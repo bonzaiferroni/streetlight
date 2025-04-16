@@ -28,3 +28,4 @@ dependencyResolutionManagement {
 include(":model")
 include(":server")
 include(":web")
+include(":app")
