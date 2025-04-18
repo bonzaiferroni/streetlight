@@ -66,6 +66,7 @@ kotlin {
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutines.swing)
+            implementation(libs.logback.classic)
         }
     }
 }
@@ -103,11 +104,11 @@ dependencies {
 
 compose.desktop {
     application {
-        mainClass = "streelight.app.MainKt"
+        mainClass = "streetlight.app.MainKt"
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "streelight.app"
+            packageName = "streetlight.app"
             packageVersion = "1.0.0"
         }
     }

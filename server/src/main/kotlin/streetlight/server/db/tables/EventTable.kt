@@ -10,7 +10,7 @@ import streetlight.model.data.Event
 import streetlight.model.data.EventStatus
 import kotlin.time.Duration.Companion.hours
 
-internal object EventTable : LongIdTable() {
+internal object EventTable : LongIdTable("event") {
     val userId = reference("user_id", UserTable, onDelete = ReferenceOption.CASCADE)
     val locationId = reference("location_id", LocationTable, onDelete = ReferenceOption.CASCADE)
     val currentRequest = reference("current_song_id", RequestTable, onDelete = ReferenceOption.SET_NULL).nullable()

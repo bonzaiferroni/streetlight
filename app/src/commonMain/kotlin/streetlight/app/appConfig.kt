@@ -3,7 +3,6 @@ package streetlight.app
 import compose.icons.TablerIcons
 import compose.icons.tablericons.CalendarEvent
 import compose.icons.tablericons.Location
-import compose.icons.tablericons.News
 import compose.icons.tablericons.TrafficLights
 import compose.icons.tablericons.YinYang
 import pondui.ui.core.PondConfig
@@ -13,7 +12,7 @@ import kotlinx.collections.immutable.persistentListOf
 import streetlight.app.ui.AreaListScreen
 import streetlight.app.ui.EventFeedScreen
 import streetlight.app.ui.HelloScreen
-import streetlight.app.ui.LocationListScreen
+import streetlight.app.ui.AreaProfileScreen
 import streetlight.app.ui.StartScreen
 
 val appConfig = PondConfig(
@@ -25,7 +24,7 @@ val appConfig = PondConfig(
         defaultScreen<HelloRoute> { HelloScreen(it) }
         defaultScreen<EventFeedRoute> { EventFeedScreen(it) }
         defaultScreen<AreaListRoute> { AreaListScreen(it) }
-        defaultScreen<LocationListRoute> { LocationListScreen(it) }
+        defaultScreen<AreaProfileRoute> { AreaProfileScreen(it) }
     },
     portalItems = persistentListOf(
         PortalRoute(TablerIcons.CalendarEvent, EventFeedRoute),

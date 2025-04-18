@@ -8,40 +8,40 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
-import pondui.ui.controls.*
-import pondui.ui.nav.LocalNav
+import pondui.ui.controls.Text
+import pondui.ui.controls.TextButton
+import pondui.ui.controls.TextField
 import pondui.ui.nav.Scaffold
 import pondui.ui.theme.Pond
-import streetlight.app.AreaListRoute
 import streetlight.app.AreaProfileRoute
 
 @Composable
-fun AreaListScreen(
-    route: AreaListRoute,
-    viewModel: AreaListModel = viewModel { AreaListModel(route) }
+fun AreaProfileScreen(
+    route: AreaProfileRoute,
+    viewModel: AreaProfileModel = viewModel { AreaProfileModel(route) }
 ) {
     val state by viewModel.state.collectAsState()
-    val nav = LocalNav.current
 
     Scaffold {
+        TextField(state.newName, viewModel::setNewName, "New Area Name")
         Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier.fillMaxWidth()
+            horizontalArrangement = Pond.ruler.rowTight
         ) {
-            TextField(state.newAreaName, viewModel::setNewAreaName)
-            TextButton("Create", state.isValidNewItem, viewModel::createNewArea)
+            TextField(state.newLongitude, viewModel::setNewLongitude, "Longitude", modifier = Modifier.weight(1f))
+            TextField(state.newLatitude, viewModel::setNewLatitude, "Latitude", modifier = Modifier.weight(1f))
+            TextButton("Create", state.isValidNewItem, viewModel::createNewItem)
         }
         LazyColumn(
-            verticalArrangement = Pond.ruler.columnTight,
+            verticalArrangement = Pond.ruler.columnTight
         ) {
-            items(state.areas) {
+            items(state.locations) {
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.fillMaxWidth(),
                 ) {
-                    Text(it.name)
-                    TextButton("➡") { nav.go(AreaProfileRoute(it.id)) }
+                    Text(it.name ?: "${it.geoPoint.longitude}, ${it.geoPoint.latitude}")
+                    TextButton("➡") {  }
                 }
             }
         }

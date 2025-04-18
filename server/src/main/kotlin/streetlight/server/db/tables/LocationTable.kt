@@ -11,7 +11,7 @@ import org.jetbrains.exposed.sql.json.json
 import streetlight.model.data.Location
 import streetlight.model.data.ResourceType
 
-internal object LocationTable : IntIdTable() {
+internal object LocationTable : IntIdTable("location") {
     val userId = reference("user_id", UserTable, ReferenceOption.SET_NULL).nullable()
     val areaId = reference("area_id", AreaTable, ReferenceOption.SET_NULL).nullable()
     val name = text("name").nullable()
@@ -19,7 +19,7 @@ internal object LocationTable : IntIdTable() {
     val address = text("address").nullable()
     val notes = text("notes").nullable()
     val geoPoint = point("geo_point")
-    val resources = json<Array<ResourceType>>("type", Json)
+    val resources = array<Int>("resources")
 }
 
 internal fun ResultRow.toLocation() = Location(
@@ -31,5 +31,5 @@ internal fun ResultRow.toLocation() = Location(
     address = this[LocationTable.address],
     notes = this[LocationTable.notes],
     geoPoint = this[LocationTable.geoPoint].toGeoPoint(),
-    resources = this[LocationTable.resources].toSet()
+    resources = this[LocationTable.resources].map { ResourceType.entries[it] }.toSet()
 )
