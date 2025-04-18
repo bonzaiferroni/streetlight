@@ -7,7 +7,7 @@ import streetlight.model.enums.EventStatus
 data class Event(
     override val id: Int = 0,
     val locationId: Int = 0,
-    val userId: Int = 0,
+    val userId: Long = 0,
     val timeStart: Long = 0L,
     val hours: Float? = null,
     val url: String? = null,

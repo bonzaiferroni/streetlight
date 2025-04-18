@@ -1,6 +1,7 @@
 package streetlight.server
 
 import io.ktor.server.application.*
+import klutch.server.configureSecurity
 import streetlight.server.plugins.*
 
 //val host = "https://streetlight.ing"
@@ -16,7 +17,6 @@ fun Application.module() {
     configureDatabases()
     configureSecurity()
     configureApiRoutes()
-    configureHtmlRouting(host)
     configureWebSockets()
     configureLogging()
 }

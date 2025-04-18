@@ -6,14 +6,14 @@ import streetlight.model.enums.ResourceType
 @Serializable
 data class Location(
     override val id: Int = 0,
-    val userId: Int? = null,
+    val userId: Long? = null,
     val areaId: Int? = null,
     val name: String? = null,
     val description: String? = null,
     val address: String? = null,
     val notes: String? = null,
     val geoPoint: GeoPoint = GeoPoint(),
-    val types: Set<ResourceType> = emptySet(),
+    val resources: Set<ResourceType> = emptySet(),
 ) : IdModel
 
 @Serializable

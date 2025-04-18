@@ -8,7 +8,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import pondui.ui.core.Blapp
+import pondui.io.ProvideUserContext
+import pondui.ui.core.PondApp
 import pondui.ui.nav.NavRoute
 import pondui.ui.theme.ProvideSkyColors
 import pondui.ui.theme.ProvideTheme
@@ -36,12 +37,14 @@ fun App(
         )
     ) {
         ProvideSkyColors {
-            Blapp(
-                initialRoute = initialRoute,
-                changeRoute = changeRoute,
-                config = appConfig,
-                exitApp = exitApp
-            )
+            ProvideUserContext {
+                PondApp(
+                    initialRoute = initialRoute,
+                    changeRoute = changeRoute,
+                    config = appConfig,
+                    exitApp = exitApp
+                )
+            }
         }
     }
 }

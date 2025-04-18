@@ -22,6 +22,8 @@ test.mv.db.backup
 test.trace.db
 backup.json
 /www/uploads
+users.json
+.env
 
 **/.kotlin-js-store/
 

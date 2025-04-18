@@ -1,7 +1,6 @@
 plugins {
-    val kotlinVersion: String by System.getProperties()
-    kotlin("plugin.serialization") version kotlinVersion
-    kotlin("multiplatform") version kotlinVersion
+    alias(libs.plugins.serialization)
+    alias(libs.plugins.kotlinMultiplatform)
     val kvisionVersion: String by System.getProperties()
     id("io.kvision") version kvisionVersion
 }
@@ -10,7 +9,6 @@ version = "1.0.2-SNAPSHOT"
 group = "streetlight.web"
 
 // Versions
-val kotlinVersion: String by System.getProperties()
 val kvisionVersion: String by System.getProperties()
 
 kotlin {
