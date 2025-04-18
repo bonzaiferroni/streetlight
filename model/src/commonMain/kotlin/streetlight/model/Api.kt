@@ -1,33 +1,52 @@
 package streetlight.model
 
-object Api {
+import kabinet.api.GetByIdEndpoint
+import kabinet.api.GetEndpoint
+import kabinet.api.ParentEndpoint
+import kabinet.api.PostEndpoint
+import streetlight.model.data.Area
+import streetlight.model.data.Event
+import streetlight.model.data.Location
+import streetlight.model.data.NewArea
+import streetlight.model.data.NewEvent
+import streetlight.model.data.NewLocation
+
+object Api: ParentEndpoint(null, apiPrefix) {
     // utility
-    val login = Endpoint("/login")
+//
+//    // models
+//    val area = Endpoint("/data/area")
+//    val event = Endpoint("/data/event")
+//    val location = Endpoint("/data/location")
+//    val request = Endpoint("/data/request")
+//
+//    // request
+//    val requestInfoEvent = Endpoint("/request_info/event")
+//    val requestInfo = Endpoint("/request_info")
+//    val requestInfoQueue = Endpoint("/request_info/queue")
+//    val requestInfoRandom = Endpoint("/request_info/random")
+//
+//    // user
+//    val song = Endpoint("/user/song")
+//    val atlas = Endpoint("/user/atlas")
+//
+//    // event
+//    val eventInfoCurrent = Endpoint("/event_info/current")
+//    val eventInfo = Endpoint("/event_info")
+//    val createEventRequest = Endpoint("/event_profile/request")
+//    val readEventRequests = Endpoint("/event_profile")
+//    val uploadEventImage = Endpoint("/event_profile/image")
+    object Events: GetEndpoint<List<Event>>(this, "/events") {
+        object Create: PostEndpoint<NewEvent, Long>(this, "/create")
+    }
 
-    // models
-    val area = Endpoint("/data/area")
-    val event = Endpoint("/data/event")
-    val location = Endpoint("/data/location")
-    val request = Endpoint("/data/request")
+    object Areas: GetEndpoint<List<Area>>(this, "/areas") {
+        object Create: PostEndpoint<NewArea, Int>(this, "/create")
+    }
 
-    // request
-    val requestInfoEvent = Endpoint("/request_info/event")
-    val requestInfo = Endpoint("/request_info")
-    val requestInfoQueue = Endpoint("/request_info/queue")
-    val requestInfoRandom = Endpoint("/request_info/random")
-
-    // user
-    val user = Endpoint("/user")
-    val privateInfo = Endpoint("/user/private")
-    val song = Endpoint("/user/song")
-    val atlas = Endpoint("/user/atlas")
-
-    // event
-    val eventInfoCurrent = Endpoint("/event_info/current")
-    val eventInfo = Endpoint("/event_info")
-    val createEventRequest = Endpoint("/event_profile/request")
-    val readEventRequests = Endpoint("/event_profile")
-    val uploadEventImage = Endpoint("/event_profile/image")
+    object Locations: GetByIdEndpoint<List<Location>>(this, "/locations") {
+        object Create: PostEndpoint<NewLocation, Int>(this, "/create")
+    }
 }
 
 val apiPrefix = "/api/v1"

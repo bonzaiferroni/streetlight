@@ -13,3 +13,12 @@ object StartRoute : AppRoute("Start")
 
 @Serializable
 object HelloRoute : AppRoute("Hello")
+
+@Serializable
+object EventFeedRoute : AppRoute("Events")
+
+@Serializable
+object AreaListRoute : AppRoute("Areas")
+
+@Serializable
+data class LocationListRoute(val areaId: Int) : AppRoute("Locations")

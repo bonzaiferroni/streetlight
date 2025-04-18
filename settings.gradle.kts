@@ -27,7 +27,6 @@ dependencyResolutionManagement {
 
 include(":model")
 include(":server")
-include(":web")
 include(":app")
 include(":pondui")
 project(":pondui").projectDir = file("../pondui/library")

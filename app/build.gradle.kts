@@ -61,6 +61,7 @@ kotlin {
             implementation(libs.androidx.lifecycle.runtime.compose)
 
             implementation(project(":pondui"))
+            implementation(project(":model"))
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)

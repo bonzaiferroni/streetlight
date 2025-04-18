@@ -1,7 +1,3 @@
-val ktor_version = "3.1.0"
-val kotlin_version: String by project
-val logback_version: String by project
-
 plugins {
     alias(libs.plugins.kotlinJvm)
     alias(libs.plugins.ktor)
@@ -15,10 +11,6 @@ application {
     mainClass.set("io.ktor.server.netty.EngineMain")
 }
 
-repositories {
-    mavenCentral()
-}
-
 dependencies {
     implementation(libs.kotlinx.datetime)
 
@@ -26,15 +18,14 @@ dependencies {
     implementation(libs.ktor.serialization.kotlinx.json.jvm)
     implementation(libs.ktor.server.content.negotiation.jvm)
 
-    val exposedVersion = "0.57.0"
     implementation(libs.exposed.core)
     implementation(libs.exposed.dao)
     implementation(libs.exposed.jdbc)
     implementation(libs.exposed.json)
-    implementation("org.jetbrains.exposed:exposed-java-time:$exposedVersion")
+    implementation(libs.exposed.kotlin.datetime)
     implementation(libs.kotlinx.serialization.json)
 
-    implementation("org.postgresql:postgresql:42.7.1")
+    implementation("org.postgresql:postgresql:42.7.3")
 
     implementation(libs.ktor.server.auth.jvm)
     implementation(libs.ktor.server.auth.jwt.jvm)
@@ -44,8 +35,8 @@ dependencies {
     implementation(libs.ktor.server.config.yaml)
     implementation(libs.ktor.server.cors)
 
-    implementation("ch.qos.logback:logback-classic:$logback_version")
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
+    implementation(libs.logback.classic)
+    testImplementation(libs.kotlin.test.junit)
 
     implementation(project(":model"))
     implementation(project(":kabinet"))

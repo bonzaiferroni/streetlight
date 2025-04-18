@@ -1,4 +1,4 @@
-package streetlight.model.dto
+package streetlight.model.data
 
 import kotlinx.serialization.Serializable
 

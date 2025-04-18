@@ -1,6 +1,6 @@
 package streetlight.model.utils
 
-import streetlight.model.dto.SignUpRequest
+import kabinet.model.SignUpRequest
 
 val SignUpRequest.validSignUp: Boolean
     get() = password.validPassword && username.validUsername && email.validEmail
