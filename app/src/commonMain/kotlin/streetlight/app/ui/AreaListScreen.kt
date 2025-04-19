@@ -28,8 +28,8 @@ fun AreaListScreen(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier.fillMaxWidth()
         ) {
-            TextField(state.newAreaName, viewModel::setNewAreaName)
-            TextButton("Create", state.isValidNewItem, viewModel::createNewArea)
+            TextField(state.newAreaName, onTextChange = viewModel::setNewAreaName)
+            TextButton("Create", isEnabled = state.isValidNewItem, onClick = viewModel::createNewArea)
         }
         LazyColumn(
             verticalArrangement = Pond.ruler.columnTight,

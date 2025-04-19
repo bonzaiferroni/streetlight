@@ -29,7 +29,7 @@ fun AreaProfileScreen(
         ) {
             TextField(state.newLongitude, viewModel::setNewLongitude, "Longitude", modifier = Modifier.weight(1f))
             TextField(state.newLatitude, viewModel::setNewLatitude, "Latitude", modifier = Modifier.weight(1f))
-            TextButton("Create", state.isValidNewItem, viewModel::createNewItem)
+            TextButton("Create", state.isValidNewItem, onClick = viewModel::createNewItem)
         }
         LazyColumn(
             verticalArrangement = Pond.ruler.columnTight
