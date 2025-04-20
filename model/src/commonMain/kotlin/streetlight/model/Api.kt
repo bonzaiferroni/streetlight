@@ -10,6 +10,8 @@ import streetlight.model.data.Location
 import streetlight.model.data.NewArea
 import streetlight.model.data.NewEvent
 import streetlight.model.data.NewLocation
+import streetlight.model.data.NewSong
+import streetlight.model.data.Song
 
 object Api: ParentEndpoint(null, apiPrefix) {
     // utility
@@ -46,6 +48,10 @@ object Api: ParentEndpoint(null, apiPrefix) {
 
     object Locations: GetByIdEndpoint<List<Location>>(this, "/locations") {
         object Create: PostEndpoint<NewLocation, Int>(this, "/create")
+    }
+
+    object Songs: GetEndpoint<List<Song>>(this, "/songs") {
+        object Create: PostEndpoint<NewSong, Long>(this, "/create")
     }
 }
 

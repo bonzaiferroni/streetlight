@@ -10,9 +10,7 @@ import klutch.db.services.UserDtoService
 import klutch.server.*
 import streetlight.model.Api
 import streetlight.model.apiPrefix
-import streetlight.server.routes.serveAreas
-import streetlight.server.routes.serveEvents
-import streetlight.server.routes.serveLocations
+import streetlight.server.routes.*
 
 fun Application.configureApiRoutes() {
     routing {
@@ -28,5 +26,6 @@ fun Application.configureApiRoutes() {
         serveEvents()
         serveAreas()
         serveLocations()
+        serveSongs()
     }
 }

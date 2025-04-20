@@ -26,5 +26,6 @@ users.json
 .env
 
 **/.kotlin-js-store/
+**/kcef-bundle/
 
 /.kotlin/

@@ -1,5 +1,6 @@
 package streetlight.app
 
+import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.*
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
@@ -7,6 +8,7 @@ import kotlinx.serialization.Serializable
 import pondui.CacheFile
 import pondui.WatchWindow
 import pondui.WindowSize
+import pondui.ui.controls.Text
 
 fun main() {
     application {
@@ -23,7 +25,7 @@ fun main() {
             title = "App",
             undecorated = true,
         ) {
-            App(cache.route, { cacheFlow.value = cache.copy(route = it as AppRoute )}, ::exitApplication)
+            App(cache.route, { cacheFlow.value = cache.copy(route = it as AppRoute) }, ::exitApplication)
         }
     }
 }

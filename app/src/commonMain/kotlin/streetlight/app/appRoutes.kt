@@ -22,3 +22,9 @@ object AreaListRoute : AppRoute("Locations")
 
 @Serializable
 data class AreaProfileRoute(val areaId: Int) : AppRoute("Locations")
+
+@Serializable
+object SongListRoute : AppRoute("Songs")
+
+@Serializable
+data class SongProfileRoute(val songId: Long) : AppRoute("Song")
