@@ -1,0 +1,43 @@
+package streetlight.app.ui
+
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
+import pondui.ui.core.StateModel
+import streetlight.app.LocationProfileRoute
+import streetlight.app.io.LocationStore
+import streetlight.model.data.Location
+import kotlin.reflect.KProperty1
+
+class LocationProfileModel(
+    route: LocationProfileRoute,
+    private val store: LocationStore = LocationStore()
+): StateModel<LocationProfileState>(LocationProfileState()) {
+    init {
+        viewModelScope.launch {
+            val location = store.readLocation(route.locationId)
+            setState { it.copy(location = location, modLocation = location) }
+        }
+    }
+
+    fun modifyItem(location: Location) {
+        setState { it.copy(modLocation = location) }
+    }
+
+    fun updateItem() {
+        val location = stateNow.modLocation
+        if (!stateNow.isValidUpdate || location == null) return
+        viewModelScope.launch {
+            val isSuccess = store.updateLocation(location)
+            if (isSuccess) {
+                setState { it.copy(location = location, modLocation = location) }
+            }
+        }
+    }
+}
+
+data class LocationProfileState(
+    val location: Location? = null,
+    val modLocation: Location? = null,
+) {
+    val isValidUpdate get() = location != modLocation
+}

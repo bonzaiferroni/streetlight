@@ -14,6 +14,7 @@ import streetlight.app.ui.AreaListScreen
 import streetlight.app.ui.EventFeedScreen
 import streetlight.app.ui.HelloScreen
 import streetlight.app.ui.AreaProfileScreen
+import streetlight.app.ui.LocationProfileScreen
 import streetlight.app.ui.SongListScreen
 import streetlight.app.ui.StartScreen
 
@@ -28,6 +29,7 @@ val appConfig = PondConfig(
         defaultScreen<AreaListRoute> { AreaListScreen(it) }
         defaultScreen<AreaProfileRoute> { AreaProfileScreen(it) }
         defaultScreen<SongListRoute> { SongListScreen(it) }
+        defaultScreen<LocationProfileRoute> { LocationProfileScreen(it) }
     },
     portalItems = persistentListOf(
         PortalRoute(TablerIcons.CalendarEvent, EventFeedRoute),

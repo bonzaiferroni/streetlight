@@ -46,8 +46,10 @@ object Api: ParentEndpoint(null, apiPrefix) {
         object Create: PostEndpoint<NewArea, Int>(this, "/create")
     }
 
-    object Locations: GetByIdEndpoint<List<Location>>(this, "/locations") {
+    object Locations: GetByIdEndpoint<Location>(this, "/locations") {
         object Create: PostEndpoint<NewLocation, Int>(this, "/create")
+        object Area: GetByIdEndpoint<List<Location>>(this, "/area")
+        object Update: PostEndpoint<Location, Boolean>(this, "/update")
     }
 
     object Songs: GetEndpoint<List<Song>>(this, "/songs") {

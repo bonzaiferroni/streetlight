@@ -21,7 +21,10 @@ object EventFeedRoute : AppRoute("Events")
 object AreaListRoute : AppRoute("Locations")
 
 @Serializable
-data class AreaProfileRoute(val areaId: Int) : AppRoute("Locations")
+data class AreaProfileRoute(val areaId: Int) : AppRoute("Area Profile")
+
+@Serializable
+data class LocationProfileRoute(val locationId: Int) : AppRoute("Location Profile")
 
 @Serializable
 object SongListRoute : AppRoute("Songs")

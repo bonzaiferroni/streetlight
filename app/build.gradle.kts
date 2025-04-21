@@ -61,6 +61,7 @@ kotlin {
             implementation(libs.androidx.lifecycle.runtime.compose)
 
 //            implementation("dev.sargunv.maplibre-compose:maplibre-compose:0.6.0")
+            implementation("org.jetbrains.kotlin:kotlin-reflect:2.1.20")
 
             implementation(project(":pondui"))
             implementation(project(":model"))

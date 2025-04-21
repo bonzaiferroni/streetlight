@@ -12,9 +12,13 @@ import streetlight.model.data.Event
 
 class EventFeedModel(
     route: EventFeedRoute,
-    store: EventStore = EventStore()
+    private val store: EventStore = EventStore()
 ): StateModel<EventFeedState>(EventFeedState()) {
     init {
+        refreshItems()
+    }
+
+    fun refreshItems() {
         viewModelScope.launch {
             val events = store.readEventFeed()
                 .toImmutableList()

@@ -57,7 +57,7 @@ class AreaProfileModel(
 
     fun refreshItems() {
         viewModelScope.launch {
-            val locations = store.readLocations(route.areaId)
+            val locations = store.readAreaLocations(route.areaId)
                 .toImmutableList()
             setState { it.copy(locations = locations) }
         }

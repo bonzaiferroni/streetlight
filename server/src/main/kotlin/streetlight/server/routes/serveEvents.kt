@@ -1,11 +1,8 @@
 package streetlight.server.routes
 
 import io.ktor.server.routing.Routing
-import klutch.db.services.UserDtoService
 import klutch.server.*
-import klutch.utils.getClaim
 import klutch.utils.getUserId
-import klutch.utils.getUsername
 import streetlight.model.Api
 import streetlight.server.db.services.EventDtoService
 

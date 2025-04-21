@@ -14,9 +14,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import pondui.ui.controls.Text
 import pondui.ui.controls.TextButton
 import pondui.ui.controls.TextField
+import pondui.ui.nav.LocalNav
 import pondui.ui.nav.Scaffold
 import pondui.ui.theme.Pond
 import streetlight.app.AreaProfileRoute
+import streetlight.app.LocationProfileRoute
 
 @Composable
 fun AreaProfileScreen(
@@ -24,6 +26,7 @@ fun AreaProfileScreen(
     viewModel: AreaProfileModel = viewModel { AreaProfileModel(route) }
 ) {
     val state by viewModel.state.collectAsState()
+    val nav = LocalNav.current
 
     Scaffold {
         TextField(state.newName, viewModel::setNewName, "New Area Name")
@@ -44,7 +47,7 @@ fun AreaProfileScreen(
                     modifier = Modifier.fillMaxWidth(),
                 ) {
                     Text(it.name ?: "${it.geoPoint.longitude}, ${it.geoPoint.latitude}")
-                    TextButton("➡") { }
+                    TextButton("➡") { nav.go(LocationProfileRoute(it.id)) }
                 }
             }
         }
