@@ -1,8 +1,11 @@
 package streetlight.app.ui
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.viewmodel.compose.viewModel
 import pondui.io.LocalUserContext
 import pondui.io.collectState
@@ -28,7 +31,10 @@ fun LocationProfileScreen(
     if (modLocation == null) return
 
     Scaffold {
-        Controls {
+        Controls(
+            maxItemsInEachRow = 2,
+            modifier = Modifier.fillMaxWidth().background(Color.Red),
+        ) {
             val readOnly = userState.user?.id != modLocation.userId
             ModText(
                 item = modLocation,

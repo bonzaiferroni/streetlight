@@ -1,1 +1,1 @@
-{"windowSize":{"width":600,"height":975},"route":{"type":"streetlight.app.LocationProfileRoute","title":"Location Profile","locationId":1}}
+{"windowSize":{"width":600,"height":975},"route":{"type":"streetlight.app.SongListRoute"}}
