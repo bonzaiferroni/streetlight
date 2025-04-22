@@ -1,5 +1,6 @@
 package streetlight.app.ui
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Row
@@ -9,14 +10,20 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.alexzhirkevich.compottie.Compottie
+import io.github.alexzhirkevich.compottie.LottieCompositionSpec
+import io.github.alexzhirkevich.compottie.rememberLottieComposition
+import io.github.alexzhirkevich.compottie.rememberLottiePainter
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 import pondui.ui.controls.Controls
 import pondui.ui.controls.Text
 import pondui.ui.controls.TextButton
 import pondui.ui.controls.TextField
 import pondui.ui.nav.Scaffold
 import streetlight.app.SongListRoute
+import streetlight.app.generated.resources.Res
 
-@OptIn(ExperimentalLayoutApi::class)
+@OptIn(ExperimentalLayoutApi::class, ExperimentalResourceApi::class)
 @Composable
 fun SongListScreen(
     route: SongListRoute,
@@ -48,5 +55,7 @@ fun SongListScreen(
                 }
             }
         }
+
+        Spirit("happy-fox")
     }
 }

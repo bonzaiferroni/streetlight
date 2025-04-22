@@ -51,5 +51,7 @@ fun AreaProfileScreen(
                 }
             }
         }
+
+        Spirit("monkey-dance")
     }
 }

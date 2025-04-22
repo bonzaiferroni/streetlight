@@ -61,7 +61,12 @@ kotlin {
             implementation(libs.androidx.lifecycle.runtime.compose)
 
 //            implementation("dev.sargunv.maplibre-compose:maplibre-compose:0.6.0")
-            implementation("org.jetbrains.kotlin:kotlin-reflect:2.1.20")
+
+            val compottieVersion = "2.0.0-rc04"
+            implementation("io.github.alexzhirkevich:compottie:$compottieVersion")
+            implementation("io.github.alexzhirkevich:compottie-dot:$compottieVersion")
+            implementation("io.github.alexzhirkevich:compottie-network:$compottieVersion")
+            implementation("io.github.alexzhirkevich:compottie-resources:$compottieVersion")
 
             implementation(project(":pondui"))
             implementation(project(":model"))
