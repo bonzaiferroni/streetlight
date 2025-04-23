@@ -33,7 +33,7 @@ fun LocationProfileScreen(
     Scaffold {
         Controls(
             maxItemsInEachRow = 2,
-            modifier = Modifier.fillMaxWidth().background(Color.Red),
+            modifier = Modifier.fillMaxWidth(),
         ) {
             val readOnly = userState.user?.id != modLocation.userId
             ModText(

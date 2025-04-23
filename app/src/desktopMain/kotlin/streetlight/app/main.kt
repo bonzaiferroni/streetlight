@@ -4,6 +4,8 @@ import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.*
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.serialization.Serializable
 import pondui.CacheFile
 import pondui.WatchWindow
@@ -25,7 +27,11 @@ fun main() {
             title = "App",
             undecorated = true,
         ) {
-            App(cache.route, { cacheFlow.value = cache.copy(route = it as AppRoute) }, ::exitApplication)
+            App(
+                routeState = MutableStateFlow(cache.route),
+                changeRoute = { cacheFlow.value = cache.copy(route = it as AppRoute) },
+                exitApp = ::exitApplication
+            )
         }
     }
 }

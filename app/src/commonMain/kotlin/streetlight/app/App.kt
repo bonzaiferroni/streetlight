@@ -10,6 +10,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import kotlinx.coroutines.flow.StateFlow
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import pondui.io.ProvideUserContext
 import pondui.ui.core.PondApp
@@ -27,8 +28,7 @@ import streetlight.app.generated.resources.Res
 @Composable
 @Preview
 fun App(
-    initialRoute: NavRoute,
-    navController: NavHostController = rememberNavController(),
+    routeState: StateFlow<NavRoute>,
     changeRoute: (NavRoute) -> Unit,
     exitApp: (() -> Unit)?,
 ) {
@@ -43,9 +43,8 @@ fun App(
         ProvideSkyColors {
             ProvideUserContext {
                 PondApp(
-                    initialRoute = initialRoute,
+                    routeState = routeState,
                     config = appConfig,
-                    navController = navController,
                     changeRoute = changeRoute,
                     exitApp = exitApp
                 )

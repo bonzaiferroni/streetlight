@@ -6,7 +6,14 @@ import kotlinx.serialization.Serializable
 @Serializable
 sealed class AppRoute(
     override val title: String,
-) : NavRoute
+    val id: Long? = null
+) : NavRoute {
+    private val titlePath get() = title.lowercase().replace(' ', '-')
+
+    override fun toPath() = id?.let { "$titlePath/$it" } ?: titlePath
+
+    fun matchRoute(path: String) = if (path.startsWith(titlePath)) this else null
+}
 
 @Serializable
 object StartRoute : AppRoute("Start")
@@ -21,13 +28,13 @@ object EventFeedRoute : AppRoute("Events")
 object AreaListRoute : AppRoute("Locations")
 
 @Serializable
-data class AreaProfileRoute(val areaId: Int) : AppRoute("Area Profile")
+data class AreaProfileRoute(val areaId: Int) : AppRoute("Area Profile", areaId.toLong())
 
 @Serializable
-data class LocationProfileRoute(val locationId: Int) : AppRoute("Location Profile")
+data class LocationProfileRoute(val locationId: Int) : AppRoute("Location Profile", locationId.toLong())
 
 @Serializable
 object SongListRoute : AppRoute("Songs")
 
 @Serializable
-data class SongProfileRoute(val songId: Long) : AppRoute("Song")
+data class SongProfileRoute(val songId: Long) : AppRoute("Song", songId)

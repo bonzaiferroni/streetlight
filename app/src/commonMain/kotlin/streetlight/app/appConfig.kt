@@ -7,9 +7,10 @@ import compose.icons.tablericons.Music
 import compose.icons.tablericons.TrafficLights
 import compose.icons.tablericons.YinYang
 import pondui.ui.core.PondConfig
-import pondui.ui.nav.PortalRoute
+import pondui.ui.nav.PortalDoor
 import pondui.ui.nav.defaultScreen
 import kotlinx.collections.immutable.persistentListOf
+import pondui.ui.core.RouteConfig
 import streetlight.app.ui.AreaListScreen
 import streetlight.app.ui.EventFeedScreen
 import streetlight.app.ui.HelloScreen
@@ -22,19 +23,19 @@ val appConfig = PondConfig(
     name = "Streetlight",
     logo = TablerIcons.TrafficLights,
     home = EventFeedRoute,
-    navGraph = {
-        defaultScreen<StartRoute> { StartScreen(it) }
-        defaultScreen<HelloRoute> { HelloScreen(it) }
-        defaultScreen<EventFeedRoute> { EventFeedScreen(it) }
-        defaultScreen<AreaListRoute> { AreaListScreen(it) }
-        defaultScreen<AreaProfileRoute> { AreaProfileScreen(it) }
-        defaultScreen<SongListRoute> { SongListScreen(it) }
-        defaultScreen<LocationProfileRoute> { LocationProfileScreen(it) }
-    },
-    portalItems = persistentListOf(
-        PortalRoute(TablerIcons.CalendarEvent, EventFeedRoute),
-        PortalRoute(TablerIcons.Location, AreaListRoute),
-        PortalRoute(TablerIcons.YinYang, HelloRoute),
-        PortalRoute(TablerIcons.Music, SongListRoute, requireLogin = true)
+    doors = persistentListOf(
+        PortalDoor(TablerIcons.CalendarEvent, EventFeedRoute),
+        PortalDoor(TablerIcons.Location, AreaListRoute),
+        PortalDoor(TablerIcons.YinYang, HelloRoute),
+        PortalDoor(TablerIcons.Music, SongListRoute, requireLogin = true)
+    ),
+    routes = persistentListOf(
+        RouteConfig({ defaultScreen<StartRoute> { StartScreen(it) }}, StartRoute::matchRoute),
+        RouteConfig({ defaultScreen<HelloRoute> { HelloScreen(it) }}, HelloRoute::matchRoute),
+        RouteConfig({ defaultScreen<EventFeedRoute> { EventFeedScreen(it) }}, EventFeedRoute::matchRoute),
+        RouteConfig({ defaultScreen<AreaListRoute> { AreaListScreen(it) }}, AreaListRoute::matchRoute),
+        RouteConfig({ defaultScreen<AreaProfileRoute> { AreaProfileScreen(it) }}),
+        RouteConfig({ defaultScreen<SongListRoute> { SongListScreen(it) }}, SongListRoute::matchRoute),
+        RouteConfig({ defaultScreen<LocationProfileRoute> { LocationProfileScreen(it) }}),
     )
 )
