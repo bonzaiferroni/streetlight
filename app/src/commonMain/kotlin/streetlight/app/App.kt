@@ -7,6 +7,9 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import pondui.io.ProvideUserContext
 import pondui.ui.core.PondApp
@@ -25,6 +28,7 @@ import streetlight.app.generated.resources.Res
 @Preview
 fun App(
     initialRoute: NavRoute,
+    navController: NavHostController = rememberNavController(),
     changeRoute: (NavRoute) -> Unit,
     exitApp: (() -> Unit)?,
 ) {
@@ -40,8 +44,9 @@ fun App(
             ProvideUserContext {
                 PondApp(
                     initialRoute = initialRoute,
-                    changeRoute = changeRoute,
                     config = appConfig,
+                    navController = navController,
+                    changeRoute = changeRoute,
                     exitApp = exitApp
                 )
             }
