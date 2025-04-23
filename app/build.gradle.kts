@@ -24,13 +24,13 @@ kotlin {
 
     @OptIn(ExperimentalWasmDsl::class)
     wasmJs {
-        moduleName = "library"
+        moduleName = "streetlight"
         browser {
-            val rootDirPath = project.rootDir.path
+            val rootDirPath = "${project.rootDir.path}/app"
             val projectDirPath = project.projectDir.path
             commonWebpackConfig {
                 outputFileName = "composeApp.js"
-                devServer = (devServer ?: KotlinWebpackConfig.DevServer()).apply {
+                devServer = (devServer?.copy(port = 9000) ?: KotlinWebpackConfig.DevServer()).apply {
                     static = (static ?: mutableListOf()).apply {
                         // Serve sources to debug inside browser
                         add(rootDirPath)
@@ -65,8 +65,6 @@ kotlin {
             val compottieVersion = "2.0.0-rc04"
             implementation("io.github.alexzhirkevich:compottie:$compottieVersion")
             implementation("io.github.alexzhirkevich:compottie-dot:$compottieVersion")
-            implementation("io.github.alexzhirkevich:compottie-network:$compottieVersion")
-            implementation("io.github.alexzhirkevich:compottie-resources:$compottieVersion")
 
             implementation(project(":pondui"))
             implementation(project(":model"))
@@ -75,6 +73,9 @@ kotlin {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutines.swing)
             implementation(libs.logback.classic)
+        }
+        wasmJsMain.dependencies {
+            implementation(libs.ktor.client.js)
         }
     }
 }

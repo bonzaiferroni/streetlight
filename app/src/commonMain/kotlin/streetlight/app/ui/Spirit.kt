@@ -15,11 +15,20 @@ import streetlight.app.generated.resources.Res
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
-fun Spirit(spiritName: String) {
+fun Spirit(
+    spiritName: String,
+    modifier: Modifier = Modifier
+) {
     val composition by rememberLottieComposition {
-        LottieCompositionSpec.DotLottie(
-            Res.readBytes("files/$spiritName.lottie")
-        )
+        if (spiritName.endsWith(".json")) {
+            LottieCompositionSpec.JsonString(
+                Res.readBytes("files/$spiritName").decodeToString()
+            )
+        } else {
+            LottieCompositionSpec.DotLottie(
+                Res.readBytes("files/$spiritName.lottie")
+            )
+        }
     }
 
     Image(
@@ -28,6 +37,6 @@ fun Spirit(spiritName: String) {
             iterations = Compottie.IterateForever
         ),
         contentDescription = "Lottie animation",
-        modifier = Modifier.fillMaxWidth()
+        modifier = modifier.fillMaxWidth()
     )
 }

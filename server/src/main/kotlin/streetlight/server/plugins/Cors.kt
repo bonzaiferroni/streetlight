@@ -13,8 +13,8 @@ fun Application.configureCors() {
         allowMethod(HttpMethod.Delete)
         allowHeader(HttpHeaders.Authorization)  // Allow Authorization header
         // anyHost()  // Don't use this in production, specify the exact domain(s)
-        allowHost("localhost:3000")
-        allowHost("192.168.1.122:3000")
+        allowHost("localhost:9000")
+        allowHost("192.168.1.100:9000")
         allowHost("localhost:8080")
         allowHost("192.168.1.122:8080")
         allowHost("streetlight.ing")
