@@ -28,7 +28,6 @@ import streetlight.app.generated.resources.Res
 @Composable
 @Preview
 fun App(
-    routeState: StateFlow<NavRoute>,
     changeRoute: (NavRoute) -> Unit,
     exitApp: (() -> Unit)?,
 ) {
@@ -43,7 +42,6 @@ fun App(
         ProvideSkyColors {
             ProvideUserContext {
                 PondApp(
-                    routeState = routeState,
                     config = appConfig,
                     changeRoute = changeRoute,
                     exitApp = exitApp

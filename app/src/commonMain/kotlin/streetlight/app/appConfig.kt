@@ -30,12 +30,12 @@ val appConfig = PondConfig(
         PortalDoor(TablerIcons.Music, SongListRoute, requireLogin = true)
     ),
     routes = persistentListOf(
-        RouteConfig({ defaultScreen<StartRoute> { StartScreen(it) }}, StartRoute::matchRoute),
-        RouteConfig({ defaultScreen<HelloRoute> { HelloScreen(it) }}, HelloRoute::matchRoute),
-        RouteConfig({ defaultScreen<EventFeedRoute> { EventFeedScreen(it) }}, EventFeedRoute::matchRoute),
-        RouteConfig({ defaultScreen<AreaListRoute> { AreaListScreen(it) }}, AreaListRoute::matchRoute),
-        RouteConfig({ defaultScreen<AreaProfileRoute> { AreaProfileScreen(it) }}),
-        RouteConfig({ defaultScreen<SongListRoute> { SongListScreen(it) }}, SongListRoute::matchRoute),
-        RouteConfig({ defaultScreen<LocationProfileRoute> { LocationProfileScreen(it) }}),
+        RouteConfig(StartRoute::matchRoute) { defaultScreen<StartRoute> { StartScreen(it) } },
+        RouteConfig(HelloRoute::matchRoute) { defaultScreen<HelloRoute> { HelloScreen(it) } },
+        RouteConfig(EventFeedRoute::matchRoute) { defaultScreen<EventFeedRoute> { EventFeedScreen(it) } },
+        RouteConfig(AreaListRoute::matchRoute) { defaultScreen<AreaListRoute> { AreaListScreen(it) } },
+        RouteConfig() { defaultScreen<AreaProfileRoute> { AreaProfileScreen(it) } },
+        RouteConfig(SongListRoute::matchRoute) { defaultScreen<SongListRoute> { SongListScreen(it) } },
+        RouteConfig() { defaultScreen<LocationProfileRoute> { LocationProfileScreen(it) } },
     )
 )
