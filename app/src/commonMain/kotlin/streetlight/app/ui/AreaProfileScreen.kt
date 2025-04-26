@@ -11,8 +11,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import pondui.ui.controls.Button
 import pondui.ui.controls.Text
-import pondui.ui.controls.TextButton
 import pondui.ui.controls.TextField
 import pondui.ui.nav.LocalNav
 import pondui.ui.nav.Scaffold
@@ -35,7 +35,7 @@ fun AreaProfileScreen(
         ) {
             TextField(state.newLongitude, viewModel::setNewLongitude, "Longitude", modifier = Modifier.weight(1f))
             TextField(state.newLatitude, viewModel::setNewLatitude, "Latitude", modifier = Modifier.weight(1f))
-            TextButton("Create", state.isValidNewItem, onClick = viewModel::createNewItem)
+            Button("Create", state.isValidNewItem, onClick = viewModel::createNewItem)
         }
         LazyColumn(
             verticalArrangement = Pond.ruler.columnTight
@@ -47,7 +47,7 @@ fun AreaProfileScreen(
                     modifier = Modifier.fillMaxWidth(),
                 ) {
                     Text(it.name ?: "${it.geoPoint.longitude}, ${it.geoPoint.latitude}")
-                    TextButton("➡") { nav.go(LocationProfileRoute(it.id)) }
+                    Button("➡") { nav.go(LocationProfileRoute(it.id)) }
                 }
             }
         }

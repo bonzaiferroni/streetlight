@@ -80,9 +80,6 @@ kotlin {
         wasmJsMain.dependencies {
             implementation(libs.ktor.client.js)
         }
-        jsMain.dependencies {
-            implementation(compose.html.core)
-        }
     }
 }
 

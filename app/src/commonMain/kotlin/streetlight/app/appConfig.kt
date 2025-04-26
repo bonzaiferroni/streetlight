@@ -23,12 +23,6 @@ val appConfig = PondConfig(
     name = "Streetlight",
     logo = TablerIcons.TrafficLights,
     home = EventFeedRoute,
-    doors = persistentListOf(
-        PortalDoor(TablerIcons.CalendarEvent, EventFeedRoute),
-        PortalDoor(TablerIcons.Location, AreaListRoute),
-        PortalDoor(TablerIcons.YinYang, HelloRoute),
-        PortalDoor(TablerIcons.Music, SongListRoute, requireLogin = true)
-    ),
     routes = persistentListOf(
         RouteConfig(StartRoute::matchRoute) { defaultScreen<StartRoute> { StartScreen(it) } },
         RouteConfig(HelloRoute::matchRoute) { defaultScreen<HelloRoute> { HelloScreen(it) } },
@@ -37,5 +31,11 @@ val appConfig = PondConfig(
         RouteConfig() { defaultScreen<AreaProfileRoute> { AreaProfileScreen(it) } },
         RouteConfig(SongListRoute::matchRoute) { defaultScreen<SongListRoute> { SongListScreen(it) } },
         RouteConfig() { defaultScreen<LocationProfileRoute> { LocationProfileScreen(it) } },
-    )
+    ),
+    doors = persistentListOf(
+        PortalDoor(TablerIcons.CalendarEvent, EventFeedRoute),
+        PortalDoor(TablerIcons.Location, AreaListRoute),
+        PortalDoor(TablerIcons.YinYang, HelloRoute),
+        PortalDoor(TablerIcons.Music, SongListRoute, requireLogin = true)
+    ),
 )

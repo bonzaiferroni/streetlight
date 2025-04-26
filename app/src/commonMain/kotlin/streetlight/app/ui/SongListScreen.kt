@@ -15,9 +15,9 @@ import io.github.alexzhirkevich.compottie.LottieCompositionSpec
 import io.github.alexzhirkevich.compottie.rememberLottieComposition
 import io.github.alexzhirkevich.compottie.rememberLottiePainter
 import org.jetbrains.compose.resources.ExperimentalResourceApi
+import pondui.ui.controls.Button
 import pondui.ui.controls.Controls
 import pondui.ui.controls.Text
-import pondui.ui.controls.TextButton
 import pondui.ui.controls.TextField
 import pondui.ui.nav.Scaffold
 import streetlight.app.SongListRoute
@@ -40,7 +40,7 @@ fun SongListScreen(
             Controls {
                 TextField(state.newName, viewModel::setNewName, "Name", modifier = Modifier.weight(1f))
                 TextField(state.newArtist, viewModel::setNewArtist, "Artist", modifier = Modifier.weight(1f))
-                TextButton("Create", onClick = viewModel::createItem, modifier = Modifier.fillMaxRowHeight())
+                Button("Create", onClick = viewModel::createItem, modifier = Modifier.fillMaxRowHeight())
             }
         }
         LazyColumn {
@@ -51,7 +51,7 @@ fun SongListScreen(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(it.name)
-                    TextButton("👉", onClick = { })
+                    Button("👉", onClick = { })
                 }
             }
         }

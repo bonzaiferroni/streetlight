@@ -1,6 +1,5 @@
 package streetlight.app.ui
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.*
@@ -9,9 +8,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.viewmodel.compose.viewModel
 import pondui.io.LocalUserContext
 import pondui.io.collectState
+import pondui.ui.controls.Button
 import pondui.ui.controls.Controls
 import pondui.ui.controls.Text
-import pondui.ui.controls.TextButton
 import pondui.ui.controls.TextField
 import pondui.ui.nav.Scaffold
 import streetlight.app.LocationProfileRoute
@@ -57,7 +56,7 @@ fun LocationProfileScreen(
                 modifyItem = { viewModel.modifyItem(modLocation.copy(description = it)) },
                 modifier = Modifier.weight(1f)
             )
-            TextButton(
+            Button(
                 text = "Update", isEnabled = state.isValidUpdate,
                 onClick = viewModel::updateItem, modifier = Modifier.fillMaxRowHeight()
             )

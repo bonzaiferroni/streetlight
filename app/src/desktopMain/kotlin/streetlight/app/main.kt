@@ -28,7 +28,6 @@ fun main() {
             undecorated = true,
         ) {
             App(
-                routeState = MutableStateFlow(cache.route),
                 changeRoute = { cacheFlow.value = cache.copy(route = it as AppRoute) },
                 exitApp = ::exitApplication
             )

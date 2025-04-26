@@ -32,7 +32,7 @@ fun AreaListScreen(
             modifier = Modifier.fillMaxWidth()
         ) {
             TextField(state.newAreaName, onTextChange = viewModel::setNewAreaName)
-            TextButton("Create", isEnabled = state.isValidNewItem, onClick = viewModel::createNewArea)
+            Button("Create", isEnabled = state.isValidNewItem, onClick = viewModel::createNewArea)
         }
         LazyColumn(
             verticalArrangement = Pond.ruler.columnTight,
@@ -44,7 +44,7 @@ fun AreaListScreen(
                     modifier = Modifier.fillMaxWidth(),
                 ) {
                     Text(it.name)
-                    TextButton("➡") { nav.go(AreaProfileRoute(it.id)) }
+                    Button("➡") { nav.go(AreaProfileRoute(it.id)) }
                 }
             }
         }
