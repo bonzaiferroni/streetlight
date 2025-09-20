@@ -4,15 +4,16 @@ import io.ktor.server.routing.Routing
 import klutch.server.*
 import klutch.utils.getUserId
 import streetlight.model.Api
+import streetlight.model.data.toProjectId
 import streetlight.server.db.services.LocationApiService
 
 fun Routing.serveLocations(service: LocationApiService = LocationApiService()) {
-    getById(Api.Locations.Area) { id, endpoint ->
-        service.readLocations(id.toInt())
+    get(Api.Locations.Area, { it.toProjectId() }) { id, endpoint ->
+        service.readLocations(id)
     }
 
-    getById(Api.Locations) { id, endpoint ->
-        service.readLocation(id.toInt())
+    get(Api.Locations, { it.toProjectId() }) { id, endpoint ->
+        service.readLocation(id)
     }
 
     authenticateJwt {

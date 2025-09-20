@@ -1,9 +1,9 @@
 package streetlight.server.plugins
 
+import kabinet.utils.Environment
 import klutch.db.services.UserInitService
 import klutch.db.tables.RefreshTokenTable
 import klutch.db.tables.UserTable
-import klutch.environment.Environment
 import klutch.utils.dbLog
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.sql.Database

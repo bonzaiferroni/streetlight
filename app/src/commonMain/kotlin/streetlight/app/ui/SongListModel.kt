@@ -5,6 +5,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.launch
+import pondui.ui.core.ModelState
 import pondui.ui.core.StateModel
 import streetlight.app.SongListRoute
 import streetlight.app.io.SongStore
@@ -14,15 +15,17 @@ import streetlight.model.data.Song
 class SongListModel(
     route: SongListRoute,
     private val store: SongStore = SongStore()
-): StateModel<SongListState>(SongListState()) {
+): StateModel<SongListState>() {
+
+    override val state = ModelState(SongListState())
+
     init {
         refreshSongs()
     }
 
     fun refreshSongs() {
         viewModelScope.launch {
-            val songs = store.readSongs()
-                .toImmutableList()
+            val songs = store.readSongs() ?: return@launch
             setState { it.copy(songs = songs) }
         }
     }
@@ -48,7 +51,7 @@ class SongListModel(
 }
 
 data class SongListState(
-    val songs: ImmutableList<Song> = persistentListOf(),
+    val songs: List<Song> = emptyList(),
     val newName: String = "",
     val newArtist: String = "",
     val isValidNewItem: Boolean = false,

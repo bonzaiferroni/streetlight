@@ -1,15 +1,19 @@
 package streetlight.model.data
 
+import kabinet.db.TableId
+import kabinet.model.UserId
+import kabinet.utils.randomUuidString
 import kotlinx.serialization.Serializable
 import kotlinx.datetime.Instant
+import kotlin.jvm.JvmInline
 import kotlin.time.Duration
 
 @Serializable
 data class Event(
-    val id: Long,
-    val locationId: Int,
-    val userId: Long,
-    val currentRequestId: Long?,
+    val eventId: EventId,
+    val locationId: LocationId,
+    val userId: UserId,
+    val currentRequestId: RequestId?,
     val url: String?,
     val imageUrl: String?,
     val streamUrl: String?,
@@ -21,3 +25,9 @@ data class Event(
     val hours: Duration?,
     val startsAt: Instant,
 )
+
+@JvmInline
+@Serializable
+value class EventId(override val value: String): ProjectId {
+    companion object { fun random() = EventId(randomUuidString()) }
+}

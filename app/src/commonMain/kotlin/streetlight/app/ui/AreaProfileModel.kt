@@ -6,16 +6,21 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.launch
+import pondui.ui.core.ModelState
 import pondui.ui.core.StateModel
 import streetlight.app.AreaProfileRoute
 import streetlight.app.io.LocationStore
 import streetlight.model.data.Location
 import streetlight.model.data.NewLocation
+import streetlight.model.data.toProjectId
 
 class AreaProfileModel(
     private val route: AreaProfileRoute,
     private val store: LocationStore = LocationStore()
-) : StateModel<AreaProfileState>(AreaProfileState()) {
+) : StateModel<AreaProfileState>() {
+
+    override val state = ModelState(AreaProfileState())
+
     init {
         refreshItems()
     }
@@ -46,7 +51,7 @@ class AreaProfileModel(
         if (!stateNow.isValidNewItem) return
         viewModelScope.launch {
             store.createLocation(NewLocation(
-                areaId = route.areaId,
+                areaId = route.areaId.toProjectId(),
                 name = stateNow.newName.takeIf { it.isNotBlank() },
                 geoPoint = GeoPoint(stateNow.newLongitude.toDouble(), stateNow.newLatitude.toDouble())
             ))
@@ -57,15 +62,14 @@ class AreaProfileModel(
 
     fun refreshItems() {
         viewModelScope.launch {
-            val locations = store.readAreaLocations(route.areaId)
-                .toImmutableList()
+            val locations = store.readAreaLocations(route.areaId.toProjectId()) ?: return@launch
             setState { it.copy(locations = locations) }
         }
     }
 }
 
 data class AreaProfileState(
-    val locations: ImmutableList<Location> = persistentListOf(),
+    val locations: List<Location> = emptyList(),
     val newName: String = "",
     val newLatitude: String = "",
     val newLongitude: String = "",

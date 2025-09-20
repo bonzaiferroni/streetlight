@@ -2,6 +2,9 @@ package streetlight.app
 
 import pondui.ui.nav.NavRoute
 import kotlinx.serialization.Serializable
+import pondui.ui.nav.IdRoute
+import streetlight.model.data.AreaId
+import streetlight.model.data.toProjectId
 
 @Serializable
 sealed class AppRoute(
@@ -28,13 +31,13 @@ object EventFeedRoute : AppRoute("Events")
 object AreaListRoute : AppRoute("Locations")
 
 @Serializable
-data class AreaProfileRoute(val areaId: Int) : AppRoute("Area Profile", areaId.toLong())
+data class AreaProfileRoute(val areaId: String) : IdRoute<String>("Area Profile", areaId)
 
 @Serializable
-data class LocationProfileRoute(val locationId: Int) : AppRoute("Location Profile", locationId.toLong())
+data class LocationProfileRoute(val locationId: String) : IdRoute<String>("Location Profile", locationId)
 
 @Serializable
 object SongListRoute : AppRoute("Songs")
 
 @Serializable
-data class SongProfileRoute(val songId: Long) : AppRoute("Song", songId)
+data class SongProfileRoute(val songId: String) : IdRoute<String>("Song", songId)

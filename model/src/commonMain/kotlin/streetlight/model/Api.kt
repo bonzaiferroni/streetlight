@@ -1,19 +1,24 @@
 package streetlight.model
 
+import kabinet.api.ApiNode
 import kabinet.api.GetByIdEndpoint
+import kabinet.api.GetByTableIdEndpoint
 import kabinet.api.GetEndpoint
-import kabinet.api.ParentEndpoint
 import kabinet.api.PostEndpoint
 import streetlight.model.data.Area
+import streetlight.model.data.AreaId
 import streetlight.model.data.Event
+import streetlight.model.data.EventId
 import streetlight.model.data.Location
+import streetlight.model.data.LocationId
 import streetlight.model.data.NewArea
 import streetlight.model.data.NewEvent
 import streetlight.model.data.NewLocation
 import streetlight.model.data.NewSong
 import streetlight.model.data.Song
+import streetlight.model.data.SongId
 
-object Api: ParentEndpoint(null, apiPrefix) {
+object Api: ApiNode(null, apiPrefix) {
     // utility
 //
 //    // models
@@ -39,21 +44,21 @@ object Api: ParentEndpoint(null, apiPrefix) {
 //    val readEventRequests = Endpoint("/event_profile")
 //    val uploadEventImage = Endpoint("/event_profile/image")
     object Events: GetEndpoint<List<Event>>(this, "/events") {
-        object Create: PostEndpoint<NewEvent, Long>(this, "/create")
+        object Create: PostEndpoint<NewEvent, EventId>(this, "/create")
     }
 
     object Areas: GetEndpoint<List<Area>>(this, "/areas") {
-        object Create: PostEndpoint<NewArea, Int>(this, "/create")
+        object Create: PostEndpoint<NewArea, AreaId>(this, "/create")
     }
 
-    object Locations: GetByIdEndpoint<Location>(this, "/locations") {
-        object Create: PostEndpoint<NewLocation, Int>(this, "/create")
-        object Area: GetByIdEndpoint<List<Location>>(this, "/area")
+    object Locations: GetByTableIdEndpoint<LocationId, Location>(this, "/locations") {
+        object Create: PostEndpoint<NewLocation, LocationId>(this, "/create")
+        object Area: GetByTableIdEndpoint<AreaId, List<Location>>(this, "/area")
         object Update: PostEndpoint<Location, Boolean>(this, "/update")
     }
 
     object Songs: GetEndpoint<List<Song>>(this, "/songs") {
-        object Create: PostEndpoint<NewSong, Long>(this, "/create")
+        object Create: PostEndpoint<NewSong, SongId>(this, "/create")
     }
 }
 

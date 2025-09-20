@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class NewLocation(
-    val areaId: Int,
+    val areaId: AreaId,
     val name: String?,
     val geoPoint: GeoPoint,
 )

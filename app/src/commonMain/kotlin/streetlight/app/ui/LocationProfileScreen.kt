@@ -4,15 +4,14 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.viewmodel.compose.viewModel
 import pondui.io.LocalUserContext
 import pondui.io.collectState
 import pondui.ui.controls.Button
-import pondui.ui.controls.Controls
+import pondui.ui.controls.FlowRow
+import pondui.ui.controls.Scaffold
 import pondui.ui.controls.Text
 import pondui.ui.controls.TextField
-import pondui.ui.nav.Scaffold
 import streetlight.app.LocationProfileRoute
 import streetlight.model.data.Location
 import kotlin.reflect.KProperty1
@@ -23,18 +22,18 @@ fun LocationProfileScreen(
     route: LocationProfileRoute,
     viewModel: LocationProfileModel = viewModel { LocationProfileModel(route) }
 ) {
-    val state by viewModel.state.collectAsState()
+    val state by viewModel.stateFlow.collectAsState()
     val userState by LocalUserContext.collectState()
 
-    val modLocation = state.modLocation
-    if (modLocation == null) return
+    val modLocation = state.modLocation ?: return
 
     Scaffold {
-        Controls(
+        FlowRow(
+            gap = 1,
             maxItemsInEachRow = 2,
             modifier = Modifier.fillMaxWidth(),
         ) {
-            val readOnly = userState.user?.id != modLocation.userId
+            val readOnly = userState.user?.userId != modLocation.userId
             ModText(
                 item = modLocation,
                 property = remember { Location::name },
@@ -79,8 +78,7 @@ fun <T> ModText(
             Text(value, modifier = modifier)
         }
     } else {
-        TextField(property.get(item) ?: "", {
-            modifyItem(it.takeIf { it.isNotBlank() })
+        TextField(property.get(item) ?: "", onValueChange = { modifyItem(it.takeIf { it.isNotBlank() })
         }, placeholder = placeholder, modifier = modifier)
     }
 }

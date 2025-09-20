@@ -16,10 +16,10 @@ import io.github.alexzhirkevich.compottie.rememberLottieComposition
 import io.github.alexzhirkevich.compottie.rememberLottiePainter
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import pondui.ui.controls.Button
-import pondui.ui.controls.Controls
+import pondui.ui.controls.FlowRow
+import pondui.ui.controls.Scaffold
 import pondui.ui.controls.Text
 import pondui.ui.controls.TextField
-import pondui.ui.nav.Scaffold
 import streetlight.app.SongListRoute
 import streetlight.app.generated.resources.Res
 
@@ -29,7 +29,7 @@ fun SongListScreen(
     route: SongListRoute,
     viewModel: SongListModel = viewModel { SongListModel(route) }
 ) {
-    val state by viewModel.state.collectAsState()
+    val state by viewModel.stateFlow.collectAsState()
 
     Scaffold {
         Row(
@@ -37,9 +37,19 @@ fun SongListScreen(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Controls {
-                TextField(state.newName, viewModel::setNewName, "Name", modifier = Modifier.weight(1f))
-                TextField(state.newArtist, viewModel::setNewArtist, "Artist", modifier = Modifier.weight(1f))
+            FlowRow(1) {
+                TextField(
+                    state.newName,
+                    onValueChange = viewModel::setNewName,
+                    placeholder = "Name",
+                    modifier = Modifier.weight(1f)
+                )
+                TextField(
+                    state.newArtist,
+                    onValueChange = viewModel::setNewArtist,
+                    placeholder = "Artist",
+                    modifier = Modifier.weight(1f)
+                )
                 Button("Create", onClick = viewModel::createItem, modifier = Modifier.fillMaxRowHeight())
             }
         }

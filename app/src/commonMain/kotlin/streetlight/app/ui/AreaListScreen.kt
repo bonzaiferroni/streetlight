@@ -13,7 +13,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import pondui.ui.controls.*
 import pondui.ui.nav.LocalNav
-import pondui.ui.nav.Scaffold
 import pondui.ui.theme.Pond
 import streetlight.app.AreaListRoute
 import streetlight.app.AreaProfileRoute
@@ -23,7 +22,7 @@ fun AreaListScreen(
     route: AreaListRoute,
     viewModel: AreaListModel = viewModel { AreaListModel(route) }
 ) {
-    val state by viewModel.state.collectAsState()
+    val state by viewModel.stateFlow.collectAsState()
     val nav = LocalNav.current
 
     Scaffold {
@@ -31,12 +30,10 @@ fun AreaListScreen(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier.fillMaxWidth()
         ) {
-            TextField(state.newAreaName, onTextChange = viewModel::setNewAreaName)
+            TextField(state.newAreaName, onValueChange = viewModel::setNewAreaName)
             Button("Create", isEnabled = state.isValidNewItem, onClick = viewModel::createNewArea)
         }
-        LazyColumn(
-            verticalArrangement = Pond.ruler.columnTight,
-        ) {
+        LazyColumn(1) {
             items(state.areas) {
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -44,7 +41,7 @@ fun AreaListScreen(
                     modifier = Modifier.fillMaxWidth(),
                 ) {
                     Text(it.name)
-                    Button("➡") { nav.go(AreaProfileRoute(it.id)) }
+                    Button("➡") { nav.go(AreaProfileRoute(it.areaId.value)) }
                 }
             }
         }
