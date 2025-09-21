@@ -39,14 +39,12 @@ fun App(
             h4Font = useFamily(Res.font.Inter_18pt_Light, FontWeight.Light),
         )
     ) {
-        ProvideSkyColors {
-            ProvideUserContext {
-                PondApp(
-                    config = appConfig,
-                    changeRoute = changeRoute,
-                    exitApp = exitApp
-                )
-            }
+        ProvideUserContext {
+            PondApp(
+                config = appConfig,
+                changeRoute = changeRoute,
+                exitApp = exitApp
+            )
         }
     }
 }

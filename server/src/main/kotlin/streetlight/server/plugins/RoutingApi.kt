@@ -7,12 +7,12 @@ import io.ktor.server.routing.post
 import io.ktor.server.routing.routing
 import kabinet.api.UserApi
 import klutch.server.*
-import streetlight.model.apiPrefix
+import streetlight.model.Api
 import streetlight.server.routes.*
 
 fun Application.configureApiRoutes() {
     routing {
-        get(apiPrefix) {
+        get(Api.path) {
             call.respondText("Hello World!")
         }
 

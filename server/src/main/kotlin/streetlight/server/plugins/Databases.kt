@@ -9,7 +9,5 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import streetlight.server.db.tables.*
 
 fun Application.configureDatabases() {
-    initDb(env)
+    initDb()
 }
-
-val env = readEnvFromPath()

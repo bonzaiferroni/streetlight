@@ -18,8 +18,28 @@ import streetlight.model.data.NewSong
 import streetlight.model.data.Song
 import streetlight.model.data.SongId
 
-object Api: ApiNode(null, apiPrefix) {
-    // utility
+object Api: ApiNode(ApiNode(null, "api"), "v1") {
+
+    object Events: GetEndpoint<List<Event>>(this, "events") {
+        object Create: PostEndpoint<NewEvent, EventId>(this, "create")
+    }
+
+    object Areas: GetEndpoint<List<Area>>(this, "areas") {
+        object Create: PostEndpoint<NewArea, AreaId>(this, "create")
+    }
+
+    object Locations: GetByTableIdEndpoint<LocationId, Location>(this, "locations") {
+        object Create: PostEndpoint<NewLocation, LocationId>(this, "create")
+        object Area: GetByTableIdEndpoint<AreaId, List<Location>>(this, "area")
+        object Update: PostEndpoint<Location, Boolean>(this, "update")
+    }
+
+    object Songs: GetEndpoint<List<Song>>(this, "songs") {
+        object Create: PostEndpoint<NewSong, SongId>(this, "create")
+    }
+}
+
+// utility
 //
 //    // models
 //    val area = Endpoint("/data/area")
@@ -43,32 +63,3 @@ object Api: ApiNode(null, apiPrefix) {
 //    val createEventRequest = Endpoint("/event_profile/request")
 //    val readEventRequests = Endpoint("/event_profile")
 //    val uploadEventImage = Endpoint("/event_profile/image")
-    object Events: GetEndpoint<List<Event>>(this, "/events") {
-        object Create: PostEndpoint<NewEvent, EventId>(this, "/create")
-    }
-
-    object Areas: GetEndpoint<List<Area>>(this, "/areas") {
-        object Create: PostEndpoint<NewArea, AreaId>(this, "/create")
-    }
-
-    object Locations: GetByTableIdEndpoint<LocationId, Location>(this, "/locations") {
-        object Create: PostEndpoint<NewLocation, LocationId>(this, "/create")
-        object Area: GetByTableIdEndpoint<AreaId, List<Location>>(this, "/area")
-        object Update: PostEndpoint<Location, Boolean>(this, "/update")
-    }
-
-    object Songs: GetEndpoint<List<Song>>(this, "/songs") {
-        object Create: PostEndpoint<NewSong, SongId>(this, "/create")
-    }
-}
-
-val apiPrefix = "/api/v1"
-
-data class Endpoint(
-    val base: String
-) {
-    val path = "$apiPrefix$base"
-    val clientIdTemplate: String get() = "$path/:id"
-    val serverIdTemplate: String get() = "$path/{id}"
-    fun replaceClientId(id: Int) = this.clientIdTemplate.replace(":id", id.toString())
-}

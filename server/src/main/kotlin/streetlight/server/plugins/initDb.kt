@@ -8,24 +8,26 @@ import klutch.utils.dbLog
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
-import org.jetbrains.exposed.sql.transactions.TransactionManager
 import org.jetbrains.exposed.sql.transactions.transaction
+import streetlight.server.ServerProvider
 import streetlight.server.db.tables.AreaTable
 import streetlight.server.db.tables.EventTable
 import streetlight.server.db.tables.LocationTable
 import streetlight.server.db.tables.RequestTable
 import streetlight.server.db.tables.SongTable
 
-fun initDb(env: Environment) {
+fun initDb(
+    app: ServerProvider = ServerProvider
+) {
     dbLog.logInfo("initializing db")
-    val db = connectDb(env)
+    val db = connectDb(app.env)
 
     transaction(db) {
         SchemaUtils.create(*dbTables.toTypedArray())
     }
 
     runBlocking {
-        UserInitService().initUsers()
+        UserInitService(app.env).initUsers()
     }
 }
 
