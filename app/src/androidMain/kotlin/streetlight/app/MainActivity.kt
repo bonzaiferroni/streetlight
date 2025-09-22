@@ -18,18 +18,13 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            val baseDensity = LocalDensity.current.density
-            CompositionLocalProvider(
-                LocalDensity provides Density(baseDensity * 1.2f, LocalDensity.current.fontScale)
-            ) {
-                val cfg = LocalConfiguration.current
-                val density = LocalDensity.current
-                val appWindow = remember(cfg) {
-                    AppWindow(cfg.screenWidthDp, cfg.screenHeightDp, density)
-                }
-                CompositionLocalProvider(LocalAppWindow provides appWindow) {
-                    App({ }, { })
-                }
+            val cfg = LocalConfiguration.current
+            val scale = 1.25f
+            val appWindow = remember(cfg) {
+                AppWindow(cfg.screenWidthDp, cfg.screenHeightDp, scale)
+            }
+            CompositionLocalProvider(LocalAppWindow provides appWindow) {
+                App(scale, { }, { })
             }
         }
     }

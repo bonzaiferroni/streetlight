@@ -28,7 +28,7 @@ fun EventFeedScreen(
 ) {
     val state by viewModel.stateFlow.collectAsState()
 
-    val cloudToggle = rememberCloud { toggle ->
+    val cloudToggle = rememberCloud(title = "Where?") { toggle ->
         Column(1) {
             TextField(state.locationSearch, onValueChange = viewModel::searchLocations)
             LazyColumn(1) {

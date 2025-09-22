@@ -18,11 +18,13 @@ import streetlight.app.generated.resources.Res
 @Composable
 @Preview
 fun App(
+    scale: Float = 1f,
     changeRoute: (NavRoute) -> Unit,
     exitApp: (() -> Unit)?,
 ) {
     ProvideTheme(
         theme = defaultTheme(
+            scale = scale,
             baseFont = useFamily(Res.font.Inter_18pt_Regular),
             h1Font = useFamily(Res.font.Inter_28pt_Light, FontWeight.Light),
             h2Font = useFamily(Res.font.Inter_24pt_Light, FontWeight.Light),
