@@ -48,8 +48,16 @@ class EventFeedModel(private val app: AppProvider = RuntimeProvider): StateModel
     fun searchLocations(query: String) {
         ioLaunch {
             val locations = app.client.location.search(query) ?: return@ioLaunch
-            println(locations.map { it.name })
             setStateFromMain { it.copy(locations = locations) }
+        }
+    }
+
+    fun removeEvent(event: Event) {
+        ioLaunch {
+            val isSuccess = client.deleteEvent(event.eventId) ?: error("Error removing event")
+            if (isSuccess) {
+                setStateFromMain { it.copy(events = it.events - event)}
+            }
         }
     }
 }

@@ -6,11 +6,14 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import compose.icons.TablerIcons
 import compose.icons.tablericons.Plus
+import compose.icons.tablericons.Trash
 import pondui.ui.controls.Button
 import pondui.ui.controls.Cloud
 import pondui.ui.controls.Column
 import pondui.ui.controls.LazyColumn
 import pondui.ui.controls.LazyScaffold
+import pondui.ui.controls.MoreMenu
+import pondui.ui.controls.MoreMenuItem
 import pondui.ui.controls.Row
 import pondui.ui.controls.Scaffold
 import pondui.ui.controls.Text
@@ -46,7 +49,12 @@ fun EventFeedScreen(
             }
         }
         items(state.events) { event ->
-            Text(event.title)
+            Row(1) {
+                Text(event.title, modifier = Modifier.weight(1f))
+                MoreMenu {
+                    MoreMenuItem("Remove", TablerIcons.Trash) { viewModel.removeEvent(event) }
+                }
+            }
         }
     }
 }

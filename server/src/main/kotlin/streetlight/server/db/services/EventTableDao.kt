@@ -3,11 +3,13 @@ package streetlight.server.db.services
 import kabinet.model.UserId
 import kabinet.utils.toDayDescription
 import klutch.db.DbService
+import klutch.db.deleteSingle
 import klutch.db.read
 import klutch.db.updateSingleWhere
 import klutch.utils.eq
 import kotlinx.datetime.Clock
 import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.insert
 import streetlight.model.data.Event
 import streetlight.model.data.EventId
@@ -50,5 +52,9 @@ class EventTableDao: DbService() {
         EventTable.updateSingleWhere({ EventTable.userId.eq(userId) and EventTable.id.eq(event.eventId) }) {
             it.writeUpdate(event)
         } != null
+    }
+
+    suspend fun deleteEvent(userId: UserId, eventId: EventId): Boolean = dbQuery {
+        EventTable.deleteSingle { EventTable.userId.eq(userId) and EventTable.id.eq(eventId) }
     }
 }

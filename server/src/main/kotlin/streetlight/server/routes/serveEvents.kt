@@ -16,14 +16,19 @@ fun Routing.serveEvents(app: ServerProvider = RuntimeProvider) {
     }
 
     authenticateJwt {
-        post(Api.Events.Create) { newEvent, endpoint ->
+        post(Api.Events.Create) { newEvent, _ ->
             val userId = call.getUserId()
             dao.createEvent(userId, newEvent)
         }
 
-        update(Api.Events.Update) { update, endpoint ->
+        update(Api.Events.Update) { update, _ ->
             val userId = call.getUserId()
             dao.updateEvent(userId, update)
+        }
+
+        delete(Api.Events.Delete) { eventId, _ ->
+            val userId = call.getUserId()
+            dao.deleteEvent(userId, eventId)
         }
 
 //        webSocket(Api.Events.UserEvents.path) {
