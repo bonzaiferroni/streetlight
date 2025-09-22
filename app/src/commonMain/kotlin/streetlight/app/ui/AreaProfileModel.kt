@@ -2,22 +2,22 @@ package streetlight.app.ui
 
 import androidx.lifecycle.viewModelScope
 import kabinet.model.GeoPoint
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.persistentListOf
-import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.launch
 import pondui.ui.core.ModelState
 import pondui.ui.core.StateModel
+import streetlight.app.AppProvider
 import streetlight.app.AreaProfileRoute
-import streetlight.app.io.LocationStore
+import streetlight.app.RuntimeProvider
 import streetlight.model.data.Location
 import streetlight.model.data.NewLocation
 import streetlight.model.data.toProjectId
 
 class AreaProfileModel(
     private val route: AreaProfileRoute,
-    private val store: LocationStore = LocationStore()
+    private val app: AppProvider = RuntimeProvider
 ) : StateModel<AreaProfileState>() {
+
+    private val client = app.client.area
 
     override val state = ModelState(AreaProfileState())
 
@@ -50,7 +50,7 @@ class AreaProfileModel(
     fun createNewItem() {
         if (!stateNow.isValidNewItem) return
         viewModelScope.launch {
-            store.createLocation(NewLocation(
+            app.client.location.createLocation(NewLocation(
                 areaId = route.areaId.toProjectId(),
                 name = stateNow.newName.takeIf { it.isNotBlank() },
                 geoPoint = GeoPoint(stateNow.newLongitude.toDouble(), stateNow.newLatitude.toDouble())
@@ -62,7 +62,7 @@ class AreaProfileModel(
 
     fun refreshItems() {
         viewModelScope.launch {
-            val locations = store.readAreaLocations(route.areaId.toProjectId()) ?: return@launch
+            val locations = app.client.location.readAreaLocations(route.areaId.toProjectId()) ?: return@launch
             setState { it.copy(locations = locations) }
         }
     }

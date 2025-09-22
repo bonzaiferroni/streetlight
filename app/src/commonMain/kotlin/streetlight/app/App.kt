@@ -1,21 +1,11 @@
 package streetlight.app
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
-import androidx.navigation.NavController
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
-import kotlinx.coroutines.flow.StateFlow
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import pondui.io.ProvideUserContext
 import pondui.ui.core.PondApp
 import pondui.ui.nav.NavRoute
-import pondui.ui.theme.ProvideSkyColors
 import pondui.ui.theme.ProvideTheme
 import pondui.ui.theme.defaultTheme
 import pondui.ui.theme.useFamily
@@ -47,4 +37,9 @@ fun App(
             )
         }
     }
+}
+
+object RuntimeProvider: AppProvider {
+    override val client = AppClient()
+    override val dao = AppDao(client)
 }

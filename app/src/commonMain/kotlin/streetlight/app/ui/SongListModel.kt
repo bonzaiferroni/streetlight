@@ -1,21 +1,20 @@
 package streetlight.app.ui
 
 import androidx.lifecycle.viewModelScope
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.persistentListOf
-import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.launch
 import pondui.ui.core.ModelState
 import pondui.ui.core.StateModel
-import streetlight.app.SongListRoute
-import streetlight.app.io.SongStore
+import streetlight.app.AppProvider
+import streetlight.app.RuntimeProvider
+import streetlight.app.io.SongApiClient
 import streetlight.model.data.NewSong
 import streetlight.model.data.Song
 
 class SongListModel(
-    route: SongListRoute,
-    private val store: SongStore = SongStore()
+    private val app: AppProvider = RuntimeProvider
 ): StateModel<SongListState>() {
+
+    private val client = app.client.song
 
     override val state = ModelState(SongListState())
 
@@ -25,7 +24,7 @@ class SongListModel(
 
     fun refreshSongs() {
         viewModelScope.launch {
-            val songs = store.readSongs() ?: return@launch
+            val songs = client.readSongs() ?: return@launch
             setState { it.copy(songs = songs) }
         }
     }
@@ -33,7 +32,7 @@ class SongListModel(
     fun createItem() {
         if (!stateNow.isValidNewItem) return
         viewModelScope.launch {
-            store.createSong(NewSong(
+            client.createSong(NewSong(
                 name = stateNow.newName,
                 artist = stateNow.newArtist.takeIf { it.isNotEmpty() }
             ))

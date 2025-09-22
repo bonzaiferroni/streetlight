@@ -13,7 +13,7 @@ import streetlight.model.data.toProjectId
 import streetlight.server.db.tables.SongTable
 import streetlight.server.db.tables.toSong
 
-class SongApiService: DbService() {
+class SongTableDao: DbService() {
     suspend fun readSongs(userId: UserId) = dbQuery {
         SongTable.read { it.userId.eq(userId) }
             .map { it.toSong() }

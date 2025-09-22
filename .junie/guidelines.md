@@ -92,7 +92,7 @@ CreateViewWithModel(Foo):
 CreateEndpoint(Foo, functionName):
 * Create an endpoint in `streetlight.model.Api`. Try to determine based on Foo where it should go, look for where similar types are being served or create a new object under Api.
 * Based on the endpoint, add a function to *ApiClient, where * is the name of the endpoint. The name of the function is functionName.
-* Add the endpoint routing to `serve*`, where * is the name of the endpoint. Within the body of the endpoint, provide the data using a Dao available on the `tao` property of the routing function, using an existing function if it is possible. Create one if needed.
+* Add the endpoint routing to `serve*`, where * is the name of the endpoint. Within the body of the endpoint, provide the data using a function of a Dao or Service that is available. Create one if needed.
 * Check to see if the function is referenced in the file that is currently open for more information about the context in which it will be called.
 
 CreateEntity(Foo):

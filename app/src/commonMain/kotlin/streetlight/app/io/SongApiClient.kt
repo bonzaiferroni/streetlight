@@ -5,7 +5,7 @@ import pondui.io.globalNeoApiClient
 import streetlight.model.Api
 import streetlight.model.data.NewSong
 
-class SongStore(
+class SongApiClient(
     private val client: NeoApiClient = globalNeoApiClient
 ) {
     suspend fun readSongs() = client.request(Api.Songs)

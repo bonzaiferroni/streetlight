@@ -8,11 +8,14 @@ import streetlight.model.data.Location
 import streetlight.model.data.LocationId
 import streetlight.model.data.NewLocation
 
-class LocationStore(
+class LocationApiClient(
     private val client: NeoApiClient = globalNeoApiClient
 ) {
     suspend fun readLocation(locationId: LocationId) = client.getById(Api.Locations, locationId)
     suspend fun readAreaLocations(areaId: AreaId) = client.getById(Api.Locations.Area, areaId)
     suspend fun createLocation(newLocation: NewLocation) = client.request(Api.Locations.Create, newLocation)
     suspend fun updateLocation(location: Location) = client.request(Api.Locations.Update, location)
+    suspend fun search(query: String) = client.request(Api.Locations.Search) {
+        it.query.write(query)
+    }
 }

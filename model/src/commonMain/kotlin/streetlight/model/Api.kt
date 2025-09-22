@@ -1,10 +1,11 @@
 package streetlight.model
 
 import kabinet.api.ApiNode
-import kabinet.api.GetByIdEndpoint
+import kabinet.api.DeleteEndpoint
 import kabinet.api.GetByTableIdEndpoint
 import kabinet.api.GetEndpoint
 import kabinet.api.PostEndpoint
+import kabinet.api.UpdateEndpoint
 import streetlight.model.data.Area
 import streetlight.model.data.AreaId
 import streetlight.model.data.Event
@@ -21,7 +22,10 @@ import streetlight.model.data.SongId
 object Api: ApiNode(ApiNode(null, "api"), "v1") {
 
     object Events: GetEndpoint<List<Event>>(this, "events") {
-        object Create: PostEndpoint<NewEvent, EventId>(this, "create")
+        object Create: PostEndpoint<NewEvent, Event>(this, "create")
+        object Update: UpdateEndpoint<Event>(this, "update")
+        object Delete: DeleteEndpoint<EventId>(this, "delete")
+        // object UserEvents: ApiDaoEndpoint<Event, EventId, NewEvent>(this, "user")
     }
 
     object Areas: GetEndpoint<List<Area>>(this, "areas") {
@@ -32,6 +36,9 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object Create: PostEndpoint<NewLocation, LocationId>(this, "create")
         object Area: GetByTableIdEndpoint<AreaId, List<Location>>(this, "area")
         object Update: PostEndpoint<Location, Boolean>(this, "update")
+        object Search: GetEndpoint<List<Location>>(this, "search") {
+            val query = addStringParam("q")
+        }
     }
 
     object Songs: GetEndpoint<List<Song>>(this, "songs") {

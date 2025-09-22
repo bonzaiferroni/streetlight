@@ -5,28 +5,36 @@ import klutch.server.*
 import klutch.utils.getUserId
 import streetlight.model.Api
 import streetlight.model.data.toProjectId
-import streetlight.server.db.services.LocationApiService
+import streetlight.server.RuntimeProvider
+import streetlight.server.ServerProvider
 
-fun Routing.serveLocations(service: LocationApiService = LocationApiService()) {
-    get(Api.Locations.Area, { it.toProjectId() }) { id, endpoint ->
-        service.readLocations(id)
+fun Routing.serveLocations(app: ServerProvider = RuntimeProvider) {
+    val dao = app.dao.location
+    get(Api.Locations.Area, { it.toProjectId() }) { id, _ ->
+        dao.readLocations(id)
     }
 
-    get(Api.Locations, { it.toProjectId() }) { id, endpoint ->
-        service.readLocation(id)
+    get(Api.Locations, { it.toProjectId() }) { id, _ ->
+        dao.readLocation(id)
+    }
+
+    get(Api.Locations.Search) { endpoint ->
+        val query = readParam(endpoint.query)
+        dao.searchLocations(query)
     }
 
     authenticateJwt {
-        post(Api.Locations.Create) { newLocation, endpoint ->
-            service.createLocation(newLocation)
+        post(Api.Locations.Create) { newLocation, _ ->
+            val userId = call.getUserId()
+            dao.createLocation(userId, newLocation)
         }
 
-        post(Api.Locations.Update) { location, endpoint ->
+        post(Api.Locations.Update) { location, _ ->
             val userId = call.getUserId()
             if (userId != location.userId) {
                 throw UnauthorizedUserException()
             }
-            service.updateLocation(userId, location)
+            dao.updateLocation(userId, location)
         }
     }
 }

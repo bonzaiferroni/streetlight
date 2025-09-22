@@ -4,21 +4,20 @@ import io.ktor.server.routing.Routing
 import klutch.server.authenticateJwt
 import klutch.server.get
 import klutch.server.post
-import klutch.utils.getUserId
 import streetlight.model.Api
-import streetlight.server.db.services.AreaDtoService
-import streetlight.server.db.services.EventDtoService
+import streetlight.server.RuntimeProvider
+import streetlight.server.ServerProvider
 
-fun Routing.serveAreas(
-    service: AreaDtoService = AreaDtoService(),
-) {
+fun Routing.serveAreas(app: ServerProvider = RuntimeProvider) {
+    val dao = app.dao.area
+
     get(Api.Areas) {
-        service.readAreas()
+        dao.readAreas()
     }
 
     authenticateJwt {
         post(Api.Areas.Create) { newArea, endpoint ->
-            service.createArea(newArea)
+            dao.createArea(newArea)
         }
     }
 }

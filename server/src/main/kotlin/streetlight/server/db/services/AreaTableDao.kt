@@ -10,7 +10,7 @@ import streetlight.model.data.toProjectId
 import streetlight.server.db.tables.AreaTable
 import streetlight.server.db.tables.toArea
 
-class AreaDtoService: DbService() {
+class AreaTableDao: DbService() {
     suspend fun readAreas() = dbQuery {
         AreaTable.readAll().map { it.toArea() }
     }
