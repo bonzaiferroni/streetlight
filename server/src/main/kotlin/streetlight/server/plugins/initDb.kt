@@ -9,6 +9,7 @@ import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
+import streetlight.server.RuntimeProvider
 import streetlight.server.ServerProvider
 import streetlight.server.db.tables.AreaTable
 import streetlight.server.db.tables.EventTable
@@ -17,13 +18,18 @@ import streetlight.server.db.tables.RequestTable
 import streetlight.server.db.tables.SongTable
 
 fun initDb(
-    app: ServerProvider = ServerProvider
+    app: ServerProvider = RuntimeProvider
 ) {
     dbLog.logInfo("initializing db")
     val db = connectDb(app.env)
 
     transaction(db) {
-        SchemaUtils.create(*dbTables.toTypedArray())
+        val statements = MigrationUtils.statementsRequiredForDatabaseMigration(*dbTables.toTypedArray())
+        statements.forEach { statement ->
+            exec(statement)
+        }
+        // SchemaUtils.create(*dbTables.toTypedArray())
+        // addLogger(StdOutSqlLogger)
     }
 
     runBlocking {

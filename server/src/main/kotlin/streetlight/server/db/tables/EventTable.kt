@@ -26,7 +26,7 @@ internal object EventTable : UUIDTable("event") {
     val url = text("url").nullable()
     val imageUrl = text("image_url").nullable()
     val streamUrl = text("stream_url").nullable()
-    val name = text("name").nullable()
+    val name = text("name")
     val description = text("description").nullable()
     val status = enumeration<EventStatus>("status")
     val cashTips = float("cash_tips").nullable()
@@ -56,6 +56,7 @@ internal fun ResultRow.toEvent() = Event(
 
 internal fun UpdateBuilder<*>.writeFull(event: Event) {
     this[EventTable.id] = event.eventId.toUUID()
+    this[EventTable.userId] = event.userId.toUUID()
     this[EventTable.locationId] = event.locationId.toUUID()
     this[EventTable.currentRequest] = event.currentRequestId?.toUUID()
     this[EventTable.url] = event.url

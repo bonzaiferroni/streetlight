@@ -16,7 +16,7 @@ data class Event(
     val url: String?,
     val imageUrl: String?,
     val streamUrl: String?,
-    val title: String?,
+    val title: String,
     val description: String?,
     val status: EventStatus,
     val cashTips: Float?,
@@ -32,7 +32,9 @@ value class EventId(override val value: String): ProjectId {
     companion object { fun random() = EventId(randomUuidString()) }
 }
 
+@Serializable
 data class NewEvent(
     val locationId: LocationId,
+    val title: String,
     val startsAt: Instant,
 )

@@ -38,7 +38,7 @@ fun LocationProfileScreen(
                 item = modLocation,
                 property = remember { Location::name },
                 readOnly = readOnly,
-                modifyItem = { viewModel.modifyItem(modLocation.copy(name = it)) },
+                modifyItem = { viewModel.modifyItem(modLocation.copy(name = it ?: "")) },
                 modifier = Modifier.weight(1f)
             )
             ModText(

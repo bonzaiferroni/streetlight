@@ -26,10 +26,10 @@ val appConfig = PondConfig(
     routes = persistentListOf(
         RouteConfig(StartRoute::matchRoute) { defaultScreen<StartRoute> { StartScreen(it) } },
         RouteConfig(HelloRoute::matchRoute) { defaultScreen<HelloRoute> { HelloScreen(it) } },
-        RouteConfig(EventFeedRoute::matchRoute) { defaultScreen<EventFeedRoute> { EventFeedScreen(it) } },
-        RouteConfig(AreaListRoute::matchRoute) { defaultScreen<AreaListRoute> { AreaListScreen(it) } },
+        RouteConfig(EventFeedRoute::matchRoute) { defaultScreen<EventFeedRoute> { EventFeedScreen() } },
+        RouteConfig(AreaListRoute::matchRoute) { defaultScreen<AreaListRoute> { AreaListScreen() } },
         RouteConfig() { defaultScreen<AreaProfileRoute> { AreaProfileScreen(it) } },
-        RouteConfig(SongListRoute::matchRoute) { defaultScreen<SongListRoute> { SongListScreen(it) } },
+        RouteConfig(SongListRoute::matchRoute) { defaultScreen<SongListRoute> { SongListScreen() } },
         RouteConfig() { defaultScreen<LocationProfileRoute> { LocationProfileScreen(it) } },
     ),
     doors = persistentListOf(

@@ -19,8 +19,7 @@ import streetlight.app.AreaProfileRoute
 
 @Composable
 fun AreaListScreen(
-    route: AreaListRoute,
-    viewModel: AreaListModel = viewModel { AreaListModel(route) }
+    viewModel: AreaListModel = viewModel { AreaListModel() }
 ) {
     val state by viewModel.stateFlow.collectAsState()
     val nav = LocalNav.current

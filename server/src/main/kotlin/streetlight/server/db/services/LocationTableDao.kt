@@ -7,6 +7,7 @@ import klutch.utils.eq
 import klutch.utils.toStringId
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.insertAndGetId
+import org.jetbrains.exposed.sql.lowerCase
 import org.jetbrains.exposed.sql.or
 import org.jetbrains.exposed.sql.update
 import streetlight.model.data.AreaId
@@ -52,6 +53,7 @@ class LocationTableDao: DbService() {
     }
 
     suspend fun searchLocations(query: String) = dbQuery {
-        LocationTable.read { it.name.like("%$query%") or it.description.like("%$query%") }.map { it.toLocation() }
+        val query = query.lowercase()
+        LocationTable.read { it.name.lowerCase().like("%$query%") or it.description.lowerCase().like("%$query%") }.map { it.toLocation() }
     }
 }

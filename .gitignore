@@ -29,3 +29,5 @@ users.json
 **/kcef-bundle/
 
 /.kotlin/
+
+/app/appcache.json

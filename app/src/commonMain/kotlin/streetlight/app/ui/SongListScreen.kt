@@ -26,8 +26,7 @@ import streetlight.app.generated.resources.Res
 @OptIn(ExperimentalLayoutApi::class, ExperimentalResourceApi::class)
 @Composable
 fun SongListScreen(
-    route: SongListRoute,
-    viewModel: SongListModel = viewModel { SongListModel(route) }
+    viewModel: SongListModel = viewModel { SongListModel() }
 ) {
     val state by viewModel.stateFlow.collectAsState()
 

@@ -1,5 +1,6 @@
 package streetlight.app.io
 
+import kabinet.api.write
 import pondui.io.NeoApiClient
 import pondui.io.globalNeoApiClient
 import streetlight.model.Api
@@ -16,6 +17,6 @@ class LocationApiClient(
     suspend fun createLocation(newLocation: NewLocation) = client.request(Api.Locations.Create, newLocation)
     suspend fun updateLocation(location: Location) = client.request(Api.Locations.Update, location)
     suspend fun search(query: String) = client.request(Api.Locations.Search) {
-        it.query.write(query)
+        write(it.query, query)
     }
 }

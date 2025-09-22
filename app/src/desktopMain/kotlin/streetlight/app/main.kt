@@ -11,6 +11,7 @@ import pondui.CacheFile
 import pondui.WatchWindow
 import pondui.WindowSize
 import pondui.ui.controls.Text
+import pondui.ui.nav.NavRoute
 
 fun main() {
     application {
@@ -28,7 +29,7 @@ fun main() {
             undecorated = true,
         ) {
             App(
-                changeRoute = { cacheFlow.value = cache.copy(route = it as AppRoute) },
+                changeRoute = { cacheFlow.value = cache.copy(address = it.toPath()) },
                 exitApp = ::exitApplication
             )
         }
@@ -38,5 +39,5 @@ fun main() {
 @Serializable
 data class AppCache(
     val windowSize: WindowSize = WindowSize(600, 800),
-    val route: AppRoute = StartRoute
+    val address: String? = null
 )

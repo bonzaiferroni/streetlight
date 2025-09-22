@@ -49,10 +49,11 @@ class AreaProfileModel(
 
     fun createNewItem() {
         if (!stateNow.isValidNewItem) return
+        val name = stateNow.newName.takeIf { it.isNotBlank() } ?: return
         viewModelScope.launch {
             app.client.location.createLocation(NewLocation(
                 areaId = route.areaId.toProjectId(),
-                name = stateNow.newName.takeIf { it.isNotBlank() },
+                name = name,
                 geoPoint = GeoPoint(stateNow.newLongitude.toDouble(), stateNow.newLatitude.toDouble())
             ))
             setState { it.copy(newName = "", newLatitude = "", newLongitude = "") }

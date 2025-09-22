@@ -1,5 +1,7 @@
 package streetlight.app.ui
 
+import kabinet.utils.toLocalDateTimeUtc
+import kabinet.utils.toLongFormat
 import kotlinx.datetime.Clock
 import pondui.ui.core.ModelState
 import pondui.ui.core.StateModel
@@ -9,6 +11,7 @@ import streetlight.model.data.Event
 import streetlight.model.data.Location
 import streetlight.model.data.LocationId
 import streetlight.model.data.NewEvent
+import kotlin.time.Duration.Companion.days
 
 class EventFeedModel(private val app: AppProvider = RuntimeProvider): StateModel<EventFeedState>() {
 
@@ -27,9 +30,17 @@ class EventFeedModel(private val app: AppProvider = RuntimeProvider): StateModel
         setStateFromMain { it.copy(events = events) }
     }
 
-    fun create(locationId: LocationId) {
+    fun create(location: Location) {
         ioLaunch {
-            val event = client.createEvent(NewEvent(locationId, Clock.System.now())) ?: return@ioLaunch
+            val startsAt = Clock.System.now() + 1.days
+            val dayOfWeek = startsAt.toLocalDateTimeUtc().dayOfWeek.toLongFormat()
+            val event = client.createEvent(
+                NewEvent(
+                    location.locationId,
+                    "$dayOfWeek @ ${location.name}",
+                    startsAt
+                )
+            ) ?: return@ioLaunch
             setStateFromMain { it.copy(events = it.events + event)}
         }
     }
@@ -37,6 +48,7 @@ class EventFeedModel(private val app: AppProvider = RuntimeProvider): StateModel
     fun searchLocations(query: String) {
         ioLaunch {
             val locations = app.client.location.search(query) ?: return@ioLaunch
+            println(locations.map { it.name })
             setStateFromMain { it.copy(locations = locations) }
         }
     }
