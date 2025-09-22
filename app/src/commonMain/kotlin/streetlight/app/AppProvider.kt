@@ -23,12 +23,12 @@ class AppClient(
 
 class AppDao(
     client: AppClient,
-    val event: ApiDao<Event, EventId, NewEvent> = ApiDao(
-        kClass = Event::class,
-        provideId = { it.eventId },
-        apiReadAll = client.event::readEventFeed,
-        apiCreate = client.event::createEvent,
-        apiUpdate = client.event::updateEvent,
-        apiDelete = client.event::deleteEvent,
-    ),
+//    val event: ApiDao<Event, EventId, NewEvent> = ApiDao(
+//        kClass = Event::class,
+//        provideId = { it.eventId },
+//        apiReadAll = client.event::readEventFeed,
+//        apiCreate = client.event::createEvent,
+//        apiUpdate = client.event::updateEvent,
+//        apiDelete = client.event::deleteEvent,
+//    ),
 )
