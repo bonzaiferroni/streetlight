@@ -21,5 +21,6 @@ fun Application.configureApiRoutes() {
         serveAreas()
         serveLocations()
         serveSongs()
+        serveSongPlays()
     }
 }

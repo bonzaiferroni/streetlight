@@ -13,6 +13,10 @@ import streetlight.model.data.AreaId
 import streetlight.model.data.Location
 import streetlight.model.data.LocationId
 import streetlight.model.data.ResourceType
+import streetlight.server.utils.toProjectId
+import streetlight.server.utils.toProjectIdOrNull
+import streetlight.server.utils.toUserId
+import streetlight.server.utils.toUserIdOrNull
 
 object LocationTable : UUIDTable("location") {
     val userId = reference("user_id", UserTable, ReferenceOption.SET_NULL).nullable()
@@ -26,33 +30,33 @@ object LocationTable : UUIDTable("location") {
 }
 
 fun ResultRow.toLocation() = Location(
-    locationId = LocationId(this[table.id].value.toStringId()),
-    userId = this[table.userId]?.value?.let { UserId(it.toStringId()) },
-    areaId = this[table.areaId]?.value?.let { AreaId(it.toStringId()) },
-    name = this[table.name],
-    description = this[table.description],
-    address = this[table.address],
-    notes = this[table.notes],
-    geoPoint = this[table.geoPoint].toGeoPoint(),
-    resources = this[table.resources].map { ResourceType.entries[it] }.toSet()
+    locationId = toProjectId(LocationTable.id),
+    userId = toUserIdOrNull(LocationTable.userId),
+    areaId = toProjectIdOrNull(LocationTable.areaId),
+    name = this[LocationTable.name],
+    description = this[LocationTable.description],
+    address = this[LocationTable.address],
+    notes = this[LocationTable.notes],
+    geoPoint = this[LocationTable.geoPoint].toGeoPoint(),
+    resources = this[LocationTable.resources].map { ResourceType.entries[it] }.toSet()
 )
 
+// Updaters
 fun UpdateBuilder<*>.writeFull(location: Location) {
-    this[table.id] = location.locationId.toUUID()
-    this[table.userId] = location.userId?.toUUID()
-    this[table.areaId] = location.areaId?.toUUID()
+    this[LocationTable.id] = location.locationId.toUUID()
+    this[LocationTable.userId] = location.userId?.toUUID()
+    this[LocationTable.areaId] = location.areaId?.toUUID()
     writeUpdate(location)
 }
 
 fun UpdateBuilder<*>.writeUpdate(location: Location) {
-    this[table.name] = location.name
-    this[table.description] = location.description
-    this[table.address] = location.address
-    this[table.notes] = location.notes
-    this[table.geoPoint] = location.geoPoint.toPGpoint()
-    this[table.resources] = location.resources.map { it.ordinal }
+    this[LocationTable.name] = location.name
+    this[LocationTable.description] = location.description
+    this[LocationTable.address] = location.address
+    this[LocationTable.notes] = location.notes
+    this[LocationTable.geoPoint] = location.geoPoint.toPGpoint()
+    this[LocationTable.resources] = location.resources.map { it.ordinal }
 }
 
-private val table = LocationTable
-
+// Property helpers
 fun LocationTable.readName(locationId: LocationId) = readColumn(name) { id.eq(locationId) }.singleOrNull()

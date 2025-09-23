@@ -18,6 +18,9 @@ import streetlight.model.data.NewLocation
 import streetlight.model.data.NewSong
 import streetlight.model.data.Song
 import streetlight.model.data.SongId
+import streetlight.model.data.SongPlay
+import streetlight.model.data.SongPlayId
+import streetlight.model.data.NewSongPlay
 
 object Api: ApiNode(ApiNode(null, "api"), "v1") {
 
@@ -43,6 +46,16 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
 
     object Songs: GetEndpoint<List<Song>>(this, "songs") {
         object Create: PostEndpoint<NewSong, SongId>(this, "create")
+    }
+
+    object SongPlays: GetByTableIdEndpoint<SongPlayId, SongPlay>(this, "song_plays") {
+        object Song: GetByTableIdEndpoint<SongId, List<SongPlay>>(this, "song")
+        object Create: PostEndpoint<NewSongPlay, SongPlayId>(this, "create")
+        object Update: PostEndpoint<SongPlay, Boolean>(this, "update")
+        object Delete: DeleteEndpoint<SongPlayId>(this, "delete")
+        object ReadAllSince: GetEndpoint<List<SongPlay>>(this, "read_all_since") {
+            val since = addInstantParam("since")
+        }
     }
 }
 

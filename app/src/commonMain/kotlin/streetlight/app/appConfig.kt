@@ -16,7 +16,7 @@ import streetlight.app.ui.EventFeedScreen
 import streetlight.app.ui.HelloScreen
 import streetlight.app.ui.AreaProfileScreen
 import streetlight.app.ui.LocationProfileScreen
-import streetlight.app.ui.SongListScreen
+import streetlight.app.ui.SongFeedScreen
 import streetlight.app.ui.StartScreen
 
 val appConfig = PondConfig(
@@ -29,7 +29,7 @@ val appConfig = PondConfig(
         RouteConfig(EventFeedRoute::matchRoute) { defaultScreen<EventFeedRoute> { EventFeedScreen() } },
         RouteConfig(AreaListRoute::matchRoute) { defaultScreen<AreaListRoute> { AreaListScreen() } },
         RouteConfig() { defaultScreen<AreaProfileRoute> { AreaProfileScreen(it) } },
-        RouteConfig(SongListRoute::matchRoute) { defaultScreen<SongListRoute> { SongListScreen() } },
+        RouteConfig(SongListRoute::matchRoute) { defaultScreen<SongListRoute> { SongFeedScreen() } },
         RouteConfig() { defaultScreen<LocationProfileRoute> { LocationProfileScreen(it) } },
     ),
     doors = persistentListOf(

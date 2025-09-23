@@ -48,36 +48,48 @@ Maintaining documentation of the API will be an important part of your role. Wit
 
 The following functions define workflows and parameters. These may be invoked as prompts in the form of Workflow(argument). Perform the instructions in the body of the workflow given the provided arguments. Foo will be used as a placeholder for a type name. Unless otherwise directed, only create the content described in the function, do not worry about integration with the rest of the project. You may also modify this file (`guidelines.md`) with any information that may provide clarity for the next time you follow the steps outlined in the function.
 
+### Data Workflows
+
 CreateModel(Foo):
 * Create a new data class in the form of `data class Foo(val fooId: FooId)` in the package `streetlight.model.data`. It must be serializable.
 * Also create the value class `value class FooId(override val fooId: String): TableId<String>`.
 
 CreateTable(Foo):
 * Create a new table in the form of FooTable in the file FooTable.kt that will provide Foo objects.
-* You may use Example and ExampleTable as examples. Add `FooTable` to `dbTables` in `Dababases.kt`.
+* Create an extension function `fun ResultRow.toFoo() = Foo(...)` as a utility for mapping entities to Foo.
+* Create a pair of functions `fun UpdateBuilder<*>.writeFull(foo: Foo)` and `fun UpdateBuilder<*>.writeUpdate(foo: Foo)` as utilities for writing Foo to the table. writeFull will assign the fixed properties that and then call `writeUpdate` which will assign the remaining properties.  
+* You may use `Location` and `LocationTable` as examples. Add `FooTable` to `dbTables` in `Dababases.kt`.
 
 CreateTableDao(Foo):
 * Create a class FooTableDao in the package `streetlight.server.db.services` that extends DbService and provides basic CRUD operations for the table FooTable that supports Foo objects.
-* You may use ExampleTableDao as an example.
+* You may use `LocationTableDao` as an example.
 
 CreateTableService(Foo):
-* Create `class FooTableService(val dao: FooTableDao = FooTableDao()): DbService { }` in the package `streetlight.server.db.services` that extends DbService and takes a FooTableDao as an argument.
+* Create `class FooTableService(val app: AppProvider = RuntimeProvider): DbService { }` in the package `streetlight.server.db.services` that extends DbService and takes a FooTableDao as an argument.
 * Add a private global value before `FooTableService`: `private val console = globalConsole.getHandle(FooTableService::class)`
 * Do not add any functions to the body of the class unless specifically asked.
 
 CreateServeFunction(Foo):
-* Create the function `Routing.serveFoos(service: FooTableService = FooTableService()) { }` in the package `streetlight.server.routes` that provides endpoints, most typically found at `Api.Foo`.
-* You may use serveExamples() as an example.
+* Create the function `Routing.serveFoos(app: ServerProvider = RuntimeProvider) { }` in the package `streetlight.server.routes` that provides endpoints, most typically found at `Api.Foo`.
+* You may use `serveLocations()` as an example.
 * Add an invocation to serveFoos() in `RoutingApi.kt`.
 
 CreateApiClient(Foo):
 * Create the class `FooApiClient` that consumes an API endpoint, most typically found at Api.Foo.
-* You may use ExampleApiClient as an example.
+* You may use `LocationApiClient` as an example.
 * Create the content of this file only.
+
+CreateEndpoint(Foo, functionName):
+* Create an endpoint in `streetlight.model.Api`. Try to determine based on Foo where it should go, look for where similar types are being served or create a new object under Api.
+* Add functionName to FooApiClient that references the endpoint.
+* Add the endpoint routing to `serveFoo`. Within the body of the endpoint, provide the data using a function of a FooTableDao or FooTableService that is available. Create one if needed.
+* Check to see if the function is referenced in the file that is currently open for more information about the context in which it will be called.
+
+### Compose Workflows
 
 CreateScreen(Foo):
 * Create a set of types and functions to provide ui content in compose.
-* First, create in the file `FooModel.kt` and the package `streetlight.app.ui` the viewmodel class `class FooModel(private val api: ApiClients = appClients): StateModel<FooState>() { override val state = ModelState(FooState())` and the ui state class `data class FooState(val content: String)`.
+* First, create in the file `FooModel.kt` and the package `streetlight.app.ui` the viewmodel class `class FooModel(private val app: AppProvider = RuntimeProvider): StateModel<FooState>() { override val state = ModelState(FooState())` and the ui state class `data class FooState(val content: String)`.
 * Then create the composable function `fun FooScreen(viewModel: FooModel = viewModel { FooModel() } { val state by viewModel.stateFlow.collectAsState() }` in the file `FooScreen.kt`.
 * Add a route `object FooRoute: AppRoute("Foo")` to `appRoutes.kt`.
     * If the variation on Foo is `FooFeed` you should create an `object FooFeedRoute : AppRoute("FooFeed")`.
@@ -89,11 +101,7 @@ CreateViewWithModel(Foo):
 * I repeat, you should *not* make a screen, stick to what I have asked. Just create the basic structure of FooView, FooModel, and FooState as I have outlined in the CreateScreen workflow.
 * This function does not have an associated route and there is nothing you need to add to `appConfig.kt`
 
-CreateEndpoint(Foo, functionName):
-* Create an endpoint in `streetlight.model.Api`. Try to determine based on Foo where it should go, look for where similar types are being served or create a new object under Api.
-* Based on the endpoint, add a function to *ApiClient, where * is the name of the endpoint. The name of the function is functionName.
-* Add the endpoint routing to `serve*`, where * is the name of the endpoint. Within the body of the endpoint, provide the data using a function of a Dao or Service that is available. Create one if needed.
-* Check to see if the function is referenced in the file that is currently open for more information about the context in which it will be called.
+### Room Workflows
 
 CreateEntity(Foo):
 * Create a data class in `streetlight.app.db` called FooEntity to be used as a table definition for the room library.

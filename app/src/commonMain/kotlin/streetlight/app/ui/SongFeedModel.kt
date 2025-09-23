@@ -6,17 +6,16 @@ import pondui.ui.core.ModelState
 import pondui.ui.core.StateModel
 import streetlight.app.AppProvider
 import streetlight.app.RuntimeProvider
-import streetlight.app.io.SongApiClient
 import streetlight.model.data.NewSong
 import streetlight.model.data.Song
 
-class SongListModel(
+class SongFeedModel(
     private val app: AppProvider = RuntimeProvider
-): StateModel<SongListState>() {
+): StateModel<SongFeedState>() {
 
     private val client = app.client.song
 
-    override val state = ModelState(SongListState())
+    override val state = ModelState(SongFeedState())
 
     init {
         refreshSongs()
@@ -49,7 +48,7 @@ class SongListModel(
     }
 }
 
-data class SongListState(
+data class SongFeedState(
     val songs: List<Song> = emptyList(),
     val newName: String = "",
     val newArtist: String = "",

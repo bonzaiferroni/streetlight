@@ -16,6 +16,7 @@ import streetlight.server.db.tables.EventTable
 import streetlight.server.db.tables.LocationTable
 import streetlight.server.db.tables.RequestTable
 import streetlight.server.db.tables.SongTable
+import streetlight.server.db.tables.SongPlayTable
 
 fun initDb(
     app: ServerProvider = RuntimeProvider
@@ -43,6 +44,7 @@ val dbTables = listOf(
     AreaTable,
     EventTable,
     SongTable,
+    SongPlayTable,
     RequestTable,
     RefreshTokenTable,
 )

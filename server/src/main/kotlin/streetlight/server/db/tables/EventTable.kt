@@ -17,9 +17,12 @@ import streetlight.model.data.EventId
 import streetlight.model.data.EventStatus
 import streetlight.model.data.LocationId
 import streetlight.model.data.RequestId
+import streetlight.server.utils.toProjectId
+import streetlight.server.utils.toProjectIdOrNull
+import streetlight.server.utils.toUserId
 import kotlin.time.Duration.Companion.hours
 
-internal object EventTable : UUIDTable("event") {
+object EventTable : UUIDTable("event") {
     val userId = reference("user_id", UserTable, onDelete = ReferenceOption.CASCADE)
     val locationId = reference("location_id", LocationTable, onDelete = ReferenceOption.CASCADE)
     val currentRequest = reference("current_song_id", RequestTable, onDelete = ReferenceOption.SET_NULL).nullable()
@@ -36,11 +39,11 @@ internal object EventTable : UUIDTable("event") {
     val createdAt = datetime("created_at")
 }
 
-internal fun ResultRow.toEvent() = Event(
-    eventId = EventId(this[EventTable.id].value.toStringId()),
-    userId = UserId(this[EventTable.userId].value.toStringId()),
-    locationId = LocationId(this[EventTable.locationId].value.toStringId()),
-    currentRequestId = this[EventTable.currentRequest]?.value?.let { RequestId(it.toStringId()) },
+fun ResultRow.toEvent() = Event(
+    eventId = toProjectId(EventTable.id),
+    userId = toUserId(EventTable.userId),
+    locationId = toProjectId(EventTable.locationId),
+    currentRequestId = toProjectIdOrNull(EventTable.currentRequest),
     url = this[EventTable.url],
     imageUrl = this[EventTable.imageUrl],
     streamUrl = this[EventTable.streamUrl],
@@ -54,7 +57,7 @@ internal fun ResultRow.toEvent() = Event(
     createdAt = this[EventTable.createdAt].toInstantFromUtc()
 )
 
-internal fun UpdateBuilder<*>.writeFull(event: Event) {
+fun UpdateBuilder<*>.writeFull(event: Event) {
     this[EventTable.id] = event.eventId.toUUID()
     this[EventTable.userId] = event.userId.toUUID()
     this[EventTable.locationId] = event.locationId.toUUID()
@@ -64,7 +67,7 @@ internal fun UpdateBuilder<*>.writeFull(event: Event) {
     writeUpdate(event)
 }
 
-internal fun UpdateBuilder<*>.writeUpdate(event: Event) {
+fun UpdateBuilder<*>.writeUpdate(event: Event) {
     this[EventTable.imageUrl] = event.imageUrl
     this[EventTable.streamUrl] = event.streamUrl
     this[EventTable.name] = event.title
