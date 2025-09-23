@@ -25,12 +25,12 @@ fun Routing.serveLocations(app: ServerProvider = RuntimeProvider) {
 
     authenticateJwt {
         post(Api.Locations.Create) { newLocation, _ ->
-            val userId = call.getUserId()
+            val userId = getUserId()
             dao.createLocation(userId, newLocation)
         }
 
         post(Api.Locations.Update) { location, _ ->
-            val userId = call.getUserId()
+            val userId = getUserId()
             if (userId != location.userId) {
                 throw UnauthorizedUserException()
             }

@@ -9,12 +9,12 @@ import streetlight.server.db.services.SongTableDao
 fun Routing.serveSongs(service: SongTableDao = SongTableDao()) {
     authenticateJwt {
         get(Api.Songs) {
-            val userId = call.getUserId()
+            val userId = getUserId()
             service.readSongs(userId)
         }
 
         post(Api.Songs.Create) { newSong, endpoint ->
-            val userId = call.getUserId()
+            val userId = getUserId()
             service.createSong(userId, newSong)
         }
     }

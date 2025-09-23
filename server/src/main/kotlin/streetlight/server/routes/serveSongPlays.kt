@@ -22,13 +22,13 @@ fun Routing.serveSongPlays(app: ServerProvider = RuntimeProvider) {
 
     authenticateJwt {
         post(Api.SongPlays.Create) { newPlay, _ ->
-            val userId = call.getUserId()
+            val userId = getUserId()
             dao.createSongPlay(userId, newPlay)
         }
 
         get(Api.SongPlays.ReadAllSince) { endpoint ->
             val since: Instant = readParam(endpoint.since)
-            val userId = call.getUserId()
+            val userId = getUserId()
             dao.readAllSince(userId, since)
         }
 
