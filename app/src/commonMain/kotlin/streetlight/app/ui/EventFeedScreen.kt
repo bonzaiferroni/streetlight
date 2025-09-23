@@ -21,6 +21,8 @@ import pondui.ui.controls.TextField
 import pondui.ui.controls.actionable
 import pondui.ui.controls.rememberCloud
 import streetlight.app.EventFeedRoute
+import streetlight.app.EventProfileRoute
+import streetlight.app.utils.toRoute
 
 @Composable
 fun EventFeedScreen(
@@ -50,7 +52,7 @@ fun EventFeedScreen(
         }
         items(state.events) { event ->
             Row(1) {
-                Text(event.title, modifier = Modifier.weight(1f))
+                Text(event.title, modifier = Modifier.weight(1f).actionable(event.eventId.toRoute()))
                 MoreMenu {
                     MoreMenuItem("Remove", TablerIcons.Trash) { viewModel.removeEvent(event) }
                 }

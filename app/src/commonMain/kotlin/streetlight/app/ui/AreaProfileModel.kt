@@ -52,7 +52,7 @@ class AreaProfileModel(
         val name = stateNow.newName.takeIf { it.isNotBlank() } ?: return
         viewModelScope.launch {
             app.client.location.createLocation(NewLocation(
-                areaId = route.areaId.toProjectId(),
+                areaId = route.id.toProjectId(),
                 name = name,
                 geoPoint = GeoPoint(stateNow.newLongitude.toDouble(), stateNow.newLatitude.toDouble())
             ))
@@ -63,7 +63,7 @@ class AreaProfileModel(
 
     fun refreshItems() {
         viewModelScope.launch {
-            val locations = app.client.location.readAreaLocations(route.areaId.toProjectId()) ?: return@launch
+            val locations = app.client.location.readAreaLocations(route.id.toProjectId()) ?: return@launch
             setState { it.copy(locations = locations) }
         }
     }

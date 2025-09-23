@@ -18,6 +18,7 @@ import streetlight.app.ui.AreaProfileScreen
 import streetlight.app.ui.LocationProfileScreen
 import streetlight.app.ui.SongFeedScreen
 import streetlight.app.ui.StartScreen
+import streetlight.app.ui.EventProfileScreen
 
 val appConfig = PondConfig(
     name = "Streetlight",
@@ -28,9 +29,10 @@ val appConfig = PondConfig(
         RouteConfig(HelloRoute::matchRoute) { defaultScreen<HelloRoute> { HelloScreen(it) } },
         RouteConfig(EventFeedRoute::matchRoute) { defaultScreen<EventFeedRoute> { EventFeedScreen() } },
         RouteConfig(AreaListRoute::matchRoute) { defaultScreen<AreaListRoute> { AreaListScreen() } },
-        RouteConfig() { defaultScreen<AreaProfileRoute> { AreaProfileScreen(it) } },
+        RouteConfig(AreaProfileRoute::matchRoute) { defaultScreen<AreaProfileRoute> { AreaProfileScreen(it) } },
         RouteConfig(SongListRoute::matchRoute) { defaultScreen<SongListRoute> { SongFeedScreen() } },
-        RouteConfig() { defaultScreen<LocationProfileRoute> { LocationProfileScreen(it) } },
+        RouteConfig(LocationProfileRoute::matchRoute) { defaultScreen<LocationProfileRoute> { LocationProfileScreen(it) } },
+        RouteConfig(EventProfileRoute::matchRoute) { defaultScreen<EventProfileRoute> { EventProfileScreen(it) } },
     ),
     doors = persistentListOf(
         PortalDoor(TablerIcons.CalendarEvent, EventFeedRoute),

@@ -3,8 +3,7 @@ package streetlight.app
 import pondui.ui.nav.NavRoute
 import kotlinx.serialization.Serializable
 import pondui.ui.nav.IdRoute
-import streetlight.model.data.AreaId
-import streetlight.model.data.toProjectId
+import pondui.ui.nav.matchStringIdRoute
 
 @Serializable
 sealed class AppRoute(
@@ -31,13 +30,40 @@ object EventFeedRoute : AppRoute("Events")
 object AreaListRoute : AppRoute("Places")
 
 @Serializable
-data class AreaProfileRoute(val areaId: String) : IdRoute<String>("Area Profile", areaId)
-
-@Serializable
-data class LocationProfileRoute(val locationId: String) : IdRoute<String>("Location Profile", locationId)
-
-@Serializable
 object SongListRoute : AppRoute("Songs")
 
 @Serializable
-data class SongProfileRoute(val songId: String) : IdRoute<String>("Song", songId)
+data class AreaProfileRoute(override val id: String) : IdRoute<String> {
+    override val title get() = TITLE
+    companion object {
+        const val TITLE = "Area"
+        fun matchRoute(path: String) = matchStringIdRoute(path, TITLE) { AreaProfileRoute(it) }
+    }
+}
+
+@Serializable
+data class LocationProfileRoute(override val id: String) : IdRoute<String> {
+    override val title get() = TITLE
+    companion object {
+        const val TITLE = "Location"
+        fun matchRoute(path: String) = matchStringIdRoute(path, TITLE) { LocationProfileRoute(it) }
+    }
+}
+
+@Serializable
+data class SongProfileRoute(override val id: String) : IdRoute<String> {
+    override val title get() = TITLE
+    companion object {
+        const val TITLE = "Song"
+        fun matchRoute(path: String) = matchStringIdRoute(path, TITLE) { SongProfileRoute(it) }
+    }
+}
+
+@Serializable
+data class EventProfileRoute(override val id: String) : IdRoute<String> {
+    override val title get() = TITLE
+    companion object {
+        const val TITLE = "Event"
+        fun matchRoute(path: String) = matchStringIdRoute(path, TITLE) { EventProfileRoute(it) }
+    }
+}

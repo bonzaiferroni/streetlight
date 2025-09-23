@@ -7,7 +7,6 @@ import pondui.ui.core.StateModel
 import streetlight.app.AppProvider
 import streetlight.app.LocationProfileRoute
 import streetlight.app.RuntimeProvider
-import streetlight.app.io.LocationApiClient
 import streetlight.model.data.Location
 import streetlight.model.data.toProjectId
 
@@ -22,7 +21,7 @@ class LocationProfileModel(
 
     init {
         viewModelScope.launch {
-            val location = client.readLocation(route.locationId.toProjectId())
+            val location = client.readLocation(route.id.toProjectId())
             setState { it.copy(location = location, modLocation = location) }
         }
     }
