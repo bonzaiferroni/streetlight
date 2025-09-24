@@ -8,6 +8,6 @@ import streetlight.model.data.NewArea
 class AreaApiClient(
     private val client: NeoApiClient = globalNeoApiClient
 ) {
-    suspend fun readAll() = client.request(Api.Areas)
-    suspend fun createArea(newArea: NewArea) = client.request(Api.Areas.Create, newArea)
+    suspend fun readAll() = client.request(Api.AreaFeed)
+    suspend fun createArea(newArea: NewArea) = client.request(Api.AreaFeed.Create, newArea)
 }

@@ -78,7 +78,7 @@ fun <T> ModText(
             Text(value, modifier = modifier)
         }
     } else {
-        TextField(property.get(item) ?: "", onValueChange = { modifyItem(it.takeIf { it.isNotBlank() })
+        TextField(property.get(item) ?: "", onChange = { modifyItem(it.takeIf { it.isNotBlank() })
         }, placeholder = placeholder, modifier = modifier)
     }
 }

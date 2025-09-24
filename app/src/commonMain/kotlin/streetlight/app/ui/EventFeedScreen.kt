@@ -8,20 +8,16 @@ import compose.icons.TablerIcons
 import compose.icons.tablericons.Plus
 import compose.icons.tablericons.Trash
 import pondui.ui.controls.Button
-import pondui.ui.controls.Cloud
 import pondui.ui.controls.Column
 import pondui.ui.controls.LazyColumn
 import pondui.ui.controls.LazyScaffold
 import pondui.ui.controls.MoreMenu
 import pondui.ui.controls.MoreMenuItem
 import pondui.ui.controls.Row
-import pondui.ui.controls.Scaffold
 import pondui.ui.controls.Text
 import pondui.ui.controls.TextField
 import pondui.ui.controls.actionable
 import pondui.ui.controls.rememberCloud
-import streetlight.app.EventFeedRoute
-import streetlight.app.EventProfileRoute
 import streetlight.app.utils.toRoute
 
 @Composable
@@ -32,7 +28,7 @@ fun EventFeedScreen(
 
     val cloudToggle = rememberCloud(title = "Where?") { toggle ->
         Column(1) {
-            TextField(state.locationSearch, onValueChange = viewModel::searchLocations)
+            TextField(state.locationSearch, onChange = viewModel::searchLocations)
             LazyColumn(1) {
                 items(state.locations) { location ->
                     Text(location.name, modifier = Modifier.actionable {

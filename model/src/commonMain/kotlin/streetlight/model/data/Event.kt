@@ -1,5 +1,6 @@
 package streetlight.model.data
 
+import kabinet.model.LabeledEnum
 import kabinet.model.UserId
 import kabinet.utils.randomUuidString
 import kotlinx.serialization.Serializable
@@ -21,8 +22,8 @@ data class Event(
     val status: EventStatus,
     val cashTips: Float?,
     val cardTips: Float?,
-    val hours: Duration?,
     val startsAt: Instant,
+    val endsAt: Instant,
     val createdAt: Instant,
 )
 
@@ -38,3 +39,10 @@ data class NewEvent(
     val title: String,
     val startsAt: Instant,
 )
+
+enum class EventStatus(override val label: String): LabeledEnum<EventStatus> {
+    Pending("Pending"),
+    Started("Started"),
+    OnBreak("On Break"),
+    Finished("Finished"),
+}

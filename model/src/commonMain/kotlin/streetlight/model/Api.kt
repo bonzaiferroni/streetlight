@@ -24,18 +24,21 @@ import streetlight.model.data.NewSongPlay
 
 object Api: ApiNode(ApiNode(null, "api"), "v1") {
 
-    object Events: GetEndpoint<List<Event>>(this, "events") {
-        object Create: PostEndpoint<NewEvent, Event>(this, "create")
+    object EventProfile: GetByTableIdEndpoint<EventId, Event>(this, "event") {
         object Update: UpdateEndpoint<Event>(this, "update")
+    }
+
+    object EventFeed: GetEndpoint<List<Event>>(this, "events") {
+        object Create: PostEndpoint<NewEvent, Event>(this, "create")
         object Delete: DeleteEndpoint<EventId>(this, "delete")
         // object UserEvents: ApiDaoEndpoint<Event, EventId, NewEvent>(this, "user")
     }
 
-    object Areas: GetEndpoint<List<Area>>(this, "areas") {
+    object AreaFeed: GetEndpoint<List<Area>>(this, "areas") {
         object Create: PostEndpoint<NewArea, AreaId>(this, "create")
     }
 
-    object Locations: GetByTableIdEndpoint<LocationId, Location>(this, "locations") {
+    object LocationFeed: GetByTableIdEndpoint<LocationId, Location>(this, "locations") {
         object Create: PostEndpoint<NewLocation, LocationId>(this, "create")
         object Area: GetByTableIdEndpoint<AreaId, List<Location>>(this, "area")
         object Update: PostEndpoint<Location, Boolean>(this, "update")
@@ -44,11 +47,11 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         }
     }
 
-    object Songs: GetEndpoint<List<Song>>(this, "songs") {
+    object SongFeed: GetEndpoint<List<Song>>(this, "songs") {
         object Create: PostEndpoint<NewSong, SongId>(this, "create")
     }
 
-    object SongPlays: GetByTableIdEndpoint<SongPlayId, SongPlay>(this, "song_plays") {
+    object SongPlayFeed: GetByTableIdEndpoint<SongPlayId, SongPlay>(this, "song_plays") {
         object Song: GetByTableIdEndpoint<SongId, List<SongPlay>>(this, "song")
         object Create: PostEndpoint<NewSongPlay, SongPlayId>(this, "create")
         object Update: PostEndpoint<SongPlay, Boolean>(this, "update")

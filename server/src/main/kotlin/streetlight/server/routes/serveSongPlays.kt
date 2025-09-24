@@ -12,31 +12,31 @@ import streetlight.server.ServerProvider
 fun Routing.serveSongPlays(app: ServerProvider = RuntimeProvider) {
     val dao = app.dao.songPlay
 
-    get(Api.SongPlays, { it.toProjectId() }) { id, _ ->
+    get(Api.SongPlayFeed, { it.toProjectId() }) { id, _ ->
         dao.readSongPlay(id)
     }
 
-    get(Api.SongPlays.Song, { it.toProjectId() }) { songId, _ ->
+    get(Api.SongPlayFeed.Song, { it.toProjectId() }) { songId, _ ->
         dao.readSongPlays(songId)
     }
 
     authenticateJwt {
-        post(Api.SongPlays.Create) { newPlay, _ ->
+        post(Api.SongPlayFeed.Create) { newPlay, _ ->
             val userId = getUserId()
             dao.createSongPlay(userId, newPlay)
         }
 
-        get(Api.SongPlays.ReadAllSince) { endpoint ->
+        get(Api.SongPlayFeed.ReadAllSince) { endpoint ->
             val since: Instant = readParam(endpoint.since)
             val userId = getUserId()
             dao.readAllSince(userId, since)
         }
 
-        post(Api.SongPlays.Update) { play, _ ->
+        post(Api.SongPlayFeed.Update) { play, _ ->
             dao.updateSongPlay(play)
         }
 
-        delete(Api.SongPlays.Delete) { songPlayId, _ ->
+        delete(Api.SongPlayFeed.Delete) { songPlayId, _ ->
             dao.deleteSongPlay(songPlayId)
         }
     }

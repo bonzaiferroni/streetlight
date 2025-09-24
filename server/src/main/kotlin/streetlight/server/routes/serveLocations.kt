@@ -10,26 +10,26 @@ import streetlight.server.ServerProvider
 
 fun Routing.serveLocations(app: ServerProvider = RuntimeProvider) {
     val dao = app.dao.location
-    get(Api.Locations.Area, { it.toProjectId() }) { id, _ ->
+    get(Api.LocationFeed.Area, { it.toProjectId() }) { id, _ ->
         dao.readLocations(id)
     }
 
-    get(Api.Locations, { it.toProjectId() }) { id, _ ->
+    get(Api.LocationFeed, { it.toProjectId() }) { id, _ ->
         dao.readLocation(id)
     }
 
-    get(Api.Locations.Search) { endpoint ->
+    get(Api.LocationFeed.Search) { endpoint ->
         val query = readParam(endpoint.query)
         dao.searchLocations(query)
     }
 
     authenticateJwt {
-        post(Api.Locations.Create) { newLocation, _ ->
+        post(Api.LocationFeed.Create) { newLocation, _ ->
             val userId = getUserId()
             dao.createLocation(userId, newLocation)
         }
 
-        post(Api.Locations.Update) { location, _ ->
+        post(Api.LocationFeed.Update) { location, _ ->
             val userId = getUserId()
             if (userId != location.userId) {
                 throw UnauthorizedUserException()

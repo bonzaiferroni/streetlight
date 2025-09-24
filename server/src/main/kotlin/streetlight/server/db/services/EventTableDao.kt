@@ -21,11 +21,16 @@ import streetlight.server.db.tables.readName
 import streetlight.server.db.tables.toEvent
 import streetlight.server.db.tables.writeFull
 import streetlight.server.db.tables.writeUpdate
+import kotlin.time.Duration.Companion.hours
 
 class EventTableDao: DbService() {
     suspend fun readActiveEvents() = dbQuery {
         EventTable.read { it.status.neq(EventStatus.Finished) }
             .map { it.toEvent() }
+    }
+
+    suspend fun readEvent(eventId: EventId) = dbQuery {
+        EventTable.read { it.id.eq(eventId) }.firstOrNull()?.toEvent()
     }
 
     suspend fun createEvent(userId: UserId, event: NewEvent) = dbQuery {
@@ -42,8 +47,8 @@ class EventTableDao: DbService() {
             status = EventStatus.Pending,
             cashTips = null,
             cardTips = null,
-            hours = null,
             startsAt = event.startsAt,
+            endsAt = event.startsAt + 1.hours,
             createdAt = Clock.System.now(),
         ).also { event -> EventTable.insert { it.writeFull(event) } }
     }

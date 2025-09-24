@@ -15,7 +15,6 @@ import pondui.ui.controls.Scaffold
 import pondui.ui.controls.Text
 import pondui.ui.controls.TextField
 import pondui.ui.nav.LocalNav
-import pondui.ui.theme.Pond
 import streetlight.app.AreaProfileRoute
 import streetlight.app.LocationProfileRoute
 
@@ -28,17 +27,17 @@ fun AreaProfileScreen(
     val nav = LocalNav.current
 
     Scaffold {
-        TextField(state.newName, onValueChange = viewModel::setNewName, placeholder = "New Area Name")
+        TextField(state.newName, onChange = viewModel::setNewName, placeholder = "New Area Name")
         Row(1) {
             TextField(
                 state.newLongitude,
-                onValueChange = viewModel::setNewLongitude,
+                onChange = viewModel::setNewLongitude,
                 placeholder = "Longitude",
                 modifier = Modifier.weight(1f)
             )
             TextField(
                 state.newLatitude,
-                onValueChange = viewModel::setNewLatitude,
+                onChange = viewModel::setNewLatitude,
                 placeholder = "Latitude",
                 modifier = Modifier.weight(1f)
             )

@@ -32,13 +32,13 @@ fun SongFeedScreen(
             FlowRow(1) {
                 TextField(
                     state.newName,
-                    onValueChange = viewModel::setNewName,
+                    onChange = viewModel::setNewName,
                     placeholder = "Name",
                     modifier = Modifier.weight(1f)
                 )
                 TextField(
                     state.newArtist,
-                    onValueChange = viewModel::setNewArtist,
+                    onChange = viewModel::setNewArtist,
                     placeholder = "Artist",
                     modifier = Modifier.weight(1f)
                 )

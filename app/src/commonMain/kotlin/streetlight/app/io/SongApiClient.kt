@@ -8,6 +8,6 @@ import streetlight.model.data.NewSong
 class SongApiClient(
     private val client: NeoApiClient = globalNeoApiClient
 ) {
-    suspend fun readSongs() = client.request(Api.Songs)
-    suspend fun createSong(newSong: NewSong) = client.request(Api.Songs.Create, newSong)
+    suspend fun readSongs() = client.request(Api.SongFeed)
+    suspend fun createSong(newSong: NewSong) = client.request(Api.SongFeed.Create, newSong)
 }

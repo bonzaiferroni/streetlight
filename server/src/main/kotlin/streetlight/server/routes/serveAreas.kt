@@ -11,12 +11,12 @@ import streetlight.server.ServerProvider
 fun Routing.serveAreas(app: ServerProvider = RuntimeProvider) {
     val dao = app.dao.area
 
-    get(Api.Areas) {
+    get(Api.AreaFeed) {
         dao.readAreas()
     }
 
     authenticateJwt {
-        post(Api.Areas.Create) { newArea, endpoint ->
+        post(Api.AreaFeed.Create) { newArea, endpoint ->
             dao.createArea(newArea)
         }
     }

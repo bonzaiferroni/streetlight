@@ -10,8 +10,9 @@ import streetlight.model.data.NewEvent
 class EventApiClient(
     private val client: NeoApiClient = globalNeoApiClient
 ) {
-    suspend fun readEventFeed() = client.request(Api.Events)
-    suspend fun createEvent(event: NewEvent) = client.request(Api.Events.Create, event)
-    suspend fun updateEvent(event: Event) = client.request(Api.Events.Update, event)
-    suspend fun deleteEvent(eventId: EventId) = client.request(Api.Events.Delete, eventId)
+    suspend fun readEventFeed() = client.request(Api.EventFeed)
+    suspend fun readById(eventId: EventId) = client.getById(Api.EventProfile, eventId)
+    suspend fun createEvent(event: NewEvent) = client.request(Api.EventFeed.Create, event)
+    suspend fun updateEvent(event: Event) = client.request(Api.EventProfile.Update, event)
+    suspend fun deleteEvent(eventId: EventId) = client.request(Api.EventFeed.Delete, eventId)
 }

@@ -13,8 +13,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import pondui.ui.controls.*
 import pondui.ui.nav.LocalNav
-import pondui.ui.theme.Pond
-import streetlight.app.AreaListRoute
 import streetlight.app.AreaProfileRoute
 
 @Composable
@@ -29,7 +27,7 @@ fun AreaListScreen(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier.fillMaxWidth()
         ) {
-            TextField(state.newAreaName, onValueChange = viewModel::setNewAreaName)
+            TextField(state.newAreaName, onChange = viewModel::setNewAreaName)
             Button("Create", isEnabled = state.isValidNewItem, onClick = viewModel::createNewArea)
         }
         LazyColumn(1) {
