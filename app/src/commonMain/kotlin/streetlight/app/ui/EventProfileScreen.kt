@@ -6,13 +6,16 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
+import kabinet.utils.toTimeDescription
 import pondui.ui.controls.Column
 import pondui.ui.controls.DropMenu
 import pondui.ui.controls.FlowRow
 import pondui.ui.controls.H1
 import pondui.ui.controls.InProgressIndicator
 import pondui.ui.controls.Row
-import pondui.ui.controls.Scaffold
+import pondui.ui.controls.Tab
+import pondui.ui.controls.TabScaffold
+import pondui.ui.controls.Text
 import pondui.ui.controls.TextField
 import pondui.ui.controls.TimeWheel
 import streetlight.app.EventProfileRoute
@@ -27,36 +30,43 @@ fun EventProfileScreen(
 
     val event = state.event ?: return
 
-    Scaffold {
-        Column(2) {
-            Row(1) {
-                H1(event.title, modifier = Modifier.weight(1f))
-                InProgressIndicator(state.updateStatus)
-            }
-            FlowRow(1, maxItemsInEachRow = 2) {
+    TabScaffold(
+        drawerContent = { H1(event.title)}
+    ) {
+        Tab("Edit") {
+            Column(2) {
+                Row(1) {
+                    Text("Updated at ${event.createdAt.toTimeDescription()}")
+                    InProgressIndicator(state.updateStatus)
+                }
+                FlowRow(1, maxItemsInEachRow = 2) {
+                    TextField(
+                        event.title,
+                        label = "title",
+                        placeholder = "title",
+                        onChange = viewModel::setTitle,
+                        modifier = Modifier.weight(1f)
+                    )
+                    DropMenu(
+                        event.status,
+                        label = "status",
+                        onChange = viewModel::setStatus,
+                        modifier = Modifier.weight(1f)
+                    )
+                }
                 TextField(
-                    event.title,
-                    label = "title",
-                    placeholder = "title",
-                    onChange = viewModel::setTitle,
-                    modifier = Modifier.weight(1f)
+                    event.description ?: "",
+                    label = "description",
+                    placeholder = "description",
+                    onChange = viewModel::setDescription,
+                    modifier = Modifier.fillMaxWidth()
                 )
-                DropMenu(
-                    event.status,
-                    label = "status",
-                    onChange = viewModel::setStatus,
-                    modifier = Modifier.weight(1f)
-                )
+                TimeWheel(event.startsAt, onChangeInstant = viewModel::setStartsAt)
+                TimeWheel(event.endsAt, onChangeInstant = viewModel::setEndsAt)
             }
-            TextField(
-                event.description ?: "",
-                label = "description",
-                placeholder = "description",
-                onChange = viewModel::setDescription,
-                modifier = Modifier.fillMaxWidth()
-            )
-            TimeWheel(event.startsAt, onChangeInstant = viewModel::setStartsAt)
-            TimeWheel(event.endsAt, onChangeInstant = viewModel::setEndsAt)
+        }
+        Tab("Live") {
+
         }
     }
 }
