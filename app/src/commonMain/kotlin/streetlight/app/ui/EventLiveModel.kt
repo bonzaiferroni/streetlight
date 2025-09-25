@@ -3,41 +3,43 @@ package streetlight.app.ui
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
 import pondui.ui.controls.UpdateStatus
 import pondui.ui.core.ModelState
 import pondui.ui.core.StateModel
 import streetlight.app.AppProvider
 import streetlight.app.RuntimeProvider
 import streetlight.model.data.Event
-import streetlight.model.data.EventId
 import streetlight.model.data.EventStatus
+import streetlight.model.data.Song
+import streetlight.model.data.SongPlay
 import kotlin.time.Duration
+import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.seconds
 
-class EventProfileModel(
-    eventId: EventId,
+class EventLiveModel(
+    event: Event,
     private val app: AppProvider = RuntimeProvider
-) : StateModel<EventProfileState>() {
-    override val state = ModelState(EventProfileState())
-
-    private val client = app.client.event
+) : StateModel<EventLiveState>() {
+    override val state = ModelState(EventLiveState(event))
     private var updateJob: Job? = null
+    private val client = app.client.event
 
     init {
         ioLaunch {
-            val event = client.readById(eventId)
-            setStateFromMain { it.copy(event = event) }
         }
     }
 
-    fun setTitle(value: String) = updateEvent { it.copy(title = value) }
-    fun setDescription(value: String) = updateEvent { it.copy(description = value) }
-    fun setStartsAt(value: Instant) = updateEvent { it.copy(startsAt = value) }
-    fun setEndsAt(value: Instant) = updateEvent { it.copy(endsAt = value) }
+    fun setStatus(value: EventStatus) = updateEvent(0.seconds) { it.copy(status = value) }
+
+    fun takeNextSong() {
+        ioLaunch {
+            val song = app.client.song.takeNextSong(Clock.System.now() - 30.days)
+            setStateFromMain { it.copy(song = song) }
+        }
+    }
 
     private fun updateEvent(delay: Duration = 1.seconds, toUpdate: (Event) -> Event) {
-        val original = stateNow.event ?: return
+        val original = stateNow.event
         var update = toUpdate(original)
         if (original == update) return
         setState { it.copy(event = update)}
@@ -57,7 +59,8 @@ class EventProfileModel(
     }
 }
 
-data class EventProfileState(
-    val event: Event? = null,
+data class EventLiveState(
+    val event: Event,
+    val song: Song? = null,
     val updateStatus: UpdateStatus = UpdateStatus.None,
 )

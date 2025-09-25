@@ -52,7 +52,7 @@ fun SongFeedScreen(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text(it.name)
+                    Text(it.title)
                     Button("👉", onClick = { })
                 }
             }

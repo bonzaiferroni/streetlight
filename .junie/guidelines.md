@@ -77,10 +77,10 @@ CreateServeFunction(Foo):
 CreateApiClient(Foo):
 * Create the class `FooApiClient` that consumes an API endpoint, most typically found at Api.Foo.
 * You may use `LocationApiClient` as an example.
-* Create the content of this file only.
+* Add the client to `AppClient` in `AppProvider.kt`
 
 CreateEndpoint(Foo, functionName):
-* Create an endpoint in `streetlight.model.Api`. Try to determine based on Foo where it should go, look for where similar types are being served or create a new object under Api.
+* Create an endpoint in `Api.kt`. Try to determine based on Foo where it should go, look for where similar types are being served or create a new object under Api.
 * Add functionName to FooApiClient that references the endpoint.
 * Add the endpoint routing to `serveFoo`. Within the body of the endpoint, provide the data using a function of a FooTableDao or FooTableService that is available. Create one if needed.
 * Check to see if the function is referenced in the file that is currently open for more information about the context in which it will be called.
@@ -96,7 +96,7 @@ CreateScreen(Foo):
     * If the variation on Foo is `FooProfile` you should create a `data class FooProfileRoute(val fooId: String) : IdRoute<String>("Foo", fooId)`. You should also pass the route as an argument to `FooProfileScreen`.
 * Add a call to `RouteConfig(FooRoute::MatchRoute) { defaultScreen<FooRoute> { FooScreen() } }` within the list definition assigned to routes in `appConfig.kt`.
 
-CreateViewWithModel(Foo):
+CreateView(Foo):
 * You are doing something like CreateScreen(Foo) but instead of `FooScreen()` you'll make `FooView()` and the associated `FooModel` and `FooState`.
 * I repeat, you should *not* make a screen, stick to what I have asked. Just create the basic structure of FooView, FooModel, and FooState as I have outlined in the CreateScreen workflow.
 * This function does not have an associated route and there is nothing you need to add to `appConfig.kt`

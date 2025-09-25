@@ -1,6 +1,5 @@
 package streetlight.model.data
 
-import kabinet.db.TableId
 import kabinet.model.UserId
 import kabinet.utils.randomUuidString
 import kotlinx.serialization.Serializable
@@ -10,7 +9,7 @@ import kotlin.jvm.JvmInline
 data class Song(
     val songId: SongId,
     val userId: UserId,
-    val name: String,
+    val title: String,
     val artist: String?,
     val music: String?,
 )

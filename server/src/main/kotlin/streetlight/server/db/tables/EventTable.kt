@@ -36,6 +36,7 @@ object EventTable : UUIDTable("event") {
     val cardTips = float("card_tips").nullable()
     val startsAt = datetime("starts_at")
     val endsAt = datetime("ends_at")
+    val updatedAt = datetime("updated_at")
     val createdAt = datetime("created_at")
 }
 
@@ -54,6 +55,7 @@ fun ResultRow.toEvent() = Event(
     cardTips = this[EventTable.cardTips],
     startsAt = this[EventTable.startsAt].toInstantFromUtc(),
     endsAt = this[EventTable.endsAt].toInstantFromUtc(),
+    updatedAt = this[EventTable.updatedAt].toInstantFromUtc(),
     createdAt = this[EventTable.createdAt].toInstantFromUtc()
 )
 
@@ -77,4 +79,5 @@ fun UpdateBuilder<*>.writeUpdate(event: Event) {
     this[EventTable.cardTips] = event.cardTips
     this[EventTable.startsAt] = event.startsAt.toLocalDateTimeUtc()
     this[EventTable.endsAt] = event.endsAt.toLocalDateTimeUtc()
+    this[EventTable.updatedAt] = event.updatedAt.toLocalDateTimeUtc()
 }

@@ -49,10 +49,13 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
 
     object SongFeed: GetEndpoint<List<Song>>(this, "songs") {
         object Create: PostEndpoint<NewSong, SongId>(this, "create")
+        object TakeNextSong: GetEndpoint<Song>(this, "take_next_song") {
+            val since = addInstantParam("since")
+        }
     }
 
     object SongPlayFeed: GetByTableIdEndpoint<SongPlayId, SongPlay>(this, "song_plays") {
-        object Song: GetByTableIdEndpoint<SongId, List<SongPlay>>(this, "song")
+        object BySong: GetByTableIdEndpoint<SongId, List<SongPlay>>(this, "by_song")
         object Create: PostEndpoint<NewSongPlay, SongPlayId>(this, "create")
         object Update: PostEndpoint<SongPlay, Boolean>(this, "update")
         object Delete: DeleteEndpoint<SongPlayId>(this, "delete")

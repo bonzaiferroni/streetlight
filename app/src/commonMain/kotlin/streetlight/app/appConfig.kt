@@ -1,7 +1,9 @@
 package streetlight.app
 
 import compose.icons.TablerIcons
+import compose.icons.tablericons.BuildingLighthouse
 import compose.icons.tablericons.CalendarEvent
+import compose.icons.tablericons.Flame
 import compose.icons.tablericons.Location
 import compose.icons.tablericons.Music
 import compose.icons.tablericons.TrafficLights
@@ -22,7 +24,7 @@ import streetlight.app.ui.EventProfileScreen
 
 val appConfig = PondConfig(
     name = "Streetlight",
-    logo = TablerIcons.TrafficLights,
+    logo = TablerIcons.Flame,
     home = EventFeedRoute,
     routes = persistentListOf(
         RouteConfig(StartRoute::matchRoute) { defaultScreen<StartRoute> { StartScreen(it) } },

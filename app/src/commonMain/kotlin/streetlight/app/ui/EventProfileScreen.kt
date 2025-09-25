@@ -14,6 +14,7 @@ import pondui.ui.controls.DropMenu
 import pondui.ui.controls.FlowRow
 import pondui.ui.controls.H1
 import pondui.ui.controls.InProgressIndicator
+import pondui.ui.controls.Label
 import pondui.ui.controls.Row
 import pondui.ui.controls.Tab
 import pondui.ui.controls.TabScaffold
@@ -45,7 +46,7 @@ fun EventProfileScreen(
         Tab("Edit") {
             Column(2) {
                 Row(1) {
-                    Text("Updated at ${event.createdAt.toTimeDescription()}")
+                    Label("Updated at ${event.updatedAt.toTimeDescription()}")
                     InProgressIndicator(state.updateStatus)
                 }
                 FlowRow(1, maxItemsInEachRow = 2) {
@@ -54,12 +55,6 @@ fun EventProfileScreen(
                         label = "title",
                         placeholder = "title",
                         onChange = viewModel::setTitle,
-                        modifier = Modifier.weight(1f)
-                    )
-                    DropMenu(
-                        event.status,
-                        label = "status",
-                        onChange = viewModel::setStatus,
                         modifier = Modifier.weight(1f)
                     )
                 }
@@ -75,7 +70,7 @@ fun EventProfileScreen(
             }
         }
         Tab("Live") {
-
+            EventLiveView(event)
         }
     }
 }

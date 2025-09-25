@@ -34,6 +34,7 @@ class EventTableDao: DbService() {
     }
 
     suspend fun createEvent(userId: UserId, event: NewEvent) = dbQuery {
+        val now = Clock.System.now()
         Event(
             eventId = EventId.random(),
             userId = userId,
@@ -49,7 +50,8 @@ class EventTableDao: DbService() {
             cardTips = null,
             startsAt = event.startsAt,
             endsAt = event.startsAt + 1.hours,
-            createdAt = Clock.System.now(),
+            updatedAt = now,
+            createdAt = now,
         ).also { event -> EventTable.insert { it.writeFull(event) } }
     }
 

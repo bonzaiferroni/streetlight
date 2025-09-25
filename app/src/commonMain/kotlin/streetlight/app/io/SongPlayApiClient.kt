@@ -14,7 +14,7 @@ class SongPlayApiClient(
     private val client: NeoApiClient = globalNeoApiClient
 ) {
     suspend fun readById(songPlayId: SongPlayId) = client.getById(Api.SongPlayFeed, songPlayId)
-    suspend fun readBySongId(songId: SongId) = client.getById(Api.SongPlayFeed.Song, songId)
+    suspend fun readBySongId(songId: SongId) = client.getById(Api.SongPlayFeed.BySong, songId)
     suspend fun readAllSince(since: Instant) = client.request(Api.SongPlayFeed.ReadAllSince) {
         write(it.since, since)
     }

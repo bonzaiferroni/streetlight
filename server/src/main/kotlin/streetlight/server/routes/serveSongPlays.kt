@@ -16,7 +16,7 @@ fun Routing.serveSongPlays(app: ServerProvider = RuntimeProvider) {
         dao.readSongPlay(id)
     }
 
-    get(Api.SongPlayFeed.Song, { it.toProjectId() }) { songId, _ ->
+    get(Api.SongPlayFeed.BySong, { it.toProjectId() }) { songId, _ ->
         dao.readSongPlays(songId)
     }
 

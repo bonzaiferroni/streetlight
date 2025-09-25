@@ -24,4 +24,5 @@ fun Application.module() {
 object RuntimeProvider: ServerProvider {
     override val env = readEnvFromPath()
     override val dao = ServerDao()
+    override val service = ServerService()
 }

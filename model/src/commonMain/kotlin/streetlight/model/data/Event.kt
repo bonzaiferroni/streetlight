@@ -1,5 +1,6 @@
 package streetlight.model.data
 
+import androidx.compose.runtime.Stable
 import kabinet.model.LabeledEnum
 import kabinet.model.UserId
 import kabinet.utils.randomUuidString
@@ -8,6 +9,7 @@ import kotlinx.datetime.Instant
 import kotlin.jvm.JvmInline
 import kotlin.time.Duration
 
+@Stable
 @Serializable
 data class Event(
     val eventId: EventId,
@@ -24,6 +26,7 @@ data class Event(
     val cardTips: Float?,
     val startsAt: Instant,
     val endsAt: Instant,
+    val updatedAt: Instant,
     val createdAt: Instant,
 )
 

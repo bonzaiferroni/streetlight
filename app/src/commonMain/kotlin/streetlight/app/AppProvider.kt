@@ -5,6 +5,7 @@ import streetlight.app.io.AreaApiClient
 import streetlight.app.io.EventApiClient
 import streetlight.app.io.LocationApiClient
 import streetlight.app.io.SongApiClient
+import streetlight.app.io.SongPlayApiClient
 import streetlight.model.data.Event
 import streetlight.model.data.EventId
 import streetlight.model.data.NewEvent
@@ -19,6 +20,7 @@ class AppClient(
     val event: EventApiClient = EventApiClient(),
     val location: LocationApiClient = LocationApiClient(),
     val song: SongApiClient = SongApiClient(),
+    val songPlay: SongPlayApiClient = SongPlayApiClient(),
 )
 
 class AppDao(
