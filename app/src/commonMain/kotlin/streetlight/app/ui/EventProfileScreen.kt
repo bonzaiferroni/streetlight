@@ -27,8 +27,9 @@ import streetlight.model.data.toProjectId
 @Composable
 fun EventProfileScreen(
     route: EventProfileRoute,
-    viewModel: EventProfileModel = viewModel { EventProfileModel(route.id.toProjectId()) }
+    viewModel: EventProfileModel = viewModel { EventProfileModel() }
 ) {
+    viewModel.init(route.id.toProjectId())
     val state by viewModel.stateFlow.collectAsState()
 
     val event = state.event ?: return
@@ -70,7 +71,7 @@ fun EventProfileScreen(
             }
         }
         Tab("Live") {
-            EventLiveView(event)
+            EventLiveView(viewModel)
         }
     }
 }

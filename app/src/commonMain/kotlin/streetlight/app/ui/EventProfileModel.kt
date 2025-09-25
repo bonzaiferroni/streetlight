@@ -1,5 +1,6 @@
 package streetlight.app.ui
 
+import androidx.compose.runtime.Stable
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.datetime.Clock
@@ -15,8 +16,8 @@ import streetlight.model.data.EventStatus
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
+@Stable
 class EventProfileModel(
-    eventId: EventId,
     private val app: AppProvider = RuntimeProvider
 ) : StateModel<EventProfileState>() {
     override val state = ModelState(EventProfileState())
@@ -24,7 +25,8 @@ class EventProfileModel(
     private val client = app.client.event
     private var updateJob: Job? = null
 
-    init {
+    fun init(eventId: EventId) {
+        if (eventId == stateNow.event?.eventId) return
         ioLaunch {
             val event = client.readById(eventId)
             setStateFromMain { it.copy(event = event) }
@@ -36,7 +38,7 @@ class EventProfileModel(
     fun setStartsAt(value: Instant) = updateEvent { it.copy(startsAt = value) }
     fun setEndsAt(value: Instant) = updateEvent { it.copy(endsAt = value) }
 
-    private fun updateEvent(delay: Duration = 1.seconds, toUpdate: (Event) -> Event) {
+    fun updateEvent(delay: Duration = 1.seconds, toUpdate: (Event) -> Event) {
         val original = stateNow.event ?: return
         var update = toUpdate(original)
         if (original == update) return

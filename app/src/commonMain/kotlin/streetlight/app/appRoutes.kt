@@ -14,7 +14,7 @@ sealed class AppRoute(
 
     override fun toPath() = id?.let { "$titlePath/$it" } ?: titlePath
 
-    fun matchRoute(path: String) = if (path.startsWith(titlePath)) this else null
+    fun matchRoute(path: String) = if (path.split("/")[0] == titlePath) this else null
 }
 
 @Serializable

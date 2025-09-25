@@ -95,6 +95,11 @@ CreateScreen(Foo):
     * If the variation on Foo is `FooFeed` you should create an `object FooFeedRoute : AppRoute("FooFeed")`.
     * If the variation on Foo is `FooProfile` you should create a `data class FooProfileRoute(val fooId: String) : IdRoute<String>("Foo", fooId)`. You should also pass the route as an argument to `FooProfileScreen`.
 * Add a call to `RouteConfig(FooRoute::MatchRoute) { defaultScreen<FooRoute> { FooScreen() } }` within the list definition assigned to routes in `appConfig.kt`.
+* Add these imports:
+    * `androidx.compose.runtime.*`
+    * `androidx.compose.ui.*`
+    * `pondui.ui.controls.*`
+    * `streetlight.model.data.*`
 
 CreateView(Foo):
 * You are doing something like CreateScreen(Foo) but instead of `FooScreen()` you'll make `FooView()` and the associated `FooModel` and `FooState`.

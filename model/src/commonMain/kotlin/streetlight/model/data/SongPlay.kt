@@ -1,5 +1,6 @@
 package streetlight.model.data
 
+import kabinet.model.LabeledEnum
 import kabinet.model.UserId
 import kabinet.utils.randomUuidString
 import kotlinx.datetime.Instant
@@ -29,9 +30,10 @@ data class NewSongPlay(
     val rating: SelfRating?,
 )
 
-enum class SelfRating {
-    FirstSteps,
-    NeedsWork,
-    FeelsGood,
-    Banger,
+enum class SelfRating(override val label: String): LabeledEnum<SelfRating> {
+    FirstSteps("First Steps"),
+    NeedsWork("Needs Work"),
+    ComingAlong("Coming Along"),
+    FeelsGood("Feels Good"),
+    Banger("Banger"),
 }

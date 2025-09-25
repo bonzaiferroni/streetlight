@@ -1,32 +1,32 @@
 package streetlight.app.ui
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.foundation.background
+import androidx.compose.runtime.*
+import androidx.compose.ui.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.viewmodel.compose.viewModel
 import compose.icons.TablerIcons
 import compose.icons.tablericons.PlayerTrackNext
+import compose.icons.tablericons.Star
 import kabinet.utils.toTimeDescription
-import pondui.ui.controls.Button
-import pondui.ui.controls.Column
-import pondui.ui.controls.DropMenu
-import pondui.ui.controls.InProgressIndicator
-import pondui.ui.controls.Row
-import pondui.ui.controls.Text
-import streetlight.model.data.Event
+import pondui.ui.controls.*
+import streetlight.model.data.*
 
 @Composable
 fun EventLiveView(
-    event: Event,
-    viewModel: EventLiveModel = viewModel(key = event.eventId.value) { EventLiveModel(event) }
+    core: EventProfileModel,
+    viewModel: EventLiveModel = viewModel { EventLiveModel(core) }
 ) {
+    val coreState by core.stateFlow.collectAsState()
     val state by viewModel.stateFlow.collectAsState()
+
+    val event = coreState.event ?: return
 
     Column(1) {
         Row(1) {
             Text("Updated at ${event.createdAt.toTimeDescription()}")
-            InProgressIndicator(state.updateStatus)
+            InProgressIndicator(coreState.updateStatus)
         }
         DropMenu(
             event.status,
@@ -36,6 +36,18 @@ fun EventLiveView(
         Button(TablerIcons.PlayerTrackNext, onClick = viewModel::takeNextSong)
         state.song?.let { song ->
             Text(song.title)
+        }
+        Row(1, verticalAlignment = Alignment.Top) {
+            SelfRating.entries.forEach { rating ->
+                Column(
+                    gap = 1,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Icon(TablerIcons.Star)
+                    Text(rating.label, modifier = Modifier.background(Color.Blue))
+                }
+            }
         }
     }
 }
