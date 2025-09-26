@@ -15,7 +15,7 @@ class LocationProfileModel(
     private val app: AppProvider = RuntimeProvider
 ): StateModel<LocationProfileState>() {
 
-    private val client = app.client.location
+    private val client = app.repo.location
 
     override val state = ModelState(LocationProfileState())
 

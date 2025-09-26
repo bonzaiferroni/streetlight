@@ -2,6 +2,7 @@ package streetlight.model.data
 
 import kabinet.model.UserId
 import kabinet.utils.randomUuidString
+import kotlinx.datetime.Instant
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 
@@ -11,7 +12,10 @@ data class Song(
     val userId: UserId,
     val title: String,
     val artist: String?,
+    val tempo: Int?,
+    val capo: Int?,
     val music: String?,
+    val createdAt: Instant,
 )
 
 @JvmInline @Serializable

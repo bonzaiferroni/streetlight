@@ -13,7 +13,7 @@ class SongFeedModel(
     private val app: AppProvider = RuntimeProvider
 ): StateModel<SongFeedState>() {
 
-    private val client = app.client.song
+    private val client = app.repo.song
 
     override val state = ModelState(SongFeedState())
 
@@ -32,7 +32,7 @@ class SongFeedModel(
         if (!stateNow.isValidNewItem) return
         viewModelScope.launch {
             client.createSong(NewSong(
-                name = stateNow.newName,
+                title = stateNow.newName,
                 artist = stateNow.newArtist.takeIf { it.isNotEmpty() }
             ))
             refreshSongs()

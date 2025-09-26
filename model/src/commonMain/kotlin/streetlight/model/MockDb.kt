@@ -139,6 +139,9 @@ val mockDb by lazy {
                 title = songTitleBag.draw(),
                 artist = null,
                 music = null,
+                tempo = null,
+                capo = null,
+                createdAt = now
             )
         }
     }

@@ -65,7 +65,9 @@ fun EventProfileScreen(
             }
         }
         Tab("Live") {
-            EventLiveDash(
+            LiveEventView(
+                startsAt = event.startsAt,
+                endsAt = event.endsAt,
                 status = event.status,
                 setStatus = viewModel::setStatus,
             )

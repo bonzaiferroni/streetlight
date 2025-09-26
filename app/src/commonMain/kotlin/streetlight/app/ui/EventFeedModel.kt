@@ -9,13 +9,12 @@ import streetlight.app.AppProvider
 import streetlight.app.RuntimeProvider
 import streetlight.model.data.Event
 import streetlight.model.data.Location
-import streetlight.model.data.LocationId
 import streetlight.model.data.NewEvent
 import kotlin.time.Duration.Companion.days
 
 class EventFeedModel(private val app: AppProvider = RuntimeProvider): StateModel<EventFeedState>() {
 
-    private val client = app.client.event
+    private val client = app.repo.event
 
     override val state = ModelState(EventFeedState())
 
@@ -47,7 +46,7 @@ class EventFeedModel(private val app: AppProvider = RuntimeProvider): StateModel
 
     fun searchLocations(query: String) {
         ioLaunch {
-            val locations = app.client.location.search(query) ?: return@ioLaunch
+            val locations = app.repo.location.search(query) ?: return@ioLaunch
             setStateFromMain { it.copy(locations = locations) }
         }
     }

@@ -22,7 +22,7 @@ class EventProfileModel(
 ) : StateModel<EventProfileState>() {
     override val state = ModelState(EventProfileState())
 
-    private val client = app.client.event
+    private val client = app.repo.event
     private var updateJob: Job? = null
 
     fun init(eventId: EventId) {

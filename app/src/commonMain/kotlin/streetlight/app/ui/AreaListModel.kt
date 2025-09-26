@@ -11,7 +11,7 @@ import streetlight.model.data.NewArea
 
 class AreaListModel(private val app: AppProvider = RuntimeProvider): StateModel<AreaListState>() {
 
-    private val client = app.client.area
+    private val client = app.repo.area
 
     override val state = ModelState(AreaListState())
 

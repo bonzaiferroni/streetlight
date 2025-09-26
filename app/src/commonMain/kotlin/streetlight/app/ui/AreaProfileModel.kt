@@ -17,7 +17,7 @@ class AreaProfileModel(
     private val app: AppProvider = RuntimeProvider
 ) : StateModel<AreaProfileState>() {
 
-    private val client = app.client.area
+    private val client = app.repo.area
 
     override val state = ModelState(AreaProfileState())
 
@@ -51,7 +51,7 @@ class AreaProfileModel(
         if (!stateNow.isValidNewItem) return
         val name = stateNow.newName.takeIf { it.isNotBlank() } ?: return
         viewModelScope.launch {
-            app.client.location.createLocation(NewLocation(
+            app.repo.location.createLocation(NewLocation(
                 areaId = route.id.toProjectId(),
                 name = name,
                 geoPoint = GeoPoint(stateNow.newLongitude.toDouble(), stateNow.newLatitude.toDouble())
@@ -63,7 +63,7 @@ class AreaProfileModel(
 
     fun refreshItems() {
         viewModelScope.launch {
-            val locations = app.client.location.readAreaLocations(route.id.toProjectId()) ?: return@launch
+            val locations = app.repo.location.readAreaLocations(route.id.toProjectId()) ?: return@launch
             setState { it.copy(locations = locations) }
         }
     }

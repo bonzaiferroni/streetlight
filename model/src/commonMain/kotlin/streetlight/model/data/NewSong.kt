@@ -4,6 +4,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class NewSong(
-    val name: String,
+    val title: String,
     val artist: String?,
 )

@@ -106,6 +106,16 @@ CreateView(Foo):
 * I repeat, you should *not* make a screen, stick to what I have asked. Just create the basic structure of FooView, FooModel, and FooState as I have outlined in the CreateScreen workflow.
 * This function does not have an associated route and there is nothing you need to add to `appConfig.kt`
 
+CreateElement(FunctionName):
+* Create a composable function called FunctionName in the package `streetlight.app.ui`
+* Unless otherwise indicated, the function should not have any parameters and the body should be empty.
+* Add these imports:
+    * `androidx.compose.foundation.layout.*`
+    * `androidx.compose.runtime.*`
+    * `androidx.compose.ui.*`
+    * `pondui.ui.controls.*`
+    * `streetlight.model.data.*`
+
 ### Room Workflows
 
 CreateEntity(Foo):

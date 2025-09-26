@@ -34,6 +34,6 @@ enum class SelfRating(override val label: String): LabeledEnum<SelfRating> {
     FirstSteps("First Steps"),
     NeedsWork("Needs Work"),
     ComingAlong("Coming Along"),
-    FeelsGood("Feels Good"),
+    Solid("Solid"),
     Banger("Banger"),
 }

@@ -1,6 +1,5 @@
 package streetlight.app
 
-import pondui.utils.ApiDao
 import streetlight.app.io.AreaApiClient
 import streetlight.app.io.AreaMockClient
 import streetlight.app.io.AreaRepository
@@ -16,12 +15,9 @@ import streetlight.app.io.SongPlayApiClient
 import streetlight.app.io.SongPlayMockClient
 import streetlight.app.io.SongPlayRepository
 import streetlight.app.io.SongRepository
-import streetlight.model.data.Event
-import streetlight.model.data.EventId
-import streetlight.model.data.NewEvent
 
 interface AppProvider {
-    val client: AppClient
+    val repo: AppClient
     // val dao: AppDao
 }
 
@@ -46,7 +42,7 @@ class AppDao(
 )
 
 object RuntimeProvider: AppProvider {
-    override val client = object: AppClient {
+    override val repo = object: AppClient {
         override val area = AreaApiClient()
         override val event = EventApiClient()
         override val location = LocationApiClient()
@@ -56,7 +52,7 @@ object RuntimeProvider: AppProvider {
 }
 
 object PreviewProvider: AppProvider {
-    override val client = object : AppClient {
+    override val repo = object : AppClient {
         override val area = AreaMockClient()
         override val event = EventMockClient()
         override val location = LocationMockClient()
