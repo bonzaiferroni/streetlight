@@ -7,7 +7,6 @@ import kabinet.utils.randomUuidString
 import kotlinx.serialization.Serializable
 import kotlinx.datetime.Instant
 import kotlin.jvm.JvmInline
-import kotlin.time.Duration
 
 @Stable
 @Serializable
@@ -45,7 +44,8 @@ data class NewEvent(
 
 enum class EventStatus(override val label: String): LabeledEnum<EventStatus> {
     Pending("Pending"),
-    Started("Started"),
+    Canceled("Canceled"),
+    Live("Live"),
     OnBreak("On Break"),
     Finished("Finished"),
 }

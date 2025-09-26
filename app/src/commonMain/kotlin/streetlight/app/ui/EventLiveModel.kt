@@ -19,7 +19,6 @@ import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.seconds
 
 class EventLiveModel(
-    private val core: EventProfileModel,
     private val app: AppProvider = RuntimeProvider
 ) : StateModel<EventLiveState>() {
     override val state = ModelState(EventLiveState())
@@ -29,8 +28,6 @@ class EventLiveModel(
         ioLaunch {
         }
     }
-
-    fun setStatus(value: EventStatus) = core.updateEvent(0.seconds) { it.copy(status = value) }
 
     fun takeNextSong() {
         ioLaunch {

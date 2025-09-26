@@ -37,6 +37,7 @@ class EventProfileModel(
     fun setDescription(value: String) = updateEvent { it.copy(description = value) }
     fun setStartsAt(value: Instant) = updateEvent { it.copy(startsAt = value) }
     fun setEndsAt(value: Instant) = updateEvent { it.copy(endsAt = value) }
+    fun setStatus(value: EventStatus) = updateEvent(0.seconds) { it.copy(status = value) }
 
     fun updateEvent(delay: Duration = 1.seconds, toUpdate: (Event) -> Event) {
         val original = stateNow.event ?: return

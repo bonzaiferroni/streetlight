@@ -9,20 +9,25 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kabinet.utils.toTimeDescription
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import pondui.ui.controls.Column
-import pondui.ui.controls.DropMenu
 import pondui.ui.controls.FlowRow
 import pondui.ui.controls.H1
 import pondui.ui.controls.InProgressIndicator
-import pondui.ui.controls.Label
 import pondui.ui.controls.Row
 import pondui.ui.controls.Tab
 import pondui.ui.controls.TabScaffold
 import pondui.ui.controls.Text
 import pondui.ui.controls.TextField
 import pondui.ui.controls.TimeWheel
+import pondui.ui.controls.UpdateStatus
+import pondui.utils.SinglePreview
 import streetlight.app.EventProfileRoute
+import streetlight.model.data.Event
 import streetlight.model.data.toProjectId
+import streetlight.model.mockDb
 
 @Composable
 fun EventProfileScreen(
@@ -46,32 +51,81 @@ fun EventProfileScreen(
     ) {
         Tab("Edit") {
             Column(2) {
-                Row(1) {
-                    Label("Updated at ${event.updatedAt.toTimeDescription()}")
-                    InProgressIndicator(state.updateStatus)
-                }
-                FlowRow(1, maxItemsInEachRow = 2) {
-                    TextField(
-                        event.title,
-                        label = "title",
-                        placeholder = "title",
-                        onChange = viewModel::setTitle,
-                        modifier = Modifier.weight(1f)
-                    )
-                }
-                TextField(
-                    event.description ?: "",
-                    label = "description",
-                    placeholder = "description",
-                    onChange = viewModel::setDescription,
-                    modifier = Modifier.fillMaxWidth()
+                EventUpdateIndicator(
+                    updatedAt = event.updatedAt,
+                    updateStatus = state.updateStatus,
                 )
-                TimeWheel(event.startsAt, onChangeInstant = viewModel::setStartsAt)
-                TimeWheel(event.endsAt, onChangeInstant = viewModel::setEndsAt)
+                EventProfileForm(
+                    event = event,
+                    setTitle = viewModel::setTitle,
+                    setDescription = viewModel::setDescription,
+                    setStartsAt = viewModel::setStartsAt,
+                    setEndsAt = viewModel::setEndsAt,
+                )
             }
         }
         Tab("Live") {
-            EventLiveView(viewModel)
+            EventLiveDash(
+                status = event.status,
+                setStatus = viewModel::setStatus,
+            )
         }
+    }
+}
+
+@Composable
+fun EventProfileForm(
+    event: Event,
+    setTitle: (String) -> Unit,
+    setDescription: (String) -> Unit,
+    setStartsAt: (Instant) -> Unit,
+    setEndsAt: (Instant) -> Unit,
+) {
+    FlowRow(1, maxItemsInEachRow = 2) {
+        TextField(
+            event.title,
+            label = "title",
+            placeholder = "title",
+            onChange = setTitle,
+            modifier = Modifier.weight(1f)
+        )
+    }
+    TextField(
+        event.description ?: "",
+        label = "description",
+        placeholder = "description",
+        onChange = setDescription,
+        modifier = Modifier.fillMaxWidth()
+    )
+    TimeWheel(event.startsAt, onChangeInstant = setStartsAt)
+    TimeWheel(event.endsAt, onChangeInstant = setEndsAt)
+}
+
+@Composable
+fun EventUpdateIndicator(
+    updatedAt: Instant,
+    updateStatus: UpdateStatus,
+) {
+    Row(1) {
+        Text("Updated at ${updatedAt.toTimeDescription()}")
+        InProgressIndicator(updateStatus)
+    }
+}
+
+@Composable
+@Preview()
+fun EventProfilePreview() {
+    SinglePreview {
+        EventUpdateIndicator(
+            updatedAt = Clock.System.now(),
+            updateStatus = UpdateStatus.Done,
+        )
+        EventProfileForm(
+            event = mockDb.events.first(),
+            setTitle = {},
+            setDescription = {},
+            setStartsAt = {},
+            setEndsAt = {},
+        )
     }
 }

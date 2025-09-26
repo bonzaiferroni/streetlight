@@ -16,7 +16,6 @@ import streetlight.app.generated.resources.Inter_28pt_Light
 import streetlight.app.generated.resources.Res
 
 @Composable
-@Preview
 fun App(
     scale: Float = 1f,
     changeRoute: (NavRoute) -> Unit,
@@ -39,9 +38,4 @@ fun App(
             )
         }
     }
-}
-
-object RuntimeProvider: AppProvider {
-    override val client = AppClient()
-    override val dao = AppDao(client)
 }
