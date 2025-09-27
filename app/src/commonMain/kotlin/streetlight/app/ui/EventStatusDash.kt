@@ -17,6 +17,7 @@ import kotlinx.datetime.Instant
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import pondui.ui.controls.*
 import pondui.ui.modifiers.MagicItem
+import pondui.ui.services.rememberTextSpeaker
 import pondui.ui.theme.Pond
 import pondui.utils.MultiPreview
 import pondui.utils.PreviewFrame
@@ -34,6 +35,11 @@ fun EventStatusDash(
     toggleBreak: () -> Unit,
 ) {
     val now = Clock.System.now()
+    val speak = rememberTextSpeaker()
+    val setStatus: (EventStatus) -> Unit = {
+        setStatus(it)
+        speak(it.label)
+    }
     Section {
         Column(1) {
             Row(1) {

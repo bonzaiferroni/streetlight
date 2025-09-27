@@ -6,6 +6,7 @@ import compose.icons.tablericons.CalendarEvent
 import compose.icons.tablericons.Flame
 import compose.icons.tablericons.Location
 import compose.icons.tablericons.Music
+import compose.icons.tablericons.Tornado
 import compose.icons.tablericons.TrafficLights
 import compose.icons.tablericons.YinYang
 import pondui.ui.core.PondConfig
@@ -28,7 +29,7 @@ val appConfig = PondConfig(
     home = EventFeedRoute,
     routes = persistentListOf(
         RouteConfig(StartRoute::matchRoute) { defaultScreen<StartRoute> { StartScreen(it) } },
-        RouteConfig(HelloRoute::matchRoute) { defaultScreen<HelloRoute> { HelloScreen(it) } },
+        RouteConfig(HelloRoute::matchRoute) { defaultScreen<HelloRoute> { HelloScreen() } },
         RouteConfig(EventFeedRoute::matchRoute) { defaultScreen<EventFeedRoute> { EventFeedScreen() } },
         RouteConfig(AreaListRoute::matchRoute) { defaultScreen<AreaListRoute> { AreaListScreen() } },
         RouteConfig(AreaProfileRoute::matchRoute) { defaultScreen<AreaProfileRoute> { AreaProfileScreen(it) } },
@@ -37,9 +38,9 @@ val appConfig = PondConfig(
         RouteConfig(EventProfileRoute::matchRoute) { defaultScreen<EventProfileRoute> { EventProfileScreen(it) } },
     ),
     doors = persistentListOf(
+        PortalDoor(TablerIcons.Tornado, HelloRoute),
         PortalDoor(TablerIcons.CalendarEvent, EventFeedRoute),
         PortalDoor(TablerIcons.Location, AreaListRoute),
-        PortalDoor(TablerIcons.YinYang, HelloRoute),
         PortalDoor(TablerIcons.Music, SongListRoute, requireLogin = true)
     ),
 )
