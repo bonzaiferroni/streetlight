@@ -2,17 +2,17 @@ package streetlight.app
 
 import androidx.compose.runtime.*
 import androidx.compose.ui.text.font.FontWeight
-import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.resources.FontResource
 import pondui.io.ProvideUserContext
 import pondui.ui.core.PondApp
 import pondui.ui.nav.NavRoute
 import pondui.ui.theme.ProvideTheme
 import pondui.ui.theme.defaultTheme
 import pondui.ui.theme.useFamily
-import streetlight.app.generated.resources.Inter_18pt_Light
-import streetlight.app.generated.resources.Inter_18pt_Regular
-import streetlight.app.generated.resources.Inter_24pt_Light
-import streetlight.app.generated.resources.Inter_28pt_Light
+import streetlight.app.generated.resources.FiraSans_Bold
+import streetlight.app.generated.resources.FiraSans_Italic
+import streetlight.app.generated.resources.FiraSans_Light
+import streetlight.app.generated.resources.FiraSans_Regular
 import streetlight.app.generated.resources.Res
 
 @Composable
@@ -24,11 +24,12 @@ fun App(
     ProvideTheme(
         theme = defaultTheme(
             scale = scale,
-            baseFont = useFamily(Res.font.Inter_18pt_Regular),
-            h1Font = useFamily(Res.font.Inter_28pt_Light, FontWeight.Light),
-            h2Font = useFamily(Res.font.Inter_24pt_Light, FontWeight.Light),
-            h4Font = useFamily(Res.font.Inter_18pt_Light, FontWeight.Light),
-        )
+            baseFontSize = 16f,
+            baseFont = useFamily(Res.font.FiraSans_Regular),
+            italicFont = useFamily(Res.font.FiraSans_Italic),
+            lightFont = useFamily(Res.font.FiraSans_Light, weight = FontWeight.Light),
+            boldFont = useFamily(Res.font.FiraSans_Bold, weight = FontWeight.Bold),
+        ),
     ) {
         ProvideUserContext {
             PondApp(

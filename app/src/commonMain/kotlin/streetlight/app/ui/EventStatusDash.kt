@@ -66,7 +66,7 @@ fun EventStatusDash(
                         Row(1) {
                             Icon(TablerIcons.Clock, color = Pond.localColors.contentDim)
                             ProgressBar(progress, padding = Pond.ruler.unitPadding) {
-                                Text("Starts ${(-timeUntilStart).toAgoDescription()}")
+                                Text("Starts ${(-timeUntilStart).toAgoDescription()}", style = Pond.typo.small)
                             }
                             Expando()
                             MoreMenu {
@@ -96,7 +96,7 @@ fun EventStatusDash(
                         Row(1) {
                             Icon(TablerIcons.Clock, color = Pond.localColors.contentDim)
                             ProgressBar(progress, padding = Pond.ruler.unitPadding) {
-                                Text("Ends ${(-timeUntilEnd).toAgoDescription()}")
+                                Text("Ends ${(-timeUntilEnd).toAgoDescription()}", style = Pond.typo.small)
                             }
                             Expando()
                             MoreMenu {
@@ -124,7 +124,7 @@ fun EventStatusDash(
                                     toggleBreak()
                                 }
                             } else {
-                                Button("Finish event") {
+                                Button("Finish") {
                                     setStatus(EventStatus.Finished)
                                 }
                             }
@@ -140,7 +140,7 @@ fun EventStatusDash(
                         Row(1) {
                             Icon(TablerIcons.Clock, color = Pond.localColors.contentDim)
                             ProgressBar(progress, padding = Pond.ruler.unitPadding) {
-                                Text("Ends ${(-timeUntilEnd).toAgoDescription()}")
+                                Text("Ends ${(-timeUntilEnd).toAgoDescription()}", style = Pond.typo.small)
                             }
                             Expando()
                             MoreMenu {
