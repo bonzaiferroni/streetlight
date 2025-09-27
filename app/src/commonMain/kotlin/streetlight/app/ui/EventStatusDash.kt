@@ -100,9 +100,17 @@ fun EventStatusDash(
                             }
                             Expando()
                             MoreMenu {
-                                MoreMenuItem("Delay event") { setStatus(EventStatus.Pending) }
+                                MoreMenuItem(
+                                    label = "Delay event",
+                                    icon = TablerIcons.CalendarTime,
+                                    color = Pond.colors.primary.electrify()
+                                ) { setStatus(EventStatus.Pending) }
                                 if (minutesUntilEnd > 0) {
-                                    MoreMenuItem("Finish event", TablerIcons.Check) { setStatus(EventStatus.Finished) }
+                                    MoreMenuItem(
+                                        label = "Finish event",
+                                        icon = TablerIcons.Check,
+                                        color = Pond.colors.primary.electrify()
+                                    ) { setStatus(EventStatus.Finished) }
                                 } else {
                                     MoreMenuItem(
                                         "Take a break",
@@ -152,7 +160,7 @@ fun EventStatusDash(
                             Label("Finished ${timeSinceEnd.toAgoDescription()}")
                             Expando()
                             MoreMenu {
-                                MoreMenuItem("Encore", TablerIcons.Flame, Pond.colors.hot) { setStatus(EventStatus.Live) }
+                                MoreMenuItem("Encore", TablerIcons.Flame, Pond.colors.accent) { setStatus(EventStatus.Live) }
                             }
                         }
                     }
@@ -164,11 +172,11 @@ fun EventStatusDash(
 
 @Composable
 fun EventStatus.toIconConfig() = when (this) {
-    EventStatus.Pending -> TablerIcons.CalendarTime to Pond.colors.selection.electrify()
+    EventStatus.Pending -> TablerIcons.CalendarTime to Pond.colors.primary.electrify()
     EventStatus.Canceled -> TablerIcons.CircleX to Pond.colors.negation.electrify()
-    EventStatus.Live -> TablerIcons.Flame to Pond.colors.hot.electrify()
-    EventStatus.OnBreak -> TablerIcons.PlayerPause to Pond.colors.selection.electrify()
-    EventStatus.Finished -> TablerIcons.Check to Pond.colors.accent.electrify()
+    EventStatus.Live -> TablerIcons.Flame to Pond.colors.accent.electrify()
+    EventStatus.OnBreak -> TablerIcons.PlayerPause to Pond.colors.primary.electrify()
+    EventStatus.Finished -> TablerIcons.Check to Pond.colors.primary.electrify()
 }
 
 @Composable
