@@ -10,7 +10,6 @@ import compose.icons.tablericons.CircleX
 import compose.icons.tablericons.Clock
 import compose.icons.tablericons.Flame
 import compose.icons.tablericons.PlayerPause
-import compose.icons.tablericons.ZoomCancel
 import kabinet.utils.toAgoDescription
 import kabinet.utils.toTimeDescription
 import kotlinx.datetime.Clock
@@ -112,7 +111,7 @@ fun EventStatusDash(
                                 }
                             }
                             if (minutesUntilEnd > 0) {
-                                Button("Take a break", color = Pond.colors.action) {
+                                Button("Take a break", color = Pond.colors.primary) {
                                     setStatus(EventStatus.OnBreak)
                                     toggleBreak()
                                 }
@@ -140,7 +139,7 @@ fun EventStatusDash(
                                 MoreMenuItem("Delay event") { setStatus(EventStatus.Pending) }
                                 MoreMenuItem("Finish event") { setStatus(EventStatus.Finished) }
                             }
-                            Button("Resume event", color = Pond.colors.action) {
+                            Button("Resume event", color = Pond.colors.primary) {
                                 setStatus(EventStatus.Live)
                                 toggleBreak()
                             }
@@ -169,7 +168,7 @@ fun EventStatus.toIconConfig() = when (this) {
     EventStatus.Canceled -> TablerIcons.CircleX to Pond.colors.negation.electrify()
     EventStatus.Live -> TablerIcons.Flame to Pond.colors.hot.electrify()
     EventStatus.OnBreak -> TablerIcons.PlayerPause to Pond.colors.selection.electrify()
-    EventStatus.Finished -> TablerIcons.Check to Pond.colors.creation.electrify()
+    EventStatus.Finished -> TablerIcons.Check to Pond.colors.accent.electrify()
 }
 
 @Composable
