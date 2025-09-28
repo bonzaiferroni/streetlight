@@ -138,7 +138,7 @@ val mockDb by lazy {
                 userId = spark.userId,
                 title = songTitleBag.draw(),
                 artist = null,
-                music = null,
+                notation = null,
                 tempo = null,
                 capo = null,
                 createdAt = now

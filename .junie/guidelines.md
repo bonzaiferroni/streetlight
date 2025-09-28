@@ -109,6 +109,9 @@ CreateView(Foo):
 CreateElement(FunctionName):
 * Create a composable function called FunctionName in the package `streetlight.app.ui`
 * Unless otherwise indicated, the function should not have any parameters and the body should be empty.
+* Create a function that will be used to display a preview with the following signature and body: 
+    * `fun FunctionNamePreview() { MultiPreview { PreviewFrame("FunctionName") { FunctionName() } } }`
+    * Annotate it with `@Preview`
 * Add these imports:
     * `androidx.compose.foundation.layout.*`
     * `androidx.compose.runtime.*`

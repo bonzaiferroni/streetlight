@@ -8,8 +8,8 @@ import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 
 @Serializable
-data class SongPlay(
-    val songPlayId: SongPlayId,
+data class Rendition(
+    val renditionId: RenditionId,
     val songId: SongId,
     val userId: UserId,
     val notes: String?,
@@ -19,12 +19,12 @@ data class SongPlay(
 
 @JvmInline
 @Serializable
-value class SongPlayId(override val value: String): ProjectId {
-    companion object { fun random() = SongPlayId(randomUuidString()) }
+value class RenditionId(override val value: String): ProjectId {
+    companion object { fun random() = RenditionId(randomUuidString()) }
 }
 
 @Serializable
-data class NewSongPlay(
+data class NewRendition(
     val songId: SongId,
     val notes: String?,
     val rating: SelfRating?,

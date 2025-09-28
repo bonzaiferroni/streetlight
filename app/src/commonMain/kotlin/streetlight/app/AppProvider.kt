@@ -11,9 +11,9 @@ import streetlight.app.io.LocationMockClient
 import streetlight.app.io.LocationRepository
 import streetlight.app.io.SongApiClient
 import streetlight.app.io.SongMockClient
-import streetlight.app.io.SongPlayApiClient
-import streetlight.app.io.SongPlayMockClient
-import streetlight.app.io.SongPlayRepository
+import streetlight.app.io.RenditionApiClient
+import streetlight.app.io.RenditionMockClient
+import streetlight.app.io.RenditionRepository
 import streetlight.app.io.SongRepository
 
 interface AppProvider {
@@ -26,7 +26,7 @@ interface AppClient {
     val event: EventRepository
     val location: LocationRepository
     val song: SongRepository
-    val songPlay: SongPlayRepository
+    val songPlay: RenditionRepository
 }
 
 class AppDao(
@@ -47,7 +47,7 @@ object RuntimeProvider: AppProvider {
         override val event = EventApiClient()
         override val location = LocationApiClient()
         override val song = SongApiClient()
-        override val songPlay = SongPlayApiClient()
+        override val songPlay = RenditionApiClient()
     }
 }
 
@@ -57,6 +57,6 @@ object PreviewProvider: AppProvider {
         override val event = EventMockClient()
         override val location = LocationMockClient()
         override val song = SongMockClient()
-        override val songPlay = SongPlayMockClient()
+        override val songPlay = RenditionMockClient()
     }
 }

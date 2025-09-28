@@ -5,6 +5,6 @@ import klutch.db.DbService
 import streetlight.server.RuntimeProvider
 import streetlight.server.ServerProvider
 
-private val console = globalConsole.getHandle(SongPlayTableService::class)
+private val console = globalConsole.getHandle(RenditionTableService::class)
 
-class SongPlayTableService(val app: ServerProvider = RuntimeProvider): DbService()
+class RenditionTableService(val app: ServerProvider = RuntimeProvider): DbService()

@@ -18,9 +18,9 @@ import streetlight.model.data.NewLocation
 import streetlight.model.data.NewSong
 import streetlight.model.data.Song
 import streetlight.model.data.SongId
-import streetlight.model.data.SongPlay
-import streetlight.model.data.SongPlayId
-import streetlight.model.data.NewSongPlay
+import streetlight.model.data.Rendition
+import streetlight.model.data.RenditionId
+import streetlight.model.data.NewRendition
 
 object Api: ApiNode(ApiNode(null, "api"), "v1") {
 
@@ -54,12 +54,12 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         }
     }
 
-    object SongPlayFeed: GetByTableIdEndpoint<SongPlayId, SongPlay>(this, "song_plays") {
-        object BySong: GetByTableIdEndpoint<SongId, List<SongPlay>>(this, "by_song")
-        object Create: PostEndpoint<NewSongPlay, SongPlayId>(this, "create")
-        object Update: PostEndpoint<SongPlay, Boolean>(this, "update")
-        object Delete: DeleteEndpoint<SongPlayId>(this, "delete")
-        object ReadAllSince: GetEndpoint<List<SongPlay>>(this, "read_all_since") {
+    object RenditionFeed: GetByTableIdEndpoint<RenditionId, Rendition>(this, "renditions") {
+        object BySong: GetByTableIdEndpoint<SongId, List<Rendition>>(this, "by_song")
+        object Create: PostEndpoint<NewRendition, RenditionId>(this, "create")
+        object Update: PostEndpoint<Rendition, Boolean>(this, "update")
+        object Delete: DeleteEndpoint<RenditionId>(this, "delete")
+        object ReadAllSince: GetEndpoint<List<Rendition>>(this, "read_all_since") {
             val since = addInstantParam("since")
         }
     }

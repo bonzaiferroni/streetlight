@@ -77,12 +77,12 @@ fun pitchHzFromPcmShorts(
     length: Int = minOf(2048, pcm.size)
 ): Double {
     if (length < 512) return Double.NaN
-    val x = DoubleArray(length) { i ->
+    val samples = DoubleArray(length) { i ->
         val w = 0.54 - 0.46 * kotlin.math.cos(2.0 * Math.PI * i / (length - 1))
         (pcm[i] / 32768.0) * w
     }
     // quick silence gate
-    val rms = kotlin.math.sqrt(x.sumOf { it * it } / length)
+    val rms = kotlin.math.sqrt(samples.sumOf { it * it } / length)
     if (rms < 0.01) return Double.NaN
 
     val minF = 50.0
@@ -93,11 +93,11 @@ fun pitchHzFromPcmShorts(
     var bestLag = -1
     var bestVal = Double.NEGATIVE_INFINITY
     for (lag in minLag..maxLag) {
-        var s = 0.0
+        var score = 0.0
         var i = 0
         val end = length - lag
-        while (i < end) { s += x[i] * x[i + lag]; i++ }
-        if (s > bestVal) { bestVal = s; bestLag = lag }
+        while (i < end) { score += samples[i] * samples[i + lag]; i++ }
+        if (score > bestVal) { bestVal = score; bestLag = lag }
     }
     return if (bestLag > 0) sampleRate.toDouble() / bestLag else Double.NaN
 }

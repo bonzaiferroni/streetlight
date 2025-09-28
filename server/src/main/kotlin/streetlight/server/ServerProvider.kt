@@ -1,12 +1,11 @@
 package streetlight.server
 
 import kabinet.utils.Environment
-import klutch.environment.readEnvFromPath
 import streetlight.server.db.services.AreaTableDao
 import streetlight.server.db.services.EventTableDao
 import streetlight.server.db.services.LocationTableDao
 import streetlight.server.db.services.SongTableDao
-import streetlight.server.db.services.SongPlayTableDao
+import streetlight.server.db.services.RenditionTableDao
 import streetlight.server.db.services.SongTableService
 
 interface ServerProvider {
@@ -20,7 +19,7 @@ class ServerDao(
     val area: AreaTableDao = AreaTableDao(),
     val song: SongTableDao = SongTableDao(),
     val event: EventTableDao = EventTableDao(),
-    val songPlay: SongPlayTableDao = SongPlayTableDao(),
+    val songPlay: RenditionTableDao = RenditionTableDao(),
 )
 
 class ServerService(

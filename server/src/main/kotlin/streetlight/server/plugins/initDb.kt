@@ -7,7 +7,6 @@ import klutch.db.tables.UserTable
 import klutch.utils.dbLog
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
 import streetlight.server.RuntimeProvider
 import streetlight.server.ServerProvider
@@ -16,7 +15,7 @@ import streetlight.server.db.tables.EventTable
 import streetlight.server.db.tables.LocationTable
 import streetlight.server.db.tables.RequestTable
 import streetlight.server.db.tables.SongTable
-import streetlight.server.db.tables.SongPlayTable
+import streetlight.server.db.tables.RenditionTable
 
 fun initDb(
     app: ServerProvider = RuntimeProvider
@@ -44,7 +43,7 @@ val dbTables = listOf(
     AreaTable,
     EventTable,
     SongTable,
-    SongPlayTable,
+    RenditionTable,
     RequestTable,
     RefreshTokenTable,
 )

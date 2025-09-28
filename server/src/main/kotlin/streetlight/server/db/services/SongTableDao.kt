@@ -5,7 +5,6 @@ import klutch.db.DbService
 import klutch.db.read
 import klutch.utils.eq
 import klutch.utils.toStringId
-import klutch.utils.toUUID
 import kotlinx.datetime.Clock
 import org.jetbrains.exposed.sql.insertAndGetId
 import streetlight.model.data.NewSong
@@ -31,7 +30,7 @@ class SongTableDao: DbService() {
                 artist = newSong.artist,
                 tempo = null,
                 capo = null,
-                music = null,
+                notation = null,
                 createdAt = Clock.System.now(),
             ))
         }.value.toStringId().toProjectId()

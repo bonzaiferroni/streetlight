@@ -21,35 +21,38 @@ fun SelfRatingScale(
     rating: SelfRating?,
     setRating: (SelfRating) -> Unit
 ) {
-    Row(
-        gap = 1,
-        verticalAlignment = Alignment.Top,
-        modifier = Modifier.height(IntrinsicSize.Max)
-    ) {
-        SelfRating.entries.forEach { entry ->
-            val isSelected = entry == rating
-            Column(
-                gap = 1,
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.weight(1f)
-                    .actionable { setRating(entry) }
-            ) {
-                val color = when {
-                    rating == null -> Pond.localColors.content
-                    rating.ordinal >= entry.ordinal -> Pond.colors.glow
-                    else -> Pond.localColors.contentDim.darken()
+    Column(1, horizontalAlignment = Alignment.CenterHorizontally) {
+        Label("Self Rating")
+        Row(
+            gap = 1,
+            verticalAlignment = Alignment.Top,
+            modifier = Modifier.height(IntrinsicSize.Max)
+        ) {
+            SelfRating.entries.forEach { entry ->
+                val isSelected = entry == rating
+                Column(
+                    gap = 1,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.weight(1f)
+                        .actionable { setRating(entry) }
+                ) {
+                    val color = when {
+                        rating == null -> Pond.localColors.content
+                        rating.ordinal >= entry.ordinal -> Pond.colors.glow
+                        else -> Pond.localColors.contentDim.darken()
+                    }
+                    Icon(TablerIcons.Star, color = color)
+                    Label(
+                        entry.label,
+                        modifyStyle = { it.copy(textAlign = TextAlign.Center) },
+                        color = when {
+                            isSelected -> Pond.localColors.content
+                            rating == null -> Pond.localColors.contentDim
+                            else -> Pond.localColors.contentDim.darken(.3f)
+                        },
+                        maxLines = 2
+                    )
                 }
-                Icon(TablerIcons.Star, color = color)
-                Label(
-                    entry.label,
-                    modifyStyle = { it.copy(textAlign = TextAlign.Center) },
-                    color = when {
-                        isSelected -> Pond.localColors.content
-                        rating == null -> Pond.localColors.contentDim
-                        else -> Pond.localColors.contentDim.darken(.3f)
-                    },
-                    maxLines = 2
-                )
             }
         }
     }

@@ -14,7 +14,7 @@ data class Song(
     val artist: String?,
     val tempo: Int?,
     val capo: Int?,
-    val music: String?,
+    val notation: SongNotation?,
     val createdAt: Instant,
 )
 
