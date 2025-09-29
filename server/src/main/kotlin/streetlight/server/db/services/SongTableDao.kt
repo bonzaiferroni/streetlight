@@ -6,7 +6,9 @@ import klutch.db.read
 import klutch.utils.eq
 import klutch.utils.toStringId
 import kotlinx.datetime.Clock
+import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.insertAndGetId
+import org.jetbrains.exposed.sql.update
 import streetlight.model.data.NewSong
 import streetlight.model.data.Song
 import streetlight.model.data.SongId
@@ -14,14 +16,20 @@ import streetlight.model.data.toProjectId
 import streetlight.server.db.tables.SongTable
 import streetlight.server.db.tables.toSong
 import streetlight.server.db.tables.writeFull
+import streetlight.server.db.tables.writeUpdate
 
 class SongTableDao: DbService() {
-    suspend fun readSongs(userId: UserId) = dbQuery {
+    suspend fun readById(songId: SongId) = dbQuery {
+        SongTable.read { it.id.eq(songId) }.firstOrNull()?.toSong()
+    }
+
+    suspend fun readAllByUserId(userId: UserId) = dbQuery {
         SongTable.read { it.userId.eq(userId) }
             .map { it.toSong() }
     }
 
     suspend fun createSong(userId: UserId, newSong: NewSong): SongId = dbQuery {
+        val now = Clock.System.now()
         SongTable.insertAndGetId {
             it.writeFull(Song(
                 songId = SongId.random(),
@@ -31,8 +39,15 @@ class SongTableDao: DbService() {
                 tempo = null,
                 capo = null,
                 notation = null,
-                createdAt = Clock.System.now(),
+                updatedAt = now,
+                createdAt = now,
             ))
         }.value.toStringId().toProjectId()
+    }
+
+    suspend fun updateSong(userId: UserId, song: Song): Boolean = dbQuery {
+        SongTable.update({ SongTable.userId.eq(userId) and SongTable.id.eq(song.songId) }) {
+            it.writeUpdate(song)
+        } > 0
     }
 }

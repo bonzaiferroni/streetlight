@@ -24,7 +24,7 @@ fun App(
     ProvideTheme(
         theme = defaultTheme(
             scale = scale,
-            baseFontSize = 16f,
+            baseFontSize = 15f,
             baseFont = useFamily(Res.font.FiraSans_Regular),
             italicFont = useFamily(Res.font.FiraSans_Italic),
             lightFont = useFamily(Res.font.FiraSans_Light, weight = FontWeight.Light),

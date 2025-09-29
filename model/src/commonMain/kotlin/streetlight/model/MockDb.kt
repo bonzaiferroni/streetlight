@@ -14,6 +14,7 @@ import streetlight.model.data.Song
 import streetlight.model.data.SongId
 import streetlight.model.data.Spark
 import streetlight.model.data.SparkId
+import streetlight.model.data.amazingGrace
 import kotlin.random.Random
 import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.hours
@@ -123,25 +124,43 @@ val mockDb by lazy {
     val songTitleBag = ValueBag(
         rng,
         listOf(
-            "Redemption Song", "99 Red Balloons", "Mekong", "New Slang",
-            "Electric Feel", "No Rain", "Dog Days Are Over", "Take Me Out",
-            "Pumped Up Kicks", "Young Folks", "Kids", "Float On", "Tongue Tied",
-            "A-Punk", "Oxford Comma", "Sweet Disposition", "Time to Pretend",
-            "Reptilia", "Last Nite", "Someday", "All These Things",
+            "Redemption Song" to "Bob Marley",
+            "99 Red Balloons" to "Nena",
+            "Mekong" to "The Refreshments",
+            "New Slang" to "The Shins",
+            "Electric Feel" to "MGMT",
+            "No Rain" to "Blind Melon",
+            "Dog Days Are Over" to "Florence + The Machine",
+            "Take Me Out" to "Franz Ferdinand",
+            "Pumped Up Kicks" to "Foster The People",
+            "Young Folks" to "Peter Bjorn and John",
+            "Kids" to "MGMT",
+            "Float On" to "Modest Mouse",
+            "Tongue Tied" to "Grouplove",
+            "A-Punk" to "Vampire Weekend",
+            "Oxford Comma" to "Vampire Weekend",
+            "Sweet Disposition" to "The Temper Trap",
+            "Time to Pretend" to "MGMT",
+            "Reptilia" to "The Strokes",
+            "Last Nite" to "The Strokes",
+            "Someday" to "The Strokes",
+            "All These Things" to "The Mamas & The Papas",
         )
     )
 
     val songs = sparks.flatMap { spark ->
         (0..3).map {
+            val (title, artist) = songTitleBag.draw()
             Song(
                 songId = SongId.random(),
                 userId = spark.userId,
-                title = songTitleBag.draw(),
-                artist = null,
-                notation = null,
-                tempo = null,
-                capo = null,
-                createdAt = now
+                title = title,
+                artist = artist,
+                notation = amazingGrace,
+                tempo = listOf(90, 100, 110, 120).random(),
+                capo = listOf(0, 3, 4, 7, null).random(),
+                updatedAt = now,
+                createdAt = now,
             )
         }
     }

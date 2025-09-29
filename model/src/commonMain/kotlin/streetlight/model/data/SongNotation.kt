@@ -1,6 +1,7 @@
 package streetlight.model.data
 
 import androidx.compose.runtime.Stable
+import kabinet.model.LabeledEnum
 import kotlinx.serialization.Serializable
 
 @Stable
@@ -10,14 +11,30 @@ data class SongNotation(
     val measureBeats: Int,
     val measureTime: Int,
     val parts: List<SongPart>,
-)
+) {
+    companion object {
+        val Empty get() = SongNotation(
+            root = 1,
+            measureBeats = 4,
+            measureTime = 4,
+            parts = listOf(SongPart.Empty)
+        )
+    }
+}
 
 @Serializable
 data class SongPart(
     val instrument: Instrument,
     val style: NotationStyle = NotationStyle.Diatonic,
-    val sections: List<SongSection>,
-)
+    val sections: List<SongSection> = emptyList(),
+) {
+    companion object {
+        val Empty get() = SongPart(
+            instrument = Instrument.RhythmGuitar,
+            sections = listOf(SongSection.Empty)
+        )
+    }
+}
 
 @Serializable
 data class SongSection(
@@ -44,6 +61,13 @@ data class SongSection(
         }
         error("noteIndex out of bounds: $noteIndex")
     }
+
+    companion object {
+        val Empty get() = SongSection(
+            title = "Verse",
+            phrases = listOf(SongPhrase.Empty)
+        )
+    }
 }
 
 @Serializable
@@ -53,6 +77,12 @@ data class SongPhrase(
 ) {
     fun getMeasureCount(measureBeats: Int): Int {
         return (((notes.first().beat - 1) + notes.sumOf { it.duration }) / measureBeats) * repetitions
+    }
+
+    companion object {
+        val Empty get() = SongPhrase(
+            notes = emptyList()
+        )
     }
 }
 
@@ -72,9 +102,9 @@ data class SongNote(
     }
 }
 
-enum class Instrument {
-    RhythmGuitar,
-    Voice,
+enum class Instrument(override val label: String): LabeledEnum<Instrument> {
+    RhythmGuitar("Rhythm Guitar"),
+    Voice("Voice"),
 }
 
 fun SongPart.getResolution(measureBeats: Int, measureTiming: Int): Int {

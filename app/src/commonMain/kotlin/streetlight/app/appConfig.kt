@@ -1,14 +1,11 @@
 package streetlight.app
 
 import compose.icons.TablerIcons
-import compose.icons.tablericons.BuildingLighthouse
 import compose.icons.tablericons.CalendarEvent
 import compose.icons.tablericons.Flame
 import compose.icons.tablericons.Location
 import compose.icons.tablericons.Music
 import compose.icons.tablericons.Tornado
-import compose.icons.tablericons.TrafficLights
-import compose.icons.tablericons.YinYang
 import pondui.ui.core.PondConfig
 import pondui.ui.nav.PortalDoor
 import pondui.ui.nav.defaultScreen
@@ -22,6 +19,7 @@ import streetlight.app.ui.LocationProfileScreen
 import streetlight.app.ui.SongFeedScreen
 import streetlight.app.ui.StartScreen
 import streetlight.app.ui.EventProfileScreen
+import streetlight.app.ui.SongProfileScreen
 
 val appConfig = PondConfig(
     name = "Streetlight",
@@ -33,14 +31,15 @@ val appConfig = PondConfig(
         RouteConfig(EventFeedRoute::matchRoute) { defaultScreen<EventFeedRoute> { EventFeedScreen() } },
         RouteConfig(AreaListRoute::matchRoute) { defaultScreen<AreaListRoute> { AreaListScreen() } },
         RouteConfig(AreaProfileRoute::matchRoute) { defaultScreen<AreaProfileRoute> { AreaProfileScreen(it) } },
-        RouteConfig(SongListRoute::matchRoute) { defaultScreen<SongListRoute> { SongFeedScreen() } },
+        RouteConfig(SongFeedRoute::matchRoute) { defaultScreen<SongFeedRoute> { SongFeedScreen() } },
         RouteConfig(LocationProfileRoute::matchRoute) { defaultScreen<LocationProfileRoute> { LocationProfileScreen(it) } },
         RouteConfig(EventProfileRoute::matchRoute) { defaultScreen<EventProfileRoute> { EventProfileScreen(it) } },
+        RouteConfig(SongProfileRoute::matchRoute) { defaultScreen<SongProfileRoute> { SongProfileScreen(it) } },
     ),
     doors = persistentListOf(
         PortalDoor(TablerIcons.Tornado, HelloRoute),
         PortalDoor(TablerIcons.CalendarEvent, EventFeedRoute),
         PortalDoor(TablerIcons.Location, AreaListRoute),
-        PortalDoor(TablerIcons.Music, SongListRoute, requireLogin = true)
+        PortalDoor(TablerIcons.Music, SongFeedRoute, requireLogin = true)
     ),
 )

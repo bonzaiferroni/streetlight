@@ -1,8 +1,10 @@
 package streetlight.model.data
 
-enum class NotationStyle {
-    Diatonic,
-    Nashville,
+import kabinet.model.LabeledEnum
+
+enum class NotationStyle(override val label: String): LabeledEnum<NotationStyle> {
+    Diatonic("Diatonic"),
+    Nashville("Nashville"),
     // Jazz,
 }
 

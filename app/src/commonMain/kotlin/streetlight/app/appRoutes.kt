@@ -30,7 +30,7 @@ object EventFeedRoute : AppRoute("Events")
 object AreaListRoute : AppRoute("Places")
 
 @Serializable
-object SongListRoute : AppRoute("Songs")
+object SongFeedRoute : AppRoute("Songs")
 
 @Serializable
 data class AreaProfileRoute(override val id: String) : IdRoute<String> {

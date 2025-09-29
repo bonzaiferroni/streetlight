@@ -54,6 +54,10 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         }
     }
 
+    object SongProfile: GetByTableIdEndpoint<SongId, Song>(this, "song") {
+        object Update: PostEndpoint<Song, Boolean>(this, "update")
+    }
+
     object RenditionFeed: GetByTableIdEndpoint<RenditionId, Rendition>(this, "renditions") {
         object BySong: GetByTableIdEndpoint<SongId, List<Rendition>>(this, "by_song")
         object Create: PostEndpoint<NewRendition, RenditionId>(this, "create")

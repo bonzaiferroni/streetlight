@@ -81,7 +81,9 @@ CreateApiClient(Foo):
 
 CreateEndpoint(Foo, functionName):
 * Create an endpoint in `Api.kt`. Try to determine based on Foo where it should go, look for where similar types are being served or create a new object under Api.
-* Add functionName to FooApiClient that references the endpoint.
+* Add functionName to FooRepository.
+* Add functionName to FooApiClient that references the endpoint and overrides the function on FooRepository.
+* Add functionName to FooMockClient that references data in mockDb.
 * Add the endpoint routing to `serveFoo`. Within the body of the endpoint, provide the data using a function of a FooTableDao or FooTableService that is available. Create one if needed.
 * Check to see if the function is referenced in the file that is currently open for more information about the context in which it will be called.
 
@@ -107,10 +109,11 @@ CreateView(Foo):
 * This function does not have an associated route and there is nothing you need to add to `appConfig.kt`
 
 CreateElement(FunctionName):
-* Create a composable function called FunctionName in the package `streetlight.app.ui`
-* Unless otherwise indicated, the function should not have any parameters and the body should be empty.
+* Create a composable function called FunctionName in the package `streetlight.app.ui`.
+* Check to see if the function is referenced in the file that is open for hints on function parameters.
+    * If it is not referenced in the open file and there is no additional guidance in the prompt, the function should not have any parameters and the body should be empty.
 * Create a function that will be used to display a preview with the following signature and body: 
-    * `fun FunctionNamePreview() { MultiPreview { PreviewFrame("FunctionName") { FunctionName() } } }`
+    * `fun FunctionNamePreview() { MultiPreview { PreviewFrame("FunctionName") { FunctionName(/* params */) } } }`
     * Annotate it with `@Preview`
 * Add these imports:
     * `androidx.compose.foundation.layout.*`

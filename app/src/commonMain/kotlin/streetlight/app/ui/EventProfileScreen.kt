@@ -51,7 +51,7 @@ fun EventProfileScreen(
     ) {
         Tab("Edit") {
             Column(2) {
-                EventUpdateIndicator(
+                UpdateIndicator(
                     updatedAt = event.updatedAt,
                     updateStatus = state.updateStatus,
                 )
@@ -104,7 +104,7 @@ fun EventProfileForm(
 }
 
 @Composable
-fun EventUpdateIndicator(
+fun UpdateIndicator(
     updatedAt: Instant,
     updateStatus: UpdateStatus,
 ) {
@@ -118,7 +118,7 @@ fun EventUpdateIndicator(
 @Preview()
 fun EventProfilePreview() {
     SinglePreview {
-        EventUpdateIndicator(
+        UpdateIndicator(
             updatedAt = Clock.System.now(),
             updateStatus = UpdateStatus.Done,
         )

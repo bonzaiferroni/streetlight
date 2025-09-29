@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -15,6 +16,10 @@ import pondui.ui.controls.FlowRow
 import pondui.ui.controls.Scaffold
 import pondui.ui.controls.Text
 import pondui.ui.controls.TextField
+import pondui.ui.controls.actionable
+import pondui.ui.theme.Pond
+import streetlight.app.SongProfileRoute
+import streetlight.app.utils.toRoute
 
 @OptIn(ExperimentalLayoutApi::class, ExperimentalResourceApi::class)
 @Composable
@@ -46,14 +51,15 @@ fun SongFeedScreen(
             }
         }
         LazyColumn {
-            items(state.songs) {
+            items(state.songs) { song ->
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier.fillMaxWidth()
+                        .actionable(song.songId.toRoute())
+                        .padding(vertical = Pond.ruler.unitSpacing)
                 ) {
-                    Text(it.title)
-                    Button("👉", onClick = { })
+                    Text(song.title)
                 }
             }
         }
