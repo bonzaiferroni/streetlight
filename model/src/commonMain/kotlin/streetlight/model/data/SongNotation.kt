@@ -13,7 +13,7 @@ data class SongNotation(
 ) {
     companion object {
         val Empty get() = SongNotation(
-            rootPitch = 67,
+            rootPitch = 60,
             beatsPerMeasure = 4,
             beatValue = 4,
             parts = listOf(SongPart.Empty)

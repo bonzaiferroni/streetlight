@@ -6,7 +6,6 @@ import androidx.compose.ui.Modifier
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import pondui.ui.controls.*
 import pondui.ui.theme.Pond
-import pondui.utils.LazyPreviewFrame
 import pondui.utils.MultiPreview
 import pondui.utils.PreviewFrame
 import streetlight.model.data.*
@@ -40,7 +39,7 @@ fun EditSongHeader(
                 TextField(
                     text = song.capo?.toString() ?: "",
                     placeholder = "capo",
-                    label = "capo",
+                    label = "fret",
                     modifier = Modifier.weight(1f)
                 ) { updateSong(song.copy(capo = it.toIntOrNull())) }
                 TextField(

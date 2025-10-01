@@ -21,7 +21,7 @@ object SongTable : UUIDTable() {
     val userId = reference("user_id", UserTable, onDelete = ReferenceOption.CASCADE)
     val name = text("title")
     val artist = text("artist").nullable()
-    val notation = jsonb<SongNotation>("notation", Json.Default).nullable()
+    val notation = jsonb<SongNotation>("notation", tableJsonDefault).nullable()
     val tempo = integer("tempo").nullable()
     val capo = integer("capo").nullable()
     val updatedAt = datetime("updated_at")
@@ -55,4 +55,8 @@ fun UpdateBuilder<*>.writeUpdate(song: Song) {
     this[SongTable.tempo] = song.tempo
     this[SongTable.capo] = song.capo
     this[SongTable.updatedAt] = song.updatedAt.toLocalDateTimeUtc()
+}
+
+val tableJsonDefault = Json {
+    encodeDefaults = true
 }

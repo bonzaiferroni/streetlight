@@ -1,5 +1,7 @@
 package streetlight.app.ui
 
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.*
@@ -36,7 +38,7 @@ fun SongNotationDash(
             )
         }
         part.sections.forEach { section ->
-            SongSectionDash(
+            SectionChords(
                 section = section,
                 notation = notation,
             )
@@ -45,11 +47,10 @@ fun SongNotationDash(
 }
 
 @Composable
-fun SongSectionDash(
+fun SectionChords(
     section: SongSection,
     notation: SongNotation,
 ) {
-    val measures = section.getMeasureCount(notation.beatsPerMeasure)
     val dividerColor = Pond.localColors.contentDim.copy(.5f)
     Column(0) {
         Label(section.toLabel())
@@ -57,24 +58,24 @@ fun SongSectionDash(
         val groupCount = (noteCount + 3) / 4
         val rowCount = (groupCount + 1) / 2
         repeat(rowCount) { rowIndex ->
-            Row(2) {
+            Row(1) {
                 repeat(2) { rowGroupIndex ->
                     val group = rowIndex * 2 + rowGroupIndex
-                    Row(0) {
+                    Row(1, modifier = Modifier.height(IntrinsicSize.Max)) {
                         repeat(4) { groupNoteIndex ->
                             val noteIndex = group * 4 + groupNoteIndex
-                            val chord = section.getChordAt(noteIndex)
-                            val expression = chord.expression
+                            if (noteIndex % section.beatResolution == 0) {
+                                BarLine()
+                            }
+                            val chord = noteIndex.takeIf { it < section.chords.size}?.let { section.getChordAt(it) }
+                            val expression = chord?.expression
                             if (expression != null) {
                                 Text(
                                     notationOf(expression, notation.rootPitch),
                                     modifier = Modifier.width(25.dp)
                                 )
                             } else {
-                                Text("-")
-                            }
-                            if (groupNoteIndex != 3) {
-                                Label("|", color = dividerColor)
+                                Text("-", modifier = Modifier.width(25.dp))
                             }
                         }
                     }

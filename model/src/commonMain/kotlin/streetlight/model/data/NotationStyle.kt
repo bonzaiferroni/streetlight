@@ -27,7 +27,7 @@ fun notationOf(
 }
 
 fun letterNotationOf(chord: Chord, rootPitch: Int) = buildString {
-    val chromatic = Chromatic.ofPitch(chord.pitch)
+    val chromatic = Chromatic.ofPitch(chord.pitch + rootPitch)
     append(chromatic.label)
     chord.quality?.let { append(it.letterNotation) }
     chord.extension?.let { append(it.notation) }

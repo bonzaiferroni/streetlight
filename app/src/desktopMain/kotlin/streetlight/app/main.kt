@@ -11,6 +11,7 @@ import pondui.CacheFile
 import pondui.WatchWindow
 import pondui.WindowSize
 import pondui.ui.controls.Text
+import pondui.ui.core.ProvideAddressContext
 import pondui.ui.nav.NavRoute
 
 fun main() {
@@ -22,16 +23,20 @@ fun main() {
             cacheFlow.value = cacheFlow.value.copy(windowSize = it)
         }
 
-        Window(
-            state = windowState,
-            onCloseRequest = ::exitApplication,
-            title = "App",
-            undecorated = true,
+        ProvideAddressContext(
+            initialAddress = cache.address
         ) {
-            App(
-                changeRoute = { cacheFlow.value = cache.copy(address = it.toPath()) },
-                exitApp = ::exitApplication
-            )
+            Window(
+                state = windowState,
+                onCloseRequest = ::exitApplication,
+                title = "App",
+                undecorated = true,
+            ) {
+                App(
+                    changeRoute = { cacheFlow.value = cache.copy(address = it.toPath()) },
+                    exitApp = ::exitApplication
+                )
+            }
         }
     }
 }
