@@ -7,6 +7,8 @@ import kabinet.utils.replaceAt
 import pondui.ui.controls.H1
 import pondui.ui.controls.LazyTab
 import pondui.ui.controls.TabScaffold
+import pondui.ui.services.playChord
+import pondui.ui.services.rememberMidiPlayer
 import streetlight.app.SongProfileRoute
 import streetlight.model.data.SongNotation
 import streetlight.model.data.SongPart
@@ -24,6 +26,8 @@ fun SongProfileScreen(
     fun updateNotation(notation: SongNotation?) {
         viewModel.updateSong(song.copy(notation = notation))
     }
+
+    val midi = rememberMidiPlayer()
 
     TabScaffold(
         drawerContent = { H1(song.title) }
@@ -47,7 +51,9 @@ fun SongProfileScreen(
                         updateNotation(notation.copy(parts = notation.parts.replaceAt(partIndex, part)))
                     }
 
-                    EditNotationPart(notation, part, ::modifyPart)
+                    EditNotationPart(notation, part, ::modifyPart) {
+                        midi.playChord(it)
+                    }
                 }
             }
         }

@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,7 +38,8 @@ fun SongNotationDash(
                 modifier = Modifier.padding(horizontal = unitDp)
             )
         }
-        part.sections.forEach { section ->
+        part.composition.forEach { sectionIndex ->
+            val section = part.sections.getOrNull(sectionIndex) ?: return@forEach
             SectionChords(
                 section = section,
                 notation = notation,
@@ -51,33 +53,27 @@ fun SectionChords(
     section: SongSection,
     notation: SongNotation,
 ) {
-    val dividerColor = Pond.localColors.contentDim.copy(.5f)
-    Column(0) {
+    Column(1) {
         Label(section.toLabel())
         val noteCount = section.chords.size
-        val groupCount = (noteCount + 3) / 4
-        val rowCount = (groupCount + 1) / 2
+        val rowCount = (noteCount + 7) / 8
         repeat(rowCount) { rowIndex ->
-            Row(1) {
-                repeat(2) { rowGroupIndex ->
-                    val group = rowIndex * 2 + rowGroupIndex
-                    Row(1, modifier = Modifier.height(IntrinsicSize.Max)) {
-                        repeat(4) { groupNoteIndex ->
-                            val noteIndex = group * 4 + groupNoteIndex
-                            if (noteIndex % section.beatResolution == 0) {
-                                BarLine()
-                            }
-                            val chord = noteIndex.takeIf { it < section.chords.size}?.let { section.getChordAt(it) }
-                            val expression = chord?.expression
-                            if (expression != null) {
-                                Text(
-                                    notationOf(expression, notation.rootPitch),
-                                    modifier = Modifier.width(25.dp)
-                                )
-                            } else {
-                                Text("-", modifier = Modifier.width(25.dp))
-                            }
-                        }
+            Row(1, modifier = Modifier.height(IntrinsicSize.Max)) {
+                val columnCount = minOf(8, noteCount - rowIndex * 8)
+                repeat(columnCount) { columnIndex ->
+                    val noteIndex = rowIndex * 4 + columnIndex
+                    if (noteIndex % section.beatResolution == 0) {
+                        BarLine()
+                    }
+                    val chord = noteIndex.takeIf { it < section.chords.size}?.let { section.getChordAt(it) }
+                    val expression = chord?.expression
+                    if (expression != null) {
+                        Text(
+                            notationOf(expression, notation.rootPitch),
+                            modifier = Modifier.widthIn(min = 25.dp)
+                        )
+                    } else {
+                        Text("-", modifier = Modifier.width(25.dp))
                     }
                 }
             }

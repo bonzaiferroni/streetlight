@@ -59,4 +59,6 @@ fun UpdateBuilder<*>.writeUpdate(song: Song) {
 
 val tableJsonDefault = Json {
     encodeDefaults = true
+    explicitNulls = false
+    ignoreUnknownKeys = true
 }

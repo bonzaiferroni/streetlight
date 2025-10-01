@@ -20,6 +20,8 @@ enum class Chromatic(val pitch: Int, val label: String, val diatonic: Diatonic, 
             val idx = ((pitch % size) + size) % size
             return entries[idx]
         }
+
+        fun ofLabel(label: String) = entries.firstOrNull { it.label.equals(label, true) }
     }
 }
 

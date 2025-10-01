@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -14,26 +15,26 @@ import androidx.compose.ui.unit.dp
 import kabinet.utils.removeAt
 import kabinet.utils.replaceAt
 import pondui.ui.controls.Column
-import pondui.ui.controls.FlowRow
 import pondui.ui.controls.H3
 import pondui.ui.controls.H4
 import pondui.ui.controls.Row
-import pondui.ui.controls.Text
 import pondui.ui.controls.TextField
 import pondui.ui.modifiers.onHotKeyConsume
+import streetlight.model.data.ChordHelper
 import streetlight.model.data.Chromatic
 import streetlight.model.data.MeasureChord
 import streetlight.model.data.SongNotation
 import streetlight.model.data.SongPart
 import streetlight.model.data.SongSection
 import streetlight.model.data.notationOf
-import streetlight.model.data.parseChord
+import streetlight.model.data.parseMeasureChord
 
 @Composable
 fun EditNotationSection(
     notation: SongNotation,
     part: SongPart,
     section: SongSection,
+    playChord: (List<Int>) -> Unit,
     modifySection: (SongSection) -> Unit
 ) {
     Column(2) {
@@ -86,13 +87,15 @@ fun EditNotationSection(
                         if (chordIndex % section.beatResolution == 0) {
                             BarLine()
                         }
-                        val chord = section.chords.getOrNull(chordIndex)
-                        val expression = chord?.expression
-                        var text by remember(expression, notation.rootPitch, part.style) {
-                            val text = expression?.let { notationOf(it, notation.rootPitch, part.style) } ?: ""
-                            mutableStateOf(text)
+                        val measureChord = section.chords.getOrNull(chordIndex)
+                        val expressionText =
+                            measureChord?.expression?.let { notationOf(it, notation.rootPitch, part.style) }
+                        var text by remember { mutableStateOf("") }
+                        LaunchedEffect(expressionText) {
+                            text = expressionText ?: text
                         }
-                        TextField(text,
+                        TextField(
+                            text,
                             modifier = Modifier.width(width).onHotKeyConsume(Key.Backspace) {
                                 if (text.isEmpty() && section.chords.size > chordIndex) {
                                     modifySection(section.copy(chords = section.chords.removeAt(chordIndex)))
@@ -103,14 +106,25 @@ fun EditNotationSection(
                             }
                         ) {
                             text = it
-                            val parsedChord = parseChord(it, part.style)?.let {
+                            val parsedMeasureChord = parseMeasureChord(it, part.style)?.let { c ->
                                 val rootChromatic = Chromatic.ofPitch(notation.rootPitch)
-                                it.copy(pitch = it.pitch - rootChromatic.pitch)
+                                val translation = c.expression?.let { e ->
+                                    e.copy(
+                                        pitch = e.pitch - rootChromatic.pitch,
+                                        slash = e.slash?.let { s -> s - rootChromatic.pitch }
+                                    )
+                                }
+                                translation?.takeIf { it != measureChord?.expression }?.toNotation()?.let { expressionNotation ->
+                                    ChordHelper.map[expressionNotation]?.let { midiChord -> playChord(midiChord) }
+                                }
+                                c.copy(expression = translation)
                             }
-                            if (chord != null) {
-                                modifyChord(chordIndex, chord.copy(expression = parsedChord))
-                            } else if (parsedChord != null) {
-                                modifySection(section.copy(chords = section.chords + MeasureChord(1, parsedChord)))
+                            if (parsedMeasureChord != null) {
+                                if (measureChord != null) {
+                                    modifyChord(chordIndex, parsedMeasureChord)
+                                } else {
+                                    modifySection(section.copy(chords = section.chords + parsedMeasureChord))
+                                }
                             }
                         }
                     }

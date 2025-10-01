@@ -16,6 +16,6 @@ fun BarLine(modifier: Modifier = Modifier) {
     Box(
         modifier.width(1.dp)
             .fillMaxHeight()
-            .background(Pond.localColors.content)
+            .background(Pond.localColors.contentDim)
     )
 }

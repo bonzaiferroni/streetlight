@@ -2,6 +2,7 @@ package streetlight.model.data
 
 import androidx.compose.runtime.Stable
 import kotlinx.serialization.Serializable
+import kotlin.collections.listOf
 
 @Stable
 @Serializable
@@ -16,7 +17,7 @@ data class SongNotation(
             rootPitch = 60,
             beatsPerMeasure = 4,
             beatValue = 4,
-            parts = listOf(SongPart.Empty)
+            parts = listOf(SongPart.Empty),
         )
     }
 }
@@ -26,11 +27,13 @@ data class SongPart(
     val instrument: Instrument,
     val style: NotationStyle = NotationStyle.Letters,
     val sections: List<SongSection> = emptyList(),
+    val composition: List<Int> = listOf(0),
 ) {
     companion object {
         val Empty get() = SongPart(
             instrument = Instrument.RhythmGuitar,
-            sections = listOf(SongSection.Empty)
+            sections = listOf(SongSection.Empty),
+            composition = listOf(0)
         )
     }
 }
@@ -44,9 +47,9 @@ data class SongSection(
 ) {
     fun toLabel() = repetitions.takeIf { it > 1 }?.let { "$title (${it}x)" } ?: title
 
-    fun getMeasureCount(beatsPerMeasure: Int): Int {
-        return chords.sumOf { it.beats } / beatsPerMeasure
-    }
+//    fun getMeasureCount(beatsPerMeasure: Int): Int {
+//        return chords.sumOf { it.duration } / beatsPerMeasure
+//    }
 
     fun getChordAt(index: Int) = chords[index % chords.size]
 
@@ -97,7 +100,8 @@ val amazingGrace = SongNotation(
                         MeasureChord.ofNashville(1),
                     ),
                 )
-            )
+            ),
+            composition = listOf(0)
         )
     ),
 )

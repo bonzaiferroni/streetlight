@@ -25,7 +25,8 @@ import streetlight.model.mockDb
 fun EditNotationPart(
     notation: SongNotation,
     part: SongPart,
-    updatePart: (SongPart) -> Unit
+    updatePart: (SongPart) -> Unit,
+    playChord: (List<Int>) -> Unit,
 ) {
     Section {
         Column(2, modifier = Modifier.fillMaxWidth()) {
@@ -49,7 +50,7 @@ fun EditNotationPart(
             }
             part.sections.forEachIndexed { sectionIndex, section ->
                 Section {
-                    EditNotationSection(notation, part, section) {
+                    EditNotationSection(notation, part, section, playChord) {
                         updateSection(sectionIndex, it)
                     }
                 }
@@ -68,7 +69,8 @@ fun EditNotationPartPreview() {
             EditNotationPart(
                 notation = notation,
                 part = part,
-                updatePart = { }
+                updatePart = { },
+                playChord = { }
             )
         }
     }

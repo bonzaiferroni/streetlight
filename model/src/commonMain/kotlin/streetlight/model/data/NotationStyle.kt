@@ -31,12 +31,23 @@ fun letterNotationOf(chord: Chord, rootPitch: Int) = buildString {
     append(chromatic.label)
     chord.quality?.let { append(it.letterNotation) }
     chord.extension?.let { append(it.notation) }
+    chord.slash?.let { slash ->
+        append('/')
+        val slashChromatic = Chromatic.ofPitch(slash + rootPitch)
+        append(slashChromatic.label)
+    }
 }
 
 fun nashvilleNotationOf(chord: Chord, rootPitch: Int) = buildString {
     val chromatic = Chromatic.ofPitch(chord.pitch + rootPitch)
-    if (chromatic.isSharp) append("#")
     append(chromatic.diatonic.degree)
+    if (chromatic.isSharp) append("#")
     chord.quality?.let { append(it.nashvilleNotation) }
     chord.extension?.let { append(it.notation) }
+    chord.slash?.let { slash ->
+        append('/')
+        val slashChromatic = Chromatic.ofPitch(slash + rootPitch)
+        append(slashChromatic.diatonic.degree)
+        if (slashChromatic.isSharp) append("#")
+    }
 }

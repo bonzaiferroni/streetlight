@@ -56,7 +56,7 @@ fun EditNotationHeader(
             Text("Add Instrument")
             MoreMenu(TablerIcons.Plus, TablerIcons.Minus) {
                 MoreMenuItem("Rhythm Guitar") {
-                    updateNotation(notation.copy(parts = notation.parts + SongPart(Instrument.RhythmGuitar)))
+                    updateNotation(notation.copy(parts = notation.parts + SongPart.Empty.copy(instrument = Instrument.RhythmGuitar)))
                 }
             }
         }
