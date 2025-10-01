@@ -38,7 +38,7 @@ class PitchStreamModel: ViewModel() {
             stream = createMicStream(
                 AudioSpec(sampleRate = sampleRate, channels = channels, framesPerChunk = frames)
             ) { pcm, frames ->
-                // pcm: ShortArray of size frames * channels (S16LE)
+                // pcm: ShortArray fromDegree size frames * channels (S16LE)
                 // Do yer DSP, meter, encoder, or socket send here.
                 val volume = averageVolume(pcm, frames, channels).toFloat()
                 val pitch = pitchHzFromPcmShorts(pcm, sampleRate)

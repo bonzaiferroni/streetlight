@@ -1,12 +1,15 @@
 package streetlight.app.ui
 
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.*
 import androidx.lifecycle.viewmodel.compose.viewModel
+import kabinet.utils.replaceAt
 import pondui.ui.controls.H1
-import pondui.ui.controls.Scaffold
-import pondui.ui.controls.Tab
+import pondui.ui.controls.LazyTab
 import pondui.ui.controls.TabScaffold
 import streetlight.app.SongProfileRoute
+import streetlight.model.data.SongNotation
+import streetlight.model.data.SongPart
 import streetlight.model.data.toProjectId
 
 @Composable
@@ -18,15 +21,35 @@ fun SongProfileScreen(
 
     val song = state.song ?: return
 
+    fun updateNotation(notation: SongNotation?) {
+        viewModel.updateSong(song.copy(notation = notation))
+    }
+
     TabScaffold(
         drawerContent = { H1(song.title) }
     ) {
-        Tab("Edit") {
-            EditSongDash(
-                song = song,
-                updateStatus = state.updateStatus,
-                updateSong = viewModel::updateSong
-            )
+        LazyTab("Edit", 2) {
+            item("edit song header") {
+                EditSongHeader(
+                    song = song,
+                    updateStatus = state.updateStatus,
+                    updateSong = viewModel::updateSong
+                )
+            }
+
+            song.notation?.let { notation ->
+                item("edit notation header") {
+                    EditNotationHeader(notation, ::updateNotation)
+                }
+
+                itemsIndexed(notation.parts) { partIndex, part ->
+                    fun modifyPart(part: SongPart) {
+                        updateNotation(notation.copy(parts = notation.parts.replaceAt(partIndex, part)))
+                    }
+
+                    EditNotationPart(notation, part, ::modifyPart)
+                }
+            }
         }
     }
 }

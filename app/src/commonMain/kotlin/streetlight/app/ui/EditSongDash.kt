@@ -2,17 +2,18 @@ package streetlight.app.ui
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.*
 import androidx.compose.ui.Modifier
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import pondui.ui.controls.*
+import pondui.ui.theme.Pond
+import pondui.utils.LazyPreviewFrame
 import pondui.utils.MultiPreview
 import pondui.utils.PreviewFrame
 import streetlight.model.data.*
 import streetlight.model.mockDb
 
 @Composable
-fun EditSongDash(
+fun EditSongHeader(
     song: Song,
     updateStatus: UpdateStatus,
     updateSong: (Song) -> Unit,
@@ -50,7 +51,11 @@ fun EditSongDash(
                 ) { updateSong(song.copy(tempo = it.toIntOrNull())) }
             }
         }
-        EditSongNotation(song.notation) { updateSong(song.copy(notation = it)) }
+        if (song.notation == null) {
+            Button("Add notation", color = Pond.colors.primary) {
+                updateSong(song.copy(notation = SongNotation.Empty))
+            }
+        }
     }
 }
 
@@ -58,8 +63,8 @@ fun EditSongDash(
 @Composable
 fun EditSongDashPreview() {
     MultiPreview {
-        PreviewFrame("EditSongDash") {
-            EditSongDash(
+        PreviewFrame("EditSongHeader") {
+            EditSongHeader(
                 song = mockDb.songs.first(),
                 updateStatus = UpdateStatus.Done,
                 updateSong = { }

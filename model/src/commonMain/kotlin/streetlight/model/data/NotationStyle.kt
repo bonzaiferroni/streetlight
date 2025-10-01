@@ -1,42 +1,42 @@
 package streetlight.model.data
 
-import kabinet.model.LabeledEnum
-
-enum class NotationStyle(override val label: String): LabeledEnum<NotationStyle> {
-    Diatonic("Diatonic"),
+enum class NotationStyle(val label: String) {
+    Letters("Letters"),
     Nashville("Nashville"),
-    // Jazz,
 }
 
 fun notationOf(
-    interval: Int,
-    root: Int = 1,
-    mark: String? = null,
-    style: NotationStyle = NotationStyle.Diatonic
+    pitch: Int,
+    style: NotationStyle = NotationStyle.Letters
 ) = when (style) {
-    NotationStyle.Diatonic -> diatonicNotationOf(interval, root, mark)
-    NotationStyle.Nashville -> nashvilleNotationOf(interval, mark)
+    NotationStyle.Letters -> Chromatic.ofPitch(pitch).label
+    NotationStyle.Nashville -> {
+        val chromatic = Chromatic.ofPitch(pitch)
+        if (chromatic.isSharp) "${chromatic.diatonic.degree}#"
+        else chromatic.diatonic.degree.toString()
+    }
 }
 
-fun diatonicNotationOf(interval: Int, root: Int, mark: String?): String {
-    val intNote = ((root + interval - 2) % 7) + 1
-    val note = when (intNote) {
-        1 -> "C"
-        2 -> "D"
-        3 -> "E"
-        4 -> "F"
-        5 -> "G"
-        6 -> "A"
-        7 -> "B"
-        else -> error("invalid intNote: $intNote")
-    }
-    val mark = when (mark) {
-        null -> ""
-        "-" -> "m"
-        "7" -> "7"
-        else -> error("invalid mark: $mark")
-    }
-    return note + mark
+fun notationOf(
+    chord: Chord,
+    rootPitch: Int = 60,
+    style: NotationStyle = NotationStyle.Letters
+) = when (style) {
+    NotationStyle.Letters -> letterNotationOf(chord, rootPitch)
+    NotationStyle.Nashville -> nashvilleNotationOf(chord, rootPitch)
 }
 
-fun nashvilleNotationOf(interval: Int, mark: String?) = "$interval${mark ?: ""}"
+fun letterNotationOf(chord: Chord, rootPitch: Int) = buildString {
+    val chromatic = Chromatic.ofPitch(chord.pitch)
+    append(chromatic.label)
+    chord.quality?.let { append(it.letterNotation) }
+    chord.extension?.let { append(it.notation) }
+}
+
+fun nashvilleNotationOf(chord: Chord, rootPitch: Int) = buildString {
+    val chromatic = Chromatic.ofPitch(chord.pitch + rootPitch)
+    if (chromatic.isSharp) append("#")
+    append(chromatic.diatonic.degree)
+    chord.quality?.let { append(it.nashvilleNotation) }
+    chord.extension?.let { append(it.notation) }
+}

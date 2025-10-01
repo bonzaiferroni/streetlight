@@ -1,22 +1,21 @@
 package streetlight.model.data
 
 import androidx.compose.runtime.Stable
-import kabinet.model.LabeledEnum
 import kotlinx.serialization.Serializable
 
 @Stable
 @Serializable
 data class SongNotation(
-    val root: Int,
-    val measureBeats: Int,
-    val measureTime: Int,
+    val rootPitch: Int,
+    val beatsPerMeasure: Int,
+    val beatValue: Int,
     val parts: List<SongPart>,
 ) {
     companion object {
         val Empty get() = SongNotation(
-            root = 1,
-            measureBeats = 4,
-            measureTime = 4,
+            rootPitch = 67,
+            beatsPerMeasure = 4,
+            beatValue = 4,
             parts = listOf(SongPart.Empty)
         )
     }
@@ -25,7 +24,7 @@ data class SongNotation(
 @Serializable
 data class SongPart(
     val instrument: Instrument,
-    val style: NotationStyle = NotationStyle.Diatonic,
+    val style: NotationStyle = NotationStyle.Letters,
     val sections: List<SongSection> = emptyList(),
 ) {
     companion object {
@@ -40,90 +39,34 @@ data class SongPart(
 data class SongSection(
     val title: String,
     val repetitions: Int = 1,
-    val phrases: List<SongPhrase>,
+    val beatResolution: Int = 1,
+    val chords: List<MeasureChord>,
 ) {
     fun toLabel() = repetitions.takeIf { it > 1 }?.let { "$title (${it}x)" } ?: title
 
-    fun getMeasureCount(measureBeats: Int): Int {
-        return phrases.sumOf { it.getMeasureCount(measureBeats) * it.repetitions }
+    fun getMeasureCount(beatsPerMeasure: Int): Int {
+        return chords.sumOf { it.beats } / beatsPerMeasure
     }
 
-    fun getNoteCount() = phrases.sumOf { phrase ->  phrase.notes.size * phrase.repetitions }
-
-    fun getNote(noteIndex: Int): SongNote {
-        var notesBeforePhrase = 0
-        phrases.forEach { phrase ->
-            repeat(phrase.repetitions) {
-                val phraseIndex = noteIndex - notesBeforePhrase
-                if (phraseIndex < phrase.notes.size) return phrase.notes[phraseIndex]
-                notesBeforePhrase += phrase.notes.size
-            }
-        }
-        error("noteIndex out of bounds: $noteIndex")
-    }
+    fun getChordAt(index: Int) = chords[index % chords.size]
 
     companion object {
         val Empty get() = SongSection(
             title = "Verse",
-            phrases = listOf(SongPhrase.Empty)
+            chords = emptyList()
         )
     }
 }
 
-@Serializable
-data class SongPhrase(
-    val repetitions: Int = 1,
-    val notes: List<SongNote>,
-) {
-    fun getMeasureCount(measureBeats: Int): Int {
-        return (((notes.first().beat - 1) + notes.sumOf { it.duration }) / measureBeats) * repetitions
-    }
-
-    companion object {
-        val Empty get() = SongPhrase(
-            notes = emptyList()
-        )
-    }
-}
-
-@Serializable
-data class SongNote(
-    val interval: Int?,
-    val beat: Int,
-    val duration: Int,
-    val mark: String? = null,
-) {
-    val isRest get() = interval == null
-
-    fun getResolution(measureBeats: Int, measureTiming: Int): Int {
-        if (beat == 1 && duration == 4) return 1
-        if (beat == 3 && duration == 2) return 2
-        else return 4
-    }
-}
-
-enum class Instrument(override val label: String): LabeledEnum<Instrument> {
+enum class Instrument(val label: String) {
     RhythmGuitar("Rhythm Guitar"),
     Voice("Voice"),
 }
 
-fun SongPart.getResolution(measureBeats: Int, measureTiming: Int): Int {
-    var resolution = 1
-    sections.forEach { section ->
-        section.phrases.forEach { phrase ->
-            phrase.notes.forEach { note ->
-                val noteResolution = note.getResolution(measureBeats, measureTiming)
-                resolution = maxOf(noteResolution, resolution)
-            }
-        }
-    }
-    return resolution
-}
-
 val amazingGrace = SongNotation(
-    root = 5,
-    measureBeats = 4,
-    measureTime = 4,
+    rootPitch = 67,
+    beatsPerMeasure = 4,
+    beatValue = 4,
     parts = listOf(
         SongPart(
             instrument = Instrument.RhythmGuitar,
@@ -131,33 +74,28 @@ val amazingGrace = SongNotation(
                 SongSection(
                     title = "Verse",
                     repetitions = 3,
-                    phrases = listOf(
-                        SongPhrase(
-                            repetitions = 1,
-                            notes = listOf(
-                                // G, G7, C, G
-                                SongNote(1, 1, 4),
-                                SongNote(1, 1, 4, "7"),
-                                SongNote(4, 1, 4),
-                                SongNote(1, 1, 4),
-                                // G, Am, D, D,
-                                SongNote(1, 1, 4),
-                                SongNote(2, 1, 4, "-"),
-                                SongNote(5, 1, 4),
-                                SongNote(5, 1, 4),
-                                // G, G7, C, G
-                                SongNote(1, 1, 4),
-                                SongNote(1, 1, 4, "7"),
-                                SongNote(4, 1, 4),
-                                SongNote(1, 1, 4),
-                                // Em, D, G, G,
-                                SongNote(6, 1, 4, "-"),
-                                SongNote(5, 1, 4),
-                                SongNote(1, 1, 4),
-                                SongNote(1, 1, 4),
-                            ),
-                        )
-                    )
+                    chords = listOf(
+                        // G, G7, C, G
+                        MeasureChord.ofNashville(1),
+                        MeasureChord.ofNashville(1, extension = ChordExtension.Seventh),
+                        MeasureChord.ofNashville(4),
+                        MeasureChord.ofNashville(1),
+                        // G, Am, D, D,
+                        MeasureChord.ofNashville(1),
+                        MeasureChord.ofNashville(2, quality = ChordQuality.Minor),
+                        MeasureChord.ofNashville(5),
+                        MeasureChord.ofNashville(5),
+                        // G, G7, C, G
+                        MeasureChord.ofNashville(1),
+                        MeasureChord.ofNashville(1, extension = ChordExtension.Seventh),
+                        MeasureChord.ofNashville(4),
+                        MeasureChord.ofNashville(1),
+                        // Em, D, G, G,
+                        MeasureChord.ofNashville(6, quality = ChordQuality.Minor),
+                        MeasureChord.ofNashville(5),
+                        MeasureChord.ofNashville(1),
+                        MeasureChord.ofNashville(1),
+                    ),
                 )
             )
         )

@@ -25,45 +25,56 @@ fun SongNotationDash(
     val unitDp = Pond.ruler.unitSpacing
     val instrument = Instrument.RhythmGuitar
     val part = notation.parts.first { it.instrument == instrument }
-    val resolution = part.getResolution(notation.measureBeats, notation.measureTime)
-    val dividerColor = Pond.localColors.contentDim.copy(.5f)
     Column(1, horizontalAlignment = Alignment.CenterHorizontally) {
         FlowRow(1) {
-            LabeledValue("Key", notationOf(notation.root), modifier = Modifier.padding(horizontal = unitDp))
+            val rootChromatic = Chromatic.ofPitch(notation.rootPitch)
+            LabeledValue("Key", rootChromatic.label, modifier = Modifier.padding(horizontal = unitDp))
             LabeledValue(
                 "Timing",
-                "${notation.measureBeats}/${notation.measureTime}",
+                "${notation.beatsPerMeasure}/${notation.beatValue}",
                 modifier = Modifier.padding(horizontal = unitDp)
             )
         }
         part.sections.forEach { section ->
-            val measures = section.getMeasureCount(notation.measureBeats)
-            Column(0) {
-                Label(section.toLabel())
-                val noteCount = section.getNoteCount()
-                val groupCount = (noteCount + 3) / 4
-                val rowCount = (groupCount + 1) / 2
-                repeat(rowCount) { rowIndex ->
-                    Row(2) {
-                        repeat(2) { rowGroupIndex ->
-                            val group = rowIndex * 2 + rowGroupIndex
-                            Row(0) {
-                                repeat(4) { groupNoteIndex ->
-                                    val noteIndex = group * 4 + groupNoteIndex
-                                    val note = section.getNote(noteIndex)
-                                    val interval = note.interval
-                                    if (interval == null) {
-                                        Text("-",  modifier = Modifier.width(30.dp))
-                                    } else {
-                                        Text(
-                                            notationOf(interval, notation.root, note.mark),
-                                            modifier = Modifier.width(25.dp)
-                                        )
-                                    }
-                                    if (groupNoteIndex != 3) {
-                                        Label("|", color = dividerColor)
-                                    }
-                                }
+            SongSectionDash(
+                section = section,
+                notation = notation,
+            )
+        }
+    }
+}
+
+@Composable
+fun SongSectionDash(
+    section: SongSection,
+    notation: SongNotation,
+) {
+    val measures = section.getMeasureCount(notation.beatsPerMeasure)
+    val dividerColor = Pond.localColors.contentDim.copy(.5f)
+    Column(0) {
+        Label(section.toLabel())
+        val noteCount = section.chords.size
+        val groupCount = (noteCount + 3) / 4
+        val rowCount = (groupCount + 1) / 2
+        repeat(rowCount) { rowIndex ->
+            Row(2) {
+                repeat(2) { rowGroupIndex ->
+                    val group = rowIndex * 2 + rowGroupIndex
+                    Row(0) {
+                        repeat(4) { groupNoteIndex ->
+                            val noteIndex = group * 4 + groupNoteIndex
+                            val chord = section.getChordAt(noteIndex)
+                            val expression = chord.expression
+                            if (expression != null) {
+                                Text(
+                                    notationOf(expression, notation.rootPitch),
+                                    modifier = Modifier.width(25.dp)
+                                )
+                            } else {
+                                Text("-")
+                            }
+                            if (groupNoteIndex != 3) {
+                                Label("|", color = dividerColor)
                             }
                         }
                     }
