@@ -31,31 +31,6 @@ data class Chord(
     }
 }
 
-@Serializable
-data class MeasureChord(
-    val duration: Int?,
-    val expression: Chord?
-) {
-    fun toNotation(
-        rootPitch: Int = 60,
-        style: NotationStyle = NotationStyle.Letters
-    ): String {
-        val expressionNotation = expression?.toNotation(rootPitch, style)
-        return duration?.let { duration ->
-            "$expressionNotation:$duration"
-        } ?: expressionNotation ?: "-"
-    }
-
-    companion object {
-        fun ofNashville(
-            degree: Int?,
-            duration: Int? = null,
-            quality: ChordQuality? = null,
-            extension: ChordExtension? = null,
-        ) = MeasureChord(duration, degree?.let { Chord.ofNashville(it, quality, extension) } )
-    }
-}
-
 enum class ChordQuality(val letterNotation: String, val nashvilleNotation: String) {
     Major("maj", ""),        // C, D, E… (default, often no suffix)
     Minor("m", "-"),         // Cm, Dm, etc.
@@ -71,19 +46,6 @@ enum class ChordExtension(val notation: String) {
     Ninth("9"),
     Eleventh("11"),
     Thirteenth("13")
-}
-
-fun parseMeasureChord(text: String, style: NotationStyle): MeasureChord? {
-    if (text.contains(':')) {
-        val array = text.split(':')
-        if (array.size != 2) return null
-        val duration = array[1].toIntOrNull() ?: return null
-        if (array[0] == "-") return MeasureChord(duration, null)
-        val chord = parseChord(array[0], style) ?: return null
-        return MeasureChord(duration, chord)
-    }
-    if (text == "-") return MeasureChord(1, null)
-    return parseChord(text, style)?.let { MeasureChord(1, it) }
 }
 
 fun parseChord(text: String, style: NotationStyle): Chord? {

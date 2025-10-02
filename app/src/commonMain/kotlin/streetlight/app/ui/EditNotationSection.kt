@@ -3,9 +3,11 @@ package streetlight.app.ui
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -15,9 +17,11 @@ import androidx.compose.ui.unit.dp
 import kabinet.utils.removeAt
 import kabinet.utils.replaceAt
 import pondui.ui.controls.Column
+import pondui.ui.controls.FlowRow
 import pondui.ui.controls.H3
 import pondui.ui.controls.H4
 import pondui.ui.controls.Row
+import pondui.ui.controls.Text
 import pondui.ui.controls.TextField
 import pondui.ui.modifiers.onHotKeyConsume
 import streetlight.model.data.ChordHelper
@@ -37,6 +41,11 @@ fun EditNotationSection(
     playChord: (List<Int>) -> Unit,
     modifySection: (SongSection) -> Unit
 ) {
+    fun modifyChord(chordIndex: Int, chord: MeasureChord) {
+        val chords = section.chords.replaceAt(chordIndex, chord)
+        modifySection(section.copy(chords = chords))
+    }
+
     Column(2) {
         H3(section.title)
         Row(1) {
@@ -57,46 +66,40 @@ fun EditNotationSection(
                 val repetitions = it.toIntOrNull() ?: section.repetitions
                 modifySection(section.copy(repetitions = repetitions))
             }
-            TextField(
-                text = section.beatResolution.toString(),
-                placeholder = "timing",
-                label = "timing",
-                modifier = Modifier.weight(1f)
-            ) {
-                val resolution = it.toIntOrNull() ?: section.beatResolution
-                modifySection(section.copy(beatResolution = resolution))
-            }
         }
-        H4("Notes")
-        Column(1) {
-            fun modifyChord(chordIndex: Int, chord: MeasureChord) {
-                val chords = section.chords.replaceAt(chordIndex, chord)
-                modifySection(section.copy(chords = chords))
-            }
+        H4("Chords")
 
+        Column(1) {
             val width = 60.dp
             val chordCount = section.chords.size + 1
-            val rowCount = chordCount / 4 + 1
+            var measureBeats = 0
+            var measureCount = 0
 
-            repeat(rowCount) { rowIndex ->
-                val columnCount = minOf(4, chordCount - rowIndex * 4)
-
-                Row(1, modifier = Modifier.height(IntrinsicSize.Max)) {
-                    repeat(columnCount) { columnIndex ->
-                        val chordIndex = rowIndex * 4 + columnIndex
-                        if (chordIndex % section.beatResolution == 0) {
-                            BarLine()
+            val phraseIndices = section.chords.mapIndexedNotNull { index, mc ->
+                if (mc.isPhraseEnd) index + 1 else null
+            } + chordCount
+            phraseIndices.forEachIndexed { index, phraseEndIndex ->
+                FlowRow(1) {
+                    val phraseStart = index.takeIf { it > 0 }?.let { phraseIndices[it - 1] } ?: 0
+                    val phraseLength = phraseEndIndex - phraseStart
+                    repeat(phraseLength) { phraseIndex ->
+                        val chordIndex = phraseStart + phraseIndex
+                        if (measureBeats == 0 || measureBeats >= notation.beatsPerMeasure) {
+                            BarLine(measureCount % 4 == 0)
+                            measureCount++
+                            measureBeats = 0
                         }
                         val measureChord = section.chords.getOrNull(chordIndex)
-                        val expressionText =
-                            measureChord?.expression?.let { notationOf(it, notation.rootPitch, part.style) }
-                        var text by remember { mutableStateOf("") }
+                        measureBeats += measureChord?.duration ?: (notation.beatsPerMeasure - measureBeats)
+                        val expressionText = measureChord?.toNotation(notation.rootPitch, part.style)
+                        var text by remember { mutableStateOf(expressionText ?: "") }
                         LaunchedEffect(expressionText) {
                             text = expressionText ?: text
                         }
                         TextField(
                             text,
-                            modifier = Modifier.width(width).onHotKeyConsume(Key.Backspace) {
+                            minWidth = width,
+                            modifier = Modifier.onHotKeyConsume(Key.Backspace) {
                                 if (text.isEmpty() && section.chords.size > chordIndex) {
                                     modifySection(section.copy(chords = section.chords.removeAt(chordIndex)))
                                     true
@@ -114,9 +117,10 @@ fun EditNotationSection(
                                         slash = e.slash?.let { s -> s - rootChromatic.pitch }
                                     )
                                 }
-                                translation?.takeIf { it != measureChord?.expression }?.toNotation()?.let { expressionNotation ->
-                                    ChordHelper.map[expressionNotation]?.let { midiChord -> playChord(midiChord) }
-                                }
+                                translation?.takeIf { it != measureChord?.expression }?.toNotation()
+                                    ?.let { expressionNotation ->
+                                        ChordHelper.map[expressionNotation]?.let { midiChord -> playChord(midiChord) }
+                                    }
                                 c.copy(expression = translation)
                             }
                             if (parsedMeasureChord != null) {
@@ -128,9 +132,11 @@ fun EditNotationSection(
                             }
                         }
                     }
+                    BarLine(true)
                 }
             }
         }
+
         SectionChords(section, notation)
     }
 }

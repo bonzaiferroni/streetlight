@@ -55,27 +55,28 @@ fun SectionChords(
 ) {
     Column(1) {
         Label(section.toLabel())
-        val noteCount = section.chords.size
-        val rowCount = (noteCount + 7) / 8
-        repeat(rowCount) { rowIndex ->
-            Row(1, modifier = Modifier.height(IntrinsicSize.Max)) {
-                val columnCount = minOf(8, noteCount - rowIndex * 8)
-                repeat(columnCount) { columnIndex ->
-                    val noteIndex = rowIndex * 4 + columnIndex
-                    if (noteIndex % section.beatResolution == 0) {
-                        BarLine()
+        var chordIndex = 0
+        var measureBeats = 0
+        var measureCount = 0
+        val phraseIndices = section.chords.mapIndexedNotNull {
+            index, mc -> if (mc.isPhraseEnd || index + 1 == section.chords.size) index + 1 else null
+        }
+        phraseIndices.forEach { phraseIndex ->
+            FlowRow(1) {
+                while (chordIndex < phraseIndex) {
+                    val measureChord = section.chords[chordIndex++]
+                    if (measureBeats == 0 || measureBeats >= notation.beatsPerMeasure) {
+                        BarLine(measureCount % 4 == 0)
+                        measureCount++
+                        measureBeats = 0
                     }
-                    val chord = noteIndex.takeIf { it < section.chords.size}?.let { section.getChordAt(it) }
-                    val expression = chord?.expression
-                    if (expression != null) {
-                        Text(
-                            notationOf(expression, notation.rootPitch),
-                            modifier = Modifier.widthIn(min = 25.dp)
-                        )
-                    } else {
-                        Text("-", modifier = Modifier.width(25.dp))
-                    }
+                    measureBeats += measureChord.duration ?: (notation.beatsPerMeasure - measureBeats)
+                    Text(
+                        measureChord.expression?.let { notationOf(it, notation.rootPitch) } ?: "-",
+                        modifier = Modifier.widthIn(min = 25.dp)
+                    )
                 }
+                BarLine(true)
             }
         }
     }

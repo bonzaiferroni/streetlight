@@ -42,7 +42,6 @@ data class SongPart(
 data class SongSection(
     val title: String,
     val repetitions: Int = 1,
-    val beatResolution: Int = 1,
     val chords: List<MeasureChord>,
 ) {
     fun toLabel() = repetitions.takeIf { it > 1 }?.let { "$title (${it}x)" } ?: title
@@ -82,22 +81,22 @@ val amazingGrace = SongNotation(
                         MeasureChord.ofNashville(1),
                         MeasureChord.ofNashville(1, extension = ChordExtension.Seventh),
                         MeasureChord.ofNashville(4),
-                        MeasureChord.ofNashville(1),
+                        MeasureChord.ofNashville(1, isPhraseEnd = true),
                         // G, Am, D, D,
                         MeasureChord.ofNashville(1),
                         MeasureChord.ofNashville(2, quality = ChordQuality.Minor),
                         MeasureChord.ofNashville(5),
-                        MeasureChord.ofNashville(5),
+                        MeasureChord.ofNashville(5, isPhraseEnd = true),
                         // G, G7, C, G
                         MeasureChord.ofNashville(1),
                         MeasureChord.ofNashville(1, extension = ChordExtension.Seventh),
                         MeasureChord.ofNashville(4),
-                        MeasureChord.ofNashville(1),
+                        MeasureChord.ofNashville(1, isPhraseEnd = true),
                         // Em, D, G, G,
                         MeasureChord.ofNashville(6, quality = ChordQuality.Minor),
                         MeasureChord.ofNashville(5),
                         MeasureChord.ofNashville(1),
-                        MeasureChord.ofNashville(1),
+                        MeasureChord.ofNashville(1, isPhraseEnd = true),
                     ),
                 )
             ),
