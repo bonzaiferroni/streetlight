@@ -43,7 +43,7 @@ fun SongProfileScreen(
 
             song.notation?.let { notation ->
                 item("edit notation header") {
-                    EditNotationHeader(notation, ::updateNotation)
+                    SongNotationEditor(notation, ::updateNotation)
                 }
 
                 itemsIndexed(notation.parts) { partIndex, part ->
@@ -51,7 +51,7 @@ fun SongProfileScreen(
                         updateNotation(notation.copy(parts = notation.parts.replaceAt(partIndex, part)))
                     }
 
-                    EditSongPart(notation, part, ::modifyPart) { program, chords ->
+                    SongPartEditor(notation, part, ::modifyPart) { program, chords ->
                         midi.playChord(chords, program = program)
                     }
                 }

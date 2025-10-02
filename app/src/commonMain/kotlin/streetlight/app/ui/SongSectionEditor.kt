@@ -7,11 +7,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import kabinet.utils.replaceAt
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import pondui.ui.controls.Column
 import pondui.ui.controls.H3
 import pondui.ui.controls.H4
+import pondui.ui.controls.MoreMenu
+import pondui.ui.controls.MoreMenuItem
 import pondui.ui.controls.Row
 import pondui.ui.controls.TextField
 import pondui.ui.theme.Pond
@@ -28,20 +29,22 @@ import streetlight.model.data.parseMeasureChord
 import streetlight.model.mockDb
 
 @Composable
-fun EditSongSection(
+fun SongSectionEditor(
     notation: SongNotation,
     part: SongPart,
     section: SongSection,
     playChord: (Int, List<Int>) -> Unit,
-    modifySection: (SongSection) -> Unit
+    modifySection: (SongSection?) -> Unit
 ) {
-    fun modifyChord(chordIndex: Int, chord: MeasureChord) {
-        val chords = section.chords.replaceAt(chordIndex, chord)
-        modifySection(section.copy(chords = chords))
-    }
-
     Column(2) {
-        H3(section.title)
+        Row(1) {
+            H3(section.title, modifier = Modifier.weight(1f))
+            MoreMenu {
+                MoreMenuItem("Delete ${section.title}") {
+                    modifySection(null)
+                }
+            }
+        }
         Row(1) {
             TextField(
                 text = section.title,
@@ -115,7 +118,7 @@ fun EditSongSection(
             modifySection(section.copy(chords = chords))
         }
 
-        SectionChords(notation, part, section)
+        SongSectionView(notation, part, section)
     }
 }
 
@@ -127,7 +130,7 @@ fun EditSongSectionPreview() {
             val notation = mockDb.songs.first().notation!!
             val part = notation.parts.first()
             val section = part.sections.first()
-            EditSongSection(
+            SongSectionEditor(
                 notation = notation,
                 part = part,
                 section = section,

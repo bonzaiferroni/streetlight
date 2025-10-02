@@ -3,17 +3,12 @@ package streetlight.app.ui
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.key.Key
-import androidx.compose.ui.unit.dp
 import compose.icons.TablerIcons
 import compose.icons.tablericons.Minus
 import compose.icons.tablericons.Plus
 import compose.icons.tablericons.Trash
-import kabinet.utils.removeAt
-import kabinet.utils.replaceAt
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import pondui.ui.controls.*
-import pondui.ui.modifiers.onHotKeyConsume
 import pondui.utils.MultiPreview
 import pondui.utils.PreviewFrame
 import streetlight.model.data.*
@@ -21,7 +16,7 @@ import streetlight.model.mockDb
 import kotlin.collections.plus
 
 @Composable
-fun EditNotationHeader(
+fun SongNotationEditor(
     notation: SongNotation,
     updateNotation: (SongNotation?) -> Unit,
 ) {
@@ -68,7 +63,7 @@ fun EditNotationHeader(
 fun EditNotationHeaderPreview() {
     MultiPreview {
         PreviewFrame("EditSongNotation") {
-            EditNotationHeader(
+            SongNotationEditor(
                 notation = mockDb.songs.first().notation!!,
                 updateNotation = { }
             )

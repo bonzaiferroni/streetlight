@@ -1,9 +1,6 @@
 package streetlight.app.ui
 
-import androidx.compose.foundation.layout.IntrinsicSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -14,7 +11,6 @@ import pondui.ui.controls.Column
 import pondui.ui.controls.FlowRow
 import pondui.ui.controls.Label
 import pondui.ui.controls.LabeledValue
-import pondui.ui.controls.Row
 import pondui.ui.controls.Text
 import pondui.ui.theme.Pond
 import streetlight.model.data.*
@@ -22,7 +18,7 @@ import pondui.utils.MultiPreview
 import pondui.utils.PreviewFrame
 
 @Composable
-fun SongNotationDash(
+fun SongNotationView(
     notation: SongNotation
 ) {
     val unitDp = Pond.ruler.unitSpacing
@@ -40,7 +36,7 @@ fun SongNotationDash(
         }
         part.composition.forEach { sectionIndex ->
             val section = part.sections.getOrNull(sectionIndex) ?: return@forEach
-            SectionChords(
+            SongSectionView(
                 notation = notation,
                 part = part,
                 section = section,
@@ -50,12 +46,13 @@ fun SongNotationDash(
 }
 
 @Composable
-fun SectionChords(
+fun SongSectionView(
     notation: SongNotation,
     part: SongPart,
     section: SongSection,
+    modifier: Modifier = Modifier,
 ) {
-    Column(1) {
+    Column(1, modifier = modifier) {
         Label(section.toLabel())
         var chordIndex = 0
         var measureBeats = 0
@@ -88,8 +85,8 @@ fun SectionChords(
 @Composable
 fun SongNotationDashPreview() {
     MultiPreview {
-        PreviewFrame("SongNotationDash") {
-            SongNotationDash(amazingGrace)
+        PreviewFrame("SongNotationView") {
+            SongNotationView(amazingGrace)
         }
     }
 }

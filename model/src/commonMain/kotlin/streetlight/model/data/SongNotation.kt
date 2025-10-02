@@ -22,50 +22,6 @@ data class SongNotation(
     }
 }
 
-@Serializable
-data class SongPart(
-    val instrument: Instrument,
-    val style: NotationStyle = NotationStyle.Letters,
-    val midiProgram: Int? = null,
-    val sections: List<SongSection> = emptyList(),
-    val composition: List<Int> = listOf(0),
-) {
-    companion object {
-        val Empty get() = SongPart(
-            instrument = Instrument.RhythmGuitar,
-            sections = listOf(SongSection.Empty),
-            composition = listOf(0)
-        )
-    }
-}
-
-@Serializable
-data class SongSection(
-    val title: String,
-    val repetitions: Int = 1,
-    val chords: List<MeasureChord>,
-) {
-    fun toLabel() = repetitions.takeIf { it > 1 }?.let { "$title (${it}x)" } ?: title
-
-//    fun getMeasureCount(beatsPerMeasure: Int): Int {
-//        return chords.sumOf { it.duration } / beatsPerMeasure
-//    }
-
-    fun getChordAt(index: Int) = chords[index % chords.size]
-
-    companion object {
-        val Empty get() = SongSection(
-            title = "Verse",
-            chords = emptyList()
-        )
-    }
-}
-
-enum class Instrument(val label: String, val midiProgram: Int) {
-    RhythmGuitar("Rhythm Guitar", 24),
-    Voice("Voice", 52),
-}
-
 val amazingGrace = SongNotation(
     rootPitch = 67,
     beatsPerMeasure = 4,

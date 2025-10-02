@@ -33,7 +33,7 @@ fun LiveSongDash(
             LabeledValue("Tempo", "90 bpm", modifier = Modifier.padding(horizontal = unitDp))
         }
         Section {
-            // SongNotationDash()
+            // SongNotationView()
         }
         Section {
             Column(2) {
