@@ -41,8 +41,9 @@ fun SongNotationDash(
         part.composition.forEach { sectionIndex ->
             val section = part.sections.getOrNull(sectionIndex) ?: return@forEach
             SectionChords(
-                section = section,
                 notation = notation,
+                part = part,
+                section = section,
             )
         }
     }
@@ -50,8 +51,9 @@ fun SongNotationDash(
 
 @Composable
 fun SectionChords(
-    section: SongSection,
     notation: SongNotation,
+    part: SongPart,
+    section: SongSection,
 ) {
     Column(1) {
         Label(section.toLabel())
@@ -72,7 +74,7 @@ fun SectionChords(
                     }
                     measureBeats += measureChord.duration ?: (notation.beatsPerMeasure - measureBeats)
                     Text(
-                        measureChord.expression?.let { notationOf(it, notation.rootPitch) } ?: "-",
+                        measureChord.expression?.let { notationOf(it, notation.rootPitch, part.style) } ?: "-",
                         modifier = Modifier.widthIn(min = 25.dp)
                     )
                 }

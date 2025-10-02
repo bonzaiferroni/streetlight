@@ -26,6 +26,7 @@ data class SongNotation(
 data class SongPart(
     val instrument: Instrument,
     val style: NotationStyle = NotationStyle.Letters,
+    val midiProgram: Int? = null,
     val sections: List<SongSection> = emptyList(),
     val composition: List<Int> = listOf(0),
 ) {
@@ -60,9 +61,9 @@ data class SongSection(
     }
 }
 
-enum class Instrument(val label: String) {
-    RhythmGuitar("Rhythm Guitar"),
-    Voice("Voice"),
+enum class Instrument(val label: String, val midiProgram: Int) {
+    RhythmGuitar("Rhythm Guitar", 24),
+    Voice("Voice", 52),
 }
 
 val amazingGrace = SongNotation(
