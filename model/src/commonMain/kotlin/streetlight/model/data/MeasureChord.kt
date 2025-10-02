@@ -16,11 +16,8 @@ data class MeasureChord(
         return buildString {
             append(expressionNotation ?: "-")
             duration?.let {
-                append(':')
+                append('.')
                 append(it)
-            }
-            if (isPhraseEnd) {
-                append("|")
             }
         }
     }
@@ -40,16 +37,10 @@ data class MeasureChord(
     }
 }
 
-fun parseMeasureChord(text: String, style: NotationStyle): MeasureChord? {
+fun parseMeasureChord(text: String, style: NotationStyle, isPhraseEnd: Boolean): MeasureChord? {
     var text = text
-    val barIndex = text.indexOf('|')
-    val isPhraseEnd = if (barIndex >= 0) {
-        if (barIndex != text.length - 1) return null
-        text = text.take(barIndex)
-        true
-    } else false
-    val duration = if (text.contains(':')) {
-        val array = text.split(':')
+    val duration = if (text.contains('.')) {
+        val array = text.split('.')
         if (array.size != 2) return null
         val duration = array[1].toIntOrNull() ?: return null
         text = array[0]

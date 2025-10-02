@@ -152,3 +152,8 @@ fun RejectFontsPreview() {
 //        ),
     )
 }
+
+@Composable
+fun ThemePreview() {
+
+}
