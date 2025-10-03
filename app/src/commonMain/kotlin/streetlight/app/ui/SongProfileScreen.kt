@@ -51,9 +51,14 @@ fun SongProfileScreen(
                         updateNotation(notation.copy(parts = notation.parts.replaceAt(partIndex, part)))
                     }
 
-                    SongPartEditor(notation, part, ::modifyPart) { program, chords ->
-                        midi.playChord(chords, program = program)
-                    }
+                    SongPartEditor(
+                        notation = notation,
+                        part = part,
+                        midiPlayer = midi,
+                        capo = song.capo,
+                        tempo = song.tempo,
+                        updatePart = ::modifyPart
+                    )
                 }
             }
         }

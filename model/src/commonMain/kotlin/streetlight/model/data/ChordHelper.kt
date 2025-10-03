@@ -19,7 +19,7 @@ object ChordHelper {
         "F#m" to listOf(42, 49, 54, 57, 66, 69),  // 2-4-4-2-2-2 (full barre)
         "G" to listOf(43, 47, 55, 59, 62, 67),    // 3-2-0-0-0-3
         "Gm" to listOf(43, 50, 55, 58, 62, 67),   // 3-5-5-3-3-3 (full barre)
-        "G7" to listOf(43, 47, 55, 59, 67, 70),
+        "G7" to listOf(43, 47, 55, 59, 62, 65),   // 3-2-0-0-0-1
         "C/G" to listOf(43, 55, 52, 55, 60, 64),
         "D/F#" to listOf(42, 50, 57, 62, 69),
         "F/C" to listOf(48, 53, 60, 65, 72),

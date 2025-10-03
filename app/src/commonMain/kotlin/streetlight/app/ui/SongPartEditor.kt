@@ -3,18 +3,26 @@ package streetlight.app.ui
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import compose.icons.TablerIcons
+import compose.icons.tablericons.ArrowDown
+import compose.icons.tablericons.ArrowUp
+import compose.icons.tablericons.PlayerPlay
+import compose.icons.tablericons.PlayerStop
 import compose.icons.tablericons.Plus
 import compose.icons.tablericons.Settings
 import compose.icons.tablericons.Trash
+import kabinet.utils.moveLeft
+import kabinet.utils.moveRight
 import kabinet.utils.removeAt
 import kabinet.utils.replaceAt
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import pondui.ui.controls.Carousel
 import pondui.ui.controls.Column
 import pondui.ui.controls.DropMenu
+import pondui.ui.controls.Expando
 import pondui.ui.controls.H3
 import pondui.ui.controls.H4
 import pondui.ui.controls.IconButton
@@ -23,10 +31,12 @@ import pondui.ui.controls.MoreMenu
 import pondui.ui.controls.MoreMenuItem
 import pondui.ui.controls.Row
 import pondui.ui.controls.Section
-import pondui.ui.controls.Text
 import pondui.ui.controls.TextField
+import pondui.ui.services.MidiPlayer
+import pondui.ui.services.MiniPlayer
 import pondui.utils.MultiPreview
 import pondui.utils.PreviewFrame
+import streetlight.app.utils.toMidiSequence
 import streetlight.model.data.SongNotation
 import streetlight.model.data.SongPart
 import streetlight.model.data.SongSection
@@ -36,8 +46,10 @@ import streetlight.model.mockDb
 fun SongPartEditor(
     notation: SongNotation,
     part: SongPart,
+    midiPlayer: MidiPlayer? = null,
+    capo: Int? = null,
+    tempo: Int? = null,
     updatePart: (SongPart) -> Unit,
-    playChord: (Int, List<Int>) -> Unit,
 ) {
     Section {
         Column(2, modifier = Modifier.fillMaxWidth()) {
@@ -77,6 +89,15 @@ fun SongPartEditor(
                             }
                         }
                     }
+                    Expando()
+                    midiPlayer?.MiniPlayer {
+                        part.toMidiSequence(
+                            beatsPerMeasure = notation.beatsPerMeasure,
+                            rootPitch = notation.rootPitch,
+                            capo = capo,
+                            tempo = tempo
+                        )
+                    }
                 }
                 part.composition.forEachIndexed { index, sectionIndex ->
                     val section = part.sections.getOrNull(sectionIndex)
@@ -85,6 +106,12 @@ fun SongPartEditor(
                             Row(1) {
                                 SongSectionView(notation, part, section, modifier = Modifier.weight(1f))
                                 MoreMenu {
+                                    MoreMenuItem("Move Up", TablerIcons.ArrowUp) {
+                                        updatePart(part.copy(composition = part.composition.moveLeft(index)))
+                                    }
+                                    MoreMenuItem("Move Down", TablerIcons.ArrowDown) {
+                                        updatePart(part.copy(composition = part.composition.moveRight(index)))
+                                    }
                                     MoreMenuItem("Remove", TablerIcons.Trash) {
                                         updatePart(part.copy(composition = part.composition.removeAt(index)))
                                     }
@@ -96,7 +123,7 @@ fun SongPartEditor(
             }
 
             Row(1) {
-                H4("Add Section")
+                H4("Sections")
                 IconButton(TablerIcons.Plus) {
                     updatePart(part.copy(sections = part.sections + SongSection.Empty))
                 }
@@ -104,9 +131,16 @@ fun SongPartEditor(
 
             part.sections.forEachIndexed { sectionIndex, section ->
                 Section {
-                    SongSectionEditor(notation, part, section, playChord) { modifiedSection ->
+                    SongSectionEditor(
+                        notation = notation,
+                        part = part,
+                        section = section,
+                        midiPlayer = midiPlayer,
+                        capo = capo,
+                        tempo = tempo,
+                    ) { modifiedSection ->
                         val sections = if (modifiedSection != null) {
-                            part.sections.replaceAt(sectionIndex, section)
+                            part.sections.replaceAt(sectionIndex, modifiedSection)
                         } else {
                             part.sections.removeAt(sectionIndex)
                         }
@@ -129,7 +163,6 @@ fun SongPartEditorPreview() {
                 notation = notation,
                 part = part,
                 updatePart = { },
-                playChord = { _, _ -> }
             )
         }
     }

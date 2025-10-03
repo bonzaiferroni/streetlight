@@ -9,16 +9,21 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import pondui.ui.controls.Column
+import pondui.ui.controls.Expando
 import pondui.ui.controls.H3
 import pondui.ui.controls.H4
 import pondui.ui.controls.MoreMenu
 import pondui.ui.controls.MoreMenuItem
 import pondui.ui.controls.Row
 import pondui.ui.controls.TextField
+import pondui.ui.services.MidiPlayer
+import pondui.ui.services.MiniPlayer
+import pondui.ui.services.playChord
 import pondui.ui.theme.Pond
 import pondui.utils.MultiPreview
 import pondui.utils.PreviewFrame
 import streetlight.app.appTheme
+import streetlight.app.utils.toMidiSequence
 import streetlight.model.data.ChordHelper
 import streetlight.model.data.Chromatic
 import streetlight.model.data.MeasureChord
@@ -33,7 +38,9 @@ fun SongSectionEditor(
     notation: SongNotation,
     part: SongPart,
     section: SongSection,
-    playChord: (Int, List<Int>) -> Unit,
+    midiPlayer: MidiPlayer? = null,
+    capo: Int? = null,
+    tempo: Int? = null,
     modifySection: (SongSection?) -> Unit
 ) {
     Column(2) {
@@ -64,19 +71,30 @@ fun SongSectionEditor(
                 modifySection(section.copy(repetitions = repetitions))
             }
         }
-        H4("Chords")
+        Row(1) {
+            H4("Chords")
+            Expando()
+            midiPlayer?.MiniPlayer { section.toMidiSequence(
+                beatsPerMeasure = notation.beatsPerMeasure,
+                rootPitch = notation.rootPitch,
+                capo = capo,
+                tempo = tempo
+            ) }
+        }
 
-        var chordText by remember (part.style) { mutableStateOf(buildString {
-            section.chords.forEachIndexed { index, chord ->
-                append(chord.toNotation(notation.rootPitch, part.style))
-                if (index < section.chords.size - 1) {
-                    if (chord.isPhraseEnd)
-                        append('\n')
-                    else
-                        append(' ')
+        var chordText by remember(part.style) {
+            mutableStateOf(buildString {
+                section.chords.forEachIndexed { index, chord ->
+                    append(chord.toNotation(notation.rootPitch, part.style))
+                    if (index < section.chords.size - 1) {
+                        if (chord.isPhraseEnd)
+                            append('\n')
+                        else
+                            append(' ')
+                    }
                 }
-            }
-        }) }
+            })
+        }
 
         val rootChromatic = Chromatic.ofPitch(notation.rootPitch)
 
@@ -108,8 +126,11 @@ fun SongSectionEditor(
                                 section.chords[chords.size].expression != mc.expression
                     }?.toNotation()
                         ?.let { expressionNotation ->
-                            ChordHelper.map[expressionNotation]?.let {
-                                midiChord -> playChord(part.midiProgram ?: part.instrument.midiProgram, midiChord)
+                            ChordHelper.map[expressionNotation]?.let { midiChord ->
+                                midiPlayer?.playChord(
+                                    notes = midiChord,
+                                    program = part.midiProgram ?: part.instrument.midiProgram
+                                )
                             }
                         }
                     chords.add(translation)
@@ -135,7 +156,6 @@ fun EditSongSectionPreview() {
                 part = part,
                 section = section,
                 modifySection = { },
-                playChord = { _,_ -> }
             )
         }
     }

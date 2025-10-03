@@ -48,7 +48,7 @@ fun SongNotationEditor(
             ) { updateNotation(notation.copy(beatValue = it.toIntOrNull() ?: notation.beatValue)) }
         }
         Row(1) {
-            Text("Add Instrument")
+            H4("Instruments")
             MoreMenu(TablerIcons.Plus, TablerIcons.Minus) {
                 MoreMenuItem("Rhythm Guitar") {
                     updateNotation(notation.copy(parts = notation.parts + SongPart.Empty.copy(instrument = Instrument.RhythmGuitar)))
