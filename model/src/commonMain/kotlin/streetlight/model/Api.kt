@@ -21,6 +21,9 @@ import streetlight.model.data.SongId
 import streetlight.model.data.Rendition
 import streetlight.model.data.RenditionId
 import streetlight.model.data.NewRendition
+import streetlight.model.data.NewRequest
+import streetlight.model.data.Request
+import streetlight.model.data.RequestId
 
 object Api: ApiNode(ApiNode(null, "api"), "v1") {
 
@@ -67,6 +70,8 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
             val since = addInstantParam("since")
         }
     }
+
+    object RequestBox: PostEndpoint<NewRequest, RequestId>(this, "request_box")
 }
 
 // utility

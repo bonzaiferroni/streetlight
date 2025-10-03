@@ -1,6 +1,5 @@
 package streetlight.model.data
 
-import kabinet.db.TableId
 import kabinet.utils.randomUuidString
 import kotlinx.datetime.Instant
 import kotlinx.serialization.Serializable
@@ -11,10 +10,10 @@ data class Request(
     val requestId: RequestId,
     val eventId: EventId,
     val songId: SongId,
-    val performed: Boolean,
-    val notes: String,
+    val isJoining: Boolean,
+    val comment: String?,
     val requesterName: String?,
-    val requestedAt: Instant,
+    val createdAt: Instant,
 )
 
 @JvmInline
@@ -22,3 +21,13 @@ data class Request(
 value class RequestId(override val value: String): ProjectId {
     companion object { fun random() = RequestId(randomUuidString()) }
 }
+
+@Serializable
+data class NewRequest(
+    val eventId: EventId,
+    val songId: SongId?,
+    val songName: String? = null,
+    val isJoining: Boolean,
+    val comment: String?,
+    val requesterName: String?,
+)

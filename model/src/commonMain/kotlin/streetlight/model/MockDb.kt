@@ -1,6 +1,8 @@
 package streetlight.model
 
 import kabinet.model.GeoPoint
+import kabinet.model.User
+import kabinet.model.UserId
 import kabinet.model.UserRole
 import kotlinx.datetime.Clock
 import streetlight.model.data.Area
@@ -12,15 +14,13 @@ import streetlight.model.data.Location
 import streetlight.model.data.LocationId
 import streetlight.model.data.Song
 import streetlight.model.data.SongId
-import streetlight.model.data.Spark
-import streetlight.model.data.SparkId
 import streetlight.model.data.amazingGrace
 import kotlin.random.Random
 import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.hours
 
 interface MockDb {
-    val sparks: List<Spark>
+    val sparks: List<User>
     val areas: List<Area>
     val locations: List<Location>
     val events: List<Event>
@@ -42,8 +42,8 @@ val mockDb by lazy {
     )
     val sparks = (0..3).map {
         val name = sparkNameBag.draw()
-        Spark(
-            userId = SparkId.random(),
+        User(
+            userId = UserId.random(),
             username = name.first,
             roles = setOf(UserRole.USER),
             avatarUrl = null,

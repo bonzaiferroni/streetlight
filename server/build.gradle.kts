@@ -42,4 +42,6 @@ dependencies {
     implementation(project(":model"))
     implementation(project(":kabinet"))
     implementation(project(":klutch"))
+
+    implementation("io.ktor:ktor-server-html-builder:3.3.0")
 }
