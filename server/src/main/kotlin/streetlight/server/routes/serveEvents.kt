@@ -1,6 +1,8 @@
 package streetlight.server.routes
 
+import io.ktor.server.response.respondRedirect
 import io.ktor.server.routing.Routing
+import io.ktor.server.routing.get
 import klutch.server.*
 import klutch.utils.getUserId
 import streetlight.model.Api
@@ -11,26 +13,31 @@ import streetlight.server.ServerProvider
 fun Routing.serveEvents(app: ServerProvider = RuntimeProvider) {
     val dao = app.dao.event
 
-    get(Api.EventFeed) {
+    getEndpoint(Api.EventFeed) {
         dao.readActiveEvents()
     }
 
-    get(Api.EventProfile, { it.toProjectId() }) { id, _ ->
+    getEndpoint(Api.EventProfile, { it.toProjectId() }) { id, _ ->
         dao.readEvent(id)
     }
 
+    get("/qr") {
+        val event = dao.readActiveEvents().firstOrNull() ?: return@get
+        call.respondRedirect("http://streetlight.ing/eventportal/${event.eventId.value}")
+    }
+
     authenticateJwt {
-        post(Api.EventFeed.Create) { newEvent, _ ->
+        postEndpoint(Api.EventFeed.Create) { newEvent, _ ->
             val userId = getUserId()
             dao.createEvent(userId, newEvent)
         }
 
-        update(Api.EventProfile.Update) { update, _ ->
+        updateEndpoint(Api.EventProfile.Update) { update, _ ->
             val userId = getUserId()
             dao.updateEvent(userId, update)
         }
 
-        delete(Api.EventFeed.Delete) { eventId, _ ->
+        deleteEndpoint(Api.EventFeed.Delete) { eventId, _ ->
             val userId = getUserId()
             dao.deleteEvent(userId, eventId)
         }

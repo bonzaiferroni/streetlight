@@ -18,7 +18,7 @@ import java.io.File
 fun Application.configureApiRoutes() {
     routing {
         get(Api.path) {
-            call.respondText("Hello World!")
+            call.respondText("Hello Colfax!")
         }
 
         staticResources("/static", "static")

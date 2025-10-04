@@ -13,28 +13,28 @@ fun Routing.serveSongs(app: ServerProvider = RuntimeProvider) {
     val dao = app.dao.song
     val service = app.service.song
 
-    get(Api.SongProfile, { it.toProjectId() }) { songId, _ ->
+    getEndpoint(Api.SongProfile, { it.toProjectId() }) { songId, _ ->
         dao.readById(songId)
     }
 
     authenticateJwt {
-        get(Api.SongFeed) {
+        getEndpoint(Api.SongFeed) {
             val userId = getUserId()
             dao.readAllByUserId(userId)
         }
 
-        post(Api.SongFeed.Create) { newSong, endpoint ->
+        postEndpoint(Api.SongFeed.Create) { newSong, endpoint ->
             val userId = getUserId()
             dao.createSong(userId, newSong)
         }
 
-        get(Api.SongFeed.TakeNextSong, { it.toProjectId() }) { eventId, endpoint ->
+        getEndpoint(Api.SongFeed.TakeNextSong, { it.toProjectId() }) { eventId, endpoint ->
             val since: Instant = readParam(endpoint.since)
             val userId = getUserId()
             service.takeNextSong(userId, eventId, since)
         }
 
-        post(Api.SongProfile.Update) { song, endpoint ->
+        postEndpoint(Api.SongProfile.Update) { song, endpoint ->
             val userId = getUserId()
             dao.updateSong(userId, song)
         }
