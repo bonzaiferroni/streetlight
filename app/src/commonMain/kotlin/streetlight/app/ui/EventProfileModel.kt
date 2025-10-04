@@ -5,6 +5,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
+import pondui.APP_API_URL
 import pondui.ui.controls.UpdateStatus
 import pondui.ui.core.ModelState
 import pondui.ui.core.StateModel
@@ -29,7 +30,7 @@ class EventProfileModel(
     init {
         ioLaunch {
             val event = client.readById(eventId)
-            setStateFromMain { it.copy(event = event) }
+            setStateFromMain { it.copy(event = event,) }
         }
     }
 
@@ -43,7 +44,7 @@ class EventProfileModel(
         val original = stateNow.event ?: return
         var update = toUpdate(original)
         if (original == update) return
-        setState { it.copy(event = update)}
+        setState { it.copy(event = update) }
         updateJob?.cancel()
         updateJob = ioLaunch {
             delay(delay)

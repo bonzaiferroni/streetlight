@@ -45,3 +45,9 @@ dependencies {
 
     implementation("io.ktor:ktor-server-html-builder:3.3.0")
 }
+
+ktor {
+    fatJar {
+        archiveFileName.set("streetlight-server.jar")
+    }
+}

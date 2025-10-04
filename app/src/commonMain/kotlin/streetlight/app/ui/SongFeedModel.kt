@@ -35,6 +35,7 @@ class SongFeedModel(
                 title = stateNow.newName,
                 artist = stateNow.newArtist.takeIf { it.isNotEmpty() }
             ))
+            setState { it.copy(newName = "", newArtist = "")}
             refreshSongs()
         }
     }
