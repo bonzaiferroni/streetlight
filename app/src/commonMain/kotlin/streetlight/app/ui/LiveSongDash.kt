@@ -5,7 +5,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import kotlinx.serialization.Serializable
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import pondui.ui.controls.Column
 import pondui.ui.controls.*
@@ -16,7 +15,7 @@ import pondui.utils.PreviewFrame
 import streetlight.model.data.*
 
 @Composable
-fun LiveSongDash(
+fun LiveSongView(
     title: String,
     notes: String?,
     rating: SelfRating?,
@@ -72,7 +71,7 @@ fun LiveSongDash(
 fun LiveSongDashPreview() {
     MultiPreview {
         PreviewFrame {
-            LiveSongDash(
+            LiveSongView(
                 title = "Imagine",
                 notes = "Great song, loved the vibe!",
                 rating = null,

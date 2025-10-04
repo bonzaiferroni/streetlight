@@ -28,10 +28,10 @@ fun Routing.serveSongs(app: ServerProvider = RuntimeProvider) {
             dao.createSong(userId, newSong)
         }
 
-        get(Api.SongFeed.TakeNextSong) { endpoint ->
+        get(Api.SongFeed.TakeNextSong, { it.toProjectId() }) { eventId, endpoint ->
             val since: Instant = readParam(endpoint.since)
             val userId = getUserId()
-            service.takeNextSong(userId, since)
+            service.takeNextSong(userId, eventId, since)
         }
 
         post(Api.SongProfile.Update) { song, endpoint ->

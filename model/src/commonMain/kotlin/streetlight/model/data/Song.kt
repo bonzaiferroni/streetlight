@@ -23,3 +23,9 @@ data class Song(
 value class SongId(override val value: String): ProjectId {
     companion object { fun random() = SongId(randomUuidString()) }
 }
+
+@Serializable
+data class EventSong(
+    val song: Song,
+    val request: Request?,
+)

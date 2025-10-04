@@ -10,6 +10,7 @@ import streetlight.model.data.Area
 import streetlight.model.data.AreaId
 import streetlight.model.data.Event
 import streetlight.model.data.EventId
+import streetlight.model.data.EventSong
 import streetlight.model.data.Location
 import streetlight.model.data.LocationId
 import streetlight.model.data.NewArea
@@ -52,7 +53,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
 
     object SongFeed: GetEndpoint<List<Song>>(this, "songs") {
         object Create: PostEndpoint<NewSong, SongId>(this, "create")
-        object TakeNextSong: GetEndpoint<Song>(this, "take_next_song") {
+        object TakeNextSong: GetByTableIdEndpoint<EventId, EventSong>(this, "take_next_song") {
             val since = addInstantParam("since")
         }
     }

@@ -6,12 +6,14 @@ import pondui.ui.core.ModelState
 import pondui.ui.core.StateModel
 import streetlight.app.AppProvider
 import streetlight.app.RuntimeProvider
+import streetlight.model.data.EventId
+import streetlight.model.data.EventSong
 import streetlight.model.data.NewRendition
 import streetlight.model.data.SelfRating
-import streetlight.model.data.Song
 import kotlin.time.Duration.Companion.days
 
 class LiveEventModel(
+    private val eventId: EventId,
     private val app: AppProvider = RuntimeProvider
 ) : StateModel<LiveEventState>() {
     override val state = ModelState(LiveEventState())
@@ -28,13 +30,13 @@ class LiveEventModel(
                 app.repo.songPlay.create(it)
             }
 
-            val song = app.repo.song.takeNextSong(Clock.System.now() - 30.days) ?: return@ioLaunch
+            val eventSong = app.repo.song.takeNextSong(eventId, Clock.System.now() - 30.days) ?: return@ioLaunch
             val newRendition = NewRendition(
-                songId = song.songId,
+                songId = eventSong.song.songId,
                 notes = null,
                 rating = null,
             )
-            setStateFromMain { it.copy(song = song, songPlay = newRendition) }
+            setStateFromMain { it.copy(song = eventSong, songPlay = newRendition) }
         }
     }
 
@@ -71,7 +73,7 @@ class LiveEventModel(
 }
 
 data class LiveEventState(
-    val song: Song? = null,
+    val song: EventSong? = null,
     val songPlay: NewRendition? = null,
     val breakStartedAt: Instant? = null,
 )

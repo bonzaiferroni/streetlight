@@ -32,9 +32,8 @@ import streetlight.model.mockDb
 @Composable
 fun EventProfileScreen(
     route: EventProfileRoute,
-    viewModel: EventProfileModel = viewModel { EventProfileModel() }
+    viewModel: EventProfileModel = viewModel (key = route.id) { EventProfileModel(route.id.toProjectId()) }
 ) {
-    viewModel.init(route.id.toProjectId())
     val state by viewModel.stateFlow.collectAsState()
 
     val event = state.event ?: return
@@ -66,6 +65,7 @@ fun EventProfileScreen(
         }
         Tab("Live") {
             LiveEventView(
+                eventId = event.eventId,
                 startsAt = event.startsAt,
                 endsAt = event.endsAt,
                 status = event.status,

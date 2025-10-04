@@ -11,11 +11,12 @@ import streetlight.model.data.*
 
 @Composable
 fun LiveEventView(
+    eventId: EventId,
     startsAt: Instant,
     endsAt: Instant,
     status: EventStatus,
     setStatus: (EventStatus) -> Unit,
-    viewModel: LiveEventModel = viewModel { LiveEventModel() }
+    viewModel: LiveEventModel = viewModel { LiveEventModel(eventId) }
 ) {
     val state by viewModel.stateFlow.collectAsState()
 
@@ -39,12 +40,19 @@ fun LiveEventView(
             isVisibleInit = true,
             offsetX = 50.dp,
             scale = .8f,
-        ) { song ->
+        ) { eventSong ->
+            val song = eventSong?.song
+            val request = eventSong?.request
             val songPlay = state.songPlay
             if (song != null && songPlay != null) {
                 TabSection {
                     Tab("Song") {
-                        LiveSongDash(
+                        request?.let { request ->
+                            H2("Requested by ${request.requesterName ?: "anonymous"}")
+                            Text("Is joining? ${request.isJoining}")
+                            Text("Comment: ${request.comment}")
+                        }
+                        LiveSongView(
                             title = song.title,
                             notes = songPlay.notes,
                             rating = songPlay.rating,

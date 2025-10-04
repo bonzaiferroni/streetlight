@@ -18,6 +18,7 @@ import kotlin.time.Duration.Companion.seconds
 
 @Stable
 class EventProfileModel(
+    private val eventId: EventId,
     private val app: AppProvider = RuntimeProvider
 ) : StateModel<EventProfileState>() {
     override val state = ModelState(EventProfileState())
@@ -25,8 +26,7 @@ class EventProfileModel(
     private val client = app.repo.event
     private var updateJob: Job? = null
 
-    fun init(eventId: EventId) {
-        if (eventId == stateNow.event?.eventId) return
+    init {
         ioLaunch {
             val event = client.readById(eventId)
             setStateFromMain { it.copy(event = event) }
