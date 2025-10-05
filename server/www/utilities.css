@@ -21,3 +21,7 @@
 .fill-width {
     width: 100%
 }
+
+.dim-text {
+    color: rgba(var(--fg), 0.6);
+}

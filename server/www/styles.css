@@ -7,11 +7,6 @@
     --paint-3: rgb(88 255 188 / 0.4);
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
 
 html {
     font-size: 100%;

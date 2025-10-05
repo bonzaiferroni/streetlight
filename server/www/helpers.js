@@ -1,6 +1,6 @@
 function toggleVisibility(showId, ...hideIds) {
-    document.getElementById(showId)?.classList.remove("hidden");
-    hideIds.forEach(id => document.getElementById(id)?.classList.add("hidden"));
+    document.getElementById(showId)?.classList.remove("display-none");
+    hideIds.forEach(id => document.getElementById(id)?.classList.add("display-none"));
 }
 
 function getFieldValue(id) {
