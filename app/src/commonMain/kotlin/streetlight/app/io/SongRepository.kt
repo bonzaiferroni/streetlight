@@ -3,7 +3,7 @@ package streetlight.app.io
 import kabinet.api.write
 import kotlinx.datetime.Instant
 import pondui.io.NeoApiClient
-import pondui.io.globalNeoApiClient
+import streetlight.app.globalNeoApiClient
 import streetlight.model.Api
 import streetlight.model.data.EventId
 import streetlight.model.data.EventSong

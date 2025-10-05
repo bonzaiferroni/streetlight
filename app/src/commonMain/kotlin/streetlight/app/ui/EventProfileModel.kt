@@ -5,7 +5,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
-import pondui.APP_API_URL
 import pondui.ui.controls.UpdateStatus
 import pondui.ui.core.ModelState
 import pondui.ui.core.StateModel

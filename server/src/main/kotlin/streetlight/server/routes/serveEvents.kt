@@ -1,10 +1,15 @@
 package streetlight.server.routes
 
+import io.ktor.http.HttpStatusCode
+import io.ktor.server.html.respondHtml
 import io.ktor.server.response.respondRedirect
 import io.ktor.server.routing.Routing
 import io.ktor.server.routing.get
 import klutch.server.*
 import klutch.utils.getUserId
+import kotlinx.html.body
+import kotlinx.html.p
+import streetlight.model.APP_API_URL
 import streetlight.model.Api
 import streetlight.model.data.toProjectId
 import streetlight.server.RuntimeProvider
@@ -22,8 +27,12 @@ fun Routing.serveEvents(app: ServerProvider = RuntimeProvider) {
     }
 
     get("/qr") {
-        val event = dao.readActiveEvents().firstOrNull() ?: return@get
-        call.respondRedirect("http://streetlight.ing/eventportal/${event.eventId.value}")
+        val event = dao.readActiveEvents().firstOrNull()
+        if (event == null) {
+            call.respondHtml(HttpStatusCode.NotFound) { body { p { +"No active evens!" } } }
+        } else {
+            call.respondRedirect("/eventportal/${event.eventId.value}")
+        }
     }
 
     authenticateJwt {

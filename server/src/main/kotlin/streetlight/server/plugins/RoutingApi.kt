@@ -21,7 +21,7 @@ fun Application.configureApiRoutes() {
             call.respondText("Hello Colfax!")
         }
 
-        staticResources("/static", "static")
+        staticFiles("/static", File("www"))
 
         serveUsers()
         serveEvents()

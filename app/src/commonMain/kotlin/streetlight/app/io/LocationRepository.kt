@@ -2,7 +2,7 @@ package streetlight.app.io
 
 import kabinet.api.write
 import pondui.io.NeoApiClient
-import pondui.io.globalNeoApiClient
+import streetlight.app.globalNeoApiClient
 import streetlight.model.Api
 import streetlight.model.data.AreaId
 import streetlight.model.data.Location

@@ -5,6 +5,7 @@ import io.ktor.server.html.respondHtml
 import io.ktor.server.routing.Routing
 import io.ktor.server.routing.get
 import kotlinx.html.*
+import klutch.html.*
 import streetlight.model.data.EventId
 import streetlight.server.RuntimeProvider
 import streetlight.server.ServerProvider
@@ -16,46 +17,28 @@ fun Routing.servePages(app: ServerProvider = RuntimeProvider) {
         val spark = app.dao.spark.readByUserId(event.userId)
         val songs = app.dao.song.readAllByUserId(event.userId)
         call.respondHtml(HttpStatusCode.OK) {
-            head {
-                title { +event.title }
-                link { rel = "stylesheet"; href = "/static/styles.css" }
-                script(src = "/static/eventportal.js") {}
+            head(event.title) {
+                styles("styles.css")
+                scripts("eventportal.js", "helpers.js")
             }
             body {
-                h1 { +event.title }
-                p { +"Performer: ${spark?.stageName}" }
-                h2 { +"Requests" }
-                div {
-                    id = "request-box"
-                    div {
-                        id = "request-songs"
+                h1(event.title)
+                p("Performer: ${spark?.stageName}")
+                h2("Requests")
+                div(Id("request-box")) {
+                    div(Id("request-songs"), classes(Column)) {
                         songs.forEach { song ->
-                            button {
-                                onClick = "startRequest('${event.eventId.value}', '${song.songId.value}')"
-                                +song.title
-                            }
+                            button(song.title, invoke("startRequest", event.eventId.value, song.songId.value))
                         }
                     }
-                    div {
-                        id = "request-details"
-                        hidden = true
-
-                        label {
-                            checkBoxInput { id = "join"; name = "join" }
-                            +" Join me?"
-                        }
-
-                        br {}
-
-                        textInput { id = "name"; name = "name"; placeholder = "Your name (optional)" }
-
-                        br {}
-
-                        textInput { id = "comment"; name = "comment"; placeholder = "Comment (optional)" }
-
-                        br {}
-
-                        button { onClick = "sendRequest()"; +"Send" }
+                    div(Id("request-details"), classes(Column, Hidden)) {
+                        checkBox(Id("join"), "Join me?")
+                        textField(Id("name"), "Your name (optional)")
+                        textField(Id("comment"), "Comment (optional)")
+                        button("Send", invoke("sendRequest"))
+                    }
+                    div(Id("request-sent"), classes(Column, Hidden)) {
+                        p("Request sent!")
                     }
                 }
             }

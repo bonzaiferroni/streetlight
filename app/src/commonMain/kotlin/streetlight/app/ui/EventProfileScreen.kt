@@ -12,7 +12,6 @@ import kabinet.utils.toTimeDescription
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import pondui.APP_API_URL
 import pondui.ui.controls.Column
 import pondui.ui.controls.FlowRow
 import pondui.ui.controls.H1
@@ -103,7 +102,7 @@ fun EventProfileForm(
     TimeWheel(event.startsAt, onChangeInstant = setStartsAt)
     TimeWheel(event.endsAt, onChangeInstant = setEndsAt)
 
-    TextField("$APP_API_URL/eventportal/${event.eventId.value}") { }
+    // TextField("$APP_API_URL/eventportal/${event.eventId.value}") { }
 }
 
 @Composable
