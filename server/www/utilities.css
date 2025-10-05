@@ -1,0 +1,23 @@
+.flex-1 {
+    flex: 1;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.display-none {
+    display: none !important;
+}
+
+.gap-0 {
+    gap: 0 !important;
+}
+
+.align-items-center {
+    align-items: center;
+}
+
+.fill-width {
+    width: 100%
+}

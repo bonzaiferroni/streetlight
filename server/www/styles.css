@@ -1,10 +1,16 @@
 :root {
-    --unit: 6px; /* yer base spacing value */
-    --bg: #090d0d;
-    --fg: #f5f6f6;
+    --bg: 9, 13, 13;
+    --fg: 245, 246, 246;
+    --void: 0, 0, 0;
     --paint-1: rgb(255 99 132 / 0.4);
     --paint-2: rgb(88 164 255 / 0.4);
     --paint-3: rgb(88 255 188 / 0.4);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 html {
@@ -16,24 +22,11 @@ body {
     font-size: 1rem;
     line-height: 1.5;
     margin: 0;
-    padding: var(--unit);
-    background-color: var(--bg);
-    color: var(--fg);
+    padding: 0.5rem;
+    background-color: rgb(var(--bg));
+    color: rgb(var(--fg));
     position: relative;
     min-height: 100vh;
-}
-
-/* Scale text gracefully on small screens */
-@media (max-width: 600px) {
-    html {
-        font-size: 112.5%; /* 18px base */
-    }
-}
-
-.column {
-    display: flex;
-    flex-direction: column;
-    gap: var(--unit);
 }
 
 body::before {
@@ -45,38 +38,4 @@ body::before {
     background: radial-gradient(circle at 18% 18%, var(--paint-1) 0%, transparent 50%),
     radial-gradient(circle at 82% 16%, var(--paint-2) 0%, transparent 48%),
     radial-gradient(circle at 50% 42%, var(--paint-3) 0%, transparent 55%);
-    /* fade out toward the bottom */
-    /*-webkit-mask-image: linear-gradient(black 0%, transparent 100%);*/
-    /*mask-image: linear-gradient(black 0%, transparent 100%);*/
-}
-
-button {
-    padding: calc(var(--unit) * 1.5);
-    border: none;
-    outline: 2px solid rgb(255 255 255 / 0.2);
-    outline-offset: -1px;
-    border-radius: 9999px;
-    background:  linear-gradient(
-            135deg,
-            rgb(236 255 182 / 0.22) 0%,
-            rgb(236 255 182 / 0.00) 100%
-    ), #017a8a;
-    color: var(--fg);
-    font-weight: 500;
-    cursor: pointer;
-    transition: background 0.2s ease;
-}
-
-button:hover {
-    background: linear-gradient(
-            135deg,
-            rgb(236 255 182 / 0.12) 0%,
-            rgb(236 255 182 / 0.08) 30%,
-            rgb(236 255 182 / 0.04) 60%,
-            rgb(236 255 182 / 0.00) 100%
-    ), #0196a7;
-}
-
-.hidden {
-    display: none !important;
 }

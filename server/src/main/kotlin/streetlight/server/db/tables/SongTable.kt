@@ -20,7 +20,7 @@ import streetlight.server.utils.toUserId
 object SongTable : UUIDTable() {
     val userId = reference("user_id", UserTable, onDelete = ReferenceOption.CASCADE)
     val name = text("title")
-    val artist = text("artist").nullable()
+    val artist = text("artist")
     val notation = jsonb<SongNotation>("notation", tableJsonDefault).nullable()
     val tempo = integer("tempo").nullable()
     val capo = integer("capo").nullable()

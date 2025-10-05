@@ -11,7 +11,7 @@ data class Song(
     val songId: SongId,
     val userId: UserId,
     val title: String,
-    val artist: String?,
+    val artist: String,
     val tempo: Int?,
     val capo: Int?,
     val notation: SongNotation?,
