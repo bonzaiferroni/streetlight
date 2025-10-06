@@ -6,13 +6,18 @@ import klutch.db.read
 import klutch.utils.eq
 import klutch.utils.toStringId
 import kotlinx.datetime.Clock
+import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.sql.count
 import org.jetbrains.exposed.sql.insertAndGetId
+import org.jetbrains.exposed.sql.leftJoin
 import org.jetbrains.exposed.sql.update
 import streetlight.model.data.NewSong
+import streetlight.model.data.RequestItem
 import streetlight.model.data.Song
 import streetlight.model.data.SongId
 import streetlight.model.data.toProjectId
+import streetlight.server.db.tables.RenditionTable
 import streetlight.server.db.tables.SongTable
 import streetlight.server.db.tables.toSong
 import streetlight.server.db.tables.writeFull
@@ -49,5 +54,19 @@ class SongTableDao: DbService() {
         SongTable.update({ SongTable.userId.eq(userId) and SongTable.id.eq(song.songId) }) {
             it.writeUpdate(song)
         } > 0
+    }
+
+    suspend fun readRequestItems(userId: UserId) = dbQuery {
+        SongTable.leftJoin(RenditionTable, { id }, { songId })
+            .select(SongTable.columns + RenditionTable.songId.count())
+            .where { SongTable.userId.eq(userId) }
+            .groupBy(SongTable.id)
+            .orderBy(RenditionTable.songId.count(), SortOrder.DESC_NULLS_LAST)
+            .map {
+                RequestItem(
+                    song = it.toSong(),
+                    plays = it.getOrNull(RenditionTable.songId.count())?.toInt() ?: 0
+                )
+            }
     }
 }

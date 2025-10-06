@@ -33,7 +33,7 @@ class SongFeedModel(
         viewModelScope.launch {
             client.createSong(NewSong(
                 title = stateNow.newName,
-                artist = stateNow.newArtist.takeIf { it.isNotEmpty() }
+                artist = stateNow.newArtist
             ))
             setState { it.copy(newName = "", newArtist = "")}
             refreshSongs()
@@ -41,7 +41,7 @@ class SongFeedModel(
     }
 
     fun setNewName(value: String) {
-        setState { it.copy(newName = value, isValidNewItem = value.isNotBlank())}
+        setState { it.copy(newName = value)}
     }
 
     fun setNewArtist(value: String) {
@@ -53,5 +53,6 @@ data class SongFeedState(
     val songs: List<Song> = emptyList(),
     val newName: String = "",
     val newArtist: String = "",
-    val isValidNewItem: Boolean = false,
-)
+)  {
+    val isValidNewItem get() = newName.isNotBlank() && newArtist.isNotBlank()
+}

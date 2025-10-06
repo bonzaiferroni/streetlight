@@ -31,3 +31,9 @@ data class NewRequest(
     val comment: String?,
     val requesterName: String?,
 )
+
+@Serializable
+data class RequestItem(
+    val song: Song,
+    val plays: Int,
+)

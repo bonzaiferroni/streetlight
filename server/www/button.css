@@ -6,9 +6,9 @@ button {
     border-radius: 9999px;
     background:  linear-gradient(
             135deg,
-            rgb(236 255 182 / 0.22) 0%,
+            rgb(236 255 182 / 0.4) 0%,
             rgb(236 255 182 / 0.00) 100%
-    ), #017a8a;
+    ), rgba(var(--accent), 0.8);
     color: var(--fg);
     font-weight: 500;
     font-size: 1.2rem;

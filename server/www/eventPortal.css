@@ -5,4 +5,8 @@
     width: 100%;
     z-index: 100;
     padding: 0.5rem;
+    background-color: rgba(var(--void), 0.2);
+    border-top-left-radius: 2rem;
+    border-top-right-radius: 2rem;
+    backdrop-filter: blur(1.5rem);
 }

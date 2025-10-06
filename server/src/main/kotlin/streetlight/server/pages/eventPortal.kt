@@ -4,7 +4,7 @@ import klutch.html.*
 import kotlinx.html.*
 import streetlight.model.data.*
 
-fun HTML.eventPortal(event: Event, spark: Spark?, songs: List<Song>) {
+fun HTML.eventPortal(event: Event, spark: Spark?, requestItems: List<RequestItem>) {
     head(event.title) {
         coreStyles()
         coreScripts()
@@ -14,14 +14,25 @@ fun HTML.eventPortal(event: Event, spark: Spark?, songs: List<Song>) {
     body {
         column(modify(AlignItemsCenter)) {
             heading1(event.title)
-            paragraph("Performer: ${spark?.stageName}")
+            column(modify(Gap0)) {
+                row {
+                    paragraph("performer:", modify(DimText))
+                    paragraph("Luke Bollwerk")
+                }
+                row {
+                    paragraph("instagram:", modify(DimText))
+                    a("https://www.instagram.com/trespasserswilliam/") {
+                        paragraph("trespasserswilliam")
+                    }
+                }
+            }
             heading2("Send a request")
             column(modify(FillWidth)) {
                 set(Id("request-box"))
                 column {
                     set(Id("request-songs"))
-                    songs.forEach { song ->
-                        requestItem(song, event)
+                    requestItems.forEach { item ->
+                        requestItem(item, event)
                         // button(song.title, invoke("startRequest", event.eventId.value, song.songId.value))
                     }
                 }
@@ -63,15 +74,20 @@ fun HTML.eventPortal(event: Event, spark: Spark?, songs: List<Song>) {
 }
 
 fun FlowContent.requestItem(
-    song: Song,
+    item: RequestItem,
     event: Event,
 ) {
+    val (song, plays) = item
     card() {
         onClick = invoke("startRequest", event.eventId.value, song.songId.value)
         row() {
             column(modify(Flex1, Gap0)) {
                 paragraph(song.title, modify(Bold))
                 paragraph(song.artist)
+            }
+            column(modify(Gap0, AlignItemsCenter)) {
+                paragraph("plays", modify(DimText))
+                paragraph(plays.toString())
             }
         }
     }

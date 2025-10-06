@@ -15,6 +15,6 @@
     flex-direction: column;
     gap: 0.5rem;
     border-radius: 0.5rem;
-    background-color: rgba(var(--void), 0.1);
+    background-color: rgba(var(--void), 0.2);
     padding: 0.5rem;
 }

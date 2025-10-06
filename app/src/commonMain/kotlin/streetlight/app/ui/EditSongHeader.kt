@@ -30,11 +30,11 @@ fun EditSongHeader(
         ) { updateSong(song.copy(title = it)) }
         Row(1) {
             TextField(
-                text = song.artist ?: "",
+                text = song.artist,
                 placeholder = "Artist",
                 label = "artist",
                 modifier = Modifier.weight(1f)
-            ) { updateSong(song.copy(artist = it.takeIf { it.isNotBlank() })) }
+            ) { updateSong(song.copy(artist = it)) }
             Row(1, modifier = Modifier.weight(1f)) {
                 TextField(
                     text = song.capo?.toString() ?: "",

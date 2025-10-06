@@ -1,7 +1,9 @@
 :root {
     --bg: 9, 13, 13;
     --fg: 245, 246, 246;
-    --void: 0, 0, 0;
+    --void: 24, 31, 31;
+    --primary: 1, 122, 138;
+    --accent: 209, 43, 181;
     --paint-1: rgb(255 99 132 / 0.4);
     --paint-2: rgb(88 164 255 / 0.4);
     --paint-3: rgb(88 255 188 / 0.4);
@@ -33,4 +35,21 @@ body::before {
     background: radial-gradient(circle at 18% 18%, var(--paint-1) 0%, transparent 50%),
     radial-gradient(circle at 82% 16%, var(--paint-2) 0%, transparent 48%),
     radial-gradient(circle at 50% 42%, var(--paint-3) 0%, transparent 55%);
+}
+
+input[type="text"] {
+    border: none;
+    outline: none;
+    padding: 0.75rem;
+    border-radius: 0.75rem;
+    font-size: 1.2rem;
+    background-color: rgb(var(--void));
+    color: rgb(var(--fg));
+}
+
+input[type="checkbox"] {
+    background-color: rgb(var(--void));
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 0.25rem;
 }

@@ -25,5 +25,5 @@ async function sendRequest() {
 
     await fetchPost("/api/v1/request_box", payload)
 
-    toggleVisibility("request-sent", "request-songs")
+    toggleVisibility("request-sent", "request-details")
 }

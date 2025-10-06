@@ -14,6 +14,7 @@ import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.alias
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.count
+import org.jetbrains.exposed.sql.countDistinct
 import org.jetbrains.exposed.sql.leftJoin
 import org.jetbrains.exposed.sql.longLiteral
 import streetlight.model.data.EventId
@@ -47,14 +48,24 @@ class SongTableService(val app: ServerProvider = RuntimeProvider): DbService() {
                 request = nextRequest
             )
         } else {
-            val leastPlayedSongId = RenditionTable.select(RenditionTable.songId)
-                .where { RenditionTable.userId.eq(userId) and RenditionTable.createdAt.greaterEq(since) }
-                .groupBy(RenditionTable.songId)
-                .orderBy(RenditionTable.songId.count())
+            val leastPlayedSongId = SongTable.leftJoin(
+                otherTable = RenditionTable,
+                onColumn = { id },
+                otherColumn = { songId },
+                additionalConstraint = { RenditionTable.createdAt.greaterEq(since) }
+            )
+                .select(SongTable.id)
+                .where { SongTable.userId.eq(userId) }
+                .groupBy(SongTable.id)
+                .orderBy(RenditionTable.id.count(), SortOrder.ASC_NULLS_FIRST)
                 .limit(1)
                 .firstOrNull()
-                ?.let { it[RenditionTable.songId].value }
-                ?: SongTable.select(SongTable.id).first().let { it[SongTable.id].value }
+                ?.let { it[SongTable.id].value }
+
+            // SongTable.select(SongTable.id)
+            //                    .orderBy(SongTable.createdAt)
+            //                    .first().let { it[SongTable.id].value }
+            require(leastPlayedSongId != null)
 
             val song = SongTable.readById(leastPlayedSongId).toSong()
             EventSong(request = null, song = song)
