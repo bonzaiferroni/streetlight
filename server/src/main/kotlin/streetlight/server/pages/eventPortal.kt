@@ -13,6 +13,7 @@ fun HTML.eventPortal(event: Event, spark: Spark?, requestItems: List<RequestItem
     }
     body {
         column(modify(AlignItemsCenter)) {
+            set(Id("event-profile"))
             heading1(event.title)
             column(modify(Gap0)) {
                 row {
@@ -29,7 +30,7 @@ fun HTML.eventPortal(event: Event, spark: Spark?, requestItems: List<RequestItem
             heading2("Send a request")
             column(modify(FillWidth)) {
                 set(Id("request-box"))
-                column {
+                column() {
                     set(Id("request-songs"))
                     requestItems.forEach { item ->
                         requestItem(item, event)
@@ -38,9 +39,9 @@ fun HTML.eventPortal(event: Event, spark: Spark?, requestItems: List<RequestItem
                 }
                 column(modify(DisplayNone)) {
                     set(Id("request-details"))
-                    checkBox(Id("join"), "Join me?")
                     textField(Id("name"), "Your name (optional)")
                     textField(Id("comment"), "Comment (optional)")
+                    checkBox(Id("join"), "Would you like to sing with me?")
                     button("Send", invoke("sendRequest"))
                 }
                 column(modify(DisplayNone)) {
@@ -49,7 +50,8 @@ fun HTML.eventPortal(event: Event, spark: Spark?, requestItems: List<RequestItem
                 }
             }
         }
-        column(modify(TipsBox, AlignItemsCenter)) {
+        column(modify(AlignItemsCenter)) {
+            set(Id("tips-box"))
             heading2("Send a tip")
             row(modify(AlignItemsCenter)) {
                 row {
