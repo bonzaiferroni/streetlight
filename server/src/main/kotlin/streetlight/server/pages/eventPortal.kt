@@ -94,5 +94,3 @@ fun FlowContent.requestItem(
         }
     }
 }
-
-object TipsBox: CssClass { override val value = "tips-box" }
