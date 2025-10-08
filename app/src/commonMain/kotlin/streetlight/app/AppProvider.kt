@@ -3,6 +3,7 @@ package streetlight.app
 import pondui.io.GeminiApiClient
 import pondui.io.GeminiAppClient
 import pondui.io.GeminiMockClient
+import pondui.io.NeoApiClient
 import pondui.io.SpeechApiClient
 import pondui.io.SpeechAppClient
 import pondui.io.SpeechMockClient
@@ -22,6 +23,7 @@ import streetlight.app.io.RenditionApiClient
 import streetlight.app.io.RenditionMockClient
 import streetlight.app.io.RenditionRepository
 import streetlight.app.io.SongRepository
+import streetlight.model.APP_API_URL
 import streetlight.model.Api
 
 interface AppProvider {
@@ -52,14 +54,16 @@ class AppDao(
 )
 
 object RuntimeProvider: AppProvider {
+    val apiClient = NeoApiClient(APP_API_URL)
+
     override val repo = object: AppClient {
-        override val area = AreaApiClient()
-        override val event = EventApiClient()
-        override val location = LocationApiClient()
-        override val song = SongApiClient()
-        override val songPlay = RenditionApiClient()
+        override val area = AreaApiClient(apiClient)
+        override val event = EventApiClient(apiClient)
+        override val location = LocationApiClient(apiClient)
+        override val song = SongApiClient(apiClient)
+        override val songPlay = RenditionApiClient(apiClient)
     }
-    override val speech = SpeechApiClient(Api.Speech, globalNeoApiClient)
+    override val speech = SpeechApiClient(Api.Speech, apiClient)
     override val wavePlayer = WavePlayer()
 }
 

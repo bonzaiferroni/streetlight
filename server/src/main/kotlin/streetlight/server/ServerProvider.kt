@@ -1,10 +1,7 @@
 package streetlight.server
 
-import io.ktor.client.call.body
 import kabinet.clients.ReplicateClient
 import kabinet.clients.ReplicateInput
-import kabinet.console.globalConsole
-import kabinet.gemini.GeminiClient
 import kabinet.utils.Environment
 import klutch.db.services.UserTableDao
 import klutch.db.services.UserTableService
@@ -48,6 +45,8 @@ object RuntimeProvider: ServerProvider {
     override val env = readEnvFromPath()
 
     private val replicate = ReplicateClient(env.read("REPLICATE_KEY"))
+    private val serverIp = env.read("SERVER_IP")
+    private val speechPort = env.read("SERVER_PORT")
 
     override val dao = ServerDao()
     override val service = ServerService()
@@ -55,7 +54,8 @@ object RuntimeProvider: ServerProvider {
     override val speech = SpeechService { request ->
         replicate.requestBytes(
             // model = "lucataco/orpheus-3b-0.1-ft:79f2a473e6a9720716a473d9b2f2951437dbf91dc02ccb7079fb3d89b881207f",
-            url = "http://localhost:5000/predictions",
+            // url = "http://localhost:5000/predictions",
+            url = "http://$serverIp:$speechPort/speech",
             input = ReplicateInput(
                 text = request.text,
                 voice = request.voice

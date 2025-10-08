@@ -2,7 +2,6 @@ package streetlight.app.io
 
 import kabinet.api.write
 import pondui.io.NeoApiClient
-import streetlight.app.globalNeoApiClient
 import streetlight.model.Api
 import streetlight.model.data.AreaId
 import streetlight.model.data.Location
@@ -19,7 +18,7 @@ interface LocationRepository {
 }
 
 class LocationApiClient(
-    private val client: NeoApiClient = globalNeoApiClient
+    private val client: NeoApiClient
 ): LocationRepository {
     override suspend fun readLocation(locationId: LocationId) = client.getById(Api.LocationFeed, locationId)
     override suspend fun readAreaLocations(areaId: AreaId) = client.getById(Api.LocationFeed.Area, areaId)

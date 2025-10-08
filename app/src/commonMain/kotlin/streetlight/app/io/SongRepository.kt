@@ -3,7 +3,6 @@ package streetlight.app.io
 import kabinet.api.write
 import kotlinx.datetime.Instant
 import pondui.io.NeoApiClient
-import streetlight.app.globalNeoApiClient
 import streetlight.model.Api
 import streetlight.model.data.EventId
 import streetlight.model.data.EventSong
@@ -21,7 +20,7 @@ interface SongRepository {
 }
 
 class SongApiClient(
-    private val client: NeoApiClient = globalNeoApiClient
+    private val client: NeoApiClient
 ) : SongRepository {
     override suspend fun readSongs() = client.request(Api.SongFeed)
     override suspend fun readById(songId: SongId) = client.getById(Api.SongProfile, songId)

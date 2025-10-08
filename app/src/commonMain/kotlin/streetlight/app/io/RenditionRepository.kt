@@ -3,7 +3,6 @@ package streetlight.app.io
 import kabinet.api.write
 import kotlinx.datetime.Instant
 import pondui.io.NeoApiClient
-import streetlight.app.globalNeoApiClient
 import streetlight.model.Api
 import streetlight.model.data.NewRendition
 import streetlight.model.data.Rendition
@@ -20,7 +19,7 @@ interface RenditionRepository {
 }
 
 class RenditionApiClient(
-    private val client: NeoApiClient = globalNeoApiClient
+    private val client: NeoApiClient
 ): RenditionRepository {
     override suspend fun readById(renditionId: RenditionId) = client.getById(Api.RenditionFeed, renditionId)
     override suspend fun readBySongId(songId: SongId) = client.getById(Api.RenditionFeed.BySong, songId)

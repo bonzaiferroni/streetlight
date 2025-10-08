@@ -2,8 +2,6 @@ package streetlight.app
 
 import androidx.compose.runtime.*
 import androidx.compose.ui.text.font.FontWeight
-import org.jetbrains.compose.resources.FontResource
-import pondui.io.NeoApiClient
 import pondui.io.ProvideUserContext
 import pondui.ui.core.PondApp
 import pondui.ui.nav.NavRoute
@@ -16,7 +14,6 @@ import streetlight.app.generated.resources.FiraSans_Italic
 import streetlight.app.generated.resources.FiraSans_Light
 import streetlight.app.generated.resources.FiraSans_Regular
 import streetlight.app.generated.resources.Res
-import streetlight.model.APP_API_URL
 
 @Composable
 fun App(
@@ -27,7 +24,7 @@ fun App(
     ProvideTheme(
         theme = appTheme(scale),
     ) {
-        ProvideUserContext {
+        ProvideUserContext(RuntimeProvider.apiClient) {
             PondApp(
                 config = appConfig,
                 changeRoute = changeRoute,
@@ -47,5 +44,3 @@ fun appTheme(scale: Float = 1f) = defaultTheme(
     boldFont = useFamily(Res.font.FiraSans_Bold, weight = FontWeight.Bold),
     monoFont = useFamily(Res.font.FiraCode_Regular)
 )
-
-val globalNeoApiClient = NeoApiClient(APP_API_URL)

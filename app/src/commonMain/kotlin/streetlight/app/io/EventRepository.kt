@@ -1,7 +1,6 @@
 package streetlight.app.io
 
 import pondui.io.NeoApiClient
-import streetlight.app.globalNeoApiClient
 import streetlight.model.Api
 import streetlight.model.data.Event
 import streetlight.model.data.EventId
@@ -17,7 +16,7 @@ interface EventRepository {
 }
 
 class EventApiClient(
-    private val client: NeoApiClient = globalNeoApiClient
+    private val client: NeoApiClient
 ): EventRepository {
     override suspend fun readEventFeed() = client.request(Api.EventFeed)
     override suspend fun readById(eventId: EventId) = client.getById(Api.EventProfile, eventId)

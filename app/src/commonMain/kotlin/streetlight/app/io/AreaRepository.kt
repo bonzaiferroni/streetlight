@@ -1,7 +1,6 @@
 package streetlight.app.io
 
 import pondui.io.NeoApiClient
-import streetlight.app.globalNeoApiClient
 import streetlight.model.Api
 import streetlight.model.data.Area
 import streetlight.model.data.AreaId
@@ -14,7 +13,7 @@ interface AreaRepository {
 }
 
 class AreaApiClient(
-    private val client: NeoApiClient = globalNeoApiClient
+    private val client: NeoApiClient
 ): AreaRepository {
     override suspend fun readAll() = client.request(Api.AreaFeed)
     override suspend fun createArea(area: NewArea) = client.request(Api.AreaFeed.Create, area)
