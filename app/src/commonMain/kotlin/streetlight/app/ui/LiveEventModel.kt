@@ -1,6 +1,7 @@
 package streetlight.app.ui
 
 import kabinet.model.GeminiVoice
+import kabinet.model.OrpheusVoice
 import kabinet.model.SpeechRequest
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
@@ -46,7 +47,7 @@ class LiveEventModel(
 
             val introRequestJob = launch {
                 val introRequest = createIntroRequest(eventSong)
-                introSpeech = app.gemini.generateSpeech(introRequest)
+                introSpeech = app.speech.createWav(introRequest)
             }
 
 //            val interludeRequestJob = launch {
@@ -56,7 +57,7 @@ class LiveEventModel(
 
             launch {
                 val outroRequest = createOutroRequest(eventSong)
-                outroSpeech = app.gemini.generateSpeech(outroRequest)
+                outroSpeech = app.speech.createWav(outroRequest)
             }
 
             outroSpeechJob?.join()
@@ -129,7 +130,7 @@ private fun createOutroRequest(eventSong: EventSong): SpeechRequest {
         text = text,
         theme = announcerTheme,
         voice = announcerVoice,
-        filename = "${song.title} outro ${announcerVoice.apiName}",
+        filename = "${song.title} outro ${announcerVoice}",
         isCached = true
     )
 }
@@ -152,23 +153,23 @@ private fun createIntroRequest(eventSong: EventSong): SpeechRequest {
         text = text,
         theme = announcerTheme,
         voice = announcerVoice,
-        filename = "${song.title} intro ${announcerVoice.apiName}",
+        filename = "${song.title} intro ${announcerVoice}",
         isCached = true
     )
 }
 
-private fun createInterludeRequest(): SpeechRequest {
-    val interlude = interludes.random()
-    return SpeechRequest(
-        text = interlude,
-        theme = announcerTheme,
-        voice = announcerVoice,
-        filename = "${announcerVoice.apiName} ${interlude.take(50)}",
-        isCached = true
-    )
-}
+//private fun createInterludeRequest(): SpeechRequest {
+//    val interlude = interludes.random()
+//    return SpeechRequest(
+//        text = interlude,
+//        theme = announcerTheme,
+//        voice = announcerVoice,
+//        filename = "${announcerVoice.apiName} ${interlude.take(50)}",
+//        isCached = true
+//    )
+//}
 
-private val announcerVoice = GeminiVoice.Soft
+private val announcerVoice = OrpheusVoice.Emma.apiName
 private val announcerTheme = "Say it like a radio DJ and be low key, do not be emotive or enthusiastic"
 
 // voice ranks:

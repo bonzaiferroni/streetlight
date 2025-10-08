@@ -1,5 +1,8 @@
 package streetlight.server
 
+import io.ktor.client.call.body
+import kabinet.clients.ReplicateClient
+import kabinet.clients.ReplicateInput
 import kabinet.console.globalConsole
 import kabinet.gemini.GeminiClient
 import kabinet.utils.Environment
@@ -7,6 +10,7 @@ import klutch.db.services.UserTableDao
 import klutch.db.services.UserTableService
 import klutch.environment.readEnvFromPath
 import klutch.gemini.GeminiService
+import klutch.gemini.SpeechService
 import streetlight.server.db.services.AreaTableDao
 import streetlight.server.db.services.EventTableDao
 import streetlight.server.db.services.LocationTableDao
@@ -21,6 +25,7 @@ interface ServerProvider {
     val dao: ServerDao
     val service: ServerService
     val gemini: GeminiService
+    val speech: SpeechService
 }
 
 class ServerDao(
@@ -41,7 +46,20 @@ class ServerService(
 
 object RuntimeProvider: ServerProvider {
     override val env = readEnvFromPath()
+
+    private val replicate = ReplicateClient(env.read("REPLICATE_KEY"))
+
     override val dao = ServerDao()
     override val service = ServerService()
     override val gemini = GeminiService(env)
+    override val speech = SpeechService { request ->
+        replicate.requestBytes(
+            // model = "lucataco/orpheus-3b-0.1-ft:79f2a473e6a9720716a473d9b2f2951437dbf91dc02ccb7079fb3d89b881207f",
+            url = "http://localhost:5000/predictions",
+            input = ReplicateInput(
+                text = request.text,
+                voice = request.voice
+            )
+        )
+    }
 }

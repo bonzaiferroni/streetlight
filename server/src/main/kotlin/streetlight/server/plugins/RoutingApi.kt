@@ -11,6 +11,7 @@ import io.ktor.server.routing.post
 import io.ktor.server.routing.routing
 import kabinet.api.UserApi
 import klutch.gemini.serveGemini
+import klutch.gemini.serveSpeech
 import klutch.server.*
 import streetlight.model.Api
 import streetlight.server.RuntimeProvider
@@ -34,6 +35,7 @@ fun Application.configureApiRoutes(app: ServerProvider = RuntimeProvider) {
         serveSongPlays()
         servePages()
         serveRequests()
-        serveGemini(Api.Gemini, app.gemini)
+        // serveGemini(Api.Gemini, app.gemini)
+        serveSpeech(Api.Speech, app.speech)
     }
 }

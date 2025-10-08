@@ -5,6 +5,7 @@ import kabinet.api.DeleteEndpoint
 import kabinet.api.GetByTableIdEndpoint
 import kabinet.api.GetEndpoint
 import kabinet.api.PostEndpoint
+import kabinet.api.SpeechApi
 import kabinet.api.UpdateEndpoint
 import kabinet.clients.GeminiMessage
 import kabinet.gemini.GeminiApi
@@ -84,6 +85,11 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         override val image = PostEndpoint<ImageGenRequest, ImageUrls>(this, "image")
         override val speechUrl = PostEndpoint<SpeechRequest, String>(this, "speechUrl")
         override val speech = PostEndpoint<SpeechRequest, ByteArray>(this, "speech")
+    }
+
+    object Speech: ApiNode(this, "speech"), SpeechApi {
+        override val wav = PostEndpoint<SpeechRequest, ByteArray>(this, "wav")
+        override val url = PostEndpoint<SpeechRequest, String>(this, "url")
     }
 }
 
