@@ -43,6 +43,7 @@ class SongTableService(val app: ServerProvider = RuntimeProvider): DbService() {
         if (nextRequest != null) {
             RequestTable.deleteSingle { it.id.eq(nextRequest.requestId) }
             val song = SongTable.readById(nextRequest.songId.toUUID()).toSong()
+            console.log("playing request: ${song.title}")
             EventSong(
                 song = song,
                 request = nextRequest
@@ -62,13 +63,14 @@ class SongTableService(val app: ServerProvider = RuntimeProvider): DbService() {
                 .firstOrNull()
                 ?.let { it[SongTable.id].value }
 
-            // SongTable.select(SongTable.id)
-            //                    .orderBy(SongTable.createdAt)
-            //                    .first().let { it[SongTable.id].value }
-            require(leastPlayedSongId != null)
-
-            val song = SongTable.readById(leastPlayedSongId).toSong()
-            EventSong(request = null, song = song)
+            if (leastPlayedSongId == null) {
+                console.logError("Unable to find song")
+                null
+            } else {
+                val song = SongTable.readById(leastPlayedSongId).toSong()
+                console.log("playing from catalog: ${song.title}")
+                EventSong(request = null, song = song)
+            }
         }
     }
 }

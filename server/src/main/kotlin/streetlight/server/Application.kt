@@ -1,7 +1,6 @@
 package streetlight.server
 
 import io.ktor.server.application.*
-import klutch.environment.readEnvFromPath
 import klutch.server.configureSecurity
 import streetlight.server.plugins.*
 
@@ -19,10 +18,4 @@ fun Application.module() {
     configureApiRoutes()
     configureWebSockets()
     configureLogging()
-}
-
-object RuntimeProvider: ServerProvider {
-    override val env = readEnvFromPath()
-    override val dao = ServerDao()
-    override val service = ServerService()
 }

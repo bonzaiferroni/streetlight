@@ -19,3 +19,4 @@ class CatalogState() {
 val catalog = PageConfig("Catalog", "/user/catalog", builder = TransientPageBuilder {
         catalogPage(it)
     })
+

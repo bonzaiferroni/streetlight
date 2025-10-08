@@ -1,5 +1,8 @@
 package streetlight.app.ui
 
+import kabinet.model.GeminiVoice
+import kabinet.model.SpeechRequest
+import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import pondui.ui.core.ModelState
@@ -14,18 +17,21 @@ import kotlin.time.Duration.Companion.days
 
 class LiveEventModel(
     private val eventId: EventId,
-    private val app: AppProvider = RuntimeProvider
+    private val app: AppProvider = RuntimeProvider,
 ) : StateModel<LiveEventState>() {
     override val state = ModelState(LiveEventState())
     private val client = app.repo.event
 
-    init {
-        ioLaunch {
-        }
-    }
+    private var introSpeech: ByteArray? = null
+    private var interludeSpeech: ByteArray? = null
+    private var outroSpeech: ByteArray? = null
 
     fun takeNextSong() {
         ioLaunch {
+            val outroSpeechJob = outroSpeech?.let {
+                launch { app.wavePlayer.play(it) }
+            }
+
             stateNow.songPlay?.let {
                 app.repo.songPlay.create(it)
             }
@@ -37,6 +43,33 @@ class LiveEventModel(
                 rating = null,
             )
             setStateFromMain { it.copy(song = eventSong, songPlay = newRendition) }
+
+            val introRequestJob = launch {
+                val introRequest = createIntroRequest(eventSong)
+                introSpeech = app.gemini.generateSpeech(introRequest)
+            }
+
+//            val interludeRequestJob = launch {
+//                val interludeRequest = createInterludeRequest()
+//                interludeSpeech = app.gemini.generateSpeech(interludeRequest)
+//            }
+
+            launch {
+                val outroRequest = createOutroRequest(eventSong)
+                outroSpeech = app.gemini.generateSpeech(outroRequest)
+            }
+
+            outroSpeechJob?.join()
+            // interludeRequestJob.join()
+//            val interludeSpeechJob = interludeSpeech?.let {
+//                launch { app.wavePlayer.play(it) }
+//            }
+//            interludeSpeechJob?.join()
+            introRequestJob.join()
+
+            introSpeech?.let {
+                app.wavePlayer.play(it)
+            }
         }
     }
 
@@ -77,3 +110,96 @@ data class LiveEventState(
     val songPlay: NewRendition? = null,
     val breakStartedAt: Instant? = null,
 )
+
+private fun createOutroRequest(eventSong: EventSong): SpeechRequest {
+    val song = eventSong.song; val request = eventSong.request
+    val text = buildString {
+        append("That last one was '")
+        append(song.title)
+        append("' by ")
+        append(song.artist)
+        request?.requesterName?.let {
+            append(", requested by ")
+            append(it)
+        }
+        append(".")
+    }
+
+    return SpeechRequest(
+        text = text,
+        theme = announcerTheme,
+        voice = announcerVoice,
+        filename = "${song.title} outro ${announcerVoice.apiName}",
+        isCached = true
+    )
+}
+
+private fun createIntroRequest(eventSong: EventSong): SpeechRequest {
+    val song = eventSong.song; val request = eventSong.request
+    val text = buildString {
+        append("This next song is called '")
+        append(song.title)
+        append("' and it's by ")
+        append(song.artist)
+        request?.requesterName?.let {
+            append(", requested by ")
+            append(it)
+        }
+        append(".")
+    }
+
+    return SpeechRequest(
+        text = text,
+        theme = announcerTheme,
+        voice = announcerVoice,
+        filename = "${song.title} intro ${announcerVoice.apiName}",
+        isCached = true
+    )
+}
+
+private fun createInterludeRequest(): SpeechRequest {
+    val interlude = interludes.random()
+    return SpeechRequest(
+        text = interlude,
+        theme = announcerTheme,
+        voice = announcerVoice,
+        filename = "${announcerVoice.apiName} ${interlude.take(50)}",
+        isCached = true
+    )
+}
+
+private val announcerVoice = GeminiVoice.Soft
+private val announcerTheme = "Say it like a radio DJ and be low key, do not be emotive or enthusiastic"
+
+// voice ranks:
+// Smooth: Algieba
+// Upbeat: Puck
+// Soft: Achernar
+// Clear2: Erinome
+// Gravelly: Algenib
+// Zubenelgenubi
+// Gacrux
+// Sulafat
+// Sadachbia
+// Enceladus
+// Charon
+// Pulcherrima
+// Alnilam
+// Laomedeia
+// Sadaltagager
+// Autonoe
+// Despina
+// Vindemiatrix
+// Zephyr
+// Kore
+// Iapetus
+// Schedar
+// Achird
+// Rasalgethi
+// Umbriel
+// Aoede
+// Callirrhoe
+// Leda
+// Fenrir
+// Orus
+

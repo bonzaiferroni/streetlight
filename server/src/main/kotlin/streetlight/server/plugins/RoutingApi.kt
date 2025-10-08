@@ -10,12 +10,15 @@ import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import io.ktor.server.routing.routing
 import kabinet.api.UserApi
+import klutch.gemini.serveGemini
 import klutch.server.*
 import streetlight.model.Api
+import streetlight.server.RuntimeProvider
+import streetlight.server.ServerProvider
 import streetlight.server.routes.*
 import java.io.File
 
-fun Application.configureApiRoutes() {
+fun Application.configureApiRoutes(app: ServerProvider = RuntimeProvider) {
     routing {
         get(Api.path) {
             call.respondText("Hello Colfax!")
@@ -31,5 +34,6 @@ fun Application.configureApiRoutes() {
         serveSongPlays()
         servePages()
         serveRequests()
+        serveGemini(Api.Gemini, app.gemini)
     }
 }

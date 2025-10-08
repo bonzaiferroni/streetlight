@@ -7,6 +7,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.datetime.Instant
 import pondui.ui.controls.*
 import pondui.ui.modifiers.MagicItem
+import pondui.ui.services.MediaEvent
 import pondui.ui.services.MediaEventEffect
 import streetlight.model.data.*
 
@@ -22,7 +23,10 @@ fun LiveEventView(
     val state by viewModel.stateFlow.collectAsState()
 
     MediaEventEffect {
-        println("Squawk! $it")
+        when (it) {
+            MediaEvent.Next -> viewModel.takeNextSong()
+            else -> { }
+        }
     }
 
     Column(1) {

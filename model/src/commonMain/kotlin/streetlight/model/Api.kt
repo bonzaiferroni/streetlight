@@ -6,6 +6,11 @@ import kabinet.api.GetByTableIdEndpoint
 import kabinet.api.GetEndpoint
 import kabinet.api.PostEndpoint
 import kabinet.api.UpdateEndpoint
+import kabinet.clients.GeminiMessage
+import kabinet.gemini.GeminiApi
+import kabinet.model.ImageGenRequest
+import kabinet.model.ImageUrls
+import kabinet.model.SpeechRequest
 import streetlight.model.data.Area
 import streetlight.model.data.AreaId
 import streetlight.model.data.Event
@@ -73,6 +78,13 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
     }
 
     object RequestBox: PostEndpoint<NewRequest, RequestId>(this, "request_box")
+
+    object Gemini: ApiNode(this, "gemini"), GeminiApi {
+        override val chat = PostEndpoint<List<GeminiMessage>, String>(this, "chat")
+        override val image = PostEndpoint<ImageGenRequest, ImageUrls>(this, "image")
+        override val speechUrl = PostEndpoint<SpeechRequest, String>(this, "speechUrl")
+        override val speech = PostEndpoint<SpeechRequest, ByteArray>(this, "speech")
+    }
 }
 
 // utility

@@ -1,5 +1,9 @@
 package streetlight.app
 
+import pondui.io.GeminiApiClient
+import pondui.io.GeminiClient
+import pondui.io.GeminiMockClient
+import pondui.ui.services.WavePlayer
 import streetlight.app.io.AreaApiClient
 import streetlight.app.io.AreaMockClient
 import streetlight.app.io.AreaRepository
@@ -15,10 +19,13 @@ import streetlight.app.io.RenditionApiClient
 import streetlight.app.io.RenditionMockClient
 import streetlight.app.io.RenditionRepository
 import streetlight.app.io.SongRepository
+import streetlight.model.Api
 
 interface AppProvider {
     val repo: AppClient
     // val dao: AppDao
+    val gemini: GeminiClient
+    val wavePlayer: WavePlayer
 }
 
 interface AppClient {
@@ -49,9 +56,11 @@ object RuntimeProvider: AppProvider {
         override val song = SongApiClient()
         override val songPlay = RenditionApiClient()
     }
+    override val gemini = GeminiApiClient(Api.Gemini, globalNeoApiClient)
+    override val wavePlayer = WavePlayer()
 }
 
-object PreviewProvider: AppProvider {
+object MockProvider: AppProvider {
     override val repo = object : AppClient {
         override val area = AreaMockClient()
         override val event = EventMockClient()
@@ -59,4 +68,6 @@ object PreviewProvider: AppProvider {
         override val song = SongMockClient()
         override val songPlay = RenditionMockClient()
     }
+    override val gemini = GeminiMockClient()
+    override val wavePlayer get() = error("no mock wave player")
 }
