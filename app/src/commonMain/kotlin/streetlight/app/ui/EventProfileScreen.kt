@@ -48,6 +48,15 @@ fun EventProfileScreen(
             }
         }
     ) {
+        Tab("Live") {
+            LiveEventView(
+                eventId = event.eventId,
+                startsAt = event.startsAt,
+                endsAt = event.endsAt,
+                status = event.status,
+                setStatus = viewModel::setStatus,
+            )
+        }
         Tab("Edit") {
             Column(2) {
                 UpdateIndicator(
@@ -62,15 +71,6 @@ fun EventProfileScreen(
                     setEndsAt = viewModel::setEndsAt,
                 )
             }
-        }
-        Tab("Live") {
-            LiveEventView(
-                eventId = event.eventId,
-                startsAt = event.startsAt,
-                endsAt = event.endsAt,
-                status = event.status,
-                setStatus = viewModel::setStatus,
-            )
         }
     }
 }

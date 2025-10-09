@@ -35,7 +35,11 @@ fun LiveEventView(
         }
     }
 
-    Column(1, modifier = Modifier.verticalScroll(rememberScrollState())) {
+    Column(
+        gap = 1,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.verticalScroll(rememberScrollState())
+    ) {
         EventStatusDash(
             startsAt = startsAt,
             endsAt = endsAt,
@@ -48,6 +52,8 @@ fun LiveEventView(
             },
             toggleBreak = viewModel::toggleBreak,
         )
+
+        LabeledValue("Announcer:", state.announcerStatus)
 
         MagicItem(
             state.song,

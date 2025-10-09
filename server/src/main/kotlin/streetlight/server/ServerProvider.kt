@@ -52,14 +52,19 @@ object RuntimeProvider: ServerProvider {
     override val service = ServerService()
     override val gemini = GeminiService(env)
     override val speech = SpeechService { request ->
+        val model = "lucataco/orpheus-3b-0.1-ft:79f2a473e6a9720716a473d9b2f2951437dbf91dc02ccb7079fb3d89b881207f"
+        val request = ReplicateInput(
+            text = request.text,
+            voice = request.voice,
+            maxNewTokens = 2000
+        )
         replicate.requestBytes(
             // model = "lucataco/orpheus-3b-0.1-ft:79f2a473e6a9720716a473d9b2f2951437dbf91dc02ccb7079fb3d89b881207f",
-            // url = "http://localhost:5000/predictions",
+//             url = "http://localhost:5000/predictions",
             url = "http://$serverIp:$speechPort/speech",
-            input = ReplicateInput(
-                text = request.text,
-                voice = request.voice
-            )
-        )
+            input = request
+        ) ?: replicate.requestFileBytes(model, request)
+
+//        replicate.requestFileBytes(model, request)
     }
 }
