@@ -31,38 +31,10 @@ fun LiveSongView(
             LabeledValue("Capo", "3rd Fret", modifier = Modifier.padding(horizontal = unitDp))
             LabeledValue("Tempo", "90 bpm", modifier = Modifier.padding(horizontal = unitDp))
         }
-        Section {
-            // SongNotationView()
-        }
-        Section {
-            Column(2) {
-                SelfRatingScale(
-                    rating = rating,
-                    setRating = setRating,
-                )
-                Column(1) {
-                    TextField(
-                        notes ?: "",
-                        placeholder = "song notes",
-                        label = "notes to self",
-                        onChange = setNotes,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    Box(
-                        contentAlignment = Alignment.CenterEnd,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        MagicItem(rating != null, offsetX = 5.dp) { isRated ->
-                            if (isRated) {
-                                Button("Done", onClick = takeNextSong)
-                            } else {
-                                TextButton("Skip", onClick = takeNextSong)
-                            }
-                        }
-                    }
-                }
-            }
-        }
+//        Section {
+//            // SongNotationView()
+//        }
+        Button("Done", onClick = takeNextSong)
     }
 }
 

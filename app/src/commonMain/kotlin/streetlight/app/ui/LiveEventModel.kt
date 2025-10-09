@@ -30,7 +30,10 @@ class LiveEventModel(
     fun takeNextSong() {
         ioLaunch {
             val outroSpeechJob = outroSpeech?.let {
-                launch { app.wavePlayer.play(it) }
+                launch {
+                    app.wavePlayer.play(it)
+                    outroSpeech = null
+                }
             }
 
             stateNow.songPlay?.let {
@@ -70,7 +73,8 @@ class LiveEventModel(
 
             introSpeech?.let {
                 app.wavePlayer.play(it)
-            }
+                introSpeech = null
+            } ?: println("no speech found")
         }
     }
 
@@ -110,7 +114,9 @@ data class LiveEventState(
     val song: EventSong? = null,
     val songPlay: NewRendition? = null,
     val breakStartedAt: Instant? = null,
-)
+) {
+    val isActive get() = song != null
+}
 
 private fun createOutroRequest(eventSong: EventSong): SpeechRequest {
     val song = eventSong.song; val request = eventSong.request

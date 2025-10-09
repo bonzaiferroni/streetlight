@@ -1,7 +1,10 @@
 package streetlight.app.ui
 
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.datetime.Instant
@@ -23,13 +26,16 @@ fun LiveEventView(
     val state by viewModel.stateFlow.collectAsState()
 
     MediaEventEffect {
-        when (it) {
-            MediaEvent.Next -> viewModel.takeNextSong()
-            else -> { }
+        if (state.isActive) {
+            when (it) {
+                MediaEvent.PlayPause,
+                MediaEvent.Next -> viewModel.takeNextSong()
+                else -> { }
+            }
         }
     }
 
-    Column(1) {
+    Column(1, modifier = Modifier.verticalScroll(rememberScrollState())) {
         EventStatusDash(
             startsAt = startsAt,
             endsAt = endsAt,
@@ -75,7 +81,7 @@ fun LiveEventView(
                     }
                 }
             } else {
-                // show something
+                Button("Next Song", onClick = viewModel::takeNextSong)
             }
         }
     }
