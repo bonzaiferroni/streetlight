@@ -53,7 +53,12 @@ fun LiveEventView(
             toggleBreak = viewModel::toggleBreak,
         )
 
-        LabeledValue("Announcer:", state.announcerStatus)
+        Row(1) {
+            LabeledContent("Announcer:") {
+                Checkbox(state.playAnnouncements, onChange = viewModel::toggleAnnouncements)
+            }
+            LabeledValue("Status:", state.announcerStatus)
+        }
 
         MagicItem(
             state.song,

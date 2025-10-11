@@ -1,9 +1,9 @@
 package streetlight.app.ui
 
-import kabinet.model.GeminiVoice
 import kabinet.model.OrpheusVoice
 import kabinet.model.SpeechRequest
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
@@ -34,14 +34,6 @@ class LiveEventModel(
     fun takeNextSong() {
         job?.cancel()
         job = ioLaunch {
-            val outroSpeechJob = outroSpeech?.let {
-                launch {
-                    setAnnouncerStatus("announcing outro")
-                    app.wavePlayer.play(it)
-                    outroSpeech = null
-                }
-            }
-
             stateNow.songPlay?.let {
                 app.repo.songPlay.create(it)
             }
@@ -54,40 +46,54 @@ class LiveEventModel(
             )
             setStateFromMain { it.copy(song = eventSong, songPlay = newRendition) }
 
-            val introRequestJob = launch {
-                setAnnouncerStatus("fetching intro")
-                val introRequest = createIntroRequest(eventSong)
-                introSpeech = app.speech.createWav(introRequest)
+            if (stateNow.playAnnouncements) {
+                announceTransition(eventSong)
             }
-
-            val interludeRequestJob = launch {
-                setAnnouncerStatus("fetching interlude")
-                val interludeRequest = createInterludeRequest()
-                interludeSpeech = app.speech.createWav(interludeRequest)
-            }
-
-            launch {
-                setAnnouncerStatus("fetching outro")
-                val outroRequest = createOutroRequest(eventSong)
-                outroSpeech = app.speech.createWav(outroRequest)
-            }
-
-            outroSpeechJob?.join()
-             interludeRequestJob.join()
-            val interludeSpeechJob = interludeSpeech?.let {
-                setAnnouncerStatus("interlude")
-                launch { app.wavePlayer.play(it) }
-            }
-            interludeSpeechJob?.join()
-            introRequestJob.join()
-
-            introSpeech?.let {
-                setAnnouncerStatus("announcing intro")
-                app.wavePlayer.play(it)
-                introSpeech = null
-            } ?: println("no speech found")
-            setAnnouncerStatus("Ready.")
         }
+    }
+
+    private suspend fun announceTransition(eventSong: EventSong) = coroutineScope {
+        val outroSpeechJob = outroSpeech?.let {
+            launch {
+                setAnnouncerStatus("announcing outro")
+                app.wavePlayer.play(it)
+                outroSpeech = null
+            }
+        }
+
+        val introRequestJob = launch {
+            setAnnouncerStatus("fetching intro")
+            val introRequest = createIntroRequest(eventSong)
+            introSpeech = app.speech.createWav(introRequest)
+        }
+
+        val interludeRequestJob = launch {
+            setAnnouncerStatus("fetching interlude")
+            val interludeRequest = createInterludeRequest()
+            interludeSpeech = app.speech.createWav(interludeRequest)
+        }
+
+        launch {
+            setAnnouncerStatus("fetching outro")
+            val outroRequest = createOutroRequest(eventSong)
+            outroSpeech = app.speech.createWav(outroRequest)
+        }
+
+        outroSpeechJob?.join()
+        interludeRequestJob.join()
+        val interludeSpeechJob = interludeSpeech?.let {
+            setAnnouncerStatus("interlude")
+            launch { app.wavePlayer.play(it) }
+        }
+        interludeSpeechJob?.join()
+        introRequestJob.join()
+
+        introSpeech?.let {
+            setAnnouncerStatus("announcing intro")
+            app.wavePlayer.play(it)
+            introSpeech = null
+        } ?: println("no speech found")
+        setAnnouncerStatus("Ready.")
     }
 
     private suspend fun setAnnouncerStatus(status: String) = setStateFromMain { it.copy(announcerStatus = status) }
@@ -109,6 +115,10 @@ class LiveEventModel(
             setState { it.copy(breakStartedAt = Clock.System.now()) }
         }
     }
+
+    fun toggleAnnouncements(value: Boolean = !stateNow.playAnnouncements) {
+        setState { it.copy(playAnnouncements = value) }
+    }
 }
 
 data class LiveEventState(
@@ -116,6 +126,7 @@ data class LiveEventState(
     val songPlay: NewRendition? = null,
     val breakStartedAt: Instant? = null,
     val announcerStatus: String = "Ready.",
+    val playAnnouncements: Boolean = false,
 ) {
     val isActive get() = song != null
 }
