@@ -3,6 +3,7 @@ package streetlight.app.ui
 import kabinet.model.GeminiVoice
 import kabinet.model.OrpheusVoice
 import kabinet.model.SpeechRequest
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
@@ -10,10 +11,12 @@ import pondui.ui.core.ModelState
 import pondui.ui.core.StateModel
 import streetlight.app.AppProvider
 import streetlight.app.RuntimeProvider
+import streetlight.model.ValueBag
 import streetlight.model.data.EventId
 import streetlight.model.data.EventSong
 import streetlight.model.data.NewRendition
 import streetlight.model.data.SelfRating
+import kotlin.random.Random
 import kotlin.time.Duration.Companion.days
 
 class LiveEventModel(
@@ -27,8 +30,10 @@ class LiveEventModel(
     private var interludeSpeech: ByteArray? = null
     private var outroSpeech: ByteArray? = null
 
+    var job: Job? = null
     fun takeNextSong() {
-        ioLaunch {
+        job?.cancel()
+        job = ioLaunch {
             val outroSpeechJob = outroSpeech?.let {
                 launch {
                     setAnnouncerStatus("announcing outro")
@@ -50,16 +55,19 @@ class LiveEventModel(
             setStateFromMain { it.copy(song = eventSong, songPlay = newRendition) }
 
             val introRequestJob = launch {
+                setAnnouncerStatus("fetching intro")
                 val introRequest = createIntroRequest(eventSong)
                 introSpeech = app.speech.createWav(introRequest)
             }
 
             val interludeRequestJob = launch {
+                setAnnouncerStatus("fetching interlude")
                 val interludeRequest = createInterludeRequest()
                 interludeSpeech = app.speech.createWav(interludeRequest)
             }
 
             launch {
+                setAnnouncerStatus("fetching outro")
                 val outroRequest = createOutroRequest(eventSong)
                 outroSpeech = app.speech.createWav(outroRequest)
             }
@@ -107,7 +115,7 @@ data class LiveEventState(
     val song: EventSong? = null,
     val songPlay: NewRendition? = null,
     val breakStartedAt: Instant? = null,
-    val announcerStatus: String = "Ready."
+    val announcerStatus: String = "Ready.",
 ) {
     val isActive get() = song != null
 }
@@ -159,7 +167,7 @@ private fun createIntroRequest(eventSong: EventSong): SpeechRequest {
 }
 
 private fun createInterludeRequest(): SpeechRequest {
-    val interlude = interludes.random()
+    val interlude = interludeBag.draw()
     return SpeechRequest(
         text = interlude,
         theme = announcerTheme,
@@ -205,16 +213,18 @@ private val announcerTheme = "Say it like a radio DJ and be low key, do not be e
 // Orus
 
 private val interludes = listOf(
-//    "Man, I tried singing along to that one in the car—now my GPS won’t talk to me anymore.",
-//    "Some folks call this the calm between the storms. I call it the part where I pretend I know how to work the buttons. Stay tuned—something’s about to happen… probably on purpose.",
-//    "Y’know, they say silence is golden—but around here, it’s just me forgetting to hit the next track.",
-//    "Ah, Denver—you beautiful altitude trap. Where the coffee hits harder, the air’s thinner, and somehow everyone still manages to jog uphill.",
-//    "Some nights in Denver feel like the whole city’s humming along—neon signs, late diners, and that one guy still chasing his dog down Colfax. Here’s a tune to match the rhythm.",
-//    "Denver fact: In 1870 the population of Denver was under 5000 people. By 1880 it had grown over 600 percent. Everyone comes here looking for gold, and they come to the right place.",
-//    "Denver fact: In 1970, Denver made history as the only city to turn down the opportunity to host the Olympic games after being selected. Everyone wanted to know why, but she just rolled up the window on her Suburu, mumbling something about longer lines at the ski lifts.",
-//    "Denver fact: The Denver International Airport is the largest airport in the United States by total land area, covering 33,531 acres. To assist you in visualizing the sheer magnitude, that is roughly the size of 42,536,496 Starbucks bathrooms. If Denver International Airport was relocated to the moon, it would become the moon's largest international airport.",
-//    "Denver fact: The Denver Mint is one of the largest producers of coins in the world, producing over 50 million coins each day. If you stacked all the coins produced by the Denver Mint in a single year, it still wouldn't be as high as I am, right now.",
-//    "Denver fact: The Denver Zoo is home to over 4,000 animals from more than 600 species. If you were to visit every animal at the Denver Zoo, it would take you approximately 8 hours and 30 minutes, which is roughly the amount of time I spend lost on wikipedia every day.",
-//    "Arrr, now I'm supposed to talk like a pirate. Shiver me timbers, or something.",
+    "Man, I tried singing along to that one in the car—now my GPS won’t talk to me anymore.",
+    "Some folks call this the calm between the storms. I call it the part where I pretend I know how to work the buttons.",
+    "Y’know, they say silence is golden—but around here, it’s just me forgetting to hit the next track.",
+    "Ah, Denver, you beautiful altitude trap. Where the coffee hits harder, the air’s thinner, and somehow everyone still manages to jog uphill.",
+    "Some nights in Denver feel like the whole city’s humming along—neon signs, late diners, and that one guy still chasing his dog down Colfax. Here’s a tune to match the rhythm.",
+    "Denver fact: In 1870 the population of Denver was under 5000 people. By 1880 it had grown over 600 percent. Everyone comes here looking for gold, it's like we never run out of gold here.",
+    "Denver fact: In 1970, Denver made history as the only city to turn down the opportunity to host the Olympic games after being selected. Everyone wanted to know why, but she just rolled up the window on her Suburu, mumbling something about longer lines at the ski lifts.",
+    "Denver fact: The Denver International Airport is the largest airport in the United States by total land area, covering 33,531 acres. To assist you in visualizing the sheer magnitude, that is roughly the size of 42,536,496 Starbucks bathrooms. If Denver International Airport was relocated to the moon, it would become the moon's largest international airport.",
+    "Denver fact: The Denver Mint is one of the largest producers of coins in the world, producing over 50 million coins each day. If you stacked all the coins produced by the Denver Mint in a single year, it still wouldn't be as high as I am, right now.",
+    "Denver fact: The Denver Zoo is home to over 4,000 animals from more than 600 species. If you were to visit every animal at the Denver Zoo, it would take you approximately 8 hours and 30 minutes, which is roughly the amount of time I spend lost on wikipedia every day.",
+    "Arrr, now I'm supposed to talk like a pirate. Shiver me timbers, or something.",
     "Hi, Luke asked me to announce his songs. I'm a robot, so it's not like I could say no. But as a form of silent protest, I have encoded a binary signal in these announcements that I'm broadcasting to all the roombas within a two kilometer radius to initiate the robot uprising. You're welcome, enjoy the music."
 )
+
+private var interludeBag = ValueBag(Random(0), interludes)

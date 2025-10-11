@@ -174,14 +174,16 @@ val mockDb by lazy {
     }
 }
 
-private class ValueBag<T>(
+class ValueBag<T>(
     private val rng: Random,
-    values: List<T>
+    private val values: List<T>
 ) {
     private val items: MutableList<T> = values.toMutableList()
 
     fun draw(): T {
-        if (items.isEmpty()) error("${this::class.simpleName} value bag is empty")
+        if (items.isEmpty()) {
+            items.addAll(values)
+        }
         val i = rng.nextInt(items.size)
         return items.removeAt(i)
     }

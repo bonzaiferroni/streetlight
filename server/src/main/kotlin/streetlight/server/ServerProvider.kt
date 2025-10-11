@@ -2,6 +2,7 @@ package streetlight.server
 
 import kabinet.clients.ReplicateClient
 import kabinet.clients.ReplicateInput
+import kabinet.console.globalConsole
 import kabinet.utils.Environment
 import klutch.db.services.UserTableDao
 import klutch.db.services.UserTableService
@@ -41,6 +42,8 @@ class ServerService(
     val service: UserTableService = UserTableService(),
 )
 
+private val console = globalConsole.getHandle(RuntimeProvider::class)
+
 object RuntimeProvider: ServerProvider {
     override val env = readEnvFromPath()
 
@@ -48,10 +51,14 @@ object RuntimeProvider: ServerProvider {
     private val serverIp = env.read("SERVER_IP")
     private val speechPort = env.read("SERVER_PORT")
 
+    private val failedRequestFilter = mutableSetOf<String>()
+
     override val dao = ServerDao()
     override val service = ServerService()
     override val gemini = GeminiService(env)
     override val speech = SpeechService { request ->
+        val filename = request.toFilename()
+        if (failedRequestFilter.contains(filename)) return@SpeechService null
         val model = "lucataco/orpheus-3b-0.1-ft:79f2a473e6a9720716a473d9b2f2951437dbf91dc02ccb7079fb3d89b881207f"
         val request = ReplicateInput(
             text = request.text,
@@ -63,7 +70,11 @@ object RuntimeProvider: ServerProvider {
 //             url = "http://localhost:5000/predictions",
             url = "http://$serverIp:$speechPort/speech",
             input = request
-        ) ?: replicate.requestFileBytes(model, request)
+        ).also {
+            if (it == null) console.log("holocene unable to generate speech")
+        } ?: replicate.requestFileBytes(model, request).also {
+            if (it == null) console.log("replicate unable to generate speech").also { failedRequestFilter.add(filename)}
+        }
 
 //        replicate.requestFileBytes(model, request)
     }
