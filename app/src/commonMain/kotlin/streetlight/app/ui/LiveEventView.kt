@@ -54,8 +54,14 @@ fun LiveEventView(
         )
 
         Row(1) {
-            LabeledContent("Announcer:") {
-                Checkbox(state.playAnnouncements, onChange = viewModel::toggleAnnouncements)
+            LabeledContent("Outro:") {
+                Checkbox(state.announceOutro, onChange = viewModel::toggleOutro)
+            }
+            LabeledContent("Interlude") {
+                Checkbox(state.announceInterlude, onChange = viewModel::toggleInterlude)
+            }
+            LabeledContent("Intro:") {
+                Checkbox(state.announceIntro, onChange = viewModel::toggleIntro)
             }
             LabeledValue("Status:", state.announcerStatus)
         }

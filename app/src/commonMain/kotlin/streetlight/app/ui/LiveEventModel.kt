@@ -46,14 +46,12 @@ class LiveEventModel(
             )
             setStateFromMain { it.copy(song = eventSong, songPlay = newRendition) }
 
-            if (stateNow.playAnnouncements) {
-                announceTransition(eventSong)
-            }
+            announceTransition(eventSong)
         }
     }
 
     private suspend fun announceTransition(eventSong: EventSong) = coroutineScope {
-        val outroSpeechJob = outroSpeech?.let {
+        val outroSpeechJob = outroSpeech?.takeIf { stateNow.announceOutro }?.let {
             launch {
                 setAnnouncerStatus("announcing outro")
                 app.wavePlayer.play(it)
@@ -61,32 +59,34 @@ class LiveEventModel(
             }
         }
 
-        val introRequestJob = launch {
+        val introRequestJob = if (stateNow.announceIntro) launch {
             setAnnouncerStatus("fetching intro")
             val introRequest = createIntroRequest(eventSong)
             introSpeech = app.speech.createWav(introRequest)
-        }
+        } else null
 
-        val interludeRequestJob = launch {
+        val interludeRequestJob = if (stateNow.announceInterlude) launch {
             setAnnouncerStatus("fetching interlude")
             val interludeRequest = createInterludeRequest()
             interludeSpeech = app.speech.createWav(interludeRequest)
-        }
+        } else null
 
-        launch {
-            setAnnouncerStatus("fetching outro")
-            val outroRequest = createOutroRequest(eventSong)
-            outroSpeech = app.speech.createWav(outroRequest)
+        if (stateNow.announceOutro) {
+            launch {
+                setAnnouncerStatus("fetching outro")
+                val outroRequest = createOutroRequest(eventSong)
+                outroSpeech = app.speech.createWav(outroRequest)
+            }
         }
 
         outroSpeechJob?.join()
-        interludeRequestJob.join()
+        interludeRequestJob?.join()
         val interludeSpeechJob = interludeSpeech?.let {
             setAnnouncerStatus("interlude")
             launch { app.wavePlayer.play(it) }
         }
         interludeSpeechJob?.join()
-        introRequestJob.join()
+        introRequestJob?.join()
 
         introSpeech?.let {
             setAnnouncerStatus("announcing intro")
@@ -116,8 +116,16 @@ class LiveEventModel(
         }
     }
 
-    fun toggleAnnouncements(value: Boolean = !stateNow.playAnnouncements) {
-        setState { it.copy(playAnnouncements = value) }
+    fun toggleIntro(value: Boolean = !stateNow.announceIntro) {
+        setState { it.copy(announceIntro = value) }
+    }
+
+    fun toggleOutro(value: Boolean = !stateNow.announceOutro) {
+        setState { it.copy(announceOutro = value) }
+    }
+
+    fun toggleInterlude(value: Boolean = !stateNow.announceInterlude) {
+        setState { it.copy(announceInterlude = value) }
     }
 }
 
@@ -126,7 +134,9 @@ data class LiveEventState(
     val songPlay: NewRendition? = null,
     val breakStartedAt: Instant? = null,
     val announcerStatus: String = "Ready.",
-    val playAnnouncements: Boolean = false,
+    val announceIntro: Boolean = false,
+    val announceOutro: Boolean = false,
+    val announceInterlude: Boolean = false,
 ) {
     val isActive get() = song != null
 }
