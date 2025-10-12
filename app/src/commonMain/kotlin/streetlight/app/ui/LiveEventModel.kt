@@ -191,38 +191,6 @@ private fun createInterludeRequest(): SpeechRequest {
 private val announcerVoice = OrpheusVoice.Tara.apiName
 private val announcerTheme = "Say it like a radio DJ and be low key, do not be emotive or enthusiastic"
 
-// voice ranks:
-// Smooth: Algieba
-// Upbeat: Puck
-// Soft: Achernar
-// Clear2: Erinome
-// Gravelly: Algenib
-// Zubenelgenubi
-// Gacrux
-// Sulafat
-// Sadachbia
-// Enceladus
-// Charon
-// Pulcherrima
-// Alnilam
-// Laomedeia
-// Sadaltagager
-// Autonoe
-// Despina
-// Vindemiatrix
-// Zephyr
-// Kore
-// Iapetus
-// Schedar
-// Achird
-// Rasalgethi
-// Umbriel
-// Aoede
-// Callirrhoe
-// Leda
-// Fenrir
-// Orus
-
 private val interludes = listOf(
     "Man, I tried singing along to that one in the car—now my GPS won’t talk to me anymore.",
     "Some folks call this the calm between the storms. I call it the part where I pretend I know how to work the buttons.",
