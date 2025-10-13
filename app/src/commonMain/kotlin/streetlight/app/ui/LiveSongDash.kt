@@ -13,24 +13,30 @@ import pondui.ui.theme.Pond
 import pondui.utils.MultiPreview
 import pondui.utils.PreviewFrame
 import streetlight.model.data.*
+import streetlight.model.mockDb
 
 @Composable
 fun LiveSongView(
-    title: String,
+    song: Song,
     notes: String?,
-    rating: SelfRating?,
-    setRating: (SelfRating) -> Unit,
     setNotes: (String) -> Unit,
     takeNextSong: () -> Unit,
 ) {
-    val unitDp = Pond.ruler.unitSpacing
     Column(2, horizontalAlignment = Alignment.CenterHorizontally) {
-        H1(title)
-        FlowRow(1, horizontalArrangement = Arrangement.SpaceAround, modifier = Modifier.fillMaxWidth()) {
-            LabeledValue("Artist", "John Lennon", modifier = Modifier.padding(horizontal = unitDp))
-            LabeledValue("Capo", "3rd Fret", modifier = Modifier.padding(horizontal = unitDp))
-            LabeledValue("Tempo", "90 bpm", modifier = Modifier.padding(horizontal = unitDp))
+        Column(0, horizontalAlignment = Alignment.CenterHorizontally) {
+            H1(song.title)
+            Text(song.artist)
         }
+        song.notation?.let {
+            SongNotationView(notation = it, capo = song.capo, tempo = song.tempo, showComposition = false)
+        }
+        TextField(
+            text = notes,
+            onChange = setNotes,
+            placeholder = "Notes",
+            label = "Notes",
+            modifier = Modifier.fillMaxWidth()
+        )
 //        Section {
 //            // SongNotationView()
 //        }
@@ -41,13 +47,12 @@ fun LiveSongView(
 @Preview
 @Composable
 fun LiveSongDashPreview() {
+    val song = mockDb.songs.first()
     MultiPreview {
         PreviewFrame {
             LiveSongView(
-                title = "Imagine",
+                song,
                 notes = "Great song, loved the vibe!",
-                rating = null,
-                setRating = {},
                 setNotes = {},
                 takeNextSong = {}
             )

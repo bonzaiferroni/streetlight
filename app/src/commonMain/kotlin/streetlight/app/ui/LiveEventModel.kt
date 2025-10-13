@@ -34,8 +34,8 @@ class LiveEventModel(
     fun takeNextSong() {
         job?.cancel()
         job = ioLaunch {
-            stateNow.songPlay?.let {
-                app.repo.songPlay.create(it)
+            stateNow.rendition?.let {
+                app.repo.rendition.create(it)
             }
 
             val eventSong = app.repo.song.takeNextSong(eventId, Clock.System.now() - 1.days) ?: return@ioLaunch
@@ -44,7 +44,7 @@ class LiveEventModel(
                 notes = null,
                 rating = null,
             )
-            setStateFromMain { it.copy(song = eventSong, songPlay = newRendition) }
+            setStateFromMain { it.copy(song = eventSong, rendition = newRendition) }
 
             announceTransition(eventSong)
         }
@@ -99,13 +99,13 @@ class LiveEventModel(
     private suspend fun setAnnouncerStatus(status: String) = setStateFromMain { it.copy(announcerStatus = status) }
 
     fun setRating(rating: SelfRating?) {
-        val songPlay = stateNow.songPlay ?: return
-        setState { it.copy(songPlay = songPlay.copy(rating = rating))}
+        val songPlay = stateNow.rendition ?: return
+        setState { it.copy(rendition = songPlay.copy(rating = rating))}
     }
 
     fun setNotes(notes: String) {
-        val songPlay = stateNow.songPlay ?: return
-        setState { it.copy(songPlay = songPlay.copy(notes = notes.takeIf { it.isNotBlank() }))}
+        val songPlay = stateNow.rendition ?: return
+        setState { it.copy(rendition = songPlay.copy(notes = notes.takeIf { it.isNotBlank() }))}
     }
 
     fun toggleBreak() {
@@ -131,10 +131,10 @@ class LiveEventModel(
 
 data class LiveEventState(
     val song: EventSong? = null,
-    val songPlay: NewRendition? = null,
+    val rendition: NewRendition? = null,
     val breakStartedAt: Instant? = null,
     val announcerStatus: String = "Ready.",
-    val announceIntro: Boolean = false,
+    val announceIntro: Boolean = true,
     val announceOutro: Boolean = false,
     val announceInterlude: Boolean = false,
 ) {

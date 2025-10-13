@@ -37,7 +37,7 @@ interface AppClient {
     val event: EventRepository
     val location: LocationRepository
     val song: SongRepository
-    val songPlay: RenditionRepository
+    val rendition: RenditionRepository
 }
 
 class AppDao(
@@ -60,7 +60,7 @@ object RuntimeProvider: AppProvider {
         override val event = EventApiClient(apiClient)
         override val location = LocationApiClient(apiClient)
         override val song = SongApiClient(apiClient)
-        override val songPlay = RenditionApiClient(apiClient)
+        override val rendition = RenditionApiClient(apiClient)
     }
     override val speech = SpeechApiClient(Api.Speech, apiClient)
     override val wavePlayer = WavePlayer()
@@ -74,7 +74,7 @@ object MockProvider: AppProvider {
         override val event = EventMockClient()
         override val location = LocationMockClient()
         override val song = SongMockClient()
-        override val songPlay = RenditionMockClient()
+        override val rendition = RenditionMockClient()
     }
     override val speech = SpeechMockClient()
     override val wavePlayer get() = error("no mock wave player")

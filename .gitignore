@@ -24,6 +24,8 @@ backup.json
 /www/uploads
 users.json
 .env
+.room
+/dbdumps/*
 
 **/.kotlin-js-store/
 **/kcef-bundle/

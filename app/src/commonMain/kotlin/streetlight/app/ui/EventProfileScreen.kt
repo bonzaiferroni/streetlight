@@ -32,7 +32,7 @@ import streetlight.model.mockDb
 @Composable
 fun EventProfileScreen(
     route: EventProfileRoute,
-    viewModel: EventProfileModel = viewModel (key = route.id) { EventProfileModel(route.id.toProjectId()) }
+    viewModel: EventProfileModel = viewModel(key = route.id + "profile") { EventProfileModel(route.id.toProjectId()) }
 ) {
     val state by viewModel.stateFlow.collectAsState()
 
@@ -50,11 +50,8 @@ fun EventProfileScreen(
     ) {
         Tab("Live") {
             LiveEventView(
-                eventId = event.eventId,
-                startsAt = event.startsAt,
-                endsAt = event.endsAt,
-                status = event.status,
-                setStatus = viewModel::setStatus,
+                event = event,
+                modifyEvent = viewModel::updateEvent
             )
         }
         Tab("Edit") {
@@ -65,10 +62,7 @@ fun EventProfileScreen(
                 )
                 EventProfileForm(
                     event = event,
-                    setTitle = viewModel::setTitle,
-                    setDescription = viewModel::setDescription,
-                    setStartsAt = viewModel::setStartsAt,
-                    setEndsAt = viewModel::setEndsAt,
+                    modifyEvent = viewModel::updateEvent,
                 )
             }
         }
@@ -78,31 +72,26 @@ fun EventProfileScreen(
 @Composable
 fun EventProfileForm(
     event: Event,
-    setTitle: (String) -> Unit,
-    setDescription: (String) -> Unit,
-    setStartsAt: (Instant) -> Unit,
-    setEndsAt: (Instant) -> Unit,
+    modifyEvent: (Event) -> Unit,
 ) {
     FlowRow(1, maxItemsInEachRow = 2) {
         TextField(
             event.title,
             label = "title",
             placeholder = "title",
-            onChange = setTitle,
             modifier = Modifier.weight(1f)
-        )
+        ) { modifyEvent(event.copy(title = it)) }
     }
     TextField(
         event.description ?: "",
         label = "description",
         placeholder = "description",
-        onChange = setDescription,
         modifier = Modifier.fillMaxWidth()
-    )
-    TimeWheel(event.startsAt, onChangeInstant = setStartsAt)
-    TimeWheel(event.endsAt, onChangeInstant = setEndsAt)
-
-    // TextField("$APP_API_URL/eventportal/${event.eventId.value}") { }
+    ) { modifyEvent(event.copy(description = it)) }
+    TimeWheel(event.startsAt) { modifyEvent(event.copy(startsAt = it)) }
+    TimeWheel(event.endsAt) { modifyEvent(event.copy(endsAt = it)) }
+    TextField(event.cashTips) { modifyEvent(event.copy(cashTips = it)) }
+    TextField(event.cardTips) { modifyEvent(event.copy(cardTips = it)) }
 }
 
 @Composable
@@ -126,10 +115,7 @@ fun EventProfilePreview() {
         )
         EventProfileForm(
             event = mockDb.events.first(),
-            setTitle = {},
-            setDescription = {},
-            setStartsAt = {},
-            setEndsAt = {},
+            modifyEvent = {}
         )
     }
 }

@@ -13,7 +13,6 @@ import streetlight.app.RuntimeProvider
 import streetlight.model.data.Event
 import streetlight.model.data.EventId
 import streetlight.model.data.EventStatus
-import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
 @Stable
@@ -33,26 +32,20 @@ class EventProfileModel(
         }
     }
 
-    fun setTitle(value: String) = updateEvent { it.copy(title = value) }
-    fun setDescription(value: String) = updateEvent { it.copy(description = value) }
-    fun setStartsAt(value: Instant) = updateEvent { it.copy(startsAt = value) }
-    fun setEndsAt(value: Instant) = updateEvent { it.copy(endsAt = value) }
-    fun setStatus(value: EventStatus) = updateEvent(0.seconds) { it.copy(status = value) }
-
-    fun updateEvent(delay: Duration = 1.seconds, toUpdate: (Event) -> Event) {
+    fun updateEvent(event: Event) {
+        var update = event
         val original = stateNow.event ?: return
-        var update = toUpdate(original)
         if (original == update) return
         setState { it.copy(event = update) }
         updateJob?.cancel()
         updateJob = ioLaunch {
-            delay(delay)
+            delay(1.seconds)
             setStateFromMain { it.copy(updateStatus = UpdateStatus.InProgress) }
             update = update.copy(updatedAt = Clock.System.now())
             val isSuccess = client.updateEvent(update)
             setStateFromMain {
                 when (isSuccess) {
-                    true -> it.copy(event = update, updateStatus = UpdateStatus.Done)
+                    true -> it.copy(updateStatus = UpdateStatus.Done)
                     else -> it.copy(event = original, updateStatus = UpdateStatus.Failed)
                 }
             }

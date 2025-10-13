@@ -7,21 +7,18 @@ import androidx.compose.ui.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import kotlinx.datetime.Instant
 import pondui.ui.controls.*
 import pondui.ui.modifiers.MagicItem
 import pondui.ui.services.MediaEvent
 import pondui.ui.services.MediaEventEffect
+import pondui.ui.theme.Pond
 import streetlight.model.data.*
 
 @Composable
 fun LiveEventView(
-    eventId: EventId,
-    startsAt: Instant,
-    endsAt: Instant,
-    status: EventStatus,
-    setStatus: (EventStatus) -> Unit,
-    viewModel: LiveEventModel = viewModel { LiveEventModel(eventId) }
+    event: Event,
+    modifyEvent: (Event) -> Unit,
+    viewModel: LiveEventModel = viewModel (key = event.eventId.value + "live") { LiveEventModel(event.eventId) }
 ) {
     val state by viewModel.stateFlow.collectAsState()
 
@@ -36,34 +33,34 @@ fun LiveEventView(
     }
 
     Column(
-        gap = 1,
+        gap = 2,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.verticalScroll(rememberScrollState())
     ) {
         EventStatusDash(
-            startsAt = startsAt,
-            endsAt = endsAt,
+            event = event,
             breakStartedAt = state.breakStartedAt,
-            status = status,
             setStatus = { status ->
                 if (state.song == null && status == EventStatus.Live)
                     viewModel.takeNextSong()
-                setStatus(status)
+                modifyEvent(event.copy(status = status))
             },
             toggleBreak = viewModel::toggleBreak,
         )
 
-        Row(1) {
-            LabeledContent("Outro:") {
-                Checkbox(state.announceOutro, onChange = viewModel::toggleOutro)
+        Column(1) {
+            LabeledValue("Announcer:", state.announcerStatus)
+            Row(2) {
+                LabeledContent("Outro:") {
+                    Checkbox(state.announceOutro, onChange = viewModel::toggleOutro)
+                }
+                LabeledContent("Interlude:") {
+                    Checkbox(state.announceInterlude, onChange = viewModel::toggleInterlude)
+                }
+                LabeledContent("Intro:") {
+                    Checkbox(state.announceIntro, onChange = viewModel::toggleIntro)
+                }
             }
-            LabeledContent("Interlude") {
-                Checkbox(state.announceInterlude, onChange = viewModel::toggleInterlude)
-            }
-            LabeledContent("Intro:") {
-                Checkbox(state.announceIntro, onChange = viewModel::toggleIntro)
-            }
-            LabeledValue("Status:", state.announcerStatus)
         }
 
         MagicItem(
@@ -75,9 +72,9 @@ fun LiveEventView(
         ) { eventSong ->
             val song = eventSong?.song
             val request = eventSong?.request
-            val songPlay = state.songPlay
-            if (song != null && songPlay != null) {
-                TabSection {
+            val rendition = state.rendition
+            if (song != null && rendition != null) {
+                TabSection(tabColor = Pond.colors.selection.copy(.5f)) {
                     Tab("Song") {
                         request?.let { request ->
                             H2("Requested by ${request.requesterName ?: "anonymous"}")
@@ -85,16 +82,11 @@ fun LiveEventView(
                             Text("Comment: ${request.comment}")
                         }
                         LiveSongView(
-                            title = song.title,
-                            notes = songPlay.notes,
-                            rating = songPlay.rating,
-                            setRating = viewModel::setRating,
+                            song = song,
+                            notes = rendition.notes,
                             setNotes = viewModel::setNotes,
                             takeNextSong = viewModel::takeNextSong,
                         )
-                    }
-                    Tab("Chords") {
-                        SongChordsDash()
                     }
                 }
             } else {

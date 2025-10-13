@@ -23,17 +23,17 @@ import pondui.utils.MultiPreview
 import pondui.utils.PreviewFrame
 import pondui.utils.electrify
 import streetlight.model.data.*
+import streetlight.model.mockDb
 import kotlin.time.Duration.Companion.minutes
 
 @Composable
 fun EventStatusDash(
-    startsAt: Instant,
-    endsAt: Instant,
+    event: Event,
     breakStartedAt: Instant?,
-    status: EventStatus,
     setStatus: (EventStatus) -> Unit,
     toggleBreak: () -> Unit,
 ) {
+    val status = event.status; val startsAt = event.startsAt; val endsAt = event.endsAt
     val now = Clock.System.now()
     val speak = rememberTextSpeaker()
     val setStatus: (EventStatus) -> Unit = {
@@ -189,43 +189,51 @@ fun EventStatus.toIconConfig() = when (this) {
 @Preview
 fun EventLiveAtomicPreview() {
     val now = Clock.System.now()
-
+    val event = mockDb.events.first()
     MultiPreview {
         PreviewFrame("Status Dash", "Pending") {
             EventStatusDash(
-                startsAt = now + 5.minutes,
-                endsAt = now + 65.minutes,
+                event = event.copy(
+                    startsAt = now + 5.minutes,
+                    endsAt = now + 65.minutes,
+                    status = EventStatus.Pending,
+                ),
                 breakStartedAt = null,
-                status = EventStatus.Pending,
                 setStatus = {},
                 toggleBreak = {},
             )
         }
         PreviewFrame("Status Dash", "Pending") {
             EventStatusDash(
-                startsAt = now + 5.minutes,
-                endsAt = now + 65.minutes,
+                event = event.copy(
+                    startsAt = now + 5.minutes,
+                    endsAt = now + 65.minutes,
+                    status = EventStatus.Canceled,
+                ),
                 breakStartedAt = null,
-                status = EventStatus.Canceled,
                 setStatus = {},
                 toggleBreak = {},
             )
         }
         PreviewFrame("Status Dash", "Live") {
             EventStatusDash(
-                startsAt = now - 10.minutes,
-                endsAt = now + 50.minutes,
+                event.copy(
+                    startsAt = now - 10.minutes,
+                    endsAt = now + 50.minutes,
+                    status = EventStatus.Live,
+                ),
                 breakStartedAt = null,
-                status = EventStatus.Live,
                 setStatus = {},
                 toggleBreak = {},
             )
         }
         PreviewFrame("Status Dash", "On Break") {
             EventStatusDash(
-                startsAt = now - 10.minutes,
-                endsAt = now + 50.minutes,
-                status = EventStatus.OnBreak,
+                event = event.copy(
+                    startsAt = now - 10.minutes,
+                    endsAt = now + 50.minutes,
+                    status = EventStatus.OnBreak,
+                ),
                 breakStartedAt = now - 2.minutes,
                 setStatus = {},
                 toggleBreak = {},
@@ -233,9 +241,11 @@ fun EventLiveAtomicPreview() {
         }
         PreviewFrame("Status Dash", "Finished") {
             EventStatusDash(
-                startsAt = now - 70.minutes,
-                endsAt = now - 10.minutes,
-                status = EventStatus.Finished,
+                event = event.copy(
+                    startsAt = now - 70.minutes,
+                    endsAt = now - 10.minutes,
+                    status = EventStatus.Finished,
+                ),
                 breakStartedAt = null,
                 setStatus = {},
                 toggleBreak = {},

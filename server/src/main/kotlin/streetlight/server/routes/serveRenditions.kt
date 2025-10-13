@@ -9,21 +9,21 @@ import streetlight.model.data.toProjectId
 import streetlight.server.RuntimeProvider
 import streetlight.server.ServerProvider
 
-fun Routing.serveSongPlays(app: ServerProvider = RuntimeProvider) {
-    val dao = app.dao.songPlay
+fun Routing.serveRenditions(app: ServerProvider = RuntimeProvider) {
+    val dao = app.dao.rendition
 
     getEndpoint(Api.RenditionFeed, { it.toProjectId() }) { id, _ ->
-        dao.readSongPlay(id)
+        dao.readById(id)
     }
 
     getEndpoint(Api.RenditionFeed.BySong, { it.toProjectId() }) { songId, _ ->
-        dao.readSongPlays(songId)
+        dao.readAllBySongId(songId)
     }
 
     authenticateJwt {
         postEndpoint(Api.RenditionFeed.Create) { newPlay, _ ->
             val userId = getUserId()
-            dao.createSongPlay(userId, newPlay)
+            dao.create(userId, newPlay)
         }
 
         getEndpoint(Api.RenditionFeed.ReadAllSince) { endpoint ->
@@ -33,11 +33,11 @@ fun Routing.serveSongPlays(app: ServerProvider = RuntimeProvider) {
         }
 
         postEndpoint(Api.RenditionFeed.Update) { play, _ ->
-            dao.updateSongPlay(play)
+            dao.update(play)
         }
 
         deleteEndpoint(Api.RenditionFeed.Delete) { songPlayId, _ ->
-            dao.deleteSongPlay(songPlayId)
+            dao.delete(songPlayId)
         }
     }
 }

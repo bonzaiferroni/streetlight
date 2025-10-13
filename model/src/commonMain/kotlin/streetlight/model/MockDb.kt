@@ -159,6 +159,7 @@ val mockDb by lazy {
                 notation = amazingGrace,
                 tempo = listOf(90, 100, 110, 120).random(),
                 capo = listOf(0, 3, 4, 7, null).random(),
+                inRotation = true,
                 updatedAt = now,
                 createdAt = now,
             )

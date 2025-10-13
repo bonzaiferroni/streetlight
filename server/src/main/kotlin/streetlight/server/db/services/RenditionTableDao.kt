@@ -23,11 +23,11 @@ import streetlight.server.utils.toProjectId
 
 class RenditionTableDao: DbService() {
 
-    suspend fun readSongPlay(renditionId: RenditionId) = dbQuery {
+    suspend fun readById(renditionId: RenditionId) = dbQuery {
         RenditionTable.read { it.id.eq(renditionId) }.firstOrNull()?.toRendition()
     }
 
-    suspend fun readSongPlays(songId: SongId) = dbQuery {
+    suspend fun readAllBySongId(songId: SongId) = dbQuery {
         RenditionTable.read { it.songId.eq(songId) }.map { it.toRendition() }
     }
 
@@ -37,7 +37,7 @@ class RenditionTableDao: DbService() {
         }.map { it.toRendition() }
     }
 
-    suspend fun createSongPlay(userId: UserId, songPlay: NewRendition): RenditionId = dbQuery {
+    suspend fun create(userId: UserId, songPlay: NewRendition): RenditionId = dbQuery {
         RenditionTable.insertAndGetId {
             it.writeFull(
                 Rendition(
@@ -52,13 +52,13 @@ class RenditionTableDao: DbService() {
         }.toProjectId()
     }
 
-    suspend fun updateSongPlay(rendition: Rendition): Boolean = dbQuery {
+    suspend fun update(rendition: Rendition): Boolean = dbQuery {
         RenditionTable.updateSingleWhere({ RenditionTable.id.eq(rendition.renditionId) }) {
             it.writeUpdate(rendition)
         } != null
     }
 
-    suspend fun deleteSongPlay(renditionId: RenditionId): Boolean = dbQuery {
+    suspend fun delete(renditionId: RenditionId): Boolean = dbQuery {
         RenditionTable.deleteSingle { RenditionTable.id.eq(renditionId) }
     }
 }

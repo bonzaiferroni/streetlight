@@ -31,7 +31,7 @@ class ServerDao(
     val area: AreaTableDao = AreaTableDao(),
     val song: SongTableDao = SongTableDao(),
     val event: EventTableDao = EventTableDao(),
-    val songPlay: RenditionTableDao = RenditionTableDao(),
+    val rendition: RenditionTableDao = RenditionTableDao(),
     val user: UserTableDao = UserTableDao(),
     val spark: SparkTableDao = SparkTableDao(),
     val request: RequestTableDao = RequestTableDao(),
