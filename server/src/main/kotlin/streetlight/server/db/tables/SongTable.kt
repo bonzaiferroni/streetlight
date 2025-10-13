@@ -8,7 +8,6 @@ import kotlinx.serialization.json.Json
 import org.jetbrains.exposed.dao.id.UUIDTable
 import org.jetbrains.exposed.sql.ReferenceOption
 import org.jetbrains.exposed.sql.ResultRow
-import org.jetbrains.exposed.sql.json.json
 import org.jetbrains.exposed.sql.json.jsonb
 import org.jetbrains.exposed.sql.kotlin.datetime.datetime
 import org.jetbrains.exposed.sql.statements.UpdateBuilder
@@ -24,6 +23,7 @@ object SongTable : UUIDTable() {
     val notation = jsonb<SongNotation>("notation", tableJsonDefault).nullable()
     val tempo = integer("tempo").nullable()
     val capo = integer("capo").nullable()
+    val inRotation = bool("in_rotation").default(true)
     val updatedAt = datetime("updated_at")
     val createdAt = datetime("created_at")
 }
@@ -36,6 +36,7 @@ fun ResultRow.toSong() = Song(
     notation = this[SongTable.notation],
     tempo = this[SongTable.tempo],
     capo = this[SongTable.capo],
+    inRotation = this[SongTable.inRotation],
     updatedAt = this[SongTable.updatedAt].toInstantFromUtc(),
     createdAt = this[SongTable.createdAt].toInstantFromUtc(),
 )
@@ -54,6 +55,7 @@ fun UpdateBuilder<*>.writeUpdate(song: Song) {
     this[SongTable.notation] = song.notation
     this[SongTable.tempo] = song.tempo
     this[SongTable.capo] = song.capo
+    this[SongTable.inRotation] = song.inRotation
     this[SongTable.updatedAt] = song.updatedAt.toLocalDateTimeUtc()
 }
 

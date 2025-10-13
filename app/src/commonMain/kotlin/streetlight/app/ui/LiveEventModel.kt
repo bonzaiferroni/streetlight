@@ -38,7 +38,7 @@ class LiveEventModel(
                 app.repo.songPlay.create(it)
             }
 
-            val eventSong = app.repo.song.takeNextSong(eventId, Clock.System.now() - 30.days) ?: return@ioLaunch
+            val eventSong = app.repo.song.takeNextSong(eventId, Clock.System.now() - 1.days) ?: return@ioLaunch
             val newRendition = NewRendition(
                 songId = eventSong.song.songId,
                 notes = null,

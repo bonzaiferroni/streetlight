@@ -48,6 +48,7 @@ fun EditSongHeader(
                     label = "bpm",
                     modifier = Modifier.weight(1f)
                 ) { updateSong(song.copy(tempo = it.toIntOrNull())) }
+                Checkbox(song.inRotation, "Active") { updateSong(song.copy(inRotation = it)) }
             }
         }
         if (song.notation == null) {
