@@ -56,7 +56,7 @@ class SongTableService(val app: ServerProvider = RuntimeProvider): DbService() {
                 additionalConstraint = { RenditionTable.createdAt.greaterEq(since) }
             )
                 .select(SongTable.id)
-                .where { SongTable.userId.eq(userId) }
+                .where { SongTable.userId.eq(userId) and SongTable.inRotation.eq(true) }
                 .groupBy(SongTable.id)
                 .orderBy(RenditionTable.id.count(), SortOrder.ASC_NULLS_FIRST)
                 .limit(1)

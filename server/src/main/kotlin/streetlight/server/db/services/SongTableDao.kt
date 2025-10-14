@@ -44,7 +44,7 @@ class SongTableDao: DbService() {
                 tempo = null,
                 capo = null,
                 notation = null,
-                inRotation = true,
+                inRotation = false,
                 updatedAt = now,
                 createdAt = now,
             ))

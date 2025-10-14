@@ -4,6 +4,7 @@ object ChordHelper {
     val map = mapOf(
         "A" to listOf(45, 52, 57, 64, 69),
         "Am" to listOf(45, 52, 57, 60, 69),
+        "Am7" to listOf(45, 52, 57, 60, 64, 69),
         "B" to listOf(47, 54, 59, 66, 71),
         "Bm" to listOf(47, 54, 59, 62, 71),
         "C" to listOf(48, 52, 60, 64, 67),
@@ -11,7 +12,9 @@ object ChordHelper {
         "C#m" to listOf(49, 56, 61, 64, 68),
         "C7" to listOf(48, 52, 60, 64, 67, 70),
         "D" to listOf(50, 57, 62, 69),
+        "Dm" to listOf(50, 57, 62, 65, 69),
         "D7" to listOf(50, 57, 60, 62, 69),
+        "D9" to listOf(50, 57, 60, 62, 64, 69),
         "E" to listOf(40, 47, 52, 59, 64, 67),    // 0-2-2-1-0-0
         "Em" to listOf(40, 47, 52, 55, 64, 67),   // 0-2-2-0-0-0
         "F" to listOf(41, 48, 53, 60, 65, 69),    // 1-3-3-2-1-1 (full barre)
@@ -24,7 +27,8 @@ object ChordHelper {
         "D/F#" to listOf(42, 50, 57, 62, 69),
         "F/C" to listOf(48, 53, 60, 65, 72),
         "G/B" to listOf(47, 55, 59, 67, 71),
-        "A/C#" to listOf(49, 52, 57, 64, 69, 73)
+        "A/C#" to listOf(49, 52, 57, 64, 69, 73),
+        "Em/D#" to listOf(51, 52, 55, 64, 67),
     )
 
 }

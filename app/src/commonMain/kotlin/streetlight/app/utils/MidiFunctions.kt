@@ -19,7 +19,7 @@ fun SongPart.toMidiSequence(
         val section = sections.getOrNull(sectionIndex) ?: return@forEachIndexed
         repeat(section.repetitions) {
             section.chords.forEach { chord ->
-                val midiChord = chord.toMidiChord(beatsPerMeasure, rootPitch, capo) ?: return@forEach
+                val midiChord = chord.toMidiChord(beatsPerMeasure, rootPitch, capo)
                 chords.add(midiChord)
             }
         }
@@ -35,18 +35,20 @@ fun SongSection.toMidiSequence(
 ): MidiSequence {
     val chords = mutableListOf<MidiChord>()
     this.chords.forEach { chord ->
-        val midiChord = chord.toMidiChord(beatsPerMeasure, rootPitch, capo) ?: return@forEach
+        val midiChord = chord.toMidiChord(beatsPerMeasure, rootPitch, capo)
         chords.add(midiChord)
     }
     return MidiSequence(tempo = tempo, chords = chords)
 }
 
-fun MeasureChord.toMidiChord(beatsPerMeasure: Int, rootPitch: Int, capo: Int?) =
-    expression?.toNotation(rootPitch)?.let {
+fun MeasureChord.toMidiChord(beatsPerMeasure: Int, rootPitch: Int, capo: Int?): MidiChord {
+    val beats = duration ?: beatsPerMeasure
+    return expression?.toNotation(rootPitch)?.let {
         ChordHelper.map[it]?.let { notes -> capo?.let { capo -> notes.map { it + capo } } ?: notes }
     }?.let {
         MidiChord(
-            beats = duration ?: beatsPerMeasure,
+            beats = beats,
             notes = it
         )
-    }
+    } ?: MidiChord(beats, null)
+}

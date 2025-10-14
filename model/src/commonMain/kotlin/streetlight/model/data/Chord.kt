@@ -40,6 +40,8 @@ enum class ChordQuality(val letterNotation: String, val nashvilleNotation: Strin
 }
 
 enum class ChordExtension(val notation: String) {
+    Second("2"),
+    Fourth("4"),
     Seventh("7"),
     MajorSeventh("maj7"),
     Sixth("6"),
