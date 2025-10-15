@@ -8,6 +8,7 @@ import pondui.ui.controls.H4
 import pondui.ui.controls.MoreMenu
 import pondui.ui.controls.MoreMenuItem
 import pondui.ui.controls.Row
+import pondui.ui.controls.Text
 import pondui.ui.controls.TextField
 import pondui.ui.modifiers.padTop
 import pondui.ui.services.MidiPlayer
@@ -30,6 +31,7 @@ fun SongSequenceEditor(
     modifySequence: (PartSequence?) -> Unit,
 ) {
     Column(2, horizontalAlignment = Alignment.CenterHorizontally) {
+        Text(sequence.sequenceId)
         Row(1, modifier = Modifier.padTop(1)) {
             TextField(
                 text = sequence.sequenceId,

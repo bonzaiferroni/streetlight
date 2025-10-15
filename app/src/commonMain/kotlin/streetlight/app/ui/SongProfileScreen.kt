@@ -7,10 +7,9 @@ import compose.icons.tablericons.Minus
 import compose.icons.tablericons.Plus
 import kabinet.utils.replaceAt
 import pondui.ui.controls.H1
-import pondui.ui.controls.LazyTab
+import pondui.ui.controls.LazyColumnTab
 import pondui.ui.controls.MoreMenu
 import pondui.ui.controls.MoreMenuItem
-import pondui.ui.controls.Tab
 import pondui.ui.controls.TabScaffold
 import pondui.ui.controls.Tabs
 import pondui.ui.services.rememberMidiPlayer
@@ -40,7 +39,7 @@ fun SongProfileScreen(
     TabScaffold(
         drawerContent = { H1(song.title) }
     ) {
-        LazyTab("Edit", 2) {
+        LazyColumnTab("Edit", 2) {
             item("edit song header") {
                 EditSongHeader(
                     song = song,

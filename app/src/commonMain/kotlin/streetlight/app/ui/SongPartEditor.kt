@@ -21,7 +21,7 @@ import pondui.ui.controls.IconButton
 import pondui.ui.controls.LabeledContent
 import pondui.ui.controls.Row
 import pondui.ui.controls.Section
-import pondui.ui.controls.Tab
+import pondui.ui.controls.TabItem
 import pondui.ui.controls.Tabs
 import pondui.ui.controls.TextField
 import pondui.ui.services.MidiPlayer
@@ -70,6 +70,7 @@ fun SongPartEditor(
             }
 
             Tabs(
+                items = part.sequences,
                 tabColor = Pond.colors.selection.mixWith(Pond.colors.secondary).copy(.5f),
                 tabVoidColor = Color.Transparent,
                 headerContent = {
@@ -78,29 +79,49 @@ fun SongPartEditor(
                         modifyPart(part.copy(sequences = part.sequences + part.instrument.createSequence(sequenceId)))
                     }
                 }
-            ) {
-                part.sequences.forEachIndexed { sectionIndex, sequence ->
-                    Tab(sequence.sequenceId) {
-                        Section {
-                            SongSequenceEditor(
-                                notation = notation,
-                                part = part,
-                                sequence = sequence,
-                                midiPlayer = midiPlayer,
-                                capo = capo,
-                                tempo = tempo,
-                            ) { modifiedSequence ->
-                                val sequences = if (modifiedSequence != null) {
-                                    part.sequences.replaceAt(sectionIndex, modifiedSequence)
-                                } else {
-                                    part.sequences.removeAt(sectionIndex)
-                                }
-                                modifyPart(part.copy(sequences = sequences))
+            ) { sectionIndex, sequence ->
+                TabItem(sequence.sequenceId) {
+                    Section {
+                        SongSequenceEditor(
+                            notation = notation,
+                            part = part,
+                            sequence = sequence,
+                            midiPlayer = midiPlayer,
+                            capo = capo,
+                            tempo = tempo,
+                        ) { modifiedSequence ->
+                            val sequences = if (modifiedSequence != null) {
+                                part.sequences.replaceAt(sectionIndex, modifiedSequence)
+                            } else {
+                                part.sequences.removeAt(sectionIndex)
                             }
+                            modifyPart(part.copy(sequences = sequences))
                         }
                     }
                 }
             }
+//            Column(1) {
+//                part.sequences.forEachIndexed { sectionIndex, sequence ->
+//                    Section {
+//                        SongSequenceEditor(
+//                            notation = notation,
+//                            part = part,
+//                            sequence = sequence,
+//                            midiPlayer = midiPlayer,
+//                            capo = capo,
+//                            tempo = tempo,
+//                        ) { modifiedSequence ->
+//                            val sequences = if (modifiedSequence != null) {
+//                                part.sequences.replaceAt(sectionIndex, modifiedSequence)
+//                            } else {
+//                                part.sequences.removeAt(sectionIndex)
+//                            }
+//                            modifyPart(part.copy(sequences = sequences))
+//                        }
+//                    }
+//                }
+//            }
+
         }
     }
 }

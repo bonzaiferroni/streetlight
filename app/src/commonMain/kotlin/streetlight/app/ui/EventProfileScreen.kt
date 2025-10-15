@@ -17,7 +17,7 @@ import pondui.ui.controls.FlowRow
 import pondui.ui.controls.H1
 import pondui.ui.controls.InProgressIndicator
 import pondui.ui.controls.Row
-import pondui.ui.controls.Tab
+import pondui.ui.controls.ScaffoldTab
 import pondui.ui.controls.TabScaffold
 import pondui.ui.controls.Text
 import pondui.ui.controls.TextField
@@ -48,13 +48,13 @@ fun EventProfileScreen(
             }
         }
     ) {
-        Tab("Live") {
+        ScaffoldTab("Live") {
             LiveEventView(
                 event = event,
                 modifyEvent = viewModel::updateEvent
             )
         }
-        Tab("Edit") {
+        ScaffoldTab("Edit") {
             Column(2) {
                 UpdateIndicator(
                     updatedAt = event.updatedAt,

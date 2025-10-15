@@ -1,42 +1,44 @@
 package streetlight.app.ui
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import kabinet.GEMINI_KEY
-import kotlinx.coroutines.launch
-import pondui.ui.controls.Button
+import androidx.compose.runtime.setValue
 import pondui.ui.controls.Scaffold
-import pondui.ui.services.AudioSpec
-import pondui.ui.services.PcmStream
-import pondui.ui.services.rememberMicRecorder
+import pondui.ui.controls.Text
+import pondui.ui.controls.TextField
 
 @Composable
 fun HelloScreen(
 ) {
-    val scope = rememberCoroutineScope()
-    val stream = remember { PcmStream(24000).also { it.start() } }
-    val live = remember { GeminiLiveAudio(apiKey = GEMINI_KEY).also { it.connect() } }
-    live.onModelAudio {
-        println("received audio")
-        scope.launch {
-            stream.send(it)
-        }
-    }
-    val recorder = rememberMicRecorder(AudioSpec(sampleRate = 16000)) { pcm ->
-        println("sending audio from mic")
-        live.sendPcmChunk(pcm, true)
-    }
-
-    val recorderState by recorder.stateFlow.collectAsState()
-
+    var text by remember { mutableStateOf("") }
     Scaffold {
-        if (recorderState.isRecording) {
-            Button("Stop", onClick = recorder::stop)
-        } else {
-            Button("Start", onClick = recorder::start)
+
+        val scope = remember { ContentScope() }
+        scope.contentBox {
+            Text(text)
         }
+
+        Box() {
+            scope.content?.invoke()
+        }
+
+        TextField(text) { text = it }
+    }
+}
+
+fun ContentScope.contentBox(
+    content: @Composable () -> Unit
+) {
+    addContent(content)
+}
+
+class ContentScope {
+    var content: (@Composable () -> Unit)? = null
+
+    fun addContent(content: @Composable () -> Unit) {
+        this.content = content
     }
 }
