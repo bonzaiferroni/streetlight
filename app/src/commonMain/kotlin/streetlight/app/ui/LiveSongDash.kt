@@ -28,7 +28,7 @@ fun LiveSongView(
             Text(song.artist)
         }
         song.notation?.let {
-            SongNotationView(notation = it, capo = song.capo, tempo = song.tempo, showComposition = false)
+            SongNotationView(notation = it, capo = song.capo, tempo = song.tempo)
         }
         TextField(
             text = notes,

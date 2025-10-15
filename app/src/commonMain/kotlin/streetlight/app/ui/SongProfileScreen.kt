@@ -1,15 +1,23 @@
 package streetlight.app.ui
 
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.*
 import androidx.lifecycle.viewmodel.compose.viewModel
+import compose.icons.TablerIcons
+import compose.icons.tablericons.Minus
+import compose.icons.tablericons.Plus
 import kabinet.utils.replaceAt
 import pondui.ui.controls.H1
 import pondui.ui.controls.LazyTab
+import pondui.ui.controls.MoreMenu
+import pondui.ui.controls.MoreMenuItem
+import pondui.ui.controls.Tab
 import pondui.ui.controls.TabScaffold
-import pondui.ui.services.playChord
+import pondui.ui.controls.Tabs
 import pondui.ui.services.rememberMidiPlayer
+import pondui.ui.theme.Pond
+import pondui.utils.mixWith
 import streetlight.app.SongProfileRoute
+import streetlight.model.data.Instrument
 import streetlight.model.data.SongNotation
 import streetlight.model.data.SongPart
 import streetlight.model.data.toProjectId
@@ -17,7 +25,7 @@ import streetlight.model.data.toProjectId
 @Composable
 fun SongProfileScreen(
     route: SongProfileRoute,
-    viewModel: SongProfileModel = viewModel (key = route.id) { SongProfileModel(route.id.toProjectId()) }
+    viewModel: SongProfileModel = viewModel(key = route.id) { SongProfileModel(route.id.toProjectId()) }
 ) {
     val state by viewModel.stateFlow.collectAsState()
 
@@ -46,19 +54,31 @@ fun SongProfileScreen(
                     SongNotationEditor(notation, ::updateNotation)
                 }
 
-                itemsIndexed(notation.parts) { partIndex, part ->
-                    fun modifyPart(part: SongPart) {
-                        updateNotation(notation.copy(parts = notation.parts.replaceAt(partIndex, part)))
+                item("edit instruments") {
+                    Tabs(
+                        tabColor = Pond.colors.selection.mixWith(Pond.colors.primary).copy(alpha = 0.5f),
+                        headerContent = {
+                            MoreMenu(TablerIcons.Plus, TablerIcons.Minus) {
+                                Instrument.entries.forEach {
+                                    MoreMenuItem(it.label) {
+                                        updateNotation(notation.copy(parts = notation.parts + SongPart.createEmpty(it)))
+                                    }
+                                }
+                            }
+                        }
+                    ) {
+                        notation.parts.forEachIndexed { partIndex, part ->
+                            Tab(part.instrument.label) {
+                                SongPartEditor(
+                                    notation = notation,
+                                    part = part,
+                                    midiPlayer = midi,
+                                    capo = song.capo,
+                                    tempo = song.tempo,
+                                ) { updateNotation(notation.copy(parts = notation.parts.replaceAt(partIndex, it))) }
+                            }
+                        }
                     }
-
-                    SongPartEditor(
-                        notation = notation,
-                        part = part,
-                        midiPlayer = midi,
-                        capo = song.capo,
-                        tempo = song.tempo,
-                        updatePart = ::modifyPart
-                    )
                 }
             }
         }

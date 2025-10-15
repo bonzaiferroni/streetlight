@@ -7,19 +7,22 @@ data class SongPart(
     val instrument: Instrument,
     val style: NotationStyle = NotationStyle.Letters,
     val midiProgram: Int? = null,
-    val sections: List<SongSection> = emptyList(),
-    val composition: List<Int> = listOf(0),
+    val sequences: List<PartSequence> = emptyList(),
 ) {
     companion object {
-        val Empty get() = SongPart(
-            instrument = Instrument.RhythmGuitar,
-            sections = listOf(SongSection.Empty),
-            composition = listOf(0)
+        fun createEmpty(instrument: Instrument) = SongPart(
+            instrument = instrument,
+            sequences = listOf(instrument.createSequence("Verse")),
         )
     }
 }
 
-enum class Instrument(val label: String, val midiProgram: Int) {
-    RhythmGuitar("Rhythm Guitar", 24),
-    Voice("Voice", 52),
+enum class Instrument(val label: String, val midiProgram: Int, val notationLabel: String) {
+    RhythmGuitar("Rhythm Guitar", 24, "Chords"),
+    Vocals("Vocals", 52, "Lyrics");
+
+    fun createSequence(sequenceId: SequenceId): PartSequence = when (this) {
+        RhythmGuitar -> ChordSequence.Empty.copy(sequenceId = sequenceId)
+        Vocals -> VocalSequence.Empty.copy(sequenceId = sequenceId)
+    }
 }

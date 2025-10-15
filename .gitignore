@@ -25,6 +25,7 @@ backup.json
 users.json
 .env
 .room
+.room.sh
 /dbdumps/*
 
 **/.kotlin-js-store/

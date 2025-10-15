@@ -2,6 +2,7 @@ package streetlight.app.ui
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import compose.icons.TablerIcons
 import compose.icons.tablericons.Minus
@@ -20,9 +21,9 @@ fun SongNotationEditor(
     notation: SongNotation,
     updateNotation: (SongNotation?) -> Unit,
 ) {
-    Column(2) {
+    Column(2, horizontalAlignment = Alignment.CenterHorizontally) {
         Row(1) {
-            H2("Notation", modifier = Modifier.weight(1f))
+            H2("Notation")
             MoreMenu {
                 MoreMenuItem("Remove notation", icon = TablerIcons.Trash) { updateNotation(null) }
             }
@@ -35,25 +36,17 @@ fun SongNotationEditor(
                 modifier = Modifier.weight(1f)
             ) { updateNotation(notation.copy(rootPitch = it.toIntOrNull() ?: notation.rootPitch)) }
             TextField(
-                text = notation.beatsPerMeasure.toString(),
+                text = notation.measureBeats.toString(),
                 placeholder = "beats",
                 label = "beats",
                 modifier = Modifier.weight(1f)
-            ) { updateNotation(notation.copy(beatsPerMeasure = it.toIntOrNull() ?: notation.beatsPerMeasure)) }
+            ) { updateNotation(notation.copy(measureBeats = it.toIntOrNull() ?: notation.measureBeats)) }
             TextField(
                 text = notation.beatValue.toString(),
                 placeholder = "timing",
                 label = "timing",
                 modifier = Modifier.weight(1f)
             ) { updateNotation(notation.copy(beatValue = it.toIntOrNull() ?: notation.beatValue)) }
-        }
-        Row(1) {
-            H4("Instruments")
-            MoreMenu(TablerIcons.Plus, TablerIcons.Minus) {
-                MoreMenuItem("Rhythm Guitar") {
-                    updateNotation(notation.copy(parts = notation.parts + SongPart.Empty.copy(instrument = Instrument.RhythmGuitar)))
-                }
-            }
         }
     }
 }

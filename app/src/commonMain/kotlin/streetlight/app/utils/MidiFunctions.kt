@@ -3,31 +3,31 @@ package streetlight.app.utils
 import pondui.ui.services.MidiChord
 import pondui.ui.services.MidiSequence
 import streetlight.model.data.ChordHelper
+import streetlight.model.data.ChordSequence
 import streetlight.model.data.MeasureChord
 import streetlight.model.data.SongPart
-import streetlight.model.data.SongSection
-import streetlight.model.data.notationOf
+import streetlight.model.data.PartSequence
 
-fun SongPart.toMidiSequence(
-    beatsPerMeasure: Int,
-    rootPitch: Int = 60,
-    capo: Int?,
-    tempo: Int?,
-): MidiSequence {
-    val chords = mutableListOf<MidiChord>()
-    composition.forEachIndexed { index, sectionIndex ->
-        val section = sections.getOrNull(sectionIndex) ?: return@forEachIndexed
-        repeat(section.repetitions) {
-            section.chords.forEach { chord ->
-                val midiChord = chord.toMidiChord(beatsPerMeasure, rootPitch, capo)
-                chords.add(midiChord)
-            }
-        }
-    }
-    return MidiSequence(tempo = tempo, chords = chords)
-}
+//fun SongPart.toMidiSequence(
+//    beatsPerMeasure: Int,
+//    rootPitch: Int = 60,
+//    capo: Int?,
+//    tempo: Int?,
+//): MidiSequence {
+//    val chords = mutableListOf<MidiChord>()
+//    composition.forEachIndexed { index, sectionIndex ->
+//        val section = sequences.getOrNull(sectionIndex) ?: return@forEachIndexed
+//        repeat(section.repetitions) {
+//            section.chords.forEach { chord ->
+//                val midiChord = chord.toMidiChord(beatsPerMeasure, rootPitch, capo)
+//                chords.add(midiChord)
+//            }
+//        }
+//    }
+//    return MidiSequence(tempo = tempo, chords = chords)
+//}
 
-fun SongSection.toMidiSequence(
+fun ChordSequence.toMidiSequence(
     beatsPerMeasure: Int,
     rootPitch: Int = 60,
     capo: Int? = null,

@@ -1,6 +1,5 @@
 package streetlight.app.ui
 
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -12,10 +11,8 @@ import pondui.ui.controls.Column
 import pondui.ui.controls.FlowRow
 import pondui.ui.controls.Label
 import pondui.ui.controls.LabeledValue
-import pondui.ui.controls.Row
 import pondui.ui.controls.Text
 import pondui.ui.modifiers.topBorder
-import pondui.ui.theme.Pond
 import streetlight.model.data.*
 import pondui.utils.MultiPreview
 import pondui.utils.PreviewFrame
@@ -25,7 +22,6 @@ fun SongNotationView(
     notation: SongNotation,
     capo: Int? = null,
     tempo: Int? = null,
-    showComposition: Boolean = true,
 ) {
     val instrument = Instrument.RhythmGuitar
     val part = notation.parts.first { it.instrument == instrument }
@@ -33,7 +29,7 @@ fun SongNotationView(
         FlowRow(2, verticalGap = 1) {
             val rootChromatic = Chromatic.ofPitch(notation.rootPitch)
             LabeledValue("Key:", rootChromatic.label)
-            LabeledValue("Timing:", "${notation.beatsPerMeasure}/${notation.beatValue}",)
+            LabeledValue("Timing:", "${notation.measureBeats}/${notation.beatValue}",)
             capo?.let {
                 LabeledValue("Capo:", it)
             }
@@ -41,48 +37,31 @@ fun SongNotationView(
                 LabeledValue("Tempo:", it)
             }
         }
-        val partIndices = if (showComposition) part.composition else part.sections.mapIndexed { index, _ -> index }
-        partIndices.forEach { sectionIndex ->
-            val section = part.sections.getOrNull(sectionIndex) ?: return@forEach
-            SongSectionView(
+        part.sequences.forEach { sequence ->
+            PartSequenceView(
                 notation = notation,
                 part = part,
-                section = section,
+                sequence = sequence,
             )
         }
     }
 }
 
 @Composable
-fun SongSectionView(
+fun PartSequenceView(
     notation: SongNotation,
     part: SongPart,
-    section: SongSection,
-    modifier: Modifier = Modifier,
+    sequence: PartSequence,
 ) {
-    val borderColor = Color(0xFF808080)
-    Column(1, horizontalAlignment = Alignment.CenterHorizontally, modifier = modifier) {
-        Label(section.toLabel())
-        var chordIndex = 0
-        var measureBeats = 0
-        val phraseIndices = section.chords.mapIndexedNotNull { index, mc ->
-            if (mc.isPhraseEnd || index + 1 == section.chords.size) index + 1 else null
-        }
-        phraseIndices.forEach { phraseIndex ->
-            FlowRow(1, modifier = Modifier.topBorder(borderColor)) {
-                BarLine(true, color = borderColor)
-                while (chordIndex < phraseIndex) {
-                    val measureChord = section.chords[chordIndex++]
-                    measureBeats += measureChord.duration ?: notation.beatsPerMeasure
-                    Text(
-                        measureChord.expression?.let { notationOf(it, notation.rootPitch, part.style) } ?: "-",
-                        modifier = Modifier.widthIn(min = 25.dp)
-                    )
-                    if (measureBeats % notation.beatsPerMeasure == 0) {
-                        BarLine(measureChord.isPhraseEnd, doubleBar = measureChord.duration == 8, color = borderColor)
-                    }
-                }
-            }
+    Column(1, horizontalAlignment = Alignment.CenterHorizontally) {
+        Label(sequence.toLabel())
+        when (sequence) {
+            is ChordSequence -> ChordSequenceView(
+                notation = notation,
+                part = part,
+                sequence = sequence,
+            )
+            is VocalSequence -> Text(sequence.lyrics)
         }
     }
 }

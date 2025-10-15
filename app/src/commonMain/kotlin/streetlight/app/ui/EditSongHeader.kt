@@ -53,7 +53,7 @@ fun EditSongHeader(
         }
         if (song.notation == null) {
             Button("Add notation", color = Pond.colors.primary) {
-                updateSong(song.copy(notation = SongNotation.Empty))
+                updateSong(song.copy(notation = SongNotation.createEmpty(Instrument.RhythmGuitar)))
             }
         }
     }

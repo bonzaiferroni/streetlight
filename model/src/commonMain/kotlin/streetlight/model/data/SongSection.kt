@@ -4,22 +4,15 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class SongSection(
-    val title: String,
-    val repetitions: Int = 1,
-    val chords: List<MeasureChord>,
-) {
-    fun toLabel() = repetitions.takeIf { it > 1 }?.let { "$title (${it}x)" } ?: title
+    val sectionId: String,
+    val measures: Int,
+    val layers: List<SectionLayer>,
+)
 
-//    fun getMeasureCount(beatsPerMeasure: Int): Int {
-//        return chords.sumOf { it.duration } / beatsPerMeasure
-//    }
-
-    fun getChordAt(index: Int) = chords[index % chords.size]
-
-    companion object {
-        val Empty get() = SongSection(
-            title = "Verse",
-            chords = emptyList()
-        )
-    }
-}
+@Serializable
+data class SectionLayer(
+    val startMeasure: Int,
+    val instrument: Instrument,
+    val sequenceId: String,
+    val repetitions: Int,
+)

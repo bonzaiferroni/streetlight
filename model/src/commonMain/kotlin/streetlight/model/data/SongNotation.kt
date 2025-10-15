@@ -1,6 +1,7 @@
 package streetlight.model.data
 
 import androidx.compose.runtime.Stable
+import kabinet.utils.suggestVariation
 import kotlinx.serialization.Serializable
 import kotlin.collections.listOf
 
@@ -8,30 +9,36 @@ import kotlin.collections.listOf
 @Serializable
 data class SongNotation(
     val rootPitch: Int,
-    val beatsPerMeasure: Int,
+    val beatsPerMeasure: Int? = null,
+    val measureBeats: Int = beatsPerMeasure ?: 4,
     val beatValue: Int,
     val parts: List<SongPart>,
+    val composition: List<SongSection> = emptyList(),
 ) {
+    fun validateSectionId(sectionId: String) = composition.none { it.sectionId == sectionId }
+
+    fun suggestSectionId(rootId: String) = composition.suggestVariation(rootId) { it.sectionId }
+
     companion object {
-        val Empty get() = SongNotation(
+        fun createEmpty(instrument: Instrument) = SongNotation(
             rootPitch = 60,
-            beatsPerMeasure = 4,
+            measureBeats = 4,
             beatValue = 4,
-            parts = listOf(SongPart.Empty),
+            parts = listOf(SongPart.createEmpty(instrument)),
         )
     }
 }
 
 val amazingGrace = SongNotation(
     rootPitch = 67,
-    beatsPerMeasure = 4,
+    measureBeats = 4,
     beatValue = 4,
     parts = listOf(
         SongPart(
             instrument = Instrument.RhythmGuitar,
-            sections = listOf(
-                SongSection(
-                    title = "Verse",
+            sequences = listOf(
+                ChordSequence(
+                    sequenceId = "Verse",
                     repetitions = 3,
                     chords = listOf(
                         // G, G7, C, G
@@ -57,7 +64,6 @@ val amazingGrace = SongNotation(
                     ),
                 )
             ),
-            composition = listOf(0)
         )
     ),
 )
