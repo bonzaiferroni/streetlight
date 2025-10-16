@@ -52,7 +52,7 @@ fun SongPartEditor(
     modifyPart: (SongPart?) -> Unit,
 ) {
     Section {
-        Column(2, horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) {
+        Column(1, horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) {
             Carousel {
                 addItem("instrument/notation") {
                     Row(1) {
