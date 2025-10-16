@@ -35,7 +35,6 @@ fun SongSequenceEditor(
     modifySequence: (PartSequence?) -> Unit,
 ) {
     Column(2, horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(sequence.sequenceId)
         Row(1, modifier = Modifier.padTop(1)) {
             var sequenceId by remember(sequence.sequenceId) { mutableStateOf(sequence.sequenceId) }
             TextField(
@@ -69,19 +68,6 @@ fun SongSequenceEditor(
                 }
             }
         }
-        Row(1) {
-            H4(part.instrument.notationLabel)
-            if (midiPlayer != null && sequence is ChordSequence) {
-                midiPlayer.MiniPlayer {
-                    sequence.toMidiSequence(
-                        beatsPerMeasure = notation.measureBeats,
-                        rootPitch = notation.rootPitch,
-                        capo = capo,
-                        tempo = tempo
-                    )
-                }
-            }
-        }
 
         when (sequence) {
             is ChordSequence -> ChordSequenceEditor(
@@ -101,6 +87,9 @@ fun SongSequenceEditor(
             notation = notation,
             part = part,
             sequence = sequence,
+            midiPlayer = midiPlayer,
+            capo = capo,
+            tempo = tempo
         )
     }
 }

@@ -11,11 +11,15 @@ import pondui.ui.controls.Column
 import pondui.ui.controls.FlowRow
 import pondui.ui.controls.Label
 import pondui.ui.controls.LabeledValue
+import pondui.ui.controls.Row
 import pondui.ui.controls.Text
 import pondui.ui.modifiers.topBorder
+import pondui.ui.services.MidiPlayer
+import pondui.ui.services.MiniPlayer
 import streetlight.model.data.*
 import pondui.utils.MultiPreview
 import pondui.utils.PreviewFrame
+import streetlight.app.utils.toMidiSequence
 
 @Composable
 fun SongNotationView(
@@ -42,6 +46,9 @@ fun SongNotationView(
                 notation = notation,
                 part = part,
                 sequence = sequence,
+                midiPlayer = null,
+                capo = capo,
+                tempo = tempo
             )
         }
     }
@@ -52,16 +59,31 @@ fun PartSequenceView(
     notation: SongNotation,
     part: SongPart,
     sequence: PartSequence,
+    midiPlayer: MidiPlayer?,
+    capo: Int?,
+    tempo: Int?,
 ) {
-    Column(1, horizontalAlignment = Alignment.CenterHorizontally) {
-        Label(sequence.toLabel())
-        when (sequence) {
-            is ChordSequence -> ChordSequenceView(
-                notation = notation,
-                part = part,
-                sequence = sequence,
-            )
-            is VocalSequence -> Text(sequence.lyrics)
+    Row(1) {
+        Column(1, horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.weight(1f)) {
+            Label(part.instrument.notationLabel)
+            when (sequence) {
+                is ChordSequence -> ChordSequenceView(
+                    notation = notation,
+                    part = part,
+                    sequence = sequence,
+                )
+                is VocalSequence -> Text(sequence.lyrics)
+            }
+        }
+        if (midiPlayer != null && sequence is ChordSequence) {
+            midiPlayer.MiniPlayer {
+                sequence.toMidiSequence(
+                    beatsPerMeasure = notation.measureBeats,
+                    rootPitch = notation.rootPitch,
+                    capo = capo,
+                    tempo = tempo
+                )
+            }
         }
     }
 }
