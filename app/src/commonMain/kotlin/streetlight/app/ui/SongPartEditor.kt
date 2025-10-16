@@ -1,10 +1,13 @@
 package streetlight.app.ui
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import compose.icons.TablerIcons
@@ -12,19 +15,24 @@ import compose.icons.tablericons.Plus
 import compose.icons.tablericons.Settings
 import kabinet.utils.removeAt
 import kabinet.utils.replaceAt
+import kabinet.utils.replaceOrRemoveAt
 import kabinet.utils.suggestVariation
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import pondui.ui.controls.Button
 import pondui.ui.controls.Carousel
 import pondui.ui.controls.Column
+import pondui.ui.controls.Drawer
 import pondui.ui.controls.DropMenu
+import pondui.ui.controls.Icon
 import pondui.ui.controls.IconButton
 import pondui.ui.controls.LabeledContent
 import pondui.ui.controls.Row
 import pondui.ui.controls.Section
 import pondui.ui.controls.TabItem
 import pondui.ui.controls.Tabs
+import pondui.ui.controls.Text
 import pondui.ui.controls.TextField
+import pondui.ui.modifiers.pad
 import pondui.ui.services.MidiPlayer
 import pondui.ui.theme.Pond
 import pondui.utils.MultiPreview
@@ -75,36 +83,36 @@ fun SongPartEditor(
                 }
             }
 
-            Tabs(
-                items = part.sequences,
-                tabColor = Pond.colors.selection.mixWith(Pond.colors.secondary).copy(.5f),
-                tabVoidColor = Color.Transparent,
-                headerContent = {
-                    IconButton(TablerIcons.Plus) {
+            part.sequences.forEachIndexed { sequenceIndex, sequence ->
+                Drawer(
+                    isOpen = sequenceIndex == 0,
+                    headerContent = { Text(sequence.sequenceId) }
+                ) {
+                    SongSequenceEditor(
+                        notation = notation,
+                        part = part,
+                        sequence = sequence,
+                        midiPlayer = midiPlayer,
+                        capo = capo,
+                        tempo = tempo,
+                    ) { modifiedSequence ->
+                        val sequences = part.sequences.replaceOrRemoveAt(sequenceIndex, modifiedSequence)
+                        modifyPart(part.copy(sequences = sequences))
+                    }
+                }
+            }
+
+            Row(
+                gap = 1,
+                modifier = Modifier.clip(Pond.ruler.unitCorners)
+                    .clickable {
                         val sequenceId = part.sequences.suggestVariation("Verse") { it.sequenceId }
                         modifyPart(part.copy(sequences = part.sequences + part.instrument.createSequence(sequenceId)))
                     }
-                }
-            ) { sectionIndex, sequence ->
-                TabItem(sequence.sequenceId, key = sectionIndex.toString()) {
-                    Section {
-                        SongSequenceEditor(
-                            notation = notation,
-                            part = part,
-                            sequence = sequence,
-                            midiPlayer = midiPlayer,
-                            capo = capo,
-                            tempo = tempo,
-                        ) { modifiedSequence ->
-                            val sequences = if (modifiedSequence != null) {
-                                part.sequences.replaceAt(sectionIndex, modifiedSequence)
-                            } else {
-                                part.sequences.removeAt(sectionIndex)
-                            }
-                            modifyPart(part.copy(sequences = sequences))
-                        }
-                    }
-                }
+                    .pad(1)
+            ) {
+                Text("Add sequence", color = Pond.localColors.contentDim)
+                Icon(TablerIcons.Plus)
             }
         }
     }
