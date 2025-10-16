@@ -34,7 +34,7 @@ fun ChordSequenceEditor(
     midiPlayer: MidiPlayer? = null,
     modifySection: (PartSequence?) -> Unit
 ) {
-    var chordText by remember(part.style) {
+    var chordText by remember(part.style, sequence.sequenceId) {
         mutableStateOf(buildString {
             sequence.chords.forEachIndexed { index, chord ->
                 append(chord.toNotation(notation.rootPitch, part.style))

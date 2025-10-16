@@ -14,6 +14,7 @@ import kabinet.utils.removeAt
 import kabinet.utils.replaceAt
 import kabinet.utils.suggestVariation
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import pondui.ui.controls.Button
 import pondui.ui.controls.Carousel
 import pondui.ui.controls.Column
 import pondui.ui.controls.DropMenu
@@ -40,7 +41,7 @@ fun SongPartEditor(
     midiPlayer: MidiPlayer? = null,
     capo: Int? = null,
     tempo: Int? = null,
-    modifyPart: (SongPart) -> Unit,
+    modifyPart: (SongPart?) -> Unit,
 ) {
     Section {
         Column(2, horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) {
@@ -56,14 +57,19 @@ fun SongPartEditor(
                     }
                 }
                 addItem("midi", TablerIcons.Settings) {
-                    LabeledContent("midi sound") {
-                        TextField(
-                            text = (part.midiProgram ?: part.instrument.midiProgram).toString(),
-                            placeholder = "midi",
-                            modifier = Modifier.width(50.dp)
-                        ) {
-                            val value = it.toIntOrNull() ?: return@TextField
-                            modifyPart(part.copy(midiProgram = value))
+                    Row(1) {
+                        LabeledContent("midi sound") {
+                            TextField(
+                                text = (part.midiProgram ?: part.instrument.midiProgram).toString(),
+                                placeholder = "midi",
+                                modifier = Modifier.width(50.dp)
+                            ) {
+                                val value = it.toIntOrNull() ?: return@TextField
+                                modifyPart(part.copy(midiProgram = value))
+                            }
+                        }
+                        Button("Remove", color = Pond.colors.negation) {
+                            modifyPart(null)
                         }
                     }
                 }
@@ -80,7 +86,7 @@ fun SongPartEditor(
                     }
                 }
             ) { sectionIndex, sequence ->
-                TabItem(sequence.sequenceId) {
+                TabItem(sequence.sequenceId, key = sectionIndex.toString()) {
                     Section {
                         SongSequenceEditor(
                             notation = notation,
@@ -100,28 +106,6 @@ fun SongPartEditor(
                     }
                 }
             }
-//            Column(1) {
-//                part.sequences.forEachIndexed { sectionIndex, sequence ->
-//                    Section {
-//                        SongSequenceEditor(
-//                            notation = notation,
-//                            part = part,
-//                            sequence = sequence,
-//                            midiPlayer = midiPlayer,
-//                            capo = capo,
-//                            tempo = tempo,
-//                        ) { modifiedSequence ->
-//                            val sequences = if (modifiedSequence != null) {
-//                                part.sequences.replaceAt(sectionIndex, modifiedSequence)
-//                            } else {
-//                                part.sequences.removeAt(sectionIndex)
-//                            }
-//                            modifyPart(part.copy(sequences = sequences))
-//                        }
-//                    }
-//                }
-//            }
-
         }
     }
 }

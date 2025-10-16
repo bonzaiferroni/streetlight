@@ -1,6 +1,10 @@
 package streetlight.app.ui
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import pondui.ui.controls.Column
@@ -33,12 +37,15 @@ fun SongSequenceEditor(
     Column(2, horizontalAlignment = Alignment.CenterHorizontally) {
         Text(sequence.sequenceId)
         Row(1, modifier = Modifier.padTop(1)) {
+            var sequenceId by remember(sequence.sequenceId) { mutableStateOf(sequence.sequenceId) }
             TextField(
-                text = sequence.sequenceId,
+                text = sequenceId,
                 label = "sequence id",
                 modifier = Modifier.weight(3f)
-            ) {
-                modifySequence(sequence.setSequenceId(it))
+            ) { text ->
+                sequenceId = text
+                if (part.sequences.none { it.sequenceId == text })
+                    modifySequence(sequence.setSequenceId(text))
             }
             TextField(
                 text = sequence.repetitions.toString(),

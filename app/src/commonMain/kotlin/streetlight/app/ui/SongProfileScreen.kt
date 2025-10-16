@@ -6,10 +6,12 @@ import compose.icons.TablerIcons
 import compose.icons.tablericons.Minus
 import compose.icons.tablericons.Plus
 import kabinet.utils.replaceAt
+import kabinet.utils.replaceOrRemoveAt
 import pondui.ui.controls.H1
 import pondui.ui.controls.LazyColumnTab
 import pondui.ui.controls.MoreMenu
 import pondui.ui.controls.MoreMenuItem
+import pondui.ui.controls.TabItem
 import pondui.ui.controls.TabScaffold
 import pondui.ui.controls.Tabs
 import pondui.ui.services.rememberMidiPlayer
@@ -55,27 +57,27 @@ fun SongProfileScreen(
 
                 item("edit instruments") {
                     Tabs(
+                        items = notation.parts,
                         tabColor = Pond.colors.selection.mixWith(Pond.colors.primary).copy(alpha = 0.5f),
                         headerContent = {
                             MoreMenu(TablerIcons.Plus, TablerIcons.Minus) {
-                                Instrument.entries.forEach {
-                                    MoreMenuItem(it.label) {
-                                        updateNotation(notation.copy(parts = notation.parts + SongPart.createEmpty(it)))
+                                Instrument.entries.forEach { instrument ->
+                                    if (notation.parts.any { it.instrument == instrument }) return@forEach
+                                    MoreMenuItem(instrument.label) {
+                                        updateNotation(notation.copy(parts = notation.parts + SongPart.createEmpty(instrument)))
                                     }
                                 }
                             }
                         }
-                    ) {
-                        notation.parts.forEachIndexed { partIndex, part ->
-                            Tab(part.instrument.label) {
-                                SongPartEditor(
-                                    notation = notation,
-                                    part = part,
-                                    midiPlayer = midi,
-                                    capo = song.capo,
-                                    tempo = song.tempo,
-                                ) { updateNotation(notation.copy(parts = notation.parts.replaceAt(partIndex, it))) }
-                            }
+                    ) { partIndex, part ->
+                        TabItem(part.instrument.label) {
+                            SongPartEditor(
+                                notation = notation,
+                                part = part,
+                                midiPlayer = midi,
+                                capo = song.capo,
+                                tempo = song.tempo,
+                            ) { updateNotation(notation.copy(parts = notation.parts.replaceOrRemoveAt(partIndex, it))) }
                         }
                     }
                 }
