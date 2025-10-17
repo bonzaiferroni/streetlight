@@ -11,7 +11,7 @@ enum class Diatonic(val degree: Int, val letter: Char, val pitch: Int) {
 
     fun toLabel(style: NotationStyle) = when (style) {
         NotationStyle.Letters -> letter
-        NotationStyle.Nashville -> degree.toString()
+        NotationStyle.Degrees -> degree.toString()
     }
 
     companion object {

@@ -8,7 +8,7 @@ data class VocalSequence(
     override val repetitions: Int = 1,
     override val measureBeats: Int?,
     val measureCount: Int,
-    val lyrics: String,
+    val notes: List<VocalNote> = emptyList(),
 ): PartSequence {
     override fun getMeasureCount(songMeasureBeats: Int) = measureCount
 
@@ -22,7 +22,7 @@ data class VocalSequence(
             repetitions = 1,
             measureBeats = null,
             measureCount = 8,
-            lyrics = "",
+            notes = emptyList(),
         )
     }
 }

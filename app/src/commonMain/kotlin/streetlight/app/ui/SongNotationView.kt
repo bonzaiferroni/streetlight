@@ -72,10 +72,10 @@ fun PartSequenceView(
                     part = part,
                     sequence = sequence,
                 )
-                is VocalSequence -> Text(sequence.lyrics)
+                is VocalSequence -> VocalSequenceView(sequence)
             }
         }
-        if (midiPlayer != null && sequence is ChordSequence) {
+        if (midiPlayer != null) {
             midiPlayer.MiniPlayer {
                 sequence.toMidiSequence(
                     beatsPerMeasure = notation.measureBeats,

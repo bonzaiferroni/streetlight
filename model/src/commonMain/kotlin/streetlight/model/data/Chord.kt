@@ -17,7 +17,7 @@ data class Chord(
     ) = notationOf(this, rootPitch, style)
 
     companion object {
-        fun ofNashville(
+        fun ofDegree(
             degree: Int,
             quality: ChordQuality? = null,
             extension: ChordExtension? = null,
@@ -31,11 +31,11 @@ data class Chord(
     }
 }
 
-enum class ChordQuality(val letterNotation: String, val nashvilleNotation: String) {
+enum class ChordQuality(val letterNotation: String, val degreeNotation: String) {
     Major("maj", ""),        // C, D, E… (default, often no suffix)
     Minor("m", "-"),         // Cm, Dm, etc.
-    Diminished("dim", "°"),  // Cdim or C°, Nashville uses the degree sign
-    Augmented("aug", "+"),   // Caug or C+, Nashville uses plus
+    Diminished("dim", "°"),  // Cdim or C°
+    Augmented("aug", "+"),   // Caug or C+
     Suspended("sus", "sus")  // Csus (usually 2 or 4 implied: Csus2, Csus4)
 }
 
@@ -56,7 +56,7 @@ fun parseChord(text: String, style: NotationStyle): Chord? {
     val firstChar = text[index++]
     var pitch = when (style) {
         NotationStyle.Letters -> Diatonic.entries.firstOrNull { it.letter.equals(firstChar, true) }?.pitch
-        NotationStyle.Nashville -> Diatonic.entries.firstOrNull { it.degree.toString()[0].equals(firstChar, true) }?.pitch
+        NotationStyle.Degrees -> Diatonic.entries.firstOrNull { it.degree.toString()[0].equals(firstChar, true) }?.pitch
     } ?: return null
     if (text.length > index && text[index] == '#') {
         pitch++
@@ -65,7 +65,7 @@ fun parseChord(text: String, style: NotationStyle): Chord? {
     var quality: ChordQuality? = null
     if (index < text.length) {
         for (qual in ChordQuality.entries) {
-            val n = if (style == NotationStyle.Letters) qual.letterNotation else qual.nashvilleNotation
+            val n = if (style == NotationStyle.Letters) qual.letterNotation else qual.degreeNotation
             if (index + n.length <= text.length && text.regionMatches(index, n, 0, n.length, ignoreCase = true)) {
                 index += n.length
                 quality = qual

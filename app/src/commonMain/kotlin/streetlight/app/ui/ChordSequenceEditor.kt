@@ -8,7 +8,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import pondui.ui.controls.Column
 import pondui.ui.controls.TextField
 import pondui.ui.services.MidiPlayer
 import pondui.ui.services.playChord
@@ -32,9 +31,9 @@ fun ChordSequenceEditor(
     part: SongPart,
     sequence: ChordSequence,
     midiPlayer: MidiPlayer? = null,
-    modifySection: (PartSequence?) -> Unit
+    modifySequence: (PartSequence?) -> Unit
 ) {
-    var chordText by remember(part.style, sequence.sequenceId) {
+    var editText by remember(part.style, sequence.sequenceId) {
         mutableStateOf(buildString {
             sequence.chords.forEachIndexed { index, chord ->
                 append(chord.toNotation(notation.rootPitch, part.style))
@@ -51,11 +50,11 @@ fun ChordSequenceEditor(
     val rootChromatic = Chromatic.ofPitch(notation.rootPitch)
 
     TextField(
-        text = chordText,
+        text = editText,
         style = Pond.typo.mono,
         modifier = Modifier.fillMaxWidth()
     ) { editedText ->
-        chordText = editedText
+        editText = editedText
         val chords = mutableListOf<MeasureChord>()
         val phraseTexts = editedText.split('\n')
         phraseTexts.forEach { phraseText ->
@@ -72,11 +71,10 @@ fun ChordSequenceEditor(
                         )
                     )
                 } ?: measureChord
-                translation.takeIf { mc ->
-                    chords.size == sequence.chords.size ||
-                            chords.size == sequence.chords.size - 1 &&
-                            sequence.chords[chords.size].expression != mc.expression
-                }?.toNotation()
+                val isNewLastChord = chords.size == sequence.chords.size ||
+                        chords.size == sequence.chords.size - 1 &&
+                        sequence.chords[chords.size].expression != translation.expression
+                translation.takeIf { isNewLastChord }?.toNotation()
                     ?.let { expressionNotation ->
                         ChordHelper.map[expressionNotation]?.let { midiChord ->
                             midiPlayer?.playChord(
@@ -88,7 +86,7 @@ fun ChordSequenceEditor(
                 chords.add(translation)
             }
         }
-        modifySection(sequence.copy(chords = chords))
+        modifySequence(sequence.copy(chords = chords))
     }
 }
 
@@ -104,7 +102,7 @@ fun EditSongSectionPreview() {
                 notation = notation,
                 part = part,
                 sequence = section,
-                modifySection = { },
+                modifySequence = { },
             )
         }
     }
