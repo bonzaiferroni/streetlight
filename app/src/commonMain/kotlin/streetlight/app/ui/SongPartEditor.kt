@@ -2,34 +2,32 @@ package streetlight.app.ui
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import compose.icons.TablerIcons
 import compose.icons.tablericons.Plus
 import compose.icons.tablericons.Settings
-import kabinet.utils.removeAt
-import kabinet.utils.replaceAt
 import kabinet.utils.replaceOrRemoveAt
 import kabinet.utils.suggestVariation
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import pondui.ui.controls.Button
 import pondui.ui.controls.Carousel
+import pondui.ui.controls.Checkbox
 import pondui.ui.controls.Column
-import pondui.ui.controls.Drawer
 import pondui.ui.controls.DropMenu
 import pondui.ui.controls.Icon
-import pondui.ui.controls.IconButton
 import pondui.ui.controls.LabeledContent
+import pondui.ui.controls.ReorderableAccordion
 import pondui.ui.controls.Row
 import pondui.ui.controls.Section
-import pondui.ui.controls.TabItem
-import pondui.ui.controls.Tabs
 import pondui.ui.controls.Text
 import pondui.ui.controls.TextField
 import pondui.ui.modifiers.pad
@@ -37,7 +35,6 @@ import pondui.ui.services.MidiPlayer
 import pondui.ui.theme.Pond
 import pondui.utils.MultiPreview
 import pondui.utils.PreviewFrame
-import pondui.utils.mixWith
 import streetlight.model.data.SongNotation
 import streetlight.model.data.SongPart
 import streetlight.model.mockDb
@@ -51,6 +48,8 @@ fun SongPartEditor(
     tempo: Int? = null,
     modifyPart: (SongPart?) -> Unit,
 ) {
+    var isReorderable by remember { mutableStateOf(false) }
+
     Section {
         Column(1, horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) {
             Carousel {
@@ -62,6 +61,7 @@ fun SongPartEditor(
                         LabeledContent("notation", modifier = Modifier.weight(2f)) {
                             DropMenu(part.style, { it.label }) { modifyPart(part.copy(style = it)) }
                         }
+                        Checkbox(isReorderable, "reorder") { isReorderable = it }
                     }
                 }
                 addItem("midi", TablerIcons.Settings) {
@@ -83,22 +83,23 @@ fun SongPartEditor(
                 }
             }
 
-            part.sequences.forEachIndexed { sequenceIndex, sequence ->
-                Drawer(
-                    isOpen = sequenceIndex == 0,
-                    headerContent = { Text(sequence.sequenceId) }
-                ) {
-                    SongSequenceEditor(
-                        notation = notation,
-                        part = part,
-                        sequence = sequence,
-                        midiPlayer = midiPlayer,
-                        capo = capo,
-                        tempo = tempo,
-                    ) { modifiedSequence ->
-                        val sequences = part.sequences.replaceOrRemoveAt(sequenceIndex, modifiedSequence)
-                        modifyPart(part.copy(sequences = sequences))
-                    }
+            println("exterior: ${part.sequences.joinToString(" ") { it.sequenceId }}")
+            ReorderableAccordion(
+                items = part.sequences,
+                isReorderable = isReorderable,
+                provideHeader = { Text(it.sequenceId)},
+                onChange = { modifyPart(part.copy(sequences = it)) }
+            ) { sequenceIndex, sequence ->
+                SongSequenceEditor(
+                    notation = notation,
+                    part = part,
+                    sequence = sequence,
+                    midiPlayer = midiPlayer,
+                    capo = capo,
+                    tempo = tempo,
+                ) { modifiedSequence ->
+                    val sequences = part.sequences.replaceOrRemoveAt(sequenceIndex, modifiedSequence)
+                    modifyPart(part.copy(sequences = sequences))
                 }
             }
 
