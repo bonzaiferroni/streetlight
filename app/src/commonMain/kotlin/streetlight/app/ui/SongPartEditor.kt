@@ -20,7 +20,6 @@ import kabinet.utils.suggestVariation
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import pondui.ui.controls.Button
 import pondui.ui.controls.Carousel
-import pondui.ui.controls.Checkbox
 import pondui.ui.controls.Column
 import pondui.ui.controls.DropMenu
 import pondui.ui.controls.Icon
@@ -28,6 +27,7 @@ import pondui.ui.controls.LabeledContent
 import pondui.ui.controls.ReorderableAccordion
 import pondui.ui.controls.Row
 import pondui.ui.controls.Section
+import pondui.ui.controls.Switch
 import pondui.ui.controls.Text
 import pondui.ui.controls.TextField
 import pondui.ui.modifiers.pad
@@ -61,7 +61,12 @@ fun SongPartEditor(
                         LabeledContent("notation", modifier = Modifier.weight(2f)) {
                             DropMenu(part.style, { it.label }) { modifyPart(part.copy(style = it)) }
                         }
-                        Checkbox(isReorderable, "reorder") { isReorderable = it }
+                        Switch(
+                            isOn = isReorderable,
+                            text = "Reorder",
+                            color = Pond.colors.secondary,
+                            shape = Pond.ruler.torpedo
+                        ) { isReorderable = it }
                     }
                 }
                 addItem("midi", TablerIcons.Settings) {
@@ -83,7 +88,6 @@ fun SongPartEditor(
                 }
             }
 
-            println("exterior: ${part.sequences.joinToString(" ") { it.sequenceId }}")
             ReorderableAccordion(
                 items = part.sequences,
                 isReorderable = isReorderable,
