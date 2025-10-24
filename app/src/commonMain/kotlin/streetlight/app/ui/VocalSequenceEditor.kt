@@ -7,6 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.sp
 import pondui.ui.controls.TextField
 import pondui.ui.services.MidiPlayer
 import pondui.ui.services.playChord
@@ -47,7 +48,7 @@ fun VocalSequenceEditor(
 
     TextField(
         text = editText,
-        style = Pond.typo.mono,
+        style = Pond.typo.mono.copy(fontSize = 12.sp),
         modifier = Modifier.fillMaxWidth()
     ) { editedText ->
         editText = editedText

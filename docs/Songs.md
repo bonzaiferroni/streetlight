@@ -40,6 +40,21 @@ G Am D D
 G G7 C G
 Em D G G
 
+Amazing grace how sweet the sound
+that saved a wretch like me
+I once was lost, but now am found
+was blind, but now I see
+
+Twas grace that taught my heart to fear
+and grace my fears relieved
+how precious did that grace appear
+the hour I first believed
+
+Through many dangers, toils and snares
+I have already come
+Tis grace has brought me safe thus far
+and grace will lead me home
+
 # Sure of
 Caamp
 fret 3 bpm 64

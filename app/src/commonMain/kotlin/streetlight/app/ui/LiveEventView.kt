@@ -88,6 +88,13 @@ fun LiveEventView(
                             takeNextSong = viewModel::takeNextSong,
                         )
                     }
+                    val notation = song.notation
+                    val vocalPart = notation?.parts?.firstOrNull { it.instrument == Instrument.Vocals }
+                    if (vocalPart != null) {
+                        Tab("Lyrics") {
+                            LyricsView(notation, vocalPart, song.capo, song.tempo)
+                        }
+                    }
                 }
             } else {
                 Button("Next Song", onClick = viewModel::takeNextSong)

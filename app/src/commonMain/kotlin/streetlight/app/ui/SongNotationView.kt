@@ -65,7 +65,7 @@ fun PartSequenceView(
 ) {
     Row(1) {
         Column(1, horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.weight(1f)) {
-            Label(part.instrument.notationLabel)
+            Label(sequence.sequenceId)
             when (sequence) {
                 is ChordSequence -> ChordSequenceView(
                     notation = notation,

@@ -37,9 +37,6 @@ fun LiveSongView(
             label = "Notes",
             modifier = Modifier.fillMaxWidth()
         )
-//        Section {
-//            // SongNotationView()
-//        }
         Button("Done", onClick = takeNextSong)
     }
 }
