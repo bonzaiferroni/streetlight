@@ -60,7 +60,7 @@ fun VocalSequenceEditor(
                 val isPhraseEnd = index == noteTexts.size - 1
                 val vocalNote = parseVocalNote(noteText, part.style, isPhraseEnd) ?: return@forEachIndexed
                 val translation = vocalNote.pitch?.let { pitch ->
-                    vocalNote.copy(pitch = pitch - rootChromatic.pitch)
+                    vocalNote.copy(pitch = pitch + rootChromatic.pitch)
                 } ?: vocalNote
                 val isNewLastNote = notes.size == sequence.notes.size ||
                         notes.size == sequence.notes.size - 1 &&
@@ -71,7 +71,7 @@ fun VocalSequenceEditor(
                         program = part.midiProgram ?: part.instrument.midiProgram
                     )
                 }
-                notes.add(translation)
+                notes.add(vocalNote)
             }
         }
         modifySequence(sequence.copy(notes = notes))

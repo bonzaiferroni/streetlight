@@ -12,7 +12,7 @@ fun notationOf(
 ) = when (style) {
     NotationStyle.Letters -> Chromatic.ofPitch(pitch).label
     NotationStyle.Degrees -> {
-        val chromatic = Chromatic.ofPitch(pitch + rootPitch)
+        val chromatic = Chromatic.ofPitch(pitch)
         if (chromatic.isSharp) "${chromatic.diatonic.degree}#"
         else chromatic.diatonic.degree.toString()
     }

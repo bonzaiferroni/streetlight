@@ -15,7 +15,7 @@ enum class Diatonic(val degree: Int, val letter: Char, val pitch: Int) {
     }
 
     companion object {
-        fun fromDegree(degree: Int) = entries.firstOrNull { it.degree == degree }
+        fun ofDegree(degree: Int) = entries.firstOrNull { it.degree == degree }
             ?: error("Not a diatonic interval: $degree")
     }
 }

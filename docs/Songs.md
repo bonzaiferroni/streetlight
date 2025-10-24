@@ -6,11 +6,11 @@ Intro
 Am C Am C
 
 Verse
-Am.2 G.2 C Am.2 G.2 C
-Am.2 G.2 C Am.2 G.2 F
+Am_2 G_2 C Am_2 G_2 C
+Am_2 G_2 C Am_2 G_2 F
 
 Instrumental
-Am.2 G.2 C Am.2 G.2 C
+Am_2 G_2 C Am_2 G_2 C
 
 Chorus
 Am G C C
@@ -28,7 +28,7 @@ Am C F C
 Shaboozey
 
 Verse/Chorus x4
-Em G C/G G.2 D/F#.2
+Em G C/G G_2 D/F#_2
 
 # Amazing Grace
 John Newton
@@ -61,7 +61,7 @@ Neil Young
 bpm 100
 
 Intro x2
-Dsus2.1 D.3 G
+Dsus2_1 D_3 G
 
 Verse x4
 D G D G
@@ -71,7 +71,7 @@ D A C G
 D A C G
 
 # Streets of Laredo
-Frank H. Maynard
+Frank H_ Maynard
 Fret 5
 
 Verse x2
@@ -81,8 +81,8 @@ G D7 G D7
 G C D7 G
 
 Chorus
-G.8 C.8 G.8 A D7
-G.8 C.8 G.8 D7 G
+G_8 C_8 G_8 A D7
+G_8 C_8 G_8 D7 G
 
 # The Gambler
 Kenny Rogers
@@ -91,7 +91,7 @@ Kenny Rogers
 Julianna Zachariou
 
 # Lost Boy
-Ruth B.
+Ruth B_
 
 # Angel Band
 Johnny Cash
@@ -130,28 +130,29 @@ Zach Bryan
 Jack Johnson
 
 Intro
-Am7 Am7 G7 G7.3 D7.1
+Am7 Am7 G7 G7_3 D7_1
 
 # Crowded Table
 The Highwomen
+Capo: 4
 
 Intro
 F C G G
 F C G -
 
 Verse
-C.1 G.3 Em.1 C.3
-C.1 G.3 Em.1 C.3
+C_1 G_3 Em_1 C_3
+C_1 G_3 Em_1 C_3
 Em C
-C.1 G.3 Em.1 C.3
+C_1 G_3 Em_1 C_3
 
-Verse
+Chorus
 G D C G
 G D F C
 G D C G
-C G D.2 C.2 G
+C G D_2 C_2 G
 
-Verse
+Bridge
 F C G G
 F C D D
 

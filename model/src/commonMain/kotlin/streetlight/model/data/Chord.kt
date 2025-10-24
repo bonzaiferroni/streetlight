@@ -23,7 +23,7 @@ data class Chord(
             extension: ChordExtension? = null,
             slash: Int? = null,
         ) = Chord(
-            pitch = Diatonic.fromDegree(degree).pitch,
+            pitch = Diatonic.ofDegree(degree).pitch,
             quality = quality,
             extension = extension,
             slash = slash,

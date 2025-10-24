@@ -5,7 +5,6 @@ import pondui.ui.services.MidiSequence
 import streetlight.model.data.ChordHelper
 import streetlight.model.data.ChordSequence
 import streetlight.model.data.MeasureChord
-import streetlight.model.data.SongPart
 import streetlight.model.data.PartSequence
 import streetlight.model.data.VocalNote
 import streetlight.model.data.VocalSequence
@@ -60,28 +59,29 @@ fun VocalSequence.toMidiSequence(
     tempo: Int? = null,
 ): MidiSequence {
     val chords = mutableListOf<MidiChord>()
-    this.notes.forEach { chord ->
-        val midiChord = chord.toMidiChord(beatsPerMeasure, rootPitch, capo)
+    this.notes.forEach { note ->
+        println("rootPitch: ${note.pitch}")
+        val midiChord = note.toMidiChord(beatsPerMeasure, rootPitch, capo)
         chords.add(midiChord)
     }
     return MidiSequence(tempo = tempo, chords = chords)
 }
 
 fun MeasureChord.toMidiChord(beatsPerMeasure: Int, rootPitch: Int, capo: Int?): MidiChord {
-    val beats = duration ?: beatsPerMeasure
+    val measureFraction = (this@toMidiChord.duration ?: beatsPerMeasure) / beatsPerMeasure.toFloat()
     return expression?.toNotation(rootPitch)?.let {
         ChordHelper.map[it]?.let { notes -> capo?.let { capo -> notes.map { it + capo } } ?: notes }
     }?.let {
         MidiChord(
-            beats = beats,
+            duration = measureFraction,
             notes = it
         )
-    } ?: MidiChord(beats, null)
+    } ?: MidiChord(measureFraction, null)
 }
 
 fun VocalNote.toMidiChord(beatsPerMeasure: Int, rootPitch: Int, capo: Int?): MidiChord {
-    val beats = duration ?: beatsPerMeasure
+    val measureFraction = (duration ?: beatsPerMeasure) / beatsPerMeasure.toFloat()
     return pitch?.let {
-        MidiChord(beats, listOf(rootPitch + it + (capo ?: 0)))
-    } ?: MidiChord(beats, null)
+        MidiChord(measureFraction, listOf(rootPitch + it + (capo ?: 0)))
+    } ?: MidiChord(measureFraction, null)
 }

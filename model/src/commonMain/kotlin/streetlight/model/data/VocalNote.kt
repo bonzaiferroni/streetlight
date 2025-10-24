@@ -44,5 +44,10 @@ fun parseVocalNote(text: String, style: NotationStyle, isPhraseEnd: Boolean): Vo
         }
         durationText.toIntOrNull() ?: return null
     } else null
-    return VocalNote(utterance.takeIf { it != "~" }, duration, pitch, isPhraseEnd)
+    return VocalNote(
+        utterance = utterance.takeIf { it != "~" },
+        duration = duration,
+        pitch = pitch,
+        isPhraseEnd = isPhraseEnd
+    )
 }

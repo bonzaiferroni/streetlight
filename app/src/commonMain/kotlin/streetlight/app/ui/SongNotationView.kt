@@ -78,7 +78,7 @@ fun PartSequenceView(
         if (midiPlayer != null) {
             midiPlayer.MiniPlayer {
                 sequence.toMidiSequence(
-                    beatsPerMeasure = notation.measureBeats,
+                    beatsPerMeasure = sequence.measureBeats ?: notation.measureBeats,
                     rootPitch = notation.rootPitch,
                     capo = capo,
                     tempo = tempo
