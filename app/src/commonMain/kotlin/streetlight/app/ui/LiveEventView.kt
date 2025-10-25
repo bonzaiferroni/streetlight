@@ -32,6 +32,10 @@ fun LiveEventView(
         }
     }
 
+    LaunchedEffect(Unit) {
+        viewModel.refreshSong()
+    }
+
     Column(
         gap = 2,
         horizontalAlignment = Alignment.CenterHorizontally,

@@ -127,6 +127,14 @@ class LiveEventModel(
     fun toggleInterlude(value: Boolean = !stateNow.announceInterlude) {
         setState { it.copy(announceInterlude = value) }
     }
+
+    fun refreshSong() {
+        val eventSong = stateNow.song ?: return
+        ioLaunch {
+            val song = app.repo.song.readById(eventSong.song.songId) ?: return@ioLaunch
+            setStateFromMain { it.copy(song = eventSong.copy(song = song)) }
+        }
+    }
 }
 
 data class LiveEventState(
