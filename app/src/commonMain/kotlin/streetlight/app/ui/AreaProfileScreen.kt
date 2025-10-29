@@ -8,6 +8,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
+import kabinet.model.GeoPoint
 import pondui.ui.controls.Button
 import pondui.ui.controls.LazyColumn
 import pondui.ui.controls.Row
@@ -15,8 +16,11 @@ import pondui.ui.controls.Scaffold
 import pondui.ui.controls.Text
 import pondui.ui.controls.TextField
 import pondui.ui.nav.LocalNav
+import pondui.utils.current
+import pondui.utils.rememberGeoLocator
 import streetlight.app.AreaProfileRoute
 import streetlight.app.LocationProfileRoute
+import kotlin.time.Duration.Companion.seconds
 
 @Composable
 fun AreaProfileScreen(
@@ -25,9 +29,18 @@ fun AreaProfileScreen(
 ) {
     val state by viewModel.stateFlow.collectAsState()
     val nav = LocalNav.current
+    val geoLocator = rememberGeoLocator()
 
     Scaffold {
-        TextField(state.newName, onChange = viewModel::setNewName, placeholder = "New Area Name")
+        Row(1) {
+            TextField(
+                text = state.newName,
+                onChange = viewModel::setNewName,
+                placeholder = "New Area Name",
+                modifier = Modifier.weight(1f)
+            )
+            Button("Create", isEnabled = state.isValidNewItem, onClick = viewModel::createNewItem)
+        }
         Row(1) {
             TextField(
                 state.newLongitude,
@@ -41,7 +54,13 @@ fun AreaProfileScreen(
                 placeholder = "Latitude",
                 modifier = Modifier.weight(1f)
             )
-            Button("Create", isEnabled = state.isValidNewItem, onClick = viewModel::createNewItem)
+            Button("Locate", onClick = {
+                geoLocator?.current(20.seconds) { location ->
+                    location?.let {
+                        viewModel.setGeoPoint(GeoPoint(location.longitude, location.latitude))
+                    }
+                }
+            })
         }
         LazyColumn(1) {
             items(state.locations) {

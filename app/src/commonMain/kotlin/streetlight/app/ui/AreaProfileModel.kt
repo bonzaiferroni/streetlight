@@ -47,6 +47,10 @@ class AreaProfileModel(
         }
     }
 
+    fun setGeoPoint(geoPoint: GeoPoint) {
+        setState { it.copy(newLatitude = geoPoint.latitude.toString(), newLongitude = geoPoint.longitude.toString())}
+    }
+
     fun createNewItem() {
         if (!stateNow.isValidNewItem) return
         val name = stateNow.newName.takeIf { it.isNotBlank() } ?: return
