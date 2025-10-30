@@ -52,6 +52,7 @@ kotlin {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.kotlinx.coroutines.android)
+            implementation(libs.maplibre.android.vulkan)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -71,11 +72,24 @@ kotlin {
 
             implementation(project(":pondui"))
             implementation(project(":model"))
+            implementation(libs.maplibre.compose.get().toString()) {
+                exclude(group = "org.maplibre.gl", module = "android-sdk")
+            }
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutines.swing)
             implementation(libs.logback.classic)
+
+            implementation(compose.desktop.currentOs)
+            implementation("org.maplibre.compose:maplibre-compose:0.11.1")
+            runtimeOnly("org.maplibre.compose:maplibre-native-bindings-jni:0.11.1") {
+                capabilities {
+                    requireCapability("org.maplibre.compose:maplibre-native-bindings-jni-macos-aarch64-metal")
+                    requireCapability("org.maplibre.compose:maplibre-native-bindings-jni-linux-amd64-opengl")
+                    requireCapability("org.maplibre.compose:maplibre-native-bindings-jni-windows-amd64-opengl")
+                }
+            }
         }
 //        wasmJsMain.dependencies {
 //            implementation(libs.ktor.client.js)

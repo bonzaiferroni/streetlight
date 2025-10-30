@@ -33,7 +33,6 @@ class AreaProfileModel(
         setState {
             it.copy(
                 newLatitude = value,
-                isValidNewItem = value.toDoubleOrNull() != null && stateNow.newLongitude.toDoubleOrNull() != null
             )
         }
     }
@@ -42,7 +41,6 @@ class AreaProfileModel(
         setState {
             it.copy(
                 newLongitude = value,
-                isValidNewItem = value.toDoubleOrNull() != null && stateNow.newLatitude.toDoubleOrNull() != null
             )
         }
     }
@@ -78,5 +76,7 @@ data class AreaProfileState(
     val newName: String = "",
     val newLatitude: String = "",
     val newLongitude: String = "",
-    val isValidNewItem: Boolean = false,
-)
+) {
+    val isValidNewItem: Boolean get() = newLongitude.toDoubleOrNull() != null && newLatitude.toDoubleOrNull() != null
+            && newName.isNotBlank()
+}

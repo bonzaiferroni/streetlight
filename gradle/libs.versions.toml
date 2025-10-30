@@ -83,6 +83,8 @@ room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
 
+maplibre-compose = { module = "org.maplibre.compose:maplibre-compose", version = "0.11.1" }
+maplibre-android-vulkan = { module = "org.maplibre.gl:android-sdk-vulkan", version = "11.13.0" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

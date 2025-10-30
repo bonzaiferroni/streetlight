@@ -14,13 +14,13 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import pondui.ui.controls.*
 import pondui.ui.nav.LocalNav
 import streetlight.app.AreaProfileRoute
+import streetlight.app.utils.toRoute
 
 @Composable
 fun AreaListScreen(
     viewModel: AreaListModel = viewModel { AreaListModel() }
 ) {
     val state by viewModel.stateFlow.collectAsState()
-    val nav = LocalNav.current
 
     Scaffold {
         Row(
@@ -35,10 +35,10 @@ fun AreaListScreen(
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth()
+                        .actionable(it.areaId.toRoute()),
                 ) {
                     Text(it.name)
-                    Button("➡") { nav.go(AreaProfileRoute(it.areaId.value)) }
                 }
             }
         }
