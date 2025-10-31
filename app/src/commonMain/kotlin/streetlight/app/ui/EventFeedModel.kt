@@ -8,6 +8,7 @@ import pondui.ui.core.StateModel
 import streetlight.app.AppProvider
 import streetlight.app.RuntimeProvider
 import streetlight.model.data.Event
+import streetlight.model.data.EventType
 import streetlight.model.data.Location
 import streetlight.model.data.NewEvent
 import kotlin.time.Duration.Companion.days
@@ -35,9 +36,10 @@ class EventFeedModel(private val app: AppProvider = RuntimeProvider): StateModel
             val dayOfWeek = startsAt.toLocalDateTimeUtc().dayOfWeek.toLongFormat()
             val event = client.createEvent(
                 NewEvent(
-                    location.locationId,
-                    "$dayOfWeek @ ${location.name}",
-                    startsAt
+                    locationId = location.locationId,
+                    title = "$dayOfWeek @ ${location.name}",
+                    eventType = stateNow.eventType,
+                    startsAt = startsAt,
                 )
             ) ?: return@ioLaunch
             setStateFromMain { it.copy(events = it.events + event)}
@@ -59,10 +61,15 @@ class EventFeedModel(private val app: AppProvider = RuntimeProvider): StateModel
             }
         }
     }
+
+    fun setEventType(type: EventType) {
+        setState { it.copy(eventType = type) }
+    }
 }
 
 data class EventFeedState(
     val locations: List<Location> = listOf(),
     val locationSearch: String = "",
-    val events: List<Event> = listOf()
+    val events: List<Event> = listOf(),
+    val eventType: EventType = EventType.StreetPerformance
 )

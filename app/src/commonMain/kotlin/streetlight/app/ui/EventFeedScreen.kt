@@ -9,6 +9,7 @@ import compose.icons.tablericons.Plus
 import compose.icons.tablericons.Trash
 import pondui.ui.controls.Button
 import pondui.ui.controls.Column
+import pondui.ui.controls.DropMenu
 import pondui.ui.controls.LazyColumn
 import pondui.ui.controls.LazyScaffold
 import pondui.ui.controls.MoreMenu
@@ -28,7 +29,12 @@ fun EventFeedScreen(
 
     val cloudToggle = rememberCloud(title = "Where?") { toggle ->
         Column(1) {
-            TextField(state.locationSearch, onChange = viewModel::searchLocations)
+            TextField(
+                text = state.locationSearch,
+                onChange = viewModel::searchLocations,
+                modifier = Modifier.weight(1f)
+            )
+            DropMenu(state.eventType, {it.label}, onChange = viewModel::setEventType)
             LazyColumn(1) {
                 items(state.locations) { location ->
                     Text(location.name, modifier = Modifier.actionable {

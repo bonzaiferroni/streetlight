@@ -21,6 +21,7 @@ data class Event(
     val title: String,
     val description: String?,
     val status: EventStatus,
+    val eventType: EventType,
     val cashTips: Float?,
     val cardTips: Float?,
     val startsAt: Instant,
@@ -40,7 +41,16 @@ data class NewEvent(
     val locationId: LocationId,
     val title: String,
     val startsAt: Instant,
+    val eventType: EventType,
 )
+
+enum class EventType(val label: String) {
+    StreetPerformance("Street Performance"),
+    OpenMic("Open Mic"),
+    Potluck("Potluck"),
+    Circle("Circle"),
+    BunnyJam("Bunny Jam"),
+}
 
 enum class EventStatus(override val label: String): LabeledEnum<EventStatus> {
     Pending("Pending"),

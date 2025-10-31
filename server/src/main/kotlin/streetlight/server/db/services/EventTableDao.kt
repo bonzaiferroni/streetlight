@@ -46,6 +46,7 @@ class EventTableDao: DbService() {
             title = event.title,
             description = null,
             status = EventStatus.Pending,
+            eventType = event.eventType,
             cashTips = null,
             cardTips = null,
             startsAt = event.startsAt,

@@ -1,11 +1,8 @@
 package streetlight.server.db.tables
 
-import kabinet.model.UserId
-import kabinet.utils.toHours
 import kabinet.utils.toInstantFromUtc
 import kabinet.utils.toLocalDateTimeUtc
 import klutch.db.tables.UserTable
-import klutch.utils.toStringId
 import klutch.utils.toUUID
 import org.jetbrains.exposed.dao.id.UUIDTable
 import org.jetbrains.exposed.sql.ReferenceOption
@@ -13,14 +10,11 @@ import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.kotlin.datetime.datetime
 import org.jetbrains.exposed.sql.statements.UpdateBuilder
 import streetlight.model.data.Event
-import streetlight.model.data.EventId
 import streetlight.model.data.EventStatus
-import streetlight.model.data.LocationId
-import streetlight.model.data.RequestId
+import streetlight.model.data.EventType
 import streetlight.server.utils.toProjectId
 import streetlight.server.utils.toProjectIdOrNull
 import streetlight.server.utils.toUserId
-import kotlin.time.Duration.Companion.hours
 
 object EventTable : UUIDTable("event") {
     val userId = reference("user_id", UserTable, onDelete = ReferenceOption.CASCADE)
@@ -32,6 +26,7 @@ object EventTable : UUIDTable("event") {
     val name = text("name")
     val description = text("description").nullable()
     val status = enumeration<EventStatus>("status")
+    val eventType = enumeration<EventType>("type").default(EventType.StreetPerformance)
     val cashTips = float("cash_tips").nullable()
     val cardTips = float("card_tips").nullable()
     val startsAt = datetime("starts_at")
@@ -51,6 +46,7 @@ fun ResultRow.toEvent() = Event(
     title = this[EventTable.name],
     description = this[EventTable.description],
     status = this[EventTable.status],
+    type = this[EventTable.eventType],
     cashTips = this[EventTable.cashTips],
     cardTips = this[EventTable.cardTips],
     startsAt = this[EventTable.startsAt].toInstantFromUtc(),
@@ -75,6 +71,7 @@ fun UpdateBuilder<*>.writeUpdate(event: Event) {
     this[EventTable.name] = event.title
     this[EventTable.description] = event.description
     this[EventTable.status] = event.status
+    this[EventTable.eventType] = event.type
     this[EventTable.cashTips] = event.cashTips
     this[EventTable.cardTips] = event.cardTips
     this[EventTable.startsAt] = event.startsAt.toLocalDateTimeUtc()
