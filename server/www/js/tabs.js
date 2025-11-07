@@ -19,7 +19,7 @@
         panels.forEach((p, i) => {
             p.style.display = i === current ? "block" : "none";
             p.classList.toggle("is-active", i === current);
-            p.classList.remove("enter-left", "enter-right", "exit-left", "exit-right");
+            p.classList.remove("enter", "exit", "dir-left", "dir-right");
         });
         buttons.forEach((b, i) => b.classList.toggle("is-active", i === current));
 
@@ -31,22 +31,27 @@
                 const next = Number(btn.dataset.tab);
                 if (Number.isNaN(next) || next === current || next < 0 || next >= panels.length) return;
 
-                const dir = next > current ? "left" : "right";
                 buttons[current]?.classList.remove("is-active");
                 buttons[next]?.classList.add("is-active");
-                swap(current, next, dir);
+                swap(current, next);
                 current = next;
             });
         });
 
-        function swap(fromIdx, toIdx, dir) {
+        function swap(fromIdx, toIdx) {
             const from = panels[fromIdx];
             const to = panels[toIdx];
 
-            to.style.display = "block";
-            to.classList.remove("is-active", "enter-left", "enter-right", "exit-left", "exit-right");
-            to.classList.add(dir === "left" ? "enter-right" : "enter-left");
+            // Determine directions based on relative tab index
+            const toDir = toIdx > fromIdx ? "dir-right" : "dir-left";
+            const fromDir = toIdx > fromIdx ? "dir-left" : "dir-right";
 
+            // Prepare incoming panel
+            to.style.display = "block";
+            to.classList.remove("is-active", "enter", "exit", "dir-left", "dir-right");
+            to.classList.add(toDir, "enter");
+
+            // Animate viewport height
             const startH = from.scrollHeight;
             const endH = to.scrollHeight;
             viewport.style.height = startH + "px";
@@ -54,16 +59,21 @@
                 viewport.style.height = endH + "px";
             });
 
-            from.classList.remove("enter-left", "enter-right", "exit-left", "exit-right");
-            from.classList.add(dir === "left" ? "exit-left" : "exit-right");
+            // Animate outgoing panel
+            from.classList.remove("enter", "exit", "dir-left", "dir-right");
+            from.classList.add(fromDir, "exit");
+
+            // Force a reflow so the browser registers the 'enter' start state
+            // before we activate the new panel and remove 'enter'.
+            void to.offsetWidth;
 
             requestAnimationFrame(() => {
                 to.classList.add("is-active");
-                to.classList.remove("enter-left", "enter-right");
+                to.classList.remove("enter");
             });
 
             const done = () => {
-                from.classList.remove("is-active", "exit-left", "exit-right");
+                from.classList.remove("is-active", "exit", "dir-left", "dir-right");
                 from.style.display = "none";
                 viewport.style.height = "auto";
             };

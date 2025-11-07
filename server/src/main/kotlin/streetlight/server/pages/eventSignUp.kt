@@ -23,6 +23,9 @@ fun HTML.eventSignUp(event: Event) {
                 tab("Sign-in") {
                     paragraph("world")
                 }
+                tab("Coffee") {
+                    paragraph("yes please")
+                }
             }
             column(Id("sign-up-box"), FillWidth) {
                 column(Id("guest-details"), DisplayNone) {
