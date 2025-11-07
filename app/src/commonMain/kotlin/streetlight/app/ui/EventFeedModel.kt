@@ -8,7 +8,6 @@ import pondui.ui.core.StateModel
 import streetlight.app.AppProvider
 import streetlight.app.RuntimeProvider
 import streetlight.model.data.Event
-import streetlight.model.data.EventType
 import streetlight.model.data.Location
 import streetlight.model.data.NewEvent
 import kotlin.time.Duration.Companion.days

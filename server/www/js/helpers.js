@@ -18,3 +18,7 @@ async function fetchPost(endpoint, payload) {
         body: JSON.stringify(payload)
     });
 }
+
+function wave(text) {
+    console.log(text)
+}

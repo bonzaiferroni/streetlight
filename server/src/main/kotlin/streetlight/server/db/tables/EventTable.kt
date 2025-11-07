@@ -26,7 +26,7 @@ object EventTable : UUIDTable("event") {
     val name = text("name")
     val description = text("description").nullable()
     val status = enumeration<EventStatus>("status")
-    val eventType = enumeration<EventType>("type").default(EventType.StreetPerformance)
+    val eventType = enumeration<EventType>("event_type").default(EventType.StreetPerformance)
     val cashTips = float("cash_tips").nullable()
     val cardTips = float("card_tips").nullable()
     val startsAt = datetime("starts_at")
@@ -46,7 +46,7 @@ fun ResultRow.toEvent() = Event(
     title = this[EventTable.name],
     description = this[EventTable.description],
     status = this[EventTable.status],
-    type = this[EventTable.eventType],
+    eventType = this[EventTable.eventType],
     cashTips = this[EventTable.cashTips],
     cardTips = this[EventTable.cardTips],
     startsAt = this[EventTable.startsAt].toInstantFromUtc(),
@@ -71,7 +71,7 @@ fun UpdateBuilder<*>.writeUpdate(event: Event) {
     this[EventTable.name] = event.title
     this[EventTable.description] = event.description
     this[EventTable.status] = event.status
-    this[EventTable.eventType] = event.type
+    this[EventTable.eventType] = event.eventType
     this[EventTable.cashTips] = event.cashTips
     this[EventTable.cardTips] = event.cardTips
     this[EventTable.startsAt] = event.startsAt.toLocalDateTimeUtc()

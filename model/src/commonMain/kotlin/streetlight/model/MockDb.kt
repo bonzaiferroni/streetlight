@@ -10,6 +10,7 @@ import streetlight.model.data.AreaId
 import streetlight.model.data.Event
 import streetlight.model.data.EventId
 import streetlight.model.data.EventStatus
+import streetlight.model.data.EventType
 import streetlight.model.data.Location
 import streetlight.model.data.LocationId
 import streetlight.model.data.Song
@@ -112,6 +113,7 @@ val mockDb by lazy {
             title = eventTitleBag.draw(),
             description = null,
             status = EventStatus.Pending,
+            eventType = EventType.StreetPerformance,
             cashTips = null,
             cardTips = null,
             startsAt = now,

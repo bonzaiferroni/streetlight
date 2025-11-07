@@ -12,10 +12,9 @@ fun HTML.eventPortal(event: Event, spark: Spark?, requestItems: List<RequestItem
         scripts("eventportal.js")
     }
     body {
-        column(modify(AlignItemsCenter)) {
-            set(Id("event-profile"))
+        column(Id("event-profile"), AlignItemsCenter) {
             heading1(event.title)
-            column(modify(Gap0)) {
+            column(Gap0) {
                 row {
                     paragraph("performer:", modify(DimText))
                     paragraph("Luke Bollwerk")
@@ -28,32 +27,27 @@ fun HTML.eventPortal(event: Event, spark: Spark?, requestItems: List<RequestItem
                 }
             }
             heading2("Send a request")
-            column(modify(FillWidth)) {
-                set(Id("request-box"))
-                column() {
-                    set(Id("request-songs"))
+            column(Id("request-box"), FillWidth) {
+                column(Id("request-songs")) {
                     requestItems.forEach { item ->
                         requestItem(item, event)
                         // button(song.title, invoke("startRequest", event.eventId.value, song.songId.value))
                     }
                 }
-                column(modify(DisplayNone)) {
-                    set(Id("request-details"))
+                column(Id("request-details"), DisplayNone) {
                     textField(Id("name"), "Your name (optional)")
                     textField(Id("comment"), "Comment (optional)")
                     checkBox(Id("join"), "Would you like to sing with me?")
                     button("Send", invoke("sendRequest"))
                 }
-                column(modify(DisplayNone)) {
-                    set(Id("request-sent"))
+                column(Id("request-sent"), DisplayNone) {
                     paragraph("Request sent!")
                 }
             }
         }
-        column(modify(AlignItemsCenter)) {
-            set(Id("tips-box"))
+        column(Id("tips-box"), AlignItemsCenter) {
             heading2("Send a tip")
-            row(modify(AlignItemsCenter)) {
+            row(AlignItemsCenter) {
                 row {
                     heading3("Venmo:", modify(DimText))
                     a("https://venmo.com/colfaxband?txn=pay&note=street+music") {
@@ -83,11 +77,11 @@ fun FlowContent.requestItem(
     card() {
         onClick = invoke("startRequest", event.eventId.value, song.songId.value)
         row() {
-            column(modify(Flex1, Gap0)) {
+            column(Flex1, Gap0) {
                 paragraph(song.title, modify(Bold))
                 paragraph(song.artist)
             }
-            column(modify(Gap0, AlignItemsCenter)) {
+            column(Gap0, AlignItemsCenter) {
                 paragraph("plays", modify(DimText))
                 paragraph(plays.toString())
             }

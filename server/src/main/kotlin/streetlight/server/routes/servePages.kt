@@ -8,15 +8,24 @@ import streetlight.model.data.EventId
 import streetlight.server.RuntimeProvider
 import streetlight.server.ServerProvider
 import streetlight.server.pages.eventPortal
+import streetlight.server.pages.eventSignUp
 
 fun Routing.servePages(app: ServerProvider = RuntimeProvider) {
-    get("/eventportal/{id}") {
+    get("/event-portal/{id}") {
         val eventId = call.parameters["id"]?.let { EventId(it) } ?: return@get
         val event = app.dao.event.readEvent(eventId) ?: return@get
         val spark = app.dao.spark.readByUserId(event.userId)
         val requestItems = app.dao.song.readRequestItems(event.userId)
         call.respondHtml(HttpStatusCode.OK) {
             eventPortal(event, spark, requestItems)
+        }
+    }
+
+    get("/event-signup/{id}") {
+        val eventId = call.parameters["id"]?.let { EventId(it) } ?: return@get
+        val event = app.dao.event.readEvent(eventId) ?: return@get
+        call.respondHtml(HttpStatusCode.OK) {
+            eventSignUp(event)
         }
     }
 }

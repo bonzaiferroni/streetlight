@@ -13,5 +13,6 @@ inline fun <reified T: ProjectId> String.toProjectId(): T = when (T::class) {
     SongId::class -> SongId(this) as T
     RenditionId::class -> RenditionId(this) as T
     SparkId::class -> SparkId(this) as T
+    PerformerId::class -> PerformerId(this) as T
     else -> error("invalid projectId type: ${T::class.simpleName}")
 }

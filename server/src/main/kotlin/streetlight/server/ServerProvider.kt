@@ -17,6 +17,7 @@ import streetlight.server.db.services.RenditionTableDao
 import streetlight.server.db.services.SongTableService
 import streetlight.server.db.services.SparkTableDao
 import streetlight.server.db.services.RequestTableDao
+import streetlight.server.db.services.PerformerTableDao
 
 interface ServerProvider {
     val env: Environment
@@ -35,6 +36,7 @@ class ServerDao(
     val user: UserTableDao = UserTableDao(),
     val spark: SparkTableDao = SparkTableDao(),
     val request: RequestTableDao = RequestTableDao(),
+    val performer: PerformerTableDao = PerformerTableDao(),
 )
 
 class ServerService(

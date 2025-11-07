@@ -1,20 +1,23 @@
-.column {
+.layout-column {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
 }
 
-.row {
+.layout-row {
     display: flex;
     flex-direction: row;
     gap: 0.5rem;
 }
 
-.card {
+.layout-card {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
     border-radius: 0.5rem;
     background-color: rgba(var(--void), 0.2);
     padding: 0.5rem;
+}
+
+.layout-box {
 }

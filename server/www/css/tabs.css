@@ -1,0 +1,53 @@
+.tabs-header {
+    background: rgb(var(--void));
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    border-radius: 24px 24px 12px 12px;
+}
+
+.tabs-button {
+    flex: 1 1 auto;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 0.5rem 1rem;
+    border-radius: 24px 24px 12px 12px;
+    cursor: pointer;
+}
+
+.tabs-button.is-active {
+    background: rgb(var(--primary));
+}
+
+/* Viewport container created by tabs.kt */
+.tabs-viewport {
+    position: relative;
+    overflow: hidden;
+    transition: height 200ms ease;
+}
+
+/* Panels stacked inside .tabs-viewport */
+.tabs-panel {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(0);
+    transition: opacity 200ms ease, transform 200ms ease;
+}
+
+/* Active panel (visible state) */
+.tabs-panel.is-active {
+    position: relative;
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(0);
+}
+
+/* Exit/enter helpers */
+.tabs-panel.exit-left  { transform: translateX(-20px); opacity: 0; }
+.tabs-panel.exit-right { transform: translateX(20px);  opacity: 0; }
+.tabs-panel.enter-left { transform: translateX(-20px); opacity: 0; }
+.tabs-panel.enter-right{ transform: translateX(20px);  opacity: 0; }
