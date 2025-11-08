@@ -53,6 +53,16 @@
     opacity: 0;
 }
 
+/* During animation, keep active panel absolute so both can overlap */
+.tabs-viewport.animating .tabs-panel.is-active {
+    position: absolute;
+}
+
+/* Stacking order: ensure both entrance and exit are visible */
+.tabs-panel { z-index: 0; }
+.tabs-panel.exit { z-index: 1; }
+.tabs-panel.enter { z-index: 2; }
+
 .tabs-panel.dir-left { --shift: -20px; }
 .tabs-panel.dir-right { --shift: 20px; }
 

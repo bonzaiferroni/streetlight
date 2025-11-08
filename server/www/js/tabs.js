@@ -46,6 +46,9 @@
             const toDir = toIdx > fromIdx ? "dir-right" : "dir-left";
             const fromDir = toIdx > fromIdx ? "dir-left" : "dir-right";
 
+            // Mark viewport as animating so CSS can overlay panels
+            viewport.classList.add("animating");
+
             // Prepare incoming panel
             to.style.display = "block";
             to.classList.remove("is-active", "enter", "exit", "dir-left", "dir-right");
@@ -67,17 +70,45 @@
             // before we activate the new panel and remove 'enter'.
             void to.offsetWidth;
 
+            // Promote both animations in the same frame
             requestAnimationFrame(() => {
                 to.classList.add("is-active");
                 to.classList.remove("enter");
             });
 
-            const done = () => {
+            // Wait for both transitions to finish (or timeout) before cleanup
+            let doneCount = 0;
+            const maybeDone = () => {
+                doneCount++;
+                if (doneCount >= 2) cleanup();
+            };
+
+            const onFromEnd = () => { maybeDone(); };
+            const onToEnd = () => { maybeDone(); };
+
+            from.addEventListener("transitionend", onFromEnd, { once: true });
+            to.addEventListener("transitionend", onToEnd, { once: true });
+
+            const fallback = setTimeout(() => {
+                cleanup();
+            }, DURATION + 50);
+
+            function cleanup() {
+                clearTimeout(fallback);
+                from.removeEventListener("transitionend", onFromEnd);
+                to.removeEventListener("transitionend", onToEnd);
+
+                // Reset classes and stacking
                 from.classList.remove("is-active", "exit", "dir-left", "dir-right");
                 from.style.display = "none";
+
+                to.classList.remove("dir-left", "dir-right", "exit");
+                to.classList.add("is-active");
+
+                // Reset viewport height and animating flag
                 viewport.style.height = "auto";
-            };
-            from.addEventListener("transitionend", done, { once: true });
+                viewport.classList.remove("animating");
+            }
         }
     }
 })();
