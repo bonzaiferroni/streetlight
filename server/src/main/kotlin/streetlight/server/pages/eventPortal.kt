@@ -6,8 +6,6 @@ import streetlight.model.data.*
 
 fun HTML.eventPortal(event: Event, spark: Spark?, requestItems: List<RequestItem>) {
     head(event.title) {
-        coreStyles()
-        coreScripts()
         styles("eventPortal.css")
         scripts("eventportal.js")
     }
@@ -74,9 +72,9 @@ fun FlowContent.requestItem(
     event: Event,
 ) {
     val (song, plays) = item
-    card() {
+    card {
         onClick = invoke("startRequest", event.eventId.value, song.songId.value)
-        row() {
+        row {
             column(Flex1, Gap0) {
                 paragraph(song.title, modify(Bold))
                 paragraph(song.artist)

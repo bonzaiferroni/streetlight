@@ -22,6 +22,10 @@
     background-color: rgb(var(--primary));
 }
 
+.tabs-button:not(.is-active):hover {
+    background-color: rgba(var(--primary), 0.2);
+}
+
 /* Viewport container created by tabs.kt */
 .tabs-viewport {
     position: relative;

@@ -14,21 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import compose.icons.TablerIcons
 import compose.icons.tablericons.Target
-import io.github.dellisd.spatialk.geojson.Feature
-import io.github.dellisd.spatialk.geojson.FeatureCollection
-import io.github.dellisd.spatialk.geojson.Point
-import io.github.dellisd.spatialk.geojson.Position
 import kabinet.model.GeoPoint
-import org.maplibre.compose.camera.CameraPosition
-import org.maplibre.compose.camera.rememberCameraState
-import org.maplibre.compose.expressions.dsl.image
-import org.maplibre.compose.layers.SymbolLayer
-import org.maplibre.compose.map.MaplibreMap
-import org.maplibre.compose.sources.GeoJsonData
-import org.maplibre.compose.sources.getBaseSource
-import org.maplibre.compose.sources.rememberGeoJsonSource
-import org.maplibre.compose.style.BaseStyle
-import org.maplibre.compose.util.ClickResult
 import pondui.ui.controls.Button
 import pondui.ui.controls.Icon
 import pondui.ui.controls.LazyColumn
@@ -54,11 +40,11 @@ fun AreaProfileScreen(
     val nav = LocalNav.current
     val geoLocator = rememberGeoLocator()
 
-    val camera =
-        rememberCameraState(
-            firstPosition =
-                CameraPosition(target = Position(latitude = 45.521, longitude = -122.675), zoom = 13.0)
-        )
+//    val camera =
+//        rememberCameraState(
+//            firstPosition =
+//                CameraPosition(target = Position(latitude = 45.521, longitude = -122.675), zoom = 13.0)
+//        )
 
     Scaffold {
         Row(1) {
@@ -70,26 +56,26 @@ fun AreaProfileScreen(
             )
             Button("Create", isEnabled = state.isValidNewItem, onClick = viewModel::createNewItem)
         }
-        Box(
-            contentAlignment = Alignment.Center
-        ) {
-            MaplibreMap(
-                baseStyle = BaseStyle.Uri("https://tiles.openfreemap.org/styles/liberty"),
-                cameraState = camera,
-                onMapClick = { pos, offset ->
-                    val features = camera.projection?.queryRenderedFeatures(offset)
-                    if (!features.isNullOrEmpty()) {
-                        println("Clicked on ${features[0].json()}")
-                        viewModel.setGeoPoint(GeoPoint(pos.longitude, pos.latitude))
-                        ClickResult.Consume
-                    } else {
-                        ClickResult.Pass
-                    }
-                },
-                modifier = Modifier.height(400.dp)
-            )
-            Icon(TablerIcons.Target)
-        }
+//        Box(
+//            contentAlignment = Alignment.Center
+//        ) {
+//            MaplibreMap(
+//                baseStyle = BaseStyle.Uri("https://tiles.openfreemap.org/styles/liberty"),
+//                cameraState = camera,
+//                onMapClick = { pos, offset ->
+//                    val features = camera.projection?.queryRenderedFeatures(offset)
+//                    if (!features.isNullOrEmpty()) {
+//                        println("Clicked on ${features[0].json()}")
+//                        viewModel.setGeoPoint(GeoPoint(pos.longitude, pos.latitude))
+//                        ClickResult.Consume
+//                    } else {
+//                        ClickResult.Pass
+//                    }
+//                },
+//                modifier = Modifier.height(400.dp)
+//            )
+//            Icon(TablerIcons.Target)
+//        }
         Row(1) {
             TextField(
                 state.newLongitude,
@@ -109,10 +95,10 @@ fun AreaProfileScreen(
                 geoLocator?.current(20.seconds) { location ->
                     location?.let {
                         viewModel.setGeoPoint(GeoPoint(location.longitude, location.latitude))
-                        camera.position = CameraPosition(
-                            target = Position(latitude = location.latitude, longitude = location.longitude),
-                            zoom = 20.0
-                        )
+//                        camera.position = CameraPosition(
+//                            target = Position(latitude = location.latitude, longitude = location.longitude),
+//                            zoom = 20.0
+//                        )
                     }
                 }
             })

@@ -1,0 +1,45 @@
+.logo {
+    display: inline-flex;
+    align-items: center;
+    aspect-ratio: 1 / 1;
+    height: 1em; /* or inherit from font-size if ye prefer */
+}
+
+.logo svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    overflow: visible; /* let the glow spill out */
+}
+
+.logo svg * {
+    animation: colorShift 10s infinite linear;
+    filter: drop-shadow(0 0 2px rgb(var(--light-1)));
+}
+
+@keyframes colorShift {
+    0% {
+        stroke: rgb(var(--light-1));
+        filter: drop-shadow(0 0 2px rgb(var(--light-1)));
+    }
+    25% {
+        stroke: rgb(var(--light-2));
+        filter: drop-shadow(1px -1px 3px rgb(var(--light-2)));
+    }
+    40% {
+        stroke: rgb(var(--light-1));
+        filter: drop-shadow(0 0 1px rgb(var(--light-1)));
+    }
+    65% {
+        stroke: rgb(var(--light-3));
+        filter: drop-shadow(-1px -1px 2px rgb(var(--light-3)));
+    }
+    80% {
+        stroke: rgb(var(--light-2));
+        filter: drop-shadow(0 -1px 1px rgb(var(--light-2)));
+    }
+    100% {
+        stroke: rgb(var(--light-1));
+        filter: drop-shadow(0 0 2px rgb(var(--light-1)));
+    }
+}

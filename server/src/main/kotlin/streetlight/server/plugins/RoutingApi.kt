@@ -15,12 +15,6 @@ import java.io.File
 
 fun Application.configureApiRoutes(app: ServerProvider = RuntimeProvider) {
     routing {
-        get(Api.path) {
-            call.respondText("Hello Colfax!")
-        }
-
-        staticFiles("/static", File("www"))
-
         serveUsers()
         serveEvents()
         serveAreas()

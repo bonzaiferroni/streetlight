@@ -19,6 +19,6 @@ async function fetchPost(endpoint, payload) {
     });
 }
 
-function wave(text) {
+function wave(text = "hello world") {
     console.log(text)
 }

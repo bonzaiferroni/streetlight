@@ -6,8 +6,6 @@ import streetlight.model.data.*
 
 fun HTML.eventSignUp(event: Event) {
     head("Sign Up | ${event.title}") {
-        coreStyles()
-        coreScripts()
         styles("eventSignUp.css")
         scripts("eventSignUp.js")
     }
