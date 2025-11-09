@@ -10,10 +10,6 @@
     display: none !important;
 }
 
-.gap-0 {
-    gap: 0 !important;
-}
-
 .align-items-center {
     align-items: center;
 }
@@ -22,6 +18,14 @@
     width: 100%
 }
 
-.dim-text {
+.dim {
     color: rgba(var(--fg), 0.6);
+}
+
+.no-dim {
+    color: rgb(var(--fg)) !important;
+}
+
+.no-gap {
+    gap: 0 !important;
 }

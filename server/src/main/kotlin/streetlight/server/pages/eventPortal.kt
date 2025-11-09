@@ -12,13 +12,13 @@ fun HTML.eventPortal(event: Event, spark: Spark?, requestItems: List<RequestItem
     body {
         column(Id("event-profile"), AlignItemsCenter) {
             heading1(event.title)
-            column(Gap0) {
+            column(NoGap) {
                 row {
-                    paragraph("performer:", modify(DimText))
+                    paragraph("performer:", Dim)
                     paragraph("Luke Bollwerk")
                 }
                 row {
-                    paragraph("instagram:", modify(DimText))
+                    paragraph("instagram:", Dim)
                     a("https://www.instagram.com/trespasserswilliam/") {
                         paragraph("trespasserswilliam")
                     }
@@ -47,9 +47,9 @@ fun HTML.eventPortal(event: Event, spark: Spark?, requestItems: List<RequestItem
             heading2("Send a tip")
             row(AlignItemsCenter) {
                 row {
-                    heading3("Venmo:", modify(DimText))
+                    heading3("Venmo:", Dim)
                     a("https://venmo.com/colfaxband?txn=pay&note=street+music") {
-                        heading3("@colfaxband")
+                        heading3("@colfaxband", Glow)
                     }
                 }
                 a("https://venmo.com/colfaxband?txn=pay&amount=1&note=street+music") {
@@ -75,12 +75,12 @@ fun FlowContent.requestItem(
     card {
         onClick = invoke("startRequest", event.eventId.value, song.songId.value)
         row {
-            column(Flex1, Gap0) {
-                paragraph(song.title, modify(Bold))
+            column(Flex1, NoGap) {
+                paragraph(song.title, Bold)
                 paragraph(song.artist)
             }
-            column(Gap0, AlignItemsCenter) {
-                paragraph("plays", modify(DimText))
+            column(NoGap, AlignItemsCenter) {
+                paragraph("plays", Dim)
                 paragraph(plays.toString())
             }
         }

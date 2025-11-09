@@ -13,4 +13,5 @@
     border-top-left-radius: 2rem;
     border-top-right-radius: 2rem;
     backdrop-filter: blur(1.5rem);
+    filter: drop-shadow(0 0 8px rgba(var(--void), .8));
 }

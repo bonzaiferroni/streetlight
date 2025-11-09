@@ -11,18 +11,38 @@ fun HTML.homePage(events: List<Event>) {
     }
     body {
         column {
-            column(FillWidth, AlignItemsCenter) {
+            column(FillWidth, AlignItemsCenter, NoGap) {
                 row {
                     heading1("Streetlight")
                     logo()
                 }
-            }
-            events.forEach { event ->
-                a {
-                    href = "/event-portal/${event.eventId.value}"
-                    card {
-                        label(event.title)
+                box(Dim) {
+                    +"a "
+                    span {
+                        modify(NoDim, Glow)
+                        +"Colfax"
                     }
+                    +" music community"
+                }
+            }
+            tabs {
+                tab("Events") {
+                    column {
+                        events.forEach { event ->
+                            a {
+                                href = "/event-portal/${event.eventId.value}"
+                                card {
+                                    label(event.title)
+                                }
+                            }
+                        }
+                    }
+                }
+                tab("Map") {
+                    paragraph("Hello map")
+                }
+                tab("App") {
+                    paragraph("Hello app")
                 }
             }
         }

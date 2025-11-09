@@ -13,30 +13,33 @@
 }
 
 .logo svg * {
-    animation: colorShift 10s infinite linear;
-    filter: drop-shadow(0 0 2px rgb(var(--light-1)));
+    animation: glow 10s infinite linear;
 }
 
-@keyframes colorShift {
+.glow {
+    animation: glow 10s infinite linear;
+}
+
+@keyframes glow {
     0% {
         stroke: rgb(var(--light-1));
         filter: drop-shadow(0 0 2px rgb(var(--light-1)));
     }
     25% {
         stroke: rgb(var(--light-2));
-        filter: drop-shadow(1px -1px 3px rgb(var(--light-2)));
+        filter: drop-shadow(0 -1px 3px rgb(var(--light-2)));
     }
     40% {
         stroke: rgb(var(--light-1));
-        filter: drop-shadow(0 0 1px rgb(var(--light-1)));
+        filter: drop-shadow(1px 0 1px rgb(var(--light-1)));
     }
     65% {
         stroke: rgb(var(--light-3));
-        filter: drop-shadow(-1px -1px 2px rgb(var(--light-3)));
+        filter: drop-shadow(0 -1px 2px rgb(var(--light-3)));
     }
     80% {
         stroke: rgb(var(--light-2));
-        filter: drop-shadow(0 -1px 1px rgb(var(--light-2)));
+        filter: drop-shadow(-1px 0 1px rgb(var(--light-2)));
     }
     100% {
         stroke: rgb(var(--light-1));
