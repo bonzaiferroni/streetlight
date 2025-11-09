@@ -27,22 +27,13 @@ fun HTML.homePage(events: List<Event>) {
             }
             tabs {
                 tab("Events") {
-                    column {
-                        events.forEach { event ->
-                            a {
-                                href = "/event-portal/${event.eventId.value}"
-                                card {
-                                    label(event.title)
-                                }
-                            }
-                        }
-                    }
+                    eventsTab(events)
                 }
                 tab("Map") {
                     paragraph("Hello map")
                 }
                 tab("App") {
-                    paragraph("Hello app")
+                    appTab()
                 }
             }
         }
