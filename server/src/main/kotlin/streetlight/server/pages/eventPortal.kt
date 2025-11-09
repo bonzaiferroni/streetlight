@@ -11,6 +11,12 @@ fun HTML.eventPortal(event: Event, spark: Spark?, requestItems: List<RequestItem
     }
     body {
         column(Id("event-profile"), AlignItemsCenter) {
+            a("/") {
+                row {
+                    heading4("Streetlight")
+                    logo(1.5f)
+                }
+            }
             heading1(event.title)
             column(NoGap) {
                 row {

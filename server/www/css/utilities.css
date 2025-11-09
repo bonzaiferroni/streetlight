@@ -1,6 +1,7 @@
-.flex-1 {
-    flex: 1;
-}
+.flex-1 { flex: 1; }
+.flex-2 { flex: 2; }
+.flex-3 { flex: 3; }
+.flex-4 { flex: 4; }
 
 .bold {
     font-weight: bold;
@@ -28,4 +29,8 @@
 
 .no-gap {
     gap: 0 !important;
+}
+
+p.large {
+    font-size: 1.5rem;
 }
