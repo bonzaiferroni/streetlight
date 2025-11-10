@@ -10,7 +10,7 @@ import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.transactions.transaction
 import streetlight.server.RuntimeProvider
 import streetlight.server.ServerProvider
-import streetlight.server.db.tables.AreaTable
+import streetlight.server.db.tables.StreetTable
 import streetlight.server.db.tables.EventTable
 import streetlight.server.db.tables.LocationTable
 import streetlight.server.db.tables.RequestTable
@@ -41,7 +41,7 @@ fun initDb(
 val dbTables = listOf(
     UserTable,
     LocationTable,
-    AreaTable,
+    StreetTable,
     EventTable,
     SongTable,
     RenditionTable,

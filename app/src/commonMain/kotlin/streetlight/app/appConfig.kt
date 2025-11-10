@@ -11,10 +11,10 @@ import pondui.ui.nav.PortalDoor
 import pondui.ui.nav.defaultScreen
 import kotlinx.collections.immutable.persistentListOf
 import pondui.ui.core.RouteConfig
-import streetlight.app.ui.AreaListScreen
+import streetlight.app.ui.StreetListScreen
 import streetlight.app.ui.EventFeedScreen
 import streetlight.app.ui.HelloScreen
-import streetlight.app.ui.AreaProfileScreen
+import streetlight.app.ui.StreetProfileScreen
 import streetlight.app.ui.LocationProfileScreen
 import streetlight.app.ui.SongFeedScreen
 import streetlight.app.ui.StartScreen
@@ -29,8 +29,8 @@ val appConfig = PondConfig(
         RouteConfig(StartRoute::matchRoute) { defaultScreen<StartRoute> { StartScreen(it) } },
         RouteConfig(HelloRoute::matchRoute) { defaultScreen<HelloRoute> { HelloScreen() } },
         RouteConfig(EventFeedRoute::matchRoute) { defaultScreen<EventFeedRoute> { EventFeedScreen() } },
-        RouteConfig(AreaListRoute::matchRoute) { defaultScreen<AreaListRoute> { AreaListScreen() } },
-        RouteConfig(AreaProfileRoute::matchRoute) { defaultScreen<AreaProfileRoute> { AreaProfileScreen(it) } },
+        RouteConfig(StreetListRoute::matchRoute) { defaultScreen<StreetListRoute> { StreetListScreen() } },
+        RouteConfig(StreetProfileRoute::matchRoute) { defaultScreen<StreetProfileRoute> { StreetProfileScreen(it) } },
         RouteConfig(SongFeedRoute::matchRoute) { defaultScreen<SongFeedRoute> { SongFeedScreen() } },
         RouteConfig(LocationProfileRoute::matchRoute) { defaultScreen<LocationProfileRoute> { LocationProfileScreen(it) } },
         RouteConfig(EventProfileRoute::matchRoute) { defaultScreen<EventProfileRoute> { EventProfileScreen(it) } },
@@ -39,7 +39,7 @@ val appConfig = PondConfig(
     doors = persistentListOf(
         PortalDoor(TablerIcons.Tornado, HelloRoute),
         PortalDoor(TablerIcons.CalendarEvent, EventFeedRoute),
-        PortalDoor(TablerIcons.Location, AreaListRoute),
+        PortalDoor(TablerIcons.Location, StreetListRoute),
         PortalDoor(TablerIcons.Music, SongFeedRoute, requireLogin = true)
     ),
 )

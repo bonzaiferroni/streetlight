@@ -1,6 +1,5 @@
 package streetlight.server.db.tables
 
-import kabinet.model.UserId
 import klutch.db.tables.UserTable
 import klutch.utils.*
 import klutch.db.point
@@ -9,18 +8,16 @@ import org.jetbrains.exposed.dao.id.UUIDTable
 import org.jetbrains.exposed.sql.ReferenceOption
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.statements.UpdateBuilder
-import streetlight.model.data.AreaId
 import streetlight.model.data.Location
 import streetlight.model.data.LocationId
 import streetlight.model.data.ResourceType
 import streetlight.server.utils.toProjectId
 import streetlight.server.utils.toProjectIdOrNull
-import streetlight.server.utils.toUserId
 import streetlight.server.utils.toUserIdOrNull
 
 object LocationTable : UUIDTable("location") {
     val userId = reference("user_id", UserTable, ReferenceOption.SET_NULL).nullable()
-    val areaId = reference("area_id", AreaTable, ReferenceOption.SET_NULL).nullable()
+    val areaId = reference("area_id", StreetTable, ReferenceOption.SET_NULL).nullable()
     val name = text("name")
     val description = text("description").nullable()
     val address = text("address").nullable()
@@ -32,7 +29,7 @@ object LocationTable : UUIDTable("location") {
 fun ResultRow.toLocation() = Location(
     locationId = toProjectId(LocationTable.id),
     userId = toUserIdOrNull(LocationTable.userId),
-    areaId = toProjectIdOrNull(LocationTable.areaId),
+    streetId = toProjectIdOrNull(LocationTable.areaId),
     name = this[LocationTable.name],
     description = this[LocationTable.description],
     address = this[LocationTable.address],
@@ -45,7 +42,7 @@ fun ResultRow.toLocation() = Location(
 fun UpdateBuilder<*>.writeFull(location: Location) {
     this[LocationTable.id] = location.locationId.toUUID()
     this[LocationTable.userId] = location.userId?.toUUID()
-    this[LocationTable.areaId] = location.areaId?.toUUID()
+    this[LocationTable.areaId] = location.streetId?.toUUID()
     writeUpdate(location)
 }
 

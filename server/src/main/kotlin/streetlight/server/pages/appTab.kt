@@ -80,8 +80,8 @@ fun FlowContent.appTab() {
     }
 }
 
-const val welcomeText = "Do you like working with Kotlin or people? Consider becoming a contributor. " +
+const val welcomeText = "Do you like working with Kotlin and/or people? Consider becoming a contributor. " +
         "As a software development community, we welcome people at any stage in their career. " +
-        "Are you interested in focusing on open-source software full time? " +
+        "Are you interested in working on open-source software full time? " +
         "We are based in Aurora, CO, and we have support opportunities. " +
         "Work on Streetlight or your own open-source idea."

@@ -5,8 +5,8 @@ import kabinet.model.User
 import kabinet.model.UserId
 import kabinet.model.UserRole
 import kotlinx.datetime.Clock
-import streetlight.model.data.Area
-import streetlight.model.data.AreaId
+import streetlight.model.data.Street
+import streetlight.model.data.StreetId
 import streetlight.model.data.Event
 import streetlight.model.data.EventId
 import streetlight.model.data.EventStatus
@@ -22,7 +22,7 @@ import kotlin.time.Duration.Companion.hours
 
 interface MockDb {
     val sparks: List<User>
-    val areas: List<Area>
+    val streets: List<Street>
     val locations: List<Location>
     val events: List<Event>
     val songs: List<Song>
@@ -71,18 +71,18 @@ val mockDb by lazy {
             "The Jazz Club", "The Sports Bar", "The Wine Cellar",
         )
     )
-    val areas = (0..3).map {
-        Area(
-            areaId = AreaId.random(),
+    val streets = (0..3).map {
+        Street(
+            streetId = StreetId.random(),
             name = areaNameBag.draw()
         )
     }
-    val locations = areas.flatMap { area ->
+    val locations = streets.flatMap { area ->
         (0..3).map { index ->
             Location(
                 locationId = LocationId.random(),
                 userId = sparks[index].userId,
-                areaId = area.areaId,
+                streetId = area.streetId,
                 name = locationNameBag.draw(),
                 description = null,
                 address = null,
@@ -170,7 +170,7 @@ val mockDb by lazy {
 
     object : MockDb {
         override val sparks = sparks
-        override val areas = areas
+        override val streets = streets
         override val locations = locations
         override val events = events
         override val songs = songs

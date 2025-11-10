@@ -9,7 +9,7 @@ import klutch.db.services.UserTableService
 import klutch.environment.readEnvFromPath
 import klutch.gemini.GeminiService
 import klutch.gemini.SpeechService
-import streetlight.server.db.services.AreaTableDao
+import streetlight.server.db.services.StreetTableDao
 import streetlight.server.db.services.EventTableDao
 import streetlight.server.db.services.LocationTableDao
 import streetlight.server.db.services.SongTableDao
@@ -29,7 +29,7 @@ interface ServerProvider {
 
 class ServerDao(
     val location: LocationTableDao = LocationTableDao(),
-    val area: AreaTableDao = AreaTableDao(),
+    val area: StreetTableDao = StreetTableDao(),
     val song: SongTableDao = SongTableDao(),
     val event: EventTableDao = EventTableDao(),
     val rendition: RenditionTableDao = RenditionTableDao(),

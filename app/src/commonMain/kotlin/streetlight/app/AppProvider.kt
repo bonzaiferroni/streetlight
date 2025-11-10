@@ -7,9 +7,9 @@ import pondui.io.SpeechApiClient
 import pondui.io.SpeechAppClient
 import pondui.io.SpeechMockClient
 import pondui.ui.services.WavePlayer
-import streetlight.app.io.AreaApiClient
-import streetlight.app.io.AreaMockClient
-import streetlight.app.io.AreaRepository
+import streetlight.app.io.StreetApiClient
+import streetlight.app.io.StreetMockClient
+import streetlight.app.io.StreetRepository
 import streetlight.app.io.EventApiClient
 import streetlight.app.io.EventMockClient
 import streetlight.app.io.EventRepository
@@ -33,7 +33,7 @@ interface AppProvider {
 }
 
 interface AppClient {
-    val area: AreaRepository
+    val area: StreetRepository
     val event: EventRepository
     val location: LocationRepository
     val song: SongRepository
@@ -56,7 +56,7 @@ object RuntimeProvider: AppProvider {
     val apiClient = NeoApiClient(APP_API_URL)
 
     override val repo = object: AppClient {
-        override val area = AreaApiClient(apiClient)
+        override val area = StreetApiClient(apiClient)
         override val event = EventApiClient(apiClient)
         override val location = LocationApiClient(apiClient)
         override val song = SongApiClient(apiClient)
@@ -70,7 +70,7 @@ object RuntimeProvider: AppProvider {
 
 object MockProvider: AppProvider {
     override val repo = object : AppClient {
-        override val area = AreaMockClient()
+        override val area = StreetMockClient()
         override val event = EventMockClient()
         override val location = LocationMockClient()
         override val song = SongMockClient()

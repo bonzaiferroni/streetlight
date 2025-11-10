@@ -27,17 +27,17 @@ object HelloRoute : AppRoute("Hello")
 object EventFeedRoute : AppRoute("Events")
 
 @Serializable
-object AreaListRoute : AppRoute("Places")
+object StreetListRoute : AppRoute("Streets")
 
 @Serializable
 object SongFeedRoute : AppRoute("Songs")
 
 @Serializable
-data class AreaProfileRoute(override val id: String) : IdRoute<String> {
+data class StreetProfileRoute(override val id: String) : IdRoute<String> {
     override val title get() = TITLE
     companion object {
-        const val TITLE = "Area"
-        fun matchRoute(path: String) = matchStringIdRoute(path, TITLE) { AreaProfileRoute(it) }
+        const val TITLE = "Street"
+        fun matchRoute(path: String) = matchStringIdRoute(path, TITLE) { StreetProfileRoute(it) }
     }
 }
 

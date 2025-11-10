@@ -1,6 +1,5 @@
 package streetlight.model.data
 
-import kabinet.db.TableId
 import kabinet.model.GeoPoint
 import kabinet.model.UserId
 import kabinet.utils.randomUuidString
@@ -11,7 +10,7 @@ import kotlin.jvm.JvmInline
 data class Location(
     val locationId: LocationId,
     val userId: UserId?,
-    val areaId: AreaId?,
+    val streetId: StreetId?,
     val name: String,
     val description: String?,
     val address: String?,

@@ -10,7 +10,7 @@ import streetlight.server.ServerProvider
 
 fun Routing.serveLocations(app: ServerProvider = RuntimeProvider) {
     val dao = app.dao.location
-    getEndpoint(Api.LocationFeed.Area, { it.toProjectId() }) { id, _ ->
+    getEndpoint(Api.LocationFeed.Street, { it.toProjectId() }) { id, _ ->
         dao.readLocations(id)
     }
 
