@@ -11,3 +11,8 @@ a {
 a:hover {
     text-decoration: none;
 }
+
+ul, ol {
+    margin-left: 1rem;
+    padding-left: 1rem;
+}

@@ -30,6 +30,7 @@ fun HTML.homePage(events: List<Event>) {
                     eventsTab(events)
                 }
                 tab("Map") {
+                    geoMap()
                     paragraph("Hello map")
                 }
                 tab("App") {

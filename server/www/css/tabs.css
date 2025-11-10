@@ -18,13 +18,13 @@
 }
 
 .tabs-button.is-active {
-    background-color: rgb(var(--primary), 0.4);
+    background-color: rgb(var(--primaryBg), 0.4);
     cursor: default;
     animation: glow 10s infinite linear;
 }
 
 .tabs-button:not(.is-active):hover {
-    background-color: rgba(var(--primary), 0.1);
+    background-color: rgba(var(--primaryBg), 0.1);
 }
 
 /* Viewport container created by tabs.kt */

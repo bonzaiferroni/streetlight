@@ -8,7 +8,7 @@ button {
             135deg,
             rgb(236 255 182 / 0.4) 0%,
             rgb(236 255 182 / 0.00) 100%
-    ), rgba(var(--accent), 0.8);
+    ), rgba(var(--accentBg), 0.8);
     color: var(--fg);
     font-weight: 500;
     font-size: 1.2rem;

@@ -19,12 +19,8 @@ fun HTML.eventPortal(event: Event, spark: Spark?, requestItems: List<RequestItem
             }
             heading1(event.title)
             column(NoGap) {
-                row {
-                    paragraph("performer:", Dim)
-                    paragraph("Luke Bollwerk")
-                }
-                row {
-                    paragraph("instagram:", Dim)
+                propertyValue("performer", "Luke Bollwerk")
+                propertyValue("instagram") {
                     a("https://www.instagram.com/trespasserswilliam/") {
                         paragraph("trespasserswilliam")
                     }

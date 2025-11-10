@@ -2,8 +2,10 @@
     --bg: 9, 13, 13;
     --fg: 245, 246, 246;
     --void: 24, 31, 31;
-    --primary: 1, 122, 138;
-    --accent: 209, 43, 181;
+    --primaryBg: 1, 122, 138;
+    --primary: 5, 242, 255;
+    --accentBg: 209, 43, 181;
+    --accent: 255, 53, 221;
     --light-1: 255, 99, 132;
     --light-2: 88, 164, 255;
     --light-3: 88, 255, 188;
@@ -61,4 +63,14 @@ input[type="checkbox"] {
 
 @keyframes hueSpin {
     to { filter: hue-rotate(360deg); }
+}
+
+a {
+    color: rgb(var(--primary));
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: rgb(var(--accentBg));
+    animation: glow 10s infinite linear;
 }
