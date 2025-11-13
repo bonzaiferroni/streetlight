@@ -46,7 +46,7 @@ class StreetProfileModel(
     }
 
     fun setGeoPoint(geoPoint: GeoPoint) {
-        setState { it.copy(newLatitude = geoPoint.latitude.toString(), newLongitude = geoPoint.longitude.toString())}
+        setState { it.copy(newLatitude = geoPoint.y.toString(), newLongitude = geoPoint.x.toString())}
     }
 
     fun createNewItem() {

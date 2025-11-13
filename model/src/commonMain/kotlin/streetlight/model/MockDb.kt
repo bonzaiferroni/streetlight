@@ -74,7 +74,8 @@ val mockDb by lazy {
     val streets = (0..3).map {
         Street(
             streetId = StreetId.random(),
-            name = areaNameBag.draw()
+            name = areaNameBag.draw(),
+            points = emptyList(),
         )
     }
     val locations = streets.flatMap { area ->

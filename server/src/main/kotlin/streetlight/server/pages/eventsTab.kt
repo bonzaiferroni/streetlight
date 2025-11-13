@@ -1,5 +1,6 @@
 package streetlight.server.pages
 
+import klutch.html.AlignItemsCenter
 import klutch.html.card
 import klutch.html.column
 import klutch.html.label
@@ -11,7 +12,7 @@ import streetlight.model.data.Event
 fun FlowContent.eventsTab(
     events: List<Event>
 ) {
-    column {
+    column(AlignItemsCenter) {
         events.forEach { event ->
             a {
                 href = "/event-portal/${event.eventId.value}"
@@ -20,5 +21,6 @@ fun FlowContent.eventsTab(
                 }
             }
         }
+        homeFooter()
     }
 }

@@ -1,5 +1,6 @@
 package streetlight.model.data
 
+import kabinet.model.GeoPoint
 import kabinet.utils.randomUuidString
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
@@ -8,6 +9,7 @@ import kotlin.jvm.JvmInline
 data class Street(
     val streetId: StreetId,
     val name: String,
+    val points: List<GeoPoint>
 )
 
 @JvmInline @Serializable

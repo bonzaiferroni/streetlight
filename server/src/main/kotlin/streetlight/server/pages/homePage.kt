@@ -6,8 +6,10 @@ import streetlight.model.data.*
 
 fun HTML.homePage(events: List<Event>) {
     head("Streetlight | Home") {
-        // styles("home.css")
-        // scripts("home.js")
+        styles("homePage.css")
+        scripts("homePage.js")
+        geoMapResources()
+        script(src = "https://cdn.jsdelivr.net/npm/protobufjs/dist/protobuf.min.js") { }
     }
     body {
         column {
@@ -30,8 +32,10 @@ fun HTML.homePage(events: List<Event>) {
                     eventsTab(events)
                 }
                 tab("Map") {
-                    geoMap()
-                    paragraph("Hello map")
+                    column(AlignItemsCenter) {
+                        geoMap()
+                        homeFooter()
+                    }
                 }
                 tab("App") {
                     appTab()
@@ -40,3 +44,18 @@ fun HTML.homePage(events: List<Event>) {
         }
     }
 }
+
+fun FlowContent.homeFooter() {
+    val giants = "If we must live in a world with giants, may we choose a world of good and $giantType giants. "
+    row(AlignItemsCenter) {
+        style = "height: 20rem;"
+        column(NoGap) {
+            lottie("spinning_circles") {
+                style = "height: 10rem;"
+            }
+            paragraph(giants, Italic, Dim)
+        }
+    }
+}
+
+val giantType = listOf("faithful", "careful").random()

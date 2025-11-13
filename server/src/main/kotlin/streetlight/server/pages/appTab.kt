@@ -4,7 +4,7 @@ import klutch.html.*
 import kotlinx.html.*
 
 fun FlowContent.appTab() {
-    column {
+    column(AlignItemsCenter) {
         row {
             lottie("cup_stack", Flex1)
             val introText = "Streetlight is a street performance community and app. " +
@@ -26,57 +26,67 @@ fun FlowContent.appTab() {
             lottie("playful_cat", Flex1)
             column(Flex2) {
                 paragraph {
-                    githubLink("Streetlight", "bonzaiferroni")
+                    externalLink("https://github.com/bonzaiferroni/streetlight", "Streetlight")
                     +" is 100% free and open-source. Free as in speech, free as in beer. "
                 }
                 paragraph(welcomeText)
-                column(NoGap) {
-                    heading5("Tech stack:")
-                    ul {
-                        li {
-                            propertyValue("app") {
-                                githubLink("Compose Multiplatform", "jetbrains", "compose-multiplatform")
-                            }
-                        }
-                        li {
-                            propertyValue("server") {
-                                githubLink("Ktor", "jetbrains")
-                            }
-                        }
-                        li {
-                            propertyValue("backend database") {
-                                githubLink("Postgres", "postgres")
-                            }
-                        }
-                        li {
-                            propertyValue("backend ORM") {
-                                githubLink("Exposed", "jetbrains")
-                            }
-                        }
-                        li {
-                            propertyValue("frontend database") {
-                                githubLink("Sqlite", "sqlite")
-                            }
-                        }
-                        li {
-                            propertyValue("frontend ORM") {
-                                githubLink("Room", "room")
-                            }
-                        }
-                        li {
-                            propertyValue("animations") {
-                                githubLink("Lottie", "lottie")
-                            }
-                        }
-                        li {
-                            propertyValue("lottie content") {
-                                githubLink("Open Animation", "lottie")
-                            }
-                        }
+            }
+        }
+        row {
+            column(Flex1) {
+                paragraph {
+                    +"For better or for worse, apps are ever-more present in our lives. "
+                    +"As software engineers, we are like giants, and we all "
+                    span {
+                        modify(Bold)
+                        +"stand on the shoulders of other giants."
                     }
                 }
             }
+            column(NoGap, Flex1, AlignItemsStretch) {
+                heading5("Our Giants", TextAlignCenter)
+                githubLink("web", "kotlinx.html", "Kotlin")
+                githubLink("app client", "Compose Multiplatform", "jetbrains", "compose-multiplatform")
+                githubLink("app database", "SQLite", "sqlite")
+                githubLink("app ORM", "Room", "androidx-releases")
+                githubLink("server", "Ktor", "jetbrains")
+                githubLink("server database", "Postgres", "postgres")
+                githubLink("server ORM", "Exposed", "jetbrains")
+                githubLink("animation", "Lottie", "airbnb")
+                githubLink("animation content", "Open Animation", "orispok", "OpenAnimationApp")
+                githubLink("map", "MapLibre", "maplibre-gl-js")
+                githubLink("map data", "OpenFreeMap", "hyper-knot")
+            }
         }
+        homeFooter()
+    }
+}
+
+fun FlowContent.githubLink(
+    role: String,
+    name: String,
+    user: String,
+    repo: String = name,
+) {
+    row {
+        paragraph("$role:", Dim, TextAlignRight, Flex1)
+        a("https://github.com/$user/$repo") {
+            modify(Flex1)
+            target = "_blank"
+            rel = "noopener noreferrer"
+            +name
+        }
+    }
+}
+
+fun FlowContent.externalLink(
+    url: String,
+    text: String
+) {
+    a(url) {
+        target = "_blank"
+        rel = "noopener noreferrer"
+        +text
     }
 }
 
