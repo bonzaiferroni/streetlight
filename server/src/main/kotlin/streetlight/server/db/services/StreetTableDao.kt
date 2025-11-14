@@ -6,9 +6,11 @@ import klutch.utils.toStringId
 import org.jetbrains.exposed.sql.insertAndGetId
 import streetlight.model.data.StreetId
 import streetlight.model.data.NewStreet
+import streetlight.model.data.Street
 import streetlight.model.data.toProjectId
 import streetlight.server.db.tables.StreetTable
 import streetlight.server.db.tables.toArea
+import streetlight.server.db.tables.writeFull
 
 class StreetTableDao: DbService() {
     suspend fun readAreas() = dbQuery {
@@ -17,7 +19,13 @@ class StreetTableDao: DbService() {
 
     suspend fun create(newStreet: NewStreet): StreetId = dbQuery {
         StreetTable.insertAndGetId {
-            it[this.name] = newStreet.name
+            it.writeFull(
+                Street(
+                    streetId = StreetId.random(),
+                    name = newStreet.name,
+                    points = emptyList()
+                )
+            )
         }.value.toStringId().toProjectId()
     }
 }

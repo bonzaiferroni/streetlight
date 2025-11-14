@@ -19,6 +19,8 @@ import pondui.ui.controls.Text
 import pondui.ui.controls.TextField
 import pondui.ui.controls.actionable
 import pondui.ui.controls.rememberCloud
+import pondui.ui.modifiers.pad
+import pondui.ui.modifiers.padVertical
 import streetlight.app.utils.toRoute
 
 @Composable
@@ -32,7 +34,6 @@ fun EventFeedScreen(
             TextField(
                 text = state.locationSearch,
                 onChange = viewModel::searchLocations,
-                modifier = Modifier.weight(1f)
             )
             DropMenu(state.eventType, {it.label}, onChange = viewModel::setEventType)
             LazyColumn(1) {
@@ -54,7 +55,12 @@ fun EventFeedScreen(
         }
         items(state.events) { event ->
             Row(1) {
-                Text(event.title, modifier = Modifier.weight(1f).actionable(event.eventId.toRoute()))
+                Text(
+                    text = event.title,
+                    modifier = Modifier.weight(1f)
+                        .actionable(event.eventId.toRoute())
+                        .padVertical(1)
+                )
                 MoreMenu {
                     MoreMenuItem("Remove", TablerIcons.Trash) { viewModel.removeEvent(event) }
                 }

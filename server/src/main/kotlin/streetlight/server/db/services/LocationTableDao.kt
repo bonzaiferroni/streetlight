@@ -3,8 +3,11 @@ package streetlight.server.db.services
 import kabinet.model.UserId
 import klutch.db.DbService
 import klutch.db.read
+import org.jetbrains.exposed.sql.SortOrder
+import org.jetbrains.exposed.sql.selectAll
 import klutch.utils.eq
 import klutch.utils.toStringId
+import kotlinx.datetime.Clock
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.insertAndGetId
 import org.jetbrains.exposed.sql.lowerCase
@@ -41,7 +44,9 @@ class LocationTableDao: DbService() {
                 address = null,
                 notes = null,
                 geoPoint = newLocation.geoPoint,
-                resources = emptySet()
+                resources = emptySet(),
+                updatedAt = Clock.System.now(),
+                createdAt = Clock.System.now(),
             ))
         }.value.toStringId().toProjectId()
     }
@@ -55,5 +60,14 @@ class LocationTableDao: DbService() {
     suspend fun searchLocations(query: String) = dbQuery {
         val query = query.lowercase()
         LocationTable.read { it.name.lowerCase().like("%$query%") or it.description.lowerCase().like("%$query%") }.map { it.toLocation() }
+    }
+
+    suspend fun readTop(count: Int) = dbQuery {
+        // No createdAt column on Location, so we use id desc as a reasonable proxy for recency
+        LocationTable
+            .selectAll()
+            .orderBy(LocationTable.createdAt, SortOrder.DESC)
+            .limit(count)
+            .map { it.toLocation() }
     }
 }

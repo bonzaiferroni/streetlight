@@ -23,6 +23,11 @@ fun Routing.serveLocations(app: ServerProvider = RuntimeProvider) {
         dao.searchLocations(query)
     }
 
+    getEndpoint(Api.LocationFeed.ReadTop) { endpoint ->
+        val count = readParam(endpoint.count)
+        dao.readTop(count)
+    }
+
     authenticateJwt {
         postEndpoint(Api.LocationFeed.Create) { newLocation, _ ->
             val userId = getUserId()

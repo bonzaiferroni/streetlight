@@ -14,6 +14,7 @@ import pondui.ui.controls.MoreMenuItem
 import pondui.ui.controls.TabItem
 import pondui.ui.controls.TabScaffold
 import pondui.ui.controls.Tabs
+import pondui.ui.controls.Text
 import pondui.ui.services.rememberMidiPlayer
 import pondui.ui.theme.Pond
 import pondui.utils.mixWith
@@ -81,6 +82,12 @@ fun SongProfileScreen(
                         }
                     }
                 }
+            }
+        }
+
+        LazyColumnTab("Sequence", 2) {
+            item("sequence header") {
+                Text("Sequence goes here")
             }
         }
     }

@@ -15,6 +15,7 @@ interface LocationRepository {
     suspend fun createLocation(newLocation: NewLocation): LocationId?
     suspend fun updateLocation(location: Location): Boolean?
     suspend fun search(query: String): List<Location>?
+    suspend fun readTop(count: Int = 10): List<Location>?
 }
 
 class LocationApiClient(
@@ -27,6 +28,9 @@ class LocationApiClient(
     override suspend fun search(query: String) = client.request(Api.LocationFeed.Search) {
         write(it.query, query)
     }
+    override suspend fun readTop(count: Int) = client.request(Api.LocationFeed.ReadTop) {
+        write(it.count, count)
+    }
 }
 
 class LocationMockClient: LocationRepository {
@@ -35,4 +39,5 @@ class LocationMockClient: LocationRepository {
     override suspend fun createLocation(newLocation: NewLocation): LocationId? = TODO("Not yet implemented")
     override suspend fun updateLocation(location: Location): Boolean? = TODO("Not yet implemented")
     override suspend fun search(query: String): List<Location>? = mockDb.locations.filter { it.name.contains(query, ignoreCase = true) }
+    override suspend fun readTop(count: Int): List<Location>? = mockDb.locations.take(count)
 }

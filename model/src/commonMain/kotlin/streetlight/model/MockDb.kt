@@ -89,7 +89,9 @@ val mockDb by lazy {
                 address = null,
                 notes = null,
                 geoPoint = GeoPoint(0.0, 0.0),
-                resources = setOf()
+                resources = setOf(),
+                updatedAt = Clock.System.now(),
+                createdAt = Clock.System.now(),
             )
         }
     }

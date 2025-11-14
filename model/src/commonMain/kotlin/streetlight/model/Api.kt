@@ -54,6 +54,9 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object Search: GetEndpoint<List<Location>>(this, "search") {
             val query = addStringParam("q")
         }
+        object ReadTop: GetEndpoint<List<Location>>(this, "read_top") {
+            val count = addIntParam("count")
+        }
     }
 
     object SongFeed: GetEndpoint<List<Song>>(this, "songs") {

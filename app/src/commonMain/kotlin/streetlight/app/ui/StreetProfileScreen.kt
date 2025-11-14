@@ -16,6 +16,7 @@ import pondui.ui.controls.Scaffold
 import pondui.ui.controls.Text
 import pondui.ui.controls.TextField
 import pondui.ui.controls.actionable
+import pondui.ui.modifiers.pad
 import pondui.ui.nav.LocalNav
 import pondui.utils.current
 import pondui.utils.rememberGeoLocator
@@ -43,7 +44,7 @@ fun StreetProfileScreen(
             TextField(
                 text = state.newName,
                 onChange = viewModel::setNewName,
-                placeholder = "New Area Name",
+                placeholder = "New Location Name",
                 modifier = Modifier.weight(1f)
             )
             Button("Create", isEnabled = state.isValidNewItem, onClick = viewModel::createNewItem)
@@ -101,7 +102,8 @@ fun StreetProfileScreen(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.fillMaxWidth()
-                        .actionable(it.locationId.toRoute()),
+                        .actionable(it.locationId.toRoute())
+                        .pad(1),
                 ) {
                     Text(it.name)
                 }

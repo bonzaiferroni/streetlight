@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import pondui.ui.controls.*
+import pondui.ui.modifiers.pad
 import streetlight.app.utils.toRoute
 
 @Composable
@@ -34,7 +35,8 @@ fun StreetListScreen(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.fillMaxWidth()
-                        .actionable(it.streetId.toRoute()),
+                        .actionable(it.streetId.toRoute())
+                        .pad(1),
                 ) {
                     Text(it.name)
                 }
@@ -44,7 +46,7 @@ fun StreetListScreen(
             modifier = Modifier.fillMaxWidth(),
             contentAlignment = Alignment.Center
         ){
-            Spirit("boppin-fox.json", modifier = Modifier.width(400.dp))
+            Spirit("boppin-fox.json", modifier = Modifier.width(100.dp))
         }
     }
 }

@@ -3,6 +3,7 @@ package streetlight.model.data
 import kabinet.model.GeoPoint
 import kabinet.model.UserId
 import kabinet.utils.randomUuidString
+import kotlinx.datetime.Instant
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 
@@ -17,6 +18,8 @@ data class Location(
     val notes: String?,
     val geoPoint: GeoPoint,
     val resources: Set<ResourceType>,
+    val updatedAt: Instant,
+    val createdAt: Instant,
 )
 
 @JvmInline @Serializable

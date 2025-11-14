@@ -22,6 +22,8 @@ class EventFeedModel(private val app: AppProvider = RuntimeProvider): StateModel
     init {
         ioLaunch {
             refreshEvents()
+            val locations = app.repo.location.readTop() ?: emptyList()
+            setStateFromMain { it.copy(locations = locations )}
         }
     }
 
