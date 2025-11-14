@@ -2,3 +2,24 @@
     border-radius: 12px;
     overflow: hidden;
 }
+
+.geo-marker {
+    width: 24px;
+    height: 24px;
+    pointer-events: none;
+    mask-size: contain;
+    -webkit-mask-size: contain;
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+    background-color: white; /* this becomes the “fill” */
+}
+
+.bus-marker {
+    mask: url(../../svg/bus.svg);
+    -webkit-mask: url(../../svg/bus.svg);
+}
+
+.bus-marker-left {
+    mask: url(../../svg/bus-left.svg);
+    -webkit-mask: url(../../svg/bus-left.svg);
+}

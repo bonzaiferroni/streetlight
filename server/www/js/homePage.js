@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", initProto)
+document.addEventListener("DOMContentLoaded", initProto);
 
 async function initProto() {
     const root = await protobuf.load("/static/proto/gtfs-realtime.proto");
@@ -6,7 +6,7 @@ async function initProto() {
     // Note the package name: transit_realtime
     const FeedMessage = root.lookupType("transit_realtime.FeedMessage");
 
-    const response = await fetch("/static/proto/VehiclePosition.pb");
+    const response = await fetch("/proxy/vehicle-position.pb");
     const buffer = new Uint8Array(await response.arrayBuffer());
 
     const feed = FeedMessage.decode(buffer);
@@ -16,46 +16,31 @@ async function initProto() {
         .map(e => e.vehicle)
         .filter(v => v.position); // must have lat/lon
 
-    const geojson = {
-        type: "FeatureCollection",
-        features: vehicles15L.map(v => ({
-            type: "Feature",
-            geometry: {
-                type: "Point",
-                coordinates: [v.position.longitude, v.position.latitude]
-            },
-            properties: {
-                vehicleId: v.vehicle?.id ?? "",
-                tripId: v.trip?.tripId ?? ""
-            }
-        }))
-    };
-
     if (!geoMap) return;
 
-    const addLayer = () => {
-        if (!geoMap.getSource("route-15L")) {
-            geoMap.addSource("route-15L", {
-                type: "geojson",
-                data: geojson
-            });
-            geoMap.addLayer({
-                id: "route-15L",
-                type: "circle",
-                source: "route-15L",
-                paint: {
-                    "circle-radius": 4,
-                    "circle-color": "#ff5500"
-                }
-            });
-        } else {
-            geoMap.getSource("route-15L").setData(geojson);
-        }
-    };
-
-    if (geoMap.isStyleLoaded()) {
-        addLayer();
-    } else {
-        geoMap.on("load", addLayer);
+    // stash markers on the map object so we can clear/update them
+    if (!geoMap.route15LMarkers) {
+        geoMap.route15LMarkers = [];
     }
+
+    // remove any old markers
+    geoMap.route15LMarkers.forEach(m => m.remove());
+    geoMap.route15LMarkers = [];
+
+    vehicles15L.forEach(v => {
+        const bearing = typeof v.position.bearing === "number" ? v.position.bearing : 0;
+
+        const el = document.createElement("div");
+        el.className = "geo-marker " + (bearing > 180 ? "bus-marker-left" : "bus-marker");
+
+        const marker = new maplibregl.Marker({
+            element: el,
+            rotationAlignment: "map"
+        })
+            .setLngLat([v.position.longitude, v.position.latitude])
+            // .setRotation(bearing + 90)
+            .addTo(geoMap);
+
+        geoMap.route15LMarkers.push(marker);
+    });
 }
