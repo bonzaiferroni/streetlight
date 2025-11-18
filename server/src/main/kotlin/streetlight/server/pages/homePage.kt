@@ -46,10 +46,10 @@ fun HTML.homePage(events: List<Event>) {
 }
 
 fun FlowContent.homeFooter() {
-    val giants = "If we must live in a world with giants, may we choose a world of good and $giantType giants. "
+    val giants = "If we must live in a world with giants, may we choose a world of good and faithful giants. "
     row(AlignItemsCenter) {
         style = "height: 20rem;"
-        column(NoGap) {
+        column(AlignItemsCenter, NoGap, FillWidth) {
             lottie("spinning_circles") {
                 style = "height: 10rem;"
             }
@@ -57,5 +57,3 @@ fun FlowContent.homeFooter() {
         }
     }
 }
-
-val giantType = listOf("faithful", "careful").random()

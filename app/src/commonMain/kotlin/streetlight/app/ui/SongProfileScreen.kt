@@ -37,55 +37,17 @@ fun SongProfileScreen(
         viewModel.updateSong(song.copy(notation = notation))
     }
 
-    val midi = rememberMidiPlayer()
-
     TabScaffold(
         drawerContent = { H1(song.title) }
     ) {
-        LazyColumnTab("Edit", 2) {
-            item("edit song header") {
-                EditSongHeader(
-                    song = song,
-                    updateStatus = state.updateStatus,
-                    updateSong = viewModel::updateSong
-                )
-            }
+        EditSongTab(
+            song = song,
+            updateStatus = state.updateStatus,
+            updateSong = viewModel::updateSong,
+            updateNotation = ::updateNotation,
+        )
 
-            song.notation?.let { notation ->
-                item("edit notation header") {
-                    SongNotationEditor(notation, ::updateNotation)
-                }
-
-                item("edit instruments") {
-                    Tabs(
-                        items = notation.parts,
-                        tabColor = Pond.colors.selection.mixWith(Pond.colors.primary).copy(alpha = 0.5f),
-                        headerContent = {
-                            MoreMenu(TablerIcons.Plus, TablerIcons.Minus) {
-                                Instrument.entries.forEach { instrument ->
-                                    if (notation.parts.any { it.instrument == instrument }) return@forEach
-                                    MoreMenuItem(instrument.label) {
-                                        updateNotation(notation.copy(parts = notation.parts + SongPart.createEmpty(instrument)))
-                                    }
-                                }
-                            }
-                        }
-                    ) { partIndex, part ->
-                        TabItem(part.instrument.label) {
-                            SongPartEditor(
-                                notation = notation,
-                                part = part,
-                                midiPlayer = midi,
-                                capo = song.capo,
-                                tempo = song.tempo,
-                            ) { updateNotation(notation.copy(parts = notation.parts.replaceOrRemoveAt(partIndex, it))) }
-                        }
-                    }
-                }
-            }
-        }
-
-        LazyColumnTab("Sequence", 2) {
+        LazyColumnTab("Compose", 2) {
             item("sequence header") {
                 Text("Sequence goes here")
             }

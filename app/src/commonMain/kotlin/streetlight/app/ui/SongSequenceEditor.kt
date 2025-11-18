@@ -15,6 +15,7 @@ import pondui.ui.controls.TextField
 import pondui.ui.modifiers.padTop
 import pondui.ui.services.MidiPlayer
 import streetlight.model.data.ChordSequence
+import streetlight.model.data.DrumSequence
 import streetlight.model.data.VocalSequence
 import streetlight.model.data.SongNotation
 import streetlight.model.data.SongPart
@@ -75,6 +76,12 @@ fun SongSequenceEditor(
             )
             is VocalSequence -> VocalSequenceEditor(
                 notation = notation,
+                part = part,
+                sequence = sequence,
+                midiPlayer = midiPlayer,
+                modifySequence = modifySequence
+            )
+            is DrumSequence -> DrumSequenceEditor(
                 part = part,
                 sequence = sequence,
                 midiPlayer = midiPlayer,

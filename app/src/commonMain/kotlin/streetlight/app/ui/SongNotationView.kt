@@ -73,6 +73,7 @@ fun PartSequenceView(
                     sequence = sequence,
                 )
                 is VocalSequence -> VocalSequenceView(sequence)
+                is DrumSequence -> DrumSequenceView(sequence)
             }
         }
         if (midiPlayer != null) {

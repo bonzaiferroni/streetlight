@@ -24,14 +24,14 @@ fun VocalSequenceView(
 ) {
     val text = remember(sequence.notes) {
         buildString {
-            var lastUtterance: String? = null
+            // val lastUtterance = sequence.notes.lastOrNull()?.utterance
             sequence.notes.forEach { note ->
                 var utterance = note.utterance ?: return@forEach
                 val isContinued = utterance.endsWith('-')
                 if (isContinued) {
                     utterance = utterance.take(utterance.length - 1)
                 }
-                if (utterance.isEmpty() || utterance.matchesEnd(lastUtterance)) return@forEach
+                if (utterance.isEmpty()) return@forEach // utterance.matchesEnd(lastUtterance)
                 append(utterance)
                 if (!isContinued && !note.isPhraseEnd)
                     append(' ')

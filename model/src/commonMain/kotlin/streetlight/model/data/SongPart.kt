@@ -17,12 +17,14 @@ data class SongPart(
     }
 }
 
-enum class Instrument(val label: String, val midiProgram: Int, val notationLabel: String) {
+enum class Instrument(val label: String, val midiProgram: Int?, val notationLabel: String) {
     RhythmGuitar("Rhythm Guitar", 24, "Chords"),
-    Vocals("Vocals", 52, "Lyrics");
+    Vocals("Vocals", 52, "Lyrics"),
+    Drums("Drums", null, "Loop");
 
     fun createSequence(sequenceId: SequenceId): PartSequence = when (this) {
         RhythmGuitar -> ChordSequence.Empty.copy(sequenceId = sequenceId)
         Vocals -> VocalSequence.Empty.copy(sequenceId = sequenceId)
+        Drums -> DrumSequence.Empty.copy(sequenceId = sequenceId)
     }
 }

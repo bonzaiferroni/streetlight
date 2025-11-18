@@ -4,6 +4,8 @@ import pondui.ui.services.MidiChord
 import pondui.ui.services.MidiSequence
 import streetlight.model.data.ChordHelper
 import streetlight.model.data.ChordSequence
+import streetlight.model.data.DrumSequence
+import streetlight.model.data.DrumSound
 import streetlight.model.data.MeasureChord
 import streetlight.model.data.PartSequence
 import streetlight.model.data.VocalNote
@@ -36,6 +38,7 @@ fun PartSequence.toMidiSequence(
 ): MidiSequence = when(this) {
     is ChordSequence -> toMidiSequence(beatsPerMeasure, rootPitch, capo, tempo)
     is VocalSequence -> toMidiSequence(beatsPerMeasure, rootPitch, capo, tempo)
+    is DrumSequence -> toMidiSequence(beatsPerMeasure, tempo)
 }
 
 fun ChordSequence.toMidiSequence(
@@ -49,7 +52,7 @@ fun ChordSequence.toMidiSequence(
         val midiChord = chord.toMidiChord(beatsPerMeasure, rootPitch, capo)
         chords.add(midiChord)
     }
-    return MidiSequence(tempo = tempo, chords = chords)
+    return MidiSequence(tempo = tempo, chords = chords, isDrum = false)
 }
 
 fun VocalSequence.toMidiSequence(
@@ -60,11 +63,32 @@ fun VocalSequence.toMidiSequence(
 ): MidiSequence {
     val chords = mutableListOf<MidiChord>()
     this.notes.forEach { note ->
-        println("rootPitch: ${note.pitch}")
         val midiChord = note.toMidiChord(beatsPerMeasure, rootPitch, capo)
         chords.add(midiChord)
     }
-    return MidiSequence(tempo = tempo, chords = chords)
+    return MidiSequence(tempo = tempo, chords = chords, isDrum = false)
+}
+
+fun DrumSequence.toMidiSequence(
+    beatsPerMeasure: Int,
+    tempo: Int? = null,
+): MidiSequence {
+    val chords = mutableListOf<MidiChord>()
+    val beatLength = measureCount * beatsPerMeasure
+    val notes = mutableListOf<Int>()
+    (1..beatLength).forEach { beat ->
+        notes.clear()
+        sounds.forEach { sound ->
+            if (sound.beat != beat) return@forEach
+            notes.add(sound.toMidiPitch())
+        }
+        val chord = MidiChord(
+            duration = 1 / beatsPerMeasure.toFloat(), // todo: implement duration
+            notes = notes.takeIf { it.isNotEmpty() }?.toList()
+        )
+        chords.add(chord)
+    }
+    return MidiSequence(tempo = tempo, chords = chords, isDrum = true)
 }
 
 fun MeasureChord.toMidiChord(beatsPerMeasure: Int, rootPitch: Int, capo: Int?): MidiChord {
@@ -84,4 +108,10 @@ fun VocalNote.toMidiChord(beatsPerMeasure: Int, rootPitch: Int, capo: Int?): Mid
     return pitch?.let {
         MidiChord(measureFraction, listOf(rootPitch + it + (capo ?: 0)))
     } ?: MidiChord(measureFraction, null)
+}
+
+fun DrumSound.toMidiChord(beatsPerMeasure: Int): MidiChord {
+    val measureFraction = (duration ?: beatsPerMeasure) / beatsPerMeasure.toFloat()
+    val pitch = pitch ?: 60
+    return MidiChord(measureFraction, listOf(pitch))
 }

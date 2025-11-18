@@ -29,19 +29,24 @@ fun FlowContent.appTab() {
                     externalLink("https://github.com/bonzaiferroni/streetlight", "Streetlight")
                     +" is 100% free and open-source. Free as in speech, free as in beer. "
                 }
-                paragraph(welcomeText)
+                paragraph(
+                    "Do you like working with Kotlin and/or people? Consider becoming a contributor. " +
+                            "As a software development community, we welcome people at any stage in their career. " +
+                            "Are you interested in working on open-source software full time? " +
+                            "We are based in Aurora, CO, and we have support opportunities. "
+                )
+                paragraph("Work on Streetlight or your own open-source idea.", Large)
             }
         }
         row {
             column(Flex1) {
                 paragraph {
-                    +"For better or for worse, apps are ever-more present in our lives. "
-                    +"As software engineers, we are like giants, and we all "
-                    span {
-                        modify(Bold)
-                        +"stand on the shoulders of other giants."
-                    }
+                    +"For better or for worse, apps are evermore present in our lives. "
+                    +"As software engineers, we hold influence. "
+                    +"The nature of our work supports a level of collaboration as yet unrealized in human history. "
+                    +"We are like giants who stand on the shoulders of other giants, each one reaching higher. "
                 }
+                paragraph("It's giants all the way down.", Large)
             }
             column(NoGap, Flex1, AlignItemsStretch) {
                 heading5("Our Giants", TextAlignCenter)
@@ -89,9 +94,3 @@ fun FlowContent.externalLink(
         +text
     }
 }
-
-const val welcomeText = "Do you like working with Kotlin and/or people? Consider becoming a contributor. " +
-        "As a software development community, we welcome people at any stage in their career. " +
-        "Are you interested in working on open-source software full time? " +
-        "We are based in Aurora, CO, and we have support opportunities. " +
-        "Work on Streetlight or your own open-source idea."

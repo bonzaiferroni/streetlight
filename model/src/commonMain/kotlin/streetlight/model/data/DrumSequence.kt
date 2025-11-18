@@ -3,27 +3,26 @@ package streetlight.model.data
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ChordSequence(
+data class DrumSequence(
     override val sequenceId: SequenceId,
     override val repetitions: Int = 1,
-    override val measureBeats: Int? = null,
-    val chords: List<MeasureChord>,
+    override val measureBeats: Int?,
+    val measureCount: Int,
+    val sounds: List<DrumSound>,
 ): PartSequence {
-    override fun getMeasureCount(songMeasureBeats: Int): Int {
-        val measureBeats = measureBeats ?: songMeasureBeats
-        return chords.sumOf { it.duration ?: measureBeats } / measureBeats
-    }
-
-    fun getChordAt(index: Int) = chords[index % chords.size]
+    override fun getMeasureCount(songMeasureBeats: Int) = measureCount
 
     override fun setSequenceId(sequenceId: SequenceId) = copy(sequenceId = sequenceId)
     override fun setRepetitions(repetitions: Int) = copy(repetitions = repetitions)
     override fun setMeasureBeats(measureBeats: Int?) = copy(measureBeats = measureBeats)
 
     companion object {
-        val Empty get() = ChordSequence(
+        val Empty get () = DrumSequence(
             sequenceId = "Verse",
-            chords = emptyList()
+            repetitions = 1,
+            measureBeats = null,
+            measureCount = 1,
+            sounds = emptyList(),
         )
     }
 }
