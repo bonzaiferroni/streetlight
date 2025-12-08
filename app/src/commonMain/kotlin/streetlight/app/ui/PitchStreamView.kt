@@ -12,6 +12,7 @@ import pondui.ui.services.AudioSpec
 import pondui.ui.services.MicPermissionRequester
 import pondui.ui.services.MicStream
 import pondui.ui.services.createMicStream
+import pondui.ui.services.toPcmShortArray
 import kotlin.math.pow
 
 @Composable
@@ -36,10 +37,12 @@ class PitchStreamModel: ViewModel() {
             val channels = 1
             val sampleRate = 16000
             stream = createMicStream(
+                viewModelScope,
                 AudioSpec(sampleRate = sampleRate, channels = channels, framesPerChunk = frames)
-            ) { pcm, frames ->
+            ) { bytes, frames ->
                 // pcm: ShortArray ofDegree size frames * channels (S16LE)
                 // Do yer DSP, meter, encoder, or socket send here.
+                val pcm = bytes.toPcmShortArray()
                 val volume = averageVolume(pcm, frames, channels).toFloat()
                 val pitch = pitchHzFromPcmShorts(pcm, sampleRate)
                 val note = noteFromFreq(pitch)

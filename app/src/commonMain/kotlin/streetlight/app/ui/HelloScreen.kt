@@ -9,6 +9,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import kabinet.utils.AudioStage
+import kabinet.utils.PcmLayer
 import kotlinx.coroutines.launch
 import pondui.ui.controls.Button
 import pondui.ui.controls.Scaffold
@@ -16,6 +17,7 @@ import pondui.ui.controls.Text
 import pondui.ui.controls.TextField
 import pondui.ui.services.WavePlayer
 import pondui.ui.services.rememberMicRecorder
+import pondui.ui.services.toPcmByteArray
 
 @Composable
 fun HelloScreen(
@@ -24,17 +26,20 @@ fun HelloScreen(
     val scope = rememberCoroutineScope()
     val stage = remember { AudioStage() }
     val mic = rememberMicRecorder {
-        println("empty? ${it.all { it == 0.toShort() }}")
-        stage.add(it)
-        println("empty? ${stage.isEmpty}")
+        stage.add(PcmLayer(it))
     }
     val micState by mic.stateFlow.collectAsState()
     Scaffold {
-        Button("Rec") {
-            if (micState.isRecording) {
+        val isRecording = micState.isRecording
+        Button(if (isRecording) "Stop" else "Record") {
+            if (isRecording) {
                 mic.stop()
                 scope.launch {
-                    player.play(stage.pcm)
+                    player.getStream().use { stream ->
+                        stage.play { pcm ->
+                            stream.write(pcm.toPcmByteArray())
+                        }
+                    }
                 }
             } else {
                 mic.start()
@@ -42,6 +47,9 @@ fun HelloScreen(
         }
     }
 }
+
+// Data flow:
+// MicRecorder -> PcmLayer -> AudioStage -> WavePlayer (pcm in chunks)
 
 fun ContentScope.contentBox(
     content: @Composable () -> Unit
