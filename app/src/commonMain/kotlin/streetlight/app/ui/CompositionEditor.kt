@@ -1,25 +1,13 @@
 package streetlight.app.ui
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import compose.icons.TablerIcons
-import compose.icons.tablericons.ArrowDown
-import compose.icons.tablericons.ArrowUp
 import compose.icons.tablericons.Plus
-import compose.icons.tablericons.Trash
-import kabinet.utils.moveLeft
-import kabinet.utils.moveRight
-import kabinet.utils.removeAt
 import pondui.ui.controls.Column
 import pondui.ui.controls.Expando
 import pondui.ui.controls.H4
 import pondui.ui.controls.IconButton
-import pondui.ui.controls.MoreMenu
-import pondui.ui.controls.MoreMenuItem
 import pondui.ui.controls.Row
-import pondui.ui.controls.Section
-import pondui.ui.services.MiniPlayer
-import streetlight.app.utils.toMidiSequence
 import streetlight.model.data.SongNotation
 import streetlight.model.data.SongSection
 
