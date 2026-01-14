@@ -11,36 +11,51 @@ async function initProto() {
 
     const feed = FeedMessage.decode(buffer);
 
-    const vehicles15L = feed.entity
-        .filter(e => e.vehicle && e.vehicle.trip && e.vehicle.trip.routeId === "15L")
-        .map(e => e.vehicle)
-        .filter(v => v.position); // must have lat/lon
+    const buses = feed.entity
+        .filter(e => e.vehicle && e.vehicle.trip && e.vehicle.trip.routeId === "15L" && e.vehicle.position)
+        .map(e => new Bus(e.vehicle))
 
     if (!geoMap) return;
 
     // stash markers on the map object so we can clear/update them
-    if (!geoMap.route15LMarkers) {
-        geoMap.route15LMarkers = [];
+    if (!geoMap.markers) {
+        geoMap.markers = [];
     }
 
     // remove any old markers
-    geoMap.route15LMarkers.forEach(m => m.remove());
-    geoMap.route15LMarkers = [];
+    geoMap.markers.forEach(m => m.remove());
+    geoMap.markers = [];
 
-    vehicles15L.forEach(v => {
-        const bearing = typeof v.position.bearing === "number" ? v.position.bearing : 0;
+    buses.forEach(bus => {
+        const element = document.createElement("div");
+        element.className = "geo-marker"
 
-        const el = document.createElement("div");
-        el.className = "geo-marker " + (bearing > 180 ? "bus-marker-left" : "bus-marker");
+        const icon = document.createElement("div");
+        const arrow = document.createElement("div");
+        icon.className = "geo-icon bus-icon";
+        arrow.className = "bus-arrow";
+        arrow.style.setProperty("--bearing", (bus.bearing - 90 + 360) % 360 + "deg");
+        element.appendChild(arrow);
+        element.appendChild(icon)
 
         const marker = new maplibregl.Marker({
-            element: el,
+            element: element,
             rotationAlignment: "map"
         })
-            .setLngLat([v.position.longitude, v.position.latitude])
+            .setLngLat([bus.position.longitude, bus.position.latitude])
             // .setRotation(bearing + 90)
             .addTo(geoMap);
 
-        geoMap.route15LMarkers.push(marker);
+        geoMap.markers.push(marker);
     });
+}
+
+class Bus {
+    constructor(data) {
+        this.data = data;
+    }
+
+    get position() { return this.data.position; }
+
+    get bearing() { return typeof this.position.bearing === "number" ? this.position.bearing : 0;  }
 }

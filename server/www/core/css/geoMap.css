@@ -4,22 +4,47 @@
 }
 
 .geo-marker {
+    position: relative;
+}
+
+.geo-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
     width: 24px;
     height: 24px;
+    background-color: white;
     pointer-events: none;
     mask-size: contain;
-    -webkit-mask-size: contain;
     mask-repeat: no-repeat;
+    mask-position: center;
+
+    -webkit-mask-size: contain;
     -webkit-mask-repeat: no-repeat;
-    background-color: white; /* this becomes the “fill” */
 }
 
-.bus-marker {
-    mask: url(../../svg/bus.svg);
-    -webkit-mask: url(../../svg/bus.svg);
+.bus-icon {
+    mask-image: url(../../svg/bus.svg);
+    -webkit-mask-image: url(../../svg/bus.svg);
 }
 
-.bus-marker-left {
-    mask: url(../../svg/bus-left.svg);
-    -webkit-mask: url(../../svg/bus-left.svg);
+.bus-arrow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+
+    width: 24px;
+    height: 24px;
+    transform: translate(-50%, -50%) rotate(var(--bearing)) translate(80%, 0%);
+
+    mask-image: url(../../svg/chevron.svg);
+    -webkit-mask-image: url(../../svg/chevron.svg);
+    background-color: white;
+    mask-size: contain;
+    mask-repeat: no-repeat;
+    mask-position: center;
+    -webkit-mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
 }
