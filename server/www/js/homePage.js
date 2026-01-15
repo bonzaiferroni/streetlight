@@ -28,11 +28,11 @@ async function initProto() {
 
     buses.forEach(bus => {
         const element = document.createElement("div");
-        element.className = "geo-marker"
+        element.className = "map-marker"
 
         const icon = document.createElement("div");
         const arrow = document.createElement("div");
-        icon.className = "geo-icon bus-icon";
+        icon.className = "map-marker-icon bus-icon";
         arrow.className = "bus-arrow";
         arrow.style.setProperty("--bearing", (bus.bearing - 90 + 360) % 360 + "deg");
         element.appendChild(arrow);

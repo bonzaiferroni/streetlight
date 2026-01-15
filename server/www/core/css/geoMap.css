@@ -3,38 +3,38 @@
     overflow: hidden;
 }
 
-.geo-marker {
+.map-marker {
     position: relative;
 }
 
-.geo-icon {
+.map-marker > * {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+}
 
+.map-marker-icon {
     width: 24px;
     height: 24px;
     background-color: white;
     pointer-events: none;
+    mask-image: var(--svg);
     mask-size: contain;
     mask-repeat: no-repeat;
     mask-position: center;
 
+    -webkit-mask-image: var(--svg);
     -webkit-mask-size: contain;
     -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center;
 }
 
 .bus-icon {
-    mask-image: url(../../svg/bus.svg);
-    -webkit-mask-image: url(../../svg/bus.svg);
+    --svg: url("../../svg/bus.svg");
 }
 
 .bus-arrow {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-
     width: 24px;
     height: 24px;
     transform: translate(-50%, -50%) rotate(var(--bearing)) translate(80%, 0%);
