@@ -7,7 +7,11 @@ plugins {
 
 kotlin {
     js(IR) {
-        browser()
+        browser {
+            commonWebpackConfig {
+                sourceMaps = true
+            }
+        }
         binaries.executable()
     }
     sourceSets {
@@ -19,6 +23,7 @@ kotlin {
         val jsMain by getting {
             dependencies {
                 implementation(libs.kotlinx.coroutines.core)
+                kotlin("js")
             }
         }
     }
@@ -31,7 +36,7 @@ tasks.register<Copy>("copyBrowserJs") {
     dependsOn("jsBrowserProductionWebpack") // <-- build first, then copy
 
     // Grab webpack outputs (development + production if both exist)
-    from(layout.buildDirectory.dir("dist/js/productionExecutable"))
+    from(layout.buildDirectory.dir("kotlin-webpack/js/productionExecutable"))
 
     // Copy into yer chosen folder
     into(webOutDir)
