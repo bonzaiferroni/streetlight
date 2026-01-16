@@ -14,13 +14,9 @@ import org.w3c.fetch.Response
 private val scope = MainScope()
 private val markers = mutableListOf<maplibregl.Marker>()
 
-fun main() {
-    document.addEventListener("DOMContentLoaded", {
-        initProto()
-    })
-}
-
-private fun initProto() {
+@OptIn(ExperimentalJsExport::class)
+@JsExport
+fun addRtdToMap() {
     scope.launch {
         val root = protobuf.load("/static/proto/gtfs-realtime.proto").await()
         val feedType = root.lookupType("transit_realtime.FeedMessage")
@@ -40,36 +36,26 @@ private fun initProto() {
 
         vehicles.forEach { vehicle ->
             val position = vehicle.position ?: return@forEach
-            var element = document.createElement("div") as HTMLElement
+            val element = document.createElement("div") as HTMLElement
             element.className = "map-marker"
-
-            val icon = document.createElement("div") as HTMLElement
-            icon.className = "map-marker-icon bus-icon"
-            element.appendChild(icon)
 
             val bearing = position.bearing
             if (bearing != null) {
                 val bearing = (bearing - 90 + 360) % 360
                 val arrow = document.createElement("div") as HTMLElement
-                arrow.className = "bus-arrow"
+                arrow.className = "bus-bearing"
                 arrow.style.setProperty("--bearing", "${bearing}deg")
                 element.appendChild(arrow)
             }
 
-            val options: dynamic = MarkerOptions(
-                element = element,
-                rotationAlignment = "map"
-            )
-
-            val obj: dynamic = js("{}")
-            obj.element = element
-            obj["element"] = element
-            obj["rotationAlignment"] = "map"
+            val icon = document.createElement("div") as HTMLElement
+            icon.className = "map-marker-icon bus-icon"
+            element.appendChild(icon)
 
             val marker = maplibregl.Marker(
                 options = jsObject {
                     this.element = element
-                    rotationAlignment = "map"
+                    subpixelPositioning = true
                 }
             )
                 .setLngLat(arrayOf(vehicle.position.longitude, vehicle.position.latitude))
@@ -81,9 +67,3 @@ private fun initProto() {
 }
 
 external var geoMap: Map
-
-fun jsObject(block: dynamic.() -> Unit): dynamic {
-    val obj = js("{}")
-    block(obj)
-    return obj
-}

@@ -17,34 +17,27 @@
 .map-marker-icon {
     width: 24px;
     height: 24px;
-    background-color: white;
     pointer-events: none;
-    mask-image: var(--svg);
-    mask-size: contain;
-    mask-repeat: no-repeat;
-    mask-position: center;
 
-    -webkit-mask-image: var(--svg);
-    -webkit-mask-size: contain;
-    -webkit-mask-repeat: no-repeat;
-    -webkit-mask-position: center;
+    background-image: var(--svg);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: transparent; /* important */
 }
 
 .bus-icon {
     --svg: url("../../svg/bus.svg");
 }
 
-.bus-arrow {
-    width: 24px;
-    height: 24px;
-    transform: translate(-50%, -50%) rotate(var(--bearing)) translate(80%, 0%);
+.bus-bearing {
+    width: 40px;
+    height: 40px;
+    transform: translate(-50%, -50%) rotate(var(--bearing));
 
-    mask-image: url(../../svg/chevron.svg);
-    -webkit-mask-image: url(../../svg/chevron.svg);
-    background-color: white;
-    mask-size: contain;
-    mask-repeat: no-repeat;
-    mask-position: center;
-    -webkit-mask-size: contain;
-    -webkit-mask-repeat: no-repeat;
+    background-image: url(../../svg/bus-direction.svg);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: transparent; /* important */
 }

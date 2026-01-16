@@ -1,6 +1,6 @@
-document.addEventListener("DOMContentLoaded", initProto);
+document.addEventListener("DOMContentLoaded", web.streetlight.web.addRtdToMap); // defined in kotlin
 
-async function initProto() {
+async function addRtdToMapJs() {
     const root = await protobuf.load("/static/proto/gtfs-realtime.proto");
 
     // Note the package name: transit_realtime

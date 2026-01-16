@@ -23,7 +23,6 @@ kotlin {
         val jsMain by getting {
             dependencies {
                 implementation(libs.kotlinx.coroutines.core)
-                kotlin("js")
             }
         }
     }
@@ -33,8 +32,6 @@ kotlin {
 val webOutDir = layout.projectDirectory.dir("../server/www/core/js")
 
 tasks.register<Copy>("copyBrowserJs") {
-    dependsOn("jsBrowserProductionWebpack") // <-- build first, then copy
-
     // Grab webpack outputs (development + production if both exist)
     from(layout.buildDirectory.dir("kotlin-webpack/js/productionExecutable"))
 
@@ -43,4 +40,9 @@ tasks.register<Copy>("copyBrowserJs") {
 
     // Optional: only take what ye care about
     include("*.js", "*.js.map", "*.css", "*.css.map", "*.html")
+    println("copying files")
+}
+
+tasks.named("jsBrowserProductionWebpack") {
+    finalizedBy("copyBrowserJs")
 }

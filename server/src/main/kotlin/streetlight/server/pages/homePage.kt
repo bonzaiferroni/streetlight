@@ -7,7 +7,7 @@ import streetlight.model.data.*
 fun HTML.homePage(events: List<Event>) {
     head("Streetlight | Home") {
         styles("homePage.css")
-        // scripts("homePage.js")
+        scripts("homePage.js")
         geoMapResources()
         script(src = "https://cdn.jsdelivr.net/npm/protobufjs/dist/protobuf.min.js") { }
     }
