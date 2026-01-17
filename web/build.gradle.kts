@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpack
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
+    alias(libs.plugins.serialization)
 }
 
 kotlin {
@@ -17,6 +18,7 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
+                implementation(libs.kotlinx.serialization.json)
             }
         }
 

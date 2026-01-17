@@ -23,6 +23,7 @@ private val console = globalConsole.getHandle("initGtfs")
 private val httpClient = HttpClient(CIO)
 
 suspend fun initGtfs(app: ServerProvider = RuntimeProvider) {
+    if (app.dao.transitRoute.readAllRoutes().isNotEmpty()) return
     console.log("initializin' gtfs")
     val cacheDir = File("gtfs")
     if (!cacheDir.exists()) cacheDir.mkdirs()

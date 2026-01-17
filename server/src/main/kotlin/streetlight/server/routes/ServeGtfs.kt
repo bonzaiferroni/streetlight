@@ -54,7 +54,7 @@ fun Routing.serveGtfs(app: ServerProvider = RuntimeProvider) {
     get("/gtfs/routes") {
         val routeIds = setOf("15L", "15", "121", "121L", "107R", "101H", "228A")
         val routes = app.dao.transitRoute.readRoutes(routeIds)
-
+        println("found ${routes.size} routes")
         call.respond(routes)
     }
 }

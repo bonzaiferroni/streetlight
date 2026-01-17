@@ -52,6 +52,10 @@
     --svg: url("../../svg/bus.svg");
 }
 
+.train-icon {
+    --svg: url("../../svg/train.svg");
+}
+
 .bus-bearing {
     width: 40px;
     height: 40px;

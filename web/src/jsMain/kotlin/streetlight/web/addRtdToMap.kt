@@ -4,10 +4,9 @@ package streetlight.web
 
 import kotlinx.browser.document
 import kotlinx.browser.window
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.await
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
 import org.khronos.webgl.Uint8Array
 import kotlin.js.Date
 import kotlin.time.Duration.Companion.seconds
@@ -22,13 +21,16 @@ var timestamp = 0L
 fun addRtdToMap() {
     scope.launch {
         val feedType = loadFeedType()
+        val routes = fetchRoutes()
+        console.log(routes.size)
         while (true) {
-            val vehicles = fetchVehicles(feedType, setOf("15L", "15", "121", "121L", "107R", "101H"))
+            val vehicles = fetchVehicles(feedType, setOf("15L", "15", "121", "121L", "107R", "101H", "A"))
             val currentTime = Date.now().toLong() / 1000
 
             vehicles?.forEach { vehicle ->
                 val position = vehicle.position ?: return@forEach
                 val vehicleId = vehicle.vehicle?.id ?: return@forEach
+                val route = routes.firstOrNull() { it.transitRouteId == vehicle.trip?.routeId }
 
                 val bus = if (buses.containsKey(vehicleId)) {
                     val bus = buses.getValue(vehicleId)
@@ -43,7 +45,7 @@ fun addRtdToMap() {
                     bus.setBearing(position.bearing ?: 0f)
                     bus
                 } else {
-                    val bus = createBus(position)
+                    val bus = createBus(position, route?.vehicleType)
                     bus.marker.setLngLat(position.toLngLat())
                         .addTo(geoMap)
                     buses[vehicleId] = bus
@@ -72,6 +74,27 @@ fun addRtdToMap() {
     }
 }
 
+@Serializable
+data class TransitRoute(
+    val transitRouteId: String,
+    val shortName: String,
+    val longName: String,
+    val description: String?,
+    val vehicleType: VehicleType?,
+)
+
+enum class VehicleType {
+    Bus,
+    LightRail,
+    Train,
+}
+
+suspend fun fetchRoutes(): List<TransitRoute> {
+    val response = window.fetch("/gtfs/routes").await()
+    val text = response.text().await()
+    return Json.decodeFromString(text)
+}
+
 suspend fun loadFeedType(): ProtobufType {
     val root = protobuf.load("/static/proto/gtfs-realtime.proto").await()
     return root.lookupType("transit_realtime.FeedMessage")
@@ -94,7 +117,7 @@ suspend fun fetchVehicles(feedType: ProtobufType, routeIds: Set<String>): List<V
         .toList()
 }
 
-fun createBus(position: Position): Bus {
+fun createBus(position: Position, vehicleType: VehicleType?): Bus {
     val element = document.createDiv()
     element.className = "map-marker"
 
@@ -102,8 +125,9 @@ fun createBus(position: Position): Bus {
     bearingElement.className = "bus-bearing"
     element.appendChild(bearingElement)
 
+    val iconClass = if (vehicleType == VehicleType.LightRail) "train-icon" else "bus-icon"
     val icon = document.createDiv()
-    icon.className = "map-marker-icon bus-icon"
+    icon.className = "map-marker-icon $iconClass"
     element.appendChild(icon)
 
     val bus = Bus(
