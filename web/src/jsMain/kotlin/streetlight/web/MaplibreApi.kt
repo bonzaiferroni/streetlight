@@ -6,7 +6,6 @@ import org.w3c.dom.HTMLElement
 
 external open class Evented
 external open class Popup
-external open class LngLat
 external open class Point
 
 external interface Alignment
@@ -18,6 +17,30 @@ external interface LngLatLike
 external interface PointLike
 
 external object maplibregl {
+
+    class Map(options: MapOptions) : Evented {
+        // Methods
+        fun addControl(control: dynamic, position: ControlPosition = definedExternally): Map
+        fun removeControl(control: dynamic): Map
+
+        fun getContainer(): HTMLElement
+        fun getStyle(): dynamic /* .streetlight.web.StyleSpecification */
+        fun setStyle(style: dynamic /* .streetlight.web.StyleSpecification | String */): Map
+
+        fun getZoom(): Double
+        fun setZoom(zoom: Double): Map
+
+        fun getCenter(): LngLat
+        fun setCenter(center: LngLatLike): Map
+
+        fun flyTo(options: dynamic): Map
+        fun fitBounds(bounds: dynamic, options: dynamic = definedExternally): Map
+
+        fun resize(): Map
+
+        // Event handling inherited from .streetlight.web.Evented
+    }
+
     class Marker(
         options: MarkerOptions
     ) : Evented {
@@ -45,7 +68,7 @@ external object maplibregl {
         fun setDraggable(shouldBeDraggable: Boolean = definedExternally): Marker /* returns `this` */
         fun setEventedParent(parent: Evented = definedExternally, data: dynamic = definedExternally): Marker
 
-        fun setLngLat(lnglat: Array<Float>): Marker /* returns `this` */
+        fun setLngLat(lnglat: LngLat): Marker /* returns `this` */
         fun setOffset(offset: PointLike): Marker /* returns `this` */
 
         fun setOpacity(opacity: String = definedExternally, opacityWhenCovered: String = definedExternally): Marker /* returns `this` */
@@ -60,6 +83,13 @@ external object maplibregl {
 
         fun toggleClassName(className: String): Boolean
         fun togglePopup(): Marker /* returns `this` */
+    }
+
+    class LngLat(
+        val lng: Double,
+        val lat: Double
+    ) {
+        fun distanceTo(lngLat: LngLat): Double
     }
 }
 
@@ -91,26 +121,3 @@ external interface ControlPosition
 external interface GestureOptions
 external interface DragPanOptions
 external interface AroundCenterOptions
-
-external class Map(options: MapOptions) : Evented {
-    // Methods
-    fun addControl(control: dynamic, position: ControlPosition = definedExternally): Map
-    fun removeControl(control: dynamic): Map
-
-    fun getContainer(): HTMLElement
-    fun getStyle(): dynamic /* .streetlight.web.StyleSpecification */
-    fun setStyle(style: dynamic /* .streetlight.web.StyleSpecification | String */): Map
-
-    fun getZoom(): Double
-    fun setZoom(zoom: Double): Map
-
-    fun getCenter(): LngLat
-    fun setCenter(center: LngLatLike): Map
-
-    fun flyTo(options: dynamic): Map
-    fun fitBounds(bounds: dynamic, options: dynamic = definedExternally): Map
-
-    fun resize(): Map
-
-    // Event handling inherited from .streetlight.web.Evented
-}

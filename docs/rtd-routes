@@ -1,0 +1,34 @@
+14, 38, 88L, 76, 52, 35, 31, 73, 30, 99, 21, 204, 120, 51, 92, 65, 121, 6, 120L, 7, 93L, 8, 40, 105, 36, 205, 225D,
+DASH, LD3, 228F, BOND, JUMP, 228A, 206, 3, 100, 72, 49, 24, 12, 19, 10, 112, 15L, 83L, 83D, 169L, 0, 16, 0L, 120X, 17,
+3L, FF5, BOLT, AT, FF1, FF2, FREE, FMR, 483, 402L, 46, 59, 324, 327, 323, 326, AB1, NB1, LX2, AB2, CV, PD, RX, 116X, EV,
+LD1, FF4, GS, 104L, 11, 43, 32, 48, 0B, 28, SKIP, 15, 169, 20, 133, 130, 153, 45, 42, 37, 139, 135, 88, 66, 225, 9, 1,
+225T, 4, ART, 44, 101E, 101D, 103W, 101H, 117N, 107R, 109L
+
+
+{
+  "id": "1768607249_480533F7E0F87456E063DC4D1FAC9CE7",
+  "vehicle": {
+    "trip": {
+      "tripId": "115706363",
+      "scheduleRelationship": "SCHEDULED",
+      "routeId": "14",
+      "directionId": 0
+    },
+    "position": {
+      "latitude": 39.70158386230469,
+      "longitude": -104.98966979980469,
+      "bearing": 272
+    },
+    "currentStatus": "STOPPED_AT",
+    "timestamp": "1768607044",
+    "stopId": "26285",
+    "vehicle": {
+      "id": "480533F7E0F87456E063DC4D1FAC9CE7",
+      "label": "6406"
+    },
+    "occupancyStatus": "EMPTY"
+  }
+}
+
+header: Object { gtfsRealtimeVersion: "1.0", incrementality: 0, timestamp: 1768607620 }
+

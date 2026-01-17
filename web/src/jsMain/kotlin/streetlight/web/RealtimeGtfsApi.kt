@@ -41,21 +41,21 @@ import streetlight.web.VehiclePosition.OccupancyStatus
 
 /* ========== Top-level feed ========== */
 
-data class FeedMessage(
+external class FeedMessage<T>(
     val header: FeedHeader,
-    val entity: List<FeedEntity> = emptyList(),
+    val entity: Array<T>,
 )
 
-data class FeedHeader(
+external class FeedHeader(
     val gtfsRealtimeVersion: String,
-    val incrementality: Incrementality = Incrementality.FULL_DATASET,
-    val timestamp: Long? = null,          // uint64
-    val feedVersion: String? = null,
-) {
-    enum class Incrementality {
-        FULL_DATASET,
-        DIFFERENTIAL,
-    }
+    val incrementality: Incrementality,
+    val timestamp: Long,          // uint64
+    val feedVersion: String?,
+)
+
+enum class Incrementality {
+    FULL_DATASET,
+    DIFFERENTIAL,
 }
 
 external class FeedEntity(

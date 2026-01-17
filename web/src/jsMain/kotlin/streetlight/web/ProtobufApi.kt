@@ -10,7 +10,7 @@ external class ProtobufRoot {
 }
 
 external class ProtobufType {
-    fun <T> decode(buffer: Uint8Array): ProtobufMessage<T>
+    fun <T> decode(buffer: Uint8Array): FeedMessage<T>
 }
 
 external class ProtobufMessage<T> {

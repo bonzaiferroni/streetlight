@@ -46,7 +46,7 @@ fun HTML.homePage(events: List<Event>) {
 }
 
 fun FlowContent.homeFooter() {
-    val giants = "If we must live in a world with giants, may we choose a world of good and faithful giants. "
+    val giants = "May we choose a world of good and faithful giants. "
     row(AlignItemsCenter) {
         style = "height: 20rem;"
         column(AlignItemsCenter, NoGap, FillWidth) {

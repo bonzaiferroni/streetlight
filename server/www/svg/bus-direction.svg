@@ -6,5 +6,5 @@
     </bx:export>
   </defs>
   <ellipse style="stroke-width: 10px; transform-box: fill-box; transform-origin: 50% 50%; stroke: rgba(255, 255, 255, 0); fill: rgba(255, 255, 255, 0);" cx="100" cy="100" rx="79.652" ry="79.652"/>
-  <path d="M 236.928 85.071 Q 243.344 75.987 249.76 85.071 L 259.205 98.445 Q 265.621 107.529 252.789 107.529 L 233.899 107.529 Q 221.067 107.529 227.483 98.445 Z" bx:shape="triangle 221.067 75.987 44.554 31.542 0.5 0.288 1@e053b5a9" style="fill: rgb(176, 241, 158); stroke: rgb(255, 255, 255); stroke-width: 4px; transform-box: fill-box; transform-origin: 50% 50%;" transform="matrix(0, 1, -1, 0, -61.468544, 6.506248)"/>
+  <path d="M 458.788 107.352 Q 471.212 95.889 483.635 107.352 L 501.924 124.229 Q 514.347 135.692 489.501 135.692 L 452.922 135.692 Q 428.076 135.692 440.499 124.229 Z" bx:shape="triangle 428.076 95.889 86.271 39.803 0.5 0.288 1@e47597b1" style="fill: rgb(176, 241, 158); stroke: rgb(255, 255, 255); stroke-width: 4px; transform-origin: 471.209px 115.502px;" transform="matrix(0, 1, -1, 0, -290.380524, -15.209869)"/>
 </svg>

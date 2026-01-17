@@ -4,7 +4,6 @@
 }
 
 .map-marker {
-    position: relative;
 }
 
 .map-marker > * {
@@ -40,4 +39,6 @@
     background-repeat: no-repeat;
     background-position: center;
     background-color: transparent; /* important */
+
+    transition: transform 1000ms ease-out;
 }
