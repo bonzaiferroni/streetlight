@@ -114,7 +114,7 @@ enum class WheelchairBoarding {
  * - proto2 `required` → non-null Kotlin property.
  * - proto2 `optional` → nullable Kotlin property.
  * - proto2 `repeated` → List<T> or Array<T>.
- * - uint32/uint64 in ..streetlight.web.protobuf are *unsigned*; here represented as Int/Long for practicality.
+ * - uint32/uint64 in protobuf are *unsigned*; here represented as Int/Long for practicality.
  */
 
 /* ========== Top-level feed ========== */
@@ -147,7 +147,7 @@ external class FeedEntity(
     val tripModifications: TripModifications?,
 )
 
-/* ========== ..streetlight.web.TripUpdate ========== */
+/* ========== TripUpdate ========== */
 
 external class TripUpdate(
     val trip: TripDescriptor,
@@ -205,7 +205,7 @@ external class TripProperties(
     val tripShortName: String?,
 )
 
-/* ========== ..streetlight.web.VehiclePosition ========== */
+/* ========== VehiclePosition ========== */
 
 external class VehiclePosition(
     val trip: TripDescriptor?,
@@ -229,7 +229,7 @@ external class CarriageDetails(
     val carriageSequence: Int?, // uint32
 )
 
-/* ========== ..streetlight.web.Alert + supporting types ========== */
+/* ========== Alert + supporting types ========== */
 
 external class Alert(
     val activePeriod: List<TimeRange>,
@@ -324,7 +324,7 @@ external class LocalizedImage(
     val language: String?,
 )
 
-/* ========== ..streetlight.web.Shape / ..streetlight.web.Stop ========== */
+/* ========== Shape / Stop ========== */
 
 external class Shape(
     val shapeId: String?,
@@ -348,7 +348,7 @@ external class Stop(
     val platformCode: TranslatedString?,
 )
 
-/* ========== ..streetlight.web.TripModifications + helpers ========== */
+/* ========== TripModifications + helpers ========== */
 
 external class TripModifications(
     val selectedTrips: List<SelectedTrips>,

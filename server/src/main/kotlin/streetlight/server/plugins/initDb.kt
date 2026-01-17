@@ -17,6 +17,8 @@ import streetlight.server.db.tables.RequestTable
 import streetlight.server.db.tables.SongTable
 import streetlight.server.db.tables.RenditionTable
 import streetlight.server.db.tables.SparkTable
+import streetlight.server.db.tables.TransitRouteTable
+import streetlight.server.db.tables.TransitStopTable
 
 fun initDb(
     app: ServerProvider = RuntimeProvider
@@ -48,6 +50,8 @@ val dbTables = listOf(
     RequestTable,
     RefreshTokenTable,
     SparkTable,
+    TransitRouteTable,
+    TransitStopTable,
 )
 
 fun connectDb(env: Environment) = Database.connect(

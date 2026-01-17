@@ -22,6 +22,7 @@ fun Application.configureApiRoutes(app: ServerProvider = RuntimeProvider) {
         serveSongs()
         serveRenditions()
         servePages()
+        serveGtfs()
         serveRequests()
         servePerformers()
         // serveGemini(Api.Gemini, app.gemini)

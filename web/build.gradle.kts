@@ -29,7 +29,7 @@ kotlin {
 }
 
 // Where ye want the built JS to land
-val webOutDir = layout.projectDirectory.dir("../server/www/core/js")
+val webOutDir = layout.projectDirectory.dir("../server/www/core/js/compiled")
 
 tasks.register<Copy>("copyBrowserJs") {
     // Grab webpack outputs (development + production if both exist)

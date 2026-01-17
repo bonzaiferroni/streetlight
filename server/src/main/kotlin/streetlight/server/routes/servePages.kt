@@ -48,20 +48,4 @@ fun Routing.servePages(app: ServerProvider = RuntimeProvider) {
             eventSignUp(event)
         }
     }
-
-    get("/proxy/vehicle-position.pb") {
-        val url = "https://open-data.rtd-denver.com/files/gtfs-rt/rtd/VehiclePosition.pb"
-
-        val upstreamResponse: HttpResponse = httpClient.get(url)
-        val contentType = upstreamResponse.headers[HttpHeaders.ContentType]
-            ?.let { ContentType.parse(it) }
-            ?: ContentType.Application.OctetStream
-
-        call.respondBytes(
-            bytes = upstreamResponse.readRawBytes(),
-            contentType = contentType
-        )
-    }
 }
-
-private val httpClient = HttpClient(CIO)

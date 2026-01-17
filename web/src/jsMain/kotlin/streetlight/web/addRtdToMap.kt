@@ -10,7 +10,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.khronos.webgl.Uint8Array
 import kotlin.js.Date
-import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
 
 private val scope = MainScope()
 private val buses = mutableMapOf<String, Bus>()
@@ -23,13 +23,14 @@ fun addRtdToMap() {
     scope.launch {
         val feedType = loadFeedType()
         while (true) {
-            val vehicles = fetchVehicles(feedType, setOf("15L", "15", "121", "121L", "107R", "101H", "228A"))
+            val vehicles = fetchVehicles(feedType, setOf("15L", "15", "121", "121L", "107R", "101H"))
+            val currentTime = Date.now().toLong() / 1000
 
             vehicles?.forEach { vehicle ->
                 val position = vehicle.position ?: return@forEach
                 val vehicleId = vehicle.vehicle?.id ?: return@forEach
 
-                if (buses.containsKey(vehicleId)) {
+                val bus = if (buses.containsKey(vehicleId)) {
                     val bus = buses.getValue(vehicleId)
                     val current = bus.marker.getLngLat()
                     val destination = position.toLngLat()
@@ -40,16 +41,24 @@ fun addRtdToMap() {
                         bus.marker.setLngLat(position.toLngLat())
                     }
                     bus.setBearing(position.bearing ?: 0f)
+                    bus
                 } else {
                     val bus = createBus(position)
                     bus.marker.setLngLat(position.toLngLat())
                         .addTo(geoMap)
                     buses[vehicleId] = bus
+                    bus
+                }
+
+                vehicle.timestamp?.let {
+                    val vehicleTime = vehicle.timestamp.toString().toLong()
+                    val secondsSinceCapture = (currentTime - vehicleTime).toInt()
+                    val opacity = (1 - secondsSinceCapture / 240f).coerceIn(.5f, 1f)
+                    bus.marker.setOpacity(opacity.toString())
                 }
             }
 
             vehicles?.let {
-                console.log(vehicles.firstOrNull())
                 val missingIds = buses.map { it.key }
                     .filter { vehicleId -> vehicles.none { it.vehicle?.id == vehicleId} }
                 missingIds.forEach {
@@ -58,14 +67,7 @@ fun addRtdToMap() {
                 }
             }
 
-            val currentTime = Date.now().toLong() / 1000
-            val secondsSinceCapture = (currentTime - timestamp).toInt()
-            val fleetOpacity = (1 - secondsSinceCapture / 240f).coerceIn(.5f, 1f)
-            buses.forEach {
-                it.value.marker.setOpacity(fleetOpacity.toString())
-            }
-
-            delay(1.minutes)
+            delay(30.seconds)
         }
     }
 }
@@ -76,7 +78,7 @@ suspend fun loadFeedType(): ProtobufType {
 }
 
 suspend fun fetchVehicles(feedType: ProtobufType, routeIds: Set<String>): List<VehiclePosition>? {
-    val response = window.fetch("/proxy/vehicle-position.pb").await()
+    val response = window.fetch("/gtfs/vehicle-position.pb").await()
         .arrayBuffer().await()
     val buffer = Uint8Array(response)
 
@@ -85,7 +87,6 @@ suspend fun fetchVehicles(feedType: ProtobufType, routeIds: Set<String>): List<V
     val delta = (latest - timestamp).toInt()
     console.log("fetching vehicles -- timestamp delta: $delta")
     timestamp = latest
-    console.log(feed.entity.firstOrNull())
     if (delta == 0) return null
     return feed.entity
         .mapNotNull { it.vehicle }

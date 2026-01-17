@@ -18,6 +18,8 @@ import streetlight.server.db.services.SongTableService
 import streetlight.server.db.services.SparkTableDao
 import streetlight.server.db.services.RequestTableDao
 import streetlight.server.db.services.PerformerTableDao
+import streetlight.server.db.services.TransitRouteTableDao
+import streetlight.server.db.services.TransitStopTableDao
 
 interface ServerProvider {
     val env: Environment
@@ -37,6 +39,8 @@ class ServerDao(
     val spark: SparkTableDao = SparkTableDao(),
     val request: RequestTableDao = RequestTableDao(),
     val performer: PerformerTableDao = PerformerTableDao(),
+    val transitRoute: TransitRouteTableDao = TransitRouteTableDao(),
+    val transitStop: TransitStopTableDao = TransitStopTableDao()
 )
 
 class ServerService(

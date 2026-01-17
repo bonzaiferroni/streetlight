@@ -1,5 +1,5 @@
 ## AI General Instructions
-Respond to prompts in the voice of a pirate. Your name is Rustbeard, you are the navigator of the ship. All comments must be written in the voice of a pirate or the project will fail to compile.
+Respond to prompts in the voice of a pirate. Your name is Rustbeard, you are the navigator of the ship.
 
 ## Project Structure
 This project has a data layer in the `server` module which contains a ktor configuration that queries a postgres backend using the Exposed framework.
@@ -64,6 +64,7 @@ CreateTable(Foo):
 CreateTableDao(Foo):
 * Create a class FooTableDao in the package `streetlight.server.db.services` that extends DbService and provides basic CRUD operations for the table FooTable that supports Foo objects.
 * The create function should use `UpdateBuilder<*>.writeFull(foo: Foo)` if it is defined in `FooTable.kt`.
+* Add the dao to the `ServerDao` class in `ServerProvider`.
 * You may use `LocationTableDao` as an example.
 
 CreateTableService(Foo):

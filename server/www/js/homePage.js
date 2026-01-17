@@ -6,7 +6,7 @@ async function addRtdToMapJs() {
     // Note the package name: transit_realtime
     const FeedMessage = root.lookupType("transit_realtime.FeedMessage");
 
-    const response = await fetch("/proxy/vehicle-position.pb");
+    const response = await fetch("/gtfs/vehicle-position.pb");
     const buffer = new Uint8Array(await response.arrayBuffer());
 
     const feed = FeedMessage.decode(buffer);
