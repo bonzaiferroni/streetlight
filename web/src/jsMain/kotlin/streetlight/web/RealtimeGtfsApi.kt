@@ -26,17 +26,95 @@
 
 package streetlight.web
 
-import streetlight.web.VehiclePosition.OccupancyStatus
+// Ahoy! We've moved the enums to the top level to keep the ship tidy.
+
+enum class VehicleStopStatus {
+    INCOMING_AT,
+    STOPPED_AT,
+    IN_TRANSIT_TO,
+}
+
+enum class CongestionLevel {
+    UNKNOWN_CONGESTION_LEVEL,
+    RUNNING_SMOOTHLY,
+    STOP_AND_GO,
+    CONGESTION,
+    SEVERE_CONGESTION,
+}
+
+enum class OccupancyStatus {
+    EMPTY,
+    MANY_SEATS_AVAILABLE,
+    FEW_SEATS_AVAILABLE,
+    STANDING_ROOM_ONLY,
+    CRUSHED_STANDING_ROOM_ONLY,
+    FULL,
+    NOT_ACCEPTING_PASSENGERS,
+    NO_DATA_AVAILABLE,
+    NOT_BOARDABLE,
+}
+
+enum class Cause {
+    UNKNOWN_CAUSE,
+    OTHER_CAUSE,
+    TECHNICAL_PROBLEM,
+    STRIKE,
+    DEMONSTRATION,
+    ACCIDENT,
+    HOLIDAY,
+    WEATHER,
+    MAINTENANCE,
+    CONSTRUCTION,
+    POLICE_ACTIVITY,
+    MEDICAL_EMERGENCY,
+}
+
+enum class Effect {
+    NO_SERVICE,
+    REDUCED_SERVICE,
+    SIGNIFICANT_DELAYS,
+    DETOUR,
+    ADDITIONAL_SERVICE,
+    MODIFIED_SERVICE,
+    OTHER_EFFECT,
+    UNKNOWN_EFFECT,
+    STOP_MOVED,
+    NO_EFFECT,
+    ACCESSIBILITY_ISSUE,
+}
+
+enum class SeverityLevel {
+    UNKNOWN_SEVERITY,
+    INFO,
+    WARNING,
+    SEVERE,
+}
+
+enum class DescriptorScheduleRelationship {
+    SCHEDULED,
+    ADDED,          // deprecated in proto; kept for completeness
+    UNSCHEDULED,
+    CANCELED,
+    REPLACEMENT,
+    DUPLICATED,
+    DELETED,
+    NEW,
+}
+
+enum class WheelchairBoarding {
+    UNKNOWN,
+    AVAILABLE,
+    NOT_AVAILABLE,
+}
 
 /**
- * Proto2 → Kotlin model (plain data classes).
+ * Proto2 → Kotlin model (external classes for the JS world).
  *
  * Notes:
- * - proto2 `required` → non-null Kotlin property (no default unless obvious).
- * - proto2 `optional` → nullable Kotlin property (or default when proto has [default=...]).
- * - proto2 `repeated` → List<T> (default emptyList()).
+ * - proto2 `required` → non-null Kotlin property.
+ * - proto2 `optional` → nullable Kotlin property.
+ * - proto2 `repeated` → List<T> or Array<T>.
  * - uint32/uint64 in ..streetlight.web.protobuf are *unsigned*; here represented as Int/Long for practicality.
- *   (If ye truly want UInt/ULong, swap types where marked.)
  */
 
 /* ========== Top-level feed ========== */
@@ -71,61 +149,61 @@ external class FeedEntity(
 
 /* ========== ..streetlight.web.TripUpdate ========== */
 
-data class TripUpdate(
+external class TripUpdate(
     val trip: TripDescriptor,
-    val stopTimeUpdate: List<StopTimeUpdate> = emptyList(),
-    val vehicle: VehicleDescriptor? = null,
-    val timestamp: Long? = null,          // uint64
-    val delay: Int? = null,
-    val tripProperties: TripProperties? = null,
-) {
-    data class StopTimeEvent(
-        val delay: Int? = null,
-        val time: Long? = null,           // int64
-        val uncertainty: Int? = null,
-        val scheduledTime: Long? = null,  // int64
-    )
+    val stopTimeUpdate: List<StopTimeUpdate>,
+    val vehicle: VehicleDescriptor?,
+    val timestamp: Long?,          // uint64
+    val delay: Int?,
+    val tripProperties: TripProperties?,
+)
 
-    data class StopTimeUpdate(
-        val stopSequence: Int? = null,    // uint32
-        val stopId: String? = null,
-        val arrival: StopTimeEvent? = null,
-        val departure: StopTimeEvent? = null,
-        val departureOccupancyStatus: VehiclePosition.OccupancyStatus? = null,
-        val scheduleRelationship: ScheduleRelationship = ScheduleRelationship.SCHEDULED,
-        val stopTimeProperties: StopTimeProperties? = null,
-    ) {
-        enum class ScheduleRelationship {
-            SCHEDULED,
-            SKIPPED,
-            NO_DATA,
-            UNSCHEDULED,
-        }
+external class StopTimeEvent(
+    val delay: Int?,
+    val time: Long?,           // int64
+    val uncertainty: Int?,
+    val scheduledTime: Long?,  // int64
+)
 
-        data class StopTimeProperties(
-            val assignedStopId: String? = null,
-            val stopHeadsign: String? = null,
-            val pickupType: DropOffPickupType? = null,
-            val dropOffType: DropOffPickupType? = null,
-        ) {
-            enum class DropOffPickupType {
-                REGULAR,
-                NONE,
-                PHONE_AGENCY,
-                COORDINATE_WITH_DRIVER,
-            }
-        }
-    }
+external class StopTimeUpdate(
+    val stopSequence: Int?,    // uint32
+    val stopId: String?,
+    val arrival: StopTimeEvent?,
+    val departure: StopTimeEvent?,
+    val departureOccupancyStatus: OccupancyStatus?,
+    val scheduleRelationship: ScheduleRelationship,
+    val stopTimeProperties: StopTimeProperties?,
+)
 
-    data class TripProperties(
-        val tripId: String? = null,
-        val startDate: String? = null,
-        val startTime: String? = null,
-        val shapeId: String? = null,
-        val tripHeadsign: String? = null,
-        val tripShortName: String? = null,
-    )
+external class StopTimeProperties(
+    val assignedStopId: String?,
+    val stopHeadsign: String?,
+    val pickupType: DropOffPickupType?,
+    val dropOffType: DropOffPickupType?,
+)
+
+enum class DropOffPickupType {
+    REGULAR,
+    NONE,
+    PHONE_AGENCY,
+    COORDINATE_WITH_DRIVER,
 }
+
+enum class ScheduleRelationship {
+    SCHEDULED,
+    SKIPPED,
+    NO_DATA,
+    UNSCHEDULED,
+}
+
+external class TripProperties(
+    val tripId: String?,
+    val startDate: String?,
+    val startTime: String?,
+    val shapeId: String?,
+    val tripHeadsign: String?,
+    val tripShortName: String?,
+)
 
 /* ========== ..streetlight.web.VehiclePosition ========== */
 
@@ -141,33 +219,7 @@ external class VehiclePosition(
     val occupancyStatus: OccupancyStatus?,
     val occupancyPercentage: Int?, // uint32
     val multiCarriageDetails: List<CarriageDetails>,
-) {
-    enum class VehicleStopStatus {
-        INCOMING_AT,
-        STOPPED_AT,
-        IN_TRANSIT_TO,
-    }
-
-    enum class CongestionLevel {
-        UNKNOWN_CONGESTION_LEVEL,
-        RUNNING_SMOOTHLY,
-        STOP_AND_GO,
-        CONGESTION,
-        SEVERE_CONGESTION,
-    }
-
-    enum class OccupancyStatus {
-        EMPTY,
-        MANY_SEATS_AVAILABLE,
-        FEW_SEATS_AVAILABLE,
-        STANDING_ROOM_ONLY,
-        CRUSHED_STANDING_ROOM_ONLY,
-        FULL,
-        NOT_ACCEPTING_PASSENGERS,
-        NO_DATA_AVAILABLE,
-        NOT_BOARDABLE,
-    }
-}
+)
 
 external class CarriageDetails(
     val id: String?,
@@ -179,62 +231,26 @@ external class CarriageDetails(
 
 /* ========== ..streetlight.web.Alert + supporting types ========== */
 
-data class Alert(
-    val activePeriod: List<TimeRange> = emptyList(),
-    val informedEntity: List<EntitySelector> = emptyList(),
-    val cause: Cause = Cause.UNKNOWN_CAUSE,
-    val effect: Effect = Effect.UNKNOWN_EFFECT,
-    val url: TranslatedString? = null,
-    val headerText: TranslatedString? = null,
-    val descriptionText: TranslatedString? = null,
-    val ttsHeaderText: TranslatedString? = null,
-    val ttsDescriptionText: TranslatedString? = null,
-    val severityLevel: SeverityLevel = SeverityLevel.UNKNOWN_SEVERITY,
-    val image: TranslatedImage? = null,
-    val imageAlternativeText: TranslatedString? = null,
-    val causeDetail: TranslatedString? = null,
-    val effectDetail: TranslatedString? = null,
-) {
-    enum class Cause {
-        UNKNOWN_CAUSE,
-        OTHER_CAUSE,
-        TECHNICAL_PROBLEM,
-        STRIKE,
-        DEMONSTRATION,
-        ACCIDENT,
-        HOLIDAY,
-        WEATHER,
-        MAINTENANCE,
-        CONSTRUCTION,
-        POLICE_ACTIVITY,
-        MEDICAL_EMERGENCY,
-    }
+external class Alert(
+    val activePeriod: List<TimeRange>,
+    val informedEntity: List<EntitySelector>,
+    val cause: Cause,
+    val effect: Effect,
+    val url: TranslatedString?,
+    val headerText: TranslatedString?,
+    val descriptionText: TranslatedString?,
+    val ttsHeaderText: TranslatedString?,
+    val ttsDescriptionText: TranslatedString?,
+    val severityLevel: SeverityLevel,
+    val image: TranslatedImage?,
+    val imageAlternativeText: TranslatedString?,
+    val causeDetail: TranslatedString?,
+    val effectDetail: TranslatedString?,
+)
 
-    enum class Effect {
-        NO_SERVICE,
-        REDUCED_SERVICE,
-        SIGNIFICANT_DELAYS,
-        DETOUR,
-        ADDITIONAL_SERVICE,
-        MODIFIED_SERVICE,
-        OTHER_EFFECT,
-        UNKNOWN_EFFECT,
-        STOP_MOVED,
-        NO_EFFECT,
-        ACCESSIBILITY_ISSUE,
-    }
-
-    enum class SeverityLevel {
-        UNKNOWN_SEVERITY,
-        INFO,
-        WARNING,
-        SEVERE,
-    }
-}
-
-data class TimeRange(
-    val start: Long? = null,              // uint64
-    val end: Long? = null,                // uint64
+external class TimeRange(
+    val start: Long?,              // uint64
+    val end: Long?,                // uint64
 )
 
 external class Position(
@@ -253,20 +269,9 @@ external class TripDescriptor(
     val directionId: Int?,
     val startTime: String?,
     val startDate: String?,
-    val scheduleRelationship: ScheduleRelationship?,
+    val scheduleRelationship: DescriptorScheduleRelationship?,
     val modifiedTrip: ModifiedTripSelector?,
-) {
-    enum class ScheduleRelationship {
-        SCHEDULED,
-        ADDED,          // deprecated in proto; kept for completeness
-        UNSCHEDULED,
-        CANCELED,
-        REPLACEMENT,
-        DUPLICATED,
-        DELETED,
-        NEW,
-    }
-}
+)
 
 external class ModifiedTripSelector(
     val modificationsId: String?,
@@ -275,109 +280,103 @@ external class ModifiedTripSelector(
     val startDate: String?,
 )
 
-data class VehicleDescriptor(
-    val id: String? = null,
-    val label: String? = null,
-    val licensePlate: String? = null,
-    val wheelchairAccessible: WheelchairAccessible = WheelchairAccessible.NO_VALUE,
-) {
-    enum class WheelchairAccessible {
-        NO_VALUE,
-        UNKNOWN,
-        WHEELCHAIR_ACCESSIBLE,
-        WHEELCHAIR_INACCESSIBLE,
-    }
+external class VehicleDescriptor(
+    val id: String?,
+    val label: String?,
+    val licensePlate: String?,
+    val wheelchairAccessible: WheelchairAccessible,
+)
+
+enum class WheelchairAccessible {
+    NO_VALUE,
+    UNKNOWN,
+    WHEELCHAIR_ACCESSIBLE,
+    WHEELCHAIR_INACCESSIBLE,
 }
 
-data class EntitySelector(
-    val agencyId: String? = null,
-    val routeId: String? = null,
-    val routeType: Int? = null,
-    val trip: TripDescriptor? = null,
-    val stopId: String? = null,
-    val directionId: Int? = null,         // uint32
+external class EntitySelector(
+    val agencyId: String?,
+    val routeId: String?,
+    val routeType: Int?,
+    val trip: TripDescriptor?,
+    val stopId: String?,
+    val directionId: Int?,         // uint32
 )
 
 /* ========== Translated text / images ========== */
 
-data class TranslatedString(
-    val translation: List<Translation> = emptyList(),
-) {
-    data class Translation(
-        val text: String,
-        val language: String? = null,
-    )
-}
+external class TranslatedString(
+    val translation: List<Translation>,
+)
 
-data class TranslatedImage(
-    val localizedImage: List<LocalizedImage> = emptyList(),
-) {
-    data class LocalizedImage(
-        val url: String,
-        val mediaType: String,
-        val language: String? = null,
-    )
-}
+external class Translation(
+    val text: String,
+    val language: String?,
+)
+
+external class TranslatedImage(
+    val localizedImage: List<LocalizedImage>,
+)
+
+external class LocalizedImage(
+    val url: String,
+    val mediaType: String,
+    val language: String?,
+)
 
 /* ========== ..streetlight.web.Shape / ..streetlight.web.Stop ========== */
 
-data class Shape(
-    val shapeId: String? = null,
-    val encodedPolyline: String? = null,
+external class Shape(
+    val shapeId: String?,
+    val encodedPolyline: String?,
 )
 
-data class Stop(
-    val stopId: String? = null,
-    val stopCode: TranslatedString? = null,
-    val stopName: TranslatedString? = null,
-    val ttsStopName: TranslatedString? = null,
-    val stopDesc: TranslatedString? = null,
-    val stopLat: Float? = null,
-    val stopLon: Float? = null,
-    val zoneId: String? = null,
-    val stopUrl: TranslatedString? = null,
-    val parentStation: String? = null,
-    val stopTimezone: String? = null,
-    val wheelchairBoarding: WheelchairBoarding = WheelchairBoarding.UNKNOWN,
-    val levelId: String? = null,
-    val platformCode: TranslatedString? = null,
-) {
-    enum class WheelchairBoarding {
-        UNKNOWN,
-        AVAILABLE,
-        NOT_AVAILABLE,
-    }
-}
+external class Stop(
+    val stopId: String?,
+    val stopCode: TranslatedString?,
+    val stopName: TranslatedString?,
+    val ttsStopName: TranslatedString?,
+    val stopDesc: TranslatedString?,
+    val stopLat: Float?,
+    val stopLon: Float?,
+    val zoneId: String?,
+    val stopUrl: TranslatedString?,
+    val parentStation: String?,
+    val stopTimezone: String?,
+    val wheelchairBoarding: WheelchairBoarding,
+    val levelId: String?,
+    val platformCode: TranslatedString?,
+)
 
 /* ========== ..streetlight.web.TripModifications + helpers ========== */
 
-data class TripModifications(
-    val selectedTrips: List<SelectedTrips> = emptyList(),
-    val startTimes: List<String> = emptyList(),
-    val serviceDates: List<String> = emptyList(),
-    val modifications: List<Modification> = emptyList(),
-) {
-    data class Modification(
-        val startStopSelector: StopSelector? = null,
-        val endStopSelector: StopSelector? = null,
-        val propagatedModificationDelay: Int = 0,
-        val replacementStops: List<ReplacementStop> = emptyList(),
-        val serviceAlertId: String? = null,
-        val lastModifiedTime: Long? = null, // uint64
-    )
-
-    data class SelectedTrips(
-        val tripIds: List<String> = emptyList(),
-        val shapeId: String? = null,
-    )
-}
-
-data class StopSelector(
-    val stopSequence: Int? = null,        // uint32
-    val stopId: String? = null,
+external class TripModifications(
+    val selectedTrips: List<SelectedTrips>,
+    val startTimes: List<String>,
+    val serviceDates: List<String>,
+    val modifications: List<Modification>,
 )
 
-data class ReplacementStop(
-    val travelTimeToStop: Int? = null,
-    val stopId: String? = null,
+external class Modification(
+    val startStopSelector: StopSelector?,
+    val endStopSelector: StopSelector?,
+    val propagatedModificationDelay: Int,
+    val replacementStops: List<ReplacementStop>,
+    val serviceAlertId: String?,
+    val lastModifiedTime: Long?, // uint64
+)
+
+external class SelectedTrips(
+    val tripIds: List<String>,
+    val shapeId: String?,
+)
+
+external class StopSelector(
+    val stopSequence: Int?,        // uint32
+    val stopId: String?,
+)
+
+external class ReplacementStop(
+    val travelTimeToStop: Int?,
+    val stopId: String?,
 )

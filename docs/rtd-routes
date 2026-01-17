@@ -6,25 +6,25 @@ LD1, FF4, GS, 104L, 11, 43, 32, 48, 0B, 28, SKIP, 15, 169, 20, 133, 130, 153, 45
 
 
 {
-  "id": "1768607249_480533F7E0F87456E063DC4D1FAC9CE7",
+  "id": "1768667003_4892041A1F0BA9E5E063DD4D1FAC0070",
   "vehicle": {
     "trip": {
-      "tripId": "115706363",
+      "tripId": "115717307",
       "scheduleRelationship": "SCHEDULED",
-      "routeId": "14",
-      "directionId": 0
+      "routeId": "AT",
+      "directionId": 1
     },
     "position": {
-      "latitude": 39.70158386230469,
-      "longitude": -104.98966979980469,
-      "bearing": 272
+      "latitude": 39.83449935913086,
+      "longitude": -104.7405014038086,
+      "bearing": 270
     },
-    "currentStatus": "STOPPED_AT",
-    "timestamp": "1768607044",
-    "stopId": "26285",
+    "currentStatus": "IN_TRANSIT_TO",
+    "timestamp": "1768666969",
+    "stopId": "26198",
     "vehicle": {
-      "id": "480533F7E0F87456E063DC4D1FAC9CE7",
-      "label": "6406"
+      "id": "4892041A1F0BA9E5E063DD4D1FAC0070",
+      "label": "1524"
     },
     "occupancyStatus": "EMPTY"
   }

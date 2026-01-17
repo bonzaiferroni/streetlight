@@ -1,6 +1,27 @@
-#geoMap {
+#geo-map-box {
+    position: relative;
     border-radius: 12px;
     overflow: hidden;
+}
+
+#geo-map-box > * {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    inset: 0;
+}
+
+#geo-map {
+}
+
+#geo-overlay {
+    background: radial-gradient(
+            circle,
+            rgba(0, 0, 0, 0) 0%,
+            rgba(0, 0, 0, 0.15) 60%,
+            rgba(0, 0, 0, 0.4) 100%
+    );
+    pointer-events: none;
 }
 
 .map-marker {
@@ -23,6 +44,8 @@
     background-repeat: no-repeat;
     background-position: center;
     background-color: transparent; /* important */
+
+    box-shadow: 0 0 10px rgba(0, 0, 0, .5);
 }
 
 .bus-icon {

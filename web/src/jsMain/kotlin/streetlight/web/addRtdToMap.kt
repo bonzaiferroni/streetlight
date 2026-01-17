@@ -9,12 +9,13 @@ import kotlinx.coroutines.await
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.khronos.webgl.Uint8Array
-import org.w3c.dom.HTMLElement
+import kotlin.js.Date
 import kotlin.time.Duration.Companion.minutes
 
 private val scope = MainScope()
 private val buses = mutableMapOf<String, Bus>()
 external var geoMap: maplibregl.Map
+var timestamp = 0L
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
@@ -22,15 +23,14 @@ fun addRtdToMap() {
     scope.launch {
         val feedType = loadFeedType()
         while (true) {
-            console.log("fetching vehicles")
             val vehicles = fetchVehicles(feedType, setOf("15L", "15", "121", "121L", "107R", "101H", "228A"))
 
             vehicles?.forEach { vehicle ->
                 val position = vehicle.position ?: return@forEach
-                val tripId = vehicle.trip?.tripId ?: return@forEach
+                val vehicleId = vehicle.vehicle?.id ?: return@forEach
 
-                if (buses.containsKey(tripId)) {
-                    val bus = buses.getValue(tripId)
+                if (buses.containsKey(vehicleId)) {
+                    val bus = buses.getValue(vehicleId)
                     val current = bus.marker.getLngLat()
                     val destination = position.toLngLat()
                     val distance = current.distanceTo(destination)
@@ -44,8 +44,25 @@ fun addRtdToMap() {
                     val bus = createBus(position)
                     bus.marker.setLngLat(position.toLngLat())
                         .addTo(geoMap)
-                    buses[tripId] = bus
+                    buses[vehicleId] = bus
                 }
+            }
+
+            vehicles?.let {
+                console.log(vehicles.firstOrNull())
+                val missingIds = buses.map { it.key }
+                    .filter { vehicleId -> vehicles.none { it.vehicle?.id == vehicleId} }
+                missingIds.forEach {
+                    buses[it]?.marker?.remove()
+                    buses.remove(it)
+                }
+            }
+
+            val currentTime = Date.now().toLong() / 1000
+            val secondsSinceCapture = (currentTime - timestamp).toInt()
+            val fleetOpacity = (1 - secondsSinceCapture / 240f).coerceIn(.5f, 1f)
+            buses.forEach {
+                it.value.marker.setOpacity(fleetOpacity.toString())
             }
 
             delay(1.minutes)
@@ -58,19 +75,18 @@ suspend fun loadFeedType(): ProtobufType {
     return root.lookupType("transit_realtime.FeedMessage")
 }
 
-var stamp = 0L
-
 suspend fun fetchVehicles(feedType: ProtobufType, routeIds: Set<String>): List<VehiclePosition>? {
     val response = window.fetch("/proxy/vehicle-position.pb").await()
         .arrayBuffer().await()
     val buffer = Uint8Array(response)
 
     val feed = feedType.decode<FeedEntity>(buffer)
-    // console.log(feed.entity.mapNotNull { it.vehicle?.trip?.routeId }.toSet() .joinToString(", "))
-    val timestamp = feed.header.timestamp
-    val delta = timestamp - stamp
-    console.log("timestamp: $timestamp stamp: $stamp delta: $delta deltaInt: ${delta.toInt()}")
-    stamp = timestamp
+    val latest = feed.header.timestamp.toString().toLong()
+    val delta = (latest - timestamp).toInt()
+    console.log("fetching vehicles -- timestamp delta: $delta")
+    timestamp = latest
+    console.log(feed.entity.firstOrNull())
+    if (delta == 0) return null
     return feed.entity
         .mapNotNull { it.vehicle }
         .filter { it.trip != null && routeIds.contains(it.trip.routeId) }
@@ -96,6 +112,7 @@ fun createBus(position: Position): Bus {
                 subpixelPositioning = true
             }
         ),
+        element = element,
         bearingElement = bearingElement
     )
     bus.setBearing(position.bearing ?: 0f)
@@ -126,17 +143,3 @@ fun maplibregl.LngLat.interpolateTo(dest: maplibregl.LngLat, t: Double): maplibr
         lng = lng + (dest.lng - lng) * t,
         lat = lat + (dest.lat - lat) * t
     )
-
-data class Bus(
-    val marker: maplibregl.Marker,
-    val bearingElement: HTMLElement,
-) {
-    var lastBearing = 0f
-
-    fun setBearing(bearing: Float) {
-        val delta = ((bearing - lastBearing + 540) % 360) - 180;
-        lastBearing += delta
-        val adjusted = lastBearing - 90
-        bearingElement.style.setProperty("--bearing", "${adjusted}deg")
-    }
-}
