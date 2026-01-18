@@ -2,6 +2,7 @@ package streetlight.model
 
 import kabinet.api.ApiNode
 import kabinet.api.DeleteEndpoint
+import kabinet.api.Endpoint
 import kabinet.api.GetByTableIdEndpoint
 import kabinet.api.GetEndpoint
 import kabinet.api.PostEndpoint
@@ -30,6 +31,7 @@ import streetlight.model.data.RenditionId
 import streetlight.model.data.NewRendition
 import streetlight.model.data.NewRequest
 import streetlight.model.data.RequestId
+import streetlight.model.data.TransitRoute
 
 object Api: ApiNode(ApiNode(null, "api"), "v1") {
 
@@ -92,6 +94,11 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
     object Speech: ApiNode(this, "speech"), SpeechApi {
         override val wav = PostEndpoint<SpeechRequest, ByteArray>(this, "wav")
         override val url = PostEndpoint<SpeechRequest, String>(this, "url")
+    }
+
+    object Gtfs: ApiNode(this, "gtfs") {
+        object VehiclePosition: GetEndpoint<Unit>(this, "VehiclePosition.pb")
+        object Routes: GetEndpoint<List<TransitRoute>>(this, "routes")
     }
 }
 

@@ -6,6 +6,7 @@ plugins {
 }
 
 kotlin {
+    js(IR).browser()
     jvm()
 //    wasmJs {
 //        browser()

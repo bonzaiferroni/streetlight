@@ -5,23 +5,23 @@ package streetlight.web
 import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.coroutines.*
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
-import org.khronos.webgl.Uint8Array
+import streetlight.model.data.VehicleType
 import kotlin.js.Date
 import kotlin.time.Duration.Companion.seconds
 
+external var geoMap: maplibregl.Map
 private val scope = MainScope()
 private val buses = mutableMapOf<String, Bus>()
-external var geoMap: maplibregl.Map
-var timestamp = 0L
+private var timestamp = 0L
+private val gtfsClient = GtfsBrowserClient()
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
 fun addRtdToMap() {
     scope.launch {
         val feedType = loadFeedType()
-        val routes = fetchRoutes()
+        // val routes = fetchRoutes()
+        val routes = gtfsClient.readRoutes() ?: return@launch
         console.log(routes.size)
         while (true) {
             val vehicles = fetchVehicles(feedType, setOf("15L", "15", "121", "121L", "107R", "101H", "A"))
@@ -30,7 +30,7 @@ fun addRtdToMap() {
             vehicles?.forEach { vehicle ->
                 val position = vehicle.position ?: return@forEach
                 val vehicleId = vehicle.vehicle?.id ?: return@forEach
-                val route = routes.firstOrNull() { it.transitRouteId == vehicle.trip?.routeId }
+                val route = routes.firstOrNull() { it.transitRouteId.value == vehicle.trip?.routeId }
 
                 val bus = if (buses.containsKey(vehicleId)) {
                     val bus = buses.getValue(vehicleId)
@@ -74,38 +74,13 @@ fun addRtdToMap() {
     }
 }
 
-@Serializable
-data class TransitRoute(
-    val transitRouteId: String,
-    val shortName: String,
-    val longName: String,
-    val description: String?,
-    val vehicleType: VehicleType?,
-)
-
-enum class VehicleType {
-    Bus,
-    LightRail,
-    Train,
-}
-
-suspend fun fetchRoutes(): List<TransitRoute> {
-    val response = window.fetch("/gtfs/routes").await()
-    val text = response.text().await()
-    return Json.decodeFromString(text)
-}
-
 suspend fun loadFeedType(): ProtobufType {
     val root = protobuf.load("/static/proto/gtfs-realtime.proto").await()
     return root.lookupType("transit_realtime.FeedMessage")
 }
 
 suspend fun fetchVehicles(feedType: ProtobufType, routeIds: Set<String>): List<VehiclePosition>? {
-    val response = window.fetch("/gtfs/vehicle-position.pb").await()
-        .arrayBuffer().await()
-    val buffer = Uint8Array(response)
-
-    val feed = feedType.decode<FeedEntity>(buffer)
+    val feed = gtfsClient.readVehiclePositions(feedType)
     val latest = feed.header.timestamp.toString().toLong()
     val delta = (latest - timestamp).toInt()
     console.log("fetching vehicles -- timestamp delta: $delta")

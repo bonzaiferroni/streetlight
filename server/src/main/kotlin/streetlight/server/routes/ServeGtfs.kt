@@ -11,11 +11,13 @@ import io.ktor.server.response.respond
 import io.ktor.server.response.respondBytes
 import io.ktor.server.routing.Routing
 import io.ktor.server.routing.get
+import klutch.server.getEndpoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
+import streetlight.model.Api
 import streetlight.server.RuntimeProvider
 import streetlight.server.ServerProvider
 import kotlin.time.Duration.Companion.seconds
@@ -30,7 +32,7 @@ fun Routing.serveGtfs(app: ServerProvider = RuntimeProvider) {
         initGtfs(app)
     }
 
-    get("/gtfs/vehicle-position.pb") {
+    get(Api.Gtfs.VehiclePosition.path) {
         val bytes = if (vehiclePositionBytes != null && Clock.System.now() - timestamp < 10.seconds) {
             vehiclePositionBytes!!
         } else {
@@ -51,10 +53,8 @@ fun Routing.serveGtfs(app: ServerProvider = RuntimeProvider) {
         )
     }
 
-    get("/gtfs/routes") {
+    getEndpoint(Api.Gtfs.Routes) {
         val routeIds = setOf("15L", "15", "121", "121L", "107R", "101H", "228A")
-        val routes = app.dao.transitRoute.readRoutes(routeIds)
-        println("found ${routes.size} routes")
-        call.respond(routes)
+        app.dao.transitRoute.readRoutes(routeIds)
     }
 }
