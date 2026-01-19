@@ -3,10 +3,13 @@ package streetlight.server.db.services
 import klutch.db.DbService
 import klutch.db.read
 import klutch.utils.eq
+import org.jetbrains.exposed.sql.batchUpsert
 import org.jetbrains.exposed.sql.insertAndGetId
 import org.jetbrains.exposed.sql.upsert
+import streetlight.model.data.TransitRouteId
 import streetlight.model.data.TransitStop
 import streetlight.model.data.TransitStopId
+import streetlight.server.db.tables.TransitRouteStopTable
 import streetlight.server.db.tables.TransitStopTable
 import streetlight.server.db.tables.toTransitStop
 import streetlight.server.db.tables.writeFull
@@ -27,5 +30,16 @@ class TransitStopTableDao : DbService() {
         TransitStopTable.upsert(TransitStopTable.id) {
             it.writeFull(transitStop)
         }
+    }
+
+    suspend fun batchUpsert(transitStops: List<TransitStop>) = dbQuery {
+        TransitStopTable.batchUpsert(transitStops, TransitStopTable.id) {
+            this.writeFull(it)
+        }
+    }
+
+    suspend fun readRouteStops(transitRouteIds: Iterable<String>) = dbQuery {
+        TransitRouteStopTable.leftJoin(TransitStopTable).read { TransitRouteStopTable.transitRouteId.inList(transitRouteIds) }
+            .map { it.toTransitStop() }
     }
 }

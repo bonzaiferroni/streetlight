@@ -18,8 +18,8 @@
     background: radial-gradient(
             circle,
             rgba(0, 0, 0, 0) 0%,
-            rgba(0, 0, 0, 0.15) 60%,
-            rgba(0, 0, 0, 0.4) 100%
+            rgba(.2, .2, .2, 0.3) 60%,
+            rgba(.2, .2, .2, 0.6) 100%
     );
     pointer-events: none;
 }
@@ -44,8 +44,6 @@
     background-repeat: no-repeat;
     background-position: center;
     background-color: transparent; /* important */
-
-    box-shadow: 0 0 10px rgba(0, 0, 0, .5);
 }
 
 .bus-icon {
@@ -54,6 +52,10 @@
 
 .train-icon {
     --svg: url("../../svg/train.svg");
+}
+
+.transit-stop {
+    --svg: url("../../svg/transit-stop.svg");
 }
 
 .bus-bearing {

@@ -17,6 +17,7 @@ import streetlight.server.db.tables.RequestTable
 import streetlight.server.db.tables.SongTable
 import streetlight.server.db.tables.RenditionTable
 import streetlight.server.db.tables.SparkTable
+import streetlight.server.db.tables.TransitRouteStopTable
 import streetlight.server.db.tables.TransitRouteTable
 import streetlight.server.db.tables.TransitStopTable
 
@@ -52,6 +53,7 @@ val dbTables = listOf(
     SparkTable,
     TransitRouteTable,
     TransitStopTable,
+    TransitRouteStopTable,
 )
 
 fun connectDb(env: Environment) = Database.connect(

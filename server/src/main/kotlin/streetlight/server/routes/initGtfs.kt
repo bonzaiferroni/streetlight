@@ -9,10 +9,9 @@ import kabinet.console.globalConsole
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import streetlight.model.data.TransitRoute
-import streetlight.model.data.TransitRouteId
 import streetlight.model.data.TransitStop
-import streetlight.model.data.TransitStopId
-import streetlight.model.data.VehicleType
+import streetlight.model.data.TransitStopTime
+import streetlight.model.data.TransitTrip
 import streetlight.server.RuntimeProvider
 import streetlight.server.ServerProvider
 import java.io.File
@@ -46,50 +45,47 @@ suspend fun initGtfs(app: ServerProvider = RuntimeProvider) {
         gtfsFile.readBytes()
     }
 
-    unzipSelected(zipBytes, setOf("routes.txt", "stops.txt")) { name, text ->
+    var routes: List<TransitRoute>? = null
+    var stops: List<TransitStop>? = null
+    var stopTimes: List<TransitStopTime>? = null
+    var trips: List<TransitTrip>? = null
+    unzipSelected(zipBytes, setOf("routes.txt", "stops.txt", "stop_times.txt", "trips.txt")) { name, text ->
         if (name == "routes.txt") {
-            val routes = parseCsv(text) {
-                // route_id (0),agency_id (1),route_short_name (2),route_long_name (3),route_desc (4),route_type (5)
-                // route_url,route_color,route_text_color
-                // 0,RTD,0,Broadway,This Route Travels Northbound & Southbound,3,
-                // http://www.rtd-denver.com/Schedules.shtml,0076CE,FFFFFF
-                TransitRoute(
-                    transitRouteId = TransitRouteId(it[0]),
-                    shortName = it[2],
-                    longName = it[3],
-                    description = it[4].ifBlank { null },
-                    vehicleType = when (it[5].toIntOrNull()) {
-                        3 -> VehicleType.Bus
-                        2 -> VehicleType.Train
-                        0 -> VehicleType.LightRail
-                        else -> null
-                    }
-                )
-            }
-            routes.forEach {
-                app.dao.transitRoute.upsert(it)
-            }
+            routes = parseCsv(text) { TransitRoute.fromCsv(it) }
             console.log("found ${routes.size} routes")
         }
         if (name == "stops.txt") {
-            val stops = parseCsv(text) {
-                // stop_id,stop_code,stop_name,stop_desc,stop_lat,stop_lon,zone_id,stop_url,location_type,
-                // parent_station,stop_timezone,wheelchair_boarding
-                // 26199,26199,Nine Mile Station Gate J,Vehicles Travelling Southwest,39.657746,-104.846604,,,0,
-                // 33719,,1
-                TransitStop(
-                    transitStopId = TransitStopId(it[0]),
-                    name = it[2],
-                    latitude = it[4].toDouble(),
-                    longitude = it[5].toDouble(),
-                    description = it[3].ifBlank { null }
-                )
-            }
-            stops.forEach {
-                app.dao.transitStop.upsert(it)
-            }
+            stops = parseCsv(text) { TransitStop.fromCsv(it) }
             console.log("found ${stops.size} stops")
         }
+        if (name == "stop_times.txt") {
+            stopTimes = parseCsv(text) { TransitStopTime.fromCsv(it) }
+            console.log("found ${stopTimes.size} stop times")
+        }
+        if (name == "trips.txt") {
+            trips = parseCsv(text) { TransitTrip.fromCsv(it) }
+            console.log("found ${trips.size} trips")
+        }
+    }
+
+    requireNotNull(routes)
+    requireNotNull(stops)
+    requireNotNull(stopTimes)
+    requireNotNull(trips)
+
+    app.dao.transitRoute.batchUpsert(routes)
+    app.dao.transitStop.batchUpsert(stops)
+
+    val routeTrips = routes.associate { route ->
+        route.transitRouteId to trips.filter { it.transitRouteId == route.transitRouteId }.map{ it.tripId }.toSet()
+    }
+
+    val routeStops = routeTrips.entries.associate { (transitRoutId, tripIds) ->
+        transitRoutId to stopTimes.filter { tripIds.contains(it.tripId) }.map { it.transitStopId }.toSet()
+    }
+
+    routeStops.forEach { (transitRouteId, transitStopIds) ->
+        app.dao.transitRoute.upsertRouteStops(transitRouteId, transitStopIds)
     }
 }
 

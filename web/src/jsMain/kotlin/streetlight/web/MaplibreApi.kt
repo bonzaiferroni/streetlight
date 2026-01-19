@@ -42,7 +42,7 @@ external object maplibregl {
     }
 
     class Marker(
-        options: MarkerOptions
+        options: MarkerOptions? = definedExternally
     ) : Evented {
         fun addClassName(className: String)
         fun addTo(map: Map): Marker /* returns `this` */

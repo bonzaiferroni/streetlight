@@ -5,6 +5,7 @@ package streetlight.web
 import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.coroutines.*
+import streetlight.model.data.TransitStop
 import streetlight.model.data.VehicleType
 import kotlin.js.Date
 import kotlin.time.Duration.Companion.seconds
@@ -20,9 +21,9 @@ private val gtfsClient = GtfsBrowserClient()
 fun addRtdToMap() {
     scope.launch {
         val feedType = loadFeedType()
-        // val routes = fetchRoutes()
-        val routes = gtfsClient.readRoutes() ?: return@launch
-        console.log(routes.size)
+        val streetTransit = gtfsClient.readRoutes()
+        createStops(streetTransit.stops)
+
         while (true) {
             val vehicles = fetchVehicles(feedType, setOf("15L", "15", "121", "121L", "107R", "101H", "A"))
             val currentTime = Date.now().toLong() / 1000
@@ -30,7 +31,7 @@ fun addRtdToMap() {
             vehicles?.forEach { vehicle ->
                 val position = vehicle.position ?: return@forEach
                 val vehicleId = vehicle.vehicle?.id ?: return@forEach
-                val route = routes.firstOrNull() { it.transitRouteId.value == vehicle.trip?.routeId }
+                val route = streetTransit.routes.firstOrNull() { it.transitRouteId.value == vehicle.trip?.routeId }
 
                 val bus = if (buses.containsKey(vehicleId)) {
                     val bus = buses.getValue(vehicleId)
@@ -117,6 +118,25 @@ fun createBus(position: Position, vehicleType: VehicleType?): Bus {
     )
     bus.setBearing(position.bearing ?: 0f)
     return bus
+}
+
+fun createStops(stops: List<TransitStop>) {
+    stops.forEach {
+        val element = document.createDiv()
+        element.className = "map-marker"
+
+        val icon = document.createDiv()
+        icon.className = "map-marker-icon transit-stop"
+        element.appendChild(icon)
+
+        val marker = maplibregl.Marker(
+            options = jsObject {
+                this.element = element
+            }
+        )
+        marker.setLngLat(maplibregl.LngLat(it.longitude, it.latitude))
+        marker.addTo(geoMap)
+    }
 }
 
 fun Position.toLngLat() = maplibregl.LngLat(longitude.toDouble(), latitude.toDouble())

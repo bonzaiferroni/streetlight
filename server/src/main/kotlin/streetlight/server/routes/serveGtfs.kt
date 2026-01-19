@@ -7,7 +7,6 @@ import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.readRawBytes
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
-import io.ktor.server.response.respond
 import io.ktor.server.response.respondBytes
 import io.ktor.server.routing.Routing
 import io.ktor.server.routing.get
@@ -18,6 +17,7 @@ import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import streetlight.model.Api
+import streetlight.model.data.StreetTransit
 import streetlight.server.RuntimeProvider
 import streetlight.server.ServerProvider
 import kotlin.time.Duration.Companion.seconds
@@ -54,7 +54,12 @@ fun Routing.serveGtfs(app: ServerProvider = RuntimeProvider) {
     }
 
     getEndpoint(Api.Gtfs.Routes) {
-        val routeIds = setOf("15L", "15", "121", "121L", "107R", "101H", "228A")
-        app.dao.transitRoute.readRoutes(routeIds)
+        val routeIds = setOf("15L", "15", "121", "121L", "107R", "101H", "A")
+        val routes = app.dao.transitRoute.readRoutes(routeIds)
+        val stops = app.dao.transitStop.readRouteStops(routeIds)
+        StreetTransit(
+            routes = routes,
+            stops = stops
+        )
     }
 }
