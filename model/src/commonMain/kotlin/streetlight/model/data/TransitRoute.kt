@@ -1,5 +1,6 @@
 package streetlight.model.data
 
+import kabinet.model.GeoPoint
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 
@@ -13,6 +14,7 @@ data class TransitRoute(
     val longName: String,
     val description: String?,
     val vehicleType: VehicleType?,
+    val points: List<GeoPoint>
 ) {
     companion object {
         fun fromCsv(csv: List<String>) = TransitRoute(
@@ -25,7 +27,8 @@ data class TransitRoute(
                 2 -> VehicleType.Train
                 0 -> VehicleType.LightRail
                 else -> null
-            }
+            },
+            points = emptyList()
         )
     }
 }

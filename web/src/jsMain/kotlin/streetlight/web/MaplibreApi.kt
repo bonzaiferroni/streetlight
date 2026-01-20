@@ -4,13 +4,17 @@ package streetlight.web
 
 import org.w3c.dom.HTMLElement
 
-external open class Evented
+external interface Evented {
+    fun off(type: String, listener: Listener): Subscription
+    fun on(type: String, listener: Listener): Subscription
+    fun listens(type: String): Boolean
+    fun setEventedParent(parent: Evented?, data: dynamic = definedExternally): Evented
+}
 external open class Popup
 external open class Point
 
 external interface Alignment
 external interface Subscription
-external interface Listener
 
 // Type aliases in TS; keep loose for Kotlin/JS interop.
 external interface LngLatLike
@@ -38,6 +42,14 @@ external object maplibregl {
 
         fun resize(): Map
 
+        override fun listens(type: String): Boolean
+        override fun setEventedParent(parent: Evented?, data: dynamic): Evented
+        override fun off(type: String, listener: Listener): Subscription
+        override fun on(type: String, listener: Listener): Subscription
+
+        fun addSource(id: String, source: SourceSpecification)
+        fun addLayer(layer: dynamic)
+
         // Event handling inherited from .streetlight.web.Evented
     }
 
@@ -57,16 +69,17 @@ external object maplibregl {
 
         fun isDraggable(): Boolean
 
-        fun listens(type: String): Boolean
-        fun off(type: String, listener: Listener): Marker
-        fun on(type: String, listener: Listener): Subscription
+        override fun listens(type: String): Boolean
+        override fun off(type: String, listener: Listener): Subscription
+        override fun on(type: String, listener: Listener): Subscription
+        override fun setEventedParent(parent: Evented?, data: dynamic): Evented
         fun once(type: String, listener: Listener = definedExternally): dynamic /* Promise<any> | ..Marker */
 
         fun remove(): Marker /* returns `this` */
         fun removeClassName(className: String)
 
         fun setDraggable(shouldBeDraggable: Boolean = definedExternally): Marker /* returns `this` */
-        fun setEventedParent(parent: Evented = definedExternally, data: dynamic = definedExternally): Marker
+        // fun setEventedParent(parent: Evented = definedExternally, data: dynamic = definedExternally): Marker
 
         fun setLngLat(lnglat: LngLat): Marker /* returns `this` */
         fun setOffset(offset: PointLike): Marker /* returns `this` */
@@ -93,22 +106,32 @@ external object maplibregl {
     }
 }
 
-data class MarkerOptions(
-    val anchor: PositionAnchor? = null,
-    val className: String? = null,
-    val clickTolerance: Double? = null,
-    val color: String? = null,
-    val draggable: Boolean? = null,
-    val element: HTMLElement? = null,
-    val offset: PointLike? = null,
-    val opacity: String? = null,
-    val opacityWhenCovered: String? = null,
-    val pitchAlignment: Alignment? = null,
-    val rotation: Double? = null,
-    val rotationAlignment: String? = null,
-    val scale: Double? = null,
-    val subpixelPositioning: Boolean? = null,
-)
+typealias Listener = (dynamic) -> Unit
+
+//fun maplibregl.Marker.on(type: String, listener: () -> Unit): Subscription {
+//    return this.on(type, maplibregl.Listener(listener))
+//}
+
+external interface MarkerOptions {
+    val anchor: PositionAnchor?
+    val className: String?
+    val clickTolerance: Double?
+    val color: String?
+    val draggable: Boolean?
+    val element: HTMLElement?
+    val offset: PointLike?
+    val opacity: String?
+    val opacityWhenCovered: String?
+    val pitchAlignment: Alignment?
+    val rotation: Double?
+    val rotationAlignment: String?
+    val scale: Double?
+    val subpixelPositioning: Boolean?
+}
+
+external interface SourceSpecification
+
+external interface AddLayerObject
 
 // Stub for .streetlight.web.PositionAnchor
 external interface PositionAnchor

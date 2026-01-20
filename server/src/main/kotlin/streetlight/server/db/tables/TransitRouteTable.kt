@@ -1,11 +1,14 @@
 package streetlight.server.db.tables
 
+import kabinet.model.GeoPoint
 import klutch.utils.toUUID
+import kotlinx.serialization.json.Json
 import org.jetbrains.exposed.dao.id.IdTable
 import org.jetbrains.exposed.dao.id.UUIDTable
 import org.jetbrains.exposed.sql.ReferenceOption
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.Table
+import org.jetbrains.exposed.sql.json.json
 import org.jetbrains.exposed.sql.statements.UpdateBuilder
 import streetlight.model.data.TransitRoute
 import streetlight.model.data.TransitRouteId
@@ -21,6 +24,7 @@ object TransitRouteTable: IdTable<String>("transit_route") {
     val longName = text("long_name")
     val description = text("description").nullable()
     val vehicleType = enumeration<VehicleType>("vehicle_type").nullable()
+    val points = json<Array<GeoPoint>>("points", Json.Default)
 
     override val primaryKey = PrimaryKey(id)
 }
@@ -41,6 +45,7 @@ fun ResultRow.toTransitRoute() = TransitRoute(
     longName = this[TransitRouteTable.longName],
     description = this[TransitRouteTable.description],
     vehicleType = this[TransitRouteTable.vehicleType],
+    points = this[TransitRouteTable.points].toList(),
 )
 
 /**
@@ -59,4 +64,5 @@ fun UpdateBuilder<*>.writeUpdate(transitRoute: TransitRoute) {
     this[TransitRouteTable.longName] = transitRoute.longName
     this[TransitRouteTable.description] = transitRoute.description
     this[TransitRouteTable.vehicleType] = transitRoute.vehicleType
+    this[TransitRouteTable.points] = transitRoute.points.toTypedArray()
 }

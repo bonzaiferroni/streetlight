@@ -57,6 +57,7 @@ fun Routing.serveGtfs(app: ServerProvider = RuntimeProvider) {
         val routeIds = setOf("15L", "15", "121", "121L", "107R", "101H", "A")
         val routes = app.dao.transitRoute.readRoutes(routeIds)
         val stops = app.dao.transitStop.readRouteStops(routeIds)
+        println(stops)
         StreetTransit(
             routes = routes,
             stops = stops

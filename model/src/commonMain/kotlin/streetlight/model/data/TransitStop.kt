@@ -76,3 +76,21 @@ data class TransitStopTime(
 }
 
 // for each transit route, create a set of transit trips, and from that create a set of stopIds you can associate with the route
+
+// shape_id,shape_pt_lat,shape_pt_lon,shape_pt_sequence,shape_dist_traveled
+// 1325342,39.655623,-104.999767,1,
+data class TransitShape(
+    val shapeId: String,
+    val latitude: Double,
+    val longitude: Double,
+    val sequence: Int,
+) {
+    companion object {
+        fun fromCsv(csv: List<String>) = TransitShape(
+            shapeId = csv[0],
+            latitude = csv[1].toDouble(),
+            longitude = csv[2].toDouble(),
+            sequence = csv[3].toInt(),
+        )
+    }
+}

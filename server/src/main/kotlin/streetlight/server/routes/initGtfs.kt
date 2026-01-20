@@ -6,9 +6,12 @@ import io.ktor.client.request.get
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.readRawBytes
 import kabinet.console.globalConsole
+import kabinet.model.GeoPoint
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import streetlight.model.data.TransitRoute
+import streetlight.model.data.TransitRouteId
+import streetlight.model.data.TransitShape
 import streetlight.model.data.TransitStop
 import streetlight.model.data.TransitStopTime
 import streetlight.model.data.TransitTrip
@@ -49,7 +52,8 @@ suspend fun initGtfs(app: ServerProvider = RuntimeProvider) {
     var stops: List<TransitStop>? = null
     var stopTimes: List<TransitStopTime>? = null
     var trips: List<TransitTrip>? = null
-    unzipSelected(zipBytes, setOf("routes.txt", "stops.txt", "stop_times.txt", "trips.txt")) { name, text ->
+    var shapes: List<TransitShape>? = null
+    unzipSelected(zipBytes, setOf("routes.txt", "stops.txt", "stop_times.txt", "trips.txt", "shapes.txt")) { name, text ->
         if (name == "routes.txt") {
             routes = parseCsv(text) { TransitRoute.fromCsv(it) }
             console.log("found ${routes.size} routes")
@@ -66,24 +70,42 @@ suspend fun initGtfs(app: ServerProvider = RuntimeProvider) {
             trips = parseCsv(text) { TransitTrip.fromCsv(it) }
             console.log("found ${trips.size} trips")
         }
+        if (name == "shapes.txt") {
+            shapes = parseCsv(text) { TransitShape.fromCsv(it) }
+            console.log("found ${shapes.size} shapes")
+        }
     }
 
     requireNotNull(routes)
     requireNotNull(stops)
     requireNotNull(stopTimes)
     requireNotNull(trips)
+    requireNotNull(shapes)
 
-    app.dao.transitRoute.batchUpsert(routes)
+    val shapeLists = shapes.groupBy { it.shapeId }
+    val routeTrips = routes.associate { route ->
+        route.transitRouteId to trips.filter { it.transitRouteId == route.transitRouteId }.toSet()
+    }
+
+    val routesModified = routes.map { route ->
+        val rt = routeTrips.getValue(route.transitRouteId)
+        val maxShapeTrip = rt.maxBy { shapeLists[it.shapeId]?.size ?: 0 }
+        val maxShapeList = shapeLists.getValue(maxShapeTrip.shapeId)
+        route.copy(
+            points = maxShapeList.map { GeoPoint(it.longitude, it.latitude) }
+        )
+    }
+
+    console.log("upserting ${routesModified.size} routes")
+    app.dao.transitRoute.batchUpsert(routesModified)
+    console.log("upserting ${stops.size} size")
     app.dao.transitStop.batchUpsert(stops)
 
-    val routeTrips = routes.associate { route ->
-        route.transitRouteId to trips.filter { it.transitRouteId == route.transitRouteId }.map{ it.tripId }.toSet()
+    val routeStops = routeTrips.entries.associate { (routeId, trips) ->
+        routeId to stopTimes.filter { stopTime -> trips.any { stopTime.tripId == it.tripId } }.map { it.transitStopId }.toSet()
     }
 
-    val routeStops = routeTrips.entries.associate { (transitRoutId, tripIds) ->
-        transitRoutId to stopTimes.filter { tripIds.contains(it.tripId) }.map { it.transitStopId }.toSet()
-    }
-
+    console.log("upserting ${routeStops.size} routeStops")
     routeStops.forEach { (transitRouteId, transitStopIds) ->
         app.dao.transitRoute.upsertRouteStops(transitRouteId, transitStopIds)
     }
