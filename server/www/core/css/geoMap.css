@@ -25,6 +25,11 @@
 }
 
 .map-marker {
+    cursor: pointer;
+}
+
+.map-marker:hover {
+    opacity: 1 !important;
 }
 
 .map-marker > * {
@@ -37,7 +42,6 @@
 .map-marker-icon {
     width: 24px;
     height: 24px;
-    pointer-events: none;
 
     background-image: var(--svg);
     background-size: contain;

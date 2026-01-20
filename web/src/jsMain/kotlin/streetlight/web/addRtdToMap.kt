@@ -10,6 +10,7 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.await
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.w3c.dom.HTMLElement
 import streetlight.model.data.TransitRoute
 import streetlight.model.data.TransitStop
 import streetlight.model.data.VehicleType
@@ -24,6 +25,7 @@ private val stopElements = mutableListOf<MarkerElement>()
 private var timestamp = 0L
 private val gtfsClient = GtfsBrowserClient()
 private var mapZoom = geoMap.getZoom()
+private val selectPoint = document.querySelector("#select-point") as HTMLElement
 const val STOP_ZOOM = 14
 
 @OptIn(ExperimentalJsExport::class)
@@ -45,6 +47,7 @@ fun addRtdToMap() {
                 val position = vehicle.position ?: return@forEach
                 val vehicleId = vehicle.vehicle?.id ?: return@forEach
                 val route = streetTransit.routes.firstOrNull() { it.transitRouteId.value == vehicle.trip?.routeId }
+                    ?: return@forEach
 
                 val bus = if (vehicleElements.containsKey(vehicleId)) {
                     val bus = vehicleElements.getValue(vehicleId)
@@ -59,7 +62,7 @@ fun addRtdToMap() {
                     bus.setBearing(position.bearing ?: 0f)
                     bus
                 } else {
-                    val bus = createBus(position, route?.vehicleType)
+                    val bus = createBus(position, route)
                     bus.marker.setLngLat(position.toLngLat())
                         .addTo(geoMap)
                     vehicleElements[vehicleId] = bus
@@ -165,15 +168,19 @@ suspend fun fetchVehicles(feedType: ProtobufType, routeIds: Set<String>): List<V
         .toList()
 }
 
-fun createBus(position: Position, vehicleType: VehicleType?): MarkerElement {
+fun createBus(position: Position, route: TransitRoute): MarkerElement {
     val element = document.createDiv()
     element.className = "map-marker"
+
+    element.addEventListener("click", callback = {
+        selectPoint.textContent = route.longName
+    })
 
     val bearingElement = document.createDiv()
     bearingElement.className = "bus-bearing"
     element.appendChild(bearingElement)
 
-    val iconClass = if (vehicleType == VehicleType.LightRail) "train-icon" else "bus-icon"
+    val iconClass = if (route.vehicleType == VehicleType.LightRail) "train-icon" else "bus-icon"
     val icon = document.createDiv()
     icon.className = "map-marker-icon $iconClass"
     element.appendChild(icon)
