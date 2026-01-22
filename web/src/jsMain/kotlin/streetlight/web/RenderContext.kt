@@ -23,7 +23,7 @@ class RenderContext(
 ): TagConsumer<HTMLElement> by renderConsumer {
     fun <T> render(flow: Flow<T>, block: RenderContext.(T) -> Unit) {
         val element = renderConsumer.div() {
-            +"Test123"
+            +"render-context"
         }
         CoroutineScope(Dispatchers.Main + job).launch {
             var currentValue: T? = null

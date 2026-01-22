@@ -5,10 +5,12 @@ import kabinet.api.DeleteEndpoint
 import kabinet.api.GetByTableIdEndpoint
 import kabinet.api.GetEndpoint
 import kabinet.api.PostEndpoint
+import kabinet.api.QueryEndpoint
 import kabinet.api.SpeechApi
 import kabinet.api.UpdateEndpoint
 import kabinet.clients.GeminiMessage
 import kabinet.gemini.GeminiApi
+import kabinet.model.GeoPoint
 import kabinet.model.ImageGenRequest
 import kabinet.model.ImageUrls
 import kabinet.model.SpeechRequest
@@ -41,6 +43,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
     object EventFeed: GetEndpoint<List<Event>>(this, "events") {
         object Create: PostEndpoint<NewEvent, Event>(this, "create")
         object Delete: DeleteEndpoint<EventId>(this, "delete")
+        object LocationEvents: QueryEndpoint<GeoPoint, List<Event>>(this, "location")
         // object UserEvents: ApiDaoEndpoint<Event, EventId, NewEvent>(this, "user")
     }
 

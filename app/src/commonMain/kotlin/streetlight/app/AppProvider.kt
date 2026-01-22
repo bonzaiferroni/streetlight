@@ -1,7 +1,6 @@
 package streetlight.app
 
 import kabinet.GEMINI_KEY
-import kabinet.gemini.NeoGeminiClient
 import pondui.io.NeoApiClient
 import pondui.io.SpeechApiClient
 import pondui.io.SpeechAppClient
@@ -64,8 +63,6 @@ object RuntimeProvider: AppProvider {
     }
     override val speech = SpeechApiClient(Api.Speech, apiClient)
     override val wavePlayer = WavePlayer()
-
-    val gemini = NeoGeminiClient(GEMINI_KEY)
 }
 
 object MockProvider: AppProvider {

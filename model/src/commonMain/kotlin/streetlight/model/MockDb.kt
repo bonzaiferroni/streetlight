@@ -41,7 +41,7 @@ val mockDb by lazy {
             "Peter" to "Rock"
         )
     )
-    val sparks = (0..3).map {
+    val sparks = (0..5).map {
         val name = sparkNameBag.draw()
         User(
             userId = UserId.random(),

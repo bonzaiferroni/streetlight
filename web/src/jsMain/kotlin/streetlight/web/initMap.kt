@@ -29,7 +29,8 @@ val mainScope = MainScope()
 @OptIn(ExperimentalJsExport::class)
 @JsExport
 fun initMap() {
-    val stage = MapStage()
+    val app = BrowserProvider()
+    val stage = MapStage(mainScope, app)
     initMapData(stage)
     viewMapStage(stage)
 }

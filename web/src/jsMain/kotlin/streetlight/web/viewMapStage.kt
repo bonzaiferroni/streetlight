@@ -17,11 +17,11 @@ fun viewMapStage(stage: MapStage) {
         div {
             textInput {
                 id = "input-box"
-                onValueChange { value -> stage.setState { it.copy(name = value) } }
+                // onValueChange { value -> stage.setState { it.copy(name = value) } }
             }
             textInput {
                 id = "output-box"
-                setValue(stage.stateFlow.map { "Hello ${it.name}!" })
+                // setValue(stage.stateFlow.map { "Hello ${it.name}!" })
             }
             checkBoxInput {
                 onValueChange { console.log(it) }
@@ -31,6 +31,9 @@ fun viewMapStage(stage: MapStage) {
             p {
                 +"You are at ${it.lon}, ${it.lat}"
             }
+        }
+        render(stage.stateFlow.map { it.events } ) {
+            console.log(it.joinToString(", ") { it.title })
         }
     }
 }
