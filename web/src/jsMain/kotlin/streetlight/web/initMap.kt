@@ -10,7 +10,6 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.await
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.w3c.dom.HTMLElement
 import streetlight.model.data.TransitRoute
 import streetlight.model.data.TransitStop
 import streetlight.model.data.VehicleType
@@ -19,25 +18,35 @@ import kotlin.js.json
 import kotlin.time.Duration.Companion.seconds
 
 external var geoMap: maplibregl.Map
-private val scope = MainScope()
 private val vehicleElements = mutableMapOf<String, MarkerElement>()
 private val stopElements = mutableListOf<MarkerElement>()
 private var timestamp = 0L
 private val gtfsClient = GtfsBrowserClient()
 private var mapZoom = geoMap.getZoom()
-private val selectPoint = document.querySelector("#select-point") as HTMLElement
 const val STOP_ZOOM = 14
+val mainScope = MainScope()
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
-fun addRtdToMap() {
-    scope.launch {
+fun initMap() {
+    val stage = MapStage()
+    initMapData(stage)
+    viewMapStage(stage)
+}
+
+fun initMapData(stage: MapStage) {
+    mainScope.launch {
         val feedType = loadFeedType()
         val streetTransit = gtfsClient.readRoutes()
         createStops(streetTransit.stops)
 
         addZoomReactions()
         addRouteLines(streetTransit.routes)
+
+        geoMap.on("move") {
+            val point = geoMap.getCenter().let { GeoPoint(it.lng, it.lat) }
+            stage.setLocation(point)
+        }
 
         while (true) {
             val vehicles = fetchVehicles(feedType, setOf("15L", "15", "121", "121L", "107R", "101H", "A"))
@@ -173,7 +182,7 @@ fun createBus(position: Position, route: TransitRoute): MarkerElement {
     element.className = "map-marker"
 
     element.addEventListener("click", callback = {
-        selectPoint.textContent = route.longName
+        console.log(route.longName + " selected")
     })
 
     val bearingElement = document.createDiv()

@@ -49,7 +49,7 @@ enum class EventType(val label: String) {
     OpenMic("Open Mic"),
     Potluck("Potluck"),
     Circle("Circle"),
-    BunnyJam("Bunny Jam"),
+    FoodVendor("Food"),
 }
 
 enum class EventStatus(override val label: String): LabeledEnum<EventStatus> {
