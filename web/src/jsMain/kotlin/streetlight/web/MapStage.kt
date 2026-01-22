@@ -37,6 +37,7 @@ data class MapStageState(
     val queriedLocation: GeoPoint = GeoPoint.Denver,
     val zoom: Int = 11,
     val events: List<Event> = emptyList(),
+    val name: String = ""
 )
 
 

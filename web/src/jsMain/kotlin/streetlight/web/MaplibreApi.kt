@@ -8,10 +8,8 @@ external interface Evented {
     fun off(type: String, listener: Listener): Subscription
     fun on(type: String, listener: Listener): Subscription
     fun listens(type: String): Boolean
-    fun setEventedParent(parent: Evented?, data: dynamic = definedExternally): Evented
+    fun setEventedParent(parent: Evented?, data: dynamic): Evented
 }
-external open class Popup
-external open class Point
 
 external interface Alignment
 external interface Subscription
@@ -104,6 +102,9 @@ external object maplibregl {
     ) {
         fun distanceTo(lngLat: LngLat): Double
     }
+
+    class Popup
+    class Point
 }
 
 typealias Listener = (dynamic) -> Unit

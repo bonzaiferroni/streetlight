@@ -75,3 +75,8 @@
 
     transition: transform 1000ms ease-out;
 }
+
+.event-group {
+    opacity: 0;
+    transition: opacity 300ms ease-out;
+}

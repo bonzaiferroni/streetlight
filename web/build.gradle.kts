@@ -27,6 +27,8 @@ kotlin {
 
         val jsMain by getting {
             dependencies {
+                implementation(kotlinWrappers.react)
+                implementation(kotlinWrappers.reactDom)
             }
         }
     }
