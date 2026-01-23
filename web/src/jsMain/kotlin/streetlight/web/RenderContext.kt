@@ -1,87 +1,114 @@
 package streetlight.web
 
-import io.ktor.util.reflect.instanceOf
 import kotlinx.browser.window
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
+import kotlinx.dom.addClass
 import kotlinx.dom.clear
+import kotlinx.dom.hasClass
+import kotlinx.dom.removeClass
 import kotlinx.html.INPUT
+import kotlinx.html.InputType
 import kotlinx.html.TagConsumer
 import kotlinx.html.dom.append
-import kotlinx.html.id
-import kotlinx.html.js.div
+import kotlinx.html.*
 import kotlinx.html.js.onInputFunction
-import kotlinx.html.js.onLoadFunction
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLInputElement
-import react.ChildrenBuilder
-import react.useEffect
-import react.useState
-import kotlin.collections.emptyList
 
 class RenderContext(
-    val renderConsumer: TagConsumer<HTMLElement>,
-    val job: Job
-): TagConsumer<HTMLElement> by renderConsumer {
-    fun <T> renderState(flow: Flow<T>, block: RenderContext.(T) -> Unit) {
-        val element = renderConsumer.div() {
-            +"render-context"
-        }
-        CoroutineScope(Dispatchers.Main + job).launch {
-            var currentValue: T? = null
-            flow.collect {  value ->
-                if (value == currentValue) return@collect
-                currentValue = value
-                element.clear()
-                element.renderElement {
-                    block(value)
+    val consumer: TagConsumer<HTMLElement>,
+    val renderScope: CoroutineScope
+): TagConsumer<HTMLElement> by consumer {
+}
+
+fun <T> RenderContext.renderState(
+    flow: Flow<T>,
+    animate: Boolean = false,
+    block: RenderContext.(T) -> Unit
+) {
+    val parent = consumer.div("state-render")
+    var lastContainer: HTMLElement? = null
+    var job: Job? = null
+
+    renderScope.launch {
+        var currentValue: T? = null
+        flow.collect {  value ->
+            if (value == currentValue) return@collect
+            job?.cancel()
+            job = SupervisorJob()
+            currentValue = value
+
+            if (animate) lastContainer?.exitStage()
+            else lastContainer?.remove()
+
+            val scope = CoroutineScope(Dispatchers.Main + job)
+            parent.append {
+                lastContainer = div()
+                lastContainer.append {
+                    RenderContext(this, scope).block(value)
                 }
+                if (animate) lastContainer.addClass("state-render-animation")
             }
-        }
-    }
-
-    fun INPUT.onValueChange(block: (String) -> Unit) {
-        onInputFunction = {
-            val v = (it.target as HTMLInputElement).value
-            block(v)
-        }
-    }
-
-    fun <T> INPUT.setValue(flow: Flow<T>) {
-        var element: HTMLInputElement? = null
-        onLoadFunction = { event ->
-            element = event.target as? HTMLInputElement
-        }
-        CoroutineScope(Dispatchers.Main + job).launch {
-            flow.distinctUntilChanged().collect {
-                if (element == null) element = window.document.getElementById(id) as? HTMLInputElement
-                element?.value = it.toString()
+            if (animate) {
+                val height = lastContainer?.scrollHeight ?: 0
+                parent.style.height = "${height}px"
+                lastContainer?.enterStage()
             }
         }
     }
 }
 
-fun HTMLElement.renderElement(block: RenderContext.() -> Unit) {
+fun HTMLElement.enterStage() {
+    window.setTimeout({
+        if (!hasClass("exit-stage")) {
+            addClass("enter-stage")
+        }
+    }, 200)
+}
+
+fun HTMLElement.exitStage() {
+    addClass("exit-stage")
+    removeClass("enter-stage")
+    window.setTimeout({
+        remove()
+    }, 250)
+}
+
+fun HTMLElement.renderRoot(block: RenderContext.() -> Unit) {
+    clear()
     append {
-        RenderContext(this, Job()).block()
+        RenderContext(this, MainScope()).block()
     }
 }
 
-fun <T: Any> ChildrenBuilder.renderState(flow: Flow<T>, block: ChildrenBuilder.(T) -> Unit) {
-    var state by useState<T>()
-
-    useEffect {
-        flow.collect { value ->
-            if (state == value) return@collect
-            state = value
+fun RenderContext.textField(
+    onChangeValue: ((String) -> Unit)? = null,
+    binding: Flow<String>? = null,
+    block: (INPUT.() -> Unit)? = null
+) {
+    val element = input {
+        type = InputType.text
+        onChangeValue?.let { callback ->
+            onInputFunction = {
+                val v = (it.target as HTMLInputElement).value
+                callback(v)
+            }
         }
-    }
+        block?.invoke(this)
+    } as HTMLInputElement
 
-    state?.let {
-        block(it)
+    binding?.let {
+        renderScope.launch {
+            binding.distinctUntilChanged().collect {
+                element.value = it
+            }
+        }
     }
 }

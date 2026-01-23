@@ -1,89 +1,84 @@
 package streetlight.web
 
+import kotlinx.browser.document
 import kotlinx.browser.window
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.map
-import react.FC
-import react.Props
-import react.RefCallback
-import react.create
-import web.dom.document
-import react.dom.client.createRoot
-import react.dom.html.ReactHTML.button
-import react.dom.html.ReactHTML.div
-import react.dom.html.ReactHTML.h2
-import react.dom.html.ReactHTML.input
-import react.dom.html.ReactHTML.p
-import react.useRef
-import react.useState
-import streetlight.web.renderElement
-import web.cssom.CSSTransition
-import web.cssom.ClassName
-import web.dom.ElementId
-import web.html.HTMLDivElement
-import web.html.HTMLInputElement
-import web.html.InputType
-import web.html.checkbox
-import web.html.text
+import kotlinx.coroutines.launch
+import kotlinx.html.checkBoxInput
+import kotlinx.html.div
+import kotlinx.html.dom.append
+import kotlinx.html.h2
+import kotlinx.html.id
+import kotlinx.html.js.onLoadFunction
+import kotlinx.html.js.span
+import kotlinx.html.onVolumeChange
+import kotlinx.html.p
+import kotlinx.html.textInput
+import org.w3c.dom.Element
+import org.w3c.dom.HTMLElement
+import org.w3c.dom.MutationObserver
+import org.w3c.dom.MutationObserverInit
+import org.w3c.dom.asList
+import org.w3c.dom.events.Event
 import kotlin.collections.component1
 import kotlin.collections.component2
+import kotlin.time.Duration.Companion.seconds
 
 fun viewMapStage(stage: MapStage) {
-    val mount = createRoot(document.getElementById(ElementId("select-point"))!!)
-    mount.render(MapStageView.create() { this.stage = stage } )
-}
-
-external interface MapStageProps: Props {
-    var stage: MapStage
-}
-
-val MapStageView = FC<MapStageProps> { props ->
-    val stage = props.stage
-    p {
-        +"Hello map!"
-    }
-    div {
-        input {
-            type = InputType.text
-            onChange = { event ->
-                stage.setState { it.copy(name = event.target.value) }
-            }
-        }
-        input {
-            val element = useRef<HTMLInputElement>(null)
-            type = InputType.text
-            ref = RefCallback { el ->
-                element.current = el
-                stage.stateFlow.map { "Hello ${it.name}!" }.collect {
-                    element.current?.value = it
-                }
-            }
-        }
-        input {
-            type = InputType.checkbox
-        }
-    }
-    renderState(stage.stateFlow.map { it.queriedLocation }) {
+    val mount = document.getElementById("select-point") as HTMLElement
+    mount.renderRoot {
         p {
-            +"You are at ${it.lon}, ${it.lat}"
+            +"Hello map!"
         }
-    }
-    renderState(stage.stateFlow.map { it.events } ) { allEvents ->
-        allEvents.groupBy { it.eventType }.forEach { (eventType, events) ->
-            div {
-                className = ClassName("event-group")
-
-                ref = RefCallback {
-                    it.style.opacity = "1"
+        div {
+            textField(
+                onChangeValue = { value -> stage.setState { it.copy(name = value) } }
+            )
+            textField(
+                binding = stage.stateFlow.map { "Hello ${it.name}!" }
+            )
+            checkBoxInput {
+                // onValueChange { console.log(it) }
+            }
+        }
+        renderState(stage.stateFlow.map { it.queriedLocation }) {
+            p {
+                +"You are at ${it.lon}, ${it.lat}"
+            }
+            p {
+                +"And you've been there "
+                val span = span {
+                    +"0"
                 }
+                +" seconds"
 
-                h2 {
-                    +eventType.label
-                }
-                events.forEach { event ->
-                    p {
-                        +event.title
+                renderScope.launch {
+                    var seconds = 0
+                    while (true) {
+                        delay(1.seconds)
+                        seconds++
+                        span.textContent = seconds.toString()
                     }
                 }
+            }
+        }
+        renderState(stage.stateFlow.map { it.events }, true) { allEvents ->
+            allEvents.groupBy { it.eventType }.forEach { (eventType, events) ->
+                div("event-group") {
+                    h2 {
+                        +eventType.label
+                    }
+                    events.forEach { event ->
+                        p {
+                            +event.title
+                        }
+                    }
+                }.style.opacity = "1"
             }
         }
     }

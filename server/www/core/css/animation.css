@@ -21,3 +21,28 @@
     visibility: visible;
     pointer-events: auto;
 }
+
+/* render */
+
+.state-render {
+    position: relative;
+    overflow: hidden;
+    transition: height 200ms ease-in-out;
+}
+
+.state-render-animation {
+    opacity: 0;
+    filter: blur(6px);
+    transition: opacity 200ms ease-in-out, transform 200ms ease-in-out, filter 200ms ease-out;
+    pointer-events: none;
+}
+
+.state-render-animation.enter-stage {
+    opacity: 1;
+    filter: blur(0px);
+    pointer-events: auto;
+}
+
+.state-render-animation.exit-stage {
+    position: absolute;
+}
