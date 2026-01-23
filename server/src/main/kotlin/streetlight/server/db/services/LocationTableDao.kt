@@ -13,7 +13,7 @@ import org.jetbrains.exposed.sql.insertAndGetId
 import org.jetbrains.exposed.sql.lowerCase
 import org.jetbrains.exposed.sql.or
 import org.jetbrains.exposed.sql.update
-import streetlight.model.data.StreetId
+import streetlight.model.data.AreaId
 import streetlight.model.data.Location
 import streetlight.model.data.LocationId
 import streetlight.model.data.NewLocation
@@ -29,8 +29,8 @@ class LocationTableDao: DbService() {
         LocationTable.read { it.id.eq(locationId) }.firstOrNull()?.toLocation()
     }
 
-    suspend fun readLocations(streetId: StreetId) = dbQuery {
-        LocationTable.read { it.areaId.eq(streetId) }.map { it.toLocation() }
+    suspend fun readLocations(areaId: AreaId) = dbQuery {
+        LocationTable.read { it.areaId.eq(areaId) }.map { it.toLocation() }
     }
 
     suspend fun createLocation(userId: UserId, newLocation: NewLocation): LocationId = dbQuery {
@@ -38,7 +38,7 @@ class LocationTableDao: DbService() {
             it.writeFull(Location(
                 locationId = LocationId.random(),
                 userId = userId,
-                streetId = newLocation.streetId,
+                areaId = newLocation.areaId,
                 name = newLocation.name,
                 description = null,
                 address = null,

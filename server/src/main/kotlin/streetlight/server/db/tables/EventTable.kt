@@ -26,7 +26,7 @@ object EventTable : UUIDTable("event") {
     val name = text("name")
     val description = text("description").nullable()
     val status = enumeration<EventStatus>("status")
-    val eventType = enumeration<EventType>("event_type").default(EventType.StreetPerformance)
+    val eventType = enumeration<EventType>("event_type")
     val cashTips = float("cash_tips").nullable()
     val cardTips = float("card_tips").nullable()
     val startsAt = datetime("starts_at")

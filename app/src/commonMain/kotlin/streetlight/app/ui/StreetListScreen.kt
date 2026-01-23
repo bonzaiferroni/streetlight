@@ -30,12 +30,12 @@ fun StreetListScreen(
             Button("Create", isEnabled = state.isValidNewItem, onClick = viewModel::createNewStreet)
         }
         LazyColumn(1) {
-            items(state.streets) {
+            items(state.areas) {
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.fillMaxWidth()
-                        .actionable(it.streetId.toRoute())
+                        .actionable(it.areaId.toRoute())
                         .pad(1),
                 ) {
                     Text(it.name)

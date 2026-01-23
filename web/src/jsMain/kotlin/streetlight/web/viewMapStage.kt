@@ -1,30 +1,15 @@
 package streetlight.web
 
 import kotlinx.browser.document
-import kotlinx.browser.window
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.html.checkBoxInput
 import kotlinx.html.div
-import kotlinx.html.dom.append
 import kotlinx.html.h2
-import kotlinx.html.id
-import kotlinx.html.js.onLoadFunction
 import kotlinx.html.js.span
-import kotlinx.html.onVolumeChange
 import kotlinx.html.p
-import kotlinx.html.textInput
-import org.w3c.dom.Element
 import org.w3c.dom.HTMLElement
-import org.w3c.dom.MutationObserver
-import org.w3c.dom.MutationObserverInit
-import org.w3c.dom.asList
-import org.w3c.dom.events.Event
 import kotlin.collections.component1
 import kotlin.collections.component2
 import kotlin.time.Duration.Companion.seconds
@@ -48,7 +33,7 @@ fun viewMapStage(stage: MapStage) {
         }
         renderState(stage.stateFlow.map { it.queriedLocation }) {
             p {
-                +"You are at ${it.lon}, ${it.lat}"
+                +"You are at ${it.lng}, ${it.lat}"
             }
             p {
                 +"And you've been there "

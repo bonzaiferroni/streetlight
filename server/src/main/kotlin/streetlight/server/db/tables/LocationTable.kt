@@ -7,7 +7,6 @@ import klutch.db.tables.UserTable
 import klutch.utils.*
 import klutch.db.point
 import klutch.db.readColumn
-import kotlinx.datetime.Clock
 import org.jetbrains.exposed.dao.id.UUIDTable
 import org.jetbrains.exposed.sql.ReferenceOption
 import org.jetbrains.exposed.sql.ResultRow
@@ -22,7 +21,7 @@ import streetlight.server.utils.toUserIdOrNull
 
 object LocationTable : UUIDTable("location") {
     val userId = reference("user_id", UserTable, ReferenceOption.SET_NULL).nullable()
-    val areaId = reference("area_id", StreetTable, ReferenceOption.SET_NULL).nullable()
+    val areaId = reference("area_id", AreaTable, ReferenceOption.SET_NULL).nullable()
     val name = text("name")
     val description = text("description").nullable()
     val address = text("address").nullable()
@@ -36,7 +35,7 @@ object LocationTable : UUIDTable("location") {
 fun ResultRow.toLocation() = Location(
     locationId = toProjectId(LocationTable.id),
     userId = toUserIdOrNull(LocationTable.userId),
-    streetId = toProjectIdOrNull(LocationTable.areaId),
+    areaId = toProjectIdOrNull(LocationTable.areaId),
     name = this[LocationTable.name],
     description = this[LocationTable.description],
     address = this[LocationTable.address],
@@ -51,7 +50,7 @@ fun ResultRow.toLocation() = Location(
 fun UpdateBuilder<*>.writeFull(location: Location) {
     this[LocationTable.id] = location.locationId.toUUID()
     this[LocationTable.userId] = location.userId?.toUUID()
-    this[LocationTable.areaId] = location.streetId?.toUUID()
+    this[LocationTable.areaId] = location.areaId?.toUUID()
     this[LocationTable.createdAt] = location.createdAt.toLocalDateTimeUtc()
     writeUpdate(location)
 }

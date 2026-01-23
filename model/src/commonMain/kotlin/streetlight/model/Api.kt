@@ -14,14 +14,14 @@ import kabinet.model.GeoPoint
 import kabinet.model.ImageGenRequest
 import kabinet.model.ImageUrls
 import kabinet.model.SpeechRequest
-import streetlight.model.data.Street
-import streetlight.model.data.StreetId
+import streetlight.model.data.Area
+import streetlight.model.data.AreaId
 import streetlight.model.data.Event
 import streetlight.model.data.EventId
 import streetlight.model.data.EventSong
 import streetlight.model.data.Location
 import streetlight.model.data.LocationId
-import streetlight.model.data.NewStreet
+import streetlight.model.data.NewArea
 import streetlight.model.data.NewEvent
 import streetlight.model.data.NewLocation
 import streetlight.model.data.NewSong
@@ -47,13 +47,13 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         // object UserEvents: ApiDaoEndpoint<Event, EventId, NewEvent>(this, "user")
     }
 
-    object StreetFeed: GetEndpoint<List<Street>>(this, "areas") {
-        object Create: PostEndpoint<NewStreet, StreetId>(this, "create")
+    object StreetFeed: GetEndpoint<List<Area>>(this, "areas") {
+        object Create: PostEndpoint<NewArea, AreaId>(this, "create")
     }
 
     object LocationFeed: GetByTableIdEndpoint<LocationId, Location>(this, "locations") {
         object Create: PostEndpoint<NewLocation, LocationId>(this, "create")
-        object Street: GetByTableIdEndpoint<StreetId, List<Location>>(this, "street")
+        object Street: GetByTableIdEndpoint<AreaId, List<Location>>(this, "street")
         object Update: PostEndpoint<Location, Boolean>(this, "update")
         object Search: GetEndpoint<List<Location>>(this, "search") {
             val query = addStringParam("q")

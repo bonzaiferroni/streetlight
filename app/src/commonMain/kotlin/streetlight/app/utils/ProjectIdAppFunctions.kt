@@ -5,14 +5,14 @@ import streetlight.app.StreetProfileRoute
 import streetlight.app.EventProfileRoute
 import streetlight.app.LocationProfileRoute
 import streetlight.app.SongProfileRoute
-import streetlight.model.data.StreetId
+import streetlight.model.data.AreaId
 import streetlight.model.data.EventId
 import streetlight.model.data.LocationId
 import streetlight.model.data.ProjectId
 import streetlight.model.data.SongId
 
 inline fun <reified T: IdRoute<String>> ProjectId.toRoute(): T = when (this) {
-    is StreetId -> StreetProfileRoute(value) as T
+    is AreaId -> StreetProfileRoute(value) as T
     is EventId -> EventProfileRoute(value) as T
     is LocationId -> LocationProfileRoute(value) as T
     is SongId -> SongProfileRoute(value) as T

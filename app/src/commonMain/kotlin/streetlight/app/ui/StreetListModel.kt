@@ -6,8 +6,8 @@ import pondui.ui.core.ModelState
 import pondui.ui.core.StateModel
 import streetlight.app.AppProvider
 import streetlight.app.RuntimeProvider
-import streetlight.model.data.Street
-import streetlight.model.data.NewStreet
+import streetlight.model.data.Area
+import streetlight.model.data.NewArea
 
 class StreetListModel(private val app: AppProvider = RuntimeProvider): StateModel<StreetListState>() {
 
@@ -26,7 +26,7 @@ class StreetListModel(private val app: AppProvider = RuntimeProvider): StateMode
     fun createNewStreet() {
         if (!stateNow.isValidNewItem) return
         viewModelScope.launch {
-            client.create(NewStreet(
+            client.create(NewArea(
                 name = stateNow.newStreetName
             ))
             setNewStreetName("")
@@ -37,13 +37,13 @@ class StreetListModel(private val app: AppProvider = RuntimeProvider): StateMode
     fun refreshItems() {
         viewModelScope.launch {
             val areas = client.readAll() ?: return@launch
-            setState { it.copy(streets = areas) }
+            setState { it.copy(areas = areas) }
         }
     }
 }
 
 data class StreetListState(
-    val streets: List<Street> = emptyList(),
+    val areas: List<Area> = emptyList(),
     val newStreetName: String = "",
     val isValidNewItem: Boolean = false,
 )

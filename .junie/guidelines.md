@@ -53,6 +53,7 @@ The following functions define workflows and parameters. These may be invoked as
 CreateModel(Foo):
 * Create a new data class in the form of `data class Foo(val fooId: FooId)` in the package `streetlight.model.data`. It must be serializable.
 * Also create the value class `value class FooId(override val fooId: String): ProjectId`.
+  * Define companion object for creating FooId: `companion object { fun random() = FooId(randomUuidString())}` 
   * Add an entry to `String.toProjectId()` in `ProjectId.kt`.
 
 CreateTable(Foo):

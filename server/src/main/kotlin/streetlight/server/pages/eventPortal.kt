@@ -4,7 +4,7 @@ import klutch.html.*
 import kotlinx.html.*
 import streetlight.model.data.*
 
-fun HTML.eventPortal(event: Event, spark: Spark?, requestItems: List<RequestItem>) {
+fun HTML.eventPortal(event: Event, person: Person?, requestItems: List<RequestItem>) {
     head(event.title) {
         styles("eventPortal.css")
         scripts("eventportal.js")

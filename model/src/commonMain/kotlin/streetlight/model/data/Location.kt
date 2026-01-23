@@ -11,7 +11,7 @@ import kotlin.jvm.JvmInline
 data class Location(
     val locationId: LocationId,
     val userId: UserId?,
-    val streetId: StreetId?,
+    val areaId: AreaId?,
     val name: String,
     val description: String?,
     val address: String?,

@@ -45,11 +45,9 @@ data class NewEvent(
 )
 
 enum class EventType(val label: String) {
-    StreetPerformance("Street Performance"),
-    OpenMic("Open Mic"),
-    Potluck("Potluck"),
-    Circle("Circle"),
-    FoodVendor("Food"),
+    Performance("Performance"),
+    Food("Food"),
+    Social("Social")
 }
 
 enum class EventStatus(override val label: String): LabeledEnum<EventStatus> {

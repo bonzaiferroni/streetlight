@@ -105,7 +105,7 @@ suspend fun initGtfs(app: ServerProvider = RuntimeProvider) {
         routeId to stopTimes.filter { stopTime -> trips.any { stopTime.tripId == it.tripId } }.map { it.transitStopId }.toSet()
     }
 
-    console.log("upserting ${routeStops.size} routeStops")
+    console.log("upserting routeStops for ${routeStops.size} routes")
     routeStops.forEach { (transitRouteId, transitStopIds) ->
         app.dao.transitRoute.upsertRouteStops(transitRouteId, transitStopIds)
     }

@@ -124,7 +124,7 @@ fun addZoomReactions() {
 fun addRouteLines(routes: List<TransitRoute>) {
     val lines = routes.mapNotNull { route ->
         if (route.vehicleType == VehicleType.Bus) return@mapNotNull null
-        val line = route.points.map { arrayOf(it.lon, it.lat) }.toJsArray()
+        val line = route.points.map { arrayOf(it.lng, it.lat) }.toJsArray()
         jsObject {
             type = "Feature"
             properties = jsObject { }

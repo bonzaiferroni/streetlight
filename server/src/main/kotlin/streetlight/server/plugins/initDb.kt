@@ -10,16 +10,17 @@ import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.transactions.transaction
 import streetlight.server.RuntimeProvider
 import streetlight.server.ServerProvider
-import streetlight.server.db.tables.StreetTable
+import streetlight.server.db.tables.AreaTable
 import streetlight.server.db.tables.EventTable
 import streetlight.server.db.tables.LocationTable
 import streetlight.server.db.tables.RequestTable
 import streetlight.server.db.tables.SongTable
 import streetlight.server.db.tables.RenditionTable
-import streetlight.server.db.tables.SparkTable
+import streetlight.server.db.tables.PersonTable
 import streetlight.server.db.tables.TransitRouteStopTable
 import streetlight.server.db.tables.TransitRouteTable
 import streetlight.server.db.tables.TransitStopTable
+import streetlight.server.db.tables.EventTagTable
 
 fun initDb(
     app: ServerProvider = RuntimeProvider
@@ -44,16 +45,17 @@ fun initDb(
 val dbTables = listOf(
     UserTable,
     LocationTable,
-    StreetTable,
+    AreaTable,
     EventTable,
     SongTable,
     RenditionTable,
     RequestTable,
     RefreshTokenTable,
-    SparkTable,
+    PersonTable,
     TransitRouteTable,
     TransitStopTable,
     TransitRouteStopTable,
+    EventTagTable,
 )
 
 fun connectDb(env: Environment) = Database.connect(
