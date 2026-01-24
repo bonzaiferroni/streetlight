@@ -1,6 +1,7 @@
 package streetlight.web
 
 import kabinet.model.GeoPoint
+import kabinet.model.LocationEventsRequest
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -26,7 +27,7 @@ class MapStage(
             return
         }
         viewModelScope.launch {
-            val events = app.repo.eventClient.readLocationEvents(point)
+            val events = app.repo.eventClient.readLocationEvents(LocationEventsRequest(point, stateNow.zoom))
             setState { it.copy(location = point, queriedLocation = point, events = events)}
         }
     }
@@ -35,7 +36,7 @@ class MapStage(
 data class MapStageState(
     val location: GeoPoint = GeoPoint.Denver,
     val queriedLocation: GeoPoint = GeoPoint.Denver,
-    val zoom: Int = 11,
+    val zoom: Float = 11f,
     val events: List<Event> = emptyList(),
     val name: String = ""
 )

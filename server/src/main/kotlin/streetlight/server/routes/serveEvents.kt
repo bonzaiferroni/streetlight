@@ -6,6 +6,7 @@ import io.ktor.server.response.respondRedirect
 import io.ktor.server.routing.Routing
 import io.ktor.server.routing.get
 import kabinet.model.GeoPoint
+import kabinet.model.LocationEventsRequest
 import klutch.server.*
 import klutch.utils.getUserId
 import kotlinx.datetime.Clock
@@ -32,9 +33,10 @@ fun Routing.serveEvents(app: ServerProvider = RuntimeProvider) {
         dao.readEvent(id)
     }
 
-    queryEndpoint(Api.EventFeed.LocationEvents, GeoPoint::fromQuery) { sent, endpoint ->
-        val events = mockDb.events
-        events.take((1 until events.size).random())
+    queryEndpoint(Api.EventFeed.LocationEvents, LocationEventsRequest::fromQuery) { sent, endpoint ->
+        if (sent == null) return@queryEndpoint emptyList()
+        val locations = mockDb.locations.filter { it.geoPoint.distanceTo(sent.point) < 1000 }.map { it.locationId }.toSet()
+        mockDb.events.filter { locations.contains(it.locationId) }
     }
 
     get("/qr") {

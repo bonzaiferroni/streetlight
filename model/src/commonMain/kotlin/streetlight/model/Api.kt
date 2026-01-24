@@ -13,6 +13,7 @@ import kabinet.gemini.GeminiApi
 import kabinet.model.GeoPoint
 import kabinet.model.ImageGenRequest
 import kabinet.model.ImageUrls
+import kabinet.model.LocationEventsRequest
 import kabinet.model.SpeechRequest
 import streetlight.model.data.Area
 import streetlight.model.data.AreaId
@@ -43,7 +44,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
     object EventFeed: GetEndpoint<List<Event>>(this, "events") {
         object Create: PostEndpoint<NewEvent, Event>(this, "create")
         object Delete: DeleteEndpoint<EventId>(this, "delete")
-        object LocationEvents: QueryEndpoint<GeoPoint, List<Event>>(this, "location")
+        object LocationEvents: QueryEndpoint<LocationEventsRequest, List<Event>>(this, "location")
         // object UserEvents: ApiDaoEndpoint<Event, EventId, NewEvent>(this, "user")
     }
 
