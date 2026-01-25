@@ -1,7 +1,7 @@
 package streetlight.model.data
 
-import kabinet.model.GeoPoint
-import kabinet.utils.randomUuidString
+import kampfire.model.GeoPoint
+import kampfire.utils.randomUuidString
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 

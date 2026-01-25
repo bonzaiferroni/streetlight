@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import streetlight.model.Api
-import streetlight.model.data.StreetTransit
+import streetlight.model.data.AreaTransit
 import streetlight.server.RuntimeProvider
 import streetlight.server.ServerProvider
 import kotlin.time.Duration.Companion.seconds
@@ -57,7 +57,7 @@ fun Routing.serveGtfs(app: ServerProvider = RuntimeProvider) {
         val routeIds = setOf("15L", "15", "121", "121L", "107R", "101H", "A")
         val routes = app.dao.transitRoute.readRoutes(routeIds)
         val stops = app.dao.transitStop.readRouteStops(routeIds)
-        StreetTransit(
+        AreaTransit(
             routes = routes,
             stops = stops
         )

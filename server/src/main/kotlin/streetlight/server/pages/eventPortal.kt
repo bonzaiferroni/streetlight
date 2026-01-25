@@ -1,6 +1,31 @@
 package streetlight.server.pages
 
-import klutch.html.*
+import koala.html.AlignItemsCenter
+import koala.html.Bold
+import koala.html.Dim
+import koala.html.DisplayNone
+import koala.html.FillWidth
+import koala.html.Flex1
+import koala.html.Glow
+import koala.html.Id
+import koala.html.NoGap
+import koala.html.button
+import koala.html.card
+import koala.html.checkBox
+import koala.html.column
+import koala.html.head
+import koala.html.heading1
+import koala.html.heading2
+import koala.html.heading3
+import koala.html.heading4
+import koala.html.invoke
+import koala.html.logo
+import koala.html.paragraph
+import koala.html.propertyValue
+import koala.html.row
+import koala.html.scripts
+import koala.html.styles
+import koala.html.textField
 import kotlinx.html.*
 import streetlight.model.data.*
 

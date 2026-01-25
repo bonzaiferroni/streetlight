@@ -1,24 +1,22 @@
 package streetlight.web
 
-import kabinet.model.GeoPoint
-import kabinet.model.LocationEventsRequest
+import kampfire.model.GeoPoint
+import streetlight.model.data.LocationEventsRequest
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import streetlight.model.data.Event
 
-class MapStage(
-    private val viewModelScope: CoroutineScope,
-    private val app: BrowserProvider
-) {
-    protected val _state = MutableStateFlow(MapStageState())
+class EventMap(
+    viewModelScope: CoroutineScope,
+    val eventClient: EventBrowserClient
+): BrowserModel<EventMapState>(EventMapState(), viewModelScope) {
 
-    val stateFlow get() = _state.asStateFlow()
-    val stateNow get() = _state.value
+    fun setName(name: String) {
+        setState { it.copy(name = name) }
+    }
 
-    fun setState(setter: (MapStageState) -> MapStageState) {
-        _state.value = setter(_state.value)
+    fun setZoom(zoom: Float) {
+        setState { it.copy(zoom = zoom) }
     }
 
     fun setLocation(point: GeoPoint) {
@@ -27,13 +25,13 @@ class MapStage(
             return
         }
         viewModelScope.launch {
-            val events = app.repo.eventClient.readLocationEvents(LocationEventsRequest(point, stateNow.zoom))
+            val events = eventClient.readLocationEvents(LocationEventsRequest(point, stateNow.zoom))
             setState { it.copy(location = point, queriedLocation = point, events = events)}
         }
     }
 }
 
-data class MapStageState(
+data class EventMapState(
     val location: GeoPoint = GeoPoint.Denver,
     val queriedLocation: GeoPoint = GeoPoint.Denver,
     val zoom: Float = 11f,

@@ -35,5 +35,7 @@ project(":klutch").projectDir = file("klutch/library")
 include(":app")
 include(":model")
 include(":server")
+include(":kampfire")
 
 include(":web")
+include(":koala")

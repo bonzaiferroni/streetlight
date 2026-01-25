@@ -1,7 +1,7 @@
 package streetlight.web
 
-import kabinet.api.GetEndpoint
-import kabinet.api.QueryEndpoint
+import kampfire.api.GetEndpoint
+import kampfire.api.QueryEndpoint
 import kotlinx.browser.window
 import kotlinx.coroutines.await
 import kotlinx.serialization.json.Json

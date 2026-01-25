@@ -1,9 +1,9 @@
 package streetlight.model.data
 
 import androidx.compose.runtime.Stable
-import kabinet.model.LabeledEnum
-import kabinet.model.UserId
-import kabinet.utils.randomUuidString
+import kampfire.model.LabeledEnum
+import kampfire.model.UserId
+import kampfire.utils.randomUuidString
 import kotlinx.serialization.Serializable
 import kotlinx.datetime.Instant
 import kotlin.jvm.JvmInline

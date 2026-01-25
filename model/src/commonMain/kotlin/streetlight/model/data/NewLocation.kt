@@ -1,6 +1,6 @@
 package streetlight.model.data
 
-import kabinet.model.GeoPoint
+import kampfire.model.GeoPoint
 import kotlinx.serialization.Serializable
 
 @Serializable

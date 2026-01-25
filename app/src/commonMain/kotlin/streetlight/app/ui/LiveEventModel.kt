@@ -1,7 +1,7 @@
 package streetlight.app.ui
 
-import kabinet.model.OrpheusVoice
-import kabinet.model.SpeechRequest
+import kampfire.model.OrpheusVoice
+import kampfire.model.SpeechRequest
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch

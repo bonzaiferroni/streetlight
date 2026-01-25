@@ -1,6 +1,6 @@
 package streetlight.model.data
 
-import kabinet.model.GeoPoint
+import kampfire.model.GeoPoint
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 
@@ -17,6 +17,9 @@ data class TransitRoute(
     val points: List<GeoPoint>
 ) {
     companion object {
+        // gtfs data csv columns
+        // route_id,agency_id,route_short_name,route_long_name,route_desc,route_type,route_url,route_color,route_text_color
+        // 0,RTD,0,Broadway,This Route Travels Northbound & Southbound,3,http://www.rtd-denver.com/Schedules.shtml,0076CE,FFFFFF
         fun fromCsv(csv: List<String>) = TransitRoute(
             transitRouteId = TransitRouteId(csv[0]),
             shortName = csv[2],
@@ -45,13 +48,3 @@ enum class VehicleType {
     LightRail,
     Train,
 }
-
-// gtfs data csv columns
-// route_id,agency_id,route_short_name,route_long_name,route_desc,route_type,route_url,route_color,route_text_color
-// 0,RTD,0,Broadway,This Route Travels Northbound & Southbound,3,http://www.rtd-denver.com/Schedules.shtml,0076CE,FFFFFF
-
-@Serializable
-data class StreetTransit(
-    val routes: List<TransitRoute>,
-    val stops: List<TransitStop>
-)

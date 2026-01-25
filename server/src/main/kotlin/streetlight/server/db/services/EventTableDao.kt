@@ -1,7 +1,6 @@
 package streetlight.server.db.services
 
-import kabinet.model.UserId
-import kabinet.utils.toDayDescription
+import kampfire.model.UserId
 import klutch.db.DbService
 import klutch.db.deleteSingle
 import klutch.db.read
@@ -9,15 +8,12 @@ import klutch.db.updateSingleWhere
 import klutch.utils.eq
 import kotlinx.datetime.Clock
 import org.jetbrains.exposed.sql.and
-import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.insert
 import streetlight.model.data.Event
 import streetlight.model.data.EventId
 import streetlight.model.data.NewEvent
 import streetlight.model.data.EventStatus
 import streetlight.server.db.tables.EventTable
-import streetlight.server.db.tables.LocationTable
-import streetlight.server.db.tables.readName
 import streetlight.server.db.tables.toEvent
 import streetlight.server.db.tables.writeFull
 import streetlight.server.db.tables.writeUpdate

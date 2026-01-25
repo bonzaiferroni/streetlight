@@ -1,10 +1,8 @@
 package streetlight.server.db.tables
 
-import kabinet.model.GeoPoint
-import klutch.utils.toUUID
+import kampfire.model.GeoPoint
 import kotlinx.serialization.json.Json
 import org.jetbrains.exposed.dao.id.IdTable
-import org.jetbrains.exposed.dao.id.UUIDTable
 import org.jetbrains.exposed.sql.ReferenceOption
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.Table
@@ -13,7 +11,6 @@ import org.jetbrains.exposed.sql.statements.UpdateBuilder
 import streetlight.model.data.TransitRoute
 import streetlight.model.data.TransitRouteId
 import streetlight.model.data.VehicleType
-import streetlight.server.utils.toProjectId
 
 /**
  * Ahoy! This be the TransitRouteTable, where we store the charts for our noble vessels.

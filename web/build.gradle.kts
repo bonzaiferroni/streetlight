@@ -20,13 +20,14 @@ kotlin {
             dependencies {
                 implementation(libs.kotlinx.serialization.json)
                 implementation(libs.kotlinx.coroutines.core)
-                implementation("org.jetbrains.kotlinx:kotlinx-html-js:0.12.0")
                 implementation(project(":model"))
+                implementation(project(":koala"))
             }
         }
 
         val jsMain by getting {
             dependencies {
+                implementation(libs.kotlinx.html.js)
             }
         }
     }

@@ -1,8 +1,8 @@
 package streetlight.model.data
 
-import kabinet.model.LabeledEnum
-import kabinet.model.UserId
-import kabinet.utils.randomUuidString
+import kampfire.model.LabeledEnum
+import kampfire.model.UserId
+import kampfire.utils.randomUuidString
 import kotlinx.datetime.Instant
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline

@@ -8,7 +8,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
-import kabinet.model.GeoPoint
+import kampfire.model.GeoPoint
 import pondui.ui.controls.Button
 import pondui.ui.controls.LazyColumn
 import pondui.ui.controls.Row

@@ -1,6 +1,6 @@
 package streetlight.server.db.services
 
-import kabinet.model.UserId
+import kampfire.model.UserId
 import klutch.db.DbService
 import klutch.db.read
 import org.jetbrains.exposed.sql.SortOrder

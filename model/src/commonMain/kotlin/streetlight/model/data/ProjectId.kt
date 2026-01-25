@@ -1,6 +1,6 @@
 package streetlight.model.data
 
-import kabinet.db.TableId
+import kampfire.api.TableId
 
 sealed interface ProjectId: TableId<String>
 

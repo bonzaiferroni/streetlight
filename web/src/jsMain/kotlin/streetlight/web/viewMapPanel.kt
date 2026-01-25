@@ -1,6 +1,5 @@
 package streetlight.web
 
-import kotlinx.browser.document
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -9,29 +8,29 @@ import kotlinx.html.div
 import kotlinx.html.h2
 import kotlinx.html.js.span
 import kotlinx.html.p
-import org.w3c.dom.HTMLElement
 import kotlin.collections.component1
 import kotlin.collections.component2
 import kotlin.time.Duration.Companion.seconds
 
-fun viewMapStage(stage: MapStage) {
-    val mount = document.getElementById("select-point") as HTMLElement
-    mount.renderRoot {
+fun RenderContext.viewMapPanel() {
+    val eventMap = app.home.eventMap
+
+    mountRender("select-point") {
         p {
             +"Hello map!"
         }
         div {
             textField(
-                onChangeValue = { value -> stage.setState { it.copy(name = value) } }
+                onChangeValue = eventMap::setName
             )
             textField(
-                binding = stage.stateFlow.map { "Hello ${it.name}!" }
+                binding = eventMap.stateFlow.map { "Hello ${it.name}!" }
             )
             checkBoxInput {
                 // onValueChange { console.log(it) }
             }
         }
-        renderState(stage.stateFlow.map { it.queriedLocation }) {
+        renderState(eventMap.stateFlow.map { it.queriedLocation }) {
             p {
                 +"You are at ${it.lng}, ${it.lat}"
             }
@@ -52,7 +51,7 @@ fun viewMapStage(stage: MapStage) {
                 }
             }
         }
-        renderState(stage.stateFlow.map { it.events }, true) { allEvents ->
+        renderState(eventMap.stateFlow.map { it.events }, true) { allEvents ->
             allEvents.groupBy { it.eventType }.forEach { (eventType, events) ->
                 div("event-group") {
                     h2 {

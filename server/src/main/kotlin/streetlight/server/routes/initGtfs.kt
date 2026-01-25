@@ -6,11 +6,10 @@ import io.ktor.client.request.get
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.readRawBytes
 import kabinet.console.globalConsole
-import kabinet.model.GeoPoint
+import kampfire.model.GeoPoint
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import streetlight.model.data.TransitRoute
-import streetlight.model.data.TransitRouteId
 import streetlight.model.data.TransitShape
 import streetlight.model.data.TransitStop
 import streetlight.model.data.TransitStopTime

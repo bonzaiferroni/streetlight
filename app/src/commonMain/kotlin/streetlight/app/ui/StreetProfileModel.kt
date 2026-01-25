@@ -1,7 +1,7 @@
 package streetlight.app.ui
 
 import androidx.lifecycle.viewModelScope
-import kabinet.model.GeoPoint
+import kampfire.model.GeoPoint
 import kotlinx.coroutines.launch
 import pondui.ui.core.ModelState
 import pondui.ui.core.StateModel

@@ -1,6 +1,21 @@
 package streetlight.server.pages
 
-import klutch.html.*
+import koala.html.AlignItemsCenter
+import koala.html.AlignItemsStretch
+import koala.html.Bold
+import koala.html.Dim
+import koala.html.Flex1
+import koala.html.Flex2
+import koala.html.Large
+import koala.html.NoGap
+import koala.html.TextAlignCenter
+import koala.html.TextAlignRight
+import koala.html.column
+import koala.html.heading5
+import koala.html.lottie
+import koala.html.modify
+import koala.html.paragraph
+import koala.html.row
 import kotlinx.html.*
 
 fun FlowContent.appTab() {

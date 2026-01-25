@@ -1,11 +1,10 @@
 package streetlight.server.pages
 
-import klutch.html.AlignItemsCenter
-import klutch.html.card
-import klutch.html.column
-import klutch.html.label
+import koala.html.AlignItemsCenter
+import koala.html.card
+import koala.html.column
+import koala.html.label
 import kotlinx.html.FlowContent
-import kotlinx.html.HTML
 import kotlinx.html.a
 import streetlight.model.data.Event
 

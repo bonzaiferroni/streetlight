@@ -1,6 +1,6 @@
 package streetlight.server.utils
 
-import kabinet.model.UserId
+import kampfire.model.UserId
 import klutch.utils.toStringId
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.Column

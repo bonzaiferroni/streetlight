@@ -1,9 +1,9 @@
 package streetlight.model
 
-import kabinet.model.GeoPoint
-import kabinet.model.User
-import kabinet.model.UserId
-import kabinet.model.UserRole
+import kampfire.model.GeoPoint
+import kampfire.model.User
+import kampfire.model.UserId
+import kampfire.model.UserRole
 import kotlinx.datetime.Clock
 import streetlight.model.data.Area
 import streetlight.model.data.AreaId

@@ -1,20 +1,15 @@
 package streetlight.model
 
-import kabinet.api.ApiNode
-import kabinet.api.DeleteEndpoint
-import kabinet.api.GetByTableIdEndpoint
-import kabinet.api.GetEndpoint
-import kabinet.api.PostEndpoint
-import kabinet.api.QueryEndpoint
-import kabinet.api.SpeechApi
-import kabinet.api.UpdateEndpoint
-import kabinet.clients.GeminiMessage
-import kabinet.gemini.GeminiApi
-import kabinet.model.GeoPoint
-import kabinet.model.ImageGenRequest
-import kabinet.model.ImageUrls
-import kabinet.model.LocationEventsRequest
-import kabinet.model.SpeechRequest
+import kampfire.api.ApiNode
+import kampfire.api.DeleteEndpoint
+import kampfire.api.GetByTableIdEndpoint
+import kampfire.api.GetEndpoint
+import kampfire.api.PostEndpoint
+import kampfire.api.QueryEndpoint
+import kampfire.api.SpeechApi
+import kampfire.api.UpdateEndpoint
+import streetlight.model.data.LocationEventsRequest
+import kampfire.model.SpeechRequest
 import streetlight.model.data.Area
 import streetlight.model.data.AreaId
 import streetlight.model.data.Event
@@ -33,7 +28,7 @@ import streetlight.model.data.RenditionId
 import streetlight.model.data.NewRendition
 import streetlight.model.data.NewRequest
 import streetlight.model.data.RequestId
-import streetlight.model.data.StreetTransit
+import streetlight.model.data.AreaTransit
 
 object Api: ApiNode(ApiNode(null, "api"), "v1") {
 
@@ -87,12 +82,12 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
 
     object RequestBox: PostEndpoint<NewRequest, RequestId>(this, "request_box")
 
-    object Gemini: ApiNode(this, "gemini"), GeminiApi {
-        override val chat = PostEndpoint<List<GeminiMessage>, String>(this, "chat")
-        override val image = PostEndpoint<ImageGenRequest, ImageUrls>(this, "image")
-        override val speechUrl = PostEndpoint<SpeechRequest, String>(this, "speechUrl")
-        override val speech = PostEndpoint<SpeechRequest, ByteArray>(this, "speech")
-    }
+//    object Gemini: ApiNode(this, "gemini"), GeminiApi {
+//        override val chat = PostEndpoint<List<GeminiMessage>, String>(this, "chat")
+//        override val image = PostEndpoint<ImageGenRequest, ImageUrls>(this, "image")
+//        override val speechUrl = PostEndpoint<SpeechRequest, String>(this, "speechUrl")
+//        override val speech = PostEndpoint<SpeechRequest, ByteArray>(this, "speech")
+//    }
 
     object Speech: ApiNode(this, "speech"), SpeechApi {
         override val wav = PostEndpoint<SpeechRequest, ByteArray>(this, "wav")
@@ -101,31 +96,6 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
 
     object Gtfs: ApiNode(this, "gtfs") {
         object VehiclePosition: GetEndpoint<Unit>(this, "VehiclePosition.pb")
-        object Routes: GetEndpoint<StreetTransit>(this, "routes")
+        object Routes: GetEndpoint<AreaTransit>(this, "routes")
     }
 }
-
-// utility
-//
-//    // models
-//    val area = Endpoint("/data/area")
-//    val event = Endpoint("/data/event")
-//    val location = Endpoint("/data/location")
-//    val request = Endpoint("/data/request")
-//
-//    // request
-//    val requestInfoEvent = Endpoint("/request_info/event")
-//    val requestInfo = Endpoint("/request_info")
-//    val requestInfoQueue = Endpoint("/request_info/queue")
-//    val requestInfoRandom = Endpoint("/request_info/random")
-//
-//    // user
-//    val song = Endpoint("/user/song")
-//    val atlas = Endpoint("/user/atlas")
-//
-//    // event
-//    val eventInfoCurrent = Endpoint("/event_info/current")
-//    val eventInfo = Endpoint("/event_info")
-//    val createEventRequest = Endpoint("/event_profile/request")
-//    val readEventRequests = Endpoint("/event_profile")
-//    val uploadEventImage = Endpoint("/event_profile/image")

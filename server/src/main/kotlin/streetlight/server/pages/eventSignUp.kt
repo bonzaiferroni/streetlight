@@ -1,6 +1,6 @@
 package streetlight.server.pages
 
-import klutch.html.*
+import koala.html.*
 import kotlinx.html.*
 import streetlight.model.data.*
 

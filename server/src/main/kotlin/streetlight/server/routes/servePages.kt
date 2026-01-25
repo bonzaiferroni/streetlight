@@ -25,9 +25,8 @@ fun Routing.servePages(app: ServerProvider = RuntimeProvider) {
     staticFiles("/static", File("www"))
 
     get("/") {
-        val events = app.dao.event.readActiveEvents()
         call.respondHtml {
-            homePage(events)
+            homePage()
         }
     }
 
@@ -49,3 +48,4 @@ fun Routing.servePages(app: ServerProvider = RuntimeProvider) {
         }
     }
 }
+

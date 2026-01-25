@@ -1,10 +1,9 @@
 package streetlight.web
 
-import kabinet.model.GeoPoint
-import kabinet.model.LocationEventsRequest
 import streetlight.model.Api
 import streetlight.model.data.Event
 import streetlight.model.data.EventId
+import streetlight.model.data.LocationEventsRequest
 import streetlight.model.data.NewEvent
 
 class EventBrowserClient() {

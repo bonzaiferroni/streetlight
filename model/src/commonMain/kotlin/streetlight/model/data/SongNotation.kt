@@ -1,7 +1,6 @@
 package streetlight.model.data
 
 import androidx.compose.runtime.Stable
-import kabinet.utils.suggestVariation
 import kotlinx.serialization.Serializable
 import kotlin.collections.listOf
 
@@ -68,3 +67,7 @@ val amazingGrace = SongNotation(
     ),
 )
 
+fun <T> List<T>.suggestVariation(rootId: String, provideId: (T) -> String) = count { provideId(it).startsWith(rootId) }
+    .takeIf { it > 0 }
+    ?.let { "$rootId ${'A' + it}" }
+    ?: rootId

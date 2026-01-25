@@ -1,13 +1,12 @@
 package streetlight.server.pages
 
-import klutch.html.*
+import koala.html.*
 import kotlinx.html.*
-import streetlight.model.data.*
 
-fun HTML.homePage(events: List<Event>) {
+fun HTML.homePage() {
     head("Streetlight | Home") {
         styles("homePage.css")
-        scripts("homePage.js")
+        scripts("launchApp.js")
         geoMapResources()
         script(src = "https://cdn.jsdelivr.net/npm/protobufjs/dist/protobuf.min.js") { }
     }
@@ -26,20 +25,7 @@ fun HTML.homePage(events: List<Event>) {
                     }
                     +" music community"
                 }
-            }
-            tabs {
-                tab("Events") {
-                    eventsTab(events)
-                }
-                tab("Map") {
-                    column(AlignItemsCenter) {
-                        geoMap()
-                        homeFooter()
-                    }
-                }
-                tab("App") {
-                    appTab()
-                }
+                box(Id("app-navigator"))
             }
         }
     }

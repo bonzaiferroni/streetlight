@@ -1,6 +1,6 @@
 package streetlight.model.utils
 
-import kabinet.model.SignUpRequest
+import kampfire.model.SignUpRequest
 
 val SignUpRequest.validSignUp: Boolean
     get() = password.validPassword && username.validUsername && email.validEmail

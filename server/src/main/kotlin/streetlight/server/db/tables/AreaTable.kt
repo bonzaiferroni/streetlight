@@ -1,6 +1,6 @@
 package streetlight.server.db.tables
 
-import kabinet.model.GeoPoint
+import kampfire.model.GeoPoint
 import klutch.utils.toUUID
 import org.jetbrains.exposed.dao.id.UUIDTable
 import org.jetbrains.exposed.sql.ResultRow

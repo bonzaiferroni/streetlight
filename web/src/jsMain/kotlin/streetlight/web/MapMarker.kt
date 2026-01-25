@@ -2,7 +2,7 @@ package streetlight.web
 
 import org.w3c.dom.HTMLElement
 
-data class MarkerElement(
+data class MapMarker(
     val marker: maplibregl.Marker,
     val element: HTMLElement,
     val bearingElement: HTMLElement?,
