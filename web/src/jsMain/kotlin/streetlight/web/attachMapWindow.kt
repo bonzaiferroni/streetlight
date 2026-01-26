@@ -6,6 +6,7 @@ import kotlinx.html.dom.append
 import kotlinx.html.js.p
 import streetlight.model.data.EventId
 import streetlight.model.data.EventLocation
+import streetlight.model.data.EventType
 
 const val STOP_ZOOM = 14
 
@@ -37,11 +38,21 @@ fun AppContext.attachMapWindow(
 
 fun createEventMarker(event: EventLocation): MarkerElement {
     val element = document.createDiv()
-    element.append {
-        p { +"event" }
+
+    val iconClass = when(event.eventType) {
+        EventType.Performance -> "performance-icon"
+        EventType.Food -> "food-icon"
+        EventType.Social -> "social-icon"
     }
 
-    val marker = maplibregl.Marker()
+    val icon = document.createDiv()
+    icon.className = "map-marker-icon $iconClass"
+    element.appendChild(icon)
+
+    val marker = maplibregl.Marker(jsObject {
+        this.element = element
+        subpixelPositioning = true
+    })
     marker.setLngLat(event.geoPoint.toLngLat())
 
     return MarkerElement(

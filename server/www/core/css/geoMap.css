@@ -50,17 +50,12 @@
     background-color: transparent; /* important */
 }
 
-.bus-icon {
-    --svg: url("../../svg/bus.svg");
-}
-
-.train-icon {
-    --svg: url("../../svg/train.svg");
-}
-
-.transit-stop {
-    --svg: url("../../svg/transit-stop.svg");
-}
+.bus-icon { --svg: url("../../svg/bus.svg"); }
+.food-icon { --svg: url("../../svg/food.svg"); }
+.performance-icon { --svg: url("../../svg/guitar.svg"); }
+.social-icon { --svg: url("../../svg/social.svg"); }
+.train-icon { --svg: url("../../svg/train.svg"); }
+.transit-stop { --svg: url("../../svg/transit-stop.svg"); }
 
 .bus-bearing {
     width: 40px;
