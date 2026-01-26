@@ -9,17 +9,17 @@ import kotlinx.html.a
 import streetlight.model.data.Event
 
 fun FlowContent.eventsTab(
-    events: List<Event>
+//    events: List<Event>
 ) {
     column(AlignItemsCenter) {
-        events.forEach { event ->
-            a {
-                href = "/event-portal/${event.eventId.value}"
-                card {
-                    label(event.title)
-                }
-            }
-        }
+//        events.forEach { event ->
+//            a {
+//                href = "/event-portal/${event.eventId.value}"
+//                card {
+//                    label(event.title)
+//                }
+//            }
+//        }
         homeFooter()
     }
 }

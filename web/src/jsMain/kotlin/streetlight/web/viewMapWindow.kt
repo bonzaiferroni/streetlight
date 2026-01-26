@@ -4,10 +4,10 @@ import kampfire.model.GeoPoint
 
 const val STOP_ZOOM = 14
 
-fun RenderContext.viewMapWindow(
+fun AppContext.viewMapWindow(
     maplibre: maplibregl.Map
 ) {
-    val eventMap = app.home.eventMap
+    val eventMap = home.eventMap
 
     maplibre.on("move") {
         val point = maplibre.getCenter().let { GeoPoint(it.lng, it.lat) }

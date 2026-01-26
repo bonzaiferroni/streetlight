@@ -64,14 +64,6 @@ class RenderContext(
             }
         }
     }
-
-    fun mountRender(
-        elementId: String,
-        block: RenderContext.() -> Unit
-    ) {
-        val mount = document.getElementById(elementId) as HTMLElement
-        mount.renderRoot(renderScope, app, block)
-    }
 }
 
 fun HTMLElement.enterStage() {

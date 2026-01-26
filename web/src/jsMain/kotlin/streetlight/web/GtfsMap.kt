@@ -16,10 +16,9 @@ class GtfsMap(
     init {
         viewModelScope.launch {
             launch {
+                val areaId = AreaId.random()
                 val areaTransit = gtfsClient.readAreaTransit()
-                setState { it.copy(areaTransit = areaTransit) }
-            }
-            launch {
+                setState { it.copy(areaTransit = areaTransit, areaId = areaId) }
                 val root = protobuf.load("/static/proto/gtfs-realtime.proto").await()
                 val feedType = root.lookupType("transit_realtime.FeedMessage")
 

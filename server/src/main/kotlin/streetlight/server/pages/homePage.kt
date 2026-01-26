@@ -25,7 +25,20 @@ fun HTML.homePage() {
                     }
                     +" music community"
                 }
-                box(Id("app-navigator"))
+                tabs(FillWidth) {
+                    tab("Events") {
+                         eventsTab()
+                    }
+                    tab("Map") {
+                        column(AlignItemsCenter) {
+                            geoMap()
+                            homeFooter()
+                        }
+                    }
+                    tab("App") {
+                        appTab()
+                    }
+                }
             }
         }
     }

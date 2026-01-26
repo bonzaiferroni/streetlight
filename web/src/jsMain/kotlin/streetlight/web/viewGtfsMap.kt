@@ -9,16 +9,16 @@ import streetlight.model.data.TransitStop
 import streetlight.model.data.VehicleType
 import kotlin.js.Date
 
-fun RenderContext.viewGtfsMap(
+fun AppContext.viewGtfsMap(
     maplibre: maplibregl.Map
 ) {
-    val eventMap = app.home.eventMap
-    val gtfsMap = app.home.gtfsMap
+    val eventMap = home.eventMap
+    val gtfsMap = home.gtfsMap
     var stopMarkers: List<MapMarker> = emptyList()
     var areaTransit = gtfsMap.stateNow.areaTransit
     val vehicleElements = mutableMapOf<String, MapMarker>()
 
-    renderScope.launch {
+    appScope.launch {
         launch {
             eventMap.stateFlow.mapDistinct { it.zoom }.collect { zoom ->
                 if (zoom >= STOP_ZOOM) {

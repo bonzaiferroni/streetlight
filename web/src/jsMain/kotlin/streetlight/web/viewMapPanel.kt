@@ -12,8 +12,8 @@ import kotlin.collections.component1
 import kotlin.collections.component2
 import kotlin.time.Duration.Companion.seconds
 
-fun RenderContext.viewMapPanel() {
-    val eventMap = app.home.eventMap
+fun AppContext.viewMapPanel() {
+    val eventMap = home.eventMap
 
     mountRender("select-point") {
         p {

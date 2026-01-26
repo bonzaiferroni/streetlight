@@ -5,6 +5,9 @@ package streetlight.web
 
 import kotlinx.browser.window
 import kotlinx.coroutines.MainScope
+import kotlinx.html.div
+import kotlinx.html.dom.append
+import kotlinx.html.id
 import org.w3c.dom.HTMLElement
 
 @OptIn(ExperimentalJsExport::class)
@@ -14,6 +17,8 @@ fun viewApp() {
     val navigator = AppNavigator("/", scope) // 2 KB
 
     val app = object: AppContext { // 220 KB
+        override val appScope = scope
+
         override val client = object: ClientContext {
             override val gtfs = GtfsBrowserClient()
             override val event = EventBrowserClient()
@@ -29,15 +34,5 @@ fun viewApp() {
         }
     }
 
-    val navigatorElement = window.document.getElementById("app-navigator") as HTMLElement
-    navigatorElement.renderRoot(scope, app) {
-//        renderState(navigator.stateFlow.mapDistinct { it.screen }) { screen ->
-//            when(screen) {
-//                BrowserScreen.Home -> viewHome()
-//                BrowserScreen.Event -> TODO()
-//                BrowserScreen.User -> TODO()
-//            }
-//        }
-        viewHome()
-    }
+    app.viewHome()
 }

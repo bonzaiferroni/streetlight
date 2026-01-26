@@ -4,11 +4,12 @@ import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 
 fun FlowContent.tabs(
+    vararg modifiers: CssClass,
     content: TabScope.() -> Unit,
 ) {
     val scope = TabScope()
     scope.content()
-    column(Css("tabs")) {
+    column(Css("tabs"), *modifiers) {
         row(Css("tabs-header")) {
             scope.tabs.forEachIndexed { index, tab ->
                 label(tab.label, Css("tabs-button")) {
