@@ -8,7 +8,6 @@ import kampfire.api.PostEndpoint
 import kampfire.api.QueryEndpoint
 import kampfire.api.SpeechApi
 import kampfire.api.UpdateEndpoint
-import streetlight.model.data.LocationEventsRequest
 import kampfire.model.SpeechRequest
 import streetlight.model.data.Area
 import streetlight.model.data.AreaId
@@ -29,6 +28,8 @@ import streetlight.model.data.NewRendition
 import streetlight.model.data.NewRequest
 import streetlight.model.data.RequestId
 import streetlight.model.data.AreaTransit
+import streetlight.model.data.EventLocation
+import streetlight.model.data.MapQuery
 
 object Api: ApiNode(ApiNode(null, "api"), "v1") {
 
@@ -39,7 +40,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
     object EventFeed: GetEndpoint<List<Event>>(this, "events") {
         object Create: PostEndpoint<NewEvent, Event>(this, "create")
         object Delete: DeleteEndpoint<EventId>(this, "delete")
-        object LocationEvents: QueryEndpoint<LocationEventsRequest, List<Event>>(this, "location")
+        object QueryMap: QueryEndpoint<MapQuery, List<EventLocation>>(this, "bounds")
         // object UserEvents: ApiDaoEndpoint<Event, EventId, NewEvent>(this, "user")
     }
 

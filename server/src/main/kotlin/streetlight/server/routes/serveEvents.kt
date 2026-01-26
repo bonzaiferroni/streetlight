@@ -5,12 +5,13 @@ import io.ktor.server.html.respondHtml
 import io.ktor.server.response.respondRedirect
 import io.ktor.server.routing.Routing
 import io.ktor.server.routing.get
-import streetlight.model.data.LocationEventsRequest
+import streetlight.model.data.MapQuery
 import klutch.server.*
 import klutch.utils.getUserId
 import kotlinx.html.body
 import kotlinx.html.p
 import streetlight.model.Api
+import streetlight.model.data.EventLocation
 import streetlight.model.data.toProjectId
 import streetlight.model.mockDb
 import streetlight.server.RuntimeProvider
@@ -27,10 +28,12 @@ fun Routing.serveEvents(app: ServerProvider = RuntimeProvider) {
         dao.readEvent(id)
     }
 
-    queryEndpoint(Api.EventFeed.LocationEvents, LocationEventsRequest::fromQuery) { sent, endpoint ->
+    queryEndpoint(Api.EventFeed.QueryMap, MapQuery::fromQuery) { sent, endpoint ->
         if (sent == null) return@queryEndpoint emptyList()
-        val locations = mockDb.locations.filter { it.geoPoint.distanceTo(sent.point) < 1000 }.map { it.locationId }.toSet()
-        mockDb.events.filter { locations.contains(it.locationId) }
+        val locations = mockDb.locations.filter { sent.bounds.contains(it.geoPoint) }
+        val locationIds = locations.map { it.locationId }.toSet()
+        val events = mockDb.events.filter { locationIds.contains(it.locationId) }
+        events.map { event -> EventLocation.from(event, locations.first { it.locationId == event.locationId }) }
     }
 
     get("/qr") {

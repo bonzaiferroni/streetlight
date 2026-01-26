@@ -2,32 +2,34 @@ package streetlight.web
 
 import kotlinx.browser.document
 import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.launch
 import streetlight.model.data.TransitRoute
 import streetlight.model.data.TransitStop
 import streetlight.model.data.VehicleType
 import kotlin.js.Date
 
-fun AppContext.viewGtfsMap(
+fun AppContext.attachGtfsMap(
     maplibre: maplibregl.Map
 ) {
     val eventMap = home.eventMap
     val gtfsMap = home.gtfsMap
-    var stopMarkers: List<MapMarker> = emptyList()
+    var stopMarkers: List<MarkerElement> = emptyList()
     var areaTransit = gtfsMap.stateNow.areaTransit
-    val vehicleElements = mutableMapOf<String, MapMarker>()
+    val vehicleElements = mutableMapOf<String, MarkerElement>()
+    var markersVisible = false
 
     appScope.launch {
         launch {
             eventMap.stateFlow.mapDistinct { it.zoom }.collect { zoom ->
-                if (zoom >= STOP_ZOOM) {
+                if (!markersVisible && zoom >= STOP_ZOOM) {
                     console.log("showing markers")
+                    markersVisible = true
                     stopMarkers.forEach { marker ->
                         marker.setOpacity(1f)
                     }
-                } else {
+                } else if (markersVisible && zoom < STOP_ZOOM) {
                     console.log("hiding markers")
+                    markersVisible = false
                     stopMarkers.forEach { marker ->
                         marker.setOpacity(0f)
                     }
@@ -133,7 +135,7 @@ fun addRouteLines(
     maplibre.addLayer(layerObj)
 }
 
-fun createBusMarker(position: Position, route: TransitRoute): MapMarker {
+fun createBusMarker(position: Position, route: TransitRoute): MarkerElement {
     val element = document.createDiv()
     element.className = "map-marker"
 
@@ -155,18 +157,18 @@ fun createBusMarker(position: Position, route: TransitRoute): MapMarker {
         subpixelPositioning = true
     }
 
-    val mapMarker = MapMarker(
+    val markerElement = MarkerElement(
         marker = maplibregl.Marker(
             options = options
         ),
         element = element,
         bearingElement = bearingElement
     )
-    mapMarker.setBearing(position.bearing ?: 0f)
-    return mapMarker
+    markerElement.setBearing(position.bearing ?: 0f)
+    return markerElement
 }
 
-fun createStopMarker(stop: TransitStop, zoom: Float, map: maplibregl.Map): MapMarker {
+fun createStopMarker(stop: TransitStop, zoom: Float, map: maplibregl.Map): MarkerElement {
     val element = document.createDiv()
     element.className = "map-marker"
 
@@ -191,7 +193,7 @@ fun createStopMarker(stop: TransitStop, zoom: Float, map: maplibregl.Map): MapMa
 //        marker.getElement().style.display = if (show) "block" else "none"
 //    }
 
-    val mapMarker = MapMarker(marker, element, null)
-    mapMarker.setOpacity(if (zoom >= STOP_ZOOM) 1f else 0f)
-    return mapMarker
+    val markerElement = MarkerElement(marker, element, null)
+    markerElement.setOpacity(if (zoom >= STOP_ZOOM) 1f else 0f)
+    return markerElement
 }

@@ -2,10 +2,10 @@ package streetlight.web
 
 import org.w3c.dom.HTMLElement
 
-data class MapMarker(
+data class MarkerElement(
     val marker: maplibregl.Marker,
     val element: HTMLElement,
-    val bearingElement: HTMLElement?,
+    val bearingElement: HTMLElement? = null,
 ) {
     var lastBearing = 0f
 

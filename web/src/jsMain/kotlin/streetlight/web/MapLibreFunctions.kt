@@ -1,5 +1,7 @@
 package streetlight.web
 
+import kampfire.model.GeoBounds
+import kampfire.model.GeoPoint
 import kotlinx.browser.window
 
 fun maplibregl.LngLat.interpolateTo(dest: maplibregl.LngLat, t: Double): maplibregl.LngLat =
@@ -26,3 +28,9 @@ fun maplibregl.Marker.move(
 }
 
 fun Position.toLngLat() = maplibregl.LngLat(longitude.toDouble(), latitude.toDouble())
+
+fun maplibregl.LngLatBounds.toGeoBounds() = GeoBounds(getSouthWest().toGeoPoint(), getNorthEast().toGeoPoint())
+
+fun maplibregl.LngLat.toGeoPoint() = GeoPoint(lng = lng, lat = lat)
+
+fun GeoPoint.toLngLat() = maplibregl.LngLat(lng = lng, lat = lat)

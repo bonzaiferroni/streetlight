@@ -1,12 +1,5 @@
 package streetlight.web
 
-import koala.html.*
-import kotlinx.browser.window
-import kotlinx.html.js.div
-import kotlinx.html.id
-import kotlinx.html.style
-import kotlinx.html.visitAndFinalize
-
 fun AppContext.viewHome() {
     val maplibre = maplibregl.Map(jsObject {
         container = "geo-map"
@@ -15,7 +8,7 @@ fun AppContext.viewHome() {
         zoom = 11
     })
 
-    viewMapWindow(maplibre)
-    viewGtfsMap(maplibre)
+    attachMapWindow(maplibre)
+    attachGtfsMap(maplibre)
     viewMapPanel()
 }

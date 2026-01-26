@@ -3,7 +3,6 @@ package streetlight.web
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import kotlinx.html.checkBoxInput
 import kotlinx.html.div
 import kotlinx.html.h2
 import kotlinx.html.js.span
@@ -16,23 +15,24 @@ fun AppContext.viewMapPanel() {
     val eventMap = home.eventMap
 
     mountRender("select-point") {
-        p {
-            +"Hello map!"
-        }
-        div {
-            textField(
-                onChangeValue = eventMap::setName
-            )
-            textField(
-                binding = eventMap.stateFlow.map { "Hello ${it.name}!" }
-            )
-            checkBoxInput {
-                // onValueChange { console.log(it) }
-            }
-        }
-        renderState(eventMap.stateFlow.map { it.queriedLocation }) {
+//        p {
+//            +"Hello map!"
+//        }
+//        div {
+//            textField(
+//                onChangeValue = eventMap::setName
+//            )
+//            textField(
+//                binding = eventMap.stateFlow.map { "Hello ${it.name}!" }
+//            )
+//            checkBoxInput {
+//                // onValueChange { console.log(it) }
+//            }
+//        }
+        renderState(eventMap.stateFlow.map { it.queriedBounds }) {
+            val center = it.center
             p {
-                +"You are at ${it.lng}, ${it.lat}"
+                +"You are at ${center.lng}, ${center.lat}"
             }
             p {
                 +"And you've been there "

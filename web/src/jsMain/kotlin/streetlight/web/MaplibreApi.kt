@@ -36,7 +36,8 @@ external object maplibregl {
         fun setCenter(center: LngLatLike): Map
 
         fun flyTo(options: dynamic): Map
-        fun fitBounds(bounds: dynamic, options: dynamic = definedExternally): Map
+        fun getBounds(): LngLatBounds
+        fun fitBounds(bounds: LngLatBounds, options: dynamic = definedExternally): Map
 
         fun resize(): Map
 
@@ -101,6 +102,21 @@ external object maplibregl {
         val lat: Double
     ) {
         fun distanceTo(lngLat: LngLat): Double
+    }
+
+    class LngLatBounds(
+        val sw: LngLat,
+        val ne: LngLat,
+    ) {
+        fun getCenter(): LngLat
+        fun getEast(): Double
+        fun getNorth(): Double
+        fun getNorthEast(): LngLat
+        fun getNorthWest(): LngLat
+        fun getSouth(): Double
+        fun getSouthEast(): LngLat
+        fun getSouthWest(): LngLat
+        fun getWest(): Double
     }
 
     class Popup
