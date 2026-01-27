@@ -8,6 +8,9 @@ fun AppContext.viewHome() {
         zoom = 11
     })
 
+    maplibre.addControl(maplibregl.NavigationControl())
+    maplibre.addControl(maplibregl.FullscreenControl())
+
     attachMapWindow(maplibre)
     attachGtfsMap(maplibre)
     viewMapPanel()

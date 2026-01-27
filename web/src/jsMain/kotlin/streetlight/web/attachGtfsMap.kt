@@ -7,6 +7,7 @@ import streetlight.model.data.TransitRoute
 import streetlight.model.data.TransitStop
 import streetlight.model.data.VehicleType
 import kotlin.js.Date
+import kotlin.js.json
 
 fun AppContext.attachGtfsMap(
     maplibre: maplibregl.Map
@@ -41,6 +42,7 @@ fun AppContext.attachGtfsMap(
             gtfsMap.stateFlow.mapDistinctBy({ it.areaId }) { it.areaTransit }.filterNotNull().collect { transit ->
                 areaTransit = transit
                 stopMarkers = transit.stops.map { createStopMarker(it, eventMap.stateNow.zoom, maplibre) }
+                addRouteLines(transit.routes, maplibre)
             }
         }
 
@@ -121,18 +123,18 @@ fun addRouteLines(
         id = "routes"
         type = "line"
         source = "routes"
-        paint = kotlin.js.json(
+        paint = json(
             "line-color" to "#4fd1c5",
             "line-width" to 2
         )
-        layout = kotlin.js.json(
+        layout = json(
             "line-join" to "round",
             "line-cap" to "round"
         )
     }
 
-    maplibre.addSource("routes", sourceObj);
-    maplibre.addLayer(layerObj)
+     maplibre.addSource("routes", sourceObj);
+     maplibre.addLayer(layerObj)
 }
 
 fun createBusMarker(position: Position, route: TransitRoute): MarkerElement {

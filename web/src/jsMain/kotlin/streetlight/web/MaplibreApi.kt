@@ -121,6 +121,9 @@ external object maplibregl {
 
     class Popup
     class Point
+
+    class NavigationControl
+    class FullscreenControl
 }
 
 typealias Listener = (dynamic) -> Unit

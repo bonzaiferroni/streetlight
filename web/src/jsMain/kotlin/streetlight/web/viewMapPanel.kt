@@ -1,10 +1,14 @@
 package streetlight.web
 
+import koala.html.Css
+import koala.html.card
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import kotlinx.html.checkBoxInput
 import kotlinx.html.div
 import kotlinx.html.h2
+import kotlinx.html.id
 import kotlinx.html.js.span
 import kotlinx.html.p
 import kotlin.collections.component1
@@ -15,54 +19,69 @@ fun AppContext.viewMapPanel() {
     val eventMap = home.eventMap
 
     mountRender("select-point") {
-//        p {
-//            +"Hello map!"
-//        }
-//        div {
-//            textField(
-//                onChangeValue = eventMap::setName
-//            )
-//            textField(
-//                binding = eventMap.stateFlow.map { "Hello ${it.name}!" }
-//            )
-//            checkBoxInput {
-//                // onValueChange { console.log(it) }
-//            }
-//        }
-        renderState(eventMap.stateFlow.map { it.queriedBounds }) {
-            val center = it.center
-            p {
-                +"You are at ${center.lng}, ${center.lat}"
-            }
-            p {
-                +"And you've been there "
-                val span = span {
-                    +"0"
-                }
-                +" seconds"
-
-                renderScope.launch {
-                    var seconds = 0
-                    while (true) {
-                        delay(1.seconds)
-                        seconds++
-                        span.textContent = seconds.toString()
+        // testInput()
+        // showLocation()
+        renderState(eventMap.stateFlow.map { it.events }, true) { allEvents ->
+            div("map-event-panel") {
+                allEvents.groupBy { it.eventType }.forEach { (eventType, events) ->
+                    card(Css("event-group")) {
+                        h2 {
+                            +eventType.label
+                        }
+                        events.forEach { event ->
+                            p {
+                                +event.title
+                            }
+                        }
                     }
                 }
             }
         }
-        renderState(eventMap.stateFlow.map { it.events }, true) { allEvents ->
-            allEvents.groupBy { it.eventType }.forEach { (eventType, events) ->
-                div("event-group") {
-                    h2 {
-                        +eventType.label
-                    }
-                    events.forEach { event ->
-                        p {
-                            +event.title
-                        }
-                    }
-                }.style.opacity = "1"
+    }
+}
+
+fun RenderContext.testInput() {
+    val eventMap = app.home.eventMap
+
+    p {
+        +"Hello map!"
+    }
+    div {
+        id = "test-form"
+        textField(
+            onChangeValue = eventMap::setName
+        )
+        textField(
+            binding = eventMap.stateFlow.map { "Hello ${it.name}!" }
+        )
+        checkBoxInput {
+            // onValueChange { console.log(it) }
+        }
+    }
+}
+
+fun RenderContext.showLocation() {
+    val eventMap = app.home.eventMap
+
+    renderState(eventMap.stateFlow.map { it.queriedBounds }) {
+        val center = it.center
+        p {
+            +"You are at ${center.lng}, ${center.lat}"
+        }
+        p {
+            +"And you've been there "
+            val span = span {
+                +"0"
+            }
+            +" seconds"
+
+            renderScope.launch {
+                var seconds = 0
+                while (true) {
+                    delay(1.seconds)
+                    seconds++
+                    span.textContent = seconds.toString()
+                }
             }
         }
     }
