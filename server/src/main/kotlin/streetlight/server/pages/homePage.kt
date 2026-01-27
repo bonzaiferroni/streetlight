@@ -2,6 +2,7 @@ package streetlight.server.pages
 
 import koala.html.*
 import kotlinx.html.*
+import koala.css.*
 
 fun HTML.homePage() {
     head("Streetlight | Home") {

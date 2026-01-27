@@ -2,6 +2,7 @@ package koala.html
 
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
+import koala.css.*
 
 fun FlowContent.tabs(
     vararg modifiers: CssClass,

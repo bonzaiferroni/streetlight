@@ -1,21 +1,12 @@
 package koala.html
 
+import koala.css.Card
+import koala.css.CssClass
+import koala.css.modify
 import kotlinx.html.DIV
+
 import kotlinx.html.FlowContent
 import kotlinx.html.div
-import kotlinx.html.id
-
-inline fun FlowContent.card(
-    id: Id,
-    vararg modifiers: CssClass,
-    crossinline content: DIV.() -> Unit,
-) {
-    div {
-        this.id = id.value
-        modify(Card, *modifiers)
-        content()
-    }
-}
 
 inline fun FlowContent.card(
     vararg modifiers: CssClass,

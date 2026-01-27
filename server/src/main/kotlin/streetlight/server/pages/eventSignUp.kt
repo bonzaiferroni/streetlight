@@ -3,6 +3,7 @@ package streetlight.server.pages
 import koala.html.*
 import kotlinx.html.*
 import streetlight.model.data.*
+import koala.css.*
 
 fun HTML.eventSignUp(event: Event) {
     head("Sign Up | ${event.title}") {

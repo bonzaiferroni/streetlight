@@ -1,6 +1,7 @@
 package koala.html
 
 import kotlinx.html.*
+import koala.css.*
 
 object Row : CssClass { override val value = "layout-row" }
 

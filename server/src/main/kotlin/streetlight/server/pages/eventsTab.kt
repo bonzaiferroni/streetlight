@@ -1,12 +1,8 @@
 package streetlight.server.pages
 
-import koala.html.AlignItemsCenter
-import koala.html.card
 import koala.html.column
-import koala.html.label
 import kotlinx.html.FlowContent
-import kotlinx.html.a
-import streetlight.model.data.Event
+import koala.css.*
 
 fun FlowContent.eventsTab(
 //    events: List<Event>

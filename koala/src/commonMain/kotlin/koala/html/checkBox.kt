@@ -1,5 +1,6 @@
 package koala.html
 
+import koala.css.*
 import kotlinx.html.*
 
 fun FlowContent.checkBox(

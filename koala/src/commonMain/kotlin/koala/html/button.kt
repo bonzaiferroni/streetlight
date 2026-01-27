@@ -1,5 +1,6 @@
 package koala.html
 
+import koala.css.CssClass
 import kotlinx.html.*
 import kotlinx.html.button as buttonCore
 

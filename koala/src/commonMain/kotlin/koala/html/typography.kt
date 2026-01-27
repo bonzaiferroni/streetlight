@@ -1,6 +1,7 @@
 package koala.html
 
 import kotlinx.html.*
+import koala.css.*
 
 inline fun FlowContent.label(
     content: String,

@@ -1,4 +1,4 @@
-package koala.html
+package koala.css
 
 import kotlinx.html.CoreAttributeGroupFacade
 import kotlinx.html.classes

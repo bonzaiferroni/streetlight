@@ -1,7 +1,8 @@
 package streetlight.web
 
-import koala.html.Css
-import koala.html.card
+import koala.css.Css
+import koala.js.box
+import koala.js.card
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -11,8 +12,6 @@ import kotlinx.html.h2
 import kotlinx.html.id
 import kotlinx.html.js.span
 import kotlinx.html.p
-import kotlin.collections.component1
-import kotlin.collections.component2
 import kotlin.time.Duration.Companion.seconds
 
 fun AppContext.viewMapPanel() {
@@ -22,9 +21,9 @@ fun AppContext.viewMapPanel() {
         // testInput()
         // showLocation()
         renderState(eventMap.stateFlow.map { it.events }, true) { allEvents ->
-            div("map-event-panel") {
+            box(Css("map-event-panel")) {
                 allEvents.groupBy { it.eventType }.forEach { (eventType, events) ->
-                    card(Css("event-group")) {
+                    card(Css("map-event-group")) {
                         h2 {
                             +eventType.label
                         }
