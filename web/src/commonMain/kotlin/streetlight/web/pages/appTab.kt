@@ -1,4 +1,4 @@
-package streetlight.server.pages
+package streetlight.web.pages
 
 import koala.html.column
 import koala.html.heading5

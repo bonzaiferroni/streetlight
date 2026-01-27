@@ -1,4 +1,4 @@
-package streetlight.server.pages
+package streetlight.web.pages
 
 import koala.html.*
 import kotlinx.html.*

@@ -15,11 +15,13 @@ kotlin {
         }
         binaries.executable()
     }
+    jvm()
     sourceSets {
         val commonMain by getting {
             dependencies {
                 implementation(libs.kotlinx.serialization.json)
                 implementation(libs.kotlinx.coroutines.core)
+                implementation(libs.kotlinx.html)
                 implementation(project(":model"))
                 implementation(project(":koala"))
             }
