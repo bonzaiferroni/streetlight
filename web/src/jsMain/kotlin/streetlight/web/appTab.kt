@@ -1,14 +1,16 @@
-package streetlight.web.pages
+package streetlight.web
 
-import koala.html.column
 import koala.html.heading5
-import koala.html.lottie
 import koala.html.paragraph
 import koala.html.row
 import kotlinx.html.*
 import koala.css.*
+import koala.dom.column
+import koala.dom.lottie
+import org.w3c.dom.HTMLElement
+import streetlight.web.pages.homeFooter
 
-fun FlowContent.appTab() {
+fun TagConsumer<HTMLElement>.appTab() {
     column(AlignItemsCenter) {
         row {
             lottie("cup_stack", Flex1)

@@ -1,8 +1,8 @@
 package streetlight.web
 
 import koala.css.Css
-import koala.js.box
-import koala.js.card
+import koala.dom.box
+import koala.dom.card
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch

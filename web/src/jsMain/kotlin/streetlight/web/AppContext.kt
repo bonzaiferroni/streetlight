@@ -7,7 +7,7 @@ import org.w3c.dom.HTMLElement
 interface AppContext {
     val appScope: CoroutineScope
     val client: ClientContext
-    val navigator: AppNavigator
+    val portal: AppPortal
     val home: Home
 }
 

@@ -17,6 +17,7 @@ fun CoreAttributeGroupFacade.modify(vararg cssClass: CssClass?) {
 
 // layouts
 object Column : CssClass { override val value = "layout-column" }
+object Row : CssClass { override val value = "layout-row" }
 object Card : CssClass { override val value = "layout-card" }
 object Box : CssClass { override val value = "layout-box"}
 

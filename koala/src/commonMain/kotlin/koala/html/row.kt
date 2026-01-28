@@ -3,16 +3,13 @@ package koala.html
 import kotlinx.html.*
 import koala.css.*
 
-object Row : CssClass { override val value = "layout-row" }
-
 inline fun FlowContent.row(
     id: Id,
     vararg modifiers: CssClass,
     crossinline content: DIV.() -> Unit,
 ) {
-    div {
+    row(*modifiers) {
         this.id = id.value
-        modify(Row, *modifiers)
         content()
     }
 }

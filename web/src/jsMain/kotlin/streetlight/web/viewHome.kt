@@ -1,6 +1,12 @@
 package streetlight.web
 
-fun AppContext.viewHome() {
+import kotlinx.html.js.div
+
+fun RenderContext.viewHome() {
+    console.log("loading home")
+
+    homeContent()
+
     val maplibre = maplibregl.Map(jsObject {
         container = "geo-map"
         style = "https://tiles.openfreemap.org/styles/fiord"
@@ -11,7 +17,7 @@ fun AppContext.viewHome() {
     maplibre.addControl(maplibregl.NavigationControl())
     maplibre.addControl(maplibregl.FullscreenControl())
 
-    attachMapWindow(maplibre)
-    attachGtfsMap(maplibre)
-    viewMapPanel()
+    app.attachMapWindow(maplibre)
+    app.attachGtfsMap(maplibre)
+    app.viewMapPanel()
 }

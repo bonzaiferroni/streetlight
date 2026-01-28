@@ -1,21 +1,19 @@
 package streetlight.web
 
-import kotlinx.browser.document
-import kotlinx.browser.window
+import koala.dom.DOMContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import kotlinx.dom.addClass
 import kotlinx.dom.clear
-import kotlinx.dom.hasClass
 import kotlinx.dom.removeClass
 import kotlinx.html.INPUT
 import kotlinx.html.InputType
-import kotlinx.html.TagConsumer
 import kotlinx.html.dom.append
 import kotlinx.html.*
 import kotlinx.html.js.onInputFunction
@@ -23,63 +21,82 @@ import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLInputElement
 
 class RenderContext(
-    val consumer: TagConsumer<HTMLElement>,
+    consumer: DOMContext,
     val renderScope: CoroutineScope,
     val app: AppContext,
-): TagConsumer<HTMLElement> by consumer {
+): DOMContext by consumer, AppContext by app {
 
-    fun <T> renderState(
-        flow: Flow<T>,
+    fun <State> renderState(
+        flow: Flow<State>,
         animate: Boolean = false,
-        block: RenderContext.(T) -> Unit
+        configureParent: DIV.() -> Unit = { style = "width: 100%;" },
+        configureContainer: DIV.() -> Unit = { style = "width: 100%;" },
+        cacheRenderedElements: Boolean = false,
+        block: RenderContext.(State) -> Unit
     ) {
-        val parent = consumer.div("state-render")
-        var lastContainer: HTMLElement? = null
+        val parent = div("state-render") {
+            configureParent()
+        }
+        var render: HTMLElement? = null
         var job: Job? = null
+        val renderCache = mutableMapOf<State, HTMLElement>()
 
         renderScope.launch {
-            var currentValue: T? = null
+            var currentValue: State? = null
             flow.collect {  value ->
                 if (value == currentValue) return@collect
                 job?.cancel()
                 job = SupervisorJob()
                 currentValue = value
 
-                if (animate) lastContainer?.exitStage()
-                else lastContainer?.remove()
+                render?.hide(animate)
 
                 val scope = CoroutineScope(Dispatchers.Main + job)
-                parent.append {
-                    lastContainer = div()
-                    lastContainer.append {
+                render = renderCache[value]?.apply {
+                    parent.append(this)
+                } ?: parent.append {
+                    val container = div() {
+                        configureContainer()
+                    }
+                    container.append {
                         RenderContext(this, scope, app).block(value)
                     }
-                    if (animate) lastContainer.addClass("state-render-animation")
-                }
+                    if (cacheRenderedElements) renderCache[value] = container
+                }.first()
+
+                render.show(animate)
+
                 if (animate) {
-                    val height = lastContainer?.scrollHeight ?: 0
+                    val height = render.scrollHeight
                     parent.style.height = "${height}px"
-                    lastContainer?.enterStage()
                 }
             }
         }
     }
-}
 
-fun HTMLElement.enterStage() {
-    window.setTimeout({
-        if (!hasClass("exit-stage")) {
-            addClass("enter-stage")
+    fun HTMLElement.hide(animate: Boolean) {
+        if (animate) {
+            addClass("exit-stage")
+            removeClass("enter-stage")
+            renderScope.launch {
+                delay(250)
+                remove()
+                removeClass("exit-stage")
+            }
+        } else {
+            remove()
         }
-    }, 200)
-}
+    }
 
-fun HTMLElement.exitStage() {
-    addClass("exit-stage")
-    removeClass("enter-stage")
-    window.setTimeout({
-        remove()
-    }, 250)
+    fun HTMLElement.show(animate: Boolean) {
+        if (animate) {
+            addClass("state-render-animation")
+            renderScope.launch {
+                delay(200)
+                addClass("enter-stage")
+            }
+        }
+    }
 }
 
 fun HTMLElement.renderRoot(

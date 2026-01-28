@@ -8,9 +8,8 @@ inline fun FlowContent.column(
     vararg modifiers: CssClass,
     crossinline content: DIV.() -> Unit,
 ) {
-    div {
+    column(*modifiers) {
         this.id = id.value
-        modify(Column, *modifiers)
         content()
     }
 }

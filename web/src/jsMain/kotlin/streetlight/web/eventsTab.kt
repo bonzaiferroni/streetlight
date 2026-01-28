@@ -1,11 +1,10 @@
-package streetlight.web.pages
+package streetlight.web
 
-import koala.html.column
-import kotlinx.html.FlowContent
 import koala.css.*
-import kotlinx.html.TagConsumer
+import koala.dom.*
+import streetlight.web.pages.homeFooter
 
-fun FlowContent.eventsTab(
+fun RenderContext.eventsTab(
 //    events: List<Event>
 ) {
     column(AlignItemsCenter) {
@@ -17,6 +16,9 @@ fun FlowContent.eventsTab(
 //                }
 //            }
 //        }
+        button("Go to event") {
+            portal.go(AppScreen.Event)
+        }
         homeFooter()
     }
 }

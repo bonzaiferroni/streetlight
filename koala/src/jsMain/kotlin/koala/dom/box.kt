@@ -1,16 +1,14 @@
-package koala.js
+package koala.dom
 
 import koala.css.Box
 import koala.css.CssClass
 import koala.css.modify
 import koala.html.Id
 import kotlinx.html.DIV
-import kotlinx.html.TagConsumer
 import kotlinx.html.js.div
 import kotlinx.html.id
-import org.w3c.dom.HTMLElement
 
-inline fun <C: HTMLElement> TagConsumer<C>.box(
+inline fun DOMContext.box(
     vararg modifiers: CssClass,
     crossinline content: DIV.() -> Unit = { },
 ) = div {
@@ -18,7 +16,7 @@ inline fun <C: HTMLElement> TagConsumer<C>.box(
     content()
 }
 
-inline fun <C: HTMLElement> TagConsumer<C>.box(
+inline fun DOMContext.box(
     id: Id,
     vararg modifiers: CssClass,
     crossinline content: DIV.() -> Unit = { },

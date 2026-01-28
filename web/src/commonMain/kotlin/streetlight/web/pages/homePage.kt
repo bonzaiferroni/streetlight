@@ -26,20 +26,11 @@ fun HTML.homePage() {
                     }
                     +" music community"
                 }
-                tabs(FillWidth) {
-                    tab("Events") {
-                        eventsTab()
-                    }
-                    tab("Map") {
-                        column(AlignItemsCenter) {
-                            geoMap()
-                            homeFooter()
-                        }
-                    }
-                    tab("App") {
-                        appTab()
-                    }
+                div {
+                    id = "portal-mount"
+                    style = "width: 100%;"
                 }
+                // homeContent()
             }
         }
     }

@@ -12,19 +12,23 @@ fun FlowContent.tabs(
     val scope = TabScope()
     scope.content()
     column(Css("tabs"), *modifiers) {
-        row(Css("tabs-header")) {
-            scope.tabs.forEachIndexed { index, tab ->
-                label(tab.label, Css("tabs-button")) {
-                    attributes["data-tab"] = index.toString()
-                }
+        tabsContent(scope)
+    }
+}
+
+fun FlowContent.tabsContent(scope: TabScope) {
+    row(Css("tabs-header")) {
+        scope.tabs.forEachIndexed { index, tab ->
+            label(tab.label, Css("tabs-button")) {
+                attributes["data-tab"] = index.toString()
             }
         }
-        box(Css("tabs-viewport")) {
-            scope.tabs.forEach { tab ->
-                val content = tab.content
-                box(Css("tabs-panel")) {
-                    content()
-                }
+    }
+    box(Css("tabs-viewport")) {
+        scope.tabs.forEach { tab ->
+            val content = tab.content
+            box(Css("tabs-panel")) {
+                content()
             }
         }
     }
