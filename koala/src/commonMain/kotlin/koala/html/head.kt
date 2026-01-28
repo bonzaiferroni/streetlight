@@ -12,13 +12,14 @@ fun HTML.head(
         coreStyles()
         coreScripts()
         script(src = "https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js") { }
-        link { href = "/static/icon/foxicon.ico"; rel = "icon"}
+        link { href = "/www/icon/foxicon.ico"; rel = "icon"}
+//        script {src = "webdev.js" }
         block()
     }
 }
 
 fun HEAD.styles(vararg styles: String) {
-    styles.forEach { style -> link { rel = "stylesheet"; href = "/static/css/$style" } }
+    styles.forEach { style -> link { rel = "stylesheet"; href = "/www/css/$style" } }
 }
 
 fun HEAD.coreStyles() {
@@ -34,11 +35,11 @@ fun HEAD.coreStyles() {
         "logo.css",
         "geoMap.css"
     )
-    styles.forEach { style -> link { rel = "stylesheet"; href = "/static/core/css/$style" } }
+    styles.forEach { style -> link { rel = "stylesheet"; href = "/www/core/css/$style" } }
 }
 
 fun HEAD.scripts(vararg scripts: String) {
-    scripts.forEach { script -> script(src = "/static/js/$script") {} }
+    scripts.forEach { script -> script(src = "/www/js/$script") {} }
 }
 
 fun HEAD.coreScripts() {
@@ -53,4 +54,4 @@ fun HEAD.coreScripts() {
     scripts.forEach { script -> script(src = corePath + script) {} }
 }
 
-val corePath = "/static/core/js/"
+val corePath = "/www/core/js/"

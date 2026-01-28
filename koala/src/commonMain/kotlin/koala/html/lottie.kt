@@ -10,7 +10,7 @@ inline fun FlowContent.lottie(
 ) {
     div {
         modify(*modifiers)
-        attributes["lottie"] = "/static/lottie/${id}.json"
+        attributes["lottie"] = "/www/lottie/${id}.json"
         block()
     }
 }

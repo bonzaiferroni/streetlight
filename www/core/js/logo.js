@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-    fetch("/static/svg/flame.svg")
+    fetch("/www/svg/flame.svg")
         .then(r => r.text())
         .then(svg => {
             document.querySelectorAll(".logo").forEach(el => {

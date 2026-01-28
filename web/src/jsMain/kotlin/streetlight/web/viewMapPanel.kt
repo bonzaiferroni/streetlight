@@ -22,6 +22,9 @@ fun AppContext.viewMapPanel() {
         // showLocation()
         renderState(eventMap.stateFlow.map { it.events }, true) { allEvents ->
             box(Css("map-event-panel")) {
+                p {
+                    +"eyyyyy!"
+                }
                 allEvents.groupBy { it.eventType }.forEach { (eventType, events) ->
                     card(Css("map-event-group")) {
                         h2 {

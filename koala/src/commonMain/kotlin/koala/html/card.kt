@@ -6,6 +6,7 @@ import koala.css.modify
 import kotlinx.html.DIV
 
 import kotlinx.html.FlowContent
+import kotlinx.html.TagConsumer
 import kotlinx.html.div
 
 inline fun FlowContent.card(

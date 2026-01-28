@@ -13,7 +13,7 @@ import streetlight.web.pages.homePage
 import java.io.File
 
 fun Routing.servePages(app: ServerProvider = RuntimeProvider) {
-    staticFiles("/static", File("www"))
+    staticFiles("/www", File("../www"))
 
     get("/") {
         call.respondHtml {

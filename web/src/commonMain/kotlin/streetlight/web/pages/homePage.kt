@@ -28,7 +28,7 @@ fun HTML.homePage() {
                 }
                 tabs(FillWidth) {
                     tab("Events") {
-                         eventsTab()
+                        eventsTab()
                     }
                     tab("Map") {
                         column(AlignItemsCenter) {

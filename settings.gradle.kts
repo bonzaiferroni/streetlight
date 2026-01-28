@@ -39,3 +39,4 @@ include(":kampfire")
 
 include(":web")
 include(":koala")
+include(":webdev")
