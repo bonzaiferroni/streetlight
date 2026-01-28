@@ -52,8 +52,8 @@ class RenderContext(
                 render?.hide(animate)
 
                 val scope = CoroutineScope(Dispatchers.Main + job)
-                render = renderCache[value]?.apply {
-                    parent.append(this)
+                render = renderCache[value]?.also {
+                    parent.append(it)
                 } ?: parent.append {
                     val container = div() {
                         configureContainer()

@@ -11,7 +11,7 @@ kotlin {
             commonWebpackConfig {
                 sourceMaps = true
 
-                // devServer?.static("/home/starfox/projects/streetlight/www", true)
+                devServer?.static("/home/starfox/projects/streetlight", true)
                 devServer?.proxy = mutableListOf(
                     KotlinWebpackConfig.DevServer.Proxy(
                         context = mutableListOf("/api"),

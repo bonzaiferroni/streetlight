@@ -16,7 +16,7 @@ fun RenderContext.eventsTab(
 //                }
 //            }
 //        }
-        button("Go to event") {
+        button("Go to the event") {
             portal.go(AppScreen.Event)
         }
         homeFooter()

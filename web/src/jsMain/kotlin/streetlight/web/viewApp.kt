@@ -10,6 +10,8 @@ import org.w3c.dom.HTMLElement
 @OptIn(ExperimentalJsExport::class)
 @JsExport
 fun viewApp() {
+    console.log("loading streetlight")
+
     val scope = MainScope() // 57 KB
     val portal = AppPortal("/", scope) // 2 KB
 
