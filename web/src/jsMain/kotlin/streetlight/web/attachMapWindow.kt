@@ -21,7 +21,7 @@ fun AppContext.attachMapWindow(
     }
 
     appScope.launch {
-        eventMap.state.mapDistinct { it.events }.collect { events ->
+        eventMap.stateFlow.mapDistinct { it.events }.collect { events ->
             console.log("adding events")
             events.forEach { event ->
                 if (eventMarkers.contains(event.eventId)) return@forEach
@@ -38,9 +38,9 @@ fun createEventMarker(event: EventLocation): MarkerElement {
     val element = document.createDiv()
 
     val iconClass = when(event.eventType) {
-        EventType.Performance -> "performance-icon"
+        EventType.Show -> "performance-icon"
         EventType.Food -> "food-icon"
-        EventType.Social -> "social-icon"
+        EventType.Fellowship -> "social-icon"
     }
 
     val icon = document.createDiv()

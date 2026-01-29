@@ -14,9 +14,13 @@ fun HTML.homePage() {
     body {
         column {
             column(Width100, AlignItemsCenter) {
-                row(Gap0) {
-                    logo()
-                    heading1("Streetlight")
+                row(Width100, SpaceBetween) {
+                    icon("chevron-down", Height4)
+                    row(Gap0) {
+                        logo()
+                        heading1("Streetlight")
+                    }
+                    paragraph("thing")
                 }
 //                box(Dim) {
 //                    +"a "

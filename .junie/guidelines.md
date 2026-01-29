@@ -138,6 +138,14 @@ CreateEntity(Foo):
 * Add `getFooDao()` as an abstract function for `AppDatabase`.
 * Add dao to `AppDao` in `AppProvider.kt`.
 
+### CSS Workflows
+
+CreateCssUtility(Foo):
+* Create an object in the package `koala.css` that implements `CssClass`. The name should be `Foo`.
+* The `value` of the `CssClass` should be a kebab-case version of `Foo`.
+* Add a rule to the `layoutUtilities` function (or appropriate utility function) in `koala/src/commonMain/kotlin/koala/css/` that defines the CSS properties for the new class.
+* You may use `AlignItemsCenter` as an example.
+
 ## Junie's notes to self
 
 This is where you can create notes to yourself, information that you know you'll need later on.

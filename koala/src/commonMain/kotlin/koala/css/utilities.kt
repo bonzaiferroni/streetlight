@@ -21,7 +21,7 @@ fun CssBuilder.utilities(theme: KoalaTheme) {
 
     // display utilities
     rule(DisplayNone) {
-        put("display", "none !important")
+        display = Display.none
     }
 
     rule(Dim) {
@@ -29,7 +29,7 @@ fun CssBuilder.utilities(theme: KoalaTheme) {
     }
 
     rule(NoDim) {
-        put("color", "${theme.fg} !important")
+        color = theme.fg
     }
 
     rule(Glow) {
