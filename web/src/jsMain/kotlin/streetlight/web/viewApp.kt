@@ -37,7 +37,6 @@ fun viewApp() {
     portalMount.renderRoot(app.appScope, app) {
         renderState(
             flow = portal.screenFlow,
-            animate = true,
             cacheRenderedElements = true
         ) { screen ->
             when (screen) {

@@ -2,8 +2,6 @@ package streetlight.web
 
 import kotlinx.browser.document
 import kotlinx.coroutines.launch
-import kotlinx.html.dom.append
-import kotlinx.html.js.p
 import streetlight.model.data.EventId
 import streetlight.model.data.EventLocation
 import streetlight.model.data.EventType
@@ -23,7 +21,7 @@ fun AppContext.attachMapWindow(
     }
 
     appScope.launch {
-        eventMap.stateFlow.mapDistinct { it.events }.collect { events ->
+        eventMap.state.mapDistinct { it.events }.collect { events ->
             console.log("adding events")
             events.forEach { event ->
                 if (eventMarkers.contains(event.eventId)) return@forEach

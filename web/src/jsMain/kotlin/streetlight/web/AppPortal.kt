@@ -6,7 +6,7 @@ class AppPortal(
     initialPath: String,
     scope: CoroutineScope
 ): BrowserModel<AppNavigatorState>(AppNavigatorState(initialPath), scope) {
-    val screenFlow = stateFlow.mapDistinct { it.screen }
+    val screenFlow = state.mapDistinct { it.screen }
 
     fun go(screen: AppScreen) {
         setState { it.copy(screen = screen) }

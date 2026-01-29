@@ -21,7 +21,7 @@ fun AppContext.attachGtfsMap(
 
     appScope.launch {
         launch {
-            eventMap.stateFlow.mapDistinct { it.zoom }.collect { zoom ->
+            eventMap.state.mapDistinct { it.zoom }.collect { zoom ->
                 if (!markersVisible && zoom >= STOP_ZOOM) {
                     console.log("showing markers")
                     markersVisible = true
@@ -39,7 +39,7 @@ fun AppContext.attachGtfsMap(
         }
 
         launch {
-            gtfsMap.stateFlow.mapDistinctBy({ it.areaId }) { it.areaTransit }.filterNotNull().collect { transit ->
+            gtfsMap.state.mapDistinctBy({ it.areaId }) { it.areaTransit }.filterNotNull().collect { transit ->
                 areaTransit = transit
                 stopMarkers = transit.stops.map { createStopMarker(it, eventMap.stateNow.zoom, maplibre) }
                 addRouteLines(transit.routes, maplibre)
@@ -47,7 +47,7 @@ fun AppContext.attachGtfsMap(
         }
 
         launch {
-            gtfsMap.stateFlow.mapDistinctBy({ it.timestamp }) { it.vehiclePositions }.collect { vehicles ->
+            gtfsMap.state.mapDistinctBy({ it.timestamp }) { it.vehiclePositions }.collect { vehicles ->
                 val currentTime = Date.now().toLong() / 1000
                 vehicles.forEach { vehicle ->
                     val position = vehicle.position ?: return@forEach

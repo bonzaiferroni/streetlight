@@ -20,7 +20,7 @@ fun AppContext.viewMapPanel() {
     mountRender("select-point") {
         // testInput()
         // showLocation()
-        renderState(eventMap.stateFlow.map { it.events }, true) { allEvents ->
+        renderState(eventMap.state.map { it.events }, true) { allEvents ->
             box(Css("map-event-panel")) {
                 p {
                     +"eyyyyy!"
@@ -54,7 +54,7 @@ fun RenderContext.testInput() {
             onChangeValue = eventMap::setName
         )
         textField(
-            binding = eventMap.stateFlow.map { "Hello ${it.name}!" }
+            binding = eventMap.state.map { "Hello ${it.name}!" }
         )
         checkBoxInput {
             // onValueChange { console.log(it) }
@@ -65,7 +65,7 @@ fun RenderContext.testInput() {
 fun RenderContext.showLocation() {
     val eventMap = app.home.eventMap
 
-    renderState(eventMap.stateFlow.map { it.queriedBounds }) {
+    renderState(eventMap.state.map { it.queriedBounds }) {
         val center = it.center
         p {
             +"You are at ${center.lng}, ${center.lat}"

@@ -30,6 +30,8 @@ kotlin {
                 implementation(libs.kotlinx.serialization.json)
                 implementation(libs.kotlinx.coroutines.core)
                 implementation(libs.kotlinx.html)
+                implementation(kotlinWrappers.css)
+                implementation(project(":koala"))
                 implementation(project(":web"))
             }
         }
@@ -38,5 +40,9 @@ kotlin {
             dependencies {
             }
         }
+    }
+
+    compilerOptions {
+        this.freeCompilerArgs.add("-Xexplicit-backing-fields")
     }
 }

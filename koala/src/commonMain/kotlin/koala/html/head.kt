@@ -28,7 +28,6 @@ fun HEAD.coreStyles() {
         "styles.css",
         "typography.css",
         "button.css",
-        "layout.css",
         "utilities.css",
         "animation.css",
         "tabs.css",

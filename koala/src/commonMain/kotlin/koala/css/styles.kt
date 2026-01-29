@@ -1,5 +1,16 @@
 package koala.css
 
+import kotlinx.css.CssBuilder
+import kotlinx.css.Display
+import kotlinx.css.FlexDirection
+import kotlinx.css.LinearDimension
+import kotlinx.css.Rule
+import kotlinx.css.RuleContainer
+import kotlinx.css.RuleSet
+import kotlinx.css.display
+import kotlinx.css.flexDirection
+import kotlinx.css.gap
+import kotlinx.css.rem
 import kotlinx.html.CoreAttributeGroupFacade
 import kotlinx.html.classes
 import kotlin.jvm.JvmInline
@@ -9,7 +20,9 @@ interface CssClass {
 }
 
 @JvmInline
-value class Css(override val value: String): CssClass
+value class Css(override val value: String): CssClass {
+    override fun toString() = value
+}
 
 fun CoreAttributeGroupFacade.modify(vararg cssClass: CssClass?) {
     classes = cssClass.mapNotNull { it?.value }.toSet()
@@ -45,3 +58,12 @@ object TextAlignRight: CssClass { override val value = "text-align-right"}
 object Fade: CssClass { override val value = "fade" }
 object Show: CssClass { override val value = "show" }
 object FadeStack: CssClass { override val value = "fade-stack" }
+
+fun CssBuilder.rules(theme: KoalaTheme): CssBuilder {
+    layout(theme)
+    utilities(theme)
+    animation(theme)
+    return this
+}
+
+fun RuleContainer.classRule(cssClass: CssClass, block: RuleSet) = rule(".${cssClass.value}", block)
