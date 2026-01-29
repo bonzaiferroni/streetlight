@@ -7,25 +7,25 @@ import koala.css.*
 fun HTML.homePage() {
     head("Streetlight | Home") {
         styles("homePage.css")
-        scripts("launchApp.js")
         geoMapResources()
         script(src = "https://cdn.jsdelivr.net/npm/protobufjs/dist/protobuf.min.js") { }
+        koalaStyles()
     }
     body {
         column {
-            column(FillWidth, AlignItemsCenter, NoGap) {
-                row {
-                    heading1("Streetlight")
+            column(FillWidth, AlignItemsCenter) {
+                row(NoGap) {
                     logo()
+                    heading1("Streetlight")
                 }
-                box(Dim) {
-                    +"a "
-                    span {
-                        modify(NoDim, Glow)
-                        +"Colfax"
-                    }
-                    +" music community"
-                }
+//                box(Dim) {
+//                    +"a "
+//                    span {
+//                        modify(NoDim, Glow)
+//                        +"Colfax"
+//                    }
+//                    +" music community"
+//                }
                 div {
                     id = "portal-mount"
                     style = "width: 100%;"
@@ -33,6 +33,7 @@ fun HTML.homePage() {
                 // homeContent()
             }
         }
+        scripts("launchApp.js")
     }
 }
 

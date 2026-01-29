@@ -1,4 +1,5 @@
 import koala.css.KoalaTheme
+import koala.css.buildKoalaStyles
 import koala.css.rules
 import kotlinx.browser.document
 import kotlinx.css.CssBuilder
@@ -13,7 +14,7 @@ import streetlight.web.viewApp
 fun main() {
     console.log("loading styles")
     document.head?.append {
-        val rules = CssBuilder().rules(KoalaTheme()).toString()
+        val rules = buildKoalaStyles()
         console.log(rules)
         style {
             +rules

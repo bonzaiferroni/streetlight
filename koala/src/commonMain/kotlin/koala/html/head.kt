@@ -28,8 +28,9 @@ fun HEAD.coreStyles() {
         "styles.css",
         "typography.css",
         "button.css",
-        "utilities.css",
-        "animation.css",
+//        "layout.css",
+//        "utilities.css",
+//        "animation.css",
         "tabs.css",
         "logo.css",
         "geoMap.css"
@@ -37,7 +38,7 @@ fun HEAD.coreStyles() {
     styles.forEach { style -> link { rel = "stylesheet"; href = "/www/core/css/$style" } }
 }
 
-fun HEAD.scripts(vararg scripts: String) {
+fun FlowOrMetaDataContent.scripts(vararg scripts: String) {
     scripts.forEach { script -> script(src = "/www/js/$script") {} }
 }
 
@@ -47,7 +48,6 @@ fun HEAD.coreScripts() {
         "tabs.js",
         "logo.js",
         "lottie.js",
-        // "geoMap.js",
         "compiled/web.js"
     )
     scripts.forEach { script -> script(src = corePath + script) {} }

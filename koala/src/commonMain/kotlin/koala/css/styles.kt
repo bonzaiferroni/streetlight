@@ -12,7 +12,10 @@ import kotlinx.css.flexDirection
 import kotlinx.css.gap
 import kotlinx.css.rem
 import kotlinx.html.CoreAttributeGroupFacade
+import kotlinx.html.HEAD
 import kotlinx.html.classes
+import kotlinx.html.id
+import kotlinx.html.style
 import kotlin.jvm.JvmInline
 
 interface CssClass {
@@ -67,3 +70,12 @@ fun CssBuilder.rules(theme: KoalaTheme): CssBuilder {
 }
 
 fun RuleContainer.classRule(cssClass: CssClass, block: RuleSet) = rule(".${cssClass.value}", block)
+
+fun HEAD.koalaStyles(theme: KoalaTheme = KoalaTheme()) {
+    style {
+        id = "koala-theme"
+        +buildKoalaStyles(theme)
+    }
+}
+
+fun buildKoalaStyles(theme: KoalaTheme = KoalaTheme()) = CssBuilder().rules(theme).toString()
