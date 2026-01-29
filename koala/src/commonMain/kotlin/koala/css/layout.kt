@@ -13,22 +13,28 @@ import kotlinx.css.flexDirection
 import kotlinx.css.gap
 import kotlinx.css.padding
 
+object Column : CssClass { override val value = "column" }
+object Row : CssClass { override val value = "row" }
+object QueryRow: CssClass { override val value = "query-row" }
+object Card : CssClass { override val value = "card" }
+object Box : CssClass { override val value = "box"}
+
 fun CssBuilder.layout(theme: KoalaTheme) {
     // layouts
-    classRule(Column) {
+    rule(Column) {
         display = Display.flex
         flexDirection = FlexDirection.column
         gap = theme.spacingUnit
     }
 
-    classRule(Row) {
+    rule(Row) {
         display = Display.flex
         flexDirection = FlexDirection.row
         gap = theme.spacingUnit
         alignItems = Align.center
     }
 
-    classRule(Card) {
+    rule(Card) {
         display = Display.flex
         flexDirection = FlexDirection.column
         gap = theme.spacingUnit
@@ -37,6 +43,6 @@ fun CssBuilder.layout(theme: KoalaTheme) {
         padding = Padding(theme.spacingUnit)
     }
 
-    classRule(Box) {
+    rule(Box) {
     }
 }

@@ -1,6 +1,7 @@
 package koala.dom
 
 import koala.css.CssClass
+import koala.css.LottieClass
 import koala.css.modify
 import kotlinx.html.DIV
 import kotlinx.html.js.div
@@ -12,7 +13,7 @@ inline fun DOMContext.lottie(
     crossinline block: DIV.() -> Unit = { }
 ): HTMLDivElement {
     val div = div {
-        modify(*modifiers)
+        modify(LottieClass, *modifiers)
         block()
     }
     initLottie(div, filename)

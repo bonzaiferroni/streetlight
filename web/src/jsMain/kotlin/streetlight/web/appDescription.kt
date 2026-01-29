@@ -5,48 +5,47 @@ import koala.html.paragraph
 import koala.html.row
 import kotlinx.html.*
 import koala.css.*
+import koala.dom.DOMContext
 import koala.dom.column
 import koala.dom.lottie
+import koala.html.box
 import org.w3c.dom.HTMLElement
 import streetlight.web.pages.homeFooter
 
-fun TagConsumer<HTMLElement>.appTab() {
+fun DOMContext.appDescription() {
     column(AlignItemsCenter) {
-        row {
-            lottie("cup_stack", Flex1)
+        column(QueryRow, AlignItemsCenter) {
+            lottie("cup_stack", Flex1, MaxWidth50)
             val introText = "Streetlight is a street performance community and app. " +
                     "It is cross-platform, open-source, and 100% Kotlin. "
-            paragraph(introText, Flex2, Large)
+            paragraph(introText, Flex3, Large)
         }
-        row {
-            column(Flex2) {
-                column(NoGap) {
+        column(QueryRow, AlignItemsCenter) {
+            lottie("dancing_man", Flex1, MaxWidth50)
+            column(Flex3) {
+                column(Gap0) {
                     paragraph("Do you have a talent to share with passersby?")
                     paragraph("Do you have a business, venue, or message you would like to promote?")
                     paragraph("Are you walking down the street somewhere and looking for something to experience?")
                 }
                 paragraph("Consider downloading Streetlight to see what it can offer.", Bold)
             }
-            lottie("dancing_man", Flex1)
         }
-        row {
-            lottie("playful_cat", Flex1)
-            column(Flex2) {
+        column(QueryRow, AlignItemsCenter) {
+            lottie("playful_cat", Flex1, MaxWidth50)
+            column(Flex3) {
                 paragraph {
                     externalLink("https://github.com/bonzaiferroni/streetlight", "Streetlight")
                     +" is 100% free and open-source. Free as in speech, free as in beer. "
                 }
                 paragraph(
                     "Do you like working with Kotlin and/or people? Consider becoming a contributor. " +
-                            "As a software development community, we welcome people at any stage in their career. " +
-                            "Are you interested in working on open-source software full time? " +
-                            "We are based in Aurora, CO, and we have support opportunities. "
+                            "As a software development community, we welcome people at any stage in their career. "
+                    // pending resources to follow through
+//                            "Are you interested in working on open-source software full time? " +
+//                            "We are based in Aurora, CO, and we have support opportunities. "
                 )
-                paragraph("Work on Streetlight or your own open-source idea.", Large)
-            }
-        }
-        row {
-            column(Flex1) {
+//                paragraph("Work on Streetlight or your own open-source idea.", Large)
                 paragraph {
                     +"For better or for worse, apps are evermore present in our lives. "
                     +"As software engineers, we hold influence. "
@@ -55,20 +54,20 @@ fun TagConsumer<HTMLElement>.appTab() {
                 }
                 paragraph("It's giants all the way down.", Large)
             }
-            column(NoGap, Flex1, AlignItemsStretch) {
-                heading5("Our Giants", TextAlignCenter)
-                githubLink("web", "kotlinx.html", "Kotlin")
-                githubLink("app client", "Compose Multiplatform", "jetbrains", "compose-multiplatform")
-                githubLink("app database", "SQLite", "sqlite")
-                githubLink("app ORM", "Room", "androidx-releases")
-                githubLink("server", "Ktor", "jetbrains")
-                githubLink("server database", "Postgres", "postgres")
-                githubLink("server ORM", "Exposed", "jetbrains")
-                githubLink("animation", "Lottie", "airbnb")
-                githubLink("animation content", "Open Animation", "orispok", "OpenAnimationApp")
-                githubLink("map", "MapLibre", "maplibre-gl-js")
-                githubLink("map data", "OpenFreeMap", "hyper-knot")
-            }
+        }
+        column(Gap0, AlignItemsStretch, Width100, MarginTop4) {
+            heading5("Our Giants", TextAlignCenter)
+            githubLink("web", "kotlinx.html", "Kotlin")
+            githubLink("app client", "Compose Multiplatform", "jetbrains", "compose-multiplatform")
+            githubLink("app database", "SQLite", "sqlite")
+            githubLink("app ORM", "Room", "androidx-releases")
+            githubLink("server", "Ktor", "jetbrains")
+            githubLink("server database", "Postgres", "postgres")
+            githubLink("server ORM", "Exposed", "jetbrains")
+            githubLink("animation", "Lottie", "airbnb")
+            githubLink("animation content", "Open Animation", "orispok", "OpenAnimationApp")
+            githubLink("map", "MapLibre", "maplibre-gl-js")
+            githubLink("map data", "OpenFreeMap", "hyper-knot")
         }
         homeFooter()
     }

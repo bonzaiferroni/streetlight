@@ -13,8 +13,8 @@ fun HTML.homePage() {
     }
     body {
         column {
-            column(FillWidth, AlignItemsCenter) {
-                row(NoGap) {
+            column(Width100, AlignItemsCenter) {
+                row(Gap0) {
                     logo()
                     heading1("Streetlight")
                 }
@@ -41,7 +41,7 @@ fun FlowContent.homeFooter() {
     val giants = "May we choose a world of good and faithful giants. "
     row(AlignItemsCenter) {
         style = "height: 20rem;"
-        column(AlignItemsCenter, NoGap, FillWidth) {
+        column(AlignItemsCenter, Gap0, Width100) {
             lottie("spinning_circles") {
                 style = "height: 10rem;"
             }

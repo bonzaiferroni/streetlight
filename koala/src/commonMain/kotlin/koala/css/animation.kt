@@ -3,8 +3,12 @@ package koala.css
 import kotlinx.css.*
 import kotlinx.css.properties.*
 
+object Fade: CssClass { override val value = "fade" }
+object Show: CssClass { override val value = "show" }
+object FadeStack: CssClass { override val value = "fade-stack" }
+
 fun CssBuilder.animation(theme: KoalaTheme) {
-    classRule(FadeStack) {
+    rule(FadeStack) {
         position = Position.relative
 
         children {

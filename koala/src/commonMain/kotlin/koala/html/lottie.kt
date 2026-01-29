@@ -9,7 +9,7 @@ inline fun FlowContent.lottie(
     crossinline block: DIV.() -> Unit = { }
 ) {
     div {
-        modify(*modifiers)
+        modify(LottieClass, *modifiers)
         attributes["lottie"] = filename
         block()
     }
