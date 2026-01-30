@@ -6,10 +6,11 @@ import koala.html.column
 import koala.html.geoMap
 import koala.html.tab
 import koala.dom.tabs
+import koala.html.Id
 import streetlight.web.pages.homeFooter
 
 fun RenderContext.homeContent() {
-    tabs(Width100) {
+    tabs(Id("main-tabs"), Width100) {
         tab("Events") {
             eventsTab()
         }

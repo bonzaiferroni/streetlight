@@ -7,12 +7,17 @@ function initTabs(root) {
     const viewport = root.querySelector(".tabs-viewport");
     if (!viewport) return;
 
+    // Key is the viewport element id (must exist)
+    const paramKey = (root.id || "").trim();
+    console.log(paramKey);
+    if (!paramKey) return;
+
     const buttons = Array.from(root.querySelectorAll(".tabs-header .tabs-button"));
     const panels = Array.from(viewport.querySelectorAll(".tabs-panel"));
     if (panels.length === 0) return;
 
-    // --- Helpers: naming + hash control ---
-    const slug = (s) => s
+    // --- Helpers: naming + query control ---
+    const slug = (s) => String(s || "")
         .toLowerCase()
         .trim()
         .replace(/[_\s]+/g, "-")
@@ -30,24 +35,26 @@ function initTabs(root) {
 
     const names = panels.map((_, i) => tabNameAt(i));
 
-    const readHash = () => {
-        const h = decodeURIComponent((location.hash || "").slice(1)).toLowerCase().trim();
-        return h || "";
+    const readQuery = () => {
+        const url = new URL(location.href);
+        const v = (url.searchParams.get(paramKey) || "").toLowerCase().trim();
+        return v || "";
     };
 
-    const setHash = (name) => {
+    const setQuery = (name) => {
         const url = new URL(location.href);
-        url.hash = name ? `#${encodeURIComponent(name)}` : "";
+        if (name) url.searchParams.set(paramKey, name);
+        else url.searchParams.delete(paramKey);
         history.replaceState(null, "", url);
     };
 
-    // --- Initial current (class or #hash) ---
+    // --- Initial current (class or ?paramKey=...) ---
     let current = panels.findIndex((p) => p.classList.contains("is-active"));
     if (current < 0) current = 0;
 
-    const initialHash = readHash();
-    const hashIdx = initialHash ? names.indexOf(slug(initialHash)) : -1;
-    if (hashIdx >= 0) current = hashIdx;
+    const initialWanted = readQuery();
+    const wantedIdx = initialWanted ? names.indexOf(slug(initialWanted)) : -1;
+    if (wantedIdx >= 0) current = wantedIdx;
 
     // --- Initial apply ---
     panels.forEach((p, i) => {
@@ -61,9 +68,9 @@ function initTabs(root) {
     setTimeout(() => (viewport.style.height = "auto"), DURATION);
 
     // Ensure URL reflects active tab after init
-    setHash(names[current]);
+    setQuery(names[current]);
 
-    // --- Click -> swap + hash update ---
+    // --- Click -> swap + query update ---
     buttons.forEach((btn) => {
         btn.addEventListener("click", () => {
             const next = Number(btn.dataset.tab);
@@ -73,13 +80,13 @@ function initTabs(root) {
             buttons[next]?.classList.add("is-active");
             swap(current, next);
             current = next;
-            setHash(names[current]);
+            setQuery(names[current]);
         });
     });
 
-    // --- React to external hash changes ---
-    const onHash = () => {
-        const wanted = readHash();
+    // --- React to external navigation (back/forward / replaceState elsewhere) ---
+    const onNav = () => {
+        const wanted = readQuery();
         if (!wanted) return;
         const idx = names.indexOf(slug(wanted));
         if (idx < 0 || idx === current) return;
@@ -89,7 +96,7 @@ function initTabs(root) {
         swap(current, idx);
         current = idx;
     };
-    window.addEventListener("hashchange", onHash);
+    window.addEventListener("popstate", onNav);
 
     function swap(fromIdx, toIdx) {
         const from = panels[fromIdx];
