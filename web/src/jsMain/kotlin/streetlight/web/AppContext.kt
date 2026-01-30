@@ -8,6 +8,7 @@ interface AppContext {
     val appScope: CoroutineScope
     val client: ClientContext
     val portal: AppPortal
+    val gate: UserGate
     val home: HomeContext
 }
 

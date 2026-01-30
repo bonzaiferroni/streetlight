@@ -13,7 +13,6 @@ fun viewApp() {
     console.log("loading streetlight")
 
     val scope = MainScope() // 57 KB
-    val portal = AppPortal(scope) // 2 KB
 
     val app = object: AppContext { // 220 KB
         override val appScope = scope
@@ -23,7 +22,8 @@ fun viewApp() {
             override val event = EventBrowserClient()
         }
 
-        override val portal = portal
+        override val portal = AppPortal(scope)
+        override val gate = UserGate(scope)
 
         override val home by lazy {
             object: HomeContext {

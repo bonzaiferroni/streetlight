@@ -39,12 +39,14 @@ class RenderContext(
         }
         var render: HTMLElement? = null
         var job: Job? = null
+        var renderedOnce = false
         val renderCache = mutableMapOf<State, HTMLElement>()
 
         renderScope.launch {
             var currentValue: State? = null
             flow.collect {  value ->
-                if (value == currentValue) return@collect
+                if (renderedOnce && value == currentValue) return@collect
+                renderedOnce = true
                 job?.cancel()
                 job = SupervisorJob()
                 currentValue = value
