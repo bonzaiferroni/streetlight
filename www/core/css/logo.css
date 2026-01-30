@@ -1,7 +1,6 @@
 .logo {
     display: inline-flex;
     align-items: center;
-    aspect-ratio: 1 / 1;
     height: 1em; /* or inherit from font-size if ye prefer */
 }
 

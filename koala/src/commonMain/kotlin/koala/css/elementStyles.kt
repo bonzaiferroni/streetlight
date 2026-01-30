@@ -1,9 +1,14 @@
 package koala.css
 
 import kotlinx.css.*
+import kotlinx.css.properties.Timing
+import kotlinx.css.properties.Transition
+import kotlinx.css.properties.s
 
 object LottieClass: CssClass { override val value: String = "lottie" }
 object IconClass: CssClass { override val value: String = "icon" }
+object LogoClass: CssClass { override val value: String = "logo" }
+object ActionClass: CssClass { override val value: String = "action" }
 
 fun CssBuilder.elementStyles(theme: KoalaTheme) {
     rule(LottieClass) {
@@ -25,5 +30,13 @@ fun CssBuilder.elementStyles(theme: KoalaTheme) {
         put("-webkit-mask-repeat", "no-repeat")
         put("mask-position", "center")
         put("-webkit-mask-position", "center")
+    }
+
+    rule(ActionClass) {
+        transition += Transition("opacity", 0.35.s, Timing.ease)
+
+        hover {
+            opacity = 1
+        }
     }
 }

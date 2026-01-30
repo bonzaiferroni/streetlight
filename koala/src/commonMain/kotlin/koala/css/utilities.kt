@@ -8,7 +8,9 @@ import kotlinx.css.properties.s
 
 // display utilities
 object DisplayNone : CssClass { override val value = "display-none" }
-object Dim: CssClass { override val value = "dim" }
+object Opacity6: CssClass { override val value = "opacity-6" }
+object Opacity4: CssClass { override val value = "opacity-4" }
+object Opacity2: CssClass { override val value = "opacity-2" }
 object NoDim: CssClass { override val value = "no-dim" }
 object Glow: CssClass { override val value = "glow" }
 
@@ -24,8 +26,16 @@ fun CssBuilder.utilities(theme: KoalaTheme) {
         display = Display.none
     }
 
-    rule(Dim) {
+    rule(Opacity6) {
         color = theme.fg.changeAlpha(0.6)
+    }
+
+    rule(Opacity4) {
+        color = theme.fg.changeAlpha(0.4)
+    }
+
+    rule(Opacity2) {
+        color = theme.fg.changeAlpha(0.2)
     }
 
     rule(NoDim) {

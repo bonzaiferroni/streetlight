@@ -16,6 +16,7 @@ object AlignItemsStretch: CssClass { override val value = "align-items-stretch" 
 object Width100: CssClass { override val value = "width-100" }
 object Height100: CssClass { override val value = "height-100" }
 object Height2: CssClass { override val value = "height-2" }
+object Height3: CssClass { override val value = "height-3" }
 object Height4: CssClass { override val value = "height-4" }
 object FillHeight: CssClass { override val value = "fill-height" }
 object FlexItems1: CssClass { override val value = "flex-items-1" }
@@ -122,6 +123,10 @@ fun CssBuilder.layoutUtilities(theme: KoalaTheme) {
 
     rule(Height2) {
         height = 2.rem
+    }
+
+    rule(Height3) {
+        height = 3.rem
     }
 
     rule(Height4) {

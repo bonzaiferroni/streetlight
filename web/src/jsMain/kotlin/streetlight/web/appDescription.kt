@@ -8,8 +8,6 @@ import koala.css.*
 import koala.dom.DOMContext
 import koala.dom.column
 import koala.dom.lottie
-import koala.html.box
-import org.w3c.dom.HTMLElement
 import streetlight.web.pages.homeFooter
 
 fun DOMContext.appDescription() {
@@ -80,7 +78,7 @@ fun FlowContent.githubLink(
     repo: String = name,
 ) {
     row {
-        paragraph("$role:", Dim, TextAlignRight, Flex1)
+        paragraph("$role:", Opacity6, TextAlignRight, Flex1)
         a("https://github.com/$user/$repo") {
             modify(Flex1)
             target = "_blank"

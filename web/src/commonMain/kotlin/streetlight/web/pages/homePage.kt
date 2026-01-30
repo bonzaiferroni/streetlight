@@ -15,12 +15,16 @@ fun HTML.homePage() {
         column {
             column(Width100, AlignItemsCenter) {
                 row(Width100, SpaceBetween) {
-                    icon("chevron-down", Height4)
-                    row(Gap0) {
+                    action(Height3, Opacity2) {
+                        icon("chevron-down", Height100)
+                    }
+                    row {
                         logo()
                         heading1("Streetlight")
                     }
-                    paragraph("thing")
+                    action("#user", Height3, Opacity2) {
+                        icon("empty-profile", Height100)
+                    }
                 }
 //                box(Dim) {
 //                    +"a "
@@ -49,7 +53,7 @@ fun FlowContent.homeFooter() {
             lottie("spinning_circles") {
                 style = "height: 10rem;"
             }
-            paragraph(giants, Italic, Dim)
+            paragraph(giants, Italic, Opacity6)
         }
     }
 }

@@ -50,7 +50,7 @@ fun HTML.eventPortal(event: Event, person: Person?, requestItems: List<RequestIt
             heading2("Send a tip")
             row(AlignItemsCenter) {
                 row {
-                    heading3("Venmo:", Dim)
+                    heading3("Venmo:", Opacity6)
                     a("https://venmo.com/colfaxband?txn=pay&note=street+music") {
                         heading3("@colfaxband", Glow)
                     }
@@ -83,7 +83,7 @@ fun FlowContent.requestItem(
                 paragraph(song.artist)
             }
             column(Gap0, AlignItemsCenter) {
-                paragraph("plays", Dim)
+                paragraph("plays", Opacity6)
                 paragraph(plays.toString())
             }
         }
