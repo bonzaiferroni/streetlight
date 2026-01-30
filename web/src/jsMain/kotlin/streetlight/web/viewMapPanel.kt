@@ -23,20 +23,24 @@ fun AppContext.viewMapPanel() {
 
     mountRender("select-point") {
         column {
-            row {
-                renderState(eventMap.locationFlow) { location ->
-                    if (location != null) {
-                        paragraph("Location: Burger King")
+            renderState(eventMap.placeFlow) { (location, event) ->
+                if (event != null) {
+                    row {
+                        paragraph("Event: ${event.title}")
+                    }
+                } else if (location != null) {
+                    row {
+                        paragraph("Location: ${location.name}")
                         button("Add Event") {
                             gateAgent.checkIn {
-                                console.log("adding event")
+                                portal.go(CreateEventRoute)
                             }
                         }
-                    } else {
-                        button("Add Location") {
-                            gateAgent.checkIn {
-                                portal.go(CreateLocationRoute)
-                            }
+                    }
+                } else {
+                    button("Add Location") {
+                        gateAgent.checkIn {
+                            portal.go(CreateLocationRoute)
                         }
                     }
                 }

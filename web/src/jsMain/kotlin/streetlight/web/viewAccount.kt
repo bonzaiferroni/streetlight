@@ -5,6 +5,7 @@ import koala.dom.column
 import kotlinx.html.js.p
 
 fun RenderContext.viewAccount() {
+    console.log("rendering account")
     column {
         renderState(gate.userFlow) { user ->
             if (user != null) {

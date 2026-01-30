@@ -47,13 +47,11 @@ class RenderContext(
             flow.collect {  value ->
                 if (renderedOnce && value == currentValue) return@collect
                 renderedOnce = true
-                job?.cancel()
-                job = SupervisorJob()
+                if (!cacheRenderedElements) job?.cancel()
                 currentValue = value
 
                 render?.hide(animate)
 
-                val scope = CoroutineScope(Dispatchers.Main + job)
                 render = renderCache[value]?.also {
                     parent.append(it)
                 } ?: parent.append {
@@ -61,6 +59,8 @@ class RenderContext(
                         configureContainer()
                     }
                     container.append {
+                        job = SupervisorJob()
+                        val scope = CoroutineScope(Dispatchers.Main + job)
                         RenderContext(this, scope, app).block(value)
                     }
                     if (cacheRenderedElements) renderCache[value] = container

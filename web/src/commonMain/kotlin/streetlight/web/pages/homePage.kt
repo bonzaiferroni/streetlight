@@ -4,6 +4,7 @@ import koala.html.*
 import kotlinx.html.*
 import koala.css.*
 import streetlight.web.Account
+import streetlight.web.Home
 
 fun HTML.homePage() {
     head("Streetlight | Home") {
@@ -19,9 +20,11 @@ fun HTML.homePage() {
                     action(Height3, Opacity2) {
                         icon("chevron-down", Height100)
                     }
-                    row {
-                        logo()
-                        heading1("Streetlight")
+                    action(Home()) {
+                        row {
+                            logo()
+                            heading1("Streetlight")
+                        }
                     }
                     action(Account, Height3, Opacity2) {
                         icon("empty-profile", Height100)

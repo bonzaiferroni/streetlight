@@ -7,6 +7,7 @@ enum class AppScreen(val path: String) {
     Account("account"),
     Event("event"),
     CreateLocation("create-location"),
+    CreateEvent("create-event"),
 }
 
 sealed class StreetlightRoute: AppRoute {
@@ -37,4 +38,8 @@ object EventRoute: StreetlightRoute() {
 
 object CreateLocationRoute : StreetlightRoute() {
     override val screen get() = AppScreen.CreateLocation
+}
+
+object CreateEventRoute : StreetlightRoute() {
+    override val screen get() = AppScreen.CreateEvent
 }

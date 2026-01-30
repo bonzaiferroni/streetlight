@@ -42,7 +42,27 @@ data class NewEvent(
     val title: String,
     val startsAt: Instant,
     val eventType: EventType,
-)
+) {
+    fun toEvent() = Event(
+        eventId = EventId.random(),
+        locationId = locationId,
+        userId = UserId.random(),
+        currentRequestId = null,
+        url = null,
+        imageUrl = null,
+        streamUrl = null,
+        title = title,
+        description = null,
+        status = EventStatus.Pending,
+        eventType = eventType,
+        cashTips = null,
+        cardTips = null,
+        startsAt = startsAt,
+        endsAt = startsAt,
+        updatedAt = Instant.DISTANT_PAST,
+        createdAt = Instant.DISTANT_PAST,
+    )
+}
 
 enum class EventType(val label: String) {
     Show("Show"),
