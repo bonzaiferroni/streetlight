@@ -13,7 +13,7 @@ fun viewApp() {
     console.log("loading streetlight")
 
     val scope = MainScope() // 57 KB
-    val portal = AppPortal("/", scope) // 2 KB
+    val portal = AppPortal(scope) // 2 KB
 
     val app = object: AppContext { // 220 KB
         override val appScope = scope
@@ -26,7 +26,7 @@ fun viewApp() {
         override val portal = portal
 
         override val home by lazy {
-            object: Home {
+            object: HomeContext {
                 override val gtfsMap = GtfsMap(scope, client.gtfs)
                 override val eventMap = EventMap(scope, client.event)
             }
@@ -42,7 +42,7 @@ fun viewApp() {
             when (screen) {
                 AppScreen.Home -> viewHome()
                 AppScreen.Event -> viewEvent()
-                AppScreen.User -> TODO()
+                AppScreen.Account -> viewAccount()
             }
         }
     }

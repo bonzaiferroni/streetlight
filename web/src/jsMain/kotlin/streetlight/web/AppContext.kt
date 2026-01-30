@@ -8,10 +8,10 @@ interface AppContext {
     val appScope: CoroutineScope
     val client: ClientContext
     val portal: AppPortal
-    val home: Home
+    val home: HomeContext
 }
 
-interface Home {
+interface HomeContext {
     val gtfsMap: GtfsMap
     val eventMap: EventMap
 }

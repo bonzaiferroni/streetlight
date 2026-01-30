@@ -1,25 +1,42 @@
 package streetlight.web
 
+import kotlinx.browser.window
 import kotlinx.coroutines.CoroutineScope
 
 class AppPortal(
-    initialPath: String,
     scope: CoroutineScope
-): BrowserModel<AppNavigatorState>(AppNavigatorState(initialPath), scope) {
-    val screenFlow = stateFlow.mapDistinct { it.screen }
+): BrowserModel<AppNavigatorState>(AppNavigatorState(), scope) {
+    val screenFlow = stateFlow.mapDistinct { it.route.screen }
 
-    fun go(screen: AppScreen) {
-        setState { it.copy(screen = screen) }
+    init {
+        window.addEventListener("hashchange", {
+            console.log(window.location.hash)
+            val route = StreetlightRoute.fromHashFragment(window.location.hash)
+            if (route.screen == stateNow.route.screen) return@addEventListener
+            go(route)
+        })
+    }
+
+    fun go(route: StreetlightRoute) {
+        setState { it.copy(route = route) }
+        window.location.hash = route.toHashPath()
     }
 }
 
 data class AppNavigatorState(
-    val path: String,
-    val screen: AppScreen = AppScreen.Home
+    val route: StreetlightRoute = Home()
 )
 
-enum class AppScreen {
-    Home,
-    Event,
-    User
+fun StreetlightRoute.Companion.fromHashFragment(fragment: String): StreetlightRoute {
+    val fragment = fragment.dropStart('#').dropStart('/')
+    val querySplit = fragment.split('?')
+    val path = querySplit[0].lowercase().split('/')
+    return when (path[0]) {
+        Home.screen.path -> Home()
+        Account.screen.path -> Account
+        EventRoute.screen.path -> EventRoute
+        else -> Home()
+    }
 }
+
+private fun String.dropStart(char: Char) = if (startsWith(char)) drop(1) else this

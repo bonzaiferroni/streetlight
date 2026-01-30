@@ -8,6 +8,14 @@ import kotlinx.html.FlowContent
 import kotlinx.html.a
 
 fun FlowContent.action(
+    route: AppRoute,
+    vararg modifiers: CssClass,
+    block: (A.() -> Unit)? = null
+) {
+    action(href = route.toHashPath(), modifiers = modifiers, block = block)
+}
+
+fun FlowContent.action(
     href: String? = null,
     vararg modifiers: CssClass,
     block: (A.() -> Unit)? = null
