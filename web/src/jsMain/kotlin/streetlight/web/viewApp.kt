@@ -44,6 +44,7 @@ fun viewApp() {
                 AppScreen.Home -> viewHome()
                 AppScreen.Event -> viewEvent()
                 AppScreen.Account -> viewAccount()
+                AppScreen.CreateLocation -> viewCreateLocation()
             }
         }
     }

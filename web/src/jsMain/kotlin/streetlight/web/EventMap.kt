@@ -1,20 +1,26 @@
 package streetlight.web
 
 import kampfire.model.GeoBounds
-import kampfire.model.GeoPoint
 import streetlight.model.data.MapQuery
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import streetlight.model.data.Event
 import streetlight.model.data.EventLocation
+import streetlight.model.data.Location
+import streetlight.model.data.NewLocation
 
 class EventMap(
     viewModelScope: CoroutineScope,
     val eventClient: EventBrowserClient
 ): BrowserModel<EventMapState>(EventMapState(), viewModelScope) {
 
+    val locationFlow = stateFlow.mapDistinct { it.location }
+
     fun setName(name: String) {
         setState { it.copy(name = name) }
+    }
+
+    fun createLocation(location: NewLocation) {
+        setState { it.copy(location = location.toLocation()) }
     }
 
     fun setBounds(bounds: GeoBounds, zoom: Float) {
@@ -36,7 +42,8 @@ data class EventMapState(
     val queriedBounds: GeoBounds = GeoBounds.Denver,
     val zoom: Float = 11f,
     val events: List<EventLocation> = emptyList(),
-    val name: String = ""
+    val name: String = "",
+    val location: Location? = null
 ) {
     val center get() = bounds.center
 }

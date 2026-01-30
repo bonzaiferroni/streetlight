@@ -5,7 +5,8 @@ import koala.html.AppRoute
 enum class AppScreen(val path: String) {
     Home("home"),
     Account("account"),
-    Event("event")
+    Event("event"),
+    CreateLocation("create-location"),
 }
 
 sealed class StreetlightRoute: AppRoute {
@@ -32,4 +33,8 @@ object Account: StreetlightRoute() {
 
 object EventRoute: StreetlightRoute() {
     override val screen get() = AppScreen.Event
+}
+
+object CreateLocationRoute : StreetlightRoute() {
+    override val screen get() = AppScreen.CreateLocation
 }

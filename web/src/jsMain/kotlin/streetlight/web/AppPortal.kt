@@ -18,14 +18,23 @@ class AppPortal(
     }
 
     fun go(route: StreetlightRoute) {
-        setState { it.copy(route = route) }
+        val backstack = stateNow.backstack + stateNow.route
+        setState { it.copy(route = route, backstack = backstack) }
         window.location.hash = route.toHashPath()
+    }
+
+    fun goBack() {
+        val route = stateNow.backstack.lastOrNull() ?: return
+        setState { it.copy(route = route, backstack = stateNow.backstack.dropLast(1))}
     }
 }
 
 data class AppNavigatorState(
-    val route: StreetlightRoute = Home()
-)
+    val route: StreetlightRoute = Home(),
+    val backstack: List<StreetlightRoute> = emptyList()
+) {
+    val canGoBack get() = backstack.isNotEmpty()
+}
 
 fun StreetlightRoute.Companion.fromHashFragment(fragment: String): StreetlightRoute {
     val fragment = fragment.dropStart('#').dropStart('/')
@@ -35,6 +44,7 @@ fun StreetlightRoute.Companion.fromHashFragment(fragment: String): StreetlightRo
         Home.screen.path -> Home()
         Account.screen.path -> Account
         EventRoute.screen.path -> EventRoute
+        CreateLocationRoute.screen.path -> CreateLocationRoute
         else -> Home()
     }
 }
