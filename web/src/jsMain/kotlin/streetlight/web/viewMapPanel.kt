@@ -2,7 +2,11 @@ package streetlight.web
 
 import koala.css.Css
 import koala.dom.box
+import koala.dom.button
 import koala.dom.card
+import koala.dom.column
+import koala.dom.row
+import koala.html.paragraph
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -18,21 +22,30 @@ fun AppContext.viewMapPanel() {
     val eventMap = home.eventMap
 
     mountRender("select-point") {
-        // testInput()
-        // showLocation()
-        renderState(eventMap.stateFlow.map { it.events }, true) { allEvents ->
-            box(Css("map-event-panel")) {
-                p {
-                    +"eyyyyy!"
+        column {
+            row {
+                paragraph("Location: Burger King")
+                button("Add Event") {
+                    gateAgent.checkIn {
+                        console.log("adding event")
+                    }
                 }
-                allEvents.groupBy { it.eventType }.forEach { (eventType, events) ->
-                    card(Css("map-event-group")) {
-                        h2 {
-                            +eventType.label
-                        }
-                        events.forEach { event ->
-                            p {
-                                +event.title
+            }
+
+            renderState(eventMap.stateFlow.map { it.events }, true) { allEvents ->
+                box(Css("map-event-panel")) {
+                    p {
+                        +"eyyyyy!"
+                    }
+                    allEvents.groupBy { it.eventType }.forEach { (eventType, events) ->
+                        card(Css("map-event-group")) {
+                            h2 {
+                                +eventType.label
+                            }
+                            events.forEach { event ->
+                                p {
+                                    +event.title
+                                }
                             }
                         }
                     }

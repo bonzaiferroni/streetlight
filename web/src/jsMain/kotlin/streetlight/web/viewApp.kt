@@ -24,6 +24,7 @@ fun viewApp() {
 
         override val portal = AppPortal(scope)
         override val gate = UserGate(scope)
+        override val gateAgent = GateAgent(scope, gate, portal)
 
         override val home by lazy {
             object: HomeContext {

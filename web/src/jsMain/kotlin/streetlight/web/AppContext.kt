@@ -9,6 +9,7 @@ interface AppContext {
     val client: ClientContext
     val portal: AppPortal
     val gate: UserGate
+    val gateAgent: GateAgent
     val home: HomeContext
 }
 

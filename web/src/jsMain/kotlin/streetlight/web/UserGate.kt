@@ -1,5 +1,6 @@
 package streetlight.web
 
+import koala.html.AppRoute
 import kotlinx.coroutines.CoroutineScope
 
 class UserGate(
