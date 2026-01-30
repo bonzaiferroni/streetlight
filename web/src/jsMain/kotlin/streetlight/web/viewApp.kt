@@ -15,11 +15,14 @@ fun viewApp() {
     val scope = MainScope() // 57 KB
 
     val app = object: AppContext { // 220 KB
+        val _this = this
+
         override val appScope = scope
 
         override val client = object: ClientContext {
             override val gtfs = GtfsBrowserClient()
             override val event = EventBrowserClient()
+            override val location = LocationBrowserClient()
         }
 
         override val portal = AppPortal(scope)
@@ -29,7 +32,7 @@ fun viewApp() {
         override val home by lazy {
             object: HomeContext {
                 override val gtfsMap = GtfsMap(scope, client.gtfs)
-                override val eventMap = EventMap(scope, client.event)
+                override val eventMap = EventMap(_this)
             }
         }
     }

@@ -23,4 +23,12 @@ data class NewLocation(
         updatedAt = Clock.System.now(),
         createdAt = Clock.System.now()
     )
+
+    companion object {
+        val Empty get() = NewLocation(
+            areaId = AreaId.random(),
+            name = "",
+            geoPoint = GeoPoint.Denver
+        )
+    }
 }

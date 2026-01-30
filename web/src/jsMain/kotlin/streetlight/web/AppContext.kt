@@ -21,6 +21,7 @@ interface HomeContext {
 interface ClientContext {
     val gtfs: GtfsBrowserClient
     val event: EventBrowserClient
+    val location: LocationBrowserClient
 }
 
 fun AppContext.mountRender(

@@ -1,27 +1,37 @@
 package streetlight.web
 
 import kampfire.model.GeoBounds
+import kampfire.model.GeoPoint
 import streetlight.model.data.MapQuery
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import streetlight.model.data.AreaId
 import streetlight.model.data.EventLocation
 import streetlight.model.data.Location
 import streetlight.model.data.NewEvent
 import streetlight.model.data.NewLocation
 
-class EventMap(
-    viewModelScope: CoroutineScope,
-    val eventClient: EventBrowserClient
-): BrowserModel<EventMapState>(EventMapState(), viewModelScope) {
+class EventMap(app: AppContext): BrowserModel<EventMapState>(EventMapState(), app.appScope), AppContext by app {
 
     val placeFlow = stateFlow.mapDistinct { it.place }
+    val newLocationFlow = stateFlow.mapDistinct { it.newLocation }
 
     fun setName(name: String) {
         setState { it.copy(name = name) }
     }
 
-    fun createLocation(location: NewLocation) {
-        setState { it.copy(place = stateNow.place.copy(location = location.toLocation())) }
+    fun queryLocation() {
+        viewModelScope.launch {
+            val returned = client.location.readPlaceInfo(stateNow.center)
+            setState { it.copy(newLocation = stateNow.newLocation.copy(name = returned.displayName))}
+        }
+    }
+
+    fun createLocation() {
+        setState { it.copy(
+            place = stateNow.place.copy(location = stateNow.newLocation.toLocation()),
+            newLocation = NewLocation.Empty
+        ) }
     }
 
     fun createEvent(event: NewEvent) {
@@ -41,7 +51,7 @@ class EventMap(
             val queriedBounds = bounds.expandBy(1.5f)
             setState { it.copy(bounds = bounds, zoom = zoom, queriedBounds = queriedBounds )}
             viewModelScope.launch {
-                val events = eventClient.queryMap(MapQuery(queriedBounds, stateNow.zoom))
+                val events = client.event.queryMap(MapQuery(queriedBounds, stateNow.zoom))
                 setState { it.copy(events = events)}
             }
         }
@@ -54,7 +64,12 @@ data class EventMapState(
     val zoom: Float = 11f,
     val events: List<EventLocation> = emptyList(),
     val name: String = "",
-    val place: Place = Place()
+    val place: Place = Place(),
+    val newLocation: NewLocation = NewLocation(
+        areaId = AreaId.random(),
+        name = "",
+        geoPoint = GeoPoint.Denver,
+    )
 ) {
     val center get() = bounds.center
 }

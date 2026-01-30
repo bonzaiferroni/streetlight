@@ -11,17 +11,20 @@ import streetlight.model.data.NewLocation
 
 fun RenderContext.viewCreateLocation() {
     column {
-        paragraph("create location")
+        renderState(home.eventMap.newLocationFlow) { location ->
+            row {
+                paragraph("Location: ${location.name}")
+            }
+        }
         row {
             button("cancel") {
                 portal.goBack()
             }
+            button("query") {
+                home.eventMap.queryLocation()
+            }
             button("create") {
-                home.eventMap.createLocation(NewLocation(
-                    areaId = AreaId.random(),
-                    name = "owltown",
-                    geoPoint = GeoPoint.Denver
-                ))
+                home.eventMap.createLocation()
                 portal.goBack()
             }
         }
