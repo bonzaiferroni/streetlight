@@ -7,9 +7,14 @@ import koala.html.geoMap
 import koala.html.tab
 import koala.dom.tabs
 import koala.html.Id
+import kotlinx.html.js.div
 import streetlight.web.pages.homeFooter
 
 fun RenderContext.homeContent() {
+    console.log("loading home content")
+//    div {
+//         geoMap()
+//    }
     tabs(Id("main-tabs"), Width100) {
         tab("Events") {
             eventsTab()
@@ -24,4 +29,5 @@ fun RenderContext.homeContent() {
             appDescription()
         }
     }
+    console.log("done loading home content")
 }

@@ -1,13 +1,9 @@
 package streetlight.web
 
-import kampfire.model.GeoPoint
 import koala.dom.button
 import koala.dom.column
 import koala.dom.row
 import koala.html.paragraph
-import streetlight.model.data.AreaId
-import streetlight.model.data.Location
-import streetlight.model.data.NewLocation
 
 fun RenderContext.viewCreateLocation() {
     column {

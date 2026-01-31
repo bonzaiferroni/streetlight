@@ -1,7 +1,5 @@
 package streetlight.web
 
-import kotlinx.html.js.div
-
 fun RenderContext.viewHome() {
     console.log("loading home")
 

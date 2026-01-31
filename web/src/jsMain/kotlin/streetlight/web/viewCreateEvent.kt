@@ -1,12 +1,10 @@
 package streetlight.web
 
-import kampfire.model.GeoPoint
 import koala.dom.button
 import koala.dom.column
 import koala.dom.row
 import koala.html.paragraph
 import kotlinx.datetime.Clock
-import streetlight.model.data.AreaId
 import streetlight.model.data.EventType
 import streetlight.model.data.LocationId
 import streetlight.model.data.NewEvent

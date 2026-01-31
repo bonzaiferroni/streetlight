@@ -2,7 +2,9 @@ package streetlight.web
 
 import koala.dom.button
 import koala.dom.column
+import koala.dom.textField
 import kotlinx.html.InputType
+import kotlinx.html.input
 import kotlinx.html.js.p
 
 fun RenderContext.viewAccount() {
@@ -31,6 +33,9 @@ fun RenderContext.viewAccount() {
                     textField(gate::setUsername)
                     textField(gate::setPassword) {
                         type = InputType.password
+                    }
+                    input {
+                        type = InputType.checkBox
                     }
                     button("sign in") {
                         gate.signIn()

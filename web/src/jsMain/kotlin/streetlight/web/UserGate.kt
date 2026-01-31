@@ -4,15 +4,20 @@ import kampfire.api.UserApi
 import kampfire.model.LoginRequest
 import kampfire.model.User
 import kampfire.utils.obfuscate
+import kotlinx.browser.localStorage
 import kotlinx.coroutines.launch
+import org.w3c.dom.get
 
-class UserGate(app: AppContext): BrowserModel<UserGateState>(UserGateState(), app.appScope), AppContext by app {
+class UserGate(app: AppContext): BrowserModel<UserGateState>(UserGateState(
+    savePassword = localStorage[SAVE_PASSWORD_KEY]?.toBooleanStrictOrNull() ?: false,
+    stayLoggedIn = localStorage[STAY_LOGGED_KEY]?.toBooleanStrictOrNull() ?: false
+), app.appScope), AppContext by app {
 
     val userFlow = stateFlow.mapDistinct { it.user }
     val messageFlow = stateFlow.mapDistinct { it.message }
 
-    private var usernameOrEmail = ""
-    private var password = ""
+    private var usernameOrEmail = localStorage[USERNAME_KEY] ?: ""
+    private var password= localStorage[PASSWORD_KEY] ?: ""
 
     fun setUsername(username: String) {
         usernameOrEmail = username
@@ -22,6 +27,16 @@ class UserGate(app: AppContext): BrowserModel<UserGateState>(UserGateState(), ap
     fun setPassword(password: String) {
         this.password = password
         setState { it.copy(passwordText = password) }
+    }
+
+    fun setSavePassword(value: Boolean) {
+        localStorage.setItem(SAVE_PASSWORD_KEY, value.toString())
+        setState { it.copy(savePassword = value) }
+    }
+
+    fun setStayLoggedIn(value: Boolean) {
+        localStorage.setItem(STAY_LOGGED_KEY, value.toString())
+        setState { it.copy(stayLoggedIn = value) }
     }
 
     fun getLoginRequest() = LoginRequest(
@@ -34,6 +49,10 @@ class UserGate(app: AppContext): BrowserModel<UserGateState>(UserGateState(), ap
         viewModelScope.launch {
             val user = get(UserApi.ReadInfo)
             if (user != null) {
+                if (stateNow.savePassword && stateNow.stayLoggedIn) {
+                    localStorage.setItem(USERNAME_KEY, usernameOrEmail)
+                    localStorage.setItem(PASSWORD_KEY, password)
+                }
                 setState { it.copy(user = user) }
             } else {
                 setState { it.copy(message = "Unable to sign in.")}
@@ -51,4 +70,11 @@ data class UserGateState(
     val usernameText: String = "",
     val passwordText: String = "",
     val message: String? = null,
+    val savePassword: Boolean,
+    val stayLoggedIn: Boolean
 )
+
+const val USERNAME_KEY = "streetlight.username"
+const val PASSWORD_KEY = "streetlight.password"
+const val SAVE_PASSWORD_KEY = "streetlight.save_password"
+const val STAY_LOGGED_KEY = "streetlight.stay_logged"
