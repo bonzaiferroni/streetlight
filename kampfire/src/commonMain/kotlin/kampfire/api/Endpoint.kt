@@ -81,6 +81,11 @@ open class PostEndpoint<Sent, Returned>(
     pathNode: String = "",
 ): Endpoint<Sent, Returned>(HttpMethod.Post, parent, pathNode)
 
+open class PostObjectEndpoint<Returned>(
+    parent: Endpoint<*,*>? = null,
+    pathNode: String = "",
+): Endpoint<Unit, Returned>(HttpMethod.Post, parent, pathNode)
+
 open class GetByIdEndpoint<Returned>(
     parent: Endpoint<*, *>? = null,
     pathNode: String = "",

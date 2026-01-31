@@ -29,6 +29,10 @@ fun Routing.serveLocations(app: ServerProvider = RuntimeProvider) {
     }
 
     authenticateJwt {
+        getEndpoint(Api.LocationFeed.Secure) {
+            "\"you did it\""
+        }
+
         postEndpoint(Api.LocationFeed.Create) { newLocation, _ ->
             val userId = getUserId()
             dao.createLocation(userId, newLocation)

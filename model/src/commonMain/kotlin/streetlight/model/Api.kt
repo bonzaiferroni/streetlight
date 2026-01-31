@@ -49,6 +49,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
     }
 
     object LocationFeed: GetByTableIdEndpoint<LocationId, Location>(this, "locations") {
+        object Secure: GetEndpoint<String>(this, "secure")
         object Create: PostEndpoint<NewLocation, LocationId>(this, "create")
         object Street: GetByTableIdEndpoint<AreaId, List<Location>>(this, "street")
         object Update: PostEndpoint<Location, Boolean>(this, "update")

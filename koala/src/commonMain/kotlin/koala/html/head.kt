@@ -25,7 +25,7 @@ fun HEAD.styles(vararg styles: String) {
 fun HEAD.coreStyles() {
     val styles = listOf(
         "reset.css",
-//        "styles.css",
+        "styles.css",
         "typography.css",
         "button.css",
 //        "layout.css",

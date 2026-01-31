@@ -9,6 +9,8 @@ class AppPortal(
     val screenFlow = stateFlow.mapDistinct { it.route.screen }
 
     init {
+        val route = StreetlightRoute.fromHashFragment(window.location.hash)
+        go(route)
         window.addEventListener("hashchange", {
             console.log(window.location.hash)
             val route = StreetlightRoute.fromHashFragment(window.location.hash)

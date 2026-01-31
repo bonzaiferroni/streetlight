@@ -25,6 +25,7 @@ fun CssBuilder.layout(theme: KoalaTheme) {
         display = Display.flex
         flexDirection = FlexDirection.column
         gap = theme.spacingUnit
+        alignItems = Align.start
     }
 
     rule(Row) {

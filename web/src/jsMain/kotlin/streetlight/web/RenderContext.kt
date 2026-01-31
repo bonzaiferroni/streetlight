@@ -29,13 +29,13 @@ class RenderContext(
     fun <State> renderState(
         flow: Flow<State>,
         animate: Boolean = false,
-        configureParent: DIV.() -> Unit = { style = "width: 100%;" },
-        configureContainer: DIV.() -> Unit = { style = "width: 100%;" },
+        configureParent: (DIV.() -> Unit)? = null,
+        configureContainer: (DIV.() -> Unit)? = null,
         cacheRenderedElements: Boolean = false,
         block: RenderContext.(State) -> Unit
     ) {
         val parent = div("state-render") {
-            configureParent()
+            configureParent?.invoke(this)
         }
         var render: HTMLElement? = null
         var job: Job? = null
@@ -56,7 +56,7 @@ class RenderContext(
                     parent.append(it)
                 } ?: parent.append {
                     val container = div() {
-                        configureContainer()
+                        configureContainer?.invoke(this)
                     }
                     container.append {
                         job = SupervisorJob()

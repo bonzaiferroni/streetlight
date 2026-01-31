@@ -1,0 +1,104 @@
+package streetlight.web
+
+import kampfire.api.GetEndpoint
+import kampfire.api.QueryEndpoint
+import kampfire.api.UserApi
+import kampfire.model.Auth
+import kotlinx.browser.localStorage
+import kotlinx.browser.window
+import kotlinx.coroutines.await
+import kotlinx.serialization.json.Json
+import org.khronos.webgl.Uint8Array
+import org.w3c.fetch.RequestInit
+import org.w3c.fetch.Response
+import kotlin.js.json
+
+suspend inline fun <reified Returned> AppContext.get(endpoint: GetEndpoint<Returned>): Returned? =
+    authRequest("GET", endpoint.path) { request ->
+        request.text().await().let { Json.decodeFromString(it) }
+    }
+
+suspend inline fun <reified Returned> AppContext.getProtobuf(
+    endpoint: GetEndpoint<Unit>,
+    feedType: ProtobufType
+): FeedMessage<Returned> {
+    val response = window.fetch(endpoint.path).await()
+        .arrayBuffer().await()
+    val buffer = Uint8Array(response)
+
+    return feedType.decode(buffer)
+}
+
+suspend inline fun <reified Sent, reified Returned> AppContext.get(
+    endpoint: QueryEndpoint<Sent, Returned>,
+    query: String?
+): Returned? {
+    val url = if (!query.isNullOrEmpty()) "${endpoint.path}?$query" else endpoint.path
+    return authRequest("GET", url) { request ->
+        request.text().await().let { Json.decodeFromString(it) }
+    }
+}
+
+const val AUTH_STORAGE_KEY = "streetlight.auth"
+private var authCache: Auth? = null
+
+fun readAuth() = authCache ?: localStorage.getItem(AUTH_STORAGE_KEY)?.let { value ->
+    Json.decodeFromString<Auth?>(value).also { authCache = it }
+}
+
+fun writeAuth(auth: Auth) {
+    authCache = auth
+    localStorage.setItem(AUTH_STORAGE_KEY, Json.encodeToString(auth))
+}
+
+suspend fun <T> AppContext.authRequest(
+    method: String,
+    path: String,
+    body: String? = null,
+    block: suspend (Response) -> T
+): T? {
+
+    val fetchWithJwt: suspend (String?) -> Response = { jwt ->
+        window.fetch(
+            path,
+            RequestInit(
+                method = method,
+                headers = jsObject {
+                    Authorization = "Bearer $jwt"
+                },
+                body = body
+            )
+        ).await()
+    }
+
+    var auth = readAuth()
+    var response = fetchWithJwt(auth?.jwt)
+
+    if (response.status == 401.toShort()) {
+        val loginResponse = window.fetch(
+            UserApi.Login.path,
+            RequestInit(
+                method = "POST",
+                headers = json(
+                    "Content-Type" to "application/json",
+                ),
+                body = Json.encodeToString(
+                    gate.getLoginRequest()
+                ),
+            )
+        ).await()
+
+        if (!loginResponse.ok) {
+            console.log("Login failed")
+            return null
+        }
+
+        val loginText = loginResponse.text().await()
+        auth = Json.decodeFromString<Auth>(loginText)
+        writeAuth(auth)
+
+        response = fetchWithJwt(auth.jwt)
+    }
+
+     return block(response)
+}

@@ -2,10 +2,10 @@ package streetlight.web
 
 import koala.dom.button
 import koala.dom.column
+import kotlinx.html.InputType
 import kotlinx.html.js.p
 
 fun RenderContext.viewAccount() {
-    console.log("rendering account")
     column {
         renderState(gate.userFlow) { user ->
             if (user != null) {
@@ -16,11 +16,25 @@ fun RenderContext.viewAccount() {
                     gate.signOut()
                 }
             } else {
-                p {
-                    +"Sign in to continue!"
-                }
-                button("sign in") {
-                    gate.signIn()
+                column {
+                    renderState(gate.messageFlow) { msg ->
+                        if (msg == null) {
+                            p {
+                                +"Sign in to continue!"
+                            }
+                        } else {
+                            p {
+                                +msg
+                            }
+                        }
+                    }
+                    textField(gate::setUsername)
+                    textField(gate::setPassword) {
+                        type = InputType.password
+                    }
+                    button("sign in") {
+                        gate.signIn()
+                    }
                 }
             }
         }

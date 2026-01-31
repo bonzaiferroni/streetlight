@@ -24,7 +24,7 @@ fun CoreAttributeGroupFacade.modify(vararg cssClass: CssClass?) {
 }
 
 fun CssBuilder.rules(theme: KoalaTheme): CssBuilder {
-     baseStyles(theme)
+    baseStyles(theme)
     layout(theme)
     queryLayout(theme)
     layoutUtilities(theme)

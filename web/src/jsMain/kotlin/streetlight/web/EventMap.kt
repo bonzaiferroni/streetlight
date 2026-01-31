@@ -51,7 +51,7 @@ class EventMap(app: AppContext): BrowserModel<EventMapState>(EventMapState(), ap
             val queriedBounds = bounds.expandBy(1.5f)
             setState { it.copy(bounds = bounds, zoom = zoom, queriedBounds = queriedBounds )}
             viewModelScope.launch {
-                val events = client.event.queryMap(MapQuery(queriedBounds, stateNow.zoom))
+                val events = client.event.queryMap(MapQuery(queriedBounds, stateNow.zoom)) ?: emptyList()
                 setState { it.copy(events = events)}
             }
         }

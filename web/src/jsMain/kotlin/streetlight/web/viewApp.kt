@@ -5,6 +5,7 @@ package streetlight.web
 
 import kotlinx.browser.document
 import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 import org.w3c.dom.HTMLElement
 
 @OptIn(ExperimentalJsExport::class)
@@ -15,24 +16,24 @@ fun viewApp() {
     val scope = MainScope() // 57 KB
 
     val app = object: AppContext { // 220 KB
-        val _this = this
+        val context = this
 
         override val appScope = scope
 
         override val client = object: ClientContext {
-            override val gtfs = GtfsBrowserClient()
-            override val event = EventBrowserClient()
+            override val gtfs = GtfsBrowserClient(context)
+            override val event = EventBrowserClient(context)
             override val location = LocationBrowserClient()
         }
 
         override val portal = AppPortal(scope)
-        override val gate = UserGate(scope)
+        override val gate = UserGate(context)
         override val gateAgent = GateAgent(scope, gate, portal)
 
         override val home by lazy {
             object: HomeContext {
                 override val gtfsMap = GtfsMap(scope, client.gtfs)
-                override val eventMap = EventMap(_this)
+                override val eventMap = EventMap(context)
             }
         }
     }
@@ -52,4 +53,9 @@ fun viewApp() {
             }
         }
     }
+
+//    scope.launch {
+//        val msg = app.client.event.readSecure()
+//        console.log(msg)
+//    }
 }
