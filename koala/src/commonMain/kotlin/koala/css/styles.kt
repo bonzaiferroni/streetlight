@@ -24,6 +24,7 @@ fun CoreAttributeGroupFacade.modify(vararg cssClass: CssClass?) {
 }
 
 fun CssBuilder.rules(theme: KoalaTheme): CssBuilder {
+     baseStyles(theme)
     layout(theme)
     queryLayout(theme)
     layoutUtilities(theme)
@@ -42,4 +43,10 @@ fun HEAD.koalaStyles(theme: KoalaTheme = KoalaTheme()) {
     }
 }
 
-fun buildKoalaStyles(theme: KoalaTheme = KoalaTheme()) = CssBuilder().rules(theme).toString()
+fun buildKoalaStyles(theme: KoalaTheme = KoalaTheme()) = CssBuilder("    ").rules(theme).toString()
+
+fun CssBuilder.printCss(block: () -> Unit) {
+    val len = toString().length
+    block()
+    println(toString().substring(len))
+}

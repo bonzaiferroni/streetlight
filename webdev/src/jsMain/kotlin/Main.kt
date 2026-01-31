@@ -15,7 +15,6 @@ fun main() {
     console.log("loading styles")
     document.head?.append {
         val rules = buildKoalaStyles()
-        console.log(rules)
         style {
             +rules
         }
