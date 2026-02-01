@@ -1,29 +1,18 @@
-button {
-    padding: 0.5rem 1rem;
+.btn {
+    padding: 0.7rem 1rem;
     border: none;
-    outline: 1px solid rgb(255 255 255 / 0.2);
-    outline-offset: 0;
     border-radius: 9999px;
-    background:  linear-gradient(
-            135deg,
-            rgb(236 255 182 / 0.4) 0%,
-            rgb(236 255 182 / 0.00) 100%
-    ), rgba(var(--accentBg), 0.8);
+    background: rgba(var(--accentBg), 0.5);
     color: var(--fg);
     font-weight: 500;
-    font-size: 1.2rem;
+    font-size: 1rem;
     cursor: pointer;
     transition: background 0.2s ease;
+    box-shadow: 0 0 3px 3px rgba(var(--accentBg), 0.3);
 }
 
-button:hover {
-    background: linear-gradient(
-            135deg,
-            rgb(236 255 182 / 0.12) 0%,
-            rgb(236 255 182 / 0.08) 30%,
-            rgb(236 255 182 / 0.04) 60%,
-            rgb(236 255 182 / 0.00) 100%
-    ), #0196a7;
+.btn:hover {
+    animation: glow 10s infinite linear;
 }
 
 [onclick] {

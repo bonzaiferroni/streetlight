@@ -33,7 +33,7 @@ fun LocationProfileScreen(
             maxItemsInEachRow = 2,
             modifier = Modifier.fillMaxWidth(),
         ) {
-            val readOnly = userState.user?.userId != modLocation.userId
+            val readOnly = userState.user?.userId != modLocation.hostId
             ModText(
                 item = modLocation,
                 property = remember { Location::name },

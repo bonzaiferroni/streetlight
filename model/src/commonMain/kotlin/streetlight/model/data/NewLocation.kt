@@ -6,14 +6,12 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class NewLocation(
-    val areaId: AreaId,
     val name: String,
     val geoPoint: GeoPoint,
 ) {
     fun toLocation() = Location(
         locationId = LocationId.random(),
-        userId = null,
-        areaId = areaId,
+        hostId = null,
         name = name,
         geoPoint = geoPoint,
         description = null,
@@ -26,7 +24,6 @@ data class NewLocation(
 
     companion object {
         val Empty get() = NewLocation(
-            areaId = AreaId.random(),
             name = "",
             geoPoint = GeoPoint.Denver
         )

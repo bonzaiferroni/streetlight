@@ -1,14 +1,7 @@
 package streetlight.web
 
 import koala.css.Css
-import koala.dom.RenderContext
-import koala.dom.box
-import koala.dom.button
-import koala.dom.card
-import koala.dom.column
-import koala.dom.row
-import koala.dom.textField
-import koala.html.paragraph
+import koala.dom.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -20,47 +13,40 @@ import kotlinx.html.js.span
 import kotlinx.html.p
 import kotlin.time.Duration.Companion.seconds
 
-fun AppContext.viewMapPanel() {
-    val eventMap = home.eventMap
+fun RenderContext.viewMapPanel(app: AppContext) {
+    val eventMap = app.home.eventMap
+    val eventCreator = app.home.eventCreator
+    val gateAgent = app.gateAgent
 
-    mountRender("select-point") {
-        column {
-            renderState(eventMap.placeFlow) { (location, event) ->
-                if (event != null) {
-                    row {
-                        paragraph("Event: ${event.title}")
-                    }
-                } else if (location != null) {
-                    row {
-                        paragraph("Location: ${location.name}")
-                        button("Add Event") {
-                            gateAgent.checkIn {
-                                portal.go(CreateEventRoute)
+    mountRender("map-panel") {
+        renderState(eventCreator.stateFlow.mapDistinct { it.isCreatingEvent }, true) { isCreatingEvent ->
+            if (isCreatingEvent) {
+                viewEventCreator(app)
+            } else {
+                column {
+                    renderState(eventMap.focusFlow) { (location, event) ->
+                        column {
+                            paragraph("Event: ${event?.title}")
+                            paragraph("Location: ${location?.name}")
+                            button("Add Event") {
+                                gateAgent.checkIn {
+                                    eventCreator.toggle()
+                                }
                             }
                         }
                     }
-                } else {
-                    button("Add Location") {
-                        gateAgent.checkIn {
-                            portal.go(CreateLocationRoute)
-                        }
-                    }
-                }
-            }
-
-            renderState(eventMap.stateFlow.map { it.events }, true) { allEvents ->
-                box(Css("map-event-panel")) {
-                    p {
-                        +"eyyyyy!"
-                    }
-                    allEvents.groupBy { it.eventType }.forEach { (eventType, events) ->
-                        card(Css("map-event-group")) {
-                            h2 {
-                                +eventType.label
-                            }
-                            events.forEach { event ->
-                                p {
-                                    +event.title
+                    renderState(eventMap.stateFlow.map { it.areaEvents }, true) { allEvents ->
+                        box(Css("map-event-panel")) {
+                            allEvents.groupBy { it.eventType }.forEach { (eventType, events) ->
+                                card(Css("map-event-group")) {
+                                    h2 {
+                                        +eventType.label
+                                    }
+                                    events.forEach { event ->
+                                        p {
+                                            +event.title
+                                        }
+                                    }
                                 }
                             }
                         }

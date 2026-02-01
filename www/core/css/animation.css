@@ -26,7 +26,6 @@
 
 .state-render {
     position: relative;
-    overflow: hidden;
     transition: height 200ms ease-in-out;
 }
 

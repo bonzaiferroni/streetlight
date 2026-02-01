@@ -20,7 +20,7 @@ class AreaApiClient(
 }
 
 class AreaMockClient: AreaRepository {
-    override suspend fun readAll() = mockDb.areas
+    override suspend fun readAll() = mockDb.communities
 
     override suspend fun create(street: NewArea): AreaId? = TODO("Not yet implemented")
 }

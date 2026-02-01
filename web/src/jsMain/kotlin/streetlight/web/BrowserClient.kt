@@ -1,33 +1,25 @@
 package streetlight.web
 
 import kampfire.api.GetEndpoint
+import kampfire.api.PostEndpoint
 import kampfire.api.QueryEndpoint
 import kampfire.api.UserApi
 import kampfire.model.Auth
 import kotlinx.browser.localStorage
 import kotlinx.browser.window
 import kotlinx.coroutines.await
+import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import org.khronos.webgl.Uint8Array
 import org.w3c.fetch.RequestInit
 import org.w3c.fetch.Response
 import kotlin.js.json
+import kotlin.let
 
 suspend inline fun <reified Returned> AppContext.get(endpoint: GetEndpoint<Returned>): Returned? =
     authRequest("GET", endpoint.path) { request ->
         request.text().await().let { Json.decodeFromString(it) }
     }
-
-suspend inline fun <reified Returned> AppContext.getProtobuf(
-    endpoint: GetEndpoint<Unit>,
-    feedType: ProtobufType
-): FeedMessage<Returned> {
-    val response = window.fetch(endpoint.path).await()
-        .arrayBuffer().await()
-    val buffer = Uint8Array(response)
-
-    return feedType.decode(buffer)
-}
 
 suspend inline fun <reified Sent, reified Returned> AppContext.get(
     endpoint: QueryEndpoint<Sent, Returned>,
@@ -37,6 +29,24 @@ suspend inline fun <reified Sent, reified Returned> AppContext.get(
     return authRequest("GET", url) { request ->
         request.text().await().let { Json.decodeFromString(it) }
     }
+}
+
+suspend inline fun <reified Sent, reified Returned> AppContext.post(
+    endpoint: PostEndpoint<Sent, Returned>,
+    body: Sent,
+): Returned? = authRequest("POST", endpoint.path, Json.encodeToString(body)) { request ->
+    request.text().await().let { Json.decodeFromString(it) }
+}
+
+suspend inline fun <reified Returned> getProtobuf(
+    endpoint: GetEndpoint<Unit>,
+    feedType: ProtobufType
+): FeedMessage<Returned> {
+    val response = window.fetch(endpoint.path).await()
+        .arrayBuffer().await()
+    val buffer = Uint8Array(response)
+
+    return feedType.decode(buffer)
 }
 
 const val AUTH_STORAGE_KEY = "streetlight.auth"
@@ -63,9 +73,10 @@ suspend fun <T> AppContext.authRequest(
             path,
             RequestInit(
                 method = method,
-                headers = jsObject {
-                    Authorization = "Bearer $jwt"
-                },
+                headers = json(
+                    "Content-Type" to "application/json",
+                    "Authorization" to "Bearer $jwt"
+                ),
                 body = body
             )
         ).await()
@@ -75,6 +86,7 @@ suspend fun <T> AppContext.authRequest(
     var response = fetchWithJwt(auth?.jwt)
 
     if (response.status == 401.toShort()) {
+        console.log("authorizing")
         val loginResponse = window.fetch(
             UserApi.Login.path,
             RequestInit(

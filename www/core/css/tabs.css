@@ -31,7 +31,6 @@
 /* Viewport container created by tabs.kt */
 .tabs-viewport {
     position: relative;
-    overflow: hidden;
     transition: height 200ms ease;
     width: 100%;
 }

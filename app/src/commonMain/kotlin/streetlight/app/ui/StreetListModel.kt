@@ -37,13 +37,13 @@ class StreetListModel(private val app: AppProvider = RuntimeProvider): StateMode
     fun refreshItems() {
         viewModelScope.launch {
             val areas = client.readAll() ?: return@launch
-            setState { it.copy(areas = areas) }
+            setState { it.copy(communities = areas) }
         }
     }
 }
 
 data class StreetListState(
-    val areas: List<Area> = emptyList(),
+    val communities: List<Area> = emptyList(),
     val newStreetName: String = "",
     val isValidNewItem: Boolean = false,
 )

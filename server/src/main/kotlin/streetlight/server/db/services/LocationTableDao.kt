@@ -18,6 +18,7 @@ import streetlight.model.data.Location
 import streetlight.model.data.LocationId
 import streetlight.model.data.NewLocation
 import streetlight.model.data.toProjectId
+import streetlight.server.db.tables.AreaLocationTable
 import streetlight.server.db.tables.LocationTable
 import streetlight.server.db.tables.toLocation
 import streetlight.server.db.tables.writeFull
@@ -30,15 +31,15 @@ class LocationTableDao: DbService() {
     }
 
     suspend fun readLocations(areaId: AreaId) = dbQuery {
-        LocationTable.read { it.areaId.eq(areaId) }.map { it.toLocation() }
+        // untested
+        AreaLocationTable.leftJoin(LocationTable).read { AreaLocationTable.areaId.eq(areaId) }.map { it.toLocation() }
     }
 
     suspend fun createLocation(userId: UserId, newLocation: NewLocation): LocationId = dbQuery {
         LocationTable.insertAndGetId {
             it.writeFull(Location(
                 locationId = LocationId.random(),
-                userId = userId,
-                areaId = newLocation.areaId,
+                hostId = userId,
                 name = newLocation.name,
                 description = null,
                 address = null,
@@ -52,7 +53,7 @@ class LocationTableDao: DbService() {
     }
 
     suspend fun updateLocation(userId: UserId, location: Location) = dbQuery {
-        LocationTable.update(where = { LocationTable.id.eq(location.locationId) and LocationTable.userId.eq(userId)}) {
+        LocationTable.update(where = { LocationTable.id.eq(location.locationId) and LocationTable.hostId.eq(userId)}) {
             it.writeUpdate(location)
         } == 1
     }

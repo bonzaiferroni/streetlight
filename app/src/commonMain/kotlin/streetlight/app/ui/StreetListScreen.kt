@@ -30,7 +30,7 @@ fun StreetListScreen(
             Button("Create", isEnabled = state.isValidNewItem, onClick = viewModel::createNewStreet)
         }
         LazyColumn(1) {
-            items(state.areas) {
+            items(state.communities) {
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,

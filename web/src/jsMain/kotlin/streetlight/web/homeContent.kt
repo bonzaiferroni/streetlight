@@ -21,7 +21,7 @@ fun RenderContext.homeContent(
         tab("Map") {
             column(AlignItemsCenter) {
                 geoMap()
-                homeFooter()
+                footer()
             }
         }
         tab("App") {

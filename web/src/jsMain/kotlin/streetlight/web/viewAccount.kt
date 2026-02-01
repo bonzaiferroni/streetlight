@@ -2,6 +2,7 @@ package streetlight.web
 
 import koala.dom.RenderContext
 import koala.dom.button
+import koala.dom.checkBox
 import koala.dom.column
 import koala.dom.textField
 import kotlinx.html.InputType
@@ -35,13 +36,11 @@ fun RenderContext.viewAccount(
                             }
                         }
                     }
-                    textField(gate::setUsername)
-                    textField(gate::setPassword) {
+                    textField(gate::setUsername, gate.stateFlow.mapDistinct { it.usernameText })
+                    textField(gate::setPassword, gate.stateFlow.mapDistinct { it.passwordText }) {
                         type = InputType.password
                     }
-                    input {
-                        type = InputType.checkBox
-                    }
+                    checkBox("Stay signed in", gate::setStayLoggedIn, gate.stateFlow.mapDistinct { it.stayLoggedIn })
                     button("sign in") {
                         gate.signIn()
                     }

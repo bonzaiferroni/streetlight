@@ -14,7 +14,7 @@ fun FlowContent.geoMap(
             box(Id("geo-overlay"))
         }
         div {
-            id = "select-point"
+            id = "map-panel"
         }
     }
 }

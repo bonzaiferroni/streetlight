@@ -28,12 +28,13 @@ fun HEAD.coreStyles() {
         "styles.css",
         "typography.css",
         "button.css",
-//        "layout.css",
-//        "utilities.css",
-//        "animation.css",
+        "layout.css",
+        "utilities.css",
+        "animation.css",
         "tabs.css",
         "logo.css",
-        "geoMap.css"
+        "geoMap.css",
+        "sandbox.css"
     )
     styles.forEach { style -> link { rel = "stylesheet"; href = "/www/core/css/$style" } }
 }

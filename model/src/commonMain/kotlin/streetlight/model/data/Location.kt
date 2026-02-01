@@ -10,8 +10,7 @@ import kotlin.jvm.JvmInline
 @Serializable
 data class Location(
     val locationId: LocationId,
-    val userId: UserId?,
-    val areaId: AreaId?,
+    val hostId: UserId?,
     val name: String,
     val description: String?,
     val address: String?,

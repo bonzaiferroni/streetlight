@@ -9,7 +9,6 @@ import kotlinx.coroutines.launch
 import org.w3c.dom.get
 
 class UserGate(app: AppContext): BrowserModel<UserGateState>(UserGateState(
-    savePassword = localStorage[SAVE_PASSWORD_KEY]?.toBooleanStrictOrNull() ?: false,
     stayLoggedIn = localStorage[STAY_LOGGED_KEY]?.toBooleanStrictOrNull() ?: false
 ), app.appScope), AppContext by app {
 
@@ -17,7 +16,7 @@ class UserGate(app: AppContext): BrowserModel<UserGateState>(UserGateState(
     val messageFlow = stateFlow.mapDistinct { it.message }
 
     private var usernameOrEmail = localStorage[USERNAME_KEY] ?: ""
-    private var password= localStorage[PASSWORD_KEY] ?: ""
+    private var password = localStorage[PASSWORD_KEY] ?: ""
 
     fun setUsername(username: String) {
         usernameOrEmail = username
@@ -27,11 +26,6 @@ class UserGate(app: AppContext): BrowserModel<UserGateState>(UserGateState(
     fun setPassword(password: String) {
         this.password = password
         setState { it.copy(passwordText = password) }
-    }
-
-    fun setSavePassword(value: Boolean) {
-        localStorage.setItem(SAVE_PASSWORD_KEY, value.toString())
-        setState { it.copy(savePassword = value) }
     }
 
     fun setStayLoggedIn(value: Boolean) {
@@ -49,7 +43,7 @@ class UserGate(app: AppContext): BrowserModel<UserGateState>(UserGateState(
         viewModelScope.launch {
             val user = get(UserApi.ReadInfo)
             if (user != null) {
-                if (stateNow.savePassword && stateNow.stayLoggedIn) {
+                if (stateNow.stayLoggedIn) {
                     localStorage.setItem(USERNAME_KEY, usernameOrEmail)
                     localStorage.setItem(PASSWORD_KEY, password)
                 }
@@ -70,7 +64,6 @@ data class UserGateState(
     val usernameText: String = "",
     val passwordText: String = "",
     val message: String? = null,
-    val savePassword: Boolean,
     val stayLoggedIn: Boolean
 )
 

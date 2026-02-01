@@ -5,7 +5,7 @@ import kotlinx.datetime.Instant
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class EventLocation(
+data class EventInfo(
     val eventId: EventId,
     val locationId: LocationId,
     val url: String?,
@@ -20,7 +20,7 @@ data class EventLocation(
     val geoPoint: GeoPoint,
 ) {
     companion object {
-        fun from(event: Event, location: Location) = EventLocation(
+        fun from(event: Event, location: Location) = EventInfo(
             eventId = event.eventId,
             locationId = location.locationId,
             url = event.url,

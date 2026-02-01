@@ -1,0 +1,22 @@
+.column {
+    display: flex;
+    flex-direction: column;
+    gap: var(--unit-spacing);
+    align-items: start;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    gap: var(--unit-spacing);
+    align-items: center;
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--unit-spacing);
+    border-radius: var(--unit-spacing);
+    background-color: rgba(var(--void), 0.2);
+    padding: var(--unit-spacing);
+}

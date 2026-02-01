@@ -40,7 +40,7 @@ fun Routing.serveLocations(app: ServerProvider = RuntimeProvider) {
 
         postEndpoint(Api.LocationFeed.Update) { location, _ ->
             val userId = getUserId()
-            if (userId != location.userId) {
+            if (userId != location.hostId) {
                 throw UnauthorizedUserException()
             }
             dao.updateLocation(userId, location)

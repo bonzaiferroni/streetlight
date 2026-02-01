@@ -49,8 +49,6 @@ fun StreetlightRoute.Companion.fromHashFragment(fragment: String): StreetlightRo
         Home.screen.path -> Home()
         Account.screen.path -> Account
         EventRoute.screen.path -> EventRoute
-        CreateLocationRoute.screen.path -> CreateLocationRoute
-        CreateEventRoute.screen.path -> CreateEventRoute
         else -> Home()
     }
 }

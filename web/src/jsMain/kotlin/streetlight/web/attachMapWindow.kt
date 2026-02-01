@@ -3,7 +3,7 @@ package streetlight.web
 import kotlinx.browser.document
 import kotlinx.coroutines.launch
 import streetlight.model.data.EventId
-import streetlight.model.data.EventLocation
+import streetlight.model.data.EventInfo
 import streetlight.model.data.EventType
 
 const val STOP_ZOOM = 14
@@ -21,7 +21,7 @@ fun AppContext.attachMapWindow(
     }
 
     appScope.launch {
-        eventMap.stateFlow.mapDistinct { it.events }.collect { events ->
+        eventMap.stateFlow.mapDistinct { it.areaEvents }.collect { events ->
             console.log("adding events")
             events.forEach { event ->
                 if (eventMarkers.contains(event.eventId)) return@forEach
@@ -34,7 +34,7 @@ fun AppContext.attachMapWindow(
     }
 }
 
-fun createEventMarker(event: EventLocation): MarkerElement {
+fun createEventMarker(event: EventInfo): MarkerElement {
     val element = document.createDiv()
 
     val iconClass = when(event.eventType) {

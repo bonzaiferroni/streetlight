@@ -25,7 +25,7 @@ import kotlin.time.Duration.Companion.hours
 
 interface MockDb {
     val users: List<User>
-    val areas: List<Area>
+    val communities: List<Area>
     val locations: List<Location>
     val events: List<Event>
     val eventTags: List<EventTag>
@@ -73,8 +73,7 @@ val mockDb by lazy {
         point: GeoPoint,
     ) = Location(
         locationId = LocationId.random(),
-        userId = users.bag.draw().userId,
-        areaId = areas.colfax.areaId,
+        hostId = users.bag.draw().userId,
         name = name,
         description = null,
         address = null,
@@ -208,7 +207,7 @@ val mockDb by lazy {
 
     object : MockDb {
         override val users = users.list
-        override val areas = areas.list
+        override val communities = areas.list
         override val locations = locations.list
         override val events = events.list
         override val eventTags = DefaultEventTag.list

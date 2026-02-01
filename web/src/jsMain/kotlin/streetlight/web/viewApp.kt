@@ -23,18 +23,17 @@ fun viewApp() {
         override val client = object: ClientContext {
             override val gtfs = GtfsBrowserClient(context)
             override val event = EventBrowserClient(context)
-            override val location = LocationBrowserClient()
+            override val location = LocationBrowserClient(context)
         }
 
         override val portal = AppPortal(scope)
         override val gate = UserGate(context)
         override val gateAgent = GateAgent(scope, gate, portal)
 
-        override val home by lazy {
-            object: HomeContext {
-                override val gtfsMap = GtfsMap(scope, client.gtfs)
-                override val eventMap = EventMap(context)
-            }
+        override val home = object: HomeContext {
+            override val gtfsMap = GtfsMap(scope, client.gtfs)
+            override val eventMap = EventMap(scope, client)
+            override val eventCreator = EventCreator(scope, client, eventMap)
         }
     }
 
@@ -48,14 +47,7 @@ fun viewApp() {
                 AppScreen.Home -> viewHome(app)
                 AppScreen.Event -> viewEvent(app.portal)
                 AppScreen.Account -> viewAccount(app.gate, app.portal)
-                AppScreen.CreateLocation -> viewCreateLocation(app.home.eventMap, app.portal)
-                AppScreen.CreateEvent -> viewCreateEvent(app.portal, app.home.eventMap)
             }
         }
     }
-
-//    scope.launch {
-//        val msg = app.client.event.readSecure()
-//        console.log(msg)
-//    }
 }

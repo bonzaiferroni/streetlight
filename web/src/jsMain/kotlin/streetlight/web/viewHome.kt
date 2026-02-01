@@ -17,7 +17,7 @@ fun RenderContext.viewHome(app: AppContext) {
     maplibre.addControl(maplibregl.NavigationControl())
     maplibre.addControl(maplibregl.FullscreenControl())
 
-    app.attachMapWindow(maplibre)
-    app.attachGtfsMap(maplibre)
-    app.viewMapPanel()
+     app.attachMapWindow(maplibre)
+     app.attachGtfsMap(maplibre)
+     viewMapPanel(app)
 }

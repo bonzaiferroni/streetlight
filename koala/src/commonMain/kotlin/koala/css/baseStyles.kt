@@ -13,19 +13,6 @@ import kotlinx.css.properties.s
 
 fun CssBuilder.baseStyles(theme: KoalaTheme) {
 
-    root {
-        put("--bg", "9, 13, 13")
-        put("--fg", "245, 246, 246")
-        put("--void", "24, 31, 31")
-        put("--primaryBg", "1, 122, 138")
-        put("--primary", "5, 242, 255")
-        put("--accentBg", "209, 43, 181")
-        put("--accent", "255, 53, 221")
-        put("--light-1", "255, 99, 132")
-        put("--light-2", "88, 164, 255")
-        put("--light-3", "88, 255, 188")
-    }
-
     html {
         fontSize = 100.pct
     }
@@ -99,8 +86,11 @@ fun CssBuilder.baseStyles(theme: KoalaTheme) {
     }
 
     a {
-        color = theme.primary
         transition += Transition("color", .3.s, Timing.ease)
+    }
+
+    "p a" {
+        color = theme.primary
     }
 
     "a:hover" {

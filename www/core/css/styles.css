@@ -9,6 +9,7 @@
     --light-1: 255, 99, 132;
     --light-2: 88, 164, 255;
     --light-3: 88, 255, 188;
+    --unit-spacing: 0.5rem;
 }
 
 
@@ -21,7 +22,7 @@ body {
     font-size: 1rem;
     line-height: 1.5;
     margin: 0 auto;
-    padding: 0.5rem;
+    padding: var(--unit-spacing);
     background-color: rgb(var(--bg));
     color: rgb(var(--fg));
     position: relative;
@@ -55,10 +56,30 @@ input[type="text"] {
 }
 
 input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+
     background-color: rgb(var(--void));
     width: 1.5rem;
     height: 1.5rem;
     border-radius: 0.25rem;
+    display: inline-grid;
+    place-items: center;
+}
+
+input[type="checkbox"]::before {
+    content: "👍";
+    font-size: 1rem;
+    opacity: 0;
+    transform: rotate(-90deg) scale(0.8);
+    transition:
+            opacity 150ms ease,
+            transform 150ms ease;
+}
+
+input[type="checkbox"]:checked::before {
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
 }
 
 @keyframes hueSpin {
@@ -66,11 +87,34 @@ input[type="checkbox"] {
 }
 
 a {
-    color: rgb(var(--primary));
     transition: color 0.3s ease;
+}
+
+p a {
+    color: rgb(var(--primary));
 }
 
 a:hover {
     color: rgb(var(--accentBg));
     animation: glow 10s infinite linear;
+}
+
+select {
+    border: none;
+    outline: none;
+    padding: 0.75rem;
+    border-radius: 0.75rem;
+    font-size: 1.2rem;
+    background-color: rgb(var(--void));
+    color: rgb(var(--fg));
+
+    /*appearance: none;*/
+    /*-webkit-appearance: none;*/
+    /*-moz-appearance: none;*/
+}
+
+label {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--unit-spacing);
 }

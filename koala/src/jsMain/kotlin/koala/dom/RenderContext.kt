@@ -1,5 +1,6 @@
 package koala.dom
 
+import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -66,10 +67,10 @@ class RenderContext(
 
                 render.show(animate)
 
-                if (animate) {
-                    val height = render.scrollHeight
-                    parent.style.height = "${height}px"
-                }
+//                if (animate) {
+//                    val height = render.scrollHeight
+//                    parent.style.height = "${height}px"
+//                }
             }
         }
     }
@@ -90,6 +91,7 @@ class RenderContext(
 
     fun HTMLElement.show(animate: Boolean) {
         if (animate) {
+            console.log("animating")
             addClass("state-render-animation")
             renderScope.launch {
                 delay(200)
@@ -107,4 +109,12 @@ fun HTMLElement.renderRoot(
     append {
         RenderContext(this, scope).block()
     }
+}
+
+fun RenderContext.mountRender(
+    elementId: String,
+    block: RenderContext.() -> Unit
+) {
+    val mount = document.getElementById(elementId) as HTMLElement
+    mount.renderRoot(renderScope, block)
 }

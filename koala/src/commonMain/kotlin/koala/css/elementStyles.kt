@@ -9,6 +9,7 @@ object LottieClass: CssClass { override val value: String = "lottie" }
 object IconClass: CssClass { override val value: String = "icon" }
 object LogoClass: CssClass { override val value: String = "logo" }
 object ActionClass: CssClass { override val value: String = "action" }
+object ButtonClass: CssClass { override val value: String = "btn" }
 
 fun CssBuilder.elementStyles(theme: KoalaTheme) {
     rule(LottieClass) {

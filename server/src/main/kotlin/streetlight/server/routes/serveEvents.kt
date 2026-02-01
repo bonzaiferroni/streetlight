@@ -11,7 +11,7 @@ import klutch.utils.getUserId
 import kotlinx.html.body
 import kotlinx.html.p
 import streetlight.model.Api
-import streetlight.model.data.EventLocation
+import streetlight.model.data.EventInfo
 import streetlight.model.data.toProjectId
 import streetlight.model.mockDb
 import streetlight.server.RuntimeProvider
@@ -33,7 +33,7 @@ fun Routing.serveEvents(app: ServerProvider = RuntimeProvider) {
         val locations = mockDb.locations.filter { sent.bounds.contains(it.geoPoint) }
         val locationIds = locations.map { it.locationId }.toSet()
         val events = mockDb.events.filter { locationIds.contains(it.locationId) }
-        events.map { event -> EventLocation.from(event, locations.first { it.locationId == event.locationId }) }
+        events.map { event -> EventInfo.from(event, locations.first { it.locationId == event.locationId }) }
     }
 
     get("/qr") {

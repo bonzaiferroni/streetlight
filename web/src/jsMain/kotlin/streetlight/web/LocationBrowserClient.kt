@@ -5,9 +5,11 @@ import kotlinx.browser.window
 import kotlinx.coroutines.await
 import kotlinx.serialization.json.Json
 import org.w3c.fetch.RequestInit
+import streetlight.model.Api
+import streetlight.model.data.NewLocation
 import kotlin.js.json
 
-class LocationBrowserClient {
+class LocationBrowserClient(app: AppContext): AppContext by app {
     suspend fun readPlaceInfo(point: GeoPoint): NominatimPlace {
         val url =
             "https://nominatim.openstreetmap.org/reverse" +
@@ -27,4 +29,5 @@ class LocationBrowserClient {
         return Json.decodeFromString(text)
     }
 
+    suspend fun createLocation(newLocation: NewLocation) = post(Api.LocationFeed.Create, newLocation)
 }

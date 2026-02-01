@@ -18,18 +18,11 @@ interface AppContext {
 interface HomeContext {
     val gtfsMap: GtfsMap
     val eventMap: EventMap
+    val eventCreator: EventCreator
 }
 
 interface ClientContext {
     val gtfs: GtfsBrowserClient
     val event: EventBrowserClient
     val location: LocationBrowserClient
-}
-
-fun AppContext.mountRender(
-    elementId: String,
-    block: RenderContext.() -> Unit
-) {
-    val mount = document.getElementById(elementId) as HTMLElement
-    mount.renderRoot(appScope, block)
 }
