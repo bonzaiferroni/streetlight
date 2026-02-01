@@ -1,13 +1,17 @@
 package streetlight.web
 
+import koala.dom.RenderContext
 import koala.dom.button
 import koala.dom.column
 import koala.dom.row
 import koala.html.paragraph
 
-fun RenderContext.viewCreateLocation() {
+fun RenderContext.viewCreateLocation(
+    eventMap: EventMap,
+    portal: AppPortal,
+) {
     column {
-        renderState(home.eventMap.newLocationFlow) { location ->
+        renderState(eventMap.newLocationFlow) { location ->
             row {
                 paragraph("Location: ${location.name}")
             }
@@ -17,10 +21,10 @@ fun RenderContext.viewCreateLocation() {
                 portal.goBack()
             }
             button("query") {
-                home.eventMap.queryLocation()
+                eventMap.queryLocation()
             }
             button("create") {
-                home.eventMap.createLocation()
+                eventMap.createLocation()
                 portal.goBack()
             }
         }

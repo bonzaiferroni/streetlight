@@ -5,7 +5,7 @@ import koala.dom.*
 import streetlight.web.pages.homeFooter
 
 fun RenderContext.eventsTab(
-//    events: List<Event>
+    portal: AppPortal
 ) {
     column(AlignItemsCenter) {
 //        events.forEach { event ->

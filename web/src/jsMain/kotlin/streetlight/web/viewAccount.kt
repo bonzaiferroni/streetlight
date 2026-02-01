@@ -1,5 +1,6 @@
 package streetlight.web
 
+import koala.dom.RenderContext
 import koala.dom.button
 import koala.dom.column
 import koala.dom.textField
@@ -7,7 +8,11 @@ import kotlinx.html.InputType
 import kotlinx.html.input
 import kotlinx.html.js.p
 
-fun RenderContext.viewAccount() {
+fun RenderContext.viewAccount(
+    gate: UserGate,
+    portal: AppPortal
+) {
+
     column {
         renderState(gate.userFlow) { user ->
             if (user != null) {

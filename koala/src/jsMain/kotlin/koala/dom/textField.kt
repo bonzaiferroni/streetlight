@@ -9,7 +9,7 @@ import kotlinx.html.input
 import kotlinx.html.js.onInputFunction
 import org.w3c.dom.HTMLInputElement
 
-fun AltRenderContext.textField(
+fun RenderContext.textField(
     onChangeValue: ((String) -> Unit)? = null,
     binding: Flow<String>? = null,
     block: (INPUT.() -> Unit)? = null

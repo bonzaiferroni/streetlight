@@ -1,5 +1,7 @@
 package streetlight.web
 
+import koala.dom.RenderContext
+import koala.dom.renderRoot
 import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
 import org.w3c.dom.HTMLElement
@@ -29,5 +31,5 @@ fun AppContext.mountRender(
     block: RenderContext.() -> Unit
 ) {
     val mount = document.getElementById(elementId) as HTMLElement
-    mount.renderRoot(appScope, this, block)
+    mount.renderRoot(appScope, block)
 }

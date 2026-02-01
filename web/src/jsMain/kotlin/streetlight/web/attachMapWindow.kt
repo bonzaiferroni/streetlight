@@ -9,7 +9,7 @@ import streetlight.model.data.EventType
 const val STOP_ZOOM = 14
 
 fun AppContext.attachMapWindow(
-    maplibre: maplibregl.Map
+    maplibre: maplibregl.Map,
 ) {
     val eventMap = home.eventMap
     val eventMarkers = mutableMapOf<EventId, MarkerElement>()

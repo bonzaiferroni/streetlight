@@ -1,6 +1,5 @@
-package streetlight.web
+package koala.dom
 
-import koala.dom.DOMContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -22,9 +21,8 @@ import org.w3c.dom.HTMLInputElement
 
 class RenderContext(
     consumer: DOMContext,
-    val renderScope: CoroutineScope,
-    val app: AppContext,
-): DOMContext by consumer, AppContext by app {
+    val renderScope: CoroutineScope
+): DOMContext by consumer {
 
     fun <State> renderState(
         flow: Flow<State>,
@@ -61,7 +59,7 @@ class RenderContext(
                     container.append {
                         job = SupervisorJob()
                         val scope = CoroutineScope(Dispatchers.Main + job)
-                        RenderContext(this, scope, app).block(value)
+                        RenderContext(this, scope).block(value)
                     }
                     if (cacheRenderedElements) renderCache[value] = container
                 }.first()
@@ -103,36 +101,10 @@ class RenderContext(
 
 fun HTMLElement.renderRoot(
     scope: CoroutineScope,
-    app: AppContext,
     block: RenderContext.() -> Unit
 ) {
     clear()
     append {
-        RenderContext(this, scope, app).block()
-    }
-}
-
-fun RenderContext.textField(
-    onChangeValue: ((String) -> Unit)? = null,
-    binding: Flow<String>? = null,
-    block: (INPUT.() -> Unit)? = null
-) {
-    val element = input {
-        type = InputType.text
-        onChangeValue?.let { callback ->
-            onInputFunction = {
-                val v = (it.target as HTMLInputElement).value
-                callback(v)
-            }
-        }
-        block?.invoke(this)
-    } as HTMLInputElement
-
-    binding?.let {
-        renderScope.launch {
-            binding.distinctUntilChanged().collect {
-                element.value = it
-            }
-        }
+        RenderContext(this, scope).block()
     }
 }

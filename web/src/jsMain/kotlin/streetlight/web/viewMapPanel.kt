@@ -1,6 +1,7 @@
 package streetlight.web
 
 import koala.css.Css
+import koala.dom.RenderContext
 import koala.dom.box
 import koala.dom.button
 import koala.dom.card
@@ -70,7 +71,7 @@ fun AppContext.viewMapPanel() {
     }
 }
 
-fun RenderContext.testInput() {
+fun RenderContext.testInput(app: AppContext) {
     val eventMap = app.home.eventMap
 
     p {
@@ -90,7 +91,7 @@ fun RenderContext.testInput() {
     }
 }
 
-fun RenderContext.showLocation() {
+fun RenderContext.showLocation(app: AppContext) {
     val eventMap = app.home.eventMap
 
     renderState(eventMap.stateFlow.map { it.queriedBounds }) {

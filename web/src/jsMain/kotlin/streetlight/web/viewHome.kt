@@ -1,9 +1,11 @@
 package streetlight.web
 
-fun RenderContext.viewHome() {
+import koala.dom.RenderContext
+
+fun RenderContext.viewHome(app: AppContext) {
     console.log("loading home")
 
-    homeContent()
+    homeContent(app.portal)
 
     val maplibre = maplibregl.Map(jsObject {
         container = "geo-map"

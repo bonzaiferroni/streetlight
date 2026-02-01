@@ -3,9 +3,9 @@
 
 package streetlight.web
 
+import koala.dom.renderRoot
 import kotlinx.browser.document
 import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.launch
 import org.w3c.dom.HTMLElement
 
 @OptIn(ExperimentalJsExport::class)
@@ -39,17 +39,17 @@ fun viewApp() {
     }
 
     val portalMount = document.getElementById("portal-mount") as HTMLElement
-    portalMount.renderRoot(app.appScope, app) {
+    portalMount.renderRoot(app.appScope) {
         renderState(
-            flow = portal.screenFlow,
+            flow = app.portal.screenFlow,
             cacheRenderedElements = true
         ) { screen ->
             when (screen) {
-                AppScreen.Home -> viewHome()
-                AppScreen.Event -> viewEvent()
-                AppScreen.Account -> viewAccount()
-                AppScreen.CreateLocation -> viewCreateLocation()
-                AppScreen.CreateEvent -> viewCreateEvent()
+                AppScreen.Home -> viewHome(app)
+                AppScreen.Event -> viewEvent(app.portal)
+                AppScreen.Account -> viewAccount(app.gate, app.portal)
+                AppScreen.CreateLocation -> viewCreateLocation(app.home.eventMap, app.portal)
+                AppScreen.CreateEvent -> viewCreateEvent(app.portal, app.home.eventMap)
             }
         }
     }
