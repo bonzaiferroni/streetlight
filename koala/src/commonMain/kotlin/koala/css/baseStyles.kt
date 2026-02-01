@@ -62,22 +62,22 @@ fun CssBuilder.baseStyles(theme: KoalaTheme) {
         willChange = "filter"
     }
 
-    "input[type='text'], input[type='password']" {
-        border = Border.none
-        outline = Outline.none
-        padding = Padding(0.75.rem)
-        borderRadius = 0.75.rem
-        fontSize = 1.2.rem
-        backgroundColor = theme.void
-        color = theme.fg
-    }
+//    "input[type='text'], input[type='password']" {
+//        border = Border.none
+//        outline = Outline.none
+//        padding = Padding(0.75.rem)
+//        borderRadius = 0.75.rem
+//        fontSize = 1.2.rem
+//        backgroundColor = theme.void
+//        color = theme.fg
+//    }
 
-    "input[type=\"checkbox\"]" {
-        backgroundColor = theme.void
-        width = 1.5.rem
-        height = 1.5.rem
-        borderRadius = 0.25.rem
-    }
+//    "input[type=\"checkbox\"]" {
+//        backgroundColor = theme.void
+//        width = 1.5.rem
+//        height = 1.5.rem
+//        borderRadius = 0.25.rem
+//    }
 
     keyframes("hueSpin") {
         to {

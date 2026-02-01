@@ -22,6 +22,8 @@ data class NominatimPlace(
     val importance: Double,
     @SerialName("addresstype")
     val addressType: String,
+    @SerialName("house_number")
+    val houseNumber: Int? = null,
     val name: String,
     @SerialName("display_name")
     val displayName: String,

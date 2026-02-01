@@ -26,7 +26,7 @@ class LocationBrowserClient(app: AppContext): AppContext by app {
         ).await()
 
         val text = response.text().await()
-        return Json.decodeFromString(text)
+        return jsonConfig.decodeFromString(text)
     }
 
     suspend fun createLocation(newLocation: NewLocation) = post(Api.LocationFeed.Create, newLocation)

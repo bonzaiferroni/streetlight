@@ -18,6 +18,10 @@ class UserGate(app: AppContext): BrowserModel<UserGateState>(UserGateState(
     private var usernameOrEmail = localStorage[USERNAME_KEY] ?: ""
     private var password = localStorage[PASSWORD_KEY] ?: ""
 
+    init {
+        signIn()
+    }
+
     fun setUsername(username: String) {
         usernameOrEmail = username
         setState { it.copy(usernameText = username) }
