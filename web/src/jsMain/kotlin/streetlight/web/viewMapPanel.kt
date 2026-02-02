@@ -20,7 +20,7 @@ fun RenderContext.viewMapPanel(app: AppContext) {
     val gateAgent = app.gateAgent
 
     mountRender("map-panel") {
-        renderState(eventCreator.stateFlow.mapDistinct { it.isCreatingEvent }, true) { isCreatingEvent ->
+        flowBlock(eventCreator.stateFlow.mapDistinct { it.isCreatingEvent }, animate = true) { isCreatingEvent ->
             if (isCreatingEvent) {
                 viewEventCreator(app)
             } else {

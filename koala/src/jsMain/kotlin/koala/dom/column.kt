@@ -25,6 +25,5 @@ inline fun DOMContext.column(
     return div {
         modify(Column, *modifiers)
         content()
-        div { }
     }
 }

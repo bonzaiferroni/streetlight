@@ -4,6 +4,7 @@
 package streetlight.web
 
 import koala.dom.renderRoot
+import koala.dom.flowBlock
 import kotlinx.browser.document
 import kotlinx.coroutines.MainScope
 import org.w3c.dom.HTMLElement
@@ -39,7 +40,7 @@ fun viewApp() {
 
     val portalMount = document.getElementById("portal-mount") as HTMLElement
     portalMount.renderRoot(app.appScope) {
-        renderState(
+        flowBlock(
             flow = app.portal.screenFlow,
             cacheRenderedElements = true
         ) { screen ->

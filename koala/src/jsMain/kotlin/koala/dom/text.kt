@@ -1,17 +1,30 @@
 package koala.dom
 
+import koala.css.CssClass
+import koala.css.modify
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
+import kotlinx.html.P
 import kotlinx.html.js.p
 import org.w3c.dom.HTMLParagraphElement
 
-fun DOMContext.textBlock(text: String) = p {
+fun DOMContext.textBlock(
+    text: String = "",
+    vararg modifiers: CssClass,
+    block: (P.() -> Unit)? = null
+) = p {
+    modify(*modifiers)
     +text
+    block?.invoke(this)
 }
 
-fun RenderContext.textBlock(flow: Flow<String>): HTMLParagraphElement {
-    val element = p { }
+fun RenderContext.textBlock(
+    flow: Flow<String>,
+    vararg modifiers: CssClass,
+    block: (P.() -> Unit)? = null
+): HTMLParagraphElement {
+    val element = textBlock(modifiers = modifiers, block = block)
     renderScope.launch {
         flow.distinctUntilChanged().collect {
             element.textContent = it

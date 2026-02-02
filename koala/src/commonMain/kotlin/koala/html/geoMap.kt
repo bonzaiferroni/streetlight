@@ -1,5 +1,6 @@
 package koala.html
 
+import koala.css.Width100
 import kotlinx.html.*
 
 fun FlowContent.geoMap(
@@ -15,9 +16,7 @@ fun FlowContent.geoMap(
                 box(Id("geo-crosshairs"))
             }
         }
-        div {
-            id = "map-panel"
-        }
+        box(Id("map-panel"), Width100)
     }
 }
 
