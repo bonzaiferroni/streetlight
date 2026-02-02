@@ -47,8 +47,8 @@ fun RenderContext.viewMapPanel(app: AppContext) {
                     }
                     renderState(eventMap.focusFlow) { (location, event) ->
                         column {
-                            paragraph("Event: ${event?.title}")
-                            paragraph("Location: ${location?.name}")
+                            textBlock("Event: ${event?.title}")
+                            textBlock("Location: ${location?.name}")
                             button("Add Event") {
                                 gateAgent.checkIn {
                                     eventCreator.toggle()

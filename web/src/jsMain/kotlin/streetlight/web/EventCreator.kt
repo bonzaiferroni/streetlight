@@ -46,6 +46,10 @@ class EventCreator(
         setState { it.copy(locationName = name) }
     }
 
+    fun setEventType(value: EventType) {
+        setState { it.copy(eventType = value) }
+    }
+
     fun createEvent() {
         viewModelScope.launch {
             val location = eventMap.stateNow.focus.location
@@ -60,24 +64,17 @@ class EventCreator(
                 return@launch
             }
 
-            val eventType = stateNow.eventType
-            if (eventType == null) {
-                setState { it.copy(message = UIMessage(UIMessageType.Error, "Event type is required")) }
-                return@launch
-            }
-
             val newEvent = NewEvent(
                 locationId = locationId,
                 title = stateNow.title,
                 startsAt = Clock.System.now(),
-                eventType = eventType
+                eventType = stateNow.eventType
             )
 
             val event = client.event.create(newEvent)
             console.log(event)
             setState { it.copy(
                 isCreatingEvent = false,
-                eventType = null,
                 locationName = "",
                 title = "",
             )}
@@ -97,9 +94,9 @@ class EventCreator(
 data class EventCreatorState(
     val isCreatingEvent: Boolean = false,
     val title: String = "",
-    val eventType: EventType? = null,
+    val eventType: EventType = EventType.Show,
     val locationName: String = "",
     val message: UIMessage? = null,
 ) {
-    val canCreateEvent get() = locationName.isNotBlank() && title.isNotBlank() && eventType != null
+    val canCreateEvent get() = locationName.isNotBlank() && title.isNotBlank()
 }
