@@ -5,11 +5,11 @@ import koala.css.*
 
 inline fun FlowContent.label(
     content: String,
-    vararg modifiers: CssClass?,
+    modifiers: ModifierSet? = null,
     crossinline block: (DIV.() -> Unit) = { }
 ) {
     div {
-        applyModifiers(*modifiers)
+        applyModifiers(modifiers)
         block()
         +content
     }
@@ -17,11 +17,11 @@ inline fun FlowContent.label(
 
 inline fun FlowContent.paragraph(
     content: String = "",
-    vararg modifiers: CssClass,
+    modifiers: ModifierSet? = null,
     crossinline block: P.() -> Unit = { }
 ) {
     p {
-        applyModifiers(*modifiers)
+        applyModifiers(modifiers)
         block()
         +content
     }
@@ -29,50 +29,50 @@ inline fun FlowContent.paragraph(
 
 fun FlowContent.heading1(
     content: String,
-    vararg modifiers: CssClass,
+    modifiers: ModifierSet? = null,
 ) {
     h1 {
-        applyModifiers(*modifiers)
+        applyModifiers(modifiers)
         +content
     }
 }
 
 fun FlowContent.heading2(
     content: String,
-    vararg modifiers: CssClass,
+    modifiers: ModifierSet? = null,
 ) {
     h2 {
-        applyModifiers(*modifiers)
+        applyModifiers(modifiers)
         +content
     }
 }
 
 fun FlowContent.heading3(
     content: String,
-    vararg modifiers: CssClass,
+    modifiers: ModifierSet? = null,
 ) {
     h3 {
-        applyModifiers(*modifiers)
+        applyModifiers(modifiers)
         +content
     }
 }
 
 fun FlowContent.heading4(
     content: String,
-    vararg modifiers: CssClass,
+    modifiers: ModifierSet? = null,
 ) {
     h4 {
-        applyModifiers(*modifiers)
+        applyModifiers(modifiers)
         +content
     }
 }
 
 fun FlowContent.heading5(
     content: String,
-    vararg modifiers: CssClass,
+    modifiers: ModifierSet? = null,
 ) {
     h5 {
-        applyModifiers(*modifiers)
+        applyModifiers(modifiers)
         +content
     }
 }

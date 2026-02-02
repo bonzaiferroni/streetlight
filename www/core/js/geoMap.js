@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", initGeoMap)
 
 function initGeoMap() {
     geoMap = new maplibregl.Map({
-        container: "geo-map",
+        container: "map-widget",
         style: `https://tiles.openfreemap.org/styles/fiord`,
         center: [-104.95, 39.75],
         zoom: 11

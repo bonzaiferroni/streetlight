@@ -1,6 +1,7 @@
 package koala.html
 
 import koala.css.Width100
+import koala.css.modify
 import kotlinx.html.*
 
 fun FlowContent.geoMap(
@@ -9,15 +10,23 @@ fun FlowContent.geoMap(
 ) {
     column {
         style = "width: $width;"
-        box(Id("geo-map-box")) {
+        box(MapId.window) {
             style = "width: $width; height: $height;"
-            box(Id("geo-map"))
-            box(Id("geo-overlay")) {
-                box(Id("geo-crosshairs"))
+            box(MapId.widget)
+            box(MapId.overlay) {
+                box(MapId.crosshairs)
             }
         }
-        box(Id("map-panel"), Width100)
+        box(MapId.panel, modify(Width100))
     }
+}
+
+object MapId {
+    val window = Id("map-window")
+    val widget = Id("map-widget")
+    val overlay = Id("map-overlay")
+    val crosshairs = Id("map-crosshairs")
+    val panel = Id("map-panel")
 }
 
 fun HEAD.geoMapResources() {

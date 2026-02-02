@@ -32,6 +32,7 @@ fun RenderContext.viewMapPanel(app: AppContext) {
                 viewEventCreator(app)
             } else {
                 column {
+                    viewMapConfig(app)
                     button("location query") {
                         renderScope.launch {
                             // val info = app.client.location.readPlaceInfo(eventMap.stateNow.center)
@@ -64,9 +65,9 @@ fun RenderContext.viewMapPanel(app: AppContext) {
                         }
                     }
                     flowBlock(eventMap.stateFlow.map { it.areaEvents }, animate = true) { allEvents ->
-                        box(Css("map-event-panel")) {
+                        box(modify(Css("map-event-panel"))) {
                             allEvents.groupBy { it.eventType }.forEach { (eventType, events) ->
-                                card(Css("map-event-group")) {
+                                card(modify(Css("map-event-group"))) {
                                     h2 {
                                         +eventType.label
                                     }

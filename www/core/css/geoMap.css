@@ -1,20 +1,20 @@
-#geo-map-box {
+#map-window {
     position: relative;
     border-radius: 12px;
     overflow: hidden;
 }
 
-#geo-map-box > * {
+#map-window > * {
     width: 100%;
     height: 100%;
     position: absolute;
     inset: 0;
 }
 
-#geo-map {
+#map-widget {
 }
 
-#geo-overlay {
+#map-overlay {
     position: relative;
     background: radial-gradient(
             circle,
@@ -25,7 +25,7 @@
     pointer-events: none;
 }
 
-#geo-crosshairs {
+#map-crosshairs {
     width: 12px;
     height: 12px;
 

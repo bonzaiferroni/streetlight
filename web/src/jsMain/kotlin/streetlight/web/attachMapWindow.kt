@@ -39,7 +39,7 @@ fun RenderContext.viewMapWindow(
     }
 
     // manage overlay
-//    mountRender("geo-overlay") {
+//    mountRender("map-overlay") {
 //
 //    }
 }

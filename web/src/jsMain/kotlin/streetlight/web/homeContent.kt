@@ -2,6 +2,7 @@ package streetlight.web
 
 import koala.css.AlignItemsCenter
 import koala.css.Width100
+import koala.css.modify
 import koala.dom.RenderContext
 import koala.html.column
 import koala.html.geoMap
@@ -14,12 +15,12 @@ fun RenderContext.homeContent(
     portal: AppPortal
 ) {
     console.log("loading home content")
-    tabs(Id("main-tabs"), Width100) {
+    tabs(Id("main-tabs"), modify(Width100)) {
         tab("Events") {
             eventsTab(portal)
         }
         tab("Map") {
-            column(AlignItemsCenter) {
+            column(modify(AlignItemsCenter)) {
                 geoMap()
                 footer()
             }

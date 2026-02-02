@@ -5,21 +5,21 @@ import koala.css.*
 
 inline fun FlowContent.column(
     id: Id,
-    vararg modifiers: CssClass,
+    modifiers: ModifierSet? = null,
     crossinline content: DIV.() -> Unit,
 ) {
-    column(*modifiers) {
+    column(modifiers) {
         this.id = id.value
         content()
     }
 }
 
 inline fun FlowContent.column(
-    vararg modifiers: CssClass,
+    modifiers: ModifierSet? = null,
     crossinline content: DIV.() -> Unit,
 ) {
     div {
-        applyModifiers(Column, *modifiers)
+        applyModifiers(modify(Column, modifiers))
         content()
     }
 }

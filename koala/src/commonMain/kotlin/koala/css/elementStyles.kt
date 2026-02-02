@@ -5,22 +5,24 @@ import kotlinx.css.properties.Timing
 import kotlinx.css.properties.Transition
 import kotlinx.css.properties.s
 
-object LottieClass: CssClass { override val value: String = "lottie" }
-object IconClass: CssClass { override val value: String = "icon" }
-object LogoClass: CssClass { override val value: String = "logo" }
-object ActionClass: CssClass { override val value: String = "action" }
-object ButtonClass: CssClass { override val value: String = "btn" }
-object FlowBlock: CssClass { override val value: String = "flow-block" }
+object ElementClass {
+    val lottie = Css("lottie")
+    val icon = Css("icon")
+    val logo = Css("logo")
+    val action = Css("action")
+    val button = Css("btn")
+    val flowBlock = Css("flow-block")
+}
 
 fun CssBuilder.elementStyles(theme: KoalaTheme) {
-    rule(LottieClass) {
+    rule(ElementClass.lottie) {
         child("svg") {
 //            display = Display.block
 //            maxHeight = 100.pct
         }
     }
 
-    rule(IconClass) {
+    rule(ElementClass.icon) {
         display = Display.inlineBlock
         backgroundColor = Color.currentColor
         put("aspect-ratio", "1 / 1")
@@ -34,7 +36,7 @@ fun CssBuilder.elementStyles(theme: KoalaTheme) {
         put("-webkit-mask-position", "center")
     }
 
-    rule(ActionClass) {
+    rule(ElementClass.action) {
         transition += Transition("opacity", 0.35.s, Timing.ease)
 
         hover {

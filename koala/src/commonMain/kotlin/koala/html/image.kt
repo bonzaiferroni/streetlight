@@ -6,10 +6,10 @@ import kotlinx.html.*
 fun FlowContent.image(
     id: Id,
     src: String,
-    vararg modifiers: CssClass,
+    modifiers: ModifierSet? = null,
     block: (IMG.() -> Unit)? = null
 ) {
-    image(src, *modifiers) {
+    image(src, modifiers) {
         this.id = id.value
         block?.invoke(this)
     }
@@ -17,12 +17,12 @@ fun FlowContent.image(
 
 fun FlowContent.image(
     src: String,
-    vararg modifiers: CssClass,
+    modifiers: ModifierSet? = null,
     block: (IMG.() -> Unit)? = null
 ) {
     img {
         this.src = "/www/${src}"
-        applyModifiers(*modifiers)
+        applyModifiers(modifiers)
         block?.invoke(this)
     }
 }

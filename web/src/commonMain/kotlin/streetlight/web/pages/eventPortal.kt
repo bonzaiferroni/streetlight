@@ -11,7 +11,7 @@ fun HTML.eventPortal(event: Event, person: Person?, requestItems: List<RequestIt
         scripts("eventportal.js")
     }
     body {
-        column(Id("event-profile"), AlignItemsCenter) {
+        column(Id("event-profile"), modify(AlignItemsCenter)) {
             a("/") {
                 row {
                     heading4("Streetlight")
@@ -19,7 +19,7 @@ fun HTML.eventPortal(event: Event, person: Person?, requestItems: List<RequestIt
                 }
             }
             heading1(event.title)
-            column(Gap0) {
+            column(modify(Gap0)) {
                 propertyValue("performer", "Luke Bollwerk")
                 propertyValue("instagram") {
                     a("https://www.instagram.com/trespasserswilliam/") {
@@ -28,31 +28,31 @@ fun HTML.eventPortal(event: Event, person: Person?, requestItems: List<RequestIt
                 }
             }
             heading2("Send a request")
-            column(Id("request-box"), Width100) {
+            column(Id("request-box"), modify(Width100)) {
                 column(Id("request-songs")) {
                     requestItems.forEach { item ->
                         requestItem(item, event)
                         // button(song.title, invoke("startRequest", event.eventId.value, song.songId.value))
                     }
                 }
-                column(Id("request-details"), DisplayNone) {
+                column(Id("request-details"), modify(DisplayNone)) {
                     textField(Id("name"), "Your name (optional)")
                     textField(Id("comment"), "Comment (optional)")
                     checkBox(Id("join"), "Would you like to sing with me?")
                     button("Send", invoke("sendRequest"))
                 }
-                column(Id("request-sent"), DisplayNone) {
+                column(Id("request-sent"), modify(DisplayNone)) {
                     paragraph("Request sent!")
                 }
             }
         }
-        column(Id("tips-box"), AlignItemsCenter) {
+        column(Id("tips-box"), modify(AlignItemsCenter)) {
             heading2("Send a tip")
-            row(AlignItemsCenter) {
+            row(modify(AlignItemsCenter)) {
                 row {
-                    heading3("Venmo:", Opacity6)
+                    heading3("Venmo:", modify(Opacity6))
                     a("https://venmo.com/colfaxband?txn=pay&note=street+music") {
-                        heading3("@colfaxband", Glow)
+                        heading3("@colfaxband", modify(Glow))
                     }
                 }
                 a("https://venmo.com/colfaxband?txn=pay&amount=1&note=street+music") {
@@ -78,12 +78,12 @@ fun FlowContent.requestItem(
     card {
         onClick = invoke("startRequest", event.eventId.value, song.songId.value)
         row {
-            column(Flex1, Gap0) {
-                paragraph(song.title, Bold)
+            column(modify(Flex1, Gap0)) {
+                paragraph(song.title, modify(Bold))
                 paragraph(song.artist)
             }
-            column(Gap0, AlignItemsCenter) {
-                paragraph("plays", Opacity6)
+            column(modify(Gap0, AlignItemsCenter)) {
+                paragraph("plays", modify(Opacity6))
                 paragraph(plays.toString())
             }
         }

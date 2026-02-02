@@ -11,27 +11,27 @@ import koala.dom.lottie
 import streetlight.web.pages.homeFooter
 
 fun DOMContext.appDescription() {
-    column(AlignItemsCenter) {
-        column(QueryRow, AlignItemsCenter) {
-            lottie("cup_stack", Flex1, MaxWidth50)
+    column(modify(AlignItemsCenter)) {
+        column(modify(QueryRow, AlignItemsCenter)) {
+            lottie("cup_stack", modify(Flex1, MaxWidth50))
             val introText = "Streetlight is a street performance community and app. " +
                     "It is cross-platform, open-source, and 100% Kotlin. "
-            paragraph(introText, Flex3, Large)
+            paragraph(introText, modify(Flex3, Large))
         }
-        column(QueryRow, AlignItemsCenter) {
-            lottie("dancing_man", Flex1, MaxWidth50)
-            column(Flex3) {
-                column(Gap0) {
+        column(modify(QueryRow, AlignItemsCenter)) {
+            lottie("dancing_man", modify(Flex1, MaxWidth50))
+            column(modify(Flex3)) {
+                column(modify(Gap0)) {
                     paragraph("Do you have a talent to share with passersby?")
                     paragraph("Do you have a business, venue, or message you would like to promote?")
                     paragraph("Are you walking down the street somewhere and looking for something to experience?")
                 }
-                paragraph("Consider downloading Streetlight to see what it can offer.", Bold)
+                paragraph("Consider downloading Streetlight to see what it can offer.", modify(Bold))
             }
         }
-        column(QueryRow, AlignItemsCenter) {
-            lottie("playful_cat", Flex1, MaxWidth50)
-            column(Flex3) {
+        column(modify(QueryRow, AlignItemsCenter)) {
+            lottie("playful_cat", modify(Flex1, MaxWidth50))
+            column(modify(Flex3)) {
                 paragraph {
                     externalLink("https://github.com/bonzaiferroni/streetlight", "Streetlight")
                     +" is 100% free and open-source. Free as in speech, free as in beer. "
@@ -50,11 +50,11 @@ fun DOMContext.appDescription() {
                     +"The nature of our work supports a level of collaboration as yet unrealized in human history. "
                     +"We are like giants who stand on the shoulders of other giants, each one reaching higher. "
                 }
-                paragraph("It's giants all the way down.", Large)
+                paragraph("It's giants all the way down.", modify(Large))
             }
         }
-        column(Gap0, AlignItemsStretch, Width100, MarginTop4) {
-            heading5("Our Giants", TextAlignCenter)
+        column(modify(Gap0, AlignItemsStretch, Width100, MarginTop4)) {
+            heading5("Our Giants", modify(TextAlignCenter))
             githubLink("web", "kotlinx.html", "Kotlin")
             githubLink("app client", "Compose Multiplatform", "jetbrains", "compose-multiplatform")
             githubLink("app database", "SQLite", "sqlite")
@@ -78,7 +78,7 @@ fun FlowContent.githubLink(
     repo: String = name,
 ) {
     row {
-        paragraph("$role:", Opacity6, TextAlignRight, Flex1)
+        paragraph("$role:", modify(Opacity6, TextAlignRight, Flex1))
         a("https://github.com/$user/$repo") {
             applyModifiers(Flex1)
             target = "_blank"

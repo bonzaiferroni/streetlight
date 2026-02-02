@@ -7,7 +7,7 @@ import streetlight.web.pages.homeFooter
 fun RenderContext.eventsTab(
     portal: AppPortal
 ) {
-    column(AlignItemsCenter) {
+    column(modify(AlignItemsCenter)) {
 //        events.forEach { event ->
 //            a {
 //                href = "/event-portal/${event.eventId.value}"

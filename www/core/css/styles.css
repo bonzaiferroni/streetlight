@@ -37,8 +37,8 @@ body::before {
     pointer-events: none;
     z-index: -1;
     background:
-            radial-gradient(circle at 18% 18%, rgba(var(--light-1), 0.2) 0%, transparent 50%),
-            radial-gradient(circle at 82% 16%, rgba(var(--light-2), 0.2) 0%, transparent 48%),
+            radial-gradient(circle at 18% 22%, rgba(var(--light-1), 0.3) 0%, transparent 50%),
+            radial-gradient(circle at 82% 20%, rgba(var(--light-2), 0.3) 0%, transparent 48%),
             radial-gradient(circle at 50% 52%, rgba(var(--light-3), 0.2) 0%, transparent 55%);
     filter: hue-rotate(0deg);
     animation: hueSpin 30s linear infinite;

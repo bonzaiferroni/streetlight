@@ -1,8 +1,8 @@
 package koala.dom
 
 import koala.css.Animate
-import koala.css.CssClass
-import koala.css.FlowBlock
+import koala.css.ElementClass
+import koala.css.ModifierSet
 import koala.css.Reveal
 import koala.css.applyModifiers
 import kotlinx.coroutines.CoroutineScope
@@ -22,14 +22,14 @@ import org.w3c.dom.HTMLElement
 
 fun <State> RenderContext.flowBlock(
     flow: Flow<State>,
-    modifiers: Set<CssClass>? = null,
+    modifiers: ModifierSet? = null,
     animate: Boolean = false,
     cacheRenderedElements: Boolean = false,
     config: (DIV.() -> Unit)? = null,
     block: RenderContext.(State) -> Unit
 ): HTMLDivElement {
     val element = div {
-        applyModifiers(FlowBlock, modifiers)
+        applyModifiers(ElementClass.flowBlock, modifiers)
         if (animate) {
             classes += Animate.value
         }

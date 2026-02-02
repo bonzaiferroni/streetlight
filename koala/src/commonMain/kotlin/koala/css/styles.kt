@@ -19,17 +19,29 @@ value class Css(override val value: String): CssClass {
     override fun toString() = value
 }
 
+typealias ModifierSet = Set<CssClass>
+
 fun modify(vararg cssClass: CssClass) = cssClass.toSet()
-
-fun CoreAttributeGroupFacade.applyModifiers(modifiers: Set<CssClass>) {
-    classes += modifiers.map { it.value }
+fun modify(css: CssClass, modifiers: ModifierSet?): ModifierSet {
+    val set = setOf(css)
+    return if (modifiers != null) {
+        set + modifiers
+    } else {
+        set
+    }
 }
 
-fun CoreAttributeGroupFacade.applyModifiers(vararg cssClass: CssClass?) {
-    classes += cssClass.mapNotNull { it?.value }.toSet()
+fun CoreAttributeGroupFacade.applyModifiers(modifiers: ModifierSet?) {
+    modifiers?.let {
+        classes += modifiers.map { it.value }
+    }
 }
 
-fun CoreAttributeGroupFacade.applyModifiers(css: CssClass, modifiers: Set<CssClass>?) {
+fun CoreAttributeGroupFacade.applyModifiers(cssClass: CssClass) {
+    classes += cssClass.value
+}
+
+fun CoreAttributeGroupFacade.applyModifiers(css: CssClass, modifiers: ModifierSet?) {
     classes += css.value
     modifiers?.let {
         classes += modifiers.map { it.value }

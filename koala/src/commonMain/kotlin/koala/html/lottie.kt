@@ -5,11 +5,11 @@ import koala.css.*
 
 inline fun FlowContent.lottie(
     filename: String,
-    vararg modifiers: CssClass?,
+    modifiers: ModifierSet? = null,
     crossinline block: DIV.() -> Unit = { }
 ) {
     div {
-        applyModifiers(LottieClass, *modifiers)
+        applyModifiers(modify(ElementClass.lottie, modifiers))
         attributes["lottie"] = filename
         block()
     }

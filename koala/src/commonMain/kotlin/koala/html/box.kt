@@ -7,18 +7,18 @@ import kotlinx.html.div
 import kotlinx.html.id
 
 inline fun FlowContent.box(
-    vararg modifiers: CssClass,
+    modifiers: ModifierSet? = null,
     crossinline content: DIV.() -> Unit = { },
 ) {
     div {
-        applyModifiers(Box, *modifiers)
+        applyModifiers(Box, modifiers)
         content()
     }
 }
 
 inline fun FlowContent.box(
     id: Id,
-    vararg modifiers: CssClass,
+    modifiers: ModifierSet? = null,
     crossinline content: DIV.() -> Unit = { },
 ) {
     box(modifiers = modifiers) {

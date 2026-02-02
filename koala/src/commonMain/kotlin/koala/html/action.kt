@@ -1,15 +1,17 @@
 package koala.html
 
-import koala.css.ActionClass
 import koala.css.CssClass
+import koala.css.ElementClass
+import koala.css.ModifierSet
 import koala.css.applyModifiers
+import koala.css.modify
 import kotlinx.html.A
 import kotlinx.html.FlowContent
 import kotlinx.html.a
 
 fun FlowContent.action(
     route: AppRoute,
-    vararg modifiers: CssClass,
+    modifiers: ModifierSet? = null,
     block: (A.() -> Unit)? = null
 ) {
     action(href = route.toHashPath(), modifiers = modifiers, block = block)
@@ -17,21 +19,21 @@ fun FlowContent.action(
 
 fun FlowContent.action(
     href: String? = null,
-    vararg modifiers: CssClass,
+    modifiers: ModifierSet? = null,
     block: (A.() -> Unit)? = null
 ) {
-    action(*modifiers) {
+    action(modifiers) {
         href?.let { this.href = href }
         block?.invoke(this)
     }
 }
 
 fun FlowContent.action(
-    vararg modifiers: CssClass,
+    modifiers: ModifierSet? = null,
     block: (A.() -> Unit)? = null
 ) {
     a {
-        applyModifiers(ActionClass, *modifiers)
+        applyModifiers(modify(ElementClass.action, modifiers))
         block?.invoke(this)
     }
 }

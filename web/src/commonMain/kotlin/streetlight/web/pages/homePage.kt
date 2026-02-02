@@ -15,10 +15,10 @@ fun HTML.homePage() {
     }
     body {
         column {
-            column(Width100, AlignItemsCenter) {
-                row(Width100, SpaceBetween) {
-                    action(Height3, Opacity2) {
-                        icon("chevron-down", Height100)
+            column(modify(Width100, AlignItemsCenter)) {
+                row(modify(Width100, SpaceBetween)) {
+                    action(modify(Height3, Opacity2)) {
+                        icon("chevron-down", modify(Height100))
                     }
                     action(Home()) {
                         row {
@@ -26,8 +26,8 @@ fun HTML.homePage() {
                             heading1("Streetlight")
                         }
                     }
-                    action(Account, Height3, Opacity2) {
-                        icon("empty-profile", Height100)
+                    action(Account, modify(Height3, Opacity2)) {
+                        icon("empty-profile", modify(Height100))
                     }
                 }
 //                box(Dim) {
@@ -51,13 +51,13 @@ fun HTML.homePage() {
 
 fun FlowContent.homeFooter() {
     val giants = "May we choose a world of good and faithful giants. "
-    row(AlignItemsCenter) {
+    row(modify(AlignItemsCenter)) {
         style = "height: 20rem;"
-        column(AlignItemsCenter, Gap0, Width100) {
+        column(modify(AlignItemsCenter, Gap0, Width100)) {
             lottie("spinning_circles") {
                 style = "height: 10rem;"
             }
-            paragraph(giants, Italic, Opacity6)
+            paragraph(giants, modify(Italic, Opacity6))
         }
     }
 }

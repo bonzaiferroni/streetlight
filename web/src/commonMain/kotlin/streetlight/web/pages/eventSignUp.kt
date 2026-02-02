@@ -11,7 +11,7 @@ fun HTML.eventSignUp(event: Event) {
         scripts("eventSignUp.js")
     }
     body {
-        column(Id("event-profile"), AlignItemsCenter) {
+        column(Id("event-profile"), modify(AlignItemsCenter)) {
             heading1(event.title)
             heading2("Sign Up")
 
@@ -26,13 +26,13 @@ fun HTML.eventSignUp(event: Event) {
                     paragraph("yes please")
                 }
             }
-            column(Id("sign-up-box"), Width100) {
-                column(Id("guest-details"), DisplayNone) {
+            column(Id("sign-up-box"), modify(Width100)) {
+                column(Id("guest-details"), modify(DisplayNone)) {
                     textField(Id("name"), "Your name")
                     textField(Id("email"), "Email")
                     button("Send", invoke("sendRequest"))
                 }
-                column(Id("user-details"), DisplayNone) {
+                column(Id("user-details"), modify(DisplayNone)) {
                     paragraph("User details form")
                 }
             }

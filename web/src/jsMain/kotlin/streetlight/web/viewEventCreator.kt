@@ -9,7 +9,7 @@ fun RenderContext.viewEventCreator(app: AppContext) {
     val eventCreator = app.home.eventCreator
 
     column {
-        column(QueryRow, FlexItems1, Width100) {
+        column(modify(QueryRow, FlexItems1, Width100)) {
             card {
                 heading2("what")
                 textField(eventCreator::setEventName)

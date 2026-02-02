@@ -1,6 +1,7 @@
 package koala.dom
 
 import koala.css.CssClass
+import koala.css.ModifierSet
 import koala.css.applyModifiers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -11,17 +12,17 @@ import org.w3c.dom.HTMLParagraphElement
 
 fun DOMContext.textBlock(
     text: String = "",
-    vararg modifiers: CssClass,
+    modifiers: ModifierSet? = null,
     block: (P.() -> Unit)? = null
 ) = p {
-    applyModifiers(*modifiers)
+    applyModifiers(modifiers)
     +text
     block?.invoke(this)
 }
 
 fun RenderContext.textBlock(
     flow: Flow<String>,
-    vararg modifiers: CssClass,
+    modifiers: ModifierSet? = null,
     block: (P.() -> Unit)? = null
 ): HTMLParagraphElement {
     val element = textBlock(modifiers = modifiers, block = block)

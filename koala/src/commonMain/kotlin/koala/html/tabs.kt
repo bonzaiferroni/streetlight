@@ -6,32 +6,40 @@ import koala.css.*
 import kotlinx.html.TagConsumer
 
 fun FlowContent.tabs(
-    vararg modifiers: CssClass,
+    modifiers: ModifierSet? = null,
     content: TabScope.() -> Unit,
 ) {
     val scope = TabScope()
     scope.content()
-    column(Css("tabs"), *modifiers) {
+    column(modify(TabClass.tabs, modifiers)) {
         tabsContent(scope)
     }
 }
 
 fun FlowContent.tabsContent(scope: TabScope) {
-    row(Css("tabs-header")) {
+    row(modify(TabClass.header)) {
         scope.tabs.forEachIndexed { index, tab ->
-            label(tab.label, Css("tabs-button")) {
+            label(tab.label, modify(TabClass.button)) {
                 attributes["data-tab"] = index.toString()
             }
         }
     }
-    box(Css("tabs-viewport")) {
+    box(modify(TabClass.viewport)) {
         scope.tabs.forEach { tab ->
             val content = tab.content
-            box(Css("tabs-panel")) {
+            box(modify(TabClass.panel)) {
                 content()
             }
         }
     }
+}
+
+object TabClass {
+    val tabs = Css("tabs")
+    val button = Css("tabs-button")
+    val header = Css("tabs-header")
+    val viewport = Css("tabs-viewport")
+    val panel = Css("tabs-panel")
 }
 
 fun TabScope.tab(
