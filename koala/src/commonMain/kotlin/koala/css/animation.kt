@@ -3,9 +3,16 @@ package koala.css
 import kotlinx.css.*
 import kotlinx.css.properties.*
 
-object Fade: CssClass { override val value = "fade" }
+@Deprecated("use reveal")
 object Show: CssClass { override val value = "show" }
 object FadeStack: CssClass { override val value = "fade-stack" }
+
+// utilities
+object Animate: CssClass { override val value = "animate" }
+object Reveal: CssClass { override val value = "reveal" }
+// object Hide: CssClass { override val value = "hide" }
+object Blur: CssClass { override val value = "blur" }
+object Slide: CssClass { override val value = "slide" }
 
 fun CssBuilder.animation(theme: KoalaTheme) {
     rule(FadeStack) {

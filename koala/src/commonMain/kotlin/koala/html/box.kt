@@ -1,7 +1,6 @@
 package koala.html
 
 import koala.css.*
-import koala.html.Id
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kotlinx.html.div
@@ -12,7 +11,7 @@ inline fun FlowContent.box(
     crossinline content: DIV.() -> Unit = { },
 ) {
     div {
-        modify(Box, *modifiers)
+        applyModifiers(Box, *modifiers)
         content()
     }
 }

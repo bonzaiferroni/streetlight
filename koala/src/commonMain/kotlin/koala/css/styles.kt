@@ -19,8 +19,21 @@ value class Css(override val value: String): CssClass {
     override fun toString() = value
 }
 
-fun CoreAttributeGroupFacade.modify(vararg cssClass: CssClass?) {
-    classes = cssClass.mapNotNull { it?.value }.toSet()
+fun modify(vararg cssClass: CssClass) = cssClass.toSet()
+
+fun CoreAttributeGroupFacade.applyModifiers(modifiers: Set<CssClass>) {
+    classes += modifiers.map { it.value }
+}
+
+fun CoreAttributeGroupFacade.applyModifiers(vararg cssClass: CssClass?) {
+    classes += cssClass.mapNotNull { it?.value }.toSet()
+}
+
+fun CoreAttributeGroupFacade.applyModifiers(css: CssClass, modifiers: Set<CssClass>?) {
+    classes += css.value
+    modifiers?.let {
+        classes += modifiers.map { it.value }
+    }
 }
 
 fun CssBuilder.rules(theme: KoalaTheme): CssBuilder {

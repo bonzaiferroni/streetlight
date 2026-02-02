@@ -22,7 +22,7 @@
     pointer-events: auto;
 }
 
-/* render */
+/* state render */
 
 .state-render {
     position: relative;
@@ -46,15 +46,31 @@
     position: absolute;
 }
 
-.state-block.animate {
+/* flow block */
+
+.flow-block.animate {
     opacity: 0;
-    filter: blur(6px);
     transition: opacity 200ms ease-in-out, transform 200ms ease-in-out, filter 200ms ease-out;
     pointer-events: none;
 }
 
-.state-block.animate.reveal {
+.flow-block.animate.reveal {
     opacity: 1;
-    filter: blur(0px);
     pointer-events: auto;
+}
+
+.flow-block.animate.blur {
+    filter: blur(6px);
+}
+
+.flow-block.animate.blur.reveal {
+    filter: blur(0px);
+}
+
+.flow-block.animate.slide {
+    transform: translate(20px, 0px);
+}
+
+.flow-block.animate.slide.reveal {
+    transform: translate(0px, 0px);
 }

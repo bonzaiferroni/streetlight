@@ -1,6 +1,9 @@
 package streetlight.web
 
+import koala.css.Blur
 import koala.css.Css
+import koala.css.FadeStack
+import koala.css.modify
 import koala.dom.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.map
@@ -20,7 +23,11 @@ fun RenderContext.viewMapPanel(app: AppContext) {
     val gateAgent = app.gateAgent
 
     mountRender("map-panel") {
-        flowBlock(eventCreator.stateFlow.mapDistinct { it.isCreatingEvent }, animate = true) { isCreatingEvent ->
+        flowBlock(
+            flow = eventCreator.stateFlow.mapDistinct { it.isCreatingEvent },
+            modifiers = modify(Blur),
+            animate = true
+        ) { isCreatingEvent ->
             if (isCreatingEvent) {
                 viewEventCreator(app)
             } else {
@@ -45,7 +52,7 @@ fun RenderContext.viewMapPanel(app: AppContext) {
                             console.log(id?.value)
                         }
                     }
-                    renderState(eventMap.focusFlow) { (location, event) ->
+                    flowBlock(eventMap.focusFlow) { (location, event) ->
                         column {
                             textBlock("Event: ${event?.title}")
                             textBlock("Location: ${location?.name}")
@@ -56,7 +63,7 @@ fun RenderContext.viewMapPanel(app: AppContext) {
                             }
                         }
                     }
-                    renderState(eventMap.stateFlow.map { it.areaEvents }, true) { allEvents ->
+                    flowBlock(eventMap.stateFlow.map { it.areaEvents }, animate = true) { allEvents ->
                         box(Css("map-event-panel")) {
                             allEvents.groupBy { it.eventType }.forEach { (eventType, events) ->
                                 card(Css("map-event-group")) {

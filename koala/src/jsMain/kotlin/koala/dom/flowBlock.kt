@@ -1,8 +1,10 @@
 package koala.dom
 
+import koala.css.Animate
 import koala.css.CssClass
-import koala.css.StateBlock
-import koala.css.modify
+import koala.css.FlowBlock
+import koala.css.Reveal
+import koala.css.applyModifiers
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -10,9 +12,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import kotlinx.dom.addClass
 import kotlinx.dom.clear
-import kotlinx.dom.removeClass
 import kotlinx.html.DIV
 import kotlinx.html.classes
 import kotlinx.html.dom.append
@@ -22,16 +22,16 @@ import org.w3c.dom.HTMLElement
 
 fun <State> RenderContext.flowBlock(
     flow: Flow<State>,
-    vararg modifiers: CssClass,
+    modifiers: Set<CssClass>? = null,
     animate: Boolean = false,
     cacheRenderedElements: Boolean = false,
     config: (DIV.() -> Unit)? = null,
     block: RenderContext.(State) -> Unit
 ): HTMLDivElement {
     val element = div {
-        modify(StateBlock, *modifiers)
+        applyModifiers(FlowBlock, modifiers)
         if (animate) {
-            classes += "animate"
+            classes += Animate.value
         }
         config?.invoke(this)
     }
@@ -64,16 +64,19 @@ fun <State> RenderContext.flowBlock(
             }
 
             if (animate) {
-                element.removeClass("reveal")
+                element.unmodify(Reveal)
                 val exitJob = renderScope.launch {
                     if (render == null) return@launch
+                    element.unmodify(Reveal)
+                    // element.modify(Hide)
                     delay(200)
                     element.clear()
                 }
                 localScope.launch {
                     exitJob.join()
                     appendRender()
-                    element.addClass("reveal")
+                    // element.unmodify(Hide)
+                    element.modify(Reveal)
                 }
             } else {
                 element.clear()

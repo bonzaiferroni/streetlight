@@ -22,7 +22,7 @@ fun FlowContent.image(
 ) {
     img {
         this.src = "/www/${src}"
-        modify(*modifiers)
+        applyModifiers(*modifiers)
         block?.invoke(this)
     }
 }

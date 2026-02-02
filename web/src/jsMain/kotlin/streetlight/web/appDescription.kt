@@ -80,7 +80,7 @@ fun FlowContent.githubLink(
     row {
         paragraph("$role:", Opacity6, TextAlignRight, Flex1)
         a("https://github.com/$user/$repo") {
-            modify(Flex1)
+            applyModifiers(Flex1)
             target = "_blank"
             rel = "noopener noreferrer"
             +name

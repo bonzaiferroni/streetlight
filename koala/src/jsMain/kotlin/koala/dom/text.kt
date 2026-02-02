@@ -1,7 +1,7 @@
 package koala.dom
 
 import koala.css.CssClass
-import koala.css.modify
+import koala.css.applyModifiers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
@@ -14,7 +14,7 @@ fun DOMContext.textBlock(
     vararg modifiers: CssClass,
     block: (P.() -> Unit)? = null
 ) = p {
-    modify(*modifiers)
+    applyModifiers(*modifiers)
     +text
     block?.invoke(this)
 }

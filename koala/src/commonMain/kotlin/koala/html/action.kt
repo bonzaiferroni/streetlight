@@ -2,7 +2,7 @@ package koala.html
 
 import koala.css.ActionClass
 import koala.css.CssClass
-import koala.css.modify
+import koala.css.applyModifiers
 import kotlinx.html.A
 import kotlinx.html.FlowContent
 import kotlinx.html.a
@@ -31,7 +31,7 @@ fun FlowContent.action(
     block: (A.() -> Unit)? = null
 ) {
     a {
-        modify(ActionClass, *modifiers)
+        applyModifiers(ActionClass, *modifiers)
         block?.invoke(this)
     }
 }

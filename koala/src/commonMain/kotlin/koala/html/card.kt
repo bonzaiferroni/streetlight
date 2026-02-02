@@ -2,11 +2,10 @@ package koala.html
 
 import koala.css.Card
 import koala.css.CssClass
-import koala.css.modify
+import koala.css.applyModifiers
 import kotlinx.html.DIV
 
 import kotlinx.html.FlowContent
-import kotlinx.html.TagConsumer
 import kotlinx.html.div
 
 inline fun FlowContent.card(
@@ -14,7 +13,7 @@ inline fun FlowContent.card(
     crossinline content: DIV.() -> Unit,
 ) {
     div {
-        modify(Card, *modifiers)
+        applyModifiers(Card, *modifiers)
         content()
     }
 }
