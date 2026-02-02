@@ -16,7 +16,7 @@ fun RenderContext.viewEventCreator(app: AppContext) {
                 dropMenu(eventCreator::setEventType) { it.label }
                 flowBlock(
                     flow = eventCreator.stateFlow.mapDistinct { it.eventType.label },
-                    modifiers = modify(Slide),
+                    modifiers = modify(SlideX),
                     animate = true
                 ) {
                     p {

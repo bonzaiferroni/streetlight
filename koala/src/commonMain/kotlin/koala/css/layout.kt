@@ -35,14 +35,14 @@ fun CssBuilder.layout(theme: KoalaTheme) {
         alignItems = Align.center
     }
 
-    rule(Card) {
-        display = Display.flex
-        flexDirection = FlexDirection.column
-        gap = theme.spacingUnit
-        borderRadius = theme.spacingUnit
-        backgroundColor = theme.void.changeAlpha(0.2)
-        padding = Padding(theme.spacingUnit)
-    }
+//    rule(Card) {
+//        display = Display.flex
+//        flexDirection = FlexDirection.column
+//        gap = theme.spacingUnit
+//        borderRadius = theme.spacingUnit
+//        backgroundColor = theme.void.changeAlpha(0.2)
+//        padding = Padding(theme.spacingUnit)
+//    }
 
     rule(Box) {
     }

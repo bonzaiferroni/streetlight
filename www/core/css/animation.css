@@ -67,10 +67,18 @@
     filter: blur(0px);
 }
 
-.flow-block.animate.slide {
+.flow-block.animate.slide-x {
     transform: translate(20px, 0px);
 }
 
-.flow-block.animate.slide.reveal {
+.flow-block.animate.slide-x.reveal {
+    transform: translate(0px, 0px);
+}
+
+.flow-block.animate.slide-y {
+    transform: translate(0px, 20px);
+}
+
+.flow-block.animate.slide-y.reveal {
     transform: translate(0px, 0px);
 }

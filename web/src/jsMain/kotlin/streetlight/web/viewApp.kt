@@ -3,6 +3,10 @@
 
 package streetlight.web
 
+import koala.css.Blur
+import koala.css.FadeStack
+import koala.css.SlideY
+import koala.css.modify
 import koala.dom.renderRoot
 import koala.dom.flowBlock
 import kotlinx.browser.document
@@ -42,7 +46,9 @@ fun viewApp() {
     portalMount.renderRoot(app.appScope) {
         flowBlock(
             flow = app.portal.screenFlow,
-            cacheRenderedElements = true
+            modifiers = modify(Blur, SlideY),
+            cacheRenderedElements = true,
+            animate = true,
         ) { screen ->
             when (screen) {
                 AppScreen.Home -> viewHome(app)

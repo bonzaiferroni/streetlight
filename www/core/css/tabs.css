@@ -1,5 +1,5 @@
 .tabs-header {
-    background-color: rgba(var(--void), 0.4);
+    background-color: rgba(var(--bg), 0.4);
     display: flex;
     gap: 0.5rem;
     border-radius: 24px 24px 12px 12px;

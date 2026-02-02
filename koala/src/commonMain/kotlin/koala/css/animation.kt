@@ -12,7 +12,8 @@ object Animate: CssClass { override val value = "animate" }
 object Reveal: CssClass { override val value = "reveal" }
 // object Hide: CssClass { override val value = "hide" }
 object Blur: CssClass { override val value = "blur" }
-object Slide: CssClass { override val value = "slide" }
+object SlideX: CssClass { override val value = "slide-x" }
+object SlideY: CssClass { override val value = "slide-y" }
 
 fun CssBuilder.animation(theme: KoalaTheme) {
     rule(FadeStack) {
