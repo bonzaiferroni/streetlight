@@ -11,6 +11,7 @@ import kotlinx.html.h2
 import kotlinx.html.id
 import kotlinx.html.js.span
 import kotlinx.html.p
+import streetlight.model.data.NewLocation
 import kotlin.time.Duration.Companion.seconds
 
 fun RenderContext.viewMapPanel(app: AppContext) {
@@ -24,6 +25,26 @@ fun RenderContext.viewMapPanel(app: AppContext) {
                 viewEventCreator(app)
             } else {
                 column {
+                    button("location query") {
+                        renderScope.launch {
+                            // val info = app.client.location.readPlaceInfo(eventMap.stateNow.center)
+                            // console.log(jsonPrettyConfig.encodeToString(info))
+                            val locations = app.client.location.queryLocation(eventMap.stateNow.center)
+                            console.log(locations?.joinToString(", ") { it.name })
+                        }
+                    }
+                    button("create location") {
+                        renderScope.launch {
+                            val point = eventMap.stateNow.center
+                            val info = app.client.location.readPlaceInfo(point)
+                            console.log(info)
+                            val id = app.client.location.createLocation(NewLocation(
+                                name = info.name.takeIf { it.isNotBlank() } ?: info.address.road ?: info.addressType,
+                                geoPoint = point
+                            ))
+                            console.log(id?.value)
+                        }
+                    }
                     renderState(eventMap.focusFlow) { (location, event) ->
                         column {
                             paragraph("Event: ${event?.title}")

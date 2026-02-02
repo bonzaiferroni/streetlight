@@ -8,6 +8,7 @@ import kampfire.api.PostEndpoint
 import kampfire.api.QueryEndpoint
 import kampfire.api.SpeechApi
 import kampfire.api.UpdateEndpoint
+import kampfire.model.GeoPoint
 import kampfire.model.SpeechRequest
 import streetlight.model.data.Area
 import streetlight.model.data.AreaId
@@ -49,7 +50,6 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
     }
 
     object LocationFeed: GetByTableIdEndpoint<LocationId, Location>(this, "locations") {
-        object Secure: GetEndpoint<String>(this, "secure")
         object Create: PostEndpoint<NewLocation, LocationId>(this, "create")
         object Street: GetByTableIdEndpoint<AreaId, List<Location>>(this, "street")
         object Update: PostEndpoint<Location, Boolean>(this, "update")
@@ -59,6 +59,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object ReadTop: GetEndpoint<List<Location>>(this, "read_top") {
             val count = addIntParam("count")
         }
+        object QueryPoint: QueryEndpoint<GeoPoint, List<Location>>(this, "query_point")
     }
 
     object SongFeed: GetEndpoint<List<Song>>(this, "songs") {

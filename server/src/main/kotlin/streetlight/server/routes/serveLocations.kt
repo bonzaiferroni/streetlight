@@ -1,6 +1,8 @@
 package streetlight.server.routes
 
 import io.ktor.server.routing.Routing
+import kampfire.model.GeoPoint
+import kampfire.model.kilometers
 import klutch.server.*
 import klutch.utils.getUserId
 import streetlight.model.Api
@@ -28,10 +30,13 @@ fun Routing.serveLocations(app: ServerProvider = RuntimeProvider) {
         dao.readTop(count)
     }
 
-    authenticateJwt {
-        getEndpoint(Api.LocationFeed.Secure) {
-            "\"you did it\""
+    queryEndpoint(Api.LocationFeed.QueryPoint, GeoPoint::fromQuery) { sent, endpoint ->
+        sent?.let {
+            dao.readNearbyLocations(sent, 1.kilometers)
         }
+    }
+
+    authenticateJwt {
 
         postEndpoint(Api.LocationFeed.Create) { newLocation, _ ->
             val userId = getUserId()

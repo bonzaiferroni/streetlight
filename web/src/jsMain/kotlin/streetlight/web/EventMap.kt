@@ -30,10 +30,6 @@ class EventMap(
             }
         }
     }
-
-    fun setLocation(value: Location) {
-        setState { it.copy(focus = it.focus.copy(location = value)) }
-    }
 }
 
 data class EventMapState(
@@ -51,5 +47,3 @@ data class MapFocus(
     val location: Location? = null,
     val event: EventInfo? = null,
 )
-
-

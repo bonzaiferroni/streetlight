@@ -1,8 +1,12 @@
 package streetlight.server.db.services
 
+import kampfire.model.Distance
+import kampfire.model.GeoPoint
 import kampfire.model.UserId
 import klutch.db.DbService
 import klutch.db.read
+import klutch.db.withinBox
+import klutch.db.withinRadius
 import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.selectAll
 import klutch.utils.eq
@@ -69,6 +73,11 @@ class LocationTableDao: DbService() {
             .selectAll()
             .orderBy(LocationTable.createdAt, SortOrder.DESC)
             .limit(count)
+            .map { it.toLocation() }
+    }
+
+    suspend fun readNearbyLocations(point: GeoPoint, distance: Distance) = dbQuery {
+        LocationTable.selectAll().withinRadius(LocationTable.geoPoint, point, distance)
             .map { it.toLocation() }
     }
 }

@@ -1,5 +1,7 @@
 package streetlight.web
 
+import koala.dom.RenderContext
+import koala.dom.mountRender
 import kotlinx.browser.document
 import kotlinx.coroutines.launch
 import streetlight.model.data.EventId
@@ -8,19 +10,22 @@ import streetlight.model.data.EventType
 
 const val STOP_ZOOM = 14
 
-fun AppContext.attachMapWindow(
+fun RenderContext.viewMapWindow(
     maplibre: maplibregl.Map,
+    app: AppContext,
 ) {
-    val eventMap = home.eventMap
+    val eventMap = app.home.eventMap
     val eventMarkers = mutableMapOf<EventId, MarkerElement>()
 
+    // respond to map movement
     maplibre.on("move") {
         val bounds = maplibre.getBounds().toGeoBounds()
         val zoom = maplibre.getZoom()
         eventMap.setBounds(bounds, zoom.toFloat())
     }
 
-    appScope.launch {
+    // add event markers
+    renderScope.launch {
         eventMap.stateFlow.mapDistinct { it.areaEvents }.collect { events ->
             console.log("adding events")
             events.forEach { event ->
@@ -32,6 +37,11 @@ fun AppContext.attachMapWindow(
             }
         }
     }
+
+    // manage overlay
+//    mountRender("geo-overlay") {
+//
+//    }
 }
 
 fun createEventMarker(event: EventInfo): MarkerElement {

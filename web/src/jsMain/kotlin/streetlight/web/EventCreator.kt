@@ -28,7 +28,14 @@ class EventCreator(
     }
 
     fun toggle(isCreatingEvent: Boolean? = null) {
-        setState { it.copy(isCreatingEvent = isCreatingEvent ?: !stateNow.isCreatingEvent) }
+        val isCreatingEvent = isCreatingEvent ?: !stateNow.isCreatingEvent
+        setState { it.copy(isCreatingEvent = isCreatingEvent) }
+        if (isCreatingEvent) {
+            viewModelScope.launch {
+                val locations = client.location.queryLocation(eventMap.stateNow.center)
+                console.log(locations)
+            }
+        }
     }
 
     fun setEventName(name: String) {

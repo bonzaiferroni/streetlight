@@ -1,5 +1,6 @@
 package kampfire.model
 
+import kampfire.utils.ParameterMap
 import kotlinx.serialization.Serializable
 import kotlin.math.*
 
@@ -37,7 +38,7 @@ data class GeoPoint(
     companion object {
         val Denver = GeoPoint(-104.95, 39.75)
 
-        fun fromQuery(parameters: Map<String, List<String>>) = parameters.let {
+        fun fromQuery(parameters: ParameterMap) = parameters.let {
             val lng = parameters["lng"]?.firstOrNull()?.toDoubleOrNull() ?: return@let null
             val lat = parameters["lat"]?.firstOrNull()?.toDoubleOrNull() ?: return@let null
             GeoPoint(lng, lat)

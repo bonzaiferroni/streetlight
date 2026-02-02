@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class NominatimPlace(
+data class OSMPlace(
     @SerialName("place_id")
     val placeId: Long,
     val licence: String,
@@ -12,8 +12,8 @@ data class NominatimPlace(
     val osmType: String,
     @SerialName("osm_id")
     val osmId: Long,
-    val lat: String,
-    val lon: String,
+    val lat: Double,
+    val lon: Double,
     @SerialName("class")
     val placeClass: String,
     val type: String,
@@ -29,7 +29,7 @@ data class NominatimPlace(
     val displayName: String,
     val address: Address,
     @SerialName("boundingbox")
-    val bounds: List<String>
+    val bounds: List<Double>
 )
 
 @Serializable

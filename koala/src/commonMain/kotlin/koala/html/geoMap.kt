@@ -11,7 +11,9 @@ fun FlowContent.geoMap(
         box(Id("geo-map-box")) {
             style = "width: $width; height: $height;"
             box(Id("geo-map"))
-            box(Id("geo-overlay"))
+            box(Id("geo-overlay")) {
+                box(Id("geo-crosshairs"))
+            }
         }
         div {
             id = "map-panel"
