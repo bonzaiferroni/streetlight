@@ -4,24 +4,21 @@ import koala.dom.UIMessage
 import koala.dom.UIMessageType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
-import streetlight.model.Api
 import streetlight.model.data.EventType
-import streetlight.model.data.LocationId
 import streetlight.model.data.NewEvent
 import streetlight.model.data.NewLocation
 
 class EventCreator(
     scope: CoroutineScope,
     private val client: ClientContext,
-    private val eventMap: EventMap,
+    private val streetMap: StreetMap,
 ): BrowserModel<EventCreatorState>(EventCreatorState(), scope) {
 
     init {
         viewModelScope.launch {
-            eventMap.stateFlow.mapDistinct { it.focus.location?.name }.filterNotNull().collect { locationName ->
+            streetMap.stateFlow.mapDistinct { it.focus.location?.name }.filterNotNull().collect { locationName ->
                 setState { it.copy(locationName = locationName) }
             }
         }
@@ -32,7 +29,7 @@ class EventCreator(
         setState { it.copy(isCreatingEvent = isCreatingEvent) }
         if (isCreatingEvent) {
             viewModelScope.launch {
-                val locations = client.location.queryLocation(eventMap.stateNow.center)
+                val locations = client.location.queryLocation(streetMap.stateNow.center)
                 console.log(locations)
             }
         }
@@ -52,11 +49,11 @@ class EventCreator(
 
     fun createEvent() {
         viewModelScope.launch {
-            val location = eventMap.stateNow.focus.location
+            val location = streetMap.stateNow.focus.location
             val locationId = location?.locationId
                 ?: client.location.createLocation(NewLocation(
                     name = stateNow.locationName,
-                    geoPoint = eventMap.stateNow.center,
+                    geoPoint = streetMap.stateNow.center,
                 ))
 
             if (locationId == null) {
@@ -84,7 +81,7 @@ class EventCreator(
 
     fun queryLocation() {
         viewModelScope.launch {
-            val center = eventMap.stateNow.center
+            val center = streetMap.stateNow.center
             val returned = client.location.readPlaceInfo(center)
             setState { it.copy(locationName = returned.displayName)}
         }

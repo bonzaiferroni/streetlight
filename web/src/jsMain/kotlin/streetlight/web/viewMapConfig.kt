@@ -6,7 +6,7 @@ import koala.html.paragraph
 
 fun RenderContext.viewMapConfig(app: AppContext) {
     val gateAgent = app.gateAgent
-    val eventMap = app.home.eventMap
+    val eventMap = app.home.streetMap
     val eventCreator = app.home.eventCreator
 
     row(modify(Width100)) {

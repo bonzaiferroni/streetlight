@@ -97,13 +97,21 @@
 }
 
 .map-event-panel {
-    columns: 20rem;
-    column-gap: var(--unit-spacing);
+    display: grid;
+    gap: var(--unit-spacing);
+    grid-template-columns: 1fr; /* small screens */
+    align-items: start;
 }
 
-.map-event-group {
-    break-inside: avoid;
-    margin-bottom: var(--unit-spacing);
+@media (min-width: 48rem) {
+    .map-event-panel {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* no need for column/break hacks */
+.map-panel-card {
+    margin: 0;
 }
 
 .map-event-group-grid {

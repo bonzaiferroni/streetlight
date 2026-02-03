@@ -4,13 +4,11 @@
 package streetlight.web
 
 import koala.css.Blur
-import koala.css.FadeStack
 import koala.css.SlideY
 import koala.css.modify
 import koala.dom.renderRoot
 import koala.dom.flowBlock
 import kotlinx.browser.document
-import kotlinx.browser.window
 import kotlinx.coroutines.MainScope
 import org.w3c.dom.HTMLElement
 
@@ -38,8 +36,8 @@ fun viewApp() {
 
         override val home = object: HomeContext {
             override val gtfsMap = GtfsMap(scope, client.gtfs)
-            override val eventMap = EventMap(scope, client)
-            override val eventCreator = EventCreator(scope, client, eventMap)
+            override val streetMap = StreetMap(scope, client)
+            override val eventCreator = EventCreator(scope, client, streetMap)
         }
     }
 

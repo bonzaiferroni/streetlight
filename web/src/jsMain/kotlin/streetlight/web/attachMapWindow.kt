@@ -1,7 +1,6 @@
 package streetlight.web
 
 import koala.dom.RenderContext
-import koala.dom.mountRender
 import kotlinx.browser.document
 import kotlinx.coroutines.launch
 import streetlight.model.data.EventId
@@ -14,7 +13,7 @@ fun RenderContext.viewMapWindow(
     maplibre: maplibregl.Map,
     app: AppContext,
 ) {
-    val eventMap = app.home.eventMap
+    val eventMap = app.home.streetMap
     val eventMarkers = mutableMapOf<EventId, MarkerElement>()
 
     // respond to map movement
@@ -26,7 +25,7 @@ fun RenderContext.viewMapWindow(
 
     // add event markers
     renderScope.launch {
-        eventMap.stateFlow.mapDistinct { it.areaEvents }.collect { events ->
+        eventMap.eventsFlow.collect { events ->
             console.log("adding events")
             events.forEach { event ->
                 if (eventMarkers.contains(event.eventId)) return@forEach

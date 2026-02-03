@@ -2,8 +2,6 @@ package streetlight.web
 
 import koala.css.Blur
 import koala.css.Css
-import koala.css.FadeStack
-import koala.css.Width100
 import koala.css.modify
 import koala.dom.*
 import kotlinx.coroutines.delay
@@ -11,15 +9,13 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.html.checkBoxInput
 import kotlinx.html.div
-import kotlinx.html.h2
 import kotlinx.html.id
 import kotlinx.html.js.span
 import kotlinx.html.p
-import streetlight.model.data.NewLocation
 import kotlin.time.Duration.Companion.seconds
 
 fun RenderContext.viewMapPanel(app: AppContext) {
-    val eventMap = app.home.eventMap
+    val eventMap = app.home.streetMap
     val eventCreator = app.home.eventCreator
     val gateAgent = app.gateAgent
 
@@ -35,37 +31,23 @@ fun RenderContext.viewMapPanel(app: AppContext) {
                 column {
                     viewMapConfig(app)
 
-                    // sandbox
-                    viewSandbox(app)
+                    viewMapCards(app)
 
-                    flowBlock(
-                        flow = eventMap.stateFlow.map { it.areaEvents },
-                        modifiers = modify(Width100),
-                        animate = true
-                    ) { allEvents ->
-                        box(modify(Css("map-event-panel"))) {
-                            allEvents.groupBy { it.eventType }.forEach { (eventType, events) ->
-                                card(modify(Css("map-event-group"))) {
-                                    h2 {
-                                        +eventType.label
-                                    }
-                                    events.forEach { event ->
-                                        p {
-                                            +event.title
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    // sandbox
+                    // viewSandbox(app)
                 }
             }
         }
     }
 }
 
+object MapPanel {
+    val container = Css("map-event-panel")
+    val card = Css("map-panel-card")
+}
+
 fun RenderContext.testInput(app: AppContext) {
-    val eventMap = app.home.eventMap
+    val eventMap = app.home.streetMap
 
     p {
         +"Hello map!"
@@ -85,7 +67,7 @@ fun RenderContext.testInput(app: AppContext) {
 }
 
 fun RenderContext.showLocation(app: AppContext) {
-    val eventMap = app.home.eventMap
+    val eventMap = app.home.streetMap
 
     renderState(eventMap.stateFlow.map { it.queriedBounds }) {
         val center = it.center

@@ -12,7 +12,7 @@ import kotlin.js.json
 fun AppContext.attachGtfsMap(
     maplibre: maplibregl.Map
 ) {
-    val eventMap = home.eventMap
+    val eventMap = home.streetMap
     val gtfsMap = home.gtfsMap
     var stopMarkers: List<MarkerElement> = emptyList()
     var areaTransit = gtfsMap.stateNow.areaTransit
@@ -39,7 +39,7 @@ fun AppContext.attachGtfsMap(
         }
 
         launch {
-            gtfsMap.stateFlow.mapDistinctBy({ it.areaId }) { it.areaTransit }.filterNotNull().collect { transit ->
+            gtfsMap.stateFlow.mapDistinctBy({ it.communityId }) { it.areaTransit }.filterNotNull().collect { transit ->
                 areaTransit = transit
                 // stopMarkers = transit.stops.map { createStopMarker(it, eventMap.stateNow.zoom, maplibre) }
                 addRouteLines(transit.routes, maplibre)

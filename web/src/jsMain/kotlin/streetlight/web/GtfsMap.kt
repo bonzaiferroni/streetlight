@@ -4,7 +4,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.await
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import streetlight.model.data.AreaId
+import streetlight.model.data.CommunityId
 import streetlight.model.data.AreaTransit
 import kotlin.time.Duration.Companion.seconds
 
@@ -16,9 +16,9 @@ class GtfsMap(
     init {
         viewModelScope.launch {
             launch {
-                val areaId = AreaId.random()
+                val communityId = CommunityId.random()
                 val areaTransit = gtfsClient.readAreaTransit()
-                setState { it.copy(areaTransit = areaTransit, areaId = areaId) }
+                setState { it.copy(areaTransit = areaTransit, communityId = communityId) }
                 val root = protobuf.load("/www/proto/gtfs-realtime.proto").await()
                 val feedType = root.lookupType("transit_realtime.FeedMessage")
 
@@ -48,5 +48,5 @@ data class GtfsMapState(
     val vehiclePositions: List<VehiclePosition> = emptyList(),
     val timestamp: Long = 0L,
     val areaTransit: AreaTransit? = null,
-    val areaId: AreaId? = null,
+    val communityId: CommunityId? = null,
 )

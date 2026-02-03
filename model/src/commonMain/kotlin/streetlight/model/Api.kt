@@ -10,8 +10,8 @@ import kampfire.api.SpeechApi
 import kampfire.api.UpdateEndpoint
 import kampfire.model.GeoPoint
 import kampfire.model.SpeechRequest
-import streetlight.model.data.Area
-import streetlight.model.data.AreaId
+import streetlight.model.data.Community
+import streetlight.model.data.CommunityId
 import streetlight.model.data.Event
 import streetlight.model.data.EventId
 import streetlight.model.data.EventSong
@@ -45,13 +45,13 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         // object UserEvents: ApiDaoEndpoint<Event, EventId, NewEvent>(this, "user")
     }
 
-    object StreetFeed: GetEndpoint<List<Area>>(this, "areas") {
-        object Create: PostEndpoint<NewArea, AreaId>(this, "create")
+    object StreetFeed: GetEndpoint<List<Community>>(this, "areas") {
+        object Create: PostEndpoint<NewArea, CommunityId>(this, "create")
     }
 
     object LocationFeed: GetByTableIdEndpoint<LocationId, Location>(this, "locations") {
         object Create: PostEndpoint<NewLocation, LocationId>(this, "create")
-        object Street: GetByTableIdEndpoint<AreaId, List<Location>>(this, "street")
+        object Street: GetByTableIdEndpoint<CommunityId, List<Location>>(this, "street")
         object Update: PostEndpoint<Location, Boolean>(this, "update")
         object Search: GetEndpoint<List<Location>>(this, "search") {
             val query = addStringParam("q")

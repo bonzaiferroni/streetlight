@@ -5,9 +5,9 @@ import kampfire.model.User
 import kampfire.model.UserId
 import kampfire.model.UserRole
 import kotlinx.datetime.Clock
-import streetlight.model.data.Area
-import streetlight.model.data.AreaId
-import streetlight.model.data.AreaType
+import streetlight.model.data.Community
+import streetlight.model.data.CommunityId
+import streetlight.model.data.CommunityType
 import streetlight.model.data.DefaultEventTag
 import streetlight.model.data.Event
 import streetlight.model.data.EventId
@@ -25,7 +25,7 @@ import kotlin.time.Duration.Companion.hours
 
 interface MockDb {
     val users: List<User>
-    val communities: List<Area>
+    val communities: List<Community>
     val locations: List<Location>
     val events: List<Event>
     val eventTags: List<EventTag>
@@ -55,15 +55,15 @@ val mockDb by lazy {
         val bag = ValueBag(rng, list)
     }
 
-    fun areaOf(name: String, areaType: AreaType) = Area(
-        areaId = AreaId.random(),
+    fun areaOf(name: String, communityType: CommunityType) = Community(
+        communityId = CommunityId.random(),
         name = name,
         points = emptyList(),
-        areaType = areaType
+        communityType = communityType
     )
 
     val areas = object {
-        val colfax = areaOf("Colfax", AreaType.Street)
+        val colfax = areaOf("Colfax", CommunityType.Street)
 
         val list = listOf(colfax)
     }

@@ -4,15 +4,22 @@ import kampfire.model.GeoBounds
 import kotlinx.coroutines.CoroutineScope
 import streetlight.model.data.MapQuery
 import kotlinx.coroutines.launch
+import streetlight.model.data.Community
 import streetlight.model.data.EventInfo
+import streetlight.model.data.EventType
 import streetlight.model.data.Location
 
-class EventMap(
+class StreetMap(
     scope: CoroutineScope,
     private val client: ClientContext,
-): BrowserModel<EventMapState>(EventMapState(), scope) {
+): BrowserModel<StreetMapState>(StreetMapState(), scope) {
 
     val focusFlow = stateFlow.mapDistinct { it.focus }
+    val communityFlow = stateFlow.mapDistinct { it.communities }
+    val eventsFlow = stateFlow.mapDistinct { it.events }
+    val eventMapFlow = stateFlow.mapDistinctBy({ it.events }) { it.events.groupBy { event -> event.eventType } }
+
+    fun flowOf(eventType: EventType) = eventMapFlow.mapDistinct { it[eventType] ?: emptyList() }
 
     fun setName(name: String) {
         setState { it.copy(name = name) }
@@ -31,17 +38,18 @@ class EventMap(
             setState { it.copy(bounds = bounds, zoom = zoom, queriedBounds = queriedBounds )}
             viewModelScope.launch {
                 val events = client.event.queryMap(MapQuery(queriedBounds, stateNow.zoom)) ?: emptyList()
-                setState { it.copy(areaEvents = events)}
+                setState { it.copy(events = events)}
             }
         }
     }
 }
 
-data class EventMapState(
+data class StreetMapState(
     val bounds: GeoBounds = GeoBounds.Denver,
     val queriedBounds: GeoBounds = GeoBounds.Denver,
     val zoom: Float = 11f,
-    val areaEvents: List<EventInfo> = emptyList(),
+    val events: List<EventInfo> = emptyList(),
+    val communities: List<Community> = listOf(Community.BFEastfax),
     val name: String = "",
     val focus: MapFocus = MapFocus(),
     val layers: Set<MapLayer> = MapLayer.entries.toSet()
@@ -54,10 +62,10 @@ data class MapFocus(
     val event: EventInfo? = null,
 )
 
-enum class MapLayer(val label: String) {
-    Shows("Shows"),
-    Food("Food"),
-    Fellowship("Fellowship"),
+enum class MapLayer(val label: String, val eventType: EventType? = null) {
+    Shows("Shows", EventType.Show),
+    Food("Food", EventType.Food),
+    Fellowship("Fellowship", EventType.Fellowship),
     Transit("Transit"),
     Shelter("Shelter"),
 }

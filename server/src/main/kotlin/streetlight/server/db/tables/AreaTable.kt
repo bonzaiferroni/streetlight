@@ -1,25 +1,21 @@
 package streetlight.server.db.tables
 
 import kampfire.model.GeoPoint
-import klutch.db.tables.UserTable
 import klutch.utils.toUUID
 import org.jetbrains.exposed.dao.id.UUIDTable
-import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.ReferenceOption
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.json.jsonb
 import org.jetbrains.exposed.sql.statements.UpdateBuilder
-import streetlight.model.data.Area
-import streetlight.model.data.AreaType
-import streetlight.server.db.tables.TransitRouteStopTable.transitRouteId
-import streetlight.server.db.tables.TransitRouteStopTable.transitStopId
+import streetlight.model.data.Community
+import streetlight.model.data.CommunityType
 import streetlight.server.utils.toProjectId
 
 object AreaTable : UUIDTable("area") {
     val name = text("name")
     val points = jsonb<List<GeoPoint>>("points", tableJsonDefault)
-    val areaType = enumeration<AreaType>("area_type")
+    val communityType = enumeration<CommunityType>("area_type")
 }
 
 object AreaTransitRouteTable : Table("area_transit_route") {
@@ -33,22 +29,22 @@ object AreaLocationTable : Table("area_location_table") {
     override val primaryKey = PrimaryKey(areaId, locationId)
 }
 
-fun ResultRow.toArea() = Area(
-    areaId = toProjectId(AreaTable.id),
+fun ResultRow.toArea() = Community(
+    communityId = toProjectId(AreaTable.id),
     name = this[AreaTable.name],
     points = this[AreaTable.points],
-    areaType = this[AreaTable.areaType],
+    communityType = this[AreaTable.communityType],
 )
 
 // Updaters
-fun UpdateBuilder<*>.writeFull(area: Area) {
-    this[AreaTable.id] = area.areaId.toUUID()
-    writeUpdate(area)
+fun UpdateBuilder<*>.writeFull(community: Community) {
+    this[AreaTable.id] = community.communityId.toUUID()
+    writeUpdate(community)
 }
 
-fun UpdateBuilder<*>.writeUpdate(area: Area) {
-    this[AreaTable.name] = area.name
-    this[AreaTable.points] = area.points
-    this[AreaTable.areaType] = area.areaType
+fun UpdateBuilder<*>.writeUpdate(community: Community) {
+    this[AreaTable.name] = community.name
+    this[AreaTable.points] = community.points
+    this[AreaTable.communityType] = community.communityType
 }
 

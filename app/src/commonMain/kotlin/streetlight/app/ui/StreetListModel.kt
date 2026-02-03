@@ -6,7 +6,7 @@ import pondui.ui.core.ModelState
 import pondui.ui.core.StateModel
 import streetlight.app.AppProvider
 import streetlight.app.RuntimeProvider
-import streetlight.model.data.Area
+import streetlight.model.data.Community
 import streetlight.model.data.NewArea
 
 class StreetListModel(private val app: AppProvider = RuntimeProvider): StateModel<StreetListState>() {
@@ -43,7 +43,7 @@ class StreetListModel(private val app: AppProvider = RuntimeProvider): StateMode
 }
 
 data class StreetListState(
-    val communities: List<Area> = emptyList(),
+    val communities: List<Community> = emptyList(),
     val newStreetName: String = "",
     val isValidNewItem: Boolean = false,
 )

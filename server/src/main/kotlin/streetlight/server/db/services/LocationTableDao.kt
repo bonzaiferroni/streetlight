@@ -5,7 +5,6 @@ import kampfire.model.GeoPoint
 import kampfire.model.UserId
 import klutch.db.DbService
 import klutch.db.read
-import klutch.db.withinBox
 import klutch.db.withinRadius
 import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.selectAll
@@ -17,7 +16,7 @@ import org.jetbrains.exposed.sql.insertAndGetId
 import org.jetbrains.exposed.sql.lowerCase
 import org.jetbrains.exposed.sql.or
 import org.jetbrains.exposed.sql.update
-import streetlight.model.data.AreaId
+import streetlight.model.data.CommunityId
 import streetlight.model.data.Location
 import streetlight.model.data.LocationId
 import streetlight.model.data.NewLocation
@@ -34,9 +33,9 @@ class LocationTableDao: DbService() {
         LocationTable.read { it.id.eq(locationId) }.firstOrNull()?.toLocation()
     }
 
-    suspend fun readLocations(areaId: AreaId) = dbQuery {
+    suspend fun readLocations(communityId: CommunityId) = dbQuery {
         // untested
-        AreaLocationTable.leftJoin(LocationTable).read { AreaLocationTable.areaId.eq(areaId) }.map { it.toLocation() }
+        AreaLocationTable.leftJoin(LocationTable).read { AreaLocationTable.areaId.eq(communityId) }.map { it.toLocation() }
     }
 
     suspend fun createLocation(userId: UserId, newLocation: NewLocation): LocationId = dbQuery {

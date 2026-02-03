@@ -1,10 +1,6 @@
 package streetlight.web
 
-import koala.dom.RenderContext
-import koala.dom.renderRoot
-import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
-import org.w3c.dom.HTMLElement
 
 interface AppContext {
     val appScope: CoroutineScope
@@ -17,7 +13,7 @@ interface AppContext {
 
 interface HomeContext {
     val gtfsMap: GtfsMap
-    val eventMap: EventMap
+    val streetMap: StreetMap
     val eventCreator: EventCreator
 }
 
