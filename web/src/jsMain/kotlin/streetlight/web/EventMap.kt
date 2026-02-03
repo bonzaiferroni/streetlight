@@ -18,6 +18,11 @@ class EventMap(
         setState { it.copy(name = name) }
     }
 
+    fun toggleLayer(layer: MapLayer) {
+        val layers = if (stateNow.layers.contains(layer)) stateNow.layers - layer else stateNow.layers + layer
+        setState { it.copy(layers = layers) }
+    }
+
     fun setBounds(bounds: GeoBounds, zoom: Float) {
         if (stateNow.queriedBounds.contains(bounds)) {
             setState { it.copy(bounds = bounds, zoom = zoom)}
@@ -39,6 +44,7 @@ data class EventMapState(
     val areaEvents: List<EventInfo> = emptyList(),
     val name: String = "",
     val focus: MapFocus = MapFocus(),
+    val layers: Set<MapLayer> = MapLayer.entries.toSet()
 ) {
     val center get() = bounds.center
 }
@@ -47,3 +53,11 @@ data class MapFocus(
     val location: Location? = null,
     val event: EventInfo? = null,
 )
+
+enum class MapLayer(val label: String) {
+    Shows("Shows"),
+    Food("Food"),
+    Fellowship("Fellowship"),
+    Transit("Transit"),
+    Shelter("Shelter"),
+}

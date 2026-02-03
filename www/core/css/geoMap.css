@@ -95,3 +95,18 @@
 
     transition: transform 1000ms ease-out;
 }
+
+.map-event-panel {
+    columns: 20rem;
+    column-gap: var(--unit-spacing);
+}
+
+.map-event-group {
+    break-inside: avoid;
+    margin-bottom: var(--unit-spacing);
+}
+
+.map-event-group-grid {
+    display: grid;
+    grid-template-columns: max-content max-content 1fr;
+}

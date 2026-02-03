@@ -13,7 +13,11 @@ object Flex3: CssClass { override val value = "flex-3" }
 object Flex4: CssClass { override val value = "flex-4" }
 object AlignItemsCenter: CssClass { override val value = "align-items-center" }
 object AlignItemsStretch: CssClass { override val value = "align-items-stretch" }
+object JustifyCenter: CssClass { override val value = "justify-content-center" }
+object JustifySpaceAround: CssClass { override val value = "justify-content-space-around" }
 object Width100: CssClass { override val value = "width-100" }
+object Width2: CssClass { override val value = "width-2" }
+object Width4: CssClass { override val value = "width-4" }
 object Height100: CssClass { override val value = "height-100" }
 object Height2: CssClass { override val value = "height-2" }
 object Height3: CssClass { override val value = "height-3" }
@@ -29,6 +33,7 @@ object MaxWidth50: CssClass { override val value = "max-width-50" }
 object MarginAuto: CssClass { override val value = "margin-auto" }
 object MarginTop4: CssClass { override val value = "margin-top-4" }
 object SpaceBetween: CssClass { override val value = "space-between" }
+object NoWrap: CssClass { override val value = "no-wrap" }
 
 fun CssBuilder.layoutUtilities(theme: KoalaTheme) {
     rule(Gap0) {
@@ -75,8 +80,24 @@ fun CssBuilder.layoutUtilities(theme: KoalaTheme) {
         alignItems = Align.stretch
     }
 
+    rule(JustifyCenter) {
+        justifyContent = JustifyContent.center
+    }
+
+    rule(JustifySpaceAround) {
+        justifyContent = JustifyContent.spaceAround
+    }
+
     rule(Width100) {
         width = 100.pct
+    }
+
+    rule(Width2) {
+        width = theme.spacingUnit * 2
+    }
+
+    rule(Width4) {
+        width = theme.spacingUnit * 4
     }
 
     rule(FlexItems1) {
@@ -136,5 +157,10 @@ fun CssBuilder.layoutUtilities(theme: KoalaTheme) {
     rule(FillHeight) {
         height = LinearDimension.auto
         maxHeight = 100.pct
+    }
+
+    rule(NoWrap) {
+        flexWrap = FlexWrap.nowrap
+        whiteSpace = WhiteSpace.nowrap
     }
 }

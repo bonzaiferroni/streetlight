@@ -38,6 +38,7 @@ fun CssBuilder.elementStyles(theme: KoalaTheme) {
 
     rule(ElementClass.action) {
         transition += Transition("opacity", 0.35.s, Timing.ease)
+        cursor = Cursor.pointer
 
         hover {
             opacity = 1

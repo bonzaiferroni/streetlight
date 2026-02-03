@@ -1,10 +1,12 @@
 :root {
     --bg: 9, 13, 13;
+    --card-bg: rgba(var(--bg), .2);
+    --tabs-bg: rgba(var(--bg), .4);
     --fg: 245, 246, 246;
     --void: 34, 41, 41;
-    --primaryBg: 1, 122, 138;
+    --primary-bg: 1, 122, 138;
     --primary: 5, 242, 255;
-    --accentBg: 209, 43, 181;
+    --accent-bg: 209, 43, 181;
     --accent: 255, 53, 221;
     --light-1: 255, 99, 132;
     --light-2: 88, 164, 255;
@@ -95,7 +97,7 @@ p a {
 }
 
 a:hover {
-    color: rgb(var(--accentBg));
+    color: rgb(var(--accent));
     animation: glow 10s infinite linear;
 }
 

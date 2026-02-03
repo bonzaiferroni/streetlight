@@ -11,6 +11,7 @@ object DisplayNone : CssClass { override val value = "display-none" }
 object Opacity6: CssClass { override val value = "opacity-6" }
 object Opacity4: CssClass { override val value = "opacity-4" }
 object Opacity2: CssClass { override val value = "opacity-2" }
+object Dim: CssClass { override val value = Opacity6.value }
 object NoDim: CssClass { override val value = "no-dim" }
 object Glow: CssClass { override val value = "glow" }
 

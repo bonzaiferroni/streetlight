@@ -94,7 +94,7 @@ fun CssBuilder.baseStyles(theme: KoalaTheme) {
     }
 
     "a:hover" {
-        color = theme.accentBg
+        color = theme.accent
         animation += Animation("glow", 10.s, Timing.linear, iterationCount = IterationCount.infinite)
     }
 }

@@ -3,6 +3,7 @@ package streetlight.web
 import koala.css.Blur
 import koala.css.Css
 import koala.css.FadeStack
+import koala.css.Width100
 import koala.css.modify
 import koala.dom.*
 import kotlinx.coroutines.delay
@@ -33,38 +34,15 @@ fun RenderContext.viewMapPanel(app: AppContext) {
             } else {
                 column {
                     viewMapConfig(app)
-                    button("location query") {
-                        renderScope.launch {
-                            // val info = app.client.location.readPlaceInfo(eventMap.stateNow.center)
-                            // console.log(jsonPrettyConfig.encodeToString(info))
-                            val locations = app.client.location.queryLocation(eventMap.stateNow.center)
-                            console.log(locations?.joinToString(", ") { it.name })
-                        }
-                    }
-                    button("create location") {
-                        renderScope.launch {
-                            val point = eventMap.stateNow.center
-                            val info = app.client.location.readPlaceInfo(point)
-                            console.log(info)
-                            val id = app.client.location.createLocation(NewLocation(
-                                name = info.name.takeIf { it.isNotBlank() } ?: info.address.road ?: info.addressType,
-                                geoPoint = point
-                            ))
-                            console.log(id?.value)
-                        }
-                    }
-                    flowBlock(eventMap.focusFlow) { (location, event) ->
-                        column {
-                            textBlock("Event: ${event?.title}")
-                            textBlock("Location: ${location?.name}")
-                            button("Add Event") {
-                                gateAgent.checkIn {
-                                    eventCreator.toggle()
-                                }
-                            }
-                        }
-                    }
-                    flowBlock(eventMap.stateFlow.map { it.areaEvents }, animate = true) { allEvents ->
+
+                    // sandbox
+                    // viewMapSandbox(app)
+
+                    flowBlock(
+                        flow = eventMap.stateFlow.map { it.areaEvents },
+                        modifiers = modify(Width100),
+                        animate = true
+                    ) { allEvents ->
                         box(modify(Css("map-event-panel"))) {
                             allEvents.groupBy { it.eventType }.forEach { (eventType, events) ->
                                 card(modify(Css("map-event-group"))) {
