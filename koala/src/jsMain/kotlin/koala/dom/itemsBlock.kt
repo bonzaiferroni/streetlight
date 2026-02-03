@@ -93,7 +93,6 @@ fun <Item> RenderContext.itemsBlock(
                 }
 
                 if (animate && !isCurrentlyDisplayed) {
-                    console.log("ey")
                     cache.localScope.launch {
                         delay(200)
                         cache.container.modify(Reveal)

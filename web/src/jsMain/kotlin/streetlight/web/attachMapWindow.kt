@@ -26,7 +26,7 @@ fun RenderContext.viewMapWindow(
     // add event markers
     renderScope.launch {
         eventMap.eventsFlow.collect { events ->
-            console.log("adding events")
+//            console.log("adding events")
             events.forEach { event ->
                 if (eventMarkers.contains(event.eventId)) return@forEach
                 console.log("adding event marker")

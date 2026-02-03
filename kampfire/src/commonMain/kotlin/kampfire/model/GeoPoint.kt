@@ -15,7 +15,7 @@ data class GeoPoint(
     fun toList(): List<Double> = listOf(lng, lat)
     fun toArray(): Array<Double> = arrayOf(lng, lat)
 
-    fun distanceTo(other: GeoPoint): Double {
+    fun distanceTo(other: GeoPoint): Distance {
         val earthRadiusMeters = 6_371_000.0
         val degToRad = PI / 180.0
 
@@ -30,7 +30,7 @@ data class GeoPoint(
 
         val c = 2 * atan2(sqrt(a), sqrt(1 - a))
 
-        return earthRadiusMeters * c
+        return Distance.ofMeters(earthRadiusMeters * c)
     }
 
     fun toQuery() = "lng=$lng&lat=$lat"
