@@ -1,5 +1,8 @@
 package streetlight.web
 
+import koala.css.Blur
+import koala.css.SlideX
+import koala.css.modify
 import koala.dom.RenderContext
 import koala.dom.itemsBlock
 import koala.dom.textBlock
@@ -12,15 +15,19 @@ fun RenderContext.viewSandbox(app: AppContext) {
 
     val flow = MutableStateFlow(listOf("One", "Two", "Three"))
 
-    itemsBlock(flow) {
+    itemsBlock(flow, modify(Blur, SlideX), animate = true) {
         textBlock(it)
     }
 
     renderScope.launch {
         delay(2000)
         flow.value -= "Two"
-        delay(4000)
+        delay(2000)
         flow.value += "Four"
+        delay(2000)
+        flow.value += "Five"
+        delay(2000)
+        flow.value = flow.value.sorted()
     }
 
 //    val eventMap = app.home.eventMap

@@ -10,6 +10,7 @@ import koala.css.modify
 import koala.dom.renderRoot
 import koala.dom.flowBlock
 import kotlinx.browser.document
+import kotlinx.browser.window
 import kotlinx.coroutines.MainScope
 import org.w3c.dom.HTMLElement
 

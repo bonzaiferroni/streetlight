@@ -1,10 +1,13 @@
 package koala.dom
 
 import koala.css.*
+import kotlinx.browser.document
+import kotlinx.browser.window
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.html.DIV
@@ -24,7 +27,7 @@ fun <Item> RenderContext.itemsBlock(
     block: RenderContext.(Item) -> Unit
 ) {
     val parent = div {
-        applyModifiers(ElementClass.flowBlock, modifiers)
+        applyModifiers(ElementClass.itemsBlock, modifiers)
         if (animate) {
             classes += Animate.value
         }
@@ -33,6 +36,7 @@ fun <Item> RenderContext.itemsBlock(
 
     val cachedItems = mutableMapOf<Item, ItemCache>()
     var displayedItems: Map<Item, ItemCache>? = null
+    val gapPx = remToPx(0.5)
 
     fun createItem(item: Item): ItemCache {
         val job = SupervisorJob()
@@ -45,7 +49,13 @@ fun <Item> RenderContext.itemsBlock(
         container.append {
             RenderContext(this, localScope).block(item)
         }
-        return ItemCache(job, container)
+        return ItemCache(job, localScope, container)
+    }
+
+    fun recallCachedItem(item: Item): ItemCache? {
+        val cachedItem = cachedItems[item] ?: return null
+        parent.append(cachedItem.container)
+        return cachedItem
     }
 
     renderScope.launch {
@@ -53,26 +63,58 @@ fun <Item> RenderContext.itemsBlock(
 
             displayedItems?.forEach { (item, cache) ->
                 if (!items.contains(item)) {
-                    cache.container.remove()
                     if (cacheRenderedElements) {
                         cachedItems[item] = cache
+                    } else {
+                        cache.job.cancel()
+                    }
+                    if (animate) {
+                        renderScope.launch {
+                            cache.container.unmodify(Reveal)
+                            delay(200)
+                            cache.container.remove()
+                        }
+                    } else {
+                        cache.container.remove()
                     }
                 }
             }
 
             var height = 0
+            var index = 0
             displayedItems = items.associateWith { item ->
-                val cachedItem = displayedItems?.get(item) ?: cachedItems[item] ?: createItem(item)
-                val container = cachedItem.container
+                val isCurrentlyDisplayed = displayedItems?.contains(item) ?: false
+                val cache = displayedItems?.get(item) ?: recallCachedItem(item) ?: createItem(item)
+                val container = cache.container
                 container.style.top = "${height}px"
                 height += container.offsetHeight
-                cachedItem
+                if (index + 1 < items.size) {
+                    height += gapPx
+                }
+
+                if (animate && !isCurrentlyDisplayed) {
+                    console.log("ey")
+                    cache.localScope.launch {
+                        delay(200)
+                        cache.container.modify(Reveal)
+                    }
+                }
+
+                index++
+                cache
             }
+
+            parent.style.height = "${height}px"
         }
     }
 }
 
+private fun remToPx(rem: Double) = window.getComputedStyle(document.documentElement!!).fontSize.dropLast(2).toDouble().let {
+    (it * rem).toInt()
+}
+
 private data class ItemCache(
     val job: Job,
+    val localScope: CoroutineScope,
     val container: HTMLElement
 )
