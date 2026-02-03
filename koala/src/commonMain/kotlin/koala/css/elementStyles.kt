@@ -12,6 +12,7 @@ object ElementClass {
     val action = Css("action")
     val button = Css("btn")
     val flowBlock = Css("flow-block")
+    val itemsBlock = Css("items-block")
 }
 
 fun CssBuilder.elementStyles(theme: KoalaTheme) {

@@ -36,7 +36,7 @@ fun RenderContext.viewMapPanel(app: AppContext) {
                     viewMapConfig(app)
 
                     // sandbox
-                    // viewMapSandbox(app)
+                    viewSandbox(app)
 
                     flowBlock(
                         flow = eventMap.stateFlow.map { it.areaEvents },

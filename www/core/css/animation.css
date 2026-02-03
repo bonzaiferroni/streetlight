@@ -82,3 +82,12 @@
 .flow-block.animate.slide-y.reveal {
     transform: translate(0px, 0px);
 }
+
+/* items block */
+.items-block {
+    position: relative;
+}
+
+.items-block-container {
+    position: absolute;
+}

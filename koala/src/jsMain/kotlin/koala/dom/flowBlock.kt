@@ -44,6 +44,7 @@ fun <State> RenderContext.flowBlock(
     renderScope.launch {
         var currentValue: State? = null
         flow.collect { value ->
+            // do we need renderedOnce?
             if (renderedOnce && value == currentValue) return@collect
             renderedOnce = true
             if (!cacheRenderedElements) job?.cancel()
