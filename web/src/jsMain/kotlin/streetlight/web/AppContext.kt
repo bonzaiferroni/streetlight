@@ -12,13 +12,13 @@ interface AppContext {
 }
 
 interface HomeContext {
-    val gtfsMap: GtfsMap
+    val geoMap: GeoMap
     val streetMap: StreetMap
     val eventCreator: EventCreator
 }
 
 interface ClientContext {
-    val gtfs: GtfsBrowserClient
+    val transit: TransitBrowserClient
     val event: EventBrowserClient
     val location: LocationBrowserClient
 }

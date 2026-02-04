@@ -25,7 +25,7 @@ fun viewApp() {
         override val appScope = scope
 
         override val client = object: ClientContext {
-            override val gtfs = GtfsBrowserClient(context)
+            override val transit = TransitBrowserClient(context)
             override val event = EventBrowserClient(context)
             override val location = LocationBrowserClient(context)
         }
@@ -35,8 +35,8 @@ fun viewApp() {
         override val gateAgent = GateAgent(scope, gate, portal)
 
         override val home = object: HomeContext {
-            override val gtfsMap = GtfsMap(scope, client.gtfs)
-            override val streetMap = StreetMap(scope, client)
+            override val geoMap = GeoMap(scope)
+            override val streetMap = StreetMap(scope, client, geoMap)
             override val eventCreator = EventCreator(scope, client, streetMap)
         }
     }

@@ -9,8 +9,7 @@ import streetlight.web.Home
 fun HTML.homePage() {
     head("Streetlight | Home") {
         styles("homePage.css")
-        geoMapResources()
-        script(src = "https://cdn.jsdelivr.net/npm/protobufjs/dist/protobuf.min.js") { }
+        link(href = "https://cdn.jsdelivr.net/npm/maplibre-gl@5.12.0/dist/maplibre-gl.css", "stylesheet")
         koalaStyles()
     }
     body {
@@ -30,14 +29,6 @@ fun HTML.homePage() {
                         icon("empty-profile", modify(Height100))
                     }
                 }
-//                box(Dim) {
-//                    +"a "
-//                    span {
-//                        modify(NoDim, Glow)
-//                        +"Colfax"
-//                    }
-//                    +" music community"
-//                }
                 div {
                     id = "portal-mount"
                     style = "width: 100%;"
@@ -45,6 +36,8 @@ fun HTML.homePage() {
                 // homeContent()
             }
         }
+        script(src = "https://cdn.jsdelivr.net/npm/maplibre-gl@5.12.0/dist/maplibre-gl.js") { }
+        script(src = "https://cdn.jsdelivr.net/npm/protobufjs/dist/protobuf.min.js") { }
         scripts("launchApp.js")
     }
 }

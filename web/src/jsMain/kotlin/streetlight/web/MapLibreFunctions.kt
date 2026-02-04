@@ -28,6 +28,7 @@ fun maplibregl.Marker.move(
 }
 
 fun Position.toLngLat() = maplibregl.LngLat(longitude.toDouble(), latitude.toDouble())
+fun Position.toGeoPoint() = GeoPoint(lng = longitude.toDouble(), lat = latitude.toDouble())
 
 fun maplibregl.LngLatBounds.toGeoBounds() = GeoBounds(getSouthWest().toGeoPoint(), getNorthEast().toGeoPoint())
 

@@ -13,7 +13,7 @@ data class Community(
     val communityType: CommunityType
 ) {
     companion object {
-        val BFEastfax get() = Community(
+        val Eastfax get() = Community(
             communityId = CommunityId.random(),
             name = "BF Eastfax",
             points = emptyList(),

@@ -1,6 +1,7 @@
 package streetlight.web
 
 import kampfire.model.GeoBounds
+import kampfire.model.GeoPoint
 import kampfire.model.meters
 import kotlinx.coroutines.CoroutineScope
 import streetlight.model.data.MapQuery
@@ -8,37 +9,50 @@ import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import streetlight.model.data.Community
+import streetlight.model.data.EventId
 import streetlight.model.data.EventInfo
 import streetlight.model.data.EventType
 import streetlight.model.data.Location
+import streetlight.model.data.VehicleType
 import kotlin.time.Duration.Companion.minutes
 
 class StreetMap(
     scope: CoroutineScope,
     private val client: ClientContext,
+    private val geoMap: GeoMap,
 ): BrowserModel<StreetMapState>(StreetMapState(), scope) {
+
+    val transit = TransitMap(scope, client, geoMap)
 
     val focusFlow = stateFlow.mapDistinct { it.focus }
     val communityFlow = stateFlow.mapDistinct { it.communities }
     val eventsFlow = stateFlow.mapDistinct { it.events }
     val eventMapFlow = stateFlow.mapDistinctBy({ it.events }) { it.events.groupBy { event -> event.eventType } }
 
-    fun flowOf(eventType: EventType) = eventMapFlow.mapDistinct { it[eventType] ?: emptyList() }
-
-    fun setName(name: String) {
-        setState { it.copy(name = name) }
+    init {
+        viewModelScope.launch {
+            geoMap.stateFlow.collect { geoMapState ->
+                setBounds(geoMapState.bounds, geoMapState.zoom)
+            }
+        }
     }
+
+    fun flowOf(eventType: EventType) = eventMapFlow.mapDistinct { it[eventType] ?: emptyList() }
 
     fun toggleLayer(layer: MapLayer) {
         val layers = if (stateNow.layers.contains(layer)) stateNow.layers - layer else stateNow.layers + layer
-        setState { it.copy(layers = layers) }
+        if (layer.eventType != null) {
+            val events = getBoundedEvents(layers = layers)
+            setState { it.copy(layers = layers, events = events) }
+        } else {
+            setState { it.copy(layers = layers) }
+        }
     }
 
     private val allEvents = ArrayList<EventInfo>()
 
     fun setBounds(bounds: GeoBounds, zoom: Float) {
-        if (stateNow.isQuerying || zoom == stateNow.zoom && bounds.center.distanceTo(stateNow.center) < (10 * zoom).meters) return
-        // console.log("bounds")
+        if (stateNow.isQuerying) return
 
         if (hasQueried(bounds)) {
             val events = getBoundedEvents(bounds)
@@ -63,7 +77,10 @@ class StreetMap(
         return queries.any { it.bounds.contains(bounds) && it.time > cutoff }
     }
 
-    private fun getBoundedEvents(bounds: GeoBounds) = allEvents.filter { bounds.contains(it.geoPoint) }
+    private fun getBoundedEvents(
+        bounds: GeoBounds = stateNow.bounds,
+        layers: Set<MapLayer> = stateNow.layers
+    ) = allEvents.filter { event -> bounds.contains(event.geoPoint) && layers.any { it.eventType == event.eventType } }
 }
 
 data class StreetMapState(
@@ -71,8 +88,7 @@ data class StreetMapState(
     val queriedBounds: GeoBounds = GeoBounds.Denver,
     val zoom: Float = 11f,
     val events: List<EventInfo> = emptyList(),
-    val communities: List<Community> = listOf(Community.BFEastfax),
-    val name: String = "",
+    val communities: List<Community> = listOf(Community.Eastfax),
     val focus: MapFocus = MapFocus(),
     val layers: Set<MapLayer> = MapLayer.entries.toSet(),
     val isQuerying: Boolean = false,

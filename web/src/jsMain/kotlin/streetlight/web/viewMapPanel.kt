@@ -2,14 +2,12 @@ package streetlight.web
 
 import koala.css.Blur
 import koala.css.Css
+import koala.css.Width100
 import koala.css.modify
 import koala.dom.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import kotlinx.html.checkBoxInput
-import kotlinx.html.div
-import kotlinx.html.id
 import kotlinx.html.js.span
 import kotlinx.html.p
 import kotlin.time.Duration.Companion.seconds
@@ -19,7 +17,7 @@ fun RenderContext.viewMapPanel(app: AppContext) {
     val eventCreator = app.home.eventCreator
     val gateAgent = app.gateAgent
 
-    mountRender("map-panel") {
+    box(GeoMapIds.panel, modify(Width100)) {
         flowBlock(
             flow = eventCreator.stateFlow.mapDistinct { it.isCreatingEvent },
             modifiers = modify(Blur),
@@ -44,26 +42,6 @@ fun RenderContext.viewMapPanel(app: AppContext) {
 object MapPanel {
     val container = Css("map-event-panel")
     val card = Css("map-panel-card")
-}
-
-fun RenderContext.testInput(app: AppContext) {
-    val eventMap = app.home.streetMap
-
-    p {
-        +"Hello map!"
-    }
-    div {
-        id = "test-form"
-        textField(
-            onChangeValue = eventMap::setName
-        )
-        textField(
-            binding = eventMap.stateFlow.map { "Hello ${it.name}!" }
-        )
-        checkBoxInput {
-            // onValueChange { console.log(it) }
-        }
-    }
 }
 
 fun RenderContext.showLocation(app: AppContext) {

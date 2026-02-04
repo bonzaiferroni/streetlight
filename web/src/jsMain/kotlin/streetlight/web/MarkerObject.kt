@@ -2,9 +2,11 @@ package streetlight.web
 
 import org.w3c.dom.HTMLElement
 
-data class MarkerElement(
+data class MarkerObject(
     val marker: maplibregl.Marker,
-    val element: HTMLElement,
+    val entity: MarkerEntity,
+    val element: HTMLElement?,
+    val iconElement: HTMLElement?,
     val bearingElement: HTMLElement? = null,
 ) {
     var lastBearing = 0f
