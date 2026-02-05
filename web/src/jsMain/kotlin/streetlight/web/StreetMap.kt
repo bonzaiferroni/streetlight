@@ -1,19 +1,15 @@
 package streetlight.web
 
 import kampfire.model.GeoBounds
-import kampfire.model.GeoPoint
-import kampfire.model.meters
 import kotlinx.coroutines.CoroutineScope
 import streetlight.model.data.MapQuery
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import streetlight.model.data.Community
-import streetlight.model.data.EventId
 import streetlight.model.data.EventInfo
 import streetlight.model.data.EventType
 import streetlight.model.data.Location
-import streetlight.model.data.VehicleType
 import kotlin.time.Duration.Companion.minutes
 
 class StreetMap(
@@ -61,8 +57,13 @@ class StreetMap(
             val queriedBounds = bounds.expandBy(1.2f)
             setState { it.copy(bounds = bounds, zoom = zoom, queriedBounds = queriedBounds, isQuerying = true)}
             viewModelScope.launch {
-                val newEvents = client.event.queryMap(MapQuery(queriedBounds, stateNow.zoom)) ?: emptyList()
-                allEvents.addAll(newEvents.filter { newEvent -> allEvents.none { it.eventId == newEvent.eventId } })
+                val areaEvents = client.event.queryMap(MapQuery(queriedBounds, stateNow.zoom)) ?: emptyList()
+                areaEvents.forEach { event ->
+                    if (allEvents.any { it.eventId == event.eventId }) return@forEach
+                    allEvents.add(event)
+                    val entity = EventEntity(event)
+                    geoMap.addEntity(entity)
+                }
                 val events = getBoundedEvents(bounds)
                 setState { it.copy(events = events, isQuerying = false)}
             }

@@ -47,6 +47,7 @@ external object maplibregl {
         override fun on(type: String, listener: Listener): Subscription
 
         fun addSource(id: String, source: SourceSpecification)
+        fun getSource(id: String): Source
         fun addLayer(layer: dynamic)
 
         // Event handling inherited from .streetlight.web.Evented
@@ -150,6 +151,9 @@ external interface MarkerOptions {
 }
 
 external interface SourceSpecification
+external interface Source {
+    fun setData(data: dynamic)
+}
 
 external interface AddLayerObject
 

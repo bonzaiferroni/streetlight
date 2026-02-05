@@ -1,5 +1,6 @@
 package streetlight.web
 
+import kampfire.model.GeoPoint
 import koala.css.AlignItemsCenter
 import koala.css.Width100
 import koala.css.modify
@@ -8,9 +9,8 @@ import koala.dom.tabs
 import koala.html.Id
 import koala.html.column
 import koala.html.tab
-import kotlinx.browser.document
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.html.style
 
 fun RenderContext.viewHome(app: AppContext) {
     console.log("loading home")
@@ -31,4 +31,15 @@ fun RenderContext.viewHome(app: AppContext) {
     }
 
     initGeoMap(app)
+
+//    renderScope.launch {
+//        val geoMap = app.home.geoMap
+//
+//        geoMap.addEntity(object: PointEntity {
+//            override val entityId = "yo"
+//            override val position = GeoPoint.Denver
+//        })
+//        delay(1000)
+//        geoMap.removeEntities(listOf("yo"))
+//    }
 }

@@ -16,6 +16,8 @@ class GeoMap(
     val entityFlow: SharedFlow<MapEntity> = _entityFlow
     private val _removeEntity = MutableSharedFlow<MapEntityId>()
     val removeEntity: SharedFlow<MapEntityId> = _removeEntity
+    private val _linesFlow = MutableSharedFlow<List<LineEntity>>()
+    val linesFlow: SharedFlow<List<LineEntity>> = _linesFlow
 
     val zoomFlow = stateFlow.mapDistinct { it.zoom }
 
@@ -41,6 +43,12 @@ class GeoMap(
         }
     }
 
+    fun addLines(entities: List<LineEntity>) {
+        viewModelScope.launch {
+            _linesFlow.emit(entities)
+        }
+    }
+
     fun setBounds(bounds: GeoBounds, zoom: Float) {
         if (zoom == stateNow.zoom && bounds.center.distanceTo(stateNow.center) < (10 * zoom).meters) return
         setState { it.copy(bounds = bounds, zoom = zoom) }
@@ -58,14 +66,4 @@ typealias MapEntityId = String
 
 sealed interface MapEntity {
     val entityId: MapEntityId
-}
-
-interface MarkerEntity: MapEntity {
-    val position: GeoPoint
-    val bearing: Float? get() = null
-    val opacity: Float? get() = null
-    val subpixelPositioning: Boolean get() = true
-    val iconPath: String? get() = null
-    val minZoom: Float? get() = null
-    val onClick: (() -> Unit)? get() = null
 }

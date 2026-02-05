@@ -1,14 +1,10 @@
 package streetlight.web
 
 import koala.dom.RenderContext
-import kotlinx.browser.document
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
-import org.w3c.dom.HTMLElement
 import streetlight.model.data.TransitRoute
-import streetlight.model.data.TransitStop
 import streetlight.model.data.VehicleType
-import kotlin.js.Date
 import kotlin.js.json
 
 fun RenderContext.viewTransitMap(
@@ -17,9 +13,9 @@ fun RenderContext.viewTransitMap(
 ) {
     val streetMap = app.home.streetMap
     val transitMap = app.home.streetMap.transit
-    var stopMarkers: List<MarkerObject> = emptyList()
+    var stopMarkers: List<MapObject> = emptyList()
     var areaTransit = transitMap.stateNow.areaTransit
-    val vehicleElements = mutableMapOf<String, MarkerObject>()
+    val vehicleElements = mutableMapOf<String, MapObject>()
     var markersVisible = false
 
     renderScope.launch {

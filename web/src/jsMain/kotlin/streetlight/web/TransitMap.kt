@@ -1,11 +1,14 @@
 package streetlight.web
 
+import kampfire.model.GeoPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.await
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import streetlight.model.data.CommunityId
 import streetlight.model.data.AreaTransit
+import streetlight.model.data.TransitRouteId
+import streetlight.model.data.VehicleType
 import kotlin.time.Duration.Companion.seconds
 
 class TransitMap(
@@ -19,6 +22,7 @@ class TransitMap(
             launch {
                 val communityId = CommunityId.random()
                 val areaTransit = client.transit.readAreaTransit()
+                showRoutes(areaTransit)
                 setState { it.copy(areaTransit = areaTransit, communityId = communityId) }
                 val root = protobuf.load("/www/proto/gtfs-realtime.proto").await()
                 val feedType = root.lookupType("transit_realtime.FeedMessage")
@@ -29,6 +33,16 @@ class TransitMap(
                 }
             }
         }
+    }
+
+    private fun showRoutes(transit: AreaTransit?) {
+        val transit = transit ?: return
+        val lines = transit.routes.mapNotNull { route ->
+            if (route.vehicleType == VehicleType.Bus) return@mapNotNull null
+            val vehicleType = route.vehicleType ?: return@mapNotNull null
+            RouteEntity(route.transitRouteId, vehicleType, route.points)
+        }
+        geoMap.addLines(lines)
     }
 
     private suspend fun fetchVehicles(feedType: ProtobufType) {
@@ -50,6 +64,10 @@ class TransitMap(
             .filter { currentEntity -> entities.none { currentEntity.vehicleId != it.vehicleId } }
             .map { it.vehicleId }
 
+        if (removedIds.isNotEmpty()) {
+            console.log("removing ${removedIds.size} vehicles")
+        }
+
         geoMap.removeEntities(removedIds)
         geoMap.addEntities(entities)
 
@@ -63,3 +81,46 @@ data class TransitMapState(
     val areaTransit: AreaTransit? = null,
     val communityId: CommunityId? = null,
 )
+
+data class RouteEntity(
+    val transitRouteId: TransitRouteId,
+    val vehicleType: VehicleType,
+    override val points: List<GeoPoint>
+): LineEntity {
+    override val entityId: MapEntityId get() = transitRouteId.value
+    override val layerId: LayerId get() = when(vehicleType) {
+        VehicleType.Bus -> "bus-layer"
+        VehicleType.LightRail -> "light-rail-layer"
+        VehicleType.Train -> "train-layer"
+    }
+}
+
+data class TransitEntity(
+    val vehicleId: String,
+    override val position: GeoPoint,
+    val vehicleType: VehicleType,
+    override val opacity: Float,
+    override val bearing: Float?,
+): PointEntity {
+    override val entityId get() = vehicleId
+    override val iconPath get() = when (vehicleType) {
+        VehicleType.Bus -> SvgPath.bus
+        VehicleType.LightRail -> SvgPath.train
+        VehicleType.Train -> SvgPath.train
+    }
+}
+
+fun VehiclePosition.toEntity(currentTime: Long, vehicleType: VehicleType): TransitEntity? {
+    val vehicleId = vehicle?.id ?: return null
+    val position = position ?: return null
+    val vehicleTime = timestamp.toString().toLong()
+    val secondsSinceCapture = (currentTime - vehicleTime).toInt()
+    val opacity = (1 - secondsSinceCapture / 240f).coerceIn(.5f, 1f)
+    return TransitEntity(
+        vehicleId = vehicleId,
+        position = position.toGeoPoint(),
+        vehicleType = vehicleType,
+        opacity = opacity,
+        bearing = position.bearing
+    )
+}
