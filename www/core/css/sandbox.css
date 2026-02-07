@@ -1,0 +1,24 @@
+[block-label] {
+    position: relative;
+}
+
+
+[block-label]::before {
+    content: attr(block-label);
+    position: absolute;
+    top: -0.40rem;
+    right: .5rem;
+
+    font-size: 0.6rem;
+    padding: 0.10rem 0.5rem;
+
+    background: var(--void-border);
+    color: var(--fg-dim);
+    line-height: 1;
+    max-width: 75%;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
+    border-radius: 0.4rem;
+    box-shadow: 0 0 0.4rem var(--shadow);
+}

@@ -12,7 +12,7 @@ fun RenderContext.viewEventCreator(app: AppContext) {
         column(modify(QueryRow, FlexItems1, Width100)) {
             card {
                 heading2("what")
-                textField(eventCreator::setEventName)
+                textField("title", eventCreator::setEventTitle)
                 dropMenu(eventCreator::setEventType) { it.label }
                 flowBlock(
                     flow = eventCreator.stateFlow.mapDistinct { it.eventType.label },
@@ -26,7 +26,7 @@ fun RenderContext.viewEventCreator(app: AppContext) {
             }
             card {
                 heading2("where")
-                textField(eventCreator::setLocationName, eventCreator.stateFlow.mapDistinct { it.locationName })
+                textField("location name", eventCreator::setLocationName, eventCreator.stateFlow.mapDistinct { it.locationName })
                 button("query") {
                     eventCreator.queryLocation()
                 }

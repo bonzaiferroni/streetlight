@@ -35,7 +35,7 @@ class EventCreator(
         }
     }
 
-    fun setEventName(name: String) {
+    fun setEventTitle(name: String) {
         setState { it.copy(title = name) }
     }
 

@@ -6,29 +6,33 @@ import koala.css.modify
 import koala.dom.RenderContext
 import koala.dom.itemsBlock
 import koala.dom.textBlock
+import koala.dom.textField
+import koala.html.blockLabel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 
 fun RenderContext.viewSandbox(app: AppContext) {
+    textField("input")
+}
 
-    val flow = MutableStateFlow(listOf("One", "Two", "Three"))
-
-    itemsBlock(flow, modify(Blur, SlideX), animate = true) {
-        textBlock(it)
-    }
-
-    renderScope.launch {
-        delay(2000)
-        flow.value -= "Two"
-        delay(2000)
-        flow.value += "Four"
-        delay(2000)
-        flow.value += "Five"
-        delay(2000)
-        flow.value = flow.value.sorted()
-    }
+// val flow = MutableStateFlow(listOf("One", "Two", "Three"))
+//
+//    itemsBlock(flow, modify(Blur, SlideX), animate = true) {
+//        textBlock(it)
+//    }
+//
+//    renderScope.launch {
+//        delay(2000)
+//        flow.value -= "Two"
+//        delay(2000)
+//        flow.value += "Four"
+//        delay(2000)
+//        flow.value += "Five"
+//        delay(2000)
+//        flow.value = flow.value.sorted()
+//    }
 
 //    val eventMap = app.home.eventMap
 //
@@ -59,4 +63,3 @@ fun RenderContext.viewSandbox(app: AppContext) {
 //            textBlock("Location: ${location?.name}")
 //        }
 //    }
-}

@@ -4,6 +4,7 @@ import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import koala.css.*
 import kotlinx.html.TagConsumer
+import kotlinx.html.p
 
 fun FlowContent.tabs(
     modifiers: ModifierSet? = null,
@@ -19,8 +20,10 @@ fun FlowContent.tabs(
 fun FlowContent.tabsContent(scope: TabScope) {
     row(modify(TabClass.header)) {
         scope.tabs.forEachIndexed { index, tab ->
-            label(tab.label, modify(TabClass.button)) {
+            p {
+                applyModifiers(TabClass.button)
                 attributes["data-tab"] = index.toString()
+                +tab.label
             }
         }
     }

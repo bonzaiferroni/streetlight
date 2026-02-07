@@ -14,6 +14,7 @@ object ElementClass {
     val flowBlock = Css("flow-block")
     val itemsBlock = Css("items-block")
     val textLabel = Css("text-label")
+    val blockLabel = Css("block-label")
 }
 
 fun CssBuilder.elementStyles(theme: KoalaTheme) {

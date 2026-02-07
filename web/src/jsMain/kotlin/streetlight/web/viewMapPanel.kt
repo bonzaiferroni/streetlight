@@ -32,10 +32,11 @@ fun RenderContext.viewMapPanel(app: AppContext) {
             } else {
                 column {
                     viewMapConfig(app)
-                    viewMapCards(app)
 
                     // sandbox
-                    // viewSandbox(app)
+                    viewSandbox(app)
+
+                    viewMapCards(app)
                 }
             }
         }

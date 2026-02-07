@@ -4,6 +4,7 @@ import koala.dom.RenderContext
 import koala.dom.button
 import koala.dom.checkBox
 import koala.dom.column
+import koala.dom.flowBlock
 import koala.dom.renderState
 import koala.dom.textField
 import kotlinx.html.InputType
@@ -16,7 +17,7 @@ fun RenderContext.viewAccount(
 ) {
 
     column {
-        renderState(gate.userFlow) { user ->
+        flowBlock(gate.userFlow) { user ->
             if (user != null) {
                 p {
                     +"Hello ${user.username}!"
@@ -26,7 +27,7 @@ fun RenderContext.viewAccount(
                 }
             } else {
                 column {
-                    renderState(gate.messageFlow) { msg ->
+                    flowBlock(gate.messageFlow) { msg ->
                         if (msg == null) {
                             p {
                                 +"Sign in to continue!"
@@ -37,8 +38,8 @@ fun RenderContext.viewAccount(
                             }
                         }
                     }
-                    textField(gate::setUsername, gate.stateFlow.mapDistinct { it.usernameText })
-                    textField(gate::setPassword, gate.stateFlow.mapDistinct { it.passwordText }) {
+                    textField("username/email", gate::setUsername, gate.stateFlow.mapDistinct { it.usernameText })
+                    textField("password", gate::setPassword, gate.stateFlow.mapDistinct { it.passwordText }) {
                         type = InputType.password
                     }
                     checkBox("Stay signed in", gate::setStayLoggedIn, gate.stateFlow.mapDistinct { it.stayLoggedIn })

@@ -3,7 +3,11 @@
     --card-bg: rgba(var(--bg), .2);
     --tabs-bg: rgba(var(--bg), .4);
     --fg: 245, 246, 246;
+    --fg-dim: rgba(var(--fg), .8);
     --void: 34, 41, 41;
+    --void-bg: rgb(var(--void));
+    --void-border: color-mix(in srgb, var(--void-bg) 90%, white);
+    --shadow: rgba(0, 0, 0, 0.35);
     --primary-bg: 1, 122, 138;
     --primary: 5, 242, 255;
     --accent-bg: 209, 43, 181;
@@ -49,12 +53,14 @@ body::before {
 
 input[type="text"], input[type='password'] {
     border: none;
-    outline: none;
-    padding: 0.75rem;
-    border-radius: 0.75rem;
-    font-size: 1.2rem;
+    padding: var(--unit-spacing);
+    font-size: 1rem;
     background-color: rgb(var(--void));
     color: rgb(var(--fg));
+
+    outline: 1px solid var(--void-border);
+    border-radius: var(--unit-spacing);
+    box-shadow: 0 0 var(--unit-spacing) var(--shadow);
 }
 
 input[type="checkbox"] {
@@ -64,9 +70,12 @@ input[type="checkbox"] {
     background-color: rgb(var(--void));
     width: 1.5rem;
     height: 1.5rem;
-    border-radius: 0.25rem;
     display: inline-grid;
     place-items: center;
+
+    outline: 1px solid var(--void-border);
+    border-radius: 0.25rem;
+    box-shadow: 0 0 0.25rem var(--shadow);
 }
 
 input[type="checkbox"]::before {
@@ -84,6 +93,18 @@ input[type="checkbox"]:checked::before {
     transform: rotate(0deg) scale(1);
 }
 
+select {
+    border: none;
+    padding: var(--unit-spacing);
+    font-size: 1rem;
+    background-color: rgb(var(--void));
+    color: rgb(var(--fg));
+
+    outline: 1px solid var(--void-border);
+    border-radius: var(--unit-spacing);
+    box-shadow: 0 0 var(--unit-spacing) var(--shadow);
+}
+
 @keyframes hueSpin {
     to { filter: hue-rotate(360deg); }
 }
@@ -99,20 +120,6 @@ p a {
 a:hover {
     color: rgb(var(--accent));
     animation: glow 10s infinite linear;
-}
-
-select {
-    border: none;
-    outline: none;
-    padding: 0.75rem;
-    border-radius: 0.75rem;
-    font-size: 1.2rem;
-    background-color: rgb(var(--void));
-    color: rgb(var(--fg));
-
-    /*appearance: none;*/
-    /*-webkit-appearance: none;*/
-    /*-moz-appearance: none;*/
 }
 
 label {
