@@ -85,7 +85,12 @@
 
 /* items block */
 .items-block {
+    width: 100%;
     position: relative;
+}
+
+.items-block > * {
+    width: 100%;
 }
 
 .items-block.animate {

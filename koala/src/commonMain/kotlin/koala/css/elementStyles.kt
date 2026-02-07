@@ -13,6 +13,7 @@ object ElementClass {
     val button = Css("btn")
     val flowBlock = Css("flow-block")
     val itemsBlock = Css("items-block")
+    val textLabel = Css("text-label")
 }
 
 fun CssBuilder.elementStyles(theme: KoalaTheme) {
@@ -44,5 +45,10 @@ fun CssBuilder.elementStyles(theme: KoalaTheme) {
         hover {
             opacity = 1
         }
+    }
+
+    rule(ElementClass.textLabel) {
+        fontSize = .8.rem
+        opacity = .5
     }
 }

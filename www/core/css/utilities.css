@@ -48,3 +48,9 @@ p.large {
 .text-align-right {
     text-align: right;
 }
+
+.circle-shape {
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid #b4bd7d;
+}

@@ -9,4 +9,4 @@ object SvgPath {
     val transitStop = toPath("transit-stop")
 }
 
-private fun toPath(filename: String) = "../../svg/$filename.svg"
+private fun toPath(filename: String) = "/www/svg/$filename.svg"

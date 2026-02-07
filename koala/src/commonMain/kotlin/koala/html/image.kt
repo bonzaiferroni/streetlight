@@ -16,13 +16,17 @@ fun FlowContent.image(
 }
 
 fun FlowContent.image(
-    src: String,
+    src: String = DefaultPath.placeholderImage,
     modifiers: ModifierSet? = null,
     block: (IMG.() -> Unit)? = null
 ) {
     img {
-        this.src = "/www/${src}"
+        this.src = "/www/img/${src}"
         applyModifiers(modifiers)
         block?.invoke(this)
     }
+}
+
+object DefaultPath {
+    val placeholderImage = "placeholder.jpg"
 }

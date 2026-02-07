@@ -13,6 +13,8 @@ object Flex3: CssClass { override val value = "flex-3" }
 object Flex4: CssClass { override val value = "flex-4" }
 object AlignItemsCenter: CssClass { override val value = "align-items-center" }
 object AlignItemsStretch: CssClass { override val value = "align-items-stretch" }
+object AlignItemsStart: CssClass { override val value = "align-items-start" }
+object AlignItemsEnd: CssClass { override val value = "align-items-end" }
 object JustifyCenter: CssClass { override val value = "justify-content-center" }
 object JustifySpaceAround: CssClass { override val value = "justify-content-space-around" }
 object Width100: CssClass { override val value = "width-100" }
@@ -78,6 +80,14 @@ fun CssBuilder.layoutUtilities(theme: KoalaTheme) {
 
     rule(AlignItemsStretch) {
         alignItems = Align.stretch
+    }
+
+    rule(AlignItemsStart) {
+        alignItems = Align.flexStart
+    }
+
+    rule(AlignItemsEnd) {
+        alignItems = Align.flexEnd
     }
 
     rule(JustifyCenter) {

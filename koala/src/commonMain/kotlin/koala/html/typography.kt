@@ -6,10 +6,10 @@ import koala.css.*
 inline fun FlowContent.label(
     content: String,
     modifiers: ModifierSet? = null,
-    crossinline block: (DIV.() -> Unit) = { }
+    crossinline block: (P.() -> Unit) = { }
 ) {
-    div {
-        applyModifiers(modifiers)
+    p {
+        applyModifiers(ElementClass.textLabel, modifiers)
         block()
         +content
     }

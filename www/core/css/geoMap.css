@@ -107,7 +107,13 @@
     margin: 0;
 }
 
-.map-event-group-grid {
+.map-panel-card-grid {
+    width: 100%;
     display: grid;
-    grid-template-columns: max-content max-content 1fr;
+    grid-template-columns: 3rem 1fr 3rem 3rem;
+    gap: var(--unit-spacing);
+}
+
+.map-panel-card-heading {
+    grid-column: 1 / 2;
 }

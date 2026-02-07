@@ -102,12 +102,12 @@ data class MapFocus(
     val event: EventInfo? = null,
 )
 
-enum class MapLayer(val label: String, val eventType: EventType? = null) {
-    Shows("Shows", EventType.Show),
-    Food("Food", EventType.Food),
-    Fellowship("Fellowship", EventType.Fellowship),
-    Transit("Transit"),
-    Shelter("Shelter"),
+enum class MapLayer(val label: String, val color: String, val eventType: EventType? = null) {
+    Shows("Shows", "#bd7dae", EventType.Show),
+    Fellowship("Fellowship", "#7dbd8f", EventType.Fellowship),
+    Food("Food", "#bd9a7d", EventType.Food),
+    Transit("Transit", "#7daebd"),
+    Shelter("Shelter", "#b4bd7d"),
 }
 
 data class QueryBounds(

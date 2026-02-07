@@ -14,6 +14,7 @@ object Opacity2: CssClass { override val value = "opacity-2" }
 object Dim: CssClass { override val value = Opacity6.value }
 object NoDim: CssClass { override val value = "no-dim" }
 object Glow: CssClass { override val value = "glow" }
+object CircleShape: CssClass { override val value = "circle-shape" }
 
 // font utilities
 object Bold: CssClass { override val value = "bold" }
