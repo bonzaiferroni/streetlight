@@ -5,10 +5,8 @@ import koala.dom.button
 import koala.dom.checkBox
 import koala.dom.column
 import koala.dom.flowBlock
-import koala.dom.renderState
 import koala.dom.textField
 import kotlinx.html.InputType
-import kotlinx.html.input
 import kotlinx.html.js.p
 
 fun RenderContext.viewAccount(
@@ -56,7 +54,7 @@ fun RenderContext.viewAccount(
             }
         }
         button("go home") {
-            portal.go(Home())
+            portal.go(HomeRoute())
         }
     }
 }

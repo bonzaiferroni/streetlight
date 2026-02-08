@@ -1,5 +1,6 @@
 package streetlight.web
 
+import koala.html.AppRoute
 import kotlinx.browser.window
 import kotlinx.coroutines.CoroutineScope
 
@@ -16,10 +17,10 @@ class AppPortal(
         }
 
     init {
-        val route = StreetlightRoute.fromHashPath(hashPath)
+        val route = routeOf(hashPath)
         go(route)
         window.addEventListener("hashchange", {
-            val route = StreetlightRoute.fromHashPath(hashPath)
+            val route = routeOf(hashPath)
             if (route.screen == stateNow.route.screen) return@addEventListener
             go(route)
         })
@@ -38,24 +39,16 @@ class AppPortal(
         setState { it.copy(route = route, backstack = backstack)}
         hashPath = route.toHashPath()
     }
+
+    private fun routeOf(hashPath: String): StreetlightRoute {
+        return AppRoute.routeOf(hashPath, StreetlightScreen.entries) { HomeRoute() }
+    }
 }
 
 data class AppNavigatorState(
-    val route: StreetlightRoute = Home(),
+    val route: StreetlightRoute = HomeRoute(),
     val backstack: List<StreetlightRoute> = emptyList()
 ) {
     val canGoBack get() = backstack.isNotEmpty()
 }
 
-fun StreetlightRoute.Companion.fromHashPath(hashPath: String): StreetlightRoute {
-    val fragment = hashPath.dropStart('/')
-    val path = fragment.lowercase().split('/')
-    return when (path[0]) {
-        Home.screen.path -> Home()
-        Account.screen.path -> Account
-        EventRoute.screen.path -> EventRoute
-        else -> Home()
-    }
-}
-
-private fun String.dropStart(char: Char) = if (startsWith(char)) drop(1) else this

@@ -17,7 +17,7 @@ fun RenderContext.eventsTab(
 //            }
 //        }
         button("Go to the event") {
-            portal.go(EventRoute)
+            // portal.go(EventRoute)
         }
         homeFooter()
     }

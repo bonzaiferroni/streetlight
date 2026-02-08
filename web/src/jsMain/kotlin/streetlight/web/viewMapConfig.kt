@@ -9,6 +9,7 @@ fun RenderContext.viewMapConfig(app: AppContext) {
     val gateAgent = app.gateAgent
     val eventMap = app.home.streetMap
     val eventCreator = app.home.eventCreator
+    val portal = app.portal
 
     row(modify(Width100)) {
         card(modify(Flex1)) {
@@ -29,7 +30,7 @@ fun RenderContext.viewMapConfig(app: AppContext) {
         }
         button("Add Event") {
             gateAgent.checkIn {
-                // eventCreator.toggle()
+                portal.go(CreateEventRoute)
             }
         }
     }

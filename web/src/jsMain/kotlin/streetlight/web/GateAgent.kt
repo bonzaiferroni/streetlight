@@ -2,7 +2,6 @@ package streetlight.web
 
 import kampfire.model.User
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -31,7 +30,7 @@ class GateAgent(
                 }
         }
 
-        portal.go(Account)
+        portal.go(AccountRoute)
     }
 }
 

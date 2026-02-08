@@ -50,9 +50,10 @@ fun viewApp() {
             animate = true,
         ) { screen ->
             when (screen) {
-                AppScreen.Home -> viewHome(app)
-                AppScreen.Event -> viewEvent(app.portal)
-                AppScreen.Account -> viewAccount(app.gate, app.portal)
+                StreetlightScreen.Home -> viewHome(app)
+                StreetlightScreen.Event -> viewEvent(app.portal)
+                StreetlightScreen.Account -> viewAccount(app.gate, app.portal)
+                StreetlightScreen.CreateEvent -> viewEventCreator(app)
             }
         }
     }

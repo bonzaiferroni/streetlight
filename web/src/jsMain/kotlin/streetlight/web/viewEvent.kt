@@ -7,6 +7,6 @@ fun RenderContext.viewEvent(
     portal: AppPortal,
 ) {
     button("go home") {
-        portal.go(Home())
+        portal.go(HomeRoute())
     }
 }

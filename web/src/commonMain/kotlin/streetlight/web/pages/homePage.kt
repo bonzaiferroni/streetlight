@@ -3,8 +3,8 @@ package streetlight.web.pages
 import koala.html.*
 import kotlinx.html.*
 import koala.css.*
-import streetlight.web.Account
-import streetlight.web.Home
+import streetlight.web.AccountRoute
+import streetlight.web.HomeRoute
 
 fun HTML.homePage() {
     head("Streetlight | Home") {
@@ -19,13 +19,13 @@ fun HTML.homePage() {
                     action(modify(Height3, Opacity2)) {
                         icon("chevron-down", modify(Height100))
                     }
-                    action(Home()) {
+                    action(HomeRoute()) {
                         row {
                             logo()
                             heading1("Streetlight")
                         }
                     }
-                    action(Account, modify(Height3, Opacity2)) {
+                    action(AccountRoute, modify(Height3, Opacity2)) {
                         icon("empty-profile", modify(Height100))
                     }
                 }

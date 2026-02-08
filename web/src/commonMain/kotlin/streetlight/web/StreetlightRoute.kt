@@ -1,35 +1,42 @@
 package streetlight.web
 
 import koala.html.AppRoute
+import koala.html.AppScreen
+import streetlight.model.data.EventId
 
-enum class AppScreen(val path: String) {
-    Home("home"),
-    Account("account"),
-    Event("event"),
+enum class StreetlightScreen(
+    override val pathRoot: String,
+    override val provideRoute: (List<String>) -> StreetlightRoute?
+): AppScreen<StreetlightRoute> {
+    Home("home", { HomeRoute() }),
+    Account("account", { AccountRoute }),
+    Event("event", { segments -> segments.getOrNull(1)?.let { EventRoute(EventId(it)) } }),
+    CreateEvent("create-event", { CreateEventRoute }),
 }
 
-sealed class StreetlightRoute: AppRoute {
-    abstract val screen: AppScreen
+sealed class StreetlightRoute: AppRoute
 
-    override fun toHashPath() = "#/${screen.path}"
-
-    companion object
-}
-
-data class Home(
+data class HomeRoute(
     val tab: String? = null
 ): StreetlightRoute() {
-    override val screen get() = AppScreen.Home
+    override val screen get() = StreetlightScreen.Home
 
     companion object {
-        val screen get() = AppScreen.Home
+        val screen get() = StreetlightScreen.Home
     }
 }
 
-object Account: StreetlightRoute() {
-    override val screen get() = AppScreen.Account
+object AccountRoute: StreetlightRoute() {
+    override val screen get() = StreetlightScreen.Account
 }
 
-object EventRoute: StreetlightRoute() {
-    override val screen get() = AppScreen.Event
+data class EventRoute(
+    val id: EventId
+): StreetlightRoute() {
+    override val screen get() = StreetlightScreen.Event
+    override fun toHashPath() = "${super.toHashPath()}/${id.value}"
+}
+
+object CreateEventRoute: StreetlightRoute() {
+    override val screen get() = StreetlightScreen.CreateEvent
 }
