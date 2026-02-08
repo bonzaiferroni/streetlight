@@ -40,6 +40,8 @@ external object maplibregl {
         fun fitBounds(bounds: LngLatBounds, options: dynamic = definedExternally): Map
 
         fun resize(): Map
+        fun loaded(): Boolean
+        fun isStyleLoaded(): Boolean
 
         override fun listens(type: String): Boolean
         override fun setEventedParent(parent: Evented?, data: dynamic): Evented

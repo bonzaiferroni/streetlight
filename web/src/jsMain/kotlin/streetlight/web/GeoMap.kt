@@ -1,17 +1,21 @@
 package streetlight.web
 
 import kampfire.model.GeoBounds
-import kampfire.model.GeoPoint
 import kampfire.model.meters
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 
 class GeoMap(
-    scope: CoroutineScope
-): BrowserModel<GeoMapState>(GeoMapState(), scope) {
+    private val viewModelScope: CoroutineScope
+) {
+    private var state: GeoMapState = GeoMapState()
+    private val stateNow get() = state
 
+    private val _state = MutableSharedFlow<GeoMapState>()
+    val stateFlow: Flow<GeoMapState> = _state
     private val _entityFlow = MutableSharedFlow<MapEntity>()
     val entityFlow: SharedFlow<MapEntity> = _entityFlow
     private val _removeEntity = MutableSharedFlow<MapEntityId>()
@@ -20,6 +24,13 @@ class GeoMap(
     val linesFlow: SharedFlow<List<LineEntity>> = _linesFlow
 
     val zoomFlow = stateFlow.mapDistinct { it.zoom }
+
+    private fun setState(setter: (GeoMapState) -> GeoMapState) {
+        state = setter(stateNow)
+        viewModelScope.launch {
+            _state.emit(state)
+        }
+    }
 
     fun addEntity(entity: MapEntity) {
         viewModelScope.launch {

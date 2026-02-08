@@ -19,18 +19,18 @@ class TransitMap(
 
     init {
         viewModelScope.launch {
-            launch {
-                val communityId = CommunityId.random()
-                val areaTransit = client.transit.readAreaTransit()
-                showRoutes(areaTransit)
-                setState { it.copy(areaTransit = areaTransit, communityId = communityId) }
-                val root = protobuf.load("/www/proto/gtfs-realtime.proto").await()
-                val feedType = root.lookupType("transit_realtime.FeedMessage")
+            val communityId = CommunityId.random()
+            val areaTransit = client.transit.readAreaTransit()
+            showRoutes(areaTransit)
+            setState { it.copy(areaTransit = areaTransit, communityId = communityId) }
+            val root = protobuf.load("/www/proto/gtfs-realtime.proto").await()
+            val feedType = root.lookupType("transit_realtime.FeedMessage")
 
-                while (true) {
-                    fetchVehicles(feedType)
-                    delay(30.seconds)
-                }
+            delay(1.seconds)
+
+            while (true) {
+                fetchVehicles(feedType)
+                delay(30.seconds)
             }
         }
     }

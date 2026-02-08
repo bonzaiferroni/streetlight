@@ -29,17 +29,4 @@ fun RenderContext.viewHome(app: AppContext) {
             appDescription()
         }
     }
-
-    initGeoMap(app)
-
-//    renderScope.launch {
-//        val geoMap = app.home.geoMap
-//
-//        geoMap.addEntity(object: PointEntity {
-//            override val entityId = "yo"
-//            override val position = GeoPoint.Denver
-//        })
-//        delay(1000)
-//        geoMap.removeEntities(listOf("yo"))
-//    }
 }

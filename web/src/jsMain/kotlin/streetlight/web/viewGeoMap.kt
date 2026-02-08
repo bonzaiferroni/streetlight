@@ -1,30 +1,95 @@
 package streetlight.web
 
-import koala.css.Css
 import koala.css.Width100
 import koala.css.modify
 import koala.dom.RenderContext
 import koala.dom.box
-import koala.dom.modify
 import koala.html.Id
-import kotlinx.browser.document
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.html.*
+import kotlinx.html.DIV
+import kotlinx.html.dom.append
 import org.w3c.dom.HTMLDivElement
+import kotlinx.html.style
 
 fun RenderContext.viewGeoMap(
+    geoMap: GeoMap,
     height: String = "400px",
-): HTMLDivElement? {
-    box(GeoMapIds.window, modify(Width100)) {
+    block: (DIV.() -> Unit)? = null
+): HTMLDivElement {
+    val parent = box(GeoMapIds.window, modify(Width100)) {
         style = "height: $height;"
+
+        block?.invoke(this)
+    }
+
+    val widgetBox = parent.append {
         box(GeoMapIds.widget) {
         }
         box(GeoMapIds.overlay) {
             box(GeoMapIds.crosshairs)
         }
+    }.first()
+
+    renderScope.launch {
+
+        val widget = maplibregl.Map(jsObject {
+            container = widgetBox
+            style = "https://tiles.openfreemap.org/styles/fiord"
+            center = maplibregl.LngLat(-104.95, 39.75)
+            zoom = 11
+        })
+
+        widget.addControl(maplibregl.NavigationControl())
+        widget.addControl(maplibregl.FullscreenControl())
+
+        fun relayBounds() {
+            val bounds = widget.getBounds().toGeoBounds()
+            val zoom = widget.getZoom()
+            geoMap.setBounds(bounds, zoom.toFloat())
+        }
+
+        val markers = mutableMapOf<MapEntityId, MapObject>()
+
+        val context = MapContext(widget)
+
+        while (!widget.loaded()) {
+            delay(10)
+        }
+
+        launch {
+            console.log("collecting entities")
+            geoMap.entityFlow.collect(context::collectEntity)
+        }
+
+        launch {
+            geoMap.removeEntity.collect { entityId ->
+                markers[entityId]?.marker?.remove()
+                markers.remove(entityId)
+            }
+        }
+
+        launch {
+            geoMap.zoomFlow.collect { zoom ->
+                markers.forEach { (_, obj) ->
+                    val minZoom = obj.entity.minZoom ?: return@forEach
+                    obj.setOpacity(if (zoom >= minZoom) 1f else 0f)
+                }
+            }
+        }
+
+        launch {
+            geoMap.linesFlow.collect(context::showLines)
+        }
+
+        widget.on("move") {
+            relayBounds()
+        }
+
+        relayBounds()
     }
 
-    return null
+    return parent
 }
 
 object GeoMapIds {

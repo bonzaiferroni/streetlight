@@ -2,6 +2,7 @@ package streetlight.web
 
 import koala.css.*
 import koala.dom.*
+import koala.html.blockLabel
 import koala.html.paragraph
 
 fun RenderContext.viewMapConfig(app: AppContext) {
@@ -11,6 +12,7 @@ fun RenderContext.viewMapConfig(app: AppContext) {
 
     row(modify(Width100)) {
         card(modify(Flex1)) {
+            blockLabel = "layers"
             flowBlock(eventMap.stateFlow.mapDistinct { it.layers }, modify(Width100)) { layers ->
                 row(modify(JustifySpaceAround)) {
                     MapLayer.entries.forEach { layer ->
