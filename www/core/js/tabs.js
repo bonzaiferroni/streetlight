@@ -9,7 +9,6 @@ function initTabs(root) {
 
     // Key is the viewport element id (must exist)
     const paramKey = (root.id || "").trim();
-    console.log(paramKey);
     if (!paramKey) return;
 
     const buttons = Array.from(root.querySelectorAll(".tabs-header .tabs-button"));
@@ -36,16 +35,27 @@ function initTabs(root) {
     const names = panels.map((_, i) => tabNameAt(i));
 
     const readQuery = () => {
-        const url = new URL(location.href);
-        const v = (url.searchParams.get(paramKey) || "").toLowerCase().trim();
+        const hash = location.hash.startsWith("#") ? location.hash.slice(1) : "";
+        const [_, query = ""] = hash.split("?", 2);
+        const params = new URLSearchParams(query);
+
+        const v = (params.get(paramKey) || "").toLowerCase().trim();
         return v || "";
     };
 
     const setQuery = (name) => {
-        const url = new URL(location.href);
-        if (name) url.searchParams.set(paramKey, name);
-        else url.searchParams.delete(paramKey);
-        history.replaceState(null, "", url);
+        const hash = location.hash.startsWith("#") ? location.hash.slice(1) : "";
+        const [path = "", query = ""] = hash.split("?", 2);
+        const params = new URLSearchParams(query);
+
+        if (name) params.set(paramKey, name);
+        else params.delete(paramKey);
+
+        const nextHash = params.toString()
+            ? `${path}?${params}`
+            : path;
+
+        history.replaceState(null, "", `#${nextHash}`);
     };
 
     // --- Initial current (class or ?paramKey=...) ---
@@ -53,6 +63,7 @@ function initTabs(root) {
     if (current < 0) current = 0;
 
     const initialWanted = readQuery();
+    console.log("tabs: " + initialWanted);
     const wantedIdx = initialWanted ? names.indexOf(slug(initialWanted)) : -1;
     if (wantedIdx >= 0) current = wantedIdx;
 

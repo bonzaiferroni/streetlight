@@ -8,12 +8,18 @@ class AppPortal(
 ): BrowserModel<AppNavigatorState>(AppNavigatorState(), scope) {
     val screenFlow = stateFlow.mapDistinct { it.route.screen }
 
+    var hashPath
+        get() = window.location.hash.split("?")[0]
+        set(value: String) {
+            val query = window.location.hash.split("?").getOrNull(1)
+            window.location.hash = value + (query?.let { "?$it" } ?: "")
+        }
+
     init {
-        val route = StreetlightRoute.fromHashFragment(window.location.hash)
+        val route = StreetlightRoute.fromHashPath(hashPath)
         go(route)
         window.addEventListener("hashchange", {
-            console.log(window.location.hash)
-            val route = StreetlightRoute.fromHashFragment(window.location.hash)
+            val route = StreetlightRoute.fromHashPath(hashPath)
             if (route.screen == stateNow.route.screen) return@addEventListener
             go(route)
         })
@@ -30,7 +36,7 @@ class AppPortal(
 
     private fun go(route: StreetlightRoute, backstack: List<StreetlightRoute>) {
         setState { it.copy(route = route, backstack = backstack)}
-        window.location.hash = route.toHashPath()
+        hashPath = route.toHashPath()
     }
 }
 
@@ -41,10 +47,9 @@ data class AppNavigatorState(
     val canGoBack get() = backstack.isNotEmpty()
 }
 
-fun StreetlightRoute.Companion.fromHashFragment(fragment: String): StreetlightRoute {
-    val fragment = fragment.dropStart('#').dropStart('/')
-    val querySplit = fragment.split('?')
-    val path = querySplit[0].lowercase().split('/')
+fun StreetlightRoute.Companion.fromHashPath(hashPath: String): StreetlightRoute {
+    val fragment = hashPath.dropStart('/')
+    val path = fragment.lowercase().split('/')
     return when (path[0]) {
         Home.screen.path -> Home()
         Account.screen.path -> Account

@@ -29,7 +29,7 @@ fun RenderContext.viewMapConfig(app: AppContext) {
         }
         button("Add Event") {
             gateAgent.checkIn {
-                eventCreator.toggle()
+                // eventCreator.toggle()
             }
         }
     }

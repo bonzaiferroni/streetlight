@@ -37,7 +37,7 @@ fun RenderContext.viewEventCreator(app: AppContext) {
         message(eventCreator.stateFlow.mapDistinct { it.message })
         row {
             button("cancel") {
-                eventCreator.toggle()
+                // eventCreator.toggle()
             }
             button("create") {
                 eventCreator.createEvent()

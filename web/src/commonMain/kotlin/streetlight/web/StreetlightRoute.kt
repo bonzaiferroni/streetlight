@@ -11,7 +11,7 @@ enum class AppScreen(val path: String) {
 sealed class StreetlightRoute: AppRoute {
     abstract val screen: AppScreen
 
-    override fun toHashPath() = "#${screen.path}"
+    override fun toHashPath() = "#/${screen.path}"
 
     companion object
 }
