@@ -38,8 +38,14 @@ fun RenderContext.viewAccount(
                             }
                         }
                     }
-                    textField("username/email", gate::setUsername, gate.stateFlow.mapDistinct { it.usernameText })
-                    textField("password", gate::setPassword, gate.stateFlow.mapDistinct { it.passwordText }) {
+                    textField(
+                        label = "username/email",
+                        onChangeValue = gate::setUsername,
+                        binding = gate.stateFlow.mapDistinct { it.usernameText })
+                    textField(
+                        label = "password",
+                        onChangeValue = gate::setPassword,
+                        binding = gate.stateFlow.mapDistinct { it.passwordText }) {
                         type = InputType.password
                     }
                     checkBox("Stay signed in", gate::setStayLoggedIn, gate.stateFlow.mapDistinct { it.stayLoggedIn })

@@ -24,17 +24,6 @@ class EventCreator(
         }
     }
 
-    fun toggle(isCreatingEvent: Boolean? = null) {
-        val isCreatingEvent = isCreatingEvent ?: !stateNow.isCreatingEvent
-        setState { it.copy(isCreatingEvent = isCreatingEvent) }
-        if (isCreatingEvent) {
-            viewModelScope.launch {
-                val locations = client.location.queryLocation(streetMap.stateNow.center)
-                console.log(locations)
-            }
-        }
-    }
-
     fun setEventTitle(name: String) {
         setState { it.copy(title = name) }
     }
@@ -71,7 +60,6 @@ class EventCreator(
             val event = client.event.create(newEvent)
             console.log(event)
             setState { it.copy(
-                isCreatingEvent = false,
                 locationName = "",
                 title = "",
             )}
@@ -89,7 +77,6 @@ class EventCreator(
 }
 
 data class EventCreatorState(
-    val isCreatingEvent: Boolean = false,
     val title: String = "",
     val eventType: EventType = EventType.Show,
     val locationName: String = "",

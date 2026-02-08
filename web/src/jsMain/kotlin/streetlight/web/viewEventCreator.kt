@@ -3,32 +3,34 @@ package streetlight.web
 import koala.css.*
 import koala.dom.*
 import koala.html.heading2
+import koala.html.image
 import kotlinx.html.js.p
 
 fun RenderContext.viewEventCreator(app: AppContext) {
     val eventCreator = app.home.eventCreator
 
     column {
-        column(modify(QueryRow, FlexItems1, Width100)) {
-            card {
-                heading2("what")
-                textField("title", eventCreator::setEventTitle)
-                dropMenu(eventCreator::setEventType) { it.label }
-                flowBlock(
-                    flow = eventCreator.stateFlow.mapDistinct { it.eventType.label },
-                    modifiers = modify(SlideX),
-                    animate = true
-                ) {
-                    p {
-                        +it
-                    }
-                }
+        card {
+            row(modify(Width100, AlignItemsStretch)) {
+                image(modifiers = modify(Flex1, Width100, BorderRadius1))
+                textField(
+                    label = "title",
+                    onChangeValue = eventCreator::setEventTitle,
+                    modifiers = modify(Flex2, Height100),
+                    textModifiers = modify(Heading2),
+                    placeholder = "Event Title"
+                )
             }
-            card {
-                heading2("where")
-                textField("location name", eventCreator::setLocationName, eventCreator.stateFlow.mapDistinct { it.locationName })
-                button("query") {
-                    eventCreator.queryLocation()
+            column(modify(QueryRow, Width100, FlexItemsBasis50)) {
+                dropMenu(eventCreator::setEventType) { it.label }
+                column(modify(ItemsWidth100)) {
+                    textField(
+                        label = "location name",
+                        onChangeValue = eventCreator::setLocationName,
+                        binding = eventCreator.stateFlow.mapDistinct { it.locationName })
+                    button("query") {
+                        eventCreator.queryLocation()
+                    }
                 }
             }
         }

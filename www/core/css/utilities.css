@@ -1,5 +1,15 @@
 
-.flex-items-1 > * { flex:1; }
+.flex-items-1 > * {
+    flex:1;
+    width: 100%;
+}
+.flex-items-basis-50 > * {
+    flex-basis: 50%;
+}
+
+.flex-1 {
+    flex: 1;
+}
 
 .bold {
     font-weight: bold;
@@ -53,4 +63,22 @@ p.large {
     border-radius: 50%;
     overflow: hidden;
     border: 3px solid #b4bd7d;
+}
+
+.border-radius-1 {
+    border-radius: var(--unit-spacing);
+}
+
+.heading-1, input.heading-1 {
+    font-size: var(--heading-1-size);
+    font-weight: var(--heading-1-weight);
+}
+
+.heading-2, input.heading-2 {
+    font-size: var(--heading-2-size);
+    font-weight: var(--heading-2-weight);
+}
+
+.items-width-100 > * {
+    width: 100%;
 }

@@ -1,6 +1,6 @@
 #map-window {
     position: relative;
-    border-radius: 12px;
+    border-radius: 1rem;
     overflow: hidden;
 }
 

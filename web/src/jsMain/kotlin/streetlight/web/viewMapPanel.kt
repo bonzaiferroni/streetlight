@@ -17,28 +17,14 @@ import koala.html.label
 import kotlinx.html.js.div
 
 fun RenderContext.viewMapPanel(app: AppContext) {
-    val eventMap = app.home.streetMap
-    val eventCreator = app.home.eventCreator
-    val gateAgent = app.gateAgent
-
     box(GeoMapIds.panel, modify(Width100)) {
-        flowBlock(
-            flow = eventCreator.stateFlow.mapDistinct { it.isCreatingEvent },
-            modifiers = modify(Blur),
-            animate = true
-        ) { isCreatingEvent ->
-            if (isCreatingEvent) {
-                viewEventCreator(app)
-            } else {
-                column {
-                    viewMapConfig(app)
+        column {
+            viewMapConfig(app)
 
-                    // sandbox
-                    viewSandbox(app)
+            // sandbox
+            // viewSandbox(app)
 
-                    viewMapCards(app)
-                }
-            }
+            viewMapCards(app)
         }
     }
 }

@@ -1,6 +1,11 @@
 h1 {
-    font-size: 3rem;
-    font-weight: 200;
+    font-size: var(--heading-1-size);
+    font-weight: var(--heading-1-weight);
     line-height: 1;
-    animation: glow 10s infinite linear;
+}
+
+h2 {
+    font-size: var(--heading-2-size);
+    font-weight: var(--heading-2-weight);
+    line-height: 1;
 }

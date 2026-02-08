@@ -15,11 +15,14 @@ object Dim: CssClass { override val value = Opacity6.value }
 object NoDim: CssClass { override val value = "no-dim" }
 object Glow: CssClass { override val value = "glow" }
 object CircleShape: CssClass { override val value = "circle-shape" }
+object BorderRadius1: CssClass { override val value = "border-radius-1" }
 
 // font utilities
 object Bold: CssClass { override val value = "bold" }
 object Italic: CssClass { override val value = "italic" }
 object Large: CssClass { override val value = "large" }
+object Heading1: CssClass { override val value = "heading-1" }
+object Heading2: CssClass { override val value = "heading-2" }
 
 fun CssBuilder.utilities(theme: KoalaTheme) {
 

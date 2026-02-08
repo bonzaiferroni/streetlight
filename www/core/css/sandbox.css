@@ -6,11 +6,11 @@
 [block-label]::before {
     content: attr(block-label);
     position: absolute;
-    top: -0.40rem;
+    top: -0.38rem;
     right: .5rem;
 
-    font-size: 0.6rem;
-    padding: 0.10rem 0.5rem;
+    font-size: 0.65rem;
+    padding: 0.12rem 0.5rem;
 
     background: var(--void-border);
     color: var(--fg-dim);

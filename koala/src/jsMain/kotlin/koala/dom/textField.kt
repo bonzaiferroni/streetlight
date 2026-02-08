@@ -1,7 +1,10 @@
 package koala.dom
 
+import koala.css.ModifierSet
 import koala.css.Width100
 import koala.css.applyModifiers
+import koala.html.Id
+import koala.html.applyId
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
@@ -17,10 +20,15 @@ import kotlinx.html.js.div
 fun RenderContext.textField(
     label: String? = null,
     onChangeValue: ((String) -> Unit)? = null,
+    modifiers: ModifierSet? = null,
+    textModifiers: ModifierSet? = null,
+    id: Id? = null,
+    placeholder: String? = null,
     binding: Flow<String>? = null,
     block: (INPUT.() -> Unit)? = null
 ): HTMLInputElement {
     val parent = div {
+        applyModifiers(modifiers)
         label?.let {
             blockLabel = it
         }
@@ -28,7 +36,8 @@ fun RenderContext.textField(
 
     val element = parent.append {
         input {
-            applyModifiers(Width100)
+            applyModifiers(Width100, textModifiers)
+            applyId(id)
             type = InputType.text
             onChangeValue?.let { callback ->
                 onInputFunction = {
@@ -38,6 +47,9 @@ fun RenderContext.textField(
             }
             label?.let {
                 attributes["aria-label"] = it
+            }
+            placeholder?.let {
+                this.placeholder = it
             }
             block?.invoke(this)
         }

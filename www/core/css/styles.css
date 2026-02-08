@@ -16,6 +16,12 @@
     --light-2: 88, 164, 255;
     --light-3: 88, 255, 188;
     --unit-spacing: 0.5rem;
+
+    --heading-1-size: 3rem;
+    --heading-1-weight: 200;
+
+    --heading-2-size: 2rem;
+    --heading-2-weight: 200;
 }
 
 
@@ -52,13 +58,13 @@ body::before {
 }
 
 input[type="text"], input[type='password'] {
-    border: none;
+    outline: none;
     padding: var(--unit-spacing);
     font-size: 1rem;
     background-color: rgb(var(--void));
     color: rgb(var(--fg));
 
-    outline: 1px solid var(--void-border);
+    border: 1px solid var(--void-border);
     border-radius: var(--unit-spacing);
     box-shadow: 0 0 var(--unit-spacing) var(--shadow);
 }
@@ -73,7 +79,7 @@ input[type="checkbox"] {
     display: inline-grid;
     place-items: center;
 
-    outline: 1px solid var(--void-border);
+    border: 1px solid var(--void-border);
     border-radius: 0.25rem;
     box-shadow: 0 0 0.25rem var(--shadow);
 }
@@ -126,4 +132,10 @@ label {
     display: inline-flex;
     align-items: center;
     gap: var(--unit-spacing);
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
 }
