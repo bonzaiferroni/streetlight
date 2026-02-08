@@ -20,10 +20,6 @@ fun RenderContext.viewMapPanel(app: AppContext) {
     box(GeoMapIds.panel, modify(Width100)) {
         column {
             viewMapConfig(app)
-
-            // sandbox
-            // viewSandbox(app)
-
             viewMapCards(app)
         }
     }

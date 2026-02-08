@@ -16,8 +16,8 @@ fun RenderContext.eventsTab(
 //                }
 //            }
 //        }
-        button("Go to the event") {
-            // portal.go(EventRoute)
+        button("Go to sandbox") {
+            portal.go(SandboxRoute)
         }
         homeFooter()
     }

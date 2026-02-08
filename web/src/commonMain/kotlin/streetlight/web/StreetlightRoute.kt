@@ -12,6 +12,7 @@ enum class StreetlightScreen(
     Account("account", { AccountRoute }),
     Event("event", { segments -> segments.getOrNull(1)?.let { EventRoute(EventId(it)) } }),
     CreateEvent("create-event", { CreateEventRoute }),
+    Sandbox("sandbox", { SandboxRoute })
 }
 
 sealed class StreetlightRoute: AppRoute
@@ -39,4 +40,8 @@ data class EventRoute(
 
 object CreateEventRoute: StreetlightRoute() {
     override val screen get() = StreetlightScreen.CreateEvent
+}
+
+object SandboxRoute: StreetlightRoute() {
+    override val screen get() = StreetlightScreen.Sandbox
 }

@@ -36,10 +36,10 @@ fun <State> RenderContext.flowBlock(
         config?.invoke(this)
     }
 
-    var render: List<HTMLElement>? = null
+    var render: RenderCache? = null
     var job: Job? = null
     var renderedOnce = false
-    val renderCache = mutableMapOf<State, List<HTMLElement>>()
+    val renderCaches = mutableMapOf<State, RenderCache>()
 
     renderScope.launch {
         var currentValue: State? = null
@@ -53,15 +53,23 @@ fun <State> RenderContext.flowBlock(
             job = SupervisorJob()
             val localScope = CoroutineScope(Dispatchers.Main + job)
 
+            fun createRender(): RenderCache {
+                var context: RenderContext
+                val elements =element.append {
+                    context = RenderContext(this, localScope)
+                    context.block(value)
+                }
+                return RenderCache(context, elements)
+            }
+
             fun appendRender() {
-                render = renderCache[value]?.also {
-                    it.forEach { child ->
+                render = renderCaches[value]?.also {
+                    it.elements.forEach { child ->
                         element.append(child)
                     }
-                } ?: element.append {
-                    RenderContext(this, localScope).block(value)
-                }
-                if (cacheRenderedElements) renderCache[value] = render
+                } ?: createRender()
+                render.context.emitOnLoad()
+                if (cacheRenderedElements) renderCaches[value] = render
             }
 
             if (animate) {
@@ -88,3 +96,8 @@ fun <State> RenderContext.flowBlock(
 
     return element
 }
+
+private class RenderCache(
+    val context: RenderContext,
+    val elements: List<HTMLElement>
+)

@@ -4,6 +4,8 @@ import koala.css.Blur
 import koala.css.SlideX
 import koala.css.modify
 import koala.dom.RenderContext
+import koala.dom.button
+import koala.dom.column
 import koala.dom.itemsBlock
 import koala.dom.textBlock
 import koala.dom.textField
@@ -14,8 +16,17 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 
 fun RenderContext.viewSandbox(app: AppContext) {
-    textField("input")
+    textBlock("hello sandbox")
+    button("Go home") {
+        app.portal.go(HomeRoute())
+    }
+
+    onLoad {
+        console.log("loaded")
+    }
 }
+
+// textField("input")
 
 // val flow = MutableStateFlow(listOf("One", "Two", "Three"))
 //
