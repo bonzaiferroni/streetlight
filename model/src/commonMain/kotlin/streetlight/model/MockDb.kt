@@ -131,17 +131,17 @@ val mockDb by lazy {
     )
     data class EventDetails(val title: String, val eventType: EventType, val tags: List<EventTag>)
     val events = object {
-        val jamSesh = eventOf("Jam Sesh", EventType.Meetup, listOf(DefaultEventTag.jamCircle))
-        val openMic = eventOf("Open Mic Night", EventType.Meetup, listOf(DefaultEventTag.openMic))
+        val jamSesh = eventOf("Jam Sesh", EventType.Meet, listOf(DefaultEventTag.jamCircle))
+        val openMic = eventOf("Open Mic Night", EventType.Meet, listOf(DefaultEventTag.openMic))
         val liveMusic = eventOf("Monday @ The Pub", EventType.Show, listOf(DefaultEventTag.liveMusic))
-        val karaoke = eventOf("Sing Your Heart Out", EventType.Meetup, listOf(DefaultEventTag.karaoke))
-        val gaming = eventOf("Trivia Night", EventType.Meetup, listOf(DefaultEventTag.gaming))
-        val blockParty = eventOf("Block Party", EventType.Meetup, listOf(DefaultEventTag.party, DefaultEventTag.potluck))
-        val singingCircle = eventOf("Singing Circle", EventType.Meetup, listOf(DefaultEventTag.jamCircle))
-        val poetrySlam = eventOf("Poetry Slam", EventType.Meetup, listOf(DefaultEventTag.special))
+        val karaoke = eventOf("Sing Your Heart Out", EventType.Meet, listOf(DefaultEventTag.karaoke))
+        val gaming = eventOf("Trivia Night", EventType.Meet, listOf(DefaultEventTag.gaming))
+        val blockParty = eventOf("Block Party", EventType.Meet, listOf(DefaultEventTag.party, DefaultEventTag.potluck))
+        val singingCircle = eventOf("Singing Circle", EventType.Meet, listOf(DefaultEventTag.jamCircle))
+        val poetrySlam = eventOf("Poetry Slam", EventType.Meet, listOf(DefaultEventTag.special))
         val tacoNight = eventOf("Taco Night", EventType.Food, listOf(DefaultEventTag.dinner))
-        val political = eventOf("School Board Review", EventType.Meetup, listOf(DefaultEventTag.political))
-        val potluck = eventOf("Afternoon Potluck", EventType.Meetup, listOf(DefaultEventTag.potluck, DefaultEventTag.appetizers))
+        val political = eventOf("School Board Review", EventType.Meet, listOf(DefaultEventTag.political))
+        val potluck = eventOf("Afternoon Potluck", EventType.Meet, listOf(DefaultEventTag.potluck, DefaultEventTag.appetizers))
 
         val list = listOf(
             jamSesh,

@@ -1,17 +1,24 @@
 :root {
-    --bg: 9, 13, 13;
-    --card-bg: rgba(var(--bg), .2);
-    --tabs-bg: rgba(var(--bg), .4);
-    --fg: 245, 246, 246;
-    --fg-dim: rgba(var(--fg), .8);
+    --black: 9, 13, 13;
+    --black-bg: rgb(var(--black));
+    --card-bg: rgba(var(--black), .2);
+    --tabs-bg: rgba(var(--black), .4);
+    --white: 240, 246, 246;
+    --white-fg: rgb(var(--white));
+    --white-dim: rgba(var(--white), .8);
+    --gray: 114, 120, 120;
+    --gray-fg: rgb(var(--gray));
     --void: 34, 41, 41;
     --void-bg: rgb(var(--void));
     --void-border: color-mix(in srgb, var(--void-bg) 90%, white);
     --shadow: rgba(0, 0, 0, 0.35);
-    --primary-bg: 1, 122, 138;
-    --primary: 5, 242, 255;
+    --primary: 70, 117, 153;
+    --primary-fg: rgb(var(--primary));
+    --primary-button: rgba(var(--primary), .5);
+    --primary-bg: color-mix(in srgb, var(--primary-fg) 15%, black);
     --accent-bg: 209, 43, 181;
     --accent: 255, 53, 221;
+    --accent-button: rgba(var(--accent), .5);
     --light-1: 255, 99, 132;
     --light-2: 88, 164, 255;
     --light-3: 88, 255, 188;
@@ -22,6 +29,9 @@
 
     --heading-2-size: 2rem;
     --heading-2-weight: 200;
+
+    --heading-3-size: 1.5rem;
+    --heading-3-weight: 300;
 }
 
 
@@ -33,8 +43,8 @@ body {
     font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
     font-size: 1rem;
     line-height: 1.5;
-    background-color: rgb(var(--bg));
-    color: rgb(var(--fg));
+    background-color: var(--black-bg);
+    color: var(--white-fg);
 }
 
 body::before {
@@ -57,7 +67,7 @@ input[type="text"], input[type='password'], textarea {
     padding: var(--unit-spacing);
     font-size: 1rem;
     background-color: rgb(var(--void));
-    color: rgb(var(--fg));
+    color: rgb(var(--white));
 
     border: 1px solid var(--void-border);
     border-radius: var(--unit-spacing);
@@ -99,7 +109,7 @@ select {
     padding: var(--unit-spacing);
     font-size: 1rem;
     background-color: rgb(var(--void));
-    color: rgb(var(--fg));
+    color: rgb(var(--white));
 
     outline: 1px solid var(--void-border);
     border-radius: var(--unit-spacing);

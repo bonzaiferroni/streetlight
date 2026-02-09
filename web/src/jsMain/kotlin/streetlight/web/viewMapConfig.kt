@@ -28,7 +28,7 @@ fun RenderContext.viewMapConfig(app: AppContext) {
                 }
             }
         }
-        button("Add Event") {
+        button("Add Event", modify(Accent)) {
             gateAgent.checkIn {
                 portal.go(CreateEventRoute)
             }

@@ -1,5 +1,5 @@
 .tabs-header {
-    background-color: rgba(var(--bg), 0.4);
+    background-color: rgba(var(--black), 0.4);
     display: flex;
     gap: 0.5rem;
     border-radius: 24px 24px 12px 12px;
@@ -19,13 +19,13 @@
 }
 
 .tabs-button.is-active {
-    background-color: rgb(var(--primary-bg), 0.4);
+    background-color: rgb(var(--primary), 0.4);
     cursor: default;
     animation: glow 10s infinite linear;
 }
 
 .tabs-button:not(.is-active):hover {
-    background-color: rgba(var(--primary-bg), 0.1);
+    background-color: rgba(var(--primary), 0.1);
 }
 
 /* Viewport container created by tabs.kt */

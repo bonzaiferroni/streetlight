@@ -11,6 +11,6 @@ data class EventEntity(
     override val iconPath get() = when(info.eventType) {
         EventType.Show -> SvgPath.guitar
         EventType.Food -> SvgPath.food
-        EventType.Meetup -> SvgPath.fellowship
+        EventType.Meet -> SvgPath.meet
     }
 }

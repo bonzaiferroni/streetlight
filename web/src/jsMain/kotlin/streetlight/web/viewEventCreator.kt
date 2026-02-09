@@ -6,13 +6,16 @@ import koala.html.applyBlockLabel
 import koala.html.blockLabel
 import koala.html.image
 import koala.html.paragraph
+import kotlinx.html.dialog
 
 fun RenderContext.viewEventCreator(app: AppContext) {
     val eventCreator = app.home.eventCreator
 
     column {
         card(modify(Width100, AlignItemsStretch)) {
+            setImage("feature image", modify(Height4))
             column(modify(QueryRow, AlignItemsStretch)) {
+                setImage("icon", modify(Square, Center))
                 textField(
                     label = "title",
                     onChangeValue = eventCreator::setEventTitle,
@@ -28,6 +31,9 @@ fun RenderContext.viewEventCreator(app: AppContext) {
             row {
                 paragraph("Tags:", modify(MarginLeft1, Dim))
                 textField()
+            }
+            dialogBox("yer dialog") {
+                paragraph("ey")
             }
             column(modify(QueryRow, AlignItemsStretch)) {
                 viewGeoMap(app.home.geoMap, modify(Flex1, Square))

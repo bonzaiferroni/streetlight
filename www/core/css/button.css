@@ -1,13 +1,20 @@
 .btn {
-    padding: var(--unit-spacing) 1rem;
+    padding: .5rem 1rem;
     border: none;
-    border-radius: 9999px;
-    background: rgba(var(--accent-bg), 0.5);
-    color: var(--fg);
-    font-size: 1rem;
+    border-radius: 2rem;
+    background: var(--primary-button);
+    color: var(--white);
+    font-size: .8rem;
+    line-height: 1.5rem;
     cursor: pointer;
     transition: background 0.2s ease;
-    box-shadow: 0 0 3px 3px rgba(var(--accent-bg), 0.3);
+    box-shadow: 0 0 .8rem var(--primary-button);
+    text-transform: uppercase;
+}
+
+.btn.accent {
+    box-shadow: 0 0 .8rem var(--accent-button);
+    background: var(--accent-button);
 }
 
 .btn:hover {
@@ -16,9 +23,9 @@
 
 [onclick] {
     cursor: pointer;
+    transition: box-shadow 200ms ease-in-out;
 }
 
 [onclick]:hover, a > .layout-card:hover {
-    box-shadow: inset 0 0 0 9999px rgba(255,255,255,.08);
-    transition: box-shadow .15s;
+    box-shadow: inset 0 0 0 9999px rgba(255,255,255,.04);
 }

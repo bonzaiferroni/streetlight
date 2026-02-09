@@ -16,6 +16,9 @@ object NoDim: CssClass { override val value = "no-dim" }
 object Glow: CssClass { override val value = "glow" }
 object CircleShape: CssClass { override val value = "circle-shape" }
 object BorderRadius1: CssClass { override val value = "border-radius-1" }
+object Accent: CssClass { override val value = "accent" }
+object Primary: CssClass { override val value = "primary" }
+object Secondary: CssClass { override val value = "secondary" }
 
 // font utilities
 object Bold: CssClass { override val value = "bold" }

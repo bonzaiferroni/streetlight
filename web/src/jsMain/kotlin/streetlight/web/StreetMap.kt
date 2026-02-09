@@ -108,7 +108,7 @@ data class MapFocus(
 
 enum class MapLayer(val label: String, val color: String, val eventType: EventType? = null) {
     Shows("Shows", "#bd7dae", EventType.Show),
-    Fellowship("Fellowship", "#7dbd8f", EventType.Meetup),
+    Meet("Meet", "#7dbd8f", EventType.Meet),
     Food("Food", "#bd9a7d", EventType.Food),
     Transit("Transit", "#7daebd"),
     Shelter("Shelter", "#b4bd7d"),
