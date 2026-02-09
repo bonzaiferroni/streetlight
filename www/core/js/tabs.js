@@ -68,6 +68,7 @@ function initTabs(root) {
     if (wantedIdx >= 0) current = wantedIdx;
 
     // --- Initial apply ---
+    buttons[current].dispatchEvent(new CustomEvent("select-tab"))
     panels.forEach((p, i) => {
         p.style.display = i === current ? "block" : "none";
         p.classList.toggle("is-active", i === current);
@@ -112,6 +113,7 @@ function initTabs(root) {
     function swap(fromIdx, toIdx) {
         const from = panels[fromIdx];
         const to = panels[toIdx];
+        buttons[toIdx].dispatchEvent(new CustomEvent("select-tab"))
 
         const toDir = toIdx > fromIdx ? "dir-right" : "dir-left";
         const fromDir = toIdx > fromIdx ? "dir-left" : "dir-right";

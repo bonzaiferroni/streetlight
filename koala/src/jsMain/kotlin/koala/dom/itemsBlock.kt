@@ -87,7 +87,8 @@ fun <Item> RenderContext.itemsBlock(
                 val cache = displayedItems?.get(item) ?: recallCachedItem(item) ?: createItem(item)
                 val container = cache.firstElement
                 container.style.top = "${height}px"
-                height += container.offsetHeight
+                console.log("container height: " + container.scrollHeight)
+                height += container.scrollHeight
                 if (index + 1 < items.size) {
                     height += gapPx
                 }

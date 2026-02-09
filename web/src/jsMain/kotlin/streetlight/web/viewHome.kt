@@ -5,10 +5,10 @@ import koala.css.AlignItemsCenter
 import koala.css.Width100
 import koala.css.modify
 import koala.dom.RenderContext
+import koala.dom.column
+import koala.dom.tab
 import koala.dom.tabs
 import koala.html.Id
-import koala.html.column
-import koala.html.tab
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
