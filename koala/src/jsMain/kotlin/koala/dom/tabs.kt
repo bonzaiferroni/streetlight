@@ -3,8 +3,6 @@ package koala.dom
 import koala.css.*
 import koala.html.Id
 import koala.html.TabClass
-import kotlinx.html.DIV
-import kotlinx.html.dom.append
 import kotlinx.html.js.p
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
@@ -17,7 +15,10 @@ fun RenderContext.tabs(
 ): HTMLDivElement {
     val scope = TabScope()
     scope.content()
-    val tabPanelElements = mutableListOf<HTMLElement?>()
+    val tabPanelElements = Array<HTMLElement?>(3) { null }
+    val renders = Array<RenderContext?>(3) { null }
+    var currentIndex = 0
+    var isLoaded = true
     val root = column(id, modify(TabClass.tabs, modifiers)) {
         row(modify(TabClass.header)) {
             scope.tabs.forEachIndexed { index, tab ->
@@ -26,25 +27,41 @@ fun RenderContext.tabs(
                     attributes["data-tab"] = index.toString()
                     +tab.label
                 }
-                fun createContent(event: Event) {
-                    val element = tabPanelElements.getOrNull(index) ?: return
+                fun createTab(): RenderContext {
+                    val element = tabPanelElements.getOrNull(index) ?: error("tab not found: $index")
                     console.log("creating content: $index")
-                    val render = createRender(element, tab.content)
-                    render.context.emitOnLoad()
-                    tabPanelElements[index] = null
+                    val context = createRender(element, tab.content).context
+                    renders[index] = context
+                    return context
                 }
-                button.addEventListener("select-tab", ::createContent)
+                fun selectTab(event: Event) {
+                    val context = renders.getOrNull(index) ?: createTab()
+                    context.emitOnLoad()
+                    currentIndex = index
+                }
+                button.addEventListener("select-tab", ::selectTab)
             }
         }
         box(modify(TabClass.viewport)) {
-            scope.tabs.forEach { tab ->
+            scope.tabs.forEachIndexed { index, tab ->
                 val element = box(modify(TabClass.panel))
-                tabPanelElements.add(element)
+                tabPanelElements[index] = element
             }
         }
     }
 
     initTabs(root)
+
+    onLoad {
+        if (!isLoaded) {
+            isLoaded = true
+            renders[currentIndex]?.emitOnLoad()
+        }
+    }
+
+    onUnload {
+        isLoaded = false
+    }
 
     return root
 }
