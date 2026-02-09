@@ -61,7 +61,7 @@ class TransitMap(
         }
 
         val removedIds = stateNow.entities
-            .filter { currentEntity -> entities.none { currentEntity.vehicleId != it.vehicleId } }
+            .filter { currentEntity -> entities.none { currentEntity.vehicleId == it.vehicleId } }
             .map { it.vehicleId }
 
         if (removedIds.isNotEmpty()) {

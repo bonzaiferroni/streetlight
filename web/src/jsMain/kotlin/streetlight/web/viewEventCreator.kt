@@ -2,28 +2,36 @@ package streetlight.web
 
 import koala.css.*
 import koala.dom.*
-import koala.html.heading2
+import koala.html.applyBlockLabel
+import koala.html.blockLabel
 import koala.html.image
-import kotlinx.html.js.p
+import koala.html.paragraph
 
 fun RenderContext.viewEventCreator(app: AppContext) {
     val eventCreator = app.home.eventCreator
 
     column {
-        card {
-            row(modify(Width100, AlignItemsStretch)) {
-                image(modifiers = modify(Flex1, Width100, BorderRadius1))
+        card(modify(Width100, AlignItemsStretch)) {
+            column(modify(QueryRow, AlignItemsStretch)) {
                 textField(
                     label = "title",
                     onChangeValue = eventCreator::setEventTitle,
-                    modifiers = modify(Flex2, Height100),
+                    modifiers = modify(Flex1),
                     textModifiers = modify(Heading2),
                     placeholder = "Event Title"
                 )
+                row {
+                    paragraph("Event category:", modify(MarginLeft1, Dim))
+                    dropMenu(eventCreator::setEventType, provideLabel = { it.label })
+                }
             }
-            column(modify(QueryRow, Width100, FlexItemsBasis50)) {
-                dropMenu(eventCreator::setEventType) { it.label }
-                column(modify(ItemsWidth100)) {
+            row {
+                paragraph("Tags:", modify(MarginLeft1, Dim))
+                textField()
+            }
+            column(modify(QueryRow, AlignItemsStretch)) {
+                viewGeoMap(app.home.geoMap, modify(Flex1, Square))
+                column(modify(Flex2, AlignItemsStretch)) {
                     textField(
                         label = "location name",
                         onChangeValue = eventCreator::setLocationName,
@@ -33,6 +41,7 @@ fun RenderContext.viewEventCreator(app: AppContext) {
                     }
                 }
             }
+            textField(5, "description", placeholder = "Event description")
         }
         message(eventCreator.stateFlow.mapDistinct { it.message })
         row {

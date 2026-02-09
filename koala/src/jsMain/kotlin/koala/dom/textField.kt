@@ -4,6 +4,7 @@ import koala.css.ModifierSet
 import koala.css.Width100
 import koala.css.applyModifiers
 import koala.html.Id
+import koala.html.applyBlockLabel
 import koala.html.applyId
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -16,6 +17,7 @@ import org.w3c.dom.HTMLInputElement
 import koala.html.blockLabel
 import kotlinx.html.dom.append
 import kotlinx.html.js.div
+import kotlinx.html.js.textArea
 
 fun RenderContext.textField(
     label: String? = null,
@@ -29,9 +31,7 @@ fun RenderContext.textField(
 ): HTMLInputElement {
     val parent = div {
         applyModifiers(modifiers)
-        label?.let {
-            blockLabel = it
-        }
+        applyBlockLabel(label)
     }
 
     val element = parent.append {
@@ -64,4 +64,32 @@ fun RenderContext.textField(
     }
 
     return element
+}
+
+fun RenderContext.textField(
+    rows: Int,
+    label: String? = null,
+    modifiers: ModifierSet? = null,
+    textModifiers: ModifierSet? = null,
+    id: Id? = null,
+    placeholder: String? = null,
+) {
+    val parent = div {
+        applyModifiers(modifiers)
+        applyBlockLabel(label)
+    }
+
+    val element = parent.append {
+        textArea {
+            this.rows = rows.toString()
+            applyModifiers(Width100, textModifiers)
+            applyId(id)
+            label?.let {
+                attributes["aria-label"] = it
+            }
+            placeholder?.let {
+                this.placeholder = it
+            }
+        }
+    }
 }

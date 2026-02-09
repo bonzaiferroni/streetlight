@@ -8,6 +8,6 @@ import streetlight.web.pages.SinglePageId
 
 fun RenderContext.viewFullMap(app: AppContext) {
     mountFullscreen(Id("fullscreen-map")) {
-        viewGeoMap(app.home.geoMap, "100%")
+        viewGeoMap(app.home.geoMap, modify(Height100))
     }
 }

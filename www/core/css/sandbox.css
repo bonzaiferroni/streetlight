@@ -49,3 +49,8 @@
     display: block;
 }
 
+textarea {
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    resize: none;
+    overflow: auto;
+}

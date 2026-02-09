@@ -79,6 +79,18 @@ p.large {
     font-weight: var(--heading-2-weight);
 }
 
-.items-width-100 > * {
-    width: 100%;
+.margin-left-1 {
+    margin-left: var(--unit-spacing);
+}
+
+.height-32 {
+    height: calc(var(--unit-spacing) * 32);
+}
+
+.height-48 {
+    height: calc(var(--unit-spacing) * 48);
+}
+
+.square {
+    aspect-ratio: 1 / 1;
 }

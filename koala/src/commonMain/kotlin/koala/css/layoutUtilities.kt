@@ -24,6 +24,8 @@ object Height100: CssClass { override val value = "height-100" }
 object Height2: CssClass { override val value = "height-2" }
 object Height3: CssClass { override val value = "height-3" }
 object Height4: CssClass { override val value = "height-4" }
+object Height32: CssClass { override val value = "height-32" }
+object Height48: CssClass { override val value = "height-48" }
 object FillHeight: CssClass { override val value = "fill-height" }
 object FlexItems1: CssClass { override val value = "flex-items-1" }
 object FlexItemsBasis50: CssClass { override val value = "flex-items-basis-50" }
@@ -35,9 +37,10 @@ object MaxWidth25: CssClass { override val value = "max-width-25" }
 object MaxWidth50: CssClass { override val value = "max-width-50" }
 object MarginAuto: CssClass { override val value = "margin-auto" }
 object MarginTop4: CssClass { override val value = "margin-top-4" }
+object MarginLeft1: CssClass { override val value = "margin-left-1" }
 object SpaceBetween: CssClass { override val value = "space-between" }
 object NoWrap: CssClass { override val value = "no-wrap" }
-object ItemsWidth100: CssClass { override val value = "items-width-100" }
+object Square: CssClass { override val value = "square" }
 
 fun CssBuilder.layoutUtilities(theme: KoalaTheme) {
     rule(Gap0) {

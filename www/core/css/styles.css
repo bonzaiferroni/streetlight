@@ -52,7 +52,7 @@ body::before {
     will-change: filter;
 }
 
-input[type="text"], input[type='password'] {
+input[type="text"], input[type='password'], textarea {
     outline: none;
     padding: var(--unit-spacing);
     font-size: 1rem;

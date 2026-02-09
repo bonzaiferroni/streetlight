@@ -1,7 +1,11 @@
+@file:OptIn(FlowPreview::class)
+
 package streetlight.web
 
 import kampfire.model.GeoBounds
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.debounce
 import streetlight.model.data.MapQuery
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
@@ -23,7 +27,7 @@ class StreetMap(
     val focusFlow = stateFlow.mapDistinct { it.focus }
     val communityFlow = stateFlow.mapDistinct { it.communities }
     val eventsFlow = stateFlow.mapDistinct { it.events }
-    val eventMapFlow = stateFlow.mapDistinctBy({ it.events }) { it.events.groupBy { event -> event.eventType } }
+    val eventMapFlow = stateFlow.debounce(100).mapDistinctBy({ it.events }) { it.events.groupBy { event -> event.eventType } }
 
     init {
         viewModelScope.launch {
@@ -104,7 +108,7 @@ data class MapFocus(
 
 enum class MapLayer(val label: String, val color: String, val eventType: EventType? = null) {
     Shows("Shows", "#bd7dae", EventType.Show),
-    Fellowship("Fellowship", "#7dbd8f", EventType.Fellowship),
+    Fellowship("Fellowship", "#7dbd8f", EventType.Meetup),
     Food("Food", "#bd9a7d", EventType.Food),
     Transit("Transit", "#7daebd"),
     Shelter("Shelter", "#b4bd7d"),

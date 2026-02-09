@@ -17,3 +17,9 @@ value class Attribute(val value: String)
 object Attributes {
     val blockLabel = Attribute("block-label")
 }
+
+fun AttributeContext.applyBlockLabel(label: String?) {
+    label?.let {
+        blockLabel = it
+    }
+}

@@ -1,6 +1,9 @@
 package streetlight.web
 
 import koala.css.Height100
+import koala.css.Height32
+import koala.css.Height48
+import koala.css.ModifierSet
 import koala.css.Width100
 import koala.css.modify
 import koala.dom.RenderContext
@@ -17,12 +20,10 @@ import org.w3c.dom.get
 
 fun RenderContext.viewGeoMap(
     geoMap: GeoMap,
-    height: String = "400px",
+    modifiers: ModifierSet? = modify(Height48),
     block: (DIV.() -> Unit)? = null
 ): HTMLDivElement {
-    val parent = box(GeoMapIds.mapMount, modify(Width100)) {
-        style = "height: $height;"
-
+    val parent = box(GeoMapIds.mapMount, modify(Width100, modifiers)) {
         block?.invoke(this)
     }
 

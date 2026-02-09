@@ -1,9 +1,16 @@
 package koala.dom
 
+import koala.css.ModifierSet
+import koala.css.Width100
+import koala.css.applyModifiers
+import koala.html.applyBlockLabel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import kotlinx.html.SELECT
+import kotlinx.html.dom.append
+import kotlinx.html.js.div
 import kotlinx.html.js.option
 import kotlinx.html.js.select
 import org.w3c.dom.HTMLSelectElement
@@ -11,15 +18,19 @@ import org.w3c.dom.HTMLSelectElement
 fun RenderContext.dropMenu(
     options: List<String>,
     flow: Flow<String>? = null,
-    onChangeValue: ((String) -> Unit)? = null
+    onChangeValue: ((String) -> Unit)? = null,
+    modifiers: ModifierSet? = null,
+    block: (SELECT.() -> Unit)? = null
 ) {
     val element = select {
+        applyModifiers(modifiers)
         options.forEach {
             option {
                 value = it
                 +it
             }
         }
+        block?.invoke(this)
     }
 
     onChangeValue?.let {
@@ -41,11 +52,13 @@ fun RenderContext.dropMenu(
 inline fun <reified T> RenderContext.dropMenu(
     noinline onChangeValue: ((T) -> Unit)? = null,
     flow: Flow<T>? = null,
-    crossinline labelOf: (T) -> String,
+    modifiers: ModifierSet? = null,
+    crossinline provideLabel: (T) -> String,
+    noinline block: (SELECT.() -> Unit)? = null
 ) where T : Enum<T> {
     val enums = enumValues<T>()
-    val values = enums.map { labelOf(it) }
-    val flow = flow?.map(labelOf)
+    val values = enums.map { provideLabel(it) }
+    val flow = flow?.map(provideLabel)
     val callback: ((String) -> Unit)? = onChangeValue?.let {
         { str ->
             val index = values.indexOf(str)
@@ -53,7 +66,7 @@ inline fun <reified T> RenderContext.dropMenu(
         }
     }
 
-    dropMenu(values, flow, callback)
+    dropMenu(values, flow, callback, modifiers, block)
 }
 
 // inline fun <reified T> DropMenu(
