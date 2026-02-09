@@ -37,7 +37,6 @@ fun <State> RenderContext.flowBlock(
     }
 
     var render: RenderCache? = null
-    var job: Job? = null
     var renderedOnce = false
     val renderCaches = mutableMapOf<State, RenderCache>()
 
@@ -47,44 +46,31 @@ fun <State> RenderContext.flowBlock(
             // do we need renderedOnce?
             if (renderedOnce && value == currentValue) return@collect
             renderedOnce = true
-            if (!cacheRenderedElements) job?.cancel()
+            if (!cacheRenderedElements) render?.job?.cancel()
             currentValue = value
 
-            job = SupervisorJob()
-            val localScope = CoroutineScope(Dispatchers.Main + job)
+            render?.context?.emitOnUnload()
 
-            fun createRender(): RenderCache {
-                var context: RenderContext
-                val elements =element.append {
-                    context = RenderContext(this, localScope)
-                    context.block(value)
-                }
-                return RenderCache(context, elements)
-            }
+            // this be creating a lot of jobs when cache is active
 
             fun appendRender() {
                 render = renderCaches[value]?.also {
                     it.elements.forEach { child ->
                         element.append(child)
                     }
-                } ?: createRender()
+                } ?: createRender(element, value, block)
                 render.context.emitOnLoad()
                 if (cacheRenderedElements) renderCaches[value] = render
             }
 
             if (animate) {
-                element.unmodify(Reveal)
-                val exitJob = renderScope.launch {
-                    if (render == null) return@launch
-                    element.unmodify(Reveal)
-                    // element.modify(Hide)
-                    delay(200)
-                    element.clear()
-                }
-                localScope.launch {
-                    exitJob.join()
+                renderScope.launch {
+                    if (render != null) {
+                        element.unmodify(Reveal)
+                        delay(200)
+                        element.clear()
+                    }
                     appendRender()
-                    // element.unmodify(Hide)
                     element.modify(Reveal)
                 }
             } else {
@@ -96,8 +82,3 @@ fun <State> RenderContext.flowBlock(
 
     return element
 }
-
-private class RenderCache(
-    val context: RenderContext,
-    val elements: List<HTMLElement>
-)

@@ -1,12 +1,14 @@
 package streetlight.web
 
 import koala.css.Blur
+import koala.css.FlexItemsBasis50
 import koala.css.SlideX
 import koala.css.modify
 import koala.dom.RenderContext
 import koala.dom.button
 import koala.dom.column
 import koala.dom.itemsBlock
+import koala.dom.row
 import koala.dom.textBlock
 import koala.dom.textField
 import koala.html.blockLabel
@@ -16,13 +18,12 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 
 fun RenderContext.viewSandbox(app: AppContext) {
-    textBlock("hello sandbox")
+    row(modify(FlexItemsBasis50)) {
+        textBlock("hello sandbox")
+        viewGeoMap(app.home.geoMap)
+    }
     button("Go home") {
         app.portal.go(HomeRoute())
-    }
-
-    onLoad {
-        console.log("loaded")
     }
 }
 

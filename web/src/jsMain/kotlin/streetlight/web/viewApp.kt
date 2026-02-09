@@ -8,9 +8,10 @@ import koala.css.SlideY
 import koala.css.modify
 import koala.dom.renderRoot
 import koala.dom.flowBlock
+import koala.dom.getElementById
 import kotlinx.browser.document
 import kotlinx.coroutines.MainScope
-import org.w3c.dom.HTMLElement
+import streetlight.web.pages.SinglePageId
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
@@ -41,7 +42,7 @@ fun viewApp() {
         }
     }
 
-    val portalMount = document.getElementById("portal-mount") as HTMLElement
+    val portalMount = document.getElementById(SinglePageId.portalMount)
     portalMount.renderRoot(app.appScope) {
         flowBlock(
             flow = app.portal.screenFlow,
@@ -55,6 +56,7 @@ fun viewApp() {
                 StreetlightScreen.Account -> viewAccount(app.gate, app.portal)
                 StreetlightScreen.CreateEvent -> viewEventCreator(app)
                 StreetlightScreen.Sandbox -> viewSandbox(app)
+                StreetlightScreen.FullMap -> viewFullMap(app)
             }
         }
     }

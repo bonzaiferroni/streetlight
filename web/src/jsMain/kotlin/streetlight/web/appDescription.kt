@@ -8,7 +8,7 @@ import koala.css.*
 import koala.dom.DOMContext
 import koala.dom.column
 import koala.dom.lottie
-import streetlight.web.pages.homeFooter
+import streetlight.web.pages.appFooter
 
 fun DOMContext.appDescription() {
     column(modify(AlignItemsCenter)) {
@@ -67,7 +67,7 @@ fun DOMContext.appDescription() {
             githubLink("map", "MapLibre", "maplibre-gl-js")
             githubLink("map data", "OpenFreeMap", "hyper-knot")
         }
-        homeFooter()
+        appFooter()
     }
 }
 

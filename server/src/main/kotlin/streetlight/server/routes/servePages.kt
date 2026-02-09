@@ -9,7 +9,7 @@ import streetlight.server.RuntimeProvider
 import streetlight.server.ServerProvider
 import streetlight.web.pages.eventPortal
 import streetlight.web.pages.eventSignUp
-import streetlight.web.pages.homePage
+import streetlight.web.pages.singlePage
 import java.io.File
 
 fun Routing.servePages(app: ServerProvider = RuntimeProvider) {
@@ -17,7 +17,7 @@ fun Routing.servePages(app: ServerProvider = RuntimeProvider) {
 
     get("/") {
         call.respondHtml {
-            homePage()
+            singlePage()
         }
     }
 

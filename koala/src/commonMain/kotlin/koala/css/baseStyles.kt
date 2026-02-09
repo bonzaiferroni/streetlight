@@ -13,22 +13,22 @@ import kotlinx.css.properties.s
 
 fun CssBuilder.baseStyles(theme: KoalaTheme) {
 
-    html {
-        fontSize = 100.pct
-    }
+//    html {
+//        fontSize = 100.pct
+//    }
 
-    body {
-        fontFamily = "system-ui, -apple-system, Segoe UI, Roboto, sans-serif"
-        fontSize = 1.rem
-        lineHeight = LineHeight("1.5")
-        margin = Margin(LinearDimension("0"), LinearDimension.auto)
-        padding = Padding(theme.spacingUnit)
-        backgroundColor = theme.bg
-        color = theme.fg
-        position = Position.relative
-        minHeight = 100.vh
-        maxWidth = 960.px
-    }
+//    body {
+//        fontFamily = "system-ui, -apple-system, Segoe UI, Roboto, sans-serif"
+//        fontSize = 1.rem
+//        lineHeight = LineHeight("1.5")
+//        margin = Margin(LinearDimension("0"), LinearDimension.auto)
+//        padding = Padding(theme.spacingUnit)
+//        backgroundColor = theme.bg
+//        color = theme.fg
+//        position = Position.relative
+//        minHeight = 100.vh
+//        maxWidth = 960.px
+//    }
 
 //    "body:before" {
 //        content = QuotedString("")

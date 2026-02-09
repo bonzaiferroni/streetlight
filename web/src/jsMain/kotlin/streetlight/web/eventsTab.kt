@@ -2,7 +2,7 @@ package streetlight.web
 
 import koala.css.*
 import koala.dom.*
-import streetlight.web.pages.homeFooter
+import streetlight.web.pages.appFooter
 
 fun RenderContext.eventsTab(
     portal: AppPortal
@@ -19,6 +19,6 @@ fun RenderContext.eventsTab(
         button("Go to sandbox") {
             portal.go(SandboxRoute)
         }
-        homeFooter()
+        appFooter()
     }
 }

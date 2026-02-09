@@ -22,3 +22,30 @@
     border-radius: 0.4rem;
     box-shadow: 0 0 0.4rem var(--shadow);
 }
+
+#viewport-box {
+    position: relative;
+    width: 100vw;
+    height: 100dvh;
+}
+
+#app {
+    position: relative;
+    min-height: 100vh;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: var(--unit-spacing);
+}
+
+#fullscreen-mount {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+}
+
+#fullscreen-mount.reveal {
+    display: block;
+}
+

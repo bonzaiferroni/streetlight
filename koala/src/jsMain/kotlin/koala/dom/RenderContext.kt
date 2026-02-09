@@ -1,5 +1,6 @@
 package koala.dom
 
+import koala.html.Id
 import koala.utils.EventHandler
 import koala.utils.MutableEventHandler
 import kotlinx.browser.document
@@ -29,8 +30,15 @@ class RenderContext(
     private val onLoadHandler = MutableEventHandler()
     val onLoad: EventHandler = onLoadHandler
 
+    private val onUnloadHandler = MutableEventHandler()
+    val onUnload: EventHandler = onUnloadHandler
+
     internal fun emitOnLoad() {
         onLoadHandler.emit()
+    }
+
+    internal fun emitOnUnload() {
+        onUnloadHandler.emit()
     }
 }
 
@@ -40,14 +48,40 @@ fun HTMLElement.renderRoot(
 ) {
     clear()
     append {
-        RenderContext(this, scope).block()
+        val context = RenderContext(this, scope)
+        context.block()
+        context.emitOnLoad()
     }
 }
 
 fun RenderContext.mountRender(
-    elementId: String,
+    elementId: Id,
     block: RenderContext.() -> Unit
 ) {
-    val mount = document.getElementById(elementId) as HTMLElement
+    val mount = document.getElementById(elementId)
     mount.renderRoot(renderScope, block)
+}
+
+class RenderCache(
+    val context: RenderContext,
+    val job: Job,
+    val localScope: CoroutineScope,
+    val elements: List<HTMLElement>
+) {
+    val firstElement get() = elements.first()
+}
+
+fun <T> createRender(parent: HTMLElement, value: T, block: RenderContext.(T) -> Unit): RenderCache {
+    val job = SupervisorJob()
+    val localScope = CoroutineScope(Dispatchers.Main + job)
+    var context: RenderContext
+    val elements = parent.append {
+        context = RenderContext(this, localScope)
+        context.block(value)
+    }
+    return RenderCache(context, job, localScope, elements)
+}
+
+fun createRender(parent: HTMLElement, block: RenderContext.() -> Unit) = createRender(parent, Unit) {
+    block()
 }

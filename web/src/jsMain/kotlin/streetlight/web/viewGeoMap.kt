@@ -1,5 +1,6 @@
 package streetlight.web
 
+import koala.css.Height100
 import koala.css.Width100
 import koala.css.modify
 import koala.dom.RenderContext
@@ -11,19 +12,50 @@ import kotlinx.html.DIV
 import kotlinx.html.dom.append
 import org.w3c.dom.HTMLDivElement
 import kotlinx.html.style
+import org.w3c.dom.HTMLElement
+import org.w3c.dom.get
 
 fun RenderContext.viewGeoMap(
     geoMap: GeoMap,
     height: String = "400px",
     block: (DIV.() -> Unit)? = null
 ): HTMLDivElement {
-    val parent = box(GeoMapIds.window, modify(Width100)) {
+    val parent = box(GeoMapIds.mapMount, modify(Width100)) {
         style = "height: $height;"
 
         block?.invoke(this)
     }
 
-    val widgetBox = parent.append {
+    if (mapWindowElement == null) {
+        mapWindowElement = createMapWindow(geoMap, parent)
+    }
+
+    onLoad {
+        if (parent.children.length == 0) {
+            console.log("grabbing geomap window")
+            val mapWindow = mapWindowElement ?: error("mapWindowElement not found")
+            parent.appendChild(mapWindow)
+            mapWidget?.resize()
+        }
+    }
+
+    return parent
+}
+
+var mapWindowElement: HTMLElement? = null
+var mapWidget: maplibregl.Map? = null
+
+fun RenderContext.createMapWindow(
+    geoMap: GeoMap,
+    parent: HTMLDivElement,
+): HTMLElement {
+    console.log("creating geomap")
+
+    val mapWindow = parent.append {
+        box(GeoMapIds.window, modify(Width100, Height100))
+    }.first()
+
+    val widgetBox = mapWindow.append {
         box(GeoMapIds.widget) {
         }
         box(GeoMapIds.overlay) {
@@ -39,6 +71,7 @@ fun RenderContext.viewGeoMap(
             center = maplibregl.LngLat(-104.95, 39.75)
             zoom = 11
         })
+        mapWidget = widget
 
         widget.addControl(maplibregl.NavigationControl())
         widget.addControl(maplibregl.FullscreenControl())
@@ -89,10 +122,11 @@ fun RenderContext.viewGeoMap(
         relayBounds()
     }
 
-    return parent
+    return mapWindow
 }
 
 object GeoMapIds {
+    val mapMount = Id("map-mount")
     val window = Id("map-window")
     val widget = Id("map-widget")
     val overlay = Id("map-overlay")

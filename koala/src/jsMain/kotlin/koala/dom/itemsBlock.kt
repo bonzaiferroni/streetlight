@@ -5,7 +5,6 @@ import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -14,7 +13,6 @@ import kotlinx.html.DIV
 import kotlinx.html.classes
 import kotlinx.html.dom.append
 import kotlinx.html.js.div
-import org.w3c.dom.HTMLElement
 import kotlin.collections.plus
 
 fun <Item> RenderContext.itemsBlock(
@@ -34,11 +32,11 @@ fun <Item> RenderContext.itemsBlock(
         config?.invoke(this)
     }
 
-    val cachedItems = mutableMapOf<Item, ItemCache>()
-    var displayedItems: Map<Item, ItemCache>? = null
+    val cachedItems = mutableMapOf<Item, RenderCache>()
+    var displayedItems: Map<Item, RenderCache>? = null
     val gapPx = remToPx(0.5)
 
-    fun createItem(item: Item): ItemCache {
+    fun createItem(item: Item): RenderCache {
         val job = SupervisorJob()
         val localScope = CoroutineScope(Dispatchers.Main + job)
         val container = parent.append {
@@ -46,15 +44,17 @@ fun <Item> RenderContext.itemsBlock(
                 containerConfig?.invoke(this)
             }
         }.first()
+        var context: RenderContext
         container.append {
-            RenderContext(this, localScope).block(item)
+            context = RenderContext(this, localScope)
+            context.block(item)
         }
-        return ItemCache(job, localScope, container)
+        return RenderCache(context, job, localScope, listOf(container))
     }
 
-    fun recallCachedItem(item: Item): ItemCache? {
+    fun recallCachedItem(item: Item): RenderCache? {
         val cachedItem = cachedItems[item] ?: return null
-        parent.append(cachedItem.container)
+        parent.append(cachedItem.elements)
         return cachedItem
     }
 
@@ -70,12 +70,12 @@ fun <Item> RenderContext.itemsBlock(
                     }
                     if (animate) {
                         renderScope.launch {
-                            cache.container.unmodify(Reveal)
+                            cache.firstElement.unmodify(Reveal)
                             delay(200)
-                            cache.container.remove()
+                            cache.firstElement.remove()
                         }
                     } else {
-                        cache.container.remove()
+                        cache.firstElement.remove()
                     }
                 }
             }
@@ -85,7 +85,7 @@ fun <Item> RenderContext.itemsBlock(
             displayedItems = items.associateWith { item ->
                 val isCurrentlyDisplayed = displayedItems?.contains(item) ?: false
                 val cache = displayedItems?.get(item) ?: recallCachedItem(item) ?: createItem(item)
-                val container = cache.container
+                val container = cache.firstElement
                 container.style.top = "${height}px"
                 height += container.offsetHeight
                 if (index + 1 < items.size) {
@@ -95,7 +95,7 @@ fun <Item> RenderContext.itemsBlock(
                 if (animate && !isCurrentlyDisplayed) {
                     cache.localScope.launch {
                         delay(200)
-                        cache.container.modify(Reveal)
+                        cache.firstElement.modify(Reveal)
                     }
                 }
 
@@ -111,9 +111,3 @@ fun <Item> RenderContext.itemsBlock(
 private fun remToPx(rem: Double) = window.getComputedStyle(document.documentElement!!).fontSize.dropLast(2).toDouble().let {
     (it * rem).toInt()
 }
-
-private data class ItemCache(
-    val job: Job,
-    val localScope: CoroutineScope,
-    val container: HTMLElement
-)
