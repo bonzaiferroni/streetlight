@@ -9,7 +9,7 @@ import kotlinx.html.js.div
 fun DOMContext.blockLabel(
     label: String,
     modifiers: ModifierSet? = null,
-    block: (DIV.() -> Unit?)? = null
+    block: (DIV.() -> Unit)? = null
 ) = div {
     this.blockLabel = label
     applyModifiers(modifiers)

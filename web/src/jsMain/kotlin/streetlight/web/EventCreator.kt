@@ -16,6 +16,8 @@ class EventCreator(
     private val streetMap: StreetMap,
 ): BrowserModel<EventCreatorState>(EventCreatorState(), scope) {
 
+    val urlFlow = stateFlow.mapDistinct { it.url }
+
     init {
         viewModelScope.launch {
             streetMap.stateFlow.mapDistinct { it.focus.location?.name }.filterNotNull().collect { locationName ->
@@ -74,6 +76,10 @@ class EventCreator(
             setState { it.copy(locationName = returned.displayName)}
         }
     }
+
+    fun setUrl(url: String?) {
+        setState { it.copy(url = url) }
+    }
 }
 
 data class EventCreatorState(
@@ -81,6 +87,7 @@ data class EventCreatorState(
     val eventType: EventType = EventType.Show,
     val locationName: String = "",
     val message: UIMessage? = null,
+    val url: String? = null,
 ) {
     val canCreateEvent get() = locationName.isNotBlank() && title.isNotBlank()
 }

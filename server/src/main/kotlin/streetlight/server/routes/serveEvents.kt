@@ -14,6 +14,7 @@ import kotlinx.html.body
 import kotlinx.html.p
 import streetlight.model.Api
 import streetlight.model.data.EventInfo
+import streetlight.model.data.FileUse
 import streetlight.model.data.toProjectId
 import streetlight.model.mockDb
 import streetlight.server.RuntimeProvider
@@ -69,7 +70,8 @@ fun Routing.serveEvents(app: ServerProvider = RuntimeProvider) {
 //
 //        }
         postEndpoint(Api.Events.Upload) { bytes, _ ->
-            uploadUserImage(bytes)
+            val userId = getUserId()
+            uploadUserImage(bytes, userId, FileUse.EventImage)
         }
     }
 }

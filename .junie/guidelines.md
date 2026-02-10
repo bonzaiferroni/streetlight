@@ -65,6 +65,7 @@ CreateTable(Foo):
 CreateTableDao(Foo):
 * Create a class FooTableDao in the package `streetlight.server.db.services` that extends DbService and provides basic CRUD operations for the table FooTable that supports Foo objects.
 * The create function should use `UpdateBuilder<*>.writeFull(foo: Foo)` if it is defined in `FooTable.kt`.
+* The create, update, and delete functions should just be named "create", etc, without repeating the type. Any read functions you make should be more descriptive.
 * Add the dao to the `ServerDao` class in `ServerProvider`.
 * You may use `LocationTableDao` as an example.
 

@@ -67,19 +67,16 @@ textarea {
 }
 
 .set-image {
-    position: relative;
     border-radius: var(--unit-spacing);
-    overflow: clip;
 }
 
 .set-image > * {
-    position: absolute;
     width: 100%;
-    height: 100%;
 }
 
 .set-image-placeholder {
     background-color: var(--card-bg);
+    height: 100%;
 }
 
 .set-image-placeholder::before {

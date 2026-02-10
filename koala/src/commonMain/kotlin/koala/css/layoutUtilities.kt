@@ -24,6 +24,9 @@ object Height100: CssClass { override val value = "height-100" }
 object Height2: CssClass { override val value = "height-2" }
 object Height3: CssClass { override val value = "height-3" }
 object Height4: CssClass { override val value = "height-4" }
+object Height8: CssClass { override val value = "height-8" }
+object MinHeight4: CssClass { override val value = "min-height-4" }
+object MinHeight8: CssClass { override val value = "min-height-8" }
 object Height32: CssClass { override val value = "height-32" }
 object Height48: CssClass { override val value = "height-48" }
 object Size100: CssClass { override val value = "size-100" }
@@ -164,15 +167,15 @@ fun CssBuilder.layoutUtilities(theme: KoalaTheme) {
     }
 
     rule(Height2) {
-        height = 2.rem
+        height = theme.spacingUnit * 2
     }
 
     rule(Height3) {
-        height = 3.rem
+        height = theme.spacingUnit * 3
     }
 
     rule(Height4) {
-        height = 4.rem
+        height = theme.spacingUnit * 4
     }
 
     rule(FillHeight) {

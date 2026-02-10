@@ -111,3 +111,11 @@ p.large {
 .wrap-flex {
     flex-wrap: wrap;
 }
+
+.min-height-4 {
+    min-height: calc(var(--unit-spacing) * 4);
+}
+
+.min-height-8 {
+    min-height: calc(var(--unit-spacing) * 8);
+}

@@ -20,6 +20,7 @@ import streetlight.server.db.services.RequestTableDao
 import streetlight.server.db.services.PerformerTableDao
 import streetlight.server.db.services.TransitRouteTableDao
 import streetlight.server.db.services.TransitStopTableDao
+import streetlight.server.db.services.UserFileTableDao
 
 interface ServerProvider {
     val env: Environment
@@ -40,7 +41,8 @@ class ServerDao(
     val request: RequestTableDao = RequestTableDao(),
     val performer: PerformerTableDao = PerformerTableDao(),
     val transitRoute: TransitRouteTableDao = TransitRouteTableDao(),
-    val transitStop: TransitStopTableDao = TransitStopTableDao()
+    val transitStop: TransitStopTableDao = TransitStopTableDao(),
+    val userFile: UserFileTableDao = UserFileTableDao()
 )
 
 class ServerService(

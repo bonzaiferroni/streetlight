@@ -11,9 +11,12 @@ fun RenderContext.viewEventCreator(app: AppContext) {
     column {
         card(modify(Width100, AlignItemsStretch)) {
             blockLabel("feature image") {
-                imageChoice(modify(Height4), onUpload = {
-                    app.client.event.uploadFeatureImage(it)
-                })
+                imageChoice(
+                    modifiers = modify(MinHeight8),
+                    onUpload = { app.client.event.uploadFeatureImage(it) },
+                    onValueChanged = eventCreator::setUrl,
+                    urlFlow = eventCreator.urlFlow
+                )
             }
             column(modify(QueryRow, AlignItemsStretch)) {
                 row(modify(Flex1)) {

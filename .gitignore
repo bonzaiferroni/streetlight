@@ -21,7 +21,7 @@ test.mv.db
 test.mv.db.backup
 test.trace.db
 backup.json
-/www/uploads
+/upload
 users.json
 .env
 .room

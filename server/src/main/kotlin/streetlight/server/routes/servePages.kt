@@ -14,7 +14,10 @@ import streetlight.web.pages.singlePage
 import java.io.File
 
 fun Routing.servePages(app: ServerProvider = RuntimeProvider) {
-    staticFiles("/www", File("../www")) {
+    uploadFolder.mkdirs()
+    wwwFolder.mkdirs()
+    staticFiles("/upload", uploadFolder)
+    staticFiles("/www", wwwFolder) {
 //        cacheControl {
 //            listOf(CacheControl.MaxAge(maxAgeSeconds = 600))
 //        }
@@ -45,3 +48,5 @@ fun Routing.servePages(app: ServerProvider = RuntimeProvider) {
     }
 }
 
+val uploadFolder = File("../upload")
+val wwwFolder = File("../www")

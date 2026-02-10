@@ -20,6 +20,7 @@ import streetlight.server.db.tables.PersonTable
 import streetlight.server.db.tables.TransitRouteStopTable
 import streetlight.server.db.tables.TransitRouteTable
 import streetlight.server.db.tables.TransitStopTable
+import streetlight.server.db.tables.UserFileTable
 import streetlight.server.db.tables.EventTagTable
 
 fun initDb(
@@ -56,6 +57,7 @@ val dbTables = listOf(
     TransitStopTable,
     TransitRouteStopTable,
     EventTagTable,
+    UserFileTable,
 )
 
 fun connectDb(env: Environment) = Database.connect(

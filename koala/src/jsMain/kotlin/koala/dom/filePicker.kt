@@ -32,11 +32,11 @@ fun DOMContext.filePicker(
 
         dropZone = div {
             applyModifiers(FilePickerClass.dropZone)
-            +"Click to choose $mimeType"
+            +"Click here"
             br { }
             +"— or —"
             br { }
-            +"Drop file here"
+            +"Drop $mimeType"
         }
 
         preview = img {

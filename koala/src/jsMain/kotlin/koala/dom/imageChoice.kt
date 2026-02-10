@@ -1,19 +1,30 @@
 package koala.dom
 
 import koala.css.*
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+import kotlinx.html.js.*
+import kotlinx.html.style
 import org.w3c.dom.HTMLButtonElement
+import org.w3c.dom.HTMLDivElement
+import org.w3c.dom.HTMLImageElement
 
 fun RenderContext.imageChoice(
     modifiers: ModifierSet? = null,
     onValueChanged: ((String?) -> Unit)? = null,
-    onUpload: suspend (String) -> String?
-) {
+    onUpload: suspend (String) -> String?,
+    urlFlow: Flow<String?>? = null,
+): HTMLDivElement {
     var localUrl: String? = null
     var uploadButton: HTMLButtonElement? = null
+    var image: HTMLImageElement? = null
+    var placeholder: HTMLDivElement? = null
 
     val element = box(modify(SetImageClass.parent, modifiers)) {
-        box(modify(SetImageClass.placeholder))
+        placeholder = box(modify(SetImageClass.placeholder))
+        image = img {
+            style = "display: none;"
+        }
     }
 
     val dialog = dialogBox("Choose yer image") { close ->
@@ -30,8 +41,8 @@ fun RenderContext.imageChoice(
                 val localUrl = localUrl ?: return@button
                 renderScope.launch {
                     console.log("uploading: $localUrl")
-                    val msg = onUpload(localUrl)
-                    console.log(msg)
+                    val url = onUpload(localUrl)
+                    onValueChanged?.invoke(url)
                     close()
                 }
             }) {
@@ -43,6 +54,23 @@ fun RenderContext.imageChoice(
     element.onClick {
         dialog.open()
     }
+
+    renderScope.launch {
+        val image = image ?: return@launch
+        val placeholder = placeholder ?: return@launch
+        urlFlow?.collect { url ->
+            if (url != null) {
+                image.src = url
+                image.style.display = "block"
+                placeholder.style.display = "none"
+            } else {
+                image.style.display = "none"
+                placeholder.style.display = "block"
+            }
+        }
+    }
+
+    return element
 }
 
 object SetImageClass {
