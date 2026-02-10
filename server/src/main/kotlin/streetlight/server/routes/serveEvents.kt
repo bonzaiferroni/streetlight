@@ -2,6 +2,8 @@ package streetlight.server.routes
 
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.html.respondHtml
+import io.ktor.server.request.contentType
+import io.ktor.server.response.respond
 import io.ktor.server.response.respondRedirect
 import io.ktor.server.routing.Routing
 import io.ktor.server.routing.get
@@ -16,11 +18,12 @@ import streetlight.model.data.toProjectId
 import streetlight.model.mockDb
 import streetlight.server.RuntimeProvider
 import streetlight.server.ServerProvider
+import java.io.File
 
 fun Routing.serveEvents(app: ServerProvider = RuntimeProvider) {
     val dao = app.dao.event
 
-    getEndpoint(Api.EventFeed) {
+    getEndpoint(Api.Events) {
         dao.readActiveEvents()
     }
 
@@ -28,7 +31,7 @@ fun Routing.serveEvents(app: ServerProvider = RuntimeProvider) {
         dao.readEvent(id)
     }
 
-    queryEndpoint(Api.EventFeed.QueryMap, MapQuery::fromQuery) { sent, endpoint ->
+    queryEndpoint(Api.Events.QueryMap, MapQuery::fromQuery) { sent, endpoint ->
         if (sent == null) return@queryEndpoint emptyList()
         val locations = mockDb.locations.filter { sent.bounds.contains(it.geoPoint) }
         val locationIds = locations.map { it.locationId }.toSet()
@@ -46,7 +49,7 @@ fun Routing.serveEvents(app: ServerProvider = RuntimeProvider) {
     }
 
     authenticateJwt {
-        postEndpoint(Api.EventFeed.Create) { newEvent, _ ->
+        postEndpoint(Api.Events.Create) { newEvent, _ ->
             val userId = getUserId()
             dao.createEvent(userId, newEvent)
         }
@@ -56,7 +59,7 @@ fun Routing.serveEvents(app: ServerProvider = RuntimeProvider) {
             dao.updateEvent(userId, update)
         }
 
-        deleteEndpoint(Api.EventFeed.Delete) { eventId, _ ->
+        deleteEndpoint(Api.Events.Delete) { eventId, _ ->
             val userId = getUserId()
             dao.deleteEvent(userId, eventId)
         }
@@ -65,5 +68,9 @@ fun Routing.serveEvents(app: ServerProvider = RuntimeProvider) {
 //            val userId = call.getUserId()
 //
 //        }
+        postEndpoint(Api.Events.Upload) { bytes, _ ->
+            uploadUserImage(bytes)
+        }
     }
 }
+

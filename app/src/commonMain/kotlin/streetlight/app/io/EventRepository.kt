@@ -18,11 +18,11 @@ interface EventRepository {
 class EventApiClient(
     private val client: NeoApiClient
 ): EventRepository {
-    override suspend fun readEventFeed() = client.request(Api.EventFeed)
+    override suspend fun readEventFeed() = client.request(Api.Events)
     override suspend fun readById(eventId: EventId) = client.getById(Api.EventProfile, eventId)
-    override suspend fun createEvent(event: NewEvent) = client.request(Api.EventFeed.Create, event)
+    override suspend fun createEvent(event: NewEvent) = client.request(Api.Events.Create, event)
     override suspend fun updateEvent(event: Event) = client.request(Api.EventProfile.Update, event)
-    override suspend fun deleteEvent(eventId: EventId) = client.request(Api.EventFeed.Delete, eventId)
+    override suspend fun deleteEvent(eventId: EventId) = client.request(Api.Events.Delete, eventId)
 }
 
 class EventMockClient: EventRepository {

@@ -11,10 +11,13 @@ import kotlinx.coroutines.await
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import org.khronos.webgl.Uint8Array
+import org.w3c.fetch.Headers
 import org.w3c.fetch.RequestInit
 import org.w3c.fetch.Response
+import org.w3c.files.Blob
 import kotlin.js.json
 import kotlin.let
+import kotlin.text.ifEmpty
 
 suspend inline fun <reified Returned> AppContext.get(endpoint: GetEndpoint<Returned>): Returned? =
     authRequest("GET", endpoint.path) { request ->
@@ -65,10 +68,7 @@ suspend fun <T> AppContext.authRequest(
     method: String,
     path: String,
     body: String? = null,
-    block: suspend (Response) -> T
-): T? {
-
-    val fetchWithJwt: suspend (String?) -> Response = { jwt ->
+    fetchWithJwt: suspend (String?) -> Response = { jwt ->
         window.fetch(
             path,
             RequestInit(
@@ -80,8 +80,9 @@ suspend fun <T> AppContext.authRequest(
                 body = body
             )
         ).await()
-    }
-
+    },
+    block: suspend (Response) -> T
+): T? {
     var auth = readAuth()
     var response = fetchWithJwt(auth?.jwt)
 
@@ -112,5 +113,31 @@ suspend fun <T> AppContext.authRequest(
         response = fetchWithJwt(auth.jwt)
     }
 
-     return block(response)
+    return block(response)
+}
+
+suspend fun AppContext.uploadBlob(postUrl: String, blobUrl: String): String? {
+    return authRequest(
+        method = "POST",
+        path = postUrl,
+        body = null,
+        fetchWithJwt = { jwt ->
+            val response = window.fetch(blobUrl).await()
+            val blob: Blob = response.blob().await()
+
+            window.fetch(
+                postUrl,
+                RequestInit(
+                    method = "POST",
+                    headers = json(
+                        "Content-Type" to blob.type.ifEmpty { "application/octet-stream" },
+                        "Authorization" to "Bearer $jwt"
+                    ),
+                    body = blob
+                )
+            ).await()
+        }
+    ) {
+        it.text().await()
+    }
 }

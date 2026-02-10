@@ -6,8 +6,10 @@
     --white: 240, 246, 246;
     --white-fg: rgb(var(--white));
     --white-dim: rgba(var(--white), .8);
+    --white-disabled: color-mix(in srgb, var(--white-fg) 50%, black);
     --gray: 114, 120, 120;
     --gray-fg: rgb(var(--gray));
+    --gray-bg: color-mix(in srgb, var(--gray-fg) 50%, black);
     --void: 34, 41, 41;
     --void-bg: rgb(var(--void));
     --void-border: color-mix(in srgb, var(--void-bg) 90%, white);
@@ -16,6 +18,7 @@
     --primary-fg: rgb(var(--primary));
     --primary-button: rgba(var(--primary), .5);
     --primary-bg: color-mix(in srgb, var(--primary-fg) 15%, black);
+    --secondary-button: rgb(var(--gray));
     --accent-bg: 209, 43, 181;
     --accent: 255, 53, 221;
     --accent-button: rgba(var(--accent), .5);

@@ -6,7 +6,7 @@ import koala.dom.button
 fun RenderContext.viewEvent(
     portal: AppPortal,
 ) {
-    button("go home") {
+    button("go home", onClick = {
         portal.go(HomeRoute())
-    }
+    })
 }

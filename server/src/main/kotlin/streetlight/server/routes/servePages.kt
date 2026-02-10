@@ -15,9 +15,9 @@ import java.io.File
 
 fun Routing.servePages(app: ServerProvider = RuntimeProvider) {
     staticFiles("/www", File("../www")) {
-        cacheControl {
-            listOf(CacheControl.MaxAge(maxAgeSeconds = 600))
-        }
+//        cacheControl {
+//            listOf(CacheControl.MaxAge(maxAgeSeconds = 600))
+//        }
     }
 
     get("/") {

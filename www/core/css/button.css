@@ -18,15 +18,31 @@
     background: var(--accent-button);
 }
 
+.btn.secondary {
+    background: var(--secondary-button);
+}
+
+.btn[disabled] {
+    background: var(--gray-bg);
+    color: var(--white-disabled);
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.btn[disabled]:hover {
+    animation: none;
+}
+
 .btn:hover {
     animation: glow 10s infinite linear;
 }
 
-[onclick] {
+[onclick], .clickable {
     cursor: pointer;
     transition: box-shadow 200ms ease-in-out;
 }
 
-[onclick]:hover, a > .layout-card:hover {
+/*a > .layout-card:hover*/
+[onclick]:hover, .clickable:hover {
     box-shadow: inset 0 0 0 9999px rgba(255,255,255,.04);
 }

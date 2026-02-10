@@ -38,11 +38,12 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object Update: UpdateEndpoint<Event>(this, "update")
     }
 
-    object EventFeed: GetEndpoint<List<Event>>(this, "events") {
+    object Events: GetEndpoint<List<Event>>(this, "events") {
         object Create: PostEndpoint<NewEvent, Event>(this, "create")
         object Delete: DeleteEndpoint<EventId>(this, "delete")
         object QueryMap: QueryEndpoint<MapQuery, List<EventInfo>>(this, "bounds")
         // object UserEvents: ApiDaoEndpoint<Event, EventId, NewEvent>(this, "user")
+        object Upload: PostEndpoint<ByteArray, String>(this, "upload")
     }
 
     object StreetFeed: GetEndpoint<List<Community>>(this, "areas") {

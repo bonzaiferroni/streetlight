@@ -19,6 +19,7 @@ object BorderRadius1: CssClass { override val value = "border-radius-1" }
 object Accent: CssClass { override val value = "accent" }
 object Primary: CssClass { override val value = "primary" }
 object Secondary: CssClass { override val value = "secondary" }
+object Clickable: CssClass { override val value = "clickable" }
 
 // font utilities
 object Bold: CssClass { override val value = "bold" }

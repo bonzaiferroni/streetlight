@@ -22,9 +22,9 @@ fun RenderContext.viewSandbox(app: AppContext) {
         textBlock("hello sandbox")
         viewGeoMap(app.home.geoMap)
     }
-    button("Go home") {
+    button("Go home", onClick = {
         app.portal.go(HomeRoute())
-    }
+    })
 }
 
 // textField("input")

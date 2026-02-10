@@ -94,6 +94,8 @@ textarea {
     pointer-events: none;
 }
 
+/*dialog-box*/
+
 .dialog-box {
     position: fixed;
     inset: 0;
@@ -123,4 +125,17 @@ textarea {
 .dialog-box::backdrop {
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
+}
+
+/*file-picker*/
+
+.file-picker-drop-zone {
+    border: 2px dashed #888;
+    padding: 2rem;
+    text-align: center;
+}
+
+.file-picker-drop-zone.dragover {
+    border-color: #fff;
+    background: rgba(255, 255, 255, 0.1);
 }

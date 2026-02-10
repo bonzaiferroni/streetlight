@@ -8,6 +8,7 @@ import koala.css.applyModifiers
 import koala.css.modify
 import koala.html.heading3
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.html.DIALOG
 import kotlinx.html.js.dialog
@@ -15,8 +16,9 @@ import org.w3c.dom.HTMLDialogElement
 
 fun RenderContext.dialogBox(
     title: String?,
-    block: RenderContext.() -> Unit
-) {
+    stateFlow: Flow<Boolean>? = null,
+    block: RenderContext.(() -> Unit) -> Unit
+): HTMLDialogElement {
     var dialog: HTMLDialogElement? = null
     dialog = dialog {
         applyModifiers(Css("dialog-box"))
@@ -24,20 +26,28 @@ fun RenderContext.dialogBox(
             title?.let {
                 heading3(title, modify(TextAlignCenter))
             }
-            block()
-            button("hide") {
-                val dialog = dialog ?: error("no dialog")
+            fun closeImage() {
+                val dialog = dialog ?: return
                 renderScope.launch {
                     dialog.unmodify(Reveal)
                     delay(200)
                     dialog.close()
                 }
             }
+            block(::closeImage)
         }
     }
 
-    button("show") {
-        dialog.showModal()
-        dialog.modify(Reveal)
+    renderScope.launch {
+        stateFlow?.collect {
+            if (it) dialog.showModal() else dialog.close()
+        }
     }
+
+    return dialog
+}
+
+fun HTMLDialogElement.open() {
+    showModal()
+    modify(Reveal)
 }
