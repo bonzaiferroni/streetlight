@@ -1,5 +1,6 @@
 package streetlight.server.routes
 
+import io.ktor.http.CacheControl
 import io.ktor.server.html.respondHtml
 import io.ktor.server.http.content.staticFiles
 import io.ktor.server.routing.Routing
@@ -13,7 +14,11 @@ import streetlight.web.pages.singlePage
 import java.io.File
 
 fun Routing.servePages(app: ServerProvider = RuntimeProvider) {
-    staticFiles("/www", File("../www"))
+    staticFiles("/www", File("../www")) {
+        cacheControl {
+            listOf(CacheControl.MaxAge(maxAgeSeconds = 600))
+        }
+    }
 
     get("/") {
         call.respondHtml {

@@ -51,7 +51,9 @@ fun HEAD.coreScripts() {
         "lottie.js",
         "compiled/web.js"
     )
-    scripts.forEach { script -> script(src = corePath + script) {} }
+    scripts.forEach { script -> script(src = corePath + script) {
+//        defer = true
+    } }
 }
 
 val corePath = "/www/core/js/"

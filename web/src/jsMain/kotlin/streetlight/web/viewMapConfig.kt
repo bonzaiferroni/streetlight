@@ -11,11 +11,11 @@ fun RenderContext.viewMapConfig(app: AppContext) {
     val eventCreator = app.home.eventCreator
     val portal = app.portal
 
-    row(modify(Width100)) {
+    row(modify(Width100, AlignItemsStart)) {
         card(modify(Flex1)) {
             blockLabel = "layers"
             flowBlock(eventMap.stateFlow.mapDistinct { it.layers }, modify(Width100)) { layers ->
-                row(modify(JustifySpaceAround)) {
+                row(modify(JustifySpaceAround, WrapFlex)) {
                     MapLayer.entries.forEach { layer ->
                         val isActive = layers.contains(layer)
                         action({ eventMap.toggleLayer(layer) }) {

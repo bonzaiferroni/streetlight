@@ -39,10 +39,12 @@ fun RenderContext.viewAccount(
                     textField(
                         label = "username/email",
                         onChangeValue = gate::setUsername,
+                        placeholder = "username/email",
                         binding = gate.stateFlow.mapDistinct { it.usernameText })
                     textField(
                         label = "password",
                         onChangeValue = gate::setPassword,
+                        placeholder = "password",
                         binding = gate.stateFlow.mapDistinct { it.passwordText }) {
                         type = InputType.password
                     }

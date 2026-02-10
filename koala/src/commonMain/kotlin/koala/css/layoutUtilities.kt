@@ -41,6 +41,7 @@ object MarginTop4: CssClass { override val value = "margin-top-4" }
 object MarginLeft1: CssClass { override val value = "margin-left-1" }
 object SpaceBetween: CssClass { override val value = "space-between" }
 object NoWrap: CssClass { override val value = "no-wrap" }
+object WrapFlex: CssClass { override val value = "wrap-flex" }
 object Square: CssClass { override val value = "square" }
 object StackChildren: CssClass { override val value = "stack-children" }
 object Start: CssClass { override val value = "start" }

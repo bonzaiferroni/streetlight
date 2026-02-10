@@ -68,6 +68,7 @@ input[type="text"], input[type='password'], textarea {
     font-size: 1rem;
     background-color: rgb(var(--void));
     color: rgb(var(--white));
+    line-height: 1.5rem;
 
     border: 1px solid var(--void-border);
     border-radius: var(--unit-spacing);
