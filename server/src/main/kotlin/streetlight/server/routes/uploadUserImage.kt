@@ -5,6 +5,7 @@ import io.ktor.server.request.contentType
 import io.ktor.server.response.respond
 import io.ktor.server.routing.RoutingContext
 import kampfire.model.UserId
+import kotlinx.datetime.Clock
 import streetlight.model.data.FileFormat
 import streetlight.model.data.FileType
 import streetlight.model.data.FileUse
@@ -59,7 +60,8 @@ suspend fun RoutingContext.uploadUserImage(
             url = url,
             fileType = FileType.Image,
             fileUse = fileUse,
-            fileFormat = fileFormat
+            fileFormat = fileFormat,
+            createdAt = Clock.System.now()
         )
     )
 

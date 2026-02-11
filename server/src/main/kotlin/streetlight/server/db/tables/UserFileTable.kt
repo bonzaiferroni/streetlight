@@ -1,10 +1,13 @@
 package streetlight.server.db.tables
 
+import kabinet.utils.toInstantFromUtc
+import kabinet.utils.toLocalDateTimeUtc
 import klutch.db.tables.UserTable
 import klutch.utils.toUUID
 import org.jetbrains.exposed.dao.id.UUIDTable
 import org.jetbrains.exposed.sql.ReferenceOption
 import org.jetbrains.exposed.sql.ResultRow
+import org.jetbrains.exposed.sql.kotlin.datetime.datetime
 import org.jetbrains.exposed.sql.statements.UpdateBuilder
 import streetlight.model.data.*
 import streetlight.server.utils.toProjectId
@@ -16,6 +19,7 @@ object UserFileTable : UUIDTable("user_file") {
     val fileType = enumeration<FileType>("file_type")
     val fileUse = enumeration<FileUse>("file_use")
     val fileFormat = enumeration<FileFormat>("file_format")
+    val createdAt = datetime("created_at")
 }
 
 fun ResultRow.toUserFile() = UserFile(
@@ -25,11 +29,13 @@ fun ResultRow.toUserFile() = UserFile(
     fileType = this[UserFileTable.fileType],
     fileUse = this[UserFileTable.fileUse],
     fileFormat = this[UserFileTable.fileFormat],
+    createdAt = this[UserFileTable.createdAt].toInstantFromUtc()
 )
 
 fun UpdateBuilder<*>.writeFull(userFile: UserFile) {
     this[UserFileTable.id] = userFile.userFileId.toUUID()
     this[UserFileTable.userId] = userFile.userId.toUUID()
+    this[UserFileTable.createdAt] = userFile.createdAt.toLocalDateTimeUtc()
     writeUpdate(userFile)
 }
 

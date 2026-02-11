@@ -12,12 +12,6 @@
     align-items: center;
 }
 
-.row > img {
-    align-self: stretch;
-    height: auto;      /* keep aspect ratio */
-    object-fit: cover; /* if you want it to fill the stretched height */
-}
-
 .card {
     display: flex;
     flex-direction: column;

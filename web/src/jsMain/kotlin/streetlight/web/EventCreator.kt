@@ -7,8 +7,10 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import streetlight.model.data.EventType
+import streetlight.model.data.FileUse
 import streetlight.model.data.NewEvent
 import streetlight.model.data.NewLocation
+import streetlight.model.data.UserFileRequest
 
 class EventCreator(
     scope: CoroutineScope,
@@ -16,12 +18,19 @@ class EventCreator(
     private val streetMap: StreetMap,
 ): BrowserModel<EventCreatorState>(EventCreatorState(), scope) {
 
-    val urlFlow = stateFlow.mapDistinct { it.url }
+    val urlFlow = stateFlow.mapDistinct { it.imageUrl }
+    val userImagesFlow = stateFlow.mapDistinct { it.userImages }
 
     init {
         viewModelScope.launch {
-            streetMap.stateFlow.mapDistinct { it.focus.location?.name }.filterNotNull().collect { locationName ->
-                setState { it.copy(locationName = locationName) }
+            launch {
+                streetMap.stateFlow.mapDistinct { it.focus.location?.name }.filterNotNull().collect { locationName ->
+                    setState { it.copy(locationName = locationName) }
+                }
+            }
+            launch {
+                val images = client.event.readUserFiles(UserFileRequest(FileUse.EventImage)) ?: emptyList()
+                setState { it.copy(userImages = images) }
             }
         }
     }
@@ -66,7 +75,6 @@ class EventCreator(
                 title = "",
             )}
         }
-
     }
 
     fun queryLocation() {
@@ -77,8 +85,9 @@ class EventCreator(
         }
     }
 
-    fun setUrl(url: String?) {
-        setState { it.copy(url = url) }
+    fun setImageUrl(url: String?) {
+        val images = if (url != null) stateNow.userImages + url else stateNow.userImages
+        setState { it.copy(imageUrl = url, userImages = images) }
     }
 }
 
@@ -87,7 +96,8 @@ data class EventCreatorState(
     val eventType: EventType = EventType.Show,
     val locationName: String = "",
     val message: UIMessage? = null,
-    val url: String? = null,
+    val imageUrl: String? = null,
+    val userImages: List<String> = emptyList()
 ) {
     val canCreateEvent get() = locationName.isNotBlank() && title.isNotBlank()
 }

@@ -3,6 +3,7 @@ package streetlight.model.data
 import kampfire.api.TableId
 import kampfire.model.UserId
 import kampfire.utils.randomUuidString
+import kotlinx.datetime.Instant
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 
@@ -14,6 +15,7 @@ data class UserFile(
     val fileType: FileType,
     val fileUse: FileUse,
     val fileFormat: FileFormat,
+    val createdAt: Instant
 )
 
 @JvmInline
@@ -22,16 +24,25 @@ value class UserFileId(override val value: String) : TableId<String>, ProjectId 
     companion object { fun random() = UserFileId(randomUuidString())}
 }
 
+@Serializable
 enum class FileType {
     Image
 }
 
+@Serializable
 enum class FileUse {
     ProfileImage,
     EventImage,
     LocationImage,
 }
 
+@Serializable
 enum class FileFormat(val ext: String) {
     JPEG("jpg"), PNG("png"), GIF("gif"), WEBP("webp"), BMP("bmp")
 }
+
+@Serializable
+data class UserFileRequest(
+    val fileUse: FileUse,
+    val count: Int = 10
+)

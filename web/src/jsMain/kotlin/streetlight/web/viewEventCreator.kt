@@ -3,7 +3,6 @@ package streetlight.web
 import koala.css.*
 import koala.dom.*
 import koala.html.paragraph
-import streetlight.model.Api
 
 fun RenderContext.viewEventCreator(app: AppContext) {
     val eventCreator = app.home.eventCreator
@@ -14,8 +13,9 @@ fun RenderContext.viewEventCreator(app: AppContext) {
                 imageChoice(
                     modifiers = modify(MinHeight8),
                     onUpload = { app.client.event.uploadFeatureImage(it) },
-                    onValueChanged = eventCreator::setUrl,
-                    urlFlow = eventCreator.urlFlow
+                    onValueChanged = eventCreator::setImageUrl,
+                    urlFlow = eventCreator.urlFlow,
+                    choicesFlow = eventCreator.userImagesFlow
                 )
             }
             column(modify(QueryRow, AlignItemsStretch)) {

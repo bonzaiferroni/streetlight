@@ -123,3 +123,11 @@ p.large {
 .height-6 {
     height: calc(var(--unit-spacing) * 6);
 }
+
+.height-8 {
+    height: calc(var(--unit-spacing) * 8);
+}
+
+.height-16 {
+    height: calc(var(--unit-spacing) * 16);
+}

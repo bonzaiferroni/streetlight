@@ -30,7 +30,9 @@ import streetlight.model.data.NewRequest
 import streetlight.model.data.RequestId
 import streetlight.model.data.AreaTransit
 import streetlight.model.data.EventInfo
+import streetlight.model.data.FileUse
 import streetlight.model.data.MapQuery
+import streetlight.model.data.UserFileRequest
 
 object Api: ApiNode(ApiNode(null, "api"), "v1") {
 
@@ -101,5 +103,9 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
     object Gtfs: ApiNode(this, "gtfs") {
         object VehiclePosition: GetEndpoint<Unit>(this, "VehiclePosition.pb")
         object Routes: GetEndpoint<AreaTransit>(this, "routes")
+    }
+
+    object Users: ApiNode(this, "users") {
+        object Images: PostEndpoint<UserFileRequest, List<String>>(this, "images")
     }
 }

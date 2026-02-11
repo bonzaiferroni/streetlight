@@ -3,6 +3,8 @@ package koala.dom
 import koala.css.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+import kotlinx.dom.clear
+import kotlinx.html.dom.append
 import kotlinx.html.js.*
 import kotlinx.html.style
 import org.w3c.dom.HTMLButtonElement
@@ -14,11 +16,13 @@ fun RenderContext.imageChoice(
     onValueChanged: ((String?) -> Unit)? = null,
     onUpload: suspend (String) -> String?,
     urlFlow: Flow<String?>? = null,
+    choicesFlow: Flow<List<String>>? = null,
 ): HTMLDivElement {
     var localUrl: String? = null
     var uploadButton: HTMLButtonElement? = null
     var image: HTMLImageElement? = null
     var placeholder: HTMLDivElement? = null
+    var choicesRow: HTMLDivElement? = null
 
     val element = box(modify(SetImageClass.parent, modifiers)) {
         placeholder = box(modify(SetImageClass.placeholder))
@@ -29,7 +33,10 @@ fun RenderContext.imageChoice(
     }
 
     val dialog = dialogBox("Choose yer image") { close ->
-        textBlock("[recent images]")
+        choicesRow = row {
+            applyModifiers(WrapFlex)
+            style = "display: none;"
+        }
         filePicker("image") {
             localUrl = it
             uploadButton?.disabled = false
@@ -57,16 +64,40 @@ fun RenderContext.imageChoice(
     }
 
     renderScope.launch {
-        val image = image ?: return@launch
-        val placeholder = placeholder ?: return@launch
-        urlFlow?.collect { url ->
-            if (url != null) {
-                image.src = url
-                image.style.display = "block"
-                placeholder.style.display = "none"
-            } else {
-                image.style.display = "none"
-                placeholder.style.display = "block"
+        launch {
+            val image = image ?: return@launch
+            val placeholder = placeholder ?: return@launch
+            urlFlow?.collect { url ->
+                if (url != null) {
+                    image.src = url
+                    image.style.display = "block"
+                    placeholder.style.display = "none"
+                } else {
+                    image.style.display = "none"
+                    placeholder.style.display = "block"
+                }
+            }
+        }
+        launch {
+            val choicesRow = choicesRow ?: return@launch
+            choicesFlow?.collect { choices ->
+                if (choices.isEmpty()) {
+                    choicesRow.style.display = "none"
+                } else {
+                    choicesRow.clear()
+                    choicesRow.append {
+                        choices.forEach { url ->
+                            val image =img(src = url) {
+                                applyModifiers(Height16)
+                            }
+                            image.onClick {
+                                onValueChanged?.invoke(url)
+                                dialog.close()
+                            }
+                        }
+                    }
+                    choicesRow.style.display = "flex"
+                }
             }
         }
     }
