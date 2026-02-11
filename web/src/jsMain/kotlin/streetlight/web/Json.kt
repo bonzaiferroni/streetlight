@@ -11,3 +11,5 @@ val jsonPrettyConfig = Json {
     ignoreUnknownKeys = true
     prettyPrint = true
 }
+
+inline fun <reified T> prettyJson(obj: T) = jsonPrettyConfig.encodeToString(obj)

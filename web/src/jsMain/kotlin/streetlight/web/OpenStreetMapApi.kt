@@ -34,6 +34,8 @@ data class OSMPlace(
 
 @Serializable
 data class Address(
+    @SerialName("house_number")
+    val number: String? = null,
     val road: String? = null,
     val city: String? = null,
     val state: String? = null,
@@ -44,3 +46,35 @@ data class Address(
     @SerialName("country_code")
     val countryCode: String? = null
 )
+
+//{
+//    "place_id": 306281058,
+//    "licence": "Data © OpenStreetMap contributors, ODbL 1.0. http://osm.org/copyright",
+//    "osm_type": "node",
+//    "osm_id": 5029710203,
+//    "lat": 39.7157006,
+//    "lon": -104.8216956,
+//    "class": "shop",
+//    "type": "mobile_phone",
+//    "place_rank": 30,
+//    "importance": 0.00006197833218886118,
+//    "addresstype": "shop",
+//    "name": "Target Mobile",
+//    "display_name": "Target Mobile, 14200, East Ellsworth Avenue, Aurora City Place, Aurora, Arapahoe County, Colorado, 80012, United States",
+//    "address": {
+//        "house_number": "14200",
+//        "road": "East Ellsworth Avenue",
+//        "city": "Aurora",
+//        "state": "Colorado",
+//        "ISO3166-2-lvl4": "US-CO",
+//        "postcode": "80012",
+//        "country": "United States",
+//        "country_code": "us"
+//    },
+//    "boundingbox": [
+//        39.7156506,
+//        39.7157506,
+//        -104.8217456,
+//        -104.8216456
+//    ]
+//}

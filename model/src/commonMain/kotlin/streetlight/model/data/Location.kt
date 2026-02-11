@@ -3,6 +3,7 @@ package streetlight.model.data
 import kampfire.model.GeoPoint
 import kampfire.model.UserId
 import kampfire.utils.randomUuidString
+import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
@@ -24,4 +25,26 @@ data class Location(
 @JvmInline @Serializable
 value class LocationId(override val value: String): ProjectId {
     companion object { fun random() = LocationId(randomUuidString())}
+}
+
+@Serializable
+data class NewLocation(
+    val name: String = "",
+    val address: String? = null,
+    val geoPoint: GeoPoint = GeoPoint.Denver
+) {
+    val isValid get() = name.isNotBlank() && geoPoint != GeoPoint.Denver // sry Denver
+
+    fun toLocation() = Location(
+        locationId = LocationId.random(),
+        hostId = null,
+        name = name,
+        geoPoint = geoPoint,
+        description = null,
+        address = null,
+        notes = null,
+        resources = emptySet(),
+        updatedAt = Clock.System.now(),
+        createdAt = Clock.System.now()
+    )
 }

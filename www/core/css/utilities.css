@@ -131,3 +131,23 @@ p.large {
 .height-16 {
     height: calc(var(--unit-spacing) * 16);
 }
+
+.width-8 {
+    width: calc(var(--unit-spacing) * 8);
+}
+
+.width-16 {
+    width: calc(var(--unit-spacing) * 16);
+}
+
+.width-24 {
+    width: calc(var(--unit-spacing) * 24);
+}
+
+.width-32 {
+    width: calc(var(--unit-spacing) * 32);
+}
+
+.width-64 {
+    width: calc(var(--unit-spacing) * 64);
+}

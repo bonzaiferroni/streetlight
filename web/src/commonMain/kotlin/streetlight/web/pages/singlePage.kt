@@ -9,9 +9,10 @@ import streetlight.web.HomeRoute
 
 fun HTML.singlePage() {
     head("Streetlight | Home") {
+        script(src = "https://cdn.jsdelivr.net/npm/protobufjs/dist/protobuf.min.js") { }
+        link(href = "https://cdn.jsdelivr.net/npm/maplibre-gl@5.12.0/dist/maplibre-gl.css", rel = "stylesheet")
+        script(src = "https://cdn.jsdelivr.net/npm/maplibre-gl@5.12.0/dist/maplibre-gl.js") { }
         styles("homePage.css")
-        link(href = "https://cdn.jsdelivr.net/npm/maplibre-gl@5.12.0/dist/maplibre-gl.css", "stylesheet")
-        koalaStyles()
     }
     body {
         box(SinglePageId.viewportBox) {
@@ -37,8 +38,6 @@ fun HTML.singlePage() {
             }
             box(FullscreenId.mount)
         }
-        script(src = "https://cdn.jsdelivr.net/npm/maplibre-gl@5.12.0/dist/maplibre-gl.js") { }
-        script(src = "https://cdn.jsdelivr.net/npm/protobufjs/dist/protobuf.min.js") { }
         scripts("launchApp.js")
     }
 }

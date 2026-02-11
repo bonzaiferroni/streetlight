@@ -24,6 +24,9 @@ class GeoMap(
     val linesFlow: SharedFlow<List<LineEntity>> = _linesFlow
 
     val zoomFlow = stateFlow.mapDistinct { it.zoom }
+    val movingBoundsFlow = stateFlow.mapDistinct { it.movingBounds }
+    val centerFlow = stateFlow.mapDistinct { it.center }
+    val boundsFlow = stateFlow.mapDistinct { it.bounds }
 
     private fun setState(setter: (GeoMapState) -> GeoMapState) {
         state = setter(stateNow)
@@ -60,15 +63,18 @@ class GeoMap(
         }
     }
 
-    fun setBounds(bounds: GeoBounds, zoom: Float) {
-        if (zoom == stateNow.zoom && bounds.center.distanceTo(stateNow.center) < (10 * zoom).meters) return
-        setState { it.copy(bounds = bounds, zoom = zoom) }
+    fun setBounds(value: GeoBounds, zoom: Float, isMoving: Boolean) {
+        if (isMoving && zoom == stateNow.zoom && value.center.distanceTo(stateNow.center) < (20 * zoom).meters) return
+        val bounds = if (isMoving) stateNow.bounds else value
+        setState { it.copy(bounds = bounds, movingBounds = value, zoom = zoom, isMoving = isMoving) }
     }
 }
 
 data class GeoMapState(
     val bounds: GeoBounds = GeoBounds.Denver,
+    val movingBounds: GeoBounds = GeoBounds.Denver,
     val zoom: Float = 11f,
+    val isMoving: Boolean = false,
 ) {
     val center get() = bounds.center
 }

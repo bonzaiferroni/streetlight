@@ -1,5 +1,6 @@
 package koala.html
 
+import koala.css.koalaStyles
 import kotlinx.html.*
 
 fun HTML.head(
@@ -9,12 +10,12 @@ fun HTML.head(
     head {
         title { +title }
         meta { name = "viewport"; content = "width=device-width, initial-scale=1" }
+        link { href = "/www/icon/foxicon.ico"; rel = "icon"}
+        block()
         coreStyles()
         coreScripts()
+        koalaStyles()
         script(src = "https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js") { }
-        link { href = "/www/icon/foxicon.ico"; rel = "icon"}
-//        script {src = "webdev.js" }
-        block()
     }
 }
 

@@ -11,7 +11,7 @@ object FadeStack: CssClass { override val value = "fade-stack" }
 object Animate: CssClass { override val value = "animate" }
 object Reveal: CssClass { override val value = "reveal" }
 // object Hide: CssClass { override val value = "hide" }
-object Blur: CssClass { override val value = "blur" }
+object MagicBlur: CssClass { override val value = "blur" }
 object SlideX: CssClass { override val value = "slide-x" }
 object SlideY: CssClass { override val value = "slide-y" }
 

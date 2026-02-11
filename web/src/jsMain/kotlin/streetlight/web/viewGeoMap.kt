@@ -77,10 +77,10 @@ fun RenderContext.createMapWindow(
         widget.addControl(maplibregl.NavigationControl())
         widget.addControl(maplibregl.FullscreenControl())
 
-        fun relayBounds() {
+        fun relayBounds(isMoving: Boolean) {
             val bounds = widget.getBounds().toGeoBounds()
             val zoom = widget.getZoom()
-            geoMap.setBounds(bounds, zoom.toFloat())
+            geoMap.setBounds(bounds, zoom.toFloat(), isMoving)
         }
 
         val markers = mutableMapOf<MapEntityId, MapObject>()
@@ -117,10 +117,14 @@ fun RenderContext.createMapWindow(
         }
 
         widget.on("move") {
-            relayBounds()
+            relayBounds(true)
         }
 
-        relayBounds()
+        widget.on("moveend") {
+            relayBounds(false)
+        }
+
+        relayBounds(false)
     }
 
     return mapWindow

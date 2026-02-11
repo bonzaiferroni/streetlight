@@ -4,8 +4,17 @@ import androidx.compose.runtime.Stable
 import kampfire.model.LabeledEnum
 import kampfire.model.UserId
 import kampfire.utils.randomUuidString
+import kotlinx.datetime.Clock
+import kotlinx.datetime.DatePeriod
 import kotlinx.serialization.Serializable
 import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.plus
+import kotlinx.datetime.toInstant
+import kotlinx.datetime.toLocalDateTime
+import streetlight.model.utils.tomorrowNoon
 import kotlin.jvm.JvmInline
 
 @Stable
@@ -38,30 +47,31 @@ value class EventId(override val value: String): ProjectId {
 
 @Serializable
 data class NewEvent(
-    val locationId: LocationId,
-    val title: String,
-    val startsAt: Instant,
-    val eventType: EventType,
+    val title: String = "",
+    val startsAt: Instant = tomorrowNoon(),
+    val eventType: EventType = EventType.Show,
+    val locationId: LocationId? = null,
 ) {
-    fun toEvent() = Event(
-        eventId = EventId.random(),
-        locationId = locationId,
-        userId = UserId.random(),
-        currentRequestId = null,
-        url = null,
-        imageUrl = null,
-        streamUrl = null,
-        title = title,
-        description = null,
-        status = EventStatus.Pending,
-        eventType = eventType,
-        cashTips = null,
-        cardTips = null,
-        startsAt = startsAt,
-        endsAt = startsAt,
-        updatedAt = Instant.DISTANT_PAST,
-        createdAt = Instant.DISTANT_PAST,
-    )
+    val isValid get() = title.isNotBlank() && locationId != null
+//    fun toEvent() = Event(
+//        eventId = EventId.random(),
+//        locationId = locationId,
+//        userId = UserId.random(),
+//        currentRequestId = null,
+//        url = null,
+//        imageUrl = null,
+//        streamUrl = null,
+//        title = title,
+//        description = null,
+//        status = EventStatus.Pending,
+//        eventType = eventType,
+//        cashTips = null,
+//        cardTips = null,
+//        startsAt = startsAt,
+//        endsAt = startsAt,
+//        updatedAt = Instant.DISTANT_PAST,
+//        createdAt = Instant.DISTANT_PAST,
+//    )
 }
 
 enum class EventType(val label: String) {

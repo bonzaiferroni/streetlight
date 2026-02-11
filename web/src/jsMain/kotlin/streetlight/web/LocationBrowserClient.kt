@@ -10,6 +10,7 @@ import kotlin.js.json
 
 class LocationBrowserClient(app: AppContext): AppContext by app {
     suspend fun readPlaceInfo(point: GeoPoint): OSMPlace {
+        // acceptable use policy: https://operations.osmfoundation.org/policies/nominatim/
         val url =
             "https://nominatim.openstreetmap.org/reverse" +
                     "?lat=${point.lat}&lon=${point.lng}&format=json"

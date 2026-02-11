@@ -31,10 +31,11 @@ class EventTableDao: DbService() {
 
     suspend fun createEvent(userId: UserId, event: NewEvent) = dbQuery {
         val now = Clock.System.now()
+        val locationId = event.locationId ?: return@dbQuery null
         Event(
             eventId = EventId.random(),
             userId = userId,
-            locationId = event.locationId,
+            locationId = locationId,
             currentRequestId = null,
             url = null,
             imageUrl = null,

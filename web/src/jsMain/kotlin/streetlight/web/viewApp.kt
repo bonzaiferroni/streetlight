@@ -3,7 +3,7 @@
 
 package streetlight.web
 
-import koala.css.Blur
+import koala.css.MagicBlur
 import koala.css.SlideY
 import koala.css.modify
 import koala.dom.renderRoot
@@ -38,7 +38,7 @@ fun viewApp() {
         override val home = object: HomeContext {
             override val geoMap = GeoMap(scope)
             override val streetMap = StreetMap(scope, client, geoMap)
-            override val eventCreator = EventCreator(scope, client, streetMap)
+            override val eventCreator = EventCreator(scope, client, geoMap)
         }
     }
 
@@ -46,7 +46,7 @@ fun viewApp() {
     portalMount.renderRoot(app.appScope) {
         flowBlock(
             flow = app.portal.screenFlow,
-            modifiers = modify(Blur, SlideY),
+            modifiers = modify(MagicBlur, SlideY),
             cacheRenderedElements = true,
             animate = true,
         ) { screen ->

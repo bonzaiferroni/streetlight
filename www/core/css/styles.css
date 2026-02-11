@@ -37,6 +37,8 @@
     --heading-3-weight: 300;
 
     --body-width: 960px;
+
+    --font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 
 
@@ -45,7 +47,7 @@ html {
 }
 
 body {
-    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-family: var(--font-family);
     font-size: 1rem;
     line-height: 1.5;
     background-color: var(--black-bg);
@@ -67,7 +69,13 @@ body::before {
     will-change: filter;
 }
 
-input[type="text"], input[type='password'], textarea {
+input[type="text"],
+input[type="password"],
+input[type="datetime-local"],
+input[type="time"],
+input[type="date"],
+textarea {
+    font-family: var(--font-family);
     outline: none;
     padding: var(--unit-spacing);
     font-size: 1rem;

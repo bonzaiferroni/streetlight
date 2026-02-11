@@ -32,7 +32,7 @@ class StreetMap(
     init {
         viewModelScope.launch {
             geoMap.stateFlow.collect { geoMapState ->
-                setBounds(geoMapState.bounds, geoMapState.zoom)
+                setBounds(geoMapState.movingBounds, geoMapState.zoom)
             }
         }
     }

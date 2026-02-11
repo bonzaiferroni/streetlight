@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.serialization)
+    kotlin("plugin.js-plain-objects") version "2.3.10"
 }
 
 kotlin {
@@ -17,6 +18,7 @@ kotlin {
             dependencies {
                 implementation(libs.kotlinx.serialization.json)
                 implementation(libs.kotlinx.coroutines.core)
+                implementation(libs.kotlinx.datetime)
                 implementation(libs.kotlinx.html)
                 implementation(kotlinWrappers.css)
             }

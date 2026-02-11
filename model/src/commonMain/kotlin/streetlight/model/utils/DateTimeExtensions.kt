@@ -1,11 +1,15 @@
 package streetlight.model.utils
 
+import kotlinx.datetime.Clock
+import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.format
 import kotlinx.datetime.format.FormatStringsInDatetimeFormats
 import kotlinx.datetime.format.byUnicodePattern
+import kotlinx.datetime.plus
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 
@@ -22,3 +26,16 @@ fun Instant.toLocalDateTime() = toLocalDateTime(TimeZone.currentSystemDefault())
 fun LocalDateTime.toFormatString(pattern: String) = this.format(
     LocalDateTime.Format { byUnicodePattern(pattern) }
 )
+
+fun tomorrowNoon(): Instant {
+    val zone = TimeZone.currentSystemDefault()
+
+    val now = Clock.System.now()
+    val today = now.toLocalDateTime(zone).date
+    val tomorrow = today.plus(DatePeriod(days = 1))
+
+    return LocalDateTime(
+        date = tomorrow,
+        time = LocalTime(12, 0)
+    ).toInstant(zone)
+}
