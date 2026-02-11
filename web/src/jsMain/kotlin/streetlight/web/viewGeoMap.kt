@@ -116,6 +116,23 @@ fun RenderContext.createMapWindow(
             geoMap.linesFlow.collect(context::showLines)
         }
 
+        launch {
+            geoMap.panFlow.collect { pan ->
+                console.log("panning to: ${pan.point.toLngLat()}")
+                val options = CenterZoomBearing(
+                    center = pan.point.toLngLat(),
+                    zoom = pan.zoom?.toDouble(),
+                )
+                if (pan.snap) {
+                    widget.jumpTo(options)
+                } else if (pan.zoom != null) {
+                    widget.flyTo(options)
+                } else {
+                    widget.panTo(pan.point.toLngLat())
+                }
+            }
+        }
+
         widget.on("move") {
             relayBounds(true)
         }

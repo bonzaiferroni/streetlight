@@ -1,5 +1,6 @@
 package streetlight.web
 
+import kampfire.model.GeoPoint
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -45,6 +46,11 @@ data class Address(
     val country: String? = null,
     @SerialName("country_code")
     val countryCode: String? = null
+)
+
+fun OSMPlace.toGeoPoint() = GeoPoint(
+    lat = lat,
+    lng = lon
 )
 
 //{

@@ -1,6 +1,7 @@
 package streetlight.web
 
 import kampfire.model.GeoBounds
+import kampfire.model.GeoPoint
 import kampfire.model.meters
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -22,6 +23,8 @@ class GeoMap(
     val removeEntity: SharedFlow<MapEntityId> = _removeEntity
     private val _linesFlow = MutableSharedFlow<List<LineEntity>>()
     val linesFlow: SharedFlow<List<LineEntity>> = _linesFlow
+    private val _panFlow = MutableSharedFlow<PanPoint>()
+    val panFlow: SharedFlow<PanPoint> = _panFlow
 
     val zoomFlow = stateFlow.mapDistinct { it.zoom }
     val movingBoundsFlow = stateFlow.mapDistinct { it.movingBounds }
@@ -68,6 +71,12 @@ class GeoMap(
         val bounds = if (isMoving) stateNow.bounds else value
         setState { it.copy(bounds = bounds, movingBounds = value, zoom = zoom, isMoving = isMoving) }
     }
+
+    fun panMap(pan: PanPoint) {
+        viewModelScope.launch {
+            _panFlow.emit(pan)
+        }
+    }
 }
 
 data class GeoMapState(
@@ -84,3 +93,9 @@ typealias MapEntityId = String
 sealed interface MapEntity {
     val entityId: MapEntityId
 }
+
+data class PanPoint(
+    val point: GeoPoint,
+    val zoom: Float? = null,
+    val snap: Boolean = false,
+)

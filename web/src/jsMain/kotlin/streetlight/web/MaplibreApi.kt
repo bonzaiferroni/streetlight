@@ -2,6 +2,7 @@
 
 package streetlight.web
 
+import kotlinx.js.JsPlainObject
 import org.w3c.dom.HTMLElement
 
 external interface Evented {
@@ -34,8 +35,12 @@ external object maplibregl {
 
         fun getCenter(): LngLat
         fun setCenter(center: LngLatLike): Map
+        fun setCenter(center: LngLat): Map
 
-        fun flyTo(options: dynamic): Map
+        fun panTo(center: LngLat): Map
+        fun flyTo(options: CenterZoomBearing): Map
+        fun jumpTo(options: CenterZoomBearing): Map
+
         fun getBounds(): LngLatBounds
         fun fitBounds(bounds: LngLatBounds, options: dynamic = definedExternally): Map
 
@@ -170,3 +175,10 @@ external interface ControlPosition
 external interface GestureOptions
 external interface DragPanOptions
 external interface AroundCenterOptions
+
+@JsPlainObject
+external interface CenterZoomBearing {
+    var center: maplibregl.LngLat
+    var zoom: Double?
+    var bearing: Double?
+}

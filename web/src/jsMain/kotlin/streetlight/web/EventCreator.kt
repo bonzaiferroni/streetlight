@@ -113,6 +113,7 @@ class EventCreator(
             val returned = client.location.readPlaceInfo(center)
 //            console.log(prettyJson(returned))
             // val name = returned.name.takeIf { it.isNotBlank() } ?: fromDisplayName(returned)
+            geoMap.panMap(PanPoint(point = returned.toGeoPoint(), zoom = 18f))
             val address = returned.address.toBasicString() ?: ""
             val name = returned.name.takeIf { it.isNotBlank() } ?: address
             setLocation { it.copy(name = name, address = address) }
