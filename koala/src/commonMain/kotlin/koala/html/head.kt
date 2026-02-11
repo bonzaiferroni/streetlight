@@ -40,7 +40,9 @@ fun HEAD.coreStyles() {
 }
 
 fun FlowOrMetaDataContent.scripts(vararg scripts: String) {
-    scripts.forEach { script -> script(src = "/www/js/$script") {} }
+    scripts.forEach { script -> script(src = "/www/js/$script") {
+        this.defer = true
+    } }
 }
 
 fun HEAD.coreScripts() {
@@ -52,7 +54,7 @@ fun HEAD.coreScripts() {
         "compiled/web.js"
     )
     scripts.forEach { script -> script(src = corePath + script) {
-//        defer = true
+        defer = true
     } }
 }
 

@@ -119,3 +119,7 @@ p.large {
 .min-height-8 {
     min-height: calc(var(--unit-spacing) * 8);
 }
+
+.height-6 {
+    height: calc(var(--unit-spacing) * 6);
+}

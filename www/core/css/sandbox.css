@@ -68,6 +68,7 @@ textarea {
 
 .set-image {
     border-radius: var(--unit-spacing);
+    position: relative;
 }
 
 .set-image > * {
@@ -77,6 +78,7 @@ textarea {
 .set-image-placeholder {
     background-color: var(--card-bg);
     height: 100%;
+    position: absolute;
 }
 
 .set-image-placeholder::before {

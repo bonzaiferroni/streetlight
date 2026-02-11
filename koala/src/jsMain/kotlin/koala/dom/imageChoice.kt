@@ -23,6 +23,7 @@ fun RenderContext.imageChoice(
     val element = box(modify(SetImageClass.parent, modifiers)) {
         placeholder = box(modify(SetImageClass.placeholder))
         image = img {
+            applyModifiers(BorderRadius1)
             style = "display: none;"
         }
     }

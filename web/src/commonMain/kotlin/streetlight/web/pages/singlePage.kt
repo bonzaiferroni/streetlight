@@ -18,7 +18,7 @@ fun HTML.singlePage() {
             column(SinglePageId.app) {
                 column(modify(Width100, AlignItemsCenter)) {
                     row(modify(Width100, SpaceBetween)) {
-                        action(FullMapRoute, modify(Height3, Opacity2)) {
+                        action(FullMapRoute, modify(Height6, Opacity2)) {
                             icon("chevron-down", modify(Height100))
                         }
                         action(HomeRoute()) {
@@ -27,7 +27,7 @@ fun HTML.singlePage() {
                                 heading1("Streetlight")
                             }
                         }
-                        action(AccountRoute, modify(Height3, Opacity2)) {
+                        action(AccountRoute, modify(Height6, Opacity2)) {
                             icon("empty-profile", modify(Height100))
                         }
                     }

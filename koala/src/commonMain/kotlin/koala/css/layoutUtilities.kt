@@ -24,6 +24,7 @@ object Height100: CssClass { override val value = "height-100" }
 object Height2: CssClass { override val value = "height-2" }
 object Height3: CssClass { override val value = "height-3" }
 object Height4: CssClass { override val value = "height-4" }
+object Height6: CssClass { override val value = "height-6" }
 object Height8: CssClass { override val value = "height-8" }
 object MinHeight4: CssClass { override val value = "min-height-4" }
 object MinHeight8: CssClass { override val value = "min-height-8" }
