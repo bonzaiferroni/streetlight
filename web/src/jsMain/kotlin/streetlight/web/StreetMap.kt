@@ -61,7 +61,7 @@ class StreetMap(
             val queriedBounds = bounds.expandBy(1.2f)
             setState { it.copy(bounds = bounds, zoom = zoom, queriedBounds = queriedBounds, isQuerying = true)}
             viewModelScope.launch {
-                val areaEvents = client.event.queryMap(MapQuery(queriedBounds, stateNow.zoom)) ?: emptyList()
+                val areaEvents = client.api.queryMap(MapQuery(queriedBounds, stateNow.zoom)) ?: emptyList()
                 areaEvents.forEach { event ->
                     if (allEvents.any { it.eventId == event.eventId }) return@forEach
                     allEvents.add(event)

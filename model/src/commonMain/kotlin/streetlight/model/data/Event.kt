@@ -51,6 +51,8 @@ data class NewEvent(
     val startsAt: Instant = tomorrowNoon(),
     val eventType: EventType = EventType.Show,
     val locationId: LocationId? = null,
+    val imageUrl: String? = null,
+    val description: String? = null,
 ) {
     val isValid get() = title.isNotBlank() && locationId != null
 //    fun toEvent() = Event(

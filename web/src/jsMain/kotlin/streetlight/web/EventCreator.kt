@@ -2,6 +2,7 @@ package streetlight.web
 
 import kampfire.model.GeoPoint
 import koala.dom.UIMessage
+import koala.dom.UIMessageType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDateTime
@@ -17,7 +18,6 @@ import streetlight.model.data.NewLocation
 import streetlight.model.data.UserFileRequest
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
-import streetlight.model.utils.toLocalDateTime
 
 class EventCreator(
     scope: CoroutineScope,
@@ -25,7 +25,7 @@ class EventCreator(
     private val geoMap: GeoMap,
 ): BrowserModel<EventCreatorState>(EventCreatorState(), scope) {
 
-    val urlFlow = stateFlow.mapDistinct { it.imageUrl }
+    val urlFlow = stateFlow.mapDistinct { it.event.imageUrl }
     val userImagesFlow = stateFlow.mapDistinct { it.userImages }
     val locationFlow = stateFlow.mapDistinct { it.location.name }
     val pointFlow = stateFlow.mapDistinct { it.location.geoPoint }
@@ -33,9 +33,12 @@ class EventCreator(
     val datetimeFlow = stateFlow.mapDistinct { it.event.startsAt.toLocalDateTime(timeZone) }
     val timeFlow = datetimeFlow.mapDistinct { it.time }
     val dateFlow = datetimeFlow.mapDistinct { it.date }
+    val descriptionFlow = stateFlow.mapDistinct { it.event.description ?: "" }
 
     val eventNow get() = stateNow.event
     val locationNow get() = stateNow.location
+
+    private val api get() = client.api
 
     init {
         viewModelScope.launch {
@@ -43,7 +46,7 @@ class EventCreator(
                 geoMap.centerFlow.collect(::setGeoPoint)
             }
             launch {
-                val images = client.event.readUserFiles(UserFileRequest(FileUse.EventImage)) ?: emptyList()
+                val images = client.api.readUserFiles(UserFileRequest(FileUse.EventImage)) ?: emptyList()
                 setState { it.copy(userImages = images) }
             }
         }
@@ -77,33 +80,24 @@ class EventCreator(
         setEvent { it.copy(startsAt = eventNow.startsAt.withDate(value)) }
     }
 
+    fun setDescription(value: String) {
+        setEvent { it.copy(description = value) }
+    }
+
     fun createEvent() {
+        val location = stateNow.location
+        if (!location.isValid) return
         viewModelScope.launch {
-//            val location = streetMap.stateNow.focus.location
-//            val locationId = location?.locationId
-//                ?: client.location.createLocation(NewLocation(
-//                    name = stateNow.locationName,
-//                    geoPoint = streetMap.stateNow.center,
-//                ))
-//
-//            if (locationId == null) {
-//                setState { it.copy(message = UIMessage(UIMessageType.Error, "Unable to create location")) }
-//                return@launch
-//            }
-//
-//            val newEvent = NewEvent(
-//                locationId = locationId,
-//                title = stateNow.title,
-//                startsAt = Clock.System.now(),
-//                eventType = stateNow.eventType
-//            )
-//
-//            val event = client.event.create(newEvent)
-//            console.log(event)
-//            setState { it.copy(
-//                locationName = "",
-//                title = "",
-//            )}
+            console.log("creating location")
+            val locationId = api.createLocation(location)
+            if (locationId == null) {
+                setState { it.copy(message = UIMessage(UIMessageType.Error, "Unable to create location")) }
+                return@launch
+            }
+
+            val newEvent = eventNow.copy(locationId = locationId)
+            val event = api.create(newEvent)
+            console.log(prettyPrint(event))
         }
     }
 
@@ -122,7 +116,7 @@ class EventCreator(
 
     fun setImageUrl(url: String?) {
         val images = if (url != null) stateNow.userImages + url else stateNow.userImages
-        setState { it.copy(imageUrl = url, userImages = images) }
+        setState { it.copy(event = eventNow.copy(imageUrl = url), userImages = images) }
     }
 
     private fun setEvent(provideEvent: (NewEvent) -> NewEvent) {
@@ -136,7 +130,6 @@ class EventCreator(
 
 data class EventCreatorState(
     val message: UIMessage? = null,
-    val imageUrl: String? = null,
     val userImages: List<String> = emptyList(),
     val event: NewEvent = NewEvent(),
     val location: NewLocation = NewLocation(),

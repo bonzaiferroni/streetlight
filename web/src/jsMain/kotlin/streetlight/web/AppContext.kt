@@ -19,6 +19,6 @@ interface HomeContext {
 
 interface ClientContext {
     val transit: TransitBrowserClient
-    val event: BrowserApiClient
-    val location: LocationBrowserClient
+    val api: ApiClient
+    val location: OSMClient
 }

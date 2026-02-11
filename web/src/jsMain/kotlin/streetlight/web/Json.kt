@@ -12,4 +12,4 @@ val jsonPrettyConfig = Json {
     prettyPrint = true
 }
 
-inline fun <reified T> prettyJson(obj: T) = jsonPrettyConfig.encodeToString(obj)
+inline fun <reified T> prettyPrint(obj: T) = jsonPrettyConfig.encodeToString(obj)

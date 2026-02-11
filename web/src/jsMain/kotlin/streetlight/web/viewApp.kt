@@ -27,8 +27,8 @@ fun viewApp() {
 
         override val client = object: ClientContext {
             override val transit = TransitBrowserClient(context)
-            override val event = BrowserApiClient(context)
-            override val location = LocationBrowserClient(context)
+            override val api = ApiClient(context)
+            override val location = OSMClient(context)
         }
 
         override val portal = AppPortal(scope)

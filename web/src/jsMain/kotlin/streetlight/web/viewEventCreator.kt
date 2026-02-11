@@ -14,7 +14,7 @@ fun RenderContext.viewEventCreator(app: AppContext) {
             blockLabel("feature image") {
                 imageChoice(
                     modifiers = modify(MinHeight8),
-                    onUpload = { app.client.event.uploadFeatureImage(it) },
+                    onUpload = { app.client.api.uploadFeatureImage(it) },
                     onValueChanged = model::setImageUrl,
                     urlFlow = model.urlFlow,
                     choicesFlow = model.userImagesFlow
@@ -53,7 +53,12 @@ fun RenderContext.viewEventCreator(app: AppContext) {
                 textBlock(model.datetimeFlow.map { it.toString() })
             }
             locationEditor(app)
-            textField(5, "description", placeholder = "Event description")
+            textEditor(
+                label = "description",
+                placeholder = "Event description",
+                onChangeValue = model::setDescription,
+                binding = model.descriptionFlow
+            )
         }
         message(model.stateFlow.mapDistinct { it.message })
         row {

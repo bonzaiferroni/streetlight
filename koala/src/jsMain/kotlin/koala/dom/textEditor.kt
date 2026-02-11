@@ -7,26 +7,27 @@ import koala.html.Id
 import koala.html.applyBlockLabel
 import koala.html.applyId
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import kotlinx.html.INPUT
-import kotlinx.html.InputType
-import kotlinx.html.input
-import kotlinx.html.js.onInputFunction
-import org.w3c.dom.HTMLInputElement
+import kotlinx.html.TEXTAREA
 import kotlinx.html.dom.append
 import kotlinx.html.js.div
+import kotlinx.html.js.onInputFunction
+import kotlinx.html.js.textArea
+import org.w3c.dom.HTMLInputElement
+import org.w3c.dom.HTMLTextAreaElement
 
-fun RenderContext.textField(
+fun RenderContext.textEditor(
     label: String? = null,
     modifiers: ModifierSet? = null,
     textModifiers: ModifierSet? = null,
     id: Id? = null,
     onChangeValue: ((String) -> Unit)? = null,
     binding: Flow<String>? = null,
+    rows: Int = 5,
     placeholder: String? = null,
-    block: (INPUT.() -> Unit)? = null
-): HTMLInputElement {
+    block: (TEXTAREA.() -> Unit)? = null
+): HTMLTextAreaElement {
     val parent = div {
         applyModifiers(modifiers)
         applyBlockLabel(label)
@@ -34,28 +35,29 @@ fun RenderContext.textField(
 
     var currentValue = ""
     val element = parent.append {
-        input {
+        textArea {
+            this.rows = rows.toString()
             applyModifiers(Width100, textModifiers)
             applyId(id)
-            type = InputType.text
-            onChangeValue?.let { callback ->
-                onInputFunction = {
-                    val value = (it.target as HTMLInputElement).value
-                    if (value != currentValue) {
-                        currentValue = value
-                        callback(value)
-                    }
-                }
-            }
             label?.let {
                 attributes["aria-label"] = it
             }
             placeholder?.let {
                 this.placeholder = it
             }
+
+            onChangeValue?.let { callback ->
+                onInputFunction = {
+                    val value = (it.target as HTMLTextAreaElement).value
+                    if (value != currentValue) {
+                        currentValue = value
+                        callback(value)
+                    }
+                }
+            }
             block?.invoke(this)
         }
-    }.first() as HTMLInputElement
+    }.first() as HTMLTextAreaElement
 
     binding?.let {
         renderScope.launch {

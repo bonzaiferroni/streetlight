@@ -8,7 +8,7 @@ import streetlight.model.Api
 import streetlight.model.data.NewLocation
 import kotlin.js.json
 
-class LocationBrowserClient(app: AppContext): AppContext by app {
+class OSMClient(app: AppContext): AppContext by app {
     suspend fun readPlaceInfo(point: GeoPoint): OSMPlace {
         // acceptable use policy: https://operations.osmfoundation.org/policies/nominatim/
         val url =
@@ -28,7 +28,4 @@ class LocationBrowserClient(app: AppContext): AppContext by app {
         val text = response.text().await()
         return jsonConfig.decodeFromString(text)
     }
-
-    suspend fun createLocation(newLocation: NewLocation) = post(Api.LocationFeed.Create, newLocation)
-    suspend fun queryLocation(point: GeoPoint) = get(Api.LocationFeed.QueryPoint, point.toQuery())
 }
