@@ -13,6 +13,8 @@ const val STOP_ZOOM = 14
 fun RenderContext.viewStreetMap(
     app: AppContext,
 ) {
+
+
     column(modify(Width100)) {
         viewGeoMap(app.home.geoMap)
         viewMapPanel(app)

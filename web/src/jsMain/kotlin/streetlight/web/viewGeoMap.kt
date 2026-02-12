@@ -1,22 +1,21 @@
 package streetlight.web
 
 import koala.css.Height100
-import koala.css.Height32
 import koala.css.Height48
 import koala.css.ModifierSet
 import koala.css.Width100
 import koala.css.modify
 import koala.dom.RenderContext
 import koala.dom.box
+import koala.dom.onView
 import koala.html.Id
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.html.DIV
 import kotlinx.html.dom.append
 import org.w3c.dom.HTMLDivElement
-import kotlinx.html.style
 import org.w3c.dom.HTMLElement
-import org.w3c.dom.get
 
 fun RenderContext.viewGeoMap(
     geoMap: GeoMap,
@@ -31,8 +30,8 @@ fun RenderContext.viewGeoMap(
         mapWindowElement = createMapWindow(geoMap, parent)
     }
 
-    onLoad {
-        if (parent.children.length == 0) {
+    parent.onView { isVisible ->
+        if (isVisible && parent.children.length == 0) {
             console.log("grabbing geomap window")
             val mapWindow = mapWindowElement ?: error("mapWindowElement not found")
             parent.appendChild(mapWindow)

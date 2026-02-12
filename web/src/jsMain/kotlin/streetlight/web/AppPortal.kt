@@ -8,6 +8,7 @@ class AppPortal(
     scope: CoroutineScope
 ): BrowserModel<AppNavigatorState>(AppNavigatorState(), scope) {
     val screenFlow = stateFlow.mapDistinct { it.route.screen }
+    val routeFlow = stateFlow.mapDistinct { it.route }
 
     var hashPath
         get() = window.location.hash.split("?")[0]

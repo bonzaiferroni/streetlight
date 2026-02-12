@@ -1,25 +1,27 @@
 package streetlight.web
 
-import koala.css.FlexItemsBasis50
-import koala.css.modify
 import koala.dom.RenderContext
-import koala.dom.button
-import koala.dom.row
+import koala.dom.onView
 import koala.dom.textBlock
 
 fun RenderContext.viewSandbox(app: AppContext) {
-    row(modify(FlexItemsBasis50)) {
-        textBlock("hello sandbox")
-        viewGeoMap(app.home.geoMap)
+    val element = textBlock("yer element")
+    element.onView {
+        console.log("In view, matey!")
     }
-    button("Go home", onClick = {
-        app.portal.go(HomeRoute())
-    })
 }
 
-// textField("input")
+//    row(modify(FlexItemsBasis50)) {
+//        textBlock("hello sandbox")
+//        viewGeoMap(app.home.geoMap)
+//    }
+//    button("Go home", onClick = {
+//        app.portal.go(HomeRoute())
+//    })
 
-// val flow = MutableStateFlow(listOf("One", "Two", "Three"))
+//    textField("input")
+
+//    val flow = MutableStateFlow(listOf("One", "Two", "Three"))
 //
 //    itemsBlock(flow, modify(Blur, SlideX), animate = true) {
 //        textBlock(it)

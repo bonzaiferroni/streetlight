@@ -2,7 +2,10 @@ package streetlight.web
 
 import kampfire.model.GeoPoint
 import koala.css.Css
+import koala.dom.OnClick
+import koala.dom.addEventListener
 import koala.dom.modify
+import koala.dom.onClick
 import kotlinx.browser.document
 import org.w3c.dom.HTMLElement
 
@@ -92,9 +95,7 @@ fun MapContext.createObject(entity: PointEntity): MapObject {
     )
     val onClick = entity.onClick
     if (element != null && onClick != null) {
-        element.addEventListener("click", callback = {
-            onClick()
-        })
+        element.onClick(onClick)
     }
     mapObject.marker.setLngLat(entity.position.toLngLat())
     mapObject.marker.addTo(widget)

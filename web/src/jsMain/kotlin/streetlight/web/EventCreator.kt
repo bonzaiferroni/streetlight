@@ -18,6 +18,7 @@ import streetlight.model.data.NewLocation
 import streetlight.model.data.UserFileRequest
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
+import streetlight.model.data.EventId
 
 class EventCreator(
     scope: CoroutineScope,
@@ -84,21 +85,20 @@ class EventCreator(
         setEvent { it.copy(description = value) }
     }
 
-    fun createEvent() {
+    suspend fun createEvent(): EventId? {
         val location = stateNow.location
-        if (!location.isValid) return
-        viewModelScope.launch {
-            console.log("creating location")
-            val locationId = api.createLocation(location)
-            if (locationId == null) {
-                setState { it.copy(message = UIMessage(UIMessageType.Error, "Unable to create location")) }
-                return@launch
-            }
-
-            val newEvent = eventNow.copy(locationId = locationId)
-            val event = api.create(newEvent)
-            console.log(prettyPrint(event))
+        if (!location.isValid) return null
+        console.log("creating location")
+        val locationId = api.createLocation(location)
+        if (locationId == null) {
+            setState { it.copy(message = UIMessage(UIMessageType.Error, "Unable to create location")) }
+            return null
         }
+
+        val newEvent = eventNow.copy(locationId = locationId)
+        val event = api.create(newEvent)
+        console.log(prettyPrint(event))
+        return event?.eventId
     }
 
     fun queryLocation() {
