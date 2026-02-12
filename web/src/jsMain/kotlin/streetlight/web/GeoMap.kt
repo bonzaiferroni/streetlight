@@ -13,7 +13,7 @@ class GeoMap(
     private val viewModelScope: CoroutineScope
 ) {
     private var state: GeoMapState = GeoMapState()
-    private val stateNow get() = state
+    val stateNow get() = state
 
     private val _state = MutableSharedFlow<GeoMapState>()
     val stateFlow: Flow<GeoMapState> = _state
@@ -77,6 +77,11 @@ class GeoMap(
             _panFlow.emit(pan)
         }
     }
+
+    fun setIsViewed(value: Boolean) {
+        setState { it.copy(isViewed = value) }
+        console.log("ey: $value")
+    }
 }
 
 data class GeoMapState(
@@ -84,6 +89,7 @@ data class GeoMapState(
     val movingBounds: GeoBounds = GeoBounds.Denver,
     val zoom: Float = 11f,
     val isMoving: Boolean = false,
+    val isViewed: Boolean = false,
 ) {
     val center get() = bounds.center
 }

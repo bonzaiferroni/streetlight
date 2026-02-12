@@ -29,8 +29,12 @@ class TransitMap(
             delay(1.seconds)
 
             while (true) {
-                fetchVehicles(feedType)
-                delay(30.seconds)
+                if (geoMap.stateNow.isViewed) {
+                    fetchVehicles(feedType)
+                    delay(30.seconds)
+                } else {
+                    delay(1.seconds)
+                }
             }
         }
     }

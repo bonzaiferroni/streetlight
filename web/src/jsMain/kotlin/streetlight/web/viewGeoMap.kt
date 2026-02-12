@@ -63,6 +63,8 @@ fun RenderContext.createMapWindow(
         }
     }.first()
 
+    mapWindow.onView(geoMap::setIsViewed)
+
     renderScope.launch {
 
         val widget = maplibregl.Map(jsObject {
