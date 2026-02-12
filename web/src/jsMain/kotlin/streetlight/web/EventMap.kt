@@ -1,5 +1,6 @@
 package streetlight.web
 
+import koala.model.BrowserModel
 import kotlinx.coroutines.CoroutineScope
 
 class EventMap(

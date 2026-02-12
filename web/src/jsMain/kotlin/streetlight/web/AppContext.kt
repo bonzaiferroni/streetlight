@@ -1,11 +1,12 @@
 package streetlight.web
 
+import koala.model.Portal
 import kotlinx.coroutines.CoroutineScope
 
 interface AppContext {
     val appScope: CoroutineScope
     val client: ClientContext
-    val portal: AppPortal
+    val portal: Portal
     val gate: UserGate
     val gateAgent: GateAgent
     val home: HomeContext

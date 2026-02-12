@@ -1,6 +1,7 @@
 package streetlight.web
 
 import kampfire.model.GeoPoint
+import koala.model.BrowserModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.await
 import kotlinx.coroutines.delay

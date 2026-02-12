@@ -13,6 +13,7 @@ import koala.dom.*
 import koala.html.heading2
 import koala.html.image
 import koala.html.label
+import koala.model.mapDistinct
 import kotlinx.html.js.div
 
 fun RenderContext.viewMapPanel(app: AppContext) {

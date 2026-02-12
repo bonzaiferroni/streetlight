@@ -2,51 +2,55 @@ package streetlight.web
 
 import koala.html.AppRoute
 import koala.html.AppScreen
+import streetlight.model.data.Event
 import streetlight.model.data.EventId
 
 enum class StreetlightScreen(
     override val pathRoot: String,
     override val provideRoute: (List<String>) -> StreetlightRoute?
-): AppScreen<StreetlightRoute> {
+): AppScreen {
     Home("home", { HomeRoute() }),
     Account("account", { AccountRoute }),
-    Event("event", { segments -> segments.getOrNull(1)?.let { EventRoute(EventId(it)) } }),
+    Event("event", { segments -> segments.getOrNull(1)?.let { EventIdRoute(EventId(it)) } }),
     CreateEvent("create-event", { CreateEventRoute }),
     Sandbox("sandbox", { SandboxRoute }),
     FullMap("full-map", { FullMapRoute })
 }
 
-sealed class StreetlightRoute: AppRoute
+sealed interface StreetlightRoute: AppRoute
 
 data class HomeRoute(
     val tab: String? = null
-): StreetlightRoute() {
+): StreetlightRoute {
     override val screen get() = StreetlightScreen.Home
-
-    companion object {
-        val screen get() = StreetlightScreen.Home
-    }
 }
 
-object AccountRoute: StreetlightRoute() {
+object AccountRoute: StreetlightRoute {
     override val screen get() = StreetlightScreen.Account
 }
 
-data class EventRoute(
-    val id: EventId
-): StreetlightRoute() {
+sealed interface EventRoute: StreetlightRoute {
     override val screen get() = StreetlightScreen.Event
-    override fun toHashPath() = "${super.toHashPath()}/${id.value}"
 }
 
-object CreateEventRoute: StreetlightRoute() {
+data class EventIdRoute(
+    val eventId: EventId
+): EventRoute {
+    override fun toHashPath() = "${super.toHashPath()}/${eventId.value}"
+}
+
+data class EventObjectRoute(val event: Event): EventRoute {
+    override fun toHashPath() = "${super.toHashPath()}/${event.eventId.value}"
+}
+
+object CreateEventRoute: StreetlightRoute {
     override val screen get() = StreetlightScreen.CreateEvent
 }
 
-object SandboxRoute: StreetlightRoute() {
+object SandboxRoute: StreetlightRoute {
     override val screen get() = StreetlightScreen.Sandbox
 }
 
-object FullMapRoute: StreetlightRoute() {
+object FullMapRoute: StreetlightRoute {
     override val screen get() = StreetlightScreen.FullMap
 }

@@ -1,11 +1,11 @@
 package koala.html
 
 interface AppRoute {
-    val screen: AppScreen<*>
+    val screen: AppScreen
     fun toHashPath() = "#/${screen.pathRoot}"
 
     companion object {
-        fun <T: AppRoute> routeOf(hashPath: String, screens: List<AppScreen<T>>, provideDefault: () -> T): T {
+        fun routeOf(hashPath: String, screens: List<AppScreen>, provideDefault: () -> AppRoute): AppRoute {
             val fragment = hashPath.dropStart('#').dropStart('/')
             val segments = fragment.split('/')
             val root = segments[0].lowercase()
@@ -15,9 +15,9 @@ interface AppRoute {
     }
 }
 
-interface AppScreen <T: AppRoute> {
+interface AppScreen {
     val pathRoot: String
-    val provideRoute: (List<String>) -> T?
+    val provideRoute: (List<String>) -> AppRoute?
 }
 
 private fun String.dropStart(char: Char) = if (startsWith(char)) drop(1) else this

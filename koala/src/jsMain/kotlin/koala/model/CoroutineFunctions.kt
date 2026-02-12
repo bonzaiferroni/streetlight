@@ -1,4 +1,4 @@
-package streetlight.web
+package koala.model
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged

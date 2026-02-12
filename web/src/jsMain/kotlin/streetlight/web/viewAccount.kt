@@ -6,12 +6,14 @@ import koala.dom.checkBox
 import koala.dom.column
 import koala.dom.flowBlock
 import koala.dom.textField
+import koala.model.Portal
+import koala.model.mapDistinct
 import kotlinx.html.InputType
 import kotlinx.html.js.p
 
 fun RenderContext.viewAccount(
     gate: UserGate,
-    portal: AppPortal
+    portal: Portal
 ) {
 
     column {

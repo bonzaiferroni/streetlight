@@ -4,6 +4,7 @@ import koala.css.*
 import koala.dom.*
 import koala.html.blockLabel
 import koala.html.paragraph
+import koala.model.mapDistinct
 
 fun RenderContext.viewMapConfig(app: AppContext) {
     val gateAgent = app.gateAgent

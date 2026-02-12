@@ -3,6 +3,8 @@ package streetlight.web
 import kampfire.model.GeoPoint
 import koala.dom.UIMessage
 import koala.dom.UIMessageType
+import koala.model.BrowserModel
+import koala.model.mapDistinct
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDateTime

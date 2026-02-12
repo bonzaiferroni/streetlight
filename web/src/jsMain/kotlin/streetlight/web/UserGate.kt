@@ -4,6 +4,8 @@ import kampfire.api.UserApi
 import kampfire.model.LoginRequest
 import kampfire.model.User
 import kampfire.utils.obfuscate
+import koala.model.BrowserModel
+import koala.model.mapDistinct
 import kotlinx.browser.localStorage
 import kotlinx.coroutines.launch
 import org.w3c.dom.get

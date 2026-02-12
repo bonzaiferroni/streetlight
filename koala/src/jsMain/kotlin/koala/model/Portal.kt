@@ -1,12 +1,17 @@
-package streetlight.web
+package koala.model
 
 import koala.html.AppRoute
+import koala.html.AppScreen
 import kotlinx.browser.window
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filterNotNull
 
-class AppPortal(
+class Portal(
+    val initialRoute: AppRoute,
+    val screens: List<AppScreen>,
     scope: CoroutineScope
-): BrowserModel<AppNavigatorState>(AppNavigatorState(), scope) {
+): BrowserModel<PortalState>(PortalState(initialRoute), scope) {
     val screenFlow = stateFlow.mapDistinct { it.route.screen }
     val routeFlow = stateFlow.mapDistinct { it.route }
 
@@ -27,7 +32,23 @@ class AppPortal(
         })
     }
 
-    fun go(route: StreetlightRoute) {
+    inline fun <reified T> routeFlowOf(): Flow<T> {
+        return routeFlow.mapDistinct {
+            try {
+                it as? T
+            } catch(e: Exception) {
+                console.log("narr!")
+                console.log(e)
+                throw(e)
+            }
+        }.filterNotNull()
+    }
+
+    inline fun <reified T> routeOrNullFlowOf(): Flow<T?> {
+        return routeFlow.mapDistinct { it as? T }
+    }
+
+    fun go(route: AppRoute) {
         go(route, stateNow.backstack + stateNow.route)
     }
 
@@ -36,19 +57,19 @@ class AppPortal(
         go(route, stateNow.backstack.dropLast(1))
     }
 
-    private fun go(route: StreetlightRoute, backstack: List<StreetlightRoute>) {
+    private fun go(route: AppRoute, backstack: List<AppRoute>) {
         setState { it.copy(route = route, backstack = backstack)}
         hashPath = route.toHashPath()
     }
 
-    private fun routeOf(hashPath: String): StreetlightRoute {
-        return AppRoute.routeOf(hashPath, StreetlightScreen.entries) { HomeRoute() }
+    private fun routeOf(hashPath: String): AppRoute {
+        return AppRoute.routeOf(hashPath, screens) { initialRoute }
     }
 }
 
-data class AppNavigatorState(
-    val route: StreetlightRoute = HomeRoute(),
-    val backstack: List<StreetlightRoute> = emptyList()
+data class PortalState(
+    val route: AppRoute,
+    val backstack: List<AppRoute> = emptyList()
 ) {
     val canGoBack get() = backstack.isNotEmpty()
 }

@@ -6,24 +6,13 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.launch
-import kotlinx.dom.addClass
 import kotlinx.dom.clear
-import kotlinx.dom.removeClass
-import kotlinx.html.INPUT
-import kotlinx.html.InputType
 import kotlinx.html.dom.append
-import kotlinx.html.*
-import kotlinx.html.js.onInputFunction
 import org.w3c.dom.HTMLElement
-import org.w3c.dom.HTMLInputElement
 
 class RenderContext(
     consumer: DOMContext,
-    val renderScope: CoroutineScope
+    val renderScope: CoroutineScope,
 ): DOMContext by consumer
 
 fun HTMLElement.renderRoot(

@@ -1,8 +1,7 @@
-package streetlight.web
+package koala.model
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 open class BrowserModel<T>(

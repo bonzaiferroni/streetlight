@@ -4,6 +4,7 @@ import koala.css.*
 import koala.dom.*
 import koala.html.paragraph
 import koala.html.textSpan
+import koala.model.mapDistinct
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
@@ -69,7 +70,7 @@ fun RenderContext.viewEventCreator(app: AppContext) {
             button("create", modify(Accent), onClick = {
                 renderScope.launch {
                     val eventId = model.createEvent() ?: return@launch
-                    app.portal.go(EventRoute(eventId))
+                    app.portal.go(EventIdRoute(eventId))
                 }
             })
         }

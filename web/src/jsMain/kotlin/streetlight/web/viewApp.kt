@@ -9,6 +9,7 @@ import koala.css.modify
 import koala.dom.renderRoot
 import koala.dom.flowBlock
 import koala.dom.getElementById
+import koala.model.Portal
 import kotlinx.browser.document
 import kotlinx.coroutines.MainScope
 import streetlight.web.pages.SinglePageId
@@ -31,7 +32,7 @@ fun viewApp() {
             override val location = OSMClient(context)
         }
 
-        override val portal = AppPortal(scope)
+        override val portal = Portal(HomeRoute(), StreetlightScreen.entries, scope)
         override val gate = UserGate(context)
         override val gateAgent = GateAgent(scope, gate, portal)
 
@@ -52,7 +53,7 @@ fun viewApp() {
         ) { screen ->
             when (screen) {
                 StreetlightScreen.Home -> viewHome(app)
-                StreetlightScreen.Event -> viewEvent(app.portal)
+                StreetlightScreen.Event -> viewEventRoute(app.portal)
                 StreetlightScreen.Account -> viewAccount(app.gate, app.portal)
                 StreetlightScreen.CreateEvent -> viewEventCreator(app)
                 StreetlightScreen.Sandbox -> viewSandbox(app)

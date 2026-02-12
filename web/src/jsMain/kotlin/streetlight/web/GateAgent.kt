@@ -1,6 +1,7 @@
 package streetlight.web
 
 import kampfire.model.User
+import koala.model.Portal
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
@@ -9,7 +10,7 @@ import kotlinx.coroutines.launch
 class GateAgent(
     val scope: CoroutineScope,
     val gate: UserGate,
-    val portal: AppPortal,
+    val portal: Portal,
 ) {
     fun checkIn(block: (User) -> Unit) {
         val user = gate.stateNow.user
