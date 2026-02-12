@@ -49,17 +49,12 @@ fun <State> RenderContext.flowBlock(
             if (!cacheRenderedElements) render?.job?.cancel()
             currentValue = value
 
-            render?.context?.emitOnUnload()
-
-            // this be creating a lot of jobs when cache is active
-
             fun appendRender() {
                 render = renderCaches[value]?.also {
                     it.elements.forEach { child ->
                         element.append(child)
                     }
                 } ?: createRender(element, value, block)
-                render.context.emitOnLoad()
                 if (cacheRenderedElements) renderCaches[value] = render
             }
 

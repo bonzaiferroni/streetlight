@@ -15,6 +15,7 @@ interface ElementEvent {
 }
 
 object OnClick: ElementEvent { override val value = "click"}
+object OnClose: ElementEvent { override val value = "close"}
 
 fun Element.onClickEvent(block: (Event) -> Unit) {
     addEventListener("click", block)

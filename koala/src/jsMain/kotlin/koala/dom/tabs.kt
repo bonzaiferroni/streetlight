@@ -17,8 +17,6 @@ fun RenderContext.tabs(
     scope.content()
     val tabPanelElements = Array<HTMLElement?>(3) { null }
     val renders = Array<RenderContext?>(3) { null }
-    var currentIndex = 0
-    var isLoaded = true
     val root = column(id, modify(TabClass.tabs, modifiers)) {
         row(modify(TabClass.header)) {
             scope.tabs.forEachIndexed { index, tab ->
@@ -36,8 +34,6 @@ fun RenderContext.tabs(
                 }
                 fun selectTab(event: Event) {
                     val context = renders.getOrNull(index) ?: createTab()
-                    context.emitOnLoad()
-                    currentIndex = index
                 }
                 button.addEventListener("select-tab", ::selectTab)
             }
@@ -51,17 +47,6 @@ fun RenderContext.tabs(
     }
 
     initTabs(root)
-
-    onLoad {
-        if (!isLoaded) {
-            isLoaded = true
-            renders[currentIndex]?.emitOnLoad()
-        }
-    }
-
-    onUnload {
-        isLoaded = false
-    }
 
     return root
 }

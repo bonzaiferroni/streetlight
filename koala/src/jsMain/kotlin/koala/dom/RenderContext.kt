@@ -1,8 +1,6 @@
 package koala.dom
 
 import koala.html.Id
-import koala.utils.EventHandler
-import koala.utils.MutableEventHandler
 import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -26,21 +24,7 @@ import org.w3c.dom.HTMLInputElement
 class RenderContext(
     consumer: DOMContext,
     val renderScope: CoroutineScope
-): DOMContext by consumer {
-    private val onLoadHandler = MutableEventHandler()
-    val onLoad: EventHandler = onLoadHandler
-
-    private val onUnloadHandler = MutableEventHandler()
-    val onUnload: EventHandler = onUnloadHandler
-
-    internal fun emitOnLoad() {
-        onLoadHandler.emit()
-    }
-
-    internal fun emitOnUnload() {
-        onUnloadHandler.emit()
-    }
-}
+): DOMContext by consumer
 
 fun HTMLElement.renderRoot(
     scope: CoroutineScope,
@@ -50,7 +34,6 @@ fun HTMLElement.renderRoot(
     append {
         val context = RenderContext(this, scope)
         context.block()
-        context.emitOnLoad()
     }
 }
 
