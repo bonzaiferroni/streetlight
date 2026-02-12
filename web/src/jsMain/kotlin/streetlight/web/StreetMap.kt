@@ -39,7 +39,7 @@ class StreetMap(
 
     fun flowOf(eventType: EventType) = eventMapFlow.mapDistinct { it[eventType] ?: emptyList() }
 
-    fun toggleLayer(layer: MapLayer) {
+    fun toggleLayer(layer: StreetMapLayer) {
         val layers = if (stateNow.layers.contains(layer)) stateNow.layers - layer else stateNow.layers + layer
         if (layer.eventType != null) {
             val events = getBoundedEvents(layers = layers)
@@ -84,7 +84,7 @@ class StreetMap(
 
     private fun getBoundedEvents(
         bounds: GeoBounds = stateNow.bounds,
-        layers: Set<MapLayer> = stateNow.layers
+        layers: Set<StreetMapLayer> = stateNow.layers
     ) = allEvents.filter { event -> bounds.contains(event.geoPoint) && layers.any { it.eventType == event.eventType } }
 }
 
@@ -95,7 +95,7 @@ data class StreetMapState(
     val events: List<EventInfo> = emptyList(),
     val communities: List<Community> = listOf(Community.Eastfax),
     val focus: MapFocus = MapFocus(),
-    val layers: Set<MapLayer> = MapLayer.entries.toSet(),
+    val layers: Set<StreetMapLayer> = StreetMapLayer.entries.toSet(),
     val isQuerying: Boolean = false,
 ) {
     val center get() = bounds.center
@@ -106,12 +106,12 @@ data class MapFocus(
     val event: EventInfo? = null,
 )
 
-enum class MapLayer(val label: String, val color: String, val eventType: EventType? = null) {
+enum class StreetMapLayer(val label: String, val color: String, val eventType: EventType? = null) {
     Shows("Shows", "#bd7dae", EventType.Show),
     Meet("Meet", "#7dbd8f", EventType.Meet),
     Food("Food", "#bd9a7d", EventType.Food),
     Transit("Transit", "#7daebd"),
-    Shelter("Shelter", "#b4bd7d"),
+    Shelter("Shelter", "#b4bd7d");
 }
 
 data class QueryBounds(

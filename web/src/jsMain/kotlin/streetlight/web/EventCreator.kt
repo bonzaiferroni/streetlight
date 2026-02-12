@@ -119,6 +119,15 @@ class EventCreator(
         setState { it.copy(event = eventNow.copy(imageUrl = url), userImages = images) }
     }
 
+    fun setVisibility(value: Boolean) {
+        if (value) {
+            geoMap.setEntityVisibility { it is EventEntity }
+        } else {
+            geoMap.setEntityVisibility { true }
+        }
+        setState { it.copy(isVisible = value) }
+    }
+
     private fun setEvent(provideEvent: (NewEvent) -> NewEvent) {
         setState { it.copy(event = provideEvent(eventNow)) }
     }
@@ -133,7 +142,8 @@ data class EventCreatorState(
     val userImages: List<String> = emptyList(),
     val event: NewEvent = NewEvent(),
     val location: NewLocation = NewLocation(),
-    val locations: List<Location> = emptyList()
+    val locations: List<Location> = emptyList(),
+    val isVisible: Boolean = false,
 )
 
 private fun Address.toBasicString(): String? {

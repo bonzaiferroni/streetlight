@@ -25,6 +25,8 @@ class GeoMap(
     val linesFlow: SharedFlow<List<LineEntity>> = _linesFlow
     private val _panFlow = MutableSharedFlow<PanPoint>()
     val panFlow: SharedFlow<PanPoint> = _panFlow
+    private val _markerVisibilityFlow = MutableSharedFlow<(MapEntity) -> Boolean>()
+    val markerVisibilityFlow: SharedFlow<(MapEntity) -> Boolean> = _markerVisibilityFlow
 
     val zoomFlow = stateFlow.mapDistinct { it.zoom }
     val movingBoundsFlow = stateFlow.mapDistinct { it.movingBounds }
@@ -63,6 +65,12 @@ class GeoMap(
     fun addLines(entities: List<LineEntity>) {
         viewModelScope.launch {
             _linesFlow.emit(entities)
+        }
+    }
+
+    fun setEntityVisibility(filter: (MapEntity) -> Boolean) {
+        viewModelScope.launch {
+            _markerVisibilityFlow.emit(filter)
         }
     }
 

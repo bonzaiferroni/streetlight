@@ -84,8 +84,6 @@ fun RenderContext.createMapWindow(
             geoMap.setBounds(bounds, zoom.toFloat(), isMoving)
         }
 
-        val markers = mutableMapOf<MapEntityId, MapObject>()
-
         val context = MapContext(widget)
 
         while (!widget.loaded()) {
@@ -99,14 +97,14 @@ fun RenderContext.createMapWindow(
 
         launch {
             geoMap.removeEntity.collect { entityId ->
-                markers[entityId]?.marker?.remove()
-                markers.remove(entityId)
+                context.markers[entityId]?.marker?.remove()
+                context.markers.remove(entityId)
             }
         }
 
         launch {
             geoMap.zoomFlow.collect { zoom ->
-                markers.forEach { (_, obj) ->
+                context.markers.forEach { (_, obj) ->
                     val minZoom = obj.entity.minZoom ?: return@forEach
                     obj.setOpacity(if (zoom >= minZoom) 1f else 0f)
                 }
@@ -130,6 +128,15 @@ fun RenderContext.createMapWindow(
                     widget.flyTo(options)
                 } else {
                     widget.panTo(pan.point.toLngLat())
+                }
+            }
+        }
+
+        launch {
+            geoMap.markerVisibilityFlow.collect { provideVisibility ->
+                context.markers.forEach { (_, obj) ->
+                    val isVisible = provideVisibility(obj.entity)
+                    obj.setOpacity(if (isVisible) 1f else 0f)
                 }
             }
         }

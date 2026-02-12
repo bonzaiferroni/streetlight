@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 fun RenderContext.viewEventCreator(app: AppContext) {
     val model = app.home.eventCreator
 
-    column {
+    val element = column {
         card(modify(Width100, AlignItemsStretch)) {
             blockLabel("feature image") {
                 imageChoice(
@@ -74,6 +74,8 @@ fun RenderContext.viewEventCreator(app: AppContext) {
             })
         }
     }
+
+    element.onView(model::setVisibility)
 }
 
 fun RenderContext.locationEditor(app: AppContext) {

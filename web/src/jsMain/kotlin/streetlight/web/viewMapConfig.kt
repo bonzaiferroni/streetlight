@@ -16,7 +16,7 @@ fun RenderContext.viewMapConfig(app: AppContext) {
             blockLabel = "layers"
             flowBlock(eventMap.stateFlow.mapDistinct { it.layers }, modify(Width100)) { layers ->
                 row(modify(JustifySpaceAround, WrapFlex)) {
-                    MapLayer.entries.forEach { layer ->
+                    StreetMapLayer.entries.forEach { layer ->
                         val isActive = layers.contains(layer)
                         action({ eventMap.toggleLayer(layer) }) {
                             row(modify(NoWrap)) {
