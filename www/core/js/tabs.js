@@ -1,6 +1,10 @@
 document.addEventListener("DOMContentLoaded", () => {
-    document.querySelectorAll(".tabs").forEach(initTabs);
+    findAndInitTabs(document)
 });
+
+function findAndInitTabs(parent) {
+    parent.querySelectorAll(".tabs").forEach(initTabs);
+}
 
 function initTabs(root) {
     const DURATION = 200;

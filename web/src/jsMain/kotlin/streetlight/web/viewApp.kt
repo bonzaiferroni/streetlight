@@ -36,11 +36,10 @@ fun viewApp() {
         override val gate = UserGate(context)
         override val gateAgent = GateAgent(scope, gate, portal)
 
-        override val home = object: HomeContext {
-            override val geoMap = GeoMap(scope)
-            override val streetMap = StreetMap(scope, client, geoMap)
-            override val eventCreator = EventCreator(scope, client, geoMap)
-        }
+        override val geoMap = GeoMap(scope)
+        override val streetMap = StreetMap(scope, client, geoMap)
+        override val eventEditor = EventEditor(scope, client, geoMap)
+        override val eventProfile = EventProfile(scope, client)
     }
 
     val portalMount = document.getElementById(SinglePageId.portalMount)
@@ -53,9 +52,9 @@ fun viewApp() {
         ) { screen ->
             when (screen) {
                 StreetlightScreen.Home -> viewHome(app)
-                StreetlightScreen.Event -> viewEventRoute(app.portal)
+                StreetlightScreen.Event -> viewEventRoute(app)
                 StreetlightScreen.Account -> viewAccount(app.gate, app.portal)
-                StreetlightScreen.CreateEvent -> viewEventCreator(app)
+                StreetlightScreen.EditEvent -> viewEventEditor(app)
                 StreetlightScreen.Sandbox -> viewSandbox(app)
                 StreetlightScreen.FullMap -> viewFullMap(app)
             }

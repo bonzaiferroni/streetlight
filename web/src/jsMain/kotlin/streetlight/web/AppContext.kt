@@ -9,13 +9,10 @@ interface AppContext {
     val portal: Portal
     val gate: UserGate
     val gateAgent: GateAgent
-    val home: HomeContext
-}
-
-interface HomeContext {
     val geoMap: GeoMap
+    val eventProfile: EventProfile
     val streetMap: StreetMap
-    val eventCreator: EventCreator
+    val eventEditor: EventEditor
 }
 
 interface ClientContext {

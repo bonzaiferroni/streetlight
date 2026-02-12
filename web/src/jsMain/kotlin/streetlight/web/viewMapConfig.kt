@@ -3,13 +3,13 @@ package streetlight.web
 import koala.css.*
 import koala.dom.*
 import koala.html.blockLabel
-import koala.html.paragraph
+import koala.html.textBlock
 import koala.model.mapDistinct
 
 fun RenderContext.viewMapConfig(app: AppContext) {
     val gateAgent = app.gateAgent
-    val eventMap = app.home.streetMap
-    val eventCreator = app.home.eventCreator
+    val eventMap = app.streetMap
+    val eventCreator = app.eventEditor
     val portal = app.portal
 
     row(modify(Width100, AlignItemsStart)) {
@@ -21,8 +21,8 @@ fun RenderContext.viewMapConfig(app: AppContext) {
                         val isActive = layers.contains(layer)
                         action({ eventMap.toggleLayer(layer) }) {
                             row(modify(NoWrap)) {
-                                paragraph(if (isActive) "👁" else "⌣", modify(Dim, Width2, TextAlignCenter))
-                                paragraph(layer.label, if (!isActive) modify(Dim) else null)
+                                this.textBlock(if (isActive) "👁" else "⌣", modify(Dim, Width2, TextAlignCenter))
+                                this.textBlock(layer.label, if (!isActive) modify(Dim) else null)
                             }
                         }
                     }
@@ -31,7 +31,7 @@ fun RenderContext.viewMapConfig(app: AppContext) {
         }
         button("Add Event", modify(Accent), onClick = {
             gateAgent.checkIn {
-                portal.go(CreateEventRoute)
+                portal.go(EditEventRoute)
             }
         })
     }

@@ -15,15 +15,15 @@ fun HTML.eventSignUp(event: Event) {
             heading1(event.title)
             heading2("Sign Up")
 
-            tabs {
+            tabs(Id("signup-tabs")) {
                 tab("Guest") {
-                    paragraph("hello")
+                    textBlock("hello")
                 }
                 tab("Sign-in") {
-                    paragraph("world")
+                    textBlock("world")
                 }
                 tab("Coffee") {
-                    paragraph("yes please")
+                    textBlock("yes please")
                 }
             }
             column(Id("sign-up-box"), modify(Width100)) {
@@ -33,7 +33,7 @@ fun HTML.eventSignUp(event: Event) {
                     button("Send", invoke("sendRequest"))
                 }
                 column(Id("user-details"), modify(DisplayNone)) {
-                    paragraph("User details form")
+                    textBlock("User details form")
                 }
             }
         }

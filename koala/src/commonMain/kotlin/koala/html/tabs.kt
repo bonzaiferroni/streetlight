@@ -7,12 +7,13 @@ import kotlinx.html.TagConsumer
 import kotlinx.html.p
 
 fun FlowContent.tabs(
+    id: Id,
     modifiers: ModifierSet? = null,
     content: TabScope.() -> Unit,
 ) {
     val scope = TabScope()
     scope.content()
-    column(modify(TabClass.tabs, modifiers)) {
+    column(id, modify(TabClass.tabs, modifiers)) {
         row(modify(TabClass.header)) {
             scope.tabs.forEachIndexed { index, tab ->
                 p {

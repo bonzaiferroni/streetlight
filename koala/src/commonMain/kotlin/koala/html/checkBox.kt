@@ -12,6 +12,6 @@ fun FlowContent.checkBox(
             this.id = id.value
             this.name = id.value
         }
-        paragraph(label)
+        textBlock(label)
     }
 }

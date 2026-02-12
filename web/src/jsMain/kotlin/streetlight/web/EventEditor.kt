@@ -22,7 +22,7 @@ import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import streetlight.model.data.EventId
 
-class EventCreator(
+class EventEditor(
     scope: CoroutineScope,
     private val client: ClientContext,
     private val geoMap: GeoMap,

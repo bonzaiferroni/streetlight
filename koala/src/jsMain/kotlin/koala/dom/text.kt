@@ -1,6 +1,5 @@
 package koala.dom
 
-import koala.css.CssClass
 import koala.css.ModifierSet
 import koala.css.applyModifiers
 import kotlinx.coroutines.flow.Flow
@@ -25,7 +24,7 @@ fun RenderContext.textBlock(
     modifiers: ModifierSet? = null,
     block: (P.() -> Unit)? = null
 ): HTMLParagraphElement {
-    val element = textBlock(modifiers = modifiers, block = block)
+    val element = this@textBlock.textBlock(modifiers = modifiers, block = block)
     renderScope.launch {
         flow.distinctUntilChanged().collect {
             element.textContent = it

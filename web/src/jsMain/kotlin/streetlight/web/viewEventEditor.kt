@@ -2,14 +2,14 @@ package streetlight.web
 
 import koala.css.*
 import koala.dom.*
-import koala.html.paragraph
+import koala.html.textBlock
 import koala.html.textSpan
 import koala.model.mapDistinct
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
-fun RenderContext.viewEventCreator(app: AppContext) {
-    val model = app.home.eventCreator
+fun RenderContext.viewEventEditor(app: AppContext) {
+    val model = app.eventEditor
 
     val element = column {
         card(modify(Width100, AlignItemsStretch)) {
@@ -36,7 +36,7 @@ fun RenderContext.viewEventCreator(app: AppContext) {
                     )
                 }
                 row {
-                    paragraph("Event category:", modify(MarginLeft1, Dim))
+                    this.textBlock("Event category:", modify(MarginLeft1, Dim))
                     dropMenu(model::setEventType, provideLabel = { it.label })
                 }
             }
@@ -80,10 +80,10 @@ fun RenderContext.viewEventCreator(app: AppContext) {
 }
 
 fun RenderContext.locationEditor(app: AppContext) {
-    val eventCreator = app.home.eventCreator
+    val eventCreator = app.eventEditor
 
     column(modify(QueryRow, AlignItemsStretch)) {
-        viewGeoMap(app.home.geoMap, modify(Flex1, Square))
+        viewGeoMap(app.geoMap, modify(Flex1, Square))
         column(modify(Flex2, AlignItemsStretch)) {
             row {
                 textField(
@@ -105,7 +105,7 @@ fun RenderContext.locationEditor(app: AppContext) {
                 binding = eventCreator.addressFlow,
             )
             flowBlock(eventCreator.pointFlow, animate = true, modifiers = modify(MagicBlur)) { point ->
-                textBlock {
+                this.textBlock {
                     textSpan("latitude: ", modify(Dim))
                     textSpan(point?.lat?.toString() ?: "--" )
                     textSpan(" longitude: ", modify(Dim))

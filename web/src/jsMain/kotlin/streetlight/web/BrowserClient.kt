@@ -1,8 +1,10 @@
 package streetlight.web
 
+import kampfire.api.GetByTableIdEndpoint
 import kampfire.api.GetEndpoint
 import kampfire.api.PostEndpoint
 import kampfire.api.QueryEndpoint
+import kampfire.api.TableId
 import kampfire.api.UserApi
 import kampfire.model.Auth
 import kotlinx.browser.localStorage
@@ -22,6 +24,14 @@ import kotlin.text.ifEmpty
 suspend inline fun <reified Returned> AppContext.get(endpoint: GetEndpoint<Returned>): Returned? =
     authRequest("GET", endpoint.path) { request ->
         request.text().await().let { Json.decodeFromString(it) }
+    }
+
+suspend inline fun <Id: TableId<*>, reified Returned> AppContext.get(
+    endpoint: GetByTableIdEndpoint<Id, Returned>,
+    id: Id
+): Returned? =
+    authRequest("GET", "${endpoint.path}/${id.value}") { request ->
+        request.text().await().let { Json.decodeFromString(it)}
     }
 
 suspend inline fun <reified Sent, reified Returned> AppContext.get(

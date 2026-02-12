@@ -50,7 +50,7 @@ fun FlowContent.appFooter() {
             lottie("spinning_circles") {
                 style = "height: 10rem;"
             }
-            paragraph(giants, modify(Italic, Opacity6))
+            textBlock(giants, modify(Italic, Opacity6))
         }
     }
 }

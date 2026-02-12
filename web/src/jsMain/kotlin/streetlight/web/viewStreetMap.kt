@@ -14,7 +14,7 @@ fun RenderContext.viewStreetMap(
     app: AppContext,
 ) {
     column(modify(Width100)) {
-        viewGeoMap(app.home.geoMap)
+        viewGeoMap(app.geoMap)
         viewMapPanel(app)
     }
 }

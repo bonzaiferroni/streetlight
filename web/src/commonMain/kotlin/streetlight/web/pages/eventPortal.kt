@@ -23,7 +23,7 @@ fun HTML.eventPortal(event: Event, person: Person?, requestItems: List<RequestIt
                 propertyValue("performer", "Luke Bollwerk")
                 propertyValue("instagram") {
                     a("https://www.instagram.com/trespasserswilliam/") {
-                        paragraph("trespasserswilliam")
+                        textBlock("trespasserswilliam")
                     }
                 }
             }
@@ -42,7 +42,7 @@ fun HTML.eventPortal(event: Event, person: Person?, requestItems: List<RequestIt
                     button("Send", invoke("sendRequest"))
                 }
                 column(Id("request-sent"), modify(DisplayNone)) {
-                    paragraph("Request sent!")
+                    textBlock("Request sent!")
                 }
             }
         }
@@ -79,12 +79,12 @@ fun FlowContent.requestItem(
         onClick = invoke("startRequest", event.eventId.value, song.songId.value)
         row {
             column(modify(Flex1, Gap0)) {
-                paragraph(song.title, modify(Bold))
-                paragraph(song.artist)
+                textBlock(song.title, modify(Bold))
+                textBlock(song.artist)
             }
             column(modify(Gap0, AlignItemsCenter)) {
-                paragraph("plays", modify(Opacity6))
-                paragraph(plays.toString())
+                textBlock("plays", modify(Opacity6))
+                textBlock(plays.toString())
             }
         }
     }

@@ -13,8 +13,8 @@ fun RenderContext.viewTransitMap(
     app: AppContext,
     maplibre: maplibregl.Map
 ) {
-    val streetMap = app.home.streetMap
-    val transitMap = app.home.streetMap.transit
+    val streetMap = app.streetMap
+    val transitMap = app.streetMap.transit
     var stopMarkers: List<MapObject> = emptyList()
     var areaTransit = transitMap.stateNow.areaTransit
     val vehicleElements = mutableMapOf<String, MapObject>()

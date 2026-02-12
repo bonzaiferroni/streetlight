@@ -5,7 +5,7 @@ import koala.dom.onView
 import koala.dom.textBlock
 
 fun RenderContext.viewSandbox(app: AppContext) {
-    val element = textBlock("yer element")
+    val element = this@viewSandbox.textBlock("yer element")
     element.onView {
         console.log("In view, matey!")
     }

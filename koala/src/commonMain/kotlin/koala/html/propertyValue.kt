@@ -8,7 +8,7 @@ fun FlowContent.propertyValue(
     propertyValue: String,
 ) {
     propertyValue(propertyName) {
-        paragraph(propertyValue)
+        textBlock(propertyValue)
     }
 }
 
@@ -17,7 +17,7 @@ fun FlowContent.propertyValue(
     block: DIV.() -> Unit
 ) {
     row {
-        paragraph("${propertyName}:", modify(Opacity6, TextAlignRight))
+        textBlock("${propertyName}:", modify(Opacity6, TextAlignRight))
         block()
     }
 }

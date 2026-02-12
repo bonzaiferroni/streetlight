@@ -1,7 +1,7 @@
 package streetlight.web
 
 import koala.html.heading5
-import koala.html.paragraph
+import koala.html.textBlock
 import koala.html.row
 import kotlinx.html.*
 import koala.css.*
@@ -16,27 +16,27 @@ fun DOMContext.appDescription() {
             lottie("cup_stack", modify(Flex1, MaxWidth50))
             val introText = "Streetlight is a street performance community and app. " +
                     "It is cross-platform, open-source, and 100% Kotlin. "
-            paragraph(introText, modify(Flex3, Large))
+            textBlock(introText, modify(Flex3, Large))
         }
         column(modify(QueryRow, AlignItemsCenter)) {
             lottie("dancing_man", modify(Flex1, MaxWidth50))
             column(modify(Flex3)) {
                 column(modify(Gap0)) {
-                    paragraph("Do you have a talent to share with passersby?")
-                    paragraph("Do you have a business, venue, or message you would like to promote?")
-                    paragraph("Are you walking down the street somewhere and looking for something to experience?")
+                    textBlock("Do you have a talent to share with passersby?")
+                    textBlock("Do you have a business, venue, or message you would like to promote?")
+                    textBlock("Are you walking down the street somewhere and looking for something to experience?")
                 }
-                paragraph("Consider downloading Streetlight to see what it can offer.", modify(Bold))
+                textBlock("Consider downloading Streetlight to see what it can offer.", modify(Bold))
             }
         }
         column(modify(QueryRow, AlignItemsCenter)) {
             lottie("playful_cat", modify(Flex1, MaxWidth50))
             column(modify(Flex3)) {
-                paragraph {
+                textBlock {
                     externalLink("https://github.com/bonzaiferroni/streetlight", "Streetlight")
                     +" is 100% free and open-source. Free as in speech, free as in beer. "
                 }
-                paragraph(
+                textBlock(
                     "Do you like working with Kotlin and/or people? Consider becoming a contributor. " +
                             "As a software development community, we welcome people at any stage in their career. "
                     // pending resources to follow through
@@ -44,13 +44,13 @@ fun DOMContext.appDescription() {
 //                            "We are based in Aurora, CO, and we have support opportunities. "
                 )
 //                paragraph("Work on Streetlight or your own open-source idea.", Large)
-                paragraph {
+                textBlock {
                     +"For better or for worse, apps are evermore present in our lives. "
                     +"As software engineers, we hold influence. "
                     +"The nature of our work supports a level of collaboration as yet unrealized in human history. "
                     +"We are like giants who stand on the shoulders of other giants, each one reaching higher. "
                 }
-                paragraph("It's giants all the way down.", modify(Large))
+                textBlock("It's giants all the way down.", modify(Large))
             }
         }
         column(modify(Gap0, AlignItemsStretch, Width100, MarginTop4)) {
@@ -78,7 +78,7 @@ fun FlowContent.githubLink(
     repo: String = name,
 ) {
     row {
-        paragraph("$role:", modify(Opacity6, TextAlignRight, Flex1))
+        textBlock("$role:", modify(Opacity6, TextAlignRight, Flex1))
         a("https://github.com/$user/$repo") {
             applyModifiers(Flex1)
             target = "_blank"

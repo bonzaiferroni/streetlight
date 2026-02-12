@@ -2,12 +2,14 @@ package streetlight.web
 
 import kampfire.model.GeoPoint
 import streetlight.model.Api
+import streetlight.model.data.EventId
 import streetlight.model.data.MapQuery
 import streetlight.model.data.NewEvent
 import streetlight.model.data.NewLocation
 import streetlight.model.data.UserFileRequest
 
 class ApiClient(app: AppContext): AppContext by app {
+    suspend fun readEvent(eventId: EventId) = get(Api.EventProfile, eventId)
     suspend fun readEventFeed() = get(Api.Events)
     suspend fun queryMap(request: MapQuery) = get(Api.Events.QueryMap, request.toQuery())
     suspend fun create(event: NewEvent) = post(Api.Events.Create, event)

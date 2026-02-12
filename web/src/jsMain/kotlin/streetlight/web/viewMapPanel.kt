@@ -26,7 +26,7 @@ fun RenderContext.viewMapPanel(app: AppContext) {
 }
 
 fun RenderContext.viewMapCards(app: AppContext) {
-    val eventMap = app.home.streetMap
+    val eventMap = app.streetMap
 
     flowBlock(eventMap.stateFlow.mapDistinct { it.layers }, modify(Width100)) { layers ->
         box(modify(MapPanel.container)) {

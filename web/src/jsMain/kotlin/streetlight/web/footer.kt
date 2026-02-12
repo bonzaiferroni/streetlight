@@ -10,8 +10,7 @@ import koala.dom.RenderContext
 import koala.dom.lottie
 import koala.dom.row
 import koala.html.column
-import koala.html.paragraph
-import koala.html.row
+import koala.html.textBlock
 import kotlinx.html.style
 
 fun RenderContext.footer() {
@@ -22,7 +21,7 @@ fun RenderContext.footer() {
             lottie("spinning_circles") {
                 style = "height: 10rem;"
             }
-            paragraph(giants, modify(Italic, Opacity6))
+            textBlock(giants, modify(Italic, Opacity6))
         }
     }
 }

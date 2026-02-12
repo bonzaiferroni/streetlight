@@ -12,7 +12,7 @@ enum class StreetlightScreen(
     Home("home", { HomeRoute() }),
     Account("account", { AccountRoute }),
     Event("event", { segments -> segments.getOrNull(1)?.let { EventIdRoute(EventId(it)) } }),
-    CreateEvent("create-event", { CreateEventRoute }),
+    EditEvent("edit-event", { EditEventRoute }),
     Sandbox("sandbox", { SandboxRoute }),
     FullMap("full-map", { FullMapRoute })
 }
@@ -43,8 +43,8 @@ data class EventObjectRoute(val event: Event): EventRoute {
     override fun toHashPath() = "${super.toHashPath()}/${event.eventId.value}"
 }
 
-object CreateEventRoute: StreetlightRoute {
-    override val screen get() = StreetlightScreen.CreateEvent
+object EditEventRoute: StreetlightRoute {
+    override val screen get() = StreetlightScreen.EditEvent
 }
 
 object SandboxRoute: StreetlightRoute {

@@ -15,7 +15,7 @@ inline fun FlowContent.label(
     }
 }
 
-inline fun FlowContent.paragraph(
+inline fun FlowContent.textBlock(
     content: String = "",
     modifiers: ModifierSet? = null,
     crossinline block: P.() -> Unit = { }

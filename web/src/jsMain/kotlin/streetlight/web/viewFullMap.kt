@@ -11,7 +11,7 @@ import streetlight.web.pages.SinglePageId
 fun RenderContext.viewFullMap(app: AppContext) {
     val element = div { }
     val fullscreen = fullscreenBox {
-        viewGeoMap(app.home.geoMap, modify(Height100))
+        viewGeoMap(app.geoMap, modify(Height100))
     }
     element.onView { isVisible ->
         if (isVisible) {
