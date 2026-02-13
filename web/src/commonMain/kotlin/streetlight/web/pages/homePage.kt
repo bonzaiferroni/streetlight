@@ -3,15 +3,16 @@ package streetlight.web.pages
 import koala.html.*
 import kotlinx.html.*
 import koala.css.*
+import streetlight.model.data.Event
 import streetlight.web.shells.homeShell
 
-fun HTML.homePage() {
+fun HTML.homePage(events: List<Event>) {
     head("Streetlight | Home") {
         supportProtobuf()
         supportGeoMap()
     }
     appBody {
-        homeShell()
+        homeShell(events)
     }
 }
 

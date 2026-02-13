@@ -19,19 +19,10 @@ import kotlinx.browser.document
 import kotlinx.html.js.div
 
 fun RenderContext.wireMapPanel(app: AppContext) {
-    val element = document.getElementById(GeoMapSelector.panel)
-    var isRendered = false
-
-    element.onView { isVisible ->
-        if (isVisible && !isRendered) {
-            console.log("Rendering map panel")
-            isRendered = true
-            element.renderRoot(renderScope) {
-                column {
-                    viewMapConfig(app)
-                    viewMapCards(app)
-                }
-            }
+    mountRenderOnView(GeoMapSelector.panel) {
+        column {
+            viewMapConfig(app)
+            viewMapCards(app)
         }
     }
 }

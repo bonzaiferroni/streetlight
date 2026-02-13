@@ -6,6 +6,7 @@ import io.ktor.server.html.respondHtml
 import io.ktor.server.http.content.staticFiles
 import io.ktor.server.routing.Routing
 import io.ktor.server.routing.get
+import kabinet.console.globalConsole
 import streetlight.model.data.EventId
 import streetlight.server.RuntimeProvider
 import streetlight.server.ServerProvider
@@ -14,6 +15,8 @@ import streetlight.web.pages.eventPortal
 import streetlight.web.pages.eventSignUp
 import streetlight.web.pages.homePage
 import java.io.File
+
+private val console = globalConsole.getHandle("servePages")
 
 fun Routing.servePages(app: ServerProvider = RuntimeProvider) {
     uploadFolder.mkdirs()
@@ -30,8 +33,9 @@ fun Routing.servePages(app: ServerProvider = RuntimeProvider) {
     }
 
     get("/") {
+        val events = app.dao.event.readActiveEvents()
         call.respondHtml {
-            homePage()
+            homePage(events)
         }
     }
 

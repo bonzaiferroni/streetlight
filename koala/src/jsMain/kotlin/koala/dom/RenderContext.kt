@@ -1,5 +1,7 @@
 package koala.dom
 
+import koala.dom.getElementById
+import koala.html.GeoMapSelector
 import koala.html.Id
 import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
@@ -32,6 +34,21 @@ fun RenderContext.mountRender(
 ) {
     val mount = document.getElementById(elementId)
     mount.renderRoot(renderScope, block)
+}
+
+fun RenderContext.mountRenderOnView(
+    elementId: Id,
+    block: RenderContext.() -> Unit
+) {
+    val element = document.getElementById(elementId)
+    var isRendered = false
+
+    element.onView { isVisible ->
+        if (isVisible && !isRendered) {
+            isRendered = true
+            element.renderRoot(renderScope, block)
+        }
+    }
 }
 
 class RenderCache(
