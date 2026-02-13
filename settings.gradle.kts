@@ -37,6 +37,7 @@ include(":model")
 include(":server")
 include(":kampfire")
 
-include(":web")
+include(":konch")
 include(":koala")
+include(":web")
 include(":webdev")
