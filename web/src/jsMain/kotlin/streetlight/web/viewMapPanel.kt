@@ -17,7 +17,7 @@ import koala.model.mapDistinct
 import kotlinx.html.js.div
 
 fun RenderContext.viewMapPanel(app: AppContext) {
-    box(GeoMapIds.panel, modify(Width100)) {
+    box(GeoMapId.panel, modify(Width100)) {
         column {
             viewMapConfig(app)
             viewMapCards(app)

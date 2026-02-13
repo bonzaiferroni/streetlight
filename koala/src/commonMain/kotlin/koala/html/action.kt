@@ -7,9 +7,10 @@ import koala.css.applyModifiers
 import koala.css.modify
 import kotlinx.html.A
 import kotlinx.html.FlowContent
+import kotlinx.html.FlowOrInteractiveOrPhrasingContent
 import kotlinx.html.a
 
-fun FlowContent.action(
+fun FlowOrInteractiveOrPhrasingContent.action(
     route: AppRoute,
     modifiers: ModifierSet? = null,
     block: (A.() -> Unit)? = null
@@ -17,7 +18,7 @@ fun FlowContent.action(
     action(href = route.toHashPath(), modifiers = modifiers, block = block)
 }
 
-fun FlowContent.action(
+fun FlowOrInteractiveOrPhrasingContent.action(
     href: String? = null,
     modifiers: ModifierSet? = null,
     block: (A.() -> Unit)? = null
@@ -28,7 +29,7 @@ fun FlowContent.action(
     }
 }
 
-fun FlowContent.action(
+fun FlowOrInteractiveOrPhrasingContent.action(
     modifiers: ModifierSet? = null,
     block: (A.() -> Unit)? = null
 ) {

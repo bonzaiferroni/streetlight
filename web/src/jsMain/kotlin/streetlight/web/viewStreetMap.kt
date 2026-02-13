@@ -8,8 +8,6 @@ import koala.dom.RenderContext
 import koala.dom.column
 import koala.html.blockLabel
 
-const val STOP_ZOOM = 14
-
 fun RenderContext.viewStreetMap(
     app: AppContext,
 ) {

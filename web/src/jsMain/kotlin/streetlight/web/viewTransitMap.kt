@@ -9,6 +9,8 @@ import streetlight.model.data.TransitRoute
 import streetlight.model.data.VehicleType
 import kotlin.js.json
 
+const val STOP_ZOOM = 14
+
 fun RenderContext.viewTransitMap(
     app: AppContext,
     maplibre: maplibregl.Map

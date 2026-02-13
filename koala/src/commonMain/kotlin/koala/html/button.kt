@@ -1,6 +1,5 @@
 package koala.html
 
-import koala.css.CssClass
 import koala.css.ElementClass
 import koala.css.ModifierSet
 import koala.css.applyModifiers
@@ -12,12 +11,23 @@ fun FlowOrInteractiveOrPhrasingContent.button(
     text: String,
     onClick: String? = null,
     modifiers: ModifierSet? = null,
-    content: BUTTON.() -> Unit = {},
+    block: BUTTON.() -> Unit = {},
 ) {
     buttonCore {
         applyModifiers(modify(ElementClass.button, modifiers))
         onClick?.let { this.onClick = it }
         +text
-        content()
+        block()
+    }
+}
+
+fun FlowOrInteractiveOrPhrasingContent.button(
+    text: String,
+    route: AppRoute,
+    modifiers: ModifierSet? = null,
+    content: BUTTON.() -> Unit = {},
+) {
+    action(route) {
+        button(text, modifiers = modifiers, block = content)
     }
 }

@@ -15,13 +15,14 @@ import kotlinx.html.DIV
 import kotlinx.html.dom.append
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
+import streetlight.web.shells.GeoMapId
 
 fun RenderContext.viewGeoMap(
     geoMap: GeoMap,
     modifiers: ModifierSet? = modify(Height48),
     block: (DIV.() -> Unit)? = null
 ): HTMLDivElement {
-    val parent = box(GeoMapIds.mapMount, modify(Width100, modifiers)) {
+    val parent = box(GeoMapId.mapMount, modify(Width100, modifiers)) {
         block?.invoke(this)
     }
 
@@ -51,14 +52,14 @@ fun RenderContext.createMapWindow(
     console.log("creating geomap")
 
     val mapWindow = parent.append {
-        box(GeoMapIds.window, modify(Width100, Height100))
+        box(GeoMapId.window)
     }.first()
 
     val widgetBox = mapWindow.append {
-        box(GeoMapIds.widget) {
+        box(GeoMapId.widget) {
         }
-        box(GeoMapIds.overlay) {
-            box(GeoMapIds.crosshairs)
+        box(GeoMapId.overlay) {
+            box(GeoMapId.crosshairs)
         }
     }.first()
 
@@ -154,13 +155,4 @@ fun RenderContext.createMapWindow(
     }
 
     return mapWindow
-}
-
-object GeoMapIds {
-    val mapMount = Id("map-mount")
-    val window = Id("map-window")
-    val widget = Id("map-widget")
-    val overlay = Id("map-overlay")
-    val crosshairs = Id("map-crosshairs")
-    val panel = Id("map-panel")
 }

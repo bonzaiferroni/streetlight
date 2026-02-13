@@ -15,18 +15,5 @@ import kotlinx.coroutines.launch
 fun RenderContext.viewHome(app: AppContext) {
     console.log("loading home")
 
-    tabs(Id("main-tabs"), modify(Width100)) {
-        tab("Events") {
-            eventsTab(app.portal)
-        }
-        tab("Map") {
-            column(modify(AlignItemsCenter)) {
-                viewStreetMap(app)
-                footer()
-            }
-        }
-        tab("App") {
-            appDescription()
-        }
-    }
+
 }
