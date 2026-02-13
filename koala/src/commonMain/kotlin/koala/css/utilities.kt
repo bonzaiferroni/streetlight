@@ -7,26 +7,26 @@ import kotlinx.css.properties.Timing
 import kotlinx.css.properties.s
 
 // display utilities
-object DisplayNone : CssClass { override val value = "display-none" }
-object Opacity6: CssClass { override val value = "opacity-6" }
-object Opacity4: CssClass { override val value = "opacity-4" }
-object Opacity2: CssClass { override val value = "opacity-2" }
-object Dim: CssClass { override val value = Opacity6.value }
-object NoDim: CssClass { override val value = "no-dim" }
-object Glow: CssClass { override val value = "glow" }
-object CircleShape: CssClass { override val value = "circle-shape" }
-object BorderRadius1: CssClass { override val value = "border-radius-1" }
-object Accent: CssClass { override val value = "accent" }
-object Primary: CssClass { override val value = "primary" }
-object Secondary: CssClass { override val value = "secondary" }
-object Clickable: CssClass { override val value = "clickable" }
+object DisplayNone : Modifier { override val value = "display-none" }
+object Opacity6: Modifier { override val value = "opacity-6" }
+object Opacity4: Modifier { override val value = "opacity-4" }
+object Opacity2: Modifier { override val value = "opacity-2" }
+object Dim: Modifier { override val value = Opacity6.value }
+object NoDim: Modifier { override val value = "no-dim" }
+object Glow: Modifier { override val value = "glow" }
+object CircleShape: Modifier { override val value = "circle-shape" }
+object BorderRadius1: Modifier { override val value = "border-radius-1" }
+object Accent: Modifier { override val value = "accent" }
+object Primary: Modifier { override val value = "primary" }
+object Secondary: Modifier { override val value = "secondary" }
+object Clickable: Modifier { override val value = "clickable" }
 
 // font utilities
-object Bold: CssClass { override val value = "bold" }
-object Italic: CssClass { override val value = "italic" }
-object Large: CssClass { override val value = "large" }
-object Heading1: CssClass { override val value = "heading-1" }
-object Heading2: CssClass { override val value = "heading-2" }
+object Bold: Modifier { override val value = "bold" }
+object Italic: Modifier { override val value = "italic" }
+object Large: Modifier { override val value = "large" }
+object Heading1: Modifier { override val value = "heading-1" }
+object Heading2: Modifier { override val value = "heading-2" }
 
 fun CssBuilder.utilities(theme: KoalaTheme) {
 

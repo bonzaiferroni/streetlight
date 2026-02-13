@@ -12,10 +12,13 @@ var AttributeContext.blockLabel: String?
     }
 
 @JvmInline
-value class Attribute(val value: String)
+value class Attribute(val value: String) {
+    val selector get() = "[$value]"
+}
 
 object Attributes {
     val blockLabel = Attribute("block-label")
+    val lottie = Attribute("lottie")
 }
 
 fun AttributeContext.applyBlockLabel(label: String?) {

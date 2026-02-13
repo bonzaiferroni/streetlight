@@ -1,7 +1,9 @@
-package streetlight.web
+package koala.model
 
 import kampfire.model.GeoBounds
 import kampfire.model.GeoPoint
+import koala.external.Position
+import koala.external.maplibregl
 import kotlinx.browser.window
 
 fun maplibregl.LngLat.interpolateTo(dest: maplibregl.LngLat, t: Double): maplibregl.LngLat =

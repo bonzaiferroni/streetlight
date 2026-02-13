@@ -10,19 +10,21 @@ import kotlinx.html.id
 import kotlinx.html.style
 import kotlin.jvm.JvmInline
 
-interface CssClass {
+interface Modifier {
     val value: String
+
+    val selector get() = ".$value"
 }
 
 @JvmInline
-value class Css(override val value: String): CssClass {
+value class Css(override val value: String): Modifier {
     override fun toString() = value
 }
 
-typealias ModifierSet = Set<CssClass>
+typealias ModifierSet = Set<Modifier>
 
-fun modify(vararg cssClass: CssClass) = cssClass.toSet()
-fun modify(css: CssClass, modifiers: ModifierSet?): ModifierSet {
+fun modify(vararg modifiers: Modifier) = modifiers.toSet()
+fun modify(css: Modifier, modifiers: ModifierSet?): ModifierSet {
     val set = setOf(css)
     return if (modifiers != null) {
         set + modifiers
@@ -37,11 +39,11 @@ fun CoreAttributeGroupFacade.applyModifiers(modifiers: ModifierSet?) {
     }
 }
 
-fun CoreAttributeGroupFacade.applyModifiers(cssClass: CssClass) {
-    classes += cssClass.value
+fun CoreAttributeGroupFacade.applyModifiers(modifier: Modifier) {
+    classes += modifier.value
 }
 
-fun CoreAttributeGroupFacade.applyModifiers(css: CssClass, modifiers: ModifierSet?) {
+fun CoreAttributeGroupFacade.applyModifiers(css: Modifier, modifiers: ModifierSet?) {
     classes += css.value
     modifiers?.let {
         classes += modifiers.map { it.value }
@@ -60,7 +62,7 @@ fun CssBuilder.rules(theme: KoalaTheme): CssBuilder {
     return this
 }
 
-fun RuleContainer.rule(cssClass: CssClass, block: RuleSet) = rule(".${cssClass.value}", block)
+fun RuleContainer.rule(modifier: Modifier, block: RuleSet) = rule(".${modifier.value}", block)
 
 fun HEAD.koalaStyles(theme: KoalaTheme = KoalaTheme()) {
     style {

@@ -17,7 +17,7 @@ kotlin {
                 sourceMaps = true
             }
             distribution {
-                outputDirectory.set(projectDir.resolve("../www/core/js/compiled"))
+                outputDirectory.set(projectDir.resolve("../www/core/js/streetlight"))
             }
         }
         binaries.executable()

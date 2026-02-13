@@ -1,12 +1,9 @@
-package streetlight.web
+package koala.model
 
 import kampfire.model.GeoBounds
 import kampfire.model.GeoPoint
 import kampfire.model.meters
-import koala.model.BrowserModel
-import koala.model.mapDistinct
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.filter

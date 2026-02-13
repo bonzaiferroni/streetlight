@@ -1,5 +1,6 @@
 package streetlight.web
 
+import koala.model.GeoMap
 import koala.model.Portal
 import kotlinx.coroutines.CoroutineScope
 

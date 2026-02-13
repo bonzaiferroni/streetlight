@@ -1,4 +1,6 @@
-package streetlight.web
+package koala.model
+
+import koala.external.maplibregl
 
 class MapContext(
     val widget: maplibregl.Map,

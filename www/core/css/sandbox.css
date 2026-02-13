@@ -60,6 +60,11 @@
     grid-area: 1 / 1;
 }
 
+#portal-mount > *,
+#shell-box > * {
+    width: 100%;
+}
+
 #fullscreen-mount {
     position: absolute;
     top: 0;

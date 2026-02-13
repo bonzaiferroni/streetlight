@@ -9,6 +9,7 @@ import koala.css.modify
 import koala.dom.renderRoot
 import koala.dom.flowBlock
 import koala.dom.getElementById
+import koala.model.GeoMap
 import koala.model.Portal
 import kotlinx.browser.document
 import kotlinx.coroutines.MainScope

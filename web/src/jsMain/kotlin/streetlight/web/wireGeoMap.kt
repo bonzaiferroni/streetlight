@@ -1,82 +1,58 @@
 package streetlight.web
 
-import koala.css.Height100
-import koala.css.Height48
-import koala.css.ModifierSet
-import koala.css.Width100
-import koala.css.modify
-import koala.dom.RenderContext
-import koala.dom.box
+import koala.core.geoMapWindow
+import koala.core.queryFirstOrNull
+import koala.dom.getElementOrNullById
 import koala.dom.onView
-import koala.html.Id
+import koala.external.CenterZoomBearing
+import koala.external.maplibregl
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.html.DIV
-import kotlinx.html.dom.append
-import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
-import streetlight.web.shells.GeoMapId
+import koala.html.GeoMapSelector
+import koala.model.GeoMap
+import koala.model.MapContext
+import koala.model.collectEntities
+import koala.model.showLines
+import koala.model.toGeoBounds
+import koala.model.toLngLat
+import kotlinx.browser.document
+import kotlinx.coroutines.CoroutineScope
 
-fun RenderContext.viewGeoMap(
+fun wireGeoMap(
     geoMap: GeoMap,
-    modifiers: ModifierSet? = modify(Height48),
-    block: (DIV.() -> Unit)? = null
-): HTMLDivElement {
-    val parent = box(GeoMapId.mapMount, modify(Width100, modifiers)) {
-        block?.invoke(this)
-    }
+    appScope: CoroutineScope,
+    ancestor: HTMLElement,
+) {
+    val mount = ancestor.queryFirstOrNull(GeoMapSelector.mapMount) ?: error("No geomap mount descendent")
+    initMapWindow(geoMap, appScope)
 
-    if (mapWindowElement == null) {
-        mapWindowElement = createMapWindow(geoMap, parent)
-    }
-
-    parent.onView { isVisible ->
-        if (isVisible && parent.children.length == 0) {
+    mount.onView { isVisible ->
+        if (isVisible && mount.children.length == 0) {
             console.log("grabbing geomap window")
-            val mapWindow = mapWindowElement ?: error("mapWindowElement not found")
-            parent.appendChild(mapWindow)
-            mapWidget?.resize()
+            val mapWindow = geoMapWindow ?: error("mapWindowElement not found")
+            mount.appendChild(mapWindow)
+            // mapWidget?.resize()
         }
     }
-
-    return parent
 }
 
-var mapWindowElement: HTMLElement? = null
-var mapWidget: maplibregl.Map? = null
+var initializedMapWindow = false
 
-fun RenderContext.createMapWindow(
+fun initMapWindow(
     geoMap: GeoMap,
-    parent: HTMLDivElement,
-): HTMLElement {
+    appScope: CoroutineScope,
+) {
+    if (initializedMapWindow) return
+    initializedMapWindow = true
+
     console.log("creating geomap")
-
-    val mapWindow = parent.append {
-        box(GeoMapId.window)
-    }.first()
-
-    val widgetBox = mapWindow.append {
-        box(GeoMapId.widget) {
-        }
-        box(GeoMapId.overlay) {
-            box(GeoMapId.crosshairs)
-        }
-    }.first()
+    val mapWindow = document.getElementOrNullById(GeoMapSelector.window) ?: error("geomap window not found")
+    val widget: maplibregl.Map = mapWindow.asDynamic().widget ?: error("geomap widget not found")
 
     mapWindow.onView(geoMap::setIsViewed)
 
-    renderScope.launch {
-
-        val widget = maplibregl.Map(jsObject {
-            container = widgetBox
-            style = "https://tiles.openfreemap.org/styles/fiord"
-            center = maplibregl.LngLat(-104.95, 39.75)
-            zoom = 11
-        })
-        mapWidget = widget
-
-        widget.addControl(maplibregl.NavigationControl())
-        widget.addControl(maplibregl.FullscreenControl())
+    appScope.launch {
 
         fun relayBounds(isMoving: Boolean) {
             val bounds = widget.getBounds().toGeoBounds()
@@ -153,6 +129,4 @@ fun RenderContext.createMapWindow(
 
         relayBounds(false)
     }
-
-    return mapWindow
 }

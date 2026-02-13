@@ -3,13 +3,16 @@ package streetlight.web.pages
 import koala.html.*
 import kotlinx.html.*
 import koala.css.*
+import streetlight.web.shells.homeShell
 
-fun HTML.singlePage() {
+fun HTML.homePage() {
     head("Streetlight | Home") {
         supportProtobuf()
         supportGeoMap()
     }
-    appBody()
+    appBody {
+        homeShell()
+    }
 }
 
 fun FlowContent.appFooter() {

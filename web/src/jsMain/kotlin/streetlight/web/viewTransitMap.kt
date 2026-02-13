@@ -1,6 +1,9 @@
 package streetlight.web
 
 import koala.dom.RenderContext
+import koala.external.maplibregl
+import koala.model.MapObject
+import koala.model.jsObject
 import koala.model.mapDistinct
 import koala.model.mapDistinctBy
 import kotlinx.coroutines.flow.filterNotNull
@@ -106,8 +109,8 @@ fun addRouteLines(
         val line = route.points.map { arrayOf(it.lng, it.lat) }.toJsArray()
         jsObject {
             type = "Feature"
-            properties = jsObject { }
-            geometry = jsObject {
+            properties = koala.model.jsObject { }
+            geometry = koala.model.jsObject {
                 type = "LineString"
                 coordinates = line
             }
@@ -115,7 +118,7 @@ fun addRouteLines(
     }.toJsArray()
     val sourceObj = jsObject {
         type = "geojson"
-        data = jsObject {
+        data = koala.model.jsObject {
             type = "FeatureCollection"
             features = lines
         }

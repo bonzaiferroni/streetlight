@@ -2,6 +2,7 @@ package streetlight.web
 
 import koala.css.*
 import koala.dom.*
+import koala.html.geoMapMount
 import koala.html.textBlock
 import koala.html.textSpan
 import koala.model.mapDistinct
@@ -82,8 +83,8 @@ fun RenderContext.viewEventEditor(app: AppContext) {
 fun RenderContext.locationEditor(app: AppContext) {
     val eventCreator = app.eventEditor
 
-    column(modify(QueryRow, AlignItemsStretch)) {
-        viewGeoMap(app.geoMap, modify(Flex1, Square))
+    val element = column(modify(QueryRow, AlignItemsStretch)) {
+        geoMapMount(modify(Flex1, Square))
         column(modify(Flex2, AlignItemsStretch)) {
             row {
                 textField(
@@ -114,4 +115,6 @@ fun RenderContext.locationEditor(app: AppContext) {
             }
         }
     }
+
+    wireGeoMap(app.geoMap, app.appScope, element)
 }

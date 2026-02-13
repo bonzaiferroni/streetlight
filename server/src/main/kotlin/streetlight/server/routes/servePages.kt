@@ -1,12 +1,9 @@
 package streetlight.server.routes
 
-import io.ktor.http.CacheControl
 import io.ktor.http.ContentType
 import io.ktor.http.defaultForFilePath
 import io.ktor.server.html.respondHtml
 import io.ktor.server.http.content.staticFiles
-import io.ktor.server.request.path
-import io.ktor.server.response.header
 import io.ktor.server.routing.Routing
 import io.ktor.server.routing.get
 import streetlight.model.data.EventId
@@ -15,7 +12,7 @@ import streetlight.server.ServerProvider
 import streetlight.web.pages.eventPage
 import streetlight.web.pages.eventPortal
 import streetlight.web.pages.eventSignUp
-import streetlight.web.pages.singlePage
+import streetlight.web.pages.homePage
 import java.io.File
 
 fun Routing.servePages(app: ServerProvider = RuntimeProvider) {
@@ -34,7 +31,7 @@ fun Routing.servePages(app: ServerProvider = RuntimeProvider) {
 
     get("/") {
         call.respondHtml {
-            singlePage()
+            homePage()
         }
     }
 

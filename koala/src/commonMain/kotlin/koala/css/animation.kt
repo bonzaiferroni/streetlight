@@ -4,16 +4,16 @@ import kotlinx.css.*
 import kotlinx.css.properties.*
 
 @Deprecated("use reveal")
-object Show: CssClass { override val value = "show" }
-object FadeStack: CssClass { override val value = "fade-stack" }
+object Show: Modifier { override val value = "show" }
+object FadeStack: Modifier { override val value = "fade-stack" }
 
 // utilities
-object Animate: CssClass { override val value = "animate" }
-object Reveal: CssClass { override val value = "reveal" }
+object Animate: Modifier { override val value = "animate" }
+object Reveal: Modifier { override val value = "reveal" }
 // object Hide: CssClass { override val value = "hide" }
-object MagicBlur: CssClass { override val value = "blur" }
-object SlideX: CssClass { override val value = "slide-x" }
-object SlideY: CssClass { override val value = "slide-y" }
+object MagicBlur: Modifier { override val value = "blur" }
+object SlideX: Modifier { override val value = "slide-x" }
+object SlideY: Modifier { override val value = "slide-y" }
 
 fun CssBuilder.animation(theme: KoalaTheme) {
     rule(FadeStack) {

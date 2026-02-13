@@ -1,3 +1,7 @@
+@file:OptIn(ExperimentalDistributionDsl::class)
+
+import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalDistributionDsl
+
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.serialization)
@@ -11,7 +15,11 @@ kotlin {
             commonWebpackConfig {
                 sourceMaps = true
             }
+            distribution {
+                outputDirectory.set(projectDir.resolve("../www/core/js/koala"))
+            }
         }
+        binaries.executable()
     }
     sourceSets {
         val commonMain by getting {
@@ -21,6 +29,7 @@ kotlin {
                 implementation(libs.kotlinx.datetime)
                 implementation(libs.kotlinx.html)
                 implementation(kotlinWrappers.css)
+                api(project(":kampfire"))
             }
         }
 

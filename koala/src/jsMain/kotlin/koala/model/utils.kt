@@ -1,4 +1,4 @@
-package streetlight.web
+package koala.model
 
 import org.w3c.dom.Document
 import org.w3c.dom.HTMLElement

@@ -1,5 +1,6 @@
 package streetlight.web
 
+import koala.external.FeedMessage
 import org.khronos.webgl.Uint8Array
 import kotlin.js.Promise
 

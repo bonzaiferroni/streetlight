@@ -1,7 +1,6 @@
 package koala.dom
 
 import koala.css.Column
-import koala.css.CssClass
 import koala.css.ModifierSet
 import koala.css.applyModifiers
 import koala.css.modify

@@ -4,6 +4,7 @@ package streetlight.web
 
 import kampfire.model.GeoBounds
 import koala.model.BrowserModel
+import koala.model.GeoMap
 import koala.model.mapDistinct
 import koala.model.mapDistinctBy
 import kotlinx.coroutines.CoroutineScope

@@ -1,7 +1,6 @@
 package koala.dom
 
 import koala.css.Card
-import koala.css.CssClass
 import koala.css.ModifierSet
 import koala.css.applyModifiers
 import kotlinx.html.DIV

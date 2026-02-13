@@ -24,7 +24,7 @@
 
 @file:Suppress("MemberVisibilityCanBePrivate", "unused")
 
-package streetlight.web
+package koala.external
 
 // Ahoy! We've moved the enums to the top level to keep the ship tidy.
 

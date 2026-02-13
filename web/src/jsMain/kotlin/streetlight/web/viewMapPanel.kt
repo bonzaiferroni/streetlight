@@ -10,6 +10,7 @@ import koala.css.SlideX
 import koala.css.Width100
 import koala.css.modify
 import koala.dom.*
+import koala.html.GeoMapSelector
 import koala.html.heading2
 import koala.html.image
 import koala.html.label
@@ -17,7 +18,7 @@ import koala.model.mapDistinct
 import kotlinx.html.js.div
 
 fun RenderContext.viewMapPanel(app: AppContext) {
-    box(GeoMapId.panel, modify(Width100)) {
+    box(GeoMapSelector.panel, modify(Width100)) {
         column {
             viewMapConfig(app)
             viewMapCards(app)

@@ -2,12 +2,15 @@ package streetlight.web
 
 import koala.css.*
 import koala.dom.*
+import koala.html.geoMapMount
 import kotlinx.html.js.div
 
 fun RenderContext.viewFullMap(app: AppContext) {
-    val element = div { }
+    val element = div {
+
+    }
     val fullscreen = fullscreenBox {
-        viewGeoMap(app.geoMap, modify(Height100))
+        geoMapMount(modify(Size100))
     }
     element.onView { isVisible ->
         if (isVisible) {
@@ -19,6 +22,8 @@ fun RenderContext.viewFullMap(app: AppContext) {
     fullscreen.addEventListener(OnClose) {
         app.portal.goBack()
     }
+
+    wireGeoMap(app.geoMap, app.appScope, fullscreen)
 }
 
 //    mountFullscreen(Id("fullscreen-map")) {

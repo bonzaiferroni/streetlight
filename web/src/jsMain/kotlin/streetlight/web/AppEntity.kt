@@ -1,5 +1,6 @@
 package streetlight.web
 
+import koala.model.PointEntity
 import streetlight.model.data.EventInfo
 import streetlight.model.data.EventType
 

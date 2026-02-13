@@ -1,11 +1,10 @@
-package streetlight.web
+package koala.model
 
 import kampfire.model.GeoPoint
 import koala.css.Css
-import koala.dom.OnClick
-import koala.dom.addEventListener
 import koala.dom.modify
 import koala.dom.onClick
+import koala.external.maplibregl
 import kotlinx.browser.document
 import org.w3c.dom.HTMLElement
 

@@ -51,8 +51,8 @@ fun HEAD.coreScripts() {
         "utils.js",
         "tabs.js",
         "logo.js",
-        "lottie.js",
-        "compiled/web.js"
+        "koala/koala.js",
+        "streetlight/web.js"
     )
     scripts.forEach { script -> script(src = corePath + script) {
         defer = true

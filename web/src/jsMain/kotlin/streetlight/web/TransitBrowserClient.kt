@@ -1,5 +1,6 @@
 package streetlight.web
 
+import koala.external.FeedEntity
 import streetlight.model.Api
 
 class TransitBrowserClient(app: AppContext): AppContext by app {

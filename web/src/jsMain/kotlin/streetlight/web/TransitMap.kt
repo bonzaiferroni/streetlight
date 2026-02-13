@@ -2,6 +2,13 @@ package streetlight.web
 
 import kampfire.model.GeoPoint
 import koala.model.BrowserModel
+import koala.model.GeoMap
+import koala.model.LayerId
+import koala.model.LineEntity
+import koala.model.MapEntityId
+import koala.model.PointEntity
+import koala.external.VehiclePosition
+import koala.model.toGeoPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.await
 import kotlinx.coroutines.delay
@@ -93,7 +100,8 @@ data class RouteEntity(
     override val points: List<GeoPoint>
 ): LineEntity {
     override val entityId: MapEntityId get() = transitRouteId.value
-    override val layerId: LayerId get() = when(vehicleType) {
+    override val layerId: LayerId
+        get() = when(vehicleType) {
         VehicleType.Bus -> "bus-layer"
         VehicleType.LightRail -> "light-rail-layer"
         VehicleType.Train -> "train-layer"

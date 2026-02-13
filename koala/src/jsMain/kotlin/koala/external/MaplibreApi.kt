@@ -1,6 +1,6 @@
 @file:Suppress("unused")
 
-package streetlight.web
+package koala.external
 
 import kotlinx.js.JsPlainObject
 import org.w3c.dom.HTMLElement
@@ -27,8 +27,8 @@ external object maplibregl {
         fun removeControl(control: dynamic): Map
 
         fun getContainer(): HTMLElement
-        fun getStyle(): dynamic /* .streetlight.web.StyleSpecification */
-        fun setStyle(style: dynamic /* .streetlight.web.StyleSpecification | String */): Map
+        fun getStyle(): dynamic /* .koala.external.StyleSpecification */
+        fun setStyle(style: dynamic /* .koala.external.StyleSpecification | String */): Map
 
         fun getZoom(): Double
         fun setZoom(zoom: Double): Map
@@ -57,7 +57,7 @@ external object maplibregl {
         fun getSource(id: String): Source
         fun addLayer(layer: dynamic)
 
-        // Event handling inherited from .streetlight.web.Evented
+        // Event handling inherited from .koala.external.Evented
     }
 
     class Marker(
@@ -164,11 +164,18 @@ external interface Source {
 
 external interface AddLayerObject
 
-// Stub for .streetlight.web.PositionAnchor
+// Stub for .koala.external.PositionAnchor
 external interface PositionAnchor
 
 // Stubs for types not defined yet
-external interface MapOptions
+@JsPlainObject
+external interface MapOptions {
+    val container: HTMLElement?
+    val style: String?
+    val center: maplibregl.LngLat
+    val zoom: Number
+}
+
 external interface Camera
 external interface StyleSpecification
 external interface ControlPosition

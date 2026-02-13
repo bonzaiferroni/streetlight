@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalWasmJsInterop::class)
 
-package streetlight.web
+package koala.model
 
 import kampfire.model.GeoPoint
 

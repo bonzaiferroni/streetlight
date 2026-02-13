@@ -1,12 +1,10 @@
 package koala.html
 
-import koala.css.CssClass
 import koala.css.ElementClass
 import koala.css.ModifierSet
 import koala.css.applyModifiers
 import koala.css.modify
 import kotlinx.html.A
-import kotlinx.html.FlowContent
 import kotlinx.html.FlowOrInteractiveOrPhrasingContent
 import kotlinx.html.a
 
