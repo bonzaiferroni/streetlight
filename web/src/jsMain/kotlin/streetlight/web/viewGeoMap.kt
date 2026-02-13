@@ -10,7 +10,6 @@ import koala.dom.box
 import koala.dom.onView
 import koala.html.Id
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.html.DIV
 import kotlinx.html.dom.append
@@ -92,13 +91,15 @@ fun RenderContext.createMapWindow(
 
         launch {
             console.log("collecting entities")
-            geoMap.entityFlow.collect(context::collectEntity)
+            geoMap.entityFlow.collect(context::collectEntities)
         }
 
         launch {
-            geoMap.removeEntity.collect { entityId ->
-                context.markers[entityId]?.marker?.remove()
-                context.markers.remove(entityId)
+            geoMap.removeEntity.collect { entityIds ->
+                entityIds.forEach { entityId ->
+                    context.markers[entityId]?.marker?.remove()
+                    context.markers.remove(entityId)
+                }
             }
         }
 

@@ -65,12 +65,12 @@ class StreetMap(
             setState { it.copy(bounds = bounds, zoom = zoom, queriedBounds = queriedBounds, isQuerying = true)}
             viewModelScope.launch {
                 val areaEvents = client.api.queryMap(MapQuery(queriedBounds, stateNow.zoom)) ?: emptyList()
-                areaEvents.forEach { event ->
-                    if (allEvents.any { it.eventId == event.eventId }) return@forEach
+                val mapEntities = areaEvents.mapNotNull { event ->
+                    if (allEvents.any { it.eventId == event.eventId }) return@mapNotNull null
                     allEvents.add(event)
-                    val entity = EventEntity(event)
-                    geoMap.addEntity(entity)
+                    EventEntity(event)
                 }
+                geoMap.addEntities(mapEntities)
                 val events = getBoundedEvents(bounds)
                 setState { it.copy(events = events, isQuerying = false)}
             }

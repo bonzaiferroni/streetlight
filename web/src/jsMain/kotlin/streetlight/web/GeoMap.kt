@@ -3,63 +3,44 @@ package streetlight.web
 import kampfire.model.GeoBounds
 import kampfire.model.GeoPoint
 import kampfire.model.meters
+import koala.model.BrowserModel
 import koala.model.mapDistinct
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 
 class GeoMap(
-    private val viewModelScope: CoroutineScope
-) {
-    private var state: GeoMapState = GeoMapState()
-    val stateNow get() = state
-
-    private val _state = MutableSharedFlow<GeoMapState>()
-    val stateFlow: Flow<GeoMapState> = _state
-    private val _entityFlow = MutableSharedFlow<MapEntity>()
-    val entityFlow: SharedFlow<MapEntity> = _entityFlow
-    private val _removeEntity = MutableSharedFlow<MapEntityId>()
-    val removeEntity: SharedFlow<MapEntityId> = _removeEntity
-    private val _linesFlow = MutableSharedFlow<List<LineEntity>>()
+    scope: CoroutineScope
+): BrowserModel<GeoMapState>(GeoMapState(), scope) {
+    private val _entityFlow = MutableSharedFlow<List<MapEntity>>(8)
+    val entityFlow: SharedFlow<List<MapEntity>> = _entityFlow
+    private val _removeEntity = MutableSharedFlow<List<MapEntityId>>(8)
+    val removeEntity: SharedFlow<List<MapEntityId>> = _removeEntity
+    private val _linesFlow = MutableSharedFlow<List<LineEntity>>(8)
     val linesFlow: SharedFlow<List<LineEntity>> = _linesFlow
-    private val _panFlow = MutableSharedFlow<PanPoint>()
+    private val _panFlow = MutableSharedFlow<PanPoint>(8)
     val panFlow: SharedFlow<PanPoint> = _panFlow
-    private val _markerVisibilityFlow = MutableSharedFlow<(MapEntity) -> Boolean>()
+    private val _markerVisibilityFlow = MutableSharedFlow<(MapEntity) -> Boolean>(8)
     val markerVisibilityFlow: SharedFlow<(MapEntity) -> Boolean> = _markerVisibilityFlow
 
-    val zoomFlow = stateFlow.mapDistinct { it.zoom }
-    val movingBoundsFlow = stateFlow.mapDistinct { it.movingBounds }
-    val centerFlow = stateFlow.mapDistinct { it.center }
-    val boundsFlow = stateFlow.mapDistinct { it.bounds }
-
-    private fun setState(setter: (GeoMapState) -> GeoMapState) {
-        state = setter(stateNow)
-        viewModelScope.launch {
-            _state.emit(state)
-        }
-    }
-
-    fun addEntity(entity: MapEntity) {
-        viewModelScope.launch {
-            _entityFlow.emit(entity)
-        }
-    }
+    val viewedStateFlow = stateFlow.filter { it.isViewed }
+    val zoomFlow = viewedStateFlow.mapDistinct { it.zoom }
+    val movingBoundsFlow = viewedStateFlow.mapDistinct { it.movingBounds }
+    val centerFlow = viewedStateFlow.mapDistinct { it.center }
+    val boundsFlow = viewedStateFlow.filter { it.isViewed }.mapDistinct { it.bounds }
 
     fun addEntities(entities: List<MapEntity>) {
         viewModelScope.launch {
-            entities.forEach {
-                _entityFlow.emit(it)
-            }
+            _entityFlow.emit(entities)
         }
     }
 
     fun removeEntities(entityIds: List<MapEntityId>) {
         viewModelScope.launch {
-            entityIds.forEach {
-                _removeEntity.emit(it)
-            }
+            _removeEntity.emit(entityIds)
         }
     }
 

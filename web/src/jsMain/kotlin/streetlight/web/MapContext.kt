@@ -10,14 +10,16 @@ class MapContext(
 
 typealias LayerId = String
 
-fun MapContext.collectEntity(entity: MapEntity) {
-    when (entity) {
-        is PointEntity -> {
-            val markerElement = recallObject(entity) ?: createObject(entity)
-            markerElement.setAttributes(entity)
-        }
-        is LineEntity -> {
-            showLines(listOf(entity))
+fun MapContext.collectEntities(entities: List<MapEntity>) {
+    entities.forEach { entity ->
+        when (entity) {
+            is PointEntity -> {
+                val markerElement = recallObject(entity) ?: createObject(entity)
+                markerElement.setAttributes(entity)
+            }
+            is LineEntity -> {
+                showLines(listOf(entity))
+            }
         }
     }
 }
