@@ -3,43 +3,13 @@ package streetlight.web.pages
 import koala.html.*
 import kotlinx.html.*
 import koala.css.*
-import streetlight.web.AccountRoute
-import streetlight.web.FullMapRoute
-import streetlight.web.HomeRoute
 
 fun HTML.singlePage() {
     head("Streetlight | Home") {
-        script(src = "https://cdn.jsdelivr.net/npm/protobufjs/dist/protobuf.min.js") { }
-        link(href = "https://cdn.jsdelivr.net/npm/maplibre-gl@5.12.0/dist/maplibre-gl.css", rel = "stylesheet")
-        script(src = "https://cdn.jsdelivr.net/npm/maplibre-gl@5.12.0/dist/maplibre-gl.js") { }
-        styles("homePage.css")
+        supportProtobuf()
+        supportGeoMap()
     }
-    body {
-        box(SinglePageId.viewportBox) {
-            column(SinglePageId.app) {
-                column(modify(Width100, AlignItemsCenter)) {
-                    row(modify(Width100, SpaceBetween)) {
-                        action(FullMapRoute, modify(Height6, Opacity2)) {
-                            icon("chevron-down", modify(Height100))
-                        }
-                        action(HomeRoute()) {
-                            row {
-                                logo()
-                                heading1("Streetlight")
-                            }
-                        }
-                        action(AccountRoute, modify(Height6, Opacity2)) {
-                            icon("empty-profile", modify(Height100))
-                        }
-                    }
-                    box(SinglePageId.portalMount, modify(Width100))
-                    // homeContent()
-                }
-            }
-            box(FullscreenId.mount)
-        }
-        scripts("launchApp.js")
-    }
+    portalBody()
 }
 
 fun FlowContent.appFooter() {

@@ -1,10 +1,8 @@
 package koala.dom
 
-import koala.css.Reveal
-import koala.html.FullscreenId
+import koala.html.OverlayId
 import koala.html.Id
 import kotlinx.browser.document
-import kotlinx.dom.clear
 import kotlinx.html.js.div
 
 fun RenderContext.mountFullscreen(
@@ -13,7 +11,7 @@ fun RenderContext.mountFullscreen(
 ) {
     val element = div { }
 
-    val fullscreenMount = document.getElementById(FullscreenId.mount)
+    val fullscreenMount = document.getElementById(OverlayId.mount)
 
 //    onLoad {
 //        fullscreenMount.clear()

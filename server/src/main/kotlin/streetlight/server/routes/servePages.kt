@@ -12,6 +12,7 @@ import io.ktor.server.routing.get
 import streetlight.model.data.EventId
 import streetlight.server.RuntimeProvider
 import streetlight.server.ServerProvider
+import streetlight.web.pages.eventPage
 import streetlight.web.pages.eventPortal
 import streetlight.web.pages.eventSignUp
 import streetlight.web.pages.singlePage
@@ -52,6 +53,15 @@ fun Routing.servePages(app: ServerProvider = RuntimeProvider) {
         val event = app.dao.event.readEvent(eventId) ?: return@get
         call.respondHtml {
             eventSignUp(event)
+        }
+    }
+
+    get("/event/{id}") {
+        val eventId = call.parameters["id"]?.let { EventId(it) } ?: return@get
+        val event = app.dao.event.readEvent(eventId) ?: return@get
+
+        call.respondHtml {
+            eventPage(event)
         }
     }
 }

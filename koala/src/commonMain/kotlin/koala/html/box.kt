@@ -6,23 +6,23 @@ import kotlinx.html.FlowContent
 import kotlinx.html.div
 import kotlinx.html.id
 
-inline fun FlowContent.box(
+fun FlowContent.box(
     modifiers: ModifierSet? = null,
-    crossinline content: DIV.() -> Unit = { },
+    block: (DIV.() -> Unit)? = null,
 ) {
     div {
         applyModifiers(Box, modifiers)
-        content()
+        block?.invoke(this)
     }
 }
 
-inline fun FlowContent.box(
+fun FlowContent.box(
     id: Id,
     modifiers: ModifierSet? = null,
-    crossinline content: DIV.() -> Unit = { },
+    block: (DIV.() -> Unit)? = null,
 ) {
     box(modifiers = modifiers) {
         this.id = id.value
-        content()
+        block?.invoke(this)
     }
 }

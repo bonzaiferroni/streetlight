@@ -12,7 +12,7 @@ abstract class Endpoint<SentType, ReturnType>(
     val appendId: Boolean = false,
 ) {
     val pathSegments: List<String> = createPathSegments()
-    val path: String = pathSegments.joinToString("/")
+    val path: String = "/${pathSegments.joinToString("/")}"
     val serverIdTemplate: String get() = "$path/{id}"
 
     private fun createPathSegments(): MutableList<String> = (parent?.createPathSegments() ?: mutableListOf()).also {

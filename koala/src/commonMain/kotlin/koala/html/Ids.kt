@@ -1,5 +1,5 @@
 package koala.html
 
-object FullscreenId {
+object OverlayId {
     val mount = Id("fullscreen-mount")
 }
