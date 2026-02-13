@@ -67,7 +67,6 @@ class GeoMap(
 
     fun setIsViewed(value: Boolean) {
         setState { it.copy(isViewed = value) }
-        console.log("ey: $value")
     }
 }
 

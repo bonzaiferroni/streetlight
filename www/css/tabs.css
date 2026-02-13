@@ -38,6 +38,7 @@
 /* Panels stacked inside .tabs-viewport */
 .tabs-panel {
     position: absolute;
+    display: none;
     inset: 0;
     opacity: 0;
     pointer-events: none;
@@ -47,6 +48,7 @@
 
 /* Active panel (visible state) */
 .tabs-panel.is-active {
+    display: block;
     position: relative;
     opacity: 1;
     pointer-events: auto;
@@ -57,6 +59,7 @@
 .tabs-panel.enter,
 .tabs-panel.exit {
     opacity: 0;
+    display: block;
 }
 
 /* During animation, keep active panel absolute so both can overlap */

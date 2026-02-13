@@ -13,8 +13,6 @@ import kotlinx.coroutines.MainScope
 import streetlight.web.pages.AppBody
 
 fun viewApp() {
-    console.log("loading streetlight")
-
     val scope = MainScope() // 57 KB
 
     val app = object: AppContext { // 220 KB

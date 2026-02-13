@@ -15,13 +15,23 @@ import koala.html.heading2
 import koala.html.image
 import koala.html.label
 import koala.model.mapDistinct
+import kotlinx.browser.document
 import kotlinx.html.js.div
 
 fun RenderContext.wireMapPanel(app: AppContext) {
-    mountRender(GeoMapSelector.panel) {
-        column {
-            viewMapConfig(app)
-            viewMapCards(app)
+    val element = document.getElementById(GeoMapSelector.panel)
+    var isRendered = false
+
+    element.onView { isVisible ->
+        if (isVisible && !isRendered) {
+            console.log("Rendering map panel")
+            isRendered = true
+            element.renderRoot(renderScope) {
+                column {
+                    viewMapConfig(app)
+                    viewMapCards(app)
+                }
+            }
         }
     }
 }
