@@ -7,6 +7,7 @@ import koala.css.Opacity2
 import koala.css.SpaceBetween
 import koala.css.Width100
 import koala.css.modify
+import koala.html.Id
 import koala.html.OverlayId
 import koala.html.action
 import koala.html.box
@@ -23,12 +24,12 @@ import streetlight.web.AccountRoute
 import streetlight.web.FullMapRoute
 import streetlight.web.HomeRoute
 
-fun HTML.portalBody(
+fun HTML.appBody(
     block: (DIV.() -> Unit)? = null
 ) {
     body {
-        box(SinglePageId.viewportBox) {
-            column(SinglePageId.app) {
+        box(AppBody.viewportId) {
+            column(AppBody.appBoxId) {
                 column(modify(Width100, AlignItemsCenter)) {
                     row(modify(Width100, SpaceBetween)) {
                         action(FullMapRoute, modify(Height6, Opacity2)) {
@@ -44,15 +45,22 @@ fun HTML.portalBody(
                             icon("empty-profile", modify(Height100))
                         }
                     }
-                    box(
-                        id = SinglePageId.portalMount,
-                        modifiers = modify(Width100),
-                        block = block
-                    )
+                    box(AppBody.contentBox) {
+                        box(AppBody.portalMountId)
+                        box(id = AppBody.shellBoxId, block = block)
+                    }
                 }
             }
             box(OverlayId.mount)
         }
         scripts("launchApp.js")
     }
+}
+
+object AppBody {
+    val viewportId = Id("viewport-box")
+    val appBoxId = Id("app-box")
+    val portalMountId = Id("portal-mount")
+    val shellBoxId = Id("shell-box")
+    val contentBox = Id("content-box")
 }

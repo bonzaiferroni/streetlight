@@ -12,7 +12,7 @@ import koala.dom.getElementById
 import koala.model.Portal
 import kotlinx.browser.document
 import kotlinx.coroutines.MainScope
-import streetlight.web.pages.SinglePageId
+import streetlight.web.pages.AppBody
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
@@ -42,7 +42,7 @@ fun viewApp() {
         override val eventProfile = EventProfile(scope, client)
     }
 
-    val portalMount = document.getElementById(SinglePageId.portalMount)
+    val portalMount = document.getElementById(AppBody.portalMountId)
     portalMount.renderRoot(app.appScope) {
         flowBlock(
             flow = app.portal.screenFlow,

@@ -5,3 +5,4 @@ import org.w3c.dom.Document
 import org.w3c.dom.HTMLElement
 
 fun Document.getElementById(id: Id) = getElementById(id.value) as HTMLElement
+fun Document.getElementOrNullById(id: Id) = getElementById(id.value) as? HTMLElement

@@ -9,7 +9,7 @@ fun HTML.singlePage() {
         supportProtobuf()
         supportGeoMap()
     }
-    portalBody()
+    appBody()
 }
 
 fun FlowContent.appFooter() {
@@ -23,10 +23,4 @@ fun FlowContent.appFooter() {
             textBlock(giants, modify(Italic, Opacity6))
         }
     }
-}
-
-object SinglePageId {
-    val viewportBox = Id("viewport-box")
-    val app = Id("app")
-    val portalMount = Id("portal-mount")
 }

@@ -17,14 +17,14 @@ import streetlight.model.data.Event
 import streetlight.web.EditEventRoute
 
 fun FlowContent.eventProfileShell(event: Event) {
-    column(modify(AlignItemsStretch)) {
+    column(EventProfileShell.id, modify(AlignItemsStretch)) {
         val imageUrl = event.imageUrl
         if (imageUrl != null) {
             image(imageUrl, modify(BorderRadius1))
         }
         heading1(event.title)
 
-        tabs(Id("event-tabs")) {
+        tabs(EventProfileShell.tabsId) {
             tab("Profile") {
                 textBlock("[Event information]")
                 action(EditEventRoute) {
@@ -36,4 +36,9 @@ fun FlowContent.eventProfileShell(event: Event) {
             }
         }
     }
+}
+
+object EventProfileShell {
+    val id = Id("event-profile")
+    val tabsId = Id("event-tabs")
 }

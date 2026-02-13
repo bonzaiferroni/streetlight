@@ -40,12 +40,24 @@
     height: 100dvh;
 }
 
-#app {
+#app-box {
     position: relative;
     min-height: 100vh;
+    width: 100%;
     max-width: var(--body-width);
     margin: 0 auto;
     padding: var(--unit-spacing);
+}
+
+#content-box {
+    width: 100%;
+    display: grid;
+}
+
+#portal-mount,
+#shell-box {
+    width: 100%;
+    grid-area: 1 / 1;
 }
 
 #fullscreen-mount {

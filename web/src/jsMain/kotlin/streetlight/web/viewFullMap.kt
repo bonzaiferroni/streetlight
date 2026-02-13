@@ -2,11 +2,7 @@ package streetlight.web
 
 import koala.css.*
 import koala.dom.*
-import koala.html.Id
-import koala.html.image
-import kotlinx.browser.document
 import kotlinx.html.js.div
-import streetlight.web.pages.SinglePageId
 
 fun RenderContext.viewFullMap(app: AppContext) {
     val element = div { }

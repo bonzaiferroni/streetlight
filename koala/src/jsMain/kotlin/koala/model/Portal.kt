@@ -6,6 +6,7 @@ import kotlinx.browser.window
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
+import org.w3c.dom.Location
 
 class Portal(
     val initialRoute: AppRoute,
@@ -23,6 +24,9 @@ class Portal(
         }
 
     init {
+        val spaUrl = transformToHashUrl(window.location)
+        window.history.replaceState(null, "", spaUrl)
+
         val route = routeOf(hashPath)
         go(route)
         window.addEventListener("hashchange", {
@@ -74,3 +78,21 @@ data class PortalState(
     val canGoBack get() = backstack.isNotEmpty()
 }
 
+private fun transformToHashUrl(location: Location): String {
+    val origin = location.origin
+    val path = location.pathname
+    val search = location.search
+    val hash = location.hash
+
+    // If already a hash route, leave it be
+    if (hash.startsWith("#/")) {
+        return location.href
+    }
+
+    // Nothing but root? No need to meddle
+    if (path == "/" || path.isBlank()) {
+        return location.href
+    }
+
+    return "$origin/#$path$search"
+}

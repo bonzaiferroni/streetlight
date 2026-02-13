@@ -3,6 +3,7 @@ package streetlight.web
 import koala.css.*
 import koala.dom.*
 import kotlinx.coroutines.launch
+import streetlight.web.shells.EventProfileShell
 import streetlight.web.shells.eventProfileShell
 
 fun RenderContext.viewEventRoute(
@@ -11,7 +12,7 @@ fun RenderContext.viewEventRoute(
     val model = app.eventProfile
 
     flowBlock(model.eventFlow) {
-        shellBox(modify(Width100)) {
+        shellBox(EventProfileShell.id, modify(Width100)) {
             eventProfileShell(it)
         }
     }
