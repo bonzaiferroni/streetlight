@@ -7,7 +7,7 @@ import koala.external.maplibregl
 import koala.html.GeoMapSelector
 import org.w3c.dom.HTMLElement
 
-var geoMapWindow: HTMLElement? = null
+private var geoMapWindow: HTMLElement? = null
 
 fun findAndInitGeoMap(ancestor: HTMLElement) {
     if (geoMapWindow != null) {

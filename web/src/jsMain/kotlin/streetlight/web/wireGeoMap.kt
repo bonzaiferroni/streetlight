@@ -1,6 +1,5 @@
 package streetlight.web
 
-import koala.core.geoMapWindow
 import koala.core.queryFirstOrNull
 import koala.dom.getElementOrNullById
 import koala.dom.onView
@@ -25,29 +24,30 @@ fun wireGeoMap(
     ancestor: HTMLElement,
 ) {
     val mount = ancestor.queryFirstOrNull(GeoMapSelector.mapMount) ?: error("No geomap mount descendent")
-    initMapWindow(geoMap, appScope)
+    val mapWindow = initMapWindow(geoMap, appScope)
 
     mount.onView { isVisible ->
         if (isVisible && mount.children.length == 0) {
             console.log("grabbing geomap window")
-            val mapWindow = geoMapWindow ?: error("mapWindowElement not found")
             mount.appendChild(mapWindow)
             // mapWidget?.resize()
         }
     }
 }
 
-var initializedMapWindow = false
+private var geoMapWindow: HTMLElement? = null
 
 fun initMapWindow(
     geoMap: GeoMap,
     appScope: CoroutineScope,
-) {
-    if (initializedMapWindow) return
-    initializedMapWindow = true
+): HTMLElement {
+    geoMapWindow?.let {
+        return it
+    }
 
     console.log("creating geomap")
     val mapWindow = document.getElementOrNullById(GeoMapSelector.window) ?: error("geomap window not found")
+    geoMapWindow = mapWindow
     val widget: maplibregl.Map = mapWindow.asDynamic().widget ?: error("geomap widget not found")
 
     mapWindow.onView(geoMap::setIsViewed)
@@ -129,4 +129,6 @@ fun initMapWindow(
 
         relayBounds(false)
     }
+
+    return mapWindow
 }

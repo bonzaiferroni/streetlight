@@ -12,19 +12,19 @@ fun HTML.head(
         meta { name = "viewport"; content = "width=device-width, initial-scale=1" }
         link { href = "/www/icon/foxicon.ico"; rel = "icon"}
         block()
-        coreStyles()
-        coreScripts()
+        applyCoreStyles()
+        applyCoreScripts()
         koalaStyles()
         script(src = "https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js") { }
     }
 }
 
-fun HEAD.styles(vararg styles: String) {
-    styles.forEach { style -> link { rel = "stylesheet"; href = "/www/css/$style" } }
+fun HEAD.applyStyles(vararg styles: String) {
+    styles.forEach { style -> link { rel = "stylesheet"; href = cssPath + style } }
 }
 
-fun HEAD.coreStyles() {
-    val styles = listOf(
+fun HEAD.applyCoreStyles() {
+    applyStyles(
         "reset.css",
         "styles.css",
         "typography.css",
@@ -37,26 +37,22 @@ fun HEAD.coreStyles() {
         "geoMap.css",
         "sandbox.css"
     )
-    styles.forEach { style -> link { rel = "stylesheet"; href = "/www/core/css/$style" } }
 }
 
-fun FlowOrMetaDataContent.scripts(vararg scripts: String) {
-    scripts.forEach { script -> script(src = "/www/js/$script") {
+fun FlowOrMetaDataContent.applyScripts(vararg scripts: String) {
+    scripts.forEach { script -> script(src = jsPath + script) {
         this.defer = true
     } }
 }
 
-fun HEAD.coreScripts() {
-    val scripts = listOf(
+fun HEAD.applyCoreScripts() {
+    applyScripts(
         "utils.js",
         "tabs.js",
         "logo.js",
         "koala/koala.js",
-        "streetlight/web.js"
     )
-    scripts.forEach { script -> script(src = corePath + script) {
-        defer = true
-    } }
 }
 
-val corePath = "/www/core/js/"
+val jsPath = "/www/js/"
+val cssPath = "/www/css/"

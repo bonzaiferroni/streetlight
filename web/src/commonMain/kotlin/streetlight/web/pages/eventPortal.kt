@@ -7,8 +7,8 @@ import koala.css.*
 
 fun HTML.eventPortal(event: Event, person: Person?, requestItems: List<RequestItem>) {
     head(event.title) {
-        styles("eventPortal.css")
-        scripts("eventportal.js")
+        applyStyles("eventPortal.css")
+        applyScripts("eventportal.js")
     }
     body {
         column(Id("event-profile"), modify(AlignItemsCenter)) {

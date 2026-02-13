@@ -16,7 +16,7 @@ import koala.html.heading1
 import koala.html.icon
 import koala.html.logo
 import koala.html.row
-import koala.html.scripts
+import koala.html.applyScripts
 import kotlinx.html.DIV
 import kotlinx.html.HTML
 import kotlinx.html.body
@@ -53,7 +53,7 @@ fun HTML.appBody(
             }
             box(OverlayId.mount)
         }
-        scripts("launchApp.js")
+        applyScripts("streetlight/web.js")
     }
 }
 

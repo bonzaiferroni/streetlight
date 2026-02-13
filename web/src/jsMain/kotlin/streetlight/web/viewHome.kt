@@ -13,6 +13,7 @@ import koala.dom.tabs
 import koala.html.Id
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.w3c.dom.HTMLElement
 import streetlight.web.shells.HomeShell
 import streetlight.web.shells.homeShell
 
@@ -20,7 +21,7 @@ fun RenderContext.viewHome(app: AppContext) {
     val element = shellBox(HomeShell.homeBoxId) {
         homeShell()
     }
-    wireGeoMap(app.geoMap, app.appScope, element)
 
-    viewMapPanel(app)
+    wireGeoMap(app.geoMap, app.appScope, element)
+    wireMapPanel(app)
 }

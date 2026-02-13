@@ -1,6 +1,3 @@
-@file:Suppress("UnsafeCastFromDynamic")
-@file:OptIn(ExperimentalWasmJsInterop::class)
-
 package streetlight.web
 
 import koala.css.MagicBlur
@@ -15,8 +12,6 @@ import kotlinx.browser.document
 import kotlinx.coroutines.MainScope
 import streetlight.web.pages.AppBody
 
-@OptIn(ExperimentalJsExport::class)
-@JsExport
 fun viewApp() {
     console.log("loading streetlight")
 

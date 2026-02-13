@@ -3,6 +3,7 @@ package streetlight.web.shells
 import koala.css.AlignItemsCenter
 import koala.css.Width100
 import koala.css.modify
+import koala.html.GeoMapSelector
 import koala.html.Id
 import koala.html.box
 import koala.html.button
@@ -24,7 +25,7 @@ fun FlowContent.homeShell() {
             tab("Map") {
                 column(modify(AlignItemsCenter)) {
                     geoMapMount()
-                    // geoMapPanel
+                    box(GeoMapSelector.panel)
                     footer()
                 }
             }

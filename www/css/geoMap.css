@@ -31,7 +31,7 @@
     width: 12px;
     height: 12px;
 
-    --svg: url("../../svg/crosshairs.svg");
+    --svg: url("../svg/crosshairs.svg");
 
     position: absolute;
     top: 50%;
@@ -49,6 +49,10 @@
     mask-size: contain;
     mask-repeat: no-repeat;
     mask-position: center;
+}
+
+#map-panel {
+    width: 100%;
 }
 
 .map-marker {
@@ -82,7 +86,7 @@
     height: 40px;
     transform: translate(-50%, -50%) rotate(var(--bearing));
 
-    background-image: url(../../svg/bus-direction.svg);
+    background-image: url(../svg/bus-direction.svg);
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;

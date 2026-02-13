@@ -16,7 +16,7 @@ kotlin {
                 sourceMaps = true
             }
             distribution {
-                outputDirectory.set(projectDir.resolve("../www/core/js/koala"))
+                outputDirectory.set(projectDir.resolve("../www/js/koala"))
             }
         }
         binaries.executable()

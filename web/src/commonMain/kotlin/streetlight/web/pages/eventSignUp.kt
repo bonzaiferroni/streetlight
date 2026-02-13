@@ -7,8 +7,8 @@ import koala.css.*
 
 fun HTML.eventSignUp(event: Event) {
     head("Sign Up | ${event.title}") {
-        styles("eventSignUp.css")
-        scripts("eventSignUp.js")
+        applyStyles("eventSignUp.css")
+        applyScripts("eventSignUp.js")
     }
     body {
         column(Id("event-profile"), modify(AlignItemsCenter)) {
