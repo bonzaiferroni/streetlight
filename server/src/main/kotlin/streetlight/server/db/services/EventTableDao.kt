@@ -11,7 +11,7 @@ import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.insert
 import streetlight.model.data.Event
 import streetlight.model.data.EventId
-import streetlight.model.data.NewEvent
+import streetlight.model.data.EventUpdate
 import streetlight.model.data.EventStatus
 import streetlight.server.db.tables.EventTable
 import streetlight.server.db.tables.toEvent
@@ -29,7 +29,7 @@ class EventTableDao: DbService() {
         EventTable.read { it.id.eq(eventId) }.firstOrNull()?.toEvent()
     }
 
-    suspend fun createEvent(userId: UserId, event: NewEvent) = dbQuery {
+    suspend fun createEvent(userId: UserId, event: EventUpdate) = dbQuery {
         val now = Clock.System.now()
         val locationId = event.locationId ?: return@dbQuery null
         Event(

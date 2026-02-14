@@ -9,6 +9,19 @@ import koala.model.mapDistinct
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
+fun RenderContext.viewEditEventRoute(app: AppContext) {
+    viewEventEditor(app)
+    val model = app.eventEditor
+
+    renderScope.launch {
+        app.portal.routeFlowOf<EditEventRoute>().collect { route ->
+            route.eventId?.let {
+                model.initEvent(it)
+            }
+        }
+    }
+}
+
 fun RenderContext.viewEventEditor(app: AppContext) {
     val model = app.eventEditor
 
@@ -31,6 +44,7 @@ fun RenderContext.viewEventEditor(app: AppContext) {
                     textField(
                         label = "title",
                         onChangeValue = model::setEventTitle,
+                        binding = model.titleFlow,
                         modifiers = modify(Flex1),
                         textModifiers = modify(Heading2),
                         placeholder = "Event Title"
@@ -70,7 +84,7 @@ fun RenderContext.viewEventEditor(app: AppContext) {
             })
             button("create", modify(Accent), onClickEvent = {
                 renderScope.launch {
-                    val eventId = model.createEvent() ?: return@launch
+                    val eventId = model.saveEvent() ?: return@launch
                     app.portal.go(EventIdRoute(eventId))
                 }
             })

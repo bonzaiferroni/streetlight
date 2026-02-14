@@ -51,7 +51,7 @@ fun viewApp() {
                 StreetlightScreen.Home -> viewHome(app)
                 StreetlightScreen.Event -> viewEventRoute(app)
                 StreetlightScreen.Account -> viewAccount(app.gate, app.portal)
-                StreetlightScreen.EditEvent -> viewEventEditor(app)
+                StreetlightScreen.EditEvent -> viewEditEventRoute(app)
                 StreetlightScreen.Sandbox -> viewSandbox(app)
                 StreetlightScreen.FullMap -> viewFullMap(app)
                 StreetlightScreen.EditStory -> viewStoryEditor(app)

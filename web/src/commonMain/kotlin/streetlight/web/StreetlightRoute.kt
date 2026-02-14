@@ -1,5 +1,6 @@
 package streetlight.web
 
+import kampfire.api.TableId
 import koala.html.AppRoute
 import koala.html.AppScreen
 import streetlight.model.data.Event
@@ -8,16 +9,22 @@ import streetlight.model.data.StoryId
 
 enum class StreetlightScreen(
     override val pathRoot: String,
-    override val provideRoute: (List<String>) -> StreetlightRoute?
+    override val provideRoute: (List<String>) -> AppRoute?
 ): AppScreen {
     Home("home", { HomeRoute() }),
     Account("account", { AccountRoute }),
-    Event("event", { path -> path.getOrNull(1)?.let { EventIdRoute(EventId(it)) } }),
-    EditEvent("edit-event", { EditEventRoute }),
-    EditStory("edit-story", { path -> EditStoryRoute(path.getOrNull(1)?.let { StoryId(it) }) }),
+    Event("event", { path -> path.provideRouteFromPath { EventIdRoute(EventId(it)) }  }),
+    EditEvent("edit-event", { path -> EditEventRoute(path.provideId { EventId(it) }) }),
+    EditStory("edit-story", { path -> EditStoryRoute(path.provideId { StoryId(it) }) }),
     Sandbox("sandbox", { SandboxRoute }),
     FullMap("full-map", { FullMapRoute })
 }
+
+fun List<String>.provideRouteFromPath(argIndex: Int = 1, provideRoute: (String) -> AppRoute?) =
+    getOrNull(argIndex)?.let { provideRoute(it) }
+
+fun <T: TableId<String>> List<String>.provideId(argIndex: Int = 1, provideId: (String) -> T) =
+    getOrNull(argIndex)?.let { provideId(it) }
 
 sealed interface StreetlightRoute: AppRoute
 
@@ -45,8 +52,9 @@ data class EventObjectRoute(val event: Event): EventRoute {
     override fun toHashPath() = "${super.toHashPath()}/${event.eventId.value}"
 }
 
-object EditEventRoute: StreetlightRoute {
+data class EditEventRoute(val eventId: EventId? = null): StreetlightRoute {
     override val screen get() = StreetlightScreen.EditEvent
+    override fun toHashPath() = eventId?.let { "${super.toHashPath()}/${it.value}"} ?: super.toHashPath()
 }
 
 object SandboxRoute: StreetlightRoute {

@@ -41,7 +41,7 @@ data class NewLocation(
         name = name,
         geoPoint = geoPoint,
         description = null,
-        address = null,
+        address = address,
         notes = null,
         resources = emptySet(),
         updatedAt = Clock.System.now(),

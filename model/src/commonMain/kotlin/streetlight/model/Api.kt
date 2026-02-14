@@ -18,7 +18,7 @@ import streetlight.model.data.EventSong
 import streetlight.model.data.Location
 import streetlight.model.data.LocationId
 import streetlight.model.data.NewArea
-import streetlight.model.data.NewEvent
+import streetlight.model.data.EventUpdate
 import streetlight.model.data.NewLocation
 import streetlight.model.data.NewSong
 import streetlight.model.data.Song
@@ -30,7 +30,6 @@ import streetlight.model.data.NewRequest
 import streetlight.model.data.RequestId
 import streetlight.model.data.AreaTransit
 import streetlight.model.data.EventInfo
-import streetlight.model.data.FileUse
 import streetlight.model.data.MapQuery
 import streetlight.model.data.StoryInfo
 import streetlight.model.data.UserFileRequest
@@ -42,7 +41,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
     }
 
     object Events: GetEndpoint<List<Event>>(this, "events") {
-        object Create: PostEndpoint<NewEvent, Event>(this, "create")
+        object Create: PostEndpoint<EventUpdate, Event>(this, "create")
         object Delete: DeleteEndpoint<EventId>(this, "delete")
         object QueryMap: QueryEndpoint<MapQuery, List<EventInfo>>(this, "bounds")
         // object UserEvents: ApiDaoEndpoint<Event, EventId, NewEvent>(this, "user")

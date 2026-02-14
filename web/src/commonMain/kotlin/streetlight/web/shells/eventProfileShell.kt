@@ -27,7 +27,7 @@ fun FlowContent.eventProfileShell(event: Event) {
         tabs(EventProfileShell.tabsId) {
             tab("Profile") {
                 textBlock("[Event information]")
-                action(EditEventRoute) {
+                action(EditEventRoute(event.eventId)) {
                     button("edit")
                 }
             }

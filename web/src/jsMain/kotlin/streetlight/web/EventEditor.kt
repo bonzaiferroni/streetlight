@@ -17,12 +17,13 @@ import kotlinx.datetime.toLocalDateTime
 import streetlight.model.data.EventType
 import streetlight.model.data.FileUse
 import streetlight.model.data.Location
-import streetlight.model.data.NewEvent
+import streetlight.model.data.EventUpdate
 import streetlight.model.data.NewLocation
 import streetlight.model.data.UserFileRequest
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import streetlight.model.data.EventId
+import streetlight.model.data.toUpdate
 
 class EventEditor(
     scope: CoroutineScope,
@@ -39,6 +40,7 @@ class EventEditor(
     val timeFlow = datetimeFlow.mapDistinct { it.time }
     val dateFlow = datetimeFlow.mapDistinct { it.date }
     val descriptionFlow = stateFlow.mapDistinct { it.event.description ?: "" }
+    val titleFlow = stateFlow.mapDistinct { it.event.title }
 
     val eventNow get() = stateNow.event
     val locationNow get() = stateNow.location
@@ -53,6 +55,18 @@ class EventEditor(
             launch {
                 val images = client.api.readUserFiles(UserFileRequest(FileUse.EventImage)) ?: emptyList()
                 setState { it.copy(userImages = images) }
+            }
+        }
+    }
+
+    fun initEvent(eventId: EventId) {
+        viewModelScope.launch {
+            val event = api.readEvent(eventId) ?: return@launch
+            setState {
+                it.copy(
+                    event = event.toUpdate(),
+                    eventId = eventId,
+                )
             }
         }
     }
@@ -89,18 +103,23 @@ class EventEditor(
         setEvent { it.copy(description = value) }
     }
 
-    suspend fun createEvent(): EventId? {
+    suspend fun saveEvent(): EventId? {
         val location = stateNow.location
         if (!location.isValid) return null
-        console.log("creating location")
-        val locationId = api.createLocation(location)
+        
+        val locationId = stateNow.event.locationId ?: run {
+            console.log("creating location")
+            api.createLocation(location)
+        }
+        
         if (locationId == null) {
-            setState { it.copy(message = UIMessage(UIMessageType.Error, "Unable to create location")) }
+            setState { it.copy(message = UIMessage(UIMessageType.Error, "Unable to create/resolve location")) }
             return null
         }
 
-        val newEvent = eventNow.copy(locationId = locationId)
-        val event = api.create(newEvent)
+        val eventUpdate = eventNow.copy(locationId = locationId)
+        val event = api.create(eventUpdate)
+        
         console.log(prettyPrint(event))
         return event?.eventId
     }
@@ -132,7 +151,7 @@ class EventEditor(
         setState { it.copy(isVisible = value) }
     }
 
-    private fun setEvent(provideEvent: (NewEvent) -> NewEvent) {
+    private fun setEvent(provideEvent: (EventUpdate) -> EventUpdate) {
         setState { it.copy(event = provideEvent(eventNow)) }
     }
 
@@ -144,7 +163,8 @@ class EventEditor(
 data class EventCreatorState(
     val message: UIMessage? = null,
     val userImages: List<String> = emptyList(),
-    val event: NewEvent = NewEvent(),
+    val event: EventUpdate = EventUpdate(),
+    val eventId: EventId? = null,
     val location: NewLocation = NewLocation(),
     val locations: List<Location> = emptyList(),
     val isVisible: Boolean = false,
