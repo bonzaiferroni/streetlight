@@ -1,0 +1,4 @@
+CreateApiClient(Foo):
+* Create the class `FooApiClient` that consumes an API endpoint, most typically found at Api.Foo.
+* You may use `LocationApiClient` as an example.
+* Add the client to `AppClient` in `AppProvider.kt`

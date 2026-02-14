@@ -14,6 +14,7 @@ inline fun <reified T: ProjectId> String.toProjectId(): T = when (T::class) {
     RenditionId::class -> RenditionId(this) as T
     PersonId::class -> PersonId(this) as T
     PerformerId::class -> PerformerId(this) as T
+    StoryId::class -> StoryId(this) as T
     UserFileId::class -> UserFileId(this) as T
     else -> error("invalid projectId type: ${T::class.simpleName}")
 }

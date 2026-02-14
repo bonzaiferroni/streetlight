@@ -23,10 +23,10 @@ import streetlight.web.pages.appFooter
 fun FlowContent.homeShell(events: List<Event> = emptyList()) {
     box(HomeShell.homeBoxId) {
         tabs(HomeShell.tabsId, modify(Width100)) {
-            tab("Hap") {
-                eventsTab(events)
+            tab("Haps") {
+                hapsTab(events)
             }
-            tab("Map") {
+            tab("Maps") {
                 column(modify(AlignItemsCenter)) {
                     geoMapMount()
                     box(GeoMapSelector.panel)
@@ -45,7 +45,7 @@ object HomeShell {
     val tabsId = Id("home-tabs")
 }
 
-fun FlowContent.eventsTab(events: List<Event>) {
+fun FlowContent.hapsTab(events: List<Event>) {
     column(modify(AlignItemsCenter)) {
         events.forEach { event ->
             action(EventObjectRoute(event)) {

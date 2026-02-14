@@ -74,16 +74,6 @@ CreateTableService(Foo):
 * Add a private global value before `FooTableService`: `private val console = globalConsole.getHandle(FooTableService::class)`
 * Do not add any functions to the body of the class unless specifically asked.
 
-CreateServeFunction(Foo):
-* Create the function `Routing.serveFoos(app: ServerProvider = RuntimeProvider) { }` in the package `streetlight.server.routes` that provides endpoints, most typically found at `Api.Foo`.
-* You may use `serveLocations()` as an example.
-* Add an invocation to serveFoos() in `RoutingApi.kt`.
-
-CreateApiClient(Foo):
-* Create the class `FooApiClient` that consumes an API endpoint, most typically found at Api.Foo.
-* You may use `LocationApiClient` as an example.
-* Add the client to `AppClient` in `AppProvider.kt`
-
 CreateEndpoint(Foo, functionName):
 * Create an endpoint in `Api.kt`. Try to determine based on Foo where it should go, look for where similar types are being served or create a new object under Api.
 * Add functionName to FooRepository.
@@ -91,6 +81,14 @@ CreateEndpoint(Foo, functionName):
 * Add functionName to FooMockClient that references data in mockDb.
 * Add the endpoint routing to `serveFoo`. Within the body of the endpoint, provide the data using a function of a FooTableDao or FooTableService that is available. Create one if needed.
 * Check to see if the function is referenced in the file that is currently open for more information about the context in which it will be called.
+
+CreateServeFunction(Foo):
+* Create the function `Routing.serveFoos(app: ServerProvider = RuntimeProvider) { }` in the package `streetlight.server.routes` that provides endpoints, most typically found at `Api.Foo`.
+* You may use `serveLocations()` as an example.
+* Add an invocation to serveFoos() in `RoutingApi.kt`.
+
+CreateApiFunctions(Foo):
+* Add a function to read, create, update, and delete Foo to `ApiClient` in `streetlight.web`
 
 ### Compose Workflows
 
