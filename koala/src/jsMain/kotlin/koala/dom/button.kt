@@ -12,7 +12,8 @@ import org.w3c.dom.events.Event
 fun DOMContext.button(
     text: String,
     modifiers: ModifierSet? = null,
-    onClick: ((Event) -> Unit)? = null,
+    onClick: (() -> Unit)? = null,
+    onClickEvent: ((Event) -> Unit)? = null,
     block: (BUTTON.() -> Unit)? = null,
 ): HTMLButtonElement {
     val element = button {
@@ -22,8 +23,12 @@ fun DOMContext.button(
         block?.invoke(this)
     }
 
-    onClick?.let {
+    onClickEvent?.let {
         element.addEventListener("click", it)
+    }
+
+    onClick?.let {
+        element.addEventListener("click", { it() })
     }
 
     return element

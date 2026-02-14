@@ -1,7 +1,9 @@
 package streetlight.web
 
+import kampfire.api.Endpoint
 import kampfire.api.GetByTableIdEndpoint
 import kampfire.api.GetEndpoint
+import kampfire.api.PathBuilder
 import kampfire.api.PostEndpoint
 import kampfire.api.QueryEndpoint
 import kampfire.api.TableId
@@ -20,35 +22,30 @@ import kotlin.js.json
 import kotlin.let
 import kotlin.text.ifEmpty
 
-suspend inline fun <reified Returned> AppContext.get(endpoint: GetEndpoint<Returned>): Returned? =
-    authRequest("GET", endpoint.path) { request ->
-        request.text().await().let { Json.decodeFromString(it) }
-    }
+suspend inline fun <reified Returned, Endpoint: GetEndpoint<Returned>> AppContext.get(
+    endpoint: Endpoint,
+    noinline block: (PathBuilder.(Endpoint) -> Unit)? = null
+): Returned? =
+    authRequest("GET", resolvePath(endpoint, block) ) { handleResponse(it) }
 
 suspend inline fun <Id: TableId<*>, reified Returned> AppContext.get(
     endpoint: GetByTableIdEndpoint<Id, Returned>,
     id: Id
 ): Returned? =
-    authRequest("GET", "${endpoint.path}/${id.value}") { request ->
-        request.text().await().let { Json.decodeFromString(it)}
-    }
+    authRequest("GET", "${endpoint.path}/${id.value}") { handleResponse(it) }
 
 suspend inline fun <reified Sent, reified Returned> AppContext.get(
     endpoint: QueryEndpoint<Sent, Returned>,
     query: String?
 ): Returned? {
     val url = if (!query.isNullOrEmpty()) "${endpoint.path}?$query" else endpoint.path
-    return authRequest("GET", url) { request ->
-        request.text().await().let { Json.decodeFromString(it) }
-    }
+    return authRequest("GET", url) { handleResponse(it) }
 }
 
 suspend inline fun <reified Sent, reified Returned> AppContext.post(
     endpoint: PostEndpoint<Sent, Returned>,
     body: Sent,
-): Returned? = authRequest("POST", endpoint.path, Json.encodeToString(body)) { request ->
-    request.text().await().let { Json.decodeFromString(it) }
-}
+): Returned? = authRequest("POST", endpoint.path, Json.encodeToString(body)) { handleResponse(it) }
 
 suspend inline fun <reified Returned> getProtobuf(
     endpoint: GetEndpoint<Unit>,
@@ -63,6 +60,16 @@ suspend inline fun <reified Returned> getProtobuf(
 
 const val AUTH_STORAGE_KEY = "streetlight.auth"
 private var authCache: Auth? = null
+
+fun <E: Endpoint<*, *>> resolvePath(
+    endpoint: E,
+    block: (PathBuilder.(E) -> Unit)? = null
+): String {
+    val block = block ?: return endpoint.path
+    val builder = PathBuilder(endpoint)
+    builder.block(endpoint)
+    return builder.build()
+}
 
 fun readAuth() = authCache ?: localStorage.getItem(AUTH_STORAGE_KEY)?.let { value ->
     Json.decodeFromString<Auth?>(value).also { authCache = it }
@@ -148,5 +155,22 @@ suspend fun AppContext.uploadBlob(postUrl: String, blobUrl: String): String? {
         }
     ) {
         it.text().await()
+    }
+}
+
+suspend inline fun <reified Returned> handleResponse(response: Response): Returned? {
+    val text = response.text().await()
+
+    return when (Returned::class) {
+        String::class -> text as Returned
+
+        Int::class -> text.toIntOrNull() as Returned?
+        Long::class -> text.toLongOrNull() as Returned?
+
+        Double::class -> text.toDoubleOrNull() as Returned?
+        Float::class -> text.toFloatOrNull() as Returned?
+        Boolean::class -> text.toBooleanStrictOrNull() as Returned?
+
+        else -> Json.decodeFromString<Returned>(text)
     }
 }

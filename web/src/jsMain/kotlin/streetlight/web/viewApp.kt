@@ -34,7 +34,10 @@ fun viewApp() {
         override val streetMap = StreetMap(scope, client, geoMap)
         override val eventEditor = EventEditor(scope, client, geoMap)
         override val eventProfile = EventProfile(scope, client)
+        override val storyEditor = StoryEditor(scope, client)
     }
+    val shellBox = document.getElementById(AppBody.shellBoxId)
+    shellBox.style.display = "none"
 
     val portalMount = document.getElementById(AppBody.portalMountId)
     portalMount.renderRoot(app.appScope) {
@@ -51,6 +54,7 @@ fun viewApp() {
                 StreetlightScreen.EditEvent -> viewEventEditor(app)
                 StreetlightScreen.Sandbox -> viewSandbox(app)
                 StreetlightScreen.FullMap -> viewFullMap(app)
+                StreetlightScreen.EditStory -> viewStoryEditor(app)
             }
         }
     }

@@ -65,10 +65,10 @@ fun RenderContext.viewEventEditor(app: AppContext) {
         }
         message(model.stateFlow.mapDistinct { it.message })
         row {
-            button("cancel", onClick = {
+            button("cancel", onClickEvent = {
                 app.portal.goBack()
             })
-            button("create", modify(Accent), onClick = {
+            button("create", modify(Accent), onClickEvent = {
                 renderScope.launch {
                     val eventId = model.createEvent() ?: return@launch
                     app.portal.go(EventIdRoute(eventId))
@@ -94,7 +94,7 @@ fun RenderContext.locationEditor(app: AppContext) {
                     onChangeValue = eventCreator::setLocationName,
                     binding = eventCreator.locationFlow,
                 )
-                button("look up", onClick = {
+                button("look up", onClickEvent = {
                     eventCreator.queryLocation()
                 })
             }

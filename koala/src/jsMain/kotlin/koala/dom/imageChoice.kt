@@ -42,10 +42,10 @@ fun RenderContext.imageChoice(
             uploadButton?.disabled = false
         }
         row(modify(FlexItems1)) {
-            button("cancel", modify(Secondary), onClick = {
+            button("cancel", modify(Secondary), onClickEvent = {
                 close()
             })
-            uploadButton = button("upload", modify(Accent), onClick = {
+            uploadButton = button("upload", modify(Accent), onClickEvent = {
                 val localUrl = localUrl ?: return@button
                 renderScope.launch {
                     console.log("uploading: $localUrl")

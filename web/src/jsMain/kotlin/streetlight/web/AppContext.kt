@@ -14,6 +14,7 @@ interface AppContext {
     val eventProfile: EventProfile
     val streetMap: StreetMap
     val eventEditor: EventEditor
+    val storyEditor: StoryEditor
 }
 
 interface ClientContext {

@@ -108,4 +108,10 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
     object Users: ApiNode(this, "users") {
         object Images: PostEndpoint<UserFileRequest, List<String>>(this, "images")
     }
+
+    object Stories: ApiNode(this, "story") {
+        object ReadUrl: GetEndpoint<String>(this, "read-url") {
+            val url = addStringParam("url")
+        }
+    }
 }

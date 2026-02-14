@@ -22,7 +22,7 @@ fun RenderContext.viewAccount(
                 p {
                     +"Hello ${user.username}!"
                 }
-                button("sign out", onClick = { gate.signOut() })
+                button("sign out", onClickEvent = { gate.signOut() })
             } else {
                 column {
                     flowBlock(gate.messageFlow) { msg ->
@@ -49,13 +49,13 @@ fun RenderContext.viewAccount(
                         type = InputType.password
                     }
                     checkBox("Stay signed in", gate::setStayLoggedIn, gate.stateFlow.mapDistinct { it.stayLoggedIn })
-                    button("sign in", onClick = {
+                    button("sign in", onClickEvent = {
                         gate.signIn()
                     })
                 }
             }
         }
-        button("go home", onClick = {
+        button("go home", onClickEvent = {
             portal.go(HomeRoute())
         })
     }

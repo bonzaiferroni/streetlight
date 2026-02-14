@@ -16,7 +16,7 @@ fun RenderContext.viewEventRoute(
             eventProfileShell(it)
         }
     }
-    button("go home", onClick = {
+    button("go home", onClickEvent = {
         app.portal.go(HomeRoute())
     })
 

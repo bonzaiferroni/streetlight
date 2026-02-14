@@ -122,7 +122,7 @@ class EndpointParam<T>(
     val toValue: (String) -> T,
     val toString: (T) -> String,
 ) {
-    fun write(value: T?) = value?.let { key to toString(value) }
+    fun write(value: T) = value.let { key to toString(value) }
     fun read(str: String) = toValue(str)
 }
 
@@ -137,5 +137,23 @@ class ApiRequestBuilder<E: Endpoint<*,*>>(
 
     fun setParams(vararg params: Pair<String, String>) {
         this.params = params.asList()
+    }
+}
+
+class PathBuilder(
+    private val endpoint: Endpoint<*,*>
+) {
+    private var params: MutableList<Pair<String, String>> = mutableListOf()
+
+    fun <T> param(param: EndpointParam<T>, value: T) {
+        params.add(param.write(value))
+    }
+
+    fun build(): String {
+        return if (params.isNotEmpty()) {
+            "${endpoint.path}?${params.joinToString("&") { "${it.first}=${it.second}" }}"
+        } else {
+            endpoint.path
+        }
     }
 }

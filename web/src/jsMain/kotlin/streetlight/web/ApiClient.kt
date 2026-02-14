@@ -19,6 +19,10 @@ class ApiClient(app: AppContext): AppContext by app {
 
     suspend fun createLocation(newLocation: NewLocation) = post(Api.LocationFeed.Create, newLocation)
     suspend fun queryLocation(point: GeoPoint) = get(Api.LocationFeed.QueryPoint, point.toQuery())
+
+    suspend fun readStoryUrl(url: String) = get(Api.Stories.ReadUrl) {
+        param(it.url, url)
+    }
 }
 
 //    suspend fun readById(eventId: EventId) = client.getById(Api.EventProfile, eventId)

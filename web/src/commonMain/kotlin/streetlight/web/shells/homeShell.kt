@@ -44,15 +44,3 @@ object HomeShell {
     val homeBoxId = Id("home-box")
     val tabsId = Id("home-tabs")
 }
-
-fun FlowContent.hapsTab(events: List<Event>) {
-    column(modify(AlignItemsCenter)) {
-        events.forEach { event ->
-            action(EventObjectRoute(event)) {
-                textBlock(event.title)
-            }
-        }
-        button("Go to sandbox", SandboxRoute)
-        appFooter()
-    }
-}
