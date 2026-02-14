@@ -108,9 +108,9 @@ fun RenderContext.locationEditor(app: AppContext) {
             flowBlock(eventCreator.pointFlow, animate = true, modifiers = modify(MagicBlur)) { point ->
                 this.textBlock {
                     textSpan("latitude: ", modify(Dim))
-                    textSpan(point?.lat?.toString() ?: "--" )
+                    textSpan(point.lat.toString())
                     textSpan(" longitude: ", modify(Dim))
-                    textSpan(point?.lng?.toString() ?: "--" )
+                    textSpan(point.lng.toString())
                 }
             }
         }

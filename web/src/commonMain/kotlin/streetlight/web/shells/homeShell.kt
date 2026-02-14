@@ -23,7 +23,7 @@ import streetlight.web.pages.appFooter
 fun FlowContent.homeShell(events: List<Event> = emptyList()) {
     box(HomeShell.homeBoxId) {
         tabs(HomeShell.tabsId, modify(Width100)) {
-            tab("Events") {
+            tab("Hap") {
                 eventsTab(events)
             }
             tab("Map") {
