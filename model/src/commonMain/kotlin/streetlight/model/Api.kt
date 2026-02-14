@@ -32,6 +32,7 @@ import streetlight.model.data.AreaTransit
 import streetlight.model.data.EventInfo
 import streetlight.model.data.FileUse
 import streetlight.model.data.MapQuery
+import streetlight.model.data.StoryInfo
 import streetlight.model.data.UserFileRequest
 
 object Api: ApiNode(ApiNode(null, "api"), "v1") {
@@ -110,7 +111,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
     }
 
     object Stories: ApiNode(this, "story") {
-        object ReadUrl: GetEndpoint<String>(this, "read-url") {
+        object ReadUrl: GetEndpoint<StoryInfo>(this, "read-url") {
             val url = addStringParam("url")
         }
     }

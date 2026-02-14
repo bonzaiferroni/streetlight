@@ -130,16 +130,6 @@ fun <T> HttpRequestBuilder.write(param: EndpointParam<T>, value: T?) {
     value?.let { parameter(param.key, param.toString(it)) }
 }
 
-class ApiRequestBuilder<E: Endpoint<*,*>>(
-    val endpoint: E
-) {
-    var params: List<Pair<String, String>>? = null
-
-    fun setParams(vararg params: Pair<String, String>) {
-        this.params = params.asList()
-    }
-}
-
 class PathBuilder(
     private val endpoint: Endpoint<*,*>
 ) {
