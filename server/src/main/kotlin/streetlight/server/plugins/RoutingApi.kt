@@ -29,5 +29,6 @@ fun Application.configureApiRoutes(app: ServerProvider = RuntimeProvider) {
         serveSpeech(Api.Speech, app.speech)
         serveUserFiles()
         serveStories()
+        serveChat()
     }
 }

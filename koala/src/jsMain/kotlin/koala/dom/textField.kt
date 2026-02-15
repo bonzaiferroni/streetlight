@@ -16,6 +16,7 @@ import kotlinx.html.js.onInputFunction
 import org.w3c.dom.HTMLInputElement
 import kotlinx.html.dom.append
 import kotlinx.html.js.div
+import org.w3c.dom.events.KeyboardEvent
 
 fun RenderContext.textField(
     label: String? = null,
@@ -25,6 +26,7 @@ fun RenderContext.textField(
     onChangeValue: ((String) -> Unit)? = null,
     binding: Flow<String>? = null,
     placeholder: String? = null,
+    onEnter: (() -> Unit)? = null,
     block: (INPUT.() -> Unit)? = null
 ): HTMLInputElement {
     val parent = div {
@@ -56,6 +58,15 @@ fun RenderContext.textField(
             block?.invoke(this)
         }
     }.first() as HTMLInputElement
+
+    onEnter?.let {
+        element.addEventListener("keydown", { event ->
+            val event = event as KeyboardEvent
+            if (event.key == "Enter") {
+                onEnter()
+            }
+        })
+    }
 
     binding?.let {
         renderScope.launch {

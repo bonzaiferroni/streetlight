@@ -16,7 +16,7 @@ import streetlight.web.pages.eventSignUp
 import streetlight.web.pages.homePage
 import java.io.File
 
-private val console = globalConsole.getHandle("servePages")
+private val console = globalConsole.getHandle(Routing::servePages.name)
 
 fun Routing.servePages(app: ServerProvider = RuntimeProvider) {
     uploadFolder.mkdirs()

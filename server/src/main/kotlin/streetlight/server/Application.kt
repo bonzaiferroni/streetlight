@@ -15,7 +15,7 @@ fun Application.module() {
     configureSerialization()
     configureDatabases()
     configureSecurity()
-    configureApiRoutes()
     configureWebSockets()
+    configureApiRoutes()
     configureLogging()
 }

@@ -17,7 +17,8 @@ enum class StreetlightScreen(
     EditEvent("edit-event", { path -> EditEventRoute(path.provideId { EventId(it) }) }),
     EditStory("edit-story", { path -> EditStoryRoute(path.provideId { StoryId(it) }) }),
     Sandbox("sandbox", { SandboxRoute }),
-    FullMap("full-map", { FullMapRoute })
+    FullMap("full-map", { FullMapRoute }),
+    Chat("chat", { ChatRoute })
 }
 
 fun List<String>.provideRouteFromPath(argIndex: Int = 1, provideRoute: (String) -> AppRoute?) =
@@ -69,4 +70,8 @@ data class EditStoryRoute(
     val storyId: StoryId? = null
 ): StreetlightRoute {
     override val screen get() = StreetlightScreen.EditStory
+}
+
+object ChatRoute: StreetlightRoute {
+    override val screen get() = StreetlightScreen.Chat
 }

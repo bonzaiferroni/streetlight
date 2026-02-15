@@ -1,6 +1,7 @@
 package streetlight.web
 
 import kampfire.model.GeoPoint
+import kotlinx.coroutines.CoroutineScope
 import streetlight.model.Api
 import streetlight.model.data.EventId
 import streetlight.model.data.LocationId
@@ -25,8 +26,6 @@ class ApiClient(app: AppContext): AppContext by app {
     suspend fun readStoryUrl(url: String) = get(Api.Stories.ReadUrl) {
         param(it.url, url)
     }
-}
 
-//    suspend fun readById(eventId: EventId) = client.getById(Api.EventProfile, eventId)
-//    suspend fun updateEvent(event: Event) = client.request(Api.EventProfile.Update, event)
-//    suspend fun deleteEvent(eventId: EventId) = client.request(Api.EventFeed.Delete, eventId)
+    fun connectChat(scope: CoroutineScope) = ChatSocket(connectSocket(Api.Chat.path), scope)
+}

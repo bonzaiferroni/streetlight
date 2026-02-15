@@ -11,6 +11,8 @@ dependencies {
     implementation(project(":klutch"))
     implementation(project(":kabinet"))
     implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.cio)
+    implementation(libs.ktor.server.websockets)
 
     implementation("ai.koog:koog-agents:0.6.2")
     implementation("com.fleeksoft.ksoup:ksoup:0.2.5")

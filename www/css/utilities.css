@@ -151,3 +151,7 @@ p.large {
 .width-64 {
     width: calc(var(--unit-spacing) * 64);
 }
+
+.justify-content-end {
+    justify-content: flex-end;
+}

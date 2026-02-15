@@ -15,6 +15,7 @@ import kotlinx.browser.window
 import kotlinx.coroutines.await
 import kotlinx.serialization.json.Json
 import org.khronos.webgl.Uint8Array
+import org.w3c.dom.WebSocket
 import org.w3c.fetch.RequestInit
 import org.w3c.fetch.Response
 import org.w3c.files.Blob
@@ -56,6 +57,13 @@ suspend inline fun <reified Returned> getProtobuf(
     val buffer = Uint8Array(response)
 
     return feedType.decode(buffer)
+}
+
+fun connectSocket(path: String): WebSocket {
+    val protocol = if (window.location.protocol == "https:") "wss:" else "ws:"
+    val host = window.location.host
+    val socket = WebSocket("$protocol//$host$path")
+    return socket
 }
 
 const val AUTH_STORAGE_KEY = "streetlight.auth"

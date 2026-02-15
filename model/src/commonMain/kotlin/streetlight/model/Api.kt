@@ -114,4 +114,8 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
             val url = addStringParam("url")
         }
     }
+
+    object Chat: ApiNode(this, "chat") {
+
+    }
 }

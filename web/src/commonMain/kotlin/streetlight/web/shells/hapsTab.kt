@@ -9,6 +9,7 @@ import koala.html.column
 import koala.html.textBlock
 import kotlinx.html.FlowContent
 import streetlight.model.data.Event
+import streetlight.web.ChatRoute
 import streetlight.web.EditStoryRoute
 import streetlight.web.EventObjectRoute
 import streetlight.web.SandboxRoute
@@ -22,6 +23,7 @@ fun FlowContent.hapsTab(events: List<Event>) {
             }
         }
         button("Create story", EditStoryRoute())
+        button("Chat", ChatRoute)
         button("Go to sandbox", SandboxRoute)
         appFooter()
     }

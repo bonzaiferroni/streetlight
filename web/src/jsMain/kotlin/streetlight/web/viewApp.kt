@@ -35,6 +35,7 @@ fun viewApp() {
         override val eventEditor = EventEditor(scope, client, geoMap)
         override val eventProfile = EventProfile(scope, client)
         override val storyEditor = StoryEditor(scope, client)
+        override val chatRoom = ChatRoom(scope, client.api)
     }
     val shellBox = document.getElementById(AppBody.shellBoxId)
     shellBox.style.display = "none"
@@ -55,6 +56,7 @@ fun viewApp() {
                 StreetlightScreen.Sandbox -> viewSandbox(app)
                 StreetlightScreen.FullMap -> viewFullMap(app)
                 StreetlightScreen.EditStory -> viewStoryEditor(app)
+                StreetlightScreen.Chat -> viewChatRoom(app)
             }
         }
     }
