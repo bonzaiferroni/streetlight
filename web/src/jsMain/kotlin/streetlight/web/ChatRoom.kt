@@ -5,7 +5,6 @@ import koala.model.mapDistinct
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
-import org.w3c.dom.WebSocket
 import streetlight.model.data.ChatMessage
 
 class ChatRoom(
@@ -14,9 +13,9 @@ class ChatRoom(
 ): BrowserModel<ChatRoomState>(ChatRoomState(), scope) {
 
     val messagesFlow = stateFlow.mapDistinct { it.messages }
-    val messageFlow = stateFlow.mapDistinct { it.message }
+    val sendFlow = stateFlow.mapDistinct { it.message }
 
-    private var socket: ChatSocket? = null
+    private var socket: WebChatSocket? = null
 
     fun setIsActive(value: Boolean) {
         if (value) {
@@ -39,7 +38,7 @@ class ChatRoom(
 
     fun sendMessage() {
         val socket = socket ?: return
-        socket.send(ChatMessage("user", Clock.System.now().toEpochMilliseconds(), stateNow.message))
+        socket.send(ChatMessage("user", stateNow.message, Clock.System.now()))
         setState { it.copy(message = "") }
     }
 }

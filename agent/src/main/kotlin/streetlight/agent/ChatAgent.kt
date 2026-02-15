@@ -19,7 +19,7 @@ private val console = globalConsole.getHandle(ChatAgent::class)
 class ChatAgent(
     apiKey: String,
 ) {
-    private val socket = ChatSocket()
+    private val socket = HostChatSocket()
 
     private val agent = AIAgent(
         promptExecutor = simpleGoogleAIExecutor(apiKey),
@@ -33,7 +33,7 @@ class ChatAgent(
     )
 
     val executor = simpleGoogleAIExecutor(apiKey)
-    var messages: List<Message> = emptyList()
+    var messages = mutableListOf<ChatMessage>()
     val identifier = "botbot"
 
     suspend fun connect() = coroutineScope {
@@ -41,31 +41,39 @@ class ChatAgent(
             socket.connect()
         }
 
+        val connectedAt = Clock.System.now()
+
         socket.messageFlow.collect { message ->
             if (message.source == identifier) return@collect
-            console.log("received: $message")
-            val prompt = prompt(
-                id = "dev-assistant",
-                params = LLMParams(
-                    temperature = 0.5,
-                )
-            ) {
-                // Add a system message to set the context
-                if (messages.none { it.role == Message.Role.System}) {
-                    system("You are a helpful assistant. Answer user questions concisely.")
-                }
-
-                messages(messages)
-
-                user(message.text)
-            }
-
-            messages = prompt.messages
-
-            val response = executor.execute(prompt, GoogleModels.Gemini2_5Flash).first()
-            messages += response
-            console.log("respending: ${response.content}")
-            socket.send(ChatMessage(identifier, Clock.System.now().toEpochMilliseconds(), response.content))
+            // console.log("received: $message")
+            messages.add(message)
+            if (message.sentAt > connectedAt)
+                respond()
         }
+    }
+
+    private suspend fun respond() {
+        val prompt = prompt(
+            id = "dev-assistant",
+            params = LLMParams(
+                temperature = 0.5,
+            )
+        ) {
+            system("Yer a pirate and helpful assistant, first mate. Keep yer answers warm and concise.")
+
+            messages.takeLast(20).forEach { message ->
+                if (message.source == identifier) {
+                    assistant(message.text)
+                } else {
+                    user(message.text)
+                }
+            }
+        }
+
+        val response = executor.execute(prompt, GoogleModels.Gemini2_5Flash).first()
+        val message = ChatMessage(identifier, response.content, Clock.System.now())
+        messages.add(message)
+        // console.log("responding: ${response.content}")
+        socket.send(message)
     }
 }

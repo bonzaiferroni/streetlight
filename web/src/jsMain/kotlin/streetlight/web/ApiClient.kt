@@ -27,5 +27,5 @@ class ApiClient(app: AppContext): AppContext by app {
         param(it.url, url)
     }
 
-    fun connectChat(scope: CoroutineScope) = ChatSocket(connectSocket(Api.Chat.path), scope)
+    fun connectChat(scope: CoroutineScope) = WebChatSocket(connectSocket(Api.Chat.path), scope)
 }

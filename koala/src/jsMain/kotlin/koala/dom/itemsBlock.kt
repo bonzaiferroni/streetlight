@@ -60,6 +60,7 @@ fun <Item> RenderContext.itemsBlock(
 
     renderScope.launch {
         flow.collect { items ->
+            console.log("collected")
 
             displayedItems?.forEach { (item, cache) ->
                 if (!items.contains(item)) {
@@ -87,7 +88,7 @@ fun <Item> RenderContext.itemsBlock(
                 val cache = displayedItems?.get(item) ?: recallCachedItem(item) ?: createItem(item)
                 val container = cache.firstElement
                 container.style.top = "${height}px"
-                console.log("container height: " + container.scrollHeight)
+                // console.log("container height: " + container.scrollHeight)
                 height += container.scrollHeight
                 if (index + 1 < items.size) {
                     height += gapPx

@@ -10,7 +10,7 @@ fun RenderContext.viewChatRoom(app: AppContext) {
             textBlock("${message.source}: ${message.text}")
         }
         textField(
-            binding = model.messageFlow,
+            binding = model.sendFlow,
             onChangeValue = model::setMessage,
             modifiers = modify(Width100),
             onEnter = model::sendMessage

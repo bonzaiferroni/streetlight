@@ -3,7 +3,6 @@ package streetlight.agent
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.websocket.*
-import io.ktor.serialization.kotlinx.KotlinxWebsocketSerializationConverter
 import io.ktor.websocket.*
 import kabinet.console.globalConsole
 import kotlinx.coroutines.*
@@ -13,41 +12,42 @@ import kotlinx.serialization.json.Json
 import streetlight.model.Api
 import streetlight.model.data.ChatMessage
 
-private val console = globalConsole.getHandle(ChatSocket::class)
+private val console = globalConsole.getHandle(HostChatSocket::class)
 
-class ChatSocket {
+class HostChatSocket {
     private val _messageFlow = MutableSharedFlow<ChatMessage>(
+        replay = 20,
         extraBufferCapacity = 64
     )
     val messageFlow: Flow<ChatMessage> = _messageFlow
-    private val sendFlow = MutableSharedFlow<ChatMessage>()
+    private val sendFlow = MutableSharedFlow<ChatMessage>(
+        extraBufferCapacity = 64
+    )
 
     suspend fun connect() {
         console.log("connecting")
-        client.use { client ->
-            client.webSocket(host = "localhost", port = 8080, path = Api.Chat.path) {
-                val incomingJob = launch {
-                    for (frame in incoming) {
-                        when (frame) {
-                            is Frame.Text -> {
-                                frame.readText().decode()?.let {
-                                    _messageFlow.emit(it)
-                                }
+        client.webSocket(host = "localhost", port = 8080, path = Api.Chat.path) {
+            val incomingJob = launch {
+                for (frame in incoming) {
+                    when (frame) {
+                        is Frame.Text -> {
+                            frame.readText().decode()?.let {
+                                _messageFlow.emit(it)
                             }
-                            else -> Unit
                         }
+                        else -> Unit
                     }
                 }
-
-                val outgoingJob = launch {
-                    sendFlow.collect { message ->
-                        send(Frame.Text(message.encode()))
-                    }
-                }
-
-                incomingJob.join()
-                outgoingJob.cancelAndJoin()
             }
+
+            val outgoingJob = launch {
+                sendFlow.collect { message ->
+                    send(Frame.Text(message.encode()))
+                }
+            }
+
+            incomingJob.join()
+            outgoingJob.cancelAndJoin()
         }
     }
 

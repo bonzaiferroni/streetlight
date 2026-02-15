@@ -14,6 +14,8 @@ import java.util.Collections
 
 private val console = globalConsole.getHandle(Routing::serveChat.name)
 
+private val history = Collections.synchronizedList(mutableListOf<String>())
+
 fun Routing.serveChat(app: ServerProvider = RuntimeProvider) {
     val clients = Collections.synchronizedSet<DefaultWebSocketServerSession>(
         LinkedHashSet()
@@ -22,9 +24,19 @@ fun Routing.serveChat(app: ServerProvider = RuntimeProvider) {
     webSocket(Api.Chat.path) {
         clients += this
         try {
+            val currentHistory = synchronized(history) { history.toList() }
+            currentHistory.forEach { message ->
+                send(message)
+            }
             for (frame in incoming) {
                 if (frame is Frame.Text) {
                     val text = frame.readText()
+                    synchronized(history) {
+                        history.add(text)
+                        while (history.size > 20) {
+                            history.removeAt(0)
+                        }
+                    }
                     clients.forEach { client ->
                         client.send(text)
                     }
