@@ -26,7 +26,7 @@ fun Routing.serveChat(app: ServerProvider = RuntimeProvider) {
                 if (frame is Frame.Text) {
                     val text = frame.readText()
                     clients.forEach { client ->
-                        client.send(Frame.Text(text))
+                        client.send(text)
                     }
                 }
             }

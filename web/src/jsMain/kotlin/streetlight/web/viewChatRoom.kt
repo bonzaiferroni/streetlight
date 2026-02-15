@@ -7,7 +7,7 @@ fun RenderContext.viewChatRoom(app: AppContext) {
     val model = app.chatRoom
     val element = column(modify(JustifyEnd)) {
         itemsBlock(model.messagesFlow, modify(Animate, MagicBlur, SlideX), true) { message ->
-            textBlock(message)
+            textBlock("${message.source}: ${message.text}")
         }
         textField(
             binding = model.messageFlow,

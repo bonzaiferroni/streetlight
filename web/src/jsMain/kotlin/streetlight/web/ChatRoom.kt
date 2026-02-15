@@ -4,7 +4,9 @@ import koala.model.BrowserModel
 import koala.model.mapDistinct
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Clock
 import org.w3c.dom.WebSocket
+import streetlight.model.data.ChatMessage
 
 class ChatRoom(
     private val scope: CoroutineScope,
@@ -37,13 +39,13 @@ class ChatRoom(
 
     fun sendMessage() {
         val socket = socket ?: return
-        socket.send(stateNow.message)
+        socket.send(ChatMessage("user", Clock.System.now().toEpochMilliseconds(), stateNow.message))
         setState { it.copy(message = "") }
     }
 }
 
 data class ChatRoomState(
-    val messages: List<String> = emptyList(),
+    val messages: List<ChatMessage> = emptyList(),
     val message: String = "",
     val isActive: Boolean = false,
 )

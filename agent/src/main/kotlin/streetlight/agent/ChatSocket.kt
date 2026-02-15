@@ -3,21 +3,24 @@ package streetlight.agent
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.websocket.*
+import io.ktor.serialization.kotlinx.KotlinxWebsocketSerializationConverter
 import io.ktor.websocket.*
 import kabinet.console.globalConsole
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.serialization.json.Json
 import streetlight.model.Api
+import streetlight.model.data.ChatMessage
 
 private val console = globalConsole.getHandle(ChatSocket::class)
 
 class ChatSocket {
-    private val _messageFlow = MutableSharedFlow<String>(
+    private val _messageFlow = MutableSharedFlow<ChatMessage>(
         extraBufferCapacity = 64
     )
-    val messageFlow: Flow<String> = _messageFlow
-    private val sendFlow = MutableSharedFlow<String>()
+    val messageFlow: Flow<ChatMessage> = _messageFlow
+    private val sendFlow = MutableSharedFlow<ChatMessage>()
 
     suspend fun connect() {
         console.log("connecting")
@@ -26,7 +29,11 @@ class ChatSocket {
                 val incomingJob = launch {
                     for (frame in incoming) {
                         when (frame) {
-                            is Frame.Text -> _messageFlow.emit(frame.readText())
+                            is Frame.Text -> {
+                                frame.readText().decode()?.let {
+                                    _messageFlow.emit(it)
+                                }
+                            }
                             else -> Unit
                         }
                     }
@@ -34,7 +41,7 @@ class ChatSocket {
 
                 val outgoingJob = launch {
                     sendFlow.collect { message ->
-                        send(Frame.Text(message))
+                        send(Frame.Text(message.encode()))
                     }
                 }
 
@@ -44,11 +51,20 @@ class ChatSocket {
         }
     }
 
-    suspend fun send(message: String) {
+    suspend fun send(message: ChatMessage) {
         sendFlow.emit(message)
     }
 }
 
+private fun ChatMessage.encode() = Json.encodeToString(this)
+
+private fun String.decode(): ChatMessage? = try {
+    Json.decodeFromString(this)
+} catch (e: Exception) {
+    null
+}
+
 val client = HttpClient(CIO) {
-    install(WebSockets)
+    install(WebSockets) {
+    }
 }

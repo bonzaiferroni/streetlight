@@ -1,9 +1,7 @@
 package streetlight.agent
 
 import ai.koog.agents.core.agent.AIAgent
-import ai.koog.agents.core.agent.AIAgent.Companion.invoke
 import ai.koog.agents.core.tools.ToolRegistry
-import ai.koog.agents.core.tools.ToolRegistry.Companion.invoke
 import ai.koog.agents.ext.tool.SayToUser
 import ai.koog.prompt.dsl.prompt
 import ai.koog.prompt.executor.clients.google.GoogleModels
@@ -13,6 +11,8 @@ import ai.koog.prompt.params.LLMParams
 import kabinet.console.globalConsole
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Clock
+import streetlight.model.data.ChatMessage
 
 private val console = globalConsole.getHandle(ChatAgent::class)
 
@@ -34,6 +34,7 @@ class ChatAgent(
 
     val executor = simpleGoogleAIExecutor(apiKey)
     var messages: List<Message> = emptyList()
+    val identifier = "botbot"
 
     suspend fun connect() = coroutineScope {
         launch {
@@ -41,6 +42,7 @@ class ChatAgent(
         }
 
         socket.messageFlow.collect { message ->
+            if (message.source == identifier) return@collect
             console.log("received: $message")
             val prompt = prompt(
                 id = "dev-assistant",
@@ -55,7 +57,7 @@ class ChatAgent(
 
                 messages(messages)
 
-                user(message)
+                user(message.text)
             }
 
             messages = prompt.messages
@@ -63,7 +65,7 @@ class ChatAgent(
             val response = executor.execute(prompt, GoogleModels.Gemini2_5Flash).first()
             messages += response
             console.log("respending: ${response.content}")
-            socket.send(response.content)
+            socket.send(ChatMessage(identifier, Clock.System.now().toEpochMilliseconds(), response.content))
         }
     }
 }
