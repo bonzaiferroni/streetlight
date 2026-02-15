@@ -131,11 +131,11 @@ fun CssBuilder.layoutUtilities(theme: KoalaTheme) {
         width = theme.spacingUnit * 4
     }
 
-    rule(FlexItems1) {
-        children {
-            flex = Flex(1)
-        }
-    }
+//    rule(FlexItems1) {
+//        children {
+//            flex = Flex(1)
+//        }
+//    }
 
     rule(TextAlignCenter) {
         textAlign = TextAlign.center

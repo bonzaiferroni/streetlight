@@ -27,6 +27,7 @@ fun Routing.serveStories(app: ServerProvider = RuntimeProvider) {
                     "Your job is to extract the requested information as json. " +
                     "Provide a headline that describes the story, if one is not present in the content then generate an appropriate headline. " +
                     "Provide a brief description of the story, one or two sentences. " +
+                    "Provide the url of any feature image that can be identified with meta information or given its placement in the body. " +
                     "If the content refers to a location, provide an estimate of the location (longitude/latitude). " +
                     "Provide the time that the story was posted. "
         )

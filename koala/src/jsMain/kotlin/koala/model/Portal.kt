@@ -1,11 +1,14 @@
 package koala.model
 
+import koala.dom.RenderContext
 import koala.html.AppRoute
 import koala.html.AppScreen
 import kotlinx.browser.window
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.launch
 import org.w3c.dom.Location
 
 class Portal(
@@ -36,7 +39,7 @@ class Portal(
         })
     }
 
-    inline fun <reified T> routeFlowOf(): Flow<T> {
+    inline fun <reified T: AppRoute> routeFlowOf(): Flow<T> {
         return routeFlow.mapDistinct {
             try {
                 it as? T
@@ -48,7 +51,7 @@ class Portal(
         }.filterNotNull()
     }
 
-    inline fun <reified T> routeOrNullFlowOf(): Flow<T?> {
+    inline fun <reified T: AppRoute> routeOrNullFlowOf(): Flow<T?> {
         return routeFlow.mapDistinct { it as? T }
     }
 

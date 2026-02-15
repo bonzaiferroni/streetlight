@@ -1,6 +1,7 @@
 .column {
     display: flex;
     flex-direction: column;
+    width: 100%;
 
     gap: var(--unit-spacing);
     align-items: start;
@@ -9,6 +10,7 @@
 .row {
     display: flex;
     flex-direction: row;
+    width: 100%;
 
     gap: var(--unit-spacing);
     align-items: center;
@@ -17,6 +19,7 @@
 .card {
     display: flex;
     flex-direction: column;
+    width: 100%;
 
     gap: var(--unit-spacing);
     border-radius: var(--unit-spacing);

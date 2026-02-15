@@ -1,6 +1,7 @@
 package koala.dom
 
 import koala.dom.getElementById
+import koala.html.AppRoute
 import koala.html.GeoMapSelector
 import koala.html.Id
 import kotlinx.browser.document
@@ -8,6 +9,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 import kotlinx.dom.clear
 import kotlinx.html.dom.append
 import org.w3c.dom.HTMLElement

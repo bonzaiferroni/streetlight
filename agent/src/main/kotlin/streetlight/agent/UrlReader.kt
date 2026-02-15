@@ -1,19 +1,13 @@
 package streetlight.agent
 
 import ai.koog.agents.core.agent.AIAgent
-import ai.koog.agents.core.agent.AIAgent.Companion.invoke
 import ai.koog.agents.core.tools.ToolRegistry
-import ai.koog.agents.core.tools.ToolRegistry.Companion.invoke
 import ai.koog.agents.ext.tool.SayToUser
 import ai.koog.prompt.dsl.prompt
 import ai.koog.prompt.executor.clients.google.GoogleModels
 import ai.koog.prompt.executor.llms.all.simpleGoogleAIExecutor
 import ai.koog.prompt.params.LLMParams
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonArray
-import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.JsonPrimitive
-import streetlight.model.data.StoryInfo
 
 class UrlReader(apiKey: String) {
     private val agent = AIAgent(

@@ -9,19 +9,6 @@ import koala.model.mapDistinct
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
-fun RenderContext.viewEditEventRoute(app: AppContext) {
-    viewEventEditor(app)
-    val model = app.eventEditor
-
-    renderScope.launch {
-        app.portal.routeFlowOf<EditEventRoute>().collect { route ->
-            route.eventId?.let {
-                model.initEvent(it)
-            }
-        }
-    }
-}
-
 fun RenderContext.viewEventEditor(app: AppContext) {
     val model = app.eventEditor
 
@@ -92,6 +79,14 @@ fun RenderContext.viewEventEditor(app: AppContext) {
     }
 
     element.onView(model::setVisibility)
+
+    renderScope.launch {
+        app.portal.routeFlowOf<EditEventRoute>().collect { route ->
+            route.eventId?.let {
+                model.initEvent(it)
+            }
+        }
+    }
 }
 
 fun RenderContext.locationEditor(app: AppContext) {
