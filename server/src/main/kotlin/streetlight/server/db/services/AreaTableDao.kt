@@ -5,7 +5,7 @@ import klutch.db.readAll
 import klutch.utils.toStringId
 import org.jetbrains.exposed.sql.insertAndGetId
 import streetlight.model.data.CommunityId
-import streetlight.model.data.NewArea
+import streetlight.model.data.NewCommunity
 import streetlight.model.data.Community
 import streetlight.model.data.toProjectId
 import streetlight.server.db.tables.AreaTable
@@ -17,14 +17,14 @@ class AreaTableDao: DbService() {
         AreaTable.readAll().map { it.toArea() }
     }
 
-    suspend fun create(newArea: NewArea): CommunityId = dbQuery {
+    suspend fun create(newCommunity: NewCommunity): CommunityId = dbQuery {
         AreaTable.insertAndGetId {
             it.writeFull(
                 Community(
                     communityId = CommunityId.random(),
-                    name = newArea.name,
+                    name = newCommunity.name,
                     points = emptyList(),
-                    communityType = newArea.communityType
+                    communityType = newCommunity.communityType
                 )
             )
         }.value.toStringId().toProjectId()

@@ -27,20 +27,3 @@ fun PlayMidi() {
         midi.play(67)
     }
 }
-
-@Composable
-fun HelloGemini() {
-    val client = RuntimeProvider.gemini
-    var responseText by remember { mutableStateOf("") }
-    var requestText by remember { mutableStateOf("Hello Gemini") }
-
-    Column(1) {
-        Row(1) {
-            TextField(requestText, onChange = { requestText = it }, modifier = Modifier.onEnterPressed {
-                responseText = client.textChat(requestText) ?: "no response"
-                requestText = ""
-            })
-        }
-        Text(responseText)
-    }
-}

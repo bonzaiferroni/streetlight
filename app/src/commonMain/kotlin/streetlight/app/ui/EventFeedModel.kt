@@ -73,5 +73,5 @@ data class EventFeedState(
     val locations: List<Location> = listOf(),
     val locationSearch: String = "",
     val events: List<Event> = listOf(),
-    val eventType: EventType = EventType.StreetPerformance
+    val eventType: EventType = EventType.Show
 )

@@ -54,7 +54,6 @@ class StreetProfileModel(
         val name = stateNow.newName.takeIf { it.isNotBlank() } ?: return
         viewModelScope.launch {
             app.repo.location.createLocation(NewLocation(
-                areaId = route.id.toProjectId(),
                 name = name,
                 geoPoint = GeoPoint(stateNow.newLongitude.toDouble(), stateNow.newLatitude.toDouble())
             ))
@@ -65,8 +64,8 @@ class StreetProfileModel(
 
     fun refreshItems() {
         viewModelScope.launch {
-            val locations = app.repo.location.readAreaLocations(route.id.toProjectId()) ?: return@launch
-            setState { it.copy(locations = locations) }
+//            val locations = app.repo.location.readAreaLocations(route.id.toProjectId()) ?: return@launch
+//            setState { it.copy(locations = locations) }
         }
     }
 }

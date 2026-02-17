@@ -17,7 +17,7 @@ import streetlight.model.data.EventId
 import streetlight.model.data.EventSong
 import streetlight.model.data.Location
 import streetlight.model.data.LocationId
-import streetlight.model.data.NewArea
+import streetlight.model.data.NewCommunity
 import streetlight.model.data.EventUpdate
 import streetlight.model.data.NewLocation
 import streetlight.model.data.NewSong
@@ -49,7 +49,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
     }
 
     object StreetFeed: GetEndpoint<List<Community>>(this, "areas") {
-        object Create: PostEndpoint<NewArea, CommunityId>(this, "create")
+        object Create: PostEndpoint<NewCommunity, CommunityId>(this, "create")
     }
 
     object LocationFeed: GetByTableIdEndpoint<LocationId, Location>(this, "locations") {

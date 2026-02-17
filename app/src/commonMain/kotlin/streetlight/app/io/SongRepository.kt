@@ -1,6 +1,6 @@
 package streetlight.app.io
 
-import kabinet.api.write
+import kampfire.api.write
 import kotlinx.datetime.Instant
 import pondui.io.NeoApiClient
 import streetlight.model.Api

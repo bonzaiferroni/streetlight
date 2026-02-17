@@ -3,7 +3,7 @@ package streetlight.model.data
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class NewArea(
+data class NewCommunity(
     val name: String,
     val communityType: CommunityType
 )

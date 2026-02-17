@@ -16,7 +16,6 @@ import compose.icons.TablerIcons
 import compose.icons.tablericons.Plus
 import compose.icons.tablericons.Settings
 import kabinet.utils.replaceOrRemoveAt
-import kabinet.utils.suggestVariation
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import pondui.ui.controls.Button
 import pondui.ui.controls.Carousel
@@ -37,6 +36,7 @@ import pondui.utils.MultiPreview
 import pondui.utils.PreviewFrame
 import streetlight.model.data.SongNotation
 import streetlight.model.data.SongPart
+import streetlight.model.data.suggestVariation
 import streetlight.model.mockDb
 
 @Composable
