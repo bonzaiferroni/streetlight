@@ -59,6 +59,10 @@ class GeoMap(
         setState { it.copy(bounds = bounds, movingBounds = value, zoom = zoom, isMoving = isMoving) }
     }
 
+    fun panMap(point: GeoPoint) {
+        panMap(PanPoint(point))
+    }
+
     fun panMap(pan: PanPoint) {
         viewModelScope.launch {
             _panFlow.emit(pan)

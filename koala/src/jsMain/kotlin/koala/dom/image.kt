@@ -11,15 +11,15 @@ import kotlinx.html.style
 import org.w3c.dom.HTMLImageElement
 
 fun RenderContext.image(
-    src: String? = SiteImage.placeholderImage,
+    initial: String? = SiteImage.placeholderImage,
     modifiers: ModifierSet? = null,
     binding: Flow<String?>? = null,
     block: (IMG.() -> Unit)? = null
 ): HTMLImageElement {
     val element = img {
-        this.src = src ?: ""
+        this.src = initial ?: ""
         applyModifiers(modifiers)
-        if (src == null) {
+        if (initial.isNullOrBlank()) {
             style = "display: none;"
         }
         block?.invoke(this)
@@ -27,7 +27,8 @@ fun RenderContext.image(
 
     renderScope.launch {
         binding?.collect { url ->
-            if (url == null) {
+            val url = url?.takeIf { it.isNotBlank() } ?: initial
+            if (url.isNullOrBlank()) {
                 element.style.display = "none"
             } else {
                 element.style.removeProperty("display")

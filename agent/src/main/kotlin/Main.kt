@@ -1,11 +1,10 @@
 import klutch.environment.readEnvFromPath
 import kotlinx.coroutines.runBlocking
 import streetlight.agent.ChatAgentConnection
-import streetlight.server.plugins.connectDb
 
 fun main(): Unit = runBlocking {
     val env = readEnvFromPath()
-    connectDb(env)
+    // connectDb(env)
     // Get an API key from the OPENAI_API_KEY environment variable
     val apiKey = env.read("GEMINI_KEY_A")
     val agent = ChatAgentConnection(apiKey)

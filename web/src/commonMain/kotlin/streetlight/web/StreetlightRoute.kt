@@ -5,7 +5,7 @@ import koala.html.AppRoute
 import koala.html.AppScreen
 import streetlight.model.data.Event
 import streetlight.model.data.EventId
-import streetlight.model.data.StoryId
+import streetlight.model.data.PostId
 
 enum class StreetlightScreen(
     override val pathRoot: String,
@@ -15,7 +15,7 @@ enum class StreetlightScreen(
     Account("account", { AccountRoute }),
     Event("event", { path -> path.provideRouteFromPath { EventIdRoute(EventId(it)) }  }),
     EditEvent("edit-event", { path -> EditEventRoute(path.provideId { EventId(it) }) }),
-    EditStory("edit-story", { path -> EditStoryRoute(path.provideId { StoryId(it) }) }),
+    EditStory("edit-story", { path -> EditPostRoute(path.provideId { PostId(it) }) }),
     Sandbox("sandbox", { SandboxRoute }),
     FullMap("full-map", { FullMapRoute }),
     Chat("chat", { ChatRoute })
@@ -66,8 +66,8 @@ object FullMapRoute: StreetlightRoute {
     override val screen get() = StreetlightScreen.FullMap
 }
 
-data class EditStoryRoute(
-    val storyId: StoryId? = null
+data class EditPostRoute(
+    val postId: PostId? = null
 ): StreetlightRoute {
     override val screen get() = StreetlightScreen.EditStory
 }

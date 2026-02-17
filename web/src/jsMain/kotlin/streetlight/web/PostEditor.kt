@@ -2,19 +2,21 @@ package streetlight.web
 
 import koala.dom.UIMessage
 import koala.model.BrowserModel
+import koala.model.GeoMap
 import koala.model.mapDistinct
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import streetlight.model.data.StoryId
-import streetlight.model.data.StoryUpdate
+import streetlight.model.data.PostId
+import streetlight.model.data.PostUpdate
 
-class StoryEditor(
+class PostEditor(
     scope: CoroutineScope,
     private val client: ClientContext,
-): BrowserModel<StoryEditorState>(StoryEditorState(), scope) {
+    private val geoMap: GeoMap,
+): BrowserModel<PostEditorState>(PostEditorState(), scope) {
 
     val infoUrlFlow = stateFlow.mapDistinct { it.story.infoUrl ?: "" }
-    val headlineFlow = stateFlow.mapDistinct { it.story.headline }
+    val headlineFlow = stateFlow.mapDistinct { it.story.title }
     val imageUrlFlow = stateFlow.mapDistinct { it.story.imageUrl ?: "" }
     val descriptionFlow = stateFlow.mapDistinct { it.story.description }
     val locationFlow = stateFlow.mapDistinct { it.story.location }
@@ -22,7 +24,7 @@ class StoryEditor(
     
     val storyNow get() = stateNow.story
 
-    fun initStory(storyId: StoryId?) {
+    fun initStory(postId: PostId?) {
     }
 
     fun setUrl(value: String) {
@@ -30,7 +32,7 @@ class StoryEditor(
     }
 
     fun setHeadline(value: String) {
-        setStory { it.copy(headline = value) }
+        setStory { it.copy(title = value) }
     }
 
     fun setDescription(value: String) {
@@ -41,17 +43,20 @@ class StoryEditor(
         val url = storyNow.infoUrl?.takeIf { it.startsWith("http") } ?: return
         viewModelScope.launch {
             val parse = client.api.readStoryUrl(url)
+            parse?.geoPoint?.let {
+                geoMap.panMap(it)
+            }
             setStory { parse?.toStoryUpdate() ?: storyNow }
         }
     }
     
-    private fun setStory(toNewState: (StoryUpdate) -> StoryUpdate) {
+    private fun setStory(toNewState: (PostUpdate) -> PostUpdate) {
         setState { it.copy(story = toNewState(storyNow))}
     }
 }
 
-data class StoryEditorState(
-    val storyId: StoryId? = null,
-    val story: StoryUpdate = StoryUpdate(),
+data class PostEditorState(
+    val postId: PostId? = null,
+    val story: PostUpdate = PostUpdate(),
     val message: UIMessage? = null,
 )

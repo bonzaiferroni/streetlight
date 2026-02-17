@@ -10,7 +10,6 @@ dependencies {
     implementation(project(":model"))
     implementation(project(":klutch"))
     implementation(project(":kabinet"))
-    implementation(project(":server"))
     implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.cio)
     implementation(libs.ktor.server.websockets)

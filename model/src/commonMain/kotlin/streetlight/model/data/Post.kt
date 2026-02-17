@@ -7,9 +7,9 @@ import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 
 @Serializable
-data class Story(
-    val storyId: StoryId,
-    val headline: String,
+data class Post(
+    val postId: PostId,
+    val title: String,
     val url: String,
     val imageUrl: String,
     val iconUrl: String,
@@ -23,13 +23,13 @@ data class Story(
 
 @JvmInline
 @Serializable
-value class StoryId(override val value: String): ProjectId {
-    companion object { fun random() = StoryId(randomUuidString())}
+value class PostId(override val value: String): ProjectId {
+    companion object { fun random() = PostId(randomUuidString())}
 }
 
 @Serializable
-data class StoryUpdate(
-    val headline: String = "",
+data class PostUpdate(
+    val title: String = "",
     val infoUrl: String? = null,
     val imageUrl: String? = null,
     val description: String = "",
@@ -39,18 +39,20 @@ data class StoryUpdate(
 
 @Serializable
 data class StoryParse(
-    val headline: String,
+    val title: String,
     val imageUrl: String? = null,
     val description: String,
     val latitude: Double? = null,
     val longitude: Double? = null,
     val postedAt: Instant,
 ) {
-    fun toStoryUpdate() = StoryUpdate(
-        headline = headline,
+    fun toStoryUpdate() = PostUpdate(
+        title = title,
         imageUrl = imageUrl,
         description = description,
-        location = if (latitude != null && longitude != null) GeoPoint(latitude, longitude) else null,
+        location = geoPoint,
         postedAt = postedAt
     )
+
+    val geoPoint: GeoPoint? get() = if (latitude != null && longitude != null) GeoPoint(longitude, latitude) else null
 }
