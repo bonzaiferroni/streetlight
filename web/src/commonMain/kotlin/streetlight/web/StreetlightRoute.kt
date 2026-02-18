@@ -6,6 +6,7 @@ import koala.html.AppScreen
 import streetlight.model.data.Event
 import streetlight.model.data.EventId
 import streetlight.model.data.PostId
+import streetlight.model.data.SongId
 
 enum class StreetlightScreen(
     override val pathRoot: String,
@@ -18,7 +19,8 @@ enum class StreetlightScreen(
     EditStory("edit-story", { path -> EditPostRoute(path.provideId { PostId(it) }) }),
     Sandbox("sandbox", { SandboxRoute }),
     FullMap("full-map", { FullMapRoute }),
-    Chat("chat", { ChatRoute })
+    Chat("chat", { ChatRoute }),
+    SongProfile("song-profile", { path -> path.provideRouteFromPath { SongProfileRoute(SongId(it)) } }),
 }
 
 fun List<String>.provideRouteFromPath(argIndex: Int = 1, provideRoute: (String) -> AppRoute?) =
@@ -28,6 +30,12 @@ fun <T: TableId<String>> List<String>.provideId(argIndex: Int = 1, provideId: (S
     getOrNull(argIndex)?.let { provideId(it) }
 
 sealed interface StreetlightRoute: AppRoute
+
+sealed interface StringIdRoute: StreetlightRoute {
+    val id: TableId<String>?
+
+    override fun toHashPath() = id?.let { "${super.toHashPath()}/${it.value}" } ?: super.toHashPath()
+}
 
 data class HomeRoute(
     val tab: String? = null
@@ -44,18 +52,16 @@ sealed interface EventRoute: StreetlightRoute {
 }
 
 data class EventIdRoute(
-    val eventId: EventId
-): EventRoute {
-    override fun toHashPath() = "${super.toHashPath()}/${eventId.value}"
+    override val id: EventId
+): EventRoute, StringIdRoute
+
+data class EventObjectRoute(val event: Event): EventRoute, StringIdRoute {
+    override val id get() = event.eventId
 }
 
-data class EventObjectRoute(val event: Event): EventRoute {
-    override fun toHashPath() = "${super.toHashPath()}/${event.eventId.value}"
-}
-
-data class EditEventRoute(val eventId: EventId? = null): StreetlightRoute {
+data class EditEventRoute(val eventId: EventId? = null): StreetlightRoute, StringIdRoute {
     override val screen get() = StreetlightScreen.EditEvent
-    override fun toHashPath() = eventId?.let { "${super.toHashPath()}/${it.value}"} ?: super.toHashPath()
+    override val id get() = eventId
 }
 
 object SandboxRoute: StreetlightRoute {
@@ -74,4 +80,11 @@ data class EditPostRoute(
 
 object ChatRoute: StreetlightRoute {
     override val screen get() = StreetlightScreen.Chat
+}
+
+data class SongProfileRoute(
+    val songId: SongId
+): StreetlightRoute, StringIdRoute {
+    override val screen get() = StreetlightScreen.SongProfile
+    override val id get() = songId
 }

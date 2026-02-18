@@ -62,9 +62,9 @@ class RenderCache(
     val firstElement get() = elements.first()
 }
 
-fun <T> createRender(parent: HTMLElement, value: T, block: RenderContext.(T) -> Unit): RenderCache {
+fun <T> createRender(parent: HTMLElement, scope: CoroutineScope, value: T, block: RenderContext.(T) -> Unit): RenderCache {
     val job = SupervisorJob()
-    val localScope = CoroutineScope(Dispatchers.Main + job)
+    val localScope = CoroutineScope(scope.coroutineContext + job)
     var context: RenderContext
     val elements = parent.append {
         context = RenderContext(this, localScope)
@@ -73,6 +73,10 @@ fun <T> createRender(parent: HTMLElement, value: T, block: RenderContext.(T) -> 
     return RenderCache(context, job, localScope, elements)
 }
 
-fun createRender(parent: HTMLElement, block: RenderContext.() -> Unit) = createRender(parent, Unit) {
+fun createRender(
+    parent: HTMLElement,
+    scope: CoroutineScope = CoroutineScope(Dispatchers.Main),
+    block: RenderContext.() -> Unit
+) = createRender(parent, scope, Unit) {
     block()
 }

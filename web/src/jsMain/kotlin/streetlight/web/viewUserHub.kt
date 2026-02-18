@@ -40,8 +40,10 @@ fun RenderContext.viewUserHub(
                         button("Add new song", modify(Accent), onClick = model::addSong)
                     }
                     itemsBlock(model.songsFlow, modify(MagicBlur, MagicSlideX), true) { song ->
-                        card {
-                            textBlock(song.title)
+                        action(SongProfileRoute(song.songId)) {
+                            card {
+                                textBlock(song.title)
+                            }
                         }
                     }
                 }

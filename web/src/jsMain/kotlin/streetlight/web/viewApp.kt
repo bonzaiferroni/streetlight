@@ -3,6 +3,7 @@ package streetlight.web
 import koala.css.MagicBlur
 import koala.css.SlideY
 import koala.css.modify
+import koala.dom.RenderContext
 import koala.dom.renderRoot
 import koala.dom.flowBlock
 import koala.dom.getElementById
@@ -60,6 +61,7 @@ fun viewApp() {
                 StreetlightScreen.FullMap -> viewFullMap(app)
                 StreetlightScreen.EditStory -> viewPostEditor(app)
                 StreetlightScreen.Chat -> viewChatRoom(app)
+                StreetlightScreen.SongProfile -> viewSongProfile(app)
             }
         }
     }

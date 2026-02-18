@@ -19,15 +19,16 @@ fun DOMContext.textBlock(
     block?.invoke(this)
 }
 
-fun RenderContext.textBlock(
-    flow: Flow<String>,
+fun <T> RenderContext.textBlock(
+    flow: Flow<T>,
     modifiers: ModifierSet? = null,
+    provideValue: (T) -> String = { it.toString() },
     block: (P.() -> Unit)? = null
 ): HTMLParagraphElement {
     val element = this@textBlock.textBlock(modifiers = modifiers, block = block)
     renderScope.launch {
         flow.distinctUntilChanged().collect {
-            element.textContent = it
+            element.textContent = provideValue(it)
         }
     }
     return element

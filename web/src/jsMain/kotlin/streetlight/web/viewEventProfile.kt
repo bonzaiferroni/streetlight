@@ -24,7 +24,7 @@ fun RenderContext.viewEventRoute(
         app.portal.routeFlowOf<EventRoute>().collect { route ->
             when (route) {
                 is EventIdRoute -> {
-                    model.fetchEvent(route.eventId)
+                    model.fetchEvent(route.id)
                 }
 
                 is EventObjectRoute -> {

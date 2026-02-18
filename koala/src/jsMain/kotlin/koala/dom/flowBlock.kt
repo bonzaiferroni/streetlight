@@ -54,7 +54,7 @@ fun <State> RenderContext.flowBlock(
                     it.elements.forEach { child ->
                         element.append(child)
                     }
-                } ?: createRender(element, value, block)
+                } ?: createRender(element, renderScope, value, block)
                 if (cacheRenderedElements) renderCaches[value] = render
             }
 

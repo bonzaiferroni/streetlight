@@ -3,13 +3,7 @@ package streetlight.web
 import kampfire.model.GeoPoint
 import kotlinx.coroutines.CoroutineScope
 import streetlight.model.Api
-import streetlight.model.data.EventId
-import streetlight.model.data.LocationId
-import streetlight.model.data.MapQuery
-import streetlight.model.data.EventUpdate
-import streetlight.model.data.NewLocation
-import streetlight.model.data.NewSong
-import streetlight.model.data.UserFileRequest
+import streetlight.model.data.*
 
 class ApiClient(app: AppContext): AppContext by app {
     suspend fun readEvent(eventId: EventId) = get(Api.EventProfile, eventId)
@@ -32,4 +26,6 @@ class ApiClient(app: AppContext): AppContext by app {
 
     suspend fun readSongs() = get(Api.Songs)
     suspend fun createSong(song: NewSong) = post(Api.Songs.Create, song)
+    suspend fun readSong(songId: SongId) = get(Api.SongProfile, songId)
+    suspend fun updateSong(song: Song) = post(Api.SongProfile.Update, song)
 }
