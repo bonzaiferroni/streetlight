@@ -1,9 +1,11 @@
 package streetlight.server.plugins
 
+import kabinet.console.globalConsole
 import kabinet.utils.Environment
 import klutch.db.services.UserInitService
 import klutch.db.tables.RefreshTokenTable
 import klutch.db.tables.UserTable
+import klutch.environment.readEnvFromPath
 import klutch.utils.dbLog
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.sql.Database
@@ -24,10 +26,11 @@ import streetlight.server.db.tables.UserFileTable
 import streetlight.server.db.tables.EventTagTable
 
 fun initDb(
-    app: ServerProvider = RuntimeProvider
+    // app: ServerProvider = RuntimeProvider
 ) {
     dbLog.logInfo("initializing db")
-    val db = connectDb(app.env)
+    val env = readEnvFromPath()
+    val db = connectDb(env)
 
     transaction(db) {
         val statements = MigrationUtils.statementsRequiredForDatabaseMigration(*dbTables.toTypedArray())
@@ -39,7 +42,7 @@ fun initDb(
     }
 
     runBlocking {
-        UserInitService(app.env).initUsers()
+        UserInitService(env).initUsers()
     }
 }
 
