@@ -30,25 +30,25 @@ class GeoMap(
     val boundsFlow = viewedStateFlow.filter { it.isViewed }.mapDistinct { it.bounds }
 
     fun addEntities(entities: List<MapEntity>) {
-        viewModelScope.launch {
+        scope.launch {
             _entityFlow.emit(entities)
         }
     }
 
     fun removeEntities(entityIds: List<MapEntityId>) {
-        viewModelScope.launch {
+        scope.launch {
             _removeEntity.emit(entityIds)
         }
     }
 
     fun addLines(entities: List<LineEntity>) {
-        viewModelScope.launch {
+        scope.launch {
             _linesFlow.emit(entities)
         }
     }
 
     fun setEntityVisibility(filter: (MapEntity) -> Boolean) {
-        viewModelScope.launch {
+        scope.launch {
             _markerVisibilityFlow.emit(filter)
         }
     }
@@ -64,7 +64,7 @@ class GeoMap(
     }
 
     fun panMap(pan: PanPoint) {
-        viewModelScope.launch {
+        scope.launch {
             _panFlow.emit(pan)
         }
     }

@@ -16,6 +16,7 @@ interface AppContext {
     val eventEditor: EventEditor
     val postEditor: PostEditor
     val chatRoom: ChatRoom
+    val userHub: UserHub
 }
 
 interface ClientContext {

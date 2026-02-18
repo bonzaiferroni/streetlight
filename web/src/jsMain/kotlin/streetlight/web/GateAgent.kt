@@ -1,6 +1,7 @@
 package streetlight.web
 
 import kampfire.model.User
+import kampfire.model.UserInfo
 import koala.model.Portal
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.filterNotNull
@@ -12,7 +13,7 @@ class GateAgent(
     val gate: UserGate,
     val portal: Portal,
 ) {
-    fun checkIn(block: (User) -> Unit) {
+    fun checkIn(block: (UserInfo) -> Unit) {
         val user = gate.stateNow.user
         if (user != null) {
             block(user)

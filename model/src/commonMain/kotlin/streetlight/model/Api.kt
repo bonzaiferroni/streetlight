@@ -65,7 +65,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object QueryPoint: QueryEndpoint<GeoPoint, List<Location>>(this, "query_point")
     }
 
-    object SongFeed: GetEndpoint<List<Song>>(this, "songs") {
+    object Songs: GetEndpoint<List<Song>>(this, "songs") {
         object Create: PostEndpoint<NewSong, SongId>(this, "create")
         object TakeNextSong: GetByTableIdEndpoint<EventId, EventSong>(this, "take_next_song") {
             val since = addInstantParam("since")

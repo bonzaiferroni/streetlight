@@ -2,6 +2,9 @@
     position: relative;
 }
 
+[block-label] > * {
+    width: 100%;
+}
 
 [block-label]::after {
     content: attr(block-label);

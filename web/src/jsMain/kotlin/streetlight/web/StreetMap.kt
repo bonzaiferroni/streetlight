@@ -34,7 +34,7 @@ class StreetMap(
     val eventMapFlow = stateFlow.debounce(100).mapDistinctBy({ it.events }) { it.events.groupBy { event -> event.eventType } }
 
     init {
-        viewModelScope.launch {
+        scope.launch {
             geoMap.stateFlow.collect { geoMapState ->
                 setBounds(geoMapState.movingBounds, geoMapState.zoom)
             }
@@ -64,7 +64,7 @@ class StreetMap(
         } else {
             val queriedBounds = bounds.expandBy(1.2f)
             setState { it.copy(bounds = bounds, zoom = zoom, queriedBounds = queriedBounds, isQuerying = true)}
-            viewModelScope.launch {
+            scope.launch {
                 val areaEvents = client.api.queryMap(MapQuery(queriedBounds, stateNow.zoom)) ?: emptyList()
                 val mapEntities = areaEvents.mapNotNull { event ->
                     if (allEvents.any { it.eventId == event.eventId }) return@mapNotNull null

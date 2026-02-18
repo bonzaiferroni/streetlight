@@ -4,6 +4,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class NewSong(
-    val title: String,
-    val artist: String,
-)
+    val title: String = "",
+    val artist: String = "",
+) {
+    val isValid get() = title.isNotBlank() && artist.isNotBlank()
+}

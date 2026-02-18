@@ -16,7 +16,7 @@ class EventProfile(
     val eventFlow = stateFlow.mapDistinct { it.event }.filterNotNull()
 
     fun fetchEvent(eventId: EventId) {
-        viewModelScope.launch {
+        scope.launch {
             val event = client.api.readEvent(eventId) ?: return@launch
             setEvent(event)
         }

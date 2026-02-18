@@ -13,7 +13,7 @@ fun RenderContext.viewEventEditor(app: AppContext) {
     val model = app.eventEditor
 
     val element = column {
-        card(modify(Width100, AlignItemsStretch)) {
+        card(modify(AlignItemsStretch)) {
             blockLabel("feature image") {
                 imageChoice(
                     modifiers = modify(MinHeight8),
@@ -37,7 +37,7 @@ fun RenderContext.viewEventEditor(app: AppContext) {
                         placeholder = "Event Title"
                     )
                 }
-                row {
+                row(modify(WidthAuto)) {
                     this.textBlock("Event category:", modify(MarginLeft1, Dim))
                     dropMenu(model::setEventType, provideLabel = { it.label })
                 }
@@ -46,7 +46,7 @@ fun RenderContext.viewEventEditor(app: AppContext) {
                 textField(placeholder = "Add a tag")
             }
             row {
-                row(modify(FlexItems1)) {
+                row(modify(FlexItems1, WidthAuto)) {
                     blockLabel("time") {
                         timeInput(model.timeFlow, model::setTime, modify(Width24))
                     }

@@ -8,6 +8,7 @@ import streetlight.model.data.LocationId
 import streetlight.model.data.MapQuery
 import streetlight.model.data.EventUpdate
 import streetlight.model.data.NewLocation
+import streetlight.model.data.NewSong
 import streetlight.model.data.UserFileRequest
 
 class ApiClient(app: AppContext): AppContext by app {
@@ -28,4 +29,7 @@ class ApiClient(app: AppContext): AppContext by app {
     }
 
     fun connectChat(scope: CoroutineScope) = WebChatSocket(connectSocket(Api.Chat.path), scope)
+
+    suspend fun readSongs() = get(Api.Songs)
+    suspend fun createSong(song: NewSong) = post(Api.Songs.Create, song)
 }

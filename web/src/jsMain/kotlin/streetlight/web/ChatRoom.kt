@@ -8,7 +8,7 @@ import kotlinx.datetime.Clock
 import streetlight.model.data.ChatMessage
 
 class ChatRoom(
-    private val scope: CoroutineScope,
+    scope: CoroutineScope,
     private val client: ApiClient
 ): BrowserModel<ChatRoomState>(ChatRoomState(), scope) {
 
@@ -21,7 +21,7 @@ class ChatRoom(
         if (value) {
             if (socket == null) {
                 val socket = client.connectChat(scope)
-                viewModelScope.launch {
+                scope.launch {
                     socket.messageFlow.collect { message ->
                         setState { it.copy(messages = stateNow.messages + message) }
                     }

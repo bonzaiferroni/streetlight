@@ -41,7 +41,7 @@ class PostEditor(
 
     fun readUrl() {
         val url = storyNow.infoUrl?.takeIf { it.startsWith("http") } ?: return
-        viewModelScope.launch {
+        scope.launch {
             val parse = client.api.readStoryUrl(url)
             parse?.geoPoint?.let {
                 geoMap.panMap(it)

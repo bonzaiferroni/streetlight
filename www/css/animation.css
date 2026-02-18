@@ -126,6 +126,7 @@
 
 .items-block > * {
     width: 100%;
+    position: absolute;
 }
 
 .items-block.animate {

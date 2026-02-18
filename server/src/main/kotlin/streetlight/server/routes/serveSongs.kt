@@ -18,17 +18,17 @@ fun Routing.serveSongs(app: ServerProvider = RuntimeProvider) {
     }
 
     authenticateJwt {
-        getEndpoint(Api.SongFeed) {
+        getEndpoint(Api.Songs) {
             val userId = getUserId()
             dao.readAllByUserId(userId)
         }
 
-        postEndpoint(Api.SongFeed.Create) { newSong, endpoint ->
+        postEndpoint(Api.Songs.Create) { newSong, endpoint ->
             val userId = getUserId()
             dao.createSong(userId, newSong)
         }
 
-        getEndpoint(Api.SongFeed.TakeNextSong, { it.toProjectId() }) { eventId, endpoint ->
+        getEndpoint(Api.Songs.TakeNextSong, { it.toProjectId() }) { eventId, endpoint ->
             val since: Instant = readParam(endpoint.since)
             val userId = getUserId()
             service.takeNextSong(userId, eventId, since)

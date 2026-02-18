@@ -22,11 +22,11 @@ interface SongRepository {
 class SongApiClient(
     private val client: NeoApiClient
 ) : SongRepository {
-    override suspend fun readSongs() = client.request(Api.SongFeed)
+    override suspend fun readSongs() = client.request(Api.Songs)
     override suspend fun readById(songId: SongId) = client.getById(Api.SongProfile, songId)
-    override suspend fun createSong(newSong: NewSong) = client.request(Api.SongFeed.Create, newSong)
+    override suspend fun createSong(newSong: NewSong) = client.request(Api.Songs.Create, newSong)
     override suspend fun takeNextSong(eventId: EventId, since: Instant) =
-        client.getById(Api.SongFeed.TakeNextSong, eventId) {
+        client.getById(Api.Songs.TakeNextSong, eventId) {
             write(it.since, since)
         }
 

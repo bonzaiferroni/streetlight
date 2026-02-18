@@ -26,7 +26,7 @@ class TransitMap(
 ) : BrowserModel<TransitMapState>(TransitMapState(), scope) {
 
     init {
-        viewModelScope.launch {
+        scope.launch {
             val communityId = CommunityId.random()
             val areaTransit = client.transit.readAreaTransit()
             showRoutes(areaTransit)

@@ -36,7 +36,10 @@ fun viewApp() {
         override val eventProfile = EventProfile(scope, client)
         override val postEditor = PostEditor(scope, client, geoMap)
         override val chatRoom = ChatRoom(scope, client.api)
+
+        override val userHub by lazy { UserHub(scope, client.api) }
     }
+
     val shellBox = document.getElementById(AppBody.shellBoxId)
     shellBox.style.display = "none"
 
@@ -51,7 +54,7 @@ fun viewApp() {
             when (screen) {
                 StreetlightScreen.Home -> viewHome(app)
                 StreetlightScreen.Event -> viewEventRoute(app)
-                StreetlightScreen.Account -> viewAccount(app.gate, app.portal)
+                StreetlightScreen.Account -> viewAccount(app)
                 StreetlightScreen.EditEvent -> viewEventEditor(app)
                 StreetlightScreen.Sandbox -> viewSandbox(app)
                 StreetlightScreen.FullMap -> viewFullMap(app)

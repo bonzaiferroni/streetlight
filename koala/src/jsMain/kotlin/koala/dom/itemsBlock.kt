@@ -19,6 +19,7 @@ fun <Item> RenderContext.itemsBlock(
     flow: Flow<List<Item>>,
     modifiers: ModifierSet? = null,
     animate: Boolean = false,
+    gapRems: Float? = 0.5f,
     cacheRenderedElements: Boolean = false,
     config: (DIV.() -> Unit)? = null,
     containerConfig: (DIV.() -> Unit)? = null,
@@ -34,7 +35,7 @@ fun <Item> RenderContext.itemsBlock(
 
     val cachedItems = mutableMapOf<Item, RenderCache>()
     var displayedItems: Map<Item, RenderCache>? = null
-    val gapPx = remToPx(0.5)
+    val gapPx = gapRems?.let { remToPx(it) }
 
     fun createItem(item: Item): RenderCache {
         val job = SupervisorJob()
@@ -88,9 +89,8 @@ fun <Item> RenderContext.itemsBlock(
                 val cache = displayedItems?.get(item) ?: recallCachedItem(item) ?: createItem(item)
                 val container = cache.firstElement
                 container.style.top = "${height}px"
-                // console.log("container height: " + container.scrollHeight)
                 height += container.scrollHeight
-                if (index + 1 < items.size) {
+                if (gapPx != null && index + 1 < items.size) {
                     height += gapPx
                 }
 
@@ -110,6 +110,6 @@ fun <Item> RenderContext.itemsBlock(
     }
 }
 
-private fun remToPx(rem: Double) = window.getComputedStyle(document.documentElement!!).fontSize.dropLast(2).toDouble().let {
+private fun remToPx(rem: Float) = window.getComputedStyle(document.documentElement!!).fontSize.dropLast(2).toDouble().let {
     (it * rem).toInt()
 }

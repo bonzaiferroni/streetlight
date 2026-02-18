@@ -83,21 +83,21 @@ fun CssBuilder.layoutUtilities(theme: KoalaTheme) {
         gap = theme.spacingUnit * 8
     }
 
-    rule(Flex1) {
-        flex = Flex(1)
-    }
-
-    rule(Flex2) {
-        flex = Flex(2)
-    }
-
-    rule(Flex3) {
-        flex = Flex(3)
-    }
-
-    rule(Flex4) {
-        flex = Flex(4)
-    }
+//    rule(Flex1) {
+//        flex = Flex(1)
+//    }
+//
+//    rule(Flex2) {
+//        flex = Flex(2)
+//    }
+//
+//    rule(Flex3) {
+//        flex = Flex(3)
+//    }
+//
+//    rule(Flex4) {
+//        flex = Flex(4)
+//    }
 
     rule(AlignItemsCenter) {
         alignItems = Align.center

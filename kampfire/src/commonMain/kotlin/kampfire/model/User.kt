@@ -26,3 +26,11 @@ val User.isUser: Boolean
 value class UserId(override val value: String): TableId<String> {
     companion object { fun random() = UserId(randomUuidString()) }
 }
+
+@Serializable
+data class UserInfo(
+    val username: String,
+    val roles: RoleSet,
+    val avatarUrl: String?,
+    val createdAt: Instant,
+)

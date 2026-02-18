@@ -2,7 +2,7 @@ package streetlight.web
 
 import kampfire.api.UserApi
 import kampfire.model.LoginRequest
-import kampfire.model.User
+import kampfire.model.UserInfo
 import kampfire.utils.obfuscate
 import koala.model.BrowserModel
 import koala.model.mapDistinct
@@ -46,7 +46,7 @@ class UserGate(app: AppContext): BrowserModel<UserGateState>(UserGateState(
     )
 
     fun signIn() {
-        viewModelScope.launch {
+        scope.launch {
             val user = get(UserApi.ReadInfo)
             if (user != null) {
                 if (stateNow.stayLoggedIn) {
@@ -66,7 +66,7 @@ class UserGate(app: AppContext): BrowserModel<UserGateState>(UserGateState(
 }
 
 data class UserGateState(
-    val user: User? = null,
+    val user: UserInfo? = null,
     val usernameText: String = "",
     val passwordText: String = "",
     val message: String? = null,

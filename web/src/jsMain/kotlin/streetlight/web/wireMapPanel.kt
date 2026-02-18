@@ -6,7 +6,7 @@ import koala.css.MagicBlur
 import koala.css.Css
 import koala.css.CircleShape
 import koala.css.Height3
-import koala.css.SlideX
+import koala.css.MagicSlideX
 import koala.css.Width100
 import koala.css.modify
 import koala.dom.*
@@ -16,7 +16,6 @@ import koala.html.heading2
 import koala.html.image
 import koala.html.label
 import koala.model.mapDistinct
-import kotlinx.browser.document
 import kotlinx.html.js.div
 
 fun RenderContext.wireMapPanel(app: AppContext) {
@@ -70,7 +69,7 @@ fun RenderContext.viewMapCards(app: AppContext) {
     }
 }
 
-private val modifyCardItems = modify(Animate, MagicBlur, SlideX)
+private val modifyCardItems = modify(Animate, MagicBlur, MagicSlideX)
 
 fun RenderContext.mapPanelCard(label: String, block: RenderContext.() -> Unit) {
     card(modify(MapPanel.card)) {

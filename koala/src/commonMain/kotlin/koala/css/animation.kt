@@ -12,7 +12,7 @@ object Animate: Modifier { override val value = "animate" }
 object Reveal: Modifier { override val value = "reveal" }
 // object Hide: CssClass { override val value = "hide" }
 object MagicBlur: Modifier { override val value = "blur" }
-object SlideX: Modifier { override val value = "slide-x" }
+object MagicSlideX: Modifier { override val value = "slide-x" }
 object SlideY: Modifier { override val value = "slide-y" }
 
 fun CssBuilder.animation(theme: KoalaTheme) {

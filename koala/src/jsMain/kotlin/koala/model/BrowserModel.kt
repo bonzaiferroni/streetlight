@@ -4,9 +4,10 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
+@Deprecated("Use ModelState")
 open class BrowserModel<T>(
     initialValue: T,
-    val viewModelScope: CoroutineScope
+    val scope: CoroutineScope
 ) {
     private val state = MutableStateFlow(initialValue)
 

@@ -48,7 +48,7 @@ class EventEditor(
     private val api get() = client.api
 
     init {
-        viewModelScope.launch {
+        scope.launch {
             launch {
                 geoMap.centerFlow.collect(::setGeoPoint)
             }
@@ -60,7 +60,7 @@ class EventEditor(
     }
 
     fun initEvent(eventId: EventId) {
-        viewModelScope.launch {
+        scope.launch {
             val event = api.readEvent(eventId) ?: return@launch
             setState {
                 it.copy(
@@ -126,7 +126,7 @@ class EventEditor(
 
     fun queryLocation() {
         val center = stateNow.location.geoPoint
-        viewModelScope.launch {
+        scope.launch {
             val returned = client.location.readPlaceInfo(center)
 //            console.log(prettyJson(returned))
             // val name = returned.name.takeIf { it.isNotBlank() } ?: fromDisplayName(returned)
