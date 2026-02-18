@@ -120,6 +120,10 @@ p.large {
     min-height: calc(var(--unit-spacing) * 8);
 }
 
+.height-auto {
+    height: auto;
+}
+
 .height-6 {
     height: calc(var(--unit-spacing) * 6);
 }
@@ -130,6 +134,10 @@ p.large {
 
 .height-16 {
     height: calc(var(--unit-spacing) * 16);
+}
+
+.width-auto {
+    width: auto;
 }
 
 .width-8 {
@@ -154,4 +162,8 @@ p.large {
 
 .justify-content-end {
     justify-content: flex-end;
+}
+
+.padding-1 {
+    padding: var(--unit-spacing);
 }

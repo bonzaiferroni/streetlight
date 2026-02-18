@@ -19,6 +19,9 @@ fun FlowContent.tabs(
                 p {
                     applyModifiers(TabClass.button)
                     attributes["data-tab"] = index.toString()
+                    if (tab.isDefault) {
+                        attributes["is-default"] = ""
+                    }
                     +tab.label
                 }
             }
@@ -44,18 +47,20 @@ object TabClass {
 
 fun TabScope.tab(
     label: String,
+    isDefault: Boolean = false,
     content: DIV.() -> Unit
 ) {
-    add(label, content)
+    add(label, isDefault, content)
 }
 
 class TabScope {
     private val _tabs: MutableList<Tab> = mutableListOf()
     val tabs: List<Tab> = _tabs
 
-    fun add(label: String, content: DIV.() -> Unit) {
+    fun add(label: String, isDefault: Boolean, content: DIV.() -> Unit) {
         _tabs.add(Tab(
             label = label,
+            isDefault = isDefault,
             content = content
         ))
     }
@@ -64,5 +69,6 @@ class TabScope {
 data class Tab(
     val label: String,
     val id: Id = Id(label),
+    val isDefault: Boolean = false,
     val content: DIV.() -> Unit
 )

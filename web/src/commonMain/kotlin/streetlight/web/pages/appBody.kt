@@ -18,6 +18,7 @@ import koala.html.logo
 import koala.html.row
 import koala.html.applyScripts
 import kotlinx.html.DIV
+import kotlinx.html.FlowContent
 import kotlinx.html.HTML
 import kotlinx.html.body
 import streetlight.web.AccountRoute
@@ -31,20 +32,7 @@ fun HTML.appBody(
         box(AppBody.viewportId) {
             column(AppBody.appBoxId) {
                 column(modify(Width100, AlignItemsCenter)) {
-                    row(modify(Width100, SpaceBetween)) {
-                        action(FullMapRoute, modify(Height6, Opacity2)) {
-                            icon("chevron-down", modify(Height100))
-                        }
-                        action(HomeRoute()) {
-                            row {
-                                logo()
-                                heading1("Streetlight")
-                            }
-                        }
-                        action(AccountRoute, modify(Height6, Opacity2)) {
-                            icon("empty-profile", modify(Height100))
-                        }
-                    }
+                    appHeader()
                     box(AppBody.contentBox) {
                         box(AppBody.portalMountId)
                         box(id = AppBody.shellBoxId, block = block)
@@ -57,10 +45,28 @@ fun HTML.appBody(
     }
 }
 
+fun FlowContent.appHeader() {
+    row(AppBody.appHeaderId, modify(Width100, SpaceBetween)) {
+        action(FullMapRoute, modify(Height6, Opacity2)) {
+            icon("chevron-down", modify(Height100))
+        }
+        action(HomeRoute()) {
+            row {
+                logo()
+                heading1("Streetlight")
+            }
+        }
+        action(AccountRoute, modify(Height6, Opacity2)) {
+            icon("empty-profile", modify(Height100))
+        }
+    }
+}
+
 object AppBody {
     val viewportId = Id("viewport-box")
     val appBoxId = Id("app-box")
     val portalMountId = Id("portal-mount")
     val shellBoxId = Id("shell-box")
     val contentBox = Id("content-box")
+    val appHeaderId = Id("app-header")
 }

@@ -45,6 +45,7 @@ fun Routing.servePages(app: ServerProvider = RuntimeProvider) {
         val spark = app.dao.spark.readByUserId(event.userId)
         val requestItems = app.dao.song.readRequestItems(event.userId)
         call.respondHtml {
+            console.log("responding")
             eventPortal(event, spark, requestItems)
         }
     }

@@ -8,6 +8,7 @@ import kotlinx.html.id
 
 fun FlowOrInteractiveOrPhrasingContent.textField(
     id: Id,
+    placeholder: String,
     block: (INPUT.() -> Unit)? = null
 ) {
     textInput {
@@ -22,9 +23,13 @@ fun FlowOrInteractiveOrPhrasingContent.textField(
 fun FlowOrInteractiveOrPhrasingContent.textField(
     id: Id,
     label: String,
+    placeholder: String,
+    block: (INPUT.() -> Unit)? = null
 ) {
-    textField(id) {
+    textField(id, placeholder) {
         attributes["aria-label"] = label
         blockLabel = label
+
+        block?.invoke(this)
     }
 }

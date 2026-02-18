@@ -45,7 +45,7 @@ fun Routing.serveEvents(app: ServerProvider = RuntimeProvider) {
         if (event == null) {
             call.respondHtml(HttpStatusCode.NotFound) { body { p { +"Arr, no active events!" } } }
         } else {
-            call.respondRedirect("/eventportal/${event.eventId.value}")
+            call.respondRedirect("/event-portal/${event.eventId.value}")
         }
     }
 

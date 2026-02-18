@@ -18,6 +18,7 @@ object AlignItemsEnd: Modifier { override val value = "align-items-end" }
 object JustifyCenter: Modifier { override val value = "justify-content-center" }
 object JustifyEnd: Modifier { override val value = "justify-content-end" }
 object JustifySpaceAround: Modifier { override val value = "justify-content-space-around" }
+object WidthAuto: Modifier { override val value = "width-auto" }
 object Width100: Modifier { override val value = "width-100" }
 object Width2: Modifier { override val value = "width-2" }
 object Width4: Modifier { override val value = "width-4" }
@@ -27,6 +28,7 @@ object Width24: Modifier { override val value = "width-24" }
 object Width32: Modifier { override val value = "width-32" }
 object Width64: Modifier { override val value = "width-64" }
 object Height100: Modifier { override val value = "height-100" }
+object HeightAuto: Modifier { override val value = "height-auto" }
 object Height2: Modifier { override val value = "height-2" }
 object Height3: Modifier { override val value = "height-3" }
 object Height4: Modifier { override val value = "height-4" }
@@ -58,6 +60,7 @@ object StackChildren: Modifier { override val value = "stack-children" }
 object Start: Modifier { override val value = "start" }
 object End: Modifier { override val value = "end" }
 object Center: Modifier { override val value = "center" }
+object Padding1: Modifier { override val value = "padding-1" }
 
 fun CssBuilder.layoutUtilities(theme: KoalaTheme) {
     rule(Gap0) {

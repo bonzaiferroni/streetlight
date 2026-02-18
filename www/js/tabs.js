@@ -47,6 +47,14 @@ function initTabs(root) {
         return v || "";
     };
 
+    const readDefault = () => {
+        const index = buttons.findIndex(button =>
+            button.hasAttribute("is-default")
+        );
+
+        return index === -1 ? -1 : index;
+    };
+
     const setQuery = (name) => {
         const hash = location.hash.startsWith("#") ? location.hash.slice(1) : "";
         const [path = "", query = ""] = hash.split("?", 2);
@@ -66,9 +74,8 @@ function initTabs(root) {
     let current = panels.findIndex((p) => p.classList.contains("is-active"));
     if (current < 0) current = 0;
 
-    const initialWanted = readQuery();
-    console.log("tabs: " + initialWanted);
-    const wantedIdx = initialWanted ? names.indexOf(slug(initialWanted)) : -1;
+    let initialWanted = readQuery();
+    const wantedIdx = initialWanted ? names.indexOf(slug(initialWanted)) : readDefault();
     if (wantedIdx >= 0) current = wantedIdx;
 
     // --- Initial apply ---
