@@ -16,19 +16,21 @@ import streetlight.web.pages.AppBody
 fun viewApp() {
     val scope = MainScope() // 57 KB
 
-    val app = object: AppContext { // 220 KB
-        val context = this
+    val cred = UserCred()
+    val fetchClient = FetchClient(cred)
+    val apiClient = ApiClient(fetchClient)
 
+    val app = object: AppContext { // 220 KB
         override val appScope = scope
 
         override val client = object: ClientContext {
-            override val transit = TransitBrowserClient(context)
-            override val api = ApiClient(context)
-            override val location = OSMClient(context)
+            override val transit = TransitBrowserClient(fetchClient)
+            override val api = apiClient
+            override val location = OSMClient()
         }
 
         override val portal = Portal(HomeRoute(), StreetlightScreen.entries, scope)
-        override val gate = UserGate(context)
+        override val gate = UserGate(scope, cred, apiClient)
         override val gateAgent = GateAgent(scope, gate, portal)
 
         override val geoMap = GeoMap(scope)

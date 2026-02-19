@@ -27,6 +27,7 @@ fun RenderContext.signInFields(
     app: AppContext,
 ) {
     val gate = app.gate
+    val cred = gate.cred
     val portal = app.portal
 
     column {
@@ -43,17 +44,19 @@ fun RenderContext.signInFields(
         }
         textField(
             label = "username/email",
-            onChangeValue = gate::setUsername,
+            onChangeValue = cred::setUsername,
             placeholder = "username/email",
-            binding = gate.stateFlow.mapDistinct { it.usernameText })
+            binding = cred.usernameFlow
+        )
         textField(
             label = "password",
-            onChangeValue = gate::setPassword,
+            onChangeValue = cred::setPassword,
             placeholder = "password",
-            binding = gate.stateFlow.mapDistinct { it.passwordText }) {
+            binding = cred.passwordFlow
+        ) {
             type = InputType.password
         }
-        checkBox("Stay signed in", gate::setStayLoggedIn, gate.stateFlow.mapDistinct { it.stayLoggedIn })
+        checkBox("Stay signed in", cred::setStayLoggedIn, cred.stayLoggedInFlow)
         row {
             button("go home", onClickEvent = {
                 portal.go(HomeRoute())

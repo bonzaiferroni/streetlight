@@ -1,5 +1,6 @@
 package koala.html
 
+import kampfire.api.TableId
 import kotlinx.html.CoreAttributeGroupFacade
 import kotlin.jvm.JvmInline
 
@@ -25,4 +26,12 @@ fun AttributeContext.applyBlockLabel(label: String?) {
     label?.let {
         blockLabel = it
     }
+}
+
+operator fun MutableMap<String, String>.set(attribute: Attribute, value: String) {
+    this[attribute.value] = value
+}
+
+operator fun MutableMap<String, String>.set(attribute: Attribute, value: TableId<String>) {
+    this[attribute.value] = value.value
 }

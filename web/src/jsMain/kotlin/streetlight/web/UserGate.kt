@@ -4,76 +4,54 @@ import kampfire.api.UserApi
 import kampfire.model.LoginRequest
 import kampfire.model.UserInfo
 import kampfire.utils.obfuscate
-import koala.model.BrowserModel
 import koala.model.mapDistinct
+import koala.model.stateOf
 import kotlinx.browser.localStorage
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.w3c.dom.get
 
-class UserGate(app: AppContext): BrowserModel<UserGateState>(UserGateState(
-    stayLoggedIn = localStorage[STAY_LOGGED_KEY]?.toBooleanStrictOrNull() ?: false
-), app.appScope), AppContext by app {
+class UserGate(
+    private val scope: CoroutineScope,
+    val cred: UserCred,
+    private val api: ApiClient,
+) {
+    private val state = stateOf(UserGateState())
+    val stateNow = state.now
 
-    val userFlow = stateFlow.mapDistinct { it.user }
-    val messageFlow = stateFlow.mapDistinct { it.message }
-
-    private var usernameOrEmail = localStorage[USERNAME_KEY] ?: ""
-    private var password = localStorage[PASSWORD_KEY] ?: ""
+    val userFlow = state.flow.mapDistinct { it.user }
+    val messageFlow = state.flow.mapDistinct { it.message }
 
     init {
         signIn()
     }
 
-    fun setUsername(username: String) {
-        usernameOrEmail = username
-        setState { it.copy(usernameText = username) }
-    }
-
-    fun setPassword(password: String) {
-        this.password = password
-        setState { it.copy(passwordText = password) }
-    }
-
-    fun setStayLoggedIn(value: Boolean) {
-        localStorage.setItem(STAY_LOGGED_KEY, value.toString())
-        setState { it.copy(stayLoggedIn = value) }
-    }
-
-    fun getLoginRequest() = LoginRequest(
-        usernameOrEmail = usernameOrEmail,
-        stayLoggedIn = true,
-        password = password.obfuscate(),
-    )
-
     fun signIn() {
         scope.launch {
-            val user = get(UserApi.ReadInfo)
+            val user = api.readUserInfo()
             if (user != null) {
-                if (stateNow.stayLoggedIn) {
-                    localStorage.setItem(USERNAME_KEY, usernameOrEmail)
-                    localStorage.setItem(PASSWORD_KEY, password)
+                val credState = cred.stateNow
+                if (credState.stayLoggedIn) {
+                    localStorage.setItem(USERNAME_KEY, credState.usernameText)
+                    localStorage.setItem(PASSWORD_KEY, credState.passwordText)
                 }
-                setState { it.copy(user = user) }
+                state.set { it.copy(user = user) }
             } else {
-                setState { it.copy(message = "Unable to sign in.")}
+                state.set { it.copy(message = "Unable to sign in.")}
             }
         }
     }
 
     fun signOut() {
-        setState { it.copy(user = null) }
+        state.set { it.copy(user = null) }
     }
 }
 
 data class UserGateState(
     val user: UserInfo? = null,
-    val usernameText: String = "",
-    val passwordText: String = "",
-    val message: String? = null,
-    val stayLoggedIn: Boolean
+    val message: String? = null
 )
 
 const val USERNAME_KEY = "streetlight.username"
 const val PASSWORD_KEY = "streetlight.password"
-const val SAVE_PASSWORD_KEY = "streetlight.save_password"
 const val STAY_LOGGED_KEY = "streetlight.stay_logged"

@@ -1,31 +1,33 @@
 package streetlight.web
 
+import kampfire.api.UserApi
 import kampfire.model.GeoPoint
 import kotlinx.coroutines.CoroutineScope
 import streetlight.model.Api
 import streetlight.model.data.*
 
-class ApiClient(app: AppContext): AppContext by app {
-    suspend fun readEvent(eventId: EventId) = get(Api.EventProfile, eventId)
-    suspend fun readLocation(locationId: LocationId) = get(Api.LocationFeed, locationId)
-    suspend fun readEventFeed() = get(Api.Events)
-    suspend fun queryMap(request: MapQuery) = get(Api.Events.QueryMap, request.toQuery())
-    suspend fun create(event: EventUpdate) = post(Api.Events.Create, event)
-    suspend fun uploadFeatureImage(blobUrl: String) = uploadBlob(Api.Events.Upload.path, blobUrl)
+class ApiClient(private val client: FetchClient) {
+    suspend fun readUserInfo() = client.get(UserApi.ReadInfo)
+    suspend fun readEvent(eventId: EventId) = client.get(Api.EventProfile, eventId)
+    suspend fun readLocation(locationId: LocationId) = client.get(Api.LocationFeed, locationId)
+    suspend fun readEventFeed() = client.get(Api.Events)
+    suspend fun queryMap(request: MapQuery) = client.get(Api.Events.QueryMap, request.toQuery())
+    suspend fun create(event: EventUpdate) = client.post(Api.Events.Create, event)
+    suspend fun uploadFeatureImage(blobUrl: String) = client.uploadBlob(Api.Events.Upload.path, blobUrl)
 
-    suspend fun readUserFiles(request: UserFileRequest) = post(Api.Users.Images, request)
+    suspend fun readUserFiles(request: UserFileRequest) = client.post(Api.Users.Images, request)
 
-    suspend fun createLocation(newLocation: NewLocation) = post(Api.LocationFeed.Create, newLocation)
-    suspend fun queryLocation(point: GeoPoint) = get(Api.LocationFeed.QueryPoint, point.toQuery())
+    suspend fun createLocation(newLocation: NewLocation) = client.post(Api.LocationFeed.Create, newLocation)
+    suspend fun queryLocation(point: GeoPoint) = client.get(Api.LocationFeed.QueryPoint, point.toQuery())
 
-    suspend fun readStoryUrl(url: String) = get(Api.Stories.ReadUrl) {
+    suspend fun readStoryUrl(url: String) = client.get(Api.Stories.ReadUrl) {
         param(it.url, url)
     }
 
-    fun connectChat(scope: CoroutineScope) = WebChatSocket(connectSocket(Api.Chat.path), scope)
+    fun connectChat(scope: CoroutineScope) = WebChatSocket(client.connectSocket(Api.Chat.path), scope)
 
-    suspend fun readSongs() = get(Api.Songs)
-    suspend fun createSong(song: NewSong) = post(Api.Songs.Create, song)
-    suspend fun readSong(songId: SongId) = get(Api.SongProfile, songId)
-    suspend fun updateSong(song: Song) = post(Api.SongProfile.Update, song)
+    suspend fun readSongs() = client.get(Api.Songs)
+    suspend fun createSong(song: NewSong) = client.post(Api.Songs.Create, song)
+    suspend fun readSong(songId: SongId) = client.get(Api.SongProfile, songId)
+    suspend fun updateSong(song: Song) = client.post(Api.SongProfile.Update, song)
 }

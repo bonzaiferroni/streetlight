@@ -9,9 +9,11 @@ fun HTML.eventPortal(event: Event, person: Person?, requestItems: List<RequestIt
     head(event.title) {
         applyStyles("event-portal.css")
         applyScripts("event-portal.js")
+//        applyScripts("event-portal/webscripts.js")
     }
     body {
         column(Id("event-profile"), modify(AlignItemsCenter, Padding1)) {
+            attributes[EventPortalSelector.eventIdAttribute] = event.eventId
             a("/") {
                 row() {
                     logo(1.5f)
@@ -36,7 +38,7 @@ fun HTML.eventPortal(event: Event, person: Person?, requestItems: List<RequestIt
                     column(Id("request-box"), modify(AlignItemsCenter)) {
                         column(Id("request-songs")) {
                             requestItems.forEach { item ->
-                                requestItem(item, event)
+                                requestItem(item)
                                 // button(song.title, invoke("startRequest", event.eventId.value, song.songId.value))
                             }
                         }
@@ -82,11 +84,12 @@ fun HTML.eventPortal(event: Event, person: Person?, requestItems: List<RequestIt
 
 fun FlowContent.requestItem(
     item: RequestItem,
-    event: Event,
 ) {
     val (song, plays) = item
     card() {
-        onClick = invoke("startRequest", event.eventId.value, song.songId.value)
+//        attributes[EventPortalSelector.songIdAttribute] = song.songId
+        onClick = invoke("startRequest", song.songId.value)
+
         row(modify(Flex1)) {
             column(modify(Flex1, Gap0, WidthAuto)) {
                 textBlock(song.title, modify(Bold))
@@ -98,4 +101,11 @@ fun FlowContent.requestItem(
             }
         }
     }
+}
+
+object EventPortalSelector {
+    val requestItem = Css("request-item")
+    val eventIdAttribute = Attribute("event-id")
+    val songIdAttribute = Attribute("song-id")
+    val sendRequestButtonId = Id("send-request-button")
 }

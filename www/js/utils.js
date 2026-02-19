@@ -11,6 +11,10 @@ function getCheckboxValue(id) {
     return document.getElementById(id)?.checked;
 }
 
+function getAttributeValue(attribute) {
+    return document.querySelector("[${attribute}]")?.getAttribute(attribute)
+}
+
 async function fetchPost(endpoint, payload) {
     return fetch(endpoint, {
         method: "POST",
