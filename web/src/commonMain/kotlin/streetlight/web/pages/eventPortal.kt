@@ -5,7 +5,7 @@ import kotlinx.html.*
 import streetlight.model.data.*
 import koala.css.*
 
-fun HTML.eventPortal(event: Event, person: Person?, requestItems: List<RequestItem>) {
+fun HTML.eventPortal(event: Event, performer: Performer?, requestItems: List<RequestItem>) {
     head(event.title) {
         applyStyles("event-portal.css")
         applyScripts("event-portal.js")
