@@ -84,15 +84,18 @@ class FetchClient(
     suspend fun <T> authRequest(
         method: String,
         path: String,
-        body: String? = null,
-        fetchWithJwt: suspend (String?) -> Response = { jwt ->
+        body: dynamic? = null,
+        contentType: String = "application/json",
+        block: suspend (Response) -> T
+    ): T? {
+        val fetchWithJwt: suspend (String?) -> Response = { jwt ->
             val headers = jwt?.let {
                 json(
-                    "Content-Type" to "application/json",
+                    "Content-Type" to contentType,
                     "Authorization" to "Bearer $jwt"
                 )
             } ?: json(
-                "Content-Type" to "application/json",
+                "Content-Type" to contentType,
             )
             val request = RequestInit(
                 method = method,
@@ -100,9 +103,8 @@ class FetchClient(
                 body = body
             )
             window.fetch(path, request).await()
-        },
-        block: suspend (Response) -> T
-    ): T? {
+        }
+
         var auth = cred?.readAuth()
         var response = fetchWithJwt(auth?.jwt)
 
@@ -140,26 +142,13 @@ class FetchClient(
     }
 
     suspend fun uploadBlob(postUrl: String, blobUrl: String): String? {
+        val response = window.fetch(blobUrl).await()
+        val blob: Blob = response.blob().await()
         return authRequest(
             method = "POST",
             path = postUrl,
-            body = null,
-            fetchWithJwt = { jwt ->
-                val response = window.fetch(blobUrl).await()
-                val blob: Blob = response.blob().await()
-
-                window.fetch(
-                    postUrl,
-                    RequestInit(
-                        method = "POST",
-                        headers = json(
-                            "Content-Type" to blob.type.ifEmpty { "application/octet-stream" },
-                            "Authorization" to "Bearer $jwt"
-                        ),
-                        body = blob
-                    )
-                ).await()
-            }
+            body = blob,
+            contentType = blob.type.ifEmpty { "application/octet-stream" }
         ) {
             it.text().await()
         }
