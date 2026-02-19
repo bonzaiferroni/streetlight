@@ -71,8 +71,6 @@ class FetchClient(
         return socket
     }
 
-    private var authCache: Auth? = null
-
     fun <E: Endpoint<*, *>> resolvePath(
         endpoint: E,
         block: (PathBuilder.(E) -> Unit)? = null
@@ -83,22 +81,12 @@ class FetchClient(
         return builder.build()
     }
 
-    fun readAuth() = authCache ?: localStorage.getItem(AUTH_STORAGE_KEY)?.let { value ->
-        Json.decodeFromString<Auth?>(value).also { authCache = it }
-    }
-
-    fun writeAuth(auth: Auth) {
-        authCache = auth
-        localStorage.setItem(AUTH_STORAGE_KEY, Json.encodeToString(auth))
-    }
-
     suspend fun <T> authRequest(
         method: String,
         path: String,
         body: String? = null,
         fetchWithJwt: suspend (String?) -> Response = { jwt ->
-            window.fetch(
-                path,
+            val request = jwt?.let {
                 RequestInit(
                     method = method,
                     headers = json(
@@ -107,11 +95,15 @@ class FetchClient(
                     ),
                     body = body
                 )
-            ).await()
+            } ?: RequestInit(
+                method = method,
+                body = body
+            )
+            window.fetch(path, request).await()
         },
         block: suspend (Response) -> T
     ): T? {
-        var auth = readAuth()
+        var auth = cred?.readAuth()
         var response = fetchWithJwt(auth?.jwt)
 
         if (response.status == 401.toShort()) {
@@ -139,7 +131,7 @@ class FetchClient(
 
             val loginText = loginResponse.text().await()
             auth = Json.decodeFromString<Auth>(loginText)
-            writeAuth(auth)
+            cred.writeAuth(auth)
 
             response = fetchWithJwt(auth.jwt)
         }
@@ -189,17 +181,4 @@ class FetchClient(
             else -> Json.decodeFromString<Returned>(text)
         }
     }
-
-    private fun getLoginRequest(): LoginRequest? {
-        val usernameOrEmail = localStorage[USERNAME_KEY] ?: return null
-        val stayLoggedIn = localStorage[STAY_LOGGED_KEY]?.toBooleanStrictOrNull() ?: false
-        val password = localStorage[PASSWORD_KEY] ?: return null
-        return LoginRequest(
-            usernameOrEmail = usernameOrEmail,
-            stayLoggedIn = stayLoggedIn,
-            password = password,
-        )
-    }
 }
-
-const val AUTH_STORAGE_KEY = "streetlight.auth"

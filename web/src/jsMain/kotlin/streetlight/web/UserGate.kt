@@ -30,11 +30,6 @@ class UserGate(
         scope.launch {
             val user = api.readUserInfo()
             if (user != null) {
-                val credState = cred.stateNow
-                if (credState.stayLoggedIn) {
-                    localStorage.setItem(USERNAME_KEY, credState.usernameText)
-                    localStorage.setItem(PASSWORD_KEY, credState.passwordText)
-                }
                 state.set { it.copy(user = user) }
             } else {
                 state.set { it.copy(message = "Unable to sign in.")}
@@ -43,6 +38,7 @@ class UserGate(
     }
 
     fun signOut() {
+        cred.setStayLoggedIn(false)
         state.set { it.copy(user = null) }
     }
 }
@@ -51,7 +47,3 @@ data class UserGateState(
     val user: UserInfo? = null,
     val message: String? = null
 )
-
-const val USERNAME_KEY = "streetlight.username"
-const val PASSWORD_KEY = "streetlight.password"
-const val STAY_LOGGED_KEY = "streetlight.stay_logged"

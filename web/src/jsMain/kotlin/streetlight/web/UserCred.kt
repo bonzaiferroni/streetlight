@@ -1,5 +1,6 @@
 package streetlight.web
 
+import kampfire.model.Auth
 import kampfire.model.LoginRequest
 import kampfire.utils.obfuscate
 import koala.model.mapDistinct
@@ -9,7 +10,9 @@ import org.w3c.dom.get
 
 class UserCred {
     private val state = stateOf(UserCredState(
-        stayLoggedIn = localStorage[STAY_LOGGED_KEY]?.toBooleanStrictOrNull() ?: false
+        usernameText = localStorage[USERNAME_KEY] ?: "",
+        stayLoggedIn = localStorage[STAY_LOGGED_KEY]?.toBooleanStrictOrNull() ?: false,
+        refreshToken = localStorage[REFRESH_TOKEN_KEY]
     ))
     val stateNow get() = state.now
 
@@ -17,33 +20,48 @@ class UserCred {
     val passwordFlow = state.flow.mapDistinct { it.passwordText }
     val stayLoggedInFlow = state.flow.mapDistinct { it.stayLoggedIn }
 
-    private var usernameOrEmail = localStorage[USERNAME_KEY] ?: ""
-    private var password = localStorage[PASSWORD_KEY] ?: ""
-
     fun setUsername(username: String) {
-        usernameOrEmail = username
         state.set { it.copy(usernameText = username) }
     }
 
     fun setPassword(password: String) {
-        this.password = password.obfuscate()
         state.set { it.copy(passwordText = password) }
     }
 
     fun setStayLoggedIn(value: Boolean) {
         localStorage.setItem(STAY_LOGGED_KEY, value.toString())
+        if (!value) {
+            localStorage.removeItem(USERNAME_KEY)
+            localStorage.removeItem(REFRESH_TOKEN_KEY)
+        }
         state.set { it.copy(stayLoggedIn = value) }
     }
 
     fun getLoginRequest(): LoginRequest? {
-        val usernameOrEmail = usernameOrEmail.takeIf { it.isNotBlank() } ?: return null
-        val password = password.takeIf { it.isNotBlank() } ?: return null
+        val usernameOrEmail = stateNow.usernameText.takeIf { it.isNotBlank() } ?: return null
+        val refreshToken = stateNow.refreshToken
+        val password = stateNow.passwordText.takeIf { refreshToken == null && it.isNotBlank() }?.obfuscate()
         val stayLoggedIn = state.now.stayLoggedIn
         return LoginRequest(
             usernameOrEmail = usernameOrEmail,
             stayLoggedIn = stayLoggedIn,
             password = password,
+            refreshToken = refreshToken
         )
+    }
+
+    fun readAuth(): Auth? {
+        val jwt = stateNow.jwt ?: return null
+        val refreshToken = stateNow.refreshToken ?: return null
+        return Auth(jwt = jwt, refreshToken = refreshToken)
+    }
+
+    fun writeAuth(auth: Auth) {
+        if (stateNow.stayLoggedIn) {
+            localStorage.setItem(REFRESH_TOKEN_KEY, auth.refreshToken)
+            localStorage.setItem(USERNAME_KEY, stateNow.usernameText)
+        }
+        state.set { it.copy(refreshToken = auth.refreshToken, jwt = auth.jwt, passwordText = "") }
     }
 }
 
@@ -51,4 +69,10 @@ data class UserCredState(
     val usernameText: String = "",
     val passwordText: String = "",
     val stayLoggedIn: Boolean,
+    val refreshToken: String? = null,
+    val jwt: String? = null,
 )
+
+private const val USERNAME_KEY = "streetlight.username"
+private const val REFRESH_TOKEN_KEY = "streetlight.refresh"
+private const val STAY_LOGGED_KEY = "streetlight.stay_logged"

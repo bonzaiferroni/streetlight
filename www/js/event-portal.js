@@ -8,6 +8,7 @@ function startRequest(songId) {
 
 async function sendRequest() {
     const eventId = getAttributeValue("event-id")
+    console.log(eventId)
     const isJoining = !!getCheckboxValue("join");
     const requesterName = getFieldValue("name");
     const comment = getFieldValue("comment");
