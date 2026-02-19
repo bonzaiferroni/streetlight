@@ -2,7 +2,7 @@ package streetlight.model.utils
 
 import kampfire.model.SignUpRequest
 
-val SignUpRequest.validSignUp: Boolean
+val SignUpRequest.isValid: Boolean
     get() = password.validPassword && username.validUsername && email.validEmail
 
 val String.validUsernameLength: Boolean

@@ -27,6 +27,7 @@ class UserGate(
     }
 
     fun signIn() {
+        console.log("signing in")
         scope.launch {
             val user = api.readUserInfo()
             if (user != null) {
@@ -45,5 +46,5 @@ class UserGate(
 
 data class UserGateState(
     val user: UserInfo? = null,
-    val message: String? = null
+    val message: String? = null,
 )

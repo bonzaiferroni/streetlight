@@ -2,11 +2,13 @@ package streetlight.web
 
 import kampfire.api.UserApi
 import kampfire.model.GeoPoint
+import kampfire.model.SignUpRequest
 import kotlinx.coroutines.CoroutineScope
 import streetlight.model.Api
 import streetlight.model.data.*
 
 class ApiClient(private val client: FetchClient) {
+    suspend fun createUser(request: SignUpRequest) = client.post(UserApi.Create, request)
     suspend fun readUserInfo() = client.get(UserApi.ReadInfo)
     suspend fun readEvent(eventId: EventId) = client.get(Api.EventProfile, eventId)
     suspend fun readLocation(locationId: LocationId) = client.get(Api.LocationFeed, locationId)

@@ -2,6 +2,7 @@ package streetlight.web
 
 import kampfire.model.Auth
 import kampfire.model.LoginRequest
+import kampfire.model.SignUpRequest
 import kampfire.utils.obfuscate
 import koala.model.mapDistinct
 import koala.model.stateOf
@@ -35,6 +36,10 @@ class UserCred {
             localStorage.removeItem(REFRESH_TOKEN_KEY)
         }
         state.set { it.copy(stayLoggedIn = value) }
+    }
+
+    fun setFromSignup(requestNow: SignUpRequest) {
+         state.set { it.copy(passwordText = requestNow.password, usernameText = requestNow.username) }
     }
 
     fun getLoginRequest(): LoginRequest? {

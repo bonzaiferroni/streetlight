@@ -2,8 +2,6 @@ package streetlight.web
 
 import koala.css.*
 import koala.dom.*
-import koala.model.Portal
-import koala.model.mapDistinct
 import kotlinx.html.InputType
 import kotlinx.html.js.p
 
@@ -13,24 +11,25 @@ fun RenderContext.viewAccount(
     val gate = app.gate
 
     flowBlock(gate.userFlow) { user ->
-        column {
-            if (user != null) {
-                viewUserHub(app, user)
-            } else {
-                signInFields(app)
+        if (user != null) {
+             viewUserHub(app, user)
+        } else {
+            column(modify(QueryRow, FlexItems1)) {
+                 signInCard(app)
+                 createAccountCard(app)
             }
         }
     }
 }
 
-fun RenderContext.signInFields(
+fun RenderContext.signInCard(
     app: AppContext,
 ) {
     val gate = app.gate
     val cred = gate.cred
     val portal = app.portal
 
-    column {
+    card {
         flowBlock(gate.messageFlow) { msg ->
             if (msg == null) {
                 p {

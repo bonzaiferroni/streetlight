@@ -20,14 +20,14 @@ fun DOMContext.textBlock(
 }
 
 fun <T> RenderContext.textBlock(
-    flow: Flow<T>,
+    binding: Flow<T>,
     modifiers: ModifierSet? = null,
     provideValue: (T) -> String = { it.toString() },
     block: (P.() -> Unit)? = null
 ): HTMLParagraphElement {
     val element = this@textBlock.textBlock(modifiers = modifiers, block = block)
     renderScope.launch {
-        flow.distinctUntilChanged().collect {
+        binding.distinctUntilChanged().collect {
             element.textContent = provideValue(it)
         }
     }

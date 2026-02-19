@@ -86,17 +86,17 @@ class FetchClient(
         path: String,
         body: String? = null,
         fetchWithJwt: suspend (String?) -> Response = { jwt ->
-            val request = jwt?.let {
-                RequestInit(
-                    method = method,
-                    headers = json(
-                        "Content-Type" to "application/json",
-                        "Authorization" to "Bearer $jwt"
-                    ),
-                    body = body
+            val headers = jwt?.let {
+                json(
+                    "Content-Type" to "application/json",
+                    "Authorization" to "Bearer $jwt"
                 )
-            } ?: RequestInit(
+            } ?: json(
+                "Content-Type" to "application/json",
+            )
+            val request = RequestInit(
                 method = method,
+                headers = headers,
                 body = body
             )
             window.fetch(path, request).await()
