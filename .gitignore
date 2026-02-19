@@ -35,5 +35,4 @@ users.json
 
 /app/appcache.json
 /app/release
-/server/deploy
-/server/wav
+/server-old
