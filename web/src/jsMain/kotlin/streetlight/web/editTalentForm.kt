@@ -12,45 +12,38 @@ fun RenderContext.editTalentForm(app: AppContext) {
     val portal = app.portal
     val api = app.client.api
     val userCache = app.userCache
-    val routeFlow = portal.routeFlowOf<EditTalentRoute>()
-    val state = stateOf(TalentEdit())
 
-    wireTo(state) {
-        column {
-            textField(
-                label = "talent",
-                read = { it.name },
-                write = { it.state.copy(name = it.value) }
-            )
-            textField(
-                label = "description",
-                read = { it.description },
-                write = { it.state.copy(description = it.value ) }
-            )
+    suspend fun provideEdit(route: EditTalentRoute) = route.talentId?.let {
+        userCache.talents.getItem(it)?.toEdit()
+    } ?: TalentEdit()
 
-            button(
-                text = { if (it.talentId != null) "edit" else "share" },
-                modifiers = modify(Accent),
-                onClick = {
-                    renderScope.launch {
-                        val talent = api.editTalent(state.now) ?: return@launch
-                        console.log("edit talent: ${talent.name}")
-                        userCache.talents.addItem(talent)
-                        portal.goBack()
+    routeBlock(portal, ::provideEdit) {
+        val state = stateOf(TalentEdit())
+        wireTo(state) {
+            column {
+                textField(
+                    label = "talent",
+                    read = { it.name },
+                    write = { it.state.copy(name = it.value) }
+                )
+                textField(
+                    label = "description",
+                    read = { it.description },
+                    write = { it.state.copy(description = it.value) }
+                )
+
+                button(
+                    text = { if (it.talentId != null) "edit" else "share" },
+                    modifiers = modify(Accent),
+                    onClick = {
+                        renderScope.launch {
+                            val talent = api.editTalent(state.now) ?: return@launch
+                            console.log("edit talent: ${talent.name}")
+                            userCache.talents.addItem(talent)
+                            portal.goBack()
+                        }
                     }
-                }
-            )
-        }
-    }
-
-    renderScope.launch {
-        routeFlow.collect { route ->
-            val talentId = route.talentId
-            if (talentId != null) {
-                val edit = userCache.talents.getItem(talentId)?.toEdit() ?: error("todo: handle talent not found")
-                state.set { edit }
-            } else {
-                state.set { TalentEdit() }
+                )
             }
         }
     }
