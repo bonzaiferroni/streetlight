@@ -7,6 +7,7 @@ import streetlight.model.data.Event
 import streetlight.model.data.EventId
 import streetlight.model.data.PostId
 import streetlight.model.data.SongId
+import streetlight.model.data.TalentId
 
 enum class StreetlightScreen(
     override val pathRoot: String,
@@ -21,6 +22,8 @@ enum class StreetlightScreen(
     FullMap("full-map", { FullMapRoute }),
     Chat("chat", { ChatRoute }),
     SongProfile("song-profile", { path -> path.provideRouteFromPath { SongProfileRoute(SongId(it)) } }),
+    TalentProfile("talent-profile", { path -> path.provideRouteFromPath { TalentProfileRoute(TalentId(it)) } }),
+    ShareTalent("share-talent", { ShareTalentRoute })
 }
 
 fun List<String>.provideRouteFromPath(argIndex: Int = 1, provideRoute: (String) -> AppRoute?) =
@@ -87,4 +90,15 @@ data class SongProfileRoute(
 ): StreetlightRoute, StringIdRoute {
     override val screen get() = StreetlightScreen.SongProfile
     override val id get() = songId
+}
+
+data class TalentProfileRoute(
+    val talentId: TalentId
+): StreetlightRoute, StringIdRoute {
+    override val screen get() = StreetlightScreen.TalentProfile
+    override val id get() = talentId
+}
+
+object ShareTalentRoute: StreetlightRoute {
+    override val screen get() = StreetlightScreen.ShareTalent
 }

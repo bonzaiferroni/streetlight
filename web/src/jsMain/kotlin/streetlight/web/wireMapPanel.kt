@@ -57,7 +57,7 @@ fun RenderContext.viewMapCards(app: AppContext) {
 
             mapPanelCard("Communities") {
                 itemsBlock(eventMap.communityFlow, modifyCardItems, true) { community ->
-                    box(modify(MapPanel.grid, AlignItemsCenter, Height3)) {
+                    container(modify(MapPanel.grid, AlignItemsCenter, Height3)) {
                         image(modifiers = modify(CircleShape, Width100))
                         textBlock(community.name)
                         textBlock("4 PM")
@@ -74,7 +74,7 @@ private val modifyCardItems = modify(Animate, MagicBlur, MagicSlideX)
 fun RenderContext.mapPanelCard(label: String, block: RenderContext.() -> Unit) {
     card(modify(MapPanel.card)) {
         // header
-        box(modify(MapPanel.grid, AlignItemsCenter)) {
+        container(modify(MapPanel.grid, AlignItemsCenter)) {
             heading2(label, modify(MapPanel.cardHeading))
             div { }
             label("visibility")

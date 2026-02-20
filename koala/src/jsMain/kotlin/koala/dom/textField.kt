@@ -6,6 +6,8 @@ import koala.css.applyModifiers
 import koala.html.Id
 import koala.html.applyBlockLabel
 import koala.html.applyId
+import koala.model.ModelState
+import koala.model.mapDistinct
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
@@ -25,7 +27,7 @@ fun RenderContext.textField(
     id: Id? = null,
     onChangeValue: ((String) -> Unit)? = null,
     binding: Flow<String>? = null,
-    placeholder: String? = null,
+    placeholder: String? = label,
     size: Int = 25,
     onEnter: (() -> Unit)? = null,
     block: (INPUT.() -> Unit)? = null
@@ -83,3 +85,18 @@ fun RenderContext.textField(
 
     return element
 }
+
+//fun <T> StateRenderContext<T>.textField(
+//    label: String,
+//    provideValue: (T) -> String,
+//    writeValue: (TextUpdate<T>) -> T,
+//) = textField(
+//    label = label,
+//    binding = state.flow.mapDistinct { provideValue(it) },
+//    onChangeValue = { text -> state.set { writeValue(TextUpdate(it, text)) } },
+//)
+//
+//data class TextUpdate<T>(
+//    val state: T,
+//    val value: String,
+//)

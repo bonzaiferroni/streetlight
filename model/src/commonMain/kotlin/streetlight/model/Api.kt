@@ -31,7 +31,9 @@ import streetlight.model.data.RequestId
 import streetlight.model.data.AreaTransit
 import streetlight.model.data.EventInfo
 import streetlight.model.data.MapQuery
+import streetlight.model.data.NewTalent
 import streetlight.model.data.StoryParse
+import streetlight.model.data.Talent
 import streetlight.model.data.UserFileRequest
 
 object Api: ApiNode(ApiNode(null, "api"), "v1") {
@@ -107,6 +109,8 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
 
     object Users: ApiNode(this, "users") {
         object Images: PostEndpoint<UserFileRequest, List<String>>(this, "images")
+        object Talents: GetEndpoint<List<Talent>>(this, "talents")
+        object CreateTalent: PostEndpoint<NewTalent, Talent>(this, "create-talent")
     }
 
     object Stories: ApiNode(this, "story") {

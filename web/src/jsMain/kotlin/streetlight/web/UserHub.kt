@@ -5,51 +5,28 @@ import koala.model.stateOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import streetlight.model.data.NewSong
-import streetlight.model.data.Song
+import streetlight.model.data.Talent
 
 class UserHub(
     private val scope: CoroutineScope,
     private val api: ApiClient
 ) {
-    private val song = stateOf(NewSong())
     private val view = stateOf(UserHubState())
 
-    val titleFlow = song.flow.mapDistinct { it.title }
-    val artistFlow = song.flow.mapDistinct { it.artist }
-    val songsFlow = view.flow.mapDistinct { it.songs }
+    val talentsFlow = view.flow.mapDistinct { it.talents }
 
     init {
-        refreshSongs()
+        refreshTalents()
     }
 
-    fun refreshSongs() {
+    fun refreshTalents() {
         scope.launch {
-            val songs = api.readSongs() ?: emptyList()
-            view.set { it.copy(songs = songs) }
-        }
-    }
-
-    fun setArtist(artist: String) {
-        song.set { it.copy(artist = artist) }
-    }
-
-    fun setSongTitle(title: String) {
-        song.set { it.copy(title = title) }
-    }
-
-    fun addSong() {
-        val songNow = song.now
-        if (!songNow.isValid) return
-        scope.launch {
-            val id = api.createSong(songNow)
-            if (id != null) {
-                refreshSongs()
-                song.set { NewSong() }
-            }
+            val talents = api.readTalents() ?: emptyList()
+            view.set { it.copy(talents = talents) }
         }
     }
 }
 
 data class UserHubState(
-    val songs: List<Song> = emptyList()
+    val talents: List<Talent> = emptyList()
 )

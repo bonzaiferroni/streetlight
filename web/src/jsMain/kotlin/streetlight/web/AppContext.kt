@@ -15,7 +15,7 @@ interface AppContext {
     val streetMap: StreetMap
     val postEditor: PostEditor
     val chatRoom: ChatRoom
-    val userHub: UserHub
+    val userCache: UserCache
 }
 
 interface ClientContext {

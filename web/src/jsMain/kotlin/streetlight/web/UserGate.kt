@@ -4,6 +4,7 @@ import kampfire.api.UserApi
 import kampfire.model.LoginRequest
 import kampfire.model.UserInfo
 import kampfire.utils.obfuscate
+import koala.model.Portal
 import koala.model.mapDistinct
 import koala.model.stateOf
 import kotlinx.browser.localStorage
@@ -15,6 +16,7 @@ class UserGate(
     private val scope: CoroutineScope,
     val cred: UserCred,
     private val api: ApiClient,
+    private val userCache: UserCache,
 ) {
     private val state = stateOf(UserGateState())
     val stateNow = state.now
@@ -40,6 +42,7 @@ class UserGate(
     }
 
     fun signOut() {
+        userCache.reset()
         cred.setStayLoggedIn(false)
         state.set { it.copy(user = null) }
     }

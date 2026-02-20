@@ -3,7 +3,6 @@ package streetlight.web
 import koala.css.MagicBlur
 import koala.css.SlideY
 import koala.css.modify
-import koala.dom.RenderContext
 import koala.dom.renderRoot
 import koala.dom.flowBlock
 import koala.dom.getElementById
@@ -18,19 +17,19 @@ fun viewApp() {
 
     val cred = UserCred()
     val fetchClient = FetchClient(cred)
-    val apiClient = ApiClient(fetchClient)
 
     val app = object: AppContext { // 220 KB
         override val appScope = scope
 
         override val client = object: ClientContext {
             override val transit = TransitBrowserClient(fetchClient)
-            override val api = apiClient
+            override val api = ApiClient(fetchClient)
             override val location = OSMClient()
         }
 
+        override val userCache = UserCache(scope, client.api)
         override val portal = Portal(HomeRoute(), StreetlightScreen.entries, scope)
-        override val gate = UserGate(scope, cred, apiClient)
+        override val gate = UserGate(scope, cred, client.api, userCache)
         override val gateAgent = GateAgent(scope, gate, portal)
 
         override val geoMap = GeoMap(scope)
@@ -38,8 +37,6 @@ fun viewApp() {
         override val eventProfile = EventProfile(scope, client)
         override val postEditor = PostEditor(scope, client, geoMap)
         override val chatRoom = ChatRoom(scope, client.api)
-
-        override val userHub by lazy { UserHub(scope, client.api) }
     }
 
     val shellBox = document.getElementById(AppBody.shellBoxId)
@@ -63,6 +60,7 @@ fun viewApp() {
                 StreetlightScreen.EditStory -> viewPostEditor(app)
                 StreetlightScreen.Chat -> viewChatRoom(app)
                 StreetlightScreen.SongProfile -> viewSongProfile(app)
+                StreetlightScreen.ShareTalent -> shareTalentForm(app)
             }
         }
     }

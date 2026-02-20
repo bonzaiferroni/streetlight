@@ -14,7 +14,7 @@ import kotlinx.dom.clear
 import kotlinx.html.dom.append
 import org.w3c.dom.HTMLElement
 
-class RenderContext(
+open class RenderContext(
     consumer: DOMContext,
     val renderScope: CoroutineScope,
 ): DOMContext by consumer
