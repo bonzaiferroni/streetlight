@@ -9,7 +9,6 @@ import koala.model.mapDistinct
 fun RenderContext.viewMapConfig(app: AppContext) {
     val gateAgent = app.gateAgent
     val eventMap = app.streetMap
-    val eventCreator = app.eventEditor
     val portal = app.portal
 
     row(modify(Width100, AlignItemsStart)) {

@@ -34,7 +34,7 @@ val String.passwordHasUpper: Boolean
 val String.passwordHasLower: Boolean
     get() = any { it.isLowerCase() }
 val String.validPassword: Boolean
-    get() = passwordScore >= 4
+    get() = passwordScore >= 4 && validPasswordLength
 
 val String.passwordScore: Int
     get() {

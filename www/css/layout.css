@@ -25,4 +25,5 @@
     border-radius: var(--unit-spacing);
     background-color: var(--card-bg);
     padding: var(--unit-spacing);
+    align-items: start;
 }

@@ -27,6 +27,7 @@ class UserGate(
     }
 
     fun signIn() {
+        if (!cred.stateNow.hasCredentials) return
         console.log("signing in")
         scope.launch {
             val user = api.readUserInfo()

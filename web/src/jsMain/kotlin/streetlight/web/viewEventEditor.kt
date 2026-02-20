@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 fun RenderContext.viewEventEditor(app: AppContext) {
-    val model = app.eventEditor
+    val model = EventEditor(renderScope, app.client, app.geoMap)
 
     val element = column {
         card(modify(AlignItemsStretch)) {
@@ -56,7 +56,7 @@ fun RenderContext.viewEventEditor(app: AppContext) {
                 }
                 textBlock(model.datetimeFlow.map { it.toString() })
             }
-            locationEditor(app)
+            locationEditor(app, model)
             textEditor(
                 label = "description",
                 placeholder = "Event description",
@@ -89,8 +89,7 @@ fun RenderContext.viewEventEditor(app: AppContext) {
     }
 }
 
-fun RenderContext.locationEditor(app: AppContext) {
-    val eventCreator = app.eventEditor
+fun RenderContext.locationEditor(app: AppContext, model: EventEditor) {
 
     val element = column(modify(QueryRow, AlignItemsStretch)) {
         geoMapMount(modify(Flex1, Square))
@@ -100,21 +99,21 @@ fun RenderContext.locationEditor(app: AppContext) {
                     label = "location name",
                     placeholder = "Location name",
                     modifiers = modify(Flex1),
-                    onChangeValue = eventCreator::setLocationName,
-                    binding = eventCreator.locationFlow,
+                    onChangeValue = model::setLocationName,
+                    binding = model.locationFlow,
                 )
                 button("look up", onClickEvent = {
-                    eventCreator.queryLocation()
+                    model.queryLocation()
                 })
             }
             textField(
                 label = "address",
                 placeholder = "Address",
                 modifiers = modify(Width100),
-                onChangeValue = eventCreator::setAddress,
-                binding = eventCreator.addressFlow,
+                onChangeValue = model::setAddress,
+                binding = model.addressFlow,
             )
-            flowBlock(eventCreator.pointFlow, animate = true, modifiers = modify(MagicBlur)) { point ->
+            flowBlock(model.pointFlow, animate = true, modifiers = modify(MagicBlur)) { point ->
                 this.textBlock {
                     textSpan("latitude: ", modify(Dim))
                     textSpan(point.lat.toString())

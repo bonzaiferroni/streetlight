@@ -57,5 +57,5 @@ data class UserCreatorState(
     val request: SignUpRequest = SignUpRequest(),
     val confirmPassword: String = "",
 ) {
-    val isValid get() = request.isValid
+    val isValid get() = request.isValid && confirmPassword == request.password
 }

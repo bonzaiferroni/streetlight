@@ -13,7 +13,6 @@ interface AppContext {
     val geoMap: GeoMap
     val eventProfile: EventProfile
     val streetMap: StreetMap
-    val eventEditor: EventEditor
     val postEditor: PostEditor
     val chatRoom: ChatRoom
     val userHub: UserHub

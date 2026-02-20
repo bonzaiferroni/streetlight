@@ -2,6 +2,7 @@ package koala.html
 
 import kampfire.api.TableId
 import kotlinx.html.CoreAttributeGroupFacade
+import kotlinx.html.impl.DelegatingMap
 import kotlin.jvm.JvmInline
 
 typealias AttributeContext = CoreAttributeGroupFacade

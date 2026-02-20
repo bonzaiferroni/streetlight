@@ -76,7 +76,9 @@ data class UserCredState(
     val stayLoggedIn: Boolean,
     val refreshToken: String? = null,
     val jwt: String? = null,
-)
+) {
+    val hasCredentials get() = refreshToken != null
+}
 
 private const val USERNAME_KEY = "streetlight.username"
 private const val REFRESH_TOKEN_KEY = "streetlight.refresh"

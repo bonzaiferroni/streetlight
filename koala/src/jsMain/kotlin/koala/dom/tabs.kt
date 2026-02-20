@@ -27,7 +27,6 @@ fun RenderContext.tabs(
                 }
                 fun createTab(): RenderContext {
                     val element = tabPanelElements.getOrNull(index) ?: error("tab not found: $index")
-                    console.log("creating content: $index")
                     val context = createRender(element, renderScope, tab.content).context
                     renders[index] = context
                     return context

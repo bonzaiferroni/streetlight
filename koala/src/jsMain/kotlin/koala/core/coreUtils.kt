@@ -6,6 +6,7 @@ import koala.dom.modify
 import koala.html.Attribute
 import koala.html.Id
 import kotlinx.browser.document
+import kotlinx.html.impl.DelegatingMap
 import org.w3c.dom.Document
 import org.w3c.dom.Element
 import org.w3c.dom.HTMLElement
