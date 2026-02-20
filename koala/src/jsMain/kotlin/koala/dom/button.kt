@@ -4,6 +4,7 @@ import koala.css.ElementClass
 import koala.css.ModifierSet
 import koala.css.applyModifiers
 import koala.css.modify
+import koala.model.mapDistinct
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.html.BUTTON
@@ -43,4 +44,28 @@ fun RenderContext.button(
     }
 
     return element
+}
+
+fun <T> WireContext<T>.button(
+    text: (T) -> String,
+    modifiers: ModifierSet? = null,
+    onClick: (() -> Unit)? = null,
+    onClickEvent: ((Event) -> Unit)? = null,
+    isEnabled: ((T) -> Boolean)? = null,
+    block: (BUTTON.() -> Unit)? = null,
+) {
+    val element = button(
+        text = text(state.now),
+        modifiers = modifiers,
+        onClick = onClick,
+        onClickEvent = onClickEvent,
+        bindIsEnabled = isEnabled?.let { isEnabled -> state.flow.mapDistinct { isEnabled(it) }},
+        block = block
+    )
+
+    renderScope.launch {
+        state.flow.collect {
+            element.textContent = text(it)
+        }
+    }
 }

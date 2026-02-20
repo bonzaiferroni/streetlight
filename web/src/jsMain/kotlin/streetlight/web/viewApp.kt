@@ -60,7 +60,7 @@ fun viewApp() {
                 StreetlightScreen.EditStory -> viewPostEditor(app)
                 StreetlightScreen.Chat -> viewChatRoom(app)
                 StreetlightScreen.SongProfile -> viewSongProfile(app)
-                StreetlightScreen.ShareTalent -> shareTalentForm(app)
+                StreetlightScreen.EditTalent -> editTalentForm(app)
             }
         }
     }

@@ -16,14 +16,14 @@ fun RenderContext.viewUserHub(
 
     column {
         row {
-            textBlock("Hello ${user.username}! $intro", modify(Flex1))
+            textBlock("Hello ${user.username}!", modify(Flex1))
             button("go home", onClick = { portal.go(HomeRoute()) })
             button("sign out", onClick = gate::signOut)
         }
 
         row {
-            textBlock("What would you like to share?", modify(Flex1))
-            button("add talent", modify(Accent), onClick = { portal.go(ShareTalentRoute) })
+            textBlock("Share and grow your talents.", modify(Flex1))
+            button("add talent", modify(Accent), onClick = { portal.go(EditTalentRoute()) })
         }
 
         itemsBlock(userCache.talents.flow) { talent ->
@@ -36,5 +36,4 @@ fun RenderContext.viewUserHub(
     }
 }
 
-private const val intro = "Streetlight is a place to share, experience, and find a deeper level of human expression. " +
-        "Share and grow your talents."
+private const val intro = "Streetlight is a place to explore a deeper level of expression. "

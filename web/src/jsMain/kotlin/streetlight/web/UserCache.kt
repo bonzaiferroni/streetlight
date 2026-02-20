@@ -7,8 +7,8 @@ class UserCache(
     scope: CoroutineScope,
     private val api: ApiClient,
 ) {
-    val talents = ItemCache(scope) { api.readTalents() }
-    val songs = ItemCache(scope) { api.readSongs() }
+    val talents = ItemCache(scope, { it.talentId }) { api.readTalents() }
+    val songs = ItemCache(scope, { it.songId }) { api.readSongs() }
 
     fun reset() {
         talents.clear()

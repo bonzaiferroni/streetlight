@@ -23,7 +23,7 @@ enum class StreetlightScreen(
     Chat("chat", { ChatRoute }),
     SongProfile("song-profile", { path -> path.provideRouteFromPath { SongProfileRoute(SongId(it)) } }),
     TalentProfile("talent-profile", { path -> path.provideRouteFromPath { TalentProfileRoute(TalentId(it)) } }),
-    ShareTalent("share-talent", { ShareTalentRoute })
+    EditTalent("edit-talent", { path -> EditTalentRoute(path.provideId { TalentId(it)} ) })
 }
 
 fun List<String>.provideRouteFromPath(argIndex: Int = 1, provideRoute: (String) -> AppRoute?) =
@@ -99,6 +99,9 @@ data class TalentProfileRoute(
     override val id get() = talentId
 }
 
-object ShareTalentRoute: StreetlightRoute {
-    override val screen get() = StreetlightScreen.ShareTalent
+data class EditTalentRoute(
+    val talentId: TalentId? = null
+): StreetlightRoute, StringIdRoute {
+    override val screen get() = StreetlightScreen.EditTalent
+    override val id get() = talentId
 }

@@ -69,6 +69,8 @@ inline fun <reified T> RenderContext.dropMenu(
     dropMenu(values, flow, callback, modifiers, block)
 }
 
+// inline fun <reified Value>
+
 // inline fun <reified T> DropMenu(
 //    selected: T,
 //    crossinline labelOf: (T) -> String,

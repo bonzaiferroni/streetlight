@@ -6,10 +6,8 @@ import koala.css.applyModifiers
 import koala.html.Id
 import koala.html.applyBlockLabel
 import koala.html.applyId
-import koala.model.ModelState
 import koala.model.mapDistinct
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import kotlinx.html.INPUT
 import kotlinx.html.InputType
@@ -86,17 +84,17 @@ fun RenderContext.textField(
     return element
 }
 
-//fun <T> StateRenderContext<T>.textField(
-//    label: String,
-//    provideValue: (T) -> String,
-//    writeValue: (TextUpdate<T>) -> T,
-//) = textField(
-//    label = label,
-//    binding = state.flow.mapDistinct { provideValue(it) },
-//    onChangeValue = { text -> state.set { writeValue(TextUpdate(it, text)) } },
-//)
-//
-//data class TextUpdate<T>(
-//    val state: T,
-//    val value: String,
-//)
+fun <T> WireContext<T>.textField(
+    label: String,
+    read: (T) -> String?,
+    write: (TextUpdate<T>) -> T,
+) = textField(
+    label = label,
+    binding = state.flow.mapDistinct { read(it) ?: "" },
+    onChangeValue = { text -> state.set { write(TextUpdate(it, text)) } },
+)
+
+data class TextUpdate<T>(
+    val state: T,
+    val value: String,
+)

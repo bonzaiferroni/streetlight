@@ -43,7 +43,7 @@ class MusicianHub(
         scope.launch {
             val id = api.createSong(songNow)
             if (id != null) {
-                refreshTalents()
+                refreshSongs()
                 song.set { NewSong() }
             }
         }

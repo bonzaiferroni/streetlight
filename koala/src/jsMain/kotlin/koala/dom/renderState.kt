@@ -53,7 +53,7 @@ fun <State> RenderContext.renderState(
                 container.append {
                     job = SupervisorJob()
                     val scope = CoroutineScope(Dispatchers.Main + job)
-                    RenderContext(this, scope).block(value)
+                    DOMRenderContext(this, scope).block(value)
                 }
                 if (cacheRenderedElements) renderCache[value] = container
             }.first()

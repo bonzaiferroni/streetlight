@@ -14,10 +14,14 @@ import kotlinx.dom.clear
 import kotlinx.html.dom.append
 import org.w3c.dom.HTMLElement
 
-open class RenderContext(
+interface RenderContext: DOMContext {
+    val renderScope: CoroutineScope
+}
+
+class DOMRenderContext(
     consumer: DOMContext,
-    val renderScope: CoroutineScope,
-): DOMContext by consumer
+    override val renderScope: CoroutineScope,
+): RenderContext, DOMContext by consumer
 
 fun HTMLElement.renderRoot(
     scope: CoroutineScope,
@@ -25,7 +29,7 @@ fun HTMLElement.renderRoot(
 ) {
     clear()
     append {
-        val context = RenderContext(this, scope)
+        val context = DOMRenderContext(this, scope)
         context.block()
     }
 }
@@ -67,7 +71,7 @@ fun <T> createRender(parent: HTMLElement, scope: CoroutineScope, value: T, block
     val localScope = CoroutineScope(scope.coroutineContext + job)
     var context: RenderContext
     val elements = parent.append {
-        context = RenderContext(this, localScope)
+        context = DOMRenderContext(this, localScope)
         context.block(value)
     }
     return RenderCache(context, job, localScope, elements)
