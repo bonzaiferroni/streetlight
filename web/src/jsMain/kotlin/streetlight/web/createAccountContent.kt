@@ -1,10 +1,14 @@
 package streetlight.web
 
 import koala.css.AlignItemsCenter
+import koala.css.AlignItemsStretch
+import koala.css.CenterItems
 import koala.css.Flex1
 import koala.css.FlexItems1
 import koala.css.MaxWidth50
 import koala.css.QueryRow
+import koala.css.QueryRowReverse
+import koala.css.RowReverse
 import koala.css.modify
 import koala.dom.*
 
@@ -12,7 +16,7 @@ fun RenderContext.createAccountContent(app: AppContext) {
     val gate = app.gate
     val creator = UserCreator(renderScope, gate, app.client.api)
 
-    column(modify(QueryRow, FlexItems1)) {
+    column(modify(QueryRowReverse, FlexItems1, AlignItemsStretch)) {
         card {
             textBlock("Not yet on Streetlight? Create a new account.")
             textField(
@@ -47,8 +51,11 @@ fun RenderContext.createAccountContent(app: AppContext) {
             )
             button("Sign up", onClick = creator::createAccount, bindIsEnabled = creator.isValidFlow)
         }
-        column(modify(AlignItemsCenter)) {
-            lottie("playful_cat", modify(MaxWidth50))
+        box(modify(CenterItems)) {
+            column(modify(MaxWidth50)) {
+                lottie("playful_cat")
+                textBlock("Streetlight is at an early stage in development. Only the bravest souls should enter.")
+            }
         }
     }
 }

@@ -60,6 +60,7 @@ object StackChildren: Modifier { override val value = "stack-children" }
 object Start: Modifier { override val value = "start" }
 object End: Modifier { override val value = "end" }
 object Center: Modifier { override val value = "center" }
+object CenterItems: Modifier { override val value = "center-items" }
 object Padding1: Modifier { override val value = "padding-1" }
 
 fun CssBuilder.layoutUtilities(theme: KoalaTheme) {

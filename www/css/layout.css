@@ -27,3 +27,19 @@
     padding: var(--unit-spacing);
     align-items: start;
 }
+
+.box {
+    display: grid;
+}
+
+.box > * {
+    grid-area: 1 / 1 / 2 / 2;
+}
+
+.box > .center {
+    place-self: center;
+}
+
+.box.center-items {
+    place-items: center;
+}

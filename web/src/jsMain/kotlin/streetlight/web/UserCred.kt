@@ -77,7 +77,7 @@ data class UserCredState(
     val refreshToken: String? = null,
     val jwt: String? = null,
 ) {
-    val hasCredentials get() = refreshToken != null
+    val hasCredentials get() = refreshToken != null || usernameText.isNotBlank() && passwordText.isNotBlank()
 }
 
 private const val USERNAME_KEY = "streetlight.username"

@@ -26,6 +26,7 @@ fun RenderContext.textField(
     onChangeValue: ((String) -> Unit)? = null,
     binding: Flow<String>? = null,
     placeholder: String? = null,
+    size: Int = 25,
     onEnter: (() -> Unit)? = null,
     block: (INPUT.() -> Unit)? = null
 ): HTMLInputElement {
@@ -55,6 +56,7 @@ fun RenderContext.textField(
             placeholder?.let {
                 this.placeholder = it
             }
+            this.size = size.toString()
             block?.invoke(this)
         }
     }.first() as HTMLInputElement

@@ -24,3 +24,20 @@ inline fun DOMContext.box(
     this.id = id.value
     content()
 }
+
+fun DOMContext.container(
+    modifiers: ModifierSet? = null,
+    content: DIV.() -> Unit = { },
+) = div {
+    applyModifiers(modifiers)
+    content()
+}
+
+fun DOMContext.container(
+    id: Id,
+    modifiers: ModifierSet? = null,
+    content: DIV.() -> Unit = { },
+) = container(modifiers = modifiers) {
+    this.id = id.value
+    content()
+}

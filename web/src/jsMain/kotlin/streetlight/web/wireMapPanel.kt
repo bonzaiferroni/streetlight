@@ -44,7 +44,7 @@ fun RenderContext.viewMapCards(app: AppContext) {
     val eventMap = app.streetMap
 
     flowBlock(eventMap.stateFlow.mapDistinct { it.layers }, modify(Width100)) { layers ->
-        box(modify(MapPanel.container)) {
+        container(modify(MapPanel.container)) {
 
             layers.forEach { layer ->
                 val eventType = layer.eventType ?: return@forEach
