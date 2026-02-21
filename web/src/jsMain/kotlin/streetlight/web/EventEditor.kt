@@ -160,6 +160,14 @@ class EventEditor(
         state.set { it.copy(isVisible = value) }
     }
 
+    fun readUrl() {
+        val url = eventNow.url?.takeIf { it.startsWith("http") } ?: return
+        scope.launch {
+            val parse = api.readEventFromUrl(url)
+            console.log(parse)
+        }
+    }
+
     private fun setEvent(provideEvent: (EventEdit) -> EventEdit) {
         state.set { it.copy(event = provideEvent(eventNow)) }
     }

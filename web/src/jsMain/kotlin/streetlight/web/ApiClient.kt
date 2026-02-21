@@ -10,9 +10,13 @@ import streetlight.model.data.*
 class ApiClient(private val client: FetchClient) {
     suspend fun createUser(request: SignUpRequest) = client.post(UserApi.Create, request)
     suspend fun readUserInfo() = client.get(UserApi.ReadInfo)
+
+    // events
     suspend fun readEvent(eventId: EventId) = client.get(Api.EventProfile, eventId)
-    suspend fun readLocation(locationId: LocationId) = client.get(Api.LocationFeed, locationId)
     suspend fun readEventFeed() = client.get(Api.Events)
+    suspend fun readEventFromUrl(url: String) = client.post(Api.Events.ReadUrl, url)
+
+    suspend fun readLocation(locationId: LocationId) = client.get(Api.LocationFeed, locationId)
     suspend fun queryMap(request: MapQuery) = client.get(Api.Events.QueryMap, request.toQuery())
     suspend fun create(event: EventEdit) = client.post(Api.Events.Create, event)
     suspend fun uploadFeatureImage(blobUrl: String) = client.uploadBlob(Api.Events.Upload.path, blobUrl)

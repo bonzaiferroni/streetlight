@@ -6,6 +6,8 @@ import kampfire.model.UserId
 import kampfire.utils.randomUuidString
 import kotlinx.serialization.Serializable
 import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalTime
 import streetlight.model.utils.tomorrowNoon
 import kotlin.jvm.JvmInline
 
@@ -75,3 +77,27 @@ enum class EventStatus(override val label: String): LabeledEnum<EventStatus> {
     OnBreak("On Break"),
     Finished("Finished"),
 }
+
+@Serializable
+data class EventParse(
+    val hasContent: Boolean? = null,
+    val events: List<EventParseItem>? = null
+)
+
+@Serializable
+data class EventParseItem(
+    val name: String? = null,
+    val time: String? = null,
+    val date: String? = null,
+    val location: String? = null,
+    val address: String? = null,
+    val imageUrl: String? = null,
+    val description: String? = null,
+)
+
+//    val title: String,
+//    val imageUrl: String? = null,
+//    val description: String,
+//    val latitude: Double? = null,
+//    val longitude: Double? = null,
+//    val postedAt: Instant,

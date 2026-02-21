@@ -62,7 +62,7 @@ fun RenderContext.eventEditorView(app: AppContext) {
                     )
                     row {
                         textField("Link", modify(Flex1), model::setUrl, model.urlFlow)
-                        button("read")
+                        button("read", onClick = model::readUrl)
                     }
                 }
             }

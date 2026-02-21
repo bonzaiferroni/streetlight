@@ -30,6 +30,7 @@ import streetlight.model.data.NewRequest
 import streetlight.model.data.RequestId
 import streetlight.model.data.AreaTransit
 import streetlight.model.data.EventInfo
+import streetlight.model.data.EventParse
 import streetlight.model.data.MapQuery
 import streetlight.model.data.TalentEdit
 import streetlight.model.data.StoryParse
@@ -48,6 +49,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object QueryMap: QueryEndpoint<MapQuery, List<EventInfo>>(this, "bounds")
         // object UserEvents: ApiDaoEndpoint<Event, EventId, NewEvent>(this, "user")
         object Upload: PostEndpoint<ByteArray, String>(this, "upload")
+        object ReadUrl: PostEndpoint<String, EventParse>(this, "read-url")
     }
 
     object StreetFeed: GetEndpoint<List<Community>>(this, "areas") {
