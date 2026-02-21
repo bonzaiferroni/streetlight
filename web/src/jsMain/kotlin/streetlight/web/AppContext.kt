@@ -11,7 +11,6 @@ interface AppContext {
     val gate: UserGate
     val gateAgent: GateAgent
     val geoMap: GeoMap
-    val eventProfile: EventProfile
     val streetMap: StreetMap
     val postEditor: PostEditor
     val chatRoom: ChatRoom

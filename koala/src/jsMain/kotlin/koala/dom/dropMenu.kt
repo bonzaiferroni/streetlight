@@ -1,16 +1,12 @@
 package koala.dom
 
 import koala.css.ModifierSet
-import koala.css.Width100
 import koala.css.applyModifiers
-import koala.html.applyBlockLabel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.html.SELECT
-import kotlinx.html.dom.append
-import kotlinx.html.js.div
 import kotlinx.html.js.option
 import kotlinx.html.js.select
 import org.w3c.dom.HTMLSelectElement
@@ -49,14 +45,14 @@ fun RenderContext.dropMenu(
     }
 }
 
-inline fun <reified T> RenderContext.dropMenu(
-    noinline onChangeValue: ((T) -> Unit)? = null,
-    flow: Flow<T>? = null,
+inline fun <reified E> RenderContext.dropMenu(
+    noinline onChangeValue: ((E) -> Unit)? = null,
+    flow: Flow<E>? = null,
     modifiers: ModifierSet? = null,
-    crossinline provideLabel: (T) -> String,
+    crossinline provideLabel: (E) -> String,
     noinline block: (SELECT.() -> Unit)? = null
-) where T : Enum<T> {
-    val enums = enumValues<T>()
+) where E : Enum<E> {
+    val enums = enumValues<E>()
     val values = enums.map { provideLabel(it) }
     val flow = flow?.map(provideLabel)
     val callback: ((String) -> Unit)? = onChangeValue?.let {
@@ -69,7 +65,16 @@ inline fun <reified T> RenderContext.dropMenu(
     dropMenu(values, flow, callback, modifiers, block)
 }
 
-// inline fun <reified Value>
+//inline fun <reified E, Data> WireContext<Data>.dropMenu(
+//    noinline write: (E) -> Data,
+//    crossinline provideLabel: (E) -> String,
+//) {
+//    dropMenu(
+//        onChangeValue = { value -> state.set { write(value) } },
+//        provideLabel = provideLabel,
+//        flow =
+//    )
+//}
 
 // inline fun <reified T> DropMenu(
 //    selected: T,

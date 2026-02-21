@@ -64,7 +64,7 @@ fun RenderContext.viewEventEditor(app: AppContext) {
                 binding = model.descriptionFlow
             )
         }
-        message(model.stateFlow.mapDistinct { it.message })
+        message(model.messageFlow)
         row {
             button("cancel", onClickEvent = {
                 app.portal.goBack()

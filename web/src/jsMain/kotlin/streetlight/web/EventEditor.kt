@@ -3,10 +3,10 @@ package streetlight.web
 import kampfire.model.GeoPoint
 import koala.dom.UIMessage
 import koala.dom.UIMessageType
-import koala.model.BrowserModel
 import koala.model.GeoMap
 import koala.model.PanPoint
 import koala.model.mapDistinct
+import koala.model.stateOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDateTime
@@ -26,10 +26,13 @@ import streetlight.model.data.EventId
 import streetlight.model.data.toUpdate
 
 class EventEditor(
-    scope: CoroutineScope,
+    private val scope: CoroutineScope,
     private val client: ClientContext,
     private val geoMap: GeoMap,
-): BrowserModel<EventCreatorState>(EventCreatorState(), scope) {
+) {
+    private val state = stateOf(EventEditorState())
+    private val stateFlow = state.flow
+    private val stateNow get() = state.now
 
     val urlFlow = stateFlow.mapDistinct { it.event.imageUrl }
     val userImagesFlow = stateFlow.mapDistinct { it.userImages }
@@ -41,6 +44,7 @@ class EventEditor(
     val dateFlow = datetimeFlow.mapDistinct { it.date }
     val descriptionFlow = stateFlow.mapDistinct { it.event.description ?: "" }
     val titleFlow = stateFlow.mapDistinct { it.event.title }
+    val messageFlow = stateFlow.mapDistinct { it.message }
 
     val eventNow get() = stateNow.event
     val locationNow get() = stateNow.location
@@ -54,7 +58,7 @@ class EventEditor(
             }
             launch {
                 val images = client.api.readUserFiles(UserFileRequest(FileUse.EventImage)) ?: emptyList()
-                setState { it.copy(userImages = images) }
+                state.set { it.copy(userImages = images) }
             }
         }
     }
@@ -62,7 +66,7 @@ class EventEditor(
     fun initEvent(eventId: EventId) {
         scope.launch {
             val event = api.readEvent(eventId) ?: return@launch
-            setState {
+            state.set {
                 it.copy(
                     event = event.toUpdate(),
                     eventId = eventId,
@@ -113,7 +117,7 @@ class EventEditor(
         }
         
         if (locationId == null) {
-            setState { it.copy(message = UIMessage(UIMessageType.Error, "Unable to create/resolve location")) }
+            state.set { it.copy(message = UIMessage(UIMessageType.Error, "Unable to create/resolve location")) }
             return null
         }
 
@@ -139,7 +143,7 @@ class EventEditor(
 
     fun setImageUrl(url: String?) {
         val images = if (url != null) stateNow.userImages + url else stateNow.userImages
-        setState { it.copy(event = eventNow.copy(imageUrl = url), userImages = images) }
+        state.set { it.copy(event = eventNow.copy(imageUrl = url), userImages = images) }
     }
 
     fun setVisibility(value: Boolean) {
@@ -148,19 +152,19 @@ class EventEditor(
         } else {
             geoMap.setEntityVisibility { true }
         }
-        setState { it.copy(isVisible = value) }
+        state.set { it.copy(isVisible = value) }
     }
 
     private fun setEvent(provideEvent: (EventUpdate) -> EventUpdate) {
-        setState { it.copy(event = provideEvent(eventNow)) }
+        state.set { it.copy(event = provideEvent(eventNow)) }
     }
 
     private fun setLocation(provideLocation: (NewLocation) -> NewLocation) {
-        setState { it.copy(location = provideLocation(locationNow)) }
+        state.set { it.copy(location = provideLocation(locationNow)) }
     }
 }
 
-data class EventCreatorState(
+data class EventEditorState(
     val message: UIMessage? = null,
     val userImages: List<String> = emptyList(),
     val event: EventUpdate = EventUpdate(),

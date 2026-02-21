@@ -1,7 +1,11 @@
 package koala.dom
 
+import koala.html.AppRoute
 import koala.model.ModelState
+import koala.model.Portal
 import koala.model.stateOf
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 
 class WireContext<T>(
     val state: ModelState<T>,
@@ -29,4 +33,21 @@ fun <T> RenderContext.wireTo(
 ) {
     val context = WireContext(state, this)
     context.block()
+}
+
+inline fun <reified Route: AppRoute, Data> RenderContext.wireRouteTo(
+    portal: Portal,
+    initialState: Data,
+    crossinline provideData: suspend (Route) -> Data?,
+    crossinline block: WireContext<Data>.() -> Unit
+) {
+    val context = wireContextOf(initialState)
+
+    context.block()
+
+    renderScope.launch {
+        portal.routeFlowOf<Route>().map(provideData).collect {
+            context.state.set { it }
+        }
+    }
 }

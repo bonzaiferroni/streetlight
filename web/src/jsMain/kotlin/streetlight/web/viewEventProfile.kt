@@ -9,28 +9,28 @@ import streetlight.web.shells.eventProfileShell
 fun RenderContext.viewEventRoute(
     app: AppContext,
 ) {
-    val model = app.eventProfile
+    // val model = app.eventProfile
+    val api = app.client.api
+    val portal = app.portal
 
-    flowBlock(model.eventFlow) {
-        shellBox(EventProfileShell.id, modify(Width100)) {
-            eventProfileShell(it)
+    suspend fun provideData(route: EventRoute) = when (route) {
+        is EventIdRoute -> {
+            api.readEvent(route.id)
+        }
+        is EventObjectRoute -> {
+            route.event
         }
     }
-    button("go home", onClickEvent = {
-        app.portal.go(HomeRoute())
-    })
 
-    renderScope.launch {
-        app.portal.routeFlowOf<EventRoute>().collect { route ->
-            when (route) {
-                is EventIdRoute -> {
-                    model.fetchEvent(route.id)
-                }
-
-                is EventObjectRoute -> {
-                    model.setEvent(route.event)
-                }
+    column {
+        routeBlock(portal, ::provideData) {
+            shellBox(EventProfileShell.id, modify(Width100)) {
+                eventProfileShell(it)
             }
         }
+
+        button("go home", onClickEvent = {
+            app.portal.go(HomeRoute())
+        })
     }
 }

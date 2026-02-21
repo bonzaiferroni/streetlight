@@ -34,7 +34,6 @@ fun viewApp() {
 
         override val geoMap = GeoMap(scope)
         override val streetMap = StreetMap(scope, client, geoMap)
-        override val eventProfile = EventProfile(scope, client)
         override val postEditor = PostEditor(scope, client, geoMap)
         override val chatRoom = ChatRoom(scope, client.api)
     }
