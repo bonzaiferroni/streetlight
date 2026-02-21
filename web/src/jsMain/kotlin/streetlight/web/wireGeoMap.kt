@@ -11,7 +11,6 @@ import org.w3c.dom.HTMLElement
 import koala.html.GeoMapSelector
 import koala.model.GeoMap
 import koala.model.MapContext
-import koala.model.collectEntities
 import koala.model.showLines
 import koala.model.toGeoBounds
 import koala.model.toLngLat
@@ -68,7 +67,7 @@ fun initMapWindow(
 
         launch {
             console.log("collecting entities")
-            geoMap.entityFlow.collect(context::collectEntities)
+            geoMap.entityFlow.collect(context::addEntities)
         }
 
         launch {
@@ -112,10 +111,7 @@ fun initMapWindow(
 
         launch {
             geoMap.markerVisibilityFlow.collect { provideVisibility ->
-                context.markers.forEach { (_, obj) ->
-                    val isVisible = provideVisibility(obj.entity)
-                    obj.setOpacity(if (isVisible) 1f else 0f)
-                }
+                context.setVisibility(provideVisibility)
             }
         }
 

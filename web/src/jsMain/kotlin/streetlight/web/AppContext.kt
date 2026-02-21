@@ -12,7 +12,6 @@ interface AppContext {
     val gateAgent: GateAgent
     val geoMap: GeoMap
     val streetMap: StreetMap
-    val postEditor: PostEditor
     val chatRoom: ChatRoom
     val userCache: UserCache
 }

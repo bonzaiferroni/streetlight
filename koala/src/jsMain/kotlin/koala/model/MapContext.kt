@@ -8,20 +8,35 @@ class MapContext(
     val markers = mutableMapOf<MapEntityId, MapObject>()
     val lineLayers = mutableMapOf<LayerId, MutableList<MapLine>>()
     val layers = mutableSetOf<LayerId>()
-}
+    private var visibility: ((MapEntity) -> Boolean)? = null
 
-typealias LayerId = String
+    fun setVisibility(visibility: ((MapEntity) -> Boolean)?) {
+        this.visibility = visibility ?: { true }
+        markers.forEach { (_, obj) ->
+            applyVisibility(obj)
+        }
+    }
 
-fun MapContext.collectEntities(entities: List<MapEntity>) {
-    entities.forEach { entity ->
-        when (entity) {
-            is PointEntity -> {
-                val markerElement = recallObject(entity) ?: createObject(entity)
-                markerElement.setAttributes(entity)
-            }
-            is LineEntity -> {
-                showLines(listOf(entity))
+    fun applyVisibility(obj: MapObject) {
+        val visibility = visibility ?: return
+        val isVisible = visibility(obj.entity)
+        obj.setOpacity(if (isVisible) 1f else 0f)
+    }
+
+    fun addEntities(entities: List<MapEntity>) {
+        entities.forEach { entity ->
+            when (entity) {
+                is PointEntity -> {
+                    val obj = recallObject(entity) ?: createObject(entity)
+                    obj.setAttributes(entity)
+                    applyVisibility(obj)
+                }
+                is LineEntity -> {
+                    showLines(listOf(entity))
+                }
             }
         }
     }
 }
+
+typealias LayerId = String

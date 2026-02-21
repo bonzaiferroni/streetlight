@@ -7,6 +7,10 @@
     align-items: start;
 }
 
+.column > img {
+    width: 100%;
+}
+
 .row {
     display: flex;
     flex-direction: row;
@@ -14,6 +18,14 @@
 
     gap: var(--unit-spacing);
     align-items: center;
+}
+
+.row > .row {
+    width: auto;
+}
+
+.row > .column {
+    width: auto;
 }
 
 .card {

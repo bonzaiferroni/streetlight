@@ -13,12 +13,22 @@ import kotlinx.coroutines.launch
 import kotlinx.html.DIALOG
 import kotlinx.html.js.dialog
 import org.w3c.dom.HTMLDialogElement
+import org.w3c.dom.events.MouseEvent
 
 fun RenderContext.dialogBox(
     title: String?,
     stateFlow: Flow<Boolean>? = null,
     block: RenderContext.(() -> Unit) -> Unit
 ): HTMLDialogElement {
+
+    fun close(dialog: HTMLDialogElement) {
+        renderScope.launch {
+            dialog.unmodify(Reveal)
+            delay(200)
+            dialog.close()
+        }
+    }
+
     var dialog: HTMLDialogElement? = null
     dialog = dialog {
         applyModifiers(Css("dialog-box"))
@@ -28,19 +38,30 @@ fun RenderContext.dialogBox(
             }
             fun closeImage() {
                 val dialog = dialog ?: return
-                renderScope.launch {
-                    dialog.unmodify(Reveal)
-                    delay(200)
-                    dialog.close()
-                }
+                close(dialog)
             }
             block(::closeImage)
         }
     }
 
+    dialog.onClickEvent { event ->
+        val mouse = event as MouseEvent
+        val rect = dialog.getBoundingClientRect()
+
+        val inside =
+            mouse.clientY >= rect.top &&
+                    mouse.clientY <= rect.top + rect.height &&
+                    mouse.clientX >= rect.left &&
+                    mouse.clientX <= rect.left + rect.width
+
+        if (!inside) {
+            close(dialog)
+        }
+    }
+
     renderScope.launch {
         stateFlow?.collect {
-            if (it) dialog.showModal() else dialog.close()
+            if (it) dialog.showModal() else close(dialog)
         }
     }
 

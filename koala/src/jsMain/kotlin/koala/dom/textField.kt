@@ -21,10 +21,10 @@ import org.w3c.dom.events.KeyboardEvent
 fun RenderContext.textField(
     label: String? = null,
     modifiers: ModifierSet? = null,
+    onChangeValue: ((String) -> Unit)? = null,
+    values: Flow<String?>? = null,
     textModifiers: ModifierSet? = null,
     id: Id? = null,
-    onChangeValue: ((String) -> Unit)? = null,
-    binding: Flow<String>? = null,
     placeholder: String? = label,
     size: Int = 25,
     onEnter: (() -> Unit)? = null,
@@ -32,7 +32,7 @@ fun RenderContext.textField(
 ): HTMLInputElement {
     val parent = div {
         applyModifiers(modifiers)
-        applyBlockLabel(label)
+        applyBlockLabel(label?.lowercase())
     }
 
     var currentValue = ""
@@ -70,9 +70,10 @@ fun RenderContext.textField(
         })
     }
 
-    binding?.let {
+    values?.let {
         renderScope.launch {
-            binding.collect { value ->
+            values.collect { value ->
+                val value = value ?: ""
                 if (value != currentValue) {
                     currentValue = value
                     element.value = value
@@ -90,7 +91,7 @@ fun <T> WireContext<T>.textField(
     write: (TextUpdate<T>) -> T,
 ) = textField(
     label = label,
-    binding = state.flow.mapDistinct { read(it) ?: "" },
+    values = state.flow.mapDistinct { read(it) ?: "" },
     onChangeValue = { text -> state.set { write(TextUpdate(it, text)) } },
 )
 

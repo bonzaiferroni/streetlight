@@ -17,7 +17,7 @@ import kotlinx.datetime.toLocalDateTime
 import streetlight.model.data.EventType
 import streetlight.model.data.FileUse
 import streetlight.model.data.Location
-import streetlight.model.data.EventUpdate
+import streetlight.model.data.EventEdit
 import streetlight.model.data.NewLocation
 import streetlight.model.data.UserFileRequest
 import kotlinx.datetime.Instant
@@ -34,7 +34,7 @@ class EventEditor(
     private val stateFlow = state.flow
     private val stateNow get() = state.now
 
-    val urlFlow = stateFlow.mapDistinct { it.event.imageUrl }
+    val imageUrlFlow = stateFlow.mapDistinct { it.event.imageUrl }
     val userImagesFlow = stateFlow.mapDistinct { it.userImages }
     val locationFlow = stateFlow.mapDistinct { it.location.name }
     val pointFlow = stateFlow.mapDistinct { it.location.geoPoint }
@@ -45,6 +45,7 @@ class EventEditor(
     val descriptionFlow = stateFlow.mapDistinct { it.event.description ?: "" }
     val titleFlow = stateFlow.mapDistinct { it.event.title }
     val messageFlow = stateFlow.mapDistinct { it.message }
+    val urlFlow = stateFlow.mapDistinct { it.event.url }
 
     val eventNow get() = stateNow.event
     val locationNow get() = stateNow.location
@@ -107,6 +108,10 @@ class EventEditor(
         setEvent { it.copy(description = value) }
     }
 
+    fun setUrl(value: String) {
+        setEvent { it.copy(url = value) }
+    }
+
     suspend fun saveEvent(): EventId? {
         val location = stateNow.location
         if (!location.isValid) return null
@@ -155,7 +160,7 @@ class EventEditor(
         state.set { it.copy(isVisible = value) }
     }
 
-    private fun setEvent(provideEvent: (EventUpdate) -> EventUpdate) {
+    private fun setEvent(provideEvent: (EventEdit) -> EventEdit) {
         state.set { it.copy(event = provideEvent(eventNow)) }
     }
 
@@ -167,7 +172,7 @@ class EventEditor(
 data class EventEditorState(
     val message: UIMessage? = null,
     val userImages: List<String> = emptyList(),
-    val event: EventUpdate = EventUpdate(),
+    val event: EventEdit = EventEdit(),
     val eventId: EventId? = null,
     val location: NewLocation = NewLocation(),
     val locations: List<Location> = emptyList(),

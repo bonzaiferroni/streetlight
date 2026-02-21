@@ -39,13 +39,13 @@ fun RenderContext.viewMusicianHub(
                             textField(
                                 label = "title",
                                 placeholder = "Song title",
-                                binding = model.titleFlow,
+                                values = model.titleFlow,
                                 onChangeValue = model::setSongTitle
                             )
                             textField(
                                 label = "artist",
                                 placeholder = "Artist",
-                                binding = model.artistFlow,
+                                values = model.artistFlow,
                                 onChangeValue = model::setArtist
                             )
                         }

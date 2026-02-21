@@ -38,24 +38,28 @@ value class EventId(override val value: String): ProjectId {
 }
 
 @Serializable
-data class EventUpdate(
+data class EventEdit(
+    val eventId: EventId? = null,
     val title: String = "",
     val startsAt: Instant = tomorrowNoon(),
     val eventType: EventType = EventType.Show,
     val locationId: LocationId? = null,
     val imageUrl: String? = null,
     val description: String? = null,
+    val url: String? = null,
 ) {
     val isValid get() = title.isNotBlank() && locationId != null
 }
 
-fun Event.toUpdate() = EventUpdate(
+fun Event.toUpdate() = EventEdit(
+    eventId = eventId,
     title = title,
     startsAt = startsAt,
     eventType = eventType,
     locationId = locationId,
     imageUrl = imageUrl,
-    description = description
+    description = description,
+    url = url,
 )
 
 enum class EventType(val label: String) {

@@ -1,14 +1,10 @@
 package streetlight.web
 
-import koala.css.AlignItemsCenter
 import koala.css.AlignItemsStretch
 import koala.css.CenterItems
-import koala.css.Flex1
 import koala.css.FlexItems1
 import koala.css.MaxWidth50
-import koala.css.QueryRow
 import koala.css.QueryRowReverse
-import koala.css.RowReverse
 import koala.css.modify
 import koala.dom.*
 
@@ -22,13 +18,13 @@ fun RenderContext.createAccountContent(app: AppContext) {
             textField(
                 label = "username",
                 placeholder = "username",
-                binding = creator.usernameFlow,
+                values = creator.usernameFlow,
                 onChangeValue = creator::setUsername
             )
             textField(
                 label = "email",
                 placeholder = "email (optional)",
-                binding = creator.emailFlow,
+                values = creator.emailFlow,
                 onChangeValue = creator::setEmail
             )
             textBlock("Your email address is optional. It can be used to reset your password. " +
@@ -36,13 +32,13 @@ fun RenderContext.createAccountContent(app: AppContext) {
             textField(
                 label = "password",
                 placeholder = "password",
-                binding = creator.passwordFlow,
+                values = creator.passwordFlow,
                 onChangeValue = creator::setPassword
             )
             textField(
                 label = "confirm password",
                 placeholder = "confirm password",
-                binding = creator.confirmPasswordFlow,
+                values = creator.confirmPasswordFlow,
                 onChangeValue = creator::setConfirmPassword
             )
             textBlock(

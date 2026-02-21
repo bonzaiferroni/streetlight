@@ -7,14 +7,14 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 fun RenderContext.viewPostEditor(app: AppContext) {
-    val model = app.postEditor
+    val model = PostEditor(renderScope, app.client, app.geoMap)
 
     val element = column(modify(FlexItems1)) {
         row {
             textField(
                 label = "url",
                 onChangeValue = model::setUrl,
-                binding = model.infoUrlFlow,
+                values = model.infoUrlFlow,
                 modifiers = modify(Flex1),
                 placeholder = "Info link"
             )
@@ -29,7 +29,7 @@ fun RenderContext.viewPostEditor(app: AppContext) {
                 textField(
                     label = "headline",
                     onChangeValue = model::setHeadline,
-                    binding = model.headlineFlow,
+                    values = model.headlineFlow,
                     placeholder = "Story Headline"
                 )
                 textEditor(

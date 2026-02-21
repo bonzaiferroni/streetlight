@@ -10,7 +10,7 @@ import streetlight.app.RuntimeProvider
 import streetlight.model.data.Event
 import streetlight.model.data.EventType
 import streetlight.model.data.Location
-import streetlight.model.data.EventUpdate
+import streetlight.model.data.EventEdit
 import kotlin.time.Duration.Companion.days
 
 class EventFeedModel(private val app: AppProvider = RuntimeProvider): StateModel<EventFeedState>() {
@@ -37,7 +37,7 @@ class EventFeedModel(private val app: AppProvider = RuntimeProvider): StateModel
             val startsAt = Clock.System.now() + 1.days
             val dayOfWeek = startsAt.toLocalDateTimeUtc().dayOfWeek.toLongFormat()
             val event = client.createEvent(
-                EventUpdate(
+                EventEdit(
                     locationId = location.locationId,
                     title = "$dayOfWeek @ ${location.name}",
                     eventType = stateNow.eventType,

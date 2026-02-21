@@ -34,7 +34,6 @@ fun viewApp() {
 
         override val geoMap = GeoMap(scope)
         override val streetMap = StreetMap(scope, client, geoMap)
-        override val postEditor = PostEditor(scope, client, geoMap)
         override val chatRoom = ChatRoom(scope, client.api)
     }
 
@@ -53,7 +52,7 @@ fun viewApp() {
                 StreetlightScreen.Home -> viewHome(app)
                 StreetlightScreen.Event -> viewEventRoute(app)
                 StreetlightScreen.Account -> viewAccount(app)
-                StreetlightScreen.EditEvent -> viewEventEditor(app)
+                StreetlightScreen.EditEvent -> eventEditorView(app)
                 StreetlightScreen.Sandbox -> viewSandbox(app)
                 StreetlightScreen.FullMap -> viewFullMap(app)
                 StreetlightScreen.EditStory -> viewPostEditor(app)

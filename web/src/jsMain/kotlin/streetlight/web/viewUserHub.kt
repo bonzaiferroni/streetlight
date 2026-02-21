@@ -30,8 +30,8 @@ fun RenderContext.viewUserHub(
 
         card {
             row {
-                textBlock("Host an event or post an event.")
-                button("add event", modify(Accent), onClick = { portal.go()})
+                textBlock("Host an event or post an event.", modify(Flex1))
+                button("add event", modify(Accent), onClick = { portal.go(EditEventRoute())})
             }
         }
 
