@@ -3,7 +3,6 @@ package streetlight.web
 import koala.css.*
 import koala.dom.*
 import koala.model.mapDistinct
-import koala.model.stateOf
 import kotlinx.coroutines.launch
 import streetlight.model.data.TalentEdit
 import streetlight.model.data.toEdit

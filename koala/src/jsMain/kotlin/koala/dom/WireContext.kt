@@ -1,21 +1,21 @@
 package koala.dom
 
 import koala.html.AppRoute
-import koala.model.ModelState
+import koala.model.Store
 import koala.model.Portal
-import koala.model.stateOf
+import koala.model.storeOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 class WireContext<T>(
-    val state: ModelState<T>,
+    val state: Store<T>,
     context: RenderContext
 ): RenderContext by context
 
 fun <T> RenderContext.wireContextOf(
     initialState: T
 ): WireContext<T> {
-    val state = stateOf(initialState)
+    val state = storeOf(initialState)
     return WireContext(state, this)
 }
 
@@ -28,7 +28,7 @@ fun <T> RenderContext.wireState(
 }
 
 fun <T> RenderContext.wireTo(
-    state: ModelState<T>,
+    state: Store<T>,
     block: WireContext<T>.() -> Unit
 ) {
     val context = WireContext(state, this)

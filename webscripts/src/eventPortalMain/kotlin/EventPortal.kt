@@ -1,6 +1,5 @@
-import koala.model.stateOf
+import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
-import streetlight.model.Api
 import streetlight.model.data.EventId
 import streetlight.model.data.NewRequest
 import streetlight.model.data.SongId
@@ -11,7 +10,7 @@ class EventPortal(
     private val eventId: EventId,
     private val api: ApiClient,
 ) {
-    private val view = stateOf(EventPortalState())
+    private val view = storeOf(EventPortalState())
 
     fun setSongId(songId: SongId, ) {
         view.set { it.copy(songId = songId) }

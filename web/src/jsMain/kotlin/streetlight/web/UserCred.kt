@@ -5,12 +5,12 @@ import kampfire.model.LoginRequest
 import kampfire.model.SignUpRequest
 import kampfire.utils.obfuscate
 import koala.model.mapDistinct
-import koala.model.stateOf
+import koala.model.storeOf
 import kotlinx.browser.localStorage
 import org.w3c.dom.get
 
 class UserCred {
-    private val state = stateOf(UserCredState(
+    private val state = storeOf(UserCredState(
         usernameText = localStorage[USERNAME_KEY] ?: "",
         stayLoggedIn = localStorage[STAY_LOGGED_KEY]?.toBooleanStrictOrNull() ?: false,
         refreshToken = localStorage[REFRESH_TOKEN_KEY]

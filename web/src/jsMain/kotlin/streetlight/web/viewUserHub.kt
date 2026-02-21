@@ -21,9 +21,18 @@ fun RenderContext.viewUserHub(
             button("sign out", onClick = gate::signOut)
         }
 
-        row {
-            textBlock("Share and grow your talents.", modify(Flex1))
-            button("add talent", modify(Accent), onClick = { portal.go(EditTalentRoute()) })
+        card {
+            row {
+                textBlock("Share and grow your talents.", modify(Flex1))
+                button("add talent", modify(Accent), onClick = { portal.go(EditTalentRoute()) })
+            }
+        }
+
+        card {
+            row {
+                textBlock("Host an event or post an event.")
+                button("add event", modify(Accent), onClick = { portal.go()})
+            }
         }
 
         itemsBlock(userCache.talents.flow) { talent ->

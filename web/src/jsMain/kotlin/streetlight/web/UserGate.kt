@@ -1,16 +1,10 @@
 package streetlight.web
 
-import kampfire.api.UserApi
-import kampfire.model.LoginRequest
 import kampfire.model.UserInfo
-import kampfire.utils.obfuscate
-import koala.model.Portal
 import koala.model.mapDistinct
-import koala.model.stateOf
-import kotlinx.browser.localStorage
+import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import org.w3c.dom.get
 
 class UserGate(
     private val scope: CoroutineScope,
@@ -18,7 +12,7 @@ class UserGate(
     private val api: ApiClient,
     private val userCache: UserCache,
 ) {
-    private val state = stateOf(UserGateState())
+    private val state = storeOf(UserGateState())
     val stateNow = state.now
 
     val userFlow = state.flow.mapDistinct { it.user }

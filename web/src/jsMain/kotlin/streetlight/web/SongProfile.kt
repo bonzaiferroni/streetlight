@@ -1,11 +1,9 @@
 package streetlight.web
 
 import koala.model.mapDistinct
-import koala.model.stateOf
+import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import streetlight.model.data.NewSong
 import streetlight.model.data.Song
 import streetlight.model.data.SongId
 
@@ -14,7 +12,7 @@ class SongProfile(
     private val scope: CoroutineScope,
     private val api: ApiClient,
 ) {
-    private val song = stateOf<Song?>(null)
+    private val song = storeOf<Song?>(null)
 
     val titleFlow = song.flow.mapDistinct { it?.title ?: "" }
     val artistFlow = song.flow.mapDistinct { it?.artist ?: "" }

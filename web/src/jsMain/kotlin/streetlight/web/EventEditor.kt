@@ -6,7 +6,7 @@ import koala.dom.UIMessageType
 import koala.model.GeoMap
 import koala.model.PanPoint
 import koala.model.mapDistinct
-import koala.model.stateOf
+import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDateTime
@@ -30,7 +30,7 @@ class EventEditor(
     private val client: ClientContext,
     private val geoMap: GeoMap,
 ) {
-    private val state = stateOf(EventEditorState())
+    private val state = storeOf(EventEditorState())
     private val stateFlow = state.flow
     private val stateNow get() = state.now
 

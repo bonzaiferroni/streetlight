@@ -1,17 +1,16 @@
 package streetlight.web
 
 import koala.model.mapDistinct
-import koala.model.stateOf
+import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import streetlight.model.data.NewSong
 import streetlight.model.data.Talent
 
 class UserHub(
     private val scope: CoroutineScope,
     private val api: ApiClient
 ) {
-    private val view = stateOf(UserHubState())
+    private val view = storeOf(UserHubState())
 
     val talentsFlow = view.flow.mapDistinct { it.talents }
 

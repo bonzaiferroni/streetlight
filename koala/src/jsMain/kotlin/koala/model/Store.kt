@@ -3,7 +3,7 @@ package koala.model
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-class ModelState<T>(
+class Store<T>(
     initialValue: T,
 ) {
     private val state = MutableStateFlow(initialValue)
@@ -16,4 +16,4 @@ class ModelState<T>(
     }
 }
 
-fun <T> stateOf(initialValue: T) = ModelState(initialValue)
+fun <T> storeOf(initialValue: T) = Store(initialValue)

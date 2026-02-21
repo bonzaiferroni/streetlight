@@ -2,7 +2,7 @@ package streetlight.web
 
 import kampfire.model.SignUpRequest
 import koala.model.mapDistinct
-import koala.model.stateOf
+import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import streetlight.model.utils.isValid
@@ -12,7 +12,7 @@ class UserCreator(
     private val gate: UserGate,
     private val api: ApiClient,
 ) {
-    private val state = stateOf(UserCreatorState())
+    private val state = storeOf(UserCreatorState())
     private val requestNow get() = state.now.request
 
     val usernameFlow = state.flow.mapDistinct { it.request.username }
