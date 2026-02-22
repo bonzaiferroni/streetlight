@@ -55,6 +55,7 @@ data class EventEdit(
     val title: String = "",
     val eventType: EventType = EventType.Show,
     val locationId: LocationId? = null,
+    val newLocation: NewLocation? = null,
     val imageUrl: String? = null,
     val description: String? = null,
     val url: String? = null,
@@ -67,7 +68,7 @@ data class EventEdit(
     val startsAt: Instant = tomorrowNoon(),
     val date: LocalDate = startsAt.toLocalDateTime(TimeZone.currentSystemDefault()).date,
 ) {
-    val isValid get() = title.isNotBlank() && locationId != null
+    val isValid get() = title.isNotBlank() && (newLocation != null && newLocation.isValid || locationId != null)
 }
 
 fun Event.toUpdate() = EventEdit(

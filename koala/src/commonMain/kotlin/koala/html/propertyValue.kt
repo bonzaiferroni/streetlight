@@ -7,8 +7,13 @@ fun FlowContent.propertyValue(
     propertyName: String,
     propertyValue: String,
 ) {
-    propertyValue(propertyName) {
-        textBlock(propertyValue)
+    p {
+        span(modify(Dim)) {
+            +"$propertyName:"
+        }
+        span(modify(MarginLeft1)) {
+            +propertyValue
+        }
     }
 }
 

@@ -76,3 +76,23 @@ fun FlowContent.heading5(
         +content
     }
 }
+
+fun FlowContent.p(
+    modifiers: ModifierSet,
+    block: P.() -> Unit,
+) {
+    p {
+        applyModifiers(modifiers)
+        block()
+    }
+}
+
+fun FlowContent.span(
+    modifiers: ModifierSet,
+    block: SPAN.() -> Unit,
+) {
+    span {
+        applyModifiers(modifiers)
+        block()
+    }
+}

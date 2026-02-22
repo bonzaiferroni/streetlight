@@ -35,14 +35,15 @@ class EventEditor(
 ) {
     private val state = storeOf(EventEditorState())
     private val stateFlow = state.flow
+    private val eventFlow = state.flow.mapDistinct { it.event }
     private val stateNow get() = state.now
     val message = storeOf(UIMessage())
 
     val imageUrlFlow = stateFlow.mapDistinct { it.event.imageUrl }
     val userImagesFlow = stateFlow.mapDistinct { it.userImages }
-    val locationFlow = stateFlow.mapDistinct { it.location.name }
-    val pointFlow = stateFlow.mapDistinct { it.location.geoPoint }
-    val addressFlow = stateFlow.mapDistinct { it.location.address ?: "" }
+    val locationFlow = eventFlow.mapDistinct { it.newLocation?.name }
+    val pointFlow = eventFlow.mapDistinct { it.newLocation?.geoPoint }
+    val addressFlow = eventFlow.mapDistinct { it.newLocation?.address ?: "" }
     val datetimeFlow = stateFlow.mapDistinct { it.event.startsAt.toLocalDateTime(timeZone) }
     val timeFlow = datetimeFlow.mapDistinct { it.time }
     val dateFlow = datetimeFlow.mapDistinct { it.date }
@@ -51,7 +52,7 @@ class EventEditor(
     val urlFlow = stateFlow.mapDistinct { it.event.url }
 
     val eventNow get() = stateNow.event
-    val locationNow get() = stateNow.location
+    val locationNow get() = eventNow.newLocation
 
     private val api get() = client.api
 
@@ -84,7 +85,7 @@ class EventEditor(
     }
 
     fun setLocationName(name: String) {
-        setLocation { it.copy(name = name) }
+        setNewLocation { it.copy(name = name) }
     }
 
     fun setEventType(value: EventType) {
@@ -92,11 +93,11 @@ class EventEditor(
     }
 
     fun setGeoPoint(value: GeoPoint) {
-        setLocation { it.copy(geoPoint = value)}
+        setNewLocation { it.copy(geoPoint = value)}
     }
 
     fun setAddress(value: String) {
-        setLocation { it.copy(address = value) }
+        setNewLocation { it.copy(address = value) }
     }
 
     fun setTime(value: LocalTime) {
@@ -129,41 +130,30 @@ class EventEditor(
             scope.launch {
                 val query = OSMQuery(amenity = location, state = "CO")
                 val place = client.location.readPlace(query)?.firstOrNull() ?: return@launch
-                setLocation(place)
+                setPlace(place)
             }
         }
     }
 
     suspend fun saveEvent(): EventId? {
-        val location = stateNow.location
-        if (!location.isValid) return null
-        
-        val locationId = stateNow.event.locationId ?: run {
-            console.log("creating location")
-            api.createLocation(location)
-        }
-        
-        if (locationId == null) {
-            message.set("Unable to create/resolve location", UIMessageType.Error)
-            return null
-        }
+        val event = eventNow
+        if (!event.isValid) return null
 
-        val eventUpdate = eventNow.copy(locationId = locationId)
-        val event = api.create(eventUpdate)
+        val createdEvent = api.create(event)
         
-        console.log(prettyPrint(event))
-        return event?.eventId
+        console.log(prettyPrint(createdEvent))
+        return createdEvent?.eventId
     }
 
     fun queryLocation() {
-        val center = stateNow.location.geoPoint
+        val center = eventNow.newLocation?.geoPoint ?: return
         scope.launch {
             val place = client.location.readPlace(center)
             if (place == null) {
                 message.set("Unable to read place", UIMessageType.Error)
                 return@launch
             }
-            setLocation(place)
+            setPlace(place)
         }
     }
 
@@ -185,15 +175,17 @@ class EventEditor(
         state.set { it.copy(event = provideEvent(eventNow)) }
     }
 
-    private fun setLocation(provideLocation: (NewLocation) -> NewLocation) {
-        state.set { it.copy(location = provideLocation(locationNow)) }
+    private fun setNewLocation(provideLocation: (NewLocation) -> NewLocation) {
+        setEvent { it.copy(newLocation = provideLocation(locationNow ?: NewLocation())) }
     }
 
-    private fun setLocation(place: OSMPlace) {
-        geoMap.panMap(PanPoint(point = place.toGeoPoint(), zoom = 18f))
+    private fun setPlace(place: OSMPlace) {
+        val point = place.toGeoPoint()
         val address = place.address.toBasicString() ?: ""
         val name = place.name.takeIf { it.isNotBlank() } ?: address
-        setLocation { it.copy(name = name, address = address) }
+        geoMap.panMap(PanPoint(point = point, zoom = 18f))
+
+        setNewLocation { it.copy(name = name, address = address, geoPoint = point) }
     }
 }
 
@@ -201,8 +193,8 @@ data class EventEditorState(
     val userImages: List<String> = emptyList(),
     val event: EventEdit = EventEdit(),
     val eventId: EventId? = null,
-    val location: NewLocation = NewLocation(),
-    val locations: List<Location> = emptyList(),
+    val location: Location? = null,
+    val possibleLocations: List<Location> = emptyList(),
     val isVisible: Boolean = false,
 )
 

@@ -31,7 +31,7 @@ value class LocationId(override val value: String): ProjectId {
 data class NewLocation(
     val name: String = "",
     val address: String? = null,
-    val geoPoint: GeoPoint = GeoPoint.Denver
+    val geoPoint: GeoPoint = GeoPoint.Denver,
 ) {
     val isValid get() = name.isNotBlank() && geoPoint != GeoPoint.Denver // sry Denver
 

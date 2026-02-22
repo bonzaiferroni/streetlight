@@ -162,11 +162,13 @@ fun RenderContext.locationEditor(app: AppContext, model: EventEditor) {
                 values = model.addressFlow,
             )
             flowBlock(model.pointFlow, animate = true, modifiers = modify(MagicBlur)) { point ->
-                this.textBlock {
-                    textSpan("latitude: ", modify(Dim))
-                    textSpan(point.lat.toString())
-                    textSpan(" longitude: ", modify(Dim))
-                    textSpan(point.lng.toString())
+                if (point != null) {
+                    this.textBlock {
+                        textSpan("latitude: ", modify(Dim))
+                        textSpan(point.lat.toString())
+                        textSpan(" longitude: ", modify(Dim))
+                        textSpan(point.lng.toString())
+                    }
                 }
             }
         }
