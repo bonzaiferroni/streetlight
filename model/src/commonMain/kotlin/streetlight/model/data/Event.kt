@@ -8,6 +8,9 @@ import kotlinx.serialization.Serializable
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atTime
+import kotlinx.datetime.toInstant
 import streetlight.model.utils.tomorrowNoon
 import kotlin.jvm.JvmInline
 
@@ -87,13 +90,15 @@ data class EventParse(
 @Serializable
 data class EventParseItem(
     val name: String? = null,
-    val time: String? = null,
-    val date: String? = null,
+    val time: LocalTime? = null,
+    val date: LocalDate? = null,
     val location: String? = null,
     val address: String? = null,
     val imageUrl: String? = null,
     val description: String? = null,
-)
+) {
+    val startsAt: Instant? get() = if (time != null && date != null) toInstant(date, time) else null
+}
 
 //    val title: String,
 //    val imageUrl: String? = null,
@@ -101,3 +106,13 @@ data class EventParseItem(
 //    val latitude: Double? = null,
 //    val longitude: Double? = null,
 //    val postedAt: Instant,
+
+private fun toInstant(
+    date: LocalDate,
+    time: LocalTime,
+    timeZone: TimeZone = TimeZone.currentSystemDefault()
+): Instant {
+    return date
+        .atTime(time)
+        .toInstant(timeZone)
+}

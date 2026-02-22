@@ -91,13 +91,14 @@ textarea {
     position: relative;
 }
 
-.set-image > * {
-    width: 100%;
+.set-image > img {
+    margin: auto;
 }
 
 .set-image-placeholder {
     background-color: var(--card-bg);
     height: 100%;
+    width: 100%;
     position: absolute;
 }
 
@@ -128,6 +129,7 @@ textarea {
     border: none;
     outline: none;
     max-width: var(--body-width);
+    overflow-x: hidden;
 
     opacity: 0;
     transform: translateY(10px);

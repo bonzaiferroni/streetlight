@@ -18,7 +18,7 @@ fun HTML.homePage(events: List<Event>) {
 
 fun FlowContent.appFooter() {
     val giants = "May we choose a world of good and faithful giants. "
-    row(modify(AlignItemsCenter)) {
+    row(modify(JustifyCenter)) {
         style = "height: 20rem;"
         column(modify(AlignItemsCenter, Gap0, Width100)) {
             lottie("spinning_circles") {

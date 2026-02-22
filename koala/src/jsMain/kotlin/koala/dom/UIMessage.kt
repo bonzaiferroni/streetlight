@@ -1,8 +1,10 @@
 package koala.dom
 
+import koala.model.Store
+
 data class UIMessage(
-    val type: UIMessageType,
-    val message: String,
+    val text: String? = null,
+    val type: UIMessageType = UIMessageType.Info,
 )
 
 enum class UIMessageType {
@@ -10,3 +12,7 @@ enum class UIMessageType {
     Warning,
     Error
 }
+
+fun Store<UIMessage>.set(text: String, type: UIMessageType = UIMessageType.Info) = set { UIMessage(text, type) }
+
+fun Store<UIMessage>.clear() = set { UIMessage() }

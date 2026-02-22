@@ -2,6 +2,7 @@ package koala.dom
 
 import koala.css.AlignItemsStretch
 import koala.css.Css
+import koala.css.ModifierSet
 import koala.css.Reveal
 import koala.css.TextAlignCenter
 import koala.css.applyModifiers
@@ -18,6 +19,7 @@ import org.w3c.dom.events.MouseEvent
 fun RenderContext.dialogBox(
     title: String?,
     stateFlow: Flow<Boolean>? = null,
+    modifiers: ModifierSet? = null,
     block: RenderContext.(() -> Unit) -> Unit
 ): HTMLDialogElement {
 
@@ -31,7 +33,7 @@ fun RenderContext.dialogBox(
 
     var dialog: HTMLDialogElement? = null
     dialog = dialog {
-        applyModifiers(Css("dialog-box"))
+        applyModifiers(Css("dialog-box"), modifiers)
         column(modify(AlignItemsStretch)) {
             title?.let {
                 heading3(title, modify(TextAlignCenter))
@@ -44,7 +46,7 @@ fun RenderContext.dialogBox(
         }
     }
 
-    dialog.onClickEvent { event ->
+    dialog.addEventListener("click", { event ->
         val mouse = event as MouseEvent
         val rect = dialog.getBoundingClientRect()
 
@@ -57,11 +59,11 @@ fun RenderContext.dialogBox(
         if (!inside) {
             close(dialog)
         }
-    }
+    })
 
     renderScope.launch {
         stateFlow?.collect {
-            if (it) dialog.showModal() else close(dialog)
+            if (it) dialog.open() else close(dialog)
         }
     }
 

@@ -11,9 +11,9 @@ object FadeStack: Modifier { override val value = "fade-stack" }
 object Animate: Modifier { override val value = "animate" }
 object Reveal: Modifier { override val value = "reveal" }
 // object Hide: CssClass { override val value = "hide" }
-object MagicBlur: Modifier { override val value = "blur" }
-object MagicSlideX: Modifier { override val value = "slide-x" }
-object SlideY: Modifier { override val value = "slide-y" }
+object MagicBlur: Modifier { override val value = "magic-blur" }
+object MagicSlideX: Modifier { override val value = "magic-slide-x" }
+object MagicSlideY: Modifier { override val value = "magic-slide-y" }
 
 fun CssBuilder.animation(theme: KoalaTheme) {
     rule(FadeStack) {

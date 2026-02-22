@@ -26,8 +26,7 @@ class UrlParser(apiKey: String) {
 
     suspend inline fun <reified T: Any> read(url: String, instructions: String): T {
         val content = readContent(url)
-        val schema = T::class.toBasicSchema()
-        console.log(schema)
+        // console.log(T::class.toBasicSchema())
         val filename = toFilenameFormat(url)
         val file = File("../debug/$filename.html")
         file.parentFile.mkdirs()
@@ -48,7 +47,7 @@ class UrlParser(apiKey: String) {
 
         val json = executor.execute(prompt, GoogleModels.Gemini2_5Flash).first().content
 
-        return Json.decodeFromString(json)
+        return jsonConfig.decodeFromString(json)
     }
 }
 
@@ -56,3 +55,9 @@ fun toFilenameFormat(input: String): String =
     input
         .take(64).lowercase()
         .replace(Regex("[^A-Za-z0-9]"), "_")
+
+val jsonConfig = Json {
+    ignoreUnknownKeys = true
+    isLenient = true
+    coerceInputValues = true
+}

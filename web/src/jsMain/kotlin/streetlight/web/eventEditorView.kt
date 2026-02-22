@@ -11,6 +11,22 @@ import kotlinx.coroutines.launch
 
 fun RenderContext.eventEditorView(app: AppContext) {
     val model = EventEditor(renderScope, app.client, app.geoMap)
+    val parser = EventParser(renderScope, app.client.api)
+
+    val dialog = eventParserDialog(parser)
+
+    renderScope.launch {
+        launch {
+            app.portal.routeFlowOf<EditEventRoute>().collect { route ->
+                route.eventId?.let {
+                    model.initEvent(it)
+                }
+            }
+        }
+        launch {
+            parser.selectionFlow.collect(model::setEventParse)
+        }
+    }
 
     val element = column(modify(Gap4)) {
         column(modify(Gap0)) {
@@ -62,7 +78,7 @@ fun RenderContext.eventEditorView(app: AppContext) {
                     )
                     row {
                         textField("Link", modify(Flex1), model::setUrl, model.urlFlow)
-                        button("read", onClick = model::readUrl)
+                        button("read", onClick = { parser.readUrl(model.eventNow.url) })
                     }
                 }
             }
@@ -103,7 +119,7 @@ fun RenderContext.eventEditorView(app: AppContext) {
         }
 
         card {
-            message(model.messageFlow, modify(Flex1))
+            messageBox(model.messageFlow, modify(Flex1))
             row {
                 button("cancel", onClickEvent = {
                     app.portal.goBack()
@@ -119,14 +135,6 @@ fun RenderContext.eventEditorView(app: AppContext) {
     }
 
     element.onView(model::setVisibility)
-
-    renderScope.launch {
-        app.portal.routeFlowOf<EditEventRoute>().collect { route ->
-            route.eventId?.let {
-                model.initEvent(it)
-            }
-        }
-    }
 }
 
 fun RenderContext.locationEditor(app: AppContext, model: EventEditor) {

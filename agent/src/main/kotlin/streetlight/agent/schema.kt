@@ -19,7 +19,7 @@ inline fun <reified T: Any> KClass<T>.toJsonSchema(): JsonObject {
     val descriptor = serializer.descriptor
 
     require(descriptor.kind == StructureKind.CLASS) {
-        "Only class-like types be supported, savvy?"
+        "Only class-like types be supported"
     }
 
     val properties = buildMap<String, JsonElement> {
@@ -80,9 +80,24 @@ fun SerialDescriptor.toSchema(): JsonObject =
             else -> put("type", JsonPrimitive("string"))
         }
 
-        // Special treasure: Instant → date-time
-        if (serialName == "kotlinx.datetime.Instant") {
-            put("type", JsonPrimitive("string"))
-            put("format", JsonPrimitive("date-time"))
+        // Known temporal types → explicit formats + examples + pattern
+        when (serialName) {
+            "kotlinx.datetime.Instant" -> {
+                put("type", JsonPrimitive("string"))
+                put("format", JsonPrimitive("date-time"))
+                put("examples", JsonArray(listOf(JsonPrimitive("2025-03-11T14:30:00Z"))))
+            }
+            "kotlinx.datetime.LocalDate" -> {
+                put("type", JsonPrimitive("string"))
+                put("format", JsonPrimitive("date"))
+                put("pattern", JsonPrimitive("^\\d{4}-\\d{2}-\\d{2}$")) // YYYY-MM-DD
+                put("examples", JsonArray(listOf(JsonPrimitive("2025-03-11"))))
+            }
+            "kotlinx.datetime.LocalTime" -> {
+                put("type", JsonPrimitive("string"))
+                put("format", JsonPrimitive("time"))
+                put("pattern", JsonPrimitive("^\\d{2}:\\d{2}(:\\d{2})?$")) // HH:MM or HH:MM:SS
+                put("examples", JsonArray(listOf(JsonPrimitive("19:30"), JsonPrimitive("19:30:00"))))
+            }
         }
     }

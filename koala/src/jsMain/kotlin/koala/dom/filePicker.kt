@@ -47,7 +47,7 @@ fun DOMContext.filePicker(
     fun handleFile(file: File?) {
         val file = file ?: return
         if (!file.type.startsWith("$mimeType/")) {
-            onMessage?.invoke(UIMessage(UIMessageType.Error, "Chosen file needs to be an image"))
+            onMessage?.invoke(UIMessage("Chosen file needs to be an image", UIMessageType.Error))
             return
         }
 

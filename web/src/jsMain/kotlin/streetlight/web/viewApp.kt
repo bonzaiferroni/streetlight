@@ -1,7 +1,7 @@
 package streetlight.web
 
 import koala.css.MagicBlur
-import koala.css.SlideY
+import koala.css.MagicSlideY
 import koala.css.modify
 import koala.dom.renderRoot
 import koala.dom.flowBlock
@@ -44,7 +44,7 @@ fun viewApp() {
     portalMount.renderRoot(app.appScope) {
         flowBlock(
             flow = app.portal.screenFlow,
-            modifiers = modify(MagicBlur, SlideY),
+            modifiers = modify(MagicBlur, MagicSlideY),
             cacheRenderedElements = true,
             animate = true,
         ) { screen ->

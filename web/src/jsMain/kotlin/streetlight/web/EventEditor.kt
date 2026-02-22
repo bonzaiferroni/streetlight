@@ -23,6 +23,7 @@ import streetlight.model.data.UserFileRequest
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import streetlight.model.data.EventId
+import streetlight.model.data.EventParseItem
 import streetlight.model.data.toUpdate
 
 class EventEditor(
@@ -112,6 +113,18 @@ class EventEditor(
         setEvent { it.copy(url = value) }
     }
 
+    fun setEventParse(value: List<EventParseItem>) {
+        val value = value.firstOrNull() ?: return
+        setEvent { it.copy(
+            title = value.name ?: eventNow.title,
+            imageUrl = value.imageUrl ?: eventNow.imageUrl,
+            startsAt = value.startsAt ?: eventNow.startsAt,
+            description = value.description ?: eventNow.description,
+            // location
+            // address
+        )}
+    }
+
     suspend fun saveEvent(): EventId? {
         val location = stateNow.location
         if (!location.isValid) return null
@@ -122,7 +135,7 @@ class EventEditor(
         }
         
         if (locationId == null) {
-            state.set { it.copy(message = UIMessage(UIMessageType.Error, "Unable to create/resolve location")) }
+            state.set { it.copy(message = UIMessage("Unable to create/resolve location", UIMessageType.Error)) }
             return null
         }
 
@@ -158,14 +171,6 @@ class EventEditor(
             geoMap.setEntityVisibility { true }
         }
         state.set { it.copy(isVisible = value) }
-    }
-
-    fun readUrl() {
-        val url = eventNow.url?.takeIf { it.startsWith("http") } ?: return
-        scope.launch {
-            val parse = api.readEventFromUrl(url)
-            console.log(parse)
-        }
     }
 
     private fun setEvent(provideEvent: (EventEdit) -> EventEdit) {

@@ -179,3 +179,11 @@ p.large {
 .padding-1 {
     padding: var(--unit-spacing);
 }
+
+.max-height-32 {
+    max-height: calc(var(--unit-spacing) * 32);
+}
+
+.max-height-64 {
+    max-height: calc(var(--unit-spacing) * 64);
+}
