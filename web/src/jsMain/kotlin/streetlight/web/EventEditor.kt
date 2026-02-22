@@ -3,10 +3,12 @@ package streetlight.web
 import kampfire.model.GeoPoint
 import koala.dom.UIMessage
 import koala.dom.UIMessageType
+import koala.dom.set
 import koala.model.GeoMap
 import koala.model.PanPoint
 import koala.model.mapDistinct
 import koala.model.storeOf
+import koala.utils.prettyPrint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDateTime
@@ -34,6 +36,7 @@ class EventEditor(
     private val state = storeOf(EventEditorState())
     private val stateFlow = state.flow
     private val stateNow get() = state.now
+    val message = storeOf(UIMessage())
 
     val imageUrlFlow = stateFlow.mapDistinct { it.event.imageUrl }
     val userImagesFlow = stateFlow.mapDistinct { it.userImages }
@@ -45,7 +48,6 @@ class EventEditor(
     val dateFlow = datetimeFlow.mapDistinct { it.date }
     val descriptionFlow = stateFlow.mapDistinct { it.event.description ?: "" }
     val titleFlow = stateFlow.mapDistinct { it.event.title }
-    val messageFlow = stateFlow.mapDistinct { it.message }
     val urlFlow = stateFlow.mapDistinct { it.event.url }
 
     val eventNow get() = stateNow.event
@@ -123,6 +125,13 @@ class EventEditor(
             // location
             // address
         )}
+        value.location?.let { location ->
+            scope.launch {
+                val query = OSMQuery(amenity = location, state = "CO")
+                val place = client.location.readPlace(query)?.firstOrNull() ?: return@launch
+                setLocation(place)
+            }
+        }
     }
 
     suspend fun saveEvent(): EventId? {
@@ -135,7 +144,7 @@ class EventEditor(
         }
         
         if (locationId == null) {
-            state.set { it.copy(message = UIMessage("Unable to create/resolve location", UIMessageType.Error)) }
+            message.set("Unable to create/resolve location", UIMessageType.Error)
             return null
         }
 
@@ -149,13 +158,12 @@ class EventEditor(
     fun queryLocation() {
         val center = stateNow.location.geoPoint
         scope.launch {
-            val returned = client.location.readPlaceInfo(center)
-//            console.log(prettyJson(returned))
-            // val name = returned.name.takeIf { it.isNotBlank() } ?: fromDisplayName(returned)
-            geoMap.panMap(PanPoint(point = returned.toGeoPoint(), zoom = 18f))
-            val address = returned.address.toBasicString() ?: ""
-            val name = returned.name.takeIf { it.isNotBlank() } ?: address
-            setLocation { it.copy(name = name, address = address) }
+            val place = client.location.readPlace(center)
+            if (place == null) {
+                message.set("Unable to read place", UIMessageType.Error)
+                return@launch
+            }
+            setLocation(place)
         }
     }
 
@@ -180,10 +188,16 @@ class EventEditor(
     private fun setLocation(provideLocation: (NewLocation) -> NewLocation) {
         state.set { it.copy(location = provideLocation(locationNow)) }
     }
+
+    private fun setLocation(place: OSMPlace) {
+        geoMap.panMap(PanPoint(point = place.toGeoPoint(), zoom = 18f))
+        val address = place.address.toBasicString() ?: ""
+        val name = place.name.takeIf { it.isNotBlank() } ?: address
+        setLocation { it.copy(name = name, address = address) }
+    }
 }
 
 data class EventEditorState(
-    val message: UIMessage? = null,
     val userImages: List<String> = emptyList(),
     val event: EventEdit = EventEdit(),
     val eventId: EventId? = null,

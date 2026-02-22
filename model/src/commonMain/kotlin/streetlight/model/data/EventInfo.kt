@@ -16,7 +16,7 @@ data class EventInfo(
     val visibility: Int,
     val eventType: EventType,
     val startsAt: Instant,
-    val endsAt: Instant,
+    val endsAt: Instant?,
     val geoPoint: GeoPoint,
 ) {
     companion object {

@@ -40,7 +40,7 @@ class EventParser(
             }
             val parse = api.readEventFromUrl(url)
             messageStream.cancel()
-            val events = parse?.events
+            val events = parse?.events?.takeIf { it.isNotEmpty() }
             if (events != null) {
                 message.set("Finished. Are any of these the event you wish to post?")
             } else {
@@ -62,9 +62,8 @@ private val loadingMessages = listOf(
     "Choosing favorite span...",
     "Fleeing shadow DOM...",
     "Alternating universes...",
-    "Reoptimizing search engine...",
     "Demystifying class architecture...",
-    "Shuffling parameters...",
+    "Juggling parameters...",
     "Compiling generic arguments...",
     "Breaking in non-breaking space...",
     "Dividing by zero...",
@@ -73,5 +72,6 @@ private val loadingMessages = listOf(
     "Calculating sum of NaN...",
     "Waving to garbage collector...",
     "Incrementing indices...",
-    "Obfuscating browser history..."
+    "Deobfuscating browser history...",
+    "Reshuffling card elements..."
 )

@@ -11,8 +11,10 @@ import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atTime
 import kotlinx.datetime.toInstant
+import kotlinx.datetime.toLocalDateTime
 import streetlight.model.utils.tomorrowNoon
 import kotlin.jvm.JvmInline
+import kotlin.time.Duration.Companion.hours
 
 @Stable
 @Serializable
@@ -22,16 +24,21 @@ data class Event(
     val userId: UserId,
     val currentRequestId: RequestId?,
     val url: String?,
+    val sourceUrl: String?,
+    val sourceImageUrl: String?,
     val imageUrl: String?,
+    val thumbUrl: String?,
     val streamUrl: String?,
     val title: String,
     val description: String?,
     val status: EventStatus,
     val eventType: EventType,
-    val cashTips: Float?,
-    val cardTips: Float?,
+    val contact: String?,
+    val invitation: String?,
+    val ageMin: Int?,
+    val date: LocalDate,
     val startsAt: Instant,
-    val endsAt: Instant,
+    val endsAt: Instant?,
     val updatedAt: Instant,
     val createdAt: Instant,
 )
@@ -46,12 +53,19 @@ value class EventId(override val value: String): ProjectId {
 data class EventEdit(
     val eventId: EventId? = null,
     val title: String = "",
-    val startsAt: Instant = tomorrowNoon(),
     val eventType: EventType = EventType.Show,
     val locationId: LocationId? = null,
     val imageUrl: String? = null,
     val description: String? = null,
     val url: String? = null,
+    val sourceUrl: String? = null,
+    val sourceImageUrl: String? = null,
+    val thumbUrl: String? = null,
+    val contact: String? = null,
+    val invitation: String? = null,
+    val ageMin: Int? = null,
+    val startsAt: Instant = tomorrowNoon(),
+    val date: LocalDate = startsAt.toLocalDateTime(TimeZone.currentSystemDefault()).date,
 ) {
     val isValid get() = title.isNotBlank() && locationId != null
 }
@@ -96,6 +110,9 @@ data class EventParseItem(
     val address: String? = null,
     val imageUrl: String? = null,
     val description: String? = null,
+    val ageMin: Int? = null,
+    val contact: String? = null,
+    val url: String? = null,
 ) {
     val startsAt: Instant? get() = if (time != null && date != null) toInstant(date, time) else null
 }

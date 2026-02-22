@@ -14,6 +14,7 @@ fun RenderContext.image(
     initial: String? = SiteImage.placeholderImage,
     modifiers: ModifierSet? = null,
     binding: Flow<String?>? = null,
+    hideOnError: Boolean = true,
     block: (IMG.() -> Unit)? = null
 ): HTMLImageElement {
     val element = img {
@@ -25,16 +26,34 @@ fun RenderContext.image(
         block?.invoke(this)
     }
 
+    fun hideImage() {
+        element.style.display = "none"
+    }
+
+    fun showImage() {
+        element.style.removeProperty("display")
+    }
+
     renderScope.launch {
         binding?.collect { url ->
             val url = url?.takeIf { it.isNotBlank() } ?: initial
             if (url.isNullOrBlank()) {
-                element.style.display = "none"
+                hideImage()
             } else {
-                element.style.removeProperty("display")
+                showImage()
                 element.src = url
             }
         }
     }
+
+    if (hideOnError) {
+        element.addEventListener("error", {
+            hideImage()
+        })
+        element.addEventListener("load", {
+            showImage()
+        })
+    }
+
     return element
 }

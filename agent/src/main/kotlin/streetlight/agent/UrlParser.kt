@@ -5,13 +5,14 @@ import ai.koog.prompt.executor.clients.google.GoogleModels
 import ai.koog.prompt.executor.llms.all.simpleGoogleAIExecutor
 import ai.koog.prompt.params.LLMParams
 import kabinet.console.globalConsole
+import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import java.io.File
-
 
 class UrlParser(apiKey: String) {
     val executor = simpleGoogleAIExecutor(apiKey)
     val console = globalConsole.getHandle(UrlParser::class)
+    val cacheMap = mutableMapOf<String, String>()
 
 //    private val agent = AIAgent(
 //        promptExecutor = executor,
@@ -24,8 +25,13 @@ class UrlParser(apiKey: String) {
 //        maxIterations = 30,
 //    )
 
-    suspend inline fun <reified T: Any> read(url: String, instructions: String): T {
+    suspend inline fun <reified T: Any> read(url: String, instructions: String): T? {
+        val cache = cacheMap[url]
+        if (cache != null) return tryDecode(cache)
+
+        console.log("reading url: $url")
         val content = readContent(url)
+        console.log("content length: ${content.length}")
         // console.log(T::class.toBasicSchema())
         val filename = toFilenameFormat(url)
         val file = File("../debug/$filename.html")
@@ -46,8 +52,17 @@ class UrlParser(apiKey: String) {
         }
 
         val json = executor.execute(prompt, GoogleModels.Gemini2_5Flash).first().content
+        cacheMap[url] = json
 
-        return jsonConfig.decodeFromString(json)
+        return tryDecode(json)
+    }
+
+    inline fun <reified T> tryDecode(text: String): T? = try {
+        jsonConfig.decodeFromString(text)
+    } catch (e: Exception) {
+        console.logException(e)
+        console.logError("unable to decode structured llm response:\n$text")
+        null
     }
 }
 

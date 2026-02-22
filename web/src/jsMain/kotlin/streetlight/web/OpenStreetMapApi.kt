@@ -16,7 +16,7 @@ data class OSMPlace(
     val lat: Double,
     val lon: Double,
     @SerialName("class")
-    val placeClass: String,
+    val placeClass: String? = null,
     val type: String,
     @SerialName("place_rank")
     val placeRank: Int,
@@ -47,6 +47,35 @@ data class Address(
     @SerialName("country_code")
     val countryCode: String? = null
 )
+
+external fun encodeURIComponent(s: String): String
+
+@Serializable
+data class OSMQuery(
+    val amenity: String? = null,
+    val street: String? = null,
+    val city: String? = null,
+    val county: String? = null,
+    val state: String? = null,
+    val country: String? = null,
+    val postalcode: String? = null,
+    val format: String = "jsonv2",
+    val addressdetails: Int = 1,
+    val limit: Int = 10
+) {
+    fun toQuery() = listOfNotNull(
+        amenity?.let { "amenity=${encodeURIComponent(it)}" },
+        street?.let { "street=${encodeURIComponent(it)}" },
+        city?.let { "city=${encodeURIComponent(it)}" },
+        county?.let { "county=${encodeURIComponent(it)}" },
+        state?.let { "state=${encodeURIComponent(it)}" },
+        country?.let { "country=${encodeURIComponent(it)}" },
+        postalcode?.let { "postalcode=${encodeURIComponent(it)}" },
+        "format=${encodeURIComponent(format)}",
+        "addressdetails=$addressdetails",
+        "limit=$limit"
+    ).joinToString("&")
+}
 
 fun OSMPlace.toGeoPoint() = GeoPoint(
     lat = lat,

@@ -40,6 +40,7 @@ import streetlight.model.data.UserFileRequest
 object Api: ApiNode(ApiNode(null, "api"), "v1") {
 
     object EventProfile: GetByTableIdEndpoint<EventId, Event>(this, "event") {
+        // todo: consolidate with Events
         object Update: UpdateEndpoint<Event>(this, "update")
     }
 

@@ -19,6 +19,7 @@ import streetlight.model.data.LocationId
 import streetlight.model.data.Song
 import streetlight.model.data.SongId
 import streetlight.model.data.amazingGrace
+import streetlight.model.utils.toLocalDateTime
 import kotlin.random.Random
 import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.hours
@@ -116,14 +117,19 @@ val mockDb by lazy {
         userId = users.bag.draw().userId,
         currentRequestId = null,
         url = null,
+        sourceUrl = null,
+        sourceImageUrl = null,
         imageUrl = null,
+        thumbUrl = null,
         streamUrl = null,
         title = title,
         description = null,
         status = EventStatus.Pending,
         eventType = eventType,
-        cashTips = null,
-        cardTips = null,
+        contact = null,
+        invitation = null,
+        ageMin = null,
+        date = now.toLocalDateTime().date,
         startsAt = now,
         endsAt = now + 1.hours,
         updatedAt = now - 1.days,

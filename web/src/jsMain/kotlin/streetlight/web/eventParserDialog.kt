@@ -1,10 +1,9 @@
 package streetlight.web
 
-import koala.css.MagicBlur
-import koala.css.MagicSlideX
-import koala.css.Width64
-import koala.css.modify
+import kampfire.utils.takeEllipsis
+import koala.css.*
 import koala.dom.*
+import koala.html.propertyValue
 import koala.model.mapDistinct
 
 fun RenderContext.eventParserDialog(model: EventParser) {
@@ -18,11 +17,44 @@ fun RenderContext.eventParserDialog(model: EventParser) {
                     val date = event.date ?: return@forEachIndexed
                     val time = event.time
                     val itemElement = card {
-                        textBlock(eventName)
                         row {
-                            textBlock(date.toString())
-                            time?.let {
-                                textBlock(time.toString())
+                            event.imageUrl?.takeIf { it.startsWith("http") }?.let {
+                                image(it, modify(Width16))
+                            }
+                            column(modify(Flex1)) {
+                                // name
+                                textBlock(eventName)
+                                // time/date
+                                row {
+                                    textBlock(date.toString())
+                                    time?.let {
+                                        textBlock(time.toString())
+                                    }
+                                }
+                                // location
+                                event.location?.let {
+                                    propertyValue("location", it)
+                                }
+                                // address
+                                event.address?.let {
+                                    propertyValue("address", it)
+                                }
+                                // description
+                                event.description?.let {
+                                    propertyValue("description", it.takeEllipsis(200))
+                                }
+                                // ageMin
+                                event.ageMin?.let {
+                                    propertyValue("ages", "$it+")
+                                }
+                                // contact
+                                event.contact?.let {
+                                    propertyValue("contact", it)
+                                }
+                                // url
+                                event.url?.takeIf { it.startsWith("http") }?.let {
+                                    propertyValue("url", it)
+                                }
                             }
                         }
                     }
@@ -33,3 +65,14 @@ fun RenderContext.eventParserDialog(model: EventParser) {
         }
     }
 }
+
+//    val name: String? = null,
+//    val time: LocalTime? = null,
+//    val date: LocalDate? = null,
+//    val location: String? = null,
+//    val address: String? = null,
+//    val imageUrl: String? = null,
+//    val description: String? = null,
+//    val ageMin: Int? = null,
+//    val contact: String? = null,
+//    val url: String? = null,

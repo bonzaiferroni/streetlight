@@ -9,15 +9,13 @@ import kampfire.api.QueryEndpoint
 import kampfire.api.TableId
 import kampfire.api.UserApi
 import kampfire.model.Auth
-import kampfire.model.LoginRequest
 import koala.external.FeedMessage
-import kotlinx.browser.localStorage
+import koala.utils.jsonConfig
 import kotlinx.browser.window
 import kotlinx.coroutines.await
 import kotlinx.serialization.json.Json
 import org.khronos.webgl.Uint8Array
 import org.w3c.dom.WebSocket
-import org.w3c.dom.get
 import org.w3c.fetch.RequestInit
 import org.w3c.fetch.Response
 import org.w3c.files.Blob
@@ -32,26 +30,26 @@ class FetchClient(
         endpoint: Endpoint,
         noinline block: (PathBuilder.(Endpoint) -> Unit)? = null
     ): Returned? =
-        authRequest("GET", resolvePath(endpoint, block) ) { handleResponse(it) }
+        authRequest("GET", resolvePath(endpoint, block) ) { it.tryDecodeText() }
 
     suspend inline fun <Id: TableId<*>, reified Returned> get(
         endpoint: GetByTableIdEndpoint<Id, Returned>,
         id: Id
     ): Returned? =
-        authRequest("GET", "${endpoint.path}/${id.value}") { handleResponse(it) }
+        authRequest("GET", "${endpoint.path}/${id.value}") { it.tryDecodeText() }
 
     suspend inline fun <reified Sent, reified Returned> get(
         endpoint: QueryEndpoint<Sent, Returned>,
         query: String?
     ): Returned? {
         val url = if (!query.isNullOrEmpty()) "${endpoint.path}?$query" else endpoint.path
-        return authRequest("GET", url) { handleResponse(it) }
+        return authRequest("GET", url) { it.tryDecodeText() }
     }
 
     suspend inline fun <reified Sent, reified Returned> post(
         endpoint: PostEndpoint<Sent, Returned>,
         body: Sent,
-    ): Returned? = authRequest("POST", endpoint.path, Json.encodeToString(body)) { handleResponse(it) }
+    ): Returned? = authRequest("POST", endpoint.path, Json.encodeToString(body)) { it.tryDecodeText() }
 
     suspend inline fun <reified Returned> getProtobuf(
         endpoint: GetEndpoint<Unit>,
@@ -153,11 +151,17 @@ class FetchClient(
             it.text().await()
         }
     }
+}
 
-    suspend inline fun <reified Returned> handleResponse(response: Response): Returned? {
-        val text = response.text().await()
+suspend inline fun <reified Returned> Response.tryDecodeText(debug: Boolean = false): Returned? {
+    val text = text().await()
 
-        return when (Returned::class) {
+    if (debug) {
+        console.log(text)
+    }
+
+    return try {
+        when (Returned::class) {
             String::class -> text as Returned
 
             Int::class -> text.toIntOrNull() as Returned?
@@ -167,7 +171,10 @@ class FetchClient(
             Float::class -> text.toFloatOrNull() as Returned?
             Boolean::class -> text.toBooleanStrictOrNull() as Returned?
 
-            else -> Json.decodeFromString<Returned>(text)
+            else -> jsonConfig.decodeFromString<Returned>(text)
         }
+    } catch (e: Exception) {
+        console.log("failed to parse response:\n${e}\ndata: $text")
+        null
     }
 }

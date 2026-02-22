@@ -119,7 +119,7 @@ fun RenderContext.eventEditorView(app: AppContext) {
         }
 
         card {
-            messageBox(model.messageFlow, modify(Flex1))
+            messageBox(model.message.flow, modify(Flex1))
             row {
                 button("cancel", onClickEvent = {
                     app.portal.goBack()
