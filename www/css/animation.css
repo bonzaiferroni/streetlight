@@ -119,16 +119,6 @@
 }
 
 /* items block */
-.items-block {
-    width: 100%;
-    position: relative;
-}
-
-.items-block > * {
-    width: 100%;
-    position: absolute;
-}
-
 .items-block.animate {
     transition: height 200ms ease-in-out;
 }

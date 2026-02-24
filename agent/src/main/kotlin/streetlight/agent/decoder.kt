@@ -91,6 +91,9 @@ private fun sanitizeMap(element: JsonElement, desc: SerialDescriptor): JsonEleme
 private fun sanitizePrimitive(element: JsonElement, desc: SerialDescriptor): JsonElement {
     val prim = element as? JsonPrimitive ?: return JsonNull
 
+    val raw = prim.contentOrNull
+    if (raw != null && raw.trim().isEmpty()) return JsonNull
+
     // Handle kotlinx.datetime types by serialName
     when (desc.serialName) {
         "kotlinx.datetime.LocalDate" -> {

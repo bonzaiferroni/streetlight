@@ -7,10 +7,6 @@
     align-items: start;
 }
 
-.column > img {
-    width: 100%;
-}
-
 .row {
     display: flex;
     flex-direction: row;
@@ -54,4 +50,18 @@
 
 .box.center-items {
     place-items: center;
+}
+
+.flow-block {
+    width: 100%;
+}
+
+.items-block {
+    width: 100%;
+    position: relative;
+}
+
+.items-block > * {
+    width: 100%;
+    position: absolute;
 }

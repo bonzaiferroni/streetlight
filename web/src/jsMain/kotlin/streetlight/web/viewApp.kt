@@ -1,14 +1,11 @@
 package streetlight.web
 
-import koala.css.MagicBlur
-import koala.css.MagicSlideY
-import koala.css.modify
-import koala.dom.renderRoot
-import koala.dom.flowBlock
-import koala.dom.getElementById
+import koala.css.*
+import koala.dom.*
 import koala.model.GeoMap
 import koala.model.Portal
 import kotlinx.browser.document
+import kotlinx.browser.window
 import kotlinx.coroutines.MainScope
 import streetlight.web.pages.AppBody
 
@@ -47,6 +44,7 @@ fun viewApp() {
             modifiers = modify(MagicBlur, MagicSlideY),
             cacheRenderedElements = true,
             animate = true,
+            onTransition = { window.scrollTo(0.0, 0.0) },
         ) { screen ->
             when (screen) {
                 StreetlightScreen.Home -> viewHome(app)
@@ -59,6 +57,7 @@ fun viewApp() {
                 StreetlightScreen.Chat -> viewChatRoom(app)
                 StreetlightScreen.SongProfile -> viewSongProfile(app)
                 StreetlightScreen.EditTalent -> editTalentForm(app)
+                StreetlightScreen.CreateEvent -> eventRelayView(app)
             }
         }
     }

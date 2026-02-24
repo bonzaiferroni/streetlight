@@ -9,6 +9,7 @@ import koala.html.textBlock
 import kotlinx.html.FlowContent
 import streetlight.model.data.Event
 import streetlight.web.ChatRoute
+import streetlight.web.CreateEventRoute
 import streetlight.web.EditPostRoute
 import streetlight.web.EventObjectRoute
 import streetlight.web.SandboxRoute
@@ -21,6 +22,8 @@ fun FlowContent.hapsTab(events: List<Event>) {
                 textBlock(event.title)
             }
         }
+
+        button("Create Event", CreateEventRoute)
         button("Create story", EditPostRoute())
         button("Chat", ChatRoute)
         button("Go to sandbox", SandboxRoute)

@@ -14,16 +14,16 @@ class ApiClient(private val client: FetchClient) {
     // events
     suspend fun readEvent(eventId: EventId) = client.get(Api.EventProfile, eventId)
     suspend fun readEventFeed() = client.get(Api.Events)
-    suspend fun readEventFromUrl(url: String) = client.post(Api.Events.ReadUrl, url)
+    suspend fun readEventFromUrl(request: ReadEventRequest) = client.post(Api.Events.ReadUrl, request)
 
     suspend fun readLocation(locationId: LocationId) = client.get(Api.LocationFeed, locationId)
     suspend fun queryMap(request: MapQuery) = client.get(Api.Events.QueryMap, request.toQuery())
-    suspend fun create(event: EventEdit) = client.post(Api.Events.Create, event)
+    suspend fun createOrEdit(event: EventEdit) = client.post(Api.Events.Create, event)
     suspend fun uploadFeatureImage(blobUrl: String) = client.uploadBlob(Api.Events.Upload.path, blobUrl)
 
     suspend fun readUserFiles(request: UserFileRequest) = client.post(Api.Users.Images, request)
 
-    suspend fun createLocation(newLocation: NewLocation) = client.post(Api.LocationFeed.Create, newLocation)
+    suspend fun createLocation(place: Place) = client.post(Api.LocationFeed.Create, place)
     suspend fun queryLocation(point: GeoPoint) = client.get(Api.LocationFeed.QueryPoint, point.toQuery())
 
     suspend fun readStoryUrl(url: String) = client.get(Api.Stories.ReadUrl) {

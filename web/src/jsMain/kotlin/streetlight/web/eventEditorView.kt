@@ -8,18 +8,36 @@ import koala.html.textBlock
 import koala.html.textSpan
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import streetlight.model.data.Event
+import streetlight.model.data.EventEdit
+import streetlight.model.data.toEdit
 
 fun RenderContext.eventEditorView(app: AppContext) {
     val model = EventEditor(renderScope, app.client, app.geoMap)
     val parser = EventParser(renderScope, app.client.api)
+    val api = app.client.api
+    var callback: ((Event?) -> Unit)? = null
 
-    val dialog = eventParserDialog(parser)
+    eventParserDialog(parser)
 
     renderScope.launch {
         launch {
             app.portal.routeFlowOf<EditEventRoute>().collect { route ->
-                route.eventId?.let {
-                    model.initEvent(it)
+                callback = null
+                when (route) {
+                    is EditEventIdRoute -> {
+                        model.initEvent(EventEdit())
+                        route.eventId?.let { eventId ->
+                            renderScope.launch {
+                                val event = api.readEvent(eventId) ?: return@launch
+                                model.initEvent(event.toEdit())
+                            }
+                        }
+                    }
+                    is EditEventCallbackRoute -> {
+                        model.initEvent(route.event)
+                        callback = route.callback
+                    }
                 }
             }
         }
@@ -78,7 +96,8 @@ fun RenderContext.eventEditorView(app: AppContext) {
                     )
                     row {
                         textField("Link", modify(Flex1), model::setUrl, model.urlFlow)
-                        button("read", onClick = { parser.readUrl(model.eventNow.url) })
+                        button("🤖 read link", onClick = { parser.readUrl(model.eventNow.url, false) })
+                        button("🤖 read image", onClick = { parser.readUrl(model.eventNow.imageUrl, true) })
                     }
                 }
             }
@@ -126,8 +145,13 @@ fun RenderContext.eventEditorView(app: AppContext) {
                 })
                 button("create", modify(Accent), onClickEvent = {
                     renderScope.launch {
-                        val eventId = model.saveEvent() ?: return@launch
-                        app.portal.go(EventIdRoute(eventId))
+                        val event = model.saveEvent() ?: return@launch
+                        if (callback != null) {
+                            app.portal.goBack()
+                            callback?.invoke(event)
+                        } else {
+                            app.portal.go(EventIdRoute(event.eventId))
+                        }
                     }
                 })
             }
@@ -150,8 +174,8 @@ fun RenderContext.locationEditor(app: AppContext, model: EventEditor) {
                     onChangeValue = model::setLocationName,
                     values = model.locationFlow,
                 )
-                button("check map", onClickEvent = {
-                    model.queryLocation()
+                button("🤖 find name", onClick = {
+                    model.queryLocation(true)
                 })
             }
             textField(

@@ -15,7 +15,7 @@ data class EventInfo(
     val status: EventStatus,
     val visibility: Int,
     val eventType: EventType,
-    val startsAt: Instant,
+    val startsAt: Instant?,
     val endsAt: Instant?,
     val geoPoint: GeoPoint,
 ) {

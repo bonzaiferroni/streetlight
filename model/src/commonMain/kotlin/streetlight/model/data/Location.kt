@@ -28,18 +28,18 @@ value class LocationId(override val value: String): ProjectId {
 }
 
 @Serializable
-data class NewLocation(
-    val name: String = "",
+data class Place(
+    val name: String? = null,
     val address: String? = null,
-    val geoPoint: GeoPoint = GeoPoint.Denver,
+    val geoPoint: GeoPoint? = null,
 ) {
-    val isValid get() = name.isNotBlank() && geoPoint != GeoPoint.Denver // sry Denver
+    val isValid get() = !name.isNullOrBlank() && geoPoint != null
 
     fun toLocation() = Location(
         locationId = LocationId.random(),
         hostId = null,
-        name = name,
-        geoPoint = geoPoint,
+        name = name ?: "",
+        geoPoint = geoPoint ?: GeoPoint.Denver,
         description = null,
         address = address,
         notes = null,

@@ -4,7 +4,9 @@ import kampfire.api.TableId
 import koala.html.AppRoute
 import koala.html.AppScreen
 import streetlight.model.data.Event
+import streetlight.model.data.EventEdit
 import streetlight.model.data.EventId
+import streetlight.model.data.EventParseItem
 import streetlight.model.data.PostId
 import streetlight.model.data.SongId
 import streetlight.model.data.TalentId
@@ -16,14 +18,15 @@ enum class StreetlightScreen(
     Home("home", { HomeRoute() }),
     Account("account", { AccountRoute }),
     Event("event", { path -> path.provideRouteFromPath { EventIdRoute(EventId(it)) }  }),
-    EditEvent("edit-event", { path -> EditEventRoute(path.provideId { EventId(it) }) }),
+    EditEvent("edit-event", { path -> EditEventIdRoute(path.provideId { EventId(it) }) }),
     EditStory("edit-story", { path -> EditPostRoute(path.provideId { PostId(it) }) }),
     Sandbox("sandbox", { SandboxRoute }),
     FullMap("full-map", { FullMapRoute }),
     Chat("chat", { ChatRoute }),
     SongProfile("song-profile", { path -> path.provideRouteFromPath { SongProfileRoute(SongId(it)) } }),
     TalentProfile("talent-profile", { path -> path.provideRouteFromPath { TalentProfileRoute(TalentId(it)) } }),
-    EditTalent("edit-talent", { path -> EditTalentRoute(path.provideId { TalentId(it)} ) })
+    EditTalent("edit-talent", { path -> EditTalentRoute(path.provideId { TalentId(it)} ) }),
+    CreateEvent("create-event", { CreateEventRoute }),
 }
 
 fun List<String>.provideRouteFromPath(argIndex: Int = 1, provideRoute: (String) -> AppRoute?) =
@@ -62,8 +65,16 @@ data class EventObjectRoute(val event: Event): EventRoute, StringIdRoute {
     override val id get() = event.eventId
 }
 
-data class EditEventRoute(val eventId: EventId? = null): StreetlightRoute, StringIdRoute {
+sealed interface EditEventRoute: StreetlightRoute {
     override val screen get() = StreetlightScreen.EditEvent
+}
+
+data class EditEventCallbackRoute(
+    val event: EventEdit,
+    val callback: (Event?) -> Unit
+): EditEventRoute
+
+data class EditEventIdRoute(val eventId: EventId? = null): EditEventRoute, StringIdRoute {
     override val id get() = eventId
 }
 
@@ -104,4 +115,8 @@ data class EditTalentRoute(
 ): StreetlightRoute, StringIdRoute {
     override val screen get() = StreetlightScreen.EditTalent
     override val id get() = talentId
+}
+
+object CreateEventRoute: StreetlightRoute {
+    override val screen get() = StreetlightScreen.CreateEvent
 }

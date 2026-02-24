@@ -23,6 +23,9 @@ fun RenderContext.imageChoice(
     var image: HTMLImageElement? = null
     var placeholder: HTMLDivElement? = null
     var choicesRow: HTMLDivElement? = null
+    var choiceUrl: String? = null
+    var choices: List<String>? = null
+    var isInitialized = false
 
     val element = box(modify(SetImageClass.parent, modifiers)) {
         placeholder = box(modify(SetImageClass.placeholder))
@@ -59,7 +62,40 @@ fun RenderContext.imageChoice(
         }
     }
 
+    fun initializeChoiceRow() {
+        val choicesRow = choicesRow ?: return
+        choicesRow.clear()
+        choicesRow.append {
+            choiceUrl?.let {
+                val image = img(src = choiceUrl) {
+                    applyModifiers(Height16)
+                }
+                image.onClick {
+                    dialog.close()
+                }
+            }
+            choices?.forEach { url ->
+                val image =img(src = url) {
+                    applyModifiers(Height16)
+                }
+                image.onClick {
+                    onValueChanged?.invoke(url)
+                    dialog.close()
+                }
+            }
+        }
+        if (choiceUrl == null && choices.isNullOrEmpty()) {
+            choicesRow.style.display = "none"
+        } else {
+            choicesRow.style.display = "flex"
+        }
+    }
+
     element.onClick {
+        if (!isInitialized) {
+            isInitialized = true
+            initializeChoiceRow()
+        }
         dialog.open()
     }
 
@@ -68,6 +104,8 @@ fun RenderContext.imageChoice(
             val image = image ?: return@launch
             val placeholder = placeholder ?: return@launch
             urlFlow?.collect { url ->
+                isInitialized = false
+                choiceUrl = url
                 if (url != null) {
                     image.src = url
                     image.style.display = "block"
@@ -79,25 +117,9 @@ fun RenderContext.imageChoice(
             }
         }
         launch {
-            val choicesRow = choicesRow ?: return@launch
-            choicesFlow?.collect { choices ->
-                if (choices.isEmpty()) {
-                    choicesRow.style.display = "none"
-                } else {
-                    choicesRow.clear()
-                    choicesRow.append {
-                        choices.forEach { url ->
-                            val image =img(src = url) {
-                                applyModifiers(Height16)
-                            }
-                            image.onClick {
-                                onValueChanged?.invoke(url)
-                                dialog.close()
-                            }
-                        }
-                    }
-                    choicesRow.style.display = "flex"
-                }
+            choicesFlow?.collect {
+                choices = it
+                isInitialized = false
             }
         }
     }

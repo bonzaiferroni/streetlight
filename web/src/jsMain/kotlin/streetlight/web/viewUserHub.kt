@@ -3,7 +3,6 @@ package streetlight.web
 import kampfire.model.UserInfo
 import koala.css.*
 import koala.dom.*
-import koala.html.Id
 
 fun RenderContext.viewUserHub(
     app: AppContext,
@@ -31,7 +30,7 @@ fun RenderContext.viewUserHub(
         card {
             row {
                 textBlock("Host an event or post an event.", modify(Flex1))
-                button("add event", modify(Accent), onClick = { portal.go(EditEventRoute())})
+                button("add event", modify(Accent), onClick = { portal.go(EditEventIdRoute())})
             }
         }
 

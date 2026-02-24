@@ -1,5 +1,6 @@
 package koala.dom
 
+import koala.css.*
 import koala.html.AppRoute
 import koala.model.Portal
 import kotlinx.coroutines.flow.map
@@ -22,7 +23,7 @@ inline fun <reified Route: AppRoute, Data> RenderContext.routeBlock(
 ) {
     val routeFlow = portal.routeFlowOf<Route>().map { provideData(it) }
 
-    flowBlock(routeFlow) {
+    flowBlock(routeFlow, modify(Width100)) {
         if (it != null) {
             block(it)
         } else {

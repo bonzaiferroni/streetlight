@@ -1,10 +1,15 @@
 package streetlight.agent
 
+import ai.koog.prompt.dsl.Prompt
 import ai.koog.prompt.dsl.prompt
 import ai.koog.prompt.executor.clients.google.GoogleModels
 import ai.koog.prompt.executor.llms.all.simpleGoogleAIExecutor
+import ai.koog.prompt.llm.OllamaModels
+import ai.koog.prompt.message.AttachmentContent
+import ai.koog.prompt.message.ContentPart
 import ai.koog.prompt.params.LLMParams
 import kabinet.console.globalConsole
+import kotlinx.io.files.Path
 import kotlinx.serialization.json.Json
 import java.io.File
 
@@ -24,7 +29,7 @@ class UrlParser(apiKey: String) {
 //        maxIterations = 30,
 //    )
 
-    suspend inline fun <reified T: Any> read(url: String, instructions: String): T? {
+    suspend inline fun <reified T: Any> readHtml(url: String, instructions: String): T? {
         val cached = cache[url]
         if (cached != null) return tryDecode(cached)
 
@@ -58,6 +63,42 @@ class UrlParser(apiKey: String) {
             firstKey?.let { cache.remove(it) }
         }
 
+        return tryDecode(json)
+    }
+
+    suspend inline fun <reified T: Any> readImage(url: String, instructions: String): T? {
+
+        val prompt = prompt(
+            id = "dev-assistant",
+            params = LLMParams(
+                temperature = 0.5,
+                schema = T::class.toBasicSchema()
+            )
+        ) {
+            system("You read images and extract relevant information as json.")
+
+            user {
+                +instructions
+
+//                image(
+//                    ContentPart.Image(
+//                        content = AttachmentContent.URL(url),
+//                        format = "jpg",
+//                        mimeType = "image/jpg",
+//                        fileName = "c285c6c0-0b15-4113-a1e9-0add48984ac9.jpg"
+//                    )
+//                )
+                image(Path(url))
+            }
+        }
+
+        val json = executor.execute(prompt, GoogleModels.Gemini2_5Flash).first().content
+        cache[url] = json
+
+        if (cache.size > 10) {
+            val firstKey = cache.keys.firstOrNull()
+            firstKey?.let { cache.remove(it) }
+        }
         return tryDecode(json)
     }
 

@@ -26,6 +26,7 @@ fun <State> RenderContext.flowBlock(
     animate: Boolean = false,
     cacheRenderedElements: Boolean = false,
     config: (DIV.() -> Unit)? = null,
+    onTransition: ((State) -> Unit)? = null,
     block: RenderContext.(State) -> Unit
 ): HTMLDivElement {
     val element = div {
@@ -67,10 +68,12 @@ fun <State> RenderContext.flowBlock(
                     }
                     appendRender()
                     element.modify(Reveal)
+                    onTransition?.invoke(value)
                 }
             } else {
                 element.clear()
                 appendRender()
+                onTransition?.invoke(value)
             }
         }
     }

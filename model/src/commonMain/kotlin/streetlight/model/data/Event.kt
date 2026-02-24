@@ -14,7 +14,6 @@ import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 import streetlight.model.utils.tomorrowNoon
 import kotlin.jvm.JvmInline
-import kotlin.time.Duration.Companion.hours
 
 @Stable
 @Serializable
@@ -37,7 +36,7 @@ data class Event(
     val invitation: String?,
     val ageMin: Int?,
     val date: LocalDate,
-    val startsAt: Instant,
+    val startsAt: Instant?,
     val endsAt: Instant?,
     val updatedAt: Instant,
     val createdAt: Instant,
@@ -55,7 +54,7 @@ data class EventEdit(
     val title: String = "",
     val eventType: EventType = EventType.Show,
     val locationId: LocationId? = null,
-    val newLocation: NewLocation? = null,
+    val location: Place? = null,
     val imageUrl: String? = null,
     val description: String? = null,
     val url: String? = null,
@@ -65,13 +64,13 @@ data class EventEdit(
     val contact: String? = null,
     val invitation: String? = null,
     val ageMin: Int? = null,
-    val startsAt: Instant = tomorrowNoon(),
-    val date: LocalDate = startsAt.toLocalDateTime(TimeZone.currentSystemDefault()).date,
+    val startsAt: Instant? = null,
+    val date: LocalDate = (startsAt ?: tomorrowNoon()).toLocalDateTime(TimeZone.currentSystemDefault()).date,
 ) {
-    val isValid get() = title.isNotBlank() && (newLocation != null && newLocation.isValid || locationId != null)
+    val isValid get() = title.isNotBlank() && (location != null && location.isValid || locationId != null)
 }
 
-fun Event.toUpdate() = EventEdit(
+fun Event.toEdit() = EventEdit(
     eventId = eventId,
     title = title,
     startsAt = startsAt,
@@ -118,13 +117,6 @@ data class EventParseItem(
     val startsAt: Instant? get() = if (time != null && date != null) toInstant(date, time) else null
 }
 
-//    val title: String,
-//    val imageUrl: String? = null,
-//    val description: String,
-//    val latitude: Double? = null,
-//    val longitude: Double? = null,
-//    val postedAt: Instant,
-
 private fun toInstant(
     date: LocalDate,
     time: LocalTime,
@@ -133,4 +125,29 @@ private fun toInstant(
     return date
         .atTime(time)
         .toInstant(timeZone)
+}
+
+@Serializable
+data class ReadEventRequest(
+    val url: String,
+    val isImage: Boolean
+)
+
+fun EventParseItem.toEventEdit(
+    sourceUrl: String?,
+    sourceImageUrl: String?,
+): EventEdit? {
+    val date = date ?: return null
+    return EventEdit(
+        title = name ?: "",
+        location = Place(location ?: ""),
+        imageUrl = imageUrl,
+        description = description,
+        url = url,
+        sourceUrl = sourceUrl,
+        sourceImageUrl = sourceImageUrl,
+        ageMin = ageMin?.takeIf { it > 0 },
+        startsAt = startsAt,
+        date = date
+    )
 }

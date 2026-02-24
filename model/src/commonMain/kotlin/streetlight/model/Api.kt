@@ -19,7 +19,7 @@ import streetlight.model.data.Location
 import streetlight.model.data.LocationId
 import streetlight.model.data.NewCommunity
 import streetlight.model.data.EventEdit
-import streetlight.model.data.NewLocation
+import streetlight.model.data.Place
 import streetlight.model.data.NewSong
 import streetlight.model.data.Song
 import streetlight.model.data.SongId
@@ -32,6 +32,7 @@ import streetlight.model.data.AreaTransit
 import streetlight.model.data.EventInfo
 import streetlight.model.data.EventParse
 import streetlight.model.data.MapQuery
+import streetlight.model.data.ReadEventRequest
 import streetlight.model.data.TalentEdit
 import streetlight.model.data.StoryParse
 import streetlight.model.data.Talent
@@ -50,7 +51,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object QueryMap: QueryEndpoint<MapQuery, List<EventInfo>>(this, "bounds")
         // object UserEvents: ApiDaoEndpoint<Event, EventId, NewEvent>(this, "user")
         object Upload: PostEndpoint<ByteArray, String>(this, "upload")
-        object ReadUrl: PostEndpoint<String, EventParse>(this, "read-url")
+        object ReadUrl: PostEndpoint<ReadEventRequest, EventParse>(this, "read-url")
     }
 
     object StreetFeed: GetEndpoint<List<Community>>(this, "areas") {
@@ -58,7 +59,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
     }
 
     object LocationFeed: GetByTableIdEndpoint<LocationId, Location>(this, "locations") {
-        object Create: PostEndpoint<NewLocation, LocationId>(this, "create")
+        object Create: PostEndpoint<Place, LocationId>(this, "create")
         object Street: GetByTableIdEndpoint<CommunityId, List<Location>>(this, "street")
         object Update: PostEndpoint<Location, Boolean>(this, "update")
         object Search: GetEndpoint<List<Location>>(this, "search") {

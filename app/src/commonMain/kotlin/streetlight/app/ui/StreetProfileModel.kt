@@ -9,8 +9,7 @@ import streetlight.app.AppProvider
 import streetlight.app.StreetProfileRoute
 import streetlight.app.RuntimeProvider
 import streetlight.model.data.Location
-import streetlight.model.data.NewLocation
-import streetlight.model.data.toProjectId
+import streetlight.model.data.Place
 
 class StreetProfileModel(
     private val route: StreetProfileRoute,
@@ -53,7 +52,7 @@ class StreetProfileModel(
         if (!stateNow.isValidNewItem) return
         val name = stateNow.newName.takeIf { it.isNotBlank() } ?: return
         viewModelScope.launch {
-            app.repo.location.createLocation(NewLocation(
+            app.repo.location.createLocation(Place(
                 name = name,
                 geoPoint = GeoPoint(stateNow.newLongitude.toDouble(), stateNow.newLatitude.toDouble())
             ))

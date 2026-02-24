@@ -1,6 +1,8 @@
 package koala.dom
 
 import koala.css.Modifier
+import koala.external.ScrollIntoViewOptions
+import kotlinx.browser.window
 import kotlinx.dom.addClass
 import kotlinx.dom.removeClass
 import org.w3c.dom.Element
@@ -17,4 +19,29 @@ fun Node.modify(vararg modifier: Modifier) {
 fun Node.unmodify(vararg modifier: Modifier) {
     val element = this as? Element ?: error("not an element")
     element.unmodify(*modifier)
+}
+
+
+private const val MAX_ATTEMPTS = 30
+
+fun Element.scrollWhenPresent(
+    options: ScrollIntoViewOptions? = ScrollIntoViewOptions(
+        behavior = "smooth",
+        block = "nearest"
+    )
+) {
+    var attempts = 0
+
+    fun tryScroll() {
+        if (isConnected) {
+            scrollIntoView(options)
+            return
+        }
+
+        if (++attempts >= MAX_ATTEMPTS) return
+
+        window.requestAnimationFrame { tryScroll() }
+    }
+
+    window.requestAnimationFrame { tryScroll() }
 }
