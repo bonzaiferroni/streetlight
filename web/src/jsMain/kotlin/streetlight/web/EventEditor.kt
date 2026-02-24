@@ -40,7 +40,6 @@ class EventEditor(
     override val placeFlow = eventFlow.mapDistinct { it.place }
 
     val imageUrlFlow = stateFlow.mapDistinct { it.event.imageUrl }
-    val userImagesFlow = stateFlow.mapDistinct { it.userImages }
     val datetimeFlow = stateFlow.mapDistinct { it.event.startsAt?.toLocalDateTime() }
     val timeFlow = datetimeFlow.mapDistinct { it?.time ?: tomorrowNoon().toLocalDateTime().time }
     val dateFlow = datetimeFlow.mapDistinct { it?.date ?: tomorrowNoon().toLocalDateTime().date }
@@ -55,10 +54,6 @@ class EventEditor(
 
     init {
         scope.launch {
-            launch {
-                val images = client.api.readUserFiles(UserFileRequest(FileUse.EventImage)) ?: emptyList()
-                state.set { it.copy(userImages = images) }
-            }
             launch {
                 val locationId = eventNow.locationId
                 val placeName = eventNow.place?.name
@@ -145,8 +140,7 @@ class EventEditor(
     }
 
     fun setImageUrl(url: String?) {
-        val images = if (url != null) stateNow.userImages + url else stateNow.userImages
-        state.set { it.copy(event = eventNow.copy(imageUrl = url), userImages = images) }
+        state.set { it.copy(event = eventNow.copy(imageUrl = url)) }
     }
 
     private fun setEvent(provideEvent: (EventEdit) -> EventEdit) {
@@ -171,7 +165,6 @@ class EventEditor(
 
 data class EventEditorState(
     val event: EventEdit,
-    val userImages: List<String> = emptyList(),
     val possibleLocations: List<Location> = emptyList(),
     val isVisible: Boolean = false,
 )

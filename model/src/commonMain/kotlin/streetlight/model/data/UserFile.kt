@@ -31,9 +31,8 @@ enum class FileType {
 
 @Serializable
 enum class FileUse {
-    ProfileImage,
-    EventImage,
-    LocationImage,
+    FullImage,
+    ThumbImage,
 }
 
 @Serializable

@@ -29,6 +29,7 @@ value class LocationId(override val value: String): ProjectId {
     companion object { fun random() = LocationId(randomUuidString())}
 }
 
+@Serializable
 data class LocationEdit(
     val locationId: LocationId? = null,
     val name: String = "",
@@ -37,6 +38,9 @@ data class LocationEdit(
     val notes: String? = null,
     val geoPoint: GeoPoint = GeoPoint.Denver,
     val resources: Set<ResourceType> = emptySet(),
+    val imageUrl: String? = null,
+    val thumbUrl: String? = null,
+    val isHost: Boolean = false,
 )
 
 @Serializable
@@ -83,6 +87,23 @@ fun Place.toLocation(
     resources = emptySet(),
     imageUrl = null,
     thumbUrl = null,
+    updatedAt = Clock.System.now(),
+    createdAt = Clock.System.now()
+)
+
+fun LocationEdit.toLocation(
+    userId: UserId? = null
+) = Location(
+    locationId = locationId ?: LocationId.random(),
+    hostId = userId,
+    name = name,
+    geoPoint = geoPoint,
+    description = description,
+    address = address,
+    notes = notes,
+    resources = resources,
+    imageUrl = imageUrl.also { println("ey: ${it}") },
+    thumbUrl = thumbUrl,
     updatedAt = Clock.System.now(),
     createdAt = Clock.System.now()
 )

@@ -10,6 +10,7 @@ import koala.model.mapDistinct
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import streetlight.model.data.Location
 import streetlight.model.data.LocationEdit
 import streetlight.model.data.LocationId
 import streetlight.model.data.Place
@@ -53,6 +54,10 @@ class LocationEditor(
         edit.set { it.copy(resources = value) }
     }
 
+    fun setImageUrl(value: String?) {
+        edit.set { it.copy(imageUrl = value) }
+    }
+
     override fun lookUp() {
         queryLocation(true)
     }
@@ -80,14 +85,7 @@ class LocationEditor(
     }
 
     suspend fun saveLocation(): LocationId? {
-        val edit = editNow
-        // Convert to a minimal Place for creation API
-        val place = Place(
-            name = edit.name,
-            address = edit.address,
-            geoPoint = edit.geoPoint
-        )
-        return api.editLocation(editNow)
+        return api.editLocation(editNow.also { console.log("ey: ${it.imageUrl}") })?.locationId
     }
 
     private fun setPlace(place: OSMPlace) {

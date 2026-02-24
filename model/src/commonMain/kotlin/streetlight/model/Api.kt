@@ -37,7 +37,6 @@ import streetlight.model.data.ReadEventRequest
 import streetlight.model.data.TalentEdit
 import streetlight.model.data.StoryParse
 import streetlight.model.data.Talent
-import streetlight.model.data.UserFileRequest
 
 object Api: ApiNode(ApiNode(null, "api"), "v1") {
 
@@ -60,9 +59,11 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
     }
 
     object Locations: GetByTableIdEndpoint<LocationId, Location>(this, "locations") {
+        @Deprecated("use edit")
         object Create: PostEndpoint<Place, LocationId>(this, "create")
-        object Edit: PostEndpoint<LocationEdit, LocationId>(this, "create")
+        object Edit: PostEndpoint<LocationEdit, Location>(this, "edit")
         object Street: GetByTableIdEndpoint<CommunityId, List<Location>>(this, "street")
+        @Deprecated("use edit")
         object Update: PostEndpoint<Location, Boolean>(this, "update")
         object Search: GetEndpoint<List<Location>>(this, "search") {
             val query = addStringParam("q")
@@ -114,7 +115,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
     }
 
     object Users: ApiNode(this, "users") {
-        object Images: PostEndpoint<UserFileRequest, List<String>>(this, "images")
+        object Files: GetEndpoint<List<String>>(this, "files")
         object Talents: GetEndpoint<List<Talent>>(this, "talents")
         object EditTalent: PostEndpoint<TalentEdit, Talent>(this, "edit-talent")
     }

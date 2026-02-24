@@ -15,6 +15,8 @@ fun RenderContext.eventEditorView(
     app: AppContext,
     callback: ((Event?) -> Unit)?
 ) {
+    val imagesFlow = app.userCache.files.flow
+
     column(modify(Gap4)) {
         column(modify(Gap0)) {
             heading3("What's happening?", modify(Padding1, Dim))
@@ -22,10 +24,10 @@ fun RenderContext.eventEditorView(
                 blockLabel("feature image") {
                     imageChoice(
                         modifiers = modify(MinHeight8),
-                        onUpload = { app.client.api.uploadFeatureImage(it) },
+                        onUpload = { app.client.api.uploadFile(it) },
                         onValueChanged = model::setImageUrl,
                         urlFlow = model.imageUrlFlow,
-                        choicesFlow = model.userImagesFlow
+                        choicesFlow = imagesFlow
                     )
                 }
                 column(modify(QueryRow, AlignItemsStretch)) {
