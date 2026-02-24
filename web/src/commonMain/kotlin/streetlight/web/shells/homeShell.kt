@@ -16,15 +16,16 @@ import koala.html.textBlock
 import kotlinx.html.FlowContent
 import kotlinx.html.footer
 import streetlight.model.data.Event
+import streetlight.model.data.Location
 import streetlight.web.EventObjectRoute
 import streetlight.web.SandboxRoute
 import streetlight.web.pages.appFooter
 
-fun FlowContent.homeShell(events: List<Event> = emptyList()) {
+fun FlowContent.homeShell(events: List<Event> = emptyList(), locations: List<Location> = emptyList()) {
     box(HomeShell.homeBoxId) {
         tabs(HomeShell.tabsId, modify(Width100)) {
             tab("Haps") {
-                hapsTab(events)
+                hapsTab(events, locations)
             }
             tab("Maps") {
                 column(modify(AlignItemsCenter)) {

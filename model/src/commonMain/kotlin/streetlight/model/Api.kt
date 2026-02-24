@@ -31,6 +31,7 @@ import streetlight.model.data.RequestId
 import streetlight.model.data.AreaTransit
 import streetlight.model.data.EventInfo
 import streetlight.model.data.EventParse
+import streetlight.model.data.LocationEdit
 import streetlight.model.data.MapQuery
 import streetlight.model.data.ReadEventRequest
 import streetlight.model.data.TalentEdit
@@ -58,8 +59,9 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object Create: PostEndpoint<NewCommunity, CommunityId>(this, "create")
     }
 
-    object LocationFeed: GetByTableIdEndpoint<LocationId, Location>(this, "locations") {
+    object Locations: GetByTableIdEndpoint<LocationId, Location>(this, "locations") {
         object Create: PostEndpoint<Place, LocationId>(this, "create")
+        object Edit: PostEndpoint<LocationEdit, LocationId>(this, "create")
         object Street: GetByTableIdEndpoint<CommunityId, List<Location>>(this, "street")
         object Update: PostEndpoint<Location, Boolean>(this, "update")
         object Search: GetEndpoint<List<Location>>(this, "search") {

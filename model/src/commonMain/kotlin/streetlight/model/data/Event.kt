@@ -54,7 +54,7 @@ data class EventEdit(
     val title: String = "",
     val eventType: EventType = EventType.Show,
     val locationId: LocationId? = null,
-    val location: Place? = null,
+    val place: Place? = null,
     val imageUrl: String? = null,
     val description: String? = null,
     val url: String? = null,
@@ -67,7 +67,7 @@ data class EventEdit(
     val startsAt: Instant? = null,
     val date: LocalDate = (startsAt ?: tomorrowNoon()).toLocalDateTime(TimeZone.currentSystemDefault()).date,
 ) {
-    val isValid get() = title.isNotBlank() && (location != null && location.isValid || locationId != null)
+    val isValid get() = title.isNotBlank() && (place != null && place.isValid || locationId != null)
 }
 
 fun Event.toEdit() = EventEdit(
@@ -140,7 +140,7 @@ fun EventParseItem.toEventEdit(
     val date = date ?: return null
     return EventEdit(
         title = name ?: "",
-        location = Place(location ?: ""),
+        place = Place(location ?: ""),
         imageUrl = imageUrl,
         description = description,
         url = url,

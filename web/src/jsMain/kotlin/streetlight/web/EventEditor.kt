@@ -4,8 +4,6 @@ import kampfire.model.GeoPoint
 import koala.dom.UIMessage
 import koala.dom.UIMessageType
 import koala.dom.set
-import koala.model.GeoMap
-import koala.model.PanPoint
 import koala.model.mapDistinct
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
@@ -24,26 +22,25 @@ import streetlight.model.data.UserFileRequest
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import streetlight.model.data.Event
-import streetlight.model.data.EventParseItem
+import streetlight.model.data.toPlace
 import streetlight.model.utils.toLocalDateTime
 import streetlight.model.utils.tomorrowNoon
 
 class EventEditor(
+    initialEvent: EventEdit,
     private val scope: CoroutineScope,
     private val client: ClientContext,
-    private val geoMap: GeoMap,
-) {
-    private val state = storeOf(EventEditorState())
+): PlaceEditor {
+    private val state = storeOf(EventEditorState(initialEvent))
     private val stateFlow = state.flow
     private val eventFlow = state.flow.mapDistinct { it.event }
     private val stateNow get() = state.now
     val message = storeOf(UIMessage())
 
+    override val placeFlow = eventFlow.mapDistinct { it.place }
+
     val imageUrlFlow = stateFlow.mapDistinct { it.event.imageUrl }
     val userImagesFlow = stateFlow.mapDistinct { it.userImages }
-    val locationFlow = eventFlow.mapDistinct { it.location?.name }
-    val pointFlow = eventFlow.mapDistinct { it.location?.geoPoint }
-    val addressFlow = eventFlow.mapDistinct { it.location?.address ?: "" }
     val datetimeFlow = stateFlow.mapDistinct { it.event.startsAt?.toLocalDateTime() }
     val timeFlow = datetimeFlow.mapDistinct { it?.time ?: tomorrowNoon().toLocalDateTime().time }
     val dateFlow = datetimeFlow.mapDistinct { it?.date ?: tomorrowNoon().toLocalDateTime().date }
@@ -52,27 +49,26 @@ class EventEditor(
     val urlFlow = stateFlow.mapDistinct { it.event.url }
 
     val eventNow get() = stateNow.event
-    val locationNow get() = eventNow.location
+    val locationNow get() = eventNow.place
 
     private val api get() = client.api
 
     init {
         scope.launch {
             launch {
-                geoMap.centerFlow.collect(::setGeoPoint)
-            }
-            launch {
                 val images = client.api.readUserFiles(UserFileRequest(FileUse.EventImage)) ?: emptyList()
                 state.set { it.copy(userImages = images) }
             }
-        }
-    }
-
-    fun initEvent(event: EventEdit) {
-        setEvent { event }
-        event.location?.let { location ->
-            if (location.geoPoint == null) {
-                queryLocation(false)
+            launch {
+                val locationId = eventNow.locationId
+                val placeName = eventNow.place?.name
+                val geoPoint = eventNow.place?.geoPoint
+                if (locationId != null) {
+                    val place = api.readLocation(locationId)?.toPlace() ?: return@launch
+                    setPlace(place)
+                } else if (placeName != null && geoPoint == null) {
+                    queryLocation(false)
+                }
             }
         }
     }
@@ -81,20 +77,20 @@ class EventEditor(
         setEvent { it.copy(title = value)}
     }
 
-    fun setLocationName(name: String) {
-        setPlace { it.copy(name = name) }
+    override fun setPlaceName(value: String) {
+        setPlace { it.copy(name = value) }
+    }
+
+    override fun setAddress(value: String) {
+        setPlace { it.copy(address = value) }
+    }
+
+    override fun setPoint(value: GeoPoint) {
+        setPlace { it.copy(geoPoint = value)}
     }
 
     fun setEventType(value: EventType) {
         setEvent { it.copy(eventType = value) }
-    }
-
-    fun setGeoPoint(value: GeoPoint) {
-        setPlace { it.copy(geoPoint = value)}
-    }
-
-    fun setAddress(value: String) {
-        setPlace { it.copy(address = value) }
     }
 
     fun setTime(value: LocalTime) {
@@ -115,19 +111,6 @@ class EventEditor(
         setEvent { it.copy(url = value) }
     }
 
-    fun setEventParse(value: List<EventParseItem>) {
-        val value = value.firstOrNull() ?: return
-        setEvent { it.copy(
-            title = value.name ?: eventNow.title,
-            imageUrl = value.imageUrl ?: eventNow.imageUrl,
-            startsAt = value.startsAt ?: eventNow.startsAt,
-            description = value.description ?: eventNow.description,
-            // location
-            // address
-        )}
-
-    }
-
     suspend fun saveEvent(): Event? {
         val event = eventNow
         if (!event.isValid) return null
@@ -136,9 +119,13 @@ class EventEditor(
         return savedEvent
     }
 
+    override fun lookUp() {
+        queryLocation(true)
+    }
+
     fun queryLocation(reverse: Boolean) {
         if (reverse) {
-            val center = eventNow.location?.geoPoint ?: return
+            val center = eventNow.place?.geoPoint ?: return
             scope.launch {
                 val place = client.location.readPlace(center)
                 if (place == null) {
@@ -148,7 +135,7 @@ class EventEditor(
                 setPlace(place)
             }
         } else {
-            val location = eventNow.location?.name ?: return
+            val location = eventNow.place?.name ?: return
             scope.launch {
                 val query = OSMQuery(amenity = location, state = "CO")
                 val place = client.location.readPlace(query)?.firstOrNull() ?: return@launch
@@ -162,21 +149,12 @@ class EventEditor(
         state.set { it.copy(event = eventNow.copy(imageUrl = url), userImages = images) }
     }
 
-    fun setVisibility(value: Boolean) {
-        if (value) {
-            geoMap.setEntityVisibility { it is EventEntity }
-        } else {
-            geoMap.setEntityVisibility { true }
-        }
-        state.set { it.copy(isVisible = value) }
-    }
-
     private fun setEvent(provideEvent: (EventEdit) -> EventEdit) {
         state.set { it.copy(event = provideEvent(eventNow)) }
     }
 
     private fun setPlace(provideLocation: (Place) -> Place) {
-        setEvent { it.copy(location = provideLocation(locationNow ?: Place())) }
+        setEvent { it.copy(place = provideLocation(locationNow ?: Place())) }
     }
 
     private fun setPlace(place: OSMPlace) {
@@ -187,18 +165,13 @@ class EventEditor(
     }
 
     private fun setPlace(place: Place) {
-        place.geoPoint?.let { point ->
-            geoMap.panMap(PanPoint(point = point, zoom = 18f))
-        }
-
         setPlace { place }
     }
 }
 
 data class EventEditorState(
+    val event: EventEdit,
     val userImages: List<String> = emptyList(),
-    val event: EventEdit = EventEdit(),
-    val location: Location? = null,
     val possibleLocations: List<Location> = emptyList(),
     val isVisible: Boolean = false,
 )

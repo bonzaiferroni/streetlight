@@ -26,7 +26,7 @@ class GeoMap(
     val viewedStateFlow = stateFlow.filter { it.isViewed }
     val zoomFlow = viewedStateFlow.mapDistinct { it.zoom }
     val movingBoundsFlow = viewedStateFlow.mapDistinct { it.movingBounds }
-    val centerFlow = viewedStateFlow.mapDistinct { it.center }
+    val centerFlow = viewedStateFlow.filter { !it.isMoving }.mapDistinct { it.center }
     val boundsFlow = viewedStateFlow.filter { it.isViewed }.mapDistinct { it.bounds }
 
     fun addEntities(entities: List<MapEntity>) {

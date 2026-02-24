@@ -19,13 +19,13 @@ interface LocationRepository {
 class LocationApiClient(
     private val client: NeoApiClient
 ): LocationRepository {
-    override suspend fun readLocation(locationId: LocationId) = client.getById(Api.LocationFeed, locationId)
-    override suspend fun createLocation(place: Place) = client.request(Api.LocationFeed.Create, place)
-    override suspend fun updateLocation(location: Location) = client.request(Api.LocationFeed.Update, location)
-    override suspend fun search(query: String) = client.request(Api.LocationFeed.Search) {
+    override suspend fun readLocation(locationId: LocationId) = client.getById(Api.Locations, locationId)
+    override suspend fun createLocation(place: Place) = client.request(Api.Locations.Create, place)
+    override suspend fun updateLocation(location: Location) = client.request(Api.Locations.Update, location)
+    override suspend fun search(query: String) = client.request(Api.Locations.Search) {
         write(it.query, query)
     }
-    override suspend fun readTop(count: Int) = client.request(Api.LocationFeed.ReadTop) {
+    override suspend fun readTop(count: Int) = client.request(Api.Locations.ReadTop) {
         write(it.count, count)
     }
 }

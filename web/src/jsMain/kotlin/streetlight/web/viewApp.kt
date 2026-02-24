@@ -50,7 +50,7 @@ fun viewApp() {
                 StreetlightScreen.Home -> viewHome(app)
                 StreetlightScreen.Event -> viewEventRoute(app)
                 StreetlightScreen.Account -> viewAccount(app)
-                StreetlightScreen.EditEvent -> eventEditorView(app)
+                StreetlightScreen.EditEvent -> eventEditorRouteView(app)
                 StreetlightScreen.Sandbox -> viewSandbox(app)
                 StreetlightScreen.FullMap -> viewFullMap(app)
                 StreetlightScreen.EditStory -> viewPostEditor(app)
@@ -58,6 +58,9 @@ fun viewApp() {
                 StreetlightScreen.SongProfile -> viewSongProfile(app)
                 StreetlightScreen.EditTalent -> editTalentForm(app)
                 StreetlightScreen.CreateEvent -> eventRelayView(app)
+                StreetlightScreen.LocationProfile -> locationProfileView(app)
+                StreetlightScreen.EditLocation -> locationEditorRouteView(app)
+                else -> textBlock("Coming soon: $screen")
             }
         }
     }

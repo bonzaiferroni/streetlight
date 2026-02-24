@@ -6,7 +6,8 @@ import koala.html.AppScreen
 import streetlight.model.data.Event
 import streetlight.model.data.EventEdit
 import streetlight.model.data.EventId
-import streetlight.model.data.EventParseItem
+import streetlight.model.data.LocationEdit
+import streetlight.model.data.LocationId
 import streetlight.model.data.PostId
 import streetlight.model.data.SongId
 import streetlight.model.data.TalentId
@@ -20,6 +21,7 @@ enum class StreetlightScreen(
     Event("event", { path -> path.provideRouteFromPath { EventIdRoute(EventId(it)) }  }),
     EditEvent("edit-event", { path -> EditEventIdRoute(path.provideId { EventId(it) }) }),
     EditStory("edit-story", { path -> EditPostRoute(path.provideId { PostId(it) }) }),
+    EditLocation("edit-location", { path -> EditLocationIdRoute(path.provideId { LocationId(it)} ) }),
     Sandbox("sandbox", { SandboxRoute }),
     FullMap("full-map", { FullMapRoute }),
     Chat("chat", { ChatRoute }),
@@ -27,6 +29,7 @@ enum class StreetlightScreen(
     TalentProfile("talent-profile", { path -> path.provideRouteFromPath { TalentProfileRoute(TalentId(it)) } }),
     EditTalent("edit-talent", { path -> EditTalentRoute(path.provideId { TalentId(it)} ) }),
     CreateEvent("create-event", { CreateEventRoute }),
+    LocationProfile("location-profile", { path -> path.provideRouteFromPath { LocationProfileRoute(LocationId(it)) } }),
 }
 
 fun List<String>.provideRouteFromPath(argIndex: Int = 1, provideRoute: (String) -> AppRoute?) =
@@ -119,4 +122,27 @@ data class EditTalentRoute(
 
 object CreateEventRoute: StreetlightRoute {
     override val screen get() = StreetlightScreen.CreateEvent
+}
+
+data class LocationProfileRoute(
+    val locationId: LocationId
+): StreetlightRoute, StringIdRoute {
+    override val screen get() = StreetlightScreen.LocationProfile
+    override val id get() = locationId
+}
+
+sealed interface EditLocationRoute: StreetlightRoute {
+    override val screen get() = StreetlightScreen.EditLocation
+}
+
+data class EditLocationIdRoute(
+    val locationId: LocationId?
+): EditLocationRoute, StringIdRoute {
+    override val id get() = locationId
+}
+
+data class EditLocationDataRoute(
+    val location: LocationEdit
+): EditLocationRoute, StringIdRoute {
+    override val id get() = location.locationId
 }

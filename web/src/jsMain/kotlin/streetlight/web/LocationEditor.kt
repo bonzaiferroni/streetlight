@@ -1,0 +1,112 @@
+package streetlight.web
+
+import kampfire.model.GeoPoint
+import koala.dom.UIMessage
+import koala.dom.UIMessageType
+import koala.dom.set
+import koala.model.GeoMap
+import koala.model.PanPoint
+import koala.model.mapDistinct
+import koala.model.storeOf
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
+import streetlight.model.data.LocationEdit
+import streetlight.model.data.LocationId
+import streetlight.model.data.Place
+import streetlight.model.data.ResourceType
+import streetlight.model.data.toPlace
+
+class LocationEditor(
+    initialData: LocationEdit,
+    private val scope: CoroutineScope,
+    private val client: ClientContext,
+): PlaceEditor {
+    private val edit = storeOf(initialData)
+    private val editNow get() = edit.now
+    val editFlow = edit.flow
+    val message = storeOf(UIMessage())
+    override val placeFlow = editFlow.mapDistinct { it.toPlace() }
+
+    private val api get() = client.api
+
+    override fun setPlaceName(value: String) {
+        edit.set { it.copy(name = value) }
+    }
+
+    fun setDescription(value: String?) {
+        edit.set { it.copy(description = value) }
+    }
+
+    override fun setAddress(value: String) {
+        edit.set { it.copy(address = value) }
+    }
+
+    fun setNotes(value: String?) {
+        edit.set { it.copy(notes = value) }
+    }
+
+    override fun setPoint(value: GeoPoint) {
+        edit.set { it.copy(geoPoint = value) }
+    }
+
+    fun setResources(value: Set<ResourceType>) {
+        edit.set { it.copy(resources = value) }
+    }
+
+    override fun lookUp() {
+        queryLocation(true)
+    }
+
+    fun queryLocation(reverse: Boolean) {
+        if (reverse) {
+            val center = editNow.geoPoint
+            scope.launch {
+                val place = client.location.readPlace(center)
+                if (place == null) {
+                    message.set("Unable to read place", UIMessageType.Error)
+                    return@launch
+                }
+                setPlace(place)
+            }
+        } else {
+            val name = editNow.name
+            if (name.isBlank()) return
+            scope.launch {
+                val query = OSMQuery(amenity = name, state = "CO")
+                val place = client.location.readPlace(query)?.firstOrNull() ?: return@launch
+                setPlace(place)
+            }
+        }
+    }
+
+    suspend fun saveLocation(): LocationId? {
+        val edit = editNow
+        // Convert to a minimal Place for creation API
+        val place = Place(
+            name = edit.name,
+            address = edit.address,
+            geoPoint = edit.geoPoint
+        )
+        return api.editLocation(editNow)
+    }
+
+    private fun setPlace(place: OSMPlace) {
+        val point = place.toGeoPoint()
+        val address = place.address.toBasicString() ?: ""
+        val name = place.name.takeIf { it.isNotBlank() } ?: address
+        setPlace(Place(name = name, address = address, geoPoint = point))
+    }
+
+    private fun setPlace(place: Place) {
+        edit.set { it.copy(
+            name = place.name ?: it.name,
+            address = place.address ?: it.address,
+            geoPoint = place.geoPoint ?: it.geoPoint)
+        }
+    }
+}
+
+private fun Address.toBasicString(): String? {
+    val road = road ?: return null
+    return if (number != null) "$number $road" else road
+}
