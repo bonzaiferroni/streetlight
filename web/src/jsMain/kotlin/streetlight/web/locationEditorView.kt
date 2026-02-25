@@ -45,9 +45,8 @@ fun RenderContext.locationEditorRouteView(app: AppContext) {
         provideData = { route ->
             when (route) {
                 is EditLocationDataRoute -> route.location
-                is EditLocationIdRoute -> route.locationId?.let {
-                    api.readLocation(it)?.toEdit()
-                } ?: LocationEdit()
+                is EditLocationIdRoute -> api.readLocation(route.locationId)?.toEdit()
+                is CreateLocationRoute -> LocationEdit()
             }
         }
     ) {

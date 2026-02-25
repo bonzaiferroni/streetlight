@@ -36,7 +36,7 @@ class StreetMap(
     init {
         scope.launch {
             geoMap.stateFlow.collect { geoMapState ->
-                setBounds(geoMapState.movingBounds, geoMapState.zoom)
+                setBounds(geoMapState.bounds, geoMapState.zoom)
             }
         }
     }
@@ -63,6 +63,7 @@ class StreetMap(
             setState { it.copy(bounds = bounds, zoom = zoom, events = events)}
         } else {
             val queriedBounds = bounds.expandBy(1.2f)
+            queries.add(QueryBounds(Clock.System.now(), queriedBounds))
             setState { it.copy(bounds = bounds, zoom = zoom, queriedBounds = queriedBounds, isQuerying = true)}
             scope.launch {
                 val areaEvents = client.api.queryMap(MapQuery(queriedBounds, stateNow.zoom)) ?: emptyList()

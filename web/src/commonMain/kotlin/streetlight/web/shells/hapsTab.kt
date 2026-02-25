@@ -5,6 +5,7 @@ import koala.css.ElementClass
 import koala.css.FlexItems1
 import koala.css.Width100
 import koala.css.modify
+import koala.html.AppRoute
 import koala.html.SiteImage
 import koala.html.ThumbImage
 import koala.html.action
@@ -20,6 +21,9 @@ import streetlight.model.data.Event
 import streetlight.model.data.Location
 import streetlight.web.ChatRoute
 import streetlight.web.CreateEventRoute
+import streetlight.web.CreateLocationRoute
+import streetlight.web.EditLocationIdRoute
+import streetlight.web.EditLocationRoute
 import streetlight.web.EditPostRoute
 import streetlight.web.EventIdRoute
 import streetlight.web.EventObjectRoute
@@ -32,31 +36,38 @@ fun FlowContent.hapsTab(events: List<Event>, locations: List<Location>) {
         row(modify(FlexItems1, AlignItemsStart)) {
             column {
                 heading3("Events")
-                events.forEach { event ->
-                    action(EventIdRoute(event.eventId), modify(Width100)) {
-                        card {
-                            row {
-                                image(event.thumbUrl, modify(ThumbImage), SiteImage.placeholderThumb)
-                                textBlock(event.title)
-                            }
-                        }
-                    }
+                events.take(10).forEach { event ->
+                    hapsCard(EventIdRoute(event.eventId), event.title, event.thumbUrl)
                 }
             }
             column {
                 heading3("Locations")
-                locations.forEach { location ->
-                    action(LocationProfileRoute(location.locationId)) {
-                        textBlock(location.name)
-                    }
+                locations.take(10).forEach { location ->
+                    hapsCard(LocationProfileRoute(location.locationId), location.name, location.thumbUrl)
                 }
             }
         }
 
         button("Create Event", CreateEventRoute)
+        button("Create location", CreateLocationRoute)
         button("Create story", EditPostRoute())
         button("Chat", ChatRoute)
         button("Go to sandbox", SandboxRoute)
         appFooter()
+    }
+}
+
+fun FlowContent.hapsCard(
+    route: AppRoute,
+    title: String,
+    thumbUrl: String?,
+) {
+    action(route, modify(Width100)) {
+        card {
+            row {
+                image(thumbUrl, modify(ThumbImage), SiteImage.placeholderThumb)
+                textBlock(title)
+            }
+        }
     }
 }

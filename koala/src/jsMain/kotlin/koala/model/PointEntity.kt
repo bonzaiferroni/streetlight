@@ -14,6 +14,7 @@ interface PointEntity: MapEntity {
     val opacity: Float? get() = null
     val subpixelPositioning: Boolean get() = true
     val iconPath: String? get() = null
+    val thumbPath: String? get() = null
     val minZoom: Float? get() = null
     val onClick: (() -> Unit)? get() = null
 }
@@ -21,14 +22,14 @@ interface PointEntity: MapEntity {
 data class MapObject(
     val marker: maplibregl.Marker,
     val entity: PointEntity,
-    val element: HTMLElement?,
-    val iconElement: HTMLElement?,
-    val bearingElement: HTMLElement? = null,
+    val base: HTMLElement?,
+    val body: HTMLElement?,
+    val bearing: HTMLElement? = null,
 ) {
     var lastBearing = 0f
 
     fun setBearing(bearing: Float) {
-        val be = bearingElement ?: return
+        val be = this@MapObject.bearing ?: return
         val delta = ((bearing - lastBearing + 540) % 360) - 180;
         lastBearing += delta
         val adjusted = lastBearing - 90
@@ -54,29 +55,28 @@ fun MapContext.recallObject(entity: PointEntity): MapObject? {
 }
 
 fun MapContext.createObject(entity: PointEntity): MapObject {
-    val element = entity.iconPath?.let {
-        document.createDiv().also {
-            it.modify(MarkerClass.base)
-        }
+    val element = document.createDiv().also {
+        it.modify(MarkerClass.base)
     }
 
     val bearingElement = entity.bearing?.let { _ ->
-        if (element != null) {
-            document.createDiv().also {
-                it.modify(MarkerClass.bearing)
-                element.appendChild(it)
-            }
-        } else null
+        document.createDiv().also {
+            it.modify(MarkerClass.bearing)
+            element.appendChild(it)
+        }
     }
 
-    val iconElement = entity.iconPath?.let { iconPath ->
-        if (element != null) {
-            document.createDiv().also {
-                it.style.setProperty("--svg", "url(${iconPath})")
-                it.modify(MarkerClass.icon)
-                element.appendChild(it)
-            }
-        } else null
+    val bodyElement = entity.iconPath?.let { iconPath ->
+        document.createDiv().also {
+            it.style.setProperty("--svg", "url(${iconPath})")
+            it.modify(MarkerClass.icon)
+            element.appendChild(it)
+        }
+    } ?: entity.thumbPath?.let { thumbPath ->
+        document.createImg(thumbPath).also {
+            it.modify(MarkerClass.thumb)
+            element.appendChild(it)
+        }
     }
 
     val options = jsObject {
@@ -88,12 +88,12 @@ fun MapContext.createObject(entity: PointEntity): MapObject {
             options = options
         ),
         entity = entity,
-        element = element,
-        iconElement = iconElement,
-        bearingElement = bearingElement
+        base = element,
+        body = bodyElement,
+        bearing = bearingElement
     )
     val onClick = entity.onClick
-    if (element != null && onClick != null) {
+    if (onClick != null) {
         element.onClick(onClick)
     }
     mapObject.marker.setLngLat(entity.position.toLngLat())
@@ -115,4 +115,5 @@ object MarkerClass {
     val base = Css("map-marker")
     val bearing = Css("marker-bearing")
     val icon = Css("marker-icon")
+    val thumb = Css("marker-thumb")
 }
