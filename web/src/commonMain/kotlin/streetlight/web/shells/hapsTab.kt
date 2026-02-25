@@ -1,13 +1,18 @@
 package streetlight.web.shells
 
 import koala.css.AlignItemsStart
+import koala.css.ElementClass
 import koala.css.FlexItems1
 import koala.css.Width100
 import koala.css.modify
+import koala.html.SiteImage
+import koala.html.ThumbImage
 import koala.html.action
 import koala.html.button
+import koala.html.card
 import koala.html.column
 import koala.html.heading3
+import koala.html.image
 import koala.html.row
 import koala.html.textBlock
 import kotlinx.html.FlowContent
@@ -28,8 +33,13 @@ fun FlowContent.hapsTab(events: List<Event>, locations: List<Location>) {
             column {
                 heading3("Events")
                 events.forEach { event ->
-                    action(EventIdRoute(event.eventId)) {
-                        textBlock(event.title)
+                    action(EventIdRoute(event.eventId), modify(Width100)) {
+                        card {
+                            row {
+                                image(event.thumbUrl, modify(ThumbImage), SiteImage.placeholderThumb)
+                                textBlock(event.title)
+                            }
+                        }
                     }
                 }
             }

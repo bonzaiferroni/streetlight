@@ -8,9 +8,9 @@ import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 
 @Serializable
-data class UserFile(
-    val userFileId: UserFileId,
-    val userId: UserId,
+data class UploadFile(
+    val uploadFileId: UploadFileId,
+    val userId: UserId?,
     val url: String,
     val fileType: FileType,
     val fileUse: FileUse,
@@ -20,8 +20,8 @@ data class UserFile(
 
 @JvmInline
 @Serializable
-value class UserFileId(override val value: String) : TableId<String>, ProjectId {
-    companion object { fun random() = UserFileId(randomUuidString())}
+value class UploadFileId(override val value: String) : TableId<String>, ProjectId {
+    companion object { fun random() = UploadFileId(randomUuidString())}
 }
 
 @Serializable

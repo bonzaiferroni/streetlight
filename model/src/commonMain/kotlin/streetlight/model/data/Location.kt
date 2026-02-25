@@ -102,7 +102,7 @@ fun LocationEdit.toLocation(
     address = address,
     notes = notes,
     resources = resources,
-    imageUrl = imageUrl.also { println("ey: ${it}") },
+    imageUrl = imageUrl,
     thumbUrl = thumbUrl,
     updatedAt = Clock.System.now(),
     createdAt = Clock.System.now()

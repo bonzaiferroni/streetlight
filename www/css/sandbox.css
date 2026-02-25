@@ -182,3 +182,11 @@ textarea {
     background: var(--black-bg);
     color: rgb(var(--white));
 }
+
+/*thumb image*/
+
+.thumb-image {
+    width: 64px;
+    height: 64px;
+    border-radius: 32px;
+}

@@ -11,7 +11,7 @@ import kotlinx.html.style
 import org.w3c.dom.HTMLImageElement
 
 fun RenderContext.image(
-    initial: String? = SiteImage.placeholderImage,
+    initial: String? = SiteImage.placeholder,
     modifiers: ModifierSet? = null,
     binding: Flow<String?>? = null,
     hideOnError: Boolean = true,
