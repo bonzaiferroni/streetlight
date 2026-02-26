@@ -7,6 +7,7 @@ import koala.model.Portal
 import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 import streetlight.web.pages.AppBody
 
 fun viewApp() {
@@ -34,34 +35,38 @@ fun viewApp() {
         override val chatRoom = ChatRoom(scope, client.api)
     }
 
-    val shellBox = document.getElementById(AppBody.shellBoxId)
-    shellBox.style.display = "none"
+    scope.launch {
+        app.gate.handshake()
 
-    val portalMount = document.getElementById(AppBody.portalMountId)
-    portalMount.renderRoot(app.appScope) {
-        flowBlock(
-            flow = app.portal.screenFlow,
-            modifiers = modify(MagicBlur, MagicSlideY),
-            cacheRenderedElements = true,
-            animate = true,
-            onTransition = { window.scrollTo(0.0, 0.0) },
-        ) { screen ->
-            when (screen) {
-                StreetlightScreen.Home -> viewHome(app)
-                StreetlightScreen.Event -> viewEventRoute(app)
-                StreetlightScreen.Account -> viewAccount(app)
-                StreetlightScreen.EditEvent -> eventEditorRouteView(app)
-                StreetlightScreen.Sandbox -> viewSandbox(app)
-                StreetlightScreen.FullMap -> viewFullMap(app)
-                StreetlightScreen.EditStory -> viewPostEditor(app)
-                StreetlightScreen.Chat -> viewChatRoom(app)
-                StreetlightScreen.SongProfile -> viewSongProfile(app)
-                StreetlightScreen.EditTalent -> editTalentForm(app)
-                StreetlightScreen.CreateEvent -> eventRelayView(app)
-                StreetlightScreen.LocationProfile -> locationProfileView(app)
-                StreetlightScreen.EditLocation -> locationEditorRouteView(app)
-                StreetlightScreen.LocationAdmin -> locationAdminRouteView(app)
-                else -> textBlock("Coming soon: $screen")
+        val shellBox = document.getElementById(AppBody.shellBoxId)
+        shellBox.style.display = "none"
+
+        val portalMount = document.getElementById(AppBody.portalMountId)
+        portalMount.renderRoot(app.appScope) {
+            flowBlock(
+                flow = app.portal.screenFlow,
+                modifiers = modify(MagicBlur, MagicSlideY),
+                cacheRenderedElements = true,
+                animate = true,
+                onTransition = { window.scrollTo(0.0, 0.0) },
+            ) { screen ->
+                when (screen) {
+                    StreetlightScreen.Home -> viewHome(app)
+                    StreetlightScreen.Event -> viewEventRoute(app)
+                    StreetlightScreen.Account -> viewAccount(app)
+                    StreetlightScreen.EditEvent -> eventEditorRouteView(app)
+                    StreetlightScreen.Sandbox -> viewSandbox(app)
+                    StreetlightScreen.FullMap -> viewFullMap(app)
+                    StreetlightScreen.EditStory -> viewPostEditor(app)
+                    StreetlightScreen.Chat -> viewChatRoom(app)
+                    StreetlightScreen.SongProfile -> viewSongProfile(app)
+                    StreetlightScreen.EditTalent -> editTalentForm(app)
+                    StreetlightScreen.CreateEvent -> eventRelayView(app)
+                    StreetlightScreen.LocationProfile -> locationProfileView(app)
+                    StreetlightScreen.EditLocation -> locationEditorRouteView(app)
+                    StreetlightScreen.LocationAdmin -> locationAdminRouteView(app)
+                    else -> textBlock("Coming soon: $screen")
+                }
             }
         }
     }

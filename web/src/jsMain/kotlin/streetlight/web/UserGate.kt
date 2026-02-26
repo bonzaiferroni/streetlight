@@ -26,12 +26,16 @@ class UserGate(
         if (!cred.stateNow.hasCredentials) return
         console.log("signing in")
         scope.launch {
-            val user = api.readUserInfo()
-            if (user != null) {
-                state.set { it.copy(user = user) }
-            } else {
-                state.set { it.copy(message = "Unable to sign in.")}
-            }
+            handshake()
+        }
+    }
+
+    suspend fun handshake() {
+        val user = api.readUserInfo()
+        if (user != null) {
+            state.set { it.copy(user = user) }
+        } else {
+            state.set { it.copy(message = "Unable to sign in.")}
         }
     }
 
