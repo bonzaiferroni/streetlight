@@ -1,8 +1,6 @@
-package streetlight.web
+package koala.dom
 
 import koala.core.queryFirstOrNull
-import koala.dom.getElementOrNullById
-import koala.dom.onView
 import koala.external.CenterZoomBearing
 import koala.external.maplibregl
 import kotlinx.coroutines.delay
@@ -22,7 +20,7 @@ fun wireGeoMap(
     appScope: CoroutineScope,
     ancestor: HTMLElement,
 ) {
-    val mount = ancestor.queryFirstOrNull(GeoMapSelector.mapMount) ?: error("No geomap mount descendent")
+    val mount = ancestor.queryFirstOrNull(GeoMapSelector.mapMount) ?: return
     val mapWindow = initMapWindow(geoMap, appScope)
 
     mount.onView { isVisible ->

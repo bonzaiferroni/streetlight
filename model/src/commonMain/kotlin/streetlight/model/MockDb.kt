@@ -81,8 +81,11 @@ val mockDb by lazy {
         notes = null,
         geoPoint = point,
         resources = emptySet(),
+        link = null,
+        eventsLink = null,
         imageUrl = null,
         thumbUrl = null,
+        checkedAt = null,
         updatedAt = now - 10.days,
         createdAt = now - 30.days,
     )

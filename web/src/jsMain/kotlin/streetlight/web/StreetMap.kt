@@ -10,6 +10,7 @@ import koala.model.mapDistinctBy
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.filter
 import streetlight.model.data.MapQuery
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
@@ -35,7 +36,7 @@ class StreetMap(
 
     init {
         scope.launch {
-            geoMap.stateFlow.collect { geoMapState ->
+            geoMap.stateFlow.filter { it.isViewed }.collect { geoMapState ->
                 setBounds(geoMapState.bounds, geoMapState.zoom)
             }
         }

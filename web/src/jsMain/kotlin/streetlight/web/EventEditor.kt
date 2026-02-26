@@ -14,11 +14,9 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 import streetlight.model.data.EventType
-import streetlight.model.data.FileUse
 import streetlight.model.data.Location
 import streetlight.model.data.EventEdit
 import streetlight.model.data.Place
-import streetlight.model.data.UserFileRequest
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import streetlight.model.data.Event
@@ -110,7 +108,7 @@ class EventEditor(
         val event = eventNow
         if (!event.isValid) return null
 
-        val savedEvent = api.createOrEdit(event)
+        val savedEvent = api.createOrEditEvent(event)
         return savedEvent
     }
 

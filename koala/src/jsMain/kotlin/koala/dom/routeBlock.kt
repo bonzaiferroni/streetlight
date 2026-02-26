@@ -3,6 +3,7 @@ package koala.dom
 import koala.css.*
 import koala.html.AppRoute
 import koala.model.Portal
+import koala.utils.prettyPrint
 import kotlinx.coroutines.flow.map
 
 inline fun <reified Route: AppRoute> RenderContext.routeBlock(

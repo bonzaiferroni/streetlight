@@ -18,6 +18,7 @@ import koala.dom.flowBlock
 import koala.dom.row
 import koala.dom.textBlock
 import koala.dom.textField
+import koala.dom.wireGeoMap
 import koala.html.geoMapMount
 import koala.html.textSpan
 import koala.model.PanPoint

@@ -1,6 +1,7 @@
 package streetlight.web.pages
 
 import koala.css.AlignItemsCenter
+import koala.css.Flex1
 import koala.css.Height100
 import koala.css.Height6
 import koala.css.Opacity2
@@ -17,6 +18,7 @@ import koala.html.icon
 import koala.html.logo
 import koala.html.row
 import koala.html.applyScripts
+import koala.html.heading2
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kotlinx.html.HTML
@@ -46,15 +48,15 @@ fun HTML.appBody(
 }
 
 fun FlowContent.appHeader() {
-    row(AppBody.appHeaderId, modify(Width100, SpaceBetween)) {
+    row(AppBody.appHeaderId, modify(Width100)) {
+        action(HomeRoute(), modify(Flex1)) {
+            row {
+                logo(modify(Height6))
+                heading2("Streetlight")
+            }
+        }
         action(FullMapRoute, modify(Height6, Opacity2)) {
             icon("chevron-down", modify(Height100))
-        }
-        action(HomeRoute()) {
-            row {
-                logo()
-                heading1("Streetlight")
-            }
         }
         action(AccountRoute, modify(Height6, Opacity2)) {
             icon("empty-profile", modify(Height100))

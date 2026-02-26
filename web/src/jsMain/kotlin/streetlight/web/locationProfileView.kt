@@ -1,15 +1,18 @@
 package streetlight.web
 
-import koala.css.MarginAuto
-import koala.css.MaxHeight64
-import koala.css.modify
-import koala.dom.RenderContext
-import koala.dom.column
-import koala.dom.routeBlock
+import koala.css.*
+import koala.dom.*
+import koala.html.Id
 import koala.html.button
+import koala.html.geoMapMount
 import koala.html.heading1
 import koala.html.image
+import koala.html.propertyValue
+import koala.utils.prettyPrint
+import kotlinx.coroutines.launch
 import streetlight.model.data.Location
+import streetlight.model.data.toLocationEdit
+import streetlight.web.shells.locationShell
 
 fun RenderContext.locationProfileView(app: AppContext) {
     routeBlock<LocationProfileRoute, Location>(
@@ -17,11 +20,19 @@ fun RenderContext.locationProfileView(app: AppContext) {
         provideData = { app.client.api.readLocation(it.locationId) }
     ) { location ->
         column {
-            location.imageUrl?.let {
-                image(it, modify(MaxHeight64, MarginAuto))
+            shellBox(Id("location-profile"), app.geoMap, app.appScope) {
+                locationShell(location)
             }
-            heading1(location.name)
-            button("Edit", EditLocationIdRoute(location.locationId))
+            location.link?.let {
+                button("check", onClick = {
+                    renderScope.launch {
+                        app.client.api.parseLocation(it)?.toLocationEdit(location.locationId)?.let { edit ->
+                            app.portal.go(EditLocationDataRoute(edit))
+                        }
+                    }
+                })
+            }
         }
     }
 }
+

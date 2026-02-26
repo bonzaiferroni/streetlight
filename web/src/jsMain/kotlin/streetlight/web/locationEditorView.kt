@@ -15,6 +15,8 @@ fun RenderContext.locationEditorView(location: LocationEdit, app: AppContext) {
     val model = LocationEditor(location, renderScope, app.client)
     val nameFlow = model.editFlow.mapDistinct { it.name }
     val imageUrlFlow = model.editFlow.mapDistinct { it.imageUrl }
+    val linkFlow = model.editFlow.mapDistinct { it.link }
+    val eventsLinkFlow = model.editFlow.mapDistinct { it.eventsLink }
 
     column(modify(AlignItemsStretch)) {
         imageChoice(
@@ -24,7 +26,9 @@ fun RenderContext.locationEditorView(location: LocationEdit, app: AppContext) {
             urlFlow = imageUrlFlow,
             choicesFlow = app.userCache.files.flow
         )
-        textField("name", modify(Width100), model::setPlaceName, nameFlow)
+        textField("name", modify(), model::setPlaceName, nameFlow)
+        textField("link", modify(), model::setLink, linkFlow)
+        textField("events", modify(), model::setEventsLink, eventsLinkFlow)
         placeEditor(app, model)
         button("back", onClick = app.portal::goBack)
         button("save", modify(Accent), onClick = {

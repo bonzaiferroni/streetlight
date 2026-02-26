@@ -16,6 +16,8 @@ object ElementClass {
     val textLabel = Css("text-label")
     val blockLabel = Css("block-label")
     val thumbImage = Css("thumb-image")
+    val shellBox = Css("shell-box")
+    val headerImage = Css("header-image")
 }
 
 fun CssBuilder.elementStyles(theme: KoalaTheme) {

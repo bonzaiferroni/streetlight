@@ -2,6 +2,7 @@ package streetlight.model.data
 
 import kampfire.model.GeoPoint
 import kampfire.model.UserId
+import kampfire.utils.ParseHint
 import kampfire.utils.randomUuidString
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
@@ -18,8 +19,11 @@ data class Location(
     val notes: String?,
     val geoPoint: GeoPoint,
     val resources: Set<ResourceType>,
+    val link: String?,
+    val eventsLink: String?,
     val imageUrl: String?,
     val thumbUrl: String?,
+    val checkedAt: Instant?,
     val updatedAt: Instant,
     val createdAt: Instant,
 )
@@ -38,9 +42,21 @@ data class LocationEdit(
     val notes: String? = null,
     val geoPoint: GeoPoint = GeoPoint.Denver,
     val resources: Set<ResourceType> = emptySet(),
+    val link: String? = null,
+    val eventsLink: String? = null,
     val imageUrl: String? = null,
     val thumbUrl: String? = null,
     val isHost: Boolean = false,
+)
+
+@Serializable
+data class LocationParse(
+    val name: String? = null,
+    val description: String? = null,
+    val address: String? = null,
+    val url: String? = null,
+    val eventsUrl: String? = null,
+    val imageUrl: String? = null,
 )
 
 @Serializable
@@ -59,7 +75,11 @@ fun Location.toEdit() = LocationEdit(
     address = address,
     notes = notes,
     geoPoint = geoPoint,
-    resources = resources
+    resources = resources,
+    link = link,
+    eventsLink = eventsLink,
+    imageUrl = imageUrl,
+    thumbUrl = thumbUrl,
 )
 
 fun Location.toPlace() = Place(
@@ -85,8 +105,11 @@ fun Place.toLocation(
     address = address,
     notes = null,
     resources = emptySet(),
+    link = null,
+    eventsLink = null,
     imageUrl = null,
     thumbUrl = null,
+    checkedAt = null,
     updatedAt = Clock.System.now(),
     createdAt = Clock.System.now()
 )
@@ -102,8 +125,23 @@ fun LocationEdit.toLocation(
     address = address,
     notes = notes,
     resources = resources,
+    link = link,
+    eventsLink = eventsLink,
     imageUrl = imageUrl,
     thumbUrl = thumbUrl,
+    checkedAt = null,
     updatedAt = Clock.System.now(),
     createdAt = Clock.System.now()
+)
+
+fun LocationParse.toLocationEdit(
+    locationId: LocationId? = null
+) = LocationEdit(
+    locationId = locationId,
+    name = name ?: "",
+    description = description,
+    address = address,
+    link = url,
+    eventsLink = eventsUrl,
+    imageUrl = imageUrl,
 )

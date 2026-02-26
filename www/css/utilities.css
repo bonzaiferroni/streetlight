@@ -187,3 +187,7 @@ p.large {
 .max-height-64 {
     max-height: calc(var(--unit-spacing) * 64);
 }
+
+.min-height-32 {
+    min-height: calc(var(--unit-spacing) * 32);
+}

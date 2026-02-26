@@ -5,12 +5,12 @@ interface AppRoute {
     fun toHashPath() = "#/${screen.pathRoot}"
 
     companion object {
-        fun routeOf(hashPath: String, screens: List<AppScreen>, provideDefault: () -> AppRoute): AppRoute {
+        fun routeOf(hashPath: String, screens: List<AppScreen>): AppRoute? {
             val fragment = hashPath.dropStart('#').dropStart('/')
             val segments = fragment.split('/')
             val root = segments[0].lowercase()
             val screen = screens.firstOrNull { it.pathRoot == root }
-            return screen?.provideRoute(segments) ?: provideDefault()
+            return screen?.provideRoute(segments)
         }
     }
 }

@@ -1,42 +1,9 @@
 package streetlight.model
 
-import kampfire.api.ApiNode
-import kampfire.api.DeleteEndpoint
-import kampfire.api.GetByTableIdEndpoint
-import kampfire.api.GetEndpoint
-import kampfire.api.PostEndpoint
-import kampfire.api.QueryEndpoint
-import kampfire.api.SpeechApi
-import kampfire.api.UpdateEndpoint
+import kampfire.api.*
 import kampfire.model.GeoPoint
 import kampfire.model.SpeechRequest
-import streetlight.model.data.Community
-import streetlight.model.data.CommunityId
-import streetlight.model.data.Event
-import streetlight.model.data.EventId
-import streetlight.model.data.EventSong
-import streetlight.model.data.Location
-import streetlight.model.data.LocationId
-import streetlight.model.data.NewCommunity
-import streetlight.model.data.EventEdit
-import streetlight.model.data.Place
-import streetlight.model.data.NewSong
-import streetlight.model.data.Song
-import streetlight.model.data.SongId
-import streetlight.model.data.Rendition
-import streetlight.model.data.RenditionId
-import streetlight.model.data.NewRendition
-import streetlight.model.data.NewRequest
-import streetlight.model.data.RequestId
-import streetlight.model.data.AreaTransit
-import streetlight.model.data.EventInfo
-import streetlight.model.data.EventParse
-import streetlight.model.data.LocationEdit
-import streetlight.model.data.MapQuery
-import streetlight.model.data.ReadEventRequest
-import streetlight.model.data.TalentEdit
-import streetlight.model.data.StoryParse
-import streetlight.model.data.Talent
+import streetlight.model.data.*
 
 object Api: ApiNode(ApiNode(null, "api"), "v1") {
 
@@ -72,6 +39,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
             val count = addIntParam("count")
         }
         object QueryPoint: QueryEndpoint<GeoPoint, List<Location>>(this, "query_point")
+        object ParseLocation: PostEndpoint<String, LocationParse>(this, "parse_location")
     }
 
     object Songs: GetEndpoint<List<Song>>(this, "songs") {

@@ -41,6 +41,7 @@ object MaxHeight32: Modifier { override val value = "max-height-32" }
 object MaxHeight64: Modifier { override val value = "max-height-64" }
 object MinHeight4: Modifier { override val value = "min-height-4" }
 object MinHeight8: Modifier { override val value = "min-height-8" }
+object MinHeight32: Modifier { override val value = "min-height-8" }
 object Size100: Modifier { override val value = "size-100" }
 object FillHeight: Modifier { override val value = "fill-height" }
 object FlexItems1: Modifier { override val value = "flex-items-1" }

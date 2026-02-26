@@ -30,12 +30,12 @@ fun HEAD.applyCoreStyles() {
         "typography.css",
         "button.css",
         "layout.css",
-        "utilities.css",
         "animation.css",
         "tabs.css",
         "logo.css",
         "geoMap.css",
-        "sandbox.css"
+        "sandbox.css",
+        "utilities.css",
     )
 }
 

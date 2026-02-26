@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 import org.w3c.dom.Location
 
 class Portal(
-    val initialRoute: AppRoute,
+    initialRoute: AppRoute,
     val screens: List<AppScreen>,
     scope: CoroutineScope
 ): BrowserModel<PortalState>(PortalState(initialRoute), scope) {
@@ -31,9 +31,9 @@ class Portal(
         window.history.replaceState(null, "", spaUrl)
 
         val route = routeOf(hashPath)
-        go(route)
+        go(route ?: initialRoute)
         window.addEventListener("hashchange", {
-            val route = routeOf(hashPath)
+            val route = routeOf(hashPath) ?: return@addEventListener
             if (route.screen == stateNow.route.screen) return@addEventListener
             go(route)
         })
@@ -69,8 +69,8 @@ class Portal(
         hashPath = route.toHashPath()
     }
 
-    private fun routeOf(hashPath: String): AppRoute {
-        return AppRoute.routeOf(hashPath, screens) { initialRoute }
+    private fun routeOf(hashPath: String): AppRoute? {
+        return AppRoute.routeOf(hashPath, screens)
     }
 }
 

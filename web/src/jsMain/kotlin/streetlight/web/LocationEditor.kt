@@ -54,6 +54,14 @@ class LocationEditor(
         edit.set { it.copy(resources = value) }
     }
 
+    fun setLink(value: String?) {
+        edit.set { it.copy(link = value) }
+    }
+
+    fun setEventsLink(value: String?) {
+        edit.set { it.copy(eventsLink = value) }
+    }
+
     fun setImageUrl(value: String?) {
         edit.set { it.copy(imageUrl = value) }
     }
@@ -85,7 +93,7 @@ class LocationEditor(
     }
 
     suspend fun saveLocation(): LocationId? {
-        return api.editLocation(editNow.also { console.log("ey: ${it.imageUrl}") })?.locationId
+        return api.editLocation(editNow)?.locationId
     }
 
     private fun setPlace(place: OSMPlace) {

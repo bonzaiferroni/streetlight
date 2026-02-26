@@ -6,8 +6,11 @@ import koala.css.*
 fun FlowContent.propertyValue(
     propertyName: String,
     propertyValue: String,
+    modifiers: ModifierSet? = null,
 ) {
     p {
+        applyModifiers(modifiers)
+
         span(modify(Dim)) {
             +"$propertyName:"
         }
@@ -19,9 +22,11 @@ fun FlowContent.propertyValue(
 
 fun FlowContent.propertyValue(
     propertyName: String,
+    modifiers: ModifierSet? = null,
     block: DIV.() -> Unit
 ) {
     row {
+        applyModifiers(modifiers)
         textBlock("${propertyName}:", modify(Opacity6, TextAlignRight))
         block()
     }

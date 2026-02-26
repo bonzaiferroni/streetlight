@@ -30,7 +30,7 @@
     width: 100%;
 
     gap: var(--unit-spacing);
-    border-radius: var(--unit-spacing);
+    border-radius: calc(var(--unit-spacing) * 2);
     background-color: var(--card-bg);
     padding: var(--unit-spacing);
     align-items: start;
