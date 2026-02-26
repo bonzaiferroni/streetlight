@@ -1,5 +1,7 @@
 package koala.dom
 
+import koala.core.findAndInitGeoMap
+import koala.core.findAndInitLottie
 import koala.css.*
 import koala.html.Id
 import koala.model.GeoMap
@@ -34,6 +36,8 @@ fun RenderContext.shellBox(
         }
 
         findAndInitTabs(element)
+        findAndInitLottie(element)
+        findAndInitGeoMap(element)
         element
     }
 }

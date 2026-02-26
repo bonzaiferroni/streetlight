@@ -30,6 +30,7 @@ enum class StreetlightScreen(
     EditTalent("edit-talent", { path -> EditTalentRoute(path.provideId { TalentId(it)} ) }),
     CreateEvent("create-event", { CreateEventRoute }),
     LocationProfile("location", { path -> path.provideRouteFromPath { LocationProfileRoute(LocationId(it)) } }),
+    LocationAdmin("location-admin", { path -> path.provideRouteFromPath { LocationAdminRoute(LocationId(it)) } }),
 }
 
 fun List<String>.provideRouteFromPath(argIndex: Int = 1, provideRoute: (String) -> AppRoute?) =
@@ -147,4 +148,11 @@ data class EditLocationDataRoute(
     val location: LocationEdit
 ): EditLocationRoute, StringIdRoute {
     override val id get() = location.locationId
+}
+
+data class LocationAdminRoute(
+    val locationId: LocationId
+): StreetlightRoute, StringIdRoute {
+    override val screen get() = StreetlightScreen.LocationAdmin
+    override val id get() = locationId
 }

@@ -19,7 +19,7 @@ import koala.model.mapDistinct
 import kotlinx.html.js.div
 
 fun RenderContext.wireMapPanel(app: AppContext) {
-    mountRenderOnView(GeoMapSelector.panel) {
+    wireBlock(GeoMapSelector.panel) {
         tabs(Id("map-panel-tabs")) {
             tab("News") {
                 column {

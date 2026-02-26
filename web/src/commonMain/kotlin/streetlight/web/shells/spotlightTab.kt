@@ -1,7 +1,6 @@
 package streetlight.web.shells
 
 import koala.css.AlignItemsStart
-import koala.css.ElementClass
 import koala.css.FlexItems1
 import koala.css.Width100
 import koala.css.modify
@@ -22,28 +21,25 @@ import streetlight.model.data.Location
 import streetlight.web.ChatRoute
 import streetlight.web.CreateEventRoute
 import streetlight.web.CreateLocationRoute
-import streetlight.web.EditLocationIdRoute
-import streetlight.web.EditLocationRoute
 import streetlight.web.EditPostRoute
 import streetlight.web.EventIdRoute
-import streetlight.web.EventObjectRoute
 import streetlight.web.LocationProfileRoute
 import streetlight.web.SandboxRoute
 import streetlight.web.pages.appFooter
 
-fun FlowContent.hapsTab(events: List<Event>, locations: List<Location>) {
+fun FlowContent.spotlightTab(events: List<Event>, locations: List<Location>) {
     column {
         row(modify(FlexItems1, AlignItemsStart)) {
             column {
                 heading3("Events")
                 events.take(10).forEach { event ->
-                    hapsCard(EventIdRoute(event.eventId), event.title, event.thumbUrl)
+                    spotlightCard(EventIdRoute(event.eventId), event.title, event.thumbUrl)
                 }
             }
             column {
                 heading3("Locations")
                 locations.take(10).forEach { location ->
-                    hapsCard(LocationProfileRoute(location.locationId), location.name, location.thumbUrl)
+                    spotlightCard(LocationProfileRoute(location.locationId), location.name, location.thumbUrl)
                 }
             }
         }
@@ -57,7 +53,7 @@ fun FlowContent.hapsTab(events: List<Event>, locations: List<Location>) {
     }
 }
 
-fun FlowContent.hapsCard(
+fun FlowContent.spotlightCard(
     route: AppRoute,
     title: String,
     thumbUrl: String?,

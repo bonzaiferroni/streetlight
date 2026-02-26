@@ -61,8 +61,6 @@ fun <Item> RenderContext.itemsBlock(
 
     renderScope.launch {
         flow.collect { items ->
-            console.log("collected")
-
             displayedItems?.forEach { (item, cache) ->
                 if (!items.contains(item)) {
                     if (cacheRenderedElements) {

@@ -40,7 +40,7 @@ fun MapContext.showLines(entities: List<LineEntity>) {
             widget.getSource(layerId).setData(sourceData)
         } else {
             val entity = lineLayers.getValue(layerId).first().entity
-            console.log("creating layer")
+            console.log("creating layer: $layerId")
             val sourceObj = jsObject {
                 type = "geojson"
                 data = sourceData

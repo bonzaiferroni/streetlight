@@ -12,7 +12,6 @@ import kotlin.jvm.JvmInline
 @Serializable
 data class Location(
     val locationId: LocationId,
-    val hostId: UserId?,
     val name: String,
     val description: String?,
     val address: String?,
@@ -32,6 +31,24 @@ data class Location(
 value class LocationId(override val value: String): ProjectId {
     companion object { fun random() = LocationId(randomUuidString())}
 }
+
+@Serializable
+data class LocationInfo(
+    val locationId: LocationId,
+    val name: String,
+    val description: String?,
+    val address: String?,
+    val notes: String?,
+    val geoPoint: GeoPoint,
+    val resources: Set<ResourceType>,
+    val link: String?,
+    val eventsLink: String?,
+    val imageUrl: String?,
+    val thumbUrl: String?,
+    val checkedAt: Instant?,
+    val updatedAt: Instant,
+    val createdAt: Instant,
+)
 
 @Serializable
 data class LocationEdit(
@@ -94,11 +111,8 @@ fun LocationEdit.toPlace() = Place(
     geoPoint = geoPoint,
 )
 
-fun Place.toLocation(
-    userId: UserId? = null
-) = Location(
+fun Place.toLocation() = Location(
     locationId = LocationId.random(),
-    hostId = userId,
     name = name ?: "",
     geoPoint = geoPoint ?: GeoPoint.Denver,
     description = null,
@@ -114,11 +128,8 @@ fun Place.toLocation(
     createdAt = Clock.System.now()
 )
 
-fun LocationEdit.toLocation(
-    userId: UserId? = null
-) = Location(
+fun LocationEdit.toLocation() = Location(
     locationId = locationId ?: LocationId.random(),
-    hostId = userId,
     name = name,
     geoPoint = geoPoint,
     description = description,
@@ -144,4 +155,21 @@ fun LocationParse.toLocationEdit(
     link = url,
     eventsLink = eventsUrl,
     imageUrl = imageUrl,
+)
+
+fun Location.toInfo() = LocationInfo(
+    locationId = locationId,
+    name = name,
+    description = description,
+    address = address,
+    notes = notes,
+    geoPoint = geoPoint,
+    resources = resources,
+    link = link,
+    eventsLink = eventsLink,
+    imageUrl = imageUrl,
+    thumbUrl = thumbUrl,
+    checkedAt = checkedAt,
+    updatedAt = updatedAt,
+    createdAt = createdAt,
 )

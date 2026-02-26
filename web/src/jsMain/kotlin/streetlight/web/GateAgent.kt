@@ -28,6 +28,7 @@ class GateAgent(
                 .first()
                 .let { user ->
                     portal.go(currentRoute)
+                    // this seems flawed, will try to create blocks after tags are closed
                     block(user)
                 }
         }

@@ -1,15 +1,11 @@
 package koala.dom
 
-import koala.dom.getElementById
-import koala.html.AppRoute
-import koala.html.GeoMapSelector
 import koala.html.Id
 import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.launch
 import kotlinx.dom.clear
 import kotlinx.html.dom.append
 import org.w3c.dom.HTMLElement
@@ -42,21 +38,6 @@ fun RenderContext.mountRender(
     mount.renderRoot(renderScope, block)
 }
 
-fun RenderContext.mountRenderOnView(
-    elementId: Id,
-    block: RenderContext.() -> Unit
-) {
-    val element = document.getElementById(elementId)
-    var isRendered = false
-
-    element.onView { isVisible ->
-        if (isVisible && !isRendered) {
-            isRendered = true
-            element.renderRoot(renderScope, block)
-        }
-    }
-}
-
 class RenderCache(
     val context: RenderContext,
     val job: Job,
@@ -66,7 +47,12 @@ class RenderCache(
     val firstElement get() = elements.first()
 }
 
-fun <T> createRender(parent: HTMLElement, scope: CoroutineScope, value: T, block: RenderContext.(T) -> Unit): RenderCache {
+fun <T> createRender(
+    parent: HTMLElement,
+    scope: CoroutineScope,
+    value: T,
+    block: RenderContext.(T) -> Unit
+): RenderCache {
     val job = SupervisorJob()
     val localScope = CoroutineScope(scope.coroutineContext + job)
     var context: RenderContext

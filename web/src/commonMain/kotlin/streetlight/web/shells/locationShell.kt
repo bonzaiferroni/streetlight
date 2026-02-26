@@ -2,13 +2,10 @@ package streetlight.web.shells
 
 import koala.css.*
 import koala.html.*
-import kotlinx.coroutines.launch
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import streetlight.model.data.Location
-import streetlight.model.data.toLocationEdit
-import streetlight.web.EditLocationDataRoute
-import streetlight.web.EditLocationIdRoute
+import streetlight.web.pages.appFooter
 
 fun FlowContent.locationShell(
     location: Location
@@ -17,7 +14,9 @@ fun FlowContent.locationShell(
         headerImage(location.name, location.imageUrl)
         row(modify(FlexItems1, AlignItemsStretch)) {
             card() {
-                heading3(location.name, modify(Dim, MarginTop1))
+                row(modify(AlignItemsEnd)) {
+                    heading3(location.name, modify(Dim, MarginTop1, Flex1))
+                }
                 location.description?.let {
                     textBlock(it)
                 }
@@ -42,15 +41,29 @@ fun FlowContent.locationShell(
                         }
                     }
                 }
-                button("Edit", EditLocationIdRoute(location.locationId))
             }
             geoMapMount(location.geoPoint, modify(Square))
         }
+        wireBlock(LocationShell.adminCard)
+        tabs(LocationShell.tabsId) {
+            tab("events") {
+                textBlock("yer events")
+            }
+            tab("menu") {
+                textBlock("yer menu")
+            }
+            tab("talk") {
+                textBlock("yer talk")
+            }
+        }
+        appFooter()
     }
 }
 
 object LocationShell {
     val id = Id("location-shell")
+    val tabsId = Id("location-tabs")
+    val adminCard = Id("location-admin-card")
 }
 
 fun FlowContent.propertyRow(property: String, block: DIV.() -> Unit) {

@@ -62,6 +62,7 @@ data class EventEdit(
     val contact: String? = null,
     val invitation: String? = null,
     val ageMin: Int? = null,
+    val isHost: Boolean = false,
     val url: String? = null,
     val sourceUrl: String? = null,
     val sourceImageUrl: String? = null,

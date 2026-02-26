@@ -74,7 +74,6 @@ val mockDb by lazy {
         point: GeoPoint,
     ) = Location(
         locationId = LocationId.random(),
-        hostId = users.bag.draw().userId,
         name = name,
         description = null,
         address = null,

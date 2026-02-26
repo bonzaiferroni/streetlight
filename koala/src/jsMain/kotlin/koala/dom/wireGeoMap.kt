@@ -66,7 +66,6 @@ fun initMapWindow(
         }
 
         launch {
-            console.log("collecting entities")
             geoMap.entityFlow.collect(context::addEntities)
         }
 
