@@ -13,7 +13,8 @@ fun FlowContent.aboutApp() {
     column(modify(AlignItemsCenter)) {
         column(modify(QueryRow, AlignItemsCenter)) {
             lottie("cup_stack", modify(Flex1, MaxWidth50))
-            val introText = "Streetlight is a street performance community and app. " +
+            val introText = "Streetlight is your front page for community events. " +
+//                    "Its first and only mission is to bring people together. " +
                     "It is cross-platform, open-source, and 100% Kotlin. "
             textBlock(introText, modify(Flex3, Large))
         }

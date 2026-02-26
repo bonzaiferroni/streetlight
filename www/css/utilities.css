@@ -91,6 +91,14 @@ p.large {
     font-weight: var(--heading-2-weight);
 }
 
+.margin-top-1 {
+    margin-top: var(--unit-spacing);
+}
+
+.margin-top-2 {
+    margin-top: calc(var(--unit-spacing) * 2);
+}
+
 .margin-left-1 {
     margin-left: var(--unit-spacing);
 }
@@ -178,6 +186,10 @@ p.large {
 
 .padding-1 {
     padding: var(--unit-spacing);
+}
+
+.padding-2 {
+    padding: calc(var(--unit-spacing) * 2);
 }
 
 .max-height-32 {

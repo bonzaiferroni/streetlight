@@ -28,6 +28,7 @@ import kotlinx.coroutines.launch
 import streetlight.model.data.Place
 
 fun RenderContext.placeEditor(
+    geoPoint: GeoPoint?,
     app: AppContext,
     model: PlaceEditor
 ) {
@@ -52,7 +53,7 @@ fun RenderContext.placeEditor(
     }
 
     val element = column(modify(QueryRow, AlignItemsStretch)) {
-        geoMapMount(modify(Flex1, Square))
+        geoMapMount(geoPoint, modify(Flex1, Square))
         column(modify(Flex2, AlignItemsStretch)) {
             row {
                 textField(

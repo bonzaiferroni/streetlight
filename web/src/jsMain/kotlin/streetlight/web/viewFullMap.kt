@@ -10,7 +10,7 @@ fun RenderContext.viewFullMap(app: AppContext) {
 
     }
     val fullscreen = fullscreenBox {
-        geoMapMount(modify(Size100))
+        geoMapMount(null, modify(Size100))
     }
     element.onView { isVisible ->
         if (isVisible) {

@@ -11,11 +11,11 @@ import streetlight.web.pages.EventPortalSelector
 
 fun main() {
     val eventId = document.queryAttribute(EventPortalSelector.eventIdAttribute)?.let { EventId(it) } ?: return
-    val api = ApiClient()
-    val model = EventPortal(eventId)
+    // val api = ApiClient()
+    // val model = EventPortal(eventId)
     console.log("loading event portal")
-    document.onClickElementAll(EventPortalSelector.requestItem, model::clickRequest)
-    document.onClick(EventPortalSelector.sendRequestButtonId, model::sendRequest)
+//    document.onClickElementAll(EventPortalSelector.requestItem, model::clickRequest)
+//    document.onClick(EventPortalSelector.sendRequestButtonId, model::sendRequest)
 }
 
 fun EventPortal.clickRequest(element: HTMLElement) {

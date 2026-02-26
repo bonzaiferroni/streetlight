@@ -29,7 +29,7 @@ enum class StreetlightScreen(
     TalentProfile("talent-profile", { path -> path.provideRouteFromPath { TalentProfileRoute(TalentId(it)) } }),
     EditTalent("edit-talent", { path -> EditTalentRoute(path.provideId { TalentId(it)} ) }),
     CreateEvent("create-event", { CreateEventRoute }),
-    LocationProfile("location-profile", { path -> path.provideRouteFromPath { LocationProfileRoute(LocationId(it)) } }),
+    LocationProfile("location", { path -> path.provideRouteFromPath { LocationProfileRoute(LocationId(it)) } }),
 }
 
 fun List<String>.provideRouteFromPath(argIndex: Int = 1, provideRoute: (String) -> AppRoute?) =

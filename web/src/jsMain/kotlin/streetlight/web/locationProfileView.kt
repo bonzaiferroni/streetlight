@@ -12,6 +12,7 @@ import koala.utils.prettyPrint
 import kotlinx.coroutines.launch
 import streetlight.model.data.Location
 import streetlight.model.data.toLocationEdit
+import streetlight.web.shells.LocationShell
 import streetlight.web.shells.locationShell
 
 fun RenderContext.locationProfileView(app: AppContext) {
@@ -20,7 +21,8 @@ fun RenderContext.locationProfileView(app: AppContext) {
         provideData = { app.client.api.readLocation(it.locationId) }
     ) { location ->
         column {
-            shellBox(Id("location-profile"), app.geoMap, app.appScope) {
+            shellBox(LocationShell.id, app.geoMap, app.appScope) {
+                console.log("ey")
                 locationShell(location)
             }
             location.link?.let {

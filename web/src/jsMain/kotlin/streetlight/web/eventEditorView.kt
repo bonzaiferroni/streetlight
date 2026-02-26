@@ -76,7 +76,7 @@ fun RenderContext.eventEditorView(
                 textBlock("You can choose from existing locations or provide a new one.")
             }
             card {
-                placeEditor(app, model)
+                placeEditor(null, app, model)
             }
         }
 

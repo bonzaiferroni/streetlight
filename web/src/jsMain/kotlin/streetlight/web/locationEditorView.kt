@@ -29,7 +29,7 @@ fun RenderContext.locationEditorView(location: LocationEdit, app: AppContext) {
         textField("name", modify(), model::setPlaceName, nameFlow)
         textField("link", modify(), model::setLink, linkFlow)
         textField("events", modify(), model::setEventsLink, eventsLinkFlow)
-        placeEditor(app, model)
+        placeEditor(location.geoPoint, app, model)
         button("back", onClick = app.portal::goBack)
         button("save", modify(Accent), onClick = {
             renderScope.launch {

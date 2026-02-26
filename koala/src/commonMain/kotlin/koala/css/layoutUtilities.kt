@@ -53,6 +53,8 @@ object QueryRowReverse: Modifier { override val value = "query-row-reverse" }
 object MaxWidth25: Modifier { override val value = "max-width-25" }
 object MaxWidth50: Modifier { override val value = "max-width-50" }
 object MarginAuto: Modifier { override val value = "margin-auto" }
+object MarginTop1: Modifier { override val value = "margin-top-1" }
+object MarginTop2: Modifier { override val value = "margin-top-2" }
 object MarginTop4: Modifier { override val value = "margin-top-4" }
 object MarginLeft1: Modifier { override val value = "margin-left-1" }
 object SpaceBetween: Modifier { override val value = "space-between" }
@@ -65,6 +67,7 @@ object End: Modifier { override val value = "end" }
 object Center: Modifier { override val value = "center" }
 object CenterItems: Modifier { override val value = "center-items" }
 object Padding1: Modifier { override val value = "padding-1" }
+object Padding2: Modifier { override val value = "padding-2" }
 
 fun CssBuilder.layoutUtilities(theme: KoalaTheme) {
     rule(Gap0) {

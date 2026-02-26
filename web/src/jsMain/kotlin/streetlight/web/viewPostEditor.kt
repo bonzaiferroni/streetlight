@@ -42,7 +42,7 @@ fun RenderContext.viewPostEditor(app: AppContext) {
             }
         }
         column(modify(QueryRow)) {
-            geoMapMount(modify(Flex1, Square))
+            geoMapMount(null, modify(Flex1, Square))
             column(modify(Flex2)) {
                 textBlock(model.locationFlow.map { it.toString() })
             }

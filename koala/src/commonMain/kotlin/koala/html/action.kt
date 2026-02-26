@@ -18,11 +18,13 @@ fun FlowOrInteractiveOrPhrasingContent.action(
 
 fun FlowOrInteractiveOrPhrasingContent.action(
     href: String? = null,
+    text: String = "",
     modifiers: ModifierSet? = null,
     block: (A.() -> Unit)? = null
 ) {
     action(modifiers) {
         href?.let { this.href = href }
+        +text
         block?.invoke(this)
     }
 }

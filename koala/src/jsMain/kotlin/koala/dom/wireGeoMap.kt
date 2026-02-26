@@ -1,5 +1,6 @@
 package koala.dom
 
+import koala.core.findAndInitGeoMap
 import koala.core.queryFirstOrNull
 import koala.external.CenterZoomBearing
 import koala.external.maplibregl
@@ -21,7 +22,7 @@ fun wireGeoMap(
     ancestor: HTMLElement,
 ) {
     val mount = ancestor.queryFirstOrNull(GeoMapSelector.mapMount) ?: return
-    val mapWindow = initMapWindow(geoMap, appScope)
+    val mapWindow = initMapWindow(geoMap, appScope, mount)
 
     mount.onView { isVisible ->
         if (isVisible && mount.children.length == 0) {
@@ -37,13 +38,14 @@ private var geoMapWindow: HTMLElement? = null
 fun initMapWindow(
     geoMap: GeoMap,
     appScope: CoroutineScope,
+    mount: HTMLElement
 ): HTMLElement {
     geoMapWindow?.let {
         return it
     }
 
     console.log("creating geomap")
-    val mapWindow = document.getElementOrNullById(GeoMapSelector.window) ?: error("geomap window not found")
+    val mapWindow = document.getElementOrNullById(GeoMapSelector.window) ?: findAndInitGeoMap(mount) ?: error("geomap window not found")
     geoMapWindow = mapWindow
     val widget: maplibregl.Map = mapWindow.asDynamic().widget ?: error("geomap widget not found")
 
