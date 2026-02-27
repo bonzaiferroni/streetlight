@@ -2,8 +2,10 @@ package streetlight.web
 
 import koala.css.*
 import koala.dom.*
+import koala.html.heading2
 import koala.model.GeoMap
 import koala.model.Portal
+import koala.model.mapDistinct
 import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.coroutines.MainScope
@@ -68,6 +70,18 @@ fun viewApp() {
                     StreetlightScreen.EditLocation -> locationEditorRouteView(app)
                     StreetlightScreen.LocationAdmin -> viewLocationAdmin(app)
                     else -> textBlock("Coming soon: $screen")
+                }
+            }
+
+            wireBlock(AppBody.titlePathId) {
+                val titleFlow = app.portal.stateFlow.mapDistinct { it.title }
+                flowBlock(titleFlow, modify(MagicBlur, MagicSlideX), animate = true) { title ->
+                    if (title != null) {
+                        row {
+                            heading2("|", modify(Dim))
+                            heading2(title, modify(Dim))
+                        }
+                    }
                 }
             }
         }

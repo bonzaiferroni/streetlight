@@ -11,6 +11,7 @@ import koala.css.modify
 import koala.html.Id
 import koala.html.OverlayId
 import koala.html.action
+import koala.html.applyId
 import koala.html.box
 import koala.html.column
 import koala.html.heading1
@@ -19,6 +20,7 @@ import koala.html.logo
 import koala.html.row
 import koala.html.applyScripts
 import koala.html.heading2
+import koala.html.wireBlock
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kotlinx.html.HTML
@@ -54,6 +56,7 @@ fun FlowContent.appHeader() {
             row {
                 logo(modify(Height6))
                 heading2("Streetlight")
+                wireBlock(AppBody.titlePathId)
             }
         }
         action(FullMapRoute, modify(Height6, Opacity2)) {
@@ -72,4 +75,5 @@ object AppBody {
     val shellBoxId = Id("shell-box")
     val contentBox = Id("content-box")
     val appHeaderId = Id("app-header")
+    val titlePathId = Id("title-path")
 }

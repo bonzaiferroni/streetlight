@@ -52,14 +52,17 @@ data class HomeRoute(
     val tab: String? = null
 ): StreetlightRoute {
     override val screen get() = StreetlightScreen.Home
+    override val title get() = "Home"
 }
 
 object AccountRoute: StreetlightRoute {
     override val screen get() = StreetlightScreen.Account
+    override val title get() = "You"
 }
 
 sealed interface EventRoute: StreetlightRoute {
     override val screen get() = StreetlightScreen.Event
+    override val title get() = "Event"
 }
 
 data class EventIdRoute(
@@ -68,10 +71,12 @@ data class EventIdRoute(
 
 data class EventObjectRoute(val event: Event): EventRoute, StringIdRoute {
     override val id get() = event.eventId
+    override val title get() = event.title
 }
 
 sealed interface EditEventRoute: StreetlightRoute {
     override val screen get() = StreetlightScreen.EditEvent
+    override val title get() = "Post Event"
 }
 
 data class EditEventCallbackRoute(
@@ -85,20 +90,24 @@ data class EditEventIdRoute(val eventId: EventId? = null): EditEventRoute, Strin
 
 object SandboxRoute: StreetlightRoute {
     override val screen get() = StreetlightScreen.Sandbox
+    override val title get() = "Sandbox"
 }
 
 object FullMapRoute: StreetlightRoute {
     override val screen get() = StreetlightScreen.FullMap
+    override val title get() = "Map"
 }
 
 data class EditPostRoute(
     val postId: PostId? = null
 ): StreetlightRoute {
     override val screen get() = StreetlightScreen.EditStory
+    override val title get() = "Share Post"
 }
 
 object ChatRoute: StreetlightRoute {
     override val screen get() = StreetlightScreen.Chat
+    override val title get() = "Chat"
 }
 
 data class SongProfileRoute(
@@ -106,6 +115,7 @@ data class SongProfileRoute(
 ): StreetlightRoute, StringIdRoute {
     override val screen get() = StreetlightScreen.SongProfile
     override val id get() = songId
+    override val title get() = "Song"
 }
 
 data class TalentProfileRoute(
@@ -113,6 +123,7 @@ data class TalentProfileRoute(
 ): StreetlightRoute, StringIdRoute {
     override val screen get() = StreetlightScreen.TalentProfile
     override val id get() = talentId
+    override val title get() = "Talent"
 }
 
 data class EditTalentRoute(
@@ -120,6 +131,7 @@ data class EditTalentRoute(
 ): StreetlightRoute, StringIdRoute {
     override val screen get() = StreetlightScreen.EditTalent
     override val id get() = talentId
+    override val title get() = "Talent"
 }
 
 data class ReadEventRoute(
@@ -127,6 +139,7 @@ data class ReadEventRoute(
     val link: String? = null,
 ): StreetlightRoute {
     override val screen get() = StreetlightScreen.ReadEvent
+    override val title get() = "Event Reader"
 }
 
 data class LocationProfileRoute(
@@ -134,10 +147,12 @@ data class LocationProfileRoute(
 ): StreetlightRoute, StringIdRoute {
     override val screen get() = StreetlightScreen.LocationProfile
     override val id get() = locationId
+    override val title get() = "Location"
 }
 
 sealed interface EditLocationRoute: StreetlightRoute {
     override val screen get() = StreetlightScreen.EditLocation
+    override val title get() = "Share Location"
 }
 
 object CreateLocationRoute: EditLocationRoute
@@ -159,4 +174,5 @@ data class LocationAdminRoute(
 ): StreetlightRoute, StringIdRoute {
     override val screen get() = StreetlightScreen.LocationAdmin
     override val id get() = locationId
+    override val title get() = "Location Admin"
 }

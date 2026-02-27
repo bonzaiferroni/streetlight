@@ -9,7 +9,8 @@ fun RenderContext.wireBlock(
     ancestor: HTMLElement? = null,
     block: RenderContext.() -> Unit
 ) {
-    val element = ancestor?.querySelector(elementId.value) as? HTMLElement ?: document.getElementById(elementId)
+    val element = ancestor?.querySelector(elementId.selector) as? HTMLElement ?: document.getElementOrNullById(elementId)
+        ?: error("couldn't find ${elementId.value}")
     var isRendered = false
     element.style.removeProperty("display")
 

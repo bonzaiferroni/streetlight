@@ -69,7 +69,7 @@ class Portal(
     }
 
     private fun go(route: AppRoute, backstack: List<AppRoute>) {
-        state.set { it.copy(route = route, backstack = backstack)}
+        state.set { it.copy(route = route, backstack = backstack, title = route.title)}
         hashPath = route.toHashPath()
     }
 
@@ -80,6 +80,7 @@ class Portal(
 
 data class PortalState(
     val route: AppRoute,
+    val title: String? = null,
     val backstack: List<AppRoute> = emptyList()
 ) {
     val canGoBack get() = backstack.isNotEmpty()

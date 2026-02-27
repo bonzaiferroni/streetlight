@@ -3,6 +3,7 @@ package koala.html
 interface AppRoute {
     val screen: AppScreen
     fun toHashPath() = "#/${screen.pathRoot}"
+    val title: String
 
     companion object {
         fun routeOf(hashPath: String, screens: List<AppScreen>): AppRoute? {
