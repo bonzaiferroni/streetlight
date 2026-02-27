@@ -7,18 +7,24 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import streetlight.model.data.EventParse
-import streetlight.model.data.EventParseItem
 import streetlight.model.data.ReadEventRequest
-import streetlight.model.utils.toLocalDateTime
-import streetlight.model.utils.tomorrowNoon
 import kotlin.time.Duration.Companion.seconds
 
-class EventRelay(
+class EventReader(
     private val scope: CoroutineScope,
     private val api: ApiClient,
+    private val route: ReadEventRoute,
 ) {
     val state = storeOf(EventRelayState())
     val message = storeOf(UIMessage(intro))
+
+    init {
+        if (route.link != null) {
+            console.log("auto reading link")
+            state.set { it.copy(link = route.link) }
+            readLink()
+        }
+    }
 
     fun setLink(value: String) {
         state.set { it.copy(link = value) }

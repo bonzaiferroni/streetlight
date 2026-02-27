@@ -3,18 +3,14 @@ package streetlight.web
 import kampfire.utils.takeEllipsis
 import koala.css.*
 import koala.dom.*
-import koala.external.ScrollIntoViewOptions
 import koala.html.propertyValue
 import koala.model.mapDistinct
-import koala.model.storeOf
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import streetlight.model.data.EventParse
 import streetlight.model.data.toEventEdit
-import kotlin.time.Duration.Companion.seconds
 
-fun RenderContext.eventRelayView(app: AppContext) {
-    val model = EventRelay(renderScope, app.client.api)
+fun RenderContext.eventReaderView(app: AppContext, route: ReadEventRoute) {
+    console.log(route)
+    val model = EventReader(renderScope, app.client.api, route)
     val stateFlow = model.state.flow
     val linkFlow = stateFlow.mapDistinct { it.link }
     val stageFlow = stateFlow.mapDistinct { it.stage }
@@ -45,14 +41,20 @@ fun RenderContext.eventRelayView(app: AppContext) {
                 }
 
                 flowBlock(parseFlow) { parse ->
-                    eventRelayParse(app, model, parse)
+                    eventReaderResult(app, model, parse)
                 }
             }
         }
     }
 }
 
-fun RenderContext.eventRelayParse(app: AppContext, model: EventRelay, parse: EventParse?) {
+fun RenderContext.eventReaderView(app: AppContext) {
+    routeBlock<ReadEventRoute>(app.portal) { route ->
+        eventReaderView(app, route)
+    }
+}
+
+fun RenderContext.eventReaderResult(app: AppContext, model: EventReader, parse: EventParse?) {
     val events = parse?.events ?: return
     column {
         events.forEachIndexed { index, event ->

@@ -1,5 +1,6 @@
 package koala.html
 
+import koala.css.ElementClass
 import koala.css.ModifierSet
 import koala.css.applyModifiers
 import kotlinx.html.FlowContent
@@ -13,7 +14,7 @@ fun FlowContent.wireBlock(
 ) {
     div {
         applyId(id)
-        applyModifiers(modifiers)
+        applyModifiers(ElementClass.wireBlock, modifiers)
         if (!isVisibleWhileLoading) {
             style = "display: none;"
         }

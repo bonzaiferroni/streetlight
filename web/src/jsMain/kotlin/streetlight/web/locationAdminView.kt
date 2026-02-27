@@ -1,13 +1,37 @@
 package streetlight.web
 
+import koala.css.*
 import koala.dom.*
 import streetlight.model.data.Location
+import streetlight.model.data.toEdit
 
 fun RenderContext.locationAdminView(
     app: AppContext,
     location: Location,
 ) {
-    tabs()
+    column {
+        tabs {
+            tab("profile") {
+                val edit = location.toEdit()
+                locationEditorView(edit, app)
+            }
+            tab("events") {
+                column {
+                    location.eventsLink.let { link ->
+                        row {
+                            textBlock("This location has an event page that we can try to read. " +
+                                    "The last time it was checked was ${location.checkedAt}.", modify(Flex1))
+                            button("read events", onClick = {
+                                app.portal.go(ReadEventRoute(location.locationId, link))
+                            })
+                        }
+                    }
+                    textBlock("yer events")
+                }
+            }
+        }
+        appFooter()
+    }
 }
 
 fun RenderContext.locationAdminRouteView(app: AppContext) {

@@ -38,7 +38,7 @@ fun viewApp() {
     }
 
     scope.launch {
-        app.gate.handshake()
+        app.gate.readUser()
 
         val shellBox = document.getElementById(AppBody.shellBoxId)
         shellBox.style.display = "none"
@@ -63,7 +63,7 @@ fun viewApp() {
                     StreetlightScreen.Chat -> viewChatRoom(app)
                     StreetlightScreen.SongProfile -> viewSongProfile(app)
                     StreetlightScreen.EditTalent -> editTalentForm(app)
-                    StreetlightScreen.CreateEvent -> eventRelayView(app)
+                    StreetlightScreen.ReadEvent -> eventReaderView(app)
                     StreetlightScreen.LocationProfile -> locationProfileView(app)
                     StreetlightScreen.EditLocation -> locationEditorRouteView(app)
                     StreetlightScreen.LocationAdmin -> locationAdminRouteView(app)

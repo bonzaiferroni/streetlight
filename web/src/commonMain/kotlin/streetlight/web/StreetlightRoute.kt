@@ -28,7 +28,7 @@ enum class StreetlightScreen(
     SongProfile("song-profile", { path -> path.provideRouteFromPath { SongProfileRoute(SongId(it)) } }),
     TalentProfile("talent-profile", { path -> path.provideRouteFromPath { TalentProfileRoute(TalentId(it)) } }),
     EditTalent("edit-talent", { path -> EditTalentRoute(path.provideId { TalentId(it)} ) }),
-    CreateEvent("create-event", { CreateEventRoute }),
+    ReadEvent("create-event", { ReadEventRoute() }),
     LocationProfile("location", { path -> path.provideRouteFromPath { LocationProfileRoute(LocationId(it)) } }),
     LocationAdmin("location-admin", { path -> path.provideRouteFromPath { LocationAdminRoute(LocationId(it)) } }),
 }
@@ -121,8 +121,11 @@ data class EditTalentRoute(
     override val id get() = talentId
 }
 
-object CreateEventRoute: StreetlightRoute {
-    override val screen get() = StreetlightScreen.CreateEvent
+data class ReadEventRoute(
+    val locationId: LocationId? = null,
+    val link: String? = null,
+): StreetlightRoute {
+    override val screen get() = StreetlightScreen.ReadEvent
 }
 
 data class LocationProfileRoute(

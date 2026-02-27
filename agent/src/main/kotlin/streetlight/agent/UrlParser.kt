@@ -9,6 +9,7 @@ import ai.koog.prompt.message.AttachmentContent
 import ai.koog.prompt.message.ContentPart
 import ai.koog.prompt.params.LLMParams
 import kabinet.console.globalConsole
+import kampfire.utils.takeEllipsis
 import kotlinx.io.files.Path
 import kotlinx.serialization.json.Json
 import java.io.File
@@ -106,7 +107,7 @@ class UrlParser(apiKey: String) {
         decodeLenient(text)
     } catch (e: Exception) {
         console.logException(e)
-        console.logError("unable to decode structured llm response:\n$text")
+        console.logError("unable to decode structured llm response:\n${text.takeEllipsis(400)}")
         null
     }
 }

@@ -91,82 +91,49 @@ private fun sanitizeMap(element: JsonElement, desc: SerialDescriptor): JsonEleme
 private fun sanitizePrimitive(element: JsonElement, desc: SerialDescriptor): JsonElement {
     val prim = element as? JsonPrimitive ?: return JsonNull
 
-    val raw = prim.contentOrNull
-    if (raw != null && raw.trim().isEmpty()) return JsonNull
+    val raw = prim.contentOrNull?.trim()
 
-    // Handle kotlinx.datetime types by serialName
-    when (desc.serialName) {
+    // Treat blanks and common LLM "null-ish" strings as null
+    if (raw.isNullOrEmpty()) return JsonNull
+    if (raw.equals("null", ignoreCase = true)) return JsonNull
+    if (raw.equals("undefined", ignoreCase = true)) return JsonNull
+
+    // Nullable descriptors often have a "?" suffix in serialName
+    val sn = desc.serialName.removeSuffix("?")
+
+    when (sn) {
         "kotlinx.datetime.LocalDate" -> {
-            val s = prim.contentOrNull?.trim() ?: return JsonNull
-            return if (runCatching { LocalDate.parse(s) }.isSuccess) JsonPrimitive(s) else JsonNull
+            return if (runCatching { LocalDate.parse(raw) }.isSuccess) JsonPrimitive(raw) else JsonNull
         }
         "kotlinx.datetime.LocalTime" -> {
-            val s = prim.contentOrNull?.trim() ?: return JsonNull
-            return if (runCatching { LocalTime.parse(s) }.isSuccess) JsonPrimitive(s) else JsonNull
+            return if (runCatching { LocalTime.parse(raw) }.isSuccess) JsonPrimitive(raw) else JsonNull
         }
         "kotlinx.datetime.Instant" -> {
-            // Accept ISO-8601, or epoch seconds/millis as number or numeric string.
-            val s = prim.contentOrNull?.trim()
-            if (!s.isNullOrBlank()) {
-                if (runCatching { Instant.parse(s) }.isSuccess) return JsonPrimitive(s)
-                val n = s.toLongOrNull()
-                if (n != null) return JsonPrimitive(n) // keep numeric; serializer will decode
-            }
-            if (prim.longOrNull != null) return prim
+            if (runCatching { Instant.parse(raw) }.isSuccess) return JsonPrimitive(raw)
+            val n = raw.toLongOrNull()
+            if (n != null) return JsonPrimitive(n)
             return JsonNull
         }
     }
 
     return when (desc.kind as PrimitiveKind) {
-        PrimitiveKind.STRING -> JsonPrimitive(prim.contentOrNull ?: return JsonNull)
-
+        PrimitiveKind.STRING -> JsonPrimitive(raw)
         PrimitiveKind.BOOLEAN -> {
-            val b = prim.booleanOrNull ?: prim.contentOrNull
-                ?.trim()
-                ?.lowercase()
-                ?.let {
-                    when (it) {
-                        "true", "t", "yes", "y", "1" -> true
-                        "false", "f", "no", "n", "0" -> false
-                        else -> null
-                    }
+            val b = prim.booleanOrNull ?: raw.lowercase().let {
+                when (it) {
+                    "true", "t", "yes", "y", "1" -> true
+                    "false", "f", "no", "n", "0" -> false
+                    else -> null
                 }
+            }
             if (b != null) JsonPrimitive(b) else JsonNull
         }
-
-        PrimitiveKind.INT -> {
-            val n = prim.intOrNull ?: prim.contentOrNull?.toIntOrNull()
-            if (n != null) JsonPrimitive(n) else JsonNull
-        }
-
-        PrimitiveKind.LONG -> {
-            val n = prim.longOrNull ?: prim.contentOrNull?.toLongOrNull()
-            if (n != null) JsonPrimitive(n) else JsonNull
-        }
-
-        PrimitiveKind.FLOAT -> {
-            val n = prim.floatOrNull ?: prim.contentOrNull?.toFloatOrNull()
-            if (n != null) JsonPrimitive(n) else JsonNull
-        }
-
-        PrimitiveKind.DOUBLE -> {
-            val n = prim.doubleOrNull ?: prim.contentOrNull?.toDoubleOrNull()
-            if (n != null) JsonPrimitive(n) else JsonNull
-        }
-
-        PrimitiveKind.BYTE -> {
-            val n = prim.intOrNull ?: prim.contentOrNull?.toIntOrNull()
-            if (n != null && n in -128..127) JsonPrimitive(n) else JsonNull
-        }
-
-        PrimitiveKind.SHORT -> {
-            val n = prim.intOrNull ?: prim.contentOrNull?.toIntOrNull()
-            if (n != null && n in -32768..32767) JsonPrimitive(n) else JsonNull
-        }
-
-        PrimitiveKind.CHAR -> {
-            val s = prim.contentOrNull
-            if (s != null && s.length == 1) JsonPrimitive(s) else JsonNull
-        }
+        PrimitiveKind.INT -> prim.intOrNull?.let(::JsonPrimitive) ?: raw.toIntOrNull()?.let(::JsonPrimitive) ?: JsonNull
+        PrimitiveKind.LONG -> prim.longOrNull?.let(::JsonPrimitive) ?: raw.toLongOrNull()?.let(::JsonPrimitive) ?: JsonNull
+        PrimitiveKind.FLOAT -> prim.floatOrNull?.let(::JsonPrimitive) ?: raw.toFloatOrNull()?.let(::JsonPrimitive) ?: JsonNull
+        PrimitiveKind.DOUBLE -> prim.doubleOrNull?.let(::JsonPrimitive) ?: raw.toDoubleOrNull()?.let(::JsonPrimitive) ?: JsonNull
+        PrimitiveKind.BYTE -> (prim.intOrNull ?: raw.toIntOrNull())?.takeIf { it in -128..127 }?.let(::JsonPrimitive) ?: JsonNull
+        PrimitiveKind.SHORT -> (prim.intOrNull ?: raw.toIntOrNull())?.takeIf { it in -32768..32767 }?.let(::JsonPrimitive) ?: JsonNull
+        PrimitiveKind.CHAR -> raw.takeIf { it.length == 1 }?.let(::JsonPrimitive) ?: JsonNull
     }
 }

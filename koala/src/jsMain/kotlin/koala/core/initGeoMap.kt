@@ -7,9 +7,11 @@ import koala.external.maplibregl
 import koala.html.GeoMapSelector
 import org.w3c.dom.HTMLElement
 
-private var geoMapWindow: HTMLElement? = null
+// globalThis.geoMapWindow: HTMLElement? = null
+external val globalThis: dynamic
 
 fun findAndInitGeoMap(ancestor: HTMLElement): HTMLElement? {
+    val geoMapWindow = globalThis.geoMapWindow as? HTMLElement
     geoMapWindow?.let {
         console.log("geomap already initialized")
         return it
@@ -22,7 +24,7 @@ fun findAndInitGeoMap(ancestor: HTMLElement): HTMLElement? {
     }
     val mount = mounts[0] as? HTMLElement ?: return null
     val element = initGeoMap(mount)
-    geoMapWindow = element
+    globalThis.geoMapWindow = element
     return element
 }
 

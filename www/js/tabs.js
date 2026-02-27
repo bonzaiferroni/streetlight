@@ -11,9 +11,9 @@ function initTabs(root) {
     const viewport = root.querySelector(".tabs-viewport");
     if (!viewport) return;
 
-    // Key is the viewport element id (must exist)
+    // Optional: Key is the root id (used only for URL hash query sync)
     const paramKey = (root.id || "").trim();
-    if (!paramKey) return;
+    const canSyncUrl = Boolean(paramKey);
 
     const buttons = Array.from(root.querySelectorAll(".tabs-header .tabs-button"));
     const panels = Array.from(viewport.querySelectorAll(".tabs-panel"));
@@ -39,6 +39,7 @@ function initTabs(root) {
     const names = panels.map((_, i) => tabNameAt(i));
 
     const readQuery = () => {
+        if (!canSyncUrl) return "";
         const hash = location.hash.startsWith("#") ? location.hash.slice(1) : "";
         const [_, query = ""] = hash.split("?", 2);
         const params = new URLSearchParams(query);
@@ -56,6 +57,7 @@ function initTabs(root) {
     };
 
     const setQuery = (name) => {
+        if (!canSyncUrl) return;
         const hash = location.hash.startsWith("#") ? location.hash.slice(1) : "";
         const [path = "", query = ""] = hash.split("?", 2);
         const params = new URLSearchParams(query);
@@ -74,12 +76,12 @@ function initTabs(root) {
     let current = panels.findIndex((p) => p.classList.contains("is-active"));
     if (current < 0) current = 0;
 
-    let initialWanted = readQuery();
+    const initialWanted = readQuery();
     const wantedIdx = initialWanted ? names.indexOf(slug(initialWanted)) : readDefault();
     if (wantedIdx >= 0) current = wantedIdx;
 
     // --- Initial apply ---
-    buttons[current].dispatchEvent(new CustomEvent("select-tab"))
+    buttons[current].dispatchEvent(new CustomEvent("select-tab"));
     panels.forEach((p, i) => {
         p.style.display = i === current ? "block" : "none";
         p.classList.toggle("is-active", i === current);
@@ -90,7 +92,7 @@ function initTabs(root) {
     viewport.style.height = panels[current].scrollHeight + "px";
     setTimeout(() => (viewport.style.height = "auto"), DURATION);
 
-    // Ensure URL reflects active tab after init
+    // Ensure URL reflects active tab after init (only if id present)
     setQuery(names[current]);
 
     // --- Click -> swap + query update ---
@@ -108,23 +110,25 @@ function initTabs(root) {
     });
 
     // --- React to external navigation (back/forward / replaceState elsewhere) ---
-    const onNav = () => {
-        const wanted = readQuery();
-        if (!wanted) return;
-        const idx = names.indexOf(slug(wanted));
-        if (idx < 0 || idx === current) return;
+    if (canSyncUrl) {
+        const onNav = () => {
+            const wanted = readQuery();
+            if (!wanted) return;
+            const idx = names.indexOf(slug(wanted));
+            if (idx < 0 || idx === current) return;
 
-        buttons[current]?.classList.remove("is-active");
-        buttons[idx]?.classList.add("is-active");
-        swap(current, idx);
-        current = idx;
-    };
-    window.addEventListener("popstate", onNav);
+            buttons[current]?.classList.remove("is-active");
+            buttons[idx]?.classList.add("is-active");
+            swap(current, idx);
+            current = idx;
+        };
+        window.addEventListener("popstate", onNav);
+    }
 
     function swap(fromIdx, toIdx) {
         const from = panels[fromIdx];
         const to = panels[toIdx];
-        buttons[toIdx].dispatchEvent(new CustomEvent("select-tab"))
+        buttons[toIdx].dispatchEvent(new CustomEvent("select-tab"));
 
         const toDir = toIdx > fromIdx ? "dir-right" : "dir-left";
         const fromDir = toIdx > fromIdx ? "dir-left" : "dir-right";
