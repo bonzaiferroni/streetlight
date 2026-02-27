@@ -9,7 +9,6 @@ import streetlight.model.data.EventParse
 import streetlight.model.data.toEventEdit
 
 fun RenderContext.eventReaderView(app: AppContext, route: ReadEventRoute) {
-    console.log(route)
     val model = EventReader(renderScope, app.client.api, route)
     val stateFlow = model.state.flow
     val linkFlow = stateFlow.mapDistinct { it.link }
@@ -56,16 +55,30 @@ fun RenderContext.eventReaderView(app: AppContext) {
 
 fun RenderContext.eventReaderResult(app: AppContext, model: EventReader, parse: EventParse?) {
     val events = parse?.events ?: return
+
     column {
+        flowBlock(model.location.flow) { location ->
+            card {
+                if (location != null) {
+                    row {
+                        textBlock("If the information looks correct, you can post these events to ${location.name}.", modify(Flex1))
+                        button("post all", onClick = model::postAll)
+                    }
+                }
+            }
+        }
+
         events.forEachIndexed { index, event ->
             val eventName = event.name ?: return@forEachIndexed
             val date = event.date ?: return@forEachIndexed
-            val isCompleted = model.state.flow.mapDistinct { it.completed.contains(index) }
+            val statusFlow = model.state.flow.mapDistinct { it.getStatus(index) }
 
             val itemElement = card {
-                flowBlock(isCompleted) { isCompleted ->
-                    if (isCompleted) {
+                flowBlock(statusFlow) { status ->
+                    if (status == 200) {
                         textBlock("Posted: $eventName ✅")
+                    } else if (status == 409) {
+                        textBlock("Already posted: $eventName 👍")
                     } else {
                         row {
                             event.imageUrl?.takeIf { it.startsWith("http") }?.let {
@@ -112,7 +125,7 @@ fun RenderContext.eventReaderResult(app: AppContext, model: EventReader, parse: 
             }
 
             itemElement.onClick {
-                val event = event.toEventEdit(null, null) ?: return@onClick
+                val event = event.toEventEdit(null, null, model.location.now?.locationId) ?: return@onClick
                 val route = EditEventCallbackRoute(event) { event ->
                     if (event != null) {
                         model.setCompleted(index)

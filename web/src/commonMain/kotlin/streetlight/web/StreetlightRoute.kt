@@ -6,6 +6,7 @@ import koala.html.AppScreen
 import streetlight.model.data.Event
 import streetlight.model.data.EventEdit
 import streetlight.model.data.EventId
+import streetlight.model.data.Location
 import streetlight.model.data.LocationEdit
 import streetlight.model.data.LocationId
 import streetlight.model.data.PostId
@@ -122,7 +123,7 @@ data class EditTalentRoute(
 }
 
 data class ReadEventRoute(
-    val locationId: LocationId? = null,
+    val location: Location? = null,
     val link: String? = null,
 ): StreetlightRoute {
     override val screen get() = StreetlightScreen.ReadEvent

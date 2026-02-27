@@ -8,6 +8,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import streetlight.model.data.EventParse
 import streetlight.model.data.ReadEventRequest
+import streetlight.model.data.toEventEdit
 import kotlin.time.Duration.Companion.seconds
 
 class EventReader(
@@ -17,10 +18,10 @@ class EventReader(
 ) {
     val state = storeOf(EventRelayState())
     val message = storeOf(UIMessage(intro))
+    val location = storeOf(route.location)
 
     init {
         if (route.link != null) {
-            console.log("auto reading link")
             state.set { it.copy(link = route.link) }
             readLink()
         }
@@ -38,6 +39,28 @@ class EventReader(
 
     fun setCompleted(index: Int) {
         state.set { it.copy(completed = it.completed + index) }
+    }
+
+    fun postAll() {
+        val location = location.now ?: return
+        val events = state.now.parse?.events ?: return
+        val link = state.now.link
+        scope.launch {
+            events.forEachIndexed { index, event ->
+                if (state.now.getStatus(index) == 200) return@forEachIndexed
+                val edit = event.toEventEdit(link, null, location.locationId)?.takeIf { it.isValid }
+                    ?: return@forEachIndexed
+                val response = api.createOrEditEvent(edit)
+                if (response == null) {
+                    console.log("unhandled error")
+                    return@forEachIndexed
+                }
+
+                val completed = state.now.completed.toMutableList()
+                completed[index] = response.status
+                state.set { it.copy(completed = completed) }
+            }
+        }
     }
 
     private fun readUrl(url: String?, isImage: Boolean) {
@@ -64,7 +87,7 @@ class EventReader(
             val events = parse?.events?.takeIf { it.isNotEmpty() }
             if (events != null) {
                 message.set("Finished. Are any of these the event you wish to post?")
-                state.set { it.copy(parse = parse) }
+                state.set { it.copy(parse = parse, completed = MutableList(events.size) { null }) }
             } else {
                 message.set("I couldn't find any events at that link. It might be for human readers only.")
             }
@@ -78,7 +101,9 @@ data class EventRelayState(
     val imageUrl: String = "",
     val parse: EventParse? = null,
     val stage: Int = 0,
-    val completed: Set<Int> = emptySet()
-)
+    val completed: List<Int?> = emptyList()
+) {
+    fun getStatus(index: Int) = completed.getOrNull(index)
+}
 
 private const val intro = "Share information about upcoming events."

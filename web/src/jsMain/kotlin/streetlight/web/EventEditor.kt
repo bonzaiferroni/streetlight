@@ -108,7 +108,7 @@ class EventEditor(
         val event = eventNow
         if (!event.isValid) return null
 
-        val savedEvent = api.createOrEditEvent(event)
+        val savedEvent = api.createOrEditEvent(event)?.payload
         return savedEvent
     }
 

@@ -51,6 +51,11 @@ class FetchClient(
         body: Sent,
     ): Returned? = authRequest("POST", endpoint.path, Json.encodeToString(body)) { it.tryDecodeText() }
 
+    suspend inline fun <reified Sent, reified Returned> postAndReadStatus(
+        endpoint: PostEndpoint<Sent, Returned>,
+        body: Sent,
+    ): FetchResponse<Returned>? = authRequest("POST", endpoint.path, Json.encodeToString(body)) { it.tryDecodeWithStatus() }
+
     suspend inline fun <reified Returned> getProtobuf(
         endpoint: GetEndpoint<Unit>,
         feedType: ProtobufType
@@ -84,7 +89,7 @@ class FetchClient(
         path: String,
         body: dynamic? = null,
         contentType: String = "application/json",
-        block: suspend (Response) -> T
+        handleResponse: suspend (Response) -> T
     ): T? {
         val fetchWithJwt: suspend (String?) -> Response = { jwt ->
             val headers = jwt?.let {
@@ -136,7 +141,7 @@ class FetchClient(
             response = fetchWithJwt(auth.jwt)
         }
 
-        return block(response)
+        return handleResponse(response)
     }
 
     suspend fun uploadBlob(postUrl: String, blobUrl: String): String? {
@@ -178,3 +183,14 @@ suspend inline fun <reified Returned> Response.tryDecodeText(debug: Boolean = fa
         null
     }
 }
+
+suspend inline fun <reified Returned> Response.tryDecodeWithStatus(debug: Boolean = false): FetchResponse<Returned> {
+    val status = status.toInt()
+    val payload: Returned? = if (status == 200) tryDecodeText(debug) else null
+    return FetchResponse(status, payload)
+}
+
+data class FetchResponse<T>(
+    val status: Int,
+    val payload: T?
+)

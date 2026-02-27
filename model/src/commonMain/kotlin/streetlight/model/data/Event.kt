@@ -139,10 +139,12 @@ data class ReadEventRequest(
 fun EventParseItem.toEventEdit(
     sourceUrl: String?,
     sourceImageUrl: String?,
+    locationId: LocationId?
 ): EventEdit? {
     val date = date ?: return null
     return EventEdit(
         title = name ?: "",
+        locationId = locationId,
         place = Place(location ?: ""),
         imageUrl = imageUrl,
         description = description,

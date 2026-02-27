@@ -21,7 +21,6 @@ fun RenderContext.userContent(
     val portal = app.portal
 
     val user = gate.stateNow.user
-    console.log(user)
     if (user != null) {
         block(user)
         return

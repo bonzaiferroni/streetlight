@@ -22,7 +22,7 @@ fun RenderContext.locationAdminView(
                             textBlock("This location has an event page that we can try to read. " +
                                     "The last time it was checked was ${location.checkedAt}.", modify(Flex1))
                             button("read events", onClick = {
-                                app.portal.go(ReadEventRoute(location.locationId, link))
+                                app.portal.go(ReadEventRoute(location, link))
                             })
                         }
                     }

@@ -1,12 +1,8 @@
 package streetlight.agent
 
-import ai.koog.prompt.dsl.Prompt
 import ai.koog.prompt.dsl.prompt
 import ai.koog.prompt.executor.clients.google.GoogleModels
 import ai.koog.prompt.executor.llms.all.simpleGoogleAIExecutor
-import ai.koog.prompt.llm.OllamaModels
-import ai.koog.prompt.message.AttachmentContent
-import ai.koog.prompt.message.ContentPart
 import ai.koog.prompt.params.LLMParams
 import kabinet.console.globalConsole
 import kampfire.utils.takeEllipsis
@@ -106,7 +102,7 @@ class UrlParser(apiKey: String) {
     inline fun <reified T> tryDecode(text: String): T? = try {
         decodeLenient(text)
     } catch (e: Exception) {
-        console.logException(e)
+        console.logThrowable(e)
         console.logError("unable to decode structured llm response:\n${text.takeEllipsis(400)}")
         null
     }
