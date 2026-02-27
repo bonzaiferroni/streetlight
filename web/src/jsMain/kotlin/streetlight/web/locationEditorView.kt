@@ -3,7 +3,6 @@ package streetlight.web
 import koala.css.Accent
 import koala.css.AlignItemsStretch
 import koala.css.MinHeight8
-import koala.css.Width100
 import koala.css.modify
 import koala.dom.*
 import koala.model.mapDistinct
@@ -56,4 +55,5 @@ fun RenderContext.locationEditorRouteView(app: AppContext) {
     ) {
         locationEditorView(it, app)
     }
+    appFooter()
 }

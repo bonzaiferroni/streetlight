@@ -13,7 +13,8 @@ class UserCred {
     private val state = storeOf(UserCredState(
         usernameText = localStorage[USERNAME_KEY] ?: "",
         stayLoggedIn = localStorage[STAY_LOGGED_KEY]?.toBooleanStrictOrNull() ?: false,
-        refreshToken = localStorage[REFRESH_TOKEN_KEY]
+        refreshToken = localStorage[REFRESH_TOKEN_KEY],
+        jwt = localStorage[JWT_KEY],
     ))
     val stateNow get() = state.now
 
@@ -65,6 +66,7 @@ class UserCred {
         if (stateNow.stayLoggedIn) {
             localStorage.setItem(REFRESH_TOKEN_KEY, auth.refreshToken)
             localStorage.setItem(USERNAME_KEY, stateNow.usernameText)
+            localStorage.setItem(JWT_KEY, auth.jwt)
         }
         state.set { it.copy(refreshToken = auth.refreshToken, jwt = auth.jwt, passwordText = "") }
     }
@@ -83,3 +85,4 @@ data class UserCredState(
 private const val USERNAME_KEY = "streetlight.username"
 private const val REFRESH_TOKEN_KEY = "streetlight.refresh"
 private const val STAY_LOGGED_KEY = "streetlight.stay_logged"
+private const val JWT_KEY = "streetlight.jwt"

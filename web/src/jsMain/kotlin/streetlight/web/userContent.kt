@@ -2,6 +2,7 @@ package streetlight.web
 
 import kampfire.model.UserInfo
 import koala.css.ModifierSet
+import koala.css.Width100
 import koala.css.applyModifiers
 import koala.dom.*
 import kotlinx.coroutines.flow.filterNotNull
@@ -10,8 +11,9 @@ import kotlinx.coroutines.launch
 import kotlinx.dom.clear
 import kotlinx.html.js.div
 
-fun RenderContext.userGate(
+fun RenderContext.userContent(
     app: AppContext,
+    redirect: Boolean = false,
     modifiers: ModifierSet? = null,
     block: RenderContext.(UserInfo) -> Unit
 ) {
@@ -24,10 +26,12 @@ fun RenderContext.userGate(
         return
     }
 
+    if (!redirect) return
+
     val currentRoute = portal.stateNow.route
 
     val element = div {
-        applyModifiers(modifiers)
+        applyModifiers(Width100, modifiers)
         +"Must be signed in"
     }
 
@@ -45,5 +49,4 @@ fun RenderContext.userGate(
     }
 
     portal.go(AccountRoute)
-
 }

@@ -7,7 +7,9 @@ import koala.model.Portal
 import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import revealContent
 import streetlight.web.pages.AppBody
 
 fun viewApp() {
@@ -69,5 +71,8 @@ fun viewApp() {
                 }
             }
         }
+
+        delay(100)
+        revealContent()
     }
 }

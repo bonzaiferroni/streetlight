@@ -23,6 +23,7 @@ import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kotlinx.html.HTML
 import kotlinx.html.body
+import kotlinx.html.style
 import streetlight.web.AccountRoute
 import streetlight.web.FullMapRoute
 import streetlight.web.HomeRoute

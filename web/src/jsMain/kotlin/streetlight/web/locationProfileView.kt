@@ -16,18 +16,17 @@ fun RenderContext.locationProfileView(app: AppContext) {
         }
 
         wireBlock(LocationShell.adminCard, element) {
-            userGate(app) { userInfo ->
+            userContent(app) { userInfo ->
                 card {
                     row {
-                    textBlock("hello ${userInfo.username}", modify(Flex1))
-                        button("Edit", onClick = {
-                            app.portal.go(EditLocationIdRoute(location.locationId))
+                        textBlock("hello ${userInfo.username}", modify(Flex1))
+                        button("Admin panel", onClick = {
+                            app.portal.go(LocationAdminRoute(location.locationId))
                         })
                     }
                 }
             }
         }
-
     }
 }
 

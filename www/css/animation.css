@@ -81,80 +81,90 @@
     position: absolute;
 }
 
-/* flow block */
+/* magic */
 
-.flow-block.animate {
+.flow-block.magic {
     opacity: 0;
     transition: opacity 200ms ease-in-out, transform 200ms ease-in-out, filter 200ms ease-out;
     pointer-events: none;
 }
 
-.flow-block.animate.reveal {
+.flow-block.magic.reveal {
     opacity: 1;
     pointer-events: auto;
 }
 
-.flow-block.animate.magic-blur {
+.flow-block.magic.magic-blur {
     filter: blur(6px);
 }
 
-.flow-block.animate.magic-blur.reveal {
+.flow-block.magic.magic-blur.reveal {
     filter: blur(0px);
 }
 
-.flow-block.animate.magic-slide-x {
+.flow-block.magic.magic-slide-x {
     transform: translate(20px, 0px);
 }
 
-.flow-block.animate.magic-slide-x.reveal {
+.flow-block.magic.magic-slide-x.reveal {
     transform: translate(0px, 0px);
 }
 
-.flow-block.animate.magic-slide-y {
+.flow-block.magic.magic-slide-y {
     transform: translate(0px, 20px);
 }
 
-.flow-block.animate.magic-slide-y.reveal {
+.flow-block.magic.magic-slide-y.reveal {
     transform: translate(0px, 0px);
 }
 
 /* items block */
-.items-block.animate {
+.items-block.magic {
     transition: height 200ms ease-in-out;
 }
 
-.items-block.animate > * {
+.items-block.magic > * {
     position: absolute;
     opacity: 0;
     transition: opacity 200ms ease-in-out, transform 200ms ease-in-out, filter 200ms ease-in-out, top 200ms ease-in-out;
     pointer-events: none;
 }
 
-.items-block.animate > .reveal {
+.items-block.magic > .reveal {
     opacity: 1;
     pointer-events: auto;
 }
 
-.items-block.animate.magic-blur > * {
+.items-block.magic.magic-blur > * {
     filter: blur(6px);
 }
 
-.items-block.animate > .reveal {
+.items-block.magic > .reveal {
     filter: blur(0px);
 }
 
-.items-block.animate.magic-slide-x > * {
+.items-block.magic.magic-slide-x > * {
     transform: translate(20px, 0px);
 }
 
-.items-block.animate.magic-slide-x > .reveal {
+.items-block.magic.magic-slide-x > .reveal {
     transform: translate(0px, 0px);
 }
 
-.items-block.animate.magic-slide-y > * {
+.items-block.magic.magic-slide-y > * {
     transform: translate(0px, 20px);
 }
 
-.items-block.animate.magic-slide-y > .reveal {
+.items-block.magic.magic-slide-y > .reveal {
     transform: translate(0px, 0px);
+}
+
+/* content box */
+#content-box {
+    opacity: 0;
+    transition: opacity 200ms ease-in-out;
+}
+
+#content-box.reveal {
+    opacity: 1;
 }

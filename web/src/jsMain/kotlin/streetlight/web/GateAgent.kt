@@ -13,6 +13,7 @@ class GateAgent(
     val gate: UserGate,
     val portal: Portal,
 ) {
+    @Deprecated("use userContent")
     fun checkIn(block: (UserInfo) -> Unit) {
         val user = gate.stateNow.user
         if (user != null) {

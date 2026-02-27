@@ -9,7 +9,7 @@ import org.w3c.dom.HTMLElement
 import org.w3c.dom.events.Event
 
 fun RenderContext.tabs(
-    id: Id,
+    id: Id? = null,
     modifiers: ModifierSet? = null,
     content: TabScope.() -> Unit,
 ): HTMLDivElement {

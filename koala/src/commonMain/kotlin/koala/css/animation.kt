@@ -8,7 +8,7 @@ object Show: Modifier { override val value = "show" }
 object FadeStack: Modifier { override val value = "fade-stack" }
 
 // utilities
-object Animate: Modifier { override val value = "animate" }
+object Animate: Modifier { override val value = "magic" }
 object Reveal: Modifier { override val value = "reveal" }
 // object Hide: CssClass { override val value = "hide" }
 object MagicBlur: Modifier { override val value = "magic-blur" }

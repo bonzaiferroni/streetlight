@@ -14,7 +14,7 @@ import koala.html.column
 import koala.html.textBlock
 import kotlinx.html.style
 
-fun RenderContext.footer() {
+fun RenderContext.appFooter() {
     val giants = "May we choose a world of good and faithful giants. "
     row(modify(JustifyCenter)) {
         style = "height: 20rem;"

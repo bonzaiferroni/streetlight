@@ -11,11 +11,13 @@ import kotlinx.html.id
 import org.w3c.dom.HTMLDivElement
 
 inline fun DOMContext.column(
-    id: Id,
+    id: Id?,
     modifiers: ModifierSet? = null,
     crossinline content: DIV.() -> Unit,
 ) = column(modifiers) {
-    this.id = id.value
+    id?.let {
+        this.id = id.value
+    }
     content()
 }
 
