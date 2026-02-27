@@ -14,8 +14,12 @@ import org.w3c.dom.Location
 class Portal(
     initialRoute: AppRoute,
     val screens: List<AppScreen>,
-    scope: CoroutineScope
-): BrowserModel<PortalState>(PortalState(initialRoute), scope) {
+    private val scope: CoroutineScope
+) {
+    private val state = storeOf(PortalState(initialRoute))
+    val stateFlow = state.flow
+    val stateNow get() = state.now
+
     val screenFlow = stateFlow.mapDistinct { it.route.screen }
     val routeFlow = stateFlow.mapDistinct { it.route }
 
@@ -65,7 +69,7 @@ class Portal(
     }
 
     private fun go(route: AppRoute, backstack: List<AppRoute>) {
-        setState { it.copy(route = route, backstack = backstack)}
+        state.set { it.copy(route = route, backstack = backstack)}
         hashPath = route.toHashPath()
     }
 

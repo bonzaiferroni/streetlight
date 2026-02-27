@@ -1,16 +1,13 @@
 package streetlight.web
 
 import koala.css.*
-import koala.css.ElementClass.flowBlock
 import koala.dom.*
 import koala.model.flowerOf
-import koala.model.storeOf
-import streetlight.model.data.Event
 import streetlight.model.data.Location
 import streetlight.model.data.toEdit
 import streetlight.web.shells.cardOf
 
-fun RenderContext.locationAdminView(
+fun RenderContext.viewLocationAdmin(
     app: AppContext,
     location: Location,
 ) {
@@ -47,11 +44,11 @@ fun RenderContext.locationAdminView(
     }
 }
 
-fun RenderContext.locationAdminRouteView(app: AppContext) {
+fun RenderContext.viewLocationAdmin(app: AppContext) {
     routeBlock<LocationAdminRoute, Location>(
         portal = app.portal,
         provideData = { app.client.api.readLocation(it.locationId) }
     ) {
-        locationAdminView(app, it)
+        viewLocationAdmin(app, it)
     }
 }

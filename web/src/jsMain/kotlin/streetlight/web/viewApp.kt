@@ -66,7 +66,7 @@ fun viewApp() {
                     StreetlightScreen.ReadEvent -> eventReaderView(app)
                     StreetlightScreen.LocationProfile -> locationProfileView(app)
                     StreetlightScreen.EditLocation -> locationEditorRouteView(app)
-                    StreetlightScreen.LocationAdmin -> locationAdminRouteView(app)
+                    StreetlightScreen.LocationAdmin -> viewLocationAdmin(app)
                     else -> textBlock("Coming soon: $screen")
                 }
             }

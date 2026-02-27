@@ -22,15 +22,16 @@ fun RenderContext.viewUserHub(
 
         card {
             row {
-                textBlock("Share and grow your talents.", modify(Flex1))
-                button("add talent", modify(Accent), onClick = { portal.go(EditTalentRoute()) })
+                textBlock("Add things to the map.", modify(Flex1))
+                button("post event", modify(Accent), onClick = { portal.go(ReadEventRoute())})
+                button("post location", modify(Accent), onClick = { portal.go(CreateLocationRoute)})
             }
         }
 
         card {
             row {
-                textBlock("Host an event or post an event.", modify(Flex1))
-                button("add event", modify(Accent), onClick = { portal.go(EditEventIdRoute())})
+                textBlock("Share and grow your talents.", modify(Flex1))
+                button("add talent", modify(Accent), onClick = { portal.go(EditTalentRoute()) })
             }
         }
 
@@ -44,4 +45,3 @@ fun RenderContext.viewUserHub(
     }
 }
 
-private const val intro = "Streetlight is a place to explore a deeper level of expression. "
