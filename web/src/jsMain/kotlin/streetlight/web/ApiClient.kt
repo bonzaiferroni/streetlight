@@ -16,6 +16,7 @@ class ApiClient(private val client: FetchClient) {
     suspend fun readEventFeed() = client.get(Api.Events)
     suspend fun createOrEditEvent(event: EventEdit) = client.postAndReadStatus(Api.Events.Edit, event)
     suspend fun readEventFromUrl(request: ReadEventRequest) = client.post(Api.Events.ReadUrl, request)
+    suspend fun readLocationEvents(locationId: LocationId) = client.get(Api.Events.Location, locationId)
 
     // locations
     suspend fun readLocation(locationId: LocationId) = client.get(Api.Locations, locationId)

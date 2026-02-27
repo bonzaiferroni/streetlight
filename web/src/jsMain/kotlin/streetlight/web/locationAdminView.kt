@@ -1,32 +1,45 @@
 package streetlight.web
 
 import koala.css.*
+import koala.css.ElementClass.flowBlock
 import koala.dom.*
+import koala.model.flowerOf
+import koala.model.storeOf
+import streetlight.model.data.Event
 import streetlight.model.data.Location
 import streetlight.model.data.toEdit
+import streetlight.web.shells.cardOf
 
 fun RenderContext.locationAdminView(
     app: AppContext,
     location: Location,
 ) {
     column {
+        cardOf(location)
         tabs {
             tab("profile") {
                 val edit = location.toEdit()
                 locationEditorView(edit, app)
             }
             tab("events") {
+                val events = flowerOf { app.client.api.readLocationEvents(location.locationId) }
                 column {
                     location.eventsLink.let { link ->
                         row {
-                            textBlock("This location has an event page that we can try to read. " +
-                                    "The last time it was checked was ${location.checkedAt}.", modify(Flex1))
+                            val lastTime = location.checkedAt?.let { "The last time it was checked was ${it}." } ?: ""
+                            textBlock("This location has an event page that we can try to read. $lastTime", modify(Flex1))
                             button("read events", onClick = {
                                 app.portal.go(ReadEventRoute(location, link))
                             })
                         }
                     }
-                    textBlock("yer events")
+                    flowBlock(events.flow, modify(MagicBlur, MagicSlideX), animate = true) { events ->
+                        column {
+                            events.forEach { event ->
+                                cardOf(event)
+                            }
+                        }
+                    }
                 }
             }
         }
