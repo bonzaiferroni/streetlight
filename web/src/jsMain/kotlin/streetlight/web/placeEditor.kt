@@ -1,6 +1,7 @@
 package streetlight.web
 
 import kampfire.model.GeoPoint
+import kampfire.model.distanceTo
 import kampfire.model.meters
 import koala.css.AlignItemsStretch
 import koala.css.Dim

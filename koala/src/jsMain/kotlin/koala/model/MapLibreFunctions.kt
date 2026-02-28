@@ -2,6 +2,7 @@ package koala.model
 
 import kampfire.model.GeoBounds
 import kampfire.model.GeoPoint
+import kampfire.model.Point
 import koala.external.Position
 import koala.external.maplibregl
 import kotlinx.browser.window
@@ -37,3 +38,5 @@ fun maplibregl.LngLatBounds.toGeoBounds() = GeoBounds(getSouthWest().toGeoPoint(
 fun maplibregl.LngLat.toGeoPoint() = GeoPoint(lng = lng, lat = lat)
 
 fun GeoPoint.toLngLat() = maplibregl.LngLat(lng = lng, lat = lat)
+
+fun maplibregl.Point.toProjectedPoint() = Point(x = x, y = y)

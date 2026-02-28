@@ -57,6 +57,8 @@ external object maplibregl {
         fun getSource(id: String): Source
         fun addLayer(layer: dynamic)
 
+        fun project(point: LngLat): Point
+
         // Event handling inherited from .koala.external.Evented
     }
 
@@ -128,7 +130,10 @@ external object maplibregl {
     }
 
     class Popup
-    class Point
+    class Point(
+        val x: Double,
+        val y: Double
+    )
 
     class NavigationControl
     class FullscreenControl
@@ -140,6 +145,7 @@ typealias Listener = (dynamic) -> Unit
 //    return this.on(type, maplibregl.Listener(listener))
 //}
 
+@JsPlainObject
 external interface MarkerOptions {
     val anchor: PositionAnchor?
     val className: String?

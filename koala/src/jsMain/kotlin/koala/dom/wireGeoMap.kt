@@ -1,5 +1,6 @@
 package koala.dom
 
+import kampfire.model.GeoPoint
 import koala.core.findAndInitGeoMap
 import koala.core.queryFirstOrNull
 import koala.external.CenterZoomBearing
@@ -9,9 +10,10 @@ import kotlinx.coroutines.launch
 import org.w3c.dom.HTMLElement
 import koala.html.GeoMapSelector
 import koala.model.GeoMap
-import koala.model.MapContext
+import koala.model.MapViewContext
 import koala.model.showLines
 import koala.model.toGeoBounds
+import koala.model.toGeoPoint
 import koala.model.toLngLat
 import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
@@ -22,7 +24,7 @@ fun wireGeoMap(
     ancestor: HTMLElement,
 ) {
     val mount = ancestor.queryFirstOrNull(GeoMapSelector.mapMount) ?: return
-    val mapWindow = initMapWindow(geoMap, appScope, mount)
+    val mapWindow = wireMapWindow(geoMap, appScope, mount)
 
     mount.onView { isVisible ->
         if (isVisible && mount.children.length == 0) {
@@ -35,7 +37,7 @@ fun wireGeoMap(
 
 private var geoMapWindow: HTMLElement? = null
 
-fun initMapWindow(
+fun wireMapWindow(
     geoMap: GeoMap,
     appScope: CoroutineScope,
     mount: HTMLElement
@@ -53,13 +55,15 @@ fun initMapWindow(
 
     appScope.launch {
 
+        val context = MapViewContext(widget)
+
         fun relayBounds(isMoving: Boolean) {
             val bounds = widget.getBounds().toGeoBounds()
-            val zoom = widget.getZoom()
-            geoMap.setBounds(bounds, zoom.toFloat(), isMoving)
+            val zoom = widget.getZoom().toFloat()
+            val nearest = context.getNearest(widget.getCenter().toGeoPoint(), zoom)
+            console.log(nearest?.entityId)
+            geoMap.setBounds(bounds, zoom, isMoving, nearest)
         }
-
-        val context = MapContext(widget)
 
         while (!widget.loaded()) {
             delay(10)

@@ -18,7 +18,7 @@ data class MapLine(
     val entity: LineEntity,
 )
 
-fun MapContext.showLines(entities: List<LineEntity>) {
+fun MapViewContext.showLines(entities: List<LineEntity>) {
     val layerIds = entities.mapNotNull { entity ->
         val lineSet = lineLayers.getOrPut(entity.layerId) { mutableListOf() }
         if (lineSet.any { it.entity.entityId  == entity.entityId} ) return@mapNotNull null

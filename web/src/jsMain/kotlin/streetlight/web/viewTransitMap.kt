@@ -2,7 +2,7 @@ package streetlight.web
 
 import koala.dom.RenderContext
 import koala.external.maplibregl
-import koala.model.MapObject
+import koala.model.PointEntityView
 import koala.model.jsObject
 import koala.model.mapDistinct
 import koala.model.mapDistinctBy
@@ -20,9 +20,9 @@ fun RenderContext.viewTransitMap(
 ) {
     val streetMap = app.streetMap
     val transitMap = app.streetMap.transit
-    var stopMarkers: List<MapObject> = emptyList()
+    var stopMarkers: List<PointEntityView> = emptyList()
     var areaTransit = transitMap.stateNow.areaTransit
-    val vehicleElements = mutableMapOf<String, MapObject>()
+    val vehicleElements = mutableMapOf<String, PointEntityView>()
     var markersVisible = false
 
     renderScope.launch {

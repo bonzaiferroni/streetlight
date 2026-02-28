@@ -2,6 +2,7 @@ package koala.model
 
 import kampfire.model.GeoBounds
 import kampfire.model.GeoPoint
+import kampfire.model.distanceTo
 import kampfire.model.meters
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -10,8 +11,12 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 
 class GeoMap(
-    scope: CoroutineScope
-): BrowserModel<GeoMapState>(GeoMapState(), scope) {
+    private val scope: CoroutineScope
+) {
+    private val state = storeOf(GeoMapState())
+    val stateFlow = state.flow
+    val stateNow get() = state.now
+
     private val _entityFlow = MutableSharedFlow<List<MapEntity>>(8)
     val entityFlow: SharedFlow<List<MapEntity>> = _entityFlow
     private val _removeEntity = MutableSharedFlow<List<MapEntityId>>(8)
@@ -53,10 +58,10 @@ class GeoMap(
         }
     }
 
-    fun setBounds(value: GeoBounds, zoom: Float, isMoving: Boolean) {
+    fun setBounds(value: GeoBounds, zoom: Float, isMoving: Boolean, nearest: PointEntity?) {
         if (isMoving && zoom == stateNow.zoom && value.center.distanceTo(stateNow.center) < (20 * zoom).meters) return
         val bounds = if (isMoving) stateNow.bounds else value
-        setState { it.copy(bounds = bounds, movingBounds = value, zoom = zoom, isMoving = isMoving) }
+        state.set { it.copy(bounds = bounds, movingBounds = value, zoom = zoom, isMoving = isMoving, nearest = nearest) }
     }
 
     fun panMap(point: GeoPoint) {
@@ -70,7 +75,7 @@ class GeoMap(
     }
 
     fun setIsViewed(value: Boolean) {
-        setState { it.copy(isViewed = value) }
+        state.set { it.copy(isViewed = value) }
     }
 }
 
@@ -80,6 +85,7 @@ data class GeoMapState(
     val zoom: Float = 11f,
     val isMoving: Boolean = false,
     val isViewed: Boolean = false,
+    val nearest: PointEntity? = null,
 ) {
     val center get() = bounds.center
 }
@@ -95,3 +101,14 @@ data class PanPoint(
     val zoom: Float? = null,
     val snap: Boolean = false,
 )
+
+interface PointEntity: MapEntity {
+    val position: GeoPoint
+    val bearing: Float? get() = null
+    val opacity: Float? get() = null
+    val subpixelPositioning: Boolean get() = true
+    val iconPath: String? get() = null
+    val thumbPath: String? get() = null
+    val minZoom: Float? get() = null
+    val onClick: (() -> Unit)? get() = null
+}

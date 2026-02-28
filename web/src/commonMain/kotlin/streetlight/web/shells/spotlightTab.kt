@@ -2,6 +2,7 @@ package streetlight.web.shells
 
 import koala.css.AlignItemsStart
 import koala.css.FlexItems1
+import koala.css.QueryRow
 import koala.css.Width100
 import koala.css.modify
 import koala.html.AppRoute
@@ -29,7 +30,7 @@ import streetlight.web.pages.appFooter
 
 fun FlowContent.spotlightTab(events: List<Event>, locations: List<Location>) {
     column {
-        row(modify(FlexItems1, AlignItemsStart)) {
+        column(modify(QueryRow, FlexItems1, AlignItemsStart)) {
             column {
                 heading3("Events")
                 events.take(10).forEach { event ->

@@ -79,6 +79,12 @@
     background-repeat: no-repeat;
     background-position: center;
     background-color: transparent; /* important */
+    transform: translate(-50%, -50%) scale(1);
+    transition: transform 200ms ease;
+}
+
+.map-focus > .marker-icon {
+    transform: translate(-50%, -50%) scale(2);
 }
 
 .marker-bearing {
@@ -98,8 +104,15 @@
 .marker-thumb {
     width: 32px;
     height: 32px;
-
     border-radius: 16px;
+
+    transition: transform 200ms ease, border-radius 200ms ease;
+    transform: scale(1);
+}
+
+.map-focus > .marker-thumb {
+    transform: scale(2); /* 32px → 64px */
+    border-radius: 1rem;
 }
 
 .map-event-panel {

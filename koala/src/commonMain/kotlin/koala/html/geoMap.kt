@@ -29,4 +29,5 @@ object GeoMapSelector {
     val crosshairs = Id("map-crosshairs")
     val panel = Id("map-panel")
     val geoPoint = Attribute("data-geo-point")
+    val focused = Css("map-focus")
 }
