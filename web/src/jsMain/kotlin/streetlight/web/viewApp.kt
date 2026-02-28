@@ -49,7 +49,7 @@ fun viewApp() {
         portalMount.renderRoot(app.appScope) {
             flowBlock(
                 flow = app.portal.screenFlow,
-                modifiers = modify(MagicBlur, MagicSlideY),
+                modifiers = modify(Blur, SlideY),
                 cacheRenderedElements = true,
                 animate = true,
                 onTransition = { window.scrollTo(0.0, 0.0) },
@@ -75,7 +75,7 @@ fun viewApp() {
 
             wireBlock(AppBody.titlePathId) {
                 val titleFlow = app.portal.stateFlow.mapDistinct { it.title }
-                flowBlock(titleFlow, modify(MagicBlur, MagicSlideX), animate = true) { title ->
+                flowBlock(titleFlow, modify(Blur, SlideX), animate = true) { title ->
                     if (title != null) {
                         row {
                             heading2("|", modify(Dim))

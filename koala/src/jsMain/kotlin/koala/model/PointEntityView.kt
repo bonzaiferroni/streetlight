@@ -2,7 +2,11 @@ package koala.model
 
 import kampfire.model.Point
 import koala.css.Css
+import koala.css.Scale
 import koala.css.applyModifiers
+import koala.css.modify
+import koala.dom.box
+import koala.dom.column
 import koala.dom.modify
 import koala.dom.onClick
 import koala.dom.unmodify
@@ -13,15 +17,20 @@ import kotlinx.browser.document
 import kotlinx.html.dom.append
 import kotlinx.html.js.div
 import kotlinx.html.js.img
+import kotlinx.html.js.p
 import kotlinx.html.style
+import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
+import org.w3c.dom.HTMLParagraphElement
 
 class PointEntityView(
     val marker: maplibregl.Marker,
     entity: PointEntity,
     pixelPoint: Point,
-    val base: HTMLElement?,
+    val element: HTMLDivElement?,
+    val base: HTMLDivElement?,
     val body: HTMLElement?,
+    val label: HTMLElement?,
     val bearing: HTMLElement? = null,
 ) {
     var lastBearing = 0f
@@ -68,37 +77,51 @@ fun PointEntityView.setAttributes(entity: PointEntity) {
 
 object MarkerClass {
     val base = Css("map-marker")
+    val box = Css("marker-box")
     val bearing = Css("marker-bearing")
     val icon = Css("marker-icon")
     val thumb = Css("marker-thumb")
+    val body = Css("marker-body")
+    val label = Css("marker-label")
 }
 
 fun PointEntity.toMapEntityView(pixelPoint: Point): PointEntityView {
-    val element = document.createDiv().also {
-        it.modify(MarkerClass.base)
-    }
+    val element = document.createDiv()
 
-    var bearingElement: HTMLElement? = null
+    var baseElement: HTMLDivElement? = null
+    var bearingElement: HTMLDivElement? = null
     var bodyElement: HTMLElement? = null
+    var labelElement: HTMLParagraphElement? = null
 
     element.append {
-        bearingElement = bearing?.let {
-            div {
-                applyModifiers(MarkerClass.bearing)
+        baseElement = div {
+            applyModifiers(MarkerClass.base)
+
+            bearingElement = bearing?.let {
+                div {
+                    applyModifiers(MarkerClass.bearing)
+                }
             }
-        }
-        bodyElement = iconPath?.let {
-            div {
-                applyModifiers(MarkerClass.icon)
-                style = "--svg: url(${iconPath});"
+            bodyElement = iconPath?.let {
+                div {
+                    applyModifiers(modify(MarkerClass.icon, MarkerClass.body))
+                    style = "--svg: url(${iconPath});"
+                }
+            } ?: thumbPath?.let {
+                img {
+                    src = it
+                    applyModifiers(MarkerClass.thumb)
+                }
             }
-        } ?: thumbPath?.let {
-            img {
-                src = it
-                applyModifiers(MarkerClass.thumb)
+
+            labelElement = p {
+                applyModifiers(MarkerClass.label)
+                +label
             }
         }
     }
+
+    if (isPrimary) baseElement?.modify(Scale)
 
     val options = MarkerOptions(
         element = element,
@@ -110,9 +133,11 @@ fun PointEntity.toMapEntityView(pixelPoint: Point): PointEntityView {
         ),
         entity = this,
         pixelPoint = pixelPoint,
-        base = element,
+        element = element,
+        base = baseElement,
         body = bodyElement,
-        bearing = bearingElement
+        label = labelElement,
+        bearing = bearingElement,
     )
     onClick?.let {
         element.onClick(it)

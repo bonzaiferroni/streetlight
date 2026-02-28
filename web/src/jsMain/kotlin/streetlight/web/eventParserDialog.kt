@@ -8,7 +8,7 @@ import koala.model.mapDistinct
 
 fun RenderContext.eventParserDialog(model: EventParser) {
     val dialog = dialogBox("Event reader", model.state.flow.mapDistinct { it.isOpen }, modify(Width64)) {
-        messageBox(model.message.flow, modify(MagicSlideX, MagicBlur))
+        messageBox(model.message.flow, modify(SlideX, Blur))
         flowBlock(model.state.flow.mapDistinct { it.parse }) { parse ->
             val events = parse?.events ?: return@flowBlock
             column {

@@ -118,27 +118,27 @@
     pointer-events: auto;
 }
 
-.flow-block.magic.magic-blur {
+.flow-block.magic.blur {
     filter: blur(6px);
 }
 
-.flow-block.magic.magic-blur.reveal {
+.flow-block.magic.blur.reveal {
     filter: blur(0px);
 }
 
-.flow-block.magic.magic-slide-x {
+.flow-block.magic.slide-x {
     transform: translate(20px, 0px);
 }
 
-.flow-block.magic.magic-slide-x.reveal {
+.flow-block.magic.slide-x.reveal {
     transform: translate(0px, 0px);
 }
 
-.flow-block.magic.magic-slide-y {
+.flow-block.magic.slide-y {
     transform: translate(0px, 20px);
 }
 
-.flow-block.magic.magic-slide-y.reveal {
+.flow-block.magic.slide-y.reveal {
     transform: translate(0px, 0px);
 }
 
@@ -159,7 +159,7 @@
     pointer-events: auto;
 }
 
-.items-block.magic.magic-blur > * {
+.items-block.magic.blur > * {
     filter: blur(6px);
 }
 
@@ -167,19 +167,19 @@
     filter: blur(0px);
 }
 
-.items-block.magic.magic-slide-x > * {
+.items-block.magic.slide-x > * {
     transform: translate(20px, 0px);
 }
 
-.items-block.magic.magic-slide-x > .reveal {
+.items-block.magic.slide-x > .reveal {
     transform: translate(0px, 0px);
 }
 
-.items-block.magic.magic-slide-y > * {
+.items-block.magic.slide-y > * {
     transform: translate(0px, 20px);
 }
 
-.items-block.magic.magic-slide-y > .reveal {
+.items-block.magic.slide-y > .reveal {
     transform: translate(0px, 0px);
 }
 

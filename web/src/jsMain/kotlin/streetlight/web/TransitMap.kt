@@ -52,7 +52,7 @@ class TransitMap(
         val lines = transit.routes.mapNotNull { route ->
             if (route.vehicleType == VehicleType.Bus) return@mapNotNull null
             val vehicleType = route.vehicleType ?: return@mapNotNull null
-            RouteEntity(route.transitRouteId, vehicleType, route.points)
+            RouteEntity(route.transitRouteId, route.shortName, vehicleType, route.points)
         }
         geoMap.addLines(lines)
     }
@@ -96,6 +96,7 @@ data class TransitMapState(
 
 data class RouteEntity(
     val transitRouteId: TransitRouteId,
+    override val label: String,
     val vehicleType: VehicleType,
     override val points: List<GeoPoint>
 ): LineEntity {
@@ -110,6 +111,7 @@ data class RouteEntity(
 
 data class TransitEntity(
     val vehicleId: String,
+    override val label: String,
     override val position: GeoPoint,
     val vehicleType: VehicleType,
     override val opacity: Float,
@@ -131,6 +133,7 @@ fun VehiclePosition.toEntity(currentTime: Long, vehicleType: VehicleType): Trans
     val opacity = (1 - secondsSinceCapture / 240f).coerceIn(.5f, 1f)
     return TransitEntity(
         vehicleId = vehicleId,
+        label = trip?.routeId ?: "Transit",
         position = position.toGeoPoint(),
         vehicleType = vehicleType,
         opacity = opacity,

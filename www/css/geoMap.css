@@ -55,41 +55,53 @@
     width: 100%;
 }
 
+/* map marker */
+
 .map-marker {
     cursor: pointer;
+    position: relative;
+    width: 0;
+    height: 0;
+
+    transition: transform 200ms ease-in-out;
+}
+
+.map-marker.scale {
+    transform: scale(1);
+}
+
+.map-marker.map-focus.scale {
+    transform: scale(2);
+}
+
+/* .marker-icon, .marker-thumb, .marker-label, .marker-bearing */
+.map-marker > * {
+    position: absolute;
+    top: 0;
+    left: 0;
 }
 
 .map-marker:hover {
     opacity: 1 !important;
 }
 
-.map-marker > * {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
 .marker-icon {
     width: 24px;
     height: 24px;
+
+    transform: translate(-50%, -50%);
 
     background-image: var(--svg);
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
-    background-color: transparent; /* important */
-    transform: translate(-50%, -50%) scale(1);
-    transition: transform 200ms ease;
-}
-
-.map-focus > .marker-icon {
-    transform: translate(-50%, -50%) scale(2);
+    background-color: transparent; /* important */;
 }
 
 .marker-bearing {
     width: 40px;
     height: 40px;
+
     transform: translate(-50%, -50%) rotate(var(--bearing));
 
     background-image: url(../svg/bus-direction.svg);
@@ -102,18 +114,45 @@
 }
 
 .marker-thumb {
+    --thumb-border-rgb: 255, 255, 255; /* or whatever ye like */
+
     width: 32px;
     height: 32px;
+
+    transform: translate(-50%, -50%);
+
     border-radius: 16px;
 
-    transition: transform 200ms ease, border-radius 200ms ease;
-    transform: scale(1);
+    border: 1px solid rgba(var(--thumb-border-rgb), 0.5);
+
+    transition:
+            border-radius 200ms ease-in-out,
+            border-color 200ms ease-in-out;
 }
 
-.map-focus > .marker-thumb {
-    transform: scale(2); /* 32px → 64px */
-    border-radius: 1rem;
+.map-focus .marker-thumb {
+    border-radius: 4px;
+    border-color: rgba(var(--thumb-border-rgb), 1);
 }
+
+.marker-label {
+    transform: translate(-50%, calc(50% + .1rem)); /* below body */
+    pointer-events: none;
+    opacity: 0;
+
+    max-width: 12rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    transition: opacity 200ms ease-in-out;
+}
+
+.map-focus .marker-label {
+    opacity: 1;
+}
+
+/* event panel */
 
 .map-event-panel {
     display: grid;

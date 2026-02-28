@@ -1,12 +1,12 @@
 package streetlight.web
 
 import koala.css.AlignItemsCenter
-import koala.css.Animate
-import koala.css.MagicBlur
+import koala.css.Magic
+import koala.css.Blur
 import koala.css.Css
 import koala.css.CircleShape
 import koala.css.Height3
-import koala.css.MagicSlideX
+import koala.css.SlideX
 import koala.css.Width100
 import koala.css.modify
 import koala.dom.*
@@ -69,7 +69,7 @@ fun RenderContext.viewMapCards(app: AppContext) {
     }
 }
 
-private val modifyCardItems = modify(Animate, MagicBlur, MagicSlideX)
+private val modifyCardItems = modify(Magic, Blur, SlideX)
 
 fun RenderContext.mapPanelCard(label: String, block: RenderContext.() -> Unit) {
     card(modify(MapPanel.card)) {

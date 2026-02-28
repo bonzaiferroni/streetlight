@@ -28,7 +28,7 @@ fun <Item> RenderContext.itemsBlock(
     val parent = div {
         applyModifiers(ElementClass.itemsBlock, modifiers)
         if (animate) {
-            classes += Animate.value
+            classes += Magic.value
         }
         config?.invoke(this)
     }

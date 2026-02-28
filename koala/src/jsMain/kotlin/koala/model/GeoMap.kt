@@ -94,6 +94,7 @@ typealias MapEntityId = String
 
 sealed interface MapEntity {
     val entityId: MapEntityId
+    val label: String
 }
 
 data class PanPoint(
@@ -111,4 +112,5 @@ interface PointEntity: MapEntity {
     val thumbPath: String? get() = null
     val minZoom: Float? get() = null
     val onClick: (() -> Unit)? get() = null
+    val isPrimary: Boolean get() = false
 }

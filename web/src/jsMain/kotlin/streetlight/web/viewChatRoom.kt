@@ -6,7 +6,7 @@ import koala.dom.*
 fun RenderContext.viewChatRoom(app: AppContext) {
     val model = app.chatRoom
     val element = column(modify(JustifyEnd)) {
-        itemsBlock(model.messagesFlow, modify(Animate, MagicBlur, MagicSlideX), true) { message ->
+        itemsBlock(model.messagesFlow, modify(Magic, Blur, SlideX), true) { message ->
             textBlock("${message.source}: ${message.text}")
         }
         textField(
