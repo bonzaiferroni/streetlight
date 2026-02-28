@@ -34,6 +34,7 @@ fun initGeoMap(mount: HTMLElement): HTMLElement {
     val widgetBox = window.appendDiv(GeoMapSelector.widget)
     val overlay = window.appendDiv(GeoMapSelector.overlay)
     overlay.appendDiv(GeoMapSelector.crosshairs)
+    overlay.appendDiv(GeoMapSelector.focusPanel)
 
     val center = mount
         .getAttribute(GeoMapSelector.geoPoint.value)

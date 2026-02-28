@@ -4,6 +4,7 @@ import kampfire.model.GeoBounds
 import kampfire.model.GeoPoint
 import kampfire.model.distanceTo
 import kampfire.model.meters
+import koala.dom.RenderContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -113,4 +114,5 @@ interface PointEntity: MapEntity {
     val minZoom: Float? get() = null
     val onClick: (() -> Unit)? get() = null
     val isPrimary: Boolean get() = false
+    val focusCard: (RenderContext.() -> Unit)? get() = null
 }

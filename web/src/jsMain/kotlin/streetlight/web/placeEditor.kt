@@ -73,7 +73,7 @@ fun RenderContext.placeEditor(
                 onChangeValue = model::setAddress,
                 values = addressFlow,
             )
-            flowBlock(pointFlow, animate = true, modifiers = modify(Blur)) { point ->
+            flowBlock(pointFlow, magic = true, modifiers = modify(Blur)) { point ->
                 if (point != null) {
                     this.textBlock {
                         textSpan("latitude: ", modify(Dim))

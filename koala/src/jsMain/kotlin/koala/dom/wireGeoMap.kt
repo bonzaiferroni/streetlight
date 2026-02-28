@@ -1,22 +1,28 @@
 package koala.dom
 
-import kampfire.model.GeoPoint
 import koala.core.findAndInitGeoMap
 import koala.core.queryFirstOrNull
+import koala.css.Blur
+import koala.css.SlideX
+import koala.css.modify
 import koala.external.CenterZoomBearing
 import koala.external.maplibregl
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.w3c.dom.HTMLElement
 import koala.html.GeoMapSelector
+import koala.html.cardOf
 import koala.model.GeoMap
 import koala.model.MapViewContext
+import koala.model.PointEntity
+import koala.model.mapDistinct
 import koala.model.showLines
 import koala.model.toGeoBounds
 import koala.model.toGeoPoint
 import koala.model.toLngLat
 import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.html.FlowContent
 
 fun wireGeoMap(
     geoMap: GeoMap,
@@ -53,6 +59,15 @@ fun wireMapWindow(
 
     mapWindow.onView(geoMap::setIsViewed)
 
+    val focusPanel = mapWindow.querySelector(GeoMapSelector.focusPanel.selector) as HTMLElement
+    focusPanel.renderRoot(appScope) {
+        val nearestFlow = geoMap.stateFlow.mapDistinct { it.nearest }
+        flowBlock(nearestFlow, modify(Blur, SlideX), magic = true) { entity ->
+            val cardFunction = entity?.focusCard ?: return@flowBlock
+            cardFunction()
+        }
+    }
+
     appScope.launch {
 
         val context = MapViewContext(widget)
@@ -61,7 +76,6 @@ fun wireMapWindow(
             val bounds = widget.getBounds().toGeoBounds()
             val zoom = widget.getZoom().toFloat()
             val nearest = context.getNearest(widget.getCenter().toGeoPoint(), zoom)
-            console.log(nearest?.entityId)
             geoMap.setBounds(bounds, zoom, isMoving, nearest)
         }
 

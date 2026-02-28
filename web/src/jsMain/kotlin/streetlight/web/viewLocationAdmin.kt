@@ -30,7 +30,7 @@ fun RenderContext.viewLocationAdmin(
                             })
                         }
                     }
-                    flowBlock(events.flow, modify(Blur, SlideX), animate = true) { events ->
+                    flowBlock(events.flow, modify(Blur, SlideX), magic = true) { events ->
                         column {
                             events.forEach { event ->
                                 cardOf(event)

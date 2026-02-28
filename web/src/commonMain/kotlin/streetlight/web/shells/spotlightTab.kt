@@ -53,26 +53,3 @@ fun FlowContent.spotlightTab(events: List<Event>, locations: List<Location>) {
         appFooter()
     }
 }
-
-fun FlowContent.spotlightCard(
-    route: AppRoute,
-    title: String,
-    thumbUrl: String?,
-) {
-    action(route, modify(Width100)) {
-        card {
-            row {
-                image(thumbUrl, modify(ThumbImage), SiteImage.placeholderThumb)
-                textBlock(title)
-            }
-        }
-    }
-}
-
-fun FlowContent.cardOf(event: Event) {
-    spotlightCard(EventIdRoute(event.eventId), event.title, event.thumbUrl)
-}
-
-fun FlowContent.cardOf(location: Location) {
-    spotlightCard(LocationProfileRoute(location.locationId), location.name, location.thumbUrl)
-}

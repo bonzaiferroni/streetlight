@@ -140,7 +140,7 @@
     pointer-events: none;
     opacity: 0;
 
-    max-width: 12rem;
+    max-width: 6rem;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -181,4 +181,13 @@
 
 .map-panel-card-heading {
     grid-column: 1 / 2;
+}
+
+/* map focus */
+
+#map-focus-panel {
+    position: absolute;
+    left: var(--unit-spacing);
+    bottom: var(--unit-spacing);
+    margin-right: 4rem;
 }

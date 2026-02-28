@@ -8,7 +8,7 @@ fun RenderContext.wireBlock(
     elementId: Id,
     ancestor: HTMLElement? = null,
     block: RenderContext.() -> Unit
-) {
+): HTMLElement {
     val element = ancestor?.querySelector(elementId.selector) as? HTMLElement ?: document.getElementOrNullById(elementId)
         ?: error("couldn't find ${elementId.value}")
     var isRendered = false
@@ -20,4 +20,6 @@ fun RenderContext.wireBlock(
             element.renderRoot(renderScope, block)
         }
     }
+
+    return element
 }

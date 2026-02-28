@@ -22,6 +22,7 @@ object Accent: Modifier { override val value = "accent" }
 object Primary: Modifier { override val value = "primary" }
 object Secondary: Modifier { override val value = "secondary" }
 object Clickable: Modifier { override val value = "clickable" }
+object OverflowHidden: Modifier { override val value = "overflow-hidden"}
 
 // font utilities
 object Bold: Modifier { override val value = "bold" }

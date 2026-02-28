@@ -17,7 +17,7 @@ import org.w3c.dom.HTMLDivElement
 fun <State> RenderContext.flowBlock(
     flow: Flow<State>,
     modifiers: ModifierSet? = null,
-    animate: Boolean = false,
+    magic: Boolean = false,
     cacheRenderedElements: Boolean = false,
     config: (DIV.() -> Unit)? = null,
     onTransition: ((State) -> Unit)? = null,
@@ -25,7 +25,7 @@ fun <State> RenderContext.flowBlock(
 ): HTMLDivElement {
     val element = div {
         applyModifiers(ElementClass.flowBlock, modifiers)
-        if (animate) {
+        if (magic) {
             classes += Magic.value
         }
         config?.invoke(this)
@@ -53,7 +53,7 @@ fun <State> RenderContext.flowBlock(
                 if (cacheRenderedElements) renderCaches[value] = render
             }
 
-            if (animate) {
+            if (magic) {
                 renderScope.launch {
                     if (render != null) {
                         element.unmodify(Reveal)

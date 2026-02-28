@@ -203,3 +203,7 @@ p.large {
 .min-height-32 {
     min-height: calc(var(--unit-spacing) * 32);
 }
+
+.overflow-hidden {
+    overflow: hidden;
+}
