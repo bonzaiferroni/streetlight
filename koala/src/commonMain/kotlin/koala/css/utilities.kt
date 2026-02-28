@@ -14,6 +14,8 @@ object Opacity2: Modifier { override val value = "opacity-2" }
 object Dim: Modifier { override val value = Opacity6.value }
 object NoDim: Modifier { override val value = "no-dim" }
 object Glow: Modifier { override val value = "glow" }
+object GlowShadow: Modifier { override val value = "glow-shadow" }
+object GlowBackground: Modifier { override val value = "glow-background" }
 object CircleShape: Modifier { override val value = "circle-shape" }
 object BorderRadius1: Modifier { override val value = "border-radius-1" }
 object Accent: Modifier { override val value = "accent" }
@@ -51,9 +53,9 @@ fun CssBuilder.utilities(theme: KoalaTheme) {
         color = theme.fg
     }
 
-    rule(Glow) {
-        animation += Animation("glow", 10.s, iterationCount = IterationCount.infinite, timing = Timing.linear)
-    }
+//    rule(GlowShadow) {
+//        animation += Animation("glow-shadow", 10.s, iterationCount = IterationCount.infinite, timing = Timing.linear)
+//    }
 
     // font utilities
 

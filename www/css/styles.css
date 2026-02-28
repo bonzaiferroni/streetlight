@@ -49,6 +49,12 @@ html {
     font-size: 100%;
 }
 
+/*@media (max-width: 600px) {*/
+/*    html {*/
+/*        font-size: 90%;*/
+/*    }*/
+/*}*/
+
 body {
     font-family: var(--font-family);
     font-size: 1rem;
@@ -147,7 +153,7 @@ p a {
 
 a:hover {
     color: rgb(var(--accent));
-    animation: glow 10s infinite linear;
+    animation: glow-shadow 10s infinite linear;
 }
 
 label {

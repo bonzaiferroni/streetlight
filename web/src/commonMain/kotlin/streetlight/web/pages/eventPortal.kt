@@ -64,7 +64,7 @@ fun HTML.eventPortal(event: Event, performer: Performer?, requestItems: List<Req
                 row(modify(WidthAuto)) {
                     heading3("Venmo:", modify(Opacity6))
                     a("https://venmo.com/colfaxband?txn=pay&note=street+music") {
-                        heading3("@colfaxband", modify(Glow))
+                        heading3("@colfaxband", modify(GlowShadow))
                     }
                 }
 //                a("https://venmo.com/colfaxband?txn=pay&amount=1&note=street+music") {

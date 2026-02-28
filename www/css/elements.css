@@ -1,0 +1,63 @@
+.icon {
+    display: inline-block;
+    background-color: currentColor;
+    aspect-ratio: 1 / 1;
+
+    mask-image: var(--mask-src);
+    -webkit-mask-image: var(--mask-src);
+
+    mask-size: contain;
+    -webkit-mask-size: contain;
+
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+
+    mask-position: center;
+    -webkit-mask-position: center;
+}
+
+.action {
+    transition: opacity 0.35s ease;
+    cursor: pointer;
+}
+
+.action:hover {
+    opacity: 1;
+}
+
+.text-label {
+    font-size: 0.8rem;
+    opacity: 0.5;
+}
+
+/* logo */
+
+.logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: glow-shadow 10s infinite linear;
+}
+
+.logo > div {
+    --mask-src: url('/www/svg/flame.svg');
+    height: 100%;
+    background-color: currentColor;
+    aspect-ratio: 2 / 3;
+
+    display: block;
+
+    mask-image: var(--mask-src);
+    -webkit-mask-image: var(--mask-src);
+
+    mask-size: contain;
+    -webkit-mask-size: contain;
+
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+
+    mask-position: center;
+    -webkit-mask-position: center;
+
+    animation: glow-background 10s infinite linear;
+}

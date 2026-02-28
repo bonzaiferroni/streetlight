@@ -2,30 +2,29 @@ package streetlight.web.pages
 
 import koala.css.AlignItemsCenter
 import koala.css.Flex1
+import koala.css.Glow
+import koala.css.GlowBackground
+import koala.css.GlowShadow
 import koala.css.Height100
 import koala.css.Height6
 import koala.css.Opacity2
-import koala.css.SpaceBetween
 import koala.css.Width100
 import koala.css.modify
 import koala.html.Id
 import koala.html.OverlayId
 import koala.html.action
-import koala.html.applyId
 import koala.html.box
 import koala.html.column
-import koala.html.heading1
 import koala.html.icon
-import koala.html.logo
 import koala.html.row
 import koala.html.applyScripts
 import koala.html.heading2
+import koala.html.logo
 import koala.html.wireBlock
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kotlinx.html.HTML
 import kotlinx.html.body
-import kotlinx.html.style
 import streetlight.web.AccountRoute
 import streetlight.web.FullMapRoute
 import streetlight.web.HomeRoute
@@ -55,6 +54,7 @@ fun FlowContent.appHeader() {
         action(HomeRoute(), modify(Flex1)) {
             row {
                 logo(modify(Height6))
+//                image("/www/svg/flame.svg", modify(Height6, Glow))
                 heading2("Streetlight")
                 wireBlock(AppBody.titlePathId)
             }

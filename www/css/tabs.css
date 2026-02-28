@@ -21,7 +21,7 @@
 .tabs-button.is-active {
     background-color: rgb(var(--primary), 0.4);
     cursor: default;
-    animation: glow 10s infinite linear;
+    animation: glow-shadow 10s infinite linear;
 }
 
 .tabs-button:not(.is-active):hover {

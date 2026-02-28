@@ -35,6 +35,7 @@ fun HEAD.applyCoreStyles() {
         "logo.css",
         "geoMap.css",
         "sandbox.css",
+        "elements.css",
         "utilities.css",
     )
 }
@@ -49,7 +50,7 @@ fun HEAD.applyCoreScripts() {
     applyScripts(
         "utils.js",
         "tabs.js",
-        "logo.js",
+//        "logo.js",
         "koala/koala.js",
     )
 }

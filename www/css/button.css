@@ -34,7 +34,7 @@
 }
 
 .btn:hover {
-    animation: glow 10s infinite linear;
+    animation: glow-shadow 10s infinite linear;
 }
 
 [onclick], .clickable {

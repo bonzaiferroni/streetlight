@@ -58,7 +58,7 @@ fun CssBuilder.rules(theme: KoalaTheme): CssBuilder {
     layoutUtilities(theme)
     utilities(theme)
     animation(theme)
-    elementStyles(theme)
+//    elementStyles(theme)
     return this
 }
 
