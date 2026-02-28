@@ -2,6 +2,7 @@ package koala.model
 
 import kampfire.model.Point
 import koala.css.Css
+import koala.css.applyModifiers
 import koala.dom.modify
 import koala.dom.onClick
 import koala.dom.unmodify
@@ -9,11 +10,15 @@ import koala.external.MarkerOptions
 import koala.external.maplibregl
 import koala.html.GeoMapSelector
 import kotlinx.browser.document
+import kotlinx.html.dom.append
+import kotlinx.html.js.div
+import kotlinx.html.js.img
+import kotlinx.html.style
 import org.w3c.dom.HTMLElement
 
 class PointEntityView(
     val marker: maplibregl.Marker,
-    val entity: PointEntity,
+    entity: PointEntity,
     pixelPoint: Point,
     val base: HTMLElement?,
     val body: HTMLElement?,
@@ -22,6 +27,8 @@ class PointEntityView(
     var lastBearing = 0f
 
     var point = pixelPoint
+        private set
+    var entity = entity
         private set
 
     fun setBearing(bearing: Float) {
@@ -36,8 +43,9 @@ class PointEntityView(
         marker.setOpacity(opacity.toString())
     }
 
-    fun setPixelPoint(point: Point) {
-        this@PointEntityView.point = point
+    fun setEntity(entity: PointEntity, point: Point) {
+        this.entity = entity
+        this.point = point
     }
 
     fun unfocus() {
@@ -70,23 +78,25 @@ fun PointEntity.toMapEntityView(pixelPoint: Point): PointEntityView {
         it.modify(MarkerClass.base)
     }
 
-    val bearingElement = bearing?.let { _ ->
-        document.createDiv().also {
-            it.modify(MarkerClass.bearing)
-            element.appendChild(it)
-        }
-    }
+    var bearingElement: HTMLElement? = null
+    var bodyElement: HTMLElement? = null
 
-    val bodyElement = iconPath?.let { iconPath ->
-        document.createDiv().also {
-            it.style.setProperty("--svg", "url(${iconPath})")
-            it.modify(MarkerClass.icon)
-            element.appendChild(it)
+    element.append {
+        bearingElement = bearing?.let {
+            div {
+                applyModifiers(MarkerClass.bearing)
+            }
         }
-    } ?: thumbPath?.let { thumbPath ->
-        document.createImg(thumbPath).also {
-            it.modify(MarkerClass.thumb)
-            element.appendChild(it)
+        bodyElement = iconPath?.let {
+            div {
+                applyModifiers(MarkerClass.icon)
+                style = "--svg: url(${iconPath});"
+            }
+        } ?: thumbPath?.let {
+            img {
+                src = it
+                applyModifiers(MarkerClass.thumb)
+            }
         }
     }
 

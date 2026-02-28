@@ -1,8 +1,8 @@
 package koala.model
 
 import kampfire.model.GeoPoint
-import kampfire.model.distanceSquaredTo
 import kampfire.model.distanceTo
+import kampfire.model.regionalDistanceTo
 import kampfire.model.toPoint
 import koala.external.maplibregl
 
@@ -45,12 +45,11 @@ class MapViewContext(
     }
 
     fun getNearest(center: GeoPoint, zoom: Float): PointEntity? {
-        val centerPx = center.toPoint(center.lat)
         var nearest: PointEntityView? = null
         var nearestDistanceSq = Double.MAX_VALUE
         markers.forEach {
             val view = it.value
-            val distanceSq = view.entity.position.distanceTo(center).meters
+            val distanceSq = view.entity.position.regionalDistanceTo(center).meters
             if (distanceSq < nearestDistanceSq) {
                 nearestDistanceSq = distanceSq
                 nearest = view
@@ -68,7 +67,7 @@ class MapViewContext(
     private fun recallObject(entity: PointEntity, center: GeoPoint): PointEntityView? {
         val view = markers[entity.entityId] ?: return null
 
-        // move on map
+        // move marker
         val current = view.marker.getLngLat()
         val destination = entity.position.toLngLat()
         val distance = current.distanceTo(destination)
@@ -78,9 +77,9 @@ class MapViewContext(
             view.marker.setLngLat(destination)
         }
 
-        // set pixel point
+        // set entity
         val pixelPoint = entity.position.toPoint(center.lat)
-        view.setPixelPoint(pixelPoint)
+        view.setEntity(entity, pixelPoint)
 
         return view
     }
