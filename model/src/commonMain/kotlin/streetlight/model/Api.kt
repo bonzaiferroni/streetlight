@@ -1,6 +1,7 @@
 package streetlight.model
 
 import kampfire.api.*
+import kampfire.model.GeoBounds
 import kampfire.model.GeoPoint
 import kampfire.model.SpeechRequest
 import streetlight.model.data.*
@@ -41,6 +42,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         }
         object QueryPoint: QueryEndpoint<GeoPoint, List<Location>>(this, "query_point")
         object ParseLocation: PostEndpoint<String, LocationParse>(this, "parse_location")
+        object QueryBounds: PostEndpoint<GeoBounds, List<LocationInfo>>(this, "query_bounds")
     }
 
     object Songs: GetEndpoint<List<Song>>(this, "songs") {

@@ -3,15 +3,14 @@
 package streetlight.web
 
 import kampfire.model.GeoBounds
-import koala.model.BrowserModel
 import koala.model.GeoMap
 import koala.model.mapDistinct
 import koala.model.mapDistinctBy
+import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.filter
-import streetlight.model.data.MapQuery
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
@@ -19,20 +18,23 @@ import streetlight.model.data.Community
 import streetlight.model.data.EventInfo
 import streetlight.model.data.EventType
 import streetlight.model.data.Location
+import streetlight.model.data.LocationInfo
 import kotlin.time.Duration.Companion.minutes
 
 class StreetMap(
-    scope: CoroutineScope,
+    private val scope: CoroutineScope,
     private val client: ClientContext,
     private val geoMap: GeoMap,
-): BrowserModel<StreetMapState>(StreetMapState(), scope) {
-
+) {
+    private val state = storeOf(StreetMapState())
+    val stateFlow = state.flow
+    val stateNow = state.now
+    
     val transit = TransitMap(scope, client, geoMap)
 
     val focusFlow = stateFlow.mapDistinct { it.focus }
     val communityFlow = stateFlow.mapDistinct { it.communities }
-    val eventsFlow = stateFlow.mapDistinct { it.events }
-    val eventMapFlow = stateFlow.debounce(100).mapDistinctBy({ it.events }) { it.events.groupBy { event -> event.eventType } }
+    val locationsFlow = stateFlow.mapDistinct { it.locations }
 
     init {
         scope.launch {
@@ -42,40 +44,42 @@ class StreetMap(
         }
     }
 
-    fun flowOf(eventType: EventType) = eventMapFlow.mapDistinct { it[eventType] ?: emptyList() }
-
     fun toggleLayer(layer: StreetMapLayer) {
         val layers = if (stateNow.layers.contains(layer)) stateNow.layers - layer else stateNow.layers + layer
         if (layer.eventType != null) {
-            val events = getBoundedEvents(layers = layers)
-            setState { it.copy(layers = layers, events = events) }
+            val events = getBoundedLocations(layers = layers)
+            state.set { it.copy(layers = layers, locations = events) }
         } else {
-            setState { it.copy(layers = layers) }
+            state.set { it.copy(layers = layers) }
         }
     }
 
-    private val allEvents = ArrayList<EventInfo>()
+    private val allLocations = ArrayList<LocationInfo>()
 
     fun setBounds(bounds: GeoBounds, zoom: Float) {
         if (stateNow.isQuerying) return
 
         if (hasQueried(bounds)) {
-            val events = getBoundedEvents(bounds)
-            setState { it.copy(bounds = bounds, zoom = zoom, events = events)}
+            val locations = getBoundedLocations(bounds)
+            state.set { it.copy(bounds = bounds, zoom = zoom, locations = locations)}
         } else {
             val queriedBounds = bounds.expandBy(1.2f)
             queries.add(QueryBounds(Clock.System.now(), queriedBounds))
-            setState { it.copy(bounds = bounds, zoom = zoom, queriedBounds = queriedBounds, isQuerying = true)}
+            state.set { it.copy(bounds = bounds, zoom = zoom, queriedBounds = queriedBounds, isQuerying = true)}
             scope.launch {
-                val areaEvents = client.api.queryMap(MapQuery(queriedBounds, stateNow.zoom)) ?: emptyList()
-                val mapEntities = areaEvents.mapNotNull { event ->
-                    if (allEvents.any { it.eventId == event.eventId }) return@mapNotNull null
-                    allEvents.add(event)
-                    EventEntity(event)
+                val locations = client.api.readLocationsInBounds(queriedBounds) ?: emptyList()
+                val mapEntities = locations.mapNotNull { info ->
+                    if (allLocations.any { it.locationId == info.locationId }) return@mapNotNull null
+                    allLocations.add(info)
+                    if (info.events.isNotEmpty()) {
+                        EventEntity(info.location, info.events)
+                    } else {
+                        LocationEntity(info.location)
+                    }
                 }
                 geoMap.addEntities(mapEntities)
-                val events = getBoundedEvents(bounds)
-                setState { it.copy(events = events, isQuerying = false)}
+                val events = getBoundedLocations(bounds)
+                state.set { it.copy(locations = events, isQuerying = false)}
             }
         }
     }
@@ -88,17 +92,17 @@ class StreetMap(
         return queries.any { it.bounds.contains(bounds) && it.time > cutoff }
     }
 
-    private fun getBoundedEvents(
+    private fun getBoundedLocations(
         bounds: GeoBounds = stateNow.bounds,
         layers: Set<StreetMapLayer> = stateNow.layers
-    ) = allEvents.filter { event -> bounds.contains(event.geoPoint) && layers.any { it.eventType == event.eventType } }
+    ) = allLocations.filter { location -> bounds.contains(location.geoPoint) }
 }
 
 data class StreetMapState(
     val bounds: GeoBounds = GeoBounds.Denver,
     val queriedBounds: GeoBounds = GeoBounds.Denver,
     val zoom: Float = 11f,
-    val events: List<EventInfo> = emptyList(),
+    val locations: List<LocationInfo> = emptyList(),
     val communities: List<Community> = listOf(Community.Eastfax),
     val focus: MapFocus = MapFocus(),
     val layers: Set<StreetMapLayer> = StreetMapLayer.entries.toSet(),

@@ -5,8 +5,6 @@ import koala.css.Css
 import koala.css.Scale
 import koala.css.applyModifiers
 import koala.css.modify
-import koala.dom.box
-import koala.dom.column
 import koala.dom.modify
 import koala.dom.onClick
 import koala.dom.unmodify
@@ -121,7 +119,7 @@ fun PointEntity.toMapEntityView(pixelPoint: Point): PointEntityView {
         }
     }
 
-    if (isPrimary) baseElement?.modify(Scale)
+    if (thumbPath != null) baseElement?.modify(Scale)
 
     val options = MarkerOptions(
         element = element,

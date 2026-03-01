@@ -113,6 +113,5 @@ interface PointEntity: MapEntity {
     val thumbPath: String? get() = null
     val minZoom: Float? get() = null
     val onClick: (() -> Unit)? get() = null
-    val isPrimary: Boolean get() = false
     val focusCard: (RenderContext.() -> Unit)? get() = null
 }

@@ -141,6 +141,11 @@ class FetchClient(
             response = fetchWithJwt(auth.jwt)
         }
 
+        if (!response.ok) {
+            console.log("$method to $path failed: ${response.status}")
+            return null
+        }
+
         return handleResponse(response)
     }
 

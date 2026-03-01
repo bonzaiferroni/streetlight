@@ -1,6 +1,7 @@
 package streetlight.web
 
 import kampfire.api.UserApi
+import kampfire.model.GeoBounds
 import kampfire.model.GeoPoint
 import kampfire.model.SignUpRequest
 import kotlinx.coroutines.CoroutineScope
@@ -21,6 +22,7 @@ class ApiClient(private val client: FetchClient) {
     // locations
     suspend fun readLocation(locationId: LocationId) = client.get(Api.Locations, locationId)
     suspend fun parseLocation(url: String) = client.post(Api.Locations.ParseLocation, url)
+    suspend fun readLocationsInBounds(bounds: GeoBounds) = client.post(Api.Locations.QueryBounds, bounds)
 
     suspend fun queryMap(request: MapQuery) = client.get(Api.Events.QueryMap, request.toQuery())
     suspend fun uploadFile(blobUrl: String) = client.uploadBlob(Api.Events.Upload.path, blobUrl)

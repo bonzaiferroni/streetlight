@@ -46,14 +46,14 @@ fun RenderContext.viewMapCards(app: AppContext) {
     flowBlock(eventMap.stateFlow.mapDistinct { it.layers }, modify(Width100)) { layers ->
         container(modify(MapPanel.container)) {
 
-            layers.forEach { layer ->
-                val eventType = layer.eventType ?: return@forEach
-                mapPanelCard(layer.label) {
-                    itemsBlock(eventMap.flowOf(eventType), modifyCardItems, true) { event ->
-                        textBlock(event.title)
-                    }
-                }
-            }
+//            layers.forEach { layer ->
+//                val eventType = layer.eventType ?: return@forEach
+//                mapPanelCard(layer.label) {
+//                    itemsBlock(eventMap.flowOf(eventType), modifyCardItems, true) { event ->
+//                        textBlock(event.title)
+//                    }
+//                }
+//            }
 
             mapPanelCard("Communities") {
                 itemsBlock(eventMap.communityFlow, modifyCardItems, true) { community ->
