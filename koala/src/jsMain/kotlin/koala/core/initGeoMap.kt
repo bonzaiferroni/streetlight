@@ -2,7 +2,11 @@
 
 package koala.core
 
+import koala.external.AddLayerObject
+import koala.external.CanvasContextAttributes
+import koala.external.FillExtrusionPaint
 import koala.external.MapOptions
+import koala.external.SourceSpecification
 import koala.external.maplibregl
 import koala.html.GeoMapSelector
 import org.w3c.dom.HTMLElement
@@ -50,7 +54,9 @@ fun initGeoMap(mount: HTMLElement): HTMLElement {
         center = center,
         zoom = 11,
         pitch = 45,
-        canvasContextAttributes = js("{ antialias: true }")
+        canvasContextAttributes = CanvasContextAttributes(
+            antialias = true
+        )
     ))
 
     widget.addControl(maplibregl.NavigationControl())
@@ -60,80 +66,63 @@ fun initGeoMap(mount: HTMLElement): HTMLElement {
 
 
     widget.on("load") {
-        val layers = widget.getStyle().layers.unsafeCast<Array<dynamic>>()
+        val layers = widget.getStyle().layers.orEmpty()
 
-        var labelLayerId: String? = null
-        for (i in layers.indices) {
-            val layer = layers[i]
-            if (layer.type == "symbol" && layer.layout != null && layer.layout["text-field"] != null) {
-                labelLayerId = layer.id as String
-                break
-            }
-        }
+        val labelLayerId = layers.firstOrNull { it.type == "symbol" && it.layout?.textField != null }?.id
 
-        widget.addSource(
-            "openfreemap",
-            js(
-                """
-            ({
-                type: "vector",
-                url: "https://tiles.openfreemap.org/planet"
-            })
-            """
+        val source = SourceSpecification(
+            type = "vector",
+            url = "https://tiles.openfreemap.org/planet"
+        )
+
+        widget.addSource("openfreemap", source)
+
+        val layer = AddLayerObject(
+            id = "3d-buildings",
+            source = "openfreemap",
+            sourceLayer = "building",
+            type = "fill-extrusion",
+            minzoom = 15.0,
+            filter = arrayOf("!=", arrayOf("get", "hide_3d"), true),
+            paint = FillExtrusionPaint(
+                fillExtrusionColor = arrayOf(
+                    "interpolate",
+                    arrayOf("linear"),
+                    arrayOf("coalesce", arrayOf("get", "render_height"), 0),
+                    0, "hsla(232,47%,18%,0.65)",
+                    6, "hsl(224,22%,45%)",
+                    60, "hsl(224,20%,34%)",
+                    200, "hsl(224,20%,24%)",
+                    500, "hsl(224,22%,16%)"
+                ),
+                fillExtrusionHeight = arrayOf(
+                    "interpolate",
+                    arrayOf("linear"),
+                    arrayOf("zoom"),
+                    15, 0,
+                    16, arrayOf("get", "render_height")
+                ),
+                fillExtrusionBase = arrayOf(
+                    "interpolate",
+                    arrayOf("linear"),
+                    arrayOf("zoom"),
+                    15, 0,
+                    16, arrayOf("get", "render_min_height")
+                ),
+                fillExtrusionOpacity = arrayOf(
+                    "interpolate",
+                    arrayOf("linear"),
+                    arrayOf("zoom"),
+                    15, 0.0,
+                    16, 0.55
+                )
             )
         )
 
-        val layerDef = js(
-            """
-    ({
-        id: "3d-buildings",
-        source: "openfreemap",
-        "source-layer": "building",
-        type: "fill-extrusion",
-        minzoom: 15,
-        filter: ["!=", ["get", "hide_3d"], true],
-        paint: {
-            "fill-extrusion-color": [
-                "interpolate",
-                ["linear"],
-                ["coalesce", ["get", "render_height"], 0],
-
-                0,   "hsla(232,47%,18%,0.65)",  
-                6,   "hsl(224,22%,45%)",       
-                60,  "hsl(224,20%,34%)",
-                200, "hsl(224,20%,24%)",
-                500, "hsl(224,22%,16%)"       
-            ],
-            "fill-extrusion-height": [
-                "interpolate",
-                ["linear"],
-                ["zoom"],
-                15, 0,
-                16, ["get", "render_height"]
-            ],
-            "fill-extrusion-base": [
-                "interpolate",
-                ["linear"],
-                ["zoom"],
-                15, 0,
-                16, ["get", "render_min_height"]
-            ],
-            "fill-extrusion-opacity": [
-                "interpolate",
-                ["linear"],
-                ["zoom"],
-                15, 0.0,
-                16, 0.55
-            ]
-        }
-    })
-    """
-        )
-
         if (labelLayerId != null) {
-            widget.addLayer(layerDef, labelLayerId)
+            widget.addLayer(layer, labelLayerId)
         } else {
-            widget.addLayer(layerDef)
+            widget.addLayer(layer)
         }
     }
 

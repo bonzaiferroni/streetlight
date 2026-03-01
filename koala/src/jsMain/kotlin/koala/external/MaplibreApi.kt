@@ -27,8 +27,8 @@ external object maplibregl {
         fun removeControl(control: dynamic): Map
 
         fun getContainer(): HTMLElement
-        fun getStyle(): dynamic /* .koala.external.StyleSpecification */
-        fun setStyle(style: dynamic /* .koala.external.StyleSpecification | String */): Map
+        fun getStyle(): StyleSpecification
+        fun setStyle(style: StyleSpecification): Map
 
         fun getZoom(): Double
         fun setZoom(zoom: Double): Map
@@ -166,7 +166,6 @@ external interface MarkerOptions {
     val subpixelPositioning: Boolean?
 }
 
-external interface SourceSpecification
 external interface Source {
     fun setData(data: dynamic)
 }
@@ -183,11 +182,10 @@ external interface MapOptions {
     val zoom: Number
     val pitch: Number?
     val bearing: Number?
-    val canvasContextAttributes: dynamic
+    val canvasContextAttributes: CanvasContextAttributes
 }
 
 external interface Camera
-external interface StyleSpecification
 external interface ControlPosition
 external interface GestureOptions
 external interface DragPanOptions
@@ -234,4 +232,42 @@ external interface FillExtrusionPaint {
 
     @JsName("fill-extrusion-opacity")
     var fillExtrusionOpacity: Any? // Number | Expression
+}
+
+@JsPlainObject
+external interface SourceSpecification {
+    var type: String
+    var url: String?
+    var tiles: Array<String>?
+    var minzoom: Double?
+    var maxzoom: Double?
+}
+
+@JsPlainObject
+external interface CanvasContextAttributes {
+    var antialias: Boolean?
+    var alpha: Boolean?
+    var depth: Boolean?
+    var stencil: Boolean?
+    var premultipliedAlpha: Boolean?
+    var preserveDrawingBuffer: Boolean?
+    var failIfMajorPerformanceCaveat: Boolean?
+}
+
+@JsPlainObject
+external interface StyleSpecification {
+    var layers: Array<StyleLayer>?
+}
+
+@JsPlainObject
+external interface StyleLayer {
+    var id: String
+    var type: String
+    var layout: LayerLayout?
+}
+
+@JsPlainObject
+external interface LayerLayout {
+    @JsName("text-field")
+    var textField: Any?
 }
