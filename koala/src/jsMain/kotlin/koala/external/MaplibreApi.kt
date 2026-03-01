@@ -171,8 +171,6 @@ external interface Source {
     fun setData(data: dynamic)
 }
 
-external interface AddLayerObject
-
 // Stub for .koala.external.PositionAnchor
 external interface PositionAnchor
 
@@ -183,8 +181,8 @@ external interface MapOptions {
     val style: String?
     val center: maplibregl.LngLat
     val zoom: Number
-    val pitch: Number
-    val bearing: Number
+    val pitch: Number?
+    val bearing: Number?
     val canvasContextAttributes: dynamic
 }
 
@@ -200,4 +198,40 @@ external interface CenterZoomBearing {
     var center: maplibregl.LngLat
     var zoom: Double?
     var bearing: Double?
+}
+
+typealias Expression = Array<Any?>
+
+@JsPlainObject
+external interface AddLayerObject {
+    var id: String
+    var source: String
+
+    @JsName("source-layer")
+    var sourceLayer: String
+
+    var type: String
+
+    // Optional bits
+    var minzoom: Double?
+    var maxzoom: Double?
+    var filter: Expression?
+
+    // Layer-type specific paint
+    var paint: FillExtrusionPaint?
+}
+
+@JsPlainObject
+external interface FillExtrusionPaint {
+    @JsName("fill-extrusion-color")
+    var fillExtrusionColor: Any? // String | Expression
+
+    @JsName("fill-extrusion-height")
+    var fillExtrusionHeight: Any? // Number | Expression
+
+    @JsName("fill-extrusion-base")
+    var fillExtrusionBase: Any? // Number | Expression
+
+    @JsName("fill-extrusion-opacity")
+    var fillExtrusionOpacity: Any? // Number | Expression
 }

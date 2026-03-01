@@ -46,11 +46,10 @@ fun initGeoMap(mount: HTMLElement): HTMLElement {
 
     val widget = maplibregl.Map(MapOptions(
         container = widgetBox,
-        style = "https://tiles.openfreemap.org/styles/fiord",
+        style = "/www/misc/fjord",
         center = center,
         zoom = 11,
         pitch = 45,
-        bearing = -17.6,
         canvasContextAttributes = js("{ antialias: true }")
     ))
 
@@ -97,10 +96,13 @@ fun initGeoMap(mount: HTMLElement): HTMLElement {
             "fill-extrusion-color": [
                 "interpolate",
                 ["linear"],
-                ["get", "render_height"],
-                0, "lightgray",
-                200, "royalblue",
-                400, "lightblue"
+                ["coalesce", ["get", "render_height"], 0],
+
+                0,   "hsla(232,47%,18%,0.65)",  
+                6,   "hsl(224,22%,45%)",       
+                60,  "hsl(224,20%,34%)",
+                200, "hsl(224,20%,24%)",
+                500, "hsl(224,22%,16%)"       
             ],
             "fill-extrusion-height": [
                 "interpolate",
@@ -115,6 +117,13 @@ fun initGeoMap(mount: HTMLElement): HTMLElement {
                 ["zoom"],
                 15, 0,
                 16, ["get", "render_min_height"]
+            ],
+            "fill-extrusion-opacity": [
+                "interpolate",
+                ["linear"],
+                ["zoom"],
+                15, 0.0,
+                16, 0.55
             ]
         }
     })
