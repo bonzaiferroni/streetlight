@@ -48,13 +48,85 @@ fun initGeoMap(mount: HTMLElement): HTMLElement {
         container = widgetBox,
         style = "https://tiles.openfreemap.org/styles/fiord",
         center = center,
-        zoom = 11
+        zoom = 11,
+        pitch = 45,
+        bearing = -17.6,
+        canvasContextAttributes = js("{ antialias: true }")
     ))
 
     widget.addControl(maplibregl.NavigationControl())
     widget.addControl(maplibregl.FullscreenControl())
 
     window.asDynamic().widget = widget
+
+
+    widget.on("load") {
+        val layers = widget.getStyle().layers.unsafeCast<Array<dynamic>>()
+
+        var labelLayerId: String? = null
+        for (i in layers.indices) {
+            val layer = layers[i]
+            if (layer.type == "symbol" && layer.layout != null && layer.layout["text-field"] != null) {
+                labelLayerId = layer.id as String
+                break
+            }
+        }
+
+        widget.addSource(
+            "openfreemap",
+            js(
+                """
+            ({
+                type: "vector",
+                url: "https://tiles.openfreemap.org/planet"
+            })
+            """
+            )
+        )
+
+        val layerDef = js(
+            """
+    ({
+        id: "3d-buildings",
+        source: "openfreemap",
+        "source-layer": "building",
+        type: "fill-extrusion",
+        minzoom: 15,
+        filter: ["!=", ["get", "hide_3d"], true],
+        paint: {
+            "fill-extrusion-color": [
+                "interpolate",
+                ["linear"],
+                ["get", "render_height"],
+                0, "lightgray",
+                200, "royalblue",
+                400, "lightblue"
+            ],
+            "fill-extrusion-height": [
+                "interpolate",
+                ["linear"],
+                ["zoom"],
+                15, 0,
+                16, ["get", "render_height"]
+            ],
+            "fill-extrusion-base": [
+                "interpolate",
+                ["linear"],
+                ["zoom"],
+                15, 0,
+                16, ["get", "render_min_height"]
+            ]
+        }
+    })
+    """
+        )
+
+        if (labelLayerId != null) {
+            widget.addLayer(layerDef, labelLayerId)
+        } else {
+            widget.addLayer(layerDef)
+        }
+    }
 
     console.log("assigning map window")
     return window

@@ -55,9 +55,12 @@ external object maplibregl {
 
         fun addSource(id: String, source: SourceSpecification)
         fun getSource(id: String): Source
+        fun addLayer(layer: dynamic, layerId: dynamic)
         fun addLayer(layer: dynamic)
 
         fun project(point: LngLat): Point
+
+        fun setTerrain(terrain: dynamic)
 
         // Event handling inherited from .koala.external.Evented
     }
@@ -180,6 +183,9 @@ external interface MapOptions {
     val style: String?
     val center: maplibregl.LngLat
     val zoom: Number
+    val pitch: Number
+    val bearing: Number
+    val canvasContextAttributes: dynamic
 }
 
 external interface Camera
