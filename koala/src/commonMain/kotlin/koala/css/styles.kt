@@ -50,28 +50,28 @@ fun CoreAttributeGroupFacade.applyModifiers(css: Modifier, modifiers: ModifierSe
     }
 }
 
-fun CssBuilder.rules(theme: KoalaTheme): CssBuilder {
-    // rootStyles(theme)
-    // baseStyles(theme)
-    // layout(theme)
-    // queryLayout(theme)
-    // layoutUtilities(theme)
-    // utilities(theme)
-    // animation(theme)
-//    elementStyles(theme)
-    return this
-}
+//fun CssBuilder.rules(theme: KoalaTheme): CssBuilder {
+//    // rootStyles(theme)
+//    // baseStyles(theme)
+//    // layout(theme)
+//    // queryLayout(theme)
+//    // layoutUtilities(theme)
+//    // utilities(theme)
+//    // animation(theme)
+////    elementStyles(theme)
+//    return this
+//}
 
 fun RuleContainer.rule(modifier: Modifier, block: RuleSet) = rule(".${modifier.value}", block)
 
-fun HEAD.koalaStyles(theme: KoalaTheme = KoalaTheme()) {
-    style {
-        id = "koala-theme"
-        +buildKoalaStyles(theme)
-    }
-}
+//fun HEAD.koalaStyles(theme: KoalaTheme = KoalaTheme()) {
+//    style {
+//        id = "koala-theme"
+//        +buildKoalaStyles(theme)
+//    }
+//}
 
-fun buildKoalaStyles(theme: KoalaTheme = KoalaTheme()) = CssBuilder("    ").rules(theme).toString()
+// fun buildKoalaStyles(theme: KoalaTheme = KoalaTheme()) = CssBuilder("    ").rules(theme).toString()
 
 fun CssBuilder.printCss(block: () -> Unit) {
     val len = toString().length

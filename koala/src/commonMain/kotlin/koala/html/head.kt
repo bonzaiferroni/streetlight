@@ -1,6 +1,5 @@
 package koala.html
 
-import koala.css.koalaStyles
 import kotlinx.html.*
 
 fun HTML.head(
@@ -14,7 +13,6 @@ fun HTML.head(
         block()
         applyCoreStyles()
         applyCoreScripts()
-        koalaStyles()
         script(src = "https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js") { }
     }
 }
