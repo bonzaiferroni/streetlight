@@ -150,55 +150,57 @@ fun wireMapWindow(
 }
 
 fun wireKeyboardControls(widget: maplibregl.Map) {
-    // pixels the map pans when the up or down arrow is clicked
-    val deltaDistance = 60.0
-    // degrees the map rotates when the left or right arrow is clicked
-    val deltaDegrees = 25.0
+    val pressedKeys = mutableMapOf<String, Boolean>()
 
     window.addEventListener("keydown", { event ->
         event as org.w3c.dom.events.KeyboardEvent
         if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return@addEventListener
-
-        when (event.code) {
-            "KeyW", "ArrowUp" -> { // move forward
-                event.preventDefault()
-                widget.panBy(Point(0.0, -deltaDistance), js("{easing: function(t){ return t * (2.0 - t); }}"))
-            }
-
-            "KeyS", "ArrowDown" -> { // move backward
-                event.preventDefault()
-                widget.panBy(Point(0.0, deltaDistance), js("{easing: function(t){ return t * (2.0 - t); }}"))
-            }
-
-            "KeyA", "ArrowLeft" -> { // move left
-                event.preventDefault()
-                widget.panBy(Point(-deltaDistance, 0.0), js("{easing: function(t){ return t * (2.0 - t); }}"))
-            }
-
-            "KeyD", "ArrowRight" -> { // move right
-                event.preventDefault()
-                widget.panBy(Point(deltaDistance, 0.0), js("{easing: function(t){ return t * (2.0 - t); }}"))
-            }
-
-            "KeyQ" -> { // rotate left
-                event.preventDefault()
-                widget.easeTo(
-                    CenterZoomBearing(
-                        bearing = widget.getBearing() - deltaDegrees,
-                        easing = { t -> t * (2.0 - t) }
-                    )
-                )
-            }
-
-            "KeyE" -> { // rotate right
-                event.preventDefault()
-                widget.easeTo(
-                    CenterZoomBearing(
-                        bearing = widget.getBearing() + deltaDegrees,
-                        easing = { t -> t * (2.0 - t) }
-                    )
-                )
-            }
-        }
+        pressedKeys[event.code] = true
     }, false)
+
+    window.addEventListener("keyup", { event ->
+        event as org.w3c.dom.events.KeyboardEvent
+        pressedKeys[event.code] = false
+    }, false)
+
+    // pixels the map pans per second
+    val panSpeed = 500.0
+    // degrees the map rotates per second
+    val rotationSpeed = 100.0
+
+    var lastTime = window.performance.now()
+
+    fun frame(time: Double) {
+        val dt = ((time - lastTime) / 1000.0).coerceAtMost(0.1)
+        lastTime = time
+
+        var dx = 0.0
+        var dy = 0.0
+        var dBearing = 0.0
+
+        if (pressedKeys["KeyW"] == true || pressedKeys["ArrowUp"] == true) dy -= 1.0
+        if (pressedKeys["KeyS"] == true || pressedKeys["ArrowDown"] == true) dy += 1.0
+        if (pressedKeys["KeyA"] == true || pressedKeys["ArrowLeft"] == true) dx -= 1.0
+        if (pressedKeys["KeyD"] == true || pressedKeys["ArrowRight"] == true) dx += 1.0
+        if (pressedKeys["KeyQ"] == true) dBearing -= 1.0
+        if (pressedKeys["KeyE"] == true) dBearing += 1.0
+
+        if (dx != 0.0 && dy != 0.0) {
+            val mag = kotlin.math.sqrt(dx * dx + dy * dy)
+            dx /= mag
+            dy /= mag
+        }
+
+        if (dx != 0.0 || dy != 0.0) {
+            widget.panBy(Point(dx * panSpeed * dt, dy * panSpeed * dt), js("{animate: false}"))
+        }
+
+        if (dBearing != 0.0) {
+            widget.setBearing(widget.getBearing() + dBearing * rotationSpeed * dt)
+        }
+
+        window.requestAnimationFrame(::frame)
+    }
+
+    window.requestAnimationFrame(::frame)
 }
