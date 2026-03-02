@@ -38,6 +38,12 @@ external object maplibregl {
         fun setCenter(center: LngLat): Map
 
         fun panTo(center: LngLat): Map
+        fun panBy(offset: PointLike, options: dynamic = definedExternally): Map
+        fun easeTo(options: dynamic): Map
+        fun getBearing(): Double
+        fun setBearing(bearing: Double): Map
+        fun getPitch(): Double
+        fun setPitch(pitch: Double): Map
         fun flyTo(options: CenterZoomBearing): Map
         fun jumpTo(options: CenterZoomBearing): Map
 
@@ -136,7 +142,7 @@ external object maplibregl {
     class Point(
         val x: Double,
         val y: Double
-    )
+    ) : PointLike
 
     class NavigationControl
     class FullscreenControl
@@ -193,9 +199,11 @@ external interface AroundCenterOptions
 
 @JsPlainObject
 external interface CenterZoomBearing {
-    var center: maplibregl.LngLat
+    var center: maplibregl.LngLat?
     var zoom: Double?
     var bearing: Double?
+    var pitch: Double?
+    var easing: ((Double) -> Double)?
 }
 
 typealias Expression = Array<Any?>

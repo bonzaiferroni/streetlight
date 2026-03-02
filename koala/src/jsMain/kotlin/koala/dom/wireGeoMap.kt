@@ -17,10 +17,12 @@ import koala.model.MapViewContext
 import koala.model.PointEntity
 import koala.model.mapDistinct
 import koala.model.showLines
+import koala.external.maplibregl.Point
 import koala.model.toGeoBounds
 import koala.model.toGeoPoint
 import koala.model.toLngLat
 import kotlinx.browser.document
+import kotlinx.browser.window
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.html.FlowContent
 
@@ -58,6 +60,7 @@ fun wireMapWindow(
     val widget: maplibregl.Map = mapWindow.asDynamic().widget ?: error("geomap widget not found")
 
     mapWindow.onView(geoMap::setIsViewed)
+    wireKeyboardControls(widget)
 
     val focusPanel = mapWindow.querySelector(GeoMapSelector.focusPanel.selector) as HTMLElement
     focusPanel.renderRoot(appScope) {
@@ -144,4 +147,58 @@ fun wireMapWindow(
     }
 
     return mapWindow
+}
+
+fun wireKeyboardControls(widget: maplibregl.Map) {
+    // pixels the map pans when the up or down arrow is clicked
+    val deltaDistance = 60.0
+    // degrees the map rotates when the left or right arrow is clicked
+    val deltaDegrees = 25.0
+
+    window.addEventListener("keydown", { event ->
+        event as org.w3c.dom.events.KeyboardEvent
+        if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return@addEventListener
+
+        when (event.code) {
+            "KeyW", "ArrowUp" -> { // move forward
+                event.preventDefault()
+                widget.panBy(Point(0.0, -deltaDistance), js("{easing: function(t){ return t * (2.0 - t); }}"))
+            }
+
+            "KeyS", "ArrowDown" -> { // move backward
+                event.preventDefault()
+                widget.panBy(Point(0.0, deltaDistance), js("{easing: function(t){ return t * (2.0 - t); }}"))
+            }
+
+            "KeyA", "ArrowLeft" -> { // move left
+                event.preventDefault()
+                widget.panBy(Point(-deltaDistance, 0.0), js("{easing: function(t){ return t * (2.0 - t); }}"))
+            }
+
+            "KeyD", "ArrowRight" -> { // move right
+                event.preventDefault()
+                widget.panBy(Point(deltaDistance, 0.0), js("{easing: function(t){ return t * (2.0 - t); }}"))
+            }
+
+            "KeyQ" -> { // rotate left
+                event.preventDefault()
+                widget.easeTo(
+                    CenterZoomBearing(
+                        bearing = widget.getBearing() - deltaDegrees,
+                        easing = { t -> t * (2.0 - t) }
+                    )
+                )
+            }
+
+            "KeyE" -> { // rotate right
+                event.preventDefault()
+                widget.easeTo(
+                    CenterZoomBearing(
+                        bearing = widget.getBearing() + deltaDegrees,
+                        easing = { t -> t * (2.0 - t) }
+                    )
+                )
+            }
+        }
+    }, false)
 }
