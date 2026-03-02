@@ -15,7 +15,7 @@ data class ParseRequest(
 )
 
 @Serializable
-data class ColdParseResult(
+data class MultiEventParseResult(
     val hasContent: Boolean? = null,
     val location: Location? = null,
     val locationEdit: LocationEdit? = null,
