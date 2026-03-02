@@ -1,12 +1,7 @@
-import ai.koog.prompt.executor.clients.google.GoogleModels
-import ai.koog.prompt.llm.LLMCapability
-import ai.koog.prompt.llm.OllamaModels
 import klutch.environment.readEnvFromPath
 import kotlinx.coroutines.runBlocking
-import streetlight.agent.ChatAgentConnection
 import streetlight.agent.UrlParser
-import streetlight.model.data.EventParse
-import streetlight.model.data.EventParseItem
+import streetlight.model.data.ColdParse
 
 fun main(): Unit = runBlocking {
     val env = readEnvFromPath()
@@ -16,7 +11,7 @@ fun main(): Unit = runBlocking {
 
     // println(GoogleModels.Gemini2_5Flash.supports(LLMCapability.Vision.Image))
     val agent = UrlParser(apiKey)
-    val result: EventParse? =
+    val result: ColdParse? =
         agent.readImage("../upload/c285c6c0-0b15-4113-a1e9-0add48984ac9.jpg", eventInstructions)
 
      println(result)

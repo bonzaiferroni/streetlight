@@ -5,7 +5,7 @@ import koala.css.*
 import koala.dom.*
 import koala.html.propertyValue
 import koala.model.mapDistinct
-import streetlight.model.data.EventParse
+import streetlight.model.data.ColdParse
 import streetlight.model.data.toEventEdit
 
 fun RenderContext.eventReaderView(app: AppContext, route: ReadEventRoute) {
@@ -53,7 +53,7 @@ fun RenderContext.eventReaderView(app: AppContext) {
     }
 }
 
-fun RenderContext.eventReaderResult(app: AppContext, model: EventReader, parse: EventParse?) {
+fun RenderContext.eventReaderResult(app: AppContext, model: EventReader, parse: ColdParse?) {
     val events = parse?.events ?: return
 
     column {

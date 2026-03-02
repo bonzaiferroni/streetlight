@@ -3,7 +3,6 @@ package streetlight.model.data
 import androidx.compose.runtime.Stable
 import kampfire.model.LabeledEnum
 import kampfire.model.UserId
-import kampfire.utils.ParseHint
 import kampfire.utils.randomUuidString
 import kotlinx.serialization.Serializable
 import kotlinx.datetime.Instant
@@ -96,63 +95,4 @@ enum class EventStatus(override val label: String): LabeledEnum<EventStatus> {
     Live("Live"),
     OnBreak("On Break"),
     Finished("Finished"),
-}
-
-@Serializable
-data class EventParse(
-    val hasContent: Boolean? = null,
-    val events: List<EventParseItem>? = null
-)
-
-@Serializable
-data class EventParseItem(
-    val name: String? = null,
-    val time: LocalTime? = null,
-    val date: LocalDate? = null,
-    val location: String? = null,
-    val address: String? = null,
-    val imageUrl: String? = null,
-    val description: String? = null,
-    val ageMin: Int? = null,
-    val contact: String? = null,
-    val url: String? = null,
-) {
-    val startsAt: Instant? get() = if (time != null && date != null) toInstant(date, time) else null
-}
-
-private fun toInstant(
-    date: LocalDate,
-    time: LocalTime,
-    timeZone: TimeZone = TimeZone.currentSystemDefault()
-): Instant {
-    return date
-        .atTime(time)
-        .toInstant(timeZone)
-}
-
-@Serializable
-data class ReadEventRequest(
-    val url: String,
-    val isImage: Boolean
-)
-
-fun EventParseItem.toEventEdit(
-    sourceUrl: String?,
-    sourceImageUrl: String?,
-    locationId: LocationId?
-): EventEdit? {
-    val date = date ?: return null
-    return EventEdit(
-        title = name ?: "",
-        locationId = locationId,
-        place = Place(location ?: ""),
-        imageUrl = imageUrl,
-        description = description,
-        url = url,
-        sourceUrl = sourceUrl,
-        sourceImageUrl = sourceImageUrl,
-        ageMin = ageMin?.takeIf { it > 0 },
-        startsAt = startsAt,
-        date = date
-    )
 }

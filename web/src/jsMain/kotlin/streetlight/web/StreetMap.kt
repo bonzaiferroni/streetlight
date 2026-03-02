@@ -71,8 +71,9 @@ class StreetMap(
                 val mapEntities = locations.mapNotNull { info ->
                     if (allLocations.any { it.locationId == info.locationId }) return@mapNotNull null
                     allLocations.add(info)
-                    if (info.events.isNotEmpty()) {
-                        EventEntity(info.location, info.events)
+                    val events = info.events
+                    if (!events.isNullOrEmpty()) {
+                        EventEntity(info.location, events)
                     } else {
                         LocationEntity(info.location)
                     }

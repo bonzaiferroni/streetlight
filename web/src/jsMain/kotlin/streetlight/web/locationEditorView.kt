@@ -2,6 +2,7 @@ package streetlight.web
 
 import koala.css.Accent
 import koala.css.AlignItemsStretch
+import koala.css.Flex1
 import koala.css.MinHeight8
 import koala.css.modify
 import koala.dom.*
@@ -26,7 +27,10 @@ fun RenderContext.locationEditorView(location: LocationEdit, app: AppContext) {
             choicesFlow = app.userCache.files.flow
         )
         textField("name", modify(), model::setPlaceName, nameFlow)
-        textField("link", modify(), model::setLink, linkFlow)
+        row {
+            textField("link", modify(Flex1), model::setLink, linkFlow)
+            button("🤖 read details from link", onClick = model::parseLocation)
+        }
         textField("events", modify(), model::setEventsLink, eventsLinkFlow)
         placeEditor(location.geoPoint, app, model)
         button("cancel", onClick = app.portal::goBack)

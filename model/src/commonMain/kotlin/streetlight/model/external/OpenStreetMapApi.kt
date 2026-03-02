@@ -1,4 +1,4 @@
-package streetlight.web
+package streetlight.model.external
 
 import kampfire.model.GeoPoint
 import kotlinx.serialization.SerialName
@@ -48,8 +48,6 @@ data class Address(
     val countryCode: String? = null
 )
 
-external fun encodeURIComponent(s: String): String
-
 @Serializable
 data class OSMQuery(
     val amenity: String? = null,
@@ -62,20 +60,7 @@ data class OSMQuery(
     val format: String = "jsonv2",
     val addressdetails: Int = 1,
     val limit: Int = 10
-) {
-    fun toQuery() = listOfNotNull(
-        amenity?.let { "amenity=${encodeURIComponent(it)}" },
-        street?.let { "street=${encodeURIComponent(it)}" },
-        city?.let { "city=${encodeURIComponent(it)}" },
-        county?.let { "county=${encodeURIComponent(it)}" },
-        state?.let { "state=${encodeURIComponent(it)}" },
-        country?.let { "country=${encodeURIComponent(it)}" },
-        postalcode?.let { "postalcode=${encodeURIComponent(it)}" },
-        "format=${encodeURIComponent(format)}",
-        "addressdetails=$addressdetails",
-        "limit=$limit"
-    ).joinToString("&")
-}
+)
 
 fun OSMPlace.toGeoPoint() = GeoPoint(
     lat = lat,

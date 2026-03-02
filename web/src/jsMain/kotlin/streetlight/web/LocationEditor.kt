@@ -4,18 +4,20 @@ import kampfire.model.GeoPoint
 import koala.dom.UIMessage
 import koala.dom.UIMessageType
 import koala.dom.set
-import koala.model.GeoMap
-import koala.model.PanPoint
 import koala.model.mapDistinct
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import streetlight.model.data.Location
 import streetlight.model.data.LocationEdit
 import streetlight.model.data.LocationId
+import streetlight.model.data.ParseRequest
 import streetlight.model.data.Place
 import streetlight.model.data.ResourceType
 import streetlight.model.data.toPlace
+import streetlight.model.external.Address
+import streetlight.model.external.OSMPlace
+import streetlight.model.external.OSMQuery
+import streetlight.model.external.toGeoPoint
 
 class LocationEditor(
     initialData: LocationEdit,
@@ -89,6 +91,14 @@ class LocationEditor(
                 val place = client.location.readPlace(query)?.firstOrNull() ?: return@launch
                 setPlace(place)
             }
+        }
+    }
+
+    fun parseLocation() {
+        val link = edit.now.link ?: return
+        scope.launch {
+            val edit = api.parseLocation(ParseRequest(link))
+            this@LocationEditor.edit.set { edit ?: editNow }
         }
     }
 

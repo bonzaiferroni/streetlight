@@ -1,8 +1,6 @@
 package streetlight.model.data
 
 import kampfire.model.GeoPoint
-import kampfire.model.UserId
-import kampfire.utils.ParseHint
 import kampfire.utils.randomUuidString
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
@@ -15,14 +13,12 @@ data class Location(
     val name: String,
     val description: String?,
     val address: String?,
-    val notes: String?,
     val geoPoint: GeoPoint,
     val resources: Set<ResourceType>,
     val link: String?,
     val eventsLink: String?,
     val imageUrl: String?,
     val thumbUrl: String?,
-    val checkedAt: Instant?,
     val updatedAt: Instant,
     val createdAt: Instant,
 )
@@ -49,19 +45,22 @@ data class LocationEdit(
 )
 
 @Serializable
-data class LocationParse(
-    val name: String? = null,
-    val description: String? = null,
-    val address: String? = null,
-    val url: String? = null,
-    val eventsUrl: String? = null,
-    val imageUrl: String? = null,
+data class LocationAddress(
+    val streetAddress: String,
+    val postCode: String? = null,
+    val city: String? = null,
+    val state: String? = null,
+    val country: String? = null,
 )
 
 @Serializable
 data class Place(
     val name: String? = null,
     val address: String? = null,
+    val postCode: String? = null,
+    val city: String? = null,
+    val state: String? = null,
+    val country: String? = null,
     val geoPoint: GeoPoint? = null,
 ) {
     val isValid get() = !name.isNullOrBlank() && geoPoint != null
@@ -72,7 +71,6 @@ fun Location.toEdit() = LocationEdit(
     name = name,
     description = description,
     address = address,
-    notes = notes,
     geoPoint = geoPoint,
     resources = resources,
     link = link,
@@ -99,13 +97,11 @@ fun Place.toLocation() = Location(
     geoPoint = geoPoint ?: GeoPoint.Denver,
     description = null,
     address = address,
-    notes = null,
     resources = emptySet(),
     link = null,
     eventsLink = null,
     imageUrl = null,
     thumbUrl = null,
-    checkedAt = null,
     updatedAt = Clock.System.now(),
     createdAt = Clock.System.now()
 )
@@ -116,25 +112,32 @@ fun LocationEdit.toLocation() = Location(
     geoPoint = geoPoint,
     description = description,
     address = address,
-    notes = notes,
     resources = resources,
     link = link,
     eventsLink = eventsLink,
     imageUrl = imageUrl,
     thumbUrl = thumbUrl,
-    checkedAt = null,
     updatedAt = Clock.System.now(),
     createdAt = Clock.System.now()
 )
 
-fun LocationParse.toLocationEdit(
+fun LocationParse.toEdit(
     locationId: LocationId? = null
 ) = LocationEdit(
     locationId = locationId,
     name = name ?: "",
     description = description,
-    address = address,
     link = url,
     eventsLink = eventsUrl,
     imageUrl = imageUrl,
 )
+
+fun LocationParse.toAddress() = address?.let {
+    LocationAddress(
+        streetAddress = it,
+        postCode = postalCode,
+        city = city,
+        state = state,
+        country = country,
+    )
+}

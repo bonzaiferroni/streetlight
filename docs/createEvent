@@ -15,3 +15,20 @@ information url
 feature image url
 
 status
+
+
+
+It might also
+        have information about an event location. You will parse information about the events and their location.
+
+        For the location, determine the following:
+
+        * name: name of the location
+        * description: description of the location
+        * address: house or building number and street name of the location
+        * postalCode: Postal code of the location
+        * state: State of the location, two letter abbreviation if relevant (e.g. CO)
+        * country: Country of the location
+        * url: web address for more information about the location
+        * eventsUrl: web address for more information about upcoming events at the location, like a calendar
+        * imageUrl: featured image of the location

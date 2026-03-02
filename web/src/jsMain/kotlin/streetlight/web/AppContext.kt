@@ -19,5 +19,5 @@ interface AppContext {
 interface ClientContext {
     val transit: TransitBrowserClient
     val api: ApiClient
-    val location: OSMClient
+    val location: OSMFetchClient
 }

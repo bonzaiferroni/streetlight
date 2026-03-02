@@ -23,8 +23,7 @@ fun RenderContext.viewLocationAdmin(
                 column {
                     location.eventsLink.let { link ->
                         row {
-                            val lastTime = location.checkedAt?.let { "The last time it was checked was ${it}." } ?: ""
-                            textBlock("This location has an event page that we can try to read. $lastTime", modify(Flex1))
+                            textBlock("This location has an event page that we can try to read.", modify(Flex1))
                             button("read events", onClick = {
                                 app.portal.go(ReadEventRoute(location, link))
                             })

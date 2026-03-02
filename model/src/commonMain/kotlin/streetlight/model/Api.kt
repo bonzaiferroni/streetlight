@@ -19,7 +19,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object QueryMap: QueryEndpoint<MapQuery, List<EventInfo>>(this, "bounds")
         // object UserEvents: ApiDaoEndpoint<Event, EventId, NewEvent>(this, "user")
         object Upload: PostEndpoint<ByteArray, String>(this, "upload")
-        object ReadUrl: PostEndpoint<ReadEventRequest, EventParse>(this, "read-url")
+        object ParseEvents: PostEndpoint<ParseRequest, ColdParseResult>(this, "read-url")
         object Location: GetByTableIdEndpoint<LocationId, List<Event>>(this, "location")
     }
 
@@ -41,7 +41,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
             val count = addIntParam("count")
         }
         object QueryPoint: QueryEndpoint<GeoPoint, List<Location>>(this, "query_point")
-        object ParseLocation: PostEndpoint<String, LocationParse>(this, "parse_location")
+        object ParseLocation: PostEndpoint<ParseRequest, LocationEdit>(this, "parse_location")
         object QueryBounds: PostEndpoint<GeoBounds, List<LocationInfo>>(this, "query_bounds")
     }
 

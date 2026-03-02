@@ -26,7 +26,7 @@ fun viewApp() {
         override val client = object: ClientContext {
             override val transit = TransitBrowserClient(fetchClient)
             override val api = ApiClient(fetchClient)
-            override val location = OSMClient()
+            override val location = OSMFetchClient()
         }
 
         override val userCache = UserCache(scope, client.api)

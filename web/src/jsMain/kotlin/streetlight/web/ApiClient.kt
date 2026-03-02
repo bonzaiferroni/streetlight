@@ -16,12 +16,12 @@ class ApiClient(private val client: FetchClient) {
     suspend fun readEvent(eventId: EventId) = client.get(Api.EventProfile, eventId)
     suspend fun readEventFeed() = client.get(Api.Events)
     suspend fun createOrEditEvent(event: EventEdit) = client.postAndReadStatus(Api.Events.Edit, event)
-    suspend fun readEventFromUrl(request: ReadEventRequest) = client.post(Api.Events.ReadUrl, request)
+    suspend fun readEventFromUrl(request: ParseRequest) = client.post(Api.Events.ParseEvents, request)
     suspend fun readLocationEvents(locationId: LocationId) = client.get(Api.Events.Location, locationId)
 
     // locations
     suspend fun readLocation(locationId: LocationId) = client.get(Api.Locations, locationId)
-    suspend fun parseLocation(url: String) = client.post(Api.Locations.ParseLocation, url)
+    suspend fun parseLocation(request: ParseRequest) = client.post(Api.Locations.ParseLocation, request)
     suspend fun readLocationsInBounds(bounds: GeoBounds) = client.post(Api.Locations.QueryBounds, bounds)
 
     suspend fun queryMap(request: MapQuery) = client.get(Api.Events.QueryMap, request.toQuery())

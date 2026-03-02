@@ -7,9 +7,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
+import streetlight.model.data.ColdParse
 import streetlight.model.data.EventParse
-import streetlight.model.data.EventParseItem
-import streetlight.model.data.ReadEventRequest
+import streetlight.model.data.ParseRequest
 import kotlin.time.Duration.Companion.seconds
 
 class EventParser(
@@ -18,7 +18,7 @@ class EventParser(
 ) {
     val state = storeOf(EventParserState())
     val message = storeOf(UIMessage())
-    val selectionFlow = MutableSharedFlow<List<EventParseItem>>()
+    val selectionFlow = MutableSharedFlow<List<EventParse>>()
 
     fun select(index: Int) {
         val item = state.now.parse?.events?.getOrNull(index) ?: return
@@ -39,7 +39,7 @@ class EventParser(
                     message.set(loadingMessages.random())
                 }
             }
-            val parse = api.readEventFromUrl(ReadEventRequest(url, isImage))
+            val parse = api.readEventFromUrl(ParseRequest(url, isImage))
             messageStream.cancel()
             val events = parse?.events?.takeIf { it.isNotEmpty() }
             if (events != null) {
@@ -47,7 +47,7 @@ class EventParser(
             } else {
                 message.set("I couldn't find any events at that link. It might be for human readers only.")
             }
-            state.set { it.copy(parse = parse) }
+            // state.set { it.copy(parse = parse) }
         }
     }
 }
@@ -55,6 +55,6 @@ class EventParser(
 data class EventParserState(
     val isOpen: Boolean = false,
     val url: String = "",
-    val parse: EventParse? = null
+    val parse: ColdParse? = null
 )
 

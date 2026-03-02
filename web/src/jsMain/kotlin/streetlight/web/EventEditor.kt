@@ -21,6 +21,10 @@ import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import streetlight.model.data.Event
 import streetlight.model.data.toPlace
+import streetlight.model.external.Address
+import streetlight.model.external.OSMPlace
+import streetlight.model.external.OSMQuery
+import streetlight.model.external.toGeoPoint
 import streetlight.model.utils.toLocalDateTime
 import streetlight.model.utils.tomorrowNoon
 
