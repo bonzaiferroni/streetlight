@@ -42,6 +42,7 @@ fun RenderContext.placeEditor(
         launch {
             pointFlow.collect { point ->
                 if (point != null && point.distanceTo(geoMap.stateNow.center) > 10.meters) {
+                    console.log(point)
                     geoMap.panMap(PanPoint(point = point, zoom = 18f))
                 }
             }

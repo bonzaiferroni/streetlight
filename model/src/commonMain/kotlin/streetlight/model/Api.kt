@@ -19,7 +19,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object QueryMap: QueryEndpoint<MapQuery, List<EventInfo>>(this, "bounds")
         // object UserEvents: ApiDaoEndpoint<Event, EventId, NewEvent>(this, "user")
         object Upload: PostEndpoint<ByteArray, String>(this, "upload")
-        object ParseEvents: PostEndpoint<ParseRequest, ColdParseResult>(this, "read-url")
+        object ParseEvents: PostEndpoint<ParseRequest, MultiEventParseResponse>(this, "read-url")
         object Location: GetByTableIdEndpoint<LocationId, List<Event>>(this, "location")
     }
 

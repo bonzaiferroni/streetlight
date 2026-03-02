@@ -69,7 +69,7 @@ class LocationEditor(
     }
 
     override fun lookUp() {
-        queryLocation(true)
+        queryLocation(false)
     }
 
     fun queryLocation(reverse: Boolean) {
@@ -109,7 +109,7 @@ class LocationEditor(
     private fun setPlace(place: OSMPlace) {
         val point = place.toGeoPoint()
         val address = place.address.toBasicString() ?: ""
-        val name = place.name.takeIf { it.isNotBlank() } ?: address
+        val name = place.name.takeIf { it.isNotBlank() }
         setPlace(Place(name = name, address = address, geoPoint = point))
     }
 

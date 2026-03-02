@@ -7,8 +7,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
-import streetlight.model.data.ColdParse
 import streetlight.model.data.EventParse
+import streetlight.model.data.MultiEventParse
 import streetlight.model.data.ParseRequest
 import kotlin.time.Duration.Companion.seconds
 
@@ -39,7 +39,7 @@ class EventParser(
                     message.set(loadingMessages.random())
                 }
             }
-            val parse = api.readEventFromUrl(ParseRequest(url, isImage))
+            val parse = api.parseMultiEventFromUrl(ParseRequest(url, isImage))
             messageStream.cancel()
             val events = parse?.events?.takeIf { it.isNotEmpty() }
             if (events != null) {
@@ -55,6 +55,6 @@ class EventParser(
 data class EventParserState(
     val isOpen: Boolean = false,
     val url: String = "",
-    val parse: ColdParse? = null
+    val parse: MultiEventParse? = null
 )
 

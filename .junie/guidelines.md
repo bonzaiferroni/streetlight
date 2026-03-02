@@ -145,6 +145,18 @@ CreateCssUtility(Foo):
 * Add a rule to the `layoutUtilities` function (or appropriate utility function) in `koala/src/commonMain/kotlin/koala/css/` that defines the CSS properties for the new class.
 * You may use `AlignItemsCenter` as an example.
 
+### Documentation
+
+CreatePackageDocs(Foo):
+* Foo is the name of a package. Create a file at `docs/packages/Foo.md` with general documentation for Foo.
+  For example, if Foo is `streetlight.web.pages` then create a file `docs/packages/streetlight.web.pages.md`
+* The documentation will have the following parts:
+  * Introduction: A short introduction to the general structure and patterns you find in the package.
+  * Dependencies: A short list of the most common packages that it depends on.
+  * Structures: If there is a coding structure that is repeated in the package, give a brief description of that structure and how it is used.
+    For example, if the package has several classes with the suffix -Client, give a brief description of what they have in common
+    and what they accomplish.
+
 ## Junie's notes to self
 
 This is where you can create notes to yourself, information that you know you'll need later on.

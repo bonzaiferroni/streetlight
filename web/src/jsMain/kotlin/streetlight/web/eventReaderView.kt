@@ -6,6 +6,8 @@ import koala.dom.*
 import koala.html.propertyValue
 import koala.model.mapDistinct
 import streetlight.model.data.ColdParse
+import streetlight.model.data.MultiEventParse
+import streetlight.model.data.MultiEventParseResponse
 import streetlight.model.data.toEventEdit
 
 fun RenderContext.eventReaderView(app: AppContext, route: ReadEventRoute) {
@@ -53,7 +55,7 @@ fun RenderContext.eventReaderView(app: AppContext) {
     }
 }
 
-fun RenderContext.eventReaderResult(app: AppContext, model: EventReader, parse: ColdParse?) {
+fun RenderContext.eventReaderResult(app: AppContext, model: EventReader, parse: MultiEventParseResponse?) {
     val events = parse?.events ?: return
 
     column {
@@ -69,8 +71,8 @@ fun RenderContext.eventReaderResult(app: AppContext, model: EventReader, parse: 
         }
 
         events.forEachIndexed { index, event ->
-            val eventName = event.name ?: return@forEachIndexed
-            val date = event.date ?: return@forEachIndexed
+            val eventName = event.title
+            val date = event.date
             val statusFlow = model.state.flow.mapDistinct { it.getStatus(index) }
 
             val itemElement = card {
@@ -90,17 +92,9 @@ fun RenderContext.eventReaderResult(app: AppContext, model: EventReader, parse: 
                                 // time/date
                                 row {
                                     textBlock(date.toString())
-                                    event.time?.let { time ->
+                                    event.startsAt?.let { time ->
                                         textBlock(time.toString())
                                     }
-                                }
-                                // location
-                                event.location?.let {
-                                    propertyValue("location", it)
-                                }
-                                // address
-                                event.address?.let {
-                                    propertyValue("address", it)
                                 }
                                 // description
                                 event.description?.let {
@@ -125,7 +119,6 @@ fun RenderContext.eventReaderResult(app: AppContext, model: EventReader, parse: 
             }
 
             itemElement.onClick {
-                val event = event.toEventEdit(null, null, model.location.now?.locationId) ?: return@onClick
                 val route = EditEventCallbackRoute(event) { event ->
                     if (event != null) {
                         model.setCompleted(index)

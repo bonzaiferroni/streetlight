@@ -7,6 +7,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import streetlight.model.data.ColdParse
+import streetlight.model.data.MultiEventParseResponse
 import streetlight.model.data.ParseRequest
 import streetlight.model.data.toEventEdit
 import kotlin.time.Duration.Companion.seconds
@@ -48,8 +49,7 @@ class EventReader(
         scope.launch {
             events.forEachIndexed { index, event ->
                 if (state.now.getStatus(index) == 200) return@forEachIndexed
-                val edit = event.toEventEdit(link, null, location.locationId)?.takeIf { it.isValid }
-                    ?: return@forEachIndexed
+                val edit = event.takeIf { it.isValid } ?: return@forEachIndexed
                 val response = api.createOrEditEvent(edit)
                 if (response == null) {
                     console.log("unhandled error")
@@ -82,12 +82,12 @@ class EventReader(
                     message.set(loadingMessages.random())
                 }
             }
-            val parse = api.readEventFromUrl(ParseRequest(url, isImage))
+            val parse = api.parseMultiEventFromUrl(ParseRequest(url, isImage))
             messageStream.cancel()
             val events = parse?.events?.takeIf { it.isNotEmpty() }
             if (events != null) {
                 message.set("Finished. Are any of these the event you wish to post?")
-                // state.set { it.copy(parse = parse, completed = MutableList(events.size) { null }) }
+                state.set { it.copy(parse = parse, completed = MutableList(events.size) { null }) }
             } else {
                 message.set("I couldn't find any events at that link. It might be for human readers only.")
             }
@@ -99,7 +99,7 @@ data class EventRelayState(
     val text: String = "",
     val link: String = "",
     val imageUrl: String = "",
-    val parse: ColdParse? = null,
+    val parse: MultiEventParseResponse? = null,
     val stage: Int = 0,
     val completed: List<Int?> = emptyList()
 ) {

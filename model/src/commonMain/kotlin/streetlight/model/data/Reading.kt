@@ -30,9 +30,15 @@ data class ColdParse(
 )
 
 @Serializable
-data class LocationEventParse(
+data class MultiEventParse(
     val hasContent: Boolean? = null,
     val events: List<EventParse>? = null,
+)
+
+@Serializable
+data class MultiEventParseResponse(
+    val hasContent: Boolean? = null,
+    val events: List<EventEdit>? = null,
 )
 
 @Serializable
