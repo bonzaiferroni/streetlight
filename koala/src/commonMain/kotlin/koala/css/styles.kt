@@ -51,13 +51,13 @@ fun CoreAttributeGroupFacade.applyModifiers(css: Modifier, modifiers: ModifierSe
 }
 
 fun CssBuilder.rules(theme: KoalaTheme): CssBuilder {
-    rootStyles(theme)
-    baseStyles(theme)
-    layout(theme)
-    queryLayout(theme)
-    layoutUtilities(theme)
-    utilities(theme)
-    animation(theme)
+    // rootStyles(theme)
+    // baseStyles(theme)
+    // layout(theme)
+    // queryLayout(theme)
+    // layoutUtilities(theme)
+    // utilities(theme)
+    // animation(theme)
 //    elementStyles(theme)
     return this
 }

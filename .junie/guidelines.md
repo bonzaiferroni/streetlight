@@ -160,14 +160,18 @@ CreatePackageDocs(Foo):
     to the package.
 * Add an entry to the `Package specific guidelines` section of this document.
 
-## Package specific guidelines
+## More guidelines
 
+### Package guidelines
 You can find more information, including additional workflows that are specific to the following packages. Look for a 
 file at `docs/packages/package.name.md`.
 
 Packages:
   * streetlight.web.pages
   * koala.dom
+
+### Web content guidelines
+You can find more information about webcontent at `docs/web-content.md`
 
 ## Junie's notes to self
 
