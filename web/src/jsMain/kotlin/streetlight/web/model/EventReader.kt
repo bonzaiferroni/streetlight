@@ -8,6 +8,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import streetlight.model.data.MultiEventParseResponse
 import streetlight.model.data.ParseRequest
+import streetlight.model.data.Place
 import streetlight.web.ReadEventRoute
 import streetlight.web.io.ApiClient
 import streetlight.web.ui.loadingMessages
@@ -18,7 +19,7 @@ class EventReader(
     private val api: ApiClient,
     private val route: ReadEventRoute,
 ) {
-    val state = storeOf(EventRelayState())
+    val state = storeOf(EventReaderState())
     val message = storeOf(UIMessage(intro))
     val location = storeOf(route.location)
 
@@ -36,7 +37,7 @@ class EventReader(
     fun readLink() = readUrl(state.now.link, false)
 
     fun startOver() {
-        state.set { EventRelayState() }
+        state.set { EventReaderState() }
     }
 
     fun setCompleted(index: Int) {
@@ -50,7 +51,9 @@ class EventReader(
         scope.launch {
             events.forEachIndexed { index, event ->
                 if (state.now.getStatus(index) == 200) return@forEachIndexed
-                val edit = event.takeIf { it.isValid } ?: return@forEachIndexed
+                val edit = event.copy(
+                    locationId = location.locationId,
+                ).takeIf { it.isValid } ?: return@forEachIndexed
                 val response = api.createOrEditEvent(edit)
                 if (response == null) {
                     console.log("unhandled error")
@@ -65,13 +68,6 @@ class EventReader(
     }
 
     private fun readUrl(url: String?, isImage: Boolean) {
-//        state.set {
-//            val time = tomorrowNoon().toLocalDateTime()
-//            it.copy(stage = 1, parse = EventParse(true, listOf(
-//                EventParseItem("event 1", time.time, time.date),
-//                EventParseItem("event 2", time.time, time.date)
-//            )))
-//        }
 
         val url = url?.takeIf { it.isNotEmpty() } ?: return
         state.set { it.copy(stage = 1)}
@@ -96,7 +92,7 @@ class EventReader(
     }
 }
 
-data class EventRelayState(
+data class EventReaderState(
     val text: String = "",
     val link: String = "",
     val imageUrl: String = "",

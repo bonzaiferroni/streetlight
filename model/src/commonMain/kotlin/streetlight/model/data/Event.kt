@@ -69,7 +69,7 @@ data class EventEdit(
     val startsAt: Instant? = null,
     val date: LocalDate = (startsAt ?: tomorrowNoon()).toLocalDateTime(TimeZone.currentSystemDefault()).date,
 ) {
-    val isValid get() = title.isNotBlank() && (place != null && place.isValid || locationId != null)
+    val isValid get() = title.isNotBlank() && ((place != null && place.isValid) || locationId != null)
 }
 
 fun Event.toEdit() = EventEdit(
