@@ -156,6 +156,18 @@ CreatePackageDocs(Foo):
   * Structures: If there is a coding structure that is repeated in the package, give a brief description of that structure and how it is used.
     For example, if the package has several classes with the suffix -Client, give a brief description of what they have in common
     and what they accomplish.
+  * Workflows: This will be an initially empty section that will describe workflows like the ones listed here, but specific
+    to the package.
+* Add an entry to the `Package specific guidelines` section of this document.
+
+## Package specific guidelines
+
+You can find more information, including additional workflows that are specific to the following packages. Look for a 
+file at `docs/packages/package.name.md`.
+
+Packages:
+  * streetlight.web.pages
+  * koala.dom
 
 ## Junie's notes to self
 
