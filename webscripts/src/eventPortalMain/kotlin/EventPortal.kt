@@ -3,7 +3,7 @@ import kotlinx.coroutines.CoroutineScope
 import streetlight.model.data.EventId
 import streetlight.model.data.NewRequest
 import streetlight.model.data.SongId
-import streetlight.web.ApiClient
+import streetlight.web.ui.ApiClient
 
 class EventPortal(
     private val scope: CoroutineScope,
