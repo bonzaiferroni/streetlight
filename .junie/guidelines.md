@@ -157,7 +157,7 @@ CreatePackageDocs(Foo):
     For example, if the package has several classes with the suffix -Client, give a brief description of what they have in common
     and what they accomplish.
   * Workflows: This will be an initially empty section that will describe workflows like the ones listed here, but specific
-    to the package.
+    to the package. Compose any basic workflows that seem useful for units of work within the package.
 * Add an entry to the `Package specific guidelines` section of this document.
 
 ## More guidelines
@@ -169,6 +169,7 @@ file at `docs/packages/package.name.md`.
 Packages:
   * streetlight.web.pages
   * koala.dom
+  * koala.css
 
 ### Web content guidelines
 You can find more information about webcontent at `docs/web-content.md`
