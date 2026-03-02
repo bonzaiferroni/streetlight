@@ -15,6 +15,7 @@ import streetlight.web.EditLocationDataRoute
 import streetlight.web.EditLocationIdRoute
 import streetlight.web.EditLocationRoute
 import streetlight.web.model.AppContext
+import streetlight.web.model.LocationEditor
 
 fun RenderContext.locationEditorView(location: LocationEdit, app: AppContext) {
     val model = LocationEditor(location, renderScope, app.client)
@@ -57,7 +58,7 @@ fun RenderContext.locationEditorRouteView(app: AppContext) {
         provideData = { route ->
             when (route) {
                 is EditLocationDataRoute -> route.location
-                is EditLocationIdRoute -> api.readLocation(route.locationId)?.toEdit()
+                is EditLocationIdRoute -> route.locationId?.let { api.readLocation(it)?.toEdit() } ?: LocationEdit()
                 is CreateLocationRoute -> LocationEdit()
             }
         }

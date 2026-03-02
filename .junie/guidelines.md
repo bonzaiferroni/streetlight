@@ -168,6 +168,7 @@ file at `docs/packages/package.name.md`.
 
 Packages:
   * streetlight.model
+  * streetlight.server.routes
   * streetlight.web.pages
   * streetlight.web.ui
   * streetlight.web.io

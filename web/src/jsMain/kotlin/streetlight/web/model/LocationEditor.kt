@@ -1,4 +1,4 @@
-package streetlight.web.ui
+package streetlight.web.model
 
 import kampfire.model.GeoPoint
 import koala.dom.UIMessage
@@ -18,7 +18,7 @@ import streetlight.model.external.Address
 import streetlight.model.external.OSMPlace
 import streetlight.model.external.OSMQuery
 import streetlight.model.external.toGeoPoint
-import streetlight.web.model.ClientContext
+import streetlight.web.ui.PlaceEditor
 
 class LocationEditor(
     initialData: LocationEdit,

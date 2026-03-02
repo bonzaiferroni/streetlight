@@ -22,7 +22,7 @@ enum class StreetlightScreen(
     Event("event", { path -> path.provideRouteFromPath { EventIdRoute(EventId(it)) }  }),
     EditEvent("edit-event", { path -> EditEventIdRoute(path.provideId { EventId(it) }) }),
     EditStory("edit-story", { path -> EditPostRoute(path.provideId { PostId(it) }) }),
-    EditLocation("edit-location", { path -> path.provideRouteFromPath { EditLocationIdRoute(LocationId(it)) } }),
+    EditLocation("edit-location", { path -> EditLocationIdRoute(path.provideId { LocationId(it) }) }),
     Sandbox("sandbox", { SandboxRoute }),
     FullMap("full-map", { FullMapRoute }),
     Chat("chat", { ChatRoute }),
@@ -158,7 +158,7 @@ sealed interface EditLocationRoute: StreetlightRoute {
 object CreateLocationRoute: EditLocationRoute
 
 data class EditLocationIdRoute(
-    val locationId: LocationId
+    val locationId: LocationId? = null
 ): EditLocationRoute, StringIdRoute {
     override val id get() = locationId
 }
