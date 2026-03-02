@@ -167,8 +167,10 @@ You can find more information, including additional workflows that are specific 
 file at `docs/packages/package.name.md`.
 
 Packages:
+  * streetlight.model
   * streetlight.web.pages
   * streetlight.web.ui
+  * streetlight.web.io
   * koala.dom
   * koala.css
 

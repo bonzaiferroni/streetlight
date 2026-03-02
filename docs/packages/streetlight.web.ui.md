@@ -19,7 +19,6 @@ The package follows several key structural patterns to maintain a clean and modu
 
 * **Context Interfaces**: `AppContext` and `ClientContext` provide a consistent way to inject dependencies like `ApiClient`, `GeoMap`, `StreetMap`, and `UserGate` throughout the UI components.
 * **View Functions**: Functions prefixed with `view` (e.g., `viewHome`, `viewApp`, `viewAccount`) are extension functions on `RenderContext` (from `koala.dom`) that define how a specific screen or component is rendered and wired to the application state.
-* **API and Fetch Clients**: `ApiClient` provides high-level suspend functions for interacting with the backend API, while `FetchClient` handles the underlying HTTP requests, authentication, and serialization.
 * **State Management**: Classes like `StreetMap` and `ChatRoom` encapsulate complex state and business logic, exposing reactive flows (`stateFlow`) to the UI.
 * **Portal and Routing**: The `Portal` class manages the current navigation state and screen transitions, which are typically defined in `viewApp`.
 
