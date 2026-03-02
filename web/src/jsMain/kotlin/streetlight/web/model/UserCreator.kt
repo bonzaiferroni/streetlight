@@ -1,4 +1,4 @@
-package streetlight.web.ui
+package streetlight.web.model
 
 import kampfire.model.SignUpRequest
 import koala.model.mapDistinct
@@ -6,6 +6,7 @@ import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import streetlight.model.utils.isValid
+import streetlight.web.io.ApiClient
 
 class UserCreator(
     private val scope: CoroutineScope,

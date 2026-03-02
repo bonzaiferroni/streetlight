@@ -27,6 +27,7 @@ import koala.model.mapDistinct
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import streetlight.model.data.Place
+import streetlight.web.model.AppContext
 
 fun RenderContext.placeEditor(
     geoPoint: GeoPoint?,

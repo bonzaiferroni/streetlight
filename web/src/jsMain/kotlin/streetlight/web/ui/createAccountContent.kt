@@ -7,6 +7,8 @@ import koala.css.MaxWidth50
 import koala.css.QueryRowReverse
 import koala.css.modify
 import koala.dom.*
+import streetlight.web.model.AppContext
+import streetlight.web.model.UserCreator
 
 fun RenderContext.createAccountContent(app: AppContext) {
     val gate = app.gate

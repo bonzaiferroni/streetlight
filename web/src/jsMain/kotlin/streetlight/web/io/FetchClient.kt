@@ -1,4 +1,4 @@
-package streetlight.web.ui
+package streetlight.web.io
 
 import kampfire.api.Endpoint
 import kampfire.api.GetByTableIdEndpoint
@@ -19,6 +19,7 @@ import org.w3c.dom.WebSocket
 import org.w3c.fetch.RequestInit
 import org.w3c.fetch.Response
 import org.w3c.files.Blob
+import streetlight.web.model.UserCred
 import kotlin.js.json
 import kotlin.let
 import kotlin.text.ifEmpty

@@ -5,6 +5,7 @@ import koala.dom.*
 import streetlight.model.data.Location
 import streetlight.web.LocationAdminRoute
 import streetlight.web.LocationProfileRoute
+import streetlight.web.model.AppContext
 import streetlight.web.shells.LocationShell
 import streetlight.web.shells.locationShell
 

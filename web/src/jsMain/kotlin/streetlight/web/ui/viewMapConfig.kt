@@ -6,6 +6,8 @@ import koala.html.blockLabel
 import koala.html.textBlock
 import koala.model.mapDistinct
 import streetlight.web.EditEventIdRoute
+import streetlight.web.model.AppContext
+import streetlight.web.model.StreetMapLayer
 
 fun RenderContext.viewMapConfig(app: AppContext) {
     val gateAgent = app.gateAgent

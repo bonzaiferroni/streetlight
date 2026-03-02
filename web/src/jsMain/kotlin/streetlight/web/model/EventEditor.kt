@@ -1,4 +1,4 @@
-package streetlight.web.ui
+package streetlight.web.model
 
 import kampfire.model.GeoPoint
 import koala.dom.UIMessage
@@ -27,6 +27,7 @@ import streetlight.model.external.OSMQuery
 import streetlight.model.external.toGeoPoint
 import streetlight.model.utils.toLocalDateTime
 import streetlight.model.utils.tomorrowNoon
+import streetlight.web.ui.PlaceEditor
 
 class EventEditor(
     initialEvent: EventEdit,

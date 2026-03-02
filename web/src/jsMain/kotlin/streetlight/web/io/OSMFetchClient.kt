@@ -1,4 +1,4 @@
-package streetlight.web.ui
+package streetlight.web.io
 
 import kampfire.model.GeoPoint
 import kotlinx.browser.window

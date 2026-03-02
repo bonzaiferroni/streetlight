@@ -1,4 +1,4 @@
-package streetlight.web.ui
+package streetlight.web.model
 
 import kampfire.model.GeoPoint
 import koala.model.BrowserModel
@@ -17,6 +17,9 @@ import streetlight.model.data.CommunityId
 import streetlight.model.data.AreaTransit
 import streetlight.model.data.TransitRouteId
 import streetlight.model.data.VehicleType
+import streetlight.web.io.ProtobufType
+import streetlight.web.io.SvgPath
+import streetlight.web.io.protobuf
 import kotlin.time.Duration.Companion.seconds
 
 class TransitMap(

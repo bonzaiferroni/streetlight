@@ -6,6 +6,8 @@ import koala.html.geoMapMount
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import streetlight.web.EditPostRoute
+import streetlight.web.model.AppContext
+import streetlight.web.model.PostEditor
 
 fun RenderContext.viewPostEditor(app: AppContext) {
     val model = PostEditor(renderScope, app.client, app.geoMap)

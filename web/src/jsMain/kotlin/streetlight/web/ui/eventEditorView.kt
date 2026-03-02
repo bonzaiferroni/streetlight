@@ -13,6 +13,8 @@ import streetlight.web.EditEventCallbackRoute
 import streetlight.web.EditEventIdRoute
 import streetlight.web.EditEventRoute
 import streetlight.web.EventIdRoute
+import streetlight.web.model.AppContext
+import streetlight.web.model.EventEditor
 
 fun RenderContext.eventEditorView(
     model: EventEditor,

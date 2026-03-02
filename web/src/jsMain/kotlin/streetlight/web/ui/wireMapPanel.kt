@@ -17,6 +17,7 @@ import koala.html.image
 import koala.html.label
 import koala.model.mapDistinct
 import kotlinx.html.js.div
+import streetlight.web.model.AppContext
 
 fun RenderContext.wireMapPanel(app: AppContext) {
     wireBlock(GeoMapSelector.panel) {

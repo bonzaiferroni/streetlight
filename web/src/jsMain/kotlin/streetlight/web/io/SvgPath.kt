@@ -1,4 +1,4 @@
-package streetlight.web.ui
+package streetlight.web.io
 
 object SvgPath {
     val bus = toPath("bus")

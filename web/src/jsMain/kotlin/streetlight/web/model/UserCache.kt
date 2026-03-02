@@ -1,7 +1,8 @@
-package streetlight.web.ui
+package streetlight.web.model
 
 import koala.model.ItemCache
 import kotlinx.coroutines.CoroutineScope
+import streetlight.web.io.ApiClient
 
 class UserCache(
     scope: CoroutineScope,

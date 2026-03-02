@@ -6,6 +6,7 @@ import streetlight.web.EventIdRoute
 import streetlight.web.EventObjectRoute
 import streetlight.web.EventRoute
 import streetlight.web.HomeRoute
+import streetlight.web.model.AppContext
 import streetlight.web.shells.EventProfileShell
 import streetlight.web.shells.eventProfileShell
 

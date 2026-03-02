@@ -14,6 +14,18 @@ import kotlinx.coroutines.launch
 import revealContent
 import streetlight.web.HomeRoute
 import streetlight.web.StreetlightScreen
+import streetlight.web.io.ApiClient
+import streetlight.web.io.FetchClient
+import streetlight.web.io.OSMFetchClient
+import streetlight.web.io.TransitBrowserClient
+import streetlight.web.model.AppContext
+import streetlight.web.model.ChatRoom
+import streetlight.web.model.ClientContext
+import streetlight.web.model.GateAgent
+import streetlight.web.model.StreetMap
+import streetlight.web.model.UserCache
+import streetlight.web.model.UserCred
+import streetlight.web.model.UserGate
 import streetlight.web.pages.AppBody
 
 fun viewApp() {

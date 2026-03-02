@@ -1,4 +1,4 @@
-package streetlight.web.ui
+package streetlight.web.io
 
 import koala.external.FeedEntity
 import streetlight.model.Api

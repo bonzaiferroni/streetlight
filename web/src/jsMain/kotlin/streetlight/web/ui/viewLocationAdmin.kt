@@ -7,6 +7,7 @@ import streetlight.model.data.Location
 import streetlight.model.data.toEdit
 import streetlight.web.LocationAdminRoute
 import streetlight.web.ReadEventRoute
+import streetlight.web.model.AppContext
 import streetlight.web.shells.cardOf
 
 fun RenderContext.viewLocationAdmin(

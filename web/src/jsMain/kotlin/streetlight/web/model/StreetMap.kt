@@ -1,6 +1,6 @@
 @file:OptIn(FlowPreview::class)
 
-package streetlight.web.ui
+package streetlight.web.model
 
 import kampfire.model.GeoBounds
 import koala.model.GeoMap

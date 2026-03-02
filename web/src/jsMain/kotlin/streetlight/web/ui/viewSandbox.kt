@@ -3,6 +3,7 @@ package streetlight.web.ui
 import koala.dom.RenderContext
 import koala.dom.onView
 import koala.dom.textBlock
+import streetlight.web.model.AppContext
 
 fun RenderContext.viewSandbox(app: AppContext) {
     val element = this@viewSandbox.textBlock("yer element")

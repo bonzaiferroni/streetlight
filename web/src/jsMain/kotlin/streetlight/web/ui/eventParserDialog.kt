@@ -5,6 +5,7 @@ import koala.css.*
 import koala.dom.*
 import koala.html.propertyValue
 import koala.model.mapDistinct
+import streetlight.web.model.EventParser
 
 fun RenderContext.eventParserDialog(model: EventParser) {
     val dialog = dialogBox("Event reader", model.state.flow.mapDistinct { it.isOpen }, modify(Width64)) {

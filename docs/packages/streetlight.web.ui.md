@@ -25,4 +25,8 @@ The package follows several key structural patterns to maintain a clean and modu
 
 ### Workflows
 
-(Initially empty)
+CreateRoute(Foo):
+* Add a value to the `StreetlightScreen` enum in `StreetlightRoute.kt` that defines the `pathRoot` and the `provideRoute` lambda.
+* Define `FooRoute` as an implementation of `StreetlightRoute` in `StreetlightRoute.kt`. If the route requires an ID, also implement `StringIdRoute`.
+* Create a view function `fun RenderContext.viewFoo(app: AppContext)` in a new file `viewFoo.kt` in the package `streetlight.web.ui`.
+* Add a new branch to the `when (screen)` block within `viewApp()` in `viewApp.kt` that maps `StreetlightScreen.Foo` to the `viewFoo(app)` function.

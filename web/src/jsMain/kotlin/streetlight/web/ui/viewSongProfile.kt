@@ -3,6 +3,8 @@ package streetlight.web.ui
 import koala.css.*
 import koala.dom.*
 import streetlight.web.SongProfileRoute
+import streetlight.web.model.AppContext
+import streetlight.web.model.SongProfile
 
 fun RenderContext.viewSongProfile(app: AppContext) {
     val portal = app.portal

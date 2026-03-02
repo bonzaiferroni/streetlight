@@ -1,10 +1,11 @@
-package streetlight.web.ui
+package streetlight.web.model
 
 import koala.model.mapDistinct
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import streetlight.model.data.Talent
+import streetlight.web.io.ApiClient
 
 class UserHub(
     private val scope: CoroutineScope,

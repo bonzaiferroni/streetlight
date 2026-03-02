@@ -1,4 +1,4 @@
-package streetlight.web.ui
+package streetlight.web.model
 
 import koala.dom.RenderContext
 import koala.dom.box

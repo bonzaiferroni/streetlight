@@ -8,6 +8,7 @@ import streetlight.web.EditTalentRoute
 import streetlight.web.HomeRoute
 import streetlight.web.ReadEventRoute
 import streetlight.web.TalentProfileRoute
+import streetlight.web.model.AppContext
 
 fun RenderContext.viewUserHub(
     app: AppContext,

@@ -1,8 +1,11 @@
-package streetlight.web.ui
+package streetlight.web.model
 
 import koala.model.GeoMap
 import koala.model.Portal
 import kotlinx.coroutines.CoroutineScope
+import streetlight.web.io.ApiClient
+import streetlight.web.io.OSMFetchClient
+import streetlight.web.io.TransitBrowserClient
 
 interface AppContext {
     val appScope: CoroutineScope

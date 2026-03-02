@@ -1,4 +1,4 @@
-package streetlight.web.ui
+package streetlight.web.model
 
 import kampfire.model.UserInfo
 import koala.model.Portal

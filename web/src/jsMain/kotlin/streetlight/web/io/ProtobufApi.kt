@@ -1,4 +1,4 @@
-package streetlight.web.ui
+package streetlight.web.io
 
 import koala.external.FeedMessage
 import org.khronos.webgl.Uint8Array

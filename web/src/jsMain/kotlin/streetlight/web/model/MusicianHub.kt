@@ -1,4 +1,4 @@
-package streetlight.web.ui
+package streetlight.web.model
 
 import koala.model.mapDistinct
 import koala.model.storeOf
@@ -6,6 +6,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import streetlight.model.data.NewSong
 import streetlight.model.data.Song
+import streetlight.web.io.ApiClient
 
 class MusicianHub(
     private val scope: CoroutineScope,

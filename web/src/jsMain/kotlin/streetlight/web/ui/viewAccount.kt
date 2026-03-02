@@ -6,6 +6,7 @@ import koala.html.Id
 import kotlinx.html.InputType
 import kotlinx.html.js.p
 import streetlight.web.HomeRoute
+import streetlight.web.model.AppContext
 
 fun RenderContext.viewAccount(
     app: AppContext,

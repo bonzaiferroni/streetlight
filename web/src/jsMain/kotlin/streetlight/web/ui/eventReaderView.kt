@@ -8,6 +8,8 @@ import koala.model.mapDistinct
 import streetlight.model.data.MultiEventParseResponse
 import streetlight.web.EditEventCallbackRoute
 import streetlight.web.ReadEventRoute
+import streetlight.web.model.AppContext
+import streetlight.web.model.EventReader
 
 fun RenderContext.eventReaderView(app: AppContext, route: ReadEventRoute) {
     val model = EventReader(renderScope, app.client.api, route)

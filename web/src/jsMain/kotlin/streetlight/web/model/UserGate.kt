@@ -1,10 +1,11 @@
-package streetlight.web.ui
+package streetlight.web.model
 
 import kampfire.model.UserInfo
 import koala.model.mapDistinct
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import streetlight.web.io.ApiClient
 
 class UserGate(
     private val scope: CoroutineScope,

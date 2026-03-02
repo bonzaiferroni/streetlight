@@ -14,6 +14,7 @@ import streetlight.web.CreateLocationRoute
 import streetlight.web.EditLocationDataRoute
 import streetlight.web.EditLocationIdRoute
 import streetlight.web.EditLocationRoute
+import streetlight.web.model.AppContext
 
 fun RenderContext.locationEditorView(location: LocationEdit, app: AppContext) {
     val model = LocationEditor(location, renderScope, app.client)

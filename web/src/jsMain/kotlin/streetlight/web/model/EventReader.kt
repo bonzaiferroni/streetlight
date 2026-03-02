@@ -1,4 +1,4 @@
-package streetlight.web.ui
+package streetlight.web.model
 
 import koala.dom.UIMessage
 import koala.dom.set
@@ -9,6 +9,8 @@ import kotlinx.coroutines.launch
 import streetlight.model.data.MultiEventParseResponse
 import streetlight.model.data.ParseRequest
 import streetlight.web.ReadEventRoute
+import streetlight.web.io.ApiClient
+import streetlight.web.ui.loadingMessages
 import kotlin.time.Duration.Companion.seconds
 
 class EventReader(

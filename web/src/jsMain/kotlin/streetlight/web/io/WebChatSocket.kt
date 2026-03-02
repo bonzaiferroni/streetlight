@@ -1,4 +1,4 @@
-package streetlight.web.ui
+package streetlight.web.io
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow

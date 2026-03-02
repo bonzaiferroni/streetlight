@@ -3,6 +3,7 @@ package streetlight.web.ui
 import koala.dom.RenderContext
 import koala.dom.shellBox
 import koala.dom.wireGeoMap
+import streetlight.web.model.AppContext
 import streetlight.web.shells.HomeShell
 import streetlight.web.shells.homeShell
 

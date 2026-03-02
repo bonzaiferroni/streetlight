@@ -1,4 +1,4 @@
-package streetlight.web.ui
+package streetlight.web.model
 
 import koala.model.BrowserModel
 import koala.model.mapDistinct
@@ -6,6 +6,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import streetlight.model.data.ChatMessage
+import streetlight.web.io.ApiClient
+import streetlight.web.io.WebChatSocket
 
 class ChatRoom(
     scope: CoroutineScope,

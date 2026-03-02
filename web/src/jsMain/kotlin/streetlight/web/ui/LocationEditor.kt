@@ -18,6 +18,7 @@ import streetlight.model.external.Address
 import streetlight.model.external.OSMPlace
 import streetlight.model.external.OSMQuery
 import streetlight.model.external.toGeoPoint
+import streetlight.web.model.ClientContext
 
 class LocationEditor(
     initialData: LocationEdit,

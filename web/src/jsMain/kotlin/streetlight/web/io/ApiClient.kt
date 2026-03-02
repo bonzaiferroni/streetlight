@@ -1,4 +1,4 @@
-package streetlight.web.ui
+package streetlight.web.io
 
 import kampfire.api.UserApi
 import kampfire.model.GeoBounds

@@ -11,6 +11,7 @@ import kotlinx.coroutines.launch
 import kotlinx.dom.clear
 import kotlinx.html.js.div
 import streetlight.web.AccountRoute
+import streetlight.web.model.AppContext
 
 fun RenderContext.userContent(
     app: AppContext,

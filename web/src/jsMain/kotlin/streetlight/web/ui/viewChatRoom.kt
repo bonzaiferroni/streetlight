@@ -2,6 +2,7 @@ package streetlight.web.ui
 
 import koala.css.*
 import koala.dom.*
+import streetlight.web.model.AppContext
 
 fun RenderContext.viewChatRoom(app: AppContext) {
     val model = app.chatRoom
