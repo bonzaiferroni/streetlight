@@ -168,6 +168,7 @@ file at `docs/packages/package.name.md`.
 
 Packages:
   * streetlight.web.pages
+  * streetlight.web.ui
   * koala.dom
   * koala.css
 
