@@ -2,6 +2,7 @@ package streetlight.web.model
 
 import koala.model.BrowserModel
 import koala.model.mapDistinct
+import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
@@ -10,9 +11,12 @@ import streetlight.web.io.ApiClient
 import streetlight.web.io.WebChatSocket
 
 class ChatRoom(
-    scope: CoroutineScope,
+    private val scope: CoroutineScope,
     private val client: ApiClient
-): BrowserModel<ChatRoomState>(ChatRoomState(), scope) {
+) {
+    private val state = storeOf(ChatRoomState())
+    val stateFlow = state.flow
+    val stateNow get() = state.now
 
     val messagesFlow = stateFlow.mapDistinct { it.messages }
     val sendFlow = stateFlow.mapDistinct { it.message }
@@ -25,23 +29,23 @@ class ChatRoom(
                 val socket = client.connectChat(scope)
                 scope.launch {
                     socket.messageFlow.collect { message ->
-                        setState { it.copy(messages = stateNow.messages + message) }
+                        state.set { it.copy(messages = stateNow.messages + message) }
                     }
                 }
                 this.socket = socket
             }
         }
-        setState { it.copy(isActive = value) }
+        state.set { it.copy(isActive = value) }
     }
 
     fun setMessage(value: String) {
-        setState { it.copy(message = value) }
+        state.set { it.copy(message = value) }
     }
 
     fun sendMessage() {
         val socket = socket ?: return
         socket.send(ChatMessage("user", stateNow.message, Clock.System.now()))
-        setState { it.copy(message = "") }
+        state.set { it.copy(message = "") }
     }
 }
 
