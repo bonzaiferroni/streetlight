@@ -82,12 +82,11 @@ fun initGeoMap(mount: HTMLElement): HTMLElement {
             source = "openfreemap",
             sourceLayer = "building",
             type = "fill-extrusion",
-            minzoom = 15.0,
+            minzoom = 14.0,
             filter = arrayOf("!=", arrayOf("get", "hide_3d"), true),
             paint = FillExtrusionPaint(
                 fillExtrusionColor = arrayOf(
-                    "interpolate",
-                    arrayOf("linear"),
+                    "interpolate", arrayOf("linear"),
                     arrayOf("coalesce", arrayOf("get", "render_height"), 0),
                     0, "hsla(232,47%,18%,0.65)",
                     6, "hsl(224,22%,45%)",
@@ -96,25 +95,20 @@ fun initGeoMap(mount: HTMLElement): HTMLElement {
                     500, "hsl(224,22%,16%)"
                 ),
                 fillExtrusionHeight = arrayOf(
-                    "interpolate",
-                    arrayOf("linear"),
-                    arrayOf("zoom"),
-                    15, 0,
-                    16, arrayOf("get", "render_height")
+                    "interpolate", arrayOf("linear"), arrayOf("zoom"),
+                    14, 0,
+                    15, arrayOf("get", "render_height")
                 ),
                 fillExtrusionBase = arrayOf(
-                    "interpolate",
-                    arrayOf("linear"),
-                    arrayOf("zoom"),
-                    15, 0,
-                    16, arrayOf("get", "render_min_height")
+                    "interpolate", arrayOf("linear"), arrayOf("zoom"),
+                    14, 0,
+                    15, arrayOf("get", "render_min_height")
                 ),
                 fillExtrusionOpacity = arrayOf(
-                    "interpolate",
-                    arrayOf("linear"),
-                    arrayOf("zoom"),
-                    15, 0.0,
-                    16, 0.55
+                    "interpolate", arrayOf("linear"), arrayOf("zoom"),
+                    14, 0.0,
+                    15, 0.55,
+                    16, 0.75
                 )
             )
         )

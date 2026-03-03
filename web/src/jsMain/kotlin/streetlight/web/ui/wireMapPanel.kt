@@ -32,9 +32,9 @@ fun RenderContext.wireMapPanel(app: AppContext) {
                     viewMapCards(app)
                 }
             }
-            tab("More") {
+            tab("Controls") {
                 column {
-                    viewMapConfig(app)
+                    viewMapControls(app)
                 }
             }
         }

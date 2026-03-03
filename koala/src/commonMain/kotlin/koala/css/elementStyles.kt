@@ -11,6 +11,7 @@ object ElementClass {
     val logo = Css("logo")
     val action = Css("action")
     val button = Css("btn")
+    val switch = Css("switch")
     val flowBlock = Css("flow-block")
     val itemsBlock = Css("items-block")
     val textLabel = Css("text-label")

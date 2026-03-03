@@ -17,12 +17,12 @@
 }
 
 .action {
-    transition: opacity 0.35s ease;
+    /*transition: opacity 0.35s ease;*/
     cursor: pointer;
 }
 
 .action:hover {
-    opacity: 1;
+    /*opacity: 1;*/
 }
 
 .text-label {

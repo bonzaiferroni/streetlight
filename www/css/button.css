@@ -46,3 +46,66 @@
 [onclick]:hover, .clickable:hover {
     box-shadow: inset 0 0 0 9999px rgba(255,255,255,.04);
 }
+
+/* switch */
+/* outer constraints */
+.switch {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+
+    padding-right: 1rem;
+    border-radius: 2rem;
+
+    background: color-mix(in srgb, var(--primary-button) 25%, transparent);
+    /*box-shadow: 0 0 .8rem color-mix(in srgb, var(--primary-button) 35%, transparent);*/
+
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* inner sliding pill (visual cues from .btn) */
+.switch__pill {
+    position: absolute;
+    top: 50%;
+    transform: translate(0, -50%);
+    transition: transform 200ms ease, opacity 200ms ease;
+
+    padding: .5rem 1rem;
+    border: none;
+    border-radius: 2rem;
+    background: var(--primary-button);
+    color: var(--white);
+    font-size: .8rem;
+    line-height: 1.5rem;
+    text-transform: uppercase;
+    white-space: nowrap;
+
+    opacity: .65;                     /* “off” dim */
+}
+
+/* sizing helper: invisible text to define track width */
+.switch__ghost {
+    visibility: hidden;
+    pointer-events: none;
+
+    padding: .5rem 1rem;
+    font-size: .8rem;
+    line-height: 1.5rem;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+/* ON state: slide pill to the right, full opacity */
+.switch[data-on="true"] .switch__pill {
+    opacity: 1;
+    transform: translate(1rem, -50%);
+    box-shadow: 0 0 .8rem var(--primary-button);
+}
+
+/* optional: keyboard focus ring if you add tabindex */
+.switch:focus-visible {
+    outline: 2px solid color-mix(in srgb, var(--primary-button) 70%, white);
+    outline-offset: 2px;
+}
