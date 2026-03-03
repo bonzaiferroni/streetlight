@@ -46,7 +46,7 @@ fun StreetListScreen(
             modifier = Modifier.fillMaxWidth(),
             contentAlignment = Alignment.Center
         ){
-            Spirit("boppin-fox.json", modifier = Modifier.width(100.dp))
+            LottieSpirit("boppin-fox.json", modifier = Modifier.width(100.dp))
         }
     }
 }

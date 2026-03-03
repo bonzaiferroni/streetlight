@@ -18,7 +18,6 @@ import pondui.ui.controls.Text
 import pondui.ui.controls.TextField
 import pondui.ui.controls.actionable
 import pondui.ui.theme.Pond
-import streetlight.app.SongProfileRoute
 import streetlight.app.utils.toRoute
 
 @OptIn(ExperimentalLayoutApi::class, ExperimentalResourceApi::class)
@@ -64,6 +63,6 @@ fun SongFeedScreen(
             }
         }
 
-        Spirit("happy-fox")
+        LottieSpirit("happy-fox")
     }
 }

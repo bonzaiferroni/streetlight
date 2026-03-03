@@ -110,6 +110,6 @@ fun StreetProfileScreen(
             }
         }
 
-        Spirit("monkey-dance")
+        LottieSpirit("monkey-dance")
     }
 }

@@ -15,7 +15,7 @@ import streetlight.app.generated.resources.Res
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
-fun Spirit(
+fun LottieSpirit(
     spiritName: String,
     modifier: Modifier = Modifier
 ) {
