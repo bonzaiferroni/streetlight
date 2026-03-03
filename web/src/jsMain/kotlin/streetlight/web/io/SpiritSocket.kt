@@ -7,10 +7,9 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.w3c.dom.WebSocket
-import streetlight.model.data.SpiritDelta
 
 class SpiritSocket(
-    private val socket: WebSocket,
+    private val api: ApiClient,
     private val scope: CoroutineScope
 ) {
     private val _deltaFlow = MutableSharedFlow<SpiritDelta>(
@@ -18,6 +17,10 @@ class SpiritSocket(
         extraBufferCapacity = 64
     )
     val deltaFlow: Flow<SpiritDelta> = _deltaFlow
+
+    fun connect() {
+        val socket = api.connectSpiritVision()
+    }
 
     init {
         socket.onmessage = { event ->

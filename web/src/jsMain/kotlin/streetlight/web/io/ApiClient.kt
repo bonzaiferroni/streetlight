@@ -37,7 +37,9 @@ class ApiClient(private val client: FetchClient) {
         param(it.url, url)
     }
 
+    // websockets
     fun connectChat(scope: CoroutineScope) = WebChatSocket(client.connectSocket(Api.Chat.path), scope)
+    fun connectSpiritVision() = client.connectSocket(Api.Map.SpiritVision.path)
 
     suspend fun readSongs() = client.get(Api.Songs)
     suspend fun createSong(song: NewSong) = client.post(Api.Songs.Create, song)
