@@ -106,6 +106,7 @@ data class StreetMapState(
     val focus: MapFocus = MapFocus(),
     val layers: Set<StreetMapLayer> = StreetMapLayer.entries.toSet(),
     val isQuerying: Boolean = false,
+    val hasSpiritVision: Boolean = false,
 ) {
     val center get() = bounds.center
 }

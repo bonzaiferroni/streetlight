@@ -11,18 +11,18 @@ import streetlight.web.model.StreetMapLayer
 
 fun RenderContext.viewMapControls(app: AppContext) {
     val gateAgent = app.gateAgent
-    val eventMap = app.streetMap
+    val streetMap = app.streetMap
     val portal = app.portal
 
     column {
         row(modify(Width100, AlignItemsStart)) {
             card(modify(Flex1)) {
                 blockLabel = "layers"
-                flowBlock(eventMap.stateFlow.mapDistinct { it.layers }, modify(Width100)) { layers ->
+                flowBlock(streetMap.stateFlow.mapDistinct { it.layers }, modify(Width100)) { layers ->
                     row(modify(JustifySpaceAround, WrapFlex)) {
                         StreetMapLayer.entries.forEach { layer ->
                             val isActive = layers.contains(layer)
-                            action({ eventMap.toggleLayer(layer) }) {
+                            action({ streetMap.toggleLayer(layer) }) {
                                 row(modify(NoWrap)) {
                                     this.textBlock(if (isActive) "👁" else "⌣", modify(Dim, Width2, TextAlignCenter))
                                     this.textBlock(layer.label, if (!isActive) modify(Dim) else null)
