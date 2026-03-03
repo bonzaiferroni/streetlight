@@ -17,6 +17,10 @@ import streetlight.model.data.EventInfo
 import streetlight.model.data.EventType
 import streetlight.model.data.Location
 import streetlight.model.data.LocationInfo
+import streetlight.model.data.Spirit
+import streetlight.model.data.SpiritFrame
+import streetlight.model.data.SpiritId
+import streetlight.web.io.SpiritSocket
 import kotlin.time.Duration.Companion.minutes
 
 class StreetMap(
@@ -29,16 +33,29 @@ class StreetMap(
     val stateNow = state.now
     
     val transit = TransitMap(scope, client, geoMap)
+    val spiritVision = SpiritSocket(client.api, scope)
 
     val focusFlow = stateFlow.mapDistinct { it.focus }
     val communityFlow = stateFlow.mapDistinct { it.communities }
     val locationsFlow = stateFlow.mapDistinct { it.locations }
-    val spiritFlow = stateFlow.mapDistinct
 
     init {
         scope.launch {
-            geoMap.stateFlow.filter { it.isViewed }.collect { geoMapState ->
-                setBounds(geoMapState.bounds, geoMapState.zoom)
+            launch {
+                geoMap.stateFlow.filter { it.isViewed }.collect { geoMapState ->
+                    setBounds(geoMapState.bounds, geoMapState.zoom)
+                    if (!geoMapState.isMoving) {
+                        spiritVision.updatePosition(geoMapState.center)
+                    }
+                }
+            }
+            launch {
+                spiritVision.spiritFlow.collect { frame ->
+                    when (frame) {
+                        is SpiritFrame.Initial -> geoMap.addEntity(SpiritEntity(frame.spirit))
+                        is SpiritFrame.Position -> geoMap.moveEntity(frame.id.toEntityId(), frame.pos)
+                    }
+                }
             }
         }
     }
@@ -85,7 +102,16 @@ class StreetMap(
     }
 
     fun spiritVision(isOn: Boolean) {
-
+        val spirit = Spirit(
+            spiritId = SpiritId.random(),
+            position = geoMap.stateNow.center,
+            name = stateNow.spiritName
+        )
+        if (isOn) {
+            spiritVision.connect(spirit)
+        } else {
+            spiritVision.disconnect()
+        }
     }
 
     private val queries = ArrayList<QueryBounds>()
@@ -112,6 +138,7 @@ data class StreetMapState(
     val layers: Set<StreetMapLayer> = StreetMapLayer.entries.toSet(),
     val isQuerying: Boolean = false,
     val hasSpiritVision: Boolean = false,
+    val spiritName: String = "👻"
 ) {
     val center get() = bounds.center
 }

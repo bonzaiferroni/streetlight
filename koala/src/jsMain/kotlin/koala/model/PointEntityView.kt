@@ -1,5 +1,6 @@
 package koala.model
 
+import kampfire.model.GeoPoint
 import kampfire.model.Point
 import koala.css.Css
 import koala.css.Scale
@@ -37,6 +38,21 @@ class PointEntityView(
         private set
     var entity = entity
         private set
+
+    var position = entity.position
+        private set
+
+    fun move(position: GeoPoint) {
+        val current = marker.getLngLat()
+        val destination = position.toLngLat()
+        val distance = current.distanceTo(destination)
+        if (distance > 1) {
+            marker.move(current, destination)
+        } else {
+            marker.setLngLat(destination)
+        }
+        this.position = position
+    }
 
     fun setBearing(bearing: Float) {
         val be = this@PointEntityView.bearing ?: return
@@ -116,6 +132,8 @@ fun PointEntity.toMapEntityView(pixelPoint: Point): PointEntityView {
                 applyModifiers(MarkerClass.label)
                 +label
             }
+
+            body?.invoke(this)
         }
     }
 

@@ -24,7 +24,7 @@ fun RenderContext.switch(
     val element = div {
         applyModifiers(modify(ElementClass.switch, modifiers))
         attributes["role"] = "switch"
-        attributes["tabindex"] = "0"
+//        attributes["tabindex"] = "0"
         attributes["aria-checked"] = isOn.toString()
         attributes["data-on"] = isOn.toString()
 

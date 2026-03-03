@@ -4,12 +4,15 @@ import kampfire.model.GeoBounds
 import kampfire.model.GeoPoint
 import kampfire.model.distanceTo
 import kampfire.model.meters
+import koala.dom.DOMContext
 import koala.dom.RenderContext
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
+import kotlinx.html.DIV
 
 class GeoMap(
     private val scope: CoroutineScope
@@ -28,6 +31,8 @@ class GeoMap(
     val panFlow: SharedFlow<PanPoint> = _panFlow
     private val _markerVisibilityFlow = MutableSharedFlow<(MapEntity) -> Boolean>(8)
     val markerVisibilityFlow: SharedFlow<(MapEntity) -> Boolean> = _markerVisibilityFlow
+    private val _movementFlow = MutableSharedFlow<EntityMovement>(8)
+    val movementFlow: Flow<EntityMovement> = _movementFlow
 
     val viewedStateFlow = stateFlow.filter { it.isViewed }
     val zoomFlow = viewedStateFlow.mapDistinct { it.zoom }
@@ -35,9 +40,19 @@ class GeoMap(
     val centerFlow = viewedStateFlow.filter { !it.isMoving }.mapDistinct { it.center }
     val boundsFlow = viewedStateFlow.filter { it.isViewed }.mapDistinct { it.bounds }
 
+    fun addEntity(entity: MapEntity) {
+        addEntities(listOf(entity))
+    }
+
     fun addEntities(entities: List<MapEntity>) {
         scope.launch {
             _entityFlow.emit(entities)
+        }
+    }
+
+    fun moveEntity(entityId: MapEntityId, position: GeoPoint) {
+        scope.launch {
+            _movementFlow.emit(EntityMovement(entityId, position))
         }
     }
 
@@ -114,4 +129,10 @@ interface PointEntity: MapEntity {
     val minZoom: Float? get() = null
     val onClick: (() -> Unit)? get() = null
     val focusCard: (RenderContext.() -> Unit)? get() = null
+    val body: (DIV.() -> Unit)? get() = null
 }
+
+data class EntityMovement(
+    val entityId: MapEntityId,
+    val position: GeoPoint
+)

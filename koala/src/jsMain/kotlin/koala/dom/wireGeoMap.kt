@@ -135,6 +135,12 @@ fun wireMapWindow(
             }
         }
 
+        launch {
+            geoMap.movementFlow.collect { movement ->
+                context.moveEntity(movement)
+            }
+        }
+
         widget.on("move") {
             relayBounds(true)
         }

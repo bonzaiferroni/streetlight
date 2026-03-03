@@ -64,18 +64,17 @@ class MapViewContext(
         return nearest?.entity
     }
 
+    fun moveEntity(movement: EntityMovement) {
+        val view = markers[movement.entityId] ?: return
+        view.move(movement.position)
+        console.log("moved to ${movement.position}")
+    }
+
     private fun recallObject(entity: PointEntity, center: GeoPoint): PointEntityView? {
         val view = markers[entity.entityId] ?: return null
 
         // move marker
-        val current = view.marker.getLngLat()
-        val destination = entity.position.toLngLat()
-        val distance = current.distanceTo(destination)
-        if (distance > 1) {
-            view.marker.move(current, destination)
-        } else {
-            view.marker.setLngLat(destination)
-        }
+        view.move(entity.position)
 
         // set entity
         val pixelPoint = entity.position.toPoint(center.lat)

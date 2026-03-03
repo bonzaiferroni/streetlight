@@ -2,15 +2,18 @@ package streetlight.model.data
 
 import kampfire.model.GeoPoint
 import kampfire.utils.randomInt
-import kampfire.utils.randomUuidString
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.modules.polymorphic
+import kotlinx.serialization.modules.subclass
 import kotlin.jvm.JvmInline
 
 @Serializable
 data class Spirit(
     val spiritId: SpiritId,
-    val geoPoint: GeoPoint,
-    val label: String,
+    val position: GeoPoint,
+    val name: String,
 ) {
 }
 
@@ -28,5 +31,5 @@ sealed interface SpiritFrame {
     data class Initial(val spirit: Spirit): SpiritFrame
 
     @Serializable
-    data class PointDelta(val spiritId: SpiritId, val point: GeoPoint): SpiritFrame
+    data class Position(val id: SpiritId, val pos: GeoPoint): SpiritFrame
 }

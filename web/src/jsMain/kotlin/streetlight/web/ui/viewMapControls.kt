@@ -38,6 +38,6 @@ fun RenderContext.viewMapControls(app: AppContext) {
                 }
             })
         }
-        switch("👻 Spirit Vision")
+        switch("👻 Spirit Vision", onToggle = streetMap::spiritVision)
     }
 }
