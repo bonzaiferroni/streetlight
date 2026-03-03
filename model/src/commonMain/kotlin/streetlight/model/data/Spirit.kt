@@ -1,6 +1,7 @@
 package streetlight.model.data
 
 import kampfire.model.GeoPoint
+import kampfire.utils.randomInt
 import kampfire.utils.randomUuidString
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
@@ -15,14 +16,17 @@ data class Spirit(
 
 @Serializable
 @JvmInline
-value class SpiritId(val value: String) {
+value class SpiritId(val value: Int) {
     companion object {
-        fun random() = SpiritId(randomUuidString())
+        fun random() = SpiritId(randomInt())
     }
 }
 
 @Serializable
-sealed interface SpiritDelta
+sealed interface SpiritFrame {
+    @Serializable
+    data class Initial(val spirit: Spirit): SpiritFrame
 
-@Serializable
-data class SpiritPointDelta(val spiritId: SpiritId, val geoPoint: GeoPoint) : SpiritDelta
+    @Serializable
+    data class PointDelta(val spiritId: SpiritId, val point: GeoPoint): SpiritFrame
+}

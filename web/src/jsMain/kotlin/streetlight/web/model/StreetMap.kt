@@ -33,6 +33,7 @@ class StreetMap(
     val focusFlow = stateFlow.mapDistinct { it.focus }
     val communityFlow = stateFlow.mapDistinct { it.communities }
     val locationsFlow = stateFlow.mapDistinct { it.locations }
+    val spiritFlow = stateFlow.mapDistinct
 
     init {
         scope.launch {
@@ -81,6 +82,10 @@ class StreetMap(
                 state.set { it.copy(locations = events, isQuerying = false)}
             }
         }
+    }
+
+    fun spiritVision(isOn: Boolean) {
+
     }
 
     private val queries = ArrayList<QueryBounds>()

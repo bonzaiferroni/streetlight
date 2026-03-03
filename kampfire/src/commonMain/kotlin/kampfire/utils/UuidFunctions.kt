@@ -7,6 +7,8 @@ import kotlin.uuid.Uuid
 
 fun randomUuidString() = Uuid.random().toStringId()
 
+fun randomInt() = Uuid.random().toStringId().hashCode()
+
 fun Uuid.toStringId() = this.toString()
 
 fun Uuid.Companion.fromStringId(stringId: String) = Uuid.parse(stringId)
