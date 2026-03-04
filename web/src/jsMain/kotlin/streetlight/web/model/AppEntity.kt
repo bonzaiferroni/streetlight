@@ -47,10 +47,9 @@ data class SpiritEntity(
     val spirit: Spirit
 ): PointEntity {
     override val entityId get() = spirit.spiritId.toEntityId()
-    override val label get() = spirit.name
     override val position get() = spirit.position
     override val body: DIV.() -> Unit get() = {
-        p { +label }
+        p { +spirit.name }
     }
 }
 

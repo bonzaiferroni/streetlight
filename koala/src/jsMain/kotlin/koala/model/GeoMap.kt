@@ -109,7 +109,7 @@ typealias MapEntityId = String
 
 sealed interface MapEntity {
     val entityId: MapEntityId
-    val label: String?
+    val label: String? get() = null
 }
 
 data class PanPoint(

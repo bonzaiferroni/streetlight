@@ -124,7 +124,12 @@ fun PointEntity.toMapEntityView(pixelPoint: Point): PointEntityView {
             } ?: thumbPath?.let {
                 img {
                     src = it
-                    applyModifiers(MarkerClass.thumb)
+                    applyModifiers(modify(MarkerClass.body, MarkerClass.thumb))
+                }
+            } ?: body?.let {
+                div {
+                    applyModifiers(modify(MarkerClass.body))
+                    body?.invoke(this)
                 }
             }
 
@@ -134,8 +139,6 @@ fun PointEntity.toMapEntityView(pixelPoint: Point): PointEntityView {
                     +it
                 }
             }
-
-            body?.invoke(this)
         }
     }
 
