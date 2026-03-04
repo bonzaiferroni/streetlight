@@ -20,9 +20,9 @@ data class LocationEntity(
     val location: Location
 ): PointEntity {
     override val entityId get() = location.locationId.value
-    override val label get() = location.name
+    // override val label get() = location.name
     override val position get() = location.geoPoint
-    // override val thumbPath get() = info.thumbUrl ?: SiteImage.placeholderThumb
+    override val thumbPath get() = location.thumbUrl ?: SiteImage.placeholderThumb
     override val focusCard: RenderContext.() -> Unit get() = {
         box {
             cardOf(location)
@@ -36,7 +36,7 @@ data class EventEntity(
 ): PointEntity {
     val event get() = events.first()
     override val entityId get() = location.locationId.value
-    override val label get() = location.name
+    // override val label get() = location.name
     override val position get() = location.geoPoint
     override val thumbPath get() = event.thumbUrl ?: SiteImage.placeholderThumb
     override val focusCard: RenderContext.() -> Unit get() = {
