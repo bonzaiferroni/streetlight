@@ -79,7 +79,7 @@ fun viewApp() {
                     StreetlightScreen.Chat -> viewChatRoom(app)
                     StreetlightScreen.SongProfile -> viewSongProfile(app)
                     StreetlightScreen.EditTalent -> editTalentForm(app)
-                    StreetlightScreen.ReadEvent -> eventReaderView(app)
+                    StreetlightScreen.ReadEvent -> viewEventReader(app)
                     StreetlightScreen.LocationProfile -> locationProfileView(app)
                     StreetlightScreen.EditLocation -> locationEditorRouteView(app)
                     StreetlightScreen.LocationAdmin -> viewLocationAdmin(app)

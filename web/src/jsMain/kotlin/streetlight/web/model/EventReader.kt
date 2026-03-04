@@ -86,7 +86,8 @@ class EventReader(
                 message.set("Finished. Are any of these the event you wish to post?")
                 state.set { it.copy(parse = parse, completed = MutableList(events.size) { null }) }
             } else {
-                message.set("I couldn't find any events at that link. It might be for human readers only.")
+                message.set("I couldn't find any events in the content served from that link. " +
+                        "It might be for human readers only.")
             }
         }
     }

@@ -3,6 +3,7 @@ package koala.model
 import kampfire.model.GeoPoint
 import kampfire.model.Point
 import koala.css.Css
+import koala.css.Focus
 import koala.css.Scale
 import koala.css.applyModifiers
 import koala.css.modify
@@ -72,11 +73,11 @@ class PointEntityView(
     }
 
     fun unfocus() {
-        base?.unmodify(GeoMapSelector.focused)
+        element?.unmodify(Focus)
     }
 
     fun focus() {
-        base?.modify(GeoMapSelector.focused)
+        element?.modify(Focus)
     }
 }
 
@@ -90,17 +91,18 @@ fun PointEntityView.setAttributes(entity: PointEntity) {
 }
 
 object MarkerClass {
-    val base = Css("map-marker")
-    val box = Css("marker-box")
-    val bearing = Css("marker-bearing")
-    val icon = Css("marker-icon")
-    val thumb = Css("marker-thumb")
-    val body = Css("marker-body")
-    val label = Css("marker-label")
+    val block = Css("map-marker")
+    val base = Css("map-marker__base")
+    val bearing = Css("map-marker__bearing")
+    val icon = Css("map-marker__icon")
+    val thumb = Css("map-marker__thumb")
+    val body = Css("map-marker__body")
+    val label = Css("map-marker__label")
 }
 
 fun PointEntity.toMapEntityView(pixelPoint: Point): PointEntityView {
     val element = document.createDiv()
+    element.modify(MarkerClass.block)
 
     var baseElement: HTMLDivElement? = null
     var bearingElement: HTMLDivElement? = null

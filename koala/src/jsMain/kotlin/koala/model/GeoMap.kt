@@ -75,9 +75,12 @@ class GeoMap(
     }
 
     fun setBounds(center: GeoPoint, value: GeoBounds, zoom: Float, isMoving: Boolean, nearest: PointEntity?) {
-        if (isMoving && zoom == stateNow.zoom && value.center.distanceTo(stateNow.center) < (20 * zoom).meters) return
-        val bounds = if (isMoving) stateNow.bounds else value
-        state.set { it.copy(center = center, bounds = bounds, movingBounds = value, zoom = zoom, isMoving = isMoving, nearest = nearest) }
+        if (isMoving && zoom == stateNow.zoom && value.center.distanceTo(stateNow.center) < (20 * zoom).meters) {
+            state.set { it.copy(nearest = nearest) }
+        } else {
+            val bounds = if (isMoving) stateNow.bounds else value
+            state.set { it.copy(center = center, bounds = bounds, movingBounds = value, zoom = zoom, isMoving = isMoving, nearest = nearest) }
+        }
     }
 
     fun panMap(point: GeoPoint) {

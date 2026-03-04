@@ -56,8 +56,11 @@
 }
 
 /* map marker */
+.map-marker.focus {
+    z-index: 1;
+}
 
-.map-marker {
+.map-marker__base {
     cursor: pointer;
     position: relative;
     width: 0;
@@ -66,30 +69,30 @@
     transition: transform 200ms ease-in-out;
 }
 
-.map-marker.scale {
+.map-marker__base.scale {
     transform: scale(1);
 }
 
-.map-marker.map-focus.scale {
+.focus .map-marker__base.scale {
     transform: scale(2);
 }
 
 /* .marker-icon, .marker-thumb, .marker-label, .marker-bearing */
-.map-marker > * {
+.map-marker__base > * {
     position: absolute;
     top: 0;
     left: 0;
 }
 
-.map-marker:hover {
+.map-marker__base:hover {
     opacity: 1 !important;
 }
 
-.marker-body {
+.map-marker__body {
     transform: translate(-50%, -50%);
 }
 
-.marker-icon {
+.map-marker__icon {
     width: 24px;
     height: 24px;
 
@@ -100,7 +103,7 @@
     background-color: transparent; /* important */;
 }
 
-.marker-bearing {
+.map-marker__bearing {
     width: 40px;
     height: 40px;
 
@@ -115,7 +118,7 @@
     transition: transform 1000ms ease-out;
 }
 
-.marker-thumb {
+.map-marker__thumb {
     --thumb-border-rgb: 255, 255, 255; /* or whatever ye like */
 
     width: 32px;
@@ -129,12 +132,12 @@
     border-color 200ms ease-in-out;
 }
 
-.map-focus .marker-thumb {
+.focus .map-marker__thumb {
     border-radius: 4px;
     border-color: rgba(var(--thumb-border-rgb), 1);
 }
 
-.marker-label {
+.map-marker__label {
     transform: translate(-50%, calc(50% + .1rem)); /* below body */
     pointer-events: none;
     opacity: 0;
@@ -148,7 +151,7 @@
     transition: opacity 200ms ease-in-out;
 }
 
-.map-focus .marker-label {
+.focus .map-marker__label {
     opacity: 1;
 }
 
@@ -193,7 +196,7 @@
 }
 
 /*glow*/
-.map-marker .marker-glow {
+.map-marker__base .marker-glow {
     position: absolute;
     left: 50%;
     top: 50%;
@@ -218,7 +221,7 @@
 }
 
 /* subtle emphasis when focused */
-.map-marker.map-focus .marker-glow {
+.map-marker__base.focus .marker-glow {
     opacity: 0.75;
     transform: translate(-50%, -50%) scale(1.05);
 }

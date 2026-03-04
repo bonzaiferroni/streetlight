@@ -23,6 +23,7 @@ object Primary: Modifier { override val value = "primary" }
 object Secondary: Modifier { override val value = "secondary" }
 object Clickable: Modifier { override val value = "clickable" }
 object OverflowHidden: Modifier { override val value = "overflow-hidden"}
+object Focus: Modifier { override val value = "focus" }
 
 // font utilities
 object Bold: Modifier { override val value = "bold" }

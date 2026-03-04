@@ -11,7 +11,7 @@ import streetlight.web.ReadEventRoute
 import streetlight.web.model.AppContext
 import streetlight.web.model.EventReader
 
-fun RenderContext.eventReaderView(app: AppContext, route: ReadEventRoute) {
+fun RenderContext.viewEventReader(app: AppContext, route: ReadEventRoute) {
     val model = EventReader(renderScope, app.client.api, route)
     val stateFlow = model.state.flow
     val linkFlow = stateFlow.mapDistinct { it.link }
@@ -50,9 +50,9 @@ fun RenderContext.eventReaderView(app: AppContext, route: ReadEventRoute) {
     }
 }
 
-fun RenderContext.eventReaderView(app: AppContext) {
+fun RenderContext.viewEventReader(app: AppContext) {
     routeBlock<ReadEventRoute>(app.portal) { route ->
-        eventReaderView(app, route)
+        viewEventReader(app, route)
     }
 }
 

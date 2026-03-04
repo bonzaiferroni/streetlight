@@ -8,6 +8,7 @@ import koala.model.mapDistinct
 import koala.model.storeOf
 import kotlinx.coroutines.launch
 import streetlight.model.data.LocationEdit
+import streetlight.web.ReadEventRoute
 import streetlight.web.model.*
 import streetlight.web.shells.cardOf
 
@@ -32,7 +33,9 @@ fun RenderContext.viewScoutMap(app: AppContext) {
                             row {
                                 messageBox(model.messageFlow, modify(Flex1))
                                 button("Start over", onClick = model::reset)
-                                button("Post events", modify(Accent))
+                                button("Post events", modify(Accent), onClick = {
+                                    app.portal.go(ReadEventRoute(location))
+                                })
                             }
                         }
                     } else {
