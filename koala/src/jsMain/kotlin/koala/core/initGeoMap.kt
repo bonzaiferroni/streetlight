@@ -9,6 +9,7 @@ import koala.external.MapOptions
 import koala.external.SourceSpecification
 import koala.external.maplibregl
 import koala.html.GeoMapSelector
+import kotlinx.browser.localStorage
 import org.w3c.dom.HTMLElement
 
 // globalThis.geoMapWindow: HTMLElement? = null
@@ -40,19 +41,21 @@ fun initGeoMap(mount: HTMLElement): HTMLElement {
     overlay.appendDiv(GeoMapSelector.crosshairs)
     overlay.appendDiv(GeoMapSelector.focusPanel)
 
+    var zoom: Number = 11
     val center = mount
         .getAttribute(GeoMapSelector.geoPoint.value)
         ?.split(",")
         ?.mapNotNull { it.toDoubleOrNull() }
         ?.takeIf { it.size == 2 }
         ?.let { (lng, lat) -> maplibregl.LngLat(lng, lat) }
+        ?: cachedCenterPoint()?.also { zoom = cachedZoom() ?: zoom }
         ?: maplibregl.LngLat(-104.95, 39.75)
 
     val widget = maplibregl.Map(MapOptions(
         container = widgetBox,
         style = "/www/misc/fjord",
         center = center,
-        zoom = 11,
+        zoom = zoom,
         pitch = 45,
         canvasContextAttributes = CanvasContextAttributes(
             antialias = true
@@ -120,6 +123,31 @@ fun initGeoMap(mount: HTMLElement): HTMLElement {
         }
     }
 
+    widget.on("moveend") {
+        val center = widget.getCenter()
+        val zoom = widget.getZoom()
+        localStorage.setItem(MAP_CENTER_LAT_KEY, center.lat.toString())
+        localStorage.setItem(MAP_CENTER_LNG_KEY, center.lng.toString())
+        localStorage.setItem(MAP_ZOOM_KEY, zoom.toString())
+    }
+
     console.log("assigning map window")
     return window
 }
+
+private fun cachedCenterPoint(): maplibregl.LngLat? {
+    val lat = localStorage.getItem(MAP_CENTER_LAT_KEY)?.toDoubleOrNull()
+    val lng = localStorage.getItem(MAP_CENTER_LNG_KEY)?.toDoubleOrNull()
+    if (lat != null && lng != null) {
+        return maplibregl.LngLat(lng, lat)
+    }
+    return null
+}
+
+private fun cachedZoom(): Double? {
+    return localStorage.getItem(MAP_ZOOM_KEY)?.toDoubleOrNull()
+}
+
+private const val MAP_CENTER_LAT_KEY = "geomap.center.lat"
+private const val MAP_CENTER_LNG_KEY = "geomap.center.lng"
+private const val MAP_ZOOM_KEY = "geomap.zoom"

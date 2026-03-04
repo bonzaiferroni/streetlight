@@ -26,34 +26,40 @@ fun RenderContext.viewScoutMap(app: AppContext) {
 
         flowBlock(model.editFlow, modify(Blur, SlideX), magic = true) { edit ->
             if (edit != null) {
-                card {
-                    row {
-                        messageBox(model.messageFlow, modify(Flex1))
-                        button("Needs edits")
-                        button("Looks good", modify(Accent), onClick = {
-                            renderScope.launch {
-                                val location = model.postLocation()
-                                if (location != null) {
-                                    console.log(location)
-                                }
-                            }
-                        })
-                    }
-                    row(modify(AlignItemsStart)) {
-                        val imageUrl = edit.imageUrl
-                        if (imageUrl != null) {
-                            image(imageUrl, modify(Flex1, Width100))
-                        } else {
-                            box(modify(Flex1, CenterItems)) {
-                                textBlock("no image")
+                flowBlock(model.locationFlow, modify(Blur, SlideX), magic = true) { location ->
+                    if (location != null) {
+                        card {
+                            row {
+                                messageBox(model.messageFlow, modify(Flex1))
+                                button("Start over", onClick = model::reset)
+                                button("Post events", modify(Accent))
                             }
                         }
-                        column(modify(Flex2)) {
-                            heading3(edit.name ?: "[No name found]")
-                            textBlock(edit.description ?: "[No description]")
-                            propertyValue("address", edit.address ?: "[No address]")
-                            propertyValue("link", edit.link ?: "[No link]")
-                            propertyValue("calendar", edit.eventsLink ?: "[No calendar]")
+                    } else {
+                        card {
+                            row {
+                                messageBox(model.messageFlow, modify(Flex1))
+                                button("Start over", onClick = model::reset)
+                                button("Needs edits")
+                                button("Looks good", modify(Accent), onClick = model::postLocation)
+                            }
+                            row(modify(AlignItemsStart)) {
+                                val imageUrl = edit.imageUrl
+                                if (imageUrl != null) {
+                                    image(imageUrl, modify(Flex1, Width100))
+                                } else {
+                                    box(modify(Flex1, CenterItems)) {
+                                        textBlock("no image")
+                                    }
+                                }
+                                column(modify(Flex2)) {
+                                    heading3(edit.name ?: "[No name found]")
+                                    textBlock(edit.description ?: "[No description]")
+                                    propertyValue("address", edit.address ?: "[No address]")
+                                    propertyValue("link", edit.link ?: "[No link]")
+                                    propertyValue("calendar", edit.eventsLink ?: "[No calendar]")
+                                }
+                            }
                         }
                     }
                 }

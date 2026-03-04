@@ -19,9 +19,11 @@ class ScoutMap(
     private val state = storeOf(ScoutMapState())
     private val editState = storeOf<LocationEdit?>(null)
     private val msg = storeOf(UIMessage(initialMsg))
+    private val locationState = storeOf<Location?>(null)
     val editFlow = editState.flow
     val stateFlow = state.flow
     val messageFlow = msg.flow
+    val locationFlow = locationState.flow
 
     fun setLink(value: String) {
         state.set { it.copy(link = value) }
@@ -37,10 +39,25 @@ class ScoutMap(
         }
     }
 
-    suspend fun postLocation(): Location? {
-        val edit = editState.now?.takeIf { it.isValid } ?: return null
-        msg.set("Posting...")
-        return api.createOrEditLocation(edit)
+    fun reset() {
+        state.set { ScoutMapState() }
+        editState.set { null }
+        msg.set(initialMsg)
+        locationState.set { null }
+    }
+
+    fun postLocation() {
+        val edit = editState.now?.takeIf { it.isValid } ?: return
+        msg.set("Posting ${edit.name}...")
+        scope.launch {
+            val location = api.createOrEditLocation(edit)
+            if (location == null) {
+                msg.set("Something went wrong")
+                return@launch
+            }
+            locationState.set { location }
+            msg.set("Posted. You can now add events to ${location.name} or add another location.")
+        }
     }
 }
 
