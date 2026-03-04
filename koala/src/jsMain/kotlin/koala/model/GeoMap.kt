@@ -74,10 +74,10 @@ class GeoMap(
         }
     }
 
-    fun setBounds(value: GeoBounds, zoom: Float, isMoving: Boolean, nearest: PointEntity?) {
+    fun setBounds(center: GeoPoint, value: GeoBounds, zoom: Float, isMoving: Boolean, nearest: PointEntity?) {
         if (isMoving && zoom == stateNow.zoom && value.center.distanceTo(stateNow.center) < (20 * zoom).meters) return
         val bounds = if (isMoving) stateNow.bounds else value
-        state.set { it.copy(bounds = bounds, movingBounds = value, zoom = zoom, isMoving = isMoving, nearest = nearest) }
+        state.set { it.copy(center = center, bounds = bounds, movingBounds = value, zoom = zoom, isMoving = isMoving, nearest = nearest) }
     }
 
     fun panMap(point: GeoPoint) {
@@ -96,21 +96,20 @@ class GeoMap(
 }
 
 data class GeoMapState(
+    val center: GeoPoint = GeoPoint.Denver,
     val bounds: GeoBounds = GeoBounds.Denver,
     val movingBounds: GeoBounds = GeoBounds.Denver,
     val zoom: Float = 11f,
     val isMoving: Boolean = false,
     val isViewed: Boolean = false,
     val nearest: PointEntity? = null,
-) {
-    val center get() = bounds.center
-}
+)
 
 typealias MapEntityId = String
 
 sealed interface MapEntity {
     val entityId: MapEntityId
-    val label: String
+    val label: String?
 }
 
 data class PanPoint(

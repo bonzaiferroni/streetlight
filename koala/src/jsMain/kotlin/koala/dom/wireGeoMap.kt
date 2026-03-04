@@ -76,10 +76,11 @@ fun wireMapWindow(
         val context = MapViewContext(widget)
 
         fun relayBounds(isMoving: Boolean) {
+            val center = widget.getCenter().toGeoPoint()
             val bounds = widget.getBounds().toGeoBounds()
             val zoom = widget.getZoom().toFloat()
-            val nearest = context.getNearest(widget.getCenter().toGeoPoint(), zoom)
-            geoMap.setBounds(bounds, zoom, isMoving, nearest)
+            val nearest = context.getNearest(center, zoom)
+            geoMap.setBounds(center, bounds, zoom, isMoving, nearest)
         }
 
         while (!widget.loaded()) {

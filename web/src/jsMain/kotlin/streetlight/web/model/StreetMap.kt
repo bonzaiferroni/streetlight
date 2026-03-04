@@ -3,6 +3,7 @@
 package streetlight.web.model
 
 import kampfire.model.GeoBounds
+import kampfire.model.GeoPoint
 import koala.model.GeoMap
 import koala.model.mapDistinct
 import koala.model.storeOf
@@ -43,7 +44,7 @@ class StreetMap(
         scope.launch {
             launch {
                 geoMap.stateFlow.filter { it.isViewed }.collect { geoMapState ->
-                    setBounds(geoMapState.bounds, geoMapState.zoom)
+                    setBounds(geoMapState.center, geoMapState.bounds, geoMapState.zoom)
                     if (!geoMapState.isMoving) {
                         spiritVision.updatePosition(geoMapState.center)
                     }
@@ -72,16 +73,22 @@ class StreetMap(
 
     private val allLocations = ArrayList<LocationInfo>()
 
-    fun setBounds(bounds: GeoBounds, zoom: Float) {
+    fun setBounds(center: GeoPoint, bounds: GeoBounds, zoom: Float) {
         if (stateNow.isQuerying) return
 
         if (hasQueried(bounds)) {
             val locations = getBoundedLocations(bounds)
-            state.set { it.copy(bounds = bounds, zoom = zoom, locations = locations)}
+            state.set { it.copy(center = center, bounds = bounds, zoom = zoom, locations = locations)}
         } else {
             val queriedBounds = bounds.expandBy(1.2f)
             queries.add(QueryBounds(Clock.System.now(), queriedBounds))
-            state.set { it.copy(bounds = bounds, zoom = zoom, queriedBounds = queriedBounds, isQuerying = true)}
+            state.set { it.copy(
+                center = center,
+                bounds = bounds,
+                zoom = zoom,
+                queriedBounds = queriedBounds,
+                isQuerying = true
+            )}
             scope.launch {
                 val locations = client.api.readLocationsInBounds(queriedBounds) ?: emptyList()
                 val mapEntities = locations.mapNotNull { info ->
@@ -129,6 +136,7 @@ class StreetMap(
 }
 
 data class StreetMapState(
+    val center: GeoPoint = GeoPoint.Denver,
     val bounds: GeoBounds = GeoBounds.Denver,
     val queriedBounds: GeoBounds = GeoBounds.Denver,
     val zoom: Float = 11f,
@@ -139,9 +147,7 @@ data class StreetMapState(
     val isQuerying: Boolean = false,
     val hasSpiritVision: Boolean = false,
     val spiritName: String = "👻"
-) {
-    val center get() = bounds.center
-}
+)
 
 data class MapFocus(
     val location: Location? = null,

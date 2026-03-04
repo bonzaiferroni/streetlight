@@ -128,9 +128,11 @@ fun PointEntity.toMapEntityView(pixelPoint: Point): PointEntityView {
                 }
             }
 
-            labelElement = p {
-                applyModifiers(MarkerClass.label)
-                +label
+            labelElement = label?.let {
+                p {
+                    applyModifiers(MarkerClass.label)
+                    +it
+                }
             }
 
             body?.invoke(this)
