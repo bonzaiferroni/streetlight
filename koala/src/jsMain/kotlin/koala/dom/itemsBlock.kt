@@ -18,7 +18,7 @@ import kotlin.collections.plus
 fun <Item> RenderContext.itemsBlock(
     flow: Flow<List<Item>>,
     modifiers: ModifierSet? = null,
-    animate: Boolean = false,
+    magic: Boolean = false,
     gapRems: Float? = 0.5f,
     cacheRenderedElements: Boolean = false,
     config: (DIV.() -> Unit)? = null,
@@ -27,7 +27,7 @@ fun <Item> RenderContext.itemsBlock(
 ) {
     val parent = div {
         applyModifiers(ElementClass.itemsBlock, modifiers)
-        if (animate) {
+        if (magic) {
             classes += Magic.value
         }
         config?.invoke(this)
@@ -68,7 +68,7 @@ fun <Item> RenderContext.itemsBlock(
                     } else {
                         cache.job.cancel()
                     }
-                    if (animate) {
+                    if (magic) {
                         renderScope.launch {
                             cache.firstElement.unmodify(Reveal)
                             delay(200)
@@ -92,7 +92,7 @@ fun <Item> RenderContext.itemsBlock(
                     height += gapPx
                 }
 
-                if (animate && !isCurrentlyDisplayed) {
+                if (magic && !isCurrentlyDisplayed) {
                     cache.localScope.launch {
                         delay(200)
                         cache.firstElement.modify(Reveal)

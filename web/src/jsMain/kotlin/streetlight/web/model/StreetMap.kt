@@ -102,8 +102,8 @@ class StreetMap(
                     }
                 }
                 geoMap.addEntities(mapEntities)
-                val events = getBoundedLocations(bounds)
-                state.set { it.copy(locations = events, isQuerying = false)}
+                val boundedLocations = getBoundedLocations(bounds)
+                state.set { it.copy(locations = boundedLocations, isQuerying = false)}
             }
         }
     }

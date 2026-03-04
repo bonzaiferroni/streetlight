@@ -32,6 +32,7 @@ enum class StreetlightScreen(
     ReadEvent("create-event", { ReadEventRoute() }),
     LocationProfile("location", { path -> path.provideRouteFromPath { LocationProfileRoute(LocationId(it)) } }),
     LocationAdmin("location-admin", { path -> path.provideRouteFromPath { LocationAdminRoute(LocationId(it)) } }),
+    ScoutMap("scout-map", { ScoutMapRoute }),
 }
 
 fun List<String>.provideRouteFromPath(argIndex: Int = 1, provideRoute: (String) -> AppRoute?) =
@@ -175,4 +176,9 @@ data class LocationAdminRoute(
     override val screen get() = StreetlightScreen.LocationAdmin
     override val id get() = locationId
     override val title get() = "Location Admin"
+}
+
+object ScoutMapRoute: StreetlightRoute {
+    override val screen get() = StreetlightScreen.ScoutMap
+    override val title get() = "Scout Map"
 }

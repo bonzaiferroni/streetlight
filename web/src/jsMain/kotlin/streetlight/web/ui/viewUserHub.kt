@@ -7,6 +7,7 @@ import streetlight.web.CreateLocationRoute
 import streetlight.web.EditTalentRoute
 import streetlight.web.HomeRoute
 import streetlight.web.ReadEventRoute
+import streetlight.web.ScoutMapRoute
 import streetlight.web.TalentProfileRoute
 import streetlight.web.model.AppContext
 
@@ -31,6 +32,7 @@ fun RenderContext.viewUserHub(
                 textBlock("Add things to the map.", modify(Flex1))
                 button("post event", modify(Accent), onClick = { portal.go(ReadEventRoute())})
                 button("post location", modify(Accent), onClick = { portal.go(CreateLocationRoute)})
+                button("scout map", modify(Accent), onClick = { portal.go(ScoutMapRoute) })
             }
         }
 
