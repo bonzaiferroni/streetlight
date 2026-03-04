@@ -82,6 +82,7 @@ object RowReverse: Modifier { override val value = "row-reverse" }
 object QueryRowReverse: Modifier { override val value = "query-row-reverse" }
 object MaxWidth25: Modifier { override val value = "max-width-25" }
 object MaxWidth50: Modifier { override val value = "max-width-50" }
+object MaxWidth64: Modifier { override val value = "max-width-64" }
 object MarginAuto: Modifier { override val value = "margin-auto" }
 object MarginTop1: Modifier { override val value = "margin-top-1" }
 object MarginTop2: Modifier { override val value = "margin-top-2" }

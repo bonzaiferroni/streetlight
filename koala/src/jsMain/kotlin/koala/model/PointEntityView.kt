@@ -139,6 +139,13 @@ fun PointEntity.toMapEntityView(pixelPoint: Point): PointEntityView {
                     +it
                 }
             }
+
+            light?.let { light ->
+                div {
+                    applyModifiers(Css("marker-glow"))
+                    style = "--light: ${light.css()};"
+                }
+            }
         }
     }
 

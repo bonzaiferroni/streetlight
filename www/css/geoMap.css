@@ -125,9 +125,8 @@
 
     border: 1px solid rgba(var(--thumb-border-rgb), 0.5);
 
-    transition:
-            border-radius 200ms ease-in-out,
-            border-color 200ms ease-in-out;
+    transition: border-radius 200ms ease-in-out,
+    border-color 200ms ease-in-out;
 }
 
 .map-focus .marker-thumb {
@@ -139,6 +138,7 @@
     transform: translate(-50%, calc(50% + .1rem)); /* below body */
     pointer-events: none;
     opacity: 0;
+    font-weight: 700;
 
     max-width: 6rem;
     overflow: hidden;
@@ -190,4 +190,35 @@
     left: var(--unit-spacing);
     bottom: var(--unit-spacing);
     margin-right: 4rem;
+}
+
+/*glow*/
+.map-marker .marker-glow {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 8rem;
+    height: 8rem;
+
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+
+    pointer-events: none;
+    mix-blend-mode: screen;
+
+    opacity: 0.5;
+
+    background: radial-gradient(
+            circle at center,
+            rgba(120, 200, 255, 0.35) 0%,
+            rgba(120, 200, 255, 0.18) 25%,
+            rgba(120, 200, 255, 0.08) 45%,
+            rgba(120, 200, 255, 0.00) 70%
+    );
+}
+
+/* subtle emphasis when focused */
+.map-marker.map-focus .marker-glow {
+    opacity: 0.75;
+    transform: translate(-50%, -50%) scale(1.05);
 }

@@ -1,5 +1,6 @@
 package streetlight.web.shells
 
+import koala.css.ModifierSet
 import koala.css.Width100
 import koala.css.modify
 import koala.html.AppRoute
@@ -18,8 +19,8 @@ import streetlight.model.data.Location
 import streetlight.web.EventIdRoute
 import streetlight.web.LocationProfileRoute
 
-fun FlowContent.cardOf(event: Event) {
-    cardOf(EventIdRoute(event.eventId), event.title, event.thumbUrl, event.description)
+fun FlowContent.cardOf(event: Event, modifiers: ModifierSet? = null) {
+    cardOf(EventIdRoute(event.eventId), event.title, event.thumbUrl, event.description, modifiers)
 }
 
 fun FlowContent.cardOf(location: Location) {

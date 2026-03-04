@@ -1,10 +1,13 @@
 package streetlight.web.model
 
+import koala.css.MaxWidth64
+import koala.css.modify
 import koala.dom.RenderContext
 import koala.dom.box
 import koala.html.SiteImage
 import koala.model.MapEntityId
 import koala.model.PointEntity
+import koala.model.Rgb
 import kotlinx.html.DIV
 import kotlinx.html.p
 import streetlight.model.data.Event
@@ -38,7 +41,7 @@ data class EventEntity(
     override val thumbPath get() = event.thumbUrl ?: SiteImage.placeholderThumb
     override val focusCard: RenderContext.() -> Unit get() = {
         box {
-            cardOf(event)
+            cardOf(event, modify(MaxWidth64))
         }
     }
 }
@@ -51,6 +54,7 @@ data class SpiritEntity(
     override val body: DIV.() -> Unit get() = {
         p { +spirit.name }
     }
+    override val light get() = Rgb(100, 180, 240)
 }
 
 fun SpiritId.toEntityId(): MapEntityId = "spirit-${value}"

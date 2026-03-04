@@ -65,24 +65,21 @@
     -webkit-tap-highlight-color: transparent;
 }
 
-/* inner sliding pill (visual cues from .btn) */
 .switch__pill {
     position: absolute;
     top: 50%;
     transform: translate(0, -50%);
-    transition: transform 200ms ease, opacity 200ms ease;
+    transition: transform 200ms ease, background 200ms ease;
 
     padding: .5rem 1rem;
     border: none;
     border-radius: 2rem;
-    background: var(--primary-button);
+    background: rgba(var(--primary), .3);
     color: var(--white);
     font-size: .8rem;
     line-height: 1.5rem;
     text-transform: uppercase;
     white-space: nowrap;
-
-    opacity: .65;                     /* “off” dim */
 }
 
 /* sizing helper: invisible text to define track width */
@@ -99,7 +96,7 @@
 
 /* ON state: slide pill to the right, full opacity */
 .switch[data-on="true"] .switch__pill {
-    opacity: 1;
+    background: rgba(var(--primary), .6);
     transform: translate(1rem, -50%);
     box-shadow: 0 0 .8rem var(--primary-button);
 }

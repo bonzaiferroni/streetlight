@@ -129,9 +129,14 @@ interface PointEntity: MapEntity {
     val onClick: (() -> Unit)? get() = null
     val focusCard: (RenderContext.() -> Unit)? get() = null
     val body: (DIV.() -> Unit)? get() = null
+    val light: Rgb? get() = null
 }
 
 data class EntityMovement(
     val entityId: MapEntityId,
     val position: GeoPoint
 )
+
+data class Rgb(val r: Int, val g: Int, val b: Int) {
+    fun css(): String = "${r.coerceIn(0, 255)}, ${g.coerceIn(0, 255)}, $${b.coerceIn(0, 255)}"
+}

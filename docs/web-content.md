@@ -36,7 +36,6 @@ The following workflows are used to manage content in this directory:
 #### CreateCssUtility(Name)
 * Identify the appropriate file in `www/css/` (usually `utilities.css`).
 * Add the standard CSS rule.
-* If it replaces a Kotlin CSS DSL object, ensure the Kotlin object is updated to point to the new CSS class name (if different) and eventually deprecated or removed.
 
 #### UpdateStyles(Category)
 * When updating core styles (e.g., branding, layout), modify `www/css/styles.css` and the corresponding variable in `:root`.

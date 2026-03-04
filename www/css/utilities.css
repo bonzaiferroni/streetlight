@@ -280,6 +280,10 @@ p.large {
     max-width: 50%;
 }
 
+.max-width-64 {
+    max-width: calc(var(--unit-spacing) * 64);
+}
+
 .margin-auto {
     margin: auto;
 }
