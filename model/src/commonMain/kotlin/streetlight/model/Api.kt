@@ -20,7 +20,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         // object UserEvents: ApiDaoEndpoint<Event, EventId, NewEvent>(this, "user")
         object Upload: PostEndpoint<ByteArray, String>(this, "upload")
         object ParseEvents: PostEndpoint<ParseRequest, MultiEventParseResponse>(this, "read-url")
-        object Location: GetByTableIdEndpoint<LocationId, List<Event>>(this, "location")
+        object AtLocation: GetByTableIdEndpoint<LocationId, List<Event>>(this, "location")
     }
 
     object StreetFeed: GetEndpoint<List<Community>>(this, "areas") {

@@ -79,7 +79,7 @@ class EventReader(
                     message.set(loadingMessages.random())
                 }
             }
-            val parse = api.parseMultiEventFromUrl(ParseRequest(url, isImage))
+            val parse = api.parseMultiEventFromUrl(ParseRequest(url, null, isImage))
             messageStream.cancel()
             val events = parse?.events?.takeIf { it.isNotEmpty() }
             if (events != null) {

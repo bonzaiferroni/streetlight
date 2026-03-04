@@ -75,7 +75,7 @@ class LocationEditor(
 
     fun queryLocation(reverse: Boolean) {
         if (reverse) {
-            val center = editNow.geoPoint
+            val center = editNow.geoPoint ?: return
             scope.launch {
                 val place = client.location.readPlace(center)
                 if (place == null) {
@@ -86,7 +86,7 @@ class LocationEditor(
             }
         } else {
             val name = editNow.name
-            if (name.isBlank()) return
+            if (name.isNullOrBlank()) return
             scope.launch {
                 val query = OSMQuery(amenity = name, state = "CO")
                 val place = client.location.readPlace(query)?.firstOrNull() ?: return@launch
@@ -104,7 +104,7 @@ class LocationEditor(
     }
 
     suspend fun saveLocation(): LocationId? {
-        return api.editLocation(editNow)?.locationId
+        return api.createOrEditLocation(editNow)?.locationId
     }
 
     private fun setPlace(place: OSMPlace) {

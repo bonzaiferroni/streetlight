@@ -1,5 +1,6 @@
 package streetlight.model.data
 
+import kampfire.model.GeoPoint
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
@@ -11,7 +12,8 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class ParseRequest(
     val url: String,
-    val isImage: Boolean = false
+    val point: GeoPoint? = null,
+    val isImage: Boolean = false,
 )
 
 @Serializable

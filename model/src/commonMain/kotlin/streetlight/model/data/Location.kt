@@ -13,14 +13,23 @@ data class Location(
     val name: String,
     val description: String?,
     val address: String?,
+    // td: addressNumber
+    // td: street
+    // td: unit/suite
+    // td: postalCode
+    // td: state
+    // td: country
     val geoPoint: GeoPoint,
     val resources: Set<ResourceType>,
     val link: String?,
     val eventsLink: String?,
+    // td: aboutLink
     val imageUrl: String?,
     val thumbUrl: String?,
     val updatedAt: Instant,
     val createdAt: Instant,
+    // td: openedAt: LocalDate
+    // td: LocationTags
 )
 
 @JvmInline @Serializable
@@ -31,18 +40,20 @@ value class LocationId(override val value: String): ProjectId {
 @Serializable
 data class LocationEdit(
     val locationId: LocationId? = null,
-    val name: String = "",
+    val name: String? = null,
     val description: String? = null,
     val address: String? = null,
     val notes: String? = null,
-    val geoPoint: GeoPoint = GeoPoint.Denver,
-    val resources: Set<ResourceType> = emptySet(),
+    val geoPoint: GeoPoint? = null,
+    val resources: Set<ResourceType>? = null,
     val link: String? = null,
     val eventsLink: String? = null,
     val imageUrl: String? = null,
     val thumbUrl: String? = null,
     val isHost: Boolean = false,
-)
+) {
+    val isValid get() = name != null && geoPoint != null
+}
 
 @Serializable
 data class LocationAddress(
@@ -108,11 +119,11 @@ fun Place.toLocation() = Location(
 
 fun LocationEdit.toLocation() = Location(
     locationId = locationId ?: LocationId.random(),
-    name = name,
-    geoPoint = geoPoint,
+    name = name ?: error("no location name"),
+    geoPoint = geoPoint ?: error("no location geoPoint"),
     description = description,
     address = address,
-    resources = resources,
+    resources = resources ?: emptySet(),
     link = link,
     eventsLink = eventsLink,
     imageUrl = imageUrl,
