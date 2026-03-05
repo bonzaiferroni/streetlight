@@ -60,7 +60,7 @@ fun wireMapWindow(
     val widget: maplibregl.Map = mapWindow.asDynamic().widget ?: error("geomap widget not found")
 
     mapWindow.onView(geoMap::setIsViewed)
-    wireKeyboardControls(widget)
+    // wireKeyboardControls(widget)
 
     val focusPanel = mapWindow.querySelector(GeoMapSelector.focusPanel.selector) as HTMLElement
     focusPanel.renderRoot(appScope) {

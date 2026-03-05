@@ -11,6 +11,7 @@
     box-shadow: 0 0 .8rem var(--primary-button);
     text-transform: uppercase;
     white-space: nowrap;
+    min-width: calc(var(--unit-spacing) * 16);
 }
 
 .btn.accent {
@@ -74,7 +75,7 @@
     padding: .5rem 1rem;
     border: none;
     border-radius: 2rem;
-    background: rgba(var(--primary), .3);
+    background: var(--gray-bg);
     color: var(--white);
     font-size: .8rem;
     line-height: 1.5rem;

@@ -68,11 +68,12 @@ data class LocationAddress(
 data class Place(
     val name: String? = null,
     val address: String? = null,
-    val postCode: String? = null,
+    val postalCode: String? = null,
     val city: String? = null,
     val state: String? = null,
     val country: String? = null,
     val geoPoint: GeoPoint? = null,
+    val website: String? = null,
 ) {
     val isValid get() = !name.isNullOrBlank() && geoPoint != null
 }

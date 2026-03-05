@@ -89,7 +89,7 @@ class LocationEditor(
             if (name.isNullOrBlank()) return
             scope.launch {
                 val query = OSMQuery(amenity = name, state = "CO")
-                val place = client.location.readPlace(query)?.firstOrNull() ?: return@launch
+                val place = client.location.readPlaces(query)?.firstOrNull() ?: return@launch
                 setPlace(place)
             }
         }

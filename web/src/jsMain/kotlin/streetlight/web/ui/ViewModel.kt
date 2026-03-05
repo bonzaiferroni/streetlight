@@ -6,5 +6,6 @@ interface ViewModel {
     val app: AppContext
 
     val api get() = app.client.api
-    val geoMap get() = app.geoMap
+    val geo get() = app.geoMap
+    val osm get() = app.client.location
 }

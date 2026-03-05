@@ -136,7 +136,7 @@ class EventEditor(
             val location = eventNow.place?.name ?: return
             scope.launch {
                 val query = OSMQuery(amenity = location, state = "CO")
-                val place = client.location.readPlace(query)?.firstOrNull() ?: return@launch
+                val place = client.location.readPlaces(query)?.firstOrNull() ?: return@launch
                 setPlace(place)
             }
         }

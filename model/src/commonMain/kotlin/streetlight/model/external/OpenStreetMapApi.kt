@@ -3,6 +3,7 @@ package streetlight.model.external
 import kampfire.model.GeoPoint
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import streetlight.model.data.Place
 
 @Serializable
 data class OSMPlace(
@@ -30,7 +31,9 @@ data class OSMPlace(
     val displayName: String,
     val address: Address,
     @SerialName("boundingbox")
-    val bounds: List<Double>
+    val bounds: List<Double>,
+    @SerialName("extratags")
+    val extraTags: OSMExtra? = null
 )
 
 @Serializable
@@ -49,6 +52,33 @@ data class Address(
 )
 
 @Serializable
+data class OSMExtra(
+    val website: String? = null,
+    @SerialName("contact:website")
+    val contactWebsite: String? = null,
+    @SerialName("contact:email")
+    val contactEmail: String? = null,
+    @SerialName("contact:phone")
+    val contactPhone: String? = null,
+    val phone: String? = null,
+    val email: String? = null,
+
+    val opening_hours: String? = null,
+    val cuisine: String? = null,
+    val takeaway: String? = null,
+    val delivery: String? = null,
+
+    val wikidata: String? = null,
+    val wikipedia: String? = null,
+    val brand: String? = null,
+    val operator: String? = null,
+
+    val capacity: String? = null,
+    val height: String? = null,
+    val levels: String? = null,
+)
+
+@Serializable
 data class OSMQuery(
     val amenity: String? = null,
     val street: String? = null,
@@ -57,14 +87,23 @@ data class OSMQuery(
     val state: String? = null,
     val country: String? = null,
     val postalcode: String? = null,
-    val format: String = "jsonv2",
-    val addressdetails: Int = 1,
     val limit: Int = 10
 )
 
 fun OSMPlace.toGeoPoint() = GeoPoint(
     lat = lat,
     lng = lon
+)
+
+fun OSMPlace.toPlace() = Place(
+    name = name,
+    address = address.road?.let { road ->
+        address.number?.let { number ->
+            "$number $road"
+        } ?: road
+    },
+    geoPoint = toGeoPoint(),
+    website = extraTags?.website
 )
 
 //{

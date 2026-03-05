@@ -8,19 +8,35 @@ import streetlight.model.external.OSMPlace
 import streetlight.model.external.OSMQuery
 import kotlin.js.json
 
+// acceptable use policy: https://operations.osmfoundation.org/policies/nominatim/
+// docs: https://nominatim.org/release-docs/develop/api/Search/
+
 class OSMFetchClient() {
     suspend fun readPlace(point: GeoPoint): OSMPlace? {
-        // acceptable use policy: https://operations.osmfoundation.org/policies/nominatim/
         val url = "https://nominatim.openstreetmap.org/reverse" +
-                    "?lat=${point.lat}&lon=${point.lng}&format=json"
+                    "?lat=${point.lat}&lon=${point.lng}&format=jsonv2&addressdetails=1&extratags=1"
 
         val response = window.fetch(url, RequestInit(headers = headers)).await()
 
         return response.tryDecodeText()
     }
 
-    suspend fun readPlace(query: OSMQuery): List<OSMPlace>? {
+    suspend fun readPlaces(query: OSMQuery): List<OSMPlace>? {
         val url = "https://nominatim.openstreetmap.org/search?" + query.toQuery()
+
+        val response = window.fetch(url, RequestInit(headers = headers)).await()
+
+        return response.tryDecodeText(true)
+    }
+
+    suspend fun readPlaces(freeForm: String, limit: Int = 10): List<OSMPlace>? {
+        val url = "https://nominatim.openstreetmap.org/search?" + listOf(
+            "q=${encodeURIComponent(freeForm)}",
+            "format=jsonv2",
+            "addressdetails=1",
+            "extratags=1",
+            "limit=${limit}"
+        ).joinToString("&")
 
         val response = window.fetch(url, RequestInit(headers = headers)).await()
 
@@ -41,8 +57,9 @@ fun OSMQuery.toQuery() = listOfNotNull(
     state?.let { "state=${encodeURIComponent(it)}" },
     country?.let { "country=${encodeURIComponent(it)}" },
     postalcode?.let { "postalcode=${encodeURIComponent(it)}" },
-    "format=${encodeURIComponent(format)}",
-    "addressdetails=$addressdetails",
+    "format=jsonv2",
+    "addressdetails=1",
+    "extratags=1",
     "limit=$limit"
 ).joinToString("&")
 
