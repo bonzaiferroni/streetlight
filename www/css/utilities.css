@@ -321,3 +321,11 @@ p.large {
     flex-wrap: nowrap;
     white-space: nowrap;
 }
+
+.primary-bg {
+    background-color: var(--primary-bg);
+}
+
+.primary-card-bg {
+    background-color: var(--primary-card-bg);
+}

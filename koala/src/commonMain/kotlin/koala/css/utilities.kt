@@ -24,6 +24,8 @@ object Secondary: Modifier { override val value = "secondary" }
 object Clickable: Modifier { override val value = "clickable" }
 object OverflowHidden: Modifier { override val value = "overflow-hidden"}
 object Focus: Modifier { override val value = "focus" }
+object PrimaryBg: Modifier { override val value = "primary-bg" }
+object PrimaryCardBg: Modifier { override val value = "primary-card-bg" }
 
 // font utilities
 object Bold: Modifier { override val value = "bold" }

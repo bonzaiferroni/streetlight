@@ -20,6 +20,7 @@ object ElementClass {
     val shellBox = Css("shell-box")
     val headerImage = Css("header-image")
     val wireBlock = Css("wire-block")
+    val messageBox = Css("message-box")
 }
 
 fun CssBuilder.elementStyles(theme: KoalaTheme) {

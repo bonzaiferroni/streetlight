@@ -61,3 +61,27 @@
 
     animation: glow-background 10s infinite linear;
 }
+
+/* message box */
+
+.message-box {
+    position: relative;
+    background-color: var(--primary-card-bg);
+    border-radius: calc(var(--unit-spacing));
+    overflow: hidden;
+}
+
+.message-box::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: white;
+    opacity: 0;
+    animation: messageGlow 5s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes messageGlow {
+    0%, 100% { opacity: 0; }
+    50% { opacity: .1; }
+}
