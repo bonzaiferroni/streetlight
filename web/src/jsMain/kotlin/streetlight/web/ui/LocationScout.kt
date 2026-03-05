@@ -21,8 +21,9 @@ class LocationScout(
     private val state = storeOf(LocationScoutState())
     private val msg = storeOf(UIMessage(introMsg))
     private val data = storeOf(LocationScoutData())
-    val dataFlow = data.flow
     val stateFlow = state.flow
+    val stateNow get() = state.now
+    val dataFlow = data.flow
     val messageFlow = msg.flow
 
     private var count = 0
@@ -55,8 +56,30 @@ class LocationScout(
         state.set { it.copy(query = value) }
     }
 
+    fun setLimitMap(value: Boolean) {
+        state.set { it.copy(limitMap = value) }
+    }
+
+    fun setLimitCity(value: Boolean) {
+        state.set { it.copy(limitCity = value) }
+    }
+
+    fun setLimitState(value: Boolean) {
+        state.set { it.copy(limitState = value) }
+    }
+
     fun searchOSM() {
-        val query = state.now.query.takeIf { it.isNotBlank() } ?: return
+        val query = state.now.query.takeIf { it.isNotBlank() }?.let {
+            val city = stateNow.city
+            if (city != null && !it.contains(city)) {
+                "$it, $city"
+            } else it
+        }?.let {
+            val state = stateNow.state
+            if (state != null && !it.contains(state)) {
+                "$it, $state"
+            } else it
+        } ?: return
         msg.set("Searching OpenStreetMap...")
         scope.launch {
             val places = osm.readPlaces(query)?.map { it.toPlace() }
@@ -68,7 +91,7 @@ class LocationScout(
                 geo.panMap(PanPoint(point = it, zoom = 15f))
             }
 
-            state.set { it.copy(places = places) }
+            data.set { it.copy(places = places) }
             msg.set("Is this what you are looking for?")
         }
     }
@@ -108,14 +131,19 @@ class LocationScout(
 data class LocationScoutState(
     val website: String = "",
     val query: String = "",
-    val places: List<Place> = emptyList(),
     val place: Place? = null,
+    val city: String? = "Aurora",
+    val state: String? = "CO",
+    val limitMap: Boolean = false,
+    val limitCity: Boolean = false,
+    val limitState: Boolean = true
 )
 
 data class LocationScoutData(
     val point: GeoPoint? = null,
     val location: Location? = null,
     val edit: LocationEdit? = null,
+    val places: List<Place>? = null,
 )
 
 private val introMsg = """

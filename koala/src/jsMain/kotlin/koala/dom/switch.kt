@@ -16,7 +16,7 @@ fun RenderContext.switch(
     modifiers: ModifierSet? = null,
     initialOn: Boolean = false,
     onToggle: ((Boolean) -> Unit)? = null,
-    bindIsOn: Flow<Boolean>? = null,
+    bindFlow: Flow<Boolean>? = null,
     block: (DIV.() -> Unit)? = null,
 ): HTMLDivElement {
     var isOn = initialOn
@@ -51,7 +51,7 @@ fun RenderContext.switch(
         }
     })
 
-    bindIsOn?.let { flow ->
+    bindFlow?.let { flow ->
         renderScope.launch {
             flow.collect { setOn(it) }
         }

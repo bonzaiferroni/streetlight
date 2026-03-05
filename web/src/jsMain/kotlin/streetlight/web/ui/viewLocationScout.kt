@@ -8,38 +8,48 @@ import koala.html.propertyValue
 import koala.model.mapDistinct
 import streetlight.model.data.Location
 import streetlight.model.data.LocationEdit
+import streetlight.model.data.Place
 import streetlight.web.ReadEventRoute
 import streetlight.web.model.*
 import streetlight.web.shells.cardOf
 
 fun RenderContext.viewLocationScout(app: AppContext) {
     val model = LocationScout(renderScope, app)
-    column {
-        viewGeoMap(app.geoMap, app.appScope)
+    tabs {
+        tab("Scout") {
+            column {
+                viewGeoMap(app.geoMap, app.appScope)
 
-        flowBlock(model.dataFlow, defaultMagic, magic = true) { data ->
-            val point = data.point; val edit = data.edit; val location = data.location
-            viewOf(model) {
-                if (point == null) {
-                    findPointStage()
-                } else if (edit != null) {
-                    if (location != null) {
-                        finishedStage(location)
-                    } else {
-                        reviewStage(edit)
+                flowBlock(model.dataFlow, defaultMagic, magic = true) { data ->
+                    val point = data.point; val edit = data.edit; val location = data.location; val places = data.places
+                    viewOf(model) {
+                        if (location != null) {
+                            finishedStage(location)
+                        } else if (edit != null) {
+                            reviewStage(edit)
+                        } else if (point != null) {
+                            creationStage()
+                        } else if (places != null) {
+                            choosePlaceStage(places)
+                        } else {
+                            findPointStage()
+                        }
                     }
-                } else {
-                    creationStage()
                 }
             }
+        }
+        tab("More Info") {
+            textBlock("yer info")
         }
     }
 }
 
 fun ViewContext<LocationScout>.findPointStage() {
     val locationsFlow = model.app.streetMap.locationsFlow
-    val placesFlow = model.stateFlow.mapDistinct { it.places }
     val queryFlow = model.stateFlow.mapDistinct { it.query }
+    val limitCityFlow = model.stateFlow.mapDistinct { it.limitCity }
+    val limitMapFlow = model.stateFlow.mapDistinct { it.limitMap }
+    val limitStateFlow = model.stateFlow.mapDistinct { it.limitState }
 
     column {
         card {
@@ -51,43 +61,52 @@ fun ViewContext<LocationScout>.findPointStage() {
 
         card {
             heading4("OpenStreetMap")
-            textBlock("We can also search OpenStreetMap by the location's name, address, city, etc.")
+            textBlock("We can also search OpenStreetMap by the location's name, address, city, etc.", modify(Dim))
 
-            row {
-                textField("search", modify(Flex1), model::setQuery, queryFlow, placeholder = "Search by name or address")
-                button("Search", onClick = model::searchOSM)
-            }
-            switch("Limit search to map")
-        }
-
-        flowBlock(placesFlow, defaultMagic, magic = true) { places ->
-            if (places.isEmpty()) {
-                card {
-                    row {
-                        heading3("Nearby locations", modify(Flex1))
-                    }
-                    itemsBlock(locationsFlow, defaultMagic, magic = true) { (location, events) ->
-                        box {
-                            cardOf(location)
+            row(modify(AlignItemsStart)) {
+                column(modify(Flex1, AlignItemsEnd)) {
+                    textField("search", modify(Width100), model::setQuery, queryFlow, placeholder = "Search by name or address")
+                    row(modify(JustifyEnd)) {
+                        textBlock("Limit search area to:", modify(Dim))
+                        switch("map", onToggle = model::setLimitMap, bindFlow = limitMapFlow)
+                        model.stateNow.city?.let {
+                            switch(it, onToggle = model::setLimitCity, bindFlow = limitCityFlow)
+                        }
+                        model.stateNow.state?.let {
+                            switch(it, onToggle = model::setLimitState, bindFlow = limitStateFlow)
                         }
                     }
                 }
-            } else {
+                button("Search", onClick = model::searchOSM)
+            }
+        }
+
+        card {
+            row {
+                heading3("Nearby locations", modify(Flex1))
+            }
+            itemsBlock(locationsFlow, defaultMagic, magic = true) { (location, events) ->
+                box {
+                    cardOf(location)
+                }
+            }
+        }
+    }
+}
+
+fun ViewContext<LocationScout>.choosePlaceStage(places: List<Place>) {
+    card {
+        row {
+            messageBox(model.messageFlow, modify(Flex1))
+            button("start over", onClick = model::reset)
+        }
+        places.forEach { place ->
+            val name = place.name ?: return@forEach
+            action(onClick = { model.choosePlace(place) }, modify(Width100)) {
                 card {
-                    row {
-                        heading3("OpenStreetMap Locations")
-                        button("See Streetlight locations")
-                    }
-                    places.forEach { place ->
-                        val name = place.name ?: return@forEach
-                        action(onClick = { model.choosePlace(place) }, modify(Width100)) {
-                            card {
-                                textBlock(name)
-                                place.address?.let {
-                                    textBlock(it)
-                                }
-                            }
-                        }
+                    textBlock(name)
+                    place.address?.let {
+                        textBlock(it)
                     }
                 }
             }
@@ -107,7 +126,7 @@ fun ViewContext<LocationScout>.creationStage() {
                 button("🤖 read link", modify(Accent), onClick = model::readLink)
             }
             row {
-                textBlock("Or you can enter the details yourself.", modify(Flex1))
+                textBlock("Or you can enter the details yourself.", modify(Flex1, Dim))
                 button("📝 editor", modify(Accent))
             }
         }
