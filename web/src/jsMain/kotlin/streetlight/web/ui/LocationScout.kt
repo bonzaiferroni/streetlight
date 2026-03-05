@@ -11,6 +11,7 @@ import streetlight.model.data.Location
 import streetlight.model.data.LocationEdit
 import streetlight.model.data.ParseRequest
 import streetlight.model.data.Place
+import streetlight.model.external.OSMQuery
 import streetlight.model.external.toPlace
 import streetlight.web.model.AppContext
 
@@ -49,7 +50,7 @@ class LocationScout(
     fun reset() {
         state.set { LocationScoutState() }
         data.set { LocationScoutData() }
-        msg.set("$introMsg. Locations added so far: $count")
+        msg.set("$introMsg Locations added so far: $count")
     }
 
     fun setQuery(value: String) {
@@ -69,20 +70,29 @@ class LocationScout(
     }
 
     fun searchOSM() {
+        val q = state.now.query.takeIf { it.isNotBlank() }?.let {
+            OSMQuery(
+                amenity = it,
+                city = stateNow.city.takeIf { stateNow.limitCity },
+                state = stateNow.state.takeIf { stateNow.limitState },
+                bounds = geo.stateNow.bounds.takeIf { stateNow.limitMap },
+            )
+        } ?: return
         val query = state.now.query.takeIf { it.isNotBlank() }?.let {
             val city = stateNow.city
-            if (city != null && !it.contains(city)) {
+            if (city != null && !it.contains(city) && stateNow.limitCity) {
                 "$it, $city"
             } else it
         }?.let {
             val state = stateNow.state
-            if (state != null && !it.contains(state)) {
+            if (state != null && !it.contains(state) && stateNow.limitState) {
                 "$it, $state"
             } else it
         } ?: return
+        val bounds = geo.stateNow.bounds.takeIf { stateNow.limitMap }
         msg.set("Searching OpenStreetMap...")
         scope.launch {
-            val places = osm.readPlaces(query)?.map { it.toPlace() }
+            val places = osm.readPlaces(q)?.map { it.toPlace() }
             if (places.isNullOrEmpty()) {
                 msg.set("We couldn't find anything.")
                 return@launch
@@ -147,7 +157,7 @@ data class LocationScoutData(
 )
 
 private val introMsg = """
-    Earth, it is full of locations. Let's add one to the map, where should it go?
+    Earth, it is full of locations. Let's add one to the map. But where?
 """.trimIndent()
 
 private val detailsMsg = """

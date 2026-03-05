@@ -52,16 +52,17 @@ fun ViewContext<LocationScout>.findPointStage() {
     val limitStateFlow = model.stateFlow.mapDistinct { it.limitState }
 
     column {
-        card {
-            row {
-                messageBox(model.messageFlow, modify(Flex1))
+        card(modify(AlignItemsEnd)) {
+            messageBox(model.messageFlow)
+            row(modify(JustifyEnd)) {
+                textBlock("Move the map target to the location.", modify(Dim))
                 button("Here", modify(Accent), onClick = model::here)
             }
         }
 
         card {
             heading4("OpenStreetMap")
-            textBlock("We can also search OpenStreetMap by the location's name, address, city, etc.", modify(Dim))
+            textBlock("We can also search OpenStreetMap by the location's name, address, city, type of establishment, etc.", modify(Dim))
 
             row(modify(AlignItemsStart)) {
                 column(modify(Flex1, AlignItemsEnd)) {
@@ -83,7 +84,7 @@ fun ViewContext<LocationScout>.findPointStage() {
 
         card {
             row {
-                heading3("Nearby locations", modify(Flex1))
+                heading4("Nearby locations", modify(Flex1))
             }
             itemsBlock(locationsFlow, defaultMagic, magic = true) { (location, events) ->
                 box {
@@ -98,7 +99,7 @@ fun ViewContext<LocationScout>.choosePlaceStage(places: List<Place>) {
     card {
         row {
             messageBox(model.messageFlow, modify(Flex1))
-            button("start over", onClick = model::reset)
+            button("start over", modify(Secondary), onClick = model::reset)
         }
         places.forEach { place ->
             val name = place.name ?: return@forEach
@@ -116,17 +117,17 @@ fun ViewContext<LocationScout>.choosePlaceStage(places: List<Place>) {
 
 fun ViewContext<LocationScout>.creationStage() {
     column {
-        card {
+        card() {
             row {
                 messageBox(model.messageFlow, modify(Flex1))
-                button("start over", onClick = model::reset)
+                button("start over", modify(Secondary), onClick = model::reset)
             }
             row {
                 textField("link", modify(Flex1), model::setLink, model.stateFlow.mapDistinct { it.website })
                 button("🤖 read link", modify(Accent), onClick = model::readLink)
             }
             row {
-                textBlock("Or you can enter the details yourself.", modify(Flex1, Dim))
+                textBlock("Or you can enter the details yourself.", modify(Flex1, Dim, TextAlignRight))
                 button("📝 editor", modify(Accent))
             }
         }

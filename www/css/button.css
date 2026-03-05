@@ -20,6 +20,7 @@
 }
 
 .btn.secondary {
+    box-shadow: 0 0 .8rem var(--gray-fg);
     background: var(--secondary-button);
 }
 

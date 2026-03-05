@@ -1,5 +1,6 @@
 package streetlight.web.io
 
+import kampfire.model.GeoBounds
 import kampfire.model.GeoPoint
 import kotlinx.browser.window
 import kotlinx.coroutines.await
@@ -29,14 +30,23 @@ class OSMFetchClient() {
         return response.tryDecodeText(true)
     }
 
-    suspend fun readPlaces(freeForm: String, limit: Int = 10): List<OSMPlace>? {
-        val url = "https://nominatim.openstreetmap.org/search?" + listOf(
-            "q=${encodeURIComponent(freeForm)}",
+    suspend fun readPlaces(query: String, bounds: GeoBounds? = null): List<OSMPlace>? {
+        val params = listOfNotNull(
+            "q=${encodeURIComponent(query)}",
+            bounds?.let {
+                val sw = it.sw
+                val ne = it.ne
+                "viewbox=${sw.lng},${ne.lat},${ne.lng},${sw.lat}"
+            },
+            bounds?.let { "bounded=1" },
             "format=jsonv2",
             "addressdetails=1",
             "extratags=1",
-            "limit=${limit}"
+            "limit=10"
         ).joinToString("&")
+
+        val url = "https://nominatim.openstreetmap.org/search?$params"
+        println(url)
 
         val response = window.fetch(url, RequestInit(headers = headers)).await()
 
@@ -57,6 +67,14 @@ fun OSMQuery.toQuery() = listOfNotNull(
     state?.let { "state=${encodeURIComponent(it)}" },
     country?.let { "country=${encodeURIComponent(it)}" },
     postalcode?.let { "postalcode=${encodeURIComponent(it)}" },
+
+    bounds?.let {
+        val sw = it.sw
+        val ne = it.ne
+        "viewbox=${sw.lng},${ne.lat},${ne.lng},${sw.lat}"
+    },
+    bounds?.let { "bounded=1" },
+
     "format=jsonv2",
     "addressdetails=1",
     "extratags=1",

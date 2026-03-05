@@ -1,5 +1,6 @@
 package streetlight.model.external
 
+import kampfire.model.GeoBounds
 import kampfire.model.GeoPoint
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -87,6 +88,7 @@ data class OSMQuery(
     val state: String? = null,
     val country: String? = null,
     val postalcode: String? = null,
+    val bounds: GeoBounds? = null,
     val limit: Int = 10
 )
 
