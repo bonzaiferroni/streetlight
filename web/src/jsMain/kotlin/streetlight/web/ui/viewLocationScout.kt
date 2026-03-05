@@ -5,29 +5,21 @@ import koala.dom.*
 import koala.html.heading3
 import koala.html.propertyValue
 import koala.model.mapDistinct
-import koala.model.storeOf
 import kotlinx.coroutines.launch
-import streetlight.model.data.LocationEdit
 import streetlight.web.ReadEventRoute
 import streetlight.web.model.*
 import streetlight.web.shells.cardOf
 
-fun RenderContext.viewScoutMap(app: AppContext) {
+fun RenderContext.viewLocationScout(app: AppContext) {
     val locationsFlow = app.streetMap.locationsFlow
-    val model = ScoutMap(renderScope, app.client.api, app.geoMap)
-
-    renderScope.launch {
-        locationsFlow.collect {
-            console.log("locations ${it.size}")
-        }
-    }
+    val model = LocationScout(renderScope, app.client.api, app.geoMap)
 
     column {
         viewGeoMap(app.geoMap, app.appScope)
 
-        flowBlock(model.editFlow, modify(Blur, SlideX), magic = true) { edit ->
+        flowBlock(model.editFlow, defaultMagic, magic = true) { edit ->
             if (edit != null) {
-                flowBlock(model.locationFlow, modify(Blur, SlideX), magic = true) { location ->
+                flowBlock(model.locationFlow, defaultMagic, magic = true) { location ->
                     if (location != null) {
                         card {
                             row {
@@ -77,7 +69,7 @@ fun RenderContext.viewScoutMap(app: AppContext) {
                         }
                     }
 
-                    itemsBlock(locationsFlow, modify(Blur, SlideX), magic = true) { (location, events) ->
+                    itemsBlock(locationsFlow, defaultMagic, magic = true) { (location, events) ->
                         box {
                             cardOf(location)
                         }
@@ -86,4 +78,12 @@ fun RenderContext.viewScoutMap(app: AppContext) {
             }
         }
     }
+
+//    flowBlock(model.isMapFlow, defaultMagic, magic = true) { isMap ->
+//        if (isMap) {
+//
+//        } else {
+//
+//        }
+//    }
 }

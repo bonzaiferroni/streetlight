@@ -28,6 +28,7 @@ data class LocationEntity(
             cardOf(location)
         }
     }
+    override val light get() = Rgb(180, 240, 100)
 }
 
 data class EventEntity(
@@ -44,6 +45,7 @@ data class EventEntity(
             cardOf(event, modify(MaxWidth64))
         }
     }
+    override val light get() = Rgb(240, 100, 180 )
 }
 
 data class SpiritEntity(

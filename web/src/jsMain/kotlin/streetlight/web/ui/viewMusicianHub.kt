@@ -14,6 +14,7 @@ import koala.dom.action
 import koala.dom.button
 import koala.dom.card
 import koala.dom.column
+import koala.dom.defaultMagic
 import koala.dom.itemsBlock
 import koala.dom.row
 import koala.dom.tab
@@ -54,7 +55,7 @@ fun RenderContext.viewMusicianHub(
                         }
                         button("Add new song", modify(Accent), onClick = model::addSong)
                     }
-                    itemsBlock(model.songsFlow, modify(Blur, SlideX), true) { song ->
+                    itemsBlock(model.songsFlow, defaultMagic, true) { song ->
                         action(SongProfileRoute(song.songId)) {
                             card {
                                 textBlock(song.title)

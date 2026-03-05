@@ -83,14 +83,14 @@ fun viewApp() {
                     StreetlightScreen.LocationProfile -> locationProfileView(app)
                     StreetlightScreen.EditLocation -> locationEditorRouteView(app)
                     StreetlightScreen.LocationAdmin -> viewLocationAdmin(app)
-                    StreetlightScreen.ScoutMap -> viewScoutMap(app)
+                    StreetlightScreen.ScoutMap -> viewLocationScout(app)
                     else -> textBlock("Coming soon: $screen")
                 }
             }
 
             wireBlock(AppBody.titlePathId) {
                 val titleFlow = app.portal.stateFlow.mapDistinct { it.title }
-                flowBlock(titleFlow, modify(Blur, SlideX), magic = true) { title ->
+                flowBlock(titleFlow, defaultMagic, magic = true) { title ->
                     if (title != null) {
                         row {
                             heading2("|", modify(Dim))

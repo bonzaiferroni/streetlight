@@ -74,7 +74,7 @@
 }
 
 .focus .map-marker__base.scale {
-    transform: scale(2);
+    transform: scale(1.5);
 }
 
 /* .marker-icon, .marker-thumb, .marker-label, .marker-bearing */
@@ -126,7 +126,7 @@
 
     border-radius: 16px;
 
-    border: 1px solid rgba(var(--thumb-border-rgb), 0.5);
+    border: 2px solid rgba(var(--thumb-border-rgb), 0.8);
 
     transition: border-radius 200ms ease-in-out,
     border-color 200ms ease-in-out;

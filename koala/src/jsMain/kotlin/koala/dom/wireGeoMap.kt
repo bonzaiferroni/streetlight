@@ -65,7 +65,7 @@ fun wireMapWindow(
     val focusPanel = mapWindow.querySelector(GeoMapSelector.focusPanel.selector) as HTMLElement
     focusPanel.renderRoot(appScope) {
         val nearestFlow = geoMap.stateFlow.mapDistinct { it.nearest }
-        flowBlock(nearestFlow, modify(Blur, SlideX), magic = true) { entity ->
+        flowBlock(nearestFlow, defaultMagic, magic = true) { entity ->
             val cardFunction = entity?.focusCard ?: return@flowBlock
             cardFunction()
         }

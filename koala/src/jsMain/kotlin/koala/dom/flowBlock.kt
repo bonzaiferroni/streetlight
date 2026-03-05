@@ -1,10 +1,13 @@
 package koala.dom
 
+import koala.css.Blur
 import koala.css.Magic
 import koala.css.ElementClass
 import koala.css.ModifierSet
 import koala.css.Reveal
+import koala.css.SlideX
 import koala.css.applyModifiers
+import koala.css.modify
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -74,3 +77,5 @@ fun <State> RenderContext.flowBlock(
 
     return element
 }
+
+val defaultMagic = modify(Blur, SlideX)

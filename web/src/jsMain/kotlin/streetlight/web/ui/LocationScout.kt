@@ -1,17 +1,20 @@
 package streetlight.web.ui
 
+import kampfire.model.GeoPoint
 import koala.dom.UIMessage
 import koala.dom.set
 import koala.model.GeoMap
+import koala.model.mapDistinct
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import streetlight.model.data.Location
 import streetlight.model.data.LocationEdit
 import streetlight.model.data.ParseRequest
 import streetlight.web.io.ApiClient
 
-class ScoutMap(
+class LocationScout(
     private val scope: CoroutineScope,
     private val api: ApiClient,
     private val geoMap: GeoMap,
@@ -24,6 +27,7 @@ class ScoutMap(
     val stateFlow = state.flow
     val messageFlow = msg.flow
     val locationFlow = locationState.flow
+    val pointFlow = stateFlow.mapDistinct { it.point }
 
     fun setLink(value: String) {
         state.set { it.copy(link = value) }
@@ -63,6 +67,7 @@ class ScoutMap(
 
 data class ScoutMapState(
     val link: String = "",
+    val point: GeoPoint? = null,
 )
 
 private const val initialMsg = "Enter a link for the location you'd like to put on the map, or edit the details yourself."

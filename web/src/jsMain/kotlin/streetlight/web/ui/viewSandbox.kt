@@ -24,7 +24,7 @@ fun RenderContext.viewSandbox(app: AppContext) {
 
 //    val flow = MutableStateFlow(listOf("One", "Two", "Three"))
 //
-//    itemsBlock(flow, modify(Blur, SlideX), animate = true) {
+//    itemsBlock(flow, defaultMagic, animate = true) {
 //        textBlock(it)
 //    }
 //

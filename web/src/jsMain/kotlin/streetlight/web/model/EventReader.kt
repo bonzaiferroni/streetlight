@@ -19,9 +19,12 @@ class EventReader(
     private val api: ApiClient,
     private val route: ReadEventRoute,
 ) {
-    val state = storeOf(EventReaderState())
-    val message = storeOf(UIMessage(intro))
-    val location = storeOf(route.location)
+    private val state = storeOf(EventReaderState())
+    private val message = storeOf(UIMessage(intro))
+    private val location = storeOf(route.location)
+    val stateFlow = state.flow
+    val messageFlow = message.flow
+    val locationFlow = location.flow
 
     init {
         if (route.link != null) {
@@ -67,20 +70,15 @@ class EventReader(
         }
     }
 
-    private fun readUrl(url: String?, isImage: Boolean) {
+    fun readCalendar() {
+        readUrl(location.now?.eventsLink, false)
+    }
 
+    private fun readUrl(url: String?, isImage: Boolean) {
         val url = url?.takeIf { it.isNotEmpty() } ?: return
-        state.set { it.copy(stage = 1)}
         scope.launch {
-            val messageStream = launch {
-                message.set("Reading url...")
-                while(true) {
-                    delay(3.seconds)
-                    message.set(loadingMessages.random())
-                }
-            }
+            message.set("Reading url, this can take a minute.")
             val parse = api.parseMultiEventFromUrl(ParseRequest(url, null, isImage))
-            messageStream.cancel()
             val events = parse?.events?.takeIf { it.isNotEmpty() }
             if (events != null) {
                 message.set("Finished. Are any of these the event you wish to post?")
@@ -98,10 +96,11 @@ data class EventReaderState(
     val link: String = "",
     val imageUrl: String = "",
     val parse: MultiEventParseResponse? = null,
-    val stage: Int = 0,
     val completed: List<Int?> = emptyList()
 ) {
     fun getStatus(index: Int) = completed.getOrNull(index)
 }
 
-private const val intro = "Share information about upcoming events."
+private const val intro = "Share information about upcoming events. " +
+        "You may provide a link, image, or text and we'll do our best to understand it. " +
+        "You'll have a chance to review the information before it is posted."
