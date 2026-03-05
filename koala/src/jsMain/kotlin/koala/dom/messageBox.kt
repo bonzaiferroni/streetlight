@@ -1,7 +1,6 @@
 package koala.dom
 
 import koala.css.*
-import koala.html.SiteImage
 import kotlinx.coroutines.flow.Flow
 
 fun RenderContext.messageBox(
@@ -13,9 +12,11 @@ fun RenderContext.messageBox(
         row(modify(AlignItemsStart)) {
 //            image(SiteImage.placeholderThumb, modify(Width4))
             flowBlock(flow, modify(Flex1), magic = magic) { message ->
-                val text = message?.text
-                if (text != null) {
-                    textBlock(text)
+                column {
+                    val paragraphs = message?.text?.split("\n\n")
+                    paragraphs?.forEach { text ->
+                        textBlock(text)
+                    }
                 }
             }
         }

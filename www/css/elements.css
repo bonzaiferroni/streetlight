@@ -77,11 +77,11 @@
     inset: 0;
     background: white;
     opacity: 0;
-    animation: messageGlow 5s ease-in-out infinite;
+    animation: messageGlow 1s ease-in-out 3;
     pointer-events: none;
 }
 
 @keyframes messageGlow {
     0%, 100% { opacity: 0; }
-    50% { opacity: .1; }
+    50% { opacity: .05; }
 }
