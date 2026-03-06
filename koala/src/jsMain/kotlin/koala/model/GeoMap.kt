@@ -21,18 +21,20 @@ class GeoMap(
     val stateFlow = state.flow
     val stateNow get() = state.now
 
-    private val _entityFlow = MutableSharedFlow<List<MapEntity>>(8)
+    private val _entityFlow = MutableSharedFlow<List<MapEntity>>(1)
     val entityFlow: SharedFlow<List<MapEntity>> = _entityFlow
-    private val _removeEntity = MutableSharedFlow<List<MapEntityId>>(8)
+    private val _removeEntity = MutableSharedFlow<List<MapEntityId>>(1)
     val removeEntity: SharedFlow<List<MapEntityId>> = _removeEntity
-    private val _linesFlow = MutableSharedFlow<List<LineEntity>>(8)
+    private val _linesFlow = MutableSharedFlow<List<LineEntity>>(1)
     val linesFlow: SharedFlow<List<LineEntity>> = _linesFlow
-    private val _panFlow = MutableSharedFlow<PanPoint>(8)
+    private val _panFlow = MutableSharedFlow<PanPoint>(1)
     val panFlow: SharedFlow<PanPoint> = _panFlow
-    private val _markerVisibilityFlow = MutableSharedFlow<(MapEntity) -> Boolean>(8)
+    private val _markerVisibilityFlow = MutableSharedFlow<(MapEntity) -> Boolean>(1)
     val markerVisibilityFlow: SharedFlow<(MapEntity) -> Boolean> = _markerVisibilityFlow
-    private val _movementFlow = MutableSharedFlow<EntityMovement>(8)
+    private val _movementFlow = MutableSharedFlow<EntityMovement>(1)
     val movementFlow: Flow<EntityMovement> = _movementFlow
+    private val _tempEntityFlow = MutableSharedFlow<TempEntitySet?>(1)
+    val tempEntityFlow: Flow<TempEntitySet?> = _tempEntityFlow
 
     val viewedStateFlow = stateFlow.filter { it.isViewed }
     val zoomFlow = viewedStateFlow.mapDistinct { it.zoom }
@@ -95,6 +97,12 @@ class GeoMap(
 
     fun setIsViewed(value: Boolean) {
         state.set { it.copy(isViewed = value) }
+    }
+
+    fun tempEntities(entities: List<MapEntity>?) {
+        scope.launch {
+            _tempEntityFlow.emit(entities?.let { TempEntitySet(it)})
+        }
     }
 }
 

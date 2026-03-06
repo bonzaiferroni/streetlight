@@ -2,19 +2,14 @@ package koala.dom
 
 import koala.core.findAndInitGeoMap
 import koala.core.queryFirstOrNull
-import koala.css.Blur
-import koala.css.SlideX
-import koala.css.modify
 import koala.external.CenterZoomBearing
 import koala.external.maplibregl
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.w3c.dom.HTMLElement
 import koala.html.GeoMapSelector
-import koala.html.cardOf
 import koala.model.GeoMap
 import koala.model.MapViewContext
-import koala.model.PointEntity
 import koala.model.mapDistinct
 import koala.model.showLines
 import koala.external.maplibregl.Point
@@ -24,7 +19,6 @@ import koala.model.toLngLat
 import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.html.FlowContent
 
 fun wireGeoMap(
     geoMap: GeoMap,
@@ -92,12 +86,11 @@ fun wireMapWindow(
         }
 
         launch {
-            geoMap.removeEntity.collect { entityIds ->
-                entityIds.forEach { entityId ->
-                    context.markers[entityId]?.marker?.remove()
-                    context.markers.remove(entityId)
-                }
-            }
+            geoMap.removeEntity.collect(context::removeEntities)
+        }
+
+        launch {
+            geoMap.tempEntityFlow.collect(context::tempEntitySet)
         }
 
         launch {

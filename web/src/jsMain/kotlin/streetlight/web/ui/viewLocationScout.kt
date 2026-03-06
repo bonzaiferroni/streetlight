@@ -38,6 +38,9 @@ fun RenderContext.viewLocationScout(app: AppContext) {
                 }
             }
         }
+        tab("Your locations") {
+            textBlock("yer locations")
+        }
         tab("More Info") {
             textBlock("yer info")
         }
@@ -45,7 +48,6 @@ fun RenderContext.viewLocationScout(app: AppContext) {
 }
 
 fun ViewContext<LocationScout>.findPointStage() {
-    val locationsFlow = model.app.streetMap.locationsFlow
     val queryFlow = model.stateFlow.mapDistinct { it.query }
     val limitCityFlow = model.stateFlow.mapDistinct { it.limitCity }
     val limitMapFlow = model.stateFlow.mapDistinct { it.limitMap }
@@ -79,17 +81,6 @@ fun ViewContext<LocationScout>.findPointStage() {
                     }
                 }
                 button("Search", onClick = model::searchOSM)
-            }
-        }
-
-        card {
-            row {
-                heading4("Nearby locations", modify(Flex1))
-            }
-            itemsBlock(locationsFlow, defaultMagic, magic = true) { (location, events) ->
-                box {
-                    cardOf(location)
-                }
             }
         }
     }

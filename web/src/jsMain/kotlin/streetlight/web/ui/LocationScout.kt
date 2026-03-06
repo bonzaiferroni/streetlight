@@ -13,7 +13,9 @@ import streetlight.model.data.ParseRequest
 import streetlight.model.data.Place
 import streetlight.model.external.OSMQuery
 import streetlight.model.external.toPlace
+import streetlight.web.io.SvgPath
 import streetlight.web.model.AppContext
+import streetlight.web.model.IconEntity
 
 class LocationScout(
     private val scope: CoroutineScope,
@@ -70,14 +72,14 @@ class LocationScout(
     }
 
     fun searchOSM() {
-        val q = state.now.query.takeIf { it.isNotBlank() }?.let {
-            OSMQuery(
-                amenity = it,
-                city = stateNow.city.takeIf { stateNow.limitCity },
-                state = stateNow.state.takeIf { stateNow.limitState },
-                bounds = geo.stateNow.bounds.takeIf { stateNow.limitMap },
-            )
-        } ?: return
+//        val q = state.now.query.takeIf { it.isNotBlank() }?.let {
+//            OSMQuery(
+//                amenity = it,
+//                city = stateNow.city.takeIf { stateNow.limitCity },
+//                state = stateNow.state.takeIf { stateNow.limitState },
+//                bounds = geo.stateNow.bounds.takeIf { stateNow.limitMap },
+//            )
+//        } ?: return
         val query = state.now.query.takeIf { it.isNotBlank() }?.let {
             val city = stateNow.city
             if (city != null && !it.contains(city) && stateNow.limitCity) {
@@ -92,7 +94,7 @@ class LocationScout(
         val bounds = geo.stateNow.bounds.takeIf { stateNow.limitMap }
         msg.set("Searching OpenStreetMap...")
         scope.launch {
-            val places = osm.readPlaces(q)?.map { it.toPlace() }
+            val places = osm.readPlaces(query, bounds)?.map { it.toPlace() }
             if (places.isNullOrEmpty()) {
                 msg.set("We couldn't find anything.")
                 return@launch
@@ -107,8 +109,15 @@ class LocationScout(
     }
 
     fun here() {
-        data.set { it.copy(point = geo.stateNow.center) }
+        setPoint(geo.stateNow.center)
         msg.set(detailsMsg)
+    }
+
+    private fun setPoint(point: GeoPoint) {
+        data.set { it.copy(point = point) }
+        geo.tempEntities(listOf(
+            IconEntity("here", SvgPath.guitar, point)
+        ))
     }
 
     fun choosePlace(place: Place) {

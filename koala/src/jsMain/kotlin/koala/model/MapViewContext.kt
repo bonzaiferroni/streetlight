@@ -1,7 +1,6 @@
 package koala.model
 
 import kampfire.model.GeoPoint
-import kampfire.model.distanceTo
 import kampfire.model.regionalDistanceTo
 import kampfire.model.toPoint
 import koala.external.maplibregl
@@ -14,6 +13,7 @@ class MapViewContext(
     val layers = mutableSetOf<LayerId>()
     private var visibility: ((MapEntity) -> Boolean)? = null
     private var focus: PointEntityView? = null
+    private var tempSet: TempEntitySet? = null
 
     fun setVisibility(visibility: ((MapEntity) -> Boolean)?) {
         this.visibility = visibility ?: { true }
@@ -44,6 +44,21 @@ class MapViewContext(
         }
     }
 
+    fun removeEntities(entityIds: List<MapEntityId>) {
+        entityIds.forEach { entityId ->
+            markers[entityId]?.marker?.remove()
+            markers.remove(entityId)
+        }
+    }
+
+    fun removeEntities(entities: List<MapEntity>) {
+        entities.forEach { entity ->
+            val entityId = entity.entityId
+            markers[entityId]?.marker?.remove()
+            markers.remove(entityId)
+        }
+    }
+
     fun getNearest(center: GeoPoint, zoom: Float): PointEntity? {
         var nearest: PointEntityView? = null
         var nearestDistanceSq = Double.MAX_VALUE
@@ -68,6 +83,17 @@ class MapViewContext(
         val view = markers[movement.entityId] ?: return
         view.move(movement.position)
         console.log("moved to ${movement.position}")
+    }
+
+    fun tempEntitySet(set: TempEntitySet?) {
+        val currentSet = tempSet
+        if (currentSet != null) {
+            removeEntities(currentSet.entities)
+        }
+        if (set != null) {
+            addEntities(set.entities)
+        }
+        tempSet = set
     }
 
     private fun recallObject(entity: PointEntity, center: GeoPoint): PointEntityView? {
@@ -95,3 +121,7 @@ class MapViewContext(
 }
 
 typealias LayerId = String
+
+data class TempEntitySet(
+    val entities: List<MapEntity>
+)
