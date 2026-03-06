@@ -38,6 +38,7 @@ fun RenderContext.viewMapControls(app: AppContext) {
                 }
             })
         }
+        textBlock("Spirit vision allows you to see the focus point of other spirits and they can see yours.")
         switch("👻 Spirit Vision", onToggle = streetMap::spiritVision)
     }
 }

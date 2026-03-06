@@ -7,6 +7,7 @@ import koala.html.heading4
 import koala.html.propertyValue
 import koala.html.spacer
 import koala.model.mapDistinct
+import kotlinx.coroutines.flow.filterNotNull
 import streetlight.model.data.Location
 import streetlight.model.data.LocationEdit
 import streetlight.model.data.Place
@@ -15,13 +16,20 @@ import streetlight.web.model.*
 
 fun RenderContext.viewLocationScout(app: AppContext) {
     val model = LocationScout(renderScope, app)
+    val dataFlow = model.stateFlow.mapDistinct {
+        LocationScoutData(
+            places = it.places,
+            hasEdit = it.edit != null,
+            location = it.location
+        )
+    }
     tabs {
         tab("Scout") {
             column {
                 viewGeoMap(app.geoMap, app.appScope)
 
-                flowBlock(model.dataFlow, defaultMagic, magic = true) { data ->
-                    val edit = data.edit; val location = data.location; val places = data.places
+                flowBlock(dataFlow, defaultMagic, magic = true) { data ->
+                    val edit = model.stateNow.edit; val location = data.location; val places = data.places
                     viewOf(model) {
                         if (location != null) {
                             finishedStage(location)
@@ -44,6 +52,12 @@ fun RenderContext.viewLocationScout(app: AppContext) {
         }
     }
 }
+
+private data class LocationScoutData(
+    val places: List<Place>?,
+    val hasEdit: Boolean,
+    val location: Location?,
+)
 
 fun ViewContext<LocationScout>.findPointStage() {
     val queryFlow = model.stateFlow.mapDistinct { it.query }
@@ -105,38 +119,44 @@ fun ViewContext<LocationScout>.choosePlaceStage(places: List<Place>) {
 }
 
 fun ViewContext<LocationScout>.reviewStage(edit: LocationEdit) {
+    val editFlow = model.stateFlow.mapDistinct { it.edit }.filterNotNull()
+
     column {
         card() {
             messageBox(model.messageFlow, modify(Flex1))
             row {
-                textField("link", modify(Flex1), model::setLink, model.stateFlow.mapDistinct { it.website })
-                button("🤖 read link", onClick = model::readLink)
+                textField("website", modify(Flex1), model::setLink, model.stateFlow.mapDistinct { it.website })
+                button("🤖 read website", onClick = model::readLink)
             }
         }
 
         tabs {
             tab("Details") {
-                row(modify(AlignItemsStart)) {
-                    val imageUrl = edit.imageUrl
-                    if (imageUrl != null) {
-                        image(imageUrl, modify(Flex1, Width100))
-                    } else {
-                        box(modify(Flex1, CenterItems)) {
-                            textBlock("no image")
+                flowBlock(editFlow) { edit ->
+                    row(modify(AlignItemsStart)) {
+                        val imageUrl = edit.imageUrl
+                        if (imageUrl != null) {
+                            image(imageUrl, modify(Flex1, Width100))
+                        } else {
+                            box(modify(Flex1, CenterItems)) {
+                                textBlock("no image")
+                            }
                         }
-                    }
-                    column(modify(Flex2)) {
-                        heading3(edit.name ?: "[No name found]")
-                        textBlock(edit.description ?: "[No description]")
-                        propertyValue("address", edit.address ?: "[No address]")
-                        propertyValue("website", edit.website ?: "[No website]")
-                        propertyValue("calendar", edit.eventsLink ?: "[No calendar]")
-                        propertyValue("about", "[No about]")
+                        column(modify(Flex2)) {
+                            heading3(edit.name ?: "[No name found]")
+                            textBlock(edit.description ?: "[No description]")
+                            propertyValue("address", edit.address ?: "[No address]")
+                            propertyValue("website", edit.website ?: "[No website]")
+                            propertyValue("calendar", edit.eventsLink ?: "[No calendar]")
+                            propertyValue("about", "[No about]")
+                        }
                     }
                 }
             }
             tab("Edit") {
-                textBlock("yer editor")
+                viewLocationEditor(edit, model.app, editFlow) {
+                    model.setEdit(it)
+                }
             }
         }
 

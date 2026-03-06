@@ -1,12 +1,12 @@
 package streetlight.web.ui
 
-import koala.css.Accent
 import koala.css.AlignItemsStretch
 import koala.css.Flex1
 import koala.css.MinHeight8
 import koala.css.modify
 import koala.dom.*
 import koala.model.mapDistinct
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import streetlight.model.data.LocationEdit
 import streetlight.model.data.toEdit
@@ -17,12 +17,33 @@ import streetlight.web.EditLocationRoute
 import streetlight.web.model.AppContext
 import streetlight.web.model.LocationEditor
 
-fun RenderContext.locationEditorView(location: LocationEdit, app: AppContext) {
+fun RenderContext.viewLocationEditor(
+    location: LocationEdit,
+    app: AppContext,
+    bindFlow: Flow<LocationEdit>?,
+    onEdit: ((LocationEdit) -> Unit)?
+) {
     val model = LocationEditor(location, renderScope, app.client)
     val nameFlow = model.editFlow.mapDistinct { it.name }
     val imageUrlFlow = model.editFlow.mapDistinct { it.imageUrl }
     val linkFlow = model.editFlow.mapDistinct { it.website }
     val eventsLinkFlow = model.editFlow.mapDistinct { it.eventsLink }
+
+    onEdit?.let {
+        renderScope.launch {
+            model.editFlow.collect {
+                onEdit(it)
+            }
+        }
+    }
+
+    bindFlow?.let {
+        renderScope.launch {
+            it.collect { edit ->
+                model.setEdit(edit)
+            }
+        }
+    }
 
     column(modify(AlignItemsStretch)) {
         imageChoice(
@@ -33,23 +54,22 @@ fun RenderContext.locationEditorView(location: LocationEdit, app: AppContext) {
             choicesFlow = app.userCache.files.flow
         )
         textField("name", modify(), model::setPlaceName, nameFlow)
-        row {
-            textField("link", modify(Flex1), model::setLink, linkFlow)
-            button("🤖 read details from link", onClick = model::parseLocation)
-        }
-        textField("events", modify(), model::setEventsLink, eventsLinkFlow)
-        placeEditor(location.geoPoint, app, model)
-        button("cancel", onClick = app.portal::goBack)
-        button("save", modify(Accent), onClick = {
-            renderScope.launch {
-                model.saveLocation()
-                app.portal.goBack()
-            }
-        })
+        textField("address", modify(), model::setAddress, model.editFlow.mapDistinct { it.address })
+        textField("description", modify(), model::setDescription, model.editFlow.mapDistinct { it.description })
+        textField("website", modify(Flex1), model::setLink, linkFlow)
+        textField("calendar", modify(), model::setEventsLink, eventsLinkFlow)
+        // placeEditor(location.geoPoint, app, model)
+//        button("cancel", onClick = app.portal::goBack)
+//        button("save", modify(Accent), onClick = {
+//            renderScope.launch {
+//                model.saveLocation()
+//                app.portal.goBack()
+//            }
+//        })
     }
 }
 
-fun RenderContext.locationEditorRouteView(app: AppContext) {
+fun RenderContext.viewEditLocationRoute(app: AppContext) {
     val portal = app.portal
     val api = app.client.api
 
@@ -63,7 +83,7 @@ fun RenderContext.locationEditorRouteView(app: AppContext) {
             }
         }
     ) {
-        locationEditorView(it, app)
+        viewLocationEditor(it, app, null, null)
     }
     appFooter()
 }

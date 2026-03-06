@@ -24,10 +24,8 @@ class LocationScout(
 ): ViewModel {
     private val state = storeOf(LocationScoutState())
     private val msg = storeOf(UIMessage(introMsg))
-    private val data = storeOf(LocationScoutData())
     val stateFlow = state.flow
     val stateNow get() = state.now
-    val dataFlow = data.flow
     val messageFlow = msg.flow
 
     private var count = 0
@@ -38,18 +36,17 @@ class LocationScout(
 
     fun readLink() {
         val website = state.now.website.takeIf { it.startsWith("http") } ?: return
-        val currentEdit = data.now.edit ?: return
+        val currentEdit = state.now.edit ?: return
         scope.launch {
             msg.set("Reading the link, this will take a minute.")
             val edit = api.parseLocation(ParseRequest(website))?.merge(currentEdit) ?: return@launch
             msg.set("Does this information look correct?")
-            data.set { it.copy(edit = edit) }
+            state.set { it.copy(edit = edit) }
         }
     }
 
     fun reset() {
         state.set { LocationScoutState() }
-        data.set { LocationScoutData() }
         msg.set("$introMsg Locations added so far: $count")
     }
 
@@ -101,7 +98,7 @@ class LocationScout(
                 geo.panMap(PanPoint(point = it, zoom = 15f))
             }
 
-            data.set { it.copy(places = places) }
+            state.set { it.copy(places = places) }
             msg.set("Is this what you are looking for?")
         }
     }
@@ -109,7 +106,6 @@ class LocationScout(
     fun here() {
         msg.set("Looking for information about that place on OpenStreetMap...")
         val point = geo.stateNow.center
-        setPoint(point)
         scope.launch {
             val place = osm.readPlace(point)?.toPlace()?.copy(geoPoint = point)
             if (place == null) {
@@ -121,8 +117,11 @@ class LocationScout(
         }
     }
 
-    private fun setPoint(point: GeoPoint) {
-        state.set { it.copy(point = point) }
+    fun setEdit(edit: LocationEdit) {
+        state.set { it.copy(edit = edit) }
+    }
+
+    private fun addConstructionMarker(point: GeoPoint) {
         geo.tempEntities(listOf(
             IconEntity("here", SvgPath.guitar, point)
         ))
@@ -131,10 +130,9 @@ class LocationScout(
     fun choosePlace(place: Place) {
         val website = place.website
         val point = place.geoPoint ?: error("geoPoint is null")
-        setPoint(point)
-        state.set { it.copy(place = place, website = website ?: "")}
+        addConstructionMarker(point)
         val edit = place.toEdit()
-        data.set { it.copy(edit = edit) }
+        state.set { it.copy(place = place, website = website ?: "", edit = edit, point = point)}
         if (website != null) {
             msg.set("OSM provided a website for the location, we can try to read it.")
         } else {
@@ -143,7 +141,7 @@ class LocationScout(
     }
 
     fun postLocation() {
-        val edit = data.now.edit?.takeIf { it.isValid } ?: return
+        val edit = state.now.edit?.takeIf { it.isValid } ?: return
         msg.set("Posting ${edit.name}...")
         scope.launch {
             val location = api.createOrEditLocation(edit)
@@ -152,7 +150,7 @@ class LocationScout(
                 return@launch
             }
             count++
-            data.set { it.copy(location = location) }
+            state.set { it.copy(location = location) }
             msg.set("Posted. You can now add events to ${location.name} or add another location.")
             geo.tempEntities(null)
         }
@@ -166,14 +164,11 @@ data class LocationScoutState(
     val place: Place? = null,
     val city: String? = "Aurora",
     val state: String? = "CO",
+    val edit: LocationEdit? = null,
     val limitMap: Boolean = false,
     val limitCity: Boolean = false,
     val limitState: Boolean = true,
-)
-
-data class LocationScoutData(
     val location: Location? = null,
-    val edit: LocationEdit? = null,
     val places: List<Place>? = null,
 )
 

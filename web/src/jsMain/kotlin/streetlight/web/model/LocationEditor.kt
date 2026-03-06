@@ -69,6 +69,10 @@ class LocationEditor(
         edit.set { it.copy(imageUrl = value) }
     }
 
+    fun setEdit(edit: LocationEdit) {
+        this.edit.set { edit }
+    }
+
     override fun lookUp() {
         queryLocation(false)
     }
