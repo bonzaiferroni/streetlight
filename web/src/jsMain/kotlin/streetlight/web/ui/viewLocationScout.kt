@@ -5,6 +5,7 @@ import koala.dom.*
 import koala.html.heading3
 import koala.html.heading4
 import koala.html.propertyValue
+import koala.html.spacer
 import koala.model.mapDistinct
 import streetlight.model.data.Location
 import streetlight.model.data.LocationEdit
@@ -58,9 +59,11 @@ fun ViewContext<LocationScout>.findPointStage() {
             messageBox(model.messageFlow)
             row(modify(JustifyEnd)) {
                 textBlock("Move the map target to the location.", modify(Dim))
-                button("Here", modify(Accent), onClick = model::here)
+                button("Here", onClick = model::here)
             }
         }
+
+        spacer("or")
 
         card {
             heading4("OpenStreetMap")
@@ -88,10 +91,7 @@ fun ViewContext<LocationScout>.findPointStage() {
 
 fun ViewContext<LocationScout>.choosePlaceStage(places: List<Place>) {
     card {
-        row {
-            messageBox(model.messageFlow, modify(Flex1))
-            button("start over", modify(Secondary), onClick = model::reset)
-        }
+        messageBox(model.messageFlow, modify(Flex1))
         places.forEach { place ->
             val name = place.name ?: return@forEach
             action(onClick = { model.choosePlace(place) }, modify(Width100)) {
@@ -103,24 +103,27 @@ fun ViewContext<LocationScout>.choosePlaceStage(places: List<Place>) {
                 }
             }
         }
+        button("start over", modify(Secondary), onClick = model::reset)
     }
 }
 
 fun ViewContext<LocationScout>.creationStage() {
     column {
         card() {
-            row {
-                messageBox(model.messageFlow, modify(Flex1))
-                button("start over", modify(Secondary), onClick = model::reset)
-            }
+            messageBox(model.messageFlow, modify(Flex1))
             row {
                 textField("link", modify(Flex1), model::setLink, model.stateFlow.mapDistinct { it.website })
                 button("🤖 read link", modify(Accent), onClick = model::readLink)
             }
+            spacer("or")
             row {
                 textBlock("Or you can enter the details yourself.", modify(Flex1, Dim, TextAlignRight))
                 button("📝 editor", modify(Accent))
             }
+            row {
+                box(modify(Flex1))
+            }
+            button("start over", modify(Secondary), onClick = model::reset)
         }
     }
 }
@@ -131,10 +134,13 @@ fun ViewContext<LocationScout>.finishedStage(location: Location) {
     card {
         row {
             messageBox(model.messageFlow, modify(Flex1))
-            button("Start over", onClick = model::reset)
             button("Post events", modify(Accent), onClick = {
                 portal.go(ReadEventRoute(location))
             })
+        }
+        row {
+            box(modify(Flex1))
+            button("start over", modify(Secondary), onClick = model::reset)
         }
     }
 }
@@ -143,7 +149,6 @@ fun ViewContext<LocationScout>.reviewStage(edit: LocationEdit) {
     card {
         row {
             messageBox(model.messageFlow, modify(Flex1))
-            button("Start over", onClick = model::reset)
             button("Needs edits")
             button("Looks good", modify(Accent), onClick = model::postLocation)
         }
@@ -163,6 +168,10 @@ fun ViewContext<LocationScout>.reviewStage(edit: LocationEdit) {
                 propertyValue("link", edit.link ?: "[No link]")
                 propertyValue("calendar", edit.eventsLink ?: "[No calendar]")
             }
+        }
+        row {
+            box(modify(Flex1))
+            button("start over", modify(Secondary), onClick = model::reset)
         }
     }
 }

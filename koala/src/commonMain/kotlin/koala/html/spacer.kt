@@ -1,10 +1,10 @@
 package koala.html
 
-import koala.css.ModifierSet
-import koala.css.applyModifiers
+import koala.css.*
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kotlinx.html.div
+import kotlinx.html.hr
 
 fun FlowContent.spacer(
     modifiers: ModifierSet? = null,
@@ -13,5 +13,19 @@ fun FlowContent.spacer(
     div {
         applyModifiers(modifiers)
         block?.invoke(this)
+    }
+}
+
+fun FlowContent.spacer(
+    text: String,
+) {
+    row(modify(Width100, JustifyCenter)) {
+        hr {
+            applyModifiers(modify(Width16, Opacity2))
+        }
+        heading3(text, modify(Opacity2))
+        hr {
+            applyModifiers(modify(Width16, Opacity2))
+        }
     }
 }
