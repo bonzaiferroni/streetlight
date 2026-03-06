@@ -13,7 +13,7 @@ import java.io.File
 class UrlParser(apiKey: String) {
     val executor = simpleGoogleAIExecutor(apiKey)
     val console = globalConsole.getHandle(UrlParser::class)
-    val cache = mutableMapOf<String, String>()
+    val cache = mutableMapOf<Int, String>()
 
 //    private val agent = AIAgent(
 //        promptExecutor = executor,
@@ -26,20 +26,44 @@ class UrlParser(apiKey: String) {
 //        maxIterations = 30,
 //    )
 
-    suspend inline fun <reified T: Any> readHtml(url: String, instructions: String): T? {
-        val cached = cache[url]
-        if (cached != null) return tryDecode(cached)
+    suspend inline fun <reified T: Any> readUrl(url: String, instructions: String): T? {
+        val json = withCache(url.hashCode()) {
+            console.log("reading url: $url")
+            val content = readContent(url)
+            console.log("caching content length: ${content.length}")
+            val filename = toFilenameFormat(url)
+            val file = File("../debug/$filename.html")
+            file.parentFile.mkdirs()
+            file.writeText(content)
+            readHtmlContent<T>(url, content, instructions)
+        }
 
-        console.log("reading url: $url")
-        val content = readContent(url)
-        console.log("content length: ${content.length}")
-        // console.log(T::class.toBasicSchema())
-        val filename = toFilenameFormat(url)
-        val file = File("../debug/$filename.html")
-        file.parentFile.mkdirs()
-        file.writeText(content)
-        // val body = readBody(content)
+        return tryDecode(json)
+    }
 
+    inline fun withCache(cacheKey: Int, block: () -> String): String = cache[cacheKey] ?: block().also {
+        cache[cacheKey] = it
+
+        if (cache.size > 10) {
+            val firstKey = cache.keys.firstOrNull()
+            firstKey?.let { key -> cache.remove(key) }
+        }
+    }
+
+    suspend inline fun <reified T: Any> readHtml(url: String, html: String, instructions: String): T? {
+        val json = withCache(html.hashCode()) {
+            console.log("html length: ${html.length}")
+            readHtmlContent<T>(url, html, instructions)
+        }
+
+        return tryDecode(json)
+    }
+
+    suspend inline fun <reified T: Any> readHtmlContent(
+        url: String,
+        content: String,
+        instructions: String
+    ): String {
         val prompt = prompt(
             id = "dev-assistant",
             params = LLMParams(
@@ -52,18 +76,13 @@ class UrlParser(apiKey: String) {
             user("$instructions\n\nFor reference, here is the url:\n$url\n\nHere is the HTML:\n$content")
         }
 
-        val json = executor.execute(prompt, GoogleModels.Gemini2_5Flash).first().content
-        cache[url] = json
-
-        if (cache.size > 10) {
-            val firstKey = cache.keys.firstOrNull()
-            firstKey?.let { cache.remove(it) }
-        }
-
-        return tryDecode(json)
+        return executor.execute(prompt, GoogleModels.Gemini2_5Flash).first().content
     }
 
     suspend inline fun <reified T: Any> readImage(url: String, instructions: String): T? {
+        val cacheKey = url.hashCode()
+        val cached = cache[cacheKey]
+        if (cached != null) return tryDecode(cached)
 
         val prompt = prompt(
             id = "dev-assistant",
@@ -90,7 +109,7 @@ class UrlParser(apiKey: String) {
         }
 
         val json = executor.execute(prompt, GoogleModels.Gemini2_5Flash).first().content
-        cache[url] = json
+        cache[cacheKey] = json
 
         if (cache.size > 10) {
             val firstKey = cache.keys.firstOrNull()

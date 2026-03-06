@@ -10,11 +10,25 @@ import kotlinx.datetime.toInstant
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ParseRequest(
-    val url: String,
-    val point: GeoPoint? = null,
-    val isImage: Boolean = false,
-)
+sealed interface ParseRequest {
+    val url: String
+}
+
+@Serializable
+data class UrlParseRequest(
+    override val url: String
+): ParseRequest
+
+@Serializable
+data class HtmlParseRequest(
+    override val url: String,
+    val html: String,
+): ParseRequest
+
+@Serializable
+data class ImageParseRequest(
+    override val url: String,
+): ParseRequest
 
 @Serializable
 data class MultiEventParseResult(

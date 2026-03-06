@@ -4,30 +4,30 @@ import koala.dom.UIMessage
 import koala.dom.set
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import streetlight.model.data.ImageParseRequest
+import streetlight.model.data.Location
 import streetlight.model.data.MultiEventParseResponse
 import streetlight.model.data.ParseRequest
-import streetlight.model.data.Place
+import streetlight.model.data.UrlParseRequest
 import streetlight.web.ReadEventRoute
 import streetlight.web.io.ApiClient
-import streetlight.web.ui.loadingMessages
-import kotlin.time.Duration.Companion.seconds
+import streetlight.web.ui.ViewModel
 
-class EventReader(
+class EventScout(
     private val scope: CoroutineScope,
-    private val api: ApiClient,
     private val route: ReadEventRoute,
-) {
-    private val state = storeOf(EventReaderState())
+    override val app: AppContext
+): ViewModel {
+    private val state = storeOf(EventScoutState())
     private val message = storeOf(UIMessage(intro))
-    private val location = storeOf(route.location)
     val stateFlow = state.flow
     val messageFlow = message.flow
-    val locationFlow = location.flow
 
     init {
-        if (route.link != null) {
+        if (route.location != null) {
+            state.set { it.copy(location = route.location) }
+        } else if (route.link != null) {
             state.set { it.copy(link = route.link) }
             readLink()
         }
@@ -40,7 +40,7 @@ class EventReader(
     fun readLink() = readUrl(state.now.link, false)
 
     fun startOver() {
-        state.set { EventReaderState() }
+        state.set { EventScoutState() }
     }
 
     fun setCompleted(index: Int) {
@@ -48,7 +48,7 @@ class EventReader(
     }
 
     fun postAll() {
-        val location = location.now ?: return
+        val location = state.now.location ?: return
         val events = state.now.parse?.events ?: return
         val link = state.now.link
         scope.launch {
@@ -71,14 +71,19 @@ class EventReader(
     }
 
     fun readCalendar() {
-        readUrl(location.now?.eventsLink, false)
+        readUrl(state.now.location?.eventsLink, false)
     }
 
     private fun readUrl(url: String?, isImage: Boolean) {
         val url = url?.takeIf { it.isNotEmpty() } ?: return
         scope.launch {
             message.set("Reading url, this can take a minute.")
-            val parse = api.parseMultiEventFromUrl(ParseRequest(url, null, isImage))
+            val request = if (isImage) {
+                ImageParseRequest(url)
+            } else {
+                UrlParseRequest(url)
+            }
+            val parse = api.parseMultiEventFromUrl(request)
             val events = parse?.events?.takeIf { it.isNotEmpty() }
             if (events != null) {
                 message.set("Finished. Are any of these the event you wish to post?")
@@ -91,12 +96,13 @@ class EventReader(
     }
 }
 
-data class EventReaderState(
+data class EventScoutState(
     val text: String = "",
     val link: String = "",
     val imageUrl: String = "",
     val parse: MultiEventParseResponse? = null,
-    val completed: List<Int?> = emptyList()
+    val completed: List<Int?> = emptyList(),
+    val location: Location? = null
 ) {
     fun getStatus(index: Int) = completed.getOrNull(index)
 }

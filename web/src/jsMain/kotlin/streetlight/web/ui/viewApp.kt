@@ -51,7 +51,7 @@ fun viewApp() {
         override val geoMap = GeoMap(scope)
         override val streetMap = StreetMap(scope, client, geoMap)
         override val chatRoom = ChatRoom(scope, client.api)
-    }
+    } as AppContext
 
     scope.launch {
         app.gate.readUser()
@@ -79,7 +79,7 @@ fun viewApp() {
                     StreetlightScreen.Chat -> viewChatRoom(app)
                     StreetlightScreen.SongProfile -> viewSongProfile(app)
                     StreetlightScreen.EditTalent -> editTalentForm(app)
-                    StreetlightScreen.ReadEvent -> viewEventReader(app)
+                    StreetlightScreen.ReadEvent -> viewEventScout(app)
                     StreetlightScreen.LocationProfile -> locationProfileView(app)
                     StreetlightScreen.EditLocation -> viewEditLocationRoute(app)
                     StreetlightScreen.LocationAdmin -> viewLocationAdmin(app)

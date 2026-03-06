@@ -11,6 +11,7 @@ import streetlight.model.data.Location
 import streetlight.model.data.LocationEdit
 import streetlight.model.data.ParseRequest
 import streetlight.model.data.Place
+import streetlight.model.data.UrlParseRequest
 import streetlight.model.data.merge
 import streetlight.model.data.toEdit
 import streetlight.model.external.toPlace
@@ -39,7 +40,7 @@ class LocationScout(
         val currentEdit = state.now.edit ?: return
         scope.launch {
             msg.set("Reading the link, this will take a minute.")
-            val edit = api.parseLocation(ParseRequest(website))?.merge(currentEdit) ?: return@launch
+            val edit = api.parseLocation(UrlParseRequest(website))?.merge(currentEdit) ?: return@launch
             msg.set("Does this information look correct?")
             state.set { it.copy(edit = edit) }
         }

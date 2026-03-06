@@ -13,6 +13,7 @@ import streetlight.model.data.LocationId
 import streetlight.model.data.ParseRequest
 import streetlight.model.data.Place
 import streetlight.model.data.ResourceType
+import streetlight.model.data.UrlParseRequest
 import streetlight.model.data.toPlace
 import streetlight.model.external.Address
 import streetlight.model.external.OSMPlace
@@ -102,7 +103,7 @@ class LocationEditor(
     fun parseLocation() {
         val link = edit.now.website ?: return
         scope.launch {
-            val edit = api.parseLocation(ParseRequest(link))
+            val edit = api.parseLocation(UrlParseRequest(link))
             this@LocationEditor.edit.set { edit ?: editNow }
         }
     }
