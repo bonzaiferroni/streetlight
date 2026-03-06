@@ -256,6 +256,10 @@ p.large {
     justify-content: space-around;
 }
 
+.justify-content-space-between {
+    justify-content: space-between;
+}
+
 .width-100 {
     width: 100%;
 }

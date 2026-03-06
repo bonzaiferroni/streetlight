@@ -46,7 +46,7 @@ data class LocationEdit(
     val notes: String? = null,
     val geoPoint: GeoPoint? = null,
     val resources: Set<ResourceType>? = null,
-    val link: String? = null,
+    val website: String? = null,
     val eventsLink: String? = null,
     val imageUrl: String? = null,
     val thumbUrl: String? = null,
@@ -85,7 +85,7 @@ fun Location.toEdit() = LocationEdit(
     address = address,
     geoPoint = geoPoint,
     resources = resources,
-    link = link,
+    website = link,
     eventsLink = eventsLink,
     imageUrl = imageUrl,
     thumbUrl = thumbUrl,
@@ -118,6 +118,13 @@ fun Place.toLocation() = Location(
     createdAt = Clock.System.now()
 )
 
+fun Place.toEdit() = LocationEdit(
+    name = name,
+    address = address,
+    geoPoint = geoPoint,
+    website = website
+)
+
 fun LocationEdit.toLocation() = Location(
     locationId = locationId ?: LocationId.random(),
     name = name ?: error("no location name"),
@@ -125,7 +132,7 @@ fun LocationEdit.toLocation() = Location(
     description = description,
     address = address,
     resources = resources ?: emptySet(),
-    link = link,
+    link = website,
     eventsLink = eventsLink,
     imageUrl = imageUrl,
     thumbUrl = thumbUrl,
@@ -139,7 +146,7 @@ fun LocationParse.toEdit(
     locationId = locationId,
     name = name ?: "",
     description = description,
-    link = url,
+    website = url,
     eventsLink = eventsUrl,
     imageUrl = imageUrl,
 )
@@ -153,3 +160,16 @@ fun LocationParse.toAddress() = address?.let {
         country = country,
     )
 }
+
+fun LocationEdit.merge(edit: LocationEdit) = LocationEdit(
+    locationId = locationId ?: edit.locationId,
+    name = name ?: edit.name,
+    description = description ?: edit.description,
+    address = address ?: edit.address,
+    geoPoint = geoPoint ?: edit.geoPoint,
+    resources = resources ?: edit.resources,
+    website = website ?: edit.website,
+    eventsLink = eventsLink ?: edit.eventsLink,
+    imageUrl = imageUrl ?: edit.imageUrl,
+    thumbUrl = thumbUrl ?: edit.thumbUrl,
+)

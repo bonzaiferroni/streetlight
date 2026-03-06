@@ -12,7 +12,6 @@ import streetlight.model.data.LocationEdit
 import streetlight.model.data.Place
 import streetlight.web.ReadEventRoute
 import streetlight.web.model.*
-import streetlight.web.shells.cardOf
 
 fun RenderContext.viewLocationScout(app: AppContext) {
     val model = LocationScout(renderScope, app)
@@ -22,14 +21,12 @@ fun RenderContext.viewLocationScout(app: AppContext) {
                 viewGeoMap(app.geoMap, app.appScope)
 
                 flowBlock(model.dataFlow, defaultMagic, magic = true) { data ->
-                    val point = data.point; val edit = data.edit; val location = data.location; val places = data.places
+                    val edit = data.edit; val location = data.location; val places = data.places
                     viewOf(model) {
                         if (location != null) {
                             finishedStage(location)
                         } else if (edit != null) {
                             reviewStage(edit)
-                        } else if (point != null) {
-                            creationStage()
                         } else if (places != null) {
                             choosePlaceStage(places)
                         } else {
@@ -107,23 +104,45 @@ fun ViewContext<LocationScout>.choosePlaceStage(places: List<Place>) {
     }
 }
 
-fun ViewContext<LocationScout>.creationStage() {
+fun ViewContext<LocationScout>.reviewStage(edit: LocationEdit) {
     column {
         card() {
             messageBox(model.messageFlow, modify(Flex1))
             row {
                 textField("link", modify(Flex1), model::setLink, model.stateFlow.mapDistinct { it.website })
-                button("🤖 read link", modify(Accent), onClick = model::readLink)
+                button("🤖 read link", onClick = model::readLink)
             }
-            spacer("or")
-            row {
-                textBlock("Or you can enter the details yourself.", modify(Flex1, Dim, TextAlignRight))
-                button("📝 editor", modify(Accent))
+        }
+
+        tabs {
+            tab("Details") {
+                row(modify(AlignItemsStart)) {
+                    val imageUrl = edit.imageUrl
+                    if (imageUrl != null) {
+                        image(imageUrl, modify(Flex1, Width100))
+                    } else {
+                        box(modify(Flex1, CenterItems)) {
+                            textBlock("no image")
+                        }
+                    }
+                    column(modify(Flex2)) {
+                        heading3(edit.name ?: "[No name found]")
+                        textBlock(edit.description ?: "[No description]")
+                        propertyValue("address", edit.address ?: "[No address]")
+                        propertyValue("website", edit.website ?: "[No website]")
+                        propertyValue("calendar", edit.eventsLink ?: "[No calendar]")
+                        propertyValue("about", "[No about]")
+                    }
+                }
             }
-            row {
-                box(modify(Flex1))
+            tab("Edit") {
+                textBlock("yer editor")
             }
+        }
+
+        row(modify(JustifySpaceBetween)) {
             button("start over", modify(Secondary), onClick = model::reset)
+            button("create", modify(Accent), onClick = model::postLocation)
         }
     }
 }
@@ -137,37 +156,6 @@ fun ViewContext<LocationScout>.finishedStage(location: Location) {
             button("Post events", modify(Accent), onClick = {
                 portal.go(ReadEventRoute(location))
             })
-        }
-        row {
-            box(modify(Flex1))
-            button("start over", modify(Secondary), onClick = model::reset)
-        }
-    }
-}
-
-fun ViewContext<LocationScout>.reviewStage(edit: LocationEdit) {
-    card {
-        row {
-            messageBox(model.messageFlow, modify(Flex1))
-            button("Needs edits")
-            button("Looks good", modify(Accent), onClick = model::postLocation)
-        }
-        row(modify(AlignItemsStart)) {
-            val imageUrl = edit.imageUrl
-            if (imageUrl != null) {
-                image(imageUrl, modify(Flex1, Width100))
-            } else {
-                box(modify(Flex1, CenterItems)) {
-                    textBlock("no image")
-                }
-            }
-            column(modify(Flex2)) {
-                heading3(edit.name ?: "[No name found]")
-                textBlock(edit.description ?: "[No description]")
-                propertyValue("address", edit.address ?: "[No address]")
-                propertyValue("link", edit.link ?: "[No link]")
-                propertyValue("calendar", edit.eventsLink ?: "[No calendar]")
-            }
         }
         row {
             box(modify(Flex1))

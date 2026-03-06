@@ -58,7 +58,7 @@ class LocationEditor(
     }
 
     fun setLink(value: String?) {
-        edit.set { it.copy(link = value) }
+        edit.set { it.copy(website = value) }
     }
 
     fun setEventsLink(value: String?) {
@@ -96,7 +96,7 @@ class LocationEditor(
     }
 
     fun parseLocation() {
-        val link = edit.now.link ?: return
+        val link = edit.now.website ?: return
         scope.launch {
             val edit = api.parseLocation(ParseRequest(link))
             this@LocationEditor.edit.set { edit ?: editNow }

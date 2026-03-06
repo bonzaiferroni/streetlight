@@ -21,7 +21,7 @@ fun RenderContext.locationEditorView(location: LocationEdit, app: AppContext) {
     val model = LocationEditor(location, renderScope, app.client)
     val nameFlow = model.editFlow.mapDistinct { it.name }
     val imageUrlFlow = model.editFlow.mapDistinct { it.imageUrl }
-    val linkFlow = model.editFlow.mapDistinct { it.link }
+    val linkFlow = model.editFlow.mapDistinct { it.website }
     val eventsLinkFlow = model.editFlow.mapDistinct { it.eventsLink }
 
     column(modify(AlignItemsStretch)) {

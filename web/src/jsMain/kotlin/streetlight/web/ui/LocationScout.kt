@@ -11,7 +11,8 @@ import streetlight.model.data.Location
 import streetlight.model.data.LocationEdit
 import streetlight.model.data.ParseRequest
 import streetlight.model.data.Place
-import streetlight.model.external.OSMQuery
+import streetlight.model.data.merge
+import streetlight.model.data.toEdit
 import streetlight.model.external.toPlace
 import streetlight.web.io.SvgPath
 import streetlight.web.model.AppContext
@@ -36,15 +37,12 @@ class LocationScout(
     }
 
     fun readLink() {
-        val link = state.now.website.takeIf { it.startsWith("http") } ?: return
+        val website = state.now.website.takeIf { it.startsWith("http") } ?: return
+        val currentEdit = data.now.edit ?: return
         scope.launch {
             msg.set("Reading the link, this will take a minute.")
-            val parsedEdit = api.parseLocation(ParseRequest(link)) ?: return@launch
+            val edit = api.parseLocation(ParseRequest(website))?.merge(currentEdit) ?: return@launch
             msg.set("Does this information look correct?")
-            val edit = parsedEdit.copy(
-                geoPoint = geo.stateNow.center,
-                address = state.now.place?.address ?: parsedEdit.address
-            )
             data.set { it.copy(edit = edit) }
         }
     }
@@ -94,7 +92,7 @@ class LocationScout(
         val bounds = geo.stateNow.bounds.takeIf { stateNow.limitMap }
         msg.set("Searching OpenStreetMap...")
         scope.launch {
-            val places = osm.readPlaces(query, bounds)?.map { it.toPlace() }
+            val places = osm.readPlaces(query, bounds)?.mapNotNull { it.toPlace().takeIf { p -> p.geoPoint != null } }
             if (places.isNullOrEmpty()) {
                 msg.set("We couldn't find anything.")
                 return@launch
@@ -109,12 +107,22 @@ class LocationScout(
     }
 
     fun here() {
-        setPoint(geo.stateNow.center)
-        msg.set(detailsMsg)
+        msg.set("Looking for information about that place on OpenStreetMap...")
+        val point = geo.stateNow.center
+        setPoint(point)
+        scope.launch {
+            val place = osm.readPlace(point)?.toPlace()?.copy(geoPoint = point)
+            if (place == null) {
+                // td: handle
+                msg.set("Something went wrong")
+                return@launch
+            }
+            choosePlace(place)
+        }
     }
 
     private fun setPoint(point: GeoPoint) {
-        data.set { it.copy(point = point) }
+        state.set { it.copy(point = point) }
         geo.tempEntities(listOf(
             IconEntity("here", SvgPath.guitar, point)
         ))
@@ -122,8 +130,11 @@ class LocationScout(
 
     fun choosePlace(place: Place) {
         val website = place.website
+        val point = place.geoPoint ?: error("geoPoint is null")
+        setPoint(point)
         state.set { it.copy(place = place, website = website ?: "")}
-        data.set { it.copy(point = place.geoPoint) }
+        val edit = place.toEdit()
+        data.set { it.copy(edit = edit) }
         if (website != null) {
             msg.set("OSM provided a website for the location, we can try to read it.")
         } else {
@@ -143,6 +154,7 @@ class LocationScout(
             count++
             data.set { it.copy(location = location) }
             msg.set("Posted. You can now add events to ${location.name} or add another location.")
+            geo.tempEntities(null)
         }
     }
 }
@@ -150,16 +162,16 @@ class LocationScout(
 data class LocationScoutState(
     val website: String = "",
     val query: String = "",
+    val point: GeoPoint? = null,
     val place: Place? = null,
     val city: String? = "Aurora",
     val state: String? = "CO",
     val limitMap: Boolean = false,
     val limitCity: Boolean = false,
-    val limitState: Boolean = true
+    val limitState: Boolean = true,
 )
 
 data class LocationScoutData(
-    val point: GeoPoint? = null,
     val location: Location? = null,
     val edit: LocationEdit? = null,
     val places: List<Place>? = null,

@@ -51,6 +51,7 @@ object AlignItemsEnd: Modifier { override val value = "align-items-end" }
 object JustifyCenter: Modifier { override val value = "justify-content-center" }
 object JustifyEnd: Modifier { override val value = "justify-content-end" }
 object JustifySpaceAround: Modifier { override val value = "justify-content-space-around" }
+object JustifySpaceBetween: Modifier { override val value = "justify-content-space-between" }
 object WidthAuto: Modifier { override val value = "width-auto" }
 object Width100: Modifier { override val value = "width-100" }
 object Width2: Modifier { override val value = "width-2" }
