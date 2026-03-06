@@ -21,7 +21,7 @@ fun <State> RenderContext.flowBlock(
     flow: Flow<State>,
     modifiers: ModifierSet? = null,
     magic: Boolean = false,
-    cacheRenderedElements: Boolean = false,
+    renderCacheCount: Int? = null,
     config: (DIV.() -> Unit)? = null,
     onTransition: ((State) -> Unit)? = null,
     block: RenderContext.(State) -> Unit
@@ -36,7 +36,7 @@ fun <State> RenderContext.flowBlock(
 
     var render: RenderCache? = null
     var renderedOnce = false
-    val renderCaches = mutableMapOf<State, RenderCache>()
+    val cache = mutableMapOf<State, RenderCache>()
 
     renderScope.launch {
         var currentValue: State? = null
@@ -44,16 +44,22 @@ fun <State> RenderContext.flowBlock(
             // do we need renderedOnce?
             if (renderedOnce && value == currentValue) return@collect
             renderedOnce = true
-            if (!cacheRenderedElements) render?.job?.cancel()
+            if (renderCacheCount == null) render?.job?.cancel()
             currentValue = value
 
             fun appendRender() {
-                render = renderCaches[value]?.also {
+                render = cache[value]?.also {
                     it.elements.forEach { child ->
                         element.append(child)
                     }
                 } ?: createRender(element, renderScope, value, block)
-                if (cacheRenderedElements) renderCaches[value] = render
+                if (renderCacheCount != null) {
+                    cache[value] = render
+                    if (renderCacheCount > 0 && cache.size > renderCacheCount) {
+                        val key = cache.entries.firstOrNull()?.key
+                        cache.remove(key)
+                    }
+                }
             }
 
             if (magic) {

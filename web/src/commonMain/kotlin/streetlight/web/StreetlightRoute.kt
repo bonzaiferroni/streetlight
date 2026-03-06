@@ -3,6 +3,7 @@ package streetlight.web
 import kampfire.api.TableId
 import koala.html.AppRoute
 import koala.html.AppScreen
+import kotlinx.serialization.Serializable
 import streetlight.model.data.Event
 import streetlight.model.data.EventEdit
 import streetlight.model.data.EventId
@@ -29,7 +30,7 @@ enum class StreetlightScreen(
     SongProfile("song-profile", { path -> path.provideRouteFromPath { SongProfileRoute(SongId(it)) } }),
     TalentProfile("talent-profile", { path -> path.provideRouteFromPath { TalentProfileRoute(TalentId(it)) } }),
     EditTalent("edit-talent", { path -> EditTalentRoute(path.provideId { TalentId(it)} ) }),
-    ReadEvent("create-event", { ReadEventRoute() }),
+    ReadEvent("create-event", { EventScoutRoute() }),
     LocationProfile("location", { path -> path.provideRouteFromPath { LocationProfileRoute(LocationId(it)) } }),
     LocationAdmin("location-admin", { path -> path.provideRouteFromPath { LocationAdminRoute(LocationId(it)) } }),
     ScoutMap("scout-map", { ScoutMapRoute }),
@@ -135,7 +136,8 @@ data class EditTalentRoute(
     override val title get() = "Talent"
 }
 
-data class ReadEventRoute(
+@Serializable
+data class EventScoutRoute(
     val location: Location? = null,
     val link: String? = null,
 ): StreetlightRoute {

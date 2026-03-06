@@ -64,7 +64,7 @@ fun viewApp() {
             flowBlock(
                 flow = app.portal.screenFlow,
                 modifiers = modify(Blur, SlideY),
-                cacheRenderedElements = true,
+                renderCacheCount = 0, // allows unlimited caching
                 magic = true,
                 onTransition = { window.scrollTo(0.0, 0.0) },
             ) { screen ->
@@ -79,7 +79,7 @@ fun viewApp() {
                     StreetlightScreen.Chat -> viewChatRoom(app)
                     StreetlightScreen.SongProfile -> viewSongProfile(app)
                     StreetlightScreen.EditTalent -> editTalentForm(app)
-                    StreetlightScreen.ReadEvent -> viewEventScout(app)
+                    StreetlightScreen.ReadEvent -> viewEventScoutRoute(app)
                     StreetlightScreen.LocationProfile -> locationProfileView(app)
                     StreetlightScreen.EditLocation -> viewEditLocationRoute(app)
                     StreetlightScreen.LocationAdmin -> viewLocationAdmin(app)

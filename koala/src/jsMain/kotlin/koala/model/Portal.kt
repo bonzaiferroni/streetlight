@@ -1,14 +1,11 @@
 package koala.model
 
-import koala.dom.RenderContext
 import koala.html.AppRoute
 import koala.html.AppScreen
 import kotlinx.browser.window
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.launch
 import org.w3c.dom.Location
 
 class Portal(
@@ -39,7 +36,13 @@ class Portal(
         window.addEventListener("hashchange", {
             val route = routeOf(hashPath) ?: return@addEventListener
             if (route.screen == stateNow.route.screen) return@addEventListener
-            go(route)
+            val backRoute = stateNow.backstack.lastOrNull()
+            if (backRoute?.screen == route.screen) {
+                // goBack()
+                go(route) // td: maybe figure out
+            } else {
+                go(route)
+            }
         })
     }
 

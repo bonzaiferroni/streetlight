@@ -5,15 +5,16 @@ import koala.css.*
 import koala.dom.*
 import koala.html.propertyValue
 import koala.model.mapDistinct
+import koala.utils.prettyPrint
 import streetlight.model.data.EventEdit
 import streetlight.model.data.Location
 import streetlight.model.data.MultiEventParseResponse
 import streetlight.web.EditEventCallbackRoute
-import streetlight.web.ReadEventRoute
+import streetlight.web.EventScoutRoute
 import streetlight.web.model.AppContext
 import streetlight.web.model.EventScout
 
-fun RenderContext.viewEventScout(app: AppContext, route: ReadEventRoute) {
+fun RenderContext.viewEventScout(app: AppContext, route: EventScoutRoute) {
     val model = EventScout(renderScope, route, app)
     val panelFlow = model.stateFlow.mapDistinct { it.location }
 
@@ -77,8 +78,9 @@ fun ViewContext<EventScout>.locationPanel(location: Location) {
     }
 }
 
-fun RenderContext.viewEventScout(app: AppContext) {
-    routeBlock<ReadEventRoute>(app.portal) { route ->
+fun RenderContext.viewEventScoutRoute(app: AppContext) {
+    routeBlock<EventScoutRoute>(app.portal) { route ->
+        console.log(prettyPrint(route))
         viewEventScout(app, route)
     }
 }

@@ -8,15 +8,13 @@ import kotlinx.coroutines.launch
 import streetlight.model.data.ImageParseRequest
 import streetlight.model.data.Location
 import streetlight.model.data.MultiEventParseResponse
-import streetlight.model.data.ParseRequest
 import streetlight.model.data.UrlParseRequest
-import streetlight.web.ReadEventRoute
-import streetlight.web.io.ApiClient
+import streetlight.web.EventScoutRoute
 import streetlight.web.ui.ViewModel
 
 class EventScout(
     private val scope: CoroutineScope,
-    private val route: ReadEventRoute,
+    private val route: EventScoutRoute,
     override val app: AppContext
 ): ViewModel {
     private val state = storeOf(EventScoutState())
