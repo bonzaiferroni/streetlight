@@ -57,6 +57,7 @@ fun ViewContext<EventScout>.reviewPanel(parse: MultiEventParseResponse, location
 
 fun ViewContext<EventScout>.locationPanel(location: Location) {
     val parseFlow = model.stateFlow.mapDistinct { it.parse }
+    val fileFlow = model.stateFlow.mapDistinct { it.htmlUrl }
 
     column {
         headerOf(location)
@@ -70,7 +71,10 @@ fun ViewContext<EventScout>.locationPanel(location: Location) {
                             messageBox(model.messageFlow, modify(Flex1))
                             button("start over", onClick = model::startOver)
                             button("read calendar", onClick = model::readCalendar)
+                            button("read html", onClick = model::readHtml)
                         }
+                        // file choice
+                        fileDrop(fileFlow, model::setHtmlUrl)
                     }
                 }
             }

@@ -5,7 +5,7 @@ import koala.css.Magic
 import koala.css.ElementClass
 import koala.css.ModifierSet
 import koala.css.Reveal
-import koala.css.SlideX
+import koala.css.SlideLeft
 import koala.css.applyModifiers
 import koala.css.modify
 import kotlinx.coroutines.delay
@@ -84,4 +84,4 @@ fun <State> RenderContext.flowBlock(
     return element
 }
 
-val defaultMagic = modify(Blur, SlideX)
+val defaultMagic = modify(Blur, SlideLeft)

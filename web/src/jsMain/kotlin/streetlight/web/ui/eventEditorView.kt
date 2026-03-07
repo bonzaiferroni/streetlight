@@ -30,7 +30,7 @@ fun RenderContext.eventEditorView(
                 blockLabel("feature image") {
                     imageChoice(
                         modifiers = modify(MinHeight8),
-                        onUpload = { app.client.api.uploadFile(it) },
+                        onUpload = { app.client.api.uploadEventImage(it) },
                         onValueChanged = model::setImageUrl,
                         urlFlow = model.imageUrlFlow,
                         choicesFlow = imagesFlow

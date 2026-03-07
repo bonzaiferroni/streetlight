@@ -6,7 +6,7 @@ import koala.css.Blur
 import koala.css.Css
 import koala.css.CircleShape
 import koala.css.Height3
-import koala.css.SlideX
+import koala.css.SlideLeft
 import koala.css.Width100
 import koala.css.modify
 import koala.dom.*
@@ -70,7 +70,7 @@ fun RenderContext.viewMapCards(app: AppContext) {
     }
 }
 
-private val modifyCardItems = modify(Magic, Blur, SlideX)
+private val modifyCardItems = modify(Magic, Blur, SlideLeft)
 
 fun RenderContext.mapPanelCard(label: String, block: RenderContext.() -> Unit) {
     card(modify(MapPanel.card)) {

@@ -13,7 +13,7 @@ import org.w3c.files.File
 import org.w3c.files.get
 
 fun DOMContext.filePicker(
-    mimeType: String = "image",
+    mimeType: String? = "image/*",
     modifiers: ModifierSet? = null,
     onMessage: ((UIMessage) -> Unit)? = null,
     onPickFile: (String) -> Unit
@@ -26,7 +26,7 @@ fun DOMContext.filePicker(
 
         input = input {
             type = InputType.file
-            accept = "$mimeType/*"
+            accept = mimeType ?: "*/*"
             hidden = true
         }
 
@@ -46,7 +46,8 @@ fun DOMContext.filePicker(
 
     fun handleFile(file: File?) {
         val file = file ?: return
-        if (!file.type.startsWith("$mimeType/")) {
+        if (mimeType != null && !file.type.startsWith(mimeType)) {
+            console.log("nay: $mimeType")
             onMessage?.invoke(UIMessage("Chosen file needs to be an image", UIMessageType.Error))
             return
         }
@@ -54,6 +55,7 @@ fun DOMContext.filePicker(
         val url = URL.createObjectURL(file)
         dropZone.style.display = "none"
         preview.src = url
+        console.log(url)
         onPickFile(url)
     }
 

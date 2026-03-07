@@ -5,8 +5,6 @@ import koala.css.Accent
 import koala.css.AlignItemsCenter
 import koala.css.Flex1
 import koala.css.FlexItems1
-import koala.css.Blur
-import koala.css.SlideX
 import koala.css.Width64
 import koala.css.modify
 import koala.dom.RenderContext

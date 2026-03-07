@@ -63,7 +63,7 @@ fun viewApp() {
         portalMount.renderRoot(app.appScope) {
             flowBlock(
                 flow = app.portal.screenFlow,
-                modifiers = modify(Blur, SlideY),
+                modifiers = modify(Blur, SlideUp),
                 renderCacheCount = 0, // allows unlimited caching
                 magic = true,
                 onTransition = { window.scrollTo(0.0, 0.0) },

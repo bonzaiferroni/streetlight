@@ -16,7 +16,7 @@ class ApiClient(private val client: FetchClient) {
     suspend fun readEvent(eventId: EventId) = client.get(Api.EventProfile, eventId)
     suspend fun readEventFeed() = client.get(Api.Events)
     suspend fun createOrEditEvent(event: EventEdit) = client.postAndReadStatus(Api.Events.Edit, event)
-    suspend fun parseMultiEventFromUrl(request: ParseRequest) = client.post(Api.Events.ParseEvents, request)
+    suspend fun parseMultiEvent(request: ParseRequest) = client.post(Api.Events.ParseEvents, request)
     suspend fun readLocationEvents(locationId: LocationId) = client.get(Api.Events.AtLocation, locationId)
 
     // locations
@@ -25,7 +25,8 @@ class ApiClient(private val client: FetchClient) {
     suspend fun readLocationsInBounds(bounds: GeoBounds) = client.post(Api.Locations.QueryBounds, bounds)
 
     suspend fun queryMap(request: MapQuery) = client.get(Api.Events.QueryMap, request.toQuery())
-    suspend fun uploadFile(blobUrl: String) = client.uploadBlob(Api.Events.Upload.path, blobUrl)
+    suspend fun uploadEventImage(blobUrl: String) = client.uploadBlob(Api.Events.Upload.path, blobUrl)
+    // suspend fun uploadHtml(blobUrl: String) = client.uploadBlob(Api)
 
     suspend fun readUserFiles() = client.get(Api.Users.Files)
 
