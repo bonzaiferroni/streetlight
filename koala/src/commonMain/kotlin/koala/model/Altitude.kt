@@ -23,9 +23,9 @@ enum class Altitude(val selector: String) {
 
 fun altitudeOf(zoom: Double): Altitude =
     when {
-        zoom >= 17 -> Altitude.Kite
+        zoom >= 16 -> Altitude.Kite
         zoom >= 14.5 -> Altitude.Raincloud
-        zoom >= 12  -> Altitude.Airplane
+        zoom >= 13  -> Altitude.Airplane
         zoom >= 4  -> Altitude.Astronaut
         else       -> Altitude.Comet
     }

@@ -142,7 +142,7 @@ data class EventScoutRoute(
     val link: String? = null,
 ): StreetlightRoute {
     override val screen get() = StreetlightScreen.ReadEvent
-    override val title get() = "Event Reader"
+    override val title get() = "Event Scout"
 }
 
 data class LocationProfileRoute(

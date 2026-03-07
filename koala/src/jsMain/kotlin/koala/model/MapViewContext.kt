@@ -103,7 +103,7 @@ class MapViewContext(
     }
 
     fun setAltitude(zoom: Double) {
-        console.log(zoom)
+//        console.log(zoom)
         val altitude = altitudeOf(zoom)
         if (altitude == altitudeNow) return
         val modifiersNow = altitudeNow?.modifiers ?: emptySet()
