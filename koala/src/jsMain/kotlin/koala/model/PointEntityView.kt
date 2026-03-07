@@ -116,7 +116,14 @@ fun PointEntity.toMapEntityView(pixelPoint: Point): PointEntityView {
 
     element.append {
         baseElement = div {
-            val baseModifiers = modifiers?.let { it + MarkerCss.base } ?: modify(MarkerCss.base)
+            val baseModifiers = modify(MarkerCss.base).let { set ->
+                modifiers?.let { set + it } ?: set
+            }.let { set ->
+                light?.let {
+                    style = "--light: ${it.css()};"
+                    set + Css("marker-glow")
+                } ?: set
+            }
             applyModifiers(baseModifiers)
 
             bearingElement = bearing?.let {
