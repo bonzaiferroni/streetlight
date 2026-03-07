@@ -18,13 +18,13 @@ fun RenderContext.viewSongProfile(app: AppContext) {
                     textField(
                         label = "title",
                         placeholder = "Song title",
-                        values = model.titleFlow,
+                        bindFlow = model.titleFlow,
                         onChangeValue = model::setTitle
                     )
                     textField(
                         label = "artist",
                         placeholder = "Artist",
-                        values = model.artistFlow,
+                        bindFlow = model.artistFlow,
                         onChangeValue = model::setArtist
                     )
                 }

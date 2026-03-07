@@ -9,10 +9,10 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import streetlight.model.data.Location
 import streetlight.model.data.LocationEdit
-import streetlight.model.data.ParseRequest
 import streetlight.model.data.Place
 import streetlight.model.data.UrlParseRequest
-import streetlight.model.data.merge
+import streetlight.model.data.mergeLeft
+import streetlight.model.data.mergeRight
 import streetlight.model.data.toEdit
 import streetlight.model.external.toPlace
 import streetlight.web.io.SvgPath
@@ -31,16 +31,15 @@ class LocationScout(
 
     private var count = 0
 
-    fun setLink(value: String) {
+    fun setWebsite(value: String) {
         state.set { it.copy(website = value) }
     }
 
     fun readLink() {
         val website = state.now.website.takeIf { it.startsWith("http") } ?: return
-        val currentEdit = state.now.edit ?: return
         scope.launch {
             msg.set("Reading the link, this will take a minute.")
-            val edit = api.parseLocation(UrlParseRequest(website))?.merge(currentEdit) ?: return@launch
+            val edit = api.parseLocation(UrlParseRequest(website))?.mergeLeft(state.now.edit) ?: return@launch
             msg.set("Does this information look correct?")
             state.set { it.copy(edit = edit) }
         }
@@ -67,7 +66,7 @@ class LocationScout(
         state.set { it.copy(limitState = value) }
     }
 
-    fun searchOSM() {
+    fun searchQuery() {
 //        val q = state.now.query.takeIf { it.isNotBlank() }?.let {
 //            OSMQuery(
 //                amenity = it,
@@ -88,7 +87,7 @@ class LocationScout(
             } else it
         } ?: return
         val bounds = geo.stateNow.bounds.takeIf { stateNow.limitMap }
-        msg.set("Searching OpenStreetMap...")
+        msg.set("Searching OSM: ${state.now.query}")
         scope.launch {
             val places = osm.readPlaces(query, bounds)?.mapNotNull { it.toPlace().takeIf { p -> p.geoPoint != null } }
             if (places.isNullOrEmpty()) {
@@ -132,7 +131,7 @@ class LocationScout(
         val website = place.website
         val point = place.geoPoint ?: error("geoPoint is null")
         addConstructionMarker(point)
-        val edit = place.toEdit()
+        val edit = place.toEdit().mergeRight(state.now.edit)
         state.set { it.copy(place = place, website = website ?: "", edit = edit, point = point)}
         if (website != null) {
             msg.set("OSM provided a website for the location, we can try to read it.")
@@ -154,6 +153,21 @@ class LocationScout(
             state.set { it.copy(location = location) }
             msg.set("Posted. You can now add events to ${location.name} or add another location.")
             geo.tempEntities(null)
+        }
+    }
+
+    fun coldRead() {
+        val website = state.now.website.takeIf { it.startsWith("http") } ?: return
+        scope.launch {
+            msg.set("Reading the link, this will take a minute.")
+            val edit = api.parseLocation(UrlParseRequest(website))?.mergeLeft(state.now.edit) ?: return@launch
+            val query = edit.address ?: edit.name
+            state.set { it.copy(edit = edit, query = query ?: state.now.query ) }
+            if (query != null) {
+                searchQuery()
+            } else {
+                msg.set("We couldn't read the address or name from the website.")
+            }
         }
     }
 }

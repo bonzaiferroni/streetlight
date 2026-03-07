@@ -64,7 +64,7 @@ fun RenderContext.placeEditor(
                     placeholder = "Location name",
                     modifiers = modify(Flex1),
                     onChangeValue = model::setPlaceName,
-                    values = nameFlow,
+                    bindFlow = nameFlow,
                 )
                 button("🤖 look up", onClick = model::lookUp)
             }
@@ -73,7 +73,7 @@ fun RenderContext.placeEditor(
                 placeholder = "Address",
                 modifiers = modify(Width100),
                 onChangeValue = model::setAddress,
-                values = addressFlow,
+                bindFlow = addressFlow,
             )
             flowBlock(pointFlow, magic = true, modifiers = modify(Blur)) { point ->
                 if (point != null) {

@@ -44,7 +44,7 @@ fun RenderContext.eventEditorView(
                         textField(
                             label = "title",
                             onChangeValue = model::setEventTitle,
-                            values = model.titleFlow,
+                            bindFlow = model.titleFlow,
                             modifiers = modify(Flex1),
                             textModifiers = modify(Heading2),
                             placeholder = "Event Title"

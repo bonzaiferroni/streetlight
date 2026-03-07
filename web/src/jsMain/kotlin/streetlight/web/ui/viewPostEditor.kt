@@ -17,7 +17,7 @@ fun RenderContext.viewPostEditor(app: AppContext) {
             textField(
                 label = "url",
                 onChangeValue = model::setUrl,
-                values = model.infoUrlFlow,
+                bindFlow = model.infoUrlFlow,
                 modifiers = modify(Flex1),
                 placeholder = "Info link"
             )
@@ -32,7 +32,7 @@ fun RenderContext.viewPostEditor(app: AppContext) {
                 textField(
                     label = "headline",
                     onChangeValue = model::setHeadline,
-                    values = model.headlineFlow,
+                    bindFlow = model.headlineFlow,
                     placeholder = "Story Headline"
                 )
                 textEditor(

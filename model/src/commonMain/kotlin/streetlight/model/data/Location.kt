@@ -161,15 +161,19 @@ fun LocationParse.toAddress() = address?.let {
     )
 }
 
-fun LocationEdit.merge(edit: LocationEdit) = LocationEdit(
-    locationId = locationId ?: edit.locationId,
-    name = name ?: edit.name,
-    description = description ?: edit.description,
-    address = address ?: edit.address,
-    geoPoint = geoPoint ?: edit.geoPoint,
-    resources = resources ?: edit.resources,
-    website = website ?: edit.website,
-    eventsLink = eventsLink ?: edit.eventsLink,
-    imageUrl = imageUrl ?: edit.imageUrl,
-    thumbUrl = thumbUrl ?: edit.thumbUrl,
-)
+fun LocationEdit.mergeLeft(edit: LocationEdit?) = edit?.let {
+    LocationEdit(
+        locationId = locationId ?: edit.locationId,
+        name = name ?: edit.name,
+        description = description ?: edit.description,
+        address = address ?: edit.address,
+        geoPoint = geoPoint ?: edit.geoPoint,
+        resources = resources ?: edit.resources,
+        website = website ?: edit.website,
+        eventsLink = eventsLink ?: edit.eventsLink,
+        imageUrl = imageUrl ?: edit.imageUrl,
+        thumbUrl = thumbUrl ?: edit.thumbUrl,
+    )
+} ?: this
+
+fun LocationEdit.mergeRight(edit: LocationEdit?) = edit?.mergeLeft(this) ?: this

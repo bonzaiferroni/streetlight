@@ -53,13 +53,13 @@ fun RenderContext.signInContent(
                 label = "username/email",
                 onChangeValue = cred::setUsername,
                 placeholder = "username/email",
-                values = cred.usernameFlow
+                bindFlow = cred.usernameFlow
             )
             textField(
                 label = "password",
                 onChangeValue = cred::setPassword,
                 placeholder = "password",
-                values = cred.passwordFlow
+                bindFlow = cred.passwordFlow
             ) {
                 type = InputType.password
             }

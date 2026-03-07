@@ -22,7 +22,7 @@ fun RenderContext.textField(
     label: String? = null,
     modifiers: ModifierSet? = null,
     onChangeValue: ((String) -> Unit)? = null,
-    values: Flow<String?>? = null,
+    bindFlow: Flow<String?>? = null,
     textModifiers: ModifierSet? = null,
     id: Id? = null,
     placeholder: String? = label,
@@ -70,9 +70,9 @@ fun RenderContext.textField(
         })
     }
 
-    values?.let {
+    bindFlow?.let {
         renderScope.launch {
-            values.collect { value ->
+            bindFlow.collect { value ->
                 val value = value ?: ""
                 if (value != currentValue) {
                     currentValue = value
@@ -91,7 +91,7 @@ fun <T> WireContext<T>.textField(
     write: (TextUpdate<T>) -> T,
 ) = textField(
     label = label,
-    values = state.flow.mapDistinct { read(it) ?: "" },
+    bindFlow = state.flow.mapDistinct { read(it) ?: "" },
     onChangeValue = { text -> state.set { write(TextUpdate(it, text)) } },
 )
 

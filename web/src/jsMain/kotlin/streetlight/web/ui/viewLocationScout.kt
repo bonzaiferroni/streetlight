@@ -61,6 +61,7 @@ private data class LocationScoutData(
 
 fun ViewContext<LocationScout>.findPointStage() {
     val queryFlow = model.stateFlow.mapDistinct { it.query }
+    val websiteFlow = model.stateFlow.mapDistinct { it.website }
     val limitCityFlow = model.stateFlow.mapDistinct { it.limitCity }
     val limitMapFlow = model.stateFlow.mapDistinct { it.limitMap }
     val limitStateFlow = model.stateFlow.mapDistinct { it.limitState }
@@ -94,7 +95,19 @@ fun ViewContext<LocationScout>.findPointStage() {
                         }
                     }
                 }
-                button("Search", onClick = model::searchOSM)
+                button("Search", onClick = model::searchQuery)
+            }
+        }
+
+        spacer("or")
+
+        card {
+            heading4("Read Website")
+            textBlock("We can try reading the website content for relevant information.", modify(Dim))
+
+            row {
+                textField("website", modify(Flex1), model::setWebsite, websiteFlow)
+                button("Read", onClick = model::coldRead)
             }
         }
     }
@@ -125,7 +138,7 @@ fun ViewContext<LocationScout>.reviewStage(edit: LocationEdit) {
         card() {
             messageBox(model.messageFlow, modify(Flex1))
             row {
-                textField("website", modify(Flex1), model::setLink, model.stateFlow.mapDistinct { it.website })
+                textField("website", modify(Flex1), model::setWebsite, model.stateFlow.mapDistinct { it.website })
                 button("🤖 read website", onClick = model::readLink)
             }
         }
