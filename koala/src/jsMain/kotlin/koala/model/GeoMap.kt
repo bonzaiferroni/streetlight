@@ -4,6 +4,7 @@ import kampfire.model.GeoBounds
 import kampfire.model.GeoPoint
 import kampfire.model.distanceTo
 import kampfire.model.meters
+import koala.css.ModifierSet
 import koala.dom.DOMContext
 import koala.dom.RenderContext
 import kotlinx.coroutines.CoroutineScope
@@ -137,6 +138,7 @@ interface PointEntity: MapEntity {
     val iconPath: String? get() = null
     val thumbPath: String? get() = null
     val minZoom: Float? get() = null
+    val modifiers: ModifierSet? get() = null
     val onClick: (() -> Unit)? get() = null
     val focusCard: (RenderContext.() -> Unit)? get() = null
     val body: (DIV.() -> Unit)? get() = null

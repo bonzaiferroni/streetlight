@@ -12,7 +12,6 @@ import koala.dom.onClick
 import koala.dom.unmodify
 import koala.external.MarkerOptions
 import koala.external.maplibregl
-import koala.html.GeoMapSelector
 import kotlinx.browser.document
 import kotlinx.html.dom.append
 import kotlinx.html.js.div
@@ -90,7 +89,7 @@ fun PointEntityView.setAttributes(entity: PointEntity) {
     }
 }
 
-object MarkerClass {
+object MarkerCss {
     val block = Css("map-marker")
     val base = Css("map-marker__base")
     val bearing = Css("map-marker__bearing")
@@ -100,9 +99,15 @@ object MarkerClass {
     val label = Css("map-marker__label")
 }
 
+object MarkerUtility {
+    val twinkleAboveKite = Css("twinkle-above-kite")
+    val twinkleAboveRaincloud = Css("twinkle-above-raincloud")
+    val twinkleAboveAirplane = Css("twinkle-above-airplane")
+}
+
 fun PointEntity.toMapEntityView(pixelPoint: Point): PointEntityView {
     val element = document.createDiv()
-    element.modify(MarkerClass.block)
+    element.modify(MarkerCss.block)
 
     var baseElement: HTMLDivElement? = null
     var bearingElement: HTMLDivElement? = null
@@ -111,33 +116,35 @@ fun PointEntity.toMapEntityView(pixelPoint: Point): PointEntityView {
 
     element.append {
         baseElement = div {
-            applyModifiers(MarkerClass.base)
+            val baseModifiers = modifiers?.let { it + MarkerCss.base } ?: modify(MarkerCss.base)
+            applyModifiers(baseModifiers)
 
             bearingElement = bearing?.let {
                 div {
-                    applyModifiers(MarkerClass.bearing)
+                    applyModifiers(MarkerCss.bearing)
                 }
             }
+
             bodyElement = iconPath?.let {
                 div {
-                    applyModifiers(modify(MarkerClass.icon, MarkerClass.body))
+                    applyModifiers(modify(MarkerCss.icon, MarkerCss.body))
                     style = "--svg: url(${iconPath});"
                 }
             } ?: thumbPath?.let {
                 img {
                     src = it
-                    applyModifiers(modify(MarkerClass.body, MarkerClass.thumb))
+                    applyModifiers(modify(MarkerCss.body, MarkerCss.thumb))
                 }
             } ?: body?.let {
                 div {
-                    applyModifiers(modify(MarkerClass.body))
+                    applyModifiers(modify(MarkerCss.body))
                     body?.invoke(this)
                 }
             }
 
             labelElement = label?.let {
                 p {
-                    applyModifiers(MarkerClass.label)
+                    applyModifiers(MarkerCss.label)
                     +it
                 }
             }

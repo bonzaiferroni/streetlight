@@ -10,6 +10,8 @@ import org.w3c.dom.Node
 
 fun Element.unmodify(vararg modifier: Modifier) = modifier.forEach { classList.remove(it.value) }
 fun Element.modify(vararg modifier: Modifier) = modifier.forEach { classList.add(it.value) }
+fun Element.unmodify(modifiers: Collection<Modifier>) = modifiers.forEach { classList.remove(it.value) }
+fun Element.modify(modifiers: Collection<Modifier>) = modifiers.forEach { classList.add(it.value) }
 
 fun Node.modify(vararg modifier: Modifier) {
     val element = this as? Element ?: error("not an element")

@@ -1,6 +1,7 @@
 package streetlight.web.model
 
 import kampfire.model.GeoPoint
+import koala.css.modify
 import koala.model.BrowserModel
 import koala.model.GeoMap
 import koala.model.LayerId
@@ -8,6 +9,7 @@ import koala.model.LineEntity
 import koala.model.MapEntityId
 import koala.model.PointEntity
 import koala.external.VehiclePosition
+import koala.model.MarkerUtility
 import koala.model.toGeoPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.await
@@ -126,6 +128,7 @@ data class TransitEntity(
         VehicleType.LightRail -> SvgPath.train
         VehicleType.Train -> SvgPath.train
     }
+    override val modifiers get() = modify(MarkerUtility.twinkleAboveAirplane)
 }
 
 fun VehiclePosition.toEntity(currentTime: Long, vehicleType: VehicleType): TransitEntity? {

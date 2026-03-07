@@ -90,6 +90,8 @@
 
 .map-marker__body {
     transform: translate(-50%, -50%);
+    opacity: 1;
+    transition: opacity 200ms ease-in-out;
 }
 
 .map-marker__icon {
@@ -128,7 +130,7 @@
 
     border: 2px solid rgba(var(--thumb-border-rgb), 0.8);
 
-    transition: border-radius 200ms ease-in-out;
+    transition: opacity 200ms ease-in-out, border-radius 200ms ease-in-out;
 }
 
 .focus .map-marker__thumb {
@@ -222,4 +224,30 @@
 .map-marker__base.focus .marker-glow {
     opacity: 0.75;
     transform: translate(-50%, -50%) scale(1.05);
+}
+
+/* utilities */
+.above-kite .twinkle-above-kite,
+.above-raincloud .twinkle-above-raincloud,
+.above-airplane .twinkle-above-airplane {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.65);
+    animation: twinkle 2.4s ease-in-out infinite;
+}
+
+.above-kite .twinkle-above-kite > *,
+.above-raincloud .twinkle-above-raincloud > *,
+.above-airplane .twinkle-above-airplane > * {
+    opacity: 0;
+}
+
+@keyframes twinkle {
+    0%, 100% {
+        background-color: rgba(255, 255, 255, 0.45);
+    }
+    50% {
+        background-color: rgba(255, 255, 255, 1);
+    }
 }

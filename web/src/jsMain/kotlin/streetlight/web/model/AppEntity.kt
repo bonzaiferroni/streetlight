@@ -7,6 +7,7 @@ import koala.dom.RenderContext
 import koala.dom.box
 import koala.html.SiteImage
 import koala.model.MapEntityId
+import koala.model.MarkerUtility
 import koala.model.PointEntity
 import koala.model.Rgb
 import kotlinx.html.DIV
@@ -30,6 +31,7 @@ data class LocationEntity(
         }
     }
     override val light get() = Rgb(180, 240, 100)
+    override val modifiers get() = modify(MarkerUtility.twinkleAboveRaincloud)
 }
 
 data class EventEntity(

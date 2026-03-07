@@ -3,10 +3,14 @@ package koala.model
 import kampfire.model.GeoPoint
 import kampfire.model.regionalDistanceTo
 import kampfire.model.toPoint
+import koala.dom.modify
+import koala.dom.unmodify
 import koala.external.maplibregl
+import org.w3c.dom.HTMLElement
 
 class MapViewContext(
     val widget: maplibregl.Map,
+    val windowElement: HTMLElement,
 ) {
     val markers = mutableMapOf<MapEntityId, PointEntityView>()
     val lineLayers = mutableMapOf<LayerId, MutableList<MapLine>>()
@@ -14,6 +18,7 @@ class MapViewContext(
     private var visibility: ((MapEntity) -> Boolean)? = null
     private var focus: PointEntityView? = null
     private var tempSet: TempEntitySet? = null
+    private var altitudeNow: Altitude? = null
 
     fun setVisibility(visibility: ((MapEntity) -> Boolean)?) {
         this.visibility = visibility ?: { true }
@@ -60,6 +65,7 @@ class MapViewContext(
     }
 
     fun getNearest(center: GeoPoint, zoom: Float): PointEntity? {
+        // td: handle nearest cutoff by zoom
         var nearest: PointEntityView? = null
         var nearestDistanceSq = Double.MAX_VALUE
         markers.forEach {
@@ -94,6 +100,22 @@ class MapViewContext(
             addEntities(set.entities)
         }
         tempSet = set
+    }
+
+    fun setAltitude(zoom: Double) {
+        console.log(zoom)
+        val altitude = altitudeOf(zoom)
+        if (altitude == altitudeNow) return
+        val modifiersNow = altitudeNow?.modifiers ?: emptySet()
+        val unmodifiers = modifiersNow - altitude.modifiers
+        val modifiers = altitude.modifiers - modifiersNow
+
+        windowElement.unmodify(unmodifiers)
+        windowElement.modify(modifiers)
+        altitudeNow = altitude
+//        console.log(altitude.selector)
+//        console.log("unmodify: ${unmodifiers.joinToString(", ") { it.value }}")
+//        console.log("modify: ${modifiers.joinToString(", ") { it.value }}")
     }
 
     private fun recallObject(entity: PointEntity, center: GeoPoint): PointEntityView? {

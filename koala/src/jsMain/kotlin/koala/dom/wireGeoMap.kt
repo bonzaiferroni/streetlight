@@ -67,7 +67,7 @@ fun wireMapWindow(
 
     appScope.launch {
 
-        val context = MapViewContext(widget)
+        val context = MapViewContext(widget, mapWindow)
 
         fun relayBounds(isMoving: Boolean) {
             val center = widget.getCenter().toGeoPoint()
@@ -135,6 +135,14 @@ fun wireMapWindow(
             }
         }
 
+        // relay zoom
+        context.setAltitude(widget.getZoom())
+        widget.on("zoom") {
+            context.setAltitude(widget.getZoom())
+        }
+
+        // relay bounds
+        relayBounds(false)
         widget.on("move") {
             relayBounds(true)
         }
@@ -142,8 +150,6 @@ fun wireMapWindow(
         widget.on("moveend") {
             relayBounds(false)
         }
-
-        relayBounds(false)
     }
 
     return mapWindow
