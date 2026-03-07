@@ -42,6 +42,9 @@ class PointEntityView(
     var position = entity.position
         private set
 
+    var isVisible = false
+        private set
+
     fun move(position: GeoPoint) {
         val current = marker.getLngLat()
         val destination = position.toLngLat()
@@ -64,6 +67,16 @@ class PointEntityView(
 
     fun setOpacity(opacity: Float) {
         marker.setOpacity(opacity.toString())
+    }
+
+    fun setIsVisible(value: Boolean, widget: maplibregl.Map) {
+        if (isVisible == value) return
+        isVisible = value
+        if (isVisible) {
+            marker.addTo(widget)
+        } else {
+            marker.remove()
+        }
     }
 
     fun setEntity(entity: PointEntity, point: Point) {

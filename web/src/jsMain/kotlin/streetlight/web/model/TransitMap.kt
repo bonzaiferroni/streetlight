@@ -72,7 +72,7 @@ class TransitMap(
             val vehicle = feedEntity.vehicle ?: return@mapNotNull null
             val trip = vehicle.trip ?: return@mapNotNull null
             val vehicleType = stateNow.areaTransit?.routes?.firstOrNull() { it.transitRouteId.value == trip.routeId }
-                ?.vehicleType ?: return@mapNotNull null // VehicleType.Bus
+                ?.vehicleType ?: VehicleType.Bus // return@mapNotNull null
 
             vehicle.toEntity(timestamp, vehicleType)
         }

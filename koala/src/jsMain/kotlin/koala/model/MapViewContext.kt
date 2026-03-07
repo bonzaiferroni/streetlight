@@ -1,5 +1,6 @@
 package koala.model
 
+import kampfire.model.GeoBounds
 import kampfire.model.GeoPoint
 import kampfire.model.regionalDistanceTo
 import kampfire.model.toPoint
@@ -15,20 +16,21 @@ class MapViewContext(
     val markers = mutableMapOf<MapEntityId, PointEntityView>()
     val lineLayers = mutableMapOf<LayerId, MutableList<MapLine>>()
     val layers = mutableSetOf<LayerId>()
-    private var visibility: ((MapEntity) -> Boolean)? = null
+    private var visibilityFunction: ((MapEntity) -> Boolean)? = null
     private var focus: PointEntityView? = null
     private var tempSet: TempEntitySet? = null
     private var altitudeNow: Altitude? = null
+    private var boundsNow: GeoBounds? = null
 
     fun setVisibility(visibility: ((MapEntity) -> Boolean)?) {
-        this.visibility = visibility ?: { true }
+        this.visibilityFunction = visibility ?: { true }
         markers.forEach { (_, obj) ->
-            applyVisibility(obj)
+            applyOpacity(obj)
         }
     }
 
-    fun applyVisibility(obj: PointEntityView) {
-        val visibility = visibility ?: return
+    fun applyOpacity(obj: PointEntityView) {
+        val visibility = visibilityFunction ?: return
         val isVisible = visibility(obj.entity)
         obj.setOpacity(if (isVisible) 1f else 0f)
     }
@@ -40,7 +42,8 @@ class MapViewContext(
                     val center = widget.getCenter().toGeoPoint()
                     val obj = recallObject(entity, center) ?: createObject(entity, center)
                     obj.setAttributes(entity)
-                    applyVisibility(obj)
+                    applyOpacity(obj)
+                    updateVisibility(entity.entityId)
                 }
                 is LineEntity -> {
                     showLines(listOf(entity))
@@ -64,7 +67,24 @@ class MapViewContext(
         }
     }
 
-    fun getNearest(center: GeoPoint, zoom: Float): PointEntity? {
+    fun setBounds(bounds: GeoBounds, center: GeoPoint, zoom: Float): PointEntity? {
+        boundsNow = bounds
+        // set marker visibility
+        markers.forEach {
+            updateVisibility(it.key)
+        }
+
+        return getNearest(center, zoom)
+    }
+
+    private fun updateVisibility(entityId: MapEntityId) {
+        val bounds = boundsNow ?: return
+        val view = markers[entityId] ?: return
+        val isVisible = bounds.contains(view.position)
+        view.setIsVisible(isVisible, widget)
+    }
+
+    private fun getNearest(center: GeoPoint, zoom: Float): PointEntity? {
         // td: handle nearest cutoff by zoom
         var nearest: PointEntityView? = null
         var nearestDistanceSq = Double.MAX_VALUE

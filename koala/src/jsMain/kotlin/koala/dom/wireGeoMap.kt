@@ -73,7 +73,7 @@ fun wireMapWindow(
             val center = widget.getCenter().toGeoPoint()
             val bounds = widget.getBounds().toGeoBounds()
             val zoom = widget.getZoom().toFloat()
-            val nearest = context.getNearest(center, zoom)
+            val nearest = context.setBounds(bounds, center, zoom)
             geoMap.setBounds(center, bounds, zoom, isMoving, nearest)
         }
 
