@@ -160,8 +160,9 @@ fun ViewContext<LocationScout>.reviewStage(edit: LocationEdit) {
                             textBlock(edit.description ?: "[No description]")
                             propertyValue("address", edit.address ?: "[No address]")
                             propertyValue("website", edit.website ?: "[No website]")
-                            propertyValue("calendar", edit.eventsLink ?: "[No calendar]")
-                            propertyValue("about", "[No about]")
+                            propertyValue("calendar", edit.eventsUrl ?: "[No calendar]")
+                            propertyValue("about", edit.aboutUrl ?: "[No about]")
+                            propertyValue("menu", edit.menuUrl ?: "[No menu]")
                         }
                     }
                 }

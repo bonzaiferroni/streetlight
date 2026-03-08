@@ -73,7 +73,7 @@ class EventScout(
     }
 
     fun readCalendar() {
-        readUrl(state.now.location?.eventsLink, false)
+        readUrl(state.now.location?.eventsUrl, false)
     }
 
     fun setHtmlUrl(value: String) {

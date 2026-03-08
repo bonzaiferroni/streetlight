@@ -24,7 +24,7 @@ fun RenderContext.viewLocationAdmin(
             tab("events") {
                 val events = flowerOf { app.client.api.readLocationEvents(location.locationId) }
                 column {
-                    location.eventsLink.let { link ->
+                    location.eventsUrl.let { link ->
                         row {
                             textBlock("This location has an event page that we can try to read.", modify(Flex1))
                             button("read events", onClick = {

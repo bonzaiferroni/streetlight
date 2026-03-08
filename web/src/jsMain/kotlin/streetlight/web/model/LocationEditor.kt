@@ -10,7 +10,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import streetlight.model.data.LocationEdit
 import streetlight.model.data.LocationId
-import streetlight.model.data.ParseRequest
 import streetlight.model.data.Place
 import streetlight.model.data.ResourceType
 import streetlight.model.data.UrlParseRequest
@@ -63,7 +62,7 @@ class LocationEditor(
     }
 
     fun setEventsLink(value: String?) {
-        edit.set { it.copy(eventsLink = value) }
+        edit.set { it.copy(eventsUrl = value) }
     }
 
     fun setImageUrl(value: String?) {

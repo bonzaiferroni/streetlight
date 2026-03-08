@@ -68,6 +68,8 @@ data class LocationParse(
     val country: String? = null,
     val url: String? = null,
     val eventsUrl: String? = null,
+    val aboutUrl: String? = null,
+    val menuUrl: String? = null,
     val imageUrl: String? = null,
 )
 
@@ -87,6 +89,7 @@ data class EventParse(
     val imageUrl: String? = null,
     val description: String? = null,
     val ageMin: Int? = null,
+    val cost: Float? = null,
     val contact: String? = null,
     val url: String? = null,
 ) {
@@ -115,10 +118,11 @@ fun EventParse.toEventEdit(
         place = Place(location ?: ""),
         imageUrl = imageUrl,
         description = description,
+        ageMin = ageMin?.takeIf { it > 0 },
+        cost = cost,
         url = url,
         sourceUrl = sourceUrl,
         sourceImageUrl = sourceImageUrl,
-        ageMin = ageMin?.takeIf { it > 0 },
         startsAt = startsAt,
         date = date
     )

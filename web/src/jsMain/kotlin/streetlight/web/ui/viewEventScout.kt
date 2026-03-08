@@ -127,6 +127,9 @@ private fun ViewContext<EventScout>.viewEventParse(
                         event.ageMin?.let {
                             propertyValue("ages", "$it+")
                         }
+                        event.cost?.let {
+                            propertyValue("cost", usdValue(it))
+                        }
                         // contact
                         event.contact?.let {
                             propertyValue("contact", it)
@@ -151,3 +154,15 @@ private fun ViewContext<EventScout>.viewEventParse(
         portal.go(route)
     }
 }
+
+fun usdValue(amount: Float): String =
+    (kotlin.math.round(amount * 100) / 100.0)
+        .toString()
+        .let { value ->
+            val dot = value.indexOf('.')
+            when {
+                dot == -1 -> "$value.00"
+                value.length - dot == 2 -> "${value}0"
+                else -> value
+            }
+        }

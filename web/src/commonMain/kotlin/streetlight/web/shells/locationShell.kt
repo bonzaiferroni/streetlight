@@ -36,7 +36,7 @@ fun FlowContent.locationShell(
                     propertyRow("instagram") {
                         textBlock("@yer-instagram")
                     }
-                    location.link?.let {
+                    location.website?.let {
                         propertyRow("link") {
                             action(it, it)
                         }
