@@ -14,6 +14,7 @@ class UrlParser(apiKey: String) {
     val executor = simpleGoogleAIExecutor(apiKey)
     val console = globalConsole.getHandle(UrlParser::class)
     val cache = mutableMapOf<Int, String>()
+    val trimmer = HtmlTrimmer()
 
 //    private val agent = AIAgent(
 //        promptExecutor = executor,
@@ -64,6 +65,8 @@ class UrlParser(apiKey: String) {
         content: String,
         instructions: String
     ): String {
+        val content = trimmer.trimHtml(content)
+
         val prompt = prompt(
             id = "dev-assistant",
             params = LLMParams(
