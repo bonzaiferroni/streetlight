@@ -8,6 +8,7 @@ import kabinet.console.globalConsole
 import kampfire.utils.takeEllipsis
 import kotlinx.io.files.Path
 import kotlinx.serialization.json.Json
+import looksLikeHtml
 import java.io.File
 
 class UrlParser(apiKey: String) {
@@ -37,17 +38,19 @@ class UrlParser(apiKey: String) {
             file.parentFile.mkdirs()
             file.writeText(content)
             readHtmlContent<T>(url, content, instructions)
-        }
+        } ?: return null
 
         return tryDecode(json)
     }
 
-    inline fun withCache(cacheKey: Int, block: () -> String): String = cache[cacheKey] ?: block().also {
-        cache[cacheKey] = it
+    inline fun withCache(cacheKey: Int, block: () -> String?): String? = cache[cacheKey] ?: block().also { json ->
+        if (json != null) {
+            cache[cacheKey] = json
 
-        if (cache.size > 10) {
-            val firstKey = cache.keys.firstOrNull()
-            firstKey?.let { key -> cache.remove(key) }
+            if (cache.size > 25) {
+                val firstKey = cache.keys.firstOrNull()
+                firstKey?.let { key -> cache.remove(key) }
+            }
         }
     }
 
@@ -55,17 +58,28 @@ class UrlParser(apiKey: String) {
         val json = withCache(html.hashCode()) {
             console.log("html length: ${html.length}")
             readHtmlContent<T>(url, html, instructions)
-        }
+        } ?: return null
 
         return tryDecode(json)
     }
 
     suspend inline fun <reified T: Any> readHtmlContent(
         url: String,
-        content: String,
+        rawContent: String,
         instructions: String
-    ): String {
-        val content = trimmer.trimHtml(content)
+    ): String? {
+        if (!rawContent.looksLikeHtml()) {
+            console.logError("not likely html:\n${rawContent.take(80)}")
+            return null
+        }
+        val content = trimmer.trimHtml(rawContent)
+        val percentReduced = (100.0 * (rawContent.length - content.length) / rawContent.length).toInt()
+        val report = "from ${rawContent.length} to ${content.length} ($percentReduced%)"
+        console.log(report)
+        val filename = toFilenameFormat(url)
+        val file = File("../debug/$filename.reduced.html")
+        file.parentFile.mkdirs()
+        file.writeText(content)
 
         val prompt = prompt(
             id = "dev-assistant",
@@ -140,3 +154,8 @@ val jsonConfig = Json {
     isLenient = true
     coerceInputValues = true
 }
+
+private val htmlStart = Regex("""^\s*(<!DOCTYPE\s+html|<html|<[a-zA-Z]+)""", RegexOption.IGNORE_CASE)
+
+fun String.looksLikeHtml(): Boolean =
+    htmlStart.containsMatchIn(this)

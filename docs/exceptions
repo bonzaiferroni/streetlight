@@ -10,3 +10,10 @@ JSON input: ....."ageMin": 0, "contact": "null",
          unable to decode structured llm response:
 {"events": [{"address": "935 E Colfax Ave, Denver, CO 80218", "ageMin": 0, "contact": "null", "date": "2024-03-15", "description": "null", "imageUrl": "https://aegwebprod.blob.core.windows.net/content/events/420/A_Boogie_Wit_Da_Hoodie_1920x1080.jpg", "location": "The Ogden Theatre", "name": "A Boogie Wit Da Hoodie: Better Off Alone Tour", "time": "02:00", "url": "https://www.ogdentheatre.com/event...
 
+
+         JsonDecodingException: Unexpected JSON token at offset 99949: Expected quotation mark '"', but had ' ' instead at path: $
+JSON input: .....26-04-03","description":"Catch Zak Toscani live at Denver Co.....
+         unable to decode structured llm response:
+{"events":[{"address":"675 22nd St, Denver, CO 80205","ageMin":0,"contact": "","date":"2026-03-11","description":"A Live Comedy Show at Denver Comedy Underground The Best of Denver Comedy Showcase is a must-see comedy show in Denver, bringing together the city’s funniest rising stars and special headliner performances—all on one stage at Denver Comedy Underground. Each week, this comedy show highl...
+
+

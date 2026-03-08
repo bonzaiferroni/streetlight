@@ -1,39 +1,50 @@
 import klutch.environment.readEnvFromPath
 import kotlinx.coroutines.runBlocking
+import streetlight.agent.HtmlTrimmer
 import streetlight.agent.UrlParser
 import streetlight.model.data.ColdParse
+import java.io.File
 
 fun main(): Unit = runBlocking {
-    val env = readEnvFromPath()
-    // connectDb(env)
-    // Get an API key from the OPENAI_API_KEY environment variable
-    val apiKey = env.read("GEMINI_KEY_A")
+    val trimmer = HtmlTrimmer()
+    val debugFolder = File("debug")
 
-    // println(GoogleModels.Gemini2_5Flash.supports(LLMCapability.Vision.Image))
-    val agent = UrlParser(apiKey)
-    val result: ColdParse? =
-        agent.readImage("../upload/c285c6c0-0b15-4113-a1e9-0add48984ac9.jpg", eventInstructions)
+    debugFolder
+        .listFiles()
+        ?.asSequence()
+        ?.filter { it.isFile }
+        ?.filter { it.name.endsWith(".html") }
+        ?.filter { !it.name.endsWith(".reduced.html") }
+        ?.sortedBy { it.name }
+        ?.forEach { file ->
+            val html = file.readText()
+            if (!html.looksLikeHtml()) return@forEach
+            val reduced = trimmer.trimHtml(html)
+            val percentReduced = (100.0 * (html.length - reduced.length) / html.length).toInt()
+            val report = "from ${html.length} to ${reduced.length} ($percentReduced%)"
+            println("${report.padEnd(36)} ${file.name}")
 
-     println(result)
+            val output = File(file.parentFile, "${file.nameWithoutExtension}.reduced.html")
+            output.writeText(reduced)
+        }
+}
+
+private val htmlStart = Regex("""^\s*(<!DOCTYPE\s+html|<html|<[a-zA-Z]+)""", RegexOption.IGNORE_CASE)
+
+fun String.looksLikeHtml(): Boolean =
+    htmlStart.containsMatchIn(this)
+
 //    val agent = ChatAgentConnection(apiKey)
 //    agent.connect()
 
 //    val result = agent.read("https://www.reddit.com/r/AuroraCO/comments/1r33pww/dog_runaway_from_petco_mississippi_and_havana_area/")
 //    println(result)
-}
 
-val eventInstructions = """
-        Read the following image. We believe it is information about an event or a list of events.
-        For each event, your job is to extract the following json properties, if that information can be found in the content:
-        
-        * name: Event name or title 
-        * time: Time of day of the event as 24-hour value [HH:MM]
-        * date: Date of the event as ISO local date [YYYY-MM-DD]
-        * location: The name or description of the location of the event
-        * address: The address at which the event is located
-        * imageUrl: The featured image for the event, must be a full url
-        * description: Additional details given about the event
-        * ageMin: The minimum age for attendees
-        * contact: Any name and/or contact information given for the event
-        * url: Url for more information about the event, must be a full url
-""".trimIndent()
+//    val env = readEnvFromPath()
+//    val apiKey = env.read("GEMINI_KEY_A")
+//
+//    val agent = UrlParser(apiKey)
+//    val result: ColdParse? =
+//        agent.readImage("../upload/c285c6c0-0b15-4113-a1e9-0add48984ac9.jpg", eventInstructions)
+//
+//     println(result)

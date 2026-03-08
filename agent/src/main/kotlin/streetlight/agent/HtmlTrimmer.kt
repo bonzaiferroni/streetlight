@@ -18,12 +18,12 @@ class HtmlTrimmer {
     }
 
     private fun trimHead(doc: Document) {
-        val head = doc.head() ?: return
+        val head = doc.head()
         trimChildren(head, ::keepHeadNode)
     }
 
     private fun trimBody(doc: Document) {
-        val body = doc.body() ?: return
+        val body = doc.body()
         trimChildren(body, ::keepBodyNode)
     }
 
@@ -60,13 +60,11 @@ class HtmlTrimmer {
         return when (node) {
             is TextNode -> !node.text().isBlank()
 
-            is Element -> {
-                when (node.tagName().lowercase()) {
-                    "title" -> hasMeaningfulContent(node)
-                    "meta" -> keepMeta(node)
-                    "link" -> keepHeadLink(node)
-                    else -> false
-                }
+            is Element -> when (node.tagName().lowercase()) {
+                "title" -> hasMeaningfulContent(node)
+                "meta" -> true
+                "link" -> keepHeadLink(node)
+                else -> false
             }
 
             else -> false
@@ -90,17 +88,6 @@ class HtmlTrimmer {
 
             else -> false
         }
-    }
-
-    private fun keepMeta(element: Element): Boolean {
-        val name = element.attr("name").lowercase()
-        val property = element.attr("property").lowercase()
-        val rel = element.attr("rel").lowercase()
-
-        return name in keptMetaNames ||
-                property.startsWith("og:") ||
-                property.startsWith("twitter:") ||
-                rel == "canonical"
     }
 
     private fun keepHeadLink(element: Element): Boolean {
@@ -144,18 +131,13 @@ class HtmlTrimmer {
             "embed",
             "applet",
             "canvas",
+            "svg",
             "form",
             "input",
             "button",
             "select",
             "option",
             "textarea"
-        )
-
-        private val keptMetaNames = setOf(
-            "description",
-            "author",
-            "keywords"
         )
     }
 }
