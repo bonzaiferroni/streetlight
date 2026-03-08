@@ -46,7 +46,6 @@ class OSMFetchClient() {
         ).joinToString("&")
 
         val url = "https://nominatim.openstreetmap.org/search?$params"
-        println(url)
 
         val response = window.fetch(url, RequestInit(headers = headers)).await()
 

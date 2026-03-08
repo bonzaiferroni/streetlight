@@ -21,8 +21,12 @@ data class Location(
     // td: country
     val geoPoint: GeoPoint,
     val resources: Set<ResourceType>,
+    // td: rename -> website
     val link: String?,
+    // td: rename -> calendar
     val eventsLink: String?,
+    // td: create -> menu
+    // td: create -> tags
     // td: aboutLink
     val imageUrl: String?,
     val thumbUrl: String?,

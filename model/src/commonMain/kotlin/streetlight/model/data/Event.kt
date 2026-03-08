@@ -37,6 +37,7 @@ data class Event(
     val thumbUrl: String?,
     val streamUrl: String?,
     val date: LocalDate,
+    // repeatInterval
     val startsAt: Instant?,
     val endsAt: Instant?,
     val updatedAt: Instant,

@@ -23,6 +23,7 @@ object Primary: Modifier { override val value = "primary" }
 object Secondary: Modifier { override val value = "secondary" }
 object Clickable: Modifier { override val value = "clickable" }
 object OverflowHidden: Modifier { override val value = "overflow-hidden"}
+object OverflowWrapAnywhere: Modifier { override val value = "overflow-wrap-anywhere" }
 object Focus: Modifier { override val value = "focus" }
 object PrimaryBg: Modifier { override val value = "primary-bg" }
 object PrimaryCardBg: Modifier { override val value = "primary-card-bg" }

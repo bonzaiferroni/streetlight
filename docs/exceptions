@@ -1,0 +1,12 @@
+         JsonDecodingException: Unexpected JSON token at offset 6305: Expected quotation mark '"', but had ':' instead at path: $
+JSON input: .....out notice.","imageUrl":"https://s1.ticketm.
+         unable to decode structured llm response:
+{"events":[{"address":"1902 Blake St, Denver, CO 80202","ageMin":0,"date":"2026-03-07","description":"DOORS: 7PM SHOW: 8PM THIS SHOW IS: ALL AGES All support acts are subject to change without notice.","imageUrl":"https://s1.ticketm.net/dam/a/c58/816b35ac-0702-4821-8ad6-b1e998766c58_TABLET_LANDSCAPE_LARGE_16_9.jpg","location":"Summit Music Hall","name":"dodie with special guest Andy Louis","time":...
+
+
+         JsonDecodingException: Unexpected JSON token at offset 6289: Trailing comma before the end of JSON object at path: $
+Trailing commas are non-complaint JSON and not allowed by default. Use 'allowTrailingComma = true' in 'Json {}' builder to support them.
+JSON input: ....."ageMin": 0, "contact": "null",
+         unable to decode structured llm response:
+{"events": [{"address": "935 E Colfax Ave, Denver, CO 80218", "ageMin": 0, "contact": "null", "date": "2024-03-15", "description": "null", "imageUrl": "https://aegwebprod.blob.core.windows.net/content/events/420/A_Boogie_Wit_Da_Hoodie_1920x1080.jpg", "location": "The Ogden Theatre", "name": "A Boogie Wit Da Hoodie: Better Off Alone Tour", "time": "02:00", "url": "https://www.ogdentheatre.com/event...
+

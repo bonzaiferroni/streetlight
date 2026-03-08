@@ -1,6 +1,8 @@
 package streetlight.web.ui
 
 import kampfire.model.GeoPoint
+import kampfire.model.distanceTo
+import kampfire.model.kilometers
 import koala.dom.UIMessage
 import koala.dom.set
 import koala.model.PanPoint
@@ -89,17 +91,24 @@ class LocationScout(
         val bounds = geo.stateNow.bounds.takeIf { stateNow.limitMap }
         msg.set("Searching OSM: ${state.now.query}")
         scope.launch {
-            val places = osm.readPlaces(query, bounds)?.mapNotNull { it.toPlace().takeIf { p -> p.geoPoint != null } }
-            if (places.isNullOrEmpty()) {
+            val place = osm.readPlaces(query, bounds)?.mapNotNull { it.toPlace().takeIf {
+                p -> p.geoPoint?.let { gp -> gp.distanceTo(geo.stateNow.center) < 100.kilometers } ?: false
+            } }
+                ?.firstOrNull()
+            if (place == null) {
                 msg.set("We couldn't find anything.")
                 return@launch
             }
-            places.firstOrNull()?.geoPoint?.let {
+            place.geoPoint?.let {
                 geo.panMap(PanPoint(point = it, zoom = 15f))
             }
 
-            state.set { it.copy(places = places) }
+            val edit = place.toEdit().mergeRight(state.now.edit)
+            state.set { it.copy(edit = edit) }
             msg.set("Is this what you are looking for?")
+
+//            state.set { it.copy(places = places) }
+
         }
     }
 

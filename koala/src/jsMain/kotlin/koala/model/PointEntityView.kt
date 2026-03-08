@@ -13,14 +13,17 @@ import koala.dom.unmodify
 import koala.external.MarkerOptions
 import koala.external.maplibregl
 import kotlinx.browser.document
+import kotlinx.browser.window
 import kotlinx.html.dom.append
 import kotlinx.html.js.div
 import kotlinx.html.js.img
 import kotlinx.html.js.p
 import kotlinx.html.style
+import org.khronos.webgl.Uint32Array
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLParagraphElement
+import kotlin.js.Date
 
 class PointEntityView(
     val marker: maplibregl.Marker,
@@ -129,6 +132,9 @@ fun PointEntity.toMapEntityView(pixelPoint: Point): PointEntityView {
 
     element.append {
         baseElement = div {
+            val delay = provideDelay()
+            element.style.setProperty("--twinkle-delay", "${delay}s")
+
             val baseModifiers = modify(MarkerCss.base).let { set ->
                 modifiers?.let { set + it } ?: set
             }.let { set ->
@@ -194,4 +200,10 @@ fun PointEntity.toMapEntityView(pixelPoint: Point): PointEntityView {
     }
 
     return view
+}
+
+var twinkleIndex = 0
+
+private fun provideDelay(): Float {
+    return -(twinkleIndex++ % 24) * .2f
 }

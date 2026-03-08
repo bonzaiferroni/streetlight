@@ -220,6 +220,10 @@ p.large {
     overflow: hidden;
 }
 
+.overflow-wrap-anywhere {
+    overflow-wrap: anywhere;
+}
+
 .gap-0 {
     gap: 0;
 }
