@@ -11,6 +11,7 @@ import streetlight.model.data.GalaxyId
 import streetlight.model.data.Location
 import streetlight.model.data.LocationEdit
 import streetlight.model.data.LocationId
+import streetlight.model.data.PathId
 import streetlight.model.data.PostId
 import streetlight.model.data.SongId
 import streetlight.model.data.TalentId
@@ -37,7 +38,7 @@ enum class StreetlightScreen(
     ScoutMap("scout-map", { ScoutMapRoute }),
     FoundGalaxy("create-galaxy", { GalaxyFoundryRoute }),
     GalaxyList("galaxies", { GalaxyListRoute }),
-    GalaxyProfile("galaxy", { path -> path.provideRouteFromPath { GalaxyIdRoute(GalaxyId(it)) }})
+    GalaxyProfile("g", { path -> path.provideRouteFromPath { GalaxyPathIdRoute(it) }})
 }
 
 fun List<String>.provideRouteFromPath(argIndex: Int = 1, provideRoute: (String) -> AppRoute?) =
@@ -52,6 +53,11 @@ sealed interface StringIdRoute: StreetlightRoute {
     val id: TableId<String>?
 
     override fun toHashPath() = id?.let { "${super.toHashPath()}/${it.value}" } ?: super.toHashPath()
+}
+
+sealed interface PathIdRoute: StreetlightRoute {
+    val pathId: PathId?
+    override fun toHashPath() = pathId?.let { "${super.toHashPath()}/${it}" } ?: super.toHashPath()
 }
 
 data class HomeRoute(
@@ -199,8 +205,7 @@ object GalaxyListRoute: StreetlightRoute {
     override val title get() = "Galaxies"
 }
 
-data class GalaxyIdRoute(val galaxyId: GalaxyId): StreetlightRoute, StringIdRoute {
+data class GalaxyPathIdRoute(override val pathId: PathId): StreetlightRoute, PathIdRoute {
     override val screen get() = StreetlightScreen.GalaxyProfile
     override val title get() = "Galaxy"
-    override val id get() = galaxyId
 }

@@ -8,12 +8,14 @@ import kotlin.jvm.JvmInline
 @Serializable
 data class Galaxy(
     val galaxyId: GalaxyId,
+    val pathId: String,
     val name: String,
     val center: GeoPoint,
 ) {
     companion object {
         val Eastfax get() = Galaxy(
             galaxyId = GalaxyId.random(),
+            pathId = "bf_eastfax",
             name = "BF Eastfax",
             center = GeoPoint.Denver
         )

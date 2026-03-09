@@ -81,10 +81,10 @@ open class PostEndpoint<Sent, Returned>(
     pathNode: String = "",
 ): Endpoint<Sent, Returned>(HttpMethod.Post, parent, pathNode)
 
-open class GetByIdEndpoint<Returned>(
+open class GetByIdEndpoint<Sent, Returned>(
     parent: Endpoint<*, *>? = null,
     pathNode: String = "",
-) : Endpoint<Unit, Returned>(HttpMethod.Get, parent, pathNode, true) {
+) : Endpoint<Sent, Returned>(HttpMethod.Get, parent, pathNode, true) {
     val clientIdTemplate: String get() = "$path/:id"
     fun replaceClientId(id: Any) = this.clientIdTemplate.replace(":id", id.toString())
 }

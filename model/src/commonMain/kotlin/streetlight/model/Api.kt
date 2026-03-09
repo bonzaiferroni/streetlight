@@ -106,5 +106,6 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
     object Galaxies: ApiNode(this, "galaxy") {
         object Found: PostEndpoint<GalaxyEdit, Galaxy>(this, "found")
         object All: GetEndpoint<List<Galaxy>>(this, "areas")
+        object Path: GetByIdEndpoint<PathId, Galaxy>(this, "path")
     }
 }

@@ -1,6 +1,7 @@
 package streetlight.web.io
 
 import kampfire.api.Endpoint
+import kampfire.api.GetByIdEndpoint
 import kampfire.api.GetByTableIdEndpoint
 import kampfire.api.GetEndpoint
 import kampfire.api.PathBuilder
@@ -32,6 +33,12 @@ class FetchClient(
         noinline block: (PathBuilder.(Endpoint) -> Unit)? = null
     ): Returned? =
         authRequest("GET", resolvePath(endpoint, block) ) { it.tryDecodeText() }
+
+    suspend inline fun <reified Returned> get(
+        endpoint: GetByIdEndpoint<String, Returned>,
+        id: String,
+    ): Returned? =
+        authRequest("GET", "${endpoint.path}/$id") { it.tryDecodeText() }
 
     suspend inline fun <Id: TableId<*>, reified Returned> get(
         endpoint: GetByTableIdEndpoint<Id, Returned>,

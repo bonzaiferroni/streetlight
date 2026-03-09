@@ -18,7 +18,7 @@ import streetlight.model.data.EventInfo
 import streetlight.model.data.Galaxy
 import streetlight.model.data.Location
 import streetlight.web.EventIdRoute
-import streetlight.web.GalaxyIdRoute
+import streetlight.web.GalaxyPathIdRoute
 import streetlight.web.LocationProfileRoute
 
 fun FlowContent.cardOf(event: Event, modifiers: ModifierSet? = null) {
@@ -34,5 +34,5 @@ fun FlowContent.cardOf(event: EventInfo) {
 }
 
 fun FlowContent.cardOf(galaxy: Galaxy) {
-    cardOf(GalaxyIdRoute(galaxy.galaxyId), galaxy.name, SiteImage.placeholderThumb, "description")
+    cardOf(GalaxyPathIdRoute(galaxy.pathId), galaxy.name, SiteImage.placeholderThumb, "description")
 }
