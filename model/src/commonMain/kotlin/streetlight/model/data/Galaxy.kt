@@ -24,3 +24,11 @@ data class Galaxy(
 value class GalaxyId(override val value: String): ProjectId {
     companion object { fun random() = GalaxyId(randomUuidString())}
 }
+
+@Serializable
+data class GalaxyEdit(
+    val name: String? = null,
+    val center: GeoPoint? = null,
+) {
+    val isValid get() = !name.isNullOrBlank() && center != null
+}

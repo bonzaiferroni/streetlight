@@ -7,8 +7,6 @@ import pondui.ui.core.StateModel
 import streetlight.app.AppProvider
 import streetlight.app.RuntimeProvider
 import streetlight.model.data.Galaxy
-import streetlight.model.data.CommunityType
-import streetlight.model.data.NewCommunity
 
 class StreetListModel(private val app: AppProvider = RuntimeProvider): StateModel<StreetListState>() {
 
@@ -26,14 +24,14 @@ class StreetListModel(private val app: AppProvider = RuntimeProvider): StateMode
 
     fun createNewStreet() {
         if (!stateNow.isValidNewItem) return
-        viewModelScope.launch {
-            client.create(NewCommunity(
-                name = stateNow.newStreetName,
-                communityType = CommunityType.Neighborhood
-            ))
-            setNewStreetName("")
-            refreshItems()
-        }
+//        viewModelScope.launch {
+//            client.create(NewCommunity(
+//                name = stateNow.newStreetName,
+//                communityType = CommunityType.Neighborhood
+//            ))
+//            setNewStreetName("")
+//            refreshItems()
+//        }
     }
 
     fun refreshItems() {

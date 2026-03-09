@@ -7,6 +7,7 @@ import kotlinx.serialization.Serializable
 import streetlight.model.data.Event
 import streetlight.model.data.EventEdit
 import streetlight.model.data.EventId
+import streetlight.model.data.GalaxyId
 import streetlight.model.data.Location
 import streetlight.model.data.LocationEdit
 import streetlight.model.data.LocationId
@@ -34,6 +35,9 @@ enum class StreetlightScreen(
     LocationProfile("location", { path -> path.provideRouteFromPath { LocationProfileRoute(LocationId(it)) } }),
     LocationAdmin("location-admin", { path -> path.provideRouteFromPath { LocationAdminRoute(LocationId(it)) } }),
     ScoutMap("scout-map", { ScoutMapRoute }),
+    FoundGalaxy("create-galaxy", { GalaxyFoundryRoute }),
+    GalaxyList("galaxies", { GalaxyListRoute }),
+    GalaxyProfile("galaxy", { path -> path.provideRouteFromPath { GalaxyIdRoute(GalaxyId(it)) }})
 }
 
 fun List<String>.provideRouteFromPath(argIndex: Int = 1, provideRoute: (String) -> AppRoute?) =
@@ -183,4 +187,20 @@ data class LocationAdminRoute(
 object ScoutMapRoute: StreetlightRoute {
     override val screen get() = StreetlightScreen.ScoutMap
     override val title get() = "Scout Map"
+}
+
+object GalaxyFoundryRoute: StreetlightRoute {
+    override val screen get() = StreetlightScreen.FoundGalaxy
+    override val title get() = "Found Galaxy"
+}
+
+object GalaxyListRoute: StreetlightRoute {
+    override val screen get() = StreetlightScreen.GalaxyList
+    override val title get() = "Galaxies"
+}
+
+data class GalaxyIdRoute(val galaxyId: GalaxyId): StreetlightRoute, StringIdRoute {
+    override val screen get() = StreetlightScreen.GalaxyProfile
+    override val title get() = "Galaxy"
+    override val id get() = galaxyId
 }

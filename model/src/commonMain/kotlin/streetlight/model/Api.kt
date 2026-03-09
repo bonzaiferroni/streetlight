@@ -23,9 +23,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object AtLocation: GetByTableIdEndpoint<LocationId, List<Event>>(this, "location")
     }
 
-    object StreetFeed: GetEndpoint<List<Galaxy>>(this, "areas") {
-        object Create: PostEndpoint<NewCommunity, GalaxyId>(this, "create")
-    }
+
 
     object Locations: GetByTableIdEndpoint<LocationId, Location>(this, "locations") {
         @Deprecated("use edit")
@@ -103,5 +101,10 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
 
     object Map: ApiNode(this, "map") {
         object SpiritVision: ApiNode(this, "spirit-vision")
+    }
+
+    object Galaxies: ApiNode(this, "galaxy") {
+        object Found: PostEndpoint<GalaxyEdit, Galaxy>(this, "found")
+        object All: GetEndpoint<List<Galaxy>>(this, "areas")
     }
 }

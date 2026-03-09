@@ -50,4 +50,8 @@ class ApiClient(private val client: FetchClient) {
     // talents
     suspend fun readTalents() = client.get(Api.Users.Talents)
     suspend fun editTalent(talent: TalentEdit) = client.post(Api.Users.EditTalent, talent)
+
+    // galaxies
+    suspend fun foundGalaxy(galaxy: GalaxyEdit) = client.post(Api.Galaxies.Found, galaxy)
+    suspend fun readGalaxies() = client.get(Api.Galaxies.All)
 }

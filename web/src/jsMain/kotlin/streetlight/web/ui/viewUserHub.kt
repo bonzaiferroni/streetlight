@@ -7,6 +7,8 @@ import streetlight.web.CreateLocationRoute
 import streetlight.web.EditTalentRoute
 import streetlight.web.HomeRoute
 import streetlight.web.EventScoutRoute
+import streetlight.web.GalaxyFoundryRoute
+import streetlight.web.GalaxyListRoute
 import streetlight.web.ScoutMapRoute
 import streetlight.web.TalentProfileRoute
 import streetlight.web.model.AppContext
@@ -30,9 +32,11 @@ fun RenderContext.viewUserHub(
         card {
             row {
                 textBlock("Add things to the map.", modify(Flex1))
-                button("post event", modify(Accent), onClick = { portal.go(EventScoutRoute())})
-                button("post location", modify(Accent), onClick = { portal.go(CreateLocationRoute)})
-                button("scout map", modify(Accent), onClick = { portal.go(ScoutMapRoute) })
+                button("post event", onClick = { portal.go(EventScoutRoute())})
+                button("post location", onClick = { portal.go(CreateLocationRoute)})
+                button("scout map", onClick = { portal.go(ScoutMapRoute) })
+                button("galaxy foundry", modify(Accent), onClick = { portal.go(GalaxyFoundryRoute)} )
+                button("galaxy list", modify(Accent), onClick = { portal.go(GalaxyListRoute) })
             }
         }
 

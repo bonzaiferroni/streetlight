@@ -7,7 +7,6 @@ import kampfire.model.UserRole
 import kotlinx.datetime.Clock
 import streetlight.model.data.Galaxy
 import streetlight.model.data.GalaxyId
-import streetlight.model.data.CommunityType
 import streetlight.model.data.DefaultEventTag
 import streetlight.model.data.Event
 import streetlight.model.data.EventId
@@ -56,15 +55,14 @@ val mockDb by lazy {
         val bag = ValueBag(rng, list)
     }
 
-    fun areaOf(name: String, communityType: CommunityType) = Galaxy(
+    fun areaOf(name: String) = Galaxy(
         galaxyId = GalaxyId.random(),
         name = name,
-        points = emptyList(),
-        communityType = communityType
+        center = GeoPoint.Denver
     )
 
     val areas = object {
-        val colfax = areaOf("Colfax", CommunityType.Street)
+        val colfax = areaOf("Colfax")
 
         val list = listOf(colfax)
     }

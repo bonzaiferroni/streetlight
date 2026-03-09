@@ -15,8 +15,10 @@ import koala.html.textBlock
 import kotlinx.html.FlowContent
 import streetlight.model.data.Event
 import streetlight.model.data.EventInfo
+import streetlight.model.data.Galaxy
 import streetlight.model.data.Location
 import streetlight.web.EventIdRoute
+import streetlight.web.GalaxyIdRoute
 import streetlight.web.LocationProfileRoute
 
 fun FlowContent.cardOf(event: Event, modifiers: ModifierSet? = null) {
@@ -29,4 +31,8 @@ fun FlowContent.cardOf(location: Location) {
 
 fun FlowContent.cardOf(event: EventInfo) {
     cardOf(EventIdRoute(event.eventId), event.title, event.thumbUrl, event.description)
+}
+
+fun FlowContent.cardOf(galaxy: Galaxy) {
+    cardOf(GalaxyIdRoute(galaxy.galaxyId), galaxy.name, SiteImage.placeholderThumb, "description")
 }
