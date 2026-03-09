@@ -37,7 +37,7 @@ class StreetMap(
     val spiritVision = SpiritSocket(client.api, scope)
 
     val focusFlow = stateFlow.mapDistinct { it.focus }
-    val communityFlow = stateFlow.mapDistinct { it.communities }
+    val communityFlow = stateFlow.mapDistinct { it.galaxies }
     val locationsFlow = stateFlow.mapDistinct { it.locations }
 
     init {
@@ -141,7 +141,7 @@ data class StreetMapState(
     val queriedBounds: GeoBounds = GeoBounds.Denver,
     val zoom: Float = 11f,
     val locations: List<LocationInfo> = emptyList(),
-    val communities: List<Galaxy> = listOf(Galaxy.Eastfax),
+    val galaxies: List<Galaxy> = emptyList(),
     val focus: MapFocus = MapFocus(),
     val layers: Set<StreetMapLayer> = StreetMapLayer.entries.toSet(),
     val isQuerying: Boolean = false,

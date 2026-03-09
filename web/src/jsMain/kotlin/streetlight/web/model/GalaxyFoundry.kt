@@ -28,7 +28,11 @@ class GalaxyFoundry(
     fun foundGalaxy() {
         val galaxy = state.now.galaxy.copy(center = geo.stateNow.center).takeIf { it.isValid } ?: return
         scope.launch {
-            app.client.api.foundGalaxy(galaxy)
+            val imageUrl = stateNow.blobUrl?.let {
+                api.uploadEventImage(it)
+            }
+            console.log(imageUrl)
+            app.client.api.foundGalaxy(galaxy.copy(imageUrl = imageUrl))
         }
     }
 

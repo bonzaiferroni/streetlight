@@ -2,6 +2,8 @@ package streetlight.model.data
 
 import kampfire.model.GeoPoint
 import kampfire.utils.randomUuidString
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 
@@ -11,16 +13,11 @@ data class Galaxy(
     val pathId: String,
     val name: String,
     val center: GeoPoint,
-) {
-    companion object {
-        val Eastfax get() = Galaxy(
-            galaxyId = GalaxyId.random(),
-            pathId = "bf_eastfax",
-            name = "BF Eastfax",
-            center = GeoPoint.Denver
-        )
-    }
-}
+    val imageUrl: String?,
+    val thumbUrl: String?,
+    val updatedAt: Instant,
+    val createdAt: Instant,
+)
 
 @JvmInline @Serializable
 value class GalaxyId(override val value: String): ProjectId {
@@ -31,6 +28,7 @@ value class GalaxyId(override val value: String): ProjectId {
 data class GalaxyEdit(
     val name: String? = null,
     val center: GeoPoint? = null,
+    val imageUrl: String? = null,
 ) {
     val isValid get() = !name.isNullOrBlank() && center != null
 }
