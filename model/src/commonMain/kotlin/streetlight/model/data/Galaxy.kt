@@ -29,6 +29,7 @@ data class GalaxyEdit(
     val name: String? = null,
     val center: GeoPoint? = null,
     val imageUrl: String? = null,
+    val thumbUrl: String? = null,
 ) {
     val isValid get() = !name.isNullOrBlank() && center != null
 }

@@ -1,13 +1,8 @@
 side:
-fix the height of outline buttons, make same
-set LIGHT style to something easier on the eyes
-add content to deletePage
-refactor song request creation
-create textBox()
+allow upload of galaxy thumbnail
 
 main:
-front end: catalogPage, portalMap, songStore
-figure out flex layout
+
 
 done:
 go over
@@ -16,3 +11,11 @@ change primary color to secondary
 consolidate putRespondBool and put
 add something returned to delete and update endpoints
 
+abandoned:
+fix the height of outline buttons, make same
+set LIGHT style to something easier on the eyes
+add content to deletePage
+refactor song request creation
+create textBox()
+front end: catalogPage, portalMap, songStore
+figure out flex layout
