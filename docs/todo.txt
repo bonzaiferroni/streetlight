@@ -2,7 +2,8 @@ side:
 allow upload of galaxy thumbnail
 
 main:
-
+galaxy fields:
+    description
 
 done:
 go over

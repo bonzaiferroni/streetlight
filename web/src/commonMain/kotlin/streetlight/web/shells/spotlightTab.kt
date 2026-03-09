@@ -11,7 +11,7 @@ import kotlinx.html.FlowContent
 import streetlight.model.data.Event
 import streetlight.model.data.Location
 import streetlight.web.ChatRoute
-import streetlight.web.EventScoutRoute
+import streetlight.web.OldEventScoutRoute
 import streetlight.web.CreateLocationRoute
 import streetlight.web.EditPostRoute
 import streetlight.web.SandboxRoute
@@ -34,7 +34,7 @@ fun FlowContent.spotlightTab(events: List<Event>, locations: List<Location>) {
             }
         }
 
-        button("Create Event", EventScoutRoute())
+        button("Create Event", OldEventScoutRoute())
         button("Create location", CreateLocationRoute)
         button("Create story", EditPostRoute())
         button("Chat", ChatRoute)

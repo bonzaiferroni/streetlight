@@ -6,7 +6,7 @@ import koala.dom.*
 import streetlight.web.CreateLocationRoute
 import streetlight.web.EditTalentRoute
 import streetlight.web.HomeRoute
-import streetlight.web.EventScoutRoute
+import streetlight.web.OldEventScoutRoute
 import streetlight.web.GalaxyFoundryRoute
 import streetlight.web.GalaxyListRoute
 import streetlight.web.ScoutMapRoute
@@ -32,7 +32,7 @@ fun RenderContext.viewUserHub(
         card {
             row {
                 textBlock("Add things to the map.", modify(Flex1))
-                button("post event", onClick = { portal.go(EventScoutRoute())})
+                button("post event", onClick = { portal.go(OldEventScoutRoute())})
                 button("post location", onClick = { portal.go(CreateLocationRoute)})
                 button("scout map", onClick = { portal.go(ScoutMapRoute) })
                 button("galaxy foundry", modify(Accent), onClick = { portal.go(GalaxyFoundryRoute)} )

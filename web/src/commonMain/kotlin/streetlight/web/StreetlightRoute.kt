@@ -7,7 +7,6 @@ import kotlinx.serialization.Serializable
 import streetlight.model.data.Event
 import streetlight.model.data.EventEdit
 import streetlight.model.data.EventId
-import streetlight.model.data.GalaxyId
 import streetlight.model.data.Location
 import streetlight.model.data.LocationEdit
 import streetlight.model.data.LocationId
@@ -32,13 +31,14 @@ enum class StreetlightScreen(
     SongProfile("song-profile", { path -> path.provideRouteFromPath { SongProfileRoute(SongId(it)) } }),
     TalentProfile("talent-profile", { path -> path.provideRouteFromPath { TalentProfileRoute(TalentId(it)) } }),
     EditTalent("edit-talent", { path -> EditTalentRoute(path.provideId { TalentId(it)} ) }),
-    ReadEvent("create-event", { EventScoutRoute() }),
+    ReadEvent("create-event", { OldEventScoutRoute() }),
     LocationProfile("location", { path -> path.provideRouteFromPath { LocationProfileRoute(LocationId(it)) } }),
     LocationAdmin("location-admin", { path -> path.provideRouteFromPath { LocationAdminRoute(LocationId(it)) } }),
     ScoutMap("scout-map", { ScoutMapRoute }),
     FoundGalaxy("create-galaxy", { GalaxyFoundryRoute }),
     GalaxyList("galaxies", { GalaxyListRoute }),
-    GalaxyProfile("g", { path -> path.provideRouteFromPath { GalaxyPathIdRoute(it) }})
+    GalaxyProfile("g", { path -> path.provideRouteFromPath { GalaxyPathIdRoute(it) }}),
+    EventScout("post-event", { path -> path.provideRouteFromPath { EventScoutRoute(it) }})
 }
 
 fun List<String>.provideRouteFromPath(argIndex: Int = 1, provideRoute: (String) -> AppRoute?) =
@@ -147,7 +147,7 @@ data class EditTalentRoute(
 }
 
 @Serializable
-data class EventScoutRoute(
+data class OldEventScoutRoute(
     val location: Location? = null,
     val link: String? = null,
 ): StreetlightRoute {
@@ -208,4 +208,9 @@ object GalaxyListRoute: StreetlightRoute {
 data class GalaxyPathIdRoute(override val pathId: PathId): StreetlightRoute, PathIdRoute {
     override val screen get() = StreetlightScreen.GalaxyProfile
     override val title get() = "Galaxy"
+}
+
+data class EventScoutRoute(override val pathId: PathId): StreetlightRoute, PathIdRoute {
+    override val screen get() = StreetlightScreen.EventScout
+    override val title get() = "Event Scout"
 }

@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.filterNotNull
 import streetlight.model.data.Location
 import streetlight.model.data.LocationEdit
 import streetlight.model.data.Place
-import streetlight.web.EventScoutRoute
+import streetlight.web.OldEventScoutRoute
 import streetlight.web.model.*
 
 fun RenderContext.viewLocationScout(app: AppContext) {
@@ -188,7 +188,7 @@ fun ViewContext<LocationScout>.finishedStage(location: Location) {
         row {
             messageBox(model.messageFlow, modify(Flex1))
             button("Post events", modify(Accent), onClick = {
-                portal.go(EventScoutRoute(location))
+                portal.go(OldEventScoutRoute(location))
             })
         }
         row {

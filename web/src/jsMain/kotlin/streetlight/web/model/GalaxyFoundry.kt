@@ -5,6 +5,7 @@ import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import streetlight.model.data.GalaxyEdit
+import streetlight.web.GalaxyPathIdRoute
 import streetlight.web.ui.ViewModel
 
 class GalaxyFoundry(
@@ -31,9 +32,16 @@ class GalaxyFoundry(
             val imageUrl = stateNow.blobUrl?.let {
                 api.uploadEventImage(it)
             }
-            console.log(imageUrl)
-            app.client.api.foundGalaxy(galaxy.copy(imageUrl = imageUrl))
+            val galaxy = app.client.api.foundGalaxy(galaxy.copy(imageUrl = imageUrl))
+            if (galaxy != null) {
+                portal.go(GalaxyPathIdRoute(galaxy.pathId))
+                reset()
+            }
         }
+    }
+
+    private fun reset() {
+        state.set { GalaxyFoundryState() }
     }
 
     private fun setGalaxy(block: (GalaxyEdit) -> GalaxyEdit) {

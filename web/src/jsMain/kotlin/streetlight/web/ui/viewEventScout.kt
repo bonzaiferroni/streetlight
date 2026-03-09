@@ -10,11 +10,11 @@ import streetlight.model.data.EventEdit
 import streetlight.model.data.Location
 import streetlight.model.data.MultiEventParseResponse
 import streetlight.web.EditEventCallbackRoute
-import streetlight.web.EventScoutRoute
+import streetlight.web.OldEventScoutRoute
 import streetlight.web.model.AppContext
 import streetlight.web.model.EventScout
 
-fun RenderContext.viewEventScout(app: AppContext, route: EventScoutRoute) {
+fun RenderContext.viewEventScout(app: AppContext, route: OldEventScoutRoute) {
     val model = EventScout(renderScope, route, app)
     val panelFlow = model.stateFlow.mapDistinct { it.location }
 
@@ -83,7 +83,7 @@ fun ViewContext<EventScout>.locationPanel(location: Location) {
 }
 
 fun RenderContext.viewEventScoutRoute(app: AppContext) {
-    routeBlock<EventScoutRoute>(app.portal) { route ->
+    routeBlock<OldEventScoutRoute>(app.portal) { route ->
         console.log(prettyPrint(route))
         viewEventScout(app, route)
     }
