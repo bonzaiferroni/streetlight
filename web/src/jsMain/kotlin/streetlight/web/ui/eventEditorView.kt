@@ -13,12 +13,12 @@ import streetlight.web.EditEventCallbackRoute
 import streetlight.web.EditEventIdRoute
 import streetlight.web.EditEventRoute
 import streetlight.web.EventIdRoute
-import streetlight.web.model.AppContext
+import streetlight.web.model.Streetlight
 import streetlight.web.model.EventEditor
 
 fun RenderContext.eventEditorView(
     model: EventEditor,
-    app: AppContext,
+    app: Streetlight,
     callback: ((Event?) -> Unit)?
 ) {
     val imagesFlow = app.userCache.files.flow
@@ -132,7 +132,7 @@ fun RenderContext.eventEditorView(
     }
 }
 
-fun RenderContext.eventEditorRouteView(app: AppContext) {
+fun RenderContext.eventEditorRouteView(app: Streetlight) {
     val api = app.client.api
     var callback: ((Event?) -> Unit)? = null
 

@@ -6,10 +6,10 @@ import koala.html.Id
 import kotlinx.html.InputType
 import kotlinx.html.js.p
 import streetlight.web.HomeRoute
-import streetlight.web.model.AppContext
+import streetlight.web.model.Streetlight
 
 fun RenderContext.viewAccount(
-    app: AppContext,
+    app: Streetlight,
 ) {
     val gate = app.gate
 
@@ -30,7 +30,7 @@ fun RenderContext.viewAccount(
 }
 
 fun RenderContext.signInContent(
-    app: AppContext,
+    app: Streetlight,
 ) {
     val gate = app.gate
     val cred = gate.cred

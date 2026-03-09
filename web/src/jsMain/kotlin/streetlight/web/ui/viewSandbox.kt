@@ -3,9 +3,9 @@ package streetlight.web.ui
 import koala.dom.RenderContext
 import koala.dom.onView
 import koala.dom.textBlock
-import streetlight.web.model.AppContext
+import streetlight.web.model.Streetlight
 
-fun RenderContext.viewSandbox(app: AppContext) {
+fun RenderContext.viewSandbox(app: Streetlight) {
     val element = this@viewSandbox.textBlock("yer element")
     element.onView {
         console.log("In view, matey!")

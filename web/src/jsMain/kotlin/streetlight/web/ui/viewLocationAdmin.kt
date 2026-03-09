@@ -7,11 +7,11 @@ import streetlight.model.data.Location
 import streetlight.model.data.toEdit
 import streetlight.web.LocationAdminRoute
 import streetlight.web.OldEventScoutRoute
-import streetlight.web.model.AppContext
+import streetlight.web.model.Streetlight
 import streetlight.web.shells.cardOf
 
 fun RenderContext.viewLocationAdmin(
-    app: AppContext,
+    app: Streetlight,
     location: Location,
 ) {
     column {
@@ -46,7 +46,7 @@ fun RenderContext.viewLocationAdmin(
     }
 }
 
-fun RenderContext.viewLocationAdmin(app: AppContext) {
+fun RenderContext.viewLocationAdmin(app: Streetlight) {
     routeBlock<LocationAdminRoute, Location>(
         portal = app.portal,
         provideData = { app.client.api.readLocation(it.locationId) }

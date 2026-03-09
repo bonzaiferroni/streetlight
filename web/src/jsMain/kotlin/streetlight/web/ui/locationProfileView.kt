@@ -5,11 +5,11 @@ import koala.dom.*
 import streetlight.model.data.Location
 import streetlight.web.LocationAdminRoute
 import streetlight.web.LocationProfileRoute
-import streetlight.web.model.AppContext
+import streetlight.web.model.Streetlight
 import streetlight.web.shells.LocationShell
 import streetlight.web.shells.locationShell
 
-fun RenderContext.locationProfileView(app: AppContext) {
+fun RenderContext.locationProfileView(app: Streetlight) {
     routeBlock<LocationProfileRoute, Location>(
         portal = app.portal,
         provideData = { app.client.api.readLocation(it.locationId) }

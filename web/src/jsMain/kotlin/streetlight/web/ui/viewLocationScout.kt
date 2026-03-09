@@ -14,7 +14,7 @@ import streetlight.model.data.Place
 import streetlight.web.OldEventScoutRoute
 import streetlight.web.model.*
 
-fun RenderContext.viewLocationScout(app: AppContext) {
+fun RenderContext.viewLocationScout(app: Streetlight) {
     val model = LocationScout(renderScope, app)
     val dataFlow = model.stateFlow.mapDistinct {
         LocationScoutData(

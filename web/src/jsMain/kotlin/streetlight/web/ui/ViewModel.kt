@@ -1,9 +1,9 @@
 package streetlight.web.ui
 
-import streetlight.web.model.AppContext
+import streetlight.web.model.Streetlight
 
 interface ViewModel {
-    val app: AppContext
+    val app: Streetlight
 
     val api get() = app.client.api
     val geo get() = app.geoMap

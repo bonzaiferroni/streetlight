@@ -11,10 +11,10 @@ import streetlight.web.GalaxyFoundryRoute
 import streetlight.web.GalaxyListRoute
 import streetlight.web.ScoutMapRoute
 import streetlight.web.TalentProfileRoute
-import streetlight.web.model.AppContext
+import streetlight.web.model.Streetlight
 
 fun RenderContext.viewUserHub(
-    app: AppContext,
+    app: Streetlight,
     user: UserInfo,
 ) {
     // val model = UserHub(renderScope, app.client.api)

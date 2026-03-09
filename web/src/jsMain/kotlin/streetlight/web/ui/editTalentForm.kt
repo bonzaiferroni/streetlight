@@ -7,9 +7,9 @@ import kotlinx.coroutines.launch
 import streetlight.model.data.TalentEdit
 import streetlight.model.data.toEdit
 import streetlight.web.EditTalentRoute
-import streetlight.web.model.AppContext
+import streetlight.web.model.Streetlight
 
-fun RenderContext.editTalentForm(app: AppContext) {
+fun RenderContext.editTalentForm(app: Streetlight) {
     val portal = app.portal
     val api = app.client.api
     val userCache = app.userCache

@@ -6,10 +6,10 @@ import koala.html.blockLabel
 import koala.html.textBlock
 import koala.model.mapDistinct
 import streetlight.web.EditEventIdRoute
-import streetlight.web.model.AppContext
+import streetlight.web.model.Streetlight
 import streetlight.web.model.StreetMapLayer
 
-fun RenderContext.viewMapControls(app: AppContext) {
+fun RenderContext.viewMapControls(app: Streetlight) {
     val gateAgent = app.gateAgent
     val streetMap = app.streetMap
     val portal = app.portal

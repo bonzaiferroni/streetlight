@@ -10,13 +10,13 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 import streetlight.model.data.TransitRoute
 import streetlight.model.data.VehicleType
-import streetlight.web.model.AppContext
+import streetlight.web.model.Streetlight
 import kotlin.js.json
 
 const val STOP_ZOOM = 14
 
 fun RenderContext.viewTransitMap(
-    app: AppContext,
+    app: Streetlight,
     maplibre: maplibregl.Map
 ) {
     val streetMap = app.streetMap

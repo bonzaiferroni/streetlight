@@ -4,10 +4,10 @@ import koala.dom.*
 import koala.model.storeOf
 import kotlinx.coroutines.launch
 import streetlight.model.data.Galaxy
-import streetlight.web.model.AppContext
+import streetlight.web.model.Streetlight
 import streetlight.web.shells.cardOf
 
-fun RenderContext.viewGalaxyList(app: AppContext) {
+fun RenderContext.viewGalaxyList(app: Streetlight) {
     val galaxyStore = storeOf<List<Galaxy>>(emptyList())
 
     renderScope.launch {

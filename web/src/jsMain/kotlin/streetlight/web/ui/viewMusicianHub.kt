@@ -21,11 +21,11 @@ import koala.dom.textBlock
 import koala.dom.textField
 import koala.html.Id
 import streetlight.web.SongProfileRoute
-import streetlight.web.model.AppContext
+import streetlight.web.model.Streetlight
 import streetlight.web.model.MusicianHub
 
 fun RenderContext.viewMusicianHub(
-    app: AppContext,
+    app: Streetlight,
     user: UserInfo,
 ) {
     val model = MusicianHub(renderScope, app.client.api)

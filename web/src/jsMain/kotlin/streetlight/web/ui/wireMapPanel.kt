@@ -17,9 +17,9 @@ import koala.html.image
 import koala.html.label
 import koala.model.mapDistinct
 import kotlinx.html.js.div
-import streetlight.web.model.AppContext
+import streetlight.web.model.Streetlight
 
-fun RenderContext.wireMapPanel(app: AppContext) {
+fun RenderContext.wireMapPanel(app: Streetlight) {
     wireBlock(GeoMapSelector.panel) {
         tabs(Id("map-panel-tabs")) {
             tab("News") {
@@ -41,7 +41,7 @@ fun RenderContext.wireMapPanel(app: AppContext) {
     }
 }
 
-fun RenderContext.viewMapCards(app: AppContext) {
+fun RenderContext.viewMapCards(app: Streetlight) {
     val eventMap = app.streetMap
 
     flowBlock(eventMap.stateFlow.mapDistinct { it.layers }, modify(Width100)) { layers ->

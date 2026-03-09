@@ -1,12 +1,10 @@
 package streetlight.web.ui
 
 import koala.dom.*
-import koala.html.TabClass
 import streetlight.model.data.Galaxy
 import streetlight.web.GalaxyPathIdRoute
-import streetlight.web.model.AppContext
+import streetlight.web.model.Streetlight
 import streetlight.web.shells.GalaxyShell
-import streetlight.web.shells.HomeShell
 import streetlight.web.shells.galaxyShell
 
 fun RenderContext.viewGalaxyProfile(galaxy: Galaxy) {
@@ -25,7 +23,7 @@ fun RenderContext.viewGalaxyProfile(galaxy: Galaxy) {
 //    }
 }
 
-fun RenderContext.viewGalaxyProfileRoute(app: AppContext) {
+fun RenderContext.viewGalaxyProfileRoute(app: Streetlight) {
     routeBlock<GalaxyPathIdRoute, Galaxy>(app.portal, { route ->
         app.client.api.readGalaxy(route.pathId)
     }) { galaxy ->

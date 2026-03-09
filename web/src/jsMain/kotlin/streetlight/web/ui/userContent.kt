@@ -11,10 +11,10 @@ import kotlinx.coroutines.launch
 import kotlinx.dom.clear
 import kotlinx.html.js.div
 import streetlight.web.AccountRoute
-import streetlight.web.model.AppContext
+import streetlight.web.model.Streetlight
 
 fun RenderContext.userContent(
-    app: AppContext,
+    app: Streetlight,
     redirect: Boolean = false,
     modifiers: ModifierSet? = null,
     block: RenderContext.(UserInfo) -> Unit

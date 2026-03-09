@@ -7,7 +7,7 @@ import streetlight.web.io.ApiClient
 import streetlight.web.io.OSMFetchClient
 import streetlight.web.io.TransitBrowserClient
 
-interface AppContext {
+interface Streetlight {
     val appScope: CoroutineScope
     val client: ClientContext
     val portal: Portal

@@ -4,9 +4,9 @@ import koala.css.*
 import koala.dom.*
 import koala.html.geoMapMount
 import kotlinx.html.js.div
-import streetlight.web.model.AppContext
+import streetlight.web.model.Streetlight
 
-fun RenderContext.viewFullMap(app: AppContext) {
+fun RenderContext.viewFullMap(app: Streetlight) {
     val element = div {
 
     }

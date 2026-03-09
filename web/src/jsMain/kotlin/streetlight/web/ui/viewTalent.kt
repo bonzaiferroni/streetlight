@@ -1,8 +1,8 @@
 package streetlight.web.ui
 
 import koala.dom.*
-import streetlight.web.model.AppContext
+import streetlight.web.model.Streetlight
 
-fun RenderContext.viewTalent(app: AppContext) {
+fun RenderContext.viewTalent(app: Streetlight) {
 
 }

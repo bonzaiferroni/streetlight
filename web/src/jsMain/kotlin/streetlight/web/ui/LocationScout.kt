@@ -18,12 +18,12 @@ import streetlight.model.data.mergeRight
 import streetlight.model.data.toEdit
 import streetlight.model.external.toPlace
 import streetlight.web.io.SvgPath
-import streetlight.web.model.AppContext
+import streetlight.web.model.Streetlight
 import streetlight.web.model.IconEntity
 
 class LocationScout(
     private val scope: CoroutineScope,
-    override val app: AppContext,
+    override val app: Streetlight,
 ): ViewModel {
     private val state = storeOf(LocationScoutState())
     private val msg = storeOf(UIMessage(introMsg))

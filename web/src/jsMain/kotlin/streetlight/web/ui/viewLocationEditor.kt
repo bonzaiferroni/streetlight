@@ -14,12 +14,12 @@ import streetlight.web.CreateLocationRoute
 import streetlight.web.EditLocationDataRoute
 import streetlight.web.EditLocationIdRoute
 import streetlight.web.EditLocationRoute
-import streetlight.web.model.AppContext
+import streetlight.web.model.Streetlight
 import streetlight.web.model.LocationEditor
 
 fun RenderContext.viewLocationEditor(
     location: LocationEdit,
-    app: AppContext,
+    app: Streetlight,
     bindFlow: Flow<LocationEdit>?,
     onEdit: ((LocationEdit) -> Unit)?
 ) {
@@ -69,7 +69,7 @@ fun RenderContext.viewLocationEditor(
     }
 }
 
-fun RenderContext.viewEditLocationRoute(app: AppContext) {
+fun RenderContext.viewEditLocationRoute(app: Streetlight) {
     val portal = app.portal
     val api = app.client.api
 

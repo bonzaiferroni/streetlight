@@ -5,17 +5,20 @@ import koala.html.AppRoute
 import koala.model.Portal
 import koala.utils.prettyPrint
 import kotlinx.coroutines.flow.map
+import org.w3c.dom.HTMLElement
 
 inline fun <reified Route: AppRoute> RenderContext.routeBlock(
     portal: Portal,
     renderCacheCount: Int? = null,
     crossinline block: RenderContext.(Route) -> Unit
-) {
+): HTMLElement {
     val routeFlow = portal.routeFlowOf<Route>()
 
-    flowBlock(routeFlow, renderCacheCount = renderCacheCount) {
+    val element = flowBlock(routeFlow, renderCacheCount = renderCacheCount) {
         block(it)
     }
+
+    return element
 }
 
 inline fun <reified Route: AppRoute, Data> RenderContext.routeBlock(
@@ -23,14 +26,16 @@ inline fun <reified Route: AppRoute, Data> RenderContext.routeBlock(
     crossinline provideData: suspend (Route) -> Data?,
     renderCacheCount: Int? = null,
     crossinline block: RenderContext.(Data) -> Unit
-) {
+): HTMLElement {
     val routeFlow = portal.routeFlowOf<Route>().map { provideData(it) }
 
-    flowBlock(routeFlow, modify(Width100), renderCacheCount = renderCacheCount) {
+    val element = flowBlock(routeFlow, modify(Width100), renderCacheCount = renderCacheCount) {
         if (it != null) {
             block(it)
         } else {
             textBlock("Content not found")
         }
     }
+
+    return element
 }

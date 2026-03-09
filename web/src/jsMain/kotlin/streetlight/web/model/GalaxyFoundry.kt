@@ -9,7 +9,7 @@ import streetlight.web.GalaxyPathIdRoute
 import streetlight.web.ui.ViewModel
 
 class GalaxyFoundry(
-    override val app: AppContext,
+    override val app: Streetlight,
     val scope: CoroutineScope
 ): ViewModel {
     private val state = storeOf(GalaxyFoundryState())

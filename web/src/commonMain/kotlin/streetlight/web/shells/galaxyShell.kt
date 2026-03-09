@@ -13,6 +13,7 @@ import koala.html.tabs
 import kotlinx.html.FlowContent
 import streetlight.model.data.Event
 import streetlight.model.data.Galaxy
+import streetlight.web.EventScoutRoute
 import streetlight.web.ui.headerOf
 
 fun FlowContent.galaxyShell(galaxy: Galaxy, events: List<Event>) {
@@ -23,7 +24,7 @@ fun FlowContent.galaxyShell(galaxy: Galaxy, events: List<Event>) {
                     headerOf(galaxy)
                     row {
                         box(modify(Flex1))
-                        button("Post Event", )
+                        button("Post Event", EventScoutRoute(galaxy.pathId))
                     }
                 }
             }

@@ -18,7 +18,7 @@ import streetlight.web.io.ApiClient
 import streetlight.web.io.FetchClient
 import streetlight.web.io.OSMFetchClient
 import streetlight.web.io.TransitBrowserClient
-import streetlight.web.model.AppContext
+import streetlight.web.model.Streetlight
 import streetlight.web.model.ChatRoom
 import streetlight.web.model.ClientContext
 import streetlight.web.model.GateAgent
@@ -34,7 +34,7 @@ fun viewApp() {
     val cred = UserCred()
     val fetchClient = FetchClient(cred)
 
-    val app = object: AppContext { // 220 KB
+    val app = object: Streetlight { // 220 KB
         override val appScope = scope
 
         override val client = object: ClientContext {
@@ -51,7 +51,7 @@ fun viewApp() {
         override val geoMap = GeoMap(scope)
         override val streetMap = StreetMap(scope, client, geoMap)
         override val chatRoom = ChatRoom(scope, client.api)
-    } as AppContext
+    } as Streetlight
 
     scope.launch {
         app.gate.readUser()
@@ -68,26 +68,29 @@ fun viewApp() {
                 magic = true,
                 onTransition = { window.scrollTo(0.0, 0.0) },
             ) { screen ->
-                when (screen) {
-                    StreetlightScreen.Home -> viewHome(app)
-                    StreetlightScreen.Event -> viewEventRoute(app)
-                    StreetlightScreen.Account -> viewAccount(app)
-                    StreetlightScreen.EditEvent -> eventEditorRouteView(app)
-                    StreetlightScreen.Sandbox -> viewSandbox(app)
-                    StreetlightScreen.FullMap -> viewFullMap(app)
-                    StreetlightScreen.EditStory -> viewPostEditor(app)
-                    StreetlightScreen.Chat -> viewChatRoom(app)
-                    StreetlightScreen.SongProfile -> viewSongProfile(app)
-                    StreetlightScreen.EditTalent -> editTalentForm(app)
-                    StreetlightScreen.ReadEvent -> viewEventScoutRoute(app)
-                    StreetlightScreen.LocationProfile -> locationProfileView(app)
-                    StreetlightScreen.EditLocation -> viewEditLocationRoute(app)
-                    StreetlightScreen.LocationAdmin -> viewLocationAdmin(app)
-                    StreetlightScreen.ScoutMap -> viewLocationScout(app)
-                    StreetlightScreen.FoundGalaxy -> viewGalaxyFoundry(app)
-                    StreetlightScreen.GalaxyList -> viewGalaxyList(app)
-                    StreetlightScreen.GalaxyProfile -> viewGalaxyProfileRoute(app)
-                    else -> textBlock("Coming soon: $screen")
+                viewOf(app) {
+                    when (screen) {
+                        StreetlightScreen.Home -> viewHome(app)
+                        StreetlightScreen.Event -> viewEventRoute(app)
+                        StreetlightScreen.Account -> viewAccount(app)
+                        StreetlightScreen.EditEvent -> eventEditorRouteView(app)
+                        StreetlightScreen.Sandbox -> viewSandbox(app)
+                        StreetlightScreen.FullMap -> viewFullMap(app)
+                        StreetlightScreen.EditStory -> viewPostEditor(app)
+                        StreetlightScreen.Chat -> viewChatRoom(app)
+                        StreetlightScreen.SongProfile -> viewSongProfile(app)
+                        StreetlightScreen.EditTalent -> editTalentForm(app)
+                        StreetlightScreen.ReadEvent -> viewEventScoutRoute(app)
+                        StreetlightScreen.LocationProfile -> locationProfileView(app)
+                        StreetlightScreen.EditLocation -> viewEditLocationRoute(app)
+                        StreetlightScreen.LocationAdmin -> viewLocationAdmin(app)
+                        StreetlightScreen.ScoutMap -> viewLocationScout(app)
+                        StreetlightScreen.FoundGalaxy -> viewGalaxyFoundry(app)
+                        StreetlightScreen.GalaxyList -> viewGalaxyList(app)
+                        StreetlightScreen.GalaxyProfile -> viewGalaxyProfileRoute(app)
+                        StreetlightScreen.EventScout -> viewEventScoutRoute()
+                        else -> textBlock("Coming soon: $screen")
+                    }
                 }
             }
 
