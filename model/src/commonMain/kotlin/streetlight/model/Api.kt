@@ -23,15 +23,15 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object AtLocation: GetByTableIdEndpoint<LocationId, List<Event>>(this, "location")
     }
 
-    object StreetFeed: GetEndpoint<List<Community>>(this, "areas") {
-        object Create: PostEndpoint<NewCommunity, CommunityId>(this, "create")
+    object StreetFeed: GetEndpoint<List<Galaxy>>(this, "areas") {
+        object Create: PostEndpoint<NewCommunity, GalaxyId>(this, "create")
     }
 
     object Locations: GetByTableIdEndpoint<LocationId, Location>(this, "locations") {
         @Deprecated("use edit")
         object Create: PostEndpoint<Place, LocationId>(this, "create")
         object Edit: PostEndpoint<LocationEdit, Location>(this, "edit")
-        object Street: GetByTableIdEndpoint<CommunityId, List<Location>>(this, "street")
+        object Street: GetByTableIdEndpoint<GalaxyId, List<Location>>(this, "street")
         @Deprecated("use edit")
         object Update: PostEndpoint<Location, Boolean>(this, "update")
         object Search: GetEndpoint<List<Location>>(this, "search") {

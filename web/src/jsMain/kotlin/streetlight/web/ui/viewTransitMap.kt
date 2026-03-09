@@ -46,7 +46,7 @@ fun RenderContext.viewTransitMap(
         }
 
         launch {
-            transitMap.stateFlow.mapDistinctBy({ it.communityId }) { it.areaTransit }.filterNotNull().collect { transit ->
+            transitMap.stateFlow.mapDistinctBy({ it.galaxyId }) { it.areaTransit }.filterNotNull().collect { transit ->
                 areaTransit = transit
                 // stopMarkers = transit.stops.map { createStopMarker(it, eventMap.stateNow.zoom, maplibre) }
                 addRouteLines(transit.routes, maplibre)

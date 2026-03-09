@@ -35,7 +35,7 @@ fun StreetListScreen(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.fillMaxWidth()
-                        .actionable(it.communityId.toRoute())
+                        .actionable(it.galaxyId.toRoute())
                         .pad(1),
                 ) {
                     Text(it.name)

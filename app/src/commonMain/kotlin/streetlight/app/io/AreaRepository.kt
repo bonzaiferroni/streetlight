@@ -2,14 +2,14 @@ package streetlight.app.io
 
 import pondui.io.NeoApiClient
 import streetlight.model.Api
-import streetlight.model.data.Community
-import streetlight.model.data.CommunityId
+import streetlight.model.data.Galaxy
+import streetlight.model.data.GalaxyId
 import streetlight.model.data.NewCommunity
 import streetlight.model.mockDb
 
 interface AreaRepository {
-    suspend fun readAll(): List<Community>?
-    suspend fun create(street: NewCommunity): CommunityId?
+    suspend fun readAll(): List<Galaxy>?
+    suspend fun create(street: NewCommunity): GalaxyId?
 }
 
 class AreaApiClient(
@@ -22,5 +22,5 @@ class AreaApiClient(
 class AreaMockClient: AreaRepository {
     override suspend fun readAll() = mockDb.communities
 
-    override suspend fun create(street: NewCommunity): CommunityId? = TODO("Not yet implemented")
+    override suspend fun create(street: NewCommunity): GalaxyId? = TODO("Not yet implemented")
 }

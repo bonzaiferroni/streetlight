@@ -15,7 +15,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.await
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import streetlight.model.data.CommunityId
+import streetlight.model.data.GalaxyId
 import streetlight.model.data.AreaTransit
 import streetlight.model.data.TransitRouteId
 import streetlight.model.data.VehicleType
@@ -32,10 +32,10 @@ class TransitMap(
 
     init {
         scope.launch {
-            val communityId = CommunityId.random()
+            val galaxyId = GalaxyId.random()
             val areaTransit = client.transit.readAreaTransit()
             showRoutes(areaTransit)
-            setState { it.copy(areaTransit = areaTransit, communityId = communityId) }
+            setState { it.copy(areaTransit = areaTransit, galaxyId = galaxyId) }
             val root = protobuf.load("/www/proto/gtfs-realtime.proto").await()
             val feedType = root.lookupType("transit_realtime.FeedMessage")
 
@@ -96,7 +96,7 @@ data class TransitMapState(
     val entities: List<TransitEntity> = emptyList(),
     val timestamp: Long = 0L,
     val areaTransit: AreaTransit? = null,
-    val communityId: CommunityId? = null,
+    val galaxyId: GalaxyId? = null,
 )
 
 data class RouteEntity(

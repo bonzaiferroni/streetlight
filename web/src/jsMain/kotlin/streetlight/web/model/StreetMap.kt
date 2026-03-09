@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
-import streetlight.model.data.Community
+import streetlight.model.data.Galaxy
 import streetlight.model.data.EventInfo
 import streetlight.model.data.EventType
 import streetlight.model.data.Location
@@ -141,7 +141,7 @@ data class StreetMapState(
     val queriedBounds: GeoBounds = GeoBounds.Denver,
     val zoom: Float = 11f,
     val locations: List<LocationInfo> = emptyList(),
-    val communities: List<Community> = listOf(Community.Eastfax),
+    val communities: List<Galaxy> = listOf(Galaxy.Eastfax),
     val focus: MapFocus = MapFocus(),
     val layers: Set<StreetMapLayer> = StreetMapLayer.entries.toSet(),
     val isQuerying: Boolean = false,
