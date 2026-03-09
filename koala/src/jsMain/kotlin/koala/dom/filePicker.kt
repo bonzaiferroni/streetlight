@@ -13,7 +13,7 @@ import org.w3c.files.File
 import org.w3c.files.get
 
 fun DOMContext.filePicker(
-    mimeType: String? = "image/*",
+    mimeType: MimeType = MimeType.All,
     modifiers: ModifierSet? = null,
     onMessage: ((UIMessage) -> Unit)? = null,
     onPickFile: (String) -> Unit
@@ -26,7 +26,7 @@ fun DOMContext.filePicker(
 
         input = input {
             type = InputType.file
-            accept = mimeType ?: "*/*"
+            accept = mimeType.expression
             hidden = true
         }
 
@@ -46,7 +46,7 @@ fun DOMContext.filePicker(
 
     fun handleFile(file: File?) {
         val file = file ?: return
-        if (mimeType != null && !file.type.startsWith(mimeType)) {
+        if (!file.type.startsWith(mimeType.label)) {
             console.log("nay: $mimeType")
             onMessage?.invoke(UIMessage("Chosen file needs to be an image", UIMessageType.Error))
             return
@@ -87,6 +87,13 @@ fun DOMContext.filePicker(
 object FilePickerClass {
     val dropZone = Css("file-picker-drop-zone")
     val dragover = Css("dragover")
+}
+
+enum class MimeType(val label: String) {
+    All("*"),
+    Image("image");
+
+    val expression get() = "$label/*"
 }
 
 // <div id="dropZone" class="drop-zone">

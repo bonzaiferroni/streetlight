@@ -204,6 +204,14 @@ p.large {
     padding: calc(var(--unit-spacing) * 2);
 }
 
+.margin-1 {
+    margin: var(--unit-spacing);
+}
+
+.margin-2 {
+    margin: calc(var(--unit-spacing) * 2);
+}
+
 .max-height-32 {
     max-height: calc(var(--unit-spacing) * 32);
 }
@@ -336,4 +344,12 @@ p.large {
 
 .primary-card-bg {
     background-color: var(--primary-card-bg);
+}
+
+.justify-self-end {
+    justify-self: end;
+}
+
+.align-self-start {
+    align-self: start;
 }

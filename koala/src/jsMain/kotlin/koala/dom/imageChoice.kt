@@ -40,7 +40,7 @@ fun RenderContext.imageChoice(
             applyModifiers(WrapFlex)
             style = "display: none;"
         }
-        filePicker("image") {
+        filePicker(MimeType.Image) {
             localUrl = it
             uploadButton?.disabled = false
         }

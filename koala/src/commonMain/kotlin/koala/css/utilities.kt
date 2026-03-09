@@ -104,3 +104,7 @@ object Center: Modifier { override val value = "center" }
 object CenterItems: Modifier { override val value = "center-items" }
 object Padding1: Modifier { override val value = "padding-1" }
 object Padding2: Modifier { override val value = "padding-2" }
+object Margin1: Modifier { override val value = "margin-1" }
+object Margin2: Modifier { override val value = "margin-2" }
+object JustifySelfEnd: Modifier { override val value = "justify-self-end" }
+object AlignSelfStart: Modifier { override val value = "align-self-start" }

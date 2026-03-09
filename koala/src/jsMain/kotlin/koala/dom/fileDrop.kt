@@ -12,7 +12,7 @@ fun RenderContext.fileDrop(urlFlow: Flow<String?>, onFileUrl: (String) -> Unit) 
         if (url != null) {
             textBlock("file: $url")
         } else {
-            filePicker(null) {
+            filePicker() {
                 console.log(it)
                 onFileUrl(it)
             }
