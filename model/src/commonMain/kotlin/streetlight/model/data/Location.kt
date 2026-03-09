@@ -200,6 +200,8 @@ fun LocationEdit.mergeLeft(edit: LocationEdit?) = edit?.let {
         resources = resources ?: edit.resources,
         website = website ?: edit.website,
         eventsUrl = eventsUrl ?: edit.eventsUrl,
+        aboutUrl = aboutUrl ?: edit.aboutUrl,
+        menuUrl = menuUrl ?: edit.menuUrl,
         imageUrl = imageUrl ?: edit.imageUrl,
         thumbUrl = thumbUrl ?: edit.thumbUrl,
     )

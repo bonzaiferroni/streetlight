@@ -68,7 +68,7 @@ class MapViewContext(
     }
 
     fun setBounds(bounds: GeoBounds, center: GeoPoint, zoom: Float): PointEntity? {
-        boundsNow = bounds
+        boundsNow = bounds.expandBy(1.2f)
         // set marker visibility
         markers.forEach {
             updateVisibility(it.key)
@@ -156,7 +156,6 @@ class MapViewContext(
         val mapEntityView = entity.toMapEntityView(pixelPoint)
 
         mapEntityView.marker.setLngLat(entity.position.toLngLat())
-        mapEntityView.marker.addTo(widget)
         markers[entity.entityId] = mapEntityView
         return mapEntityView
     }

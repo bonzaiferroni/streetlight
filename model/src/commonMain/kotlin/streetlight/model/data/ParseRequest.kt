@@ -89,7 +89,7 @@ data class EventParse(
     val imageUrl: String? = null,
     val description: String? = null,
     val ageMin: Int? = null,
-    val cost: Float? = null,
+    val cost: String? = null,
     val contact: String? = null,
     val url: String? = null,
 ) {
@@ -119,11 +119,24 @@ fun EventParse.toEventEdit(
         imageUrl = imageUrl,
         description = description,
         ageMin = ageMin?.takeIf { it > 0 },
-        cost = cost,
+        cost = floatUSDOf(cost),
         url = url,
         sourceUrl = sourceUrl,
         sourceImageUrl = sourceImageUrl,
         startsAt = startsAt,
         date = date
     )
+}
+
+private fun floatUSDOf(value: String?): Float? {
+    val value = value ?: return null
+    if (value.trim().lowercase() == "free") return 0f
+
+    val cleaned = buildString {
+        for (ch in value) {
+            if (ch.isDigit() || ch == '.') append(ch)
+        }
+    }
+
+    return cleaned.toFloatOrNull()
 }
