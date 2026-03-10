@@ -10,6 +10,7 @@ import koala.dom.set
 import koala.model.PanPoint
 import koala.model.mapDistinct
 import koala.model.storeOf
+import koala.utils.prettyPrint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce
@@ -56,6 +57,10 @@ class EventScout(
 
     fun setWebsite(value: String) {
         state.set { it.copy(website = value) }
+    }
+
+    fun setLocation(value: Location?) {
+        state.set { it.copy(location = value) }
     }
 
     fun setEdit(value: LocationEdit) {
@@ -110,13 +115,29 @@ class EventScout(
         }
     }
 
-    fun readWebsite() {
+    fun readLocationWebsite() {
         val website = state.now.website.takeIf { it.startsWith("http") } ?: return
         scope.launch {
             msg.set("Reading the link, this will take a minute.")
             val edit = api.parseLocation(UrlParseRequest(website))?.mergeLeft(state.now.locationEdit) ?: return@launch
             msg.set("Does this information look correct?")
             state.set { it.copy(locationEdit = edit) }
+        }
+    }
+
+    fun readEventWebsite() {
+        val website = state.now.website.takeIf { it.startsWith("http") } ?: return
+        scope.launch {
+            msg.set("Reading the link, this will take a minute.")
+            val response = api.parseSingleEvent(UrlParseRequest(website))?.event
+            if (response == null) {
+                msg.set("We were unable to read the link.")
+                return@launch
+            }
+            val event = response.mergeRight(state.now.event ?: EventEdit())
+            console.log(prettyPrint(event))
+            msg.set("Does this information look correct?")
+            state.set { it.copy(event = event) }
         }
     }
 

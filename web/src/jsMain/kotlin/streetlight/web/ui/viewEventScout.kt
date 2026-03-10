@@ -62,13 +62,17 @@ fun RenderContext.viewEventScout(app: Streetlight, galaxy: Galaxy) {
             val locationEdit = it.locationEdit; val location = it.location; val event = it.event
 
             viewOf(model) {
-                if (locationEdit != null) {
+                if (location != null) {
+                    createEventPanel(location)
+                } else if (locationEdit != null) {
                     reviewLocationPanel(locationEdit)
                 } else {
                     findLocationPanel()
                 }
             }
         }
+
+        appFooter()
     }
 }
 
@@ -86,15 +90,59 @@ fun ViewContext<Streetlight>.viewEventScoutRoute() {
     }
 }
 
+fun ViewContext<EventScout>.createEventPanel(location: Location) {
+    val editFlow = model.stateFlow.mapDistinct { it.event }
+
+    column {
+        card {
+            messageBox(model.messageFlow)
+            row {
+                textField("website", modify(Flex1), model::setWebsite, model.stateFlow.mapDistinct { it.website })
+                button("🤖 read website", onClick = model::readEventWebsite)
+            }
+        }
+
+        tabs {
+            tab("Details") {
+                flowBlock(editFlow) { edit ->
+                    if (edit != null) {
+                        row(modify(AlignItemsStart)) {
+                            val imageUrl = edit.imageUrl
+                            if (imageUrl != null) {
+                                image(imageUrl, modify(Flex1, Width100))
+                            } else {
+                                box(modify(Flex1, CenterItems)) {
+                                    textBlock("no image")
+                                }
+                            }
+                            column(modify(Flex2)) {
+                                heading3(edit.title ?: "[No title found]")
+                                textBlock(edit.description ?: "[No description]")
+                            }
+                        }
+                    } else {
+                        textBlock("Read website or enter details.")
+                    }
+                }
+            }
+            tab("Edit") {
+//                viewLocationEditor(locationEdit, model.app, editFlow) {
+//                    model.setEdit(it)
+//                }
+            }
+        }
+    }
+}
+
 fun ViewContext<EventScout>.reviewLocationPanel(locationEdit: LocationEdit) {
     val editFlow = model.stateFlow.mapDistinct { it.locationEdit }.filterNotNull()
 
     column {
-        card() {
-            messageBox(model.messageFlow, modify(Flex1))
+        card {
+            messageBox(model.messageFlow)
             row {
                 textField("website", modify(Flex1), model::setWebsite, model.stateFlow.mapDistinct { it.website })
-                button("🤖 read website", onClick = model::readWebsite)
+                button("🤖 read website", onClick = model::readLocationWebsite)
             }
         }
 
@@ -160,8 +208,8 @@ fun ViewContext<EventScout>.findLocationPanel() {
         }
 
         itemsBlock(locationsFlow) { location ->
-            box {
-                cardOf(location)
+            cardOf(location) {
+                model.setLocation(location)
             }
         }
     }

@@ -1,10 +1,27 @@
 package koala.dom
 
+import koala.css.AlignItemsStart
+import koala.css.BorderRadius1
 import koala.css.Card
+import koala.css.Flex1
+import koala.css.Gap0
+import koala.css.Height100
+import koala.css.Height8
 import koala.css.ModifierSet
+import koala.css.OverflowHidden
+import koala.css.Square
 import koala.css.applyModifiers
+import koala.css.modify
+import koala.html.card
+import koala.html.column
+import koala.html.heading5
+import koala.html.image
+import koala.html.row
+import koala.html.textBlock
 import kotlinx.html.DIV
+import kotlinx.html.FlowContent
 import kotlinx.html.js.div
+import org.w3c.dom.HTMLElement
 
 inline fun DOMContext.card(
     modifiers: ModifierSet? = null,
@@ -12,4 +29,32 @@ inline fun DOMContext.card(
 ) = div {
     applyModifiers(Card, modifiers)
     content()
+}
+
+fun DOMContext.cardOf(
+    title: String,
+    thumbUrl: String?,
+    description: String?,
+    modifiers: ModifierSet? = null,
+    onClick: (() -> Unit)? = null,
+): HTMLElement {
+    val element = card(modifiers) {
+        row(modify(Height8, AlignItemsStart)) {
+            thumbUrl?.let {
+                image(thumbUrl, modify(Height100, Square, BorderRadius1))
+            }
+            column(modify(Flex1, Gap0, Height100)) {
+                heading5(title)
+                description?.let {
+                    textBlock(description, modify(Flex1, OverflowHidden))
+                }
+            }
+        }
+    }
+
+    onClick?.let {
+        element.onClick(it)
+    }
+
+    return element
 }

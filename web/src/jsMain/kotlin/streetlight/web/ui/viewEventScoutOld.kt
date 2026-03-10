@@ -111,7 +111,7 @@ private fun ViewContext<EventScoutOld>.viewEventParse(
                     }
                     column(modify(Flex1)) {
                         // name
-                        textBlock(eventName)
+                        textBlock(eventName ?: "[No name]")
                         // time/date
                         row {
                             textBlock(date.toString())

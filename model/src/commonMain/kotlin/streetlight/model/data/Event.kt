@@ -54,8 +54,8 @@ value class EventId(override val value: String): ProjectId {
 @Serializable
 data class EventEdit(
     val eventId: EventId? = null,
-    val title: String = "",
-    val eventType: EventType = EventType.Show,
+    val title: String? = null,
+    val eventType: EventType? = null,
     val locationId: LocationId? = null,
     val place: Place? = null,
     val imageUrl: String? = null,
@@ -64,15 +64,17 @@ data class EventEdit(
     val invitation: String? = null,
     val ageMin: Int? = null,
     val cost: Float? = null,
-    val isHost: Boolean = false,
+    val isHost: Boolean? = null,
     val url: String? = null,
     val sourceUrl: String? = null,
     val sourceImageUrl: String? = null,
     val thumbUrl: String? = null,
     val startsAt: Instant? = null,
-    val date: LocalDate = (startsAt ?: tomorrowNoon()).toLocalDateTime(TimeZone.currentSystemDefault()).date,
+    val date: LocalDate? = null,
 ) {
-    val isValid get() = title.isNotBlank() && ((place != null && place.isValid) || locationId != null)
+    val isValid get() = !title.isNullOrBlank()
+            && ((place != null && place.isValid) || locationId != null)
+            && date != null
 }
 
 fun Event.toEdit() = EventEdit(
@@ -85,6 +87,31 @@ fun Event.toEdit() = EventEdit(
     description = description,
     url = url,
 )
+
+fun EventEdit.mergeLeft(other: EventEdit?) = other?.let {
+    EventEdit(
+        eventId = eventId ?: it.eventId,
+        title = title ?: it.title,
+        eventType = eventType ?: it.eventType,
+        locationId = locationId ?: it.locationId,
+        place = place ?: it.place,
+        imageUrl = imageUrl ?: it.imageUrl,
+        description = description ?: it.description,
+        contact = contact ?: it.contact,
+        invitation = invitation ?: it.invitation,
+        ageMin = ageMin ?: it.ageMin,
+        cost = cost ?: it.cost,
+        isHost = isHost ?: it.isHost,
+        url = url ?: it.url,
+        sourceUrl = sourceUrl ?: it.sourceUrl,
+        sourceImageUrl = sourceImageUrl ?: it.sourceImageUrl,
+        thumbUrl = thumbUrl ?: it.thumbUrl,
+        startsAt = startsAt ?: it.startsAt,
+        date = date ?: it.date,
+    )
+}
+
+fun EventEdit.mergeRight(other: EventEdit?) = other?.mergeLeft(this)
 
 enum class EventType(val label: String) {
     Show("Show"),

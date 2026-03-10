@@ -19,11 +19,10 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object QueryMap: QueryEndpoint<MapQuery, List<EventInfo>>(this, "bounds")
         // object UserEvents: ApiDaoEndpoint<Event, EventId, NewEvent>(this, "user")
         object Upload: PostEndpoint<ByteArray, String>(this, "upload")
-        object ParseEvents: PostEndpoint<ParseRequest, MultiEventParseResponse>(this, "read-url")
+        object ParseMultiEvents: PostEndpoint<ParseRequest, MultiEventParseResponse>(this, "parse-multi")
+        object ParseSingleEvent: PostEndpoint<ParseRequest, SingleEventParseResponse>(this, "parse-single")
         object AtLocation: GetByTableIdEndpoint<LocationId, List<Event>>(this, "location")
     }
-
-
 
     object Locations: GetByTableIdEndpoint<LocationId, Location>(this, "locations") {
         @Deprecated("use edit")

@@ -58,6 +58,18 @@ data class MultiEventParseResponse(
 )
 
 @Serializable
+data class SingleEventParse(
+    val hasContent: Boolean? = null,
+    val event: EventParse? = null,
+)
+
+@Serializable
+data class SingleEventParseResponse(
+    val hasContent: Boolean? = null,
+    val event: EventEdit? = null,
+)
+
+@Serializable
 data class LocationParse(
     val name: String? = null,
     val description: String? = null,
@@ -110,23 +122,20 @@ fun EventParse.toEventEdit(
     sourceUrl: String?,
     sourceImageUrl: String?,
     locationId: LocationId?
-): EventEdit? {
-    val date = date ?: return null
-    return EventEdit(
-        title = name ?: "",
-        locationId = locationId,
-        place = Place(location ?: ""),
-        imageUrl = imageUrl,
-        description = description,
-        ageMin = ageMin?.takeIf { it > 0 },
-        cost = floatUSDOf(cost),
-        url = url,
-        sourceUrl = sourceUrl,
-        sourceImageUrl = sourceImageUrl,
-        startsAt = startsAt,
-        date = date
-    )
-}
+) = EventEdit(
+    title = name ?: "",
+    locationId = locationId,
+    place = Place(location ?: ""),
+    imageUrl = imageUrl,
+    description = description,
+    ageMin = ageMin?.takeIf { it > 0 },
+    cost = floatUSDOf(cost),
+    url = url,
+    sourceUrl = sourceUrl,
+    sourceImageUrl = sourceImageUrl,
+    startsAt = startsAt,
+    date = date
+)
 
 private fun floatUSDOf(value: String?): Float? {
     val value = value ?: return null
