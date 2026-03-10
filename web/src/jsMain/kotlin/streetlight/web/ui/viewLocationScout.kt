@@ -139,7 +139,7 @@ fun ViewContext<LocationScout>.reviewStage(edit: LocationEdit) {
             messageBox(model.messageFlow, modify(Flex1))
             row {
                 textField("website", modify(Flex1), model::setWebsite, model.stateFlow.mapDistinct { it.website })
-                button("🤖 read website", onClick = model::readLink)
+                button("🤖 read website", onClick = model::readWebsite)
             }
         }
 

@@ -37,16 +37,6 @@ class LocationScout(
         state.set { it.copy(website = value) }
     }
 
-    fun readLink() {
-        val website = state.now.website.takeIf { it.startsWith("http") } ?: return
-        scope.launch {
-            msg.set("Reading the link, this will take a minute.")
-            val edit = api.parseLocation(UrlParseRequest(website))?.mergeLeft(state.now.edit) ?: return@launch
-            msg.set("Does this information look correct?")
-            state.set { it.copy(edit = edit) }
-        }
-    }
-
     fun reset() {
         state.set { LocationScoutState() }
         msg.set("$introMsg Locations added so far: $count")
@@ -66,6 +56,10 @@ class LocationScout(
 
     fun setLimitState(value: Boolean) {
         state.set { it.copy(limitState = value) }
+    }
+
+    fun setEdit(edit: LocationEdit) {
+        state.set { it.copy(edit = edit) }
     }
 
     fun searchQuery() {
@@ -126,8 +120,14 @@ class LocationScout(
         }
     }
 
-    fun setEdit(edit: LocationEdit) {
-        state.set { it.copy(edit = edit) }
+    fun readWebsite() {
+        val website = state.now.website.takeIf { it.startsWith("http") } ?: return
+        scope.launch {
+            msg.set("Reading the link, this will take a minute.")
+            val edit = api.parseLocation(UrlParseRequest(website))?.mergeLeft(state.now.edit) ?: return@launch
+            msg.set("Does this information look correct?")
+            state.set { it.copy(edit = edit) }
+        }
     }
 
     private fun addConstructionMarker(point: GeoPoint) {

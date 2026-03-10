@@ -18,6 +18,8 @@ import streetlight.model.data.EventEdit
 import streetlight.model.data.Location
 import streetlight.model.data.LocationEdit
 import streetlight.model.data.Place
+import streetlight.model.data.UrlParseRequest
+import streetlight.model.data.mergeLeft
 import streetlight.model.data.mergeRight
 import streetlight.model.data.toEdit
 import streetlight.model.external.toPlace
@@ -50,6 +52,14 @@ class EventScout(
 
     fun setQuery(value: String) {
         state.set { it.copy(query = value) }
+    }
+
+    fun setWebsite(value: String) {
+        state.set { it.copy(website = value) }
+    }
+
+    fun setEdit(value: LocationEdit) {
+        state.set { it.copy(locationEdit = value) }
     }
 
     fun here() {
@@ -100,14 +110,39 @@ class EventScout(
         }
     }
 
-    private fun addConstructionMarker(point: GeoPoint) {
-        geo.tempEntities(listOf(
-            IconEntity("here", SvgPath.guitar, point)
-        ))
+    fun readWebsite() {
+        val website = state.now.website.takeIf { it.startsWith("http") } ?: return
+        scope.launch {
+            msg.set("Reading the link, this will take a minute.")
+            val edit = api.parseLocation(UrlParseRequest(website))?.mergeLeft(state.now.locationEdit) ?: return@launch
+            msg.set("Does this information look correct?")
+            state.set { it.copy(locationEdit = edit) }
+        }
+    }
+
+    fun postLocation() {
+        val edit = state.now.locationEdit?.takeIf { it.isValid } ?: return
+        msg.set("Posting ${edit.name}...")
+        scope.launch {
+            val location = api.createOrEditLocation(edit)
+            if (location == null) {
+                msg.set("Something went wrong")
+                return@launch
+            }
+            state.set { it.copy(location = location) }
+            msg.set("Posted. You can now add events to ${location.name}.")
+            geo.tempEntities(null)
+        }
     }
 
     fun reset() {
         state.set { EventScoutState() }
+    }
+
+    private fun addConstructionMarker(point: GeoPoint) {
+        geo.tempEntities(listOf(
+            IconEntity("here", SvgPath.guitar, point)
+        ))
     }
 }
 
