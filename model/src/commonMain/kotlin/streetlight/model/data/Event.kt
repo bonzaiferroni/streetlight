@@ -12,7 +12,6 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atTime
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
-import streetlight.model.utils.tomorrowNoon
 import kotlin.jvm.JvmInline
 
 @Stable
@@ -37,10 +36,10 @@ data class Event(
     val imageUrl: String?,
     val thumbUrl: String?,
     val streamUrl: String?,
-    val date: LocalDate,
     // repeatInterval
-    val startsAt: Instant?,
-    val endsAt: Instant?,
+    val startsAt: Instant,
+    val endsAt: Instant,
+    val timeZone: TimeZone,
     val updatedAt: Instant,
     val createdAt: Instant,
 )
@@ -69,23 +68,40 @@ data class EventEdit(
     val sourceUrl: String? = null,
     val sourceImageUrl: String? = null,
     val thumbUrl: String? = null,
-    val startsAt: Instant? = null,
+    val startTime: LocalTime? = null,
+    val endTime: LocalTime? = null,
     val date: LocalDate? = null,
+    val timeZone: TimeZone? = null,
 ) {
-    val isValid get() = !title.isNullOrBlank()
-            && ((place != null && place.isValid) || locationId != null)
-            && date != null
+    val isValid get() = invalidPart == null
+
+    val startsAt get() = if (startTime != null && timeZone != null) date?.atTime(startTime)?.toInstant(timeZone) else null
+    val endsAt get() = if (endTime != null && timeZone != null) date?.atTime(endTime)?.toInstant(timeZone) else null
+
+    val invalidPart get() = when {
+        title.isNullOrBlank() -> "title"
+        place != null && place.isValid || locationId != null -> "location"
+        startTime == null -> "start time"
+        endTime == null -> "end time"
+        date == null -> "date"
+        timeZone == null -> "timezone"
+        else -> null
+    }?.let {  }
+
+    val invalidMessage get() = invalidPart?.let { "missing: $it"}
 }
 
 fun Event.toEdit() = EventEdit(
     eventId = eventId,
     title = title,
-    startsAt = startsAt,
     eventType = eventType,
     locationId = locationId,
     imageUrl = imageUrl,
     description = description,
     url = url,
+    startTime = startsAt.toLocalDateTime(timeZone).time,
+    date = startsAt.toLocalDateTime(timeZone).date,
+    timeZone = timeZone,
 )
 
 fun EventEdit.mergeLeft(other: EventEdit?) = other?.let {
@@ -106,8 +122,9 @@ fun EventEdit.mergeLeft(other: EventEdit?) = other?.let {
         sourceUrl = sourceUrl ?: it.sourceUrl,
         sourceImageUrl = sourceImageUrl ?: it.sourceImageUrl,
         thumbUrl = thumbUrl ?: it.thumbUrl,
-        startsAt = startsAt ?: it.startsAt,
         date = date ?: it.date,
+        startTime = startTime ?: it.startTime,
+        timeZone = timeZone ?: it.timeZone,
     )
 }
 

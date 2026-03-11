@@ -276,6 +276,10 @@ p.large {
     width: 100%;
 }
 
+.width-fit-content {
+    width: fit-content;
+}
+
 .width-2 {
     width: calc(var(--unit-spacing) * 2);
 }

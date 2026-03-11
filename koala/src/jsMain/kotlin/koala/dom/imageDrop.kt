@@ -12,6 +12,8 @@ import koala.css.Secondary
 import koala.css.Size100
 import koala.css.SlideDown
 import koala.css.Width100
+import koala.css.WidthAuto
+import koala.css.WidthFitContent
 import koala.css.modify
 import kotlinx.coroutines.flow.Flow
 import kotlinx.html.DIV
@@ -26,7 +28,7 @@ fun RenderContext.imageDrop(
         if (url != null) {
             box(modify(Size100, OverflowHidden, BorderRadius1)) {
                 block(url)
-                button("✕", modify(Secondary, JustifySelfEnd, AlignSelfStart, Margin2), onClick = {
+                button("✕", modify(Secondary, WidthFitContent, JustifySelfEnd, AlignSelfStart, Margin2), onClick = {
                     onFileUrl(null)
                 })
             }

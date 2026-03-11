@@ -5,6 +5,7 @@ import kampfire.model.User
 import kampfire.model.UserId
 import kampfire.model.UserRole
 import kotlinx.datetime.Clock
+import kotlinx.datetime.TimeZone
 import streetlight.model.data.Galaxy
 import streetlight.model.data.GalaxyId
 import streetlight.model.data.DefaultEventTag
@@ -139,7 +140,7 @@ val mockDb by lazy {
         imageUrl = null,
         thumbUrl = null,
         streamUrl = null,
-        date = now.toLocalDateTime().date,
+        timeZone = TimeZone.currentSystemDefault(),
         startsAt = now,
         endsAt = now + 1.hours,
         updatedAt = now - 1.days,

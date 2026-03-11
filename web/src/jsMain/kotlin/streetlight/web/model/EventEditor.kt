@@ -1,13 +1,8 @@
 package streetlight.web.model
 
-import kampfire.model.GeoPoint
-import koala.dom.UIMessage
-import koala.dom.UIMessageType
-import koala.dom.set
 import koala.model.mapDistinct
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
@@ -19,15 +14,11 @@ import streetlight.model.data.EventEdit
 import streetlight.model.data.Place
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
-import streetlight.model.data.Event
-import streetlight.model.data.toPlace
 import streetlight.model.external.Address
 import streetlight.model.external.OSMPlace
-import streetlight.model.external.OSMQuery
 import streetlight.model.external.toGeoPoint
 import streetlight.model.utils.toLocalDateTime
 import streetlight.model.utils.tomorrowNoon
-import streetlight.web.ui.PlaceEditor
 
 class EventEditor(
     initialEvent: EventEdit?,
@@ -60,13 +51,11 @@ class EventEditor(
     }
 
     fun setTime(value: LocalTime) {
-        val startsAt = eventNow.startsAt ?: tomorrowNoon()
-        setEvent { it.copy(startsAt = startsAt.withTime(value)) }
+        setEvent { it.copy(startTime = value) }
     }
 
     fun setDate(value: LocalDate) {
-        val startsAt = eventNow.startsAt ?: tomorrowNoon()
-        setEvent { it.copy(startsAt = startsAt.withDate(value)) }
+        setEvent { it.copy(date = value) }
     }
 
     fun setDescription(value: String) {

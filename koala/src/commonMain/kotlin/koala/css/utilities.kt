@@ -55,6 +55,7 @@ object JustifySpaceAround: Modifier { override val value = "justify-content-spac
 object JustifySpaceBetween: Modifier { override val value = "justify-content-space-between" }
 object WidthAuto: Modifier { override val value = "width-auto" }
 object Width100: Modifier { override val value = "width-100" }
+object WidthFitContent: Modifier { override val value = "width-fit-content" }
 object Width2: Modifier { override val value = "width-2" }
 object Width4: Modifier { override val value = "width-4" }
 object Width8: Modifier { override val value = "width-8" }

@@ -1,5 +1,6 @@
 side:
 allow upload of galaxy thumbnail
+EventTableDao // td: more precise time conflict handling
 
 main:
 galaxy fields:

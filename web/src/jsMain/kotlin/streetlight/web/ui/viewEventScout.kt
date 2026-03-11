@@ -95,11 +95,6 @@ fun ViewContext<Streetlight>.viewEventScoutRoute() {
 
 fun ViewContext<EventScout>.createEventPanel(location: Location?) {
     val editFlow = model.stateFlow.mapDistinct { it.eventEdit }
-    val dialogOpen = storeOf(false)
-
-    val dialog = dialogBox("Edit Event") {
-        viewEventEditor(model.stateNow.eventEdit, model.app, editFlow.filterNotNull(), model::setEventEdit)
-    }
 
     column {
         card {
@@ -111,32 +106,11 @@ fun ViewContext<EventScout>.createEventPanel(location: Location?) {
         }
 
         card {
-            box(modify(Width100)) {
-                flowBlock(editFlow) { edit ->
-                    if (edit != null) {
-                        row(modify(AlignItemsStart)) {
-                            val imageUrl = edit.imageUrl
-                            if (imageUrl != null) {
-                                image(imageUrl, modify(Flex1, Width100))
-                            } else {
-                                box(modify(Flex1, CenterItems)) {
-                                    textBlock("no image")
-                                }
-                            }
-                            column(modify(Flex2)) {
-                                heading3(edit.title ?: "[No title found]")
-                                textBlock(edit.description ?: "[No description]")
-                            }
-                        }
-                    } else {
-                        textBlock("Read website or enter details.")
-                    }
-                }
-                button("Edit", modify(JustifySelfEnd, AlignSelfStart), onClick = {
-                    // dialogOpen.set { true }
-                    dialog.open()
-                })
-            }
+            viewEventEditor(model.stateNow.eventEdit, model.app, editFlow.filterNotNull(), model::setEventEdit)
+        }
+
+        card {
+
         }
     }
 }

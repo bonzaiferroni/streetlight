@@ -1,6 +1,5 @@
 package streetlight.model.data
 
-import kampfire.model.GeoPoint
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
@@ -133,7 +132,7 @@ fun EventParse.toEventEdit(
     url = url,
     sourceUrl = sourceUrl,
     sourceImageUrl = sourceImageUrl,
-    startsAt = startsAt,
+    startTime = time,
     date = date
 )
 
