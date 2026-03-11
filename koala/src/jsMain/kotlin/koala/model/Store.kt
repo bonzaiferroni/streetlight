@@ -14,6 +14,10 @@ class Store<T>(
     fun set(setter: (T) -> T) {
         state.value = setter(now)
     }
+
+    fun setValue(value: T) {
+        state.value = value
+    }
 }
 
 fun <T> storeOf(initialValue: T) = Store(initialValue)

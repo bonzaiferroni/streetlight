@@ -4,6 +4,8 @@ import koala.css.*
 import koala.dom.*
 import koala.html.heading3
 import koala.html.textBlock
+import koala.model.storeOf
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import streetlight.model.data.Event
@@ -16,25 +18,36 @@ import streetlight.web.EventIdRoute
 import streetlight.web.model.Streetlight
 import streetlight.web.model.EventEditor
 
-fun RenderContext.eventEditorView(
-    model: EventEditor,
+fun RenderContext.viewEventEditor(
+    event: EventEdit?,
     app: Streetlight,
-    callback: ((Event?) -> Unit)?
+    bindFlow: Flow<EventEdit>? = null,
+    onEdit: ((EventEdit) -> Unit)? = null,
 ) {
-    val imagesFlow = app.userCache.files.flow
+    val model = EventEditor(event, renderScope, app.client)
+
+    onEdit?.let {
+        renderScope.launch {
+            model.editFlow.collect {
+                onEdit(it)
+            }
+        }
+    }
+
+    bindFlow?.let {
+        renderScope.launch {
+            it.collect { edit ->
+                model.setEdit(edit)
+            }
+        }
+    }
 
     column(modify(Gap4)) {
         column(modify(Gap0)) {
             heading3("What's happening?", modify(Padding1, Dim))
             card(modify(AlignItemsStretch)) {
                 blockLabel("feature image") {
-                    imageChoice(
-                        modifiers = modify(MinHeight8),
-                        onUpload = { app.client.api.uploadEventImage(it) },
-                        onValueChanged = model::setImageUrl,
-                        urlFlow = model.imageUrlFlow,
-                        choicesFlow = imagesFlow
-                    )
+                    imageDrop(model.imageUrlFlow, model::setImageUrl)
                 }
                 column(modify(QueryRow, AlignItemsStretch)) {
                     row(modify(Flex1)) {
@@ -77,16 +90,6 @@ fun RenderContext.eventEditorView(
         }
 
         column(modify(Gap0)) {
-            column(modify(Gap0, Padding1, Dim)) {
-                heading3("Where?")
-                textBlock("You can choose from existing locations or provide a new one.")
-            }
-            card {
-                placeEditor(null, app, model)
-            }
-        }
-
-        column(modify(Gap0)) {
             heading3("When?", modify(Padding1, Dim))
             card {
                 row {
@@ -109,21 +112,38 @@ fun RenderContext.eventEditorView(
                 textBlock("yer who")
             }
         }
+    }
+}
+
+fun ViewContext<Streetlight>.viewEventEditorPanel(
+    event: EventEdit,
+    callback: ((Event?) -> Unit)?
+) {
+    val msg = storeOf(UIMessage())
+    val editStore = storeOf(event)
+
+    column {
+        viewEventEditor(event, model, editStore.flow, editStore::setValue)
 
         card {
-            messageBox(model.message.flow, modify(Flex1))
+            messageBox(msg.flow, modify(Flex1))
             row {
                 button("cancel", onClickEvent = {
-                    app.portal.goBack()
+                    model.portal.goBack()
                 })
                 button("create", modify(Accent), onClickEvent = {
                     renderScope.launch {
-                        val event = model.saveEvent() ?: return@launch
+                        val response = api.createOrEditEvent(editStore.now)
+                        val savedEvent = response?.payload
+                        if (savedEvent == null) {
+                            msg.set("Unable to create event: ${response?.reason}")
+                            return@launch
+                        }
                         if (callback != null) {
-                            app.portal.goBack()
-                            callback.invoke(event)
+                            model.portal.goBack()
+                            callback.invoke(savedEvent)
                         } else {
-                            app.portal.go(EventIdRoute(event.eventId))
+                            model.portal.go(EventIdRoute(savedEvent.eventId))
                         }
                     }
                 })
@@ -132,11 +152,10 @@ fun RenderContext.eventEditorView(
     }
 }
 
-fun RenderContext.eventEditorRouteView(app: Streetlight) {
-    val api = app.client.api
+fun ViewContext<Streetlight>.viewEventEditorRoute() {
     var callback: ((Event?) -> Unit)? = null
 
-    routeBlock<EditEventRoute, EventEdit>(app.portal, { route ->
+    routeBlock<EditEventRoute, EventEdit>({ route ->
         when (route) {
             is EditEventIdRoute -> route.eventId?.let {
                 api.readEvent(it)?.toEdit()
@@ -147,7 +166,8 @@ fun RenderContext.eventEditorRouteView(app: Streetlight) {
             }
         }
     }) { event ->
-        val model = EventEditor(event, renderScope, app.client)
-        eventEditorView(model, app, callback)
+        viewOf(model) {
+            viewEventEditorPanel(event, callback)
+        }
     }
 }

@@ -67,6 +67,10 @@ class EventScout(
         state.set { it.copy(locationEdit = value) }
     }
 
+    fun setEventEdit(value: EventEdit) {
+        state.set { it.copy(eventEdit = value) }
+    }
+
     fun here() {
         msg.set("Looking for information about that place on OpenStreetMap...")
         val point = geo.stateNow.center
@@ -134,10 +138,9 @@ class EventScout(
                 msg.set("We were unable to read the link.")
                 return@launch
             }
-            val event = response.mergeRight(state.now.event ?: EventEdit())
-            console.log(prettyPrint(event))
+            val event = response.mergeRight(state.now.eventEdit ?: EventEdit())
             msg.set("Does this information look correct?")
-            state.set { it.copy(event = event) }
+            state.set { it.copy(eventEdit = event) }
         }
     }
 
@@ -174,7 +177,7 @@ data class EventScoutState(
     val point: GeoPoint? = null,
     val locationEdit: LocationEdit? = null,
     val location: Location? = null,
-    val event: EventEdit? = null,
+    val eventEdit: EventEdit? = null,
 )
 
 private const val introMsg = "Where will the event be held? Search for a location or find one on the map."

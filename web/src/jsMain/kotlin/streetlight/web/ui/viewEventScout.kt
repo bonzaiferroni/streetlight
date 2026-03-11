@@ -36,6 +36,7 @@ import koala.html.propertyValue
 import koala.html.spacer
 import koala.model.mapDistinct
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.mapNotNull
 import streetlight.model.data.EventEdit
 import streetlight.model.data.Galaxy
 import streetlight.model.data.Location
@@ -43,7 +44,6 @@ import streetlight.model.data.LocationEdit
 import streetlight.web.EventScoutRoute
 import streetlight.web.model.EventScout
 import streetlight.web.model.Streetlight
-import streetlight.web.shells.cardOf
 
 fun RenderContext.viewEventScout(app: Streetlight, galaxy: Galaxy) {
     val model = EventScout(app, renderScope)
@@ -51,7 +51,6 @@ fun RenderContext.viewEventScout(app: Streetlight, galaxy: Galaxy) {
         EventScoutPanelState(
             locationEdit = it.locationEdit,
             location = it.location,
-            event = it.event,
         )
     }
 
@@ -59,7 +58,7 @@ fun RenderContext.viewEventScout(app: Streetlight, galaxy: Galaxy) {
         viewGeoMap(app.geoMap, app.appScope)
 
         flowBlock(panelFlow, defaultMagic, magic = true) {
-            val locationEdit = it.locationEdit; val location = it.location; val event = it.event
+            val locationEdit = it.locationEdit; val location = it.location
 
             viewOf(model) {
                 if (location != null) {
@@ -79,7 +78,6 @@ fun RenderContext.viewEventScout(app: Streetlight, galaxy: Galaxy) {
 private data class EventScoutPanelState(
     val locationEdit: LocationEdit? = null,
     val location: Location? = null,
-    val event: EventEdit? = null,
 )
 
 fun ViewContext<Streetlight>.viewEventScoutRoute() {
@@ -90,8 +88,8 @@ fun ViewContext<Streetlight>.viewEventScoutRoute() {
     }
 }
 
-fun ViewContext<EventScout>.createEventPanel(location: Location) {
-    val editFlow = model.stateFlow.mapDistinct { it.event }
+fun ViewContext<EventScout>.createEventPanel(location: Location?) {
+    val editFlow = model.stateFlow.mapDistinct { it.eventEdit }
 
     column {
         card {
@@ -126,9 +124,7 @@ fun ViewContext<EventScout>.createEventPanel(location: Location) {
                 }
             }
             tab("Edit") {
-//                viewLocationEditor(locationEdit, model.app, editFlow) {
-//                    model.setEdit(it)
-//                }
+                viewEventEditor(model.stateNow.eventEdit, model.app, editFlow.filterNotNull(), model::setEventEdit)
             }
         }
     }

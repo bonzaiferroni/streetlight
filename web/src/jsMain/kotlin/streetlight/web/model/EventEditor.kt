@@ -30,17 +30,15 @@ import streetlight.model.utils.tomorrowNoon
 import streetlight.web.ui.PlaceEditor
 
 class EventEditor(
-    initialEvent: EventEdit,
+    initialEvent: EventEdit?,
     private val scope: CoroutineScope,
     private val client: ClientContext,
-): PlaceEditor {
-    private val state = storeOf(EventEditorState(initialEvent))
+) {
+    private val state = storeOf(EventEditorState(initialEvent ?: EventEdit()))
     private val stateFlow = state.flow
-    private val eventFlow = state.flow.mapDistinct { it.event }
+    val editFlow = state.flow.mapDistinct { it.event }
     private val stateNow get() = state.now
-    val message = storeOf(UIMessage())
-
-    override val placeFlow = eventFlow.mapDistinct { it.place }
+//    val message = storeOf(UIMessage())
 
     val imageUrlFlow = stateFlow.mapDistinct { it.event.imageUrl }
     val datetimeFlow = stateFlow.mapDistinct { it.event.startsAt?.toLocalDateTime() }
@@ -53,38 +51,8 @@ class EventEditor(
     val eventNow get() = stateNow.event
     val locationNow get() = eventNow.place
 
-    private val api get() = client.api
-
-    init {
-        scope.launch {
-            launch {
-                val locationId = eventNow.locationId
-                val placeName = eventNow.place?.name
-                val geoPoint = eventNow.place?.geoPoint
-                if (locationId != null) {
-                    val place = api.readLocation(locationId)?.toPlace() ?: return@launch
-                    setPlace(place)
-                } else if (placeName != null && geoPoint == null) {
-                    queryLocation(false)
-                }
-            }
-        }
-    }
-
     fun setEventTitle(value: String) {
         setEvent { it.copy(title = value)}
-    }
-
-    override fun setPlaceName(value: String) {
-        setPlace { it.copy(name = value) }
-    }
-
-    override fun setAddress(value: String) {
-        setPlace { it.copy(address = value) }
-    }
-
-    override fun setPoint(value: GeoPoint) {
-        setPlace { it.copy(geoPoint = value)}
     }
 
     fun setEventType(value: EventType) {
@@ -109,37 +77,9 @@ class EventEditor(
         setEvent { it.copy(url = value) }
     }
 
-    suspend fun saveEvent(): Event? {
-        val event = eventNow
-        if (!event.isValid) return null
-
-        val savedEvent = api.createOrEditEvent(event)?.payload
-        return savedEvent
-    }
-
-    override fun lookUp() {
-        queryLocation(true)
-    }
-
-    fun queryLocation(reverse: Boolean) {
-        if (reverse) {
-            val center = eventNow.place?.geoPoint ?: return
-            scope.launch {
-                val place = client.location.readPlace(center)
-                if (place == null) {
-                    message.set("Unable to read place", UIMessageType.Error)
-                    return@launch
-                }
-                setPlace(place)
-            }
-        } else {
-            val location = eventNow.place?.name ?: return
-            scope.launch {
-                val query = OSMQuery(amenity = location, state = "CO")
-                val place = client.location.readPlaces(query)?.firstOrNull() ?: return@launch
-                setPlace(place)
-            }
-        }
+    fun setEdit(value: EventEdit) {
+        if (value == stateNow.event) return
+        setEvent { value }
     }
 
     fun setImageUrl(url: String?) {

@@ -206,4 +206,10 @@ suspend inline fun <reified Returned> Response.tryDecodeWithStatus(debug: Boolea
 data class FetchResponse<T>(
     val status: Int,
     val payload: T?
-)
+) {
+    val reason get() = when (status) {
+        200 -> "Success"
+        409 -> "Conflict"
+        else -> "Unknown"
+    }
+}
