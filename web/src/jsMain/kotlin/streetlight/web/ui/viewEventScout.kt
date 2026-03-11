@@ -3,11 +3,13 @@ package streetlight.web.ui
 import koala.css.Accent
 import koala.css.AlignItemsEnd
 import koala.css.AlignItemsStart
+import koala.css.AlignSelfStart
 import koala.css.CenterItems
 import koala.css.Dim
 import koala.css.Flex1
 import koala.css.Flex2
 import koala.css.JustifyEnd
+import koala.css.JustifySelfEnd
 import koala.css.JustifySpaceBetween
 import koala.css.Secondary
 import koala.css.Width100
@@ -19,10 +21,12 @@ import koala.dom.button
 import koala.dom.card
 import koala.dom.column
 import koala.dom.defaultMagic
+import koala.dom.dialogBox
 import koala.dom.flowBlock
 import koala.dom.image
 import koala.dom.itemsBlock
 import koala.dom.messageBox
+import koala.dom.open
 import koala.dom.row
 import koala.dom.tab
 import koala.dom.tabs
@@ -35,6 +39,7 @@ import koala.html.heading4
 import koala.html.propertyValue
 import koala.html.spacer
 import koala.model.mapDistinct
+import koala.model.storeOf
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.mapNotNull
 import streetlight.model.data.EventEdit
@@ -90,6 +95,11 @@ fun ViewContext<Streetlight>.viewEventScoutRoute() {
 
 fun ViewContext<EventScout>.createEventPanel(location: Location?) {
     val editFlow = model.stateFlow.mapDistinct { it.eventEdit }
+    val dialogOpen = storeOf(false)
+
+    val dialog = dialogBox("Edit Event") {
+        viewEventEditor(model.stateNow.eventEdit, model.app, editFlow.filterNotNull(), model::setEventEdit)
+    }
 
     column {
         card {
@@ -100,8 +110,8 @@ fun ViewContext<EventScout>.createEventPanel(location: Location?) {
             }
         }
 
-        tabs {
-            tab("Details") {
+        card {
+            box(modify(Width100)) {
                 flowBlock(editFlow) { edit ->
                     if (edit != null) {
                         row(modify(AlignItemsStart)) {
@@ -122,9 +132,10 @@ fun ViewContext<EventScout>.createEventPanel(location: Location?) {
                         textBlock("Read website or enter details.")
                     }
                 }
-            }
-            tab("Edit") {
-                viewEventEditor(model.stateNow.eventEdit, model.app, editFlow.filterNotNull(), model::setEventEdit)
+                button("Edit", modify(JustifySelfEnd, AlignSelfStart), onClick = {
+                    // dialogOpen.set { true }
+                    dialog.open()
+                })
             }
         }
     }

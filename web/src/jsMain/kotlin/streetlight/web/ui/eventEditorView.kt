@@ -46,30 +46,19 @@ fun RenderContext.viewEventEditor(
         column(modify(Gap0)) {
             heading3("What's happening?", modify(Padding1, Dim))
             card(modify(AlignItemsStretch)) {
-                blockLabel("feature image") {
-                    imageDrop(model.imageUrlFlow, model::setImageUrl)
-                }
-                column(modify(QueryRow, AlignItemsStretch)) {
-                    row(modify(Flex1)) {
-//                    blockLabel("icon", modify(Center, Square, Height100)) {
-//                        imageChoice(Api.Events.Upload.path, modify(Size100))
-//                    }
+                column(modify(QueryRow)) {
+                    imageDrop(model.imageUrlFlow, model::setImageUrl, modify(Flex1, Square))
+                    column(modify(Flex3)) {
                         textField(
                             label = "title",
                             onChangeValue = model::setEventTitle,
                             bindFlow = model.titleFlow,
-                            modifiers = modify(Flex1),
+                            modifiers = modify(Width100),
                             textModifiers = modify(Heading2),
                             placeholder = "Event Title"
                         )
+                        textField(placeholder = "Add a tag")
                     }
-                    row(modify(WidthAuto)) {
-                        this.textBlock("Event category:", modify(MarginLeft1, Dim))
-                        dropMenu(model::setEventType, provideLabel = { it.label })
-                    }
-                }
-                row {
-                    textField(placeholder = "Add a tag")
                 }
                 textEditor(
                     label = "description",

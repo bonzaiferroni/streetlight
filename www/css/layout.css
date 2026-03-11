@@ -71,6 +71,10 @@
         flex-direction: row;
     }
 
+    .query-row > .column {
+        width: auto;
+    }
+
     .query-row-reverse {
         flex-direction: row-reverse;
         justify-content: flex-end;

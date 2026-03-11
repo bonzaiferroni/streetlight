@@ -46,17 +46,23 @@ fun RenderContext.dialogBox(
         }
     }
 
+//    dialog.addEventListener("click", { event ->
+//        val mouse = event as MouseEvent
+//        val rect = dialog.getBoundingClientRect()
+//
+//        val inside =
+//            mouse.clientY >= rect.top &&
+//                    mouse.clientY <= rect.top + rect.height &&
+//                    mouse.clientX >= rect.left &&
+//                    mouse.clientX <= rect.left + rect.width
+//
+//        if (!inside) {
+//            close(dialog)
+//        }
+//    })
+
     dialog.addEventListener("click", { event ->
-        val mouse = event as MouseEvent
-        val rect = dialog.getBoundingClientRect()
-
-        val inside =
-            mouse.clientY >= rect.top &&
-                    mouse.clientY <= rect.top + rect.height &&
-                    mouse.clientX >= rect.left &&
-                    mouse.clientX <= rect.left + rect.width
-
-        if (!inside) {
+        if (event.target == dialog) {
             close(dialog)
         }
     })

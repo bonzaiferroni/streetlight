@@ -32,6 +32,7 @@ fun modify(css: Modifier, modifiers: ModifierSet?): ModifierSet {
         set
     }
 }
+fun modify(modifiers: ModifierSet?, vararg additional: Modifier) = (modifiers ?: emptySet()) + additional.toSet()
 
 fun CoreAttributeGroupFacade.applyModifiers(modifiers: ModifierSet?) {
     modifiers?.let {
