@@ -8,7 +8,6 @@ import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
-import streetlight.model.data.EventType
 import streetlight.model.data.Location
 import streetlight.model.data.EventEdit
 import streetlight.model.data.Place
@@ -44,10 +43,6 @@ class EventEditor(
 
     fun setEventTitle(value: String) {
         setEvent { it.copy(title = value)}
-    }
-
-    fun setEventType(value: EventType) {
-        setEvent { it.copy(eventType = value) }
     }
 
     fun setTime(value: LocalTime) {

@@ -24,7 +24,6 @@ data class Event(
     val title: String,
     val description: String?,
     val status: EventStatus,
-    val eventType: EventType,
     val contact: String?,
     val invitation: String?,
     val ageMin: Int?,
@@ -54,7 +53,6 @@ value class EventId(override val value: String): ProjectId {
 data class EventEdit(
     val eventId: EventId? = null,
     val title: String? = null,
-    val eventType: EventType? = null,
     val locationId: LocationId? = null,
     val place: Place? = null,
     val imageUrl: String? = null,
@@ -94,7 +92,6 @@ data class EventEdit(
 fun Event.toEdit() = EventEdit(
     eventId = eventId,
     title = title,
-    eventType = eventType,
     locationId = locationId,
     imageUrl = imageUrl,
     description = description,
@@ -108,7 +105,6 @@ fun EventEdit.mergeLeft(other: EventEdit?) = other?.let {
     EventEdit(
         eventId = eventId ?: it.eventId,
         title = title ?: it.title,
-        eventType = eventType ?: it.eventType,
         locationId = locationId ?: it.locationId,
         place = place ?: it.place,
         imageUrl = imageUrl ?: it.imageUrl,
@@ -129,12 +125,6 @@ fun EventEdit.mergeLeft(other: EventEdit?) = other?.let {
 }
 
 fun EventEdit.mergeRight(other: EventEdit?) = other?.mergeLeft(this)
-
-enum class EventType(val label: String) {
-    Show("Show"),
-    Food("Food"),
-    Meet("Meet")
-}
 
 enum class EventStatus(override val label: String): LabeledEnum<EventStatus> {
     Pending("Pending"),

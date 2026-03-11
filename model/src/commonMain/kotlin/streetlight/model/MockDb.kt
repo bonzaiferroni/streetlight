@@ -13,7 +13,6 @@ import streetlight.model.data.Event
 import streetlight.model.data.EventId
 import streetlight.model.data.EventStatus
 import streetlight.model.data.EventTag
-import streetlight.model.data.EventType
 import streetlight.model.data.Location
 import streetlight.model.data.LocationId
 import streetlight.model.data.Song
@@ -120,7 +119,7 @@ val mockDb by lazy {
         val bag = ValueBag(rng, list)
     }
 
-    fun eventOf(title: String, eventType: EventType, tags: List<EventTag>) = Event(
+    fun eventOf(title: String, tags: List<EventTag>) = Event(
         eventId = EventId.random(),
         locationId = locations.bag.draw().locationId,
         userId = users.bag.draw().userId,
@@ -128,7 +127,6 @@ val mockDb by lazy {
         title = title,
         description = null,
         status = EventStatus.Pending,
-        eventType = eventType,
         contact = null,
         invitation = null,
         ageMin = null,
@@ -146,19 +144,19 @@ val mockDb by lazy {
         updatedAt = now - 1.days,
         createdAt = now - 2.days
     )
-    data class EventDetails(val title: String, val eventType: EventType, val tags: List<EventTag>)
+    data class EventDetails(val title: String, val tags: List<EventTag>)
     val events = object {
-        val jamSesh = eventOf("Jam Sesh", EventType.Meet, listOf(DefaultEventTag.jamCircle))
-        val openMic = eventOf("Open Mic Night", EventType.Meet, listOf(DefaultEventTag.openMic))
-        val liveMusic = eventOf("Monday @ The Pub", EventType.Show, listOf(DefaultEventTag.liveMusic))
-        val karaoke = eventOf("Sing Your Heart Out", EventType.Meet, listOf(DefaultEventTag.karaoke))
-        val gaming = eventOf("Trivia Night", EventType.Meet, listOf(DefaultEventTag.gaming))
-        val blockParty = eventOf("Block Party", EventType.Meet, listOf(DefaultEventTag.party, DefaultEventTag.potluck))
-        val singingCircle = eventOf("Singing Circle", EventType.Meet, listOf(DefaultEventTag.jamCircle))
-        val poetrySlam = eventOf("Poetry Slam", EventType.Meet, listOf(DefaultEventTag.special))
-        val tacoNight = eventOf("Taco Night", EventType.Food, listOf(DefaultEventTag.dinner))
-        val political = eventOf("School Board Review", EventType.Meet, listOf(DefaultEventTag.political))
-        val potluck = eventOf("Afternoon Potluck", EventType.Meet, listOf(DefaultEventTag.potluck, DefaultEventTag.appetizers))
+        val jamSesh = eventOf("Jam Sesh", listOf(DefaultEventTag.jamCircle))
+        val openMic = eventOf("Open Mic Night", listOf(DefaultEventTag.openMic))
+        val liveMusic = eventOf("Monday @ The Pub", listOf(DefaultEventTag.liveMusic))
+        val karaoke = eventOf("Sing Your Heart Out", listOf(DefaultEventTag.karaoke))
+        val gaming = eventOf("Trivia Night", listOf(DefaultEventTag.gaming))
+        val blockParty = eventOf("Block Party", listOf(DefaultEventTag.party, DefaultEventTag.potluck))
+        val singingCircle = eventOf("Singing Circle", listOf(DefaultEventTag.jamCircle))
+        val poetrySlam = eventOf("Poetry Slam", listOf(DefaultEventTag.special))
+        val tacoNight = eventOf("Taco Night", listOf(DefaultEventTag.dinner))
+        val political = eventOf("School Board Review", listOf(DefaultEventTag.political))
+        val potluck = eventOf("Afternoon Potluck", listOf(DefaultEventTag.potluck, DefaultEventTag.appetizers))
 
         val list = listOf(
             jamSesh,

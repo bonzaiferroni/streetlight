@@ -15,7 +15,6 @@ import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import streetlight.model.data.Galaxy
 import streetlight.model.data.EventInfo
-import streetlight.model.data.EventType
 import streetlight.model.data.Location
 import streetlight.model.data.LocationInfo
 import streetlight.model.data.Spirit
@@ -61,15 +60,15 @@ class StreetMap(
         }
     }
 
-    fun toggleLayer(layer: StreetMapLayer) {
-        val layers = if (stateNow.layers.contains(layer)) stateNow.layers - layer else stateNow.layers + layer
-        if (layer.eventType != null) {
-            val events = getBoundedLocations(layers = layers)
-            state.set { it.copy(layers = layers, locations = events) }
-        } else {
-            state.set { it.copy(layers = layers) }
-        }
-    }
+//    fun toggleLayer(layer: StreetMapLayer) {
+//        val layers = if (stateNow.layers.contains(layer)) stateNow.layers - layer else stateNow.layers + layer
+//        if (layer.eventType != null) {
+//            val events = getBoundedLocations(layers = layers)
+//            state.set { it.copy(layers = layers, locations = events) }
+//        } else {
+//            state.set { it.copy(layers = layers) }
+//        }
+//    }
 
     private val allLocations = ArrayList<LocationInfo>()
 
@@ -154,10 +153,10 @@ data class MapFocus(
     val event: EventInfo? = null,
 )
 
-enum class StreetMapLayer(val label: String, val color: String, val eventType: EventType? = null) {
-    Shows("Shows", "#bd7dae", EventType.Show),
-    Meet("Meet", "#7dbd8f", EventType.Meet),
-    Food("Food", "#bd9a7d", EventType.Food),
+enum class StreetMapLayer(val label: String, val color: String) {
+    Shows("Shows", "#bd7dae"),
+    Meet("Meet", "#7dbd8f"),
+    Food("Food", "#bd9a7d"),
     Transit("Transit", "#7daebd"),
     Shelter("Shelter", "#b4bd7d");
 }
