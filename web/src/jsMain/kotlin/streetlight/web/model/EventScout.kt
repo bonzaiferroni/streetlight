@@ -11,10 +11,12 @@ import koala.model.PanPoint
 import koala.model.mapDistinct
 import koala.model.storeOf
 import koala.utils.prettyPrint
+import kotlinx.browser.window
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
+import kotlinx.datetime.TimeZone
 import streetlight.model.data.Event
 import streetlight.model.data.EventEdit
 import streetlight.model.data.Location
@@ -38,6 +40,7 @@ class EventScout(
 
     private val msg = storeOf(UIMessage(introMsg))
     val messageFlow = msg.flow
+    val validEventFlow = stateFlow.mapDistinct { UIMessage(it.eventEdit.invalidMessage ?: "Looks good") }
 
     init {
         scope.launch {
@@ -65,7 +68,8 @@ class EventScout(
     }
 
     fun setLocation(value: Location?) {
-        state.set { it.copy(location = value) }
+        val eventEdit = state.now.eventEdit.copy(locationId = value?.locationId)
+        state.set { it.copy(location = value, eventEdit = eventEdit) }
     }
 
     fun setEdit(value: LocationEdit) {
@@ -182,6 +186,10 @@ class EventScout(
         state.set { EventScoutState() }
     }
 
+    fun resetEvent() {
+        state.set { it.copy(eventEdit = blankEdit, event = null) }
+    }
+
     private fun addConstructionMarker(point: GeoPoint) {
         geo.tempEntities(listOf(
             IconEntity("here", SvgPath.guitar, point)
@@ -196,9 +204,16 @@ data class EventScoutState(
     val point: GeoPoint? = null,
     val locationEdit: LocationEdit? = null,
     val location: Location? = null,
-    val eventEdit: EventEdit = EventEdit(),
+    val eventEdit: EventEdit = blankEdit,
     val event: Event? = null,
+)
+
+private val blankEdit get() = EventEdit(
+    timeZoneId = BrowserTime.timeZoneId
 )
 
 private const val introMsg = "Where will the event be held? Search for a location or find one on the map."
 
+object BrowserTime {
+    val timeZoneId by lazy { js("Intl.DateTimeFormat().resolvedOptions().timeZone") as String }
+}

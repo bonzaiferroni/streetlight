@@ -138,7 +138,7 @@ val mockDb by lazy {
         imageUrl = null,
         thumbUrl = null,
         streamUrl = null,
-        timeZone = TimeZone.currentSystemDefault(),
+        timeZoneId = TimeZone.currentSystemDefault().id,
         startsAt = now,
         endsAt = now + 1.hours,
         updatedAt = now - 1.days,

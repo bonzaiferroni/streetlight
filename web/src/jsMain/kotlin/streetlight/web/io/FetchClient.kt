@@ -12,6 +12,7 @@ import kampfire.api.UserApi
 import kampfire.model.Auth
 import koala.external.FeedMessage
 import koala.utils.jsonConfig
+import koala.utils.prettyPrint
 import kotlinx.browser.window
 import kotlinx.coroutines.await
 import kotlinx.serialization.json.Json

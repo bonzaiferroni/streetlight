@@ -121,7 +121,6 @@ fun EventParse.toEventEdit(
 ) = EventEdit(
     title = name ?: "",
     locationId = locationId,
-    place = Place(location ?: ""),
     imageUrl = imageUrl,
     description = description,
     ageMin = ageMin?.takeIf { it > 0 },

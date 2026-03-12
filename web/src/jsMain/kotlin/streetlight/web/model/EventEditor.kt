@@ -36,7 +36,6 @@ class EventEditor(
     val urlFlow = stateFlow.mapDistinct { it.event.link }
 
     val eventNow get() = stateNow.event
-    val locationNow get() = eventNow.place
 
     fun setEventTitle(value: String) {
         setEvent { it.copy(title = value)}
@@ -73,21 +72,6 @@ class EventEditor(
 
     private fun setEvent(provideEvent: (EventEdit) -> EventEdit) {
         state.set { it.copy(event = provideEvent(eventNow)) }
-    }
-
-    private fun setPlace(provideLocation: (Place) -> Place) {
-        setEvent { it.copy(place = provideLocation(locationNow ?: Place())) }
-    }
-
-    private fun setPlace(place: OSMPlace) {
-        val point = place.toGeoPoint()
-        val address = place.address.toBasicString() ?: ""
-        val name = place.name.takeIf { it.isNotBlank() } ?: address
-        setPlace(Place(name = name, address = address, geoPoint = point))
-    }
-
-    private fun setPlace(place: Place) {
-        setPlace { place }
     }
 }
 

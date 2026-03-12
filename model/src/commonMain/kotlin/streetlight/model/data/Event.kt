@@ -36,12 +36,14 @@ data class Event(
     val thumbUrl: String?,
     val streamUrl: String?,
     // repeatInterval
+    val timeZoneId: String,
     val startsAt: Instant,
     val endsAt: Instant,
-    val timeZone: TimeZone,
     val updatedAt: Instant,
     val createdAt: Instant,
-)
+) {
+    val timeZone get() = TimeZone.currentSystemDefault() // notsure
+}
 
 @JvmInline
 @Serializable
@@ -54,7 +56,6 @@ data class EventEdit(
     val eventId: EventId? = null,
     val title: String? = null,
     val locationId: LocationId? = null,
-    val place: Place? = null,
     val imageUrl: String? = null,
     val description: String? = null,
     val contact: String? = null,
@@ -69,22 +70,24 @@ data class EventEdit(
     val startTime: LocalTime? = null,
     val endTime: LocalTime? = null,
     val date: LocalDate? = null,
-    val timeZone: TimeZone? = null,
+    val timeZoneId: String? = null,
 ) {
     val isValid get() = invalidPart == null
+    // val timeZone get() = timeZoneId?.let { TimeZone.of(it) }
+    val timeZone get() = TimeZone.currentSystemDefault() // td: convert IANA property
 
-    val startsAt get() = if (startTime != null && timeZone != null) date?.atTime(startTime)?.toInstant(timeZone) else null
-    val endsAt get() = if (endTime != null && timeZone != null) date?.atTime(endTime)?.toInstant(timeZone) else null
+    val startsAt get() = startTime?.let { timeZone.let { date?.atTime(startTime)?.toInstant(it) } }
+    val endsAt get() = endTime?.let { timeZone.let { date?.atTime(endTime)?.toInstant(it) }  }
 
     val invalidPart get() = when {
         title.isNullOrBlank() -> "title"
-        place != null && place.isValid || locationId != null -> "location"
+        locationId == null -> "location"
         startTime == null -> "start time"
         endTime == null -> "end time"
         date == null -> "date"
-        timeZone == null -> "timezone"
+        timeZoneId == null -> "timezone"
         else -> null
-    }?.let {  }
+    }
 
     val invalidMessage get() = invalidPart?.let { "missing: $it"}
 }
@@ -98,7 +101,7 @@ fun Event.toEdit() = EventEdit(
     link = url,
     startTime = startsAt.toLocalDateTime(timeZone).time,
     date = startsAt.toLocalDateTime(timeZone).date,
-    timeZone = timeZone,
+    timeZoneId = timeZone.id,
 )
 
 fun EventEdit.mergeLeft(other: EventEdit?) = other?.let {
@@ -106,7 +109,6 @@ fun EventEdit.mergeLeft(other: EventEdit?) = other?.let {
         eventId = eventId ?: it.eventId,
         title = title ?: it.title,
         locationId = locationId ?: it.locationId,
-        place = place ?: it.place,
         imageUrl = imageUrl ?: it.imageUrl,
         description = description ?: it.description,
         contact = contact ?: it.contact,
@@ -121,7 +123,7 @@ fun EventEdit.mergeLeft(other: EventEdit?) = other?.let {
         date = date ?: it.date,
         startTime = startTime ?: it.startTime,
         endTime = endTime ?: it.endTime,
-        timeZone = timeZone ?: it.timeZone,
+        timeZoneId = timeZoneId ?: it.timeZoneId,
     )
 } ?: this
 

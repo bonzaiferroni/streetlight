@@ -10,6 +10,7 @@ import koala.model.mapDistinct
 import koala.model.storeOf
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.mapNotNull
+import streetlight.model.data.Event
 import streetlight.model.data.EventEdit
 import streetlight.model.data.Galaxy
 import streetlight.model.data.Location
@@ -24,6 +25,7 @@ fun RenderContext.viewEventScout(app: Streetlight, galaxy: Galaxy) {
         EventScoutPanelState(
             locationEdit = it.locationEdit,
             location = it.location,
+            event = it.event,
         )
     }
 
@@ -31,10 +33,12 @@ fun RenderContext.viewEventScout(app: Streetlight, galaxy: Galaxy) {
         viewGeoMap(app.geoMap, app.appScope)
 
         flowBlock(panelFlow, defaultMagic, magic = true) {
-            val locationEdit = it.locationEdit; val location = it.location
+            val locationEdit = it.locationEdit; val location = it.location; val event = it.event
 
             viewOf(model) {
-                if (location != null) {
+                if (event != null) {
+                    reviewEventPanel(event)
+                } else if (location != null) {
                     createEventPanel(location)
                 } else if (locationEdit != null) {
                     reviewLocationPanel(locationEdit)
@@ -51,6 +55,7 @@ fun RenderContext.viewEventScout(app: Streetlight, galaxy: Galaxy) {
 private data class EventScoutPanelState(
     val locationEdit: LocationEdit? = null,
     val location: Location? = null,
+    val event: Event? = null
 )
 
 fun ViewContext<Streetlight>.viewEventScoutRoute() {
@@ -58,6 +63,18 @@ fun ViewContext<Streetlight>.viewEventScoutRoute() {
         api.readGalaxy(it.pathId)
     }) { galaxy ->
         viewEventScout(model, galaxy)
+    }
+}
+
+fun ViewContext<EventScout>.reviewEventPanel(event: Event) {
+    column {
+        card {
+            messageBox(model.messageFlow)
+            row {
+                button("start over", modify(Secondary), onClick = model::reset)
+                button("post another event here", onClick = model::resetEvent)
+            }
+        }
     }
 }
 
@@ -78,7 +95,10 @@ fun ViewContext<EventScout>.createEventPanel(location: Location?) {
             viewEventEditor(model.stateNow.eventEdit, model.app, editFlow.filterNotNull(), model::setEventEdit)
             row(modify(JustifySpaceBetween)) {
                 button("start over", onClick = model::reset)
-                button("create", onClick = model::postEvent)
+                row {
+                    messageBox(model.validEventFlow)
+                    button("create", onClick = model::postEvent)
+                }
             }
         }
     }
