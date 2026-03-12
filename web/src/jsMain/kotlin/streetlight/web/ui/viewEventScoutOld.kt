@@ -135,7 +135,7 @@ private fun ViewContext<EventScoutOld>.viewEventParse(
                             propertyValue("contact", it)
                         }
                         // url
-                        event.url?.takeIf { it.startsWith("http") }?.let {
+                        event.link?.takeIf { it.startsWith("http") }?.let {
                             propertyValue("url", it)
                         }
                     }

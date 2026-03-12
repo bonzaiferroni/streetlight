@@ -62,7 +62,7 @@ data class EventEdit(
     val ageMin: Int? = null,
     val cost: Float? = null,
     val isHost: Boolean? = null,
-    val url: String? = null,
+    val link: String? = null,
     val sourceUrl: String? = null,
     val sourceImageUrl: String? = null,
     val thumbUrl: String? = null,
@@ -95,7 +95,7 @@ fun Event.toEdit() = EventEdit(
     locationId = locationId,
     imageUrl = imageUrl,
     description = description,
-    url = url,
+    link = url,
     startTime = startsAt.toLocalDateTime(timeZone).time,
     date = startsAt.toLocalDateTime(timeZone).date,
     timeZone = timeZone,
@@ -114,17 +114,18 @@ fun EventEdit.mergeLeft(other: EventEdit?) = other?.let {
         ageMin = ageMin ?: it.ageMin,
         cost = cost ?: it.cost,
         isHost = isHost ?: it.isHost,
-        url = url ?: it.url,
+        link = link ?: it.link,
         sourceUrl = sourceUrl ?: it.sourceUrl,
         sourceImageUrl = sourceImageUrl ?: it.sourceImageUrl,
         thumbUrl = thumbUrl ?: it.thumbUrl,
         date = date ?: it.date,
         startTime = startTime ?: it.startTime,
+        endTime = endTime ?: it.endTime,
         timeZone = timeZone ?: it.timeZone,
     )
-}
+} ?: this
 
-fun EventEdit.mergeRight(other: EventEdit?) = other?.mergeLeft(this)
+fun EventEdit.mergeRight(other: EventEdit?) = other?.mergeLeft(this) ?: this
 
 enum class EventStatus(override val label: String): LabeledEnum<EventStatus> {
     Pending("Pending"),

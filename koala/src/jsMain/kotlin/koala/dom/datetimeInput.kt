@@ -16,7 +16,7 @@ fun RenderContext.datetimeInput() {
 }
 
 fun RenderContext.dateInput(
-    flow: Flow<LocalDate>,
+    flow: Flow<LocalDate?>,
     onValueChanged: (LocalDate) -> Unit,
     modifiers: ModifierSet? = null,
 ) {
@@ -42,14 +42,14 @@ fun RenderContext.dateInput(
         flow.collect { d ->
             if (d != last) {
                 last = d
-                element.value = d.toString()
+                element.value = d?.toString() ?: ""
             }
         }
     }
 }
 
 fun RenderContext.timeInput(
-    flow: Flow<LocalTime>,
+    flow: Flow<LocalTime?>,
     onValueChanged: (LocalTime) -> Unit,
     modifiers: ModifierSet? = null,
 ) {
@@ -75,7 +75,7 @@ fun RenderContext.timeInput(
         flow.collect { t ->
             if (t != last) {
                 last = t
-                element.value = t.toInputValue()
+                element.value = t?.toInputValue() ?: ""
             }
         }
     }

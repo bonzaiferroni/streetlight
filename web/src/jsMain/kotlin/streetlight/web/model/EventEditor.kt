@@ -16,8 +16,6 @@ import kotlinx.datetime.LocalDate
 import streetlight.model.external.Address
 import streetlight.model.external.OSMPlace
 import streetlight.model.external.toGeoPoint
-import streetlight.model.utils.toLocalDateTime
-import streetlight.model.utils.tomorrowNoon
 
 class EventEditor(
     initialEvent: EventEdit?,
@@ -26,17 +24,16 @@ class EventEditor(
 ) {
     private val state = storeOf(EventEditorState(initialEvent ?: EventEdit()))
     private val stateFlow = state.flow
-    val editFlow = state.flow.mapDistinct { it.event }
     private val stateNow get() = state.now
-//    val message = storeOf(UIMessage())
 
-    val imageUrlFlow = stateFlow.mapDistinct { it.event.imageUrl }
-    val datetimeFlow = stateFlow.mapDistinct { it.event.startsAt?.toLocalDateTime() }
-    val timeFlow = datetimeFlow.mapDistinct { it?.time ?: tomorrowNoon().toLocalDateTime().time }
-    val dateFlow = datetimeFlow.mapDistinct { it?.date ?: tomorrowNoon().toLocalDateTime().date }
+    val editFlow = state.flow.mapDistinct { it.event }
+    val imageUrlFlow = editFlow.mapDistinct { it.imageUrl }
+    val startTimeFlow = editFlow.mapDistinct { it.startTime }
+    val endTimeFlow = editFlow.mapDistinct { it.endTime }
+    val dateFlow = editFlow.mapDistinct { it.date }
     val descriptionFlow = stateFlow.mapDistinct { it.event.description ?: "" }
     val titleFlow = stateFlow.mapDistinct { it.event.title }
-    val urlFlow = stateFlow.mapDistinct { it.event.url }
+    val urlFlow = stateFlow.mapDistinct { it.event.link }
 
     val eventNow get() = stateNow.event
     val locationNow get() = eventNow.place
@@ -45,8 +42,12 @@ class EventEditor(
         setEvent { it.copy(title = value)}
     }
 
-    fun setTime(value: LocalTime) {
+    fun setStartTime(value: LocalTime) {
         setEvent { it.copy(startTime = value) }
+    }
+
+    fun setEndTime(value: LocalTime) {
+        setEvent { it.copy(endTime = value) }
     }
 
     fun setDate(value: LocalDate) {
@@ -58,7 +59,7 @@ class EventEditor(
     }
 
     fun setUrl(value: String) {
-        setEvent { it.copy(url = value) }
+        setEvent { it.copy(link = value) }
     }
 
     fun setEdit(value: EventEdit) {
@@ -100,31 +101,3 @@ private fun Address.toBasicString(): String? {
     val road = road ?: return null
     return if (number != null) "$number $road" else road
 }
-
-private fun Instant.withTime(
-    newTime: LocalTime,
-): Instant {
-    val ldt = this.toLocalDateTime(timeZone)
-
-    val updated = LocalDateTime(
-        date = ldt.date,
-        time = newTime
-    )
-
-    return updated.toInstant(timeZone)
-}
-
-private fun Instant.withDate(
-    newDate: LocalDate,
-): Instant {
-    val ldt = this.toLocalDateTime(timeZone)
-
-    val updated = LocalDateTime(
-        date = newDate,
-        time = ldt.time
-    )
-
-    return updated.toInstant(timeZone)
-}
-
-private val timeZone = TimeZone.currentSystemDefault()

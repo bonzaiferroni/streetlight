@@ -93,7 +93,8 @@ data class LocationParseResult(
 @Serializable
 data class EventParse(
     val name: String? = null,
-    val time: LocalTime? = null,
+    val startTime: LocalTime? = null,
+    val endTime: LocalTime? = null,
     val date: LocalDate? = null,
     val location: String? = null,
     val address: String? = null,
@@ -104,17 +105,13 @@ data class EventParse(
     val contact: String? = null,
     val url: String? = null,
 ) {
-    val startsAt: Instant? get() = if (time != null && date != null) toInstant(date, time) else null
+    val startsAt: Instant? get() = if (startTime != null && date != null) toInstant(date, startTime) else null
 
     private fun toInstant(
         date: LocalDate,
         time: LocalTime,
         timeZone: TimeZone = TimeZone.currentSystemDefault()
-    ): Instant {
-        return date
-            .atTime(time)
-            .toInstant(timeZone)
-    }
+    ) = date.atTime(time).toInstant(timeZone)
 }
 
 fun EventParse.toEventEdit(
@@ -129,10 +126,11 @@ fun EventParse.toEventEdit(
     description = description,
     ageMin = ageMin?.takeIf { it > 0 },
     cost = floatUSDOf(cost),
-    url = url,
+    link = url,
     sourceUrl = sourceUrl,
     sourceImageUrl = sourceImageUrl,
-    startTime = time,
+    startTime = startTime,
+    endTime = endTime,
     date = date
 )
 

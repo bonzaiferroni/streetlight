@@ -6,9 +6,7 @@ import koala.html.heading3
 import koala.html.textBlock
 import koala.model.storeOf
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import kotlinx.datetime.TimeZone
 import streetlight.model.data.Event
 import streetlight.model.data.EventEdit
 import streetlight.model.data.toEdit
@@ -84,24 +82,27 @@ fun RenderContext.viewEventEditor(
             card {
                 row {
                     row(modify(FlexItems1)) {
-                        blockLabel("time") {
-                            timeInput(model.timeFlow, model::setTime, modify(Width24))
+                        blockLabel("start time") {
+                            timeInput(model.startTimeFlow, model::setStartTime)
+                        }
+                        blockLabel("end time") {
+                            timeInput(model.endTimeFlow, model::setEndTime)
                         }
                         blockLabel("day") {
-                            dateInput(model.dateFlow, model::setDate, modify(Width24))
+                            dateInput(model.dateFlow, model::setDate)
                         }
                     }
-                    textBlock(model.datetimeFlow.map { it.toString() })
+                    // textBlock(model.datetimeFlow.map { it.toString() })
                 }
             }
         }
 
-        column(modify(Gap0)) {
-            heading3("Who?", modify(Padding1, Dim))
-            card {
-                textBlock("yer who")
-            }
-        }
+//        column(modify(Gap0)) {
+//            heading3("Who?", modify(Padding1, Dim))
+//            card {
+//                textBlock("yer who")
+//            }
+//        }
     }
 }
 

@@ -15,6 +15,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
+import streetlight.model.data.Event
 import streetlight.model.data.EventEdit
 import streetlight.model.data.Location
 import streetlight.model.data.LocationEdit
@@ -57,6 +58,10 @@ class EventScout(
 
     fun setWebsite(value: String) {
         state.set { it.copy(website = value) }
+    }
+
+    fun setEventLink(value: String) {
+        state.set { it.copy(eventEdit = state.now.eventEdit.copy(link = value))}
     }
 
     fun setLocation(value: Location?) {
@@ -130,7 +135,7 @@ class EventScout(
     }
 
     fun readEventWebsite() {
-        val website = state.now.website.takeIf { it.startsWith("http") } ?: return
+        val website = state.now.eventEdit.link?.takeIf { it.startsWith("http") } ?: return
         scope.launch {
             msg.set("Reading the link, this will take a minute.")
             val response = api.parseSingleEvent(UrlParseRequest(website))?.event
@@ -138,7 +143,7 @@ class EventScout(
                 msg.set("We were unable to read the link.")
                 return@launch
             }
-            val event = response.mergeRight(state.now.eventEdit ?: EventEdit())
+            val event = response.mergeRight(state.now.eventEdit)
             msg.set("Does this information look correct?")
             state.set { it.copy(eventEdit = event) }
         }
@@ -156,6 +161,20 @@ class EventScout(
             state.set { it.copy(location = location) }
             msg.set("Posted. You can now add events to ${location.name}.")
             geo.tempEntities(null)
+        }
+    }
+
+    fun postEvent() {
+        val edit = state.now.eventEdit.takeIf { it.isValid } ?: return
+        msg.set("Posting ${edit.title}...")
+        scope.launch {
+            val event = api.createOrEditEvent(edit)?.payload
+            if (event == null) {
+                msg.set("Something went wrong")
+                return@launch
+            }
+            state.set { it.copy(event = event) }
+            msg.set("Posted.")
         }
     }
 
@@ -177,7 +196,8 @@ data class EventScoutState(
     val point: GeoPoint? = null,
     val locationEdit: LocationEdit? = null,
     val location: Location? = null,
-    val eventEdit: EventEdit? = null,
+    val eventEdit: EventEdit = EventEdit(),
+    val event: Event? = null,
 )
 
 private const val introMsg = "Where will the event be held? Search for a location or find one on the map."
