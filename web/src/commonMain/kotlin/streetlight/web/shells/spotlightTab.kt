@@ -1,14 +1,17 @@
 package streetlight.web.shells
 
 import koala.css.AlignItemsStart
+import koala.css.Dim
 import koala.css.FlexItems1
 import koala.css.QueryRow
 import koala.css.modify
 import koala.html.button
 import koala.html.column
 import koala.html.heading3
+import koala.html.textBlock
 import kotlinx.html.FlowContent
 import streetlight.model.data.Event
+import streetlight.model.data.Galaxy
 import streetlight.model.data.Location
 import streetlight.web.ChatRoute
 import streetlight.web.OldEventScoutRoute
@@ -17,8 +20,19 @@ import streetlight.web.EditPostRoute
 import streetlight.web.SandboxRoute
 import streetlight.web.pages.appFooter
 
-fun FlowContent.spotlightTab(events: List<Event>, locations: List<Location>) {
+fun FlowContent.spotlightTab(
+    galaxies: List<Galaxy>,
+    events: List<Event>,
+    locations: List<Location>
+) {
     column {
+        column {
+            heading3("Galaxies")
+            textBlock("Galaxies are Streetlight communities, each with a particular focus.", modify(Dim))
+            galaxies.forEach { galaxy ->
+                cardOf(galaxy)
+            }
+        }
         column(modify(QueryRow, FlexItems1, AlignItemsStart)) {
             column {
                 heading3("Events")

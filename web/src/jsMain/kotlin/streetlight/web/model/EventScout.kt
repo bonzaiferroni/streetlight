@@ -10,15 +10,14 @@ import koala.dom.set
 import koala.model.PanPoint
 import koala.model.mapDistinct
 import koala.model.storeOf
-import koala.utils.prettyPrint
-import kotlinx.browser.window
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
-import kotlinx.datetime.TimeZone
 import streetlight.model.data.Event
 import streetlight.model.data.EventEdit
+import streetlight.model.data.Galaxy
+import streetlight.model.data.GalaxyPostEdit
 import streetlight.model.data.Location
 import streetlight.model.data.LocationEdit
 import streetlight.model.data.Place
@@ -33,8 +32,9 @@ import streetlight.web.ui.ViewModel
 class EventScout(
     override val app: Streetlight,
     val scope: CoroutineScope,
+    val galaxy: Galaxy,
 ): ViewModel {
-    private val state = storeOf(EventScoutState())
+    private val state = storeOf(EventScoutState(blankEvent))
     val stateFlow = state.flow
     val stateNow get() = state.now
 
@@ -182,13 +182,24 @@ class EventScout(
         }
     }
 
+    fun postToGalaxy() {
+        val event = state.now.event ?: return
+        scope.launch {
+            val post = api.createPost(GalaxyPostEdit(
+                galaxyId = galaxy.galaxyId,
+                eventId = event.eventId,
+            ))
+            console.log(post)
+        }
+    }
+
     fun reset() {
-        state.set { EventScoutState() }
+        state.set { EventScoutState(blankEvent) }
     }
 
     fun resetEvent() {
         val location = state.now.location ?: return
-        val edit = blankEdit.copy(locationId = location.locationId)
+        val edit = blankEvent.copy(locationId = location.locationId)
         state.set { it.copy(eventEdit = edit, event = null, location = location) }
     }
 
@@ -200,18 +211,14 @@ class EventScout(
 }
 
 data class EventScoutState(
+    val eventEdit: EventEdit,
     val query: String = "",
     val website: String = "",
     val locations: List<Location> = emptyList(),
     val point: GeoPoint? = null,
     val locationEdit: LocationEdit? = null,
     val location: Location? = null,
-    val eventEdit: EventEdit = blankEdit,
     val event: Event? = null,
-)
-
-private val blankEdit get() = EventEdit(
-    timeZoneId = BrowserTime.timeZoneId
 )
 
 private const val introMsg = "Where will the event be held? Search for a location or find one on the map."
@@ -219,3 +226,7 @@ private const val introMsg = "Where will the event be held? Search for a locatio
 object BrowserTime {
     val timeZoneId by lazy { js("Intl.DateTimeFormat().resolvedOptions().timeZone") as String }
 }
+
+private val blankEvent get() = EventEdit(
+    timeZoneId = BrowserTime.timeZoneId,
+)

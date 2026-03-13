@@ -60,6 +60,7 @@ val mockDb by lazy {
         galaxyId = GalaxyId.random(),
         pathId = pathIdFromName(name),
         name = name,
+        description = "",
         center = GeoPoint.Denver,
         imageUrl = null,
         thumbUrl = null,

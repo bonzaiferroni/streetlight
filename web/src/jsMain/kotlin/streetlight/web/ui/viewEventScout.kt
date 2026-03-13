@@ -20,7 +20,7 @@ import streetlight.web.model.EventScout
 import streetlight.web.model.Streetlight
 
 fun RenderContext.viewEventScout(app: Streetlight, galaxy: Galaxy) {
-    val model = EventScout(app, renderScope)
+    val model = EventScout(app, renderScope, galaxy)
     val panelFlow = model.stateFlow.mapDistinct {
         EventScoutPanelState(
             locationEdit = it.locationEdit,
@@ -37,7 +37,7 @@ fun RenderContext.viewEventScout(app: Streetlight, galaxy: Galaxy) {
 
             viewOf(model) {
                 if (event != null) {
-                    reviewEventPanel(event)
+                    reviewEventPanel(event, galaxy)
                 } else if (location != null) {
                     createEventPanel(location)
                 } else if (locationEdit != null) {
@@ -66,13 +66,19 @@ fun ViewContext<Streetlight>.viewEventScoutRoute() {
     }
 }
 
-fun ViewContext<EventScout>.reviewEventPanel(event: Event) {
+fun ViewContext<EventScout>.reviewEventPanel(event: Event, galaxy: Galaxy) {
     column {
         card {
             messageBox(model.messageFlow)
             row {
                 button("start over", modify(Secondary), onClick = model::reset)
-                button("post another event here", onClick = model::resetEvent)
+                button("post another event at this location", onClick = model::resetEvent)
+            }
+
+            heading3("Post to a galaxy")
+            row(modify(JustifySpaceBetween)) {
+                textBlock(galaxy.name)
+                button("post", onClick = model::postToGalaxy)
             }
         }
     }

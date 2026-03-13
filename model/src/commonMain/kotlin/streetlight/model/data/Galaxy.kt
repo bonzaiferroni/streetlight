@@ -12,6 +12,7 @@ data class Galaxy(
     val galaxyId: GalaxyId,
     val pathId: String,
     val name: String,
+    val description: String,
     val center: GeoPoint,
     val imageUrl: String?,
     val thumbUrl: String?,
@@ -27,6 +28,7 @@ value class GalaxyId(override val value: String): ProjectId {
 @Serializable
 data class GalaxyEdit(
     val name: String? = null,
+    val description: String? = null,
     val center: GeoPoint? = null,
     val imageUrl: String? = null,
     val thumbUrl: String? = null,

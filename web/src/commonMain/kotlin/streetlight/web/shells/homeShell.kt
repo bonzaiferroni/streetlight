@@ -19,7 +19,7 @@ fun FlowContent.homeShell(events: List<Event> = emptyList(), locations: List<Loc
     box(HomeShell.homeBoxId) {
         tabs(HomeShell.tabsId, modify(Width100)) {
             tab("Spotlight") {
-                spotlightTab(events, locations)
+                spotlightTab(emptyList(), events, locations)
             }
             tab("Map") {
                 column(modify(AlignItemsCenter)) {
