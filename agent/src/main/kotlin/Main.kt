@@ -6,27 +6,27 @@ import streetlight.model.data.ColdParse
 import java.io.File
 
 fun main(): Unit = runBlocking {
-    val trimmer = HtmlTrimmer()
-    val debugFolder = File("debug")
-
-    debugFolder
-        .listFiles()
-        ?.asSequence()
-        ?.filter { it.isFile }
-        ?.filter { it.name.endsWith(".html") }
-        ?.filter { !it.name.endsWith(".reduced.html") }
-        ?.sortedBy { it.name }
-        ?.forEach { file ->
-            val html = file.readText()
-            if (!html.looksLikeHtml()) return@forEach
-            val reduced = trimmer.trimHtml(html)
-            val percentReduced = (100.0 * (html.length - reduced.length) / html.length).toInt()
-            val report = "from ${html.length} to ${reduced.length} ($percentReduced%)"
-            println("${report.padEnd(36)} ${file.name}")
-
-            val output = File(file.parentFile, "${file.nameWithoutExtension}.reduced.html")
-            output.writeText(reduced)
-        }
+//    val trimmer = HtmlTrimmer()
+//    val debugFolder = File("debug")
+//
+//    debugFolder
+//        .listFiles()
+//        ?.asSequence()
+//        ?.filter { it.isFile }
+//        ?.filter { it.name.endsWith(".html") }
+//        ?.filter { !it.name.endsWith(".reduced.html") }
+//        ?.sortedBy { it.name }
+//        ?.forEach { file ->
+//            val html = file.readText()
+//            if (!html.looksLikeHtml()) return@forEach
+//            val reduced = trimmer.trimHtml(html)
+//            val percentReduced = (100.0 * (html.length - reduced.length) / html.length).toInt()
+//            val report = "from ${html.length} to ${reduced.length} ($percentReduced%)"
+//            println("${report.padEnd(36)} ${file.name}")
+//
+//            val output = File(file.parentFile, "${file.nameWithoutExtension}.reduced.html")
+//            output.writeText(reduced)
+//        }
 }
 
 private val htmlStart = Regex("""^\s*(<!DOCTYPE\s+html|<html|<[a-zA-Z]+)""", RegexOption.IGNORE_CASE)

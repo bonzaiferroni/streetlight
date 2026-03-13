@@ -37,8 +37,9 @@ data class Event(
     val streamUrl: String?,
     // repeatInterval
     val timeZoneId: String,
+    // val doorsAt: Instant?,
     val startsAt: Instant,
-    val endsAt: Instant,
+    val endsAt: Instant?,
     val updatedAt: Instant,
     val createdAt: Instant,
 ) {
@@ -73,17 +74,17 @@ data class EventEdit(
     val timeZoneId: String? = null,
 ) {
     val isValid get() = invalidPart == null
-    // val timeZone get() = timeZoneId?.let { TimeZone.of(it) }
-    val timeZone get() = TimeZone.currentSystemDefault() // td: convert IANA property
+    val timeZone get() = try {
+        timeZoneId?.let { TimeZone.of(it) }
+    } catch (_: Exception) { TimeZone.currentSystemDefault() } // fails in browser
 
-    val startsAt get() = startTime?.let { timeZone.let { date?.atTime(startTime)?.toInstant(it) } }
-    val endsAt get() = endTime?.let { timeZone.let { date?.atTime(endTime)?.toInstant(it) }  }
+    val startsAt get() = startTime?.let { timeZone?.let { date?.atTime(startTime)?.toInstant(it) } }
+    val endsAt get() = endTime?.let { timeZone?.let { date?.atTime(endTime)?.toInstant(it) }  }
 
     val invalidPart get() = when {
         title.isNullOrBlank() -> "title"
         locationId == null -> "location"
         startTime == null -> "start time"
-        endTime == null -> "end time"
         date == null -> "date"
         timeZoneId == null -> "timezone"
         else -> null

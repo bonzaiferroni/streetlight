@@ -8,9 +8,7 @@ import com.fleeksoft.ksoup.nodes.TextNode
 
 class HtmlTrimmer {
 
-    fun trimHtml(html: String): String {
-        val doc = Ksoup.parse(html = html)
-
+    fun trimHtml(doc: Document): String {
         trimHead(doc)
         trimBody(doc)
 

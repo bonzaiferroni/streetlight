@@ -4,6 +4,8 @@ import ai.koog.prompt.dsl.prompt
 import ai.koog.prompt.executor.clients.google.GoogleModels
 import ai.koog.prompt.executor.llms.all.simpleGoogleAIExecutor
 import ai.koog.prompt.params.LLMParams
+import com.fleeksoft.ksoup.Ksoup
+import com.fleeksoft.ksoup.nodes.Document
 import kabinet.console.globalConsole
 import kampfire.utils.takeEllipsis
 import kotlinx.io.files.Path
@@ -14,7 +16,7 @@ import java.io.File
 class UrlParser(apiKey: String) {
     val executor = simpleGoogleAIExecutor(apiKey)
     val console = globalConsole.getHandle(UrlParser::class)
-    val cache = mutableMapOf<Int, String>()
+    val cache = mutableMapOf<Int, ParserContent>()
     val trimmer = HtmlTrimmer()
 
 //    private val agent = AIAgent(
@@ -28,8 +30,8 @@ class UrlParser(apiKey: String) {
 //        maxIterations = 30,
 //    )
 
-    suspend inline fun <reified T: Any> readUrl(url: String, instructions: String): T? {
-        val json = withCache(url.hashCode()) {
+    suspend inline fun <reified T: Any> readUrl(url: String, instructions: String): ParserResult<T>? {
+        val content = withCache(url.hashCode()) {
             console.log("reading url: $url")
             val content = readContent(url)
             console.log("caching content length: ${content.length}")
@@ -40,12 +42,12 @@ class UrlParser(apiKey: String) {
             readHtmlContent<T>(url, content, instructions)
         } ?: return null
 
-        return tryDecode(json)
+        return resultOf(content)
     }
 
-    inline fun withCache(cacheKey: Int, block: () -> String?): String? = cache[cacheKey] ?: block().also { json ->
-        if (json != null) {
-            cache[cacheKey] = json
+    inline fun withCache(cacheKey: Int, block: () -> ParserContent?): ParserContent? = cache[cacheKey] ?: block().also { content ->
+        if (content != null) {
+            cache[cacheKey] = content
 
             if (cache.size > 25) {
                 val firstKey = cache.keys.firstOrNull()
@@ -54,25 +56,30 @@ class UrlParser(apiKey: String) {
         }
     }
 
-    suspend inline fun <reified T: Any> readHtml(url: String, html: String, instructions: String): T? {
-        val json = withCache(html.hashCode()) {
+    inline fun <reified T> resultOf(content: ParserContent) = content.json.let { tryDecode<T>(it) }?.let {
+        ParserResult(content.document, it)
+    }
+
+    suspend inline fun <reified T: Any> readHtml(url: String, html: String, instructions: String): ParserResult<T>? {
+        val content = withCache(html.hashCode()) {
             console.log("html length: ${html.length}")
             readHtmlContent<T>(url, html, instructions)
         } ?: return null
 
-        return tryDecode(json)
+        return resultOf(content)
     }
 
     suspend inline fun <reified T: Any> readHtmlContent(
         url: String,
         rawContent: String,
         instructions: String
-    ): String? {
+    ): ParserContent? {
         if (!rawContent.looksLikeHtml()) {
             console.logError("not likely html:\n${rawContent.take(80)}")
             return null
         }
-        val content = trimmer.trimHtml(rawContent)
+        val doc = Ksoup.parse(html = rawContent)
+        val content = trimmer.trimHtml(doc)
         val percentReduced = (100.0 * (rawContent.length - content.length) / rawContent.length).toInt()
         val report = "from ${rawContent.length} to ${content.length} ($percentReduced%)"
         console.log(report)
@@ -93,13 +100,19 @@ class UrlParser(apiKey: String) {
             user("$instructions\n\nFor reference, here is the url:\n$url\n\nHere is the HTML:\n$content")
         }
 
-        return executor.execute(prompt, GoogleModels.Gemini2_5Flash).first().content
+        return ParserContent(
+            document = doc,
+            json = executor.execute(prompt, GoogleModels.Gemini2_5Flash).first().content
+        )
     }
 
-    suspend inline fun <reified T: Any> readImage(url: String, instructions: String): T? {
+    suspend inline fun <reified T: Any> readImage(url: String, instructions: String): ParserResult<T>? {
         val cacheKey = url.hashCode()
         val cached = cache[cacheKey]
-        if (cached != null) return tryDecode(cached)
+        if (cached != null) return ParserResult<T>(
+            document = cached.document,
+            value = tryDecode(cached.json)
+        )
 
         val prompt = prompt(
             id = "dev-assistant",
@@ -126,7 +139,10 @@ class UrlParser(apiKey: String) {
         }
 
         val json = executor.execute(prompt, GoogleModels.Gemini2_5Flash).first().content
-        cache[cacheKey] = json
+        cache[cacheKey] = ParserContent(
+            document = null,
+            json = json
+        )
 
         if (cache.size > 10) {
             val firstKey = cache.keys.firstOrNull()
@@ -157,5 +173,14 @@ val jsonConfig = Json {
 
 private val htmlStart = Regex("""^\s*(<!DOCTYPE\s+html|<html|<[a-zA-Z]+)""", RegexOption.IGNORE_CASE)
 
-fun String.looksLikeHtml(): Boolean =
-    htmlStart.containsMatchIn(this)
+fun String.looksLikeHtml(): Boolean = htmlStart.containsMatchIn(this)
+
+data class ParserContent(
+    val document: Document?,
+    val json: String,
+)
+
+data class ParserResult<T>(
+    val document: Document?,
+    val value: T?
+)

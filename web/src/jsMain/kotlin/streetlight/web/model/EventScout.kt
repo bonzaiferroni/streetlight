@@ -187,7 +187,9 @@ class EventScout(
     }
 
     fun resetEvent() {
-        state.set { it.copy(eventEdit = blankEdit, event = null) }
+        val location = state.now.location ?: return
+        val edit = blankEdit.copy(locationId = location.locationId)
+        state.set { it.copy(eventEdit = edit, event = null, location = location) }
     }
 
     private fun addConstructionMarker(point: GeoPoint) {
