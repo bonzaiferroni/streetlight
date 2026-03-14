@@ -6,6 +6,7 @@ import koala.css.modify
 import koala.dom.RenderContext
 import koala.dom.box
 import koala.html.SiteImage
+import koala.model.MapContextId
 import koala.model.MapEntityId
 import koala.model.MarkerUtility
 import koala.model.PointEntity
@@ -19,7 +20,8 @@ import streetlight.model.data.SpiritId
 import streetlight.web.shells.cardOf
 
 data class LocationEntity(
-    val location: Location
+    override val contextId: MapContextId?,
+    val location: Location,
 ): PointEntity {
     override val entityId get() = location.locationId.value
     // override val label get() = location.name
@@ -35,8 +37,9 @@ data class LocationEntity(
 }
 
 data class EventEntity(
+    override val contextId: MapContextId,
     val location: Location,
-    val events: List<Event>
+    val events: List<Event>,
 ): PointEntity {
     val event get() = events.first()
     override val entityId get() = location.locationId.value

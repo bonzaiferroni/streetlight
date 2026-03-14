@@ -16,10 +16,23 @@ import koala.html.heading2
 import koala.html.image
 import koala.html.label
 import koala.model.mapDistinct
+import kotlinx.coroutines.launch
 import kotlinx.html.js.div
+import streetlight.web.HomeRoute
 import streetlight.web.model.Streetlight
 
-fun RenderContext.wireMapPanel(app: Streetlight) {
+fun ViewContext<Streetlight>.wireStreetMap() {
+//    val streetMap = model.streetMap
+//
+//    renderScope.launch {
+//        portal.routeFlowOf<HomeRoute>().collect {
+//        }
+//    }
+
+    wireMapPanel()
+}
+
+fun ViewContext<Streetlight>.wireMapPanel() {
     wireBlock(GeoMapSelector.panel) {
         tabs(Id("map-panel-tabs")) {
             tab("News") {
@@ -29,12 +42,12 @@ fun RenderContext.wireMapPanel(app: Streetlight) {
             }
             tab("Events") {
                 column {
-                    viewMapCards(app)
+                    viewMapCards(model)
                 }
             }
             tab("Controls") {
                 column {
-                    viewMapControls(app)
+                    viewMapControls(model)
                 }
             }
         }

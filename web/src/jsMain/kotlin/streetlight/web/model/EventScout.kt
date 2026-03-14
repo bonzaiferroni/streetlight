@@ -17,6 +17,8 @@ import kotlinx.coroutines.launch
 import streetlight.model.data.Event
 import streetlight.model.data.EventEdit
 import streetlight.model.data.Galaxy
+import streetlight.model.data.GalaxyId
+import streetlight.model.data.GalaxyPost
 import streetlight.model.data.GalaxyPostEdit
 import streetlight.model.data.Location
 import streetlight.model.data.LocationEdit
@@ -178,18 +180,21 @@ class EventScout(
                 return@launch
             }
             state.set { it.copy(event = event) }
+            postToGalaxy(galaxy.galaxyId)
             msg.set("Posted.")
         }
     }
 
-    fun postToGalaxy() {
+    fun postToGalaxy(galaxyId: GalaxyId) {
         val event = state.now.event ?: return
         scope.launch {
             val post = api.createPost(GalaxyPostEdit(
-                galaxyId = galaxy.galaxyId,
+                galaxyId = galaxyId,
                 eventId = event.eventId,
             ))
-            console.log(post)
+            if (post != null) {
+                state.set { it.copy(posts = it.posts + post)}
+            }
         }
     }
 
@@ -219,6 +224,7 @@ data class EventScoutState(
     val locationEdit: LocationEdit? = null,
     val location: Location? = null,
     val event: Event? = null,
+    val posts: List<GalaxyPost> = emptyList()
 )
 
 private const val introMsg = "Where will the event be held? Search for a location or find one on the map."

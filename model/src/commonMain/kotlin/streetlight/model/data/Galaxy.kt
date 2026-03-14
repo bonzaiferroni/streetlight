@@ -12,7 +12,7 @@ data class Galaxy(
     val galaxyId: GalaxyId,
     val pathId: String,
     val name: String,
-    val description: String,
+    val description: String?,
     val center: GeoPoint,
     val imageUrl: String?,
     val thumbUrl: String?,

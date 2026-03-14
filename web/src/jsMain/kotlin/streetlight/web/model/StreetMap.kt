@@ -5,6 +5,7 @@ package streetlight.web.model
 import kampfire.model.GeoBounds
 import kampfire.model.GeoPoint
 import koala.model.GeoMap
+import koala.model.MapContextId
 import koala.model.mapDistinct
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
@@ -95,9 +96,9 @@ class StreetMap(
                     allLocations.add(info)
                     val events = info.events
                     if (!events.isNullOrEmpty()) {
-                        EventEntity(info.location, events)
+                        EventEntity(streetMapId, info.location, events)
                     } else {
-                        LocationEntity(info.location)
+                        LocationEntity(streetMapId, info.location)
                     }
                 }
                 geoMap.addEntities(mapEntities)
@@ -165,3 +166,5 @@ data class QueryBounds(
     val time: Instant,
     val bounds: GeoBounds,
 )
+
+const val streetMapId: MapContextId = "StreetMap"

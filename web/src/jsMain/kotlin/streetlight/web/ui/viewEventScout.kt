@@ -75,11 +75,10 @@ fun ViewContext<EventScout>.reviewEventPanel(event: Event, galaxy: Galaxy) {
                 button("post another event at this location", onClick = model::resetEvent)
             }
 
-            heading3("Post to a galaxy")
-            row(modify(JustifySpaceBetween)) {
-                textBlock(galaxy.name)
-                button("post", onClick = model::postToGalaxy)
-            }
+//            heading3("Post to a galaxy")
+//            row(modify(JustifySpaceBetween)) {
+//                textBlock(galaxy.name)
+//            }
         }
     }
 }

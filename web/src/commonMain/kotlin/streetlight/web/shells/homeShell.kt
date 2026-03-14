@@ -15,11 +15,11 @@ import kotlinx.html.footer
 import streetlight.model.data.Event
 import streetlight.model.data.Location
 
-fun FlowContent.homeShell(events: List<Event> = emptyList(), locations: List<Location> = emptyList()) {
+fun FlowContent.homeShell(content: SpotlightContent) {
     box(HomeShell.homeBoxId) {
         tabs(HomeShell.tabsId, modify(Width100)) {
             tab("Spotlight") {
-                spotlightTab(emptyList(), events, locations)
+                spotlightTab(content)
             }
             tab("Map") {
                 column(modify(AlignItemsCenter)) {

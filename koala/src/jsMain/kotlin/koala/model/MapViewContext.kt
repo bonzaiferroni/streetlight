@@ -77,6 +77,13 @@ class MapViewContext(
         return getNearest(center, zoom)
     }
 
+    fun setContextId(contextId: MapContextId) {
+        markers.entries.removeAll {
+            val entityContextId = it.value.entity.contextId ?: return@removeAll false
+            contextId != entityContextId
+        }
+    }
+
     private fun updateVisibility(entityId: MapEntityId) {
         val bounds = boundsNow ?: return
         val view = markers[entityId] ?: return

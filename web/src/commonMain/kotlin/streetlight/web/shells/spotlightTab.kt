@@ -20,11 +20,8 @@ import streetlight.web.EditPostRoute
 import streetlight.web.SandboxRoute
 import streetlight.web.pages.appFooter
 
-fun FlowContent.spotlightTab(
-    galaxies: List<Galaxy>,
-    events: List<Event>,
-    locations: List<Location>
-) {
+fun FlowContent.spotlightTab(content: SpotlightContent) {
+    val galaxies = content.galaxies; val events = content.events; val locations = content.locations
     column {
         column {
             heading3("Galaxies")
@@ -56,3 +53,9 @@ fun FlowContent.spotlightTab(
         appFooter()
     }
 }
+
+data class SpotlightContent(
+    val galaxies: List<Galaxy>,
+    val events: List<Event>,
+    val locations: List<Location>
+)

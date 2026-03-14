@@ -6,6 +6,9 @@ main:
 galaxy fields:
     description
 
+before server update:
+stop caching html in UrlReader
+
 done:
 go over
 trawl front end pages

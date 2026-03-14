@@ -42,6 +42,7 @@ class GeoMap(
     val movingBoundsFlow = viewedStateFlow.mapDistinct { it.movingBounds }
     val centerFlow = viewedStateFlow.filter { !it.isMoving }.mapDistinct { it.center }
     val boundsFlow = viewedStateFlow.filter { it.isViewed }.mapDistinct { it.bounds }
+    val contextIdFlow = stateFlow.mapDistinct { it.contextId }
 
     fun addEntity(entity: MapEntity) {
         addEntities(listOf(entity))
@@ -115,12 +116,15 @@ data class GeoMapState(
     val isMoving: Boolean = false,
     val isViewed: Boolean = false,
     val nearest: PointEntity? = null,
+    val contextId: MapContextId? = null,
 )
 
 typealias MapEntityId = String
+typealias MapContextId = String
 
 sealed interface MapEntity {
     val entityId: MapEntityId
+    val contextId: MapContextId? get() = null
     val label: String? get() = null
 }
 

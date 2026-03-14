@@ -71,7 +71,7 @@ fun viewApp() {
             ) { screen ->
                 viewOf(app) {
                     when (screen) {
-                        StreetlightScreen.Home -> viewHome(app)
+                        StreetlightScreen.Home -> viewHome()
                         StreetlightScreen.Event -> viewEventRoute(app)
                         StreetlightScreen.Account -> viewAccount(app)
                         StreetlightScreen.EditEvent -> viewEventEditorRoute()

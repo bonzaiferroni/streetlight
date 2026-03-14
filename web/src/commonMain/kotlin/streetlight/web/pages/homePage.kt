@@ -5,15 +5,16 @@ import kotlinx.html.*
 import koala.css.*
 import streetlight.model.data.Event
 import streetlight.model.data.Location
+import streetlight.web.shells.SpotlightContent
 import streetlight.web.shells.homeShell
 
-fun HTML.homePage(events: List<Event>, locations: List<Location>) {
+fun HTML.homePage(content: SpotlightContent) {
     head("Streetlight | Home") {
         supportProtobuf()
         supportGeoMap()
     }
     appBody {
-        homeShell(events, locations)
+        homeShell(content)
     }
 }
 
