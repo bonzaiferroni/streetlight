@@ -62,4 +62,5 @@ class ApiClient(private val client: FetchClient) {
     suspend fun createPost(post: GalaxyPostEdit) = client.post(Api.Galaxies.CreatePost, post)
     suspend fun readPosts(galaxyIds: List<GalaxyId>) = client.post(Api.Galaxies.ReadMultiPosts, galaxyIds)
     suspend fun readPosts(galaxyId: GalaxyId) = client.get(Api.Galaxies.ReadPosts, galaxyId)
+    suspend fun readPost(galaxyPostId: GalaxyPostId) = client.get(Api.Galaxies.ReadPost, galaxyPostId)
 }

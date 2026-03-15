@@ -193,7 +193,7 @@ suspend inline fun <reified Returned> Response.tryDecodeText(debug: Boolean = fa
             else -> jsonConfig.decodeFromString<Returned>(text)
         }
     } catch (e: Exception) {
-        console.log("failed to parse response:\n${e}\ndata: ${text.take(400)}")
+        console.log("failed to parse response:\n${e}\n${url}\ndata: ${text.take(400)}")
         null
     }
 }

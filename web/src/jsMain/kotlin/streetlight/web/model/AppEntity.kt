@@ -75,11 +75,11 @@ data class IconEntity(
 
 data class PostEntity(
     val post: GalaxyPost,
-    val galaxy: Galaxy,
+    val galaxy: Galaxy?,
     override val position: GeoPoint,
 ): PointEntity {
     override val entityId get() = post.location?.locationId?.value ?: post.postId.value
-    override val thumbPath get() = post.event?.thumbUrl ?: post.location?.thumbUrl ?: galaxy.thumbUrl
+    override val thumbPath get() = post.event?.thumbUrl ?: post.location?.thumbUrl ?: galaxy?.thumbUrl
         ?: SiteImage.placeholderThumb
     override val light get() = Rgb(240, 100, 180 )
 }

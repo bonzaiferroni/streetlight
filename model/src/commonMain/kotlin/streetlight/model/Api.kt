@@ -94,9 +94,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         }
     }
 
-    object Chat: ApiNode(this, "chat") {
-
-    }
+    object Chat: ApiNode(this, "chat") { }
 
     object Map: ApiNode(this, "map") {
         object SpiritVision: ApiNode(this, "spirit-vision")
@@ -106,8 +104,9 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object Found: PostEndpoint<GalaxyEdit, Galaxy>(this, "found")
         object All: GetEndpoint<List<Galaxy>>(this, "areas")
         object Path: GetByIdEndpoint<PathId, Galaxy>(this, "path")
-        object CreatePost: PostEndpoint<GalaxyPostEdit, GalaxyPostRow>(this, "create-post")
+        object CreatePost: PostEndpoint<GalaxyPostEdit, GalaxyPostId>(this, "create-post")
         object ReadMultiPosts: PostEndpoint<List<GalaxyId>, List<GalaxyPost>>(this, "multi-posts")
         object ReadPosts: GetByTableIdEndpoint<GalaxyId, List<GalaxyPost>>(this, "posts")
+        object ReadPost: GetByTableIdEndpoint<GalaxyPostId, GalaxyPost>(this, "post")
     }
 }

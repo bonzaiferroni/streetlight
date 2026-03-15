@@ -4,7 +4,6 @@ package streetlight.web.model
 
 import koala.model.GeoMap
 import koala.model.MapContextId
-import koala.model.mapDistinct
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.FlowPreview
@@ -25,17 +24,25 @@ class StreetMap(
     
     val transit = TransitMap(scope, client, geoMap)
 
-    val communityFlow = stateFlow.mapDistinct { it.galaxies }
-
     fun setPosts(posts: List<GalaxyPost>) {
-        val entities = posts.mapNotNull { post ->
-            val galaxy = cache.galaxy.getCachedItem(post.galaxyId) ?: return@mapNotNull null
-            val position = post.location?.geoPoint ?: return@mapNotNull null
+        val posts = createEntities(posts)
+        geoMap.removeEntities(state.now.posts.map { it.entityId })
+        geoMap.addEntities(posts)
+        state.set { it.copy(posts = posts) }
+    }
+
+    fun addPosts(posts: List<GalaxyPost>) {
+        val posts = createEntities(posts)
+        geoMap.addEntities(posts)
+        state.set { it.copy(posts = it.posts + posts)}
+    }
+
+    private fun createEntities(posts: List<GalaxyPost>): List<PostEntity> {
+        return posts.mapNotNull { post ->
+            val position = post.position ?: return@mapNotNull null
+            val galaxy = cache.galaxy.getCachedItem(post.galaxyId)
             PostEntity(post, galaxy, position)
         }
-        geoMap.removeEntities(state.now.posts.map { it.entityId })
-        geoMap.addEntities(entities)
-        state.set { it.copy(posts = entities) }
     }
 }
 
