@@ -2,7 +2,6 @@ side:
 allow upload of galaxy thumbnail
 EventTableDao // td: more precise time conflict handling
 routeBlock.kt // td: retry provideData call n times
-EventScout: new event must appear on map on creation
 
 main:
 galaxy fields:
@@ -18,6 +17,8 @@ trawl front end pages
 change primary color to secondary
 consolidate putRespondBool and put
 add something returned to delete and update endpoints
+EventScout: new event must appear on map on creation
+show galaxy posts on map
 
 abandoned:
 fix the height of outline buttons, make same
