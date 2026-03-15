@@ -45,7 +45,7 @@ fun RenderContext.viewEventEditor(
         column(modify(Gap0)) {
             heading3("What's happening?", modify(Padding1, Dim))
             card(modify(AlignItemsStretch)) {
-                column(modify(QueryRow)) {
+                column(modify(QueryRowMedium)) {
                     imageDrop(model.imageUrlFlow, model::setImageUrl, modify(Flex1, Square))
                     column(modify(Flex3)) {
                         textField(

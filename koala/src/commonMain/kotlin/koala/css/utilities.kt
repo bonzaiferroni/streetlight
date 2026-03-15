@@ -1,11 +1,5 @@
 package koala.css
 
-import kotlinx.css.*
-import kotlinx.css.properties.Animation
-import kotlinx.css.properties.IterationCount
-import kotlinx.css.properties.Timing
-import kotlinx.css.properties.s
-
 // display utilities
 object DisplayNone : Modifier { override val value = "display-none" }
 object Opacity6: Modifier { override val value = "opacity-6" }
@@ -17,6 +11,7 @@ object Glow: Modifier { override val value = "glow" }
 object GlowShadow: Modifier { override val value = "glow-shadow" }
 object GlowBackground: Modifier { override val value = "glow-background" }
 object CircleShape: Modifier { override val value = "circle-shape" }
+object BorderRadius0: Modifier { override val value = "border-radius-0" }
 object BorderRadius1: Modifier { override val value = "border-radius-1" }
 object Accent: Modifier { override val value = "accent" }
 object Primary: Modifier { override val value = "primary" }
@@ -31,7 +26,8 @@ object PrimaryCardBg: Modifier { override val value = "primary-card-bg" }
 // font utilities
 object Bold: Modifier { override val value = "bold" }
 object Italic: Modifier { override val value = "italic" }
-object Large: Modifier { override val value = "large" }
+object SmallFont: Modifier { override val value = "small-font" }
+object LargeFont: Modifier { override val value = "large-font" }
 object Heading1: Modifier { override val value = "heading-1" }
 object Heading2: Modifier { override val value = "heading-2" }
 
@@ -41,6 +37,7 @@ object Gap1: Modifier { override val value = "gap-1" }
 object Gap2: Modifier { override val value = "gap-2" }
 object Gap4: Modifier { override val value = "gap-4" }
 object Gap8: Modifier { override val value = "gap-8" }
+object GapTiny: Modifier { override val value = "gap-tiny" }
 object Flex1: Modifier { override val value = "flex-1" }
 object Flex2: Modifier { override val value = "flex-2" }
 object Flex3: Modifier { override val value = "flex-3" }
@@ -103,8 +100,10 @@ object Start: Modifier { override val value = "start" }
 object End: Modifier { override val value = "end" }
 object Center: Modifier { override val value = "center" }
 object CenterItems: Modifier { override val value = "center-items" }
+object Padding0: Modifier { override val value = "padding-0" }
 object Padding1: Modifier { override val value = "padding-1" }
 object Padding2: Modifier { override val value = "padding-2" }
+object PaddingTiny: Modifier { override val value = "padding-tiny" }
 object Margin1: Modifier { override val value = "margin-1" }
 object Margin2: Modifier { override val value = "margin-2" }
 object JustifySelfEnd: Modifier { override val value = "justify-self-end" }

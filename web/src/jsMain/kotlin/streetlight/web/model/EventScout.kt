@@ -19,7 +19,6 @@ import streetlight.model.data.EventEdit
 import streetlight.model.data.Galaxy
 import streetlight.model.data.GalaxyId
 import streetlight.model.data.GalaxyPost
-import streetlight.model.data.GalaxyPostRow
 import streetlight.model.data.GalaxyPostEdit
 import streetlight.model.data.Location
 import streetlight.model.data.LocationEdit
@@ -29,7 +28,7 @@ import streetlight.model.data.mergeLeft
 import streetlight.model.data.mergeRight
 import streetlight.model.data.toEdit
 import streetlight.model.external.toPlace
-import streetlight.web.io.SvgPath
+import streetlight.web.ui.SvgPath
 import streetlight.web.ui.ViewModel
 
 class EventScout(

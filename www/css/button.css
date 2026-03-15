@@ -103,7 +103,7 @@
     box-shadow: 0 0 .8rem var(--primary-button);
 }
 
-/* optional: keyboard focus ring if you add tabindex */
+/* optional: keyboard focus.svg ring if you add tabindex */
 .switch:focus-visible {
     outline: 2px solid color-mix(in srgb, var(--primary-button) 70%, white);
     outline-offset: 2px;

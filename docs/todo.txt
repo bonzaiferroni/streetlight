@@ -1,17 +1,19 @@
-side:
+# SIDE:
 allow upload of galaxy thumbnail
 EventTableDao // td: more precise time conflict handling
 routeBlock.kt // td: retry provideData call n times
 
-main:
+# MAIN:
 galaxy fields:
     description
 wireMapPanel // td: gather posts from json in html
+add visibility/interest to GalaxyPost
+fee: entry/ticket distinction
 
-before server update:
+# BEFORE UPDATE:
 stop caching html in UrlReader
 
-done:
+# DONE:
 go over
 trawl front end pages
 change primary color to secondary
@@ -20,8 +22,9 @@ add something returned to delete and update endpoints
 EventScout: new event must appear on map on creation
 show galaxy posts on map
 GalaxyProfile: show post list under map
+viewGalaxyProfile: Show post list under map as table
 
-abandoned:
+# ABANDONED:
 fix the height of outline buttons, make same
 set LIGHT style to something easier on the eyes
 add content to deletePage

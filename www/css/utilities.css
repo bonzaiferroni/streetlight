@@ -71,8 +71,12 @@
     gap: 0 !important;
 }
 
-p.large {
+.large-font {
     font-size: 1.4rem;
+}
+
+.small-font {
+    font-size: 0.8rem;
 }
 
 .text-align-center {
@@ -87,6 +91,10 @@ p.large {
     border-radius: 50%;
     overflow: hidden;
     border: 3px solid #b4bd7d;
+}
+
+.border-radius-0 {
+    border-radius: 0;
 }
 
 .border-radius-1 {
@@ -196,12 +204,20 @@ p.large {
     justify-content: flex-end;
 }
 
+.padding-0 {
+    padding: 0;
+}
+
 .padding-1 {
     padding: var(--unit-spacing);
 }
 
 .padding-2 {
     padding: calc(var(--unit-spacing) * 2);
+}
+
+.padding-tiny {
+    padding: 2px;
 }
 
 .margin-1 {
@@ -250,6 +266,10 @@ p.large {
 
 .gap-8 {
     gap: calc(var(--unit-spacing) * 8);
+}
+
+.gap-tiny {
+    gap: 2px;
 }
 
 .align-items-start {

@@ -1,18 +1,8 @@
 package streetlight.web.shells
 
-import kampfire.utils.takeEllipsis
 import koala.css.ModifierSet
-import koala.css.Width100
-import koala.css.modify
-import koala.html.AppRoute
 import koala.html.SiteImage
-import koala.html.ThumbImage
-import koala.html.action
-import koala.html.card
 import koala.html.cardOf
-import koala.html.image
-import koala.html.row
-import koala.html.textBlock
 import kotlinx.html.FlowContent
 import streetlight.model.data.Event
 import streetlight.model.data.EventInfo

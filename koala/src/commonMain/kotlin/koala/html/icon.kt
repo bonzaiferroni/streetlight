@@ -16,7 +16,7 @@ fun FlowContent.icon(
 ) {
     div {
         applyModifiers(modify(ElementClass.icon, modifiers))
-        style = "--mask-src: url('/www/svg/$src.svg');"
+        style = "--mask-src: url('$src');"
         block?.invoke(this)
     }
 }

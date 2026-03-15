@@ -36,7 +36,7 @@ fun RenderContext.signInContent(
     val cred = gate.cred
     val portal = app.portal
 
-    column(modify(QueryRow, FlexItems1)) {
+    column(modify(QueryRowMedium, FlexItems1)) {
         card {
             flowBlock(gate.messageFlow) { msg ->
                 if (msg == null) {

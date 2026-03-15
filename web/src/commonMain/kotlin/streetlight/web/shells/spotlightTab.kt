@@ -3,22 +3,14 @@ package streetlight.web.shells
 import koala.css.AlignItemsStart
 import koala.css.Dim
 import koala.css.FlexItems1
-import koala.css.QueryRow
+import koala.css.QueryRowMedium
 import koala.css.modify
-import koala.html.button
 import koala.html.column
 import koala.html.heading3
 import koala.html.textBlock
 import kotlinx.html.FlowContent
-import streetlight.model.data.Event
 import streetlight.model.data.Galaxy
 import streetlight.model.data.GalaxyPost
-import streetlight.model.data.Location
-import streetlight.web.ChatRoute
-import streetlight.web.OldEventScoutRoute
-import streetlight.web.CreateLocationRoute
-import streetlight.web.EditPostRoute
-import streetlight.web.SandboxRoute
 import streetlight.web.pages.appFooter
 
 fun FlowContent.spotlightTab(content: SpotlightContent) {
@@ -31,7 +23,7 @@ fun FlowContent.spotlightTab(content: SpotlightContent) {
                 cardOf(galaxy)
             }
         }
-        column(modify(QueryRow, FlexItems1, AlignItemsStart)) {
+        column(modify(QueryRowMedium, FlexItems1, AlignItemsStart)) {
             column {
                 heading3("Posts")
                 posts.forEach { post ->

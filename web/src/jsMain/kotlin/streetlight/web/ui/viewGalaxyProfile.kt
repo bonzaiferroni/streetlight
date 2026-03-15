@@ -1,14 +1,12 @@
 package streetlight.web.ui
 
 import koala.dom.*
-import kotlinx.coroutines.launch
-import streetlight.model.data.Galaxy
 import streetlight.web.GalaxyPathIdRoute
 import streetlight.web.model.Streetlight
 import streetlight.web.shells.GalaxyShell
 import streetlight.web.shells.GalaxyShellContent
-import streetlight.web.shells.cardOf
 import streetlight.web.shells.galaxyShell
+import streetlight.web.shells.gridOf
 
 fun RenderContext.viewGalaxyProfile(app: Streetlight, content: GalaxyShellContent) {
     shellBox(GalaxyShell.galaxyBoxId, app.geoMap, app.appScope) {
@@ -18,7 +16,7 @@ fun RenderContext.viewGalaxyProfile(app: Streetlight, content: GalaxyShellConten
     wireBlock(GalaxyShell.mapPanelId) {
         column {
             content.posts.forEach { post ->
-                cardOf(post)
+                gridOf(post)
             }
         }
     }

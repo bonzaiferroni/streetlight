@@ -32,6 +32,7 @@ kotlin {
                 implementation(libs.kotlinx.html)
                 implementation(project(":model"))
                 implementation(project(":koala"))
+                implementation(project(":kabinet"))
             }
         }
 

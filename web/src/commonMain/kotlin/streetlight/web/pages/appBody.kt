@@ -28,6 +28,7 @@ import kotlinx.html.body
 import streetlight.web.AccountRoute
 import streetlight.web.FullMapRoute
 import streetlight.web.HomeRoute
+import streetlight.web.ui.SvgPath
 
 fun HTML.appBody(
     block: (DIV.() -> Unit)? = null
@@ -60,10 +61,10 @@ fun FlowContent.appHeader() {
             }
         }
         action(FullMapRoute, modify(Height6, Opacity2)) {
-            icon("chevron-down", modify(Height100))
+            icon(SvgPath.chevronDown, modify(Height100))
         }
         action(AccountRoute, modify(Height6, Opacity2)) {
-            icon("empty-profile", modify(Height100))
+            icon(SvgPath.emptyProfile, modify(Height100))
         }
     }
 }

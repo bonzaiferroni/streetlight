@@ -1,4 +1,4 @@
-package streetlight.web.io
+package streetlight.web.ui
 
 object SvgPath {
     val bus = toPath("bus")
@@ -7,6 +7,12 @@ object SvgPath {
     val meet = toPath("social")
     val train = toPath("train")
     val transitStop = toPath("transit-stop")
+    val focus = toPath("focus")
+    val chevronDown = toPath("chevron-down")
+    val emptyProfile = toPath("empty-profile")
+    val flame = toPath("flame")
+    val starOutline = toPath("star-outline")
+    val starFilled = toPath("star-filled")
 }
 
 private fun toPath(filename: String) = "/www/svg/$filename.svg"

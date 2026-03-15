@@ -11,7 +11,8 @@ import kotlinx.css.gap
 
 object Column : Modifier { override val value = "column" }
 object Row : Modifier { override val value = "row" }
-object QueryRow: Modifier { override val value = "query-row" }
+object QueryRowMedium: Modifier { override val value = "query-row-medium" }
+object QueryRowLarge: Modifier { override val value = "query-row-large" }
 object Card : Modifier { override val value = "card" }
 object Box : Modifier { override val value = "box"}
 

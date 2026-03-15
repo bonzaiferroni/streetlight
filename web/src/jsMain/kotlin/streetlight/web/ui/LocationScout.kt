@@ -17,7 +17,6 @@ import streetlight.model.data.mergeLeft
 import streetlight.model.data.mergeRight
 import streetlight.model.data.toEdit
 import streetlight.model.external.toPlace
-import streetlight.web.io.SvgPath
 import streetlight.web.model.Streetlight
 import streetlight.web.model.IconEntity
 

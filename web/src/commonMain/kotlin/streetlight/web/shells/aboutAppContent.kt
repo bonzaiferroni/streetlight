@@ -11,14 +11,14 @@ import streetlight.web.pages.appFooter
 
 fun FlowContent.aboutApp() {
     column(modify(AlignItemsCenter)) {
-        column(modify(QueryRow, AlignItemsCenter)) {
+        column(modify(QueryRowMedium, AlignItemsCenter)) {
             lottie("cup_stack", modify(Flex1, MaxWidth50))
             val introText = "Streetlight is your front page for community events. " +
 //                    "Its first and only mission is to bring people together. " +
                     "It is cross-platform, open-source, and 100% Kotlin. "
-            textBlock(introText, modify(Flex3, Large))
+            textBlock(introText, modify(Flex3, LargeFont))
         }
-        column(modify(QueryRow, AlignItemsCenter)) {
+        column(modify(QueryRowMedium, AlignItemsCenter)) {
             lottie("dancing_man", modify(Flex1, MaxWidth50))
             column(modify(Flex3)) {
                 column(modify(Gap0)) {
@@ -29,7 +29,7 @@ fun FlowContent.aboutApp() {
                 textBlock("Consider downloading Streetlight to see what it can offer.", modify(Bold))
             }
         }
-        column(modify(QueryRow, AlignItemsCenter)) {
+        column(modify(QueryRowMedium, AlignItemsCenter)) {
             lottie("playful_cat", modify(Flex1, MaxWidth50))
             column(modify(Flex3)) {
                 textBlock {
@@ -50,7 +50,7 @@ fun FlowContent.aboutApp() {
                     +"The nature of our work supports a level of collaboration as yet unrealized in human history. "
                     +"We are like giants who stand on the shoulders of other giants, each one reaching higher. "
                 }
-                textBlock("It's giants all the way down.", modify(Large))
+                textBlock("It's giants all the way down.", modify(LargeFont))
             }
         }
         column(modify(Gap0, AlignItemsStretch, Width100, MarginTop4)) {
