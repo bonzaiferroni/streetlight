@@ -2,31 +2,21 @@
 
 package streetlight.web.model
 
-import kampfire.model.GeoBounds
-import kampfire.model.GeoPoint
 import koala.model.GeoMap
 import koala.model.MapContextId
 import koala.model.mapDistinct
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
 import streetlight.model.data.Galaxy
 import streetlight.model.data.EventInfo
+import streetlight.model.data.GalaxyPost
 import streetlight.model.data.Location
-import streetlight.model.data.LocationInfo
-import streetlight.model.data.Spirit
-import streetlight.model.data.SpiritFrame
-import streetlight.model.data.SpiritId
-import streetlight.web.io.SpiritSocket
-import kotlin.time.Duration.Companion.minutes
 
 class StreetMap(
     private val scope: CoroutineScope,
     private val client: ClientContext,
+    private val cache: UserCache,
     private val geoMap: GeoMap,
 ) {
     private val state = storeOf(StreetMapState())
@@ -34,137 +24,30 @@ class StreetMap(
     val stateNow = state.now
     
     val transit = TransitMap(scope, client, geoMap)
-    val spiritVision = SpiritSocket(client.api, scope)
 
-    val focusFlow = stateFlow.mapDistinct { it.focus }
     val communityFlow = stateFlow.mapDistinct { it.galaxies }
-    val locationsFlow = stateFlow.mapDistinct { it.locations }
 
-    init {
-        scope.launch {
-            launch {
-                geoMap.stateFlow.filter { it.isViewed }.collect { geoMapState ->
-                    setBounds(geoMapState.center, geoMapState.bounds, geoMapState.zoom)
-                    if (!geoMapState.isMoving) {
-                        spiritVision.updatePosition(geoMapState.center)
-                    }
-                }
-            }
-            launch {
-                spiritVision.spiritFlow.collect { frame ->
-                    when (frame) {
-                        is SpiritFrame.Initial -> geoMap.addEntity(SpiritEntity(frame.spirit))
-                        is SpiritFrame.Position -> geoMap.moveEntity(frame.id.toEntityId(), frame.pos)
-                    }
-                }
-            }
+    fun setPosts(posts: List<GalaxyPost>) {
+        val entities = posts.mapNotNull { post ->
+            val galaxy = cache.galaxy.getCachedItem(post.galaxyId) ?: return@mapNotNull null
+            val position = post.location?.geoPoint ?: return@mapNotNull null
+            PostEntity(post, galaxy, position)
         }
+        geoMap.removeEntities(state.now.posts.map { it.entityId })
+        geoMap.addEntities(entities)
+        state.set { it.copy(posts = entities) }
     }
-
-//    fun toggleLayer(layer: StreetMapLayer) {
-//        val layers = if (stateNow.layers.contains(layer)) stateNow.layers - layer else stateNow.layers + layer
-//        if (layer.eventType != null) {
-//            val events = getBoundedLocations(layers = layers)
-//            state.set { it.copy(layers = layers, locations = events) }
-//        } else {
-//            state.set { it.copy(layers = layers) }
-//        }
-//    }
-
-    private val allLocations = ArrayList<LocationInfo>()
-
-    fun setBounds(center: GeoPoint, bounds: GeoBounds, zoom: Float) {
-        if (stateNow.isQuerying) return
-
-        if (hasQueried(bounds)) {
-            val locations = getBoundedLocations(bounds)
-            state.set { it.copy(center = center, bounds = bounds, zoom = zoom, locations = locations)}
-        } else {
-            val queriedBounds = bounds.expandBy(1.2f)
-            queries.add(QueryBounds(Clock.System.now(), queriedBounds))
-            state.set { it.copy(
-                center = center,
-                bounds = bounds,
-                zoom = zoom,
-                queriedBounds = queriedBounds,
-                isQuerying = true
-            )}
-            scope.launch {
-                val locations = client.api.readLocationsInBounds(queriedBounds) ?: emptyList()
-                val mapEntities = locations.mapNotNull { info ->
-                    if (allLocations.any { it.locationId == info.locationId }) return@mapNotNull null
-                    allLocations.add(info)
-                    val events = info.events
-                    if (!events.isNullOrEmpty()) {
-                        EventEntity(streetMapId, info.location, events)
-                    } else {
-                        LocationEntity(streetMapId, info.location)
-                    }
-                }
-                geoMap.addEntities(mapEntities)
-                val boundedLocations = getBoundedLocations(bounds)
-                state.set { it.copy(locations = boundedLocations, isQuerying = false)}
-            }
-        }
-    }
-
-    fun spiritVision(isOn: Boolean) {
-        val spirit = Spirit(
-            spiritId = SpiritId.random(),
-            position = geoMap.stateNow.center,
-            name = stateNow.spiritName
-        )
-        if (isOn) {
-            spiritVision.connect(spirit)
-        } else {
-            spiritVision.disconnect()
-        }
-    }
-
-    private val queries = ArrayList<QueryBounds>()
-
-    private fun hasQueried(bounds: GeoBounds): Boolean {
-        val now = Clock.System.now()
-        val cutoff = now - 1.minutes
-        return queries.any { it.bounds.contains(bounds) && it.time > cutoff }
-    }
-
-    private fun getBoundedLocations(
-        bounds: GeoBounds = stateNow.bounds,
-        layers: Set<StreetMapLayer> = stateNow.layers
-    ) = allLocations.filter { location -> bounds.contains(location.geoPoint) }
 }
 
 data class StreetMapState(
-    val center: GeoPoint = GeoPoint.Denver,
-    val bounds: GeoBounds = GeoBounds.Denver,
-    val queriedBounds: GeoBounds = GeoBounds.Denver,
-    val zoom: Float = 11f,
-    val locations: List<LocationInfo> = emptyList(),
     val galaxies: List<Galaxy> = emptyList(),
+    val posts: List<PostEntity> = emptyList(),
     val focus: MapFocus = MapFocus(),
-    val layers: Set<StreetMapLayer> = StreetMapLayer.entries.toSet(),
-    val isQuerying: Boolean = false,
-    val hasSpiritVision: Boolean = false,
-    val spiritName: String = "👻"
 )
 
 data class MapFocus(
     val location: Location? = null,
     val event: EventInfo? = null,
-)
-
-enum class StreetMapLayer(val label: String, val color: String) {
-    Shows("Shows", "#bd7dae"),
-    Meet("Meet", "#7dbd8f"),
-    Food("Food", "#bd9a7d"),
-    Transit("Transit", "#7daebd"),
-    Shelter("Shelter", "#b4bd7d");
-}
-
-data class QueryBounds(
-    val time: Instant,
-    val bounds: GeoBounds,
 )
 
 const val streetMapId: MapContextId = "StreetMap"

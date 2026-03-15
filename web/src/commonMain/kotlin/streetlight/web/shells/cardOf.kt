@@ -1,5 +1,6 @@
 package streetlight.web.shells
 
+import kampfire.utils.takeEllipsis
 import koala.css.ModifierSet
 import koala.css.Width100
 import koala.css.modify
@@ -16,6 +17,7 @@ import kotlinx.html.FlowContent
 import streetlight.model.data.Event
 import streetlight.model.data.EventInfo
 import streetlight.model.data.Galaxy
+import streetlight.model.data.GalaxyPost
 import streetlight.model.data.Location
 import streetlight.web.EventIdRoute
 import streetlight.web.GalaxyPathIdRoute
@@ -35,4 +37,13 @@ fun FlowContent.cardOf(event: EventInfo) {
 
 fun FlowContent.cardOf(galaxy: Galaxy) {
     cardOf(GalaxyPathIdRoute(galaxy.pathId), galaxy.name, SiteImage.placeholderThumb, galaxy.description)
+}
+
+fun FlowContent.cardOf(post: GalaxyPost) {
+    val route = post.event?.eventId?.let { EventIdRoute(it) }
+        ?: post.location?.locationId?.let { LocationProfileRoute(it) }
+        ?: return
+    val title = post.title ?: return
+    val thumbUrl = post.thumbUrl ?: SiteImage.placeholderThumb
+    cardOf(route, title, thumbUrl, post.description)
 }

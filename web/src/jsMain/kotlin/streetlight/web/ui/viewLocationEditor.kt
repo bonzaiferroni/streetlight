@@ -51,7 +51,7 @@ fun RenderContext.viewLocationEditor(
             onUpload = { app.client.api.uploadEventImage(it) },
             onValueChanged = model::setImageUrl,
             urlFlow = imageUrlFlow,
-            choicesFlow = app.userCache.files.flow
+            choicesFlow = app.userCache.file.flow
         )
         textField("name", modify(), model::setPlaceName, nameFlow)
         textField("address", modify(), model::setAddress, model.editFlow.mapDistinct { it.address })

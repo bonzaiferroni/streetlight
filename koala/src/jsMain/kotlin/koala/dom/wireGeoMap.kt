@@ -135,11 +135,11 @@ fun wireMapWindow(
             }
         }
 
-        launch {
-            geoMap.contextIdFlow.collect {
-                context.setContextId(it)
-            }
-        }
+//        launch {
+//            geoMap.contextIdFlow.collect {
+//                context.setContextId(it)
+//            }
+//        }
 
         // relay zoom
         context.setAltitude(widget.getZoom())

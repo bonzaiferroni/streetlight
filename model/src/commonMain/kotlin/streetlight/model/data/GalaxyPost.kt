@@ -1,36 +1,24 @@
 package streetlight.model.data
 
-import kampfire.utils.randomUuidString
+import kampfire.model.GeoPoint
 import kotlinx.datetime.Instant
 import kotlinx.serialization.Serializable
-import kotlin.jvm.JvmInline
 
 @Serializable
 data class GalaxyPost(
-    val galaxyPostId: GalaxyPostId,
+    val postId: GalaxyPostId,
     val galaxyId: GalaxyId,
     val username: String?,
-    val eventId: EventId?,
-    val locationId: LocationId?,
+    val location: Location?,
+    val event: Event?,
+    val title: String?,
     val text: String?,
-    val updatedAt: Instant,
+    val geoPoint: GeoPoint?,
     val createdAt: Instant,
-)
-
-@Serializable
-@JvmInline
-value class GalaxyPostId(override val value: String) : ProjectId {
-    companion object {
-        fun random() = GalaxyPostId(randomUuidString())
-    }
+    val updatedAt: Instant,
+) {
+    val postTitle get() = title ?: event?.title ?: location?.name
+    val thumbUrl get() = event?.thumbUrl ?: location?.thumbUrl
+    val position get() = geoPoint ?: location?.geoPoint
+    val description get() = event?.description ?: location?.description
 }
-
-@Serializable
-data class GalaxyPostEdit(
-    val galaxyPostId: GalaxyPostId? = null,
-    val galaxyId: GalaxyId? = null,
-    val username: String? = null,
-    val eventId: EventId? = null,
-    val locationId: LocationId? = null,
-    val text: String? = null,
-)

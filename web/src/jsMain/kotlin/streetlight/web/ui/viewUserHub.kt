@@ -3,13 +3,12 @@ package streetlight.web.ui
 import kampfire.model.UserInfo
 import koala.css.*
 import koala.dom.*
-import streetlight.web.CreateLocationRoute
+import koala.html.button
 import streetlight.web.EditTalentRoute
 import streetlight.web.HomeRoute
-import streetlight.web.OldEventScoutRoute
 import streetlight.web.GalaxyFoundryRoute
 import streetlight.web.GalaxyListRoute
-import streetlight.web.ScoutMapRoute
+import streetlight.web.SandboxRoute
 import streetlight.web.TalentProfileRoute
 import streetlight.web.model.Streetlight
 
@@ -32,9 +31,7 @@ fun RenderContext.viewUserHub(
         card {
             row {
                 textBlock("Add things to the map.", modify(Flex1))
-                button("post event", onClick = { portal.go(OldEventScoutRoute())})
-                button("post location", onClick = { portal.go(CreateLocationRoute)})
-                button("scout map", onClick = { portal.go(ScoutMapRoute) })
+                button("Go to sandbox", SandboxRoute)
                 button("galaxy foundry", modify(Accent), onClick = { portal.go(GalaxyFoundryRoute)} )
                 button("galaxy list", modify(Accent), onClick = { portal.go(GalaxyListRoute) })
             }
@@ -47,7 +44,7 @@ fun RenderContext.viewUserHub(
             }
         }
 
-        itemsBlock(userCache.talents.flow) { talent ->
+        itemsBlock(userCache.talent.flow) { talent ->
             action(TalentProfileRoute(talent.talentId)) {
                 card {
                     textBlock(talent.name)

@@ -50,7 +50,7 @@ fun viewApp() {
         override val gateAgent = GateAgent(scope, gate, portal)
 
         override val geoMap = GeoMap(scope)
-        override val streetMap = StreetMap(scope, client, geoMap)
+        override val streetMap = StreetMap(scope, client, userCache, geoMap)
         override val chatRoom = ChatRoom(scope, client.api)
     } as Streetlight
 

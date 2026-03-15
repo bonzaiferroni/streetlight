@@ -8,12 +8,15 @@ class UserCache(
     scope: CoroutineScope,
     private val api: ApiClient,
 ) {
-    val talents = ItemCache(scope, { it.talentId }) { api.readTalents() }
-    val songs = ItemCache(scope, { it.songId }) { api.readSongs() }
-    val files = ItemCache(scope, { it }) { api.readUserFiles().also{console.log("yer files")} }
+    val talent = ItemCache(scope, { it.talentId }) { api.readTalents() }
+    val song = ItemCache(scope, { it.songId }) { api.readSongs() }
+    val file = ItemCache(scope, { it }) { api.readUserFiles() }
+    val galaxy = ItemCache(scope, { it.galaxyId }) { api.readGalaxies() }
 
     fun reset() {
-        talents.clear()
-        songs.clear()
+        talent.clear()
+        song.clear()
+        file.clear()
+        galaxy.clear()
     }
 }

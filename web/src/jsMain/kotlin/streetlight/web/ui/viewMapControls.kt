@@ -2,12 +2,9 @@ package streetlight.web.ui
 
 import koala.css.*
 import koala.dom.*
-import koala.html.blockLabel
 import koala.html.textBlock
-import koala.model.mapDistinct
 import streetlight.web.EditEventIdRoute
 import streetlight.web.model.Streetlight
-import streetlight.web.model.StreetMapLayer
 
 fun RenderContext.viewMapControls(app: Streetlight) {
     val gateAgent = app.gateAgent
@@ -38,7 +35,7 @@ fun RenderContext.viewMapControls(app: Streetlight) {
                 }
             })
         }
-        textBlock("Spirit vision allows you to see the focus point of other spirits and they can see yours.")
-        switch("👻 Spirit Vision", onToggle = streetMap::spiritVision)
+//        textBlock("Spirit vision allows you to see the focus point of other spirits and they can see yours.")
+//        switch("👻 Spirit Vision", onToggle = streetMap::spiritVision)
     }
 }

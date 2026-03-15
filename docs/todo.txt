@@ -5,6 +5,7 @@ EventTableDao // td: more precise time conflict handling
 main:
 galaxy fields:
     description
+wireMapPanel // td: gather posts from json in html
 
 before server update:
 stop caching html in UrlReader

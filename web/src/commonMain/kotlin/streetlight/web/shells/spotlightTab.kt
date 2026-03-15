@@ -12,6 +12,7 @@ import koala.html.textBlock
 import kotlinx.html.FlowContent
 import streetlight.model.data.Event
 import streetlight.model.data.Galaxy
+import streetlight.model.data.GalaxyPost
 import streetlight.model.data.Location
 import streetlight.web.ChatRoute
 import streetlight.web.OldEventScoutRoute
@@ -21,7 +22,7 @@ import streetlight.web.SandboxRoute
 import streetlight.web.pages.appFooter
 
 fun FlowContent.spotlightTab(content: SpotlightContent) {
-    val galaxies = content.galaxies; val events = content.events; val locations = content.locations
+    val galaxies = content.galaxies; val posts = content.posts
     column {
         column {
             heading3("Galaxies")
@@ -32,30 +33,18 @@ fun FlowContent.spotlightTab(content: SpotlightContent) {
         }
         column(modify(QueryRow, FlexItems1, AlignItemsStart)) {
             column {
-                heading3("Events")
-                events.take(10).forEach { event ->
-                    cardOf(event)
-                }
-            }
-            column {
-                heading3("Locations")
-                locations.take(10).forEach { location ->
-                    cardOf(location)
+                heading3("Posts")
+                posts.forEach { post ->
+                    cardOf(post)
                 }
             }
         }
 
-        button("Create Event", OldEventScoutRoute())
-        button("Create location", CreateLocationRoute)
-        button("Create story", EditPostRoute())
-        button("Chat", ChatRoute)
-        button("Go to sandbox", SandboxRoute)
         appFooter()
     }
 }
 
 data class SpotlightContent(
     val galaxies: List<Galaxy>,
-    val events: List<Event>,
-    val locations: List<Location>
+    val posts: List<GalaxyPost>
 )

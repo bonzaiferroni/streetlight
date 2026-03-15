@@ -22,12 +22,16 @@ import streetlight.web.HomeRoute
 import streetlight.web.model.Streetlight
 
 fun ViewContext<Streetlight>.wireStreetMap() {
-//    val streetMap = model.streetMap
-//
-//    renderScope.launch {
-//        portal.routeFlowOf<HomeRoute>().collect {
-//        }
-//    }
+    val streetMap = model.streetMap
+
+    renderScope.launch {
+        portal.routeFlowOf<HomeRoute>().collect {
+            val galaxyIds = userCache.galaxy.getItems().map { it.galaxyId }
+            // td: gather initial posts from json in html
+            val posts = api.readPosts(galaxyIds) ?: return@collect
+            streetMap.setPosts(posts)
+        }
+    }
 
     wireMapPanel()
 }
@@ -35,48 +39,14 @@ fun ViewContext<Streetlight>.wireStreetMap() {
 fun ViewContext<Streetlight>.wireMapPanel() {
     wireBlock(GeoMapSelector.panel) {
         tabs(Id("map-panel-tabs")) {
-            tab("News") {
+            tab("Posts") {
                 column {
-                    textBlock("yer news")
-                }
-            }
-            tab("Events") {
-                column {
-                    viewMapCards(model)
+                    textBlock("yer posts")
                 }
             }
             tab("Controls") {
                 column {
                     viewMapControls(model)
-                }
-            }
-        }
-    }
-}
-
-fun RenderContext.viewMapCards(app: Streetlight) {
-    val eventMap = app.streetMap
-
-    flowBlock(eventMap.stateFlow.mapDistinct { it.layers }, modify(Width100)) { layers ->
-        container(modify(MapPanel.container)) {
-
-//            layers.forEach { layer ->
-//                val eventType = layer.eventType ?: return@forEach
-//                mapPanelCard(layer.label) {
-//                    itemsBlock(eventMap.flowOf(eventType), modifyCardItems, true) { event ->
-//                        textBlock(event.title)
-//                    }
-//                }
-//            }
-
-            mapPanelCard("Communities") {
-                itemsBlock(eventMap.communityFlow, modifyCardItems, true) { community ->
-                    container(modify(MapPanel.grid, AlignItemsCenter, Height3)) {
-                        image(modifiers = modify(CircleShape, Width100))
-                        textBlock(community.name)
-                        textBlock("4 PM")
-                        textBlock("vis")
-                    }
                 }
             }
         }

@@ -4,6 +4,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
+import kotlin.collections.List
 
 class ItemCache<Item, ItemId>(
     private val scope: CoroutineScope,
@@ -15,8 +16,10 @@ class ItemCache<Item, ItemId>(
     private var isInitialized = false
 
     val flow: Flow<List<Item>> get() {
-        scope.launch {
-            initializeItems()
+        if (!isInitialized) {
+            scope.launch {
+                initializeItems()
+            }
         }
         return _flow
     }
@@ -40,6 +43,11 @@ class ItemCache<Item, ItemId>(
     fun clear() {
         items.clear()
         isInitialized = false
+    }
+
+    suspend fun getItems(): List<Item> {
+        initializeItems()
+        return items
     }
 
     private suspend fun initializeItems() {

@@ -15,7 +15,7 @@ fun RenderContext.editTalentForm(app: Streetlight) {
     val userCache = app.userCache
 
     suspend fun provideEdit(route: EditTalentRoute) = route.talentId?.let {
-        userCache.talents.getItem(it)?.toEdit()
+        userCache.talent.getItem(it)?.toEdit()
     } ?: TalentEdit()
 
     wireRouteTo(portal, TalentEdit(), ::provideEdit) {
@@ -43,7 +43,7 @@ fun RenderContext.editTalentForm(app: Streetlight) {
                     renderScope.launch {
                         val talent = api.editTalent(state.now) ?: return@launch
                         console.log("edit talent: ${talent.name}")
-                        userCache.talents.addItem(talent)
+                        userCache.talent.addItem(talent)
                         portal.goBack()
                     }
                 }

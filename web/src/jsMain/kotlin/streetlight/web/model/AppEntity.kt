@@ -14,13 +14,14 @@ import koala.model.Rgb
 import kotlinx.html.DIV
 import kotlinx.html.p
 import streetlight.model.data.Event
+import streetlight.model.data.Galaxy
+import streetlight.model.data.GalaxyPost
 import streetlight.model.data.Location
 import streetlight.model.data.Spirit
 import streetlight.model.data.SpiritId
 import streetlight.web.shells.cardOf
 
 data class LocationEntity(
-    override val contextId: MapContextId?,
     val location: Location,
 ): PointEntity {
     override val entityId get() = location.locationId.value
@@ -37,7 +38,6 @@ data class LocationEntity(
 }
 
 data class EventEntity(
-    override val contextId: MapContextId,
     val location: Location,
     val events: List<Event>,
 ): PointEntity {
@@ -72,3 +72,14 @@ data class IconEntity(
     override val iconPath: String,
     override val position: GeoPoint
 ): PointEntity
+
+data class PostEntity(
+    val post: GalaxyPost,
+    val galaxy: Galaxy,
+    override val position: GeoPoint,
+): PointEntity {
+    override val entityId get() = post.location?.locationId?.value ?: post.postId.value
+    override val thumbPath get() = post.event?.thumbUrl ?: post.location?.thumbUrl ?: galaxy.thumbUrl
+        ?: SiteImage.placeholderThumb
+    override val light get() = Rgb(240, 100, 180 )
+}

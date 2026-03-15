@@ -28,21 +28,21 @@ fun RenderContext.viewTransitMap(
 
     renderScope.launch {
         launch {
-            streetMap.stateFlow.mapDistinct { it.zoom }.collect { zoom ->
-                if (!markersVisible && zoom >= STOP_ZOOM) {
-                    console.log("showing markers")
-                    markersVisible = true
-                    stopMarkers.forEach { marker ->
-                        marker.setOpacity(1f)
-                    }
-                } else if (markersVisible && zoom < STOP_ZOOM) {
-                    console.log("hiding markers")
-                    markersVisible = false
-                    stopMarkers.forEach { marker ->
-                        marker.setOpacity(0f)
-                    }
-                }
-            }
+//            streetMap.stateFlow.mapDistinct { it.zoom }.collect { zoom ->
+//                if (!markersVisible && zoom >= STOP_ZOOM) {
+//                    console.log("showing markers")
+//                    markersVisible = true
+//                    stopMarkers.forEach { marker ->
+//                        marker.setOpacity(1f)
+//                    }
+//                } else if (markersVisible && zoom < STOP_ZOOM) {
+//                    console.log("hiding markers")
+//                    markersVisible = false
+//                    stopMarkers.forEach { marker ->
+//                        marker.setOpacity(0f)
+//                    }
+//                }
+//            }
         }
 
         launch {

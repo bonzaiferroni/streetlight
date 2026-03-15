@@ -10,7 +10,7 @@ import streetlight.web.shells.SpotlightContent
 import streetlight.web.shells.homeShell
 
 fun ViewContext<Streetlight>.viewHome() {
-    val content = SpotlightContent(emptyList(), emptyList(), emptyList())
+    val content = SpotlightContent(emptyList(), emptyList())
     shellBox(HomeShell.homeBoxId, model.geoMap, model.appScope) {
         homeShell(content)
     }
