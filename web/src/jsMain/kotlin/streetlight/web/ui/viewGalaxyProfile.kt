@@ -7,11 +7,20 @@ import streetlight.web.GalaxyPathIdRoute
 import streetlight.web.model.Streetlight
 import streetlight.web.shells.GalaxyShell
 import streetlight.web.shells.GalaxyShellContent
+import streetlight.web.shells.cardOf
 import streetlight.web.shells.galaxyShell
 
 fun RenderContext.viewGalaxyProfile(app: Streetlight, content: GalaxyShellContent) {
     shellBox(GalaxyShell.galaxyBoxId, app.geoMap, app.appScope) {
         galaxyShell(content)
+    }
+
+    wireBlock(GalaxyShell.mapPanelId) {
+        column {
+            content.posts.forEach { post ->
+                cardOf(post)
+            }
+        }
     }
 
     app.streetMap.setPosts(content.posts)

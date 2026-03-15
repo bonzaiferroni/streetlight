@@ -19,6 +19,7 @@ consolidate putRespondBool and put
 add something returned to delete and update endpoints
 EventScout: new event must appear on map on creation
 show galaxy posts on map
+GalaxyProfile: show post list under map
 
 abandoned:
 fix the height of outline buttons, make same

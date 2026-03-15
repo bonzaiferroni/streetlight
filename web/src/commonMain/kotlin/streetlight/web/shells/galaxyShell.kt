@@ -37,6 +37,7 @@ fun FlowContent.galaxyShell(content: GalaxyShellContent) {
             tab("Map") {
                 column {
                     geoMapMount()
+                    box(GalaxyShell.mapPanelId)
                 }
             }
             tab("Talk") {
@@ -48,6 +49,7 @@ fun FlowContent.galaxyShell(content: GalaxyShellContent) {
 
 object GalaxyShell {
     val galaxyBoxId = Id("galaxy-box")
+    val mapPanelId = Id("galaxy-map-panel")
 }
 
 @Serializable
