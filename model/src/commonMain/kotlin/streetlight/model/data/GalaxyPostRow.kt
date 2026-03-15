@@ -13,7 +13,7 @@ data class GalaxyPostRow(
     val username: String?,
     val eventId: EventId?,
     val locationId: LocationId?,
-    val title: String?,
+    val title: String,
     val text: String?,
     val geoPoint: GeoPoint?,
     val updatedAt: Instant,
@@ -38,4 +38,6 @@ data class GalaxyPostEdit(
     val title: String? = null,
     val text: String? = null,
     val geoPoint: GeoPoint? = null,
-)
+) {
+    val isValid get () = !title.isNullOrBlank()
+}

@@ -192,7 +192,8 @@ class EventScout(
             val post = api.createPost(GalaxyPostEdit(
                 galaxyId = galaxyId,
                 eventId = event.eventId,
-                locationId = location.locationId
+                locationId = location.locationId,
+                title = event.title,
             ))
             if (post != null) {
                 state.set { it.copy(posts = it.posts + post)}

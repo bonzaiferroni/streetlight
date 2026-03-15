@@ -34,7 +34,7 @@ fun FlowContent.cardOf(
     description: String?,
     modifiers: ModifierSet? = null,
 ) {
-    card(modifiers) {
+    card(modify(Width100, modifiers)) {
         row(modify(Height8, AlignItemsStart)) {
             thumbUrl?.let {
                 image(thumbUrl, modify(Height100, Square, BorderRadius1))
@@ -50,13 +50,17 @@ fun FlowContent.cardOf(
 }
 
 fun FlowContent.cardOf(
-    route: AppRoute,
+    route: AppRoute?,
     title: String,
     thumbUrl: String?,
     description: String?,
     modifiers: ModifierSet? = null,
 ) {
-    action(route, modifiers) {
-        cardOf(title, thumbUrl, description)
+    if (route != null) {
+        action(route, modifiers) {
+            cardOf(title, thumbUrl, description)
+        }
+    } else {
+        cardOf(title, thumbUrl, description, modifiers)
     }
 }

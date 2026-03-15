@@ -1,6 +1,8 @@
 side:
 allow upload of galaxy thumbnail
 EventTableDao // td: more precise time conflict handling
+routeBlock.kt // td: retry provideData call n times
+EventScout: new event must appear on map on creation
 
 main:
 galaxy fields:

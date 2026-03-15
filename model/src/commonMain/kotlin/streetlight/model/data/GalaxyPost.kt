@@ -11,13 +11,12 @@ data class GalaxyPost(
     val username: String?,
     val location: Location?,
     val event: Event?,
-    val title: String?,
+    val title: String,
     val text: String?,
     val geoPoint: GeoPoint?,
     val createdAt: Instant,
     val updatedAt: Instant,
 ) {
-    val postTitle get() = title ?: event?.title ?: location?.name
     val thumbUrl get() = event?.thumbUrl ?: location?.thumbUrl
     val position get() = geoPoint ?: location?.geoPoint
     val description get() = event?.description ?: location?.description
