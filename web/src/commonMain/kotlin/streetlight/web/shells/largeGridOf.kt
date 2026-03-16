@@ -2,11 +2,13 @@ package streetlight.web.shells
 
 import kabinet.utils.toRelativeDayFormat
 import koala.css.*
+import koala.html.box
 import koala.html.button
 import koala.html.card
 import koala.html.column
 import koala.html.heading3
 import koala.html.heading4
+import koala.html.heading5
 import koala.html.icon
 import koala.html.imageWithBackdrop
 import koala.html.row
@@ -20,21 +22,23 @@ fun FlowContent.largeGridOf(post: GalaxyPost) {
         column(modify(QueryLargeRow, AlignItemsStretch, Gap0)) {
 
             // non-grid content
-            column(modify(Flex2, QueryMediumRow, AlignItemsStart, Padding1)) {
+            column(modify(Flex3, QueryMediumRow, AlignItemsStretch, Gap0)) {
                 post.imageUrl?.let { imageUrl ->
-                    imageWithBackdrop(imageUrl, modify(Flex1, MinHeight16, BorderRadius1, AlignSelfStretch))
+                    imageWithBackdrop(imageUrl, modify(Flex1, MinHeight24, AlignSelfStretch))
                 }
-                column(modify(Flex2)) {
+                column(modify(Flex2, Padding1, AlignItemsStretch)) {
                     row {
                         column(modify(Flex1, Gap0)) {
                             heading3(post.title)
                             post.location?.let { location ->
-                                textBlock(location.name, modify(Dim))
+                                textBlock("${location.name}, ${location.city}", modify(Dim))
                             }
                         }
                     }
                     post.description?.let { description ->
-                        textBlock(description, modify(Flex1, MaxHeight8, SmallFont, OverflowHidden))
+                        box(modify(Flex1, SmallFont, OverflowHidden, FadeBottom, RelativeParent, MinHeight8)) {
+                            textBlock(description)
+                        }
                     }
                     row {
                         button("their music")
@@ -45,28 +49,33 @@ fun FlowContent.largeGridOf(post: GalaxyPost) {
             }
 
             // grid content
-            row(modify(Flex1, MinHeight8, FlexItems1, AlignItemsStretch, GapTiny, TextAlignCenter, WrapFlex)) {
+            row(modify(Flex1, MinHeight8, FlexItems1, AlignItemsStretch, GapTiny, TextAlignCenter, WrapFlex, SmallFont)) {
                 val cellModifiers = modify(AlignItemsCenter, Gap0, BorderRadius0, JustifyCenter, MinWidth16)
                 card(cellModifiers) {
-                    post.location?.let { location ->
-                        textBlock(location.name)
-                    }
-                }
-                card(cellModifiers) {
                     post.event?.startsAt?.let { startsAt ->
-                        heading4(startsAt.toRelativeDayFormat())
-                        textBlock("8:00 PM")
+                        row(modify(WrapFlex, JustifyCenter, Gap0)) {
+                            heading5(startsAt.toRelativeDayFormat())
+                            textBlock("8:00 PM", modify(MarginLeft1))
+                        }
                     }
                 }
                 card(cellModifiers) {
                     post.event?.cost?.let {
-                        textBlock("Tickets", modify(Dim, SmallFont))
-                        textBlock("$$it")
+                        row(modify(WrapFlex, JustifyCenter, Gap0)) {
+                            textBlock("tickets:", modify(Dim))
+                            textBlock("$$it", modify(MarginLeft1))
+                        }
+                    }
+                }
+                card(cellModifiers) {
+                    row(modify(WrapFlex, JustifyCenter, Gap0)) {
+                        textBlock("from:", modify(Dim))
+                        textBlock(post.username ?: "anonymous", modify(MarginLeft1))
                     }
                 }
                 card(cellModifiers) {
                     row(modify(WidthAuto)) {
-                        textBlock("31")
+                        textBlock(post.visibility.toString())
                         icon(SvgPath.starOutline, modify(Height100, Square))
                     }
                 }

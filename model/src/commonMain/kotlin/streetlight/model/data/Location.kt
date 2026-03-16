@@ -33,7 +33,9 @@ data class Location(
     val createdAt: Instant,
     // td: openedAt: LocalDate
     // td: LocationTags
-)
+) {
+    val city: String get() = "Denver"
+}
 
 @JvmInline @Serializable
 value class LocationId(override val value: String): ProjectId {

@@ -21,4 +21,5 @@ data class GalaxyPost(
     val imageUrl get() = event?.imageUrl ?: location?.imageUrl
     val position get() = geoPoint ?: location?.geoPoint
     val description get() = event?.description ?: location?.description
+    val visibility get() = 0
 }
