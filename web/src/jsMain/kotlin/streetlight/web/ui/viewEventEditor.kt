@@ -56,7 +56,18 @@ fun RenderContext.viewEventEditor(
                             textModifiers = modify(Heading2),
                             placeholder = "Event Title"
                         )
-                        textField(placeholder = "Add a tag")
+                        row {
+                            flowBlock(model.isFreeFlow) { isFree ->
+                                row {
+                                    checkBox("Free event", model::setFree, model.isFreeFlow)
+                                    if (!isFree) {
+                                        textField("cost", onChangeValue = model::setCost, bindFlow = model.costFlow)
+                                    }
+                                }
+                            }
+
+                            textField(placeholder = "Add a tag")
+                        }
                     }
                 }
                 textEditor(
@@ -97,12 +108,12 @@ fun RenderContext.viewEventEditor(
             }
         }
 
-//        column(modify(Gap0)) {
-//            heading3("Who?", modify(Padding1, Dim))
-//            card {
-//                textBlock("yer who")
-//            }
-//        }
+        column(modify(Gap0)) {
+            heading3("Who?", modify(Padding1, Dim))
+            card {
+                textBlock("yer who")
+            }
+        }
     }
 }
 

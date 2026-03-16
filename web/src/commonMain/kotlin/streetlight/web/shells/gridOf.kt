@@ -61,14 +61,13 @@ fun FlowContent.gridOf(post: GalaxyPost) {
                     }
                 }
                 card(cellModifiers) {
-                    textBlock("Tickets", modify(Dim, SmallFont))
-                    textBlock("$10")
                     post.event?.cost?.let {
-
+                        textBlock("Tickets", modify(Dim, SmallFont))
+                        textBlock("$$it")
                     }
                 }
                 card(cellModifiers) {
-                    row(modify(WidthAuto, Gap0)) {
+                    row(modify(WidthAuto)) {
                         textBlock("31")
                         icon(SvgPath.starOutline, modify(Height100, Square))
                     }

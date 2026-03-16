@@ -34,6 +34,8 @@ class EventEditor(
     val descriptionFlow = stateFlow.mapDistinct { it.event.description ?: "" }
     val titleFlow = stateFlow.mapDistinct { it.event.title }
     val urlFlow = stateFlow.mapDistinct { it.event.link }
+    val isFreeFlow = stateFlow.mapDistinct { it.event.isFree }
+    val costFlow = stateFlow.mapDistinct { it.event.cost?.toString() }
 
     val eventNow get() = stateNow.event
 
@@ -68,6 +70,14 @@ class EventEditor(
 
     fun setImageUrl(url: String?) {
         state.set { it.copy(event = eventNow.copy(imageUrl = url)) }
+    }
+
+    fun setCost(value: String) {
+        setEvent { it.copy(cost = value.toFloatOrNull())}
+    }
+
+    fun setFree(value: Boolean) {
+        setEvent { it.copy(cost = if (value) 0f else null)}
     }
 
     private fun setEvent(provideEvent: (EventEdit) -> EventEdit) {

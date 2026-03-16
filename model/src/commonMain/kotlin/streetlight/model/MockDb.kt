@@ -131,7 +131,7 @@ val mockDb by lazy {
         contact = null,
         invitation = null,
         ageMin = null,
-        cost = null,
+        cost = 0f,
         visibility = null,
         url = null,
         sourceUrl = null,

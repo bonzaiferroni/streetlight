@@ -1,7 +1,7 @@
 :root {
     --black: 9, 13, 13;
     --black-bg: rgb(var(--black));
-    --body-bg: color-mix(in srgb, var(--black-bg) 93%, white);
+    --body-bg: color-mix(in srgb, var(--black-bg) 95%, white);
     --card-bg: rgba(var(--black), .4);
     --tabs-bg: rgba(var(--black), .5);
     --white: 240, 246, 246;
@@ -82,7 +82,7 @@ body::before {
     background:
             radial-gradient(circle at 18% 22%, rgba(var(--light-1), 0.4) 0%, transparent 50%),
             radial-gradient(circle at 82% 20%, rgba(var(--light-2), 0.4) 0%, transparent 48%),
-            radial-gradient(circle at 50% 65%, rgba(var(--light-3), 0.3) 0%, transparent 55%);
+            radial-gradient(circle at 50% 65%, rgba(var(--light-3), 0.3) 0%, transparent 65%);
     filter: hue-rotate(0deg);
     animation: hueSpin 30s linear infinite;
     will-change: filter;

@@ -27,7 +27,7 @@ data class Event(
     val contact: String?,
     val invitation: String?,
     val ageMin: Int?,
-    val cost: Float?,
+    val cost: Float,
     val visibility: Int?,
     val url: String?,
     val sourceUrl: String?,
@@ -73,6 +73,7 @@ data class EventEdit(
     val date: LocalDate? = null,
     val timeZoneId: String? = null,
 ) {
+    val isFree get() = cost == 0f
     val isValid get() = invalidPart == null
     val timeZone get() = try {
         timeZoneId?.let { TimeZone.of(it) }
@@ -87,6 +88,7 @@ data class EventEdit(
         startTime == null -> "start time"
         date == null -> "date"
         timeZoneId == null -> "timezone"
+        cost == null -> "cost"
         else -> null
     }
 

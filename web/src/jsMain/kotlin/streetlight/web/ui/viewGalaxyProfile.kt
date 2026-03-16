@@ -9,14 +9,16 @@ import streetlight.web.shells.galaxyShell
 import streetlight.web.shells.gridOf
 
 fun RenderContext.viewGalaxyProfile(app: Streetlight, content: GalaxyShellContent) {
-    shellBox(GalaxyShell.galaxyBoxId, app.geoMap, app.appScope) {
+    val element = shellBox(GalaxyShell.galaxyBoxId, app.geoMap, app.appScope) {
         galaxyShell(content)
     }
 
-    wireBlock(GalaxyShell.mapPanelId) {
-        column {
-            content.posts.forEach { post ->
-                gridOf(post)
+    element.onView {
+        wireBlock(GalaxyShell.mapPanelId) {
+            column {
+                content.posts.forEach { post ->
+                    gridOf(post)
+                }
             }
         }
     }

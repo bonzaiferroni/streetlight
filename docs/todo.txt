@@ -9,6 +9,7 @@ galaxy fields:
 wireMapPanel // td: gather posts from json in html
 add visibility/interest to GalaxyPost
 fee: entry/ticket distinction
+isFull as a property on Event
 
 # BEFORE UPDATE:
 stop caching html in UrlReader
