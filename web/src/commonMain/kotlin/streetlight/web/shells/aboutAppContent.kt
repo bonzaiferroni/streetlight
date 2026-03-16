@@ -11,14 +11,14 @@ import streetlight.web.pages.appFooter
 
 fun FlowContent.aboutApp() {
     column(modify(AlignItemsCenter)) {
-        column(modify(QueryRowMedium, AlignItemsCenter)) {
+        column(modify(QueryMediumRow, AlignItemsCenter)) {
             lottie("cup_stack", modify(Flex1, MaxWidth50))
             val introText = "Streetlight is your front page for community events. " +
 //                    "Its first and only mission is to bring people together. " +
                     "It is cross-platform, open-source, and 100% Kotlin. "
             textBlock(introText, modify(Flex3, LargeFont))
         }
-        column(modify(QueryRowMedium, AlignItemsCenter)) {
+        column(modify(QueryMediumRow, AlignItemsCenter)) {
             lottie("dancing_man", modify(Flex1, MaxWidth50))
             column(modify(Flex3)) {
                 column(modify(Gap0)) {
@@ -29,7 +29,7 @@ fun FlowContent.aboutApp() {
                 textBlock("Consider downloading Streetlight to see what it can offer.", modify(Bold))
             }
         }
-        column(modify(QueryRowMedium, AlignItemsCenter)) {
+        column(modify(QueryMediumRow, AlignItemsCenter)) {
             lottie("playful_cat", modify(Flex1, MaxWidth50))
             column(modify(Flex3)) {
                 textBlock {

@@ -21,6 +21,7 @@ object ElementClass {
     val headerImage = Css("header-image")
     val wireBlock = Css("wire-block")
     val messageBox = Css("message-box")
+    val imageWithBackdrop = Css("image-with-backdrop")
 }
 
 fun CssBuilder.elementStyles(theme: KoalaTheme) {

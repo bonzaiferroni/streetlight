@@ -18,6 +18,7 @@ data class GalaxyPost(
     val updatedAt: Instant,
 ) {
     val thumbUrl get() = event?.thumbUrl ?: location?.thumbUrl
+    val imageUrl get() = event?.imageUrl ?: location?.imageUrl
     val position get() = geoPoint ?: location?.geoPoint
     val description get() = event?.description ?: location?.description
 }

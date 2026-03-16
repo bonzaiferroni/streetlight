@@ -10,6 +10,7 @@ wireMapPanel // td: gather posts from json in html
 add visibility/interest to GalaxyPost
 fee: entry/ticket distinction
 isFull as a property on Event
+large grid content
 
 # BEFORE UPDATE:
 stop caching html in UrlReader

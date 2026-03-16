@@ -30,7 +30,7 @@ fun FlowContent.galaxyShell(content: GalaxyShellContent) {
                         button("Post Event", EventScoutRoute(galaxy.pathId))
                     }
                     posts.forEach { post ->
-                        cardOf(post)
+                        largeGridOf(post)
                     }
                 }
             }

@@ -8,7 +8,7 @@ import koala.css.Dim
 import koala.css.Flex1
 import koala.css.Flex2
 import koala.css.Blur
-import koala.css.QueryRowMedium
+import koala.css.QueryMediumRow
 import koala.css.Square
 import koala.css.Width100
 import koala.css.modify
@@ -55,7 +55,7 @@ fun RenderContext.placeEditor(
         }
     }
 
-    val element = column(modify(QueryRowMedium, AlignItemsStretch)) {
+    val element = column(modify(QueryMediumRow, AlignItemsStretch)) {
         geoMapMount(geoPoint, modify(Flex1, Square))
         column(modify(Flex2, AlignItemsStretch)) {
             row {

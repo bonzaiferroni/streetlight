@@ -32,3 +32,12 @@ It might also
         * url: web address for more information about the location
         * eventsUrl: web address for more information about upcoming events at the location, like a calendar
         * imageUrl: featured image of the location
+
+
+opacity: .3;
+
+scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y)); 1.2
+
+object-fit: cover;
+
+filter: blur(24px);

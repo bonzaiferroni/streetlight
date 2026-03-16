@@ -2,58 +2,56 @@ package streetlight.web.shells
 
 import kabinet.utils.toRelativeDayFormat
 import koala.css.*
+import koala.html.button
 import koala.html.card
 import koala.html.column
+import koala.html.heading3
 import koala.html.heading4
-import koala.html.heading5
 import koala.html.icon
-import koala.html.image
+import koala.html.imageWithBackdrop
 import koala.html.row
 import koala.html.textBlock
 import kotlinx.html.FlowContent
 import streetlight.model.data.GalaxyPost
 import streetlight.web.ui.SvgPath
 
-fun FlowContent.gridOf(post: GalaxyPost) {
-    // thumbnail
-    // title/description
-
-    // location/distance
-    // time interval
-    // price/availability
-    // visibility/interest/comments
-    val thumbUrl = post.thumbUrl
-    val title = post.title
-    val description = post.description
+fun FlowContent.largeGridOf(post: GalaxyPost) {
     card(modify(Padding0, OverflowHidden)) {
         column(modify(QueryLargeRow, AlignItemsStretch, Gap0)) {
-            row(modify(Height16, AlignItemsStart, Padding1)) {
-                thumbUrl?.let {
-                    image(thumbUrl, modify(Height100, Square, BorderRadius1))
+
+            // non-grid content
+            column(modify(Flex2, QueryMediumRow, AlignItemsStart, Padding1)) {
+                post.imageUrl?.let { imageUrl ->
+                    imageWithBackdrop(imageUrl, modify(Flex1, MinHeight16, BorderRadius1, AlignSelfStretch))
                 }
-                column(modify(Flex1, Height100)) {
+                column(modify(Flex2)) {
                     row {
                         column(modify(Flex1, Gap0)) {
-                            heading5(title)
+                            heading3(post.title)
                             post.location?.let { location ->
                                 textBlock(location.name, modify(Dim))
                             }
                         }
-                        icon(SvgPath.focus, modify(Height100, Square, Dim))
                     }
-                    description?.let {
-                        textBlock(description, modify(Flex1, SmallFont, Height2, OverflowHidden))
+                    post.description?.let { description ->
+                        textBlock(description, modify(Flex1, MaxHeight8, SmallFont, OverflowHidden))
+                    }
+                    row {
+                        button("their music")
+                        button("signup rules")
+                        button("buy tickets")
                     }
                 }
             }
-            row(modify(MinHeight8, FlexItems1, AlignItemsStretch, GapTiny, TextAlignCenter)) {
-                val cellModifiers = modify(AlignItemsCenter, Gap0, BorderRadius0, JustifyCenter)
-//                card(cellModifiers) {
-//                    post.location?.let { location ->
-//                        textBlock(location.name)
-//                        textBlock("5.2 miles", modify(Dim))
-//                    }
-//                }
+
+            // grid content
+            row(modify(Flex1, MinHeight8, FlexItems1, AlignItemsStretch, GapTiny, TextAlignCenter, WrapFlex)) {
+                val cellModifiers = modify(AlignItemsCenter, Gap0, BorderRadius0, JustifyCenter, MinWidth16)
+                card(cellModifiers) {
+                    post.location?.let { location ->
+                        textBlock(location.name)
+                    }
+                }
                 card(cellModifiers) {
                     post.event?.startsAt?.let { startsAt ->
                         heading4(startsAt.toRelativeDayFormat())

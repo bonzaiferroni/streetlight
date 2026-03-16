@@ -23,7 +23,7 @@ fun RenderContext.viewPostEditor(app: Streetlight) {
             )
             button("read", onClick = model::readUrl)
         }
-        column(modify(QueryRowMedium)) {
+        column(modify(QueryMediumRow)) {
             image (
                 modifiers = modify(Flex1),
                 binding = model.imageUrlFlow
@@ -44,7 +44,7 @@ fun RenderContext.viewPostEditor(app: Streetlight) {
                 textBlock(model.postedAtFlow.map { it.toString() })
             }
         }
-        column(modify(QueryRowMedium)) {
+        column(modify(QueryMediumRow)) {
             geoMapMount(null, modify(Flex1, Square))
             column(modify(Flex2)) {
                 textBlock(model.locationFlow.map { it.toString() })
