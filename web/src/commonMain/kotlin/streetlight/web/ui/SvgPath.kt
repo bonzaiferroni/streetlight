@@ -13,6 +13,10 @@ object SvgPath {
     val flame = toPath("flame")
     val starOutline = toPath("star-outline")
     val starFilled = toPath("star-filled")
+    val plus = toPath("plus")
+    val check = toPath("check")
+    val trash = toPath("trash")
+    val edit = toPath("edit")
 }
 
 private fun toPath(filename: String) = "/www/svg/$filename.svg"

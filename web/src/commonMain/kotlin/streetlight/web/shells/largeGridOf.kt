@@ -40,10 +40,14 @@ fun FlowContent.largeGridOf(post: GalaxyPost) {
                             textBlock(description)
                         }
                     }
+
                     row {
-                        button("their music")
-                        button("signup rules")
-                        button("buy tickets")
+                        post.event?.url?.let { url ->
+                            button("source", url)
+                        }
+                        post.event?.links?.forEach { link ->
+                            button(link.label, link.url)
+                        }
                     }
                 }
             }

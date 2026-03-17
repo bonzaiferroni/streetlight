@@ -1,6 +1,7 @@
 package koala.dom
 
 import koala.css.*
+import koala.model.mapDistinct
 import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.coroutines.CoroutineScope
@@ -13,6 +14,7 @@ import kotlinx.html.DIV
 import kotlinx.html.classes
 import kotlinx.html.dom.append
 import kotlinx.html.js.div
+import org.w3c.dom.HTMLDivElement
 import kotlin.collections.plus
 
 fun <Item> RenderContext.itemsBlock(
@@ -24,7 +26,7 @@ fun <Item> RenderContext.itemsBlock(
     config: (DIV.() -> Unit)? = null,
     containerConfig: (DIV.() -> Unit)? = null,
     block: RenderContext.(Item) -> Unit
-) {
+): HTMLDivElement {
     val parent = div {
         applyModifiers(ElementClass.itemsBlock, modifiers)
         if (magic) {
@@ -80,17 +82,9 @@ fun <Item> RenderContext.itemsBlock(
                 }
             }
 
-            var height = 0
-            var index = 0
             displayedItems = items.associateWith { item ->
                 val isCurrentlyDisplayed = displayedItems?.contains(item) ?: false
                 val cache = displayedItems?.get(item) ?: recallCachedItem(item) ?: createItem(item)
-                val container = cache.firstElement
-                container.style.top = "${height}px"
-                height += container.scrollHeight
-                if (gapPx != null && index + 1 < items.size) {
-                    height += gapPx
-                }
 
                 if (magic && !isCurrentlyDisplayed) {
                     cache.localScope.launch {
@@ -99,14 +93,59 @@ fun <Item> RenderContext.itemsBlock(
                     }
                 }
 
-                index++
                 cache
             }
 
-            parent.style.height = "${height}px"
+            window.requestAnimationFrame {
+                var index = 0
+                var height = 0
+
+                displayedItems.forEach {
+                    val container = it.value.firstElement
+                    container.style.top = "${height}px"
+                    height += container.offsetHeight
+                    console.log(container.offsetHeight)
+                    if (gapPx != null && index + 1 < items.size) {
+                        height += gapPx
+                    }
+                    index++
+                }
+
+                parent.style.height = "${height}px"
+            }
         }
     }
+
+    return parent
 }
+
+fun <Item> RenderContext.indexedItemsBlock(
+    flow: Flow<List<Item>>,
+    modifiers: ModifierSet? = null,
+    magic: Boolean = false,
+    gapRems: Float? = 0.5f,
+    cacheRenderedElements: Boolean = false,
+    config: (DIV.() -> Unit)? = null,
+    containerConfig: (DIV.() -> Unit)? = null,
+    block: RenderContext.(IndexedItem<Item>) -> Unit
+): HTMLDivElement {
+    val flow = flow.mapDistinct { it.mapIndexed { index, item -> IndexedItem(index, item) } }
+    return itemsBlock(
+        flow = flow,
+        modifiers = modifiers,
+        magic = magic,
+        gapRems = gapRems,
+        cacheRenderedElements = cacheRenderedElements,
+        config = config,
+        containerConfig = containerConfig,
+        block = { block(it) }
+    )
+}
+
+data class IndexedItem<T>(
+    val index: Int,
+    val value: T,
+)
 
 private fun remToPx(rem: Float) = window.getComputedStyle(document.documentElement!!).fontSize.dropLast(2).toDouble().let {
     (it * rem).toInt()

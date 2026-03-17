@@ -27,9 +27,20 @@ fun FlowOrInteractiveOrPhrasingContent.button(
     text: String,
     route: AppRoute,
     modifiers: ModifierSet? = null,
-    content: BUTTON.() -> Unit = {},
+    block: BUTTON.() -> Unit = {},
 ) {
     action(route) {
-        button(text, modifiers = modifiers, block = content)
+        button(text, modifiers = modifiers, block = block)
+    }
+}
+
+fun FlowOrInteractiveOrPhrasingContent.button(
+    text: String,
+    src: String,
+    modifiers: ModifierSet? = null,
+    block: BUTTON.() -> Unit = {},
+) {
+    action(src) {
+        button(text, modifiers = modifiers, block = block)
     }
 }

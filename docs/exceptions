@@ -17,3 +17,8 @@ JSON input: .....26-04-03","description":"Catch Zak Toscani live at Denver Co...
 {"events":[{"address":"675 22nd St, Denver, CO 80205","ageMin":0,"contact": "","date":"2026-03-11","description":"A Live Comedy Show at Denver Comedy Underground The Best of Denver Comedy Showcase is a must-see comedy show in Denver, bringing together the city’s funniest rising stars and special headliner performances—all on one stage at Denver Comedy Underground. Each week, this comedy show highl...
 
 
+Uncaught
+Object { stack: "", … }
+cause: undefined
+message: "couldn't find galaxy-map-panel"
+name: "Ts"

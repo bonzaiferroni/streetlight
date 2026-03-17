@@ -1,5 +1,6 @@
 package streetlight.web.model
 
+import kabinet.utils.replaceAt
 import koala.model.mapDistinct
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
@@ -13,6 +14,7 @@ import streetlight.model.data.EventEdit
 import streetlight.model.data.Place
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
+import streetlight.model.data.ExtraLink
 import streetlight.model.external.Address
 import streetlight.model.external.OSMPlace
 import streetlight.model.external.toGeoPoint
@@ -23,8 +25,8 @@ class EventEditor(
     private val client: ClientContext,
 ) {
     private val state = storeOf(EventEditorState(initialEvent ?: EventEdit()))
-    private val stateFlow = state.flow
-    private val stateNow get() = state.now
+    val stateFlow = state.flow
+    val stateNow get() = state.now
 
     val editFlow = state.flow.mapDistinct { it.event }
     val imageUrlFlow = editFlow.mapDistinct { it.imageUrl }
@@ -78,6 +80,21 @@ class EventEditor(
 
     fun setFree(value: Boolean) {
         setEvent { it.copy(cost = if (value) 0f else null)}
+    }
+
+    fun addLink(value: ExtraLink) {
+        val linksNow = stateNow.event.links ?: emptyList()
+        setEvent { it.copy(links = linksNow + value) }
+    }
+
+    fun removeLink(value: ExtraLink) {
+        val linksNow = stateNow.event.links ?: emptyList()
+        setEvent { it.copy(links = (linksNow - value).takeIf { links -> links.isNotEmpty() }) }
+    }
+
+    fun editLink(index: Int, value: ExtraLink) {
+        val linksNow = stateNow.event.links ?: error("no links to edit")
+        setEvent { it.copy(links = linksNow.replaceAt(index, value)) }
     }
 
     private fun setEvent(provideEvent: (EventEdit) -> EventEdit) {

@@ -168,6 +168,10 @@
     height: auto;
 }
 
+.height-5 {
+    height: calc(var(--unit-spacing) * 5);
+}
+
 .height-6 {
     height: calc(var(--unit-spacing) * 6);
 }

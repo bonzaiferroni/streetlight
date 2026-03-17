@@ -1,6 +1,9 @@
+/* icon */
+
 .icon {
     display: inline-block;
     background-color: currentColor;
+    height: 2rem;
     aspect-ratio: 1 / 1;
 
     mask-image: var(--mask-src);
@@ -15,6 +18,20 @@
     mask-position: center;
     -webkit-mask-position: center;
 }
+
+.icon.clickable {
+    transition: background-color 200ms ease-in-out;
+}
+
+.icon.clickable:hover {
+    background-color: rgb(var(--accent));
+}
+
+.icon.danger {
+    background-color: rgb(var(--danger));
+}
+
+/* action */
 
 .action {
     /*transition: opacity 0.35s ease;*/

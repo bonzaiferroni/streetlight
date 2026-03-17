@@ -24,6 +24,8 @@
     --accent-bg: 209, 43, 181;
     --accent: 255, 53, 221;
     --accent-button: rgba(var(--accent), .5);
+    --danger: 255, 99, 132;
+    --danger-bg: rgb(var(--danger)); /* not evaluated */
     --light-1: 255, 99, 132;
     --light-2: 88, 164, 255;
     --light-3: 88, 255, 188;
