@@ -2,6 +2,8 @@
 allow upload of galaxy thumbnail
 EventTableDao // td: more precise time conflict handling
 routeBlock.kt // td: retry provideData call n times
+largeGridOf // td: provide action/route
+fix issue with lazy map on galaxyProfile
 
 # MAIN:
 galaxy fields:

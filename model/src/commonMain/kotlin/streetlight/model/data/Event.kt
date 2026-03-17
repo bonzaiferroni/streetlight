@@ -43,6 +43,7 @@ data class Event(
     val createdAt: Instant,
 ) {
     val timeZone get() = TimeZone.currentSystemDefault() // notsure
+    val isFree get() = cost == 0f
 
     // repeatInterval
     // val doorsAt: Instant?,

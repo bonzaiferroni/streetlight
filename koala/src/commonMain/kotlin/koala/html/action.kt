@@ -5,6 +5,7 @@ import koala.css.ModifierSet
 import koala.css.applyModifiers
 import koala.css.modify
 import kotlinx.html.A
+import kotlinx.html.FlowContent
 import kotlinx.html.FlowOrInteractiveOrPhrasingContent
 import kotlinx.html.a
 
@@ -36,5 +37,18 @@ fun FlowOrInteractiveOrPhrasingContent.action(
     a {
         applyModifiers(modify(ElementClass.action, modifiers))
         block?.invoke(this)
+    }
+}
+
+fun FlowContent.actionIfNotNull(
+    href: String? = null,
+    text: String = "",
+    modifiers: ModifierSet? = null,
+    block: (FlowContent.() -> Unit)? = null
+) {
+    if (href == null) {
+        block?.invoke(this)
+    } else {
+        action(href, text, modifiers, block)
     }
 }

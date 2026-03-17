@@ -3,6 +3,7 @@ package streetlight.web.shells
 import kabinet.utils.toRelativeDayFormat
 import koala.css.*
 import koala.html.action
+import koala.html.actionIfNotNull
 import koala.html.box
 import koala.html.button
 import koala.html.card
@@ -74,9 +75,14 @@ fun FlowContent.largeGridOf(post: GalaxyPost) {
                 }
                 card(cellModifiers) {
                     post.event?.cost?.let {
-                        row(modify(WrapFlex, JustifyCenter, Gap0)) {
-                            textBlock("tickets:", modify(Dim))
-                            textBlock("$$it", modify(MarginLeft1))
+                        val ticketsUrl = post.event?.cost?.takeIf { it != 0f }?.let {
+                            post.event?.url
+                        }
+                        actionIfNotNull(ticketsUrl) {
+                            row(modify(WrapFlex, JustifyCenter, Gap0)) {
+                                textBlock("tickets:", modify(Dim))
+                                textBlock("$$it", modify(MarginLeft1))
+                            }
                         }
                     }
                 }
