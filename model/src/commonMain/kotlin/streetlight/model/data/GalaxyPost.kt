@@ -14,6 +14,7 @@ data class GalaxyPost(
     val title: String,
     val text: String?,
     val geoPoint: GeoPoint?,
+    val interest: InterestType?,
     val createdAt: Instant,
     val updatedAt: Instant,
 ) {
