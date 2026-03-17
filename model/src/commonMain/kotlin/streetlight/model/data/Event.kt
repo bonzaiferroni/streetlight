@@ -36,15 +36,16 @@ data class Event(
     val imageUrl: String?,
     val thumbUrl: String?,
     val streamUrl: String?,
-    // repeatInterval
     val timeZoneId: String,
-    // val doorsAt: Instant?,
     val startsAt: Instant,
     val endsAt: Instant?,
     val updatedAt: Instant,
     val createdAt: Instant,
 ) {
     val timeZone get() = TimeZone.currentSystemDefault() // notsure
+
+    // repeatInterval
+    // val doorsAt: Instant?,
 }
 
 @JvmInline

@@ -2,6 +2,7 @@ package streetlight.web.shells
 
 import kabinet.utils.toRelativeDayFormat
 import koala.css.*
+import koala.html.action
 import koala.html.box
 import koala.html.button
 import koala.html.card
@@ -18,6 +19,8 @@ import streetlight.model.data.GalaxyPost
 import streetlight.web.ui.SvgPath
 
 fun FlowContent.largeGridOf(post: GalaxyPost) {
+    val postRoute = post.route ?: return
+
     card(modify(Padding0, OverflowHidden)) {
         column(modify(QueryLargeRow, AlignItemsStretch, Gap0)) {
 
@@ -29,15 +32,21 @@ fun FlowContent.largeGridOf(post: GalaxyPost) {
                 column(modify(Flex2, Padding1, AlignItemsStretch)) {
                     row {
                         column(modify(Flex1, Gap0)) {
-                            heading3(post.title)
+                            action(postRoute) {
+                                heading3(post.title)
+                            }
                             post.location?.let { location ->
-                                textBlock("${location.name}, ${location.city}", modify(Dim))
+                                action(location.route) {
+                                    textBlock("${location.name}, ${location.city}", modify(Dim))
+                                }
                             }
                         }
                     }
                     post.description?.let { description ->
                         box(modify(Flex1, SmallFont, OverflowHidden, FadeBottom, RelativeParent, MinHeight8)) {
-                            textBlock(description)
+                            action(postRoute) {
+                                textBlock(description)
+                            }
                         }
                     }
 

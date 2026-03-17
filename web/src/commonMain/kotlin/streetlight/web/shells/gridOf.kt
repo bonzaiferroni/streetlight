@@ -2,6 +2,7 @@ package streetlight.web.shells
 
 import kabinet.utils.toRelativeDayFormat
 import koala.css.*
+import koala.html.action
 import koala.html.card
 import koala.html.column
 import koala.html.heading4
@@ -11,7 +12,11 @@ import koala.html.image
 import koala.html.row
 import koala.html.textBlock
 import kotlinx.html.FlowContent
+import streetlight.model.data.Event
 import streetlight.model.data.GalaxyPost
+import streetlight.model.data.Location
+import streetlight.web.EventIdRoute
+import streetlight.web.LocationIdRoute
 import streetlight.web.ui.SvgPath
 
 fun FlowContent.gridOf(post: GalaxyPost) {
@@ -25,6 +30,8 @@ fun FlowContent.gridOf(post: GalaxyPost) {
     val thumbUrl = post.thumbUrl
     val title = post.title
     val description = post.description
+    val postRoute = post.route ?: return
+
     card(modify(Padding0, OverflowHidden)) {
         column(modify(QueryLargeRow, AlignItemsStretch, Gap0)) {
             row(modify(Height16, AlignItemsStart, Padding1)) {
@@ -34,15 +41,21 @@ fun FlowContent.gridOf(post: GalaxyPost) {
                 column(modify(Flex1, Height100)) {
                     row {
                         column(modify(Flex1, Gap0)) {
-                            heading5(title)
+                            action(postRoute) {
+                                heading5(title)
+                            }
                             post.location?.let { location ->
-                                textBlock(location.name, modify(Dim))
+                                action(location.route) {
+                                    textBlock(location.name, modify(Dim))
+                                }
                             }
                         }
                         icon(SvgPath.focus, modify(Height100, Square, Dim))
                     }
                     description?.let {
-                        textBlock(description, modify(Flex1, SmallFont, Height2, OverflowHidden))
+                        action(postRoute) {
+                            textBlock(description, modify(Flex1, SmallFont, Height2, OverflowHidden))
+                        }
                     }
                 }
             }
@@ -76,3 +89,7 @@ fun FlowContent.gridOf(post: GalaxyPost) {
         }
     }
 }
+
+val GalaxyPost.route get() = event?.route ?: location?.route
+val Location.route get() = LocationIdRoute(locationId)
+val Event.route get() = EventIdRoute(eventId)
