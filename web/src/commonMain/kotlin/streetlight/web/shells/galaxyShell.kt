@@ -16,13 +16,14 @@ import streetlight.model.data.Event
 import streetlight.model.data.Galaxy
 import streetlight.model.data.GalaxyPost
 import streetlight.web.EventScoutRoute
+import streetlight.web.pages.appFooter
 import streetlight.web.ui.headerOf
 
 fun FlowContent.galaxyShell(content: GalaxyShellContent) {
     val galaxy = content.galaxy; val posts = content.posts;
     box(GalaxyShell.galaxyBoxId) {
         tabs(HomeShell.tabsId) {
-            tab("Events") {
+            tab("Posts") {
                 column {
                     headerOf(galaxy)
                     row {
@@ -32,17 +33,19 @@ fun FlowContent.galaxyShell(content: GalaxyShellContent) {
                     posts.forEach { post ->
                         largeGridOf(post)
                     }
+                    appFooter()
                 }
             }
             tab("Map") {
                 column {
                     geoMapMount()
                     box(GalaxyShell.mapPanelId)
+                    appFooter()
                 }
             }
-            tab("Talk") {
-
-            }
+//            tab("Talk") {
+//
+//            }
         }
     }
 }

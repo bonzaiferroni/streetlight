@@ -51,7 +51,6 @@ fun RenderContext.viewEventEditor(
                 heading3("What's happening?", modify(Padding1, Dim))
                 card(modify(AlignItemsStretch)) {
                     primaryFields()
-
                     eventLinks()
                 }
             }
@@ -171,7 +170,7 @@ fun ViewContext<EventEditor>.eventLinks() {
                         textBlock(link.label)
                         textBlock(link.url, modify(Dim))
                         spacer(modify(Flex1))
-                        icon(SvgPath.trash, onClick = { model.removeLink(link) } ,modify(Dim, Danger))
+                        icon(SvgPath.trash, onClick = { model.removeLink(link) }, modify(Dim, Danger))
                         icon(SvgPath.edit, onClick = { editState.set{ it.copy(index = linkIndex, link = link)} }, modify(Dim))
                     }
                 }

@@ -75,6 +75,10 @@ body {
     color: var(--white-fg);
 }
 
+button {
+    font-family: var(--font-family);
+}
+
 body::before {
     content: "";
     position: fixed;

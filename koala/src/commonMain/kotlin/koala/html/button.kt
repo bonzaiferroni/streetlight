@@ -40,7 +40,27 @@ fun FlowOrInteractiveOrPhrasingContent.button(
     modifiers: ModifierSet? = null,
     block: BUTTON.() -> Unit = {},
 ) {
+    val domain = domainOf(src)
+    val text = domain?.let { domain ->
+        domainMap[domain].let { symbol ->
+            "${symbol ?: "🔗"} $text"
+        }
+    } ?: text
     action(src) {
         button(text, modifiers = modifiers, block = block)
     }
 }
+
+fun domainOf(url: String): String? =
+    Regex("""^(?:[a-zA-Z][a-zA-Z\d+\-.]*://)?(?:[^@/\n]+@)?([^:/\n?#]+)""")
+        .find(url.trim())
+        ?.groupValues?.get(1)
+        ?.removePrefix("www.")
+        ?.takeIf { it.isNotBlank() }
+
+private const val video = "📼"
+
+private val domainMap = mapOf(
+    "youtube.com" to video
+)
+
