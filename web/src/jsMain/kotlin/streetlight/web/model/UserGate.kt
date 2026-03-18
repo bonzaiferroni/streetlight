@@ -11,7 +11,6 @@ class UserGate(
     private val scope: CoroutineScope,
     val cred: UserCred,
     private val api: ApiClient,
-    private val userCache: UserCache,
 ) {
     private val state = storeOf(UserGateState())
     val stateNow get() = state.now
@@ -43,7 +42,7 @@ class UserGate(
     }
 
     fun signOut() {
-        userCache.reset()
+//        userCache.reset()
         cred.setStayLoggedIn(false)
         state.set { it.copy(user = null) }
     }

@@ -44,9 +44,9 @@ fun viewApp() {
             override val location = OSMFetchClient()
         }
 
-        override val userCache = UserCache(scope, client.api)
+        override val gate = UserGate(scope, cred, client.api)
+        override val userCache = UserCache(scope, client.api, gate)
         override val portal = Portal(HomeRoute(), StreetlightScreen.entries, scope)
-        override val gate = UserGate(scope, cred, client.api, userCache)
         override val gateAgent = GateAgent(scope, gate, portal)
 
         override val geoMap = GeoMap(scope)
