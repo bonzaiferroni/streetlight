@@ -8,14 +8,15 @@ import kotlin.jvm.JvmInline
 typealias AttributeContext = CoreAttributeGroupFacade
 
 var AttributeContext.blockLabel: String?
-    get() = attributes[Attributes.blockLabel.value]
+    get() = attributes[Attributes.blockLabel.key]
     set(value) {
-        attributes[Attributes.blockLabel.value] = value ?: ""
+        attributes[Attributes.blockLabel.key] = value ?: ""
     }
 
 @JvmInline
 value class Attribute(val value: String) {
-    val selector get() = "[$value]"
+    val selector get() = "[$key]"
+    val key get() = "data-$value"
 }
 
 object Attributes {
@@ -30,9 +31,9 @@ fun AttributeContext.applyBlockLabel(label: String?) {
 }
 
 operator fun MutableMap<String, String>.set(attribute: Attribute, value: String) {
-    this[attribute.value] = value
+    this[attribute.key] = value
 }
 
 operator fun MutableMap<String, String>.set(attribute: Attribute, value: TableId<String>) {
-    this[attribute.value] = value.value
+    this[attribute.key] = value.value
 }

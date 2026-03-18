@@ -43,7 +43,7 @@ fun initGeoMap(mount: HTMLElement): HTMLElement {
 
     var zoom: Number = 11
     val center = mount
-        .getAttribute(GeoMapSelector.geoPoint.value)
+        .getAttribute(GeoMapSelector.geoPoint.key)
         ?.split(",")
         ?.mapNotNull { it.toDoubleOrNull() }
         ?.takeIf { it.size == 2 }

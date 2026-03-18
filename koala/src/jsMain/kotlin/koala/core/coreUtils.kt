@@ -47,4 +47,4 @@ fun Element.appendDiv(id: Id? = null): HTMLElement {
     return element
 }
 
-operator fun NamedNodeMap.get(attribute: Attribute): String? = this.getNamedItem(attribute.value)?.value
+operator fun NamedNodeMap.get(attribute: Attribute): String? = this.getNamedItem(attribute.key)?.value

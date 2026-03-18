@@ -10,7 +10,7 @@ The directory is organized into several functional subdirectories:
 * **img/**: Static image assets, including JPEGs and PNGs used throughout the application.
 * **js/**: JavaScript source and compiled outputs. This includes:
     * **koala/** and **streetlight/**: Compiled Kotlin/JS modules (e.g., `koala.js`, `web.js`).
-    * **Handwritten scripts**: Files like `launchApp.js`, `utils.js`, and `geoMap.js` provide targeted functionality.
+    * **Handwritten scripts**: Files like `utils.js`, and `geoMap.js` provide targeted functionality.
 * **lottie/**: JSON animation files for use with the Lottie web library.
 * **svg/**: Vector graphics used for icons, markers, and UI elements.
 * **proto/**: Protocol Buffer definitions and serialized binary data used for communication (e.g., `gtfs-realtime.proto`).

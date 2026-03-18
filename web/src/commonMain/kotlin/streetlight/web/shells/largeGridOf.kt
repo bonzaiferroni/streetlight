@@ -2,6 +2,7 @@ package streetlight.web.shells
 
 import kabinet.utils.toRelativeDayFormat
 import koala.css.*
+import koala.html.Attribute
 import koala.html.action
 import koala.html.actionIfNotNull
 import koala.html.box
@@ -14,9 +15,12 @@ import koala.html.heading5
 import koala.html.icon
 import koala.html.imageWithBackdrop
 import koala.html.row
+import koala.html.setData
 import koala.html.textBlock
 import kotlinx.html.FlowContent
+import streetlight.model.data.EventInterest
 import streetlight.model.data.GalaxyPost
+import streetlight.model.data.InterestType
 import streetlight.web.ui.SvgPath
 
 fun FlowContent.largeGridOf(post: GalaxyPost) {
@@ -74,14 +78,14 @@ fun FlowContent.largeGridOf(post: GalaxyPost) {
                     }
                 }
                 card(cellModifiers) {
-                    post.event?.cost?.let {
-                        val ticketsUrl = post.event?.cost?.takeIf { it != 0f }?.let {
+                    post.event?.cost?.let { cost ->
+                        val ticketsUrl = cost.takeIf { it != 0f }?.let {
                             post.event?.url
                         }
                         actionIfNotNull(ticketsUrl) {
                             row(modify(WrapFlex, JustifyCenter, Gap0)) {
                                 textBlock("tickets:", modify(Dim))
-                                textBlock("$$it", modify(MarginLeft1))
+                                textBlock("$$cost", modify(MarginLeft1))
                             }
                         }
                     }
@@ -92,13 +96,27 @@ fun FlowContent.largeGridOf(post: GalaxyPost) {
                         textBlock(post.username ?: "anonymous", modify(MarginLeft1))
                     }
                 }
-                card(cellModifiers) {
-                    row(modify(WidthAuto)) {
-                        textBlock(post.visibility.toString())
-                        icon(SvgPath.starOutline, modify(Height100, Square))
+                post.event?.let { event ->
+                    card(cellModifiers) {
+                        val interest = EventInterest(event.eventId, post.interest)
+                        row(modify(WidthAuto)) {
+                            setData(EventAttributes.interest, interest)
+                            // textBlock(post.visibility.toString())
+                            icon(interest.value.iconPath, modify(Height3, Square))
+                        }
                     }
                 }
             }
         }
     }
+}
+
+object EventAttributes {
+    val interest = Attribute("event-interest")
+}
+
+val InterestType?.iconPath get() = when(this) {
+    InterestType.Star -> SvgPath.starFilled
+    InterestType.Calendar -> SvgPath.starFilled // td: handle differently
+    null -> SvgPath.starOutline
 }

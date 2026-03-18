@@ -22,6 +22,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object ParseMultiEvents: PostEndpoint<ParseRequest, MultiEventParseResponse>(this, "parse-multi")
         object ParseSingleEvent: PostEndpoint<ParseRequest, SingleEventParseResponse>(this, "parse-single")
         object AtLocation: GetByTableIdEndpoint<LocationId, List<Event>>(this, "location")
+        object UserInterest: PostEndpoint<EventInterest, Boolean>(this, "user-interest")
     }
 
     object Locations: GetByTableIdEndpoint<LocationId, Location>(this, "locations") {

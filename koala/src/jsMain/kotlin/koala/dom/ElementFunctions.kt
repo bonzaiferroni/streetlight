@@ -1,12 +1,17 @@
 package koala.dom
 
+import koala.core.get
 import koala.css.Modifier
 import koala.external.ScrollIntoViewOptions
+import koala.html.Attribute
+import koala.utils.jsonConfig
 import kotlinx.browser.window
 import kotlinx.dom.addClass
 import kotlinx.dom.removeClass
 import org.w3c.dom.Element
+import org.w3c.dom.HTMLElement
 import org.w3c.dom.Node
+import org.w3c.dom.asList
 
 fun Element.unmodify(vararg modifier: Modifier) = modifier.forEach { classList.remove(it.value) }
 fun Element.modify(vararg modifier: Modifier) = modifier.forEach { classList.add(it.value) }
@@ -46,4 +51,13 @@ fun Element.scrollWhenPresent(
     }
 
     window.requestAnimationFrame { tryScroll() }
+}
+
+inline fun <reified T> Element.wireByAttribute(attribute: Attribute, block: (HTMLElement, T) -> Unit) {
+    querySelectorAll(attribute.selector).asList().forEach {
+        val element = it as HTMLElement
+        val json = element.attributes[attribute] ?: return@forEach
+        val data = jsonConfig.decodeFromString<T>(json)
+        block(element, data)
+    }
 }

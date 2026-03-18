@@ -18,7 +18,7 @@ inline fun DOMContext.lottie(
 ): HTMLDivElement {
     val div = div {
         applyModifiers(ElementClass.lottie, modifiers)
-        attributes[Attributes.lottie.value] = filename
+        attributes[Attributes.lottie.key] = filename
         block()
     }
     initLottie(div)

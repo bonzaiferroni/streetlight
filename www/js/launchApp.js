@@ -1,1 +1,0 @@
-document.addEventListener("DOMContentLoaded", web.streetlight.web.viewApp); // defined in kotlin

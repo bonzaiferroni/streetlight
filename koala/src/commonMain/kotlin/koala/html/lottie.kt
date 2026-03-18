@@ -10,7 +10,7 @@ inline fun FlowContent.lottie(
 ) {
     div {
         applyModifiers(modify(ElementClass.lottie, modifiers))
-        attributes["lottie"] = filename
+        attributes[Attributes.lottie] = filename
         block()
     }
 }
