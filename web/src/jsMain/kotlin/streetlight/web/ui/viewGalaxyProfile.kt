@@ -1,7 +1,9 @@
 package streetlight.web.ui
 
 import koala.core.queryFirstOrNull
+import koala.css.CustomProperties
 import koala.css.ElementClass
+import koala.css.UrlValue
 import koala.dom.*
 import kotlinx.coroutines.launch
 import kotlinx.dom.clear
@@ -23,13 +25,14 @@ fun RenderContext.viewGalaxyProfile(app: Streetlight, content: GalaxyShellConten
         galaxyShell(content)
     }
 
-    root.onView {
+    root.onFirstView {
         wireBlock(GalaxyShell.mapPanelId) {
-            column {
+            val element = column {
                 content.posts.forEach { post ->
                     gridOf(post)
                 }
             }
+            wireInterestControls(app, element)
         }
     }
 
@@ -59,12 +62,18 @@ fun RenderContext.wireInterestControls(app: Streetlight, root: HTMLElement) {
             interest = interest.copy(
                 value = if (interest.value == null) InterestType.Star else null
             )
-            renderScope.launch {
-                val isSuccess = app.client.api.editEventInterest(interest) ?: return@launch
-                if (isSuccess) {
-                    val iconElement = element.queryFirstOrNull(ElementClass.icon) ?: return@launch
-                    iconElement.style.setProperty("--mask-src", "url('${interest.value.iconPath}')")
-                }
+
+            app.userInterest.editEventInterest(interest)
+        }
+
+        val iconElement by lazy { element.queryFirstOrNull(ElementClass.icon) }
+        renderScope.launch {
+            app.userInterest.interestFlow.collect { updatedInterest ->
+                if (updatedInterest.eventId != interest.eventId) return@collect
+                interest = updatedInterest
+
+                val element = iconElement ?: return@collect
+                element.style.setProperty(CustomProperties.maskSrc, UrlValue(interest.value.iconPath))
             }
         }
     }

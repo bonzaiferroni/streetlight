@@ -1,9 +1,6 @@
 package koala.dom
 
-import koala.css.ElementClass
-import koala.css.ModifierSet
-import koala.css.applyModifiers
-import koala.css.modify
+import koala.css.*
 import kotlinx.html.DIV
 import kotlinx.html.js.div
 import kotlinx.html.style
@@ -15,7 +12,7 @@ fun DOMContext.icon(
     block: (DIV.() -> Unit)? = null
 ) = div {
     applyModifiers(modify(ElementClass.icon, modifiers))
-    style = "--mask-src: url('$src');"
+    style = styleOf(CustomProperties.maskSrc, UrlValue(src))
     block?.invoke(this)
 }
 

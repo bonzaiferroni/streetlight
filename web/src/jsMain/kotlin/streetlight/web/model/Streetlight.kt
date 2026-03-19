@@ -17,6 +17,7 @@ interface Streetlight {
     val streetMap: StreetMap
     val chatRoom: ChatRoom
     val userCache: UserCache
+    val userInterest: UserInterest
 }
 
 interface ClientContext {

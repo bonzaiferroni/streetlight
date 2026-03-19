@@ -1,5 +1,6 @@
 package streetlight.web.shells
 
+import kabinet.utils.toRelativeDayFormat
 import koala.css.Flex1
 import koala.css.modify
 import koala.html.Id
@@ -8,11 +9,11 @@ import koala.html.button
 import koala.html.column
 import koala.html.geoMapMount
 import koala.html.row
+import koala.html.spacer
 import koala.html.tab
 import koala.html.tabs
 import kotlinx.html.FlowContent
 import kotlinx.serialization.Serializable
-import streetlight.model.data.Event
 import streetlight.model.data.Galaxy
 import streetlight.model.data.GalaxyPost
 import streetlight.web.EventScoutRoute
@@ -30,7 +31,13 @@ fun FlowContent.galaxyShell(content: GalaxyShellContent) {
                         box(modify(Flex1))
                         button("Post Event", EventScoutRoute(galaxy.pathId))
                     }
+                    var headingDay: String? = null
                     posts.forEach { post ->
+                        val eventDay = post.event?.startsAt?.toRelativeDayFormat()
+                        if (eventDay != null && eventDay != headingDay) {
+                            headingDay = eventDay
+                            spacer(headingDay)
+                        }
                         largeGridOf(post)
                     }
                     appFooter()

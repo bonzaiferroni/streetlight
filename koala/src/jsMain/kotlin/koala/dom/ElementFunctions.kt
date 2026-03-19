@@ -1,6 +1,8 @@
 package koala.dom
 
 import koala.core.get
+import koala.css.CssValue
+import koala.css.CustomProperty
 import koala.css.Modifier
 import koala.external.ScrollIntoViewOptions
 import koala.html.Attribute
@@ -12,6 +14,7 @@ import org.w3c.dom.Element
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.Node
 import org.w3c.dom.asList
+import org.w3c.dom.css.CSSStyleDeclaration
 
 fun Element.unmodify(vararg modifier: Modifier) = modifier.forEach { classList.remove(it.value) }
 fun Element.modify(vararg modifier: Modifier) = modifier.forEach { classList.add(it.value) }
@@ -61,3 +64,5 @@ inline fun <reified T> Element.wireByAttribute(attribute: Attribute, block: (HTM
         block(element, data)
     }
 }
+
+fun CSSStyleDeclaration.setProperty(property: CustomProperty, value: CssValue) = setProperty("--${property.identifier}", value.value)

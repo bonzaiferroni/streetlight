@@ -67,7 +67,7 @@ fun FlowContent.largeGridOf(post: GalaxyPost) {
             }
 
             // grid content
-            row(modify(QueryLargeColumn, Flex1, MinHeight8, FlexItems1, AlignItemsStretch, GapTiny, TextAlignCenter, WrapFlex, SmallFont)) {
+            row(modify(Flex1, QueryLargeColumn, MinHeight8, FlexItems1, AlignItemsStretch, GapTiny, TextAlignCenter, WrapFlex, SmallFont)) {
                 val cellModifiers = modify(AlignItemsCenter, Gap0, BorderRadius0, JustifyCenter, MinWidth16)
                 card(cellModifiers) {
                     post.event?.startsAt?.let { startsAt ->
@@ -99,15 +99,19 @@ fun FlowContent.largeGridOf(post: GalaxyPost) {
                 post.event?.let { event ->
                     card(cellModifiers) {
                         val interest = EventInterest(event.eventId, post.interest)
-                        row(modify(WidthAuto)) {
-                            setData(EventAttributes.interest, interest)
-                            // textBlock(post.visibility.toString())
-                            icon(interest.value.iconPath, modify(Height3, Square))
-                        }
+                        interestCell(interest)
                     }
                 }
             }
         }
+    }
+}
+
+fun FlowContent.interestCell(interest: EventInterest) {
+    row(modify(WidthAuto)) {
+        setData(EventAttributes.interest, interest)
+        // textBlock(post.visibility.toString())
+        icon(interest.value.iconPath, modify(Height3, Square))
     }
 }
 

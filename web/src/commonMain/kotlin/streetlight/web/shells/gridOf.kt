@@ -10,9 +10,11 @@ import koala.html.heading5
 import koala.html.icon
 import koala.html.image
 import koala.html.row
+import koala.html.setData
 import koala.html.textBlock
 import kotlinx.html.FlowContent
 import streetlight.model.data.Event
+import streetlight.model.data.EventInterest
 import streetlight.model.data.GalaxyPost
 import streetlight.model.data.Location
 import streetlight.web.EventIdRoute
@@ -20,13 +22,6 @@ import streetlight.web.LocationIdRoute
 import streetlight.web.ui.SvgPath
 
 fun FlowContent.gridOf(post: GalaxyPost) {
-    // thumbnail
-    // title/description
-
-    // location/distance
-    // time interval
-    // price/availability
-    // visibility/interest/comments
     val thumbUrl = post.thumbUrl
     val title = post.title
     val description = post.description
@@ -79,10 +74,10 @@ fun FlowContent.gridOf(post: GalaxyPost) {
                         textBlock("$$it")
                     }
                 }
-                card(cellModifiers) {
-                    row(modify(WidthAuto)) {
-                        textBlock("31")
-                        icon(SvgPath.starOutline, modify(Height100, Square))
+                post.event?.let { event ->
+                    card(cellModifiers) {
+                        val interest = EventInterest(event.eventId, post.interest)
+                        interestCell(interest)
                     }
                 }
             }

@@ -27,6 +27,7 @@ import streetlight.web.model.StreetMap
 import streetlight.web.model.UserCache
 import streetlight.web.model.UserCred
 import streetlight.web.model.UserGate
+import streetlight.web.model.UserInterest
 import streetlight.web.pages.AppBody
 import streetlight.web.pages.emptyBadge
 
@@ -53,6 +54,7 @@ fun viewApp() {
         override val geoMap = GeoMap(scope)
         override val streetMap = StreetMap(scope, client, userCache, geoMap)
         override val chatRoom = ChatRoom(scope, client.api)
+        override val userInterest = UserInterest(scope, client.api)
     } as Streetlight
 
     scope.launch {

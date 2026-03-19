@@ -23,7 +23,7 @@ fun FlowContent.spacer(
         hr {
             applyModifiers(modify(Width16, Opacity2))
         }
-        heading3(text, modify(Opacity2))
+        heading3(text, modify(Opacity4))
         hr {
             applyModifiers(modify(Width16, Opacity2))
         }

@@ -17,6 +17,7 @@ class UserGate(
 
     val userFlow = state.flow.mapDistinct { it.user }
     val messageFlow = state.flow.mapDistinct { it.message }
+    val isSignedInFlow = state.flow.mapDistinct { it.isSignedIn }
 
     init {
         signIn()
@@ -55,4 +56,6 @@ class UserGate(
 data class UserGateState(
     val user: UserInfo? = null,
     val message: String? = null,
-)
+) {
+    val isSignedIn get() = user != null
+}

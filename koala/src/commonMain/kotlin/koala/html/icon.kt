@@ -1,9 +1,12 @@
 package koala.html
 
+import koala.css.CustomProperties
 import koala.css.ElementClass
 import koala.css.ModifierSet
+import koala.css.UrlValue
 import koala.css.applyModifiers
 import koala.css.modify
+import koala.css.styleOf
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kotlinx.html.div
@@ -16,7 +19,7 @@ fun FlowContent.icon(
 ) {
     div {
         applyModifiers(modify(ElementClass.icon, modifiers))
-        style = "--mask-src: url('$src');"
+        style = styleOf(CustomProperties.maskSrc, UrlValue(src))
         block?.invoke(this)
     }
 }

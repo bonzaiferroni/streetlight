@@ -40,3 +40,16 @@ fun Element.onView(block: (Boolean) -> Unit) {
 
     observer.observe(this)
 }
+
+fun Element.onFirstView(block: () -> Unit) {
+    val observer = IntersectionObserver { entries, obs ->
+        entries.forEach { entry ->
+            if (entry.isIntersecting) {
+                block()
+                obs.disconnect()
+            }
+        }
+    }
+
+    observer.observe(this)
+}
