@@ -12,18 +12,21 @@ import kotlinx.html.a
 fun FlowOrInteractiveOrPhrasingContent.action(
     route: AppRoute,
     modifiers: ModifierSet? = null,
+    id: Id? = null,
     block: (A.() -> Unit)? = null
 ) {
-    action(href = route.toHashPath(), modifiers = modifiers, block = block)
+    action(href = route.toHashPath(), modifiers = modifiers, id = id, block = block)
 }
 
 fun FlowOrInteractiveOrPhrasingContent.action(
     href: String? = null,
     text: String = "",
     modifiers: ModifierSet? = null,
+    id: Id? = null,
     block: (A.() -> Unit)? = null
 ) {
     action(modifiers) {
+        applyId(id)
         href?.let { this.href = href }
         +text
         block?.invoke(this)
@@ -44,11 +47,12 @@ fun FlowContent.actionIfNotNull(
     href: String? = null,
     text: String = "",
     modifiers: ModifierSet? = null,
+    id: Id? = null,
     block: (FlowContent.() -> Unit)? = null
 ) {
     if (href == null) {
         block?.invoke(this)
     } else {
-        action(href, text, modifiers, block)
+        action(href, text, modifiers, id, block)
     }
 }

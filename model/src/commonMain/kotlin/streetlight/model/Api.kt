@@ -87,6 +87,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object Files: GetEndpoint<List<String>>(this, "files")
         object Talents: GetEndpoint<List<Talent>>(this, "talents")
         object EditTalent: PostEndpoint<TalentEdit, Talent>(this, "edit-talent")
+        object UploadAvatar: PostEndpoint<ByteArray, String>(this, "upload-avatar")
     }
 
     object Stories: ApiNode(this, "story") {

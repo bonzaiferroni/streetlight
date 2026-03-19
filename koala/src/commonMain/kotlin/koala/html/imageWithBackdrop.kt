@@ -6,6 +6,7 @@ import koala.css.ModifierSet
 import koala.css.applyModifiers
 import kotlinx.html.FlowContent
 import kotlinx.html.IMG
+import kotlinx.html.div
 import kotlinx.html.img
 
 fun FlowContent.imageWithBackdrop(
@@ -15,7 +16,7 @@ fun FlowContent.imageWithBackdrop(
     block: (IMG.() -> Unit)? = null
 ) {
     val src = src ?: placeholder
-    box {
+    div {
         applyModifiers(ElementClass.imageWithBackdrop, modifiers)
         img {
             applyModifiers(Css("image-with-backdrop__backdrop"))

@@ -4,6 +4,7 @@ import kampfire.api.UserApi
 import kampfire.model.GeoBounds
 import kampfire.model.GeoPoint
 import kampfire.model.SignUpRequest
+import kampfire.model.UserInfo
 import kotlinx.coroutines.CoroutineScope
 import streetlight.model.Api
 import streetlight.model.data.*
@@ -31,11 +32,13 @@ class ApiClient(private val client: FetchClient) {
 
     suspend fun queryMap(request: MapQuery) = client.get(Api.Events.QueryMap, request.toQuery())
     suspend fun uploadEventImage(blobUrl: String) = client.uploadBlob(Api.Events.Upload.path, blobUrl)
-    // suspend fun uploadHtml(blobUrl: String) = client.uploadBlob(Api)
 
+    // users
     suspend fun readUserFiles() = client.get(Api.Users.Files)
+    suspend fun updateUser(user: UserInfo) = client.post(UserApi.Update, user)
+    suspend fun checkUsername(username: String) = client.post(UserApi.CheckUsername, username)
+    suspend fun uploadAvatar(blobUrl: String) = client.uploadBlob(Api.Users.UploadAvatar.path, blobUrl)
 
-    suspend fun createLocation(place: Place) = client.post(Api.Locations.Create, place)
     suspend fun createOrEditLocation(location: LocationEdit) = client.post(Api.Locations.Edit, location)
     suspend fun queryLocation(point: GeoPoint) = client.get(Api.Locations.QueryPoint, point.toQuery())
 

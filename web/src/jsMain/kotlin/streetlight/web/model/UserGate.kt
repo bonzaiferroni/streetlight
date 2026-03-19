@@ -46,6 +46,10 @@ class UserGate(
         cred.setStayLoggedIn(false)
         state.set { it.copy(user = null) }
     }
+
+    fun setUpdate(user: UserInfo) {
+        state.set { it.copy(user = user) }
+    }
 }
 
 data class UserGateState(

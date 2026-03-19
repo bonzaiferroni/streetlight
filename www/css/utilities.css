@@ -52,15 +52,15 @@
 }
 
 .opacity-6 {
-    color: rgba(var(--white), 0.6);
+    opacity: .6;
 }
 
 .opacity-4 {
-    color: rgba(var(--white), 0.4);
+    opacity: .4;
 }
 
 .opacity-2 {
-    color: rgba(var(--white), 0.2);
+    opacity: .2;
 }
 
 .no-dim {
@@ -91,6 +91,11 @@
     border-radius: 50%;
     overflow: hidden;
     border: 3px solid #b4bd7d;
+}
+
+.circle-clip {
+    border-radius: 50%;
+    overflow: hidden;
 }
 
 .border-radius-0 {
@@ -214,6 +219,10 @@
 
 .min-width-32 {
     min-width: calc(var(--unit-spacing) * 32);
+}
+
+.min-width-auto {
+    min-width: auto;
 }
 
 .justify-content-end {
@@ -447,4 +456,8 @@
 .relative-parent > * {
     position: absolute;
     inset: 0;
+}
+
+.z-index-1 {
+    z-index: 1;
 }

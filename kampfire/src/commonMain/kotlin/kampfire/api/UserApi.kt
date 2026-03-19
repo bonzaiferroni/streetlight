@@ -15,7 +15,9 @@ object UserApi : ApiNode(ApiNode(ApiNode(null, "api"),
     object Create : PostEndpoint<SignUpRequest, SignUpResult>(this, "create")
     object Private : GetEndpoint<PrivateInfo>(this, "private")
     object ReadInfo : GetEndpoint<UserInfo>(this)
-    // object Update : PutEndpoint(this)
+    object Update : PostEndpoint<UserInfo, Boolean>(this, "update")
+    object CheckUsername: PostEndpoint<String, Boolean>(this, "check-username")
+//    object UploadAvatar: PostEndpoint<ByteArray, String>(this, "upload-avatar")
 }
 
 // "api/v1/user"

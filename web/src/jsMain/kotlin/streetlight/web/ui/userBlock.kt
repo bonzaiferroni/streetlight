@@ -13,7 +13,7 @@ import kotlinx.html.js.div
 import streetlight.web.AccountRoute
 import streetlight.web.model.Streetlight
 
-fun RenderContext.userContent(
+fun RenderContext.userBlock(
     app: Streetlight,
     redirect: Boolean = false,
     modifiers: ModifierSet? = null,
@@ -22,31 +22,26 @@ fun RenderContext.userContent(
     val gate = app.gate
     val portal = app.portal
 
-    val user = gate.stateNow.user
-    if (user != null) {
-        block(user)
-        return
+    flowBlock(gate.userFlow, modifiers) { user ->
+        if (user != null) {
+            block(user)
+        } else {
+            div {
+                +"Must be signed in"
+            }
+        }
     }
 
     if (!redirect) return
 
     val currentRoute = portal.stateNow.route
 
-    val element = div {
-        applyModifiers(Width100, modifiers)
-        +"Must be signed in"
-    }
-
     renderScope.launch {
         gate.userFlow
             .filterNotNull()
             .first()
-            .let { user ->
+            .let {
                 portal.go(currentRoute)
-                element.clear()
-                createRender(element, renderScope) {
-                     this@createRender.block(user)
-                }
             }
     }
 

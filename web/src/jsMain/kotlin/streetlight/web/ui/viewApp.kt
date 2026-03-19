@@ -28,6 +28,7 @@ import streetlight.web.model.UserCache
 import streetlight.web.model.UserCred
 import streetlight.web.model.UserGate
 import streetlight.web.pages.AppBody
+import streetlight.web.pages.emptyBadge
 
 fun viewApp() {
     val scope = MainScope() // 57 KB
@@ -90,6 +91,7 @@ fun viewApp() {
                         StreetlightScreen.GalaxyList -> viewGalaxyList(app)
                         StreetlightScreen.GalaxyProfile -> viewGalaxyProfileRoute()
                         StreetlightScreen.EventScout -> viewEventScoutRoute()
+                        StreetlightScreen.EditProfile -> viewProfileEditor()
                         else -> textBlock("Coming soon: $screen")
                     }
                 }
@@ -102,6 +104,19 @@ fun viewApp() {
                         row {
                             heading2("|", modify(Dim))
                             heading2(title, modify(Dim))
+                        }
+                    }
+                }
+            }
+
+            wireBlock(AppBody.badgeId) {
+                flowBlock(app.gate.userFlow, defaultMagic, magic = true) { userInfo ->
+                    val avatarUrl = userInfo?.avatarUrl
+                    if (avatarUrl != null) {
+                        image(avatarUrl, modify(Size100, Square, CircleClip))
+                    } else {
+                        box(modify(Height100, Square)) {
+                            emptyBadge()
                         }
                     }
                 }

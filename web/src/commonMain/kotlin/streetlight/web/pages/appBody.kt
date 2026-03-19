@@ -8,11 +8,13 @@ import koala.css.GlowShadow
 import koala.css.Height100
 import koala.css.Height6
 import koala.css.Opacity2
+import koala.css.Square
 import koala.css.Width100
 import koala.css.modify
 import koala.html.Id
 import koala.html.OverlayId
 import koala.html.action
+import koala.html.applyId
 import koala.html.box
 import koala.html.column
 import koala.html.icon
@@ -63,10 +65,14 @@ fun FlowContent.appHeader() {
         action(FullMapRoute, modify(Height6, Opacity2)) {
             icon(SvgPath.chevronDown, modify(Height100))
         }
-        action(AccountRoute, modify(Height6, Opacity2)) {
-            icon(SvgPath.emptyProfile, modify(Height100))
+        action(AccountRoute, modify(Height6, Square), AppBody.badgeId) {
+            emptyBadge()
         }
     }
+}
+
+fun FlowContent.emptyBadge() {
+    icon(SvgPath.emptyProfile, modify(Height100, Opacity2))
 }
 
 object AppBody {
@@ -77,4 +83,5 @@ object AppBody {
     val contentBox = Id("content-box")
     val appHeaderId = Id("app-header")
     val titlePathId = Id("title-path")
+    val badgeId = Id("user-badge")
 }

@@ -19,7 +19,7 @@ fun RenderContext.locationProfileView(app: Streetlight) {
         }
 
         wireBlock(LocationShell.adminCard, element) {
-            userContent(app) { userInfo ->
+            userBlock(app) { userInfo ->
                 card {
                     row {
                         textBlock("hello ${userInfo.username}", modify(Flex1))

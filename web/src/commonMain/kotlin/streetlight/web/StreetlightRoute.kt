@@ -38,7 +38,8 @@ enum class StreetlightScreen(
     FoundGalaxy("create-galaxy", { GalaxyFoundryRoute }),
     GalaxyList("galaxies", { GalaxyListRoute }),
     GalaxyProfile("g", { path -> path.provideRouteFromPath { GalaxyPathIdRoute(it) }}),
-    EventScout("post-event", { path -> path.provideRouteFromPath { EventScoutRoute(it) }})
+    EventScout("post-event", { path -> path.provideRouteFromPath { EventScoutRoute(it) }}),
+    EditProfile("edit-profile", { EditProfileRoute }),
 }
 
 fun List<String>.provideRouteFromPath(argIndex: Int = 1, provideRoute: (String) -> AppRoute?) =
@@ -213,4 +214,9 @@ data class GalaxyPathIdRoute(override val pathId: PathId): StreetlightRoute, Pat
 data class EventScoutRoute(override val pathId: PathId): StreetlightRoute, PathIdRoute {
     override val screen get() = StreetlightScreen.EventScout
     override val title get() = "Event Scout"
+}
+
+object EditProfileRoute: StreetlightRoute {
+    override val screen get() = StreetlightScreen.EditProfile
+    override val title get() = "Edit Profile"
 }
