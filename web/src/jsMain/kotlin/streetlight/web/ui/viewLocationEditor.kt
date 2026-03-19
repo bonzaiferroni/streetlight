@@ -48,7 +48,7 @@ fun RenderContext.viewLocationEditor(
     column(modify(AlignItemsStretch)) {
         imageChoice(
             modifiers = modify(MinHeight8),
-            onUpload = { app.client.api.uploadEventImage(it) },
+            onUpload = { app.client.api.uploadImage(it) },
             onValueChanged = model::setImageUrl,
             urlFlow = imageUrlFlow,
             choicesFlow = app.userCache.file.flow

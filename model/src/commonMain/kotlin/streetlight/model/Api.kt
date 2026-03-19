@@ -18,7 +18,6 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object Delete: DeleteEndpoint<EventId>(this, "delete")
         object QueryMap: QueryEndpoint<MapQuery, List<EventInfo>>(this, "bounds")
         // object UserEvents: ApiDaoEndpoint<Event, EventId, NewEvent>(this, "user")
-        object Upload: PostEndpoint<ByteArray, String>(this, "upload")
         object ParseMultiEvents: PostEndpoint<ParseRequest, MultiEventParseResponse>(this, "parse-multi")
         object ParseSingleEvent: PostEndpoint<ParseRequest, SingleEventParseResponse>(this, "parse-single")
         object AtLocation: GetByTableIdEndpoint<LocationId, List<Event>>(this, "location")
@@ -88,6 +87,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object Talents: GetEndpoint<List<Talent>>(this, "talents")
         object EditTalent: PostEndpoint<TalentEdit, Talent>(this, "edit-talent")
         object UploadAvatar: PostEndpoint<ByteArray, String>(this, "upload-avatar")
+        object UploadImage: PostEndpoint<ByteArray, String>(this, "upload")
     }
 
     object Stories: ApiNode(this, "story") {

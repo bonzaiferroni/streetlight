@@ -31,13 +31,13 @@ class ApiClient(private val client: FetchClient) {
     }
 
     suspend fun queryMap(request: MapQuery) = client.get(Api.Events.QueryMap, request.toQuery())
-    suspend fun uploadEventImage(blobUrl: String) = client.uploadBlob(Api.Events.Upload.path, blobUrl)
 
     // users
     suspend fun readUserFiles() = client.get(Api.Users.Files)
     suspend fun updateUser(user: UserInfo) = client.post(UserApi.Update, user)
     suspend fun checkUsername(username: String) = client.post(UserApi.CheckUsername, username)
     suspend fun uploadAvatar(blobUrl: String) = client.uploadBlob(Api.Users.UploadAvatar.path, blobUrl)
+    suspend fun uploadImage(blobUrl: String) = client.uploadBlob(Api.Users.UploadImage.path, blobUrl)
 
     suspend fun createOrEditLocation(location: LocationEdit) = client.post(Api.Locations.Edit, location)
     suspend fun queryLocation(point: GeoPoint) = client.get(Api.Locations.QueryPoint, point.toQuery())
