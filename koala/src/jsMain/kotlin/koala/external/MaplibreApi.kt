@@ -249,6 +249,7 @@ external interface SourceSpecification {
     var tiles: Array<String>?
     var minzoom: Double?
     var maxzoom: Double?
+    var data: dynamic /* String | GeoJSON */
 }
 
 @JsPlainObject
@@ -278,4 +279,54 @@ external interface StyleLayer {
 external interface LayerLayout {
     @JsName("text-field")
     var textField: Any?
+}
+
+@JsPlainObject
+external interface FeatureCollection {
+    var type: String /* "FeatureCollection" */
+    var features: Array<Feature>
+}
+
+@JsPlainObject
+external interface Feature {
+    var type: String /* "Feature" */
+    var properties: dynamic /* plain object */
+    var geometry: Geometry
+}
+
+@JsPlainObject
+external interface Geometry {
+    var type: String
+}
+
+@JsPlainObject
+external interface LineStringGeometry : Geometry {
+    var coordinates: Array<Array<Double>> /* [lng, lat][] */
+}
+
+@JsPlainObject
+external interface LayerSpecification {
+    var id: String
+    var type: String
+    var source: String
+    var paint: LinePaint?
+    var layout: LineLayout?
+}
+
+@JsPlainObject
+external interface LinePaint {
+    @JsName("line-color")
+    var lineColor: String?
+
+    @JsName("line-width")
+    var lineWidth: Number?
+}
+
+@JsPlainObject
+external interface LineLayout {
+    @JsName("line-join")
+    var lineJoin: String? /* "miter" | "bevel" | "round" */
+
+    @JsName("line-cap")
+    var lineCap: String? /* "butt" | "round" | "square" */
 }

@@ -8,6 +8,7 @@
     --white-fg: rgb(var(--white));
     --white-dim: rgba(var(--white), .8);
     --white-disabled: color-mix(in srgb, var(--white-fg) 50%, black);
+    --weak-outline: rgba(var(--white), .2);
     --gray: 60, 62, 64;
     --gray-fg: rgb(var(--gray));
     --gray-bg: color-mix(in srgb, var(--gray-fg) 50%, black);

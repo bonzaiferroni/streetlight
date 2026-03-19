@@ -215,6 +215,7 @@ textarea {
     max-height: 24rem;
     border-radius: 1rem;
     overflow: hidden;
+    box-shadow: 0 0 0 1px var(--weak-outline);
 }
 
 .header-image > * {

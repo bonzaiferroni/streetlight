@@ -3,8 +3,16 @@
 package koala.model
 
 import kampfire.model.GeoPoint
+import koala.external.Feature
+import koala.external.FeatureCollection
+import koala.external.LayerSpecification
+import koala.external.LineLayout
+import koala.external.LinePaint
+import koala.external.LineStringGeometry
+import koala.external.SourceSpecification
+import koala.model.jsObject
 
-interface LineEntity: MapEntity {
+interface LineEntity : MapEntity {
     val points: List<GeoPoint>
     val layerId: LayerId
     val color: String get() = "#4fd1c5"
@@ -21,7 +29,7 @@ data class MapLine(
 fun MapViewContext.showLines(entities: List<LineEntity>) {
     val layerIds = entities.mapNotNull { entity ->
         val lineSet = lineLayers.getOrPut(entity.layerId) { mutableListOf() }
-        if (lineSet.any { it.entity.entityId  == entity.entityId} ) return@mapNotNull null
+        if (lineSet.any { it.entity.entityId == entity.entityId }) return@mapNotNull null
         val line = entity.createLine()
         lineSet.add(line)
         entity.layerId
@@ -30,10 +38,10 @@ fun MapViewContext.showLines(entities: List<LineEntity>) {
     layerIds.forEach { layerId ->
         val lineSet = lineLayers.getValue(layerId)
         val lines = lineSet.map { it.feature }.toJsArray()
-        val sourceData = jsObject {
-            type = "FeatureCollection"
+        val sourceData = FeatureCollection(
+            type = "FeatureCollection",
             features = lines
-        }
+        )
 
         if (layers.contains(layerId)) {
             console.log("adding to existing layer")
@@ -41,23 +49,23 @@ fun MapViewContext.showLines(entities: List<LineEntity>) {
         } else {
             val entity = lineLayers.getValue(layerId).first().entity
             console.log("creating layer: $layerId")
-            val sourceObj = jsObject {
-                type = "geojson"
+            val sourceObj = SourceSpecification(
+                type = "geojson",
                 data = sourceData
-            }
-            val layerObj = jsObject {
-                id = layerId
-                type = "line"
-                source = layerId
-                paint = jsObject(
-                    "line-color" to entity.color,
-                    "line-width" to entity.width
+            )
+            val layerObj = LayerSpecification(
+                id = layerId,
+                type = "line",
+                source = layerId,
+                paint = LinePaint(
+                    lineColor = entity.color,
+                    lineWidth = entity.width
+                ),
+                layout = LineLayout(
+                    lineJoin = entity.joinShape,
+                    lineCap = entity.capShape,
                 )
-                layout = jsObject(
-                    "line-join" to entity.joinShape,
-                    "line-cap" to entity.capShape
-                )
-            }
+            )
             widget.addSource(layerId, sourceObj)
             widget.addLayer(layerObj)
             layers.add(layerId)
@@ -65,17 +73,15 @@ fun MapViewContext.showLines(entities: List<LineEntity>) {
     }
 }
 
-@Suppress("DuplicatedCode")
 fun LineEntity.createLine(): MapLine {
     val line = points.map { arrayOf(it.lng, it.lat) }.toJsArray()
-    val feature = jsObject {
-        type = "Feature"
-        properties = jsObject { }
-        geometry = jsObject {
-            type = "LineString"
+    val feature = Feature(
+        type = "Feature",
+        geometry = LineStringGeometry(
+            type = "LineString",
             coordinates = line
-        }
-    }
+        )
+    )
     return MapLine(feature, this)
 }
 

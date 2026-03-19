@@ -21,6 +21,8 @@ import streetlight.web.shells.gridOf
 import streetlight.web.shells.iconPath
 
 fun RenderContext.viewGalaxyProfile(app: Streetlight, content: GalaxyShellContent) {
+    val transit = app.streetMap.transit
+
     val root = shellBox(GalaxyShell.galaxyBoxId, app.geoMap, app.appScope) {
         galaxyShell(content)
     }
@@ -28,6 +30,9 @@ fun RenderContext.viewGalaxyProfile(app: Streetlight, content: GalaxyShellConten
     root.onFirstView {
         wireBlock(GalaxyShell.mapPanelId) {
             val element = column {
+                row {
+                    switch("show transit", onToggle = transit::setIsActive, bindFlow = transit.isActiveFlow)
+                }
                 content.posts.forEach { post ->
                     gridOf(post)
                 }

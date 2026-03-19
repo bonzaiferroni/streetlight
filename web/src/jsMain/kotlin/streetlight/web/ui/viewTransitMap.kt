@@ -22,7 +22,7 @@ fun RenderContext.viewTransitMap(
     val streetMap = app.streetMap
     val transitMap = app.streetMap.transit
     var stopMarkers: List<PointEntityView> = emptyList()
-    var areaTransit = transitMap.stateNow.areaTransit
+//    var areaTransit = transitMap.stateNow.areaTransit
     val vehicleElements = mutableMapOf<String, PointEntityView>()
     var markersVisible = false
 
@@ -45,13 +45,13 @@ fun RenderContext.viewTransitMap(
 //            }
         }
 
-        launch {
-            transitMap.stateFlow.mapDistinctBy({ it.galaxyId }) { it.areaTransit }.filterNotNull().collect { transit ->
-                areaTransit = transit
-                // stopMarkers = transit.stops.map { createStopMarker(it, eventMap.stateNow.zoom, maplibre) }
-                addRouteLines(transit.routes, maplibre)
-            }
-        }
+//        launch {
+//            transitMap.stateFlow.mapDistinctBy({ it.galaxyId }) { it.areaTransit }.filterNotNull().collect { transit ->
+//                areaTransit = transit
+//                // stopMarkers = transit.stops.map { createStopMarker(it, eventMap.stateNow.zoom, maplibre) }
+//                addRouteLines(transit.routes, maplibre)
+//            }
+//        }
 
         launch {
 //            transitMap.stateFlow.mapDistinctBy({ it.timestamp }) { it.vehiclePositions }.collect { vehicles ->
