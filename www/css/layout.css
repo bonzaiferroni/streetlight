@@ -71,6 +71,10 @@
         flex-direction: row;
     }
 
+    .query-medium-column {
+        flex-direction: column;
+    }
+
     .query-medium-row > .column {
         width: auto;
     }
@@ -100,6 +104,10 @@
 @media (min-width: 768px) {
     .query-large-row {
         flex-direction: row;
+    }
+
+    .query-large-column {
+        flex-direction: column;
     }
 
     .query-large-row > .column {

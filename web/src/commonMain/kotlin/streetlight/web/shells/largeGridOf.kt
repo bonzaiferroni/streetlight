@@ -67,7 +67,7 @@ fun FlowContent.largeGridOf(post: GalaxyPost) {
             }
 
             // grid content
-            row(modify(Flex1, MinHeight8, FlexItems1, AlignItemsStretch, GapTiny, TextAlignCenter, WrapFlex, SmallFont)) {
+            row(modify(QueryLargeColumn, Flex1, MinHeight8, FlexItems1, AlignItemsStretch, GapTiny, TextAlignCenter, WrapFlex, SmallFont)) {
                 val cellModifiers = modify(AlignItemsCenter, Gap0, BorderRadius0, JustifyCenter, MinWidth16)
                 card(cellModifiers) {
                     post.event?.startsAt?.let { startsAt ->

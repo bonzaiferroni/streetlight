@@ -1,7 +1,6 @@
 
 .flex-items-1 > * {
     flex: 1;
-    width: 100%;
 }
 .flex-items-basis-50 > * {
     flex-basis: 50%;
@@ -21,6 +20,14 @@
 
 .flex-4 {
     flex: 4;
+}
+
+.flex-basis-25 {
+    flex-basis: 25%;
+}
+
+.flex-basis-33 {
+    flex-basis: 33%;
 }
 
 .bold {
