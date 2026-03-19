@@ -145,6 +145,14 @@ class MapViewContext(
 //        console.log("modify: ${modifiers.joinToString(", ") { it.value }}")
     }
 
+    fun hideLayer(layerId: LayerId) {
+        widget.setLayoutProperty(layerId, "visibility", "none")
+    }
+
+    fun showLayer(layerId: LayerId) {
+        widget.setLayoutProperty(layerId, "visibility", "visible")
+    }
+
     private fun recallObject(entity: PointEntity, center: GeoPoint): PointEntityView? {
         val view = markers[entity.entityId] ?: return null
 

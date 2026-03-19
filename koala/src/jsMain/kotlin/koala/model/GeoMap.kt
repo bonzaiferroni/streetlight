@@ -5,7 +5,6 @@ import kampfire.model.GeoPoint
 import kampfire.model.distanceTo
 import kampfire.model.meters
 import koala.css.ModifierSet
-import koala.dom.DOMContext
 import koala.dom.RenderContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -36,6 +35,10 @@ class GeoMap(
     val movementFlow: Flow<EntityMovement> = _movementFlow
     private val _tempEntityFlow = MutableSharedFlow<TempEntitySet?>(1)
     val tempEntityFlow: Flow<TempEntitySet?> = _tempEntityFlow
+    private val _hideLayersFlow = MutableSharedFlow<List<LayerId>>()
+    val hideLayersFlow: Flow<List<LayerId>> = _hideLayersFlow
+    private val _showLayersFlow = MutableSharedFlow<List<LayerId>>()
+    val showLayersFlow: Flow<List<LayerId>> = _showLayersFlow
 
     val viewedStateFlow = stateFlow.filter { it.isViewed }
     val zoomFlow = viewedStateFlow.mapDistinct { it.zoom }
@@ -103,6 +106,18 @@ class GeoMap(
     fun tempEntities(entities: List<MapEntity>?) {
         scope.launch {
             _tempEntityFlow.emit(entities?.let { TempEntitySet(it)})
+        }
+    }
+
+    fun hideLayers(layerIds: List<LayerId>) {
+        scope.launch {
+            _hideLayersFlow.emit(layerIds)
+        }
+    }
+
+    fun showLayers(layerIds: List<LayerId>) {
+        scope.launch {
+            _showLayersFlow.emit(layerIds)
         }
     }
 }

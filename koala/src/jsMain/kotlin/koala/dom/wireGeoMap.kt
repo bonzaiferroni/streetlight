@@ -135,6 +135,22 @@ fun wireMapWindow(
             }
         }
 
+        launch {
+            geoMap.hideLayersFlow.collect { layerIds ->
+                layerIds.forEach {
+                    context.hideLayer(it)
+                }
+            }
+        }
+
+        launch {
+            geoMap.showLayersFlow.collect { layerIds ->
+                layerIds.forEach {
+                    context.showLayer(it)
+                }
+            }
+        }
+
 //        launch {
 //            geoMap.contextIdFlow.collect {
 //                context.setContextId(it)

@@ -68,6 +68,8 @@ external object maplibregl {
 
         fun setTerrain(terrain: dynamic)
 
+        fun setLayoutProperty(layerId: String, propertyName: String, value: String)
+
         // Event handling inherited from .koala.external.Evented
     }
 
