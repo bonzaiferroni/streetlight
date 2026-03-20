@@ -70,7 +70,8 @@ class TransitMap(
 
             while (true) {
                 if (geoMap.stateNow.isViewed) {
-                    fetchVehicles(feedType, transit)
+                    // fetchVehicles(feedType, transit)
+                    client.transit.readVehiclePositions(0)
                     delay(30.seconds)
                 } else {
                     delay(1.seconds)
@@ -103,7 +104,7 @@ class TransitMap(
     }
 
     private suspend fun fetchVehicles(feedType: ProtobufType, transit: AreaTransit) {
-        val feed = client.transit.readVehiclePositions(feedType)
+        val feed = client.transit.readVehiclePositions(feedType) ?: return
         val timestamp = feed.header.timestamp.toString().toLong()
         val delta = (timestamp - stateNow.timestamp).toInt()
         console.log("fetching vehicles -- timestamp delta: $delta")

@@ -66,14 +66,17 @@ class FetchClient(
     ): FetchResponse<Returned>? = authRequest("POST", endpoint.path, Json.encodeToString(body)) { it.tryDecodeWithStatus() }
 
     suspend inline fun <reified Returned> getProtobuf(
-        endpoint: GetEndpoint<Unit>,
+        path: String,
         feedType: ProtobufType
-    ): FeedMessage<Returned> {
-        val response = window.fetch(endpoint.path).await()
-            .arrayBuffer().await()
-        val buffer = Uint8Array(response)
+    ): FeedMessage<Returned>? {
+        val response = window.fetch(path).await()
+        if (response.status.toInt() == 204) {
+            return null
+        }
+        val buffer = response.arrayBuffer().await()
+        val array = Uint8Array(buffer)
 
-        return feedType.decode(buffer)
+        return feedType.decode(array)
     }
 
     fun connectSocket(path: String): WebSocket {
