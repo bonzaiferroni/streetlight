@@ -31,15 +31,7 @@ fun FlowContent.galaxyShell(content: GalaxyShellContent) {
                         box(modify(Flex1))
                         button("Post Event", EventScoutRoute(galaxy.pathId))
                     }
-                    var headingDay: String? = null
-                    posts.forEach { post ->
-                        val eventDay = post.event?.startsAt?.toRelativeDayFormat()
-                        if (eventDay != null && eventDay != headingDay) {
-                            headingDay = eventDay
-                            spacer(headingDay)
-                        }
-                        largeGridOf(post)
-                    }
+                    gridOf(content.posts)
                     appFooter()
                 }
             }

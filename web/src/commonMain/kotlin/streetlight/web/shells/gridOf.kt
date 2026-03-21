@@ -11,6 +11,7 @@ import koala.html.icon
 import koala.html.image
 import koala.html.row
 import koala.html.setData
+import koala.html.spacer
 import koala.html.textBlock
 import kotlinx.html.FlowContent
 import streetlight.model.data.Event
@@ -88,3 +89,15 @@ fun FlowContent.gridOf(post: GalaxyPost) {
 val GalaxyPost.route get() = event?.route ?: location?.route
 val Location.route get() = LocationIdRoute(locationId)
 val Event.route get() = EventIdRoute(eventId)
+
+fun FlowContent.gridOf(posts: List<GalaxyPost>) {
+    var headingDay: String? = null
+    posts.forEach { post ->
+        val eventDay = post.event?.startsAt?.toRelativeDayFormat()
+        if (eventDay != null && eventDay != headingDay) {
+            headingDay = eventDay
+            spacer(headingDay)
+        }
+        largeGridOf(post)
+    }
+}

@@ -3,12 +3,10 @@ package streetlight.web.pages
 import koala.html.*
 import kotlinx.html.*
 import koala.css.*
-import streetlight.model.data.Event
-import streetlight.model.data.Location
-import streetlight.web.shells.SpotlightContent
+import streetlight.web.shells.HomeContent
 import streetlight.web.shells.homeShell
 
-fun HTML.homePage(content: SpotlightContent) {
+fun HTML.homePage(content: HomeContent) {
     head("Streetlight | Home") {
         supportProtobuf()
         supportGeoMap()

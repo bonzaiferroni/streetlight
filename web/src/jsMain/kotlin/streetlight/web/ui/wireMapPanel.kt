@@ -33,7 +33,7 @@ fun ViewContext<Streetlight>.wireStreetMap() {
         }
     }
 
-    wireMapPanel()
+    // wireMapPanel()
 }
 
 fun ViewContext<Streetlight>.wireMapPanel() {

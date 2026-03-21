@@ -13,7 +13,7 @@ import streetlight.model.data.Galaxy
 import streetlight.model.data.GalaxyPost
 import streetlight.web.pages.appFooter
 
-fun FlowContent.spotlightTab(content: SpotlightContent) {
+fun FlowContent.spotlightTab(content: HomeContent) {
     val galaxies = content.galaxies; val posts = content.posts
     column {
         column {
@@ -36,7 +36,7 @@ fun FlowContent.spotlightTab(content: SpotlightContent) {
     }
 }
 
-data class SpotlightContent(
+data class HomeContent(
     val galaxies: List<Galaxy>,
     val posts: List<GalaxyPost>
 )
