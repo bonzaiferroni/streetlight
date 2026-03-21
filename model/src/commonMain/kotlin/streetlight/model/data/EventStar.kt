@@ -3,7 +3,7 @@ package streetlight.model.data
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class EventInterest(
+data class EventStar(
     val eventId: EventId,
     val value: InterestType?,
 )

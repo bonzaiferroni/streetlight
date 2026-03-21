@@ -1,13 +1,13 @@
 package streetlight.web.ui
 
 import koala.core.queryFirstOrNull
-import koala.css.CustomProperty
 import koala.css.ElementClass
+import koala.css.StyleProperty
 import koala.css.UrlValue
 import koala.dom.*
 import kotlinx.coroutines.launch
 import org.w3c.dom.HTMLElement
-import streetlight.model.data.EventInterest
+import streetlight.model.data.EventStar
 import streetlight.model.data.InterestType
 import streetlight.web.GalaxyPathIdRoute
 import streetlight.web.model.Streetlight
@@ -58,7 +58,7 @@ fun ViewContext<Streetlight>.viewGalaxyProfileRoute() {
 }
 
 fun RenderContext.wireInterestControls(app: Streetlight, root: HTMLElement) {
-    root.wireByAttribute<EventInterest>(EventAttributes.interest) { element, interest ->
+    root.wireByAttribute<EventStar>(EventAttributes.interest) { element, interest ->
         var interest = interest
 
         element.onClick {
@@ -76,7 +76,7 @@ fun RenderContext.wireInterestControls(app: Streetlight, root: HTMLElement) {
                 interest = updatedInterest
 
                 val element = iconElement ?: return@collect
-                element.style.setProperty(CustomProperty.maskSrc, UrlValue(interest.value.iconPath))
+                element.style.setProperty(StyleProperty.maskSrc, UrlValue(interest.value.iconPath))
             }
         }
     }

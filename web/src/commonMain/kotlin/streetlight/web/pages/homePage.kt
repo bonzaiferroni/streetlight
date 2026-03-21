@@ -17,7 +17,7 @@ fun HTML.homePage(content: HomeContent) {
 }
 
 fun FlowContent.appFooter() {
-    val giants = "May we build a world of faithful giants. "
+    val giants = "May we build us a world of faithful giants."
     row(modify(JustifyCenter)) {
         style = "height: 20rem;"
         column(modify(AlignItemsCenter, Gap0, Width100)) {

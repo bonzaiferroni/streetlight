@@ -2,16 +2,11 @@ package streetlight.web.ui
 
 import koala.css.*
 import koala.dom.*
-import koala.html.heading3
 import koala.html.heading4
-import koala.html.propertyValue
-import koala.html.spacer
+import koala.html.centeredHeading
 import koala.model.mapDistinct
-import koala.model.storeOf
 import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.mapNotNull
 import streetlight.model.data.Event
-import streetlight.model.data.EventEdit
 import streetlight.model.data.Galaxy
 import streetlight.model.data.Location
 import streetlight.model.data.LocationEdit
@@ -142,7 +137,7 @@ fun ViewContext<EventScout>.findLocationPanel() {
             button("Here", onClick = model::here)
         }
 
-        spacer("or")
+        centeredHeading("or")
 
         heading4("Search")
         textBlock("We can search for the location's name, address, city, etc.", modify(Dim))

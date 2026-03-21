@@ -6,8 +6,8 @@
     height: 2rem;
     aspect-ratio: 1 / 1;
 
-    mask-image: var(--mask-src);
-    -webkit-mask-image: var(--mask-src);
+    mask-image: var(--mask-url);
+    -webkit-mask-image: var(--mask-url);
 
     mask-size: contain;
     -webkit-mask-size: contain;
@@ -57,15 +57,15 @@
 }
 
 .logo > div {
-    --mask-src: url('/www/svg/flame.svg');
+    --mask-url: url('/www/svg/flame.svg');
     height: 100%;
     background-color: currentColor;
     aspect-ratio: 2 / 3;
 
     display: block;
 
-    mask-image: var(--mask-src);
-    -webkit-mask-image: var(--mask-src);
+    mask-image: var(--mask-url);
+    -webkit-mask-image: var(--mask-url);
 
     mask-size: contain;
     -webkit-mask-size: contain;

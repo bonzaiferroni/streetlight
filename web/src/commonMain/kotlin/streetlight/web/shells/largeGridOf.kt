@@ -10,7 +10,6 @@ import koala.html.button
 import koala.html.card
 import koala.html.column
 import koala.html.heading3
-import koala.html.heading4
 import koala.html.heading5
 import koala.html.icon
 import koala.html.imageWithBackdrop
@@ -18,7 +17,7 @@ import koala.html.row
 import koala.html.setData
 import koala.html.textBlock
 import kotlinx.html.FlowContent
-import streetlight.model.data.EventInterest
+import streetlight.model.data.EventStar
 import streetlight.model.data.GalaxyPost
 import streetlight.model.data.InterestType
 import streetlight.web.ui.SvgPath
@@ -34,7 +33,7 @@ fun FlowContent.largeGridOf(post: GalaxyPost) {
                 post.imageUrl?.let { imageUrl ->
                     imageWithBackdrop(imageUrl, modify(Flex1, MinHeight24, AlignSelfStretch))
                 }
-                column(modify(Flex2, Padding1, AlignItemsStretch, Height24)) {
+                column(modify(Flex2, Padding1, AlignItemsStretch, MaxHeight24)) {
                     row {
                         column(modify(Flex1, Gap0)) {
                             action(postRoute) {
@@ -48,7 +47,7 @@ fun FlowContent.largeGridOf(post: GalaxyPost) {
                         }
                     }
                     post.description?.let { description ->
-                        box(modify(Flex1, SmallFont, OverflowHidden, FadeBottom, MinHeight0)) {
+                        box(modify(Flex1, SmallFont, OverflowHidden, FadeBottom)) {
                             action(postRoute) {
                                 textBlock(description)
                             }
@@ -98,7 +97,7 @@ fun FlowContent.largeGridOf(post: GalaxyPost) {
                 }
                 post.event?.let { event ->
                     card(cellModifiers) {
-                        val interest = EventInterest(event.eventId, post.interest)
+                        val interest = EventStar(event.eventId, post.interest)
                         interestCell(interest)
                     }
                 }
@@ -107,7 +106,7 @@ fun FlowContent.largeGridOf(post: GalaxyPost) {
     }
 }
 
-fun FlowContent.interestCell(interest: EventInterest) {
+fun FlowContent.interestCell(interest: EventStar) {
     row(modify(WidthAuto)) {
         setData(EventAttributes.interest, interest)
         // textBlock(post.visibility.toString())

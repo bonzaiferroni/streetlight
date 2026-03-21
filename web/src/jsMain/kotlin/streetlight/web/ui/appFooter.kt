@@ -15,7 +15,7 @@ import koala.html.textBlock
 import kotlinx.html.style
 
 fun RenderContext.appFooter() {
-    val giants = "May we choose a world of good and faithful giants. "
+    val giants = "May we build us a world of faithful giants."
     row(modify(JustifyCenter)) {
         style = "height: 20rem;"
         column(modify(AlignItemsCenter, Gap0, Width100)) {

@@ -10,12 +10,11 @@ import koala.html.heading5
 import koala.html.icon
 import koala.html.image
 import koala.html.row
-import koala.html.setData
-import koala.html.spacer
+import koala.html.centeredHeading
 import koala.html.textBlock
 import kotlinx.html.FlowContent
 import streetlight.model.data.Event
-import streetlight.model.data.EventInterest
+import streetlight.model.data.EventStar
 import streetlight.model.data.GalaxyPost
 import streetlight.model.data.Location
 import streetlight.web.EventIdRoute
@@ -77,7 +76,7 @@ fun FlowContent.gridOf(post: GalaxyPost) {
                 }
                 post.event?.let { event ->
                     card(cellModifiers) {
-                        val interest = EventInterest(event.eventId, post.interest)
+                        val interest = EventStar(event.eventId, post.interest)
                         interestCell(interest)
                     }
                 }
@@ -96,7 +95,7 @@ fun FlowContent.gridOf(posts: List<GalaxyPost>) {
         val eventDay = post.event?.startsAt?.toRelativeDayFormat()
         if (eventDay != null && eventDay != headingDay) {
             headingDay = eventDay
-            spacer(headingDay)
+            centeredHeading(headingDay, modify(MarginTop1))
         }
         largeGridOf(post)
     }

@@ -63,4 +63,4 @@ inline fun <reified T> Element.wireByAttribute(attribute: Attribute, block: (HTM
     }
 }
 
-fun CSSStyleDeclaration.setProperty(property: StyleProperty, value: CssValue) = setProperty("--${property.identifier}", value.value)
+fun CSSStyleDeclaration.setProperty(property: StyleProperty, value: CssValue) = setProperty("--${property.identifier}", value.expression)

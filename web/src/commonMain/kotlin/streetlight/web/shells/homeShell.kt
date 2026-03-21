@@ -10,15 +10,25 @@ import koala.html.box
 import koala.html.column
 import koala.html.geoMapMount
 import koala.html.heading3
+import koala.html.row
 import koala.html.tab
 import koala.html.tabs
 import koala.html.textBlock
 import kotlinx.html.FlowContent
+import streetlight.model.data.GalaxyStar
 import streetlight.web.pages.appFooter
 
 fun FlowContent.homeShell(content: HomeContent) {
     column(HomeShell.homeBoxId) {
         geoMapMount()
+
+        val galaxyStars = content.galaxies.map { GalaxyStar(it.pathId, it.name, it.imageUrl) }
+
+        row {
+            galaxyStars.forEach {
+                buttonOf(it)
+            }
+        }
 
         column {
             heading3("Galaxies")

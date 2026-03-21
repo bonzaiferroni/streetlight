@@ -24,6 +24,7 @@ object OverflowWrapAnywhere: Modifier { override val value = "overflow-wrap-anyw
 object Focus: Modifier { override val value = "focus" }
 object PrimaryBg: Modifier { override val value = "primary-bg" }
 object PrimaryCardBg: Modifier { override val value = "primary-card-bg" }
+object BackgroundImage: Modifier { override val value = "background-image" }
 
 // font utilities
 object Bold: Modifier { override val value = "bold" }
@@ -81,6 +82,7 @@ object Height32: Modifier { override val value = "height-32" }
 object Height48: Modifier { override val value = "height-48" }
 object MaxHeight8: Modifier { override val value = "max-height-8" }
 object MaxHeight16: Modifier { override val value = "max-height-16" }
+object MaxHeight24: Modifier { override val value = "max-height-24" }
 object MaxHeight32: Modifier { override val value = "max-height-32" }
 object MaxHeight64: Modifier { override val value = "max-height-64" }
 object MinHeight0: Modifier { override val value = "min-height-0" }

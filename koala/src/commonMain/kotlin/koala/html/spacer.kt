@@ -16,10 +16,11 @@ fun FlowContent.spacer(
     }
 }
 
-fun FlowContent.spacer(
+fun FlowContent.centeredHeading(
     text: String,
+    modifiers: ModifierSet? = null,
 ) {
-    row(modify(Width100, JustifyCenter)) {
+    row(modify(modifiers, Width100, JustifyCenter)) {
         hr {
             applyModifiers(modify(Width16, Opacity2))
         }

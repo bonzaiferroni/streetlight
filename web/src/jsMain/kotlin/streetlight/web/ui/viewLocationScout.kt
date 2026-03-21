@@ -5,7 +5,7 @@ import koala.dom.*
 import koala.html.heading3
 import koala.html.heading4
 import koala.html.propertyValue
-import koala.html.spacer
+import koala.html.centeredHeading
 import koala.model.mapDistinct
 import kotlinx.coroutines.flow.filterNotNull
 import streetlight.model.data.Location
@@ -75,7 +75,7 @@ fun ViewContext<LocationScout>.findPointStage() {
             }
         }
 
-        spacer("or")
+        centeredHeading("or")
 
         card {
             heading4("OpenStreetMap")
@@ -99,7 +99,7 @@ fun ViewContext<LocationScout>.findPointStage() {
             }
         }
 
-        spacer("or")
+        centeredHeading("or")
 
         card {
             heading4("Read Website")

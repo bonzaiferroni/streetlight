@@ -5,6 +5,7 @@
     background: var(--primary-button);
     color: var(--ink);
     font-size: .8rem;
+    font-weight: 500;
     line-height: 1.5rem;
     cursor: pointer;
     transition: background 0.2s ease;
@@ -12,6 +13,9 @@
     text-transform: uppercase;
     white-space: nowrap;
     min-width: calc(var(--unit-spacing) * 16);
+    text-shadow:
+            0 1px 2px rgba(0, 0, 0, 0.8),
+            0 0 6px rgba(0, 0, 0, 0.6);
 }
 
 .btn.accent {
@@ -22,6 +26,29 @@
 .btn.secondary {
     box-shadow: 0 0 .8rem var(--gray-fg);
     background: var(--secondary-button);
+}
+
+.btn.background-image {
+    position: relative;
+    overflow: hidden;
+    color: inherit;
+    z-index: 0;
+    box-shadow: 0 0 .8rem rgba(var(--ink), .2);
+}
+
+.btn.background-image::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+            linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),
+            var(--background-url);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    filter: blur(2px);
+    transform: scale(1.05);
+    z-index: -1;
 }
 
 .btn[disabled] {

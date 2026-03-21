@@ -12,7 +12,7 @@ fun DOMContext.icon(
     block: (DIV.() -> Unit)? = null
 ) = div {
     applyModifiers(modify(ElementClass.icon, modifiers))
-    style = styleOf(CustomProperty.maskSrc, UrlValue(src))
+    applyStyles(styleOf(StyleProperty.maskSrc to UrlValue(src)))
     block?.invoke(this)
 }
 
