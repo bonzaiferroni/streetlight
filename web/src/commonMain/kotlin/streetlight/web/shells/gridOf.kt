@@ -45,7 +45,7 @@ fun FlowContent.gridOf(post: GalaxyPost) {
                                 }
                             }
                         }
-                        icon(SvgPath.focus, modify(Height100, Square, Dim))
+                        icon(SvgPath.focus, modify(Height5, Square, Dim))
                     }
                     description?.let {
                         action(postRoute) {

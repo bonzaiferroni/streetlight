@@ -34,7 +34,7 @@ fun FlowContent.largeGridOf(post: GalaxyPost) {
                 post.imageUrl?.let { imageUrl ->
                     imageWithBackdrop(imageUrl, modify(Flex1, MinHeight24, AlignSelfStretch))
                 }
-                column(modify(Flex2, Padding1, AlignItemsStretch)) {
+                column(modify(Flex2, Padding1, AlignItemsStretch, Height24)) {
                     row {
                         column(modify(Flex1, Gap0)) {
                             action(postRoute) {
@@ -48,7 +48,7 @@ fun FlowContent.largeGridOf(post: GalaxyPost) {
                         }
                     }
                     post.description?.let { description ->
-                        box(modify(Flex1, SmallFont, OverflowHidden, FadeBottom, RelativeParent, MinHeight8)) {
+                        box(modify(Flex1, SmallFont, OverflowHidden, FadeBottom, MinHeight0)) {
                             action(postRoute) {
                                 textBlock(description)
                             }

@@ -196,6 +196,10 @@
     height: calc(var(--unit-spacing) * 16);
 }
 
+.height-24 {
+    height: calc(var(--unit-spacing) * 24);
+}
+
 .width-auto {
     width: auto;
 }

@@ -76,6 +76,7 @@ object Height5: Modifier { override val value = "height-5" }
 object Height6: Modifier { override val value = "height-6" }
 object Height8: Modifier { override val value = "height-8" }
 object Height16: Modifier { override val value = "height-16" }
+object Height24: Modifier { override val value = "height-24" }
 object Height32: Modifier { override val value = "height-32" }
 object Height48: Modifier { override val value = "height-48" }
 object MaxHeight8: Modifier { override val value = "max-height-8" }
