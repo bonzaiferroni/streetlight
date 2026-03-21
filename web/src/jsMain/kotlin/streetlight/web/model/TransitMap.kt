@@ -14,15 +14,15 @@ import koala.model.storeOf
 import koala.model.toGeoPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.await
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import streetlight.model.data.AreaTransit
+import streetlight.model.data.AreaTransitState
 import streetlight.model.data.TransitRouteId
+import streetlight.model.data.TransitVehicle
 import streetlight.model.data.VehicleType
 import streetlight.web.io.ProtobufType
 import streetlight.web.ui.SvgPath
-import streetlight.web.io.protobuf
 import kotlin.time.Duration.Companion.seconds
 
 class TransitMap(
@@ -63,16 +63,19 @@ class TransitMap(
                 currentRoutes = createRoutes(transit)
             }
 
-            val feedType = feedType ?: protobuf.load("/www/proto/gtfs-realtime.proto").await()
-                .lookupType("transit_realtime.FeedMessage").also { feedType = it }
-
             delay(1.seconds)
+
+            var timestamp = 0L
 
             while (true) {
                 if (geoMap.stateNow.isViewed) {
-                    // fetchVehicles(feedType, transit)
-                    client.transit.readVehiclePositions(0)
-                    delay(30.seconds)
+                    val transitState = client.transit.readVehiclePositions(timestamp)
+                    if (transitState != null) {
+                        timestamp = transitState.timestamp
+                        showTransitState(transitState)
+                    }
+                    console.log(transitState?.vehicles?.size)
+                    delay(10.seconds)
                 } else {
                     delay(1.seconds)
                 }
@@ -101,6 +104,25 @@ class TransitMap(
         }
         geoMap.addLines(routes)
         return routes
+    }
+
+    private fun showTransitState(transitState: AreaTransitState) {
+        val transit = transit ?: return
+        val vehicles = transitState.vehicles
+        val removedIds = currentEntities
+            .filter { currentEntity -> vehicles.none { currentEntity.vehicleId == it.vehicleId } }
+            .map { it.entityId }
+        val entities = transitState.vehicles.map {
+            val vehicleType = transit.routes.firstOrNull() { route -> route.transitRouteId.value == it.routeId }
+                ?.vehicleType ?: VehicleType.Bus
+            it.toEntity(transitState.timestamp, vehicleType)
+        }
+        geoMap.removeEntities(removedIds)
+        geoMap.addEntities(entities)
+
+        currentEntities = entities
+
+        state.set { it.copy(timestamp = transitState.timestamp) }
     }
 
     private suspend fun fetchVehicles(feedType: ProtobufType, transit: AreaTransit) {
@@ -185,5 +207,19 @@ fun VehiclePosition.toEntity(currentTime: Long, vehicleType: VehicleType): Trans
         vehicleType = vehicleType,
         opacity = opacity,
         bearing = position.bearing
+    )
+}
+
+fun TransitVehicle.toEntity(currentTime: Long, vehicleType: VehicleType): TransitEntity {
+    val vehicleTime = timestamp.toString().toLong()
+    val secondsSinceCapture = (currentTime - vehicleTime).toInt()
+    val opacity = (1 - secondsSinceCapture / 240f).coerceIn(.5f, 1f)
+    return TransitEntity(
+        vehicleId = vehicleId,
+        label = routeId,
+        position = geoPoint,
+        vehicleType = vehicleType,
+        opacity = opacity,
+        bearing = bearing
     )
 }

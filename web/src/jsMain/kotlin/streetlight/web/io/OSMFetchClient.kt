@@ -27,7 +27,7 @@ class OSMFetchClient() {
 
         val response = window.fetch(url, RequestInit(headers = headers)).await()
 
-        return response.tryDecodeText(true)
+        return response.tryDecodeText()
     }
 
     suspend fun readPlaces(query: String, bounds: GeoBounds? = null): List<OSMPlace>? {
@@ -49,7 +49,7 @@ class OSMFetchClient() {
 
         val response = window.fetch(url, RequestInit(headers = headers)).await()
 
-        return response.tryDecodeText(true)
+        return response.tryDecodeText()
     }
 }
 

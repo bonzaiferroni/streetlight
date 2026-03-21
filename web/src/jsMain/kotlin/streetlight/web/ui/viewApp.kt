@@ -1,5 +1,6 @@
 package streetlight.web.ui
 
+import kampfire.model.GeoPoint
 import koala.css.*
 import koala.dom.*
 import koala.html.heading2
@@ -12,7 +13,14 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.datetime.TimeZone
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.cbor.Cbor
+import kotlinx.serialization.decodeFromByteArray
+import kotlinx.serialization.encodeToByteArray
+import kotlinx.serialization.serializer
 import revealContent
+import streetlight.model.data.AreaTransitState
+import streetlight.model.data.TransitVehicle
 import streetlight.web.HomeRoute
 import streetlight.web.StreetlightScreen
 import streetlight.web.io.ApiClient
@@ -31,8 +39,17 @@ import streetlight.web.model.UserInterest
 import streetlight.web.pages.AppBody
 import streetlight.web.pages.emptyBadge
 
+@OptIn(ExperimentalSerializationApi::class)
 fun viewApp() {
     val scope = MainScope() // 57 KB
+
+    console.log("encoding")
+    val bytes = Cbor.encodeToByteArray(AreaTransitState(0, listOf(
+        TransitVehicle("ey", "ey", GeoPoint.Denver, 0f, 0)
+    )))
+    console.log("decoding")
+    val value: AreaTransitState = Cbor.decodeFromByteArray(bytes)
+    console.log(value)
 
     val cred = UserCred()
     val fetchClient = FetchClient(cred)

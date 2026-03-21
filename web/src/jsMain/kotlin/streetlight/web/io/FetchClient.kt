@@ -1,5 +1,6 @@
 package streetlight.web.io
 
+import kabinet.utils.toBytes
 import kampfire.api.Endpoint
 import kampfire.api.GetByIdEndpoint
 import kampfire.api.GetByTableIdEndpoint
@@ -12,15 +13,20 @@ import kampfire.api.UserApi
 import kampfire.model.Auth
 import koala.external.FeedMessage
 import koala.utils.jsonConfig
-import koala.utils.prettyPrint
 import kotlinx.browser.window
 import kotlinx.coroutines.await
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.cbor.Cbor
+import kotlinx.serialization.decodeFromByteArray
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.serializer
+import org.khronos.webgl.Int8Array
 import org.khronos.webgl.Uint8Array
 import org.w3c.dom.WebSocket
 import org.w3c.fetch.RequestInit
 import org.w3c.fetch.Response
 import org.w3c.files.Blob
+import streetlight.model.data.AreaTransitState
 import streetlight.web.model.UserCred
 import kotlin.js.json
 import kotlin.let
@@ -31,9 +37,14 @@ class FetchClient(
 ) {
     suspend inline fun <reified Returned, Endpoint: GetEndpoint<Returned>> get(
         endpoint: Endpoint,
+        acceptEncoding: EncodingType? = null,
         noinline block: (PathBuilder.(Endpoint) -> Unit)? = null
     ): Returned? =
-        authRequest("GET", resolvePath(endpoint, block) ) { it.tryDecodeText() }
+        authRequest(
+            method = "GET",
+            path = resolvePath(endpoint, block),
+            acceptEncoding = acceptEncoding
+        ) { it.tryDecode(acceptEncoding) }
 
     suspend inline fun <reified Returned> get(
         endpoint: GetByIdEndpoint<String, Returned>,
@@ -101,17 +112,19 @@ class FetchClient(
         path: String,
         body: dynamic? = null,
         contentType: String = "application/json",
+        acceptEncoding: EncodingType? = null,
         handleResponse: suspend (Response) -> T
     ): T? {
         val fetchWithJwt: suspend (String?) -> Response = { jwt ->
-            val headers = jwt?.let {
-                json(
-                    "Content-Type" to contentType,
-                    "Authorization" to "Bearer $jwt"
-                )
-            } ?: json(
+            val headers = json(
                 "Content-Type" to contentType,
             )
+            jwt?.let {
+                headers["Authorization"] = "Bearer $jwt"
+            }
+            acceptEncoding?.let {
+                headers["Accept"] = it.headerValue
+            }
             val request = RequestInit(
                 method = method,
                 headers = headers,
@@ -175,12 +188,23 @@ class FetchClient(
     }
 }
 
-suspend inline fun <reified Returned> Response.tryDecodeText(debug: Boolean = false): Returned? {
-    val text = text().await()
-
-    if (debug) {
-        console.log(text)
+suspend inline fun <reified Returned> Response.tryDecode(encoding: EncodingType?): Returned? {
+    return when (encoding) {
+        EncodingType.Cbor -> tryDecodeBytes()
+        EncodingType.Json, null -> tryDecodeText()
     }
+}
+
+@OptIn(ExperimentalSerializationApi::class)
+suspend inline fun <reified Returned> Response.tryDecodeBytes(): Returned? {
+    if (status.toInt() == 204 || !ok) return null
+    val buffer = arrayBuffer().await()
+    val bytes = Int8Array(buffer).unsafeCast<ByteArray>()
+    return Cbor.decodeFromByteArray<Returned>(bytes)
+}
+
+suspend inline fun <reified Returned> Response.tryDecodeText(): Returned? {
+    val text = text().await()
 
     return try {
         when (Returned::class) {
@@ -201,9 +225,9 @@ suspend inline fun <reified Returned> Response.tryDecodeText(debug: Boolean = fa
     }
 }
 
-suspend inline fun <reified Returned> Response.tryDecodeWithStatus(debug: Boolean = false): FetchResponse<Returned> {
+suspend inline fun <reified Returned> Response.tryDecodeWithStatus(): FetchResponse<Returned> {
     val status = status.toInt()
-    val payload: Returned? = if (status == 200) tryDecodeText(debug) else null
+    val payload: Returned? = if (status == 200) tryDecodeText() else null
     return FetchResponse(status, payload)
 }
 
@@ -216,4 +240,9 @@ data class FetchResponse<T>(
         409 -> "Conflict"
         else -> "Unknown"
     }
+}
+
+enum class EncodingType(val headerValue: String) {
+    Cbor("application/cbor"),
+    Json("application/json")
 }
