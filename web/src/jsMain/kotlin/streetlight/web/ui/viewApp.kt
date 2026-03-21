@@ -31,6 +31,7 @@ import streetlight.web.model.Streetlight
 import streetlight.web.model.ChatRoom
 import streetlight.web.model.ClientContext
 import streetlight.web.model.GateAgent
+import streetlight.web.model.SiteConfig
 import streetlight.web.model.StreetMap
 import streetlight.web.model.UserCache
 import streetlight.web.model.UserCred
@@ -43,19 +44,13 @@ import streetlight.web.pages.emptyBadge
 fun viewApp() {
     val scope = MainScope() // 57 KB
 
-    console.log("encoding")
-    val bytes = Cbor.encodeToByteArray(AreaTransitState(0, listOf(
-        TransitVehicle("ey", "ey", GeoPoint.Denver, 0f, 0)
-    )))
-    console.log("decoding")
-    val value: AreaTransitState = Cbor.decodeFromByteArray(bytes)
-    console.log(value)
-
     val cred = UserCred()
     val fetchClient = FetchClient(cred)
 
     val app = object: Streetlight { // 220 KB
         override val appScope = scope
+
+        override val config = SiteConfig()
 
         override val client = object: ClientContext {
             override val transit = TransitBrowserClient(fetchClient)
@@ -69,7 +64,7 @@ fun viewApp() {
         override val gateAgent = GateAgent(scope, gate, portal)
 
         override val geoMap = GeoMap(scope)
-        override val streetMap = StreetMap(scope, client, userCache, geoMap)
+        override val streetMap = StreetMap(scope, client, userCache, geoMap, config)
         override val chatRoom = ChatRoom(scope, client.api)
         override val userInterest = UserInterest(scope, client.api)
     } as Streetlight

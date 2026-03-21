@@ -34,7 +34,7 @@ fun FlowContent.gridOf(post: GalaxyPost) {
                     image(thumbUrl, modify(Height100, Square, BorderRadius1))
                 }
                 column(modify(Flex1, Height100)) {
-                    row {
+                    row(modify(AlignItemsStart)) {
                         column(modify(Flex1, Gap0)) {
                             action(postRoute) {
                                 heading5(title)

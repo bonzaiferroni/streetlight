@@ -29,6 +29,7 @@ class TransitMap(
     private val scope: CoroutineScope,
     private val client: ClientContext,
     private val geoMap: GeoMap,
+    private val config: SiteConfig,
 ) {
     private val state = storeOf(TransitMapState())
     val stateNow get() = state.now
@@ -41,7 +42,15 @@ class TransitMap(
     private var currentRoutes: List<RouteEntity>? = null
     private var feedType: ProtobufType? = null
 
-    fun setIsActive(value: Boolean) {
+    init {
+        scope.launch {
+            config.showTransitFlow.collect {
+                setIsActive(it)
+            }
+        }
+    }
+
+    private fun setIsActive(value: Boolean) {
         if (value) {
             startTracking()
         } else {
@@ -74,7 +83,6 @@ class TransitMap(
                         timestamp = transitState.timestamp
                         showTransitState(transitState)
                     }
-                    console.log(transitState?.vehicles?.size)
                     delay(10.seconds)
                 } else {
                     delay(1.seconds)
@@ -125,6 +133,7 @@ class TransitMap(
         state.set { it.copy(timestamp = transitState.timestamp) }
     }
 
+    @Deprecated("Use showTransitState")
     private suspend fun fetchVehicles(feedType: ProtobufType, transit: AreaTransit) {
         val feed = client.transit.readVehiclePositions(feedType) ?: return
         val timestamp = feed.header.timestamp.toString().toLong()

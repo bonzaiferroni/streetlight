@@ -17,12 +17,13 @@ class StreetMap(
     private val client: ClientContext,
     private val cache: UserCache,
     private val geoMap: GeoMap,
+    private val config: SiteConfig,
 ) {
     private val state = storeOf(StreetMapState())
     val stateFlow = state.flow
     val stateNow = state.now
     
-    val transit = TransitMap(scope, client, geoMap)
+    val transit = TransitMap(scope, client, geoMap, config)
 
     fun setPosts(posts: List<GalaxyPost>) {
         val posts = createEntities(posts)

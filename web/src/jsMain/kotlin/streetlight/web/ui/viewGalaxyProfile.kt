@@ -6,8 +6,6 @@ import koala.css.ElementClass
 import koala.css.UrlValue
 import koala.dom.*
 import kotlinx.coroutines.launch
-import kotlinx.dom.clear
-import kotlinx.html.dom.append
 import org.w3c.dom.HTMLElement
 import streetlight.model.data.EventInterest
 import streetlight.model.data.InterestType
@@ -21,7 +19,7 @@ import streetlight.web.shells.gridOf
 import streetlight.web.shells.iconPath
 
 fun RenderContext.viewGalaxyProfile(app: Streetlight, content: GalaxyShellContent) {
-    val transit = app.streetMap.transit
+    val config = app.config
 
     val root = shellBox(GalaxyShell.galaxyBoxId, app.geoMap, app.appScope) {
         galaxyShell(content)
@@ -31,7 +29,7 @@ fun RenderContext.viewGalaxyProfile(app: Streetlight, content: GalaxyShellConten
         wireBlock(GalaxyShell.mapPanelId) {
             val element = column {
                 row {
-                    switch("show transit", onToggle = transit::setIsActive, bindFlow = transit.isActiveFlow)
+                    switch("show transit", onToggle = config::setShowTransit, bindFlow = config.showTransitFlow)
                 }
                 content.posts.forEach { post ->
                     gridOf(post)
