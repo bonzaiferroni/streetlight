@@ -30,6 +30,7 @@ import kotlinx.html.body
 import streetlight.web.AccountRoute
 import streetlight.web.FullMapRoute
 import streetlight.web.HomeRoute
+import streetlight.web.SiteConfigRoute
 import streetlight.web.ui.SvgPath
 
 fun HTML.appBody(
@@ -62,8 +63,11 @@ fun FlowContent.appHeader() {
                 wireBlock(AppBody.titlePathId)
             }
         }
-        action(FullMapRoute, modify(Height6, Opacity2)) {
-            icon(SvgPath.chevronDown, modify(Height100))
+//        action(FullMapRoute, modify(Height6, Opacity2)) {
+//            icon(SvgPath.chevronDown, modify(Height100))
+//        }
+        action(SiteConfigRoute, modify(Height6, Opacity2)) {
+            icon(SvgPath.settings, modify(Height100))
         }
         action(AccountRoute, modify(Height6, Square), AppBody.badgeId) {
             emptyBadge()

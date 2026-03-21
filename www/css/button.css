@@ -3,7 +3,7 @@
     border: none;
     border-radius: 2rem;
     background: var(--primary-button);
-    color: var(--white);
+    color: var(--ink);
     font-size: .8rem;
     line-height: 1.5rem;
     cursor: pointer;
@@ -77,7 +77,7 @@
     border: none;
     border-radius: 2rem;
     background: var(--gray-bg);
-    color: var(--white);
+    color: var(--ink);
     font-size: .8rem;
     line-height: 1.5rem;
     text-transform: uppercase;

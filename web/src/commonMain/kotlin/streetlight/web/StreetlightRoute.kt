@@ -40,6 +40,7 @@ enum class StreetlightScreen(
     GalaxyProfile("g", { path -> path.provideRouteFromPath { GalaxyPathIdRoute(it) }}),
     EventScout("post-event", { path -> path.provideRouteFromPath { EventScoutRoute(it) }}),
     EditProfile("edit-profile", { EditProfileRoute }),
+    SiteConfig("config", { SiteConfigRoute }),
 }
 
 fun List<String>.provideRouteFromPath(argIndex: Int = 1, provideRoute: (String) -> AppRoute?) =
@@ -219,4 +220,9 @@ data class EventScoutRoute(override val pathId: PathId): StreetlightRoute, PathI
 object EditProfileRoute: StreetlightRoute {
     override val screen get() = StreetlightScreen.EditProfile
     override val title get() = "Edit Profile"
+}
+
+object SiteConfigRoute: StreetlightRoute {
+    override val screen get() = StreetlightScreen.SiteConfig
+    override val title get() = "Config"
 }

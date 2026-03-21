@@ -17,6 +17,7 @@ object SvgPath {
     val check = toPath("check")
     val trash = toPath("trash")
     val edit = toPath("edit")
+    val settings = toPath("settings")
 }
 
 private fun toPath(filename: String) = "/www/svg/$filename.svg"

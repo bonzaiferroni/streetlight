@@ -1,6 +1,6 @@
 package koala.html
 
-import koala.css.CustomProperties
+import koala.css.CustomProperty
 import koala.css.ElementClass
 import koala.css.ModifierSet
 import koala.css.UrlValue
@@ -19,7 +19,7 @@ fun FlowContent.icon(
 ) {
     div {
         applyModifiers(modify(ElementClass.icon, modifiers))
-        style = styleOf(CustomProperties.maskSrc, UrlValue(src))
+        style = styleOf(CustomProperty.maskSrc, UrlValue(src))
         block?.invoke(this)
     }
 }

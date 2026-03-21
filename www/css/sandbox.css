@@ -125,7 +125,7 @@ textarea {
     box-shadow: 0 0 var(--unit-spacing) var(--shadow);
     background-color: var(--primary-bg);
     padding: var(--unit-spacing);
-    color: rgb(var(--white));
+    color: rgb(var(--ink));
     border: none;
     outline: none;
     max-width: var(--body-width);
@@ -189,8 +189,8 @@ textarea {
     border-radius: 0;
 
     box-sizing: border-box;
-    background: var(--black-bg);
-    color: rgb(var(--white));
+    background: var(--paper-bg);
+    color: rgb(var(--ink));
 }
 
 /*thumb image*/

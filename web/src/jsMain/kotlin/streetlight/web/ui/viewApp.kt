@@ -33,6 +33,7 @@ import streetlight.web.model.ClientContext
 import streetlight.web.model.GateAgent
 import streetlight.web.model.SiteConfig
 import streetlight.web.model.StreetMap
+import streetlight.web.model.ThemeReactor
 import streetlight.web.model.UserCache
 import streetlight.web.model.UserCred
 import streetlight.web.model.UserGate
@@ -68,6 +69,8 @@ fun viewApp() {
         override val chatRoom = ChatRoom(scope, client.api)
         override val userInterest = UserInterest(scope, client.api)
     } as Streetlight
+
+    ThemeReactor(scope, app.config)
 
     scope.launch {
         app.gate.readUser()
@@ -106,6 +109,7 @@ fun viewApp() {
                         StreetlightScreen.GalaxyProfile -> viewGalaxyProfileRoute()
                         StreetlightScreen.EventScout -> viewEventScoutRoute()
                         StreetlightScreen.EditProfile -> viewProfileEditor()
+                        StreetlightScreen.SiteConfig -> viewSiteConfig()
                         else -> textBlock("Coming soon: $screen")
                     }
                 }

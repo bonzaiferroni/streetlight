@@ -32,8 +32,8 @@ fun RenderContext.editTalentForm(app: Streetlight) {
             )
             dropMenu(
                 onChangeValue = { value -> state.set { it.copy(talentType = value) } },
-                flow = state.flow.mapDistinct { it.talentType },
-                provideLabel = { it.name }
+                provideLabel = { it.name },
+                flow = state.flow.mapDistinct { it.talentType }
             )
 
             button(

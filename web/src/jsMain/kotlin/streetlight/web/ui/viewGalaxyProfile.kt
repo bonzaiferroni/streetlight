@@ -1,7 +1,7 @@
 package streetlight.web.ui
 
 import koala.core.queryFirstOrNull
-import koala.css.CustomProperties
+import koala.css.CustomProperty
 import koala.css.ElementClass
 import koala.css.UrlValue
 import koala.dom.*
@@ -76,7 +76,7 @@ fun RenderContext.wireInterestControls(app: Streetlight, root: HTMLElement) {
                 interest = updatedInterest
 
                 val element = iconElement ?: return@collect
-                element.style.setProperty(CustomProperties.maskSrc, UrlValue(interest.value.iconPath))
+                element.style.setProperty(CustomProperty.maskSrc, UrlValue(interest.value.iconPath))
             }
         }
     }

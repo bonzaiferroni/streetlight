@@ -2,14 +2,12 @@ package koala.dom
 
 import koala.core.get
 import koala.css.CssValue
-import koala.css.CustomProperty
+import koala.css.StyleProperty
 import koala.css.Modifier
 import koala.external.ScrollIntoViewOptions
 import koala.html.Attribute
 import koala.utils.jsonConfig
 import kotlinx.browser.window
-import kotlinx.dom.addClass
-import kotlinx.dom.removeClass
 import org.w3c.dom.Element
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.Node
@@ -65,4 +63,4 @@ inline fun <reified T> Element.wireByAttribute(attribute: Attribute, block: (HTM
     }
 }
 
-fun CSSStyleDeclaration.setProperty(property: CustomProperty, value: CssValue) = setProperty("--${property.identifier}", value.value)
+fun CSSStyleDeclaration.setProperty(property: StyleProperty, value: CssValue) = setProperty("--${property.identifier}", value.value)

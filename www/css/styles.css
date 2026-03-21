@@ -1,14 +1,14 @@
 :root {
-    --black: 9, 13, 13;
-    --black-bg: rgb(var(--black));
-    --body-bg: color-mix(in srgb, var(--black-bg) 95%, white);
-    --card-bg: rgba(var(--black), .4);
-    --tabs-bg: rgba(var(--black), .5);
-    --white: 240, 246, 246;
-    --white-fg: rgb(var(--white));
-    --white-dim: rgba(var(--white), .8);
+    --paper: 9, 13, 13;
+    --paper-bg: rgb(var(--paper));
+    --body-bg: color-mix(in srgb, var(--paper-bg) 95%, white);
+    --card-bg: rgba(var(--paper), .4);
+    --tabs-bg: rgba(var(--paper), .5);
+    --ink: 240, 246, 246;
+    --white-fg: rgb(var(--ink));
+    --white-dim: rgba(var(--ink), .8);
     --white-disabled: color-mix(in srgb, var(--white-fg) 50%, black);
-    --weak-outline: rgba(var(--white), .2);
+    --weak-outline: rgba(var(--ink), .2);
     --gray: 60, 62, 64;
     --gray-fg: rgb(var(--gray));
     --gray-bg: color-mix(in srgb, var(--gray-fg) 50%, black);
@@ -106,7 +106,7 @@ textarea {
     padding: var(--unit-spacing);
     font-size: 1rem;
     background-color: rgb(var(--void));
-    color: rgb(var(--white));
+    color: rgb(var(--ink));
     line-height: 1.5rem;
 
     border: 1px solid var(--void-border);
@@ -149,7 +149,7 @@ select {
     padding: var(--unit-spacing);
     font-size: 1rem;
     background-color: rgb(var(--void));
-    color: rgb(var(--white));
+    color: rgb(var(--ink));
 
     outline: 1px solid var(--void-border);
     border-radius: var(--unit-spacing);

@@ -46,20 +46,18 @@ fun RenderContext.dropMenu(
 }
 
 inline fun <reified E> RenderContext.dropMenu(
-    noinline onChangeValue: ((E) -> Unit)? = null,
+    noinline onChangeValue: ((E) -> Unit),
+    crossinline provideLabel: (E) -> String,
     flow: Flow<E>? = null,
     modifiers: ModifierSet? = null,
-    crossinline provideLabel: (E) -> String,
     noinline block: (SELECT.() -> Unit)? = null
 ) where E : Enum<E> {
     val enums = enumValues<E>()
     val values = enums.map { provideLabel(it) }
     val flow = flow?.map(provideLabel)
-    val callback: ((String) -> Unit)? = onChangeValue?.let {
-        { str ->
-            val index = values.indexOf(str)
-            onChangeValue(enums[index])
-        }
+    val callback: ((String) -> Unit) = { str ->
+        val index = values.indexOf(str)
+        onChangeValue(enums[index])
     }
 
     dropMenu(values, flow, callback, modifiers, block)

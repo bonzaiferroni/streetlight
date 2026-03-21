@@ -55,7 +55,7 @@
 }
 
 .dim {
-    color: rgba(var(--white), 0.6);
+    color: rgba(var(--ink), 0.6);
 }
 
 .opacity-6 {
@@ -71,7 +71,7 @@
 }
 
 .no-dim {
-    color: rgb(var(--white)) !important;
+    color: rgb(var(--ink)) !important;
 }
 
 .no-gap {
