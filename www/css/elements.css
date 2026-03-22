@@ -130,3 +130,33 @@
     object-fit: contain;
     object-position: center;
 }
+
+/* carousel */
+
+.carousel {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: visible;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+}
+
+.carousel::-webkit-scrollbar {
+    display: none;
+}
+
+.carousel > .row {
+    display: flex;
+    flex-wrap: nowrap;
+    width: max-content;
+}
+
+.carousel > .row > * {
+    scroll-snap-align: start;
+}
+
+/* wire block */
+
+.wire-block {
+}

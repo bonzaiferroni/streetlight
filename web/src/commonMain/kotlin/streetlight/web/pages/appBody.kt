@@ -1,28 +1,7 @@
 package streetlight.web.pages
 
-import koala.css.AlignItemsCenter
-import koala.css.Flex1
-import koala.css.Glow
-import koala.css.GlowBackground
-import koala.css.GlowShadow
-import koala.css.Height100
-import koala.css.Height6
-import koala.css.Opacity2
-import koala.css.Square
-import koala.css.Width100
-import koala.css.modify
-import koala.html.Id
-import koala.html.OverlayId
-import koala.html.action
-import koala.html.applyId
-import koala.html.box
-import koala.html.column
-import koala.html.icon
-import koala.html.row
-import koala.html.applyScripts
-import koala.html.heading2
-import koala.html.logo
-import koala.html.wireBlock
+import koala.css.*
+import koala.html.*
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kotlinx.html.HTML
@@ -54,7 +33,7 @@ fun HTML.appBody(
 }
 
 fun FlowContent.appHeader() {
-    row(AppBody.appHeaderId, modify(Width100)) {
+    row(modify(MinHeightAuto)) {
         action(HomeRoute(), modify(Flex1)) {
             row {
                 logo(modify(Height6))

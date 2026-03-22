@@ -2,6 +2,7 @@
     display: flex;
     flex-direction: column;
     width: 100%;
+    min-width: 0;
 
     gap: var(--unit-spacing);
     align-items: start;
@@ -11,15 +12,13 @@
     display: flex;
     flex-direction: row;
     width: 100%;
+    min-width: 0;
 
     gap: var(--unit-spacing);
     align-items: center;
 }
 
-.row > .row {
-    width: auto;
-}
-
+.row > .row,
 .row > .column {
     width: auto;
 }
@@ -54,6 +53,7 @@
 
 .flow-block {
     width: 100%;
+    min-width: 0;
 }
 
 .items-block {

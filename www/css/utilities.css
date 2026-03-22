@@ -224,6 +224,10 @@
     width: calc(var(--unit-spacing) * 64);
 }
 
+.min-width-0 {
+    min-width: 0;
+}
+
 .min-width-16 {
     min-width: calc(var(--unit-spacing) * 16);
 }
@@ -282,6 +286,10 @@
 
 .max-height-64 {
     max-height: calc(var(--unit-spacing) * 64);
+}
+
+.min-height-auto {
+    min-height: auto;
 }
 
 .min-height-16 {
