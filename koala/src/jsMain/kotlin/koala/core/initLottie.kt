@@ -6,9 +6,9 @@ import koala.html.Attributes
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.asList
 
-fun findAndInitLottie(ancestor: HTMLElement) {
-    val lotties = ancestor.querySelectorAll(Attributes.lottie.selector).asList()
-    lotties.forEach {
+fun findAndInitLotties(ancestor: HTMLElement) {
+    val elements = ancestor.querySelectorAll(Attributes.lottie.selector).asList()
+    elements.forEach {
         initLottie(it as HTMLElement)
     }
 }

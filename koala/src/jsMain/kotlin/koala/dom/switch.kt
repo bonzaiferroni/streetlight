@@ -1,9 +1,12 @@
 package koala.dom
 
+import koala.core.initSwitch
 import koala.css.ElementClass
 import koala.css.ModifierSet
 import koala.css.applyModifiers
 import koala.css.modify
+import koala.html.ElementEvent
+import koala.html.configureSwitch
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.html.DIV
@@ -22,40 +25,29 @@ fun RenderContext.switch(
     var isOn = initialOn
 
     val element = div {
-        applyModifiers(modify(ElementClass.switch, modifiers))
-        attributes["role"] = "switch"
-//        attributes["tabindex"] = "0"
-        attributes["aria-checked"] = isOn.toString()
-        attributes["data-on"] = isOn.toString()
-
-        // ghost text defines the inner pill width; outer padding makes the “constraints” larger
-        span("switch__ghost") { +label }
-        span("switch__pill") { +label }
-
-        block?.invoke(this)
+        configureSwitch(label, modifiers, initialOn, block)
     }
 
     fun setOn(value: Boolean) {
+        if (value == isOn) return
         isOn = value
-        element.setAttribute("data-on", value.toString())
-        element.setAttribute("aria-checked", value.toString())
         onToggle?.invoke(value)
+        element.sendCustomEvent(ElementEvent.onToggle, value)
     }
 
-    element.addEventListener("click", { setOn(!isOn) })
-    element.addEventListener("keydown", { ev ->
-        val key = (ev as? org.w3c.dom.events.KeyboardEvent)?.key
-        if (key == "Enter" || key == " ") {
-            ev.preventDefault()
-            setOn(!isOn)
-        }
-    })
+    element.onCustomEvent(ElementEvent.onToggle) {
+        setOn(it)
+    }
 
     bindFlow?.let { flow ->
         renderScope.launch {
-            flow.collect { setOn(it) }
+            flow.collect {
+                setOn(it)
+            }
         }
     }
+
+    initSwitch(element)
 
     return element
 }

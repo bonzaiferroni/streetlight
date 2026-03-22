@@ -1,8 +1,8 @@
 package streetlight.web.ui
 
-import kampfire.model.GeoPoint
 import koala.css.*
 import koala.dom.*
+import koala.html.ElementEvent
 import koala.html.heading2
 import koala.model.GeoMap
 import koala.model.Portal
@@ -12,15 +12,8 @@ import kotlinx.browser.window
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.datetime.TimeZone
 import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.cbor.Cbor
-import kotlinx.serialization.decodeFromByteArray
-import kotlinx.serialization.encodeToByteArray
-import kotlinx.serialization.serializer
 import revealContent
-import streetlight.model.data.AreaTransitState
-import streetlight.model.data.TransitVehicle
 import streetlight.web.HomeRoute
 import streetlight.web.StreetlightScreen
 import streetlight.web.io.ApiClient
@@ -79,6 +72,7 @@ fun viewApp() {
         shellBox.style.display = "none"
 
         val portalMount = document.getElementById(AppBody.portalMountId)
+
         portalMount.renderRoot(app.appScope) {
             flowBlock(
                 flow = app.portal.screenFlow,

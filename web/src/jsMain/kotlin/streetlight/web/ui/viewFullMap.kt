@@ -2,6 +2,7 @@ package streetlight.web.ui
 
 import koala.css.*
 import koala.dom.*
+import koala.html.ElementEvent
 import koala.html.geoMapMount
 import kotlinx.html.js.div
 import streetlight.web.model.Streetlight
@@ -20,7 +21,7 @@ fun RenderContext.viewFullMap(app: Streetlight) {
         console.log("onView: $isVisible")
     }
 
-    fullscreen.addEventListener(OnClose) {
+    fullscreen.onEvent(ElementEvent.onClose) {
         app.portal.goBack()
     }
 

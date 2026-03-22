@@ -15,27 +15,27 @@ fun FlowContent.homeShell(content: HomeContent) {
         val galaxy = content.galaxies.first()
 
         // button()
-        carousel {
-            content.galaxies.forEach {
-                buttonOf(it)
-            }
-
-            content.galaxies.forEach {
-                buttonOf(it)
-            }
-
-            content.galaxies.forEach {
-                buttonOf(it)
-            }
-
-            content.galaxies.forEach {
-                buttonOf(it)
-            }
-
-            content.galaxies.forEach {
-                buttonOf(it)
-            }
-        }
+//        carousel {
+//            content.galaxies.forEach {
+//                buttonOf(it)
+//            }
+//
+//            content.galaxies.forEach {
+//                buttonOf(it)
+//            }
+//
+//            content.galaxies.forEach {
+//                buttonOf(it)
+//            }
+//
+//            content.galaxies.forEach {
+//                buttonOf(it)
+//            }
+//
+//            content.galaxies.forEach {
+//                buttonOf(it)
+//            }
+//        }
 
         column {
             heading3("Galaxies")

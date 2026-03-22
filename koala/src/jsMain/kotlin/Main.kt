@@ -1,6 +1,8 @@
 import koala.core.findAndInitGeoMap
-import koala.core.findAndInitLottie
+import koala.core.findAndInitLotties
+import koala.core.findAndInitSwitches
 import koala.css.Reveal
+import koala.dom.findAndInitTabs
 import koala.dom.modify
 import kotlinx.browser.document
 import kotlinx.browser.window
@@ -15,8 +17,14 @@ fun main() {
         revealContent()
     }
 
-    findAndInitGeoMap(body)
-    findAndInitLottie(body)
+    initElement(body)
+}
+
+fun initElement(element: HTMLElement) {
+    findAndInitGeoMap(element)
+    findAndInitLotties(element)
+    findAndInitSwitches(element)
+    findAndInitTabs(element)
 }
 
 fun revealContent() {
