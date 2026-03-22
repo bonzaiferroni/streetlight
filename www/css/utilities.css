@@ -94,6 +94,10 @@
     text-align: right;
 }
 
+.white-space-normal {
+    white-space: normal;
+}
+
 .circle-shape {
     border-radius: 50%;
     overflow: hidden;
@@ -192,6 +196,10 @@
     height: calc(var(--unit-spacing) * 8);
 }
 
+.height-12 {
+    height: calc(var(--unit-spacing) * 12);
+}
+
 .height-16 {
     height: calc(var(--unit-spacing) * 16);
 }
@@ -206,6 +214,10 @@
 
 .width-8 {
     width: calc(var(--unit-spacing) * 8);
+}
+
+.width-12 {
+    width: calc(var(--unit-spacing) * 12);
 }
 
 .width-16 {

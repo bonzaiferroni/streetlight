@@ -12,5 +12,10 @@ fun FlowContent.buttonOf(star: GalaxyStar, modifiers: ModifierSet? = null) {
 }
 
 fun FlowContent.buttonOf(galaxy: Galaxy, modifiers: ModifierSet? = null) {
-    button(galaxy.name, GalaxyPathIdRoute(galaxy.pathId), galaxy.imageUrl, modifiers)
+    button(
+        text = galaxy.name,
+        route = GalaxyPathIdRoute(galaxy.pathId),
+        background = galaxy.imageUrl,
+        modifiers = modify(modifiers)
+    )
 }

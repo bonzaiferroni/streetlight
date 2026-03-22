@@ -33,6 +33,7 @@ object SmallFont: Modifier { override val value = "small-font" }
 object LargeFont: Modifier { override val value = "large-font" }
 object Heading1: Modifier { override val value = "heading-1" }
 object Heading2: Modifier { override val value = "heading-2" }
+object WhiteSpaceNormal: Modifier { override val value = "white-space-normal" }
 
 // layout utilities
 object Gap0: Modifier { override val value = "gap-0" }
@@ -61,6 +62,7 @@ object WidthFitContent: Modifier { override val value = "width-fit-content" }
 object Width2: Modifier { override val value = "width-2" }
 object Width4: Modifier { override val value = "width-4" }
 object Width8: Modifier { override val value = "width-8" }
+object Width12: Modifier { override val value = "width-12" }
 object Width16: Modifier { override val value = "width-16" }
 object Width24: Modifier { override val value = "width-24" }
 object Width32: Modifier { override val value = "width-32" }
@@ -77,6 +79,7 @@ object Height4: Modifier { override val value = "height-4" }
 object Height5: Modifier { override val value = "height-5" }
 object Height6: Modifier { override val value = "height-6" }
 object Height8: Modifier { override val value = "height-8" }
+object Height12: Modifier { override val value = "height-12" }
 object Height16: Modifier { override val value = "height-16" }
 object Height24: Modifier { override val value = "height-24" }
 object Height32: Modifier { override val value = "height-32" }
