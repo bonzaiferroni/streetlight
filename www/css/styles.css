@@ -77,10 +77,6 @@ body {
     -webkit-font-smoothing: antialiased;
 }
 
-button {
-    font-family: var(--font-family);
-}
-
 body::before {
     content: "";
     position: fixed;

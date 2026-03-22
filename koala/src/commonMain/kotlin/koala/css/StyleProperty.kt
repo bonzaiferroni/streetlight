@@ -24,6 +24,12 @@ data class RgbValue(val red: Int, val green: Int, val blue: Int): CssValue {
     override val expression get() = "$red, $green, $blue"
 }
 
+fun styleOf(set: StyleSet?, vararg styles: Pair<StyleProperty, CssValue>) = styles.asList().let { styles ->
+    set?.let {
+        styles + it
+    } ?: styles
+}
+
 fun styleOf(vararg styles: Pair<StyleProperty, CssValue>) = styles.asList()
 
 typealias StyleSet = List<Pair<StyleProperty, CssValue>>

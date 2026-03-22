@@ -48,7 +48,7 @@ fun FlowContent.appHeader() {
         action(SiteConfigRoute, modify(Height6, Opacity2)) {
             icon(SvgPath.settings, modify(Height100))
         }
-        action(AccountRoute, modify(Height6, Square), AppBody.badgeId) {
+        action(AccountRoute, modify(Height6, Square), id = AppBody.badgeId) {
             emptyBadge()
         }
     }

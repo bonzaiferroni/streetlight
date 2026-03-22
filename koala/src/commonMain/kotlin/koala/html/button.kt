@@ -6,70 +6,91 @@ import koala.css.ModifierSet
 import koala.css.StyleProperty
 import koala.css.StyleSet
 import koala.css.UrlValue
-import koala.css.applyModifiers
-import koala.css.applyStyles
 import koala.css.modify
 import koala.css.styleOf
 import kotlinx.html.*
-import kotlinx.html.button as buttonTag
 
-fun FlowContent.button(
-    text: String,
-    onClick: String? = null,
-    id: Id? = null,
-    modifiers: ModifierSet? = null,
-    styles: StyleSet? = null,
-    block: BUTTON.() -> Unit = {},
-) {
-    buttonTag {
-        applyId(id)
-        applyModifiers(modify(ElementClass.button, modifiers))
-        applyStyles(styles)
-        onClick?.let { this.onClick = it }
-        +text
-        block()
-    }
-}
+//fun FlowContent.button(
+//    text: String,
+//    onClick: String? = null,
+//    id: Id? = null,
+//    modifiers: ModifierSet? = null,
+//    styles: StyleSet? = null,
+//    block: BUTTON.() -> Unit = {},
+//) {
+//    buttonTag {
+//        applyId(id)
+//        applyModifiers(modify(ElementClass.button, modifiers))
+//        applyStyles(styles)
+//        onClick?.let { this.onClick = it }
+//        +text
+//        block()
+//    }
+//}
 
 fun FlowContent.button(
     text: String,
     route: AppRoute,
     modifiers: ModifierSet? = null,
+    id: Id? = null,
     styles: StyleSet? = null,
-    block: BUTTON.() -> Unit = {},
+    block: A.() -> Unit = {},
 ) {
-    action(route) {
-        button(text, modifiers = modifiers, block = block, styles = styles)
-    }
+    action(
+        text = text,
+        route = route,
+        modifiers = modify(ElementClass.button, modifiers),
+        id = id,
+        block = block,
+        styles = styles
+    )
 }
 
 fun FlowContent.button(
     text: String,
     route: AppRoute,
     background: String?,
-    modifiers: ModifierSet? = null
+    modifiers: ModifierSet? = null,
+    id: Id? = null,
+    styles: StyleSet? = null,
+    block: A.() -> Unit = {},
 ) {
     val styles = background?.let {
-        styleOf(StyleProperty.backgroundUrl to UrlValue(it))
-    }
-    button(text, route, modify(modifiers, BackgroundImage), styles)
+        styleOf(styles, StyleProperty.backgroundUrl to UrlValue(it))
+    } ?: styles
+    button(
+        text = text,
+        route = route,
+        modifiers = modify(modifiers, BackgroundImage),
+        id = id,
+        styles = styles,
+        block = block
+    )
 }
 
 fun FlowContent.button(
     text: String,
-    src: String,
+    href: String,
     modifiers: ModifierSet? = null,
-    block: BUTTON.() -> Unit = {},
+    id: Id? = null,
+    styles: StyleSet? = null,
+    addExternalIndicator: Boolean = true,
+    block: A.() -> Unit = {},
 ) {
-    val domain = domainOf(src)
+    val domain = href.takeIf { addExternalIndicator }?.let { domainOf(it) }
     val text = domain?.let { domain ->
         domainMap[domain].let { symbol ->
             "${symbol ?: "🔗"} $text"
         }
     } ?: text
-    action(src) {
-        button(text, modifiers = modifiers, block = block)
-    }
+    action(
+        href = href,
+        text = text,
+        modifiers = modify(ElementClass.button, modifiers),
+        block = block,
+        id = id,
+        styles = styles
+    )
 }
 
 fun domainOf(url: String): String? =

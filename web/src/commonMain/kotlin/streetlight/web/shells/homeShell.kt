@@ -12,6 +12,9 @@ fun FlowContent.homeShell(content: HomeContent) {
 
         // val galaxyStars = content.galaxies.map { GalaxyStar(it.pathId, it.name, it.imageUrl) }
 
+        val galaxy = content.galaxies.first()
+
+        // button()
         carousel {
             content.galaxies.forEach {
                 buttonOf(it)

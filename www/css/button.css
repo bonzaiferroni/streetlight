@@ -11,6 +11,7 @@
     transition: background 0.2s ease;
     box-shadow: 0 0 .8rem var(--primary-button);
     text-transform: uppercase;
+    text-align: center;
     white-space: nowrap;
     min-width: calc(var(--unit-spacing) * 16);
     text-shadow:

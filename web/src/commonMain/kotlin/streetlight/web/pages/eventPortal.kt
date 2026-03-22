@@ -73,9 +73,12 @@ fun HTML.eventPortal(event: Event, performer: Performer?, requestItems: List<Req
 //                a("https://venmo.com/colfaxband?txn=pay&amount=1&note=street+music") {
 //                    button("$5", modifiers = modify(Accent))
 //                }
-                a("https://venmo.com/colfaxband?txn=pay&note=street+music") {
-                    button("Send a tip", modifiers = modify(Accent))
-                }
+                button(
+                    text = "Send a tip",
+                    href = "https://venmo.com/colfaxband?txn=pay&note=street+music",
+                    modifiers = modify(Accent),
+                    addExternalIndicator = false,
+                )
             }
             heading4("Thank you for stopping by!")
         }

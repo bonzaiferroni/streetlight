@@ -38,7 +38,7 @@ fun FlowContent.locationShell(
                     }
                     location.website?.let {
                         propertyRow("link") {
-                            action(it, it)
+                            action(it, text = it)
                         }
                     }
                 }

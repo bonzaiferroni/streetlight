@@ -2,45 +2,49 @@ package koala.html
 
 import koala.css.ElementClass
 import koala.css.ModifierSet
+import koala.css.StyleSet
 import koala.css.applyModifiers
+import koala.css.applyStyles
 import koala.css.modify
 import kotlinx.html.A
 import kotlinx.html.FlowContent
 import kotlinx.html.FlowOrInteractiveOrPhrasingContent
 import kotlinx.html.a
 
-fun FlowOrInteractiveOrPhrasingContent.action(
-    route: AppRoute,
-    modifiers: ModifierSet? = null,
-    id: Id? = null,
-    block: (A.() -> Unit)? = null
-) {
-    action(href = route.toHashPath(), modifiers = modifiers, id = id, block = block)
-}
-
-fun FlowOrInteractiveOrPhrasingContent.action(
+fun FlowContent.action(
     href: String? = null,
-    text: String = "",
     modifiers: ModifierSet? = null,
+    text: String = "",
     id: Id? = null,
+    styles: StyleSet? = null,
     block: (A.() -> Unit)? = null
 ) {
-    action(modifiers) {
+    a {
         applyId(id)
+        applyModifiers(modify(ElementClass.action, modifiers))
+        applyStyles(styles)
         href?.let { this.href = href }
         +text
         block?.invoke(this)
     }
 }
 
-fun FlowOrInteractiveOrPhrasingContent.action(
+fun FlowContent.action(
+    route: AppRoute,
     modifiers: ModifierSet? = null,
+    text: String = "",
+    id: Id? = null,
+    styles: StyleSet? = null,
     block: (A.() -> Unit)? = null
 ) {
-    a {
-        applyModifiers(modify(ElementClass.action, modifiers))
-        block?.invoke(this)
-    }
+    action(
+        text = text,
+        href = route.toHashPath(),
+        modifiers = modifiers,
+        id = id,
+        styles = styles,
+        block = block
+    )
 }
 
 fun FlowContent.actionIfNotNull(
@@ -53,6 +57,6 @@ fun FlowContent.actionIfNotNull(
     if (href == null) {
         block?.invoke(this)
     } else {
-        action(href, text, modifiers, id, block)
+        action(href = href, text = text, modifiers = modifiers, id = id, block = block)
     }
 }
