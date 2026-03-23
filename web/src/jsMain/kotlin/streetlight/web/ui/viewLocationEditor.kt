@@ -16,6 +16,7 @@ import streetlight.web.EditLocationIdRoute
 import streetlight.web.EditLocationRoute
 import streetlight.web.model.Streetlight
 import streetlight.web.model.LocationEditor
+import streetlight.web.pages.appFooter
 
 fun RenderContext.viewLocationEditor(
     location: LocationEdit,
@@ -73,17 +74,19 @@ fun RenderContext.viewEditLocationRoute(app: Streetlight) {
     val portal = app.portal
     val api = app.client.api
 
-    routeBlock<EditLocationRoute, LocationEdit>(
-        portal = portal,
-        provideData = { route ->
-            when (route) {
-                is EditLocationDataRoute -> route.location
-                is EditLocationIdRoute -> route.locationId?.let { api.readLocation(it)?.toEdit() } ?: LocationEdit()
-                is CreateLocationRoute -> LocationEdit()
+    column {
+        routeBlock<EditLocationRoute, LocationEdit>(
+            portal = portal,
+            provideData = { route ->
+                when (route) {
+                    is EditLocationDataRoute -> route.location
+                    is EditLocationIdRoute -> route.locationId?.let { api.readLocation(it)?.toEdit() } ?: LocationEdit()
+                    is CreateLocationRoute -> LocationEdit()
+                }
             }
+        ) {
+            viewLocationEditor(it, app, null, null)
         }
-    ) {
-        viewLocationEditor(it, app, null, null)
+        appFooter()
     }
-    appFooter()
 }

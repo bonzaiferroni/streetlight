@@ -15,16 +15,3 @@ fun HTML.homePage(content: HomeContent) {
         homeShell(content)
     }
 }
-
-fun FlowContent.appFooter() {
-    val giants = "May we build us a world of faithful giants."
-    row(modify(JustifyCenter)) {
-        style = "height: 20rem;"
-        column(modify(AlignItemsCenter, Gap0, Width100)) {
-            lottie("spinning_circles") {
-                style = "height: 10rem;"
-            }
-            textBlock(giants, modify(Italic, Opacity6))
-        }
-    }
-}

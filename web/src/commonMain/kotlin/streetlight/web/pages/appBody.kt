@@ -54,6 +54,16 @@ fun FlowContent.appHeader() {
     }
 }
 
+fun FlowContent.appFooter() {
+    val giants = "May we build a world of faithful giants."
+    row(modify(JustifyCenter, Height48)) {
+        column(modify(AlignItemsCenter, Gap0, Width100)) {
+            lottie("spinning_circles", modify(Height24))
+            textBlock(giants, modify(Italic, Opacity6))
+        }
+    }
+}
+
 fun FlowContent.emptyBadge() {
     icon(SvgPath.emptyProfile, modify(Height100, Opacity2))
 }

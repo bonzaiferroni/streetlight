@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import streetlight.web.model.Streetlight
+import streetlight.web.pages.appFooter
 
 fun ViewContext<Streetlight>.viewProfileEditor() {
     userBlock(model, true) { user ->
