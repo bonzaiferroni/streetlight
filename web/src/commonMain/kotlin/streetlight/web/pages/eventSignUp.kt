@@ -1,5 +1,7 @@
 package streetlight.web.pages
 
+import koala.FileSet
+import koala.SiteFile
 import koala.html.*
 import kotlinx.html.*
 import streetlight.model.data.*
@@ -7,8 +9,7 @@ import koala.css.*
 
 fun HTML.eventSignUp(event: Event) {
     head("Sign Up | ${event.title}") {
-        applyStyles("eventSignUp.css")
-        applyScripts("eventSignUp.js")
+        applyFiles(EventSignUpFiles)
     }
     body {
         column(Id("event-profile"), modify(AlignItemsCenter)) {
@@ -38,4 +39,9 @@ fun HTML.eventSignUp(event: Event) {
             }
         }
     }
+}
+
+object EventSignUpFiles: FileSet<SiteFile>() {
+    val css = add("eventSignUp.css")
+    val js = add("eventSignUp.js")
 }

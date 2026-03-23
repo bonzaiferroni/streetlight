@@ -1,5 +1,10 @@
 package koala.html
 
+import koala.CssFile
+import koala.CssFiles
+import koala.JsFile
+import koala.JsFiles
+import koala.SiteFile
 import kotlinx.html.*
 
 fun HTML.head(
@@ -10,48 +15,30 @@ fun HTML.head(
         title { +title }
         meta { name = "viewport"; content = "width=device-width, initial-scale=1" }
         link { href = "/www/icon/foxicon.ico"; rel = "icon"}
-        block()
-        applyCoreStyles()
-        applyCoreScripts()
+        applyFiles(JsFiles)
+        applyFiles(CssFiles)
         script(src = "https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js") { }
+        block()
     }
 }
 
-fun HEAD.applyStyles(vararg styles: String) {
-    styles.forEach { style -> link { rel = "stylesheet"; href = cssPath + style } }
+fun HEAD.applyFiles(files: Collection<SiteFile>) {
+    files.forEach { applyFile(it) }
 }
 
-fun HEAD.applyCoreStyles() {
-    applyStyles(
-        "reset.css",
-        "styles.css",
-        "typography.css",
-        "button.css",
-        "layout.css",
-        "animation.css",
-        "tabs.css",
-        "logo.css",
-        "geoMap.css",
-        "sandbox.css",
-        "elements.css",
-        "utilities.css",
-    )
+fun HEAD.applyFile(file: SiteFile) {
+    when (file) {
+        is JsFile -> applyJsFile(file)
+        is CssFile -> applyCssFile(file)
+    }
 }
 
-fun FlowOrMetaDataContent.applyScripts(vararg scripts: String) {
-    scripts.forEach { script -> script(src = jsPath + script) {
-        this.defer = true
-    } }
+fun FlowOrMetaDataOrPhrasingContent.applyJsFile(file: JsFile) {
+    script(src = file.path) {
+        this.defer = file.isDeferred
+    }
 }
 
-fun HEAD.applyCoreScripts() {
-    applyScripts(
-        "utils.js",
-        "tabs.js",
-//        "logo.js",
-        "koala/koala.js",
-    )
+fun HEAD.applyCssFile(file: CssFile) {
+    link { rel = "stylesheet"; href = file.path }
 }
-
-val jsPath = "/www/js/"
-val cssPath = "/www/css/"

@@ -1,5 +1,7 @@
 package streetlight.web.pages
 
+import koala.FileSet
+import koala.SiteFile
 import koala.html.*
 import kotlinx.html.*
 import streetlight.model.data.*
@@ -7,8 +9,7 @@ import koala.css.*
 
 fun HTML.eventPortal(event: Event, performer: Performer?, requestItems: List<RequestItem>) {
     head(event.title) {
-        applyStyles("event-portal.css")
-        applyScripts("event-portal.js")
+        applyFiles(EventPortalFiles)
 //        applyScripts("event-portal/webscripts.js")
     }
     body {
@@ -111,4 +112,9 @@ object EventPortalSelector {
     val eventIdAttribute = Attribute("event-id")
     val songIdAttribute = Attribute("song-id")
     val sendRequestButtonId = Id("send-request-button")
+}
+
+object EventPortalFiles: FileSet<SiteFile>() {
+    val css = add("event-portal.css")
+    val js = add("event-portal.js")
 }

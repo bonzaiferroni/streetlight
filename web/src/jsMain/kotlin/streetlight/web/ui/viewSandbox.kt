@@ -24,9 +24,14 @@ fun RenderContext.viewSandbox(app: Streetlight) {
 
 fun RenderContext.popBox() {
     div {
-        attributes["popover"] = "auto"
         id = "menu"
+        attributes["popover"] = "auto"
+        style = """
+            position: absolute;
+            position-anchor: --my-anchor;
+            position-area: bottom;
+            inset: auto;
+        """.trimIndent()
         +"Ahoy!"
-        style = "position-anchor: --my-anchor;"
     }
 }

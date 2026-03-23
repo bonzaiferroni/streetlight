@@ -55,3 +55,7 @@ fun RenderContext.queryAndWireToggleBlock(
     val root = ancestor.querySelector(queryable) ?: error("toggle block not found")
     wireToggleBlock(root, initialOn, onToggle, bindFlow)
 }
+
+private val toggleBlockStyle = """
+
+"""

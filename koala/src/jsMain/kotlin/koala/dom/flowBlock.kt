@@ -85,3 +85,10 @@ fun <State> RenderContext.flowBlock(
 }
 
 val defaultMagic = modify(Blur, SlideLeft)
+
+
+val flowStyle = """
+.flows {
+    background: red;
+}
+"""

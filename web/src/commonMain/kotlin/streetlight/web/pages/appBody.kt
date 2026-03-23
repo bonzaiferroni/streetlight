@@ -1,7 +1,9 @@
 package streetlight.web.pages
 
+import koala.JsFile
 import koala.css.*
 import koala.html.*
+import koala.jsFileOf
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kotlinx.html.HTML
@@ -28,7 +30,7 @@ fun HTML.appBody(
             }
             box(OverlayId.mount)
         }
-        applyScripts("streetlight/web.js")
+        applyJsFile(jsFileOf("streetlight/web.js"))
     }
 }
 
