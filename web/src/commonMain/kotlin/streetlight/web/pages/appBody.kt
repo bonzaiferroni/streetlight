@@ -1,6 +1,7 @@
 package streetlight.web.pages
 
 import koala.JsFile
+import koala.LottieFiles
 import koala.SvgFile
 import koala.SvgFiles
 import koala.css.*
@@ -61,7 +62,7 @@ fun FlowContent.appFooter() {
     val giants = "May we build a world of faithful giants."
     row(modify(JustifyCenter, Height48)) {
         column(modify(AlignItemsCenter, Gap0, Width100)) {
-            lottie("spinning_circles", modify(Height24))
+            lottie(LottieFiles.spinningCircles, modify(Height24))
             textBlock(giants, modify(Italic, Opacity6))
         }
     }

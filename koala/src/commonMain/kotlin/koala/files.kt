@@ -41,3 +41,26 @@ object SvgFiles: FileSet<SvgFile>() {
     val settings = add("settings.svg")
 }
 
+object LottieFiles: FileSet<LottieFile>() {
+    val airplane = addLottie("airplane.json")
+    val fox = addLottie("fox.json")
+    val cassette = addLottie("cassette.json")
+    val catWalk = addLottie("cat-walk.json")
+    val cloudSync = addLottie("cloud-sync.json")
+    val confused = addLottie("confused.json")
+    val cupShuffle = addLottie("cup-shuffle.json")
+    val strollingMan = addLottie("strolling-man.json")
+    val dinoLoad = addLottie("dino-load.json")
+    val ghost = addLottie("ghost.json")
+    val friendWave = addLottie("friend-wave.json")
+    val helicopter = addLottie("helicopter.json")
+    val playPause = addLottie("play-pause.json")
+    val cat = addLottie("cat.json")
+    val astronautReading = addLottie("astronaut-reading.json")
+    val astronautWalking = addLottie("astronaut-walking.json")
+    val rocket = addLottie("rocket.json")
+    val secureCloudSync = addLottie("secure-cloud-sync.json")
+    val serverSync = addLottie("server-sync.json")
+    val spinningCircles = addLottie("spinning-circles.json")
+    val circleSync = addLottie("circle-sync.json")
+}

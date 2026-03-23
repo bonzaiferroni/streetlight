@@ -21,7 +21,7 @@ fun initLottie(element: HTMLElement) {
             renderer = "svg",
             loop = true,
             autoplay = true,
-            path = "/www/lottie/$path.json"
+            path = path
         )
     )
 }
