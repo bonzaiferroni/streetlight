@@ -1,70 +1,32 @@
 package streetlight.web.ui
 
 import koala.dom.RenderContext
+import koala.dom.button
+import koala.dom.column
 import koala.dom.onView
 import koala.dom.textBlock
+import kotlinx.html.id
+import kotlinx.html.js.div
+import kotlinx.html.style
 import streetlight.web.model.Streetlight
+import streetlight.web.pages.appFooter
 
 fun RenderContext.viewSandbox(app: Streetlight) {
-    val element = this@viewSandbox.textBlock("yer element")
-    element.onView {
-        console.log("In view, matey!")
+    column {
+        button("open") {
+            attributes["popovertarget"] = "menu"
+            style = "anchor-name: --my-anchor;"
+        }
+        popBox()
+        appFooter()
     }
 }
 
-//    row(modify(FlexItemsBasis50)) {
-//        textBlock("hello sandbox")
-//        viewGeoMap(app.home.geoMap)
-//    }
-//    button("Go home", onClick = {
-//        app.portal.go(HomeRoute())
-//    })
-
-//    textField("input")
-
-//    val flow = MutableStateFlow(listOf("One", "Two", "Three"))
-//
-//    itemsBlock(flow, defaultMagic, animate = true) {
-//        textBlock(it)
-//    }
-//
-//    renderScope.launch {
-//        delay(2000)
-//        flow.value -= "Two"
-//        delay(2000)
-//        flow.value += "Four"
-//        delay(2000)
-//        flow.value += "Five"
-//        delay(2000)
-//        flow.value = flow.value.sorted()
-//    }
-
-//    val eventMap = app.home.eventMap
-//
-//    button("location query") {
-//        renderScope.launch {
-//            // val info = app.client.location.readPlaceInfo(eventMap.stateNow.center)
-//            // console.log(jsonPrettyConfig.encodeToString(info))
-//            val locations = app.client.location.queryLocation(eventMap.stateNow.center)
-//            console.log(locations?.joinToString(", ") { it.name })
-//        }
-//    }
-//    button("create location") {
-//        renderScope.launch {
-//            val point = eventMap.stateNow.center
-//            val info = app.client.location.readPlaceInfo(point)
-//            console.log(info)
-//            val id = app.client.location.createLocation(NewLocation(
-//                name = info.name.takeIf { it.isNotBlank() } ?: info.address.road ?: info.addressType,
-//                geoPoint = point
-//            ))
-//            console.log(id?.value)
-//        }
-//    }
-//
-//    flowBlock(eventMap.focusFlow) { (location, event) ->
-//        column {
-//            textBlock("Event: ${event?.title}")
-//            textBlock("Location: ${location?.name}")
-//        }
-//    }
+fun RenderContext.popBox() {
+    div {
+        attributes["popover"] = "auto"
+        id = "menu"
+        +"Ahoy!"
+        style = "position-anchor: --my-anchor;"
+    }
+}
