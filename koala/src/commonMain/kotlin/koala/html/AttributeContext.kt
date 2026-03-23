@@ -2,26 +2,26 @@ package koala.html
 
 import kampfire.api.TableId
 import kotlinx.html.CoreAttributeGroupFacade
-import kotlinx.html.impl.DelegatingMap
 import kotlin.jvm.JvmInline
 
 typealias AttributeContext = CoreAttributeGroupFacade
 
 var AttributeContext.blockLabel: String?
-    get() = attributes[Attributes.blockLabel.key]
+    get() = attributes[Attribute.blockLabel.key]
     set(value) {
-        attributes[Attributes.blockLabel.key] = value ?: ""
+        attributes[Attribute.blockLabel.key] = value ?: ""
     }
 
 @JvmInline
-value class Attribute(val value: String) {
-    val selector get() = "[$key]"
+value class Attribute(val value: String): Queryable {
+    override val selector get() = "[$key]"
     val key get() = "data-$value"
-}
 
-object Attributes {
-    val blockLabel = Attribute("block-label")
-    val lottie = Attribute("lottie")
+    companion object {
+        val blockLabel = Attribute("block-label")
+        val lottie = Attribute("lottie")
+        val isOn = Attribute("is-on")
+    }
 }
 
 fun AttributeContext.applyBlockLabel(label: String?) {

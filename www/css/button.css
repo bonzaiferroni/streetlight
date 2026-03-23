@@ -1,25 +1,30 @@
+:root {
+    --btn-text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8), 0 0 6px rgba(0, 0, 0, 0.6);
+    --btn-font-size: .8rem;
+    --btn-font-weight: 500;
+    --btn-padding: .75rem 1rem;
+}
+
 .btn {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: .75rem 1rem;
+    padding: var(--btn-padding);
     border: none;
     border-radius: 1.25rem;
     background: var(--primary-button);
     color: var(--ink);
-    font-size: .8rem;
-    font-weight: 500;
+    font-size: var(--btn-font-size);
+    font-weight: var(--btn-font-weight);
     line-height: 1rem;
     cursor: pointer;
     transition: background 0.2s ease;
     box-shadow: 0 0 .8rem var(--primary-button);
     text-transform: uppercase;
+    text-shadow: var(--btn-text-shadow);
     text-align: center;
     white-space: nowrap;
     min-width: calc(var(--unit-spacing) * 16);
-    text-shadow:
-            0 1px 2px rgba(0, 0, 0, 0.8),
-            0 0 6px rgba(0, 0, 0, 0.6);
 }
 
 .btn.accent {
@@ -104,14 +109,16 @@
     transform: translate(0, -50%);
     transition: transform 200ms ease, background 200ms ease;
 
-    padding: .5rem 1rem;
+    padding: var(--btn-padding);
     border: none;
     border-radius: 2rem;
     background: var(--gray-bg);
     color: var(--ink);
-    font-size: .8rem;
-    line-height: 1.5rem;
+    font-size: var(--btn-font-size);
+    font-weight: var(--btn-font-weight);
+    line-height: 1rem;
     text-transform: uppercase;
+    text-shadow: var(--btn-text-shadow);
     white-space: nowrap;
 }
 
@@ -120,15 +127,15 @@
     visibility: hidden;
     pointer-events: none;
 
-    padding: .5rem 1rem;
-    font-size: .8rem;
-    line-height: 1.5rem;
+    padding: var(--btn-padding);
+    font-size: var(--btn-font-size);
+    line-height: 1rem;
     text-transform: uppercase;
     white-space: nowrap;
 }
 
 /* ON state: slide pill to the right, full opacity */
-.switch[data-on="true"] .switch__pill {
+.switch[data-is-on="true"] .switch__pill {
     background: rgba(var(--primary), .6);
     transform: translate(1rem, -50%);
     box-shadow: 0 0 .8rem var(--primary-button);

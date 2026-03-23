@@ -3,30 +3,48 @@ package koala.dom
 import koala.core.initSwitch
 import koala.css.ElementClass
 import koala.css.ModifierSet
-import koala.css.applyModifiers
-import koala.css.modify
 import koala.html.ElementEvent
+import koala.html.Id
+import koala.html.Queryable
 import koala.html.configureSwitch
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.html.DIV
 import kotlinx.html.js.div
-import kotlinx.html.js.span
 import org.w3c.dom.HTMLDivElement
+import org.w3c.dom.HTMLElement
 
 fun RenderContext.switch(
     label: String,
     modifiers: ModifierSet? = null,
+    id: Id? = null,
     initialOn: Boolean = false,
     onToggle: ((Boolean) -> Unit)? = null,
     bindFlow: Flow<Boolean>? = null,
     block: (DIV.() -> Unit)? = null,
 ): HTMLDivElement {
-    var isOn = initialOn
-
     val element = div {
-        configureSwitch(label, modifiers, initialOn, block)
+        configureSwitch(label, modifiers, id, initialOn, block)
     }
+
+    initSwitch(element)
+    wireSwitch(
+        element = element,
+        initialOn = initialOn,
+        onToggle = onToggle,
+        bindFlow = bindFlow,
+    )
+
+    return element
+}
+
+fun RenderContext.wireSwitch(
+    element: HTMLElement,
+    initialOn: Boolean = false,
+    onToggle: ((Boolean) -> Unit)? = null,
+    bindFlow: Flow<Boolean>? = null,
+) {
+    var isOn = initialOn
 
     fun setOn(value: Boolean) {
         if (value == isOn) return
@@ -46,8 +64,16 @@ fun RenderContext.switch(
             }
         }
     }
+}
 
-    initSwitch(element)
-
-    return element
+fun RenderContext.queryAndWireSwitch(
+    ancestor: HTMLElement,
+    queryable: Queryable = ElementClass.switch,
+    initialOn: Boolean = false,
+    onToggle: ((Boolean) -> Unit)? = null,
+    bindFlow: Flow<Boolean>? = null,
+) {
+    val element = ancestor.querySelector(queryable)
+        ?: error("switch not found with selector: ${queryable.selector}")
+    wireSwitch(element, initialOn, onToggle, bindFlow)
 }

@@ -160,3 +160,30 @@
 
 .wire-block {
 }
+
+/* toggle block */
+
+.toggle-block {
+    display: grid;
+}
+
+.toggle-block > * {
+    grid-area: 1 / 1 / 2 / 2;
+}
+
+.toggle-block__cover {
+}
+
+.toggle-block.reveal > .toggle-block__cover,
+.toggle-block__base {
+    display: none;
+}
+
+.toggle-block.reveal > .toggle-block__base {
+    display: block;
+}
+
+.toggle-block > .switch {
+    justify-self: end;
+    align-self: start;
+}

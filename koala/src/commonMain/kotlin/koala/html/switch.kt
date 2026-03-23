@@ -12,24 +12,27 @@ import kotlinx.html.span
 fun FlowContent.switch(
     label: String,
     modifiers: ModifierSet? = null,
+    id: Id? = null,
     initialOn: Boolean = false,
     block: (DIV.() -> Unit)? = null,
 ) {
     div {
-        configureSwitch(label, modifiers, initialOn, block)
+        configureSwitch(label, modifiers, id, initialOn, block)
     }
 }
 
 fun DIV.configureSwitch(
     label: String,
     modifiers: ModifierSet? = null,
+    id: Id? = null,
     initialOn: Boolean = false,
     block: (DIV.() -> Unit)? = null,
 ) {
     applyModifiers(modify(ElementClass.switch, modifiers))
+    applyId(id)
     attributes["role"] = "switch"
     attributes["aria-checked"] = initialOn.toString()
-    attributes["data-on"] = initialOn.toString()
+    attributes[Attribute.isOn] = initialOn.toString()
 
     // ghost text defines the inner pill width; outer padding makes the “constraints” larger
     span("switch__ghost") { +label }

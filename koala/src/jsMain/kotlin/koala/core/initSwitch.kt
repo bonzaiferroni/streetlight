@@ -3,7 +3,8 @@ package koala.core
 import koala.css.ElementClass
 import koala.dom.onCustomEvent
 import koala.dom.sendCustomEvent
-import koala.html.Attributes
+import koala.dom.setAttribute
+import koala.html.Attribute
 import koala.html.ElementEvent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -20,12 +21,12 @@ fun findAndInitSwitches(ancestor: HTMLElement) {
 fun initSwitch(
     element: HTMLElement,
 ) {
-    var isOn = element.getAttribute("data-on")?.toBooleanStrictOrNull() ?: false
+    var isOn = element.attributes[Attribute.isOn]?.toBooleanStrictOrNull() ?: false
 
     fun setOn(value: Boolean) {
         if (value == isOn) return
         isOn = value
-        element.setAttribute("data-on", value.toString())
+        element.setAttribute(Attribute.isOn, value.toString())
         element.setAttribute("aria-checked", value.toString())
         element.sendCustomEvent(ElementEvent.onToggle, isOn)
     }

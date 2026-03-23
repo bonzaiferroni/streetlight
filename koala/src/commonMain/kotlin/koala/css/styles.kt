@@ -1,19 +1,17 @@
 package koala.css
 
+import koala.html.Queryable
 import kotlinx.css.CssBuilder
 import kotlinx.css.RuleContainer
 import kotlinx.css.RuleSet
 import kotlinx.html.CoreAttributeGroupFacade
-import kotlinx.html.HEAD
 import kotlinx.html.classes
-import kotlinx.html.id
-import kotlinx.html.style
 import kotlin.jvm.JvmInline
 
-interface Modifier {
+interface Modifier: Queryable {
     val value: String
 
-    val selector get() = ".$value"
+    override val selector get() = ".$value"
 }
 
 @JvmInline

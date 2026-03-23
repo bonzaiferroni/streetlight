@@ -4,7 +4,7 @@ import koala.core.initLottie
 import koala.css.ElementClass
 import koala.css.ModifierSet
 import koala.css.applyModifiers
-import koala.html.Attributes
+import koala.html.Attribute
 import kotlinx.css.div
 import kotlinx.html.DIV
 import kotlinx.html.div
@@ -18,7 +18,7 @@ inline fun DOMContext.lottie(
 ): HTMLDivElement {
     val div = div {
         applyModifiers(ElementClass.lottie, modifiers)
-        attributes[Attributes.lottie.key] = filename
+        attributes[Attribute.lottie.key] = filename
         block()
     }
     initLottie(div)

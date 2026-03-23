@@ -4,8 +4,12 @@ import kotlinx.html.*
 import kotlin.jvm.JvmInline
 
 @JvmInline
-value class Id(val value: String) {
-    val selector get() = "#$value"
+value class Id(val value: String): Queryable {
+    override val selector get() = "#$value"
+}
+
+interface Queryable {
+    val selector: String
 }
 
 fun CoreAttributeGroupFacade.applyId(id: Id?) {

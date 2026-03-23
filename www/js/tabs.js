@@ -9,7 +9,8 @@ function findAndInitTabs(parent) {
 function initTabs(root) {
     const DURATION = 200;
     const viewport = root.querySelector(".tabs-viewport");
-    if (!viewport) return;
+    if (!viewport || viewport.isInitialized) return;
+    viewport.isInitialized = true
 
     // Optional: Key is the root id (used only for URL hash query sync)
     const paramKey = (root.id || "").trim();
