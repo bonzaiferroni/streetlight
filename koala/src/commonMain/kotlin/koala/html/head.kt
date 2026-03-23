@@ -30,6 +30,7 @@ fun HEAD.applyFile(file: SiteFile) {
     when (file) {
         is JsFile -> applyJsFile(file)
         is CssFile -> applyCssFile(file)
+        else -> error("unsupported file: $file")
     }
 }
 

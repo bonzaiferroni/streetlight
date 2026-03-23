@@ -3,6 +3,7 @@ package streetlight.web.ui
 import kampfire.model.GeoPoint
 import kampfire.model.distanceTo
 import kampfire.model.kilometers
+import koala.SvgFiles
 import koala.dom.UIMessage
 import koala.dom.set
 import koala.model.PanPoint
@@ -131,7 +132,7 @@ class LocationScout(
 
     private fun addConstructionMarker(point: GeoPoint) {
         geo.tempEntities(listOf(
-            IconEntity("here", SvgPath.guitar, point)
+            IconEntity("here", SvgFiles.guitar, point)
         ))
     }
 

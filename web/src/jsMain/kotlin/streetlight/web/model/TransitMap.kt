@@ -1,6 +1,7 @@
 package streetlight.web.model
 
 import kampfire.model.GeoPoint
+import koala.SvgFiles
 import koala.css.modify
 import koala.model.GeoMap
 import koala.model.LayerId
@@ -22,7 +23,6 @@ import streetlight.model.data.TransitRouteId
 import streetlight.model.data.TransitVehicle
 import streetlight.model.data.VehicleType
 import streetlight.web.io.ProtobufType
-import streetlight.web.ui.SvgPath
 import kotlin.time.Duration.Companion.seconds
 
 class TransitMap(
@@ -195,10 +195,10 @@ data class TransitEntity(
     override val bearing: Float?,
 ): PointEntity {
     override val entityId get() = vehicleId
-    override val iconPath get() = when (vehicleType) {
-        VehicleType.Bus -> SvgPath.bus
-        VehicleType.LightRail -> SvgPath.train
-        VehicleType.Train -> SvgPath.train
+    override val icon get() = when (vehicleType) {
+        VehicleType.Bus -> SvgFiles.bus
+        VehicleType.LightRail -> SvgFiles.train
+        VehicleType.Train -> SvgFiles.train
     }
     override val modifiers get() = modify(MarkerUtility.twinkleAboveAirplane)
 }

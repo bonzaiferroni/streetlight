@@ -1,6 +1,7 @@
 package streetlight.web.shells
 
 import kabinet.utils.toRelativeDayFormat
+import koala.SvgFiles
 import koala.css.*
 import koala.html.Attribute
 import koala.html.action
@@ -20,7 +21,6 @@ import kotlinx.html.FlowContent
 import streetlight.model.data.EventStar
 import streetlight.model.data.GalaxyPost
 import streetlight.model.data.InterestType
-import streetlight.web.ui.SvgPath
 
 fun FlowContent.largeGridOf(post: GalaxyPost) {
     val postRoute = post.route ?: return
@@ -119,7 +119,7 @@ object EventAttributes {
 }
 
 val InterestType?.iconPath get() = when(this) {
-    InterestType.Star -> SvgPath.starFilled
-    InterestType.Calendar -> SvgPath.starFilled // td: handle differently
-    null -> SvgPath.starOutline
+    InterestType.Star -> SvgFiles.starFilled
+    InterestType.Calendar -> SvgFiles.starFilled // td: handle differently
+    null -> SvgFiles.starOutline
 }

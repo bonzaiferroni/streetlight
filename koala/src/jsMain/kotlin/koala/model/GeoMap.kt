@@ -4,6 +4,7 @@ import kampfire.model.GeoBounds
 import kampfire.model.GeoPoint
 import kampfire.model.distanceTo
 import kampfire.model.meters
+import koala.SvgFile
 import koala.css.ModifierSet
 import koala.dom.RenderContext
 import kotlinx.coroutines.CoroutineScope
@@ -151,7 +152,7 @@ interface PointEntity: MapEntity {
     val bearing: Float? get() = null
     val opacity: Float? get() = null
     val subpixelPositioning: Boolean get() = true
-    val iconPath: String? get() = null
+    val icon: SvgFile? get() = null
     val thumbPath: String? get() = null
     val minZoom: Float? get() = null
     val modifiers: ModifierSet? get() = null

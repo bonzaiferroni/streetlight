@@ -1,5 +1,6 @@
 package koala.css
 
+import koala.SiteFile
 import kotlinx.html.CoreAttributeGroupFacade
 import kotlinx.html.style
 import kotlin.jvm.JvmInline
@@ -17,6 +18,8 @@ interface CssValue {
 }
 
 data class UrlValue(val url: String): CssValue {
+    constructor(file: SiteFile): this(file.path)
+
     override val expression get() = "url('$url')"
 }
 

@@ -1,6 +1,8 @@
 package streetlight.web.pages
 
 import koala.JsFile
+import koala.SvgFile
+import koala.SvgFiles
 import koala.css.*
 import koala.html.*
 import koala.jsFileOf
@@ -12,7 +14,6 @@ import streetlight.web.AccountRoute
 import streetlight.web.FullMapRoute
 import streetlight.web.HomeRoute
 import streetlight.web.SiteConfigRoute
-import streetlight.web.ui.SvgPath
 
 fun HTML.appBody(
     block: (DIV.() -> Unit)? = null
@@ -48,7 +49,7 @@ fun FlowContent.appHeader() {
 //            icon(SvgPath.chevronDown, modify(Height100))
 //        }
         action(SiteConfigRoute, modify(Height6, Opacity2)) {
-            icon(SvgPath.settings, modify(Height100))
+            icon(SvgFiles.settings, modify(Height100))
         }
         action(AccountRoute, modify(Height6, Square), id = AppBody.badgeId) {
             emptyBadge()
@@ -67,7 +68,7 @@ fun FlowContent.appFooter() {
 }
 
 fun FlowContent.emptyBadge() {
-    icon(SvgPath.emptyProfile, modify(Height100, Opacity2))
+    icon(SvgFiles.emptyProfile, modify(Height100, Opacity2))
 }
 
 object AppBody {

@@ -1,6 +1,7 @@
 package streetlight.web.shells
 
 import kabinet.utils.toRelativeDayFormat
+import koala.SvgFiles
 import koala.css.*
 import koala.html.action
 import koala.html.card
@@ -19,7 +20,6 @@ import streetlight.model.data.GalaxyPost
 import streetlight.model.data.Location
 import streetlight.web.EventIdRoute
 import streetlight.web.LocationIdRoute
-import streetlight.web.ui.SvgPath
 
 fun FlowContent.gridOf(post: GalaxyPost) {
     val thumbUrl = post.thumbUrl
@@ -45,7 +45,7 @@ fun FlowContent.gridOf(post: GalaxyPost) {
                                 }
                             }
                         }
-                        icon(SvgPath.focus, modify(Height5, Square, Dim))
+                        icon(SvgFiles.focus, modify(Height5, Square, Dim))
                     }
                     description?.let {
                         action(postRoute) {

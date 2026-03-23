@@ -5,6 +5,7 @@ package streetlight.web.model
 import kampfire.model.GeoPoint
 import kampfire.model.distanceTo
 import kampfire.model.kilometers
+import koala.SvgFiles
 import koala.dom.UIMessage
 import koala.dom.set
 import koala.model.PanPoint
@@ -28,7 +29,6 @@ import streetlight.model.data.mergeLeft
 import streetlight.model.data.mergeRight
 import streetlight.model.data.toEdit
 import streetlight.model.external.toPlace
-import streetlight.web.ui.SvgPath
 import streetlight.web.ui.ViewModel
 
 class EventScout(
@@ -215,7 +215,7 @@ class EventScout(
 
     private fun addConstructionMarker(point: GeoPoint) {
         geo.tempEntities(listOf(
-            IconEntity("here", SvgPath.guitar, point)
+            IconEntity("here", SvgFiles.guitar, point)
         ))
     }
 }
