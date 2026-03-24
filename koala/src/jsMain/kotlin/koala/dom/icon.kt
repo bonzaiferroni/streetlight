@@ -2,6 +2,8 @@ package koala.dom
 
 import koala.SvgFile
 import koala.css.*
+import koala.html.IconElement
+import koala.html.configureIcon
 import kotlinx.html.DIV
 import kotlinx.html.js.div
 import org.w3c.dom.HTMLDivElement
@@ -11,9 +13,11 @@ fun DOMContext.icon(
     modifiers: ModifierSet? = null,
     block: (DIV.() -> Unit)? = null
 ) = div {
-    applyModifiers(modify(ElementClass.icon, modifiers))
-    applyStyles(styleOf(StyleProperty.maskSrc to UrlValue(file)))
-    block?.invoke(this)
+    configureIcon(
+        file = file,
+        modifiers = modifiers,
+        block = block
+    )
 }
 
 fun DOMContext.icon(

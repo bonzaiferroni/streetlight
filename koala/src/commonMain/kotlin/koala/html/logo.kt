@@ -2,36 +2,47 @@ package koala.html
 
 import kotlinx.html.*
 import koala.css.*
+import kotlinx.css.div
 
 fun FlowContent.logo(
     modifiers: ModifierSet? = null
 ) {
-//    box(modify(GlowShadow, modifiers)) {
-//        icon("flame", modify(Height100, GlowBackground))
-//    }
     div {
         applyModifiers(ElementClass.logo, modifiers)
         div {
-//             applyModifiers(GlowBackground)
+            applyStyles(styleOf(StyleProperty.maskUrl to UrlValue("/www/svg/flame.svg")))
         }
     }
 }
 
+// language="CSS"
+const val LOGO_STYLES = """
+.logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: glow-shadow 10s infinite linear;
+}
 
+.logo > div {
+    height: 100%;
+    background-color: currentColor;
+    aspect-ratio: 2 / 3;
 
-// .logo {
-//    display: inline-flex;
-//    align-items: center;
-//    height: 1.5rem;
-//}
-//
-//.logo svg {
-//    width: 100%;
-//    height: 100%;
-//    display: block;
-//    overflow: visible; /* let the glow spill out */
-//}
-//
-//.logo svg * {
-//    animation: glow-shadow 10s infinite linear;
-//}
+    display: block;
+
+    mask-image: var(--mask-url);
+    -webkit-mask-image: var(--mask-url);
+
+    mask-size: contain;
+    -webkit-mask-size: contain;
+
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+
+    mask-position: center;
+    -webkit-mask-position: center;
+
+    animation: glow-background 10s infinite linear;
+}
+"""

@@ -1,36 +1,3 @@
-/* icon */
-
-.icon {
-    display: inline-block;
-    background-color: currentColor;
-    height: 2rem;
-    aspect-ratio: 1 / 1;
-
-    mask-image: var(--mask-url);
-    -webkit-mask-image: var(--mask-url);
-
-    mask-size: contain;
-    -webkit-mask-size: contain;
-
-    mask-repeat: no-repeat;
-    -webkit-mask-repeat: no-repeat;
-
-    mask-position: center;
-    -webkit-mask-position: center;
-}
-
-.icon.clickable {
-    transition: background-color 200ms ease-in-out;
-}
-
-.icon.clickable:hover {
-    background-color: rgb(var(--accent));
-}
-
-.icon.danger {
-    background-color: rgb(var(--danger));
-}
-
 /* action */
 
 .action {
@@ -45,38 +12,6 @@
 .text-label {
     font-size: 0.8rem;
     opacity: 0.5;
-}
-
-/* logo */
-
-.logo {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    animation: glow-shadow 10s infinite linear;
-}
-
-.logo > div {
-    --mask-url: url('/www/svg/flame.svg');
-    height: 100%;
-    background-color: currentColor;
-    aspect-ratio: 2 / 3;
-
-    display: block;
-
-    mask-image: var(--mask-url);
-    -webkit-mask-image: var(--mask-url);
-
-    mask-size: contain;
-    -webkit-mask-size: contain;
-
-    mask-repeat: no-repeat;
-    -webkit-mask-repeat: no-repeat;
-
-    mask-position: center;
-    -webkit-mask-position: center;
-
-    animation: glow-background 10s infinite linear;
 }
 
 /* message box */

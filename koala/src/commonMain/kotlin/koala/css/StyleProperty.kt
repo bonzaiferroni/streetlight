@@ -8,7 +8,7 @@ import kotlin.jvm.JvmInline
 @JvmInline
 value class StyleProperty(val identifier: String) {
     companion object {
-        val maskSrc = StyleProperty("mask-url")
+        val maskUrl = StyleProperty("mask-url")
         val backgroundUrl = StyleProperty("background-url")
     }
 }

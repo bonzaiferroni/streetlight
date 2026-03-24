@@ -7,7 +7,6 @@ import kotlinx.css.properties.s
 
 object ElementClass {
     val lottie = Css("lottie")
-    val icon = Css("icon")
     val logo = Css("logo")
     val action = Css("action")
     val button = Css("btn")
@@ -23,41 +22,4 @@ object ElementClass {
     val messageBox = Css("message-box")
     val imageWithBackdrop = Css("image-with-backdrop")
     val carousel = Css("carousel")
-}
-
-fun CssBuilder.elementStyles(theme: KoalaTheme) {
-    rule(ElementClass.lottie) {
-        child("svg") {
-//            display = Display.block
-//            maxHeight = 100.pct
-        }
-    }
-
-    rule(ElementClass.icon) {
-        display = Display.inlineBlock
-        backgroundColor = Color.currentColor
-        put("aspect-ratio", "1 / 1")
-        put("mask-image", "var(--mask-src)")
-        put("-webkit-mask-image", "var(--mask-src)")
-        put("mask-size", "contain")
-        put("-webkit-mask-size", "contain")
-        put("mask-repeat", "no-repeat")
-        put("-webkit-mask-repeat", "no-repeat")
-        put("mask-position", "center")
-        put("-webkit-mask-position", "center")
-    }
-
-    rule(ElementClass.action) {
-        transition += Transition("opacity", 0.35.s, Timing.ease)
-        cursor = Cursor.pointer
-
-        hover {
-            opacity = 1
-        }
-    }
-
-    rule(ElementClass.textLabel) {
-        fontSize = .8.rem
-        opacity = .5
-    }
 }

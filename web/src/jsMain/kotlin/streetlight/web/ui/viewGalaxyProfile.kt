@@ -1,10 +1,10 @@
 package streetlight.web.ui
 
 import koala.core.queryFirstOrNull
-import koala.css.ElementClass
 import koala.css.StyleProperty
 import koala.css.UrlValue
 import koala.dom.*
+import koala.html.IconElement
 import kotlinx.coroutines.launch
 import org.w3c.dom.HTMLElement
 import streetlight.model.data.EventStar
@@ -69,14 +69,14 @@ fun RenderContext.wireInterestControls(app: Streetlight, root: HTMLElement) {
             app.userInterest.editEventInterest(interest)
         }
 
-        val iconElement by lazy { element.queryFirstOrNull(ElementClass.icon) }
+        val iconElement by lazy { element.queryFirstOrNull(IconElement.cssClass) }
         renderScope.launch {
             app.userInterest.interestFlow.collect { updatedInterest ->
                 if (updatedInterest.eventId != interest.eventId) return@collect
                 interest = updatedInterest
 
                 val element = iconElement ?: return@collect
-                element.style.setProperty(StyleProperty.maskSrc, UrlValue(interest.value.iconPath))
+                element.style.setProperty(StyleProperty.maskUrl, UrlValue(interest.value.iconPath))
             }
         }
     }

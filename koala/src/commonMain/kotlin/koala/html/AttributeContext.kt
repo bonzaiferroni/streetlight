@@ -21,6 +21,7 @@ value class Attribute(val value: String): Queryable {
         val blockLabel = Attribute("block-label")
         val lottie = Attribute("lottie")
         val isOn = Attribute("is-on")
+        val maskUrl = Attribute("mask-url")
     }
 }
 
