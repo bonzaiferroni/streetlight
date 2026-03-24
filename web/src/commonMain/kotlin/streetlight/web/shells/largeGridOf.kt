@@ -7,7 +7,7 @@ import koala.html.TagAttribute
 import koala.html.action
 import koala.html.actionIfNotNull
 import koala.html.box
-import koala.html.button
+import koala.html.btn
 import koala.html.card
 import koala.html.column
 import koala.html.heading3
@@ -56,10 +56,10 @@ fun FlowContent.largeGridOf(post: GalaxyPost) {
 
                     row {
                         post.event?.url?.let { url ->
-                            button("source", url)
+                            btn("source", url)
                         }
                         post.event?.links?.forEach { link ->
-                            button(link.label, link.url)
+                            btn(link.label, link.url)
                         }
                     }
                 }

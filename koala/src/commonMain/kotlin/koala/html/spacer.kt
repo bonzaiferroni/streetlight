@@ -22,11 +22,11 @@ fun FlowContent.centeredHeading(
 ) {
     row(modify(modifiers, Width100, JustifyCenter)) {
         hr {
-            setModifiers(modify(Width16, Opacity2))
+            setModifiers(modify(Width16, OpacitySome))
         }
-        heading3(text, modify(Opacity4))
+        heading3(text, modify(OpacityHalf))
         hr {
-            setModifiers(modify(Width16, Opacity2))
+            setModifiers(modify(Width16, OpacitySome))
         }
     }
 }

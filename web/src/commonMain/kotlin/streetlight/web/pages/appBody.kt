@@ -1,8 +1,6 @@
 package streetlight.web.pages
 
-import koala.JsFile
 import koala.LottieFiles
-import koala.SvgFile
 import koala.SvgFiles
 import koala.css.*
 import koala.html.*
@@ -12,7 +10,6 @@ import kotlinx.html.FlowContent
 import kotlinx.html.HTML
 import kotlinx.html.body
 import streetlight.web.AccountRoute
-import streetlight.web.FullMapRoute
 import streetlight.web.HomeRoute
 import streetlight.web.SiteConfigRoute
 
@@ -49,7 +46,7 @@ fun FlowContent.appHeader() {
 //        action(FullMapRoute, modify(Height6, Opacity2)) {
 //            icon(SvgPath.chevronDown, modify(Height100))
 //        }
-        action(SiteConfigRoute, modify(Height6, Opacity2)) {
+        action(SiteConfigRoute, modify(Height6, OpacitySome)) {
             icon(SvgFiles.settings, modify(Height100))
         }
         action(AccountRoute, modify(Height6, Square), id = AppBody.badgeId) {
@@ -70,12 +67,12 @@ fun DIV.configureAppFooter() {
     column(modify(AlignItemsCenter, Gap0, Width100)) {
 
         lottie(LottieFiles.spinningCircles, modify(Height24))
-        textBlock(giants, modify(Italic, Opacity6))
+        textBlock(giants, modify(Italic, OpacityMost))
     }
 }
 
 fun FlowContent.emptyBadge() {
-    icon(SvgFiles.emptyProfile, modify(Height100, Opacity2))
+    icon(SvgFiles.emptyProfile, modify(Height100, OpacitySome))
 }
 
 object AppBody {

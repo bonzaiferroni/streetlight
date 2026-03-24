@@ -6,8 +6,7 @@ import koala.css.MarginAuto
 import koala.css.MaxHeight64
 import koala.css.modify
 import koala.html.Id
-import koala.html.action
-import koala.html.button
+import koala.html.btn
 import koala.html.column
 import koala.html.heading1
 import koala.html.image
@@ -29,7 +28,7 @@ fun FlowContent.eventProfileShell(event: Event) {
         tabs(EventProfileShell.tabsId) {
             tab("Profile") {
                 textBlock("[Event information]")
-                button("edit", EditEventIdRoute(event.eventId))
+                btn("edit", EditEventIdRoute(event.eventId))
             }
             tab("Requests") {
                 textBlock("[Requests information]")

@@ -48,9 +48,11 @@ fun ViewContext<Streetlight>.viewGalaxyProfileRoute() {
     routeBlock<GalaxyPathIdRoute, GalaxyShellContent>(model.portal, { route ->
         val galaxy = model.client.api.readGalaxy(route.pathId) ?: return@routeBlock null
         val posts = model.client.api.readPosts(galaxy.galaxyId) ?: return@routeBlock null
+        val galaxies = model.client.api.readGalaxies() ?: emptyList()
         GalaxyShellContent(
             galaxy = galaxy,
-            posts = posts
+            posts = posts,
+            galaxies = galaxies,
         )
     }) { content ->
         viewGalaxyProfile(model, content)

@@ -27,7 +27,7 @@ fun FlowContent.propertyValue(
 ) {
     row {
         setModifiers(modifiers)
-        textBlock("${propertyName}:", modify(Opacity6, TextAlignRight))
+        textBlock("${propertyName}:", modify(OpacityMost, TextAlignRight))
         block()
     }
 }

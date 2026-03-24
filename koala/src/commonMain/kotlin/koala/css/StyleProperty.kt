@@ -14,6 +14,7 @@ data class StyleProperty<T: CssValue>(val identifier: String, val isCustom: Bool
         val anchorName = StyleProperty<PositionAnchor>("anchor-name")
         val positionAnchor = StyleProperty<PositionAnchor>("position-anchor")
         val anchorId = StyleProperty<PositionAnchor>("anchor-id", true)
+        val containerAnchorId = StyleProperty<PositionAnchor>("anchor-width-id", true)
     }
 }
 

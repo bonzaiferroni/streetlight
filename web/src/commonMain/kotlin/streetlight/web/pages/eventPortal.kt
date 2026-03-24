@@ -47,7 +47,7 @@ fun HTML.eventPortal(event: Event, performer: Performer?, requestItems: List<Req
                             textField(Id("name"), "Your name (optional)")
                             textField(Id("comment"), "Comment (optional)")
                             checkBox(Id("join"), "Would you like to sing with me?")
-                            button("Send", invoke("sendRequest"))
+                            btn("Send", invoke("sendRequest"))
                         }
                         column(Id("request-sent"), modify(DisplayNone)) {
                             textBlock("Request sent!")
@@ -63,7 +63,7 @@ fun HTML.eventPortal(event: Event, performer: Performer?, requestItems: List<Req
         column(Id("tips-box"), modify(AlignItemsCenter)) {
             row(modify(AlignItemsCenter, WidthAuto)) {
                 row(modify(WidthAuto)) {
-                    heading3("Venmo:", modify(Opacity6))
+                    heading3("Venmo:", modify(OpacityMost))
                     a("https://venmo.com/colfaxband?txn=pay&note=street+music") {
                         heading3("@colfaxband", modify(GlowShadow))
                     }
@@ -74,7 +74,7 @@ fun HTML.eventPortal(event: Event, performer: Performer?, requestItems: List<Req
 //                a("https://venmo.com/colfaxband?txn=pay&amount=1&note=street+music") {
 //                    button("$5", modifiers = modify(Accent))
 //                }
-                button(
+                btn(
                     text = "Send a tip",
                     href = "https://venmo.com/colfaxband?txn=pay&note=street+music",
                     modifiers = modify(Accent),
@@ -100,7 +100,7 @@ fun FlowContent.requestItem(
                 textBlock(song.artist)
             }
             column(modify(Gap0, AlignItemsCenter, WidthAuto)) {
-                textBlock("plays", modify(Opacity6))
+                textBlock("plays", modify(OpacityMost))
                 textBlock(plays.toString())
             }
         }

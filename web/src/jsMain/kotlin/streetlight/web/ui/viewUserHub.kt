@@ -3,7 +3,7 @@ package streetlight.web.ui
 import kampfire.model.UserInfo
 import koala.css.*
 import koala.dom.*
-import koala.html.button
+import koala.html.btn
 import streetlight.web.EditProfileRoute
 import streetlight.web.EditTalentRoute
 import streetlight.web.HomeRoute
@@ -32,8 +32,8 @@ fun RenderContext.viewUserHub(
         card {
             row {
                 textBlock("Add things to the map.", modify(Flex1))
-                button("Edit Profile", EditProfileRoute)
-                button("Go to sandbox", SandboxRoute)
+                btn("Edit Profile", EditProfileRoute)
+                btn("Go to sandbox", SandboxRoute)
                 button("galaxy foundry", modify(Accent), onClick = { portal.go(GalaxyFoundryRoute)} )
                 button("galaxy list", modify(Accent), onClick = { portal.go(GalaxyListRoute) })
             }

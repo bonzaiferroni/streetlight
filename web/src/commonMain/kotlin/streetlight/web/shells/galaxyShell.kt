@@ -1,10 +1,11 @@
 package streetlight.web.shells
 
 import koala.css.Flex1
+import koala.css.JustifySpaceBetween
 import koala.css.modify
 import koala.html.Id
 import koala.html.box
-import koala.html.button
+import koala.html.btn
 import koala.html.column
 import koala.html.geoMapMount
 import koala.html.row
@@ -25,9 +26,9 @@ fun FlowContent.galaxyShell(content: GalaxyShellContent) {
             tab("Posts") {
                 column {
                     headerOf(galaxy)
-                    row {
-                        box(modify(Flex1))
-                        button("Post Event", EventScoutRoute(galaxy.pathId))
+                    row(modify(JustifySpaceBetween)) {
+                        galaxyMenu(content.galaxies)
+                        btn("Post Event", EventScoutRoute(galaxy.pathId))
                     }
                     gridOf(content.posts)
                     appFooter()
@@ -55,5 +56,6 @@ object GalaxyShell {
 @Serializable
 data class GalaxyShellContent(
     val galaxy: Galaxy,
-    val posts: List<GalaxyPost>
+    val posts: List<GalaxyPost>,
+    val galaxies: List<Galaxy>
 )

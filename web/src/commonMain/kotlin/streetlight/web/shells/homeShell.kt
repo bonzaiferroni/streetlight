@@ -2,7 +2,9 @@ package streetlight.web.shells
 
 import koala.css.*
 import koala.html.*
+import kotlinx.html.DIV
 import kotlinx.html.FlowContent
+import streetlight.model.data.Galaxy
 import streetlight.web.pages.appFooter
 
 fun FlowContent.homeShell(content: HomeContent) {
@@ -11,47 +13,11 @@ fun FlowContent.homeShell(content: HomeContent) {
 
         // val galaxyStars = content.galaxies.map { GalaxyStar(it.pathId, it.name, it.imageUrl) }
 
-        button("dang") {
-            attributes["popovertarget"] = "menu"
+        row(modify(JustifySpaceBetween)) {
+            galaxyMenu(content.galaxies)
+            switch("bruh", id = Id("ey"))
         }
 
-        val galaxy = content.galaxies.first()
-
-//        toggleBlock(
-//            label = "ey",
-//            modifiers = modify(Width32, Height16),
-//            base = {
-//                textBlock("one")
-//            },
-//            cover = {
-//                textBlock("two")
-//            },
-//        )
-
-        switch("bruh", id = Id("ey"))
-
-        // button()
-//        carousel {
-//            content.galaxies.forEach {
-//                buttonOf(it)
-//            }
-//
-//            content.galaxies.forEach {
-//                buttonOf(it)
-//            }
-//
-//            content.galaxies.forEach {
-//                buttonOf(it)
-//            }
-//
-//            content.galaxies.forEach {
-//                buttonOf(it)
-//            }
-//
-//            content.galaxies.forEach {
-//                buttonOf(it)
-//            }
-//        }
 
         column {
             heading3("Galaxies")

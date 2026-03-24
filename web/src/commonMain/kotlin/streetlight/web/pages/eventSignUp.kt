@@ -31,7 +31,7 @@ fun HTML.eventSignUp(event: Event) {
                 column(Id("guest-details"), modify(DisplayNone)) {
                     textField(Id("name"), "Your name")
                     textField(Id("email"), "Email")
-                    button("Send", invoke("sendRequest"))
+                    btn("Send", invoke("sendRequest"))
                 }
                 column(Id("user-details"), modify(DisplayNone)) {
                     textBlock("User details form")

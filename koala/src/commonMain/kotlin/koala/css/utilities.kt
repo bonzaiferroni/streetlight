@@ -2,10 +2,11 @@ package koala.css
 
 // display utilities
 object DisplayNone : Modifier { override val value = "display-none" }
-object Opacity6: Modifier { override val value = "opacity-6" }
-object Opacity4: Modifier { override val value = "opacity-4" }
-object Opacity2: Modifier { override val value = "opacity-2" }
-object Dim: Modifier { override val value = Opacity6.value }
+object Opacity1: Modifier { override val value = "opacity-1" }
+object OpacityMost: Modifier { override val value = "opacity-most" }
+object OpacityHalf: Modifier { override val value = "opacity-half" }
+object OpacitySome: Modifier { override val value = "opacity-some" }
+object Dim: Modifier { override val value = OpacityMost.value }
 object NoDim: Modifier { override val value = "no-dim" }
 object Glow: Modifier { override val value = "glow" }
 object GlowShadow: Modifier { override val value = "glow-shadow" }
@@ -25,6 +26,7 @@ object Focus: Modifier { override val value = "focus" }
 object PrimaryBg: Modifier { override val value = "primary-bg" }
 object PrimaryCardBg: Modifier { override val value = "primary-card-bg" }
 object BackgroundImage: Modifier { override val value = "background-image" }
+object SolidBg: Modifier { override val value = "solid-bg" }
 
 // font utilities
 object Bold: Modifier { override val value = "bold" }

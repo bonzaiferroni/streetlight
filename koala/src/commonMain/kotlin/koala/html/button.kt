@@ -1,113 +1,22 @@
 package koala.html
 
-import koala.css.BackgroundImage
 import koala.css.ElementClass
 import koala.css.ModifierSet
-import koala.css.StyleProperty
-import koala.css.StyleSet
-import koala.css.UrlValue
-import koala.css.setStyle
 import koala.css.modify
-import kotlinx.html.*
-
-//fun FlowContent.button(
-//    text: String,
-//    onClick: String? = null,
-//    id: Id? = null,
-//    modifiers: ModifierSet? = null,
-//    styles: StyleSet? = null,
-//    block: BUTTON.() -> Unit = {},
-//) {
-//    buttonTag {
-//        applyId(id)
-//        applyModifiers(modify(ElementClass.button, modifiers))
-//        applyStyles(styles)
-//        onClick?.let { this.onClick = it }
-//        +text
-//        block()
-//    }
-//}
+import koala.css.setModifiers
+import kotlinx.html.A
+import kotlinx.html.BUTTON
+import kotlinx.html.FlowContent
+import kotlinx.html.button
 
 fun FlowContent.button(
     text: String,
     modifiers: ModifierSet? = null,
-    block: A.() -> Unit = {},
+    block: (BUTTON.() -> Unit)? = null,
 ) {
-    action(
-        text = text,
-        modifiers = modify(ElementClass.button, modifiers),
-        block = block,
-    )
-}
-
-fun FlowContent.button(
-    text: String,
-    route: AppRoute,
-    modifiers: ModifierSet? = null,
-    block: A.() -> Unit = {},
-) {
-    action(
-        text = text,
-        route = route,
-        modifiers = modify(ElementClass.button, modifiers),
-        block = block,
-    )
-}
-
-fun FlowContent.button(
-    text: String,
-    route: AppRoute,
-    background: String?,
-    modifiers: ModifierSet? = null,
-    block: (A.() -> Unit)? = null,
-) {
-    action(
-        text = text,
-        route = route,
-        modifiers = modify(modifiers, BackgroundImage),
-    ) {
-        background?.let {
-            setStyle(StyleProperty.backgroundUrl.to(UrlValue(it)))
-        }
+    button {
+        setModifiers(ElementClass.button, modifiers)
         block?.invoke(this)
+        +text
     }
 }
-
-fun FlowContent.button(
-    text: String,
-    href: String,
-    modifiers: ModifierSet? = null,
-    id: Id? = null,
-    styles: StyleSet? = null,
-    addExternalIndicator: Boolean = true,
-    block: A.() -> Unit = {},
-) {
-    val domain = href.takeIf { addExternalIndicator }?.let { domainOf(it) }
-    val text = domain?.let { domain ->
-        domainMap[domain].let { symbol ->
-            "${symbol ?: "🔗"} $text"
-        }
-    } ?: text
-    action(
-        href = href,
-        text = text,
-        modifiers = modify(ElementClass.button, modifiers),
-        block = block,
-        id = id,
-        styles = styles
-    )
-}
-
-fun domainOf(url: String): String? =
-    Regex("""^(?:[a-zA-Z][a-zA-Z\d+\-.]*://)?(?:[^@/\n]+@)?([^:/\n?#]+)""")
-        .find(url.trim())
-        ?.groupValues?.get(1)
-        ?.removePrefix("www.")
-        ?.takeIf { it.isNotBlank() }
-
-private const val video = "📼"
-
-private val domainMap = mapOf(
-    "youtube.com" to video
-)
-

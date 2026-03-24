@@ -58,16 +58,20 @@
     color: rgba(var(--ink), 0.6);
 }
 
-.opacity-6 {
-    opacity: .6;
+.opacity-1 {
+    opacity: 1;
 }
 
-.opacity-4 {
-    opacity: .4;
+.opacity-most {
+    opacity: .75;
 }
 
-.opacity-2 {
-    opacity: .2;
+.opacity-half {
+    opacity: .5;
+}
+
+.opacity-some {
+    opacity: .25;
 }
 
 .no-dim {
@@ -444,6 +448,10 @@
 
 .primary-card-bg {
     background-color: var(--primary-card-bg);
+}
+
+.solid-bg {
+    background-color: var(--paper-bg);
 }
 
 .justify-self-end {

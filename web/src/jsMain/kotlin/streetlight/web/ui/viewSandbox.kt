@@ -13,6 +13,7 @@ import koala.dom.column
 import koala.dom.textBlock
 import koala.html.Id
 import koala.html.TagAttribute
+import koala.html.card
 import koala.html.setAttribute
 import koala.html.popover
 import streetlight.web.model.Streetlight
@@ -24,7 +25,9 @@ fun RenderContext.viewSandbox(app: Streetlight) {
             setAttribute(TagAttribute.popoverTarget, menuId)
         }
         popover(menuId, myAnchor, modify(Magic, Blur)) {
-            textBlock("ahoy!")
+            card {
+                textBlock("ahoy!")
+            }
         }
         appFooter()
     }
