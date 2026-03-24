@@ -1,5 +1,7 @@
 package streetlight.web.ui
 
+import koala.core.findAndInitLotties
+import koala.core.initLottie
 import koala.css.AlignItemsCenter
 import koala.css.Gap0
 import koala.css.Italic
@@ -13,16 +15,13 @@ import koala.dom.row
 import koala.html.column
 import koala.html.textBlock
 import kotlinx.html.style
+import org.w3c.dom.HTMLElement
+import streetlight.web.pages.configureAppFooter
 
-//fun RenderContext.appFooter() {
-//    val giants = "May we build us a world of faithful giants."
-//    row(modify(JustifyCenter)) {
-//        style = "height: 20rem;"
-//        column(modify(AlignItemsCenter, Gap0, Width100)) {
-//            lottie("spinning_circles") {
-//                style = "height: 10rem;"
-//            }
-//            textBlock(giants, modify(Italic, Opacity6))
-//        }
-//    }
-//}
+fun RenderContext.appFooter(): HTMLElement {
+    val element = row {
+        configureAppFooter()
+    }
+    findAndInitLotties(element)
+    return element
+}

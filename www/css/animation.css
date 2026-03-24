@@ -1,5 +1,9 @@
 /* glow */
 
+:root {
+    --magic-blur: blur(6px);
+}
+
 .glow {
     animation:
             glow-shadow 10s infinite linear,
@@ -90,7 +94,7 @@
 
 .state-render-animation {
     opacity: 0;
-    filter: blur(6px);
+    filter: var(--magic-blur);
     transition: opacity 200ms ease-in-out, transform 200ms ease-in-out, filter 200ms ease-out;
     pointer-events: none;
 }
@@ -119,7 +123,7 @@
 }
 
 .flow-block.magic.blur {
-    filter: blur(6px);
+    filter: var(--magic-blur);
 }
 
 .flow-block.magic.blur.reveal {
@@ -160,7 +164,7 @@
 }
 
 .items-block.magic.blur > * {
-    filter: blur(6px);
+    filter: var(--magic-blur);
 }
 
 .items-block.magic > .reveal {

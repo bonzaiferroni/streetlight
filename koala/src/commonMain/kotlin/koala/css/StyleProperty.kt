@@ -11,8 +11,9 @@ data class StyleProperty<T: CssValue>(val identifier: String, val isCustom: Bool
     companion object {
         val maskUrl = StyleProperty<UrlValue>("mask-url", true)
         val backgroundUrl = StyleProperty<UrlValue>("background-url", true)
-        val anchorName = StyleProperty<PositionAnchorValue>("anchor-name")
-        val positionAnchor = StyleProperty<PositionAnchorValue>("position-anchor")
+        val anchorName = StyleProperty<PositionAnchor>("anchor-name")
+        val positionAnchor = StyleProperty<PositionAnchor>("position-anchor")
+        val anchorId = StyleProperty<PositionAnchor>("anchor-id", true)
     }
 }
 
@@ -32,7 +33,7 @@ data class RgbValue(val red: Int, val green: Int, val blue: Int): CssValue {
     override val expression get() = "$red, $green, $blue"
 }
 
-data class PositionAnchorValue(val identifier: String): CssValue {
+data class PositionAnchor(val identifier: String): CssValue {
     override val expression get() = "--$identifier"
 }
 
@@ -46,15 +47,15 @@ fun styleOf(set: StyleSet?, vararg styles: InlineStyle<*>) = styles.asList().let
 
 fun styleOf(vararg styles: InlineStyle<*>) = styles.asList()
 
-fun CoreAttributeGroupFacade.setStyle(style: InlineStyle<*>) = setStyle(styleOf(style))
+fun CoreAttributeGroupFacade.setStyle(vararg styles: InlineStyle<*>) = setStyle(styleOf(*styles))
 
 fun CoreAttributeGroupFacade.setStyle(styles: StyleSet?) {
     styles?.let {
         style = buildString {
-            val style = attributes["style"]?.let { style ->
-                if (style.endsWith(';')) style.dropLast(1) else style
-            } ?: ""
-            append(style)
+            attributes["style"]?.let { style ->
+                append(style)
+                append(' ')
+            }
             styles.forEachIndexed { index, (property, value) ->
                 if (property.isCustom)
                     append("--")
@@ -62,7 +63,7 @@ fun CoreAttributeGroupFacade.setStyle(styles: StyleSet?) {
                 append(": ")
                 append(value.expression)
                 if (index + 1 < styles.size)
-                    append(", ")
+                    append("; ")
                 else
                     append(";")
             }
@@ -70,8 +71,8 @@ fun CoreAttributeGroupFacade.setStyle(styles: StyleSet?) {
     }
 }
 
-fun CoreAttributeGroupFacade.setPositionAnchor(value: PositionAnchorValue) =
+fun CoreAttributeGroupFacade.setPositionAnchor(value: PositionAnchor) =
     setStyle(StyleProperty.positionAnchor.to(value))
 
-fun CoreAttributeGroupFacade.setAnchorName(anchor: PositionAnchorValue) =
+fun CoreAttributeGroupFacade.setAnchorName(anchor: PositionAnchor) =
     setStyle(StyleProperty.anchorName.to(anchor))

@@ -59,12 +59,18 @@ fun FlowContent.appHeader() {
 }
 
 fun FlowContent.appFooter() {
+    row {
+        configureAppFooter()
+    }
+}
+
+fun DIV.configureAppFooter() {
     val giants = "May we build a world of faithful giants."
-    row(modify(JustifyCenter, Height48)) {
-        column(modify(AlignItemsCenter, Gap0, Width100)) {
-            lottie(LottieFiles.spinningCircles, modify(Height24))
-            textBlock(giants, modify(Italic, Opacity6))
-        }
+    setModifiers(modify(JustifyCenter, Height48))
+    column(modify(AlignItemsCenter, Gap0, Width100)) {
+
+        lottie(LottieFiles.spinningCircles, modify(Height24))
+        textBlock(giants, modify(Italic, Opacity6))
     }
 }
 

@@ -1,6 +1,11 @@
 package streetlight.web.ui
 
-import koala.css.PositionAnchorValue
+import koala.css.Blur
+import koala.css.Magic
+import koala.css.PositionAnchor
+import koala.css.SlideLeft
+import koala.css.SlideUp
+import koala.css.modify
 import koala.css.setAnchorName
 import koala.dom.RenderContext
 import koala.dom.button
@@ -11,7 +16,6 @@ import koala.html.TagAttribute
 import koala.html.setAttribute
 import koala.html.popover
 import streetlight.web.model.Streetlight
-import streetlight.web.pages.appFooter
 
 fun RenderContext.viewSandbox(app: Streetlight) {
     column {
@@ -19,7 +23,7 @@ fun RenderContext.viewSandbox(app: Streetlight) {
             setAnchorName(myAnchor)
             setAttribute(TagAttribute.popoverTarget, menuId)
         }
-        popover(menuId, myAnchor) {
+        popover(menuId, myAnchor, modify(Magic, Blur)) {
             textBlock("ahoy!")
         }
         appFooter()
@@ -27,4 +31,4 @@ fun RenderContext.viewSandbox(app: Streetlight) {
 }
 
 private val menuId = Id("menu")
-private val myAnchor = PositionAnchorValue("my-anchor")
+private val myAnchor = PositionAnchor("my-anchor")

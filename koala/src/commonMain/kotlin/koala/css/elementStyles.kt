@@ -1,5 +1,7 @@
 package koala.css
 
+import koala.html.ICON_STYLES
+import koala.html.LOGO_STYLES
 import kotlinx.css.*
 import kotlinx.css.properties.Timing
 import kotlinx.css.properties.Transition
@@ -23,3 +25,9 @@ object ElementClass {
     val imageWithBackdrop = Css("image-with-backdrop")
     val carousel = Css("carousel")
 }
+
+val kotlinElementStyles = listOf(
+    ICON_STYLES,
+    LOGO_STYLES,
+    // POPOVER_STYLES
+)

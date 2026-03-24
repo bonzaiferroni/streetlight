@@ -6,19 +6,18 @@ import koala.css.ElementClass
 import koala.css.ModifierSet
 import koala.css.setModifiers
 import koala.html.TagAttribute
+import koala.html.configureLottie
 import kotlinx.html.DIV
 import kotlinx.html.js.div
 import org.w3c.dom.HTMLDivElement
 
-inline fun DOMContext.lottie(
+fun DOMContext.lottie(
     file: LottieFile,
     modifiers: ModifierSet? = null,
-    crossinline block: DIV.() -> Unit = { }
+    block: (DIV.() -> Unit)? = null
 ): HTMLDivElement {
     val div = div {
-        setModifiers(ElementClass.lottie, modifiers)
-        attributes[TagAttribute.lottie.key] = file.path
-        block()
+        configureLottie(file, modifiers, block)
     }
     initLottie(div)
     return div
