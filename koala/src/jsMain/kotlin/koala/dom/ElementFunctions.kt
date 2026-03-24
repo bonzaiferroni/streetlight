@@ -5,7 +5,7 @@ import koala.css.CssValue
 import koala.css.StyleProperty
 import koala.css.Modifier
 import koala.external.ScrollIntoViewOptions
-import koala.html.Attribute
+import koala.html.TagAttribute
 import koala.html.Queryable
 import koala.utils.jsonConfig
 import kotlinx.browser.window
@@ -55,7 +55,7 @@ fun Element.scrollWhenPresent(
     window.requestAnimationFrame { tryScroll() }
 }
 
-inline fun <reified T> Element.wireByAttribute(attribute: Attribute, block: (HTMLElement, T) -> Unit) {
+inline fun <reified T> Element.wireByAttribute(attribute: TagAttribute<*>, block: (HTMLElement, T) -> Unit) {
     querySelectorAll(attribute.selector).asList().forEach {
         val element = it as HTMLElement
         val json = element.attributes[attribute] ?: return@forEach
@@ -64,8 +64,9 @@ inline fun <reified T> Element.wireByAttribute(attribute: Attribute, block: (HTM
     }
 }
 
-fun CSSStyleDeclaration.setProperty(property: StyleProperty, value: CssValue) = setProperty("--${property.identifier}", value.expression)
+fun <T: CssValue> CSSStyleDeclaration.setProperty(property: StyleProperty<T>, value: T) =
+    setProperty("--${property.identifier}", value.expression)
 
 fun Element.querySelector(queryable: Queryable) = querySelector(queryable.selector) as? HTMLElement
 
-fun Element.setAttribute(attribute: Attribute, value: String) = setAttribute(attribute.key, value)
+fun Element.setAttribute(attribute: TagAttribute<*>, value: String) = setAttribute(attribute.key, value)

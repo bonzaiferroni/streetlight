@@ -3,7 +3,7 @@ package koala.html
 import koala.css.Css
 import koala.css.ElementClass
 import koala.css.ModifierSet
-import koala.css.applyModifiers
+import koala.css.setModifiers
 import kotlinx.html.FlowContent
 import kotlinx.html.IMG
 import kotlinx.html.div
@@ -17,13 +17,13 @@ fun FlowContent.imageWithBackdrop(
 ) {
     val src = src ?: placeholder
     div {
-        applyModifiers(ElementClass.imageWithBackdrop, modifiers)
+        setModifiers(ElementClass.imageWithBackdrop, modifiers)
         img {
-            applyModifiers(Css("image-with-backdrop__backdrop"))
+            setModifiers(Css("image-with-backdrop__backdrop"))
             this.src = src
         }
         img {
-            applyModifiers(Css("image-with-backdrop__image"))
+            setModifiers(Css("image-with-backdrop__image"))
             this.src = src
 
             block?.invoke(this)

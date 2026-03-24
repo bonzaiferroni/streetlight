@@ -19,7 +19,7 @@ inline fun FlowContent.row(
     crossinline content: DIV.() -> Unit,
 ) {
     div {
-        applyModifiers(Row, modifiers)
+        setModifiers(Row, modifiers)
         content()
     }
 }

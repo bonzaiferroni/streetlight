@@ -11,7 +11,7 @@ import koala.css.ModifierSet
 import koala.css.OverflowHidden
 import koala.css.Square
 import koala.css.Width100
-import koala.css.applyModifiers
+import koala.css.setModifiers
 import koala.css.modify
 import kotlinx.html.DIV
 
@@ -23,7 +23,7 @@ inline fun FlowContent.card(
     crossinline content: DIV.() -> Unit,
 ) {
     div {
-        applyModifiers(Card, modifiers)
+        setModifiers(Card, modifiers)
         content()
     }
 }

@@ -3,7 +3,6 @@ package koala.html
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import koala.css.*
-import kotlinx.html.TagConsumer
 import kotlinx.html.p
 
 fun FlowContent.tabs(
@@ -17,7 +16,7 @@ fun FlowContent.tabs(
         row(modify(TabClass.header)) {
             scope.tabs.forEachIndexed { index, tab ->
                 p {
-                    applyModifiers(TabClass.button)
+                    setModifiers(TabClass.button)
                     attributes["data-tab"] = index.toString()
                     if (tab.isDefault) {
                         attributes["is-default"] = ""

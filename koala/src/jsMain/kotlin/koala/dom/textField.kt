@@ -2,10 +2,11 @@ package koala.dom
 
 import koala.css.ModifierSet
 import koala.css.Width100
-import koala.css.applyModifiers
+import koala.css.setModifiers
 import koala.html.Id
-import koala.html.applyBlockLabel
-import koala.html.applyId
+import koala.html.TagAttribute
+import koala.html.setId
+import koala.html.setAttribute
 import koala.model.mapDistinct
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -31,15 +32,15 @@ fun RenderContext.textField(
     block: (INPUT.() -> Unit)? = null
 ): HTMLInputElement {
     val parent = div {
-        applyModifiers(modifiers)
-        applyBlockLabel(label?.lowercase())
+        setModifiers(modifiers)
+        setAttribute(TagAttribute.blockLabel, label?.lowercase())
     }
 
     var currentValue = ""
     val element = parent.append {
         input {
-            applyModifiers(Width100, textModifiers)
-            applyId(id)
+            setModifiers(Width100, textModifiers)
+            setId(id)
             type = InputType.text
             onChangeValue?.let { callback ->
                 onInputFunction = {

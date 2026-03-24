@@ -3,10 +3,9 @@ package koala.core
 import koala.css.Clickable
 import koala.css.Modifier
 import koala.dom.modify
-import koala.html.Attribute
+import koala.html.TagAttribute
 import koala.html.Id
 import kotlinx.browser.document
-import kotlinx.html.impl.DelegatingMap
 import org.w3c.dom.Document
 import org.w3c.dom.Element
 import org.w3c.dom.HTMLElement
@@ -32,7 +31,7 @@ fun Document.onClick(id: Id, onClick: () -> Unit) = querySelector(id.value)?.let
     })
 }
 
-fun Document.queryAttribute(attribute: Attribute) = querySelector(attribute.selector)?.attributes?.get(attribute)
+fun Document.queryAttribute(attribute: TagAttribute<*>) = querySelector(attribute.selector)?.attributes?.get(attribute)
 
 fun Element.queryAll(modifier: Modifier) = querySelectorAll(modifier.selector).asList()
 
@@ -47,4 +46,4 @@ fun Element.appendDiv(id: Id? = null): HTMLElement {
     return element
 }
 
-operator fun NamedNodeMap.get(attribute: Attribute): String? = this.getNamedItem(attribute.key)?.value
+operator fun NamedNodeMap.get(attribute: TagAttribute<*>): String? = this.getNamedItem(attribute.key)?.value

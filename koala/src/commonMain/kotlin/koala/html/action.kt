@@ -3,12 +3,11 @@ package koala.html
 import koala.css.ElementClass
 import koala.css.ModifierSet
 import koala.css.StyleSet
-import koala.css.applyModifiers
-import koala.css.applyStyles
+import koala.css.setModifiers
+import koala.css.setStyle
 import koala.css.modify
 import kotlinx.html.A
 import kotlinx.html.FlowContent
-import kotlinx.html.FlowOrInteractiveOrPhrasingContent
 import kotlinx.html.a
 
 fun FlowContent.action(
@@ -20,9 +19,9 @@ fun FlowContent.action(
     block: (A.() -> Unit)? = null
 ) {
     a {
-        applyId(id)
-        applyModifiers(modify(ElementClass.action, modifiers))
-        applyStyles(styles)
+        setId(id)
+        setModifiers(modify(ElementClass.action, modifiers))
+        setStyle(styles)
         href?.let { this.href = href }
         block?.invoke(this)
         +text

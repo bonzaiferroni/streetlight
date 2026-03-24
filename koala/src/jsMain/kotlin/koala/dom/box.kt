@@ -2,7 +2,7 @@ package koala.dom
 
 import koala.css.Box
 import koala.css.ModifierSet
-import koala.css.applyModifiers
+import koala.css.setModifiers
 import koala.html.Id
 import kotlinx.html.DIV
 import kotlinx.html.js.div
@@ -12,7 +12,7 @@ inline fun DOMContext.box(
     modifiers: ModifierSet? = null,
     crossinline content: DIV.() -> Unit = { },
 ) = div {
-    applyModifiers(Box, modifiers)
+    setModifiers(Box, modifiers)
     content()
 }
 
@@ -29,7 +29,7 @@ fun DOMContext.container(
     modifiers: ModifierSet? = null,
     content: DIV.() -> Unit = { },
 ) = div {
-    applyModifiers(modifiers)
+    setModifiers(modifiers)
     content()
 }
 

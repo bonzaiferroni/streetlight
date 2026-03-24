@@ -37,8 +37,8 @@ class ThemeReactor(
 }
 
 object ThemeProperty {
-    val paper = StyleProperty("paper")
-    val ink = StyleProperty("ink")
+    val paper = StyleProperty<RgbValue>("paper")
+    val ink = StyleProperty<RgbValue>("ink")
 }
 
 object ThemeValue {

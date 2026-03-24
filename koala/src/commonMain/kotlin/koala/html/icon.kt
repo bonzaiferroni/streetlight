@@ -25,8 +25,8 @@ fun DIV.configureIcon(
     modifiers: ModifierSet? = null,
     block: (DIV.() -> Unit)? = null
 ) {
-    applyModifiers(modify(IconElement.cssClass, modifiers))
-    applyStyles(styleOf(StyleProperty.maskUrl to UrlValue(file.path)))
+    setModifiers(modify(IconElement.cssClass, modifiers))
+    setStyle(StyleProperty.maskUrl.to(UrlValue(file.path)))
     block?.invoke(this)
 }
 

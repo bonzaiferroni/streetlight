@@ -11,7 +11,7 @@ fun FlowContent.spacer(
     block: (DIV.() -> Unit)? = null,
 ) {
     div {
-        applyModifiers(modifiers)
+        setModifiers(modifiers)
         block?.invoke(this)
     }
 }
@@ -22,11 +22,11 @@ fun FlowContent.centeredHeading(
 ) {
     row(modify(modifiers, Width100, JustifyCenter)) {
         hr {
-            applyModifiers(modify(Width16, Opacity2))
+            setModifiers(modify(Width16, Opacity2))
         }
         heading3(text, modify(Opacity4))
         hr {
-            applyModifiers(modify(Width16, Opacity2))
+            setModifiers(modify(Width16, Opacity2))
         }
     }
 }

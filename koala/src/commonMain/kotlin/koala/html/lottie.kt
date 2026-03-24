@@ -10,8 +10,8 @@ fun FlowContent.lottie(
     block: (DIV.() -> Unit)? = null
 ) {
     div {
-        applyModifiers(modify(ElementClass.lottie, modifiers))
-        attributes[Attribute.lottie] = file.path
+        setModifiers(modify(ElementClass.lottie, modifiers))
+        setAttribute(TagAttribute.lottie, file)
         block?.invoke(this)
     }
 }

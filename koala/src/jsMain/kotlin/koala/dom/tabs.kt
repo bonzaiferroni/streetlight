@@ -21,7 +21,7 @@ fun RenderContext.tabs(
         row(modify(TabClass.header)) {
             scope.tabs.forEachIndexed { index, tab ->
                 val button = p {
-                    applyModifiers(TabClass.button)
+                    setModifiers(TabClass.button)
                     attributes["data-tab"] = index.toString()
                     +tab.label
                 }

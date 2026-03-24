@@ -2,14 +2,11 @@ package koala.dom
 
 import koala.css.ModifierSet
 import koala.css.Width100
-import koala.css.applyModifiers
+import koala.css.setModifiers
 import koala.external.SimpleMDE
 import koala.external.SimpleMDEOptions
 import koala.html.Id
-import koala.html.applyBlockLabel
-import koala.html.applyId
-import kotlinx.html.dom.append
-import kotlinx.html.js.div
+import koala.html.setId
 import kotlinx.html.js.textArea
 
 fun RenderContext.markdownEditor(
@@ -18,8 +15,8 @@ fun RenderContext.markdownEditor(
     placeholder: String? = null,
 ) {
     val element = textArea {
-        applyModifiers(Width100, modifiers)
-        applyId(id)
+        setModifiers(Width100, modifiers)
+        setId(id)
 
         placeholder?.let {
             this.placeholder = it

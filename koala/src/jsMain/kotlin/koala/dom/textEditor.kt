@@ -2,19 +2,18 @@ package koala.dom
 
 import koala.css.ModifierSet
 import koala.css.Width100
-import koala.css.applyModifiers
+import koala.css.setModifiers
 import koala.html.Id
-import koala.html.applyBlockLabel
-import koala.html.applyId
+import koala.html.TagAttribute
+import koala.html.setId
+import koala.html.setAttribute
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import kotlinx.html.INPUT
 import kotlinx.html.TEXTAREA
 import kotlinx.html.dom.append
 import kotlinx.html.js.div
 import kotlinx.html.js.onInputFunction
 import kotlinx.html.js.textArea
-import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.HTMLTextAreaElement
 
 fun RenderContext.textEditor(
@@ -29,16 +28,16 @@ fun RenderContext.textEditor(
     block: (TEXTAREA.() -> Unit)? = null
 ): HTMLTextAreaElement {
     val parent = div {
-        applyModifiers(modifiers)
-        applyBlockLabel(label)
+        setModifiers(modifiers)
+        setAttribute(TagAttribute.blockLabel, label)
     }
 
     var currentValue = ""
     val element = parent.append {
         textArea {
             this.rows = rows.toString()
-            applyModifiers(Width100, textModifiers)
-            applyId(id)
+            setModifiers(Width100, textModifiers)
+            setId(id)
             label?.let {
                 attributes["aria-label"] = it
             }

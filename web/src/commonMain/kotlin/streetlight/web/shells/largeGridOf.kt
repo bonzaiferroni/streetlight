@@ -3,7 +3,7 @@ package streetlight.web.shells
 import kabinet.utils.toRelativeDayFormat
 import koala.SvgFiles
 import koala.css.*
-import koala.html.Attribute
+import koala.html.TagAttribute
 import koala.html.action
 import koala.html.actionIfNotNull
 import koala.html.box
@@ -15,7 +15,7 @@ import koala.html.heading5
 import koala.html.icon
 import koala.html.imageWithBackdrop
 import koala.html.row
-import koala.html.setData
+import koala.html.setJsonData
 import koala.html.textBlock
 import kotlinx.html.FlowContent
 import streetlight.model.data.EventStar
@@ -108,14 +108,14 @@ fun FlowContent.largeGridOf(post: GalaxyPost) {
 
 fun FlowContent.interestCell(interest: EventStar) {
     row(modify(WidthAuto)) {
-        setData(EventAttributes.interest, interest)
+        setJsonData(EventAttributes.interest, interest)
         // textBlock(post.visibility.toString())
         icon(interest.value.iconPath, modify(Height3, Square))
     }
 }
 
 object EventAttributes {
-    val interest = Attribute("event-interest")
+    val interest = TagAttribute<String>("event-interest")
 }
 
 val InterestType?.iconPath get() = when(this) {

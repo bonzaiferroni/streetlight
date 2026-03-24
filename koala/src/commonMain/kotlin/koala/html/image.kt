@@ -24,7 +24,7 @@ fun FlowContent.image(
 ) {
     img {
         this.src = src ?: placeholder
-        applyModifiers(modifiers)
+        setModifiers(modifiers)
         block?.invoke(this)
     }
 }

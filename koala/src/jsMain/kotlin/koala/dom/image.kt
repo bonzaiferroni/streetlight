@@ -1,7 +1,7 @@
 package koala.dom
 
 import koala.css.ModifierSet
-import koala.css.applyModifiers
+import koala.css.setModifiers
 import koala.html.SiteImage
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -19,7 +19,7 @@ fun RenderContext.image(
 ): HTMLImageElement {
     val element = img {
         this.src = initial ?: ""
-        applyModifiers(modifiers)
+        setModifiers(modifiers)
         if (initial.isNullOrBlank()) {
             style = "display: none;"
         }

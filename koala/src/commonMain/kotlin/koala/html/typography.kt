@@ -9,7 +9,7 @@ inline fun FlowContent.label(
     crossinline block: (P.() -> Unit) = { }
 ) {
     p {
-        applyModifiers(ElementClass.textLabel, modifiers)
+        setModifiers(ElementClass.textLabel, modifiers)
         block()
         +content
     }
@@ -21,7 +21,7 @@ inline fun FlowContent.textBlock(
     crossinline block: P.() -> Unit = { }
 ) {
     p {
-        applyModifiers(modifiers)
+        setModifiers(modifiers)
         block()
         +content
     }
@@ -32,7 +32,7 @@ fun FlowContent.heading1(
     modifiers: ModifierSet? = null,
 ) {
     h1 {
-        applyModifiers(modifiers)
+        setModifiers(modifiers)
         +content
     }
 }
@@ -42,7 +42,7 @@ fun FlowContent.heading2(
     modifiers: ModifierSet? = null,
 ) {
     h2 {
-        applyModifiers(modifiers)
+        setModifiers(modifiers)
         +content
     }
 }
@@ -52,7 +52,7 @@ fun FlowContent.heading3(
     modifiers: ModifierSet? = null,
 ) {
     h3 {
-        applyModifiers(modifiers)
+        setModifiers(modifiers)
         +content
     }
 }
@@ -62,7 +62,7 @@ fun FlowContent.heading4(
     modifiers: ModifierSet? = null,
 ) {
     h4 {
-        applyModifiers(modifiers)
+        setModifiers(modifiers)
         +content
     }
 }
@@ -72,7 +72,7 @@ fun FlowContent.heading5(
     modifiers: ModifierSet? = null,
 ) {
     h5 {
-        applyModifiers(modifiers)
+        setModifiers(modifiers)
         +content
     }
 }
@@ -82,7 +82,7 @@ fun FlowContent.p(
     block: P.() -> Unit,
 ) {
     p {
-        applyModifiers(modifiers)
+        setModifiers(modifiers)
         block()
     }
 }
@@ -92,7 +92,7 @@ fun FlowContent.span(
     block: SPAN.() -> Unit,
 ) {
     span {
-        applyModifiers(modifiers)
+        setModifiers(modifiers)
         block()
     }
 }

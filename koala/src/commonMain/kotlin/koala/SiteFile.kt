@@ -35,6 +35,8 @@ data class JsFile(override val path: String, val isDeferred: Boolean = true) : S
 
 data class LottieFile(override val path: String) : SiteFile {
     override val type get() = SiteFileType.Lottie
+
+    override fun toString() = path
 }
 
 data class SvgFile(override val path: String) : SiteFile {

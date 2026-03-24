@@ -1,7 +1,7 @@
 package koala.dom
 
 import koala.css.ModifierSet
-import koala.css.applyModifiers
+import koala.css.setModifiers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
@@ -19,7 +19,7 @@ fun RenderContext.dropMenu(
     block: (SELECT.() -> Unit)? = null
 ) {
     val element = select {
-        applyModifiers(modifiers)
+        setModifiers(modifiers)
         options.forEach {
             option {
                 value = it

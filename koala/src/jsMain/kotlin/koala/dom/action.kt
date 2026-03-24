@@ -5,14 +5,13 @@ import koala.html.AppRoute
 import kotlinx.html.A
 import kotlinx.html.a
 import kotlinx.html.js.onClickFunction
-import org.w3c.dom.HTMLAnchorElement
 import org.w3c.dom.events.Event
 
 fun RenderContext.action(
     modifiers: ModifierSet? = null,
     block: (A.() -> Unit)? = null
 ) = a {
-    applyModifiers(ElementClass.action, modifiers)
+    setModifiers(ElementClass.action, modifiers)
     block?.invoke(this)
 }
 

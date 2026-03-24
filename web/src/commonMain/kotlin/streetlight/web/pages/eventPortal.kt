@@ -14,7 +14,7 @@ fun HTML.eventPortal(event: Event, performer: Performer?, requestItems: List<Req
     }
     body {
         column(Id("event-profile"), modify(AlignItemsCenter, Padding1)) {
-            attributes[EventPortalSelector.eventIdAttribute] = event.eventId
+            setAttribute(EventPortalSelector.eventIdAttribute, event.eventId.value)
             a("/") {
                 row() {
                     logo()
@@ -109,8 +109,8 @@ fun FlowContent.requestItem(
 
 object EventPortalSelector {
     val requestItem = Css("request-item")
-    val eventIdAttribute = Attribute("event-id")
-    val songIdAttribute = Attribute("song-id")
+    val eventIdAttribute = TagAttribute<String>("event-id")
+    val songIdAttribute = TagAttribute<String>("song-id")
     val sendRequestButtonId = Id("send-request-button")
 }
 

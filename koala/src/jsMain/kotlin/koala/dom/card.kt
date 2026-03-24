@@ -10,16 +10,14 @@ import koala.css.Height8
 import koala.css.ModifierSet
 import koala.css.OverflowHidden
 import koala.css.Square
-import koala.css.applyModifiers
+import koala.css.setModifiers
 import koala.css.modify
-import koala.html.card
 import koala.html.column
 import koala.html.heading5
 import koala.html.image
 import koala.html.row
 import koala.html.textBlock
 import kotlinx.html.DIV
-import kotlinx.html.FlowContent
 import kotlinx.html.js.div
 import org.w3c.dom.HTMLElement
 
@@ -27,7 +25,7 @@ inline fun DOMContext.card(
     modifiers: ModifierSet? = null,
     crossinline content: DIV.() -> Unit,
 ) = div {
-    applyModifiers(Card, modifiers)
+    setModifiers(Card, modifiers)
     content()
 }
 

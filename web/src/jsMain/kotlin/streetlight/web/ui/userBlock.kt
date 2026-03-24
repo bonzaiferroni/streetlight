@@ -2,13 +2,10 @@ package streetlight.web.ui
 
 import kampfire.model.UserInfo
 import koala.css.ModifierSet
-import koala.css.Width100
-import koala.css.applyModifiers
 import koala.dom.*
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import kotlinx.dom.clear
 import kotlinx.html.js.div
 import streetlight.web.AccountRoute
 import streetlight.web.model.Streetlight

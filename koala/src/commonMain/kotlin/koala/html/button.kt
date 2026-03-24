@@ -6,8 +6,8 @@ import koala.css.ModifierSet
 import koala.css.StyleProperty
 import koala.css.StyleSet
 import koala.css.UrlValue
+import koala.css.setStyle
 import koala.css.modify
-import koala.css.styleOf
 import kotlinx.html.*
 
 //fun FlowContent.button(
@@ -31,16 +31,12 @@ import kotlinx.html.*
 fun FlowContent.button(
     text: String,
     modifiers: ModifierSet? = null,
-    id: Id? = null,
-    styles: StyleSet? = null,
     block: A.() -> Unit = {},
 ) {
     action(
         text = text,
         modifiers = modify(ElementClass.button, modifiers),
-        id = id,
         block = block,
-        styles = styles
     )
 }
 
@@ -48,17 +44,13 @@ fun FlowContent.button(
     text: String,
     route: AppRoute,
     modifiers: ModifierSet? = null,
-    id: Id? = null,
-    styles: StyleSet? = null,
     block: A.() -> Unit = {},
 ) {
     action(
         text = text,
         route = route,
         modifiers = modify(ElementClass.button, modifiers),
-        id = id,
         block = block,
-        styles = styles
     )
 }
 
@@ -67,21 +59,18 @@ fun FlowContent.button(
     route: AppRoute,
     background: String?,
     modifiers: ModifierSet? = null,
-    id: Id? = null,
-    styles: StyleSet? = null,
-    block: A.() -> Unit = {},
+    block: (A.() -> Unit)? = null,
 ) {
-    val styles = background?.let {
-        styleOf(styles, StyleProperty.backgroundUrl to UrlValue(it))
-    } ?: styles
-    button(
+    action(
         text = text,
         route = route,
         modifiers = modify(modifiers, BackgroundImage),
-        id = id,
-        styles = styles,
-        block = block
-    )
+    ) {
+        background?.let {
+            setStyle(StyleProperty.backgroundUrl.to(UrlValue(it)))
+        }
+        block?.invoke(this)
+    }
 }
 
 fun FlowContent.button(

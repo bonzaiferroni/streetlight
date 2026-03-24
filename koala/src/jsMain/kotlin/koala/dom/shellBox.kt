@@ -1,8 +1,6 @@
 package koala.dom
 
 import initElement
-import koala.core.findAndInitGeoMap
-import koala.core.findAndInitLotties
 import koala.css.*
 import koala.html.Id
 import koala.model.GeoMap
@@ -20,7 +18,7 @@ fun RenderContext.shellBox(
     return if (shell != null) {
         console.log("grabbing shell: $id")
         val element = container {
-            applyModifiers(ElementClass.shellBox, modifiers)
+            setModifiers(ElementClass.shellBox, modifiers)
         }
 
         element.append(shell)
@@ -28,7 +26,7 @@ fun RenderContext.shellBox(
     } else {
         console.log("generating shell: $id")
         val element = container {
-            applyModifiers(ElementClass.shellBox, modifiers)
+            setModifiers(ElementClass.shellBox, modifiers)
             block()
         }
 

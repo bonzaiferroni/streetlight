@@ -5,7 +5,7 @@ import koala.css.Css
 import koala.css.Height48
 import koala.css.ModifierSet
 import koala.css.Width100
-import koala.css.applyModifiers
+import koala.css.setModifiers
 import koala.css.modify
 import kotlinx.html.FlowContent
 
@@ -14,9 +14,9 @@ fun FlowContent.geoMapMount(
     modifiers: ModifierSet? = modify(Width100, Height48),
 ) {
     box {
-        applyModifiers(GeoMapSelector.mapMount, modifiers)
+        setModifiers(GeoMapSelector.mapMount, modifiers)
         initialPoint?.let {
-            attributes[GeoMapSelector.geoPoint] = "${it.lng},${it.lat}"
+            setAttribute(GeoMapSelector.geoPoint, "${it.lng},${it.lat}")
         }
     }
 }
@@ -28,6 +28,6 @@ object GeoMapSelector {
     val overlay = Id("map-overlay")
     val crosshairs = Id("map-crosshairs")
     val panel = Id("map-panel")
-    val geoPoint = Attribute("data-geo-point")
+    val geoPoint = TagAttribute<String>("data-geo-point")
     val focusPanel = Id("map-focus-panel")
 }

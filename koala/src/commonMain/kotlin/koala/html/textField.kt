@@ -1,8 +1,5 @@
 package koala.html
 
-import koala.css.ElementClass
-import koala.css.ElementClass.blockLabel
-import koala.css.applyModifiers
 import kotlinx.html.*
 import kotlinx.html.id
 
@@ -28,7 +25,7 @@ fun FlowOrInteractiveOrPhrasingContent.textField(
 ) {
     textField(id, placeholder) {
         attributes["aria-label"] = label
-        blockLabel = label
+        setAttribute(TagAttribute.blockLabel, label)
 
         block?.invoke(this)
     }

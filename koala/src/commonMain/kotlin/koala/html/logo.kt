@@ -1,16 +1,16 @@
 package koala.html
 
+import koala.SvgFiles
 import kotlinx.html.*
 import koala.css.*
-import kotlinx.css.div
 
 fun FlowContent.logo(
     modifiers: ModifierSet? = null
 ) {
     div {
-        applyModifiers(ElementClass.logo, modifiers)
+        setModifiers(ElementClass.logo, modifiers)
         div {
-            applyStyles(styleOf(StyleProperty.maskUrl to UrlValue("/www/svg/flame.svg")))
+            setStyle(StyleProperty.maskUrl.to(UrlValue(SvgFiles.flame)))
         }
     }
 }

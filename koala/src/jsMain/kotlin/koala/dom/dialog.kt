@@ -5,16 +5,14 @@ import koala.css.Css
 import koala.css.ModifierSet
 import koala.css.Reveal
 import koala.css.TextAlignCenter
-import koala.css.applyModifiers
+import koala.css.setModifiers
 import koala.css.modify
 import koala.html.heading3
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import kotlinx.html.DIALOG
 import kotlinx.html.js.dialog
 import org.w3c.dom.HTMLDialogElement
-import org.w3c.dom.events.MouseEvent
 
 fun RenderContext.dialogBox(
     title: String?,
@@ -33,7 +31,7 @@ fun RenderContext.dialogBox(
 
     var dialog: HTMLDialogElement? = null
     dialog = dialog {
-        applyModifiers(Css("dialog-box"), modifiers)
+        setModifiers(Css("dialog-box"), modifiers)
         column(modify(AlignItemsStretch)) {
             title?.let {
                 heading3(title, modify(TextAlignCenter))

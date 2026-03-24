@@ -1,7 +1,7 @@
 package koala.html
 
 import koala.css.ModifierSet
-import koala.css.applyModifiers
+import koala.css.setModifiers
 import kotlinx.html.FlowOrPhrasingContent
 import kotlinx.html.span
 import kotlinx.html.SPAN
@@ -12,7 +12,7 @@ fun FlowOrPhrasingContent.textSpan(
     block: (SPAN.() -> Unit)? = null,
 ) {
     span {
-        applyModifiers(modifierSet)
+        setModifiers(modifierSet)
         +text
         block?.invoke(this)
     }

@@ -2,7 +2,7 @@ package koala.dom
 
 import koala.css.Column
 import koala.css.ModifierSet
-import koala.css.applyModifiers
+import koala.css.setModifiers
 import koala.css.modify
 import koala.html.Id
 import kotlinx.html.DIV
@@ -26,7 +26,7 @@ inline fun DOMContext.column(
     crossinline content: DIV.() -> Unit,
 ): HTMLDivElement {
     return div {
-        applyModifiers(modify(Column, modifiers))
+        setModifiers(modify(Column, modifiers))
         content()
     }
 }

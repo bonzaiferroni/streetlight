@@ -3,16 +3,20 @@ package koala.css
 import koala.SiteFile
 import kotlinx.html.CoreAttributeGroupFacade
 import kotlinx.html.style
-import kotlin.jvm.JvmInline
 
-data class StyleProperty(val identifier: String, val isCustom: Boolean = false) {
+data class StyleProperty<T: CssValue>(val identifier: String, val isCustom: Boolean = false) {
+
+    fun to(value: T) = InlineStyle(this, value)
+
     companion object {
-        val maskUrl = StyleProperty("mask-url", true)
-        val backgroundUrl = StyleProperty("background-url", true)
-        val anchorName = StyleProperty("anchor-name")
-        val positionAnchor = StyleProperty("position-anchor")
+        val maskUrl = StyleProperty<UrlValue>("mask-url", true)
+        val backgroundUrl = StyleProperty<UrlValue>("background-url", true)
+        val anchorName = StyleProperty<PositionAnchorValue>("anchor-name")
+        val positionAnchor = StyleProperty<PositionAnchorValue>("position-anchor")
     }
 }
+
+data class InlineStyle<T: CssValue>(val property: StyleProperty<T>, val value: CssValue)
 
 interface CssValue {
     val expression: String
@@ -32,19 +36,25 @@ data class PositionAnchorValue(val identifier: String): CssValue {
     override val expression get() = "--$identifier"
 }
 
-fun styleOf(set: StyleSet?, vararg styles: Pair<StyleProperty, CssValue>) = styles.asList().let { styles ->
+typealias StyleSet = List<InlineStyle<*>>
+
+fun styleOf(set: StyleSet?, vararg styles: InlineStyle<*>) = styles.asList().let { styles ->
     set?.let {
         styles + it
     } ?: styles
 }
 
-fun styleOf(vararg styles: Pair<StyleProperty, CssValue>) = styles.asList()
+fun styleOf(vararg styles: InlineStyle<*>) = styles.asList()
 
-typealias StyleSet = List<Pair<StyleProperty, CssValue>>
+fun CoreAttributeGroupFacade.setStyle(style: InlineStyle<*>) = setStyle(styleOf(style))
 
-fun CoreAttributeGroupFacade.applyStyles(styles: StyleSet?) {
+fun CoreAttributeGroupFacade.setStyle(styles: StyleSet?) {
     styles?.let {
         style = buildString {
+            val style = attributes["style"]?.let { style ->
+                if (style.endsWith(';')) style.dropLast(1) else style
+            } ?: ""
+            append(style)
             styles.forEachIndexed { index, (property, value) ->
                 if (property.isCustom)
                     append("--")
@@ -59,3 +69,9 @@ fun CoreAttributeGroupFacade.applyStyles(styles: StyleSet?) {
         }
     }
 }
+
+fun CoreAttributeGroupFacade.setPositionAnchor(value: PositionAnchorValue) =
+    setStyle(StyleProperty.positionAnchor.to(value))
+
+fun CoreAttributeGroupFacade.setAnchorName(anchor: PositionAnchorValue) =
+    setStyle(StyleProperty.anchorName.to(anchor))

@@ -5,7 +5,7 @@ import kampfire.model.Point
 import koala.css.Css
 import koala.css.Focus
 import koala.css.Scale
-import koala.css.applyModifiers
+import koala.css.setModifiers
 import koala.css.modify
 import koala.dom.modify
 import koala.dom.onClick
@@ -140,34 +140,34 @@ fun PointEntity.toMapEntityView(pixelPoint: Point): PointEntityView {
                     set + Css("marker-glow")
                 } ?: set
             }
-            applyModifiers(baseModifiers)
+            setModifiers(baseModifiers)
 
             bearingElement = bearing?.let {
                 div {
-                    applyModifiers(MarkerCss.bearing)
+                    setModifiers(MarkerCss.bearing)
                 }
             }
 
             bodyElement = icon?.let {
                 div {
-                    applyModifiers(modify(MarkerCss.icon, MarkerCss.body))
+                    setModifiers(modify(MarkerCss.icon, MarkerCss.body))
                     style = "--svg: url(${it.path});"
                 }
             } ?: thumbPath?.let {
                 img {
                     src = it
-                    applyModifiers(modify(MarkerCss.body, MarkerCss.thumb))
+                    setModifiers(modify(MarkerCss.body, MarkerCss.thumb))
                 }
             } ?: body?.let {
                 div {
-                    applyModifiers(modify(MarkerCss.body))
+                    setModifiers(modify(MarkerCss.body))
                     body?.invoke(this)
                 }
             }
 
             labelElement = label?.let {
                 p {
-                    applyModifiers(MarkerCss.label)
+                    setModifiers(MarkerCss.label)
                     +it
                 }
             }

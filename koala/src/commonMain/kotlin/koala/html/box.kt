@@ -11,7 +11,7 @@ fun FlowContent.box(
     block: (DIV.() -> Unit)? = null,
 ) {
     div {
-        applyModifiers(Box, modifiers)
+        setModifiers(Box, modifiers)
         block?.invoke(this)
     }
 }

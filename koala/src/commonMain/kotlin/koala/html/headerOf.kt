@@ -2,7 +2,7 @@ package koala.html
 
 import koala.css.ElementClass
 import koala.css.ModifierSet
-import koala.css.applyModifiers
+import koala.css.setModifiers
 import kotlinx.html.FlowContent
 import kotlinx.html.img
 
@@ -12,7 +12,7 @@ fun FlowContent.headerOf(
     modifiers: ModifierSet? = null
 ) {
     box {
-        applyModifiers(ElementClass.headerImage, modifiers)
+        setModifiers(ElementClass.headerImage, modifiers)
 
         src?.let {
             img {
