@@ -24,8 +24,8 @@ fun FlowContent.action(
         applyModifiers(modify(ElementClass.action, modifiers))
         applyStyles(styles)
         href?.let { this.href = href }
-        +text
         block?.invoke(this)
+        +text
     }
 }
 

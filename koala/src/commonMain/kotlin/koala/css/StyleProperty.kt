@@ -5,11 +5,12 @@ import kotlinx.html.CoreAttributeGroupFacade
 import kotlinx.html.style
 import kotlin.jvm.JvmInline
 
-@JvmInline
-value class StyleProperty(val identifier: String) {
+data class StyleProperty(val identifier: String, val isCustom: Boolean = false) {
     companion object {
-        val maskUrl = StyleProperty("mask-url")
-        val backgroundUrl = StyleProperty("background-url")
+        val maskUrl = StyleProperty("mask-url", true)
+        val backgroundUrl = StyleProperty("background-url", true)
+        val anchorName = StyleProperty("anchor-name")
+        val positionAnchor = StyleProperty("position-anchor")
     }
 }
 
@@ -27,6 +28,10 @@ data class RgbValue(val red: Int, val green: Int, val blue: Int): CssValue {
     override val expression get() = "$red, $green, $blue"
 }
 
+data class PositionAnchorValue(val identifier: String): CssValue {
+    override val expression get() = "--$identifier"
+}
+
 fun styleOf(set: StyleSet?, vararg styles: Pair<StyleProperty, CssValue>) = styles.asList().let { styles ->
     set?.let {
         styles + it
@@ -41,7 +46,8 @@ fun CoreAttributeGroupFacade.applyStyles(styles: StyleSet?) {
     styles?.let {
         style = buildString {
             styles.forEachIndexed { index, (property, value) ->
-                append("--")
+                if (property.isCustom)
+                    append("--")
                 append(property.identifier)
                 append(": ")
                 append(value.expression)

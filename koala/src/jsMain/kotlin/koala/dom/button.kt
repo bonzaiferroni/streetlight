@@ -2,8 +2,12 @@ package koala.dom
 
 import koala.css.ElementClass
 import koala.css.ModifierSet
+import koala.css.StyleSet
 import koala.css.applyModifiers
+import koala.css.applyStyles
 import koala.css.modify
+import koala.html.Id
+import koala.html.applyId
 import koala.model.mapDistinct
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -18,12 +22,15 @@ fun RenderContext.button(
     onClick: (() -> Unit)? = null,
     onClickEvent: ((Event) -> Unit)? = null,
     bindIsEnabled: Flow<Boolean>? = null,
+    id: Id? = null,
+    styles: StyleSet? = null,
     block: (BUTTON.() -> Unit)? = null,
 ): HTMLButtonElement {
     val element = button {
         applyModifiers(modify(ElementClass.button, modifiers))
+        applyId(id)
+        applyStyles(styles)
         +text
-
         block?.invoke(this)
     }
 

@@ -11,6 +11,10 @@ fun FlowContent.homeShell(content: HomeContent) {
 
         // val galaxyStars = content.galaxies.map { GalaxyStar(it.pathId, it.name, it.imageUrl) }
 
+        button("dang") {
+            attributes["popovertarget"] = "menu"
+        }
+
         val galaxy = content.galaxies.first()
 
 //        toggleBlock(

@@ -30,6 +30,22 @@ import kotlinx.html.*
 
 fun FlowContent.button(
     text: String,
+    modifiers: ModifierSet? = null,
+    id: Id? = null,
+    styles: StyleSet? = null,
+    block: A.() -> Unit = {},
+) {
+    action(
+        text = text,
+        modifiers = modify(ElementClass.button, modifiers),
+        id = id,
+        block = block,
+        styles = styles
+    )
+}
+
+fun FlowContent.button(
+    text: String,
     route: AppRoute,
     modifiers: ModifierSet? = null,
     id: Id? = null,
