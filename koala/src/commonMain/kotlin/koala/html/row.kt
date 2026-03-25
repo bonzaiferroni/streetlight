@@ -3,23 +3,23 @@ package koala.html
 import kotlinx.html.*
 import koala.css.*
 
-inline fun FlowContent.row(
+fun FlowContent.row(
     id: Id,
     modifiers: ModifierSet? = null,
-    crossinline content: DIV.() -> Unit,
+    block: DIV.() -> Unit = {},
 ) {
     row(modifiers) {
         this.id = id.value
-        content()
+        block()
     }
 }
 
-inline fun FlowContent.row(
+fun FlowContent.row(
     modifiers: ModifierSet? = null,
-    crossinline content: DIV.() -> Unit,
+    block: DIV.() -> Unit = {},
 ) {
     div {
         setModifiers(Row, modifiers)
-        content()
+        block()
     }
 }

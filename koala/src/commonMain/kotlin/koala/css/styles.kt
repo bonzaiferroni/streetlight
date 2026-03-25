@@ -1,6 +1,7 @@
 package koala.css
 
 import koala.html.Queryable
+import koala.html.TagContext
 import kotlinx.css.CssBuilder
 import kotlinx.css.RuleContainer
 import kotlinx.css.RuleSet
@@ -32,21 +33,28 @@ fun modify(css: Modifier, modifiers: ModifierSet?): ModifierSet {
 }
 fun modify(modifiers: ModifierSet?, vararg additional: Modifier) = (modifiers ?: emptySet()) + additional.toSet()
 
-fun CoreAttributeGroupFacade.setModifiers(modifiers: ModifierSet?) {
+fun TagContext.setModifiers(modifiers: ModifierSet?) {
     modifiers?.let {
         classes += modifiers.map { it.value }
     }
 }
 
-fun CoreAttributeGroupFacade.setModifiers(modifier: Modifier) {
+fun TagContext.setModifiers(modifier: Modifier) {
     classes += modifier.value
 }
 
-fun CoreAttributeGroupFacade.setModifiers(css: Modifier, modifiers: ModifierSet?) {
+fun TagContext.setModifiers(css: Modifier, modifiers: ModifierSet?) {
     classes += css.value
     modifiers?.let {
         classes += modifiers.map { it.value }
     }
+}
+
+fun TagContext.setModifiers(modifiers: ModifierSet?, vararg modifier: Modifier) {
+    modifiers?.let {
+        classes += modifiers.map { it.value }
+    }
+    classes += modifier.map { it.value }
 }
 
 fun RuleContainer.rule(modifier: Modifier, block: RuleSet) = rule(".${modifier.value}", block)
