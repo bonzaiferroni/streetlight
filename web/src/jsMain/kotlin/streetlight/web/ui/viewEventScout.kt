@@ -28,7 +28,7 @@ fun RenderContext.viewEventScout(app: Streetlight, galaxy: Galaxy) {
     column {
         viewGeoMap(app.geoMap, app.appScope)
 
-        flowBlock(panelFlow, defaultMagic, magic = true) {
+        flowBlock(panelFlow, defaultMagic) {
             val locationEdit = it.locationEdit; val location = it.location; val event = it.event
 
             viewOf(model) {

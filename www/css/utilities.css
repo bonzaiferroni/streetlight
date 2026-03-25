@@ -121,6 +121,14 @@
     border-radius: var(--unit-spacing);
 }
 
+.border-radius-2 {
+    border-radius: calc(var(--unit-spacing) * 2);
+}
+
+.border-radius-4 {
+    border-radius: calc(var(--unit-spacing) * 4);
+}
+
 .heading-1, input.heading-1 {
     font-size: var(--heading-1-size);
     font-weight: var(--heading-1-weight);
@@ -503,4 +511,9 @@
 
 .z-index-1 {
     z-index: 1;
+}
+
+.blur-backdrop {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px); /* for Safari */
 }

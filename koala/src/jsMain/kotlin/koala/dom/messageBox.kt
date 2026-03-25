@@ -11,7 +11,10 @@ fun RenderContext.messageBox(
     card(modify(ElementClass.messageBox, modifiers)) {
         row(modify(AlignItemsStart)) {
 //            image(SiteImage.placeholderThumb, modify(Width4))
-            flowBlock(flow, modify(Flex1), magic = magic) { message ->
+            val modifiers = modify(Flex1).let {
+                if (magic) it + Magic else it
+            }
+            flowBlock(flow, modifiers) { message ->
                 column {
                     val paragraphs = message?.text?.split("\n\n")
                     paragraphs?.forEach { text ->

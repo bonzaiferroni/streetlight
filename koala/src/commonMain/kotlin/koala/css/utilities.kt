@@ -15,6 +15,8 @@ object CircleShape: Modifier { override val value = "circle-shape" }
 object CircleClip: Modifier { override val value = "circle-clip" }
 object BorderRadius0: Modifier { override val value = "border-radius-0" }
 object BorderRadius1: Modifier { override val value = "border-radius-1" }
+object BorderRadius2: Modifier { override val value = "border-radius-2" }
+object BorderRadius4: Modifier { override val value = "border-radius-4" }
 object Accent: Modifier { override val value = "accent" }
 object Primary: Modifier { override val value = "primary" }
 object Secondary: Modifier { override val value = "secondary" }
@@ -27,6 +29,7 @@ object PrimaryBg: Modifier { override val value = "primary-bg" }
 object PrimaryCardBg: Modifier { override val value = "primary-card-bg" }
 object BackgroundImage: Modifier { override val value = "background-image" }
 object SolidBg: Modifier { override val value = "solid-bg" }
+object BlurBackdrop: Modifier { override val value = "blur-backdrop" }
 
 // font utilities
 object Bold: Modifier { override val value = "bold" }

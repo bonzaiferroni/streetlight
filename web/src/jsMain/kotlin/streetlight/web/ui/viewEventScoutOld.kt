@@ -18,7 +18,7 @@ fun RenderContext.viewEventScoutOld(app: Streetlight, route: OldEventScoutRoute)
     val model = EventScoutOld(renderScope, route, app)
     val panelFlow = model.stateFlow.mapDistinct { it.location }
 
-    flowBlock(panelFlow, defaultMagic, magic = true) { location ->
+    flowBlock(panelFlow, defaultMagic) { location ->
         viewOf(model) {
             if (location != null) {
                 locationPanel(location)
@@ -61,7 +61,7 @@ fun ViewContext<EventScoutOld>.locationPanel(location: Location) {
 
     column {
         headerOf(location)
-        flowBlock(parseFlow, defaultMagic, magic = true) { parse ->
+        flowBlock(parseFlow, defaultMagic) { parse ->
             viewOf(model) {
                 if (parse != null) {
                     reviewPanel(parse, location)

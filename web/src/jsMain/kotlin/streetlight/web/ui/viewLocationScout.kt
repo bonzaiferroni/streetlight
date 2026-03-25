@@ -28,7 +28,7 @@ fun RenderContext.viewLocationScout(app: Streetlight) {
             column {
                 viewGeoMap(app.geoMap, app.appScope)
 
-                flowBlock(dataFlow, defaultMagic, magic = true) { data ->
+                flowBlock(dataFlow, defaultMagic) { data ->
                     val edit = model.stateNow.edit; val location = data.location; val places = data.places
                     viewOf(model) {
                         if (location != null) {

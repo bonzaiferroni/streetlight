@@ -76,9 +76,8 @@ fun viewApp() {
         portalMount.renderRoot(app.appScope) {
             flowBlock(
                 flow = app.portal.screenFlow,
-                modifiers = modify(Blur, SlideUp),
+                modifiers = modify(Magic, Blur, SlideUp),
                 renderCacheCount = 0, // allows unlimited caching
-                magic = true,
                 onTransition = { window.scrollTo(0.0, 0.0) },
             ) { screen ->
                 viewOf(app) {
@@ -111,7 +110,7 @@ fun viewApp() {
 
             wireBlock(AppBody.titlePathId) {
                 val titleFlow = app.portal.stateFlow.mapDistinct { it.title }
-                flowBlock(titleFlow, defaultMagic, magic = true) { title ->
+                flowBlock(titleFlow, defaultMagic) { title ->
                     if (title != null) {
                         row {
                             heading2("|", modify(Dim))
@@ -122,7 +121,7 @@ fun viewApp() {
             }
 
             wireBlock(AppBody.badgeId) {
-                flowBlock(app.gate.userFlow, defaultMagic, magic = true) { userInfo ->
+                flowBlock(app.gate.userFlow, defaultMagic) { userInfo ->
                     val avatarUrl = userInfo?.avatarUrl
                     if (avatarUrl != null) {
                         image(avatarUrl, modify(Size100, Square, CircleClip))

@@ -20,12 +20,12 @@ import org.w3c.dom.HTMLDivElement
 fun <State> RenderContext.flowBlock(
     flow: Flow<State>,
     modifiers: ModifierSet? = null,
-    magic: Boolean = false,
     renderCacheCount: Int? = null,
     config: (DIV.() -> Unit)? = null,
     onTransition: ((State) -> Unit)? = null,
     block: RenderContext.(State) -> Unit
 ): HTMLDivElement {
+    val magic = modifiers?.contains(Magic) ?: false
     val element = div {
         setModifiers(ElementClass.flowBlock, modifiers)
         if (magic) {
@@ -84,7 +84,7 @@ fun <State> RenderContext.flowBlock(
     return element
 }
 
-val defaultMagic = modify(Blur, SlideLeft)
+val defaultMagic = modify(Magic, Blur, SlideLeft)
 
 
 val flowStyle = """

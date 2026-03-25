@@ -4,6 +4,7 @@ import koala.css.AlignSelfStart
 import koala.css.Blur
 import koala.css.BorderRadius1
 import koala.css.JustifySelfEnd
+import koala.css.Magic
 import koala.css.Margin1
 import koala.css.MinWidthAuto
 import koala.css.ModifierSet
@@ -27,7 +28,7 @@ fun RenderContext.imageDrop(
         }
     }
 ) {
-    flowBlock(urlFlow, modify(modifiers, Blur, SlideDown), magic = true) { url ->
+    flowBlock(urlFlow, modify(modifiers, Magic, Blur, SlideDown)) { url ->
         if (url != null) {
             box(modify(Size100, OverflowHidden, BorderRadius1)) {
                 block(url)

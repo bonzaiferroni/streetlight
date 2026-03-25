@@ -49,7 +49,7 @@ fun ViewContext<Streetlight>.viewProfileEditor() {
                     imageDrop(avatarFlow, ::setAvatar, modify(Width16, Square))
                     row {
                         textField("username", onChangeValue = ::setUsername, bindFlow = usernameFlow)
-                        flowBlock(isAvailableFlow, defaultMagic, magic = true) {
+                        flowBlock(isAvailableFlow, defaultMagic) {
                             val isAvailable = it ?: return@flowBlock
                             val text = if (isAvailable) "👍" else "❌"
                             textBlock(text)

@@ -35,7 +35,7 @@ class Portal(
         go(route ?: initialRoute)
         window.addEventListener("hashchange", {
             val route = routeOf(hashPath) ?: return@addEventListener
-            if (route.screen == stateNow.route.screen) return@addEventListener
+            if (route == stateNow.route) return@addEventListener
             val backRoute = stateNow.backstack.lastOrNull()
             if (backRoute?.screen == route.screen) {
                 // goBack()

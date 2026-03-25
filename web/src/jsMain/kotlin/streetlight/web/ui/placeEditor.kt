@@ -8,6 +8,7 @@ import koala.css.Dim
 import koala.css.Flex1
 import koala.css.Flex2
 import koala.css.Blur
+import koala.css.Magic
 import koala.css.QueryMediumRow
 import koala.css.Square
 import koala.css.Width100
@@ -75,7 +76,7 @@ fun RenderContext.placeEditor(
                 onChangeValue = model::setAddress,
                 bindFlow = addressFlow,
             )
-            flowBlock(pointFlow, magic = true, modifiers = modify(Blur)) { point ->
+            flowBlock(pointFlow, modifiers = modify(Magic, Blur)) { point ->
                 if (point != null) {
                     this.textBlock {
                         textSpan("latitude: ", modify(Dim))
