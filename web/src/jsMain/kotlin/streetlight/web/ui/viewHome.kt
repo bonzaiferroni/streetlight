@@ -2,10 +2,8 @@ package streetlight.web.ui
 
 import koala.dom.ViewContext
 import koala.dom.queryAndWireSwitch
-import koala.dom.queryAndWireToggleBlock
 import koala.dom.shellBox
 import koala.dom.wireSwitch
-import koala.dom.wireToggleBlock
 import koala.html.Id
 import streetlight.web.model.Streetlight
 import streetlight.web.shells.HomeShell

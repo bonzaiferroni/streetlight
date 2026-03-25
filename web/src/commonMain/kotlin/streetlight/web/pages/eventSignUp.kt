@@ -8,7 +8,7 @@ import streetlight.model.data.*
 import koala.css.*
 
 fun HTML.eventSignUp(event: Event) {
-    head("Sign Up | ${event.title}") {
+    appHead("Sign Up | ${event.title}") {
         applyFiles(EventSignUpFiles)
     }
     body {

@@ -5,6 +5,9 @@ import koala.css.StyleProperty
 import koala.css.UrlValue
 import koala.dom.*
 import koala.html.IconElement
+import koala.model.mapDistinct
+import koala.model.storeOf
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.w3c.dom.HTMLElement
 import streetlight.model.data.EventStar
@@ -20,17 +23,33 @@ import streetlight.web.shells.iconPath
 
 fun RenderContext.viewGalaxyProfile(app: Streetlight, content: GalaxyProfileContent) {
     val config = app.config
+    val state = storeOf(GalaxyProfileState())
+
+    val isMapVisibleFlow = state.flow.mapDistinct { it.isMapVisible }
+    val swapIdFlow = isMapVisibleFlow.mapDistinct { isVisible ->
+        when (isVisible) {
+            true -> GalaxyProfileKey.MapId
+            else -> GalaxyProfileKey.HeaderId
+        }
+    }
+
+    fun setIsMapVisible(value: Boolean) = state.set { it.copy(isMapVisible = value) }
 
     val root = shellBox(GalaxyProfileKey.ShellId, app.geoMap, app.appScope) {
         galaxyShell(content)
     }
 
-    // switch("show transit", onToggle = config::setShowTransit, bindFlow = config.showTransitFlow)
+    queryAndWireSwitch(root, GalaxyProfileKey.MapSwitchId, onToggle = ::setIsMapVisible, bindFlow = isMapVisibleFlow)
+    queryAndWireSwapBlock(root, GalaxyProfileKey.SwapId, bindFlow = swapIdFlow)
 
     wireInterestControls(app, root)
 
     app.streetMap.setPosts(content.posts)
 }
+
+data class GalaxyProfileState(
+    val isMapVisible: Boolean = false
+)
 
 fun ViewContext<Streetlight>.viewGalaxyProfileRoute() {
     routeBlock<GalaxyPathIdRoute, GalaxyProfileContent>(model.portal, { route ->
@@ -66,7 +85,7 @@ fun RenderContext.wireInterestControls(app: Streetlight, root: HTMLElement) {
                 interest = updatedInterest
 
                 val element = iconElement ?: return@collect
-                element.style.setProperty(StyleProperty.maskUrl, UrlValue(interest.value.iconPath))
+                element.style.setProperty(StyleProperty.maskUrl.to(UrlValue(interest.value.iconPath)))
             }
         }
     }

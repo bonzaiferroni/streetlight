@@ -1,6 +1,7 @@
 package koala.dom
 
 import koala.core.get
+import koala.css.InlineStyle
 import koala.css.StyleProperty
 import koala.css.Modifier
 import koala.external.ScrollIntoViewOptions
@@ -63,9 +64,11 @@ inline fun <reified T> Element.wireByAttribute(attribute: TagAttribute<*>, block
     }
 }
 
-fun <T> CSSStyleDeclaration.setProperty(property: StyleProperty<T>, value: T) =
-    setProperty("--${property.identifier}", value.toString())
+fun <T> CSSStyleDeclaration.setProperty(style: InlineStyle<T>) =
+    setProperty(style.property.expression, style.value.toString())
 
 fun Element.querySelector(queryable: Queryable) = querySelector(queryable.selector) as? HTMLElement
 
 fun Element.setAttribute(attribute: TagAttribute<*>, value: String) = setAttribute(attribute.key, value)
+
+fun CSSStyleDeclaration.removeProperty(property: StyleProperty<*>) = removeProperty(property.identifier)

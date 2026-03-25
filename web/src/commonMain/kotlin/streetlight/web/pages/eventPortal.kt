@@ -8,7 +8,7 @@ import streetlight.model.data.*
 import koala.css.*
 
 fun HTML.eventPortal(event: Event, performer: Performer?, requestItems: List<RequestItem>) {
-    head(event.title) {
+    appHead(event.title) {
         applyFiles(EventPortalFiles)
 //        applyScripts("event-portal/webscripts.js")
     }

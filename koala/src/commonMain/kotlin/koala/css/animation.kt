@@ -2,7 +2,6 @@ package koala.css
 
 @Deprecated("use reveal")
 object Show: Modifier { override val value = "show" }
-object FadeStack: Modifier { override val value = "fade-stack" }
 
 // utilities
 object Magic: Modifier { override val value = "magic" }

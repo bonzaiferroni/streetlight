@@ -30,7 +30,7 @@ inline fun <reified Route: AppRoute, Data> RenderContext.routeBlock(
     // td: retry provideData call n times
     val routeFlow = portal.routeFlowOf<Route>().map { provideData(it) }
 
-    val element = flowBlock(routeFlow, modify(Width100, Magic, Blur), renderCacheCount = renderCacheCount) {
+    val element = flowBlock(routeFlow, modify(Width100, Magic), renderCacheCount = renderCacheCount) {
         if (it != null) {
             block(it)
         } else {

@@ -7,7 +7,7 @@ import koala.JsFiles
 import koala.SiteFile
 import kotlinx.html.*
 
-fun HTML.head(
+fun HTML.appHead(
     title: String,
     block: HEAD.() -> Unit,
 ) {

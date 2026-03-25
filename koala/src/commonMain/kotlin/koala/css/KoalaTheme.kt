@@ -27,4 +27,8 @@ data class KoalaTheme(
     val light1: Color = rgb(255, 99, 132),
     val light2: Color = rgb(88, 164, 255),
     val light3: Color = rgb(88, 255, 188),
-)
+) {
+    companion object {
+        const val MAGIC_INTERVAL = 222
+    }
+}

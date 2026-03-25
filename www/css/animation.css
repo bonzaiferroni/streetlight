@@ -1,6 +1,8 @@
 /* glow */
 
 :root {
+    --magic-interval: 222ms;
+    --magic-easing: ease-in-out;
     --magic-blur: blur(6px);
 }
 

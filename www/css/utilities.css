@@ -336,6 +336,10 @@
     overflow-wrap: anywhere;
 }
 
+.overflow-clip {
+    overflow: clip;
+}
+
 .gap-0 {
     gap: 0;
 }

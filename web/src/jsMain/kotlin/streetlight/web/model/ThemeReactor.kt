@@ -25,12 +25,12 @@ class ThemeReactor(
 
         when (theme) {
             SiteTheme.Dark -> {
-                root.style.setProperty(ThemeProperty.paper, ThemeValue.black)
-                root.style.setProperty(ThemeProperty.ink, ThemeValue.white)
+                root.style.setProperty(ThemeProperty.paper.to(ThemeValue.black))
+                root.style.setProperty(ThemeProperty.ink.to(ThemeValue.white))
             }
             SiteTheme.Light -> {
-                root.style.setProperty(ThemeProperty.paper, ThemeValue.white)
-                root.style.setProperty(ThemeProperty.ink, ThemeValue.black)
+                root.style.setProperty(ThemeProperty.paper.to(ThemeValue.white))
+                root.style.setProperty(ThemeProperty.ink.to(ThemeValue.black))
             }
         }
     }

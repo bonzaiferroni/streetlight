@@ -107,7 +107,9 @@
     position: absolute;
     top: 50%;
     transform: translate(0, -50%);
-    transition: transform 200ms ease, background 200ms ease;
+    transition:
+            transform var(--magic-interval) var(--magic-easing),
+            background var(--magic-interval) var(--magic-easing);
 
     padding: var(--btn-padding);
     border: none;

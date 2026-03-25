@@ -9,6 +9,11 @@ data class StyleProperty<T>(val identifier: String, val isCustom: Boolean = fals
 
     fun to(value: T) = InlineStyle(this, value)
 
+    val expression get() = when (isCustom) {
+        true -> "--$identifier"
+        else -> identifier
+    }
+
     companion object {
         val anchorName = StyleProperty<PositionAnchor>("anchor-name")
         val positionAnchor = StyleProperty<PositionAnchor>("position-anchor")
@@ -56,9 +61,7 @@ fun CoreAttributeGroupFacade.setStyle(styles: StyleSet?) {
                 append(' ')
             }
             styles.forEachIndexed { index, (property, value) ->
-                if (property.isCustom)
-                    append("--")
-                append(property.identifier)
+                append(property.expression)
                 append(": ")
                 append(value)
                 if (index + 1 < styles.size)

@@ -1,14 +1,12 @@
 package streetlight.web.pages
 
-import koala.html.head
+import koala.html.appHead
 import kotlinx.html.HTML
-import streetlight.model.data.Event
 import streetlight.model.data.Location
-import streetlight.web.shells.homeShell
 import streetlight.web.shells.locationShell
 
 fun HTML.locationPage(location: Location) {
-    head("${location.name} | Streetlight") {
+    appHead("${location.name} | Streetlight") {
         supportProtobuf()
         supportGeoMap()
     }

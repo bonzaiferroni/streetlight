@@ -68,12 +68,12 @@ fun RenderContext.wireSwitch(
 
 fun RenderContext.queryAndWireSwitch(
     ancestor: HTMLElement,
-    queryable: Queryable = ElementClass.switch,
+    queryable: Queryable,
     initialOn: Boolean = false,
     onToggle: ((Boolean) -> Unit)? = null,
     bindFlow: Flow<Boolean>? = null,
 ) {
     val element = ancestor.querySelector(queryable)
-        ?: error("switch not found with selector: ${queryable.selector}")
+        ?: error("switch not found: ${queryable.selector}")
     wireSwitch(element, initialOn, onToggle, bindFlow)
 }

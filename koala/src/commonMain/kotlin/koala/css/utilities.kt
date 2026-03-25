@@ -24,6 +24,7 @@ object Danger: Modifier { override val value = "danger" }
 object Clickable: Modifier { override val value = "clickable" }
 object OverflowHidden: Modifier { override val value = "overflow-hidden"}
 object OverflowWrapAnywhere: Modifier { override val value = "overflow-wrap-anywhere" }
+object OverflowClip: Modifier { override val value = "overflow-clip" }
 object Focus: Modifier { override val value = "focus" }
 object PrimaryBg: Modifier { override val value = "primary-bg" }
 object PrimaryCardBg: Modifier { override val value = "primary-card-bg" }

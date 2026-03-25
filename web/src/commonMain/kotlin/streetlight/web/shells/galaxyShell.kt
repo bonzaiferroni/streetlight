@@ -1,21 +1,7 @@
 package streetlight.web.shells
 
-import koala.css.Accent
-import koala.css.DisplayNone
-import koala.css.JustifySpaceBetween
-import koala.css.StyleProperty
-import koala.css.modify
-import koala.css.setStyle
-import koala.html.Id
-import koala.html.box
-import koala.html.btn
-import koala.html.column
-import koala.html.geoMapMount
-import koala.html.row
-import koala.html.setId
-import koala.html.swapBlock
-import koala.html.tab
-import koala.html.tabs
+import koala.css.*
+import koala.html.*
 import kotlinx.css.Display
 import kotlinx.html.FlowContent
 import kotlinx.serialization.Serializable
@@ -28,20 +14,24 @@ import streetlight.web.ui.headerOf
 fun FlowContent.galaxyShell(content: GalaxyProfileContent) {
     val galaxy = content.galaxy; val posts = content.posts;
     column(GalaxyProfileKey.ShellId) {
-        swapBlock(GalaxyProfileKey.SwapId) {
-            headerOf(galaxy) {
+        swapBlock(GalaxyProfileKey.SwapId, modify(Magic, OverflowClip)) {
+            headerOf(galaxy, modify(SlideLeft)) {
                 setId(GalaxyProfileKey.HeaderId)
+                setReveal(true)
             }
-            geoMapMount {
+            geoMapMount(galaxy.center, modify(SlideRight)) {
                 setId(GalaxyProfileKey.MapId)
-                setStyle(StyleProperty.display.to(Display.none))
+                setReveal(false)
             }
         }
         row(modify(JustifySpaceBetween)) {
-            galaxyMenu(content.galaxies)
+            row {
+                galaxyMenu(content.galaxies)
+                switch("map", id = GalaxyProfileKey.MapSwitchId)
+            }
             btn("Post Event", EventScoutRoute(galaxy.pathId), modify(Accent))
         }
-        gridOf(content.posts)
+        gridOf(posts)
         appFooter()
     }
 }
@@ -51,6 +41,7 @@ object GalaxyProfileKey {
     val SwapId = Id("galaxy-profile-swap")
     val HeaderId = Id("galaxy-profile-header")
     val MapId = Id("galaxy-profile-map")
+    val MapSwitchId = Id("galaxy-profile-map-switch")
 }
 
 @Serializable
