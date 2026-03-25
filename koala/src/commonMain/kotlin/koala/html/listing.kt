@@ -10,7 +10,7 @@ import kotlinx.html.ol
 import kotlinx.html.ul
 
 fun FlowContent.olist(
-    axis: ListAxis,
+    axis: ListAxis = ListAxis.Column,
     modifiers: ModifierSet? = null,
     block: OL.() -> Unit = {},
 ) {
@@ -21,7 +21,7 @@ fun FlowContent.olist(
 }
 
 fun FlowContent.ulist(
-    axis: ListAxis,
+    axis: ListAxis = ListAxis.Column,
     modifiers: ModifierSet? = null,
     block: UL.() -> Unit = {},
 ) {
@@ -36,10 +36,10 @@ internal fun TagContext.configureListing(
     modifiers: ModifierSet? = null,
 ) {
     val axisClass = when (axis) {
-        ListAxis.Row -> ListKey.rowClass
-        ListAxis.Column -> ListKey.columnClass
+        ListAxis.Row -> ListKey.RowClass
+        ListAxis.Column -> ListKey.ColumnClass
     }
-    setModifiers(modifiers, ListKey.baseClass, axisClass)
+    setModifiers(modifiers, ListKey.Class, axisClass)
 }
 
 enum class ListAxis {
@@ -48,9 +48,9 @@ enum class ListAxis {
 }
 
 object ListKey {
-    val baseClass = Css("listing")
-    val rowClass = Css("row-listing")
-    val columnClass = Css("column-listing")
+    val Class = Css("listing")
+    val RowClass = Css("row-listing")
+    val ColumnClass = Css("column-listing")
 }
 
 // language="CSS"
@@ -60,6 +60,7 @@ const val LISTING_STYLES = """
     min-width: 0;
     min-height: 0;
     gap: var(--unit-spacing);
+    list-style: none;
 }
 
 .column-listing {

@@ -1,41 +1,39 @@
 package koala.css
 
 import koala.SiteFile
+import kotlinx.css.Display
 import kotlinx.html.CoreAttributeGroupFacade
 import kotlinx.html.style
 
-data class StyleProperty<T: CssValue>(val identifier: String, val isCustom: Boolean = false) {
+data class StyleProperty<T>(val identifier: String, val isCustom: Boolean = false) {
 
     fun to(value: T) = InlineStyle(this, value)
 
     companion object {
-        val maskUrl = StyleProperty<UrlValue>("mask-url", true)
-        val backgroundUrl = StyleProperty<UrlValue>("background-url", true)
         val anchorName = StyleProperty<PositionAnchor>("anchor-name")
         val positionAnchor = StyleProperty<PositionAnchor>("position-anchor")
+        val display = StyleProperty<Display>("display")
+
+        val maskUrl = StyleProperty<UrlValue>("mask-url", true)
+        val backgroundUrl = StyleProperty<UrlValue>("background-url", true)
         val anchorId = StyleProperty<PositionAnchor>("anchor-id", true)
         val containerAnchorId = StyleProperty<PositionAnchor>("anchor-width-id", true)
     }
 }
 
-data class InlineStyle<T: CssValue>(val property: StyleProperty<T>, val value: CssValue)
+data class InlineStyle<T>(val property: StyleProperty<T>, val value: T)
 
-interface CssValue {
-    val expression: String
-}
-
-data class UrlValue(val url: String): CssValue {
+data class UrlValue(val url: String) {
     constructor(file: SiteFile): this(file.path)
-
-    override val expression get() = "url('$url')"
+    override fun toString() = "url('$url')"
 }
 
-data class RgbValue(val red: Int, val green: Int, val blue: Int): CssValue {
-    override val expression get() = "$red, $green, $blue"
+data class RgbValue(val red: Int, val green: Int, val blue: Int) {
+    override fun toString() = "$red, $green, $blue"
 }
 
-data class PositionAnchor(val identifier: String): CssValue {
-    override val expression get() = "--$identifier"
+data class PositionAnchor(val identifier: String) {
+    override fun toString() = "--$identifier"
 }
 
 typealias StyleSet = List<InlineStyle<*>>
@@ -62,7 +60,7 @@ fun CoreAttributeGroupFacade.setStyle(styles: StyleSet?) {
                     append("--")
                 append(property.identifier)
                 append(": ")
-                append(value.expression)
+                append(value)
                 if (index + 1 < styles.size)
                     append("; ")
                 else

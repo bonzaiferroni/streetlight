@@ -50,11 +50,11 @@ fun TagContext.setModifiers(css: Modifier, modifiers: ModifierSet?) {
     }
 }
 
-fun TagContext.setModifiers(modifiers: ModifierSet?, vararg modifier: Modifier) {
+fun TagContext.setModifiers(modifiers: ModifierSet?, vararg modifier: Modifier?) {
     modifiers?.let {
         classes += modifiers.map { it.value }
     }
-    classes += modifier.map { it.value }
+    classes += modifier.mapNotNull { it?.value }
 }
 
 fun RuleContainer.rule(modifier: Modifier, block: RuleSet) = rule(".${modifier.value}", block)

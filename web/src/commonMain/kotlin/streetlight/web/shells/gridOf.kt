@@ -12,6 +12,8 @@ import koala.html.icon
 import koala.html.image
 import koala.html.row
 import koala.html.centeredHeading
+import koala.html.listItem
+import koala.html.olist
 import koala.html.textBlock
 import kotlinx.html.FlowContent
 import streetlight.model.data.Event
@@ -55,7 +57,7 @@ fun FlowContent.gridOf(post: GalaxyPost) {
                 }
             }
             row(modify(MinHeight8, FlexItems1, AlignItemsStretch, GapTiny, TextAlignCenter)) {
-                val cellModifiers = modify(AlignItemsCenter, Gap0, BorderRadius0, JustifyCenter)
+                val cellModifiers = modify(AlignItemsCenter, Gap0, BorderRadius0, JustifyContentCenter)
 //                card(cellModifiers) {
 //                    post.location?.let { location ->
 //                        textBlock(location.name)
@@ -90,13 +92,17 @@ val Location.route get() = LocationIdRoute(locationId)
 val Event.route get() = EventIdRoute(eventId)
 
 fun FlowContent.gridOf(posts: List<GalaxyPost>) {
-    var headingDay: String? = null
-    posts.forEach { post ->
-        val eventDay = post.event?.startsAt?.toRelativeDayFormat()
-        if (eventDay != null && eventDay != headingDay) {
-            headingDay = eventDay
-            centeredHeading(headingDay, modify(MarginTop1))
+    val groupings = posts.groupBy { it.event?.startsAt }
+    groupings.forEach { grouping ->
+        val startsAt = grouping.key ?: return@forEach
+        val posts = grouping.value
+        centeredHeading(startsAt.toRelativeDayFormat(), modify(MarginTop1))
+        olist {
+            posts.forEach {
+                listItem {
+                    largeGridOf(it)
+                }
+            }
         }
-        largeGridOf(post)
     }
 }

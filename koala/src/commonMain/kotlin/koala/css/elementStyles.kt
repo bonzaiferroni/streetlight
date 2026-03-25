@@ -1,7 +1,10 @@
 package koala.css
 
 import koala.html.ICON_STYLES
+import koala.html.LISTING_STYLES
+import koala.html.LIST_ITEM_STYLES
 import koala.html.LOGO_STYLES
+import koala.html.SwapBlockStyle
 import kotlinx.css.*
 import kotlinx.css.properties.Timing
 import kotlinx.css.properties.Transition
@@ -29,5 +32,8 @@ object ElementClass {
 val kotlinElementStyles = listOf(
     ICON_STYLES,
     LOGO_STYLES,
+    LISTING_STYLES,
+    LIST_ITEM_STYLES,
+    SwapBlockStyle,
     // POPOVER_STYLES
 )

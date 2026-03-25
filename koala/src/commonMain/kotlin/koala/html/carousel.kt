@@ -10,6 +10,6 @@ import kotlinx.html.div
 fun FlowContent.carousel(modifiers: ModifierSet? = null, content: DIV.() -> Unit) {
     div {
         setModifiers(ElementClass.carousel, modifiers)
-        row(content = content)
+        row(block = content)
     }
 }

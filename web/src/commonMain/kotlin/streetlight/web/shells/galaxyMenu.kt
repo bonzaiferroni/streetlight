@@ -3,8 +3,10 @@ package streetlight.web.shells
 import koala.css.BlurBackdrop
 import koala.css.BorderRadius1
 import koala.css.BorderRadius4
+import koala.css.GlowShadow
 import koala.css.Magic
 import koala.css.PositionAnchor
+import koala.css.PrimaryCardBg
 import koala.css.SlideUp
 import koala.css.SolidBg
 import koala.css.WrapFlex
@@ -29,7 +31,7 @@ fun DIV.galaxyMenu(
 
     popoverContainer(myAnchor)
     popover(menuId, myAnchor, modify(Magic, SlideUp)) {
-        card(modify(BlurBackdrop, BorderRadius4)) {
+        card(modify(BlurBackdrop, BorderRadius4, PrimaryCardBg)) {
             row(modify(WrapFlex)) {
                 galaxies.forEach {
                     buttonOf(it)

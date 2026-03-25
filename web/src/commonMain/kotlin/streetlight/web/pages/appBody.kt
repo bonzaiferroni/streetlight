@@ -19,7 +19,7 @@ fun HTML.appBody(
     body {
         box(AppBody.viewportId) {
             column(AppBody.appBoxId) {
-                column(modify(Width100, AlignItemsCenter)) {
+                column {
                     appHeader()
                     box(AppBody.contentBox) {
                         box(AppBody.portalMountId)
@@ -56,19 +56,16 @@ fun FlowContent.appHeader() {
 }
 
 fun FlowContent.appFooter() {
-    row {
+    column {
         configureAppFooter()
     }
 }
 
 fun DIV.configureAppFooter() {
     val giants = "May we build a world of faithful giants."
-    setModifiers(modify(JustifyCenter, Height48))
-    column(modify(AlignItemsCenter, Gap0, Width100)) {
-
-        lottie(LottieFiles.spinningCircles, modify(Height24))
-        textBlock(giants, modify(Italic, OpacityMost))
-    }
+    setModifiers(modify(JustifyContentCenter, Height48, AlignItemsCenter, Gap0))
+    lottie(LottieFiles.spinningCircles, modify(Height24))
+    textBlock(giants, modify(Italic, OpacityMost))
 }
 
 fun FlowContent.emptyBadge() {

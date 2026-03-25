@@ -1,21 +1,17 @@
 .column {
     display: flex;
     flex-direction: column;
-    width: 100%;
     min-width: 0;
 
     gap: var(--unit-spacing);
-    align-items: start;
 }
 
 .row {
     display: flex;
     flex-direction: row;
-    width: 100%;
     min-width: 0;
 
     gap: var(--unit-spacing);
-    align-items: center;
 }
 
 .row > .row,
@@ -26,7 +22,6 @@
 .card {
     display: flex;
     flex-direction: column;
-    width: 100%;
 
     gap: var(--unit-spacing);
     border-radius: calc(var(--unit-spacing) * 2);

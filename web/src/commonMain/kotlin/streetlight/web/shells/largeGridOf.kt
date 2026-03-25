@@ -67,10 +67,10 @@ fun FlowContent.largeGridOf(post: GalaxyPost) {
 
             // grid content
             row(modify(Flex1, QueryLargeColumn, MinHeight8, FlexItems1, AlignItemsStretch, GapTiny, TextAlignCenter, WrapFlex, SmallFont)) {
-                val cellModifiers = modify(AlignItemsCenter, Gap0, BorderRadius0, JustifyCenter, MinWidth16)
+                val cellModifiers = modify(AlignItemsCenter, Gap0, BorderRadius0, JustifyContentCenter, MinWidth16)
                 card(cellModifiers) {
                     post.event?.startsAt?.let { startsAt ->
-                        row(modify(WrapFlex, JustifyCenter, Gap0)) {
+                        row(modify(WrapFlex, JustifyContentCenter, Gap0)) {
                             heading5(startsAt.toRelativeDayFormat())
                             textBlock("8:00 PM", modify(MarginLeft1))
                         }
@@ -82,7 +82,7 @@ fun FlowContent.largeGridOf(post: GalaxyPost) {
                             post.event?.url
                         }
                         actionIfNotNull(ticketsUrl) {
-                            row(modify(WrapFlex, JustifyCenter, Gap0)) {
+                            row(modify(WrapFlex, JustifyContentCenter, Gap0)) {
                                 textBlock("tickets:", modify(Dim))
                                 textBlock("$$cost", modify(MarginLeft1))
                             }
@@ -90,7 +90,7 @@ fun FlowContent.largeGridOf(post: GalaxyPost) {
                     }
                 }
                 card(cellModifiers) {
-                    row(modify(WrapFlex, JustifyCenter, Gap0)) {
+                    row(modify(WrapFlex, JustifyContentCenter, Gap0)) {
                         textBlock("from:", modify(Dim))
                         textBlock(post.username ?: "anonymous", modify(MarginLeft1))
                     }

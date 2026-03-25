@@ -20,7 +20,7 @@ fun FlowContent.centeredHeading(
     text: String,
     modifiers: ModifierSet? = null,
 ) {
-    row(modify(modifiers, Width100, JustifyCenter)) {
+    row(modify(modifiers, JustifyContentCenter, AlignItemsCenter)) {
         hr {
             setModifiers(modify(Width16, OpacitySome))
         }

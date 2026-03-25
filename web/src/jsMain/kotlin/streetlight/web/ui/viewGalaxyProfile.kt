@@ -12,32 +12,20 @@ import streetlight.model.data.InterestType
 import streetlight.web.GalaxyPathIdRoute
 import streetlight.web.model.Streetlight
 import streetlight.web.shells.EventAttributes
-import streetlight.web.shells.GalaxyShell
-import streetlight.web.shells.GalaxyShellContent
+import streetlight.web.shells.GalaxyProfileKey
+import streetlight.web.shells.GalaxyProfileContent
 import streetlight.web.shells.galaxyShell
 import streetlight.web.shells.gridOf
 import streetlight.web.shells.iconPath
 
-fun RenderContext.viewGalaxyProfile(app: Streetlight, content: GalaxyShellContent) {
+fun RenderContext.viewGalaxyProfile(app: Streetlight, content: GalaxyProfileContent) {
     val config = app.config
 
-    val root = shellBox(GalaxyShell.galaxyBoxId, app.geoMap, app.appScope) {
+    val root = shellBox(GalaxyProfileKey.ShellId, app.geoMap, app.appScope) {
         galaxyShell(content)
     }
 
-    root.onFirstView {
-        wireBlock(GalaxyShell.mapPanelId) {
-            val element = column {
-                row {
-                    switch("show transit", onToggle = config::setShowTransit, bindFlow = config.showTransitFlow)
-                }
-                content.posts.forEach { post ->
-                    gridOf(post)
-                }
-            }
-            wireInterestControls(app, element)
-        }
-    }
+    // switch("show transit", onToggle = config::setShowTransit, bindFlow = config.showTransitFlow)
 
     wireInterestControls(app, root)
 
@@ -45,11 +33,11 @@ fun RenderContext.viewGalaxyProfile(app: Streetlight, content: GalaxyShellConten
 }
 
 fun ViewContext<Streetlight>.viewGalaxyProfileRoute() {
-    routeBlock<GalaxyPathIdRoute, GalaxyShellContent>(model.portal, { route ->
+    routeBlock<GalaxyPathIdRoute, GalaxyProfileContent>(model.portal, { route ->
         val galaxy = model.client.api.readGalaxy(route.pathId) ?: return@routeBlock null
         val posts = model.client.api.readPosts(galaxy.galaxyId) ?: return@routeBlock null
         val galaxies = model.client.api.readGalaxies() ?: emptyList()
-        GalaxyShellContent(
+        GalaxyProfileContent(
             galaxy = galaxy,
             posts = posts,
             galaxies = galaxies,
