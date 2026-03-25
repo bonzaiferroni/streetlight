@@ -29,7 +29,6 @@ fun DIV.galaxyMenu(
     val menuId = Id("menu")
     val myAnchor = PositionAnchor("my-anchor")
 
-    popoverContainer(myAnchor)
     popover(menuId, myAnchor, modify(Magic, SlideUp)) {
         card(modify(BlurBackdrop, BorderRadius4, PrimaryCardBg)) {
             row(modify(WrapFlex)) {

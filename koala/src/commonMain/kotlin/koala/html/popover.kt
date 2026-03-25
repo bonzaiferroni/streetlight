@@ -3,15 +3,11 @@
 package koala.html
 
 import koala.css.Css
-import koala.css.DisplayNone
 import koala.css.ModifierSet
 import koala.css.PositionAnchor
 import koala.css.StyleProperty
-import koala.css.Width100
-import koala.css.modify
 import koala.css.setModifiers
 import koala.css.setStyle
-import koala.css.setStylesheet
 import kotlinx.html.CommonAttributeGroupFacade
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
@@ -24,14 +20,13 @@ fun FlowContent.popover(
     isManual: Boolean = false,
     block: DIV.() -> Unit
 ) {
-    setStylesheet(POPOVER_STYLES)
     div {
         setModifiers(PopoverElement.cssClass, modifiers)
         setId(id)
         setStyle(
             StyleProperty.positionAnchor.to(anchor),
             StyleProperty.anchorId.to(anchor),
-            StyleProperty.containerAnchorId.to(anchor.containerVariant()),
+            StyleProperty.containerAnchorId.to(anchor.containerPosition()),
         )
         setAttribute(TagAttribute.popover.to(if (isManual) "manual" else "auto"))
         block()
@@ -40,24 +35,25 @@ fun FlowContent.popover(
 
 // Called on the parent element
 fun CommonAttributeGroupFacade.popoverContainer(anchor: PositionAnchor) {
-    setStyle(StyleProperty.anchorName.to(anchor.containerVariant()))
+    setStyle(StyleProperty.anchorName.to(anchor.containerPosition()))
 }
 
-// Derived automatically — no extra param needed
-fun PositionAnchor.containerVariant(): PositionAnchor = PositionAnchor("${this.identifier}-container")
+private fun PositionAnchor.containerPosition(): PositionAnchor = PositionAnchor("${this.identifier}-container")
 
 object PopoverElement {
     val cssClass = Css("popover")
 }
 
 // language="CSS"
-const val POPOVER_STYLES = """
+val PopoverStyle get() = """
 .popover {
     position: absolute;
     inset: auto;
-    top: calc(anchor(var(--anchor-id) bottom) + .5rem);
-    left: anchor(var(--anchor-id) left);
-    max-width: anchor-size(var(--anchor-width-id) width);
+    top: anchor(var(--anchor-id) bottom);
+    left: anchor(var(--anchor-container-id) left);
+    max-width: anchor-size(var(--anchor-container-id) width);
+    justify-self: anchor-center;
+    margin: var(--unit-spacing);
     border: none;
     background: none;
     color: inherit;

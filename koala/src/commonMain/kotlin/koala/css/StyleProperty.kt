@@ -17,7 +17,7 @@ data class StyleProperty<T>(val identifier: String, val isCustom: Boolean = fals
         val maskUrl = StyleProperty<UrlValue>("mask-url", true)
         val backgroundUrl = StyleProperty<UrlValue>("background-url", true)
         val anchorId = StyleProperty<PositionAnchor>("anchor-id", true)
-        val containerAnchorId = StyleProperty<PositionAnchor>("anchor-width-id", true)
+        val containerAnchorId = StyleProperty<PositionAnchor>("anchor-container-id", true)
     }
 }
 
