@@ -139,3 +139,4 @@ object AlignSelfStretch: Modifier { override val value = "align-self-stretch" }
 object FadeBottom: Modifier { override val value = "fade-bottom" }
 object RelativeParent: Modifier { override val value = "relative-parent" }
 object ZIndex1: Modifier { override val value = "z-index-1" }
+object Shrinkable: Modifier { override val value = "shrinkable" }

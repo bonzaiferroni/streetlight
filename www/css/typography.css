@@ -37,9 +37,9 @@ h5 {
 }
 
 @media (max-width: 600px) {
-    h1 { font-size: calc(var(--heading-1-size) * 0.8); }
-    h2 { font-size: calc(var(--heading-2-size) * 0.8); }
-    h3 { font-size: calc(var(--heading-3-size) * 0.8); }
+    .shrinkable h1 { font-size: calc(var(--heading-1-size) * 0.8); }
+    .shrinkable h2 { font-size: calc(var(--heading-2-size) * 0.8); }
+    .shrinkable h3 { font-size: calc(var(--heading-3-size) * 0.8); }
 }
 
 p {

@@ -4,6 +4,7 @@ import koala.css.*
 import koala.dom.*
 import koala.html.ElementEvent
 import koala.html.heading2
+import koala.html.heading3
 import koala.model.GeoMap
 import koala.model.Portal
 import koala.model.mapDistinct
@@ -108,17 +109,17 @@ fun viewApp() {
                 }
             }
 
-            wireBlock(AppBody.titlePathId) {
-                val titleFlow = app.portal.stateFlow.mapDistinct { it.title }
-                flowBlock(titleFlow, defaultMagic) { title ->
-                    if (title != null) {
-                        row {
-                            heading2("|", modify(Dim))
-                            heading2(title, modify(Dim))
-                        }
-                    }
-                }
-            }
+//            wireBlock(AppBody.titlePathId) {
+//                val titleFlow = app.portal.stateFlow.mapDistinct { it.title }
+//                flowBlock(titleFlow, defaultMagic) { title ->
+//                    if (title != null) {
+//                        row {
+////                            heading2("|", modify(Dim))
+//                            heading2(title, modify(Dim))
+//                        }
+//                    }
+//                }
+//            }
 
             wireBlock(AppBody.badgeId) {
                 flowBlock(app.gate.userFlow, defaultMagic) { userInfo ->

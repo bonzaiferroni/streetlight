@@ -39,7 +39,6 @@ const val ICON_STYLES = """
 .icon {
     display: inline-block;
     background-color: currentColor;
-    height: 2rem;
     aspect-ratio: 1 / 1;
 
     mask-image: var(--mask-url);

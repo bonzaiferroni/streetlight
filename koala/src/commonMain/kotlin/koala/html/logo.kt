@@ -19,27 +19,22 @@ fun FlowContent.logo(
 const val LOGO_STYLES = """
 .logo {
     display: flex;
-    align-items: center;
-    justify-content: center;
+    height: 100%;
     animation: glow-shadow 10s infinite linear;
 }
 
 .logo > div {
     height: 100%;
-    background-color: currentColor;
     aspect-ratio: 2 / 3;
-
     display: block;
+    background-color: currentColor;
 
     mask-image: var(--mask-url);
     -webkit-mask-image: var(--mask-url);
-
     mask-size: contain;
     -webkit-mask-size: contain;
-
     mask-repeat: no-repeat;
     -webkit-mask-repeat: no-repeat;
-
     mask-position: center;
     -webkit-mask-position: center;
 

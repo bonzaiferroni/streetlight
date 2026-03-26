@@ -40,6 +40,8 @@ object SvgFiles: FileSet<SvgFile>() {
     val trash = add("trash.svg")
     val edit = add("edit.svg")
     val settings = add("settings.svg")
+    val menu = add("menu.svg")
+    val search = add("search.svg")
 }
 
 object LottieFiles: FileSet<LottieFile>() {

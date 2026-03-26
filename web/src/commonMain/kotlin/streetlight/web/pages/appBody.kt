@@ -34,22 +34,22 @@ fun HTML.appBody(
 }
 
 fun FlowContent.appHeader() {
-    row(modify(MinHeightAuto)) {
-        action(HomeRoute, modify(Flex1)) {
-            row(modify(AlignItemsCenter)) {
-                logo(modify(Height6))
-//                image("/www/svg/flame.svg", modify(Height6, Glow))
-                heading2("Streetlight")
-                wireBlock(AppBody.titlePathId)
+    row(modify(Height5)) {
+        icon(SvgFiles.menu, modify(OpacitySome))
+        icon(SvgFiles.search, modify(OpacitySome))
+        row(modify(Flex1, JustifyContentCenter)) {
+            action(HomeRoute, modify(Height100)) {
+                row(modify(AlignItemsCenter, Height100)) {
+                    logo()
+                    heading2("Streetlight")
+//                    wireBlock(AppBody.titlePathId)
+                }
             }
         }
-//        action(FullMapRoute, modify(Height6, Opacity2)) {
-//            icon(SvgPath.chevronDown, modify(Height100))
-//        }
-        action(SiteConfigRoute, modify(Height6, OpacitySome)) {
+        action(SiteConfigRoute, modify(OpacitySome)) {
             icon(SvgFiles.settings, modify(Height100))
         }
-        action(AccountRoute, modify(Height6, Square), id = AppBody.badgeId) {
+        action(AccountRoute, modify(Square), id = AppBody.badgeId) {
             emptyBadge()
         }
     }
