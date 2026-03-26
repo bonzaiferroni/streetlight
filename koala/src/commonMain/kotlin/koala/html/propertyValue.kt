@@ -9,7 +9,7 @@ fun FlowContent.propertyValue(
     modifiers: ModifierSet? = null,
 ) {
     p {
-        setModifiers(modifiers)
+        addModifiers(modifiers)
 
         span(modify(Dim)) {
             +"$propertyName:"
@@ -26,7 +26,7 @@ fun FlowContent.propertyValue(
     block: DIV.() -> Unit
 ) {
     row {
-        setModifiers(modifiers)
+        addModifiers(modifiers)
         textBlock("${propertyName}:", modify(OpacityMost, TextAlignRight))
         block()
     }

@@ -155,7 +155,7 @@ fun ViewContext<EventEditor>.eventLinks() {
                 heading4("Additional Links")
                 textBlock("You may provide your original source, a youtube video, or any useful link.", modify(Dim))
             }
-            icon(SvgFiles.plus, ::addLink)
+            icon(SvgFiles.Plus, ::addLink)
         }
         indexedItemsBlock(linksFlow, defaultMagic, magic = true) { (linkIndex, link) ->
             flowBlock(linkEditIndexFlow, modify(Height5, JustifyContentCenter)) { index ->
@@ -164,15 +164,15 @@ fun ViewContext<EventEditor>.eventLinks() {
                     row() {
                         textField("label", onChangeValue = ::setLabel, bindFlow = labelFlow)
                         textField("url", modify(Flex1), onChangeValue = ::setUrl, bindFlow = urlFlow)
-                        icon(SvgFiles.check, ::finalizeEdit)
+                        icon(SvgFiles.Check, ::finalizeEdit)
                     }
                 } else {
                     row() {
                         textBlock(link.label)
                         textBlock(link.url, modify(Dim))
                         spacer(modify(Flex1))
-                        icon(SvgFiles.trash, onClick = { model.removeLink(link) }, modify(Dim, Danger))
-                        icon(SvgFiles.edit, onClick = { editState.set{ it.copy(index = linkIndex, link = link)} }, modify(Dim))
+                        icon(SvgFiles.Trash, onClick = { model.removeLink(link) }, modify(Dim, Danger))
+                        icon(SvgFiles.Edit, onClick = { editState.set{ it.copy(index = linkIndex, link = link)} }, modify(Dim))
                     }
                 }
             }

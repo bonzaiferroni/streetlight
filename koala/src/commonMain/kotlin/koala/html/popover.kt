@@ -6,7 +6,7 @@ import koala.css.Css
 import koala.css.ModifierSet
 import koala.css.PositionAnchor
 import koala.css.StyleProperty
-import koala.css.setModifiers
+import koala.css.addModifiers
 import koala.css.setStyle
 import kotlinx.html.CommonAttributeGroupFacade
 import kotlinx.html.DIV
@@ -21,7 +21,7 @@ fun FlowContent.popover(
     block: DIV.() -> Unit
 ) {
     div {
-        setModifiers(PopoverElement.cssClass, modifiers)
+        addModifiers(PopoverElement.cssClass, modifiers)
         setId(id)
         setStyle(
             StyleProperty.positionAnchor.to(anchor),

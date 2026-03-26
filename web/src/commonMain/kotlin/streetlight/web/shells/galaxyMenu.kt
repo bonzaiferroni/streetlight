@@ -46,7 +46,7 @@ fun DIV.galaxyMenu(
             }
         }
     }
-    button("galaxies") {
+    button("☰ galaxies") {
         setAnchorName(myAnchor)
         setAttribute(TagAttribute.popoverTarget, menuId)
     }

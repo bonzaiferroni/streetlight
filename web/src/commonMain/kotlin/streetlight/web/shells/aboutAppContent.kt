@@ -81,7 +81,7 @@ fun FlowContent.githubLink(
     row {
         textBlock("$role:", modify(OpacityMost, TextAlignRight, Flex1))
         a("https://github.com/$user/$repo") {
-            setModifiers(Flex1)
+            addModifiers(Flex1)
             target = "_blank"
             rel = "noopener noreferrer"
             +name

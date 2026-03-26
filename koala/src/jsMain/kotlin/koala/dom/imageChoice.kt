@@ -30,14 +30,14 @@ fun RenderContext.imageChoice(
     val element = box(modify(SetImageClass.parent, modifiers)) {
         placeholder = box(modify(SetImageClass.placeholder))
         image = img {
-            setModifiers(modify(BorderRadius1, MaxHeight64))
+            addModifiers(modify(BorderRadius1, MaxHeight64))
             style = "display: none;"
         }
     }
 
     val dialog = dialogBox("Choose yer image") { close ->
         choicesRow = row {
-            setModifiers(WrapFlex)
+            addModifiers(WrapFlex)
             style = "display: none;"
         }
         filePicker(MimeType.Image) {
@@ -68,7 +68,7 @@ fun RenderContext.imageChoice(
         choicesRow.append {
             choiceUrl?.let {
                 val image = img(src = choiceUrl) {
-                    setModifiers(Height16)
+                    addModifiers(Height16)
                 }
                 image.onClick {
                     dialog.close()
@@ -76,7 +76,7 @@ fun RenderContext.imageChoice(
             }
             choices?.forEach { url ->
                 val image =img(src = url) {
-                    setModifiers(Height16)
+                    addModifiers(Height16)
                 }
                 image.onClick {
                     onValueChanged?.invoke(url)

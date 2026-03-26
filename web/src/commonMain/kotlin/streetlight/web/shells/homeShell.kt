@@ -2,9 +2,8 @@ package streetlight.web.shells
 
 import koala.css.*
 import koala.html.*
-import kotlinx.html.DIV
 import kotlinx.html.FlowContent
-import streetlight.model.data.Galaxy
+import streetlight.web.layouts.layoutGalaxyPosts
 import streetlight.web.pages.appFooter
 
 fun FlowContent.homeShell(content: HomeContent) {
@@ -27,7 +26,7 @@ fun FlowContent.homeShell(content: HomeContent) {
             }
         }
 
-        gridOf(content.posts)
+        layoutGalaxyPosts(content.posts)
 
         appFooter()
     }

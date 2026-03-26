@@ -2,7 +2,7 @@ package koala.dom
 
 import koala.css.ModifierSet
 import koala.css.Width100
-import koala.css.setModifiers
+import koala.css.addModifiers
 import koala.html.Id
 import koala.html.TagAttribute
 import koala.html.setId
@@ -32,14 +32,14 @@ fun RenderContext.textField(
     block: (INPUT.() -> Unit)? = null
 ): HTMLInputElement {
     val parent = div {
-        setModifiers(modifiers)
+        addModifiers(modifiers)
         setAttribute(TagAttribute.blockLabel, label?.lowercase())
     }
 
     var currentValue = ""
     val element = parent.append {
         input {
-            setModifiers(Width100, textModifiers)
+            addModifiers(Width100, textModifiers)
             setId(id)
             type = InputType.text
             onChangeValue?.let { callback ->

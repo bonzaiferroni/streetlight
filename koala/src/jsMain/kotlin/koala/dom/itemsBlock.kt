@@ -28,7 +28,7 @@ fun <Item> RenderContext.itemsBlock(
     block: RenderContext.(Item) -> Unit
 ): HTMLDivElement {
     val parent = div {
-        setModifiers(ElementClass.itemsBlock, modifiers)
+        addModifiers(ElementClass.itemsBlock, modifiers)
         if (magic) {
             classes += Magic.value
         }

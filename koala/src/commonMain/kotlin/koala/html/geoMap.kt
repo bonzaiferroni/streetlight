@@ -5,7 +5,7 @@ import koala.css.Css
 import koala.css.Height48
 import koala.css.ModifierSet
 import koala.css.Width100
-import koala.css.setModifiers
+import koala.css.addModifiers
 import koala.css.modify
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
@@ -16,7 +16,7 @@ fun FlowContent.geoMapMount(
     block: DIV.() -> Unit = {}
 ) {
     box {
-        setModifiers(GeoMapSelector.mapMount, modifiers)
+        addModifiers(GeoMapSelector.mapMount, modifiers)
         initialPoint?.let {
             setAttribute(GeoMapSelector.geoPoint, "${it.lng},${it.lat}")
         }

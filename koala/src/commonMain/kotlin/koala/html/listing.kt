@@ -2,7 +2,7 @@ package koala.html
 
 import koala.css.Css
 import koala.css.ModifierSet
-import koala.css.setModifiers
+import koala.css.addModifiers
 import kotlinx.html.FlowContent
 import kotlinx.html.OL
 import kotlinx.html.UL
@@ -39,7 +39,7 @@ internal fun TagContext.configureListing(
         ListAxis.Row -> ListKey.RowClass
         ListAxis.Column -> ListKey.ColumnClass
     }
-    setModifiers(modifiers, ListKey.Class, axisClass)
+    addModifiers(modifiers, ListKey.Class, axisClass)
 }
 
 enum class ListAxis {

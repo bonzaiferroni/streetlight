@@ -1,7 +1,7 @@
 package koala.dom
 
 import koala.css.ModifierSet
-import koala.css.setModifiers
+import koala.css.addModifiers
 import koala.html.TagAttribute
 import koala.html.blockLabel
 import koala.html.setAttribute
@@ -15,7 +15,7 @@ fun DOMContext.blockLabel(
     block: (DIV.() -> Unit)? = null
 ) = div {
     this.blockLabel = label
-    setModifiers(modifiers)
+    addModifiers(modifiers)
     setAttribute(TagAttribute.blockLabel, label)
     block?.invoke(this)
 }

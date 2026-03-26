@@ -3,8 +3,7 @@ package koala.html
 import koala.LottieFile
 import kotlinx.html.*
 import koala.css.*
-import koala.css.setModifiers
-import koala.html.setAttribute
+import koala.css.addModifiers
 
 fun FlowContent.lottie(
     file: LottieFile,
@@ -21,7 +20,7 @@ internal fun DIV.configureLottie(
     modifiers: ModifierSet? = null,
     block: (DIV.() -> Unit)? = null
 ) {
-    setModifiers(modify(ElementClass.lottie, modifiers))
+    addModifiers(modify(ElementClass.lottie, modifiers))
     setAttribute(TagAttribute.lottie, file)
     block?.invoke(this)
 }

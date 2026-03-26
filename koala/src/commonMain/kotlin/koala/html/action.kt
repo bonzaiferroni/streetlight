@@ -3,7 +3,7 @@ package koala.html
 import koala.css.ElementClass
 import koala.css.ModifierSet
 import koala.css.StyleSet
-import koala.css.setModifiers
+import koala.css.addModifiers
 import koala.css.setStyle
 import koala.css.modify
 import kotlinx.html.A
@@ -20,7 +20,7 @@ fun FlowContent.action(
 ) {
     a {
         setId(id)
-        setModifiers(modify(ElementClass.action, modifiers))
+        addModifiers(modify(ElementClass.action, modifiers))
         setStyle(styles)
         href?.let { this.href = href }
         block?.invoke(this)

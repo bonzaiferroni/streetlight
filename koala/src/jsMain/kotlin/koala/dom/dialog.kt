@@ -5,7 +5,7 @@ import koala.css.Css
 import koala.css.ModifierSet
 import koala.css.Reveal
 import koala.css.TextAlignCenter
-import koala.css.setModifiers
+import koala.css.addModifiers
 import koala.css.modify
 import koala.html.heading3
 import kotlinx.coroutines.delay
@@ -31,7 +31,7 @@ fun RenderContext.dialogBox(
 
     var dialog: HTMLDialogElement? = null
     dialog = dialog {
-        setModifiers(Css("dialog-box"), modifiers)
+        addModifiers(Css("dialog-box"), modifiers)
         column(modify(AlignItemsStretch)) {
             title?.let {
                 heading3(title, modify(TextAlignCenter))

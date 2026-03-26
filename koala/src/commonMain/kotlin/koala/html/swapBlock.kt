@@ -4,7 +4,7 @@ import koala.css.Css
 import koala.css.ModifierSet
 import koala.css.Reveal
 import koala.css.StyleProperty
-import koala.css.setModifiers
+import koala.css.addModifiers
 import koala.css.setStyle
 import kotlinx.css.Display
 import kotlinx.html.DIV
@@ -18,14 +18,14 @@ fun FlowContent.swapBlock(
 ) {
     div {
         setId(id)
-        setModifiers(modifiers, SwapBlockKey.Class)
+        addModifiers(modifiers, SwapBlockKey.Class)
         block()
     }
 }
 
 fun DIV.setReveal(isVisible: Boolean) {
     when (isVisible) {
-        true -> setModifiers(Reveal)
+        true -> addModifiers(Reveal)
         else -> setStyle(StyleProperty.display.to(Display.none))
     }
 }

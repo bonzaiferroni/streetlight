@@ -1,4 +1,4 @@
-package streetlight.web.shells
+package streetlight.web.layouts
 
 import kabinet.utils.toRelativeDayFormat
 import koala.SvgFiles
@@ -22,7 +22,7 @@ import streetlight.model.data.EventStar
 import streetlight.model.data.GalaxyPost
 import streetlight.model.data.InterestType
 
-fun FlowContent.largeGridOf(post: GalaxyPost) {
+fun FlowContent.layoutLargeGalaxyPost(post: GalaxyPost) {
     val postRoute = post.route ?: return
 
     card(modify(Padding0, OverflowHidden)) {
@@ -70,7 +70,7 @@ fun FlowContent.largeGridOf(post: GalaxyPost) {
                 val cellModifiers = modify(AlignItemsCenter, Gap0, BorderRadius0, JustifyContentCenter, MinWidth16)
                 card(cellModifiers) {
                     post.event?.startsAt?.let { startsAt ->
-                        row(modify(WrapFlex, JustifyContentCenter, Gap0)) {
+                        row(modify(WrapFlex, JustifyContentCenter, Gap0, AlignItemsCenter)) {
                             heading5(startsAt.toRelativeDayFormat())
                             textBlock("8:00 PM", modify(MarginLeft1))
                         }
@@ -119,7 +119,7 @@ object EventAttributes {
 }
 
 val InterestType?.iconPath get() = when(this) {
-    InterestType.Star -> SvgFiles.starFilled
-    InterestType.Calendar -> SvgFiles.starFilled // td: handle differently
-    null -> SvgFiles.starOutline
+    InterestType.Star -> SvgFiles.StarFilled
+    InterestType.Calendar -> SvgFiles.StarFilled // td: handle differently
+    null -> SvgFiles.StarOutline
 }

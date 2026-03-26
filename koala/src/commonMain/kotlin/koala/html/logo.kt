@@ -8,9 +8,9 @@ fun FlowContent.logo(
     modifiers: ModifierSet? = null
 ) {
     div {
-        setModifiers(ElementClass.logo, modifiers)
+        addModifiers(ElementClass.logo, modifiers)
         div {
-            setStyle(StyleProperty.maskUrl.to(UrlValue(SvgFiles.flame)))
+            setStyle(StyleProperty.maskUrl.to(UrlValue(SvgFiles.Flame)))
         }
     }
 }

@@ -196,9 +196,9 @@ data class TransitEntity(
 ): PointEntity {
     override val entityId get() = vehicleId
     override val icon get() = when (vehicleType) {
-        VehicleType.Bus -> SvgFiles.bus
-        VehicleType.LightRail -> SvgFiles.train
-        VehicleType.Train -> SvgFiles.train
+        VehicleType.Bus -> SvgFiles.Bus
+        VehicleType.LightRail -> SvgFiles.Train
+        VehicleType.Train -> SvgFiles.Train
     }
     override val modifiers get() = modify(MarkerUtility.twinkleAboveAirplane)
 }

@@ -11,7 +11,7 @@ fun RenderContext.action(
     modifiers: ModifierSet? = null,
     block: (A.() -> Unit)? = null
 ) = a {
-    setModifiers(ElementClass.action, modifiers)
+    addModifiers(ElementClass.action, modifiers)
     block?.invoke(this)
 }
 

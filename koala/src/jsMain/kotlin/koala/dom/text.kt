@@ -1,7 +1,7 @@
 package koala.dom
 
 import koala.css.ModifierSet
-import koala.css.setModifiers
+import koala.css.addModifiers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
@@ -14,7 +14,7 @@ fun DOMContext.textBlock(
     modifiers: ModifierSet? = null,
     block: (P.() -> Unit)? = null
 ) = p {
-    setModifiers(modifiers)
+    addModifiers(modifiers)
     +text
     block?.invoke(this)
 }

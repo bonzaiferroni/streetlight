@@ -2,7 +2,7 @@ package koala.html
 
 import koala.css.ElementClass
 import koala.css.ModifierSet
-import koala.css.setModifiers
+import koala.css.addModifiers
 import koala.css.modify
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
@@ -28,7 +28,7 @@ fun DIV.configureSwitch(
     initialOn: Boolean = false,
     block: (DIV.() -> Unit)? = null,
 ) {
-    setModifiers(modify(ElementClass.switch, modifiers))
+    addModifiers(modify(ElementClass.switch, modifiers))
     setId(id)
     attributes["role"] = "switch"
     attributes["aria-checked"] = initialOn.toString()

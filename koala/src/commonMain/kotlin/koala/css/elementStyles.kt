@@ -1,10 +1,11 @@
 package koala.css
 
-import koala.html.ICON_STYLES
+import koala.html.IconStyles
 import koala.html.LISTING_STYLES
 import koala.html.LIST_ITEM_STYLES
 import koala.html.LOGO_STYLES
 import koala.html.PopoverStyle
+import koala.html.SectionStyles
 import koala.html.SwapBlockStyle
 
 object ElementClass {
@@ -27,10 +28,11 @@ object ElementClass {
 }
 
 val kotlinElementStyles = listOf(
-    ICON_STYLES,
+    IconStyles,
     LOGO_STYLES,
     LISTING_STYLES,
     LIST_ITEM_STYLES,
     PopoverStyle,
     SwapBlockStyle,
+    SectionStyles,
 )

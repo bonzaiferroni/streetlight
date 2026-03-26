@@ -25,17 +25,17 @@ fun DIV.configureIcon(
     modifiers: ModifierSet? = null,
     block: (DIV.() -> Unit)? = null
 ) {
-    setModifiers(modify(IconElement.cssClass, modifiers))
+    addModifiers(modify(IconElement.Class, modifiers))
     setStyle(StyleProperty.maskUrl.to(UrlValue(file.path)))
     block?.invoke(this)
 }
 
 object IconElement {
-    val cssClass = Css("icon")
+    val Class = Css("icon")
 }
 
 // language="CSS"
-const val ICON_STYLES = """
+val IconStyles get() = """
 .icon {
     display: inline-block;
     background-color: currentColor;

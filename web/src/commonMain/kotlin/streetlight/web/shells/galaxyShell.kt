@@ -2,12 +2,12 @@ package streetlight.web.shells
 
 import koala.css.*
 import koala.html.*
-import kotlinx.css.Display
 import kotlinx.html.FlowContent
 import kotlinx.serialization.Serializable
 import streetlight.model.data.Galaxy
 import streetlight.model.data.GalaxyPost
 import streetlight.web.EventScoutRoute
+import streetlight.web.layouts.layoutGalaxyPosts
 import streetlight.web.pages.appFooter
 import streetlight.web.ui.headerOf
 
@@ -31,7 +31,7 @@ fun FlowContent.galaxyShell(content: GalaxyProfileContent) {
             }
             btn("Post Event", EventScoutRoute(galaxy.pathId), modify(Accent))
         }
-        gridOf(posts)
+        layoutGalaxyPosts(posts)
         appFooter()
     }
 }

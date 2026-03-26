@@ -16,7 +16,7 @@ fun FlowContent.tabs(
         row(modify(TabClass.header)) {
             scope.tabs.forEachIndexed { index, tab ->
                 p {
-                    setModifiers(TabClass.button)
+                    addModifiers(TabClass.button)
                     attributes["data-tab"] = index.toString()
                     if (tab.isDefault) {
                         attributes["is-default"] = ""

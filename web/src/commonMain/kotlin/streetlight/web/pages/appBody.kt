@@ -35,8 +35,8 @@ fun HTML.appBody(
 
 fun FlowContent.appHeader() {
     row(modify(Height5)) {
-        icon(SvgFiles.menu, modify(OpacitySome))
-        icon(SvgFiles.search, modify(OpacitySome))
+        icon(SvgFiles.Menu, modify(OpacitySome))
+        icon(SvgFiles.Search, modify(OpacitySome))
         row(modify(Flex1, JustifyContentCenter)) {
             action(HomeRoute, modify(Height100)) {
                 row(modify(AlignItemsCenter, Height100)) {
@@ -47,7 +47,7 @@ fun FlowContent.appHeader() {
             }
         }
         action(SiteConfigRoute, modify(OpacitySome)) {
-            icon(SvgFiles.settings, modify(Height100))
+            icon(SvgFiles.Settings, modify(Height100))
         }
         action(AccountRoute, modify(Square), id = AppBody.badgeId) {
             emptyBadge()
@@ -63,13 +63,13 @@ fun FlowContent.appFooter() {
 
 fun DIV.configureAppFooter() {
     val giants = "May we build a world of faithful giants."
-    setModifiers(modify(JustifyContentCenter, Height48, AlignItemsCenter, Gap0))
+    addModifiers(modify(JustifyContentCenter, Height48, AlignItemsCenter, Gap0))
     lottie(LottieFiles.spinningCircles, modify(Height24))
     textBlock(giants, modify(Italic, OpacityMost))
 }
 
 fun FlowContent.emptyBadge() {
-    icon(SvgFiles.emptyProfile, modify(Height100, OpacitySome))
+    icon(SvgFiles.EmptyProfile, modify(Height100, OpacitySome))
 }
 
 object AppBody {

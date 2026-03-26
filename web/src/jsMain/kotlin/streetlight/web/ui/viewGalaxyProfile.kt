@@ -7,19 +7,17 @@ import koala.dom.*
 import koala.html.IconElement
 import koala.model.mapDistinct
 import koala.model.storeOf
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.w3c.dom.HTMLElement
 import streetlight.model.data.EventStar
 import streetlight.model.data.InterestType
 import streetlight.web.GalaxyPathIdRoute
 import streetlight.web.model.Streetlight
-import streetlight.web.shells.EventAttributes
+import streetlight.web.layouts.EventAttributes
 import streetlight.web.shells.GalaxyProfileKey
 import streetlight.web.shells.GalaxyProfileContent
 import streetlight.web.shells.galaxyShell
-import streetlight.web.shells.gridOf
-import streetlight.web.shells.iconPath
+import streetlight.web.layouts.iconPath
 
 fun RenderContext.viewGalaxyProfile(app: Streetlight, content: GalaxyProfileContent) {
     val config = app.config
@@ -78,7 +76,7 @@ fun RenderContext.wireInterestControls(app: Streetlight, root: HTMLElement) {
             app.userInterest.editEventInterest(interest)
         }
 
-        val iconElement by lazy { element.queryFirstOrNull(IconElement.cssClass) }
+        val iconElement by lazy { element.queryFirstOrNull(IconElement.Class) }
         renderScope.launch {
             app.userInterest.interestFlow.collect { updatedInterest ->
                 if (updatedInterest.eventId != interest.eventId) return@collect

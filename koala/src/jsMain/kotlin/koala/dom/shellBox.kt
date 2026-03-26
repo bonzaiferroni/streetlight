@@ -18,7 +18,7 @@ fun RenderContext.shellBox(
     return if (shell != null) {
         console.log("grabbing shell: $id")
         val element = container {
-            setModifiers(ElementClass.shellBox, modifiers)
+            addModifiers(ElementClass.shellBox, modifiers)
         }
 
         element.append(shell)
@@ -26,7 +26,7 @@ fun RenderContext.shellBox(
     } else {
         console.log("generating shell: $id")
         val element = container {
-            setModifiers(ElementClass.shellBox, modifiers)
+            addModifiers(ElementClass.shellBox, modifiers)
             block()
         }
 

@@ -2,7 +2,7 @@ package koala.html
 
 import koala.css.Css
 import koala.css.ModifierSet
-import koala.css.setModifiers
+import koala.css.addModifiers
 import kotlinx.html.LI
 import kotlinx.html.OL
 import kotlinx.html.UL
@@ -13,7 +13,7 @@ fun OL.listItem(
     block: LI.() -> Unit = {}
 ) {
     li {
-        setModifiers(modifiers)
+        addModifiers(modifiers)
         block()
     }
 }
@@ -23,7 +23,7 @@ fun UL.listItem(
     block: LI.() -> Unit = {}
 ) {
     li {
-        setModifiers(modifiers)
+        addModifiers(modifiers)
         block()
     }
 }

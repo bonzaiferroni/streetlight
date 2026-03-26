@@ -19,7 +19,7 @@ fun FlowContent.row(
     block: DIV.() -> Unit = {},
 ) {
     div {
-        setModifiers(Row, modifiers)
+        addModifiers(Row, modifiers)
         block()
     }
 }

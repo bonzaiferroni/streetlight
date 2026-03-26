@@ -1,7 +1,7 @@
 package koala.dom
 
 import koala.css.ModifierSet
-import koala.css.setModifiers
+import koala.css.addModifiers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
@@ -21,7 +21,7 @@ fun RenderContext.dateInput(
     modifiers: ModifierSet? = null,
 ) {
     val element = input {
-        setModifiers(modifiers)
+        addModifiers(modifiers)
         type = InputType.date
     }
 
@@ -54,7 +54,7 @@ fun RenderContext.timeInput(
     modifiers: ModifierSet? = null,
 ) {
     val element = input {
-        setModifiers(modifiers)
+        addModifiers(modifiers)
         type = InputType.time
     }
 

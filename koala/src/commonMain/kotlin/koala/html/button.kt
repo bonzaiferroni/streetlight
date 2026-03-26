@@ -2,9 +2,7 @@ package koala.html
 
 import koala.css.ElementClass
 import koala.css.ModifierSet
-import koala.css.modify
-import koala.css.setModifiers
-import kotlinx.html.A
+import koala.css.addModifiers
 import kotlinx.html.BUTTON
 import kotlinx.html.FlowContent
 import kotlinx.html.button
@@ -15,7 +13,7 @@ fun FlowContent.button(
     block: (BUTTON.() -> Unit)? = null,
 ) {
     button {
-        setModifiers(ElementClass.button, modifiers)
+        addModifiers(ElementClass.button, modifiers)
         block?.invoke(this)
         +text
     }

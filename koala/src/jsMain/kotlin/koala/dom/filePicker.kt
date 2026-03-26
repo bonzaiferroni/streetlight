@@ -22,7 +22,7 @@ fun DOMContext.filePicker(
     var preview: HTMLImageElement
     var dropZone: HTMLDivElement
     val element = div {
-        setModifiers(modifiers)
+        addModifiers(modifiers)
 
         input = input {
             type = InputType.file
@@ -31,7 +31,7 @@ fun DOMContext.filePicker(
         }
 
         dropZone = div {
-            setModifiers(FilePickerClass.dropZone)
+            addModifiers(FilePickerClass.dropZone)
             +"Click here"
             br { }
             +"— or —"
@@ -40,7 +40,7 @@ fun DOMContext.filePicker(
         }
 
         preview = img {
-            setModifiers(BorderRadius1)
+            addModifiers(BorderRadius1)
         }
     }
 

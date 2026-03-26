@@ -19,7 +19,7 @@ inline fun FlowContent.column(
     crossinline content: DIV.() -> Unit,
 ) {
     div {
-        setModifiers(modify(Column, modifiers))
+        addModifiers(modify(Column, modifiers))
         content()
     }
 }

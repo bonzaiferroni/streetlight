@@ -215,7 +215,7 @@ class EventScout(
 
     private fun addConstructionMarker(point: GeoPoint) {
         geo.tempEntities(listOf(
-            IconEntity("here", SvgFiles.guitar, point)
+            IconEntity("here", SvgFiles.Guitar, point)
         ))
     }
 }

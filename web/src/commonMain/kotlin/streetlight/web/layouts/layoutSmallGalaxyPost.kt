@@ -1,4 +1,4 @@
-package streetlight.web.shells
+package streetlight.web.layouts
 
 import kabinet.utils.toRelativeDayFormat
 import koala.SvgFiles
@@ -11,9 +11,6 @@ import koala.html.heading5
 import koala.html.icon
 import koala.html.image
 import koala.html.row
-import koala.html.centeredHeading
-import koala.html.listItem
-import koala.html.olist
 import koala.html.textBlock
 import kotlinx.html.FlowContent
 import streetlight.model.data.Event
@@ -23,7 +20,7 @@ import streetlight.model.data.Location
 import streetlight.web.EventIdRoute
 import streetlight.web.LocationIdRoute
 
-fun FlowContent.gridOf(post: GalaxyPost) {
+fun FlowContent.layoutSmallGalaxyPost(post: GalaxyPost) {
     val thumbUrl = post.thumbUrl
     val title = post.title
     val description = post.description
@@ -47,7 +44,7 @@ fun FlowContent.gridOf(post: GalaxyPost) {
                                 }
                             }
                         }
-                        icon(SvgFiles.focus, modify(Height5, Square, Dim))
+                        icon(SvgFiles.Focus, modify(Height5, Square, Dim))
                     }
                     description?.let {
                         action(postRoute) {
@@ -90,19 +87,3 @@ fun FlowContent.gridOf(post: GalaxyPost) {
 val GalaxyPost.route get() = event?.route ?: location?.route
 val Location.route get() = LocationIdRoute(locationId)
 val Event.route get() = EventIdRoute(eventId)
-
-fun FlowContent.gridOf(posts: List<GalaxyPost>) {
-    val groupings = posts.groupBy { it.event?.startsAt }
-    groupings.forEach { grouping ->
-        val startsAt = grouping.key ?: return@forEach
-        val posts = grouping.value
-        centeredHeading(startsAt.toRelativeDayFormat(), modify(MarginTop1))
-        olist {
-            posts.forEach {
-                listItem {
-                    largeGridOf(it)
-                }
-            }
-        }
-    }
-}

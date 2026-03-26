@@ -5,7 +5,6 @@ import koala.html.TagContext
 import kotlinx.css.CssBuilder
 import kotlinx.css.RuleContainer
 import kotlinx.css.RuleSet
-import kotlinx.html.CoreAttributeGroupFacade
 import kotlinx.html.classes
 import kotlin.jvm.JvmInline
 
@@ -33,24 +32,24 @@ fun modify(css: Modifier, modifiers: ModifierSet?): ModifierSet {
 }
 fun modify(modifiers: ModifierSet?, vararg additional: Modifier) = (modifiers ?: emptySet()) + additional.toSet()
 
-fun TagContext.setModifiers(modifiers: ModifierSet?) {
+fun TagContext.addModifiers(modifiers: ModifierSet?) {
     modifiers?.let {
         classes += modifiers.map { it.value }
     }
 }
 
-fun TagContext.setModifiers(modifier: Modifier) {
+fun TagContext.addModifiers(modifier: Modifier) {
     classes += modifier.value
 }
 
-fun TagContext.setModifiers(css: Modifier, modifiers: ModifierSet?) {
+fun TagContext.addModifiers(css: Modifier, modifiers: ModifierSet?) {
     classes += css.value
     modifiers?.let {
         classes += modifiers.map { it.value }
     }
 }
 
-fun TagContext.setModifiers(modifiers: ModifierSet?, vararg modifier: Modifier?) {
+fun TagContext.addModifiers(modifiers: ModifierSet?, vararg modifier: Modifier?) {
     modifiers?.let {
         classes += modifiers.map { it.value }
     }

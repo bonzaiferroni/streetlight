@@ -2,7 +2,7 @@ package koala.html
 
 import koala.css.Css
 import koala.css.ModifierSet
-import koala.css.setModifiers
+import koala.css.addModifiers
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kotlinx.html.div
@@ -26,13 +26,13 @@ fun DIV.configureToggleBlock(
     cover: FlowContent.() -> Unit,
     block: (DIV.() -> Unit)? = null,
 ) {
-    setModifiers(ToggleBlock.root, modifiers)
+    addModifiers(ToggleBlock.root, modifiers)
     div {
-        setModifiers(ToggleBlock.base)
+        addModifiers(ToggleBlock.base)
         base()
     }
     div {
-        setModifiers(ToggleBlock.cover)
+        addModifiers(ToggleBlock.cover)
         cover()
     }
     switch(label)

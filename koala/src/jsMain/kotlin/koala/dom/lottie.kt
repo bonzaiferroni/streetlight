@@ -2,10 +2,7 @@ package koala.dom
 
 import koala.LottieFile
 import koala.core.initLottie
-import koala.css.ElementClass
 import koala.css.ModifierSet
-import koala.css.setModifiers
-import koala.html.TagAttribute
 import koala.html.configureLottie
 import kotlinx.html.DIV
 import kotlinx.html.js.div

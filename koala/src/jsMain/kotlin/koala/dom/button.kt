@@ -3,7 +3,7 @@ package koala.dom
 import koala.css.ElementClass
 import koala.css.ModifierSet
 import koala.css.StyleSet
-import koala.css.setModifiers
+import koala.css.addModifiers
 import koala.css.setStyle
 import koala.css.modify
 import koala.html.Id
@@ -27,7 +27,7 @@ fun RenderContext.button(
     block: (BUTTON.() -> Unit)? = null,
 ): HTMLButtonElement {
     val element = button {
-        setModifiers(modify(ElementClass.button, modifiers))
+        addModifiers(modify(ElementClass.button, modifiers))
         setId(id)
         setStyle(styles)
         +text

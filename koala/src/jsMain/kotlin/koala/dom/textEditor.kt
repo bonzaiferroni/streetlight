@@ -2,7 +2,7 @@ package koala.dom
 
 import koala.css.ModifierSet
 import koala.css.Width100
-import koala.css.setModifiers
+import koala.css.addModifiers
 import koala.html.Id
 import koala.html.TagAttribute
 import koala.html.setId
@@ -28,7 +28,7 @@ fun RenderContext.textEditor(
     block: (TEXTAREA.() -> Unit)? = null
 ): HTMLTextAreaElement {
     val parent = div {
-        setModifiers(modifiers)
+        addModifiers(modifiers)
         setAttribute(TagAttribute.blockLabel, label)
     }
 
@@ -36,7 +36,7 @@ fun RenderContext.textEditor(
     val element = parent.append {
         textArea {
             this.rows = rows.toString()
-            setModifiers(Width100, textModifiers)
+            addModifiers(Width100, textModifiers)
             setId(id)
             label?.let {
                 attributes["aria-label"] = it
