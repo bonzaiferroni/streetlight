@@ -17,8 +17,8 @@ object CssFiles: FileSet<CssFile>() {
     val logo = add("logo.css")
     val geoMap = add("geoMap.css")
     val elements = add("elements.css") // isGenerated = true
-    val genElements = add("gen-elements.css", isGenerated = true)
     val sandbox = add("sandbox.css")
+    val genElements = add("gen-elements.css", isGenerated = true)
     val utilities = add("utilities.css")
 }
 

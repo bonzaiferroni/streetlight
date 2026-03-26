@@ -30,7 +30,7 @@ fun <Item> RenderContext.itemsBlock(
     val parent = div {
         addModifiers(ElementClass.itemsBlock, modifiers)
         if (magic) {
-            classes += Magic.value
+            classes += Magic.identifier
         }
         config?.invoke(this)
     }

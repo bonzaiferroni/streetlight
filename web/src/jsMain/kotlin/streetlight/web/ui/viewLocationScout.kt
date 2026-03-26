@@ -69,7 +69,7 @@ fun ViewContext<LocationScout>.findPointStage() {
     column {
         card(modify(AlignItemsEnd)) {
             messageBox(model.messageFlow)
-            row(modify(JustifyEnd)) {
+            row(modify(JustifyContentEnd)) {
                 textBlock("Move the map target to the location.", modify(Dim))
                 button("Here", onClick = model::here)
             }
@@ -84,7 +84,7 @@ fun ViewContext<LocationScout>.findPointStage() {
             row(modify(AlignItemsStart)) {
                 column(modify(Flex1, AlignItemsEnd)) {
                     textField("search", modify(Width100), model::setQuery, queryFlow, placeholder = "Search by name or address")
-                    row(modify(JustifyEnd)) {
+                    row(modify(JustifyContentEnd)) {
                         textBlock("Limit search area to:", modify(Dim))
                         switch("map", onToggle = model::setLimitMap, bindFlow = limitMapFlow)
                         model.stateNow.city?.let {
@@ -174,7 +174,7 @@ fun ViewContext<LocationScout>.reviewStage(edit: LocationEdit) {
             }
         }
 
-        row(modify(JustifySpaceBetween)) {
+        row(modify(JustifyContentSpaceBetween)) {
             button("start over", modify(Secondary), onClick = model::reset)
             button("create", modify(Accent), onClick = model::postLocation)
         }

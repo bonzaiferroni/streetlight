@@ -24,7 +24,7 @@ fun FlowContent.galaxyShell(content: GalaxyProfileContent) {
                 setReveal(false)
             }
         }
-        row(modify(JustifySpaceBetween)) {
+        row(modify(JustifyContentSpaceBetween)) {
             row {
                 galaxyMenu(content.galaxies, galaxy)
                 switch("map", id = GalaxyProfileKey.MapSwitchId)

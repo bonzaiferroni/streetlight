@@ -9,14 +9,14 @@ import kotlinx.html.classes
 import kotlin.jvm.JvmInline
 
 interface Modifier: Queryable {
-    val value: String
+    val identifier: String
 
-    override val selector get() = ".$value"
+    override val selector get() = ".$identifier"
 }
 
 @JvmInline
-value class Css(override val value: String): Modifier {
-    override fun toString() = value
+value class Css(override val identifier: String): Modifier {
+    override fun toString() = identifier
 }
 
 typealias ModifierSet = Set<Modifier>
@@ -34,29 +34,29 @@ fun modify(modifiers: ModifierSet?, vararg additional: Modifier) = (modifiers ?:
 
 fun TagContext.addModifiers(modifiers: ModifierSet?) {
     modifiers?.let {
-        classes += modifiers.map { it.value }
+        classes += modifiers.map { it.identifier }
     }
 }
 
 fun TagContext.addModifiers(modifier: Modifier) {
-    classes += modifier.value
+    classes += modifier.identifier
 }
 
 fun TagContext.addModifiers(css: Modifier, modifiers: ModifierSet?) {
-    classes += css.value
+    classes += css.identifier
     modifiers?.let {
-        classes += modifiers.map { it.value }
+        classes += modifiers.map { it.identifier }
     }
 }
 
 fun TagContext.addModifiers(modifiers: ModifierSet?, vararg modifier: Modifier?) {
     modifiers?.let {
-        classes += modifiers.map { it.value }
+        classes += modifiers.map { it.identifier }
     }
-    classes += modifier.mapNotNull { it?.value }
+    classes += modifier.mapNotNull { it?.identifier }
 }
 
-fun RuleContainer.rule(modifier: Modifier, block: RuleSet) = rule(".${modifier.value}", block)
+fun RuleContainer.rule(modifier: Modifier, block: RuleSet) = rule(".${modifier.identifier}", block)
 
 fun CssBuilder.printCss(block: () -> Unit) {
     val len = toString().length

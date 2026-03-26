@@ -12,17 +12,26 @@ fun FlowContent.homeShell(content: HomeContent) {
 
         // val galaxyStars = content.galaxies.map { GalaxyStar(it.pathId, it.name, it.imageUrl) }
 
-        row(modify(JustifySpaceBetween)) {
+        row(modify(JustifyContentSpaceBetween)) {
             galaxyMenu(content.galaxies, null)
             switch("bruh", id = Id("ey"))
         }
 
+        section {
+            column(modify(Gap0)) {
+                sectionHeading("Galaxies")
+                textBlock(
+                    content = "Galaxies are Streetlight communities, each with a particular focus.",
+                    modifiers = modify(Dim, TextAlignCenter)
+                )
+            }
 
-        column {
-            heading3("Galaxies")
-            textBlock("Galaxies are Streetlight communities, each with a particular focus.", modify(Dim))
-            content.galaxies.forEach { galaxy ->
-                cardOf(galaxy)
+            ulist {
+                content.galaxies.forEach { galaxy ->
+                    listItem {
+                        cardOf(galaxy)
+                    }
+                }
             }
         }
 

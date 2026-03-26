@@ -15,10 +15,10 @@ import org.w3c.dom.Node
 import org.w3c.dom.asList
 import org.w3c.dom.css.CSSStyleDeclaration
 
-fun Element.unmodify(vararg modifier: Modifier) = modifier.forEach { classList.remove(it.value) }
-fun Element.modify(vararg modifier: Modifier) = modifier.forEach { classList.add(it.value) }
-fun Element.unmodify(modifiers: Collection<Modifier>) = modifiers.forEach { classList.remove(it.value) }
-fun Element.modify(modifiers: Collection<Modifier>) = modifiers.forEach { classList.add(it.value) }
+fun Element.unmodify(vararg modifier: Modifier) = modifier.forEach { classList.remove(it.identifier) }
+fun Element.modify(vararg modifier: Modifier) = modifier.forEach { classList.add(it.identifier) }
+fun Element.unmodify(modifiers: Collection<Modifier>) = modifiers.forEach { classList.remove(it.identifier) }
+fun Element.modify(modifiers: Collection<Modifier>) = modifiers.forEach { classList.add(it.identifier) }
 
 fun Node.modify(vararg modifier: Modifier) {
     val element = this as? Element ?: error("not an element")

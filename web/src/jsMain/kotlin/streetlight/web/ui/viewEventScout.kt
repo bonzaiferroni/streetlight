@@ -94,7 +94,7 @@ fun ViewContext<EventScout>.createEventPanel(location: Location?) {
 
         card {
             viewEventEditor(model.stateNow.eventEdit, model.app, editFlow.filterNotNull(), model::setEventEdit)
-            row(modify(JustifySpaceBetween)) {
+            row(modify(JustifyContentSpaceBetween)) {
                 button("start over", onClick = model::reset)
                 row {
                     messageBox(model.validEventFlow)
@@ -119,7 +119,7 @@ fun ViewContext<EventScout>.reviewLocationPanel(locationEdit: LocationEdit) {
 
         card {
             viewLocationEditor(locationEdit, model.app, editFlow, model::setEdit)
-            row(modify(JustifySpaceBetween)) {
+            row(modify(JustifyContentSpaceBetween)) {
                 button("start over", modify(Secondary), onClick = model::reset)
                 button("create location", modify(Accent), onClick = model::postLocation)
             }
@@ -133,7 +133,7 @@ fun ViewContext<EventScout>.findLocationPanel() {
 
     card {
         messageBox(model.messageFlow)
-        row(modify(JustifyEnd)) {
+        row(modify(JustifyContentEnd)) {
             textBlock("Move the map target to the location.", modify(Dim))
             button("Here", onClick = model::here)
         }

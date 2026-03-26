@@ -6,7 +6,7 @@ import streetlight.web.model.Streetlight
 
 fun RenderContext.viewChatRoom(app: Streetlight) {
     val model = app.chatRoom
-    val element = column(modify(JustifyEnd)) {
+    val element = column(modify(JustifyContentEnd)) {
         itemsBlock(model.messagesFlow, modify(Magic, Blur, SlideLeft), true) { message ->
             textBlock("${message.source}: ${message.text}")
         }

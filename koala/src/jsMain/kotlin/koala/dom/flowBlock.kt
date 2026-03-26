@@ -29,7 +29,7 @@ fun <State> RenderContext.flowBlock(
     val element = div {
         addModifiers(ElementClass.flowBlock, modifiers)
         if (magic) {
-            classes += Magic.value
+            classes += Magic.identifier
         }
         config?.invoke(this)
     }

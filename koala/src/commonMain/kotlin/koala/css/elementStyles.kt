@@ -27,7 +27,7 @@ object ElementClass {
     val carousel = Css("carousel")
 }
 
-val kotlinElementStyles = listOf(
+val kotlinElementStyles get() = listOf(
     IconStyles,
     LOGO_STYLES,
     LISTING_STYLES,
@@ -35,4 +35,5 @@ val kotlinElementStyles = listOf(
     PopoverStyle,
     SwapBlockStyle,
     SectionStyles,
+    layoutUtilities.mapNotNull{ it.definition }.joinToString("\n")
 )

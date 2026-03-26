@@ -56,7 +56,7 @@ fun ViewContext<Streetlight>.viewProfileEditor() {
                         }
                     }
                 }
-                row(modify(JustifySpaceBetween)) {
+                row(modify(JustifyContentSpaceBetween)) {
                     button("cancel", onClick = { portal.goBack() })
                     button("update", modify(Accent), onClick = ::update)
                 }

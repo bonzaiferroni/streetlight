@@ -9,22 +9,22 @@ import kotlinx.css.display
 import kotlinx.css.flexDirection
 import kotlinx.css.gap
 
-object Column : Modifier { override val value = "column" }
-object Row : Modifier { override val value = "row" }
-object QueryMediumRow: Modifier { override val value = "query-medium-row" }
-object QueryMediumColumn: Modifier { override val value = "query-medium-column" }
-object QueryMediumFlex1: Modifier { override val value = "query-medium-flex-1" }
-object QueryMediumFlex2: Modifier { override val value = "query-medium-flex-2" }
-object QueryMediumFlex3: Modifier { override val value = "query-medium-flex-3" }
-object QueryMediumFlex4: Modifier { override val value = "query-medium-flex-4" }
-object QueryLargeRow: Modifier { override val value = "query-large-row" }
-object QueryLargeColumn: Modifier { override val value = "query-large-column" }
-object QueryLargeFlex1: Modifier { override val value = "query-large-flex-1" }
-object QueryLargeFlex2: Modifier { override val value = "query-large-flex-2" }
-object QueryLargeFlex3: Modifier { override val value = "query-large-flex-3" }
-object QueryLargeFlex4: Modifier { override val value = "query-large-flex-4" }
-object Card : Modifier { override val value = "card" }
-object Box : Modifier { override val value = "box"}
+object Column : Modifier { override val identifier = "column" }
+object Row : Modifier { override val identifier = "row" }
+object QueryMediumRow: Modifier { override val identifier = "query-medium-row" }
+object QueryMediumColumn: Modifier { override val identifier = "query-medium-column" }
+object QueryMediumFlex1: Modifier { override val identifier = "query-medium-flex-1" }
+object QueryMediumFlex2: Modifier { override val identifier = "query-medium-flex-2" }
+object QueryMediumFlex3: Modifier { override val identifier = "query-medium-flex-3" }
+object QueryMediumFlex4: Modifier { override val identifier = "query-medium-flex-4" }
+object QueryLargeRow: Modifier { override val identifier = "query-large-row" }
+object QueryLargeColumn: Modifier { override val identifier = "query-large-column" }
+object QueryLargeFlex1: Modifier { override val identifier = "query-large-flex-1" }
+object QueryLargeFlex2: Modifier { override val identifier = "query-large-flex-2" }
+object QueryLargeFlex3: Modifier { override val identifier = "query-large-flex-3" }
+object QueryLargeFlex4: Modifier { override val identifier = "query-large-flex-4" }
+object Card : Modifier { override val identifier = "card" }
+object Box : Modifier { override val identifier = "box"}
 
 fun CssBuilder.layout(theme: KoalaTheme) {
     // layouts

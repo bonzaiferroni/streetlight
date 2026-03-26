@@ -1,20 +1,16 @@
 package koala.dom
 
-import koala.css.KoalaTheme
 import koala.css.Magic
 import koala.css.Reveal
 import koala.css.StyleProperty
 import koala.html.Id
 import koala.html.Queryable
 import kotlinx.browser.window
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.css.Display
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.asList
-import kotlin.time.Duration.Companion.seconds
 
 fun RenderContext.wireSwapBlock(
     element: HTMLElement,
@@ -22,7 +18,7 @@ fun RenderContext.wireSwapBlock(
 ) {
     bindFlow?.let { flow ->
         val children = element.children.asList().map { it as HTMLElement }
-        val isMagic = element.classList.contains(Magic.value)
+        val isMagic = element.classList.contains(Magic.identifier)
         renderScope.launch {
             var isInitial = true
             flow.collect { id ->
