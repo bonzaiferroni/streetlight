@@ -19,7 +19,7 @@ enum class StreetlightScreen(
     override val pathRoot: String,
     override val provideRoute: (List<String>) -> AppRoute?
 ): AppScreen {
-    Home("home", { HomeRoute() }),
+    Home("home", { HomeRoute }),
     Account("account", { AccountRoute }),
     Event("event", { path -> path.provideRouteFromPath { EventIdRoute(EventId(it)) }  }),
     EditEvent("edit-event", { path -> EditEventIdRoute(path.provideId { EventId(it) }) }),
@@ -62,9 +62,7 @@ sealed interface PathIdRoute: StreetlightRoute {
     override fun toHashPath() = pathId?.let { "${super.toHashPath()}/${it}" } ?: super.toHashPath()
 }
 
-data class HomeRoute(
-    val tab: String? = null
-): StreetlightRoute {
+object HomeRoute: StreetlightRoute {
     override val screen get() = StreetlightScreen.Home
     override val title get() = "Home"
 }

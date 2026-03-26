@@ -26,7 +26,7 @@ fun FlowContent.galaxyShell(content: GalaxyProfileContent) {
         }
         row(modify(JustifySpaceBetween)) {
             row {
-                galaxyMenu(content.galaxies)
+                galaxyMenu(content.galaxies, galaxy)
                 switch("map", id = GalaxyProfileKey.MapSwitchId)
             }
             btn("Post Event", EventScoutRoute(galaxy.pathId), modify(Accent))

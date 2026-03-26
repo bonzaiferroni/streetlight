@@ -34,7 +34,7 @@ fun RenderContext.viewEventRoute(
         }
 
         button("go home", onClickEvent = {
-            app.portal.go(HomeRoute())
+            app.portal.go(HomeRoute)
         })
     }
 }

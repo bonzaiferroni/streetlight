@@ -25,7 +25,7 @@ fun RenderContext.viewUserHub(
     column {
         row {
             textBlock("Hello ${user.username}!", modify(Flex1))
-            button("go home", onClick = { portal.go(HomeRoute()) })
+            button("go home", onClick = { portal.go(HomeRoute) })
             button("sign out", onClick = gate::signOut)
         }
 

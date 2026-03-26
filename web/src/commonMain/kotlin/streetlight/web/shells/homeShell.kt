@@ -14,7 +14,7 @@ fun FlowContent.homeShell(content: HomeContent) {
         // val galaxyStars = content.galaxies.map { GalaxyStar(it.pathId, it.name, it.imageUrl) }
 
         row(modify(JustifySpaceBetween)) {
-            galaxyMenu(content.galaxies)
+            galaxyMenu(content.galaxies, null)
             switch("bruh", id = Id("ey"))
         }
 

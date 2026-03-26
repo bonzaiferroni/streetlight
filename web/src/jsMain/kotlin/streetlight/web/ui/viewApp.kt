@@ -41,12 +41,12 @@ fun viewApp() {
     val cred = UserCred()
     val fetchClient = FetchClient(cred)
 
-    val app = object: Streetlight { // 220 KB
+    val app = object : Streetlight { // 220 KB
         override val appScope = scope
 
         override val config = SiteConfig()
 
-        override val client = object: ClientContext {
+        override val client = object : ClientContext {
             override val transit = TransitBrowserClient(fetchClient)
             override val api = ApiClient(fetchClient)
             override val location = OSMFetchClient()
@@ -54,7 +54,7 @@ fun viewApp() {
 
         override val gate = UserGate(scope, cred, client.api)
         override val userCache = UserCache(scope, client.api, gate)
-        override val portal = Portal(HomeRoute(), StreetlightScreen.entries, scope)
+        override val portal = Portal(HomeRoute, StreetlightScreen.entries, scope)
         override val gateAgent = GateAgent(scope, gate, portal)
 
         override val geoMap = GeoMap(scope)

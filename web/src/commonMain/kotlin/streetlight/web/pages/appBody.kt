@@ -35,7 +35,7 @@ fun HTML.appBody(
 
 fun FlowContent.appHeader() {
     row(modify(MinHeightAuto)) {
-        action(HomeRoute(), modify(Flex1)) {
+        action(HomeRoute, modify(Flex1)) {
             row(modify(AlignItemsCenter)) {
                 logo(modify(Height6))
 //                image("/www/svg/flame.svg", modify(Height6, Glow))

@@ -67,7 +67,7 @@ fun RenderContext.signInContent(
             checkBox("Stay signed in", cred::setStayLoggedIn, cred.stayLoggedInFlow)
             row {
                 button("go home", onClickEvent = {
-                    portal.go(HomeRoute())
+                    portal.go(HomeRoute)
                 })
                 button("sign in", modifiers = modify(Accent), onClickEvent = {
                     gate.signIn()
