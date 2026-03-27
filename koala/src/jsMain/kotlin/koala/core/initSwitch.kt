@@ -6,11 +6,12 @@ import koala.dom.sendCustomEvent
 import koala.dom.setAttribute
 import koala.html.TagAttribute
 import koala.html.ElementEvent
+import koala.html.SwitchKey
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.asList
 
 fun findAndInitSwitches(ancestor: HTMLElement) {
-    val elements = ancestor.querySelectorAll(ElementClass.switch.selector).asList()
+    val elements = ancestor.querySelectorAll(SwitchKey.Class.selector).asList()
     elements.forEach { element ->
         initSwitch(element as HTMLElement)
     }

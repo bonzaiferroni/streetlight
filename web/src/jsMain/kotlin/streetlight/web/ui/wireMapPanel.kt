@@ -4,18 +4,13 @@ import koala.css.AlignItemsCenter
 import koala.css.Magic
 import koala.css.Blur
 import koala.css.Css
-import koala.css.CircleShape
-import koala.css.Height3
 import koala.css.SlideLeft
-import koala.css.Width100
 import koala.css.modify
 import koala.dom.*
 import koala.html.GeoMapSelector
 import koala.html.Id
 import koala.html.heading2
-import koala.html.image
-import koala.html.label
-import koala.model.mapDistinct
+import koala.html.textLabel
 import kotlinx.coroutines.launch
 import kotlinx.html.js.div
 import streetlight.web.HomeRoute
@@ -61,8 +56,8 @@ fun RenderContext.mapPanelCard(label: String, block: RenderContext.() -> Unit) {
         container(modify(MapPanel.grid, AlignItemsCenter)) {
             heading2(label, modify(MapPanel.cardHeading))
             div { }
-            label("visibility")
-            label("starts")
+            textLabel("visibility")
+            textLabel("starts")
         }
         block()
     }

@@ -1,6 +1,6 @@
 package koala.css
 
-val displayUtilities
+val DisplayUtilityCss
     get() = listOf(
         // Display
         DisplayNone,

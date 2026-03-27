@@ -1,6 +1,7 @@
 package koala.dom
 
 import koala.css.*
+import koala.html.FilePickerKey
 import kotlinx.html.InputType
 import kotlinx.html.hidden
 import kotlinx.html.js.*
@@ -22,7 +23,7 @@ fun DOMContext.filePicker(
     var preview: HTMLImageElement
     var dropZone: HTMLDivElement
     val element = div {
-        addModifiers(modifiers)
+        addModifiers(FilePickerKey.Class, modifiers)
 
         input = input {
             type = InputType.file
@@ -31,7 +32,7 @@ fun DOMContext.filePicker(
         }
 
         dropZone = div {
-            addModifiers(FilePickerClass.dropZone)
+            addModifiers(FilePickerKey.DropZone)
             +"Click here"
             br { }
             +"— or —"
@@ -62,7 +63,7 @@ fun DOMContext.filePicker(
     element.addEventListener("drop", { event ->
         val event = event as DragEvent
         event.preventDefault()
-        element.unmodify(FilePickerClass.dragover)
+        element.unmodify(FilePickerKey.DragOver)
         handleFile(event.dataTransfer?.files?.get(0))
     })
 
@@ -72,21 +73,16 @@ fun DOMContext.filePicker(
 
     element.addEventListener("dragover", { event ->
         event.preventDefault()
-        element.modify(FilePickerClass.dragover)
+        element.modify(FilePickerKey.DragOver)
     })
 
     element.addEventListener("dragleave", {
-        element.unmodify(FilePickerClass.dragover)
+        element.unmodify(FilePickerKey.DragOver)
     })
 
     input.addEventListener("change", { _ ->
         handleFile(input.files?.get(0))
     })
-}
-
-object FilePickerClass {
-    val dropZone = Css("file-picker-drop-zone")
-    val dragover = Css("dragover")
 }
 
 enum class MimeType(val label: String) {
@@ -95,42 +91,3 @@ enum class MimeType(val label: String) {
 
     val expression get() = "$label/*"
 }
-
-// <div id="dropZone" class="drop-zone">
-//    Drop yer image here or click to choose
-//    <input id="imgPick" type="file" accept="image/*" hidden>
-//</div>
-//<img id="preview" alt="">
-
-// const zone = document.getElementById("dropZone");
-//const input = document.getElementById("imgPick");
-//const preview = document.getElementById("preview");
-//
-//const handleFile = (file) => {
-//    if (!file || !file.type.startsWith("image/")) return;
-//    preview.src = URL.createObjectURL(file);
-//};
-//
-//zone.addEventListener("click", () => {
-//    input.value = "";
-//    input.click();
-//});
-//
-//input.addEventListener("change", () => {
-//    handleFile(input.files?.[0]);
-//});
-//
-//zone.addEventListener("dragover", (e) => {
-//    e.preventDefault();
-//    zone.classList.add("dragover");
-//});
-//
-//zone.addEventListener("dragleave", () => {
-//    zone.classList.remove("dragover");
-//});
-//
-//zone.addEventListener("drop", (e) => {
-//    e.preventDefault();
-//    zone.classList.remove("dragover");
-//    handleFile(e.dataTransfer.files?.[0]);
-//});

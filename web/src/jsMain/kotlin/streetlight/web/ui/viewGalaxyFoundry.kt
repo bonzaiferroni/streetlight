@@ -2,7 +2,7 @@ package streetlight.web.ui
 
 import koala.css.*
 import koala.dom.*
-import koala.html.headerOf
+import koala.html.headerImage
 import koala.model.mapDistinct
 import streetlight.web.model.Streetlight
 import streetlight.web.model.GalaxyFoundry
@@ -21,7 +21,7 @@ fun RenderContext.viewGalaxyFoundry(app: Streetlight) {
         }
         imageDrop(blobFlow, model::setBlobUrl) {
             box {
-                headerOf(model.stateNow.galaxy.name ?: "", it)
+                headerImage(model.stateNow.galaxy.name ?: "", it)
             }
         }
     }

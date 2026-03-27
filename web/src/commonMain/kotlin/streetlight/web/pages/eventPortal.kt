@@ -96,7 +96,7 @@ fun FlowContent.requestItem(
 
         row(modify(Flex1)) {
             column(modify(Flex1, Gap0, WidthAuto)) {
-                textBlock(song.title, modify(Bold))
+                textBlock(song.title, modify(FontWeightBold))
                 textBlock(song.artist)
             }
             column(modify(Gap0, AlignItemsCenter, WidthAuto)) {

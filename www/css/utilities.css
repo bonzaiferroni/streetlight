@@ -46,13 +46,9 @@
 }
 */
 
-.bold {
-    font-weight: bold;
-}
-
-.italic {
-    font-style: italic;
-}
+/*.italic {*/
+/*    font-style: italic;*/
+/*}*/
 
 /*
 .display-none {
@@ -72,9 +68,9 @@
 }
 */
 
-.fill-width {
-    width: 100%
-}
+/*.fill-width {*/
+/*    width: 100%*/
+/*}*/
 
 /*
 .dim {
@@ -112,17 +108,9 @@
 }
 */
 
-.no-gap {
-    gap: 0 !important;
-}
+/*.large-font { font-size: 1.4rem; }*/
 
-.large-font {
-    font-size: 1.4rem;
-}
-
-.small-font {
-    font-size: 0.8rem;
-}
+/*.small-font { font-size: 0.8rem; }*/
 
 /*
 .text-align-center {
@@ -136,9 +124,9 @@
 }
 */
 
-.white-space-normal {
-    white-space: normal;
-}
+/*.white-space-normal {*/
+/*    white-space: normal;*/
+/*}*/
 
 /*
 .circle-shape {
@@ -178,16 +166,6 @@
     border-radius: calc(var(--unit-spacing) * 4);
 }
 */
-
-.heading-1, input.heading-1 {
-    font-size: var(--heading-1-size);
-    font-weight: var(--heading-1-weight);
-}
-
-.heading-2, input.heading-2 {
-    font-size: var(--heading-2-size);
-    font-weight: var(--heading-2-weight);
-}
 
 /*
 .margin-top-1 {
@@ -694,58 +672,14 @@
 }
 */
 
-.object-fit-cover {
-    object-fit: cover;
-}
+/*.object-fit-cover {*/
+/*    object-fit: cover;*/
+/*}*/
 
-.object-fit-contain {
-    object-fit: contain;
-}
+/*.object-fit-contain {*/
+/*    object-fit: contain;*/
+/*}*/
 
-.object-position-center {
-    object-position: center;
-}
-
-/*
-.fade-bottom {
-    -webkit-mask-image: linear-gradient(
-            to bottom,
-            black 0,
-            black calc(100% - 1rem),
-            transparent 100%
-    );
-    mask-image: linear-gradient(
-            to bottom,
-            black 0,
-            black calc(100% - 1rem),
-            transparent 100%
-    );
-}
-*/
-
-/*
-.relative-parent {
-    position: relative;
-}
-.relative-parent > * {
-    position: absolute;
-    inset: 0;
-}
-*/
-
-/*
-.z-index-1 {
-    z-index: 1;
-}
-*/
-
-/*
-.blur-backdrop {
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-}
-*/
-
-.line-height-1 {
-    line-height: 1;
-}
+/*.object-position-center {*/
+/*    object-position: center;*/
+/*}*/

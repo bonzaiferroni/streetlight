@@ -54,7 +54,7 @@ object ListKey {
 }
 
 // language="CSS"
-const val LISTING_STYLES = """
+val ListingCss get() = """
 .listing {
     display: flex;
     min-width: 0;

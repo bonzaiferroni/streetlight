@@ -95,7 +95,6 @@ fun ViewContext<EventEditor>.primaryFields() {
                 onChangeValue = model::setEventTitle,
                 bindFlow = model.titleFlow,
                 modifiers = modify(Width100),
-                textModifiers = modify(Heading2),
                 placeholder = "Event Title"
             )
             row {

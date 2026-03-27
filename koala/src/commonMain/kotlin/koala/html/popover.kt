@@ -45,7 +45,7 @@ object PopoverElement {
 }
 
 // language="CSS"
-val PopoverStyle get() = """
+val PopoverCss get() = """
 .popover {
     position: absolute;
     inset: auto;

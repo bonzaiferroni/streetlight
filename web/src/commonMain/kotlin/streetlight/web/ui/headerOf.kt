@@ -1,7 +1,7 @@
 package streetlight.web.ui
 
 import koala.css.ModifierSet
-import koala.html.headerOf
+import koala.html.headerImage
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import streetlight.model.data.Galaxy
@@ -12,7 +12,7 @@ fun FlowContent.headerOf(
     modifiers: ModifierSet? = null,
     block: DIV.() -> Unit = {}
 ) {
-    headerOf(location.name, location.imageUrl, modifiers, block)
+    headerImage(location.name, location.imageUrl, modifiers, block)
 }
 
 fun FlowContent.headerOf(
@@ -20,5 +20,5 @@ fun FlowContent.headerOf(
     modifiers: ModifierSet? = null,
     block: DIV.() -> Unit = {}
 ) {
-    headerOf(galaxy.name, galaxy.imageUrl, modifiers, block)
+    headerImage(galaxy.name, galaxy.imageUrl, modifiers, block)
 }

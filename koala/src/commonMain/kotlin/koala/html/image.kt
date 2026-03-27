@@ -35,5 +35,3 @@ object SiteImage {
 }
 
 private fun imagePathOf(filename: String) = "/www/img/$filename"
-
-object ThumbImage: Modifier { override val identifier = "thumb-image" }

@@ -27,7 +27,7 @@ fun FlowContent.aboutApp() {
                     textBlock("Do you have a business, venue, or message you would like to promote?")
                     textBlock("Are you walking down the street somewhere and looking for something to experience?")
                 }
-                textBlock("Consider downloading Streetlight to see what it can offer.", modify(Bold))
+                textBlock("Consider downloading Streetlight to see what it can offer.", modify(FontWeightBold))
             }
         }
         column(modify(QueryMediumRow, AlignItemsCenter)) {

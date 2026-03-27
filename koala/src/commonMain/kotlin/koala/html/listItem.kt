@@ -33,7 +33,7 @@ object ListItemKey {
 }
 
 // language="CSS"
-const val LIST_ITEM_STYLES = """
+const val ListItemCss = """
 .list-item {
     min-width: 0;
 }

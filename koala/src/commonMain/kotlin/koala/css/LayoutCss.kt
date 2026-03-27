@@ -1,3 +1,7 @@
+package koala.css
+
+// language="CSS"
+val LayoutCss get() = """
 .column {
     display: flex;
     flex-direction: column;
@@ -128,3 +132,4 @@
         flex: 4;
     }
 }
+"""

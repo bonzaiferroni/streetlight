@@ -3,18 +3,6 @@ package koala.html
 import kotlinx.html.*
 import koala.css.*
 
-inline fun FlowContent.label(
-    content: String,
-    modifiers: ModifierSet? = null,
-    crossinline block: (P.() -> Unit) = { }
-) {
-    p {
-        addModifiers(ElementClass.textLabel, modifiers)
-        block()
-        +content
-    }
-}
-
 inline fun FlowContent.textBlock(
     content: String = "",
     modifiers: ModifierSet? = null,

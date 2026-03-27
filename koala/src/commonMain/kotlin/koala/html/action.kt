@@ -1,5 +1,6 @@
 package koala.html
 
+import koala.css.Css
 import koala.css.ElementClass
 import koala.css.ModifierSet
 import koala.css.StyleSet
@@ -20,7 +21,7 @@ fun FlowContent.action(
 ) {
     a {
         setId(id)
-        addModifiers(modify(ElementClass.action, modifiers))
+        addModifiers(modify(ActionKey.Class, modifiers))
         setStyle(styles)
         href?.let { this.href = href }
         block?.invoke(this)
@@ -59,3 +60,19 @@ fun FlowContent.actionIfNotNull(
         action(href = href, text = text, modifiers = modifiers, id = id, block = block)
     }
 }
+
+object ActionKey {
+    val Class = Css("action")
+}
+
+// language="CSS"
+val ActionCss get() = """
+.action {
+    /*transition: opacity 0.35s ease;*/
+    cursor: pointer;
+}
+
+.action:hover {
+    /*opacity: 1;*/
+}
+"""

@@ -8,15 +8,19 @@ fun FlowContent.logo(
     modifiers: ModifierSet? = null
 ) {
     div {
-        addModifiers(ElementClass.logo, modifiers)
+        addModifiers(LogoKey.Class, modifiers)
         div {
             setStyle(StyleProperty.maskUrl.to(UrlValue(SvgFiles.Flame)))
         }
     }
 }
 
+object LogoKey {
+    val Class = Css("logo")
+}
+
 // language="CSS"
-const val LOGO_STYLES = """
+val LogoCss get() = """
 .logo {
     display: flex;
     height: 100%;

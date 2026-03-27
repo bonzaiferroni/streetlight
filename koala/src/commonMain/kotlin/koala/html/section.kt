@@ -20,7 +20,7 @@ object SectionKey {
 }
 
 // language="CSS"
-val SectionStyles get() = """
+val SectionCss get() = """
 .section {
     display: flex;
     flex-direction: column;

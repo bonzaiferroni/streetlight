@@ -3,6 +3,7 @@ package koala.dom
 import initElement
 import koala.css.*
 import koala.html.Id
+import koala.html.ShellBoxKey
 import koala.model.GeoMap
 import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
@@ -18,7 +19,7 @@ fun RenderContext.shellBox(
     return if (shell != null) {
         console.log("grabbing shell: $id")
         val element = container {
-            addModifiers(ElementClass.shellBox, modifiers)
+            addModifiers(ShellBoxKey.Class, modifiers)
         }
 
         element.append(shell)
@@ -26,7 +27,7 @@ fun RenderContext.shellBox(
     } else {
         console.log("generating shell: $id")
         val element = container {
-            addModifiers(ElementClass.shellBox, modifiers)
+            addModifiers(ShellBoxKey.Class, modifiers)
             block()
         }
 

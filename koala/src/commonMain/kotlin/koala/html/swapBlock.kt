@@ -35,7 +35,7 @@ object SwapBlockKey {
 }
 
 // language="CSS"
-val SwapBlockStyle get() = """
+val SwapBlockCss get() = """
 .swap-block {
     display: grid;
     min-width: 0;

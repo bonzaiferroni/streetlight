@@ -1,18 +1,6 @@
 package koala.html
 
-import koala.css.AlignItemsStart
-import koala.css.BorderRadius1
-import koala.css.Card
-import koala.css.Flex1
-import koala.css.Gap0
-import koala.css.Height100
-import koala.css.Height8
-import koala.css.ModifierSet
-import koala.css.OverflowHidden
-import koala.css.Square
-import koala.css.Width100
-import koala.css.addModifiers
-import koala.css.modify
+import koala.css.*
 import kotlinx.html.DIV
 
 import kotlinx.html.FlowContent

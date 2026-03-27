@@ -1,10 +1,10 @@
 package koala.html
 
 import koala.CssFile
-import koala.CssFiles
 import koala.JsFile
 import koala.JsFiles
 import koala.SiteFile
+import koala.css.CssManifest
 import kotlinx.html.*
 
 fun HTML.appHead(
@@ -20,9 +20,15 @@ fun HTML.appHead(
             defer = true
         }
         applyFiles(JsFiles)
-        applyFiles(CssFiles)
+        style {
+            unsafe {
+                +inlineStyles
+            }
+        }
     }
 }
+
+val inlineStyles by lazy { CssManifest.joinToString("\n") }
 
 fun HEAD.applyFiles(files: Collection<SiteFile>) {
     files.forEach { applyFile(it) }

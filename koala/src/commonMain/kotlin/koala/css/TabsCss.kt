@@ -1,0 +1,85 @@
+package koala.css
+
+// language="CSS"
+val TabsCss get() = """
+.tabs-header {
+    background-color: rgba(var(--paper), 0.4);
+    display: flex;
+    gap: 0.5rem;
+    border-radius: 24px 24px 12px 12px;
+    width: 100%;
+}
+
+.tabs-button {
+    flex: 1 1 0;
+    min-width: 0;
+    white-space: nowrap;
+    padding: 0.5rem 1rem;
+    border-radius: 24px 24px 12px 12px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    text-align: center;
+    user-select: none;
+}
+
+.tabs-button.is-active {
+    background-color: rgb(var(--primary), 0.4);
+    cursor: default;
+    animation: glow-shadow 10s infinite linear;
+}
+
+.tabs-button:not(.is-active):hover {
+    background-color: rgba(var(--primary), 0.1);
+}
+
+/* Viewport container created by tabs.kt */
+.tabs-viewport {
+    position: relative;
+    transition: height 200ms ease;
+    width: 100%;
+}
+
+/* Panels stacked inside .tabs-viewport */
+.tabs-panel {
+    position: absolute;
+    display: none;
+    inset: 0;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(0);
+    transition: opacity 200ms ease, transform 200ms ease;
+}
+
+/* Active panel (visible state) */
+.tabs-panel.is-active {
+    display: block;
+    position: relative;
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(0);
+}
+
+/* Simplified enter/exit with direction helpers */
+.tabs-panel.enter,
+.tabs-panel.exit {
+    opacity: 0;
+    display: block;
+}
+
+/* During animation, keep active panel absolute so both can overlap */
+.tabs-viewport.animating .tabs-panel.is-active {
+    position: absolute;
+}
+
+/* Stacking order: ensure both entrance and exit are visible */
+.tabs-panel { z-index: 0; }
+.tabs-panel.exit { z-index: 1; }
+.tabs-panel.enter { z-index: 2; }
+
+.tabs-panel.dir-left { --shift: -20px; }
+.tabs-panel.dir-right { --shift: 20px; }
+
+.tabs-panel.enter { transform: translateX(var(--shift)); }
+.tabs-panel.exit  { transform: translateX(var(--shift)); }
+
+"""

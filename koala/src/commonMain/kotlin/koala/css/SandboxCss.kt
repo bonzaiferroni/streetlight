@@ -1,0 +1,191 @@
+package koala.css
+
+// language="CSS"
+val SandboxCss get() = """
+[block-label] {
+    position: relative;
+}
+
+[block-label] > * {
+    width: 100%;
+}
+
+[block-label]::after {
+    content: attr(block-label);
+    position: absolute;
+    top: -0.38rem;
+    right: .5rem;
+
+    font-size: 0.65rem;
+    padding: 0.12rem 0.5rem;
+
+    background: var(--void-border);
+    color: var(--white-dim);
+    line-height: 1;
+    max-width: 75%;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
+    border-radius: 0.4rem;
+    box-shadow: 0 0 0.4rem var(--shadow);
+}
+
+[block-label].start::after {
+    left: .5rem;
+    right: auto;
+}
+
+[block-label].center::after {
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+}
+
+#viewport-box {
+    position: relative;
+    width: 100vw;
+    height: 100dvh;
+}
+
+#app-box {
+    position: relative;
+    min-height: 100vh;
+    width: 100%;
+    max-width: var(--body-width);
+    margin: 0 auto;
+    padding: var(--unit-spacing);
+}
+
+#content-box {
+    width: 100%;
+    display: grid;
+}
+
+#portal-mount,
+#shell-box {
+    width: 100%;
+    grid-area: 1 / 1;
+    min-width: 0;
+}
+
+#portal-mount > *,
+#shell-box > * {
+    width: 100%;
+}
+
+#fullscreen-mount {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+}
+
+#fullscreen-mount.reveal {
+    display: block;
+}
+
+textarea {
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    resize: none;
+    overflow: auto;
+}
+
+.set-image {
+    border-radius: var(--unit-spacing);
+    position: relative;
+}
+
+.set-image > img {
+    margin: auto;
+}
+
+.set-image-placeholder {
+    background-color: var(--card-bg);
+    height: 100%;
+    width: 100%;
+    position: absolute;
+}
+
+.set-image-placeholder::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+
+    background: var(--gray-fg);     /* SVG color */
+    mask: url("/www/svg/image-placeholder.svg") no-repeat center / 2rem;
+    -webkit-mask: url("/www/svg/image-placeholder.svg") no-repeat center / 2rem;
+
+    pointer-events: none;
+}
+
+/*dialog-box*/
+
+.dialog-box {
+    position: fixed;
+    inset: 0;
+    margin: auto;
+
+    border-radius: var(--unit-spacing);
+    box-shadow: 0 0 var(--unit-spacing) var(--shadow);
+    background-color: var(--primary-bg);
+    padding: var(--unit-spacing);
+    color: rgb(var(--ink));
+    border: none;
+    outline: none;
+    max-width: var(--body-width);
+    overflow-x: hidden;
+
+    opacity: 0;
+    transform: translateY(10px);
+
+    transition:
+            opacity 200ms ease-in-out,
+            transform 200ms ease-in-out;
+}
+
+.dialog-box[open].reveal {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.dialog-box::backdrop {
+    backdrop-filter: blur(0px);
+    -webkit-backdrop-filter: blur(0px);
+}
+
+.dialog-box[open].reveal::backdrop {
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
+/*file-picker*/
+
+
+/*fullscreen-box*/
+
+.fullscreen-box {
+    position: fixed;
+    inset: 0;
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+    max-width: none;
+    max-height: none;
+    border: none;
+    border-radius: 0;
+
+    box-sizing: border-box;
+    background: var(--paper-bg);
+    color: rgb(var(--ink));
+}
+
+/*thumb image*/
+
+/*.thumb-image {*/
+/*    width: 64px;*/
+/*    height: 64px;*/
+/*    border-radius: 32px;*/
+/*}*/
+"""

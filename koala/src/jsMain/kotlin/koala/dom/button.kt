@@ -6,6 +6,7 @@ import koala.css.StyleSet
 import koala.css.addModifiers
 import koala.css.setStyle
 import koala.css.modify
+import koala.html.BtnKey
 import koala.html.Id
 import koala.html.setId
 import koala.model.mapDistinct
@@ -27,7 +28,7 @@ fun RenderContext.button(
     block: (BUTTON.() -> Unit)? = null,
 ): HTMLButtonElement {
     val element = button {
-        addModifiers(modify(ElementClass.button, modifiers))
+        addModifiers(modify(BtnKey.Class, modifiers))
         setId(id)
         setStyle(styles)
         +text

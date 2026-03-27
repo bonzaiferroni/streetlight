@@ -1,6 +1,7 @@
 package koala.html
 
 import koala.css.BackgroundImage
+import koala.css.Css
 import koala.css.ElementClass
 import koala.css.ModifierSet
 import koala.css.StyleProperty
@@ -19,7 +20,7 @@ fun FlowContent.btn(
     action(
         text = text,
         route = route,
-        modifiers = modify(ElementClass.button, modifiers),
+        modifiers = modify(BtnKey.Class, modifiers),
         block = block,
     )
 }
@@ -34,7 +35,7 @@ fun FlowContent.btn(
     action(
         text = text,
         route = route,
-        modifiers = modify(modifiers, ElementClass.button, BackgroundImage),
+        modifiers = modify(modifiers, BtnKey.Class, BackgroundImage),
     ) {
         background?.let {
             setStyle(StyleProperty.backgroundUrl.to(UrlValue(it)))
@@ -61,7 +62,7 @@ fun FlowContent.btn(
     action(
         href = href,
         text = text,
-        modifiers = modify(ElementClass.button, modifiers),
+        modifiers = modify(BtnKey.Class, modifiers),
         block = block,
         id = id,
         styles = styles
@@ -81,3 +82,6 @@ private val domainMap = mapOf(
     "youtube.com" to video
 )
 
+object BtnKey {
+    val Class = Css("btn")
+}

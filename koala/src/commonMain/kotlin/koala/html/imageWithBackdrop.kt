@@ -17,7 +17,7 @@ fun FlowContent.imageWithBackdrop(
 ) {
     val src = src ?: placeholder
     div {
-        addModifiers(ElementClass.imageWithBackdrop, modifiers)
+        addModifiers(ImageWithBackdropKey.Class, modifiers)
         img {
             addModifiers(Css("image-with-backdrop__backdrop"))
             this.src = src
@@ -30,3 +30,36 @@ fun FlowContent.imageWithBackdrop(
         }
     }
 }
+
+object ImageWithBackdropKey {
+    val Class = Css("image-with-backdrop")
+}
+
+// language="CSS"
+val ImageWithBackdropCss get() = """
+.image-with-backdrop {
+    position: relative;
+    overflow: hidden;
+}
+
+.image-with-backdrop__backdrop,
+.image-with-backdrop__image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.image-with-backdrop__backdrop {
+    object-fit: cover;
+    object-position: center;
+    transform: scale(1.2);
+    filter: blur(24px);
+    opacity: 0.5;
+}
+
+.image-with-backdrop__image {
+    object-fit: contain;
+    object-position: center;
+}
+"""

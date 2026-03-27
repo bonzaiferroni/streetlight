@@ -1,5 +1,6 @@
 package koala.html
 
+import koala.css.Css
 import koala.css.ElementClass
 import koala.css.ModifierSet
 import koala.css.addModifiers
@@ -14,9 +15,19 @@ fun FlowContent.wireBlock(
 ) {
     div {
         setId(id)
-        addModifiers(ElementClass.wireBlock, modifiers)
+        addModifiers(WireBlockKey.Class, modifiers)
         if (!isVisibleWhileLoading) {
             style = "display: none;"
         }
     }
 }
+
+object WireBlockKey {
+    val Class = Css("wire-block")
+}
+
+// language="CSS"
+val WireBlockCss get() = """
+.wire-block {
+}
+"""

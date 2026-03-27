@@ -35,7 +35,7 @@ object IconElement {
 }
 
 // language="CSS"
-val IconStyles get() = """
+val IconCss get() = """
 .icon {
     display: inline-block;
     background-color: currentColor;

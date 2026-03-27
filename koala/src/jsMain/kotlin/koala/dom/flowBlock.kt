@@ -8,6 +8,7 @@ import koala.css.Reveal
 import koala.css.SlideLeft
 import koala.css.addModifiers
 import koala.css.modify
+import koala.html.FlowBlockKey
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -27,7 +28,7 @@ fun <State> RenderContext.flowBlock(
 ): HTMLDivElement {
     val magic = modifiers?.contains(Magic) ?: false
     val element = div {
-        addModifiers(ElementClass.flowBlock, modifiers)
+        addModifiers(FlowBlockKey.Class, modifiers)
         if (magic) {
             classes += Magic.identifier
         }

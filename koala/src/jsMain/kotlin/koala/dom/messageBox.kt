@@ -1,6 +1,7 @@
 package koala.dom
 
 import koala.css.*
+import koala.html.MessageBoxKey
 import kotlinx.coroutines.flow.Flow
 
 fun RenderContext.messageBox(
@@ -8,7 +9,7 @@ fun RenderContext.messageBox(
     modifiers: ModifierSet? = null,
     magic: Boolean = true
 ) {
-    card(modify(ElementClass.messageBox, modifiers)) {
+    card(modify(MessageBoxKey.Class, modifiers)) {
         row(modify(AlignItemsStart)) {
 //            image(SiteImage.placeholderThumb, modify(Width4))
             val modifiers = modify(Flex1).let {

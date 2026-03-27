@@ -13,7 +13,7 @@ fun FlowContent.button(
     block: (BUTTON.() -> Unit)? = null,
 ) {
     button {
-        addModifiers(ElementClass.button, modifiers)
+        addModifiers(BtnKey.Class, modifiers)
         block?.invoke(this)
         +text
     }

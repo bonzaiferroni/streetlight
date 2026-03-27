@@ -1,6 +1,7 @@
 package koala.dom
 
 import koala.css.*
+import koala.html.ActionKey
 import koala.html.AppRoute
 import kotlinx.html.A
 import kotlinx.html.a
@@ -11,7 +12,7 @@ fun RenderContext.action(
     modifiers: ModifierSet? = null,
     block: (A.() -> Unit)? = null
 ) = a {
-    addModifiers(ElementClass.action, modifiers)
+    addModifiers(ActionKey.Class, modifiers)
     block?.invoke(this)
 }
 

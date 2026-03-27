@@ -1,6 +1,7 @@
 package koala.dom
 
 import koala.css.*
+import koala.html.ItemsBlockKey
 import koala.model.mapDistinct
 import kotlinx.browser.document
 import kotlinx.browser.window
@@ -28,7 +29,7 @@ fun <Item> RenderContext.itemsBlock(
     block: RenderContext.(Item) -> Unit
 ): HTMLDivElement {
     val parent = div {
-        addModifiers(ElementClass.itemsBlock, modifiers)
+        addModifiers(ItemsBlockKey.Class, modifiers)
         if (magic) {
             classes += Magic.identifier
         }
