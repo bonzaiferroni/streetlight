@@ -53,6 +53,7 @@ data class Event(
 @Serializable
 value class EventId(override val value: String): ProjectId {
     companion object { fun random() = EventId(randomUuidString()) }
+    override fun toString() = value
 }
 
 @Serializable

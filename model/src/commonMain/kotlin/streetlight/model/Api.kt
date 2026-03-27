@@ -16,12 +16,14 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
     object Events: GetEndpoint<List<Event>>(this, "events") {
         object Edit: PostEndpoint<EventEdit, Event>(this, "create")
         object Delete: DeleteEndpoint<EventId>(this, "delete")
-        object QueryMap: QueryEndpoint<MapQuery, List<EventInfo>>(this, "bounds")
+        object QueryMap: QueryEndpoint<MapQuery, List<EventLocation>>(this, "bounds")
         // object UserEvents: ApiDaoEndpoint<Event, EventId, NewEvent>(this, "user")
         object ParseMultiEvents: PostEndpoint<ParseRequest, MultiEventParseResponse>(this, "parse-multi")
         object ParseSingleEvent: PostEndpoint<ParseRequest, SingleEventParseResponse>(this, "parse-single")
         object AtLocation: GetByTableIdEndpoint<LocationId, List<Event>>(this, "location")
-        object UserInterest: PostEndpoint<EventStar, Boolean>(this, "user-interest")
+        object EditEventStar: PostEndpoint<EventStar, Boolean>(this, "edit-event-star")
+        object ReadEventStars: GetEndpoint<List<EventStar>>(this, "read-event-stars")
+        object ReadEventLocations: PostEndpoint<List<EventId>, List<EventLocation>>(this, "read-event-locations")
     }
 
     object Locations: GetByTableIdEndpoint<LocationId, Location>(this, "locations") {

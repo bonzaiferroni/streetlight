@@ -20,7 +20,9 @@ class ApiClient(private val client: FetchClient) {
     suspend fun parseMultiEvent(request: ParseRequest) = client.post(Api.Events.ParseMultiEvents, request)
     suspend fun parseSingleEvent(request: ParseRequest) = client.post(Api.Events.ParseSingleEvent, request)
     suspend fun readLocationEvents(locationId: LocationId) = client.get(Api.Events.AtLocation, locationId)
-    suspend fun editEventInterest(interest: EventStar) = client.post(Api.Events.UserInterest, interest)
+    suspend fun editEventStar(star: EventStar) = client.post(Api.Events.EditEventStar, star)
+    suspend fun readEventStars() = client.get(Api.Events.ReadEventStars)
+    suspend fun readEventLocations(eventIds: List<EventId>) = client.post(Api.Events.ReadEventLocations, eventIds)
 
     // locations
     suspend fun readLocation(locationId: LocationId) = client.get(Api.Locations, locationId)

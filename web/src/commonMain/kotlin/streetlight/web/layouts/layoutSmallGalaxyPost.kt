@@ -14,7 +14,6 @@ import koala.html.row
 import koala.html.textBlock
 import kotlinx.html.FlowContent
 import streetlight.model.data.Event
-import streetlight.model.data.EventStar
 import streetlight.model.data.GalaxyPost
 import streetlight.model.data.Location
 import streetlight.web.EventIdRoute
@@ -76,7 +75,7 @@ fun FlowContent.layoutSmallGalaxyPost(post: GalaxyPost) {
                 post.event?.let { event ->
                     card(cellModifiers) {
                         // val interest = EventStar(event.eventId, post.interest)
-                        interestCell()
+                        starCell(event.eventId)
                     }
                 }
             }

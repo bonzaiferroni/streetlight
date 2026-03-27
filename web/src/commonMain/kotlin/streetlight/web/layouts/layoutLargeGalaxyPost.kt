@@ -15,10 +15,12 @@ import koala.html.heading5
 import koala.html.icon
 import koala.html.imageWithBackdrop
 import koala.html.row
+import koala.html.setData
 import koala.html.textBlock
 import kotlinx.html.FlowContent
+import streetlight.model.data.EventId
 import streetlight.model.data.GalaxyPost
-import streetlight.model.data.InterestType
+import streetlight.model.data.StarType
 
 fun FlowContent.layoutLargeGalaxyPost(post: GalaxyPost) {
     val postRoute = post.route ?: return
@@ -95,8 +97,7 @@ fun FlowContent.layoutLargeGalaxyPost(post: GalaxyPost) {
                 }
                 post.event?.let { event ->
                     card(cellModifiers) {
-                        // val interest = EventStar(event.eventId, post.interest)
-                        interestCell()
+                        starCell(event.eventId)
                     }
                 }
             }
@@ -104,20 +105,21 @@ fun FlowContent.layoutLargeGalaxyPost(post: GalaxyPost) {
     }
 }
 
-fun FlowContent.interestCell() {
+fun FlowContent.starCell(eventId: EventId) {
     row(modify(WidthAuto)) {
-        // setJsonData(EventAttributes.interest, interest)
+        setData(EventKey.StarEventId, eventId)
         // textBlock(post.visibility.toString())
         icon(SvgFile.LoaderSmall, modify(Height3, Square))
     }
 }
 
-object EventAttributes {
-    val interest = TagAttribute<String>("event-interest")
+object EventKey {
+    val StarEventId = TagAttribute<EventId>("event-id")
+    // val StarClass = Css("event-star")
 }
 
-val InterestType?.iconPath get() = when(this) {
-    InterestType.Star -> SvgFile.StarFilled
-    InterestType.Calendar -> SvgFile.StarFilled // td: handle differently
+val StarType?.iconPath get() = when(this) {
+    StarType.Star -> SvgFile.StarFilled
+    StarType.Calendar -> SvgFile.StarFilled // td: handle differently
     null -> SvgFile.StarOutline
 }

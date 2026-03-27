@@ -10,10 +10,8 @@ import koala.dom.wireBlock
 import koala.html.Id
 import koala.html.textBlock
 import koala.model.mapDistinct
-import kotlinx.coroutines.flow.map
 import org.w3c.dom.HTMLElement
 import streetlight.web.model.Streetlight
-import streetlight.web.shells.GalaxyProfileKey
 import streetlight.web.shells.HomeShellKey
 import streetlight.web.shells.HomeContent
 import streetlight.web.shells.homeShell
@@ -26,8 +24,7 @@ fun ViewContext<Streetlight>.viewHome() {
     }
 
     queryAndWireSwitch(root, Id("bruh"), onToggle = { console.log("bruh") })
-    // queryAndWireToggleBlock(element)
-    wireInterestControls(app, root)
+    wireStarSetters(app, root)
     wireStarredEvents(root)
 
     wireStreetMap()
@@ -35,8 +32,8 @@ fun ViewContext<Streetlight>.viewHome() {
 
 fun ViewContext<Streetlight>.wireStarredEvents(root: HTMLElement) {
     val app = model
-    val userInterest = app.userInterest
-    val eventsFlow = userInterest.stateFlow.mapDistinct { it.events }
+    val eventStarCache = app.userCache.eventStar
+    val eventsFlow = eventStarCache.stateFlow.mapDistinct { it.events }
     val swapIdFlow = eventsFlow.mapDistinct {
         when (it.isEmpty()) {
             true -> HomeShellKey.StarInfoId

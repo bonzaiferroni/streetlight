@@ -55,19 +55,31 @@ fun Element.scrollWhenPresent(
     window.requestAnimationFrame { tryScroll() }
 }
 
-inline fun <reified T> Element.wireByAttribute(attribute: TagAttribute<*>, block: (HTMLElement, T) -> Unit) {
-    querySelectorAll(attribute.selector).asList().forEach {
+fun <T> Element.queryAttributeAll(
+    attribute: TagAttribute<T>,
+    provider: (String) -> T,
+): List<Pair<HTMLElement, T>> {
+    return querySelectorAll(attribute.selector).asList().mapNotNull {
         val element = it as HTMLElement
-        val json = element.attributes[attribute] ?: return@forEach
-        val data = jsonConfig.decodeFromString<T>(json)
-        block(element, data)
+        val value = element.attributes[attribute] ?: return@mapNotNull null
+        val data = provider(value)
+        element to data
     }
+}
+
+inline fun <reified T> Element.queryJsonAttribute(attribute: TagAttribute<T>): List<Pair<HTMLElement, T>> {
+    return queryAttributeAll(attribute, { json ->
+        jsonConfig.decodeFromString<T>(json)
+    })
 }
 
 fun <T> CSSStyleDeclaration.setProperty(style: InlineStyle<T>) =
     setProperty(style.property.expression, style.value.toString())
 
 fun Element.querySelector(queryable: Queryable) = querySelector(queryable.selector) as? HTMLElement
+fun Element.querySelectorAll(queryable: Queryable) = querySelectorAll(queryable.selector).asList().map {
+    it as HTMLElement
+}
 
 fun Element.setAttribute(attribute: TagAttribute<*>, value: String) = setAttribute(attribute.key, value)
 

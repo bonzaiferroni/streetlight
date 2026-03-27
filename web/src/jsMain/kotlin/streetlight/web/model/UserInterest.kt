@@ -7,9 +7,9 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import streetlight.model.data.Event
 import streetlight.model.data.EventStar
-import streetlight.model.data.InterestType
 import streetlight.web.io.ApiClient
 
+@Deprecated("use EventStarCache")
 class UserInterest(
     private val scope: CoroutineScope,
     private val api: ApiClient,
@@ -23,7 +23,7 @@ class UserInterest(
 
     fun editEventInterest(interest: EventStar) {
         scope.launch {
-            val isSuccess = api.editEventInterest(interest) ?: return@launch
+            val isSuccess = api.editEventStar(interest) ?: return@launch
             if (isSuccess) {
                 _interestFlow.emit(interest)
 

@@ -5,7 +5,7 @@ import koala.html.SiteImage
 import koala.html.cardOf
 import kotlinx.html.FlowContent
 import streetlight.model.data.Event
-import streetlight.model.data.EventInfo
+import streetlight.model.data.EventLocation
 import streetlight.model.data.Galaxy
 import streetlight.model.data.GalaxyPost
 import streetlight.model.data.Location
@@ -21,7 +21,7 @@ fun FlowContent.cardOf(location: Location) {
     cardOf(LocationIdRoute(location.locationId), location.name, location.thumbUrl, location.description)
 }
 
-fun FlowContent.cardOf(event: EventInfo) {
+fun FlowContent.cardOf(event: EventLocation) {
     cardOf(EventIdRoute(event.eventId), event.title, event.thumbUrl, event.description)
 }
 

@@ -7,6 +7,7 @@ import streetlight.web.io.ApiClient
 
 class UserCache(
     scope: CoroutineScope,
+    private val config: SiteConfig,
     private val api: ApiClient,
     private val gate: UserGate,
 ) {
@@ -24,6 +25,7 @@ class UserCache(
     val song = ItemCache(scope, { it.songId }) { api.readSongs() }
     val file = ItemCache(scope, { it }) { api.readUserFiles() }
     val galaxy = ItemCache(scope, { it.galaxyId }) { api.readGalaxies() }
+    val eventStar = EventStarCache(scope, config, api)
 
     fun reset() {
         console.log("user signed out, resetting cache")
@@ -31,5 +33,6 @@ class UserCache(
         song.clear()
         file.clear()
         galaxy.clear()
+        // eventStar.clear() temporary for debugging
     }
 }

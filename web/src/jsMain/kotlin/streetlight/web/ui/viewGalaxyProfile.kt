@@ -9,11 +9,12 @@ import koala.model.mapDistinct
 import koala.model.storeOf
 import kotlinx.coroutines.launch
 import org.w3c.dom.HTMLElement
+import streetlight.model.data.EventId
 import streetlight.model.data.EventStar
-import streetlight.model.data.InterestType
+import streetlight.model.data.StarType
 import streetlight.web.GalaxyPathIdRoute
 import streetlight.web.model.Streetlight
-import streetlight.web.layouts.EventAttributes
+import streetlight.web.layouts.EventKey
 import streetlight.web.shells.GalaxyProfileKey
 import streetlight.web.shells.GalaxyProfileContent
 import streetlight.web.shells.galaxyProfileShell
@@ -39,7 +40,7 @@ fun RenderContext.viewGalaxyProfile(app: Streetlight, content: GalaxyProfileCont
 
     queryAndWireSwitch(root, GalaxyProfileKey.MapSwitchId, onToggle = ::setIsMapVisible, bindFlow = isMapVisibleFlow)
     queryAndWireSwapBlock(root, GalaxyProfileKey.SwapId, bindFlow = swapIdFlow)
-    wireInterestControls(app, root)
+    wireStarSetters(app, root)
 
     app.streetMap.setPosts(content.posts)
 }
@@ -63,27 +64,40 @@ fun ViewContext<Streetlight>.viewGalaxyProfileRoute() {
     }
 }
 
-fun RenderContext.wireInterestControls(app: Streetlight, root: HTMLElement) {
-    root.wireByAttribute<EventStar>(EventAttributes.interest) { element, interest ->
-        var interest = interest
+fun RenderContext.wireStarSetters(app: Streetlight, root: HTMLElement) {
+    val eventStarCache = app.userCache.eventStar
+    val pairs = root.queryAttributeAll(EventKey.StarEventId) { EventId(it) }
+    val starMap = mutableMapOf<EventId, EventStar>()
 
-        element.onClick {
-            interest = interest.copy(
-                value = if (interest.value == null) InterestType.Star else null
-            )
+    fun getStar(eventId: EventId) = starMap[eventId] ?: EventStar(eventId, null)
 
-            app.userInterest.editEventInterest(interest)
-        }
+    renderScope.launch {
+        eventStarCache.starFlow.collect { stars ->
+            pairs.forEach { (element, eventId) ->
+                val isStarred = stars.any { it.eventId == eventId }
+                val star = when(isStarred) {
+                    true -> EventStar(eventId, StarType.Star)
+                    else -> EventStar(eventId, null)
+                }
 
-        val iconElement by lazy { element.queryFirstOrNull(IconElement.Class) }
-        renderScope.launch {
-            app.userInterest.interestFlow.collect { updatedInterest ->
-                if (updatedInterest.eventId != interest.eventId) return@collect
-                interest = updatedInterest
+                element.queryFirstOrNull(IconElement.Class)?.style
+                    ?.setProperty(StyleProperty.maskUrl.to(UrlValue(star.value.iconPath)))
 
-                val element = iconElement ?: return@collect
-                element.style.setProperty(StyleProperty.maskUrl.to(UrlValue(interest.value.iconPath)))
+                starMap[eventId] = star
             }
+        }
+    }
+
+    pairs.forEach { (element, eventId) ->
+        element.onClick {
+            val star = getStar(eventId).let { star ->
+                star.copy(value = when (star.value) {
+                    null -> StarType.Star
+                    else -> null
+                })
+            }
+
+            eventStarCache.editStar(star)
         }
     }
 }
