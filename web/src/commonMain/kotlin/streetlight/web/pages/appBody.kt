@@ -1,7 +1,7 @@
 package streetlight.web.pages
 
-import koala.LottieFiles
-import koala.SvgFiles
+import koala.LottieFile
+import koala.SvgFile
 import koala.css.*
 import koala.html.*
 import koala.jsFileOf
@@ -35,8 +35,8 @@ fun HTML.appBody(
 
 fun FlowContent.appHeader() {
     row(modify(Height5)) {
-        icon(SvgFiles.Menu, modify(OpacitySome))
-        icon(SvgFiles.Search, modify(OpacitySome))
+        icon(SvgFile.Menu, modify(OpacitySome))
+        icon(SvgFile.Search, modify(OpacitySome))
         row(modify(Flex1, JustifyContentCenter)) {
             action(HomeRoute, modify(Height100)) {
                 row(modify(AlignItemsCenter, Height100)) {
@@ -47,7 +47,7 @@ fun FlowContent.appHeader() {
             }
         }
         action(SiteConfigRoute, modify(OpacitySome)) {
-            icon(SvgFiles.Settings, modify(Height100))
+            icon(SvgFile.Settings, modify(Height100))
         }
         action(AccountRoute, modify(Square), id = AppBody.badgeId) {
             emptyBadge()
@@ -64,12 +64,12 @@ fun FlowContent.appFooter() {
 fun DIV.configureAppFooter() {
     val giants = "May we build a world of faithful giants."
     addModifiers(modify(JustifyContentCenter, Height48, AlignItemsCenter, Gap0))
-    lottie(LottieFiles.spinningCircles, modify(Height24))
+    lottie(LottieFile.spinningCircles, modify(Height24))
     textBlock(giants, modify(Italic, OpacityMost))
 }
 
 fun FlowContent.emptyBadge() {
-    icon(SvgFiles.EmptyProfile, modify(Height100, OpacitySome))
+    icon(SvgFile.EmptyProfile, modify(Height100, OpacitySome))
 }
 
 object AppBody {

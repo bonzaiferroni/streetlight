@@ -1,6 +1,6 @@
 package streetlight.web.ui
 
-import koala.LottieFiles
+import koala.LottieFile
 import koala.css.*
 import koala.dom.*
 import koala.html.Id
@@ -75,7 +75,7 @@ fun RenderContext.signInContent(
             }
         }
         column(modify(AlignItemsCenter)) {
-            lottie(LottieFiles.strollingMan, modify(MaxWidth50))
+            lottie(LottieFile.strollingMan, modify(MaxWidth50))
         }
     }
 }

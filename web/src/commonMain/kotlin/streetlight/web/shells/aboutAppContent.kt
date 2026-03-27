@@ -1,6 +1,6 @@
 package streetlight.web.shells
 
-import koala.LottieFiles
+import koala.LottieFile
 import koala.html.heading5
 import koala.html.textBlock
 import koala.html.row
@@ -13,14 +13,14 @@ import streetlight.web.pages.appFooter
 fun FlowContent.aboutApp() {
     column(modify(AlignItemsCenter)) {
         column(modify(QueryMediumRow, AlignItemsCenter)) {
-            lottie(LottieFiles.cupShuffle, modify(Flex1, MaxWidth50))
+            lottie(LottieFile.cupShuffle, modify(Flex1, MaxWidth50))
             val introText = "Streetlight is your front page for community events. " +
 //                    "Its first and only mission is to bring people together. " +
                     "It is cross-platform, open-source, and 100% Kotlin. "
             textBlock(introText, modify(Flex3, LargeFont))
         }
         column(modify(QueryMediumRow, AlignItemsCenter)) {
-            lottie(LottieFiles.strollingMan, modify(Flex1, MaxWidth50))
+            lottie(LottieFile.strollingMan, modify(Flex1, MaxWidth50))
             column(modify(Flex3)) {
                 column(modify(Gap0)) {
                     textBlock("Do you have a talent to share with passersby?")
@@ -31,7 +31,7 @@ fun FlowContent.aboutApp() {
             }
         }
         column(modify(QueryMediumRow, AlignItemsCenter)) {
-            lottie(LottieFiles.cat, modify(Flex1, MaxWidth50))
+            lottie(LottieFile.cat, modify(Flex1, MaxWidth50))
             column(modify(Flex3)) {
                 textBlock {
                     externalLink("https://github.com/bonzaiferroni/streetlight", "Streetlight")

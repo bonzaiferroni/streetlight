@@ -1,12 +1,12 @@
 package koala.html
 
-import koala.LottieFile
+import koala.Lottie
 import kotlinx.html.*
 import koala.css.*
 import koala.css.addModifiers
 
 fun FlowContent.lottie(
-    file: LottieFile,
+    file: Lottie,
     modifiers: ModifierSet? = null,
     block: (DIV.() -> Unit)? = null
 ) {
@@ -16,7 +16,7 @@ fun FlowContent.lottie(
 }
 
 internal fun DIV.configureLottie(
-    file: LottieFile,
+    file: Lottie,
     modifiers: ModifierSet? = null,
     block: (DIV.() -> Unit)? = null
 ) {

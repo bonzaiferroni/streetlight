@@ -1,6 +1,6 @@
 package koala.html
 
-import koala.SvgFiles
+import koala.SvgFile
 import kotlinx.html.*
 import koala.css.*
 
@@ -10,7 +10,7 @@ fun FlowContent.logo(
     div {
         addModifiers(LogoKey.Class, modifiers)
         div {
-            setStyle(StyleProperty.maskUrl.to(UrlValue(SvgFiles.Flame)))
+            setStyle(StyleProperty.maskUrl.to(UrlValue(SvgFile.Flame)))
         }
     }
 }

@@ -1,6 +1,6 @@
 package streetlight.web.shells
 
-import koala.SvgFiles
+import koala.SvgFile
 import koala.css.*
 import koala.html.*
 import kotlinx.html.FlowContent
@@ -57,7 +57,7 @@ fun FlowContent.homeShell(content: HomeContent) {
 
                         row(modify(JustifyContentCenter)) {
                             textBlock("Events that you")
-                            icon(SvgFiles.StarOutline)
+                            icon(SvgFile.StarOutline)
                             textBlock("will appear here.")
                         }
                         textBlock("This is saved on your device, no need to sign in.", modify(TextAlignCenter))

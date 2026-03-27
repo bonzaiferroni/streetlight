@@ -1,6 +1,6 @@
 package koala.dom
 
-import koala.LottieFile
+import koala.Lottie
 import koala.core.initLottie
 import koala.css.ModifierSet
 import koala.html.configureLottie
@@ -9,7 +9,7 @@ import kotlinx.html.js.div
 import org.w3c.dom.HTMLDivElement
 
 fun DOMContext.lottie(
-    file: LottieFile,
+    file: Lottie,
     modifiers: ModifierSet? = null,
     block: (DIV.() -> Unit)? = null
 ): HTMLDivElement {

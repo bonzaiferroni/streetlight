@@ -1,13 +1,12 @@
 package streetlight.web.model
 
 import kampfire.model.GeoPoint
-import koala.SvgFile
+import koala.Svg
 import koala.css.MaxWidth64
 import koala.css.modify
 import koala.dom.RenderContext
 import koala.dom.box
 import koala.html.SiteImage
-import koala.model.MapContextId
 import koala.model.MapEntityId
 import koala.model.MarkerUtility
 import koala.model.PointEntity
@@ -70,7 +69,7 @@ fun SpiritId.toEntityId(): MapEntityId = "spirit-${value}"
 
 data class IconEntity(
     override val entityId: MapEntityId,
-    override val icon: SvgFile,
+    override val icon: Svg,
     override val position: GeoPoint
 ): PointEntity
 

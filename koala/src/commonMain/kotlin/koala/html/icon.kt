@@ -1,13 +1,13 @@
 package koala.html
 
-import koala.SvgFile
+import koala.Svg
 import koala.css.*
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kotlinx.html.div
 
 fun FlowContent.icon(
-    file: SvgFile,
+    file: Svg,
     modifiers: ModifierSet? = null,
     block: (DIV.() -> Unit)? = null
 ) {
@@ -21,7 +21,7 @@ fun FlowContent.icon(
 }
 
 fun DIV.configureIcon(
-    file: SvgFile,
+    file: Svg,
     modifiers: ModifierSet? = null,
     block: (DIV.() -> Unit)? = null
 ) {

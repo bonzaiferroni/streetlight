@@ -1,7 +1,7 @@
 package streetlight.web.layouts
 
 import kabinet.utils.toRelativeDayFormat
-import koala.SvgFiles
+import koala.SvgFile
 import koala.css.*
 import koala.html.TagAttribute
 import koala.html.action
@@ -15,10 +15,8 @@ import koala.html.heading5
 import koala.html.icon
 import koala.html.imageWithBackdrop
 import koala.html.row
-import koala.html.setJsonData
 import koala.html.textBlock
 import kotlinx.html.FlowContent
-import streetlight.model.data.EventStar
 import streetlight.model.data.GalaxyPost
 import streetlight.model.data.InterestType
 
@@ -97,8 +95,8 @@ fun FlowContent.layoutLargeGalaxyPost(post: GalaxyPost) {
                 }
                 post.event?.let { event ->
                     card(cellModifiers) {
-                        val interest = EventStar(event.eventId, post.interest)
-                        interestCell(interest)
+                        // val interest = EventStar(event.eventId, post.interest)
+                        interestCell()
                     }
                 }
             }
@@ -106,11 +104,11 @@ fun FlowContent.layoutLargeGalaxyPost(post: GalaxyPost) {
     }
 }
 
-fun FlowContent.interestCell(interest: EventStar) {
+fun FlowContent.interestCell() {
     row(modify(WidthAuto)) {
-        setJsonData(EventAttributes.interest, interest)
+        // setJsonData(EventAttributes.interest, interest)
         // textBlock(post.visibility.toString())
-        icon(interest.value.iconPath, modify(Height3, Square))
+        icon(SvgFile.LoaderSmall, modify(Height3, Square))
     }
 }
 
@@ -119,7 +117,7 @@ object EventAttributes {
 }
 
 val InterestType?.iconPath get() = when(this) {
-    InterestType.Star -> SvgFiles.StarFilled
-    InterestType.Calendar -> SvgFiles.StarFilled // td: handle differently
-    null -> SvgFiles.StarOutline
+    InterestType.Star -> SvgFile.StarFilled
+    InterestType.Calendar -> SvgFile.StarFilled // td: handle differently
+    null -> SvgFile.StarOutline
 }

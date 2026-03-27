@@ -1,8 +1,7 @@
 package koala.html
 
-import koala.LottieFile
+import koala.Lottie
 import kotlinx.html.CoreAttributeGroupFacade
-import kotlin.jvm.JvmInline
 
 data class TagAttribute<T>(val identifier: String, val isCustom: Boolean = false): Queryable {
     override val selector get() = "[$key]"
@@ -15,7 +14,7 @@ data class TagAttribute<T>(val identifier: String, val isCustom: Boolean = false
 
     companion object {
         val blockLabel = TagAttribute<String>("block-label", true)
-        val lottie = TagAttribute<LottieFile>("lottie", true)
+        val lottie = TagAttribute<Lottie>("lottie", true)
         val isOn = TagAttribute<Boolean>("is-on", true)
         // val maskUrl = TagAttribute<>("mask-url", true)
         val popoverTarget = TagAttribute<Id>("popovertarget")

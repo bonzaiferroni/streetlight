@@ -1,6 +1,6 @@
 package streetlight.web.ui
 
-import koala.LottieFiles
+import koala.LottieFile
 import koala.css.AlignItemsStretch
 import koala.css.PlaceItemsCenter
 import koala.css.FlexItems1
@@ -52,7 +52,7 @@ fun RenderContext.createAccountContent(app: Streetlight) {
         }
         box(modify(PlaceItemsCenter)) {
             column(modify(MaxWidth50)) {
-                lottie(LottieFiles.cat)
+                lottie(LottieFile.cat)
                 textBlock("Streetlight is at an early stage in development. Only the bravest souls should enter.")
             }
         }

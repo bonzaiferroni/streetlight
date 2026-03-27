@@ -1,10 +1,9 @@
 package koala.html
 
-import koala.SvgFiles
+import koala.SvgFile
 import koala.css.*
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
-import kotlinx.html.SECTION
 
 fun FlowContent.sectionHeading(
     labelContent: DIV.() -> Unit,
@@ -19,7 +18,7 @@ fun FlowContent.sectionHeading(
         row(modify(Flex1, JustifyContentCenter)) {
             labelContent()
         }
-        icon(SvgFiles.EyeClosed, modify(OpacitySome, Height4))
+        icon(SvgFile.EyeClosed, modify(OpacitySome, Height4))
     }
 }
 

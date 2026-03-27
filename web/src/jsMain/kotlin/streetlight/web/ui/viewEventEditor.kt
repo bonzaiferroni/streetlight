@@ -1,6 +1,6 @@
 package streetlight.web.ui
 
-import koala.SvgFiles
+import koala.SvgFile
 import koala.css.*
 import koala.dom.*
 import koala.html.heading3
@@ -154,7 +154,7 @@ fun ViewContext<EventEditor>.eventLinks() {
                 heading4("Additional Links")
                 textBlock("You may provide your original source, a youtube video, or any useful link.", modify(Dim))
             }
-            icon(SvgFiles.Plus, ::addLink)
+            icon(SvgFile.Plus, ::addLink)
         }
         indexedItemsBlock(linksFlow, defaultMagic, magic = true) { (linkIndex, link) ->
             flowBlock(linkEditIndexFlow, modify(Height5, JustifyContentCenter)) { index ->
@@ -163,15 +163,15 @@ fun ViewContext<EventEditor>.eventLinks() {
                     row() {
                         textField("label", onChangeValue = ::setLabel, bindFlow = labelFlow)
                         textField("url", modify(Flex1), onChangeValue = ::setUrl, bindFlow = urlFlow)
-                        icon(SvgFiles.Check, ::finalizeEdit)
+                        icon(SvgFile.Check, ::finalizeEdit)
                     }
                 } else {
                     row() {
                         textBlock(link.label)
                         textBlock(link.url, modify(Dim))
                         spacer(modify(Flex1))
-                        icon(SvgFiles.Trash, onClick = { model.removeLink(link) }, modify(Dim, Danger))
-                        icon(SvgFiles.Edit, onClick = { editState.set{ it.copy(index = linkIndex, link = link)} }, modify(Dim))
+                        icon(SvgFile.Trash, onClick = { model.removeLink(link) }, modify(Dim, Danger))
+                        icon(SvgFile.Edit, onClick = { editState.set{ it.copy(index = linkIndex, link = link)} }, modify(Dim))
                     }
                 }
             }

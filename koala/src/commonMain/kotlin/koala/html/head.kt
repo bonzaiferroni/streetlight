@@ -1,8 +1,8 @@
 package koala.html
 
 import koala.CssFile
+import koala.Js
 import koala.JsFile
-import koala.JsFiles
 import koala.SiteFile
 import koala.css.CssManifest
 import kotlinx.html.*
@@ -19,7 +19,7 @@ fun HTML.appHead(
         script(src = "https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js") {
             defer = true
         }
-        applyFiles(JsFiles)
+        applyFiles(JsFile)
         style {
             unsafe {
                 +inlineStyles
@@ -36,13 +36,13 @@ fun HEAD.applyFiles(files: Collection<SiteFile>) {
 
 fun HEAD.applyFile(file: SiteFile) {
     when (file) {
-        is JsFile -> applyJsFile(file)
+        is Js -> applyJsFile(file)
         is CssFile -> applyCssFile(file)
         else -> error("unsupported file: $file")
     }
 }
 
-fun FlowOrMetaDataOrPhrasingContent.applyJsFile(file: JsFile) {
+fun FlowOrMetaDataOrPhrasingContent.applyJsFile(file: Js) {
     script(src = file.path) {
         this.defer = file.isDeferred
     }

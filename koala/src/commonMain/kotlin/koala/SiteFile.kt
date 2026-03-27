@@ -15,7 +15,7 @@ open class FileSet<T : SiteFile> : MutableSet<T> by mutableSetOf() {
 
     fun addJs(filename: String, isDeferred: Boolean = true) = jsFileOf(filename, isDeferred)
 
-    fun addLottie(filename: String) = LottieFile(lottiePath + filename)
+    fun addLottie(filename: String) = Lottie(lottiePath + filename)
 }
 
 enum class SiteFileType {
@@ -29,17 +29,17 @@ data class CssFile(override val path: String) : SiteFile {
     override val type get() = SiteFileType.Stylesheet
 }
 
-data class JsFile(override val path: String, val isDeferred: Boolean = true) : SiteFile {
+data class Js(override val path: String, val isDeferred: Boolean = true) : SiteFile {
     override val type get() = SiteFileType.Javascript
 }
 
-data class LottieFile(override val path: String) : SiteFile {
+data class Lottie(override val path: String) : SiteFile {
     override val type get() = SiteFileType.Lottie
 
     override fun toString() = path
 }
 
-data class SvgFile(override val path: String) : SiteFile {
+data class Svg(override val path: String) : SiteFile {
     override val type get() = SiteFileType.Svg
 }
 
@@ -65,11 +65,11 @@ fun fileOf(filename: String, isGenerated: Boolean): SiteFile {
 
 
     return when (type) {
-        SiteFileType.Javascript -> JsFile(path)
+        SiteFileType.Javascript -> Js(path)
         SiteFileType.Stylesheet -> CssFile(path)
-        SiteFileType.Svg -> SvgFile(path)
+        SiteFileType.Svg -> Svg(path)
         else -> error("unsupported type: $type")
     }
 }
 
-fun jsFileOf(filename: String, isDeferred: Boolean = true) = JsFile(jsPath + filename, isDeferred)
+fun jsFileOf(filename: String, isDeferred: Boolean = true) = Js(jsPath + filename, isDeferred)

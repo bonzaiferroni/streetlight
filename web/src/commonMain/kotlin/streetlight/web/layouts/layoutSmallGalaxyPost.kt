@@ -1,7 +1,7 @@
 package streetlight.web.layouts
 
 import kabinet.utils.toRelativeDayFormat
-import koala.SvgFiles
+import koala.SvgFile
 import koala.css.*
 import koala.html.action
 import koala.html.card
@@ -44,7 +44,7 @@ fun FlowContent.layoutSmallGalaxyPost(post: GalaxyPost) {
                                 }
                             }
                         }
-                        icon(SvgFiles.Focus, modify(Height5, Square, Dim))
+                        icon(SvgFile.Focus, modify(Height5, Square, Dim))
                     }
                     description?.let {
                         action(postRoute) {
@@ -75,8 +75,8 @@ fun FlowContent.layoutSmallGalaxyPost(post: GalaxyPost) {
                 }
                 post.event?.let { event ->
                     card(cellModifiers) {
-                        val interest = EventStar(event.eventId, post.interest)
-                        interestCell(interest)
+                        // val interest = EventStar(event.eventId, post.interest)
+                        interestCell()
                     }
                 }
             }

@@ -1,6 +1,6 @@
 package koala
 
-object JsFiles: FileSet<JsFile>() {
+object JsFile: FileSet<Js>() {
     val Utils = add("utils.js")
     val Tabs = add("tabs.js")
     val Koala = add("koala/koala.js")
@@ -22,7 +22,7 @@ object JsFiles: FileSet<JsFile>() {
 //    // val utilities = add("utilities.css")
 //}
 
-object SvgFiles: FileSet<SvgFile>() {
+object SvgFile: FileSet<Svg>() {
     val Bus = add("bus.svg")
     val Food = add("food.svg")
     val Guitar = add("guitar.svg")
@@ -47,9 +47,10 @@ object SvgFiles: FileSet<SvgFile>() {
     val EyeOff = add("eye-off.svg")
     val EyeClosed = add("eye-closed.svg")
     val Crosshairs = add("crosshairs.svg")
+    val LoaderSmall = add("loader-small.svg")
 }
 
-object LottieFiles: FileSet<LottieFile>() {
+object LottieFile: FileSet<Lottie>() {
     val airplane = addLottie("airplane.json")
     val fox = addLottie("fox.json")
     val cassette = addLottie("cassette.json")

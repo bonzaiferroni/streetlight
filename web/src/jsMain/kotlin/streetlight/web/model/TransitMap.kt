@@ -1,7 +1,7 @@
 package streetlight.web.model
 
 import kampfire.model.GeoPoint
-import koala.SvgFiles
+import koala.SvgFile
 import koala.css.modify
 import koala.model.GeoMap
 import koala.model.LayerId
@@ -196,9 +196,9 @@ data class TransitEntity(
 ): PointEntity {
     override val entityId get() = vehicleId
     override val icon get() = when (vehicleType) {
-        VehicleType.Bus -> SvgFiles.Bus
-        VehicleType.LightRail -> SvgFiles.Train
-        VehicleType.Train -> SvgFiles.Train
+        VehicleType.Bus -> SvgFile.Bus
+        VehicleType.LightRail -> SvgFile.Train
+        VehicleType.Train -> SvgFile.Train
     }
     override val modifiers get() = modify(MarkerUtility.twinkleAboveAirplane)
 }
