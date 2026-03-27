@@ -17,6 +17,9 @@ large grid content
 # BEFORE UPDATE:
 stop caching html in UrlReader
 
+# BEFORE LAUNCH
+hikariCP
+
 # DONE:
 go over
 trawl front end pages
