@@ -703,3 +703,7 @@
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px); /* for Safari */
 }
+
+.line-height-1 {
+    line-height: 1;
+}

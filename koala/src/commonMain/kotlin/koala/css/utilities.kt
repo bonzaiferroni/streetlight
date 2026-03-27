@@ -46,3 +46,4 @@ object LargeFont: Modifier { override val identifier = "large-font" }
 object Heading1: Modifier { override val identifier = "heading-1" }
 object Heading2: Modifier { override val identifier = "heading-2" }
 object WhiteSpaceNormal: Modifier { override val identifier = "white-space-normal" }
+object LineHeight1: Modifier { override val identifier = "line-height-1" }

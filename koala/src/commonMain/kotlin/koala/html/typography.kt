@@ -88,11 +88,22 @@ fun FlowContent.p(
 }
 
 fun FlowContent.span(
-    modifiers: ModifierSet,
+    modifiers: ModifierSet? = null,
     block: SPAN.() -> Unit,
 ) {
     span {
         addModifiers(modifiers)
         block()
+    }
+}
+
+fun FlowContent.span(
+    text: String,
+    modifiers: ModifierSet? = null,
+    block: SPAN.() -> Unit = {},
+) {
+    span(modifiers) {
+        block()
+        +text
     }
 }

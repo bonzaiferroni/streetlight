@@ -151,7 +151,7 @@ fun ViewContext<LocationScout>.reviewStage(edit: LocationEdit) {
                         if (imageUrl != null) {
                             image(imageUrl, modify(Flex1, Width100))
                         } else {
-                            box(modify(Flex1, CenterItems)) {
+                            box(modify(Flex1, PlaceItemsCenter)) {
                                 textBlock("no image")
                             }
                         }

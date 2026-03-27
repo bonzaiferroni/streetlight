@@ -27,7 +27,6 @@
     border-radius: calc(var(--unit-spacing) * 2);
     background-color: var(--card-bg);
     padding: var(--unit-spacing);
-    align-items: start;
 }
 
 .box {
@@ -42,7 +41,7 @@
     place-self: center;
 }
 
-.box.center-items {
+.box.place-center-items {
     place-items: center;
 }
 

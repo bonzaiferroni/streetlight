@@ -118,7 +118,7 @@ val SpaceBetween = CssUtility("space-between", ".space-between { justify-content
 val Start = CssUtility("start", null)
 val End = CssUtility("end", null)
 val Center = CssUtility("center", null)
-val CenterItems = CssUtility("center-items", null)
+val PlaceItemsCenter = CssUtility("center-items", null)
 val JustifySelfEnd = CssUtility("justify-self-end", ".justify-self-end { justify-self: end; }")
 val AlignSelfStart = CssUtility("align-self-start", ".align-self-start { align-self: start; }")
 val AlignSelfStretch = CssUtility("align-self-stretch", ".align-self-stretch { align-self: stretch; }")
@@ -158,7 +158,7 @@ val layoutUtilities
         // Padding
         Padding0, Padding1, Padding2, PaddingTiny,
         // Other
-        SpaceBetween, Start, End, Center, CenterItems, RelativeParent, ZIndex1, Shrinkable
+        SpaceBetween, Start, End, Center, PlaceItemsCenter, RelativeParent, ZIndex1, Shrinkable
     )
 
 // layout utilities

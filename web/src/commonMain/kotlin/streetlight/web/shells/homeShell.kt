@@ -1,5 +1,6 @@
 package streetlight.web.shells
 
+import koala.SvgFiles
 import koala.css.*
 import koala.html.*
 import kotlinx.html.FlowContent
@@ -19,10 +20,16 @@ fun FlowContent.homeShell(content: HomeContent) {
 
         section {
             column(modify(Gap0)) {
-                sectionHeading("Galaxies")
-                textBlock(
-                    content = "Galaxies are Streetlight communities, each with a particular focus.",
-                    modifiers = modify(Dim, TextAlignCenter)
+                sectionHeading(
+                    labelContent = {
+                        column(modify(Gap0)) {
+                            centeredHeading("Galaxies", modify(Flex1))
+                            textBlock(
+                                content = "Galaxies are Streetlight communities, each with a particular focus.",
+                                modifiers = modify(Dim, TextAlignCenter)
+                            )
+                        }
+                    }
                 )
             }
 
@@ -36,6 +43,21 @@ fun FlowContent.homeShell(content: HomeContent) {
         }
 
         layoutGalaxyPosts(content.posts)
+
+        section {
+            column(modify(Gap0)) {
+                sectionHeading("Starred Events")
+            }
+
+            card(modify(Height32, JustifyContentCenter, Dim, Gap0)) {
+                row(modify(JustifyContentCenter)) {
+                    textBlock("Events that you")
+                    icon(SvgFiles.StarOutline)
+                    textBlock("will appear here.")
+                }
+                textBlock("This is saved on your device, no need to sign in.", modify(TextAlignCenter))
+            }
+        }
 
         appFooter()
     }

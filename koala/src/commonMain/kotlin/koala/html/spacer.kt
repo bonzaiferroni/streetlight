@@ -24,7 +24,7 @@ fun FlowContent.centeredHeading(
 //        hr {
 //            addModifiers(modify(Flex1, OpacitySome))
 //        }
-        heading3(text, modify(OpacityHalf))
+        heading3(text, modify(OpacityHalf, LineHeight1))
 //        hr {
 //            addModifiers(modify(Flex1, OpacitySome))
 //        }
