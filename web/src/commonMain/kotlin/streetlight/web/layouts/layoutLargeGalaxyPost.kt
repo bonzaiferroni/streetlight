@@ -37,7 +37,7 @@ fun FlowContent.layoutLargeGalaxyPost(post: GalaxyPost) {
                     row {
                         column(modify(Flex1, Gap0)) {
                             action(postRoute) {
-                                heading3(post.title)
+                                heading3(post.title, modify(SingleLine, LineHeight1, MarginTop1))
                             }
                             post.location?.let { location ->
                                 action(location.route) {
@@ -109,7 +109,7 @@ fun FlowContent.starCell(eventId: EventId) {
     row(modify(WidthAuto)) {
         setData(EventKey.StarEventId, eventId)
         // textBlock(post.visibility.toString())
-        icon(SvgFile.LoaderSmall, modify(Height3, Square))
+        icon(SvgFile.LoaderSmall, modify(Height3, AspectRatio1))
     }
 }
 

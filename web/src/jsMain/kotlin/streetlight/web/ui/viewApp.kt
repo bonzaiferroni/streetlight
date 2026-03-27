@@ -2,12 +2,8 @@ package streetlight.web.ui
 
 import koala.css.*
 import koala.dom.*
-import koala.html.ElementEvent
-import koala.html.heading2
-import koala.html.heading3
 import koala.model.GeoMap
 import koala.model.Portal
-import koala.model.mapDistinct
 import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.coroutines.MainScope
@@ -31,7 +27,6 @@ import streetlight.web.model.ThemeReactor
 import streetlight.web.model.UserCache
 import streetlight.web.model.UserCred
 import streetlight.web.model.UserGate
-import streetlight.web.model.UserInterest
 import streetlight.web.pages.AppBody
 import streetlight.web.pages.emptyBadge
 
@@ -124,9 +119,9 @@ fun viewApp() {
                 flowBlock(app.gate.userFlow, defaultMagic) { userInfo ->
                     val avatarUrl = userInfo?.avatarUrl
                     if (avatarUrl != null) {
-                        image(avatarUrl, modify(Size100, Square, CircleClip))
+                        image(avatarUrl, modify(Size100, AspectRatio1, CircleClip))
                     } else {
-                        box(modify(Height100, Square)) {
+                        box(modify(Height100, AspectRatio1)) {
                             emptyBadge()
                         }
                     }

@@ -43,7 +43,7 @@ fun FlowContent.locationShell(
                     }
                 }
             }
-            geoMapMount(location.geoPoint, modify(Square))
+            geoMapMount(location.geoPoint, modify(AspectRatio1))
         }
         wireBlock(LocationShell.adminCard)
         tabs(LocationShell.tabsId) {

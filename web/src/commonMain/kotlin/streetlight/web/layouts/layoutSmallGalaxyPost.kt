@@ -29,7 +29,7 @@ fun FlowContent.layoutSmallGalaxyPost(post: GalaxyPost) {
         column(modify(QueryLargeRow, AlignItemsStretch, Gap0)) {
             row(modify(Height16, AlignItemsStart, Padding1)) {
                 thumbUrl?.let {
-                    image(thumbUrl, modify(Height100, Square, BorderRadius1))
+                    image(thumbUrl, modify(Height100, AspectRatio1, BorderRadius1))
                 }
                 column(modify(Flex1, Height100)) {
                     row(modify(AlignItemsStart)) {
@@ -43,7 +43,7 @@ fun FlowContent.layoutSmallGalaxyPost(post: GalaxyPost) {
                                 }
                             }
                         }
-                        icon(SvgFile.Focus, modify(Height5, Square, Dim))
+                        icon(SvgFile.Focus, modify(Height5, AspectRatio1, Dim))
                     }
                     description?.let {
                         action(postRoute) {

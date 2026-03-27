@@ -15,9 +15,10 @@ data class EventLocation(
     val description: String?,
     val status: EventStatus,
     val visibility: Int,
-    val startsAt: Instant?,
-    val endsAt: Instant?,
     val geoPoint: GeoPoint,
+    val locationName: String,
+    val startsAt: Instant,
+    val endsAt: Instant?,
 ) {
     companion object {
         fun from(event: Event, location: Location) = EventLocation(
@@ -30,9 +31,10 @@ data class EventLocation(
             description = event.description,
             status = event.status,
             visibility = (0..20).random(),
+            geoPoint = location.geoPoint,
+            locationName = location.name,
             startsAt = event.startsAt,
             endsAt = event.endsAt,
-            geoPoint = location.geoPoint,
         )
     }
 }

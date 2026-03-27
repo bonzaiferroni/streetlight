@@ -18,7 +18,7 @@ val LayoutUtilityCss
         MinHeightAuto, MinHeight0, MinHeight4, MinHeight8, MinHeight16, MinHeight24, MinHeight32,
         MaxHeight8, MaxHeight16, MaxHeight24, MaxHeight32, MaxHeight64,
         // Size
-        Size100, FillHeight, Square,
+        Size100, FillHeight, AspectRatio1, AspectRatio2,
         // Flex Items
         FlexItems1, FlexItemsBasis50,
         // Text
@@ -160,7 +160,8 @@ val PlaceItemsCenter = CssUtility("center-items", null)
 val JustifySelfEnd = CssUtility("justify-self-end", ".justify-self-end { justify-self: end; }")
 val AlignSelfStart = CssUtility("align-self-start", ".align-self-start { align-self: start; }")
 val AlignSelfStretch = CssUtility("align-self-stretch", ".align-self-stretch { align-self: stretch; }")
-val Square = CssUtility("square", ".square { aspect-ratio: 1 / 1; }")
+val AspectRatio1 = CssUtility("square", ".square { aspect-ratio: 1 / 1; }")
+val AspectRatio2 = CssUtility("aspect-ratio-2", ".aspect-ratio-2 { aspect-ratio: 2 / 1; }")
 val RelativeParent = CssUtility(
     "relative-parent",
     ".relative-parent { position: relative; } .relative-parent > * { position: absolute; inset: 0; }"

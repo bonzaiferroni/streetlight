@@ -48,6 +48,8 @@ object SvgFile: FileSet<Svg>() {
     val EyeClosed = add("eye-closed.svg")
     val Crosshairs = add("crosshairs.svg")
     val LoaderSmall = add("loader-small.svg")
+    val StarOff = add("star-off.svg")
+    val Minus = add("minus.svg")
 }
 
 object LottieFile: FileSet<Lottie>() {

@@ -55,5 +55,5 @@ val CssManifest get() = listOf(
     // utilities
     LayoutUtilityCss.toStylesheet(),
     DisplayUtilityCss.toStylesheet(),
-    FontUtilityCss.toStylesheet(),
+    TextUtilityCss.toStylesheet(),
 )

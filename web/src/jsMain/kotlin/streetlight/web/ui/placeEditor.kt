@@ -10,7 +10,7 @@ import koala.css.Flex2
 import koala.css.Blur
 import koala.css.Magic
 import koala.css.QueryMediumRow
-import koala.css.Square
+import koala.css.AspectRatio1
 import koala.css.Width100
 import koala.css.modify
 import koala.dom.RenderContext
@@ -57,7 +57,7 @@ fun RenderContext.placeEditor(
     }
 
     val element = column(modify(QueryMediumRow, AlignItemsStretch)) {
-        geoMapMount(geoPoint, modify(Flex1, Square))
+        geoMapMount(geoPoint, modify(Flex1, AspectRatio1))
         column(modify(Flex2, AlignItemsStretch)) {
             row {
                 textField(

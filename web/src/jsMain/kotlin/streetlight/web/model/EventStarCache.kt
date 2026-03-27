@@ -25,7 +25,6 @@ class EventStarCache(
 
     private var localCache
         get() = localStorage[EVENT_STAR_CACHE_KEY]?.let {
-            console.log(it)
             jsonConfig.decodeFromString<List<EventStar>>(it)
         } ?: emptyList()
         set(value: List<EventStar>) {
@@ -44,7 +43,7 @@ class EventStarCache(
                     val events = when (stars.isEmpty()) {
                         true -> emptyList()
                         else -> api.readEventLocations(stars.map { it.eventId }) ?: emptyList() // td: fail message
-                    }
+                    }.sortedBy { it.startsAt }
                     state.set { it.copy(events = events) }
                 }
             }
@@ -82,7 +81,7 @@ class EventStarCache(
 
     private fun modifyStateEvents(star: EventStar) = when (star.value) {
         null -> stateNow.stars.filter { it.eventId != star.eventId }
-        else -> stateNow.stars + star
+        else -> (stateNow.stars + star)
     }
 
     private fun setStateEvents(star: EventStar) {

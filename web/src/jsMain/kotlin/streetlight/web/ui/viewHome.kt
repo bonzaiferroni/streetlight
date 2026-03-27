@@ -1,16 +1,18 @@
 package streetlight.web.ui
 
-import koala.dom.ViewContext
-import koala.dom.column
-import koala.dom.flowBlock
-import koala.dom.queryAndWireSwapBlock
-import koala.dom.queryAndWireSwitch
-import koala.dom.shellBox
-import koala.dom.wireBlock
+import kabinet.utils.toRelativeDayFormat
+import kabinet.utils.toTimeFormat
+import koala.SvgFile
+import koala.css.*
+import koala.dom.*
 import koala.html.Id
+import koala.html.card
+import koala.html.heading3
+import koala.html.imageWithBackdrop
 import koala.html.textBlock
 import koala.model.mapDistinct
 import org.w3c.dom.HTMLElement
+import streetlight.model.data.EventStar
 import streetlight.web.model.Streetlight
 import streetlight.web.shells.HomeShellKey
 import streetlight.web.shells.HomeContent
@@ -44,9 +46,31 @@ fun ViewContext<Streetlight>.wireStarredEvents(root: HTMLElement) {
     queryAndWireSwapBlock(root, HomeShellKey.StarSwapId, bindFlow = swapIdFlow)
     wireBlock(HomeShellKey.StarEventsId, root, wireOnView = false) {
         flowBlock(eventsFlow) { events ->
-            column {
-                events.forEach { event ->
-                    textBlock(event.title)
+            box {
+                val eventMap = events.groupBy { it.startsAt.toRelativeDayFormat() }
+                row {
+                    eventMap.forEach { (day, events) ->
+                        column(modify(Gap0)) {
+                            heading3(day, modify(LineHeight1, Margin1))
+                            row(modify(Flex1)) {
+                                events.forEach { event ->
+                                    card(modify(Width24, BorderRadius1)) {
+                                        imageWithBackdrop(event.imageUrl, modify(Flex1))
+                                        column(modify(Gap0)) {
+                                            textBlock(event.title, modify(SingleLine))
+                                            textBlock(event.locationName, modify(SingleLine, Dim))
+                                        }
+                                        row(modify(JustifyContentSpaceBetween)) {
+                                            textBlock(event.startsAt.toTimeFormat())
+                                            icon(SvgFile.Minus, modify(Dim)).onClick {
+                                                eventStarCache.editStar(EventStar(event.eventId, null))
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }

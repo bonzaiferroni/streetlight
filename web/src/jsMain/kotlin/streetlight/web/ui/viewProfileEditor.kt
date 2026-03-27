@@ -46,7 +46,7 @@ fun ViewContext<Streetlight>.viewProfileEditor() {
         column {
             card {
                 row(modify(AlignItemsStart)) {
-                    imageDrop(avatarFlow, ::setAvatar, modify(Width16, Square))
+                    imageDrop(avatarFlow, ::setAvatar, modify(Width16, AspectRatio1))
                     row {
                         textField("username", onChangeValue = ::setUsername, bindFlow = usernameFlow)
                         flowBlock(isAvailableFlow, defaultMagic) {

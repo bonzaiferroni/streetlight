@@ -49,7 +49,7 @@ fun FlowContent.appHeader() {
         action(SiteConfigRoute, modify(OpacitySome)) {
             icon(SvgFile.Settings, modify(Height100))
         }
-        action(AccountRoute, modify(Square), id = AppBody.badgeId) {
+        action(AccountRoute, modify(AspectRatio1), id = AppBody.badgeId) {
             emptyBadge()
         }
     }
