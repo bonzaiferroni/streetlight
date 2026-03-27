@@ -35,5 +35,6 @@ val kotlinElementStyles get() = listOf(
     PopoverStyle,
     SwapBlockStyle,
     SectionStyles,
-    layoutUtilities.mapNotNull{ it.definition }.joinToString("\n")
+    layoutUtilities.mapNotNull{ it.definition }.joinToString("\n"),
+    displayUtilities.mapNotNull{ it.definition }.joinToString("\n")
 )

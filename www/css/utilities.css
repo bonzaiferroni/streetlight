@@ -54,9 +54,11 @@
     font-style: italic;
 }
 
+/*
 .display-none {
     display: none !important;
 }
+*/
 
 /*
 .align-items-center {
@@ -74,29 +76,41 @@
     width: 100%
 }
 
+/*
 .dim {
     color: rgba(var(--ink), 0.6);
 }
+*/
 
+/*
 .opacity-1 {
     opacity: 1;
 }
+*/
 
+/*
 .opacity-most {
     opacity: .75;
 }
+*/
 
+/*
 .opacity-half {
     opacity: .5;
 }
+*/
 
+/*
 .opacity-some {
     opacity: .25;
 }
+*/
 
+/*
 .no-dim {
     color: rgb(var(--ink)) !important;
 }
+*/
 
 .no-gap {
     gap: 0 !important;
@@ -126,32 +140,44 @@
     white-space: normal;
 }
 
+/*
 .circle-shape {
     border-radius: 50%;
     overflow: hidden;
     border: 3px solid #b4bd7d;
 }
+*/
 
+/*
 .circle-clip {
     border-radius: 50%;
     overflow: hidden;
 }
+*/
 
+/*
 .border-radius-0 {
     border-radius: 0;
 }
+*/
 
+/*
 .border-radius-1 {
     border-radius: var(--unit-spacing);
 }
+*/
 
+/*
 .border-radius-2 {
     border-radius: calc(var(--unit-spacing) * 2);
 }
+*/
 
+/*
 .border-radius-4 {
     border-radius: calc(var(--unit-spacing) * 4);
 }
+*/
 
 .heading-1, input.heading-1 {
     font-size: var(--heading-1-size);
@@ -444,17 +470,23 @@
 }
 */
 
+/*
 .overflow-hidden {
     overflow: hidden;
 }
+*/
 
+/*
 .overflow-wrap-anywhere {
     overflow-wrap: anywhere;
 }
+*/
 
+/*
 .overflow-clip {
     overflow: clip;
 }
+*/
 
 /*
 .gap-0 {
@@ -626,17 +658,23 @@
 }
 */
 
+/*
 .primary-bg {
     background-color: var(--primary-bg);
 }
+*/
 
+/*
 .primary-card-bg {
     background-color: var(--primary-card-bg);
 }
+*/
 
+/*
 .solid-bg {
     background-color: var(--paper-bg);
 }
+*/
 
 /*
 .justify-self-end {
@@ -668,6 +706,7 @@
     object-position: center;
 }
 
+/*
 .fade-bottom {
     -webkit-mask-image: linear-gradient(
             to bottom,
@@ -682,6 +721,7 @@
             transparent 100%
     );
 }
+*/
 
 /*
 .relative-parent {
@@ -699,10 +739,12 @@
 }
 */
 
+/*
 .blur-backdrop {
     backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px); /* for Safari */
+    -webkit-backdrop-filter: blur(10px);
 }
+*/
 
 .line-height-1 {
     line-height: 1;

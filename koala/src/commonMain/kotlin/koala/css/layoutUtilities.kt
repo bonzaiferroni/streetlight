@@ -1,5 +1,36 @@
 package koala.css
 
+val layoutUtilities
+    get() = listOf(
+        // Gap
+        Gap0, Gap1, Gap2, Gap4, Gap8, GapTiny,
+        // Flex
+        Flex1, Flex2, Flex3, Flex4, FlexBasis25, FlexBasis33, RowReverse, QueryRowReverse, NoWrap, WrapFlex,
+        // Align
+        AlignItemsCenter, AlignItemsStretch, AlignItemsStart, AlignItemsEnd,
+        JustifyContentCenter, JustifyContentEnd, JustifyContentSpaceAround, JustifyContentSpaceBetween,
+        JustifySelfEnd, AlignSelfStart, AlignSelfStretch,
+        // Width
+        WidthAuto, Width100, WidthFitContent, Width2, Width4, Width8, Width12, Width16, Width24, Width32, Width64,
+        MinWidth0, MinWidth16, MinWidth32, MinWidthAuto, MaxWidth25, MaxWidth50, MaxWidth64,
+        // Height
+        HeightAuto, Height100, Height2, Height3, Height4, Height5, Height6, Height8, Height12, Height16, Height24, Height32, Height48,
+        MinHeightAuto, MinHeight0, MinHeight4, MinHeight8, MinHeight16, MinHeight24, MinHeight32,
+        MaxHeight8, MaxHeight16, MaxHeight24, MaxHeight32, MaxHeight64,
+        // Size
+        Size100, FillHeight, Square,
+        // Flex Items
+        FlexItems1, FlexItemsBasis50,
+        // Text
+        TextAlignCenter, TextAlignRight,
+        // Margin
+        MarginAuto, Margin1, Margin2, MarginTop1, MarginTop2, MarginTop4, MarginTop8, MarginLeft1,
+        // Padding
+        Padding0, Padding1, Padding2, PaddingTiny,
+        // Other
+        SpaceBetween, Start, End, Center, PlaceItemsCenter, RelativeParent, ZIndex1, Shrinkable
+    )
+
 // Gap
 val Gap0 = CssUtility("gap-0", ".gap-0 { gap: 0; }")
 val Gap1 = CssUtility("gap-1", ".gap-1 { gap: var(--unit-spacing); }")
@@ -129,37 +160,6 @@ val RelativeParent = CssUtility(
 )
 val ZIndex1 = CssUtility("z-index-1", ".z-index-1 { z-index: 1; }")
 val Shrinkable = CssUtility("shrinkable", null)
-
-val layoutUtilities
-    get() = listOf(
-        // Gap
-        Gap0, Gap1, Gap2, Gap4, Gap8, GapTiny,
-        // Flex
-        Flex1, Flex2, Flex3, Flex4, FlexBasis25, FlexBasis33, RowReverse, QueryRowReverse, NoWrap, WrapFlex,
-        // Align
-        AlignItemsCenter, AlignItemsStretch, AlignItemsStart, AlignItemsEnd,
-        JustifyContentCenter, JustifyContentEnd, JustifyContentSpaceAround, JustifyContentSpaceBetween,
-        JustifySelfEnd, AlignSelfStart, AlignSelfStretch,
-        // Width
-        WidthAuto, Width100, WidthFitContent, Width2, Width4, Width8, Width12, Width16, Width24, Width32, Width64,
-        MinWidth0, MinWidth16, MinWidth32, MinWidthAuto, MaxWidth25, MaxWidth50, MaxWidth64,
-        // Height
-        HeightAuto, Height100, Height2, Height3, Height4, Height5, Height6, Height8, Height12, Height16, Height24, Height32, Height48,
-        MinHeightAuto, MinHeight0, MinHeight4, MinHeight8, MinHeight16, MinHeight24, MinHeight32,
-        MaxHeight8, MaxHeight16, MaxHeight24, MaxHeight32, MaxHeight64,
-        // Size
-        Size100, FillHeight, Square,
-        // Flex Items
-        FlexItems1, FlexItemsBasis50,
-        // Text
-        TextAlignCenter, TextAlignRight,
-        // Margin
-        MarginAuto, Margin1, Margin2, MarginTop1, MarginTop2, MarginTop4, MarginTop8, MarginLeft1,
-        // Padding
-        Padding0, Padding1, Padding2, PaddingTiny,
-        // Other
-        SpaceBetween, Start, End, Center, PlaceItemsCenter, RelativeParent, ZIndex1, Shrinkable
-    )
 
 // layout utilities
 // object Gap0: Modifier { override val identifier = "gap-0" }
