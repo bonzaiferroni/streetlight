@@ -46,6 +46,7 @@ object SvgFiles: FileSet<SvgFile>() {
     val Eye = add("eye.svg")
     val EyeOff = add("eye-off.svg")
     val EyeClosed = add("eye-closed.svg")
+    val Crosshairs = add("crosshairs.svg")
 }
 
 object LottieFiles: FileSet<LottieFile>() {

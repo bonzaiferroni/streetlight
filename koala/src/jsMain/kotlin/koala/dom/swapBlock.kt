@@ -18,6 +18,7 @@ fun RenderContext.wireSwapBlock(
 ) {
     bindFlow?.let { flow ->
         val children = element.children.asList().map { it as HTMLElement }
+        console.log(element.id)
         val isMagic = element.classList.contains(Magic.identifier)
         renderScope.launch {
             var isInitial = true

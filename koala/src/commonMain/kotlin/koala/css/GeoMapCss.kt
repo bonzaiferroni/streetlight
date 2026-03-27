@@ -35,7 +35,7 @@ val GeoMapCss get() = """
     width: 12px;
     height: 12px;
 
-    --svg: url("../svg/crosshairs.svg");
+    --svg: url("/www/svg/crosshairs.svg");
 
     position: absolute;
     top: 50%;
@@ -115,7 +115,7 @@ val GeoMapCss get() = """
 
     transform: translate(-50%, -50%) rotate(var(--bearing));
 
-    background-image: url(../svg/bus-direction.svg);
+    background-image: url(/www/svg/bus-direction.svg);
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;

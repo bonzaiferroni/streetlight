@@ -39,6 +39,8 @@ val SwapBlockCss get() = """
 .swap-block {
     display: grid;
     min-width: 0;
+    width: 100%;
+    height: 100%;
 }
 
 .swap-block > * {

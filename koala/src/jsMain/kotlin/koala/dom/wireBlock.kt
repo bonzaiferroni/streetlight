@@ -7,18 +7,28 @@ import org.w3c.dom.HTMLElement
 fun RenderContext.wireBlock(
     elementId: Id,
     ancestor: HTMLElement? = null,
+    wireOnView: Boolean = true,
     block: RenderContext.() -> Unit
 ): HTMLElement {
     val element = ancestor?.querySelector(elementId.selector) as? HTMLElement ?: document.getElementOrNullById(elementId)
         ?: error("couldn't find ${elementId.value}")
-    var isRendered = false
-    element.style.removeProperty("display")
 
-    element.onView { isVisible ->
-        if (isVisible && !isRendered) {
-            isRendered = true
-            element.renderRoot(renderScope, block)
+    fun wireElement() {
+        element.renderRoot(renderScope, block)
+    }
+
+    if (wireOnView) {
+        var isRendered = false
+        element.style.removeProperty("display")
+
+        element.onView { isVisible ->
+            if (isVisible && !isRendered) {
+                isRendered = true
+                wireElement()
+            }
         }
+    } else {
+        wireElement()
     }
 
     return element

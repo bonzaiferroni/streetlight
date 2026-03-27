@@ -8,14 +8,14 @@ import streetlight.web.layouts.layoutGalaxyPosts
 import streetlight.web.pages.appFooter
 
 fun FlowContent.homeShell(content: HomeContent) {
-    column(HomeShell.homeBoxId) {
+    column(HomeShellKey.ContainerId) {
         geoMapMount()
 
         // val galaxyStars = content.galaxies.map { GalaxyStar(it.pathId, it.name, it.imageUrl) }
 
         row(modify(JustifyContentSpaceBetween)) {
             galaxyMenu(content.galaxies, null)
-            switch("bruh", id = Id("ey"))
+            switch("bruh", id = Id("bruh"))
         }
 
         section {
@@ -49,13 +49,23 @@ fun FlowContent.homeShell(content: HomeContent) {
                 sectionHeading("Starred Events")
             }
 
-            card(modify(Height32, JustifyContentCenter, Dim, Gap0)) {
-                row(modify(JustifyContentCenter)) {
-                    textBlock("Events that you")
-                    icon(SvgFiles.StarOutline)
-                    textBlock("will appear here.")
+            card(modify(Height32)) {
+                swapBlock(HomeShellKey.StarSwapId, modify(Magic)) {
+                    column(modify(JustifyContentCenter, Dim, Gap0)) {
+                        setId(HomeShellKey.StarInfoId)
+                        setReveal(true)
+
+                        row(modify(JustifyContentCenter)) {
+                            textBlock("Events that you")
+                            icon(SvgFiles.StarOutline)
+                            textBlock("will appear here.")
+                        }
+                        textBlock("This is saved on your device, no need to sign in.", modify(TextAlignCenter))
+                    }
+                    box(HomeShellKey.StarEventsId) {
+                        setReveal(false)
+                    }
                 }
-                textBlock("This is saved on your device, no need to sign in.", modify(TextAlignCenter))
             }
         }
 
@@ -63,7 +73,9 @@ fun FlowContent.homeShell(content: HomeContent) {
     }
 }
 
-object HomeShell {
-    val homeBoxId = Id("home-box")
-    val tabsId = Id("home-tabs")
+object HomeShellKey {
+    val ContainerId = Id("home-box")
+    val StarSwapId = Id("star-swap")
+    val StarInfoId = Id("star-info")
+    val StarEventsId = Id("star-events")
 }

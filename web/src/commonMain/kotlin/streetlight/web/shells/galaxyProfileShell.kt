@@ -11,7 +11,7 @@ import streetlight.web.layouts.layoutGalaxyPosts
 import streetlight.web.pages.appFooter
 import streetlight.web.ui.headerOf
 
-fun FlowContent.galaxyShell(content: GalaxyProfileContent) {
+fun FlowContent.galaxyProfileShell(content: GalaxyProfileContent) {
     val galaxy = content.galaxy; val posts = content.posts;
     column(GalaxyProfileKey.ShellId) {
         swapBlock(GalaxyProfileKey.SwapId, modify(Magic, OverflowClip)) {

@@ -16,7 +16,7 @@ import streetlight.web.model.Streetlight
 import streetlight.web.layouts.EventAttributes
 import streetlight.web.shells.GalaxyProfileKey
 import streetlight.web.shells.GalaxyProfileContent
-import streetlight.web.shells.galaxyShell
+import streetlight.web.shells.galaxyProfileShell
 import streetlight.web.layouts.iconPath
 
 fun RenderContext.viewGalaxyProfile(app: Streetlight, content: GalaxyProfileContent) {
@@ -34,12 +34,11 @@ fun RenderContext.viewGalaxyProfile(app: Streetlight, content: GalaxyProfileCont
     fun setIsMapVisible(value: Boolean) = state.set { it.copy(isMapVisible = value) }
 
     val root = shellBox(GalaxyProfileKey.ShellId, app.geoMap, app.appScope) {
-        galaxyShell(content)
+        galaxyProfileShell(content)
     }
 
     queryAndWireSwitch(root, GalaxyProfileKey.MapSwitchId, onToggle = ::setIsMapVisible, bindFlow = isMapVisibleFlow)
     queryAndWireSwapBlock(root, GalaxyProfileKey.SwapId, bindFlow = swapIdFlow)
-
     wireInterestControls(app, root)
 
     app.streetMap.setPosts(content.posts)
