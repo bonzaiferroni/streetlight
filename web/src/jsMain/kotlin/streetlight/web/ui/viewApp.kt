@@ -119,9 +119,9 @@ fun viewApp() {
                 flowBlock(app.gate.userFlow, defaultMagic) { userInfo ->
                     val avatarUrl = userInfo?.avatarUrl
                     if (avatarUrl != null) {
-                        image(avatarUrl, modify(Size100, AspectRatio1, CircleClip))
+                        image(avatarUrl, modify(Size100P, AspectRatio1, CircleClip))
                     } else {
-                        box(modify(Height100, AspectRatio1)) {
+                        box(modify(Height100P, AspectRatio1)) {
                             emptyBadge()
                         }
                     }

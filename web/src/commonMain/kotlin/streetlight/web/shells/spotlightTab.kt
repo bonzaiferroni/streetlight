@@ -3,7 +3,7 @@ package streetlight.web.shells
 import koala.css.AlignItemsStart
 import koala.css.Dim
 import koala.css.FlexItems1
-import koala.css.QueryMediumRow
+import koala.css.MediaMdRow
 import koala.css.modify
 import koala.html.column
 import koala.html.heading3
@@ -23,7 +23,7 @@ fun FlowContent.spotlightTab(content: HomeContent) {
                 cardOf(galaxy)
             }
         }
-        column(modify(QueryMediumRow, FlexItems1, AlignItemsStart)) {
+        column(modify(MediaMdRow, FlexItems1, AlignItemsStart)) {
             column {
                 heading3("Posts")
                 posts.forEach { post ->

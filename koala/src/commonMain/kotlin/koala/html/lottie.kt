@@ -28,3 +28,12 @@ internal fun DIV.configureLottie(
 object LottieKey {
     val Class = Css("lottie")
 }
+
+// language="CSS"
+val LottieCss get() = """
+.lottie,
+.lottie > svg {
+    width: 100%;
+    height: 100%;
+}
+"""

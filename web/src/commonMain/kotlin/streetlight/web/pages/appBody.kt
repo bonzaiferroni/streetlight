@@ -38,16 +38,16 @@ fun FlowContent.appHeader() {
         icon(SvgFile.Menu, modify(OpacitySome))
         icon(SvgFile.Search, modify(OpacitySome))
         row(modify(Flex1, JustifyContentCenter)) {
-            action(HomeRoute, modify(Height100)) {
-                row(modify(AlignItemsCenter, Height100)) {
+            action(HomeRoute, modify(Height100P)) {
+                row(modify(AlignItemsEnd, Height100P)) {
                     logo()
-                    heading2("Streetlight")
+                    heading2("Streetlight", modify(LineHeight1))
 //                    wireBlock(AppBody.titlePathId)
                 }
             }
         }
         action(SiteConfigRoute, modify(OpacitySome)) {
-            icon(SvgFile.Settings, modify(Height100))
+            icon(SvgFile.Settings, modify(Height100P))
         }
         action(AccountRoute, modify(AspectRatio1), id = AppBody.badgeId) {
             emptyBadge()
@@ -69,7 +69,7 @@ fun DIV.configureAppFooter() {
 }
 
 fun FlowContent.emptyBadge() {
-    icon(SvgFile.EmptyProfile, modify(Height100, OpacitySome))
+    icon(SvgFile.EmptyProfile, modify(Height100P, OpacitySome))
 }
 
 object AppBody {

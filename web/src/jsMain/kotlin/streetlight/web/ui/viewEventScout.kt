@@ -145,7 +145,7 @@ fun ViewContext<EventScout>.findLocationPanel() {
 
         row(modify(AlignItemsStart)) {
             column(modify(Flex1, AlignItemsEnd)) {
-                textField("search", modify(Width100), model::setQuery, queryFlow, placeholder = "Search by name or address")
+                textField("search", modify(Width100P), model::setQuery, queryFlow, placeholder = "Search by name or address")
             }
             button("Search", onClick = model::searchQuery)
         }

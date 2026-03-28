@@ -1,43 +1,50 @@
 package streetlight.web.shells
 
+import koala.LottieFile
 import koala.SvgFile
 import koala.css.*
 import koala.html.*
 import kotlinx.html.FlowContent
 import streetlight.web.layouts.layoutGalaxyPosts
+import streetlight.web.layouts.smallGalaxyCard
 import streetlight.web.pages.appFooter
+import streetlight.web.toRoute
 
 fun FlowContent.homeShell(content: HomeContent) {
-    column(HomeShellKey.ContainerId) {
-        geoMapMount()
+    column(HomeShellKey.ContainerId, modify(Gap8)) {
+        column {
+            geoMapMount()
 
-        // val galaxyStars = content.galaxies.map { GalaxyStar(it.pathId, it.name, it.imageUrl) }
-
-        row(modify(JustifyContentSpaceBetween)) {
-            galaxyMenu(content.galaxies, null)
-            switch("bruh", id = Id("bruh"))
+            row(modify(JustifyContentSpaceBetween)) {
+                galaxyMenu(content.galaxies, null)
+                switch("bruh", id = Id("bruh"))
+            }
         }
 
-        section {
+        section(modify(QueryContainer)) {
             column(modify(Gap0)) {
-                sectionHeading(
-                    labelContent = {
-                        column(modify(Gap0)) {
-                            centeredHeading("Galaxies", modify(Flex1))
-                            textBlock(
-                                content = "Galaxies are Streetlight communities, each with a particular focus.",
-                                modifiers = modify(Dim, TextAlignCenter)
-                            )
-                        }
-                    }
+                heading2("Galaxies", SectionHeadingMods)
+                textBlock(
+                    content = "Galaxies are Streetlight communities, each with a particular focus.",
+                    modifiers = modify(Dim, TextAlignCenter)
                 )
             }
 
-            ulist {
-                content.galaxies.forEach { galaxy ->
-                    listItem {
-                        cardOf(galaxy)
+            column(modify(ContainerTnRow)) {
+                column(modify(Flex1)) {
+                    filigree {
+                        heading4("Top Galaxies", modify(LineHeight1))
                     }
+                    ulist {
+                        content.galaxies.forEach { galaxy ->
+                            listItem {
+                                smallGalaxyCard(galaxy)
+                            }
+                        }
+                    }
+                }
+                row(modify(Flex1, AlignItemsCenter, JustifyContentCenter)) {
+                    lottie(LottieFile.dinoLoad, modify(Width32, AspectRatio1))
                 }
             }
         }
@@ -45,8 +52,8 @@ fun FlowContent.homeShell(content: HomeContent) {
         layoutGalaxyPosts(content.posts)
 
         section {
-            column(modify(Gap0)) {
-                sectionHeading("Starred Events")
+            filigree {
+                heading2("Starred Events", SectionHeadingMods)
             }
 
             card(modify(Height32)) {
@@ -79,3 +86,5 @@ object HomeShellKey {
     val StarInfoId = Id("star-info")
     val StarEventsId = Id("star-events")
 }
+
+val SectionHeadingMods = modify(LineHeight1, SingleLine, TextAlignCenter)

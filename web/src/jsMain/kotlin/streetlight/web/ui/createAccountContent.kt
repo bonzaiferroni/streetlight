@@ -4,7 +4,7 @@ import koala.LottieFile
 import koala.css.AlignItemsStretch
 import koala.css.PlaceItemsCenter
 import koala.css.FlexItems1
-import koala.css.MaxWidth50
+import koala.css.MaxWidth50P
 import koala.css.QueryRowReverse
 import koala.css.modify
 import koala.dom.*
@@ -51,7 +51,7 @@ fun RenderContext.createAccountContent(app: Streetlight) {
             button("Sign up", onClick = creator::createAccount, bindIsEnabled = creator.isValidFlow)
         }
         box(modify(PlaceItemsCenter)) {
-            column(modify(MaxWidth50)) {
+            column(modify(MaxWidth50P)) {
                 lottie(LottieFile.cat)
                 textBlock("Streetlight is at an early stage in development. Only the bravest souls should enter.")
             }

@@ -11,11 +11,11 @@ import koala.css.ModifierSet
 import koala.css.OpacityMost
 import koala.css.OverflowHidden
 import koala.css.Secondary
-import koala.css.Size100
+import koala.css.Size100P
 import koala.css.SlideDown
 import koala.css.ZIndex1
 import koala.css.modify
-import koala.html.imageWithBackdrop
+import koala.html.fillImage
 import kotlinx.coroutines.flow.Flow
 
 fun RenderContext.imageDrop(
@@ -23,14 +23,14 @@ fun RenderContext.imageDrop(
     onFileUrl: (String?) -> Unit,
     modifiers: ModifierSet? = null,
     block: RenderContext.(String) -> Unit = {
-        box(modify(Size100)) {
-            imageWithBackdrop(it)
+        box(modify(Size100P)) {
+            fillImage(it)
         }
     }
 ) {
     flowBlock(urlFlow, modify(modifiers, Magic, Blur, SlideDown)) { url ->
         if (url != null) {
-            box(modify(Size100, OverflowHidden, BorderRadius1)) {
+            box(modify(Size100P, OverflowHidden, BorderRadius1)) {
                 block(url)
                 button(
                     text = "✕",
@@ -40,7 +40,7 @@ fun RenderContext.imageDrop(
                     })
             }
         } else {
-            filePicker(MimeType.Image, modify(Size100)) {
+            filePicker(MimeType.Image, modify(Size100P)) {
                 console.log(it)
                 onFileUrl(it)
             }

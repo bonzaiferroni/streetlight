@@ -6,14 +6,12 @@ import koala.css.*
 import koala.html.TagAttribute
 import koala.html.action
 import koala.html.actionIfNotNull
-import koala.html.box
 import koala.html.btn
 import koala.html.card
 import koala.html.column
 import koala.html.heading3
-import koala.html.heading5
 import koala.html.icon
-import koala.html.imageWithBackdrop
+import koala.html.fillImage
 import koala.html.row
 import koala.html.setData
 import koala.html.textBlock
@@ -22,18 +20,16 @@ import streetlight.model.data.EventId
 import streetlight.model.data.GalaxyPost
 import streetlight.model.data.StarType
 
-fun FlowContent.layoutLargeGalaxyPost(post: GalaxyPost) {
+fun FlowContent.largePostCard(post: GalaxyPost) {
     val postRoute = post.route ?: return
 
-    card(modify(Padding0, OverflowHidden)) {
-        column(modify(QueryLargeRow, AlignItemsStretch, Gap0)) {
+    card(modify(QueryContainer, Padding0, OverflowHidden)) {
+        column(modify(QueryContainer, ContainerLgRow, Gap0)) {
 
             // non-grid content
-            column(modify(Flex3, QueryMediumRow, AlignItemsStretch, Gap0)) {
-                post.imageUrl?.let { imageUrl ->
-                    imageWithBackdrop(imageUrl, modify(Flex1, MinHeight24, AlignSelfStretch))
-                }
-                column(modify(Flex2, Padding1, AlignItemsStretch, MaxHeight24)) {
+            column(modify(Flex3, ContainerMdRow, Gap0)) {
+                fillImage(post.imageUrl, modify(Flex1, MinHeight24))
+                column(modify(Flex2, Padding1, Height24, MaxHeight24)) {
                     row {
                         column(modify(Flex1, Gap0)) {
                             action(postRoute) {
@@ -47,10 +43,8 @@ fun FlowContent.layoutLargeGalaxyPost(post: GalaxyPost) {
                         }
                     }
                     post.description?.let { description ->
-                        box(modify(Flex1, SmallFont, OverflowHidden, FadeBottom)) {
-                            action(postRoute) {
-                                textBlock(description)
-                            }
+                        action(postRoute, modify(Flex1, SmallText, OverflowHidden, FadeBottom)) {
+                            textBlock(description)
                         }
                     }
 
@@ -66,38 +60,42 @@ fun FlowContent.layoutLargeGalaxyPost(post: GalaxyPost) {
             }
 
             // grid content
-            row(modify(Flex1, QueryLargeColumn, MinHeight8, FlexItems1, AlignItemsStretch, GapTiny, TextAlignCenter, WrapFlex, SmallFont)) {
-                val cellModifiers = modify(AlignItemsCenter, Gap0, BorderRadius0, JustifyContentCenter, MinWidth16)
-                card(cellModifiers) {
+            row(modify(Flex1, ContainerLgColumn, MinHeight8, FlexItems1, GapTiny, TextAlignCenter, WrapFlex)) {
+                val cellMods = modify(AlignItemsCenter, Gap0, BorderRadius0, JustifyContentCenter, MinWidth16)
+                val rowMods = modify(JustifyContentCenter)
+                card(cellMods) {
                     post.event?.startsAt?.let { startsAt ->
-                        row(modify(WrapFlex, JustifyContentCenter, Gap0, AlignItemsCenter)) {
-                            heading5(startsAt.toRelativeDayFormat())
-                            textBlock("8:00 PM", modify(MarginLeft1))
+                        row(rowMods) {
+                            textBlock(startsAt.toRelativeDayFormat(), modify(Bold))
+                            textBlock("8:00 PM")
                         }
                     }
                 }
-                card(cellModifiers) {
+                card(cellMods) {
                     post.event?.cost?.let { cost ->
                         val ticketsUrl = cost.takeIf { it != 0f }?.let {
                             post.event?.url
                         }
                         actionIfNotNull(ticketsUrl) {
-                            row(modify(WrapFlex, JustifyContentCenter, Gap0)) {
+                            row(rowMods) {
                                 textBlock("tickets:", modify(Dim))
-                                textBlock("$$cost", modify(MarginLeft1))
+                                textBlock("$$cost")
                             }
                         }
                     }
                 }
-                card(cellModifiers) {
-                    row(modify(WrapFlex, JustifyContentCenter, Gap0)) {
+                card(cellMods) {
+                    row(rowMods) {
                         textBlock("from:", modify(Dim))
-                        textBlock(post.username ?: "anonymous", modify(MarginLeft1))
+                        textBlock(post.username ?: "anonymous")
                     }
                 }
                 post.event?.let { event ->
-                    card(cellModifiers) {
-                        starCell(event.eventId)
+                    card(cellMods) {
+                        row(rowMods) {
+                            textBlock((0..10).random().toString())
+                            starCell(event.eventId)
+                        }
                     }
                 }
             }

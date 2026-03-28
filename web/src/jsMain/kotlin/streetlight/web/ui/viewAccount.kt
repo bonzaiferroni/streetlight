@@ -37,7 +37,7 @@ fun RenderContext.signInContent(
     val cred = gate.cred
     val portal = app.portal
 
-    column(modify(QueryMediumRow, FlexItems1)) {
+    column(modify(MediaMdRow, FlexItems1)) {
         card {
             flowBlock(gate.messageFlow) { msg ->
                 if (msg == null) {
@@ -75,7 +75,7 @@ fun RenderContext.signInContent(
             }
         }
         column(modify(AlignItemsCenter)) {
-            lottie(LottieFile.strollingMan, modify(MaxWidth50))
+            lottie(LottieFile.strollingMan, modify(MaxWidth50P))
         }
     }
 }

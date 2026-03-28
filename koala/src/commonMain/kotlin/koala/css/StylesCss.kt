@@ -38,7 +38,7 @@ val StylesCss get() = """
 
     --body-width: 960px;
 
-    --font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --font-family: Roboto, sans-serif; /* system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;*/
 
     --breakpoint-sm: 0px;
     --breakpoint-md: 600px;

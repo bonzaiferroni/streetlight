@@ -1,6 +1,7 @@
 package koala.core
 
 import koala.external.LottieOptions
+import koala.external.RendererSettings
 import koala.external.lottie
 import koala.html.TagAttribute
 import org.w3c.dom.HTMLElement
@@ -21,7 +22,10 @@ fun initLottie(element: HTMLElement) {
             renderer = "svg",
             loop = true,
             autoplay = true,
-            path = path
+            path = path,
+            rendererSettings = RendererSettings(
+                preserveAspectRatio = "xMidYMid slice",
+            )
         )
     )
 }

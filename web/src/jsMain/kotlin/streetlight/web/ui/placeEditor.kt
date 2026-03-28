@@ -9,9 +9,9 @@ import koala.css.Flex1
 import koala.css.Flex2
 import koala.css.Blur
 import koala.css.Magic
-import koala.css.QueryMediumRow
+import koala.css.MediaMdRow
 import koala.css.AspectRatio1
-import koala.css.Width100
+import koala.css.Width100P
 import koala.css.modify
 import koala.dom.RenderContext
 import koala.dom.button
@@ -56,7 +56,7 @@ fun RenderContext.placeEditor(
         }
     }
 
-    val element = column(modify(QueryMediumRow, AlignItemsStretch)) {
+    val element = column(modify(MediaMdRow, AlignItemsStretch)) {
         geoMapMount(geoPoint, modify(Flex1, AspectRatio1))
         column(modify(Flex2, AlignItemsStretch)) {
             row {
@@ -72,7 +72,7 @@ fun RenderContext.placeEditor(
             textField(
                 label = "address",
                 placeholder = "Address",
-                modifiers = modify(Width100),
+                modifiers = modify(Width100P),
                 onChangeValue = model::setAddress,
                 bindFlow = addressFlow,
             )

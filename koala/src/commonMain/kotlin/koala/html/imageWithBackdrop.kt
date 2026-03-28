@@ -1,7 +1,6 @@
 package koala.html
 
 import koala.css.Css
-import koala.css.ElementClass
 import koala.css.ModifierSet
 import koala.css.addModifiers
 import kotlinx.html.FlowContent
@@ -9,7 +8,7 @@ import kotlinx.html.IMG
 import kotlinx.html.div
 import kotlinx.html.img
 
-fun FlowContent.imageWithBackdrop(
+fun FlowContent.fillImage(
     src: String? = null,
     modifiers: ModifierSet? = null,
     placeholder: String = SiteImage.placeholder,

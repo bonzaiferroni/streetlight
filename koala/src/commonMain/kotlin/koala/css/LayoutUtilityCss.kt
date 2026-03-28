@@ -11,14 +11,14 @@ val LayoutUtilityCss
         JustifyContentCenter, JustifyContentEnd, JustifyContentSpaceAround, JustifyContentSpaceBetween,
         JustifySelfEnd, AlignSelfStart, AlignSelfStretch,
         // Width
-        WidthAuto, Width100, WidthFitContent, Width2, Width4, Width8, Width12, Width16, Width24, Width32, Width64,
-        MinWidth0, MinWidth16, MinWidth32, MinWidthAuto, MaxWidth25, MaxWidth50, MaxWidth64,
+        WidthAuto, Width100P, WidthFitContent, Width2, Width4, Width8, Width12, Width16, Width24, Width32, Width64,
+        MinWidth0, MinWidth16, MinWidth32, MinWidthAuto, MaxWidth25P, MaxWidth50P, MaxWidth16, MaxWidth64,
         // Height
-        HeightAuto, Height100, Height2, Height3, Height4, Height5, Height6, Height8, Height12, Height16, Height24, Height32, Height48,
-        MinHeightAuto, MinHeight0, MinHeight4, MinHeight8, MinHeight16, MinHeight24, MinHeight32,
+        HeightAuto, Height100P, Height2, Height3, Height4, Height5, Height6, Height8, Height12, Height16, Height24, Height32, Height48,
+        MinHeightAuto, MinHeight0, MinHeight4, MinHeight5, MinHeight8, MinHeight16, MinHeight24, MinHeight32,
         MaxHeight8, MaxHeight16, MaxHeight24, MaxHeight32, MaxHeight64,
         // Size
-        Size100, FillHeight, AspectRatio1, AspectRatio2,
+        Size100P, FillHeight, AspectRatio1, AspectRatio2,
         // Flex Items
         FlexItems1, FlexItemsBasis50,
         // Text
@@ -30,7 +30,7 @@ val LayoutUtilityCss
         // Object Fit
         ObjectFitCover, ObjectFitContain, ObjectPositionCenter,
         // Other
-        SpaceBetween, Start, End, Center, PlaceItemsCenter, RelativeParent, ZIndex1, Shrinkable,
+        SpaceBetween, Start, End, Center, PlaceItemsCenter, RelativeParent, ZIndex1, Shrinkable, QueryContainer
     )
 
 // Gap
@@ -67,7 +67,7 @@ val JustifyContentSpaceBetween =
 
 // Width
 val WidthAuto = CssUtility("width-auto", ".width-auto { width: auto; }")
-val Width100 = CssUtility("width-100", ".width-100 { width: 100%; }")
+val Width100P = CssUtility("width-100", ".width-100 { width: 100%; }")
 val WidthFitContent = CssUtility("width-fit-content", ".width-fit-content { width: fit-content; }")
 val Width2 = CssUtility("width-2", ".width-2 { width: calc(var(--unit-spacing) * 2); }")
 val Width4 = CssUtility("width-4", ".width-4 { width: calc(var(--unit-spacing) * 4); }")
@@ -81,9 +81,13 @@ val MinWidth0 = CssUtility("min-width-0", ".min-width-0 { min-width: 0; }")
 val MinWidth16 = CssUtility("min-width-16", ".min-width-16 { min-width: calc(var(--unit-spacing) * 16); }")
 val MinWidth32 = CssUtility("min-width-32", ".min-width-32 { min-width: calc(var(--unit-spacing) * 32); }")
 val MinWidthAuto = CssUtility("min-width-auto", ".min-width-auto { min-width: auto; }")
+val MaxWidth25P = CssUtility("max-width-25", ".max-width-25 { max-width: 25%; }")
+val MaxWidth50P = CssUtility("max-width-50", ".max-width-50 { max-width: 50%; }")
+val MaxWidth16 = CssUtility("max-width-16", ".max-width-16 { max-width: calc(var(--unit-spacing) * 16); }")
+val MaxWidth64 = CssUtility("max-width-64", ".max-width-64 { max-width: calc(var(--unit-spacing) * 64); }")
 
 // Height
-val Height100 = CssUtility("height-100", ".height-100 { height: 100%; }")
+val Height100P = CssUtility("height-100", ".height-100 { height: 100%; }")
 val HeightAuto = CssUtility("height-auto", ".height-auto { height: auto; }")
 val Height2 = CssUtility("height-2", ".height-2 { height: calc(var(--unit-spacing) * 2); }")
 val Height3 = CssUtility("height-3", ".height-3 { height: calc(var(--unit-spacing) * 3); }")
@@ -104,13 +108,14 @@ val MaxHeight64 = CssUtility("max-height-64", ".max-height-64 { max-height: calc
 val MinHeightAuto = CssUtility("min-height-auto", ".min-height-auto { min-height: auto; }")
 val MinHeight0 = CssUtility("min-height-0", ".min-height-0 { min-height: 0; }")
 val MinHeight4 = CssUtility("min-height-4", ".min-height-4 { min-height: calc(var(--unit-spacing) * 4); }")
+val MinHeight5 = CssUtility("min-height-5", ".min-height-5 { min-height: calc(var(--unit-spacing) * 5); }")
 val MinHeight8 = CssUtility("min-height-8", ".min-height-8 { min-height: calc(var(--unit-spacing) * 8); }")
 val MinHeight16 = CssUtility("min-height-16", ".min-height-16 { min-height: calc(var(--unit-spacing) * 16); }")
 val MinHeight24 = CssUtility("min-height-24", ".min-height-24 { min-height: calc(var(--unit-spacing) * 24); }")
 val MinHeight32 = CssUtility("min-height-32", ".min-height-32 { min-height: calc(var(--unit-spacing) * 32); }")
 
 // Size
-val Size100 = CssUtility("size-100", ".size-100 { width: 100%; height: 100%; }")
+val Size100P = CssUtility("size-100", ".size-100 { width: 100%; height: 100%; }")
 val FillHeight = CssUtility("fill-height", ".fill-height { height: auto; max-height: 100%; }")
 
 // Flex Items
@@ -126,9 +131,6 @@ val RowReverse = CssUtility("row-reverse", ".row-reverse { flex-direction: row-r
 val QueryRowReverse = CssUtility("query-row-reverse", null)
 val NoWrap = CssUtility("no-wrap", ".no-wrap { flex-wrap: nowrap; white-space: nowrap; }")
 val WrapFlex = CssUtility("wrap-flex", ".wrap-flex { flex-wrap: wrap; }")
-val MaxWidth25 = CssUtility("max-width-25", ".max-width-25 { max-width: 25%; }")
-val MaxWidth50 = CssUtility("max-width-50", ".max-width-50 { max-width: 50%; }")
-val MaxWidth64 = CssUtility("max-width-64", ".max-width-64 { max-width: calc(var(--unit-spacing) * 64); }")
 
 // Margin
 val MarginAuto = CssUtility("margin-auto", ".margin-auto { margin: auto; }")
@@ -168,32 +170,23 @@ val RelativeParent = CssUtility(
 )
 val ZIndex1 = CssUtility("z-index-1", ".z-index-1 { z-index: 1; }")
 val Shrinkable = CssUtility("shrinkable", null)
-
-// object QueryMediumRow: Modifier { override val identifier = "query-medium-row" }
-// object QueryMediumColumn: Modifier { override val identifier = "query-medium-column" }
-// object QueryMediumFlex1: Modifier { override val identifier = "query-medium-flex-1" }
-// object QueryMediumFlex2: Modifier { override val identifier = "query-medium-flex-2" }
-// object QueryMediumFlex3: Modifier { override val identifier = "query-medium-flex-3" }
-// object QueryMediumFlex4: Modifier { override val identifier = "query-medium-flex-4" }
-// object QueryLargeRow: Modifier { override val identifier = "query-large-row" }
-// object QueryLargeColumn: Modifier { override val identifier = "query-large-column" }
-// object QueryLargeFlex1: Modifier { override val identifier = "query-large-flex-1" }
-// object QueryLargeFlex2: Modifier { override val identifier = "query-large-flex-2" }
-// object QueryLargeFlex3: Modifier { override val identifier = "query-large-flex-3" }
-// object QueryLargeFlex4: Modifier { override val identifier = "query-large-flex-4" }
+val QueryContainer = CssUtility("query-container", ".query-container { container-type: inline-size; }")
 
 // Query
-val QueryMediumRow = CssUtility("query-medium-row")
-val QueryMediumColumn = CssUtility("query-medium-column")
-val QueryMediumFlex1 = CssUtility("query-medium-flex-1")
-val QueryMediumFlex2 = CssUtility("query-medium-flex-2")
-val QueryMediumFlex3 = CssUtility("query-medium-flex-3")
-val QueryMediumFlex4 = CssUtility("query-medium-flex-4")
-val QueryLargeRow = CssUtility("query-large-row")
-val QueryLargeColumn = CssUtility("query-large-column")
-val QueryLargeFlex1 = CssUtility("query-large-flex-1")
-val QueryLargeFlex2 = CssUtility("query-large-flex-2")
-val QueryLargeFlex3 = CssUtility("query-large-flex-3")
+val MediaMdRow = CssUtility("media-md-row")
+val MediaMdColumn = CssUtility("media-md-column")
+val MediaLgRow = CssUtility("media-lg-row")
+val MediaLgColumn = CssUtility("media-lg-column")
+
+// Container Query
+val ContainerTnRow = CssUtility("container-tn-row")
+val ContainerSmRow = CssUtility("container-sm-row")
+val ContainerMdRow = CssUtility("container-md-row")
+val ContainerLgRow = CssUtility("container-lg-row")
+val ContainerTnColumn = CssUtility("container-tn-column")
+val ContainerSmColumn = CssUtility("container-sm-column")
+val ContainerMdColumn = CssUtility("container-md-column")
+val ContainerLgColumn = CssUtility("container-lg-column")
 
 // Layouts
 val Box = CssUtility("box")

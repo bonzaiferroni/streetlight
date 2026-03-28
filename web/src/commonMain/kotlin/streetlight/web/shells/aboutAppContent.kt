@@ -12,26 +12,26 @@ import streetlight.web.pages.appFooter
 
 fun FlowContent.aboutApp() {
     column(modify(AlignItemsCenter)) {
-        column(modify(QueryMediumRow, AlignItemsCenter)) {
-            lottie(LottieFile.cupShuffle, modify(Flex1, MaxWidth50))
+        column(modify(MediaMdRow, AlignItemsCenter)) {
+            lottie(LottieFile.cupShuffle, modify(Flex1, MaxWidth50P))
             val introText = "Streetlight is your front page for community events. " +
 //                    "Its first and only mission is to bring people together. " +
                     "It is cross-platform, open-source, and 100% Kotlin. "
-            textBlock(introText, modify(Flex3, LargeFont))
+            textBlock(introText, modify(Flex3, LargeText))
         }
-        column(modify(QueryMediumRow, AlignItemsCenter)) {
-            lottie(LottieFile.strollingMan, modify(Flex1, MaxWidth50))
+        column(modify(MediaMdRow, AlignItemsCenter)) {
+            lottie(LottieFile.strollingMan, modify(Flex1, MaxWidth50P))
             column(modify(Flex3)) {
                 column(modify(Gap0)) {
                     textBlock("Do you have a talent to share with passersby?")
                     textBlock("Do you have a business, venue, or message you would like to promote?")
                     textBlock("Are you walking down the street somewhere and looking for something to experience?")
                 }
-                textBlock("Consider downloading Streetlight to see what it can offer.", modify(FontWeightBold))
+                textBlock("Consider downloading Streetlight to see what it can offer.", modify(Bold))
             }
         }
-        column(modify(QueryMediumRow, AlignItemsCenter)) {
-            lottie(LottieFile.cat, modify(Flex1, MaxWidth50))
+        column(modify(MediaMdRow, AlignItemsCenter)) {
+            lottie(LottieFile.cat, modify(Flex1, MaxWidth50P))
             column(modify(Flex3)) {
                 textBlock {
                     externalLink("https://github.com/bonzaiferroni/streetlight", "Streetlight")
@@ -51,10 +51,10 @@ fun FlowContent.aboutApp() {
                     +"The nature of our work supports a level of collaboration as yet unrealized in human history. "
                     +"We are like giants who stand on the shoulders of other giants, each one reaching higher. "
                 }
-                textBlock("It's giants all the way down.", modify(LargeFont))
+                textBlock("It's giants all the way down.", modify(LargeText))
             }
         }
-        column(modify(Gap0, AlignItemsStretch, Width100, MarginTop4)) {
+        column(modify(Gap0, AlignItemsStretch, Width100P, MarginTop4)) {
             heading5("Our Giants", modify(TextAlignCenter))
             githubLink("web", "kotlinx.html", "Kotlin")
             githubLink("app client", "Compose Multiplatform", "jetbrains", "compose-multiplatform")

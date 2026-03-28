@@ -2,6 +2,10 @@ package koala.css
 
 // language="CSS"
 val LayoutCss get() = """
+:root {
+
+}
+
 .column {
     display: flex;
     flex-direction: column;
@@ -66,72 +70,44 @@ val LayoutCss get() = """
 }
 
 @media (min-width: 600px) {
-    .query-medium-row {
-        flex-direction: row;
-    }
-
-    .query-medium-column {
-        flex-direction: column;
-    }
-
-    .query-medium-row > .column {
-        width: auto;
-    }
-
-    .query-medium-row-reverse {
-        flex-direction: row-reverse;
-        justify-content: flex-end;
-    }
-
-    .query-medium-flex-1 {
-        flex: 1;
-    }
-
-    .query-medium-flex-2 {
-        flex: 2;
-    }
-
-    .query-medium-flex-3 {
-        flex: 3;
-    }
-
-    .query-medium-flex-4 {
-        flex: 4;
-    }
+    .media-md-row { flex-direction: row; }
+    .media-md-column { flex-direction: column; }
+    .media-md-row > .column { width: auto; }
+    .media-md-row-reverse { flex-direction: row-reverse; justify-content: flex-end; }
 }
 
 @media (min-width: 768px) {
-    .query-large-row {
-        flex-direction: row;
-    }
+    .media-lg-row { flex-direction: row; }
+    .media-lg-column { flex-direction: column; }
+    .media-lg-row > .column { width: auto; }
+    .media-lg-row-reverse { flex-direction: row-reverse; justify-content: flex-end; }
+}
 
-    .query-large-column {
-        flex-direction: column;
-    }
+@container (min-width: 300px) {
+    .container-tn-row { flex-direction: row; }
+    .container-tn-column { flex-direction: column; }
+    .container-tn-row > .column { width: auto; }
+    .container-tn-row-reverse { flex-direction: row-reverse; justify-content: flex-end; }
+}
 
-    .query-large-row > .column {
-        width: auto;
-    }
+@container (min-width: 384px) {
+    .container-sm-row { flex-direction: row; }
+    .container-sm-column { flex-direction: column; }
+    .container-sm-row > .column { width: auto; }
+    .container-sm-row-reverse { flex-direction: row-reverse; justify-content: flex-end; }
+}
 
-    .query-large-row-reverse {
-        flex-direction: row-reverse;
-        justify-content: flex-end;
-    }
+@container (min-width: 600px) {
+    .container-md-row { flex-direction: row; }
+    .container-md-column { flex-direction: column; }
+    .container-md-row > .column { width: auto; }
+    .container-md-row-reverse { flex-direction: row-reverse; justify-content: flex-end; }
+}
 
-    .query-large-flex-1 {
-        flex: 1;
-    }
-
-    .query-large-flex-2 {
-        flex: 2;
-    }
-
-    .query-large-flex-3 {
-        flex: 3;
-    }
-
-    .query-large-flex-4 {
-        flex: 4;
-    }
+@container (min-width: 768px) {
+    .container-lg-row { flex-direction: row; }
+    .container-lg-column { flex-direction: column; }
+    .container-lg-row > .column { width: auto; }
+    .container-lg-row-reverse { flex-direction: row-reverse; justify-content: flex-end; }
 }
 """

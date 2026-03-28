@@ -2,7 +2,6 @@ package streetlight.web.ui
 
 import koala.css.*
 import koala.dom.*
-import koala.html.textBlock
 import streetlight.web.EditEventIdRoute
 import streetlight.web.model.Streetlight
 
@@ -12,7 +11,7 @@ fun RenderContext.viewMapControls(app: Streetlight) {
     val portal = app.portal
 
     column {
-        row(modify(Width100, AlignItemsStart)) {
+        row(modify(Width100P, AlignItemsStart)) {
 //            card(modify(Flex1)) {
 //                blockLabel = "layers"
 //                flowBlock(streetMap.stateFlow.mapDistinct { it.layers }, modify(Width100)) { layers ->

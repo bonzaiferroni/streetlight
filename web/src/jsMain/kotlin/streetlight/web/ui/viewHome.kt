@@ -8,7 +8,7 @@ import koala.dom.*
 import koala.html.Id
 import koala.html.card
 import koala.html.heading3
-import koala.html.imageWithBackdrop
+import koala.html.fillImage
 import koala.html.textBlock
 import koala.model.mapDistinct
 import org.w3c.dom.HTMLElement
@@ -55,10 +55,10 @@ fun ViewContext<Streetlight>.wireStarredEvents(root: HTMLElement) {
                             row(modify(Flex1)) {
                                 events.forEach { event ->
                                     card(modify(Width24, BorderRadius1)) {
-                                        imageWithBackdrop(event.imageUrl, modify(Flex1))
+                                        fillImage(event.imageUrl, modify(Flex1))
                                         column(modify(Gap0)) {
-                                            textBlock(event.title, modify(SingleLine))
-                                            textBlock(event.locationName, modify(SingleLine, Dim))
+                                            textBlock(event.title, modify(SingleLine, TextOverflowHidden))
+                                            textBlock(event.locationName, modify(SingleLine, TextOverflowHidden, Dim))
                                         }
                                         row(modify(JustifyContentSpaceBetween)) {
                                             textBlock(event.startsAt.toTimeFormat())

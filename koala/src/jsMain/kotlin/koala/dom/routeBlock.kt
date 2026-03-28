@@ -3,7 +3,6 @@ package koala.dom
 import koala.css.*
 import koala.html.AppRoute
 import koala.model.Portal
-import koala.utils.prettyPrint
 import kotlinx.coroutines.flow.map
 import org.w3c.dom.HTMLElement
 
@@ -30,7 +29,7 @@ inline fun <reified Route: AppRoute, Data> RenderContext.routeBlock(
     // td: retry provideData call n times
     val routeFlow = portal.routeFlowOf<Route>().map { provideData(it) }
 
-    val element = flowBlock(routeFlow, modify(Width100, Magic), renderCacheCount = renderCacheCount) {
+    val element = flowBlock(routeFlow, modify(Width100P, Magic), renderCacheCount = renderCacheCount) {
         if (it != null) {
             block(it)
         } else {

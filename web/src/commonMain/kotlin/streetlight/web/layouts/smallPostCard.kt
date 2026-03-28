@@ -19,19 +19,19 @@ import streetlight.model.data.Location
 import streetlight.web.EventIdRoute
 import streetlight.web.LocationIdRoute
 
-fun FlowContent.layoutSmallGalaxyPost(post: GalaxyPost) {
+fun FlowContent.smallPostCard(post: GalaxyPost) {
     val thumbUrl = post.thumbUrl
     val title = post.title
     val description = post.description
     val postRoute = post.route ?: return
 
     card(modify(Padding0, OverflowHidden)) {
-        column(modify(QueryLargeRow, AlignItemsStretch, Gap0)) {
+        column(modify(MediaLgRow, AlignItemsStretch, Gap0)) {
             row(modify(Height16, AlignItemsStart, Padding1)) {
                 thumbUrl?.let {
-                    image(thumbUrl, modify(Height100, AspectRatio1, BorderRadius1))
+                    image(thumbUrl, modify(Height100P, AspectRatio1, BorderRadius1))
                 }
-                column(modify(Flex1, Height100)) {
+                column(modify(Flex1, Height100P)) {
                     row(modify(AlignItemsStart)) {
                         column(modify(Flex1, Gap0)) {
                             action(postRoute) {
@@ -47,7 +47,7 @@ fun FlowContent.layoutSmallGalaxyPost(post: GalaxyPost) {
                     }
                     description?.let {
                         action(postRoute) {
-                            textBlock(description, modify(Flex1, SmallFont, Height2, OverflowHidden))
+                            textBlock(description, modify(Flex1, SmallText, Height2, OverflowHidden))
                         }
                     }
                 }
@@ -68,7 +68,7 @@ fun FlowContent.layoutSmallGalaxyPost(post: GalaxyPost) {
                 }
                 card(cellModifiers) {
                     post.event?.cost?.let {
-                        textBlock("Tickets", modify(Dim, SmallFont))
+                        textBlock("Tickets", modify(Dim, SmallText))
                         textBlock("$$it")
                     }
                 }

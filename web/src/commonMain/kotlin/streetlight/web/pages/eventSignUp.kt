@@ -27,7 +27,7 @@ fun HTML.eventSignUp(event: Event) {
                     textBlock("yes please")
                 }
             }
-            column(Id("sign-up-box"), modify(Width100)) {
+            column(Id("sign-up-box"), modify(Width100P)) {
                 column(Id("guest-details"), modify(DisplayNone)) {
                     textField(Id("name"), "Your name")
                     textField(Id("email"), "Email")

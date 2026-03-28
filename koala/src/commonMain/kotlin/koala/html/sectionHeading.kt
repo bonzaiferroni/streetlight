@@ -10,15 +10,15 @@ fun FlowContent.sectionHeading(
     modifiers: ModifierSet? = null,
     block: DIV.() -> Unit = {}
 ) {
-    row(modify(modifiers, AlignItemsEnd, MarginTop4)) {
+    row(modify(modifiers, AlignItemsEnd)) {
         block()
 
-        spacer(modify(Width4))
+//        spacer(modify(Width4))
         // icon(SvgFiles.EyeOff, modify(OpacitySome, Height4))
         row(modify(Flex1, JustifyContentCenter)) {
             labelContent()
         }
-        icon(SvgFile.EyeClosed, modify(OpacitySome, Height4))
+//        icon(SvgFile.EyeClosed, modify(OpacitySome, Height4))
     }
 }
 

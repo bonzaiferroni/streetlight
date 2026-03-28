@@ -83,7 +83,7 @@ fun ViewContext<LocationScout>.findPointStage() {
 
             row(modify(AlignItemsStart)) {
                 column(modify(Flex1, AlignItemsEnd)) {
-                    textField("search", modify(Width100), model::setQuery, queryFlow, placeholder = "Search by name or address")
+                    textField("search", modify(Width100P), model::setQuery, queryFlow, placeholder = "Search by name or address")
                     row(modify(JustifyContentEnd)) {
                         textBlock("Limit search area to:", modify(Dim))
                         switch("map", onToggle = model::setLimitMap, bindFlow = limitMapFlow)
@@ -118,7 +118,7 @@ fun ViewContext<LocationScout>.choosePlaceStage(places: List<Place>) {
         messageBox(model.messageFlow, modify(Flex1))
         places.forEach { place ->
             val name = place.name ?: return@forEach
-            action(onClick = { model.choosePlace(place) }, modify(Width100)) {
+            action(onClick = { model.choosePlace(place) }, modify(Width100P)) {
                 card {
                     textBlock(name)
                     place.address?.let {
@@ -149,7 +149,7 @@ fun ViewContext<LocationScout>.reviewStage(edit: LocationEdit) {
                     row(modify(AlignItemsStart)) {
                         val imageUrl = edit.imageUrl
                         if (imageUrl != null) {
-                            image(imageUrl, modify(Flex1, Width100))
+                            image(imageUrl, modify(Flex1, Width100P))
                         } else {
                             box(modify(Flex1, PlaceItemsCenter)) {
                                 textBlock("no image")

@@ -10,10 +10,10 @@ fun RenderContext.viewGeoMap(
     geoMap: GeoMap,
     appScope: CoroutineScope,
     initialPoint: GeoPoint? = null,
-    modifiers: ModifierSet? = modify(Width100, Height48),
+    modifiers: ModifierSet? = modify(Width100P, Height48),
 ) {
     val element = box(modifiers) {
-        geoMapMount(initialPoint, modify(Width100, Height100))
+        geoMapMount(initialPoint, modify(Width100P, Height100P))
     }
 
     wireGeoMap(geoMap, appScope, element)

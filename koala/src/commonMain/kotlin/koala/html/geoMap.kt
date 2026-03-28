@@ -4,7 +4,7 @@ import kampfire.model.GeoPoint
 import koala.css.Css
 import koala.css.Height48
 import koala.css.ModifierSet
-import koala.css.Width100
+import koala.css.Width100P
 import koala.css.addModifiers
 import koala.css.modify
 import kotlinx.html.DIV
@@ -12,7 +12,7 @@ import kotlinx.html.FlowContent
 
 fun FlowContent.geoMapMount(
     initialPoint: GeoPoint? = null,
-    modifiers: ModifierSet? = modify(Width100, Height48),
+    modifiers: ModifierSet? = modify(Width100P, Height48),
     block: DIV.() -> Unit = {}
 ) {
     box {

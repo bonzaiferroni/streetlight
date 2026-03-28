@@ -1,7 +1,7 @@
 package koala.dom
 
 import koala.css.ModifierSet
-import koala.css.Width100
+import koala.css.Width100P
 import koala.css.addModifiers
 import koala.html.Id
 import koala.html.TagAttribute
@@ -36,7 +36,7 @@ fun RenderContext.textEditor(
     val element = parent.append {
         textArea {
             this.rows = rows.toString()
-            addModifiers(Width100, textModifiers)
+            addModifiers(Width100P, textModifiers)
             setId(id)
             label?.let {
                 attributes["aria-label"] = it

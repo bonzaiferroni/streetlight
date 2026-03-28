@@ -13,7 +13,7 @@ fun RenderContext.viewChatRoom(app: Streetlight) {
         textField(
             bindFlow = model.sendFlow,
             onChangeValue = model::setMessage,
-            modifiers = modify(Width100),
+            modifiers = modify(Width100P),
             onEnter = model::sendMessage
         )
     }

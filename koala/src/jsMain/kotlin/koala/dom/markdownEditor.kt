@@ -1,7 +1,7 @@
 package koala.dom
 
 import koala.css.ModifierSet
-import koala.css.Width100
+import koala.css.Width100P
 import koala.css.addModifiers
 import koala.external.SimpleMDE
 import koala.external.SimpleMDEOptions
@@ -15,7 +15,7 @@ fun RenderContext.markdownEditor(
     placeholder: String? = null,
 ) {
     val element = textArea {
-        addModifiers(Width100, modifiers)
+        addModifiers(Width100P, modifiers)
         setId(id)
 
         placeholder?.let {

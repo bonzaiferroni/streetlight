@@ -28,7 +28,7 @@ fun RenderContext.viewEventRoute(
 
     column {
         routeBlock(portal, ::provideData) {
-            shellBox(EventProfileShell.id, modify(Width100)) {
+            shellBox(EventProfileShell.id, modify(Width100P)) {
                 eventProfileShell(it)
             }
         }

@@ -12,7 +12,7 @@ fun RenderContext.viewFullMap(app: Streetlight) {
 
     }
     val fullscreen = fullscreenBox {
-        geoMapMount(null, modify(Size100))
+        geoMapMount(null, modify(Size100P))
     }
     element.onView { isVisible ->
         if (isVisible) {

@@ -5,7 +5,7 @@ import koala.css.BorderRadius1
 import koala.css.Card
 import koala.css.Flex1
 import koala.css.Gap0
-import koala.css.Height100
+import koala.css.Height100P
 import koala.css.Height8
 import koala.css.ModifierSet
 import koala.css.OverflowHidden
@@ -39,9 +39,9 @@ fun DOMContext.cardOf(
     val element = card(modifiers) {
         row(modify(Height8, AlignItemsStart)) {
             thumbUrl?.let {
-                image(thumbUrl, modify(Height100, AspectRatio1, BorderRadius1))
+                image(thumbUrl, modify(Height100P, AspectRatio1, BorderRadius1))
             }
-            column(modify(Flex1, Gap0, Height100)) {
+            column(modify(Flex1, Gap0, Height100P)) {
                 heading5(title)
                 description?.let {
                     textBlock(description, modify(Flex1, OverflowHidden))

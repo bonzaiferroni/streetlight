@@ -87,14 +87,14 @@ fun RenderContext.viewEventEditor(
 }
 
 fun ViewContext<EventEditor>.primaryFields() {
-    column(modify(QueryMediumRow)) {
+    column(modify(MediaMdRow)) {
         imageDrop(model.imageUrlFlow, model::setImageUrl, modify(Flex1, AspectRatio1))
         column(modify(Flex3)) {
             textField(
                 label = "title",
                 onChangeValue = model::setEventTitle,
                 bindFlow = model.titleFlow,
-                modifiers = modify(Width100),
+                modifiers = modify(Width100P),
                 placeholder = "Event Title"
             )
             row {
@@ -148,7 +148,7 @@ fun ViewContext<EventEditor>.eventLinks() {
                     "You can also try reading event details from the link.",
             modify(Dim)
         )
-        textField("Link", modify(Width100), model::setUrl, model.urlFlow)
+        textField("Link", modify(Width100P), model::setUrl, model.urlFlow)
         row {
             column(modify(Flex1)) {
                 heading4("Additional Links")
