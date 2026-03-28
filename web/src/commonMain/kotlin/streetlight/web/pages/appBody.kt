@@ -69,7 +69,7 @@ fun FlowContent.stickyBar() {
     val iconMod = modify(Height6, AspectRatio1, DisplayFlex)
     row(AppBodyKey.StickyBar, modify(JustifyContentSpaceBetween)) {
         card(cardMod + LeftStickyCard) {
-            action(SiteConfigRoute, iconMod) {
+            action(SiteConfigRoute, iconMod + OpacityMost) {
                 icon(SvgFile.Helm)
             }
         }

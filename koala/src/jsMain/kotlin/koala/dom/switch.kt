@@ -1,7 +1,6 @@
 package koala.dom
 
 import koala.core.initSwitch
-import koala.css.ElementClass
 import koala.css.ModifierSet
 import koala.html.ElementEvent
 import koala.html.Id

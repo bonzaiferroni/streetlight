@@ -1,6 +1,5 @@
 package koala.core
 
-import koala.css.ElementClass
 import koala.dom.onCustomEvent
 import koala.dom.sendCustomEvent
 import koala.dom.setAttribute

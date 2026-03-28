@@ -48,9 +48,9 @@ fun ViewContext<Streetlight>.wireStarredEvents(root: HTMLElement) {
         flowBlock(eventsFlow) { events ->
             box {
                 val eventMap = events.groupBy { it.startsAt.toRelativeDayFormat() }
-                row {
+                row(modify(OverflowXAuto)) {
                     eventMap.forEach { (day, events) ->
-                        column(modify(Gap0)) {
+                        column(modify(Gap0, FlexShrink0)) {
                             heading3(day, modify(LineHeight1, Margin1))
                             row(modify(Flex1)) {
                                 events.forEach { event ->

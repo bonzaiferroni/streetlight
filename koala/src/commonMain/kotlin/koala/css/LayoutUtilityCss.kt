@@ -5,7 +5,7 @@ val LayoutUtilityCss
         // Gap
         Gap0, Gap1, Gap2, Gap4, Gap8, GapTiny,
         // Flex
-        Flex0, Flex1, Flex2, Flex3, Flex4, FlexBasis25, FlexBasis33, FlexGrow,
+        Flex0, Flex1, Flex2, Flex3, Flex4, FlexBasis25, FlexBasis33, FlexShrink0,
         RowReverse, QueryRowReverse, NoWrap, WrapFlex, DisplayFlex,
         // Align
         AlignItemsCenter, AlignItemsStretch, AlignItemsStart, AlignItemsEnd,
@@ -51,7 +51,7 @@ val Flex1 = CssUtility("flex-1", ".flex-1 { flex: 1; }")
 val Flex2 = CssUtility("flex-2", ".flex-2 { flex: 2; }")
 val Flex3 = CssUtility("flex-3", ".flex-3 { flex: 3; }")
 val Flex4 = CssUtility("flex-4", ".flex-4 { flex: 4; }")
-val FlexGrow = CssUtility("flex-grow", ".flex-grow { flex: 1 0 auto; }")
+val FlexShrink0 = CssUtility("flex-grow", ".flex-grow { flex-shrink: 0; }")
 
 // Flex Basis
 val FlexBasis25 = CssUtility("flex-basis-25", ".flex-basis-25 { flex-basis: 25%; }")

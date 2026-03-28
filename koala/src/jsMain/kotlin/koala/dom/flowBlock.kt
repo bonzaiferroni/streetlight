@@ -2,7 +2,6 @@ package koala.dom
 
 import koala.css.Blur
 import koala.css.Magic
-import koala.css.ElementClass
 import koala.css.ModifierSet
 import koala.css.Reveal
 import koala.css.SlideLeft

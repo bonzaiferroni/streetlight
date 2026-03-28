@@ -1,6 +1,5 @@
 package koala.dom
 
-import koala.css.ElementClass
 import koala.css.ModifierSet
 import koala.css.StyleSet
 import koala.css.addModifiers

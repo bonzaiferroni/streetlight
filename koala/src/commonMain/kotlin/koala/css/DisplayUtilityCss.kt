@@ -15,7 +15,7 @@ val DisplayUtilityCss
         // Color
         Accent, Primary, Secondary, Danger,
         // Overflow
-        OverflowHidden, OverflowWrapAnywhere, OverflowClip,
+        OverflowHidden, OverflowWrapAnywhere, OverflowClip, OverflowXAuto,
         // Background
         PrimaryBg, PrimaryCardBg, BackgroundImage, SolidBg, BlurBackdrop,
         // Misc
@@ -58,6 +58,7 @@ val Danger = CssUtility("danger", null)
 val OverflowHidden = CssUtility("overflow-hidden", ".overflow-hidden { overflow: hidden; }")
 val OverflowWrapAnywhere = CssUtility("overflow-wrap-anywhere", ".overflow-wrap-anywhere { overflow-wrap: anywhere; }")
 val OverflowClip = CssUtility("overflow-clip", ".overflow-clip { overflow: clip; }")
+val OverflowXAuto = CssUtility("overflow-x-auto", ".overflow-x-auto { overflow-x: auto; }")
 
 // Background
 val PrimaryBg = CssUtility("primary-bg", ".primary-bg { background-color: var(--primary-bg); }")

@@ -1,14 +1,8 @@
 package streetlight.web.layouts
 
 import kabinet.utils.toRelativeDayFormat
-import koala.css.OpacityMost
-import koala.html.column
-import koala.html.filigree
-import koala.html.heading2
-import koala.html.heading4
-import koala.html.listItem
-import koala.html.olist
-import koala.html.section
+import koala.css.*
+import koala.html.*
 import kotlinx.html.FlowContent
 import streetlight.model.data.GalaxyPost
 import streetlight.web.shells.SectionHeadingMod
@@ -21,7 +15,7 @@ fun FlowContent.layoutGalaxyPosts(posts: List<GalaxyPost>) {
             val startsAt = grouping.key ?: return@forEach
             val posts = grouping.value
             section {
-                filigree {
+                filigree(modify(MarginTop2)) {
                     heading4(startsAt.toRelativeDayFormat(), SectionHeadingMod + OpacityMost)
                 }
                 olist {
