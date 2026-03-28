@@ -27,7 +27,7 @@ import streetlight.web.model.ThemeReactor
 import streetlight.web.model.UserCache
 import streetlight.web.model.UserCred
 import streetlight.web.model.UserGate
-import streetlight.web.pages.AppBody
+import streetlight.web.pages.AppBodyKey
 import streetlight.web.pages.emptyBadge
 
 @OptIn(ExperimentalSerializationApi::class)
@@ -63,10 +63,10 @@ fun viewApp() {
     scope.launch {
         app.gate.readUser()
 
-        val shellBox = document.getElementById(AppBody.shellBoxId)
+        val shellBox = document.getElementById(AppBodyKey.ShellBoxId)
         shellBox.style.display = "none"
 
-        val portalMount = document.getElementById(AppBody.portalMountId)
+        val portalMount = document.getElementById(AppBodyKey.PortalMountId)
 
         portalMount.renderRoot(app.appScope) {
             flowBlock(
@@ -115,7 +115,7 @@ fun viewApp() {
 //                }
 //            }
 
-            wireBlock(AppBody.badgeId) {
+            wireBlock(AppBodyKey.BadgeId) {
                 flowBlock(app.gate.userFlow, defaultMagic) { userInfo ->
                     val avatarUrl = userInfo?.avatarUrl
                     if (avatarUrl != null) {

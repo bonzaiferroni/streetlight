@@ -40,6 +40,8 @@
     --breakpoint-md: 600px;
     --breakpoint-lg: 768px;
     --breakpoint-vlg: 1024px;
+
+    --strong-blur: blur(10px);
 }
 
 

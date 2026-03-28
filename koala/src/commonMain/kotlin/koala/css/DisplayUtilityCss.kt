@@ -19,7 +19,7 @@ val DisplayUtilityCss
         // Background
         PrimaryBg, PrimaryCardBg, BackgroundImage, SolidBg, BlurBackdrop,
         // Misc
-        FadeBottom, Focus, Clickable,
+        FadeBottom, Focus, Clickable, PointerEventsAuto, PointerEventsNone,
     )
 
 // Display
@@ -64,12 +64,14 @@ val PrimaryBg = CssUtility("primary-bg", ".primary-bg { background-color: var(--
 val PrimaryCardBg = CssUtility("primary-card-bg", ".primary-card-bg { background-color: var(--primary-card-bg); }")
 val BackgroundImage = CssUtility("background-image", null)
 val SolidBg = CssUtility("solid-bg", ".solid-bg { background-color: var(--paper-bg); }")
-val BlurBackdrop = CssUtility("blur-backdrop", ".blur-backdrop { backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }")
+val BlurBackdrop = CssUtility("blur-backdrop", ".blur-backdrop { backdrop-filter: var(--strong-blur); -webkit-backdrop-filter: var(--strong-blur);  }")
 
 // Misc
 val FadeBottom = CssUtility("fade-bottom", ".fade-bottom { -webkit-mask-image: linear-gradient(to bottom, black 0, black calc(100% - 1rem), transparent 100%); mask-image: linear-gradient(to bottom, black 0, black calc(100% - 1rem), transparent 100%); }")
 val Focus = CssUtility("focus", null)
 val Clickable = CssUtility("clickable", null)
+val PointerEventsAuto = CssUtility("pointer-events-auto", ".pointer-events-auto { pointer-events: auto; }")
+val PointerEventsNone = CssUtility("pointer-events-none", ".pointer-events-none { pointer-events: none; }")
 
 // object DisplayNone : Modifier { override val identifier = "display-none" }
 // object Opacity1: Modifier { override val identifier = "opacity-1" }

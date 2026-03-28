@@ -17,13 +17,14 @@ fun HTML.appBody(
     block: (DIV.() -> Unit)? = null
 ) {
     body {
-        box(AppBody.viewportId) {
-            column(AppBody.appBoxId) {
+        stickyBar()
+        box(AppBodyKey.ViewportId) {
+            column(AppBodyKey.AppBoxId) {
                 column {
                     appHeader()
-                    box(AppBody.contentBox) {
-                        box(AppBody.portalMountId)
-                        box(id = AppBody.shellBoxId, block = block)
+                    box(AppBodyKey.ContentBox) {
+                        box(AppBodyKey.PortalMountId)
+                        box(id = AppBodyKey.ShellBoxId, block = block)
                     }
                 }
             }
@@ -34,23 +35,14 @@ fun HTML.appBody(
 }
 
 fun FlowContent.appHeader() {
-    val iconMod = modify(AspectRatio1, DisplayFlex)
     val height = Height6
-    row(modify(height)) {
-        action(SiteConfigRoute, iconMod + OpacityHalf) {
-            icon(SvgFile.Helm)
-        }
-        row(modify(Flex1, JustifyContentCenter, MarginX1)) {
-            action(HomeRoute, modify(DisplayFlex)) {
-                row(modify(AlignItemsCenter)) {
-                    logo(modify(height))
-                    heading2("Streetlight", modify(GrowText, TextShadow))
+    filigree(modify(height, MarginTop1)) {
+        action(HomeRoute, modify(DisplayFlex)) {
+            row(modify(AlignItemsCenter)) {
+                logo(modify(height))
+                heading2("Streetlight", modify(GrowText, TextShadow))
 //                    wireBlock(AppBody.titlePathId)
-                }
             }
-        }
-        action(AccountRoute, iconMod, id = AppBody.badgeId) {
-            emptyBadge()
         }
     }
 }
@@ -72,13 +64,57 @@ fun FlowContent.emptyBadge() {
     icon(SvgFile.EmptyProfile, modify(OpacityHalf, Size100P))
 }
 
-object AppBody {
-    val viewportId = Id("viewport-box")
-    val appBoxId = Id("app-box")
-    val portalMountId = Id("portal-mount")
-    val shellBoxId = Id("shell-box")
-    val contentBox = Id("content-box")
-    val appHeaderId = Id("app-header")
-    val titlePathId = Id("title-path")
-    val badgeId = Id("user-badge")
+fun FlowContent.stickyBar() {
+    val cardMod = modify(BlurBackdrop, PointerEventsAuto)
+    val iconMod = modify(Height6, AspectRatio1, DisplayFlex)
+    row(AppBodyKey.StickyBar, modify(JustifyContentSpaceBetween)) {
+        card(cardMod + LeftStickyCard) {
+            action(SiteConfigRoute, iconMod) {
+                icon(SvgFile.Helm)
+            }
+        }
+        card(cardMod + RightStickyCard) {
+            action(AccountRoute, iconMod, id = AppBodyKey.BadgeId) {
+                emptyBadge()
+            }
+        }
+    }
 }
+
+object AppBodyKey {
+    val ViewportId = Id("viewport-box")
+    val AppBoxId = Id("app-box")
+    val PortalMountId = Id("portal-mount")
+    val ShellBoxId = Id("shell-box")
+    val ContentBox = Id("content-box")
+    val BadgeId = Id("user-badge")
+    val StickyBar = Id("sticky-bar")
+}
+
+private val LeftStickyCard = Css("left-sticky-card")
+private val RightStickyCard = Css("right-sticky-card")
+
+// language="CSS"
+val AppBodyCss = """
+${AppBodyKey.StickyBar.selector} {
+    position: fixed;
+    pointer-events: none;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 14;
+}
+
+${RightStickyCard.selector}
+${LeftStickyCard.selector} {
+    background: rgba(var(--paper), .8);
+}
+
+${LeftStickyCard.selector} {
+    border-radius: 0 20% 40% 20%;
+}
+
+${RightStickyCard.selector} {
+    border-radius: 20% 0 20% 40%;
+}
+"""
