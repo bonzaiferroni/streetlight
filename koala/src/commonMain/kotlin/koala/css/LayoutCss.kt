@@ -102,6 +102,7 @@ val LayoutCss get() = """
     .container-md-column { flex-direction: column; }
     .container-md-row > .column { width: auto; }
     .container-md-row-reverse { flex-direction: row-reverse; justify-content: flex-end; }
+    .container-md-margin-top-0 { margin-top: 0 !important; }
 }
 
 @container (min-width: 768px) {

@@ -30,10 +30,11 @@ fun FlowContent.homeShell(content: HomeContent) {
                 )
             }
 
-            column(modify(ContainerTnRow)) {
-                column(modify(Flex1)) {
+            column(modify(ContainerMdRow, FlexItems1)) {
+                val subHeadingMods = modify(LineHeight1, OpacityMost)
+                column {
                     filigree {
-                        heading4("Top Galaxies", modify(LineHeight1))
+                        heading4("Top Galaxies", subHeadingMods)
                     }
                     ulist {
                         content.galaxies.forEach { galaxy ->
@@ -43,8 +44,13 @@ fun FlowContent.homeShell(content: HomeContent) {
                         }
                     }
                 }
-                row(modify(Flex1, AlignItemsCenter, JustifyContentCenter)) {
-                    lottie(LottieFile.dinoLoad, modify(Width32, AspectRatio1))
+                column(modify(MarginTop4, ContainerMdMarginTop0)) {
+                    filigree {
+                        heading4("Featured Galaxies", subHeadingMods)
+                    }
+                    row(modify(Flex1, AlignItemsCenter, JustifyContentCenter)) {
+                        lottie(LottieFile.dinoLoad, modify(Width32, AspectRatio1))
+                    }
                 }
             }
         }

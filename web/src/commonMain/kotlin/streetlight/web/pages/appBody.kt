@@ -34,22 +34,22 @@ fun HTML.appBody(
 }
 
 fun FlowContent.appHeader() {
-    row(modify(Height5)) {
-        icon(SvgFile.Menu, modify(OpacitySome))
-        icon(SvgFile.Search, modify(OpacitySome))
-        row(modify(Flex1, JustifyContentCenter)) {
-            action(HomeRoute, modify(Height100P)) {
-                row(modify(AlignItemsCenter, Height100P)) {
-                    logo()
-                    heading2("Streetlight")
+    val iconMod = modify(AspectRatio1, DisplayFlex)
+    val height = Height6
+    row(modify(height)) {
+        action(SiteConfigRoute, iconMod + OpacityHalf) {
+            icon(SvgFile.Helm)
+        }
+        row(modify(Flex1, JustifyContentCenter, MarginX1)) {
+            action(HomeRoute, modify(DisplayFlex)) {
+                row(modify(AlignItemsCenter)) {
+                    logo(modify(height))
+                    heading2("Streetlight", modify(GrowText))
 //                    wireBlock(AppBody.titlePathId)
                 }
             }
         }
-        action(SiteConfigRoute, modify(OpacitySome)) {
-            icon(SvgFile.Settings, modify(Height100P))
-        }
-        action(AccountRoute, modify(AspectRatio1), id = AppBody.badgeId) {
+        action(AccountRoute, iconMod, id = AppBody.badgeId) {
             emptyBadge()
         }
     }
@@ -69,7 +69,7 @@ fun DIV.configureAppFooter() {
 }
 
 fun FlowContent.emptyBadge() {
-    icon(SvgFile.EmptyProfile, modify(Height100P, OpacitySome))
+    icon(SvgFile.EmptyProfile, modify(OpacityHalf, Size100P))
 }
 
 object AppBody {

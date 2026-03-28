@@ -50,6 +50,6 @@ p {
     text-overflow: ellipsis;
 }
 
-
+h2.grow-text { font-size: calc(var(--heading-2-size) * 1.1); }
 
 """

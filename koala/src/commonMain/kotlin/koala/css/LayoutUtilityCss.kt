@@ -5,18 +5,21 @@ val LayoutUtilityCss
         // Gap
         Gap0, Gap1, Gap2, Gap4, Gap8, GapTiny,
         // Flex
-        Flex1, Flex2, Flex3, Flex4, FlexBasis25, FlexBasis33, RowReverse, QueryRowReverse, NoWrap, WrapFlex,
+        Flex0, Flex1, Flex2, Flex3, Flex4, FlexBasis25, FlexBasis33, FlexGrow,
+        RowReverse, QueryRowReverse, NoWrap, WrapFlex, DisplayFlex,
         // Align
         AlignItemsCenter, AlignItemsStretch, AlignItemsStart, AlignItemsEnd,
         JustifyContentCenter, JustifyContentEnd, JustifyContentSpaceAround, JustifyContentSpaceBetween,
         JustifySelfEnd, AlignSelfStart, AlignSelfStretch,
         // Width
-        WidthAuto, Width100P, WidthFitContent, Width2, Width4, Width8, Width12, Width16, Width24, Width32, Width64,
-        MinWidth0, MinWidth16, MinWidth32, MinWidthAuto, MaxWidth25P, MaxWidth50P, MaxWidth16, MaxWidth64,
+        WidthAuto, Width100P, WidthFitContent,
+        Width2, Width4, Width5, Width8, Width12, Width16, Width24, Width32, Width64,
+        MinWidth0, MinWidth16, MinWidth32, MinWidthAuto, MaxWidth25P, MaxWidth50P,
+        MaxWidth5, MaxWidth16, MaxWidth64,
         // Height
         HeightAuto, Height100P, Height2, Height3, Height4, Height5, Height6, Height8, Height12, Height16, Height24, Height32, Height48,
         MinHeightAuto, MinHeight0, MinHeight4, MinHeight5, MinHeight8, MinHeight16, MinHeight24, MinHeight32,
-        MaxHeight8, MaxHeight16, MaxHeight24, MaxHeight32, MaxHeight64,
+        MaxHeight5, MaxHeight8, MaxHeight16, MaxHeight24, MaxHeight32, MaxHeight64,
         // Size
         Size100P, FillHeight, AspectRatio1, AspectRatio2,
         // Flex Items
@@ -25,6 +28,7 @@ val LayoutUtilityCss
         TextAlignCenter, TextAlignRight,
         // Margin
         MarginAuto, Margin1, Margin2, MarginTop1, MarginTop2, MarginTop4, MarginTop8, MarginLeft1,
+        MarginX1, MarginX2, MarginX4,
         // Padding
         Padding0, Padding1, Padding2, PaddingTiny,
         // Object Fit
@@ -42,10 +46,12 @@ val Gap8 = CssUtility("gap-8", ".gap-8 { gap: calc(var(--unit-spacing) * 8); }")
 val GapTiny = CssUtility("gap-tiny", ".gap-tiny { gap: 2px; }")
 
 // Flex
+val Flex0 = CssUtility("flex-0", ".flex-0 { flex: 0; }")
 val Flex1 = CssUtility("flex-1", ".flex-1 { flex: 1; }")
 val Flex2 = CssUtility("flex-2", ".flex-2 { flex: 2; }")
 val Flex3 = CssUtility("flex-3", ".flex-3 { flex: 3; }")
 val Flex4 = CssUtility("flex-4", ".flex-4 { flex: 4; }")
+val FlexGrow = CssUtility("flex-grow", ".flex-grow { flex: 1 0 auto; }")
 
 // Flex Basis
 val FlexBasis25 = CssUtility("flex-basis-25", ".flex-basis-25 { flex-basis: 25%; }")
@@ -71,6 +77,7 @@ val Width100P = CssUtility("width-100", ".width-100 { width: 100%; }")
 val WidthFitContent = CssUtility("width-fit-content", ".width-fit-content { width: fit-content; }")
 val Width2 = CssUtility("width-2", ".width-2 { width: calc(var(--unit-spacing) * 2); }")
 val Width4 = CssUtility("width-4", ".width-4 { width: calc(var(--unit-spacing) * 4); }")
+val Width5 = CssUtility("width-5", ".width-5 { width: calc(var(--unit-spacing) * 5); }")
 val Width8 = CssUtility("width-8", ".width-8 { width: calc(var(--unit-spacing) * 8); }")
 val Width12 = CssUtility("width-12", ".width-12 { width: calc(var(--unit-spacing) * 12); }")
 val Width16 = CssUtility("width-16", ".width-16 { width: calc(var(--unit-spacing) * 16); }")
@@ -83,6 +90,7 @@ val MinWidth32 = CssUtility("min-width-32", ".min-width-32 { min-width: calc(var
 val MinWidthAuto = CssUtility("min-width-auto", ".min-width-auto { min-width: auto; }")
 val MaxWidth25P = CssUtility("max-width-25", ".max-width-25 { max-width: 25%; }")
 val MaxWidth50P = CssUtility("max-width-50", ".max-width-50 { max-width: 50%; }")
+val MaxWidth5 = CssUtility("max-width-5", ".max-width-5 { max-width: calc(var(--unit-spacing) * 5); }")
 val MaxWidth16 = CssUtility("max-width-16", ".max-width-16 { max-width: calc(var(--unit-spacing) * 16); }")
 val MaxWidth64 = CssUtility("max-width-64", ".max-width-64 { max-width: calc(var(--unit-spacing) * 64); }")
 
@@ -100,6 +108,7 @@ val Height16 = CssUtility("height-16", ".height-16 { height: calc(var(--unit-spa
 val Height24 = CssUtility("height-24", ".height-24 { height: calc(var(--unit-spacing) * 24); }")
 val Height32 = CssUtility("height-32", ".height-32 { height: calc(var(--unit-spacing) * 32); }")
 val Height48 = CssUtility("height-48", ".height-48 { height: calc(var(--unit-spacing) * 48); }")
+val MaxHeight5 = CssUtility("max-height-5", ".max-height-5 { max-height: calc(var(--unit-spacing) * 5); }")
 val MaxHeight8 = CssUtility("max-height-8", ".max-height-8 { max-height: calc(var(--unit-spacing) * 8); }")
 val MaxHeight16 = CssUtility("max-height-16", ".max-height-16 { max-height: calc(var(--unit-spacing) * 16); }")
 val MaxHeight24 = CssUtility("max-height-24", ".max-height-24 { max-height: calc(var(--unit-spacing) * 24); }")
@@ -131,6 +140,7 @@ val RowReverse = CssUtility("row-reverse", ".row-reverse { flex-direction: row-r
 val QueryRowReverse = CssUtility("query-row-reverse", null)
 val NoWrap = CssUtility("no-wrap", ".no-wrap { flex-wrap: nowrap; white-space: nowrap; }")
 val WrapFlex = CssUtility("wrap-flex", ".wrap-flex { flex-wrap: wrap; }")
+val DisplayFlex = CssUtility("display-flex", ".display-flex { display: flex; }")
 
 // Margin
 val MarginAuto = CssUtility("margin-auto", ".margin-auto { margin: auto; }")
@@ -141,6 +151,9 @@ val MarginTop2 = CssUtility("margin-top-2", ".margin-top-2 { margin-top: calc(va
 val MarginTop4 = CssUtility("margin-top-4", ".margin-top-4 { margin-top: calc(var(--unit-spacing) * 4); }")
 val MarginTop8 = CssUtility("margin-top-8", ".margin-top-8 { margin-top: calc(var(--unit-spacing) * 8); }")
 val MarginLeft1 = CssUtility("margin-left-1", ".margin-left-1 { margin-left: var(--unit-spacing); }")
+val MarginX1 = CssUtility("margin-x-1", ".margin-x-1 { margin-left: var(--unit-spacing); margin-right: var(--unit-spacing); }")
+val MarginX2 = CssUtility("margin-x-2", ".margin-x-2 { margin-left: calc(var(--unit-spacing) * 2); margin-right: calc(var(--unit-spacing) * 2); }")
+val MarginX4 = CssUtility("margin-x-4", ".margin-x-4 { margin-left: calc(var(--unit-spacing) * 4); margin-right: calc(var(--unit-spacing) * 4); }")
 
 // Padding
 val Padding0 = CssUtility("padding-0", ".padding-0 { padding: 0; }")
@@ -183,10 +196,13 @@ val ContainerTnRow = CssUtility("container-tn-row")
 val ContainerSmRow = CssUtility("container-sm-row")
 val ContainerMdRow = CssUtility("container-md-row")
 val ContainerLgRow = CssUtility("container-lg-row")
+
 val ContainerTnColumn = CssUtility("container-tn-column")
 val ContainerSmColumn = CssUtility("container-sm-column")
 val ContainerMdColumn = CssUtility("container-md-column")
 val ContainerLgColumn = CssUtility("container-lg-column")
+
+val ContainerMdMarginTop0 = CssUtility("container-md-margin-top-0")
 
 // Layouts
 val Box = CssUtility("box")

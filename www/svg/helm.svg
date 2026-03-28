@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+     stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+     class="icon icon-ship-wheel">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+
+    <!-- outer rim -->
+    <path d="M12 12m-6 0a6 6 0 1 0 12 0a6 6 0 1 0 -12 0"/>
+
+    <!-- main spokes -->
+    <path d="M12 12l0 -9"/>
+    <path d="M12 12l0 9"/>
+    <path d="M12 12l-9 0"/>
+    <path d="M12 12l9 0"/>
+    <path d="M12 12l-6.36 -6.36"/>
+    <path d="M12 12l6.36 6.36"/>
+    <path d="M12 12l6.36 -6.36"/>
+    <path d="M12 12l-6.36 6.36"/>
+
+    <!-- thicker grip ends -->
+    <g stroke-width="2">
+        <path d="M12 2.5l0 1.5"/>
+        <path d="M12 20l0 1.5"/>
+        <path d="M2.5 12l1.5 0"/>
+        <path d="M20 12l1.5 0"/>
+        <path d="M5.28 5.28l1.06 1.06"/>
+        <path d="M17.66 17.66l1.06 1.06"/>
+        <path d="M17.66 6.34l1.06 -1.06"/>
+        <path d="M5.28 18.72l1.06 -1.06"/>
+    </g>
+
+    <!-- solid hub -->
+    <circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/>
+</svg>

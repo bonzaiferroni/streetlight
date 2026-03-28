@@ -20,7 +20,7 @@ val StylesCss get() = """
     --void-bg: rgb(var(--void));
     --void-border: color-mix(in srgb, var(--void-bg) 90%, white);
     --shadow: rgba(0, 0, 0, 0.35);
-    --primary: 100, 180, 240; /* 70, 117, 153; */
+    --primary: 45, 199, 255; /* 70, 117, 153; */
     --primary-fg: rgb(var(--primary));
     --primary-button: rgba(var(--primary), .5);
     --primary-bg: color-mix(in srgb, var(--primary-fg) 15%, black);
@@ -38,7 +38,7 @@ val StylesCss get() = """
 
     --body-width: 960px;
 
-    --font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; /* */
+    --font-family: "Fira Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; /*  */
 
     --breakpoint-sm: 0px;
     --breakpoint-md: 600px;

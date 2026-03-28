@@ -4,9 +4,9 @@ package koala.css
 val ButtonCss get() = """
 :root {
     --btn-text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8), 0 0 6px rgba(0, 0, 0, 0.6);
-    --btn-font-size: .8rem;
+    --btn-font-size: .9rem;
     --btn-font-weight: 500;
-    --btn-padding: .75rem 1rem;
+    --btn-padding: .70rem 1rem;
 }
 
 .btn {
