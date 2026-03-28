@@ -35,7 +35,7 @@ object ImageWithBackdropKey {
 }
 
 // language="CSS"
-val ImageWithBackdropCss get() = """
+val FillImageCss get() = """
 .image-with-backdrop {
     position: relative;
     overflow: hidden;

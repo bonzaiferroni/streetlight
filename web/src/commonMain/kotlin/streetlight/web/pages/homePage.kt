@@ -5,8 +5,8 @@ import kotlinx.html.*
 import streetlight.web.shells.HomeContent
 import streetlight.web.shells.homeShell
 
-fun HTML.homePage(content: HomeContent) {
-    appHead("Streetlight | Home") {
+fun HTML.homePage(content: HomeContent, styles: String) {
+    appHead("Streetlight | Home", styles) {
         supportProtobuf()
         supportGeoMap()
     }

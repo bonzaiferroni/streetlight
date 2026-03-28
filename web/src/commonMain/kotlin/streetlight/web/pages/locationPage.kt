@@ -5,8 +5,8 @@ import kotlinx.html.HTML
 import streetlight.model.data.Location
 import streetlight.web.shells.locationShell
 
-fun HTML.locationPage(location: Location) {
-    appHead("${location.name} | Streetlight") {
+fun HTML.locationPage(location: Location, styles: String) {
+    appHead("${location.name} | Streetlight", styles) {
         supportProtobuf()
         supportGeoMap()
     }

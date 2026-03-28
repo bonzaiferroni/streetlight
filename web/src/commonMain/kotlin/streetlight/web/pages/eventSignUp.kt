@@ -7,8 +7,8 @@ import kotlinx.html.*
 import streetlight.model.data.*
 import koala.css.*
 
-fun HTML.eventSignUp(event: Event) {
-    appHead("Sign Up | ${event.title}") {
+fun HTML.eventSignUp(event: Event, styles: String) {
+    appHead("Sign Up | ${event.title}", styles) {
         applyFiles(EventSignUpFiles)
     }
     body {

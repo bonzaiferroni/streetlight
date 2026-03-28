@@ -1,7 +1,6 @@
 package koala.html
 
 import koala.css.Css
-import koala.css.ElementClass
 import koala.css.ModifierSet
 import koala.css.addModifiers
 import kotlinx.html.FlowContent

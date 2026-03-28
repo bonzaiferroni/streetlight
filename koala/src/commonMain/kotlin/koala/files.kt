@@ -6,21 +6,17 @@ object JsFile: FileSet<Js>() {
     val Koala = add("koala/koala.js")
 }
 
-//object CssFiles: FileSet<CssFile>() {
-//    // val reset = add("reset.css")
-//    // val styles = add("styles.css")
-//    // val typography = add("typography.css")
-//    // val button = add("button.css")
-//    // val layout = add("layout.css")
-//    // val animation = add("animation.css")
-//    // val tabs = add("tabs.css")
-//    // val logo = add("logo.css")
-//    // val geoMap = add("geoMap.css")
-//    // val elements = add("elements.css") // isGenerated = true
-//    // val sandbox = add("sandbox.css")
-//    // val genElements = add("gen-elements.css", isGenerated = true)
-//    // val utilities = add("utilities.css")
-//}
+object CssFiles: FileSet<CssFile>() {
+     val Reset = add("reset.css")
+     val Styles = add("styles.css")
+     val Typography = add("typography.css")
+     val Button = add("button.css")
+     val Layout = add("layout.css")
+     val Magic = add("magic.css")
+     val Tabs = add("tabs.css")
+     val GeoMap = add("geo-map.css")
+     val Sandbox = add("sandbox.css")
+}
 
 object SvgFile: FileSet<Svg>() {
     val Bus = add("bus.svg")

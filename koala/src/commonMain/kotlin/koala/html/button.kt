@@ -1,6 +1,5 @@
 package koala.html
 
-import koala.css.ElementClass
 import koala.css.ModifierSet
 import koala.css.addModifiers
 import kotlinx.html.BUTTON

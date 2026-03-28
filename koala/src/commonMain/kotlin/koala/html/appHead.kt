@@ -4,11 +4,11 @@ import koala.CssFile
 import koala.Js
 import koala.JsFile
 import koala.SiteFile
-import koala.css.CssManifest
 import kotlinx.html.*
 
 fun HTML.appHead(
     title: String,
+    styles: String,
     block: HEAD.() -> Unit,
 ) {
     head {
@@ -26,13 +26,11 @@ fun HTML.appHead(
         applyFiles(JsFile)
         style {
             unsafe {
-                +inlineStyles
+                +styles
             }
         }
     }
 }
-
-val inlineStyles by lazy { CssManifest.joinToString("\n") }
 
 fun HEAD.applyFiles(files: Collection<SiteFile>) {
     files.forEach { applyFile(it) }

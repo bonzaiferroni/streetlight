@@ -5,9 +5,9 @@ import kotlinx.html.HTML
 import streetlight.web.shells.GalaxyProfileContent
 import streetlight.web.shells.galaxyProfileShell
 
-fun HTML.galaxyProfilePage(content: GalaxyProfileContent) {
+fun HTML.galaxyProfilePage(content: GalaxyProfileContent, styles: String) {
     val galaxy = content.galaxy
-    appHead("Streetlight | ${galaxy.name}") {
+    appHead("Streetlight | ${galaxy.name}", styles) {
         supportProtobuf()
         supportGeoMap()
     }

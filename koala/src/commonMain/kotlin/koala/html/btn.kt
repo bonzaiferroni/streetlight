@@ -2,7 +2,6 @@ package koala.html
 
 import koala.css.BackgroundImage
 import koala.css.Css
-import koala.css.ElementClass
 import koala.css.ModifierSet
 import koala.css.StyleProperty
 import koala.css.StyleSet

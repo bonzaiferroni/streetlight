@@ -5,8 +5,8 @@ import kotlinx.html.HTML
 import streetlight.model.data.Event
 import streetlight.web.shells.eventProfileShell
 
-fun HTML.eventPage(event: Event) {
-    appHead("Streetlight | ${event.title}") {
+fun HTML.eventPage(event: Event, styles: String) {
+    appHead("Streetlight | ${event.title}", styles) {
         supportProtobuf()
         supportGeoMap()
     }
