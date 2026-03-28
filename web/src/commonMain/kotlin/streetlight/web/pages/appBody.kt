@@ -44,7 +44,7 @@ fun FlowContent.appHeader() {
             action(HomeRoute, modify(DisplayFlex)) {
                 row(modify(AlignItemsCenter)) {
                     logo(modify(height))
-                    heading2("Streetlight", modify(GrowText))
+                    heading2("Streetlight", modify(GrowText, TextShadow))
 //                    wireBlock(AppBody.titlePathId)
                 }
             }

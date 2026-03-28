@@ -8,7 +8,6 @@ import kotlinx.html.FlowContent
 import streetlight.web.layouts.layoutGalaxyPosts
 import streetlight.web.layouts.smallGalaxyCard
 import streetlight.web.pages.appFooter
-import streetlight.web.toRoute
 
 fun FlowContent.homeShell(content: HomeContent) {
     column(HomeShellKey.ContainerId, modify(Gap8)) {
@@ -23,7 +22,7 @@ fun FlowContent.homeShell(content: HomeContent) {
 
         section(modify(QueryContainer)) {
             column(modify(Gap0)) {
-                heading2("Galaxies", SectionHeadingMods)
+                heading2("Galaxies", SectionHeadingMod)
                 textBlock(
                     content = "Galaxies are Streetlight communities, each with a particular focus.",
                     modifiers = modify(Dim, TextAlignCenter)
@@ -59,7 +58,7 @@ fun FlowContent.homeShell(content: HomeContent) {
 
         section {
             filigree {
-                heading2("Starred Events", SectionHeadingMods)
+                heading2("Starred Events", SectionHeadingMod)
             }
 
             card(modify(Height32)) {
@@ -93,4 +92,4 @@ object HomeShellKey {
     val StarEventsId = Id("star-events")
 }
 
-val SectionHeadingMods = modify(LineHeight1, SingleLine, TextAlignCenter)
+val SectionHeadingMod = modify(LineHeight1, SingleLine, TextAlignCenter, TextShadow)

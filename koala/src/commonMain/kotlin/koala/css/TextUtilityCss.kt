@@ -6,8 +6,10 @@ val TextUtilityCss
         Bold, Italic,
         // font size
         SmallText, LargeText, GrowText,
+        // line height
+        LineHeight1, LineHeight115,
         // misc
-        WhiteSpaceNormal, LineHeight1, LineHeight115, SingleLine, TextOverflowHidden,
+        WhiteSpaceNormal, TextOverflowHidden, TextShadow, SingleLine
     )
 
 val Bold = CssUtility("bold", ".bold { font-weight: bold; }")
@@ -20,3 +22,4 @@ val LineHeight1 = CssUtility("line-height-1", ".line-height-1 { line-height: 1; 
 val LineHeight115 = CssUtility("line-height-1-15", ".line-height-1-15 { line-height: 1.15; }")
 val SingleLine = CssUtility("single-line", ".single-line { white-space: nowrap; }")
 val TextOverflowHidden = CssUtility("text-overflow-hidden", ".text-overflow-hidden { overflow: hidden; text-overflow: ellipsis; }")
+val TextShadow = CssUtility("text-shadow", ".text-shadow { text-shadow: var(--btn-text-shadow); }")
