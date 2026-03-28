@@ -39,9 +39,9 @@ fun FlowContent.appHeader() {
         icon(SvgFile.Search, modify(OpacitySome))
         row(modify(Flex1, JustifyContentCenter)) {
             action(HomeRoute, modify(Height100P)) {
-                row(modify(AlignItemsEnd, Height100P)) {
+                row(modify(AlignItemsCenter, Height100P)) {
                     logo()
-                    heading2("Streetlight", modify(LineHeight1))
+                    heading2("Streetlight")
 //                    wireBlock(AppBody.titlePathId)
                 }
             }
