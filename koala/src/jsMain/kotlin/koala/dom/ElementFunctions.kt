@@ -55,24 +55,6 @@ fun Element.scrollWhenPresent(
     window.requestAnimationFrame { tryScroll() }
 }
 
-fun <T> Element.queryAttributeAll(
-    attribute: Attribute<T>,
-    provider: (String) -> T,
-): List<Pair<HTMLElement, T>> {
-    return querySelectorAll(attribute.selector).asList().mapNotNull {
-        val element = it as HTMLElement
-        val value = element.attributes[attribute] ?: return@mapNotNull null
-        val data = provider(value)
-        element to data
-    }
-}
-
-inline fun <reified T> Element.queryJsonAttribute(attribute: Attribute<T>): List<Pair<HTMLElement, T>> {
-    return queryAttributeAll(attribute, { json ->
-        jsonConfig.decodeFromString<T>(json)
-    })
-}
-
 fun <T> CSSStyleDeclaration.setProperty(style: InlineStyle<T>) =
     setProperty(style.property.expression, style.value.toString())
 
@@ -80,7 +62,5 @@ fun Element.querySelector(queryable: Queryable) = querySelector(queryable.select
 fun Element.querySelectorAll(queryable: Queryable) = querySelectorAll(queryable.selector).asList().map {
     it as HTMLElement
 }
-
-fun Element.setAttribute(attribute: Attribute<*>, value: String) = setAttribute(attribute.key, value)
 
 fun CSSStyleDeclaration.removeProperty(property: Property<*>) = removeProperty(property.identifier)

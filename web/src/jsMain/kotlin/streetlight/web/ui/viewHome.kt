@@ -18,6 +18,7 @@ fun ViewContext<Streetlight>.viewHome() {
     wireEventStars(root)
     wireGalaxyStars(root)
     wireStarredEvents(root)
+    wireGalaxyMenu(app, root, null)
 
     wireStreetMap()
 }

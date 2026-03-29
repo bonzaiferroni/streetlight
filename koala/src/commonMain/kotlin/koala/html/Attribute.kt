@@ -18,7 +18,8 @@ data class Attribute<T>(val identifier: String, val isCustom: Boolean = false): 
         val BlockLabel = Attribute<String>("block-label", true)
         val Lottie = Attribute<Lottie>("lottie", true)
         val IsOn = Attribute<Boolean>("is-on", true)
-        val PopoverTarget = Attribute<Id>("popovertarget")
+
+        val PopoverTarget = Attribute<String>("popovertarget")
         val Popover = Attribute<String>("popover")
     }
 }

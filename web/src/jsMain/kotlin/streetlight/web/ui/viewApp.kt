@@ -10,6 +10,7 @@ import kotlinx.browser.window
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.html.dom.append
 import kotlinx.serialization.ExperimentalSerializationApi
 import org.w3c.dom.get
 import revealContent

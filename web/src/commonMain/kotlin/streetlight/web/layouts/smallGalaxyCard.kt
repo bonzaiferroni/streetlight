@@ -55,4 +55,5 @@ fun FlowContent.starCell(galaxyId: GalaxyId) {
 
 object GalaxyKey {
     val GalaxyStarId = Attribute<GalaxyId>("galaxy-star-id")
+    val TopGalaxies = Attribute<List<Galaxy>>("galaxies")
 }

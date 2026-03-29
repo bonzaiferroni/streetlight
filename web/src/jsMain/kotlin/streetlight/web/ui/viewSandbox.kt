@@ -20,7 +20,7 @@ fun RenderContext.viewSandbox(app: Streetlight) {
     column {
         button("open") {
             setAnchorName(myAnchor)
-            setAttribute(Attribute.PopoverTarget, menuId)
+            setAttribute(Attribute.PopoverTarget, menuId.value)
         }
         popover(menuId, myAnchor, modify(Magic, Blur)) {
             card {

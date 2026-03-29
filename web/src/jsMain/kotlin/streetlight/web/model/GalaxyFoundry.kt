@@ -33,7 +33,6 @@ class GalaxyFoundry(
                 api.uploadImage(it)
             }
             val galaxy = app.client.api.foundGalaxy(galaxy.copy(imageUrl = imageUrl))
-            console.log(galaxy)
             if (galaxy != null) {
                 portal.go(GalaxyPathIdRoute(galaxy.pathId))
                 reset()

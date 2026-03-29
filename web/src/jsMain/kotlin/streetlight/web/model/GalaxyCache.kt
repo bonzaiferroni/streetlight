@@ -19,6 +19,7 @@ class GalaxyCache(
     val stateNow get() = state.now
     val stateFlow = state.flow
     val starFlow = stateFlow.mapDistinct { it.stars }
+    val galaxiesFlow = stateFlow.mapDistinct { it.galaxies }
 
     private var stars by setStorageOf(GALAXY_CACHE_KEY) { GalaxyId(it) }
 
@@ -30,7 +31,6 @@ class GalaxyCache(
             }
             launch {
                 starFlow.collect { stars ->
-                    console.log(stars.size)
                     val galaxies = when (stars.isEmpty()) {
                         true -> emptyList()
                         else -> api.readGalaxies(stars.toList()) ?: emptyList() // td: fail message
