@@ -16,7 +16,7 @@ fun FlowContent.logo(
 }
 
 object LogoKey {
-    val Class = Css("logo")
+    val Class = Class("logo")
 }
 
 // language="CSS"

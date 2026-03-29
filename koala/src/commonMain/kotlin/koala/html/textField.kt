@@ -25,7 +25,7 @@ fun FlowOrInteractiveOrPhrasingContent.textField(
 ) {
     textField(id, placeholder) {
         attributes["aria-label"] = label
-        setAttribute(TagAttribute.blockLabel, label)
+        setAttribute(Attribute.BlockLabel, label)
 
         block?.invoke(this)
     }

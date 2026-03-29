@@ -5,7 +5,7 @@ import koala.css.InlineStyle
 import koala.css.StyleProperty
 import koala.css.Modifier
 import koala.external.ScrollIntoViewOptions
-import koala.html.TagAttribute
+import koala.html.Attribute
 import koala.html.Queryable
 import koala.utils.jsonConfig
 import kotlinx.browser.window
@@ -56,7 +56,7 @@ fun Element.scrollWhenPresent(
 }
 
 fun <T> Element.queryAttributeAll(
-    attribute: TagAttribute<T>,
+    attribute: Attribute<T>,
     provider: (String) -> T,
 ): List<Pair<HTMLElement, T>> {
     return querySelectorAll(attribute.selector).asList().mapNotNull {
@@ -67,7 +67,7 @@ fun <T> Element.queryAttributeAll(
     }
 }
 
-inline fun <reified T> Element.queryJsonAttribute(attribute: TagAttribute<T>): List<Pair<HTMLElement, T>> {
+inline fun <reified T> Element.queryJsonAttribute(attribute: Attribute<T>): List<Pair<HTMLElement, T>> {
     return queryAttributeAll(attribute, { json ->
         jsonConfig.decodeFromString<T>(json)
     })
@@ -81,6 +81,6 @@ fun Element.querySelectorAll(queryable: Queryable) = querySelectorAll(queryable.
     it as HTMLElement
 }
 
-fun Element.setAttribute(attribute: TagAttribute<*>, value: String) = setAttribute(attribute.key, value)
+fun Element.setAttribute(attribute: Attribute<*>, value: String) = setAttribute(attribute.key, value)
 
 fun CSSStyleDeclaration.removeProperty(property: StyleProperty<*>) = removeProperty(property.identifier)

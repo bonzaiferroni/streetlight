@@ -2,7 +2,7 @@
 
 package koala.html
 
-import koala.css.Css
+import koala.css.Class
 import koala.css.ModifierSet
 import koala.css.PositionAnchor
 import koala.css.StyleProperty
@@ -28,7 +28,7 @@ fun FlowContent.popover(
             StyleProperty.anchorId.to(anchor),
             StyleProperty.containerAnchorId.to(anchor.containerPosition()),
         )
-        setAttribute(TagAttribute.popover.to(if (isManual) "manual" else "auto"))
+        setAttribute(Attribute.Popover.to(if (isManual) "manual" else "auto"))
         block()
     }
 }
@@ -41,7 +41,7 @@ fun CommonAttributeGroupFacade.popoverContainer(anchor: PositionAnchor) {
 private fun PositionAnchor.containerPosition(): PositionAnchor = PositionAnchor("${this.identifier}-container")
 
 object PopoverElement {
-    val cssClass = Css("popover")
+    val cssClass = Class("popover")
 }
 
 // language="CSS"

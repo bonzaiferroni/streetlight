@@ -4,7 +4,7 @@ import koala.css.ModifierSet
 import koala.css.Width100P
 import koala.css.addModifiers
 import koala.html.Id
-import koala.html.TagAttribute
+import koala.html.Attribute
 import koala.html.setId
 import koala.html.setAttribute
 import kotlinx.coroutines.flow.Flow
@@ -29,7 +29,7 @@ fun RenderContext.textEditor(
 ): HTMLTextAreaElement {
     val parent = div {
         addModifiers(modifiers)
-        setAttribute(TagAttribute.blockLabel, label)
+        setAttribute(Attribute.BlockLabel, label)
     }
 
     var currentValue = ""

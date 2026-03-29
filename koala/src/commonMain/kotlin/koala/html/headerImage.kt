@@ -1,6 +1,6 @@
 package koala.html
 
-import koala.css.Css
+import koala.css.Class
 import koala.css.ModifierSet
 import koala.css.addModifiers
 import kotlinx.html.DIV
@@ -28,7 +28,7 @@ fun FlowContent.headerImage(
 }
 
 object HeaderImageKey {
-    val Class = Css("header-image")
+    val Class = Class("header-image")
 }
 
 // language="CSS"

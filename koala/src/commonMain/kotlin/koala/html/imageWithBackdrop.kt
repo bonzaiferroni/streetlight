@@ -1,6 +1,6 @@
 package koala.html
 
-import koala.css.Css
+import koala.css.Class
 import koala.css.ModifierSet
 import koala.css.addModifiers
 import kotlinx.html.FlowContent
@@ -18,11 +18,11 @@ fun FlowContent.fillImage(
     div {
         addModifiers(ImageWithBackdropKey.Class, modifiers)
         img {
-            addModifiers(Css("image-with-backdrop__backdrop"))
+            addModifiers(Class("image-with-backdrop__backdrop"))
             this.src = src
         }
         img {
-            addModifiers(Css("image-with-backdrop__image"))
+            addModifiers(Class("image-with-backdrop__image"))
             this.src = src
 
             block?.invoke(this)
@@ -31,7 +31,7 @@ fun FlowContent.fillImage(
 }
 
 object ImageWithBackdropKey {
-    val Class = Css("image-with-backdrop")
+    val Class = Class("image-with-backdrop")
 }
 
 // language="CSS"

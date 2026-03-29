@@ -1,6 +1,7 @@
 package koala.dom
 
 import koala.css.*
+import koala.html.ImageChooserKey
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.dom.clear
@@ -11,7 +12,7 @@ import org.w3c.dom.HTMLButtonElement
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLImageElement
 
-fun RenderContext.imageChoice(
+fun RenderContext.imageChooser(
     modifiers: ModifierSet? = null,
     onValueChanged: ((String?) -> Unit)? = null,
     onUpload: suspend (String) -> String?,
@@ -27,8 +28,8 @@ fun RenderContext.imageChoice(
     var choices: List<String>? = null
     var isInitialized = false
 
-    val element = box(modify(SetImageClass.parent, modifiers)) {
-        placeholder = box(modify(SetImageClass.placeholder))
+    val element = box(modify(ImageChooserKey.Class, modifiers)) {
+        placeholder = box(modify(ImageChooserKey.Placeholder))
         image = img {
             addModifiers(modify(BorderRadius1, MaxHeight64))
             style = "display: none;"
@@ -127,7 +128,3 @@ fun RenderContext.imageChoice(
     return element
 }
 
-object SetImageClass {
-    val parent = Css("set-image")
-    val placeholder = Css("set-image-placeholder")
-}

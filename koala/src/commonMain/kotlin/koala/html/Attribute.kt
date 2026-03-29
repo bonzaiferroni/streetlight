@@ -3,7 +3,7 @@ package koala.html
 import koala.Lottie
 import kotlinx.html.CoreAttributeGroupFacade
 
-data class TagAttribute<T>(val identifier: String, val isCustom: Boolean = false): Queryable {
+data class Attribute<T>(val identifier: String, val isCustom: Boolean = false): Queryable {
     override val selector get() = "[$key]"
     val key get() = when(isCustom) {
         true -> "data-$identifier"
@@ -12,17 +12,18 @@ data class TagAttribute<T>(val identifier: String, val isCustom: Boolean = false
 
     fun to(value: T) = AttributeExpression(this, value)
 
+    override fun toString() = selector
+
     companion object {
-        val blockLabel = TagAttribute<String>("block-label", true)
-        val lottie = TagAttribute<Lottie>("lottie", true)
-        val isOn = TagAttribute<Boolean>("is-on", true)
-        // val maskUrl = TagAttribute<>("mask-url", true)
-        val popoverTarget = TagAttribute<Id>("popovertarget")
-        val popover = TagAttribute<String>("popover")
+        val BlockLabel = Attribute<String>("block-label", true)
+        val Lottie = Attribute<Lottie>("lottie", true)
+        val IsOn = Attribute<Boolean>("is-on", true)
+        val PopoverTarget = Attribute<Id>("popovertarget")
+        val Popover = Attribute<String>("popover")
     }
 }
 
-data class AttributeExpression<T>(val attribute: TagAttribute<T>, val value: T)
+data class AttributeExpression<T>(val attribute: Attribute<T>, val value: T)
 
 fun CoreAttributeGroupFacade.applyBlockLabel(label: String?) {
     label?.let {
@@ -33,7 +34,7 @@ fun CoreAttributeGroupFacade.applyBlockLabel(label: String?) {
 fun <T> CoreAttributeGroupFacade.setAttribute(expression: AttributeExpression<T>) =
     setAttribute(expression.attribute, expression.value)
 
-fun <T> CoreAttributeGroupFacade.setAttribute(attribute: TagAttribute<T>, value: T?) {
+fun <T> CoreAttributeGroupFacade.setAttribute(attribute: Attribute<T>, value: T?) {
     if (value != null) {
         attributes[attribute.key] = value.toString()
     } else {
@@ -42,7 +43,7 @@ fun <T> CoreAttributeGroupFacade.setAttribute(attribute: TagAttribute<T>, value:
 }
 
 var CoreAttributeGroupFacade.blockLabel: String?
-    get() = attributes[TagAttribute.blockLabel.key]
+    get() = attributes[Attribute.BlockLabel.key]
     set(value) {
-        setAttribute(TagAttribute.blockLabel, value)
+        setAttribute(Attribute.BlockLabel, value)
     }

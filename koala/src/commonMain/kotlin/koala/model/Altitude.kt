@@ -1,6 +1,6 @@
 package koala.model
 
-import koala.css.Css
+import koala.css.Class
 
 enum class Altitude(val selector: String) {
     Kite("kite"),
@@ -9,9 +9,9 @@ enum class Altitude(val selector: String) {
     Astronaut("astronaut"),
     Comet("comet");
 
-    val css = Css(selector)
-    val aboveCss = Css("above-$selector")
-    val belowCss = Css("below-$selector")
+    val css = Class(selector)
+    val aboveCss = Class("above-$selector")
+    val belowCss = Class("below-$selector")
     val modifiers by lazy {
         entries.map {
             if (it < this) it.aboveCss

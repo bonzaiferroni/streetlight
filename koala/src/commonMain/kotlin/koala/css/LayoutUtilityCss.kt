@@ -66,10 +66,8 @@ val AlignItemsEnd = utilityOf("align-items-end", "align-items: flex-end")
 // Justify Content
 val JustifyContentCenter = utilityOf("justify-content-center", "justify-content: center")
 val JustifyContentEnd = utilityOf("justify-content-end", "justify-content: flex-end")
-val JustifyContentSpaceAround =
-    utilityOf("justify-content-space-around", "justify-content: space-around")
-val JustifyContentSpaceBetween =
-    utilityOf("justify-content-space-between", "justify-content: space-between")
+val JustifyContentSpaceAround = utilityOf("justify-content-space-around", "justify-content: space-around")
+val JustifyContentSpaceBetween = utilityOf("justify-content-space-between", "justify-content: space-between")
 
 // Width
 val WidthAuto = utilityOf("width-auto", "width: auto")
@@ -137,7 +135,7 @@ val TextAlignRight = utilityOf("text-align-right", "text-align: right")
 
 // Row / Wrap
 val RowReverse = utilityOf("row-reverse", "flex-direction: row-reverse")
-val QueryRowReverse = CssUtility("query-row-reverse", null)
+val QueryRowReverse = CssUtility("query-row-reverse")
 val NoWrap = utilityOf("no-wrap", "flex-wrap: nowrap", "white-space: nowrap")
 val WrapFlex = utilityOf("wrap-flex", "flex-wrap: wrap")
 val DisplayFlex = utilityOf("display-flex", "display: flex")
@@ -151,9 +149,21 @@ val MarginTop2 = utilityOf("margin-top-2", "margin-top: calc(var(--unit-spacing)
 val MarginTop4 = utilityOf("margin-top-4", "margin-top: calc(var(--unit-spacing) * 4)")
 val MarginTop8 = utilityOf("margin-top-8", "margin-top: calc(var(--unit-spacing) * 8)")
 val MarginLeft1 = utilityOf("margin-left-1", "margin-left: var(--unit-spacing)")
-val MarginX1 = utilityOf("margin-x-1", "margin-left: var(--unit-spacing)", "margin-right: var(--unit-spacing)")
-val MarginX2 = utilityOf("margin-x-2", "margin-left: calc(var(--unit-spacing) * 2)", "margin-right: calc(var(--unit-spacing) * 2)")
-val MarginX4 = utilityOf("margin-x-4", "margin-left: calc(var(--unit-spacing) * 4)", "margin-right: calc(var(--unit-spacing) * 4)")
+val MarginX1 = utilityOf(
+    "margin-x-1",
+    "margin-left: var(--unit-spacing)",
+    "margin-right: var(--unit-spacing)"
+)
+val MarginX2 = utilityOf(
+    "margin-x-2",
+    "margin-left: calc(var(--unit-spacing) * 2)",
+    "margin-right: calc(var(--unit-spacing) * 2)"
+)
+val MarginX4 = utilityOf(
+    "margin-x-4",
+    "margin-left: calc(var(--unit-spacing) * 4)",
+    "margin-right: calc(var(--unit-spacing) * 4)"
+)
 
 // Padding
 val Padding0 = utilityOf("padding-0", "padding: 0")
@@ -168,10 +178,10 @@ val ObjectPositionCenter = utilityOf("object-position-center", "object-position:
 
 // Other
 val SpaceBetween = utilityOf("space-between", "justify-content: space-between")
-val Start = CssUtility("start", null)
-val End = CssUtility("end", null)
-val Center = CssUtility("center", null)
-val PlaceItemsCenter = CssUtility("center-items", null)
+val Start = CssUtility("start")
+val End = CssUtility("end")
+val Center = CssUtility("center")
+val PlaceItemsCenter = CssUtility("center-items")
 val JustifySelfEnd = utilityOf("justify-self-end", "justify-self: end")
 val AlignSelfStart = utilityOf("align-self-start", "align-self: start")
 val AlignSelfStretch = utilityOf("align-self-stretch", "align-self: stretch")
@@ -182,7 +192,7 @@ val RelativeParent = CssUtility(
     ".relative-parent { position: relative; } .relative-parent > * { position: absolute; inset: 0; }"
 )
 val ZIndex1 = utilityOf("z-index-1", "z-index: 1")
-val Shrinkable = CssUtility("shrinkable", null)
+val Shrinkable = CssUtility("shrinkable")
 val QueryContainer = utilityOf("query-container", "container-type: inline-size")
 
 // Query

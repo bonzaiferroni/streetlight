@@ -3,7 +3,7 @@ package streetlight.web.layouts
 import kabinet.utils.toRelativeDayFormat
 import koala.SvgFile
 import koala.css.*
-import koala.html.TagAttribute
+import koala.html.Attribute
 import koala.html.action
 import koala.html.actionIfNotNull
 import koala.html.btn
@@ -112,7 +112,7 @@ fun FlowContent.starCell(eventId: EventId) {
 }
 
 object EventKey {
-    val StarEventId = TagAttribute<EventId>("event-id")
+    val StarEventId = Attribute<EventId>("event-id")
     // val StarClass = Css("event-star")
 }
 

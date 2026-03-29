@@ -1,6 +1,6 @@
 package koala.html
 
-import koala.css.Css
+import koala.css.Class
 import koala.css.ModifierSet
 import koala.css.addModifiers
 import koala.css.modify
@@ -32,7 +32,7 @@ fun DIV.configureSwitch(
     setId(id)
     attributes["role"] = "switch"
     attributes["aria-checked"] = initialOn.toString()
-    setAttribute(TagAttribute.isOn, initialOn)
+    setAttribute(Attribute.IsOn, initialOn)
 
     // ghost text defines the inner pill width; outer padding makes the “constraints” larger
     span("switch__ghost") { +label }
@@ -42,7 +42,7 @@ fun DIV.configureSwitch(
 }
 
 object SwitchKey {
-    val Class = Css("switch")
+    val Class = Class("switch")
 }
 
 // language="CSS"

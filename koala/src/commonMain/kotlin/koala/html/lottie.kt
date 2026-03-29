@@ -21,12 +21,12 @@ internal fun DIV.configureLottie(
     block: (DIV.() -> Unit)? = null
 ) {
     addModifiers(modify(LottieKey.Class, modifiers))
-    setAttribute(TagAttribute.lottie, file)
+    setAttribute(Attribute.Lottie, file)
     block?.invoke(this)
 }
 
 object LottieKey {
-    val Class = Css("lottie")
+    val Class = Class("lottie")
 }
 
 // language="CSS"

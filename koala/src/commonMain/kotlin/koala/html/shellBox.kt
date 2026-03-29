@@ -1,9 +1,9 @@
 package koala.html
 
-import koala.css.Css
+import koala.css.Class
 
 object ShellBoxKey {
-    val Class = Css("shell-box")
+    val Class = Class("shell-box")
 }
 
 val ShellBoxCss get() = """

@@ -1,9 +1,9 @@
 package koala.html
 
-import koala.css.Css
+import koala.css.Class
 
 object FlowBlockKey {
-    val Class = Css("flow-block")
+    val Class = Class("flow-block")
 }
 
 // language="CSS"

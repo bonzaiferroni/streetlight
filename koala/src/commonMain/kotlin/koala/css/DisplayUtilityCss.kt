@@ -11,7 +11,7 @@ val DisplayUtilityCss
         // Shape
         CircleShape, CircleClip,
         // Border Radius
-        BorderRadius0, BorderRadius1, BorderRadius2, BorderRadius4,
+        BorderRadius0, BorderRadius1, BorderRadius2, BorderRadius4, BorderRadius50P,
         // Color
         Accent, Primary, Secondary, Danger,
         // Overflow
@@ -49,6 +49,7 @@ val BorderRadius0 = utilityOf("border-radius-0", "border-radius: 0")
 val BorderRadius1 = utilityOf("border-radius-1", "border-radius: var(--unit-spacing)")
 val BorderRadius2 = utilityOf("border-radius-2", "border-radius: calc(var(--unit-spacing) * 2)")
 val BorderRadius4 = utilityOf("border-radius-4", "border-radius: calc(var(--unit-spacing) * 4)")
+val BorderRadius50P = utilityOf("border-radius-50p", "border-radius: 50%")
 
 // Color
 val Accent = CssUtility("accent")
@@ -67,10 +68,17 @@ val PrimaryBg = utilityOf("primary-bg", "background-color: var(--primary-bg)")
 val PrimaryCardBg = utilityOf("primary-card-bg", "background-color: var(--primary-card-bg)")
 val BackgroundImage = CssUtility("background-image")
 val SolidBg = utilityOf("solid-bg", "background-color: var(--paper-bg)")
-val BlurBackdrop = utilityOf("blur-backdrop", "backdrop-filter: var(--strong-blur)", "-webkit-backdrop-filter: var(--strong-blur)")
+val BlurBackdrop = utilityOf(
+    "blur-backdrop",
+    "backdrop-filter: var(--strong-blur)",
+    "-webkit-backdrop-filter: var(--strong-blur)")
+val BlurBg = utilityOf("blur-bg", "background: rgba(var(--paper), .8)")
 
 // Misc
-val FadeBottom = utilityOf("fade-bottom", "-webkit-mask-image: linear-gradient(to bottom, black 0, black calc(100% - 1rem), transparent 100%)", "mask-image: linear-gradient(to bottom, black 0, black calc(100% - 1rem), transparent 100%)")
+val FadeBottom = utilityOf(
+    "fade-bottom",
+    "-webkit-mask-image: linear-gradient(to bottom, black 0, black calc(100% - 1rem), transparent 100%)",
+    "mask-image: linear-gradient(to bottom, black 0, black calc(100% - 1rem), transparent 100%)")
 val Focus = CssUtility("focus")
 val Clickable = CssUtility("clickable")
 val PointerEventsAuto = utilityOf("pointer-events-auto", "pointer-events: auto")

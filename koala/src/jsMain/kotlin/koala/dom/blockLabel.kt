@@ -2,7 +2,7 @@ package koala.dom
 
 import koala.css.ModifierSet
 import koala.css.addModifiers
-import koala.html.TagAttribute
+import koala.html.Attribute
 import koala.html.blockLabel
 import koala.html.setAttribute
 import kotlinx.html.DIV
@@ -16,6 +16,6 @@ fun DOMContext.blockLabel(
 ) = div {
     this.blockLabel = label
     addModifiers(modifiers)
-    setAttribute(TagAttribute.blockLabel, label)
+    setAttribute(Attribute.BlockLabel, label)
     block?.invoke(this)
 }

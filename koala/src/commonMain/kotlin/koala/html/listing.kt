@@ -1,6 +1,6 @@
 package koala.html
 
-import koala.css.Css
+import koala.css.Class
 import koala.css.ModifierSet
 import koala.css.addModifiers
 import kotlinx.html.FlowContent
@@ -48,9 +48,9 @@ enum class ListAxis {
 }
 
 object ListKey {
-    val Class = Css("listing")
-    val RowClass = Css("row-listing")
-    val ColumnClass = Css("column-listing")
+    val Class = Class("listing")
+    val RowClass = Class("row-listing")
+    val ColumnClass = Class("column-listing")
 }
 
 // language="CSS"

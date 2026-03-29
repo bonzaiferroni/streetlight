@@ -16,7 +16,7 @@ fun FlowContent.section(
 }
 
 object SectionKey {
-    val Class = Css("section")
+    val Class = Class("section")
 }
 
 // language="CSS"

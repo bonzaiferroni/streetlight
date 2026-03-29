@@ -22,7 +22,7 @@ fun HTML.appBody(
             column(AppBodyKey.AppBoxId) {
                 column {
                     appHeader()
-                    box(AppBodyKey.ContentBox) {
+                    box(AppBodyKey.ContentBoxId) {
                         box(AppBodyKey.PortalMountId)
                         box(id = AppBodyKey.ShellBoxId, block = block)
                     }
@@ -65,15 +65,15 @@ fun FlowContent.emptyBadge() {
 }
 
 fun FlowContent.stickyBar() {
-    val cardMod = modify(BlurBackdrop, PointerEventsAuto)
+    val cardMod = modify(BlurBackdrop, PointerEventsAuto, BorderRadius50P, BlurBg)
     val iconMod = modify(Height6, AspectRatio1, DisplayFlex)
-    row(AppBodyKey.StickyBar, modify(JustifyContentSpaceBetween)) {
-        card(cardMod + LeftStickyCard) {
+    row(AppBodyKey.StickyBarId, modify(JustifyContentSpaceBetween)) {
+        card(cardMod) {
             action(SiteConfigRoute, iconMod + OpacityMost) {
                 icon(SvgFile.Helm)
             }
         }
-        card(cardMod + RightStickyCard) {
+        card(cardMod) {
             action(AccountRoute, iconMod, id = AppBodyKey.BadgeId) {
                 emptyBadge()
             }
@@ -86,17 +86,49 @@ object AppBodyKey {
     val AppBoxId = Id("app-box")
     val PortalMountId = Id("portal-mount")
     val ShellBoxId = Id("shell-box")
-    val ContentBox = Id("content-box")
+    val ContentBoxId = Id("content-box")
     val BadgeId = Id("user-badge")
-    val StickyBar = Id("sticky-bar")
+    val StickyBarId = Id("sticky-bar")
 }
 
-private val LeftStickyCard = Css("left-sticky-card")
-private val RightStickyCard = Css("right-sticky-card")
+// private val LeftStickyCard = Css("left-sticky-card")
+// private val RightStickyCard = Css("right-sticky-card")
 
 // language="CSS"
 val AppBodyCss = """
-${AppBodyKey.StickyBar.selector} {
+${AppBodyKey.ViewportId} {
+    position: relative;
+    width: 100vw;
+    height: 100dvh;
+}
+
+${AppBodyKey.AppBoxId} {
+    position: relative;
+    min-height: 100vh;
+    width: 100%;
+    max-width: var(--body-width);
+    margin: 0 auto;
+    padding: var(--unit-spacing);
+}
+
+${AppBodyKey.AppBoxId} {
+    width: 100%;
+    display: grid;
+}
+
+${AppBodyKey.PortalMountId},
+${AppBodyKey.ShellBoxId} {
+    width: 100%;
+    grid-area: 1 / 1;
+    min-width: 0;
+}
+
+${AppBodyKey.PortalMountId} > *,
+${AppBodyKey.ShellBoxId} > * {
+    width: 100%;
+}
+    
+${AppBodyKey.StickyBarId} {
     position: fixed;
     pointer-events: none;
     top: 0;
@@ -105,16 +137,6 @@ ${AppBodyKey.StickyBar.selector} {
     z-index: 14;
 }
 
-${RightStickyCard.selector}
-${LeftStickyCard.selector} {
-    background: rgba(var(--paper), .8);
-}
 
-${LeftStickyCard.selector} {
-    border-radius: 0 20% 40% 20%;
-}
 
-${RightStickyCard.selector} {
-    border-radius: 20% 0 20% 40%;
-}
 """

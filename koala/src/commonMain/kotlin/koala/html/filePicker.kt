@@ -1,11 +1,11 @@
 package koala.html
 
-import koala.css.Css
+import koala.css.Class
 
 object FilePickerKey {
-    val Class = Css("file-picker")
-    val DropZone = Css("file-picker-drop-zone")
-    val DragOver = Css("dragover")
+    val Class = Class("file-picker")
+    val DropZone = Class("file-picker-drop-zone")
+    val DragOver = Class("dragover")
 }
 
 // language="CSS"

@@ -1,6 +1,6 @@
 package koala.html
 
-import koala.css.Css
+import koala.css.Class
 import koala.css.ModifierSet
 import koala.css.addModifiers
 import kotlinx.html.LI
@@ -29,7 +29,7 @@ fun UL.listItem(
 }
 
 object ListItemKey {
-    val baseClass = Css("list-item")
+    val baseClass = Class("list-item")
 }
 
 // language="CSS"

@@ -3,7 +3,7 @@ package koala.core
 import koala.dom.onCustomEvent
 import koala.dom.sendCustomEvent
 import koala.dom.setAttribute
-import koala.html.TagAttribute
+import koala.html.Attribute
 import koala.html.ElementEvent
 import koala.html.SwitchKey
 import org.w3c.dom.HTMLElement
@@ -19,12 +19,12 @@ fun findAndInitSwitches(ancestor: HTMLElement) {
 fun initSwitch(
     element: HTMLElement,
 ) {
-    var isOn = element.attributes[TagAttribute.isOn]?.toBooleanStrictOrNull() ?: false
+    var isOn = element.attributes[Attribute.IsOn]?.toBooleanStrictOrNull() ?: false
 
     fun setOn(value: Boolean) {
         if (value == isOn) return
         isOn = value
-        element.setAttribute(TagAttribute.isOn, value.toString())
+        element.setAttribute(Attribute.IsOn, value.toString())
         element.setAttribute("aria-checked", value.toString())
         element.sendCustomEvent(ElementEvent.onToggle, isOn)
     }

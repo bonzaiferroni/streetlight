@@ -1,6 +1,6 @@
 package koala.html
 
-import koala.css.Css
+import koala.css.Class
 import koala.css.ModifierSet
 import koala.css.addModifiers
 import kotlinx.html.FlowContent
@@ -22,7 +22,7 @@ fun FlowContent.wireBlock(
 }
 
 object WireBlockKey {
-    val Class = Css("wire-block")
+    val Class = Class("wire-block")
 }
 
 // language="CSS"

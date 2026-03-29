@@ -4,7 +4,7 @@ import koala.css.ModifierSet
 import koala.css.Width100P
 import koala.css.addModifiers
 import koala.html.Id
-import koala.html.TagAttribute
+import koala.html.Attribute
 import koala.html.setId
 import koala.html.setAttribute
 import koala.model.mapDistinct
@@ -33,7 +33,7 @@ fun RenderContext.textField(
 ): HTMLInputElement {
     val parent = div {
         addModifiers(modifiers)
-        setAttribute(TagAttribute.blockLabel, label?.lowercase())
+        setAttribute(Attribute.BlockLabel, label?.lowercase())
     }
 
     var currentValue = ""

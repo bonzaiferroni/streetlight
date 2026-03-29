@@ -1,9 +1,9 @@
 package koala.html
 
-import koala.css.Css
+import koala.css.Class
 
 object MessageBoxKey {
-    val Class = Css("message-box")
+    val Class = Class("message-box")
 }
 
 // language="CSS"

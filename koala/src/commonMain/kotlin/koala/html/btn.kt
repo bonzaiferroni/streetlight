@@ -1,7 +1,7 @@
 package koala.html
 
 import koala.css.BackgroundImage
-import koala.css.Css
+import koala.css.Class
 import koala.css.ModifierSet
 import koala.css.StyleProperty
 import koala.css.StyleSet
@@ -82,5 +82,5 @@ private val domainMap = mapOf(
 )
 
 object BtnKey {
-    val Class = Css("btn")
+    val Class = Class("btn")
 }

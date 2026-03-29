@@ -15,7 +15,7 @@ interface Modifier: Queryable {
 }
 
 @JvmInline
-value class Css(override val identifier: String): Modifier {
+value class Class(override val identifier: String): Modifier {
     override fun toString() = identifier
 }
 

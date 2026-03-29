@@ -1,6 +1,6 @@
 package koala.html
 
-import koala.css.Css
+import koala.css.Class
 import koala.css.ModifierSet
 import koala.css.Reveal
 import koala.css.StyleProperty
@@ -31,7 +31,7 @@ fun DIV.setReveal(isVisible: Boolean) {
 }
 
 object SwapBlockKey {
-    val Class = Css("swap-block")
+    val Class = Class("swap-block")
 }
 
 // language="CSS"

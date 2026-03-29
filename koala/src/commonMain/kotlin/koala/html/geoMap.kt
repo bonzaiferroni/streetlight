@@ -1,7 +1,7 @@
 package koala.html
 
 import kampfire.model.GeoPoint
-import koala.css.Css
+import koala.css.Class
 import koala.css.Height48
 import koala.css.ModifierSet
 import koala.css.Width100P
@@ -25,12 +25,12 @@ fun FlowContent.geoMapMount(
 }
 
 object GeoMapSelector {
-    val mapMount = Css("map-mount")
+    val mapMount = Class("map-mount")
     val window = Id("map-window")
     val widget = Id("map-widget")
     val overlay = Id("map-overlay")
     val crosshairs = Id("map-crosshairs")
     val panel = Id("map-panel")
-    val geoPoint = TagAttribute<String>("data-geo-point")
+    val geoPoint = Attribute<String>("data-geo-point")
     val focusPanel = Id("map-focus-panel")
 }

@@ -2,7 +2,7 @@ package koala.model
 
 import kampfire.model.GeoPoint
 import kampfire.model.Point
-import koala.css.Css
+import koala.css.Class
 import koala.css.Focus
 import koala.css.Scale
 import koala.css.addModifiers
@@ -103,19 +103,19 @@ fun PointEntityView.setAttributes(entity: PointEntity) {
 }
 
 object MarkerCss {
-    val block = Css("map-marker")
-    val base = Css("map-marker__base")
-    val bearing = Css("map-marker__bearing")
-    val icon = Css("map-marker__icon")
-    val thumb = Css("map-marker__thumb")
-    val body = Css("map-marker__body")
-    val label = Css("map-marker__label")
+    val block = Class("map-marker")
+    val base = Class("map-marker__base")
+    val bearing = Class("map-marker__bearing")
+    val icon = Class("map-marker__icon")
+    val thumb = Class("map-marker__thumb")
+    val body = Class("map-marker__body")
+    val label = Class("map-marker__label")
 }
 
 object MarkerUtility {
-    val twinkleAboveKite = Css("twinkle-above-kite")
-    val twinkleAboveRaincloud = Css("twinkle-above-raincloud")
-    val twinkleAboveAirplane = Css("twinkle-above-airplane")
+    val twinkleAboveKite = Class("twinkle-above-kite")
+    val twinkleAboveRaincloud = Class("twinkle-above-raincloud")
+    val twinkleAboveAirplane = Class("twinkle-above-airplane")
 }
 
 fun PointEntity.toMapEntityView(pixelPoint: Point): PointEntityView {
@@ -137,7 +137,7 @@ fun PointEntity.toMapEntityView(pixelPoint: Point): PointEntityView {
             }.let { set ->
                 light?.let {
                     style = "--light: ${it.css()};"
-                    set + Css("marker-glow")
+                    set + Class("marker-glow")
                 } ?: set
             }
             addModifiers(baseModifiers)

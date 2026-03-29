@@ -3,7 +3,7 @@ package streetlight.web.ui
 import koala.css.AlignItemsCenter
 import koala.css.Magic
 import koala.css.Blur
-import koala.css.Css
+import koala.css.Class
 import koala.css.SlideLeft
 import koala.css.modify
 import koala.dom.*
@@ -64,8 +64,8 @@ fun RenderContext.mapPanelCard(label: String, block: RenderContext.() -> Unit) {
 }
 
 object MapPanel {
-    val container = Css("map-event-panel")
-    val card = Css("map-panel-card")
-    val cardHeading = Css("map-panel-card-heading")
-    val grid = Css("map-panel-card-grid")
+    val container = Class("map-event-panel")
+    val card = Class("map-panel-card")
+    val cardHeading = Class("map-panel-card-heading")
+    val grid = Class("map-panel-card-grid")
 }

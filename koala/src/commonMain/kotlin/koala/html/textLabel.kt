@@ -1,6 +1,6 @@
 package koala.html
 
-import koala.css.Css
+import koala.css.Class
 import koala.css.ModifierSet
 import koala.css.addModifiers
 import kotlinx.html.FlowContent
@@ -20,7 +20,7 @@ fun FlowContent.textLabel(
 }
 
 object TextLabelKey {
-    val Class = Css("text-label")
+    val Class = Class("text-label")
 }
 
 val TextLabelCss get() = """

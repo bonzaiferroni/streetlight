@@ -31,7 +31,7 @@ fun DIV.configureIcon(
 }
 
 object IconElement {
-    val Class = Css("icon")
+    val Class = Class("icon")
 }
 
 // language="CSS"

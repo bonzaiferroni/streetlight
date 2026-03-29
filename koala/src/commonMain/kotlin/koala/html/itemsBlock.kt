@@ -1,9 +1,9 @@
 package koala.html
 
-import koala.css.Css
+import koala.css.Class
 
 object ItemsBlockKey {
-    val Class = Css("items-block")
+    val Class = Class("items-block")
 }
 
 // language="CSS"

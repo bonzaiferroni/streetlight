@@ -37,11 +37,11 @@ fun FlowContent.tabs(
 }
 
 object TabClass {
-    val tabs = Css("tabs")
-    val button = Css("tabs-button")
-    val header = Css("tabs-header")
-    val viewport = Css("tabs-viewport")
-    val panel = Css("tabs-panel")
+    val tabs = Class("tabs")
+    val button = Class("tabs-button")
+    val header = Class("tabs-header")
+    val viewport = Class("tabs-viewport")
+    val panel = Class("tabs-panel")
 }
 
 fun TabScope.tab(

@@ -1,6 +1,6 @@
 package koala.html
 
-import koala.css.Css
+import koala.css.Class
 import koala.css.ModifierSet
 import koala.css.addModifiers
 import kotlinx.html.DIV
@@ -41,7 +41,7 @@ fun DIV.configureToggleBlock(
 }
 
 object ToggleBlock {
-    val root = Css("toggle-block")
-    val cover = Css("toggle-block__cover")
-    val base = Css("toggle-block__base")
+    val root = Class("toggle-block")
+    val cover = Class("toggle-block__cover")
+    val base = Class("toggle-block__base")
 }

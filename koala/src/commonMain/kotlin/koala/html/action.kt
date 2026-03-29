@@ -1,6 +1,6 @@
 package koala.html
 
-import koala.css.Css
+import koala.css.Class
 import koala.css.ModifierSet
 import koala.css.StyleSet
 import koala.css.addModifiers
@@ -61,7 +61,7 @@ fun FlowContent.actionIfNotNull(
 }
 
 object ActionKey {
-    val Class = Css("action")
+    val Class = Class("action")
 }
 
 // language="CSS"

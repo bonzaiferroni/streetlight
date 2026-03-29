@@ -14,6 +14,8 @@ data class StyleProperty<T>(val identifier: String, val isCustom: Boolean = fals
         else -> identifier
     }
 
+    override fun toString() = expression
+
     companion object {
         val anchorName = StyleProperty<PositionAnchor>("anchor-name")
         val positionAnchor = StyleProperty<PositionAnchor>("position-anchor")
