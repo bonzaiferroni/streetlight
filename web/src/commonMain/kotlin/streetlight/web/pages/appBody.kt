@@ -36,7 +36,7 @@ fun HTML.appBody(
 
 fun FlowContent.appHeader() {
     val height = Height6
-    filigree(modify(height, MarginTop1)) {
+    filigree(modify(height)) {
         action(HomeRoute, modify(DisplayFlex)) {
             row(modify(AlignItemsCenter)) {
                 logo(modify(height))
@@ -136,7 +136,4 @@ ${AppBodyKey.StickyBarId} {
     width: 100%;
     z-index: 14;
 }
-
-
-
 """

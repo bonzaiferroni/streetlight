@@ -3,7 +3,7 @@ package koala.html
 import koala.css.Class
 import koala.css.ModifierSet
 import koala.css.Reveal
-import koala.css.StyleProperty
+import koala.css.Property
 import koala.css.addModifiers
 import koala.css.setStyle
 import kotlinx.css.Display
@@ -26,7 +26,7 @@ fun FlowContent.swapBlock(
 fun DIV.setReveal(isVisible: Boolean) {
     when (isVisible) {
         true -> addModifiers(Reveal)
-        else -> setStyle(StyleProperty.display.to(Display.none))
+        else -> setStyle(Property.Display.to(Display.none))
     }
 }
 

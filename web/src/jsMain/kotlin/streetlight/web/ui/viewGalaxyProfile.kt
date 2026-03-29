@@ -1,7 +1,7 @@
 package streetlight.web.ui
 
 import koala.core.queryFirstOrNull
-import koala.css.StyleProperty
+import koala.css.Property
 import koala.css.UrlValue
 import koala.dom.*
 import koala.html.IconElement
@@ -81,7 +81,7 @@ fun RenderContext.wireStarSetters(app: Streetlight, root: HTMLElement) {
                 }
 
                 element.queryFirstOrNull(IconElement.Class)?.style
-                    ?.setProperty(StyleProperty.maskUrl.to(UrlValue(star.value.iconPath)))
+                    ?.setProperty(Property.MaskUrl.to(UrlValue(star.value.iconPath)))
 
                 starMap[eventId] = star
             }

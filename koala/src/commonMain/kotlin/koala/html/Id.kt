@@ -6,7 +6,7 @@ import kotlin.jvm.JvmInline
 @JvmInline
 value class Id(val value: String): Queryable {
     override val selector get() = "#$value"
-    override fun toString() = value
+    override fun toString() = selector
 }
 
 interface Queryable {

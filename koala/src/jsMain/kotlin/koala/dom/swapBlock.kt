@@ -2,7 +2,7 @@ package koala.dom
 
 import koala.css.Magic
 import koala.css.Reveal
-import koala.css.StyleProperty
+import koala.css.Property
 import koala.html.Id
 import koala.html.Queryable
 import kotlinx.browser.window
@@ -47,8 +47,8 @@ fun RenderContext.queryAndWireSwapBlock(
 private fun List<HTMLElement>.setVisibility(id: Id) {
     forEach { child ->
         when (child.id == id.value) {
-            true -> child.style.removeProperty(StyleProperty.display)
-            else -> child.style.setProperty(StyleProperty.display.to(Display.none))
+            true -> child.style.removeProperty(Property.Display)
+            else -> child.style.setProperty(Property.Display.to(Display.none))
         }
     }
 }
@@ -57,7 +57,7 @@ private fun List<HTMLElement>.setReveal(id: Id, isInitial: Boolean) {
     forEach { child ->
         when (child.id == id.value) {
             true -> {
-                child.style.removeProperty(StyleProperty.display)
+                child.style.removeProperty(Property.Display)
                 if (isInitial) {
                     // pops into view on the first switch, this doesn't seem to help
                     window.requestAnimationFrame {

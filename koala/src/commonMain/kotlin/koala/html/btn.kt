@@ -3,7 +3,7 @@ package koala.html
 import koala.css.BackgroundImage
 import koala.css.Class
 import koala.css.ModifierSet
-import koala.css.StyleProperty
+import koala.css.Property
 import koala.css.StyleSet
 import koala.css.UrlValue
 import koala.css.setStyle
@@ -37,7 +37,7 @@ fun FlowContent.btn(
         modifiers = modify(modifiers, BtnKey.Class, BackgroundImage),
     ) {
         background?.let {
-            setStyle(StyleProperty.backgroundUrl.to(UrlValue(it)))
+            setStyle(Property.BackgroundUrl.to(UrlValue(it)))
         }
         block?.invoke(this)
     }

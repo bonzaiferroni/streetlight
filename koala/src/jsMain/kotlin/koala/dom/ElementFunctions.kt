@@ -2,7 +2,7 @@ package koala.dom
 
 import koala.core.get
 import koala.css.InlineStyle
-import koala.css.StyleProperty
+import koala.css.Property
 import koala.css.Modifier
 import koala.external.ScrollIntoViewOptions
 import koala.html.Attribute
@@ -83,4 +83,4 @@ fun Element.querySelectorAll(queryable: Queryable) = querySelectorAll(queryable.
 
 fun Element.setAttribute(attribute: Attribute<*>, value: String) = setAttribute(attribute.key, value)
 
-fun CSSStyleDeclaration.removeProperty(property: StyleProperty<*>) = removeProperty(property.identifier)
+fun CSSStyleDeclaration.removeProperty(property: Property<*>) = removeProperty(property.identifier)

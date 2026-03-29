@@ -5,7 +5,7 @@ package koala.html
 import koala.css.Class
 import koala.css.ModifierSet
 import koala.css.PositionAnchor
-import koala.css.StyleProperty
+import koala.css.Property
 import koala.css.addModifiers
 import koala.css.setStyle
 import kotlinx.html.CommonAttributeGroupFacade
@@ -24,9 +24,9 @@ fun FlowContent.popover(
         addModifiers(PopoverElement.cssClass, modifiers)
         setId(id)
         setStyle(
-            StyleProperty.positionAnchor.to(anchor),
-            StyleProperty.anchorId.to(anchor),
-            StyleProperty.containerAnchorId.to(anchor.containerPosition()),
+            Property.PositionAnchor.to(anchor),
+            Property.AnchorId.to(anchor),
+            Property.ContainerAnchorId.to(anchor.containerPosition()),
         )
         setAttribute(Attribute.Popover.to(if (isManual) "manual" else "auto"))
         block()
@@ -35,7 +35,7 @@ fun FlowContent.popover(
 
 // Called on the parent element
 fun CommonAttributeGroupFacade.popoverContainer(anchor: PositionAnchor) {
-    setStyle(StyleProperty.anchorName.to(anchor.containerPosition()))
+    setStyle(Property.AnchorName.to(anchor.containerPosition()))
 }
 
 private fun PositionAnchor.containerPosition(): PositionAnchor = PositionAnchor("${this.identifier}-container")

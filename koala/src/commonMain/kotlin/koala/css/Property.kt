@@ -5,7 +5,7 @@ import kotlinx.css.Display
 import kotlinx.html.CoreAttributeGroupFacade
 import kotlinx.html.style
 
-data class StyleProperty<T>(val identifier: String, val isCustom: Boolean = false) {
+data class Property<T>(val identifier: String, val isCustom: Boolean = true) {
 
     fun to(value: T) = InlineStyle(this, value)
 
@@ -17,25 +17,25 @@ data class StyleProperty<T>(val identifier: String, val isCustom: Boolean = fals
     override fun toString() = expression
 
     companion object {
-        val anchorName = StyleProperty<PositionAnchor>("anchor-name")
-        val positionAnchor = StyleProperty<PositionAnchor>("position-anchor")
-        val display = StyleProperty<Display>("display")
+        val AnchorName = Property<PositionAnchor>("anchor-name", false)
+        val PositionAnchor = Property<PositionAnchor>("position-anchor", false)
+        val Display = Property<Display>("display", false)
 
-        val maskUrl = StyleProperty<UrlValue>("mask-url", true)
-        val backgroundUrl = StyleProperty<UrlValue>("background-url", true)
-        val anchorId = StyleProperty<PositionAnchor>("anchor-id", true)
-        val containerAnchorId = StyleProperty<PositionAnchor>("anchor-container-id", true)
+        val MaskUrl = Property<UrlValue>("mask-url")
+        val BackgroundUrl = Property<UrlValue>("background-url")
+        val AnchorId = Property<PositionAnchor>("anchor-id")
+        val ContainerAnchorId = Property<PositionAnchor>("anchor-container-id")
     }
 }
 
-data class InlineStyle<T>(val property: StyleProperty<T>, val value: T)
+data class InlineStyle<T>(val property: Property<T>, val value: T)
 
 data class UrlValue(val url: String) {
     constructor(file: SiteFile): this(file.path)
     override fun toString() = "url('$url')"
 }
 
-data class RgbValue(val red: Int, val green: Int, val blue: Int) {
+data class Rgb(val red: Int, val green: Int, val blue: Int) {
     override fun toString() = "$red, $green, $blue"
 }
 
@@ -76,7 +76,7 @@ fun CoreAttributeGroupFacade.setStyle(styles: StyleSet?) {
 }
 
 fun CoreAttributeGroupFacade.setPositionAnchor(value: PositionAnchor) =
-    setStyle(StyleProperty.positionAnchor.to(value))
+    setStyle(Property.PositionAnchor.to(value))
 
 fun CoreAttributeGroupFacade.setAnchorName(anchor: PositionAnchor) =
-    setStyle(StyleProperty.anchorName.to(anchor))
+    setStyle(Property.AnchorName.to(anchor))

@@ -8,7 +8,7 @@ object JsFile: FileSet<Js>() {
 
 object CssFiles: FileSet<CssFile>() {
      val Reset = add("reset.css")
-     val Styles = add("styles.css")
+     // val Styles = add("styles.css")
      val Typography = add("typography.css")
      val Button = add("button.css")
      val Layout = add("layout.css")

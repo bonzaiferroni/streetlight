@@ -32,3 +32,9 @@ data class KoalaTheme(
         const val MAGIC_INTERVAL = 222
     }
 }
+
+object KoalaVar {
+    val Paper = Property<Rgb>("paper")
+    val PaperBg = Property<Color>("paper-bg")
+    val BodyBg = Property<Color>("body-bg")
+}

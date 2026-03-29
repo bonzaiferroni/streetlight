@@ -1,7 +1,7 @@
 package streetlight.web.model
 
-import koala.css.RgbValue
-import koala.css.StyleProperty
+import koala.css.Rgb
+import koala.css.Property
 import koala.dom.setProperty
 import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
@@ -37,11 +37,11 @@ class ThemeReactor(
 }
 
 object ThemeProperty {
-    val paper = StyleProperty<RgbValue>("paper")
-    val ink = StyleProperty<RgbValue>("ink")
+    val paper = Property<Rgb>("paper")
+    val ink = Property<Rgb>("ink")
 }
 
 object ThemeValue {
-    val black = RgbValue(9, 13, 13)
-    val white = RgbValue(240, 246, 246)
+    val black = Rgb(9, 13, 13)
+    val white = Rgb(240, 246, 246)
 }
