@@ -20,8 +20,8 @@ import streetlight.web.shells.GalaxyProfileContent
 import streetlight.web.shells.galaxyProfileShell
 import streetlight.web.layouts.iconPath
 
-fun RenderContext.viewGalaxyProfile(app: Streetlight, content: GalaxyProfileContent) {
-    val config = app.config
+fun ViewContext<Streetlight>.viewGalaxyProfile(content: GalaxyProfileContent) {
+    val app = model
     val state = storeOf(GalaxyProfileState())
 
     val isMapVisibleFlow = state.flow.mapDistinct { it.isMapVisible }
@@ -40,7 +40,7 @@ fun RenderContext.viewGalaxyProfile(app: Streetlight, content: GalaxyProfileCont
 
     queryAndWireSwitch(root, GalaxyProfileKey.MapSwitchId, onToggle = ::setIsMapVisible, bindFlow = isMapVisibleFlow)
     queryAndWireSwapBlock(root, GalaxyProfileKey.SwapId, bindFlow = swapIdFlow)
-    wireStarSetters(app, root)
+    wireEventStars(root)
 
     app.streetMap.setPosts(content.posts)
 }
@@ -53,51 +53,15 @@ fun ViewContext<Streetlight>.viewGalaxyProfileRoute() {
     routeBlock<GalaxyPathIdRoute, GalaxyProfileContent>(model.portal, { route ->
         val galaxy = model.client.api.readGalaxy(route.pathId) ?: return@routeBlock null
         val posts = model.client.api.readPosts(galaxy.galaxyId) ?: return@routeBlock null
-        val galaxies = model.client.api.readGalaxies() ?: emptyList()
+        val galaxies = model.client.api.readTopGalaxies() ?: emptyList()
         GalaxyProfileContent(
             galaxy = galaxy,
             posts = posts,
             galaxies = galaxies,
         )
     }) { content ->
-        viewGalaxyProfile(model, content)
-    }
-}
-
-fun RenderContext.wireStarSetters(app: Streetlight, root: HTMLElement) {
-    val eventStarCache = app.userCache.eventStar
-    val pairs = root.queryAttributeAll(EventKey.StarEventId) { EventId(it) }
-    val starMap = mutableMapOf<EventId, EventStar>()
-
-    fun getStar(eventId: EventId) = starMap[eventId] ?: EventStar(eventId, null)
-
-    renderScope.launch {
-        eventStarCache.starFlow.collect { stars ->
-            pairs.forEach { (element, eventId) ->
-                val isStarred = stars.any { it.eventId == eventId }
-                val star = when(isStarred) {
-                    true -> EventStar(eventId, StarType.Star)
-                    else -> EventStar(eventId, null)
-                }
-
-                element.queryFirstOrNull(IconElement.Class)?.style
-                    ?.setProperty(Property.MaskUrl.to(UrlValue(star.value.iconPath)))
-
-                starMap[eventId] = star
-            }
-        }
-    }
-
-    pairs.forEach { (element, eventId) ->
-        element.onClick {
-            val star = getStar(eventId).let { star ->
-                star.copy(value = when (star.value) {
-                    null -> StarType.Star
-                    else -> null
-                })
-            }
-
-            eventStarCache.editStar(star)
+        viewOf(model) {
+            viewGalaxyProfile(content)
         }
     }
 }

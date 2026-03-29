@@ -24,15 +24,18 @@ class UserCache(
     val talent = ItemCache(scope, { it.talentId }) { api.readTalents() }
     val song = ItemCache(scope, { it.songId }) { api.readSongs() }
     val file = ItemCache(scope, { it }) { api.readUserFiles() }
-    val galaxy = ItemCache(scope, { it.galaxyId }) { api.readGalaxies() }
-    val eventStar = EventStarCache(scope, config, api)
+    @Deprecated("use GalaxyCache")
+    val topGalaxies = ItemCache(scope, { it.galaxyId }) { api.readTopGalaxies() }
+    val event = EventCache(scope, config, api)
+    val galaxy = GalaxyCache(scope, config, api)
 
     fun reset() {
         console.log("user signed out, resetting cache")
         talent.clear()
         song.clear()
         file.clear()
-        galaxy.clear()
-        // eventStar.clear() temporary for debugging
+        topGalaxies.clear()
+        // event.clear() temporary for debugging
+        // galaxy.clear()
     }
 }

@@ -18,7 +18,7 @@ fun RenderContext.viewUserHub(
     user: UserInfo,
 ) {
     // val model = UserHub(renderScope, app.client.api)
-    val userCache = app.userCache
+    val userCache = app.cache
     val portal = app.portal
     val gate = app.gate
 

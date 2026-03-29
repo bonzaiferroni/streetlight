@@ -23,6 +23,7 @@ data class Galaxy(
 @JvmInline @Serializable
 value class GalaxyId(override val value: String): ProjectId {
     companion object { fun random() = GalaxyId(randomUuidString())}
+    override fun toString() = value
 }
 
 @Serializable

@@ -5,6 +5,7 @@ import koala.css.*
 import koala.html.*
 import kotlinx.html.FlowContent
 import streetlight.model.data.Galaxy
+import streetlight.model.data.GalaxyId
 import streetlight.web.toRoute
 
 fun FlowContent.smallGalaxyCard(galaxy: Galaxy) {
@@ -28,22 +29,30 @@ fun FlowContent.smallGalaxyCard(galaxy: Galaxy) {
                     textBlock(galaxy.description ?: "Too mysterious for a description", modifiers)
                 }
                 row(modify(Height5, FlexItems1, GapTiny)) {
-                    val cardMods = modify(BorderRadius0, JustifyContentCenter)
-                    val rowMods = modify(JustifyContentCenter)
+                    val cardMods = modify(BorderRadius0, JustifyContentCenter, AlignItemsCenter)
                     card(modify(cardMods)) {
-                        row(rowMods) {
+                        row {
                             textBlock("events:", modify(Dim))
                             textBlock((0..10).random().toString())
                         }
                     }
                     card(modify(cardMods)) {
-                        row(rowMods) {
-                            textBlock((0..10).random().toString())
-                            icon(SvgFile.StarOutline, modify(Height100P))
-                        }
+                        starCell(galaxy.galaxyId)
                     }
                 }
             }
         }
     }
+}
+
+fun FlowContent.starCell(galaxyId: GalaxyId) {
+    row(modify(WidthAuto)) {
+        setData(GalaxyKey.GalaxyStarId, galaxyId)
+        textBlock((0..10).random().toString())
+        icon(SvgFile.LoaderSmall, modify(Height3, AspectRatio1))
+    }
+}
+
+object GalaxyKey {
+    val GalaxyStarId = Attribute<GalaxyId>("galaxy-star-id")
 }

@@ -5,11 +5,13 @@ import koala.dom.*
 import koala.model.GeoMap
 import koala.model.Portal
 import kotlinx.browser.document
+import kotlinx.browser.localStorage
 import kotlinx.browser.window
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.serialization.ExperimentalSerializationApi
+import org.w3c.dom.get
 import revealContent
 import streetlight.web.HomeRoute
 import streetlight.web.StreetlightScreen
@@ -49,12 +51,12 @@ fun viewApp() {
         }
 
         override val gate = UserGate(scope, cred, client.api)
-        override val userCache = UserCache(scope, config, client.api, gate)
+        override val cache = UserCache(scope, config, client.api, gate)
         override val portal = Portal(HomeRoute, StreetlightScreen.entries, scope)
         override val gateAgent = GateAgent(scope, gate, portal)
 
         override val geoMap = GeoMap(scope)
-        override val streetMap = StreetMap(scope, client, userCache, geoMap, config)
+        override val streetMap = StreetMap(scope, client, cache, geoMap, config)
         override val chatRoom = ChatRoom(scope, client.api)
     } as Streetlight
 

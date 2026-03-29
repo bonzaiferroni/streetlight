@@ -12,7 +12,7 @@ import streetlight.web.model.Streetlight
 fun RenderContext.editTalentForm(app: Streetlight) {
     val portal = app.portal
     val api = app.client.api
-    val userCache = app.userCache
+    val userCache = app.cache
 
     suspend fun provideEdit(route: EditTalentRoute) = route.talentId?.let {
         userCache.talent.getItem(it)?.toEdit()

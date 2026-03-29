@@ -92,10 +92,7 @@ fun FlowContent.largePostCard(post: GalaxyPost) {
                 }
                 post.event?.let { event ->
                     card(cellMods) {
-                        row(rowMods) {
-                            textBlock((0..10).random().toString())
-                            starCell(event.eventId)
-                        }
+                        starCell(event.eventId)
                     }
                 }
             }
@@ -104,15 +101,15 @@ fun FlowContent.largePostCard(post: GalaxyPost) {
 }
 
 fun FlowContent.starCell(eventId: EventId) {
-    row(modify(WidthAuto)) {
-        setData(EventKey.StarEventId, eventId)
-        // textBlock(post.visibility.toString())
+    row {
+        setData(EventKey.EventStarId, eventId)
+        textBlock((0..10).random().toString())
         icon(SvgFile.LoaderSmall, modify(Height3, AspectRatio1))
     }
 }
 
 object EventKey {
-    val StarEventId = Attribute<EventId>("event-id")
+    val EventStarId = Attribute<EventId>("event-star-id")
     // val StarClass = Css("event-star")
 }
 

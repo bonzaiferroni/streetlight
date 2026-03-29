@@ -41,7 +41,7 @@ class StreetMap(
     private fun createEntities(posts: List<GalaxyPost>): List<PostEntity> {
         return posts.mapNotNull { post ->
             val position = post.position ?: return@mapNotNull null
-            val galaxy = cache.galaxy.getCachedItem(post.galaxyId)
+            val galaxy = cache.topGalaxies.getCachedItem(post.galaxyId)
             PostEntity(post, galaxy, position)
         }
     }

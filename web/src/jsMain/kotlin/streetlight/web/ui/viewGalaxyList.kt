@@ -11,7 +11,7 @@ fun RenderContext.viewGalaxyList(app: Streetlight) {
     val galaxyStore = storeOf<List<Galaxy>>(emptyList())
 
     renderScope.launch {
-        val galaxies = app.client.api.readGalaxies() ?: return@launch
+        val galaxies = app.client.api.readTopGalaxies() ?: return@launch
         galaxyStore.set { galaxies }
     }
 

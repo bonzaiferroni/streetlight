@@ -16,7 +16,7 @@ interface Streetlight {
     val geoMap: GeoMap
     val streetMap: StreetMap
     val chatRoom: ChatRoom
-    val userCache: UserCache
+    val cache: UserCache
     val config: SiteConfig
 }
 

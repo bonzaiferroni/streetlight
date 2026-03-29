@@ -1,36 +1,26 @@
 package streetlight.web.model
 
+import koala.dom.jsonListStorageOf
 import koala.model.mapDistinct
 import koala.model.storeOf
-import koala.utils.jsonConfig
-import kotlinx.browser.localStorage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import org.w3c.dom.get
-import streetlight.model.data.Event
 import streetlight.model.data.EventLocation
 import streetlight.model.data.EventStar
 import streetlight.web.io.ApiClient
 
-class EventStarCache(
+class EventCache(
     private val scope: CoroutineScope,
     private val config: SiteConfig,
     private val api: ApiClient,
 ) {
 
-    private val state = storeOf(StarCacheState())
+    private val state = storeOf(EventCacheState())
     val stateNow get() = state.now
     val stateFlow = state.flow
     val starFlow = stateFlow.mapDistinct { it.stars }
 
-    private var localCache
-        get() = localStorage[EVENT_STAR_CACHE_KEY]?.let {
-            jsonConfig.decodeFromString<List<EventStar>>(it)
-        } ?: emptyList()
-        set(value: List<EventStar>) {
-            val json = jsonConfig.encodeToString(value)
-            localStorage.setItem(EVENT_STAR_CACHE_KEY, json)
-        }
+    private var localCache by jsonListStorageOf<EventStar>(EVENT_CACHE_KEY)
 
     init {
         scope.launch {
@@ -52,8 +42,10 @@ class EventStarCache(
 
     fun editStar(star: EventStar) {
         scope.launch {
-            editEvent(star)
-            setStateEvents(star)
+            val isSuccess = editStorage(star)
+            if (isSuccess) {
+                editState(star)
+            }
         }
     }
 
@@ -68,15 +60,16 @@ class EventStarCache(
         else -> localCache
     }
 
-    private suspend fun editEvent(star: EventStar) {
-        when (config.stateNow.starSync) {
-            true -> api.editEventStar(star)
+    private suspend fun editStorage(star: EventStar): Boolean {
+        return when (config.stateNow.starSync) {
+            true -> api.editEventStar(star) ?: false
             else -> editLocalCache(star)
         }
     }
 
-    private fun editLocalCache(star: EventStar) {
+    private fun editLocalCache(star: EventStar): Boolean {
         localCache = modifyStateEvents(star)
+        return true
     }
 
     private fun modifyStateEvents(star: EventStar) = when (star.value) {
@@ -84,15 +77,15 @@ class EventStarCache(
         else -> (stateNow.stars + star)
     }
 
-    private fun setStateEvents(star: EventStar) {
+    private fun editState(star: EventStar) {
         val events = modifyStateEvents(star)
         state.set { it.copy(stars = events)}
     }
 }
 
-data class StarCacheState(
+data class EventCacheState(
     val stars: List<EventStar> = emptyList(),
     val events: List<EventLocation> = emptyList(),
 )
 
-const val EVENT_STAR_CACHE_KEY = "event-star-cache"
+const val EVENT_CACHE_KEY = "streetlight.event-cache"

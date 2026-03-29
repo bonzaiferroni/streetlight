@@ -21,7 +21,7 @@ fun ViewContext<Streetlight>.wireStreetMap() {
 
     renderScope.launch {
         portal.routeFlowOf<HomeRoute>().collect {
-            val galaxyIds = userCache.galaxy.getItems().map { it.galaxyId }
+            val galaxyIds = userCache.topGalaxies.getItems().map { it.galaxyId }
             // td: gather initial posts from json in html
             val posts = api.readPosts(galaxyIds) ?: return@collect
             streetMap.setPosts(posts)
