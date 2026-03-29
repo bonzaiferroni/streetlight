@@ -16,7 +16,7 @@ interface Modifier: Queryable {
 
 @JvmInline
 value class Class(override val identifier: String): Modifier {
-    override fun toString() = identifier
+    override fun toString() = selector
 }
 
 typealias ModifierSet = Set<Modifier>

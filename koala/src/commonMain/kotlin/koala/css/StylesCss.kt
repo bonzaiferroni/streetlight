@@ -2,6 +2,8 @@
 
 package koala.css
 
+const val BODY_WIDTH_PX = 960
+
 // language="CSS"
 val StylesCss get() = """
 :root {
@@ -38,7 +40,7 @@ val StylesCss get() = """
     --light-3: 88, 255, 188;
     --unit-spacing: 0.5rem;
 
-    --body-width: 960px;
+    --body-width: ${BODY_WIDTH_PX}px;
 
     --font-family: "Fira Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; /*  */
 

@@ -6,7 +6,7 @@ object JsFile: FileSet<Js>() {
     val Koala = add("koala/koala.js")
 }
 
-object CssFiles: FileSet<CssFile>() {
+object CssFile: FileSet<Css>() {
      val Reset = add("reset.css")
      // val Styles = add("styles.css")
      val Typography = add("typography.css")
@@ -15,7 +15,7 @@ object CssFiles: FileSet<CssFile>() {
      val Magic = add("magic.css")
      val Tabs = add("tabs.css")
      val GeoMap = add("geo-map.css")
-     val Sandbox = add("sandbox.css")
+     // val Sandbox = add("sandbox.css")
 }
 
 object SvgFile: FileSet<Svg>() {

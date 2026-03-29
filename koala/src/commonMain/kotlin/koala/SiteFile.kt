@@ -25,7 +25,7 @@ enum class SiteFileType {
     Svg,
 }
 
-data class CssFile(override val path: String) : SiteFile {
+data class Css(override val path: String) : SiteFile {
     override val type get() = SiteFileType.Stylesheet
 }
 
@@ -66,7 +66,7 @@ fun fileOf(filename: String, isGenerated: Boolean): SiteFile {
 
     return when (type) {
         SiteFileType.Javascript -> Js(path)
-        SiteFileType.Stylesheet -> CssFile(path)
+        SiteFileType.Stylesheet -> Css(path)
         SiteFileType.Svg -> Svg(path)
         else -> error("unsupported type: $type")
     }

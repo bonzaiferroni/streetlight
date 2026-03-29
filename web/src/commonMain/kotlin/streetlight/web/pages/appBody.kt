@@ -65,7 +65,7 @@ fun FlowContent.emptyBadge() {
 }
 
 fun FlowContent.stickyBar() {
-    val cardMod = modify(BlurBackdrop, PointerEventsAuto, BorderRadius50P, BlurBg)
+    val cardMod = modify(BlurBackdrop, PointerEventsAuto, BorderRadius50P, BlurBg, StickyCard)
     val iconMod = modify(Height6, AspectRatio1, DisplayFlex)
     row(AppBodyKey.StickyBarId, modify(JustifyContentSpaceBetween)) {
         card(cardMod) {
@@ -91,8 +91,7 @@ object AppBodyKey {
     val StickyBarId = Id("sticky-bar")
 }
 
-// private val LeftStickyCard = Css("left-sticky-card")
-// private val RightStickyCard = Css("right-sticky-card")
+private val StickyCard = Class("sticky-card")
 
 // language="CSS"
 val AppBodyCss = """
@@ -135,5 +134,15 @@ ${AppBodyKey.StickyBarId} {
     left: 0;
     width: 100%;
     z-index: 14;
+}
+
+$StickyCard {
+    transition: background-color var(--magic-interval) var(--magic-easing);
+}
+
+@media (min-width: ${BODY_WIDTH_PX + 128}px) {
+    $StickyCard {
+        background-color: transparent;
+    }
 }
 """
