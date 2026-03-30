@@ -81,7 +81,7 @@ fun FlowContent.homeShell(content: HomeContent) {
             }
         }
 
-        appFooter()
+        appFooter(HomeShellKey.SOURCE)
     }
 }
 
@@ -90,6 +90,7 @@ object HomeShellKey {
     val StarSwapId = Id("star-swap")
     val StarInfoId = Id("star-info")
     val StarEventsId = Id("star-events")
+    const val SOURCE = "/commonMain/kotlin/streetlight/web/shells/homeShell.kt"
 }
 
 val SectionHeadingMod = modify(LineHeight1, SingleLine, TextAlignCenter, TextShadow)

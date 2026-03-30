@@ -47,19 +47,6 @@ fun FlowContent.appHeader() {
     }
 }
 
-fun FlowContent.appFooter() {
-    column {
-        configureAppFooter()
-    }
-}
-
-fun DIV.configureAppFooter() {
-    val giants = "May we build a world of faithful giants."
-    addModifiers(modify(JustifyContentCenter, Height48, AlignItemsCenter, Gap0))
-    lottie(LottieFile.spinningCircles, modify(Height24))
-    textBlock(giants, modify(Italic, OpacityMost))
-}
-
 fun FlowContent.emptyBadge() {
     icon(SvgFile.EmptyProfile, modify(OpacityHalf, Size100P))
 }

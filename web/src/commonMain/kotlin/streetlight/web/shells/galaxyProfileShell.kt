@@ -32,7 +32,7 @@ fun FlowContent.galaxyProfileShell(content: GalaxyProfileContent) {
             btn("Post Event", EventScoutRoute(galaxy.pathId), modify(Accent))
         }
         layoutGalaxyPosts(posts)
-        appFooter()
+        appFooter(GalaxyProfileKey.SOURCE)
     }
 }
 
@@ -42,6 +42,7 @@ object GalaxyProfileKey {
     val HeaderId = Id("galaxy-profile-header")
     val MapId = Id("galaxy-profile-map")
     val MapSwitchId = Id("galaxy-profile-map-switch")
+    const val SOURCE = "web/src/commonMain/kotlin/streetlight/web/shells/galaxyProfileShell.kt"
 }
 
 @Serializable

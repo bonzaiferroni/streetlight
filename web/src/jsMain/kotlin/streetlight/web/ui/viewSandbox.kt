@@ -15,6 +15,7 @@ import koala.html.card
 import koala.html.setAttribute
 import koala.html.popover
 import streetlight.web.model.Streetlight
+import streetlight.web.pages.appFooter
 
 fun RenderContext.viewSandbox(app: Streetlight) {
     column {
