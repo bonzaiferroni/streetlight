@@ -5,12 +5,13 @@ import koala.SvgFile
 import koala.css.*
 import koala.html.*
 import kotlinx.html.FlowContent
+import streetlight.web.CreateGalaxyRoute
 import streetlight.web.layouts.layoutGalaxyPosts
 import streetlight.web.layouts.smallGalaxyCard
 import streetlight.web.pages.appFooter
 
 fun FlowContent.homeShell(content: HomeContent) {
-    column(HomeShellKey.ContainerId, modify(Gap8)) {
+    column(HomeShellKey.ContainerId, modify(Gap4)) {
         column {
             geoMapMount()
 
@@ -52,6 +53,10 @@ fun FlowContent.homeShell(content: HomeContent) {
                     }
                 }
             }
+            row {
+                spacer(modify(Flex1))
+                btn("Create a Galaxy", CreateGalaxyRoute, modify(Accent))
+            }
         }
 
         layoutGalaxyPosts(content.posts)
@@ -90,7 +95,7 @@ object HomeShellKey {
     val StarSwapId = Id("star-swap")
     val StarInfoId = Id("star-info")
     val StarEventsId = Id("star-events")
-    const val SOURCE = "/commonMain/kotlin/streetlight/web/shells/homeShell.kt"
+    const val SOURCE = "web/src/commonMain/kotlin/streetlight/web/shells/homeShell.kt"
 }
 
 val SectionHeadingMod = modify(LineHeight1, SingleLine, TextAlignCenter, TextShadow)

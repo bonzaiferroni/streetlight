@@ -4,7 +4,7 @@ import koala.css.*
 import koala.dom.*
 import koala.html.heading3
 import koala.html.heading4
-import koala.html.propertyValue
+import koala.html.textProperty
 import koala.html.centeredHeading
 import koala.model.mapDistinct
 import kotlinx.coroutines.flow.filterNotNull
@@ -158,11 +158,11 @@ fun ViewContext<LocationScout>.reviewStage(edit: LocationEdit) {
                         column(modify(Flex2)) {
                             heading3(edit.name ?: "[No name found]")
                             textBlock(edit.description ?: "[No description]")
-                            propertyValue("address", edit.address ?: "[No address]")
-                            propertyValue("website", edit.website ?: "[No website]")
-                            propertyValue("calendar", edit.eventsUrl ?: "[No calendar]")
-                            propertyValue("about", edit.aboutUrl ?: "[No about]")
-                            propertyValue("menu", edit.menuUrl ?: "[No menu]")
+                            textProperty("address", edit.address ?: "[No address]")
+                            textProperty("website", edit.website ?: "[No website]")
+                            textProperty("calendar", edit.eventsUrl ?: "[No calendar]")
+                            textProperty("about", edit.aboutUrl ?: "[No about]")
+                            textProperty("menu", edit.menuUrl ?: "[No menu]")
                         }
                     }
                 }

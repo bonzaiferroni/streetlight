@@ -38,7 +38,7 @@ fun RenderContext.viewPostEditor(app: Streetlight) {
                 textEditor(
                     label = "description",
                     onChangeValue = model::setDescription,
-                    binding = model.descriptionFlow,
+                    bindFlow = model.descriptionFlow,
                     placeholder = "Story description"
                 )
                 textBlock(model.postedAtFlow.map { it.toString() })

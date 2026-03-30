@@ -31,7 +31,7 @@ fun FlowContent.aboutApp() {
             }
         }
         column(modify(MediaMdRow, AlignItemsCenter)) {
-            lottie(LottieFile.cat, modify(Flex1, MaxWidth50P))
+            lottie(LottieFile.Cat, modify(Flex1, MaxWidth50P))
             column(modify(Flex3)) {
                 textBlock {
                     externalLink("https://github.com/bonzaiferroni/streetlight", "Streetlight")

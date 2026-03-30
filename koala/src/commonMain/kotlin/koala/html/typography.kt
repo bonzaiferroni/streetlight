@@ -1,6 +1,7 @@
 package koala.html
 
 import kotlinx.html.*
+import kotlinx.html.span as spanTag
 import koala.css.*
 
 inline fun FlowContent.textBlock(
@@ -79,7 +80,7 @@ fun FlowContent.span(
     modifiers: ModifierSet? = null,
     block: SPAN.() -> Unit,
 ) {
-    span {
+    spanTag {
         addModifiers(modifiers)
         block()
     }

@@ -26,6 +26,10 @@ class GalaxyFoundry(
         state.set { it.copy(blobUrl = value) }
     }
 
+    fun setDescription(value: String) {
+        setGalaxy { it.copy(description = value) }
+    }
+
     fun foundGalaxy() {
         val galaxy = state.now.galaxy.copy(center = geo.stateNow.center).takeIf { it.isValid } ?: return
         scope.launch {

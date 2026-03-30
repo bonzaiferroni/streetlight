@@ -27,6 +27,8 @@ fun DIV.configureAppFooter(sourcePath: String?) {
     row(modify(JustifyContentCenter)) {
         textBlock("about us")
         textBlock("•")
+        textBlock("your privacy")
+        textBlock("•")
         textBlock("feedback")
         textBlock("•")
         textBlock("report a bug")

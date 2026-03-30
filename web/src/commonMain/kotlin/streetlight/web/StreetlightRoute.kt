@@ -35,7 +35,7 @@ enum class StreetlightScreen(
     LocationProfile("location", { path -> path.provideRouteFromPath { LocationIdRoute(LocationId(it)) } }),
     LocationAdmin("location-admin", { path -> path.provideRouteFromPath { LocationAdminRoute(LocationId(it)) } }),
     ScoutMap("scout-map", { ScoutMapRoute }),
-    FoundGalaxy("create-galaxy", { GalaxyFoundryRoute }),
+    CreateGalaxy("create-galaxy", { CreateGalaxyRoute }),
     GalaxyList("galaxies", { GalaxyListRoute }),
     GalaxyProfile("g", { path -> path.provideRouteFromPath { GalaxyPathIdRoute(it) }}),
     EventScout("post-event", { path -> path.provideRouteFromPath { EventScoutRoute(it) }}),
@@ -195,9 +195,9 @@ object ScoutMapRoute: StreetlightRoute {
     override val title get() = "Scout Map"
 }
 
-object GalaxyFoundryRoute: StreetlightRoute {
-    override val screen get() = StreetlightScreen.FoundGalaxy
-    override val title get() = "Found Galaxy"
+object CreateGalaxyRoute: StreetlightRoute {
+    override val screen get() = StreetlightScreen.CreateGalaxy
+    override val title get() = "Create Galaxy"
 }
 
 object GalaxyListRoute: StreetlightRoute {

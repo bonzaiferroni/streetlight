@@ -99,6 +99,9 @@
     .container-md-row > .column { width: auto; }
     .container-md-row-reverse { flex-direction: row-reverse; justify-content: flex-end; }
     .container-md-margin-top-0 { margin-top: 0 !important; }
+
+    .flex-md-1 { flex: 1 !important; }
+    .flex-md-2 { flex: 2 !important; }
 }
 
 @container (min-width: 768px) {

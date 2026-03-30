@@ -3,7 +3,7 @@ package koala.html
 import kotlinx.html.*
 import koala.css.*
 
-fun FlowContent.propertyValue(
+fun FlowContent.textProperty(
     propertyName: String,
     propertyValue: String,
     modifiers: ModifierSet? = null,
@@ -20,7 +20,7 @@ fun FlowContent.propertyValue(
     }
 }
 
-fun FlowContent.propertyValue(
+fun FlowContent.textProperty(
     propertyName: String,
     modifiers: ModifierSet? = null,
     block: DIV.() -> Unit

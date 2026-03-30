@@ -7,7 +7,7 @@ import koala.html.Attribute
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.asList
 
-fun findAndInitLotties(ancestor: HTMLElement) {
+fun queryAndInitLotties(ancestor: HTMLElement) {
     val elements = ancestor.querySelectorAll(Attribute.Lottie.selector).asList()
     elements.forEach {
         initLottie(it as HTMLElement)
@@ -24,7 +24,7 @@ fun initLottie(element: HTMLElement) {
             autoplay = true,
             path = path,
             rendererSettings = RendererSettings(
-                preserveAspectRatio = "xMidYMid slice",
+                preserveAspectRatio = "xMidYMid meet",
             )
         )
     )

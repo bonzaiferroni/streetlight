@@ -31,9 +31,8 @@ object LottieKey {
 
 // language="CSS"
 val LottieCss get() = """
-.lottie,
-.lottie > svg {
-    width: 100%;
+${LottieKey.Class} {
     height: 100%;
+    aspect-ratio: 1 / 1;
 }
 """

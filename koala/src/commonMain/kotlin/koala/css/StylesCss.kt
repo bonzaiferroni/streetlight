@@ -11,6 +11,7 @@ val StylesCss get() = """
     ${KoalaVar.PaperBg}: rgb(var(${KoalaVar.Paper}));
     ${KoalaVar.BodyBg}: color-mix(in srgb, var(${KoalaVar.PaperBg}) 95%, white);
     --card-bg: rgba(var(--paper), .4);
+    --zen-card-bg: rgba(var(--paper), .2);
     --tabs-bg: rgba(var(--paper), .5);
     --ink: 240, 246, 246;
     --white-fg: rgb(var(--ink));

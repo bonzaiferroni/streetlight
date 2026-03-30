@@ -3,7 +3,7 @@ package streetlight.web.ui
 import kampfire.utils.takeEllipsis
 import koala.css.*
 import koala.dom.*
-import koala.html.propertyValue
+import koala.html.textProperty
 import koala.model.mapDistinct
 import koala.utils.prettyPrint
 import streetlight.model.data.EventEdit
@@ -121,22 +121,22 @@ private fun ViewContext<EventScoutOld>.viewEventParse(
                         }
                         // description
                         event.description?.let {
-                            propertyValue("description", it.takeEllipsis(200))
+                            textProperty("description", it.takeEllipsis(200))
                         }
                         // ageMin
                         event.ageMin?.let {
-                            propertyValue("ages", "$it+")
+                            textProperty("ages", "$it+")
                         }
                         event.cost?.let {
-                            propertyValue("cost", usdValue(it))
+                            textProperty("cost", usdValue(it))
                         }
                         // contact
                         event.contact?.let {
-                            propertyValue("contact", it)
+                            textProperty("contact", it)
                         }
                         // url
                         event.link?.takeIf { it.startsWith("http") }?.let {
-                            propertyValue("url", it)
+                            textProperty("url", it)
                         }
                     }
                 }

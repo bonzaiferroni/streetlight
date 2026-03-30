@@ -24,8 +24,8 @@ fun HTML.eventPortal(event: Event, performer: Performer?, requestItems: List<Req
             spacer()
             heading1(event.title)
             column(modify(Gap0, WidthAuto)) {
-                propertyValue("performer", "Luke Bollwerk")
-                propertyValue("instagram") {
+                textProperty("performer", "Luke Bollwerk")
+                textProperty("instagram") {
                     a("https://www.instagram.com/trespasserswilliam/") {
                         textBlock("trespasserswilliam")
                     }

@@ -5,14 +5,11 @@ import koala.dom.*
 import koala.model.GeoMap
 import koala.model.Portal
 import kotlinx.browser.document
-import kotlinx.browser.localStorage
 import kotlinx.browser.window
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.html.dom.append
 import kotlinx.serialization.ExperimentalSerializationApi
-import org.w3c.dom.get
 import revealContent
 import streetlight.web.HomeRoute
 import streetlight.web.StreetlightScreen
@@ -95,7 +92,7 @@ fun viewApp() {
                         StreetlightScreen.EditLocation -> viewEditLocationRoute(app)
                         StreetlightScreen.LocationAdmin -> viewLocationAdmin(app)
                         StreetlightScreen.ScoutMap -> viewLocationScout(app)
-                        StreetlightScreen.FoundGalaxy -> viewGalaxyFoundry(app)
+                        StreetlightScreen.CreateGalaxy -> viewGalaxyFoundry()
                         StreetlightScreen.GalaxyList -> viewGalaxyList(app)
                         StreetlightScreen.GalaxyProfile -> viewGalaxyProfileRoute()
                         StreetlightScreen.EventScout -> viewEventScoutRoute()

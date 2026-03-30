@@ -7,7 +7,6 @@ import koala.html.btn
 import streetlight.web.EditProfileRoute
 import streetlight.web.EditTalentRoute
 import streetlight.web.HomeRoute
-import streetlight.web.GalaxyFoundryRoute
 import streetlight.web.GalaxyListRoute
 import streetlight.web.SandboxRoute
 import streetlight.web.TalentProfileRoute
@@ -34,7 +33,6 @@ fun RenderContext.viewUserHub(
                 textBlock("Add things to the map.", modify(Flex1))
                 btn("Edit Profile", EditProfileRoute)
                 btn("Go to sandbox", SandboxRoute)
-                button("galaxy foundry", modify(Accent), onClick = { portal.go(GalaxyFoundryRoute)} )
                 button("galaxy list", modify(Accent), onClick = { portal.go(GalaxyListRoute) })
             }
         }

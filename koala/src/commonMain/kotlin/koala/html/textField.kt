@@ -3,7 +3,7 @@ package koala.html
 import kotlinx.html.*
 import kotlinx.html.id
 
-fun FlowOrInteractiveOrPhrasingContent.textField(
+fun FlowContent.textField(
     id: Id,
     placeholder: String,
     block: (INPUT.() -> Unit)? = null
@@ -17,7 +17,7 @@ fun FlowOrInteractiveOrPhrasingContent.textField(
     }
 }
 
-fun FlowOrInteractiveOrPhrasingContent.textField(
+fun FlowContent.textField(
     id: Id,
     label: String,
     placeholder: String,

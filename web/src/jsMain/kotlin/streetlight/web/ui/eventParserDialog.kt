@@ -1,11 +1,5 @@
 package streetlight.web.ui
 
-import kampfire.utils.takeEllipsis
-import koala.css.*
-import koala.dom.*
-import koala.html.propertyValue
-import koala.model.mapDistinct
-
 //fun RenderContext.eventParserDialog(model: EventParser) {
 //    val dialog = dialogBox("Event reader", model.state.flow.mapDistinct { it.isOpen }, modify(Width64)) {
 //        messageBox(model.message.flow, modify(SlideX, Blur))

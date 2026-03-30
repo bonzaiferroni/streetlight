@@ -51,6 +51,8 @@ val Flex1 = utilityOf("flex-1", "flex: 1")
 val Flex2 = utilityOf("flex-2", "flex: 2")
 val Flex3 = utilityOf("flex-3", "flex: 3")
 val Flex4 = utilityOf("flex-4", "flex: 4")
+val FlexMd1 = CssUtility("flex-md-1")
+val FlexMd2 = CssUtility("flex-md-2")
 val FlexShrink0 = utilityOf("flex-grow", "flex-shrink: 0")
 
 // Flex Basis

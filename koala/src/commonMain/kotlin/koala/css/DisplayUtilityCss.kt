@@ -17,7 +17,7 @@ val DisplayUtilityCss
         // Overflow
         OverflowHidden, OverflowWrapAnywhere, OverflowClip, OverflowXAuto,
         // Background
-        PrimaryBg, PrimaryCardBg, BackgroundImage, SolidBg, BlurBackdrop,
+        PrimaryBg, PrimaryCardBg, ZenCardBg, BackgroundImage, SolidBg, BlurBackdrop,
         // Misc
         FadeBottom, Focus, Clickable, PointerEventsAuto, PointerEventsNone,
     )
@@ -66,6 +66,7 @@ val OverflowXAuto = utilityOf("overflow-x-auto", "overflow-x: auto")
 // Background
 val PrimaryBg = utilityOf("primary-bg", "background-color: var(--primary-bg)")
 val PrimaryCardBg = utilityOf("primary-card-bg", "background-color: var(--primary-card-bg)")
+val ZenCardBg = utilityOf("zen-card-bg", "background: var(--zen-card-bg)")
 val BackgroundImage = CssUtility("background-image")
 val SolidBg = utilityOf("solid-bg", "background-color: var(--paper-bg)")
 val BlurBackdrop = utilityOf(

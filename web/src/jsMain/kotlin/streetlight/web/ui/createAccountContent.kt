@@ -52,7 +52,7 @@ fun RenderContext.createAccountContent(app: Streetlight) {
         }
         box(modify(PlaceItemsCenter)) {
             column(modify(MaxWidth50P)) {
-                lottie(LottieFile.cat)
+                lottie(LottieFile.Cat)
                 textBlock("Streetlight is at an early stage in development. Only the bravest souls should enter.")
             }
         }

@@ -115,7 +115,7 @@ fun ViewContext<EventEditor>.primaryFields() {
         label = "description",
         placeholder = "Event description",
         onChangeValue = model::setDescription,
-        binding = model.descriptionFlow
+        bindFlow = model.descriptionFlow
     )
 }
 

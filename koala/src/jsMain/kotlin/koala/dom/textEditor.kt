@@ -22,7 +22,7 @@ fun RenderContext.textEditor(
     textModifiers: ModifierSet? = null,
     id: Id? = null,
     onChangeValue: ((String) -> Unit)? = null,
-    binding: Flow<String>? = null,
+    bindFlow: Flow<String>? = null,
     rows: Int = 5,
     placeholder: String? = null,
     block: (TEXTAREA.() -> Unit)? = null
@@ -58,9 +58,9 @@ fun RenderContext.textEditor(
         }
     }.first() as HTMLTextAreaElement
 
-    binding?.let {
+    bindFlow?.let {
         renderScope.launch {
-            binding.collect { value ->
+            bindFlow.collect { value ->
                 if (value != currentValue) {
                     currentValue = value
                     element.value = value
