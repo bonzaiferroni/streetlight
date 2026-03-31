@@ -13,6 +13,9 @@ data class Galaxy(
     val name: String,
     val description: String?,
     val center: GeoPoint,
+    val zoom: Float,
+    val postPermission: PostPermission,
+    val postGuide: String?,
     val imageUrl: String?,
     val thumbUrl: String?,
     val updatedAt: Instant,
@@ -31,6 +34,9 @@ data class GalaxyEdit(
     val path: String? = null,
     val description: String? = null,
     val center: GeoPoint? = null,
+    val zoom: Float? = null,
+    val postPermission: PostPermission = PostPermission.Community,
+    val postGuide: String? = null,
     val imageUrl: String? = null,
     val thumbUrl: String? = null,
 ) {
@@ -43,6 +49,7 @@ data class GalaxyEdit(
         fun isValidName(name: String) = name.all { it.isDigit() || it.isLetter() || NameCharacters.contains(it) }
                 && name.length <= MAX_NAME_LENGTH
         fun isValidPath(path: String) = path.all { it.isDigit() || it.isLetter() || PathCharacters.contains(it) }
+                && path.length <= MAX_NAME_LENGTH
 
         fun pathOf(name: String): String =
             name
@@ -51,6 +58,13 @@ data class GalaxyEdit(
                 .replace("\\s+".toRegex(), "_")
                 .replace("[^a-z0-9_\\-]".toRegex(), "")
 
-        const val MAX_NAME_LENGTH = 24
+        const val MAX_NAME_LENGTH = 32
     }
+}
+
+enum class PostPermission(label: String? = null) {
+    Community,
+    Founder;
+
+    val label = label ?: name
 }

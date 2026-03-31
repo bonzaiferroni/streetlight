@@ -11,7 +11,7 @@ import streetlight.web.layouts.smallGalaxyCard
 import streetlight.web.pages.appFooter
 
 fun FlowContent.homeShell(content: HomeContent) {
-    column(HomeShellKey.ContainerId, modify(Gap4)) {
+    column(HomeShellKey.ContainerId, modify(Gap8)) {
         column {
             geoMapMount()
 

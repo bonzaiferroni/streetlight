@@ -5,6 +5,7 @@ import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import streetlight.model.data.GalaxyEdit
+import streetlight.model.data.PostPermission
 import streetlight.web.GalaxyPathIdRoute
 import streetlight.web.ui.ViewModel
 
@@ -29,16 +30,20 @@ class GalaxyFoundry(
         setGalaxy { it.copy(path = value) }
     }
 
-    fun setBlobUrl(value: String?) {
-        state.set { it.copy(blobUrl = value) }
-    }
+    fun setBlobUrl(value: String?) = state.set { it.copy(blobUrl = value) }
 
-    fun setDescription(value: String) {
-        setGalaxy { it.copy(description = value) }
-    }
+    fun setDescription(value: String) = setGalaxy { it.copy(description = value) }
+
+    fun setPostPermission(permission: PostPermission) = setGalaxy { it.copy(postPermission = permission) }
+
+    fun setPostGuide(value: String) = setGalaxy { it.copy(postGuide = value) }
 
     fun foundGalaxy() {
-        val galaxy = state.now.galaxy.copy(center = geo.stateNow.center).takeIf { it.isValid } ?: return
+        val geoState = geo.stateNow
+        val galaxy = galaxyNow.copy(
+            center = geoState.center,
+            zoom = geoState.zoom
+        ).takeIf { it.isValid } ?: return
         scope.launch {
             val imageUrl = stateNow.blobUrl?.let {
                 api.uploadImage(it)

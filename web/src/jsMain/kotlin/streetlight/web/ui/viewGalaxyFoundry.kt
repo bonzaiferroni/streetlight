@@ -1,5 +1,6 @@
 package streetlight.web.ui
 
+import kabinet.utils.format
 import koala.LottieFile
 import koala.css.*
 import koala.dom.*
@@ -13,8 +14,10 @@ import koala.html.heading5
 import koala.html.textProperty
 import koala.html.section
 import koala.html.spacer
+import koala.html.span
 import koala.model.mapDistinct
 import streetlight.model.data.GalaxyEdit
+import streetlight.model.data.PostPermission
 import streetlight.web.model.Streetlight
 import streetlight.web.model.GalaxyFoundry
 
@@ -27,15 +30,19 @@ fun ViewContext<Streetlight>.viewGalaxyFoundry() {
     val blobFlow = model.stateFlow.mapDistinct { it.blobUrl }
     val descriptionFlow = model.galaxyFlow.mapDistinct { it.description ?: "" }
     val pathFlow = model.galaxyFlow.mapDistinct { it.path ?: "" }
+    val permissionFlow = model.galaxyFlow.mapDistinct { it.postPermission }
+    val guideFlow = model.galaxyFlow.mapDistinct { it.postGuide ?: "" }
+    val pointFlow = app.geoMap.stateFlow.mapDistinct { it.center to it.zoom }
+
     val textMod = modify()
-    val sectionMod = modify(QueryContainer, Gap0)
+    val sectionMod = modify(QueryContainer)
     val queryColumnMod = modify(ContainerMdRow)
-    val instructionsColumnMod = modify(Flex1, JustifyContentCenter)
+    val instructionsColumnMod = modify(Flex1, JustifyContentCenter, Margin1)
     val contentColumnMod = modify(Flex1)
     val cardMod = modify(ZenCardBg)
     val footnoteMod = modify(OpacityMost, Italic, TextAlignCenter)
 
-    column(modify(Gap4)) {
+    column(modify(Gap8)) {
         section(sectionMod) {
             filigree {
                 heading1("Galaxy Foundry", modify(Shrinkable))
@@ -106,7 +113,7 @@ fun ViewContext<Streetlight>.viewGalaxyFoundry() {
                             modify(OpacityMost),
                             "Ideally at least 1024 pixels wide and 512 pixels tall.",
                             canBeChangedText,
-                            imageRequirements
+                            imageRequirements,
                         )
                     }
                     column(contentColumnMod) {
@@ -129,15 +136,24 @@ fun ViewContext<Streetlight>.viewGalaxyFoundry() {
                     column(instructionsColumnMod) {
                         flowBlock(nameFlow) { name ->
                             val galaxy = name.takeIf { it.isNotEmpty() } ?: "the galaxy"
-                            textBlock("Describe ${galaxy} to newcomers.", textMod)
+                            val mod = when (name.isEmpty()) {
+                                true -> null
+                                else -> modify(Italic, Bold)
+                            }
+                            textBlock {
+                                span("Describe ")
+                                span(galaxy, mod)
+                                span(" to newcomers.")
+                            }
                         }
                         bulletsOf(
                             modify(OpacityMost),
+                            "Can be brief or detailed.",
                             canBeChangedText
                         )
                     }
                     column(contentColumnMod) {
-                        textEditor("description", onChangeValue = model::setDescription, bindFlow = descriptionFlow)
+                        textEditor("Post Guide", onChangeValue = model::setPostGuide, bindFlow = guideFlow)
                     }
                 }
             }
@@ -151,13 +167,53 @@ fun ViewContext<Streetlight>.viewGalaxyFoundry() {
                 column(queryColumnMod) {
                     column(instructionsColumnMod) {
                         textBlock(mapInstructions1, textMod)
+                        flowBlock(pointFlow) { (point, zoom) ->
+                            box {
+                                bulletsOf(
+                                    modify(OpacityMost),
+                                    canBeChangedText,
+                                    "latitude: ${point.lat.toFloat().format(4)}",
+                                    "longitude: ${point.lng.toFloat().format(4)}",
+                                    "zoom: ${zoom.format(1)}",
+                                )
+                            }
+                        }
+                    }
+                    column(contentColumnMod) {
+                        viewGeoMap(geoMap, app.appScope)
+                    }
+                }
+            }
+        }
+
+        section(sectionMod) {
+            filigree {
+                heading3("Other details")
+            }
+            card(cardMod) {
+                column(queryColumnMod) {
+                    column(instructionsColumnMod) {
+                        textBlock("You can open up posting to the community or curate the content yourself")
                         bulletsOf(
                             modify(OpacityMost),
                             canBeChangedText
                         )
                     }
                     column(contentColumnMod) {
-                        viewGeoMap(geoMap, app.appScope)
+                        dropMenu(model::setPostPermission, { it.label }, flow = permissionFlow)
+                    }
+                }
+                column(queryColumnMod + MarginTop2) {
+                    column(instructionsColumnMod) {
+                        textBlock("Provide guidelines or requirements for the content of community posts.")
+                        bulletsOf(
+                            modify(OpacityMost),
+                            canBeChangedText,
+                            "Optional"
+                        )
+                    }
+                    column(contentColumnMod) {
+                        textEditor("description", onChangeValue = model::setDescription, bindFlow = descriptionFlow)
                     }
                 }
             }
