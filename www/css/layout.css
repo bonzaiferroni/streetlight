@@ -1,5 +1,6 @@
 :root {
-
+    --unit-spacing-1: calc(var(--unit-spacing));
+    --unit-spacing-2: calc(var(--unit-spacing) * 2);
 }
 
 .column {

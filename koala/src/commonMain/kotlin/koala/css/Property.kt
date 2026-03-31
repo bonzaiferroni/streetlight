@@ -17,14 +17,14 @@ data class Property<T>(val identifier: String, val isCustom: Boolean = true) {
     override fun toString() = expression
 
     companion object {
-        val AnchorName = Property<PositionAnchor>("anchor-name", false)
-        val PositionAnchor = Property<PositionAnchor>("position-anchor", false)
+        val AnchorName = Property<Anchor>("anchor-name", false)
+        val PositionAnchor = Property<Anchor>("position-anchor", false)
         val Display = Property<Display>("display", false)
 
         val MaskUrl = Property<UrlValue>("mask-url")
         val BackgroundUrl = Property<UrlValue>("background-url")
-        val AnchorId = Property<PositionAnchor>("anchor-id")
-        val ContainerAnchorId = Property<PositionAnchor>("anchor-container-id")
+        val AnchorId = Property<Anchor>("anchor-id")
+        val ContainerAnchorId = Property<Anchor>("anchor-container-id")
     }
 }
 
@@ -39,7 +39,7 @@ data class Rgb(val red: Int, val green: Int, val blue: Int) {
     override fun toString() = "$red, $green, $blue"
 }
 
-data class PositionAnchor(val identifier: String) {
+data class Anchor(val identifier: String) {
     override fun toString() = "--$identifier"
 }
 
@@ -75,8 +75,8 @@ fun CoreAttributeGroupFacade.setStyle(styles: StyleSet?) {
     }
 }
 
-fun CoreAttributeGroupFacade.setPositionAnchor(value: PositionAnchor) =
+fun CoreAttributeGroupFacade.setPositionAnchor(value: Anchor) =
     setStyle(Property.PositionAnchor.to(value))
 
-fun CoreAttributeGroupFacade.setAnchorName(anchor: PositionAnchor) =
+fun CoreAttributeGroupFacade.setAnchor(anchor: Anchor) =
     setStyle(Property.AnchorName.to(anchor))

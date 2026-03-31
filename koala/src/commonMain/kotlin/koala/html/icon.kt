@@ -25,18 +25,18 @@ fun DIV.configureIcon(
     modifiers: ModifierSet? = null,
     block: (DIV.() -> Unit)? = null
 ) {
-    addModifiers(modify(IconElement.Class, modifiers))
+    addModifiers(modify(IconKey.Class, modifiers))
     setStyle(Property.MaskUrl.to(UrlValue(file.path)))
     block?.invoke(this)
 }
 
-object IconElement {
+object IconKey {
     val Class = Class("icon")
 }
 
 // language="CSS"
 val IconCss get() = """
-.icon {
+${IconKey.Class} {
     display: inline-block;
     background-color: currentColor;
     aspect-ratio: 1 / 1;
@@ -54,15 +54,15 @@ val IconCss get() = """
     -webkit-mask-position: center;
 }
 
-.icon.clickable {
-    transition: background-color 200ms ease-in-out;
+${IconKey.Class}.clickable {
+    transition: background-color var(--magic-interval) var(--magic-easing);
 }
 
-.icon.clickable:hover {
+${IconKey.Class}.clickable:hover {
     background-color: rgb(var(--accent));
 }
 
-.icon.danger {
+${IconKey.Class}.danger {
     background-color: rgb(var(--danger));
 }
 """

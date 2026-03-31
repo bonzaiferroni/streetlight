@@ -1,24 +1,13 @@
 package streetlight.web.ui
 
-import koala.core.queryFirstOrNull
-import koala.css.Property
-import koala.css.UrlValue
 import koala.dom.*
-import koala.html.IconElement
 import koala.model.mapDistinct
 import koala.model.storeOf
-import kotlinx.coroutines.launch
-import org.w3c.dom.HTMLElement
-import streetlight.model.data.EventId
-import streetlight.model.data.EventStar
-import streetlight.model.data.StarType
 import streetlight.web.GalaxyPathIdRoute
 import streetlight.web.model.Streetlight
-import streetlight.web.layouts.EventKey
 import streetlight.web.shells.GalaxyProfileKey
 import streetlight.web.shells.GalaxyProfileContent
 import streetlight.web.shells.galaxyProfileShell
-import streetlight.web.layouts.iconPath
 
 fun ViewContext<Streetlight>.viewGalaxyProfile(content: GalaxyProfileContent) {
     val app = model

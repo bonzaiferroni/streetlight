@@ -2,6 +2,7 @@ package streetlight.web.pages
 
 import koala.SvgFile
 import koala.css.*
+import koala.css.Property.Companion.PositionAnchor
 import koala.html.*
 import koala.jsFileOf
 import kotlinx.html.DIV
@@ -50,23 +51,6 @@ fun FlowContent.emptyBadge() {
     icon(SvgFile.EmptyProfile, modify(OpacityHalf, Size100P))
 }
 
-fun FlowContent.stickyBar() {
-    val cardMod = modify(BlurBackdrop, PointerEventsAuto, BorderRadius50P, BlurBg, StickyCard)
-    val iconMod = modify(Height6, AspectRatio1, DisplayFlex)
-    row(AppBodyKey.StickyBarId, modify(JustifyContentSpaceBetween)) {
-        card(cardMod) {
-            action(SiteConfigRoute, iconMod + OpacityMost) {
-                icon(SvgFile.Helm)
-            }
-        }
-        card(cardMod) {
-            action(AccountRoute, iconMod, id = AppBodyKey.BadgeId) {
-                emptyBadge()
-            }
-        }
-    }
-}
-
 object AppBodyKey {
     val ViewportId = Id("viewport-box")
     val AppBoxId = Id("app-box")
@@ -74,10 +58,7 @@ object AppBodyKey {
     val ShellBoxId = Id("shell-box")
     val ContentBoxId = Id("content-box")
     val BadgeId = Id("user-badge")
-    val StickyBarId = Id("sticky-bar")
 }
-
-private val StickyCard = Class("sticky-card")
 
 // language="CSS"
 val AppBodyCss = """
@@ -111,24 +92,5 @@ ${AppBodyKey.ShellBoxId} {
 ${AppBodyKey.PortalMountId} > *,
 ${AppBodyKey.ShellBoxId} > * {
     width: 100%;
-}
-    
-${AppBodyKey.StickyBarId} {
-    position: fixed;
-    pointer-events: none;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 14;
-}
-
-$StickyCard {
-    transition: background-color var(--magic-interval) var(--magic-easing);
-}
-
-@media (min-width: ${BODY_WIDTH_PX + 128}px) {
-    $StickyCard {
-        background-color: transparent;
-    }
 }
 """

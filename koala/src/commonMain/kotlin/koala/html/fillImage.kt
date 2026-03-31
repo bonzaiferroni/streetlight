@@ -4,7 +4,6 @@ import koala.css.Class
 import koala.css.HeightAuto
 import koala.css.ModifierSet
 import koala.css.ObjectFitContain
-import koala.css.Width100P
 import koala.css.addModifiers
 import koala.css.modify
 import kotlinx.html.FlowContent

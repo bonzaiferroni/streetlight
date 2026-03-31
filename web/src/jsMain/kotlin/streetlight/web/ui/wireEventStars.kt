@@ -7,7 +7,7 @@ import koala.dom.ViewContext
 import koala.dom.onClick
 import koala.dom.queryAttributeAll
 import koala.dom.setProperty
-import koala.html.IconElement
+import koala.html.IconKey
 import kotlinx.coroutines.launch
 import org.w3c.dom.HTMLElement
 import streetlight.model.data.EventId
@@ -31,7 +31,7 @@ fun ViewContext<Streetlight>.wireEventStars(root: HTMLElement) {
                     else -> EventStar(eventId, null)
                 }
 
-                element.queryFirstOrNull(IconElement.Class)?.style
+                element.queryFirstOrNull(IconKey.Class)?.style
                     ?.setProperty(Property.MaskUrl.to(UrlValue(star.value.iconPath)))
             }
         }

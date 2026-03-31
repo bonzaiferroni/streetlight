@@ -4,7 +4,7 @@ import koala.SvgFile
 import koala.core.queryFirstOrNull
 import koala.css.*
 import koala.dom.*
-import koala.html.IconElement
+import koala.html.IconKey
 import kotlinx.coroutines.launch
 import org.w3c.dom.HTMLElement
 import streetlight.model.data.GalaxyId
@@ -25,7 +25,7 @@ fun ViewContext<Streetlight>.wireGalaxyStars(root: HTMLElement) {
                     else -> SvgFile.StarOutline
                 }
 
-                element.queryFirstOrNull(IconElement.Class)?.style
+                element.queryFirstOrNull(IconKey.Class)?.style
                     ?.setProperty(Property.MaskUrl.to(UrlValue(icon)))
             }
         }

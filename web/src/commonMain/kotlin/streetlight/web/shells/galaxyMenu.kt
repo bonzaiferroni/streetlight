@@ -3,12 +3,13 @@ package streetlight.web.shells
 import koala.css.BlurBackdrop
 import koala.css.BorderRadius4
 import koala.css.Magic
-import koala.css.PositionAnchor
+import koala.css.Anchor
+import koala.css.Margin1
 import koala.css.PrimaryCardBg
 import koala.css.SlideUp
 import koala.css.WrapFlex
 import koala.css.modify
-import koala.css.setAnchorName
+import koala.css.setAnchor
 import koala.html.Id
 import koala.html.Attribute
 import koala.html.btn
@@ -19,8 +20,6 @@ import koala.html.row
 import koala.html.setAttribute
 import koala.html.setJsonData
 import kotlinx.html.DIV
-import kotlinx.html.FlowContent
-import kotlinx.html.TagConsumer
 import streetlight.model.data.Galaxy
 import streetlight.web.HomeRoute
 import streetlight.web.layouts.GalaxyKey
@@ -30,7 +29,7 @@ fun DIV.galaxyMenu(
     currentGalaxy: Galaxy?,
 ) {
     popover(GalaxyMenuKey.Id, GalaxyMenuKey.Anchor, modify(Magic, SlideUp)) {
-        card(modify(BlurBackdrop, BorderRadius4, PrimaryCardBg)) {
+        card(modify(BlurBackdrop, BorderRadius4, PrimaryCardBg, Margin1)) {
             setJsonData(GalaxyKey.TopGalaxies, galaxies)
 
             row(GalaxyMenuKey.RowMods) {
@@ -39,7 +38,7 @@ fun DIV.galaxyMenu(
         }
     }
     button("☰ galaxies") {
-        setAnchorName(GalaxyMenuKey.Anchor)
+        setAnchor(GalaxyMenuKey.Anchor)
         setAttribute(Attribute.PopoverTarget, GalaxyMenuKey.Id.value)
     }
 }
@@ -59,6 +58,6 @@ fun DIV.galaxyMenuItems(
 
 object GalaxyMenuKey {
     val Id = Id("galaxy-menu")
-    val Anchor = PositionAnchor("galaxy-menu-anchor")
+    val Anchor = Anchor("galaxy-menu-anchor")
     val RowMods = modify(WrapFlex)
 }
