@@ -10,7 +10,6 @@ import streetlight.model.data.EventId
 import streetlight.model.data.Location
 import streetlight.model.data.LocationEdit
 import streetlight.model.data.LocationId
-import streetlight.model.data.PathId
 import streetlight.model.data.PostId
 import streetlight.model.data.SongId
 import streetlight.model.data.TalentId
@@ -58,7 +57,7 @@ sealed interface StringIdRoute: StreetlightRoute {
 }
 
 sealed interface PathIdRoute: StreetlightRoute {
-    val pathId: PathId?
+    val pathId: String?
     override fun toHashPath() = pathId?.let { "${super.toHashPath()}/${it}" } ?: super.toHashPath()
 }
 
@@ -205,12 +204,12 @@ object GalaxyListRoute: StreetlightRoute {
     override val title get() = "Galaxies"
 }
 
-data class GalaxyPathIdRoute(override val pathId: PathId): StreetlightRoute, PathIdRoute {
+data class GalaxyPathIdRoute(override val pathId: String): StreetlightRoute, PathIdRoute {
     override val screen get() = StreetlightScreen.GalaxyProfile
     override val title get() = "Galaxy"
 }
 
-data class EventScoutRoute(override val pathId: PathId): StreetlightRoute, PathIdRoute {
+data class EventScoutRoute(override val pathId: String): StreetlightRoute, PathIdRoute {
     override val screen get() = StreetlightScreen.EventScout
     override val title get() = "Event Scout"
 }

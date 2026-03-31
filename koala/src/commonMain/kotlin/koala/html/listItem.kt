@@ -9,32 +9,40 @@ import kotlinx.html.UL
 import kotlinx.html.li
 
 fun OL.listItem(
+    text: String? = null,
     modifiers: ModifierSet? = null,
     block: LI.() -> Unit = {}
 ) {
     li {
-        addModifiers(modifiers)
+        addModifiers(ListItemKey.Class, modifiers)
         block()
+        text?.let {
+            +text
+        }
     }
 }
 
 fun UL.listItem(
+    text: String? = null,
     modifiers: ModifierSet? = null,
     block: LI.() -> Unit = {}
 ) {
     li {
-        addModifiers(modifiers)
+        addModifiers(ListItemKey.Class, modifiers)
         block()
+        text?.let {
+            +text
+        }
     }
 }
 
 object ListItemKey {
-    val baseClass = Class("list-item")
+    val Class = Class("list-item")
 }
 
 // language="CSS"
-const val ListItemCss = """
-.list-item {
+val ListItemCss get() = """
+${ListItemKey.Class} {
     min-width: 0;
 }
 """

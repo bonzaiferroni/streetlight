@@ -1,6 +1,5 @@
 package streetlight.web.pages
 
-import koala.LottieFile
 import koala.SvgFile
 import koala.css.*
 import koala.html.*

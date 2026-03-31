@@ -13,13 +13,12 @@ import streetlight.model.data.Event
 import streetlight.model.data.EventId
 import streetlight.model.data.EventStatus
 import streetlight.model.data.EventTag
+import streetlight.model.data.GalaxyEdit
 import streetlight.model.data.Location
 import streetlight.model.data.LocationId
 import streetlight.model.data.Song
 import streetlight.model.data.SongId
 import streetlight.model.data.amazingGrace
-import streetlight.model.data.pathIdFromName
-import streetlight.model.utils.toLocalDateTime
 import kotlin.random.Random
 import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.hours
@@ -58,7 +57,7 @@ val mockDb by lazy {
 
     fun areaOf(name: String) = Galaxy(
         galaxyId = GalaxyId.random(),
-        pathId = pathIdFromName(name),
+        path = GalaxyEdit.pathOf(name),
         name = name,
         description = "",
         center = GeoPoint.Denver,

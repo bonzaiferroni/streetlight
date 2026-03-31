@@ -29,7 +29,7 @@ fun FlowContent.galaxyProfileShell(content: GalaxyProfileContent) {
                 galaxyMenu(content.galaxies, galaxy)
                 switch("map", id = GalaxyProfileKey.MapSwitchId)
             }
-            btn("Post Event", EventScoutRoute(galaxy.pathId), modify(Accent))
+            btn("Post Event", EventScoutRoute(galaxy.path), modify(Accent))
         }
         layoutGalaxyPosts(posts)
         appFooter(GalaxyProfileKey.SOURCE)

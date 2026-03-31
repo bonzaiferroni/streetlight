@@ -55,7 +55,7 @@ object ListKey {
 
 // language="CSS"
 val ListingCss get() = """
-.listing {
+${ListKey.Class} {
     display: flex;
     min-width: 0;
     min-height: 0;
@@ -63,11 +63,11 @@ val ListingCss get() = """
     list-style: none;
 }
 
-.column-listing {
+${ListKey.ColumnClass} {
     flex-direction: column;
 }
 
-.row-listing {
+${ListKey.RowClass} {
     flex-direction: row;
 }
 """

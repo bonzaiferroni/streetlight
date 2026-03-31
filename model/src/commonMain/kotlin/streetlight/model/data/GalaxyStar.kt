@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class GalaxyStar(
-    val pathId: PathId,
+    val path: String,
     val name: String,
     val imageUrl: String?,
 )

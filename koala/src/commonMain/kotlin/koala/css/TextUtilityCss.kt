@@ -8,6 +8,8 @@ val TextUtilityCss
         SmallText, LargeText, GrowText,
         // line height
         LineHeight1, LineHeight115,
+        // lists
+        ListStyleDisc,
         // misc
         WhiteSpaceNormal, TextOverflowHidden, TextShadow, SingleLine
     )
@@ -23,3 +25,4 @@ val LineHeight115 = utilityOf("line-height-1-15", "line-height: 1.15")
 val SingleLine = utilityOf("single-line", "white-space: nowrap")
 val TextOverflowHidden = utilityOf("text-overflow-hidden", "overflow: hidden", "text-overflow: ellipsis")
 val TextShadow = utilityOf("text-shadow", "text-shadow: var(--btn-text-shadow)")
+val ListStyleDisc = utilityOf("list-style-disc", "list-style: disc")

@@ -44,10 +44,15 @@ fun RenderContext.textField(
             type = InputType.text
             onChangeValue?.let { callback ->
                 onInputFunction = {
-                    val value = (it.target as HTMLInputElement).value
-                    if (value != currentValue) {
-                        currentValue = value
-                        callback(value)
+                    val element = (it.target as HTMLInputElement)
+                    val newValue = element.value
+                    if (newValue != currentValue) {
+                        if (bindFlow != null) {
+                            element.value = currentValue
+                        } else {
+                            currentValue = newValue
+                        }
+                        callback(newValue)
                     }
                 }
             }

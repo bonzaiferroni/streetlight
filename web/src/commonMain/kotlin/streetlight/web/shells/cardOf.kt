@@ -26,7 +26,7 @@ fun FlowContent.cardOf(event: EventLocation) {
 }
 
 fun FlowContent.cardOf(galaxy: Galaxy) {
-    cardOf(GalaxyPathIdRoute(galaxy.pathId), galaxy.name, SiteImage.placeholderThumb, galaxy.description)
+    cardOf(GalaxyPathIdRoute(galaxy.path), galaxy.name, SiteImage.placeholderThumb, galaxy.description)
 }
 
 fun FlowContent.cardOf(

@@ -16,10 +16,17 @@ class GalaxyFoundry(
     val stateFlow = state.flow
     val stateNow get() = state.now
     val galaxyFlow = stateFlow.mapDistinct { it.galaxy }
-    val galaxyNow = state.now.galaxy
+    val galaxyNow get() = state.now.galaxy
 
     fun setName(value: String) {
-        setGalaxy { it.copy(name = value) }
+        if (!GalaxyEdit.isValidName(value)) return
+        val path = GalaxyEdit.pathOf(value)
+        setGalaxy { it.copy(name = value, path = path) }
+    }
+
+    fun setPath(value: String) {
+        if (!GalaxyEdit.isValidPath(value)) return
+        setGalaxy { it.copy(path = value) }
     }
 
     fun setBlobUrl(value: String?) {
@@ -38,7 +45,7 @@ class GalaxyFoundry(
             }
             val galaxy = app.client.api.foundGalaxy(galaxy.copy(imageUrl = imageUrl))
             if (galaxy != null) {
-                portal.go(GalaxyPathIdRoute(galaxy.pathId))
+                portal.go(GalaxyPathIdRoute(galaxy.path))
                 reset()
             }
         }
@@ -49,7 +56,7 @@ class GalaxyFoundry(
     }
 
     private fun setGalaxy(block: (GalaxyEdit) -> GalaxyEdit) {
-        state.set { it.copy(galaxy = block(galaxyNow)) }
+        state.set { it.copy(galaxy = block(it.galaxy)) }
     }
 }
 
