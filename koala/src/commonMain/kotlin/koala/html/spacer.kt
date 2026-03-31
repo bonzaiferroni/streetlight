@@ -4,7 +4,6 @@ import koala.css.*
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kotlinx.html.div
-import kotlinx.html.hr
 
 fun FlowContent.spacer(
     modifiers: ModifierSet? = null,
@@ -24,7 +23,7 @@ fun FlowContent.centeredHeading(
 //        hr {
 //            addModifiers(modify(Flex1, OpacitySome))
 //        }
-        heading3(text, modify(OpacityMost, LineHeight1, SingleLine))
+        heading3(text, modify(OpacityMost, LineHeight1, WhiteSpaceNoWrap))
 //        hr {
 //            addModifiers(modify(Flex1, OpacitySome))
 //        }

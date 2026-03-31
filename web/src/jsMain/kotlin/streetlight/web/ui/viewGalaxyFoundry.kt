@@ -9,21 +9,17 @@ import koala.html.filigree
 import koala.html.headerImage
 import koala.html.heading1
 import koala.html.heading3
-import koala.html.heading4
-import koala.html.heading5
-import koala.html.textProperty
 import koala.html.section
 import koala.html.spacer
 import koala.html.span
 import koala.model.mapDistinct
 import streetlight.model.data.GalaxyEdit
-import streetlight.model.data.PostPermission
 import streetlight.web.model.Streetlight
-import streetlight.web.model.GalaxyFoundry
+import streetlight.web.model.GalaxyEditor
 
 fun ViewContext<Streetlight>.viewGalaxyFoundry() {
     val app = model
-    val model = GalaxyFoundry(app, renderScope)
+    val model = GalaxyEditor(app, renderScope)
 
     val geoMap = app.geoMap
     val nameFlow = model.galaxyFlow.mapDistinct { it.name ?: "" }
@@ -40,7 +36,7 @@ fun ViewContext<Streetlight>.viewGalaxyFoundry() {
     val instructionsColumnMod = modify(Flex1, JustifyContentCenter, Margin1)
     val contentColumnMod = modify(Flex1)
     val cardMod = modify(ZenCardBg)
-    val footnoteMod = modify(OpacityMost, Italic, TextAlignCenter)
+    val footnoteMod = modify(OpacityMost, Italic, JustifyContentSpaceBetween, WhiteSpaceNoWrap)
 
     column(modify(Gap8)) {
         section(sectionMod) {
@@ -50,6 +46,7 @@ fun ViewContext<Streetlight>.viewGalaxyFoundry() {
             row(modify(AlignItemsCenter, QueryContainer)) {
                 column(modify(Flex4, FlexMd2, PaddingLeft3)) {
                     textBlock(introText1)
+                    textBlock(introText2)
                 }
                 row(modify(Flex1, JustifyContentCenter)) {
                     lottie(LottieFile.AstronautReading, modify(MaxHeight32))
@@ -73,7 +70,12 @@ fun ViewContext<Streetlight>.viewGalaxyFoundry() {
                         }
                         column(contentColumnMod + Gap0) {
                             textField("name", onChangeValue = model::setName, bindFlow = nameFlow)
-                            textBlock(nameCharacters, footnoteMod)
+                            row(modify(footnoteMod)) {
+                                textBlock(nameCharacters)
+                                flowBlock(nameFlow) { name ->
+                                    textBlock("${name.length}/${GalaxyEdit.MAX_NAME_LENGTH}")
+                                }
+                            }
                         }
                     }
                 }
@@ -93,7 +95,12 @@ fun ViewContext<Streetlight>.viewGalaxyFoundry() {
                         column(contentColumnMod) {
                             column(modify(Gap0)) {
                                 textField("path", onChangeValue = model::setPath, bindFlow = pathFlow)
-                                textBlock(pathCharacters, footnoteMod)
+                                row(modify(footnoteMod)) {
+                                    textBlock(pathCharacters)
+                                    flowBlock(pathFlow) { path ->
+                                        textBlock("${path.length}/${GalaxyEdit.MAX_NAME_LENGTH}")
+                                    }
+                                }
                             }
                         }
                     }
@@ -153,7 +160,7 @@ fun ViewContext<Streetlight>.viewGalaxyFoundry() {
                         )
                     }
                     column(contentColumnMod) {
-                        textEditor("Post Guide", onChangeValue = model::setPostGuide, bindFlow = guideFlow)
+                        textEditor("description", onChangeValue = model::setDescription, bindFlow = descriptionFlow)
                     }
                 }
             }
@@ -213,7 +220,7 @@ fun ViewContext<Streetlight>.viewGalaxyFoundry() {
                         )
                     }
                     column(contentColumnMod) {
-                        textEditor("description", onChangeValue = model::setDescription, bindFlow = descriptionFlow)
+                        textEditor("Post Guide", onChangeValue = model::setPostGuide, bindFlow = guideFlow)
                     }
                 }
             }
@@ -231,6 +238,11 @@ fun ViewContext<Streetlight>.viewGalaxyFoundry() {
 private val introText1 = """
 A galaxy is a streetlight community where events, locations, and other posts can be shared on a map. 
 As a galaxy founder, you may curate the content yourself or open it up to the community. 
+"""
+
+private val introText2 = """
+Streetlight is in an early stage of development. It's current focus is our hometown, Denver.
+Theoretically, your map can focus on any part of the world, but features like transit updates may not be available.
 """
 
 private val nameInstructions1 = "Let's give the galaxy a name, up to ${GalaxyEdit.MAX_NAME_LENGTH} characters."

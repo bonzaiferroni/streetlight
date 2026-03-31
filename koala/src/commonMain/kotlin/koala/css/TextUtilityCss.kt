@@ -11,7 +11,7 @@ val TextUtilityCss
         // lists
         ListStyleDisc,
         // misc
-        WhiteSpaceNormal, TextOverflowHidden, TextShadow, SingleLine
+        WhiteSpaceNormal, TextOverflowHidden, TextShadow, WhiteSpaceNoWrap
     )
 
 val Bold = utilityOf("bold", "font-weight: bold")
@@ -22,7 +22,7 @@ val GrowText = utilityOf("grow-text", "font-size: 1.1em")
 val WhiteSpaceNormal = utilityOf("white-space-normal", "white-space: normal")
 val LineHeight1 = utilityOf("line-height-1", "line-height: 1")
 val LineHeight115 = utilityOf("line-height-1-15", "line-height: 1.15")
-val SingleLine = utilityOf("single-line", "white-space: nowrap")
+val WhiteSpaceNoWrap = utilityOf("white-space-no-wrap", "white-space: nowrap")
 val TextOverflowHidden = utilityOf("text-overflow-hidden", "overflow: hidden", "text-overflow: ellipsis")
 val TextShadow = utilityOf("text-shadow", "text-shadow: var(--btn-text-shadow)")
 val ListStyleDisc = utilityOf("list-style-disc", "list-style: disc")

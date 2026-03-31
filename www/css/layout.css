@@ -51,17 +51,15 @@
 }
 
 .flow-block {
-    width: 100%;
     min-width: 0;
 }
 
+
 .items-block {
-    width: 100%;
     position: relative;
 }
 
 .items-block > * {
-    width: 100%;
     position: absolute;
 }
 

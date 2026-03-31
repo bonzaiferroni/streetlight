@@ -12,7 +12,7 @@ import koala.css.JustifyContentSpaceBetween
 import koala.css.LineHeight1
 import koala.css.Margin1
 import koala.css.OverflowXAuto
-import koala.css.SingleLine
+import koala.css.WhiteSpaceNoWrap
 import koala.css.TextOverflowHidden
 import koala.css.Width24
 import koala.css.modify
@@ -62,8 +62,8 @@ fun ViewContext<Streetlight>.wireStarredEvents(root: HTMLElement) {
                                     card(modify(Width24, BorderRadius1)) {
                                         fillImage(event.imageUrl, modify(Flex1))
                                         column(modify(Gap0)) {
-                                            textBlock(event.title, modify(SingleLine, TextOverflowHidden))
-                                            textBlock(event.locationName, modify(SingleLine, TextOverflowHidden, Dim))
+                                            textBlock(event.title, modify(WhiteSpaceNoWrap, TextOverflowHidden))
+                                            textBlock(event.locationName, modify(WhiteSpaceNoWrap, TextOverflowHidden, Dim))
                                         }
                                         row(modify(JustifyContentSpaceBetween)) {
                                             textBlock(event.startsAt.toTimeFormat())

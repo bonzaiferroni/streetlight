@@ -9,7 +9,7 @@ import streetlight.model.data.PostPermission
 import streetlight.web.GalaxyPathIdRoute
 import streetlight.web.ui.ViewModel
 
-class GalaxyFoundry(
+class GalaxyEditor(
     override val app: Streetlight,
     val scope: CoroutineScope
 ): ViewModel {
@@ -45,6 +45,7 @@ class GalaxyFoundry(
             zoom = geoState.zoom
         ).takeIf { it.isValid } ?: return
         scope.launch {
+            console.log(galaxy.description)
             val imageUrl = stateNow.blobUrl?.let {
                 api.uploadImage(it)
             }

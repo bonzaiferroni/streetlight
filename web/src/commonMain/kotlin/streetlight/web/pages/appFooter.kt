@@ -34,7 +34,7 @@ fun DIV.configureAppFooter(sourcePath: String?) {
         textBlock("report a bug")
     }
     sourcePath?.let {
-        action(sourceUrlOf(sourcePath), modify(MarginTop2)) {
+        action(sourceUrlOf(sourcePath), modify(MarginTop4)) {
             column(modify(Gap0)) {
                 filigree {
                     icon(SvgFile.Github, modify(Height4))

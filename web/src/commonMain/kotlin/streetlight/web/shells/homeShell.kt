@@ -98,4 +98,4 @@ object HomeShellKey {
     const val SOURCE = "web/src/commonMain/kotlin/streetlight/web/shells/homeShell.kt"
 }
 
-val SectionHeadingMod = modify(LineHeight1, SingleLine, TextAlignCenter, TextShadow)
+val SectionHeadingMod = modify(LineHeight1, WhiteSpaceNoWrap, TextAlignCenter, TextShadow)

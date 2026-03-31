@@ -33,7 +33,7 @@ fun FlowContent.largePostCard(post: GalaxyPost) {
                     row {
                         column(modify(Flex1, Gap0)) {
                             action(postRoute) {
-                                heading3(post.title, modify(SingleLine, LineHeight1, MarginTop1, TextOverflowHidden))
+                                heading3(post.title, modify(WhiteSpaceNoWrap, LineHeight1, MarginTop1, TextOverflowHidden))
                             }
                             post.location?.let { location ->
                                 action(location.route) {
