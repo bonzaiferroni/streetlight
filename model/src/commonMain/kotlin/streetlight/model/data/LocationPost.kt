@@ -6,50 +6,50 @@ import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 
 @Serializable
-data class EventPost(
+data class LocationPost(
     override val postId: EventPostId,
     override val galaxyId: GalaxyId,
     override val username: String?,
     override val location: Location,
-    override val event: Event,
+    override val title: String,
     override val text: String?,
     override val createdAt: Instant,
     override val updatedAt: Instant,
 ): MapPost {
-    override val thumbUrl get() = event.thumbUrl ?: location.thumbUrl
-    override val imageUrl get() = event.imageUrl ?: location.imageUrl
+    override val thumbUrl get() = location.thumbUrl
+    override val imageUrl get() = location.imageUrl
     override val geoPoint get() = location.geoPoint
-    override val title get() = event.title
-    override val description get() = event.description
+    override val description get() = location.description
     override val visibility get() = 0
+    override val event: Event? get() = null
 }
 
 @Serializable
 @JvmInline
-value class EventPostId(override val value: String): ProjectId, MapPostId {
+value class LocationPostId(override val value: String): ProjectId, MapPostId {
     override val stringId get() = value
     companion object {
-        fun random() = EventPostId(randomUuidString())
+        fun random() = LocationPostId(randomUuidString())
     }
 }
 
 @Serializable
-data class EventPostRow(
-    val postId: EventPostId,
+data class LocationPostRow(
+    val postId: LocationPostId,
     val galaxyId: GalaxyId,
     val username: String?,
-    val eventId: EventId,
+    val locationId: LocationId,
     val text: String?,
     val updatedAt: Instant,
     val createdAt: Instant,
 )
 
 @Serializable
-data class EventPostEdit(
-    val postId: EventPostId? = null,
+data class LocationPostEdit(
+    val postId: LocationPostId? = null,
     val galaxyId: GalaxyId? = null,
     val username: String? = null,
-    val eventId: EventId? = null,
+    val locationId: LocationId? = null,
     val text: String? = null,
 ) {
     val isValid get () = true // !title.isNullOrBlank()
