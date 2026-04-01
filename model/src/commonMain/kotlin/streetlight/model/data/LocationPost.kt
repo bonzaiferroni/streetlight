@@ -11,7 +11,7 @@ data class LocationPost(
     override val galaxyId: GalaxyId,
     override val username: String?,
     override val location: Location,
-    override val title: String,
+    val postTitle: String?,
     override val text: String?,
     override val createdAt: Instant,
     override val updatedAt: Instant,
@@ -22,6 +22,7 @@ data class LocationPost(
     override val description get() = location.description
     override val visibility get() = 0
     override val event: Event? get() = null
+    override val title get() = postTitle ?: location.name
 }
 
 @Serializable
@@ -39,6 +40,7 @@ data class LocationPostRow(
     val galaxyId: GalaxyId,
     val username: String?,
     val locationId: LocationId,
+    val title: String?,
     val text: String?,
     val updatedAt: Instant,
     val createdAt: Instant,
@@ -50,6 +52,7 @@ data class LocationPostEdit(
     val galaxyId: GalaxyId? = null,
     val username: String? = null,
     val locationId: LocationId? = null,
+    val title: String? = null,
     val text: String? = null,
 ) {
     val isValid get () = true // !title.isNullOrBlank()
