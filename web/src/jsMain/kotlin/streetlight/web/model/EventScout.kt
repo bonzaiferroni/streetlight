@@ -19,8 +19,8 @@ import streetlight.model.data.Event
 import streetlight.model.data.EventEdit
 import streetlight.model.data.Galaxy
 import streetlight.model.data.GalaxyId
-import streetlight.model.data.GalaxyPost
-import streetlight.model.data.GalaxyPostEdit
+import streetlight.model.data.EventPost
+import streetlight.model.data.EventPostEdit
 import streetlight.model.data.Location
 import streetlight.model.data.LocationEdit
 import streetlight.model.data.Place
@@ -187,13 +187,10 @@ class EventScout(
 
     fun postToGalaxy(galaxyId: GalaxyId) {
         val event = state.now.event ?: return
-        val location = state.now.location ?: return
         scope.launch {
-            val postId = api.createPost(GalaxyPostEdit(
+            val postId = api.createPost(EventPostEdit(
                 galaxyId = galaxyId,
                 eventId = event.eventId,
-                locationId = location.locationId,
-                title = event.title,
             ))
             if (postId != null) {
                 val post = api.readPost(postId) ?: return@launch
@@ -229,7 +226,7 @@ data class EventScoutState(
     val locationEdit: LocationEdit? = null,
     val location: Location? = null,
     val event: Event? = null,
-    val posts: List<GalaxyPost> = emptyList()
+    val posts: List<EventPost> = emptyList()
 )
 
 private const val introMsg = "Where will the event be held? Search for a location or find one on the map."

@@ -7,7 +7,7 @@ import kotlinx.html.FlowContent
 import streetlight.model.data.Event
 import streetlight.model.data.EventLocation
 import streetlight.model.data.Galaxy
-import streetlight.model.data.GalaxyPost
+import streetlight.model.data.EventPost
 import streetlight.model.data.Location
 import streetlight.web.EventIdRoute
 import streetlight.web.GalaxyPathIdRoute
@@ -30,7 +30,7 @@ fun FlowContent.cardOf(galaxy: Galaxy) {
 }
 
 fun FlowContent.cardOf(
-    post: GalaxyPost,
+    post: EventPost,
     modifiers: ModifierSet? = null,
 ) {
     val route = post.event?.eventId?.let { EventIdRoute(it) }

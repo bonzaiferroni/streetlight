@@ -6,7 +6,7 @@ import koala.css.*
 import koala.html.*
 import kotlinx.html.FlowContent
 import streetlight.web.CreateGalaxyRoute
-import streetlight.web.layouts.layoutGalaxyPosts
+import streetlight.web.layouts.layoutEventPosts
 import streetlight.web.layouts.smallGalaxyCard
 import streetlight.web.pages.appFooter
 
@@ -59,7 +59,7 @@ fun FlowContent.homeShell(content: HomeContent) {
             }
         }
 
-        layoutGalaxyPosts(content.posts)
+        layoutEventPosts(content.posts)
 
         section {
             filigree {

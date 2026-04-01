@@ -9,7 +9,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.FlowPreview
 import streetlight.model.data.Galaxy
 import streetlight.model.data.EventLocation
-import streetlight.model.data.GalaxyPost
+import streetlight.model.data.EventPost
 import streetlight.model.data.Location
 
 class StreetMap(
@@ -25,22 +25,22 @@ class StreetMap(
     
     val transit = TransitMap(scope, client, geoMap, config)
 
-    fun setPosts(posts: List<GalaxyPost>) {
+    fun setPosts(posts: List<EventPost>) {
         val posts = createEntities(posts)
         geoMap.removeEntities(state.now.posts.map { it.entityId })
         geoMap.addEntities(posts)
         state.set { it.copy(posts = posts) }
     }
 
-    fun addPosts(posts: List<GalaxyPost>) {
+    fun addPosts(posts: List<EventPost>) {
         val posts = createEntities(posts)
         geoMap.addEntities(posts)
         state.set { it.copy(posts = it.posts + posts)}
     }
 
-    private fun createEntities(posts: List<GalaxyPost>): List<PostEntity> {
+    private fun createEntities(posts: List<EventPost>): List<PostEntity> {
         return posts.mapNotNull { post ->
-            val position = post.position ?: return@mapNotNull null
+            val position = post.geoPoint ?: return@mapNotNull null
             val galaxy = cache.topGalaxies.getCachedItem(post.galaxyId)
             PostEntity(post, galaxy, position)
         }

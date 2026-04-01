@@ -14,12 +14,12 @@ import koala.html.row
 import koala.html.textBlock
 import kotlinx.html.FlowContent
 import streetlight.model.data.Event
-import streetlight.model.data.GalaxyPost
+import streetlight.model.data.EventPost
 import streetlight.model.data.Location
 import streetlight.web.EventIdRoute
 import streetlight.web.LocationIdRoute
 
-fun FlowContent.smallPostCard(post: GalaxyPost) {
+fun FlowContent.smallPostCard(post: EventPost) {
     val thumbUrl = post.thumbUrl
     val title = post.title
     val description = post.description
@@ -83,6 +83,6 @@ fun FlowContent.smallPostCard(post: GalaxyPost) {
     }
 }
 
-val GalaxyPost.route get() = event?.route ?: location?.route
+val EventPost.route get() = event?.route ?: location?.route
 val Location.route get() = LocationIdRoute(locationId)
 val Event.route get() = EventIdRoute(eventId)

@@ -10,7 +10,7 @@ import koala.html.heading3
 import koala.html.textBlock
 import kotlinx.html.FlowContent
 import streetlight.model.data.Galaxy
-import streetlight.model.data.GalaxyPost
+import streetlight.model.data.EventPost
 import streetlight.web.pages.appFooter
 
 fun FlowContent.spotlightTab(content: HomeContent) {
@@ -38,5 +38,5 @@ fun FlowContent.spotlightTab(content: HomeContent) {
 
 data class HomeContent(
     val galaxies: List<Galaxy>,
-    val posts: List<GalaxyPost>
+    val posts: List<EventPost>
 )

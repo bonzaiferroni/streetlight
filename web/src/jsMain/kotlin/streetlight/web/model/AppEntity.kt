@@ -15,7 +15,7 @@ import kotlinx.html.DIV
 import kotlinx.html.p
 import streetlight.model.data.Event
 import streetlight.model.data.Galaxy
-import streetlight.model.data.GalaxyPost
+import streetlight.model.data.EventPost
 import streetlight.model.data.Location
 import streetlight.model.data.Spirit
 import streetlight.model.data.SpiritId
@@ -74,7 +74,7 @@ data class IconEntity(
 ): PointEntity
 
 data class PostEntity(
-    val post: GalaxyPost,
+    val post: EventPost,
     val galaxy: Galaxy?,
     override val position: GeoPoint,
 ): PointEntity {

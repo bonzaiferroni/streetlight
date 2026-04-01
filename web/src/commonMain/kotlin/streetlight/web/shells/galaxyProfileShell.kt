@@ -5,9 +5,9 @@ import koala.html.*
 import kotlinx.html.FlowContent
 import kotlinx.serialization.Serializable
 import streetlight.model.data.Galaxy
-import streetlight.model.data.GalaxyPost
+import streetlight.model.data.EventPost
 import streetlight.web.EventScoutRoute
-import streetlight.web.layouts.layoutGalaxyPosts
+import streetlight.web.layouts.layoutEventPosts
 import streetlight.web.pages.appFooter
 import streetlight.web.ui.headerOf
 
@@ -31,7 +31,7 @@ fun FlowContent.galaxyProfileShell(content: GalaxyProfileContent) {
             }
             btn("Post Event", EventScoutRoute(galaxy.path), modify(Accent))
         }
-        layoutGalaxyPosts(posts)
+        layoutEventPosts(posts)
         appFooter(GalaxyProfileKey.SOURCE)
     }
 }
@@ -48,6 +48,6 @@ object GalaxyProfileKey {
 @Serializable
 data class GalaxyProfileContent(
     val galaxy: Galaxy,
-    val posts: List<GalaxyPost>,
+    val posts: List<EventPost>,
     val galaxies: List<Galaxy>
 )

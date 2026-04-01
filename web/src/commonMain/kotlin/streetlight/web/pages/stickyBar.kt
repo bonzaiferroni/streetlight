@@ -76,7 +76,7 @@ object StickyBarKey {
 
 // language="JS"
 val StickyBarJs get() = """
-console.log("ey")
+console.log("stickyBar: ey")
 """
 
 // language="CSS"

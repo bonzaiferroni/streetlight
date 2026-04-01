@@ -4,15 +4,15 @@ import kabinet.utils.toRelativeDayFormat
 import koala.css.*
 import koala.html.*
 import kotlinx.html.FlowContent
-import streetlight.model.data.GalaxyPost
+import streetlight.model.data.EventPost
 import streetlight.web.shells.SectionHeadingMod
 
-fun FlowContent.layoutGalaxyPosts(posts: List<GalaxyPost>) {
+fun FlowContent.layoutEventPosts(posts: List<EventPost>) {
     column {
         heading2("Upcoming Events", SectionHeadingMod)
-        val groupings = posts.groupBy { it.event?.startsAt }
+        val groupings = posts.groupBy { it.event.startsAt }
         groupings.forEach { grouping ->
-            val startsAt = grouping.key ?: return@forEach
+            val startsAt = grouping.key
             val posts = grouping.value
             section {
                 filigree(modify(MarginTop2)) {
