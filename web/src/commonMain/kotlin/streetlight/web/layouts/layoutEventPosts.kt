@@ -10,9 +10,9 @@ import streetlight.web.shells.SectionHeadingMod
 fun FlowContent.layoutEventPosts(posts: List<EventPost>) {
     column {
         heading2("Upcoming Events", SectionHeadingMod)
-        val groupings = posts.groupBy { it.event.startsAt }
+        val groupings = posts.groupBy { it.event?.startsAt }
         groupings.forEach { grouping ->
-            val startsAt = grouping.key
+            val startsAt = grouping.key ?: return@forEach // td: show removed post content
             val posts = grouping.value
             section {
                 filigree(modify(MarginTop2)) {

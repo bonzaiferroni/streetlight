@@ -22,7 +22,8 @@ import streetlight.model.data.StarType
 
 fun FlowContent.largePostCard(post: EventPost) {
     val postRoute = post.route ?: return
-    val event = post.event
+    val event = post.event ?: return
+    val location = post.location ?: return // td: show removed post content
 
     card(modify(QueryContainer, Padding0, OverflowHidden)) {
         column(modify(QueryContainer, ContainerLgRow, Gap0)) {
@@ -36,7 +37,6 @@ fun FlowContent.largePostCard(post: EventPost) {
                             action(postRoute) {
                                 heading3(post.title, modify(WhiteSpaceNoWrap, LineHeight1, MarginTop1, TextOverflowHidden))
                             }
-                            val location = post.location
                             action(location.route) {
                                 textBlock("${location.name}, ${location.city}", modify(Dim))
                             }
@@ -49,10 +49,10 @@ fun FlowContent.largePostCard(post: EventPost) {
                     }
 
                     row {
-                        post.event.url?.let { url ->
+                        event.url?.let { url ->
                             btn("source", url)
                         }
-                        post.event.links?.forEach { link ->
+                        event.links?.forEach { link ->
                             btn(link.label, link.url)
                         }
                     }
@@ -65,14 +65,14 @@ fun FlowContent.largePostCard(post: EventPost) {
                 val rowMods = modify(JustifyContentCenter)
                 card(cellMods) {
                     row(rowMods) {
-                        textBlock(post.event.startsAt.toRelativeDayFormat(), modify(Bold))
+                        textBlock(event.startsAt.toRelativeDayFormat(), modify(Bold))
                         textBlock("8:00 PM")
                     }
                 }
                 card(cellMods) {
-                    val cost = post.event.cost
+                    val cost = event.cost
                     val ticketsUrl = cost.takeIf { it != 0f }?.let {
-                        post.event.url
+                        event.url
                     }
                     actionIfNotNull(ticketsUrl) {
                         row(rowMods) {

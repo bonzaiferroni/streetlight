@@ -18,6 +18,8 @@ sealed interface MapPost {
     val visibility: Int
     val createdAt: Instant
     val updatedAt: Instant
+
+    val isRemoved: Boolean
 }
 
 sealed interface MapPostId {
