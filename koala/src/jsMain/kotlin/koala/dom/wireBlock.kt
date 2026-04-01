@@ -11,7 +11,7 @@ fun RenderContext.wireBlock(
     block: RenderContext.() -> Unit
 ): HTMLElement {
     val element = ancestor?.querySelector(elementId.selector) as? HTMLElement ?: document.getElementOrNullById(elementId)
-        ?: error("couldn't find ${elementId.value}")
+        ?: error("couldn't find ${elementId.identifier}")
 
     fun wireElement() {
         element.renderRoot(renderScope, block)

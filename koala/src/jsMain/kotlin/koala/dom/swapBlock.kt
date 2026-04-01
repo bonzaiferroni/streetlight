@@ -46,7 +46,7 @@ fun RenderContext.queryAndWireSwapBlock(
 
 private fun List<HTMLElement>.setVisibility(id: Id) {
     forEach { child ->
-        when (child.id == id.value) {
+        when (child.id == id.identifier) {
             true -> child.style.removeProperty(Property.Display)
             else -> child.style.setProperty(Property.Display.to(Display.none))
         }
@@ -55,7 +55,7 @@ private fun List<HTMLElement>.setVisibility(id: Id) {
 
 private fun List<HTMLElement>.setReveal(id: Id, isInitial: Boolean) {
     forEach { child ->
-        when (child.id == id.value) {
+        when (child.id == id.identifier) {
             true -> {
                 child.style.removeProperty(Property.Display)
                 if (isInitial) {

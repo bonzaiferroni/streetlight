@@ -13,7 +13,7 @@ inline fun DOMContext.row(
     modifiers: ModifierSet? = null,
     crossinline content: DIV.() -> Unit,
 ) = row(modifiers) {
-    this.id = id.value
+    this.id = id.identifier
     content()
 }
 

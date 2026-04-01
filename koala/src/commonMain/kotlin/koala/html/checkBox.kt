@@ -9,8 +9,8 @@ fun FlowContent.checkBox(
 ) {
     row(modify(AlignItemsCenter)) {
         checkBoxInput {
-            this.id = id.value
-            this.name = id.value
+            this.id = id.identifier
+            this.name = id.identifier
         }
         textBlock(label)
     }

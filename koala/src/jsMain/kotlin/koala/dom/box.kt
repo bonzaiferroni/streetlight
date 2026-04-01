@@ -21,7 +21,7 @@ inline fun DOMContext.box(
     modifiers: ModifierSet? = null,
     crossinline content: DIV.() -> Unit = { },
 ) = box(modifiers = modifiers) {
-    this.id = id.value
+    this.id = id.identifier
     content()
 }
 
@@ -38,6 +38,6 @@ fun DOMContext.container(
     modifiers: ModifierSet? = null,
     content: DIV.() -> Unit = { },
 ) = container(modifiers = modifiers) {
-    this.id = id.value
+    this.id = id.identifier
     content()
 }

@@ -6,18 +6,19 @@ val DisplayUtilityCss
         DisplayNone,
         // Opacity
         Opacity1, OpacityMost, OpacityHalf, OpacitySome, Dim, NoDim,
-        // Glow
-        Glow, GlowShadow, GlowBackground,
+        // Animation
+        Glow, GlowShadow, GlowBackground, SpinSlow,
         // Shape
         CircleShape, CircleClip,
         // Border Radius
         BorderRadius0, BorderRadius1, BorderRadius2, BorderRadius4, BorderRadius50P,
+        BorderDashed2Px,
         // Color
         Accent, Primary, Secondary, Danger,
         // Overflow
         OverflowHidden, OverflowWrapAnywhere, OverflowClip, OverflowXAuto,
         // Background
-        PrimaryBg, PrimaryCardBg, ZenCardBg, BackgroundImage, SolidBg, BlurBackdrop,
+        PrimaryBg, PrimaryCardBg, ZenCardBg, BackgroundImage, SolidBg, BlurBackdrop, TransparentBg,
         // Misc
         FadeBottom, Focus, Clickable, PointerEventsAuto, PointerEventsNone,
     )
@@ -39,6 +40,7 @@ val NoDim = utilityOf("no-dim", "color: rgb(var(--ink)) !important")
 val Glow = CssUtility("glow")
 val GlowShadow = CssUtility("glow-shadow")
 val GlowBackground = CssUtility("glow-background")
+val SpinSlow = CssUtility("spin-slow")
 
 // Shape
 val CircleShape = utilityOf("circle-shape", "border-radius: 50%", "overflow: hidden", "border: 3px solid #b4bd7d")
@@ -50,6 +52,7 @@ val BorderRadius1 = utilityOf("border-radius-1", "border-radius: var(--unit-spac
 val BorderRadius2 = utilityOf("border-radius-2", "border-radius: calc(var(--unit-spacing) * 2)")
 val BorderRadius4 = utilityOf("border-radius-4", "border-radius: calc(var(--unit-spacing) * 4)")
 val BorderRadius50P = utilityOf("border-radius-50p", "border-radius: 50%")
+val BorderDashed2Px = utilityOf("border: 2px dashed currentColor;")
 
 // Color
 val Accent = CssUtility("accent")
@@ -67,13 +70,14 @@ val OverflowXAuto = utilityOf("overflow-x-auto", "overflow-x: auto")
 val PrimaryBg = utilityOf("primary-bg", "background-color: var(--primary-bg)")
 val PrimaryCardBg = utilityOf("primary-card-bg", "background-color: var(--primary-card-bg)")
 val ZenCardBg = utilityOf("zen-card-bg", "background: var(--zen-card-bg)")
+val HeavyCardBg = utilityOf("heavy-card-bg", "background: rgba(var(--paper), .8)")
 val BackgroundImage = CssUtility("background-image")
 val SolidBg = utilityOf("solid-bg", "background-color: var(--paper-bg)")
 val BlurBackdrop = utilityOf(
     "blur-backdrop",
     "backdrop-filter: var(--strong-blur)",
     "-webkit-backdrop-filter: var(--strong-blur)")
-val BlurBg = utilityOf("blur-bg", "background: rgba(var(--paper), .8)")
+val TransparentBg = utilityOf("background-transparent", "background-color: transparent")
 
 // Misc
 val FadeBottom = utilityOf(

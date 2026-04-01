@@ -22,7 +22,7 @@ fun FlowContent.box(
     block: (DIV.() -> Unit)? = null,
 ) {
     box(modifiers = modifiers) {
-        this.id = id.value
+        this.id = id.identifier
         block?.invoke(this)
     }
 }

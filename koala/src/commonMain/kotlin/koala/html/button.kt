@@ -19,13 +19,15 @@ fun FlowContent.button(
 }
 
 fun FlowContent.button(
-    svg: Svg,
+    svg: Svg? = null,
     modifiers: ModifierSet? = null,
     block: BUTTON.() -> Unit = {}
 ) {
     button {
         addModifiers(IconButtonKey.Class, modify(IconKey.Class, modifiers))
-        setStyle(Property.MaskUrl.to(UrlValue(svg)))
+        svg?.let {
+            setStyle(Property.MaskUrl.to(UrlValue(svg)))
+        }
         block()
     }
 }

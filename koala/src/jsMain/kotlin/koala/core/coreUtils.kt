@@ -23,7 +23,7 @@ fun Document.onClickElementAll(modifier: Modifier, onClick: (HTMLElement) -> Uni
         })
     }
 
-fun Document.onClick(id: Id, onClick: () -> Unit) = querySelector(id.value)?.let {
+fun Document.onClick(id: Id, onClick: () -> Unit) = querySelector(id.identifier)?.let {
     val element = it as HTMLElement
     element.modify(Clickable)
     element.addEventListener("click", {
@@ -40,7 +40,7 @@ fun Element.queryFirstOrNull(modifier: Modifier) = querySelector(modifier.select
 fun Element.appendDiv(id: Id? = null): HTMLElement {
     val element = document.createElement("div") as HTMLElement
     if (id != null) {
-        element.id = id.value
+        element.id = id.identifier
     }
     append(element)
     return element

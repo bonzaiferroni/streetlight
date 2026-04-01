@@ -4,8 +4,8 @@ import kotlinx.html.*
 import kotlin.jvm.JvmInline
 
 @JvmInline
-value class Id(val value: String): Queryable {
-    override val selector get() = "#$value"
+value class Id(val identifier: String): Queryable {
+    override val selector get() = "#$identifier"
     override fun toString() = selector
 }
 
@@ -15,6 +15,6 @@ interface Queryable {
 
 fun CoreAttributeGroupFacade.setId(id: Id?) {
     id?.let {
-        this.id = id.value
+        this.id = id.identifier
     }
 }

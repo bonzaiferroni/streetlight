@@ -9,7 +9,7 @@ fun FlowContent.row(
     block: DIV.() -> Unit = {},
 ) {
     row(modifiers) {
-        this.id = id.value
+        this.id = id.identifier
         block()
     }
 }

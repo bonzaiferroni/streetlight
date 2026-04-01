@@ -30,11 +30,11 @@ val LayoutUtilityCss
         MarginAuto, Margin1, Margin2, MarginTop1, MarginTop2, MarginTop4, MarginTop8, MarginLeft1, MarginBottom16,
         MarginX1, MarginX2, MarginX4,
         // Padding
-        Padding0, Padding1, Padding2, PaddingTiny, PaddingLeft3,
+        Padding0, Padding1, Padding2, PaddingTiny, PaddingLeft3, PaddingRight3,
         // Object Fit
         ObjectFitCover, ObjectFitContain, ObjectPositionCenter,
         // Other
-        SpaceBetween, Start, End, Center, PlaceItemsCenter, RelativeParent, ZIndex1, Shrinkable, QueryContainer
+        SpaceBetween, Start, End, Center, PlaceItemsCenter, RelativeParent, ZIndex1, Shrinkable, QueryContainer,
     )
 
 // Gap
@@ -174,6 +174,7 @@ val Padding1 = utilityOf("padding-1", "padding: var(--unit-spacing)")
 val Padding2 = utilityOf("padding-2", "padding: calc(var(--unit-spacing) * 2)")
 val PaddingTiny = utilityOf("padding-tiny", "padding: 2px")
 val PaddingLeft3 = utilityOf("padding-left-3", "padding-left: calc(var(--unit-spacing) * 3)")
+val PaddingRight3 = utilityOf("padding-right-3", "padding-right: calc(var(--unit-spacing) * 3)")
 
 // Object Fit
 val ObjectFitCover = utilityOf("object-fit-cover", "object-fit: cover")
@@ -188,6 +189,7 @@ val Center = CssUtility("center")
 val PlaceItemsCenter = CssUtility("center-items")
 val JustifySelfEnd = utilityOf("justify-self-end", "justify-self: end")
 val AlignSelfStart = utilityOf("align-self-start", "align-self: start")
+val JustifySelfStart = utilityOf("justify-self-start", "justify-self: start")
 val AlignSelfStretch = utilityOf("align-self-stretch", "align-self: stretch")
 val AspectRatio1 = utilityOf("square", "aspect-ratio: 1 / 1")
 val AspectRatio2 = utilityOf("aspect-ratio-2", "aspect-ratio: 2 / 1")

@@ -39,7 +39,7 @@ fun DIV.galaxyMenu(
     }
     button("☰ galaxies") {
         setAnchor(GalaxyMenuKey.Anchor)
-        setAttribute(Attribute.PopoverTarget, GalaxyMenuKey.Id.value)
+        setAttribute(Attribute.PopoverTarget, GalaxyMenuKey.Id.identifier)
     }
 }
 

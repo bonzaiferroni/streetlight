@@ -16,7 +16,7 @@ inline fun DOMContext.column(
     crossinline content: DIV.() -> Unit,
 ) = column(modifiers) {
     id?.let {
-        this.id = id.value
+        this.id = id.identifier
     }
     content()
 }

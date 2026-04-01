@@ -9,7 +9,7 @@ inline fun FlowContent.column(
     crossinline content: DIV.() -> Unit,
 ) {
     column(modifiers) {
-        this.id = id.value
+        this.id = id.identifier
         content()
     }
 }

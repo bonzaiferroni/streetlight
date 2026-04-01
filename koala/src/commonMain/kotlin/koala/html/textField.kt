@@ -9,8 +9,8 @@ fun FlowContent.textField(
     block: (INPUT.() -> Unit)? = null
 ) {
     textInput {
-        this.id = id.value
-        this.name = id.value
+        this.id = id.identifier
+        this.name = id.identifier
         this.placeholder = placeholder
 
         block?.invoke(this)

@@ -11,7 +11,7 @@ fun FlowContent.image(
     block: (IMG.() -> Unit)? = null
 ) {
     image(src, modifiers, placeholder) {
-        this.id = id.value
+        this.id = id.identifier
         block?.invoke(this)
     }
 }
