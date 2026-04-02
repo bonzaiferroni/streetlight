@@ -46,7 +46,7 @@ fun RenderContext.viewEventEditor(
         }
     }
 
-    viewOf(model) {
+    viewContextOf(model) {
         column(modify(Gap4)) {
             column(modify(Gap0)) {
                 heading3("What's happening?", modify(Padding1, Dim))
@@ -235,7 +235,7 @@ fun ViewContext<Streetlight>.viewEventEditorRoute() {
             }
         }
     }) { event ->
-        viewOf(model) {
+        viewContextOf(model) {
             viewEventEditorPanel(event, callback)
         }
     }

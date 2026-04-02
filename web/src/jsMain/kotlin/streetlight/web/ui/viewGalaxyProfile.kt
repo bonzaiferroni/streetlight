@@ -50,7 +50,7 @@ fun ViewContext<Streetlight>.viewGalaxyProfileRoute() {
             galaxies = galaxies,
         )
     }) { content ->
-        viewOf(model) {
+        viewContextOf(model) {
             viewGalaxyProfile(content)
         }
     }

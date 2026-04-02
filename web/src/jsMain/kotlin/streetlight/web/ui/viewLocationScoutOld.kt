@@ -29,7 +29,7 @@ fun RenderContext.viewLocationScoutOld(app: Streetlight) {
 
                 flowBlock(dataFlow, defaultMagic) { data ->
                     val edit = model.stateNow.edit; val location = data.location; val places = data.places
-                    viewOf(model) {
+                    viewContextOf(model) {
                         if (location != null) {
                             finishedStage(location)
                         } else if (edit != null) {

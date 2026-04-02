@@ -31,7 +31,7 @@ fun RenderContext.viewEventScout(app: Streetlight, galaxy: Galaxy) {
         flowBlock(panelFlow, defaultMagic) {
             val locationEdit = it.locationEdit; val location = it.location; val event = it.event
 
-            viewOf(model) {
+            viewContextOf(model) {
                 if (event != null) {
                     reviewEventPanel(event, galaxy)
                 } else if (location != null) {

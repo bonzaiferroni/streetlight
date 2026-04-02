@@ -6,4 +6,4 @@ class ViewContext<T>(
 ): RenderContext by context {
 }
 
-fun <T> RenderContext.viewOf(model: T, block: ViewContext<T>.() -> Unit) = ViewContext(model, this).block()
+fun <T> RenderContext.viewContextOf(model: T, block: ViewContext<T>.() -> Unit) = ViewContext(model, this).block()

@@ -75,7 +75,7 @@ fun viewApp() {
                 renderCacheCount = 0, // allows unlimited caching
                 onTransition = { window.scrollTo(0.0, 0.0) },
             ) { screen ->
-                viewOf(app) {
+                viewContextOf(app) {
                     when (screen) {
                         StreetlightScreen.Home -> viewHome()
                         StreetlightScreen.Event -> viewEventRoute(app)

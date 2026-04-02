@@ -3,12 +3,13 @@ package streetlight.web.shells
 import koala.css.*
 import koala.html.*
 import kotlinx.html.DIV
+import kotlinx.html.FlowContent
 import streetlight.model.data.Galaxy
 import streetlight.web.EventScoutRoute
 import streetlight.web.LocationScoutRoute
 import streetlight.web.layouts.GalaxyKey
 
-fun DIV.postMenu(galaxy: Galaxy) {
+fun FlowContent.postMenu(galaxy: Galaxy) {
     popover(PostMenuKey.Id, PostMenuKey.Anchor, modify(Magic, SlideUp)) {
         card(modify(BlurBackdrop, BorderRadius4, PrimaryCardBg, Margin1)) {
             btn("Post Event", EventScoutRoute(galaxy.path))
