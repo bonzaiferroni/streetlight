@@ -15,6 +15,7 @@ data class Galaxy(
     val center: GeoPoint,
     val zoom: Float,
     val postPermission: PostPermission,
+    val reviewMode: ReviewMode,
     val postGuide: String?,
     val imageUrl: String?,
     val thumbUrl: String?,
@@ -35,7 +36,8 @@ data class GalaxyEdit(
     val description: String? = null,
     val center: GeoPoint? = null,
     val zoom: Float? = null,
-    val postPermission: PostPermission = PostPermission.Community,
+    val postPermission: PostPermission = PostPermission.Accounts,
+    val reviewMode: ReviewMode = ReviewMode.PostImmediately,
     val postGuide: String? = null,
     val imageUrl: String? = null,
     val thumbUrl: String? = null,
@@ -63,8 +65,14 @@ data class GalaxyEdit(
 }
 
 enum class PostPermission(label: String? = null) {
-    Community,
+    Everyone,
+    Accounts("Streetlight accounts"),
     Founder;
 
     val label = label ?: name
+}
+
+enum class ReviewMode(val label: String) {
+    PostImmediately("User posts appear immediately"),
+    PostAfterReview("User posts appear after reviewed"),
 }

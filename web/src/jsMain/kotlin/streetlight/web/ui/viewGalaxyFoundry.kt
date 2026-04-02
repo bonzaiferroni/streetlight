@@ -14,6 +14,7 @@ import koala.html.spacer
 import koala.html.span
 import koala.model.mapDistinct
 import streetlight.model.data.GalaxyEdit
+import streetlight.model.data.PostPermission
 import streetlight.web.model.Streetlight
 import streetlight.web.model.GalaxyEditor
 
@@ -27,16 +28,19 @@ fun ViewContext<Streetlight>.viewGalaxyFoundry() {
     val descriptionFlow = model.galaxyFlow.mapDistinct { it.description ?: "" }
     val pathFlow = model.galaxyFlow.mapDistinct { it.path ?: "" }
     val permissionFlow = model.galaxyFlow.mapDistinct { it.postPermission }
+    val reviewModeFlow = model.galaxyFlow.mapDistinct { it.reviewMode }
     val guideFlow = model.galaxyFlow.mapDistinct { it.postGuide ?: "" }
     val pointFlow = app.geoMap.stateFlow.mapDistinct { it.center to it.zoom }
 
     val textMod = modify()
     val sectionMod = modify(QueryContainer)
     val queryColumnMod = modify(ContainerMdRow)
+    val querySubColumnMod = queryColumnMod + MarginTop2
     val instructionsColumnMod = modify(Flex1, JustifyContentCenter, Margin1)
     val contentColumnMod = modify(Flex1)
     val cardMod = modify(ZenCardBg)
     val footnoteMod = modify(OpacityMost, Italic, JustifyContentSpaceBetween, WhiteSpaceNoWrap)
+    val bulletsMod = modify(OpacityMost)
 
     column(modify(Gap8)) {
         section(sectionMod) {
@@ -59,47 +63,43 @@ fun ViewContext<Streetlight>.viewGalaxyFoundry() {
                 heading3("Galaxy Name")
             }
             card(cardMod) {
-                column {
-                    column(queryColumnMod) {
-                        column(instructionsColumnMod) {
-                            textBlock(nameInstructions1, textMod)
-                            column(modify(Gap0, OpacityMost)) {
-                                textBlock("Examples:")
-                                bulletsOf("Denver Book Club", "Page Turners")
-                            }
+                column(queryColumnMod) {
+                    column(instructionsColumnMod) {
+                        textBlock(nameInstructions1, textMod)
+                        column(modify(Gap0, OpacityMost)) {
+                            textBlock("Examples:")
+                            bulletsOf("Denver Book Club", "Page Turners")
                         }
-                        column(contentColumnMod + Gap0) {
-                            textField("name", onChangeValue = model::setName, bindFlow = nameFlow)
-                            row(modify(footnoteMod)) {
-                                textBlock(nameCharacters)
-                                flowBlock(nameFlow) { name ->
-                                    textBlock("${name.length}/${GalaxyEdit.MAX_NAME_LENGTH}")
-                                }
+                    }
+                    column(contentColumnMod + Gap0) {
+                        textField("name", onChangeValue = model::setName, bindFlow = nameFlow)
+                        row(modify(footnoteMod)) {
+                            textBlock(nameCharacters)
+                            flowBlock(nameFlow) { name ->
+                                textBlock("${name.length}/${GalaxyEdit.MAX_NAME_LENGTH}")
                             }
                         }
                     }
                 }
-                column(modify(MarginTop2)) {
-                    column(queryColumnMod) {
-                        column(instructionsColumnMod) {
-                            textBlock(pathInstructions)
-                            column(modify(Gap0, OpacityMost)) {
-                                textBlock("Currently:")
-                                flowBlock(pathFlow) { path ->
-                                    box {
-                                        bulletsOf("streetlight.ing/g/$path")
-                                    }
+                column(querySubColumnMod) {
+                    column(instructionsColumnMod) {
+                        textBlock(pathInstructions)
+                        column(modify(Gap0, OpacityMost)) {
+                            textBlock("Currently:")
+                            flowBlock(pathFlow) { path ->
+                                box {
+                                    bulletsOf("streetlight.ing/g/$path")
                                 }
                             }
                         }
-                        column(contentColumnMod) {
-                            column(modify(Gap0)) {
-                                textField("path", onChangeValue = model::setPath, bindFlow = pathFlow)
-                                row(modify(footnoteMod)) {
-                                    textBlock(pathCharacters)
-                                    flowBlock(pathFlow) { path ->
-                                        textBlock("${path.length}/${GalaxyEdit.MAX_NAME_LENGTH}")
-                                    }
+                    }
+                    column(contentColumnMod) {
+                        column(modify(Gap0)) {
+                            textField("path", onChangeValue = model::setPath, bindFlow = pathFlow)
+                            row(modify(footnoteMod)) {
+                                textBlock(pathCharacters)
+                                flowBlock(pathFlow) { path ->
+                                    textBlock("${path.length}/${GalaxyEdit.MAX_NAME_LENGTH}")
                                 }
                             }
                         }
@@ -117,10 +117,10 @@ fun ViewContext<Streetlight>.viewGalaxyFoundry() {
                     column(instructionsColumnMod) {
                         textBlock(imageInstructions1, textMod)
                         bulletsOf(
-                            modify(OpacityMost),
+                            bulletsMod,
                             "Ideally at least 1024 pixels wide and 512 pixels tall.",
-                            canBeChangedText,
                             imageRequirements,
+                            canBeChangedText,
                         )
                     }
                     column(contentColumnMod) {
@@ -154,7 +154,7 @@ fun ViewContext<Streetlight>.viewGalaxyFoundry() {
                             }
                         }
                         bulletsOf(
-                            modify(OpacityMost),
+                            bulletsMod,
                             "Can be brief or detailed.",
                             canBeChangedText
                         )
@@ -177,11 +177,11 @@ fun ViewContext<Streetlight>.viewGalaxyFoundry() {
                         flowBlock(pointFlow) { (point, zoom) ->
                             box {
                                 bulletsOf(
-                                    modify(OpacityMost),
-                                    canBeChangedText,
+                                    bulletsMod,
                                     "latitude: ${point.lat.toFloat().format(4)}",
                                     "longitude: ${point.lng.toFloat().format(4)}",
                                     "zoom: ${zoom.format(1)}",
+                                    canBeChangedText,
                                 )
                             }
                         }
@@ -200,17 +200,38 @@ fun ViewContext<Streetlight>.viewGalaxyFoundry() {
             card(cardMod) {
                 column(queryColumnMod) {
                     column(instructionsColumnMod) {
-                        textBlock("You can open up posting to the community or curate the content yourself")
+                        textBlock("You can open up posting to the community or curate the content yourself.")
                         bulletsOf(
-                            modify(OpacityMost),
-                            canBeChangedText
+                            bulletsMod,
+                            canBeChangedText,
                         )
                     }
                     column(contentColumnMod) {
                         dropMenu(model::setPostPermission, { it.label }, flow = permissionFlow)
                     }
                 }
-                column(queryColumnMod + MarginTop2) {
+                flowBlock(permissionFlow) { permission ->
+                    if (permission == PostPermission.Founder) return@flowBlock
+                    column(modify(QueryContainer)) {
+                        column(querySubColumnMod) {
+                            column(instructionsColumnMod) {
+                                textBlock(permissionInfo1)
+                                bulletsOf(
+                                    bulletsMod,
+                                    "You can extend the role of moderation to other community members.",
+                                    canBeChangedText
+                                )
+                                if (permission == PostPermission.Everyone) {
+                                    textBlock(anonymousInfoText)
+                                }
+                            }
+                            column(contentColumnMod) {
+                                dropMenu(model::setReviewMode, { it.label }, flow = reviewModeFlow)
+                            }
+                        }
+                    }
+                }
+                column(querySubColumnMod) {
                     column(instructionsColumnMod) {
                         textBlock("Provide guidelines or requirements for the content of community posts.")
                         bulletsOf(
@@ -262,3 +283,7 @@ private val imageRequirements = "Suitable for all audiences."
 private val mapInstructions1 = """
 Choose the point on the map and zoom level that people will see first. They can move around from there.
 """
+
+private val permissionInfo1 = "You can choose to review posts before they appear in the feed."
+
+private val anonymousInfoText = "Posts from users who are not signed in will always need review before appearing in the feed."

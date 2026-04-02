@@ -17,6 +17,7 @@ import streetlight.model.data.GalaxyEdit
 import streetlight.model.data.Location
 import streetlight.model.data.LocationId
 import streetlight.model.data.PostPermission
+import streetlight.model.data.ReviewMode
 import streetlight.model.data.Song
 import streetlight.model.data.SongId
 import streetlight.model.data.amazingGrace
@@ -63,7 +64,8 @@ val mockDb by lazy {
         description = "",
         center = GeoPoint.Denver,
         zoom = 11f,
-        postPermission = PostPermission.Community,
+        postPermission = PostPermission.Accounts,
+        reviewMode = ReviewMode.PostImmediately,
         postGuide = null,
         imageUrl = null,
         thumbUrl = null,

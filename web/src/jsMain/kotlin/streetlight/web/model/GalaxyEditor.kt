@@ -6,6 +6,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import streetlight.model.data.GalaxyEdit
 import streetlight.model.data.PostPermission
+import streetlight.model.data.ReviewMode
 import streetlight.web.GalaxyPathIdRoute
 import streetlight.web.ui.ViewModel
 
@@ -37,6 +38,8 @@ class GalaxyEditor(
     fun setPostPermission(permission: PostPermission) = setGalaxy { it.copy(postPermission = permission) }
 
     fun setPostGuide(value: String) = setGalaxy { it.copy(postGuide = value) }
+
+    fun setReviewMode(value: ReviewMode) = setGalaxy { it.copy(reviewMode = value) }
 
     fun foundGalaxy() {
         val geoState = geo.stateNow
