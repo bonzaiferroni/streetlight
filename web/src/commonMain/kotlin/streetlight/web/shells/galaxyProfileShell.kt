@@ -2,34 +2,38 @@ package streetlight.web.shells
 
 import koala.css.*
 import koala.html.*
+import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kotlinx.serialization.Serializable
 import streetlight.model.data.Galaxy
 import streetlight.model.data.EventPost
 import streetlight.web.EventScoutRoute
+import streetlight.web.layouts.GalaxyKey
 import streetlight.web.layouts.layoutEventPosts
 import streetlight.web.pages.appFooter
 import streetlight.web.ui.headerOf
 
 fun FlowContent.galaxyProfileShell(content: GalaxyProfileContent) {
     val galaxy = content.galaxy; val posts = content.posts;
-    column(GalaxyProfileKey.ShellId) {
-        swapBlock(GalaxyProfileKey.SwapId, modify(Magic, OverflowClip)) {
-            headerOf(galaxy, modify(SlideLeft)) {
-                setId(GalaxyProfileKey.HeaderId)
-                setReveal(true)
+    column(GalaxyProfileKey.ShellId, modify(Gap8)) {
+        column {
+            swapBlock(GalaxyProfileKey.SwapId, modify(Magic, OverflowClip)) {
+                headerOf(galaxy, modify(SlideLeft)) {
+                    setId(GalaxyProfileKey.HeaderId)
+                    setReveal(true)
+                }
+                geoMapMount(galaxy.center, modify(SlideRight)) {
+                    setId(GalaxyProfileKey.MapId)
+                    setReveal(false)
+                }
             }
-            geoMapMount(galaxy.center, modify(SlideRight)) {
-                setId(GalaxyProfileKey.MapId)
-                setReveal(false)
+            row(modify(JustifyContentSpaceBetween)) {
+                row {
+                    galaxyMenu(content.galaxies, galaxy)
+                    switch("map", id = GalaxyProfileKey.MapSwitchId)
+                }
+                postMenu(galaxy)
             }
-        }
-        row(modify(JustifyContentSpaceBetween)) {
-            row {
-                galaxyMenu(content.galaxies, galaxy)
-                switch("map", id = GalaxyProfileKey.MapSwitchId)
-            }
-            btn("Post Event", EventScoutRoute(galaxy.path), modify(Accent))
         }
         layoutEventPosts(posts)
         appFooter(GalaxyProfileKey.SOURCE)

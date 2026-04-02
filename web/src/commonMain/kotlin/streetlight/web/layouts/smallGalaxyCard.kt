@@ -16,7 +16,7 @@ fun FlowContent.smallGalaxyCard(galaxy: Galaxy) {
                 fillImage(galaxy.imageUrl, modify(Size100P))
             }
             column(modify(Flex2, Height16)) {
-                column(modify(Flex1, Padding1)) {
+                column(modify(Flex1, Padding1, OverflowHidden, FadeBottom)) {
                     action(route) {
                         heading4(galaxy.name, modify(LineHeight1))
                     }

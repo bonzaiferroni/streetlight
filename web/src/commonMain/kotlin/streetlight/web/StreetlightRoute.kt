@@ -30,7 +30,6 @@ enum class StreetlightScreen(
     SongProfile("song-profile", { path -> path.provideRouteFromPath { SongProfileRoute(SongId(it)) } }),
     TalentProfile("talent-profile", { path -> path.provideRouteFromPath { TalentProfileRoute(TalentId(it)) } }),
     EditTalent("edit-talent", { path -> EditTalentRoute(path.provideId { TalentId(it)} ) }),
-    ReadEvent("create-event", { OldEventScoutRoute() }),
     LocationProfile("location", { path -> path.provideRouteFromPath { LocationIdRoute(LocationId(it)) } }),
     LocationAdmin("location-admin", { path -> path.provideRouteFromPath { LocationAdminRoute(LocationId(it)) } }),
     ScoutMap("scout-map", { ScoutMapRoute }),
@@ -38,6 +37,7 @@ enum class StreetlightScreen(
     GalaxyList("galaxies", { GalaxyListRoute }),
     GalaxyProfile("g", { path -> path.provideRouteFromPath { GalaxyPathIdRoute(it) }}),
     EventScout("post-event", { path -> path.provideRouteFromPath { EventScoutRoute(it) }}),
+    LocationScout("post-location", { path -> path.provideRouteFromPath { LocationScoutRoute(it) } }),
     EditProfile("edit-profile", { EditProfileRoute }),
     SiteConfig("config", { SiteConfigRoute }),
 }
@@ -145,15 +145,6 @@ data class EditTalentRoute(
     override val title get() = "Talent"
 }
 
-@Serializable
-data class OldEventScoutRoute(
-    val location: Location? = null,
-    val link: String? = null,
-): StreetlightRoute {
-    override val screen get() = StreetlightScreen.ReadEvent
-    override val title get() = "Event Scout"
-}
-
 data class LocationIdRoute(
     val locationId: LocationId
 ): StreetlightRoute, StringIdRoute {
@@ -212,6 +203,11 @@ data class GalaxyPathIdRoute(override val pathId: String): StreetlightRoute, Pat
 data class EventScoutRoute(override val pathId: String): StreetlightRoute, PathIdRoute {
     override val screen get() = StreetlightScreen.EventScout
     override val title get() = "Event Scout"
+}
+
+data class LocationScoutRoute(override val pathId: String): StreetlightRoute, PathIdRoute {
+    override val screen get() = StreetlightScreen.LocationScout
+    override val title get() = "Location Scout"
 }
 
 object EditProfileRoute: StreetlightRoute {

@@ -6,7 +6,6 @@ import koala.model.flowerOf
 import streetlight.model.data.Location
 import streetlight.model.data.toEdit
 import streetlight.web.LocationAdminRoute
-import streetlight.web.OldEventScoutRoute
 import streetlight.web.model.Streetlight
 import streetlight.web.pages.appFooter
 import streetlight.web.shells.cardOf
@@ -29,7 +28,7 @@ fun RenderContext.viewLocationAdmin(
                         row {
                             textBlock("This location has an event page that we can try to read.", modify(Flex1))
                             button("read events", onClick = {
-                                app.portal.go(OldEventScoutRoute(location, link))
+                                // app.portal.go(OldEventScoutRoute(location, link))
                             })
                         }
                     }
