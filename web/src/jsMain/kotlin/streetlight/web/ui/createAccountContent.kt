@@ -21,28 +21,28 @@ fun RenderContext.createAccountContent(app: Streetlight) {
             textField(
                 label = "username",
                 placeholder = "username",
-                bindFlow = creator.usernameFlow,
-                onChangeValue = creator::setUsername
+                flow = creator.usernameFlow,
+                onValue = creator::setUsername
             )
             textField(
                 label = "email",
                 placeholder = "email (optional)",
-                bindFlow = creator.emailFlow,
-                onChangeValue = creator::setEmail
+                flow = creator.emailFlow,
+                onValue = creator::setEmail
             )
             textBlock("Your email address is optional. It can be used to reset your password. " +
                     "Streetlight will never contact you without your request.")
             textField(
                 label = "password",
                 placeholder = "password",
-                bindFlow = creator.passwordFlow,
-                onChangeValue = creator::setPassword
+                flow = creator.passwordFlow,
+                onValue = creator::setPassword
             )
             textField(
                 label = "confirm password",
                 placeholder = "confirm password",
-                bindFlow = creator.confirmPasswordFlow,
-                onChangeValue = creator::setConfirmPassword
+                flow = creator.confirmPasswordFlow,
+                onValue = creator::setConfirmPassword
             )
             textBlock(
                 binding = creator.isValidFlow,

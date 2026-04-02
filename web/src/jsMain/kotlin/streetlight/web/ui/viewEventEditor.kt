@@ -92,8 +92,8 @@ fun ViewContext<EventEditor>.primaryFields() {
         column(modify(Flex3)) {
             textField(
                 label = "title",
-                onChangeValue = model::setEventTitle,
-                bindFlow = model.titleFlow,
+                onValue = model::setEventTitle,
+                flow = model.titleFlow,
                 modifiers = modify(Width100P),
                 placeholder = "Event Title"
             )
@@ -102,7 +102,7 @@ fun ViewContext<EventEditor>.primaryFields() {
                     row {
                         checkBox("Free event", model::setFree, model.isFreeFlow)
                         if (!isFree) {
-                            textField("cost", onChangeValue = model::setCost, bindFlow = model.costFlow)
+                            textField("cost", onValue = model::setCost, flow = model.costFlow)
                         }
                     }
                 }
@@ -161,8 +161,8 @@ fun ViewContext<EventEditor>.eventLinks() {
                 val isEdit = index == linkIndex
                 if (isEdit) {
                     row() {
-                        textField("label", onChangeValue = ::setLabel, bindFlow = labelFlow)
-                        textField("url", modify(Flex1), onChangeValue = ::setUrl, bindFlow = urlFlow)
+                        textField("label", onValue = ::setLabel, flow = labelFlow)
+                        textField("url", modify(Flex1), onValue = ::setUrl, flow = urlFlow)
                         icon(SvgFile.Check, ::finalizeEdit)
                     }
                 } else {

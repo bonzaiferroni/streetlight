@@ -21,7 +21,7 @@ import streetlight.model.external.toPlace
 import streetlight.web.model.Streetlight
 import streetlight.web.model.IconEntity
 
-class LocationScout(
+class LocationScoutOld(
     private val scope: CoroutineScope,
     override val app: Streetlight,
 ): ViewModel {

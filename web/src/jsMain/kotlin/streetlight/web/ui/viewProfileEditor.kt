@@ -48,7 +48,7 @@ fun ViewContext<Streetlight>.viewProfileEditor() {
                 row(modify(AlignItemsStart)) {
                     imageDrop(avatarFlow, ::setAvatar, modify(Width16, AspectRatio1))
                     row {
-                        textField("username", onChangeValue = ::setUsername, bindFlow = usernameFlow)
+                        textField("username", onValue = ::setUsername, flow = usernameFlow)
                         flowBlock(isAvailableFlow, defaultMagic) {
                             val isAvailable = it ?: return@flowBlock
                             val text = if (isAvailable) "👍" else "❌"

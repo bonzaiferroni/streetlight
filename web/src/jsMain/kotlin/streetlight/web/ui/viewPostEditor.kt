@@ -16,8 +16,8 @@ fun RenderContext.viewPostEditor(app: Streetlight) {
         row {
             textField(
                 label = "url",
-                onChangeValue = model::setUrl,
-                bindFlow = model.infoUrlFlow,
+                onValue = model::setUrl,
+                flow = model.infoUrlFlow,
                 modifiers = modify(Flex1),
                 placeholder = "Info link"
             )
@@ -31,8 +31,8 @@ fun RenderContext.viewPostEditor(app: Streetlight) {
             column(modify(Flex2, AlignItemsStretch)) {
                 textField(
                     label = "headline",
-                    onChangeValue = model::setHeadline,
-                    bindFlow = model.headlineFlow,
+                    onValue = model::setHeadline,
+                    flow = model.headlineFlow,
                     placeholder = "Story Headline"
                 )
                 textEditor(

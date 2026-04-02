@@ -22,8 +22,8 @@ import org.w3c.dom.events.KeyboardEvent
 fun RenderContext.textField(
     label: String? = null,
     modifiers: ModifierSet? = null,
-    onChangeValue: ((String) -> Unit)? = null,
-    bindFlow: Flow<String?>? = null,
+    onValue: ((String) -> Unit)? = null,
+    flow: Flow<String?>? = null,
     textModifiers: ModifierSet? = null,
     id: Id? = null,
     placeholder: String? = label,
@@ -42,12 +42,12 @@ fun RenderContext.textField(
             addModifiers(Width100P, textModifiers)
             setId(id)
             type = InputType.text
-            onChangeValue?.let { callback ->
+            onValue?.let { callback ->
                 onInputFunction = {
                     val element = (it.target as HTMLInputElement)
                     val newValue = element.value
                     if (newValue != currentValue) {
-                        if (bindFlow != null) {
+                        if (flow != null) {
                             element.value = currentValue
                         } else {
                             currentValue = newValue
@@ -76,9 +76,9 @@ fun RenderContext.textField(
         })
     }
 
-    bindFlow?.let {
+    flow?.let {
         renderScope.launch {
-            bindFlow.collect { value ->
+            flow.collect { value ->
                 val value = value ?: ""
                 if (value != currentValue) {
                     currentValue = value
@@ -97,8 +97,8 @@ fun <T> WireContext<T>.textField(
     write: (TextUpdate<T>) -> T,
 ) = textField(
     label = label,
-    bindFlow = state.flow.mapDistinct { read(it) ?: "" },
-    onChangeValue = { text -> state.set { write(TextUpdate(it, text)) } },
+    flow = state.flow.mapDistinct { read(it) ?: "" },
+    onValue = { text -> state.set { write(TextUpdate(it, text)) } },
 )
 
 data class TextUpdate<T>(

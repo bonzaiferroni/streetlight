@@ -41,14 +41,14 @@ fun RenderContext.viewMusicianHub(
                             textField(
                                 label = "title",
                                 placeholder = "Song title",
-                                bindFlow = model.titleFlow,
-                                onChangeValue = model::setSongTitle
+                                flow = model.titleFlow,
+                                onValue = model::setSongTitle
                             )
                             textField(
                                 label = "artist",
                                 placeholder = "Artist",
-                                bindFlow = model.artistFlow,
-                                onChangeValue = model::setArtist
+                                flow = model.artistFlow,
+                                onValue = model::setArtist
                             )
                         }
                         button("Add new song", modify(Accent), onClick = model::addSong)

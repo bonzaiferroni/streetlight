@@ -27,6 +27,8 @@ import org.w3c.fetch.RequestInit
 import org.w3c.fetch.Response
 import org.w3c.files.Blob
 import streetlight.model.data.AreaTransitState
+import streetlight.model.data.ProjectId
+import streetlight.model.data.toProjectId
 import streetlight.web.model.UserCred
 import kotlin.js.json
 import kotlin.let
@@ -216,6 +218,7 @@ suspend inline fun <reified Returned> Response.tryDecodeText(): Returned? {
             Double::class -> text.toDoubleOrNull() as Returned?
             Float::class -> text.toFloatOrNull() as Returned?
             Boolean::class -> text.toBooleanStrictOrNull() as Returned?
+            ProjectId::class -> text.toProjectId<Returned>()
 
             else -> jsonConfig.decodeFromString<Returned>(text)
         }

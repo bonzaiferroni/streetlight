@@ -72,7 +72,7 @@ fun ViewContext<Streetlight>.viewGalaxyFoundry() {
                         }
                     }
                     column(contentColumnMod + Gap0) {
-                        textField("name", onChangeValue = model::setName, bindFlow = nameFlow)
+                        textField("name", onValue = model::setName, flow = nameFlow)
                         row(modify(footnoteMod)) {
                             textBlock(nameCharacters)
                             flowBlock(nameFlow) { name ->
@@ -95,7 +95,7 @@ fun ViewContext<Streetlight>.viewGalaxyFoundry() {
                     }
                     column(contentColumnMod) {
                         column(modify(Gap0)) {
-                            textField("path", onChangeValue = model::setPath, bindFlow = pathFlow)
+                            textField("path", onValue = model::setPath, flow = pathFlow)
                             row(modify(footnoteMod)) {
                                 textBlock(pathCharacters)
                                 flowBlock(pathFlow) { path ->

@@ -11,8 +11,8 @@ fun RenderContext.viewChatRoom(app: Streetlight) {
             textBlock("${message.source}: ${message.text}")
         }
         textField(
-            bindFlow = model.sendFlow,
-            onChangeValue = model::setMessage,
+            flow = model.sendFlow,
+            onValue = model::setMessage,
             modifiers = modify(Width100P),
             onEnter = model::sendMessage
         )

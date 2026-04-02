@@ -4,7 +4,7 @@ import kampfire.api.TableId
 
 sealed interface ProjectId: TableId<String>
 
-inline fun <reified T: ProjectId> String.toProjectId(): T = when (T::class) {
+inline fun <reified T> String.toProjectId(): T = when (T::class) {
     GalaxyId::class -> GalaxyId(this) as T
     ContactId::class -> ContactId(this) as T
     EventId::class -> EventId(this) as T
@@ -18,5 +18,6 @@ inline fun <reified T: ProjectId> String.toProjectId(): T = when (T::class) {
     UploadFileId::class -> UploadFileId(this) as T
     TalentId::class -> TalentId(this) as T
     EventPostId::class -> EventPostId(this) as T
+    LocationPostId::class -> LocationPostId(this) as T
     else -> error("invalid projectId type: ${T::class.simpleName}")
 }

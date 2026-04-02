@@ -46,6 +46,7 @@ value class LocationId(override val value: String): ProjectId {
 data class LocationEdit(
     val locationId: LocationId? = null,
     val name: String? = null,
+    val isOwner: Boolean = false,
     val description: String? = null,
     val address: String? = null,
     val notes: String? = null,
@@ -57,7 +58,6 @@ data class LocationEdit(
     val menuUrl: String? = null,
     val imageUrl: String? = null,
     val thumbUrl: String? = null,
-    val isHost: Boolean = false,
 ) {
     val isValid get() = name != null && geoPoint != null
 }

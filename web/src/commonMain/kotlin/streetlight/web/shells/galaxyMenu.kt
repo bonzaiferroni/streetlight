@@ -20,11 +20,12 @@ import koala.html.row
 import koala.html.setAttribute
 import koala.html.setJsonData
 import kotlinx.html.DIV
+import kotlinx.html.FlowContent
 import streetlight.model.data.Galaxy
 import streetlight.web.HomeRoute
 import streetlight.web.layouts.GalaxyKey
 
-fun DIV.galaxyMenu(
+fun FlowContent.galaxyMenu(
     galaxies: List<Galaxy>,
     currentGalaxy: Galaxy?,
 ) {
@@ -43,7 +44,7 @@ fun DIV.galaxyMenu(
     }
 }
 
-fun DIV.galaxyMenuItems(
+fun FlowContent.galaxyMenuItems(
     galaxies: List<Galaxy>,
     currentGalaxy: Galaxy?,
 ) {

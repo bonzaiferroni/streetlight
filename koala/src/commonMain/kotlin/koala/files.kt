@@ -48,6 +48,8 @@ object SvgFile: FileSet<Svg>() {
     val Minus = add("minus.svg")
     val Helm = add("helm.svg")
     val Github = add("github.svg")
+    val Calendar = add("calendar.svg")
+    val Ticket = add("ticket.svg")
 }
 
 object LottieFile: FileSet<Lottie>() {

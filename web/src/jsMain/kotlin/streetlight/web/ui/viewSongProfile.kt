@@ -18,14 +18,14 @@ fun RenderContext.viewSongProfile(app: Streetlight) {
                     textField(
                         label = "title",
                         placeholder = "Song title",
-                        bindFlow = model.titleFlow,
-                        onChangeValue = model::setTitle
+                        flow = model.titleFlow,
+                        onValue = model::setTitle
                     )
                     textField(
                         label = "artist",
                         placeholder = "Artist",
-                        bindFlow = model.artistFlow,
-                        onChangeValue = model::setArtist
+                        flow = model.artistFlow,
+                        onValue = model::setArtist
                     )
                 }
                 button("Update", modify(Accent), onClick = model::updateSong)

@@ -9,8 +9,8 @@ import kotlin.jvm.JvmInline
 
 @Serializable
 data class LocationPost(
-    override val postId: EventPostId,
-    override val galaxyId: GalaxyId,
+    override val postId: LocationPostId,
+    override val galaxyId: GalaxyId?,
     override val username: String?,
     override val location: Location?,
     val postTitle: String?,
@@ -41,7 +41,6 @@ value class LocationPostId(override val value: String): ProjectId, MapPostId {
 @Serializable
 data class LocationPostRow(
     val postId: LocationPostId,
-    val galaxyId: GalaxyId,
     val locationId: LocationId?,
     val userId: UserId?,
     val username: String?,
@@ -52,12 +51,21 @@ data class LocationPostRow(
 )
 
 @Serializable
-data class LocationPostEdit(
-    val postId: LocationPostId? = null,
-    val galaxyId: GalaxyId? = null,
-    val locationId: LocationId? = null,
+data class NewLocationPost(
+    val locationId: LocationId,
     val title: String? = null,
     val text: String? = null,
+)
+
+@Serializable
+data class NewGalaxyLocationPost(
+    val postId: LocationPostId,
+    val galaxyIds: List<GalaxyId>
 ) {
-    val isValid get () = true // !title.isNullOrBlank()
+    val isValid get() = galaxyIds.isNotEmpty()
 }
+
+@Serializable
+data class GalaxyPostResult(
+    val results: Map<GalaxyId, PostResult>
+)

@@ -31,7 +31,9 @@ class ApiClient(private val client: FetchClient) {
     suspend fun searchLocations(query: String) = client.get(Api.Locations.Search) {
         param(it.query, query)
     }
-
+    suspend fun createOrEditLocation(location: LocationEdit) = client.post(Api.Locations.CreateOrEdit, location)
+    suspend fun postLocation(location: NewLocationPost) = client.post(Api.Locations.PostLocation, location)
+    suspend fun postGalaxyLocation(location: NewGalaxyLocationPost) = client.post(Api.Locations.PostGalaxyLocation, location)
     suspend fun queryMap(request: MapQuery) = client.get(Api.Events.QueryMap, request.toQuery())
 
     // users
@@ -40,8 +42,6 @@ class ApiClient(private val client: FetchClient) {
     suspend fun checkUsername(username: String) = client.post(UserApi.CheckUsername, username)
     suspend fun uploadAvatar(blobUrl: String) = client.uploadBlob(Api.Users.UploadAvatar.path, blobUrl)
     suspend fun uploadImage(blobUrl: String) = client.uploadBlob(Api.Users.UploadImage.path, blobUrl)
-
-    suspend fun createOrEditLocation(location: LocationEdit) = client.post(Api.Locations.Edit, location)
     suspend fun queryLocation(point: GeoPoint) = client.get(Api.Locations.QueryPoint, point.toQuery())
 
     suspend fun readStoryUrl(url: String) = client.get(Api.Stories.ReadUrl) {

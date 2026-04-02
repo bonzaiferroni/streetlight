@@ -14,7 +14,7 @@ import streetlight.model.data.Place
 import streetlight.web.model.*
 
 fun RenderContext.viewLocationScoutOld(app: Streetlight) {
-    val model = LocationScout(renderScope, app)
+    val model = LocationScoutOld(renderScope, app)
     val dataFlow = model.stateFlow.mapDistinct {
         LocationScoutData(
             places = it.places,
@@ -58,7 +58,7 @@ private data class LocationScoutData(
     val location: Location?,
 )
 
-fun ViewContext<LocationScout>.findPointStage() {
+fun ViewContext<LocationScoutOld>.findPointStage() {
     val queryFlow = model.stateFlow.mapDistinct { it.query }
     val websiteFlow = model.stateFlow.mapDistinct { it.website }
     val limitCityFlow = model.stateFlow.mapDistinct { it.limitCity }
@@ -112,7 +112,7 @@ fun ViewContext<LocationScout>.findPointStage() {
     }
 }
 
-fun ViewContext<LocationScout>.choosePlaceStage(places: List<Place>) {
+fun ViewContext<LocationScoutOld>.choosePlaceStage(places: List<Place>) {
     card {
         messageBox(model.messageFlow, modify(Flex1))
         places.forEach { place ->
@@ -130,7 +130,7 @@ fun ViewContext<LocationScout>.choosePlaceStage(places: List<Place>) {
     }
 }
 
-fun ViewContext<LocationScout>.reviewStage(edit: LocationEdit) {
+fun ViewContext<LocationScoutOld>.reviewStage(edit: LocationEdit) {
     val editFlow = model.stateFlow.mapDistinct { it.edit }.filterNotNull()
 
     column {
@@ -180,7 +180,7 @@ fun ViewContext<LocationScout>.reviewStage(edit: LocationEdit) {
     }
 }
 
-fun ViewContext<LocationScout>.finishedStage(location: Location) {
+fun ViewContext<LocationScoutOld>.finishedStage(location: Location) {
     val portal = model.app.portal
 
     card {

@@ -29,19 +29,21 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
     object Locations: GetByTableIdEndpoint<LocationId, Location>(this, "locations") {
         @Deprecated("use edit")
         object Create: PostEndpoint<Place, LocationId>(this, "create")
-        object Edit: PostEndpoint<LocationEdit, Location>(this, "edit")
+        object CreateOrEdit: PostEndpoint<LocationEdit, Location>(this, "edit")
         object Street: GetByTableIdEndpoint<GalaxyId, List<Location>>(this, "street")
         @Deprecated("use edit")
         object Update: PostEndpoint<Location, Boolean>(this, "update")
         object Search: GetEndpoint<List<Location>>(this, "search") {
             val query = addStringParam("q")
         }
-        object ReadTop: GetEndpoint<List<Location>>(this, "read_top") {
+        object ReadTop: GetEndpoint<List<Location>>(this, "read-top") {
             val count = addIntParam("count")
         }
-        object QueryPoint: QueryEndpoint<GeoPoint, List<Location>>(this, "query_point")
-        object ParseLocation: PostEndpoint<ParseRequest, LocationEdit>(this, "parse_location")
-        object QueryBounds: PostEndpoint<GeoBounds, List<LocationInfo>>(this, "query_bounds")
+        object QueryPoint: QueryEndpoint<GeoPoint, List<Location>>(this, "query-point")
+        object ParseLocation: PostEndpoint<ParseRequest, LocationEdit>(this, "parse-location")
+        object QueryBounds: PostEndpoint<GeoBounds, List<LocationInfo>>(this, "query-bounds")
+        object PostLocation: PostEndpoint<NewLocationPost, LocationPostId>(this, "create-post")
+        object PostGalaxyLocation: PostEndpoint<NewGalaxyLocationPost, GalaxyPostResult>(this, "create-galaxy-post")
     }
 
     object Songs: GetEndpoint<List<Song>>(this, "songs") {
@@ -113,7 +115,6 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object ReadGalaxies: PostEndpoint<List<GalaxyId>, List<Galaxy>>(this, "read-galaxies")
         object Path: GetByIdEndpoint<String, Galaxy>(this, "path")
         object PostEvent: PostEndpoint<EventPostEdit, EventPostId>(this, "post-event")
-        object PostLocation: PostEndpoint<LocationPostEdit, LocationPostId>(this, "post-location")
         object ReadMultiPosts: PostEndpoint<List<GalaxyId>, List<EventPost>>(this, "multi-posts")
         object ReadPosts: GetByTableIdEndpoint<GalaxyId, List<EventPost>>(this, "posts")
         object ReadPost: GetByTableIdEndpoint<EventPostId, EventPost>(this, "post")

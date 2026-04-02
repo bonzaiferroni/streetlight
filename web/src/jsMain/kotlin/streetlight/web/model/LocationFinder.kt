@@ -1,3 +1,5 @@
+@file:OptIn(FlowPreview::class)
+
 package streetlight.web.model
 
 import kampfire.model.GeoPoint
@@ -7,8 +9,11 @@ import koala.SvgFile
 import koala.dom.UIMessage
 import koala.dom.set
 import koala.model.PanPoint
+import koala.model.mapDistinct
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
 import streetlight.model.data.Location
 import streetlight.model.data.LocationEdit
@@ -30,6 +35,19 @@ class LocationFinder(
     val messageFlow = msg.flow
     val stateFlow = state.flow
     val stateNow get() = state.now
+
+    init {
+        scope.launch {
+            stateFlow.mapDistinct { it.query }.debounce(500).collect { query ->
+                val locations = if (query.isBlank()) {
+                    emptyList()
+                } else {
+                    api.searchLocations(query) ?: emptyList()
+                }
+                state.set { it.copy(locations = locations) }
+            }
+        }
+    }
 
     fun setQuery(value: String) = state.set { it.copy(query = value) }
 

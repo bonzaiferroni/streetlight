@@ -5,7 +5,7 @@ import kotlinx.datetime.Instant
 
 sealed interface MapPost {
     val postId: MapPostId
-    val galaxyId: GalaxyId
+    val galaxyId: GalaxyId?
     val username: String?
     val location: Location?
     val event: Event?
