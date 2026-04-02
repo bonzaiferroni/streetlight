@@ -6,9 +6,9 @@ import kotlinx.html.FlowContent
 
 fun FlowContent.buttonMenu(
     label: String,
-    id: Id = Id("${label.lowercase().replace(" ", "-")}-menu"),
     modifiers: ModifierSet? = null,
     menuModifiers: ModifierSet? = null,
+    id: Id = Id("${label.lowercase().replace(" ", "-")}-menu"),
     block: DIV.() -> Unit = {}
 ) {
     val anchor = Anchor("${id.identifier}-anchor")

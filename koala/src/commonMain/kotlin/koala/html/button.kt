@@ -12,10 +12,18 @@ fun FlowContent.button(
     block: BUTTON.() -> Unit = {}
 ) {
     button {
-        addModifiers(BtnKey.Class, modifiers)
-        block()
-        +text
+        configureButton(text, modifiers, block)
     }
+}
+
+fun BUTTON.configureButton(
+    text: String,
+    modifiers: ModifierSet? = null,
+    block: BUTTON.() -> Unit = {}
+) {
+    addModifiers(BtnKey.Class, modifiers)
+    block()
+    +text
 }
 
 fun FlowContent.button(
@@ -24,12 +32,20 @@ fun FlowContent.button(
     block: BUTTON.() -> Unit = {}
 ) {
     button {
-        addModifiers(IconButtonKey.Class, modify(IconKey.Class, modifiers))
-        svg?.let {
-            setStyle(Property.MaskUrl.to(UrlValue(svg)))
-        }
-        block()
+        configureButton(svg, modifiers, block)
     }
+}
+
+fun BUTTON.configureButton(
+    svg: Svg? = null,
+    modifiers: ModifierSet? = null,
+    block: BUTTON.() -> Unit = {}
+) {
+    addModifiers(IconButtonKey.Class, modify(IconKey.Class, modifiers))
+    svg?.let {
+        setStyle(Property.MaskUrl.to(UrlValue(svg)))
+    }
+    block()
 }
 
 object IconButtonKey {

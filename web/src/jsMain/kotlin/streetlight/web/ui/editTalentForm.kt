@@ -36,18 +36,18 @@ fun RenderContext.editTalentForm(app: Streetlight) {
                 flow = state.flow.mapDistinct { it.talentType }
             )
 
-            button(
-                text = { if (it.talentId != null) "edit" else "share" },
-                modifiers = modify(Accent),
-                onClick = {
-                    renderScope.launch {
-                        val talent = api.editTalent(state.now) ?: return@launch
-                        console.log("edit talent: ${talent.name}")
-                        userCache.talent.addItem(talent)
-                        portal.goBack()
-                    }
-                }
-            )
+//            button(
+//                text = { if (it.talentId != null) "edit" else "share" },
+//                modifiers = modify(Accent),
+//                onClick = {
+//                    renderScope.launch {
+//                        val talent = api.editTalent(state.now) ?: return@launch
+//                        console.log("edit talent: ${talent.name}")
+//                        userCache.talent.addItem(talent)
+//                        portal.goBack()
+//                    }
+//                }
+//            )
         }
     }
 }

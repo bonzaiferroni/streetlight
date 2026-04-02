@@ -32,11 +32,12 @@ class LocationScout(
     }
 
     fun setTitle(value: String) = state.set { it.copy(title = value) }
+
     fun setText(value: String) = state.set { it.copy(text = value) }
 
-    fun addGalaxyId(galaxyId: GalaxyId) {
-        state.set { it.copy(galaxyIds = it.galaxyIds + galaxyId) }
-    }
+    fun addGalaxyId(galaxyId: GalaxyId) = state.set { it.copy(galaxyIds = it.galaxyIds + galaxyId) }
+
+    fun removeGalaxyId(galaxyId: GalaxyId) = state.set { it.copy(galaxyIds = it.galaxyIds - galaxyId) }
 
     fun createPost() {
         val location = location ?: error("location not found")

@@ -31,7 +31,7 @@ fun FlowContent.galaxyMenu(
     galaxies: List<Galaxy>,
     currentGalaxy: Galaxy?,
 ) {
-    buttonMenu("galaxies", GalaxyMenuKey.Id) {
+    buttonMenu("galaxies", id = GalaxyMenuKey.Id) {
         card(modify(ButtonMenu.CardMod)) {
             setJsonData(GalaxyKey.TopGalaxies, galaxies)
 

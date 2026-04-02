@@ -10,7 +10,7 @@ import streetlight.web.LocationScoutRoute
 import streetlight.web.layouts.GalaxyKey
 
 fun FlowContent.postMenu(galaxy: Galaxy) {
-    buttonMenu("Create Post", modifiers = modify(Accent)) {
+    buttonMenu("Create Post", modify(Accent)) {
         card(ButtonMenu.CardMod) {
             btn("Post Event", EventScoutRoute(galaxy.path), modify(Accent))
             btn("Post Location", LocationScoutRoute(galaxy.path), modify(Accent))

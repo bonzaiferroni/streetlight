@@ -21,11 +21,11 @@ fun RenderContext.textEditor(
     modifiers: ModifierSet? = null,
     textModifiers: ModifierSet? = null,
     id: Id? = null,
-    onChangeValue: ((String) -> Unit)? = null,
-    bindFlow: Flow<String>? = null,
+    onValue: ((String) -> Unit)? = null,
+    flow: Flow<String?>? = null,
     rows: Int = 5,
-    placeholder: String? = null,
-    block: (TEXTAREA.() -> Unit)? = null
+    placeholder: String? = label,
+    block: TEXTAREA.() -> Unit = {}
 ): HTMLTextAreaElement {
     val parent = div {
         addModifiers(modifiers)
@@ -45,7 +45,7 @@ fun RenderContext.textEditor(
                 this.placeholder = it
             }
 
-            onChangeValue?.let { callback ->
+            onValue?.let { callback ->
                 onInputFunction = {
                     val value = (it.target as HTMLTextAreaElement).value
                     if (value != currentValue) {
@@ -54,13 +54,14 @@ fun RenderContext.textEditor(
                     }
                 }
             }
-            block?.invoke(this)
+            block()
         }
     }.first() as HTMLTextAreaElement
 
-    bindFlow?.let {
+    flow?.let {
         renderScope.launch {
-            bindFlow.collect { value ->
+            flow.collect { value ->
+                val value = value ?: ""
                 if (value != currentValue) {
                     currentValue = value
                     element.value = value

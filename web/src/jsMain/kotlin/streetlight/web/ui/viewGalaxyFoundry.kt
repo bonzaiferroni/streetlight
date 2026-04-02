@@ -160,7 +160,7 @@ fun ViewContext<Streetlight>.viewGalaxyFoundry() {
                         )
                     }
                     column(contentColumnMod) {
-                        textEditor("description", onChangeValue = model::setDescription, bindFlow = descriptionFlow)
+                        textEditor("description", onValue = model::setDescription, flow = descriptionFlow)
                     }
                 }
             }
@@ -241,7 +241,7 @@ fun ViewContext<Streetlight>.viewGalaxyFoundry() {
                         )
                     }
                     column(contentColumnMod) {
-                        textEditor("Post Guide", onChangeValue = model::setPostGuide, bindFlow = guideFlow)
+                        textEditor("Post Guide", onValue = model::setPostGuide, flow = guideFlow)
                     }
                 }
             }
