@@ -6,12 +6,12 @@ import kotlinx.html.FlowContent
 
 fun FlowContent.buttonMenu(
     label: String,
-    id: Id = Id("${label}-menu"),
+    id: Id = Id("${label.lowercase().replace(" ", "-")}-menu"),
     modifiers: ModifierSet? = null,
     menuModifiers: ModifierSet? = null,
     block: DIV.() -> Unit = {}
 ) {
-    val anchor = Anchor("${id}-anchor")
+    val anchor = Anchor("${id.identifier}-anchor")
 
     popover(id, anchor, modify(menuModifiers, Magic, SlideUp)) {
         block()
@@ -20,4 +20,8 @@ fun FlowContent.buttonMenu(
         setAnchor(anchor)
         setAttribute(Attribute.PopoverTarget, id.identifier)
     }
+}
+
+object ButtonMenu {
+    val CardMod = modify(BlurBackdrop, PrimaryCardBg, BorderRadius4, Margin1)
 }

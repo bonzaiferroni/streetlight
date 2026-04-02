@@ -10,19 +10,10 @@ import streetlight.web.LocationScoutRoute
 import streetlight.web.layouts.GalaxyKey
 
 fun FlowContent.postMenu(galaxy: Galaxy) {
-    popover(PostMenuKey.Id, PostMenuKey.Anchor, modify(Magic, SlideUp)) {
-        card(modify(BlurBackdrop, BorderRadius4, PrimaryCardBg, Margin1)) {
-            btn("Post Event", EventScoutRoute(galaxy.path))
-            btn("Post Location", LocationScoutRoute(galaxy.path))
+    buttonMenu("Create Post", modifiers = modify(Accent)) {
+        card(ButtonMenu.CardMod) {
+            btn("Post Event", EventScoutRoute(galaxy.path), modify(Accent))
+            btn("Post Location", LocationScoutRoute(galaxy.path), modify(Accent))
         }
     }
-    button("☰ Create Post", modify(Accent)) {
-        setAnchor(PostMenuKey.Anchor)
-        setAttribute(Attribute.PopoverTarget, PostMenuKey.Id.identifier)
-    }
-}
-
-object PostMenuKey {
-    val Id = Id("create-post-menu")
-    val Anchor = Anchor("create-post-menu")
 }

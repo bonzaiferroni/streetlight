@@ -2,7 +2,9 @@ package streetlight.web.ui
 
 import koala.css.*
 import koala.dom.*
+import koala.html.ButtonMenu
 import koala.html.buttonMenu
+import koala.html.card
 import koala.html.filigree
 import koala.html.heading1
 import koala.html.heading3
@@ -76,8 +78,10 @@ fun ViewContext<LocationScout>.postLocationEditor(location: Location, galaxy: Ga
                     textProperty("Post to", galaxyNames)
                     if (availableGalaxies.isNotEmpty()) {
                         buttonMenu("galaxies") {
-                            availableGalaxies.forEach { galaxy ->
-                                button(galaxy.name, onClick = { model.addGalaxyId(galaxy.galaxyId) })
+                            card(ButtonMenu.CardMod) {
+                                availableGalaxies.forEach { galaxy ->
+                                    button(galaxy.name, onClick = { model.addGalaxyId(galaxy.galaxyId) })
+                                }
                             }
                         }
                     }
