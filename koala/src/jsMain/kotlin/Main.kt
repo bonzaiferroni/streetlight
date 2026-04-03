@@ -14,7 +14,7 @@ fun main() {
 
     val hash = window.location.hash.takeIf { it.isNotEmpty() }
     if (hash == null) {
-        // revealContent()
+        revealContent()
     }
 
     initElement(body)

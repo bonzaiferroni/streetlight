@@ -117,8 +117,8 @@ fun viewApp() {
             }
         }
 
-//        delay(100)
-//        revealContent()
+        delay(100)
+        revealContent()
     }
 }
 

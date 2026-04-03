@@ -2,6 +2,7 @@ package streetlight.web.ui
 
 import koala.css.ModifierSet
 import koala.dom.*
+import koala.html.SiteImage
 import streetlight.model.data.Location
 
 fun RenderContext.cardOf(
@@ -11,8 +12,8 @@ fun RenderContext.cardOf(
 ) {
     cardOf(
         title = location.name,
-        thumbUrl = location.thumbUrl,
-        description = location.description,
+        thumbUrl = location.thumbUrl ?: SiteImage.placeholderThumb,
+        description = location.description ?: location.address,
         modifiers = modifiers,
         onClick = onClick,
     )

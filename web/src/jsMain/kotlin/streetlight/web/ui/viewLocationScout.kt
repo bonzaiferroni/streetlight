@@ -5,7 +5,6 @@ import koala.css.*
 import koala.dom.*
 import koala.html.ButtonMenu
 import koala.html.buttonMenu
-import koala.html.card
 import koala.html.filigree
 import koala.html.heading1
 import koala.html.heading3
@@ -13,7 +12,9 @@ import koala.html.section
 import koala.html.spacer
 import koala.model.mapDistinct
 import streetlight.model.data.Galaxy
-import streetlight.model.data.Location
+import streetlight.model.data.GalaxyPostResult
+import streetlight.model.data.PostResult
+import streetlight.web.GalaxyPathIdRoute
 import streetlight.web.LocationScoutRoute
 import streetlight.web.model.LocationFinder
 import streetlight.web.model.LocationScout
@@ -22,8 +23,13 @@ import streetlight.web.model.Streetlight
 fun RenderContext.viewLocationScout(app: Streetlight, galaxy: Galaxy, galaxies: List<Galaxy>) {
     val sectionMod = modify()
     val finder = LocationFinder(renderScope, app)
-    val scout = LocationScout(renderScope, app, finder, galaxy.galaxyId)
+    val model = LocationScout(renderScope, app, finder, galaxy.galaxyId)
     val locationFlow = finder.stateFlow.mapDistinct { it.location }
+    val resultFlow = model.stateFlow.mapDistinct { it.result }
+    val allGalaxies = when (galaxies.any { it.galaxyId == galaxy.galaxyId }) {
+        true -> galaxies
+        else -> listOf(galaxy) + galaxies
+    } // combine target galaxy with starred galaxies
 
     column(modify(Gap8)) {
         section(sectionMod) {
@@ -44,65 +50,91 @@ fun RenderContext.viewLocationScout(app: Streetlight, galaxy: Galaxy, galaxies: 
 
         flowBlock(locationFlow, defaultMagic) { location ->
             val location = location ?: return@flowBlock
-            viewContextOf(scout) {
-                postLocationEditor(location, galaxy, galaxies)
-            }
 
+            column { // required for boxing FlowContent
+                section {
+                    filigree {
+                        heading3("Post ${location.name}")
+                    }
+
+                    flowBlock(resultFlow, defaultMagic) { result ->
+                        viewContextOf(model) {
+                            when (result) {
+                                null -> postLocationEditor(allGalaxies)
+                                else -> postResult(result, allGalaxies)
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         appFooter("web/src/jsMain/kotlin/streetlight/web/ui/viewLocationScout.kt")
     }
 }
 
-fun ViewContext<LocationScout>.postLocationEditor(location: Location, galaxy: Galaxy, galaxies: List<Galaxy>) {
+fun ViewContext<LocationScout>.postLocationEditor(galaxies: List<Galaxy>) {
     val titleFlow = model.stateFlow.mapDistinct { it.title }
     val textFlow = model.stateFlow.mapDistinct { it.text }
     val galaxiesFlow = model.stateFlow.mapDistinct { it.galaxyIds }
-    val allGalaxies = when (galaxies.any { it.galaxyId == galaxy.galaxyId }) {
-        true -> galaxies
-        else -> galaxies + galaxy
-    }
 
-    column { // required for boxing FlowContent
-        section {
-            filigree {
-                heading3("Post ${location.name}")
-            }
+    card(modify(ZenCardBg)) {
+        flowBlock(galaxiesFlow) { galaxyIds ->
+            val toGalaxies = galaxies.filter { galaxyIds.contains(it.galaxyId) }
+            val availableGalaxies = galaxies.filter { !galaxyIds.contains(it.galaxyId) }
 
-            card(modify(ZenCardBg)) {
-                flowBlock(galaxiesFlow) { galaxyIds ->
-                    val toGalaxies = allGalaxies.filter { galaxyIds.contains(it.galaxyId) }
-                    val availableGalaxies = allGalaxies.filter { !galaxyIds.contains(it.galaxyId) }
-
-                    row(modify(MinHeight5)) {
-                        row(modify(Flex1, AlignItemsCenter, WrapFlex)) {
-                            textBlock("Post to:", modify(WhiteSpaceNoWrap, MarginLeft1, OpacityMost))
-                            toGalaxies.forEach { galaxy ->
-                                row(modify(AlignItemsCenter, Gap0)) {
-                                    textBlock(galaxy.name, modify(WhiteSpaceNoWrap))
-                                    button(SvgFile.Backspace, onClick = { model.removeGalaxyId(galaxy.galaxyId) })
-                                }
-                            }
+            row(modify(MinHeight5)) {
+                row(modify(Flex1, AlignItemsCenter, WrapFlex)) {
+                    textBlock("Post to:", modify(WhiteSpaceNoWrap, MarginLeft1, OpacityMost))
+                    toGalaxies.forEach { galaxy ->
+                        row(modify(AlignItemsCenter, Gap0)) {
+                            textBlock(galaxy.name, modify(WhiteSpaceNoWrap))
+                            button(SvgFile.Backspace, onClick = { model.removeGalaxyId(galaxy.galaxyId) })
                         }
-                        if (availableGalaxies.isNotEmpty()) {
-                            buttonMenu("galaxies", modify(AlignSelfStart)) {
-                                card(ButtonMenu.CardMod) {
-                                    availableGalaxies.forEach { galaxy ->
-                                        button(galaxy.name, onClick = { model.addGalaxyId(galaxy.galaxyId) })
-                                    }
-                                }
+                    }
+                }
+                if (availableGalaxies.isNotEmpty()) {
+                    buttonMenu("galaxies", modify(AlignSelfStart)) {
+                        card(ButtonMenu.CardMod) {
+                            availableGalaxies.forEach { galaxy ->
+                                button(galaxy.name, onClick = { model.addGalaxyId(galaxy.galaxyId) })
                             }
                         }
                     }
                 }
+            }
+        }
 
-                textField("title", onValue = model::setTitle, flow = titleFlow)
-                textEditor("text", onValue = model::setText, flow = textFlow)
-                row(modify(JustifyContentSpaceBetween)) {
-                    spacer()
-                    button("Post", modify(Accent), model::createPost)
+        textField("title", onValue = model::setTitle, flow = titleFlow)
+        textEditor("text", onValue = model::setText, flow = textFlow)
+        row(modify(JustifyContentSpaceBetween)) {
+            spacer()
+            button("Post", modify(Accent), model::createPost)
+        }
+    }
+}
+
+fun ViewContext<LocationScout>.postResult(result: GalaxyPostResult, galaxies: List<Galaxy>) {
+    column {
+        card(modify(ZenCardBg)) {
+            result.results.forEach { (galaxyId, result) ->
+                val galaxy = galaxies.first { it.galaxyId == galaxyId }
+                val emoji = when (result) {
+                    PostResult.Posted -> "✔"
+                    PostResult.Conflict -> "👍"
+                }
+                val msg = when (result) {
+                    PostResult.Posted -> "Posted."
+                    PostResult.Conflict -> "Already in galaxy."
+                }
+                cardOf("${galaxy.name}: $emoji", galaxy.thumbUrl, msg) {
+                    portal.go(GalaxyPathIdRoute(galaxy.path))
                 }
             }
+        }
+        row(modify(JustifyContentSpaceBetween)) {
+            button("Post another location", onClick = model::reset )
+            button("Done", onClick = { portal.goBack() })
         }
     }
 }

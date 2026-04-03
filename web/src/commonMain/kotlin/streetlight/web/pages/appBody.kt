@@ -93,4 +93,14 @@ ${AppBodyKey.PortalMountId} > *,
 ${AppBodyKey.ShellBoxId} > * {
     width: 100%;
 }
+
+/* content box */
+#content-box {
+    opacity: 0;
+    transition: opacity var(--magic-interval) var(--magic-easing);
+}
+
+#content-box.reveal {
+    opacity: 1;
+}
 """

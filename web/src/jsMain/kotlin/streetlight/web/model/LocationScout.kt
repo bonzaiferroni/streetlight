@@ -6,6 +6,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import streetlight.model.data.Galaxy
 import streetlight.model.data.GalaxyId
+import streetlight.model.data.GalaxyPostResult
 import streetlight.model.data.Location
 import streetlight.model.data.NewGalaxyLocationPost
 import streetlight.model.data.NewLocationPost
@@ -18,8 +19,9 @@ class LocationScout(
     val galaxyId: GalaxyId,
 ): ViewModel {
 
+    private val initialState = LocationScoutState(setOf(galaxyId))
     private var location: Location? = null
-    private val state = storeOf(LocationScoutState(setOf(galaxyId)))
+    private val state = storeOf(initialState)
     val stateFlow = state.flow
     val stateNow get() = state.now
 
@@ -39,6 +41,8 @@ class LocationScout(
 
     fun removeGalaxyId(galaxyId: GalaxyId) = state.set { it.copy(galaxyIds = it.galaxyIds - galaxyId) }
 
+    fun reset() = state.set { initialState }
+
     fun createPost() {
         val location = location ?: error("location not found")
         val title = stateNow.title
@@ -47,8 +51,8 @@ class LocationScout(
             val post = NewLocationPost(location.locationId, title, text)
             val postId = api.postLocation(post) ?: error("result not found")
             val galaxyPost = NewGalaxyLocationPost(postId, stateNow.galaxyIds.toList())
-            val galaxyResult = api.postGalaxyLocation(galaxyPost)
-            console.log(galaxyResult)
+            val result = api.postGalaxyLocation(galaxyPost)
+            state.set { it.copy(result = result) }
         }
     }
 }
@@ -56,5 +60,6 @@ class LocationScout(
 data class LocationScoutState(
     val galaxyIds: Set<GalaxyId>,
     val title: String? = null,
-    val text: String? = null
+    val text: String? = null,
+    val result: GalaxyPostResult? = null,
 )

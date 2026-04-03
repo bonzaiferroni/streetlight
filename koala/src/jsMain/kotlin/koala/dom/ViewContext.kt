@@ -1,6 +1,6 @@
 package koala.dom
 
-class ViewContext<T>(
+class ViewContext<out T>(
     val model: T,
     context: RenderContext
 ): RenderContext by context {

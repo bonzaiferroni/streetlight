@@ -109,18 +109,6 @@
     position: absolute;
 }
 
-/* content box */
-#content-box {
-    opacity: 1;
-    transition: opacity 200ms ease-in-out;
-}
-
-@starting-style {
-    #content-box {
-        opacity: 0;
-    }
-}
-
 /* slow spin */
 
 @keyframes slow-spin {

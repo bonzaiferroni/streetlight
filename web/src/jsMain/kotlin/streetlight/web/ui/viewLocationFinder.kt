@@ -22,6 +22,7 @@ fun ViewContext<LocationFinder>.viewLocationFinder() {
 }
 
 fun ViewContext<LocationFinder>.viewLocationFinderPlace() {
+    val app = model.app
     val queryFlow = model.stateFlow.mapDistinct { it.query }
     val locationsFlow = model.stateFlow.mapDistinct { it.locations }
 
@@ -44,9 +45,12 @@ fun ViewContext<LocationFinder>.viewLocationFinderPlace() {
                 }
             }
             tab("Find on map") {
-                row(modify(JustifyContentEnd)) {
-                    textBlock("Move the map target to the location.", modify(Dim))
-                    button("Here", onClick = model::here)
+                column {
+                    viewGeoMap(app.geoMap, app.appScope)
+                    row(modify(JustifyContentEnd)) {
+                        textBlock("Move the map target to the location.", modify(Dim))
+                        button("Here", onClick = model::here)
+                    }
                 }
             }
         }
