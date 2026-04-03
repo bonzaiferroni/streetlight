@@ -59,7 +59,7 @@ fun FlowContent.homeShell(content: HomeContent) {
             }
         }
 
-        layoutEventPosts(content.posts)
+        layoutEventPosts("Upcoming Events", content.posts)
 
         section {
             filigree {

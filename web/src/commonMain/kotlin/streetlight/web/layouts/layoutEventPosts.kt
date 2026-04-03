@@ -7,9 +7,14 @@ import kotlinx.html.FlowContent
 import streetlight.model.data.EventPost
 import streetlight.web.shells.SectionHeadingMod
 
-fun FlowContent.layoutEventPosts(posts: List<EventPost>) {
+fun FlowContent.layoutEventPosts(
+    headingText: String?,
+    posts: List<EventPost>,
+) {
     column {
-        heading2("Upcoming Events", SectionHeadingMod)
+        headingText?.let {
+            heading2(headingText, SectionHeadingMod)
+        }
         val groupings = posts.groupBy { it.event?.startsAt }
         groupings.forEach { grouping ->
             val startsAt = grouping.key ?: return@forEach // td: show removed post content

@@ -17,13 +17,13 @@ import streetlight.web.StreetlightRoute
 
 fun FlowContent.largePostCard(
     title: String,
-    subtitle: String,
+    subtitle: String?,
     description: String?,
     sourceUrl: String?,
     links: List<ExtraLink>?,
     imageUrl: String?,
     postRoute: StreetlightRoute,
-    subRoute: StreetlightRoute,
+    subRoute: StreetlightRoute?,
     modifiers: ModifierSet? = null,
     cells: List<(FlowContent.() -> Unit)?>
 ) {
@@ -41,8 +41,13 @@ fun FlowContent.largePostCard(
                             action(postRoute) {
                                 heading3(title, modify(WhiteSpaceNoWrap, LineHeight1, MarginTop1, TextOverflowHidden))
                             }
-                            action(subRoute) {
-                                textBlock(subtitle, modify(Dim))
+
+                            subtitle?.let {
+                                fun FlowContent.showSubtitle() = textBlock(subtitle, modify(Dim))
+                                when (subRoute) {
+                                    null -> showSubtitle()
+                                    else -> action(subRoute) { showSubtitle() }
+                                }
                             }
                         }
                     }
