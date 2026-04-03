@@ -1,58 +1,62 @@
 package streetlight.web.layouts
 
 import kabinet.utils.toRelativeDayFormat
+import kabinet.utils.toRelativeTimeFormat
+import kabinet.utils.toTimeFormat
 import koala.SvgFile
 import koala.css.*
-import koala.html.Attribute
-import koala.html.action
-import koala.html.actionIfNotNull
-import koala.html.btn
-import koala.html.card
-import koala.html.column
-import koala.html.heading3
-import koala.html.icon
-import koala.html.fillImage
-import koala.html.row
-import koala.html.setData
-import koala.html.textBlock
+import koala.html.*
+import kotlinx.datetime.Instant
 import kotlinx.html.FlowContent
 import streetlight.model.data.EventId
 import streetlight.model.data.EventPost
-import streetlight.model.data.StarType
+import streetlight.model.data.ExtraLink
+import streetlight.model.data.GalaxyId
+import streetlight.model.data.ProjectId
+import streetlight.web.StreetlightRoute
 
-fun FlowContent.largePostCard(post: EventPost) {
-    val postRoute = post.route ?: return
-    val event = post.event ?: return
-    val location = post.location ?: return // td: show removed post content
+fun FlowContent.largePostCard(
+    title: String,
+    subtitle: String,
+    description: String?,
+    sourceUrl: String?,
+    links: List<ExtraLink>?,
+    imageUrl: String?,
+    postRoute: StreetlightRoute,
+    subRoute: StreetlightRoute,
+    modifiers: ModifierSet? = null,
+    cells: List<(FlowContent.() -> Unit)?>
+) {
+    val imageUrl = imageUrl ?: SiteImage.placeholder
 
-    card(modify(QueryContainer, Padding0, OverflowHidden)) {
+    card(modify(modifiers, QueryContainer, Padding0, OverflowHidden)) {
         column(modify(QueryContainer, ContainerLgRow, Gap0)) {
 
             // non-grid content
             column(modify(Flex3, ContainerMdRow, Gap0)) {
-                fillImage(post.imageUrl, modify(Flex1, MinHeight24))
+                fillImage(imageUrl, modify(Flex1, MinHeight24))
                 column(modify(Flex2, Padding1, Height24, MaxHeight24)) {
                     row {
                         column(modify(Flex1, Gap0)) {
                             action(postRoute) {
-                                heading3(post.title, modify(WhiteSpaceNoWrap, LineHeight1, MarginTop1, TextOverflowHidden))
+                                heading3(title, modify(WhiteSpaceNoWrap, LineHeight1, MarginTop1, TextOverflowHidden))
                             }
-                            action(location.route) {
-                                textBlock("${location.name}, ${location.city}", modify(Dim))
+                            action(subRoute) {
+                                textBlock(subtitle, modify(Dim))
                             }
                         }
                     }
-                    post.description?.let { description ->
+                    description?.let { description ->
                         action(postRoute, modify(Flex1, SmallText, OverflowHidden, FadeBottom)) {
                             textBlock(description)
                         }
                     }
 
                     row {
-                        event.url?.let { url ->
+                        sourceUrl?.let { url ->
                             btn("source", url)
                         }
-                        event.links?.forEach { link ->
+                        links?.forEach { link ->
                             btn(link.label, link.url)
                         }
                     }
@@ -62,54 +66,62 @@ fun FlowContent.largePostCard(post: EventPost) {
             // grid content
             row(modify(Flex1, ContainerLgColumn, MinHeight8, FlexItems1, GapTiny, TextAlignCenter, WrapFlex)) {
                 val cellMods = modify(AlignItemsCenter, Gap0, BorderRadius0, JustifyContentCenter, MinWidth16)
-                val rowMods = modify(JustifyContentCenter)
-                card(cellMods) {
-                    row(rowMods) {
-                        textBlock(event.startsAt.toRelativeDayFormat(), modify(Bold))
-                        textBlock("8:00 PM")
+                cells.forEach {
+                    val cell = it ?: return@forEach
+                    card(cellMods) {
+                        cell()
                     }
-                }
-                card(cellMods) {
-                    val cost = event.cost
-                    val ticketsUrl = cost.takeIf { it != 0f }?.let {
-                        event.url
-                    }
-                    actionIfNotNull(ticketsUrl) {
-                        row(rowMods) {
-                            textBlock("tickets:", modify(Dim))
-                            textBlock("$$cost")
-                        }
-                    }
-                }
-                card(cellMods) {
-                    row(rowMods) {
-                        textBlock("from:", modify(Dim))
-                        textBlock(post.username ?: "anonymous")
-                    }
-                }
-                card(cellMods) {
-                    starCell(event.eventId)
                 }
             }
         }
     }
 }
 
-fun FlowContent.starCell(eventId: EventId) {
-    row {
-        setData(EventKey.EventStarId, eventId)
-        textBlock((0..10).random().toString())
-        icon(SvgFile.LoaderSmall, modify(Height3, AspectRatio1))
+object PostCard {
+    val RowMod = modify(JustifyContentCenter)
+}
+
+fun FlowContent.startsAtCell(startsAt: Instant) {
+    row(PostCard.RowMod) {
+        textBlock(startsAt.toRelativeDayFormat(), modify(Bold))
+        textBlock(startsAt.toTimeFormat())
     }
 }
 
-object EventKey {
-    val EventStarId = Attribute<EventId>("event-star-id")
-    // val StarClass = Css("event-star")
+fun FlowContent.costCell(cost: Float, purchaseUrl: String?) {
+    val ticketsUrl = cost.takeIf { it != 0f }?.let {
+        purchaseUrl
+    }
+    actionIfNotNull(ticketsUrl) {
+        row(PostCard.RowMod) {
+            textBlock("tickets:", modify(Dim))
+            textBlock("$$cost")
+        }
+    }
 }
 
-val StarType?.iconPath get() = when(this) {
-    StarType.Star -> SvgFile.StarFilled
-    StarType.Calendar -> SvgFile.StarFilled // td: handle differently
-    null -> SvgFile.StarOutline
+fun FlowContent.postedBy(username: String?) {
+    row(PostCard.RowMod) {
+        textBlock("from:", modify(Dim))
+        textBlock(username ?: "someone")
+    }
+}
+
+fun FlowContent.starCell(galaxyId: GalaxyId) {
+    row(modify(WidthAuto)) {
+        setData(GalaxyKey.GalaxyStarId, galaxyId)
+        starCellContent((0..10).random())
+    }
+}
+
+fun FlowContent.starCell(eventId: EventId) {
+    row {
+        setData(EventKey.EventStarId, eventId)
+        starCellContent((0..10).random())
+    }
+}
+
+private fun FlowContent.starCellContent(count: Int) {
+    textBlock(count.toString())
+    icon(SvgFile.LoaderSmall, modify(Height3, AspectRatio1))
 }

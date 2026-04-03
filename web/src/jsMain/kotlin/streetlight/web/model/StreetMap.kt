@@ -25,8 +25,8 @@ class StreetMap(
     
     val transit = TransitMap(scope, client, geoMap, config)
 
-    fun setPosts(posts: List<EventPost>) {
-        val posts = createEntities(posts)
+    fun setPosts(posts: List<EventPost>?) {
+        val posts = posts?.let { createEntities(posts) } ?: emptyList()
         geoMap.removeEntities(state.now.posts.map { it.entityId })
         geoMap.addEntities(posts)
         state.set { it.copy(posts = posts) }

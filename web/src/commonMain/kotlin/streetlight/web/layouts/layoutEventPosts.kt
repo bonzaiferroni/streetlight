@@ -21,7 +21,7 @@ fun FlowContent.layoutEventPosts(posts: List<EventPost>) {
                 olist {
                     posts.forEach {
                         listItem {
-                            largePostCard(it)
+                            largeEventPostCard(it)
                         }
                     }
                 }

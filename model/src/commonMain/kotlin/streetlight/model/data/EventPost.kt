@@ -13,11 +13,11 @@ data class EventPost(
     override val galaxyId: GalaxyId,
     override val username: String?,
     override val location: Location?,
-    override val event: Event?,
+    val event: Event?,
     override val text: String?,
     override val createdAt: Instant,
     override val updatedAt: Instant,
-): MapPost {
+): GalaxyPost {
     override val thumbUrl get() = event?.thumbUrl ?: location?.thumbUrl
     override val imageUrl get() = event?.imageUrl ?: location?.imageUrl
     override val geoPoint get() = location?.geoPoint ?: GeoPoint.Denver
@@ -26,6 +26,7 @@ data class EventPost(
     override val visibility get() = 0
 
     override val isRemoved get() = event == null
+    override val type get() = PostType.Event
 }
 
 @Serializable

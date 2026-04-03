@@ -2,19 +2,17 @@ package streetlight.web.shells
 
 import koala.css.*
 import koala.html.*
-import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kotlinx.serialization.Serializable
 import streetlight.model.data.Galaxy
-import streetlight.model.data.EventPost
-import streetlight.web.EventScoutRoute
-import streetlight.web.layouts.GalaxyKey
+import streetlight.model.data.GalaxyListing
 import streetlight.web.layouts.layoutEventPosts
+import streetlight.web.layouts.layoutGalaxyListing
 import streetlight.web.pages.appFooter
 import streetlight.web.ui.headerOf
 
 fun FlowContent.galaxyProfileShell(content: GalaxyProfileContent) {
-    val galaxy = content.galaxy; val posts = content.posts;
+    val galaxy = content.galaxy; val listing = content.listing;
     column(GalaxyProfileKey.ShellId, modify(Gap8)) {
         column {
             swapBlock(GalaxyProfileKey.SwapId, modify(Magic, OverflowClip)) {
@@ -29,13 +27,13 @@ fun FlowContent.galaxyProfileShell(content: GalaxyProfileContent) {
             }
             row(modify(JustifyContentSpaceBetween)) {
                 row {
-                    galaxyMenu(content.galaxies, galaxy)
+                    galaxyMenu(emptyList(), galaxy)
                     switch("map", id = GalaxyProfileKey.MapSwitchId)
                 }
                 postMenu(galaxy)
             }
         }
-        layoutEventPosts(posts)
+        layoutGalaxyListing(listing)
         appFooter(GalaxyProfileKey.SOURCE)
     }
 }
@@ -52,6 +50,5 @@ object GalaxyProfileKey {
 @Serializable
 data class GalaxyProfileContent(
     val galaxy: Galaxy,
-    val posts: List<EventPost>,
-    val galaxies: List<Galaxy>
+    val listing: GalaxyListing,
 )

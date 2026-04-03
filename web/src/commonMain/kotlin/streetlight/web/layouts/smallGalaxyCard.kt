@@ -45,14 +45,6 @@ fun FlowContent.smallGalaxyCard(galaxy: Galaxy) {
     }
 }
 
-fun FlowContent.starCell(galaxyId: GalaxyId) {
-    row(modify(WidthAuto)) {
-        setData(GalaxyKey.GalaxyStarId, galaxyId)
-        textBlock((0..10).random().toString())
-        icon(SvgFile.LoaderSmall, modify(Height3, AspectRatio1))
-    }
-}
-
 object GalaxyKey {
     val GalaxyStarId = Attribute<GalaxyId>("galaxy-star-id")
     val TopGalaxies = Attribute<List<Galaxy>>("galaxies")

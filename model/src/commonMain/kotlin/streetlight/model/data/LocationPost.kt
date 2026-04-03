@@ -17,16 +17,16 @@ data class LocationPost(
     override val text: String?,
     override val createdAt: Instant,
     override val updatedAt: Instant,
-): MapPost {
+): GalaxyPost {
     override val thumbUrl get() = location?.thumbUrl
     override val imageUrl get() = location?.imageUrl
     override val geoPoint get() = location?.geoPoint ?: GeoPoint.Denver
     override val description get() = location?.description
     override val visibility get() = 0
-    override val event: Event? get() = null
     override val title get() = postTitle ?: location?.name ?: "[location removed]"
 
     override val isRemoved get() = location == null
+    override val type get() = PostType.Location
 }
 
 @Serializable

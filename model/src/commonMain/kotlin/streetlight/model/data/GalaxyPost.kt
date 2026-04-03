@@ -3,12 +3,11 @@ package streetlight.model.data
 import kampfire.model.GeoPoint
 import kotlinx.datetime.Instant
 
-sealed interface MapPost {
+sealed interface GalaxyPost {
     val postId: MapPostId
     val galaxyId: GalaxyId?
     val username: String?
     val location: Location?
-    val event: Event?
     val text: String?
     val thumbUrl: String?
     val imageUrl: String?
@@ -20,6 +19,7 @@ sealed interface MapPost {
     val updatedAt: Instant
 
     val isRemoved: Boolean
+    val type: PostType
 }
 
 sealed interface MapPostId {

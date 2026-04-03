@@ -23,7 +23,8 @@ fun FlowContent.smallPostCard(post: EventPost) {
     val thumbUrl = post.thumbUrl
     val title = post.title
     val description = post.description
-    val postRoute = post.route ?: return
+    val event = post.event ?: return // td: show removed content
+    val postRoute = event.route
 
     card(modify(Padding0, OverflowHidden)) {
         column(modify(MediaLgRow, AlignItemsStretch, Gap0)) {
@@ -83,6 +84,6 @@ fun FlowContent.smallPostCard(post: EventPost) {
     }
 }
 
-val EventPost.route get() = event?.route ?: location?.route
+// td: find better home
 val Location.route get() = LocationIdRoute(locationId)
 val Event.route get() = EventIdRoute(eventId)
