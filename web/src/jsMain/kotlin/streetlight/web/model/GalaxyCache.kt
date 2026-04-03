@@ -7,7 +7,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import streetlight.model.data.Galaxy
 import streetlight.model.data.GalaxyId
-import streetlight.model.data.StarEdit
+import streetlight.model.data.LightEdit
 import streetlight.web.io.ApiClient
 
 class GalaxyCache(
@@ -18,22 +18,22 @@ class GalaxyCache(
     private val state = storeOf(GalaxyCacheState())
     val stateNow get() = state.now
     val stateFlow = state.flow
-    val starFlow = stateFlow.mapDistinct { it.stars }
+    val lightFlow = stateFlow.mapDistinct { it.lights }
     val galaxiesFlow = stateFlow.mapDistinct { it.galaxies }
 
-    private var stars by setStorageOf(GALAXY_CACHE_KEY) { GalaxyId(it) }
+    private var lights by setStorageOf(GALAXY_CACHE_KEY) { GalaxyId(it) }
 
     init {
         scope.launch {
             launch {
-                val stars = readStars()
-                state.set { it.copy(stars = stars) }
+                val lights = readLights()
+                state.set { it.copy(lights = lights) }
             }
             launch {
-                starFlow.collect { stars ->
-                    val galaxies = when (stars.isEmpty()) {
+                lightFlow.collect { light ->
+                    val galaxies = when (light.isEmpty()) {
                         true -> emptyList()
-                        else -> api.readGalaxies(stars.toList()) ?: emptyList() // td: fail message
+                        else -> api.readGalaxies(light.toList()) ?: emptyList() // td: fail message
                     }.sortedBy { it.createdAt }
                     state.set { it.copy(galaxies = galaxies) }
                 }
@@ -41,8 +41,8 @@ class GalaxyCache(
         }
     }
 
-    fun toggleStar(galaxyId: GalaxyId) {
-        val isStar = stateNow.stars.contains(galaxyId)
+    fun toggleLight(galaxyId: GalaxyId) {
+        val isStar = stateNow.lights.contains(galaxyId)
         when (isStar) {
             true -> removeStar(galaxyId)
             else -> addStar(galaxyId)
@@ -53,19 +53,19 @@ class GalaxyCache(
     fun removeStar(galaxyId: GalaxyId) = editStar(galaxyId, false)
 
     private fun editStar(galaxyId: GalaxyId, isStar: Boolean) {
-        when (config.stateNow.starSync) {
+        when (config.stateNow.lightSync) {
             true -> {
                 scope.launch {
-                    val edit = StarEdit(galaxyId.value, true)
-                    val isSuccess = api.editGalaxyStar(edit) ?: return@launch // td: ui message
+                    val edit = LightEdit(galaxyId.value, true)
+                    val isSuccess = api.editGalaxyLight(edit) ?: return@launch // td: ui message
                     if (isSuccess)
                         editState(galaxyId, isStar)
                 }
             }
             else -> {
                 when (isStar) {
-                    true -> stars += galaxyId
-                    else -> stars -= galaxyId
+                    true -> lights += galaxyId
+                    else -> lights -= galaxyId
                 }
                 editState(galaxyId, isStar)
             }
@@ -74,19 +74,19 @@ class GalaxyCache(
 
     private fun editState(galaxyId: GalaxyId, isStar: Boolean) {
         when (isStar) {
-            true -> state.set { it.copy(stars = it.stars + galaxyId) }
-            else -> state.set { it.copy(stars = it.stars - galaxyId) }
+            true -> state.set { it.copy(lights = it.lights + galaxyId) }
+            else -> state.set { it.copy(lights = it.lights - galaxyId) }
         }
     }
 
-    private suspend fun readStars() = when(config.stateNow.starSync) {
-        true -> api.readGalaxyStars()?.toSet() ?: emptySet()
-        else -> stars
+    private suspend fun readLights() = when(config.stateNow.lightSync) {
+        true -> api.readGalaxyLights()?.toSet() ?: emptySet()
+        else -> lights
     }
 }
 
 data class GalaxyCacheState(
-    val stars: Set<GalaxyId> = emptySet(),
+    val lights: Set<GalaxyId> = emptySet(),
     val galaxies: List<Galaxy> = emptyList(),
 )
 

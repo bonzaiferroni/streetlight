@@ -15,9 +15,17 @@ fun ViewContext<Streetlight>.viewHome() {
     }
 
     queryAndWireSwitch(root, Id("bruh"), onToggle = { console.log("bruh") })
-    wireEventStars(root)
-    wireGalaxyStars(root)
-    wireStarredEvents(root)
+    wireLights(
+        root = root,
+        attribute = StarLightKey.EventLightId,
+        cache = app.cache.event
+    )
+    wireLights(
+        root = root,
+        attribute = StarLightKey.GalaxyLightId,
+        cache = app.cache.galaxy,
+    )
+    wireLitEvents(root)
     wireGalaxyMenu(app, root, null)
 
     wireStreetMap()

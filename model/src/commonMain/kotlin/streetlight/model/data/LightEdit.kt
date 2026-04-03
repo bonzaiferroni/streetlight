@@ -3,7 +3,7 @@ package streetlight.model.data
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class StarEdit(
+data class LightEdit(
     val stringId: String,
-    val isStar: Boolean
+    val isLit: Boolean
 )

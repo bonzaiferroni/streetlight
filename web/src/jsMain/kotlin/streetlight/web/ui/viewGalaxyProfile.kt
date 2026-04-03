@@ -29,7 +29,11 @@ fun ViewContext<Streetlight>.viewGalaxyProfile(content: GalaxyProfileContent) {
 
     queryAndWireSwitch(root, GalaxyProfileKey.MapSwitchId, onToggle = ::setIsMapVisible, bindFlow = isMapVisibleFlow)
     queryAndWireSwapBlock(root, GalaxyProfileKey.SwapId, bindFlow = swapIdFlow)
-    wireEventStars(root)
+    wireLights(
+        root = root,
+        attribute = StarLightKey.EventLightId,
+        cache = app.cache.event
+    )
     wireGalaxyMenu(app, root, content.galaxy)
 
     app.streetMap.setPosts(content.listing.events)

@@ -67,6 +67,7 @@ fun FlowContent.aboutApp() {
             githubLink("animation content", "Open Animation", "orispok", "OpenAnimationApp")
             githubLink("map", "MapLibre", "maplibre-gl-js")
             githubLink("map data", "OpenFreeMap", "hyper-knot")
+            githubLink("icons", "Tabler", "tabler")
         }
         appFooter()
     }

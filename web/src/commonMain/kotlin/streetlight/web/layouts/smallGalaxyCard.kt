@@ -1,6 +1,5 @@
 package streetlight.web.layouts
 
-import koala.SvgFile
 import koala.css.*
 import koala.html.*
 import kotlinx.html.FlowContent
@@ -37,7 +36,7 @@ fun FlowContent.smallGalaxyCard(galaxy: Galaxy) {
                         }
                     }
                     card(modify(cardMods)) {
-                        starCell(galaxy.galaxyId)
+                        lightCell(galaxy.galaxyId)
                     }
                 }
             }
@@ -46,6 +45,5 @@ fun FlowContent.smallGalaxyCard(galaxy: Galaxy) {
 }
 
 object GalaxyKey {
-    val GalaxyStarId = Attribute<GalaxyId>("galaxy-star-id")
     val TopGalaxies = Attribute<List<Galaxy>>("galaxies")
 }

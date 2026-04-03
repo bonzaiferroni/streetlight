@@ -2,6 +2,7 @@ package koala.dom
 
 import koala.core.get
 import koala.html.Attribute
+import koala.html.AttributeExpression
 import koala.utils.jsonConfig
 import org.w3c.dom.Element
 import org.w3c.dom.HTMLElement
@@ -46,4 +47,8 @@ inline fun <reified T> Element.queryJsonAttribute(attribute: Attribute<T>): Elem
     }
 }
 
-fun Element.setAttribute(attribute: Attribute<*>, value: String) = setAttribute(attribute.key, value)
+fun Element.setAttribute(attribute: Attribute<*>, value: String) =
+    setAttribute(attribute.key, value)
+
+fun <T> Element.setAttribute(expression: AttributeExpression<T>) =
+    setAttribute(expression.attribute.key, expression.value.toString())

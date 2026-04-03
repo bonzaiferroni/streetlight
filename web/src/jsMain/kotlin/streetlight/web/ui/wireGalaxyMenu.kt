@@ -22,7 +22,7 @@ fun RenderContext.wireGalaxyMenu(
     val element = result.element
 
     renderScope.launch {
-        app.cache.galaxy.galaxiesFlow.collect { galaxies ->
+        app.cache.galaxy.itemsFlow.collect { galaxies ->
             val galaxies = galaxies.takeIf { it.isNotEmpty() } ?: topGalaxies
             element.clear()
             element.append {

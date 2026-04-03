@@ -143,6 +143,6 @@ fun ViewContext<Streetlight>.viewLocationScoutRoute() {
     routeBlock<LocationScoutRoute, Galaxy>({
         api.readGalaxy(it.pathId)
     }) { galaxy ->
-        viewLocationScout(model, galaxy, model.cache.galaxy.stateNow.galaxies)
+        viewLocationScout(model, galaxy, model.cache.galaxy.stateNow.items)
     }
 }

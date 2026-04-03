@@ -21,9 +21,9 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object ParseMultiEvents: PostEndpoint<ParseRequest, MultiEventParseResponse>(this, "parse-multi")
         object ParseSingleEvent: PostEndpoint<ParseRequest, SingleEventParseResponse>(this, "parse-single")
         object AtLocation: GetByTableIdEndpoint<LocationId, List<Event>>(this, "location")
-        object EditEventStar: PostEndpoint<EventStar, Boolean>(this, "edit-event-star")
-        object ReadEventStars: GetEndpoint<List<EventStar>>(this, "read-event-stars")
         object ReadEventLocations: PostEndpoint<List<EventId>, List<EventLocation>>(this, "read-event-locations")
+        object ReadLights: GetEndpoint<List<EventId>>(this, "lights")
+        object EditLight: PostEndpoint<LightEdit, Boolean>(this, "light-edit")
     }
 
     object Locations: GetByTableIdEndpoint<LocationId, Location>(this, "locations") {
@@ -118,8 +118,8 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object ReadMultiPosts: PostEndpoint<List<GalaxyId>, List<EventPost>>(this, "multi-posts")
         object ReadPosts: GetByTableIdEndpoint<GalaxyId, GalaxyListing>(this, "posts")
         object ReadPost: GetByTableIdEndpoint<EventPostId, EventPost>(this, "post")
-        object ReadStars: GetEndpoint<List<GalaxyId>>(this, "stars")
-        object EditStar: PostEndpoint<StarEdit, Boolean>(this, "star-edit")
+        object ReadLights: GetEndpoint<List<GalaxyId>>(this, "lights")
+        object EditLight: PostEndpoint<LightEdit, Boolean>(this, "light-edit")
     }
 
 //    object Posts: ApiNode(this, "post") {

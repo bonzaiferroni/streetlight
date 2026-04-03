@@ -4,10 +4,10 @@ import koala.css.*
 import koala.html.btn
 import kotlinx.html.FlowContent
 import streetlight.model.data.Galaxy
-import streetlight.model.data.GalaxyStar
+import streetlight.model.data.GalaxyLight
 import streetlight.web.GalaxyPathIdRoute
 
-fun FlowContent.buttonOf(star: GalaxyStar, modifiers: ModifierSet? = null) {
+fun FlowContent.buttonOf(star: GalaxyLight, modifiers: ModifierSet? = null) {
     btn(star.name, GalaxyPathIdRoute(star.path), star.imageUrl, modifiers)
 }
 

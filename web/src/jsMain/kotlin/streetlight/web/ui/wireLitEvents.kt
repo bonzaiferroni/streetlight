@@ -31,25 +31,24 @@ import koala.html.heading3
 import koala.html.textBlock
 import koala.model.mapDistinct
 import org.w3c.dom.HTMLElement
-import streetlight.model.data.EventStar
 import streetlight.web.model.Streetlight
 import streetlight.web.shells.HomeShellKey
 import kotlin.collections.component1
 import kotlin.collections.component2
 
-fun ViewContext<Streetlight>.wireStarredEvents(root: HTMLElement) {
+fun ViewContext<Streetlight>.wireLitEvents(root: HTMLElement) {
     val app = model
     val eventCache = app.cache.event
-    val eventsFlow = eventCache.stateFlow.mapDistinct { it.events }
+    val eventsFlow = eventCache.stateFlow.mapDistinct { it.items }
     val swapIdFlow = eventsFlow.mapDistinct {
         when (it.isEmpty()) {
-            true -> HomeShellKey.StarInfoId
-            else -> HomeShellKey.StarEventsId
+            true -> HomeShellKey.LightInfoId
+            else -> HomeShellKey.LitEventsId
         }
     }
 
-    queryAndWireSwapBlock(root, HomeShellKey.StarSwapId, bindFlow = swapIdFlow)
-    wireBlock(HomeShellKey.StarEventsId, root, wireOnView = false) {
+    queryAndWireSwapBlock(root, HomeShellKey.LightSwapId, bindFlow = swapIdFlow)
+    wireBlock(HomeShellKey.LitEventsId, root, wireOnView = false) {
         flowBlock(eventsFlow) { events ->
             box {
                 val eventMap = events.groupBy { it.startsAt.toRelativeDayFormat() }
@@ -68,7 +67,7 @@ fun ViewContext<Streetlight>.wireStarredEvents(root: HTMLElement) {
                                         row(modify(JustifyContentSpaceBetween)) {
                                             textBlock(event.startsAt.toTimeFormat())
                                             icon(SvgFile.Minus, modify(Dim)).onClick {
-                                                eventCache.editStar(EventStar(event.eventId, null))
+                                                eventCache.removeLight(event.eventId)
                                             }
                                         }
                                     }

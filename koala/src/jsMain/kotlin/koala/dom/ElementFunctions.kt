@@ -6,6 +6,7 @@ import koala.css.Property
 import koala.css.Modifier
 import koala.external.ScrollIntoViewOptions
 import koala.html.Attribute
+import koala.html.AttributeExpression
 import koala.html.Queryable
 import koala.utils.jsonConfig
 import kotlinx.browser.window

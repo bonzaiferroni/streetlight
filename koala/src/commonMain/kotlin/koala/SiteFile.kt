@@ -35,12 +35,12 @@ data class Js(override val path: String, val isDeferred: Boolean = true) : SiteF
 
 data class Lottie(override val path: String) : SiteFile {
     override val type get() = SiteFileType.Lottie
-
     override fun toString() = path
 }
 
 data class Svg(override val path: String) : SiteFile {
     override val type get() = SiteFileType.Svg
+    override fun toString() = path
 }
 
 const val cssPath = "/www/css/"

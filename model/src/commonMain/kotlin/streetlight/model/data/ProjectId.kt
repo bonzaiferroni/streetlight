@@ -5,6 +5,7 @@ import kampfire.api.TableId
 sealed interface ProjectId: TableId<String>
 
 inline fun <reified T> String.toProjectId(): T = when (T::class) {
+    StarId::class -> StarId(this) as T
     GalaxyId::class -> GalaxyId(this) as T
     ContactId::class -> ContactId(this) as T
     EventId::class -> EventId(this) as T

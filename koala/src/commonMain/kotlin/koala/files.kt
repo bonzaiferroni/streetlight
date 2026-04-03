@@ -55,6 +55,8 @@ object SvgFile: FileSet<Svg>() {
     val Calendar = add("calendar.svg")
     val Ticket = add("ticket.svg")
     val Backspace = add("backspace.svg")
+    val Light = add("light.svg")
+    val LightFilled = add("light-filled.svg")
 }
 
 object LottieFile: FileSet<Lottie>() {

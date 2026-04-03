@@ -63,23 +63,23 @@ fun FlowContent.homeShell(content: HomeContent) {
 
         section {
             filigree {
-                heading2("Starred Events", SectionHeadingMod)
+                heading2("Lit Events", SectionHeadingMod)
             }
 
             card(modify(Height32)) {
-                swapBlock(HomeShellKey.StarSwapId, modify(Magic)) {
+                swapBlock(HomeShellKey.LightSwapId, modify(Magic)) {
                     column(modify(JustifyContentCenter, Dim, Gap0)) {
-                        setId(HomeShellKey.StarInfoId)
+                        setId(HomeShellKey.LightInfoId)
                         setReveal(true)
 
                         row(modify(JustifyContentCenter)) {
                             textBlock("Events that you")
-                            icon(SvgFile.StarOutline)
+                            icon(SvgFile.Light)
                             textBlock("will appear here.")
                         }
-                        textBlock("This is saved on your device, no need to sign in.", modify(TextAlignCenter))
+                        textBlock("This is saved on your device, unless you sign in.", modify(TextAlignCenter))
                     }
-                    box(HomeShellKey.StarEventsId) {
+                    box(HomeShellKey.LitEventsId) {
                         setReveal(false)
                     }
                 }
@@ -92,9 +92,9 @@ fun FlowContent.homeShell(content: HomeContent) {
 
 object HomeShellKey {
     val ContainerId = Id("home-box")
-    val StarSwapId = Id("star-swap")
-    val StarInfoId = Id("star-info")
-    val StarEventsId = Id("star-events")
+    val LightSwapId = Id("light-swap")
+    val LightInfoId = Id("light-info")
+    val LitEventsId = Id("lit-events")
     const val SOURCE = "web/src/commonMain/kotlin/streetlight/web/shells/homeShell.kt"
 }
 

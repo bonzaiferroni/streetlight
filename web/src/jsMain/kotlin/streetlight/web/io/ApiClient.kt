@@ -20,9 +20,9 @@ class ApiClient(private val client: FetchClient) {
     suspend fun parseMultiEvent(request: ParseRequest) = client.post(Api.Events.ParseMultiEvents, request)
     suspend fun parseSingleEvent(request: ParseRequest) = client.post(Api.Events.ParseSingleEvent, request)
     suspend fun readLocationEvents(locationId: LocationId) = client.get(Api.Events.AtLocation, locationId)
-    suspend fun editEventStar(star: EventStar) = client.post(Api.Events.EditEventStar, star)
-    suspend fun readEventStars() = client.get(Api.Events.ReadEventStars)
     suspend fun readEventLocations(eventIds: List<EventId>) = client.post(Api.Events.ReadEventLocations, eventIds)
+    suspend fun readEventLights() = client.get(Api.Events.ReadLights)
+    suspend fun editEventLight(edit: LightEdit) = client.post(Api.Events.EditLight, edit)
 
     // locations
     suspend fun readLocation(locationId: LocationId) = client.get(Api.Locations, locationId)
@@ -70,6 +70,6 @@ class ApiClient(private val client: FetchClient) {
     suspend fun readPosts(galaxyIds: List<GalaxyId>) = client.post(Api.Galaxies.ReadMultiPosts, galaxyIds)
     suspend fun readPosts(galaxyId: GalaxyId) = client.get(Api.Galaxies.ReadPosts, galaxyId)
     suspend fun readPost(eventPostId: EventPostId) = client.get(Api.Galaxies.ReadPost, eventPostId)
-    suspend fun readGalaxyStars() = client.get(Api.Galaxies.ReadStars)
-    suspend fun editGalaxyStar(edit: StarEdit) = client.post(Api.Galaxies.EditStar, edit)
+    suspend fun readGalaxyLights() = client.get(Api.Galaxies.ReadLights)
+    suspend fun editGalaxyLight(edit: LightEdit) = client.post(Api.Galaxies.EditLight, edit)
 }

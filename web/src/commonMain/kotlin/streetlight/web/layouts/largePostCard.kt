@@ -1,19 +1,17 @@
 package streetlight.web.layouts
 
 import kabinet.utils.toRelativeDayFormat
-import kabinet.utils.toRelativeTimeFormat
 import kabinet.utils.toTimeFormat
-import koala.SvgFile
 import koala.css.*
 import koala.html.*
 import kotlinx.datetime.Instant
 import kotlinx.html.FlowContent
 import streetlight.model.data.EventId
-import streetlight.model.data.EventPost
 import streetlight.model.data.ExtraLink
 import streetlight.model.data.GalaxyId
-import streetlight.model.data.ProjectId
 import streetlight.web.StreetlightRoute
+import streetlight.web.ui.StarLightKey
+import streetlight.web.ui.starLight
 
 fun FlowContent.largePostCard(
     title: String,
@@ -112,21 +110,17 @@ fun FlowContent.postedBy(username: String?) {
     }
 }
 
-fun FlowContent.starCell(galaxyId: GalaxyId) {
+fun FlowContent.lightCell(galaxyId: GalaxyId) {
     row(modify(WidthAuto)) {
-        setData(GalaxyKey.GalaxyStarId, galaxyId)
-        starCellContent((0..10).random())
+        setData(StarLightKey.GalaxyLightId, galaxyId)
+        starLight((0..10).random())
     }
 }
 
-fun FlowContent.starCell(eventId: EventId) {
+fun FlowContent.lightCell(eventId: EventId) {
     row {
-        setData(EventKey.EventStarId, eventId)
-        starCellContent((0..10).random())
+        setData(StarLightKey.EventLightId, eventId)
+        starLight((0..10).random())
     }
 }
 
-private fun FlowContent.starCellContent(count: Int) {
-    textBlock(count.toString())
-    icon(SvgFile.LoaderSmall, modify(Height3, AspectRatio1))
-}

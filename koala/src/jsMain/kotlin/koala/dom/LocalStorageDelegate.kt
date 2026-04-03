@@ -49,7 +49,7 @@ fun <T> setStorageOf(
     key: String,
     toString: (T) -> String = { it.toString() },
     transform: (String) -> T
-) = storageOf(
+): LocalStorageDelegate<Set<T>> = storageOf(
     key = key,
     getter = { value -> when (value.isEmpty()) {
         true -> emptySet()
