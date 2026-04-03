@@ -64,7 +64,7 @@ fun viewApp() {
         app.gate.readUser()
 
         val shellBox = document.getElementById(AppBodyKey.ShellBoxId)
-        shellBox.style.display = "none"
+        shellBox.style.display = "none" // td: use pointer-events: none
 
         val portalMount = document.getElementById(AppBodyKey.PortalMountId)
 
@@ -103,18 +103,6 @@ fun viewApp() {
                 }
             }
 
-//            wireBlock(AppBody.titlePathId) {
-//                val titleFlow = app.portal.stateFlow.mapDistinct { it.title }
-//                flowBlock(titleFlow, defaultMagic) { title ->
-//                    if (title != null) {
-//                        row {
-////                            heading2("|", modify(Dim))
-//                            heading2(title, modify(Dim))
-//                        }
-//                    }
-//                }
-//            }
-
             wireBlock(AppBodyKey.BadgeId) {
                 flowBlock(app.gate.userFlow, defaultMagic) { userInfo ->
                     val avatarUrl = userInfo?.avatarUrl
@@ -129,8 +117,8 @@ fun viewApp() {
             }
         }
 
-        delay(100)
-        revealContent()
+//        delay(100)
+//        revealContent()
     }
 }
 

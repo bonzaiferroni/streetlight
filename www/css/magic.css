@@ -111,12 +111,14 @@
 
 /* content box */
 #content-box {
-    opacity: 0;
+    opacity: 1;
     transition: opacity 200ms ease-in-out;
 }
 
-#content-box.reveal {
-    opacity: 1;
+@starting-style {
+    #content-box {
+        opacity: 0;
+    }
 }
 
 /* slow spin */

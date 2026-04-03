@@ -23,6 +23,8 @@ import kotlinx.serialization.serializer
 import org.khronos.webgl.Int8Array
 import org.khronos.webgl.Uint8Array
 import org.w3c.dom.WebSocket
+import org.w3c.fetch.DEFAULT
+import org.w3c.fetch.RequestCache
 import org.w3c.fetch.RequestInit
 import org.w3c.fetch.Response
 import org.w3c.files.Blob
@@ -130,7 +132,8 @@ class FetchClient(
             val request = RequestInit(
                 method = method,
                 headers = headers,
-                body = body
+                body = body,
+                // cache = RequestCache.DEFAULT,
             )
             window.fetch(path, request).await()
         }
