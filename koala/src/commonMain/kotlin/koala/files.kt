@@ -5,7 +5,8 @@ object JsFile: FileSet<Js>() {
     val Tabs = add("tabs.js")
     val Koala = add("koala/koala.js")
     // val Web = jsFileOf("streetlight/web.js")
-    val Web = jsFileOf("web.js", basePath = "/gen/streetlight/")
+    // val Web = jsFileOf("web.js", basePath = "/gen/streetlight/")
+    val Web = jsFileOf("web.js", basePath = "/dev/streetlight/")
 }
 
 object CssFile: FileSet<Css>() {
