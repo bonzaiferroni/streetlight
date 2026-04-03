@@ -72,4 +72,8 @@ fun fileOf(filename: String, isGenerated: Boolean): SiteFile {
     }
 }
 
-fun jsFileOf(filename: String, isDeferred: Boolean = true) = Js(jsPath + filename, isDeferred)
+fun jsFileOf(
+    filename: String,
+    isDeferred: Boolean = true,
+    basePath: String = jsPath,
+) = Js(basePath + filename, isDeferred)

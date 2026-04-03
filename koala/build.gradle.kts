@@ -1,5 +1,7 @@
 @file:OptIn(ExperimentalDistributionDsl::class)
+@file:Suppress("OPT_IN_USAGE")
 
+import org.gradle.kotlin.dsl.dependencies
 import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalDistributionDsl
 
 plugins {
@@ -21,22 +23,26 @@ kotlin {
         }
         binaries.executable()
     }
+    wasmJs {
+        binaries.executable()
+        browser()
+    }
     sourceSets {
-        val commonMain by getting {
-            dependencies {
-                implementation(libs.kotlinx.serialization.json)
-                implementation(libs.kotlinx.coroutines.core)
-                implementation(libs.kotlinx.datetime)
-                implementation(libs.kotlinx.html)
-                implementation(kotlinWrappers.css)
-                api(project(":kampfire"))
-            }
+        commonMain.dependencies {
+            implementation(libs.kotlinx.serialization.json)
+            implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.kotlinx.datetime)
+            implementation(libs.kotlinx.html)
+            implementation(kotlinWrappers.css)
+            api(project(":kampfire"))
         }
 
-        val jsMain by getting {
-            dependencies {
-                implementation(libs.kotlinx.html.js)
-            }
+        jsMain.dependencies {
+            implementation(libs.kotlinx.html.js)
+        }
+
+        wasmJsMain.dependencies {
+            implementation(libs.kotlinx.browser)
         }
     }
 }

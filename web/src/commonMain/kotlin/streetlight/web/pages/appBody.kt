@@ -1,5 +1,6 @@
 package streetlight.web.pages
 
+import koala.JsFile
 import koala.SvgFile
 import koala.css.*
 import koala.css.Property.Companion.PositionAnchor
@@ -30,7 +31,7 @@ fun HTML.appBody(
             }
             box(OverlayId.mount)
         }
-        applyJsFile(jsFileOf("streetlight/web.js"))
+        applyJsFile(JsFile.Web)
     }
 }
 

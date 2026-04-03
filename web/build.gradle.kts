@@ -1,6 +1,7 @@
-@file:OptIn(ExperimentalDistributionDsl::class)
+@file:OptIn(ExperimentalDistributionDsl::class, ExperimentalWasmDsl::class)
 
 import org.gradle.api.tasks.Copy
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalDistributionDsl
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpack
 
@@ -23,26 +24,30 @@ kotlin {
         binaries.executable()
     }
     jvm()
+    wasmJs {
+        binaries.executable()
+        browser()
+    }
     sourceSets {
-        val commonMain by getting {
-            dependencies {
-                implementation(libs.kotlinx.serialization.json)
-                implementation(libs.kotlinx.serialization.cbor)
-                implementation(libs.kotlinx.coroutines.core)
-                implementation(libs.kotlinx.datetime)
-                implementation(libs.kotlinx.html)
-                implementation(kotlinWrappers.css)
-                implementation(project(":model"))
-                implementation(project(":koala"))
-                implementation(project(":kabinet"))
-            }
+        commonMain.dependencies {
+            implementation(libs.kotlinx.serialization.json)
+            implementation(libs.kotlinx.serialization.cbor)
+            implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.kotlinx.datetime)
+            implementation(libs.kotlinx.html)
+            implementation(kotlinWrappers.css)
+            implementation(project(":model"))
+            implementation(project(":koala"))
+            implementation(project(":kabinet"))
         }
 
-        val jsMain by getting {
-            dependencies {
-                implementation(libs.kotlinx.html.js)
-                // implementation(npm("@js-joda/timezone", "2.23.0"))
-            }
+        jsMain.dependencies {
+            implementation(libs.kotlinx.html.js)
+            // implementation(npm("@js-joda/timezone", "2.23.0"))
+        }
+
+        wasmJsMain.dependencies {
+            implementation(libs.kotlinx.browser)
         }
     }
 }

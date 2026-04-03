@@ -16,19 +16,22 @@ kotlin {
         }
         binaries.executable()
     }
+    wasmJs {
+        binaries.executable()
+        browser()
+    }
     sourceSets {
-        val commonMain by getting {
-            dependencies {
-                implementation(libs.kotlinx.datetime)
-                implementation(libs.kotlinx.serialization.json)
-                implementation(libs.kotlinx.coroutines.core)
-                implementation(libs.ktor.client.core)
-            }
+        commonMain.dependencies {
+            implementation(libs.kotlinx.datetime)
+            implementation(libs.kotlinx.serialization.json)
+            implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.ktor.client.core)
         }
 
-        val jsMain by getting {
-            dependencies {
-            }
+        jsMain.dependencies {
         }
+
+        wasmJsMain.dependencies { }
+
     }
 }
