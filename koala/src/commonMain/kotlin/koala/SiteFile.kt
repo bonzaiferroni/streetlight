@@ -23,23 +23,29 @@ enum class SiteFileType {
     Stylesheet,
     Lottie,
     Svg,
+    Image,
 }
 
-data class Css(override val path: String) : SiteFile {
+data class Css(override val path: String): SiteFile {
     override val type get() = SiteFileType.Stylesheet
 }
 
-data class Js(override val path: String, val isDeferred: Boolean = true) : SiteFile {
+data class Js(override val path: String, val isDeferred: Boolean = true): SiteFile {
     override val type get() = SiteFileType.Javascript
 }
 
-data class Lottie(override val path: String) : SiteFile {
+data class Lottie(override val path: String): SiteFile {
     override val type get() = SiteFileType.Lottie
     override fun toString() = path
 }
 
-data class Svg(override val path: String) : SiteFile {
+data class Svg(override val path: String): SiteFile {
     override val type get() = SiteFileType.Svg
+    override fun toString() = path
+}
+
+data class Image(override val path: String): SiteFile {
+    override val type get() = SiteFileType.Image
     override fun toString() = path
 }
 
@@ -47,12 +53,16 @@ const val cssPath = "/www/css/"
 const val jsPath = "/www/js/"
 const val lottiePath = "/www/lottie/"
 const val svgPath = "/www/svg/"
+const val imgPath = "/www/img/"
 const val genPath = "/gen/"
+
+fun siteImageOf(path: String) = Image("$imgPath$path")
 
 fun fileOf(filename: String, isGenerated: Boolean): SiteFile {
     val type = if (filename.endsWith(".css")) SiteFileType.Stylesheet
     else if (filename.endsWith(".js")) SiteFileType.Javascript
     else if (filename.endsWith(".svg")) SiteFileType.Svg
+    else if (filename.split('.').getOrNull(1)?.let { imageExtensions.contains(it) } ?: false) SiteFileType.Image
     else error("unsupported file: $filename")
 
     val path = when {
@@ -60,14 +70,15 @@ fun fileOf(filename: String, isGenerated: Boolean): SiteFile {
         type == SiteFileType.Javascript -> jsPath
         type == SiteFileType.Stylesheet -> cssPath
         type == SiteFileType.Svg -> svgPath
+        type == SiteFileType.Image -> imgPath
         else -> error("unsupported path: $filename")
     } + filename
-
 
     return when (type) {
         SiteFileType.Javascript -> Js(path)
         SiteFileType.Stylesheet -> Css(path)
         SiteFileType.Svg -> Svg(path)
+        SiteFileType.Image -> Image(path)
         else -> error("unsupported type: $type")
     }
 }
@@ -77,3 +88,10 @@ fun jsFileOf(
     isDeferred: Boolean = true,
     basePath: String = jsPath,
 ) = Js(basePath + filename, isDeferred)
+
+val imageExtensions = setOf(
+    "jpg",
+    "png",
+    "webp",
+    "gif",
+)

@@ -4,7 +4,7 @@ package koala.html
 
 import koala.css.Class
 import koala.css.ModifierSet
-import koala.css.Anchor
+import koala.css.PositionAnchor
 import koala.css.Property
 import koala.css.addModifiers
 import koala.css.setStyle
@@ -15,7 +15,7 @@ import kotlinx.html.div
 
 fun FlowContent.popover(
     id: Id,
-    anchor: Anchor? = null,
+    anchor: PositionAnchor,
     modifiers: ModifierSet? = null,
     isManual: Boolean = false,
     block: DIV.() -> Unit
@@ -23,24 +23,25 @@ fun FlowContent.popover(
     div {
         addModifiers(PopoverKey.Class, modifiers)
         setId(id)
-        anchor?.let { anchor ->
-            setStyle(
-                Property.PositionAnchor.to(anchor),
-                Property.AnchorId.to(anchor),
-                Property.ContainerAnchorId.to(anchor.containerPosition()),
-            )
-        }
+        setStyle(
+            // position anchor is necessary for the popover api
+            Property.PositionAnchor.to(anchor),
+            // anchor id is a variable I use in CSS
+            Property.AnchorId.to(anchor),
+            // container anchor allows you to constrain the popover to a parent
+            Property.ContainerAnchorId.to(anchor.containerPosition()),
+        )
         setAttribute(Attribute.Popover.to(if (isManual) "manual" else "auto"))
         block()
     }
 }
 
 // Called on the parent element
-fun CommonAttributeGroupFacade.popoverContainer(anchor: Anchor) {
+fun CommonAttributeGroupFacade.popoverContainer(anchor: PositionAnchor) {
     setStyle(Property.AnchorName.to(anchor.containerPosition()))
 }
 
-private fun Anchor.containerPosition(): Anchor = Anchor("${this.identifier}-container")
+private fun PositionAnchor.containerPosition(): PositionAnchor = PositionAnchor("${this.identifier}-container")
 
 object PopoverKey {
     val Class = Class("popover")

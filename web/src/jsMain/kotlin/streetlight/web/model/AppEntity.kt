@@ -1,12 +1,12 @@
 package streetlight.web.model
 
 import kampfire.model.GeoPoint
+import koala.SiteImage
 import koala.Svg
 import koala.css.MaxWidth64
 import koala.css.modify
 import koala.dom.RenderContext
 import koala.dom.box
-import koala.html.SiteImage
 import koala.model.MapEntityId
 import koala.model.MarkerUtility
 import koala.model.PointEntity
@@ -27,7 +27,7 @@ data class LocationEntity(
     override val entityId get() = location.locationId.value
     // override val label get() = location.name
     override val position get() = location.geoPoint
-    override val thumbPath get() = location.thumbUrl ?: SiteImage.placeholderThumb
+    override val thumbPath get() = location.thumbUrl ?: SiteImage.placeholderThumb.path
     override val focusCard: RenderContext.() -> Unit get() = {
         box {
             cardOf(location)
@@ -45,7 +45,7 @@ data class EventEntity(
     override val entityId get() = location.locationId.value
     // override val label get() = location.name
     override val position get() = location.geoPoint
-    override val thumbPath get() = event.thumbUrl ?: SiteImage.placeholderThumb
+    override val thumbPath get() = event.thumbUrl ?: SiteImage.placeholderThumb.path
     override val focusCard: RenderContext.() -> Unit get() = {
         box {
             cardOf(event, modify(MaxWidth64))
@@ -80,6 +80,6 @@ data class PostEntity(
 ): PointEntity {
     override val entityId get() = post.location?.locationId?.value ?: post.postId.value
     override val thumbPath get() = post.event?.thumbUrl ?: post.location?.thumbUrl ?: galaxy?.thumbUrl
-        ?: SiteImage.placeholderThumb
+        ?: SiteImage.placeholderThumb.path
     override val light get() = Rgb(240, 100, 180 )
 }

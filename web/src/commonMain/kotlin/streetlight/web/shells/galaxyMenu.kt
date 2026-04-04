@@ -1,27 +1,14 @@
 package streetlight.web.shells
 
-import koala.css.BlurBackdrop
-import koala.css.BorderRadius4
-import koala.css.Magic
-import koala.css.Anchor
-import koala.css.Margin1
-import koala.css.PrimaryCardBg
-import koala.css.SlideUp
 import koala.css.WrapFlex
 import koala.css.modify
-import koala.css.setAnchor
 import koala.html.Id
-import koala.html.Attribute
 import koala.html.ButtonMenu
 import koala.html.btn
-import koala.html.button
 import koala.html.buttonMenu
 import koala.html.card
-import koala.html.popover
 import koala.html.row
-import koala.html.setAttribute
 import koala.html.setJsonData
-import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import streetlight.model.data.Galaxy
 import streetlight.web.HomeRoute

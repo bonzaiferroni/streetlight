@@ -1,8 +1,9 @@
 package koala.dom
 
+import koala.Image
+import koala.SiteImage
 import koala.css.ModifierSet
 import koala.css.addModifiers
-import koala.html.SiteImage
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.html.IMG
@@ -11,16 +12,17 @@ import kotlinx.html.style
 import org.w3c.dom.HTMLImageElement
 
 fun RenderContext.image(
-    initial: String? = SiteImage.placeholder,
+    initial: String? = SiteImage.placeholder.path,
     modifiers: ModifierSet? = null,
     binding: Flow<String?>? = null,
     hideOnError: Boolean = true,
     block: (IMG.() -> Unit)? = null
 ): HTMLImageElement {
+    val initial = initial ?: ""
     val element = img {
-        this.src = initial ?: ""
+        this.src = initial
         addModifiers(modifiers)
-        if (initial.isNullOrBlank()) {
+        if (initial.isEmpty()) {
             style = "display: none;"
         }
         block?.invoke(this)
@@ -37,7 +39,7 @@ fun RenderContext.image(
     renderScope.launch {
         binding?.collect { url ->
             val url = url?.takeIf { it.isNotBlank() } ?: initial
-            if (url.isNullOrBlank()) {
+            if (url.isEmpty()) {
                 hideImage()
             } else {
                 showImage()

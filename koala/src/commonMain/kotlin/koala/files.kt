@@ -82,3 +82,8 @@ object LottieFile: FileSet<Lottie>() {
     val spinningCircles = addLottie("spinning-circles.json")
     val circleSync = addLottie("circle-sync.json")
 }
+
+object SiteImage: FileSet<Image>() {
+    val placeholder = siteImageOf("placeholder.jpg")
+    val placeholderThumb = siteImageOf("placeholder_thumb.jpg")
+}

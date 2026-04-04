@@ -1,5 +1,7 @@
 package koala.html
 
+import koala.Image
+import koala.SiteImage
 import koala.css.Class
 import koala.css.HeightAuto
 import koala.css.ModifierSet
@@ -14,11 +16,11 @@ import kotlinx.html.img
 fun FlowContent.fillImage(
     src: String? = null,
     modifiers: ModifierSet? = null,
-    placeholder: String = SiteImage.placeholder,
+    placeholder: Image = SiteImage.placeholder,
     fillWidth: Boolean = true,
     block: (IMG.() -> Unit)? = null
 ) {
-    val src = src ?: placeholder
+    val src = src ?: placeholder.path
     div {
         addModifiers(ImageWithBackdropKey.Class, modifiers)
         img {

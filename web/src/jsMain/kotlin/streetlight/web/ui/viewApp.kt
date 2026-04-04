@@ -28,7 +28,7 @@ import streetlight.web.model.UserCache
 import streetlight.web.model.UserCred
 import streetlight.web.model.UserGate
 import streetlight.web.pages.AppBodyKey
-import streetlight.web.pages.emptyBadge
+import streetlight.web.pages.starBadge
 
 @OptIn(ExperimentalSerializationApi::class)
 fun viewApp() {
@@ -103,18 +103,18 @@ fun viewApp() {
                 }
             }
 
-            wireBlock(AppBodyKey.BadgeId) {
-                flowBlock(app.gate.userFlow, defaultMagic) { userInfo ->
-                    val avatarUrl = userInfo?.avatarUrl
-                    if (avatarUrl != null) {
-                        image(avatarUrl, modify(Size100P, AspectRatio1, CircleClip))
-                    } else {
-                        box(modify(Height100P, AspectRatio1)) {
-                            emptyBadge()
-                        }
-                    }
-                }
-            }
+//            wireBlock(AppBodyKey.BadgeId) {
+//                flowBlock(app.gate.userFlow, defaultMagic) { userInfo ->
+//                    val avatarUrl = userInfo?.avatarUrl
+//                    if (avatarUrl != null) {
+//                        image(avatarUrl, modify(Size100P, AspectRatio1, CircleClip))
+//                    } else {
+//                        box(modify(Height100P, AspectRatio1)) {
+//                            starBadge()
+//                        }
+//                    }
+//                }
+//            }
         }
 
         delay(100)

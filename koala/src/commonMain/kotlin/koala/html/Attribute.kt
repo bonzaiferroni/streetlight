@@ -43,6 +43,10 @@ fun <T> CoreAttributeGroupFacade.setAttribute(attribute: Attribute<T>, value: T?
     }
 }
 
+fun CoreAttributeGroupFacade.setPopoverTarget(id: Id) {
+    setAttribute(Attribute.PopoverTarget, id.identifier)
+}
+
 var CoreAttributeGroupFacade.blockLabel: String?
     get() = attributes[Attribute.BlockLabel.key]
     set(value) {

@@ -11,6 +11,7 @@ import koala.css.modify
 import koala.html.BtnKey
 import koala.html.Id
 import koala.html.configureButton
+import koala.html.configureSvgButton
 import koala.html.setId
 import koala.model.mapDistinct
 import kotlinx.coroutines.flow.Flow
@@ -55,7 +56,7 @@ fun RenderContext.button(
     block: BUTTON.() -> Unit = {},
 ): HTMLButtonElement {
     val element = button {
-        configureButton(svg, modifiers, block)
+        configureSvgButton(svg, modifiers, block)
     }
 
     configureButtonEvents(

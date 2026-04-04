@@ -9,7 +9,7 @@ import kotlinx.html.div
 fun FlowContent.icon(
     file: Svg,
     modifiers: ModifierSet? = null,
-    block: (DIV.() -> Unit)? = null
+    block: DIV.() -> Unit = {}
 ) {
     div {
         configureIcon(
@@ -23,11 +23,11 @@ fun FlowContent.icon(
 fun DIV.configureIcon(
     file: Svg,
     modifiers: ModifierSet? = null,
-    block: (DIV.() -> Unit)? = null
+    block: DIV.() -> Unit = {}
 ) {
     addModifiers(modify(IconKey.Class, modifiers))
-    setStyle(Property.MaskUrl.to(UrlValue(file.path)))
-    block?.invoke(this)
+    setStyle(Property.ImageUrl.to(UrlValue(file.path)))
+    block()
 }
 
 object IconKey {

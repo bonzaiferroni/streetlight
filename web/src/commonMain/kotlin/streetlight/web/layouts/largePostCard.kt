@@ -2,6 +2,7 @@ package streetlight.web.layouts
 
 import kabinet.utils.toRelativeDayFormat
 import kabinet.utils.toTimeFormat
+import koala.SiteImage
 import koala.css.*
 import koala.html.*
 import kotlinx.datetime.Instant
@@ -25,7 +26,7 @@ fun FlowContent.largePostCard(
     modifiers: ModifierSet? = null,
     cells: List<(FlowContent.() -> Unit)?>
 ) {
-    val imageUrl = imageUrl ?: SiteImage.placeholder
+    val imageUrl = imageUrl ?: SiteImage.placeholder.path
 
     card(modify(modifiers, QueryContainer, Padding0, OverflowHidden)) {
         column(modify(QueryContainer, ContainerLgRow, Gap0)) {

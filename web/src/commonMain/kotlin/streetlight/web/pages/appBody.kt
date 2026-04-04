@@ -3,22 +3,18 @@ package streetlight.web.pages
 import koala.JsFile
 import koala.SvgFile
 import koala.css.*
-import koala.css.Property.Companion.PositionAnchor
 import koala.html.*
-import koala.jsFileOf
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kotlinx.html.HTML
 import kotlinx.html.body
-import streetlight.web.AccountRoute
 import streetlight.web.HomeRoute
-import streetlight.web.SiteConfigRoute
 
 fun HTML.appBody(
     block: (DIV.() -> Unit)? = null
 ) {
     body {
-        stickyBar()
+        helmBar()
         box(AppBodyKey.ViewportId) {
             column(AppBodyKey.AppBoxId) {
                 column {
@@ -45,10 +41,6 @@ fun FlowContent.appHeader() {
             }
         }
     }
-}
-
-fun FlowContent.emptyBadge() {
-    icon(SvgFile.EmptyProfile, modify(OpacityHalf, Size100P))
 }
 
 object AppBodyKey {

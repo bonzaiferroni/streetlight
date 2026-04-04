@@ -1,37 +1,42 @@
 package koala.html
 
+import koala.Image
+import koala.SiteImage
+import koala.Svg
 import koala.css.*
 import kotlinx.html.*
 
-fun FlowContent.image(
+fun FlowOrInteractiveOrPhrasingContent.image(
+    src: String? = null,
+    modifiers: ModifierSet? = null,
+    placeholder: Image = SiteImage.placeholder,
+    block: IMG.() -> Unit = {}
+) {
+    img {
+        this.src = src ?: placeholder.path
+        addModifiers(modifiers)
+        block()
+    }
+}
+
+fun FlowOrInteractiveOrPhrasingContent.image(
     id: Id,
     src: String? = null,
     modifiers: ModifierSet? = null,
-    placeholder: String = SiteImage.placeholder,
-    block: (IMG.() -> Unit)? = null
+    placeholder: Image = SiteImage.placeholder,
+    block: IMG.() -> Unit = {}
 ) {
     image(src, modifiers, placeholder) {
         this.id = id.identifier
-        block?.invoke(this)
+        block()
     }
 }
 
-fun FlowContent.image(
-    src: String? = null,
+fun FlowOrInteractiveOrPhrasingContent.image(
+    svg: Svg,
     modifiers: ModifierSet? = null,
-    placeholder: String = SiteImage.placeholder,
-    block: (IMG.() -> Unit)? = null
+    placeholder: Image = SiteImage.placeholder,
+    block: IMG.() -> Unit = {}
 ) {
-    img {
-        this.src = src ?: placeholder
-        addModifiers(modifiers)
-        block?.invoke(this)
-    }
+    image(svg.path, modifiers, placeholder, block)
 }
-
-object SiteImage {
-    val placeholder = imagePathOf("placeholder.jpg")
-    val placeholderThumb = imagePathOf("placeholder_thumb.jpg")
-}
-
-private fun imagePathOf(filename: String) = "/www/img/$filename"

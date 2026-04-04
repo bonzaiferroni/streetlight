@@ -2,7 +2,7 @@ package streetlight.web.ui
 
 import koala.css.Blur
 import koala.css.Magic
-import koala.css.Anchor
+import koala.css.PositionAnchor
 import koala.css.modify
 import koala.css.setAnchor
 import koala.dom.RenderContext
@@ -33,4 +33,4 @@ fun RenderContext.viewSandbox(app: Streetlight) {
 }
 
 private val menuId = Id("menu")
-private val myAnchor = Anchor("my-anchor")
+private val myAnchor = PositionAnchor("my-anchor")

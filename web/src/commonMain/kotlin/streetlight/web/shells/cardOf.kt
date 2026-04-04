@@ -1,7 +1,7 @@
 package streetlight.web.shells
 
+import koala.SiteImage
 import koala.css.ModifierSet
-import koala.html.SiteImage
 import koala.html.cardOf
 import kotlinx.html.FlowContent
 import streetlight.model.data.Event
@@ -26,7 +26,7 @@ fun FlowContent.cardOf(event: EventLocation) {
 }
 
 fun FlowContent.cardOf(galaxy: Galaxy) {
-    cardOf(GalaxyPathIdRoute(galaxy.path), galaxy.name, SiteImage.placeholderThumb, galaxy.description)
+    cardOf(GalaxyPathIdRoute(galaxy.path), galaxy.name, SiteImage.placeholderThumb.path, galaxy.description)
 }
 
 fun FlowContent.cardOf(
@@ -35,6 +35,6 @@ fun FlowContent.cardOf(
 ) {
     val route = post.event?.eventId?.let { EventIdRoute(it) }
         ?: post.location?.locationId?.let { LocationIdRoute(it) }
-    val thumbUrl = post.thumbUrl ?: SiteImage.placeholderThumb
+    val thumbUrl = post.thumbUrl ?: SiteImage.placeholderThumb.path
     cardOf(route, post.title, thumbUrl, post.description, modifiers)
 }

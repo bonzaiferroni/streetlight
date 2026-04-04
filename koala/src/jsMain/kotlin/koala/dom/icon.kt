@@ -10,7 +10,7 @@ import org.w3c.dom.HTMLDivElement
 fun DOMContext.icon(
     file: Svg,
     modifiers: ModifierSet? = null,
-    block: (DIV.() -> Unit)? = null
+    block: DIV.() -> Unit = {}
 ) = div {
     configureIcon(
         file = file,
@@ -23,7 +23,7 @@ fun DOMContext.icon(
     file: Svg,
     onClick: () -> Unit,
     modifiers: ModifierSet? = null,
-    block: (DIV.() -> Unit)? = null
+    block: DIV.() -> Unit = {}
 ): HTMLDivElement {
     val element = icon(file, modifiers, block)
     element.onClick(onClick)

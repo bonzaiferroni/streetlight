@@ -4,63 +4,78 @@ import koala.Svg
 import koala.css.*
 import kotlinx.html.BUTTON
 import kotlinx.html.FlowContent
-import kotlinx.html.button
+import kotlinx.html.button as buttonTag
 
 fun FlowContent.button(
     text: String,
     modifiers: ModifierSet? = null,
     block: BUTTON.() -> Unit = {}
 ) {
-    button {
+    buttonTag {
         configureButton(text, modifiers, block)
     }
 }
 
 fun BUTTON.configureButton(
-    text: String,
+    text: String?,
     modifiers: ModifierSet? = null,
     block: BUTTON.() -> Unit = {}
 ) {
     addModifiers(BtnKey.Class, modifiers)
     block()
-    +text
+    text?.let {
+        +text
+    }
 }
 
 fun FlowContent.button(
-    svg: Svg? = null,
+    svg: Svg,
     modifiers: ModifierSet? = null,
     block: BUTTON.() -> Unit = {}
 ) {
-    button {
-        configureButton(svg, modifiers, block)
+    buttonTag {
+        configureSvgButton(svg, modifiers, block)
     }
 }
 
-fun BUTTON.configureButton(
-    svg: Svg? = null,
+fun BUTTON.configureSvgButton(
+    svg: Svg,
     modifiers: ModifierSet? = null,
     block: BUTTON.() -> Unit = {}
 ) {
-    addModifiers(IconButtonKey.Class, modify(IconKey.Class, modifiers))
-    svg?.let {
-        setStyle(Property.MaskUrl.to(UrlValue(svg)))
-    }
+    addModifiers(ButtonKey.IconClass, modify(IconKey.Class, modifiers))
+    setStyle(Property.ImageUrl.to(UrlValue(svg)))
     block()
 }
 
-object IconButtonKey {
-    val Class = Class("icon-button")
+fun FlowContent.button(
+    modifiers: ModifierSet? = null,
+    block: BUTTON.() -> Unit = {}
+) {
+    buttonTag {
+        configureButton(null, modify(ButtonKey.ElementClass, modifiers), block)
+    }
+}
+
+object ButtonKey {
+    val IconClass = Class("icon-button")
+    val ElementClass = Class("image-button")
 }
 
 // language="CSS"
 val IconButtonCss get() = """
-${IconButtonKey.Class} {
+${ButtonKey.IconClass} {
     color: inherit;
     transition: background-color var(--magic-interval) var(--magic-easing);
 }
 
-${IconButtonKey.Class}:hover {
+${ButtonKey.IconClass}:hover {
     background-color: rgb(var(--accent));
+    cursor: pointer;
+}
+
+${ButtonKey.ElementClass} {
+    all: unset;
     cursor: pointer;
 }
 """

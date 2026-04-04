@@ -5,7 +5,10 @@ import koala.html.TagContext
 import kotlinx.css.CssBuilder
 import kotlinx.css.RuleContainer
 import kotlinx.css.RuleSet
+import kotlinx.html.FlowContent
 import kotlinx.html.classes
+import kotlinx.html.style
+import kotlinx.html.unsafe
 import kotlin.jvm.JvmInline
 
 interface Modifier: Queryable {
@@ -62,4 +65,12 @@ fun CssBuilder.printCss(block: () -> Unit) {
     val len = toString().length
     block()
     println(toString().substring(len))
+}
+
+fun FlowContent.stylesheet(style: String) {
+    style {
+        unsafe {
+            +style
+        }
+    }
 }
