@@ -5,18 +5,17 @@ import koala.html.*
 import kotlinx.html.FlowContent
 import kotlinx.serialization.Serializable
 import streetlight.model.data.Galaxy
-import streetlight.model.data.GalaxyListing
-import streetlight.web.layouts.layoutEventPosts
-import streetlight.web.layouts.layoutGalaxyListing
+import streetlight.model.data.PostListing
+import streetlight.web.layouts.layoutPostListing
 import streetlight.web.pages.appFooter
-import streetlight.web.ui.headerOf
+import streetlight.web.ui.galaxyHeader
 
 fun FlowContent.galaxyProfileShell(content: GalaxyProfileContent) {
     val galaxy = content.galaxy; val listing = content.listing;
     column(GalaxyProfileKey.ShellId, modify(Gap8)) {
         column {
             swapBlock(GalaxyProfileKey.SwapId, modify(Magic, OverflowClip)) {
-                headerOf(galaxy, modify(SlideLeft)) {
+                galaxyHeader(galaxy, modify(SlideLeft)) {
                     setId(GalaxyProfileKey.HeaderId)
                     setReveal(true)
                 }
@@ -33,7 +32,7 @@ fun FlowContent.galaxyProfileShell(content: GalaxyProfileContent) {
                 postMenu(galaxy)
             }
         }
-        layoutGalaxyListing(listing)
+        layoutPostListing(listing)
         appFooter(GalaxyProfileKey.SOURCE)
     }
 }
@@ -50,5 +49,5 @@ object GalaxyProfileKey {
 @Serializable
 data class GalaxyProfileContent(
     val galaxy: Galaxy,
-    val listing: GalaxyListing,
+    val listing: PostListing,
 )

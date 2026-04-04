@@ -116,10 +116,16 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object Path: GetByIdEndpoint<String, Galaxy>(this, "path")
         object PostEvent: PostEndpoint<EventPostEdit, EventPostId>(this, "post-event")
         object ReadMultiPosts: PostEndpoint<List<GalaxyId>, List<EventPost>>(this, "multi-posts")
-        object ReadPosts: GetByTableIdEndpoint<GalaxyId, GalaxyListing>(this, "posts")
+        object ReadPosts: GetByTableIdEndpoint<GalaxyId, PostListing>(this, "posts")
         object ReadPost: GetByTableIdEndpoint<EventPostId, EventPost>(this, "post")
         object ReadLights: GetEndpoint<List<GalaxyId>>(this, "lights")
         object EditLight: PostEndpoint<LightEdit, Boolean>(this, "light-edit")
+    }
+
+    object Stars: ApiNode(this, "stars") {
+        object ReadByUsername: GetEndpoint<Star>(this, "star") {
+            val username = addStringParam("username")
+        }
     }
 
 //    object Posts: ApiNode(this, "post") {

@@ -8,7 +8,7 @@ import streetlight.web.shells.galaxyProfileShell
 fun HTML.galaxyProfilePage(content: GalaxyProfileContent, styles: String) {
     val galaxy = content.galaxy
     appHead("Streetlight | ${galaxy.name}", styles) {
-        supportProtobuf()
+        // supportProtobuf()
         supportGeoMap()
     }
     appBody {

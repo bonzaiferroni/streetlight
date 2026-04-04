@@ -6,13 +6,13 @@ import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import streetlight.model.data.Location
 import streetlight.web.pages.appFooter
-import streetlight.web.ui.headerOf
+import streetlight.web.ui.locationHeader
 
 fun FlowContent.locationShell(
     location: Location
 ) {
     column(LocationShell.id) {
-        headerOf(location)
+        locationHeader(location)
         row(modify(FlexItems1, AlignItemsStretch)) {
             card() {
                 row(modify(AlignItemsEnd)) {

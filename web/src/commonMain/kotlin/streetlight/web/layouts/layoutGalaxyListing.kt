@@ -9,10 +9,10 @@ import koala.html.heading3
 import koala.html.tab
 import koala.html.tabs
 import kotlinx.html.FlowContent
-import streetlight.model.data.GalaxyListing
+import streetlight.model.data.PostListing
 import streetlight.model.data.PostType
 
-fun FlowContent.layoutGalaxyListing(listing: GalaxyListing) {
+fun FlowContent.layoutPostListing(listing: PostListing) {
     val types = listing.types
     when (types.size) {
         0 -> {

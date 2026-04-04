@@ -6,8 +6,9 @@ import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import streetlight.model.data.Galaxy
 import streetlight.model.data.Location
+import streetlight.model.data.Star
 
-fun FlowContent.headerOf(
+fun FlowContent.locationHeader(
     location: Location,
     modifiers: ModifierSet? = null,
     block: DIV.() -> Unit = {}
@@ -15,10 +16,18 @@ fun FlowContent.headerOf(
     headerImage(location.name, location.imageUrl, modifiers, block)
 }
 
-fun FlowContent.headerOf(
+fun FlowContent.galaxyHeader(
     galaxy: Galaxy,
     modifiers: ModifierSet? = null,
     block: DIV.() -> Unit = {}
 ) {
     headerImage(galaxy.name, galaxy.imageUrl, modifiers, block)
+}
+
+fun FlowContent.starHeader(
+    star: Star,
+    modifiers: ModifierSet? = null,
+    block: DIV.() -> Unit = {}
+) {
+    headerImage(star.name, star.imageUrl, modifiers, block)
 }

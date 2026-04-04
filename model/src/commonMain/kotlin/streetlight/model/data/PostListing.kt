@@ -3,7 +3,7 @@ package streetlight.model.data
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class GalaxyListing(
+data class PostListing(
     val events: List<EventPost>?,
     val locations: List<LocationPost>?,
 ) {

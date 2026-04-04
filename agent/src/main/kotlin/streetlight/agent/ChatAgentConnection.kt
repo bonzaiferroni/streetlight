@@ -1,11 +1,11 @@
 package streetlight.agent
 
-import kabinet.console.globalConsole
+import kabinet.console.console
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 
-private val console = globalConsole.getHandle(ChatAgentConnection::class)
+private val console = console.getHandle(ChatAgentConnection::class)
 
 class ChatAgentConnection(
     apiKey: String,

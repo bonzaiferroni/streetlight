@@ -7,7 +7,6 @@ import kotlin.jvm.JvmInline
 
 @Serializable
 data class Star(
-    val path: String,
     val name: String,
     val description: String?,
     val imageUrl: String?,
@@ -26,7 +25,6 @@ value class StarId(override val value: String): ProjectId {
 @Serializable
 data class StarEdit(
     val name: String? = null,
-    val path: String? = null,
     val description: String? = null,
     val imageUrl: String? = null,
     val thumbUrl: String? = null,
