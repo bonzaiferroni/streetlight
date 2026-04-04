@@ -9,7 +9,7 @@ import koala.model.storeOf
 import kotlinx.browser.localStorage
 import org.w3c.dom.get
 
-class UserCred {
+class StarCred {
     private val state = storeOf(UserCredState(
         usernameText = localStorage[USERNAME_KEY] ?: "",
         stayLoggedIn = localStorage[STAY_LOGGED_KEY]?.toBooleanStrictOrNull() ?: false,

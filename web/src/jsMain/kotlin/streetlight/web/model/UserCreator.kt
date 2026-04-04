@@ -10,7 +10,7 @@ import streetlight.web.io.ApiClient
 
 class UserCreator(
     private val scope: CoroutineScope,
-    private val gate: UserGate,
+    private val gate: StarGate,
     private val api: ApiClient,
 ) {
     private val state = storeOf(UserCreatorState())

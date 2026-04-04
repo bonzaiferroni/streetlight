@@ -10,12 +10,12 @@ import streetlight.web.AccountRoute
 
 class GateAgent(
     val scope: CoroutineScope,
-    val gate: UserGate,
+    val gate: StarGate,
     val portal: Portal,
 ) {
     @Deprecated("use userContent")
     fun checkIn(block: (UserInfo) -> Unit) {
-        val user = gate.stateNow.user
+        val user = gate.stateNow.star
         if (user != null) {
             block(user)
             return

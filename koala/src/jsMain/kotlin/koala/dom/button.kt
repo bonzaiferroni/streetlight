@@ -11,6 +11,7 @@ import koala.css.modify
 import koala.html.BtnKey
 import koala.html.Id
 import koala.html.configureButton
+import koala.html.configureElementButton
 import koala.html.configureSvgButton
 import koala.html.setId
 import koala.model.mapDistinct
@@ -57,6 +58,27 @@ fun RenderContext.button(
 ): HTMLButtonElement {
     val element = button {
         configureSvgButton(svg, modifiers, block)
+    }
+
+    configureButtonEvents(
+        element = element,
+        onClick = onClick,
+        onClickEvent = onClickEvent,
+        bindIsEnabled = bindIsEnabled
+    )
+
+    return element
+}
+
+fun RenderContext.button(
+    modifiers: ModifierSet? = null,
+    onClick: (() -> Unit)? = null,
+    onClickEvent: ((Event) -> Unit)? = null,
+    bindIsEnabled: Flow<Boolean>? = null,
+    block: BUTTON.() -> Unit = {},
+): HTMLButtonElement {
+    val element = button {
+        configureElementButton(modifiers, block)
     }
 
     configureButtonEvents(

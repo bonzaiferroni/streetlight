@@ -1,6 +1,5 @@
 package streetlight.web.io
 
-import kabinet.utils.toBytes
 import kampfire.api.Endpoint
 import kampfire.api.GetByIdEndpoint
 import kampfire.api.GetByTableIdEndpoint
@@ -19,25 +18,21 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.cbor.Cbor
 import kotlinx.serialization.decodeFromByteArray
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.serializer
 import org.khronos.webgl.Int8Array
 import org.khronos.webgl.Uint8Array
 import org.w3c.dom.WebSocket
-import org.w3c.fetch.DEFAULT
-import org.w3c.fetch.RequestCache
 import org.w3c.fetch.RequestInit
 import org.w3c.fetch.Response
 import org.w3c.files.Blob
-import streetlight.model.data.AreaTransitState
 import streetlight.model.data.ProjectId
 import streetlight.model.data.toProjectId
-import streetlight.web.model.UserCred
+import streetlight.web.model.StarCred
 import kotlin.js.json
 import kotlin.let
 import kotlin.text.ifEmpty
 
 class FetchClient(
-    private val cred: UserCred?
+    private val cred: StarCred?
 ) {
     suspend inline fun <reified Returned, Endpoint: GetEndpoint<Returned>> get(
         endpoint: Endpoint,

@@ -51,14 +51,21 @@ fun FlowContent.button(
     block: BUTTON.() -> Unit = {}
 ) {
     buttonTag {
-        addModifiers(ButtonKey.ElementClass, modifiers)
-        block()
+        configureElementButton(modifiers, block)
     }
+}
+
+fun BUTTON.configureElementButton(
+    modifiers: ModifierSet? = null,
+    block: BUTTON.() -> Unit = {}
+) {
+    addModifiers(ButtonKey.ElementClass, modifiers)
+    block()
 }
 
 object ButtonKey {
     val IconClass = Class("icon-button")
-    val ElementClass = Class("image-button")
+    val ElementClass = Class("element-button")
 }
 
 // language="CSS"
@@ -89,9 +96,15 @@ ${ButtonKey.ElementClass} {
     outline: none;
 
     cursor: pointer;
+    transition: box-shadow var(--magic-interval) var(--magic-easing);
 }
 
 ${ButtonKey.ElementClass}:focus-visible {
     outline: 2px solid currentColor;
+}
+
+${ButtonKey.ElementClass}:hover {
+    animation: glow-shadow 10s infinite linear;
+    box-shadow: inset 0 0 0 9999px rgba(255,255,255,.04);
 }
 """

@@ -14,7 +14,7 @@ fun FlowContent.siteHelm() {
             column(modify(PaddingRight3)) {
                 val rowMod = modify(AlignItemsCenter)
                 row(modify(AlignItemsCenter)) {
-                    button(SvgFile.Helm, modify(HelmBarKey.ButtonMod, SpinLoop, BorderDashed2Px, BorderRadius50P)) {
+                    button(SvgFile.Helm, modify(HelmBarKey.IconMod, SpinLoop, BorderDashed2Px, BorderRadius50P)) {
                         onClick = closePopover
                     }
                     heading3("Helm")
@@ -22,7 +22,7 @@ fun FlowContent.siteHelm() {
                 action(SiteConfigRoute) {
                     onClick = closePopover
                     row(rowMod) {
-                        icon(SvgFile.Settings, HelmBarKey.ButtonMod)
+                        icon(SvgFile.Settings, HelmBarKey.IconMod)
                         textBlock("Settings")
                     }
                 }

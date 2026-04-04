@@ -7,15 +7,15 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import streetlight.web.io.ApiClient
 
-class UserGate(
+class StarGate(
     private val scope: CoroutineScope,
-    val cred: UserCred,
+    val cred: StarCred,
     private val api: ApiClient,
 ) {
-    private val state = storeOf(UserGateState())
+    private val state = storeOf(StarGateState())
     val stateNow get() = state.now
 
-    val starFlow = state.flow.mapDistinct { it.user }
+    val starFlow = state.flow.mapDistinct { it.star }
     val messageFlow = state.flow.mapDistinct { it.message }
     val isSignedInFlow = state.flow.mapDistinct { it.isSignedIn }
 
@@ -24,7 +24,7 @@ class UserGate(
     }
 
     fun signIn() {
-        if (stateNow.user != null && cred.stateNow.hasCredentials) return
+        if (stateNow.star != null && cred.stateNow.hasCredentials) return
         console.log("signing in")
         scope.launch {
             readUser()
@@ -32,10 +32,10 @@ class UserGate(
     }
 
     suspend fun readUser() {
-        val user = api.readUserInfo()
-        if (user != null) {
+        val star = api.readStarInfo()
+        if (star != null) {
             console.log("signed in")
-            state.set { it.copy(user = user) }
+            state.set { it.copy(star = star) }
         } else {
             console.log("unable to sign in")
             state.set { it.copy(message = "Unable to sign in.")}
@@ -45,17 +45,17 @@ class UserGate(
     fun signOut() {
 //        userCache.reset()
         cred.setStayLoggedIn(false)
-        state.set { it.copy(user = null) }
+        state.set { it.copy(star = null) }
     }
 
     fun setUpdate(user: UserInfo) {
-        state.set { it.copy(user = user) }
+        state.set { it.copy(star = user) }
     }
 }
 
-data class UserGateState(
-    val user: UserInfo? = null,
+data class StarGateState(
+    val star: UserInfo? = null,
     val message: String? = null,
 ) {
-    val isSignedIn get() = user != null
+    val isSignedIn get() = star != null
 }

@@ -30,14 +30,6 @@ fun HTMLElement.renderRoot(
     }
 }
 
-fun RenderContext.mountRender(
-    elementId: Id,
-    block: RenderContext.() -> Unit
-) {
-    val mount = document.getElementById(elementId)
-    mount.renderRoot(renderScope, block)
-}
-
 class RenderCache(
     val context: RenderContext,
     val job: Job,

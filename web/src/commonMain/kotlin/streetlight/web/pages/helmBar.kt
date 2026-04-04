@@ -12,13 +12,13 @@ fun FlowContent.helmBar() {
     row(HelmBarKey.StickyBarId, modify(JustifyContentSpaceBetween)) {
         card(cardMod) {
             setAnchor(SiteHelmKey.PositionAnchor)
-            button(SvgFile.Helm, HelmBarKey.ButtonMod) {
+            button(SvgFile.Helm, HelmBarKey.IconMod) {
                 setPopoverTarget(SiteHelmKey.Id)
             }
         }
         card(cardMod) {
             setAnchor(StarHelmKey.PositionAnchor)
-            button(HelmBarKey.ButtonMod) {
+            button(HelmBarKey.IconMod) {
                 setPopoverTarget(StarHelmKey.Id)
                 starBadge()
             }
@@ -31,7 +31,7 @@ fun FlowContent.helmBar() {
 object HelmBarKey {
     val StickyBarId = Id("helm-bar")
     val CardClass = Class("helm-card")
-    val ButtonMod = modify(Height6, AspectRatio1, DisplayFlex)
+    val IconMod = modify(Height6, AspectRatio1, DisplayFlex)
 }
 
 // language="CSS"

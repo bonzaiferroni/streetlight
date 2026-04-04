@@ -6,13 +6,17 @@ import koala.css.Class
 import koala.css.OpacityMost
 import koala.css.Size100P
 import koala.css.modify
+import koala.html.Id
 import koala.html.image
+import koala.html.setId
 import kotlinx.html.FlowOrInteractiveOrPhrasingContent
 
 fun FlowOrInteractiveOrPhrasingContent.starBadge() {
-    image(SvgFile.Someone, modify(StarBadgeKey.Class, OpacityMost, Size100P, BorderRadius50P))
+    image(SvgFile.Someone, modify(OpacityMost, Size100P, BorderRadius50P)) {
+        setId(StarBadgeKey.Id)
+    }
 }
 
 object StarBadgeKey {
-    val Class = Class("star-badge")
+    val Id = Id("star-badge")
 }

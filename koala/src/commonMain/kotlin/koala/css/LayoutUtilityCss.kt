@@ -14,7 +14,7 @@ val LayoutUtilityCss
         // Width
         WidthAuto, Width100P, WidthFitContent,
         Width2, Width4, Width5, Width8, Width12, Width16, Width24, Width32, Width64,
-        MinWidth0, MinWidth16, MinWidth32, MinWidthAuto, MaxWidth25P, MaxWidth50P,
+        MinWidth0, MinWidth16, MinWidth32, MinWidth36, MinWidth48, MinWidthAuto, MaxWidth25P, MaxWidth50P,
         MaxWidth5, MaxWidth16, MaxWidth64,
         // Height
         HeightAuto, Height100P, Height2, Height3, Height4, Height5, Height6, Height8, Height12, Height16, Height24, Height32, Height48,
@@ -87,6 +87,8 @@ val Width64 = utilityOf("width-64", "width: calc(var(--unit-spacing) * 64)")
 val MinWidth0 = utilityOf("min-width-0", "min-width: 0")
 val MinWidth16 = utilityOf("min-width-16", "min-width: calc(var(--unit-spacing) * 16)")
 val MinWidth32 = utilityOf("min-width-32", "min-width: calc(var(--unit-spacing) * 32)")
+val MinWidth36 = utilityOf("min-width-36", "min-width: calc(var(--unit-spacing) * 36)")
+val MinWidth48 = utilityOf("min-width-48", "min-width: calc(var(--unit-spacing) * 48)")
 val MinWidthAuto = utilityOf("min-width-auto", "min-width: auto")
 val MaxWidth25P = utilityOf("max-width-25", "max-width: 25%")
 val MaxWidth50P = utilityOf("max-width-50", "max-width: 50%")

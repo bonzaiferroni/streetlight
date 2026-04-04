@@ -12,7 +12,7 @@ class UserCache(
     scope: CoroutineScope,
     private val config: SiteConfig,
     private val api: ApiClient,
-    private val gate: UserGate,
+    private val gate: StarGate,
 ) {
     init {
         scope.launch {

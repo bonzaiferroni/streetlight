@@ -1,6 +1,5 @@
 package streetlight.web.ui
 
-import koala.SvgFile
 import koala.css.*
 import koala.dom.*
 import koala.model.GeoMap
@@ -11,7 +10,6 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.serialization.ExperimentalSerializationApi
-import org.w3c.dom.HTMLImageElement
 import revealContent
 import streetlight.web.HomeRoute
 import streetlight.web.StreetlightScreen
@@ -27,17 +25,15 @@ import streetlight.web.model.SiteConfig
 import streetlight.web.model.StreetMap
 import streetlight.web.model.ThemeReactor
 import streetlight.web.model.UserCache
-import streetlight.web.model.UserCred
-import streetlight.web.model.UserGate
+import streetlight.web.model.StarCred
+import streetlight.web.model.StarGate
 import streetlight.web.pages.AppBodyKey
-import streetlight.web.pages.StarBadgeKey
-import streetlight.web.pages.starBadge
 
 @OptIn(ExperimentalSerializationApi::class)
 fun viewApp() {
     val scope = MainScope() // 57 KB
 
-    val cred = UserCred()
+    val cred = StarCred()
     val fetchClient = FetchClient(cred)
 
     val app = object : Streetlight { // 220 KB
@@ -51,7 +47,7 @@ fun viewApp() {
             override val location = OSMFetchClient()
         }
 
-        override val gate = UserGate(scope, cred, client.api)
+        override val gate = StarGate(scope, cred, client.api)
         override val cache = UserCache(scope, config, client.api, gate)
         override val portal = Portal(HomeRoute, StreetlightScreen.entries, scope)
         override val gateAgent = GateAgent(scope, gate, portal)
@@ -106,7 +102,8 @@ fun viewApp() {
                 }
             }
 
-            wireBadges(app)
+            wireBadge(app)
+            queryAndWireStarHelm(app)
         }
 
         // When content is loaded with a hash tag like https://streetlight.ing/#/g/my-galaxy,

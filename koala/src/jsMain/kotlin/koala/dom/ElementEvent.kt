@@ -18,6 +18,7 @@ fun Element.onEvent(event: ElementEvent, onEvent: (Event) -> Unit) {
     addEventListener(event.label, onEvent)
 }
 
+@Suppress("UNCHECKED_CAST")
 fun <T> Element.onCustomEvent(event: CustomElementEvent<T>, onEvent: (T) -> Unit) {
     addEventListener(event.label, {
         val event = it as CustomEvent

@@ -77,7 +77,7 @@
 
 [onclick], .clickable {
     cursor: pointer;
-    transition: box-shadow 200ms ease-in-out;
+    transition: box-shadow var(--magic-interval) var(--magic-easing);
 }
 
 /*a > .layout-card:hover*/
