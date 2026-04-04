@@ -3,7 +3,11 @@ package streetlight.web.model
 import koala.model.GeoMap
 import koala.model.Portal
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.MainScope
+import streetlight.web.HomeRoute
+import streetlight.web.StreetlightScreen
 import streetlight.web.io.ApiClient
+import streetlight.web.io.FetchClient
 import streetlight.web.io.OSMFetchClient
 import streetlight.web.io.TransitBrowserClient
 
@@ -24,4 +28,31 @@ interface ClientContext {
     val transit: TransitBrowserClient
     val api: ApiClient
     val location: OSMFetchClient
+}
+
+fun createStreetlight(scope: CoroutineScope): Streetlight {
+
+    val cred = StarCred()
+    val fetchClient = FetchClient(cred)
+
+    return object : Streetlight { // 220 KB
+        override val appScope = scope
+
+        override val config = SiteConfig()
+
+        override val client = object : ClientContext {
+            override val transit = TransitBrowserClient(fetchClient)
+            override val api = ApiClient(fetchClient)
+            override val location = OSMFetchClient()
+        }
+
+        override val gate = StarGate(scope, cred, client.api)
+        override val cache = UserCache(scope, config, client.api, gate)
+        override val portal = Portal(HomeRoute, StreetlightScreen.entries, scope)
+        override val gateAgent = GateAgent(scope, gate, portal)
+
+        override val geoMap = GeoMap(scope)
+        override val streetMap = StreetMap(scope, client, cache, geoMap, config)
+        override val chatRoom = ChatRoom(scope, client.api)
+    } as Streetlight
 }
