@@ -24,7 +24,7 @@ class GateAgent(
         val currentRoute = portal.stateNow.route
 
         scope.launch {
-            gate.userFlow
+            gate.starFlow
                 .filterNotNull()
                 .first()
                 .let { user ->

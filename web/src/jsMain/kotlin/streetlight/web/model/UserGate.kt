@@ -15,7 +15,7 @@ class UserGate(
     private val state = storeOf(UserGateState())
     val stateNow get() = state.now
 
-    val userFlow = state.flow.mapDistinct { it.user }
+    val starFlow = state.flow.mapDistinct { it.user }
     val messageFlow = state.flow.mapDistinct { it.message }
     val isSignedInFlow = state.flow.mapDistinct { it.isSignedIn }
 

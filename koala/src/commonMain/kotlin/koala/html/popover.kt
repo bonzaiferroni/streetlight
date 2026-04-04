@@ -15,7 +15,7 @@ import kotlinx.html.div
 
 fun FlowContent.popover(
     id: Id,
-    anchor: PositionAnchor,
+    anchor: PositionAnchor?,
     modifiers: ModifierSet? = null,
     isManual: Boolean = false,
     block: DIV.() -> Unit
@@ -23,14 +23,16 @@ fun FlowContent.popover(
     div {
         addModifiers(PopoverKey.Class, modifiers)
         setId(id)
-        setStyle(
-            // position anchor is necessary for the popover api
-            Property.PositionAnchor.to(anchor),
-            // anchor id is a variable I use in CSS
-            Property.AnchorId.to(anchor),
-            // container anchor allows you to constrain the popover to a parent
-            Property.ContainerAnchorId.to(anchor.containerPosition()),
-        )
+        anchor?.let {
+            setStyle(
+                // position anchor is necessary for the popover api
+                Property.PositionAnchor.to(anchor),
+                // anchor id is a variable I use in CSS
+                Property.AnchorId.to(anchor),
+                // container anchor allows you to constrain the popover to a parent
+                Property.ContainerAnchorId.to(anchor.containerPosition()),
+            )
+        }
         setAttribute(Attribute.Popover.to(if (isManual) "manual" else "auto"))
         block()
     }

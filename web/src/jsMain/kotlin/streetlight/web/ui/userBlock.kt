@@ -19,7 +19,7 @@ fun RenderContext.userBlock(
     val gate = app.gate
     val portal = app.portal
 
-    flowBlock(gate.userFlow, modifiers) { user ->
+    flowBlock(gate.starFlow, modifiers) { user ->
         if (user != null) {
             block(user)
         } else {
@@ -34,7 +34,7 @@ fun RenderContext.userBlock(
     val currentRoute = portal.stateNow.route
 
     renderScope.launch {
-        gate.userFlow
+        gate.starFlow
             .filterNotNull()
             .first()
             .let {

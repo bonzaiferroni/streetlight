@@ -31,7 +31,7 @@ object SvgFile: FileSet<Svg>() {
     val TransitStop = add("transit-stop.svg")
     val Focus = add("focus.svg")
     val ChevronDown = add("chevron-down.svg")
-    val EmptyProfile = add("empty-profile.svg")
+    val Someone = add("someone.svg")
     val Flame = add("flame.svg")
     val StarOutline = add("star-outline.svg")
     val StarFilled = add("star-filled.svg")

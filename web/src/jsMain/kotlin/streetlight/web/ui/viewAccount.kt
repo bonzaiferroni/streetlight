@@ -14,7 +14,7 @@ fun RenderContext.viewAccount(
 ) {
     val gate = app.gate
 
-    flowBlock(gate.userFlow) { user ->
+    flowBlock(gate.starFlow) { user ->
         if (user != null) {
              viewUserHub(app, user)
         } else {

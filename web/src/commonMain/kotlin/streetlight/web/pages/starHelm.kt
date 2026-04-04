@@ -33,9 +33,7 @@ import streetlight.web.SiteConfigRoute
 
 fun FlowContent.starHelm() {
     val closePopover = InlineJs.closePopover(StarHelmKey.Id)
-    popover(StarHelmKey.Id, StarHelmKey.PositionAnchor, modify(StarHelmKey.PopoverClass, Magic, SlideLeft)) {
-        style += " right: 0;"
-
+    popover(StarHelmKey.Id, null, modify(StarHelmKey.PopoverClass, Magic, SlideLeft)) {
         card(modify(StarHelmKey.PopoverCardClass, HeavyCardBg, BlurBackdrop)) {
             column(modify(PaddingLeft3, AlignItemsEnd)) {
                 val rowMod = modify(AlignItemsCenter)
@@ -78,5 +76,11 @@ object StarHelmKey {
 val StarHelmCss get() = """
 ${StarHelmKey.PopoverCardClass} {
     border-radius: 0 0 0 var(--unit-spacing-2);
+}
+
+${StarHelmKey.PopoverClass} {
+    position: fixed;
+    top: 0;
+    right: 0;
 }
 """

@@ -16,7 +16,7 @@ class UserCache(
 ) {
     init {
         scope.launch {
-            gate.userFlow.collect { user ->
+            gate.starFlow.collect { user ->
                 if (user == null) {
                     reset()
                 }

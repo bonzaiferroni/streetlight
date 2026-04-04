@@ -1,5 +1,6 @@
 package streetlight.web.ui
 
+import koala.SvgFile
 import koala.css.*
 import koala.dom.*
 import koala.model.GeoMap
@@ -10,6 +11,7 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.serialization.ExperimentalSerializationApi
+import org.w3c.dom.HTMLImageElement
 import revealContent
 import streetlight.web.HomeRoute
 import streetlight.web.StreetlightScreen
@@ -28,6 +30,7 @@ import streetlight.web.model.UserCache
 import streetlight.web.model.UserCred
 import streetlight.web.model.UserGate
 import streetlight.web.pages.AppBodyKey
+import streetlight.web.pages.StarBadgeKey
 import streetlight.web.pages.starBadge
 
 @OptIn(ExperimentalSerializationApi::class)
@@ -103,20 +106,12 @@ fun viewApp() {
                 }
             }
 
-//            wireBlock(AppBodyKey.BadgeId) {
-//                flowBlock(app.gate.userFlow, defaultMagic) { userInfo ->
-//                    val avatarUrl = userInfo?.avatarUrl
-//                    if (avatarUrl != null) {
-//                        image(avatarUrl, modify(Size100P, AspectRatio1, CircleClip))
-//                    } else {
-//                        box(modify(Height100P, AspectRatio1)) {
-//                            starBadge()
-//                        }
-//                    }
-//                }
-//            }
+            wireBadges(app)
         }
 
+        // When content is loaded with a hash tag like https://streetlight.ing/#/g/my-galaxy,
+        // the home page content will be initially loaded. The opacity is initially 0 to avoid confusion, this
+        // reveals the intended content when the script has rendered it.
         delay(100)
         revealContent()
     }
