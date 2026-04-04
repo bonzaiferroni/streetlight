@@ -19,16 +19,21 @@ fun viewApp() {
     ThemeReactor(scope, app.config)
 
     scope.launch {
+        // signs in user if configured
         app.gate.readUser()
 
+        // hides the element that holds server rendered content
         val shellBox = document.getElementById(AppBodyKey.ShellBoxId)
         shellBox.style.display = "none" // td: use pointer-events: none
 
         val portalMount = document.getElementById(AppBodyKey.PortalMountId)
 
         portalMount.renderRoot(app.appScope) {
+            // renders routes from portal.routeFlow
             appNavigation(app)
+            // shows user badge in upper right corner
             wireBadge(app)
+            // shows content in user menu
             queryAndWireStarHelm(app)
         }
 

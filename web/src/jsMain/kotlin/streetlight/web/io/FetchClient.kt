@@ -26,14 +26,18 @@ import org.w3c.fetch.Response
 import org.w3c.files.Blob
 import streetlight.model.data.ProjectId
 import streetlight.model.data.toProjectId
+import streetlight.web.model.AuthClient
 import streetlight.web.model.StarCred
+import kotlin.js.Promise
 import kotlin.js.json
 import kotlin.let
 import kotlin.text.ifEmpty
 
 class FetchClient(
-    private val cred: StarCred?
+    private val cred: StarCred
 ) {
+    val authClient = AuthClient(cred)
+
     suspend inline fun <reified Returned, Endpoint: GetEndpoint<Returned>> get(
         endpoint: Endpoint,
         acceptEncoding: EncodingType? = null,
@@ -133,35 +137,12 @@ class FetchClient(
             window.fetch(path, request).await()
         }
 
-        var auth = cred?.readAuth()
+        var auth = cred.readAuth()
         var response = fetchWithJwt(auth?.jwt)
 
+        // authenticate on 401
         if (response.status == 401.toShort()) {
-            val loginRequest = cred?.getLoginRequest()
-            if (loginRequest == null) {
-                console.log("credentials not found")
-                return null
-            }
-            console.log("authorizing")
-            val loginResponse = window.fetch(
-                UserApi.Login.path,
-                RequestInit(
-                    method = "POST",
-                    headers = json(
-                        "Content-Type" to "application/json",
-                    ),
-                    body = Json.encodeToString(loginRequest),
-                )
-            ).await()
-
-            if (!loginResponse.ok) {
-                console.log("Login failed")
-                return null
-            }
-
-            val loginText = loginResponse.text().await()
-            auth = Json.decodeFromString<Auth>(loginText)
-            cred.writeAuth(auth)
+            auth = authClient.authenticate() ?: return null
 
             response = fetchWithJwt(auth.jwt)
         }
