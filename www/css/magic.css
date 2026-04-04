@@ -111,7 +111,7 @@
 
 /* slow spin */
 
-@keyframes slow-spin {
+@keyframes loop-spin {
     from {
         transform: rotate(0deg);
     }
@@ -120,6 +120,22 @@
     }
 }
 
-.spin-slow {
-    animation: slow-spin 10s linear infinite;
+.spin-loop {
+    animation: loop-spin 10s linear infinite;
+}
+
+@keyframes loop-fade {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.6;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+.fade-loop {
+    animation: loop-fade 2s ease-in-out infinite;
 }

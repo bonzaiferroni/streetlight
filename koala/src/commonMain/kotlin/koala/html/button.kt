@@ -17,15 +17,13 @@ fun FlowContent.button(
 }
 
 fun BUTTON.configureButton(
-    text: String?,
+    text: String,
     modifiers: ModifierSet? = null,
     block: BUTTON.() -> Unit = {}
 ) {
     addModifiers(BtnKey.Class, modifiers)
     block()
-    text?.let {
-        +text
-    }
+    +text
 }
 
 fun FlowContent.button(
@@ -53,7 +51,8 @@ fun FlowContent.button(
     block: BUTTON.() -> Unit = {}
 ) {
     buttonTag {
-        configureButton(null, modify(ButtonKey.ElementClass, modifiers), block)
+        addModifiers(ButtonKey.ElementClass, modifiers)
+        block()
     }
 }
 
@@ -75,7 +74,24 @@ ${ButtonKey.IconClass}:hover {
 }
 
 ${ButtonKey.ElementClass} {
-    all: unset;
+    appearance: none;
+    -webkit-appearance: none;
+
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+
+    font: inherit;
+    color: inherit;
+    text-align: inherit;
+
+    outline: none;
+
     cursor: pointer;
+}
+
+${ButtonKey.ElementClass}:focus-visible {
+    outline: 2px solid currentColor;
 }
 """

@@ -7,7 +7,7 @@ val DisplayUtilityCss
         // Opacity
         Opacity1, OpacityMost, OpacityHalf, OpacitySome, Dim, NoDim,
         // Animation
-        Glow, GlowShadow, GlowBackground, SpinSlow,
+        Glow, GlowShadow, GlowBackground, SpinLoop,
         // Shape
         CircleShape, CircleClip,
         // Border Radius
@@ -40,7 +40,8 @@ val NoDim = utilityOf("no-dim", "color: rgb(var(--ink)) !important")
 val Glow = CssUtility("glow")
 val GlowShadow = CssUtility("glow-shadow")
 val GlowBackground = CssUtility("glow-background")
-val SpinSlow = CssUtility("spin-slow")
+val SpinLoop = CssUtility("spin-loop")
+val FadeLoop = CssUtility("fade-loop")
 
 // Shape
 val CircleShape = utilityOf("circle-shape", "border-radius: 50%", "overflow: hidden", "border: 3px solid #b4bd7d")

@@ -7,11 +7,12 @@ import koala.css.BlurBackdrop
 import koala.css.BorderDashed2Px
 import koala.css.BorderRadius50P
 import koala.css.Class
+import koala.css.FadeLoop
 import koala.css.HeavyCardBg
 import koala.css.Magic
 import koala.css.PaddingLeft3
 import koala.css.SlideLeft
-import koala.css.SpinSlow
+import koala.css.SpinLoop
 import koala.css.modify
 import koala.css.stylesheet
 import koala.html.Id
@@ -35,15 +36,17 @@ fun FlowContent.starHelm() {
     popover(StarHelmKey.Id, StarHelmKey.PositionAnchor, modify(StarHelmKey.PopoverClass, Magic, SlideLeft)) {
         style += " right: 0;"
 
-        card(modify(StarHelmKey.CardClass, HeavyCardBg, BlurBackdrop)) {
+        card(modify(StarHelmKey.PopoverCardClass, HeavyCardBg, BlurBackdrop)) {
             column(modify(PaddingLeft3, AlignItemsEnd)) {
                 val rowMod = modify(AlignItemsCenter)
                 row(rowMod) {
                     heading3("You")
                     // user badge goes here
                     // make it glow
-                    button(SvgFile.Helm, modify(HelmBarKey.ButtonMod, SpinSlow, BorderDashed2Px, BorderRadius50P)) {
+                    button(modify(HelmBarKey.ButtonMod, FadeLoop, BorderDashed2Px, BorderRadius50P)) {
                         onClick = closePopover
+
+                        starBadge()
                     }
                 }
                 // sign in goes here
@@ -68,12 +71,12 @@ object StarHelmKey {
     val Id = Id("star-helm")
     val PositionAnchor = Id.toPositionAnchor()
     val PopoverClass = Class("star-helm-popover")
-    val CardClass = Class("star-helm-menu")
+    val PopoverCardClass = Class("star-helm-popover-card")
 }
 
 // language="CSS"
 val StarHelmCss get() = """
-${StarHelmKey.CardClass} {
+${StarHelmKey.PopoverCardClass} {
     border-radius: 0 0 0 var(--unit-spacing-2);
 }
 """
