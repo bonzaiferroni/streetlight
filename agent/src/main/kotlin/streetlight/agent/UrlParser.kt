@@ -6,6 +6,7 @@ import ai.koog.prompt.executor.llms.all.simpleGoogleAIExecutor
 import ai.koog.prompt.params.LLMParams
 import com.fleeksoft.ksoup.Ksoup
 import com.fleeksoft.ksoup.nodes.Document
+import kabinet.console.globalConsole
 import kampfire.utils.takeEllipsis
 import kotlinx.io.files.Path
 import kotlinx.serialization.json.Json
@@ -14,7 +15,7 @@ import java.io.File
 
 class UrlParser(apiKey: String) {
     val executor = simpleGoogleAIExecutor(apiKey)
-    val console = console.getHandle(UrlParser::class)
+    val console = globalConsole.getHandle(UrlParser::class)
     val cache = mutableMapOf<Int, ParserContent>()
     val trimmer = HtmlTrimmer()
 

@@ -93,6 +93,7 @@ fun viewApp() {
                         StreetlightScreen.CreateGalaxy -> viewGalaxyFoundry()
                         StreetlightScreen.GalaxyList -> viewGalaxyList(app)
                         StreetlightScreen.GalaxyProfile -> viewGalaxyProfileRoute()
+                        StreetlightScreen.StarProfile -> viewStarProfileRoute()
                         StreetlightScreen.EventScout -> viewEventScoutRoute()
                         StreetlightScreen.LocationScout -> viewLocationScoutRoute()
                         StreetlightScreen.EditProfile -> viewProfileEditor()

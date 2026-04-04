@@ -16,6 +16,7 @@ import kotlinx.html.InputType
 import kotlinx.html.onClick
 import org.w3c.dom.HTMLElement
 import streetlight.web.SiteConfigRoute
+import streetlight.web.StarProfileRoute
 import streetlight.web.model.Streetlight
 import streetlight.web.pages.HelmBarKey
 import streetlight.web.pages.StarHelmKey
@@ -49,7 +50,10 @@ private fun ViewContext<Streetlight>.starPanel(star: UserInfo) {
 
     column() {
         row(RowMod) {
-            heading3(star.username)
+            action(StarProfileRoute(star.username)) {
+                heading3(star.username)
+            }
+
             button(modify(HelmBarKey.IconMod, FadeLoop)) {
                 onClick = StarHelmKey.ClosePopover
 

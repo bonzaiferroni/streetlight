@@ -4,7 +4,7 @@ import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.websocket.*
 import io.ktor.websocket.*
-import kabinet.console.console
+import kabinet.console.globalConsole
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -12,7 +12,7 @@ import kotlinx.serialization.json.Json
 import streetlight.model.Api
 import streetlight.model.data.ChatMessage
 
-private val console = console.getHandle(HostChatSocket::class)
+private val console = globalConsole.getHandle(HostChatSocket::class)
 
 class HostChatSocket {
     private val _messageFlow = MutableSharedFlow<ChatMessage>(
