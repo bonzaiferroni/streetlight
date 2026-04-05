@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-    findAndInitTabs(document)
+    findAndInitTabs(document);
 });
 
 function findAndInitTabs(parent) {
@@ -10,9 +10,8 @@ function initTabs(root) {
     const DURATION = 200;
     const viewport = root.querySelector(".tabs-viewport");
     if (!viewport || viewport.isInitialized) return;
-    viewport.isInitialized = true
+    viewport.isInitialized = true;
 
-    // Optional: Key is the root id (used only for URL hash query sync)
     const paramKey = (root.id || "").trim();
     const canSyncUrl = Boolean(paramKey);
 
@@ -20,7 +19,6 @@ function initTabs(root) {
     const panels = Array.from(viewport.querySelectorAll(".tabs-panel"));
     if (panels.length === 0) return;
 
-    // --- Helpers: naming + query control ---
     const slug = (s) => String(s || "")
         .toLowerCase()
         .trim()
@@ -45,8 +43,8 @@ function initTabs(root) {
         const [_, query = ""] = hash.split("?", 2);
         const params = new URLSearchParams(query);
 
-        const v = (params.get(paramKey) || "").toLowerCase().trim();
-        return v || "";
+        const value = (params.get(paramKey) || "").toLowerCase().trim();
+        return value || "";
     };
 
     const readDefault = () => {
@@ -73,30 +71,28 @@ function initTabs(root) {
         history.replaceState(null, "", `#${nextHash}`);
     };
 
-    // --- Initial current (class or ?paramKey=...) ---
-    let current = panels.findIndex((p) => p.classList.contains("is-active"));
+    let current = panels.findIndex((panel) => panel.classList.contains("is-active"));
     if (current < 0) current = 0;
 
     const initialWanted = readQuery();
     const wantedIdx = initialWanted ? names.indexOf(slug(initialWanted)) : readDefault();
     if (wantedIdx >= 0) current = wantedIdx;
 
-    // --- Initial apply ---
     buttons[current].dispatchEvent(new CustomEvent("select-tab"));
-    panels.forEach((p, i) => {
-        p.style.display = i === current ? "block" : "none";
-        p.classList.toggle("is-active", i === current);
-        p.classList.remove("enter", "exit", "dir-left", "dir-right");
+    panels.forEach((panel, i) => {
+        panel.style.display = i === current ? "block" : "none";
+        panel.classList.toggle("is-active", i === current);
+        panel.classList.remove("enter", "exit", "dir-left", "dir-right");
     });
-    buttons.forEach((b, i) => b.classList.toggle("is-active", i === current));
+    buttons.forEach((button, i) => button.classList.toggle("is-active", i === current));
 
     viewport.style.height = panels[current].scrollHeight + "px";
-    setTimeout(() => (viewport.style.height = "auto"), DURATION);
+    setTimeout(() => {
+        viewport.style.height = "auto";
+    }, DURATION);
 
-    // Ensure URL reflects active tab after init (only if id present)
     setQuery(names[current]);
 
-    // --- Click -> swap + query update ---
     buttons.forEach((btn) => {
         btn.addEventListener("click", () => {
             const next = Number(btn.dataset.tab);
@@ -110,7 +106,6 @@ function initTabs(root) {
         });
     });
 
-    // --- React to external navigation (back/forward / replaceState elsewhere) ---
     if (canSyncUrl) {
         const onNav = () => {
             const wanted = readQuery();
@@ -131,6 +126,15 @@ function initTabs(root) {
         const to = panels[toIdx];
         buttons[toIdx].dispatchEvent(new CustomEvent("select-tab"));
 
+        const lockedScrollX = window.scrollX;
+        const lockedScrollY = window.scrollY;
+
+        const restoreScroll = () => {
+            if (window.scrollX !== lockedScrollX || window.scrollY !== lockedScrollY) {
+                window.scrollTo(lockedScrollX, lockedScrollY);
+            }
+        };
+
         const toDir = toIdx > fromIdx ? "dir-right" : "dir-left";
         const fromDir = toIdx > fromIdx ? "dir-left" : "dir-right";
 
@@ -142,9 +146,13 @@ function initTabs(root) {
 
         const startH = from.scrollHeight;
         const endH = to.scrollHeight;
+
         viewport.style.height = startH + "px";
+        restoreScroll();
+
         requestAnimationFrame(() => {
             viewport.style.height = endH + "px";
+            restoreScroll();
         });
 
         from.classList.remove("enter", "exit", "dir-left", "dir-right");
@@ -155,16 +163,23 @@ function initTabs(root) {
         requestAnimationFrame(() => {
             to.classList.add("is-active");
             to.classList.remove("enter");
+            restoreScroll();
         });
 
+        let cleanedUp = false;
         let doneCount = 0;
+
         const maybeDone = () => {
             doneCount++;
             if (doneCount >= 2) cleanup();
         };
 
-        const onFromEnd = () => { maybeDone(); };
-        const onToEnd = () => { maybeDone(); };
+        const onFromEnd = () => {
+            maybeDone();
+        };
+        const onToEnd = () => {
+            maybeDone();
+        };
 
         from.addEventListener("transitionend", onFromEnd, { once: true });
         to.addEventListener("transitionend", onToEnd, { once: true });
@@ -174,6 +189,9 @@ function initTabs(root) {
         }, DURATION + 50);
 
         function cleanup() {
+            if (cleanedUp) return;
+            cleanedUp = true;
+
             clearTimeout(fallback);
             from.removeEventListener("transitionend", onFromEnd);
             to.removeEventListener("transitionend", onToEnd);
@@ -186,6 +204,10 @@ function initTabs(root) {
 
             viewport.style.height = "auto";
             viewport.classList.remove("animating");
+
+            restoreScroll();
+            requestAnimationFrame(restoreScroll);
+            setTimeout(restoreScroll, 0);
         }
     }
 }
