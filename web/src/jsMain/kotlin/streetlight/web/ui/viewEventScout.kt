@@ -56,7 +56,7 @@ private data class EventScoutPanelState(
 
 fun ViewContext<Streetlight>.viewEventScoutRoute() {
     routeBlock<EventScoutRoute, Galaxy>({
-        api.readGalaxy(it.pathId)
+        api.readGalaxy(it.slug)
     }) { galaxy ->
         viewEventScout(model, galaxy)
     }

@@ -21,6 +21,7 @@ import streetlight.model.data.ReviewMode
 import streetlight.model.data.Song
 import streetlight.model.data.SongId
 import streetlight.model.data.amazingGrace
+import streetlight.model.data.slugOf
 import kotlin.random.Random
 import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.hours
@@ -59,7 +60,7 @@ val mockDb by lazy {
 
     fun areaOf(name: String) = Galaxy(
         galaxyId = GalaxyId.random(),
-        path = GalaxyEdit.pathOf(name),
+        slug = slugOf(name),
         name = name,
         description = "",
         center = GeoPoint.Denver,
@@ -130,6 +131,7 @@ val mockDb by lazy {
         locationId = locations.bag.draw().locationId,
         userId = users.bag.draw().userId,
         currentRequestId = null,
+        slug = slugOf(title),
         title = title,
         description = null,
         status = EventStatus.Pending,

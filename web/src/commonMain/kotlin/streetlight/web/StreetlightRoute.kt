@@ -3,14 +3,13 @@ package streetlight.web
 import kampfire.api.TableId
 import koala.html.AppRoute
 import koala.html.AppScreen
-import kotlinx.serialization.Serializable
 import streetlight.model.data.Event
 import streetlight.model.data.EventEdit
 import streetlight.model.data.EventId
-import streetlight.model.data.Location
 import streetlight.model.data.LocationEdit
 import streetlight.model.data.LocationId
 import streetlight.model.data.PostId
+import streetlight.model.data.Slug
 import streetlight.model.data.SongId
 import streetlight.model.data.TalentId
 
@@ -20,7 +19,7 @@ enum class StreetlightScreen(
 ): AppScreen {
     Home("home", { HomeRoute }),
     Account("account", { AccountRoute }),
-    Event("event", { path -> path.provideRouteFromPath { EventIdRoute(EventId(it)) }  }),
+    Event("e", { path -> path.provideRouteFromPath { EventIdRoute(EventId(it)) }  }),
     EditEvent("edit-event", { path -> EditEventIdRoute(path.provideId { EventId(it) }) }),
     EditStory("edit-story", { path -> EditPostRoute(path.provideId { PostId(it) }) }),
     EditLocation("edit-location", { path -> EditLocationIdRoute(path.provideId { LocationId(it) }) }),
@@ -35,7 +34,7 @@ enum class StreetlightScreen(
     ScoutMap("scout-map", { ScoutMapRoute }),
     CreateGalaxy("create-galaxy", { CreateGalaxyRoute }),
     GalaxyList("galaxies", { GalaxyListRoute }),
-    GalaxyProfile("g", { path -> path.provideRouteFromPath { GalaxyPathIdRoute(it) }}),
+    GalaxyProfile("g", { path -> path.provideRouteFromPath { GalaxySlugRoute(it) }}),
     StarProfile("s", { path -> path.provideRouteFromPath { StarProfileRoute(it) } }),
     EventScout("post-event", { path -> path.provideRouteFromPath { EventScoutRoute(it) }}),
     LocationScout("post-location", { path -> path.provideRouteFromPath { LocationScoutRoute(it) } }),
@@ -57,9 +56,9 @@ sealed interface StringIdRoute: StreetlightRoute {
     override fun toHashPath() = id?.let { "${super.toHashPath()}/${it.value}" } ?: super.toHashPath()
 }
 
-sealed interface PathIdRoute: StreetlightRoute {
-    val pathId: String?
-    override fun toHashPath() = pathId?.let { "${super.toHashPath()}/${it}" } ?: super.toHashPath()
+sealed interface SlugRoute: StreetlightRoute {
+    val slug: Slug?
+    override fun toHashPath() = slug?.let { "${super.toHashPath()}/${it}" } ?: super.toHashPath()
 }
 
 object HomeRoute: StreetlightRoute {
@@ -196,22 +195,22 @@ object GalaxyListRoute: StreetlightRoute {
     override val title get() = "Galaxies"
 }
 
-data class GalaxyPathIdRoute(override val pathId: String): StreetlightRoute, PathIdRoute {
+data class GalaxySlugRoute(override val slug: Slug): StreetlightRoute, SlugRoute {
     override val screen get() = StreetlightScreen.GalaxyProfile
     override val title get() = "Galaxy"
 }
 
-data class StarProfileRoute(override val pathId: String): StreetlightRoute, PathIdRoute {
+data class StarProfileRoute(override val slug: Slug): StreetlightRoute, SlugRoute {
     override val screen get() = StreetlightScreen.StarProfile
     override val title get() = "Star"
 }
 
-data class EventScoutRoute(override val pathId: String): StreetlightRoute, PathIdRoute {
+data class EventScoutRoute(override val slug: Slug): StreetlightRoute, SlugRoute {
     override val screen get() = StreetlightScreen.EventScout
     override val title get() = "Event Scout"
 }
 
-data class LocationScoutRoute(override val pathId: String): StreetlightRoute, PathIdRoute {
+data class LocationScoutRoute(override val slug: Slug): StreetlightRoute, SlugRoute {
     override val screen get() = StreetlightScreen.LocationScout
     override val title get() = "Location Scout"
 }

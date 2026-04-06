@@ -26,7 +26,7 @@ fun ViewContext<Streetlight>.viewGalaxyFoundry() {
     val nameFlow = model.galaxyFlow.mapDistinct { it.name ?: "" }
     val blobFlow = model.stateFlow.mapDistinct { it.blobUrl }
     val descriptionFlow = model.galaxyFlow.mapDistinct { it.description ?: "" }
-    val pathFlow = model.galaxyFlow.mapDistinct { it.path ?: "" }
+    val pathFlow = model.galaxyFlow.mapDistinct { it.slug ?: "" }
     val permissionFlow = model.galaxyFlow.mapDistinct { it.postPermission }
     val reviewModeFlow = model.galaxyFlow.mapDistinct { it.reviewMode }
     val guideFlow = model.galaxyFlow.mapDistinct { it.postGuide ?: "" }

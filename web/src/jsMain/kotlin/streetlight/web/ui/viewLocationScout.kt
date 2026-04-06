@@ -14,7 +14,7 @@ import koala.model.mapDistinct
 import streetlight.model.data.Galaxy
 import streetlight.model.data.GalaxyPostResult
 import streetlight.model.data.PostResult
-import streetlight.web.GalaxyPathIdRoute
+import streetlight.web.GalaxySlugRoute
 import streetlight.web.LocationScoutRoute
 import streetlight.web.model.LocationFinder
 import streetlight.web.model.LocationScout
@@ -128,7 +128,7 @@ fun ViewContext<LocationScout>.postResult(result: GalaxyPostResult, galaxies: Li
                     PostResult.Conflict -> "Already in galaxy."
                 }
                 cardOf("${galaxy.name}: $emoji", galaxy.thumbUrl, msg) {
-                    portal.go(GalaxyPathIdRoute(galaxy.path))
+                    portal.go(GalaxySlugRoute(galaxy.slug))
                 }
             }
         }
@@ -141,7 +141,7 @@ fun ViewContext<LocationScout>.postResult(result: GalaxyPostResult, galaxies: Li
 
 fun ViewContext<Streetlight>.viewLocationScoutRoute() {
     routeBlock<LocationScoutRoute, Galaxy>({
-        api.readGalaxy(it.pathId)
+        api.readGalaxy(it.slug)
     }) { galaxy ->
         viewLocationScout(model, galaxy, model.cache.galaxy.stateNow.items)
     }

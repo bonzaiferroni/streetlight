@@ -5,11 +5,8 @@ import koala.dom.column
 import koala.dom.routeBlock
 import koala.dom.textBlock
 import koala.dom.viewContextOf
-import streetlight.web.GalaxyPathIdRoute
 import streetlight.web.StarProfileRoute
 import streetlight.web.model.Streetlight
-import streetlight.web.shells.GalaxyProfileContent
-import streetlight.web.shells.StarProfileContent
 
 fun ViewContext<Streetlight>.viewStarProfile(username: String) {
     column {
@@ -25,7 +22,7 @@ fun ViewContext<Streetlight>.viewStarProfileRoute() {
 //            galaxy = galaxy,
 //            listing = listing,
 //        )
-        route.pathId
+        route.slug
     }) { content ->
         viewContextOf(model) {
             viewStarProfile(content)

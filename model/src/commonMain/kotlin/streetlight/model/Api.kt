@@ -24,12 +24,14 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object ReadEventLocations: PostEndpoint<List<EventId>, List<EventLocation>>(this, "read-event-locations")
         object ReadLights: GetEndpoint<List<EventId>>(this, "lights")
         object EditLight: PostEndpoint<LightEdit, Boolean>(this, "light-edit")
+        object ReadBySlug: GetByIdEndpoint<Slug, Event>(this, "slug")
     }
 
     object Locations: GetByTableIdEndpoint<LocationId, Location>(this, "locations") {
         @Deprecated("use edit")
         object Create: PostEndpoint<Place, LocationId>(this, "create")
         object CreateOrEdit: PostEndpoint<LocationEdit, Location>(this, "edit")
+        @Deprecated("use posts to associate locations with galaxies")
         object Street: GetByTableIdEndpoint<GalaxyId, List<Location>>(this, "street")
         @Deprecated("use edit")
         object Update: PostEndpoint<Location, Boolean>(this, "update")

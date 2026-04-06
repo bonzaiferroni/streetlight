@@ -9,7 +9,7 @@ import kotlin.jvm.JvmInline
 @Serializable
 data class Galaxy(
     val galaxyId: GalaxyId,
-    val path: String,
+    val slug: Slug,
     val name: String,
     val description: String?,
     val center: GeoPoint,
@@ -32,7 +32,7 @@ value class GalaxyId(override val value: String): ProjectId {
 @Serializable
 data class GalaxyEdit(
     val name: String? = null,
-    val path: String? = null,
+    val slug: Slug? = null,
     val description: String? = null,
     val center: GeoPoint? = null,
     val zoom: Float? = null,
@@ -46,19 +46,12 @@ data class GalaxyEdit(
 
     companion object {
         val NameCharacters = setOf(' ', '.', ',', '\'', '!', '?', '-', '+')
-        val PathCharacters = setOf('_')
+        val PathCharacters = setOf('-')
 
         fun isValidName(name: String) = name.all { it.isDigit() || it.isLetter() || NameCharacters.contains(it) }
                 && name.length <= MAX_NAME_LENGTH
         fun isValidPath(path: String) = path.all { it.isDigit() || it.isLetter() || PathCharacters.contains(it) }
                 && path.length <= MAX_NAME_LENGTH
-
-        fun pathOf(name: String): String =
-            name
-                .trim()
-                .lowercase()
-                .replace("\\s+".toRegex(), "_")
-                .replace("[^a-z0-9_\\-]".toRegex(), "")
 
         const val MAX_NAME_LENGTH = 32
     }

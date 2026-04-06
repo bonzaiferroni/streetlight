@@ -7,7 +7,8 @@ import kotlinx.coroutines.launch
 import streetlight.model.data.GalaxyEdit
 import streetlight.model.data.PostPermission
 import streetlight.model.data.ReviewMode
-import streetlight.web.GalaxyPathIdRoute
+import streetlight.model.data.slugOf
+import streetlight.web.GalaxySlugRoute
 import streetlight.web.ui.ViewModel
 
 class GalaxyEditor(
@@ -22,13 +23,13 @@ class GalaxyEditor(
 
     fun setName(value: String) {
         if (!GalaxyEdit.isValidName(value)) return
-        val path = GalaxyEdit.pathOf(value)
-        setGalaxy { it.copy(name = value, path = path) }
+        val path = slugOf(value)
+        setGalaxy { it.copy(name = value, slug = path) }
     }
 
     fun setPath(value: String) {
         if (!GalaxyEdit.isValidPath(value)) return
-        setGalaxy { it.copy(path = value) }
+        setGalaxy { it.copy(slug = value) }
     }
 
     fun setBlobUrl(value: String?) = state.set { it.copy(blobUrl = value) }
@@ -54,7 +55,7 @@ class GalaxyEditor(
             }
             val galaxy = app.client.api.foundGalaxy(galaxy.copy(imageUrl = imageUrl))
             if (galaxy != null) {
-                portal.go(GalaxyPathIdRoute(galaxy.path))
+                portal.go(GalaxySlugRoute(galaxy.slug))
                 reset()
             }
         }

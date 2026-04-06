@@ -3,7 +3,7 @@ package streetlight.web.ui
 import koala.dom.*
 import koala.model.mapDistinct
 import koala.model.storeOf
-import streetlight.web.GalaxyPathIdRoute
+import streetlight.web.GalaxySlugRoute
 import streetlight.web.model.Streetlight
 import streetlight.web.shells.GalaxyProfileKey
 import streetlight.web.shells.GalaxyProfileContent
@@ -44,8 +44,8 @@ data class GalaxyProfileState(
 )
 
 fun ViewContext<Streetlight>.viewGalaxyProfileRoute() {
-    routeBlock<GalaxyPathIdRoute, GalaxyProfileContent>(model.portal, { route ->
-        val galaxy = model.client.api.readGalaxy(route.pathId) ?: return@routeBlock null
+    routeBlock<GalaxySlugRoute, GalaxyProfileContent>(model.portal, { route ->
+        val galaxy = model.client.api.readGalaxy(route.slug) ?: return@routeBlock null
         val listing = model.client.api.readPosts(galaxy.galaxyId) ?: return@routeBlock null
         GalaxyProfileContent(
             galaxy = galaxy,
