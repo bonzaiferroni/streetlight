@@ -2,9 +2,9 @@ package streetlight.web.ui
 
 import koala.css.*
 import koala.dom.*
-import streetlight.web.EventIdRoute
 import streetlight.web.EventObjectRoute
 import streetlight.web.EventRoute
+import streetlight.web.EventSlugRoute
 import streetlight.web.HomeRoute
 import streetlight.web.model.Streetlight
 import streetlight.web.shells.EventProfileShell
@@ -18,11 +18,11 @@ fun RenderContext.viewEventRoute(
     val portal = app.portal
 
     suspend fun provideData(route: EventRoute) = when (route) {
-        is EventIdRoute -> {
-            api.readEvent(route.id)
-        }
         is EventObjectRoute -> {
             route.event
+        }
+        is EventSlugRoute -> {
+            api.readEventBySlug(route.slug)
         }
     }
 

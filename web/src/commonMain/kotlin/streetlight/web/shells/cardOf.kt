@@ -9,12 +9,13 @@ import streetlight.model.data.EventLocation
 import streetlight.model.data.Galaxy
 import streetlight.model.data.EventPost
 import streetlight.model.data.Location
-import streetlight.web.EventIdRoute
 import streetlight.web.GalaxySlugRoute
 import streetlight.web.LocationIdRoute
+import streetlight.web.layouts.route
+import streetlight.web.shells.cardOf
 
 fun FlowContent.cardOf(event: Event, modifiers: ModifierSet? = null) {
-    cardOf(EventIdRoute(event.eventId), event.title, event.thumbUrl, event.description, modifiers)
+    cardOf(event.route, event.title, event.thumbUrl, event.description, modifiers)
 }
 
 fun FlowContent.cardOf(location: Location) {
@@ -22,7 +23,7 @@ fun FlowContent.cardOf(location: Location) {
 }
 
 fun FlowContent.cardOf(event: EventLocation) {
-    cardOf(EventIdRoute(event.eventId), event.title, event.thumbUrl, event.description)
+    cardOf(event.route, event.title, event.thumbUrl, event.description)
 }
 
 fun FlowContent.cardOf(galaxy: Galaxy) {
@@ -33,8 +34,7 @@ fun FlowContent.cardOf(
     post: EventPost,
     modifiers: ModifierSet? = null,
 ) {
-    val route = post.event?.eventId?.let { EventIdRoute(it) }
-        ?: post.location?.locationId?.let { LocationIdRoute(it) }
+    val route = post.event?.route ?: post.location?.locationId?.let { LocationIdRoute(it) }
     val thumbUrl = post.thumbUrl ?: SiteImage.placeholderThumb.path
     cardOf(route, post.title, thumbUrl, post.description, modifiers)
 }

@@ -19,7 +19,7 @@ enum class StreetlightScreen(
 ): AppScreen {
     Home("home", { HomeRoute }),
     Account("account", { AccountRoute }),
-    Event("e", { path -> path.provideRouteFromPath { EventIdRoute(EventId(it)) }  }),
+    EventProfile("e", { path -> path.provideRouteFromPath { EventSlugRoute(it) } }),
     EditEvent("edit-event", { path -> EditEventIdRoute(path.provideId { EventId(it) }) }),
     EditStory("edit-story", { path -> EditPostRoute(path.provideId { PostId(it) }) }),
     EditLocation("edit-location", { path -> EditLocationIdRoute(path.provideId { LocationId(it) }) }),
@@ -40,6 +40,7 @@ enum class StreetlightScreen(
     LocationScout("post-location", { path -> path.provideRouteFromPath { LocationScoutRoute(it) } }),
     EditProfile("edit-profile", { EditProfileRoute }),
     SiteConfig("config", { SiteConfigRoute }),
+
 }
 
 fun List<String>.provideRouteFromPath(argIndex: Int = 1, provideRoute: (String) -> AppRoute?) =
@@ -72,13 +73,9 @@ object AccountRoute: StreetlightRoute {
 }
 
 sealed interface EventRoute: StreetlightRoute {
-    override val screen get() = StreetlightScreen.Event
+    override val screen get() = StreetlightScreen.EventProfile
     override val title get() = "Event"
 }
-
-data class EventIdRoute(
-    override val id: EventId
-): EventRoute, StringIdRoute
 
 data class EventObjectRoute(val event: Event): EventRoute, StringIdRoute {
     override val id get() = event.eventId
@@ -198,6 +195,9 @@ object GalaxyListRoute: StreetlightRoute {
 data class GalaxySlugRoute(override val slug: Slug): StreetlightRoute, SlugRoute {
     override val screen get() = StreetlightScreen.GalaxyProfile
     override val title get() = "Galaxy"
+}
+
+data class EventSlugRoute(override val slug: Slug): StreetlightRoute, SlugRoute, EventRoute {
 }
 
 data class StarProfileRoute(override val slug: Slug): StreetlightRoute, SlugRoute {

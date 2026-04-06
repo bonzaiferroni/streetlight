@@ -8,6 +8,7 @@ import kotlinx.serialization.Serializable
 data class EventLocation(
     val eventId: EventId,
     val locationId: LocationId,
+    val slug: Slug,
     val url: String?,
     val imageUrl: String?,
     val thumbUrl: String?,
@@ -23,6 +24,7 @@ data class EventLocation(
     companion object {
         fun from(event: Event, location: Location) = EventLocation(
             eventId = event.eventId,
+            slug = event.slug,
             locationId = location.locationId,
             url = event.url,
             imageUrl = event.imageUrl,

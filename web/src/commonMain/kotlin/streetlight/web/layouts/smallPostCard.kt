@@ -14,9 +14,10 @@ import koala.html.row
 import koala.html.textBlock
 import kotlinx.html.FlowContent
 import streetlight.model.data.Event
+import streetlight.model.data.EventLocation
 import streetlight.model.data.EventPost
 import streetlight.model.data.Location
-import streetlight.web.EventIdRoute
+import streetlight.web.EventSlugRoute
 import streetlight.web.LocationIdRoute
 
 fun FlowContent.smallPostCard(post: EventPost) {
@@ -86,4 +87,5 @@ fun FlowContent.smallPostCard(post: EventPost) {
 
 // td: find better home
 val Location.route get() = LocationIdRoute(locationId)
-val Event.route get() = EventIdRoute(eventId)
+val Event.route get() = EventSlugRoute(slug)
+val EventLocation.route get() = EventSlugRoute(slug)

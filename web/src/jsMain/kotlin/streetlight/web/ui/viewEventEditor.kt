@@ -18,7 +18,7 @@ import streetlight.model.data.toEdit
 import streetlight.web.EditEventCallbackRoute
 import streetlight.web.EditEventIdRoute
 import streetlight.web.EditEventRoute
-import streetlight.web.EventIdRoute
+import streetlight.web.layouts.route
 import streetlight.web.model.Streetlight
 import streetlight.web.model.EventEditor
 
@@ -212,7 +212,7 @@ fun ViewContext<Streetlight>.viewEventEditorPanel(
                             model.portal.goBack()
                             callback.invoke(savedEvent)
                         } else {
-                            model.portal.go(EventIdRoute(savedEvent.eventId))
+                            model.portal.go(savedEvent.route)
                         }
                     }
                 })
