@@ -37,7 +37,9 @@ enum class FileUse {
 
 @Serializable
 enum class FileFormat(val ext: String) {
-    JPEG("jpg"), PNG("png"), GIF("gif"), WEBP("webp"), BMP("bmp")
+    JPEG("jpg"), PNG("png"), GIF("gif"), WEBP("webp"), BMP("bmp");
+
+    val contentType get() = "image/$ext"
 }
 
 @Serializable
