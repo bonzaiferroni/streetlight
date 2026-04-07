@@ -5,6 +5,7 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atTime
+import kotlinx.datetime.toDeprecatedInstant
 import kotlinx.datetime.toInstant
 import kotlinx.serialization.Serializable
 
@@ -111,7 +112,7 @@ data class EventParse(
         date: LocalDate,
         time: LocalTime,
         timeZone: TimeZone = TimeZone.currentSystemDefault()
-    ) = date.atTime(time).toInstant(timeZone)
+    ) = date.atTime(time).toInstant(timeZone).toDeprecatedInstant()
 }
 
 fun EventParse.toEventEdit(

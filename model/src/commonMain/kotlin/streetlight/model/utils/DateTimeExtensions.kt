@@ -10,6 +10,7 @@ import kotlinx.datetime.format
 import kotlinx.datetime.format.FormatStringsInDatetimeFormats
 import kotlinx.datetime.format.byUnicodePattern
 import kotlinx.datetime.plus
+import kotlinx.datetime.toDeprecatedInstant
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 
@@ -37,5 +38,5 @@ fun tomorrowNoon(): Instant {
     return LocalDateTime(
         date = tomorrow,
         time = LocalTime(12, 0)
-    ).toInstant(zone)
+    ).toInstant(zone).toDeprecatedInstant()
 }
