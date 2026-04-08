@@ -5,7 +5,7 @@ import kampfire.model.GeoBounds
 import kampfire.model.GeoPoint
 import kampfire.model.SignUpRequest
 import kampfire.model.Url
-import kampfire.model.UserInfo
+import kampfire.model.BasicUserInfo
 import kotlinx.coroutines.CoroutineScope
 import streetlight.model.Api
 import streetlight.model.data.*
@@ -40,7 +40,7 @@ class ApiClient(private val client: FetchClient) {
 
     // users
     suspend fun readUserFiles() = client.get(Api.Users.Files)
-    suspend fun updateUser(user: UserInfo) = client.post(UserApi.Update, user)
+    suspend fun updateUser(user: BasicUserInfo) = client.post(UserApi.Update, user)
     suspend fun checkUsername(username: String) = client.post(UserApi.CheckUsername, username)
     suspend fun uploadAvatar(blobUrl: Url) = client.uploadBlob(Api.Users.UploadAvatar.path, blobUrl)
     suspend fun uploadImage(blobUrl: Url) = client.uploadBlob(Api.Users.UploadImage.path, blobUrl)

@@ -3,7 +3,7 @@ package kampfire.api
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.parameter
 import io.ktor.http.HttpMethod
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 
 abstract class Endpoint<SentType, ReturnType>(
     val method: HttpMethod?,

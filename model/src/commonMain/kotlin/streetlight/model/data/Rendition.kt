@@ -3,7 +3,7 @@ package streetlight.model.data
 import kampfire.model.LabeledEnum
 import kampfire.model.UserId
 import kampfire.utils.randomUuidString
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 

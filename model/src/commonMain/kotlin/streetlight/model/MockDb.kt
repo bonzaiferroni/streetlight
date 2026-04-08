@@ -1,7 +1,7 @@
 package streetlight.model
 
 import kampfire.model.GeoPoint
-import kampfire.model.User
+import kampfire.model.UserOld
 import kampfire.model.UserId
 import kampfire.model.UserRole
 import kotlinx.datetime.TimeZone
@@ -26,7 +26,7 @@ import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.hours
 
 interface MockDb {
-    val users: List<User>
+    val users: List<UserOld>
     val communities: List<Galaxy>
     val locations: List<Location>
     val events: List<Event>
@@ -38,7 +38,7 @@ val mockDb by lazy {
     val now = Clock.System.now()
     val rng = Random(0)
 
-    fun userOf(username: String) = User(
+    fun userOf(username: String) = UserOld(
         userId = UserId.random(),
         username = username,
         roles = setOf(UserRole.USER),

@@ -8,7 +8,7 @@ import kampfire.model.medium
 import koala.SiteImage
 import koala.css.*
 import koala.html.*
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import kotlinx.html.FlowContent
 import streetlight.model.data.EventId
 import streetlight.model.data.ExtraLink

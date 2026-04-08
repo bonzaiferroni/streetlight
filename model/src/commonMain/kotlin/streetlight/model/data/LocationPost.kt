@@ -4,7 +4,7 @@ import kampfire.model.GeoPoint
 import kampfire.model.UserId
 import kampfire.model.toUrl
 import kampfire.utils.randomUuidString
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 

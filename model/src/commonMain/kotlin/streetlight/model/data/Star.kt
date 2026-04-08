@@ -3,7 +3,7 @@ package streetlight.model.data
 import kampfire.model.ScaledImageArray
 import kampfire.model.Url
 import kampfire.utils.randomUuidString
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 

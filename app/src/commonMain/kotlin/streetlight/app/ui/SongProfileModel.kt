@@ -2,7 +2,7 @@ package streetlight.app.ui
 
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.datetime.Clock
+import kotlin.time.Clock
 import pondui.ui.controls.UpdateStatus
 import pondui.ui.core.ModelState
 import pondui.ui.core.StateModel

@@ -12,8 +12,8 @@ import compose.icons.tablericons.Flame
 import compose.icons.tablericons.PlayerPause
 import kabinet.utils.toAgoDescription
 import kabinet.utils.toTimeDescription
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
+import kotlin.time.Clock
+import kotlin.time.Instant
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import pondui.ui.controls.*
 import pondui.ui.modifiers.MagicItem

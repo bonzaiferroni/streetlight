@@ -42,7 +42,7 @@ class UserCreator(
         val request = state.now.request.takeIf { it.isValid } ?: return
         scope.launch {
             val result = api.createUser(request) ?: return@launch
-            if (result.success) {
+            if (result.isSuccess) {
                 gate.cred.setFromSignup(requestNow)
                 gate.signIn()
             }

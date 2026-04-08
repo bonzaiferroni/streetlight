@@ -9,8 +9,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kabinet.utils.toTimeDescription
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
+import kotlin.time.Clock
+import kotlin.time.Instant
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import pondui.ui.controls.Column
 import pondui.ui.controls.FlowRow

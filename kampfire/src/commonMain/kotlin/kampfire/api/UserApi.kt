@@ -5,8 +5,7 @@ import kampfire.model.LoginRequest
 import kampfire.model.PrivateInfo
 import kampfire.model.SignUpRequest
 import kampfire.model.SignUpResult
-import kampfire.model.User
-import kampfire.model.UserInfo
+import kampfire.model.BasicUserInfo
 
 object UserApi : ApiNode(ApiNode(ApiNode(null, "api"),
     "v1"
@@ -14,8 +13,8 @@ object UserApi : ApiNode(ApiNode(ApiNode(null, "api"),
     object Login : PostEndpoint<LoginRequest, Auth>(this, "login")
     object Create : PostEndpoint<SignUpRequest, SignUpResult>(this, "create")
     object Private : GetEndpoint<PrivateInfo>(this, "private")
-    object ReadInfo : GetEndpoint<UserInfo>(this)
-    object Update : PostEndpoint<UserInfo, Boolean>(this, "update")
+    object ReadInfo : GetEndpoint<BasicUserInfo>(this)
+    object Update : PostEndpoint<BasicUserInfo, Boolean>(this, "update")
     object CheckUsername: PostEndpoint<String, Boolean>(this, "check-username")
 //    object UploadAvatar: PostEndpoint<ByteArray, String>(this, "upload-avatar")
 }

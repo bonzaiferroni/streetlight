@@ -1,6 +1,6 @@
 package streetlight.web.ui
 
-import kampfire.model.UserInfo
+import kampfire.model.BasicUserInfo
 import koala.css.*
 import koala.dom.*
 import koala.html.btn
@@ -14,7 +14,7 @@ import streetlight.web.model.Streetlight
 
 fun RenderContext.viewUserHub(
     app: Streetlight,
-    user: UserInfo,
+    user: BasicUserInfo,
 ) {
     // val model = UserHub(renderScope, app.client.api)
     val userCache = app.cache

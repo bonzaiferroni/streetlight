@@ -1,6 +1,6 @@
 package streetlight.web.model
 
-import kampfire.model.UserInfo
+import kampfire.model.BasicUserInfo
 import koala.model.Portal
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.filterNotNull
@@ -14,7 +14,7 @@ class GateAgent(
     val portal: Portal,
 ) {
     @Deprecated("use userContent")
-    fun checkIn(block: (UserInfo) -> Unit) {
+    fun checkIn(block: (BasicUserInfo) -> Unit) {
         val user = gate.stateNow.star
         if (user != null) {
             block(user)

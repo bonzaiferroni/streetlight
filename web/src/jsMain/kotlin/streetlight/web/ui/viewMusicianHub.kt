@@ -1,6 +1,6 @@
 package streetlight.web.ui
 
-import kampfire.model.UserInfo
+import kampfire.model.BasicUserInfo
 import koala.css.Accent
 import koala.css.AlignItemsCenter
 import koala.css.Flex1
@@ -26,7 +26,7 @@ import streetlight.web.model.MusicianHub
 
 fun RenderContext.viewMusicianHub(
     app: Streetlight,
-    user: UserInfo,
+    user: BasicUserInfo,
 ) {
     val model = MusicianHub(renderScope, app.client.api)
     val portal = app.portal

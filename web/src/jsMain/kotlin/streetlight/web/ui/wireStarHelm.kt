@@ -1,6 +1,6 @@
 package streetlight.web.ui
 
-import kampfire.model.UserInfo
+import kampfire.model.BasicUserInfo
 import kampfire.model.toUrl
 import koala.SvgFile
 import koala.css.*
@@ -11,8 +11,6 @@ import koala.html.heading3
 import koala.html.icon
 import koala.html.image
 import kotlinx.browser.document
-import kotlinx.css.FlexWrap
-import kotlinx.css.TextWrap
 import kotlinx.html.InputType
 import kotlinx.html.onClick
 import org.w3c.dom.HTMLElement
@@ -45,7 +43,7 @@ private fun RenderContext.wireStarHelm(app: Streetlight, element: HTMLElement) {
 
 private val RowMod = modify(AlignItemsCenter, PaddingLeft3, JustifyContentEnd)
 
-private fun ViewContext<Streetlight>.starPanel(star: UserInfo) {
+private fun ViewContext<Streetlight>.starPanel(star: BasicUserInfo) {
     val app = model
     val gate = app.gate
 

@@ -4,6 +4,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class SignUpResult(
-    val success: Boolean = false,
-    val message: String = "",
+    val isSuccess: Boolean,
+    val message: String
 )

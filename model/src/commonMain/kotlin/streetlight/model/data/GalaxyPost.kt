@@ -3,7 +3,7 @@ package streetlight.model.data
 import kampfire.model.GeoPoint
 import kampfire.model.ScaledImageArray
 import kampfire.model.Url
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 
 sealed interface GalaxyPost {
     val postId: MapPostId

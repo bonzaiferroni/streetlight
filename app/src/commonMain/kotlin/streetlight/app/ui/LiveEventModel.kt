@@ -5,8 +5,8 @@ import kampfire.model.SpeechRequest
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
+import kotlin.time.Clock
+import kotlin.time.Instant
 import pondui.ui.core.ModelState
 import pondui.ui.core.StateModel
 import streetlight.app.AppProvider

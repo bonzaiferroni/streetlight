@@ -4,7 +4,7 @@ import kampfire.model.GeoPoint
 import kampfire.model.ScaledImageArray
 import kampfire.model.Url
 import kampfire.model.toUrl
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import kotlinx.serialization.Serializable
 
 @Serializable

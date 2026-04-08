@@ -1,7 +1,7 @@
 package streetlight.app.io
 
 import kampfire.api.write
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import pondui.io.NeoApiClient
 import streetlight.model.Api
 import streetlight.model.data.NewRendition

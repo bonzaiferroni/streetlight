@@ -1,6 +1,6 @@
 package streetlight.web.ui
 
-import kampfire.model.UserInfo
+import kampfire.model.BasicUserInfo
 import koala.css.ModifierSet
 import koala.dom.*
 import kotlinx.coroutines.flow.filterNotNull
@@ -14,7 +14,7 @@ fun RenderContext.userBlock(
     app: Streetlight,
     redirect: Boolean = false,
     modifiers: ModifierSet? = null,
-    block: RenderContext.(UserInfo) -> Unit
+    block: RenderContext.(BasicUserInfo) -> Unit
 ) {
     val gate = app.gate
     val portal = app.portal

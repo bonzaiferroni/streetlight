@@ -1,6 +1,6 @@
 package streetlight.web.model
 
-import kampfire.model.UserInfo
+import kampfire.model.BasicUserInfo
 import koala.model.mapDistinct
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
@@ -43,13 +43,13 @@ class StarGate(
         state.set { it.copy(star = null) }
     }
 
-    fun setUpdate(user: UserInfo) {
+    fun setUpdate(user: BasicUserInfo) {
         state.set { it.copy(star = user) }
     }
 }
 
 data class StarGateState(
-    val star: UserInfo? = null,
+    val star: BasicUserInfo? = null,
     val message: String? = null,
 ) {
     val isSignedIn get() = star != null
