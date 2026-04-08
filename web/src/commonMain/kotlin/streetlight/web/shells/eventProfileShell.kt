@@ -1,5 +1,6 @@
 package streetlight.web.shells
 
+import kampfire.model.medium
 import koala.css.AlignItemsStretch
 import koala.css.BorderRadius1
 import koala.css.MarginAuto
@@ -19,7 +20,7 @@ import streetlight.web.EditEventIdRoute
 
 fun FlowContent.eventProfileShell(event: Event) {
     column(EventProfileShell.id, modify(AlignItemsStretch)) {
-        val imageUrl = event.imageMd
+        val imageUrl = event.images.medium
         if (imageUrl != null) {
             image(imageUrl, modify(BorderRadius1, MaxHeight64, MarginAuto))
         }

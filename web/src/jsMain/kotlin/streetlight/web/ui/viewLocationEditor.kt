@@ -26,7 +26,7 @@ fun RenderContext.viewLocationEditor(
 ) {
     val model = LocationEditor(location, renderScope, app.client)
     val nameFlow = model.editFlow.mapDistinct { it.name }
-    val imageUrlFlow = model.editFlow.mapDistinct { it.imageUrl }
+    val imageUrlFlow = model.editFlow.mapDistinct { it.imageRef }
     val linkFlow = model.editFlow.mapDistinct { it.website }
     val eventsLinkFlow = model.editFlow.mapDistinct { it.eventsUrl }
 
@@ -50,7 +50,7 @@ fun RenderContext.viewLocationEditor(
         imageChooser(
             modifiers = modify(MinHeight8),
             onUpload = { app.client.api.uploadImage(it) },
-            onValueChanged = model::setImageUrl,
+            onValueChanged = model::setImageRef,
             urlFlow = imageUrlFlow,
             choicesFlow = app.cache.file.flow
         )

@@ -151,11 +151,11 @@ fun PointEntity.toMapEntityView(pixelPoint: Point): PointEntityView {
             bodyElement = icon?.let {
                 div {
                     addModifiers(modify(MarkerCss.icon, MarkerCss.body))
-                    style = "--svg: url(${it.path});"
+                    style = "--svg: url(${it.url});"
                 }
-            } ?: thumbPath?.let {
+            } ?: thumbUrl?.let {
                 img {
-                    src = it
+                    src = it.value
                     addModifiers(modify(MarkerCss.body, MarkerCss.thumb))
                 }
             } ?: body?.let {
@@ -174,7 +174,7 @@ fun PointEntity.toMapEntityView(pixelPoint: Point): PointEntityView {
         }
     }
 
-    if (thumbPath != null) baseElement?.modify(Scale)
+    if (thumbUrl != null) baseElement?.modify(Scale)
 
     val options = MarkerOptions(
         element = element,

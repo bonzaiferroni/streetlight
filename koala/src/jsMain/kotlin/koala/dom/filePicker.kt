@@ -1,5 +1,7 @@
 package koala.dom
 
+import kampfire.model.Url
+import kampfire.model.toUrl
 import koala.css.*
 import koala.html.FilePickerKey
 import kotlinx.html.InputType
@@ -17,7 +19,7 @@ fun DOMContext.filePicker(
     mimeType: MimeType = MimeType.All,
     modifiers: ModifierSet? = null,
     onMessage: ((UIMessage) -> Unit)? = null,
-    onPickFile: (String) -> Unit
+    onPickFile: (Url) -> Unit
 ) {
     var input: HTMLInputElement
     var preview: HTMLImageElement
@@ -56,8 +58,7 @@ fun DOMContext.filePicker(
         val url = URL.createObjectURL(file)
         dropZone.style.display = "none"
         preview.src = url
-        console.log(url)
-        onPickFile(url)
+        onPickFile(url.toUrl())
     }
 
     element.addEventListener("drop", { event ->

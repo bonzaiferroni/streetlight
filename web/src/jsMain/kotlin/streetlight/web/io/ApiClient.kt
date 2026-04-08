@@ -4,6 +4,7 @@ import kampfire.api.UserApi
 import kampfire.model.GeoBounds
 import kampfire.model.GeoPoint
 import kampfire.model.SignUpRequest
+import kampfire.model.Url
 import kampfire.model.UserInfo
 import kotlinx.coroutines.CoroutineScope
 import streetlight.model.Api
@@ -14,7 +15,7 @@ class ApiClient(private val client: FetchClient) {
     suspend fun readStarInfo() = client.get(UserApi.ReadInfo)
 
     // events
-    suspend fun readEvent(eventId: EventId) = client.get(Api.EventProfile, eventId)
+    suspend fun readEvent(eventId: EventId) = client.get(Api.Events.ReadById, eventId)
     suspend fun readEventBySlug(slug: Slug) = client.get(Api.Events.ReadBySlug, slug)
     suspend fun readEventFeed() = client.get(Api.Events)
     suspend fun createOrEditEvent(event: EventEdit) = client.postAndReadStatus(Api.Events.Edit, event)
@@ -41,8 +42,8 @@ class ApiClient(private val client: FetchClient) {
     suspend fun readUserFiles() = client.get(Api.Users.Files)
     suspend fun updateUser(user: UserInfo) = client.post(UserApi.Update, user)
     suspend fun checkUsername(username: String) = client.post(UserApi.CheckUsername, username)
-    suspend fun uploadAvatar(blobUrl: String) = client.uploadBlob(Api.Users.UploadAvatar.path, blobUrl)
-    suspend fun uploadImage(blobUrl: String) = client.uploadBlob(Api.Users.UploadImage.path, blobUrl)
+    suspend fun uploadAvatar(blobUrl: Url) = client.uploadBlob(Api.Users.UploadAvatar.path, blobUrl)
+    suspend fun uploadImage(blobUrl: Url) = client.uploadBlob(Api.Users.UploadImage.path, blobUrl)
     suspend fun queryLocation(point: GeoPoint) = client.get(Api.Locations.QueryPoint, point.toQuery())
 
     suspend fun readStoryUrl(url: String) = client.get(Api.Stories.ReadUrl) {

@@ -146,7 +146,7 @@ fun ViewContext<LocationScoutOld>.reviewStage(edit: LocationEdit) {
             tab("Details") {
                 flowBlock(editFlow) { edit ->
                     row(modify(AlignItemsStart)) {
-                        val imageUrl = edit.imageUrl
+                        val imageUrl = edit.imageRef
                         if (imageUrl != null) {
                             image(imageUrl, modify(Flex1, Width100P))
                         } else {

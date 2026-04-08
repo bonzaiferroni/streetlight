@@ -1,8 +1,10 @@
 package streetlight.model.data
 
 import kampfire.model.GeoPoint
+import kampfire.model.ScaledImageArray
+import kampfire.model.Url
+import kampfire.model.toUrl
 import kampfire.utils.randomUuidString
-import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
@@ -27,8 +29,8 @@ data class Location(
     val aboutUrl: String?,
     // td: create -> tags
     // td: aboutLink
-    val imageUrl: String?,
-    val thumbUrl: String?,
+    val imageRef: Url?,
+    val images: ScaledImageArray?,
     val updatedAt: Instant,
     val createdAt: Instant,
     // td: openedAt: LocalDate
@@ -56,8 +58,7 @@ data class LocationEdit(
     val eventsUrl: String? = null,
     val aboutUrl: String? = null,
     val menuUrl: String? = null,
-    val imageUrl: String? = null,
-    val thumbUrl: String? = null,
+    val imageRef: Url? = null,
 ) {
     val isValid get() = name != null && geoPoint != null
 }
@@ -94,8 +95,7 @@ fun Location.toEdit() = LocationEdit(
     resources = resources,
     website = website,
     eventsUrl = eventsUrl,
-    imageUrl = imageUrl,
-    thumbUrl = thumbUrl,
+    imageRef = imageRef,
 )
 
 fun Location.toPlace() = Place(
@@ -110,45 +110,29 @@ fun LocationEdit.toPlace() = Place(
     geoPoint = geoPoint,
 )
 
-fun Place.toLocation() = Location(
-    locationId = LocationId.random(),
-    name = name ?: "",
-    geoPoint = geoPoint ?: GeoPoint.Denver,
-    description = null,
-    address = address,
-    resources = emptySet(),
-    website = null,
-    eventsUrl = null,
-    aboutUrl = null,
-    menuUrl = null,
-    imageUrl = null,
-    thumbUrl = null,
-    updatedAt = Clock.System.now(),
-    createdAt = Clock.System.now()
-)
+//fun Place.toLocation() = Location(
+//    locationId = LocationId.random(),
+//    name = name ?: "",
+//    geoPoint = geoPoint ?: GeoPoint.Denver,
+//    description = null,
+//    address = address,
+//    resources = emptySet(),
+//    website = null,
+//    eventsUrl = null,
+//    aboutUrl = null,
+//    menuUrl = null,
+//    imageUrl = null,
+//    imageMd = null,
+//    imageSm = null,
+//    updatedAt = Clock.System.now(),
+//    createdAt = Clock.System.now()
+//)
 
 fun Place.toEdit() = LocationEdit(
     name = name,
     address = address,
     geoPoint = geoPoint,
     website = website
-)
-
-fun LocationEdit.toLocation() = Location(
-    locationId = locationId ?: LocationId.random(),
-    name = name ?: error("no location name"),
-    geoPoint = geoPoint ?: error("no location geoPoint"),
-    description = description,
-    address = address,
-    resources = resources ?: emptySet(),
-    website = website,
-    eventsUrl = eventsUrl,
-    aboutUrl = aboutUrl,
-    menuUrl = menuUrl,
-    imageUrl = imageUrl,
-    thumbUrl = thumbUrl,
-    updatedAt = Clock.System.now(),
-    createdAt = Clock.System.now()
 )
 
 fun LocationParse.toEdit(
@@ -166,7 +150,7 @@ fun LocationParse.toEdit(
     eventsUrl = eventsUrl,
     menuUrl = menuUrl,
     aboutUrl = aboutUrl,
-    imageUrl = imageUrl,
+    imageRef = imageUrl?.toUrl(),
 )
 
 //     val name: String? = null,
@@ -204,8 +188,7 @@ fun LocationEdit.mergeLeft(edit: LocationEdit?) = edit?.let {
         eventsUrl = eventsUrl ?: edit.eventsUrl,
         aboutUrl = aboutUrl ?: edit.aboutUrl,
         menuUrl = menuUrl ?: edit.menuUrl,
-        imageUrl = imageUrl ?: edit.imageUrl,
-        thumbUrl = thumbUrl ?: edit.thumbUrl,
+        imageRef = imageRef ?: edit.imageRef,
     )
 } ?: this
 

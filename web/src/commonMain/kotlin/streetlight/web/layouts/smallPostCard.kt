@@ -1,6 +1,7 @@
 package streetlight.web.layouts
 
 import kabinet.utils.toRelativeDayFormat
+import kampfire.model.thumb
 import koala.SvgFile
 import koala.css.*
 import koala.html.action
@@ -21,7 +22,7 @@ import streetlight.web.EventSlugRoute
 import streetlight.web.LocationIdRoute
 
 fun FlowContent.smallPostCard(post: EventPost) {
-    val thumbUrl = post.thumbUrl
+    val thumbUrl = post.images.thumb
     val title = post.title
     val description = post.description
     val event = post.event ?: return // td: show removed content

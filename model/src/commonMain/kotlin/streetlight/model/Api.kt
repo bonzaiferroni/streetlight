@@ -4,11 +4,13 @@ import kampfire.api.*
 import kampfire.model.GeoBounds
 import kampfire.model.GeoPoint
 import kampfire.model.SpeechRequest
+import kampfire.model.Url
 import streetlight.model.data.*
 
 object Api: ApiNode(ApiNode(null, "api"), "v1") {
 
     object Events: GetEndpoint<List<Event>>(this, "events") {
+        object ReadById: GetByIdEndpoint<EventId, Event>(this, "read-by-id")
         object Edit: PostEndpoint<EventEdit, Event>(this, "create")
         object Delete: DeleteEndpoint<EventId>(this, "delete")
         object QueryMap: QueryEndpoint<MapQuery, List<EventLocation>>(this, "bounds")
@@ -87,11 +89,11 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
     }
 
     object Users: ApiNode(this, "users") {
-        object Files: GetEndpoint<List<String>>(this, "files")
+        object Files: GetEndpoint<List<Url>>(this, "files")
         object Talents: GetEndpoint<List<Talent>>(this, "talents")
         object EditTalent: PostEndpoint<TalentEdit, Talent>(this, "edit-talent")
         object UploadAvatar: PostEndpoint<ByteArray, String>(this, "upload-avatar")
-        object UploadImage: PostEndpoint<ByteArray, String>(this, "upload")
+        object UploadImage: PostEndpoint<ByteArray, Url>(this, "upload")
     }
 
     object Stories: ApiNode(this, "story") {

@@ -17,7 +17,7 @@ class PostEditor(
 
     val infoUrlFlow = stateFlow.mapDistinct { it.story.infoUrl ?: "" }
     val headlineFlow = stateFlow.mapDistinct { it.story.title }
-    val imageUrlFlow = stateFlow.mapDistinct { it.story.imageUrl ?: "" }
+    val imageUrlFlow = stateFlow.mapDistinct { it.story.imageUrl }
     val descriptionFlow = stateFlow.mapDistinct { it.story.description }
     val locationFlow = stateFlow.mapDistinct { it.story.location }
     val postedAtFlow = stateFlow.mapDistinct { it.story.postedAt }

@@ -1,5 +1,6 @@
 package koala.dom
 
+import kampfire.model.Url
 import koala.css.Blur
 import koala.css.Magic
 import koala.css.SlideDown
@@ -8,7 +9,7 @@ import koala.css.modify
 import koala.model.storeOf
 import kotlinx.coroutines.flow.Flow
 
-fun RenderContext.fileDrop(urlFlow: Flow<String?>, onFileUrl: (String) -> Unit) {
+fun RenderContext.fileDrop(urlFlow: Flow<String?>, onFileUrl: (Url) -> Unit) {
     flowBlock(urlFlow, modify(Magic, Blur, SlideDown)) { url ->
         if (url != null) {
             textBlock("file: $url")

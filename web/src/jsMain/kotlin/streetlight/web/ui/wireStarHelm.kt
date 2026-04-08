@@ -1,6 +1,7 @@
 package streetlight.web.ui
 
 import kampfire.model.UserInfo
+import kampfire.model.toUrl
 import koala.SvgFile
 import koala.css.*
 import koala.dom.*
@@ -57,7 +58,7 @@ private fun ViewContext<Streetlight>.starPanel(star: UserInfo) {
             button(modify(HelmBarKey.IconMod, FadeLoop)) {
                 onClick = StarHelmKey.ClosePopover
 
-                image(star.avatarUrl, modify(OpacityMost, Size100P, BorderRadius50P))
+                image(star.avatarUrl?.toUrl(), modify(OpacityMost, Size100P, BorderRadius50P))
             }
         }
 

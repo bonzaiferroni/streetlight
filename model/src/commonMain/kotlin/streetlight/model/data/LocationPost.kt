@@ -2,6 +2,7 @@ package streetlight.model.data
 
 import kampfire.model.GeoPoint
 import kampfire.model.UserId
+import kampfire.model.toUrl
 import kampfire.utils.randomUuidString
 import kotlinx.datetime.Instant
 import kotlinx.serialization.Serializable
@@ -18,8 +19,7 @@ data class LocationPost(
     override val createdAt: Instant,
     override val updatedAt: Instant,
 ): GalaxyPost {
-    override val thumbUrl get() = location?.thumbUrl
-    override val imageUrl get() = location?.imageUrl
+    override val images get() = location?.images
     override val geoPoint get() = location?.geoPoint ?: GeoPoint.Denver
     override val description get() = location?.description
     override val visibility get() = 0

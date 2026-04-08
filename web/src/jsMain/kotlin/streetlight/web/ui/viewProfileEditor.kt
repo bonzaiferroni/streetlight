@@ -2,6 +2,8 @@
 
 package streetlight.web.ui
 
+import kampfire.model.Url
+import kampfire.model.toUrl
 import koala.css.*
 import koala.dom.*
 import koala.model.mapDistinct
@@ -17,7 +19,7 @@ fun ViewContext<Streetlight>.viewProfileEditor() {
     userBlock(model, true) { user ->
         val state = storeOf(user)
 
-        val avatarFlow = state.flow.mapDistinct { it.avatarUrl }
+        val avatarFlow = state.flow.mapDistinct { it.avatarUrl?.toUrl() }
         val usernameFlow = state.flow.mapDistinct { it.username }
         val isAvailableFlow = usernameFlow.debounce(500).map {
             if (it == user.username) null
@@ -25,15 +27,15 @@ fun ViewContext<Streetlight>.viewProfileEditor() {
         }
 
         fun setUsername(value: String) = state.set { it.copy(username = value) }
-        fun setAvatar(value: String?) = state.set { it.copy(avatarUrl = value) }
+        fun setAvatar(value: Url?) = state.set { it.copy(avatarUrl = value?.value) }
         fun update() {
             var user = state.now // td: check validity?
-            val blobUrl = user.avatarUrl?.takeIf { it.startsWith("blob:") }
+            val blobUrl = user.avatarUrl?.takeIf { it.startsWith("blob:") }?.toUrl()
             renderScope.launch {
                 user = if (blobUrl != null) {
                     val avatarUrl = api.uploadAvatar(blobUrl) ?: error("error creating avatar")
                     console.log(avatarUrl)
-                    user.copy(avatarUrl = avatarUrl)
+                    user.copy(avatarUrl = avatarUrl.value)
                 } else user
 
                 val isSuccess = api.updateUser(user) ?: return@launch

@@ -2,6 +2,7 @@ package streetlight.model.data
 
 import kampfire.api.TableId
 import kampfire.model.ImageSize
+import kampfire.model.Url
 import kampfire.model.UserId
 import kampfire.utils.randomUuidString
 import kotlinx.datetime.Instant
@@ -12,10 +13,11 @@ import kotlin.jvm.JvmInline
 data class UploadFile(
     val uploadFileId: UploadFileId,
     val userId: UserId?,
-    val url: String,
+    val url: Url,
     val fileType: FileType,
     val size: ImageSize?,
     val fileFormat: FileFormat,
+    val storage: StorageType,
     val createdAt: Instant
 )
 

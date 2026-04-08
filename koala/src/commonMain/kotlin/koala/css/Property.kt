@@ -1,5 +1,6 @@
 package koala.css
 
+import kampfire.model.Url
 import koala.SiteFile
 import kotlinx.css.Display
 import kotlinx.html.CoreAttributeGroupFacade
@@ -30,8 +31,8 @@ data class Property<T>(val identifier: String, val isCustom: Boolean = true) {
 
 data class InlineStyle<T>(val property: Property<T>, val value: T)
 
-data class UrlValue(val url: String) {
-    constructor(file: SiteFile): this(file.path)
+data class UrlValue(val url: Url) {
+    constructor(file: SiteFile): this(file.url)
     override fun toString() = "url('$url')"
 }
 

@@ -1,5 +1,6 @@
 package koala.html
 
+import kampfire.model.Url
 import koala.css.BackgroundImage
 import koala.css.Class
 import koala.css.ModifierSet
@@ -27,7 +28,7 @@ fun FlowContent.btn(
 fun FlowContent.btn(
     text: String,
     route: AppRoute,
-    background: String?,
+    background: Url?,
     modifiers: ModifierSet? = null,
     block: (A.() -> Unit)? = null,
 ) {

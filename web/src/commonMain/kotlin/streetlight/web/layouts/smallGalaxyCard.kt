@@ -1,10 +1,10 @@
 package streetlight.web.layouts
 
+import kampfire.model.small
 import koala.css.*
 import koala.html.*
 import kotlinx.html.FlowContent
 import streetlight.model.data.Galaxy
-import streetlight.model.data.GalaxyId
 import streetlight.web.toRoute
 
 fun FlowContent.smallGalaxyCard(galaxy: Galaxy) {
@@ -12,7 +12,7 @@ fun FlowContent.smallGalaxyCard(galaxy: Galaxy) {
     card(modify(QueryContainer, Padding0, OverflowHidden)) {
         column(modify(ContainerTnRow, Gap0)) {
             action(route, modify(Flex1, MinHeight8)) {
-                fillImage(galaxy.imageUrl, modify(Size100P))
+                fillImage(galaxy.images?.small, modify(Size100P))
             }
             column(modify(Flex2, Height16)) {
                 column(modify(Flex1, Padding1, OverflowHidden, FadeBottom)) {

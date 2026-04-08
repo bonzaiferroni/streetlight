@@ -2,6 +2,7 @@ package streetlight.model.data
 
 import androidx.compose.runtime.Stable
 import kampfire.model.LabeledEnum
+import kampfire.model.ScaledImageArray
 import kampfire.model.Url
 import kampfire.model.UserId
 import kampfire.utils.randomUuidString
@@ -36,8 +37,8 @@ data class Event(
     val url: String?,
     val sourceUrl: String?,
     val sourceImageUrl: String?,
-    val imageMd: Url?,
-    val imageSm: Url?,
+    val imageRef: Url?,
+    val images: ScaledImageArray?,
     val streamUrl: String?,
     val timeZoneId: String,
     val startsAt: Instant,
@@ -74,7 +75,7 @@ data class EventEdit(
     val link: String? = null,
     val sourceUrl: String? = null,
     val sourceImageUrl: String? = null,
-    val imageUrl: String? = null,
+    val imageRef: Url? = null,
     val startTime: LocalTime? = null,
     val endTime: LocalTime? = null,
     val date: LocalDate? = null,
@@ -106,7 +107,7 @@ fun Event.toEdit() = EventEdit(
     eventId = eventId,
     title = title,
     locationId = locationId,
-    imageUrl = imageMd,
+    imageRef = imageRef,
     description = description,
     contact = contact,
     invitation = invitation,
@@ -126,7 +127,7 @@ fun EventEdit.mergeLeft(other: EventEdit?) = other?.let {
         eventId = eventId ?: it.eventId,
         title = title ?: it.title,
         locationId = locationId ?: it.locationId,
-        imageUrl = imageUrl ?: it.imageUrl,
+        imageRef = imageRef ?: it.imageRef,
         description = description ?: it.description,
         contact = contact ?: it.contact,
         invitation = invitation ?: it.invitation,

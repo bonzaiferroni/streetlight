@@ -1,5 +1,6 @@
 package streetlight.model.data
 
+import kampfire.model.toUrl
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
@@ -122,7 +123,7 @@ fun EventParse.toEventEdit(
 ) = EventEdit(
     title = name ?: "",
     locationId = locationId,
-    imageUrl = imageUrl,
+    imageRef = imageUrl?.toUrl(),
     description = description,
     ageMin = ageMin?.takeIf { it > 0 },
     cost = floatUSDOf(cost),

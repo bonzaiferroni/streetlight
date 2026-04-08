@@ -1,6 +1,8 @@
 package streetlight.model.data
 
 import kampfire.model.GeoPoint
+import kampfire.model.ScaledImageArray
+import kampfire.model.Url
 import kotlinx.datetime.Instant
 
 sealed interface GalaxyPost {
@@ -9,8 +11,7 @@ sealed interface GalaxyPost {
     val username: String?
     val location: Location?
     val text: String?
-    val thumbUrl: String?
-    val imageUrl: String?
+    val images: ScaledImageArray?
     val geoPoint: GeoPoint
     val description: String?
     val title: String

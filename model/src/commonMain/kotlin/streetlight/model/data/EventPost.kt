@@ -2,6 +2,7 @@ package streetlight.model.data
 
 import kampfire.model.GeoPoint
 import kampfire.model.UserId
+import kampfire.model.toUrl
 import kampfire.utils.randomUuidString
 import kotlinx.datetime.Instant
 import kotlinx.serialization.Serializable
@@ -18,8 +19,7 @@ data class EventPost(
     override val createdAt: Instant,
     override val updatedAt: Instant,
 ): GalaxyPost {
-    override val thumbUrl get() = event?.imageSm ?: location?.thumbUrl
-    override val imageUrl get() = event?.imageMd ?: location?.imageUrl
+    override val images get() = event?.images ?: location?.images
     override val geoPoint get() = location?.geoPoint ?: GeoPoint.Denver
     override val title get() = event?.title ?: "[event removed]"
     override val description get() = event?.description

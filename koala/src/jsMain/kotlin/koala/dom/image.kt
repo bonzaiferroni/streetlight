@@ -1,6 +1,6 @@
 package koala.dom
 
-import koala.Image
+import kampfire.model.Url
 import koala.SiteImage
 import koala.css.ModifierSet
 import koala.css.addModifiers
@@ -12,17 +12,17 @@ import kotlinx.html.style
 import org.w3c.dom.HTMLImageElement
 
 fun RenderContext.image(
-    initial: String? = SiteImage.placeholder.path,
+    initial: Url? = SiteImage.placeholder.url,
     modifiers: ModifierSet? = null,
-    binding: Flow<String?>? = null,
+    binding: Flow<Url?>? = null,
     hideOnError: Boolean = true,
     block: (IMG.() -> Unit)? = null
 ): HTMLImageElement {
-    val initial = initial ?: ""
+    val initialSrc = initial?.value ?: ""
     val element = img {
-        this.src = initial
+        this.src = initialSrc
         addModifiers(modifiers)
-        if (initial.isEmpty()) {
+        if (initialSrc.isEmpty()) {
             style = "display: none;"
         }
         block?.invoke(this)
@@ -38,7 +38,7 @@ fun RenderContext.image(
 
     renderScope.launch {
         binding?.collect { url ->
-            val url = url?.takeIf { it.isNotBlank() } ?: initial
+            val url = url?.value ?: ""
             if (url.isEmpty()) {
                 hideImage()
             } else {

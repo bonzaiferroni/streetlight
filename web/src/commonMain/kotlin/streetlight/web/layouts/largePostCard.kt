@@ -2,6 +2,9 @@ package streetlight.web.layouts
 
 import kabinet.utils.toRelativeDayFormat
 import kabinet.utils.toTimeFormat
+import kampfire.model.ScaledImageArray
+import kampfire.model.Url
+import kampfire.model.medium
 import koala.SiteImage
 import koala.css.*
 import koala.html.*
@@ -20,13 +23,13 @@ fun FlowContent.largePostCard(
     description: String?,
     sourceUrl: String?,
     links: List<ExtraLink>?,
-    imageUrl: String?,
+    images: ScaledImageArray?,
     postRoute: StreetlightRoute,
     subRoute: StreetlightRoute?,
     modifiers: ModifierSet? = null,
     cells: List<(FlowContent.() -> Unit)?>
 ) {
-    val imageUrl = imageUrl ?: SiteImage.placeholder.path
+    val imageUrl = images?.medium ?: SiteImage.placeholder.url
 
     card(modify(modifiers, QueryContainer, Padding0, OverflowHidden)) {
         column(modify(QueryContainer, ContainerLgRow, Gap0)) {

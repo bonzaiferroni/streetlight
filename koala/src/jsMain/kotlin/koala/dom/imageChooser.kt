@@ -1,5 +1,6 @@
 package koala.dom
 
+import kampfire.model.Url
 import koala.css.*
 import koala.html.ImageChooserKey
 import kotlinx.coroutines.flow.Flow
@@ -14,18 +15,18 @@ import org.w3c.dom.HTMLImageElement
 
 fun RenderContext.imageChooser(
     modifiers: ModifierSet? = null,
-    onValueChanged: ((String?) -> Unit)? = null,
-    onUpload: suspend (String) -> String?,
-    urlFlow: Flow<String?>? = null,
-    choicesFlow: Flow<List<String>>? = null,
+    onValueChanged: ((Url?) -> Unit)? = null,
+    onUpload: suspend (Url) -> Url?,
+    urlFlow: Flow<Url?>? = null,
+    choicesFlow: Flow<List<Url>>? = null,
 ): HTMLDivElement {
-    var localUrl: String? = null
+    var localUrl: Url? = null
     var uploadButton: HTMLButtonElement? = null
     var image: HTMLImageElement? = null
     var placeholder: HTMLDivElement? = null
     var choicesRow: HTMLDivElement? = null
-    var choiceUrl: String? = null
-    var choices: List<String>? = null
+    var choiceUrl: Url? = null
+    var choices: List<Url>? = null
     var isInitialized = false
 
     val element = box(modify(ImageChooserKey.Class, modifiers)) {
@@ -67,8 +68,8 @@ fun RenderContext.imageChooser(
         val choicesRow = choicesRow ?: return
         choicesRow.clear()
         choicesRow.append {
-            choiceUrl?.let {
-                val image = img(src = choiceUrl) {
+            choiceUrl?.let { choiceUrl ->
+                val image = img(src = choiceUrl.value) {
                     addModifiers(Height16)
                 }
                 image.onClick {
@@ -76,7 +77,7 @@ fun RenderContext.imageChooser(
                 }
             }
             choices?.forEach { url ->
-                val image =img(src = url) {
+                val image =img(src = url.value) {
                     addModifiers(Height16)
                 }
                 image.onClick {
@@ -108,7 +109,7 @@ fun RenderContext.imageChooser(
                 isInitialized = false
                 choiceUrl = url
                 if (url != null) {
-                    image.src = url
+                    image.src = url.value
                     image.style.display = "block"
                     placeholder.style.display = "none"
                 } else {

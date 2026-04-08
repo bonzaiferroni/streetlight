@@ -10,6 +10,8 @@ import kampfire.api.QueryEndpoint
 import kampfire.api.TableId
 import kampfire.api.UserApi
 import kampfire.model.Auth
+import kampfire.model.Url
+import kampfire.model.toUrl
 import koala.external.FeedMessage
 import koala.utils.jsonConfig
 import kotlinx.browser.window
@@ -49,9 +51,9 @@ class FetchClient(
             acceptEncoding = acceptEncoding
         ) { it.tryDecode(acceptEncoding) }
 
-    suspend inline fun <reified Returned> get(
-        endpoint: GetByIdEndpoint<String, Returned>,
-        id: String,
+    suspend inline fun <Id, reified Returned> get(
+        endpoint: GetByIdEndpoint<Id, Returned>,
+        id: Id,
     ): Returned? =
         authRequest("GET", "${endpoint.path}/$id") { it.tryDecodeText() }
 
@@ -155,8 +157,8 @@ class FetchClient(
         return handleResponse(response)
     }
 
-    suspend fun uploadBlob(postUrl: String, blobUrl: String): String? {
-        val response = window.fetch(blobUrl).await()
+    suspend fun uploadBlob(postUrl: String, blobUrl: Url): Url? {
+        val response = window.fetch(blobUrl.value).await()
         val blob: Blob = response.blob().await()
         return authRequest(
             method = "POST",
@@ -164,7 +166,7 @@ class FetchClient(
             body = blob,
             contentType = blob.type.ifEmpty { "application/octet-stream" }
         ) {
-            it.text().await()
+            it.text().await().toUrl()
         }
     }
 }

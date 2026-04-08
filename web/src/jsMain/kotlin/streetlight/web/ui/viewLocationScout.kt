@@ -1,5 +1,6 @@
 package streetlight.web.ui
 
+import kampfire.model.thumb
 import koala.SvgFile
 import koala.css.*
 import koala.dom.*
@@ -127,7 +128,7 @@ fun ViewContext<LocationScout>.postResult(result: GalaxyPostResult, galaxies: Li
                     PostResult.Posted -> "Posted."
                     PostResult.Conflict -> "Already in galaxy."
                 }
-                cardOf("${galaxy.name}: $emoji", galaxy.thumbUrl, msg) {
+                cardOf("${galaxy.name}: $emoji", galaxy.images.thumb, msg) {
                     portal.go(GalaxySlugRoute(galaxy.slug))
                 }
             }

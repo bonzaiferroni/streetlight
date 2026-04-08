@@ -1,5 +1,6 @@
 package streetlight.web.ui
 
+import kampfire.model.thumb
 import koala.SiteImage
 import koala.css.ModifierSet
 import koala.dom.*
@@ -12,7 +13,7 @@ fun RenderContext.cardOf(
 ) {
     cardOf(
         title = location.name,
-        thumbUrl = location.thumbUrl ?: SiteImage.placeholderThumb.path,
+        thumbUrl = location.images.thumb ?: SiteImage.placeholderThumb.url,
         description = location.description ?: location.address,
         modifiers = modifiers,
         onClick = onClick,

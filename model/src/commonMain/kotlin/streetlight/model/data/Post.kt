@@ -1,6 +1,8 @@
 package streetlight.model.data
 
 import kampfire.model.GeoPoint
+import kampfire.model.Url
+import kampfire.model.toUrl
 import kampfire.utils.randomUuidString
 import kotlinx.datetime.Instant
 import kotlinx.serialization.Serializable
@@ -31,7 +33,7 @@ value class PostId(override val value: String): ProjectId {
 data class PostUpdate(
     val title: String = "",
     val infoUrl: String? = null,
-    val imageUrl: String? = null,
+    val imageUrl: Url? = null,
     val description: String = "",
     val location: GeoPoint? = null,
     val postedAt: Instant? = null,
@@ -48,7 +50,7 @@ data class StoryParse(
 ) {
     fun toStoryUpdate() = PostUpdate(
         title = title,
-        imageUrl = imageUrl,
+        imageUrl = imageUrl?.toUrl(),
         description = description,
         location = geoPoint,
         postedAt = postedAt

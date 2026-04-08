@@ -1,5 +1,6 @@
 package koala.html
 
+import kampfire.model.Url
 import koala.Image
 import koala.SiteImage
 import koala.Svg
@@ -7,13 +8,13 @@ import koala.css.*
 import kotlinx.html.*
 
 fun FlowOrInteractiveOrPhrasingContent.image(
-    src: String? = null,
+    src: Url? = null,
     modifiers: ModifierSet? = null,
     placeholder: Image = SiteImage.placeholder,
     block: IMG.() -> Unit = {}
 ) {
     img {
-        this.src = src ?: placeholder.path
+        this.src = (src ?: placeholder.url).value
         addModifiers(modifiers)
         block()
     }
@@ -21,7 +22,7 @@ fun FlowOrInteractiveOrPhrasingContent.image(
 
 fun FlowOrInteractiveOrPhrasingContent.image(
     id: Id,
-    src: String? = null,
+    src: Url? = null,
     modifiers: ModifierSet? = null,
     placeholder: Image = SiteImage.placeholder,
     block: IMG.() -> Unit = {}
@@ -38,5 +39,5 @@ fun FlowOrInteractiveOrPhrasingContent.image(
     placeholder: Image = SiteImage.placeholder,
     block: IMG.() -> Unit = {}
 ) {
-    image(svg.path, modifiers, placeholder, block)
+    image(svg.url, modifiers, placeholder, block)
 }

@@ -1,5 +1,6 @@
 package koala.dom
 
+import kampfire.model.Url
 import koala.css.AlignSelfStart
 import koala.css.Blur
 import koala.css.BorderRadius1
@@ -19,10 +20,10 @@ import koala.html.fillImage
 import kotlinx.coroutines.flow.Flow
 
 fun RenderContext.imageDrop(
-    urlFlow: Flow<String?>,
-    onFileUrl: (String?) -> Unit,
+    urlFlow: Flow<Url?>,
+    onFileUrl: (Url?) -> Unit,
     modifiers: ModifierSet? = null,
-    block: RenderContext.(String) -> Unit = {
+    block: RenderContext.(Url) -> Unit = {
         box(modify(Size100P)) {
             fillImage(it)
         }

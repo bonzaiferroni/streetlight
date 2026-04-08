@@ -88,7 +88,7 @@ fun RenderContext.viewEventEditor(
 
 fun ViewContext<EventEditor>.primaryFields() {
     column(modify(MediaMdRow)) {
-        imageDrop(model.imageUrlFlow, model::setImageUrl, modify(Flex1, AspectRatio1))
+        imageDrop(model.imageUrlFlow, model::setImageRef, modify(Flex1, AspectRatio1))
         column(modify(Flex3)) {
             textField(
                 label = "title",

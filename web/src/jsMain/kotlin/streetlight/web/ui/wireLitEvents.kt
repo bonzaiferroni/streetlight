@@ -2,6 +2,7 @@ package streetlight.web.ui
 
 import kabinet.utils.toRelativeDayFormat
 import kabinet.utils.toTimeFormat
+import kampfire.model.medium
 import koala.SvgFile
 import koala.css.BorderRadius1
 import koala.css.Dim
@@ -59,7 +60,7 @@ fun ViewContext<Streetlight>.wireLitEvents(root: HTMLElement) {
                             row(modify(Flex1)) {
                                 events.forEach { event ->
                                     card(modify(Width24, BorderRadius1)) {
-                                        fillImage(event.imageUrl, modify(Flex1))
+                                        fillImage(event.images.medium, modify(Flex1))
                                         column(modify(Gap0)) {
                                             textBlock(event.title, modify(WhiteSpaceNoWrap, TextOverflowHidden))
                                             textBlock(event.locationName, modify(WhiteSpaceNoWrap, TextOverflowHidden, Dim))

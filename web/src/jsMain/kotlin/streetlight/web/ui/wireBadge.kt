@@ -14,7 +14,7 @@ fun RenderContext.wireBadge(app: Streetlight) {
 
     renderScope.launch {
         app.gate.starFlow.collect { star ->
-            element.src = star?.avatarUrl ?: SvgFile.Someone.path
+            element.src = star?.avatarUrl ?: SvgFile.Someone.url.value
         }
     }
 }

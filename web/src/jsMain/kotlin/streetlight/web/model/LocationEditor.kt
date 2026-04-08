@@ -1,6 +1,7 @@
 package streetlight.web.model
 
 import kampfire.model.GeoPoint
+import kampfire.model.Url
 import koala.dom.UIMessage
 import koala.dom.UIMessageType
 import koala.dom.set
@@ -65,8 +66,8 @@ class LocationEditor(
         edit.set { it.copy(eventsUrl = value) }
     }
 
-    fun setImageUrl(value: String?) {
-        edit.set { it.copy(imageUrl = value) }
+    fun setImageRef(value: Url?) {
+        edit.set { it.copy(imageRef = value) }
     }
 
     fun setEdit(edit: LocationEdit) {

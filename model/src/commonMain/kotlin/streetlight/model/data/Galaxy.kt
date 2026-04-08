@@ -1,6 +1,8 @@
 package streetlight.model.data
 
 import kampfire.model.GeoPoint
+import kampfire.model.ScaledImageArray
+import kampfire.model.Url
 import kampfire.utils.randomUuidString
 import kotlinx.datetime.Instant
 import kotlinx.serialization.Serializable
@@ -17,8 +19,8 @@ data class Galaxy(
     val postPermission: PostPermission,
     val reviewMode: ReviewMode,
     val postGuide: String?,
-    val imageUrl: String?,
-    val thumbUrl: String?,
+    val imageRef: Url?,
+    val images: ScaledImageArray?,
     val updatedAt: Instant,
     val createdAt: Instant,
 )
@@ -31,6 +33,7 @@ value class GalaxyId(override val value: String): ProjectId {
 
 @Serializable
 data class GalaxyEdit(
+    val galaxyId: GalaxyId? = null,
     val name: String? = null,
     val slug: Slug? = null,
     val description: String? = null,
@@ -39,8 +42,7 @@ data class GalaxyEdit(
     val postPermission: PostPermission = PostPermission.Accounts,
     val reviewMode: ReviewMode = ReviewMode.PostImmediately,
     val postGuide: String? = null,
-    val imageUrl: String? = null,
-    val thumbUrl: String? = null,
+    val imageRef: Url? = null,
 ) {
     val isValid get() = !name.isNullOrBlank() && center != null
 

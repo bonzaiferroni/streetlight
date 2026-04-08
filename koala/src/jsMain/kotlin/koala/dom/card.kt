@@ -1,5 +1,6 @@
 package koala.dom
 
+import kampfire.model.Url
 import koala.css.AlignItemsStart
 import koala.css.BorderRadius1
 import koala.css.Card
@@ -31,7 +32,7 @@ inline fun DOMContext.card(
 
 fun DOMContext.cardOf(
     title: String,
-    thumbUrl: String?,
+    thumbUrl: Url?,
     description: String?,
     modifiers: ModifierSet? = null,
     onClick: (() -> Unit)? = null,

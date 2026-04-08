@@ -1,5 +1,6 @@
 package streetlight.web.shells
 
+import kampfire.model.thumb
 import koala.SiteImage
 import koala.css.ModifierSet
 import koala.html.cardOf
@@ -14,19 +15,19 @@ import streetlight.web.LocationIdRoute
 import streetlight.web.layouts.route
 
 fun FlowContent.cardOf(event: Event, modifiers: ModifierSet? = null) {
-    cardOf(event.route, event.title, event.imageSm, event.description, modifiers)
+    cardOf(event.route, event.title, event.images.thumb, event.description, modifiers)
 }
 
 fun FlowContent.cardOf(location: Location) {
-    cardOf(LocationIdRoute(location.locationId), location.name, location.thumbUrl, location.description)
+    cardOf(LocationIdRoute(location.locationId), location.name, location.images.thumb, location.description)
 }
 
 fun FlowContent.cardOf(event: EventLocation) {
-    cardOf(event.route, event.title, event.thumbUrl, event.description)
+    cardOf(event.route, event.title, event.images.thumb, event.description)
 }
 
 fun FlowContent.cardOf(galaxy: Galaxy) {
-    cardOf(GalaxySlugRoute(galaxy.slug), galaxy.name, SiteImage.placeholderThumb.path, galaxy.description)
+    cardOf(GalaxySlugRoute(galaxy.slug), galaxy.name, SiteImage.placeholderThumb.url, galaxy.description)
 }
 
 fun FlowContent.cardOf(
@@ -34,6 +35,6 @@ fun FlowContent.cardOf(
     modifiers: ModifierSet? = null,
 ) {
     val route = post.event?.route ?: post.location?.locationId?.let { LocationIdRoute(it) }
-    val thumbUrl = post.thumbUrl ?: SiteImage.placeholderThumb.path
+    val thumbUrl = post.images.thumb ?: SiteImage.placeholderThumb.url
     cardOf(route, post.title, thumbUrl, post.description, modifiers)
 }

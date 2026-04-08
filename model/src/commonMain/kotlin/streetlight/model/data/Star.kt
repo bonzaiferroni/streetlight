@@ -1,5 +1,7 @@
 package streetlight.model.data
 
+import kampfire.model.ScaledImageArray
+import kampfire.model.Url
 import kampfire.utils.randomUuidString
 import kotlinx.datetime.Instant
 import kotlinx.serialization.Serializable
@@ -9,8 +11,8 @@ import kotlin.jvm.JvmInline
 data class Star(
     val name: String,
     val description: String?,
-    val imageUrl: String?,
-    val thumbUrl: String?,
+    val imageRef: Url?,
+    val images: ScaledImageArray?,
     val updatedAt: Instant,
     val createdAt: Instant,
 )
@@ -26,6 +28,5 @@ value class StarId(override val value: String): ProjectId {
 data class StarEdit(
     val name: String? = null,
     val description: String? = null,
-    val imageUrl: String? = null,
-    val thumbUrl: String? = null,
+    val imageRef: Url? = null,
 )

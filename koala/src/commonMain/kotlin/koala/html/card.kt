@@ -1,5 +1,6 @@
 package koala.html
 
+import kampfire.model.Url
 import koala.css.*
 import kotlinx.html.DIV
 
@@ -18,7 +19,7 @@ inline fun FlowContent.card(
 
 fun FlowContent.cardOf(
     title: String,
-    thumbUrl: String?,
+    thumbUrl: Url?,
     description: String?,
     modifiers: ModifierSet? = null,
 ) {
@@ -40,7 +41,7 @@ fun FlowContent.cardOf(
 fun FlowContent.cardOf(
     route: AppRoute?,
     title: String,
-    thumbUrl: String?,
+    thumbUrl: Url?,
     description: String?,
     modifiers: ModifierSet? = null,
 ) {

@@ -1,5 +1,6 @@
 package streetlight.web.model
 
+import kampfire.model.Url
 import koala.model.mapDistinct
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
@@ -32,7 +33,7 @@ class GalaxyEditor(
         setGalaxy { it.copy(slug = value) }
     }
 
-    fun setBlobUrl(value: String?) = state.set { it.copy(blobUrl = value) }
+    fun setBlobUrl(value: Url?) = state.set { it.copy(blobUrl = value) }
 
     fun setDescription(value: String) = setGalaxy { it.copy(description = value) }
 
@@ -53,7 +54,7 @@ class GalaxyEditor(
             val imageUrl = stateNow.blobUrl?.let {
                 api.uploadImage(it)
             }
-            val galaxy = app.client.api.foundGalaxy(galaxy.copy(imageUrl = imageUrl))
+            val galaxy = app.client.api.foundGalaxy(galaxy.copy(imageRef = imageUrl))
             if (galaxy != null) {
                 portal.go(GalaxySlugRoute(galaxy.slug))
                 reset()
@@ -72,5 +73,5 @@ class GalaxyEditor(
 
 data class GalaxyFoundryState(
     val galaxy: GalaxyEdit = GalaxyEdit(),
-    val blobUrl: String? = null
+    val blobUrl: Url? = null
 )

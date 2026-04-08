@@ -1,5 +1,6 @@
 package koala.html
 
+import kampfire.model.Url
 import koala.Image
 import koala.SiteImage
 import koala.css.Class
@@ -14,18 +15,18 @@ import kotlinx.html.div
 import kotlinx.html.img
 
 fun FlowContent.fillImage(
-    src: String? = null,
+    src: Url? = null,
     modifiers: ModifierSet? = null,
     placeholder: Image = SiteImage.placeholder,
     fillWidth: Boolean = true,
     block: (IMG.() -> Unit)? = null
 ) {
-    val src = src ?: placeholder.path
+    val src = src ?: placeholder.url
     div {
         addModifiers(ImageWithBackdropKey.Class, modifiers)
         img {
             addModifiers(ImageWithBackdropKey.BackdropClass)
-            this.src = src
+            this.src = src.value
         }
         div {
             addModifiers(ImageWithBackdropKey.ImageContainerClass)
@@ -35,7 +36,7 @@ fun FlowContent.fillImage(
                     else -> modify(ImageWithBackdropKey.ImageClass, ObjectFitContain)
                 }
                 addModifiers(mod)
-                this.src = src
+                this.src = src.value
 
                 block?.invoke(this)
             }

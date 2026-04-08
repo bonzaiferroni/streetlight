@@ -1,5 +1,6 @@
 package koala.html
 
+import kampfire.model.Url
 import koala.css.Class
 import koala.css.ModifierSet
 import koala.css.addModifiers
@@ -9,7 +10,7 @@ import kotlinx.html.img
 
 fun FlowContent.headerImage(
     text: String,
-    src: String?,
+    src: Url?,
     modifiers: ModifierSet? = null,
     block: DIV.() -> Unit = {}
 ) {
@@ -19,7 +20,7 @@ fun FlowContent.headerImage(
 
         src?.let {
             img {
-                this.src = src
+                this.src = src.value
             }
         }
 

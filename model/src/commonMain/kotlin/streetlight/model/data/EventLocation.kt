@@ -1,6 +1,9 @@
 package streetlight.model.data
 
 import kampfire.model.GeoPoint
+import kampfire.model.ScaledImageArray
+import kampfire.model.Url
+import kampfire.model.toUrl
 import kotlinx.datetime.Instant
 import kotlinx.serialization.Serializable
 
@@ -10,8 +13,7 @@ data class EventLocation(
     val locationId: LocationId,
     val slug: Slug,
     val url: String?,
-    val imageUrl: String?,
-    val thumbUrl: String?,
+    val images: ScaledImageArray?,
     val title: String,
     val description: String?,
     val status: EventStatus,
@@ -27,8 +29,7 @@ data class EventLocation(
             slug = event.slug,
             locationId = location.locationId,
             url = event.url,
-            imageUrl = event.imageMd,
-            thumbUrl = event.imageSm ?: location.thumbUrl,
+            images = event.images ?: location.images,
             title = event.title,
             description = event.description,
             status = event.status,

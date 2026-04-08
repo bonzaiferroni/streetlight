@@ -45,13 +45,13 @@ fun HEAD.applyFile(file: SiteFile) {
 }
 
 fun FlowOrMetaDataOrPhrasingContent.applyJsFile(file: Js) {
-    script(src = file.path) {
+    script(src = file.url.value) {
         this.defer = file.isDeferred
     }
 }
 
 fun HEAD.applyCssFile(file: Css) {
-    link { rel = "stylesheet"; href = file.path }
+    link { rel = "stylesheet"; href = file.url.value }
 }
 
 fun HEAD.applyFira() {

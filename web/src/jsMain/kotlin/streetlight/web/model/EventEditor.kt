@@ -1,23 +1,16 @@
 package streetlight.web.model
 
 import kabinet.utils.replaceAt
+import kampfire.model.Url
 import koala.model.mapDistinct
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toInstant
-import kotlinx.datetime.toLocalDateTime
 import streetlight.model.data.Location
 import streetlight.model.data.EventEdit
-import streetlight.model.data.Place
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import streetlight.model.data.ExtraLink
 import streetlight.model.external.Address
-import streetlight.model.external.OSMPlace
-import streetlight.model.external.toGeoPoint
 
 class EventEditor(
     initialEvent: EventEdit?,
@@ -29,7 +22,7 @@ class EventEditor(
     val stateNow get() = state.now
 
     val editFlow = state.flow.mapDistinct { it.event }
-    val imageUrlFlow = editFlow.mapDistinct { it.imageUrl }
+    val imageUrlFlow = editFlow.mapDistinct { it.imageRef }
     val startTimeFlow = editFlow.mapDistinct { it.startTime }
     val endTimeFlow = editFlow.mapDistinct { it.endTime }
     val dateFlow = editFlow.mapDistinct { it.date }
@@ -70,8 +63,8 @@ class EventEditor(
         setEvent { value }
     }
 
-    fun setImageUrl(url: String?) {
-        state.set { it.copy(event = eventNow.copy(imageUrl = url)) }
+    fun setImageRef(url: Url?) {
+        state.set { it.copy(event = eventNow.copy(imageRef = url)) }
     }
 
     fun setCost(value: String) {

@@ -2,6 +2,7 @@ package koala.model
 
 import kampfire.model.GeoBounds
 import kampfire.model.GeoPoint
+import kampfire.model.Url
 import kampfire.model.distanceTo
 import kampfire.model.meters
 import koala.Svg
@@ -153,7 +154,7 @@ interface PointEntity: MapEntity {
     val opacity: Float? get() = null
     val subpixelPositioning: Boolean get() = true
     val icon: Svg? get() = null
-    val thumbPath: String? get() = null
+    val thumbUrl: Url? get() = null
     val minZoom: Float? get() = null
     val modifiers: ModifierSet? get() = null
     val onClick: (() -> Unit)? get() = null
