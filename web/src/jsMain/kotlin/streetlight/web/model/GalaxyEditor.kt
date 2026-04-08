@@ -50,9 +50,8 @@ class GalaxyEditor(
             zoom = geoState.zoom
         ).takeIf { it.isValid } ?: return
         scope.launch {
-            console.log(galaxy.description)
             val imageUrl = stateNow.blobUrl?.let {
-                api.uploadImage(it)
+                api.uploadImage(it) ?: error("failed to upload image")
             }
             val galaxy = app.client.api.foundGalaxy(galaxy.copy(imageRef = imageUrl))
             if (galaxy != null) {

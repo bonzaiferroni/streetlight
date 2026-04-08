@@ -42,7 +42,6 @@ fun RenderContext.imageDrop(
             }
         } else {
             filePicker(MimeType.Image, modify(Size100P)) {
-                console.log(it)
                 onFileUrl(it)
             }
         }

@@ -166,7 +166,7 @@ class FetchClient(
             body = blob,
             contentType = blob.type.ifEmpty { "application/octet-stream" }
         ) {
-            it.text().await().toUrl()
+            it.text().await().removeSurrounding("\"").toUrl()
         }
     }
 }

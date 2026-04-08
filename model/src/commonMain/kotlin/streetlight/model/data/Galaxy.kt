@@ -47,7 +47,7 @@ data class GalaxyEdit(
     val isValid get() = !name.isNullOrBlank() && center != null
 
     companion object {
-        val NameCharacters = setOf(' ', '.', ',', '\'', '!', '?', '-', '+')
+        val NameCharacters = setOf(' ', '.', ',', '\'', '!', '?', ':', '-', '+')
         val PathCharacters = setOf('-')
 
         fun isValidName(name: String) = name.all { it.isDigit() || it.isLetter() || NameCharacters.contains(it) }

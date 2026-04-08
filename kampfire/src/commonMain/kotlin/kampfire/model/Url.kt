@@ -17,7 +17,7 @@ value class Url(val value: String) {
 fun String.toUrl() = Url(this)
 
 fun String.appendToFilename(appended: String) = buildString {
-    val parts = split('.')
+    val parts = this@appendToFilename.split('.')
     parts.forEachIndexed { index, part ->
         if (index < parts.size - 2) {
             append(part)
