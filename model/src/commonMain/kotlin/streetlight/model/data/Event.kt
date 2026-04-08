@@ -7,15 +7,14 @@ import kampfire.model.Url
 import kampfire.model.UserId
 import kampfire.utils.randomUuidString
 import kotlinx.serialization.Serializable
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atTime
-import kotlinx.datetime.toDeprecatedInstant
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 import kotlin.jvm.JvmInline
+import kotlin.time.Instant
 
 @Stable
 @Serializable
@@ -87,8 +86,8 @@ data class EventEdit(
         timeZoneId?.let { TimeZone.of(it) }
     } catch (_: Exception) { TimeZone.currentSystemDefault() } // fails in browser
 
-    val startsAt get() = startTime?.let { timeZone?.let { date?.atTime(startTime)?.toInstant(it) } }?.toDeprecatedInstant()
-    val endsAt get() = endTime?.let { timeZone?.let { date?.atTime(endTime)?.toInstant(it) }  }?.toDeprecatedInstant()
+    val startsAt get() = startTime?.let { timeZone?.let { date?.atTime(startTime)?.toInstant(it) } }
+    val endsAt get() = endTime?.let { timeZone?.let { date?.atTime(endTime)?.toInstant(it) }  }
 
     val invalidPart get() = when {
         title.isNullOrBlank() -> "title"

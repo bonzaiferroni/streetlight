@@ -1,8 +1,6 @@
 package streetlight.model.utils
 
-import kotlinx.datetime.Clock
 import kotlinx.datetime.DatePeriod
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
@@ -10,9 +8,10 @@ import kotlinx.datetime.format
 import kotlinx.datetime.format.FormatStringsInDatetimeFormats
 import kotlinx.datetime.format.byUnicodePattern
 import kotlinx.datetime.plus
-import kotlinx.datetime.toDeprecatedInstant
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
+import kotlin.time.Clock
+import kotlin.time.Instant
 
 fun LocalDateTime.toEpochSeconds() = toInstant(TimeZone.currentSystemDefault()).epochSeconds
 fun Long.toLocalDateTime() = Instant.fromEpochSeconds(this)
@@ -38,5 +37,5 @@ fun tomorrowNoon(): Instant {
     return LocalDateTime(
         date = tomorrow,
         time = LocalTime(12, 0)
-    ).toInstant(zone).toDeprecatedInstant()
+    ).toInstant(zone)
 }

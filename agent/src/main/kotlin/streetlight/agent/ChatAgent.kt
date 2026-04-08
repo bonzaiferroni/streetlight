@@ -7,8 +7,8 @@ import ai.koog.prompt.executor.clients.google.GoogleModels
 import ai.koog.prompt.executor.llms.all.simpleGoogleAIExecutor
 import ai.koog.prompt.llm.LLModel
 import ai.koog.prompt.params.LLMParams
-import kotlinx.datetime.Clock
 import streetlight.model.data.ChatMessage
+import kotlin.time.Clock
 
 class ChatAgent(
     apiKey: String,

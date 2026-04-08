@@ -4,7 +4,6 @@ import kampfire.model.GeoPoint
 import kampfire.model.User
 import kampfire.model.UserId
 import kampfire.model.UserRole
-import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import streetlight.model.data.Galaxy
 import streetlight.model.data.GalaxyId
@@ -22,6 +21,7 @@ import streetlight.model.data.SongId
 import streetlight.model.data.amazingGrace
 import streetlight.model.data.slugOf
 import kotlin.random.Random
+import kotlin.time.Clock
 import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.hours
 

@@ -1,14 +1,13 @@
 package streetlight.model.data
 
 import kampfire.model.toUrl
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atTime
-import kotlinx.datetime.toDeprecatedInstant
 import kotlinx.datetime.toInstant
 import kotlinx.serialization.Serializable
+import kotlin.time.Instant
 
 @Serializable
 sealed interface ParseRequest {
@@ -113,7 +112,7 @@ data class EventParse(
         date: LocalDate,
         time: LocalTime,
         timeZone: TimeZone = TimeZone.currentSystemDefault()
-    ) = date.atTime(time).toInstant(timeZone).toDeprecatedInstant()
+    ) = date.atTime(time).toInstant(timeZone)
 }
 
 fun EventParse.toEventEdit(

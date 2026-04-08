@@ -1,11 +1,10 @@
 package streetlight.web.model
 
-import koala.model.BrowserModel
 import koala.model.mapDistinct
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
+import kotlin.time.Clock
 import streetlight.model.data.ChatMessage
 import streetlight.web.io.ApiClient
 import streetlight.web.io.WebChatSocket
