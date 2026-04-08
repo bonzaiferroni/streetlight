@@ -19,7 +19,7 @@ import streetlight.web.EditEventIdRoute
 
 fun FlowContent.eventProfileShell(event: Event) {
     column(EventProfileShell.id, modify(AlignItemsStretch)) {
-        val imageUrl = event.imageUrl
+        val imageUrl = event.imageMd
         if (imageUrl != null) {
             image(imageUrl, modify(BorderRadius1, MaxHeight64, MarginAuto))
         }

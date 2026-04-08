@@ -2,6 +2,7 @@ package streetlight.model.data
 
 import androidx.compose.runtime.Stable
 import kampfire.model.LabeledEnum
+import kampfire.model.Url
 import kampfire.model.UserId
 import kampfire.utils.randomUuidString
 import kotlinx.serialization.Serializable
@@ -35,8 +36,8 @@ data class Event(
     val url: String?,
     val sourceUrl: String?,
     val sourceImageUrl: String?,
-    val imageUrl: String?,
-    val thumbUrl: String?,
+    val imageMd: Url?,
+    val imageSm: Url?,
     val streamUrl: String?,
     val timeZoneId: String,
     val startsAt: Instant,
@@ -63,7 +64,6 @@ data class EventEdit(
     val eventId: EventId? = null,
     val title: String? = null,
     val locationId: LocationId? = null,
-    val imageUrl: String? = null,
     val description: String? = null,
     val contact: String? = null,
     val invitation: String? = null,
@@ -74,7 +74,7 @@ data class EventEdit(
     val link: String? = null,
     val sourceUrl: String? = null,
     val sourceImageUrl: String? = null,
-    val thumbUrl: String? = null,
+    val imageUrl: String? = null,
     val startTime: LocalTime? = null,
     val endTime: LocalTime? = null,
     val date: LocalDate? = null,
@@ -106,7 +106,7 @@ fun Event.toEdit() = EventEdit(
     eventId = eventId,
     title = title,
     locationId = locationId,
-    imageUrl = imageUrl,
+    imageUrl = imageMd,
     description = description,
     contact = contact,
     invitation = invitation,
@@ -116,7 +116,6 @@ fun Event.toEdit() = EventEdit(
     link = url,
     sourceUrl = sourceUrl,
     sourceImageUrl = sourceImageUrl,
-    thumbUrl = thumbUrl,
     startTime = startsAt.toLocalDateTime(timeZone).time,
     date = startsAt.toLocalDateTime(timeZone).date,
     timeZoneId = timeZone.id,
@@ -138,7 +137,6 @@ fun EventEdit.mergeLeft(other: EventEdit?) = other?.let {
         link = link ?: it.link,
         sourceUrl = sourceUrl ?: it.sourceUrl,
         sourceImageUrl = sourceImageUrl ?: it.sourceImageUrl,
-        thumbUrl = thumbUrl ?: it.thumbUrl,
         date = date ?: it.date,
         startTime = startTime ?: it.startTime,
         endTime = endTime ?: it.endTime,

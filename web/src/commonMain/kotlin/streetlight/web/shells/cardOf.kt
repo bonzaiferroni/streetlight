@@ -12,10 +12,9 @@ import streetlight.model.data.Location
 import streetlight.web.GalaxySlugRoute
 import streetlight.web.LocationIdRoute
 import streetlight.web.layouts.route
-import streetlight.web.shells.cardOf
 
 fun FlowContent.cardOf(event: Event, modifiers: ModifierSet? = null) {
-    cardOf(event.route, event.title, event.thumbUrl, event.description, modifiers)
+    cardOf(event.route, event.title, event.imageSm, event.description, modifiers)
 }
 
 fun FlowContent.cardOf(location: Location) {

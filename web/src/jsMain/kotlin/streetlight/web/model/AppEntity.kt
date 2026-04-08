@@ -45,7 +45,7 @@ data class EventEntity(
     override val entityId get() = location.locationId.value
     // override val label get() = location.name
     override val position get() = location.geoPoint
-    override val thumbPath get() = event.thumbUrl ?: SiteImage.placeholderThumb.path
+    override val thumbPath get() = event.imageSm ?: SiteImage.placeholderThumb.path
     override val focusCard: RenderContext.() -> Unit get() = {
         box {
             cardOf(event, modify(MaxWidth64))
@@ -79,7 +79,7 @@ data class PostEntity(
     override val position: GeoPoint,
 ): PointEntity {
     override val entityId get() = post.location?.locationId?.value ?: post.postId.value
-    override val thumbPath get() = post.event?.thumbUrl ?: post.location?.thumbUrl ?: galaxy?.thumbUrl
+    override val thumbPath get() = post.event?.imageSm ?: post.location?.thumbUrl ?: galaxy?.thumbUrl
         ?: SiteImage.placeholderThumb.path
     override val light get() = Rgb(240, 100, 180 )
 }

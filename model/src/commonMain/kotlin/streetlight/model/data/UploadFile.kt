@@ -1,6 +1,7 @@
 package streetlight.model.data
 
 import kampfire.api.TableId
+import kampfire.model.ImageSize
 import kampfire.model.UserId
 import kampfire.utils.randomUuidString
 import kotlinx.datetime.Instant
@@ -13,7 +14,7 @@ data class UploadFile(
     val userId: UserId?,
     val url: String,
     val fileType: FileType,
-    val fileUse: FileUse,
+    val size: ImageSize?,
     val fileFormat: FileFormat,
     val createdAt: Instant
 )
@@ -30,12 +31,6 @@ enum class FileType {
 }
 
 @Serializable
-enum class FileUse {
-    FullImage,
-    ThumbImage,
-}
-
-@Serializable
 enum class FileFormat(val ext: String) {
     JPEG("jpg"), PNG("png"), GIF("gif"), WEBP("webp"), BMP("bmp");
 
@@ -43,7 +38,7 @@ enum class FileFormat(val ext: String) {
 }
 
 @Serializable
-data class UserFileRequest(
-    val fileUse: FileUse,
-    val count: Int = 10
-)
+enum class StorageType {
+    Local,
+    S3,
+}

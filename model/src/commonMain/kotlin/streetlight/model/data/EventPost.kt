@@ -18,8 +18,8 @@ data class EventPost(
     override val createdAt: Instant,
     override val updatedAt: Instant,
 ): GalaxyPost {
-    override val thumbUrl get() = event?.thumbUrl ?: location?.thumbUrl
-    override val imageUrl get() = event?.imageUrl ?: location?.imageUrl
+    override val thumbUrl get() = event?.imageSm ?: location?.thumbUrl
+    override val imageUrl get() = event?.imageMd ?: location?.imageUrl
     override val geoPoint get() = location?.geoPoint ?: GeoPoint.Denver
     override val title get() = event?.title ?: "[event removed]"
     override val description get() = event?.description
@@ -42,7 +42,7 @@ value class EventPostId(override val value: String): ProjectId, MapPostId {
 data class EventPostRow(
     val postId: EventPostId,
     val galaxyId: GalaxyId,
-    val eventId: EventId?,
+    val eventId: EventId,
     val userId: UserId?,
     val username: String?,
     val text: String?,

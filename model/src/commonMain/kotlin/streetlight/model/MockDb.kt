@@ -13,7 +13,6 @@ import streetlight.model.data.Event
 import streetlight.model.data.EventId
 import streetlight.model.data.EventStatus
 import streetlight.model.data.EventTag
-import streetlight.model.data.GalaxyEdit
 import streetlight.model.data.Location
 import streetlight.model.data.LocationId
 import streetlight.model.data.PostPermission
@@ -144,8 +143,8 @@ val mockDb by lazy {
         url = null,
         sourceUrl = null,
         sourceImageUrl = null,
-        imageUrl = null,
-        thumbUrl = null,
+        imageMd = null,
+        imageSm = null,
         streamUrl = null,
         timeZoneId = TimeZone.currentSystemDefault().id,
         startsAt = now,

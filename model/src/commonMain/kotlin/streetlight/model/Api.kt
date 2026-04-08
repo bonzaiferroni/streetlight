@@ -8,11 +8,6 @@ import streetlight.model.data.*
 
 object Api: ApiNode(ApiNode(null, "api"), "v1") {
 
-    object EventProfile: GetByTableIdEndpoint<EventId, Event>(this, "event") {
-        // todo: consolidate with Events
-        object Update: UpdateEndpoint<Event>(this, "update")
-    }
-
     object Events: GetEndpoint<List<Event>>(this, "events") {
         object Edit: PostEndpoint<EventEdit, Event>(this, "create")
         object Delete: DeleteEndpoint<EventId>(this, "delete")
