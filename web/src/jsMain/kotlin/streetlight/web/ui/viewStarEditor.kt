@@ -11,36 +11,37 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import streetlight.model.data.toEdit
 import streetlight.web.model.Streetlight
 import streetlight.web.pages.appFooter
 
 fun ViewContext<Streetlight>.viewStarEditor() {
-    starBlock(model, true) { user ->
-        val state = storeOf(user)
+    starBlock(model, true) { star ->
+        val state = storeOf(star.toEdit())
 
         val avatarFlow = state.flow.mapDistinct { it.imageRef }
-        val usernameFlow = state.flow.mapDistinct { it.username }
-        val isAvailableFlow = usernameFlow.debounce(500).map {
-            if (it == user.username) null
+        val nameFlow = state.flow.mapDistinct { it.username }
+        val isAvailableFlow = nameFlow.debounce(500).map {
+            if (it == null || it == star.username) null
             else api.checkUsername(it)
         }
 
         fun setUsername(value: String) = state.set { it.copy(username = value) }
         fun setImageRef(value: Url?) = state.set { it.copy(imageRef = value) }
         fun update() {
-            var user = state.now // td: check validity?
-            val blobUrl = user.imageRef?.takeIf { it.isBlob }
+            var edit = state.now // td: check validity?
+            val blobUrl = edit.imageRef?.takeIf { it.isBlob }
             renderScope.launch {
-                user = if (blobUrl != null) {
-                    val refUrl = api.uploadAvatar(blobUrl) ?: error("error creating avatar")
+                edit = if (blobUrl != null) {
+                    val refUrl = api.uploadImage(blobUrl) ?: error("error creating avatar")
                     console.log(refUrl)
-                    user.copy(imageRef = refUrl)
-                } else user
+                    edit.copy(imageRef = refUrl)
+                } else edit
 
-//                val isSuccess = api.updateUser(user) ?: return@launch
-//                if (isSuccess) {
-//                    model.gate.setUpdate(user)
-//                }
+                val star = api.updateStar(edit)
+                if (star != null) {
+                    model.gate.setUpdate(star)
+                }
             }
         }
 
@@ -49,7 +50,7 @@ fun ViewContext<Streetlight>.viewStarEditor() {
                 row(modify(AlignItemsStart)) {
                     imageDrop(avatarFlow, ::setImageRef, modify(Width16, AspectRatio1))
                     row {
-                        textField("username", onValue = ::setUsername, flow = usernameFlow)
+                        textField("username", onValue = ::setUsername, flow = nameFlow)
                         flowBlock(isAvailableFlow, defaultMagic) {
                             val isAvailable = it ?: return@flowBlock
                             val text = if (isAvailable) "👍" else "❌"

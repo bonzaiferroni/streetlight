@@ -1,11 +1,10 @@
 package streetlight.web.ui
 
-import kampfire.model.BasicUserInfo
 import koala.css.*
 import koala.dom.*
 import koala.html.btn
 import streetlight.model.data.Star
-import streetlight.web.EditProfileRoute
+import streetlight.web.EditStarRoute
 import streetlight.web.EditTalentRoute
 import streetlight.web.HomeRoute
 import streetlight.web.GalaxyListRoute
@@ -32,7 +31,7 @@ fun RenderContext.viewStarDash(
         card {
             row {
                 textBlock("Add things to the map.", modify(Flex1))
-                btn("Edit Profile", EditProfileRoute)
+                btn("Edit Profile", EditStarRoute)
                 btn("Go to sandbox", SandboxRoute)
                 button("galaxy list", modify(Accent), onClick = { portal.go(GalaxyListRoute) })
             }

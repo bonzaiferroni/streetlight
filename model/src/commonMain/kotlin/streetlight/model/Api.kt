@@ -121,12 +121,13 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object EditLight: PostEndpoint<LightEdit, Boolean>(this, "light-edit")
     }
 
-    object Stars: ApiNode(this, "stars") {
+    object Stars: ApiNode(this, "star") {
         object ReadByUsername: GetEndpoint<Star>(this, "star") {
             val username = addStringParam("username")
         }
 
         object ValidateLogin: GetEndpoint<Star>(this, "validate-login")
+        object EditStar: PostEndpoint<StarEdit, Star>(this, "edit")
     }
 
 //    object Posts: ApiNode(this, "post") {

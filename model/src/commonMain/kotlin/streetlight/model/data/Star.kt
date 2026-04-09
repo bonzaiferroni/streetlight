@@ -29,7 +29,15 @@ value class StarId(override val value: String): ProjectId {
 
 @Serializable
 data class StarEdit(
+    val username: String? = null,
     val name: String? = null,
     val description: String? = null,
     val imageRef: Url? = null,
+)
+
+fun Star.toEdit() = StarEdit(
+    username = username,
+    name = name,
+    description = description,
+    imageRef = imageRef
 )

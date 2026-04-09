@@ -43,9 +43,9 @@ class StarGate(
         state.set { it.copy(star = null) }
     }
 
-//    fun setUpdate(user: BasicUserInfo) {
-//        state.set { it.copy(star = user) }
-//    }
+    fun setUpdate(star: Star) {
+        state.set { it.copy(star = star) }
+    }
 }
 
 data class StarGateState(
