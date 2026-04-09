@@ -42,7 +42,7 @@ data class EventPostRow(
     val postId: EventPostId,
     val galaxyId: GalaxyId,
     val eventId: EventId,
-    val starId: UserId?,
+    val starId: StarId?,
     val username: String?,
     val text: String?,
     val updatedAt: Instant,

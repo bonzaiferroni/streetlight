@@ -1,6 +1,5 @@
 package streetlight.model.data
 
-import kampfire.model.UserId
 import kampfire.utils.randomUuidString
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
@@ -8,7 +7,7 @@ import kotlin.jvm.JvmInline
 @Serializable
 data class Performer(
     val performerId: PerformerId,
-    val userId: UserId,
+    val starId: StarId,
     val venmo: String,
     val stageName: String,
 )

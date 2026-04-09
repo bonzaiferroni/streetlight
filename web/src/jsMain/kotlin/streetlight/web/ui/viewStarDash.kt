@@ -4,6 +4,7 @@ import kampfire.model.BasicUserInfo
 import koala.css.*
 import koala.dom.*
 import koala.html.btn
+import streetlight.model.data.Star
 import streetlight.web.EditProfileRoute
 import streetlight.web.EditTalentRoute
 import streetlight.web.HomeRoute
@@ -12,9 +13,9 @@ import streetlight.web.SandboxRoute
 import streetlight.web.TalentProfileRoute
 import streetlight.web.model.Streetlight
 
-fun RenderContext.viewUserHub(
+fun RenderContext.viewStarDash(
     app: Streetlight,
-    user: BasicUserInfo,
+    star: Star,
 ) {
     // val model = UserHub(renderScope, app.client.api)
     val userCache = app.cache
@@ -23,7 +24,7 @@ fun RenderContext.viewUserHub(
 
     column {
         row {
-            textBlock("Hello ${user.username}!", modify(Flex1))
+            textBlock("Hello ${star.username}!", modify(Flex1))
             button("go home", onClick = { portal.go(HomeRoute) })
             button("sign out", onClick = gate::signOut)
         }

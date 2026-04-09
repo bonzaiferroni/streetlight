@@ -21,7 +21,6 @@ import kotlin.time.Instant
 data class Event(
     val eventId: EventId,
     val locationId: LocationId,
-    val starId: UserId,
     val currentRequestId: RequestId?,
     val slug: String,
     val title: String,

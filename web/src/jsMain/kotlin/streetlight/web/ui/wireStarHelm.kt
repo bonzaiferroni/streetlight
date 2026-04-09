@@ -1,6 +1,7 @@
 package streetlight.web.ui
 
 import kampfire.model.BasicUserInfo
+import kampfire.model.thumb
 import kampfire.model.toUrl
 import koala.SvgFile
 import koala.css.*
@@ -14,7 +15,9 @@ import kotlinx.browser.document
 import kotlinx.html.InputType
 import kotlinx.html.onClick
 import org.w3c.dom.HTMLElement
+import streetlight.model.data.Star
 import streetlight.web.SiteConfigRoute
+import streetlight.web.StarDashRoute
 import streetlight.web.StarProfileRoute
 import streetlight.web.model.Streetlight
 import streetlight.web.pages.HelmBarKey
@@ -43,7 +46,7 @@ private fun RenderContext.wireStarHelm(app: Streetlight, element: HTMLElement) {
 
 private val RowMod = modify(AlignItemsCenter, PaddingLeft3, JustifyContentEnd)
 
-private fun ViewContext<Streetlight>.starPanel(star: BasicUserInfo) {
+private fun ViewContext<Streetlight>.starPanel(star: Star) {
     val app = model
     val gate = app.gate
 
@@ -56,18 +59,18 @@ private fun ViewContext<Streetlight>.starPanel(star: BasicUserInfo) {
             button(modify(HelmBarKey.IconMod, FadeLoop)) {
                 onClick = StarHelmKey.ClosePopover
 
-                image(star.avatarUrl?.toUrl(), modify(OpacityMost, Size100P, BorderRadius50P))
+                image(star.images.thumb, modify(OpacityMost, Size100P, BorderRadius50P))
             }
         }
 
         // calendar route goes here
 
-        action(SiteConfigRoute) { // filler content
+        action(StarDashRoute) { // filler content
             onClick = StarHelmKey.ClosePopover
 
             row(RowMod) {
-                textBlock("Settings")
-                icon(SvgFile.Settings, HelmBarKey.IconMod)
+                textBlock("Dashboard")
+                icon(SvgFile.Dashboard, HelmBarKey.IconMod)
             }
         }
 

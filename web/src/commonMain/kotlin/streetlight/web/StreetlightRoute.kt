@@ -18,7 +18,7 @@ enum class StreetlightScreen(
     override val provideRoute: (List<String>) -> AppRoute?
 ): AppScreen {
     Home("home", { HomeRoute }),
-    Account("account", { AccountRoute }),
+    StarDash("account", { StarDashRoute }),
     EventProfile("e", { path -> path.provideRouteFromPath { EventSlugRoute(it) } }),
     EditEvent("edit-event", { path -> EditEventIdRoute(path.provideId { EventId(it) }) }),
     EditStory("edit-story", { path -> EditPostRoute(path.provideId { PostId(it) }) }),
@@ -67,8 +67,8 @@ object HomeRoute: StreetlightRoute {
     override val title get() = "Home"
 }
 
-object AccountRoute: StreetlightRoute {
-    override val screen get() = StreetlightScreen.Account
+object StarDashRoute: StreetlightRoute {
+    override val screen get() = StreetlightScreen.StarDash
     override val title get() = "You"
 }
 

@@ -2,6 +2,7 @@ package streetlight.model.data
 
 import kampfire.model.ScaledImageArray
 import kampfire.model.Url
+import kampfire.model.UserRole
 import kampfire.utils.randomUuidString
 import kotlin.time.Instant
 import kotlinx.serialization.Serializable
@@ -10,6 +11,7 @@ import kotlin.jvm.JvmInline
 @Serializable
 data class Star(
     val username: String,
+    val roles: Set<UserRole>,
     val name: String?,
     val description: String?,
     val imageRef: Url?,

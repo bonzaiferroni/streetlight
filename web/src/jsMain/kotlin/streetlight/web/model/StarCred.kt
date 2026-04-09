@@ -13,8 +13,8 @@ class StarCred {
     private val state = storeOf(UserCredState(
         usernameText = localStorage[USERNAME_KEY] ?: "",
         stayLoggedIn = localStorage[STAY_LOGGED_KEY]?.toBooleanStrictOrNull() ?: false,
-        refreshToken = localStorage[REFRESH_TOKEN_KEY],
-        jwt = localStorage[JWT_KEY],
+        refreshToken = localStorage[REFRESH_TOKEN_KEY]?.takeIf { it.isNotBlank() },
+        jwt = localStorage[JWT_KEY]?.takeIf { it.isNotBlank() },
     ))
     val stateNow get() = state.now
 
@@ -32,10 +32,6 @@ class StarCred {
 
     fun setStayLoggedIn(value: Boolean) {
         localStorage.setItem(STAY_LOGGED_KEY, value.toString())
-        if (!value) {
-            localStorage.removeItem(USERNAME_KEY)
-            localStorage.removeItem(REFRESH_TOKEN_KEY)
-        }
         state.set { it.copy(stayLoggedIn = value) }
     }
 
@@ -45,8 +41,8 @@ class StarCred {
 
     fun getLoginRequest(): LoginRequest? {
         val usernameOrEmail = stateNow.usernameText.takeIf { it.isNotBlank() } ?: return null
-        val refreshToken = stateNow.refreshToken
-        val password = stateNow.passwordText.takeIf { refreshToken == null && it.isNotBlank() }?.obfuscate()
+        val password = stateNow.passwordText.takeIf { it.isNotBlank() }?.obfuscate()
+        val refreshToken = stateNow.refreshToken.takeIf { password == null }
         val stayLoggedIn = state.now.stayLoggedIn
         return LoginRequest(
             usernameOrEmail = usernameOrEmail,
@@ -62,13 +58,24 @@ class StarCred {
         return Auth(jwt = jwt, refreshToken = refreshToken)
     }
 
-    fun writeAuth(auth: Auth) {
-        if (stateNow.stayLoggedIn) {
-            localStorage.setItem(REFRESH_TOKEN_KEY, auth.refreshToken)
-            localStorage.setItem(USERNAME_KEY, stateNow.usernameText)
-            localStorage.setItem(JWT_KEY, auth.jwt)
+    fun writeAuth(auth: Auth?) {
+        if (auth != null) {
+            if (stateNow.stayLoggedIn) {
+                localStorage.setItem(REFRESH_TOKEN_KEY, auth.refreshToken)
+                localStorage.setItem(USERNAME_KEY, stateNow.usernameText)
+                localStorage.setItem(JWT_KEY, auth.jwt)
+            }
+            state.set { it.copy(refreshToken = auth.refreshToken, jwt = auth.jwt, passwordText = "") }
+        } else {
+            localStorage.removeItem(REFRESH_TOKEN_KEY)
+            localStorage.removeItem(JWT_KEY)
+            state.set { it.copy(refreshToken = null, jwt = null, passwordText = "") }
         }
-        state.set { it.copy(refreshToken = auth.refreshToken, jwt = auth.jwt, passwordText = "") }
+    }
+
+    fun clearToken() {
+        localStorage.removeItem(USERNAME_KEY)
+        localStorage.removeItem(REFRESH_TOKEN_KEY)
     }
 }
 

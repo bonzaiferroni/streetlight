@@ -1,12 +1,12 @@
 package streetlight.web.model
 
-import kampfire.model.BasicUserInfo
 import koala.model.Portal
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import streetlight.web.AccountRoute
+import streetlight.model.data.Star
+import streetlight.web.StarDashRoute
 
 class GateAgent(
     val scope: CoroutineScope,
@@ -14,7 +14,7 @@ class GateAgent(
     val portal: Portal,
 ) {
     @Deprecated("use userContent")
-    fun checkIn(block: (BasicUserInfo) -> Unit) {
+    fun checkIn(block: (Star) -> Unit) {
         val user = gate.stateNow.star
         if (user != null) {
             block(user)
@@ -34,7 +34,7 @@ class GateAgent(
                 }
         }
 
-        portal.go(AccountRoute)
+        portal.go(StarDashRoute)
     }
 }
 

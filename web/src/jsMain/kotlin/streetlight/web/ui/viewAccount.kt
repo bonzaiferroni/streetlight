@@ -9,14 +9,14 @@ import kotlinx.html.js.p
 import streetlight.web.HomeRoute
 import streetlight.web.model.Streetlight
 
-fun RenderContext.viewAccount(
+fun RenderContext.viewStarDash(
     app: Streetlight,
 ) {
     val gate = app.gate
 
     flowBlock(gate.starFlow) { user ->
         if (user != null) {
-             viewUserHub(app, user)
+             viewStarDash(app, user)
         } else {
             tabs(Id("sign-in-tabs")) {
                 tab("Sign in") {

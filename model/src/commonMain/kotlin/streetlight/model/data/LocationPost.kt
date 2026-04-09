@@ -41,7 +41,7 @@ value class LocationPostId(override val value: String): ProjectId, MapPostId {
 data class LocationPostRow(
     val postId: LocationPostId,
     val locationId: LocationId?,
-    val starId: UserId?,
+    val starId: StarId?,
     val username: String?,
     val title: String?,
     val text: String?,

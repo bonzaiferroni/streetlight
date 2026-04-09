@@ -1,10 +1,10 @@
 package streetlight.web.model
 
-import kampfire.model.BasicUserInfo
 import koala.model.mapDistinct
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import streetlight.model.data.Star
 import streetlight.web.io.ApiClient
 
 class StarGate(
@@ -27,7 +27,7 @@ class StarGate(
     }
 
     suspend fun readUser() {
-        val star = api.readStarInfo()
+        val star = api.validateLogin()
         if (star != null) {
             console.log("signed in")
             state.set { it.copy(star = star) }
@@ -39,17 +39,17 @@ class StarGate(
 
     fun signOut() {
 //        userCache.reset()
-        cred.setStayLoggedIn(false)
+        cred.clearToken()
         state.set { it.copy(star = null) }
     }
 
-    fun setUpdate(user: BasicUserInfo) {
-        state.set { it.copy(star = user) }
-    }
+//    fun setUpdate(user: BasicUserInfo) {
+//        state.set { it.copy(star = user) }
+//    }
 }
 
 data class StarGateState(
-    val star: BasicUserInfo? = null,
+    val star: Star? = null,
     val message: String? = null,
 ) {
     val isSignedIn get() = star != null

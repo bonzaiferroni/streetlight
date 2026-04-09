@@ -1,5 +1,6 @@
 package streetlight.web.ui
 
+import kampfire.model.thumb
 import koala.SvgFile
 import koala.dom.RenderContext
 import koala.dom.querySelector
@@ -14,7 +15,7 @@ fun RenderContext.wireBadge(app: Streetlight) {
 
     renderScope.launch {
         app.gate.starFlow.collect { star ->
-            element.src = star?.avatarUrl ?: SvgFile.Someone.url.value
+            element.src = (star?.images.thumb ?: SvgFile.Someone.url).value
         }
     }
 }

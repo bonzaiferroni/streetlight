@@ -1,20 +1,20 @@
 package streetlight.web.ui
 
-import kampfire.model.BasicUserInfo
 import koala.css.ModifierSet
 import koala.dom.*
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.html.js.div
-import streetlight.web.AccountRoute
+import streetlight.model.data.Star
+import streetlight.web.StarDashRoute
 import streetlight.web.model.Streetlight
 
-fun RenderContext.userBlock(
+fun RenderContext.starBlock(
     app: Streetlight,
     redirect: Boolean = false,
     modifiers: ModifierSet? = null,
-    block: RenderContext.(BasicUserInfo) -> Unit
+    block: RenderContext.(Star) -> Unit
 ) {
     val gate = app.gate
     val portal = app.portal
@@ -42,5 +42,5 @@ fun RenderContext.userBlock(
             }
     }
 
-    portal.go(AccountRoute)
+    portal.go(StarDashRoute)
 }

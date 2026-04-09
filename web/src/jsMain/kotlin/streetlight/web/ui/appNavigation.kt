@@ -23,7 +23,7 @@ fun RenderContext.appNavigation(app: Streetlight) {
             when (screen) {
                 StreetlightScreen.Home -> viewHome()
                 StreetlightScreen.EventProfile -> viewEventRoute(app)
-                StreetlightScreen.Account -> viewAccount(app)
+                StreetlightScreen.StarDash -> viewStarDash(app)
                 StreetlightScreen.EditEvent -> viewEventEditorRoute()
                 StreetlightScreen.Sandbox -> viewSandbox(app)
                 StreetlightScreen.FullMap -> viewFullMap(app)
@@ -41,7 +41,7 @@ fun RenderContext.appNavigation(app: Streetlight) {
                 StreetlightScreen.StarProfile -> viewStarProfileRoute()
                 StreetlightScreen.EventScout -> viewEventScoutRoute()
                 StreetlightScreen.LocationScout -> viewLocationScoutRoute()
-                StreetlightScreen.EditProfile -> viewProfileEditor()
+                StreetlightScreen.EditProfile -> viewStarEditor()
                 StreetlightScreen.SiteConfig -> viewSiteConfig()
                 else -> textBlock("Coming soon: $screen")
             }

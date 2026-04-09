@@ -125,6 +125,8 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object ReadByUsername: GetEndpoint<Star>(this, "star") {
             val username = addStringParam("username")
         }
+
+        object ValidateLogin: GetEndpoint<Star>(this, "validate-login")
     }
 
 //    object Posts: ApiNode(this, "post") {
