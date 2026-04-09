@@ -3,7 +3,6 @@ package streetlight.web.layouts
 import kabinet.utils.toRelativeDayFormat
 import kabinet.utils.toTimeFormat
 import kampfire.model.ScaledImageArray
-import kampfire.model.Url
 import kampfire.model.medium
 import koala.SiteImage
 import koala.css.*
@@ -29,14 +28,14 @@ fun FlowContent.largePostCard(
     modifiers: ModifierSet? = null,
     cells: List<(FlowContent.() -> Unit)?>
 ) {
-    val imageUrl = images?.medium ?: SiteImage.placeholder.url
+    val images = images ?: SiteImage.placeholder
 
     card(modify(modifiers, QueryContainer, Padding0, OverflowHidden)) {
         column(modify(QueryContainer, ContainerLgRow, Gap0)) {
 
             // non-grid content
             column(modify(Flex3, ContainerMdRow, Gap0)) {
-                fillImage(imageUrl, modify(Flex1, MinHeight24))
+                fillImage(images, modify(Flex1, MinHeight24))
                 column(modify(Flex2, Padding1, Height24, MaxHeight24)) {
                     row {
                         column(modify(Flex1, Gap0)) {

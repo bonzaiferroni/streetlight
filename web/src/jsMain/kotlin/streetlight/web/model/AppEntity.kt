@@ -28,7 +28,7 @@ data class LocationEntity(
     override val entityId get() = location.locationId.value
     // override val label get() = location.name
     override val position get() = location.geoPoint
-    override val thumbUrl get() = location.images.thumb ?: SiteImage.placeholderThumb.url
+    override val thumbUrl get() = location.images.thumb ?: SiteImage.placeholderTh.url
     override val focusCard: RenderContext.() -> Unit get() = {
         box {
             cardOf(location)
@@ -46,7 +46,7 @@ data class EventEntity(
     override val entityId get() = location.locationId.value
     // override val label get() = location.name
     override val position get() = location.geoPoint
-    override val thumbUrl get() = event.images.thumb ?: SiteImage.placeholderThumb.url
+    override val thumbUrl get() = event.images.thumb ?: SiteImage.placeholderTh.url
     override val focusCard: RenderContext.() -> Unit get() = {
         box {
             cardOf(event, modify(MaxWidth64))
@@ -81,6 +81,6 @@ data class PostEntity(
 ): PointEntity {
     override val entityId get() = post.location?.locationId?.value ?: post.postId.value
     override val thumbUrl get() = post.event?.images.thumb ?: post.location?.images.thumb ?: galaxy?.images.thumb
-        ?: SiteImage.placeholderThumb.url
+        ?: SiteImage.placeholderTh.url
     override val light get() = Rgb(240, 100, 180 )
 }

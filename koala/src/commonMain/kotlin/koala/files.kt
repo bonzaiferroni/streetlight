@@ -1,5 +1,9 @@
 package koala
 
+import kampfire.model.ImageSize
+import kampfire.model.ScaledImage
+import kampfire.model.ScaledImageArray
+
 object JsFile: FileSet<Js>() {
     val Utils = add("utils.js")
     val Tabs = add("tabs.js")
@@ -87,6 +91,14 @@ object LottieFile: FileSet<Lottie>() {
 }
 
 object SiteImage: FileSet<Image>() {
-    val placeholder = siteImageOf("placeholder.jpg")
-    val placeholderThumb = siteImageOf("placeholder_thumb.jpg")
+    val placeholderLg = siteImageOf("placeholder-lg.jpg")
+    val placeholderMd = siteImageOf("placeholder-md.jpg")
+    val placeholderSm = siteImageOf("placeholder-sm.jpg")
+    val placeholderTh = siteImageOf("placeholder-th.jpg")
+    val placeholder: ScaledImageArray = listOf(
+        ScaledImage(ImageSize.Large, placeholderLg.url),
+        ScaledImage(ImageSize.Medium, placeholderMd.url),
+        ScaledImage(ImageSize.Small, placeholderSm.url),
+        ScaledImage(ImageSize.Thumb, placeholderTh.url),
+    )
 }

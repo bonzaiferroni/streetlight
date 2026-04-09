@@ -141,7 +141,6 @@ class FetchClient(
         }
 
         var auth = cred.readAuth()
-        console.log(prettyPrint(auth))
         var response = fetchWithJwt(auth?.jwt)
 
         // authenticate on 401

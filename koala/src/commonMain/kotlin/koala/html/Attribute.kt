@@ -21,6 +21,8 @@ data class Attribute<T>(val identifier: String, val isCustom: Boolean = false): 
 
         val PopoverTarget = Attribute<String>("popovertarget")
         val Popover = Attribute<String>("popover")
+        val SrcSet = Attribute<String>("srcset")
+        val Sizes = Attribute<String>("sizes")
     }
 }
 

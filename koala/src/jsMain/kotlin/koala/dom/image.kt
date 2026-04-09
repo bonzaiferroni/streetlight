@@ -12,7 +12,7 @@ import kotlinx.html.style
 import org.w3c.dom.HTMLImageElement
 
 fun RenderContext.image(
-    initial: Url? = SiteImage.placeholder.url,
+    initial: Url? = SiteImage.placeholderLg.url,
     modifiers: ModifierSet? = null,
     binding: Flow<Url?>? = null,
     hideOnError: Boolean = true,

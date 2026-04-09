@@ -27,7 +27,7 @@ fun FlowContent.cardOf(event: EventLocation) {
 }
 
 fun FlowContent.cardOf(galaxy: Galaxy) {
-    cardOf(GalaxySlugRoute(galaxy.slug), galaxy.name, SiteImage.placeholderThumb.url, galaxy.description)
+    cardOf(GalaxySlugRoute(galaxy.slug), galaxy.name, SiteImage.placeholderTh.url, galaxy.description)
 }
 
 fun FlowContent.cardOf(
@@ -35,6 +35,6 @@ fun FlowContent.cardOf(
     modifiers: ModifierSet? = null,
 ) {
     val route = post.event?.route ?: post.location?.locationId?.let { LocationIdRoute(it) }
-    val thumbUrl = post.images.thumb ?: SiteImage.placeholderThumb.url
+    val thumbUrl = post.images.thumb ?: SiteImage.placeholderTh.url
     cardOf(route, post.title, thumbUrl, post.description, modifiers)
 }

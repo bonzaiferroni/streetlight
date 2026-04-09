@@ -1,6 +1,8 @@
 package koala.html
 
+import kampfire.model.ScaledImageArray
 import kampfire.model.Url
+import kampfire.model.largest
 import koala.Image
 import koala.SiteImage
 import koala.css.Class
@@ -9,6 +11,7 @@ import koala.css.ModifierSet
 import koala.css.ObjectFitContain
 import koala.css.addModifiers
 import koala.css.modify
+import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kotlinx.html.IMG
 import kotlinx.html.div
@@ -17,29 +20,71 @@ import kotlinx.html.img
 fun FlowContent.fillImage(
     src: Url? = null,
     modifiers: ModifierSet? = null,
-    placeholder: Image = SiteImage.placeholder,
+    placeholder: Image = SiteImage.placeholderLg,
     fillWidth: Boolean = true,
     block: (IMG.() -> Unit)? = null
 ) {
     val src = src ?: placeholder.url
     div {
-        addModifiers(ImageWithBackdropKey.Class, modifiers)
-        img {
-            addModifiers(ImageWithBackdropKey.BackdropClass)
-            this.src = src.value
-        }
-        div {
-            addModifiers(ImageWithBackdropKey.ImageContainerClass)
-            img {
-                val mod = when(fillWidth) {
-                    true -> modify(ImageWithBackdropKey.ImageClass, HeightAuto)
-                    else -> modify(ImageWithBackdropKey.ImageClass, ObjectFitContain)
-                }
-                addModifiers(mod)
-                this.src = src.value
+        configureFillImage(
+            src = src,
+            images = null,
+            modifiers = modifiers,
+            fillWidth = fillWidth,
+            block = block
+        )
+    }
+}
 
-                block?.invoke(this)
+fun FlowContent.fillImage(
+    images: ScaledImageArray? = null,
+    modifiers: ModifierSet? = null,
+    placeholder: ScaledImageArray = SiteImage.placeholder,
+    fillWidth: Boolean = true,
+    block: (IMG.() -> Unit)? = null
+) {
+    val images = images ?: placeholder
+    div {
+        configureFillImage(
+            src = null,
+            images = images,
+            modifiers = modifiers,
+            fillWidth = fillWidth,
+            block = block
+        )
+    }
+}
+
+fun DIV.configureFillImage(
+    src: Url?,
+    images: ScaledImageArray?,
+    modifiers: ModifierSet? = null,
+    fillWidth: Boolean = true,
+    block: (IMG.() -> Unit)? = null
+) {
+    val src = src ?: images.largest ?: SiteImage.placeholderLg.url
+    addModifiers(ImageWithBackdropKey.Class, modifiers)
+    img {
+        addModifiers(ImageWithBackdropKey.BackdropClass)
+        this.src = src.value
+        images?.let {
+            configureImages(images)
+        }
+    }
+    div {
+        addModifiers(ImageWithBackdropKey.ImageContainerClass)
+        img {
+            val mod = when(fillWidth) {
+                true -> modify(ImageWithBackdropKey.ImageClass, HeightAuto)
+                else -> modify(ImageWithBackdropKey.ImageClass, ObjectFitContain)
             }
+            addModifiers(mod)
+            this.src = src.value
+            images?.let {
+                configureImages(images)
+            }
+
+            block?.invoke(this)
         }
     }
 }
