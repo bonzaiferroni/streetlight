@@ -1,40 +1,45 @@
 package streetlight.web.shells
 
 import kampfire.model.medium
-import koala.css.AlignItemsStretch
-import koala.css.BorderRadius1
-import koala.css.MarginAuto
-import koala.css.MaxHeight64
-import koala.css.modify
-import koala.html.Id
-import koala.html.btn
-import koala.html.column
-import koala.html.heading1
-import koala.html.image
-import koala.html.tab
-import koala.html.tabs
-import koala.html.textBlock
+import koala.css.*
+import koala.html.*
 import kotlinx.html.FlowContent
 import streetlight.model.data.Event
+import streetlight.model.data.EventLocation
 import streetlight.web.EditEventIdRoute
 
-fun FlowContent.eventProfileShell(event: Event) {
-    column(EventProfileShell.id, modify(AlignItemsStretch)) {
-        val imageUrl = event.images.medium
-        if (imageUrl != null) {
-            image(imageUrl, modify(BorderRadius1, MaxHeight64, MarginAuto))
+fun FlowContent.eventProfileShell(event: EventLocation) {
+    column(EventProfileShell.id, modify(AlignItemsStretch, QueryContainer)) {
+        card(modify(ZenCardBg, BorderRadius2, Padding0, OverflowClip)) {
+            column(modify(ContainerMdRow, FlexItems1, ZenCardBg)) {
+                val imageUrl = event.images.medium
+                if (imageUrl != null) {
+                    featureImage(imageUrl, modify(MaxHeight64))
+                }
+                column(modify(JustifyContentCenter, Padding1)) {
+                    heading2(event.title, modify(TextAlignCenter))
+                    filigree {
+                        textBlock("at", modify(OpacityHalf))
+                    }
+                    heading4(event.locationName, modify(OpacityMost, TextAlignCenter))
+                }
+            }
+            column(modify(Padding1)) {
+                event.description?.let {
+                    textBlock(it)
+                }
+            }
         }
-        heading1(event.title)
 
-        tabs(EventProfileShell.tabsId) {
-            tab("Profile") {
-                textBlock("[Event information]")
-                btn("edit", EditEventIdRoute(event.eventId))
-            }
-            tab("Requests") {
-                textBlock("[Requests information]")
-            }
-        }
+//        tabs(EventProfileShell.tabsId) {
+//            tab("Profile") {
+//                textBlock("[Event information]")
+//                btn("edit", EditEventIdRoute(event.eventId))
+//            }
+//            tab("Requests") {
+//                textBlock("[Requests information]")
+//            }
+//        }
     }
 }
 

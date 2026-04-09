@@ -22,7 +22,7 @@ fun RenderContext.viewEventRoute(
             route.event
         }
         is EventSlugRoute -> {
-            api.readEventBySlug(route.slug)
+            api.readEventLocationBySlug(route.slug)
         }
     }
 

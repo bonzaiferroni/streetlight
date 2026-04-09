@@ -22,6 +22,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object ReadLights: GetEndpoint<List<EventId>>(this, "lights")
         object EditLight: PostEndpoint<LightEdit, Boolean>(this, "light-edit")
         object ReadBySlug: GetByIdEndpoint<Slug, Event>(this, "slug")
+        object ReadEventLocationBySlug: GetByIdEndpoint<Slug, EventLocation>(this, "event-location-slug")
     }
 
     object Locations: GetByTableIdEndpoint<LocationId, Location>(this, "locations") {

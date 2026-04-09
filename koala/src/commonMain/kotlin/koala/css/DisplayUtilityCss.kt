@@ -20,7 +20,7 @@ val DisplayUtilityCss
         // Background
         PrimaryBg, PrimaryCardBg, ZenCardBg, BackgroundImage, SolidBg, BlurBackdrop, TransparentBg,
         // Misc
-        FadeBottom, Focus, Clickable, PointerEventsAuto, PointerEventsNone,
+        FadeBottom, Focus, Clickable, PointerEventsAuto, PointerEventsNone, BlurContent
     )
 
 // Display
@@ -89,3 +89,4 @@ val Focus = CssUtility("focus")
 val Clickable = CssUtility("clickable")
 val PointerEventsAuto = utilityOf("pointer-events-auto", "pointer-events: auto")
 val PointerEventsNone = utilityOf("pointer-events-none", "pointer-events: none")
+val BlurContent = utilityOf("blur-content", "filter: var(--strong-blur)")

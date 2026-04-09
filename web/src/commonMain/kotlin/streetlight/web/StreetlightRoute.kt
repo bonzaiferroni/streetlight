@@ -6,6 +6,7 @@ import koala.html.AppScreen
 import streetlight.model.data.Event
 import streetlight.model.data.EventEdit
 import streetlight.model.data.EventId
+import streetlight.model.data.EventLocation
 import streetlight.model.data.LocationEdit
 import streetlight.model.data.LocationId
 import streetlight.model.data.PostId
@@ -77,7 +78,7 @@ sealed interface EventRoute: StreetlightRoute {
     override val title get() = "Event"
 }
 
-data class EventObjectRoute(val event: Event): EventRoute, StringIdRoute {
+data class EventObjectRoute(val event: EventLocation): EventRoute, StringIdRoute {
     override val id get() = event.eventId
     override val title get() = event.title
 }
