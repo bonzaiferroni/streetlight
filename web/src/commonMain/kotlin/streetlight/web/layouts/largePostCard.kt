@@ -28,14 +28,14 @@ fun FlowContent.largePostCard(
     modifiers: ModifierSet? = null,
     cells: List<(FlowContent.() -> Unit)?>
 ) {
-    val images = images ?: SiteImage.placeholder
+    val imageUrl = images?.medium ?: SiteImage.placeholderLg.url
 
     card(modify(modifiers, QueryContainer, Padding0, OverflowHidden)) {
         column(modify(QueryContainer, ContainerLgRow, Gap0)) {
 
             // non-grid content
             column(modify(Flex3, ContainerMdRow, Gap0)) {
-                fillImage(images, modify(Flex1, MinHeight24))
+                fillImage(imageUrl, modify(Flex1, MinHeight24))
                 column(modify(Flex2, Padding1, Height24, MaxHeight24)) {
                     row {
                         column(modify(Flex1, Gap0)) {

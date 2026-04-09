@@ -14,6 +14,7 @@ import koala.css.modify
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kotlinx.html.IMG
+import kotlinx.html.ImgLoading
 import kotlinx.html.div
 import kotlinx.html.img
 
@@ -22,7 +23,8 @@ fun FlowContent.fillImage(
     modifiers: ModifierSet? = null,
     placeholder: Image = SiteImage.placeholderLg,
     fillWidth: Boolean = true,
-    block: (IMG.() -> Unit)? = null
+    lazy: Boolean = true,
+    block: IMG.() -> Unit = {}
 ) {
     val src = src ?: placeholder.url
     div {
@@ -31,6 +33,7 @@ fun FlowContent.fillImage(
             images = null,
             modifiers = modifiers,
             fillWidth = fillWidth,
+            lazy = lazy,
             block = block
         )
     }
@@ -41,7 +44,8 @@ fun FlowContent.fillImage(
     modifiers: ModifierSet? = null,
     placeholder: ScaledImageArray = SiteImage.placeholder,
     fillWidth: Boolean = true,
-    block: (IMG.() -> Unit)? = null
+    lazy: Boolean = true,
+    block: IMG.() -> Unit = {}
 ) {
     val images = images ?: placeholder
     div {
@@ -50,6 +54,7 @@ fun FlowContent.fillImage(
             images = images,
             modifiers = modifiers,
             fillWidth = fillWidth,
+            lazy = lazy,
             block = block
         )
     }
@@ -58,9 +63,10 @@ fun FlowContent.fillImage(
 fun DIV.configureFillImage(
     src: Url?,
     images: ScaledImageArray?,
-    modifiers: ModifierSet? = null,
-    fillWidth: Boolean = true,
-    block: (IMG.() -> Unit)? = null
+    modifiers: ModifierSet?,
+    fillWidth: Boolean,
+    lazy: Boolean,
+    block: IMG.() -> Unit
 ) {
     val src = src ?: images.largest ?: SiteImage.placeholderLg.url
     addModifiers(ImageWithBackdropKey.Class, modifiers)
@@ -83,8 +89,11 @@ fun DIV.configureFillImage(
             images?.let {
                 configureImages(images)
             }
+            if (lazy) {
+                loading = ImgLoading.lazy
+            }
 
-            block?.invoke(this)
+            block()
         }
     }
 }

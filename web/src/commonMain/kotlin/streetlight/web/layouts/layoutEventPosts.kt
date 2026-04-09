@@ -4,6 +4,7 @@ import kabinet.utils.toRelativeDayFormat
 import koala.css.*
 import koala.html.*
 import kotlinx.html.FlowContent
+import kotlinx.html.style
 import streetlight.model.data.EventPost
 import streetlight.web.shells.SectionHeadingMod
 

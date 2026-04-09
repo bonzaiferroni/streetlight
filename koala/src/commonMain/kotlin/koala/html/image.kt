@@ -15,12 +15,11 @@ fun FlowOrInteractiveOrPhrasingContent.image(
     src: Url? = null,
     modifiers: ModifierSet? = null,
     placeholder: Image = SiteImage.placeholderLg,
+    lazy: Boolean = true,
     block: IMG.() -> Unit = {}
 ) {
     img {
-        this.src = (src ?: placeholder.url).value
-        addModifiers(modifiers)
-        block()
+        configureImage(src ?: placeholder.url, null, modifiers, lazy, block)
     }
 }
 
@@ -28,29 +27,46 @@ fun FlowOrInteractiveOrPhrasingContent.image(
     svg: Svg,
     modifiers: ModifierSet? = null,
     placeholder: Image = SiteImage.placeholderLg,
+    lazy: Boolean = true,
     block: IMG.() -> Unit = {}
 ) {
-    image(svg.url, modifiers, placeholder, block)
+    image(svg.url, modifiers, placeholder, lazy, block)
 }
 
 fun FlowOrInteractiveOrPhrasingContent.image(
     images: ScaledImageArray?,
     modifiers: ModifierSet? = null,
     placeholder: ScaledImageArray = SiteImage.placeholder,
+    lazy: Boolean = true,
     block: IMG.() -> Unit = {}
 ) {
     val images = images ?: placeholder
     img {
-        src = (images.largest ?: SiteImage.placeholderLg.url).value
-        configureImages(images)
-        addModifiers(modifiers)
-        block()
+        configureImage(null, images, modifiers, lazy, block)
     }
+}
+
+fun IMG.configureImage(
+    src: Url? = null,
+    images: ScaledImageArray? = null,
+    modifiers: ModifierSet?,
+    lazy: Boolean,
+    block: IMG.() -> Unit
+) {
+    this.src = (src ?: images.largest ?: SiteImage.placeholderLg.url).value
+    images?.let {
+        configureImages(it)
+    }
+    addModifiers(modifiers)
+    if (lazy) {
+        loading = ImgLoading.lazy
+    }
+    block()
 }
 
 fun IMG.configureImages(
     images: ScaledImageArray
 ) {
     setAttribute(Attribute.SrcSet, images.toHtmlSrcSet())
-    setAttribute(Attribute.Sizes, images.toHtmlSizes())
+    setAttribute(Attribute.Sizes, "auto")
 }
