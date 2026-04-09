@@ -2,6 +2,7 @@ package kampfire.model
 
 import kampfire.api.TableId
 import kampfire.utils.randomUuidString
+import kampfire.utils.toUuid
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 import kotlin.time.Instant
@@ -22,11 +23,6 @@ val AuthUser.isAdmin: Boolean
 
 val AuthUser.isUser: Boolean
     get() = UserRole.USER in roles
-
-@JvmInline @Serializable
-value class UserId(override val value: String): TableId<String> {
-    companion object { fun random() = UserId(randomUuidString()) }
-}
 
 data class UserSeed(
     val request: SignUpRequest,

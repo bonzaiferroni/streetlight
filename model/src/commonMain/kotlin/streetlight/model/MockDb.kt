@@ -1,30 +1,5 @@
 package streetlight.model
 
-import kampfire.model.GeoPoint
-import kampfire.model.UserId
-import kampfire.model.UserRole
-import kotlinx.datetime.TimeZone
-import streetlight.model.data.Galaxy
-import streetlight.model.data.GalaxyId
-import streetlight.model.data.DefaultEventTag
-import streetlight.model.data.Event
-import streetlight.model.data.EventId
-import streetlight.model.data.EventStatus
-import streetlight.model.data.EventTag
-import streetlight.model.data.Location
-import streetlight.model.data.LocationId
-import streetlight.model.data.PostPermission
-import streetlight.model.data.ReviewMode
-import streetlight.model.data.Song
-import streetlight.model.data.SongId
-import streetlight.model.data.Star
-import streetlight.model.data.amazingGrace
-import streetlight.model.data.slugOf
-import kotlin.random.Random
-import kotlin.time.Clock
-import kotlin.time.Duration.Companion.days
-import kotlin.time.Duration.Companion.hours
-
 //interface MockDb {
 //    val users: List<Star>
 //    val communities: List<Galaxy>

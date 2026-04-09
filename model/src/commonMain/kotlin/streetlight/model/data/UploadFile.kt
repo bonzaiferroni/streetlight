@@ -3,7 +3,6 @@ package streetlight.model.data
 import kampfire.api.TableId
 import kampfire.model.ImageSize
 import kampfire.model.Url
-import kampfire.model.UserId
 import kampfire.utils.randomUuidString
 import kotlin.time.Instant
 import kotlinx.serialization.Serializable

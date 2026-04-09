@@ -34,7 +34,6 @@ fun ViewContext<Streetlight>.viewStarEditor() {
             renderScope.launch {
                 edit = if (blobUrl != null) {
                     val refUrl = api.uploadImage(blobUrl) ?: error("error creating avatar")
-                    console.log(refUrl)
                     edit.copy(imageRef = refUrl)
                 } else edit
 

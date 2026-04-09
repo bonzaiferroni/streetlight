@@ -74,8 +74,10 @@ class StarCred {
     }
 
     fun clearToken() {
+        console.log("clearing token")
         localStorage.removeItem(USERNAME_KEY)
         localStorage.removeItem(REFRESH_TOKEN_KEY)
+        state.set { it.copy(refreshToken = null, jwt = null) }
     }
 }
 

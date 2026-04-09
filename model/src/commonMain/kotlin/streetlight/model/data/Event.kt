@@ -4,7 +4,6 @@ import androidx.compose.runtime.Stable
 import kampfire.model.LabeledEnum
 import kampfire.model.ScaledImageArray
 import kampfire.model.Url
-import kampfire.model.UserId
 import kampfire.utils.randomUuidString
 import kotlinx.serialization.Serializable
 import kotlinx.datetime.LocalDate

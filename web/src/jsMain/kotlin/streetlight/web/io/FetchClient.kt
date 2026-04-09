@@ -14,6 +14,7 @@ import kampfire.model.Url
 import kampfire.model.toUrl
 import koala.external.FeedMessage
 import koala.utils.jsonConfig
+import koala.utils.prettyPrint
 import kotlinx.browser.window
 import kotlinx.coroutines.await
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -140,6 +141,7 @@ class FetchClient(
         }
 
         var auth = cred.readAuth()
+        console.log(prettyPrint(auth))
         var response = fetchWithJwt(auth?.jwt)
 
         // authenticate on 401
