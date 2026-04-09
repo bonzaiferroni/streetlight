@@ -7,15 +7,15 @@ import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 import kotlin.time.Clock
 
-@Serializable
-data class UserOld(
-    val userId: UserId,
-    val username: String,
-    val roles: RoleSet,
-    val avatarUrl: String?,
-    val createdAt: Instant,
-    val updatedAt: Instant,
-)
+//@Serializable
+//data class UserOld(
+//    val userId: UserId,
+//    val username: String,
+//    val roles: RoleSet,
+//    val avatarUrl: String?,
+//    val createdAt: Instant,
+//    val updatedAt: Instant,
+//)
 
 @Serializable
 data class BasicUser(
@@ -43,19 +43,3 @@ fun BasicUser.toPrivateInfo() = PrivateInfo(
     name = this.name,
     email = this.email,
 )
-
-fun provideBasicUser(seed: UserSeed): BasicUser {
-    val now = Clock.System.now()
-    return BasicUser(
-        userId = UserId.random(),
-        name = seed.request.name,
-        username = seed.request.username,
-        hashedPassword = seed.hashedPassword,
-        salt = seed.salt,
-        email = seed.request.email,
-        roles = seed.roles.toSet(),
-        avatarUrl = null,
-        createdAt = now,
-        updatedAt = now,
-    )
-}

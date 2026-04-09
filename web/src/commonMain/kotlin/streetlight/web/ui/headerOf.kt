@@ -31,5 +31,5 @@ fun FlowContent.starHeader(
     modifiers: ModifierSet? = null,
     block: DIV.() -> Unit = {}
 ) {
-    headerImage(star.name, star.images.medium, modifiers, block)
+    headerImage(star.username, star.images.medium, modifiers, block)
 }

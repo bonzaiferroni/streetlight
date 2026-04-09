@@ -11,7 +11,7 @@ import kotlin.jvm.JvmInline
 data class Rendition(
     val renditionId: RenditionId,
     val songId: SongId,
-    val userId: UserId,
+    val starId: UserId,
     val notes: String?,
     val rating: SelfRating?,
     val createdAt: Instant,

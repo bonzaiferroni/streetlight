@@ -9,7 +9,8 @@ import kotlin.jvm.JvmInline
 
 @Serializable
 data class Star(
-    val name: String,
+    val username: String,
+    val name: String?,
     val description: String?,
     val imageRef: Url?,
     val images: ScaledImageArray?,

@@ -12,7 +12,7 @@ import kotlin.jvm.JvmInline
 @Serializable
 data class UploadFile(
     val uploadFileId: UploadFileId,
-    val userId: UserId?,
+    val starId: UserId?,
     val url: Url,
     val fileType: FileType,
     val size: ImageSize?,

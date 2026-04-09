@@ -2,7 +2,6 @@ package streetlight.model.data
 
 import kampfire.model.GeoPoint
 import kampfire.model.UserId
-import kampfire.model.toUrl
 import kampfire.utils.randomUuidString
 import kotlin.time.Instant
 import kotlinx.serialization.Serializable
@@ -42,7 +41,7 @@ value class LocationPostId(override val value: String): ProjectId, MapPostId {
 data class LocationPostRow(
     val postId: LocationPostId,
     val locationId: LocationId?,
-    val userId: UserId?,
+    val starId: UserId?,
     val username: String?,
     val title: String?,
     val text: String?,

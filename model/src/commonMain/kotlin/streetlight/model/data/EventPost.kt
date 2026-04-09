@@ -2,7 +2,6 @@ package streetlight.model.data
 
 import kampfire.model.GeoPoint
 import kampfire.model.UserId
-import kampfire.model.toUrl
 import kampfire.utils.randomUuidString
 import kotlin.time.Instant
 import kotlinx.serialization.Serializable
@@ -43,7 +42,7 @@ data class EventPostRow(
     val postId: EventPostId,
     val galaxyId: GalaxyId,
     val eventId: EventId,
-    val userId: UserId?,
+    val starId: UserId?,
     val username: String?,
     val text: String?,
     val updatedAt: Instant,

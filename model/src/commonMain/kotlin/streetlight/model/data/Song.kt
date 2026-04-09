@@ -9,7 +9,7 @@ import kotlin.jvm.JvmInline
 @Serializable
 data class Song(
     val songId: SongId,
-    val userId: UserId,
+    val starId: UserId,
     val title: String,
     val artist: String,
     val tempo: Int?,

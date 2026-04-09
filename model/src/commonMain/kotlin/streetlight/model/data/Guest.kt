@@ -9,7 +9,7 @@ import kotlin.jvm.JvmInline
 @Serializable
 data class Guest(
     val guestId: GuestId,
-    val userId: UserId?,
+    val starId: UserId?,
     val name: String?,
     val songs: List<String>?,
     val createdAt: Instant,

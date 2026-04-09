@@ -7,7 +7,7 @@ import kotlin.jvm.JvmInline
 import kotlin.time.Instant
 
 interface AuthUser {
-    val userId: UserId
+    val userId: TableId<String>
     val username: String
     val hashedPassword: String
     val salt: String
