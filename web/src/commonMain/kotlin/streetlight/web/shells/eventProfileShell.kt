@@ -10,13 +10,13 @@ import streetlight.web.EditEventIdRoute
 
 fun FlowContent.eventProfileShell(event: EventLocation) {
     column(EventProfileShell.id, modify(AlignItemsStretch, QueryContainer)) {
-        card(modify(ZenCardBg, BorderRadius2, Padding0, OverflowClip)) {
-            column(modify(ContainerMdRow, FlexItems1, ZenCardBg)) {
+        card(modify(ZenCardBg, BorderRadius2, Padding0, OverflowClip, Gap0)) {
+            column(modify(ContainerMdRow, FlexItems1, CardBg)) {
                 val imageUrl = event.images.medium
                 if (imageUrl != null) {
                     featureImage(imageUrl, modify(MaxHeight64))
                 }
-                column(modify(JustifyContentCenter, Padding1)) {
+                column(modify(JustifyContentCenter, PaddingX1, PaddingY2)) {
                     heading2(event.title, modify(TextAlignCenter))
                     filigree {
                         textBlock("at", modify(OpacityHalf))
@@ -24,9 +24,9 @@ fun FlowContent.eventProfileShell(event: EventLocation) {
                     heading4(event.locationName, modify(OpacityMost, TextAlignCenter))
                 }
             }
-            column(modify(Padding1)) {
+            column(modify(Padding4)) {
                 event.description?.let {
-                    textBlock(it)
+                    markdownContent(it)
                 }
             }
         }

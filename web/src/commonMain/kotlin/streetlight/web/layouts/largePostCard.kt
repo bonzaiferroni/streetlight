@@ -35,7 +35,7 @@ fun FlowContent.largePostCard(
 
             // non-grid content
             column(modify(Flex3, ContainerMdRow, Gap0)) {
-                fillImage(imageUrl, modify(Flex1, MinHeight24))
+                featureImage(imageUrl, modify(Flex1, MinHeight24))
                 column(modify(Flex2, Padding1, Height24, MaxHeight24)) {
                     row {
                         column(modify(Flex1, Gap0)) {
@@ -84,13 +84,13 @@ fun FlowContent.largePostCard(
 }
 
 object PostCard {
-    val RowMod = modify(JustifyContentCenter)
+    val RowMod = modify(JustifyContentCenter, WrapFlex, Gap0)
 }
 
 fun FlowContent.startsAtCell(startsAt: Instant) {
     row(PostCard.RowMod) {
         textBlock(startsAt.toRelativeDayFormat(), modify(Bold))
-        textBlock(startsAt.toTimeFormat())
+        textBlock(startsAt.toTimeFormat(), modify(MarginLeft1))
     }
 }
 
@@ -101,7 +101,7 @@ fun FlowContent.costCell(cost: Float, purchaseUrl: String?) {
     actionIfNotNull(ticketsUrl) {
         row(PostCard.RowMod) {
             textBlock("tickets:", modify(Dim))
-            textBlock("$$cost")
+            textBlock("$$cost", modify(MarginLeft1))
         }
     }
 }
@@ -109,7 +109,7 @@ fun FlowContent.costCell(cost: Float, purchaseUrl: String?) {
 fun FlowContent.postedBy(username: String?) {
     row(PostCard.RowMod) {
         textBlock("from:", modify(Dim))
-        textBlock(username ?: "someone")
+        textBlock(username ?: "someone", modify(MarginLeft1))
     }
 }
 

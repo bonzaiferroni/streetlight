@@ -1,6 +1,7 @@
 package streetlight.agent
 
 import ai.koog.prompt.dsl.prompt
+import ai.koog.prompt.executor.clients.LLMClientException
 import ai.koog.prompt.executor.clients.google.GoogleModels
 import ai.koog.prompt.executor.llms.all.simpleGoogleAIExecutor
 import ai.koog.prompt.params.LLMParams
@@ -100,9 +101,16 @@ class UrlParser(apiKey: String) {
             user("$instructions\n\nFor reference, here is the url:\n$url\n\nHere is the HTML:\n$content")
         }
 
+        val json = try {
+            executor.execute(prompt, GoogleModels.Gemini2_5Flash).first().content
+        } catch (e: LLMClientException) {
+            console.log(e)
+            null
+        } ?: return null
+
         return ParserContent(
             document = doc,
-            json = executor.execute(prompt, GoogleModels.Gemini2_5Flash).first().content
+            json = json
         )
     }
 

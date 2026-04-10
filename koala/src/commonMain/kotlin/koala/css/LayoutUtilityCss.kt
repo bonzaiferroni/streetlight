@@ -30,7 +30,8 @@ val LayoutUtilityCss
         MarginAuto, Margin1, Margin2, MarginTop1, MarginTop2, MarginTop4, MarginTop8, MarginLeft1, MarginBottom16,
         MarginX1, MarginX2, MarginX4,
         // Padding
-        Padding0, Padding1, Padding2, PaddingTiny, PaddingLeft3, PaddingRight3,
+        Padding0, Padding1, Padding2, Padding4, PaddingTiny, PaddingLeft3, PaddingRight3,
+        PaddingX1, PaddingY1, PaddingY2,
         // Object Fit
         ObjectFitCover, ObjectFitContain, ObjectPositionCenter,
         // Other
@@ -174,9 +175,13 @@ val MarginX4 = utilityOf(
 val Padding0 = utilityOf("padding-0", "padding: 0")
 val Padding1 = utilityOf("padding-1", "padding: var(--unit-spacing)")
 val Padding2 = utilityOf("padding-2", "padding: calc(var(--unit-spacing) * 2)")
+val Padding4 = utilityOf("padding-4", "padding: calc(var(--unit-spacing) * 4)")
 val PaddingTiny = utilityOf("padding-tiny", "padding: 2px")
 val PaddingLeft3 = utilityOf("padding-left-3", "padding-left: calc(var(--unit-spacing) * 3)")
 val PaddingRight3 = utilityOf("padding-right-3", "padding-right: calc(var(--unit-spacing) * 3)")
+val PaddingX1 = utilityOf("padding-x-1", "padding-left: var(--unit-spacing)", "padding-right: var(--unit-spacing)")
+val PaddingY1 = utilityOf("padding-y-1", "padding-top: var(--unit-spacing)", "padding-bottom: var(--unit-spacing)")
+val PaddingY2 = utilityOf("padding-y-2", "padding-top: var(--unit-spacing-2)", "padding-bottom: var(--unit-spacing-2)")
 
 // Object Fit
 val ObjectFitCover = utilityOf("object-fit-cover", "object-fit: cover")

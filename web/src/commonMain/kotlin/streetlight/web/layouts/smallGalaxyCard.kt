@@ -9,10 +9,10 @@ import streetlight.web.toRoute
 
 fun FlowContent.smallGalaxyCard(galaxy: Galaxy) {
     val route = galaxy.toRoute()
-    card(modify(QueryContainer, Padding0, OverflowHidden)) {
-        column(modify(ContainerTnRow, Gap0)) {
-            action(route, modify(Flex1, MinHeight8)) {
-                fillImage(galaxy.images?.small, modify(Size100P))
+    card(modify(Padding0, OverflowHidden)) {
+        row(modify(Gap0, Height16)) {
+            action(route, modify(Flex1)) {
+                featureImage(galaxy.images?.small, modify(Size100P))
             }
             column(modify(Flex2, Height16)) {
                 column(modify(Flex1, Padding1, OverflowHidden, FadeBottom)) {

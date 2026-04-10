@@ -29,7 +29,7 @@ val StylesCss get() = """
     --primary-fg: rgb(var(--primary));
     --primary-button: rgba(var(--primary), .5);
     --primary-bg: color-mix(in srgb, var(--primary-fg) 15%, black);
-    --primary-card-bg: color-mix(in srgb, rgba(var(--primary), .2) 80%, black);
+    --primary-card-bg: color-mix(in srgb, rgba(var(--primary), .2) 60%, black);
     --secondary-button: var(--gray-fg);
     --accent-bg: 209, 43, 181;
     --accent: 255, 53, 221;

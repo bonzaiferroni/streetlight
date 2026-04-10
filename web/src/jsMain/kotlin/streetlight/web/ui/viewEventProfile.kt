@@ -26,15 +26,9 @@ fun RenderContext.viewEventRoute(
         }
     }
 
-    column {
-        routeBlock(portal, ::provideData) {
-            shellBox(EventProfileShell.id, modify(Width100P)) {
-                eventProfileShell(it)
-            }
+    routeBlock(portal, ::provideData) {
+        shellBox(EventProfileShell.id, modify(Width100P)) {
+            eventProfileShell(it)
         }
-
-        button("go home", onClickEvent = {
-            app.portal.go(HomeRoute)
-        })
     }
 }
