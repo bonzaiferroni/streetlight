@@ -27,7 +27,7 @@ fun RenderContext.viewEventRoute(
     }
 
     routeBlock(portal, ::provideData) {
-        shellBox(EventProfileShell.id, modify(Width100P)) {
+        shellBox(EventProfileShell.id, app.geoMap, app.appScope, modify(Width100P)) {
             eventProfileShell(it)
         }
     }

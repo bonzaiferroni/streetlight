@@ -15,6 +15,7 @@ data class Location(
     val name: String,
     val description: String?,
     val address: String?,
+    val city: String?,
     // td: addressNumber
     // td: street
     // td: unit/suite
@@ -35,9 +36,7 @@ data class Location(
     val createdAt: Instant,
     // td: openedAt: LocalDate
     // td: LocationTags
-) {
-    val city: String get() = "Denver"
-}
+)
 
 @JvmInline @Serializable
 value class LocationId(override val value: String): ProjectId {
@@ -48,6 +47,7 @@ value class LocationId(override val value: String): ProjectId {
 data class LocationEdit(
     val locationId: LocationId? = null,
     val name: String? = null,
+    val city: String? = null,
     val isOwner: Boolean = false,
     val description: String? = null,
     val address: String? = null,
@@ -131,6 +131,7 @@ fun LocationEdit.toPlace() = Place(
 fun Place.toEdit() = LocationEdit(
     name = name,
     address = address,
+    city = city,
     geoPoint = geoPoint,
     website = website
 )
@@ -143,7 +144,7 @@ fun LocationParse.toEdit(
     description = description,
     address = address,
 //    val postalCode: String? = null,
-//    val city: String? = null,
+    city = null,
 //    val state: String? = null,
 //    val country: String? = null,
     website = url,

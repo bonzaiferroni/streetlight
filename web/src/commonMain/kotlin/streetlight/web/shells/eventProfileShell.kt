@@ -1,35 +1,112 @@
 package streetlight.web.shells
 
 import kampfire.model.medium
+import kampfire.model.small
 import koala.css.*
 import koala.html.*
 import kotlinx.html.FlowContent
-import streetlight.model.data.Event
 import streetlight.model.data.EventLocation
-import streetlight.web.EditEventIdRoute
+import streetlight.model.data.ExtraLink
+import streetlight.web.layouts.CellContent
+import streetlight.web.layouts.cellCard
+import streetlight.web.layouts.costCell
+import streetlight.web.layouts.lightCell
+import streetlight.web.layouts.postedBy
+import streetlight.web.layouts.startsAtCell
+import streetlight.web.pages.appFooter
 
 fun FlowContent.eventProfileShell(event: EventLocation) {
-    column(EventProfileShell.id, modify(AlignItemsStretch, QueryContainer)) {
-        card(modify(ZenCardBg, BorderRadius2, Padding0, OverflowClip, Gap0)) {
-            column(modify(ContainerMdRow, FlexItems1, CardBg)) {
+    column(EventProfileShell.id, modify(AlignItemsStretch, Gap4)) {
+        card(modify(ZenCardBg, BorderRadius2, Padding0, OverflowClip, Gap0, QueryContainer)) {
+            column(modify(ContainerMdRow, FlexItems1, CardBg, Gap0)) {
                 val imageUrl = event.images.medium
                 if (imageUrl != null) {
                     featureImage(imageUrl, modify(MaxHeight64))
                 }
-                column(modify(JustifyContentCenter, PaddingX1, PaddingY2)) {
-                    heading2(event.title, modify(TextAlignCenter))
-                    filigree {
-                        textBlock("at", modify(OpacityHalf))
+                column(modify(JustifyContentCenter)) {
+                    column(modify(PaddingX1, PaddingY2)) {
+                        heading2(event.title, modify(TextAlignCenter, MinWidth0))
+                        filigree(modify()) {
+                            textBlock("at", modify(OpacityHalf))
+                        }
+                        heading4(event.locationName, modify(OpacityMost, TextAlignCenter))
                     }
-                    heading4(event.locationName, modify(OpacityMost, TextAlignCenter))
                 }
             }
-            column(modify(Padding4)) {
-                event.description?.let {
-                    markdownContent(it)
+            row(modify(MinHeight8, FlexItems1, GapTiny, TextAlignCenter, WrapFlex, ZenCardBg)) {
+                cellCard {
+                    startsAtCell(event.startsAt)
+                }
+                cellCard {
+                    costCell(event.cost, event.url)
+                }
+                cellCard {
+                    postedBy(event.username)
+                }
+                cellCard {
+                    lightCell(event.eventId)
+                }
+            }
+            column(modify(ContainerMdRow, Padding4, Gap4, AlignItemsStart)) {
+                column(modify(Flex4)) {
+                    event.description?.let {
+                        markdownContent(it)
+                    }
+                }
+                event.links?.let { links ->
+                    row(modify(Flex1, WrapFlex, AlignItemsStart, FlexItems1)) {
+                        links.forEach { link ->
+                            btn(link.label, link.url)
+                        }
+                    }
                 }
             }
         }
+
+        tabs {
+            tab("Location") {
+                column {
+                    card(modify(QueryContainer, ZenCardBg, BorderRadius2, Padding0, OverflowClip, Gap0)) {
+                        column(modify(ContainerMdRow, FlexItems1, CardBg, Gap0)) {
+                            geoMapMount(event.geoPoint, modify(MinHeight48))
+                            column(modify(JustifyContentCenter, AlignItemsCenter)) {
+                                event.locationImages.small?.let {
+                                    image(it, modify(Flex1, BorderRadius2, MaxHeight16))
+                                }
+                                column(modify(PaddingX1, PaddingY2, Gap0)) {
+                                    heading2(event.locationName, modify(TextAlignCenter, MinWidth0))
+                                    event.addressLine?.let {
+                                        filigree {
+                                            heading4(it, modify(OpacityMost, TextAlignCenter))
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        column(modify(ContainerMdRow, Padding4, Gap4, AlignItemsStart)) {
+                            column(modify(Flex4)) {
+                                event.locationDescription?.let {
+                                    markdownContent(it)
+                                }
+                            }
+
+//                            event.links?.let { links ->
+//                                row(modify(Flex1, WrapFlex, AlignItemsStart, FlexItems1)) {
+//                                    links.forEach { link ->
+//                                        btn(link.label, link.url)
+//                                    }
+//                                }
+//                            }
+                        }
+                    }
+                }
+            }
+            tab("Comments") {
+                textBlock("coming soon")
+            }
+        }
+        appFooter()
 
 //        tabs(EventProfileShell.tabsId) {
 //            tab("Profile") {

@@ -12,32 +12,51 @@ data class EventLocation(
     val eventId: EventId,
     val locationId: LocationId,
     val slug: Slug,
+    val username: String,
     val url: String?,
-    val images: ScaledImageArray?,
+    val eventImages: ScaledImageArray?,
     val title: String,
     val description: String?,
+    val cost: Float?,
     val status: EventStatus,
     val visibility: Int,
     val geoPoint: GeoPoint,
+    val eventLinks: List<ExtraLink>?,
     val locationName: String,
+    val locationDescription: String?,
+    val address: String?,
+    val city: String?,
+    val locationImages: ScaledImageArray?,
     val startsAt: Instant,
     val endsAt: Instant?,
 ) {
-    companion object {
-        fun from(event: Event, location: Location) = EventLocation(
-            eventId = event.eventId,
-            slug = event.slug,
-            locationId = location.locationId,
-            url = event.url,
-            images = event.images ?: location.images,
-            title = event.title,
-            description = event.description,
-            status = event.status,
-            visibility = (0..20).random(),
-            geoPoint = location.geoPoint,
-            locationName = location.name,
-            startsAt = event.startsAt,
-            endsAt = event.endsAt,
-        )
+    val links by lazy {
+        buildList {
+            url?.let { url ->
+                add(ExtraLink("source", url))
+                cost?.takeIf { it > 0 }?.let {
+                    add(ExtraLink("tickets", url))
+                }
+            }
+            eventLinks?.let {
+                addAll(it)
+            }
+        }.takeIf { it.isNotEmpty() }
+    }
+
+    val images get() = eventImages ?: locationImages
+
+    val addressLine by lazy {
+        buildString {
+            address?.let {
+                append(it)
+                if (city != null) {
+                    append(", ")
+                }
+            }
+            city?.let {
+                append(it)
+            }
+        }.takeIf { it.isNotEmpty() }
     }
 }

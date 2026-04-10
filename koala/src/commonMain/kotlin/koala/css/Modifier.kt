@@ -34,6 +34,12 @@ fun modify(css: Modifier, modifiers: ModifierSet?): ModifierSet {
     }
 }
 fun modify(modifiers: ModifierSet?, vararg additional: Modifier) = (modifiers ?: emptySet()) + additional.toSet()
+fun modify(modifiers: ModifierSet, additional: ModifierSet?): ModifierSet {
+    return when (additional) {
+        null -> modifiers
+        else -> modifiers + additional
+    }
+}
 
 fun TagContext.addModifiers(modifiers: ModifierSet?) {
     modifiers?.let {

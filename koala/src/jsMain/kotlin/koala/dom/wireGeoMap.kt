@@ -1,5 +1,6 @@
 package koala.dom
 
+import kampfire.model.GeoPoint
 import koala.core.findAndInitGeoMap
 import koala.core.queryFirstOrNull
 import koala.external.CenterZoomBearing
@@ -32,6 +33,14 @@ fun wireGeoMap(
         if (isVisible && mount.children.length == 0) {
             console.log("grabbing geomap window")
             mount.appendChild(mapWindow)
+//            val geoPoint = mount.getAttribute(GeoMapSelector.geoPoint.key)
+//                ?.split(",")
+//                ?.mapNotNull { it.toDoubleOrNull() }
+//                ?.takeIf { it.size == 2 }
+//                ?.let { GeoPoint(it[0], it[1]) }
+//            geoPoint?.let {
+//                geoMap.panMap(it)
+//            }
             // mapWidget?.resize()
         }
     }

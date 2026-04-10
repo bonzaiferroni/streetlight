@@ -45,6 +45,7 @@ $Class {
     align-items: center;
     justify-content: center;
     overflow: clip;
+    min-width: 0;
 }
 
 $BackdropClass {
@@ -59,5 +60,6 @@ $BackdropClass {
 
 $ContentClass {
     position: relative;
+    min-width: 0;
 }
 """

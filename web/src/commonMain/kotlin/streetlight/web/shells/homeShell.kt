@@ -13,7 +13,7 @@ import streetlight.web.pages.appFooter
 fun FlowContent.homeShell(content: HomeContent) {
     column(HomeShellKey.ContainerId, modify(Gap8)) {
         column {
-            geoMapMount()
+            geoMapMount(null, modify(BorderRadius2, Height48))
 
             row(modify(JustifyContentSpaceBetween)) {
                 galaxyMenu(content.galaxies, null)
@@ -55,7 +55,7 @@ fun FlowContent.homeShell(content: HomeContent) {
             }
             row {
                 spacer(modify(Flex1))
-                btn("Create a Galaxy", CreateGalaxyRoute, modify(Accent))
+                btn("➕ Create a Galaxy", CreateGalaxyRoute, modify(Accent))
             }
         }
 

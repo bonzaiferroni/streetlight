@@ -71,10 +71,9 @@ fun FlowContent.largePostCard(
 
             // grid content
             row(modify(Flex1, ContainerLgColumn, MinHeight8, FlexItems1, GapTiny, TextAlignCenter, WrapFlex)) {
-                val cellMods = modify(AlignItemsCenter, Gap0, BorderRadius0, JustifyContentCenter, MinWidth16)
                 cells.forEach {
                     val cell = it ?: return@forEach
-                    card(cellMods) {
+                    cellCard {
                         cell()
                     }
                 }
@@ -83,47 +82,5 @@ fun FlowContent.largePostCard(
     }
 }
 
-object PostCard {
-    val RowMod = modify(JustifyContentCenter, WrapFlex, Gap0)
-}
 
-fun FlowContent.startsAtCell(startsAt: Instant) {
-    row(PostCard.RowMod) {
-        textBlock(startsAt.toRelativeDayFormat(), modify(Bold))
-        textBlock(startsAt.toTimeFormat(), modify(MarginLeft1))
-    }
-}
-
-fun FlowContent.costCell(cost: Float, purchaseUrl: String?) {
-    val ticketsUrl = cost.takeIf { it != 0f }?.let {
-        purchaseUrl
-    }
-    actionIfNotNull(ticketsUrl) {
-        row(PostCard.RowMod) {
-            textBlock("tickets:", modify(Dim))
-            textBlock("$$cost", modify(MarginLeft1))
-        }
-    }
-}
-
-fun FlowContent.postedBy(username: String?) {
-    row(PostCard.RowMod) {
-        textBlock("from:", modify(Dim))
-        textBlock(username ?: "someone", modify(MarginLeft1))
-    }
-}
-
-fun FlowContent.lightCell(galaxyId: GalaxyId) {
-    row(modify(WidthAuto)) {
-        setData(StarLightKey.GalaxyLightId, galaxyId)
-        starLight((0..10).random())
-    }
-}
-
-fun FlowContent.lightCell(eventId: EventId) {
-    row {
-        setData(StarLightKey.EventLightId, eventId)
-        starLight((0..10).random())
-    }
-}
 

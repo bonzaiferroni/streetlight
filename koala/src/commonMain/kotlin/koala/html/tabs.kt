@@ -6,13 +6,16 @@ import koala.css.*
 import kotlinx.html.p
 
 fun FlowContent.tabs(
-    id: Id,
+    id: Id? = null,
     modifiers: ModifierSet? = null,
     content: TabScope.() -> Unit,
 ) {
     val scope = TabScope()
     scope.content()
-    column(id, modify(TabClass.tabs, modifiers)) {
+    column(modify(TabClass.tabs, modifiers)) {
+        id?.let {
+            setId(it)
+        }
         row(modify(TabClass.header)) {
             scope.tabs.forEachIndexed { index, tab ->
                 p {

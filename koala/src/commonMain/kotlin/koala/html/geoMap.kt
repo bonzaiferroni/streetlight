@@ -12,7 +12,7 @@ import kotlinx.html.FlowContent
 
 fun FlowContent.geoMapMount(
     initialPoint: GeoPoint? = null,
-    modifiers: ModifierSet? = modify(Width100P, Height48),
+    modifiers: ModifierSet? = null, // modify(Width100P, Height48)
     block: DIV.() -> Unit = {}
 ) {
     box {

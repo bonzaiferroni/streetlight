@@ -54,10 +54,11 @@ fun FlowContent.btn(
     block: A.() -> Unit = {},
 ) {
     val domain = href.takeIf { addExternalIndicator }?.let { domainOf(it) }
-    val text = domain?.let { domain ->
-        domainMap[domain].let { symbol ->
-            "${symbol ?: "🔗"} $text"
-        }
+    val prefix = labelPrefixMap[text.lowercase()] ?: domain?.let { domain ->
+        domainPrefixMap[domain] ?: "🔗"
+    }
+    val text = prefix?.let {
+        "$it $text"
     } ?: text
     action(
         href = href,
@@ -78,8 +79,12 @@ fun domainOf(url: String): String? =
 
 private const val video = "📼"
 
-private val domainMap = mapOf(
+private val domainPrefixMap = mapOf(
     "youtube.com" to video
+)
+
+private val labelPrefixMap = mapOf(
+    "tickets" to "🎟"
 )
 
 object BtnKey {
