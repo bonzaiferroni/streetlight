@@ -7,6 +7,8 @@ import koala.html.*
 import kotlinx.html.FlowContent
 import streetlight.model.data.EventLocation
 import streetlight.model.data.ExtraLink
+import streetlight.web.EditEventIdRoute
+import streetlight.web.EditEventRoute
 import streetlight.web.layouts.CellContent
 import streetlight.web.layouts.cellCard
 import streetlight.web.layouts.costCell
@@ -58,6 +60,7 @@ fun FlowContent.eventProfileShell(event: EventLocation) {
                         links.forEach { link ->
                             btn(link.label, link.url)
                         }
+                        btn("edit", EditEventIdRoute(event.eventId))
                     }
                 }
             }
@@ -106,7 +109,7 @@ fun FlowContent.eventProfileShell(event: EventLocation) {
                 textBlock("coming soon")
             }
         }
-        appFooter()
+        appFooter(EventProfileShell.SOURCE)
 
 //        tabs(EventProfileShell.tabsId) {
 //            tab("Profile") {
@@ -122,5 +125,5 @@ fun FlowContent.eventProfileShell(event: EventLocation) {
 
 object EventProfileShell {
     val id = Id("event-profile")
-    val tabsId = Id("event-tabs")
+    const val SOURCE = "web/src/commonMain/kotlin/streetlight/web/shells/eventProfileShell.kt"
 }

@@ -53,7 +53,7 @@ fun RenderContext.viewMusicianHub(
                         }
                         button("Add new song", modify(Accent), onClick = model::addSong)
                     }
-                    itemsBlock(model.songsFlow, defaultMagic, true) { song ->
+                    itemsBlock(model.songsFlow, defaultMagic) { song ->
                         action(SongProfileRoute(song.songId)) {
                             card {
                                 textBlock(song.title)

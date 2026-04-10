@@ -22,7 +22,7 @@ fun RenderContext.appNavigation(app: Streetlight) {
         viewContextOf(app) {
             when (screen) {
                 StreetlightScreen.Home -> viewHome()
-                StreetlightScreen.EventProfile -> viewEventRoute(app)
+                StreetlightScreen.EventProfile -> viewEventProfileRoute()
                 StreetlightScreen.StarDash -> viewStarDash(app)
                 StreetlightScreen.EditEvent -> viewEventEditorRoute()
                 StreetlightScreen.Sandbox -> viewSandbox(app)

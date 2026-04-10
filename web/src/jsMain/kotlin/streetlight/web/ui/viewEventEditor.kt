@@ -156,7 +156,7 @@ fun ViewContext<EventEditor>.eventLinks() {
             }
             icon(SvgFile.Plus, ::addLink)
         }
-        indexedItemsBlock(linksFlow, defaultMagic, magic = true) { (linkIndex, link) ->
+        indexedItemsBlock(linksFlow, defaultMagic) { (linkIndex, link) ->
             flowBlock(linkEditIndexFlow, modify(Height5, JustifyContentCenter)) { index ->
                 val isEdit = index == linkIndex
                 if (isEdit) {

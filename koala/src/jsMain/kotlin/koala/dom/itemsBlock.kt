@@ -18,16 +18,22 @@ import kotlinx.html.js.div
 import org.w3c.dom.HTMLDivElement
 import kotlin.collections.plus
 
+// dynamically render a list of items using a lambda of the individual item
 fun <Item> RenderContext.itemsBlock(
     flow: Flow<List<Item>>,
     modifiers: ModifierSet? = null,
-    magic: Boolean = false,
     gapRems: Float? = 0.5f,
     cacheRenderedElements: Boolean = false,
     config: (DIV.() -> Unit)? = null,
     containerConfig: (DIV.() -> Unit)? = null,
     block: RenderContext.(Item) -> Unit
 ): HTMLDivElement {
+    // modification with Magic animates the element when items change
+    // base: item opacity fade on entrance/exit, item position is animated, base element height is animated
+    // slide: items slide in/out from the given direction, slide left is most common
+    // blur: item blur transitions on entrance/exit
+    val magic = modifiers?.contains(Magic) ?: false
+
     val parent = div {
         addModifiers(ItemsBlockKey.Class, modifiers)
         if (magic) {
@@ -38,6 +44,7 @@ fun <Item> RenderContext.itemsBlock(
 
     val cachedItems = mutableMapOf<Item, RenderCache>()
     var displayedItems: Map<Item, RenderCache>? = null
+    // A gap is provided between items, similar to flex gap. Inelegant solution, should be determined by unit-spacing.
     val gapPx = gapRems?.let { remToPx(it) }
 
     fun createItem(item: Item): RenderCache {
@@ -56,6 +63,8 @@ fun <Item> RenderContext.itemsBlock(
         return RenderCache(context, job, localScope, listOf(container))
     }
 
+    // item renders may be cached to avoid invoking the block
+    // only suitable when there is an expected finite set of possible items, otherwise constitutes a memory leak
     fun recallCachedItem(item: Item): RenderCache? {
         val cachedItem = cachedItems[item] ?: return null
         parent.append(cachedItem.elements)
@@ -97,6 +106,7 @@ fun <Item> RenderContext.itemsBlock(
                 cache
             }
 
+            // the base element height is set/animated each time the items change
             window.requestAnimationFrame {
                 var index = 0
                 var height = 0
@@ -105,7 +115,6 @@ fun <Item> RenderContext.itemsBlock(
                     val container = it.value.firstElement
                     container.style.top = "${height}px"
                     height += container.offsetHeight
-                    console.log(container.offsetHeight)
                     if (gapPx != null && index + 1 < items.size) {
                         height += gapPx
                     }
@@ -120,10 +129,10 @@ fun <Item> RenderContext.itemsBlock(
     return parent
 }
 
+// for when you really need to know the index of the item within its context
 fun <Item> RenderContext.indexedItemsBlock(
     flow: Flow<List<Item>>,
     modifiers: ModifierSet? = null,
-    magic: Boolean = false,
     gapRems: Float? = 0.5f,
     cacheRenderedElements: Boolean = false,
     config: (DIV.() -> Unit)? = null,
@@ -134,7 +143,6 @@ fun <Item> RenderContext.indexedItemsBlock(
     return itemsBlock(
         flow = flow,
         modifiers = modifiers,
-        magic = magic,
         gapRems = gapRems,
         cacheRenderedElements = cacheRenderedElements,
         config = config,

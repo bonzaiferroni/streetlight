@@ -17,6 +17,11 @@ fun FlowContent.btn(
     modifiers: ModifierSet? = null,
     block: (A.() -> Unit)? = null,
 ) {
+    val prefix = labelPrefixMap[text.lowercase()]
+    val text = prefix?.let {
+        "$it $text"
+    } ?: text
+
     action(
         text = text,
         route = route,
@@ -84,7 +89,8 @@ private val domainPrefixMap = mapOf(
 )
 
 private val labelPrefixMap = mapOf(
-    "tickets" to "🎟"
+    "tickets" to "🎟",
+    "edit" to "✍",
 )
 
 object BtnKey {
