@@ -46,6 +46,7 @@ $Class {
     justify-content: center;
     overflow: clip;
     min-width: 0;
+    min-height: 0;
 }
 
 $BackdropClass {

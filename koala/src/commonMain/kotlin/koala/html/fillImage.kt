@@ -18,7 +18,6 @@ import kotlinx.html.ImgLoading
 import kotlinx.html.div
 import kotlinx.html.img
 
-@Deprecated("use featureImage")
 fun FlowContent.fillImage(
     src: Url? = null,
     modifiers: ModifierSet? = null,
@@ -40,7 +39,6 @@ fun FlowContent.fillImage(
     }
 }
 
-@Deprecated("use featureImage")
 fun FlowContent.fillImage(
     images: ScaledImageArray? = null,
     modifiers: ModifierSet? = null,
