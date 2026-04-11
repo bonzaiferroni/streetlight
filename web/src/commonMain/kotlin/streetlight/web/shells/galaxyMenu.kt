@@ -3,9 +3,9 @@ package streetlight.web.shells
 import koala.css.WrapFlex
 import koala.css.modify
 import koala.html.Id
-import koala.html.ButtonMenu
+import koala.html.ButtonPopover
 import koala.html.btn
-import koala.html.buttonMenu
+import koala.html.buttonPopover
 import koala.html.card
 import koala.html.row
 import koala.html.setJsonData
@@ -18,8 +18,8 @@ fun FlowContent.galaxyMenu(
     galaxies: List<Galaxy>,
     currentGalaxy: Galaxy?,
 ) {
-    buttonMenu("galaxies", id = GalaxyMenuKey.Id) {
-        card(modify(ButtonMenu.CardMod)) {
+    buttonPopover("galaxies", id = GalaxyMenuKey.Id) {
+        card(modify(ButtonPopover.CardMod)) {
             setJsonData(GalaxyKey.TopGalaxies, galaxies)
 
             row(GalaxyMenuKey.RowMods) {

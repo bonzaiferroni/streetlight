@@ -4,8 +4,8 @@ import kampfire.model.thumb
 import koala.SvgFile
 import koala.css.*
 import koala.dom.*
-import koala.html.ButtonMenu
-import koala.html.buttonMenu
+import koala.html.ButtonPopover
+import koala.html.buttonPopover
 import koala.html.filigree
 import koala.html.heading1
 import koala.html.heading3
@@ -95,8 +95,8 @@ fun ViewContext<LocationScout>.postLocationEditor(galaxies: List<Galaxy>) {
                     }
                 }
                 if (availableGalaxies.isNotEmpty()) {
-                    buttonMenu("galaxies", modify(AlignSelfStart)) {
-                        card(ButtonMenu.CardMod) {
+                    buttonPopover("galaxies", modify(AlignSelfStart)) {
+                        card(ButtonPopover.CardMod) {
                             availableGalaxies.forEach { galaxy ->
                                 button(galaxy.name, onClick = { model.addGalaxyId(galaxy.galaxyId) })
                             }

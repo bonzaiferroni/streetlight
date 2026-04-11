@@ -93,7 +93,7 @@ fun ViewContext<EventScout>.createEventPanel(location: Location?) {
         }
 
         card {
-            viewEventEditor(model.stateNow.eventEdit, model.app, editFlow.filterNotNull(), model::setEventEdit)
+            eventEditorForm(model.stateNow.eventEdit, model.app, editFlow.filterNotNull(), model::setEventEdit)
             row(modify(JustifyContentSpaceBetween)) {
                 button("start over", onClick = model::reset)
                 row {

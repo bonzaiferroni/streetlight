@@ -4,24 +4,25 @@ import koala.css.*
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 
-fun FlowContent.buttonMenu(
+fun FlowContent.buttonPopover(
     label: String,
     modifiers: ModifierSet? = null,
-    menuModifiers: ModifierSet? = null,
-    id: Id = Id("${label.lowercase().replace(" ", "-")}-menu"),
+    popoverModifiers: ModifierSet? = null,
+    emoji: String = "☰",
+    id: Id = Id("${label.lowercase().replace(" ", "-")}-popover"),
     block: DIV.() -> Unit = {}
 ) {
     val anchor = id.toPositionAnchor()
 
-    popover(id, anchor, modify(menuModifiers, Magic, SlideUp)) {
+    popover(id, anchor, modify(popoverModifiers, Magic, SlideUp)) {
         block()
     }
-    button("☰ $label", modifiers) {
+    button("$emoji $label", modifiers) {
         setAnchor(anchor)
         setPopoverTarget(id)
     }
 }
 
-object ButtonMenu {
+object ButtonPopover {
     val CardMod = modify(BlurBackdrop, PrimaryCardBg, BorderRadius4, Margin1)
 }

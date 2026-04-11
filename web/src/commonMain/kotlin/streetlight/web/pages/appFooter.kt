@@ -12,6 +12,7 @@ import koala.html.row
 import koala.html.textBlock
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
+import streetlight.model.data.ExtraLink
 
 fun FlowContent.appFooter(sourcePath: String? = null) {
     column {
@@ -19,7 +20,7 @@ fun FlowContent.appFooter(sourcePath: String? = null) {
     }
 }
 
-fun DIV.configureAppFooter(sourcePath: String?) {
+fun DIV.configureAppFooter(sourcePath: String?, vararg additional: ExtraLink) {
     val prayer = "May we build a world of faithful giants."
     addModifiers(modify(JustifyContentCenter, AlignItemsCenter, Gap0, MarginBottom16))
     lottie(LottieFile.spinningCircles, modify(Height24))
@@ -34,12 +35,21 @@ fun DIV.configureAppFooter(sourcePath: String?) {
         textBlock("report a bug")
     }
     sourcePath?.let {
-        action(sourceUrlOf(sourcePath), modify(MarginTop4)) {
-            column(modify(Gap0)) {
-                filigree {
-                    icon(SvgFile.Github, modify(Height4))
+        column(modify(Gap0, MarginTop4, AlignItemsCenter)) {
+            action(sourceUrlOf(sourcePath)) {
+                column(modify(Gap0)) {
+                    filigree {
+                        icon(SvgFile.Github, modify(Height4))
+                    }
+                    textBlock("source code for this content")
                 }
-                textBlock("source code for this content", modify(LineHeight1))
+            }
+            additional.takeIf { it.isNotEmpty() }?.let {
+                it.forEach { link ->
+                    action(sourceUrlOf(link.url)) {
+                        textBlock("+ ${link.label}", modify(OpacityHalf))
+                    }
+                }
             }
         }
     }

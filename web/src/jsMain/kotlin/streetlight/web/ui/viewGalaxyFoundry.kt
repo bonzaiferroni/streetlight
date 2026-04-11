@@ -43,11 +43,11 @@ fun ViewContext<Streetlight>.viewGalaxyFoundry() {
     val bulletsMod = modify(OpacityMost)
 
     column(modify(Gap8)) {
-        section(sectionMod) {
+        section {
             filigree {
                 heading1("Galaxy Foundry", modify(Shrinkable))
             }
-            row(modify(AlignItemsCenter, QueryContainer)) {
+            row(modify(AlignItemsCenter)) {
                 column(modify(Flex4, FlexMd2, PaddingLeft3)) {
                     textBlock(introText1)
                     textBlock(introText2)

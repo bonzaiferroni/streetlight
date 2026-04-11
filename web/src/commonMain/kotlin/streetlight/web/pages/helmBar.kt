@@ -6,7 +6,7 @@ import koala.html.*
 import kotlinx.html.FlowContent
 
 fun FlowContent.helmBar() {
-    val cardMod = modify(HelmBarKey.CardClass, BlurBackdrop, PointerEventsAuto, BorderRadius50P, PrimaryCardBg)
+    val cardMod = modify(HelmBarKey.CardClass, BlurBackdrop, PointerEventsAuto, BorderRadius50P, ZenCardBg)
     siteHelm()
     starHelm()
     row(HelmBarKey.StickyBarId, modify(JustifyContentSpaceBetween)) {

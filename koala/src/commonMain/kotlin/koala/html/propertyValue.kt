@@ -25,9 +25,8 @@ fun FlowContent.textProperty(
     modifiers: ModifierSet? = null,
     block: DIV.() -> Unit
 ) {
-    row {
-        addModifiers(modifiers)
-        textBlock("${propertyName}:", modify(OpacityMost, TextAlignRight))
+    row(modify(modifiers, AlignItemsCenter)) {
+        textBlock("${propertyName}:", modify(Dim, TextAlignRight))
         block()
     }
 }

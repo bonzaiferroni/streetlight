@@ -70,7 +70,7 @@ object LottieFile: FileSet<Lottie>() {
     val airplane = addLottie("airplane.json")
     val fox = addLottie("fox.json")
     val cassette = addLottie("cassette.json")
-    val catWalk = addLottie("cat-walk.json")
+    val Wombat = addLottie("wombat.json")
     val cloudSync = addLottie("cloud-sync.json")
     val confused = addLottie("confused.json")
     val cupShuffle = addLottie("cup-shuffle.json")

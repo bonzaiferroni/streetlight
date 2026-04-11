@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
+import kotlinx.html.INPUT
 import kotlinx.html.InputType
 import kotlinx.html.js.input
 
@@ -19,10 +20,12 @@ fun RenderContext.dateInput(
     flow: Flow<LocalDate?>,
     onValueChanged: (LocalDate) -> Unit,
     modifiers: ModifierSet? = null,
+    block: INPUT.() -> Unit = {},
 ) {
     val element = input {
         addModifiers(modifiers)
         type = InputType.date
+        block()
     }
 
     var last: LocalDate? = null
@@ -52,10 +55,12 @@ fun RenderContext.timeInput(
     flow: Flow<LocalTime?>,
     onValueChanged: (LocalTime) -> Unit,
     modifiers: ModifierSet? = null,
+    block: INPUT.() -> Unit = {}
 ) {
     val element = input {
         addModifiers(modifiers)
         type = InputType.time
+        block()
     }
 
     var last: LocalTime? = null

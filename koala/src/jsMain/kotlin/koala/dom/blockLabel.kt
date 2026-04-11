@@ -8,7 +8,6 @@ import koala.html.setAttribute
 import kotlinx.html.DIV
 import kotlinx.html.js.div
 
-@Deprecated("use attribute setter")
 fun DOMContext.blockLabel(
     label: String,
     modifiers: ModifierSet? = null,

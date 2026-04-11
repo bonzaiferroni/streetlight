@@ -26,6 +26,7 @@ class EventEditor(
     val startTimeFlow = editFlow.mapDistinct { it.startTime }
     val endTimeFlow = editFlow.mapDistinct { it.endTime }
     val dateFlow = editFlow.mapDistinct { it.date }
+    val startsAtFlow = editFlow.mapDistinct { it.startsAt }
     val descriptionFlow = stateFlow.mapDistinct { it.event.description ?: "" }
     val titleFlow = stateFlow.mapDistinct { it.event.title }
     val urlFlow = stateFlow.mapDistinct { it.event.link }

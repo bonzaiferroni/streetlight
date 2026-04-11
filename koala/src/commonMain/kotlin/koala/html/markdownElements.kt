@@ -19,9 +19,9 @@ fun FlowContent.headingElement(chunk: String): Boolean {
             when (prefix.length) {
                 5 -> heading5(text)
                 4 -> heading4(text)
-                3 -> heading3(text)
-                2 -> heading2(text)
-                1 -> heading1(text)
+                3 -> filigree { heading3(text) }
+                2 -> filigree { heading2(text) }
+                1 -> filigree { heading1(text) }
                 else -> error("invalid heading: $chunk")
             }
             return true

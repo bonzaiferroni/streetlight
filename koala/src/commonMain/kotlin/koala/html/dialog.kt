@@ -12,12 +12,12 @@ val DialogCss get() = """
 ${DialogKey.Class} {
     position: fixed;
     inset: 0;
-    margin: auto;
 
     border-radius: var(--unit-spacing);
     box-shadow: 0 0 var(--unit-spacing) var(--shadow);
     background-color: var(--primary-bg);
-    padding: var(--unit-spacing);
+    margin: auto var(--unit-spacing);
+    padding: var(--unit-spacing-2) 0;
     color: rgb(var(--ink));
     border: none;
     outline: none;
@@ -35,6 +35,9 @@ ${DialogKey.Class} {
 ${DialogKey.Class}[open]$Reveal {
     opacity: 1;
     transform: translateY(0);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 ${DialogKey.Class}::backdrop {
@@ -46,4 +49,4 @@ ${DialogKey.Class}[open]$Reveal::backdrop {
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
 }
-""".trimIndent()
+"""

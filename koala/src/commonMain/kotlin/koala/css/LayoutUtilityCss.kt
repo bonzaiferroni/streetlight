@@ -5,7 +5,7 @@ val LayoutUtilityCss
         // Gap
         Gap0, Gap1, Gap2, Gap4, Gap8, GapTiny,
         // Flex
-        Flex0, Flex1, Flex2, Flex3, Flex4, FlexBasis25, FlexBasis33, FlexShrink0,
+        Flex0, Flex1, Flex2, Flex3, Flex4, FlexMd1, FlexMd2, FlexColumn, FlexBasis25, FlexBasis33, FlexShrink0,
         RowReverse, QueryRowReverse, NoWrap, WrapFlex, DisplayFlex,
         // Align
         AlignItemsCenter, AlignItemsStretch, AlignItemsStart, AlignItemsEnd,
@@ -16,7 +16,7 @@ val LayoutUtilityCss
         WidthAuto, Width100P, WidthFitContent,
         Width2, Width4, Width5, Width8, Width12, Width16, Width24, Width32, Width64,
         MinWidth0, MinWidth16, MinWidth32, MinWidth36, MinWidth48, MinWidthAuto, MaxWidth25P, MaxWidth50P,
-        MaxWidth5, MaxWidth16, MaxWidth64,
+        MaxWidth5, MaxWidth16, MaxWidth32, MaxWidth48, MaxWidth64,
         // Height
         HeightAuto, Height100P, Height2, Height3, Height4, Height5, Height6, Height8, Height12, Height16, Height24, Height32, Height48,
         MinHeightAuto, MinHeight0, MinHeight4, MinHeight5, MinHeight8, MinHeight16, MinHeight24, MinHeight32, MinHeight48,
@@ -55,6 +55,7 @@ val Flex3 = utilityOf("flex-3", "flex: 3")
 val Flex4 = utilityOf("flex-4", "flex: 4")
 val FlexMd1 = CssUtility("flex-md-1")
 val FlexMd2 = CssUtility("flex-md-2")
+val FlexColumn = CssUtility("column")
 val FlexShrink0 = utilityOf("flex-grow", "flex-shrink: 0")
 
 // Flex Basis
@@ -98,6 +99,8 @@ val MaxWidth25P = utilityOf("max-width-25", "max-width: 25%")
 val MaxWidth50P = utilityOf("max-width-50", "max-width: 50%")
 val MaxWidth5 = utilityOf("max-width-5", "max-width: calc(var(--unit-spacing) * 5)")
 val MaxWidth16 = utilityOf("max-width-16", "max-width: calc(var(--unit-spacing) * 16)")
+val MaxWidth32 = utilityOf("max-width-32", "max-width: calc(var(--unit-spacing) * 32)")
+val MaxWidth48 = utilityOf("max-width-48", "max-width: calc(var(--unit-spacing) * 48)")
 val MaxWidth64 = utilityOf("max-width-64", "max-width: calc(var(--unit-spacing) * 64)")
 
 // Height

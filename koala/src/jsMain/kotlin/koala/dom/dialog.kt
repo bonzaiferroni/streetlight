@@ -1,13 +1,13 @@
 package koala.dom
 
 import koala.css.AlignItemsStretch
-import koala.css.Class
 import koala.css.ModifierSet
 import koala.css.Reveal
 import koala.css.TextAlignCenter
 import koala.css.addModifiers
 import koala.css.modify
 import koala.html.DialogKey
+import koala.html.filigree
 import koala.html.heading3
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -19,6 +19,7 @@ fun RenderContext.dialogBox(
     title: String?,
     stateFlow: Flow<Boolean>? = null,
     modifiers: ModifierSet? = null,
+    onClose: (() -> Unit)? = null,
     block: RenderContext.(() -> Unit) -> Unit
 ): HTMLDialogElement {
 
@@ -27,6 +28,7 @@ fun RenderContext.dialogBox(
             dialog.unmodify(Reveal)
             delay(200)
             dialog.close()
+            onClose?.invoke()
         }
     }
 
@@ -35,7 +37,9 @@ fun RenderContext.dialogBox(
         addModifiers(DialogKey.Class, modifiers)
         column(modify(AlignItemsStretch)) {
             title?.let {
-                heading3(title, modify(TextAlignCenter))
+                filigree {
+                    heading3(title, modify(TextAlignCenter))
+                }
             }
             fun closeImage() {
                 val dialog = dialog ?: return
