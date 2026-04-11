@@ -33,13 +33,15 @@ fun HTML.appBody(
 
 fun FlowContent.appHeader() {
     val height = Height6
-    filigree(modify(height)) {
+    row(modify(height, JustifyContentCenter)) {
+        image(SvgFile.Rays, modify(OpacitySome, ObjectFitFill, Width16))
         action(HomeRoute, modify(DisplayFlex)) {
             row(modify(AlignItemsCenter)) {
                 logo(modify(height))
                 heading2("Streetlight", modify(GrowText, TextShadow))
             }
         }
+        image(SvgFile.Rays, modify(OpacitySome, ObjectFitFill, Width16, FlipX))
     }
 }
 

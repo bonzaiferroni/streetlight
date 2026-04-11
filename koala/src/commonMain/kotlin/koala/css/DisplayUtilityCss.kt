@@ -19,8 +19,10 @@ val DisplayUtilityCss
         OverflowHidden, OverflowWrapAnywhere, OverflowClip, OverflowXAuto,
         // Background
         PrimaryBg, PrimaryCardBg, ZenCardBg, CardBg, BackgroundImage, SolidBg, BlurBackdrop, TransparentBg,
+        // Transform
+        FlipX, FlipY,
         // Misc
-        FadeBottom, Focus, Clickable, PointerEventsAuto, PointerEventsNone, BlurContent
+        FadeBottom, Focus, Clickable, PointerEventsAuto, PointerEventsNone, BlurContent, AspectRatioAuto,
     )
 
 // Display
@@ -81,6 +83,10 @@ val BlurBackdrop = utilityOf(
     "-webkit-backdrop-filter: var(--strong-blur)")
 val TransparentBg = utilityOf("background-transparent", "background-color: transparent")
 
+// Transform
+val FlipX = utilityOf("flip-x", "transform: scaleX(-1)")
+val FlipY = utilityOf("flip-y", "transform: scaleY(-1)")
+
 // Misc
 val FadeBottom = utilityOf(
     "fade-bottom",
@@ -91,3 +97,4 @@ val Clickable = CssUtility("clickable")
 val PointerEventsAuto = utilityOf("pointer-events-auto", "pointer-events: auto")
 val PointerEventsNone = utilityOf("pointer-events-none", "pointer-events: none")
 val BlurContent = utilityOf("blur-content", "filter: var(--strong-blur)")
+val AspectRatioAuto = utilityOf("aspect-ratio-auto", "aspect-ratio: auto")
