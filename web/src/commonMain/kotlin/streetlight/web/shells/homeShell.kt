@@ -13,7 +13,7 @@ import streetlight.web.pages.appFooter
 fun FlowContent.homeShell(content: HomeContent) {
     column(HomeShellKey.ContainerId, modify(Gap8)) {
         column {
-            geoMapMount(null, modify(BorderRadius2, Height48))
+            geoMapMount(null, modify(BorderRadius2, Height48, MoonShadow))
 
             row(modify(JustifyContentSpaceBetween)) {
                 galaxyMenu(content.galaxies, null)
@@ -66,7 +66,7 @@ fun FlowContent.homeShell(content: HomeContent) {
                 heading2("Lit Events", SectionHeadingMod)
             }
 
-            card(modify(Height32)) {
+            card(modify(Height32, MoonShadow)) {
                 swapBlock(HomeShellKey.LightSwapId, modify(Magic)) {
                     column(modify(JustifyContentCenter, Dim, Gap0)) {
                         setId(HomeShellKey.LightInfoId)
@@ -98,4 +98,4 @@ object HomeShellKey {
     const val SOURCE = "web/src/commonMain/kotlin/streetlight/web/shells/homeShell.kt"
 }
 
-val SectionHeadingMod = modify(LineHeight1, WhiteSpaceNoWrap, TextAlignCenter, TextShadow)
+val SectionHeadingMod = modify(LineHeight1, WhiteSpaceNoWrap, TextAlignCenter, MoonShadowText)

@@ -75,7 +75,7 @@ val SwitchCss get() = """
     border: none;
     border-radius: 2rem;
     background: var(--gray-bg);
-    color: var(--ink);
+    color: white;
     font-size: var(--btn-font-size);
     font-weight: var(--btn-font-weight);
     line-height: 1rem;
@@ -100,7 +100,7 @@ val SwitchCss get() = """
 .switch[data-is-on="true"] .switch__pill {
     background: rgba(var(--primary), .6);
     transform: translate(1rem, -50%);
-    box-shadow: 0 0 .8rem var(--primary-button);
+    box-shadow: 0 0 .8rem var(--primary-button), var(--btn-outline);
 }
 
 /* optional: keyboard focus.svg ring if you add tabindex */

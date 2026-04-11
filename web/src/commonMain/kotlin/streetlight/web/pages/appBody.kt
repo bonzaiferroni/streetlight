@@ -34,14 +34,14 @@ fun HTML.appBody(
 fun FlowContent.appHeader() {
     val height = Height6
     row(modify(height, JustifyContentCenter)) {
-        image(SvgFile.Rays, modify(OpacitySome, ObjectFitFill, Width16))
+        icon(SvgFile.Rays, modify(OpacitySome, IconKey.Stretch, Width16))
         action(HomeRoute, modify(DisplayFlex)) {
             row(modify(AlignItemsCenter)) {
                 logo(modify(height))
                 heading2("Streetlight", modify(GrowText, TextShadow))
             }
         }
-        image(SvgFile.Rays, modify(OpacitySome, ObjectFitFill, Width16, FlipX))
+        icon(SvgFile.Rays, modify(OpacitySome, IconKey.Stretch, Width16, FlipX))
     }
 }
 

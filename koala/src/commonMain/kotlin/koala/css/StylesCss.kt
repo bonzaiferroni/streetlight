@@ -7,30 +7,39 @@ const val BODY_WIDTH_PX = 960
 // language="CSS"
 val StylesCss get() = """
 :root {
-    ${KoalaVar.Paper}: 9, 13, 13;
-    ${KoalaVar.PaperBg}: rgb(var(${KoalaVar.Paper}));
-    ${KoalaVar.BodyBg}: color-mix(in srgb, var(${KoalaVar.PaperBg}) 95%, white);
+    --paper: 18, 26, 26;
+    --ink: 238, 230, 230;
+    --ink-fg: rgb(var(--ink));
+    --paper-bg: rgb(var(--paper));
+    
+    /* color-mix(in srgb, var(--paper-bg) 95%, var(--ink-fg)); */
+    --body-bg: var(--paper-bg);   
     --card-bg: rgba(var(--paper), .4);
     --zen-card-bg: rgba(var(--paper), .2);
     --tabs-bg: rgba(var(--paper), .5);
-    --ink: 240, 246, 246;
-    --white-fg: rgb(var(--ink));
-    --white-dim: rgba(var(--ink), .8);
-    --white-disabled: color-mix(in srgb, var(--white-fg) 50%, black);
+    --ink-dim: rgba(var(--ink), .8);
+    --ink-disabled: color-mix(in srgb, var(--ink-fg) 50%, var(--paper-bg));
     --weak-outline: rgba(var(--ink), .2);
+    
     --gray: 60, 62, 64;
     --gray-fg: rgb(var(--gray));
-    --gray-bg: color-mix(in srgb, var(--gray-fg) 50%, black);
-    --void: 34, 41, 41;
-    --void-bg: rgb(var(--void));
-    --void-border: color-mix(in srgb, var(--void-bg) 90%, white);
-    --shadow: rgba(0, 0, 0, 0.35);
+    --gray-bg: color-mix(in srgb, var(--gray-fg) 50%, var(--paper-bg));
+    
+    --void-bg: color-mix(in srgb, var(--paper-bg) 89%, var(--ink-fg));
+    --void-border: color-mix(in srgb, var(--void-bg) 90%, var(--ink-fg));
+    
+    --ink-shadow: 0 1px 2px rgba(var(--paper), 0.8), 0 0 6px rgba(var(--paper), 0.6);
+    --moon-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.05), 0 0 12px 12px rgba(0, 0, 0, 0.05);
+    --moon-shadow-text: 0 0 12px rgba(0, 0, 0, 0.25);
+    --btn-text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8), 0 0 6px rgba(0, 0, 0, 0.6);
+    --input-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 0 6px rgba(0, 0, 0, 0.3);
+    
     --primary: 45, 199, 255; /* 70, 117, 153; */
     --primary-fg: rgb(var(--primary));
     --primary-button: rgba(var(--primary), .5);
     --primary-bg: color-mix(in srgb, var(--primary-fg) 15%, black);
     --primary-card-bg: color-mix(in srgb, rgba(var(--primary), .2) 60%, black);
-    --secondary-button: var(--gray-fg);
+    --secondary-button: var(--gray-bg);
     --accent-bg: 209, 43, 181;
     --accent: 255, 53, 221;
     --accent-button: rgba(var(--accent), .5);
@@ -69,7 +78,7 @@ body {
     font-size: 1rem;
     line-height: 1.5;
     background-color: var(--body-bg);
-    color: var(--white-fg);
+    color: var(--ink-fg);
     -webkit-font-smoothing: antialiased;
 }
 
@@ -80,9 +89,9 @@ body::before {
     pointer-events: none;
     z-index: -1;
     background:
-            radial-gradient(circle at 18% 22%, rgba(var(--light-1), 0.4) 0%, transparent 50%),
-            radial-gradient(circle at 82% 20%, rgba(var(--light-2), 0.4) 0%, transparent 48%),
-            radial-gradient(circle at 50% 65%, rgba(var(--light-3), 0.3) 0%, transparent 65%);
+            radial-gradient(circle at 18% 22%, rgba(var(--light-1), 0.5) 0%, transparent 50%),
+            radial-gradient(circle at 82% 20%, rgba(var(--light-2), 0.5) 0%, transparent 48%),
+            radial-gradient(circle at 50% 65%, rgba(var(--light-3), 0.4) 0%, transparent 65%);
     filter: hue-rotate(0deg);
     animation: hueSpin 30s linear infinite;
     will-change: filter;
@@ -98,20 +107,25 @@ textarea {
     outline: none;
     padding: var(--unit-spacing);
     font-size: 1rem;
-    background-color: rgb(var(--void));
+    background-color: var(--void-bg);
     color: rgb(var(--ink));
     line-height: 1.5rem;
 
     border: 1px solid var(--void-border);
     border-radius: var(--unit-spacing);
-    box-shadow: 0 0 var(--unit-spacing) var(--shadow);
+    box-shadow: var(--input-shadow);
+}
+
+input, button, textarea, select {
+    font: inherit;
+    color: white;
 }
 
 input[type="checkbox"] {
     appearance: none;
     -webkit-appearance: none;
 
-    background-color: rgb(var(--void));
+    background-color: var(--void-bg);
     width: 1.5rem;
     height: 1.5rem;
     display: inline-grid;
@@ -119,7 +133,7 @@ input[type="checkbox"] {
 
     border: 1px solid var(--void-border);
     border-radius: 0.25rem;
-    box-shadow: 0 0 0.25rem var(--shadow);
+    box-shadow: var(--input-shadow);
 }
 
 input[type="checkbox"]::before {
@@ -141,12 +155,12 @@ select {
     border: none;
     padding: var(--unit-spacing);
     font-size: 1rem;
-    background-color: rgb(var(--void));
+    background-color: var(--void-bg);
     color: rgb(var(--ink));
 
     outline: 1px solid var(--void-border);
     border-radius: var(--unit-spacing);
-    box-shadow: 0 0 var(--unit-spacing) var(--shadow);
+    box-shadow: var(--btn-text-shadow);
 }
 
 @keyframes hueSpin {

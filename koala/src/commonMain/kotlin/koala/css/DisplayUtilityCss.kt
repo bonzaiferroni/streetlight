@@ -21,6 +21,8 @@ val DisplayUtilityCss
         PrimaryBg, PrimaryCardBg, ZenCardBg, CardBg, BackgroundImage, SolidBg, BlurBackdrop, TransparentBg,
         // Transform
         FlipX, FlipY,
+        // Shadow
+        MoonShadow, MoonShadowText,
         // Misc
         FadeBottom, Focus, Clickable, PointerEventsAuto, PointerEventsNone, BlurContent, AspectRatioAuto,
     )
@@ -86,6 +88,10 @@ val TransparentBg = utilityOf("background-transparent", "background-color: trans
 // Transform
 val FlipX = utilityOf("flip-x", "transform: scaleX(-1)")
 val FlipY = utilityOf("flip-y", "transform: scaleY(-1)")
+
+// Shadow
+val MoonShadow = utilityOf("moon-shadow", "box-shadow: var(--moon-shadow)")
+val MoonShadowText = utilityOf("moon-shadow-text", "text-shadow: var(--moon-shadow-text)")
 
 // Misc
 val FadeBottom = utilityOf(

@@ -7,8 +7,13 @@
     --heading-3-weight: 300;
     --heading-4-size: 1.25rem;
     --heading-4-weight: 400;
-    --heading-5-size: 1rem;
+    --heading-5-size: 1.1rem;
     --heading-5-weight: 500;
+    --paragraph-size: 1.1rem;
+}
+
+p {
+    font-size: var(--paragraph-size);
 }
 
 h1 {

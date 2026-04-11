@@ -38,3 +38,10 @@ object KoalaVar {
     val PaperBg = Property<Color>("paper-bg")
     val BodyBg = Property<Color>("body-bg")
 }
+
+// td: pull values from theme. Idea:
+//    ${KoalaVar.Paper}: 9, 13, 13;
+//    --ink: 240, 246, 246;
+//    ${KoalaVar.PaperBg}: rgb(var(${KoalaVar.Paper}));
+//    --paper-ink: color-mix(in srgb, var(${KoalaVar.PaperBg}) 95%, rgb(var(--ink)));
+//    ${KoalaVar.BodyBg}: color-mix(in srgb, var(${KoalaVar.PaperBg}) 95%, rgb(var(--ink)));

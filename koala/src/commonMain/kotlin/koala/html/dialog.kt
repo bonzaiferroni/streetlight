@@ -14,7 +14,7 @@ ${DialogKey.Class} {
     inset: 0;
 
     border-radius: var(--unit-spacing);
-    box-shadow: 0 0 var(--unit-spacing) var(--shadow);
+    box-shadow: var(--btn-text-shadow);
     background-color: var(--primary-bg);
     margin: auto var(--unit-spacing);
     padding: var(--unit-spacing-2) 0;

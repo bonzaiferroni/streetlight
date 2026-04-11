@@ -32,6 +32,7 @@ fun DIV.configureIcon(
 
 object IconKey {
     val Class = Class("icon")
+    val Stretch = Class("icon-stretch")
 }
 
 // language="CSS"
@@ -52,6 +53,11 @@ ${IconKey.Class} {
 
     mask-position: center;
     -webkit-mask-position: center;
+}
+
+${IconKey.Stretch} {
+    mask-size: 100% 100%;   /* or any width/height ye please */
+    mask-repeat: no-repeat;
 }
 
 ${IconKey.Class}.clickable {

@@ -1,5 +1,7 @@
 package streetlight.web.ui
 
+import koala.css.AlignItemsStart
+import koala.css.modify
 import koala.dom.ViewContext
 import koala.dom.column
 import koala.dom.dropMenu
@@ -11,7 +13,7 @@ fun ViewContext<Streetlight>.viewSiteConfig() {
     val app = model
     val config = app.config
 
-    column {
+    column(modify(AlignItemsStart)) {
         switch("show transit", onToggle = config::setShowTransit, bindFlow = config.showTransitFlow)
         dropMenu(config::setTheme, { it.name }, config.themeFlow)
     }

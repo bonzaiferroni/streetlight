@@ -22,10 +22,6 @@ img, picture, video, canvas, svg {
     max-width: 100%;
 }
 
-input, button, textarea, select {
-    font: inherit;
-}
-
 @media (prefers-reduced-motion: no-preference) {
     html {
         interpolate-size: allow-keywords;

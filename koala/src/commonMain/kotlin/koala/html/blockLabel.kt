@@ -20,14 +20,14 @@ ${Attribute.BlockLabel}::after {
     padding: 0.12rem 0.5rem;
 
     background: var(--void-border);
-    color: var(--white-dim);
+    color: var(--ink-dim);
     line-height: 1;
     max-width: 75%;
     white-space: nowrap;
     text-overflow: ellipsis;
 
     border-radius: 0.4rem;
-    box-shadow: 0 0 0.4rem var(--shadow);
+    box-shadow: var(--input-shadow);
 }
 
 ${Attribute.BlockLabel}.start::after {

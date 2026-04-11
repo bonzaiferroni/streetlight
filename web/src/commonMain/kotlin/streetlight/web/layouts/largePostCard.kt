@@ -30,7 +30,7 @@ fun FlowContent.largePostCard(
 ) {
     val imageUrl = images?.medium ?: SiteImage.placeholderLg.url
 
-    card(modify(modifiers, QueryContainer, Padding0, OverflowHidden)) {
+    card(modify(modifiers, QueryContainer, Padding0, OverflowHidden, MoonShadow)) {
         column(modify(QueryContainer, ContainerLgRow, Gap0)) {
 
             // non-grid content
