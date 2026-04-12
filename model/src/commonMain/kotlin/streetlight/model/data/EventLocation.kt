@@ -29,6 +29,8 @@ data class EventLocation(
     val locationImages: ScaledImageArray?,
     val startsAt: Instant,
     val endsAt: Instant?,
+    val updatedAt: Instant,
+    val createdAt: Instant,
 ) {
     val links by lazy {
         buildList {

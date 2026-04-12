@@ -32,7 +32,7 @@ fun ViewContext<Streetlight>.viewGalaxyProfile(content: GalaxyProfileContent) {
     wireLights(
         root = root,
         attribute = StarLightKey.EventLightId,
-        cache = app.cache.event
+        cache = app.cache.eventLights
     )
     wireGalaxyMenu(app, root, content.galaxy)
 

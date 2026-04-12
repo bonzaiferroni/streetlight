@@ -104,6 +104,9 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
     }
 
     object Chat: ApiNode(this, "chat") { }
+    object Omni: ApiNode(this, "omni") {
+        object Log: ApiNode(this, "log")
+    }
 
     object Map: ApiNode(this, "map") {
         object SpiritVision: ApiNode(this, "spirit-vision")

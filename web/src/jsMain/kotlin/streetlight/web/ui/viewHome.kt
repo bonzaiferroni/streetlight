@@ -18,12 +18,12 @@ fun ViewContext<Streetlight>.viewHome() {
     wireLights(
         root = root,
         attribute = StarLightKey.EventLightId,
-        cache = app.cache.event
+        cache = app.cache.eventLights
     )
     wireLights(
         root = root,
         attribute = StarLightKey.GalaxyLightId,
-        cache = app.cache.galaxy,
+        cache = app.cache.galaxyLights,
     )
     wireLitEvents(root)
     wireGalaxyMenu(app, root, null)

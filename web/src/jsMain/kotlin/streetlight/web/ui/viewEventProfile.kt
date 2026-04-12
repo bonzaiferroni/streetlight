@@ -21,7 +21,7 @@ fun ViewContext<Streetlight>.viewEventProfile(event: EventLocation) {
     wireLights(
         root = root,
         attribute = StarLightKey.EventLightId,
-        cache = app.cache.event
+        cache = app.cache.eventLights
     )
     // app.streetmMp.setPosts td: make event marker visible on map
 }

@@ -1,7 +1,6 @@
 package streetlight.web.ui
 
 import koala.dom.*
-import koala.utils.prettyPrint
 import kotlinx.coroutines.launch
 import kotlinx.dom.clear
 import kotlinx.html.dom.append
@@ -22,7 +21,7 @@ fun RenderContext.wireGalaxyMenu(
     val element = result.element
 
     renderScope.launch {
-        app.cache.galaxy.itemsFlow.collect { galaxies ->
+        app.cache.galaxyLights.itemsFlow.collect { galaxies ->
             val galaxies = galaxies.takeIf { it.isNotEmpty() } ?: topGalaxies
             element.clear()
             element.append {

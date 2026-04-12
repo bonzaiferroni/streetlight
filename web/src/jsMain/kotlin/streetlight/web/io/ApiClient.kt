@@ -44,7 +44,7 @@ class ApiClient(private val client: FetchClient) {
     // suspend fun updateUser(user: BasicUserInfo) = client.post(UserApi.Update, user)
     suspend fun checkUsername(username: String) = client.post(UserApi.CheckUsername, username)
     // suspend fun uploadAvatar(blobUrl: Url) = client.uploadBlob(Api.Users.UploadAvatar.path, blobUrl)
-    suspend fun uploadImage(blobUrl: Url) = client.uploadBlob(Api.Users.UploadImage.path, blobUrl)
+    suspend fun uploadImage(blobUrl: Url) = client.uploadBlob(Api.Users.UploadImage, blobUrl)
     suspend fun queryLocation(point: GeoPoint) = client.get(Api.Locations.QueryPoint, point.toQuery())
     suspend fun validateLogin() = client.get(Api.Stars.ValidateLogin)
     suspend fun updateStar(edit: StarEdit) = client.post(Api.Stars.EditStar, edit)
@@ -54,8 +54,9 @@ class ApiClient(private val client: FetchClient) {
     }
 
     // websockets
-    fun connectChat(scope: CoroutineScope) = WebChatSocket(client.connectSocket(Api.Chat.path), scope)
-    fun connectSpiritVision() = client.connectSocket(Api.Map.SpiritVision.path)
+    fun connectChat(scope: CoroutineScope) = WebChatSocket(client.connectSocket(Api.Chat), scope)
+    fun connectSpiritVision() = client.connectSocket(Api.Map.SpiritVision)
+    fun connectOmniLog() = client.connectSocket(Api.Omni.Log)
 
     suspend fun readSongs() = client.get(Api.Songs)
     suspend fun createSong(song: NewSong) = client.post(Api.Songs.Create, song)

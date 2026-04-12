@@ -2,7 +2,6 @@ package streetlight.web.ui
 
 import kabinet.utils.toRelativeDayFormat
 import kabinet.utils.toTimeFormat
-import kampfire.model.medium
 import kampfire.model.small
 import koala.SvgFile
 import koala.css.*
@@ -10,7 +9,6 @@ import koala.dom.*
 import koala.html.fillImage
 import koala.html.heading3
 import koala.model.mapDistinct
-import kotlinx.html.FlowContent
 import org.w3c.dom.HTMLElement
 import streetlight.model.data.EventId
 import streetlight.model.data.EventLocation
@@ -22,7 +20,7 @@ import kotlin.collections.component2
 
 fun ViewContext<Streetlight>.wireLitEvents(root: HTMLElement) {
     val app = model
-    val eventCache = app.cache.event
+    val eventCache = app.cache.eventLights
     val eventsFlow = eventCache.stateFlow.mapDistinct { it.items }
     val swapIdFlow = eventsFlow.mapDistinct {
         when (it.isEmpty()) {

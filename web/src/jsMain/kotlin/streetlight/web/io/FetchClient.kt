@@ -1,5 +1,6 @@
 package streetlight.web.io
 
+import kampfire.api.ApiNode
 import kampfire.api.Endpoint
 import kampfire.api.GetByIdEndpoint
 import kampfire.api.GetByTableIdEndpoint
@@ -96,6 +97,8 @@ class FetchClient(
         return feedType.decode(array)
     }
 
+    fun connectSocket(endpoint: Endpoint<*, *>) = connectSocket(endpoint.path)
+
     fun connectSocket(path: String): WebSocket {
         val protocol = if (window.location.protocol == "https:") "wss:" else "ws:"
         val host = window.location.host
@@ -157,6 +160,8 @@ class FetchClient(
 
         return handleResponse(response)
     }
+
+    suspend fun uploadBlob(endpoint: Endpoint<*, *>, blobUrl: Url) = uploadBlob(endpoint.path, blobUrl)
 
     suspend fun uploadBlob(postUrl: String, blobUrl: Url): Url? {
         val response = window.fetch(blobUrl.value).await()

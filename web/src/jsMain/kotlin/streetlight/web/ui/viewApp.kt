@@ -34,6 +34,8 @@ fun viewApp() {
             queryAndWireStarHelm(app)
         }
 
+        app.omni.connect()
+
         // When content is loaded with a hash tag like https://streetlight.ing/#/g/my-galaxy,
         // the home page content will be initially loaded. The opacity is initially 0 to avoid confusion, this
         // reveals the intended content when the script has rendered it.

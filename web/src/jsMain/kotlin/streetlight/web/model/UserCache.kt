@@ -4,6 +4,7 @@ import koala.model.ItemCache
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import streetlight.model.data.EventId
+import streetlight.model.data.Galaxy
 import streetlight.model.data.GalaxyId
 import streetlight.web.io.ApiClient
 import streetlight.web.ui.StarLightKey
@@ -32,7 +33,7 @@ class UserCache(
 
     // val galaxy = GalaxyCache(scope, config, api)
 
-    val galaxy = LightCache(
+    val galaxyLights = LightCache(
         cacheKey = StarLightKey.GALAXY_LIGHT_CACHE,
         idToString = { it.value },
         stringToId = { GalaxyId(it) },
@@ -43,7 +44,7 @@ class UserCache(
         config = config,
     )
 
-    val event = LightCache(
+    val eventLights = LightCache(
         cacheKey = StarLightKey.EVENT_LIGHT_CACHE,
         idToString = { it.value },
         stringToId = { EventId(it) },
@@ -53,6 +54,8 @@ class UserCache(
         scope = scope,
         config = config,
     )
+
+    val galaxy = ItemCache<Galaxy>()
 
     fun reset() {
         console.log("user signed out, resetting cache")

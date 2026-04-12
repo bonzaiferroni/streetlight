@@ -9,6 +9,7 @@ import streetlight.web.StreetlightScreen
 import streetlight.web.io.ApiClient
 import streetlight.web.io.FetchClient
 import streetlight.web.io.OSMFetchClient
+import streetlight.web.io.OmniLog
 import streetlight.web.io.TransitBrowserClient
 
 interface Streetlight {
@@ -22,6 +23,7 @@ interface Streetlight {
     val chatRoom: ChatRoom
     val cache: UserCache
     val config: SiteConfig
+    val omni: OmniLog
 }
 
 interface ClientContext {
@@ -54,5 +56,6 @@ fun createStreetlight(scope: CoroutineScope): Streetlight {
         override val geoMap = GeoMap(scope)
         override val streetMap = StreetMap(scope, client, cache, geoMap, config)
         override val chatRoom = ChatRoom(scope, client.api)
+        override val omni = OmniLog(scope, client.api)
     } as Streetlight
 }
