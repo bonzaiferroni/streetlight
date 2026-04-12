@@ -5,6 +5,7 @@ import koala.css.*
 import koala.html.*
 import kotlinx.html.FlowContent
 import kotlinx.html.onClick
+import kotlinx.html.script
 import streetlight.web.SiteConfigRoute
 
 fun FlowContent.siteHelm() {
@@ -25,6 +26,9 @@ fun FlowContent.siteHelm() {
                         icon(SvgFile.Settings, HelmBarKey.IconMod)
                         textBlock("Settings")
                     }
+                }
+                button("theme") {
+                    onClick = KoalaFun.ToggleTheme.invocation
                 }
             }
         }

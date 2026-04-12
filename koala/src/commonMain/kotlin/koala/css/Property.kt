@@ -36,10 +36,6 @@ data class UrlValue(val url: Url) {
     override fun toString() = "url('$url')"
 }
 
-data class Rgb(val red: Int, val green: Int, val blue: Int) {
-    override fun toString() = "$red, $green, $blue"
-}
-
 data class PositionAnchor(val identifier: String) {
     override fun toString() = "--$identifier"
 }

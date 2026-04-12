@@ -16,6 +16,8 @@ import kotlinx.css.*
 //}
 
 data class KoalaTheme(
+    val paper: Rgb = Rgb(18, 26, 26),
+    val ink: Rgb = Rgb(238, 230, 230),
     val spacingUnit: LinearDimension = 0.5.rem,
     val bg: Color = rgb(9, 13, 13),
     val fg: Color = rgb(245, 246, 246),
@@ -32,6 +34,8 @@ data class KoalaTheme(
         const val MAGIC_INTERVAL = 222
     }
 }
+
+val Koala = KoalaTheme()
 
 object KoalaVar {
     val Paper = Property<Rgb>("paper")

@@ -4,6 +4,7 @@ import koala.Css
 import koala.Js
 import koala.JsFile
 import koala.SiteFile
+import koala.css.KoalaJs
 import kotlinx.html.*
 
 fun HTML.appHead(
@@ -27,6 +28,11 @@ fun HTML.appHead(
         style {
             unsafe {
                 +styles
+            }
+        }
+        script {
+            unsafe {
+                +KoalaJs
             }
         }
     }

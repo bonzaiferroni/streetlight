@@ -14,8 +14,8 @@ class ThemeReactor(
     config: SiteConfig
 ) {
     val root = document.documentElement as? HTMLElement ?: error("documentElement be null")
-    val initialPaper = window.getComputedStyle(root).getPropertyValue(ThemeProperty.paper.expression)
-    val initialInk = window.getComputedStyle(root).getPropertyValue(ThemeProperty.ink.expression)
+    // val initialPaper = window.getComputedStyle(root).getPropertyValue(ThemeProperty.paper.expression)
+    // val initialInk = window.getComputedStyle(root).getPropertyValue(ThemeProperty.ink.expression)
 
     init {
 
@@ -27,21 +27,21 @@ class ThemeReactor(
     }
 
     private fun setTheme(theme: SiteTheme) {
-
-        when (theme) {
-            SiteTheme.Dark -> {
-                root.style.setProperty(ThemeProperty.paper.expression, initialPaper)
-                root.style.setProperty(ThemeProperty.ink.expression, initialInk)
-                // root.style.setProperty(ThemeProperty.paper.to(ThemeValue.black))
-                // root.style.setProperty(ThemeProperty.ink.to(ThemeValue.white))
-            }
-            SiteTheme.Light -> {
-                root.style.setProperty(ThemeProperty.paper.expression, initialInk)
-                root.style.setProperty(ThemeProperty.ink.expression, initialPaper)
-                // root.style.setProperty(ThemeProperty.paper.to(ThemeValue.white))
-                // root.style.setProperty(ThemeProperty.ink.to(ThemeValue.black))
-            }
-        }
+//
+//        when (theme) {
+//            SiteTheme.Dark -> {
+//                root.style.setProperty(ThemeProperty.paper.expression, initialPaper)
+//                root.style.setProperty(ThemeProperty.ink.expression, initialInk)
+//                // root.style.setProperty(ThemeProperty.paper.to(ThemeValue.black))
+//                // root.style.setProperty(ThemeProperty.ink.to(ThemeValue.white))
+//            }
+//            SiteTheme.Light -> {
+//                root.style.setProperty(ThemeProperty.paper.expression, initialInk)
+//                root.style.setProperty(ThemeProperty.ink.expression, initialPaper)
+//                // root.style.setProperty(ThemeProperty.paper.to(ThemeValue.white))
+//                // root.style.setProperty(ThemeProperty.ink.to(ThemeValue.black))
+//            }
+//        }
     }
 }
 

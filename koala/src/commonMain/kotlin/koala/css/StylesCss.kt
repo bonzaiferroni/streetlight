@@ -1,4 +1,4 @@
-@file:Suppress("CssOverwrittenProperties")
+@file:Suppress("CssOverwrittenProperties", "CssInvalidPseudoSelector")
 
 package koala.css
 
@@ -7,8 +7,8 @@ const val BODY_WIDTH_PX = 960
 // language="CSS"
 val StylesCss get() = """
 :root {
-    --paper: 18, 26, 26;
-    --ink: 238, 230, 230;
+    --paper: ${Koala.paper};
+    --ink: ${Koala.ink};
     --ink-fg: rgb(var(--ink));
     --paper-bg: rgb(var(--paper));
     
@@ -34,15 +34,19 @@ val StylesCss get() = """
     --btn-text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8), 0 0 6px rgba(0, 0, 0, 0.6);
     --input-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 0 6px rgba(0, 0, 0, 0.3);
     
-    --primary: 45, 199, 255; /* 70, 117, 153; */
-    --primary-fg: rgb(var(--primary));
-    --primary-button: rgba(var(--primary), .5);
+    --primary: 58, 158, 200; /* 48, 138, 170; 70, 117, 153; 45, 199, 255*/
+    --primary-button: rgb(var(--primary));
     --primary-bg: color-mix(in srgb, var(--primary-fg) 15%, black);
+    --primary-button-day: color-mix(in srgb, var(--primary-button) 80%, black);
     --primary-card-bg: color-mix(in srgb, rgba(var(--primary), .2) 60%, black);
+    
     --secondary-button: var(--gray-bg);
+    
     --accent-bg: 209, 43, 181;
-    --accent: 255, 53, 221;
-    --accent-button: rgba(var(--accent), .5);
+    --accent: 200, 87, 178; /* 170, 57, 148; 255, 53, 221 */
+    --accent-button: rgb(var(--accent));
+    --accent-button-day: color-mix(in srgb, var(--accent-button) 80%, black);
+    
     --danger: 255, 99, 132;
     --danger-bg: rgb(var(--danger)); /* not evaluated */
     --light-1: 255, 99, 132;
@@ -60,6 +64,11 @@ val StylesCss get() = """
     --breakpoint-vlg: 1024px;
 
     --strong-blur: blur(10px);
+}
+
+:root$DayTheme {
+    --paper: ${Koala.ink};
+    --ink: ${Koala.paper * 2};
 }
 
 
@@ -80,6 +89,9 @@ body {
     background-color: var(--body-bg);
     color: var(--ink-fg);
     -webkit-font-smoothing: antialiased;
+    transition: 
+        background-color var(--magic-interval) var(--magic-easing), 
+        color var(--magic-interval) var(--magic-easing);
 }
 
 body::before {

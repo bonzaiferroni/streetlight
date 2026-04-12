@@ -98,7 +98,7 @@ val SwitchCss get() = """
 
 /* ON state: slide pill to the right, full opacity */
 .switch[data-is-on="true"] .switch__pill {
-    background: rgba(var(--primary), .6);
+    background: var(--primary-button);
     transform: translate(1rem, -50%);
     box-shadow: 0 0 .8rem var(--primary-button), var(--btn-outline);
 }

@@ -28,9 +28,18 @@
     min-width: calc(var(--unit-spacing) * 16);
 }
 
+.day-theme .btn {
+    box-shadow: var(--btn-outline);
+    background: var(--primary-button-day);
+}
+
 .btn.accent {
     box-shadow: 0 0 .8rem var(--accent-button), var(--btn-outline);
-    background: var(--accent-button);
+    background: var(--accent-button-day);
+}
+
+.day-theme .btn.accent {
+    box-shadow: var(--btn-outline);
 }
 
 .btn.secondary {

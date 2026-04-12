@@ -23,6 +23,8 @@ val DisplayUtilityCss
         FlipX, FlipY,
         // Shadow
         MoonShadow, MoonShadowText,
+        // Theme
+        DayTheme,
         // Misc
         FadeBottom, Focus, Clickable, PointerEventsAuto, PointerEventsNone, BlurContent, AspectRatioAuto,
     )
@@ -92,6 +94,9 @@ val FlipY = utilityOf("flip-y", "transform: scaleY(-1)")
 // Shadow
 val MoonShadow = utilityOf("moon-shadow", "box-shadow: var(--moon-shadow)")
 val MoonShadowText = utilityOf("moon-shadow-text", "text-shadow: var(--moon-shadow-text)")
+
+// Theme
+val DayTheme = CssUtility("day-theme")
 
 // Misc
 val FadeBottom = utilityOf(
