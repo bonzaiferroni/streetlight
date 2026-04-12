@@ -14,18 +14,24 @@ fun HTML.appBody(
     block: (DIV.() -> Unit)? = null
 ) {
     body {
-        helmBar()
+        column(AppBodyKey.AppOverlayId) {
+            helmBar()
+            spacer(modify(Flex1))
+            row(modify(Height6, Padding1)) {
+                spacer(modify(Flex1))
+                icon(SvgFile.PanelRight)
+            }
+        }
         box(AppBodyKey.ViewportId) {
-            column(AppBodyKey.AppBoxId) {
-                column {
-                    appHeader()
-                    box(AppBodyKey.ContentBoxId) {
-                        box(AppBodyKey.PortalMountId)
-                        box(id = AppBodyKey.ShellBoxId, block = block)
-                    }
+            column(AppBodyKey.LeftPanelId, modify(Flex1))
+            column(AppBodyKey.AppPanelId) {
+                appHeader()
+                box(AppBodyKey.ContentBoxId) {
+                    box(AppBodyKey.PortalMountId)
+                    box(id = AppBodyKey.ShellBoxId, block = block)
                 }
             }
-            box(OverlayId.mount)
+            column(AppBodyKey.RightPanelId, modify(Flex1))
         }
         applyJsFile(JsFile.Web)
     }
@@ -47,31 +53,31 @@ fun FlowContent.appHeader() {
 
 object AppBodyKey {
     val ViewportId = Id("viewport-box")
-    val AppBoxId = Id("app-box")
+    val AppPanelId = Id("app-box")
     val PortalMountId = Id("portal-mount")
     val ShellBoxId = Id("shell-box")
     val ContentBoxId = Id("content-box")
-    val BadgeId = Id("user-badge")
+    val RightPanelId = Id("right-panel")
+    val LeftPanelId = Id("left-panel")
+    val AppOverlayId = Id("app-overlay")
 }
 
 // language="CSS"
 val AppBodyCss = """
 ${AppBodyKey.ViewportId} {
-    position: relative;
     width: 100vw;
     height: 100dvh;
+    display: flex;
+    justify-content: center;
 }
 
-${AppBodyKey.AppBoxId} {
-    position: relative;
+${AppBodyKey.AppPanelId} {
     min-height: 100vh;
-    width: 100%;
     max-width: var(--body-width);
-    margin: 0 auto;
     padding: var(--unit-spacing);
 }
 
-${AppBodyKey.AppBoxId} {
+${AppBodyKey.AppPanelId} {
     width: 100%;
     display: grid;
 }
@@ -86,6 +92,16 @@ ${AppBodyKey.ShellBoxId} {
 ${AppBodyKey.PortalMountId} > *,
 ${AppBodyKey.ShellBoxId} > * {
     width: 100%;
+}
+
+${AppBodyKey.AppOverlayId} {
+    position: fixed;
+    pointer-events: none;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 14;
 }
 
 /* content box */

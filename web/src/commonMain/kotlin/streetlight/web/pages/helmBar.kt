@@ -37,12 +37,6 @@ object HelmBarKey {
 // language="CSS"
 val StickyBarCss get() = """
 ${HelmBarKey.StickyBarId} {
-    position: fixed;
-    pointer-events: none;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 14;
 }
 
 ${HelmBarKey.CardClass} {
