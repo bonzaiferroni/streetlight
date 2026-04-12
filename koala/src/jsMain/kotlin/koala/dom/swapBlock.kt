@@ -48,7 +48,7 @@ private fun List<HTMLElement>.setVisibility(id: Id) {
     forEach { child ->
         when (child.id == id.identifier) {
             true -> child.style.removeProperty(Property.Display)
-            else -> child.style.setProperty(Property.Display.to(Display.none))
+            else -> child.style.setProperty(Property.Display.with(Display.none))
         }
     }
 }

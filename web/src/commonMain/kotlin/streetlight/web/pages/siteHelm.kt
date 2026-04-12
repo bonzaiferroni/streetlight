@@ -27,8 +27,10 @@ fun FlowContent.siteHelm() {
                         textBlock("Settings")
                     }
                 }
-                button("theme") {
-                    onClick = KoalaFun.ToggleTheme.invocation
+                row(rowMod + ThemeToggle) {
+                    onClick = KoalaFun.ToggleTheme.invoke()
+                    icon(SvgFile.Sun, HelmBarKey.IconMod)
+                    textBlock("Theme")
                 }
             }
         }
@@ -44,6 +46,8 @@ object SiteHelmKey {
     val PopoverClass = Class("site-helm-popover")
 }
 
+private val ThemeToggle = Class("theme-toggle")
+
 // language="CSS"
 val SiteHelmCss get() = """
 ${SiteHelmKey.CardClass} {
@@ -55,5 +59,9 @@ ${SiteHelmKey.PopoverClass} {
     top: 0;
     left: 0;
     right: 0;
+}
+
+$DayTheme $ThemeToggle ${IconKey.Class} {
+    ${Property.MaskUrl.with(UrlValue(SvgFile.Moon))} !important;
 }
 """

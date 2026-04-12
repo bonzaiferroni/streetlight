@@ -97,6 +97,7 @@ val MoonShadowText = utilityOf("moon-shadow-text", "text-shadow: var(--moon-shad
 
 // Theme
 val DayTheme = CssUtility("day-theme")
+val Activate = CssUtility("activate")
 
 // Misc
 val FadeBottom = utilityOf(

@@ -7,7 +7,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.serialization.ExperimentalSerializationApi
 import revealContent
-import streetlight.web.model.ThemeReactor
 import streetlight.web.model.createStreetlight
 import streetlight.web.pages.AppBodyKey
 
@@ -15,8 +14,6 @@ import streetlight.web.pages.AppBodyKey
 fun viewApp() {
     val scope = MainScope()
     val app = createStreetlight(scope)
-
-    ThemeReactor(scope, app.config)
 
     scope.launch {
         // signs in user if configured

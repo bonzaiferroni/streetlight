@@ -26,11 +26,11 @@ fun FlowContent.popover(
         anchor?.let {
             setStyle(
                 // position anchor is necessary for the popover api
-                Property.PositionAnchor.to(anchor),
+                Property.PositionAnchor.with(anchor),
                 // anchor id is a variable I use in CSS
-                Property.AnchorId.to(anchor),
+                Property.AnchorId.with(anchor),
                 // container anchor allows you to constrain the popover to a parent
-                Property.ContainerAnchorId.to(anchor.containerPosition()),
+                Property.ContainerAnchorId.with(anchor.containerPosition()),
             )
         }
         setAttribute(Attribute.Popover.to(if (isManual) "manual" else "auto"))
@@ -40,7 +40,7 @@ fun FlowContent.popover(
 
 // Called on the parent element
 fun CommonAttributeGroupFacade.popoverContainer(anchor: PositionAnchor) {
-    setStyle(Property.AnchorName.to(anchor.containerPosition()))
+    setStyle(Property.AnchorName.with(anchor.containerPosition()))
 }
 
 private fun PositionAnchor.containerPosition(): PositionAnchor = PositionAnchor("${this.identifier}-container")
