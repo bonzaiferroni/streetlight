@@ -30,9 +30,12 @@ val StylesCss get() = """
     
     --ink-shadow: 0 1px 2px rgba(var(--paper), 0.8), 0 0 6px rgba(var(--paper), 0.6);
     --moon-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.05), 0 0 12px 12px rgba(0, 0, 0, 0.05);
+    --moon-shadow-inset: 0 0 4px 4px rgba(0, 0, 0, 0.05) inset, 0 0 12px 12px rgba(0, 0, 0, 0.05) inset;
     --moon-shadow-text: 0 0 12px rgba(0, 0, 0, 0.25);
     --btn-text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8), 0 0 6px rgba(0, 0, 0, 0.6);
     --input-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 0 6px rgba(0, 0, 0, 0.3);
+    --neumo-shadow: 6px 6px 12px 0 rgba(0, 0, 0, 0.15), 2px 2px 4px 0 rgba(0, 0, 0, 0.1), 
+        -6px -6px 12px 0 rgba(255, 255, 255, 0.7), -2px -2px 4px 0 rgba(255, 255, 255, 0.5);
     
     --primary: 58, 158, 200; /* 48, 138, 170; 70, 117, 153; 45, 199, 255*/
     --primary-button: rgb(var(--primary));

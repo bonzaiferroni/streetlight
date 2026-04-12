@@ -11,6 +11,7 @@ import koala.css.JustifyContentCenter
 import koala.css.MarginLeft1
 import koala.css.MinWidth16
 import koala.css.ModifierSet
+import koala.css.MoonShadow
 import koala.css.WidthAuto
 import koala.css.WrapFlex
 import koala.css.modify
@@ -28,7 +29,7 @@ import kotlin.time.Instant
 
 object CellContent {
     val RowMod = modify(JustifyContentCenter, WrapFlex, Gap0)
-    val CardMod = modify(AlignItemsCenter, Gap0, BorderRadius0, JustifyContentCenter, MinWidth16)
+    val CardMod = modify(AlignItemsCenter, Gap0, BorderRadius0, JustifyContentCenter, MinWidth16, MoonShadow)
 }
 
 fun FlowContent.cellCard(

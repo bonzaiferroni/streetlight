@@ -33,7 +33,7 @@ fun ViewContext<Streetlight>.wireLitEvents(root: HTMLElement) {
     wireBlock(HomeShellKey.LitEventsId, root, wireOnView = false) {
         flowBlock(eventsFlow) { events ->
             val eventMap = events.groupBy { it.startsAt.toRelativeDayFormat() }
-            row(modify(OverflowXAuto, Height100P)) {
+            row(modify(OverflowXAuto, Height100P, Padding1)) {
                 eventMap.forEach { (day, events) ->
                     column(modify(Gap0, FlexShrink0)) {
                         heading3(day, modify(LineHeight1, Margin1))
@@ -50,7 +50,7 @@ fun ViewContext<Streetlight>.wireLitEvents(root: HTMLElement) {
 }
 
 fun RenderContext.narrowEventCard(event: EventLocation, eventCache: LightCache<EventId, EventLocation>) {
-    card(modify(Width24, BorderRadius1)) {
+    card(modify(Width24, BorderRadius1, MoonShadow)) {
         fillImage(event.images.small, modify(Flex1), fillWidth = false)
         column() {
             column(modify(Gap0)) {

@@ -66,7 +66,7 @@ fun FlowContent.homeShell(content: HomeContent) {
                 heading2("Lit Events", SectionHeadingMod)
             }
 
-            card(modify(Height32, MoonShadow)) {
+            card(modify(Height32, MoonShadow, Padding0)) {
                 swapBlock(HomeShellKey.LightSwapId, modify(Magic)) {
                     column(modify(JustifyContentCenter, Dim, Gap0)) {
                         setId(HomeShellKey.LightInfoId)
