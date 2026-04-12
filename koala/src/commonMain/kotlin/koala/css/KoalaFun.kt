@@ -6,7 +6,7 @@ object KoalaFun {
 
 // language="JS"
 val KoalaJs get() = """
-function ${KoalaFun.ToggleTheme} {
+${KoalaFun.ToggleTheme} {
     document.documentElement.classList.toggle(`${DayTheme.identifier}`);
     const isDay = document.documentElement.classList.contains(`${DayTheme.identifier}`);
     localStorage.setItem('$THEME_KEY', isDay ? 'day' : 'night');

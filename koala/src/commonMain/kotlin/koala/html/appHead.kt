@@ -17,7 +17,7 @@ fun HTML.appHead(
         meta { name = "viewport"; content = "width=device-width, initial-scale=1" }
         // font
 
-        applyFira()
+        linkFira()
 
         link { href = "/www/icon/foxicon.ico"; rel = "icon"}
         block()
@@ -30,11 +30,7 @@ fun HTML.appHead(
                 +styles
             }
         }
-        script {
-            unsafe {
-                +KoalaJs
-            }
-        }
+        scriptUnsafe(KoalaJs)
     }
 }
 
@@ -44,23 +40,23 @@ fun HEAD.applyFiles(files: Collection<SiteFile>) {
 
 fun HEAD.applyFile(file: SiteFile) {
     when (file) {
-        is Js -> applyJsFile(file)
-        is Css -> applyCssFile(file)
+        is Js -> linkScript(file)
+        is Css -> linkCssFile(file)
         else -> error("unsupported file: $file")
     }
 }
 
-fun FlowOrMetaDataOrPhrasingContent.applyJsFile(file: Js) {
+fun FlowOrMetaDataOrPhrasingContent.linkScript(file: Js) {
     script(src = file.url.value) {
         this.defer = file.isDeferred
     }
 }
 
-fun HEAD.applyCssFile(file: Css) {
+fun HEAD.linkCssFile(file: Css) {
     link { rel = "stylesheet"; href = file.url.value }
 }
 
-fun HEAD.applyFira() {
+fun HEAD.linkFira() {
     link(rel = "preconnect", href = "https://fonts.googleapis.com")
     link {
         rel = "preconnect"

@@ -14,16 +14,9 @@ fun HTML.appBody(
     block: (DIV.() -> Unit)? = null
 ) {
     body {
-        column(AppBodyKey.AppOverlayId) {
-            helmBar()
-            spacer(modify(Flex1))
-            row(modify(Height6, Padding1)) {
-                spacer(modify(Flex1))
-                icon(SvgFile.PanelRight)
-            }
-        }
-        box(AppBodyKey.ViewportId) {
-            column(AppBodyKey.LeftPanelId, modify(Flex1))
+        appOverlay()
+        div(AppBodyKey.ViewportId) {
+            div(AppBodyKey.SpacerLeftId)
             column(AppBodyKey.AppPanelId) {
                 appHeader()
                 box(AppBodyKey.ContentBoxId) {
@@ -31,23 +24,17 @@ fun HTML.appBody(
                     box(id = AppBodyKey.ShellBoxId, block = block)
                 }
             }
-            column(AppBodyKey.RightPanelId, modify(Flex1))
-        }
-        applyJsFile(JsFile.Web)
-    }
-}
-
-fun FlowContent.appHeader() {
-    val height = Height6
-    row(modify(height, JustifyContentCenter)) {
-        icon(SvgFile.Rays, modify(OpacitySome, IconKey.Stretch, Width16))
-        action(HomeRoute, modify(DisplayFlex)) {
-            row(modify(AlignItemsCenter)) {
-                logo(modify(height))
-                heading2("Streetlight", modify(GrowText, TextShadow))
+            div(AppBodyKey.SpacerRightId) {
+                column {
+                    spacer(modify(AppHeaderKey.Height))
+                    column(AppBodyKey.PanelRightId) {
+                        textBlock("yer panel")
+                    }
+                    spacer(modify(AppHeaderKey.Height))
+                }
             }
         }
-        icon(SvgFile.Rays, modify(OpacitySome, IconKey.Stretch, Width16, FlipX))
+        linkScript(JsFile.Web)
     }
 }
 
@@ -57,9 +44,10 @@ object AppBodyKey {
     val PortalMountId = Id("portal-mount")
     val ShellBoxId = Id("shell-box")
     val ContentBoxId = Id("content-box")
-    val RightPanelId = Id("right-panel")
-    val LeftPanelId = Id("left-panel")
-    val AppOverlayId = Id("app-overlay")
+    val SpacerLeftId = Id("spacer-left")
+    val SpacerRightId = Id("spacer-right")
+    val PanelLeftId = Id("panel-left")
+    val PanelRightId = Id("panel-right")
 }
 
 // language="CSS"
@@ -72,7 +60,7 @@ ${AppBodyKey.ViewportId} {
 }
 
 ${AppBodyKey.AppPanelId} {
-    min-height: 100vh;
+    min-height: 100dvh;
     max-width: var(--body-width);
     padding: var(--unit-spacing);
 }
@@ -94,14 +82,22 @@ ${AppBodyKey.ShellBoxId} > * {
     width: 100%;
 }
 
-${AppBodyKey.AppOverlayId} {
+${AppBodyKey.SpacerLeftId},
+${AppBodyKey.SpacerRightId} {
+    display: none;
+}
+
+${AppBodyKey.SpacerLeftId}$Reveal,
+${AppBodyKey.SpacerRightId}$Reveal {
+    display: block;
+    width: 300px;
+}
+
+${AppBodyKey.SpacerLeftId} > *,
+${AppBodyKey.SpacerRightId} > * {
     position: fixed;
-    pointer-events: none;
     top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 14;
+    width: inherit;
 }
 
 /* content box */
@@ -114,3 +110,4 @@ ${AppBodyKey.AppOverlayId} {
     opacity: 1;
 }
 """
+
