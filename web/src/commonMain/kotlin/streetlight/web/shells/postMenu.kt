@@ -10,8 +10,8 @@ import streetlight.web.LocationScoutRoute
 fun FlowContent.postMenu(galaxy: Galaxy) {
     buttonPopover("Create Post", modify(Accent)) {
         card(ButtonPopover.CardMod) {
-            btn("Post Event", EventScoutRoute(galaxy.slug), modify(Accent))
-            btn("Post Location", LocationScoutRoute(galaxy.slug), modify(Accent))
+            btn("Post Event", EventScoutRoute(galaxy.slug))
+            btn("Post Location", LocationScoutRoute(galaxy.slug))
         }
     }
 }

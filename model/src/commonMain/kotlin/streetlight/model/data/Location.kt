@@ -15,7 +15,7 @@ data class Location(
     val name: String,
     val description: String?,
     val address: String?,
-    val city: String?,
+    val city: String,
     // td: addressNumber
     // td: street
     // td: unit/suite

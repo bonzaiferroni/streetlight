@@ -12,13 +12,15 @@ interface OmniRecord {
 }
 
 @Serializable
-data class EventCreated(
+data class EventPosted(
     val eventId: EventId,
+    val galaxyId: GalaxyId,
     val title: String,
+    val galaxy: String,
     val username: String,
     override val recordAt: Instant
 ): OmniMessage, OmniRecord {
-    override val text get() = "$username shared an event: $title"
+    override val text get() = "$username posted an event to $galaxy: $title"
 }
 
 @Serializable

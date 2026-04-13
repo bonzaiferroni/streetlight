@@ -1,7 +1,9 @@
 package streetlight.web.ui
 
+import kampfire.model.small
 import koala.css.*
 import koala.dom.*
+import koala.html.btn
 import koala.html.heading4
 import koala.html.centeredHeading
 import koala.model.mapDistinct
@@ -11,6 +13,7 @@ import streetlight.model.data.Galaxy
 import streetlight.model.data.Location
 import streetlight.model.data.LocationEdit
 import streetlight.web.EventScoutRoute
+import streetlight.web.GalaxySlugRoute
 import streetlight.web.model.EventScout
 import streetlight.web.model.Streetlight
 
@@ -67,6 +70,7 @@ fun ViewContext<EventScout>.reviewEventPanel(event: Event, galaxy: Galaxy) {
             messageBox(model.messageFlow)
             row {
                 button("start over", modify(Secondary), onClick = model::reset)
+                btn("back to ${galaxy.name}", GalaxySlugRoute(galaxy.slug), galaxy.images.small)
                 button("post another event at this location", onClick = model::resetEvent)
             }
 

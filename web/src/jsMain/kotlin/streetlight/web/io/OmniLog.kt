@@ -3,8 +3,6 @@ package streetlight.web.io
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import streetlight.model.data.EventCreated
-import streetlight.model.data.EventEdited
 import streetlight.model.data.OmniMessage
 import streetlight.model.data.OmniRecord
 import streetlight.model.data.OmniStatus
