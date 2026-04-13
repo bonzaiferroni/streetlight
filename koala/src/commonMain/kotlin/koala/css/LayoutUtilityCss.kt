@@ -18,7 +18,7 @@ val LayoutUtilityCss
         MinWidth0, MinWidth16, MinWidth32, MinWidth36, MinWidth48, MinWidthAuto, MaxWidth25P, MaxWidth50P,
         MaxWidth5, MaxWidth16, MaxWidth32, MaxWidth48, MaxWidth64,
         // Height
-        HeightAuto, Height100P, Height2, Height3, Height4, Height5, Height6, Height8, Height12, Height16, Height24, Height32, Height48,
+        HeightAuto, Height100P, Height2, Height3, Height4, Height5, Height6, Height7, Height8, Height12, Height16, Height24, Height32, Height48,
         MinHeightAuto, MinHeight0, MinHeight4, MinHeight5, MinHeight8, MinHeight16, MinHeight24, MinHeight32, MinHeight48,
         MaxHeight5, MaxHeight8, MaxHeight16, MaxHeight24, MaxHeight32, MaxHeight64,
         // Size
@@ -28,7 +28,8 @@ val LayoutUtilityCss
         // Text
         TextAlignCenter, TextAlignRight,
         // Margin
-        MarginAuto, Margin1, Margin2, MarginTop1, MarginTop2, MarginTop4, MarginTop8, MarginLeft1, MarginBottom16,
+        MarginAuto, Margin1, Margin2, MarginTop1, MarginTop2, MarginTop4, MarginTop8,
+        MarginLeft1, MarginRight1, MarginBottom16,
         MarginX1, MarginX2, MarginX4,
         // Padding
         Padding0, Padding1, Padding2, Padding4, PaddingTiny, PaddingLeft3, PaddingRight3,
@@ -111,6 +112,7 @@ val Height3 = utilityOf("height-3", "height: calc(var(--unit-spacing) * 3)")
 val Height4 = utilityOf("height-4", "height: calc(var(--unit-spacing) * 4)")
 val Height5 = utilityOf("height-5", "height: calc(var(--unit-spacing) * 5)")
 val Height6 = utilityOf("height-6", "height: calc(var(--unit-spacing) * 6)")
+val Height7 = utilityOf("height-7", "height: calc(var(--unit-spacing) * 7)")
 val Height8 = utilityOf("height-8", "height: calc(var(--unit-spacing) * 8)")
 val Height12 = utilityOf("height-12", "height: calc(var(--unit-spacing) * 12)")
 val Height16 = utilityOf("height-16", "height: calc(var(--unit-spacing) * 16)")
@@ -162,6 +164,7 @@ val MarginTop2 = utilityOf("margin-top-2", "margin-top: calc(var(--unit-spacing)
 val MarginTop4 = utilityOf("margin-top-4", "margin-top: calc(var(--unit-spacing) * 4)")
 val MarginTop8 = utilityOf("margin-top-8", "margin-top: calc(var(--unit-spacing) * 8)")
 val MarginLeft1 = utilityOf("margin-left-1", "margin-left: var(--unit-spacing)")
+val MarginRight1 = utilityOf("margin-right-1", "margin-right: var(--unit-spacing)")
 val MarginBottom16 = utilityOf("margin-bottom-16", "margin-bottom: calc(var(--unit-spacing) * 16)")
 val MarginX1 = utilityOf(
     "margin-x-1",

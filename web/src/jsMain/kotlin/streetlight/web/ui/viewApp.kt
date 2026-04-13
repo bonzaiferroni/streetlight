@@ -32,6 +32,8 @@ fun viewApp() {
             wireBadge(app)
             // shows content in user menu
             queryAndWireStarHelm(app)
+
+            wireRightPanel(app)
         }
 
         app.omni.connect()

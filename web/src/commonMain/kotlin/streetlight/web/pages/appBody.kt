@@ -17,7 +17,7 @@ fun HTML.appBody(
         appOverlay()
         div(AppBodyKey.ViewportId) {
             div(AppBodyKey.SpacerLeftId)
-            column(AppBodyKey.AppPanelId) {
+            column(AppBodyKey.AppPanelId, modify(Flex1)) {
                 appHeader()
                 box(AppBodyKey.ContentBoxId) {
                     box(AppBodyKey.PortalMountId)
@@ -25,15 +25,15 @@ fun HTML.appBody(
                 }
             }
             div(AppBodyKey.SpacerRightId) {
-                column {
-                    spacer(modify(AppHeaderKey.Height))
-                    column(AppBodyKey.PanelRightId) {
-                        textBlock("yer panel")
-                    }
-                    spacer(modify(AppHeaderKey.Height))
+                column(modify(Height100P, Gap0)) {
+                    spacer(modify(Height8))
+                    column(AppBodyKey.PanelRightId, modify(Flex1, MarginRight1))
+                    spacer(modify(Height8))
                 }
             }
         }
+
+        scriptUnsafe(AppOverlayJs)
         linkScript(JsFile.Web)
     }
 }
@@ -51,7 +51,7 @@ object AppBodyKey {
 }
 
 // language="CSS"
-val AppBodyCss = """
+val AppBodyCss get() = """
 ${AppBodyKey.ViewportId} {
     width: 100vw;
     height: 100dvh;
@@ -66,7 +66,6 @@ ${AppBodyKey.AppPanelId} {
 }
 
 ${AppBodyKey.AppPanelId} {
-    width: 100%;
     display: grid;
 }
 
@@ -90,7 +89,7 @@ ${AppBodyKey.SpacerRightId} {
 ${AppBodyKey.SpacerLeftId}$Reveal,
 ${AppBodyKey.SpacerRightId}$Reveal {
     display: block;
-    width: 300px;
+    width: ${SIDE_PANEL_WIDTH_PX}px;
 }
 
 ${AppBodyKey.SpacerLeftId} > *,
@@ -101,13 +100,14 @@ ${AppBodyKey.SpacerRightId} > * {
 }
 
 /* content box */
-#content-box {
+${AppBodyKey.ContentBoxId} {
     opacity: 0;
     transition: opacity var(--magic-interval) var(--magic-easing);
 }
 
-#content-box.reveal {
+${AppBodyKey.ContentBoxId}$Reveal {
     opacity: 1;
 }
 """
 
+const val RIGHT_PANEL_KEY = "streetlight.right-panel"

@@ -13,7 +13,6 @@ import streetlight.model.data.LocationEdit
 import streetlight.web.EventScoutRoute
 import streetlight.web.model.EventScout
 import streetlight.web.model.Streetlight
-import streetlight.web.pages.appFooter
 
 fun RenderContext.viewEventScout(app: Streetlight, galaxy: Galaxy) {
     val model = EventScout(app, renderScope, galaxy)
@@ -44,7 +43,7 @@ fun RenderContext.viewEventScout(app: Streetlight, galaxy: Galaxy) {
             }
         }
 
-        appFooter()
+        appFooter("web/src/jsMain/kotlin/streetlight/web/ui/viewEventScout.kt")
     }
 }
 

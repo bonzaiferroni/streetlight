@@ -70,7 +70,7 @@ fun FlowContent.largePostCard(
             }
 
             // grid content
-            row(modify(Flex1, ContainerLgColumn, MinHeight8, FlexItems1, GapTiny, TextAlignCenter, WrapFlex)) {
+            row(modify(Flex1, ContainerLgColumn, MinHeight8, FlexItems1, GapTiny, TextAlignCenter, WrapFlex, MoonShadow)) {
                 cells.forEach {
                     val cell = it ?: return@forEach
                     cellCard {

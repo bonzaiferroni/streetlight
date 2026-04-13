@@ -6,6 +6,7 @@ import kotlinx.coroutines.launch
 import streetlight.model.data.EventCreated
 import streetlight.model.data.EventEdited
 import streetlight.model.data.OmniMessage
+import streetlight.model.data.OmniRecord
 import streetlight.model.data.OmniStatus
 
 class OmniLog(
@@ -17,6 +18,8 @@ class OmniLog(
     private val state = storeOf(OmniLogState())
     val stateFlow = state.flow
     val stateNow get() = state.now
+
+    private val records = mutableListOf<OmniRecord>()
 
     init {
         scope.launch {
@@ -31,17 +34,27 @@ class OmniLog(
 
     private fun receiveItem(message: OmniMessage) {
         when (message) {
-            is EventCreated -> TODO()
-            is EventEdited -> TODO()
             is OmniStatus -> {
                 state.set { it.copy(starCount = message.starCount) }
-                console.log("starCount: ${message.starCount}")
+            }
+            is OmniRecord -> {
+                receiveRecord(message)
             }
         }
     }
 
+    private fun receiveRecord(record: OmniRecord) {
+        records.add(record)
+        if (records.size > MAX_RECORDS) {
+            records.removeAt(0)
+        }
+        state.set { it.copy(records = records.toList()) }
+    }
 }
 
 data class OmniLogState(
     val starCount: Int = 0,
+    val records: List<OmniRecord> = emptyList()
 )
+
+private const val MAX_RECORDS = 100

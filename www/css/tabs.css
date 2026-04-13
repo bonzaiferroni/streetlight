@@ -16,7 +16,6 @@
     transition: background-color 0.2s ease;
     text-align: center;
     user-select: none;
-    text-shadow: var(--btn-text-shadow);
 }
 
 .tabs-button.is-active {

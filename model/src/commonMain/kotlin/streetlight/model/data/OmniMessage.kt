@@ -8,6 +8,7 @@ sealed interface OmniMessage
 
 interface OmniRecord {
     val recordAt: Instant
+    val text: String
 }
 
 @Serializable
@@ -16,7 +17,9 @@ data class EventCreated(
     val title: String,
     val username: String,
     override val recordAt: Instant
-): OmniMessage, OmniRecord
+): OmniMessage, OmniRecord {
+    override val text get() = "$username shared an event: $title"
+}
 
 @Serializable
 data class EventEdited(
@@ -25,7 +28,9 @@ data class EventEdited(
     val username: String,
     // td: add edit note
     override val recordAt: Instant
-): OmniMessage, OmniRecord
+): OmniMessage, OmniRecord {
+    override val text get() = "$username edited an event: $title"
+}
 
 @Serializable
 data class OmniStatus(val starCount: Int): OmniMessage

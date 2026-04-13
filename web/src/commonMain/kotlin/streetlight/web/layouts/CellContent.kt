@@ -29,7 +29,7 @@ import kotlin.time.Instant
 
 object CellContent {
     val RowMod = modify(JustifyContentCenter, WrapFlex, Gap0)
-    val CardMod = modify(AlignItemsCenter, Gap0, BorderRadius0, JustifyContentCenter, MinWidth16, MoonShadow)
+    val CardMod = modify(AlignItemsCenter, Gap0, BorderRadius0, JustifyContentCenter, MinWidth16)
 }
 
 fun FlowContent.cellCard(

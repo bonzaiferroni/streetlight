@@ -11,7 +11,7 @@ import streetlight.web.SiteConfigRoute
 fun FlowContent.siteHelm() {
     val closePopover = InlineJs.closePopover(SiteHelmKey.Id)
     popover(SiteHelmKey.Id, SiteHelmKey.PositionAnchor, modify(SiteHelmKey.PopoverClass, Magic, SlideRight)) {
-        card(modify(SiteHelmKey.CardClass, HeavyCardBg, BlurBackdrop)) {
+        card(modify(SiteHelmKey.CardClass, HeavyCardBg, BlurBackdrop, PointerEventsAuto)) {
             column(modify(PaddingRight3)) {
                 val rowMod = modify(AlignItemsCenter)
                 row(modify(AlignItemsCenter)) {

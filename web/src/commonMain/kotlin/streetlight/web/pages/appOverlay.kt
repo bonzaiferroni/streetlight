@@ -12,26 +12,33 @@ fun FlowContent.appOverlay() {
     column(AppOverlayKey.AppOverlayId) {
         helmBar()
         spacer(modify(Flex1))
-        row(modify(Height6, Padding1)) {
+        row(modify(Height8, Padding1)) {
             spacer(modify(Flex1))
-            icon(SvgFile.PanelRight, modify(PointerEventsAuto)) {
-                onClick = AppOverlayKey.TogglePanel.invoke(
-                    AppBodyKey.SpacerRightId.argument,
-//                    AppOverlayKey.PanelRightId.argument
-                )
+            icon(SvgFile.PanelRight, modify(PointerEventsAuto, Dim)) {
+                onClick = AppOverlayKey.TogglePanel.invoke(AppBodyKey.SpacerRightId.arg,)
             }
         }
     }
-
-    scriptUnsafe(AppOverlayJs)
 }
 
 // language="JS"
 val AppOverlayJs get() = """
 
 ${AppOverlayKey.TogglePanel} {
-    document.getElementById($panelArg).classList.toggle(`${Reveal.identifier}`);
+    const modifier = `${Reveal.identifier}`;
+    const element = document.getElementById($panelArg);
+    element.classList.toggle(modifier);
+    const isToggled = element.classList.contains(modifier);
+    localStorage.setItem('$RIGHT_PANEL_KEY', isToggled ? 'true' : 'false');
 }
+
+function initRightPanel() {
+    if (localStorage.getItem('$RIGHT_PANEL_KEY') === 'true') {
+        document.getElementById(${AppBodyKey.SpacerRightId.arg}).classList.add(`${Reveal.identifier}`);
+    }
+}
+
+initRightPanel();
 
 """
 
