@@ -3,7 +3,7 @@ package streetlight.web.pages
 import koala.LottieFile
 import koala.SvgFile
 import koala.css.*
-import koala.html.action
+import koala.html.navigation
 import koala.html.column
 import koala.html.filigree
 import koala.html.icon
@@ -13,6 +13,7 @@ import koala.html.textBlock
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import streetlight.model.data.ExtraLink
+import streetlight.web.AboutAppRoute
 
 fun FlowContent.appFooter(sourcePath: String? = null) {
     column {
@@ -26,7 +27,9 @@ fun DIV.configureAppFooter(sourcePath: String?, vararg additional: ExtraLink) {
     lottie(LottieFile.spinningCircles, modify(Height24))
     textBlock(prayer, modify(Italic, OpacityMost))
     row(modify(JustifyContentCenter)) {
-        textBlock("about us")
+        navigation(AboutAppRoute) {
+            textBlock("about us")
+        }
         textBlock("•")
         textBlock("your privacy")
         textBlock("•")
@@ -36,7 +39,7 @@ fun DIV.configureAppFooter(sourcePath: String?, vararg additional: ExtraLink) {
     }
     sourcePath?.let {
         column(modify(Gap0, MarginTop4, AlignItemsCenter)) {
-            action(sourceUrlOf(sourcePath)) {
+            navigation(sourceUrlOf(sourcePath)) {
                 column(modify(Gap0)) {
                     filigree {
                         icon(SvgFile.Github, modify(Height4))
@@ -46,7 +49,7 @@ fun DIV.configureAppFooter(sourcePath: String?, vararg additional: ExtraLink) {
             }
             additional.takeIf { it.isNotEmpty() }?.let {
                 it.forEach { link ->
-                    action(sourceUrlOf(link.url)) {
+                    navigation(sourceUrlOf(link.url)) {
                         textBlock("+ ${link.label}", modify(OpacityHalf))
                     }
                 }

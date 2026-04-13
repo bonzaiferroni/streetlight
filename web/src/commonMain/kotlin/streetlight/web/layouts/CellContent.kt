@@ -12,11 +12,10 @@ import koala.css.JustifyContentCenter
 import koala.css.MarginLeft1
 import koala.css.MinWidth16
 import koala.css.ModifierSet
-import koala.css.MoonShadow
 import koala.css.WidthAuto
 import koala.css.WrapFlex
 import koala.css.modify
-import koala.html.actionIfNotNull
+import koala.html.navigationIfNotNull
 import koala.html.card
 import koala.html.row
 import koala.html.setData
@@ -60,7 +59,7 @@ fun FlowContent.costCell(cost: Float?, purchaseUrl: String?) {
             null -> "check source"
             else -> "$${cost.format(2, true)}"
         }
-        actionIfNotNull(ticketsUrl) {
+        navigationIfNotNull(ticketsUrl) {
             row(CellContent.RowMod) {
                 textBlock("tickets:", modify(Dim))
                 textBlock(costText, modify(MarginLeft1))

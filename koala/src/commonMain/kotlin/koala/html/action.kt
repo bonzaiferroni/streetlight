@@ -10,7 +10,7 @@ import kotlinx.html.A
 import kotlinx.html.FlowContent
 import kotlinx.html.a
 
-fun FlowContent.action(
+fun FlowContent.navigation(
     href: String? = null,
     modifiers: ModifierSet? = null,
     text: String = "",
@@ -28,7 +28,7 @@ fun FlowContent.action(
     }
 }
 
-fun FlowContent.action(
+fun FlowContent.navigation(
     route: AppRoute,
     modifiers: ModifierSet? = null,
     text: String = "",
@@ -36,7 +36,7 @@ fun FlowContent.action(
     styles: StyleSet? = null,
     block: (A.() -> Unit)? = null
 ) {
-    action(
+    navigation(
         text = text,
         href = route.toHashPath(),
         modifiers = modifiers,
@@ -46,7 +46,7 @@ fun FlowContent.action(
     )
 }
 
-fun FlowContent.actionIfNotNull(
+fun FlowContent.navigationIfNotNull(
     href: String? = null,
     text: String = "",
     modifiers: ModifierSet? = null,
@@ -56,7 +56,7 @@ fun FlowContent.actionIfNotNull(
     if (href == null) {
         block?.invoke(this)
     } else {
-        action(href = href, text = text, modifiers = modifiers, id = id, block = block)
+        navigation(href = href, text = text, modifiers = modifiers, id = id, block = block)
     }
 }
 

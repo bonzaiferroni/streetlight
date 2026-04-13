@@ -1,20 +1,13 @@
 package streetlight.web.layouts
 
-import kabinet.utils.toRelativeDayFormat
-import kabinet.utils.toTimeFormat
 import kampfire.model.ScaledImageArray
 import kampfire.model.medium
 import koala.SiteImage
 import koala.css.*
 import koala.html.*
-import kotlin.time.Instant
 import kotlinx.html.FlowContent
-import streetlight.model.data.EventId
 import streetlight.model.data.ExtraLink
-import streetlight.model.data.GalaxyId
 import streetlight.web.StreetlightRoute
-import streetlight.web.ui.StarLightKey
-import streetlight.web.ui.starLight
 
 fun FlowContent.largePostCard(
     title: String,
@@ -39,7 +32,7 @@ fun FlowContent.largePostCard(
                 column(modify(Flex2, Padding1, Height24, MaxHeight24)) {
                     row {
                         column(modify(Flex1, Gap0)) {
-                            action(postRoute) {
+                            navigation(postRoute) {
                                 heading3(title, modify(WhiteSpaceNoWrap, LineHeight1, MarginTop1, TextOverflowHidden))
                             }
 
@@ -47,13 +40,13 @@ fun FlowContent.largePostCard(
                                 fun FlowContent.showSubtitle() = textBlock(subtitle, modify(Dim))
                                 when (subRoute) {
                                     null -> showSubtitle()
-                                    else -> action(subRoute) { showSubtitle() }
+                                    else -> navigation(subRoute) { showSubtitle() }
                                 }
                             }
                         }
                     }
                     description?.let { description ->
-                        action(postRoute, modify(Flex1, SmallText, OverflowHidden, FadeBottom)) {
+                        navigation(postRoute, modify(Flex1, SmallText, OverflowHidden, FadeBottom)) {
                             textBlock(description)
                         }
                     }

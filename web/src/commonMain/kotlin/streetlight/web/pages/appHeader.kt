@@ -12,7 +12,7 @@ import koala.css.TextShadow
 import koala.css.Width16
 import koala.css.modify
 import koala.html.IconKey
-import koala.html.action
+import koala.html.navigation
 import koala.html.heading2
 import koala.html.icon
 import koala.html.logo
@@ -24,7 +24,7 @@ import streetlight.web.HomeRoute
 fun FlowContent.appHeader() {
     row(modify(AppHeaderKey.Height, JustifyContentCenter)) {
         icon(SvgFile.Rays, modify(OpacitySome, IconKey.Stretch, Width16))
-        action(HomeRoute, modify(DisplayFlex)) {
+        navigation(HomeRoute, modify(DisplayFlex)) {
             row(modify(AlignItemsCenter)) {
                 logo(modify(AppHeaderKey.Height))
                 heading2("Streetlight", modify(GrowText, TextShadow))

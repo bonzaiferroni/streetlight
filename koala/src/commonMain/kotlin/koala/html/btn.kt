@@ -22,7 +22,7 @@ fun FlowContent.btn(
         "$it $text"
     } ?: text
 
-    action(
+    navigation(
         text = text,
         route = route,
         modifiers = modify(BtnKey.Class, modifiers),
@@ -37,7 +37,7 @@ fun FlowContent.btn(
     modifiers: ModifierSet? = null,
     block: (A.() -> Unit)? = null,
 ) {
-    action(
+    navigation(
         text = text,
         route = route,
         modifiers = modify(modifiers, BtnKey.Class, BackgroundImage),
@@ -65,7 +65,7 @@ fun FlowContent.btn(
     val text = prefix?.let {
         "$it $text"
     } ?: text
-    action(
+    navigation(
         href = href,
         text = text,
         modifiers = modify(BtnKey.Class, modifiers),

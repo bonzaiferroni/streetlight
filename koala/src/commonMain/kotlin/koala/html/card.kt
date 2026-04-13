@@ -46,7 +46,7 @@ fun FlowContent.cardOf(
     modifiers: ModifierSet? = null,
 ) {
     if (route != null) {
-        action(route, modifiers) {
+        navigation(route, modifiers) {
             cardOf(title, thumbUrl, description)
         }
     } else {

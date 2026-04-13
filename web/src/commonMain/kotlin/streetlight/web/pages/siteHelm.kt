@@ -5,7 +5,6 @@ import koala.css.*
 import koala.html.*
 import kotlinx.html.FlowContent
 import kotlinx.html.onClick
-import kotlinx.html.script
 import streetlight.web.SiteConfigRoute
 
 fun FlowContent.siteHelm() {
@@ -20,7 +19,7 @@ fun FlowContent.siteHelm() {
                     }
                     heading3("Helm")
                 }
-                action(SiteConfigRoute) {
+                navigation(SiteConfigRoute) {
                     onClick = closePopover
                     row(rowMod) {
                         icon(SvgFile.Settings, HelmBarKey.IconMod)

@@ -6,11 +6,12 @@ import koala.html.textBlock
 import koala.html.row
 import kotlinx.html.*
 import koala.css.*
+import koala.html.Id
 import koala.html.column
 import koala.html.lottie
 import streetlight.web.pages.appFooter
 
-fun FlowContent.aboutShell() {
+fun FlowContent.aboutAppShell() {
     column(modify(AlignItemsCenter)) {
         column(modify(MediaMdRow, AlignItemsCenter)) {
             lottie(LottieFile.cupShuffle, modify(Flex1, MaxWidth50P))
@@ -70,6 +71,10 @@ fun FlowContent.aboutShell() {
         }
         appFooter()
     }
+}
+
+object AboutAppKey {
+    val id = Id("about-app-shell")
 }
 
 fun FlowContent.githubLink(

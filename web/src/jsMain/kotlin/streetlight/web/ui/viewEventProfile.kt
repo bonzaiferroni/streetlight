@@ -7,13 +7,13 @@ import streetlight.web.EventObjectRoute
 import streetlight.web.EventRoute
 import streetlight.web.EventSlugRoute
 import streetlight.web.model.Streetlight
-import streetlight.web.shells.EventProfileShell
+import streetlight.web.shells.EventProfileKey
 import streetlight.web.shells.eventProfileShell
 
 fun ViewContext<Streetlight>.viewEventProfile(event: EventLocation) {
     val app = model
 
-    val root = shellBox(EventProfileShell.id, app.geoMap, app.appScope, modify(Width100P)) {
+    val root = shellBox(EventProfileKey.id, app.geoMap, app.appScope, modify(Width100P)) {
         eventProfileShell(event)
     }
 
@@ -23,7 +23,7 @@ fun ViewContext<Streetlight>.viewEventProfile(event: EventLocation) {
         attribute = StarLightKey.EventLightId,
         cache = app.cache.eventLights
     )
-    // app.streetmMp.setPosts td: make event marker visible on map
+    // app.streetMap.setPosts td: make event marker visible on map
 }
 
 fun ViewContext<Streetlight>.viewEventProfileRoute() {

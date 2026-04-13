@@ -4,7 +4,7 @@ import kabinet.utils.toRelativeDayFormat
 import kampfire.model.thumb
 import koala.SvgFile
 import koala.css.*
-import koala.html.action
+import koala.html.navigation
 import koala.html.card
 import koala.html.column
 import koala.html.heading4
@@ -37,17 +37,17 @@ fun FlowContent.smallPostCard(post: EventPost) {
                 column(modify(Flex1, Height100P)) {
                     row(modify(AlignItemsStart)) {
                         column(modify(Flex1, Gap0)) {
-                            action(postRoute) {
+                            navigation(postRoute) {
                                 heading5(title)
                             }
-                            action(event.locationRoute) {
+                            navigation(event.locationRoute) {
                                 textBlock(event.locationName, modify(Dim))
                             }
                         }
                         icon(SvgFile.Focus, modify(Height5, AspectRatio1, Dim))
                     }
                     description?.let {
-                        action(postRoute) {
+                        navigation(postRoute) {
                             textBlock(description, modify(Flex1, SmallText, Height2, OverflowHidden))
                         }
                     }
