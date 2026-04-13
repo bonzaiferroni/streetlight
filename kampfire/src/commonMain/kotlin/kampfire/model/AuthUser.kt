@@ -1,10 +1,6 @@
 package kampfire.model
 
 import kampfire.api.TableId
-import kampfire.utils.randomUuidString
-import kampfire.utils.toUuid
-import kotlinx.serialization.Serializable
-import kotlin.jvm.JvmInline
 import kotlin.time.Instant
 
 interface AuthUser {
@@ -19,10 +15,10 @@ interface AuthUser {
 }
 
 val AuthUser.isAdmin: Boolean
-    get() = UserRole.ADMIN in roles
+    get() = UserRole.Admin in roles
 
 val AuthUser.isUser: Boolean
-    get() = UserRole.USER in roles
+    get() = UserRole.User in roles
 
 data class UserSeed(
     val request: SignUpRequest,

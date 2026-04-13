@@ -7,7 +7,7 @@ import ai.koog.agents.core.tools.reflect.ToolSet
 class UrlToolSet : ToolSet {
     @Tool
     @LLMDescription("Read html content from a url")
-    suspend fun readHtmlContentFromUrl(url: String): String {
-        return readContent(url)
+    suspend fun readHtmlContentFromUrl(url: String): String? {
+        return fetchHtml(url)
     }
 }

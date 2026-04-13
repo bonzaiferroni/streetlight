@@ -4,17 +4,24 @@ import io.ktor.client.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import com.fleeksoft.ksoup.Ksoup
+import com.fleeksoft.ksoup.nodes.Document
 import io.ktor.client.plugins.defaultRequest
+import io.ktor.http.HttpStatusCode
 
-suspend fun readContent(url: String): String {
+suspend fun fetchHtml(url: String): String? {
     val response: HttpResponse = httpClient.get(url)
+    if (response.status != HttpStatusCode.OK) return null
     return response.bodyAsText()
 }
 
-fun readBody(html: String): String {
-    val document = Ksoup.parse(html)
-    return document.body().html()
+fun parseDocument(html: String, baseUri: String): Document? {
+    if (!html.looksLikeHtml()) return null
+    return Ksoup.parse(html, baseUri)
 }
+
+private val htmlStart = Regex("""^\s*(<!DOCTYPE\s+html|<html|<[a-zA-Z]+)""", RegexOption.IGNORE_CASE)
+
+fun String.looksLikeHtml(): Boolean = htmlStart.containsMatchIn(this)
 
 
 private val httpClient by lazy {

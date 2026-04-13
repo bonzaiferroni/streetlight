@@ -64,7 +64,7 @@ data class SingleEventParse(
 )
 
 @Serializable
-data class SingleEventParseResponse(
+data class EventParseResult(
     val hasContent: Boolean? = null,
     val event: EventEdit? = null,
 )

@@ -1,9 +1,9 @@
 package kampfire.model
 
 enum class UserRole {
-	ADMIN,
-	USER,
-	BOT;
+	Admin,
+	User,
+	Bot;
 
 	companion object {
 		private val map = entries.associateBy { it.ordinal }
@@ -13,6 +13,6 @@ enum class UserRole {
 }
 
 fun RoleSet.toClaimValue() = this.joinToString(",")
-fun String.toUserRoleSet() = this.split(",")
+fun String.toUserRoleSet() = this.split(",").map { UserRole.valueOf(it) }.toSet()
 
 typealias RoleSet = Set<UserRole>
