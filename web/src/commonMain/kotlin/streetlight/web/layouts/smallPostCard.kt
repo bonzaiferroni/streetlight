@@ -26,7 +26,7 @@ fun FlowContent.smallPostCard(post: EventPost) {
     val title = post.title
     val description = post.description
     val event = post.event ?: return // td: show removed content
-    val postRoute = event.route
+    val postRoute = event.eventRoute
 
     card(modify(Padding0, OverflowHidden)) {
         column(modify(MediaLgRow, AlignItemsStretch, Gap0)) {
@@ -40,10 +40,8 @@ fun FlowContent.smallPostCard(post: EventPost) {
                             action(postRoute) {
                                 heading5(title)
                             }
-                            post.location?.let { location ->
-                                action(location.route) {
-                                    textBlock(location.name, modify(Dim))
-                                }
+                            action(event.locationRoute) {
+                                textBlock(event.locationName, modify(Dim))
                             }
                         }
                         icon(SvgFile.Focus, modify(Height5, AspectRatio1, Dim))
@@ -89,4 +87,5 @@ fun FlowContent.smallPostCard(post: EventPost) {
 // td: find better home
 val Location.route get() = LocationIdRoute(locationId)
 val Event.route get() = EventSlugRoute(slug)
-val EventLocation.route get() = EventSlugRoute(slug)
+val EventLocation.eventRoute get() = EventSlugRoute(slug)
+val EventLocation.locationRoute get() = LocationIdRoute(locationId)

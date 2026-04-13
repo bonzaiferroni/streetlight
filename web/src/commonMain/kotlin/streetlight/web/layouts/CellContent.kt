@@ -1,5 +1,6 @@
 package streetlight.web.layouts
 
+import kabinet.utils.format
 import kabinet.utils.toRelativeDayFormat
 import kabinet.utils.toTimeFormat
 import koala.css.AlignItemsCenter
@@ -57,7 +58,7 @@ fun FlowContent.costCell(cost: Float?, purchaseUrl: String?) {
     } else {
         val costText = when (cost) {
             null -> "check source"
-            else -> "$$cost"
+            else -> "$${cost.format(2, true)}"
         }
         actionIfNotNull(ticketsUrl) {
             row(CellContent.RowMod) {

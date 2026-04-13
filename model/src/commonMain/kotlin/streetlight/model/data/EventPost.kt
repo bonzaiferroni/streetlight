@@ -10,18 +10,17 @@ import kotlin.jvm.JvmInline
 data class EventPost(
     override val postId: EventPostId,
     override val galaxyId: GalaxyId,
-    override val username: String?,
-    override val location: Location?,
-    val event: Event?,
+    val event: EventLocation?,
     override val text: String?,
     override val createdAt: Instant,
     override val updatedAt: Instant,
-): GalaxyPost {
-    override val images get() = event?.images ?: location?.images
-    override val geoPoint get() = location?.geoPoint ?: GeoPoint.Denver
+): StarPost {
+    override val images get() = event?.images ?: event?.images
+    override val geoPoint get() = event?.geoPoint
     override val title get() = event?.title ?: "[event removed]"
     override val description get() = event?.description
     override val visibility get() = 0
+    override val username get() = event?.username
 
     override val isRemoved get() = event == null
     override val type get() = PostType.Event
@@ -29,7 +28,7 @@ data class EventPost(
 
 @Serializable
 @JvmInline
-value class EventPostId(override val value: String): ProjectId, MapPostId {
+value class EventPostId(override val value: String): ProjectId, StarPostId {
     override val stringId get() = value
     companion object {
         fun random() = EventPostId(randomUuidString())
@@ -42,7 +41,6 @@ data class EventPostRow(
     val galaxyId: GalaxyId,
     val eventId: EventId,
     val starId: StarId?,
-    val username: String?,
     val text: String?,
     val updatedAt: Instant,
     val createdAt: Instant,

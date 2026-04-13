@@ -1,5 +1,6 @@
 package streetlight.web.model
 
+import kabinet.utils.format
 import kabinet.utils.replaceAt
 import kampfire.model.Url
 import koala.model.mapDistinct
@@ -31,7 +32,7 @@ class EventEditor(
     val titleFlow = stateFlow.mapDistinct { it.event.title }
     val urlFlow = stateFlow.mapDistinct { it.event.link }
     val isFreeFlow = stateFlow.mapDistinct { it.event.isFree }
-    val costFlow = stateFlow.mapDistinct { it.event.cost?.toString() }
+    val costFlow = stateFlow.mapDistinct { it.event.cost?.format(2, true) }
 
     val eventNow get() = stateNow.event
 

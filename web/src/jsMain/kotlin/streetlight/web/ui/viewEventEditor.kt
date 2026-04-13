@@ -19,7 +19,6 @@ import streetlight.web.EditEventIdRoute
 import streetlight.web.EditEventRoute
 import streetlight.web.layouts.route
 import streetlight.web.model.Streetlight
-import streetlight.web.ui.appFooter
 
 // event editor content including introduction and form
 fun ViewContext<Streetlight>.viewEventEditor(

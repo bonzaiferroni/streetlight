@@ -30,7 +30,7 @@ fun RenderContext.viewEventScout(app: Streetlight, galaxy: Galaxy) {
     column {
         geoMapMount(app.geoMap, app.appScope, modifiers = modify(BorderRadius2, MoonShadow, Height48))
 
-        flowBlock(panelFlow, defaultMagic + MoonShadow) {
+        flowBlock(panelFlow, defaultMagic) {
             val locationEdit = it.locationEdit; val location = it.location; val event = it.event
 
             viewContextOf(model) {

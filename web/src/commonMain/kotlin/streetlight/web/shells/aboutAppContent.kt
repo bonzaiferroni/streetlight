@@ -10,12 +10,11 @@ import koala.html.column
 import koala.html.lottie
 import streetlight.web.pages.appFooter
 
-fun FlowContent.aboutApp() {
+fun FlowContent.aboutShell() {
     column(modify(AlignItemsCenter)) {
         column(modify(MediaMdRow, AlignItemsCenter)) {
             lottie(LottieFile.cupShuffle, modify(Flex1, MaxWidth50P))
             val introText = "Streetlight is your front page for community events. " +
-//                    "Its first and only mission is to bring people together. " +
                     "It is cross-platform, open-source, and 100% Kotlin. "
             textBlock(introText, modify(Flex3, LargeText))
         }

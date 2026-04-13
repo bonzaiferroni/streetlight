@@ -79,8 +79,8 @@ data class PostEntity(
     val galaxy: Galaxy?,
     override val position: GeoPoint,
 ): PointEntity {
-    override val entityId get() = post.location?.locationId?.value ?: post.postId.value
-    override val thumbUrl get() = post.event?.images.thumb ?: post.location?.images.thumb ?: galaxy?.images.thumb
+    override val entityId get() = post.event?.locationId?.value ?: post.postId.value
+    override val thumbUrl get() = post.images.thumb ?: galaxy?.images.thumb
         ?: SiteImage.placeholderTh.url
     override val light get() = Rgb(240, 100, 180 )
 }

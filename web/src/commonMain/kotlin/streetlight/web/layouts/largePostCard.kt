@@ -59,9 +59,6 @@ fun FlowContent.largePostCard(
                     }
 
                     row {
-                        sourceUrl?.let { url ->
-                            btn("source", url)
-                        }
                         links?.forEach { link ->
                             btn(link.label, link.url)
                         }

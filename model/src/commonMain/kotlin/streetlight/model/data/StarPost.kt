@@ -2,17 +2,15 @@ package streetlight.model.data
 
 import kampfire.model.GeoPoint
 import kampfire.model.ScaledImageArray
-import kampfire.model.Url
 import kotlin.time.Instant
 
-sealed interface GalaxyPost {
-    val postId: MapPostId
+sealed interface StarPost {
+    val postId: StarPostId
     val galaxyId: GalaxyId?
     val username: String?
-    val location: Location?
     val text: String?
     val images: ScaledImageArray?
-    val geoPoint: GeoPoint
+    val geoPoint: GeoPoint?
     val description: String?
     val title: String
     val visibility: Int
@@ -23,6 +21,6 @@ sealed interface GalaxyPost {
     val type: PostType
 }
 
-sealed interface MapPostId {
+sealed interface StarPostId {
     val stringId: String
 }

@@ -5,17 +5,16 @@ import streetlight.model.data.EventPost
 
 fun FlowContent.largeEventPostCard(post: EventPost) {
     val event = post.event ?: return // td: show removed post content
-    val location = post.location ?: return // td: show removed post content
 
     largePostCard(
         title = post.title,
-        subtitle = "${location.name}, ${location.city}",
+        subtitle = "${event.locationName}, ${event.city}",
         description = post.description,
         sourceUrl = event.url,
         links = event.links,
         images = post.images,
-        postRoute = event.route,
-        subRoute = location.route,
+        postRoute = event.eventRoute,
+        subRoute = event.locationRoute,
         cells = listOf(
             { startsAtCell(event.startsAt) },
             { costCell(event.cost, event.url) },

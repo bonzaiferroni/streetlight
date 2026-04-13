@@ -11,12 +11,12 @@ data class LocationPost(
     override val postId: LocationPostId,
     override val galaxyId: GalaxyId?,
     override val username: String?,
-    override val location: Location?,
+    val location: Location?,
     val postTitle: String?,
     override val text: String?,
     override val createdAt: Instant,
     override val updatedAt: Instant,
-): GalaxyPost {
+): StarPost {
     override val images get() = location?.images
     override val geoPoint get() = location?.geoPoint ?: GeoPoint.Denver
     override val description get() = location?.description
@@ -29,7 +29,7 @@ data class LocationPost(
 
 @Serializable
 @JvmInline
-value class LocationPostId(override val value: String): ProjectId, MapPostId {
+value class LocationPostId(override val value: String): ProjectId, StarPostId {
     override val stringId get() = value
     companion object {
         fun random() = LocationPostId(randomUuidString())
