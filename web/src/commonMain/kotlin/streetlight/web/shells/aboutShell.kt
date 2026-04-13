@@ -8,11 +8,13 @@ import kotlinx.html.*
 import koala.css.*
 import koala.html.Id
 import koala.html.column
+import koala.html.heading1
 import koala.html.lottie
 import streetlight.web.pages.appFooter
 
-fun FlowContent.aboutAppShell() {
-    column(modify(AlignItemsCenter)) {
+fun FlowContent.aboutShell() {
+    column(AboutKey.id, modify(AlignItemsCenter)) {
+        heading1("About Streetlight")
         column(modify(MediaMdRow, AlignItemsCenter)) {
             lottie(LottieFile.cupShuffle, modify(Flex1, MaxWidth50P))
             val introText = "Streetlight is your front page for community events. " +
@@ -69,11 +71,11 @@ fun FlowContent.aboutAppShell() {
             githubLink("map data", "OpenFreeMap", "hyper-knot")
             githubLink("icons", "Tabler", "tabler")
         }
-        appFooter()
+        appFooter("web/src/commonMain/kotlin/streetlight/web/shells/homeShell.kt")
     }
 }
 
-object AboutAppKey {
+object AboutKey {
     val id = Id("about-app-shell")
 }
 

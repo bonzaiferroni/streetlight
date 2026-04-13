@@ -17,52 +17,72 @@ inline fun FlowContent.textBlock(
 }
 
 fun FlowContent.heading1(
-    content: String,
+    content: String? = null,
     modifiers: ModifierSet? = null,
+    block: H1.() -> Unit = {},
 ) {
     h1 {
         addModifiers(modifiers)
-        +content
+        block()
+        content?.let {
+            +it
+        }
     }
 }
 
 fun FlowContent.heading2(
-    content: String,
+    content: String? = null,
     modifiers: ModifierSet? = null,
+    block: H2.() -> Unit = {},
 ) {
     h2 {
         addModifiers(modifiers)
-        +content
+        block()
+        content?.let {
+            +it
+        }
     }
 }
 
 fun FlowContent.heading3(
-    content: String,
+    content: String? = null,
     modifiers: ModifierSet? = null,
+    block: H3.() -> Unit = {},
 ) {
     h3 {
         addModifiers(modifiers)
-        +content
+        block()
+        content?.let {
+            +it
+        }
     }
 }
 
 fun FlowContent.heading4(
-    content: String,
+    content: String? = null,
     modifiers: ModifierSet? = null,
+    block: H4.() -> Unit = {},
 ) {
     h4 {
         addModifiers(modifiers)
-        +content
+        block()
+        content?.let {
+            +it
+        }
     }
 }
 
 fun FlowContent.heading5(
-    content: String,
+    content: String? = null,
     modifiers: ModifierSet? = null,
+    block: H5.() -> Unit = {},
 ) {
     h5 {
         addModifiers(modifiers)
-        +content
+        block()
+        content?.let {
+            +it
+        }
     }
 }
 

@@ -1,6 +1,9 @@
 package koala.html
 
 import koala.css.*
+import koala.markdown.markdownBlocksOf
+import koala.markdown.renderBlocks
+import koala.markdown.renderSpans
 import kotlinx.html.FlowContent
 import kotlinx.html.DIV
 import kotlinx.html.div
@@ -14,7 +17,8 @@ fun FlowContent.markdownContent(
         addModifiers(Class, modifiers)
         block()
 
-        markdownElements(text)
+        val blocks = markdownBlocksOf(text)
+        renderBlocks(blocks)
     }
 }
 
