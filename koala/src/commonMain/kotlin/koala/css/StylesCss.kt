@@ -64,8 +64,8 @@ val StylesCss get() = """
 
     --breakpoint-sm: 0px;
     --breakpoint-md: 600px;
-    --breakpoint-lg: 768px;
-    --breakpoint-vlg: 1024px;
+    --breakpoint-lg: 760px;
+    --breakpoint-vlg: 1000px;
 
     --strong-blur: blur(10px);
 }

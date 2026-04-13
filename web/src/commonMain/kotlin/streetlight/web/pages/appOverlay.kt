@@ -14,7 +14,7 @@ fun FlowContent.appOverlay() {
         spacer(modify(Flex1))
         row(modify(Height8, Padding1)) {
             spacer(modify(Flex1))
-            icon(SvgFile.PanelRight, modify(PointerEventsAuto, Dim)) {
+            icon(SvgFile.PanelRight, modify(PointerEventsAuto, Dim, AppOverlayKey.MediaVlgReveal)) {
                 onClick = AppOverlayKey.TogglePanel.invoke(AppBodyKey.SpacerRightId.arg,)
             }
         }
@@ -48,6 +48,7 @@ object AppOverlayKey {
     val AppOverlayId = Id("app-overlay")
     val TogglePanel = Fun("togglePanel", panelArg)
     val SpacerMiddleId = Id("spacer-middle")
+    val MediaVlgReveal = Class("display-none-below-vlg")
 }
 
 // language="CSS"
@@ -60,6 +61,31 @@ ${AppOverlayKey.AppOverlayId} {
     width: 100%;
     height: 100%;
     z-index: 14;
+}
+
+${AppOverlayKey.MediaVlgReveal} {
+    opacity: 1;
+    transform: translate(0px, 0px);
+    
+    transition: 
+        opacity var(--magic-interval),
+        transform var(--magic-interval),
+        visibility var(--magic-interval) allow-discrete;
+}
+
+@media (max-width: 1000px) {
+    ${AppOverlayKey.MediaVlgReveal} {
+        transform: var(--slide-up-initial);
+        opacity: 0;         
+        visibility: hidden;    
+    }
+}
+
+@starting-style {
+    ${AppOverlayKey.MediaVlgReveal} {
+        opacity: 0;
+        transform: var(--slide-up-initial);
+    }
 }
 
 """

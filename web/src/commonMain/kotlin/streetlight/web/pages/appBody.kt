@@ -27,7 +27,7 @@ fun HTML.appBody(
             div(AppBodyKey.SpacerRightId) {
                 column(modify(Height100P, Gap0)) {
                     spacer(modify(Height8))
-                    column(AppBodyKey.PanelRightId, modify(Flex1, MarginRight1))
+                    column(AppBodyKey.PanelRightId, modify(Flex1, MarginRight1, AppOverlayKey.MediaVlgReveal))
                     spacer(modify(Height8))
                 }
             }
@@ -84,12 +84,14 @@ ${AppBodyKey.ShellBoxId} > * {
 ${AppBodyKey.SpacerLeftId},
 ${AppBodyKey.SpacerRightId} {
     display: none;
+    width: ${SIDE_PANEL_WIDTH_PX}px;
 }
 
-${AppBodyKey.SpacerLeftId}$Reveal,
-${AppBodyKey.SpacerRightId}$Reveal {
-    display: block;
-    width: ${SIDE_PANEL_WIDTH_PX}px;
+@media (min-width: 1000px) {
+    ${AppBodyKey.SpacerLeftId}$Reveal,
+    ${AppBodyKey.SpacerRightId}$Reveal {
+        display: block;
+    }
 }
 
 ${AppBodyKey.SpacerLeftId} > *,
@@ -108,6 +110,7 @@ ${AppBodyKey.ContentBoxId} {
 ${AppBodyKey.ContentBoxId}$Reveal {
     opacity: 1;
 }
+
 """
 
 const val RIGHT_PANEL_KEY = "streetlight.right-panel"

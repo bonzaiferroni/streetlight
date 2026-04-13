@@ -10,7 +10,10 @@ object FlowBlockKey {
 val FlowBlockCss get() = """
 .flow-block.magic {
     opacity: 0;
-    transition: opacity 200ms ease-in-out, transform 200ms ease-in-out, filter 200ms ease-out;
+    transition: 
+        opacity var(--magic-interval) var(--magic-easing), 
+        transform var(--magic-interval) var(--magic-easing), 
+        filter var(--magic-interval) var(--magic-easing);
     pointer-events: none;
 }
 
@@ -28,7 +31,7 @@ val FlowBlockCss get() = """
 }
 
 .flow-block.magic.slide-left {
-    transform: translate(20px, 0px);
+    transform: var(--slide-left-initial);
 }
 
 .flow-block.magic.slide-left.reveal {
@@ -36,10 +39,11 @@ val FlowBlockCss get() = """
 }
 
 .flow-block.magic.slide-up {
-    transform: translate(0px, 20px);
+    transform: var(--slide-up-initial);
 }
 
 .flow-block.magic.slide-up.reveal {
     transform: translate(0px, 0px);
 }
+
 """

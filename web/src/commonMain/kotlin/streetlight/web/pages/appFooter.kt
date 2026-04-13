@@ -28,7 +28,7 @@ fun DIV.configureAppFooter(sourcePath: String?, vararg additional: ExtraLink) {
     row(modify(JustifyContentCenter)) {
         textBlock("about us")
         textBlock("•")
-        textBlock("yer privacy")
+        textBlock("your privacy")
         textBlock("•")
         textBlock("feedback")
         textBlock("•")
