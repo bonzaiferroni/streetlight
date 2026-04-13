@@ -187,7 +187,7 @@ fun ViewContext<Streetlight>.viewGalaxyFoundry() {
                         }
                     }
                     column(contentColumnMod) {
-                        viewGeoMap(geoMap, app.appScope)
+                        geoMapMount(geoMap, app.appScope)
                     }
                 }
             }

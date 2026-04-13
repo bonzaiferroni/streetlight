@@ -46,7 +46,7 @@ fun ViewContext<LocationFinder>.viewLocationFinderPlace() {
             }
             tab("Find on map") {
                 column {
-                    viewGeoMap(app.geoMap, app.appScope)
+                    geoMapMount(app.geoMap, app.appScope)
                     row(modify(JustifyContentEnd)) {
                         textBlock("Move the map target to the location.", modify(Dim))
                         button("Here", onClick = model::here)

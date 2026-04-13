@@ -25,7 +25,7 @@ fun RenderContext.viewLocationScoutOld(app: Streetlight) {
     tabs {
         tab("Scout") {
             column {
-                viewGeoMap(app.geoMap, app.appScope)
+                geoMapMount(app.geoMap, app.appScope)
 
                 flowBlock(dataFlow, defaultMagic) { data ->
                     val edit = model.stateNow.edit; val location = data.location; val places = data.places

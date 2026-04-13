@@ -21,6 +21,8 @@ fun Element.modify(vararg modifier: Modifier) = modifier.forEach { classList.add
 fun Element.unmodify(modifiers: Collection<Modifier>) = modifiers.forEach { classList.remove(it.identifier) }
 fun Element.modify(modifiers: Collection<Modifier>) = modifiers.forEach { classList.add(it.identifier) }
 
+fun Element.isModified(modifier: Modifier) = classList.contains(modifier.identifier)
+
 fun Node.modify(vararg modifier: Modifier) {
     val element = this as? Element ?: error("not an element")
     element.modify(*modifier)

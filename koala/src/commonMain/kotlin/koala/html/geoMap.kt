@@ -12,16 +12,24 @@ import kotlinx.html.FlowContent
 
 fun FlowContent.geoMapMount(
     initialPoint: GeoPoint? = null,
-    modifiers: ModifierSet? = null, // modify(Width100P, Height48)
+    modifiers: ModifierSet? = null,
     block: DIV.() -> Unit = {}
 ) {
     box {
-        addModifiers(GeoMapSelector.mapMount, modifiers)
-        initialPoint?.let {
-            setAttribute(GeoMapSelector.geoPoint, "${it.lng},${it.lat}")
-        }
-        block()
+        configureGeoMapMount(initialPoint, modifiers, block)
     }
+}
+
+fun DIV.configureGeoMapMount(
+    initialPoint: GeoPoint? = null,
+    modifiers: ModifierSet? = null,
+    block: DIV.() -> Unit = {}
+) {
+    addModifiers(GeoMapSelector.mapMount, modifiers)
+    initialPoint?.let {
+        setAttribute(GeoMapSelector.geoPoint, "${it.lng},${it.lat}")
+    }
+    block()
 }
 
 object GeoMapSelector {

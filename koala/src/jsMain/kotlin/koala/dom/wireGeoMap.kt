@@ -26,7 +26,8 @@ fun wireGeoMap(
     appScope: CoroutineScope,
     ancestor: HTMLElement,
 ) {
-    val mount = ancestor.queryFirstOrNull(GeoMapSelector.mapMount) ?: return
+    val mount = ancestor.takeIf { it.isModified(GeoMapSelector.mapMount) }
+        ?: ancestor.queryFirstOrNull(GeoMapSelector.mapMount) ?: error("mount not found")
     val mapWindow = wireMapWindow(geoMap, appScope, mount)
 
     mount.onView { isVisible ->
