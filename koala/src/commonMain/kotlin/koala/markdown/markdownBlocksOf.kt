@@ -1,4 +1,4 @@
-@file:Suppress("RegExpRedundantEscape")
+@file:Suppress("RegExpRedundantEscape") // necessary for regex in js context
 
 package koala.markdown
 

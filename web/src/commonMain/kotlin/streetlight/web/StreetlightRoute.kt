@@ -41,7 +41,8 @@ enum class StreetlightScreen(
     LocationScout("post-location", { path -> path.provideRouteFromPath { LocationScoutRoute(it) } }),
     EditStar("edit-profile", { EditStarRoute }),
     SiteConfig("config", { SiteConfigRoute }),
-    AboutApp("about", { AboutAppRoute })
+    AboutApp("about", { AboutRoute }),
+    PrivacyPolicy("privacy", { PrivacyPolicyRoute })
 }
 
 fun List<String>.provideRouteFromPath(argIndex: Int = 1, provideRoute: (String) -> AppRoute?) =
@@ -226,7 +227,12 @@ object SiteConfigRoute: StreetlightRoute {
     override val title get() = "Config"
 }
 
-object AboutAppRoute: StreetlightRoute {
+object AboutRoute: StreetlightRoute {
     override val screen get() = StreetlightScreen.AboutApp
     override val title get() = "About"
+}
+
+object PrivacyPolicyRoute: StreetlightRoute {
+    override val screen get() = StreetlightScreen.PrivacyPolicy
+    override val title get() = "Privacy Policy"
 }

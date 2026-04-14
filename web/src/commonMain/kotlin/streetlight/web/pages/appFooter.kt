@@ -13,7 +13,8 @@ import koala.html.textBlock
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import streetlight.model.data.ExtraLink
-import streetlight.web.AboutAppRoute
+import streetlight.web.AboutRoute
+import streetlight.web.PrivacyPolicyRoute
 
 fun FlowContent.appFooter(sourcePath: String? = null) {
     column {
@@ -27,11 +28,13 @@ fun DIV.configureAppFooter(sourcePath: String?, vararg additional: ExtraLink) {
     lottie(LottieFile.spinningCircles, modify(Height24))
     textBlock(prayer, modify(Italic, OpacityMost))
     row(modify(JustifyContentCenter)) {
-        navigation(AboutAppRoute) {
+        navigation(AboutRoute) {
             textBlock("about us")
         }
         textBlock("•")
-        textBlock("your privacy")
+        navigation(PrivacyPolicyRoute) {
+            textBlock("your privacy")
+        }
         textBlock("•")
         textBlock("feedback")
         textBlock("•")

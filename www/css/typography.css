@@ -12,6 +12,7 @@
     --paragraph-size: 1.1rem;
 }
 
+span,
 p {
     font-size: var(--paragraph-size);
 }
@@ -39,6 +40,14 @@ h4 {
 h5 {
     font-size: var(--heading-5-size);
     font-weight: var(--heading-5-weight);
+}
+
+.prose .column {
+    gap: var(--unit-spacing-2);
+}
+
+.prose {
+    line-height: 1.8rem;
 }
 
 @media (max-width: 600px) {

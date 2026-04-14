@@ -1,6 +1,8 @@
 package koala.markdown
 
 import kampfire.model.toUrl
+import koala.css.ListStyleDisc
+import koala.css.modify
 import koala.html.*
 import kotlinx.html.FlowContent
 import kotlinx.html.blockQuote
@@ -28,15 +30,11 @@ fun FlowContent.renderBlocks(blocks: List<MarkdownBlock>) {
 fun FlowContent.renderHeading(block: MarkdownHeading) {
 
     when (block.level) {
-        6 -> heading5 { // td: support h6
+        1 -> heading1 {
             renderSpans(block.spans)
         }
 
-        5 -> heading5 {
-            renderSpans(block.spans)
-        }
-
-        4 -> heading4 {
+        2 -> heading2 {
             renderSpans(block.spans)
         }
 
@@ -46,14 +44,21 @@ fun FlowContent.renderHeading(block: MarkdownHeading) {
             }
         }
 
-        2 -> filigree {
-            heading2 {
+        4 -> filigree {
+            heading4 {
                 renderSpans(block.spans)
             }
         }
 
-        1 -> filigree {
-            heading1 {
+        5 -> filigree {
+            heading5 {
+                renderSpans(block.spans)
+            }
+        }
+
+        6 -> filigree {
+            // td: support h6
+            heading5 {
                 renderSpans(block.spans)
             }
         }
@@ -116,7 +121,7 @@ fun FlowContent.renderList(block: MarkdownList) {
 }
 
 fun FlowContent.renderUnorderedList(block: MarkdownUnorderedList) {
-    ulist {
+    ulist(modify(ListStyleDisc)) {
         block.items.forEach { item ->
             listItem {
                 span {

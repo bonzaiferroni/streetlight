@@ -1,6 +1,7 @@
 package koala.html
 
 import koala.css.*
+import koala.markdown.MarkdownBlock
 import koala.markdown.markdownBlocksOf
 import koala.markdown.renderBlocks
 import koala.markdown.renderSpans
@@ -13,12 +14,29 @@ fun FlowContent.markdownContent(
     modifiers: ModifierSet? = null,
     block: DIV.() -> Unit = {}
 ) {
+    val blocks = markdownBlocksOf(text)
     div {
-        addModifiers(Class, modifiers)
-        block()
+        configureMarkdownContent(blocks, modifiers, block)
+    }
+}
 
-        val blocks = markdownBlocksOf(text)
-        renderBlocks(blocks)
+fun DIV.configureMarkdownContent(
+    blocks: List<MarkdownBlock>,
+    modifiers: ModifierSet? = null,
+    block: DIV.() -> Unit = {}
+) {
+    addModifiers(modify(Class, Prose), modifiers)
+    block()
+    renderBlocks(blocks)
+}
+
+fun FlowContent.markdownContent(
+    blocks: List<MarkdownBlock>,
+    modifiers: ModifierSet? = null,
+    block: DIV.() -> Unit = {}
+) {
+    div {
+        configureMarkdownContent(blocks, modifiers, block)
     }
 }
 

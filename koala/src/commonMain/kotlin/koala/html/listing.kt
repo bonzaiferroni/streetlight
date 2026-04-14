@@ -10,8 +10,8 @@ import kotlinx.html.ol
 import kotlinx.html.ul
 
 fun FlowContent.olist(
-    axis: ListAxis = ListAxis.Column,
     modifiers: ModifierSet? = null,
+    axis: ListAxis = ListAxis.Column,
     block: OL.() -> Unit = {},
 ) {
     ol {
@@ -21,8 +21,8 @@ fun FlowContent.olist(
 }
 
 fun FlowContent.ulist(
-    axis: ListAxis = ListAxis.Column,
     modifiers: ModifierSet? = null,
+    axis: ListAxis = ListAxis.Column,
     block: UL.() -> Unit = {},
 ) {
     ul {
@@ -59,7 +59,7 @@ ${ListKey.Class} {
     display: flex;
     min-width: 0;
     min-height: 0;
-    gap: var(--unit-spacing);
+    gap: calc(var(--unit-spacing) * 0.5);
     list-style: none;
 }
 

@@ -58,6 +58,13 @@ fun TagContext.addModifiers(css: Modifier, modifiers: ModifierSet?) {
     }
 }
 
+fun TagContext.addModifiers(modifiers: ModifierSet, additional: ModifierSet?) {
+    classes += modifiers.map { it.identifier }
+    additional?.let {
+        classes += additional.map { it.identifier }
+    }
+}
+
 fun TagContext.addModifiers(modifiers: ModifierSet?, vararg modifier: Modifier?) {
     modifiers?.let {
         classes += modifiers.map { it.identifier }
