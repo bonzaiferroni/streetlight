@@ -15,7 +15,7 @@ fun FlowContent.privacyPolicyShell() {
                 heading1("Privacy on Streetlight", modify(Shrinkable))
             }
             card(modify(ZenCardBg, Padding4)) {
-                markdown(IntroContent, modify(Flex4))
+                markdown(IntroContent)
             }
         }
 
@@ -50,11 +50,11 @@ object PrivacyPolicyKey {
 // language="MD"
 private val IntroContent get() = """
 
-Streetlight ![](/www/lottie/astronaut-reading.json) was designed to provide a high level of transparency and control over the information you share.
+Streetlight was designed to provide a high level of transparency and control over the information you share.
 This page describes in detail what you can expect when using the site.
 
 ### In a nutshell---
-* We gather only the information necessary to provide the features you see on the site. It is possible to use many features without creating an account.
+* We ![](/www/lottie/astronaut-reading.json) gather only the information necessary to provide the features you see on the site. It is possible to use many features without creating an account.
 * We do not sell or give information to third parties beyond the functionality of site features and a lawful subpoena by a recognized authority. 
 * We do not show ads or provide information to advertisers.
 * We provide tools that let you keep track of what information you share and easily remove it.
@@ -121,8 +121,6 @@ Streetlight uses your **email address** to reset your password and as an additio
 
 """.toMarkdown()
 
-private fun String.toMarkdown() = markdownBlocksOf(this)
-
 // language="MD"
 private val UpcomingSectionsContent get() = """
 This document will always be a work in progress, but at the moment there are important considerations not yet described here. At a minimum, they include the following:
@@ -137,3 +135,4 @@ val = 20
 ```
 """.toMarkdown()
 
+fun String.toMarkdown() = markdownBlocksOf(this)
