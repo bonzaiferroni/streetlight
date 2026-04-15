@@ -20,18 +20,18 @@ internal fun DIV.configureLottie(
     modifiers: ModifierSet? = null,
     block: (DIV.() -> Unit)? = null
 ) {
-    addModifiers(modify(LottieKey.Class, modifiers))
+    addModifiers(modify(LottieClass.Core, modifiers))
     setAttribute(Attribute.Lottie, file)
     block?.invoke(this)
 }
 
-object LottieKey {
-    val Class = Class("lottie")
+object LottieClass {
+    val Core = Class("lottie")
 }
 
 // language="CSS"
 val LottieCss get() = """
-${LottieKey.Class} {
+${LottieClass.Core} {
     height: 100%;
     aspect-ratio: 1 / 1;
 }

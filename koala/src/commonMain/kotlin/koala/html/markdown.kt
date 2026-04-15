@@ -71,7 +71,7 @@ ${MarkdownClass.List} {
 }
 
 ${MarkdownClass.InlineImage} {
-    max-width: 25%;
+    max-width: 33%;
     height: auto;
     display: inline-block;
 }
@@ -86,7 +86,8 @@ ${MarkdownClass.InlineImageCaption} {
 }
 
 ${MarkdownClass.BlockImage} {
-    margin: 0;
+    margin: 0 auto;
+    text-align: center;
 }
 
 """

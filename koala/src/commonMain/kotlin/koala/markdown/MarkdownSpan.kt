@@ -21,7 +21,9 @@ data class MarkdownInlineCode(
 
 data class MarkdownInlineImage(
     val altText: String,
-    val url: String
+    val url: String,
+    val maxWidthPercent: Int?,
+    val type: ImageType,
 ) : MarkdownSpan
 
 data class MarkdownLink(

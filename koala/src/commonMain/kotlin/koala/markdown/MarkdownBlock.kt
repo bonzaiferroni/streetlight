@@ -65,5 +65,7 @@ data class MarkdownListItem(
 
 data class MarkdownImage(
     val altText: String,
-    val url: String
+    val url: String,
+    val maxWidthPercent: Int?,
+    val type: ImageType,
 ): MarkdownBlock

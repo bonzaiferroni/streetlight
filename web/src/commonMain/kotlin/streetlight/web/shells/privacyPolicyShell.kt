@@ -50,9 +50,7 @@ object PrivacyPolicyKey {
 // language="MD"
 private val IntroContent get() = """
 
-![Streetlight logo](/www/img/placeholder-lg.jpg)
-
-Streetlight ![Streetlight logo](/www/img/placeholder-sm.jpg) was designed to provide a high level of transparency and control over the information you share.
+Streetlight ![](/www/lottie/astronaut-reading.json) was designed to provide a high level of transparency and control over the information you share.
 This page describes in detail what you can expect when using the site.
 
 ### In a nutshell---

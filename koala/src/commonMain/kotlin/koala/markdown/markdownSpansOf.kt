@@ -58,10 +58,13 @@ fun markdownSpansOf(text: String): List<MarkdownSpan> {
                 val closeParen = text.indexOf(")", closeBracket + 2)
                 if (closeParen != -1) {
                     flushPlainText()
+                    val args = parseImageArgs(text.substring(closeBracket + 2, closeParen))
                     spans.add(
                         MarkdownInlineImage(
                             altText = text.substring(i + 2, closeBracket),
-                            url = text.substring(closeBracket + 2, closeParen)
+                            url = args.url,
+                            maxWidthPercent = args.maxWidthPercent,
+                            type = args.type,
                         )
                     )
                     i = closeParen + 1
@@ -105,4 +108,41 @@ fun parseLink(content: String, url: String): MarkdownLink {
         spans = markdownSpansOf(content),
         url = url
     )
+}
+
+data class ParsedImageArgs(
+    val url: String,
+    val type: ImageType,
+    val maxWidthPercent: Int?
+)
+
+internal fun parseImageArgs(raw: String): ParsedImageArgs {
+    val commaIndex = raw.indexOf(',')
+    val url: String
+    val width: Int?
+    if (commaIndex == -1) {
+        url = raw.trim()
+        width = null
+    } else {
+        url = raw.substring(0, commaIndex).trim()
+        width = raw.substring(commaIndex + 1).trim().toIntOrNull()
+    }
+    return ParsedImageArgs(
+        url = url,
+        type = imageTypeOf(url),
+        maxWidthPercent = width
+    )
+}
+
+private fun imageTypeOf(url: String): ImageType {
+    val extension = url.substringAfterLast('.', "").lowercase()
+    return ImageType.entries.firstOrNull { extension in it.extensions } ?: ImageType.Image
+}
+
+enum class ImageType(vararg extensions: String) {
+    Image,
+    Lottie("json");
+    // Video("mp4", "webm");
+
+    val extensions = extensions.toSet()
 }

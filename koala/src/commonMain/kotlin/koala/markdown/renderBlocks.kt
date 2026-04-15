@@ -12,6 +12,7 @@ import kotlinx.html.hr
 import kotlinx.html.img
 import kotlinx.html.ol
 import kotlinx.html.pre
+import kotlinx.html.style
 import kotlinx.html.table
 import kotlinx.html.tbody
 import kotlinx.html.td
@@ -83,8 +84,14 @@ fun FlowContent.renderHorizontalRule() {
 
 fun FlowContent.renderImage(block: MarkdownImage) {
     figure {
-        addModifiers(MarkdownClass.BlockImage, BorderRadius2, MoonShadow)
+        addModifiers(MarkdownClass.BlockImage)
+        block.maxWidthPercent?.let {
+            style = "max-width: $it%;"
+        }
+
         img {
+            addModifiers(BorderRadius2, MoonShadow)
+
             src = block.url
             alt = block.altText
         }

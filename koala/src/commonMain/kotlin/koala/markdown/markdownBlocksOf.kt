@@ -102,13 +102,16 @@ fun markdownBlocksOf(markdown: String): List<MarkdownBlock> {
             continue
         }
 
-        if (IMAGE_BLOCK.matches(trimmed)) {
+        val match = IMAGE_BLOCK.matchEntire(trimmed)
+        if (match != null) {
             flushAll()
-            val match = IMAGE_BLOCK.matchEntire(trimmed)!!
+            val args = parseImageArgs(match.groupValues[2])
             blocks.add(
                 MarkdownImage(
                     altText = match.groupValues[1],
-                    url = match.groupValues[2]
+                    url = args.url,
+                    maxWidthPercent = args.maxWidthPercent,
+                    type = args.type,
                 )
             )
             continue
