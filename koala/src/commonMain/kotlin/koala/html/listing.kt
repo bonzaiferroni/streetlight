@@ -4,6 +4,7 @@ package koala.html
 
 import koala.css.Class
 import koala.css.ModifierSet
+import koala.css.Prose
 import koala.css.addModifiers
 import kotlinx.html.FlowContent
 import kotlinx.html.OL
@@ -66,6 +67,11 @@ ${ListKey.Class} {
     min-width: 0;
     min-height: 0;
     list-style: none;
+    gap: var(--unit-spacing);
+}
+
+$Prose ${ListKey.Class} {
+    gap: 0;
 }
 
 ${ListKey.ColumnClass} {

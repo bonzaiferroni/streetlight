@@ -76,7 +76,7 @@ Streetlight is at an early stage of development, and certain privacy features ar
 // language="MD"
 private val GatheredInformationContent get() = """
 
-This section describes the information that can be shared with Streetlight, how it is stored, and how it is used. We'll follow the basic progression that most users will follow, from using the sign without an account, to account creation and beyond. 
+This section describes the information that can be shared with Streetlight, how it is stored, and how it is used. We'll follow the basic progression that most users will follow, from using the site without an account, to account creation and beyond. 
 
 ### Using Streetlight without an account---
 
@@ -123,7 +123,7 @@ Creating an account involves sharing the following information:
 
 These credentials allow a user to sign in to the site. Users are strongly encouraged to pick a unique and strong password with a variety of character types, and a minimum level of complexity is required. All traffic on Streetlight is encrypted and transferred securely using the https protocol. When the server receives this information, it does not store the password as submitted, it transforms the password into a string of characters known as a hash. When the user signs in with their password, this same transformation is applied to verify their credentials. 
 
-Email addresses are used to allow users to reset their password and as an additional layer of authentication. They may also be used to receive news and messages from Streetlight, strictly on an opt-in basis. This functionality is not yet available on the site, and at this early stage of development we do not gather email addresses.
+Email addresses are used to allow users to reset their password and as an additional layer of authentication. They may also be used to receive news and messages from Streetlight, strictly on an opt-in basis. This functionality is not yet available on the site, and at this early stage of development we do not gather email addresses. Keep that password safe!
 
 """.toMarkdown()
 
