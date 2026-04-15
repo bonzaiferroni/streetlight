@@ -53,6 +53,12 @@ fun TagContext.addModifiers(modifiers: ModifierSet?) {
     }
 }
 
+fun TagContext.addModifiers(vararg modifiers: Modifier?) {
+    modifiers.let {
+        classes += modifiers.mapNotNull { it?.identifier }
+    }
+}
+
 fun TagContext.addModifiers(modifier: Modifier) {
     classes += modifier.identifier
 }

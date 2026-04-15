@@ -1,16 +1,20 @@
 package koala.markdown
 
 import kampfire.model.toUrl
-import koala.css.MarginTop2
-import koala.css.PaddingLeft3
-import koala.css.TextAlignCenter
-import koala.css.modify
+import koala.css.*
 import koala.html.*
 import kotlinx.html.FlowContent
 import kotlinx.html.blockQuote
 import kotlinx.html.code
 import kotlinx.html.hr
 import kotlinx.html.pre
+import kotlinx.html.style
+import kotlinx.html.table
+import kotlinx.html.tbody
+import kotlinx.html.td
+import kotlinx.html.th
+import kotlinx.html.thead
+import kotlinx.html.tr
 
 fun FlowContent.renderBlocks(blocks: List<MarkdownBlock>) {
     column {
@@ -24,6 +28,7 @@ fun FlowContent.renderBlocks(blocks: List<MarkdownBlock>) {
                 is MarkdownImage -> renderImage(block)
                 is MarkdownOrderedList -> renderOrderedList(block)
                 is MarkdownUnorderedList -> renderUnorderedList(block)
+                is MarkdownTable -> renderTable(block)
             }
         }
     }
@@ -123,5 +128,47 @@ fun FlowContent.renderUnorderedList(block: MarkdownUnorderedList) {
                 }
             }
         }
+    }
+}
+
+fun FlowContent.renderTable(block: MarkdownTable) {
+    val hasHeader = block.header.cells.any { it.spans.isNotEmpty() }
+
+    table {
+        addModifiers(AlignSelfStart, MoonShadow, BorderRadius2, ZenCardBg)
+        if (hasHeader) {
+            thead {
+                tr {
+                    block.header.cells.forEachIndexed { index, cell ->
+                        th {
+                            applyAlignment(block.alignments.getOrNull(index))
+                            renderSpans(cell.spans)
+                        }
+                    }
+                }
+            }
+        }
+        tbody {
+            block.rows.forEach { row ->
+                tr {
+                    row.cells.forEachIndexed { index, cell ->
+                        td {
+                            applyAlignment(block.alignments.getOrNull(index))
+                            renderSpans(cell.spans)
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+private fun TagContext.applyAlignment(
+    alignment: MarkdownTableAlignment?
+) {
+    when (alignment) {
+        MarkdownTableAlignment.Center -> addModifiers(TextAlignCenter)
+        MarkdownTableAlignment.Right -> addModifiers(TextAlignRight)
+        else -> Unit
     }
 }

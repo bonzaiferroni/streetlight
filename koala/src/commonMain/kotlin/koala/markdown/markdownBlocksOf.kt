@@ -6,6 +6,7 @@ internal enum class ListKind { Ordered, Unordered }
 
 private val HORIZONTAL_RULE = Regex("^(-{3,}|\\*{3,})\\s*$")
 private val UNORDERED_ITEM = Regex("^\\s*[-*+_] .*")
+private val TABLE_LINE = Regex("^\\s*\\|.*\\|\\s*$")
 private val ORDERED_ITEM = Regex("^\\s*\\d+\\. .*")
 private val IMAGE_BLOCK = Regex("^!\\[([^\\]]*)\\]\\(([^)]+)\\)\\s*$")
 private val FENCE = Regex("^```.*")
@@ -19,6 +20,14 @@ fun markdownBlocksOf(markdown: String): List<MarkdownBlock> {
     val fenceLines = mutableListOf<String>()
     var inFence = false
     var fenceLanguage: String? = null
+    val tableLines = mutableListOf<String>()
+
+    fun flushTable() {
+        if (tableLines.isNotEmpty()) {
+            markdownTableOf(tableLines)?.let { blocks.add(it) }
+            tableLines.clear()
+        }
+    }
 
     fun flushParagraph() {
         if (paragraphLines.isNotEmpty()) {
@@ -45,6 +54,7 @@ fun markdownBlocksOf(markdown: String): List<MarkdownBlock> {
         flushParagraph()
         flushQuote()
         flushList()
+        flushTable()
     }
 
     for (line in lines) {
@@ -115,6 +125,14 @@ fun markdownBlocksOf(markdown: String): List<MarkdownBlock> {
             flushParagraph()
             flushQuote()
             listLines.add(line)
+            continue
+        }
+
+        if (TABLE_LINE.matches(line)) {
+            flushParagraph()
+            flushQuote()
+            flushList()
+            tableLines.add(line)
             continue
         }
 

@@ -2,13 +2,14 @@ package koala.markdown
 
 import koala.html.navigation
 import kotlinx.html.FlowContent
+import kotlinx.html.FlowOrPhrasingContent
 import kotlinx.html.PhrasingContent
 import kotlinx.html.a
 import kotlinx.html.code
 import kotlinx.html.em
 import kotlinx.html.strong
 
-fun PhrasingContent.renderSpans(spans: List<MarkdownSpan>) {
+fun FlowOrPhrasingContent.renderSpans(spans: List<MarkdownSpan>) {
     spans.forEach { span ->
         when (span) {
             is MarkdownInlineCode -> renderInlineCode(span)
@@ -20,31 +21,31 @@ fun PhrasingContent.renderSpans(spans: List<MarkdownSpan>) {
     }
 }
 
-fun PhrasingContent.renderInlineCode(span: MarkdownInlineCode) {
+fun FlowOrPhrasingContent.renderInlineCode(span: MarkdownInlineCode) {
     code {
         +span.text
     }
 }
 
-fun PhrasingContent.renderEmphasis(span: MarkdownEmphasis) {
+fun FlowOrPhrasingContent.renderEmphasis(span: MarkdownEmphasis) {
     em {
         +span.text
     }
 }
 
-fun PhrasingContent.renderLink(span: MarkdownLink) {
+fun FlowOrPhrasingContent.renderLink(span: MarkdownLink) {
     a {
         href = span.url
         renderSpans(span.spans)
     }
 }
 
-fun PhrasingContent.renderStrong(span: MarkdownStrong) {
+fun FlowOrPhrasingContent.renderStrong(span: MarkdownStrong) {
     strong {
         +span.text
     }
 }
 
-fun PhrasingContent.renderText(span: MarkdownText) {
+fun FlowOrPhrasingContent.renderText(span: MarkdownText) {
     +span.text
 }

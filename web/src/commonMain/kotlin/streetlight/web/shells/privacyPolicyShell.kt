@@ -1,3 +1,5 @@
+@file:Suppress("MarkdownIncorrectTableFormatting")
+
 package streetlight.web.shells
 
 import koala.LottieFile
@@ -84,17 +86,23 @@ Streetlight lets users mark posts that they are interested in. While you are not
 
 We are experimenting with the ability for signed-out users to share posts. These posts are reviewed by a moderator before they become visible to the community at large to ensure the content fits the theme of the galaxy and the site's content policies. A galaxy is a streetlight community with a particular content focus. The moderator is a community member too, the galaxy creator or one of its members. 
 
-Creating a post involves sharing the following information:
-* **Events**
- * The name of the event, location, cost, and the start time (required)
- * The event website and additional links (optional)
- * A description of the event (optional)
- * A feature image (optional)
-* **Locations**
- * The name, city, address, and geolocation (required)
- * The location website and additional links (optional)
- * A description of the location (optional)
- * A feature image (optional)
+Creating an **event post** involves sharing the following information:
+
+|   |   |
+|---:|:---|
+| required | The name of the event, location, cost, and the start time |
+| optional | The event website and additional links |
+| optional | A description of the event |
+| optional | A feature image |
+
+Creating a **location post** involves sharing the following information:
+
+|   |   |
+|---:|:---|
+| required | The name, city, address, and geolocation |
+| optional | The location website and additional links |
+| optional | A description of the location |
+| optional | A feature image |
 
 There are a few important considerations when sharing this information. 
 * A post shared by a signed-out user cannot be directly removed by that user, since there is no way to verify they are the same user. We make sure the user is aware of this limitation. We are working on a feature that lets signed-out users send a special request for the removal of a post.
@@ -105,10 +113,13 @@ There are a few important considerations when sharing this information.
 
 Creating an account enables additional site functionality. Users with an account can create their own galaxies and can submit posts directly. Their information is also synchronized across devices.
 
-_ Creating an account involves sharing the following information:
- * A **username** (required)
- * A **password** (required)
- * Eventually users will be able to share an **email address** (optional)
+Creating an account involves sharing the following information:
+
+|   |   |
+|---:|:---|
+| required | A **username** |
+| required | A **password** |
+| optional | Eventually users will be able to share an **email address** |
 
 These credentials allow a user to sign in to the site. Users are strongly encouraged to pick a unique and strong password with a variety of character types, and a minimum level of complexity is required. All traffic on Streetlight is encrypted and transferred securely using the https protocol. When the server receives this information, it does not store the password as submitted, it transforms the password into a string of characters known as a hash. When the user signs in with their password, this same transformation is applied to verify their credentials. 
 

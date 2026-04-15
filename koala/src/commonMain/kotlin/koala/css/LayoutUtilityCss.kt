@@ -11,7 +11,7 @@ val LayoutUtilityCss
         AlignItemsCenter, AlignItemsStretch, AlignItemsStart, AlignItemsEnd,
         JustifyContentCenter, JustifyContentEnd, JustifyContentSpaceAround, JustifyContentSpaceBetween,
         JustifySelfEnd, JustifyContentStretch, JustifyContentStart,
-        AlignSelfStart, AlignSelfStretch,
+        AlignSelfStart, AlignSelfCenter, AlignSelfEnd, AlignSelfStretch, JustifySelfStart, JustifySelfStretch,
         // Width
         WidthAuto, Width100P, WidthFitContent,
         Width2, Width4, Width5, Width8, Width12, Width16, Width24, Width32, Width64,
@@ -208,7 +208,10 @@ val Center = CssUtility("center")
 val PlaceItemsCenter = CssUtility("center-items")
 val JustifySelfEnd = utilityOf("justify-self-end", "justify-self: end")
 val AlignSelfStart = utilityOf("align-self-start", "align-self: start")
+val AlignSelfCenter = utilityOf("align-self-center", "align-self: center")
+val AlignSelfEnd = utilityOf("align-self-end", "align-self: end")
 val JustifySelfStart = utilityOf("justify-self-start", "justify-self: start")
+val JustifySelfStretch = utilityOf("justify-self-stretch", "justify-self: stretch")
 val AlignSelfStretch = utilityOf("align-self-stretch", "align-self: stretch")
 val AspectRatio1 = utilityOf("square", "aspect-ratio: 1 / 1")
 val AspectRatio2 = utilityOf("aspect-ratio-2", "aspect-ratio: 2 / 1")
