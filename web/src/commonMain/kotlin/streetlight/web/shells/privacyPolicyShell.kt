@@ -57,17 +57,17 @@ private val IntroContent get() = """
 Streetlight was designed to provide a high level of transparency and control over the information you share.
 This page describes in detail what you can expect when using the site.
 
-##### In a nutshell
+### In a nutshell---
 * We gather only the information necessary to provide the features you see on the site. It is possible to use many features without creating an account.
 * We do not sell or give information to third parties beyond the functionality of site features and a lawful subpoena by a recognized authority. 
 * We do not show ads or provide information to advertisers.
 * We provide tools that let you keep track of what information you share and easily remove it.
 * Streetlight's source code is open and can be inspected to verify an effective implementation of these policies.
 
-##### Important limitations 
-* Sharing information on the internet can carry risk that is difficult to completely safeguard against. For example, it is possible for third parties to scrape websites and gather information on individuals and the community. It is important for each user to be mindful of what they share and how it may be used outside of Streetlight's control. 
-* Streetlight is at an early stage of development, and certain privacy features are not yet available. For example, we plan to provide a way for you to download all of your data or remove it entirely from the site.
-* In the long term, we believe that Streetlight's open source will be an important reason to trust the integrity of the site. In the short term, it may carry additional risk, since potential attackers can also inspect the code for vulnerabilities.
+#### Important limitations 
+Sharing information on the internet can carry risk that is difficult to completely safeguard against. For example, it is possible for third parties to access websites and gather public information on individuals and the community. It is important for each user to be mindful of what they share and how it may be used outside of Streetlight's control. 
+
+Streetlight is at an early stage of development, and certain privacy features are not yet available. For example, we plan to provide a way for you to download all of your data or remove it entirely from the site. In the long term, we believe that Streetlight's open source will be an important reason to trust the integrity of the site. In the short term, it may carry additional risk, since potential attackers can also inspect the code for vulnerabilities.
 
 """.toMarkdown()
 
@@ -76,7 +76,7 @@ private val GatheredInformationContent get() = """
 
 This section describes the information that can be shared with Streetlight, how it is stored, and how it is used. We'll follow the basic progression that most users will follow, from using the sign without an account, to account creation and beyond. 
 
-##### Using Streetlight without an account
+### Using Streetlight without an account---
 
 We keep the core functionality of Streetlight available to users without an account. It is possible to browse the majority of the content without ever signing in. 
 
@@ -101,14 +101,14 @@ There are a few important considerations when sharing this information.
 * Geolocation is among the most sensitive information that it is possible to share with Streetlight. For this reason, all users are advised not to share a personal residence as a location. Ultimately, this decision is left to the discretion of the user.
 * It is possible to set a feature image by providing a web address for the event or location, the image itself does not need to be provided by the user. The server checks the metainformation of the web content for an image specifically intended to be shared on social media. When an image is gathered this way, it is not associated with the user account that submitted the post.  
 
-##### Creating a Streetlight account
+### Creating a Streetlight account---
 
 Creating an account enables additional site functionality. Users with an account can create their own galaxies and can submit posts directly. Their information is also synchronized across devices.
 
-Creating an account involves sharing the following information:
-* A **username** (required)
-* A **password** (required)
-* Eventually users will be able to share an **email address** (optional)
+_ Creating an account involves sharing the following information:
+ * A **username** (required)
+ * A **password** (required)
+ * Eventually users will be able to share an **email address** (optional)
 
 These credentials allow a user to sign in to the site. Users are strongly encouraged to pick a unique and strong password with a variety of character types, and a minimum level of complexity is required. All traffic on Streetlight is encrypted and transferred securely using the https protocol. When the server receives this information, it does not store the password as submitted, it transforms the password into a string of characters known as a hash. When the user signs in with their password, this same transformation is applied to verify their credentials. 
 
@@ -124,6 +124,11 @@ This document will always be a work in progress, but at the moment there are imp
 
 * A description of features that allow you to track the information you've shared and remove it.
 * The circumstances under which Streetlight will provide or remove information in response to a lawful subpoena by a recognized authority.
-* Information provided to third parties as a part of site functionality.
+* Information observable by third parties as a part of site functionality.
+
+```
+this is a code test!
+val = 20
+```
 """.toMarkdown()
 

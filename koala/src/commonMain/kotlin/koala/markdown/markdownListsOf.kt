@@ -1,6 +1,6 @@
 package koala.markdown
 
-private val UNORDERED_MARKER = Regex("^[-*+]\\s+(.*)$")
+private val UNORDERED_MARKER = Regex("^([-*+_])\\s+(.*)$")
 private val ORDERED_MARKER = Regex("^(\\d+)\\.\\s+(.*)$")
 
 fun markdownListsOf(lines: List<String>): List<MarkdownList> {
@@ -12,6 +12,7 @@ fun markdownListsOf(lines: List<String>): List<MarkdownList> {
     val childLines = mutableListOf<String>()
     var currentKind: ListKind? = null
     var currentStart = 1
+    var marker = '-'
 
     fun attachChildrenToLastItem() {
         if (childLines.isEmpty()) return
@@ -28,7 +29,7 @@ fun markdownListsOf(lines: List<String>): List<MarkdownList> {
         if (currentItems.isEmpty()) return
         val list: MarkdownList = when (currentKind) {
             ListKind.Ordered -> MarkdownOrderedList(startNumber = currentStart, items = currentItems.toList())
-            ListKind.Unordered -> MarkdownUnorderedList(items = currentItems.toList())
+            ListKind.Unordered -> MarkdownUnorderedList(marker = marker, items = currentItems.toList())
             null -> return
         }
         results.add(list)
@@ -61,7 +62,8 @@ fun markdownListsOf(lines: List<String>): List<MarkdownList> {
             }
             unorderedMatch != null -> {
                 kind = ListKind.Unordered
-                content = unorderedMatch.groupValues[1]
+                marker = unorderedMatch.groupValues[1][0]
+                content = unorderedMatch.groupValues[2]
                 number = 1
             }
             else -> continue

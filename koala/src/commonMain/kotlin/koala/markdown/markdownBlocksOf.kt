@@ -5,7 +5,7 @@ package koala.markdown
 internal enum class ListKind { Ordered, Unordered }
 
 private val HORIZONTAL_RULE = Regex("^(-{3,}|\\*{3,})\\s*$")
-private val UNORDERED_ITEM = Regex("^\\s*[-*+] .*")
+private val UNORDERED_ITEM = Regex("^\\s*[-*+_] .*")
 private val ORDERED_ITEM = Regex("^\\s*\\d+\\. .*")
 private val IMAGE_BLOCK = Regex("^!\\[([^\\]]*)\\]\\(([^)]+)\\)\\s*$")
 private val FENCE = Regex("^```.*")
@@ -137,8 +137,13 @@ fun parseHeading(chunk: String): MarkdownHeading? {
     val level = chunk.takeWhile { it == '#' }.length
     if (level !in 1..6) return null
     if (chunk.length <= level || chunk[level] != ' ') return null
-    val content = chunk.substring(level + 1).trim()
-    return MarkdownHeading(level, markdownSpansOf(content))
+    val filigree = chunk.endsWith("---")
+    val endIndex = when (filigree) {
+        true -> chunk.length - 3
+        else -> chunk.length
+    }
+    val content = chunk.substring(level + 1, endIndex).trim()
+    return MarkdownHeading(level, filigree, markdownSpansOf(content))
 }
 
 fun parseBlockquote(lines: List<String>): MarkdownBlockquote? {

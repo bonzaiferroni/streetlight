@@ -1,7 +1,9 @@
 package koala.markdown
 
 import kampfire.model.toUrl
-import koala.css.ListStyleDisc
+import koala.css.MarginTop2
+import koala.css.PaddingLeft3
+import koala.css.TextAlignCenter
 import koala.css.modify
 import koala.html.*
 import kotlinx.html.FlowContent
@@ -27,44 +29,21 @@ fun FlowContent.renderBlocks(blocks: List<MarkdownBlock>) {
     }
 }
 
-fun FlowContent.renderHeading(block: MarkdownHeading) {
-
-    when (block.level) {
-        1 -> heading1 {
-            renderSpans(block.spans)
+fun FlowContent.renderHeading(heading: MarkdownHeading) {
+    val containerMod = modify(MarginTop2)
+    val headingMod = modify(TextAlignCenter)
+    val body: FlowContent.() -> Unit = {
+        when (heading.level) {
+            1 -> heading1(modifiers = headingMod) { renderSpans(heading.spans) }
+            2 -> heading2(modifiers = headingMod) { renderSpans(heading.spans) }
+            3 -> heading3(modifiers = headingMod) { renderSpans(heading.spans) }
+            4 -> heading4(modifiers = headingMod) { renderSpans(heading.spans) }
+            5 -> heading5(modifiers = headingMod) { renderSpans(heading.spans) }
+            6 -> heading5(modifiers = headingMod) { renderSpans(heading.spans) }  // td: support h6
+            else -> error("invalid markdown")
         }
-
-        2 -> heading2 {
-            renderSpans(block.spans)
-        }
-
-        3 -> filigree {
-            heading3 {
-                renderSpans(block.spans)
-            }
-        }
-
-        4 -> filigree {
-            heading4 {
-                renderSpans(block.spans)
-            }
-        }
-
-        5 -> filigree {
-            heading5 {
-                renderSpans(block.spans)
-            }
-        }
-
-        6 -> filigree {
-            // td: support h6
-            heading5 {
-                renderSpans(block.spans)
-            }
-        }
-
-        else -> error("invalid markdown")
     }
+    if (heading.filigree) filigree(containerMod, body) else div(containerMod, body)
 }
 
 fun FlowContent.renderParagraph(block: MarkdownParagraph) {
@@ -121,7 +100,19 @@ fun FlowContent.renderList(block: MarkdownList) {
 }
 
 fun FlowContent.renderUnorderedList(block: MarkdownUnorderedList) {
-    ulist(modify(ListStyleDisc)) {
+    val markerMod = when (block.marker) {
+        '*' -> ListStyleDisc
+        '-' -> ListStyleMinus
+        '+' -> ListStylePlus
+        else -> null
+    }
+
+    val paddingMod = when (block.marker) {
+        '_' -> null
+        else -> PaddingLeft3
+    }
+
+    ulist(modify(paddingMod, markerMod)) {
         block.items.forEach { item ->
             listItem {
                 span {

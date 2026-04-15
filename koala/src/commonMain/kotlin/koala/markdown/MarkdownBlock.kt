@@ -19,6 +19,7 @@ data class MarkdownParagraph(
 
 data class MarkdownHeading(
     val level: Int,
+    val filigree: Boolean,
     override val spans: List<MarkdownSpan>
 ): MarkdownBlock, MarkdownTextBlock
 
@@ -46,6 +47,7 @@ sealed interface MarkdownList: MarkdownBlock {
 }
 
 data class MarkdownUnorderedList(
+    val marker: Char,
     override val items: List<MarkdownListItem>
 ): MarkdownList
 

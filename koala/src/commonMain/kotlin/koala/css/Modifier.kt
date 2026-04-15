@@ -24,7 +24,13 @@ value class Class(override val identifier: String): Modifier {
 
 typealias ModifierSet = Set<Modifier>
 
-fun modify(vararg modifiers: Modifier) = modifiers.toSet()
+fun modify(vararg modifiers: Modifier?) = buildSet {
+    modifiers.forEach { modifier ->
+        modifier?.let {
+            add(it)
+        }
+    }
+}
 fun modify(css: Modifier, modifiers: ModifierSet?): ModifierSet {
     val set = setOf(css)
     return if (modifiers != null) {
@@ -33,7 +39,7 @@ fun modify(css: Modifier, modifiers: ModifierSet?): ModifierSet {
         set
     }
 }
-fun modify(modifiers: ModifierSet?, vararg additional: Modifier) = (modifiers ?: emptySet()) + additional.toSet()
+fun modify(modifiers: ModifierSet?, vararg additional: Modifier?) = (modifiers ?: emptySet()) + modify(*additional)
 fun modify(modifiers: ModifierSet, additional: ModifierSet?): ModifierSet {
     return when (additional) {
         null -> modifiers

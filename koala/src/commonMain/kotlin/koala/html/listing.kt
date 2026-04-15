@@ -1,3 +1,5 @@
+@file:Suppress("CssInvalidPropertyValue")
+
 package koala.html
 
 import koala.css.Class
@@ -53,13 +55,16 @@ object ListKey {
     val ColumnClass = Class("column-listing")
 }
 
+val ListStyleDisc = Class("list-style-disc")
+val ListStylePlus = Class("list-style-plus")
+val ListStyleMinus = Class("list-style-minus")
+
 // language="CSS"
 val ListingCss get() = """
 ${ListKey.Class} {
     display: flex;
     min-width: 0;
     min-height: 0;
-    gap: calc(var(--unit-spacing) * 0.5);
     list-style: none;
 }
 
@@ -70,4 +75,19 @@ ${ListKey.ColumnClass} {
 ${ListKey.RowClass} {
     flex-direction: row;
 }
+
+@counter-style minus-marker {
+    system: cyclic;
+    symbols: "-";
+    suffix: " ";
+}
+@counter-style plus-marker {
+    system: cyclic;
+    symbols: "+";
+    suffix: " ";
+}
+
+$ListStyleDisc   { list-style: disc; }
+$ListStylePlus   { list-style: plus-marker; }
+$ListStyleMinus  { list-style: minus-marker; }
 """
