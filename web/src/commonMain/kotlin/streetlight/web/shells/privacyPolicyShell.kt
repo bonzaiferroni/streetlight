@@ -2,7 +2,6 @@
 
 package streetlight.web.shells
 
-import koala.LottieFile
 import koala.css.*
 import koala.html.*
 import koala.markdown.markdownBlocksOf
@@ -16,12 +15,7 @@ fun FlowContent.privacyPolicyShell() {
                 heading1("Privacy on Streetlight", modify(Shrinkable))
             }
             card(modify(ZenCardBg, Padding4)) {
-                row(modify(AlignItemsCenter)) {
-                    markdownContent(IntroContent, modify(Flex4))
-                    row(modify(Flex1, JustifyContentCenter)) {
-                        lottie(LottieFile.AstronautReading, modify(MaxHeight32))
-                    }
-                }
+                markdown(IntroContent, modify(Flex4))
             }
         }
 
@@ -32,7 +26,7 @@ fun FlowContent.privacyPolicyShell() {
                 heading2("Information shared on Streetlight")
             }
             card(modify(ZenCardBg, Padding4)) {
-                markdownContent(GatheredInformationContent)
+                markdown(GatheredInformationContent)
             }
         }
 
@@ -41,7 +35,7 @@ fun FlowContent.privacyPolicyShell() {
                 heading2("Upcoming sections")
             }
             card(modify(ZenCardBg, Padding4)) {
-                markdownContent(UpcomingSectionsContent)
+                markdown(UpcomingSectionsContent)
             }
         }
 
@@ -56,7 +50,9 @@ object PrivacyPolicyKey {
 // language="MD"
 private val IntroContent get() = """
 
-Streetlight was designed to provide a high level of transparency and control over the information you share.
+![Streetlight logo](/www/img/placeholder-lg.jpg)
+
+Streetlight ![Streetlight logo](/www/img/placeholder-sm.jpg) was designed to provide a high level of transparency and control over the information you share.
 This page describes in detail what you can expect when using the site.
 
 ### In a nutshell---
@@ -90,24 +86,24 @@ Creating an **event post** involves sharing the following information:
 
 |   |   |
 |---:|:---|
-| required | The name of the event, location, cost, and the start time |
-| optional | The event website and additional links |
-| optional | A description of the event |
-| optional | A feature image |
+| *required* | The name of the event, location, cost, and the start time |
+| *optional* | The event website and additional links |
+| *optional* | A description of the event |
+| *optional* | A feature image |
 
 Creating a **location post** involves sharing the following information:
 
 |   |   |
 |---:|:---|
-| required | The name, city, address, and geolocation |
-| optional | The location website and additional links |
-| optional | A description of the location |
-| optional | A feature image |
+| *required* | The name, city, address, and geolocation |
+| *optional* | The location website and additional links |
+| *optional* | A description of the location |
+| *optional* | A feature image |
 
 There are a few important considerations when sharing this information. 
 * A post shared by a signed-out user cannot be directly removed by that user, since there is no way to verify they are the same user. We make sure the user is aware of this limitation. We are working on a feature that lets signed-out users send a special request for the removal of a post.
-* Geolocation is among the most sensitive information that it is possible to share with Streetlight. For this reason, all users are advised not to share a personal residence as a location. Ultimately, this decision is left to the discretion of the user.
-* It is possible to set a feature image by providing a web address for the event or location, the image itself does not need to be provided by the user. The server checks the metainformation of the web content for an image specifically intended to be shared on social media. When an image is gathered this way, it is not associated with the user account that submitted the post.  
+* **Geolocation** is among the most sensitive information that it is possible to share with Streetlight. For this reason, all users are advised not to share a personal residence as a location. Ultimately, this decision is left to the discretion of the user.
+* It is possible to set a **feature image** by providing a web address for the event or location, the image itself does not need to be provided by the user. The server checks the metainformation of the web content for an image specifically intended to be shared on social media. When an image is gathered this way, it is not associated with the user account that submitted the post.  
 
 ### Creating a Streetlight account---
 
@@ -117,13 +113,13 @@ Creating an account involves sharing the following information:
 
 |   |   |
 |---:|:---|
-| required | A **username** |
-| required | A **password** |
-| optional | Eventually users will be able to share an **email address** |
+| *required* | A **username** |
+| *required* | A **password** |
+| *optional* | Eventually users will be able to share an **email address** |
 
 These credentials allow a user to sign in to the site. Users are strongly encouraged to pick a unique and strong password with a variety of character types, and a minimum level of complexity is required. All traffic on Streetlight is encrypted and transferred securely using the https protocol. When the server receives this information, it does not store the password as submitted, it transforms the password into a string of characters known as a hash. When the user signs in with their password, this same transformation is applied to verify their credentials. 
 
-Email addresses are used to allow users to reset their password and as an additional layer of authentication. They may also be used to receive news and messages from Streetlight, strictly on an opt-in basis. This functionality is not yet available on the site, and at this early stage of development we do not gather email addresses. Keep that password safe!
+Streetlight uses your **email address** to reset your password and as an additional layer of authentication. They may also be used to receive news and messages from Streetlight, strictly on an opt-in basis. This functionality is not yet available on the site, and at this early stage of development we do not gather email addresses. Keep that password safe!
 
 """.toMarkdown()
 

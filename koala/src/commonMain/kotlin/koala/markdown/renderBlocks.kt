@@ -6,18 +6,23 @@ import koala.html.*
 import kotlinx.html.FlowContent
 import kotlinx.html.blockQuote
 import kotlinx.html.code
+import kotlinx.html.figcaption
+import kotlinx.html.figure
 import kotlinx.html.hr
+import kotlinx.html.img
+import kotlinx.html.ol
 import kotlinx.html.pre
-import kotlinx.html.style
 import kotlinx.html.table
 import kotlinx.html.tbody
 import kotlinx.html.td
 import kotlinx.html.th
 import kotlinx.html.thead
 import kotlinx.html.tr
+import kotlinx.html.ul
 
 fun FlowContent.renderBlocks(blocks: List<MarkdownBlock>) {
-    column {
+    div {
+        addModifiers(MarkdownClass.Block)
         blocks.forEach { block ->
             when (block) {
                 is MarkdownHeading -> renderHeading(block)
@@ -35,7 +40,7 @@ fun FlowContent.renderBlocks(blocks: List<MarkdownBlock>) {
 }
 
 fun FlowContent.renderHeading(heading: MarkdownHeading) {
-    val containerMod = modify(MarginTop2)
+    val containerMod = modify(MarginTop4)
     val headingMod = modify(TextAlignCenter)
     val body: FlowContent.() -> Unit = {
         when (heading.level) {
@@ -77,11 +82,21 @@ fun FlowContent.renderHorizontalRule() {
 }
 
 fun FlowContent.renderImage(block: MarkdownImage) {
-    image(block.url.toUrl())
+    figure {
+        addModifiers(MarkdownClass.BlockImage, BorderRadius2, MoonShadow)
+        img {
+            src = block.url
+            alt = block.altText
+        }
+        figcaption {
+            +block.altText
+        }
+    }
 }
 
 fun FlowContent.renderOrderedList(block: MarkdownOrderedList) {
-    olist {
+    ol {
+        addModifiers(MarkdownClass.List)
         start = block.startNumber.toString()
         
         block.items.forEach { item ->
@@ -117,7 +132,8 @@ fun FlowContent.renderUnorderedList(block: MarkdownUnorderedList) {
         else -> PaddingLeft3
     }
 
-    ulist(modify(paddingMod, markerMod)) {
+    ul {
+        addModifiers(MarkdownClass.List, paddingMod, markerMod)
         block.items.forEach { item ->
             listItem {
                 span {

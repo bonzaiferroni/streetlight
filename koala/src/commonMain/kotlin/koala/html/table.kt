@@ -7,6 +7,7 @@ val TableCss get() = """
 $Prose th,
 $Prose td {
     padding: .5rem 0.75rem;
+    font-size: var(--paragraph-size);
 }
 
 $Prose table {

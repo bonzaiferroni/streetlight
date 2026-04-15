@@ -49,7 +49,7 @@ fun FlowContent.eventProfileShell(event: EventLocation) {
             column(modify(ContainerMdRow, Padding4, Gap4, AlignItemsStart)) {
                 column(modify(Flex4)) {
                     event.description?.let {
-                        markdownContent(it)
+                        markdown(it)
                     }
                 }
                 event.links?.let { links ->
@@ -87,7 +87,7 @@ fun FlowContent.eventProfileShell(event: EventLocation) {
                         column(modify(ContainerMdRow, Padding4, Gap4, AlignItemsStart)) {
                             column(modify(Flex4)) {
                                 event.locationDescription?.let {
-                                    markdownContent(it)
+                                    markdown(it)
                                 }
                             }
 

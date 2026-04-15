@@ -1,18 +1,15 @@
 package koala.markdown
 
-import koala.html.navigation
-import kotlinx.html.FlowContent
-import kotlinx.html.FlowOrPhrasingContent
-import kotlinx.html.PhrasingContent
-import kotlinx.html.a
-import kotlinx.html.code
-import kotlinx.html.em
-import kotlinx.html.strong
+import koala.css.*
+import koala.html.FloatRight
+import koala.html.MarkdownClass
+import kotlinx.html.*
 
 fun FlowOrPhrasingContent.renderSpans(spans: List<MarkdownSpan>) {
     spans.forEach { span ->
         when (span) {
             is MarkdownInlineCode -> renderInlineCode(span)
+            is MarkdownInlineImage -> renderInlineImage(span)
             is MarkdownEmphasis -> renderEmphasis(span)
             is MarkdownLink -> renderLink(span)
             is MarkdownStrong -> renderStrong(span)
@@ -48,4 +45,19 @@ fun FlowOrPhrasingContent.renderStrong(span: MarkdownStrong) {
 
 fun FlowOrPhrasingContent.renderText(span: MarkdownText) {
     +span.text
+}
+
+fun FlowOrPhrasingContent.renderInlineImage(span: MarkdownInlineImage) {
+    span {
+        addModifiers(MarkdownClass.InlineImage, FloatRight, MarginLeft1, MarginBottom1)
+        img {
+            addModifiers(BorderRadius1, MoonShadow)
+            src = span.url
+            alt = span.altText
+        }
+        span {
+            addModifiers(MarkdownClass.InlineImageCaption)
+            +span.altText
+        }
+    }
 }

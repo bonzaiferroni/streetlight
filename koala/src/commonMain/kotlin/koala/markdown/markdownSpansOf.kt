@@ -48,6 +48,28 @@ fun markdownSpansOf(text: String): List<MarkdownSpan> {
             }
         }
 
+        // Inline image: ![alt](url)
+        if (rest.startsWith("![")) {
+            val closeBracket = text.indexOf("]", i + 2)
+            if (closeBracket != -1 &&
+                closeBracket + 1 < text.length &&
+                text[closeBracket + 1] == '('
+            ) {
+                val closeParen = text.indexOf(")", closeBracket + 2)
+                if (closeParen != -1) {
+                    flushPlainText()
+                    spans.add(
+                        MarkdownInlineImage(
+                            altText = text.substring(i + 2, closeBracket),
+                            url = text.substring(closeBracket + 2, closeParen)
+                        )
+                    )
+                    i = closeParen + 1
+                    continue
+                }
+            }
+        }
+
         /// Link: [text](url)
         if (rest.startsWith("[")) {
             val closeBracket = text.indexOf("]", i + 1)

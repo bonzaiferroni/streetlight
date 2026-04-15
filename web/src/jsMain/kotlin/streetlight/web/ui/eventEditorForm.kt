@@ -5,21 +5,18 @@ import koala.SvgFile
 import koala.css.*
 import koala.dom.*
 import koala.html.ButtonPopover
-import koala.html.Id
 import koala.html.bulletsOf
 import koala.html.buttonPopover
 import koala.html.filigree
-import koala.html.heading2
 import koala.html.heading3
 import koala.html.heading4
-import koala.html.markdownContent
+import koala.html.markdown
 import koala.html.spacer
 import koala.html.textBlock
 import koala.html.textProperty
 import koala.model.mapDistinct
 import koala.model.storeOf
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import streetlight.model.data.EventEdit
 import streetlight.model.data.ExtraLink
@@ -159,7 +156,7 @@ fun RenderContext.eventEditorForm(
                     buttonDialog("Preview", emoji = "👀") {
                         flowBlock(model.descriptionFlow) {
                             box(modify(Padding2)) {
-                                markdownContent(it)
+                                markdown(it)
                             }
                         }
                     }
