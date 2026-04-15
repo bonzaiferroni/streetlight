@@ -107,7 +107,7 @@ fun markdownBlocksOf(markdown: String): List<MarkdownBlock> {
             flushAll()
             val args = parseImageArgs(match.groupValues[2])
             blocks.add(
-                MarkdownImage(
+                MarkdownBlockImage(
                     altText = match.groupValues[1],
                     url = args.url,
                     maxWidthPercent = args.maxWidthPercent,

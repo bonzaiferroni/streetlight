@@ -20,11 +20,11 @@ data class MarkdownInlineCode(
 ): MarkdownSpan
 
 data class MarkdownInlineImage(
-    val altText: String,
-    val url: String,
-    val maxWidthPercent: Int?,
-    val type: ImageType,
-) : MarkdownSpan
+    override val altText: String,
+    override val url: String,
+    override val maxWidthPercent: Int?,
+    override val type: ImageType,
+) : MarkdownSpan, MarkdownImage
 
 data class MarkdownLink(
     val spans: List<MarkdownSpan>,

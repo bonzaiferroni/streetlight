@@ -4,7 +4,6 @@ import koala.css.*
 import koala.html.FloatRight
 import koala.html.LottieClass
 import koala.html.MarkdownClass
-import kotlinx.css.div
 import kotlinx.html.*
 
 fun FlowOrPhrasingContent.renderSpans(spans: List<MarkdownSpan>) {
@@ -56,8 +55,8 @@ fun FlowOrPhrasingContent.renderInlineImage(span: MarkdownInlineImage) {
             style = "max-width: $it%;"
         }
         when (span.type) {
-            ImageType.Lottie -> renderInlineLottieImage(span)
-            ImageType.Image -> renderInlineBasicImage(span)
+            ImageType.Lottie -> renderLottieImage(span)
+            ImageType.Image -> renderBasicImage(span)
         }
         span {
             addModifiers(MarkdownClass.InlineImageCaption)
@@ -66,7 +65,7 @@ fun FlowOrPhrasingContent.renderInlineImage(span: MarkdownInlineImage) {
     }
 }
 
-fun FlowOrPhrasingContent.renderInlineBasicImage(span: MarkdownInlineImage) {
+fun FlowOrPhrasingContent.renderBasicImage(span: MarkdownImage) {
     img {
         addModifiers(BorderRadius1, MoonShadow)
         src = span.url
@@ -74,7 +73,7 @@ fun FlowOrPhrasingContent.renderInlineBasicImage(span: MarkdownInlineImage) {
     }
 }
 
-fun FlowContent.renderInlineLottieImage(span: MarkdownInlineImage) {
+fun FlowContent.renderLottieImage(span: MarkdownImage) {
     div {
         addModifiers(LottieClass.Core)
         attributes["data-lottie"] = span.url

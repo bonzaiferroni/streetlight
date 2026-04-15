@@ -3,6 +3,13 @@ package koala.markdown
 sealed interface MarkdownBlock {
 }
 
+interface MarkdownImage {
+    val altText: String
+    val url: String
+    val maxWidthPercent: Int?
+    val type: ImageType
+}
+
 // Blocks
 
 interface MarkdownTextBlock {
@@ -63,9 +70,9 @@ data class MarkdownListItem(
 
 // Image
 
-data class MarkdownImage(
-    val altText: String,
-    val url: String,
-    val maxWidthPercent: Int?,
-    val type: ImageType,
-): MarkdownBlock
+data class MarkdownBlockImage(
+    override val altText: String,
+    override val url: String,
+    override val maxWidthPercent: Int?,
+    override val type: ImageType,
+): MarkdownBlock, MarkdownImage

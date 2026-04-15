@@ -1,6 +1,5 @@
 package koala.markdown
 
-import kampfire.model.toUrl
 import koala.css.*
 import koala.html.*
 import kotlinx.html.FlowContent
@@ -31,7 +30,7 @@ fun FlowContent.renderBlocks(blocks: List<MarkdownBlock>) {
                 is MarkdownBlockquote -> renderBlockquote(block)
                 is MarkdownCodeBlock -> renderCodeBlock(block)
                 MarkdownHorizontalRule -> renderHorizontalRule()
-                is MarkdownImage -> renderImage(block)
+                is MarkdownBlockImage -> renderImage(block)
                 is MarkdownOrderedList -> renderOrderedList(block)
                 is MarkdownUnorderedList -> renderUnorderedList(block)
                 is MarkdownTable -> renderTable(block)
@@ -82,18 +81,16 @@ fun FlowContent.renderHorizontalRule() {
     hr { }
 }
 
-fun FlowContent.renderImage(block: MarkdownImage) {
+fun FlowContent.renderImage(block: MarkdownBlockImage) {
     figure {
         addModifiers(MarkdownClass.BlockImage)
         block.maxWidthPercent?.let {
             style = "max-width: $it%;"
         }
 
-        img {
-            addModifiers(BorderRadius2, MoonShadow)
-
-            src = block.url
-            alt = block.altText
+        when (block.type) {
+            ImageType.Image -> renderBasicImage(block)
+            ImageType.Lottie -> renderLottieImage(block)
         }
         figcaption {
             +block.altText
