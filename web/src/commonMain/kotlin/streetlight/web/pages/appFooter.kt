@@ -15,6 +15,8 @@ import kotlinx.html.FlowContent
 import streetlight.model.data.ExtraLink
 import streetlight.web.AboutRoute
 import streetlight.web.PrivacyPolicyRoute
+import streetlight.web.doc.SiteDoc
+import streetlight.web.layouts.route
 
 fun FlowContent.appFooter(sourcePath: String? = null) {
     column {
@@ -28,11 +30,11 @@ fun DIV.configureAppFooter(sourcePath: String?, vararg additional: ExtraLink) {
     lottie(LottieFile.spinningCircles, modify(Height24))
     textBlock(prayer, modify(Italic, OpacityMost))
     row(modify(JustifyContentCenter)) {
-        navigation(AboutRoute) {
+        navigation(SiteDoc.About.route) {
             textBlock("about us")
         }
         textBlock("•")
-        navigation(PrivacyPolicyRoute) {
+        navigation(SiteDoc.Privacy.route) {
             textBlock("your privacy")
         }
         textBlock("•")

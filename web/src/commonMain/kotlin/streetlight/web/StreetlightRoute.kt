@@ -3,6 +3,8 @@ package streetlight.web
 import kampfire.api.TableId
 import koala.html.AppRoute
 import koala.html.AppScreen
+import koala.model.Doc
+import koala.model.DocId
 import streetlight.model.data.Event
 import streetlight.model.data.EventEdit
 import streetlight.model.data.EventId
@@ -42,7 +44,8 @@ enum class StreetlightScreen(
     EditStar("edit-profile", { EditStarRoute }),
     SiteConfig("config", { SiteConfigRoute }),
     AboutApp("about", { AboutRoute }),
-    PrivacyPolicy("privacy", { PrivacyPolicyRoute })
+    PrivacyPolicy("privacy", { PrivacyPolicyRoute }),
+    SiteDoc("docs", { path -> path.provideRouteFromPath { SiteDocRoute(it) } }),
 }
 
 fun List<String>.provideRouteFromPath(argIndex: Int = 1, provideRoute: (String) -> AppRoute?) =
@@ -235,4 +238,11 @@ object AboutRoute: StreetlightRoute {
 object PrivacyPolicyRoute: StreetlightRoute {
     override val screen get() = StreetlightScreen.PrivacyPolicy
     override val title get() = "Privacy Policy"
+}
+
+data class SiteDocRoute(val docId: DocId): StreetlightRoute {
+    override val screen get() = StreetlightScreen.SiteDoc
+    override val title get() = "Documentation"
+
+    override fun toHashPath() = "${super.toHashPath()}/$docId"
 }

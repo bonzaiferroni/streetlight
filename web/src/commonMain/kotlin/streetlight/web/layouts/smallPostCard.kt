@@ -13,6 +13,7 @@ import koala.html.icon
 import koala.html.image
 import koala.html.row
 import koala.html.textBlock
+import koala.model.Doc
 import kotlinx.html.FlowContent
 import streetlight.model.data.Event
 import streetlight.model.data.EventLocation
@@ -20,6 +21,7 @@ import streetlight.model.data.EventPost
 import streetlight.model.data.Location
 import streetlight.web.EventSlugRoute
 import streetlight.web.LocationIdRoute
+import streetlight.web.SiteDocRoute
 
 fun FlowContent.smallPostCard(post: EventPost) {
     val thumbUrl = post.images.thumb
@@ -89,3 +91,4 @@ val Location.route get() = LocationIdRoute(locationId)
 val Event.route get() = EventSlugRoute(slug)
 val EventLocation.eventRoute get() = EventSlugRoute(slug)
 val EventLocation.locationRoute get() = LocationIdRoute(locationId)
+val Doc.route get() = SiteDocRoute(docId)

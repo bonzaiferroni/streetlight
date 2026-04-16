@@ -15,7 +15,7 @@ fun FlowContent.privacyPolicyShell() {
                 heading1("Privacy on Streetlight", modify(Shrinkable))
             }
             card(modify(ZenCardBg, Padding4)) {
-                markdown(IntroContent)
+                markdown(PrivacyIntro)
             }
         }
 
@@ -26,7 +26,7 @@ fun FlowContent.privacyPolicyShell() {
                 heading2("Information shared on Streetlight")
             }
             card(modify(ZenCardBg, Padding4)) {
-                markdown(GatheredInformationContent)
+                markdown(InformationSharedContent)
             }
         }
 
@@ -48,7 +48,7 @@ object PrivacyPolicyKey {
 }
 
 // language="MD"
-private val IntroContent get() = """
+val PrivacyIntro get() = """
 
 Streetlight was designed to provide a high level of transparency and control over the information you share.
 This page describes in detail what you can expect when using the site.
@@ -65,10 +65,10 @@ Sharing information on the internet can carry risk that is difficult to complete
 
 Streetlight is at an early stage of development, and certain privacy features are not yet available. For example, we plan to provide a way for you to download all of your data or remove it entirely from the site. In the long term, we believe that Streetlight's open source will be an important reason to trust the integrity of the site. In the short term, it may carry additional risk, since potential attackers can also inspect the code for vulnerabilities.
 
-""".toMarkdown()
+"""
 
 // language="MD"
-private val GatheredInformationContent get() = """
+val InformationSharedContent get() = """
 
 This section describes the information that can be shared with Streetlight, how it is stored, and how it is used. We'll follow the basic progression that most users will follow, from using the site without an account, to account creation and beyond. 
 
@@ -119,10 +119,10 @@ These credentials allow a user to sign in to the site. Users are strongly encour
 
 Streetlight uses your **email address** to reset your password and as an additional layer of authentication. They may also be used to receive news and messages from Streetlight, strictly on an opt-in basis. This functionality is not yet available on the site, and at this early stage of development we do not gather email addresses. Keep that password safe!
 
-""".toMarkdown()
+"""
 
 // language="MD"
-private val UpcomingSectionsContent get() = """
+val UpcomingSectionsContent get() = """
 This document will always be a work in progress, but at the moment there are important considerations not yet described here. At a minimum, they include the following:
 
 * A description of features that allow you to track the information you've shared and remove it.
@@ -133,6 +133,6 @@ This document will always be a work in progress, but at the moment there are imp
 this is a code test!
 val = 20
 ```
-""".toMarkdown()
+"""
 
 fun String.toMarkdown() = markdownBlocksOf(this)

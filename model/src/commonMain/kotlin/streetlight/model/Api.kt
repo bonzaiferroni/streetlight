@@ -5,6 +5,8 @@ import kampfire.model.GeoBounds
 import kampfire.model.GeoPoint
 import kampfire.model.SpeechRequest
 import kampfire.model.Url
+import koala.model.DocId
+import koala.model.DocNode
 import streetlight.model.data.*
 
 object Api: ApiNode(ApiNode(null, "api"), "v1") {
@@ -137,7 +139,6 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object EditStar: PostEndpoint<StarEdit, Star>(this, "edit")
     }
 
-//    object Posts: ApiNode(this, "post") {
-//
-//    }
+    object Docs: GetByIdEndpoint<DocId, DocNode>(this, "doc") { }
+
 }

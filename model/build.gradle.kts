@@ -26,6 +26,7 @@ kotlin {
                 implementation(libs.kotlinx.serialization.json)
                 implementation(libs.kotlinx.datetime)
                 api(project(":kampfire"))
+                implementation(project(":koala"))
             }
         }
     }

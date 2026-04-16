@@ -1,7 +1,5 @@
 package streetlight.web.shells
 
-import koala.css.Flex4
-import koala.css.Gap8
 import koala.css.Padding4
 import koala.css.Shrinkable
 import koala.css.ZenCardBg
@@ -10,7 +8,6 @@ import koala.html.card
 import koala.html.column
 import koala.html.filigree
 import koala.html.heading1
-import koala.html.heading2
 import koala.html.markdown
 import koala.html.section
 import koala.html.tab
@@ -30,7 +27,7 @@ fun FlowContent.aboutShell() {
             tab("Background") {
 
                 card(modify(ZenCardBg, Padding4)) {
-                    markdown(PrologueContent)
+                    markdown(AboutLuke)
                 }
             }
             tab("Ideas") {
@@ -52,7 +49,7 @@ fun FlowContent.aboutShell() {
 }
 
 // language="MD"
-private val PrologueContent get() = """
+val AboutLuke get() = """
 
 Streetlight ![](/www/img/pearl-street-guitar.jpg) began as a side project to help out with my other side project, playing guitar out on the street corner. 
 
@@ -72,10 +69,10 @@ I have a background in Psychology. After graduating, I worked for several years 
 Over that time, the internet has shaped our world profoundly, and not clearly for the best. It's never been easier to find other people, and at the same time there is a society level phenomenon where people report feelings of isolation at unprecedented levels. Something seems broken, and our relationship to social media seems to be a part of it. As someone with an unusual combination of work experience, I believe I can understand at least part of the puzzle.
   
 I've never been able to shake my optimism about the internet. I don't think technology was destined to drive us part, I think it happened because of the choices we made. Streetlight is an experiment in making a different set of choices, plant a different kind of seed, and to watch what grows.
-""".toMarkdown()
+"""
 
 // language="MD"
-private val IdeasContent get() = """
+val IdeasContent get() = """
 Streetlight intends to test a few ideas. 
 
 ### Social media as a window to the world around us---
@@ -105,4 +102,4 @@ Streetlight uses a slightly unconventional stack, at least for the web. I experi
  
 [WIP]
 
-""".toMarkdown()
+"""

@@ -6,6 +6,7 @@ import kampfire.model.GeoPoint
 import kampfire.model.SignUpRequest
 import kampfire.model.Url
 import kampfire.model.BasicUserInfo
+import koala.model.DocId
 import kotlinx.coroutines.CoroutineScope
 import streetlight.model.Api
 import streetlight.model.data.*
@@ -82,4 +83,7 @@ class ApiClient(private val client: FetchClient) {
     suspend fun readStarByUsername(username: String) = client.get(Api.Stars.ReadByUsername) {
         param(it.username, username)
     }
+
+    // docs
+    suspend fun readSiteDoc(docId: DocId) = client.get(Api.Docs, docId)
 }
