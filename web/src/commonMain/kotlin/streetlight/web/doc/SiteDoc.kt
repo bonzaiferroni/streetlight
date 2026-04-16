@@ -2,7 +2,7 @@ package streetlight.web.doc
 
 import koala.model.Doc
 import koala.model.DocSection
-import koala.model.buildDocTree
+import koala.model.docTreeOf
 import streetlight.web.shells.AboutLuke
 import streetlight.web.shells.IdeasContent
 import streetlight.web.shells.InformationSharedContent
@@ -28,7 +28,7 @@ object SiteDoc {
 }
 
 val SiteDocTree by lazy {
-    buildDocTree {
+    docTreeOf {
         add(SiteDoc.About) {
             add(SiteDoc.Team)
             add(SiteDoc.Ideas)

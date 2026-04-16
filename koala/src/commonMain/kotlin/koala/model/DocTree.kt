@@ -8,7 +8,7 @@ data class DocTree(
 class DocNodeBuilder(
     val doc: Doc?
 ) {
-    private val children: MutableList<DocChild> = mutableListOf()
+    internal val children: MutableList<DocChild> = mutableListOf()
     internal val childNodes: MutableList<DocNode> = mutableListOf()
 
     fun add(child: Doc, block: (DocNodeBuilder.() -> Unit)? = null) {
@@ -21,21 +21,22 @@ class DocNodeBuilder(
         val childLinks = mutableListOf<DocLink>()
 
         val docLink = doc?.let { DocLink(doc.docId, doc.title) }
-        var previousChild: DocLink? = null
+        var previousLink: DocLink? = parent
         children.forEachIndexed { index, child ->
             val builder = DocNodeBuilder(child.doc)
-            val nextChild = children.getOrNull(index + 1)?.let {
+            val nextLink = children.getOrNull(index + 1)?.let {
                 DocLink(it.doc.docId, it.doc.title)
-            }
+            } ?: next
             child.block?.invoke(builder)
-            builder.buildNode(docLink, previousChild, nextChild, nodes)
+            builder.buildNode(docLink, previousLink, nextLink, nodes)
             val link = DocLink(child.doc.docId, child.doc.title)
             childLinks.add(link)
-            previousChild = link
+            previousLink = link
         }
 
         if (docId == null) return null
-        val node = DocNode(doc, parent, previous, next, childLinks)
+        val nextNodeLink = childLinks.firstOrNull() ?: next
+        val node = DocNode(doc, parent, previous, nextNodeLink, childLinks)
         nodes[docId] = node
         childNodes.add(node)
         return node
@@ -44,7 +45,7 @@ class DocNodeBuilder(
 
 internal data class DocChild(val doc: Doc, val block: (DocNodeBuilder.() -> Unit)?)
 
-fun buildDocTree(block: DocNodeBuilder.() -> Unit): DocTree {
+fun docTreeOf(block: DocNodeBuilder.() -> Unit): DocTree {
     val builder = DocNodeBuilder(null)
     val nodes: MutableMap<DocId, DocNode> = mutableMapOf()
     block(builder)
