@@ -16,6 +16,7 @@ data class Doc(
 }
 
 typealias DocId = String
+typealias DocTable = List<DocTableItem>
 
 @Serializable
 data class DocNode(
@@ -36,4 +37,11 @@ data class DocLink(
 data class DocSection(
     val title: String?,
     val content: String
+)
+
+@Serializable
+data class DocTableItem(
+    val docId: DocId,
+    val label: String,
+    val children: DocTable?
 )

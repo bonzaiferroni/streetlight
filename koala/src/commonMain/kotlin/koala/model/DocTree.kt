@@ -5,6 +5,21 @@ data class DocTree(
     val roots: List<DocNode>
 )
 
+fun DocTree.toTable(): List<DocTableItem> {
+    println(roots.size)
+    fun DocNode.toTableItem(): DocTableItem = DocTableItem(
+        docId = doc.docId,
+        label = doc.title,
+        children = children?.map {
+            nodes.getValue(it.docId).toTableItem()
+        }
+    )
+
+    return roots.map {
+        it.toTableItem()
+    }
+}
+
 class DocNodeBuilder(
     val doc: Doc?
 ) {
@@ -28,7 +43,10 @@ class DocNodeBuilder(
                 DocLink(it.doc.docId, it.doc.title)
             } ?: next
             child.block?.invoke(builder)
-            builder.buildNode(docLink, previousLink, nextLink, nodes)
+
+            val node = builder.buildNode(docLink, previousLink, nextLink, nodes) ?: error("child node was null")
+            childNodes.add(node)
+
             val link = DocLink(child.doc.docId, child.doc.title)
             childLinks.add(link)
             previousLink = link
@@ -38,7 +56,6 @@ class DocNodeBuilder(
         val nextNodeLink = childLinks.firstOrNull() ?: next
         val node = DocNode(doc, parent, previous, nextNodeLink, childLinks)
         nodes[docId] = node
-        childNodes.add(node)
         return node
     }
 }

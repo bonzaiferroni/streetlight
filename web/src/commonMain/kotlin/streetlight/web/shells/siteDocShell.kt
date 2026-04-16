@@ -4,17 +4,47 @@ import koala.SvgFile
 import koala.css.*
 import koala.html.*
 import koala.model.DocNode
+import koala.model.DocTable
 import kotlinx.html.FlowContent
 import streetlight.web.SiteDocRoute
 import streetlight.web.pages.appFooter
 
-fun FlowContent.siteDocShell(node: DocNode) {
-    val doc = node.doc
-    column(SiteDocKey.id) {
-        filigree {
-            heading1(doc.title, modify(Shrinkable))
+fun FlowContent.siteDocShell(node: DocNode, table: DocTable) {
+    column {
+        div {
+            filigree {
+                heading1(node.doc.title, modify(Shrinkable))
+            }
         }
 
+        row(modify(AlignItemsStart)) {
+            card(modify(Width32, ZenCardBg)) {
+                setId(SiteDocKey.TableId)
+                siteDocTable(table)
+            }
+            siteDocContent(node)
+        }
+
+        appFooter("web/src/commonMain/kotlin/streetlight/web/shells/siteDocShell.kt")
+    }
+}
+
+fun FlowContent.siteDocTable(table: DocTable) {
+    table.forEach { item ->
+        navigation(SiteDocRoute(item.docId)) {
+            textBlock(item.label, modify(Padding1))
+        }
+        item.children?.let {
+            column(modify(PaddingLeft3)) {
+                siteDocTable(it)
+            }
+        }
+    }
+}
+
+fun FlowContent.siteDocContent(node: DocNode) {
+    val doc = node.doc
+    column(SiteDocKey.ContentId, modify(Flex1)) {
         column(modify(Gap8)) {
             doc.sections.forEach { section ->
 
@@ -50,11 +80,10 @@ fun FlowContent.siteDocShell(node: DocNode) {
                 }
             }
         }
-
-        appFooter("")
     }
 }
 
 object SiteDocKey {
-    val id = Id("site-doc")
+    val ContentId = Id("site-doc-content")
+    val TableId = Id("site-doc-table")
 }

@@ -5,7 +5,6 @@ import kampfire.model.GeoBounds
 import kampfire.model.GeoPoint
 import kampfire.model.SignUpRequest
 import kampfire.model.Url
-import kampfire.model.BasicUserInfo
 import koala.model.DocId
 import kotlinx.coroutines.CoroutineScope
 import streetlight.model.Api
@@ -86,4 +85,5 @@ class ApiClient(private val client: FetchClient) {
 
     // docs
     suspend fun readSiteDoc(docId: DocId) = client.get(Api.Docs, docId)
+    suspend fun readSiteDocTable() = client.get(Api.SiteDocTable)
 }

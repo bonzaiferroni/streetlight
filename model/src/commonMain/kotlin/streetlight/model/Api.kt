@@ -7,6 +7,7 @@ import kampfire.model.SpeechRequest
 import kampfire.model.Url
 import koala.model.DocId
 import koala.model.DocNode
+import koala.model.DocTableItem
 import streetlight.model.data.*
 
 object Api: ApiNode(ApiNode(null, "api"), "v1") {
@@ -139,6 +140,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object EditStar: PostEndpoint<StarEdit, Star>(this, "edit")
     }
 
-    object Docs: GetByIdEndpoint<DocId, DocNode>(this, "doc") { }
+    object Docs: GetByIdEndpoint<DocId, DocNode>(this, "doc")
+    object SiteDocTable: GetEndpoint<List<DocTableItem>>(this, "doc-table")
 
 }

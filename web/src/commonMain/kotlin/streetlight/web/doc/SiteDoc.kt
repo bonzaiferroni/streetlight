@@ -3,6 +3,7 @@ package streetlight.web.doc
 import koala.model.Doc
 import koala.model.DocSection
 import koala.model.docTreeOf
+import koala.model.toTable
 import streetlight.web.shells.AboutLuke
 import streetlight.web.shells.IdeasContent
 import streetlight.web.shells.InformationSharedContent
@@ -36,4 +37,8 @@ val SiteDocTree by lazy {
         }
         add(SiteDoc.Privacy)
     }
+}
+
+val SiteDocTable by lazy {
+    SiteDocTree.toTable()
 }
