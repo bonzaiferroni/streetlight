@@ -19,17 +19,11 @@ fun HTML.appBody(
             appHeader()
             row(AppBodyKey.ContentRowId, modify(JustifyContentCenter, Flex1)) {
                 // div(AppBodyKey.SpacerLeftId)
-                box(AppBodyKey.ContentBoxId) {
+                box(AppBodyKey.ContentBoxId, modify(Flex3)) {
                     div(AppBodyKey.PortalMountId)
                     div(id = AppBodyKey.ShellBoxId, block = block)
                 }
-                div(AppBodyKey.SpacerRightId) {
-                    column(modify(Height100P, Gap0)) {
-                        spacer(modify(Height8))
-                        column(AppBodyKey.PanelRightId, modify(Flex1, MarginRight1, AppOverlayKey.MediaVlgReveal))
-                        spacer(modify(Height8))
-                    }
-                }
+                div(AppBodyKey.PanelRightId, modify(Flex1, AppOverlayKey.MediaVlgReveal))
             }
         }
 
@@ -54,7 +48,6 @@ object AppBodyKey {
 val AppBodyCss get() = """
 ${AppBodyKey.ViewportId} {
     width: 100vw;
-    height: 100dvh;
 }
 
 ${AppBodyKey.ContentRowId} {
@@ -95,6 +88,10 @@ ${AppBodyKey.SpacerRightId} {
     ${AppBodyKey.SpacerRightId}$Reveal {
         display: block;
     }
+    
+    ${AppBodyKey.PanelRightId}$Reveal {
+        display: block;
+    }
 }
 
 ${AppBodyKey.SpacerLeftId} > *,
@@ -102,6 +99,15 @@ ${AppBodyKey.SpacerRightId} > * {
     position: fixed;
     top: 0;
     width: inherit;
+}
+
+${AppBodyKey.PanelRightId} {
+    position: sticky;
+    top: calc(var(--unit-spacing) * 8);
+    height: calc(100dvh - var(--unit-spacing) * 16);
+    display: none;
+    padding-right: var(--unit-spacing-1);
+    max-width: 500px;
 }
 
 """

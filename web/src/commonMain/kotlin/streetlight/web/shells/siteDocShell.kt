@@ -10,8 +10,8 @@ import streetlight.web.SiteDocRoute
 import streetlight.web.pages.appFooter
 
 fun FlowContent.siteDocShell(node: DocNode, table: DocTable) {
-    row(modify(AlignItemsStart)) {
-        card(modify(Width32, ZenCardBg, Gap0, PositionSticky)) {
+    row(modify(AlignItemsStart, PaddingLeft1)) {
+        card(modify(Width32, ZenCardBg, Gap0, PositionSticky, TopSpacing8)) {
             setId(SiteDocKey.TableId)
             siteDocTable(table)
         }

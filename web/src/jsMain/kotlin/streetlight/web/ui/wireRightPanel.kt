@@ -11,7 +11,7 @@ fun RenderContext.wireRightPanel(app: Streetlight) {
     val recordFlow = omni.stateFlow.mapDistinct { it.records }
 
     wireBlock(AppBodyKey.PanelRightId) {
-        card(modify(ZenCardBg, MoonShadow, Height100P, JustifyContentEnd)) {
+        card(modify(ZenCardBg, Height100P, JustifyContentEnd)) {
             itemsBlock(recordFlow) { record ->
                 textBlock(record.text)
             }

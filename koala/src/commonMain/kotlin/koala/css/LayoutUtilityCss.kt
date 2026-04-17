@@ -32,13 +32,13 @@ val LayoutUtilityCss
         MarginLeft1, MarginLeft2, MarginRight1, MarginRight2, MarginBottom1, MarginBottom2, MarginBottom16,
         MarginX1, MarginX2, MarginX4,
         // Padding
-        Padding0, Padding1, Padding2, Padding4, PaddingTiny, PaddingLeft3, PaddingRight3,
+        Padding0, Padding1, Padding2, Padding4, PaddingTiny, PaddingLeft1, PaddingLeft3, PaddingRight3,
         PaddingX1, PaddingY1, PaddingY2,
         // Object Fit
         ObjectFitCover, ObjectFitContain, ObjectPositionCenter, ObjectFitFill,
         // Other
         SpaceBetween, Start, End, Center, PlaceItemsCenter, RelativeParent, ZIndex1, Shrinkable, QueryContainer,
-        PositionSticky,
+        PositionSticky, TopSpacing8,
     )
 
 // Gap
@@ -193,6 +193,7 @@ val Padding1 = utilityOf("padding-1", "padding: var(--unit-spacing)")
 val Padding2 = utilityOf("padding-2", "padding: calc(var(--unit-spacing) * 2)")
 val Padding4 = utilityOf("padding-4", "padding: calc(var(--unit-spacing) * 4)")
 val PaddingTiny = utilityOf("padding-tiny", "padding: 2px")
+val PaddingLeft1 = utilityOf("padding-left-1", "padding-left: var(--unit-spacing)")
 val PaddingLeft3 = utilityOf("padding-left-3", "padding-left: calc(var(--unit-spacing) * 3)")
 val PaddingRight3 = utilityOf("padding-right-3", "padding-right: calc(var(--unit-spacing) * 3)")
 val PaddingX1 = utilityOf("padding-x-1", "padding-left: var(--unit-spacing)", "padding-right: var(--unit-spacing)")
@@ -227,7 +228,8 @@ val RelativeParent = CssUtility(
 val ZIndex1 = utilityOf("z-index-1", "z-index: 1")
 val Shrinkable = CssUtility("shrinkable")
 val QueryContainer = utilityOf("query-container", "container-type: inline-size")
-val PositionSticky = utilityOf("position-sticky", "position: sticky", "top: var(--unit-spacing-1)")
+val PositionSticky = utilityOf("position-sticky", "position: sticky")
+val TopSpacing8 = utilityOf("top-spacing-8", "top: calc(var(--unit-spacing) * 8)")
 
 // Query
 val MediaMdRow = CssUtility("media-md-row")
