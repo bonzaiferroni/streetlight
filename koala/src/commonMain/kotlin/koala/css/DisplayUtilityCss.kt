@@ -25,8 +25,12 @@ val DisplayUtilityCss
         MoonShadow, MoonShadowText, MoonShadowInset,
         // Theme
         DayTheme,
+        // Overlays
+        Vignette, GradientDarkBottom,
+        // Masks
+        FadeBottom,
         // Misc
-        FadeBottom, Focus, Clickable, PointerEventsAuto, PointerEventsNone, BlurContent, AspectRatioAuto,
+        Focus, Clickable, PointerEventsAuto, PointerEventsNone, BlurContent, AspectRatioAuto,
     )
 
 // Display
@@ -106,6 +110,15 @@ val FadeBottom = utilityOf(
     "fade-bottom",
     "-webkit-mask-image: linear-gradient(to bottom, black 0, black calc(100% - 1rem), transparent 100%)",
     "mask-image: linear-gradient(to bottom, black 0, black calc(100% - 1rem), transparent 100%)")
+val GradientDarkBottom = utilityOf("gradient-dark-bottom", """
+background: linear-gradient(
+    to bottom,
+    transparent 50%,
+    rgba(0, 0, 0, 0.7) 100%
+);
+""".trimIndent())
+val Vignette = utilityOf("vignette", "box-shadow: inset 0 0 150px rgba(0, 0, 0, 0.6)")
+
 val Focus = CssUtility("focus")
 val Clickable = CssUtility("clickable")
 val PointerEventsAuto = utilityOf("pointer-events-auto", "pointer-events: auto")

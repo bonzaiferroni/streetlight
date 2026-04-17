@@ -1,6 +1,7 @@
 package koala.html
 
 import koala.css.Class
+import koala.css.KoalaFun
 import koala.css.ModifierSet
 import koala.css.StyleSet
 import koala.css.addModifiers
@@ -9,6 +10,7 @@ import koala.css.modify
 import kotlinx.html.A
 import kotlinx.html.FlowContent
 import kotlinx.html.a
+import kotlinx.html.onClick
 
 fun FlowContent.navigation(
     href: String? = null,
@@ -16,14 +18,14 @@ fun FlowContent.navigation(
     text: String = "",
     id: Id? = null,
     styles: StyleSet? = null,
-    block: (A.() -> Unit)? = null
+    block: A.() -> Unit = {}
 ) {
     a {
         setId(id)
         addModifiers(modify(ActionKey.Class, modifiers))
         setStyle(styles)
         href?.let { this.href = href }
-        block?.invoke(this)
+        block()
         +text
     }
 }
@@ -34,7 +36,7 @@ fun FlowContent.navigation(
     text: String = "",
     id: Id? = null,
     styles: StyleSet? = null,
-    block: (A.() -> Unit)? = null
+    block: A.() -> Unit = {}
 ) {
     navigation(
         text = text,
@@ -51,12 +53,24 @@ fun FlowContent.navigationIfNotNull(
     text: String = "",
     modifiers: ModifierSet? = null,
     id: Id? = null,
-    block: (FlowContent.() -> Unit)? = null
+    block: FlowContent.() -> Unit = {}
 ) {
     if (href == null) {
-        block?.invoke(this)
+        block()
     } else {
         navigation(href = href, text = text, modifiers = modifiers, id = id, block = block)
+    }
+}
+
+fun FlowContent.navigation(
+    targetId: Id,
+    modifiers: ModifierSet? = null,
+    block: A.() -> Unit = {}
+) {
+    a {
+        addModifiers(modifiers)
+        onClick = KoalaFun.ScrollToId.invoke(targetId.arg)
+        block()
     }
 }
 

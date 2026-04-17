@@ -47,7 +47,7 @@ fun ViewContext<Streetlight>.viewStarEditor() {
         column {
             card {
                 row(modify(AlignItemsStart)) {
-                    imageDrop(avatarFlow, ::setImageRef, modify(Width16, AspectRatio1))
+                    imageDrop(avatarFlow, ::setImageRef, modify(Width16, Aspect1))
                     row {
                         textField("username", onValue = ::setUsername, flow = nameFlow)
                         flowBlock(isAvailableFlow, defaultMagic) {

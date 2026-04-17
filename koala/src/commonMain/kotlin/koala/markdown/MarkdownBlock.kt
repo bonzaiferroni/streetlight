@@ -1,5 +1,7 @@
 package koala.markdown
 
+import koala.html.Id
+
 sealed interface MarkdownBlock {
 }
 

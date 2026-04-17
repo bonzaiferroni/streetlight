@@ -11,7 +11,7 @@ fun FlowContent.starLight(count: Int, modifiers: ModifierSet? = null) {
     row {
         addModifiers(StarLightKey.Class, modifiers)
         textBlock(count.toString())
-        icon(SvgFile.LoaderSmall, modify(Height3, AspectRatio1))
+        icon(SvgFile.LoaderSmall, modify(Height3, Aspect1))
     }
 }
 

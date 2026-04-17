@@ -54,7 +54,7 @@ Streetlight was designed to provide a high level of transparency and control ove
 This page describes in detail what you can expect when using the site.
 
 ### In a nutshell---
-* We ![](/www/lottie/astronaut-reading.json) gather only the information necessary to provide the features you see on the site. It is possible to use many features without creating an account.
+* We !["I need my privacy"](/www/lottie/astronaut-reading.json) gather only the information necessary to provide the features you see on the site. It is possible to use many features without creating an account.
 * We do not sell or give information to third parties beyond the functionality of site features and a lawful subpoena by a recognized authority. 
 * We do not show ads or provide information to advertisers.
 * We provide tools that let you keep track of what information you share and easily remove it.

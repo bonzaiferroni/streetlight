@@ -34,7 +34,7 @@ fun FlowContent.smallPostCard(post: EventPost) {
         column(modify(MediaLgRow, AlignItemsStretch, Gap0)) {
             row(modify(Height16, AlignItemsStart, Padding1)) {
                 thumbUrl?.let {
-                    image(thumbUrl, modify(Height100P, AspectRatio1, BorderRadius1))
+                    image(thumbUrl, modify(Height100P, Aspect1, BorderRadius1))
                 }
                 column(modify(Flex1, Height100P)) {
                     row(modify(AlignItemsStart)) {
@@ -46,7 +46,7 @@ fun FlowContent.smallPostCard(post: EventPost) {
                                 textBlock(event.locationName, modify(Dim))
                             }
                         }
-                        icon(SvgFile.Focus, modify(Height5, AspectRatio1, Dim))
+                        icon(SvgFile.Focus, modify(Height5, Aspect1, Dim))
                     }
                     description?.let {
                         navigation(postRoute) {

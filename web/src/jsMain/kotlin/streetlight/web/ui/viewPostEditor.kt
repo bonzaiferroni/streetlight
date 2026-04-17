@@ -45,7 +45,7 @@ fun RenderContext.viewPostEditor(app: Streetlight) {
             }
         }
         column(modify(MediaMdRow)) {
-            geoMapMount(null, modify(Flex1, AspectRatio1))
+            geoMapMount(null, modify(Flex1, Aspect1))
             column(modify(Flex2)) {
                 textBlock(model.locationFlow.map { it.toString() })
             }

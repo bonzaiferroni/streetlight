@@ -35,17 +35,36 @@ fun FlowContent.siteDocTable(table: DocTable) {
 fun FlowContent.siteDocContent(node: DocNode) {
     val doc = node.doc
     column(SiteDocKey.ContentId, modify(Flex1)) {
-        card {
-            heading1(doc.title, modify(Shrinkable, TextAlignCenter))
+        card(modify(BorderRadius2, MoonShadow, OverflowClip, Gap0, Padding0)) {
+            box(modify(AlignItemsEnd, AspectX2)) {
+                image(doc.image, modify(Size100P, ObjectFitCover, MinHeight0))
+                spacer(modify(GradientDarkBottom, AlignSelfStretch, Vignette))
+                heading1(doc.title, modify(Shrinkable, TextAlignCenter, MoonShadowText))
+            }
+            val idSections = doc.sections.filter { it.id != null && it.title != null }
+            if (idSections.size > 1) {
+                row(modify(JustifyContentCenter, AlignItemsCenter, WrapFlex, PaddingX1)) {
+                    textBlock("Jump to:", modify(OpacityMost))
+                    idSections.forEach {
+                        navigation(it.id!!) {
+                            textBlock(it.title!!, modify(Padding1))
+                        }
+                    }
+                }
+            }
         }
 
         column(modify(Gap8)) {
             doc.sections.forEach { section ->
 
                 section {
-                    section.title?.let {
+                    section.title?.let { title ->
                         filigree {
-                            heading2(it)
+                            heading2(title) {
+                                section.id?.let {
+                                    setId(it)
+                                }
+                            }
                         }
                     }
 

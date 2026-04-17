@@ -1,5 +1,7 @@
 package koala.model
 
+import kampfire.model.Url
+import koala.html.Id
 import kotlinx.serialization.Serializable
 import kotlin.String
 import kotlin.collections.List
@@ -9,10 +11,16 @@ data class Doc(
     val docId: DocId,
     val title: String,
     val sections: List<DocSection>,
+    val image: Url? = null,
     val links: List<DocLink>? = null,
 ) {
-    constructor(docId: DocId, title: String, content: String, links: List<DocLink>? = null):
-            this(docId, title, listOf(DocSection(null, content)), links)
+    constructor(
+        docId: DocId,
+        title: String,
+        content: String,
+        url: Url? = null,
+        links: List<DocLink>? = null
+    ): this(docId, title, listOf(DocSection(null, content)), url, links)
 }
 
 typealias DocId = String
@@ -36,7 +44,8 @@ data class DocLink(
 @Serializable
 data class DocSection(
     val title: String?,
-    val content: String
+    val content: String,
+    val id: Id? = title?.toElementId()
 )
 
 @Serializable
@@ -45,3 +54,10 @@ data class DocTableItem(
     val label: String,
     val children: DocTable?
 )
+
+fun String.toElementId() = Id(buildString {
+    for (c in this@toElementId) when {
+        c.isLetterOrDigit() -> append(c.lowercaseChar())
+        c == ' ' -> append('-')
+    }
+})

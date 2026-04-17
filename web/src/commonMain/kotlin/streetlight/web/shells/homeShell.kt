@@ -49,7 +49,7 @@ fun FlowContent.homeShell(content: HomeContent) {
                         heading4("Featured Galaxies", subHeadingMods)
                     }
                     row(modify(Flex1, AlignItemsCenter, JustifyContentCenter)) {
-                        lottie(LottieFile.dinoLoad, modify(Width32, AspectRatio1))
+                        lottie(LottieFile.dinoLoad, modify(Width32, Aspect1))
                     }
                 }
             }

@@ -100,6 +100,7 @@ object LottieFile : FileSet<Lottie>() {
 }
 
 object SiteImage : FileSet<Image>() {
+    val crossing = siteImageOf("crossing.jpg")
     val placeholderLg = siteImageOf("placeholder-lg.jpg")
     val placeholderMd = siteImageOf("placeholder-md.jpg")
     val placeholderSm = siteImageOf("placeholder-sm.jpg")

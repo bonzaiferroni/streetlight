@@ -51,7 +51,7 @@ fun FlowContent.aboutShell() {
 // language="MD"
 val AboutLuke get() = """
 
-Streetlight ![](/www/img/pearl-street-guitar.jpg) began as a side project to help out with my other side project, playing guitar out on the street corner. 
+Streetlight ![Photo by Ryan Kemp](/www/img/pearl-street-guitar.jpg) began as a side project to help out with my other side project, playing guitar out on the street corner. 
 
 Street performance can be a strange mix of intensely social and intensely isolating. Like many of my software engineering peers, I am not blessed with a level of charisma that lets me strike up an easy conversation with people walking by. But sometimes magic happens, and someone stops to talk or even sing a song with me, and it's always the best part of my day. 
 

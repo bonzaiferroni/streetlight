@@ -1,5 +1,6 @@
 package streetlight.web.doc
 
+import koala.SiteImage
 import koala.model.Doc
 import koala.model.DocSection
 import koala.model.docTreeOf
@@ -21,11 +22,15 @@ object SiteDoc {
 
     val Roadmap = Doc("about-roadmap", "Roadmap Page", "[information]")
 
-    val Privacy = Doc("privacy-policy", "Privacy on Streetlight", listOf(
-        DocSection(null, PrivacyIntro),
-        DocSection("Information shared on Streetlight", InformationSharedContent),
-        DocSection("Upcoming Sections", UpcomingSectionsContent),
-    ))
+    val Privacy = Doc(
+        docId = "privacy-policy", title = "Privacy on Streetlight",
+        sections = listOf(
+            DocSection(null, PrivacyIntro),
+            DocSection("Information shared on Streetlight", InformationSharedContent),
+            DocSection("Upcoming Sections", UpcomingSectionsContent),
+        ),
+        image = SiteImage.crossing.url
+    )
 }
 
 val SiteDocTree by lazy {

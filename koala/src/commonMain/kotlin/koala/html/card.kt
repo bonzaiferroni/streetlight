@@ -26,7 +26,7 @@ fun FlowContent.cardOf(
     card(modify(Width100P, modifiers)) {
         row(modify(Height8, AlignItemsStart)) {
             thumbUrl?.let {
-                image(thumbUrl, modify(Height100P, AspectRatio1, BorderRadius1))
+                image(thumbUrl, modify(Height100P, Aspect1, BorderRadius1))
             }
             column(modify(Flex1, Gap0, Height100P)) {
                 heading5(title)

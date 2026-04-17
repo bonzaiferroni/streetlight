@@ -2,6 +2,8 @@
 
 package koala.markdown
 
+import koala.html.Id
+
 internal enum class ListKind { Ordered, Unordered }
 
 private val HORIZONTAL_RULE = Regex("^(-{3,}|\\*{3,})\\s*$")

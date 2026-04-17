@@ -15,7 +15,7 @@ fun FlowContent.btn(
     text: String,
     route: AppRoute,
     modifiers: ModifierSet? = null,
-    block: (A.() -> Unit)? = null,
+    block: A.() -> Unit = {}
 ) {
     val prefix = labelPrefixMap[text.lowercase()]
     val text = prefix?.let {
@@ -35,7 +35,7 @@ fun FlowContent.btn(
     route: AppRoute,
     background: Url?,
     modifiers: ModifierSet? = null,
-    block: (A.() -> Unit)? = null,
+    block: A.() -> Unit = {}
 ) {
     navigation(
         text = text,
@@ -45,7 +45,7 @@ fun FlowContent.btn(
         background?.let {
             setStyle(Property.BackgroundUrl.with(UrlValue(it)))
         }
-        block?.invoke(this)
+        block()
     }
 }
 

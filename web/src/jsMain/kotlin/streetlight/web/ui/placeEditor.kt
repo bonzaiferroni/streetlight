@@ -10,7 +10,7 @@ import koala.css.Flex2
 import koala.css.Blur
 import koala.css.Magic
 import koala.css.MediaMdRow
-import koala.css.AspectRatio1
+import koala.css.Aspect1
 import koala.css.Width100P
 import koala.css.modify
 import koala.dom.RenderContext
@@ -57,7 +57,7 @@ fun RenderContext.placeEditor(
     }
 
     val element = column(modify(MediaMdRow, AlignItemsStretch)) {
-        geoMapMount(geoPoint, modify(Flex1, AspectRatio1))
+        geoMapMount(geoPoint, modify(Flex1, Aspect1))
         column(modify(Flex2, AlignItemsStretch)) {
             row {
                 textField(
