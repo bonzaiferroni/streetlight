@@ -14,7 +14,7 @@ import streetlight.web.shells.siteDocShell
 
 fun ViewContext<Streetlight>.viewSiteDoc(node: DocNode) {
     val table = cachedTable ?: emptyList()
-    shellBox(SiteDocKey.ContentId) {
+    shellBox(SiteDocKey.Id) {
         siteDocShell(node, table)
     }
 }
@@ -22,7 +22,7 @@ fun ViewContext<Streetlight>.viewSiteDoc(node: DocNode) {
 fun ViewContext<Streetlight>.viewSiteDocRoute() {
     routeBlock<SiteDocRoute, DocNode>(model.portal, { route ->
         if (cachedTable == null) {
-            cachedTable = model.client.api.readSiteDocTable().also { println(it?.size) }
+            cachedTable = model.client.api.readSiteDocTable()
         }
         model.client.api.readSiteDoc(route.docId)
     }) { node ->

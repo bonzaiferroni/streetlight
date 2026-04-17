@@ -38,6 +38,7 @@ val LayoutUtilityCss
         ObjectFitCover, ObjectFitContain, ObjectPositionCenter, ObjectFitFill,
         // Other
         SpaceBetween, Start, End, Center, PlaceItemsCenter, RelativeParent, ZIndex1, Shrinkable, QueryContainer,
+        PositionSticky,
     )
 
 // Gap
@@ -226,6 +227,7 @@ val RelativeParent = CssUtility(
 val ZIndex1 = utilityOf("z-index-1", "z-index: 1")
 val Shrinkable = CssUtility("shrinkable")
 val QueryContainer = utilityOf("query-container", "container-type: inline-size")
+val PositionSticky = utilityOf("position-sticky", "position: sticky", "top: var(--unit-spacing-1)")
 
 // Query
 val MediaMdRow = CssUtility("media-md-row")

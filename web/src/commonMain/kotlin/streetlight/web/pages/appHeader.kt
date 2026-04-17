@@ -7,7 +7,9 @@ import koala.css.FlipX
 import koala.css.GrowText
 import koala.css.Height6
 import koala.css.JustifyContentCenter
+import koala.css.Margin1
 import koala.css.OpacitySome
+import koala.css.Padding1
 import koala.css.TextShadow
 import koala.css.Width16
 import koala.css.modify
@@ -22,7 +24,7 @@ import streetlight.web.HomeRoute
 
 
 fun FlowContent.appHeader() {
-    row(modify(AppHeaderKey.Height, JustifyContentCenter)) {
+    row(modify(AppHeaderKey.Height, JustifyContentCenter, Margin1)) {
         icon(SvgFile.Rays, modify(OpacitySome, IconKey.Stretch, Width16))
         navigation(HomeRoute, modify(DisplayFlex)) {
             row(modify(AlignItemsCenter)) {

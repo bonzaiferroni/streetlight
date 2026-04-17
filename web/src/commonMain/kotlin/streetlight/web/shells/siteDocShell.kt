@@ -10,22 +10,12 @@ import streetlight.web.SiteDocRoute
 import streetlight.web.pages.appFooter
 
 fun FlowContent.siteDocShell(node: DocNode, table: DocTable) {
-    column {
-        div {
-            filigree {
-                heading1(node.doc.title, modify(Shrinkable))
-            }
+    row(modify(AlignItemsStart)) {
+        card(modify(Width32, ZenCardBg, Gap0, PositionSticky)) {
+            setId(SiteDocKey.TableId)
+            siteDocTable(table)
         }
-
-        row(modify(AlignItemsStart)) {
-            card(modify(Width32, ZenCardBg)) {
-                setId(SiteDocKey.TableId)
-                siteDocTable(table)
-            }
-            siteDocContent(node)
-        }
-
-        appFooter("web/src/commonMain/kotlin/streetlight/web/shells/siteDocShell.kt")
+        siteDocContent(node)
     }
 }
 
@@ -35,7 +25,7 @@ fun FlowContent.siteDocTable(table: DocTable) {
             textBlock(item.label, modify(Padding1))
         }
         item.children?.let {
-            column(modify(PaddingLeft3)) {
+            column(modify(PaddingLeft3, Gap0)) {
                 siteDocTable(it)
             }
         }
@@ -45,6 +35,10 @@ fun FlowContent.siteDocTable(table: DocTable) {
 fun FlowContent.siteDocContent(node: DocNode) {
     val doc = node.doc
     column(SiteDocKey.ContentId, modify(Flex1)) {
+        card {
+            heading1(doc.title, modify(Shrinkable, TextAlignCenter))
+        }
+
         column(modify(Gap8)) {
             doc.sections.forEach { section ->
 
@@ -80,10 +74,13 @@ fun FlowContent.siteDocContent(node: DocNode) {
                 }
             }
         }
+
+        appFooter("web/src/commonMain/kotlin/streetlight/web/shells/siteDocShell.kt")
     }
 }
 
 object SiteDocKey {
+    val Id = Id("site-doc-viewer")
     val ContentId = Id("site-doc-content")
     val TableId = Id("site-doc-table")
 }

@@ -9,5 +9,6 @@ object ShellBoxKey {
 val ShellBoxCss get() = """
 .shell-box {
     width: 100%;
+    height: 100%;
 }
 """

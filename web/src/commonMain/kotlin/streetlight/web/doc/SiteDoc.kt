@@ -13,7 +13,7 @@ import streetlight.web.shells.UpcomingSectionsContent
 object SiteDoc {
     val About = Doc("about-streetlight", "About Streetlight", "[Intro Content]")
 
-    val Team = Doc("about-team", "Team Page", listOf(
+    val Team = Doc("about-team", "The Team", listOf(
         DocSection("Luke", AboutLuke)
     ))
 

@@ -11,24 +11,24 @@ import kotlinx.html.body
 import streetlight.web.HomeRoute
 
 fun HTML.appBody(
-    block: (DIV.() -> Unit)? = null
+    block: DIV.() -> Unit = { }
 ) {
     body {
         appOverlay()
-        div(AppBodyKey.ViewportId) {
-            div(AppBodyKey.SpacerLeftId)
-            column(AppBodyKey.AppPanelId, modify(Flex1)) {
-                appHeader()
+        column(AppBodyKey.ViewportId, modify(Gap0)) {
+            appHeader()
+            row(AppBodyKey.ContentRowId, modify(JustifyContentCenter, Flex1)) {
+                // div(AppBodyKey.SpacerLeftId)
                 box(AppBodyKey.ContentBoxId) {
-                    box(AppBodyKey.PortalMountId)
-                    box(id = AppBodyKey.ShellBoxId, block = block)
+                    div(AppBodyKey.PortalMountId)
+                    div(id = AppBodyKey.ShellBoxId, block = block)
                 }
-            }
-            div(AppBodyKey.SpacerRightId) {
-                column(modify(Height100P, Gap0)) {
-                    spacer(modify(Height8))
-                    column(AppBodyKey.PanelRightId, modify(Flex1, MarginRight1, AppOverlayKey.MediaVlgReveal))
-                    spacer(modify(Height8))
+                div(AppBodyKey.SpacerRightId) {
+                    column(modify(Height100P, Gap0)) {
+                        spacer(modify(Height8))
+                        column(AppBodyKey.PanelRightId, modify(Flex1, MarginRight1, AppOverlayKey.MediaVlgReveal))
+                        spacer(modify(Height8))
+                    }
                 }
             }
         }
@@ -40,7 +40,6 @@ fun HTML.appBody(
 
 object AppBodyKey {
     val ViewportId = Id("viewport-box")
-    val AppPanelId = Id("app-box")
     val PortalMountId = Id("portal-mount")
     val ShellBoxId = Id("shell-box")
     val ContentBoxId = Id("content-box")
@@ -48,6 +47,7 @@ object AppBodyKey {
     val SpacerRightId = Id("spacer-right")
     val PanelLeftId = Id("panel-left")
     val PanelRightId = Id("panel-right")
+    val ContentRowId = Id("app-content-row")
 }
 
 // language="CSS"
@@ -55,18 +55,21 @@ val AppBodyCss get() = """
 ${AppBodyKey.ViewportId} {
     width: 100vw;
     height: 100dvh;
-    display: flex;
-    justify-content: center;
 }
 
-${AppBodyKey.AppPanelId} {
-    min-height: 100dvh;
+${AppBodyKey.ContentRowId} {
+    height: calc(100dvh - var(--unit-spacing) * 8)
+}
+
+${AppBodyKey.ContentBoxId} {
     max-width: var(--body-width);
-    padding: var(--unit-spacing);
+    width: 100%;
+    opacity: 0;
+    transition: opacity var(--magic-interval) var(--magic-easing);
 }
 
-${AppBodyKey.AppPanelId} {
-    display: grid;
+${AppBodyKey.ContentBoxId}$Reveal {
+    opacity: 1;
 }
 
 ${AppBodyKey.PortalMountId},
@@ -99,16 +102,6 @@ ${AppBodyKey.SpacerRightId} > * {
     position: fixed;
     top: 0;
     width: inherit;
-}
-
-/* content box */
-${AppBodyKey.ContentBoxId} {
-    opacity: 0;
-    transition: opacity var(--magic-interval) var(--magic-easing);
-}
-
-${AppBodyKey.ContentBoxId}$Reveal {
-    opacity: 1;
 }
 
 """
