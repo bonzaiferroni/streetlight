@@ -10,6 +10,10 @@ val StylesCss get() = """
 :root {
     --paper: ${Koala.paper};
     --ink: ${Koala.ink};
+    --white: ${Koala.ink};
+    --black: ${Koala.paper};
+    --white-fg: rgb(var(--white));
+    --black-bg: rgb(var(--black));
     --ink-fg: rgb(var(--ink));
     --paper-bg: rgb(var(--paper));
     

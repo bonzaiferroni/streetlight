@@ -36,7 +36,7 @@ class DocNodeBuilder(
         val childLinks = mutableListOf<DocLink>()
 
         val docLink = doc?.let { DocLink(doc.docId, doc.title) }
-        var previousLink: DocLink? = parent
+        var previousLink: DocLink? = docLink
         children.forEachIndexed { index, child ->
             val builder = DocNodeBuilder(child.doc)
             val nextLink = children.getOrNull(index + 1)?.let {

@@ -39,7 +39,7 @@ fun FlowContent.siteDocContent(node: DocNode) {
             box(modify(AlignItemsEnd, AspectX2)) {
                 image(doc.image, modify(Size100P, ObjectFitCover, MinHeight0))
                 spacer(modify(GradientDarkBottom, AlignSelfStretch, Vignette))
-                heading1(doc.title, modify(Shrinkable, TextAlignCenter, MoonShadowText))
+                heading1(doc.title, modify(Shrinkable, TextAlignCenter, MoonShadowText, NightInk))
             }
             val idSections = doc.sections.filter { it.id != null && it.title != null }
             if (idSections.size > 1) {

@@ -47,6 +47,10 @@
     background: var(--secondary-button);
 }
 
+.day-theme .btn.secondary {
+    box-shadow: none;
+}
+
 .btn.background-image {
     position: relative;
     overflow: hidden;

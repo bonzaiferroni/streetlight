@@ -53,7 +53,7 @@ fun FlowContent.largePostCard(
 
                     row {
                         links?.forEach { link ->
-                            btn(link.label, link.url)
+                            btn(link.label, link.url, modify(Secondary))
                         }
                     }
                 }
