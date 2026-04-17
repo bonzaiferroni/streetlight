@@ -13,7 +13,6 @@ fun FlowContent.largePostCard(
     title: String,
     subtitle: String?,
     description: String?,
-    sourceUrl: String?,
     links: List<ExtraLink>?,
     images: ScaledImageArray?,
     postRoute: StreetlightRoute,

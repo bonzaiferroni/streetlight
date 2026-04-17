@@ -35,7 +35,7 @@ data class EventLocation(
     val links by lazy {
         buildList {
             url?.let { url ->
-                add(ExtraLink("source", url))
+                add(ExtraLink("website", url))
                 cost?.takeIf { it > 0 }?.let {
                     add(ExtraLink("tickets", url))
                 }
@@ -49,16 +49,18 @@ data class EventLocation(
     val images get() = eventImages ?: locationImages
 
     val addressLine by lazy {
-        buildString {
-            address?.let {
-                append(it)
-                if (city != null) {
-                    append(", ")
-                }
-            }
-            city?.let {
-                append(it)
-            }
-        }.takeIf { it.isNotEmpty() }
+        addressLineOf(address, city)
     }
 }
+
+fun addressLineOf(address: String?, city: String?) = buildString {
+    address?.let {
+        append(it)
+        if (city != null) {
+            append(", ")
+        }
+    }
+    city?.let {
+        append(it)
+    }
+}.takeIf { it.isNotEmpty() }

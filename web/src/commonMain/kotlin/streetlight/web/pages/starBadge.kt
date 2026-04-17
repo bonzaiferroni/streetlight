@@ -2,7 +2,6 @@ package streetlight.web.pages
 
 import koala.SvgFile
 import koala.css.BorderRadius50P
-import koala.css.Class
 import koala.css.MoonShadow
 import koala.css.OpacityMost
 import koala.css.Size100P

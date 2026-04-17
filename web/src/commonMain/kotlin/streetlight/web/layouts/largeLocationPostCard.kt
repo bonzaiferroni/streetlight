@@ -10,7 +10,6 @@ fun FlowContent.largeLocationPostCard(post: LocationPost) {
         title = post.title,
         subtitle = location.address,
         description = location.description,
-        sourceUrl = location.website,
         links = null, // td: add location extra links
         images = location.images,
         postRoute = location.route,

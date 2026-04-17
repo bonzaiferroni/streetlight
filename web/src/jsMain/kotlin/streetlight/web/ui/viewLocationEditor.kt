@@ -26,7 +26,6 @@ fun RenderContext.viewLocationEditor(
 ) {
     val model = LocationEditor(location, renderScope, app.client)
     val nameFlow = model.editFlow.mapDistinct { it.name }
-    val imageUrlFlow = model.editFlow.mapDistinct { it.imageRef }
     val linkFlow = model.editFlow.mapDistinct { it.website }
     val eventsLinkFlow = model.editFlow.mapDistinct { it.eventsUrl }
 
@@ -47,13 +46,13 @@ fun RenderContext.viewLocationEditor(
     }
 
     column(modify(AlignItemsStretch)) {
-        imageChooser(
-            modifiers = modify(MinHeight8),
-            onUpload = { app.client.api.uploadImage(it) },
-            onValueChanged = model::setImageRef,
-            urlFlow = imageUrlFlow,
-            choicesFlow = app.cache.file.flow
-        )
+//        imageChooser(
+//            modifiers = modify(MinHeight8),
+//            onUpload = { app.client.api.uploadImage(it) },
+//            onValueChanged = model::setImageRef,
+//            urlFlow = imageUrlFlow,
+//            choicesFlow = app.cache.file.flow
+//        )
         textField("name", modify(), model::setPlaceName, nameFlow)
         textField("address", modify(), model::setAddress, model.editFlow.mapDistinct { it.address })
         textField("description", modify(), model::setDescription, model.editFlow.mapDistinct { it.description })

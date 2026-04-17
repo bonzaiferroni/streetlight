@@ -1,14 +1,11 @@
 package streetlight.web.pages
 
 import koala.JsFile
-import koala.SvgFile
 import koala.css.*
 import koala.html.*
 import kotlinx.html.DIV
-import kotlinx.html.FlowContent
 import kotlinx.html.HTML
 import kotlinx.html.body
-import streetlight.web.HomeRoute
 
 fun HTML.appBody(
     block: DIV.() -> Unit = { }

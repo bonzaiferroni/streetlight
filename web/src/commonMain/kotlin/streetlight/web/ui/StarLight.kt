@@ -6,6 +6,7 @@ import koala.html.*
 import kotlinx.html.FlowContent
 import streetlight.model.data.EventId
 import streetlight.model.data.GalaxyId
+import streetlight.model.data.LocationId
 
 fun FlowContent.starLight(count: Int, modifiers: ModifierSet? = null) {
     row {
@@ -21,6 +22,7 @@ object StarLightKey {
     val IsLit = Class("is-lit")
     val EventLightId = Attribute<EventId>("event-light-id")
     val GalaxyLightId = Attribute<GalaxyId>("galaxy-light-id")
+    val LocationLightId = Attribute<LocationId>("location-light-id")
 
     const val GALAXY_LIGHT_CACHE = "streetlight.galaxy-light-cache"
     const val EVENT_LIGHT_CACHE = "streetlight.event-light-cache"

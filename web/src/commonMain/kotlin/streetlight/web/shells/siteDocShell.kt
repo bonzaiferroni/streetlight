@@ -36,7 +36,7 @@ fun FlowContent.siteDocContent(node: DocNode) {
     val doc = node.doc
     column(SiteDocKey.ContentId, modify(Flex1)) {
         card(modify(BorderRadius2, MoonShadow, OverflowClip, Gap0, Padding0)) {
-            box(modify(AlignItemsEnd, AspectX2)) {
+            box(modify(AlignItemsEnd, Aspect2By1)) {
                 image(doc.image, modify(Size100P, ObjectFitCover, MinHeight0))
                 spacer(modify(GradientDarkBottom, AlignSelfStretch, Vignette))
                 heading1(doc.title, modify(Shrinkable, TextAlignCenter, MoonShadowText, NightInk))

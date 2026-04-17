@@ -12,7 +12,6 @@ import koala.css.JustifyContentCenter
 import koala.css.MarginLeft1
 import koala.css.MinWidth16
 import koala.css.ModifierSet
-import koala.css.WidthAuto
 import koala.css.WrapFlex
 import koala.css.modify
 import koala.html.navigationIfNotNull
@@ -23,6 +22,7 @@ import koala.html.textBlock
 import kotlinx.html.FlowContent
 import streetlight.model.data.EventId
 import streetlight.model.data.GalaxyId
+import streetlight.model.data.LocationId
 import streetlight.web.ui.StarLightKey
 import streetlight.web.ui.starLight
 import kotlin.time.Instant
@@ -68,15 +68,19 @@ fun FlowContent.costCell(cost: Float?, purchaseUrl: String?) {
     }
 }
 
-fun FlowContent.postedBy(username: String?) {
+fun FlowContent.postedByCell(username: String?) {
+    propertyCell("posted by", username ?: "someone")
+}
+
+fun FlowContent.propertyCell(property: String, value: String) {
     row(CellContent.RowMod) {
-        textBlock("posted by:", modify(Dim))
-        textBlock(username ?: "someone", modify(MarginLeft1))
+        textBlock("$property:", modify(Dim))
+        textBlock(value, modify(MarginLeft1))
     }
 }
 
 fun FlowContent.lightCell(galaxyId: GalaxyId) {
-    row(modify(WidthAuto)) {
+    row {
         setData(StarLightKey.GalaxyLightId, galaxyId)
         starLight((0..10).random())
     }
@@ -85,6 +89,13 @@ fun FlowContent.lightCell(galaxyId: GalaxyId) {
 fun FlowContent.lightCell(eventId: EventId) {
     row {
         setData(StarLightKey.EventLightId, eventId)
+        starLight((0..10).random())
+    }
+}
+
+fun FlowContent.lightCell(locationId: LocationId) {
+    row {
+        setData(StarLightKey.LocationLightId, locationId)
         starLight((0..10).random())
     }
 }

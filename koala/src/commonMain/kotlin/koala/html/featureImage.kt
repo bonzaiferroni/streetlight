@@ -47,6 +47,7 @@ $Class {
     overflow: clip;
     min-width: 0;
     min-height: 0;
+    object-fit: contain;
 }
 
 $BackdropClass {
@@ -60,7 +61,10 @@ $BackdropClass {
 }
 
 $ContentClass {
+    width: 100%;
+    height: 100%;
     position: relative;
     min-width: 0;
+    object-fit: inherit;
 }
 """

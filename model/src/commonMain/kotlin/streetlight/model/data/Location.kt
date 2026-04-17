@@ -13,6 +13,7 @@ import kotlin.jvm.JvmInline
 data class Location(
     val locationId: LocationId,
     val name: String,
+    val username: String?,
     val description: String?,
     val address: String?,
     val city: String,
@@ -32,11 +33,33 @@ data class Location(
     // td: aboutLink
     val imageRef: Url?,
     val images: ScaledImageArray?,
+    val extraLinks: List<ExtraLink>?,
     val updatedAt: Instant,
     val createdAt: Instant,
     // td: openedAt: LocalDate
     // td: LocationTags
-)
+) {
+    val addressLine by lazy {
+        addressLineOf(address, city)
+    }
+
+    val links by lazy {
+        buildList {
+            website?.let {
+                add(ExtraLink("website", it))
+            }
+            eventsUrl?.let {
+                add(ExtraLink("calendar", it))
+            }
+            menuUrl?.let {
+                add(ExtraLink("menu", it))
+            }
+            extraLinks?.let {
+                addAll(it)
+            }
+        }.takeIf { it.isNotEmpty() }
+    }
+}
 
 @JvmInline @Serializable
 value class LocationId(override val value: String): ProjectId {

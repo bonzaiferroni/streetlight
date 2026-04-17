@@ -7,7 +7,7 @@ import kotlinx.html.FlowContent
 import kotlinx.html.div
 import kotlinx.html.style
 
-fun FlowContent.wireBlock(
+fun FlowContent.wiringBlock(
     id: Id,
     modifiers: ModifierSet? = null,
     isVisibleWhileLoading: Boolean = false,

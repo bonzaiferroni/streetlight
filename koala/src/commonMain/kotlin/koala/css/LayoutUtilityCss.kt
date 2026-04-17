@@ -22,7 +22,7 @@ val LayoutUtilityCss
         MinHeightAuto, MinHeight0, MinHeight4, MinHeight5, MinHeight8, MinHeight16, MinHeight24, MinHeight32, MinHeight48,
         MaxHeight5, MaxHeight8, MaxHeight16, MaxHeight24, MaxHeight32, MaxHeight64,
         // Size
-        Size100P, FillHeight, Aspect1, AspectX2,
+        Size100P, FillHeight, Aspect1, Aspect2By1, Aspect3By1, Aspect3By2,
         // Flex Items
         FlexItems1, FlexItemsEqual, FlexItemsBasis50,
         // Text
@@ -165,9 +165,9 @@ val MarginTop2 = utilityOf("margin-top-2", "margin-top: calc(var(--unit-spacing)
 val MarginTop4 = utilityOf("margin-top-4", "margin-top: calc(var(--unit-spacing) * 4)")
 val MarginTop8 = utilityOf("margin-top-8", "margin-top: calc(var(--unit-spacing) * 8)")
 val MarginLeft1 = utilityOf("margin-left-1", "margin-left: var(--unit-spacing)")
-val MarginLeft2 = utilityOf("margin-left-1", "margin-left: var(--unit-spacing-2)")
+val MarginLeft2 = utilityOf("margin-left-2", "margin-left: var(--unit-spacing-2)")
 val MarginRight1 = utilityOf("margin-right-1", "margin-right: var(--unit-spacing)")
-val MarginRight2 = utilityOf("margin-right-1", "margin-right: var(--unit-spacing-2)")
+val MarginRight2 = utilityOf("margin-right-2", "margin-right: var(--unit-spacing-2)")
 val MarginBottom1 = utilityOf("margin-bottom-1", "margin-bottom: var(--unit-spacing)")
 val MarginBottom2 = utilityOf("margin-bottom-2", "margin-bottom: calc(var(--unit-spacing) * 2)")
 val MarginBottom16 = utilityOf("margin-bottom-16", "margin-bottom: calc(var(--unit-spacing) * 16)")
@@ -220,7 +220,9 @@ val JustifySelfStart = utilityOf("justify-self-start", "justify-self: start")
 val JustifySelfStretch = utilityOf("justify-self-stretch", "justify-self: stretch")
 val AlignSelfStretch = utilityOf("align-self-stretch", "align-self: stretch")
 val Aspect1 = utilityOf("aspect-1", "aspect-ratio: 1 / 1")
-val AspectX2 = utilityOf("aspect-x-2", "aspect-ratio: 2 / 1")
+val Aspect2By1 = utilityOf("aspect-x-2", "aspect-ratio: 2 / 1")
+val Aspect3By2 = utilityOf("aspect-x-3", "aspect-ratio: 3 / 2")
+val Aspect3By1 = utilityOf("aspect-x-3", "aspect-ratio: 3 / 1")
 val RelativeParent = CssUtility(
     "relative-parent",
     ".relative-parent { position: relative; } .relative-parent > * { position: absolute; inset: 0; }"

@@ -1,8 +1,6 @@
 package streetlight.web.ui
 
-import kampfire.model.BasicUserInfo
 import kampfire.model.thumb
-import kampfire.model.toUrl
 import koala.SvgFile
 import koala.css.*
 import koala.dom.*
