@@ -14,7 +14,7 @@ fun RenderContext.locationProfileView(app: Streetlight) {
         portal = app.portal,
         provideData = { app.client.api.readLocation(it.locationId) }
     ) { location ->
-        val element = shellBox(LocationProfileKey.Id, app.geoMap, app.appScope) {
+        val element = shellBox(LocationProfileKey.Id) { // app.geoMap, app.appScope
             locationProfileShell(location)
         }
 
