@@ -5,7 +5,6 @@ import koala.css.BackgroundImage
 import koala.css.Class
 import koala.css.ModifierSet
 import koala.css.Property
-import koala.css.StyleSet
 import koala.css.UrlValue
 import koala.css.setStyle
 import koala.css.modify
@@ -15,17 +14,16 @@ fun FlowContent.btn(
     text: String,
     route: AppRoute,
     modifiers: ModifierSet? = null,
+    addFlair: Boolean = true,
+    flair: String? = null,
     block: A.() -> Unit = {}
 ) {
-    val prefix = labelPrefixMap[text.lowercase()]
-    val text = prefix?.let {
-        "$it $text"
-    } ?: text
-
+    val flair = flair ?: if (addFlair) labelPrefixMap[text.lowercase()] else null
     navigation(
         text = text,
         route = route,
         modifiers = modify(BtnKey.Class, modifiers),
+        flair = flair,
         block = block,
     )
 }
@@ -35,11 +33,13 @@ fun FlowContent.btn(
     route: AppRoute,
     background: Url?,
     modifiers: ModifierSet? = null,
+    flair: String? = null,
     block: A.() -> Unit = {}
 ) {
     navigation(
         text = text,
         route = route,
+        flair = flair,
         modifiers = modify(modifiers, BtnKey.Class, BackgroundImage),
     ) {
         background?.let {
@@ -54,24 +54,22 @@ fun FlowContent.btn(
     href: String,
     modifiers: ModifierSet? = null,
     id: Id? = null,
-    styles: StyleSet? = null,
-    addExternalIndicator: Boolean = true,
+    addFlair: Boolean = true,
+    flair: String? = null,
     block: A.() -> Unit = {},
 ) {
-    val domain = href.takeIf { addExternalIndicator }?.let { domainOf(it) }
-    val prefix = labelPrefixMap[text.lowercase()] ?: domain?.let { domain ->
-        domainPrefixMap[domain] ?: "🔗"
-    }
-    val text = prefix?.let {
-        "$it $text"
-    } ?: text
+    val flair =
+        flair ?: labelPrefixMap[text.lowercase()] ?: href.takeIf { addFlair }?.let { domainOf(it) }?.let { domain ->
+            domainPrefixMap[domain] ?: "🔗"
+        }
+
     navigation(
         href = href,
         text = text,
         modifiers = modify(BtnKey.Class, modifiers),
         block = block,
+        flair = flair,
         id = id,
-        styles = styles
     )
 }
 
@@ -91,6 +89,8 @@ private val domainPrefixMap = mapOf(
 private val labelPrefixMap = mapOf(
     "tickets" to "🎟",
     "edit" to "✍",
+    "website" to "🌐",
+    "calendar" to "📅",
 )
 
 object BtnKey {

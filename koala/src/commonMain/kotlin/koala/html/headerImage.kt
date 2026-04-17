@@ -1,6 +1,7 @@
 package koala.html
 
 import kampfire.model.Url
+import koala.css.Aspect3By2
 import koala.css.Class
 import koala.css.ModifierSet
 import koala.css.addModifiers
@@ -15,7 +16,7 @@ fun FlowContent.headerImage(
     block: DIV.() -> Unit = {}
 ) {
     box {
-        addModifiers(HeaderImageKey.Class, modifiers)
+        addModifiers(modifiers, HeaderImageKey.Class, Aspect3By2)
         block()
 
         src?.let {

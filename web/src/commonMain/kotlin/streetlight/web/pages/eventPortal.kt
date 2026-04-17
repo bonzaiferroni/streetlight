@@ -78,7 +78,7 @@ fun HTML.eventPortal(event: Event, performer: Performer?, requestItems: List<Req
                     text = "Send a tip",
                     href = "https://venmo.com/colfaxband?txn=pay&note=street+music",
                     modifiers = modify(Accent),
-                    addExternalIndicator = false,
+                    addFlair = false,
                 )
             }
             heading4("Thank you for stopping by!")

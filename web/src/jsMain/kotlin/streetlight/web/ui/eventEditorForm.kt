@@ -140,7 +140,7 @@ fun RenderContext.eventEditorForm(
                     flow = model.descriptionFlow
                 )
                 row(modify(JustifyContentSpaceBetween)) {
-                    buttonPopover("Markdown Hints", emoji = "💡") {
+                    buttonPopover("Markdown Hints", flair = "💡") {
                         card(modify(ButtonPopover.CardMod, Padding2)) {
                             bulletsOf(
                                 "Add a blank line in between paragraphs.",

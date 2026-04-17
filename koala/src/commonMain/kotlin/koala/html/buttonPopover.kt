@@ -8,7 +8,7 @@ fun FlowContent.buttonPopover(
     label: String,
     modifiers: ModifierSet? = null,
     popoverModifiers: ModifierSet? = null,
-    emoji: String = "☰",
+    flair: String = "☰",
     id: Id = Id("${label.lowercase().replace(" ", "-")}-popover"),
     block: DIV.() -> Unit = {}
 ) {
@@ -17,7 +17,7 @@ fun FlowContent.buttonPopover(
     popover(id, anchor, modify(popoverModifiers, Magic, SlideUp)) {
         block()
     }
-    button("$emoji $label", modifiers) {
+    button("$flair $label", modifiers) {
         setAnchor(anchor)
         setPopoverTarget(id)
     }

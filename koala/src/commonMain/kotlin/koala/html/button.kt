@@ -9,21 +9,30 @@ import kotlinx.html.button as buttonTag
 fun FlowContent.button(
     text: String,
     modifiers: ModifierSet? = null,
+    flair: String? = null,
     block: BUTTON.() -> Unit = {}
 ) {
     buttonTag {
-        configureButton(text, modifiers, block)
+        configureButton(text, modifiers, flair, block)
     }
 }
 
 fun BUTTON.configureButton(
     text: String,
     modifiers: ModifierSet? = null,
+    flair: String? = null,
     block: BUTTON.() -> Unit = {}
 ) {
     addModifiers(BtnKey.Class, modifiers)
     block()
-    +text
+    flair?.let {
+        span {
+            +flair
+        }
+    }
+    span {
+        +text
+    }
 }
 
 fun FlowContent.button(

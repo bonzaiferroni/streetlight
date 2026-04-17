@@ -58,14 +58,15 @@ fun FlowContent.locationProfileShell(
                         markdown(it)
                     }
                 }
-                location.links?.let { links ->
-                    row(modify(Flex1, WrapFlex, AlignItemsStart, FlexItems1)) {
+                row(modify(Flex1, WrapFlex, AlignItemsStart, FlexItems1)) {
+                    location.links?.let { links ->
                         links.forEach { link ->
-                            btn(link.label, link.url, modify(Secondary))
+                            btn(link.label, link.url)
                         }
-                        btn("edit", EditLocationIdRoute(location.locationId))
                     }
+                    btn("edit", EditLocationIdRoute(location.locationId), modify(Secondary))
                 }
+
             }
         }
 

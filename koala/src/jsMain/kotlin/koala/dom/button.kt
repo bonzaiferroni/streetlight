@@ -9,6 +9,7 @@ import koala.css.modify
 import koala.html.BtnKey
 import koala.html.configureElementButton
 import koala.html.configureSvgButton
+import koala.html.span
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.html.BUTTON
@@ -22,6 +23,7 @@ fun RenderContext.button(
     onClick: (() -> Unit)? = null,
     onClickEvent: ((Event) -> Unit)? = null,
     bindIsEnabled: Flow<Boolean>? = null,
+    flair: String? = null,
     block: BUTTON.() -> Unit = {},
 ): HTMLButtonElement {
     val element = button {
@@ -29,7 +31,14 @@ fun RenderContext.button(
 //        setId(id)
 //        setStyle(styles)
         block()
-        +text
+        flair?.let {
+            span {
+                +flair
+            }
+        }
+        span {
+            +text
+        }
     }
 
     configureButtonEvents(

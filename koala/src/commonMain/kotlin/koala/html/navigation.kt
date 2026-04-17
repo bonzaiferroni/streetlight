@@ -17,16 +17,22 @@ fun FlowContent.navigation(
     modifiers: ModifierSet? = null,
     text: String = "",
     id: Id? = null,
-    styles: StyleSet? = null,
+    flair: String? = null,
     block: A.() -> Unit = {}
 ) {
     a {
         setId(id)
         addModifiers(modify(ActionKey.Class, modifiers))
-        setStyle(styles)
         href?.let { this.href = href }
         block()
-        +text
+        flair?.let {
+            span {
+                +flair
+            }
+        }
+        span {
+            +text
+        }
     }
 }
 
@@ -35,7 +41,7 @@ fun FlowContent.navigation(
     modifiers: ModifierSet? = null,
     text: String = "",
     id: Id? = null,
-    styles: StyleSet? = null,
+    flair: String? = null,
     block: A.() -> Unit = {}
 ) {
     navigation(
@@ -43,7 +49,7 @@ fun FlowContent.navigation(
         href = route.toHashPath(),
         modifiers = modifiers,
         id = id,
-        styles = styles,
+        flair = flair,
         block = block
     )
 }

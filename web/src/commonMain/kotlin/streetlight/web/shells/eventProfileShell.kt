@@ -21,7 +21,7 @@ fun FlowContent.eventProfileShell(event: EventLocation) {
             column(modify(ContainerMdRow, FlexItems1, CardBg, Gap0)) {
                 val imageUrl = event.images.medium
                 if (imageUrl != null) {
-                    featureImage(imageUrl, modify(Aspect1))
+                    featureImage(imageUrl, modify(Aspect3By2))
                 }
                 column(modify(JustifyContentCenter)) {
                     column(modify(PaddingX1, PaddingY2)) {
