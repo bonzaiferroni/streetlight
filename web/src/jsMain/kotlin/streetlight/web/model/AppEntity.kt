@@ -4,7 +4,6 @@ import kampfire.model.GeoPoint
 import kampfire.model.thumb
 import koala.SiteImage
 import koala.Svg
-import koala.css.MaxWidth64
 import koala.css.modify
 import koala.dom.RenderContext
 import koala.dom.box
@@ -14,12 +13,12 @@ import koala.model.PointEntity
 import koala.model.Rgb
 import kotlinx.html.DIV
 import kotlinx.html.p
-import streetlight.model.data.Event
 import streetlight.model.data.Galaxy
 import streetlight.model.data.EventPost
 import streetlight.model.data.Location
 import streetlight.model.data.Spirit
 import streetlight.model.data.SpiritId
+import streetlight.web.layouts.smallPostCard
 import streetlight.web.shells.cardOf
 
 data class LocationEntity(
@@ -36,23 +35,6 @@ data class LocationEntity(
     }
     override val light get() = Rgb(180, 240, 100)
     override val modifiers get() = modify(MarkerUtility.twinkleAboveRaincloud)
-}
-
-data class EventEntity(
-    val location: Location,
-    val events: List<Event>,
-): PointEntity {
-    val event get() = events.first()
-    override val entityId get() = location.locationId.value
-    // override val label get() = location.name
-    override val position get() = location.geoPoint
-    override val thumbUrl get() = event.images.thumb ?: SiteImage.placeholderTh.url
-    override val focusCard: RenderContext.() -> Unit get() = {
-        box {
-            cardOf(event, modify(MaxWidth64))
-        }
-    }
-    override val light get() = Rgb(240, 100, 180 )
 }
 
 data class SpiritEntity(
@@ -74,7 +56,7 @@ data class IconEntity(
     override val position: GeoPoint
 ): PointEntity
 
-data class PostEntity(
+data class EventEntity(
     val post: EventPost,
     val galaxy: Galaxy?,
     override val position: GeoPoint,
@@ -83,4 +65,9 @@ data class PostEntity(
     override val thumbUrl get() = post.images.thumb ?: galaxy?.images.thumb
         ?: SiteImage.placeholderTh.url
     override val light get() = Rgb(240, 100, 180 )
+    override val focusCard: RenderContext.() -> Unit get() = {
+        box {
+            smallPostCard(post)
+        }
+    }
 }

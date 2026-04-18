@@ -38,18 +38,18 @@ class StreetMap(
         state.set { it.copy(posts = it.posts + posts)}
     }
 
-    private fun createEntities(posts: List<EventPost>): List<PostEntity> {
+    private fun createEntities(posts: List<EventPost>): List<EventEntity> {
         return posts.mapNotNull { post ->
             val position = post.geoPoint ?: return@mapNotNull null
             val galaxy = cache.topGalaxies.getCachedItem(post.galaxyId)
-            PostEntity(post, galaxy, position)
+            EventEntity(post, galaxy, position)
         }
     }
 }
 
 data class StreetMapState(
     val galaxies: List<Galaxy> = emptyList(),
-    val posts: List<PostEntity> = emptyList(),
+    val posts: List<EventEntity> = emptyList(),
     val focus: MapFocus = MapFocus(),
 )
 

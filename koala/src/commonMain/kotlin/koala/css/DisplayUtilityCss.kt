@@ -105,6 +105,7 @@ val MoonShadowInset = utilityOf("moon-shadow-inset", "box-shadow: var(--moon-sha
 
 // Theme
 val DayTheme = CssUtility("day-theme")
+val NeverDay = CssUtility("never-day")
 val Activate = CssUtility("activate")
 
 // Misc

@@ -4,6 +4,7 @@ import kampfire.model.GeoPoint
 import koala.css.Class
 import koala.css.Height48
 import koala.css.ModifierSet
+import koala.css.NeverDay
 import koala.css.Width100P
 import koala.css.addModifiers
 import koala.css.modify
@@ -25,7 +26,7 @@ fun DIV.configureGeoMapMount(
     modifiers: ModifierSet? = null,
     block: DIV.() -> Unit = {}
 ) {
-    addModifiers(GeoMapSelector.mapMount, modifiers)
+    addModifiers(modifiers, GeoMapSelector.mapMount, NeverDay)
     initialPoint?.let {
         setAttribute(GeoMapSelector.geoPoint, "${it.lng},${it.lat}")
     }

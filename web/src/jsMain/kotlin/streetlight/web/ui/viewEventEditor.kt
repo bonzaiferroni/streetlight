@@ -31,7 +31,6 @@ fun ViewContext<Streetlight>.viewEventEditor(
     // give feedback on edit validity
     renderScope.launch {
         editStore.flow.collect { edit ->
-            console.log("ey")
             when (val text = edit.invalidMessage) {
                 null -> msg.set("Looks good.")
                 else -> msg.set(text)

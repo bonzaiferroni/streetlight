@@ -79,7 +79,6 @@ val StylesCss get() = """
     --ink: ${Koala.paper * 2};
 }
 
-
 html {
     font-size: 100%;
 }
