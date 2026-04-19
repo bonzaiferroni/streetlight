@@ -2,11 +2,14 @@
 
 package koala.core
 
-import koala.external.AddLayerObject
 import koala.external.CanvasContextAttributes
 import koala.external.FillExtrusionPaint
+import koala.external.HillshadePaint
+import koala.external.MapLayer
+import koala.external.MapLayerLayout
 import koala.external.MapOptions
-import koala.external.SourceSpecification
+import koala.external.MapSource
+import koala.external.MapTerrain
 import koala.external.maplibregl
 import koala.html.GeoMapSelector
 import kotlinx.browser.localStorage
@@ -51,16 +54,16 @@ fun initGeoMap(mount: HTMLElement): HTMLElement {
         ?: cachedCenterPoint()?.also { zoom = cachedZoom() ?: zoom }
         ?: maplibregl.LngLat(-104.95, 39.75)
 
-    val widget = maplibregl.Map(MapOptions(
-        container = widgetBox,
-        style = "/www/misc/fjord",
-        center = center,
-        zoom = zoom,
-        pitch = 45,
-        canvasContextAttributes = CanvasContextAttributes(
-            antialias = true
+    val widget = maplibregl.Map(
+        MapOptions(
+            container = widgetBox,
+            style = "/www/misc/fjord.json",
+            center = center,
+            zoom = zoom,
+            pitch = 45,
+//            canvasContextAttributes = CanvasContextAttributes(antialias = true)
         )
-    ))
+    )
 
     widget.addControl(maplibregl.NavigationControl())
     // widget.addControl(maplibregl.FullscreenControl())
@@ -69,18 +72,19 @@ fun initGeoMap(mount: HTMLElement): HTMLElement {
 
 
     widget.on("load") {
+
         val layers = widget.getStyle().layers.orEmpty()
 
         val labelLayerId = layers.firstOrNull { it.type == "symbol" && it.layout?.textField != null }?.id
 
-        val source = SourceSpecification(
+        val source = MapSource(
             type = "vector",
             url = "https://tiles.openfreemap.org/planet"
         )
 
         widget.addSource("openfreemap", source)
 
-        val layer = AddLayerObject(
+        val layer = MapLayer(
             id = "3d-buildings",
             source = "openfreemap",
             sourceLayer = "building",
@@ -151,3 +155,35 @@ private fun cachedZoom(): Double? {
 private const val MAP_CENTER_LAT_KEY = "geomap.center.lat"
 private const val MAP_CENTER_LNG_KEY = "geomap.center.lng"
 private const val MAP_ZOOM_KEY = "geomap.zoom"
+
+fun addTerrain(widget: maplibregl.Map) {
+    widget.addSource("dem", MapSource(
+        type = "raster-dem",
+        tiles = arrayOf("https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png"),
+        encoding = "terrarium",
+        tileSize = 256,
+        maxzoom = 12
+    ))
+    widget.addLayer(
+        MapLayer(
+            id = "hills",
+            type = "hillshade",
+            source = "dem",
+            layout = MapLayerLayout(visibility = "visible"),
+            paint = HillshadePaint(
+                hillshadeShadowColor = "#222222",
+                hillshadeExaggeration = arrayOf(
+                    "interpolate", arrayOf("linear"), arrayOf("zoom"),
+                    8, 0.0,
+                    10, 0.5
+                )
+            )
+        ),
+    )
+    widget.setTerrain(
+        MapTerrain(
+            source = "dem",
+            exaggeration = 1
+        )
+    )
+}

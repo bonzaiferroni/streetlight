@@ -2,7 +2,6 @@ package streetlight.web.ui
 
 import koala.css.*
 import koala.dom.*
-import koala.html.Id
 import koala.html.btn
 import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
@@ -17,7 +16,7 @@ import streetlight.web.pages.AppBodyKey
 fun ViewContext<Streetlight>.viewEarth() {
     val app = model
 
-    box(EarthKey.id, modify(Size100P)) {
+    box(EarthKey.Id, modify(Size100P)) {
         column(modify(Padding1)) {
             row(modify(JustifyContentCenter)) {
                 btn("Home", HomeRoute, modify(ZIndex2))

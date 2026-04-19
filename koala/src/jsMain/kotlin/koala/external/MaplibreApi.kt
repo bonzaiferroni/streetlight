@@ -59,7 +59,7 @@ external object maplibregl {
         override fun off(type: String, listener: Listener): Subscription
         override fun on(type: String, listener: Listener): Subscription
 
-        fun addSource(id: String, source: SourceSpecification)
+        fun addSource(id: String, source: MapSource)
         fun getSource(id: String): Source
         fun addLayer(layer: dynamic, layerId: dynamic)
         fun addLayer(layer: dynamic)
@@ -185,12 +185,18 @@ external interface PositionAnchor
 @JsPlainObject
 external interface MapOptions {
     val container: HTMLElement?
-    val style: String?
+    val style: Any?
     val center: maplibregl.LngLat
     val zoom: Number
     val pitch: Number?
     val bearing: Number?
-    val canvasContextAttributes: CanvasContextAttributes
+    val canvasContextAttributes: CanvasContextAttributes?
+}
+
+@JsPlainObject
+external interface TerrainSpec {
+    val source: String
+    val exaggeration: Number?
 }
 
 external interface Camera
@@ -211,22 +217,18 @@ external interface CenterZoomBearing {
 typealias Expression = Array<Any?>
 
 @JsPlainObject
-external interface AddLayerObject {
-    var id: String
-    var source: String
-
+external interface MapLayer {
+    val id: String
+    val type: String                    // "raster" | "hillshade" | ...
+    val source: String?
     @JsName("source-layer")
-    var sourceLayer: String
-
-    var type: String
-
-    // Optional bits
-    var minzoom: Double?
-    var maxzoom: Double?
-    var filter: Expression?
-
-    // Layer-type specific paint
-    var paint: FillExtrusionPaint?
+    var sourceLayer: String?
+    val minzoom: Number?
+    val maxzoom: Number?
+    val layout: Any?
+    val paint: Any?                     // keys like "hillshade-shadow-color" sail as Any
+    val filter: Array<Any>?
+    val beforeId: String?
 }
 
 @JsPlainObject
@@ -245,13 +247,23 @@ external interface FillExtrusionPaint {
 }
 
 @JsPlainObject
-external interface SourceSpecification {
+external interface MapSource {
     var type: String
     var url: String?
     var tiles: Array<String>?
-    var minzoom: Double?
-    var maxzoom: Double?
+    var minzoom: Number?
+    var maxzoom: Number?
     var data: dynamic /* String | GeoJSON */
+    val encoding: String?
+    val tileSize: Number?
+    val attribution: String?
+}
+
+@JsPlainObject
+external interface MapSources {
+    val osm: MapSource?
+    val terrainSource: MapSource?
+    val hillshadeSource: MapSource?
 }
 
 @JsPlainObject
@@ -331,4 +343,60 @@ external interface LineLayout {
 
     @JsName("line-cap")
     var lineCap: String? /* "butt" | "round" | "square" */
+}
+
+@JsPlainObject
+external interface MapStyle {
+    val version: Number                 // must be 8
+    val name: String?
+    val sources: dynamic                    // map keyed by arbitrary source IDs
+    val layers: Array<MapLayer>
+    val terrain: MapTerrain?
+    val sprite: String?
+    val glyphs: String?
+    val center: Array<Number>?
+    val zoom: Number?
+    val bearing: Number?
+    val pitch: Number?
+}
+
+@JsPlainObject
+external interface MapTerrain {
+    val source: String
+    val exaggeration: Number?
+}
+
+@JsPlainObject
+external interface RasterSource {
+    val type: String                    // "raster"
+    val tiles: Array<String>?
+    val url: String?
+    val tileSize: Number?
+    val attribution: String?
+    val maxzoom: Number?
+    val minzoom: Number?
+}
+
+@JsPlainObject
+external interface RasterDemSource {
+    val type: String                    // "raster-dem"
+    val tiles: Array<String>?
+    val url: String?
+    val tileSize: Number?
+    val maxzoom: Number?
+    val minzoom: Number?
+    val encoding: String?               // "terrarium" | "mapbox"
+}
+
+@JsPlainObject
+external interface MapLayerLayout {
+    val visibility: String?             // "visible" | "none"
+}
+
+@JsPlainObject
+external interface HillshadePaint {
+    @JsName("hillshade-shadow-color")
+    val hillshadeShadowColor: String?
+    @JsName("hillshade-exaggeration")
+    val hillshadeExaggeration: Any?
 }

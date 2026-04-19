@@ -11,7 +11,6 @@ import streetlight.web.layouts.cellCard
 import streetlight.web.layouts.costCell
 import streetlight.web.layouts.lightCell
 import streetlight.web.layouts.postedByCell
-import streetlight.web.layouts.propertyCell
 import streetlight.web.layouts.startsAtCell
 import streetlight.web.pages.appFooter
 

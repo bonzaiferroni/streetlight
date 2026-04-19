@@ -10,85 +10,89 @@ import streetlight.web.EarthRoute
 import streetlight.web.layouts.layoutEventPosts
 import streetlight.web.layouts.smallGalaxyCard
 import streetlight.web.pages.appFooter
+import streetlight.web.ui.EarthKey
 
 fun FlowContent.homeShell(content: HomeContent) {
-    column(HomeShellKey.ContainerId, modify(Gap8)) {
-        column {
-            geoMapMount(null, modify(BorderRadius2, Height48, MoonShadow))
+    column(HomeShellKey.ContainerId) {
+        geoMapMount(null, modify(BorderRadius2, Height48, MoonShadow))
+        box {
+            btn("View Map", EarthRoute, EarthKey.ViewMapButtonMod)
+            column(modify(Gap8)) {
+                row(modify(JustifyContentSpaceBetween)) {
+                    galaxyMenu(content.galaxies, null)
+                    // switch("bruh", id = Id("bruh"))
 
-            row(modify(JustifyContentSpaceBetween)) {
-                galaxyMenu(content.galaxies, null)
-                // switch("bruh", id = Id("bruh"))
-                btn("View Map", EarthRoute)
-            }
-        }
+                    spacer()
+                }
 
-        section(modify(QueryContainer)) {
-            column(modify(Gap0)) {
-                heading2("Galaxies", SectionHeadingMod)
-                textBlock(
-                    content = "Galaxies are Streetlight communities, each with a particular focus.",
-                    modifiers = modify(Dim, TextAlignCenter)
-                )
-            }
-
-            column(modify(ContainerMdRow, FlexItems1)) {
-                val subHeadingMods = modify(LineHeight1, OpacityMost)
-                column {
-                    filigree {
-                        heading4("Top Galaxies", subHeadingMods)
+                section(modify(QueryContainer)) {
+                    column(modify(Gap0)) {
+                        heading2("Galaxies", SectionHeadingMod)
+                        textBlock(
+                            content = "Galaxies are Streetlight communities, each with a particular focus.",
+                            modifiers = modify(Dim, TextAlignCenter)
+                        )
                     }
-                    ulist {
-                        content.galaxies.forEach { galaxy ->
-                            listItem {
-                                smallGalaxyCard(galaxy)
+
+                    column(modify(ContainerMdRow, FlexItems1)) {
+                        val subHeadingMods = modify(LineHeight1, OpacityMost)
+                        column {
+                            filigree {
+                                heading4("Top Galaxies", subHeadingMods)
+                            }
+                            ulist {
+                                content.galaxies.forEach { galaxy ->
+                                    listItem {
+                                        smallGalaxyCard(galaxy)
+                                    }
+                                }
+                            }
+                        }
+                        column(modify(MarginTop4, ContainerMdMarginTop0)) {
+                            filigree {
+                                heading4("Featured Galaxies", subHeadingMods)
+                            }
+                            row(modify(Flex1, AlignItemsCenter, JustifyContentCenter)) {
+                                lottie(LottieFile.dinoLoad, modify(Width32, Aspect1))
+                            }
+                        }
+                    }
+                    row {
+                        spacer(modify(Flex1))
+                        btn("➕ Create a Galaxy", CreateGalaxyRoute, modify(Accent))
+                    }
+                }
+
+                layoutEventPosts("Upcoming Events", content.posts)
+
+                section {
+                    filigree {
+                        heading2("Lit Events", SectionHeadingMod)
+                    }
+
+                    card(modify(Height32, MoonShadow, Padding0)) {
+                        swapBlock(HomeShellKey.LightSwapId, modify(Magic)) {
+                            column(modify(JustifyContentCenter, Dim, Gap0)) {
+                                setId(HomeShellKey.LightInfoId)
+                                setReveal(true)
+
+                                row(modify(JustifyContentCenter)) {
+                                    textBlock("Events that you")
+                                    icon(SvgFile.Light)
+                                    textBlock("will appear here.")
+                                }
+                                textBlock("This is saved on your device, unless you sign in.", modify(TextAlignCenter))
+                            }
+                            box(HomeShellKey.LitEventsId) {
+                                setReveal(false)
                             }
                         }
                     }
                 }
-                column(modify(MarginTop4, ContainerMdMarginTop0)) {
-                    filigree {
-                        heading4("Featured Galaxies", subHeadingMods)
-                    }
-                    row(modify(Flex1, AlignItemsCenter, JustifyContentCenter)) {
-                        lottie(LottieFile.dinoLoad, modify(Width32, Aspect1))
-                    }
-                }
-            }
-            row {
-                spacer(modify(Flex1))
-                btn("➕ Create a Galaxy", CreateGalaxyRoute, modify(Accent))
+
+                appFooter(HomeShellKey.SOURCE)
             }
         }
-
-        layoutEventPosts("Upcoming Events", content.posts)
-
-        section {
-            filigree {
-                heading2("Lit Events", SectionHeadingMod)
-            }
-
-            card(modify(Height32, MoonShadow, Padding0)) {
-                swapBlock(HomeShellKey.LightSwapId, modify(Magic)) {
-                    column(modify(JustifyContentCenter, Dim, Gap0)) {
-                        setId(HomeShellKey.LightInfoId)
-                        setReveal(true)
-
-                        row(modify(JustifyContentCenter)) {
-                            textBlock("Events that you")
-                            icon(SvgFile.Light)
-                            textBlock("will appear here.")
-                        }
-                        textBlock("This is saved on your device, unless you sign in.", modify(TextAlignCenter))
-                    }
-                    box(HomeShellKey.LitEventsId) {
-                        setReveal(false)
-                    }
-                }
-            }
-        }
-
-        appFooter(HomeShellKey.SOURCE)
     }
 }
 

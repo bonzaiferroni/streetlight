@@ -10,7 +10,7 @@ val LayoutUtilityCss
         // Align
         AlignItemsCenter, AlignItemsStretch, AlignItemsStart, AlignItemsEnd,
         JustifyContentCenter, JustifyContentEnd, JustifyContentSpaceAround, JustifyContentSpaceBetween,
-        JustifySelfEnd, JustifyContentStretch, JustifyContentStart,
+        JustifySelfEnd, JustifySelfCenter, JustifyContentStretch, JustifyContentStart,
         AlignSelfStart, AlignSelfCenter, AlignSelfEnd, AlignSelfStretch, JustifySelfStart, JustifySelfStretch,
         // Width
         WidthAuto, Width100P, WidthFitContent,
@@ -38,7 +38,7 @@ val LayoutUtilityCss
         ObjectFitCover, ObjectFitContain, ObjectPositionCenter, ObjectFitFill,
         // Other
         SpaceBetween, Start, End, Center, PlaceItemsCenter, RelativeParent, ZIndex1, ZIndex2, Shrinkable, QueryContainer,
-        PositionSticky, TopSpacing8,
+        PositionSticky, TopSpacing1, TopSpacing8,
     )
 
 // Gap
@@ -213,6 +213,7 @@ val End = CssUtility("end")
 val Center = CssUtility("center")
 val PlaceItemsCenter = CssUtility("center-items")
 val JustifySelfEnd = utilityOf("justify-self-end", "justify-self: end")
+val JustifySelfCenter = utilityOf("justify-self-center", "justify-self: center")
 val AlignSelfStart = utilityOf("align-self-start", "align-self: start")
 val AlignSelfCenter = utilityOf("align-self-center", "align-self: center")
 val AlignSelfEnd = utilityOf("align-self-end", "align-self: end")
@@ -232,6 +233,7 @@ val ZIndex2 = utilityOf("z-index-2", "z-index: 2")
 val Shrinkable = CssUtility("shrinkable")
 val QueryContainer = utilityOf("query-container", "container-type: inline-size")
 val PositionSticky = utilityOf("position-sticky", "position: sticky")
+val TopSpacing1 = utilityOf("top-spacing-1", "top: var(--unit-spacing)")
 val TopSpacing8 = utilityOf("top-spacing-8", "top: calc(var(--unit-spacing) * 8)")
 
 // Query

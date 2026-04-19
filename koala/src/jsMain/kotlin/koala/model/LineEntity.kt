@@ -9,8 +9,7 @@ import koala.external.LayerSpecification
 import koala.external.LineLayout
 import koala.external.LinePaint
 import koala.external.LineStringGeometry
-import koala.external.SourceSpecification
-import koala.model.jsObject
+import koala.external.MapSource
 
 interface LineEntity : MapEntity {
     val points: List<GeoPoint>
@@ -49,7 +48,7 @@ fun MapViewContext.showLines(entities: List<LineEntity>) {
         } else {
             val entity = lineLayers.getValue(layerId).first().entity
             console.log("creating layer: $layerId")
-            val sourceObj = SourceSpecification(
+            val sourceObj = MapSource(
                 type = "geojson",
                 data = sourceData
             )
