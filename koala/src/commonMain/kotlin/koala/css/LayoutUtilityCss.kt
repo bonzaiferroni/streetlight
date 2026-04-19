@@ -37,7 +37,7 @@ val LayoutUtilityCss
         // Object Fit
         ObjectFitCover, ObjectFitContain, ObjectPositionCenter, ObjectFitFill,
         // Other
-        SpaceBetween, Start, End, Center, PlaceItemsCenter, RelativeParent, ZIndex1, Shrinkable, QueryContainer,
+        SpaceBetween, Start, End, Center, PlaceItemsCenter, RelativeParent, ZIndex1, ZIndex2, Shrinkable, QueryContainer,
         PositionSticky, TopSpacing8,
     )
 
@@ -228,6 +228,7 @@ val RelativeParent = CssUtility(
     ".relative-parent { position: relative; } .relative-parent > * { position: absolute; inset: 0; }"
 )
 val ZIndex1 = utilityOf("z-index-1", "z-index: 1")
+val ZIndex2 = utilityOf("z-index-2", "z-index: 2")
 val Shrinkable = CssUtility("shrinkable")
 val QueryContainer = utilityOf("query-container", "container-type: inline-size")
 val PositionSticky = utilityOf("position-sticky", "position: sticky")

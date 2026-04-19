@@ -6,7 +6,7 @@ import koala.html.*
 import kotlinx.html.FlowContent
 
 fun FlowContent.helmBar() {
-    val cardMod = modify(HelmBarKey.CardClass, BlurBackdrop, PointerEventsAuto, BorderRadius50P, ZenCardBg)
+    val cardMod = modify(HelmBarKey.CardClass, BlurBackdrop, PointerEventsAuto, BorderRadius50P, TransparentBg)
     siteHelm()
     starHelm()
     row(HelmBarKey.StickyBarId, modify(JustifyContentSpaceBetween)) {
@@ -37,15 +37,5 @@ object HelmBarKey {
 // language="CSS"
 val StickyBarCss get() = """
 ${HelmBarKey.StickyBarId} {
-}
-
-${HelmBarKey.CardClass} {
-    transition: background-color var(--magic-interval) var(--magic-easing);
-}
-
-@media (min-width: ${BODY_WIDTH_PX + 128}px) {
-    ${HelmBarKey.CardClass} {
-        background-color: transparent;
-    }
 }
 """

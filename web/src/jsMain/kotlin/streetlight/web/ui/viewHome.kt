@@ -14,7 +14,7 @@ fun ViewContext<Streetlight>.viewHome() {
         homeShell(content)
     }
 
-    queryAndWireSwitch(root, Id("bruh"), onToggle = { console.log("bruh") })
+    // queryAndWireSwitch(root, Id("bruh"), onToggle = { console.log("bruh") })
     wireLights(
         root = root,
         attribute = StarLightKey.EventLightId,

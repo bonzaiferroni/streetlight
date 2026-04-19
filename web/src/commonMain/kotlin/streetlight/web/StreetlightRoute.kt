@@ -3,7 +3,6 @@ package streetlight.web
 import kampfire.api.TableId
 import koala.html.AppRoute
 import koala.html.AppScreen
-import koala.model.Doc
 import koala.model.DocId
 import streetlight.model.data.Event
 import streetlight.model.data.EventEdit
@@ -27,7 +26,7 @@ enum class StreetlightScreen(
     EditStory("edit-story", { path -> EditPostRoute(path.provideId { PostId(it) }) }),
     EditLocation("edit-location", { path -> EditLocationIdRoute(path.provideId { LocationId(it) }) }),
     Sandbox("sandbox", { SandboxRoute }),
-    FullMap("full-map", { FullMapRoute }),
+    Earth("earth", { EarthRoute }),
     Chat("chat", { ChatRoute }),
     SongProfile("song-profile", { path -> path.provideRouteFromPath { SongProfileRoute(SongId(it)) } }),
     TalentProfile("talent-profile", { path -> path.provideRouteFromPath { TalentProfileRoute(TalentId(it)) } }),
@@ -106,9 +105,9 @@ object SandboxRoute: StreetlightRoute {
     override val title get() = "Sandbox"
 }
 
-object FullMapRoute: StreetlightRoute {
-    override val screen get() = StreetlightScreen.FullMap
-    override val title get() = "Map"
+object EarthRoute: StreetlightRoute {
+    override val screen get() = StreetlightScreen.Earth
+    override val title get() = "Earth"
 }
 
 data class EditPostRoute(

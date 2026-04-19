@@ -27,7 +27,7 @@ fun ViewContext<Streetlight>.viewGalaxyProfile(content: GalaxyProfileContent) {
         galaxyProfileShell(content)
     }
 
-    queryAndWireSwitch(root, GalaxyProfileKey.MapSwitchId, onToggle = ::setIsMapVisible, bindFlow = isMapVisibleFlow)
+    // queryAndWireSwitch(root, GalaxyProfileKey.MapSwitchId, onToggle = ::setIsMapVisible, bindFlow = isMapVisibleFlow)
     queryAndWireSwapBlock(root, GalaxyProfileKey.SwapId, bindFlow = swapIdFlow)
     wireLights(
         root = root,

@@ -63,7 +63,7 @@ fun initGeoMap(mount: HTMLElement): HTMLElement {
     ))
 
     widget.addControl(maplibregl.NavigationControl())
-    widget.addControl(maplibregl.FullscreenControl())
+    // widget.addControl(maplibregl.FullscreenControl())
 
     window.asDynamic().widget = widget
 

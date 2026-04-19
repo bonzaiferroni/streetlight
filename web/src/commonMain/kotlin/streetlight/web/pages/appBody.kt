@@ -11,7 +11,6 @@ fun HTML.appBody(
     block: DIV.() -> Unit = { }
 ) {
     body {
-        appOverlay()
         column(AppBodyKey.ViewportId, modify(Gap0)) {
             appHeader()
             row(AppBodyKey.ContentRowId, modify(JustifyContentCenter, Flex1)) {
@@ -23,6 +22,8 @@ fun HTML.appBody(
                 div(AppBodyKey.PanelRightId, modify(Flex1, AppOverlayKey.MediaVlgReveal))
             }
         }
+        appOverlay()
+        div(AppBodyKey.FullScreenId)
 
         scriptUnsafe(AppOverlayJs)
         linkScript(JsFile.Web)
@@ -39,6 +40,7 @@ object AppBodyKey {
     val PanelLeftId = Id("panel-left")
     val PanelRightId = Id("panel-right")
     val ContentRowId = Id("app-content-row")
+    val FullScreenId = Id("full-screen")
 }
 
 // language="CSS"
@@ -105,6 +107,19 @@ ${AppBodyKey.PanelRightId} {
     display: none;
     padding-right: var(--unit-spacing-1);
     max-width: 500px;
+}
+
+${AppBodyKey.FullScreenId} {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity var(--magic-interval) var(--magic-easing);
+}
+
+${AppBodyKey.FullScreenId}$Reveal {
+    pointer-events: auto;
+    opacity: 1;
 }
 
 """

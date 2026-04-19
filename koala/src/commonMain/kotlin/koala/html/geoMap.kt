@@ -43,3 +43,4 @@ object GeoMapSelector {
     val geoPoint = Attribute<String>("data-geo-point")
     val focusPanel = Id("map-focus-panel")
 }
+

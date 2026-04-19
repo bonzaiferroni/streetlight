@@ -6,6 +6,7 @@ import kotlinx.html.FlowContent
 import kotlinx.serialization.Serializable
 import streetlight.model.data.Galaxy
 import streetlight.model.data.PostListing
+import streetlight.web.EarthRoute
 import streetlight.web.layouts.layoutPostListing
 import streetlight.web.pages.appFooter
 import streetlight.web.ui.galaxyHeader
@@ -27,7 +28,8 @@ fun FlowContent.galaxyProfileShell(content: GalaxyProfileContent) {
             row(modify(JustifyContentSpaceBetween)) {
                 row {
                     galaxyMenu(emptyList(), galaxy)
-                    switch("map", id = GalaxyProfileKey.MapSwitchId)
+                    // switch("map", id = GalaxyProfileKey.MapSwitchId)
+                    btn("View Map", EarthRoute)
                 }
                 postMenu(galaxy)
             }

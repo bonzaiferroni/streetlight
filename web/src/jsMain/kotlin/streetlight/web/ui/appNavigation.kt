@@ -1,7 +1,6 @@
 package streetlight.web.ui
 
 import koala.css.Blur
-import koala.css.Height100P
 import koala.css.Magic
 import koala.css.SlideUp
 import koala.css.modify
@@ -27,7 +26,7 @@ fun RenderContext.appNavigation(app: Streetlight) {
                 StreetlightScreen.StarDash -> viewStarDash(app)
                 StreetlightScreen.EditEvent -> viewEventEditorRoute()
                 StreetlightScreen.Sandbox -> viewSandbox(app)
-                StreetlightScreen.FullMap -> viewFullMap(app)
+                StreetlightScreen.Earth -> viewEarthRoute()
                 StreetlightScreen.EditStory -> viewPostEditor(app)
                 StreetlightScreen.Chat -> viewChatRoom(app)
                 StreetlightScreen.SongProfile -> viewSongProfile(app)

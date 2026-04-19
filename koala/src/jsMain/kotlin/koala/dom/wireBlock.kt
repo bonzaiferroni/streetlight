@@ -3,18 +3,20 @@ package koala.dom
 import koala.css.Class
 import koala.html.Id
 import kotlinx.browser.document
+import kotlinx.coroutines.CoroutineScope
 import org.w3c.dom.HTMLElement
 
 fun RenderContext.wireBlock(
     elementId: Id,
     ancestor: HTMLElement? = null,
     wireOnView: Boolean = true,
+    scope: CoroutineScope = renderScope,
     block: RenderContext.() -> Unit
 ): HTMLElement {
     val element = (ancestor ?: document.body)?.querySelector(elementId) ?: document.getElementOrNullById(elementId)
         ?: error("couldn't find ${elementId.identifier}")
 
-    wireBlock(element, wireOnView, block)
+    wireBlock(element, wireOnView, scope, block)
 
     return element
 }
@@ -23,13 +25,14 @@ fun RenderContext.wireBlocks(
     elementClass: Class,
     ancestor: HTMLElement? = null,
     wireOnView: Boolean = true,
+    scope: CoroutineScope = renderScope,
     block: RenderContext.() -> Unit
 ): List<HTMLElement> {
     val elements = (ancestor ?: document.body)?.querySelectorAll(elementClass)
     ?: error("couldn't find $elementClass")
 
     elements.forEach {
-        wireBlock(it, wireOnView, block)
+        wireBlock(it, wireOnView, scope, block)
     }
 
     return elements
@@ -38,10 +41,11 @@ fun RenderContext.wireBlocks(
 fun RenderContext.wireBlock(
     element: HTMLElement,
     wireOnView: Boolean = true,
+    scope: CoroutineScope = renderScope,
     block: RenderContext.() -> Unit
 ) {
     fun wireElement() {
-        element.renderRoot(renderScope, block)
+        element.renderRoot(scope, block)
     }
 
     if (wireOnView) {
