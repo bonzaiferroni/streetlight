@@ -12,7 +12,7 @@ import streetlight.web.shells.galaxyProfileShell
 fun ViewContext<Streetlight>.viewGalaxyProfile(content: GalaxyProfileContent) {
     val app = model
 
-    val root = shellBox(GalaxyProfileKey.ShellId, app.geoMap, app.appScope) {
+    val root = shellBox(GalaxyProfileKey.ShellId) {
         galaxyProfileShell(content)
     }
 

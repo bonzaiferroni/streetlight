@@ -1,6 +1,7 @@
 package streetlight.web.shells
 
 import kampfire.model.medium
+import kampfire.model.small
 import koala.css.*
 import koala.html.btn
 import kotlinx.html.FlowContent
@@ -16,7 +17,7 @@ fun FlowContent.buttonOf(galaxy: Galaxy, modifiers: ModifierSet? = null) {
     btn(
         text = galaxy.name,
         route = GalaxySlugRoute(galaxy.slug),
-        background = galaxy.images.medium,
+        background = galaxy.images.small,
         modifiers = modify(modifiers)
     )
 }

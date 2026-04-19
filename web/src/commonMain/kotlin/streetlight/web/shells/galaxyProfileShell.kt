@@ -6,7 +6,7 @@ import kotlinx.html.FlowContent
 import kotlinx.serialization.Serializable
 import streetlight.model.data.Galaxy
 import streetlight.model.data.PostListing
-import streetlight.web.EarthRoute
+import streetlight.web.EarthMapRoute
 import streetlight.web.layouts.layoutPostListing
 import streetlight.web.pages.appFooter
 import streetlight.web.ui.EarthKey
@@ -17,7 +17,7 @@ fun FlowContent.galaxyProfileShell(content: GalaxyProfileContent) {
     column(GalaxyProfileKey.ShellId) {
         galaxyHeader(galaxy, modify(BorderRadius2, Height48, MoonShadow))
         box {
-            btn("View Map", EarthRoute, EarthKey.ViewMapButtonMod)
+            btn("View Map", EarthMapRoute(galaxy.slug), EarthKey.ViewMapButtonMod)
             column(modify(Gap8)) {
                 row(modify(JustifyContentSpaceBetween)) {
                     galaxyMenu(emptyList(), galaxy)
@@ -32,9 +32,6 @@ fun FlowContent.galaxyProfileShell(content: GalaxyProfileContent) {
 
 object GalaxyProfileKey {
     val ShellId = Id("galaxy-profile-shell")
-    val HeaderId = Id("galaxy-profile-header")
-    val MapId = Id("galaxy-profile-map")
-    val MapSwitchId = Id("galaxy-profile-map-switch")
     const val SOURCE = "web/src/commonMain/kotlin/streetlight/web/shells/galaxyProfileShell.kt"
 }
 

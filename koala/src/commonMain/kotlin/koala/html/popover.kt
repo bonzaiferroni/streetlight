@@ -53,7 +53,7 @@ object PopoverKey {
 // language="CSS"
 val PopoverCss get() = """
 ${PopoverKey.Class} {
-    position: absolute;
+    position: fixed;
     inset: auto;
     top: anchor(var(--anchor-id) bottom);
     left: anchor(var(--anchor-container-id) left);

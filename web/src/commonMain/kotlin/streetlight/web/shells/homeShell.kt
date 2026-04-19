@@ -6,7 +6,7 @@ import koala.css.*
 import koala.html.*
 import kotlinx.html.FlowContent
 import streetlight.web.CreateGalaxyRoute
-import streetlight.web.EarthRoute
+import streetlight.web.EarthMapRoute
 import streetlight.web.layouts.layoutEventPosts
 import streetlight.web.layouts.smallGalaxyCard
 import streetlight.web.pages.appFooter
@@ -16,7 +16,7 @@ fun FlowContent.homeShell(content: HomeContent) {
     column(HomeShellKey.ContainerId) {
         geoMapMount(null, modify(BorderRadius2, Height48, MoonShadow))
         box {
-            btn("View Map", EarthRoute, EarthKey.ViewMapButtonMod)
+            btn("View Map", EarthMapRoute(null), EarthKey.ViewMapButtonMod)
             column(modify(Gap8)) {
                 row(modify(JustifyContentSpaceBetween)) {
                     galaxyMenu(content.galaxies, null)

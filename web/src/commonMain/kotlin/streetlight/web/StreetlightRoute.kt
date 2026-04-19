@@ -26,7 +26,7 @@ enum class StreetlightScreen(
     EditStory("edit-story", { path -> EditPostRoute(path.provideId { PostId(it) }) }),
     EditLocation("edit-location", { path -> EditLocationIdRoute(path.provideId { LocationId(it) }) }),
     Sandbox("sandbox", { SandboxRoute }),
-    Earth("earth", { EarthRoute }),
+    Earth("earth", { path -> EarthMapRoute(path.getOrNull(1))}),
     Chat("chat", { ChatRoute }),
     SongProfile("song-profile", { path -> path.provideRouteFromPath { SongProfileRoute(SongId(it)) } }),
     TalentProfile("talent-profile", { path -> path.provideRouteFromPath { TalentProfileRoute(TalentId(it)) } }),
@@ -105,9 +105,11 @@ object SandboxRoute: StreetlightRoute {
     override val title get() = "Sandbox"
 }
 
-object EarthRoute: StreetlightRoute {
+data class EarthMapRoute(val galaxySlug: String?): StreetlightRoute {
     override val screen get() = StreetlightScreen.Earth
     override val title get() = "Earth"
+
+    override fun toHashPath() = galaxySlug?.let { "${super.toHashPath()}/${it}" } ?: super.toHashPath()
 }
 
 data class EditPostRoute(
