@@ -82,12 +82,15 @@ class GeoMap(
         }
     }
 
-    fun setBounds(center: GeoPoint, value: GeoBounds, zoom: Float, isMoving: Boolean, nearest: PointEntity?) {
-        if (isMoving && zoom == stateNow.zoom && value.center.distanceTo(stateNow.center) < (20 * zoom).meters) {
-            state.set { it.copy(nearest = nearest) }
-        } else {
+    fun setFocus(entity: PointEntity?) {
+        state.set { it.copy(focus = entity) }
+    }
+
+    fun setBounds(center: GeoPoint, value: GeoBounds, zoom: Float, isMoving: Boolean) {
+        val isSmallMovement = isMoving && zoom == stateNow.zoom && value.center.distanceTo(stateNow.center) < (20 * zoom).meters
+        if (!isSmallMovement) {
             val bounds = if (isMoving) stateNow.bounds else value
-            state.set { it.copy(center = center, bounds = bounds, movingBounds = value, zoom = zoom, isMoving = isMoving, nearest = nearest) }
+            state.set { it.copy(center = center, bounds = bounds, movingBounds = value, zoom = zoom, isMoving = isMoving) }
         }
     }
 
@@ -131,7 +134,7 @@ data class GeoMapState(
     val zoom: Float = 11f,
     val isMoving: Boolean = false,
     val isViewed: Boolean = false,
-    val nearest: PointEntity? = null,
+    val focus: PointEntity? = null,
 )
 
 typealias MapEntityId = String
@@ -157,7 +160,7 @@ interface PointEntity: MapEntity {
     val thumbUrl: Url? get() = null
     val minZoom: Float? get() = null
     val modifiers: ModifierSet? get() = null
-    val onClick: (() -> Unit)? get() = null
+    val onFocus: OnFocus? get() = null
     val focusCard: (RenderContext.() -> Unit)? get() = null
     val body: (DIV.() -> Unit)? get() = null
     val light: Rgb? get() = null
@@ -171,3 +174,5 @@ data class EntityMovement(
 data class Rgb(val r: Int, val g: Int, val b: Int) {
     fun css(): String = "${r.coerceIn(0, 255)}, ${g.coerceIn(0, 255)}, $${b.coerceIn(0, 255)}"
 }
+
+typealias OnFocus = (() -> Unit) -> Unit

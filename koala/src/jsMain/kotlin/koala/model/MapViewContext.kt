@@ -5,6 +5,7 @@ import kampfire.model.GeoPoint
 import kampfire.model.regionalDistanceTo
 import kampfire.model.toPoint
 import koala.dom.modify
+import koala.dom.querySelector
 import koala.dom.unmodify
 import koala.external.maplibregl
 import org.w3c.dom.HTMLElement
@@ -12,6 +13,7 @@ import org.w3c.dom.HTMLElement
 class MapViewContext(
     val widget: maplibregl.Map,
     val windowElement: HTMLElement,
+    val onFocus: (PointEntity?) -> Unit
 ) {
     val markers = mutableMapOf<MapEntityId, PointEntityView>()
     val lineLayers = mutableMapOf<LayerId, MutableList<MapLine>>()
@@ -21,6 +23,13 @@ class MapViewContext(
     private var tempSet: TempEntitySet? = null
     private var altitudeNow: Altitude? = null
     private var boundsNow: GeoBounds? = null
+
+    init {
+        val element = windowElement.querySelector(".maplibregl-canvas") ?: error("canvas not found")
+        element.addEventListener("click", {
+            setFocus(null)
+        })
+    }
 
     fun setVisibility(visibility: ((MapEntity) -> Boolean)?) {
         this.visibilityFunction = visibility ?: { true }
@@ -67,14 +76,12 @@ class MapViewContext(
         }
     }
 
-    fun setBounds(bounds: GeoBounds, center: GeoPoint, zoom: Float): PointEntity? {
+    fun setBounds(bounds: GeoBounds, center: GeoPoint, zoom: Float) {
         boundsNow = bounds.expandBy(1.2f)
         // set marker visibility
         markers.forEach {
             updateVisibility(it.key)
         }
-
-        return getNearest(center, zoom)
     }
 
 //    fun setContextId(contextId: MapContextId) {
@@ -91,25 +98,12 @@ class MapViewContext(
         view.setIsVisible(isVisible, widget)
     }
 
-    private fun getNearest(center: GeoPoint, zoom: Float): PointEntity? {
-        // td: handle nearest cutoff by zoom
-        var nearest: PointEntityView? = null
-        var nearestDistanceSq = Double.MAX_VALUE
-        markers.forEach {
-            val view = it.value
-            val distanceSq = view.entity.position.regionalDistanceTo(center).meters
-            if (distanceSq < nearestDistanceSq) {
-                nearestDistanceSq = distanceSq
-                nearest = view
-            }
-        }
-        if (nearest != focus) {
-            focus?.unfocus()
-            focus = nearest
-            nearest?.focus()
-        }
-
-        return nearest?.entity
+    private fun setFocus(entity: PointEntity?) {
+        focus?.unfocus()
+        val view = entity?.let { markers[it.entityId] }
+        view?.focus()
+        focus = view
+        onFocus(entity)
     }
 
     fun moveEntity(movement: EntityMovement) {
@@ -168,7 +162,9 @@ class MapViewContext(
 
     private fun createObject(entity: PointEntity, center: GeoPoint): PointEntityView {
         val pixelPoint = entity.position.toPoint(center.lat)
-        val mapEntityView = entity.toMapEntityView(pixelPoint)
+        val mapEntityView = entity.toMapEntityView(pixelPoint) {
+            setFocus(entity)
+        }
 
         mapEntityView.marker.setLngLat(entity.position.toLngLat())
         markers[entity.entityId] = mapEntityView

@@ -1,6 +1,5 @@
 package koala.dom
 
-import kampfire.model.GeoPoint
 import koala.core.findAndInitGeoMap
 import koala.core.queryFirstOrNull
 import koala.external.CenterZoomBearing
@@ -68,7 +67,7 @@ fun wireMapWindow(
 
     val focusPanel = mapWindow.querySelector(GeoMapSelector.focusPanel.selector) as HTMLElement
     focusPanel.renderRoot(appScope) {
-        val nearestFlow = geoMap.stateFlow.mapDistinct { it.nearest }
+        val nearestFlow = geoMap.stateFlow.mapDistinct { it.focus }
         flowBlock(nearestFlow, defaultMagic) { entity ->
             val cardFunction = entity?.focusCard ?: return@flowBlock
             cardFunction()
@@ -77,14 +76,16 @@ fun wireMapWindow(
 
     appScope.launch {
 
-        val context = MapViewContext(widget, mapWindow)
+        val context = MapViewContext(widget, mapWindow) {
+            geoMap.setFocus(it)
+        }
 
         fun relayBounds(isMoving: Boolean) {
             val center = widget.getCenter().toGeoPoint()
             val bounds = widget.getBounds().toGeoBounds()
             val zoom = widget.getZoom().toFloat()
-            val nearest = context.setBounds(bounds, center, zoom)
-            geoMap.setBounds(center, bounds, zoom, isMoving, nearest)
+            context.setBounds(bounds, center, zoom)
+            geoMap.setBounds(center, bounds, zoom, isMoving)
         }
 
         while (!widget.loaded()) {

@@ -118,7 +118,7 @@ object MarkerUtility {
     val twinkleAboveAirplane = Class("twinkle-above-airplane")
 }
 
-fun PointEntity.toMapEntityView(pixelPoint: Point): PointEntityView {
+fun PointEntity.toMapEntityView(pixelPoint: Point, focusEntity: () -> Unit): PointEntityView {
     val element = document.createDiv()
     element.modify(MarkerCss.block)
 
@@ -192,9 +192,12 @@ fun PointEntity.toMapEntityView(pixelPoint: Point): PointEntityView {
         label = labelElement,
         bearing = bearingElement,
     )
-    onClick?.let {
-        element.onClick(it)
-    }
+
+    val onElementClick = onFocus?.let {
+        { it(focusEntity) }
+    } ?: focusEntity
+
+    element.onClick(onElementClick)
 
     return view
 }
