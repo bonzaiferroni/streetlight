@@ -196,9 +196,16 @@
 
 #map-focus-panel {
     position: absolute;
-    left: var(--unit-spacing);
-    bottom: var(--unit-spacing);
-    margin-right: 4rem;
+    padding: var(--unit-spacing);
+    width: 100%;
+    bottom: 0;
+}
+
+#map-focus-panel > * {
+    max-width: calc(var(--unit-spacing) * 64);
+    max-height: calc(var(--unit-spacing) * 48);
+    margin: 0 auto;
+    z-index: 1;
 }
 
 /*glow*/

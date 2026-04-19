@@ -7,6 +7,7 @@ import koala.Svg
 import koala.css.modify
 import koala.dom.RenderContext
 import koala.dom.box
+import koala.dom.column
 import koala.model.MapEntityId
 import koala.model.MarkerUtility
 import koala.model.PointEntity
@@ -20,6 +21,7 @@ import streetlight.model.data.Spirit
 import streetlight.model.data.SpiritId
 import streetlight.web.layouts.smallPostCard
 import streetlight.web.shells.cardOf
+import streetlight.web.ui.eventFocusContent
 
 data class LocationEntity(
     val location: Location,
@@ -28,7 +30,7 @@ data class LocationEntity(
     // override val label get() = location.name
     override val position get() = location.geoPoint
     override val thumbUrl get() = location.images.thumb ?: SiteImage.placeholderTh.url
-    override val focusCard: RenderContext.() -> Unit get() = {
+    override val focusContent: RenderContext.() -> Unit get() = {
         box {
             cardOf(location)
         }
@@ -65,9 +67,7 @@ data class EventEntity(
     override val thumbUrl get() = post.images.thumb ?: galaxy?.images.thumb
         ?: SiteImage.placeholderTh.url
     override val light get() = Rgb(240, 100, 180 )
-    override val focusCard: RenderContext.() -> Unit get() = {
-        box {
-            smallPostCard(post)
-        }
+    override val focusContent: RenderContext.() -> Unit get() = {
+        eventFocusContent(post)
     }
 }

@@ -2,6 +2,9 @@ package koala.dom
 
 import koala.core.findAndInitGeoMap
 import koala.core.queryFirstOrNull
+import koala.css.Magic
+import koala.css.SlideUp
+import koala.css.modify
 import koala.external.CenterZoomBearing
 import koala.external.maplibregl
 import kotlinx.coroutines.delay
@@ -65,12 +68,12 @@ fun wireMapWindow(
     mapWindow.onView(geoMap::setIsViewed)
     // wireKeyboardControls(widget)
 
-    val focusPanel = mapWindow.querySelector(GeoMapSelector.focusPanel.selector) as HTMLElement
+    val focusPanel = mapWindow.querySelector(GeoMapSelector.FocusPanel.selector) as HTMLElement
     focusPanel.renderRoot(appScope) {
         val nearestFlow = geoMap.stateFlow.mapDistinct { it.focus }
-        flowBlock(nearestFlow, defaultMagic) { entity ->
-            val cardFunction = entity?.focusCard ?: return@flowBlock
-            cardFunction()
+        flowBlock(nearestFlow, modify(Magic, SlideUp)) { entity ->
+            val content = entity?.focusContent ?: return@flowBlock
+            content()
         }
     }
 

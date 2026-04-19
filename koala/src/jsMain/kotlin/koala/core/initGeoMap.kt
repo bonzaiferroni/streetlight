@@ -2,7 +2,6 @@
 
 package koala.core
 
-import koala.external.CanvasContextAttributes
 import koala.external.FillExtrusionPaint
 import koala.external.HillshadePaint
 import koala.external.MapLayer
@@ -42,7 +41,7 @@ fun initGeoMap(mount: HTMLElement): HTMLElement {
     val widgetBox = window.appendDiv(GeoMapSelector.widget)
     val overlay = widgetBox.appendDiv(GeoMapSelector.overlay)
     overlay.appendDiv(GeoMapSelector.crosshairs)
-    overlay.appendDiv(GeoMapSelector.focusPanel)
+    overlay.appendDiv(GeoMapSelector.FocusPanel)
 
     var zoom: Number = 11
     val center = mount

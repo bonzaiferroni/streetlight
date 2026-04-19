@@ -161,7 +161,7 @@ interface PointEntity: MapEntity {
     val minZoom: Float? get() = null
     val modifiers: ModifierSet? get() = null
     val onFocus: OnFocus? get() = null
-    val focusCard: (RenderContext.() -> Unit)? get() = null
+    val focusContent: (RenderContext.() -> Unit)? get() = null
     val body: (DIV.() -> Unit)? get() = null
     val light: Rgb? get() = null
 }

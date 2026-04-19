@@ -2,12 +2,9 @@ package koala.html
 
 import kampfire.model.GeoPoint
 import koala.css.Class
-import koala.css.Height48
 import koala.css.ModifierSet
 import koala.css.NeverDay
-import koala.css.Width100P
 import koala.css.addModifiers
-import koala.css.modify
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 
@@ -41,6 +38,6 @@ object GeoMapSelector {
     val crosshairs = Id("map-crosshairs")
     val panel = Id("map-panel")
     val geoPoint = Attribute<String>("data-geo-point")
-    val focusPanel = Id("map-focus-panel")
+    val FocusPanel = Id("map-focus-panel")
 }
 
