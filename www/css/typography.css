@@ -10,11 +10,13 @@
     --heading-5-size: 1.1rem;
     --heading-5-weight: 500;
     --paragraph-size: 1.1rem;
+    --paragraph-line-height: 1.4;
 }
 
 span,
 p {
     font-size: var(--paragraph-size);
+    line-height: var(--paragraph-line-height);
 }
 
 h1 {

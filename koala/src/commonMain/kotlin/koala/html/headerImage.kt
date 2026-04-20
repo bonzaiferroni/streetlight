@@ -3,8 +3,13 @@ package koala.html
 import kampfire.model.Url
 import koala.css.Aspect3By2
 import koala.css.Class
+import koala.css.GradientDarkBottom
 import koala.css.ModifierSet
+import koala.css.ObjectFitCover
+import koala.css.Size100P
+import koala.css.Vignette
 import koala.css.addModifiers
+import koala.css.modify
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kotlinx.html.img
@@ -20,10 +25,10 @@ fun FlowContent.headerImage(
         block()
 
         src?.let {
-            img {
-                this.src = src.value
-            }
+            image(src, modify(Size100P, ObjectFitCover, Aspect3By2))
         }
+
+        spacer(modify(Vignette, GradientDarkBottom))
 
         heading1(text)
     }

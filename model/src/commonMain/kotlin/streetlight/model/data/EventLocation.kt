@@ -6,6 +6,7 @@ import kampfire.model.Url
 import kampfire.model.toUrl
 import kotlin.time.Instant
 import kotlinx.serialization.Serializable
+import kotlin.time.Duration.Companion.hours
 
 @Serializable
 data class EventLocation(
@@ -51,6 +52,8 @@ data class EventLocation(
     val addressLine by lazy {
         addressLineOf(address, city)
     }
+
+    val endsAtOrLater get() = endsAt ?: (startsAt + 4.hours)
 }
 
 fun addressLineOf(address: String?, city: String?) = buildString {

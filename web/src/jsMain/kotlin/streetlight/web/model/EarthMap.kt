@@ -18,7 +18,7 @@ class EarthMap(
     val stateFlow = state.flow
     val stateNow get() = state.now
     val galaxyFlow = stateFlow.mapDistinct { it.galaxy }
-    val listingFlow = stateFlow.mapDistinct { it.posts }
+    val listingFlow = stateFlow.mapDistinct { it.listing }
 
     init {
         scope.launch {
@@ -32,7 +32,7 @@ class EarthMap(
                         val posts = galaxy?.let {
                             api.readPosts(it.galaxyId)
                         }
-                        state.set { it.copy(galaxy = galaxy, posts = posts) }
+                        state.set { it.copy(galaxy = galaxy, listing = posts) }
                     }
                 }
             }
@@ -42,5 +42,5 @@ class EarthMap(
 
 data class EarthMapState(
     val galaxy: Galaxy? = null,
-    val posts: PostListing? = null,
+    val listing: PostListing? = null,
 )

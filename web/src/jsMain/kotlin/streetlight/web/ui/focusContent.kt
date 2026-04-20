@@ -21,7 +21,7 @@ fun RenderContext.eventFocusContent(post: EventPost) {
             featureImage(post.images.small, modify(Flex1, Aspect3By2))
             column(modify(Padding1, Flex2)) {
                 column {
-                    heading3(event?.title ?: "[removed]")
+                    heading3(event?.title ?: "[removed]", modify(SingleLine))
                     event?.locationName?.let {
                         textBlock(it, modify(OpacityMost))
                     }

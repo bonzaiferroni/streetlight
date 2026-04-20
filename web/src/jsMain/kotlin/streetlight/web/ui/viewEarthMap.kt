@@ -1,9 +1,11 @@
 package streetlight.web.ui
 
+import kampfire.model.thumb
 import koala.SvgFile
 import koala.css.*
 import koala.dom.*
 import koala.html.btn
+import koala.html.heading5
 import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -28,6 +30,22 @@ fun ViewContext<EarthMap>.viewEarthMap() {
                         icon(SvgFile.Settings, modify(Width5, Aspect1, ZIndex2))
                         val route = galaxy?.let { GalaxySlugRoute(it.slug) } ?: HomeRoute
                         btn("View Feed", route, modify(ZIndex2))
+                    }
+                }
+                val events = model.stateNow.listing?.events?.takeIf { it.isNotEmpty() }
+                events?.let { events ->
+                    card(modify(MaxWidth32, ZIndex2)) {
+                        events.forEach { post ->
+                            row(modify(Height8, AlignItemsCenter)) {
+                                image(post.images.thumb, modify(Aspect1, Width8, BorderRadius50P))
+                                column(modify(Flex1, Gap0)) {
+                                    textBlock(post.title, modify(SingleLine))
+                                    post.event?.locationName?.let {
+                                        textBlock(it, modify(OpacityMost, SingleLine))
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }

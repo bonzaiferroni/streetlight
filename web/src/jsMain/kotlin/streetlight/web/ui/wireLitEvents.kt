@@ -17,11 +17,13 @@ import streetlight.web.model.Streetlight
 import streetlight.web.shells.HomeShellKey
 import kotlin.collections.component1
 import kotlin.collections.component2
+import kotlin.time.Clock
 
 fun ViewContext<Streetlight>.wireLitEvents(root: HTMLElement) {
+    val now = Clock.System.now()
     val app = model
     val eventCache = app.cache.eventLights
-    val eventsFlow = eventCache.stateFlow.mapDistinct { it.items }
+    val eventsFlow = eventCache.stateFlow.mapDistinct { events -> events.items.filter { it.endsAtOrLater > now } }
     val swapIdFlow = eventsFlow.mapDistinct {
         when (it.isEmpty()) {
             true -> HomeShellKey.LightInfoId

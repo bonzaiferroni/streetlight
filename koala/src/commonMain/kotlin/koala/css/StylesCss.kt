@@ -92,7 +92,7 @@ html {
 body {
     font-family: var(--font-family);
     font-size: 1rem;
-    line-height: 1.5;
+    line-height: 1.1;
     background-color: var(--body-bg);
     color: var(--ink-fg);
     -webkit-font-smoothing: antialiased;
@@ -137,7 +137,6 @@ textarea {
 
 input, button, textarea, select {
     font: inherit;
-    color: white;
 }
 
 input[type="checkbox"] {
