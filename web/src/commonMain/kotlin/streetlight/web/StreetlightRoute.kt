@@ -33,7 +33,6 @@ enum class StreetlightScreen(
     EditTalent("edit-talent", { path -> EditTalentRoute(path.provideId { TalentId(it)} ) }),
     LocationProfile("location", { path -> path.provideRouteFromPath { LocationIdRoute(LocationId(it)) } }),
     LocationAdmin("location-admin", { path -> path.provideRouteFromPath { LocationAdminRoute(LocationId(it)) } }),
-    ScoutMap("scout-map", { ScoutMapRoute }),
     CreateGalaxy("create-galaxy", { CreateGalaxyRoute }),
     GalaxyList("galaxies", { GalaxyListRoute }),
     GalaxyProfile("g", { path -> path.provideRouteFromPath { GalaxySlugRoute(it) }}),
@@ -181,11 +180,6 @@ data class LocationAdminRoute(
     override val screen get() = StreetlightScreen.LocationAdmin
     override val id get() = locationId
     override val title get() = "Location Admin"
-}
-
-object ScoutMapRoute: StreetlightRoute {
-    override val screen get() = StreetlightScreen.ScoutMap
-    override val title get() = "Scout Map"
 }
 
 object CreateGalaxyRoute: StreetlightRoute {

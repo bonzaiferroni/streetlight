@@ -10,6 +10,8 @@ import kampfire.api.PostEndpoint
 import kampfire.api.QueryEndpoint
 import kampfire.api.TableId
 import kampfire.api.UserApi
+import kampfire.model.ApiResponse
+import kampfire.model.ApiResponseSerializer
 import kampfire.model.Auth
 import kampfire.model.Url
 import kampfire.model.toUrl
@@ -19,9 +21,11 @@ import koala.utils.prettyPrint
 import kotlinx.browser.window
 import kotlinx.coroutines.await
 import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.KSerializer
 import kotlinx.serialization.cbor.Cbor
 import kotlinx.serialization.decodeFromByteArray
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.serializer
 import org.khronos.webgl.Int8Array
 import org.khronos.webgl.Uint8Array
 import org.w3c.dom.WebSocket
@@ -77,6 +81,11 @@ class FetchClient(
         endpoint: PostEndpoint<Sent, Returned>,
         body: Sent,
     ): Returned? = authRequest("POST", endpoint.path, Json.encodeToString(body)) { it.tryDecodeText() }
+
+    suspend inline fun <reified Sent, reified Returned> postApi(
+        endpoint: PostEndpoint<Sent, Returned>,
+        body: Sent,
+    ): ApiResponse<Returned>? = authRequest("POST", endpoint.path, Json.encodeToString(body)) { it.tryDecodeApiResponse() }
 
     suspend inline fun <reified Sent, reified Returned> postAndReadStatus(
         endpoint: PostEndpoint<Sent, Returned>,
@@ -209,6 +218,19 @@ suspend inline fun <reified Returned> Response.tryDecodeText(): Returned? {
 
             else -> jsonConfig.decodeFromString<Returned>(text)
         }
+    } catch (e: Exception) {
+        console.log("failed to parse response:\n${e}\n${url}\ndata: ${text.take(400)}")
+        null
+    }
+}
+
+suspend inline fun <reified T> Response.tryDecodeApiResponse(): ApiResponse<T>? {
+    val text = text().await()
+    return try {
+        jsonConfig.decodeFromString(
+            ApiResponseSerializer(serializer<T>()),
+            text
+        )
     } catch (e: Exception) {
         console.log("failed to parse response:\n${e}\n${url}\ndata: ${text.take(400)}")
         null

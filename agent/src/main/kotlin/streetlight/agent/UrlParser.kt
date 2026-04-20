@@ -7,6 +7,9 @@ import ai.koog.prompt.executor.llms.all.simpleGoogleAIExecutor
 import ai.koog.prompt.params.LLMParams
 import com.fleeksoft.ksoup.nodes.Document
 import kabinet.console.globalConsole
+import kampfire.model.ApiResponse
+import kampfire.model.Ok
+import kampfire.model.Problem
 import kampfire.utils.takeEllipsis
 import kotlinx.io.files.Path
 import kotlinx.serialization.json.Json
@@ -20,30 +23,38 @@ class UrlParser(apiKey: String) {
     val cache = mutableMapOf<Int, ParserContent>()
     val trimmer = HtmlTrimmer()
 
-    suspend inline fun <reified T: Any> readHtml(url: String, doc: Document, instructions: String): T? {
-        val content = withCache(doc.hashCode()) {
+    suspend inline fun <reified T: Any> readHtml(url: String, doc: Document, instructions: String): ApiResponse<T> {
+        val response = withCache(doc.hashCode()) {
             readHtmlContent<T>(url, doc, instructions)
-        } ?: return null
-
-        return tryDecode(content.json)
+        }
+        return when (response) {
+            is Ok -> tryDecode<T>(response.data.json)?.let { Ok(it) } ?: Problem("Unable to decode LM response.")
+            is Problem -> Problem(response.message)
+        }
     }
 
-    inline fun withCache(cacheKey: Int, block: () -> ParserContent?): ParserContent? = cache[cacheKey] ?: block().also { content ->
-        if (content != null) {
-            cache[cacheKey] = content
+    inline fun withCache(cacheKey: Int, block: () -> ApiResponse<ParserContent>): ApiResponse<ParserContent> {
+        val cachedContent = cache[cacheKey]
+        if (cachedContent != null) return Ok(cachedContent)
+
+        val response = block()
+        if (response is Ok) {
+            cache[cacheKey] = response.data
 
             if (cache.size > 25) {
                 val firstKey = cache.keys.firstOrNull()
                 firstKey?.let { key -> cache.remove(key) }
             }
         }
+
+        return response
     }
 
     suspend inline fun <reified T: Any> readHtmlContent(
         url: String,
         doc: Document,
         instructions: String
-    ): ParserContent? {
+    ): ApiResponse<ParserContent> {
         val content = trimmer.trimHtml(doc)
 
         val prompt = prompt(
@@ -62,12 +73,16 @@ class UrlParser(apiKey: String) {
             executor.execute(prompt, GoogleModels.Gemini2_5Flash).first().content
         } catch (e: LLMClientException) {
             console.log(e)
-            null
-        } ?: return null
+            if (e.toString().contains("\"status\": \"UNAVAILABLE\"")) {
+                return Problem("Language model is busy.")
+            } else null
+        } ?: return Problem("Unspecified language model error.")
 
-        return ParserContent(
-            document = doc,
-            json = json
+        return Ok(
+            ParserContent(
+                document = doc,
+                json = json
+            )
         )
     }
 

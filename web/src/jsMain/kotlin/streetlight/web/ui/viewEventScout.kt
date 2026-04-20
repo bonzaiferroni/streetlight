@@ -114,6 +114,9 @@ fun ViewContext<EventScout>.reviewLocationPanel(locationEdit: LocationEdit) {
     column {
         card {
             messageBox(model.messageFlow)
+            textBlock("Since this is a new location on Streetlight, let's provide some information about it. We can reuse it for other events.")
+            textBlock("You can start by providing a website and we'll find out as much as we can. " +
+                    "Then you can edit the details below and fill in any missing information.")
             row {
                 textField("website", modify(Flex1), model::setWebsite, model.stateFlow.mapDistinct { it.website })
                 button("🤖 read website", onClick = model::readLocationWebsite)

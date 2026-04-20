@@ -9,7 +9,7 @@ fun RenderContext.messageBox(
     modifiers: ModifierSet? = null,
     magic: Boolean = true
 ) {
-    card(modify(MessageBoxKey.Class, modifiers)) {
+    card(modify(modifiers, MessageBoxKey.Class, MoonShadow)) {
         row(modify(AlignItemsStart)) {
 //            image(SiteImage.placeholderThumb, modify(Width4))
             val modifiers = modify(Flex1).let {

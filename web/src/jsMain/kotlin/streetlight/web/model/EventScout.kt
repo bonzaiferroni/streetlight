@@ -3,6 +3,8 @@
 package streetlight.web.model
 
 import kampfire.model.GeoPoint
+import kampfire.model.Ok
+import kampfire.model.Problem
 import kampfire.model.distanceTo
 import kampfire.model.kilometers
 import koala.SvgFile
@@ -134,9 +136,20 @@ class EventScout(
         val website = state.now.website.takeIf { it.startsWith("http") } ?: return
         scope.launch {
             msg.set("Reading the link, this will take a minute.")
-            val edit = api.parseLocation(UrlParseRequest(website))?.mergeLeft(state.now.locationEdit) ?: return@launch
-            msg.set("Does this information look correct?")
-            state.set { it.copy(locationEdit = edit) }
+            when (val response = api.parseLocation(UrlParseRequest(website))) {
+                is Ok -> {
+                    val edit = response.data.mergeLeft(state.now.locationEdit)
+                    state.set { it.copy(locationEdit = edit) }
+                    val message = response.message ?: "Does this information look correct?"
+                    msg.set(message)
+                }
+                is Problem -> {
+                    msg.set(response.message)
+                }
+                null -> {
+                    msg.set("Something went wrong.")
+                }
+            }
         }
     }
 
@@ -144,7 +157,7 @@ class EventScout(
         val website = state.now.eventEdit.link?.takeIf { it.startsWith("http") } ?: return
         scope.launch {
             msg.set("Reading the link, this will take a minute.")
-            val response = api.parseSingleEvent(UrlParseRequest(website))?.event
+            val response = api.parseSingleEvent(UrlParseRequest(website))?.data
             if (response == null) {
                 msg.set("We were unable to read the link.")
                 return@launch

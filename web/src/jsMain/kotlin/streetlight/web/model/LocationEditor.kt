@@ -70,6 +70,10 @@ class LocationEditor(
         edit.set { it.copy(imageRef = value) }
     }
 
+    fun setCity(value: String) {
+        edit.set { it.copy(city = value) }
+    }
+
     fun setEdit(edit: LocationEdit) {
         this.edit.set { edit }
     }
@@ -97,14 +101,6 @@ class LocationEditor(
                 val place = client.location.readPlaces(query)?.firstOrNull() ?: return@launch
                 setPlace(place)
             }
-        }
-    }
-
-    fun parseLocation() {
-        val link = edit.now.website ?: return
-        scope.launch {
-            val edit = api.parseLocation(UrlParseRequest(link))
-            this@LocationEditor.edit.set { edit ?: editNow }
         }
     }
 

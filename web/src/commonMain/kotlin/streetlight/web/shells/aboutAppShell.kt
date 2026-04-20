@@ -70,6 +70,8 @@ fun FlowContent.aboutAppShell() {
             githubLink("map", "MapLibre", "maplibre-gl-js")
             githubLink("map data", "OpenFreeMap", "hyper-knot")
             githubLink("icons", "Tabler", "tabler")
+            githubLink("image encoding", "scrimage", "sksamuel")
+            githubLink("HTML parsing", "ksoup", "fleeksoft")
         }
         appFooter("web/src/commonMain/kotlin/streetlight/web/shells/aboutAppShell.kt")
     }

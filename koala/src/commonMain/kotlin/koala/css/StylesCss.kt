@@ -46,7 +46,7 @@ val StylesCss get() = """
     --primary-button: rgb(var(--primary));
     --primary-bg: color-mix(in srgb, var(--primary-fg) 15%, black);
     --primary-button-day: color-mix(in srgb, var(--primary-button) 80%, black);
-    --primary-card-bg: color-mix(in srgb, rgba(var(--primary), .2) 60%, black);
+    --primary-card-bg: color-mix(in srgb, rgba(var(--primary), .2) 60%, var(--paper-bg));
     
     --secondary-button: var(--gray-bg);
     

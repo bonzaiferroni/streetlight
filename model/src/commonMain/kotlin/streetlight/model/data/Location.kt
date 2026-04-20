@@ -84,6 +84,15 @@ data class LocationEdit(
     val imageRef: Url? = null,
 ) {
     val isValid get() = name != null && geoPoint != null
+
+    val invalidPart get() = when {
+        name.isNullOrBlank() -> "name"
+        geoPoint == null -> "geolocation"
+        city == null -> "city"
+        else -> null
+    }
+
+    val invalidMessage get() = invalidPart?.let { "missing: $it"}
 }
 
 @Serializable

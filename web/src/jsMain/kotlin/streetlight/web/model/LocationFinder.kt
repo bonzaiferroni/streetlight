@@ -3,6 +3,8 @@
 package streetlight.web.model
 
 import kampfire.model.GeoPoint
+import kampfire.model.Ok
+import kampfire.model.Problem
 import kampfire.model.distanceTo
 import kampfire.model.kilometers
 import koala.SvgFile
@@ -107,18 +109,36 @@ class LocationFinder(
         }
     }
 
+    // td: should be handled by LocationEditor
     fun readLocationWebsite() {
         val website = state.now.website.takeIf { it.startsWith("http") } ?: return
         scope.launch {
             msg.set("Reading the link, this will take a minute.")
-            val edit = api.parseLocation(UrlParseRequest(website))?.mergeLeft(state.now.edit) ?: return@launch
-            msg.set("Does this information look correct?")
-            state.set { it.copy(edit = edit) }
+            when (val response = api.parseLocation(UrlParseRequest(website))) {
+                is Ok -> {
+                    val edit = response.data.mergeLeft(state.now.edit)
+                    state.set { it.copy(edit = edit) }
+                    val message = response.message ?: "Does this information look correct?"
+                    msg.set(message)
+                }
+                is Problem -> {
+                    msg.set(response.message)
+                }
+                null -> {
+                    msg.set("Something went wrong.")
+                }
+            }
         }
     }
 
     fun createLocation() {
-        val edit = state.now.edit?.takeIf { it.isValid } ?: return
+        val edit = state.now.edit ?: error("edit not found")
+        val invalidMsg = edit.invalidMessage
+        if (invalidMsg != null) {
+            msg.set(invalidMsg)
+            return
+        }
+
         msg.set("Creating ${edit.name}...")
         scope.launch {
             val location = api.createOrEditLocation(edit)

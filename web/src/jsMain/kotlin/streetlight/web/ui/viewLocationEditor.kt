@@ -1,8 +1,13 @@
 package streetlight.web.ui
 
 import koala.css.AlignItemsStretch
+import koala.css.Aspect1
+import koala.css.Aspect3By2
+import koala.css.BorderRadius1
+import koala.css.ContainerMdRow
 import koala.css.Flex1
 import koala.css.MinHeight8
+import koala.css.QueryContainer
 import koala.css.modify
 import koala.dom.*
 import koala.model.mapDistinct
@@ -28,6 +33,7 @@ fun RenderContext.viewLocationEditor(
     val nameFlow = model.editFlow.mapDistinct { it.name }
     val linkFlow = model.editFlow.mapDistinct { it.website }
     val eventsLinkFlow = model.editFlow.mapDistinct { it.eventsUrl }
+    val imageFlow = model.editFlow.mapDistinct { it.imageRef }
 
     onEdit?.let {
         renderScope.launch {
@@ -45,7 +51,7 @@ fun RenderContext.viewLocationEditor(
         }
     }
 
-    column(modify(AlignItemsStretch)) {
+    column(modify(AlignItemsStretch, QueryContainer)) {
 //        imageChooser(
 //            modifiers = modify(MinHeight8),
 //            onUpload = { app.client.api.uploadImage(it) },
@@ -53,9 +59,24 @@ fun RenderContext.viewLocationEditor(
 //            urlFlow = imageUrlFlow,
 //            choicesFlow = app.cache.file.flow
 //        )
-        textField("name", modify(), model::setPlaceName, nameFlow)
-        textField("address", modify(), model::setAddress, model.editFlow.mapDistinct { it.address })
-        textField("description", modify(), model::setDescription, model.editFlow.mapDistinct { it.description })
+        column(modify(ContainerMdRow)) {
+            imageDrop(imageFlow, model::setImageRef, modify(Aspect3By2, BorderRadius1, Flex1))
+            column(modify(Flex1)) {
+                textField("name", modify(), model::setPlaceName, nameFlow)
+                textField("address", modify(), model::setAddress, model.editFlow.mapDistinct { it.address })
+                textField("city", modify(), model::setCity, model.editFlow.mapDistinct { it.city } )
+            }
+        }
+
+        textEditor(
+            label = "description",
+            placeholder = "Event description",
+            // 8 rows are default as roughly the desired content length, field can be resized
+            rows = 8,
+            onValue = model::setDescription,
+            flow = model.editFlow.mapDistinct { it.description }
+        )
+
         textField("website", modify(Flex1), model::setLink, linkFlow)
         textField("calendar", modify(), model::setEventsLink, eventsLinkFlow)
         // placeEditor(location.geoPoint, app, model)
