@@ -142,24 +142,6 @@ fun LocationEdit.toPlace() = Place(
     geoPoint = geoPoint,
 )
 
-//fun Place.toLocation() = Location(
-//    locationId = LocationId.random(),
-//    name = name ?: "",
-//    geoPoint = geoPoint ?: GeoPoint.Denver,
-//    description = null,
-//    address = address,
-//    resources = emptySet(),
-//    website = null,
-//    eventsUrl = null,
-//    aboutUrl = null,
-//    menuUrl = null,
-//    imageUrl = null,
-//    imageMd = null,
-//    imageSm = null,
-//    updatedAt = Clock.System.now(),
-//    createdAt = Clock.System.now()
-//)
-
 fun Place.toEdit() = LocationEdit(
     name = name,
     address = address,
@@ -176,7 +158,7 @@ fun LocationParse.toEdit(
     description = description,
     address = address,
 //    val postalCode: String? = null,
-    city = null,
+    city = city,
 //    val state: String? = null,
 //    val country: String? = null,
     website = url,
@@ -185,19 +167,6 @@ fun LocationParse.toEdit(
     aboutUrl = aboutUrl,
     imageRef = imageUrl?.toUrl(),
 )
-
-//     val name: String? = null,
-//    val description: String? = null,
-//    val address: String? = null,
-//    val postalCode: String? = null,
-//    val city: String? = null,
-//    val state: String? = null,
-//    val country: String? = null,
-//    val url: String? = null,
-//    val eventsUrl: String? = null,
-//    val aboutUrl: String? = null,
-//    val menuUrl: String? = null,
-//    val imageUrl: String? = null,
 
 fun LocationParse.toAddress() = address?.let {
     LocationAddress(
@@ -215,6 +184,7 @@ fun LocationEdit.mergeLeft(edit: LocationEdit?) = edit?.let {
         name = name ?: edit.name,
         description = description ?: edit.description,
         address = address ?: edit.address,
+        city = city ?: edit.city,
         geoPoint = geoPoint ?: edit.geoPoint,
         resources = resources ?: edit.resources,
         website = website ?: edit.website,

@@ -2,7 +2,6 @@ package kampfire.model
 
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.descriptors.buildClassSerialDescriptor
 import kotlinx.serialization.descriptors.serialDescriptor
@@ -11,13 +10,8 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.encoding.decodeStructure
 import kotlinx.serialization.encoding.encodeStructure
-import kotlinx.serialization.json.JsonContentPolymorphicSerializer
-import kotlinx.serialization.json.JsonElement
-import kotlinx.serialization.json.JsonNull
-import kotlinx.serialization.json.jsonObject
-import kotlin.reflect.KClass
 
-@Serializable
+// must use ApiResponseSerializer because of generic argument
 sealed interface ApiResponse <T> {
     val message: String?
     val data: T?
@@ -70,6 +64,7 @@ class ApiResponseSerializer<T>(
         }
 
         return if (data != null) {
+            @Suppress("UNCHECKED_CAST")
             Ok(data = data as T, message = message)
         } else {
             Problem(message = message ?: "Unknown error")

@@ -104,6 +104,7 @@ fun OSMPlace.toPlace() = Place(
             "$number $road"
         } ?: road
     },
+    city = address.city,
     geoPoint = toGeoPoint(),
     website = extraTags?.website
 )

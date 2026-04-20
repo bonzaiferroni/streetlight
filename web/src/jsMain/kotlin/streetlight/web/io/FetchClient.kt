@@ -224,15 +224,17 @@ suspend inline fun <reified Returned> Response.tryDecodeText(): Returned? {
     }
 }
 
+@ExperimentalSerializationApi
 suspend inline fun <reified T> Response.tryDecodeApiResponse(): ApiResponse<T>? {
-    val text = text().await()
+    val buffer = arrayBuffer().await()
+    val bytes = Int8Array(buffer).unsafeCast<ByteArray>()
     return try {
-        jsonConfig.decodeFromString(
+        defaultCbor.decodeFromByteArray(
             ApiResponseSerializer(serializer<T>()),
-            text
+            bytes
         )
     } catch (e: Exception) {
-        console.log("failed to parse response:\n${e}\n${url}\ndata: ${text.take(400)}")
+        console.log("failed to parse response:\n${e}\n${url}")
         null
     }
 }
