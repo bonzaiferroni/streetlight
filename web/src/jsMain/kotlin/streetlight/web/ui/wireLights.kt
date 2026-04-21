@@ -4,7 +4,6 @@ import koala.dom.ViewContext
 import koala.dom.modify
 import koala.dom.onClick
 import koala.dom.queryAttributeAll
-import koala.dom.setAttribute
 import koala.dom.unmodify
 import koala.html.Attribute
 import kotlinx.coroutines.launch
@@ -20,7 +19,7 @@ fun <Id> ViewContext<Streetlight>.wireLights(
     val pairs = root.queryAttributeAll(attribute, cache.stringToId)
 
     renderScope.launch {
-        cache.lightFlow.collect { lights ->
+        cache.lightsFlow.collect { lights ->
             pairs.forEach { (element, galaxyId) ->
                 when (lights.any { it == galaxyId }) {
                     true -> element.modify(StarLightKey.IsLit)

@@ -1,7 +1,6 @@
 package streetlight.model
 
 import kampfire.api.*
-import kampfire.model.ApiResponse
 import kampfire.model.GeoBounds
 import kampfire.model.GeoPoint
 import kampfire.model.SpeechRequest
@@ -27,7 +26,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object AtLocation: GetByTableIdEndpoint<LocationId, List<Event>>(this, "location")
         object ReadEventLocations: PostEndpoint<List<EventId>, List<EventLocation>>(this, "read-event-locations")
         object ReadLights: GetEndpoint<List<EventId>>(this, "lights")
-        object EditLight: PostEndpoint<LightEdit, Boolean>(this, "light-edit")
+        object EditLight: PostEndpoint<LightRequest, Boolean>(this, "light-edit")
         object ReadBySlug: GetByIdEndpoint<Slug, Event>(this, "slug")
         object ReadEventLocationBySlug: GetByIdEndpoint<Slug, EventLocation>(this, "event-location-slug")
     }
@@ -122,7 +121,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object ReadPosts: GetByTableIdEndpoint<GalaxyId, PostListing>(this, "posts")
         object ReadPost: GetByTableIdEndpoint<EventPostId, EventPost>(this, "post")
         object ReadLights: GetEndpoint<List<GalaxyId>>(this, "lights")
-        object EditLight: PostEndpoint<LightEdit, Boolean>(this, "light-edit")
+        object EditLight: PostEndpoint<LightRequest, Boolean>(this, "light-edit")
     }
 
     object Stars: ApiNode(this, "star") {

@@ -54,7 +54,8 @@ class OmniLog(
     }
 
     private fun takeHistory(history: OmniHistory) {
-        state.set { it.copy(records = history.records) }
+        records.addAll(history.records)
+        state.set { it.copy(records = records.toList()) }
     }
 }
 

@@ -25,7 +25,7 @@ class ApiClient(private val client: FetchClient) {
     suspend fun readLocationEvents(locationId: LocationId) = client.get(Api.Events.AtLocation, locationId)
     suspend fun readEventLocations(eventIds: List<EventId>) = client.post(Api.Events.ReadEventLocations, eventIds)
     suspend fun readEventLights() = client.get(Api.Events.ReadLights)
-    suspend fun editEventLight(edit: LightEdit) = client.post(Api.Events.EditLight, edit)
+    suspend fun editEventLight(edit: LightRequest) = client.post(Api.Events.EditLight, edit)
 
     // locations
     suspend fun readLocation(locationId: LocationId) = client.get(Api.Locations, locationId)
@@ -77,7 +77,7 @@ class ApiClient(private val client: FetchClient) {
     suspend fun readPosts(galaxyId: GalaxyId) = client.get(Api.Galaxies.ReadPosts, galaxyId)
     suspend fun readPost(eventPostId: EventPostId) = client.get(Api.Galaxies.ReadPost, eventPostId)
     suspend fun readGalaxyLights() = client.get(Api.Galaxies.ReadLights)
-    suspend fun editGalaxyLight(edit: LightEdit) = client.post(Api.Galaxies.EditLight, edit)
+    suspend fun editGalaxyLight(edit: LightRequest) = client.post(Api.Galaxies.EditLight, edit)
 
     suspend fun readStarByUsername(username: String) = client.get(Api.Stars.ReadByUsername) {
         param(it.username, username)

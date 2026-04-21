@@ -6,6 +6,8 @@ import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import streetlight.model.data.LightEdit
+import streetlight.model.data.LightRequest
+import streetlight.model.data.MultiLightEdit
 import kotlin.collections.minus
 import kotlin.collections.plus
 
@@ -13,7 +15,8 @@ class LightCache<Id, Item>(
     private val cacheKey: String,
     val idToString: (Id) -> String,
     val stringToId: (String) -> Id,
-    private val lightEdit: suspend (LightEdit) -> Boolean?,
+    val itemToId: (Item) -> Id,
+    private val lightEdit: suspend (LightRequest) -> Boolean?,
     private val readRemoteLights: suspend () -> Set<Id>?,
     private val readRemoteItems: suspend (List<Id>) -> List<Item>?,
     private val scope: CoroutineScope,
@@ -22,24 +25,35 @@ class LightCache<Id, Item>(
     private val state = storeOf(LightCacheState<Id, Item>())
     val stateNow get() = state.now
     val stateFlow = state.flow
-    val lightFlow = stateFlow.mapDistinct { it.lights }
+    val lightsFlow = stateFlow.mapDistinct { it.lights }
     val itemsFlow = stateFlow.mapDistinct { it.items }
 
-    private var lights by setStorageOf(cacheKey, idToString, stringToId)
+    private var cachedLights by setStorageOf(cacheKey, idToString, stringToId)
 
     init {
         scope.launch {
             launch {
-                val lights = readLights()
-                state.set { it.copy(lights = lights) }
+                gate.signedInFlow.collect { isSignedIn ->
+                    if (isSignedIn) {
+                        if (cachedLights.isNotEmpty()) {
+                            val request = MultiLightEdit(cachedLights.map { LightEdit(idToString(it), true) })
+                            // send lights cached while signed out
+                            lightEdit(request)
+                            cachedLights = emptySet()
+                        }
+                        val lights = readRemoteLights() ?: return@collect
+                        state.set { it.copy(lights = lights)}
+                    }
+                }
             }
             launch {
-                lightFlow.collect { light ->
-                    val items = when (light.isEmpty()) {
+                lightsFlow.collect { lights ->
+                    val newIds = lights.filter { lightId -> stateNow.items.none { itemToId(it) == lightId } }
+                    val newItems = when (newIds.isEmpty()) {
                         true -> emptyList()
-                        else -> readRemoteItems(light.toList()) ?: emptyList() // td: fail message
+                        else -> readRemoteItems(newIds.toList()) ?: emptyList() // td: fail message
                     }
-                    state.set { it.copy(items = items) }
+                    state.set { it.copy(items = it.items.filter { item -> lights.contains(itemToId(item)) } + newItems) }
                 }
             }
         }
@@ -60,7 +74,7 @@ class LightCache<Id, Item>(
         when (gate.stateNow.isSignedIn) {
             true -> {
                 scope.launch {
-                    val edit = LightEdit(idToString(id), true)
+                    val edit = LightEdit(idToString(id), isLit)
                     val isSuccess = lightEdit(edit) ?: return@launch // td: ui message
                     if (isSuccess)
                         editState(id, isLit)
@@ -68,8 +82,8 @@ class LightCache<Id, Item>(
             }
             else -> {
                 when (isLit) {
-                    true -> lights += id
-                    else -> lights -= id
+                    true -> cachedLights += id
+                    else -> cachedLights -= id
                 }
                 editState(id, isLit)
             }
@@ -85,7 +99,7 @@ class LightCache<Id, Item>(
 
     private suspend fun readLights() = when(gate.stateNow.isSignedIn) {
         true -> readRemoteLights() ?: emptySet()
-        else -> lights
+        else -> cachedLights
     }
 }
 

@@ -12,7 +12,7 @@ import kotlin.time.Instant
 sealed interface OmniMessage
 
 @Serializable
-sealed interface OmniRecord {
+sealed interface OmniRecord: OmniMessage {
     val recordAt: Instant
     val text: String
 }
@@ -25,7 +25,7 @@ data class EventPosted(
     val galaxy: String,
     val username: String,
     override val recordAt: Instant
-): OmniMessage, OmniRecord {
+): OmniRecord {
     override val text get() = "$username posted an event to $galaxy: $title"
 }
 
@@ -36,7 +36,7 @@ data class EventEdited(
     val username: String,
     // td: add edit note
     override val recordAt: Instant
-): OmniMessage, OmniRecord {
+): OmniRecord {
     override val text get() = "$username edited an event: $title"
 }
 
@@ -46,7 +46,7 @@ data class LocationCreated(
     val name: String,
     val username: String?,
     override val recordAt: Instant
-): OmniMessage, OmniRecord {
+): OmniRecord {
     override val text get() = "$username created a location: $name"
 }
 
@@ -57,7 +57,7 @@ data class LocationEdited(
     val username: String?,
     // td: add edit note
     override val recordAt: Instant
-): OmniMessage, OmniRecord {
+): OmniRecord {
     override val text get() = "$username edited a location: $name"
 }
 
@@ -67,7 +67,7 @@ data class GalaxyFounded(
     val name: String,
     val username: String,
     override val recordAt: Instant
-): OmniMessage, OmniRecord {
+): OmniRecord {
     override val text get() = "$username founded a galaxy: $name"
 }
 
@@ -76,3 +76,12 @@ data class OmniStatus(val starCount: Int): OmniMessage
 
 @Serializable
 data class OmniHistory(val records: List<OmniRecord>): OmniMessage
+
+@Serializable
+data class EventLighted(
+    val eventId: EventId,
+    val title: String,
+    override val recordAt: Instant
+): OmniRecord {
+    override val text get() = "$title got a little brighter."
+}

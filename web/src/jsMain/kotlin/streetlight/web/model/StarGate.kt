@@ -16,6 +16,7 @@ class StarGate(
     val stateNow get() = state.now
 
     val starFlow = state.flow.mapDistinct { it.star }
+    val signedInFlow = state.flow.mapDistinct { it.isSignedIn }
     val messageFlow = state.flow.mapDistinct { it.message }
 
     fun signIn() {
