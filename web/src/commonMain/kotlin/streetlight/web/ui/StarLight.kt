@@ -8,10 +8,12 @@ import streetlight.model.data.EventId
 import streetlight.model.data.GalaxyId
 import streetlight.model.data.LocationId
 
-fun FlowContent.starLight(count: Int, modifiers: ModifierSet? = null) {
+fun FlowContent.starLight(visibility: Int?, modifiers: ModifierSet? = null) {
     row {
         addModifiers(StarLightKey.Class, modifiers)
-        textBlock(count.toString())
+        visibility?.let {
+            textBlock(it.toString())
+        }
         icon(SvgFile.LoaderSmall, modify(Height3, Aspect1))
     }
 }

@@ -127,7 +127,7 @@ fun ViewContext<EventScout>.reviewLocationPanel() {
         }
 
         card {
-            viewLocationEditor(locationEdit, model.app, editFlow, model::setEdit)
+            viewLocationEditor(locationEdit, model.app, editFlow, false, model::setEdit)
             row(modify(JustifyContentSpaceBetween)) {
                 button("start over", modify(Secondary), onClick = model::reset)
                 button("create location", modify(Accent), onClick = model::postLocation)

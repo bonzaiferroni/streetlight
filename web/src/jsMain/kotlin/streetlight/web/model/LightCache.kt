@@ -17,7 +17,7 @@ class LightCache<Id, Item>(
     private val readRemoteLights: suspend () -> Set<Id>?,
     private val readRemoteItems: suspend (List<Id>) -> List<Item>?,
     private val scope: CoroutineScope,
-    private val config: SiteConfig,
+    private val gate: StarGate,
 ) {
     private val state = storeOf(LightCacheState<Id, Item>())
     val stateNow get() = state.now
@@ -57,7 +57,7 @@ class LightCache<Id, Item>(
     fun removeLight(id: Id) = editLight(id, false)
 
     private fun editLight(id: Id, isLit: Boolean) {
-        when (config.stateNow.lightSync) {
+        when (gate.stateNow.isSignedIn) {
             true -> {
                 scope.launch {
                     val edit = LightEdit(idToString(id), true)
@@ -83,7 +83,7 @@ class LightCache<Id, Item>(
         }
     }
 
-    private suspend fun readLights() = when(config.stateNow.lightSync) {
+    private suspend fun readLights() = when(gate.stateNow.isSignedIn) {
         true -> readRemoteLights() ?: emptySet()
         else -> lights
     }

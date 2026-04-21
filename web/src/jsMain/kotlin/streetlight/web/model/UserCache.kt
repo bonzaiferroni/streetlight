@@ -41,7 +41,7 @@ class UserCache(
         readRemoteLights = { api.readGalaxyLights()?.toSet() },
         readRemoteItems = { api.readGalaxies(it)?.sortedBy { galaxy -> galaxy.createdAt } },
         scope = scope,
-        config = config,
+        gate = gate,
     )
 
     val eventLights = LightCache(
@@ -52,7 +52,7 @@ class UserCache(
         readRemoteLights = { api.readEventLights()?.toSet() },
         readRemoteItems = { api.readEventLocations(it)?.sortedBy { event -> event.startsAt } },
         scope = scope,
-        config = config,
+        gate = gate,
     )
 
     val galaxy = ItemCache<Galaxy>()

@@ -43,7 +43,7 @@ fun FlowContent.eventProfileShell(event: EventLocation) {
                     postedByCell(event.username)
                 }
                 cellCard {
-                    lightCell(event.eventId)
+                    lightCell(event.lightCount, event.eventId)
                 }
             }
             column(modify(ContainerMdRow, Padding4, Gap4, AlignItemsStart)) {

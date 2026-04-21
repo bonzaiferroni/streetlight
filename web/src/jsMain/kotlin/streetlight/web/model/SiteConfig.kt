@@ -43,7 +43,6 @@ class SiteConfig {
 data class SiteConfigState(
     val showTransit: Boolean = false,
     val theme: SiteTheme = SiteTheme.Dark,
-    val lightSync: Boolean = false,
 )
 
 private const val SITE_CONFIG_KEY = "streetlight.site-config"

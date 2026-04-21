@@ -28,6 +28,7 @@ data class EventLocation(
     val address: String?,
     val city: String?,
     val locationImages: ScaledImageArray?,
+    val lightCount: Int?,
     val startsAt: Instant,
     val endsAt: Instant?,
     val updatedAt: Instant,

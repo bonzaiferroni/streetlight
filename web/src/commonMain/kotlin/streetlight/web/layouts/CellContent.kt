@@ -82,20 +82,20 @@ fun FlowContent.propertyCell(property: String, value: String) {
 fun FlowContent.lightCell(galaxyId: GalaxyId) {
     row {
         setData(StarLightKey.GalaxyLightId, galaxyId)
-        starLight((0..10).random())
+        starLight(null)
     }
 }
 
-fun FlowContent.lightCell(eventId: EventId) {
+fun FlowContent.lightCell(visibility: Int?, eventId: EventId) {
     row {
         setData(StarLightKey.EventLightId, eventId)
-        starLight((0..10).random())
+        starLight(visibility)
     }
 }
 
 fun FlowContent.lightCell(locationId: LocationId) {
     row {
         setData(StarLightKey.LocationLightId, locationId)
-        starLight((0..10).random())
+        starLight(null)
     }
 }

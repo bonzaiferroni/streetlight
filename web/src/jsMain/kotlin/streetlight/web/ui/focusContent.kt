@@ -43,7 +43,7 @@ fun RenderContext.eventFocusContent(post: EventPost) {
                 postedByCell(event.username)
             }
             cellCard {
-                lightCell(event.eventId)
+                lightCell(event.lightCount, event.eventId)
             }
         }
     }

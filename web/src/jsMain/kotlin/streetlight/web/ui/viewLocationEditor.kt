@@ -29,6 +29,7 @@ fun RenderContext.viewLocationEditor(
     location: LocationEdit,
     app: Streetlight,
     bindFlow: Flow<LocationEdit>?,
+    allowSubmit: Boolean,
     onEdit: ((LocationEdit) -> Unit)?
 ) {
     val model = LocationEditor(location, renderScope, app.client)
@@ -59,7 +60,7 @@ fun RenderContext.viewLocationEditor(
             column(modify(Flex1)) {
                 textField("name", modify(), model::setPlaceName, nameFlow)
                 textField("address", modify(), model::setAddress, model.editFlow.mapDistinct { it.address })
-                textField("city", modify(), model::setCity, model.editFlow.mapDistinct { it.city } )
+                textField("city", modify(), model::setCity, model.editFlow.mapDistinct { it.city })
             }
         }
 
@@ -75,22 +76,24 @@ fun RenderContext.viewLocationEditor(
         textField("website", modify(Flex1), model::setLink, linkFlow)
         textField("calendar", modify(), model::setEventsLink, eventsLinkFlow)
 
-//        row(modify(JustifyContentSpaceBetween)) {
-//            button("Back", onClick = {
-//                app.portal.goBack()
-//            })
-//            row {
-//                messageBox(model.message.flow)
-//                button("Edit", modify(Accent), onClick = {
-//                    renderScope.launch {
-//                        val locationId = model.saveLocation()
-//                        if (locationId != null) {
-//                            app.portal.goBack()
-//                        }
-//                    }
-//                })
-//            }
-//        }
+        if (allowSubmit) {
+            row(modify(JustifyContentSpaceBetween)) {
+                button("Back", onClick = {
+                    app.portal.goBack()
+                })
+                row {
+                    messageBox(model.message.flow)
+                    button("Edit", modify(Accent), onClick = {
+                        renderScope.launch {
+                            val locationId = model.saveLocation()
+                            if (locationId != null) {
+                                app.portal.goBack()
+                            }
+                        }
+                    })
+                }
+            }
+        }
     }
 }
 
@@ -109,7 +112,7 @@ fun RenderContext.viewEditLocationRoute(app: Streetlight) {
                 }
             }
         ) {
-            viewLocationEditor(it, app, null, null)
+            viewLocationEditor(it, app, null, true, null)
         }
         appFooter()
     }

@@ -19,7 +19,7 @@ fun RenderContext.viewLocationAdmin(
         tabs {
             tab("profile") {
                 val edit = location.toEdit()
-                viewLocationEditor(edit, app, null, null)
+                viewLocationEditor(edit, app, null, false, null)
             }
             tab("events") {
                 val events = flowerOf { app.client.api.readLocationEvents(location.locationId) }
