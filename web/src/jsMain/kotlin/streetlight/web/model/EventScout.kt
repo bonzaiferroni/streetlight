@@ -177,7 +177,9 @@ class EventScout(
                 msg.set("Something went wrong")
                 return@launch
             }
-            state.set { it.copy(location = location) }
+            state.set { it.copy(location = location, eventEdit = it.eventEdit.copy(
+                locationId = location.locationId
+            )) }
             msg.set("Posted. You can now add events to ${location.name}.")
             geo.tempEntities(null)
         }

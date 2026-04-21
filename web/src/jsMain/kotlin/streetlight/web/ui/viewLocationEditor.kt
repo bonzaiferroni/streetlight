@@ -1,11 +1,13 @@
 package streetlight.web.ui
 
+import koala.css.Accent
 import koala.css.AlignItemsStretch
 import koala.css.Aspect1
 import koala.css.Aspect3By2
 import koala.css.BorderRadius1
 import koala.css.ContainerMdRow
 import koala.css.Flex1
+import koala.css.JustifyContentSpaceBetween
 import koala.css.MinHeight8
 import koala.css.QueryContainer
 import koala.css.modify
@@ -52,13 +54,6 @@ fun RenderContext.viewLocationEditor(
     }
 
     column(modify(AlignItemsStretch, QueryContainer)) {
-//        imageChooser(
-//            modifiers = modify(MinHeight8),
-//            onUpload = { app.client.api.uploadImage(it) },
-//            onValueChanged = model::setImageRef,
-//            urlFlow = imageUrlFlow,
-//            choicesFlow = app.cache.file.flow
-//        )
         column(modify(ContainerMdRow)) {
             imageDrop(imageFlow, model::setImageRef, modify(Aspect3By2, BorderRadius1, Flex1))
             column(modify(Flex1)) {
@@ -70,7 +65,7 @@ fun RenderContext.viewLocationEditor(
 
         textEditor(
             label = "description",
-            placeholder = "Event description",
+            placeholder = "Location description",
             // 8 rows are default as roughly the desired content length, field can be resized
             rows = 8,
             onValue = model::setDescription,
@@ -79,14 +74,23 @@ fun RenderContext.viewLocationEditor(
 
         textField("website", modify(Flex1), model::setLink, linkFlow)
         textField("calendar", modify(), model::setEventsLink, eventsLinkFlow)
-        // placeEditor(location.geoPoint, app, model)
-//        button("cancel", onClick = app.portal::goBack)
-//        button("save", modify(Accent), onClick = {
-//            renderScope.launch {
-//                model.saveLocation()
+
+//        row(modify(JustifyContentSpaceBetween)) {
+//            button("Back", onClick = {
 //                app.portal.goBack()
+//            })
+//            row {
+//                messageBox(model.message.flow)
+//                button("Edit", modify(Accent), onClick = {
+//                    renderScope.launch {
+//                        val locationId = model.saveLocation()
+//                        if (locationId != null) {
+//                            app.portal.goBack()
+//                        }
+//                    }
+//                })
 //            }
-//        })
+//        }
     }
 }
 

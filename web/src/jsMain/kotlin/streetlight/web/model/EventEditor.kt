@@ -77,6 +77,14 @@ class EventEditor(
         setEvent { it.copy(cost = if (value) 0f else null)}
     }
 
+    fun setOriginalSourceLabel(value: String) {
+        state.set { it.copy(originalSourceLabel = value) }
+    }
+
+    fun setOriginalSourceUrl(value: String) {
+        state.set { it.copy(originalSourceUrl = value) }
+    }
+
     fun addLink(value: ExtraLink) {
         val linksNow = stateNow.event.links ?: emptyList()
         setEvent { it.copy(links = linksNow + value) }
@@ -101,6 +109,8 @@ data class EventEditorState(
     val event: EventEdit,
     val possibleLocations: List<Location> = emptyList(),
     val isVisible: Boolean = false,
+    val originalSourceLabel: String = "",
+    val originalSourceUrl: String = "",
 )
 
 private fun Address.toBasicString(): String? {

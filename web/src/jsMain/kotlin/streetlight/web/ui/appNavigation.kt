@@ -31,7 +31,7 @@ fun RenderContext.appNavigation(app: Streetlight) {
                 StreetlightScreen.Chat -> viewChatRoom(app)
                 StreetlightScreen.SongProfile -> viewSongProfile(app)
                 StreetlightScreen.EditTalent -> editTalentForm(app)
-                StreetlightScreen.LocationProfile -> locationProfileView(app)
+                StreetlightScreen.LocationProfile -> viewLocationProfile(app)
                 StreetlightScreen.EditLocation -> viewEditLocationRoute(app)
                 StreetlightScreen.LocationAdmin -> viewLocationAdmin(app)
                 StreetlightScreen.CreateGalaxy -> viewGalaxyFoundry()

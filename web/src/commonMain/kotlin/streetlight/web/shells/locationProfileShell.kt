@@ -34,15 +34,19 @@ fun FlowContent.locationProfileShell(
                     }
                 }
             }
-            row(modify(MinHeight8, FlexItems1, GapTiny, TextAlignCenter, WrapFlex, ZenCardBg)) {
+            row(modify(MinHeight8, FlexItems1, GapTiny, TextAlignCenter, WrapFlex, ZenCardBg, MoonShadow)) {
                 cellCard {
                     postedByCell(location.username)
                 }
-                cellCard {
-                    propertyCell("email", "yer.email@gmail.com")
+                location.phone?.let {
+                    cellCard {
+                        propertyCell("phone", it)
+                    }
                 }
-                cellCard {
-                    propertyCell("phone", "(303) 555-2122")
+                location.email?.let {
+                    cellCard {
+                        propertyCell("email", it)
+                    }
                 }
                 cellCard {
                     lightCell(location.locationId)

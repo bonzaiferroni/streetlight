@@ -44,8 +44,6 @@ data class GalaxyEdit(
     val postGuide: String? = null,
     val imageRef: Url? = null,
 ) {
-    val isValid get() = !name.isNullOrBlank() && center != null
-
     companion object {
         val NameCharacters = setOf(' ', '.', ',', '\'', '!', '?', ':', '-', '+')
         val PathCharacters = setOf('-')
@@ -57,6 +55,16 @@ data class GalaxyEdit(
 
         const val MAX_NAME_LENGTH = 32
     }
+
+    val invalidPart get() = when {
+        name.isNullOrBlank() -> "name"
+        slug == null -> "address"
+        else -> null
+    }
+
+    val invalidMessage get() = invalidPart?.let { "missing: $it"}
+
+    val isValid get() = invalidPart == null
 }
 
 enum class PostPermission(label: String? = null) {

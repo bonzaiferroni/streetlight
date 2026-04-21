@@ -21,7 +21,7 @@ fun RenderContext.viewEventScout(app: Streetlight, galaxy: Galaxy) {
     val model = EventScout(app, renderScope, galaxy)
     val panelFlow = model.stateFlow.mapDistinct {
         EventScoutPanelState(
-            locationEdit = it.locationEdit,
+            locationStaged = it.locationEdit != null,
             location = it.location,
             event = it.event,
         )
@@ -31,15 +31,15 @@ fun RenderContext.viewEventScout(app: Streetlight, galaxy: Galaxy) {
         geoMapMount(app.geoMap, app.appScope, modifiers = modify(BorderRadius2, MoonShadow, Height48))
 
         flowBlock(panelFlow, defaultMagic) {
-            val locationEdit = it.locationEdit; val location = it.location; val event = it.event
+            val location = it.location; val event = it.event
 
             viewContextOf(model) {
                 if (event != null) {
                     reviewEventPanel(event, galaxy)
                 } else if (location != null) {
                     createEventPanel(location)
-                } else if (locationEdit != null) {
-                    reviewLocationPanel(locationEdit)
+                } else if (it.locationStaged) {
+                    reviewLocationPanel()
                 } else {
                     findLocationPanel()
                 }
@@ -51,7 +51,7 @@ fun RenderContext.viewEventScout(app: Streetlight, galaxy: Galaxy) {
 }
 
 private data class EventScoutPanelState(
-    val locationEdit: LocationEdit? = null,
+    val locationStaged: Boolean = false,
     val location: Location? = null,
     val event: Event? = null
 )
@@ -89,6 +89,8 @@ fun ViewContext<EventScout>.createEventPanel(location: Location?) {
     column {
         card {
             messageBox(model.messageFlow)
+            textBlock("Does the event have a website? We can try to read the details directly from the content. " +
+                    "Then you can edit the details below.")
             row {
                 textField("website", modify(Flex1), model::setEventLink, linkFlow)
                 button("🤖 read website", onClick = model::readEventWebsite)
@@ -98,7 +100,7 @@ fun ViewContext<EventScout>.createEventPanel(location: Location?) {
         card {
             eventEditorForm(model.stateNow.eventEdit, model.app, editFlow.filterNotNull(), model::setEventEdit)
             row(modify(JustifyContentSpaceBetween)) {
-                button("start over", onClick = model::reset)
+                button("start over", modify(Secondary), model::reset)
                 row {
                     messageBox(model.validEventFlow)
                     button("create", onClick = model::postEvent)
@@ -108,8 +110,9 @@ fun ViewContext<EventScout>.createEventPanel(location: Location?) {
     }
 }
 
-fun ViewContext<EventScout>.reviewLocationPanel(locationEdit: LocationEdit) {
+fun ViewContext<EventScout>.reviewLocationPanel() {
     val editFlow = model.stateFlow.mapDistinct { it.locationEdit }.filterNotNull()
+    val locationEdit = model.stateNow.locationEdit ?: error("location not found")
 
     column {
         card {

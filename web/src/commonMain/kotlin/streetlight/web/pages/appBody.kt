@@ -13,9 +13,9 @@ fun HTML.appBody(
     body {
         column(AppBodyKey.ViewportId, modify(Gap0)) {
             appHeader()
-            row(AppBodyKey.ContentRowId, modify(JustifyContentCenter, Flex1)) {
+            row(AppBodyKey.ContentRowId, modify(JustifyContentCenter, Flex1, Gap0)) {
                 // div(AppBodyKey.SpacerLeftId)
-                box(AppBodyKey.ContentBoxId, modify(Flex3)) {
+                box(AppBodyKey.ContentBoxId, modify(Flex3, PaddingX1)) {
                     div(AppBodyKey.PortalMountId)
                     div(id = AppBodyKey.ShellBoxId, block = block)
                 }

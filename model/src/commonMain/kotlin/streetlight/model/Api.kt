@@ -76,13 +76,6 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
 
     object RequestBox: PostEndpoint<NewRequest, RequestId>(this, "request_box")
 
-//    object Gemini: ApiNode(this, "gemini"), GeminiApi {
-//        override val chat = PostEndpoint<List<GeminiMessage>, String>(this, "chat")
-//        override val image = PostEndpoint<ImageGenRequest, ImageUrls>(this, "image")
-//        override val speechUrl = PostEndpoint<SpeechRequest, String>(this, "speechUrl")
-//        override val speech = PostEndpoint<SpeechRequest, ByteArray>(this, "speech")
-//    }
-
     object Speech: ApiNode(this, "speech"), SpeechApi {
         override val wav = PostEndpoint<SpeechRequest, ByteArray>(this, "wav")
         override val url = PostEndpoint<SpeechRequest, String>(this, "url")

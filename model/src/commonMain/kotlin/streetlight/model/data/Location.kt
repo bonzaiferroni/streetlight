@@ -59,6 +59,9 @@ data class Location(
             }
         }.takeIf { it.isNotEmpty() }
     }
+
+    val phone: String? get() = null
+    val email: String? get() = null
 }
 
 @JvmInline @Serializable
@@ -123,6 +126,7 @@ fun Location.toEdit() = LocationEdit(
     name = name,
     description = description,
     address = address,
+    city = city,
     geoPoint = geoPoint,
     resources = resources,
     website = website,

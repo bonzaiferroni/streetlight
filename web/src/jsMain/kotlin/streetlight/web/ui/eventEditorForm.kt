@@ -190,6 +190,8 @@ private fun ViewContext<EventEditor>.eventLinks() {
     val linkEditIndexFlow = editState.flow.mapDistinct { it.index }
     val labelFlow = editState.flow.mapDistinct { it.link.label }
     val urlFlow = editState.flow.mapDistinct { it.link.url }
+    val originalSourceLabelFlow = model.stateFlow.mapDistinct { it.originalSourceLabel }
+    val originalSourceUrlFlow = model.stateFlow.mapDistinct { it.originalSourceUrl }
 
     fun setLink(provider: (ExtraLink) -> ExtraLink) { editState.set { it.copy(link = provider(it.link)) }}
     fun setLabel(value: String) { setLink { it.copy(label = value) } }
@@ -208,11 +210,15 @@ private fun ViewContext<EventEditor>.eventLinks() {
 
     column(modify(Gap2)) {
         column(modify(Gap1)) {
-            textBlock(
-                "Is there more information about this event somewhere out there?",
-                modify(OpacityMost)
-            )
+            textBlock("Is there more information about this event somewhere out there?", modify(OpacityMost))
             textField("Link", modify(Width100P), model::setUrl, model.urlFlow)
+        }
+        column(modify(Gap1)) {
+            textBlock("Want to give a shout out to the original place where you found the event?", modify(OpacityMost))
+            row {
+                textField("Source label", modify(Flex1), model::setOriginalSourceLabel, originalSourceLabelFlow)
+                textField("Source url", modify(Flex3), model::setOriginalSourceUrl, originalSourceUrlFlow)
+            }
         }
         row(modify(AlignItemsEnd)) {
             column(modify(Flex1)) {

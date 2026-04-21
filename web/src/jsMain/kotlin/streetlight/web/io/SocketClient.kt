@@ -9,6 +9,7 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.cbor.Cbor
+import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.serializer
 import org.khronos.webgl.ArrayBuffer
 import org.khronos.webgl.Int8Array
@@ -20,12 +21,17 @@ import org.w3c.dom.BinaryType
 class SocketClient<T>(
     private val scope: CoroutineScope,
     private val serializer: KSerializer<T>,
+    private val serializersModule: SerializersModule? = null,
     private val provideSocket: suspend () -> WebSocket,
 ) {
     private val _itemFlow = MutableSharedFlow<T>(0, 8)
     val itemFlow: Flow<T> = _itemFlow
 
     private var socket: WebSocket? = null
+
+    private val cbor = serializersModule?.let {
+        Cbor { serializersModule = it }
+    } ?: defaultCbor
 
     fun connect() {
         scope.launch {
@@ -67,15 +73,15 @@ class SocketClient<T>(
     private fun decode(bytes: ByteArray): T? = try {
         cbor.decodeFromByteArray(serializer, bytes)
     } catch (e: Exception) {
-        console.log(e)
+        console.log(e.message)
         null
     }
 }
 
 val defaultCbor = Cbor.Default
-private val cbor = defaultCbor
 
 inline fun <reified T> socketClientOf(
     scope: CoroutineScope,
+    serializersModule: SerializersModule? = null,
     noinline provideSocket: suspend () -> WebSocket,
-): SocketClient<T> = SocketClient(scope, serializer(), provideSocket)
+): SocketClient<T> = SocketClient(scope, serializer(), serializersModule, provideSocket)

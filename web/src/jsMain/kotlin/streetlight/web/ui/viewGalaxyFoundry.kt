@@ -20,7 +20,7 @@ import streetlight.web.model.GalaxyEditor
 
 fun ViewContext<Streetlight>.viewGalaxyFoundry() {
     val app = model
-    val model = GalaxyEditor(app, renderScope)
+    val model = GalaxyEditor(null, app, renderScope)
 
     val geoMap = app.geoMap
     val nameFlow = model.galaxyFlow.mapDistinct { it.name ?: "" }
@@ -247,9 +247,12 @@ fun ViewContext<Streetlight>.viewGalaxyFoundry() {
             }
         }
 
-        row {
-            spacer(modify(Flex1))
-            button("Found Galaxy", modify(Accent), onClick = model::foundGalaxy)
+        row(modify(JustifyContentSpaceBetween)) {
+            button("back", onClick = { portal.goBack() })
+            row {
+                messageBox(model.msg.flow)
+                button("Found Galaxy", modify(Accent), onClick = model::foundGalaxy)
+            }
         }
 
         appFooter("web/src/jsMain/kotlin/streetlight/web/ui/viewGalaxyFoundry.kt")

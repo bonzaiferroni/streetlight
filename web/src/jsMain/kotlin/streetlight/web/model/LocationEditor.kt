@@ -29,7 +29,7 @@ class LocationEditor(
     private val edit = storeOf(initialData)
     private val editNow get() = edit.now
     val editFlow = edit.flow
-    val message = storeOf(UIMessage())
+    val message = storeOf(UIMessage(initialData.invalidMessage ?: "Looks good."))
     override val placeFlow = editFlow.mapDistinct { it.toPlace() }
 
     private val api get() = client.api
@@ -76,6 +76,7 @@ class LocationEditor(
 
     fun setEdit(edit: LocationEdit) {
         this.edit.set { edit }
+        message.set(edit.invalidMessage ?: "Looks good.")
     }
 
     override fun lookUp() {
