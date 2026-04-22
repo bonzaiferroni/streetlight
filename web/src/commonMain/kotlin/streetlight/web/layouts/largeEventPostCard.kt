@@ -18,7 +18,7 @@ fun FlowContent.largeEventPostCard(post: EventPost) {
             { startsAtCell(event.startsAt) },
             { costCell(event.cost, event.url) },
             { postedByCell(post.username) },
-            { lightCell(event.lightCount, event.eventId) },
+            { eventLightCell(event.lightCount, event.eventId) },
         )
     )
 }

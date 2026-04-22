@@ -12,6 +12,8 @@ import koala.css.JustifyContentCenter
 import koala.css.MarginLeft1
 import koala.css.MinWidth16
 import koala.css.ModifierSet
+import koala.css.Padding0
+import koala.css.Padding1
 import koala.css.WrapFlex
 import koala.css.modify
 import koala.html.navigationIfNotNull
@@ -28,8 +30,8 @@ import streetlight.web.ui.starLight
 import kotlin.time.Instant
 
 object CellContent {
-    val RowMod = modify(JustifyContentCenter, WrapFlex, Gap0)
-    val CardMod = modify(AlignItemsCenter, Gap0, BorderRadius0, JustifyContentCenter, MinWidth16)
+    val RowMod = modify(JustifyContentCenter, AlignItemsCenter, WrapFlex, Gap0, Padding1)
+    val CardMod = modify(AlignItemsCenter, Gap0, BorderRadius0, JustifyContentCenter, MinWidth16, Padding0)
 }
 
 fun FlowContent.cellCard(
@@ -79,23 +81,20 @@ fun FlowContent.propertyCell(property: String, value: String) {
     }
 }
 
-fun FlowContent.lightCell(galaxyId: GalaxyId) {
-    row {
+fun FlowContent.galaxyLightCell(visibility: Int?, galaxyId: GalaxyId) {
+    starLight(visibility, CellContent.RowMod) {
         setData(StarLightKey.GalaxyLightId, galaxyId)
-        starLight(null)
     }
 }
 
-fun FlowContent.lightCell(visibility: Int?, eventId: EventId) {
-    row {
+fun FlowContent.eventLightCell(visibility: Int?, eventId: EventId) {
+    starLight(visibility, CellContent.RowMod) {
         setData(StarLightKey.EventLightId, eventId)
-        starLight(visibility)
     }
 }
 
-fun FlowContent.lightCell(locationId: LocationId) {
-    row {
+fun FlowContent.locationLightCell(locationId: LocationId) {
+    starLight(null) {
         setData(StarLightKey.LocationLightId, locationId)
-        starLight(null)
     }
 }

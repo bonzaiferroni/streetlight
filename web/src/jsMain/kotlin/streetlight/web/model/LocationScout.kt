@@ -4,12 +4,10 @@ import koala.model.mapDistinct
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import streetlight.model.data.Galaxy
 import streetlight.model.data.GalaxyId
-import streetlight.model.data.GalaxyPostResult
 import streetlight.model.data.Location
-import streetlight.model.data.NewGalaxyLocationPost
-import streetlight.model.data.NewLocationPost
+import streetlight.model.data.LocationPostEdit
+import streetlight.model.data.LocationPostId
 import streetlight.web.ui.ViewModel
 
 class LocationScout(
@@ -19,7 +17,7 @@ class LocationScout(
     val galaxyId: GalaxyId,
 ): ViewModel {
 
-    private val initialState = LocationScoutState(setOf(galaxyId))
+    private val initialState = LocationScoutState()
     private var location: Location? = null
     private val state = storeOf(initialState)
     val stateFlow = state.flow
@@ -33,33 +31,23 @@ class LocationScout(
         }
     }
 
-    fun setTitle(value: String) = state.set { it.copy(title = value) }
 
     fun setText(value: String) = state.set { it.copy(text = value) }
-
-    fun addGalaxyId(galaxyId: GalaxyId) = state.set { it.copy(galaxyIds = it.galaxyIds + galaxyId) }
-
-    fun removeGalaxyId(galaxyId: GalaxyId) = state.set { it.copy(galaxyIds = it.galaxyIds - galaxyId) }
 
     fun reset() = state.set { initialState }
 
     fun createPost() {
         val location = location ?: error("location not found")
-        val title = stateNow.title
         val text = stateNow.text
         scope.launch {
-            val post = NewLocationPost(location.locationId, title, text)
+            val post = LocationPostEdit(null, galaxyId, location.locationId, text)
             val postId = api.postLocation(post) ?: error("result not found")
-            val galaxyPost = NewGalaxyLocationPost(postId, stateNow.galaxyIds.toList())
-            val result = api.postGalaxyLocation(galaxyPost)
-            state.set { it.copy(result = result) }
+            state.set { it.copy(postId = postId) }
         }
     }
 }
 
 data class LocationScoutState(
-    val galaxyIds: Set<GalaxyId>,
-    val title: String? = null,
     val text: String? = null,
-    val result: GalaxyPostResult? = null,
+    val postId: LocationPostId? = null
 )

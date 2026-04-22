@@ -1,11 +1,7 @@
 package streetlight.model.data
 
-import kotlinx.serialization.Polymorphic
-import kotlinx.serialization.PolymorphicSerializer
+import kampfire.api.StringId
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.modules.SerializersModule
-import kotlinx.serialization.modules.polymorphic
-import kotlinx.serialization.modules.subclass
 import kotlin.time.Instant
 
 @Serializable
@@ -18,15 +14,13 @@ sealed interface OmniRecord: OmniMessage {
 }
 
 @Serializable
-data class EventPosted(
+data class EventCreated(
     val eventId: EventId,
-    val galaxyId: GalaxyId,
     val title: String,
-    val galaxy: String,
     val username: String,
     override val recordAt: Instant
 ): OmniRecord {
-    override val text get() = "$username posted an event to $galaxy: $title"
+    override val text get() = "$username posted an event: $title"
 }
 
 @Serializable
@@ -78,10 +72,4 @@ data class OmniStatus(val starCount: Int): OmniMessage
 data class OmniHistory(val records: List<OmniRecord>): OmniMessage
 
 @Serializable
-data class EventLighted(
-    val eventId: EventId,
-    val title: String,
-    override val recordAt: Instant
-): OmniRecord {
-    override val text get() = "$title got a little brighter."
-}
+data class Beacon(val itemId: StringId): OmniMessage

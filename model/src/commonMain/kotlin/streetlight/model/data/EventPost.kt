@@ -10,6 +10,7 @@ import kotlin.jvm.JvmInline
 data class EventPost(
     override val postId: EventPostId,
     override val galaxyId: GalaxyId,
+    override val username: String?,
     val event: EventLocation?,
     override val text: String?,
     override val createdAt: Instant,
@@ -20,7 +21,6 @@ data class EventPost(
     override val title get() = event?.title ?: "[event removed]"
     override val description get() = event?.description
     override val visibility get() = 0
-    override val username get() = event?.username
 
     override val isRemoved get() = event == null
     override val type get() = PostType.Event

@@ -4,4 +4,6 @@ interface TableId<T> {
     val value: T
 }
 
-val TableId<String>.isEmpty get() = value.isEmpty()
+typealias StringId = String
+
+val TableId<StringId>.isEmpty get() = value.isEmpty()

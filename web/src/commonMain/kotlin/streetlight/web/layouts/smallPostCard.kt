@@ -78,7 +78,7 @@ fun FlowContent.smallPostCard(post: EventPost) {
                 post.event?.let { event ->
                     card(cellModifiers) {
                         // val interest = EventStar(event.eventId, post.interest)
-                        lightCell(null, event.eventId)
+                        eventLightCell(null, event.eventId)
                     }
                 }
             }

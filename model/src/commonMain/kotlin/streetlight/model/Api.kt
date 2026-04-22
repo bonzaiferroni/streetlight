@@ -48,8 +48,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object QueryPoint: QueryEndpoint<GeoPoint, List<Location>>(this, "query-point")
         object ParseLocation: PostEndpoint<ParseRequest, LocationEdit>(this, "parse-location")
         object QueryBounds: PostEndpoint<GeoBounds, List<LocationInfo>>(this, "query-bounds")
-        object PostLocation: PostEndpoint<NewLocationPost, LocationPostId>(this, "create-post")
-        object PostGalaxyLocation: PostEndpoint<NewGalaxyLocationPost, GalaxyPostResult>(this, "create-galaxy-post")
+        object PostLocation: PostEndpoint<LocationPostEdit, LocationPostId>(this, "create-post")
     }
 
     object Songs: GetEndpoint<List<Song>>(this, "songs") {
@@ -117,6 +116,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object ReadGalaxies: PostEndpoint<List<GalaxyId>, List<Galaxy>>(this, "read-galaxies")
         object Path: GetByIdEndpoint<String, Galaxy>(this, "path")
         object PostEvent: PostEndpoint<EventPostEdit, EventPostId>(this, "post-event")
+        object PostLocation: PostEndpoint<LocationPostEdit, LocationPostId>(this, "post-location")
         object ReadMultiPosts: PostEndpoint<List<GalaxyId>, List<EventPost>>(this, "multi-posts")
         object ReadPosts: GetByTableIdEndpoint<GalaxyId, PostListing>(this, "posts")
         object ReadPost: GetByTableIdEndpoint<EventPostId, EventPost>(this, "post")

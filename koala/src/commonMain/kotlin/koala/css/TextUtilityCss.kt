@@ -9,12 +9,12 @@ val TextUtilityCss
         // line height
         LineHeight1, LineHeight115, ParagraphLineHeight,
         // misc
-        SingleLine, WhiteSpaceNormal, TextOverflowHidden, TextShadow, WhiteSpaceNoWrap, Prose,
+        SingleLine, WhiteSpaceNormal, TextOverflowHidden, TextShadow, WhiteSpaceNoWrap, UserSelectNone, Prose,
     )
 
 val Bold = utilityOf("bold", "font-weight: bold")
 val Italic = utilityOf("italic", "font-style: italic")
-val SmallText = utilityOf("small-text", "font-size: 0.9em")
+val SmallText = utilityOf("small-text", "font-size: 1rem")
 val LargeText = utilityOf("large-text", "font-size: 1.2rem")
 val GrowText = utilityOf("grow-text", "font-size: 1.1em")
 val WhiteSpaceNormal = utilityOf("white-space-normal", "white-space: normal")
@@ -25,4 +25,5 @@ val WhiteSpaceNoWrap = utilityOf("white-space-no-wrap", "white-space: nowrap")
 val SingleLine = utilityOf("single-line", "white-space: nowrap", "overflow: hidden", "text-overflow: ellipsis")
 val TextOverflowHidden = utilityOf("text-overflow-hidden", "overflow: hidden", "text-overflow: ellipsis")
 val TextShadow = utilityOf("text-shadow", "text-shadow: var(--ink-shadow)")
+val UserSelectNone = utilityOf("user-select-none", "user-select: none")
 val Prose = CssUtility("prose")

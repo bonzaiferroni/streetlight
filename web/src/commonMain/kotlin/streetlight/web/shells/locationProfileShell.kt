@@ -8,7 +8,7 @@ import kotlinx.html.FlowContent
 import streetlight.model.data.Location
 import streetlight.web.EditLocationIdRoute
 import streetlight.web.layouts.cellCard
-import streetlight.web.layouts.lightCell
+import streetlight.web.layouts.locationLightCell
 import streetlight.web.layouts.postedByCell
 import streetlight.web.layouts.propertyCell
 import streetlight.web.pages.appFooter
@@ -49,7 +49,7 @@ fun FlowContent.locationProfileShell(
                     }
                 }
                 cellCard {
-                    lightCell(location.locationId)
+                    locationLightCell(location.locationId)
                 }
                 // td: instagram
                 // propertyRow("instagram") {

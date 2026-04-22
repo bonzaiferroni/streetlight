@@ -35,8 +35,7 @@ class ApiClient(private val client: FetchClient) {
         param(it.query, query)
     }
     suspend fun createOrEditLocation(location: LocationEdit) = client.post(Api.Locations.CreateOrEdit, location)
-    suspend fun postLocation(location: NewLocationPost) = client.post(Api.Locations.PostLocation, location)
-    suspend fun postGalaxyLocation(location: NewGalaxyLocationPost) = client.post(Api.Locations.PostGalaxyLocation, location)
+    suspend fun postLocation(location: LocationPostEdit) = client.post(Api.Locations.PostLocation, location)
     suspend fun queryMap(request: MapQuery) = client.get(Api.Events.QueryMap, request.toQuery())
 
     // stars

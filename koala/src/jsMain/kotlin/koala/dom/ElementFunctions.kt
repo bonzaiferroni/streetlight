@@ -33,6 +33,12 @@ fun Node.unmodify(vararg modifier: Modifier) {
     element.unmodify(*modifier)
 }
 
+fun Element.trigger(modifier: Modifier) {
+    unmodify(modifier)
+    window.requestAnimationFrame {
+        modify(modifier)
+    }
+}
 
 private const val MAX_ATTEMPTS = 30
 

@@ -59,12 +59,13 @@ class LightCache<Id, Item>(
         }
     }
 
-    fun toggleLight(id: Id) {
-        val isStar = stateNow.lights.contains(id)
-        when (isStar) {
+    fun toggleLight(id: Id): Boolean {
+        val isLitNow = stateNow.lights.contains(id)
+        when (isLitNow) {
             true -> removeLight(id)
             else -> addLight(id)
         }
+        return !isLitNow
     }
 
     fun addLight(id: Id) = editLight(id, true)

@@ -16,7 +16,7 @@ val DisplayUtilityCss
         // Color
         Accent, Primary, Secondary, Danger, NightInk, DayInk,
         // Overflow
-        OverflowHidden, OverflowWrapAnywhere, OverflowClip, OverflowXAuto, OverflowYAuto,
+        OverflowHidden, OverflowWrapAnywhere, OverflowClip, OverflowXAuto, OverflowXHidden, OverflowYAuto, OverscrollBehaviorContain,
         // Background
         PrimaryBg, PrimaryCardBg, ZenCardBg, CardBg, BackgroundImage, SolidBg, BlurBackdrop, TransparentBg,
         // Transform
@@ -78,7 +78,9 @@ val OverflowHidden = utilityOf("overflow-hidden", "overflow: hidden")
 val OverflowWrapAnywhere = utilityOf("overflow-wrap-anywhere", "overflow-wrap: anywhere")
 val OverflowClip = utilityOf("overflow-clip", "overflow: clip")
 val OverflowXAuto = utilityOf("overflow-x-auto", "overflow-x: auto")
+val OverflowXHidden = utilityOf("overflow-x-hidden", "overflow-x: hidden")
 val OverflowYAuto = utilityOf("overflow-y-auto", "overflow-y: auto")
+val OverscrollBehaviorContain = utilityOf("overscroll-behavior-contain", "overscroll-behavior: contain")
 
 // Background
 val PrimaryBg = utilityOf("primary-bg", "background-color: var(--primary-bg)")

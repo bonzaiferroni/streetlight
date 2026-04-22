@@ -35,8 +35,8 @@ fun FlowContent.smallGalaxyCard(galaxy: Galaxy) {
                             textBlock((0..10).random().toString())
                         }
                     }
-                    card(modify(cardMods)) {
-                        lightCell(galaxy.galaxyId)
+                    cellCard {
+                        galaxyLightCell(galaxy.lightCount, galaxy.galaxyId)
                     }
                 }
             }
