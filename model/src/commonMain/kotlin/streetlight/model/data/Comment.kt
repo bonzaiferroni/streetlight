@@ -1,5 +1,6 @@
 package streetlight.model.data
 
+import kampfire.model.Url
 import kampfire.utils.randomUuidString
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
@@ -10,6 +11,7 @@ data class Comment(
     val commentId: CommentId,
     val parentId: CommentId?,
     val username: String,
+    val thumb: Url?,
     val text: String,
     val lightCount: Int,
     val replyCount: Int,

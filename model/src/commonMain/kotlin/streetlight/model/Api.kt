@@ -23,7 +23,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object ParseSingleEvent: PostEndpoint<ParseRequest, EventEdit>(this, "parse-single")
         object ParseEvent: PostEndpoint<ParseRequest, EventParseResult>(this, "parse-event")
 
-        object AtLocation: GetByTableIdEndpoint<LocationId, List<Event>>(this, "location")
+        object AtLocation: GetByIdEndpoint<LocationId, List<Event>>(this, "location")
         object ReadEventLocations: PostEndpoint<List<EventId>, List<EventLocation>>(this, "read-event-locations")
         object ReadLights: GetEndpoint<List<EventId>>(this, "lights")
         object EditLight: PostEndpoint<LightRequest, Boolean>(this, "light-edit")
@@ -31,12 +31,12 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object ReadEventLocationBySlug: GetByIdEndpoint<Slug, EventLocation>(this, "event-location-slug")
     }
 
-    object Locations: GetByTableIdEndpoint<LocationId, Location>(this, "locations") {
+    object Locations: GetByIdEndpoint<LocationId, Location>(this, "locations") {
         @Deprecated("use edit")
         object Create: PostEndpoint<Place, LocationId>(this, "create")
         object CreateOrEdit: PostEndpoint<LocationEdit, Location>(this, "edit")
         @Deprecated("use posts to associate locations with galaxies")
-        object Street: GetByTableIdEndpoint<GalaxyId, List<Location>>(this, "street")
+        object Street: GetByIdEndpoint<GalaxyId, List<Location>>(this, "street")
         @Deprecated("use edit")
         object Update: PostEndpoint<Location, Boolean>(this, "update")
         object Search: GetEndpoint<List<Location>>(this, "search") {
@@ -53,17 +53,17 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
 
     object Songs: GetEndpoint<List<Song>>(this, "songs") {
         object Create: PostEndpoint<NewSong, SongId>(this, "create")
-        object TakeNextSong: GetByTableIdEndpoint<EventId, EventSong>(this, "take_next_song") {
+        object TakeNextSong: GetByIdEndpoint<EventId, EventSong>(this, "take_next_song") {
             val since = addInstantParam("since")
         }
     }
 
-    object SongProfile: GetByTableIdEndpoint<SongId, Song>(this, "song") {
+    object SongProfile: GetByIdEndpoint<SongId, Song>(this, "song") {
         object Update: PostEndpoint<Song, Boolean>(this, "update")
     }
 
-    object RenditionFeed: GetByTableIdEndpoint<RenditionId, Rendition>(this, "renditions") {
-        object BySong: GetByTableIdEndpoint<SongId, List<Rendition>>(this, "by_song")
+    object RenditionFeed: GetByIdEndpoint<RenditionId, Rendition>(this, "renditions") {
+        object BySong: GetByIdEndpoint<SongId, List<Rendition>>(this, "by_song")
         object Create: PostEndpoint<NewRendition, RenditionId>(this, "create")
         object Update: PostEndpoint<Rendition, Boolean>(this, "update")
         object Delete: DeleteEndpoint<RenditionId>(this, "delete")
@@ -118,8 +118,8 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object PostEvent: PostEndpoint<EventPostEdit, EventPostId>(this, "post-event")
         object PostLocation: PostEndpoint<LocationPostEdit, LocationPostId>(this, "post-location")
         object ReadMultiPosts: PostEndpoint<List<GalaxyId>, List<EventPost>>(this, "multi-posts")
-        object ReadPosts: GetByTableIdEndpoint<GalaxyId, PostListing>(this, "posts")
-        object ReadPost: GetByTableIdEndpoint<EventPostId, EventPost>(this, "post")
+        object ReadPosts: GetByIdEndpoint<GalaxyId, PostListing>(this, "posts")
+        object ReadPost: GetByIdEndpoint<EventPostId, EventPost>(this, "post")
         object ReadLights: GetEndpoint<List<GalaxyId>>(this, "lights")
         object EditLight: PostEndpoint<LightRequest, Boolean>(this, "light-edit")
     }

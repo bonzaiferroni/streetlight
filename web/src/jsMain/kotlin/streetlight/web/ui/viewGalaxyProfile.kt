@@ -1,19 +1,17 @@
 package streetlight.web.ui
 
 import koala.dom.*
-import koala.model.mapDistinct
-import koala.model.storeOf
 import streetlight.web.GalaxySlugRoute
 import streetlight.web.model.Streetlight
 import streetlight.web.shells.GalaxyProfileKey
 import streetlight.web.shells.GalaxyProfileContent
-import streetlight.web.shells.galaxyProfileShell
+import streetlight.web.shells.galaxyShell
 
 fun ViewContext<Streetlight>.viewGalaxyProfile(content: GalaxyProfileContent) {
     val app = model
 
     val root = shellBox(GalaxyProfileKey.ShellId) {
-        galaxyProfileShell(content)
+        galaxyShell(content)
     }
 
     // queryAndWireSwitch(root, GalaxyProfileKey.MapSwitchId, onToggle = ::setIsMapVisible, bindFlow = isMapVisibleFlow)

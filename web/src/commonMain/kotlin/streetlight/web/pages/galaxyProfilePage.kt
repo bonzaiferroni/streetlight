@@ -3,7 +3,7 @@ package streetlight.web.pages
 import koala.html.appHead
 import kotlinx.html.HTML
 import streetlight.web.shells.GalaxyProfileContent
-import streetlight.web.shells.galaxyProfileShell
+import streetlight.web.shells.galaxyShell
 
 fun HTML.galaxyProfilePage(content: GalaxyProfileContent, styles: String) {
     val galaxy = content.galaxy
@@ -12,6 +12,6 @@ fun HTML.galaxyProfilePage(content: GalaxyProfileContent, styles: String) {
         supportGeoMap()
     }
     appBody {
-        galaxyProfileShell(content)
+        galaxyShell(content)
     }
 }

@@ -6,7 +6,7 @@ val LayoutUtilityCss
         Gap0, Gap1, Gap2, Gap4, Gap8, GapTiny,
         // Flex
         Flex0, Flex1, Flex2, Flex3, Flex4, FlexMd1, FlexMd2, FlexColumn, FlexBasis25, FlexBasis33, FlexShrink0,
-        RowReverse, QueryRowReverse, NoWrap, WrapFlex, DisplayFlex,
+        FlexDirectionRow, FlexDirectionRowReverse, QueryRowReverse, NoWrap, WrapFlex, DisplayFlex,
         // Align
         AlignItemsCenter, AlignItemsStretch, AlignItemsStart, AlignItemsEnd,
         JustifyContentCenter, JustifyContentEnd, JustifyContentSpaceAround, JustifyContentSpaceBetween,
@@ -150,7 +150,8 @@ val TextAlignCenter = utilityOf("text-align-center", "text-align: center")
 val TextAlignRight = utilityOf("text-align-right", "text-align: right")
 
 // Row / Wrap
-val RowReverse = utilityOf("row-reverse", "flex-direction: row-reverse")
+val FlexDirectionRowReverse = utilityOf("row-reverse", "flex-direction: row-reverse")
+val FlexDirectionRow = utilityOf("row", "flex-direction: row")
 val QueryRowReverse = CssUtility("query-row-reverse")
 val NoWrap = utilityOf("no-wrap", "flex-wrap: nowrap", "white-space: nowrap")
 val WrapFlex = utilityOf("wrap-flex", "flex-wrap: wrap")

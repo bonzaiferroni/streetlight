@@ -10,7 +10,7 @@ import compose.icons.tablericons.CircleX
 import compose.icons.tablericons.Clock
 import compose.icons.tablericons.Flame
 import compose.icons.tablericons.PlayerPause
-import kabinet.utils.toAgoDescription
+import kabinet.utils.toAgoFormat
 import kabinet.utils.toTimeDescription
 import kotlin.time.Clock
 import kotlin.time.Instant
@@ -72,7 +72,7 @@ fun EventStatusDash(
                         Row(1) {
                             Icon(TablerIcons.Clock, color = Pond.localColors.contentDim)
                             ProgressBar(progress, padding = Pond.ruler.unitPadding) {
-                                Text("Starts ${(-timeUntilStart).toAgoDescription()}", style = Pond.typo.small)
+                                Text("Starts ${(-timeUntilStart).toAgoFormat()}", style = Pond.typo.small)
                             }
                             Expando()
                             MoreMenu {
@@ -102,7 +102,7 @@ fun EventStatusDash(
                         Row(1) {
                             Icon(TablerIcons.Clock, color = Pond.localColors.contentDim)
                             ProgressBar(progress, padding = Pond.ruler.unitPadding) {
-                                Text("Ends ${(-timeUntilEnd).toAgoDescription()}", style = Pond.typo.small)
+                                Text("Ends ${(-timeUntilEnd).toAgoFormat()}", style = Pond.typo.small)
                             }
                             Expando()
                             MoreMenu {
@@ -146,7 +146,7 @@ fun EventStatusDash(
                         Row(1) {
                             Icon(TablerIcons.Clock, color = Pond.localColors.contentDim)
                             ProgressBar(progress, padding = Pond.ruler.unitPadding) {
-                                Text("Ends ${(-timeUntilEnd).toAgoDescription()}", style = Pond.typo.small)
+                                Text("Ends ${(-timeUntilEnd).toAgoFormat()}", style = Pond.typo.small)
                             }
                             Expando()
                             MoreMenu {
@@ -163,7 +163,7 @@ fun EventStatusDash(
                     EventStatus.Finished -> {
                         val timeSinceEnd = now - endsAt
                         Row(1) {
-                            Label("Finished ${timeSinceEnd.toAgoDescription()}")
+                            Label("Finished ${timeSinceEnd.toAgoFormat()}")
                             Expando()
                             MoreMenu {
                                 MoreMenuItem("Encore", TablerIcons.Flame, Pond.colors.accent) { setStatus(EventStatus.Live) }

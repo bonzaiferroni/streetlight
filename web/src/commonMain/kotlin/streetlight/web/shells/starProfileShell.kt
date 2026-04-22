@@ -4,6 +4,7 @@ import koala.css.*
 import koala.html.*
 import kotlinx.html.FlowContent
 import streetlight.model.data.PostListing
+import streetlight.model.data.PostType
 import streetlight.model.data.Star
 import streetlight.web.layouts.layoutPostListing
 import streetlight.web.pages.appFooter
@@ -24,7 +25,7 @@ fun FlowContent.starProfileShell(content: StarProfileContent) {
                 }
             }
         }
-        layoutPostListing(listing)
+        layoutPostListing(setOf(PostType.Event, PostType.Location), listing)
         appFooter(StarProfileKey.SOURCE)
     }
 }

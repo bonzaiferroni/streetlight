@@ -6,13 +6,15 @@ import kotlinx.html.FlowContent
 import kotlinx.serialization.Serializable
 import streetlight.model.data.Galaxy
 import streetlight.model.data.PostListing
+import streetlight.model.data.PostType
 import streetlight.web.EarthMapRoute
 import streetlight.web.layouts.layoutPostListing
+import streetlight.web.layouts.layoutTalkPreview
 import streetlight.web.pages.appFooter
 import streetlight.web.ui.EarthKey
 import streetlight.web.ui.galaxyHeader
 
-fun FlowContent.galaxyProfileShell(content: GalaxyProfileContent) {
+fun FlowContent.galaxyShell(content: GalaxyProfileContent) {
     val galaxy = content.galaxy; val listing = content.listing;
     column(GalaxyProfileKey.ShellId) {
         galaxyHeader(galaxy, modify(BorderRadius2, Height48, MoonShadow))
@@ -23,7 +25,10 @@ fun FlowContent.galaxyProfileShell(content: GalaxyProfileContent) {
                     galaxyMenu(emptyList(), galaxy)
                     postMenu(galaxy)
                 }
-                layoutPostListing(listing)
+                if (galaxy.postTypes.contains(PostType.Comment)) {
+                    layoutTalkPreview(listing.comments)
+                }
+                layoutPostListing(galaxy.postTypes, listing)
                 appFooter(GalaxyProfileKey.SOURCE)
             }
         }
@@ -32,7 +37,7 @@ fun FlowContent.galaxyProfileShell(content: GalaxyProfileContent) {
 
 object GalaxyProfileKey {
     val ShellId = Id("galaxy-profile-shell")
-    const val SOURCE = "web/src/commonMain/kotlin/streetlight/web/shells/galaxyProfileShell.kt"
+    const val SOURCE = "web/src/commonMain/kotlin/streetlight/web/shells/galaxyShell.kt"
 }
 
 @Serializable

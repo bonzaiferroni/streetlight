@@ -16,7 +16,7 @@ import org.w3c.dom.HTMLElement
 import streetlight.model.data.Star
 import streetlight.web.SiteConfigRoute
 import streetlight.web.StarDashRoute
-import streetlight.web.StarProfileRoute
+import streetlight.web.StarRoute
 import streetlight.web.model.Streetlight
 import streetlight.web.pages.HelmBarKey
 import streetlight.web.pages.StarHelmKey
@@ -50,7 +50,7 @@ private fun ViewContext<Streetlight>.starPanel(star: Star) {
 
     column() {
         row(RowMod) {
-            action(StarProfileRoute(star.username)) {
+            action(StarRoute(star.username)) {
                 heading3(star.username)
             }
 

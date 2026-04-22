@@ -36,7 +36,7 @@ enum class StreetlightScreen(
     CreateGalaxy("create-galaxy", { CreateGalaxyRoute }),
     GalaxyList("galaxies", { GalaxyListRoute }),
     GalaxyProfile("g", { path -> path.provideRouteFromPath { GalaxySlugRoute(it) }}),
-    StarProfile("s", { path -> path.provideRouteFromPath { StarProfileRoute(it) } }),
+    StarProfile("s", { path -> path.provideRouteFromPath { StarRoute(it) } }),
     EventScout("post-event", { path -> path.provideRouteFromPath { EventScoutRoute(it) }}),
     LocationScout("post-location", { path -> path.provideRouteFromPath { LocationScoutRoute(it) } }),
     EditStar("edit-profile", { EditStarRoute }),
@@ -200,7 +200,7 @@ data class GalaxySlugRoute(override val slug: Slug): StreetlightRoute, SlugRoute
 data class EventSlugRoute(override val slug: Slug): StreetlightRoute, SlugRoute, EventRoute {
 }
 
-data class StarProfileRoute(override val slug: Slug): StreetlightRoute, SlugRoute {
+data class StarRoute(override val slug: Slug): StreetlightRoute, SlugRoute {
     override val screen get() = StreetlightScreen.StarProfile
     override val title get() = "Star"
 }

@@ -4,18 +4,15 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class PostListing(
-    val events: List<EventPost>?,
-    val locations: List<LocationPost>?,
-) {
-    val types get() = buildSet {
-        if (events != null) add(PostType.Event)
-        if (locations != null) add(PostType.Location)
-    }
-}
+    val events: List<EventPost>,
+    val locations: List<LocationPost>,
+    val comments: List<Comment>,
+)
 
 enum class PostType(label: String? = null) {
     Event,
-    Location;
+    Location,
+    Comment("Talk");
 
     val label = label ?: name
 }
