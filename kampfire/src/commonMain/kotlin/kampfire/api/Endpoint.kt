@@ -89,10 +89,11 @@ open class GetByIdEndpoint<Sent, Returned>(
     fun replaceClientId(id: Any) = this.clientIdTemplate.replace(":id", id.toString())
 }
 
+@Deprecated("use GetByIdEndpoint")
 open class GetByTableIdEndpoint<Id: TableId<*>, Returned>(
     parent: Endpoint<*,*>? = null,
     pathNode: String = "",
-): Endpoint<Returned, Unit>(HttpMethod.Get, parent, pathNode, true) {
+): Endpoint<Id, Returned>(HttpMethod.Get, parent, pathNode, true) {
     val clientIdTemplate: String get() = "$path/:id"
     fun replaceClientId(id: Id) = this.clientIdTemplate.replace(":id", id.value.toString())
 }

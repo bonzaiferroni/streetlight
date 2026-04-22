@@ -136,4 +136,8 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
     object Docs: GetByIdEndpoint<DocId, DocNode>(this, "doc")
     object SiteDocTable: GetEndpoint<List<DocTableItem>>(this, "doc-table")
 
+    object Comments: ApiNode(this, "comment") {
+        object ReadGalaxy: GetByIdEndpoint<GalaxyId, List<Comment>>(this, "galaxy")
+    }
+
 }
