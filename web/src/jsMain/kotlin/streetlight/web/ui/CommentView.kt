@@ -78,7 +78,11 @@ class CommentView(
         }
 
     fun ViewContext<TalkLog>.replyAction() {
-
+        if (stagedReplies.isNotEmpty()) {
+            showStagedReplies()
+        } else {
+            startReply()
+        }
     }
 
     fun ViewContext<TalkLog>.startReply() {
@@ -89,7 +93,6 @@ class CommentView(
             replaceRender(replyBlock) {
                 commentEditor("reply", "", modify(AutoMagic, SlideLeft)) { text ->
                     val commentId = model.createComment(comment.commentId, text)
-                    console.log(commentId)
 
                     return@commentEditor when (commentId) {
                         null -> null
@@ -130,6 +133,30 @@ class CommentView(
         }
     }
 
+    fun ViewContext<TalkLog>.stageReply(comment: Comment, isUserReply: Boolean) {
+        if (isUserReply) {
+            renderReplies(listOf(comment))
+        } else {
+            stagedReplies.add(comment)
+            replyButtonText.textContent = "show ${stagedReplies.size} new replies"
+        }
+    }
+
+    fun ViewContext<TalkLog>.showStagedReplies() {
+        val replies = stagedReplies.toList()
+        stagedReplies.clear()
+        renderReplies(replies)
+        replyButtonText.textContent = "reply"
+    }
+
+    private fun ViewContext<TalkLog>.renderReplies(comments: List<Comment>) {
+        prependRender(childBlock) {
+            comments.forEach { comment ->
+                addComment(comment, emptyList())
+            }
+        }
+    }
+
     fun ViewContext<TalkLog>.stageUpdate(text: String) {
         if (isUserComment) {
             updateTextContent(text)
@@ -151,10 +178,6 @@ class CommentView(
         replaceRender(contentBlock) {
             markdown(text)
         }
-    }
-
-    fun ViewContext<TalkLog>.stageReply(comment: Comment) {
-
     }
 
     fun ViewContext<TalkLog>.render(comments: List<Comment>) {
@@ -208,7 +231,7 @@ class CommentView(
                         zenButton {
                             _replyButtonText = textBlock("reply", modify(ButtonText))
                         }.onClick {
-                            startReply()
+                            replyAction()
                         }
                     }
                 }

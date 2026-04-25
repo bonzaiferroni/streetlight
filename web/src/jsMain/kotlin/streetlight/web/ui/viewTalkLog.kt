@@ -77,12 +77,19 @@ fun ViewContext<TalkLog>.buildTree(treeRoot: HTMLElement, history: TalkHistory) 
 }
 
 fun ViewContext<TalkLog>.growTree(treeRoot: HTMLElement, comment: Comment) {
-    val container = comment.parentId?.let { parentId ->
-        model.commentViews[parentId]?.also { it.rootBlock.modify(CommentClass.HasNestedContent) }?.childBlock
-    } ?: treeRoot
-
-    appendRender(container) {
-        addComment(comment, emptyList())
+    when (val parentId = comment.parentId) {
+        null -> {
+            appendRender(treeRoot) {
+                addComment(comment, emptyList())
+            }
+        }
+        else -> {
+            val parentView = model.commentViews[parentId] ?: return // incorrect, could be nested reply
+            val isUserReply = comment.username != null && comment.username == model.app.gate.stateNow.star?.username
+            with (parentView) {
+                stageReply(comment, isUserReply)
+            }
+        }
     }
 }
 
