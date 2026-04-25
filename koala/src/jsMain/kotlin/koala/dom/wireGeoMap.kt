@@ -69,7 +69,7 @@ fun wireMapWindow(
     // wireKeyboardControls(widget)
 
     val focusPanel = mapWindow.querySelector(GeoMapSelector.FocusPanel.selector) as HTMLElement
-    focusPanel.renderRoot(appScope) {
+    focusPanel.replaceRender(appScope) {
         val nearestFlow = geoMap.stateFlow.mapDistinct { it.focus }
         flowBlock(nearestFlow, modify(Magic, SlideUp)) { entity ->
             val content = entity?.focusContent ?: return@flowBlock

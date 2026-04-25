@@ -45,6 +45,7 @@ fun RenderContext.appNavigation(app: Streetlight) {
                 StreetlightScreen.AboutApp -> viewAboutApp()
                 StreetlightScreen.PrivacyPolicy -> viewPrivacyPolicy()
                 StreetlightScreen.SiteDoc -> viewSiteDocRoute()
+                StreetlightScreen.Talk -> viewTalkRoute()
                 else -> textBlock("Coming soon: $screen")
             }
         }

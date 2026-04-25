@@ -106,9 +106,18 @@ class FetchClient(
         return feedType.decode(array)
     }
 
-    fun connectSocket(endpoint: Endpoint<*, *>) = connectSocket(endpoint.path)
+    fun connectSocket(
+        endpoint: Endpoint<*, *>,
+        vararg params: Pair<String, String>
+    ) = connectSocket(endpoint.path, *params)
 
-    fun connectSocket(path: String): WebSocket {
+    fun connectSocket(
+        path: String,
+        vararg params: Pair<String, String>
+    ): WebSocket {
+        val path = params.takeIf { it.isNotEmpty() }?.let {
+            "$path?" + it.joinToString("&") { (k, v) -> "$k=$v" }
+        } ?: path
         val protocol = if (window.location.protocol == "https:") "wss:" else "ws:"
         val host = window.location.host
         val socket = WebSocket("$protocol//$host$path")

@@ -4,6 +4,7 @@
     --btn-font-size: .9rem;
     --btn-font-weight: 500;
     --btn-padding: .75rem 1rem;
+    --btn-border-radius: 1.25rem;
 }
 
 .btn {
@@ -12,7 +13,7 @@
     align-items: center;
     padding: var(--btn-padding);
     border: none;
-    border-radius: 1.25rem;
+    border-radius: var(--btn-border-radius);
     background: var(--primary-button);
     color: white;
     font-size: var(--btn-font-size);
@@ -25,6 +26,14 @@
     text-shadow: var(--btn-text-shadow);
     white-space: nowrap;
     min-width: calc(var(--unit-spacing) * 16);
+}
+
+.btn-text {
+    text-transform: uppercase;
+    font-weight: var(--btn-font-weight);
+    font-size: var(--btn-font-size);
+    line-height: 1rem;
+    white-space: nowrap;
 }
 
 .btn > :first-child { width: 1rem; text-align: center; opacity: .75; }

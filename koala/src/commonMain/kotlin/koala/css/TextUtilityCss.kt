@@ -26,4 +26,7 @@ val SingleLine = utilityOf("single-line", "white-space: nowrap", "overflow: hidd
 val TextOverflowHidden = utilityOf("text-overflow-hidden", "overflow: hidden", "text-overflow: ellipsis")
 val TextShadow = utilityOf("text-shadow", "text-shadow: var(--ink-shadow)")
 val UserSelectNone = utilityOf("user-select-none", "user-select: none")
+
+// defined in stylesheet
 val Prose = CssUtility("prose")
+val ButtonText = CssUtility("btn-text")

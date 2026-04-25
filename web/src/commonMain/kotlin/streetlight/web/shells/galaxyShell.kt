@@ -8,6 +8,7 @@ import streetlight.model.data.Galaxy
 import streetlight.model.data.PostListing
 import streetlight.model.data.PostType
 import streetlight.web.EarthMapRoute
+import streetlight.web.TalkRoute
 import streetlight.web.layouts.layoutPostListing
 import streetlight.web.layouts.layoutTalkPreview
 import streetlight.web.pages.appFooter
@@ -26,7 +27,7 @@ fun FlowContent.galaxyShell(content: GalaxyProfileContent) {
                     postMenu(galaxy)
                 }
                 if (galaxy.postTypes.contains(PostType.Comment)) {
-                    layoutTalkPreview(listing.comments)
+                    layoutTalkPreview(TalkRoute(galaxy.galaxyId), listing.comments)
                 }
                 layoutPostListing(galaxy.postTypes, listing)
                 appFooter(GalaxyProfileKey.SOURCE)

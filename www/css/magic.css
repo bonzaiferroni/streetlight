@@ -184,3 +184,23 @@
 .fade-loop {
     animation: loop-fade 2s ease-in-out infinite;
 }
+
+.auto-magic {
+    opacity: 1;
+    transition: opacity var(--magic-interval) var(--magic-easing);
+
+    @starting-style {
+        opacity: 0;
+    }
+}
+
+.auto-magic.slide-left {
+    transform: translate(0px, 0px);
+
+    transition: opacity var(--magic-interval) var(--magic-easing) var(--magic-interval),
+                transform var(--magic-interval) var(--magic-easing) var(--magic-interval);
+
+    @starting-style {
+        transform: var(--slide-left-initial);
+    }
+}

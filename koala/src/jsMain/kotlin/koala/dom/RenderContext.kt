@@ -1,13 +1,12 @@
 package koala.dom
 
-import koala.html.Id
-import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.dom.clear
 import kotlinx.html.dom.append
+import kotlinx.html.dom.prepend
 import org.w3c.dom.HTMLElement
 
 interface RenderContext: DOMContext {
@@ -18,17 +17,6 @@ class DOMRenderContext(
     consumer: DOMContext,
     override val renderScope: CoroutineScope,
 ): RenderContext, DOMContext by consumer
-
-fun HTMLElement.renderRoot(
-    scope: CoroutineScope,
-    block: RenderContext.() -> Unit
-) {
-    clear()
-    append {
-        val context = DOMRenderContext(this, scope)
-        context.block()
-    }
-}
 
 class RenderCache(
     val context: RenderContext,
@@ -61,4 +49,35 @@ fun createRender(
     block: RenderContext.() -> Unit
 ) = createRender(parent, scope, Unit) {
     block()
+}
+
+fun HTMLElement.replaceRender(
+    scope: CoroutineScope,
+    block: RenderContext.() -> Unit
+) {
+    clear()
+    append {
+        val context = DOMRenderContext(this, scope)
+        context.block()
+    }
+}
+
+fun HTMLElement.appendRender(
+    scope: CoroutineScope,
+    block: RenderContext.() -> Unit
+) {
+    append {
+        val context = DOMRenderContext(this, scope)
+        context.block()
+    }
+}
+
+fun HTMLElement.prependRender(
+    scope: CoroutineScope,
+    block: RenderContext.() -> Unit
+) {
+    prepend {
+        val context = DOMRenderContext(this, scope)
+        context.block()
+    }
 }

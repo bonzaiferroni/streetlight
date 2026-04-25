@@ -11,7 +11,7 @@ val DisplayUtilityCss
         // Shape
         CircleShape, CircleClip,
         // Border Radius
-        BorderRadius0, BorderRadius1, BorderRadius2, BorderRadius4, BorderRadius50P,
+        BorderRadius0, BorderRadius1, BorderRadius2, BorderRadius4, BorderRadius50P, BorderRadiusBottom1,
         BorderDashed2Px,
         // Color
         Accent, Primary, Secondary, Danger, NightInk, DayInk,
@@ -29,6 +29,8 @@ val DisplayUtilityCss
         Vignette, GradientDarkBottom,
         // Masks
         FadeBottom,
+        // Button
+        ButtonPadding, ButtonBorderRadius,
         // Misc
         Focus, Clickable, PointerEventsAuto, PointerEventsNone, BlurContent, AspectRatioAuto,
     )
@@ -64,6 +66,7 @@ val BorderRadius2 = utilityOf("border-radius-2", "border-radius: calc(var(--unit
 val BorderRadius4 = utilityOf("border-radius-4", "border-radius: calc(var(--unit-spacing) * 4)")
 val BorderRadius50P = utilityOf("border-radius-50p", "border-radius: 50%")
 val BorderDashed2Px = utilityOf("border: 2px dashed currentColor;")
+val BorderRadiusBottom1 = utilityOf("border-radius-bottom-1", "border-radius: 0 0 var(--unit-spacing) var(--unit-spacing)")
 
 // Color
 val Accent = CssUtility("accent")
@@ -105,10 +108,9 @@ val MoonShadow = utilityOf("moon-shadow", "box-shadow: var(--moon-shadow)")
 val MoonShadowText = utilityOf("moon-shadow-text", "text-shadow: var(--moon-shadow-text)")
 val MoonShadowInset = utilityOf("moon-shadow-inset", "box-shadow: var(--moon-shadow-inset)")
 
-// Theme
-val DayTheme = CssUtility("day-theme")
-val NeverDay = CssUtility("never-day")
-val Activate = CssUtility("activate")
+// Button
+val ButtonPadding = utilityOf("btn-padding", "padding: var(--btn-padding)")
+val ButtonBorderRadius = utilityOf("btn-border-radius", "border-radius: var(--btn-border-radius)")
 
 // Misc
 val FadeBottom = utilityOf(
@@ -124,9 +126,15 @@ background: linear-gradient(
 """.trimIndent())
 val Vignette = utilityOf("vignette", "box-shadow: inset 0 0 150px rgba(0, 0, 0, 0.6)")
 
-val Focus = CssUtility("focus")
-val Clickable = CssUtility("clickable")
 val PointerEventsAuto = utilityOf("pointer-events-auto", "pointer-events: auto")
 val PointerEventsNone = utilityOf("pointer-events-none", "pointer-events: none")
 val BlurContent = utilityOf("blur-content", "filter: var(--strong-blur)")
 val AspectRatioAuto = utilityOf("aspect-ratio-auto", "aspect-ratio: auto")
+
+
+// defined in stylesheet
+val DayTheme = CssUtility("day-theme")
+val NeverDay = CssUtility("never-day")
+val Activate = CssUtility("activate")
+val Focus = CssUtility("focus")
+val Clickable = CssUtility("clickable")

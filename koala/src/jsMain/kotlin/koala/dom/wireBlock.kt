@@ -1,6 +1,5 @@
 package koala.dom
 
-import koala.css.Class
 import koala.html.Id
 import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
@@ -21,23 +20,6 @@ fun RenderContext.wireBlock(
     return element
 }
 
-fun RenderContext.wireBlocks(
-    elementClass: Class,
-    ancestor: HTMLElement? = null,
-    wireOnView: Boolean = true,
-    scope: CoroutineScope = renderScope,
-    block: RenderContext.() -> Unit
-): List<HTMLElement> {
-    val elements = (ancestor ?: document.body)?.querySelectorAll(elementClass)
-    ?: error("couldn't find $elementClass")
-
-    elements.forEach {
-        wireBlock(it, wireOnView, scope, block)
-    }
-
-    return elements
-}
-
 fun RenderContext.wireBlock(
     element: HTMLElement,
     wireOnView: Boolean = true,
@@ -45,7 +27,7 @@ fun RenderContext.wireBlock(
     block: RenderContext.() -> Unit
 ) {
     fun wireElement() {
-        element.renderRoot(scope, block)
+        element.replaceRender(scope, block)
     }
 
     if (wireOnView) {

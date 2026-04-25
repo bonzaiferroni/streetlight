@@ -48,7 +48,8 @@ fun RenderContext.createAccountContent(app: Streetlight) {
                 binding = creator.isValidFlow,
                 provideValue = { if (it) "✅" else "❌"}
             )
-            button("Sign up", onClick = creator::createAccount, bindIsEnabled = creator.isValidFlow)
+            val button = button("Sign up", onClick = creator::createAccount)
+            configureEnabledFlow(button, creator.isValidFlow)
         }
         box(modify(PlaceItemsCenter)) {
             column(modify(MaxWidth50P)) {

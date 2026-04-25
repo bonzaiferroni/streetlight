@@ -1,5 +1,6 @@
 package streetlight.web.io
 
+import kampfire.api.StringId
 import kampfire.api.UserApi
 import kampfire.model.GeoBounds
 import kampfire.model.GeoPoint
@@ -56,6 +57,11 @@ class ApiClient(private val client: FetchClient) {
     fun connectChat(scope: CoroutineScope) = WebChatSocket(client.connectSocket(Api.Chat), scope)
     fun connectSpiritVision() = client.connectSocket(Api.Map.SpiritVision)
     fun connectOmniLog() = client.connectSocket(Api.Omni.Log)
+    fun connectTalkLog(stringId: StringId, space: SpaceType) = client.connectSocket(
+        Api.Talk.Connect,
+        "id" to stringId,
+        "space" to space.paramValue
+        )
 
     suspend fun readSongs() = client.get(Api.Songs)
     suspend fun createSong(song: NewSong) = client.post(Api.Songs.Create, song)
@@ -85,4 +91,7 @@ class ApiClient(private val client: FetchClient) {
     // docs
     suspend fun readSiteDoc(docId: DocId) = client.get(Api.Docs, docId)
     suspend fun readSiteDocTable() = client.get(Api.SiteDocTable)
+
+    // talk
+    suspend fun createComment(comment: NewComment) = client.postApi(Api.Talk.CreateComment, comment)
 }

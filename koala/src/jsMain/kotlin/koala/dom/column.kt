@@ -5,28 +5,23 @@ import koala.css.ModifierSet
 import koala.css.addModifiers
 import koala.css.modify
 import koala.html.Id
+import koala.html.setId
 import kotlinx.html.DIV
 import kotlinx.html.js.div
-import kotlinx.html.id
-import org.w3c.dom.HTMLDivElement
 
-inline fun DOMContext.column(
+fun DOMContext.column(
     id: Id?,
     modifiers: ModifierSet? = null,
-    crossinline content: DIV.() -> Unit,
+    block: DIV.() -> Unit = { },
 ) = column(modifiers) {
-    id?.let {
-        this.id = id.identifier
-    }
-    content()
+    setId(id)
+    block()
 }
 
-inline fun DOMContext.column(
+fun DOMContext.column(
     modifiers: ModifierSet? = null,
-    crossinline content: DIV.() -> Unit,
-): HTMLDivElement {
-    return div {
-        addModifiers(modify(Column, modifiers))
-        content()
-    }
+    block: DIV.() -> Unit = { },
+) = div {
+    addModifiers(modify(Column, modifiers))
+    block()
 }

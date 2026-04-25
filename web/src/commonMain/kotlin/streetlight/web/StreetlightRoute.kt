@@ -1,5 +1,6 @@
 package streetlight.web
 
+import kampfire.api.StringId
 import kampfire.api.TableId
 import koala.html.AppRoute
 import koala.html.AppScreen
@@ -8,12 +9,14 @@ import streetlight.model.data.Event
 import streetlight.model.data.EventEdit
 import streetlight.model.data.EventId
 import streetlight.model.data.EventLocation
+import streetlight.model.data.GalaxyId
 import streetlight.model.data.LocationEdit
 import streetlight.model.data.LocationId
 import streetlight.model.data.PostId
 import streetlight.model.data.Slug
 import streetlight.model.data.SongId
 import streetlight.model.data.TalentId
+import streetlight.model.data.SpaceType
 
 enum class StreetlightScreen(
     override val pathRoot: String,
@@ -44,6 +47,7 @@ enum class StreetlightScreen(
     AboutApp("about", { AboutRoute }),
     PrivacyPolicy("privacy", { PrivacyPolicyRoute }),
     SiteDoc("docs", { path -> path.provideRouteFromPath { SiteDocRoute(it) } }),
+    Talk("talk", { path -> path.provideRouteFromPath { TalkRoute(GalaxyId(it)) }})
 }
 
 fun List<String>.provideRouteFromPath(argIndex: Int = 1, provideRoute: (String) -> AppRoute?) =
@@ -57,12 +61,12 @@ sealed interface StreetlightRoute: AppRoute
 sealed interface StringIdRoute: StreetlightRoute {
     val id: TableId<String>?
 
-    override fun toHashPath() = id?.let { "${super.toHashPath()}/${it.value}" } ?: super.toHashPath()
+    override fun toHashPath() = toIdHashPath(id)
 }
 
 sealed interface SlugRoute: StreetlightRoute {
     val slug: Slug?
-    override fun toHashPath() = slug?.let { "${super.toHashPath()}/${it}" } ?: super.toHashPath()
+    override fun toHashPath() = toIdHashPath(slug)
 }
 
 object HomeRoute: StreetlightRoute {
@@ -108,7 +112,7 @@ data class EarthMapRoute(val galaxySlug: String?): StreetlightRoute {
     override val screen get() = StreetlightScreen.Earth
     override val title get() = "Earth"
 
-    override fun toHashPath() = galaxySlug?.let { "${super.toHashPath()}/${it}" } ?: super.toHashPath()
+    override fun toHashPath() = toIdHashPath(galaxySlug)
 }
 
 data class EditPostRoute(
@@ -239,5 +243,17 @@ data class SiteDocRoute(val docId: DocId): StreetlightRoute {
     override val screen get() = StreetlightScreen.SiteDoc
     override val title get() = "Documentation"
 
-    override fun toHashPath() = "${super.toHashPath()}/$docId"
+    override fun toHashPath() = toIdHashPath(docId)
 }
+
+data class TalkRoute(val stringId: StringId, val type: SpaceType): StreetlightRoute {
+    constructor(galaxyId: GalaxyId): this(galaxyId.value, SpaceType.Galaxy)
+
+    override val screen get() = StreetlightScreen.Talk
+    override val title get() = "Talk"
+
+    override fun toHashPath() = toIdHashPath(stringId)
+}
+
+private fun AppRoute.toIdHashPath(id: String?) = id?.let { "$basePath/$id" } ?: basePath
+private fun AppRoute.toIdHashPath(id: TableId<String>?) = toIdHashPath(id?.value)

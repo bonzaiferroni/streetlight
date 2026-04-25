@@ -11,6 +11,10 @@ class Store<T>(
     val flow = state.asStateFlow()
     val now get() = state.value
 
+    fun set(value: T) {
+        state.value = value
+    }
+
     fun set(setter: (T) -> T) {
         state.value = setter(now)
     }

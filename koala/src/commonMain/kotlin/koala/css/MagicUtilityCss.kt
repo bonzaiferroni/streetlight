@@ -10,3 +10,5 @@ val SlideUp = CssUtility("slide-up")
 val SlideRight = CssUtility("slide-right")
 val SlideDown = CssUtility("slide-down")
 val Scale = CssUtility("scale")
+
+val AutoMagic = CssUtility("auto-magic")

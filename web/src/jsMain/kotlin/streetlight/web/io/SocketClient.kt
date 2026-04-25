@@ -9,7 +9,6 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.cbor.Cbor
-import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.serializer
 import org.khronos.webgl.ArrayBuffer
 import org.khronos.webgl.Int8Array
@@ -18,20 +17,18 @@ import org.khronos.webgl.set
 import org.w3c.dom.ARRAYBUFFER
 import org.w3c.dom.BinaryType
 
-class SocketClient<T>(
+class SocketClient<Message, Request>(
     private val scope: CoroutineScope,
-    private val serializer: KSerializer<T>,
-    private val serializersModule: SerializersModule? = null,
+    private val messageSerializer: KSerializer<Message>,
+    private val requestSerializer: KSerializer<Request>? = null,
     private val provideSocket: suspend () -> WebSocket,
 ) {
-    private val _itemFlow = MutableSharedFlow<T>(0, 8)
-    val itemFlow: Flow<T> = _itemFlow
+    private val _itemFlow = MutableSharedFlow<Message>(0, 8)
+    val messageFlow: Flow<Message> = _itemFlow
 
     private var socket: WebSocket? = null
 
-    private val cbor = serializersModule?.let {
-        Cbor { serializersModule = it }
-    } ?: defaultCbor
+    private val cbor = defaultCbor
 
     fun connect() {
         scope.launch {
@@ -56,9 +53,9 @@ class SocketClient<T>(
         this.socket = null
     }
 
-    fun send(message: T) {
+    fun send(request: Request) {
         val socket = socket ?: error("socket not connected: ${this::class.simpleName}")
-        val bytes = encode(message)
+        val bytes = encode(request)
         socket.send(bytes.toInt8Array().buffer)
     }
 
@@ -67,11 +64,13 @@ class SocketClient<T>(
             for (i in indices) arr[i] = this[i]
         }
 
-    private fun encode(message: T): ByteArray =
-        cbor.encodeToByteArray(serializer, message)
+    private fun encode(request: Request): ByteArray = requestSerializer?.let {
+        cbor.encodeToByteArray(it, request)
+    } ?: error("request serializer not found")
 
-    private fun decode(bytes: ByteArray): T? = try {
-        cbor.decodeFromByteArray(serializer, bytes)
+
+    private fun decode(bytes: ByteArray): Message? = try {
+        cbor.decodeFromByteArray(messageSerializer, bytes)
     } catch (e: Exception) {
         console.log(e.message)
         null
@@ -80,8 +79,12 @@ class SocketClient<T>(
 
 val defaultCbor = Cbor.Default
 
-inline fun <reified T> socketClientOf(
+inline fun <reified Message> socketClientOf(
     scope: CoroutineScope,
-    serializersModule: SerializersModule? = null,
     noinline provideSocket: suspend () -> WebSocket,
-): SocketClient<T> = SocketClient(scope, serializer(), serializersModule, provideSocket)
+): SocketClient<Message, Unit> = SocketClient(scope, serializer(), null, provideSocket)
+
+inline fun <reified Message, reified Request> socketRequestClientOf(
+    scope: CoroutineScope,
+    noinline provideSocket: suspend () -> WebSocket,
+): SocketClient<Message, Request> = SocketClient(scope, serializer(), serializer(), provideSocket)

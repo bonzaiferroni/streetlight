@@ -14,7 +14,7 @@ val LayoutUtilityCss
         AlignSelfStart, AlignSelfCenter, AlignSelfEnd, AlignSelfStretch, JustifySelfStart, JustifySelfStretch,
         // Width
         WidthAuto, Width100P, WidthFitContent,
-        Width2, Width4, Width5, Width8, Width12, Width16, Width24, Width32, Width64,
+        Width1, Width2, Width4, Width5, Width8, Width12, Width16, Width24, Width32, Width64,
         MinWidth0, MinWidth16, MinWidth32, MinWidth36, MinWidth48, MinWidthAuto, MaxWidth25P, MaxWidth50P,
         MaxWidth5, MaxWidth16, MaxWidth32, MaxWidth48, MaxWidth64,
         // Height
@@ -32,7 +32,8 @@ val LayoutUtilityCss
         MarginLeft1, MarginLeft2, MarginRight1, MarginRight2, MarginBottom1, MarginBottom2, MarginBottom16,
         MarginX1, MarginX2, MarginX4,
         // Padding
-        Padding0, Padding1, Padding2, Padding4, PaddingTiny, PaddingLeft1, PaddingLeft3, PaddingRight3,
+        Padding0, Padding1, Padding2, Padding4, PaddingTiny, PaddingLeft1, PaddingLeft2, PaddingLeft3, PaddingRight3,
+        PaddingTop1,
         PaddingX1, PaddingY1, PaddingY2,
         // Object Fit
         ObjectFitCover, ObjectFitContain, ObjectPositionCenter, ObjectFitFill,
@@ -82,6 +83,7 @@ val JustifyContentStart = utilityOf("justify-content-start", "justify-content: f
 val WidthAuto = utilityOf("width-auto", "width: auto")
 val Width100P = utilityOf("width-100", "width: 100%")
 val WidthFitContent = utilityOf("width-fit-content", "width: fit-content")
+val Width1 = utilityOf("width-1", "width: var(--unit-spacing)")
 val Width2 = utilityOf("width-2", "width: calc(var(--unit-spacing) * 2)")
 val Width4 = utilityOf("width-4", "width: calc(var(--unit-spacing) * 4)")
 val Width5 = utilityOf("width-5", "width: calc(var(--unit-spacing) * 5)")
@@ -151,7 +153,7 @@ val TextAlignRight = utilityOf("text-align-right", "text-align: right")
 
 // Row / Wrap
 val FlexDirectionRowReverse = utilityOf("row-reverse", "flex-direction: row-reverse")
-val FlexDirectionRow = utilityOf("row", "flex-direction: row")
+val FlexDirectionRow = utilityOf("flex-direction-row", "flex-direction: row")
 val QueryRowReverse = CssUtility("query-row-reverse")
 val NoWrap = utilityOf("no-wrap", "flex-wrap: nowrap", "white-space: nowrap")
 val WrapFlex = utilityOf("wrap-flex", "flex-wrap: wrap")
@@ -195,8 +197,10 @@ val Padding2 = utilityOf("padding-2", "padding: calc(var(--unit-spacing) * 2)")
 val Padding4 = utilityOf("padding-4", "padding: calc(var(--unit-spacing) * 4)")
 val PaddingTiny = utilityOf("padding-tiny", "padding: 2px")
 val PaddingLeft1 = utilityOf("padding-left-1", "padding-left: var(--unit-spacing)")
-val PaddingLeft3 = utilityOf("padding-left-3", "padding-left: calc(var(--unit-spacing) * 3)")
+val PaddingLeft2 = utilityOf("padding-left-2", "padding-left: var(--unit-spacing-2)")
+val PaddingLeft3 = utilityOf("padding-left-3", "padding-left: var(--unit-spacing-3)")
 val PaddingRight3 = utilityOf("padding-right-3", "padding-right: calc(var(--unit-spacing) * 3)")
+val PaddingTop1 = utilityOf("padding-top-1", "padding-top: var(--unit-spacing)")
 val PaddingX1 = utilityOf("padding-x-1", "padding-left: var(--unit-spacing)", "padding-right: var(--unit-spacing)")
 val PaddingY1 = utilityOf("padding-y-1", "padding-top: var(--unit-spacing)", "padding-bottom: var(--unit-spacing)")
 val PaddingY2 = utilityOf("padding-y-2", "padding-top: var(--unit-spacing-2)", "padding-bottom: var(--unit-spacing-2)")

@@ -7,6 +7,7 @@ import koala.css.ModifierSet
 import koala.css.addModifiers
 import koala.css.modify
 import koala.html.BtnKey
+import koala.html.configureButton
 import koala.html.configureElementButton
 import koala.html.configureSvgButton
 import koala.html.span
@@ -17,46 +18,32 @@ import kotlinx.html.js.button
 import org.w3c.dom.HTMLButtonElement
 import org.w3c.dom.events.Event
 
-fun RenderContext.button(
+fun DOMContext.button(
     text: String,
     modifiers: ModifierSet? = null,
     onClick: (() -> Unit)? = null,
     onClickEvent: ((Event) -> Unit)? = null,
-    bindIsEnabled: Flow<Boolean>? = null,
     flair: String? = null,
     block: BUTTON.() -> Unit = {},
 ): HTMLButtonElement {
     val element = button {
-        addModifiers(modify(BtnKey.Class, modifiers))
-//        setId(id)
-//        setStyle(styles)
-        block()
-        flair?.let {
-            span {
-                +flair
-            }
-        }
-        span {
-            +text
-        }
+        configureButton(text, modifiers, flair, block)
     }
 
     configureButtonEvents(
         element = element,
         onClick = onClick,
         onClickEvent = onClickEvent,
-        bindIsEnabled = bindIsEnabled
     )
 
     return element
 }
 
-fun RenderContext.button(
+fun DOMContext.button(
     svg: Svg,
     modifiers: ModifierSet? = modify(Aspect1, Height3),
     onClick: (() -> Unit)? = null,
     onClickEvent: ((Event) -> Unit)? = null,
-    bindIsEnabled: Flow<Boolean>? = null,
     block: BUTTON.() -> Unit = {},
 ): HTMLButtonElement {
     val element = button {
@@ -67,17 +54,15 @@ fun RenderContext.button(
         element = element,
         onClick = onClick,
         onClickEvent = onClickEvent,
-        bindIsEnabled = bindIsEnabled
     )
 
     return element
 }
 
-fun RenderContext.button(
+fun DOMContext.button(
     modifiers: ModifierSet? = null,
     onClick: (() -> Unit)? = null,
     onClickEvent: ((Event) -> Unit)? = null,
-    bindIsEnabled: Flow<Boolean>? = null,
     block: BUTTON.() -> Unit = {},
 ): HTMLButtonElement {
     val element = button {
@@ -88,17 +73,15 @@ fun RenderContext.button(
         element = element,
         onClick = onClick,
         onClickEvent = onClickEvent,
-        bindIsEnabled = bindIsEnabled
     )
 
     return element
 }
 
-fun RenderContext.configureButtonEvents(
+private fun configureButtonEvents(
     element: HTMLButtonElement,
     onClick: (() -> Unit)? = null,
     onClickEvent: ((Event) -> Unit)? = null,
-    bindIsEnabled: Flow<Boolean>? = null,
 ) {
     onClickEvent?.let {
         element.addEventListener("click", it)
@@ -107,8 +90,13 @@ fun RenderContext.configureButtonEvents(
     onClick?.let {
         element.addEventListener("click", { it() })
     }
+}
 
-    bindIsEnabled?.let {
+fun RenderContext.configureEnabledFlow(
+    element: HTMLButtonElement,
+    flow: Flow<Boolean>? = null,
+) {
+    flow?.let {
         renderScope.launch {
             it.collect { isEnabled ->
                 element.disabled = !isEnabled
@@ -116,37 +104,3 @@ fun RenderContext.configureButtonEvents(
         }
     }
 }
-
-
-
-//fun <T> WireContext<T>.button(
-//    text: (T) -> String,
-//    modifiers: ModifierSet? = null,
-//    onClick: (() -> Unit)? = null,
-//    onClickEvent: ((Event) -> Unit)? = null,
-//    isEnabled: ((T) -> Boolean)? = null,
-//    block: BUTTON.() -> Unit = {},
-//) {
-//    val element = button(
-//        text = text(state.now),
-//        modifiers = modifiers,
-//        onClick = onClick,
-//        onClickEvent = onClickEvent,
-//        isEnabled = isEnabled?.let { isEnabled -> state.flow.mapDistinct { isEnabled(it) }},
-//        block = block
-//    )
-////    val element = button(
-////        text = text(state.now),
-////        modifiers = modifiers,
-////        onClick = onClick,
-////        onClickEvent = onClickEvent,
-////        bindIsEnabled = isEnabled?.let { isEnabled -> state.flow.mapDistinct { isEnabled(it) }},
-////        block = block
-////    )
-//
-//    renderScope.launch {
-//        state.flow.collect {
-//            element.textContent = text(it)
-//        }
-//    }
-//}

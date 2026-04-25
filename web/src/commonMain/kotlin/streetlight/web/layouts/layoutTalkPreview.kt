@@ -8,9 +8,10 @@ import kotlinx.html.FlowContent
 import streetlight.model.data.Comment
 import streetlight.model.data.CommentId
 import streetlight.web.StarRoute
+import streetlight.web.TalkRoute
 import streetlight.web.shells.SectionHeadingMod
 
-fun FlowContent.layoutTalkPreview(comments: List<Comment>) {
+fun FlowContent.layoutTalkPreview(route: AppRoute, comments: List<Comment>) {
     val comments = comments.sortedBy { it.createdAt }
     val childIds = mutableListOf<CommentId>()
 
@@ -22,7 +23,7 @@ fun FlowContent.layoutTalkPreview(comments: List<Comment>) {
 
         column {
             row(modify(AlignItemsCenter, modify(Height5))) {
-                navigation(StarRoute(comment.username)) {
+                navigationIfNotNull(comment.username?.let { StarRoute(it)}) {
                     row(modify(AlignItemsCenter)) {
                         image(comment.thumb, modify(Aspect1))
                         heading5(comment.username)
@@ -59,7 +60,7 @@ fun FlowContent.layoutTalkPreview(comments: List<Comment>) {
         comments.forEach {
             layoutComment(it)
         }
-        if (comments.isEmpty()) {
+        navigation(route) {
             column(modify(AlignItemsCenter, JustifyContentCenter, Height12)) {
                 textBlock("No comments here yet, be the first.", modify(OpacityMost))
             }

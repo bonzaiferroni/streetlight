@@ -15,7 +15,7 @@ class OmniLog(
     private val scope: CoroutineScope,
     private val api: ApiClient
 ) {
-    private val client: SocketClient<OmniMessage> = socketClientOf(scope) { api.connectOmniLog() }
+    private val client: SocketClient<OmniMessage, Unit> = socketClientOf(scope) { api.connectOmniLog() }
 
     private val state = storeOf(OmniLogState())
     val stateFlow = state.flow
@@ -28,7 +28,7 @@ class OmniLog(
 
     init {
         scope.launch {
-            client.itemFlow.collect {
+            client.messageFlow.collect {
                 takeMessage(it)
             }
         }

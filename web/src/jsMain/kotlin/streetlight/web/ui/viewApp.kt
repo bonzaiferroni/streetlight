@@ -25,7 +25,7 @@ fun viewApp() {
 
         val portalMount = document.getElementById(AppBodyKey.PortalMountId)
 
-        portalMount.renderRoot(app.appScope) {
+        portalMount.replaceRender(app.appScope) {
             // renders routes from portal.routeFlow
             appNavigation(app)
             // shows user badge in upper right corner

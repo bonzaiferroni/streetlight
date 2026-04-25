@@ -12,12 +12,7 @@ fun FlowContent.markdown(
     text: String,
     modifiers: ModifierSet? = null,
     block: DIV.() -> Unit = {}
-) {
-    val blocks = markdownBlocksOf(text)
-    div {
-        configureMarkdown(blocks, modifiers, block)
-    }
-}
+) = markdown(markdownBlocksOf(text), modifiers, block)
 
 fun DIV.configureMarkdown(
     blocks: List<MarkdownBlock>,

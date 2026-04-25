@@ -55,6 +55,16 @@ fun FlowContent.navigation(
 }
 
 fun FlowContent.navigationIfNotNull(
+    route: AppRoute? = null,
+    text: String = "",
+    modifiers: ModifierSet? = null,
+    id: Id? = null,
+    block: FlowContent.() -> Unit = {}
+) {
+    navigationIfNotNull(route?.toHashPath(), text, modifiers, id, block)
+}
+
+fun FlowContent.navigationIfNotNull(
     href: String? = null,
     text: String = "",
     modifiers: ModifierSet? = null,

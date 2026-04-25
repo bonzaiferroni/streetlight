@@ -125,18 +125,14 @@ textarea {
     font-family: var(--font-family);
     outline: none;
     padding: var(--unit-spacing);
-    font-size: 1rem;
+    font-size: var(--paragraph-size);
     background-color: var(--void-bg);
     color: rgb(var(--ink));
-    line-height: 1.5rem;
+    line-height: var(--paragraph-line-height);
 
     border: 1px solid var(--void-border);
     border-radius: var(--unit-spacing);
     box-shadow: var(--input-shadow);
-}
-
-input, button, textarea, select {
-    font: inherit;
 }
 
 input[type="checkbox"] {
