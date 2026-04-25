@@ -83,11 +83,11 @@ html {
     font-size: 100%;
 }
 
-/*@media (max-width: 600px) {*/
-/*    html {*/
-/*        font-size: 90%;*/
-/*    }*/
-/*}*/
+@media (max-width: 600px) {
+    html {
+        font-size: 87.5%; 
+    }
+}
 
 body {
     font-family: var(--font-family);
@@ -204,4 +204,6 @@ img {
     height: auto;
     display: block;
 }
+
+
 """

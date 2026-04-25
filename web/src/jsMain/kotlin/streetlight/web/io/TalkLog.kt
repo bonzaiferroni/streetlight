@@ -3,7 +3,6 @@ package streetlight.web.io
 import kampfire.api.StringId
 import kampfire.model.Ok
 import kampfire.model.Problem
-import koala.model.mapDistinct
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -11,13 +10,16 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import streetlight.model.data.*
+import streetlight.web.model.Streetlight
+import streetlight.web.ui.CommentView
+import streetlight.web.ui.ViewModel
 
 class TalkLog(
     private val scope: CoroutineScope,
-    private val api: ApiClient,
+    override val app: Streetlight,
     private val spaceId: StringId,
     private val spaceType: SpaceType,
-) {
+): ViewModel {
     private val client: SocketClient<TalkMessage, TalkRequest> = socketRequestClientOf(scope) {
         api.connectTalkLog(spaceId, spaceType)
     }
@@ -29,6 +31,8 @@ class TalkLog(
 
     private val _messageFlow = MutableSharedFlow<TalkMessage>()
     val messageFlow: Flow<TalkMessage> = _messageFlow
+
+    val commentViews = mutableMapOf<CommentId, CommentView>()
 
     init {
         scope.launch {
