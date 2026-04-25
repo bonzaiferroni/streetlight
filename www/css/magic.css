@@ -8,6 +8,9 @@
     --glow-background-infinite: glow-background 10s infinite linear;
     --glow-background-short: glow-background 3s linear;
     --glow-flash-short: glow-flash 3s linear;
+
+    --transition-opacity: opacity var(--magic-interval) var(--magic-easing);
+    --transition-transform: transform var(--magic-interval) var(--magic-easing);
 }
 
 .glow {
@@ -187,7 +190,7 @@
 
 .auto-magic {
     opacity: 1;
-    transition: opacity var(--magic-interval) var(--magic-easing);
+    transition: var(--transition-opacity);
 
     @starting-style {
         opacity: 0;
@@ -197,8 +200,7 @@
 .auto-magic.slide-left {
     transform: translate(0px, 0px);
 
-    transition: opacity var(--magic-interval) var(--magic-easing) var(--magic-interval),
-                transform var(--magic-interval) var(--magic-easing) var(--magic-interval);
+    transition: var(--transition-opacity), var(--transition-transform);
 
     @starting-style {
         transform: var(--slide-left-initial);

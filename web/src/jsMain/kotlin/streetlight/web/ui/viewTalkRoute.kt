@@ -1,6 +1,5 @@
 package streetlight.web.ui
 
-import kampfire.api.StringId
 import koala.css.*
 import koala.dom.*
 import koala.html.filigree
@@ -8,10 +7,10 @@ import koala.html.heading1
 import koala.model.storeOf
 import kotlinx.coroutines.launch
 import org.w3c.dom.HTMLElement
+import org.w3c.dom.HTMLParagraphElement
 import streetlight.model.data.Comment
 import streetlight.model.data.CommentId
 import streetlight.model.data.TalkHistory
-import streetlight.model.data.SpaceType
 import streetlight.model.data.TalkComment
 import streetlight.web.TalkRoute
 import streetlight.web.io.TalkLog
@@ -22,7 +21,7 @@ fun ViewContext<TalkLog>.viewTalkLog() {
 
     column {
         filigree { heading1("Talk") }
-        commentEditor("comment", null)
+        commentEditor("comment", null, "", false)
         treeRoot = column { }
     }
 
@@ -62,7 +61,7 @@ fun ViewContext<TalkLog>.buildTree(treeRoot: HTMLElement, history: TalkHistory) 
 
 fun ViewContext<TalkLog>.growTree(treeRoot: HTMLElement, comment: Comment) {
     val container = comment.parentId?.let { parentId ->
-        model.commentViews[parentId]?.also { it.body.modify(TalkLogClass.HasNestedContent) }?.childColumn
+        model.commentViews[parentId]?.also { it.rootBlock.modify(CommentClass.HasNestedContent) }?.childBlock
     } ?: treeRoot
 
     appendRender(container) {
@@ -73,10 +72,12 @@ fun ViewContext<TalkLog>.growTree(treeRoot: HTMLElement, comment: Comment) {
 fun ViewContext<TalkLog>.commentEditor(
     label: String,
     parentId: CommentId?,
+    initialText: String,
+    isEdit: Boolean,
     modifiers: ModifierSet? = null,
     onComplete: ((CommentId?) -> Unit)? = null
 ) {
-    val text = storeOf("")
+    val text = storeOf(initialText)
 
     column(modifiers) {
         textEditor(label, flow = text.flow, onValue = text::set)
@@ -84,17 +85,55 @@ fun ViewContext<TalkLog>.commentEditor(
             button("send", onClick = {
                 if (text.now.isEmpty()) return@button
                 renderScope.launch {
-                    val commentId = model.sendComment(parentId, text.now)
-                    if (commentId != null) {
-                        text.set("")
+                    when (isEdit) {
+                        true -> {
+
+                        }
+                        else -> {
+                            val commentId = model.sendComment(parentId, text.now)
+                            if (commentId != null) {
+                                text.set("")
+                            }
+                            onComplete?.invoke(commentId)
+                        }
                     }
-                    onComplete?.invoke(commentId)
                 }
             })
         }
     }
 }
 
-fun DOMContext.softButton(text: String) = row(modify(ZenCardBg, ButtonBorderRadius, ButtonPadding)) {
-    textBlock(text, modify(ButtonText))
+fun ViewContext<TalkLog>.addComment(comment: Comment, comments: List<Comment>) {
+    if (model.commentViews.contains(comment.commentId)) return
+    val isUserComment = model.app.gate.stateNow.star?.username == comment.username
+
+    val view = CommentView(comment, isUserComment)
+    with (view) {
+        render(comments)
+    }
+
+    model.commentViews[comment.commentId] = view
+}
+
+fun DOMContext.zenButton(text: String, toggleText: String? = null): HTMLElement {
+    var isToggled = false
+
+    var textElement: HTMLParagraphElement? = null
+
+    val element = row(modify(ZenCardBg, ButtonBorderRadius, ButtonPadding)) {
+        textElement = textBlock(text, modify(ButtonText))
+    }
+
+    if (toggleText != null && textElement != null) {
+        element.onClick {
+            isToggled = !isToggled
+            if (isToggled) {
+                textElement.textContent = toggleText
+            } else {
+                textElement.textContent = text
+            }
+        }
+    }
+
+    return element
 }

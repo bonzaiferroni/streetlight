@@ -34,6 +34,8 @@ class TalkLog(
 
     val commentViews = mutableMapOf<CommentId, CommentView>()
 
+    val comments = mutableListOf<Comment>()
+
     init {
         scope.launch {
             client.messageFlow.collect {
