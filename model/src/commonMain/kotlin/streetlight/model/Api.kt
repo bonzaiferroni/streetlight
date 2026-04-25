@@ -140,6 +140,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object ReadGalaxy: GetByIdEndpoint<GalaxyId, List<Comment>>(this, "galaxy")
         object Connect: ApiNode(this, "connect")
         object CreateComment: PostEndpoint<NewComment, CommentId>(this, "create")
+        object UpdateComment: PostEndpoint<UpdatedComment, Boolean>(this, "update")
     }
 
 }

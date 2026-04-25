@@ -94,4 +94,5 @@ class ApiClient(private val client: FetchClient) {
 
     // talk
     suspend fun createComment(comment: NewComment) = client.postApi(Api.Talk.CreateComment, comment)
+    suspend fun updateComment(comment: UpdatedComment) = client.postApi(Api.Talk.UpdateComment, comment)
 }

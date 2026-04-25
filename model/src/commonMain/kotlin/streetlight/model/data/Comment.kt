@@ -39,3 +39,10 @@ data class NewComment(
 ) {
     val galaxyId get() = if (spaceType == SpaceType.Galaxy) GalaxyId(spaceId) else error("invalid SpaceType")
 }
+
+@Serializable
+data class UpdatedComment(
+    val commentId: CommentId,
+    val spaceId: StringId,
+    val text: String,
+)

@@ -1,17 +1,21 @@
 package streetlight.web.ui
 
+import io.ktor.util.collections.setValue
 import koala.css.*
 import koala.dom.*
 import koala.html.filigree
 import koala.html.heading1
+import koala.html.spacer
 import koala.model.storeOf
 import kotlinx.coroutines.launch
+import kotlinx.html.DIV
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLParagraphElement
 import streetlight.model.data.Comment
 import streetlight.model.data.CommentId
 import streetlight.model.data.TalkHistory
-import streetlight.model.data.TalkComment
+import streetlight.model.data.CommentCreated
+import streetlight.model.data.CommentUpdated
 import streetlight.web.TalkRoute
 import streetlight.web.io.TalkLog
 import streetlight.web.model.Streetlight
@@ -21,8 +25,16 @@ fun ViewContext<TalkLog>.viewTalkLog() {
 
     column {
         filigree { heading1("Talk") }
-        commentEditor("comment", null, "", false)
+        commentEditor("comment", "") {
+            val commentId = model.createComment(null, it)
+            return@commentEditor when (commentId) {
+                null -> null
+                else -> ""
+            }
+        }
         treeRoot = column { }
+
+        appFooter("")
     }
 
     renderScope.launch {
@@ -31,8 +43,13 @@ fun ViewContext<TalkLog>.viewTalkLog() {
                 is TalkHistory -> {
                     buildTree(treeRoot!!, message)
                 }
-                is TalkComment -> {
+
+                is CommentCreated -> {
                     growTree(treeRoot!!, message.comment)
+                }
+
+                is CommentUpdated -> {
+                    updateComment(message)
                 }
             }
         }
@@ -69,33 +86,32 @@ fun ViewContext<TalkLog>.growTree(treeRoot: HTMLElement, comment: Comment) {
     }
 }
 
+fun ViewContext<TalkLog>.updateComment(message: CommentUpdated) {
+    val view = model.commentViews[message.commentId] ?: return
+
+    with(view) {
+        stageUpdate(message.text)
+    }
+}
+
 fun ViewContext<TalkLog>.commentEditor(
     label: String,
-    parentId: CommentId?,
     initialText: String,
-    isEdit: Boolean,
     modifiers: ModifierSet? = null,
-    onComplete: ((CommentId?) -> Unit)? = null
+    send: suspend (String) -> String?
 ) {
     val text = storeOf(initialText)
 
-    column(modifiers) {
-        textEditor(label, flow = text.flow, onValue = text::set)
+    column(modify(Height100P, modifiers)) {
+        textEditor(label, modify(Flex1), flow = text.flow, onValue = text::set)
         row {
+            spacer(modify(Flex1))
             button("send", onClick = {
                 if (text.now.isEmpty()) return@button
                 renderScope.launch {
-                    when (isEdit) {
-                        true -> {
-
-                        }
-                        else -> {
-                            val commentId = model.sendComment(parentId, text.now)
-                            if (commentId != null) {
-                                text.set("")
-                            }
-                            onComplete?.invoke(commentId)
-                        }
+                    val resultText = send(text.now)
+                    if (resultText != null) {
+                        text.set(resultText)
                     }
                 }
             })
@@ -105,35 +121,17 @@ fun ViewContext<TalkLog>.commentEditor(
 
 fun ViewContext<TalkLog>.addComment(comment: Comment, comments: List<Comment>) {
     if (model.commentViews.contains(comment.commentId)) return
-    val isUserComment = model.app.gate.stateNow.star?.username == comment.username
+    val isUserComment = model.app.gate.stateNow.star?.username == comment.username && comment.username != null
 
     val view = CommentView(comment, isUserComment)
-    with (view) {
+    with(view) {
         render(comments)
     }
 
     model.commentViews[comment.commentId] = view
 }
 
-fun DOMContext.zenButton(text: String, toggleText: String? = null): HTMLElement {
-    var isToggled = false
-
-    var textElement: HTMLParagraphElement? = null
-
-    val element = row(modify(ZenCardBg, ButtonBorderRadius, ButtonPadding)) {
-        textElement = textBlock(text, modify(ButtonText))
+fun DOMContext.zenButton(modifiers: ModifierSet? = null, block: DIV.() -> Unit) =
+    row(modify(modifiers, ZenCardBg, ButtonBorderRadius, ButtonPadding)) {
+        block()
     }
-
-    if (toggleText != null && textElement != null) {
-        element.onClick {
-            isToggled = !isToggled
-            if (isToggled) {
-                textElement.textContent = toggleText
-            } else {
-                textElement.textContent = text
-            }
-        }
-    }
-
-    return element
-}

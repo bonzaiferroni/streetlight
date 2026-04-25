@@ -51,7 +51,19 @@ class TalkLog(
 
     }
 
-    suspend fun sendComment(parentId: CommentId?, text: String): CommentId? {
+    suspend fun updateComment(commentId: CommentId, text: String): Boolean? {
+        val response = api.updateComment(UpdatedComment(
+            commentId = commentId,
+            spaceId = spaceId,
+            text = text
+        )) ?: return null
+        return when (response) {
+            is Ok -> response.data
+            is Problem -> null
+        }
+    }
+
+    suspend fun createComment(parentId: CommentId?, text: String): CommentId? {
         val response = api.createComment(NewComment(
             spaceId = spaceId,
             spaceType = spaceType,

@@ -11,8 +11,14 @@ data class TalkHistory(
 ): TalkMessage
 
 @Serializable
-data class TalkComment(
+data class CommentCreated(
     val comment: Comment
+): TalkMessage
+
+@Serializable
+data class CommentUpdated(
+    val commentId: CommentId,
+    val text: String,
 ): TalkMessage
 
 @Serializable

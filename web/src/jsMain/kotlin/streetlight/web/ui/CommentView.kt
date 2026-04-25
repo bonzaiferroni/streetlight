@@ -9,20 +9,28 @@ import koala.html.markdown
 import koala.html.navigationIfNotNull
 import koala.html.spacer
 import kotlinx.browser.document
+import kotlinx.dom.clear
 import org.w3c.dom.HTMLElement
+import org.w3c.dom.HTMLParagraphElement
 import streetlight.model.data.Comment
 import streetlight.web.StarRoute
 import streetlight.web.io.TalkLog
 
 class CommentView(
-    val comment: Comment,
+    comment: Comment,
     val isUserComment: Boolean,
 ) {
+    var comment = comment
+        private set
+
     private var _rootBlock: HTMLElement? = null
     private var _childBlock: HTMLElement? = null
     private var _replyBlock: HTMLElement? = null
     private var _bodyBlock: HTMLElement? = null
     private var _editBlock: HTMLElement? = null
+    private var _contentBlock: HTMLElement? = null
+    private var _editButtonText: HTMLParagraphElement? = null
+    private var _replyButtonText: HTMLParagraphElement? = null
     private var _hasChildren: Boolean = false
 
     val rootBlock get() = _rootBlock ?: error("body not found")
@@ -30,14 +38,23 @@ class CommentView(
     val replyBlock get() = _replyBlock ?: error("reply element not found")
     val bodyBlock get() = _bodyBlock ?: error("body block not found")
     val editBlock get() = _editBlock ?: error("edit block not found")
+    val contentBlock get() = _contentBlock ?: error("content block not found")
+    val editButtonText get() = _editButtonText ?: error("edit button text not found")
+    val replyButtonText get() = _replyButtonText ?: error("reply button text not")
     val hasChildren get() = _hasChildren
 
     var isEditing
         get() = bodyBlock.isModified(CommentClass.IsEditing)
         set(value: Boolean) {
             when (value) {
-                true -> bodyBlock.modify(CommentClass.IsEditing)
-                false -> bodyBlock.unmodify(CommentClass.IsEditing)
+                true -> {
+                    bodyBlock.modify(CommentClass.IsEditing)
+                    editButtonText.textContent = "cancel"
+                }
+                false -> {
+                    bodyBlock.unmodify(CommentClass.IsEditing)
+                    editButtonText.textContent = "edit"
+                }
             }
         }
 
@@ -45,8 +62,14 @@ class CommentView(
         get() = replyBlock.isModified(CommentClass.IsReplying)
         set(value: Boolean) {
             when (value) {
-                true -> replyBlock.modify(CommentClass.IsReplying)
-                false -> replyBlock.unmodify(CommentClass.IsReplying)
+                true -> {
+                    replyBlock.modify(CommentClass.IsReplying)
+                    replyButtonText.textContent = "cancel"
+                }
+                false -> {
+                    replyBlock.unmodify(CommentClass.IsReplying)
+                    replyButtonText.textContent = "reply"
+                }
             }
         }
 
@@ -56,9 +79,17 @@ class CommentView(
             rootBlock.modify(CommentClass.HasNestedContent)
             if (replyBlock.hasChildNodes()) return
             replaceRender(replyBlock) {
-                commentEditor("reply", comment.commentId, "", false, modify(AutoMagic, SlideLeft)) { commentId ->
-                    if (commentId != null) {
-                        replyBlock.modify(DisplayNone)
+                commentEditor("reply", "", modify(AutoMagic, SlideLeft)) { text ->
+                    val commentId = model.createComment(comment.commentId, text)
+                    console.log(commentId)
+
+                    return@commentEditor when (commentId) {
+                        null -> null
+                        else -> {
+                            replyBlock.clear()
+                            isReplying = false
+                            ""
+                        }
                     }
                 }
             }
@@ -72,9 +103,31 @@ class CommentView(
     fun ViewContext<TalkLog>.toggleEdit() {
         isEditing = !isEditing
         if (isEditing) {
+
             if (editBlock.hasChildNodes()) return
             replaceRender(editBlock) {
-                commentEditor("edit", comment.parentId, comment.text, true)
+                commentEditor("edit", comment.text) { text ->
+                    val isSuccess = model.updateComment(comment.commentId, text)
+                    return@commentEditor when (isSuccess) {
+                        true -> {
+                            isEditing = false
+                            text
+                        }
+                        else -> {
+                            text
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    fun ViewContext<TalkLog>.stageUpdate(text: String) {
+        if (isUserComment) {
+            comment = comment.copy(text = text)
+
+            replaceRender(contentBlock) {
+                markdown(text)
             }
         }
     }
@@ -107,17 +160,23 @@ class CommentView(
                 }
                 column(modify(Padding1)) {
                     _bodyBlock = box(modify(CommentClass.Body)) {
-                        _editBlock = div(modify(CommentClass.Editor))
-                        markdown(comment.text, modify(CommentClass.Content, Padding1))
+                        _editBlock = div(modify(CommentClass.Editor, Height100P))
+                        _contentBlock = div(modify(CommentClass.Content, Padding1)) {
+                            markdown(comment.text)
+                        }
                     }
                     row(modify(AlignItemsCenter)) {
                         if (isUserComment) {
-                            zenButton("edit", "cancel").onClick {
+                            zenButton {
+                                _editButtonText = textBlock("edit", modify(ButtonText))
+                            }.onClick {
                                 toggleEdit()
                             }
                         }
                         spacer(modify(Flex1))
-                        zenButton("reply", "cancel").onClick {
+                        zenButton {
+                            _replyButtonText = textBlock("reply", modify(ButtonText))
+                        }.onClick {
                             startReply()
                         }
                     }
