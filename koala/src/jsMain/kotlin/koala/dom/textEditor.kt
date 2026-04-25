@@ -1,6 +1,7 @@
 package koala.dom
 
 import koala.css.ModifierSet
+import koala.css.Size100P
 import koala.css.Width100P
 import koala.css.addModifiers
 import koala.dom.setAttribute
@@ -77,7 +78,7 @@ fun DOMContext.configureTextEditor(
     block: TEXTAREA.() -> Unit = {}
 ) = textArea {
     this.rows = rows.toString()
-    addModifiers(Width100P, textModifiers)
+    addModifiers(Size100P, textModifiers)
     setId(id)
     label?.let {
         attributes["aria-label"] = it

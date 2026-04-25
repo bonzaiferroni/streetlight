@@ -33,7 +33,10 @@ panel-right.svg
 panel-left.svg
 arrow-left.svg
 arrow-right.svg
-reply.svg
+message-plus.svg
+message-minus.svg
+eye-plus.svg
+eye-minus.svg
 
 original:
 flame.svg (modified from Tabler)

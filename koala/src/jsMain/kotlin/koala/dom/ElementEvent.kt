@@ -36,11 +36,12 @@ fun Element.onClickEvent(block: (Event) -> Unit) {
     modify(Clickable)
 }
 
-fun Element.onClick(block: () -> Unit) {
+fun <T: Element> T.onClick(block: () -> Unit): T {
     onEvent(ElementEvent.onClick, {
         block()
     })
     modify(Clickable)
+    return this
 }
 
 fun Element.removeEventListener(event: ElementEvent, block: (Event) -> Unit) {

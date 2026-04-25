@@ -8,7 +8,6 @@ import koala.html.image
 import koala.html.markdown
 import koala.html.navigationIfNotNull
 import koala.html.spacer
-import kotlinx.browser.document
 import kotlinx.dom.clear
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLParagraphElement
@@ -31,6 +30,7 @@ class CommentView(
     private var _contentBlock: HTMLElement? = null
     private var _editButtonText: HTMLParagraphElement? = null
     private var _replyButtonText: HTMLParagraphElement? = null
+    private var _showUpdateButton: HTMLElement? = null
     private var _hasChildren: Boolean = false
 
     val rootBlock get() = _rootBlock ?: error("body not found")
@@ -41,7 +41,11 @@ class CommentView(
     val contentBlock get() = _contentBlock ?: error("content block not found")
     val editButtonText get() = _editButtonText ?: error("edit button text not found")
     val replyButtonText get() = _replyButtonText ?: error("reply button text not")
+    val showUpdateButton get() = _showUpdateButton ?: error("show update button not found")
     val hasChildren get() = _hasChildren
+
+    private var stagedUpdate: String? = null
+    private val stagedReplies = mutableListOf<Comment>()
 
     var isEditing
         get() = bodyBlock.isModified(CommentClass.IsEditing)
@@ -72,6 +76,10 @@ class CommentView(
                 }
             }
         }
+
+    fun ViewContext<TalkLog>.replyAction() {
+
+    }
 
     fun ViewContext<TalkLog>.startReply() {
         isReplying = !isReplying
@@ -124,12 +132,29 @@ class CommentView(
 
     fun ViewContext<TalkLog>.stageUpdate(text: String) {
         if (isUserComment) {
-            comment = comment.copy(text = text)
-
-            replaceRender(contentBlock) {
-                markdown(text)
-            }
+            updateTextContent(text)
+        } else {
+            stagedUpdate = text
+            showUpdateButton.unmodify(DisplayNone)
         }
+    }
+
+    fun ViewContext<TalkLog>.showStagedUpdate() {
+        val text = stagedUpdate ?: error("staged update not found")
+        showUpdateButton.modify(DisplayNone)
+        updateTextContent(text)
+    }
+
+    private fun ViewContext<TalkLog>.updateTextContent(text: String) {
+        comment = comment.copy(text = text)
+
+        replaceRender(contentBlock) {
+            markdown(text)
+        }
+    }
+
+    fun ViewContext<TalkLog>.stageReply(comment: Comment) {
+
     }
 
     fun ViewContext<TalkLog>.render(comments: List<Comment>) {
@@ -154,7 +179,7 @@ class CommentView(
 
                         card(controlMod) {
                             textBlock(comment.replyCount.toString())
-                            icon(SvgFile.Reply, modify(Height4))
+                            icon(SvgFile.MessagePlus, modify(Height4))
                         }
                     }
                 }
@@ -171,6 +196,12 @@ class CommentView(
                                 _editButtonText = textBlock("edit", modify(ButtonText))
                             }.onClick {
                                 toggleEdit()
+                            }
+                        } else {
+                            _showUpdateButton = zenButton(modify(DisplayNone)) {
+                                textBlock("show update", modify(ButtonText))
+                            }.onClick {
+                                showStagedUpdate()
                             }
                         }
                         spacer(modify(Flex1))

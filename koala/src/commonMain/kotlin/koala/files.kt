@@ -73,7 +73,10 @@ object SvgFile : FileSet<Svg>() {
     val PanelLeft = add("panel-left.svg")
     val ArrowLeft = add("arrow-left.svg")
     val ArrowRight = add("arrow-right.svg")
-    val Reply = add("reply.svg")
+    val MessagePlus = add("message-plus.svg")
+    val MessageMinus = add("message-minus.svg")
+    val EyePlus = add("eye-plus.svg")
+    val EyeMinus = add("eye-minus.svg")
 }
 
 object LottieFile : FileSet<Lottie>() {

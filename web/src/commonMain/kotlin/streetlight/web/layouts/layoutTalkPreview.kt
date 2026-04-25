@@ -8,7 +8,6 @@ import kotlinx.html.FlowContent
 import streetlight.model.data.Comment
 import streetlight.model.data.CommentId
 import streetlight.web.StarRoute
-import streetlight.web.TalkRoute
 import streetlight.web.shells.SectionHeadingMod
 
 fun FlowContent.layoutTalkPreview(route: AppRoute, comments: List<Comment>) {
@@ -38,7 +37,7 @@ fun FlowContent.layoutTalkPreview(route: AppRoute, comments: List<Comment>) {
 
                     card(controlMod) {
                         textBlock(comment.replyCount.toString())
-                        icon(SvgFile.Reply)
+                        icon(SvgFile.MessagePlus)
                     }
                 }
             }
