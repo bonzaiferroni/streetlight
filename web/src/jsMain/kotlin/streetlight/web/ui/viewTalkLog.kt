@@ -1,6 +1,5 @@
 package streetlight.web.ui
 
-import io.ktor.util.collections.setValue
 import koala.css.*
 import koala.dom.*
 import koala.html.filigree
@@ -10,9 +9,7 @@ import koala.model.storeOf
 import kotlinx.coroutines.launch
 import kotlinx.html.DIV
 import org.w3c.dom.HTMLElement
-import org.w3c.dom.HTMLParagraphElement
 import streetlight.model.data.Comment
-import streetlight.model.data.CommentId
 import streetlight.model.data.TalkHistory
 import streetlight.model.data.CommentCreated
 import streetlight.model.data.CommentUpdated
@@ -89,7 +86,10 @@ fun ViewContext<TalkLog>.buildTree(treeRoot: HTMLElement, comments: List<Comment
 
     replaceRender(treeRoot) {
         roots.forEach {
-            addComment(it, comments)
+            val view = addCommentView(it, comments) ?: return@forEach
+            with(view) {
+                render()
+            }
         }
     }
 }
@@ -100,21 +100,22 @@ fun ViewContext<TalkLog>.growTree(treeRoot: HTMLElement, comment: Comment) {
             when (model.stateNow.sortBy) {
                 SortBy.New -> {
                     prependRender(treeRoot) {
-                        addComment(comment, emptyList())
+                        addCommentView(comment, emptyList())
                     }
                 }
                 SortBy.Old -> {
                     appendRender(treeRoot) {
-                        addComment(comment, emptyList())
+                        addCommentView(comment, emptyList())
                     }
                 }
             }
         }
         else -> {
-            val parentView = model.commentViews[parentId] ?: return // incorrect, could be nested reply
-            val isUserReply = comment.username != null && comment.username == model.app.gate.stateNow.star?.username
+            val parentView = model.commentViews[parentId] ?: return
+            val isUserComment = comment.username != null && comment.username == model.app.gate.stateNow.star?.username
+            val view = CommentView(comment, isUserComment)
             with (parentView) {
-                stageReply(comment, isUserReply)
+                stageReply(view, isUserComment)
             }
         }
     }
@@ -153,16 +154,19 @@ fun ViewContext<TalkLog>.commentEditor(
     }
 }
 
-fun ViewContext<TalkLog>.addComment(comment: Comment, comments: List<Comment>) {
-    if (model.commentViews.contains(comment.commentId)) return
-    val isUserComment = model.app.gate.stateNow.star?.username == comment.username && comment.username != null
+fun ViewContext<TalkLog>.addCommentView(comment: Comment, comments: List<Comment>): CommentView? {
+    if (model.commentViews.contains(comment.commentId)) return null
+    val isUserComment = comment.username != null && comment.username != gate.stateNow.star?.username
 
     val view = CommentView(comment, isUserComment)
-    with(view) {
-        render(comments)
-    }
-
     model.commentViews[comment.commentId] = view
+
+    comments.forEach {
+        if (it.parentId != comment.commentId) return@forEach
+        val reply = addCommentView(it, comments) ?: return@forEach
+        view.addReply(reply)
+    }
+    return view
 }
 
 fun DOMContext.zenButton(modifiers: ModifierSet? = null, block: DIV.() -> Unit) =

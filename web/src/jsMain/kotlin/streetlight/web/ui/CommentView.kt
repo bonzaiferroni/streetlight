@@ -21,12 +21,13 @@ class CommentView(
 ) {
     var comment = comment
         private set
-
     var isRendered = false
+        private set
+    var hasReplies = false
         private set
 
     private var _rootBlock: HTMLElement? = null
-    private var _childBlock: HTMLElement? = null
+    private var _repliesBlock: HTMLElement? = null
     private var _replyBlock: HTMLElement? = null
     private var _bodyBlock: HTMLElement? = null
     private var _editBlock: HTMLElement? = null
@@ -34,10 +35,9 @@ class CommentView(
     private var _editButtonText: HTMLParagraphElement? = null
     private var _replyButtonText: HTMLParagraphElement? = null
     private var _showUpdateButton: HTMLElement? = null
-    private var _hasChildren: Boolean = false
 
     val rootBlock get() = _rootBlock ?: error("body not found")
-    val childBlock get() = _childBlock ?: error("child column not found")
+    val repliesBlock get() = _repliesBlock ?: error("child column not found")
     val replyBlock get() = _replyBlock ?: error("reply element not found")
     val bodyBlock get() = _bodyBlock ?: error("body block not found")
     val editBlock get() = _editBlock ?: error("edit block not found")
@@ -45,10 +45,10 @@ class CommentView(
     val editButtonText get() = _editButtonText ?: error("edit button text not found")
     val replyButtonText get() = _replyButtonText ?: error("reply button text not")
     val showUpdateButton get() = _showUpdateButton ?: error("show update button not found")
-    val hasChildren get() = _hasChildren
 
     private var stagedUpdate: String? = null
-    private val stagedReplies = mutableListOf<Comment>()
+    private val stagedReplies = mutableListOf<CommentView>()
+    private val replies = mutableListOf<CommentView>()
 
     var isEditing
         get() = bodyBlock.isModified(CommentClass.IsEditing)
@@ -80,6 +80,11 @@ class CommentView(
             }
         }
 
+    fun addReply(reply: CommentView) {
+        hasReplies = true
+        replies.add(reply)
+    }
+
     fun ViewContext<TalkLog>.replyAction() {
         if (stagedReplies.isNotEmpty()) {
             showStagedReplies()
@@ -108,7 +113,7 @@ class CommentView(
                 }
             }
         } else {
-            if (!hasChildren) {
+            if (!hasReplies) {
                 rootBlock.unmodify(CommentClass.HasNestedContent)
             }
         }
@@ -136,9 +141,9 @@ class CommentView(
         }
     }
 
-    fun ViewContext<TalkLog>.stageReply(comment: Comment, isUserReply: Boolean) {
+    fun ViewContext<TalkLog>.stageReply(comment: CommentView, isUserReply: Boolean) {
         if (isUserReply) {
-            renderReplies(listOf(comment))
+            renderStagedReplies(listOf(comment))
         } else {
             stagedReplies.add(comment)
             replyButtonText.textContent = "show ${stagedReplies.size} new replies"
@@ -148,14 +153,17 @@ class CommentView(
     fun ViewContext<TalkLog>.showStagedReplies() {
         val replies = stagedReplies.toList()
         stagedReplies.clear()
-        renderReplies(replies)
+        renderStagedReplies(replies)
         replyButtonText.textContent = "reply"
+        rootBlock.modify(CommentClass.HasNestedContent)
     }
 
-    private fun ViewContext<TalkLog>.renderReplies(comments: List<Comment>) {
-        prependRender(childBlock) {
-            comments.forEach { comment ->
-                addComment(comment, emptyList())
+    private fun ViewContext<TalkLog>.renderStagedReplies(replies: List<CommentView>) {
+        prependRender(repliesBlock) {
+            replies.forEach { reply ->
+                with (reply) {
+                    render()
+                }
             }
         }
     }
@@ -183,7 +191,10 @@ class CommentView(
         }
     }
 
-    fun ViewContext<TalkLog>.render(comments: List<Comment>) {
+    fun ViewContext<TalkLog>.render() {
+        if (isRendered) return
+        isRendered = true
+
         _rootBlock = column(modify(CommentClass.Root, Gap0)) {
             card(modify(ZenCardBg, Gap0, Padding0, OverflowClip, AutoMagic)) {
                 row(modify(AlignItemsCenter, modify(ZenCardBg, Padding1))) {
@@ -244,20 +255,21 @@ class CommentView(
                 column(modify(CommentClass.NestedContent, modify(Flex1))) {
                     _replyBlock = div(modify(CommentClass.Reply))
 
-                    _childBlock = column(modify(CommentClass.ChildColumn)) {
-                        comments.forEach { child ->
-                            if (child.parentId != comment.commentId) return@forEach
-                            _hasChildren = true
-                            addComment(child, comments)
+                    _repliesBlock = column(modify(CommentClass.ChildColumn)) {
+                        replies.forEach { reply ->
+                            with (reply) {
+                                render()
+                            }
                         }
                     }
                 }
             }
         }
 
-        if (hasChildren) {
+        if (hasReplies) {
             rootBlock.modify(CommentClass.HasNestedContent)
         }
     }
 }
+
 
