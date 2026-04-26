@@ -17,6 +17,7 @@ import streetlight.model.data.TalkHistory
 import streetlight.model.data.CommentCreated
 import streetlight.model.data.CommentUpdated
 import streetlight.web.TalkRoute
+import streetlight.web.io.SortBy
 import streetlight.web.io.TalkLog
 import streetlight.web.model.Streetlight
 
@@ -32,25 +33,37 @@ fun ViewContext<TalkLog>.viewTalkLog() {
                 else -> ""
             }
         }
+        row {
+            dropMenu(model::setSortBy, { it.label }, model.sortByFlow)
+        }
+
         treeRoot = column { }
 
         appFooter("")
     }
 
     renderScope.launch {
-        model.messageFlow.collect { message ->
-            when (message) {
-                is TalkHistory -> {
-                    buildTree(treeRoot!!, message)
-                }
+        launch {
+            model.messageFlow.collect { message ->
+                when (message) {
+                    is TalkHistory -> {
+                        buildTree(treeRoot!!, message.comments)
+                    }
 
-                is CommentCreated -> {
-                    growTree(treeRoot!!, message.comment)
-                }
+                    is CommentCreated -> {
+                        growTree(treeRoot!!, message.comment)
+                    }
 
-                is CommentUpdated -> {
-                    updateComment(message)
+                    is CommentUpdated -> {
+                        updateComment(message)
+                    }
                 }
+            }
+        }
+
+        launch {
+            model.sortByFlow.collect {
+                buildTree(treeRoot!!, model.comments.toList())
             }
         }
     }
@@ -65,8 +78,13 @@ fun ViewContext<Streetlight>.viewTalkRoute() {
     }
 }
 
-fun ViewContext<TalkLog>.buildTree(treeRoot: HTMLElement, history: TalkHistory) {
-    val comments = history.comments.sortedBy { it.createdAt }
+fun ViewContext<TalkLog>.buildTree(treeRoot: HTMLElement, comments: List<Comment>) {
+    val sortBy = model.stateNow.sortBy
+
+    val comments = when (sortBy) {
+        SortBy.New -> comments.sortedByDescending { it.createdAt }
+        SortBy.Old -> comments.sortedBy { it.createdAt }
+    }
     val roots = comments.filter { it.parentId == null }
 
     replaceRender(treeRoot) {
@@ -79,8 +97,17 @@ fun ViewContext<TalkLog>.buildTree(treeRoot: HTMLElement, history: TalkHistory) 
 fun ViewContext<TalkLog>.growTree(treeRoot: HTMLElement, comment: Comment) {
     when (val parentId = comment.parentId) {
         null -> {
-            appendRender(treeRoot) {
-                addComment(comment, emptyList())
+            when (model.stateNow.sortBy) {
+                SortBy.New -> {
+                    prependRender(treeRoot) {
+                        addComment(comment, emptyList())
+                    }
+                }
+                SortBy.Old -> {
+                    appendRender(treeRoot) {
+                        addComment(comment, emptyList())
+                    }
+                }
             }
         }
         else -> {

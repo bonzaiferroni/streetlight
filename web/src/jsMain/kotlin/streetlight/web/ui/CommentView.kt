@@ -22,6 +22,9 @@ class CommentView(
     var comment = comment
         private set
 
+    var isRendered = false
+        private set
+
     private var _rootBlock: HTMLElement? = null
     private var _childBlock: HTMLElement? = null
     private var _replyBlock: HTMLElement? = null
@@ -181,7 +184,7 @@ class CommentView(
     }
 
     fun ViewContext<TalkLog>.render(comments: List<Comment>) {
-        _rootBlock = column(modify(CommentClass.Comment, Gap0)) {
+        _rootBlock = column(modify(CommentClass.Root, Gap0)) {
             card(modify(ZenCardBg, Gap0, Padding0, OverflowClip, AutoMagic)) {
                 row(modify(AlignItemsCenter, modify(ZenCardBg, Padding1))) {
                     navigationIfNotNull(comment.username?.let { StarRoute(it) }) {
@@ -194,19 +197,16 @@ class CommentView(
                         }
                     }
                     spacer(modify(Flex1))
-                    row(modify(JustifySelfEnd, AlignItemsCenter)) {
-                        card(controlMod) {
-                            textBlock(comment.lightCount.toString())
-                            icon(SvgFile.Flame, modify(Height4))
+                    icon(SvgFile.EyeMinus, modify(Height5, OpacityMost)).onClickElement {
+                        val isHidden = rootBlock.toggle(Hide)
+                        val svg = when (isHidden) {
+                            true -> SvgFile.EyePlus
+                            else -> SvgFile.EyeMinus
                         }
-
-                        card(controlMod) {
-                            textBlock(comment.replyCount.toString())
-                            icon(SvgFile.MessagePlus, modify(Height4))
-                        }
+                        it.setProperty(Property.MaskUrl.with(UrlValue(svg)))
                     }
                 }
-                column(modify(Padding1)) {
+                column(modify(Padding1, CommentClass.InnerCard)) {
                     _bodyBlock = box(modify(CommentClass.Body)) {
                         _editBlock = div(modify(CommentClass.Editor, Height100P))
                         _contentBlock = div(modify(CommentClass.Content, Padding1)) {
@@ -237,7 +237,7 @@ class CommentView(
                 }
             }
 
-            row(modify(Gap0)) {
+            row(modify(Gap0, CommentClass.AfterCard)) {
                 // indent indicator
                 div(modify(ZenCardBg, Width1, BorderRadiusBottom1))
 
@@ -260,7 +260,4 @@ class CommentView(
         }
     }
 }
-
-private val controlMod = modify(BorderRadius1, FlexDirectionRow, AlignItemsCenter)
-
 

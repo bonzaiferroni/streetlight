@@ -40,6 +40,8 @@ fun Element.trigger(modifier: Modifier) {
     }
 }
 
+fun Element.toggle(modifier: Modifier) = classList.toggle(modifier.identifier)
+
 private const val MAX_ATTEMPTS = 30
 
 fun Element.scrollWhenPresent(
@@ -66,6 +68,10 @@ fun Element.scrollWhenPresent(
 
 fun <T> CSSStyleDeclaration.setProperty(style: InlineStyle<T>) =
     setProperty(style.property.expression, style.value.toString())
+
+fun <T> HTMLElement.setProperty(style: InlineStyle<T>) {
+    this.style.setProperty(style.property.expression, style.value.toString())
+}
 
 fun Element.querySelector(queryable: Queryable) = querySelector(queryable.selector) as? HTMLElement
 fun Element.querySelectorAll(queryable: Queryable) = querySelectorAll(queryable.selector).asList().map {

@@ -1,9 +1,10 @@
 package streetlight.web.ui
 
 import koala.css.Class
+import koala.css.Hide
 
 object CommentClass {
-    val Comment = Class("comment")
+    val Root = Class("comment")
     val NestedContent = Class("comment__nested-content")
     val HasNestedContent = Class("comment--has-nested")
     val ChildColumn = Class("comment__child-column")
@@ -13,11 +14,13 @@ object CommentClass {
     val Editor = Class("comment__editor")
     val Content = Class("comment__content")
     val Reply = Class("comment__reply")
+    val InnerCard = Class("comment__inner-card")
+    val AfterCard = Class("comment__after-card")
 }
 
 // language="CSS"
 val TalkLogCss get() = """
-${CommentClass.Comment} {
+${CommentClass.Root} {
     
 }
 
@@ -70,5 +73,10 @@ ${CommentClass.IsEditing} ${CommentClass.Editor} {
 ${CommentClass.IsEditing} ${CommentClass.Content} {
     opacity: 0;
     pointer-events: none;
+}
+
+${CommentClass.Root}$Hide > .card > ${CommentClass.InnerCard},
+${CommentClass.Root}$Hide > ${CommentClass.AfterCard} {
+    display: none;
 }
 """

@@ -31,9 +31,19 @@ fun <T> Element.sendCustomEvent(event: CustomElementEvent<T>, value: T) {
     dispatchEvent(event)
 }
 
-fun Element.onClickEvent(block: (Event) -> Unit) {
+fun <T: Element> T.onClickEvent(block: (Event) -> Unit): T {
     onEvent(ElementEvent.onClick, block)
     modify(Clickable)
+    return this
+}
+
+@Suppress("UNCHECKED_CAST")
+fun <T: Element> T.onClickElement(block: (T) -> Unit): T {
+    onEvent(ElementEvent.onClick) {
+        block(it.target as T)
+    }
+    modify(Clickable)
+    return this
 }
 
 fun <T: Element> T.onClick(block: () -> Unit): T {
@@ -42,30 +52,4 @@ fun <T: Element> T.onClick(block: () -> Unit): T {
     })
     modify(Clickable)
     return this
-}
-
-fun Element.removeEventListener(event: ElementEvent, block: (Event) -> Unit) {
-    removeEventListener(event.label, block)
-}
-
-fun Element.eventFlow(event: ElementEvent, scope: CoroutineScope): Flow<Event> {
-    val flow = MutableSharedFlow<Event>()
-    addEventListener(event.label, {
-        scope.launch {
-            flow.emit(it)
-        }
-    })
-    return flow
-}
-
-fun Element.eventFlow(event: ElementEvent): Flow<Event> = callbackFlow {
-    val listener: (Event) -> Unit = { e ->
-        trySend(e).isSuccess
-    }
-
-    addEventListener(event.label, listener)
-
-    awaitClose {
-        removeEventListener(event.label, listener)
-    }
 }
