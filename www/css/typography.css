@@ -29,9 +29,17 @@ h2 {
     font-weight: var(--heading-2-weight);
 }
 
+h2.bold {
+    font-weight: var(--heading-4-weight);
+}
+
 h3 {
     font-size: var(--heading-3-size);
     font-weight: var(--heading-3-weight);
+}
+
+h3.bold {
+    font-weight: var(--heading-4-weight);
 }
 
 h4 {

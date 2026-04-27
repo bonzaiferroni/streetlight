@@ -15,7 +15,7 @@ val LayoutUtilityCss
         // Width
         WidthAuto, Width100P, WidthFitContent,
         Width1, Width2, Width4, Width5, Width8, Width12, Width16, Width24, Width32, Width64,
-        MinWidth0, MinWidth16, MinWidth32, MinWidth36, MinWidth48, MinWidthAuto, MaxWidth25P, MaxWidth50P,
+        MinWidth0, MinWidth16, MinWidth24, MinWidth32, MinWidth36, MinWidth48, MinWidthAuto, MaxWidth25P, MaxWidth50P,
         MaxWidth5, MaxWidth16, MaxWidth32, MaxWidth48, MaxWidth64,
         // Height
         HeightAuto, Height100P, Height2, Height3, Height4, Height5, Height6, Height7, Height8, Height12, Height16, Height24, Height32, Height48,
@@ -34,7 +34,7 @@ val LayoutUtilityCss
         // Padding
         Padding0, Padding1, Padding2, Padding4, PaddingTiny, PaddingLeft1, PaddingLeft2, PaddingLeft3, PaddingRight3,
         PaddingTop1,
-        PaddingX1, PaddingY1, PaddingY2,
+        PaddingX1, PaddingX2, PaddingY1, PaddingY2,
         // Object Fit
         ObjectFitCover, ObjectFitContain, ObjectPositionCenter, ObjectFitFill,
         // Other
@@ -95,6 +95,7 @@ val Width32 = utilityOf("width-32", "width: calc(var(--unit-spacing) * 32)")
 val Width64 = utilityOf("width-64", "width: calc(var(--unit-spacing) * 64)")
 val MinWidth0 = utilityOf("min-width-0", "min-width: 0")
 val MinWidth16 = utilityOf("min-width-16", "min-width: calc(var(--unit-spacing) * 16)")
+val MinWidth24 = utilityOf("min-width-24", "min-width: calc(var(--unit-spacing) * 24)")
 val MinWidth32 = utilityOf("min-width-32", "min-width: calc(var(--unit-spacing) * 32)")
 val MinWidth36 = utilityOf("min-width-36", "min-width: calc(var(--unit-spacing) * 36)")
 val MinWidth48 = utilityOf("min-width-48", "min-width: calc(var(--unit-spacing) * 48)")
@@ -202,6 +203,7 @@ val PaddingLeft3 = utilityOf("padding-left-3", "padding-left: var(--unit-spacing
 val PaddingRight3 = utilityOf("padding-right-3", "padding-right: calc(var(--unit-spacing) * 3)")
 val PaddingTop1 = utilityOf("padding-top-1", "padding-top: var(--unit-spacing)")
 val PaddingX1 = utilityOf("padding-x-1", "padding-left: var(--unit-spacing)", "padding-right: var(--unit-spacing)")
+val PaddingX2 = utilityOf("padding-x-2", "padding-left: var(--unit-spacing-2)", "padding-right: var(--unit-spacing-2)")
 val PaddingY1 = utilityOf("padding-y-1", "padding-top: var(--unit-spacing)", "padding-bottom: var(--unit-spacing)")
 val PaddingY2 = utilityOf("padding-y-2", "padding-top: var(--unit-spacing-2)", "padding-bottom: var(--unit-spacing-2)")
 

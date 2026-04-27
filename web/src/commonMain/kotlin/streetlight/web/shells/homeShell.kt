@@ -27,44 +27,9 @@ fun FlowContent.homeShell(content: HomeContent) {
                     spacer()
                 }
 
-                section(modify(QueryContainer)) {
-                    column(modify(Gap0)) {
-                        heading2("Galaxies", SectionHeadingMod)
-                        textBlock(
-                            content = "Galaxies are Streetlight communities, each with a particular focus.",
-                            modifiers = modify(Dim, TextAlignCenter)
-                        )
-                    }
+                // galaxiesSection(content.galaxies)
 
-                    column(modify(ContainerMdRow, FlexItems1)) {
-                        val subHeadingMods = modify(LineHeight1, OpacityMost)
-                        column {
-                            filigree {
-                                heading4("Top Galaxies", subHeadingMods)
-                            }
-                            ulist {
-                                content.galaxies.forEach { galaxy ->
-                                    listItem {
-                                        smallGalaxyCard(galaxy)
-                                    }
-                                }
-                            }
-                        }
-                        column(modify(MarginTop4, ContainerMdMarginTop0)) {
-                            filigree {
-                                heading4("Featured Galaxies", subHeadingMods)
-                            }
-                            row(modify(Flex1, AlignItemsCenter, JustifyContentCenter)) {
-                                lottie(LottieFile.dinoLoad, modify(Width32, Aspect1))
-                            }
-                        }
-                    }
-                    row {
-                        spacer(modify(Flex1))
-                        btn("➕ Create a Galaxy", CreateGalaxyRoute, modify(Accent))
-                    }
-                }
-
+                layoutPosts(content.posts)
                 // layoutEventPosts("Upcoming Events", content.posts)
 
                 section {
@@ -94,6 +59,46 @@ fun FlowContent.homeShell(content: HomeContent) {
 
                 appFooter(HomeShellKey.SOURCE)
             }
+        }
+    }
+}
+
+fun FlowContent.galaxiesSection(galaxies: List<Galaxy>) {
+    section(modify(QueryContainer)) {
+        column(modify(Gap0)) {
+            heading2("Galaxies", SectionHeadingMod)
+            textBlock(
+                content = "Galaxies are Streetlight communities, each with a particular focus.",
+                modifiers = modify(Dim, TextAlignCenter)
+            )
+        }
+
+        column(modify(ContainerMdRow, FlexItems1)) {
+            val subHeadingMods = modify(LineHeight1, OpacityMost)
+            column {
+                filigree {
+                    heading4("Top Galaxies", subHeadingMods)
+                }
+                ulist {
+                    galaxies.forEach { galaxy ->
+                        listItem {
+                            smallGalaxyCard(galaxy)
+                        }
+                    }
+                }
+            }
+            column(modify(MarginTop4, ContainerMdMarginTop0)) {
+                filigree {
+                    heading4("Featured Galaxies", subHeadingMods)
+                }
+                row(modify(Flex1, AlignItemsCenter, JustifyContentCenter)) {
+                    lottie(LottieFile.dinoLoad, modify(Width32, Aspect1))
+                }
+            }
+        }
+        row {
+            spacer(modify(Flex1))
+            btn("➕ Create a Galaxy", CreateGalaxyRoute, modify(Accent))
         }
     }
 }

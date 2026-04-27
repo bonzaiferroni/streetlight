@@ -32,7 +32,7 @@ class EventEditor(
     val titleFlow = stateFlow.mapDistinct { it.event.title }
     val urlFlow = stateFlow.mapDistinct { it.event.link }
     val isFreeFlow = stateFlow.mapDistinct { it.event.isFree }
-    val costFlow = stateFlow.mapDistinct { it.event.cost?.format(2, true) }
+    val costFlow = stateFlow.mapDistinct { it.costString }
 
     val eventNow get() = stateNow.event
 
@@ -71,6 +71,7 @@ class EventEditor(
 
     fun setCost(value: String) {
         setEvent { it.copy(cost = value.toFloatOrNull())}
+        state.set { it.copy(costString = value)}
     }
 
     fun setFree(value: Boolean) {
@@ -111,6 +112,7 @@ data class EventEditorState(
     val isVisible: Boolean = false,
     val originalSourceLabel: String = "",
     val originalSourceUrl: String = "",
+    val costString: String = ""
 )
 
 private fun Address.toBasicString(): String? {

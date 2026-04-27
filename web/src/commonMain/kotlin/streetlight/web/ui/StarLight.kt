@@ -8,19 +8,20 @@ import kotlinx.html.FlowContent
 import streetlight.model.data.EventId
 import streetlight.model.data.GalaxyId
 import streetlight.model.data.LocationId
+import streetlight.web.layouts.CellContent
 
 fun FlowContent.starLight(
     visibility: Int?,
     modifiers: ModifierSet? = null,
     block: DIV.() -> Unit = {}
 ) {
-    row {
+    row(CellContent.RowMod) {
         addModifiers(modifiers, StarLightKey.Class, Size100P)
         block()
+        icon(SvgFile.LoaderSmall, CellContent.IconMod)
         visibility?.let {
-            textBlock(it.toString(), modify(StarLightKey.LightCounter, UserSelectNone))
+            textBlock(it.toString(), modify(CellContent.TextMod, StarLightKey.LightCounter, UserSelectNone))
         }
-        icon(SvgFile.LoaderSmall, modify(Height3, Aspect1, MarginLeft1))
     }
 }
 

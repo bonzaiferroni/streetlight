@@ -27,6 +27,8 @@ sealed interface Post {
 @Serializable
 @JvmInline
 value class PostId(override val value: String): ProjectId {
+    override fun toString() = value
+
     companion object {
         fun random() = PostId(randomUuidString())
     }

@@ -23,6 +23,7 @@ data class Property<T>(val identifier: String, val isCustom: Boolean = true) {
         val Display = Property<Display>("display", false)
 
         val MaskUrl = Property<UrlValue>("mask-url")
+        val ColorScheme = Property<String>("color-scheme")
         val BackgroundUrl = Property<UrlValue>("background-url")
         val AnchorId = Property<PositionAnchor>("anchor-id")
         val ContainerAnchorId = Property<PositionAnchor>("anchor-container-id")
