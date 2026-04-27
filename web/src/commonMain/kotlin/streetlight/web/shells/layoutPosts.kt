@@ -2,7 +2,6 @@ package streetlight.web.shells
 
 import kampfire.model.ScaledImageArray
 import kampfire.model.medium
-import koala.SiteImage
 import koala.css.*
 import koala.html.*
 import kotlinx.html.FlowContent
@@ -29,6 +28,8 @@ fun FlowContent.layoutPosts(posts: List<Post>) {
                     images = post.images,
                     postRoute = event.eventRoute,
                     subRoute = event.locationRoute,
+                    colorScheme = colorSchemeOf(post.type),
+                    postType = post.type,
                     cells = listOf(
                         { startsAtCell(event.startsAt) },
                         { costCell(event.cost, event.url) },
@@ -50,19 +51,30 @@ fun FlowContent.postRow(
     images: ScaledImageArray?,
     postRoute: StreetlightRoute,
     subRoute: StreetlightRoute?,
+    colorScheme: String?,
+    postType: PostType,
     cells: List<(FlowContent.() -> Unit)?>
 ) {
 
     card(modify(QueryContainer, Padding0, OverflowClip, ZenCardBg)) {
+        colorScheme?.let {
+            setStyle(Property.ColorScheme.with(colorScheme))
+        }
+
         column(modify(QueryContainer, ContainerLgRow, Gap0)) {
 
             row(modify(Flex1, Gap0, Height24)) {
-                featureImage(images.medium, modify(Height24, Aspect1))
+                navigation(postRoute, modify(Height24, Aspect1)) {
+                    featureImage(images.medium, modify(Size100P))
+                }
 
                 column(modify(Flex1, Padding1, Height24)) {
                     column(modify(Gap0)) {
                         navigation(postRoute) {
-                            heading2(title, modify(LineHeight1, MarginTop1, SingleLine, Bold))
+                            row(modify(JustifyContentSpaceBetween, MarginTop1, AlignItemsStart)) {
+                                heading2(title, modify(LineHeight1, SingleLine, Bold, Shrinkable))
+                                textBlock(postType.label, modify(LineHeight1, SingleLine, ColorSchemeFg, MarginRight1))
+                            }
                         }
                         subtitle?.let {
                             navigationIfNotNull(subRoute) {
@@ -76,10 +88,13 @@ fun FlowContent.postRow(
                         }
                     }
 
-                    row {
-                        links?.forEach { link ->
-                            btn(link.label, link.url, modify(Secondary))
+                    row(modify(AlignItemsCenter)) {
+                        row(modify(Flex1, OverflowXAuto)) {
+                            links?.forEach { link ->
+                                btn(link.label, link.url, modify(Secondary))
+                            }
                         }
+
                     }
                 }
             }
@@ -97,4 +112,10 @@ fun FlowContent.postRow(
             }
         }
     }
+}
+
+fun colorSchemeOf(postType: PostType) = when (postType) {
+    PostType.Event -> "var(--accent-fg)"
+    PostType.Location -> "var(--primary-fg)"
+    PostType.Media -> null
 }

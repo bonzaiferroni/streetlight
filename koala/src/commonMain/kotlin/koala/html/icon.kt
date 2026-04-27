@@ -38,10 +38,8 @@ object IconKey {
 // language="CSS"
 val IconCss get() = """
 ${IconKey.Class} {
-    --color-scheme: currentColor;
-    
     display: inline-block;
-    background-color: var(--color-scheme);
+    background-color: currentColor;
     aspect-ratio: 1 / 1;
 
     mask-image: var(--mask-url);

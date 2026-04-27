@@ -17,7 +17,7 @@ import kotlin.time.Instant
 object CellContent {
     val RowMod = modify(JustifyContentCenter, AlignItemsCenter, WrapFlex, Gap0, PaddingY1, PaddingX2)
     val CardMod = modify(AlignItemsCenter, Gap0, BorderRadius0, JustifyContentCenter, MinWidth16, Padding0)
-    val IconMod = modify(Height3, Aspect1, MarginRight1)
+    val IconMod = modify(Height3, Aspect1, MarginRight1, ColorSchemeBg)
     val TextMod = modify(SmallText)
 }
 
@@ -32,7 +32,7 @@ fun FlowContent.cellCard(
 
 fun FlowContent.startsAtCell(startsAt: Instant) {
     row(CellContent.RowMod) {
-        textBlock(startsAt.toRelativeDayFormat(), modify(CellContent.TextMod, Bold))
+        textBlock(startsAt.toRelativeDayFormat(), modify(CellContent.TextMod, Bold, ColorSchemeFg))
         textBlock(startsAt.toTimeFormat(), modify(CellContent.TextMod, MarginLeft1))
     }
 }

@@ -14,7 +14,7 @@ val DisplayUtilityCss
         BorderRadius0, BorderRadius1, BorderRadius2, BorderRadius4, BorderRadius50P, BorderRadiusBottom1,
         BorderDashed2Px,
         // Color
-        Accent, Primary, Secondary, Danger, NightInk, DayInk,
+        Accent, Primary, Secondary, Danger, NightInk, DayInk, PrimaryFg, AccentFg, ColorSchemeFg, ColorSchemeBg,
         // Overflow
         OverflowHidden, OverflowWrapAnywhere, OverflowClip, OverflowXAuto, OverflowXHidden, OverflowYAuto, OverscrollBehaviorContain,
         // Background
@@ -70,7 +70,11 @@ val BorderRadiusBottom1 = utilityOf("border-radius-bottom-1", "border-radius: 0 
 
 // Color
 val Accent = CssUtility("accent")
+val AccentFg = utilityOf("accent-fg", "color: var(--accent-fg)")
 val Primary = CssUtility("primary")
+val PrimaryFg = utilityOf("primary-fg", "color: var(--primary-fg)")
+val ColorSchemeFg = utilityOf("color-scheme-fg", "color: var(--color-scheme, currentColor)")
+val ColorSchemeBg = utilityOf("color-scheme-bg", "background-color: var(--color-scheme, currentColor)")
 val Secondary = CssUtility("secondary")
 val Danger = CssUtility("danger")
 val NightInk = utilityOf("night-ink", "color: var(--white-fg)")
