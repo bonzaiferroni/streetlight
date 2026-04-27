@@ -56,7 +56,7 @@ fun FlowContent.postRow(
     cells: List<(FlowContent.() -> Unit)?>
 ) {
 
-    card(modify(QueryContainer, Padding0, OverflowClip, ZenCardBg)) {
+    card(modify(QueryContainer, Padding0, OverflowClip, ZenBg, MoonShadow)) {
         colorScheme?.let {
             setStyle(Property.ColorScheme.with(colorScheme))
         }
@@ -91,7 +91,7 @@ fun FlowContent.postRow(
                     row(modify(AlignItemsCenter)) {
                         row(modify(Flex1, OverflowXAuto)) {
                             links?.forEach { link ->
-                                btn(link.label, link.url, modify(Secondary))
+                                btn(link.label, link.url, modify(Zen))
                             }
                         }
 

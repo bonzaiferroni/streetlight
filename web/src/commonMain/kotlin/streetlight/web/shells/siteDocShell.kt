@@ -11,7 +11,7 @@ import streetlight.web.pages.appFooter
 
 fun FlowContent.siteDocShell(node: DocNode, table: DocTable) {
     row(modify(AlignItemsStart, PaddingLeft1)) {
-        card(modify(Width32, ZenCardBg, Gap0, PositionSticky, TopSpacing8)) {
+        card(modify(Width32, ZenBg, Gap0, PositionSticky, TopSpacing8)) {
             setId(SiteDocKey.TableId)
             siteDocTable(table)
         }
@@ -68,7 +68,7 @@ fun FlowContent.siteDocContent(node: DocNode) {
                         }
                     }
 
-                    card(modify(ZenCardBg, Padding4)) {
+                    card(modify(ZenBg, Padding4)) {
                         markdown(section.content)
                     }
                 }

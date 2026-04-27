@@ -35,7 +35,7 @@ ${CommentClass.HasNestedContent} > div > ${CommentClass.NestedContent}::before {
     left: 0;
     width: var(--unit-spacing-2);
     height: var(--unit-spacing-2);
-    background: radial-gradient(circle at 100% 100%, transparent var(--unit-spacing-2), var(--zen-card-bg) var(--unit-spacing-2));
+    background: radial-gradient(circle at 100% 100%, transparent var(--unit-spacing-2), var(--zen-bg) var(--unit-spacing-2));
 }
 
 ${CommentClass.HasNestedContent} > div > ${CommentClass.NestedContent} {

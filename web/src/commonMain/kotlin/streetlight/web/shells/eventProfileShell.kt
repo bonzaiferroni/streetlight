@@ -16,7 +16,7 @@ import streetlight.web.pages.appFooter
 
 fun FlowContent.eventProfileShell(event: EventLocation) {
     column(EventProfileKey.id, modify(AlignItemsStretch, Gap4)) {
-        card(modify(ZenCardBg, BorderRadius2, Padding0, OverflowClip, Gap0, QueryContainer)) {
+        card(modify(ZenBg, BorderRadius2, Padding0, OverflowClip, Gap0, QueryContainer)) {
             column(modify(ContainerMdRow, FlexItems1, CardBg, Gap0)) {
                 val imageUrl = event.images.medium
                 if (imageUrl != null) {
@@ -32,7 +32,7 @@ fun FlowContent.eventProfileShell(event: EventLocation) {
                     }
                 }
             }
-            row(modify(MinHeight8, FlexItems1, GapTiny, TextAlignCenter, WrapFlex, ZenCardBg)) {
+            row(modify(MinHeight8, FlexItems1, GapTiny, TextAlignCenter, WrapFlex, ZenBg)) {
                 cellCard {
                     startsAtCell(event.startsAt)
                 }
@@ -66,7 +66,7 @@ fun FlowContent.eventProfileShell(event: EventLocation) {
         tabs {
             tab("Location") {
                 column {
-                    card(modify(QueryContainer, ZenCardBg, BorderRadius2, Padding0, OverflowClip, Gap0)) {
+                    card(modify(QueryContainer, ZenBg, BorderRadius2, Padding0, OverflowClip, Gap0)) {
                         column(modify(ContainerMdRow, FlexItems1, CardBg, Gap0)) {
                             geoMapMount(event.geoPoint, modify(MinHeight48))
                             column(modify(JustifyContentCenter, AlignItemsCenter)) {

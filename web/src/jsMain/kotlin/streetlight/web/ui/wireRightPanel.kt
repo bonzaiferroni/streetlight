@@ -16,7 +16,7 @@ fun RenderContext.wireRightPanel(app: Streetlight) {
     val omni = app.omni
     val recordFlow = omni.stateFlow.mapDistinct { it.records }
     var container: HTMLElement? = null
-    val cardMod = modify(ZenCardBg, Height100P, JustifyContentEnd, OverflowYAuto, OverscrollBehaviorContain, OverflowXHidden)
+    val cardMod = modify(ZenBg, Height100P, JustifyContentEnd, OverflowYAuto, OverscrollBehaviorContain, OverflowXHidden)
 
     wireBlock(AppBodyKey.PanelRightId) {
         container = card(cardMod) {

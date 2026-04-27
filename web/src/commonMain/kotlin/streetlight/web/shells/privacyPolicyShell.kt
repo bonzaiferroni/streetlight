@@ -14,7 +14,7 @@ fun FlowContent.privacyPolicyShell() {
             filigree {
                 heading1("Privacy on Streetlight", modify(Shrinkable))
             }
-            card(modify(ZenCardBg, Padding4)) {
+            card(modify(ZenBg, Padding4)) {
                 markdown(PrivacyIntro)
             }
         }
@@ -25,7 +25,7 @@ fun FlowContent.privacyPolicyShell() {
             filigree {
                 heading2("Information shared on Streetlight")
             }
-            card(modify(ZenCardBg, Padding4)) {
+            card(modify(ZenBg, Padding4)) {
                 markdown(InformationSharedContent)
             }
         }
@@ -34,7 +34,7 @@ fun FlowContent.privacyPolicyShell() {
             filigree {
                 heading2("Upcoming sections")
             }
-            card(modify(ZenCardBg, Padding4)) {
+            card(modify(ZenBg, Padding4)) {
                 markdown(UpcomingSectionsContent)
             }
         }

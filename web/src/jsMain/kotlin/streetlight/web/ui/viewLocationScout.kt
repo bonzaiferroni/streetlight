@@ -1,11 +1,7 @@
 package streetlight.web.ui
 
-import kampfire.model.thumb
-import koala.SvgFile
 import koala.css.*
 import koala.dom.*
-import koala.html.ButtonPopover
-import koala.html.buttonPopover
 import koala.html.filigree
 import koala.html.heading1
 import koala.html.heading3
@@ -13,8 +9,6 @@ import koala.html.section
 import koala.html.spacer
 import koala.model.mapDistinct
 import streetlight.model.data.Galaxy
-import streetlight.model.data.PostResult
-import streetlight.web.GalaxySlugRoute
 import streetlight.web.LocationScoutRoute
 import streetlight.web.model.LocationFinder
 import streetlight.web.model.LocationScout
@@ -54,7 +48,7 @@ fun RenderContext.viewLocationScout(app: Streetlight, galaxy: Galaxy) {
                         heading3("Post ${location.name}")
                     }
 
-                    card(modify(ZenCardBg)) {
+                    card(modify(ZenBg)) {
                         textEditor("text", onValue = model::setText, flow = textFlow)
                         row(modify(JustifyContentSpaceBetween)) {
                             spacer()

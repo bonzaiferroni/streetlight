@@ -60,6 +60,13 @@
     background: var(--secondary-button);
 }
 
+.btn.zen {
+    color: var(--ink-fg);
+    background: var(--zen-bg);
+    box-shadow: var(--zen-button-shadow);
+    text-shadow: none;
+}
+
 .day-theme .btn.secondary {
     box-shadow: none;
 }

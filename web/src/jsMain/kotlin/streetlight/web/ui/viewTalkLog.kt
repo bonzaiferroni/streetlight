@@ -170,6 +170,6 @@ fun ViewContext<TalkLog>.addCommentView(comment: Comment, comments: List<Comment
 }
 
 fun DOMContext.zenButton(modifiers: ModifierSet? = null, block: DIV.() -> Unit) =
-    row(modify(modifiers, ZenCardBg, ButtonBorderRadius, ButtonPadding)) {
+    row(modify(modifiers, ZenBg, ButtonBorderRadius, ButtonPadding)) {
         block()
     }

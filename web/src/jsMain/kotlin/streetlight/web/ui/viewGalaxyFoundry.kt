@@ -10,7 +10,6 @@ import koala.html.headerImage
 import koala.html.heading1
 import koala.html.heading3
 import koala.html.section
-import koala.html.spacer
 import koala.html.span
 import koala.model.mapDistinct
 import streetlight.model.data.GalaxyEdit
@@ -38,7 +37,7 @@ fun ViewContext<Streetlight>.viewGalaxyFoundry() {
     val querySubColumnMod = queryColumnMod + MarginTop2
     val instructionsColumnMod = modify(Flex1, JustifyContentCenter, Margin1)
     val contentColumnMod = modify(Flex1)
-    val cardMod = modify(ZenCardBg)
+    val cardMod = modify(ZenBg)
     val footnoteMod = modify(OpacityMost, Italic, JustifyContentSpaceBetween, WhiteSpaceNoWrap)
     val bulletsMod = modify(OpacityMost)
 

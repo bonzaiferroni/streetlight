@@ -8,7 +8,6 @@ import kotlinx.html.code
 import kotlinx.html.figcaption
 import kotlinx.html.figure
 import kotlinx.html.hr
-import kotlinx.html.img
 import kotlinx.html.ol
 import kotlinx.html.pre
 import kotlinx.html.style
@@ -155,7 +154,7 @@ fun FlowContent.renderTable(block: MarkdownTable) {
     val hasHeader = block.header.cells.any { it.spans.isNotEmpty() }
 
     table {
-        addModifiers(AlignSelfStart, MoonShadow, BorderRadius2, ZenCardBg)
+        addModifiers(AlignSelfStart, MoonShadow, BorderRadius2, ZenBg)
         if (hasHeader) {
             thead {
                 tr {

@@ -2,7 +2,7 @@ package streetlight.web.shells
 
 import koala.css.Padding4
 import koala.css.Shrinkable
-import koala.css.ZenCardBg
+import koala.css.ZenBg
 import koala.css.modify
 import koala.html.card
 import koala.html.column
@@ -26,19 +26,19 @@ fun FlowContent.aboutShell() {
         tabs {
             tab("Background") {
 
-                card(modify(ZenCardBg, Padding4)) {
+                card(modify(ZenBg, Padding4)) {
                     markdown(AboutLuke)
                 }
             }
             tab("Ideas") {
 
-                card(modify(ZenCardBg, Padding4)) {
+                card(modify(ZenBg, Padding4)) {
                     markdown(IdeasContent)
                 }
             }
             tab("Roadmap") {
 
-                card(modify(ZenCardBg, Padding4)) {
+                card(modify(ZenBg, Padding4)) {
                     markdown("yer roadmap")
                 }
             }

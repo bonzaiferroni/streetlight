@@ -196,8 +196,8 @@ class CommentView(
         isRendered = true
 
         _rootBlock = column(modify(CommentClass.Root, Gap0)) {
-            card(modify(ZenCardBg, Gap0, Padding0, OverflowClip, AutoMagic)) {
-                row(modify(AlignItemsCenter, modify(ZenCardBg, Padding1))) {
+            card(modify(ZenBg, Gap0, Padding0, OverflowClip, AutoMagic)) {
+                row(modify(AlignItemsCenter, modify(ZenBg, Padding1))) {
                     navigationIfNotNull(comment.username?.let { StarRoute(it) }) {
                         row(modify(AlignItemsCenter)) {
                             image(comment.thumb, modify(Aspect1, Height6, BorderRadius50P))
@@ -250,7 +250,7 @@ class CommentView(
 
             row(modify(Gap0, CommentClass.AfterCard)) {
                 // indent indicator
-                div(modify(ZenCardBg, Width1, BorderRadiusBottom1))
+                div(modify(ZenBg, Width1, BorderRadiusBottom1))
 
                 column(modify(CommentClass.NestedContent, modify(Flex1))) {
                     _replyBlock = div(modify(CommentClass.Reply))

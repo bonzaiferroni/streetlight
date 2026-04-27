@@ -17,7 +17,7 @@ fun FlowContent.locationProfileShell(
     location: Location
 ) {
     column(LocationProfileKey.Id, modify(AlignItemsStretch, Gap4)) {
-        card(modify(ZenCardBg, BorderRadius2, Padding0, OverflowClip, Gap0, QueryContainer)) {
+        card(modify(ZenBg, BorderRadius2, Padding0, OverflowClip, Gap0, QueryContainer)) {
             column(modify(ContainerMdRow, FlexItems1, CardBg, Gap0)) {
                 val imageUrl = location.images.medium
                 if (imageUrl != null) {
@@ -34,7 +34,7 @@ fun FlowContent.locationProfileShell(
                     }
                 }
             }
-            row(modify(MinHeight8, FlexItems1, GapTiny, TextAlignCenter, WrapFlex, ZenCardBg, MoonShadow)) {
+            row(modify(MinHeight8, FlexItems1, GapTiny, TextAlignCenter, WrapFlex, ZenBg, MoonShadow)) {
                 cellCard {
                     postedByCell(location.username)
                 }
