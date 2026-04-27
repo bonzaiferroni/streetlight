@@ -48,7 +48,6 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object QueryPoint: QueryEndpoint<GeoPoint, List<Location>>(this, "query-point")
         object ParseLocation: PostEndpoint<ParseRequest, LocationEdit>(this, "parse-location")
         object QueryBounds: PostEndpoint<GeoBounds, List<LocationInfo>>(this, "query-bounds")
-        object PostLocation: PostEndpoint<LocationPostEdit, LocationPostId>(this, "create-post")
     }
 
     object Songs: GetEndpoint<List<Song>>(this, "songs") {
@@ -96,7 +95,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
     }
 
     object Stories: ApiNode(this, "story") {
-        object ReadUrl: GetEndpoint<StoryParse>(this, "read-url") {
+        object ReadUrl: GetEndpoint<ProtoStoryParse>(this, "read-url") {
             val url = addStringParam("url")
         }
     }
@@ -115,11 +114,11 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object Top: GetEndpoint<List<Galaxy>>(this, "areas")
         object ReadGalaxies: PostEndpoint<List<GalaxyId>, List<Galaxy>>(this, "read-galaxies")
         object Path: GetByIdEndpoint<String, Galaxy>(this, "path")
-        object PostEvent: PostEndpoint<EventPostEdit, EventPostId>(this, "post-event")
-        object PostLocation: PostEndpoint<LocationPostEdit, LocationPostId>(this, "post-location")
-        object ReadMultiPosts: PostEndpoint<List<GalaxyId>, List<EventPost>>(this, "multi-posts")
-        object ReadPosts: GetByIdEndpoint<GalaxyId, PostListing>(this, "posts")
-        object ReadPost: GetByIdEndpoint<EventPostId, EventPost>(this, "post")
+        object PostEvent: PostEndpoint<EventPostEdit, PostId>(this, "post-event")
+        object PostLocation: PostEndpoint<LocationPostEdit, PostId>(this, "post-location")
+        object ReadMultiPosts: PostEndpoint<List<GalaxyId>, List<Post>>(this, "multi-posts")
+        object ReadPosts: GetByIdEndpoint<GalaxyId, List<Post>>(this, "posts")
+        object ReadPost: GetByIdEndpoint<PostId, Post>(this, "post")
         object ReadLights: GetEndpoint<List<GalaxyId>>(this, "lights")
         object EditLight: PostEndpoint<LightRequest, Boolean>(this, "light-edit")
     }

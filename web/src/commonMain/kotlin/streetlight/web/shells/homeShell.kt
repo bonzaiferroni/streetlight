@@ -5,6 +5,8 @@ import koala.SvgFile
 import koala.css.*
 import koala.html.*
 import kotlinx.html.FlowContent
+import streetlight.model.data.Galaxy
+import streetlight.model.data.Post
 import streetlight.web.CreateGalaxyRoute
 import streetlight.web.EarthMapRoute
 import streetlight.web.layouts.layoutEventPosts
@@ -63,7 +65,7 @@ fun FlowContent.homeShell(content: HomeContent) {
                     }
                 }
 
-                layoutEventPosts("Upcoming Events", content.posts)
+                // layoutEventPosts("Upcoming Events", content.posts)
 
                 section {
                     filigree {
@@ -105,3 +107,8 @@ object HomeShellKey {
 }
 
 val SectionHeadingMod = modify(LineHeight1, WhiteSpaceNoWrap, TextAlignCenter, MoonShadowText)
+
+data class HomeContent(
+    val galaxies: List<Galaxy>,
+    val posts: List<Post>
+)

@@ -6,8 +6,8 @@ import koala.model.GeoMap
 import koala.model.mapDistinct
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import streetlight.model.data.PostId
-import streetlight.model.data.PostUpdate
+import streetlight.model.data.ProtoPostId
+import streetlight.model.data.ProtoPostUpdate
 
 class PostEditor(
     scope: CoroutineScope,
@@ -24,7 +24,7 @@ class PostEditor(
     
     val storyNow get() = stateNow.story
 
-    fun initStory(postId: PostId?) {
+    fun initStory(postId: ProtoPostId?) {
     }
 
     fun setUrl(value: String) {
@@ -50,13 +50,13 @@ class PostEditor(
         }
     }
     
-    private fun setStory(toNewState: (PostUpdate) -> PostUpdate) {
+    private fun setStory(toNewState: (ProtoPostUpdate) -> ProtoPostUpdate) {
         setState { it.copy(story = toNewState(storyNow))}
     }
 }
 
 data class PostEditorState(
-    val postId: PostId? = null,
-    val story: PostUpdate = PostUpdate(),
+    val postId: ProtoPostId? = null,
+    val story: ProtoPostUpdate = ProtoPostUpdate(),
     val message: UIMessage? = null,
 )

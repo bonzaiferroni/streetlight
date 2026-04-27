@@ -13,8 +13,8 @@ import streetlight.model.data.Comment
 import streetlight.model.data.TalkHistory
 import streetlight.model.data.CommentCreated
 import streetlight.model.data.CommentUpdated
+import streetlight.model.data.PostOrder
 import streetlight.web.TalkRoute
-import streetlight.web.io.SortBy
 import streetlight.web.io.TalkLog
 import streetlight.web.model.Streetlight
 
@@ -79,8 +79,8 @@ fun ViewContext<TalkLog>.buildTree(treeRoot: HTMLElement, comments: List<Comment
     val sortBy = model.stateNow.sortBy
 
     val comments = when (sortBy) {
-        SortBy.New -> comments.sortedByDescending { it.createdAt }
-        SortBy.Old -> comments.sortedBy { it.createdAt }
+        PostOrder.NewFirst -> comments.sortedByDescending { it.createdAt }
+        PostOrder.OldFirst -> comments.sortedBy { it.createdAt }
     }
     val roots = comments.filter { it.parentId == null }
 
@@ -98,12 +98,12 @@ fun ViewContext<TalkLog>.growTree(treeRoot: HTMLElement, comment: Comment) {
     when (val parentId = comment.parentId) {
         null -> {
             when (model.stateNow.sortBy) {
-                SortBy.New -> {
+                PostOrder.NewFirst -> {
                     prependRender(treeRoot) {
                         addCommentView(comment, emptyList())
                     }
                 }
-                SortBy.Old -> {
+                PostOrder.OldFirst -> {
                     appendRender(treeRoot) {
                         addCommentView(comment, emptyList())
                     }

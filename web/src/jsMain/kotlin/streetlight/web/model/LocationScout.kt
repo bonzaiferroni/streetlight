@@ -7,7 +7,7 @@ import kotlinx.coroutines.launch
 import streetlight.model.data.GalaxyId
 import streetlight.model.data.Location
 import streetlight.model.data.LocationPostEdit
-import streetlight.model.data.LocationPostId
+import streetlight.model.data.PostId
 import streetlight.web.ui.ViewModel
 
 class LocationScout(
@@ -49,5 +49,5 @@ class LocationScout(
 
 data class LocationScoutState(
     val text: String? = null,
-    val postId: LocationPostId? = null
+    val postId: PostId? = null
 )

@@ -31,7 +31,7 @@ data class Galaxy(
         it + (locationCount ?: 0)
     }
 
-    val postTypes get() = setOf(PostType.Location, PostType.Event, PostType.Comment)
+    val postTypes get() = setOf(PostType.Location, PostType.Event, PostType.Content)
 }
 
 @JvmInline @Serializable

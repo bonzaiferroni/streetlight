@@ -1,21 +1,19 @@
 package streetlight.model.data
 
 import kampfire.model.GeoPoint
-import kampfire.utils.randomUuidString
 import kotlin.time.Instant
 import kotlinx.serialization.Serializable
-import kotlin.jvm.JvmInline
 
 @Serializable
 data class LocationPost(
-    override val postId: LocationPostId,
+    override val postId: PostId,
     override val galaxyId: GalaxyId?,
     override val username: String?,
     val location: Location?,
     override val text: String?,
     override val createdAt: Instant,
     override val updatedAt: Instant,
-): StarPost {
+): Post {
     override val images get() = location?.images
     override val geoPoint get() = location?.geoPoint ?: GeoPoint.Denver
     override val description get() = location?.description
@@ -27,27 +25,8 @@ data class LocationPost(
 }
 
 @Serializable
-@JvmInline
-value class LocationPostId(override val value: String): ProjectId, StarPostId {
-    override val stringId get() = value
-    companion object {
-        fun random() = LocationPostId(randomUuidString())
-    }
-}
-
-@Serializable
-data class LocationPostRow(
-    val postId: LocationPostId,
-    val locationId: LocationId?,
-    val starId: StarId?,
-    val text: String?,
-    val updatedAt: Instant,
-    val createdAt: Instant,
-)
-
-@Serializable
 data class LocationPostEdit(
-    val postId: LocationPostId?,
+    val postId: PostId?,
     val galaxyId: GalaxyId,
     val locationId: LocationId,
     val text: String? = null,

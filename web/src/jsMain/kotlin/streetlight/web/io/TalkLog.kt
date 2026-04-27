@@ -53,7 +53,7 @@ class TalkLog(
 
     }
 
-    fun setSortBy(value: SortBy) {
+    fun setSortBy(value: PostOrder) {
         commentViews.clear() // is this a memory leak? we need to cancel a supervisor job
         state.set { it.copy(sortBy = value) }
     }
@@ -103,12 +103,5 @@ class TalkLog(
 }
 
 data class TalkLogState(
-    val sortBy: SortBy = SortBy.Old,
+    val sortBy: PostOrder = PostOrder.OldFirst,
 )
-
-enum class SortBy(label: String? = null) {
-    New("Newest first"),
-    Old("Oldest first");
-
-    val label = label ?: name
-}

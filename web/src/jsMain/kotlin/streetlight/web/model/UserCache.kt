@@ -28,7 +28,6 @@ class UserCache(
     val talent = ItemCache(scope, { it.talentId }) { api.readTalents() }
     val song = ItemCache(scope, { it.songId }) { api.readSongs() }
     // val file = ItemCache(scope, { it }) { api.readUserFiles() }
-    @Deprecated("use GalaxyCache")
     val topGalaxies = ItemCache(scope, { it.galaxyId }) { api.readTopGalaxies() }
 
     // val galaxy = GalaxyCache(scope, config, api)

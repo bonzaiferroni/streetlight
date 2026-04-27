@@ -5,12 +5,13 @@ import koala.SvgFile
 import koala.css.*
 import koala.dom.*
 import koala.html.btn
-import koala.html.heading5
 import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+import streetlight.model.data.EventPost
+import streetlight.model.data.LocationPost
 import streetlight.web.EarthMapRoute
 import streetlight.web.GalaxySlugRoute
 import streetlight.web.HomeRoute
@@ -32,18 +33,23 @@ fun ViewContext<EarthMap>.viewEarthMap() {
                         btn("View Feed", route, modify(ZIndex2))
                     }
                 }
-                val events = model.stateNow.listing?.events?.takeIf { it.isNotEmpty() }
-                events?.let { events ->
+                val posts = model.stateNow.posts?.takeIf { it.isNotEmpty() }
+                posts?.let { posts ->
                     card(modify(MaxWidth32, ZIndex2)) {
-                        events.forEach { post ->
-                            row(modify(Height8, AlignItemsCenter)) {
-                                image(post.images.thumb, modify(Aspect1, Width8, BorderRadius50P))
-                                column(modify(Flex1, Gap0)) {
-                                    textBlock(post.title, modify(SingleLine))
-                                    post.event?.locationName?.let {
-                                        textBlock(it, modify(OpacityMost, SingleLine))
+                        posts.forEach { post ->
+                            when (post) {
+                                is EventPost -> {
+                                    row(modify(Height8, AlignItemsCenter)) {
+                                        image(post.images.thumb, modify(Aspect1, Width8, BorderRadius50P))
+                                        column(modify(Flex1, Gap0)) {
+                                            textBlock(post.title, modify(SingleLine))
+                                            post.event?.locationName?.let {
+                                                textBlock(it, modify(OpacityMost, SingleLine))
+                                            }
+                                        }
                                     }
                                 }
+                                is LocationPost -> return@forEach
                             }
                         }
                     }
@@ -54,8 +60,8 @@ fun ViewContext<EarthMap>.viewEarthMap() {
     }
 
     renderScope.launch {
-        model.listingFlow.collect { listing ->
-            app.streetMap.setPosts(listing?.events)
+        model.postsFlow.collect { posts ->
+            app.streetMap.setPosts(posts)
         }
     }
 }

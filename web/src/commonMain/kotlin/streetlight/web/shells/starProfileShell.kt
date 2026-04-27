@@ -3,6 +3,7 @@ package streetlight.web.shells
 import koala.css.*
 import koala.html.*
 import kotlinx.html.FlowContent
+import streetlight.model.data.Post
 import streetlight.model.data.PostListing
 import streetlight.model.data.PostType
 import streetlight.model.data.Star
@@ -11,7 +12,7 @@ import streetlight.web.pages.appFooter
 import streetlight.web.ui.starHeader
 
 fun FlowContent.starProfileShell(content: StarProfileContent) {
-    val star = content.star; val listing = content.listing;
+    val star = content.star; val listing = content.posts;
     column(StarProfileKey.ShellId, modify(Gap8)) {
         column {
             swapBlock(StarProfileKey.SwapId, modify(Magic, OverflowClip)) {
@@ -25,14 +26,14 @@ fun FlowContent.starProfileShell(content: StarProfileContent) {
                 }
             }
         }
-        layoutPostListing(setOf(PostType.Event, PostType.Location), listing)
+        // layoutPostListing(setOf(PostType.Event, PostType.Location), listing)
         appFooter(StarProfileKey.SOURCE)
     }
 }
 
 data class StarProfileContent(
     val star: Star,
-    val listing: PostListing,
+    val posts: List<Post>,
 )
 
 object StarProfileKey {

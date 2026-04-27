@@ -22,7 +22,7 @@ fun ViewContext<Streetlight>.viewGalaxyProfile(content: GalaxyProfileContent) {
     )
     wireGalaxyMenu(app, root, content.galaxy)
 
-    app.streetMap.setPosts(content.listing.events)
+    app.streetMap.setPosts(content.posts)
 }
 
 fun ViewContext<Streetlight>.viewGalaxyProfileRoute() {
@@ -31,7 +31,7 @@ fun ViewContext<Streetlight>.viewGalaxyProfileRoute() {
         val listing = model.client.api.readPosts(galaxy.galaxyId) ?: return@routeBlock null
         GalaxyProfileContent(
             galaxy = galaxy,
-            listing = listing,
+            posts = listing,
         )
     }) { content ->
         viewContextOf(model) {

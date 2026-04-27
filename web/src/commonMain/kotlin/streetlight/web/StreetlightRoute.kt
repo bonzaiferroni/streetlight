@@ -12,7 +12,7 @@ import streetlight.model.data.EventLocation
 import streetlight.model.data.GalaxyId
 import streetlight.model.data.LocationEdit
 import streetlight.model.data.LocationId
-import streetlight.model.data.PostId
+import streetlight.model.data.ProtoPostId
 import streetlight.model.data.Slug
 import streetlight.model.data.SongId
 import streetlight.model.data.TalentId
@@ -26,7 +26,7 @@ enum class StreetlightScreen(
     StarDash("account", { StarDashRoute }),
     EventProfile("e", { path -> path.provideRouteFromPath { EventSlugRoute(it) } }),
     EditEvent("edit-event", { path -> EditEventIdRoute(path.provideId { EventId(it) }) }),
-    EditStory("edit-story", { path -> EditPostRoute(path.provideId { PostId(it) }) }),
+    EditStory("edit-story", { path -> EditPostRoute(path.provideId { ProtoPostId(it) }) }),
     EditLocation("edit-location", { path -> EditLocationIdRoute(path.provideId { LocationId(it) }) }),
     Sandbox("sandbox", { SandboxRoute }),
     Earth("earth", { path -> EarthMapRoute(path.getOrNull(1))}),
@@ -116,7 +116,7 @@ data class EarthMapRoute(val galaxySlug: String?): StreetlightRoute {
 }
 
 data class EditPostRoute(
-    val postId: PostId? = null
+    val postId: ProtoPostId? = null
 ): StreetlightRoute {
     override val screen get() = StreetlightScreen.EditStory
     override val title get() = "Share Post"

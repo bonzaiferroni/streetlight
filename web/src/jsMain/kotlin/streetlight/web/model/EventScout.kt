@@ -26,6 +26,7 @@ import streetlight.model.data.EventPostEdit
 import streetlight.model.data.Location
 import streetlight.model.data.LocationEdit
 import streetlight.model.data.Place
+import streetlight.model.data.Post
 import streetlight.model.data.UrlParseRequest
 import streetlight.model.data.mergeLeft
 import streetlight.model.data.mergeRight
@@ -241,7 +242,7 @@ data class EventScoutState(
     val locationEdit: LocationEdit? = null,
     val location: Location? = null,
     val event: Event? = null,
-    val posts: List<EventPost> = emptyList()
+    val posts: List<Post> = emptyList()
 )
 
 private const val introMsg = "Where will the event be held? Search for a location or find one on the map."

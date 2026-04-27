@@ -11,6 +11,8 @@ import streetlight.model.data.Galaxy
 import streetlight.model.data.EventLocation
 import streetlight.model.data.EventPost
 import streetlight.model.data.Location
+import streetlight.model.data.LocationPost
+import streetlight.model.data.Post
 
 class StreetMap(
     private val scope: CoroutineScope,
@@ -25,24 +27,27 @@ class StreetMap(
     
     val transit = TransitMap(scope, client, geoMap, config)
 
-    fun setPosts(posts: List<EventPost>?) {
+    fun setPosts(posts: List<Post>?) {
         val posts = posts?.let { createEntities(posts) } ?: emptyList()
         geoMap.removeEntities(state.now.posts.map { it.entityId })
         geoMap.addEntities(posts)
         state.set { it.copy(posts = posts) }
     }
 
-    fun addPosts(posts: List<EventPost>) {
+    fun addPosts(posts: List<Post>) {
         val posts = createEntities(posts)
         geoMap.addEntities(posts)
         state.set { it.copy(posts = it.posts + posts)}
     }
 
-    private fun createEntities(posts: List<EventPost>): List<EventEntity> {
+    private fun createEntities(posts: List<Post>): List<EventEntity> {
         return posts.mapNotNull { post ->
             val position = post.geoPoint ?: return@mapNotNull null
-            val galaxy = cache.topGalaxies.getCachedItem(post.galaxyId)
-            EventEntity(post, galaxy, position)
+            val galaxy = post.galaxyId?.let { cache.topGalaxies.getCachedItem(it) }
+            when (post) {
+                is EventPost -> EventEntity(post, galaxy, position)
+                is LocationPost -> return@mapNotNull null
+            }
         }
     }
 }

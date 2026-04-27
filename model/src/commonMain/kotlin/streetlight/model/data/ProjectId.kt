@@ -15,11 +15,11 @@ inline fun <reified T> String.toProjectId(): T = when (T::class) {
     RenditionId::class -> RenditionId(this) as T
     PerformerId::class -> PerformerId(this) as T
     GuestId::class -> GuestId(this) as T
-    PostId::class -> PostId(this) as T
+    ProtoPostId::class -> ProtoPostId(this) as T
     UploadFileId::class -> UploadFileId(this) as T
     TalentId::class -> TalentId(this) as T
-    EventPostId::class -> EventPostId(this) as T
-    LocationPostId::class -> LocationPostId(this) as T
+    PostId::class -> PostId(this) as T
+    PostId::class -> PostId(this) as T
     CommentId::class -> CommentId(this) as T
     else -> error("invalid projectId type: ${T::class.simpleName}")
 }

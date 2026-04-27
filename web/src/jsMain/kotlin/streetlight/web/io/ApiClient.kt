@@ -36,7 +36,6 @@ class ApiClient(private val client: FetchClient) {
         param(it.query, query)
     }
     suspend fun createOrEditLocation(location: LocationEdit) = client.post(Api.Locations.CreateOrEdit, location)
-    suspend fun postLocation(location: LocationPostEdit) = client.post(Api.Locations.PostLocation, location)
     suspend fun queryMap(request: MapQuery) = client.get(Api.Events.QueryMap, request.toQuery())
 
     // stars
@@ -78,9 +77,10 @@ class ApiClient(private val client: FetchClient) {
     suspend fun readGalaxies(galaxyIds: List<GalaxyId>) = client.post(Api.Galaxies.ReadGalaxies, galaxyIds)
     suspend fun readGalaxy(path: String) = client.get(Api.Galaxies.Path, path)
     suspend fun createPost(post: EventPostEdit) = client.post(Api.Galaxies.PostEvent, post)
+    suspend fun postLocation(location: LocationPostEdit) = client.post(Api.Galaxies.PostLocation, location)
     suspend fun readPosts(galaxyIds: List<GalaxyId>) = client.post(Api.Galaxies.ReadMultiPosts, galaxyIds)
     suspend fun readPosts(galaxyId: GalaxyId) = client.get(Api.Galaxies.ReadPosts, galaxyId)
-    suspend fun readPost(eventPostId: EventPostId) = client.get(Api.Galaxies.ReadPost, eventPostId)
+    suspend fun readPost(postId: PostId) = client.get(Api.Galaxies.ReadPost, postId)
     suspend fun readGalaxyLights() = client.get(Api.Galaxies.ReadLights)
     suspend fun editGalaxyLight(edit: LightRequest) = client.post(Api.Galaxies.EditLight, edit)
 

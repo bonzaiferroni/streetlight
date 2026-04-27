@@ -5,7 +5,7 @@ import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import streetlight.model.data.Galaxy
-import streetlight.model.data.PostListing
+import streetlight.model.data.Post
 import streetlight.web.EarthMapRoute
 import streetlight.web.ui.ViewModel
 
@@ -18,7 +18,7 @@ class EarthMap(
     val stateFlow = state.flow
     val stateNow get() = state.now
     val galaxyFlow = stateFlow.mapDistinct { it.galaxy }
-    val listingFlow = stateFlow.mapDistinct { it.listing }
+    val postsFlow = stateFlow.mapDistinct { it.posts }
 
     init {
         scope.launch {
@@ -32,7 +32,7 @@ class EarthMap(
                         val posts = galaxy?.let {
                             api.readPosts(it.galaxyId)
                         }
-                        state.set { it.copy(galaxy = galaxy, listing = posts) }
+                        state.set { it.copy(galaxy = galaxy, posts = posts) }
                     }
                 }
             }
@@ -42,5 +42,5 @@ class EarthMap(
 
 data class EarthMapState(
     val galaxy: Galaxy? = null,
-    val listing: PostListing? = null,
+    val posts: List<Post>? = null,
 )

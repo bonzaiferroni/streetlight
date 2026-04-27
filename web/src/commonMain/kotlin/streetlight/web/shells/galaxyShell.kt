@@ -5,6 +5,7 @@ import koala.html.*
 import kotlinx.html.FlowContent
 import kotlinx.serialization.Serializable
 import streetlight.model.data.Galaxy
+import streetlight.model.data.Post
 import streetlight.model.data.PostListing
 import streetlight.model.data.PostType
 import streetlight.web.EarthMapRoute
@@ -16,7 +17,7 @@ import streetlight.web.ui.EarthKey
 import streetlight.web.ui.galaxyHeader
 
 fun FlowContent.galaxyShell(content: GalaxyProfileContent) {
-    val galaxy = content.galaxy; val listing = content.listing;
+    val galaxy = content.galaxy; val listing = content.posts;
     column(GalaxyProfileKey.ShellId) {
         galaxyHeader(galaxy, modify(BorderRadius2, Height48, MoonShadow))
         box {
@@ -26,10 +27,10 @@ fun FlowContent.galaxyShell(content: GalaxyProfileContent) {
                     galaxyMenu(emptyList(), galaxy)
                     postMenu(galaxy)
                 }
-                if (galaxy.postTypes.contains(PostType.Comment)) {
-                    layoutTalkPreview(TalkRoute(galaxy.galaxyId), listing.comments)
-                }
-                layoutPostListing(galaxy.postTypes, listing)
+//                if (galaxy.postTypes.contains(PostType.Content)) {
+//                    layoutTalkPreview(TalkRoute(galaxy.galaxyId), listing.comments)
+//                }
+                // layoutPostListing(galaxy.postTypes, listing)
                 appFooter(GalaxyProfileKey.SOURCE)
             }
         }
@@ -44,5 +45,5 @@ object GalaxyProfileKey {
 @Serializable
 data class GalaxyProfileContent(
     val galaxy: Galaxy,
-    val listing: PostListing,
+    val posts: List<Post>,
 )
