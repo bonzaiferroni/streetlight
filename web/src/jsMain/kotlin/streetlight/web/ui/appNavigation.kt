@@ -17,7 +17,7 @@ fun RenderContext.appNavigation(app: Streetlight) {
         flow = app.portal.screenFlow,
         modifiers = modify(Magic, Blur, SlideUp),
         renderCacheCount = 0, // allows unlimited caching
-        onTransition = { window.scrollTo(0.0, 0.0) },
+        onTransition = { window.scrollTo(0.0, 0.0); console.log(it.pathRoot) },
     ) { screen ->
         viewContextOf(app) {
             when (screen) {

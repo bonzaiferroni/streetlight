@@ -50,7 +50,7 @@ private fun ViewContext<Streetlight>.starPanel(star: Star) {
 
     column() {
         row(RowMod) {
-            action(StarRoute(star.username)) {
+            navigation(StarRoute(star.username)) {
                 heading3(star.username)
             }
 
@@ -63,7 +63,7 @@ private fun ViewContext<Streetlight>.starPanel(star: Star) {
 
         // calendar route goes here
 
-        action(StarDashRoute) { // filler content
+        navigation(StarDashRoute) { // filler content
             onClick = StarHelmKey.ClosePopover
 
             row(RowMod) {
@@ -100,7 +100,7 @@ private fun ViewContext<Streetlight>.someonePanel() {
             }
             tab("Alternative") {
                 // calendar route goes here
-                action(SiteConfigRoute) { // filler content
+                navigation(SiteConfigRoute) { // filler content
                     onClick = StarHelmKey.ClosePopover
 
                     row(RowMod + Width32) {
@@ -109,7 +109,7 @@ private fun ViewContext<Streetlight>.someonePanel() {
                     }
                 }
 
-                action(SiteConfigRoute) { // filler content
+                navigation(SiteConfigRoute) { // filler content
                     onClick = StarHelmKey.ClosePopover
 
                     row(RowMod) {

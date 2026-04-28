@@ -3,9 +3,7 @@ package koala.html
 import koala.css.Class
 import koala.css.KoalaFun
 import koala.css.ModifierSet
-import koala.css.StyleSet
 import koala.css.addModifiers
-import koala.css.setStyle
 import koala.css.modify
 import kotlinx.html.A
 import kotlinx.html.FlowContent
@@ -46,7 +44,7 @@ fun FlowContent.navigation(
 ) {
     navigation(
         text = text,
-        href = route.toHashPath(),
+        href = route.toSitePath(),
         modifiers = modifiers,
         id = id,
         flair = flair,
@@ -61,7 +59,7 @@ fun FlowContent.navigationIfNotNull(
     id: Id? = null,
     block: FlowContent.() -> Unit = {}
 ) {
-    navigationIfNotNull(route?.toHashPath(), text, modifiers, id, block)
+    navigationIfNotNull(route?.toSitePath(), text, modifiers, id, block)
 }
 
 fun FlowContent.navigationIfNotNull(

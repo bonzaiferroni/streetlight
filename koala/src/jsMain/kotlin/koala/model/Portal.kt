@@ -2,11 +2,17 @@ package koala.model
 
 import koala.html.AppRoute
 import koala.html.AppScreen
+import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
-import org.w3c.dom.Location
+import org.w3c.dom.HTMLAnchorElement
+import org.w3c.dom.HTMLElement
+import org.w3c.dom.MANUAL
+import org.w3c.dom.ScrollRestoration
+import org.w3c.dom.events.MouseEvent
+import org.w3c.dom.url.URL
 
 class Portal(
     initialRoute: AppRoute,
@@ -20,29 +26,64 @@ class Portal(
     val screenFlow = stateFlow.mapDistinct { it.route.screen }
     val routeFlow = stateFlow.mapDistinct { it.route }
 
-    var hashPath
-        get() = window.location.hash.split("?")[0]
+    var sitePath
+        get() = window.location.pathname
         set(value: String) {
-            val query = window.location.hash.split("?").getOrNull(1)
-            window.location.hash = value + (query?.let { "?$it" } ?: "")
+            if (window.location.pathname.drop(1) == value) return
+            val href = "${window.location.origin}$value${window.location.search}"
+            window.history.pushState(null, "", href)
         }
 
     init {
-        val spaUrl = transformToHashUrl(window.location)
-        window.history.replaceState(null, "", spaUrl)
+        // keep scroll from jumping on back press
+        window.history.scrollRestoration = ScrollRestoration.MANUAL
 
-        val route = routeOf(hashPath)
+        // initialize route from current address
+        val route = routeOf(window.location.pathname)
         go(route ?: initialRoute)
-        window.addEventListener("hashchange", {
-            val route = routeOf(hashPath) ?: return@addEventListener
-            if (route == stateNow.route) return@addEventListener
-            val backRoute = stateNow.backstack.lastOrNull()
-            if (backRoute?.screen == route.screen) {
-                // goBack()
-                go(route) // td: maybe figure out
-            } else {
-                go(route)
+        // window.addEventListener("hashchange", {
+        //     val route = routeOf(hashPath) ?: return@addEventListener
+        //     if (route == stateNow.route) return@addEventListener
+        //     val backRoute = stateNow.backstack.lastOrNull()
+        //     if (backRoute?.screen == route.screen) {
+        //         // goBack()
+        //         go(route) // td: maybe figure out
+        //     } else {
+        //         go(route)
+        //     }
+        // })
+
+        fun handleRoute(href: String) {
+            val sitePath = if (href.startsWith("/")) href else URL(href).pathname
+
+            val route = routeOf(sitePath) ?: return
+            if (route == stateNow.route) return
+            go(route)
+        }
+
+        document.addEventListener("click", { event ->
+            val event = event as? MouseEvent ?: return@addEventListener
+            val anchor = (event.target as? HTMLElement)?.closest("a") as? HTMLAnchorElement ?: return@addEventListener
+            val modifiedClick = event.ctrlKey || event.metaKey || event.shiftKey
+
+            // Only intercept local paths, let external links sail free
+            if (anchor.hostname == window.location.hostname && anchor.target != "_blank" && !modifiedClick) {
+                event.preventDefault()
+                val href = anchor.getAttribute("href") ?: return@addEventListener
+                handleRoute(href)
             }
+        })
+
+        window.addEventListener("popstate", {
+            // td: handle a jump further back than 1
+            // When pushing new entries
+            // history.pushState(historyIndex++, "", href)
+            // When popstate fires
+            // window.addEventListener("popstate") { event ->
+            //     val state = (event as PopStateEvent).state as? Int
+            //     // Compare state to your current index to know the distance
+            // }
+            goBack(window.location.pathname)
         })
     }
 
@@ -66,14 +107,18 @@ class Portal(
         go(route, stateNow.backstack + stateNow.route)
     }
 
-    fun goBack() {
-        val route = stateNow.backstack.lastOrNull() ?: return
-        go(route, stateNow.backstack.dropLast(1))
+    fun goBack(sitePath: String? = null) {
+        val (jumps, route) = sitePath?.let {
+            stateNow.backstack.asReversed()
+                .withIndex()
+                .firstOrNull { (_, value) -> value.toSitePath() == it }
+        } ?: stateNow.backstack.lastOrNull()?.let { IndexedValue(1, it) } ?: return
+        go(route, stateNow.backstack.dropLast(jumps))
     }
 
     private fun go(route: AppRoute, backstack: List<AppRoute>) {
         state.set { it.copy(route = route, backstack = backstack, title = route.title)}
-        hashPath = route.toHashPath()
+        sitePath = route.toSitePath()
     }
 
     private fun routeOf(hashPath: String): AppRoute? {
@@ -89,21 +134,7 @@ data class PortalState(
     val canGoBack get() = backstack.isNotEmpty()
 }
 
-private fun transformToHashUrl(location: Location): String {
-    val origin = location.origin
-    val path = location.pathname
-    val search = location.search
-    val hash = location.hash
-
-    // If already a hash route, leave it be
-    if (hash.startsWith("#/")) {
-        return location.href
-    }
-
-    // Nothing but root? No need to meddle
-    if (path == "/" || path.isBlank()) {
-        return location.href
-    }
-
-    return "$origin/#$path$search"
+private fun sitePathOf(address: String): String {
+    if (address.startsWith("/")) return address.drop(1)
+    return URL(address).pathname
 }

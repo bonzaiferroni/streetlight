@@ -22,7 +22,7 @@ enum class StreetlightScreen(
     override val pathRoot: String,
     override val provideRoute: (List<String>) -> AppRoute?
 ): AppScreen {
-    Home("home", { HomeRoute }),
+    Home("", { HomeRoute }),
     StarDash("account", { StarDashRoute }),
     EventProfile("e", { path -> path.provideRouteFromPath { EventSlugRoute(it) } }),
     EditEvent("edit-event", { path -> EditEventIdRoute(path.provideId { EventId(it) }) }),
@@ -61,12 +61,12 @@ sealed interface StreetlightRoute: AppRoute
 sealed interface StringIdRoute: StreetlightRoute {
     val id: TableId<String>?
 
-    override fun toHashPath() = toIdHashPath(id)
+    override fun toSitePath() = toIdSitePath(id)
 }
 
 sealed interface SlugRoute: StreetlightRoute {
     val slug: Slug?
-    override fun toHashPath() = toIdHashPath(slug)
+    override fun toSitePath() = toIdSitePath(slug)
 }
 
 object HomeRoute: StreetlightRoute {
@@ -112,7 +112,7 @@ data class EarthMapRoute(val galaxySlug: String?): StreetlightRoute {
     override val screen get() = StreetlightScreen.Earth
     override val title get() = "Earth"
 
-    override fun toHashPath() = toIdHashPath(galaxySlug)
+    override fun toSitePath() = toIdSitePath(galaxySlug)
 }
 
 data class EditPostRoute(
@@ -243,7 +243,7 @@ data class SiteDocRoute(val docId: DocId): StreetlightRoute {
     override val screen get() = StreetlightScreen.SiteDoc
     override val title get() = "Documentation"
 
-    override fun toHashPath() = toIdHashPath(docId)
+    override fun toSitePath() = toIdSitePath(docId)
 }
 
 data class TalkRoute(val stringId: StringId, val type: SpaceType): StreetlightRoute {
@@ -252,8 +252,8 @@ data class TalkRoute(val stringId: StringId, val type: SpaceType): StreetlightRo
     override val screen get() = StreetlightScreen.Talk
     override val title get() = "Talk"
 
-    override fun toHashPath() = toIdHashPath(stringId)
+    override fun toSitePath() = toIdSitePath(stringId)
 }
 
-private fun AppRoute.toIdHashPath(id: String?) = id?.let { "$basePath/$id" } ?: basePath
-private fun AppRoute.toIdHashPath(id: TableId<String>?) = toIdHashPath(id?.value)
+private fun AppRoute.toIdSitePath(id: String?) = id?.let { "$basePath/$id" } ?: basePath
+private fun AppRoute.toIdSitePath(id: TableId<String>?) = toIdSitePath(id?.value)

@@ -45,7 +45,7 @@ fun RenderContext.viewStarDash(
         }
 
         itemsBlock(userCache.talent.flow) { talent ->
-            action(TalentProfileRoute(talent.talentId)) {
+            navigation(TalentProfileRoute(talent.talentId)) {
                 card {
                     textBlock(talent.name)
                 }

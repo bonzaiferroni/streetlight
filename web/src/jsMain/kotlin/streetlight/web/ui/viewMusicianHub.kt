@@ -8,7 +8,7 @@ import koala.css.FlexItems1
 import koala.css.Width64
 import koala.css.modify
 import koala.dom.RenderContext
-import koala.dom.action
+import koala.dom.navigation
 import koala.dom.button
 import koala.dom.card
 import koala.dom.column
@@ -54,7 +54,7 @@ fun RenderContext.viewMusicianHub(
                         button("Add new song", modify(Accent), onClick = model::addSong)
                     }
                     itemsBlock(model.songsFlow, defaultMagic) { song ->
-                        action(SongProfileRoute(song.songId)) {
+                        navigation(SongProfileRoute(song.songId)) {
                             card {
                                 textBlock(song.title)
                             }
