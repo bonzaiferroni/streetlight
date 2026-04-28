@@ -8,6 +8,10 @@ object ItemsBlockKey {
 
 // language="CSS"
 val ItemsBlockCss get() = """
+.items-block > * {
+    width: 100%;
+}    
+
 .items-block.magic {
     transition: height 200ms ease-in-out;
 }

@@ -7,6 +7,7 @@ import kotlinx.coroutines.launch
 import streetlight.model.data.Galaxy
 import streetlight.model.data.Post
 import streetlight.web.EarthMapRoute
+import streetlight.web.io.getDataOrNull
 import streetlight.web.ui.ViewModel
 
 class EarthMap(
@@ -30,7 +31,7 @@ class EarthMap(
                             api.readGalaxy(it)
                         }
                         val posts = galaxy?.let {
-                            api.readPosts(it.galaxyId)
+                            api.readPosts(it.galaxyId).getDataOrNull()
                         }
                         state.set { it.copy(galaxy = galaxy, posts = posts) }
                     }

@@ -1,5 +1,7 @@
 package streetlight.web.ui
 
+import kampfire.model.Ok
+import kampfire.model.Problem
 import koala.css.AlignItemsCenter
 import koala.css.Magic
 import koala.css.Blur
@@ -14,6 +16,7 @@ import koala.html.textLabel
 import kotlinx.coroutines.launch
 import kotlinx.html.js.div
 import streetlight.web.HomeRoute
+import streetlight.web.io.getDataOrNull
 import streetlight.web.model.Streetlight
 
 fun ViewContext<Streetlight>.wireStreetMap() {
@@ -23,7 +26,7 @@ fun ViewContext<Streetlight>.wireStreetMap() {
         portal.routeFlowOf<HomeRoute>().collect {
             val galaxyIds = userCache.topGalaxies.getItems().map { it.galaxyId }
             // td: gather initial posts from json in html
-            val posts = api.readPosts(galaxyIds) ?: return@collect
+            val posts = api.readPosts(galaxyIds).getDataOrNull() ?: return@collect
             streetMap.setPosts(posts)
         }
     }

@@ -14,7 +14,7 @@ val TextUtilityCss
 
 val Bold = utilityOf("bold", "font-weight: bold")
 val Italic = utilityOf("italic", "font-style: italic")
-val SmallText = utilityOf("small-text", "font-size: 1rem")
+val SmallText = utilityOf("small-text", "font-size: .9rem")
 val LargeText = utilityOf("large-text", "font-size: 1.2rem")
 val GrowText = utilityOf("grow-text", "font-size: 1.1em")
 val WhiteSpaceNormal = utilityOf("white-space-normal", "white-space: normal")

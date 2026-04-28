@@ -7,6 +7,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.serialization.ExperimentalSerializationApi
 import revealContent
+import streetlight.model.data.GalaxyId
+import streetlight.model.data.PostId
 import streetlight.web.model.createStreetlight
 import streetlight.web.pages.AppBodyKey
 

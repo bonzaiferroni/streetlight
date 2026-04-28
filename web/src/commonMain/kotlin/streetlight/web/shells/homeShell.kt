@@ -27,7 +27,7 @@ fun FlowContent.homeShell(content: HomeContent) {
                     spacer()
                 }
 
-                // galaxiesSection(content.galaxies)
+                galaxiesSection(content.galaxies)
 
                 layoutPosts(content.posts)
                 // layoutEventPosts("Upcoming Events", content.posts)

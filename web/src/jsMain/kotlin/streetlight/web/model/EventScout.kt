@@ -190,6 +190,7 @@ class EventScout(
         val edit = state.now.eventEdit.takeIf { it.isValid } ?: return
         msg.set("Posting ${edit.title}...")
         scope.launch {
+            console.log(edit.links?.size)
             val event = api.createOrEditEvent(edit)?.payload
             if (event == null) {
                 msg.set("Something went wrong")
@@ -209,9 +210,15 @@ class EventScout(
                 eventId = event.eventId,
             ))
             if (postId != null) {
-                val post = api.readPost(postId) ?: return@launch
-                app.streetMap.addPosts(listOf(post))
-                state.set { it.copy(posts = it.posts + post)}
+                val response = api.readPost(postId) ?: return@launch
+                when (response) {
+                    is Ok -> {
+                        val post = response.data
+                        app.streetMap.addPosts(listOf(post))
+                        state.set { it.copy(posts = it.posts + post)}
+                    }
+                    is Problem -> msg.set(response.message)
+                }
             }
         }
     }

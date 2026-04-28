@@ -18,9 +18,10 @@ data class EventPost(
     override val title get() = event?.title ?: "[event removed]"
     override val description get() = event?.description
     override val visibility get() = 0
+    override val links get() = event?.links
 
     override val isRemoved get() = event == null
-    override val type get() = PostType.Event
+    override val postType get() = PostType.Event
 }
 
 @Serializable

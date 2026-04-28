@@ -6,18 +6,13 @@ import kotlinx.html.FlowContent
 import kotlinx.serialization.Serializable
 import streetlight.model.data.Galaxy
 import streetlight.model.data.Post
-import streetlight.model.data.PostListing
-import streetlight.model.data.PostType
 import streetlight.web.EarthMapRoute
-import streetlight.web.TalkRoute
-import streetlight.web.layouts.layoutPostListing
-import streetlight.web.layouts.layoutTalkPreview
 import streetlight.web.pages.appFooter
 import streetlight.web.ui.EarthKey
 import streetlight.web.ui.galaxyHeader
 
-fun FlowContent.galaxyShell(content: GalaxyProfileContent) {
-    val galaxy = content.galaxy; val listing = content.posts;
+fun FlowContent.galaxyShell(content: GalaxyContent) {
+    val galaxy = content.galaxy; val post = content.posts;
     column(GalaxyProfileKey.ShellId) {
         galaxyHeader(galaxy, modify(BorderRadius2, Height48, MoonShadow))
         box {
@@ -30,7 +25,7 @@ fun FlowContent.galaxyShell(content: GalaxyProfileContent) {
 //                if (galaxy.postTypes.contains(PostType.Content)) {
 //                    layoutTalkPreview(TalkRoute(galaxy.galaxyId), listing.comments)
 //                }
-                // layoutPostListing(galaxy.postTypes, listing)
+                layoutPosts(post)
                 appFooter(GalaxyProfileKey.SOURCE)
             }
         }
@@ -43,7 +38,7 @@ object GalaxyProfileKey {
 }
 
 @Serializable
-data class GalaxyProfileContent(
+data class GalaxyContent(
     val galaxy: Galaxy,
     val posts: List<Post>,
 )

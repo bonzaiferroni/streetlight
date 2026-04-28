@@ -69,6 +69,7 @@ fun RenderContext.timeInput(
         val v = element.value
         if (v.isBlank()) return@addEventListener
 
+        console.log(v)
         val parsed = LocalTime.parse(v)
         if (parsed != last) {
             last = parsed

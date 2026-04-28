@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalSerializationApi::class)
+
 package streetlight.web.io
 
 import kampfire.api.ApiNode
@@ -60,14 +62,12 @@ class FetchClient(
     suspend inline fun <Id, reified Returned> get(
         endpoint: GetByIdEndpoint<Id, Returned>,
         id: Id,
-    ): Returned? =
-        authRequest("GET", "${endpoint.path}/$id") { it.tryDecodeText() }
+    ): Returned? = authRequest("GET", "${endpoint.path}/$id") { it.tryDecodeText() }
 
     suspend inline fun <Id: TableId<*>, reified Returned> get(
         endpoint: GetByTableIdEndpoint<Id, Returned>,
         id: Id
-    ): Returned? =
-        authRequest("GET", "${endpoint.path}/${id.value}") { it.tryDecodeText() }
+    ): Returned? = authRequest("GET", "${endpoint.path}/${id.value}") { it.tryDecodeText() }
 
     suspend inline fun <reified Sent, reified Returned> get(
         endpoint: QueryEndpoint<Sent, Returned>,
@@ -81,6 +81,11 @@ class FetchClient(
         endpoint: PostEndpoint<Sent, Returned>,
         body: Sent,
     ): Returned? = authRequest("POST", endpoint.path, Json.encodeToString(body)) { it.tryDecodeText() }
+
+    suspend inline fun <Id, reified Returned> getApi(
+        endpoint: GetByIdEndpoint<Id, Returned>,
+        id: Id,
+    ): ApiResponse<Returned>? = authRequest("GET", "${endpoint.path}/$id") { it.tryDecodeApiResponse() }
 
     suspend inline fun <reified Sent, reified Returned> postApi(
         endpoint: PostEndpoint<Sent, Returned>,

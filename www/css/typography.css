@@ -15,8 +15,7 @@
 
 span,
 p {
-    font-size: var(--paragraph-size);
-    line-height: var(--paragraph-line-height);
+
 }
 
 h1 {

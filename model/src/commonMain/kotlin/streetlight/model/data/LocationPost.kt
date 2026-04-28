@@ -19,9 +19,10 @@ data class LocationPost(
     override val description get() = location?.description
     override val visibility get() = 0
     override val title get() = location?.name ?: "[location removed]"
+    override val links get() = location?.extraLinks
 
     override val isRemoved get() = location == null
-    override val type get() = PostType.Location
+    override val postType get() = PostType.Location
 }
 
 @Serializable

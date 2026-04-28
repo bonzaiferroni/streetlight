@@ -1,7 +1,8 @@
 package streetlight.web.shells
 
-import kampfire.model.ScaledImageArray
+import kabinet.utils.toAgoFormat
 import kampfire.model.medium
+import koala.SvgFile
 import koala.css.*
 import koala.html.*
 import kotlinx.html.FlowContent
@@ -16,99 +17,107 @@ import streetlight.web.layouts.postedByCell
 import streetlight.web.layouts.startsAtCell
 
 fun FlowContent.layoutPosts(posts: List<Post>) {
-    posts.forEach { post ->
-        when (post) {
-            is EventPost -> {
-                val event = post.event ?: return@forEach
-                postRow(
-                    title = post.title,
-                    subtitle = "${event.locationName}, ${event.city}",
-                    description = post.description,
-                    links = event.links,
-                    images = post.images,
-                    postRoute = event.eventRoute,
-                    subRoute = event.locationRoute,
-                    colorScheme = colorSchemeOf(post.type),
-                    postType = post.type,
-                    cells = listOf(
-                        { startsAtCell(event.startsAt) },
-                        { costCell(event.cost, event.url) },
-                        { postedByCell(post.username) },
-                        { eventLightCell(event.lightCount, event.eventId) },
-                    )
-                )
+    section {
+        filigree {
+            heading2("Posts", SectionHeadingMod)
+        }
+
+        column(modify(Gap2)) {
+            posts.forEach { post ->
+                when (post) {
+                    is EventPost -> {
+                        val event = post.event ?: return@forEach
+                        postRow(
+                            post = post,
+                            subtitle = "${event.locationName}, ${event.city}",
+                            postRoute = event.eventRoute,
+                            subRoute = event.locationRoute,
+                            cells = listOf(
+                                { startsAtCell(event.startsAt) },
+                                { costCell(event.cost, event.url) },
+                                { postedByCell(post.username) },
+                                { eventLightCell(event.lightCount, event.eventId) },
+                            )
+                        )
+                    }
+                    is LocationPost -> TODO()
+                }
             }
-            is LocationPost -> TODO()
         }
     }
 }
 
 fun FlowContent.postRow(
-    title: String,
+    post: Post,
     subtitle: String?,
-    description: String?,
-    links: List<ExtraLink>?,
-    images: ScaledImageArray?,
     postRoute: StreetlightRoute,
     subRoute: StreetlightRoute?,
-    colorScheme: String?,
-    postType: PostType,
     cells: List<(FlowContent.() -> Unit)?>
 ) {
+    val colorScheme = colorSchemeOf(post.postType)
 
-    card(modify(QueryContainer, Padding0, OverflowClip, ZenBg, MoonShadow)) {
-        colorScheme?.let {
-            setStyle(Property.ColorScheme.with(colorScheme))
-        }
+    column {
+        card(modify(QueryContainer, Padding0, OverflowClip, ZenBg, MoonShadow)) {
+            colorScheme?.let {
+                setStyle(Property.ColorScheme.with(colorScheme))
+            }
 
-        column(modify(QueryContainer, ContainerLgRow, Gap0)) {
+            column(modify(QueryContainer, ContainerLgRow, Gap0)) {
 
-            row(modify(Flex1, Gap0, Height24)) {
-                navigation(postRoute, modify(Height24, Aspect1)) {
-                    featureImage(images.medium, modify(Size100P))
+                row(modify(Flex1, Gap0, Height24)) {
+                    navigation(postRoute, modify(Height24, Aspect1)) {
+                        featureImage(post.images.medium, modify(Size100P))
+                    }
+
+                    column(modify(Flex1, Padding1, Height24)) {
+                        column(modify(Gap0)) {
+                            navigation(postRoute) {
+                                row(modify(JustifyContentSpaceBetween, MarginTop1, AlignItemsStart)) {
+                                    heading3(post.title, modify(LineHeight1, SingleLine, Bold, Shrinkable, Flex1))
+                                    textBlock(post.postType.label, modify(LineHeight1, SingleLine, ColorSchemeFg, MarginRight1))
+                                }
+                            }
+                            subtitle?.let {
+                                navigationIfNotNull(subRoute) {
+                                    textBlock(subtitle, modify(OpacityMost))
+                                }
+                            }
+                        }
+                        post.description?.let {
+                            navigation(postRoute, modify(Flex1, OverflowHidden, FadeBottom)) {
+                                textBlock(it, modify(SmallText))
+                            }
+                        }
+
+                        row(modify(AlignItemsCenter)) {
+                            row(modify(Flex1, OverflowXAuto)) {
+                                post.links?.forEach { link ->
+                                    btn(link.label, link.url, modify(Zen))
+                                }
+                            }
+                            icon(SvgFile.MapPin, modify(Height4, MarginRight1))
+                        }
+                    }
                 }
 
-                column(modify(Flex1, Padding1, Height24)) {
-                    column(modify(Gap0)) {
-                        navigation(postRoute) {
-                            row(modify(JustifyContentSpaceBetween, MarginTop1, AlignItemsStart)) {
-                                heading2(title, modify(LineHeight1, SingleLine, Bold, Shrinkable))
-                                textBlock(postType.label, modify(LineHeight1, SingleLine, ColorSchemeFg, MarginRight1))
+                if (cells.isNotEmpty()) {
+                    // grid content
+                    row(modify(ContainerLgColumn, MinHeight5, FlexItems1, GapTiny, TextAlignCenter, WrapFlex, MoonShadow, MinWidth24)) {
+                        cells.forEach {
+                            val cell = it ?: return@forEach
+                            cellCard {
+                                cell()
                             }
                         }
-                        subtitle?.let {
-                            navigationIfNotNull(subRoute) {
-                                textBlock(subtitle, modify(OpacityMost))
-                            }
-                        }
-                    }
-                    description?.let {
-                        navigation(postRoute, modify(Flex1, OverflowHidden, FadeBottom)) {
-                            textBlock(description, modify(SmallText))
-                        }
-                    }
-
-                    row(modify(AlignItemsCenter)) {
-                        row(modify(Flex1, OverflowXAuto)) {
-                            links?.forEach { link ->
-                                btn(link.label, link.url, modify(Zen))
-                            }
-                        }
-
                     }
                 }
             }
-
-            if (cells.isNotEmpty()) {
-                // grid content
-                row(modify(ContainerLgColumn, MinHeight8, FlexItems1, GapTiny, TextAlignCenter, WrapFlex, MoonShadow, MinWidth24)) {
-                    cells.forEach {
-                        val cell = it ?: return@forEach
-                        cellCard {
-                            cell()
-                        }
-                    }
-                }
+        }
+        row(modify(JustifyContentEnd, MarginRight2)) {
+            textBlock(modifiers = modify(SmallText, LineHeight1, OpacityMost)) {
+                span("— posted by ")
+                span(post.username ?: "Someone", modify(Bold))
+                span(" ${post.createdAt.toAgoFormat()}")
             }
         }
     }

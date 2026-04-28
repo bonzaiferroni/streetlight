@@ -2,8 +2,11 @@ package streetlight.web.io
 
 import kampfire.api.StringId
 import kampfire.api.UserApi
+import kampfire.model.ApiResponse
 import kampfire.model.GeoBounds
 import kampfire.model.GeoPoint
+import kampfire.model.Ok
+import kampfire.model.Problem
 import kampfire.model.SignUpRequest
 import kampfire.model.Url
 import koala.model.DocId
@@ -78,9 +81,9 @@ class ApiClient(private val client: FetchClient) {
     suspend fun readGalaxy(path: String) = client.get(Api.Galaxies.Path, path)
     suspend fun createPost(post: EventPostEdit) = client.post(Api.Galaxies.PostEvent, post)
     suspend fun postLocation(location: LocationPostEdit) = client.post(Api.Galaxies.PostLocation, location)
-    suspend fun readPosts(galaxyIds: List<GalaxyId>) = client.post(Api.Galaxies.ReadMultiPosts, galaxyIds)
-    suspend fun readPosts(galaxyId: GalaxyId) = client.get(Api.Galaxies.ReadPosts, galaxyId)
-    suspend fun readPost(postId: PostId) = client.get(Api.Galaxies.ReadPost, postId)
+    suspend fun readPosts(galaxyIds: List<GalaxyId>) = client.postApi(Api.Galaxies.ReadMultiPosts, galaxyIds)
+    suspend fun readPosts(galaxyId: GalaxyId) = client.getApi(Api.Galaxies.ReadPosts, galaxyId)
+    suspend fun readPost(postId: PostId) = client.getApi(Api.Galaxies.ReadPost, postId)
     suspend fun readGalaxyLights() = client.get(Api.Galaxies.ReadLights)
     suspend fun editGalaxyLight(edit: LightRequest) = client.post(Api.Galaxies.EditLight, edit)
 
@@ -95,4 +98,10 @@ class ApiClient(private val client: FetchClient) {
     // talk
     suspend fun createComment(comment: NewComment) = client.postApi(Api.Talk.CreateComment, comment)
     suspend fun updateComment(comment: UpdatedComment) = client.postApi(Api.Talk.UpdateComment, comment)
+}
+
+fun <T> ApiResponse<T>?.getDataOrNull() = when (this) {
+    is Ok -> this.data
+    is Problem -> null.also { console.log("Problem: ${this.message}") }
+    null -> null.also { console.log("Response was null") }
 }

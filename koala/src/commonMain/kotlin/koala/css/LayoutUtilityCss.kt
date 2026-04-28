@@ -3,7 +3,7 @@ package koala.css
 val LayoutUtilityCss
     get() = listOf(
         // Gap
-        Gap0, Gap1, Gap2, Gap4, Gap8, GapTiny,
+        Gap0, Gap1, Gap2, Gap3, Gap4, Gap8, GapTiny,
         // Flex
         Flex0, Flex1, Flex2, Flex3, Flex4, FlexMd1, FlexMd2, FlexColumn, FlexBasis25, FlexBasis33, FlexShrink0,
         FlexDirectionRow, FlexDirectionRowReverse, QueryRowReverse, NoWrap, WrapFlex, DisplayFlex,
@@ -45,9 +45,10 @@ val LayoutUtilityCss
 // Gap
 val Gap0 = utilityOf("gap-0", "gap: 0")
 val Gap1 = utilityOf("gap-1", "gap: var(--unit-spacing)")
-val Gap2 = utilityOf("gap-2", "gap: calc(var(--unit-spacing) * 2)")
-val Gap4 = utilityOf("gap-4", "gap: calc(var(--unit-spacing) * 4)")
-val Gap8 = utilityOf("gap-8", "gap: calc(var(--unit-spacing) * 8)")
+val Gap2 = utilityOf("gap-2", "gap: var(--unit-spacing-2)")
+val Gap3 = utilityOf("gap-3", "gap: var(--unit-spacing-3)")
+val Gap4 = utilityOf("gap-4", "gap: var(--unit-spacing-4)")
+val Gap8 = utilityOf("gap-8", "gap: var(--unit-spacing-8)")
 val GapTiny = utilityOf("gap-tiny", "gap: 2px")
 
 // Flex

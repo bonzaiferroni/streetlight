@@ -7,6 +7,7 @@ import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 import kotlin.time.Instant
 
+@Serializable
 sealed interface Post {
     val postId: PostId
     val galaxyId: GalaxyId?
@@ -17,11 +18,12 @@ sealed interface Post {
     val description: String?
     val title: String
     val visibility: Int
+    val links: List<ExtraLink>?
     val createdAt: Instant
     val updatedAt: Instant
 
     val isRemoved: Boolean
-    val type: PostType
+    val postType: PostType
 }
 
 @Serializable

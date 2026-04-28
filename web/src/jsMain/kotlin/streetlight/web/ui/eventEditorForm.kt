@@ -234,7 +234,7 @@ private fun ViewContext<EventEditor>.eventLinks() {
                     row() {
                         textField("label", onValue = ::setLabel, flow = labelFlow)
                         textField("url", modify(Flex1), onValue = ::setUrl, flow = urlFlow)
-                        icon(SvgFile.Check, ::finalizeEdit)
+                        icon(SvgFile.Check, ::finalizeEdit, modify(Height5))
                     }
                 } else {
                     row() {
