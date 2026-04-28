@@ -4,6 +4,7 @@ import kampfire.api.StringId
 import kampfire.api.TableId
 import koala.html.AppRoute
 import koala.html.AppScreen
+import koala.html.ScreenParameter
 import koala.model.DocId
 import streetlight.model.data.Event
 import streetlight.model.data.EventEdit
@@ -20,34 +21,35 @@ import streetlight.model.data.SpaceType
 
 enum class StreetlightScreen(
     override val pathRoot: String,
-    override val provideRoute: (List<String>) -> AppRoute?
+    override val provideRoute: (List<String>) -> AppRoute?,
+    override val parameter: ScreenParameter? = null
 ): AppScreen {
     Home("", { HomeRoute }),
     StarDash("account", { StarDashRoute }),
-    EventProfile("e", { path -> path.provideRouteFromPath { EventSlugRoute(it) } }),
-    EditEvent("edit-event", { path -> EditEventIdRoute(path.provideId { EventId(it) }) }),
-    EditStory("edit-story", { path -> EditPostRoute(path.provideId { ProtoPostId(it) }) }),
-    EditLocation("edit-location", { path -> EditLocationIdRoute(path.provideId { LocationId(it) }) }),
+    EventProfile("e", { path -> path.provideRouteFromPath { EventSlugRoute(it) } }, ScreenParameter.Slug),
+    EditEvent("edit-event", { path -> EditEventIdRoute(path.provideId { EventId(it) }) }, ScreenParameter.Id),
+    EditStory("edit-story", { path -> EditPostRoute(path.provideId { ProtoPostId(it) }) }, ScreenParameter.Id),
+    EditLocation("edit-location", { path -> EditLocationIdRoute(path.provideId { LocationId(it) }) }, ScreenParameter.Id),
     Sandbox("sandbox", { SandboxRoute }),
-    Earth("earth", { path -> EarthMapRoute(path.getOrNull(1))}),
+    Earth("earth", { path -> EarthMapRoute(path.getOrNull(1))}, ScreenParameter.Slug),
     Chat("chat", { ChatRoute }),
-    SongProfile("song-profile", { path -> path.provideRouteFromPath { SongProfileRoute(SongId(it)) } }),
-    TalentProfile("talent-profile", { path -> path.provideRouteFromPath { TalentProfileRoute(TalentId(it)) } }),
-    EditTalent("edit-talent", { path -> EditTalentRoute(path.provideId { TalentId(it)} ) }),
-    LocationProfile("location", { path -> path.provideRouteFromPath { LocationIdRoute(LocationId(it)) } }),
-    LocationAdmin("location-admin", { path -> path.provideRouteFromPath { LocationAdminRoute(LocationId(it)) } }),
+    SongProfile("song-profile", { path -> path.provideRouteFromPath { SongProfileRoute(SongId(it)) } }, ScreenParameter.Id),
+    TalentProfile("talent-profile", { path -> path.provideRouteFromPath { TalentProfileRoute(TalentId(it)) } }, ScreenParameter.Id),
+    EditTalent("edit-talent", { path -> EditTalentRoute(path.provideId { TalentId(it)} ) }, ScreenParameter.Id),
+    Location("location", { path -> path.provideRouteFromPath { LocationIdRoute(LocationId(it)) } }, ScreenParameter.Id),
+    LocationAdmin("location-admin", { path -> path.provideRouteFromPath { LocationAdminRoute(LocationId(it)) } }, ScreenParameter.Id),
     CreateGalaxy("create-galaxy", { CreateGalaxyRoute }),
     GalaxyList("galaxies", { GalaxyListRoute }),
-    GalaxyProfile("g", { path -> path.provideRouteFromPath { GalaxySlugRoute(it) }}),
-    StarProfile("s", { path -> path.provideRouteFromPath { StarRoute(it) } }),
-    EventScout("post-event", { path -> path.provideRouteFromPath { EventScoutRoute(it) }}),
-    LocationScout("post-location", { path -> path.provideRouteFromPath { LocationScoutRoute(it) } }),
+    Galaxy("g", { path -> path.provideRouteFromPath { GalaxySlugRoute(it) }}, ScreenParameter.Slug),
+    Star("s", { path -> path.provideRouteFromPath { StarRoute(it) } }, ScreenParameter.Slug),
+    EventScout("post-event", { path -> path.provideRouteFromPath { EventScoutRoute(it) }}, ScreenParameter.Slug),
+    LocationScout("post-location", { path -> path.provideRouteFromPath { LocationScoutRoute(it) } }, ScreenParameter.Slug),
     EditStar("edit-profile", { EditStarRoute }),
     SiteConfig("config", { SiteConfigRoute }),
     AboutApp("about", { AboutRoute }),
     PrivacyPolicy("privacy", { PrivacyPolicyRoute }),
-    SiteDoc("docs", { path -> path.provideRouteFromPath { SiteDocRoute(it) } }),
-    Talk("talk", { path -> path.provideRouteFromPath { TalkRoute(GalaxyId(it)) }})
+    SiteDoc("docs", { path -> path.provideRouteFromPath { SiteDocRoute(it) } }, ScreenParameter.Slug),
+    Talk("talk", { path -> path.provideRouteFromPath { TalkRoute(GalaxyId(it)) }}, ScreenParameter.Slug)
 }
 
 fun List<String>.provideRouteFromPath(argIndex: Int = 1, provideRoute: (String) -> AppRoute?) =
@@ -154,7 +156,7 @@ data class EditTalentRoute(
 data class LocationIdRoute(
     val locationId: LocationId
 ): StreetlightRoute, StringIdRoute {
-    override val screen get() = StreetlightScreen.LocationProfile
+    override val screen get() = StreetlightScreen.Location
     override val id get() = locationId
     override val title get() = "Location"
 }
@@ -197,7 +199,7 @@ object GalaxyListRoute: StreetlightRoute {
 }
 
 data class GalaxySlugRoute(override val slug: Slug): StreetlightRoute, SlugRoute {
-    override val screen get() = StreetlightScreen.GalaxyProfile
+    override val screen get() = StreetlightScreen.Galaxy
     override val title get() = "Galaxy"
 }
 
@@ -205,7 +207,7 @@ data class EventSlugRoute(override val slug: Slug): StreetlightRoute, SlugRoute,
 }
 
 data class StarRoute(override val slug: Slug): StreetlightRoute, SlugRoute {
-    override val screen get() = StreetlightScreen.StarProfile
+    override val screen get() = StreetlightScreen.Star
     override val title get() = "Star"
 }
 

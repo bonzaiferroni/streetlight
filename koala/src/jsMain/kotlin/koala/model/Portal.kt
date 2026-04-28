@@ -19,7 +19,7 @@ class Portal(
     val screens: List<AppScreen>,
     private val scope: CoroutineScope
 ) {
-    private val state = storeOf(PortalState(initialRoute))
+    private val state = storeOf(PortalState(routeOf(window.location.pathname) ?: initialRoute))
     val stateFlow = state.flow
     val stateNow get() = state.now
 
@@ -31,18 +31,15 @@ class Portal(
     var sitePath
         get() = window.location.pathname
         set(value: String) {
-            if (window.location.pathname.drop(1) == value) return
+            if (window.location.pathname == value) return
             val href = "${window.location.origin}$value${window.location.search}"
             window.history.pushState(null, "", href)
         }
 
     init {
-        // keep scroll from jumping on back press
+        // hack to keep scroll from jumping on back press
+        // known issue: this prevents scroll restoration on refresh
         window.history.scrollRestoration = ScrollRestoration.MANUAL
-
-        // initialize route from current address
-        val route = routeOf(window.location.pathname)
-        go(route ?: initialRoute)
 
         fun handleRoute(href: String) {
             val sitePath = if (href.startsWith("/")) href else URL(href).pathname
@@ -66,7 +63,10 @@ class Portal(
         })
 
         window.addEventListener("popstate", {
-            goBack(window.location.pathname)
+            val isSuccess = goBack(window.location.pathname)
+            if (!isSuccess) {
+                handleRoute(window.location.pathname)
+            }
         })
     }
 
@@ -87,13 +87,14 @@ class Portal(
         go(navigation, backstack + Navigation(stateNow.route, window.scrollY))
     }
 
-    fun goBack(sitePath: String? = null) {
-        val (jumps, route) = sitePath?.let {
+    fun goBack(sitePath: String? = null): Boolean {
+        val (index, route) = sitePath?.let {
             backstack.asReversed()
                 .withIndex()
                 .firstOrNull { (_, value) -> value.route.toSitePath() == it }
-        } ?: backstack.lastOrNull()?.let { IndexedValue(1, it) } ?: return
-        go(route, backstack.dropLast(jumps))
+        } ?: backstack.lastOrNull()?.let { IndexedValue(0, it) } ?: return false
+        go(route, backstack.dropLast(index + 1))
+        return true
     }
 
     private fun go(navigation: Navigation, backstack: List<Navigation>) {
@@ -117,7 +118,7 @@ data class PortalState(
     val route: AppRoute,
     val title: String? = null,
     val canGoBack: Boolean = false,
-    val initialScroll: Double = 0.0,
+    val initialScroll: Double = window.scrollY,
 )
 
 private data class Navigation(

@@ -52,7 +52,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
 
     object Songs: GetEndpoint<List<Song>>(this, "songs") {
         object Create: PostEndpoint<NewSong, SongId>(this, "create")
-        object TakeNextSong: GetByIdEndpoint<EventId, EventSong>(this, "take_next_song") {
+        object TakeNextSong: GetByIdEndpoint<EventId, EventSong>(this, "take-next-song") {
             val since = addInstantParam("since")
         }
     }
@@ -62,11 +62,11 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
     }
 
     object RenditionFeed: GetByIdEndpoint<RenditionId, Rendition>(this, "renditions") {
-        object BySong: GetByIdEndpoint<SongId, List<Rendition>>(this, "by_song")
+        object BySong: GetByIdEndpoint<SongId, List<Rendition>>(this, "by-song")
         object Create: PostEndpoint<NewRendition, RenditionId>(this, "create")
         object Update: PostEndpoint<Rendition, Boolean>(this, "update")
         object Delete: DeleteEndpoint<RenditionId>(this, "delete")
-        object ReadAllSince: GetEndpoint<List<Rendition>>(this, "read_all_since") {
+        object ReadAllSince: GetEndpoint<List<Rendition>>(this, "read-all-since") {
             val since = addInstantParam("since")
         }
     }
