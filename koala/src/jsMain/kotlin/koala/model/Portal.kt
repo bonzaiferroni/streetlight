@@ -26,6 +26,8 @@ class Portal(
     val screenFlow = stateFlow.mapDistinct { it.route.screen }
     val routeFlow = stateFlow.mapDistinct { it.route }
 
+    private var backstack: List<Navigation> = emptyList()
+
     var sitePath
         get() = window.location.pathname
         set(value: String) {
@@ -99,25 +101,29 @@ class Portal(
         }.filterNotNull()
     }
 
-    inline fun <reified T: AppRoute> routeOrNullFlowOf(): Flow<T?> {
-        return routeFlow.mapDistinct { it as? T }
-    }
-
     fun go(route: AppRoute) {
-        go(route, stateNow.backstack + stateNow.route)
+        val navigation = Navigation(route, 0.0)
+        go(navigation, backstack + Navigation(stateNow.route, window.scrollY))
     }
 
     fun goBack(sitePath: String? = null) {
         val (jumps, route) = sitePath?.let {
-            stateNow.backstack.asReversed()
+            backstack.asReversed()
                 .withIndex()
-                .firstOrNull { (_, value) -> value.toSitePath() == it }
-        } ?: stateNow.backstack.lastOrNull()?.let { IndexedValue(1, it) } ?: return
-        go(route, stateNow.backstack.dropLast(jumps))
+                .firstOrNull { (_, value) -> value.route.toSitePath() == it }
+        } ?: backstack.lastOrNull()?.let { IndexedValue(1, it) } ?: return
+        go(route, backstack.dropLast(jumps))
     }
 
-    private fun go(route: AppRoute, backstack: List<AppRoute>) {
-        state.set { it.copy(route = route, backstack = backstack, title = route.title)}
+    private fun go(navigation: Navigation, backstack: List<Navigation>) {
+        val route = navigation.route
+        this.backstack = backstack
+        state.set { it.copy(
+            route = route,
+            title = route.title,
+            canGoBack = backstack.isNotEmpty(),
+            initialScroll = navigation.initialScroll
+        )}
         sitePath = route.toSitePath()
     }
 
@@ -129,12 +135,11 @@ class Portal(
 data class PortalState(
     val route: AppRoute,
     val title: String? = null,
-    val backstack: List<AppRoute> = emptyList()
-) {
-    val canGoBack get() = backstack.isNotEmpty()
-}
+    val canGoBack: Boolean = false,
+    val initialScroll: Double = 0.0,
+)
 
-private fun sitePathOf(address: String): String {
-    if (address.startsWith("/")) return address.drop(1)
-    return URL(address).pathname
-}
+private data class Navigation(
+    val route: AppRoute,
+    val initialScroll: Double,
+)
