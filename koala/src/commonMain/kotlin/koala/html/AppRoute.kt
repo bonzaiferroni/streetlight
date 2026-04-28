@@ -11,21 +11,36 @@ interface AppRoute {
             val fragment = sitePath.dropStart('/')
             val segments = fragment.split('/')
             val root = segments[0].lowercase()
-            val screen = screens.firstOrNull { it.pathRoot == root }
-            return screen?.provideRoute(segments)
+            val screen = screens.firstOrNull { it.pathRoot == root } ?: return null
+
+            return when (val parse = screen.routeParse) {
+                is StaticParse -> parse.block()
+                is IdParse -> segments.getOrNull(1)?.let { parse.block(it) }
+                is IdOrNullParse -> parse.block(segments.getOrNull(1))
+            }
         }
     }
 }
 
 interface AppScreen {
     val pathRoot: String
-    val provideRoute: (List<String>) -> AppRoute?
-    val parameter: ScreenParameter? // could make this a collection to handle more complex paths
+    val routeParse: RouteParse
 }
 
 private fun String.dropStart(char: Char) = if (startsWith(char)) drop(1) else this
 
-enum class ScreenParameter(val label: String) {
-    Id("id"),
-    Slug("slug")
-}
+sealed interface RouteParse
+
+data class StaticParse(
+    val block: () -> AppRoute
+): RouteParse
+
+data class IdParse(
+    val label: String = "id",
+    val block: (String) -> AppRoute
+): RouteParse
+
+data class IdOrNullParse(
+    val label: String = "id",
+    val block: (String?) -> AppRoute
+): RouteParse

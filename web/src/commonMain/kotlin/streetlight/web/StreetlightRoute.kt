@@ -4,7 +4,10 @@ import kampfire.api.StringId
 import kampfire.api.TableId
 import koala.html.AppRoute
 import koala.html.AppScreen
-import koala.html.ScreenParameter
+import koala.html.IdOrNullParse
+import koala.html.IdParse
+import koala.html.RouteParse
+import koala.html.StaticParse
 import koala.model.DocId
 import streetlight.model.data.Event
 import streetlight.model.data.EventEdit
@@ -21,42 +24,35 @@ import streetlight.model.data.SpaceType
 
 enum class StreetlightScreen(
     override val pathRoot: String,
-    override val provideRoute: (List<String>) -> AppRoute?,
-    override val parameter: ScreenParameter? = null
+    override val routeParse: RouteParse,
 ): AppScreen {
-    Home("", { HomeRoute }),
-    StarDash("account", { StarDashRoute }),
-    EventProfile("e", { path -> path.provideRouteFromPath { EventSlugRoute(it) } }, ScreenParameter.Slug),
-    EditEvent("edit-event", { path -> EditEventIdRoute(path.provideId { EventId(it) }) }, ScreenParameter.Id),
-    EditStory("edit-story", { path -> EditPostRoute(path.provideId { ProtoPostId(it) }) }, ScreenParameter.Id),
-    EditLocation("edit-location", { path -> EditLocationIdRoute(path.provideId { LocationId(it) }) }, ScreenParameter.Id),
-    Sandbox("sandbox", { SandboxRoute }),
-    Earth("earth", { path -> EarthMapRoute(path.getOrNull(1))}, ScreenParameter.Slug),
-    Chat("chat", { ChatRoute }),
-    SongProfile("song-profile", { path -> path.provideRouteFromPath { SongProfileRoute(SongId(it)) } }, ScreenParameter.Id),
-    TalentProfile("talent-profile", { path -> path.provideRouteFromPath { TalentProfileRoute(TalentId(it)) } }, ScreenParameter.Id),
-    EditTalent("edit-talent", { path -> EditTalentRoute(path.provideId { TalentId(it)} ) }, ScreenParameter.Id),
-    Location("location", { path -> path.provideRouteFromPath { LocationIdRoute(LocationId(it)) } }, ScreenParameter.Id),
-    LocationAdmin("location-admin", { path -> path.provideRouteFromPath { LocationAdminRoute(LocationId(it)) } }, ScreenParameter.Id),
-    CreateGalaxy("create-galaxy", { CreateGalaxyRoute }),
-    GalaxyList("galaxies", { GalaxyListRoute }),
-    Galaxy("g", { path -> path.provideRouteFromPath { GalaxySlugRoute(it) }}, ScreenParameter.Slug),
-    Star("s", { path -> path.provideRouteFromPath { StarRoute(it) } }, ScreenParameter.Slug),
-    EventScout("post-event", { path -> path.provideRouteFromPath { EventScoutRoute(it) }}, ScreenParameter.Slug),
-    LocationScout("post-location", { path -> path.provideRouteFromPath { LocationScoutRoute(it) } }, ScreenParameter.Slug),
-    EditStar("edit-profile", { EditStarRoute }),
-    SiteConfig("config", { SiteConfigRoute }),
-    AboutApp("about", { AboutRoute }),
-    PrivacyPolicy("privacy", { PrivacyPolicyRoute }),
-    SiteDoc("docs", { path -> path.provideRouteFromPath { SiteDocRoute(it) } }, ScreenParameter.Slug),
-    Talk("talk", { path -> path.provideRouteFromPath { TalkRoute(GalaxyId(it)) }}, ScreenParameter.Slug)
+    Home("", StaticParse { HomeRoute }),
+    StarDash("account", StaticParse { StarDashRoute }),
+    EventProfile("e", IdParse { EventSlugRoute(it) }),
+    EditEvent("edit-event", IdParse { EditEventIdRoute(EventId(it)) }),
+    EditStory("edit-story", IdParse { EditPostRoute(ProtoPostId(it)) }),
+    EditLocation("edit-location", IdParse { EditLocationIdRoute(LocationId(it)) }),
+    Sandbox("sandbox", StaticParse { SandboxRoute }),
+    Earth("earth", IdOrNullParse { EarthMapRoute(it) }),
+    Chat("chat", StaticParse { ChatRoute }),
+    SongProfile("song-profile", IdParse { SongProfileRoute(SongId(it)) }),
+    TalentProfile("talent-profile", IdParse { TalentProfileRoute(TalentId(it)) }),
+    EditTalent("edit-talent", IdParse { EditTalentRoute(TalentId(it)) }),
+    Location("location", IdParse { LocationIdRoute(LocationId(it)) }),
+    LocationAdmin("location-admin", IdParse { LocationAdminRoute(LocationId(it)) }),
+    CreateGalaxy("create-galaxy", StaticParse { CreateGalaxyRoute }),
+    GalaxyList("galaxies", StaticParse { GalaxyListRoute }),
+    Galaxy("g", IdParse { GalaxySlugRoute(it) }),
+    Star("s", IdParse { StarRoute(it) }),
+    EventScout("post-event", IdParse { EventScoutRoute(it) }),
+    LocationScout("post-location", IdParse { LocationScoutRoute(it) }),
+    EditStar("edit-profile", StaticParse { EditStarRoute }),
+    SiteConfig("config", StaticParse { SiteConfigRoute }),
+    AboutApp("about", StaticParse { AboutRoute }),
+    PrivacyPolicy("privacy", StaticParse { PrivacyPolicyRoute }),
+    SiteDoc("docs", IdParse { SiteDocRoute(it) }),
+    Talk("talk", IdParse { TalkRoute(GalaxyId(it)) })
 }
-
-fun List<String>.provideRouteFromPath(argIndex: Int = 1, provideRoute: (String) -> AppRoute?) =
-    getOrNull(argIndex)?.let { provideRoute(it) }
-
-fun <T: TableId<String>> List<String>.provideId(argIndex: Int = 1, provideId: (String) -> T) =
-    getOrNull(argIndex)?.let { provideId(it) }
 
 sealed interface StreetlightRoute: AppRoute
 
