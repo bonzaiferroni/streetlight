@@ -6,7 +6,6 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.serialization.ExperimentalSerializationApi
-import revealContent
 import streetlight.model.data.GalaxyId
 import streetlight.model.data.PostId
 import streetlight.web.model.createStreetlight
@@ -39,12 +38,6 @@ fun viewApp() {
         }
 
         app.omni.connect()
-
-        // When content is loaded with a hash tag like https://streetlight.ing/#/g/my-galaxy,
-        // the home page content will be initially loaded. The opacity is initially 0 to avoid confusion, this
-        // reveals the intended content when the script has rendered it.
-        delay(100)
-        revealContent()
     }
 }
 

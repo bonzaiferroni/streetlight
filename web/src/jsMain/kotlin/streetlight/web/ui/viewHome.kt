@@ -9,6 +9,7 @@ import streetlight.web.shells.homeShell
 
 fun ViewContext<Streetlight>.viewHome() {
     val app = model
+
     val content = HomeContent(emptyList(), emptyList())
     val root = shellBox(HomeShellKey.ContainerId, app.geoMap, app.appScope) {
         homeShell(content)

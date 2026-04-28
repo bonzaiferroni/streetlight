@@ -43,17 +43,6 @@ class Portal(
         // initialize route from current address
         val route = routeOf(window.location.pathname)
         go(route ?: initialRoute)
-        // window.addEventListener("hashchange", {
-        //     val route = routeOf(hashPath) ?: return@addEventListener
-        //     if (route == stateNow.route) return@addEventListener
-        //     val backRoute = stateNow.backstack.lastOrNull()
-        //     if (backRoute?.screen == route.screen) {
-        //         // goBack()
-        //         go(route) // td: maybe figure out
-        //     } else {
-        //         go(route)
-        //     }
-        // })
 
         fun handleRoute(href: String) {
             val sitePath = if (href.startsWith("/")) href else URL(href).pathname
@@ -77,14 +66,6 @@ class Portal(
         })
 
         window.addEventListener("popstate", {
-            // td: handle a jump further back than 1
-            // When pushing new entries
-            // history.pushState(historyIndex++, "", href)
-            // When popstate fires
-            // window.addEventListener("popstate") { event ->
-            //     val state = (event as PopStateEvent).state as? Int
-            //     // Compare state to your current index to know the distance
-            // }
             goBack(window.location.pathname)
         })
     }

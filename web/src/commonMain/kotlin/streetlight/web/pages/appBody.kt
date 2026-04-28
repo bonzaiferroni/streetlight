@@ -56,12 +56,6 @@ ${AppBodyKey.ContentRowId} {
 ${AppBodyKey.ContentBoxId} {
     max-width: var(--body-width);
     width: 100%;
-    opacity: 0;
-    transition: opacity var(--magic-interval) var(--magic-easing);
-}
-
-${AppBodyKey.ContentBoxId}$Reveal {
-    opacity: 1;
 }
 
 ${AppBodyKey.PortalMountId},
