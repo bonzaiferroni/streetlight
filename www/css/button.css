@@ -63,7 +63,7 @@
 .btn.zen {
     color: var(--ink-fg);
     background: var(--zen-bg);
-    box-shadow: var(--zen-button-shadow);
+    box-shadow: none;
     text-shadow: none;
 }
 

@@ -102,7 +102,7 @@ fun FlowContent.postRow(
 
                 if (cells.isNotEmpty()) {
                     // grid content
-                    row(modify(ContainerLgColumn, MinHeight5, FlexItems1, GapTiny, TextAlignCenter, WrapFlex, MoonShadow, MinWidth24)) {
+                    row(modify(ContainerLgColumn, MinHeight8, FlexItems1, GapTiny, TextAlignCenter, WrapFlex, MoonShadow, MinWidth24)) {
                         cells.forEach {
                             val cell = it ?: return@forEach
                             cellCard {
