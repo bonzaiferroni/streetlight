@@ -32,7 +32,7 @@ fun FlowContent.cellCard(
 
 fun FlowContent.startsAtCell(startsAt: Instant) {
     row(CellContent.RowMod) {
-        textBlock(startsAt.toRelativeDayFormat(), modify(CellContent.TextMod, Bold, ColorSchemeFg))
+        textBlock(startsAt.toRelativeDayFormat(), modify(CellContent.TextMod, ColorSchemeFg))
         textBlock(startsAt.toTimeFormat(), modify(CellContent.TextMod, MarginLeft1))
     }
 }

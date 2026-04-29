@@ -69,27 +69,30 @@ fun FlowContent.postRow(
     cells: List<(FlowContent.() -> Unit)?>
 ) {
     val colorScheme = colorSchemeOf(post.postType)
+    val flairIcon = flairIconOf(post.postType)
 
     column {
         card(modify(QueryContainer, Padding0, OverflowClip, ZenBg, MoonShadow)) {
-            colorScheme?.let {
-                setStyle(Property.ColorScheme.with(colorScheme))
-            }
+            setStyle(Property.ColorScheme.with(colorScheme))
 
             column(modify(QueryContainer, ContainerLgRow, Gap0)) {
 
                 row(modify(Flex1, Gap0, Height24)) {
+
+                    // image
                     navigation(postRoute, modify(Height24, Aspect1)) {
                         featureImage(post.images.medium, modify(Size100P))
                     }
 
-                    column(modify(Flex1, Padding1, Height24)) {
+                    // middle column
+                    column(modify(Flex1, Padding1, Height24, PositionRelative)) {
+                        flairIcon?.let {
+                            icon(it, modify(Height9, PositionAbsolute, Top0, Right0, OpacityGhost, ColorSchemeFg))
+                        }
+
                         column(modify(Gap0)) {
                             navigation(postRoute) {
-                                row(modify(JustifyContentSpaceBetween, MarginTop1, AlignItemsStart)) {
-                                    heading3(post.title, modify(LineHeight1, SingleLine, Bold, Shrinkable, Flex1))
-                                    textBlock(post.postType.label, modify(LineHeight1, SingleLine, ColorSchemeFg, MarginRight1))
-                                }
+                                heading3(post.title, modify(LineHeight1, SingleLine, Bold, Shrinkable, Flex1, MarginTop1))
                             }
                             subtitle?.let {
                                 navigationIfNotNull(subRoute) {
@@ -103,6 +106,7 @@ fun FlowContent.postRow(
                             }
                         }
 
+                        // button row
                         row(modify(AlignItemsCenter)) {
                             row(modify(Flex1, OverflowXAuto)) {
                                 post.links?.forEach { link ->
@@ -114,8 +118,8 @@ fun FlowContent.postRow(
                     }
                 }
 
+                // grid content
                 if (cells.isNotEmpty()) {
-                    // grid content
                     row(modify(ContainerLgColumn, MinHeight8, FlexItems1, GapTiny, TextAlignCenter, WrapFlex, MoonShadow, MinWidth24)) {
                         cells.forEach {
                             val cell = it ?: return@forEach
@@ -140,4 +144,10 @@ fun FlowContent.postRow(
 fun colorSchemeOf(postType: PostType) = when (postType) {
     PostType.Event -> "var(--accent-fg)"
     else -> "var(--primary-fg)"
+}
+
+fun flairIconOf(postType: PostType) = when (postType) {
+    PostType.Event -> SvgFile.Calendar
+    PostType.Location -> SvgFile.Pin
+    else -> null
 }

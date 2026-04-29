@@ -18,7 +18,8 @@ val LayoutUtilityCss
         MinWidth0, MinWidth16, MinWidth24, MinWidth32, MinWidth36, MinWidth48, MinWidthAuto, MaxWidth25P, MaxWidth50P,
         MaxWidth5, MaxWidth16, MaxWidth32, MaxWidth48, MaxWidth64,
         // Height
-        HeightAuto, Height100P, Height2, Height3, Height4, Height5, Height6, Height7, Height8, Height12, Height16, Height24, Height32, Height48,
+        HeightAuto, Height50P, Height100P,
+        Height2, Height3, Height4, Height5, Height6, Height7, Height8, Height9, Height10, Height12, Height16, Height24, Height32, Height48,
         MinHeightAuto, MinHeight0, MinHeight4, MinHeight5, MinHeight8, MinHeight16, MinHeight24, MinHeight32, MinHeight48,
         MaxHeight5, MaxHeight8, MaxHeight16, MaxHeight24, MaxHeight32, MaxHeight64,
         // Size
@@ -37,9 +38,11 @@ val LayoutUtilityCss
         PaddingX1, PaddingX2, PaddingY1, PaddingY2,
         // Object Fit
         ObjectFitCover, ObjectFitContain, ObjectPositionCenter, ObjectFitFill,
+        // Position
+        PositionSticky, PositionRelative, PositionAbsolute, Top0, Right0, Bottom0, Left0,
         // Other
         SpaceBetween, Start, End, Center, PlaceItemsCenter, RelativeParent, ZIndex1, ZIndex2, Shrinkable, QueryContainer,
-        PositionSticky, TopSpacing1, TopSpacing8,
+        TopSpacing1, TopSpacing8,
     )
 
 // Gap
@@ -110,6 +113,7 @@ val MaxWidth48 = utilityOf("max-width-48", "max-width: calc(var(--unit-spacing) 
 val MaxWidth64 = utilityOf("max-width-64", "max-width: calc(var(--unit-spacing) * 64)")
 
 // Height
+val Height50P = utilityOf("height-50", "height: 50%")
 val Height100P = utilityOf("height-100", "height: 100%")
 val HeightAuto = utilityOf("height-auto", "height: auto")
 val Height2 = utilityOf("height-2", "height: calc(var(--unit-spacing) * 2)")
@@ -119,6 +123,8 @@ val Height5 = utilityOf("height-5", "height: calc(var(--unit-spacing) * 5)")
 val Height6 = utilityOf("height-6", "height: calc(var(--unit-spacing) * 6)")
 val Height7 = utilityOf("height-7", "height: calc(var(--unit-spacing) * 7)")
 val Height8 = utilityOf("height-8", "height: calc(var(--unit-spacing) * 8)")
+val Height9 = utilityOf("height-9", "height: calc(var(--unit-spacing) * 9)")
+val Height10 = utilityOf("height-10", "height: calc(var(--unit-spacing) * 10)")
 val Height12 = utilityOf("height-12", "height: calc(var(--unit-spacing) * 12)")
 val Height16 = utilityOf("height-16", "height: calc(var(--unit-spacing) * 16)")
 val Height24 = utilityOf("height-24", "height: calc(var(--unit-spacing) * 24)")
@@ -241,6 +247,12 @@ val ZIndex2 = utilityOf("z-index-2", "z-index: 2")
 val Shrinkable = CssUtility("shrinkable")
 val QueryContainer = utilityOf("query-container", "container-type: inline-size")
 val PositionSticky = utilityOf("position-sticky", "position: sticky")
+val PositionRelative = utilityOf("position-relative", "position: relative")
+val PositionAbsolute = utilityOf("position-absolute", "position: absolute")
+val Top0 = utilityOf("top-0", "top: 0")
+val Left0 = utilityOf("left-0", "left: 0")
+val Bottom0 = utilityOf("bottom-0", "bottom: 0")
+val Right0 = utilityOf("right-0", "right: 0")
 val TopSpacing1 = utilityOf("top-spacing-1", "top: var(--unit-spacing)")
 val TopSpacing8 = utilityOf("top-spacing-8", "top: calc(var(--unit-spacing) * 8)")
 
