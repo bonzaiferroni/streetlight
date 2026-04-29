@@ -44,8 +44,8 @@ val StylesCss get() = """
         -6px -6px 12px 0 rgba(255, 255, 255, 0.7), -2px -2px 4px 0 rgba(255, 255, 255, 0.5);
     
     --primary: 58, 158, 200; /* 48, 138, 170; 70, 117, 153; 45, 199, 255*/
-    --primary-fg: color-mix(in srgb, rgb(var(--primary)) 15%, rgb(var(--ink)));
-    --primary-bg: color-mix(in srgb, rgb(var(--primary)) 15%, rgb(var(--paper)));
+    --primary-fg: color-mix(in srgb, rgb(var(--primary)) 75%, rgb(var(--ink)));
+    --primary-bg: color-mix(in srgb, rgb(var(--primary)) 75%, rgb(var(--paper)));
     --primary-button: rgb(var(--primary));
     --primary-button-day: color-mix(in srgb, var(--primary-button) 80%, black);
     --primary-card-bg: color-mix(in srgb, rgba(var(--primary), .2) 60%, var(--paper-bg));

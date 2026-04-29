@@ -12,8 +12,10 @@ import streetlight.web.layouts.cellCard
 import streetlight.web.layouts.costCell
 import streetlight.web.layouts.eventLightCell
 import streetlight.web.layouts.eventRoute
+import streetlight.web.layouts.locationLightCell
 import streetlight.web.layouts.locationRoute
 import streetlight.web.layouts.postedByCell
+import streetlight.web.layouts.route
 import streetlight.web.layouts.startsAtCell
 
 fun FlowContent.layoutPosts(posts: List<Post>) {
@@ -40,7 +42,19 @@ fun FlowContent.layoutPosts(posts: List<Post>) {
                             )
                         )
                     }
-                    is LocationPost -> TODO()
+                    is LocationPost -> {
+                        val location = post.location ?: return@forEach
+                        postRow(
+                            post = post,
+                            subtitle = location.addressLine,
+                            postRoute = location.route,
+                            subRoute = null,
+                            cells = listOf(
+                                { postedByCell(post.username) },
+                                { locationLightCell(location.lightCount, location.locationId)}
+                            )
+                        )
+                    }
                 }
             }
         }
@@ -125,6 +139,5 @@ fun FlowContent.postRow(
 
 fun colorSchemeOf(postType: PostType) = when (postType) {
     PostType.Event -> "var(--accent-fg)"
-    PostType.Location -> "var(--primary-fg)"
-    PostType.Media -> null
+    else -> "var(--primary-fg)"
 }

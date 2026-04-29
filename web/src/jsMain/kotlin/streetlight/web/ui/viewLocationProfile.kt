@@ -5,7 +5,7 @@ import streetlight.model.data.Location
 import streetlight.web.LocationIdRoute
 import streetlight.web.model.Streetlight
 import streetlight.web.shells.LocationProfileKey
-import streetlight.web.shells.locationProfileShell
+import streetlight.web.shells.locationShell
 
 fun RenderContext.viewLocationProfile(app: Streetlight) {
     routeBlock<LocationIdRoute, Location>(
@@ -13,7 +13,7 @@ fun RenderContext.viewLocationProfile(app: Streetlight) {
         provideData = { app.client.api.readLocation(it.locationId) }
     ) { location ->
         val element = shellBox(LocationProfileKey.Id) { // app.geoMap, app.appScope
-            locationProfileShell(location)
+            locationShell(location)
         }
     }
 }

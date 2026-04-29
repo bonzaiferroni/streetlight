@@ -13,7 +13,7 @@ import streetlight.web.layouts.postedByCell
 import streetlight.web.layouts.propertyCell
 import streetlight.web.pages.appFooter
 
-fun FlowContent.locationProfileShell(
+fun FlowContent.locationShell(
     location: Location
 ) {
     column(LocationProfileKey.Id, modify(AlignItemsStretch, Gap4)) {
@@ -49,7 +49,7 @@ fun FlowContent.locationProfileShell(
                     }
                 }
                 cellCard {
-                    locationLightCell(location.locationId)
+                    locationLightCell(location.lightCount, location.locationId)
                 }
                 // td: instagram
                 // propertyRow("instagram") {

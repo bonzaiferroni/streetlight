@@ -62,6 +62,7 @@ data class Location(
 
     val phone: String? get() = null
     val email: String? get() = null
+    val lightCount: Int? get() = null
 }
 
 @JvmInline @Serializable

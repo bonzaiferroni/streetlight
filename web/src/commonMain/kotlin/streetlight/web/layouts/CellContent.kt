@@ -80,8 +80,8 @@ fun FlowContent.eventLightCell(visibility: Int?, eventId: EventId) {
     }
 }
 
-fun FlowContent.locationLightCell(locationId: LocationId) {
-    starLight(null) {
+fun FlowContent.locationLightCell(visibility: Int?, locationId: LocationId) {
+    starLight(visibility) {
         setData(StarLightKey.LocationLightId, locationId)
     }
 }

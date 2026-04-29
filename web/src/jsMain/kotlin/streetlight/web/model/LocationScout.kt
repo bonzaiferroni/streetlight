@@ -1,5 +1,7 @@
 package streetlight.web.model
 
+import koala.dom.UIMessage
+import koala.dom.set
 import koala.model.mapDistinct
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
@@ -20,6 +22,7 @@ class LocationScout(
     private val initialState = LocationScoutState()
     private var location: Location? = null
     private val state = storeOf(initialState)
+    val messages = storeOf(UIMessage())
     val stateFlow = state.flow
     val stateNow get() = state.now
 
@@ -43,6 +46,7 @@ class LocationScout(
             val post = LocationPostEdit(null, galaxyId, location.locationId, text)
             val postId = api.postLocation(post) ?: error("result not found")
             state.set { it.copy(postId = postId) }
+            messages.set("Posted.")
         }
     }
 }

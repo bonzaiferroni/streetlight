@@ -4,10 +4,7 @@ import koala.css.*
 import koala.html.*
 import kotlinx.html.FlowContent
 import streetlight.model.data.Post
-import streetlight.model.data.PostListing
-import streetlight.model.data.PostType
 import streetlight.model.data.Star
-import streetlight.web.layouts.layoutPostListing
 import streetlight.web.pages.appFooter
 import streetlight.web.ui.starHeader
 
