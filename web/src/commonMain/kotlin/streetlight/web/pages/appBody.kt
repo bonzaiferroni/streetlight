@@ -47,6 +47,7 @@ object AppBodyKey {
 val AppBodyCss get() = """
 ${AppBodyKey.ViewportId} {
     width: 100vw;
+    isolation: isolate;
 }
 
 ${AppBodyKey.ContentRowId} {

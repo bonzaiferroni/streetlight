@@ -16,29 +16,46 @@ import org.w3c.dom.Node
 import org.w3c.dom.asList
 import org.w3c.dom.css.CSSStyleDeclaration
 
-fun Element.unmodify(vararg modifier: Modifier) = modifier.forEach { classList.remove(it.identifier) }
-fun Element.modify(vararg modifier: Modifier) = modifier.forEach { classList.add(it.identifier) }
-fun Element.unmodify(modifiers: Collection<Modifier>) = modifiers.forEach { classList.remove(it.identifier) }
-fun Element.modify(modifiers: Collection<Modifier>) = modifiers.forEach { classList.add(it.identifier) }
-
-fun Element.isModified(modifier: Modifier) = classList.contains(modifier.identifier)
-
-fun Node.modify(vararg modifier: Modifier) {
-    val element = this as? Element ?: error("not an element")
-    element.modify(*modifier)
+fun <T: Element> T.unmodify(vararg modifier: Modifier): T {
+    modifier.forEach { classList.remove(it.identifier) }
+    return this
+}
+fun <T: Element> T.modify(vararg modifier: Modifier): T {
+    modifier.forEach { classList.add(it.identifier) }
+    return this
+}
+fun <T: Element> T.unmodify(modifiers: Collection<Modifier>): T {
+    modifiers.forEach { classList.remove(it.identifier) }
+    return this
+}
+fun <T: Element> T.modify(modifiers: Collection<Modifier>): T {
+    modifiers.forEach { classList.add(it.identifier) }
+    return this
 }
 
-fun Node.unmodify(vararg modifier: Modifier) {
-    val element = this as? Element ?: error("not an element")
-    element.unmodify(*modifier)
-}
-
-fun Element.trigger(modifier: Modifier) {
+fun <T: Element> T.trigger(modifier: Modifier): T {
     unmodify(modifier)
     window.requestAnimationFrame {
         modify(modifier)
     }
+    return this
 }
+
+fun <T: Element> T.modifyAfterFrame(vararg modifier: Modifier): T {
+    window.requestAnimationFrame {
+        modify(*modifier)
+    }
+    return this
+}
+
+fun <T: Element> T.unmodifyAfterFrame(vararg modifier: Modifier): T {
+    window.requestAnimationFrame {
+        unmodify(*modifier)
+    }
+    return this
+}
+
+fun Element.isModified(modifier: Modifier) = classList.contains(modifier.identifier)
 
 fun Element.toggle(modifier: Modifier) = classList.toggle(modifier.identifier)
 

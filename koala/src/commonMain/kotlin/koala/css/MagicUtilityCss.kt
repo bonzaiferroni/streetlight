@@ -2,6 +2,7 @@ package koala.css
 
 // utilities
 val Magic = CssUtility("magic")
+val Transitioning = CssUtility("transitioning")
 val Reveal = CssUtility("reveal")
 val Hide = CssUtility("hide")
 val Blur = CssUtility("blur")

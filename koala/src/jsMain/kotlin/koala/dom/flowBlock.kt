@@ -1,10 +1,12 @@
 package koala.dom
 
 import koala.css.Blur
+import koala.css.KoalaTheme
 import koala.css.Magic
 import koala.css.ModifierSet
 import koala.css.Reveal
 import koala.css.SlideLeft
+import koala.css.Transitioning
 import koala.css.addModifiers
 import koala.css.modify
 import koala.html.FlowBlockKey
@@ -63,15 +65,18 @@ fun <State> RenderContext.flowBlock(
             }
 
             if (magic) {
+                val interval = KoalaTheme.MAGIC_INTERVAL.toLong()
                 renderScope.launch {
                     if (render != null) {
-                        element.unmodify(Reveal)
-                        delay(200)
+                        element.modify(Transitioning).unmodifyAfterFrame(Reveal)
+                        delay(interval)
                         element.clear()
                     }
                     appendRender()
                     element.modify(Reveal)
                     onTransition?.invoke(value)
+                    delay(interval)
+                    element.unmodify(Transitioning)
                 }
             } else {
                 element.clear()

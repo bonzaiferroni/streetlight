@@ -122,6 +122,10 @@ body::before {
     will-change: filter;
 }
 
+@keyframes hueSpin {
+    to { filter: hue-rotate(360deg); }
+}
+
 input[type="text"],
 input[type="password"],
 input[type="datetime-local"],
@@ -181,10 +185,6 @@ select {
     outline: 1px solid var(--void-border);
     border-radius: var(--unit-spacing);
     box-shadow: var(--btn-text-shadow);
-}
-
-@keyframes hueSpin {
-    to { filter: hue-rotate(360deg); }
 }
 
 a {

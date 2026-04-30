@@ -8,7 +8,7 @@ object FlowBlockKey {
 
 // language="CSS"
 val FlowBlockCss get() = """
-.flow-block.magic {
+.flow-block.transitioning {
     opacity: 0;
     transition: 
         opacity var(--magic-interval) var(--magic-easing), 
@@ -17,32 +17,32 @@ val FlowBlockCss get() = """
     pointer-events: none;
 }
 
-.flow-block.magic.reveal {
+.flow-block.transitioning.reveal {
     opacity: 1;
     pointer-events: auto;
 }
 
-.flow-block.magic.blur {
+.flow-block.transitioning.blur {
     filter: var(--magic-blur);
 }
 
-.flow-block.magic.blur.reveal {
+.flow-block.transitioning.blur.reveal {
     filter: blur(0px);
 }
 
-.flow-block.magic.slide-left {
+.flow-block.transitioning.slide-left {
     transform: var(--slide-left-initial);
 }
 
-.flow-block.magic.slide-left.reveal {
+.flow-block.transitioning.slide-left.reveal {
     transform: translate(0px, 0px);
 }
 
-.flow-block.magic.slide-up {
+.flow-block.transitioning.slide-up {
     transform: var(--slide-up-initial);
 }
 
-.flow-block.magic.slide-up.reveal {
+.flow-block.transitioning.slide-up.reveal {
     transform: translate(0px, 0px);
 }
 

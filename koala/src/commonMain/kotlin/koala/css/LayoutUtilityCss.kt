@@ -41,7 +41,7 @@ val LayoutUtilityCss
         // Position
         PositionSticky, PositionRelative, PositionAbsolute, Top0, Right0, Bottom0, Left0,
         // Other
-        SpaceBetween, Start, End, Center, PlaceItemsCenter, RelativeParent, ZIndex1, ZIndex2, Shrinkable, QueryContainer,
+        SpaceBetween, Start, End, Center, PlaceItemsCenter, RelativeParent, ZIndex1, ZIndex2, ZIndex3, Shrinkable, QueryContainer,
         TopSpacing1, TopSpacing8,
     )
 
@@ -246,6 +246,7 @@ val RelativeParent = CssUtility(
 )
 val ZIndex1 = utilityOf("z-index-1", "z-index: 1")
 val ZIndex2 = utilityOf("z-index-2", "z-index: 2")
+val ZIndex3 = utilityOf("z-index-3", "z-index: 3")
 val Shrinkable = CssUtility("shrinkable")
 val QueryContainer = utilityOf("query-container", "container-type: inline-size")
 val PositionSticky = utilityOf("position-sticky", "position: sticky")
