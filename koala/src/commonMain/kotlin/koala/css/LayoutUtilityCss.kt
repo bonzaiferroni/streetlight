@@ -6,7 +6,7 @@ val LayoutUtilityCss
         Gap0, Gap1, Gap2, Gap3, Gap4, Gap8, GapTiny,
         // Flex
         Flex0, Flex1, Flex2, Flex3, Flex4, FlexMd1, FlexMd2, FlexColumn, FlexBasis25, FlexBasis33, FlexShrink0,
-        FlexDirectionRow, FlexDirectionRowReverse, QueryRowReverse, NoWrap, WrapFlex, DisplayFlex,
+        FlexDirectionRow, FlexDirectionRowReverse, QueryRowReverse, NoWrap, FlexWrap, FlexBasisMin, DisplayFlex,
         // Align
         AlignItemsCenter, AlignItemsStretch, AlignItemsStart, AlignItemsEnd,
         JustifyContentCenter, JustifyContentEnd, JustifyContentSpaceAround, JustifyContentSpaceBetween,
@@ -16,7 +16,7 @@ val LayoutUtilityCss
         WidthAuto, Width100P, WidthFitContent,
         Width1, Width2, Width4, Width5, Width8, Width12, Width16, Width24, Width32, Width64,
         MinWidth0, MinWidth16, MinWidth24, MinWidth32, MinWidth36, MinWidth48, MinWidthAuto, MaxWidth25P, MaxWidth50P,
-        MaxWidth5, MaxWidth16, MaxWidth32, MaxWidth48, MaxWidth64,
+        MaxWidth5, MaxWidth16, MaxWidth32, MaxWidth48, MaxWidth64, MaxWidthNone,
         // Height
         HeightAuto, Height50P, Height100P,
         Height2, Height3, Height4, Height5, Height6, Height7, Height8, Height9, Height10, Height12, Height16, Height24, Height32, Height48,
@@ -111,6 +111,7 @@ val MaxWidth16 = utilityOf("max-width-16", "max-width: calc(var(--unit-spacing) 
 val MaxWidth32 = utilityOf("max-width-32", "max-width: calc(var(--unit-spacing) * 32)")
 val MaxWidth48 = utilityOf("max-width-48", "max-width: calc(var(--unit-spacing) * 48)")
 val MaxWidth64 = utilityOf("max-width-64", "max-width: calc(var(--unit-spacing) * 64)")
+val MaxWidthNone = utilityOf("max-width-none", "max-width: none")
 
 // Height
 val Height50P = utilityOf("height-50", "height: 50%")
@@ -164,7 +165,8 @@ val FlexDirectionRowReverse = utilityOf("row-reverse", "flex-direction: row-reve
 val FlexDirectionRow = utilityOf("flex-direction-row", "flex-direction: row")
 val QueryRowReverse = CssUtility("query-row-reverse")
 val NoWrap = utilityOf("no-wrap", "flex-wrap: nowrap", "white-space: nowrap")
-val WrapFlex = utilityOf("wrap-flex", "flex-wrap: wrap")
+val FlexWrap = utilityOf("flex-wrap", "flex-wrap: wrap")
+val FlexBasisMin = utilityOf("flex-basis-min", "flex-basis: min-content")
 val DisplayFlex = utilityOf("display-flex", "display: flex")
 
 // Margin

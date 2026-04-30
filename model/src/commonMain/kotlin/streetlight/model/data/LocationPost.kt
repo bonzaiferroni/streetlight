@@ -9,19 +9,18 @@ data class LocationPost(
     override val postId: PostId,
     override val galaxyId: GalaxyId?,
     override val username: String?,
-    val location: Location?,
+    val location: Location,
     override val text: String?,
     override val createdAt: Instant,
     override val updatedAt: Instant,
 ): Post {
-    override val images get() = location?.images
-    override val geoPoint get() = location?.geoPoint ?: GeoPoint.Denver
-    override val description get() = location?.description
+    override val images get() = location.images
+    override val geoPoint get() = location.geoPoint ?: GeoPoint.Denver
+    override val description get() = location.description
     override val visibility get() = 0
-    override val title get() = location?.name ?: "[location removed]"
-    override val links get() = location?.extraLinks
+    override val title get() = location.name ?: "[location removed]"
+    override val links get() = location.extraLinks
 
-    override val isRemoved get() = location == null
     override val postType get() = PostType.Location
 }
 

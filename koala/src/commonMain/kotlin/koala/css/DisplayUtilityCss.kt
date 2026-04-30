@@ -26,7 +26,7 @@ val DisplayUtilityCss
         // Theme
         DayTheme,
         // Overlays
-        Vignette, GradientDarkBottom,
+        VignetteOver, VignetteBehind, GradientDarkBottom,
         // Masks
         FadeBottom,
         // Button
@@ -129,8 +129,35 @@ background: linear-gradient(
     transparent 50%,
     rgba(0, 0, 0, 0.7) 100%
 );
-""".trimIndent())
-val Vignette = utilityOf("vignette", "box-shadow: inset 0 0 150px rgba(0, 0, 0, 0.6)")
+""")
+
+val VignetteOver = CssUtility("vignette-over", """
+.vignette-over {
+    position: relative;
+}
+
+.vignette-over::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    box-shadow: var(--vignette-shadow);
+    pointer-events: none;
+}
+""")
+
+val VignetteBehind = CssUtility("vignette-behind", """
+.vignette-behind {
+    position: relative;
+}   
+    
+.vignette-behind::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    box-shadow: var(--vignette-shadow);
+    pointer-events: none;
+}
+""")
 
 val PointerEventsAuto = utilityOf("pointer-events-auto", "pointer-events: auto")
 val PointerEventsNone = utilityOf("pointer-events-none", "pointer-events: none")

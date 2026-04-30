@@ -1,6 +1,6 @@
 package streetlight.web.shells
 
-import koala.css.WrapFlex
+import koala.css.FlexWrap
 import koala.css.modify
 import koala.html.Id
 import koala.html.ButtonPopover
@@ -45,5 +45,5 @@ fun FlowContent.galaxyMenuItems(
 object GalaxyMenuKey {
     val Id = Id("galaxy-menu")
     // val Anchor = Anchor("galaxy-menu-anchor")
-    val RowMods = modify(WrapFlex)
+    val RowMods = modify(FlexWrap)
 }

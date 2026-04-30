@@ -3,22 +3,43 @@ package streetlight.web.layouts
 import kabinet.utils.format
 import kabinet.utils.toRelativeDayFormat
 import kabinet.utils.toTimeFormat
+import koala.Svg
 import koala.SvgFile
 import koala.css.*
 import koala.html.*
+import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import streetlight.model.data.EventId
+import streetlight.model.data.EventLocation
+import streetlight.model.data.Galaxy
 import streetlight.model.data.GalaxyId
+import streetlight.model.data.Location
 import streetlight.model.data.LocationId
 import streetlight.web.ui.StarLightKey
 import streetlight.web.ui.starLight
 import kotlin.time.Instant
 
 object CellContent {
-    val RowMod = modify(JustifyContentCenter, AlignItemsCenter, WrapFlex, Gap0, PaddingY1, PaddingX2)
+    val RowMod = modify(JustifyContentCenter, AlignItemsCenter, FlexWrap, Gap0, PaddingY1, PaddingX2)
     val CardMod = modify(AlignItemsCenter, Gap0, BorderRadius0, JustifyContentCenter, MinWidth16, Padding0)
     val IconMod = modify(Height3, Aspect1, MarginRight1, ColorSchemeBg)
     val TextMod = modify()
+}
+
+fun FlowContent.cellRow(
+    cells: List<(FlowContent.() -> Unit)?>,
+    modifiers: ModifierSet? = null,
+    block: DIV.() -> Unit = {}
+) {
+    row(modify(modifiers, MinHeight8, MinWidth24, FlexItems1, GapTiny, TextAlignCenter, MoonShadow)) {
+        block()
+        cells.forEach {
+            val cell = it ?: return@forEach
+            cellCard {
+                cell()
+            }
+        }
+    }
 }
 
 fun FlowContent.cellCard(
@@ -54,17 +75,19 @@ fun FlowContent.costCell(cost: Float?, purchaseUrl: String?) {
     }
 }
 
-fun FlowContent.postedByCell(username: String?) {
-    row(CellContent.RowMod) {
-        icon(SvgFile.SomeoneSmall, CellContent.IconMod)
-        textBlock(username ?: "Someone", CellContent.TextMod)
-    }
-}
+fun FlowContent.starCell(username: String?) = iconPropertyCell(SvgFile.SomeoneSmall, username ?: "Someone")
 
-fun FlowContent.propertyCell(property: String, value: String) {
+fun FlowContent.textPropertyCell(property: String, value: String) {
     row(CellContent.RowMod) {
         textBlock("$property:", modify(CellContent.TextMod, Dim))
         textBlock(value, modify(CellContent.TextMod, MarginLeft1))
+    }
+}
+
+fun FlowContent.iconPropertyCell(icon: Svg, value: String) {
+    row(CellContent.RowMod) {
+        icon(icon, CellContent.IconMod)
+        textBlock(value, CellContent.TextMod)
     }
 }
 
@@ -85,3 +108,19 @@ fun FlowContent.locationLightCell(visibility: Int?, locationId: LocationId) {
         setData(StarLightKey.LocationLightId, locationId)
     }
 }
+
+fun locationCells(location: Location): List<(FlowContent.() -> Unit)?> = listOf(
+    { starCell(location.username) },
+    { locationLightCell(location.lightCount, location.locationId)}
+)
+
+fun eventCells(event: EventLocation): List<(FlowContent.() -> Unit)?> = listOf(
+    { startsAtCell(event.startsAt) },
+    { costCell(event.cost, event.url) },
+    { eventLightCell(event.lightCount, event.eventId) },
+)
+
+fun galaxyCells(galaxy: Galaxy): List<(FlowContent.() -> Unit)?> = listOf(
+    { iconPropertyCell(SvgFile.Calendar, galaxy.eventCount?.toString() ?: "?") },
+    { galaxyLightCell(galaxy.lightCount, galaxy.galaxyId) }
+)

@@ -43,7 +43,7 @@ fun FlowContent.btn(
         modifiers = modify(modifiers, BtnKey.Class, BackgroundImage),
     ) {
         background?.let {
-            setStyle(Property.BackgroundUrl.with(UrlValue(it)))
+            setStyle(Property.BackgroundUrl.to(UrlValue(it)))
         }
         block()
     }

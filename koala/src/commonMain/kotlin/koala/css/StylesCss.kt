@@ -39,9 +39,12 @@ val StylesCss get() = """
     --moon-shadow-text: 0 0 12px rgba(0, 0, 0, 0.25);
     --btn-text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8), 0 0 6px rgba(0, 0, 0, 0.6);
     --zen-button-shadow: 0 0 20px 5px rgba(0, 0, 0, 0.1) inset;
+    --vignette-shadow: 0 0 100px rgba(0, 0, 0, 0.4) inset;
     --input-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 0 6px rgba(0, 0, 0, 0.3);
     --neumo-shadow: 6px 6px 12px 0 rgba(0, 0, 0, 0.15), 2px 2px 4px 0 rgba(0, 0, 0, 0.1), 
         -6px -6px 12px 0 rgba(255, 255, 255, 0.7), -2px -2px 4px 0 rgba(255, 255, 255, 0.5);
+            
+    --vignette-gradient: radial-gradient(ellipse at center, transparent 50%, rgba(0, 0, 0, 0.3) 100%);
     
     --primary: 58, 158, 200; /* 48, 138, 170; 70, 117, 153; 45, 199, 255*/
     --primary-fg: color-mix(in srgb, rgb(var(--primary)) 75%, rgb(var(--ink)));

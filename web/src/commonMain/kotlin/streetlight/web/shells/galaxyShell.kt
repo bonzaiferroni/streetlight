@@ -9,17 +9,18 @@ import streetlight.model.data.Post
 import streetlight.web.EarthMapRoute
 import streetlight.web.pages.appFooter
 import streetlight.web.ui.EarthKey
-import streetlight.web.ui.galaxyHeader
+import streetlight.web.ui.headerOf
 
 fun FlowContent.galaxyShell(content: GalaxyContent) {
     val galaxy = content.galaxy; val post = content.posts;
     column(GalaxyProfileKey.ShellId) {
-        galaxyHeader(galaxy, modify(BorderRadius2, Height48, MoonShadow))
+        headerOf(galaxy)
         box {
             btn("View Map", EarthMapRoute(galaxy.slug), EarthKey.ViewMapButtonMod)
             column(modify(Gap8)) {
-                row(modify(JustifyContentSpaceBetween)) {
+                row {
                     galaxyMenu(emptyList(), galaxy)
+                    filigree(modify(Flex1), MaxWidthNone) { spacer { setStyle(Property.Width.to("8rem")) } }
                     postMenu(galaxy)
                 }
 //                if (galaxy.postTypes.contains(PostType.Content)) {

@@ -8,7 +8,7 @@ import kotlinx.html.style
 
 data class Property<T>(val identifier: String, val isCustom: Boolean = true) {
 
-    fun with(value: T) = InlineStyle(this, value)
+    fun to(value: T) = InlineStyle(this, value)
 
     val expression get() = when (isCustom) {
         true -> "--$identifier"
@@ -21,6 +21,7 @@ data class Property<T>(val identifier: String, val isCustom: Boolean = true) {
         val AnchorName = Property<PositionAnchor>("anchor-name", false)
         val PositionAnchor = Property<PositionAnchor>("position-anchor", false)
         val Display = Property<Display>("display", false)
+        val Width = Property<String>("width", false)
 
         val MaskUrl = Property<UrlValue>("mask-url")
         val ColorScheme = Property<String>("color-scheme")
@@ -73,10 +74,10 @@ fun CoreAttributeGroupFacade.setStyle(styles: StyleSet?) {
 }
 
 fun CoreAttributeGroupFacade.setPositionAnchor(value: PositionAnchor) =
-    setStyle(Property.PositionAnchor.with(value))
+    setStyle(Property.PositionAnchor.to(value))
 
 fun CoreAttributeGroupFacade.setAnchor(anchor: PositionAnchor) =
-    setStyle(Property.AnchorName.with(anchor))
+    setStyle(Property.AnchorName.to(anchor))
 
 //fun CoreAttributeGroupFacade.setIdAndAnchor(id: Id) {
 //    setId(id)

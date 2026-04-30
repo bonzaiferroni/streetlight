@@ -38,12 +38,12 @@ fun FlowContent.siteDocContent(node: DocNode) {
         card(modify(BorderRadius2, MoonShadow, OverflowClip, Gap0, Padding0)) {
             box(modify(AlignItemsEnd, Aspect2By1)) {
                 image(doc.image, modify(Size100P, ObjectFitCover, MinHeight0))
-                spacer(modify(GradientDarkBottom, AlignSelfStretch, Vignette))
+                spacer(modify(GradientDarkBottom, AlignSelfStretch, VignetteOver))
                 heading1(doc.title, modify(Shrinkable, TextAlignCenter, MoonShadowText, NightInk))
             }
             val idSections = doc.sections.filter { it.id != null && it.title != null }
             if (idSections.size > 1) {
-                row(modify(JustifyContentCenter, AlignItemsCenter, WrapFlex, PaddingX1)) {
+                row(modify(JustifyContentCenter, AlignItemsCenter, FlexWrap, PaddingX1)) {
                     textBlock("Jump to:", modify(OpacityMost))
                     idSections.forEach {
                         navigation(it.id!!) {

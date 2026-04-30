@@ -10,7 +10,7 @@ import streetlight.model.data.EventPost
 import streetlight.web.layouts.cellCard
 import streetlight.web.layouts.costCell
 import streetlight.web.layouts.eventLightCell
-import streetlight.web.layouts.postedByCell
+import streetlight.web.layouts.starCell
 import streetlight.web.layouts.startsAtCell
 
 fun RenderContext.eventFocusContent(post: EventPost) {
@@ -32,7 +32,7 @@ fun RenderContext.eventFocusContent(post: EventPost) {
             }
         }
         val event = event ?: return@card
-        row(modify(Flex1, MinHeight8, FlexItems1, GapTiny, TextAlignCenter, WrapFlex, MoonShadow)) {
+        row(modify(Flex1, MinHeight8, FlexItems1, GapTiny, TextAlignCenter, FlexWrap, MoonShadow)) {
             cellCard {
                 startsAtCell(event.startsAt)
             }
@@ -40,7 +40,7 @@ fun RenderContext.eventFocusContent(post: EventPost) {
                 costCell(event.cost, event.url)
             }
             cellCard {
-                postedByCell(event.username)
+                starCell(event.username)
             }
             cellCard {
                 eventLightCell(event.lightCount, event.eventId)

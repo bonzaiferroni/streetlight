@@ -26,7 +26,7 @@ fun FlowContent.swapBlock(
 fun DIV.setReveal(isVisible: Boolean) {
     when (isVisible) {
         true -> addModifiers(Reveal)
-        else -> setStyle(Property.Display.with(Display.none))
+        else -> setStyle(Property.Display.to(Display.none))
     }
 }
 

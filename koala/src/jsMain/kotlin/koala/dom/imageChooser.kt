@@ -39,7 +39,7 @@ fun RenderContext.imageChooser(
 
     val dialog = dialogBox("Choose yer image") { close ->
         choicesRow = row {
-            addModifiers(WrapFlex)
+            addModifiers(FlexWrap)
             style = "display: none;"
         }
         filePicker(MimeType.Image) {

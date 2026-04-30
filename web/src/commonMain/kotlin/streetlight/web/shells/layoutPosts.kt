@@ -8,15 +8,12 @@ import koala.html.*
 import kotlinx.html.FlowContent
 import streetlight.model.data.*
 import streetlight.web.StreetlightRoute
-import streetlight.web.layouts.cellCard
-import streetlight.web.layouts.costCell
-import streetlight.web.layouts.eventLightCell
+import streetlight.web.layouts.cellRow
+import streetlight.web.layouts.eventCells
 import streetlight.web.layouts.eventRoute
-import streetlight.web.layouts.locationLightCell
+import streetlight.web.layouts.locationCells
 import streetlight.web.layouts.locationRoute
-import streetlight.web.layouts.postedByCell
 import streetlight.web.layouts.route
-import streetlight.web.layouts.startsAtCell
 
 fun FlowContent.layoutPosts(posts: List<Post>) {
     section {
@@ -34,12 +31,7 @@ fun FlowContent.layoutPosts(posts: List<Post>) {
                             subtitle = "${event.locationName}, ${event.city}",
                             postRoute = event.eventRoute,
                             subRoute = event.locationRoute,
-                            cells = listOf(
-                                { startsAtCell(event.startsAt) },
-                                { costCell(event.cost, event.url) },
-                                { postedByCell(post.username) },
-                                { eventLightCell(event.lightCount, event.eventId) },
-                            )
+                            cells = eventCells(event)
                         )
                     }
                     is LocationPost -> {
@@ -49,10 +41,7 @@ fun FlowContent.layoutPosts(posts: List<Post>) {
                             subtitle = location.addressLine,
                             postRoute = location.route,
                             subRoute = null,
-                            cells = listOf(
-                                { postedByCell(post.username) },
-                                { locationLightCell(location.lightCount, location.locationId)}
-                            )
+                            cells = locationCells(post.location),
                         )
                     }
                 }
@@ -66,14 +55,14 @@ fun FlowContent.postRow(
     subtitle: String?,
     postRoute: StreetlightRoute,
     subRoute: StreetlightRoute?,
-    cells: List<(FlowContent.() -> Unit)?>
+    cells: List<(FlowContent.() -> Unit)?>? = null
 ) {
     val colorScheme = colorSchemeOf(post.postType)
     val flairIcon = flairIconOf(post.postType)
 
     column {
         card(modify(QueryContainer, Padding0, OverflowClip, ZenBg, MoonShadow)) {
-            setStyle(Property.ColorScheme.with(colorScheme))
+            setStyle(Property.ColorScheme.to(colorScheme))
 
             column(modify(QueryContainer, ContainerLgRow, Gap0)) {
 
@@ -118,16 +107,9 @@ fun FlowContent.postRow(
                     }
                 }
 
-                // grid content
-                if (cells.isNotEmpty()) {
-                    row(modify(ContainerLgColumn, MinHeight8, FlexItems1, GapTiny, TextAlignCenter, WrapFlex, MoonShadow, MinWidth24)) {
-                        cells.forEach {
-                            val cell = it ?: return@forEach
-                            cellCard {
-                                cell()
-                            }
-                        }
-                    }
+                // cell content
+                if (cells != null) {
+                    cellRow(cells, modify(ContainerLgColumn, FlexWrap))
                 }
             }
         }

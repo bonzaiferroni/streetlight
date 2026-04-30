@@ -1,5 +1,6 @@
 package streetlight.web.shells
 
+import kampfire.model.large
 import kampfire.model.medium
 import kampfire.model.small
 import koala.css.*
@@ -10,58 +11,28 @@ import streetlight.web.EditEventIdRoute
 import streetlight.web.layouts.cellCard
 import streetlight.web.layouts.costCell
 import streetlight.web.layouts.eventLightCell
-import streetlight.web.layouts.postedByCell
+import streetlight.web.layouts.starCell
 import streetlight.web.layouts.startsAtCell
 import streetlight.web.pages.appFooter
+import streetlight.web.ui.headerOf
 
-fun FlowContent.eventProfileShell(event: EventLocation) {
+fun FlowContent.eventShell(event: EventLocation) {
     column(EventProfileKey.id, modify(AlignItemsStretch, Gap4)) {
-        card(modify(ZenBg, BorderRadius2, Padding0, OverflowClip, Gap0, QueryContainer)) {
-            column(modify(ContainerMdRow, FlexItems1, CardBg, Gap0)) {
-                val imageUrl = event.images.medium
-                if (imageUrl != null) {
-                    featureImage(imageUrl, modify(Aspect3By2))
-                }
-                column(modify(JustifyContentCenter)) {
-                    column(modify(PaddingX1, PaddingY2)) {
-                        heading2(event.title, modify(TextAlignCenter, MinWidth0))
-                        filigree(modify()) {
-                            textBlock("at", modify(OpacityHalf))
-                        }
-                        heading4(event.locationName, modify(OpacityMost, TextAlignCenter))
-                    }
-                }
-            }
-            row(modify(MinHeight8, FlexItems1, GapTiny, TextAlignCenter, WrapFlex, ZenBg)) {
-                cellCard {
-                    startsAtCell(event.startsAt)
-                }
-                cellCard {
-                    costCell(event.cost, event.url)
-                }
-                cellCard {
-                    postedByCell(event.username)
-                }
-                cellCard {
-                    eventLightCell(event.lightCount, event.eventId)
-                }
-            }
-            column(modify(ContainerMdRow, Padding4, Gap4, AlignItemsStart)) {
-                column(modify(Flex4)) {
-                    event.description?.let {
-                        markdown(it)
-                    }
-                }
-                event.links?.let { links ->
-                    row(modify(Flex1, WrapFlex, AlignItemsStart, FlexItems1)) {
-                        links.forEach { link ->
-                            btn(link.label, link.url)
-                        }
-                        btn("edit", EditEventIdRoute(event.eventId))
-                    }
-                }
-            }
-        }
+        headerOf(
+            title = event.title,
+            descriptor = "at",
+            subtitle = event.locationName,
+            image = event.images.large,
+            description = event.description,
+            cells = listOf(
+                { startsAtCell(event.startsAt) },
+                { costCell(event.cost, event.url) },
+                { starCell(event.username) },
+                { eventLightCell(event.lightCount, event.eventId) }
+            ),
+            links = event.links,
+            editRoute = EditEventIdRoute(event.eventId),
+        )
 
         tabs {
             tab("Location") {
@@ -90,14 +61,6 @@ fun FlowContent.eventProfileShell(event: EventLocation) {
                                     markdown(it)
                                 }
                             }
-
-//                            event.links?.let { links ->
-//                                row(modify(Flex1, WrapFlex, AlignItemsStart, FlexItems1)) {
-//                                    links.forEach { link ->
-//                                        btn(link.label, link.url)
-//                                    }
-//                                }
-//                            }
                         }
                     }
                 }
@@ -122,5 +85,5 @@ fun FlowContent.eventProfileShell(event: EventLocation) {
 
 object EventProfileKey {
     val id = Id("event-profile")
-    const val SOURCE = "web/src/commonMain/kotlin/streetlight/web/shells/eventProfileShell.kt"
+    const val SOURCE = "web/src/commonMain/kotlin/streetlight/web/shells/eventShell.kt"
 }

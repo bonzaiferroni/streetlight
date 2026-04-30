@@ -6,14 +6,14 @@ import kotlinx.html.FlowContent
 import streetlight.model.data.Post
 import streetlight.model.data.Star
 import streetlight.web.pages.appFooter
-import streetlight.web.ui.starHeader
+import streetlight.web.ui.headerOf
 
 fun FlowContent.starProfileShell(content: StarProfileContent) {
     val star = content.star; val listing = content.posts;
     column(StarProfileKey.ShellId, modify(Gap8)) {
         column {
             swapBlock(StarProfileKey.SwapId, modify(Magic, OverflowClip)) {
-                starHeader(star, modify(SlideLeft)) {
+                headerOf(star, modify(SlideLeft)) {
                     setId(StarProfileKey.HeaderId)
                     setReveal(true)
                 }

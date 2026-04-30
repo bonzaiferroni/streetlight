@@ -9,8 +9,8 @@ import streetlight.model.data.Location
 import streetlight.web.EditLocationIdRoute
 import streetlight.web.layouts.cellCard
 import streetlight.web.layouts.locationLightCell
-import streetlight.web.layouts.postedByCell
-import streetlight.web.layouts.propertyCell
+import streetlight.web.layouts.starCell
+import streetlight.web.layouts.textPropertyCell
 import streetlight.web.pages.appFooter
 
 fun FlowContent.locationShell(
@@ -34,18 +34,18 @@ fun FlowContent.locationShell(
                     }
                 }
             }
-            row(modify(MinHeight8, FlexItems1, GapTiny, TextAlignCenter, WrapFlex, ZenBg, MoonShadow)) {
+            row(modify(MinHeight8, FlexItems1, GapTiny, TextAlignCenter, FlexWrap, ZenBg, MoonShadow)) {
                 cellCard {
-                    postedByCell(location.username)
+                    starCell(location.username)
                 }
                 location.phone?.let {
                     cellCard {
-                        propertyCell("phone", it)
+                        textPropertyCell("phone", it)
                     }
                 }
                 location.email?.let {
                     cellCard {
-                        propertyCell("email", it)
+                        textPropertyCell("email", it)
                     }
                 }
                 cellCard {
@@ -62,7 +62,7 @@ fun FlowContent.locationShell(
                         markdown(it)
                     }
                 }
-                row(modify(Flex1, WrapFlex, AlignItemsStart, FlexItems1)) {
+                row(modify(Flex1, FlexWrap, AlignItemsStart, FlexItems1)) {
                     location.links?.let { links ->
                         links.forEach { link ->
                             btn(link.label, link.url)

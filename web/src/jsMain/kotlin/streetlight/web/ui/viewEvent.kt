@@ -8,13 +8,13 @@ import streetlight.web.EventRoute
 import streetlight.web.EventSlugRoute
 import streetlight.web.model.Streetlight
 import streetlight.web.shells.EventProfileKey
-import streetlight.web.shells.eventProfileShell
+import streetlight.web.shells.eventShell
 
-fun ViewContext<Streetlight>.viewEventProfile(event: EventLocation) {
+fun ViewContext<Streetlight>.viewEvent(event: EventLocation) {
     val app = model
 
     val root = shellBox(EventProfileKey.id, app.geoMap, app.appScope, modify(Width100P)) {
-        eventProfileShell(event)
+        eventShell(event)
     }
 
     app.geoMap.panMap(event.geoPoint)
@@ -43,7 +43,7 @@ fun ViewContext<Streetlight>.viewEventProfileRoute() {
 
     routeBlock(portal, ::provideData) { event ->
         viewContextOf(app) {
-            viewEventProfile(event)
+            viewEvent(event)
         }
     }
 }

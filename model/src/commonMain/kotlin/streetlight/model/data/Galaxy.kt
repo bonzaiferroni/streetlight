@@ -32,6 +32,8 @@ data class Galaxy(
     }
 
     val postTypes get() = setOf(PostType.Location, PostType.Event, PostType.Content)
+
+    val tagline get() = description
 }
 
 @JvmInline @Serializable

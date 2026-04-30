@@ -61,6 +61,6 @@ ${SiteHelmKey.PopoverClass} {
 }
 
 $DayTheme $ThemeToggle ${IconKey.Class} {
-    ${Property.MaskUrl.with(UrlValue(SvgFile.Moon))} !important;
+    ${Property.MaskUrl.to(UrlValue(SvgFile.Moon))} !important;
 }
 """

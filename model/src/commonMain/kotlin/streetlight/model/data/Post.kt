@@ -22,7 +22,6 @@ sealed interface Post {
     val createdAt: Instant
     val updatedAt: Instant
 
-    val isRemoved: Boolean
     val postType: PostType
 }
 

@@ -8,19 +8,18 @@ data class EventPost(
     override val postId: PostId,
     override val galaxyId: GalaxyId,
     override val username: String?,
-    val event: EventLocation?,
+    val event: EventLocation,
     override val text: String?,
     override val createdAt: Instant,
     override val updatedAt: Instant,
 ): Post {
-    override val images get() = event?.images ?: event?.images
-    override val geoPoint get() = event?.geoPoint
-    override val title get() = event?.title ?: "[event removed]"
-    override val description get() = event?.description
+    override val images get() = event.images ?: event.images
+    override val geoPoint get() = event.geoPoint
+    override val title get() = event.title
+    override val description get() = event.description
     override val visibility get() = 0
-    override val links get() = event?.links
+    override val links get() = event.links
 
-    override val isRemoved get() = event == null
     override val postType get() = PostType.Event
 }
 

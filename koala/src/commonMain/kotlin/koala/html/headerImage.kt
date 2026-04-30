@@ -7,12 +7,11 @@ import koala.css.GradientDarkBottom
 import koala.css.ModifierSet
 import koala.css.ObjectFitCover
 import koala.css.Size100P
-import koala.css.Vignette
+import koala.css.VignetteOver
 import koala.css.addModifiers
 import koala.css.modify
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
-import kotlinx.html.img
 
 fun FlowContent.headerImage(
     text: String,
@@ -28,7 +27,7 @@ fun FlowContent.headerImage(
             image(src, modify(Size100P, ObjectFitCover, Aspect3By2))
         }
 
-        spacer(modify(Vignette, GradientDarkBottom))
+        spacer(modify(VignetteOver, GradientDarkBottom))
 
         heading1(text)
     }

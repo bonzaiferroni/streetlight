@@ -1,9 +1,11 @@
 package koala.html
 
 import koala.css.AlignItemsCenter
+import koala.css.Class
 import koala.css.Flex1
 import koala.css.JustifyContentCenter
 import koala.css.MaxWidth16
+import koala.css.Modifier
 import koala.css.ModifierSet
 import koala.css.OpacitySome
 import koala.css.addModifiers
@@ -13,9 +15,10 @@ import kotlinx.html.hr
 
 fun FlowContent.filigree(
     modifiers: ModifierSet? = null,
+    ruleMaxWidth: Modifier = MaxWidth16,
     block: FlowContent.() -> Unit
 ) {
-    val hrMods = modify(Flex1, OpacitySome, MaxWidth16)
+    val hrMods = modify(Flex1, OpacitySome, ruleMaxWidth)
     row(modify(modifiers, JustifyContentCenter, AlignItemsCenter)) {
         hr {
             addModifiers(hrMods)

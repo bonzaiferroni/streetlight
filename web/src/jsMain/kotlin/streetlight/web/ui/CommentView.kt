@@ -214,7 +214,7 @@ class CommentView(
                             true -> SvgFile.EyePlus
                             else -> SvgFile.EyeMinus
                         }
-                        it.setProperty(Property.MaskUrl.with(UrlValue(svg)))
+                        it.setProperty(Property.MaskUrl.to(UrlValue(svg)))
                     }
                 }
                 column(modify(Padding1, CommentClass.InnerCard)) {
