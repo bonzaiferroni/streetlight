@@ -15,7 +15,7 @@ fun FlowContent.appOverlay() {
         row(modify(Height8, Padding1)) {
             spacer(modify(Flex1))
             icon(SvgFile.PanelRight, modify(PointerEventsAuto, Dim, AppOverlayKey.MediaVlgReveal)) {
-                onClick = AppOverlayKey.TogglePanel.invoke(AppBodyKey.PanelRightId.arg,)
+                onClick = AppOverlayKey.TogglePanel.invoke(AppBodyKey.PanelRightId)
             }
         }
     }

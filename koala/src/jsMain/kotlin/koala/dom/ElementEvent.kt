@@ -47,9 +47,9 @@ fun <T: Element> T.onClickElement(block: (T) -> Unit): T {
 }
 
 fun <T: Element> T.onClick(block: () -> Unit): T {
-    onEvent(ElementEvent.onClick, {
+    onEvent(ElementEvent.onClick) {
         block()
-    })
+    }
     modify(Clickable)
     return this
 }

@@ -25,7 +25,6 @@ fun FlowContent.popover(
         setId(id)
         anchor?.let {
             setStyle(
-                // position anchor is necessary for the popover api
                 Property.PositionAnchor.to(anchor),
                 // anchor id is a variable I use in CSS
                 Property.AnchorId.to(anchor),

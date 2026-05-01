@@ -6,6 +6,7 @@ import koala.SvgFile
 import koala.css.*
 import koala.html.*
 import kotlinx.html.FlowContent
+import kotlinx.html.onClick
 import streetlight.model.data.*
 import streetlight.web.shells.SectionHeadingMod
 
@@ -74,7 +75,10 @@ fun FlowContent.postRow(
                                     btn(link.label, link.url, modify(Zen))
                                 }
                             }
-                            icon(SvgFile.MapPin, modify(Height4, MarginRight1))
+                            icon(SvgFile.MapPin, modify(Height4))
+                            icon(SvgFile.DotsVertical, modify(Height4)) {
+                                onClick = KoalaFun.CallMenu.invoke(This, PostKey.PostMenu, post.postId.value)
+                            }
                         }
                     }
                 }
@@ -93,4 +97,8 @@ fun FlowContent.postRow(
             }
         }
     }
+}
+
+object PostKey {
+    val PostMenu = "post-menu"
 }

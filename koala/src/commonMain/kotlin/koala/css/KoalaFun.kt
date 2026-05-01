@@ -3,7 +3,13 @@ package koala.css
 object KoalaFun {
     val ToggleTheme = Fun("toggleTheme")
     val ScrollToId = Fun("scrollToId", idArg)
+
+    val CallMenu = Fun("callMenu")
 }
+
+sealed interface KoalaArg
+
+data object This: KoalaArg
 
 private val idArg = "id"
 
@@ -13,10 +19,6 @@ ${KoalaFun.ToggleTheme} {
     document.documentElement.classList.toggle(`${DayTheme.identifier}`);
     const isDay = document.documentElement.classList.contains(`${DayTheme.identifier}`);
     localStorage.setItem('$THEME_KEY', isDay ? 'day' : 'night');
-}
-
-${KoalaFun.ScrollToId} {
-    document.getElementById($idArg)?.scrollIntoView({ behavior: "smooth" });
 }
 
 function initTheme() {

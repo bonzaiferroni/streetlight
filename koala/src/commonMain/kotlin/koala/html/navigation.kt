@@ -83,7 +83,7 @@ fun FlowContent.navigation(
 ) {
     a {
         addModifiers(modifiers)
-        onClick = KoalaFun.ScrollToId.invoke(targetId.arg)
+        onClick = KoalaFun.ScrollToId.invoke(targetId)
         block()
     }
 }
