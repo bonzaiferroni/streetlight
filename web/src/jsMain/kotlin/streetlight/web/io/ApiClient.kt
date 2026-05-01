@@ -15,6 +15,10 @@ import streetlight.model.Api
 import streetlight.model.data.*
 
 class ApiClient(private val client: FetchClient) {
+
+    // content
+    suspend fun readHomeContent() = client.getApi(Api.Content.Home)
+
     suspend fun createUser(request: SignUpRequest) = client.post(UserApi.Create, request)
     // suspend fun readStarInfo() = client.get(UserApi.ReadInfo)
 

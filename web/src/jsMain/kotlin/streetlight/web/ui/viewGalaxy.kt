@@ -4,14 +4,14 @@ import koala.dom.*
 import streetlight.web.GalaxySlugRoute
 import streetlight.web.io.getDataOrNull
 import streetlight.web.model.Streetlight
-import streetlight.web.shells.GalaxyProfileKey
+import streetlight.web.shells.GalaxyKey
 import streetlight.web.shells.GalaxyContent
 import streetlight.web.shells.galaxyShell
 
 fun ViewContext<Streetlight>.viewGalaxy(content: GalaxyContent) {
     val app = model
 
-    val root = shellBox(GalaxyProfileKey.ShellId) {
+    val root = shellBox(GalaxyKey.ShellId) {
         galaxyShell(content)
     }
 
@@ -28,12 +28,14 @@ fun ViewContext<Streetlight>.viewGalaxy(content: GalaxyContent) {
 
 fun ViewContext<Streetlight>.viewGalaxyRoute() {
     routeBlock<GalaxySlugRoute, GalaxyContent>(model.portal, { route ->
-        val galaxy = model.client.api.readGalaxy(route.slug) ?: return@routeBlock null
-        val listing = model.client.api.readPosts(galaxy.galaxyId).getDataOrNull() ?: return@routeBlock null
-        GalaxyContent(
-            galaxy = galaxy,
-            posts = listing,
-        )
+        readIslandOrApi(GalaxyKey.GalaxyContentId) {
+            val galaxy = api.readGalaxy(route.slug) ?: return@routeBlock null
+            val listing = api.readPosts(galaxy.galaxyId).getDataOrNull() ?: return@routeBlock null
+            GalaxyContent(
+                galaxy = galaxy,
+                posts = listing,
+            )
+        }
     }) { content ->
         viewContextOf(model) {
             viewGalaxy(content)

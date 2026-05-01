@@ -104,7 +104,8 @@ class Portal(
             route = route,
             title = route.title,
             canGoBack = backstack.isNotEmpty(),
-            initialScroll = navigation.initialScroll
+            initialScrollY = navigation.initialScrollY,
+            isInitialRoute = false,
         )}
         sitePath = route.toSitePath()
     }
@@ -118,10 +119,11 @@ data class PortalState(
     val route: AppRoute,
     val title: String? = null,
     val canGoBack: Boolean = false,
-    val initialScroll: Double = window.scrollY,
+    val initialScrollY: Double = window.scrollY,
+    val isInitialRoute: Boolean = true,
 )
 
 private data class Navigation(
     val route: AppRoute,
-    val initialScroll: Double,
+    val initialScrollY: Double,
 )

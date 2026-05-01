@@ -6,16 +6,16 @@ import koala.css.*
 import koala.html.*
 import kotlinx.html.FlowContent
 import streetlight.model.data.Galaxy
+import streetlight.model.data.HomeContent
 import streetlight.model.data.Post
 import streetlight.web.CreateGalaxyRoute
 import streetlight.web.EarthMapRoute
-import streetlight.web.layouts.layoutEventPosts
 import streetlight.web.layouts.smallGalaxyCard
 import streetlight.web.pages.appFooter
 import streetlight.web.ui.EarthKey
 
 fun FlowContent.homeShell(content: HomeContent) {
-    column(HomeShellKey.ContainerId) {
+    column(HomeKey.ContainerId) {
         geoMapMount(null, modify(BorderRadius2, Height48, MoonShadow))
         box {
             btn("View Map", EarthMapRoute(null), EarthKey.ViewMapButtonMod)
@@ -38,9 +38,9 @@ fun FlowContent.homeShell(content: HomeContent) {
                     }
 
                     card(modify(Height32, MoonShadow, Padding0)) {
-                        swapBlock(HomeShellKey.LightSwapId, modify(Magic)) {
+                        swapBlock(HomeKey.LightSwapId, modify(Magic)) {
                             column(modify(JustifyContentCenter, Dim, Gap0)) {
-                                setId(HomeShellKey.LightInfoId)
+                                setId(HomeKey.LightInfoId)
                                 setReveal(true)
 
                                 row(modify(JustifyContentCenter)) {
@@ -50,17 +50,19 @@ fun FlowContent.homeShell(content: HomeContent) {
                                 }
                                 textBlock("This is saved on your device, unless you sign in.", modify(TextAlignCenter))
                             }
-                            box(HomeShellKey.LitEventsId) {
+                            box(HomeKey.LitEventsId) {
                                 setReveal(false)
                             }
                         }
                     }
                 }
 
-                appFooter(HomeShellKey.SOURCE)
+                appFooter(HomeKey.SOURCE)
             }
         }
     }
+
+    dataIsland(HomeKey.IslandId, content)
 }
 
 fun FlowContent.galaxiesSection(galaxies: List<Galaxy>) {
@@ -103,17 +105,13 @@ fun FlowContent.galaxiesSection(galaxies: List<Galaxy>) {
     }
 }
 
-object HomeShellKey {
+object HomeKey {
     val ContainerId = Id("home-box")
     val LightSwapId = Id("light-swap")
     val LightInfoId = Id("light-info")
     val LitEventsId = Id("lit-events")
+    val IslandId = Id("home-island")
     const val SOURCE = "web/src/commonMain/kotlin/streetlight/web/shells/homeShell.kt"
 }
 
 val SectionHeadingMod = modify(LineHeight1, WhiteSpaceNoWrap, TextAlignCenter, MoonShadowText)
-
-data class HomeContent(
-    val galaxies: List<Galaxy>,
-    val posts: List<Post>
-)

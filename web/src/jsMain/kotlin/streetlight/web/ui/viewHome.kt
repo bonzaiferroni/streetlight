@@ -1,17 +1,20 @@
 package streetlight.web.ui
 
 import koala.dom.*
-import koala.html.Id
+import koala.dom.routeBlock
+import streetlight.model.data.HomeContent
+import streetlight.web.HomeRoute
+import streetlight.web.io.getDataOrNull
 import streetlight.web.model.Streetlight
-import streetlight.web.shells.HomeShellKey
-import streetlight.web.shells.HomeContent
+import streetlight.web.shells.GalaxyContent
+import streetlight.web.shells.GalaxyKey
+import streetlight.web.shells.HomeKey
 import streetlight.web.shells.homeShell
 
-fun ViewContext<Streetlight>.viewHome() {
+fun ViewContext<Streetlight>.viewHome(content: HomeContent) {
     val app = model
 
-    val content = HomeContent(emptyList(), emptyList())
-    val root = shellBox(HomeShellKey.ContainerId, app.geoMap, app.appScope) {
+    val root = shellBox(HomeKey.ContainerId, app.geoMap, app.appScope) {
         homeShell(content)
     }
 
@@ -30,4 +33,16 @@ fun ViewContext<Streetlight>.viewHome() {
     wireGalaxyMenu(app, root, null)
 
     wireStreetMap()
+}
+
+fun ViewContext<Streetlight>.viewHomeRoute() {
+    routeBlock<HomeRoute, HomeContent>(model.portal, { route ->
+        readIslandOrApi(HomeKey.IslandId) {
+            api.readHomeContent()?.getDataOrNull()
+        }
+    }) { content ->
+        viewContextOf(model) {
+            viewHome(content)
+        }
+    }
 }

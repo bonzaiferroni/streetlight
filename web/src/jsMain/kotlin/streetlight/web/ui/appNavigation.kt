@@ -17,11 +17,11 @@ fun RenderContext.appNavigation(app: Streetlight) {
         flow = app.portal.screenFlow,
         modifiers = modify(Magic, Blur, SlideUp),
         renderCacheCount = 0, // allows unlimited caching
-        onTransition = { window.scrollTo(0.0, app.portal.stateNow.initialScroll) },
+        onTransition = { window.scrollTo(0.0, app.portal.stateNow.initialScrollY) },
     ) { screen ->
         viewContextOf(app) {
             when (screen) {
-                StreetlightScreen.Home -> viewHome()
+                StreetlightScreen.Home -> viewHomeRoute()
                 StreetlightScreen.EventProfile -> viewEventProfileRoute()
                 StreetlightScreen.StarDash -> viewStarDash(app)
                 StreetlightScreen.EditEvent -> viewEventEditorRoute()

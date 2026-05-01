@@ -39,3 +39,12 @@ inline fun <reified Route: AppRoute, Data> RenderContext.routeBlock(
 
     return element
 }
+
+//inline fun <reified Route: AppRoute, Data> RenderContext.routeShell(
+//    portal: Portal,
+//    crossinline provideData: suspend (Route) -> Data?,
+//    renderCacheCount: Int? = null,
+//    crossinline block: RenderContext.(Data) -> Unit
+//): HTMLElement {
+//
+//}

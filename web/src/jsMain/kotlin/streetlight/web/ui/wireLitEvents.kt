@@ -14,7 +14,7 @@ import streetlight.model.data.EventId
 import streetlight.model.data.EventLocation
 import streetlight.web.model.LightCache
 import streetlight.web.model.Streetlight
-import streetlight.web.shells.HomeShellKey
+import streetlight.web.shells.HomeKey
 import kotlin.collections.component1
 import kotlin.collections.component2
 import kotlin.time.Clock
@@ -26,13 +26,13 @@ fun ViewContext<Streetlight>.wireLitEvents(root: HTMLElement) {
     val eventsFlow = eventCache.stateFlow.mapDistinct { events -> events.items.filter { it.endsAtOrLater > now } }
     val swapIdFlow = eventsFlow.mapDistinct {
         when (it.isEmpty()) {
-            true -> HomeShellKey.LightInfoId
-            else -> HomeShellKey.LitEventsId
+            true -> HomeKey.LightInfoId
+            else -> HomeKey.LitEventsId
         }
     }
 
-    queryAndWireSwapBlock(root, HomeShellKey.LightSwapId, bindFlow = swapIdFlow)
-    wireBlock(HomeShellKey.LitEventsId, root, wireOnView = false) {
+    queryAndWireSwapBlock(root, HomeKey.LightSwapId, bindFlow = swapIdFlow)
+    wireBlock(HomeKey.LitEventsId, root, wireOnView = false) {
         flowBlock(eventsFlow) { events ->
             val eventMap = events.groupBy { it.startsAt.toRelativeDayFormat() }
             row(modify(OverflowXAuto, Height100P, Padding1)) {

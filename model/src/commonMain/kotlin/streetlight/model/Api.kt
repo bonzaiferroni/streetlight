@@ -12,6 +12,10 @@ import streetlight.model.data.*
 
 object Api: ApiNode(ApiNode(null, "api"), "v1") {
 
+    object Content: ApiNode(this, "content") {
+        object Home: GetEndpoint<HomeContent>(this, "home")
+    }
+
     object Events: GetEndpoint<List<Event>>(this, "events") {
         object ReadById: GetByIdEndpoint<EventId, Event>(this, "read-by-id")
         object Edit: PostEndpoint<EventEdit, Event>(this, "create")
