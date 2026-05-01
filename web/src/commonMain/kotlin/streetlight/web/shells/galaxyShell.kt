@@ -7,6 +7,7 @@ import kotlinx.serialization.Serializable
 import streetlight.model.data.Galaxy
 import streetlight.model.data.Post
 import streetlight.web.EarthMapRoute
+import streetlight.web.layouts.layoutPosts
 import streetlight.web.pages.appFooter
 import streetlight.web.ui.EarthKey
 import streetlight.web.ui.headerOf

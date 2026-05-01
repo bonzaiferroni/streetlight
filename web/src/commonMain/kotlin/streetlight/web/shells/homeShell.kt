@@ -7,9 +7,9 @@ import koala.html.*
 import kotlinx.html.FlowContent
 import streetlight.model.data.Galaxy
 import streetlight.model.data.HomeContent
-import streetlight.model.data.Post
 import streetlight.web.CreateGalaxyRoute
 import streetlight.web.EarthMapRoute
+import streetlight.web.layouts.layoutPosts
 import streetlight.web.layouts.smallGalaxyCard
 import streetlight.web.pages.appFooter
 import streetlight.web.ui.EarthKey

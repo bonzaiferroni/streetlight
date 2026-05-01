@@ -1,5 +1,6 @@
 package streetlight.web.layouts
 
+import koala.SvgFile
 import koala.html.AppRoute
 import koala.model.Doc
 import streetlight.model.data.ContentPost
@@ -9,6 +10,7 @@ import streetlight.model.data.EventPost
 import streetlight.model.data.Location
 import streetlight.model.data.LocationPost
 import streetlight.model.data.Post
+import streetlight.model.data.PostType
 import streetlight.web.EventSlugRoute
 import streetlight.web.HomeRoute
 import streetlight.web.LocationIdRoute
@@ -42,4 +44,15 @@ val Post.cells get() = when (this) {
     is ContentPost -> null
     is EventPost -> eventCells(event)
     is LocationPost -> locationCells(location)
+}
+
+val Post.colorScheme get() = when (this) {
+    is EventPost -> "var(--accent-fg)"
+    else -> "var(--primary-fg)"
+}
+
+val Post.flairIcon get() = when (this) {
+    is EventPost -> SvgFile.Calendar
+    is LocationPost -> SvgFile.Pin
+    else -> null
 }

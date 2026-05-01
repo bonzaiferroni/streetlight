@@ -1,4 +1,4 @@
-package streetlight.web.shells
+package streetlight.web.layouts
 
 import kabinet.utils.toAgoFormat
 import kampfire.model.medium
@@ -7,16 +7,7 @@ import koala.css.*
 import koala.html.*
 import kotlinx.html.FlowContent
 import streetlight.model.data.*
-import streetlight.web.StreetlightRoute
-import streetlight.web.layouts.cellRow
-import streetlight.web.layouts.cells
-import streetlight.web.layouts.eventCells
-import streetlight.web.layouts.eventRoute
-import streetlight.web.layouts.locationCells
-import streetlight.web.layouts.locationRoute
-import streetlight.web.layouts.route
-import streetlight.web.layouts.subRoute
-import streetlight.web.layouts.subtitle
+import streetlight.web.shells.SectionHeadingMod
 
 fun FlowContent.layoutPosts(posts: List<Post>) {
     section {
@@ -35,8 +26,7 @@ fun FlowContent.layoutPosts(posts: List<Post>) {
 fun FlowContent.postRow(
     post: Post,
 ) {
-    val colorScheme = colorSchemeOf(post.postType)
-    val flairIcon = flairIconOf(post.postType)
+    val colorScheme = post.colorScheme
     val postRoute = post.route
     val subRoute = post.subRoute
     val subtitle = post.subtitle
@@ -57,7 +47,7 @@ fun FlowContent.postRow(
 
                     // middle column
                     column(modify(Flex1, Padding1, Height24, PositionRelative)) {
-                        flairIcon?.let {
+                        post.flairIcon?.let {
                             icon(it, modify(Height9, PositionAbsolute, Top0, Right0, OpacityGhost, ColorSchemeFg))
                         }
 
@@ -103,15 +93,4 @@ fun FlowContent.postRow(
             }
         }
     }
-}
-
-fun colorSchemeOf(postType: PostType) = when (postType) {
-    PostType.Event -> "var(--accent-fg)"
-    else -> "var(--primary-fg)"
-}
-
-fun flairIconOf(postType: PostType) = when (postType) {
-    PostType.Event -> SvgFile.Calendar
-    PostType.Location -> SvgFile.Pin
-    else -> null
 }
