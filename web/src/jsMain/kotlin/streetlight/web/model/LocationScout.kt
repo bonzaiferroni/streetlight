@@ -22,7 +22,7 @@ class LocationScout(
     private val initialState = LocationScoutState()
     private var location: Location? = null
     private val state = storeOf(initialState)
-    val messages = storeOf(UIMessage())
+    val message = storeOf(UIMessage())
     val stateFlow = state.flow
     val stateNow get() = state.now
 
@@ -46,7 +46,7 @@ class LocationScout(
             val post = LocationPostEdit(null, galaxyId, location.locationId, text)
             val postId = api.postLocation(post) ?: error("result not found")
             state.set { it.copy(postId = postId) }
-            messages.set("Posted.")
+            message.set("Posted.")
         }
     }
 }

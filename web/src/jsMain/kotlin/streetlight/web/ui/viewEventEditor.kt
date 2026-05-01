@@ -61,7 +61,7 @@ fun ViewContext<Streetlight>.viewEventEditor(
                 heading2("Event Details")
             }
             card {
-                eventEditorForm(event, model, editStore.flow, editStore::setValue)
+                viewEventEditor(event, model, editStore.flow, editStore::setValue)
             }
         }
 

@@ -15,8 +15,8 @@ sealed interface Post {
     val text: String?
     val images: ScaledImageArray?
     val geoPoint: GeoPoint?
-    val description: String?
     val title: String
+    val description: String?
     val visibility: Int
     val links: List<ExtraLink>?
     val createdAt: Instant

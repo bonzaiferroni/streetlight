@@ -40,6 +40,7 @@ fun RenderContext.appNavigation(app: Streetlight) {
                 StreetlightScreen.Star -> viewStarProfileRoute()
                 StreetlightScreen.EventScout -> viewEventScoutRoute()
                 StreetlightScreen.LocationScout -> viewLocationScoutRoute()
+                StreetlightScreen.PostContent -> viewContentPosterRoute()
                 StreetlightScreen.EditStar -> viewStarEditor()
                 StreetlightScreen.SiteConfig -> viewSiteConfig()
                 StreetlightScreen.AboutApp -> viewAboutApp()

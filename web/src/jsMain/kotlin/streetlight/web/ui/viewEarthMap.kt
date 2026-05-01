@@ -10,6 +10,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+import streetlight.model.data.ContentPost
 import streetlight.model.data.EventPost
 import streetlight.model.data.LocationPost
 import streetlight.web.EarthMapRoute
@@ -43,13 +44,12 @@ fun ViewContext<EarthMap>.viewEarthMap() {
                                         image(post.images.thumb, modify(Aspect1, Width8, BorderRadius50P))
                                         column(modify(Flex1, Gap0)) {
                                             textBlock(post.title, modify(SingleLine))
-                                            post.event?.locationName?.let {
-                                                textBlock(it, modify(OpacityMost, SingleLine))
-                                            }
+                                            textBlock(post.event.locationName, modify(OpacityMost, SingleLine))
                                         }
                                     }
                                 }
                                 is LocationPost -> return@forEach
+                                is ContentPost -> return@forEach
                             }
                         }
                     }

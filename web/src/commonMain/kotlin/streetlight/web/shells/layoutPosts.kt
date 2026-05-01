@@ -9,11 +9,14 @@ import kotlinx.html.FlowContent
 import streetlight.model.data.*
 import streetlight.web.StreetlightRoute
 import streetlight.web.layouts.cellRow
+import streetlight.web.layouts.cells
 import streetlight.web.layouts.eventCells
 import streetlight.web.layouts.eventRoute
 import streetlight.web.layouts.locationCells
 import streetlight.web.layouts.locationRoute
 import streetlight.web.layouts.route
+import streetlight.web.layouts.subRoute
+import streetlight.web.layouts.subtitle
 
 fun FlowContent.layoutPosts(posts: List<Post>) {
     section {
@@ -23,28 +26,7 @@ fun FlowContent.layoutPosts(posts: List<Post>) {
 
         column(modify(Gap2)) {
             posts.forEach { post ->
-                when (post) {
-                    is EventPost -> {
-                        val event = post.event ?: return@forEach
-                        postRow(
-                            post = post,
-                            subtitle = "${event.locationName}, ${event.city}",
-                            postRoute = event.eventRoute,
-                            subRoute = event.locationRoute,
-                            cells = eventCells(event)
-                        )
-                    }
-                    is LocationPost -> {
-                        val location = post.location ?: return@forEach
-                        postRow(
-                            post = post,
-                            subtitle = location.addressLine,
-                            postRoute = location.route,
-                            subRoute = null,
-                            cells = locationCells(post.location),
-                        )
-                    }
-                }
+                postRow(post)
             }
         }
     }
@@ -52,13 +34,13 @@ fun FlowContent.layoutPosts(posts: List<Post>) {
 
 fun FlowContent.postRow(
     post: Post,
-    subtitle: String?,
-    postRoute: StreetlightRoute,
-    subRoute: StreetlightRoute?,
-    cells: List<(FlowContent.() -> Unit)?>? = null
 ) {
     val colorScheme = colorSchemeOf(post.postType)
     val flairIcon = flairIconOf(post.postType)
+    val postRoute = post.route
+    val subRoute = post.subRoute
+    val subtitle = post.subtitle
+    val cells = post.cells
 
     column {
         card(modify(QueryContainer, Padding0, OverflowClip, ZenBg, MoonShadow)) {

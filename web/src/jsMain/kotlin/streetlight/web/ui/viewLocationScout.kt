@@ -55,7 +55,7 @@ fun RenderContext.viewLocationScout(app: Streetlight, galaxy: Galaxy) {
                     flowBlock(postIdFlow, defaultMagic) { postId ->
                         if (postId != null) {
                             row(modify(JustifyContentEnd)) {
-                                messageBox(model.messages.flow)
+                                messageBox(model.message.flow)
                                 btn("back to ${galaxy.name}", GalaxySlugRoute(galaxy.slug), galaxy.images.small)
                             }
                         } else {

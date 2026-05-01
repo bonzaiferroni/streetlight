@@ -46,6 +46,7 @@ enum class StreetlightScreen(
     Star("s", IdParse { StarRoute(it) }),
     EventScout("post-event", IdParse { EventScoutRoute(it) }),
     LocationScout("post-location", IdParse { LocationScoutRoute(it) }),
+    PostContent("post-content", IdParse { PostContentRoute(it) }),
     EditStar("edit-profile", StaticParse { EditStarRoute }),
     SiteConfig("config", StaticParse { SiteConfigRoute }),
     AboutApp("about", StaticParse { AboutRoute }),
@@ -215,6 +216,11 @@ data class EventScoutRoute(override val slug: Slug): StreetlightRoute, SlugRoute
 data class LocationScoutRoute(override val slug: Slug): StreetlightRoute, SlugRoute {
     override val screen get() = StreetlightScreen.LocationScout
     override val title get() = "Location Scout"
+}
+
+data class PostContentRoute(override val slug: Slug): StreetlightRoute, SlugRoute {
+    override val screen get() = StreetlightScreen.PostContent
+    override val title get() = "Post Content"
 }
 
 object EditStarRoute: StreetlightRoute {

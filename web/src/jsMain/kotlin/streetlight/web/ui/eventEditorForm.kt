@@ -24,7 +24,7 @@ import streetlight.web.model.EventEditor
 import streetlight.web.model.Streetlight
 import kotlin.time.Clock
 
-fun RenderContext.eventEditorForm(
+fun RenderContext.viewEventEditor(
     event: EventEdit?,
     app: Streetlight,
     bindFlow: Flow<EventEdit>? = null,
