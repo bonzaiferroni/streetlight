@@ -5,6 +5,10 @@
     --btn-font-weight: 500;
     --btn-padding: .75rem 1rem;
     --btn-border-radius: 1.25rem;
+
+    --accent-shadow: 0 0 .8rem var(--accent-button), var(--btn-outline);
+    --primary-shadow: 0 0 .8rem var(--primary-button), var(--btn-outline);
+    --danger-shadow: 0 0 .8rem rgb(var(--danger)), var(--btn-outline);
 }
 
 .btn {
@@ -21,7 +25,7 @@
     line-height: 1rem;
     cursor: pointer;
     transition: background 0.2s ease;
-    box-shadow: 0 0 .8rem var(--primary-button), var(--btn-outline);
+    box-shadow: var(--primary-shadow);
     text-transform: uppercase;
     text-shadow: var(--btn-text-shadow);
     white-space: nowrap;
@@ -40,6 +44,7 @@
 .btn > :only-child { grid-column: 1 / -1; justify-self: center; opacity: 1; width: auto; }
 .btn > :nth-child(2) { justify-self: center; }
 .btn > span { font-size: inherit; line-height: 1rem; }
+.btn:not(:has(*)) { grid-template-columns: 1fr; }
 
 .day-theme .btn {
     box-shadow: var(--btn-outline);
@@ -47,7 +52,7 @@
 }
 
 .btn.accent {
-    box-shadow: 0 0 .8rem var(--accent-button), var(--btn-outline);
+    box-shadow: var(--accent-shadow);
     background: var(--accent-button-day);
 }
 
@@ -65,6 +70,16 @@
     background: var(--zen-bg);
     box-shadow: none;
     text-shadow: none;
+}
+
+.btn.danger {
+    background: var(--danger-bg);
+    box-shadow: none;
+}
+
+.btn.danger.confirm {
+    background: rgb(var(--danger));
+    box-shadow: var(--danger-shadow);
 }
 
 .day-theme .btn.secondary {

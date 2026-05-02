@@ -2,6 +2,8 @@ package koala.dom
 
 import koala.Svg
 import koala.css.Aspect1
+import koala.css.Confirm
+import koala.css.Danger
 import koala.css.Height3
 import koala.css.ModifierSet
 import koala.css.addModifiers
@@ -76,6 +78,30 @@ fun DOMContext.button(
     )
 
     return element
+}
+
+fun DOMContext.dangerButton(
+    text: String,
+    modifiers: ModifierSet? = null,
+    onClick: (() -> Unit)? = null,
+    flair: String? = null,
+    block: BUTTON.() -> Unit = {},
+) {
+    var isConfirm = false
+
+    val element = button {
+        configureButton(text, modify(Danger, modifiers), flair, block)
+    }
+
+    element.onClick {
+        if (!isConfirm) {
+            isConfirm = true
+            element.modify(Confirm)
+            element.textContent = "Confirm"
+        } else {
+            onClick?.invoke()
+        }
+    }
 }
 
 private fun configureButtonEvents(

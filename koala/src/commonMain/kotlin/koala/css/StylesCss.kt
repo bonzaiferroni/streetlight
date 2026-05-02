@@ -62,7 +62,8 @@ val StylesCss get() = """
     --accent-button-day: color-mix(in srgb, var(--accent-button) 80%, black);
     
     --danger: 255, 99, 132;
-    --danger-bg: rgb(var(--danger)); /* not evaluated */
+    --danger-fg: color-mix(in srgb, rgb(var(--danger)) 75%, rgb(var(--ink)));
+    --danger-bg: color-mix(in srgb, rgb(var(--danger)) 75%, rgb(var(--paper)));
     --light-1: 255, 99, 132;
     --light-2: 88, 164, 255;
     --light-3: 88, 255, 188;
