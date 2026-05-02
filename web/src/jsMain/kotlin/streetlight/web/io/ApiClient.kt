@@ -91,6 +91,7 @@ class ApiClient(private val client: FetchClient) {
     suspend fun readPost(postId: PostId) = client.getApi(Api.Galaxies.ReadPost, postId)
     suspend fun readGalaxyLights() = client.get(Api.Galaxies.ReadLights)
     suspend fun editGalaxyLight(edit: LightRequest) = client.post(Api.Galaxies.EditLight, edit)
+    suspend fun removePost(postId: PostId) = client.postApi(Api.Galaxies.RemovePost, postId)
 
     suspend fun readStarByUsername(username: String) = client.get(Api.Stars.ReadByUsername) {
         param(it.username, username)

@@ -13,6 +13,7 @@ class Fun(val identifier: String, vararg val params: String) {
             is This -> "this"
             is String -> "'$arg'"
             is Id -> "'${arg.identifier}'"
+            is PositionAnchor -> "'${arg.identifier}'"
             else -> arg.toString()
         }
     }

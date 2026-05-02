@@ -38,6 +38,8 @@ class StarGate(
         }
     }
 
+    fun getUsername() = stateNow.star?.username
+
     fun signOut() {
 //        userCache.reset()
         cred.clearToken()

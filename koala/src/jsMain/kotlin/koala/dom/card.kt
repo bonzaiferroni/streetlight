@@ -22,9 +22,9 @@ import kotlinx.html.DIV
 import kotlinx.html.js.div
 import org.w3c.dom.HTMLElement
 
-inline fun DOMContext.card(
+fun DOMContext.card(
     modifiers: ModifierSet? = null,
-    crossinline content: DIV.() -> Unit,
+    content: DIV.() -> Unit = {},
 ) = div {
     addModifiers(Card, modifiers)
     content()

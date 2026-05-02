@@ -5,8 +5,10 @@ import kampfire.model.medium
 import koala.SvgFile
 import koala.css.*
 import koala.html.*
+import koala.utils.jsonConfig
 import kotlinx.html.FlowContent
 import kotlinx.html.onClick
+import kotlinx.serialization.Serializable
 import streetlight.model.data.*
 import streetlight.web.shells.SectionHeadingMod
 
@@ -76,8 +78,12 @@ fun FlowContent.postRow(
                                 }
                             }
                             icon(SvgFile.MapPin, modify(Height4))
+                            val anchor = PositionAnchor("menu-${post.postId}")
+                            val data = PostMenuData(post.postId, post.username).encode()
                             icon(SvgFile.DotsVertical, modify(Height4)) {
-                                onClick = KoalaFun.CallMenu.invoke(This, PostKey.PostMenu, post.postId.value)
+                                setAnchorName(anchor)
+                                setPopoverTarget(PostKey.PostMenuId)
+                                onClick = KoalaFun.CallMenu.invoke(anchor, PostKey.PostMenuId, data)
                             }
                         }
                     }
@@ -100,5 +106,17 @@ fun FlowContent.postRow(
 }
 
 object PostKey {
-    val PostMenu = "post-menu"
+    val PostMenuId = Id("post-menu")
+}
+
+@Serializable
+data class PostMenuData(
+    val postId: PostId,
+    val username: String?,
+) {
+    fun encode() = jsonConfig.encodeToString(this)
+
+    companion object {
+        fun decode(data: String): PostMenuData = jsonConfig.decodeFromString(data)
+    }
 }

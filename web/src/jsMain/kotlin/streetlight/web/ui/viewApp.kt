@@ -8,6 +8,8 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.ExperimentalSerializationApi
 import streetlight.model.data.GalaxyId
 import streetlight.model.data.PostId
+import streetlight.web.layouts.PostKey
+import streetlight.web.layouts.PostMenuData
 import streetlight.web.model.createStreetlight
 import streetlight.web.pages.AppBodyKey
 
@@ -35,6 +37,10 @@ fun viewApp() {
             queryAndWireStarHelm(app)
 
             wireRightPanel(app)
+
+            viewContextOf(app) {
+                registerMenu(PostKey.PostMenuId, PostMenuData::decode, AppContext::postMenu)
+            }
         }
 
         app.omni.connect()

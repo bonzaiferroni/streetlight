@@ -1,4 +1,4 @@
-@file:Suppress("CssInvalidPropertyValue")
+@file:Suppress("CssInvalidPropertyValue", "CssInvalidFunction")
 
 package koala.html
 
@@ -21,20 +21,26 @@ fun FlowContent.popover(
     block: DIV.() -> Unit
 ) {
     div {
-        addModifiers(PopoverKey.Class, modifiers)
-        setId(id)
-        anchor?.let {
-            setStyle(
-                Property.PositionAnchor.to(anchor),
-                // anchor id is a variable I use in CSS
-                Property.AnchorId.to(anchor),
-                // container anchor allows you to constrain the popover to a parent
-                Property.ContainerAnchorId.to(anchor.containerPosition()),
-            )
-        }
-        setAttribute(Attribute.Popover.to(if (isManual) "manual" else "auto"))
-        block()
+        configurePopover(id, anchor, modifiers, isManual, block)
     }
+}
+
+fun DIV.configurePopover(
+    id: Id,
+    anchor: PositionAnchor?,
+    modifiers: ModifierSet? = null,
+    isManual: Boolean = false,
+    block: DIV.() -> Unit
+) {
+    addModifiers(PopoverKey.Class, modifiers)
+    setId(id)
+    anchor?.let {
+        setStyle(
+            Property.PositionAnchor.to(anchor)
+        )
+    }
+    setAttribute(Attribute.Popover.to(if (isManual) "manual" else "auto"))
+    block()
 }
 
 // Called on the parent element
@@ -54,9 +60,7 @@ val PopoverCss get() = """
 ${PopoverKey.Class} {
     position: fixed;
     inset: auto;
-    top: anchor(var(--anchor-id) bottom);
-    left: anchor(var(--anchor-container-id) left);
-    max-width: anchor-size(var(--anchor-container-id) width);
+    top: anchor(bottom);
     justify-self: anchor-center;
     border: none;
     background: none;

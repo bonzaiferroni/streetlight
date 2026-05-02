@@ -11,13 +11,13 @@ fun FlowContent.helmBar() {
     starHelm()
     row(HelmBarKey.StickyBarId, modify(JustifyContentSpaceBetween)) {
         card(cardMod) {
-            setAnchor(SiteHelmKey.PositionAnchor)
+            setAnchorName(SiteHelmKey.PositionAnchor)
             button(SvgFile.Helm, HelmBarKey.IconMod) {
                 setPopoverTarget(SiteHelmKey.Id)
             }
         }
         card(cardMod) {
-            setAnchor(StarHelmKey.PositionAnchor)
+            setAnchorName(StarHelmKey.PositionAnchor)
             button(HelmBarKey.IconMod) {
                 setPopoverTarget(StarHelmKey.Id)
                 starBadge()

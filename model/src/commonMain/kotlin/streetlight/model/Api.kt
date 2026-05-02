@@ -126,6 +126,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object ReadPost: GetByIdEndpoint<PostId, Post>(this, "post")
         object ReadLights: GetEndpoint<List<GalaxyId>>(this, "lights")
         object EditLight: PostEndpoint<LightRequest, Boolean>(this, "light-edit")
+        object RemovePost: PostEndpoint<PostId, Boolean>(this, "remove")
     }
 
     object Stars: ApiNode(this, "star") {

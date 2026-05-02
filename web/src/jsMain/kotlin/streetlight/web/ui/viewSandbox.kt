@@ -4,7 +4,7 @@ import koala.css.Blur
 import koala.css.Magic
 import koala.css.PositionAnchor
 import koala.css.modify
-import koala.css.setAnchor
+import koala.css.setAnchorName
 import koala.dom.RenderContext
 import koala.dom.button
 import koala.dom.column
@@ -20,7 +20,7 @@ import streetlight.web.pages.appFooter
 fun RenderContext.viewSandbox(app: Streetlight) {
     column {
         button("open") {
-            setAnchor(myAnchor)
+            setAnchorName(myAnchor)
             setAttribute(Attribute.PopoverTarget, menuId.identifier)
         }
         popover(menuId, myAnchor, modify(Magic, Blur)) {

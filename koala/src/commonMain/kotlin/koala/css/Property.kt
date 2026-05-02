@@ -76,7 +76,7 @@ fun CoreAttributeGroupFacade.setStyle(styles: StyleSet?) {
 fun CoreAttributeGroupFacade.setPositionAnchor(value: PositionAnchor) =
     setStyle(Property.PositionAnchor.to(value))
 
-fun CoreAttributeGroupFacade.setAnchor(anchor: PositionAnchor) =
+fun CoreAttributeGroupFacade.setAnchorName(anchor: PositionAnchor) =
     setStyle(Property.AnchorName.to(anchor))
 
 //fun CoreAttributeGroupFacade.setIdAndAnchor(id: Id) {

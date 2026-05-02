@@ -18,7 +18,7 @@ fun FlowContent.buttonPopover(
         block()
     }
     button("$flair $label", modifiers) {
-        setAnchor(anchor)
+        setAnchorName(anchor)
         setPopoverTarget(id)
     }
 }
