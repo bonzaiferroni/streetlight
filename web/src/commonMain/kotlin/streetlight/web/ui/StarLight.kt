@@ -30,9 +30,9 @@ object StarLightKey {
     val Class = Class("star-light")
     val IsLit = Class("is-lit")
     val LightCounter = Class("light-counter")
-    val EventLightId = Attribute<EventId>("event-light-id")
-    val GalaxyLightId = Attribute<GalaxyId>("galaxy-light-id")
-    val LocationLightId = Attribute<LocationId>("location-light-id")
+    val EventLightId = Attribute("event-light-id", true) { EventId(it) }
+    val GalaxyLightId = Attribute("galaxy-light-id", true) { GalaxyId(it) }
+    val LocationLightId = Attribute("location-light-id", true) { LocationId(it) }
 
     const val GALAXY_LIGHT_CACHE = "streetlight.galaxy-light-cache"
     const val EVENT_LIGHT_CACHE = "streetlight.event-light-cache"

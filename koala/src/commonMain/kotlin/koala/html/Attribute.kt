@@ -1,32 +1,49 @@
 package koala.html
 
 import koala.Lottie
+import koala.utils.jsonConfig
 import kotlinx.html.CoreAttributeGroupFacade
 
-data class Attribute<T>(val identifier: String, val isCustom: Boolean = false): Queryable {
+data class Attribute<T>(
+    val identifier: String,
+    val isCustom: Boolean = false,
+    val toStringValue: (T) -> String = { it.toString() },
+    val toValue: ((String) -> T)? = null
+): Queryable {
     override val selector get() = "[$key]"
     val key get() = when(isCustom) {
         true -> "data-$identifier"
         false -> identifier
     }
 
-    fun to(value: T) = AttributeExpression(this, value)
+    fun to(value: T) = AttributeValue(this, value)
 
     override fun toString() = selector
 
     companion object {
-        val BlockLabel = Attribute<String>("block-label", true)
+        val BlockLabel = stringAttributeOf("block-label", true)
         val Lottie = Attribute<Lottie>("lottie", true)
-        val IsOn = Attribute<Boolean>("is-on", true)
+        val IsOn = booleanAttributeOf("is-on", true)
 
-        val PopoverTarget = Attribute<String>("popovertarget")
-        val Popover = Attribute<String>("popover")
-        val SrcSet = Attribute<String>("srcset")
-        val Sizes = Attribute<String>("sizes")
+        val PopoverTarget = stringAttributeOf("popovertarget")
+        val Popover = stringAttributeOf("popover")
+        val SrcSet = stringAttributeOf("srcset")
+        val Sizes = stringAttributeOf("sizes")
     }
 }
 
-data class AttributeExpression<T>(val attribute: Attribute<T>, val value: T)
+fun stringAttributeOf(identifier: String, isCustom: Boolean = false) =
+    Attribute(identifier, isCustom) { it }
+
+fun booleanAttributeOf(identifier: String, isCustom: Boolean = false) =
+    Attribute(identifier, isCustom) { it.toBoolean() }
+
+inline fun <reified T> jsonAttributeOf(identifier: String) =
+    Attribute<T>(identifier, true, jsonConfig::encodeToString, jsonConfig::decodeFromString)
+
+data class AttributeValue<T>(val attribute: Attribute<T>, val value: T): Queryable {
+    override val selector get() = "[${attribute.key}='${attribute.toStringValue(value)}']"
+}
 
 fun CoreAttributeGroupFacade.applyBlockLabel(label: String?) {
     label?.let {
@@ -34,7 +51,7 @@ fun CoreAttributeGroupFacade.applyBlockLabel(label: String?) {
     }
 }
 
-fun <T> CoreAttributeGroupFacade.setAttribute(expression: AttributeExpression<T>) =
+fun <T> CoreAttributeGroupFacade.setAttribute(expression: AttributeValue<T>) =
     setAttribute(expression.attribute, expression.value)
 
 fun <T> CoreAttributeGroupFacade.setAttribute(attribute: Attribute<T>, value: T?) {

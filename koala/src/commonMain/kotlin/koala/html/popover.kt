@@ -52,7 +52,7 @@ private fun PositionAnchor.containerPosition(): PositionAnchor = PositionAnchor(
 
 object PopoverKey {
     val Class = Class("popover")
-    val TargetAction = Attribute<String>("popovertargetaction")
+    val TargetAction = stringAttributeOf("popovertargetaction")
 }
 
 // language="CSS"

@@ -20,7 +20,7 @@ fun <Id> ViewContext<Streetlight>.wireLights(
     cache: LightCache<Id, *>
 ) {
     val app = model
-    val pairs = root.queryAttributeAll(attribute, cache.stringToId)
+    val pairs = root.queryAttributeAll(attribute)
 
     renderScope.launch {
         launch {

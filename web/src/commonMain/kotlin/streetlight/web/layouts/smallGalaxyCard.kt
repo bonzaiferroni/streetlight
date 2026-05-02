@@ -45,5 +45,5 @@ fun FlowContent.smallGalaxyCard(galaxy: Galaxy) {
 }
 
 object GalaxyKey {
-    val TopGalaxies = Attribute<List<Galaxy>>("galaxies")
+    val TopGalaxies = jsonAttributeOf<List<Galaxy>>("galaxies")
 }

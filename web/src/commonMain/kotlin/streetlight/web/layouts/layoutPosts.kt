@@ -36,6 +36,8 @@ fun FlowContent.postRow(
     val cells = post.cells
 
     column {
+        setAttribute(PostKey.Attribute.to(post.postId))
+
         card(modify(QueryContainer, Padding0, OverflowClip, ZenBg, MoonShadow)) {
             setStyle(Property.ColorScheme.to(colorScheme))
 
@@ -107,6 +109,8 @@ fun FlowContent.postRow(
 
 object PostKey {
     val PostMenuId = Id("post-menu")
+
+    val Attribute = Attribute("post-id", true) { PostId(it) }
 }
 
 @Serializable

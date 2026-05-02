@@ -6,10 +6,12 @@ import koala.css.modify
 import koala.dom.button
 import koala.dom.column
 import koala.dom.dangerButton
+import koala.dom.querySelectorAll
 import koala.dom.textBlock
 import kotlinx.coroutines.launch
 import streetlight.model.data.PostId
 import streetlight.web.io.getDataOrNull
+import streetlight.web.layouts.PostKey
 import streetlight.web.layouts.PostMenuData
 
 fun AppContext.postMenu(data: PostMenuData) {
@@ -18,7 +20,12 @@ fun AppContext.postMenu(data: PostMenuData) {
         dangerButton("remove", onClick = {
             renderScope.launch {
                 val isRemoved = api.removePost(data.postId).getDataOrNull()
-                console.log("removed: $isRemoved")
+                when (isRemoved) {
+                    true -> querySelectorAll(PostKey.Attribute.to(data.postId)).forEach {
+                        it.remove()
+                    }
+                    else -> error("could not remove post")
+                }
             }
         })
     }

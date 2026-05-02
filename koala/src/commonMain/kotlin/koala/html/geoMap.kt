@@ -37,7 +37,7 @@ object GeoMapSelector {
     val overlay = Id("map-overlay")
     val crosshairs = Id("map-crosshairs")
     val panel = Id("map-panel")
-    val geoPoint = Attribute<String>("data-geo-point")
+    val geoPoint = stringAttributeOf("geo-point", true)
     val FocusPanel = Id("map-focus-panel")
 }
 

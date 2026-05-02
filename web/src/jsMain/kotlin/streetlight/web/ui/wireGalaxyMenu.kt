@@ -16,7 +16,7 @@ fun RenderContext.wireGalaxyMenu(
     root: HTMLElement,
     currentGalaxy: Galaxy?
 ) {
-    val result = root.queryJsonAttribute(GalaxyKey.TopGalaxies) ?: return
+    val result = root.queryAttribute(GalaxyKey.TopGalaxies) ?: return
     val topGalaxies = result.value
     val element = result.element
 

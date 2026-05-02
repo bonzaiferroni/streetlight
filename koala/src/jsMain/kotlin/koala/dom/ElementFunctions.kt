@@ -1,18 +1,14 @@
 package koala.dom
 
-import koala.core.get
 import koala.css.InlineStyle
 import koala.css.Property
 import koala.css.Modifier
 import koala.external.ScrollIntoViewOptions
-import koala.html.Attribute
-import koala.html.AttributeExpression
 import koala.html.Queryable
-import koala.utils.jsonConfig
+import kotlinx.browser.document
 import kotlinx.browser.window
 import org.w3c.dom.Element
 import org.w3c.dom.HTMLElement
-import org.w3c.dom.Node
 import org.w3c.dom.asList
 import org.w3c.dom.css.CSSStyleDeclaration
 
@@ -94,5 +90,8 @@ fun Element.querySelector(queryable: Queryable) = querySelector(queryable.select
 fun Element.querySelectorAll(queryable: Queryable) = querySelectorAll(queryable.selector).asList().map {
     it as HTMLElement
 }
+
+fun querySelector(queryable: Queryable) = document.body!!.querySelector(queryable)
+fun querySelectorAll(queryable: Queryable) = document.body!!.querySelectorAll(queryable)
 
 fun CSSStyleDeclaration.removeProperty(property: Property<*>) = removeProperty(property.identifier)
