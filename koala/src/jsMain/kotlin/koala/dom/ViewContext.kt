@@ -30,8 +30,8 @@ fun <T> ViewContext<T>.replaceRender(element: HTMLElement, block: ViewContext<T>
     }
 }
 
-fun <T> ViewContext<T>.replaceRender(id: Id, block: ViewContext<T>.() -> Unit) {
-    val element = document.body!!.querySelector(id) ?: error("element not found: $id")
+fun <T> ViewContext<T>.replaceRender(id: Id, ancestor: HTMLElement? = null, block: ViewContext<T>.() -> Unit) {
+    val element = (ancestor ?: document.body!!).querySelector(id) ?: error("element not found: $id")
     element.replaceRender(renderScope) {
         viewContextOf(model, block)
     }

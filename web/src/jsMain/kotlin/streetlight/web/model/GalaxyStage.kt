@@ -29,7 +29,7 @@ class GalaxyStage(
 
     fun removePost(postId: PostId) {
         val posts = stateNow.posts ?: emptyList()
-        state.set { it.copy(posts = posts.filter { item -> item.postId == postId }, isInitialStage = false)}
+        state.set { it.copy(posts = posts.filter { item -> item.postId != postId }, isInitialStage = false)}
     }
 }
 

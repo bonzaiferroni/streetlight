@@ -35,15 +35,3 @@ object PostKey {
 
     val Attribute = Attribute("post-id", true) { PostId(it) }
 }
-
-@Serializable
-data class PostMenuData(
-    val postId: PostId,
-    val username: String?,
-) {
-    fun encode() = jsonConfig.encodeToString(this)
-
-    companion object {
-        fun decode(data: String): PostMenuData = jsonConfig.decodeFromString(data)
-    }
-}

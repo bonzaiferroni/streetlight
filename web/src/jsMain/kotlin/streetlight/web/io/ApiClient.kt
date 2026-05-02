@@ -111,3 +111,17 @@ fun <T> ApiResponse<T>?.getDataOrNull() = when (this) {
     is Problem -> null.also { console.log("Problem: ${this.message}") }
     null -> null.also { console.log("Response was null") }
 }
+
+fun <T> ApiResponse<T>?.getDataOrNull(onMessage: (String) -> Unit) = when (this) {
+    is Ok -> data
+    is Problem -> onMessage(message)
+    null -> onMessage("No response.")
+}
+
+fun <T> ApiResponse<T>?.handleResponse(onMessage: (String) -> Unit, block: (T) -> Unit) {
+    when (this) {
+        is Ok -> block(data)
+        is Problem -> onMessage(message)
+        null -> onMessage("No response.")
+    }
+}

@@ -33,7 +33,7 @@ fun ViewContext<Streetlight>.viewGalaxy(content: GalaxyContent) {
     renderScope.launch {
         stage.postFlow.collect { posts ->
             val posts = posts.takeIf { !stage.stateNow.isInitialStage } ?: return@collect
-            replaceRender(PostKey.PostLayoutId) {
+            replaceRender(PostKey.PostLayoutId, root) {
                 column(PostKey.PostLayoutColumnMod) {
                     layoutPosts(posts)
                 }

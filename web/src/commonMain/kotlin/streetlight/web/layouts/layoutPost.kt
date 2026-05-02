@@ -117,11 +117,10 @@ fun FlowContent.layoutPost(
                             }
                             icon(SvgFile.MapPin, modify(Height4))
                             val anchor = PositionAnchor("menu-${post.postId}")
-                            val data = PostMenuData(post.postId, post.username).encode()
                             icon(SvgFile.DotsVertical, modify(Height4)) {
                                 setAnchorName(anchor)
                                 setPopoverTarget(PostKey.PostMenuId)
-                                onClick = KoalaFun.CallMenu.invoke(anchor, PostKey.PostMenuId, data)
+                                onClick = KoalaFun.CallMenu.invoke(anchor, PostKey.PostMenuId, post.postId)
                             }
                         }
                     }

@@ -57,7 +57,7 @@ fun <Item> RenderContext.itemsBlock(
         }.first()
         var context: RenderContext
         container.append {
-            context = DOMRenderContext(this, localScope)
+            context = DOMRenderContext(this, localScope, container)
             context.block(item)
         }
         return RenderCache(context, job, localScope, listOf(container))

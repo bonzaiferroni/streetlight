@@ -17,7 +17,7 @@ fun <Context, Data> ViewContext<Context>.registerMenu(
 ) {
     menus[id.identifier] = {
         val data = dataOf(it)
-        val element = card(modify(BlurBackdrop))
+        val element = card(modify(BlurBackdrop, BorderRadius3))
         element.appendRender(renderScope) {
             viewContextOf(model) {
                 block(data)

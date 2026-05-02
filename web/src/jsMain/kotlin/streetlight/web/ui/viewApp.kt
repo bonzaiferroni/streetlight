@@ -9,9 +9,9 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import streetlight.model.data.GalaxyId
 import streetlight.model.data.PostId
 import streetlight.web.layouts.PostKey
-import streetlight.web.layouts.PostMenuData
 import streetlight.web.model.createStreetlight
 import streetlight.web.pages.AppBodyKey
+import kotlin.time.Duration.Companion.seconds
 
 @OptIn(ExperimentalSerializationApi::class)
 fun viewApp() {
@@ -37,9 +37,18 @@ fun viewApp() {
             queryAndWireStarHelm(app)
 
             wireRightPanel(app)
+            wireToaster(app)
+
+            launch {
+                app.toaster.toast("hello toast")
+                delay(1.seconds)
+                app.toaster.toast("hello again")
+                delay(3.seconds)
+                app.toaster.toast("and again")
+            }
 
             viewContextOf(app) {
-                registerMenu(PostKey.PostMenuId, PostMenuData::decode, AppContext::postMenu)
+                registerMenu(PostKey.PostMenuId, { PostId(it) }, AppContext::postMenu)
             }
         }
 

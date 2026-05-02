@@ -1,5 +1,6 @@
 package koala.css
 
+import kampfire.api.TableId
 import koala.html.Id
 
 class Fun(val identifier: String, vararg val params: String) {
@@ -14,6 +15,7 @@ class Fun(val identifier: String, vararg val params: String) {
             is String -> "'$arg'"
             is Id -> "'${arg.identifier}'"
             is PositionAnchor -> "'${arg.identifier}'"
+            is TableId<*> -> "'${arg.value}'"
             else -> arg.toString()
         }
     }

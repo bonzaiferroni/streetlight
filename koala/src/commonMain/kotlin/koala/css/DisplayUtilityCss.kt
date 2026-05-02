@@ -11,7 +11,7 @@ val DisplayUtilityCss
         // Shape
         CircleShape, CircleClip,
         // Border Radius
-        BorderRadius0, BorderRadius1, BorderRadius2, BorderRadius4, BorderRadius50P, BorderRadiusBottom1,
+        BorderRadius0, BorderRadius1, BorderRadius2, BorderRadius4, BorderRadius3, BorderRadius50P, BorderRadiusBottom1,
         BorderDashed2Px,
         // Color
         NightInk, DayInk, PrimaryFg, AccentFg, ColorSchemeFg, ColorSchemeBg,
@@ -63,8 +63,9 @@ val CircleClip = utilityOf("circle-clip", "border-radius: 50%", "overflow: hidde
 // Border Radius
 val BorderRadius0 = utilityOf("border-radius-0", "border-radius: 0")
 val BorderRadius1 = utilityOf("border-radius-1", "border-radius: var(--unit-spacing)")
-val BorderRadius2 = utilityOf("border-radius-2", "border-radius: calc(var(--unit-spacing) * 2)")
-val BorderRadius4 = utilityOf("border-radius-4", "border-radius: calc(var(--unit-spacing) * 4)")
+val BorderRadius2 = utilityOf("border-radius-2", "border-radius: var(--unit-spacing-2)")
+val BorderRadius3 = utilityOf("border-radius-3", "border-radius: var(--unit-spacing-3)")
+val BorderRadius4 = utilityOf("border-radius-4", "border-radius: var(--unit-spacing-4)")
 val BorderRadius50P = utilityOf("border-radius-50p", "border-radius: 50%")
 val BorderDashed2Px = utilityOf("border: 2px dashed currentColor;")
 val BorderRadiusBottom1 = utilityOf("border-radius-bottom-1", "border-radius: 0 0 var(--unit-spacing) var(--unit-spacing)")

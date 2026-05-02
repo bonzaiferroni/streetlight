@@ -24,6 +24,7 @@ fun HTML.appBody(
         }
         appOverlay()
         div(AppBodyKey.FullScreenId)
+        div(AppBodyKey.ToasterId)
 
         scriptUnsafe(AppOverlayJs)
         linkScript(JsFile.Web)
@@ -41,6 +42,7 @@ object AppBodyKey {
     val PanelRightId = Id("panel-right")
     val ContentRowId = Id("app-content-row")
     val FullScreenId = Id("full-screen")
+    val ToasterId = Id("toaster")
 }
 
 // language="CSS"
@@ -115,6 +117,15 @@ ${AppBodyKey.FullScreenId} {
 ${AppBodyKey.FullScreenId}$Reveal {
     pointer-events: auto;
     opacity: 1;
+}
+
+${AppBodyKey.ToasterId} {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
 }
 
 """

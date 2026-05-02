@@ -24,6 +24,7 @@ interface Streetlight {
     val config: SiteConfig
     val omni: OmniLog
     val stage: StageFacade
+    val toaster: Toaster
 }
 
 interface ClientFacade {
@@ -65,5 +66,7 @@ fun createStreetlight(scope: CoroutineScope): Streetlight {
         override val stage = object: StageFacade {
             override val galaxy = GalaxyStage(scope)
         }
+
+        override val toaster = Toaster(scope)
     } as Streetlight
 }
