@@ -3,7 +3,6 @@ package koala.html
 import kampfire.model.GeoPoint
 import koala.css.Class
 import koala.css.ModifierSet
-import koala.css.NeverDay
 import koala.css.addModifiers
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
@@ -23,21 +22,20 @@ fun DIV.configureGeoMapMount(
     modifiers: ModifierSet? = null,
     block: DIV.() -> Unit = {}
 ) {
-    addModifiers(modifiers, GeoMapSelector.mapMount, NeverDay)
+    addModifiers(modifiers, GeoMapKey.MapMount)
     initialPoint?.let {
-        setAttribute(GeoMapSelector.geoPoint, "${it.lng},${it.lat}")
+        setAttribute(Attribute.GeoPointAttribute, initialPoint)
     }
     block()
 }
 
-object GeoMapSelector {
-    val mapMount = Class("map-mount")
-    val window = Id("map-window")
-    val widget = Id("map-widget")
-    val overlay = Id("map-overlay")
-    val crosshairs = Id("map-crosshairs")
-    val panel = Id("map-panel")
-    val geoPoint = stringAttributeOf("geo-point", true)
+object GeoMapKey {
+    val MapMount = Class("map-mount")
+    val Window = Id("map-window")
+    val Widget = Id("map-widget")
+    val Overlay = Id("map-overlay")
+    val Crosshairs = Id("map-crosshairs")
+    val Panel = Id("map-panel")
     val FocusPanel = Id("map-focus-panel")
 }
 

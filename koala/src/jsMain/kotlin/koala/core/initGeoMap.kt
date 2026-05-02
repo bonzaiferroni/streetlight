@@ -2,6 +2,9 @@
 
 package koala.core
 
+import koala.dom.ResizeObserver
+import koala.dom.getAttribute
+import koala.dom.isModified
 import koala.external.FillExtrusionPaint
 import koala.external.HillshadePaint
 import koala.external.MapLayer
@@ -10,8 +13,10 @@ import koala.external.MapOptions
 import koala.external.MapSource
 import koala.external.MapTerrain
 import koala.external.maplibregl
-import koala.html.GeoMapSelector
+import koala.html.Attribute
+import koala.html.GeoMapKey
 import kotlinx.browser.localStorage
+import kotlinx.dom.hasClass
 import org.w3c.dom.HTMLElement
 
 // globalThis.geoMapWindow: HTMLElement? = null
@@ -24,12 +29,16 @@ fun findAndInitGeoMap(ancestor: HTMLElement): HTMLElement? {
         return it
     }
 
-    val mounts = ancestor.queryAll(GeoMapSelector.mapMount)
-    if (mounts.isEmpty()) return null
-    if (mounts.size > 1) {
-        console.log("Warning: more than one geomap mount found, using first")
+    val mount = ancestor.takeIf { it.isModified(GeoMapKey.MapMount) } ?: ancestor.queryAll(GeoMapKey.MapMount).let { mounts ->
+        when (mounts.size) {
+            0 -> error("geomap mount not found")
+            1 -> mounts.first() as HTMLElement
+            else -> {
+                console.log("Warning: more than one geomap mount found, using first")
+                mounts.first() as HTMLElement
+            }
+        }
     }
-    val mount = mounts[0] as? HTMLElement ?: return null
     val element = initGeoMap(mount)
     globalThis.geoMapWindow = element
     return element
@@ -37,19 +46,16 @@ fun findAndInitGeoMap(ancestor: HTMLElement): HTMLElement? {
 
 fun initGeoMap(mount: HTMLElement): HTMLElement {
     console.log("initializing geomap!")
-    val window = mount.appendDiv(GeoMapSelector.window)
-    val widgetBox = window.appendDiv(GeoMapSelector.widget)
-    val overlay = widgetBox.appendDiv(GeoMapSelector.overlay)
-    overlay.appendDiv(GeoMapSelector.crosshairs)
-    overlay.appendDiv(GeoMapSelector.FocusPanel)
+    val window = mount.appendDiv(GeoMapKey.Window)
+    val widgetBox = window.appendDiv(GeoMapKey.Widget)
+    val overlay = widgetBox.appendDiv(GeoMapKey.Overlay)
+    overlay.appendDiv(GeoMapKey.Crosshairs)
+    overlay.appendDiv(GeoMapKey.FocusPanel)
 
     var zoom: Number = 11
     val center = mount
-        .getAttribute(GeoMapSelector.geoPoint.key)
-        ?.split(",")
-        ?.mapNotNull { it.toDoubleOrNull() }
-        ?.takeIf { it.size == 2 }
-        ?.let { (lng, lat) -> maplibregl.LngLat(lng, lat) }
+        .getAttribute(Attribute.GeoPointAttribute)
+        ?.let { maplibregl.LngLat(it.lng, it.lat) }
         ?: cachedCenterPoint()?.also { zoom = cachedZoom() ?: zoom }
         ?: maplibregl.LngLat(-104.95, 39.75)
 
@@ -68,7 +74,6 @@ fun initGeoMap(mount: HTMLElement): HTMLElement {
     // widget.addControl(maplibregl.FullscreenControl())
 
     window.asDynamic().widget = widget
-
 
     widget.on("load") {
 
@@ -133,6 +138,11 @@ fun initGeoMap(mount: HTMLElement): HTMLElement {
         localStorage.setItem(MAP_CENTER_LNG_KEY, center.lng.toString())
         localStorage.setItem(MAP_ZOOM_KEY, zoom.toString())
     }
+
+    val observer = ResizeObserver { _,_ ->
+        widget.resize()
+    }
+    observer.observe(window)
 
     console.log("assigning map window")
     return window

@@ -15,6 +15,8 @@ data class GeoPoint(
     fun toList(): List<Double> = listOf(lng, lat)
     fun toArray(): Array<Double> = arrayOf(lng, lat)
 
+    override fun toString() = "$lng,$lat"
+
     fun toQuery() = "lng=$lng&lat=$lat"
 
     companion object {
@@ -24,6 +26,10 @@ data class GeoPoint(
             val lng = parameters["lng"]?.firstOrNull()?.toDoubleOrNull() ?: return@let null
             val lat = parameters["lat"]?.firstOrNull()?.toDoubleOrNull() ?: return@let null
             GeoPoint(lng, lat)
+        }
+
+        fun fromString(value: String) = value.split(",").mapNotNull { it.toDoubleOrNull() }.takeIf { it.size == 2 }?.let {
+            GeoPoint(it[0], it[1])
         }
     }
 }

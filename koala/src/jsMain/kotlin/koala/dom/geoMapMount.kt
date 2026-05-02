@@ -2,9 +2,7 @@ package koala.dom
 
 import kampfire.model.GeoPoint
 import koala.css.*
-import koala.html.GeoMapSelector
 import koala.html.configureGeoMapMount
-import koala.html.geoMapMount
 import koala.model.GeoMap
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.html.DIV

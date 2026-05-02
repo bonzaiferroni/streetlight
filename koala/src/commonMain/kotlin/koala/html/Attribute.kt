@@ -1,5 +1,6 @@
 package koala.html
 
+import kampfire.model.GeoPoint
 import koala.Lottie
 import koala.utils.jsonConfig
 import kotlinx.html.CoreAttributeGroupFacade
@@ -24,6 +25,7 @@ data class Attribute<T>(
         val BlockLabel = stringAttributeOf("block-label", true)
         val Lottie = Attribute<Lottie>("lottie", true)
         val IsOn = booleanAttributeOf("is-on", true)
+        val GeoPointAttribute = Attribute("geo-point", true) { GeoPoint.fromString(it) }
 
         val PopoverTarget = stringAttributeOf("popovertarget")
         val Popover = stringAttributeOf("popover")

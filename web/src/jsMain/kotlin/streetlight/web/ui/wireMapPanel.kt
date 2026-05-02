@@ -1,7 +1,5 @@
 package streetlight.web.ui
 
-import kampfire.model.Ok
-import kampfire.model.Problem
 import koala.css.AlignItemsCenter
 import koala.css.Magic
 import koala.css.Blur
@@ -9,7 +7,7 @@ import koala.css.Class
 import koala.css.SlideLeft
 import koala.css.modify
 import koala.dom.*
-import koala.html.GeoMapSelector
+import koala.html.GeoMapKey
 import koala.html.Id
 import koala.html.heading2
 import koala.html.textLabel
@@ -35,7 +33,7 @@ fun ViewContext<Streetlight>.wireStreetMap() {
 }
 
 fun ViewContext<Streetlight>.wireMapPanel() {
-    wireBlock(GeoMapSelector.panel) {
+    wireBlock(GeoMapKey.Panel) {
         tabs(Id("map-panel-tabs")) {
             tab("Posts") {
                 column {

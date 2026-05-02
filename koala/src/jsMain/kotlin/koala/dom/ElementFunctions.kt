@@ -77,24 +77,22 @@ fun CSSStyleDeclaration.removeProperty(property: Property<*>) = removeProperty(p
 
 private var Element.job: Job? get() = asDynamic().job
     set(value) {
-        asDynamic().let {
-            val existingJob = job
-            if (existingJob != null && existingJob.isActive) {
-                error("Active coroutine job cannot be replaced")
-            }
-            job = value
+        val element = asDynamic()
+        val existingJob = element.job
+        if (existingJob != null && existingJob.isActive) {
+            error("Active coroutine job cannot be replaced")
         }
+        element.job = value
     }
 
 private var Element.scope: CoroutineScope? get() = asDynamic().scope
     set(value) {
-        asDynamic().let {
-            val existingScope = scope
-            if (existingScope != null && existingScope.isActive) {
-                error("Active coroutine scope cannot be replaced")
-            }
-            scope = value
+        val element = asDynamic()
+        val existingScope = scope
+        if (existingScope != null && existingScope.isActive) {
+            error("Active coroutine scope cannot be replaced")
         }
+        element.scope = value
     }
 
 fun Element.getElementScope(parentScope: CoroutineScope, cancelExistingScope: Boolean): CoroutineScope {

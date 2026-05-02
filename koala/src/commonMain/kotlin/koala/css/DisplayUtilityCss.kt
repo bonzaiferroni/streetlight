@@ -169,7 +169,6 @@ val AspectRatioAuto = utilityOf("aspect-ratio-auto", "aspect-ratio: auto")
 
 // defined in stylesheet
 val DayTheme = CssUtility("day-theme")
-val NeverDay = CssUtility("never-day")
 val Activate = CssUtility("activate")
 val Focus = CssUtility("focus")
 val Clickable = CssUtility("clickable")

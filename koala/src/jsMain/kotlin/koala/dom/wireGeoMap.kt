@@ -10,7 +10,7 @@ import koala.external.maplibregl
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.w3c.dom.HTMLElement
-import koala.html.GeoMapSelector
+import koala.html.GeoMapKey
 import koala.model.GeoMap
 import koala.model.MapViewContext
 import koala.model.mapDistinct
@@ -28,8 +28,8 @@ fun wireGeoMap(
     appScope: CoroutineScope,
     ancestor: HTMLElement,
 ) {
-    val mount = ancestor.takeIf { it.isModified(GeoMapSelector.mapMount) }
-        ?: ancestor.queryFirstOrNull(GeoMapSelector.mapMount) ?: error("mount not found")
+    val mount = ancestor.takeIf { it.isModified(GeoMapKey.MapMount) }
+        ?: ancestor.queryFirstOrNull(GeoMapKey.MapMount) ?: error("mount not found")
     val mapWindow = wireMapWindow(geoMap, appScope, mount)
 
     mount.onView { isVisible ->
@@ -61,14 +61,14 @@ fun wireMapWindow(
     }
 
     console.log("creating geomap")
-    val mapWindow = document.getElementOrNullById(GeoMapSelector.window) ?: findAndInitGeoMap(mount) ?: error("geomap window not found")
+    val mapWindow = document.getElementOrNullById(GeoMapKey.Window) ?: findAndInitGeoMap(mount) ?: error("geomap window not found")
     geoMapWindow = mapWindow
     val widget: maplibregl.Map = mapWindow.asDynamic().widget ?: error("geomap widget not found")
 
     mapWindow.onView(geoMap::setIsViewed)
     // wireKeyboardControls(widget)
 
-    val focusPanel = mapWindow.querySelector(GeoMapSelector.FocusPanel.selector) as HTMLElement
+    val focusPanel = mapWindow.querySelector(GeoMapKey.FocusPanel.selector) as HTMLElement
     focusPanel.replaceRender(appScope) {
         val nearestFlow = geoMap.stateFlow.mapDistinct { it.focus }
         flowBlock(nearestFlow, modify(Magic, SlideUp)) { entity ->

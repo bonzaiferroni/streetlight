@@ -17,20 +17,18 @@ fun <T> Element.queryAttributeAll(
 ): List<ElementAttribute<T>> {
     return querySelectorAll(attribute.selector).asList().mapNotNull {
         val element = it as HTMLElement
-        element.toElementAttribute(attribute) ?: return@mapNotNull null
+        element.getElementAttribute(attribute) ?: return@mapNotNull null
     }
 }
 
 fun <T> Element.queryAttribute(attribute: Attribute<T>) =
-    querySelector(attribute)?.toElementAttribute(attribute)
+    querySelector(attribute)?.getElementAttribute(attribute)
 
-private fun <T> HTMLElement.toElementAttribute(
+private fun <T> HTMLElement.getElementAttribute(
     attribute: Attribute<T>,
 ): ElementAttribute<T>? {
-    val value = attributes[attribute] ?: return null
-    val transform = attribute.toValue ?: error("transform not found: ${attribute.identifier}")
-    val data = transform(value)
-    return ElementAttribute(this, data)
+    val value = getAttribute(attribute) ?: return null
+    return ElementAttribute(this, value)
 }
 
 // dep
@@ -51,3 +49,8 @@ fun Element.setAttribute(attribute: Attribute<*>, value: String) =
 
 fun <T> Element.setAttribute(expression: AttributeValue<T>) =
     setAttribute(expression.attribute.key, expression.value.toString())
+
+fun <T> Element.getAttribute(attribute: Attribute<T>): T? = attributes[attribute]?.let {
+    val transform = attribute.toValue ?: error("transform not found: ${attribute.identifier}")
+    transform(it)
+}
