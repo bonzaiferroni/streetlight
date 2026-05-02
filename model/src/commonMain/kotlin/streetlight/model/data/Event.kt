@@ -38,6 +38,7 @@ data class Event(
     val images: ScaledImageArray?,
     val streamUrl: String?,
     val timeZoneId: String,
+    val lightCount: Int,
     val startsAt: Instant,
     val endsAt: Instant?,
     val updatedAt: Instant,

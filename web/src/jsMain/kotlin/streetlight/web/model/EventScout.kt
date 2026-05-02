@@ -32,6 +32,7 @@ import streetlight.model.data.mergeLeft
 import streetlight.model.data.mergeRight
 import streetlight.model.data.toEdit
 import streetlight.model.external.toPlace
+import streetlight.web.io.handleResponse
 import streetlight.web.ui.ViewModel
 
 class EventScout(
@@ -205,20 +206,12 @@ class EventScout(
     fun postToGalaxy(galaxyId: GalaxyId) {
         val event = state.now.event ?: return
         scope.launch {
-            val postId = api.createPost(EventPostEdit(
+            api.createPost(EventPostEdit(
                 galaxyId = galaxyId,
                 eventId = event.eventId,
-            ))
-            if (postId != null) {
-                val response = api.readPost(postId) ?: return@launch
-                when (response) {
-                    is Ok -> {
-                        val post = response.data
-                        app.streetMap.addPosts(listOf(post))
-                        state.set { it.copy(posts = it.posts + post)}
-                    }
-                    is Problem -> msg.set(response.message)
-                }
+            )).handleResponse(msg::set) { post ->
+                stage.galaxy.addPost(post)
+                state.set { it.copy(posts = it.posts + post)}
             }
         }
     }

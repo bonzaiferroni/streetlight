@@ -83,7 +83,7 @@ class ApiClient(private val client: FetchClient) {
     suspend fun readTopGalaxies() = client.get(Api.Galaxies.Top)
     suspend fun readGalaxies(galaxyIds: List<GalaxyId>) = client.post(Api.Galaxies.ReadGalaxies, galaxyIds)
     suspend fun readGalaxy(path: String) = client.get(Api.Galaxies.Path, path)
-    suspend fun createPost(post: EventPostEdit) = client.post(Api.Galaxies.PostEvent, post)
+    suspend fun createPost(post: EventPostEdit) = client.postApi(Api.Galaxies.PostEvent, post)
     suspend fun createPost(post: ContentEdit) = client.postApi(Api.Galaxies.PostContent, post)
     suspend fun postLocation(location: LocationPostEdit) = client.postApi(Api.Galaxies.PostLocation, location)
     suspend fun readPosts(galaxyIds: List<GalaxyId>) = client.postApi(Api.Galaxies.ReadMultiPosts, galaxyIds)
