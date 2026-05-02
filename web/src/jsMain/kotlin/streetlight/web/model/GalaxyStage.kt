@@ -24,16 +24,17 @@ class GalaxyStage(
 
     fun addPost(post: Post) {
         val posts = stateNow.posts ?: emptyList()
-        state.set { it.copy(posts = posts + post) }
+        state.set { it.copy(posts = posts + post, isInitialStage = false) }
     }
 
     fun removePost(postId: PostId) {
         val posts = stateNow.posts ?: emptyList()
-        state.set { it.copy(posts = posts.filter { item -> item.postId == postId })}
+        state.set { it.copy(posts = posts.filter { item -> item.postId == postId }, isInitialStage = false)}
     }
 }
 
 data class GalaxyStageState(
     val galaxy: Galaxy? = null,
     val posts: List<Post>? = null,
+    val isInitialStage: Boolean = true,
 )

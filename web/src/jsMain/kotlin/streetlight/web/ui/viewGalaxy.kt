@@ -13,6 +13,7 @@ import streetlight.web.shells.galaxyShell
 
 fun ViewContext<Streetlight>.viewGalaxy(content: GalaxyContent) {
     val app = model
+    val stage = model.stage.galaxy
 
     val root = shellBox(GalaxyKey.ShellId) {
         galaxyShell(content)
@@ -27,11 +28,11 @@ fun ViewContext<Streetlight>.viewGalaxy(content: GalaxyContent) {
     wireGalaxyMenu(app, root, content.galaxy)
 
     app.streetMap.setPosts(content.posts)
-    app.stage.galaxy.setStage(content)
+    stage.setStage(content)
 
     renderScope.launch {
-        app.stage.galaxy.postFlow.collect { posts ->
-            val posts = posts ?: return@collect
+        stage.postFlow.collect { posts ->
+            val posts = posts.takeIf { !stage.stateNow.isInitialStage } ?: return@collect
             replaceRender(PostKey.PostLayoutId) {
                 column(PostKey.PostLayoutColumnMod) {
                     layoutPosts(posts)
