@@ -3,13 +3,13 @@ package koala.dom
 import koala.css.InlineStyle
 import koala.css.Property
 import koala.css.Modifier
-import koala.external.ScrollIntoViewOptions
 import koala.html.Queryable
 import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.isActive
 import org.w3c.dom.Element
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.asList
@@ -75,12 +75,40 @@ fun querySelectorAll(queryable: Queryable) = document.body!!.querySelectorAll(qu
 
 fun CSSStyleDeclaration.removeProperty(property: Property<*>) = removeProperty(property.identifier)
 
-var Element.job: Job? get() = asDynamic().job
-    set(value) { asDynamic().job = value }
+private var Element.job: Job? get() = asDynamic().job
+    set(value) {
+        asDynamic().let {
+            val existingJob = job
+            if (existingJob != null && existingJob.isActive) {
+                error("Active coroutine job cannot be replaced")
+            }
+            job = value
+        }
+    }
 
-fun Element.createElementScope(scope: CoroutineScope): CoroutineScope {
-    this.job?.cancel()
+private var Element.scope: CoroutineScope? get() = asDynamic().scope
+    set(value) {
+        asDynamic().let {
+            val existingScope = scope
+            if (existingScope != null && existingScope.isActive) {
+                error("Active coroutine scope cannot be replaced")
+            }
+            scope = value
+        }
+    }
+
+fun Element.getElementScope(parentScope: CoroutineScope, cancelExistingScope: Boolean): CoroutineScope {
+    if (cancelExistingScope) {
+        this.job?.cancel()
+    }
+    val scope = scope
+    if (scope != null && scope.isActive) {
+        return scope
+    }
+
     val job = SupervisorJob()
     this.job = job
-    return CoroutineScope(scope.coroutineContext + job)
+    val newScope = CoroutineScope(parentScope.coroutineContext + job)
+    this.scope = newScope
+    return newScope
 }
