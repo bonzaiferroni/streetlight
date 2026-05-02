@@ -31,14 +31,17 @@ fun findAndInitGeoMap(ancestor: HTMLElement): HTMLElement? {
 
     val mount = ancestor.takeIf { it.isModified(GeoMapKey.MapMount) } ?: ancestor.queryAll(GeoMapKey.MapMount).let { mounts ->
         when (mounts.size) {
-            0 -> error("geomap mount not found")
+            0 -> {
+                console.log("Geomap mount not found")
+                null
+            }
             1 -> mounts.first() as HTMLElement
             else -> {
                 console.log("Warning: more than one geomap mount found, using first")
                 mounts.first() as HTMLElement
             }
         }
-    }
+    } ?: return null
     val element = initGeoMap(mount)
     globalThis.geoMapWindow = element
     return element
