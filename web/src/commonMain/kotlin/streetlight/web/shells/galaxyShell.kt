@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 import streetlight.model.data.Galaxy
 import streetlight.model.data.Post
 import streetlight.web.EarthMapRoute
-import streetlight.web.layouts.layoutPosts
+import streetlight.web.layouts.postSection
 import streetlight.web.pages.appFooter
 import streetlight.web.ui.EarthKey
 import streetlight.web.ui.headerOf
@@ -27,7 +27,7 @@ fun FlowContent.galaxyShell(content: GalaxyContent) {
 //                if (galaxy.postTypes.contains(PostType.Content)) {
 //                    layoutTalkPreview(TalkRoute(galaxy.galaxyId), listing.comments)
 //                }
-                layoutPosts(post)
+                postSection(post)
                 appFooter(GalaxyKey.SOURCE)
             }
         }

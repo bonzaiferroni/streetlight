@@ -2,14 +2,16 @@ package streetlight.web.model
 
 import koala.model.ItemCache
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import streetlight.model.data.EventId
 import streetlight.model.data.Galaxy
 import streetlight.model.data.GalaxyId
+import streetlight.model.data.Post
 import streetlight.web.io.ApiClient
 import streetlight.web.ui.StarLightKey
 
-class UserCache(
+class DataCache(
     scope: CoroutineScope,
     private val config: SiteConfig,
     private val api: ApiClient,
@@ -29,6 +31,8 @@ class UserCache(
     val song = ItemCache(scope, { it.songId }) { api.readSongs() }
     // val file = ItemCache(scope, { it }) { api.readUserFiles() }
     val topGalaxies = ItemCache(scope, { it.galaxyId }) { api.readTopGalaxies() }
+
+    val newPosts = MutableSharedFlow<Post>()
 
     // val galaxy = GalaxyCache(scope, config, api)
 

@@ -1,6 +1,5 @@
 package streetlight.web.model
 
-import kabinet.utils.format
 import kabinet.utils.replaceAt
 import kampfire.model.Url
 import koala.model.mapDistinct
@@ -16,7 +15,7 @@ import streetlight.model.external.Address
 class EventEditor(
     initialEvent: EventEdit?,
     private val scope: CoroutineScope,
-    private val client: ClientContext,
+    private val client: ClientFacade,
 ) {
     private val state = storeOf(EventEditorState(initialEvent ?: EventEdit()))
     val stateFlow = state.flow

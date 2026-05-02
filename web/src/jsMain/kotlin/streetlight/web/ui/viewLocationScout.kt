@@ -10,6 +10,7 @@ import koala.html.heading3
 import koala.html.section
 import koala.html.spacer
 import koala.model.mapDistinct
+import kotlinx.coroutines.launch
 import streetlight.model.data.Galaxy
 import streetlight.web.GalaxySlugRoute
 import streetlight.web.LocationScoutRoute
@@ -22,7 +23,7 @@ fun RenderContext.viewLocationScout(app: Streetlight, galaxy: Galaxy) {
     val model = LocationScout(renderScope, app, finder, galaxy.galaxyId)
     val locationFlow = finder.stateFlow.mapDistinct { it.location }
     val textFlow = model.stateFlow.mapDistinct { it.text }
-    val postIdFlow = model.stateFlow.mapDistinct { it.postId }
+    val postFlow = model.stateFlow.mapDistinct { it.post }
 
     val sectionMod = modify()
 
@@ -52,23 +53,22 @@ fun RenderContext.viewLocationScout(app: Streetlight, galaxy: Galaxy) {
                         heading3("Post ${location.name}")
                     }
 
-                    flowBlock(postIdFlow, defaultMagic) { postId ->
-                        if (postId != null) {
-                            row(modify(JustifyContentEnd)) {
-                                messageBox(model.message.flow)
-                                btn("back to ${galaxy.name}", GalaxySlugRoute(galaxy.slug), galaxy.images.small)
-                            }
-                        } else {
-                            card(modify(ZenBg)) {
-                                textEditor("text", onValue = model::setText, flow = textFlow)
-                                row(modify(JustifyContentSpaceBetween)) {
-                                    spacer()
-                                    button("Post", modify(Accent), model::createPost)
-                                }
-                            }
+                    card(modify(ZenBg)) {
+                        textEditor("text", onValue = model::setText, flow = textFlow)
+                        row(modify(JustifyContentSpaceBetween)) {
+                            spacer()
+                            button("Post", modify(Accent), model::createPost)
                         }
                     }
                 }
+            }
+        }
+
+        renderScope.launch {
+            postFlow.collect { post ->
+                val post = post ?: return@collect
+                app.stage.galaxy.addPost(post)
+                app.portal.go(GalaxySlugRoute(galaxy.slug))
             }
         }
 

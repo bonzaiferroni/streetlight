@@ -20,11 +20,8 @@ fun AppContext.postMenu(data: PostMenuData) {
         dangerButton("remove", onClick = {
             renderScope.launch {
                 val isRemoved = api.removePost(data.postId).getDataOrNull()
-                when (isRemoved) {
-                    true -> querySelectorAll(PostKey.Attribute.to(data.postId)).forEach {
-                        it.remove()
-                    }
-                    else -> error("could not remove post")
+                if (isRemoved == true) {
+                    model.stage.galaxy.removePost(data.postId)
                 }
             }
         })

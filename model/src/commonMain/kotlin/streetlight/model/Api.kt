@@ -120,7 +120,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object Path: GetByIdEndpoint<String, Galaxy>(this, "path")
         object PostEvent: PostEndpoint<EventPostEdit, PostId>(this, "post-event")
         object PostContent: PostEndpoint<ContentEdit, PostId>(this, "post-content")
-        object PostLocation: PostEndpoint<LocationPostEdit, PostId>(this, "post-location")
+        object PostLocation: PostEndpoint<LocationPostEdit, Post>(this, "post-location")
         object ReadMultiPosts: PostEndpoint<List<GalaxyId>, List<Post>>(this, "multi-posts")
         object ReadPosts: GetByIdEndpoint<GalaxyId, List<Post>>(this, "posts")
         object ReadPost: GetByIdEndpoint<PostId, Post>(this, "post")

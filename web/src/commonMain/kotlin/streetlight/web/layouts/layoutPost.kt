@@ -3,30 +3,66 @@ package streetlight.web.layouts
 import kabinet.utils.toAgoFormat
 import kampfire.model.medium
 import koala.SvgFile
-import koala.css.*
-import koala.html.*
-import koala.utils.jsonConfig
+import koala.css.AlignItemsCenter
+import koala.css.Aspect1
+import koala.css.Bold
+import koala.css.ColorSchemeFg
+import koala.css.ContainerLgColumn
+import koala.css.ContainerLgRow
+import koala.css.FadeBottom
+import koala.css.Flex1
+import koala.css.FlexWrap
+import koala.css.Gap0
+import koala.css.Height24
+import koala.css.Height4
+import koala.css.Height9
+import koala.css.JustifyContentEnd
+import koala.css.KoalaFun
+import koala.css.LineHeight1
+import koala.css.MarginRight2
+import koala.css.MarginTop1
+import koala.css.MoonShadow
+import koala.css.OpacityGhost
+import koala.css.OpacityMost
+import koala.css.OverflowClip
+import koala.css.OverflowHidden
+import koala.css.OverflowXAuto
+import koala.css.Padding0
+import koala.css.Padding1
+import koala.css.PositionAbsolute
+import koala.css.PositionAnchor
+import koala.css.PositionRelative
+import koala.css.Property
+import koala.css.QueryContainer
+import koala.css.Right0
+import koala.css.Shrinkable
+import koala.css.SingleLine
+import koala.css.Size100P
+import koala.css.SmallText
+import koala.css.Top0
+import koala.css.Zen
+import koala.css.ZenBg
+import koala.css.modify
+import koala.css.setAnchorName
+import koala.css.setStyle
+import koala.html.btn
+import koala.html.card
+import koala.html.column
+import koala.html.featureImage
+import koala.html.heading3
+import koala.html.icon
+import koala.html.navigation
+import koala.html.navigationIfNotNull
+import koala.html.row
+import koala.html.setAttribute
+import koala.html.setPopoverTarget
+import koala.html.span
+import koala.html.textBlock
 import kotlinx.html.FlowContent
 import kotlinx.html.onClick
-import kotlinx.serialization.Serializable
-import streetlight.model.data.*
-import streetlight.web.shells.SectionHeadingMod
+import streetlight.model.data.Post
 
-fun FlowContent.layoutPosts(posts: List<Post>) {
-    section {
-        filigree {
-            heading2("Posts", SectionHeadingMod)
-        }
-
-        column(modify(Gap2)) {
-            posts.forEach { post ->
-                postRow(post)
-            }
-        }
-    }
-}
-
-fun FlowContent.postRow(
+fun FlowContent.layoutPost(
     post: Post,
 ) {
     val colorScheme = post.colorScheme
@@ -104,23 +140,5 @@ fun FlowContent.postRow(
                 span(" ${post.createdAt.toAgoFormat()}")
             }
         }
-    }
-}
-
-object PostKey {
-    val PostMenuId = Id("post-menu")
-
-    val Attribute = Attribute("post-id", true) { PostId(it) }
-}
-
-@Serializable
-data class PostMenuData(
-    val postId: PostId,
-    val username: String?,
-) {
-    fun encode() = jsonConfig.encodeToString(this)
-
-    companion object {
-        fun decode(data: String): PostMenuData = jsonConfig.decodeFromString(data)
     }
 }

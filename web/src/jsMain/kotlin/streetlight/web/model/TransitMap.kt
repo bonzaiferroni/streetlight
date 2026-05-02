@@ -27,7 +27,7 @@ import kotlin.time.Duration.Companion.seconds
 
 class TransitMap(
     private val scope: CoroutineScope,
-    private val client: ClientContext,
+    private val client: ClientFacade,
     private val geoMap: GeoMap,
     private val config: SiteConfig,
 ) {

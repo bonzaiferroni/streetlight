@@ -17,8 +17,8 @@ import streetlight.model.data.Post
 
 class StreetMap(
     private val scope: CoroutineScope,
-    private val client: ClientContext,
-    private val cache: UserCache,
+    private val client: ClientFacade,
+    private val cache: DataCache,
     private val geoMap: GeoMap,
     private val config: SiteConfig,
 ) {

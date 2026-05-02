@@ -1,5 +1,7 @@
 package koala.dom
 
+import koala.html.Id
+import kotlinx.browser.document
 import org.w3c.dom.HTMLElement
 
 class ViewContext<out T>(
@@ -23,6 +25,13 @@ fun <T> ViewContext<T>.prependRender(element: HTMLElement, block: ViewContext<T>
 }
 
 fun <T> ViewContext<T>.replaceRender(element: HTMLElement, block: ViewContext<T>.() -> Unit) {
+    element.replaceRender(renderScope) {
+        viewContextOf(model, block)
+    }
+}
+
+fun <T> ViewContext<T>.replaceRender(id: Id, block: ViewContext<T>.() -> Unit) {
+    val element = document.body!!.querySelector(id) ?: error("element not found: $id")
     element.replaceRender(renderScope) {
         viewContextOf(model, block)
     }

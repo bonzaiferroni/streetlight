@@ -11,7 +11,7 @@ import streetlight.model.data.ProtoPostUpdate
 
 class PostEditor(
     scope: CoroutineScope,
-    private val client: ClientContext,
+    private val client: ClientFacade,
     private val geoMap: GeoMap,
 ): BrowserModel<PostEditorState>(PostEditorState(), scope) {
 

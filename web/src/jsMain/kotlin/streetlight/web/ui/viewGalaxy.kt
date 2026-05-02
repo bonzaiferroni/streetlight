@@ -1,8 +1,11 @@
 package streetlight.web.ui
 
 import koala.dom.*
+import kotlinx.coroutines.launch
 import streetlight.web.GalaxySlugRoute
 import streetlight.web.io.getDataOrNull
+import streetlight.web.layouts.PostKey
+import streetlight.web.layouts.layoutPosts
 import streetlight.web.model.Streetlight
 import streetlight.web.shells.GalaxyKey
 import streetlight.web.shells.GalaxyContent
@@ -24,6 +27,18 @@ fun ViewContext<Streetlight>.viewGalaxy(content: GalaxyContent) {
     wireGalaxyMenu(app, root, content.galaxy)
 
     app.streetMap.setPosts(content.posts)
+    app.stage.galaxy.setStage(content)
+
+    renderScope.launch {
+        app.stage.galaxy.postFlow.collect { posts ->
+            val posts = posts ?: return@collect
+            replaceRender(PostKey.PostLayoutId) {
+                column(PostKey.PostLayoutColumnMod) {
+                    layoutPosts(posts)
+                }
+            }
+        }
+    }
 }
 
 fun ViewContext<Streetlight>.viewGalaxyRoute() {

@@ -7,6 +7,9 @@ import koala.external.ScrollIntoViewOptions
 import koala.html.Queryable
 import kotlinx.browser.document
 import kotlinx.browser.window
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
 import org.w3c.dom.Element
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.asList
@@ -55,30 +58,6 @@ fun Element.isModified(modifier: Modifier) = classList.contains(modifier.identif
 
 fun Element.toggle(modifier: Modifier) = classList.toggle(modifier.identifier)
 
-private const val MAX_ATTEMPTS = 30
-
-fun Element.scrollWhenPresent(
-    options: ScrollIntoViewOptions? = ScrollIntoViewOptions(
-        behavior = "smooth",
-        block = "nearest"
-    )
-) {
-    var attempts = 0
-
-    fun tryScroll() {
-        if (isConnected) {
-            scrollIntoView(options)
-            return
-        }
-
-        if (++attempts >= MAX_ATTEMPTS) return
-
-        window.requestAnimationFrame { tryScroll() }
-    }
-
-    window.requestAnimationFrame { tryScroll() }
-}
-
 fun <T> CSSStyleDeclaration.setProperty(style: InlineStyle<T>) =
     setProperty(style.property.expression, style.value.toString())
 
@@ -95,3 +74,13 @@ fun querySelector(queryable: Queryable) = document.body!!.querySelector(queryabl
 fun querySelectorAll(queryable: Queryable) = document.body!!.querySelectorAll(queryable)
 
 fun CSSStyleDeclaration.removeProperty(property: Property<*>) = removeProperty(property.identifier)
+
+var Element.job: Job? get() = asDynamic().job
+    set(value) { asDynamic().job = value }
+
+fun Element.createElementScope(scope: CoroutineScope): CoroutineScope {
+    this.job?.cancel()
+    val job = SupervisorJob()
+    this.job = job
+    return CoroutineScope(scope.coroutineContext + job)
+}

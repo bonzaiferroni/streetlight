@@ -1,5 +1,6 @@
 package koala.dom
 
+import kampfire.model.Problem
 import koala.model.Store
 
 data class UIMessage(
@@ -14,5 +15,7 @@ enum class UIMessageType {
 }
 
 fun Store<UIMessage>.set(text: String, type: UIMessageType = UIMessageType.Info) = set { UIMessage(text, type) }
+
+fun Store<UIMessage>.set(problem: Problem<*>?) = set { UIMessage(problem?.message ?: "No response.") }
 
 fun Store<UIMessage>.clear() = set { UIMessage() }

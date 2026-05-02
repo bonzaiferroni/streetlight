@@ -9,7 +9,7 @@ import streetlight.model.data.Galaxy
 import streetlight.model.data.HomeContent
 import streetlight.web.CreateGalaxyRoute
 import streetlight.web.EarthMapRoute
-import streetlight.web.layouts.layoutPosts
+import streetlight.web.layouts.postSection
 import streetlight.web.layouts.smallGalaxyCard
 import streetlight.web.pages.appFooter
 import streetlight.web.ui.EarthKey
@@ -29,7 +29,7 @@ fun FlowContent.homeShell(content: HomeContent) {
 
                 galaxiesSection(content.galaxies)
 
-                layoutPosts(content.posts)
+                postSection(content.posts)
                 // layoutEventPosts("Upcoming Events", content.posts)
 
                 section {

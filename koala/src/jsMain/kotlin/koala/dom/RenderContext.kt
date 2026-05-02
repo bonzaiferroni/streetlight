@@ -5,6 +5,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.dom.clear
+import kotlinx.html.FlowContent
 import kotlinx.html.dom.append
 import kotlinx.html.dom.prepend
 import org.w3c.dom.HTMLElement
@@ -57,7 +58,7 @@ fun HTMLElement.replaceRender(
 ) {
     clear()
     append {
-        val context = DOMRenderContext(this, scope)
+        val context = DOMRenderContext(this, createElementScope(scope))
         context.block()
     }
 }
@@ -67,7 +68,7 @@ fun HTMLElement.appendRender(
     block: RenderContext.() -> Unit
 ) {
     append {
-        val context = DOMRenderContext(this, scope)
+        val context = DOMRenderContext(this, createElementScope(scope))
         context.block()
     }
 }
@@ -77,7 +78,7 @@ fun HTMLElement.prependRender(
     block: RenderContext.() -> Unit
 ) {
     prepend {
-        val context = DOMRenderContext(this, scope)
+        val context = DOMRenderContext(this, createElementScope(scope))
         context.block()
     }
 }

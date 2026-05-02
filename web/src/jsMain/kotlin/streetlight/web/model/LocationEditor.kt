@@ -13,7 +13,6 @@ import streetlight.model.data.LocationEdit
 import streetlight.model.data.LocationId
 import streetlight.model.data.Place
 import streetlight.model.data.ResourceType
-import streetlight.model.data.UrlParseRequest
 import streetlight.model.data.toPlace
 import streetlight.model.external.Address
 import streetlight.model.external.OSMPlace
@@ -24,7 +23,7 @@ import streetlight.web.ui.PlaceEditor
 class LocationEditor(
     initialData: LocationEdit,
     private val scope: CoroutineScope,
-    private val client: ClientContext,
+    private val client: ClientFacade,
 ): PlaceEditor {
     private val edit = storeOf(initialData)
     private val editNow get() = edit.now
