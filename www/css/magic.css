@@ -4,7 +4,8 @@
     --magic-blur: blur(6px);
     --slide-left-initial: translate(20px, 0px);
     --slide-up-initial: translate(0px, 20px);
-    --glow-shadow-infinite: glow-shadow 10s infinite linear;
+    --glow-shadow-infinite: glow-shadow 9s infinite linear;
+    --anti-shadow-infinite: anti-shadow 9s infinite linear;
     --glow-background-infinite: glow-background 10s infinite linear;
     --glow-background-short: glow-background 3s linear;
     --glow-flash-short: glow-flash 3s linear;
@@ -20,11 +21,36 @@
 }
 
 .glow-shadow {
-    animation: glow-shadow 10s infinite linear;
+    animation: var(--glow-shadow-infinite);
+}
+
+.anti-shadow {
+    animation: var(--anti-shadow-infinite);
 }
 
 .glow-background {
-    animation: glow-background 10s infinite linear;
+    animation: var(--glow-background-infinite);
+}
+
+@keyframes anti-shadow {
+    0% {
+        filter: drop-shadow(0 4px 2px black);
+    }
+    25% {
+        filter: drop-shadow(0 4px 2px black);
+    }
+    40% {
+        filter: drop-shadow(-2px 4px 1px black);
+    }
+    65% {
+        filter: drop-shadow(0 4px 2px black);
+    }
+    80% {
+        filter: drop-shadow(2px 4px 1px black);
+    }
+    100% {
+        filter: drop-shadow(0 4px 2px black);
+    }
 }
 
 @keyframes glow-shadow {

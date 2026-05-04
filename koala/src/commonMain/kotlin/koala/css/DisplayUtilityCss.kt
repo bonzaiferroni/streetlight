@@ -52,6 +52,7 @@ val NoDim = utilityOf("no-dim", "color: rgb(var(--ink)) !important")
 // Glow
 val Glow = CssUtility("glow")
 val GlowShadow = CssUtility("glow-shadow")
+val AntiShadow = CssUtility("anti-shadow")
 val GlowBackground = CssUtility("glow-background")
 val SpinLoop = CssUtility("spin-loop")
 val FadeLoop = CssUtility("fade-loop")

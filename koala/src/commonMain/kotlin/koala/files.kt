@@ -78,6 +78,8 @@ object SvgFile : FileSet<Svg>() {
     val MapPin = add("map-pin.svg")
     val Pin = add("pin.svg")
     val DotsVertical = add("dots-vertical.svg")
+    val LogoText = add("logo-text.svg")
+    val LogoFlame = add("logo-flame.svg")
 }
 
 object LottieFile : FileSet<Lottie>() {

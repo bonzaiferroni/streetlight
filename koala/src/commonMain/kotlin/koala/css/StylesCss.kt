@@ -198,7 +198,7 @@ p a {
 
 a:hover {
     /*color: rgb(var(--accent));*/
-    animation: glow-shadow 10s infinite linear;
+    animation: var(--glow-shadow-infinite);
 }
 
 label {
