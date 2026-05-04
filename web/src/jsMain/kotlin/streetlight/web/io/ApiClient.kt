@@ -33,7 +33,6 @@ class ApiClient(private val client: FetchClient) {
     suspend fun readLocationEvents(locationId: LocationId) = client.get(Api.Events.AtLocation, locationId)
     suspend fun readEventLocations(eventIds: List<EventId>) = client.post(Api.Events.ReadEventLocations, eventIds)
     suspend fun readEventLights() = client.get(Api.Events.ReadLights)
-    suspend fun editEventLight(edit: LightRequest) = client.post(Api.Events.EditLight, edit)
 
     // locations
     suspend fun readLocation(locationId: LocationId) = client.get(Api.Locations, locationId)
@@ -54,6 +53,7 @@ class ApiClient(private val client: FetchClient) {
     suspend fun queryLocation(point: GeoPoint) = client.get(Api.Locations.QueryPoint, point.toQuery())
     suspend fun validateLogin() = client.get(Api.Stars.ValidateLogin)
     suspend fun updateStar(edit: StarEdit) = client.post(Api.Stars.EditStar, edit)
+    suspend fun editLight(edit: EditLightRequest) = client.postApi(Api.Stars.EditLight, edit)
 
     suspend fun readStoryUrl(url: String) = client.get(Api.Stories.ReadUrl) {
         param(it.url, url)
@@ -90,7 +90,6 @@ class ApiClient(private val client: FetchClient) {
     suspend fun readPosts(galaxyId: GalaxyId) = client.getApi(Api.Galaxies.ReadPosts, galaxyId)
     suspend fun readPost(postId: PostId) = client.getApi(Api.Galaxies.ReadPost, postId)
     suspend fun readGalaxyLights() = client.get(Api.Galaxies.ReadLights)
-    suspend fun editGalaxyLight(edit: LightRequest) = client.post(Api.Galaxies.EditLight, edit)
     suspend fun removePost(postId: PostId) = client.postApi(Api.Galaxies.RemovePost, postId)
 
     suspend fun readStarByUsername(username: String) = client.get(Api.Stars.ReadByUsername) {
@@ -124,4 +123,9 @@ fun <T> ApiResponse<T>?.handleResponse(onMessage: (String) -> Unit, block: (T) -
         is Problem -> onMessage(message)
         null -> onMessage("No response.")
     }
+}
+
+fun <T> ApiResponse<T>?.isOk() = when (this) {
+    is Ok -> true
+    else -> false
 }

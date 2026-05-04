@@ -5,7 +5,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
-import streetlight.model.data.Beacon
 import streetlight.model.data.OmniHistory
 import streetlight.model.data.OmniMessage
 import streetlight.model.data.OmniRecord
@@ -20,9 +19,6 @@ class OmniLog(
     private val state = storeOf(OmniLogState())
     val stateFlow = state.flow
     val stateNow get() = state.now
-
-    private val _beaconFlow = MutableSharedFlow<Beacon>()
-    val beaconFlow: Flow<Beacon> = _beaconFlow
 
     private val records = mutableListOf<OmniRecord>()
 
@@ -47,11 +43,6 @@ class OmniLog(
             }
             is OmniHistory -> {
                 takeHistory(message)
-            }
-            is Beacon -> {
-                scope.launch {
-                    _beaconFlow.emit(message)
-                }
             }
         }
     }

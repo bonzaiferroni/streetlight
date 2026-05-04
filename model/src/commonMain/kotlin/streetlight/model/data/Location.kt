@@ -26,6 +26,7 @@ data class Location(
     val geoPoint: GeoPoint,
     val resources: Set<ResourceType>,
     val website: String?,
+    val lightCount: Int?,
     val eventsUrl: String?,
     val menuUrl: String?,
     val aboutUrl: String?,
@@ -62,7 +63,6 @@ data class Location(
 
     val phone: String? get() = null
     val email: String? get() = null
-    val lightCount: Int? get() = null
 }
 
 @JvmInline @Serializable

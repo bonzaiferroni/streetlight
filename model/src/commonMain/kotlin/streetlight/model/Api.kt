@@ -30,7 +30,6 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object AtLocation: GetByIdEndpoint<LocationId, List<Event>>(this, "location")
         object ReadEventLocations: PostEndpoint<List<EventId>, List<EventLocation>>(this, "read-event-locations")
         object ReadLights: GetEndpoint<List<EventId>>(this, "lights")
-        object EditLight: PostEndpoint<LightRequest, Boolean>(this, "light-edit")
         object ReadBySlug: GetByIdEndpoint<Slug, Event>(this, "slug")
         object ReadEventLocationBySlug: GetByIdEndpoint<Slug, EventLocation>(this, "event-location-slug")
     }
@@ -125,7 +124,6 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object ReadPosts: GetByIdEndpoint<GalaxyId, List<Post>>(this, "posts")
         object ReadPost: GetByIdEndpoint<PostId, Post>(this, "post")
         object ReadLights: GetEndpoint<List<GalaxyId>>(this, "lights")
-        object EditLight: PostEndpoint<LightRequest, Boolean>(this, "light-edit")
         object RemovePost: PostEndpoint<PostId, Boolean>(this, "remove")
     }
 
@@ -136,6 +134,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
 
         object ValidateLogin: GetEndpoint<Star>(this, "validate-login")
         object EditStar: PostEndpoint<StarEdit, Star>(this, "edit")
+        object EditLight: PostEndpoint<EditLightRequest, Unit>(this, "edit-light")
     }
 
     object Docs: GetByIdEndpoint<DocId, DocNode>(this, "doc")

@@ -7,6 +7,7 @@ import kotlinx.coroutines.launch
 import streetlight.model.data.EventId
 import streetlight.model.data.Galaxy
 import streetlight.model.data.GalaxyId
+import streetlight.model.data.LightType
 import streetlight.model.data.Post
 import streetlight.web.io.ApiClient
 import streetlight.web.ui.StarLightKey
@@ -37,11 +38,12 @@ class DataCache(
     // val galaxy = GalaxyCache(scope, config, api)
 
     val galaxyLights = LightCache(
+        lightType = LightType.Galaxy,
         cacheKey = StarLightKey.GALAXY_LIGHT_CACHE,
         idToString = { it.value },
         stringToId = { GalaxyId(it) },
         itemToId = { it.galaxyId },
-        lightEdit = { api.editGalaxyLight(it) },
+        lightEdit = { api.editLight(it) },
         readRemoteLights = { api.readGalaxyLights()?.toSet() },
         readRemoteItems = { api.readGalaxies(it)?.sortedBy { galaxy -> galaxy.createdAt } },
         scope = scope,
@@ -49,11 +51,12 @@ class DataCache(
     )
 
     val eventLights = LightCache(
+        lightType = LightType.Event,
         cacheKey = StarLightKey.EVENT_LIGHT_CACHE,
         idToString = { it.value },
         stringToId = { EventId(it) },
         itemToId = { it.eventId },
-        lightEdit = { api.editEventLight(it) },
+        lightEdit = { api.editLight(it) },
         readRemoteLights = { api.readEventLights()?.toSet() },
         readRemoteItems = { api.readEventLocations(it)?.sortedBy { event -> event.startsAt } },
         scope = scope,

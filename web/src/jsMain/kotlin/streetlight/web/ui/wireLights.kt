@@ -34,15 +34,6 @@ fun <Id> ViewContext<Streetlight>.wireLights(
                 }
             }
         }
-
-        launch {
-            // increment count on Beacon
-            app.omni.beaconFlow.collect { beacon ->
-                val (element, _) = pairs.firstOrNull { it.value.toString() == beacon.itemId } ?: return@collect
-                element.modifyCounter(1)
-                element.trigger(Magic)
-            }
-        }
     }
 
     pairs.forEach { (element, id) ->

@@ -70,6 +70,3 @@ data class OmniStatus(val starCount: Int): OmniMessage
 
 @Serializable
 data class OmniHistory(val records: List<OmniRecord>): OmniMessage
-
-@Serializable
-data class Beacon(val itemId: StringId): OmniMessage

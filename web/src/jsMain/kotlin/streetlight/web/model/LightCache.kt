@@ -1,22 +1,26 @@
 package streetlight.web.model
 
+import kampfire.model.ApiResponse
 import koala.dom.setStorageOf
 import koala.model.mapDistinct
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import streetlight.model.data.LightEdit
-import streetlight.model.data.LightRequest
+import streetlight.model.data.EditLightRequest
+import streetlight.model.data.LightType
 import streetlight.model.data.MultiLightEdit
+import streetlight.web.io.isOk
 import kotlin.collections.minus
 import kotlin.collections.plus
 
 class LightCache<Id, Item>(
+    val lightType: LightType,
     private val cacheKey: String,
     val idToString: (Id) -> String,
     val stringToId: (String) -> Id,
     val itemToId: (Item) -> Id,
-    private val lightEdit: suspend (LightRequest) -> Boolean?,
+    private val lightEdit: suspend (EditLightRequest) -> ApiResponse<Unit>?,
     private val readRemoteLights: suspend () -> Set<Id>?,
     private val readRemoteItems: suspend (List<Id>) -> List<Item>?,
     private val scope: CoroutineScope,
@@ -36,7 +40,7 @@ class LightCache<Id, Item>(
                 gate.signedInFlow.collect { isSignedIn ->
                     if (isSignedIn) {
                         if (cachedLights.isNotEmpty()) {
-                            val request = MultiLightEdit(cachedLights.map { LightEdit(idToString(it), true) })
+                            val request = MultiLightEdit(cachedLights.map { LightEdit(idToString(it), true, lightType) })
                             // send lights cached while signed out
                             lightEdit(request)
                             cachedLights = emptySet()
@@ -75,8 +79,8 @@ class LightCache<Id, Item>(
         when (gate.stateNow.isSignedIn) {
             true -> {
                 scope.launch {
-                    val edit = LightEdit(idToString(id), isLit)
-                    val isSuccess = lightEdit(edit) ?: return@launch // td: ui message
+                    val edit = LightEdit(idToString(id), isLit, lightType)
+                    val isSuccess = lightEdit(edit).isOk() ?: return@launch // td: ui message
                     if (isSuccess)
                         editState(id, isLit)
                 }
