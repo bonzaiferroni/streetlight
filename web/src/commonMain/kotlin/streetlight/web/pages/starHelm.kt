@@ -8,6 +8,7 @@ import koala.css.HeavyCardBg
 import koala.css.Height5
 import koala.css.Magic
 import koala.css.OverflowClip
+import koala.css.PointerEventsAuto
 import koala.css.SlideLeft
 import koala.css.modify
 import koala.css.stylesheet
@@ -22,7 +23,7 @@ import kotlinx.html.onClick
 
 fun FlowContent.starHelm() {
     popover(StarHelmKey.Id, null, modify(StarHelmKey.PopoverClass, Magic, SlideLeft)) {
-        card(modify(StarHelmKey.PopoverCardClass, HeavyCardBg, BlurBackdrop, OverflowClip)) {
+        card(modify(StarHelmKey.PopoverCardClass, HeavyCardBg, BlurBackdrop, OverflowClip, PointerEventsAuto)) {
             setId(StarHelmKey.ContentId)
             button(SvgFile.LoaderSmall, modify(Height5, FadeLoop)) {
                 onClick = StarHelmKey.ClosePopover

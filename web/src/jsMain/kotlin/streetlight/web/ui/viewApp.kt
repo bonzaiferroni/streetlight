@@ -52,7 +52,11 @@ fun viewApp() {
             }
         }
 
-        app.omni.connect()
+        try {
+            app.omni.connect()
+        } catch (e: Exception) {
+            console.log("unable to connect to omni log:\n${e.message}")
+        }
     }
 }
 
