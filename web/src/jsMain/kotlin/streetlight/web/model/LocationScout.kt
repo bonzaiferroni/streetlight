@@ -8,18 +8,21 @@ import koala.model.mapDistinct
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import streetlight.model.data.Galaxy
 import streetlight.model.data.GalaxyId
 import streetlight.model.data.Location
 import streetlight.model.data.LocationPostEdit
 import streetlight.model.data.Post
 import streetlight.model.data.PostId
+import streetlight.web.GalaxySlugRoute
+import streetlight.web.io.handleResponse
 import streetlight.web.ui.ViewModel
 
 class LocationScout(
     private val scope: CoroutineScope,
     override val app: Streetlight,
     val finder: LocationFinder,
-    val galaxyId: GalaxyId,
+    val galaxy: Galaxy,
 ): ViewModel {
 
     private val initialState = LocationScoutState()
@@ -46,15 +49,10 @@ class LocationScout(
         val location = location ?: error("location not found")
         val text = stateNow.text
         scope.launch {
-            val edit = LocationPostEdit(null, galaxyId, location.locationId, text)
-            when (val response = api.postLocation(edit)) {
-                is Ok -> {
-                    state.set { it.copy(post = response.data) }
-                    message.set("Posted.")
-                }
-                is Problem, null -> {
-                    message.set(response)
-                }
+            val edit = LocationPostEdit(null, galaxy.galaxyId, location.locationId, text)
+            api.postLocation(edit).handleResponse(toaster::toast, "Posted location to ${galaxy.name}.") { post ->
+                app.stage.galaxy.addPost(post)
+                app.portal.go(GalaxySlugRoute(galaxy.slug))
             }
         }
     }
@@ -62,5 +60,4 @@ class LocationScout(
 
 data class LocationScoutState(
     val text: String? = null,
-    val post: Post? = null
 )

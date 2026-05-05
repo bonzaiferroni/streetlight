@@ -20,10 +20,9 @@ import streetlight.web.model.Streetlight
 
 fun RenderContext.viewLocationScout(app: Streetlight, galaxy: Galaxy) {
     val finder = LocationFinder(renderScope, app)
-    val model = LocationScout(renderScope, app, finder, galaxy.galaxyId)
+    val model = LocationScout(renderScope, app, finder, galaxy)
     val locationFlow = finder.stateFlow.mapDistinct { it.location }
     val textFlow = model.stateFlow.mapDistinct { it.text }
-    val postFlow = model.stateFlow.mapDistinct { it.post }
 
     val sectionMod = modify()
 
@@ -61,14 +60,6 @@ fun RenderContext.viewLocationScout(app: Streetlight, galaxy: Galaxy) {
                         }
                     }
                 }
-            }
-        }
-
-        renderScope.launch {
-            postFlow.collect { post ->
-                val post = post ?: return@collect
-                app.stage.galaxy.addPost(post)
-                app.portal.go(GalaxySlugRoute(galaxy.slug))
             }
         }
 

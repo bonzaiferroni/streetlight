@@ -195,7 +195,12 @@ object GalaxyListRoute: StreetlightRoute {
     override val title get() = "Galaxies"
 }
 
-data class GalaxySlugRoute(override val slug: Slug): StreetlightRoute, SlugRoute {
+sealed interface GalaxyRoute: StreetlightRoute {
+    override val screen get() = StreetlightScreen.Galaxy
+    override val title get() = "Galaxy"
+}
+
+data class GalaxySlugRoute(override val slug: Slug): GalaxyRoute, SlugRoute {
     override val screen get() = StreetlightScreen.Galaxy
     override val title get() = "Galaxy"
 }

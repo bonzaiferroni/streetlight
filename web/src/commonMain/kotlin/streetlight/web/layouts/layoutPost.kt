@@ -104,7 +104,7 @@ fun FlowContent.layoutPost(
                         }
                         post.description?.let {
                             navigation(postRoute, modify(Flex1, OverflowHidden, FadeBottom)) {
-                                textBlock(it, modify(SmallText))
+                                textBlock(it)
                             }
                         }
 

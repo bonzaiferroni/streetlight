@@ -2,6 +2,7 @@ package streetlight.web.ui
 
 import koala.dom.*
 import kotlinx.coroutines.launch
+import streetlight.web.GalaxyRoute
 import streetlight.web.GalaxySlugRoute
 import streetlight.web.io.getDataOrNull
 import streetlight.web.layouts.PostKey
