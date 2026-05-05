@@ -16,6 +16,7 @@ import streetlight.model.data.EventLocation
 import streetlight.model.data.GalaxyId
 import streetlight.model.data.LocationEdit
 import streetlight.model.data.LocationId
+import streetlight.model.data.PostId
 import streetlight.model.data.ProtoPostId
 import streetlight.model.data.Slug
 import streetlight.model.data.SongId
@@ -30,7 +31,7 @@ enum class StreetlightScreen(
     StarDash("account", StaticParse { StarDashRoute }),
     EventProfile("e", IdParse { EventSlugRoute(it) }),
     EditEvent("edit-event", IdParse { EditEventIdRoute(EventId(it)) }),
-    EditStory("edit-story", IdParse { EditPostRoute(ProtoPostId(it)) }),
+    EditPost("edit-post", IdParse { EditPostRoute(PostId(it)) }),
     EditLocation("edit-location", IdParse { EditLocationIdRoute(LocationId(it)) }),
     Sandbox("sandbox", StaticParse { SandboxRoute }),
     Earth("earth", IdOrNullParse { EarthMapRoute(it) }),
@@ -112,13 +113,6 @@ data class EarthMapRoute(val galaxySlug: String?): StreetlightRoute {
     override val title get() = "Earth"
 
     override fun toSitePath() = toIdSitePath(galaxySlug)
-}
-
-data class EditPostRoute(
-    val postId: ProtoPostId? = null
-): StreetlightRoute {
-    override val screen get() = StreetlightScreen.EditStory
-    override val title get() = "Share Post"
 }
 
 object ChatRoute: StreetlightRoute {
@@ -226,6 +220,12 @@ data class LocationScoutRoute(override val slug: Slug): StreetlightRoute, SlugRo
 data class PostContentRoute(override val slug: Slug): StreetlightRoute, SlugRoute {
     override val screen get() = StreetlightScreen.PostContent
     override val title get() = "Post Content"
+}
+
+data class EditPostRoute(val postId: PostId): StringIdRoute {
+    override val id get() = postId
+    override val screen get() = StreetlightScreen.EditPost
+    override val title get() = "Edit Post"
 }
 
 object EditStarRoute: StreetlightRoute {

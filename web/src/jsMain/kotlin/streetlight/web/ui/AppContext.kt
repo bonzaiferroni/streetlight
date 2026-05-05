@@ -14,6 +14,7 @@ typealias AppContext = ViewContext<Streetlight>
 val AppContext.api get() = model.client.api
 val AppContext.portal get() = model.portal
 val AppContext.userCache get() = model.cache
+val AppContext.toaster get() = model.toaster
 
 suspend inline fun <reified T> readIslandOrApi(
     id: Id,

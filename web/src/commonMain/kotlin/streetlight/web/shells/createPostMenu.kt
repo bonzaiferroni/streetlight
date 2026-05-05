@@ -8,7 +8,7 @@ import streetlight.web.EventScoutRoute
 import streetlight.web.LocationScoutRoute
 import streetlight.web.PostContentRoute
 
-fun FlowContent.postMenu(galaxy: Galaxy) {
+fun FlowContent.createPostMenu(galaxy: Galaxy) {
     buttonPopover("Create Post", modify(Accent)) {
         card(ButtonPopover.CardMod) {
             btn("Post Event", EventScoutRoute(galaxy.slug))

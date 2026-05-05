@@ -97,7 +97,8 @@ fun RenderContext.viewLocationEditor(
     }
 }
 
-fun RenderContext.viewEditLocationRoute(app: Streetlight) {
+fun AppContext.viewEditLocationRoute() {
+    val app = model
     val portal = app.portal
     val api = app.client.api
 

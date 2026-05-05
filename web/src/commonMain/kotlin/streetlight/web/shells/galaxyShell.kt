@@ -22,7 +22,7 @@ fun FlowContent.galaxyShell(content: GalaxyContent) {
                 row {
                     galaxyMenu(emptyList(), galaxy)
                     filigree(modify(Flex1), MaxWidthNone) { spacer { setStyle(Property.Width.to("8rem")) } }
-                    postMenu(galaxy)
+                    createPostMenu(galaxy)
                 }
 //                if (galaxy.postTypes.contains(PostType.Content)) {
 //                    layoutTalkPreview(TalkRoute(galaxy.galaxyId), listing.comments)

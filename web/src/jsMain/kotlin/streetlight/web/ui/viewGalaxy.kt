@@ -44,7 +44,7 @@ fun ViewContext<Streetlight>.viewGalaxy(content: GalaxyContent) {
     }
 }
 
-fun ViewContext<Streetlight>.viewGalaxyRoute() {
+fun AppContext.viewGalaxyRoute() {
     routeBlock<GalaxySlugRoute, GalaxyContent>(model.portal, { route ->
         readIslandOrApi(GalaxyKey.GalaxyContentId) {
             val galaxy = api.readGalaxy(route.slug) ?: return@routeBlock null

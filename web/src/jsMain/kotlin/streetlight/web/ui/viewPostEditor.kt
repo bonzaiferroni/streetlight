@@ -2,69 +2,23 @@ package streetlight.web.ui
 
 import koala.css.*
 import koala.dom.*
+import koala.dom.routeBlock
 import koala.html.geoMapMount
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import streetlight.model.data.ContentEdit
+import streetlight.model.data.LocationEdit
+import streetlight.web.EditLocationRoute
 import streetlight.web.EditPostRoute
+import streetlight.web.io.handleResponse
 import streetlight.web.model.Streetlight
-import streetlight.web.model.PostEditor
 
-fun RenderContext.viewPostEditor(app: Streetlight) {
-    val model = PostEditor(renderScope, app.client, app.geoMap)
-
-    val element = column(modify(FlexItems1)) {
-        row {
-            textField(
-                label = "url",
-                onValue = model::setUrl,
-                flow = model.infoUrlFlow,
-                modifiers = modify(Flex1),
-                placeholder = "Info link"
-            )
-            button("read", onClick = model::readUrl)
-        }
-        column(modify(MediaMdRow)) {
-            image (
-                modifiers = modify(Flex1),
-                binding = model.imageUrlFlow
-            )
-            column(modify(Flex2, AlignItemsStretch)) {
-                textField(
-                    label = "headline",
-                    onValue = model::setHeadline,
-                    flow = model.headlineFlow,
-                    placeholder = "Story Headline"
-                )
-                textEditor(
-                    label = "description",
-                    onValue = model::setDescription,
-                    flow = model.descriptionFlow,
-                    placeholder = "Story description"
-                )
-                textBlock(model.postedAtFlow.map { it.toString() })
-            }
-        }
-        column(modify(MediaMdRow)) {
-            geoMapMount(null, modify(Flex1, Aspect1))
-            column(modify(Flex2)) {
-                textBlock(model.locationFlow.map { it.toString() })
-            }
-        }
-        row {
-            button("cancel", onClickEvent = {
-                app.portal.goBack()
-            })
-            button("create", modify(Accent), onClickEvent = {
-                // TODO: model.saveStory()
-            })
-        }
-    }
-
-    renderScope.launch {
-        app.portal.routeFlowOf<EditPostRoute>().collect {
-            model.initStory(it.postId)
-        }
-    }
-
-    wireGeoMap(app.geoMap, app.appScope, element)
+fun AppContext.viewEditPostRoute() {
+//    routeBlock<EditPostRoute, ContentEdit>(portal, { route ->
+//        api.readPost(route.postId).handleResponse(toaster::toast) {
+//
+//        }
+//    }) {
+//
+//    }
 }
