@@ -39,14 +39,6 @@ fun viewApp() {
             wireRightPanel(app)
             wireToaster(app)
 
-            launch {
-                app.toaster.toast("hello toast")
-                delay(1.seconds)
-                app.toaster.toast("hello again")
-                delay(3.seconds)
-                app.toaster.toast("and again")
-            }
-
             viewContextOf(app) {
                 registerMenu(PostKey.PostMenuId, { PostId(it) }, AppContext::postMenu)
             }

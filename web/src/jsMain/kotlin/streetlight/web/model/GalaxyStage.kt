@@ -19,7 +19,8 @@ class GalaxyStage(
     val postFlow = stateFlow.mapDistinct { it.posts }
 
     fun setStage(content: GalaxyContent) {
-        state.set { it.copy(galaxy = content.galaxy, posts = content.posts) }
+        val posts = content.posts.sortedByDescending { it.createdAt } // td: implement other sorts
+        state.set { it.copy(galaxy = content.galaxy, posts = posts) }
     }
 
     fun addPost(post: Post) {

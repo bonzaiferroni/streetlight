@@ -12,67 +12,13 @@ import streetlight.web.layouts.locationLightCell
 import streetlight.web.layouts.starCell
 import streetlight.web.layouts.textPropertyCell
 import streetlight.web.pages.appFooter
+import streetlight.web.ui.headerOf
 
 fun FlowContent.locationShell(
     location: Location
 ) {
     column(LocationProfileKey.Id, modify(AlignItemsStretch, Gap4)) {
-        card(modify(ZenBg, BorderRadius2, Padding0, OverflowClip, Gap0, QueryContainer)) {
-            column(modify(ContainerMdRow, FlexItems1, CardBg, Gap0)) {
-                val imageUrl = location.images.medium
-                if (imageUrl != null) {
-                    featureImage(imageUrl, modify(Aspect3By2))
-                }
-                column(modify(JustifyContentCenter)) {
-                    column(modify(PaddingX1, PaddingY2)) {
-                        heading2(location.name, modify(TextAlignCenter, MinWidth0))
-                        filigree(modify()) {
-                            textBlock("at", modify(OpacityHalf))
-                        }
-
-                        heading4(location.addressLine, modify(OpacityMost, TextAlignCenter))
-                    }
-                }
-            }
-            row(modify(MinHeight8, FlexItems1, GapTiny, TextAlignCenter, FlexWrap, ZenBg, MoonShadow)) {
-                cellCard {
-                    starCell(location.username)
-                }
-                location.phone?.let {
-                    cellCard {
-                        textPropertyCell("phone", it)
-                    }
-                }
-                location.email?.let {
-                    cellCard {
-                        textPropertyCell("email", it)
-                    }
-                }
-                cellCard {
-                    locationLightCell(location.lightCount, location.locationId)
-                }
-                // td: instagram
-                // propertyRow("instagram") {
-                //     textBlock("@yer-instagram")
-                // }
-            }
-            column(modify(ContainerMdRow, Padding4, Gap4, AlignItemsStart)) {
-                column(modify(Flex4)) {
-                    location.description?.let {
-                        markdown(it)
-                    }
-                }
-                row(modify(Flex1, FlexWrap, AlignItemsStart, FlexItems1)) {
-                    location.links?.let { links ->
-                        links.forEach { link ->
-                            btn(link.label, link.url)
-                        }
-                    }
-                    btn("edit", EditLocationIdRoute(location.locationId), modify(Secondary))
-                }
-
-            }
-        }
+        headerOf(location)
 
         // td: add map
 

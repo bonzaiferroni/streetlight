@@ -59,7 +59,7 @@ fun RenderContext.viewEventEditor(
                     filigree {
                         heading3("Image")
                     }
-                    imageDrop(model.imageUrlFlow, model::setImageRef, modify(Aspect1, BorderRadius1))
+                    imageDrop(model.imageUrlFlow, model::setImageRef, modify(Aspect3By2, BorderRadius1))
                 }
 
                 column(modify(Flex2, Gap4)) {

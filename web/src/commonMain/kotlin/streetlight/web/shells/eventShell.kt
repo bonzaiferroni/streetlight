@@ -1,24 +1,22 @@
 package streetlight.web.shells
 
 import kampfire.model.large
-import kampfire.model.medium
 import kampfire.model.small
 import koala.css.*
 import koala.html.*
 import kotlinx.html.FlowContent
 import streetlight.model.data.EventLocation
 import streetlight.web.EditEventIdRoute
-import streetlight.web.layouts.cellCard
 import streetlight.web.layouts.costCell
 import streetlight.web.layouts.eventLightCell
 import streetlight.web.layouts.starCell
 import streetlight.web.layouts.startsAtCell
 import streetlight.web.pages.appFooter
-import streetlight.web.ui.headerOf
+import streetlight.web.ui.featureHeader
 
 fun FlowContent.eventShell(event: EventLocation) {
     column(EventProfileKey.id, modify(AlignItemsStretch, Gap4)) {
-        headerOf(
+        featureHeader(
             title = event.title,
             descriptor = "at",
             subtitle = event.locationName,
