@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" xmlns:bx="https://boxy-svg.com">
+  <path d="M 11.068 11.899 C 15.916 7.173 12.824 4.273 11.655 3.156 C 11.655 6.551 8.765 8.454 7.33 9.862 C 5.902 11.269 5 13.483 5 15.452 C 5 19.154 8.135 22.157 11.999 22.157 C 15.865 22.157 19 19.154 19 15.452 C 19 13.737 17.702 10.572 16.827 9.728 C 14.742 13.082 11.637 11.483 11.273 10.617" style="fill: none; stroke-width: 2.5px; stroke: rgb(225, 81, 196); transform-origin: 12px 12px;" id="object-0"/>
+  <defs>
+    <bx:grid x="0" y="0" width="24.18" height="24.705"/>
+    <bx:export>
+      <bx:file format="png" href="#object-0"/>
+      <bx:file format="png" path="logo-face.png" width="512" height="512"/>
+    </bx:export>
+  </defs>
+  <path d="M 8.728 12.584 C 7.787 13.422 7.525 15.01 7.648 15.941 C 7.923 18.021 10.412 19.784 12.137 19.741 C 13.862 19.698 14.688 19.187 15.734 17.866 C 16.706 16.639 16.636 14.383 16.219 13.44 C 14.704 15.132 11.252 15.209 8.728 12.584 Z" style="stroke-width: 2.5; fill: rgb(255, 255, 255); transform-origin: 12.14px 13.986px;"/>
+</svg>
