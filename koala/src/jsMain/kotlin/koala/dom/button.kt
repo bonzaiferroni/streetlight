@@ -6,6 +6,7 @@ import koala.css.Confirm
 import koala.css.Danger
 import koala.css.Height3
 import koala.css.ModifierSet
+import koala.css.Secondary
 import koala.css.addModifiers
 import koala.css.modify
 import koala.html.BtnKey
@@ -90,13 +91,14 @@ fun DOMContext.dangerButton(
     var isConfirm = false
 
     val element = button {
-        configureButton(text, modify(Danger, modifiers), flair, block)
+        configureButton(text, modify(Secondary, modifiers), flair, block)
     }
 
     element.onClick {
         if (!isConfirm) {
             isConfirm = true
-            element.modify(Confirm)
+            element.unmodify(Secondary)
+            element.modify(Danger)
             element.textContent = "Confirm"
         } else {
             onClick?.invoke()

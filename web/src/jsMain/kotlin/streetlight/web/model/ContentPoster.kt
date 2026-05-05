@@ -9,24 +9,26 @@ import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import streetlight.model.data.ContentEdit
+import streetlight.model.data.Galaxy
 import streetlight.model.data.GalaxyId
 import streetlight.model.data.PostId
+import streetlight.web.io.handleResponse
 import streetlight.web.ui.ViewModel
 import streetlight.web.ui.api
 
 class ContentPoster(
     private val scope: CoroutineScope,
     override val app: Streetlight,
-    private val galaxyId: GalaxyId,
+    private val galaxy: Galaxy,
 ): ViewModel {
 
     val message = storeOf(UIMessage())
 
-    private val state = storeOf(ContentPosterState())
-    val stateFlow = state.flow
-    val stateNow get() = state.now
+    // private val state = storeOf(ContentPosterState())
+    // val stateFlow = state.flow
+    // val stateNow get() = state.now
 
-    val editor = ContentEditor(scope, app, ContentEdit(null, galaxyId))
+    val editor = ContentEditor(scope, app, ContentEdit(null, galaxy.galaxyId))
 
     init {
         scope.launch {
@@ -50,19 +52,9 @@ class ContentPoster(
                 content.copy(imageRef = refUrl)
             } ?: content
 
-            val response = api.createPost(content) ?: error("response not found")
-            when (response) {
-                is Ok -> {
-                    state.set { it.copy(postId = response.data)}
-                }
-                is Problem -> {
-                    message.set(response.message)
-                }
+            api.createPost(content).handleResponse(toaster::toast) {
+                app.stagePostAndGo(it, galaxy)
             }
         }
     }
 }
-
-data class ContentPosterState(
-    val postId: PostId? = null
-)

@@ -61,7 +61,7 @@
 }
 
 .btn.secondary {
-    box-shadow: 0 0 .8rem var(--gray-fg);
+    box-shadow: none;
     background: var(--secondary-button);
 }
 
@@ -74,11 +74,6 @@
 
 .btn.danger {
     background: var(--danger-bg);
-    box-shadow: none;
-}
-
-.btn.danger.confirm {
-    background: rgb(var(--danger));
     box-shadow: var(--danger-shadow);
 }
 

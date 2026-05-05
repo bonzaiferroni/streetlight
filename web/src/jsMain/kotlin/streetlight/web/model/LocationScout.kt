@@ -51,8 +51,7 @@ class LocationScout(
         scope.launch {
             val edit = LocationPostEdit(null, galaxy.galaxyId, location.locationId, text)
             api.postLocation(edit).handleResponse(toaster::toast, "Posted location to ${galaxy.name}.") { post ->
-                app.stage.galaxy.addPost(post)
-                app.portal.go(GalaxySlugRoute(galaxy.slug))
+                app.stagePostAndGo(post, galaxy)
             }
         }
     }
@@ -61,3 +60,8 @@ class LocationScout(
 data class LocationScoutState(
     val text: String? = null,
 )
+
+fun Streetlight.stagePostAndGo(post: Post, galaxy: Galaxy) {
+    stage.galaxy.addPost(post)
+    portal.go(GalaxySlugRoute(galaxy.slug))
+}
