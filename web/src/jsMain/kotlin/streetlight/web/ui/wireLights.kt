@@ -38,7 +38,8 @@ fun <Id> ViewContext<Streetlight>.wireLights(
 
     pairs.forEach { (element, id) ->
         element.onClick {
-            cache.toggleLight(id)
+            val isLit = cache.toggleLight(id)
+            element.modifyCounter(if (isLit) 1 else -1)
         }
     }
 }
