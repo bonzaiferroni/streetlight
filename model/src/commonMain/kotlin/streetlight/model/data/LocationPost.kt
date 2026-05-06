@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class LocationPost(
     override val postId: PostId,
-    override val galaxyId: GalaxyId?,
+    override val galaxyId: GalaxyId,
     override val username: String?,
     val location: Location,
     override val text: String?,

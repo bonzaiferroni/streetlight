@@ -10,7 +10,7 @@ import kotlin.time.Instant
 @Serializable
 sealed interface Post {
     val postId: PostId
-    val galaxyId: GalaxyId?
+    val galaxyId: GalaxyId
     val username: String?
     val text: String?
     val images: ScaledImageArray?

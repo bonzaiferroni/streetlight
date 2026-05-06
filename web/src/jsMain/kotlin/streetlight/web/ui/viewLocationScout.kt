@@ -1,19 +1,16 @@
 package streetlight.web.ui
 
-import kampfire.model.small
 import koala.css.*
 import koala.dom.*
-import koala.html.btn
 import koala.html.filigree
 import koala.html.heading1
 import koala.html.heading3
 import koala.html.section
 import koala.html.spacer
 import koala.model.mapDistinct
-import kotlinx.coroutines.launch
 import streetlight.model.data.Galaxy
-import streetlight.web.GalaxySlugRoute
 import streetlight.web.LocationScoutRoute
+import streetlight.web.io.handleResponse
 import streetlight.web.model.LocationFinder
 import streetlight.web.model.LocationScout
 import streetlight.web.model.Streetlight
@@ -69,7 +66,7 @@ fun RenderContext.viewLocationScout(app: Streetlight, galaxy: Galaxy) {
 
 fun ViewContext<Streetlight>.viewLocationScoutRoute() {
     routeBlock<LocationScoutRoute, Galaxy>({
-        api.readGalaxy(it.slug)
+        api.readGalaxySlug(it.slug).handleResponse(toaster::toast)
     }) { galaxy ->
         viewLocationScout(model, galaxy)
     }

@@ -32,6 +32,11 @@ class GalaxyStage(
         val posts = stateNow.posts ?: emptyList()
         state.set { it.copy(posts = posts.filter { item -> item.postId != postId }, isInitialStage = false)}
     }
+
+    fun replacePost(post: Post) {
+        val posts = stateNow.posts?.map { if (it.postId == post.postId) post else it }
+        state.set { it.copy(posts = posts, isInitialStage = false) }
+    }
 }
 
 data class GalaxyStageState(

@@ -23,9 +23,10 @@ data class Ok<T>(
     override val message: String? = null
 ): ApiResponse<T>
 
+// the purpose of this class is to communicate the issue to the user
 @Serializable
 data class Problem<T>(
-    override val message: String
+    override val message: String,
 ): ApiResponse<T> {
     override val data: T? get() = null
 }

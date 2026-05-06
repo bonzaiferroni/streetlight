@@ -8,6 +8,7 @@ import streetlight.model.data.Galaxy
 import streetlight.model.data.Post
 import streetlight.web.EarthMapRoute
 import streetlight.web.io.getDataOrNull
+import streetlight.web.io.handleResponse
 import streetlight.web.ui.ViewModel
 
 class EarthMap(
@@ -26,9 +27,8 @@ class EarthMap(
             app.portal.routeFlow.collect { route ->
                 when (route) {
                     is EarthMapRoute -> {
-                        console.log(route.galaxySlug)
                         val galaxy = route.galaxySlug?.let {
-                            api.readGalaxy(it)
+                            api.readGalaxySlug(it).handleResponse(toaster::toast)
                         }
                         val posts = galaxy?.let {
                             api.readPosts(it.galaxyId).getDataOrNull()

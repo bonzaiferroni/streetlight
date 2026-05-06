@@ -17,7 +17,6 @@ import streetlight.model.data.GalaxyId
 import streetlight.model.data.LocationEdit
 import streetlight.model.data.LocationId
 import streetlight.model.data.PostId
-import streetlight.model.data.ProtoPostId
 import streetlight.model.data.Slug
 import streetlight.model.data.SongId
 import streetlight.model.data.TalentId
@@ -58,7 +57,7 @@ enum class StreetlightScreen(
 
 sealed interface StreetlightRoute: AppRoute
 
-sealed interface StringIdRoute: StreetlightRoute {
+sealed interface ProjectIdRoute: StreetlightRoute {
     val id: TableId<String>?
 
     override fun toSitePath() = toIdSitePath(id)
@@ -84,7 +83,7 @@ sealed interface EventRoute: StreetlightRoute {
     override val title get() = "Event"
 }
 
-data class EventObjectRoute(val event: EventLocation): EventRoute, StringIdRoute {
+data class EventObjectRoute(val event: EventLocation): EventRoute, ProjectIdRoute {
     override val id get() = event.eventId
     override val title get() = event.title
 }
@@ -99,7 +98,7 @@ data class EditEventCallbackRoute(
     val callback: (Event?) -> Unit
 ): EditEventRoute
 
-data class EditEventIdRoute(val eventId: EventId? = null): EditEventRoute, StringIdRoute {
+data class EditEventIdRoute(val eventId: EventId? = null): EditEventRoute, ProjectIdRoute {
     override val id get() = eventId
 }
 
@@ -122,7 +121,7 @@ object ChatRoute: StreetlightRoute {
 
 data class SongProfileRoute(
     val songId: SongId
-): StreetlightRoute, StringIdRoute {
+): StreetlightRoute, ProjectIdRoute {
     override val screen get() = StreetlightScreen.SongProfile
     override val id get() = songId
     override val title get() = "Song"
@@ -130,7 +129,7 @@ data class SongProfileRoute(
 
 data class TalentProfileRoute(
     val talentId: TalentId
-): StreetlightRoute, StringIdRoute {
+): StreetlightRoute, ProjectIdRoute {
     override val screen get() = StreetlightScreen.TalentProfile
     override val id get() = talentId
     override val title get() = "Talent"
@@ -138,7 +137,7 @@ data class TalentProfileRoute(
 
 data class EditTalentRoute(
     val talentId: TalentId? = null
-): StreetlightRoute, StringIdRoute {
+): StreetlightRoute, ProjectIdRoute {
     override val screen get() = StreetlightScreen.EditTalent
     override val id get() = talentId
     override val title get() = "Talent"
@@ -146,7 +145,7 @@ data class EditTalentRoute(
 
 data class LocationIdRoute(
     val locationId: LocationId
-): StreetlightRoute, StringIdRoute {
+): StreetlightRoute, ProjectIdRoute {
     override val screen get() = StreetlightScreen.Location
     override val id get() = locationId
     override val title get() = "Location"
@@ -161,19 +160,19 @@ object CreateLocationRoute: EditLocationRoute
 
 data class EditLocationIdRoute(
     val locationId: LocationId? = null
-): EditLocationRoute, StringIdRoute {
+): EditLocationRoute, ProjectIdRoute {
     override val id get() = locationId
 }
 
 data class EditLocationDataRoute(
     val location: LocationEdit
-): EditLocationRoute, StringIdRoute {
+): EditLocationRoute, ProjectIdRoute {
     override val id get() = location.locationId
 }
 
 data class LocationAdminRoute(
     val locationId: LocationId
-): StreetlightRoute, StringIdRoute {
+): StreetlightRoute, ProjectIdRoute {
     override val screen get() = StreetlightScreen.LocationAdmin
     override val id get() = locationId
     override val title get() = "Location Admin"
@@ -199,6 +198,10 @@ data class GalaxySlugRoute(override val slug: Slug): GalaxyRoute, SlugRoute {
     override val title get() = "Galaxy"
 }
 
+data class GalaxyIdRoute(val galaxyId: GalaxyId): GalaxyRoute, ProjectIdRoute {
+    override val id get() = galaxyId
+}
+
 data class EventSlugRoute(override val slug: Slug): StreetlightRoute, SlugRoute, EventRoute {
 }
 
@@ -222,7 +225,7 @@ data class PostContentRoute(override val slug: Slug): StreetlightRoute, SlugRout
     override val title get() = "Post Content"
 }
 
-data class EditPostRoute(val postId: PostId): StringIdRoute {
+data class EditPostRoute(val postId: PostId): ProjectIdRoute {
     override val id get() = postId
     override val screen get() = StreetlightScreen.EditPost
     override val title get() = "Edit Post"

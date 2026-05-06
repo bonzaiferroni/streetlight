@@ -82,9 +82,11 @@ class ApiClient(private val client: FetchClient) {
     suspend fun foundGalaxy(galaxy: GalaxyEdit) = client.post(Api.Galaxies.Found, galaxy)
     suspend fun readTopGalaxies() = client.get(Api.Galaxies.Top)
     suspend fun readGalaxies(galaxyIds: List<GalaxyId>) = client.post(Api.Galaxies.ReadGalaxies, galaxyIds)
-    suspend fun readGalaxy(path: String) = client.get(Api.Galaxies.Path, path)
+    suspend fun readGalaxySlug(slug: String) = client.getApi(Api.Galaxies.ReadSlug, slug)
+    suspend fun readGalaxyId(galaxyId: GalaxyId) = client.getApi(Api.Galaxies.ReadId, galaxyId)
     suspend fun createPost(post: EventPostEdit) = client.postApi(Api.Galaxies.PostEvent, post)
     suspend fun createPost(post: ContentEdit) = client.postApi(Api.Galaxies.PostContent, post)
+    suspend fun editPost(post: ContentEdit) = client.postApi(Api.Galaxies.EditContent, post)
     suspend fun postLocation(location: LocationPostEdit) = client.postApi(Api.Galaxies.PostLocation, location)
     suspend fun readPosts(galaxyIds: List<GalaxyId>) = client.postApi(Api.Galaxies.ReadMultiPosts, galaxyIds)
     suspend fun readPosts(galaxyId: GalaxyId) = client.getApi(Api.Galaxies.ReadPosts, galaxyId)
@@ -111,26 +113,29 @@ fun <T> ApiResponse<T>?.getDataOrNull() = when (this) {
     null -> null.also { console.log("Response was null") }
 }
 
-fun <T> ApiResponse<T>?.getDataOrNull(onMessage: (String) -> Unit) = when (this) {
-    is Ok -> data
-    is Problem -> onMessage(message)
-    null -> onMessage("No response.")
-}
-
 fun <T> ApiResponse<T>?.handleResponse(
     onMessage: (String) -> Unit,
     okMessage: String? = null,
-    block: (T) -> Unit
-) {
-    when (this) {
-        is Ok -> {
-            okMessage?.let {
-                onMessage(it)
-            }
-            block(data)
+) = handleResponse(onMessage, okMessage) { it }
+
+fun <T1, T2> ApiResponse<T1>?.handleResponse(
+    onMessage: (String) -> Unit,
+    okMessage: String? = null,
+    block: (T1) -> T2
+): T2? = when (this) {
+    is Ok -> {
+        okMessage?.let {
+            onMessage(it)
         }
-        is Problem -> onMessage(message)
-        null -> onMessage("No response.")
+        block(data)
+    }
+    is Problem -> {
+        onMessage(message)
+        null
+    }
+    null -> {
+        onMessage("No response.")
+        null
     }
 }
 

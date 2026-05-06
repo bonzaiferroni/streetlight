@@ -2,9 +2,11 @@ package streetlight.web.ui
 
 import koala.dom.*
 import kotlinx.coroutines.launch
+import streetlight.web.GalaxyIdRoute
 import streetlight.web.GalaxyRoute
 import streetlight.web.GalaxySlugRoute
 import streetlight.web.io.getDataOrNull
+import streetlight.web.io.handleResponse
 import streetlight.web.layouts.PostKey
 import streetlight.web.layouts.layoutPosts
 import streetlight.web.model.Streetlight
@@ -45,9 +47,12 @@ fun ViewContext<Streetlight>.viewGalaxy(content: GalaxyContent) {
 }
 
 fun AppContext.viewGalaxyRoute() {
-    routeBlock<GalaxySlugRoute, GalaxyContent>(model.portal, { route ->
+    routeBlock<GalaxyRoute, GalaxyContent>(model.portal, { route ->
         readIslandOrApi(GalaxyKey.GalaxyContentId) {
-            val galaxy = api.readGalaxy(route.slug) ?: return@routeBlock null
+            val galaxy = when (route) {
+                is GalaxyIdRoute -> api.readGalaxyId(route.galaxyId)
+                is GalaxySlugRoute -> api.readGalaxySlug(route.slug)
+            }.handleResponse(toaster::toast) ?: return@routeBlock null
             val listing = api.readPosts(galaxy.galaxyId).getDataOrNull() ?: return@routeBlock null
             GalaxyContent(
                 galaxy = galaxy,

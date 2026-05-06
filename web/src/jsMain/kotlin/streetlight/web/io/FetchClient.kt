@@ -15,6 +15,7 @@ import kampfire.api.UserApi
 import kampfire.model.ApiResponse
 import kampfire.model.ApiResponseSerializer
 import kampfire.model.Auth
+import kampfire.model.Problem
 import kampfire.model.Url
 import kampfire.model.toUrl
 import koala.external.FeedMessage
@@ -180,11 +181,6 @@ class FetchClient(
             response = fetchWithJwt(auth.jwt)
         }
 
-        if (!response.ok) {
-            console.log("$method to $path failed: ${response.status}")
-            return null
-        }
-
         return handleResponse(response)
     }
 
@@ -220,6 +216,11 @@ suspend inline fun <reified Returned> Response.tryDecodeBytes(): Returned? {
 }
 
 suspend inline fun <reified Returned> Response.tryDecodeText(): Returned? {
+    if (!ok) {
+        console.log("request failed: $status")
+        return null
+    }
+
     val text = text().await()
 
     return try {
@@ -244,25 +245,34 @@ suspend inline fun <reified Returned> Response.tryDecodeText(): Returned? {
 
 @ExperimentalSerializationApi
 suspend inline fun <reified T> Response.tryDecodeApiResponse(): ApiResponse<T>? {
-    val buffer = arrayBuffer().await()
-    val bytes = Int8Array(buffer).unsafeCast<ByteArray>()
-    return try {
-        defaultCbor.decodeFromByteArray(
-            ApiResponseSerializer(serializer<T>()),
-            bytes
-        )
-    } catch (e: Exception) {
-        console.log("failed to parse response:\n${e}\n${url}")
-        null
+    return when (status.toInt()) {
+        200 -> {
+            val buffer = arrayBuffer().await()
+            val bytes = Int8Array(buffer).unsafeCast<ByteArray>()
+            try {
+                defaultCbor.decodeFromByteArray(
+                    ApiResponseSerializer(serializer<T>()),
+                    bytes
+                )
+            } catch (e: Exception) {
+                console.log("failed to parse response:\n${e}\n${url}")
+                null
+            }
+        }
+        409 -> Problem("There was a conflict.")
+        500 -> Problem("The server ran into a problem.")
+        else -> Problem("Unknown error: $status")
     }
 }
 
+@Deprecated("use ApiResponse")
 suspend inline fun <reified Returned> Response.tryDecodeWithStatus(): FetchResponse<Returned> {
     val status = status.toInt()
     val payload: Returned? = if (status == 200) tryDecodeText() else null
     return FetchResponse(status, payload)
 }
 
+@Deprecated("use ApiResponse")
 data class FetchResponse<T>(
     val status: Int,
     val payload: T?

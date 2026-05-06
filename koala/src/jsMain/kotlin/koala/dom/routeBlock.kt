@@ -33,7 +33,7 @@ inline fun <reified Route: AppRoute, Data> RenderContext.routeBlock(
         if (it != null) {
             block(it)
         } else {
-            textBlock("Content not found")
+            textBlock("Something went wrong.")
         }
     }
 

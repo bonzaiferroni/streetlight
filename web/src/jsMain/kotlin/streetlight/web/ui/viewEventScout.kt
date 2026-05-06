@@ -13,6 +13,7 @@ import streetlight.model.data.Galaxy
 import streetlight.model.data.Location
 import streetlight.web.EventScoutRoute
 import streetlight.web.GalaxySlugRoute
+import streetlight.web.io.handleResponse
 import streetlight.web.model.EventScout
 import streetlight.web.model.Streetlight
 
@@ -57,7 +58,7 @@ private data class EventScoutPanelState(
 
 fun ViewContext<Streetlight>.viewEventScoutRoute() {
     routeBlock<EventScoutRoute, Galaxy>({
-        api.readGalaxy(it.slug)
+        api.readGalaxySlug(it.slug).handleResponse(toaster::toast)
     }) { galaxy ->
         viewEventScout(model, galaxy)
     }

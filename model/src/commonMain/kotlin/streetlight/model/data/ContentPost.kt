@@ -45,3 +45,13 @@ data class ContentEdit(
     val invalidMessage get() = invalidPart?.let { "missing: $it"}
     val isValid get() = invalidPart == null
 }
+
+fun ContentPost.toEdit() = ContentEdit(
+    postId = postId,
+    galaxyId = galaxyId,
+    title = title,
+    text = text,
+    geoPoint = geoPoint,
+    imageRef = imageRef,
+    links = links
+)
