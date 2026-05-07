@@ -26,6 +26,7 @@ object CssFile : FileSet<Css>() {
 }
 
 object SvgFile : FileSet<Svg>() {
+    val Clock = add("clock.svg")
     val Bus = add("bus.svg")
     val Food = add("food.svg")
     val Guitar = add("guitar.svg")

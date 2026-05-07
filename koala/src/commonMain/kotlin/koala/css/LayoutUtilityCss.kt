@@ -16,11 +16,11 @@ val LayoutUtilityCss
         WidthAuto, Width100P, WidthFitContent,
         Width1, Width2, Width4, Width5, Width8, Width12, Width16, Width24, Width32, Width64,
         MinWidth0, MinWidth16, MinWidth24, MinWidth32, MinWidth36, MinWidth48, MinWidthAuto, MaxWidth25P, MaxWidth50P,
-        MaxWidth5, MaxWidth16, MaxWidth32, MaxWidth48, MaxWidth64, MaxWidthNone,
+        MaxWidth5, MaxWidth16, MaxWidth32, MaxWidth48, MaxWidth64, MaxWidthTextBody, MaxWidthNone,
         // Height
         HeightAuto, Height50P, Height100P,
         Height2, Height3, Height4, Height5, Height6, Height7, Height8, Height9, Height10, Height12, Height16, Height24, Height32, Height48,
-        MinHeightAuto, MinHeight0, MinHeight4, MinHeight5, MinHeight8, MinHeight16, MinHeight24, MinHeight32, MinHeight48,
+        MinHeightAuto, MinHeight0, MinHeight4, MinHeight5, MinHeight6, MinHeight8, MinHeight16, MinHeight24, MinHeight32, MinHeight48,
         MaxHeight5, MaxHeight8, MaxHeight16, MaxHeight24, MaxHeight32, MaxHeight64,
         // Size
         Size100P, FillHeight, Aspect1, Aspect2By1, Aspect3By1, Aspect3By2,
@@ -111,6 +111,7 @@ val MaxWidth16 = utilityOf("max-width-16", "max-width: calc(var(--unit-spacing) 
 val MaxWidth32 = utilityOf("max-width-32", "max-width: calc(var(--unit-spacing) * 32)")
 val MaxWidth48 = utilityOf("max-width-48", "max-width: calc(var(--unit-spacing) * 48)")
 val MaxWidth64 = utilityOf("max-width-64", "max-width: calc(var(--unit-spacing) * 64)")
+val MaxWidthTextBody = utilityOf("max-width-text-body", "max-width: calc(var(--unit-spacing) * 108)" )
 val MaxWidthNone = utilityOf("max-width-none", "max-width: none")
 
 // Height
@@ -141,6 +142,7 @@ val MinHeightAuto = utilityOf("min-height-auto", "min-height: auto")
 val MinHeight0 = utilityOf("min-height-0", "min-height: 0")
 val MinHeight4 = utilityOf("min-height-4", "min-height: calc(var(--unit-spacing) * 4)")
 val MinHeight5 = utilityOf("min-height-5", "min-height: calc(var(--unit-spacing) * 5)")
+val MinHeight6 = utilityOf("min-height-6", "min-height: calc(var(--unit-spacing) * 6)")
 val MinHeight8 = utilityOf("min-height-8", "min-height: calc(var(--unit-spacing) * 8)")
 val MinHeight16 = utilityOf("min-height-16", "min-height: calc(var(--unit-spacing) * 16)")
 val MinHeight24 = utilityOf("min-height-24", "min-height: calc(var(--unit-spacing) * 24)")

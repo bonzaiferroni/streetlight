@@ -1,8 +1,10 @@
 package streetlight.web.layouts
 
 import kabinet.utils.format
+import kabinet.utils.toAgoFormat
 import kabinet.utils.toRelativeDayFormat
 import kabinet.utils.toTimeFormat
+import kampfire.model.Url
 import koala.Svg
 import koala.SvgFile
 import koala.css.*
@@ -23,6 +25,7 @@ object CellContent {
     val RowMod = modify(JustifyContentCenter, AlignItemsCenter, FlexWrap, Gap0, PaddingY1, PaddingX2)
     val CardMod = modify(AlignItemsCenter, Gap0, BorderRadius0, JustifyContentCenter, MinWidth16, Padding0)
     val IconMod = modify(Height3, Aspect1, MarginRight1, ColorSchemeBg)
+    val ThumbMod = modify(Height3, Aspect1, BorderRadius2, MarginRight1)
     val TextMod = modify()
 }
 
@@ -31,7 +34,7 @@ fun FlowContent.cellRow(
     modifiers: ModifierSet? = null,
     block: DIV.() -> Unit = {}
 ) {
-    row(modify(modifiers, MinHeight8, MinWidth24, FlexItems1, GapTiny, TextAlignCenter, MoonShadow)) {
+    row(modify(modifiers, MinHeight6, MinWidth24, FlexItems1, GapTiny, TextAlignCenter, MoonShadow)) {
         block()
         cells.forEach {
             val cell = it ?: return@forEach
@@ -77,11 +80,22 @@ fun FlowContent.costCell(cost: Float?, purchaseUrl: String?) {
 
 fun FlowContent.starCell(username: String?) = iconPropertyCell(SvgFile.SomeoneSmall, username ?: "Someone")
 
+fun FlowContent.starCell(username: String?, userThumb: Url?) {
+    row(CellContent.RowMod) {
+        image(userThumb, CellContent.ThumbMod)
+        textBlock(username ?: "Someone", CellContent.TextMod)
+    }
+}
+
 fun FlowContent.textPropertyCell(property: String, value: String) {
     row(CellContent.RowMod) {
         textBlock("$property:", modify(CellContent.TextMod, Dim))
         textBlock(value, modify(CellContent.TextMod, MarginLeft1))
     }
+}
+
+fun FlowContent.postedAtCell(postedAt: Instant) {
+    iconPropertyCell(SvgFile.Clock, postedAt.toAgoFormat())
 }
 
 fun FlowContent.iconPropertyCell(icon: Svg, value: String) {

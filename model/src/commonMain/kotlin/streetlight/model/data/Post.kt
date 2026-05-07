@@ -2,6 +2,7 @@ package streetlight.model.data
 
 import kampfire.model.GeoPoint
 import kampfire.model.ScaledImageArray
+import kampfire.model.Url
 import kampfire.utils.randomUuidString
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
@@ -12,6 +13,7 @@ sealed interface Post {
     val postId: PostId
     val galaxyId: GalaxyId
     val username: String?
+    val userThumb: Url?
     val text: String?
     val images: ScaledImageArray?
     val geoPoint: GeoPoint?

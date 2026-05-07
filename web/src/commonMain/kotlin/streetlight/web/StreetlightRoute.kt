@@ -47,6 +47,7 @@ enum class StreetlightScreen(
     EventScout("post-event", IdParse { EventScoutRoute(it) }),
     LocationScout("post-location", IdParse { LocationScoutRoute(it) }),
     PostContent("post-content", IdParse { PostContentRoute(it) }),
+    Post("p", IdParse { StarPostRoute(PostId(it)) }),
     EditStar("edit-profile", StaticParse { EditStarRoute }),
     SiteConfig("config", StaticParse { SiteConfigRoute }),
     AboutApp("about", StaticParse { AboutRoute }),
@@ -265,6 +266,12 @@ data class TalkRoute(val stringId: StringId, val type: SpaceType): StreetlightRo
     override val title get() = "Talk"
 
     override fun toSitePath() = toIdSitePath(stringId)
+}
+
+data class StarPostRoute(val postId: PostId): ProjectIdRoute {
+    override val id get() = postId
+    override val screen get() = StreetlightScreen.Post
+    override val title get() = "Post"
 }
 
 private fun AppRoute.toIdSitePath(id: String?) = id?.let { "$basePath/$id" } ?: basePath

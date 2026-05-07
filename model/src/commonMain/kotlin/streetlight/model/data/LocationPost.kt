@@ -1,6 +1,7 @@
 package streetlight.model.data
 
 import kampfire.model.GeoPoint
+import kampfire.model.Url
 import kotlin.time.Instant
 import kotlinx.serialization.Serializable
 
@@ -9,6 +10,7 @@ data class LocationPost(
     override val postId: PostId,
     override val galaxyId: GalaxyId,
     override val username: String?,
+    override val userThumb: Url?,
     val location: Location,
     override val text: String?,
     override val createdAt: Instant,

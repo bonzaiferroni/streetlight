@@ -24,7 +24,7 @@
     animation: var(--glow-shadow-infinite);
 }
 
-.anti-shadow {
+:root:not(.day-theme) .anti-shadow {
     animation: var(--anti-shadow-infinite);
 }
 

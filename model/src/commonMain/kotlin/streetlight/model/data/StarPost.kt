@@ -7,10 +7,11 @@ import kotlinx.serialization.Serializable
 import kotlin.time.Instant
 
 @Serializable
-data class ContentPost(
+data class StarPost(
     override val postId: PostId,
     override val galaxyId: GalaxyId,
     override val username: String?,
+    override val userThumb: Url?,
     override val title: String,
     override val text: String?,
     override val geoPoint: GeoPoint?,
@@ -27,7 +28,7 @@ data class ContentPost(
 }
 
 @Serializable
-data class ContentEdit(
+data class StarPostEdit(
     val postId: PostId?,
     val galaxyId: GalaxyId,
     val title: String? = null,
@@ -46,7 +47,7 @@ data class ContentEdit(
     val isValid get() = invalidPart == null
 }
 
-fun ContentPost.toEdit() = ContentEdit(
+fun StarPost.toEdit() = StarPostEdit(
     postId = postId,
     galaxyId = galaxyId,
     title = title,

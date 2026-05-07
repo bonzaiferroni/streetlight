@@ -10,7 +10,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import streetlight.model.data.ContentPost
+import streetlight.model.data.StarPost
 import streetlight.model.data.EventPost
 import streetlight.model.data.LocationPost
 import streetlight.web.EarthMapRoute
@@ -49,7 +49,7 @@ fun ViewContext<EarthMap>.viewEarthMap() {
                                     }
                                 }
                                 is LocationPost -> return@forEach
-                                is ContentPost -> return@forEach
+                                is StarPost -> return@forEach
                             }
                         }
                     }

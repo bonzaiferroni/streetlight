@@ -3,38 +3,25 @@ package streetlight.web.ui
 import koala.css.*
 import koala.dom.*
 import koala.dom.routeBlock
-import koala.html.geoMapMount
 import koala.html.heading1
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
-import kotlinx.html.js.section
-import streetlight.model.data.ContentEdit
-import streetlight.model.data.ContentPost
-import streetlight.model.data.LocationEdit
+import streetlight.model.data.StarPostEdit
+import streetlight.model.data.StarPost
 import streetlight.model.data.toEdit
-import streetlight.web.EditLocationRoute
 import streetlight.web.EditPostRoute
-import streetlight.web.GalaxyIdRoute
 import streetlight.web.io.handleResponse
 import streetlight.web.model.ContentEditor
-import streetlight.web.model.Streetlight
 
-fun ViewContext<ContentEditor>.viewPostEditor() {
+fun ViewContext<ContentEditor>.viewContentUpdater() {
 
-    section {
-        heading1("Edit Post")
+    section(modify(Column)) {
+        heading1("Edit Post", modify(TextAlignCenter))
 
-        viewContentEditor()
+        card {
+            viewContentEditor()
+        }
 
         row(modify(JustifyContentEnd)) {
-            button("Edit", onClick = {
-                renderScope.launch {
-                    api.editPost(model.contentNow).handleResponse(toaster::toast) {
-                        stage.galaxy.replacePost(it)
-                        portal.go(GalaxyIdRoute(it.galaxyId))
-                    }
-                }
-            })
+            button("Edit", onClick = model::submitPost)
         }
 
         appFooter("")
@@ -42,14 +29,14 @@ fun ViewContext<ContentEditor>.viewPostEditor() {
 }
 
 fun AppContext.viewEditPostRoute() {
-    routeBlock<EditPostRoute, ContentEdit>(portal, { route ->
+    routeBlock<EditPostRoute, StarPostEdit>(portal, { route ->
         api.readPost(route.postId).handleResponse(toaster::toast) {
-            (it as? ContentPost)?.toEdit()
+            (it as? StarPost)?.toEdit()
         }
     }) {
         val editor = ContentEditor(renderScope, model, it)
         viewContextOf(editor) {
-            viewPostEditor()
+            viewContentUpdater()
         }
     }
 }

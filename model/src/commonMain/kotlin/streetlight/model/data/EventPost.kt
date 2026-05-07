@@ -1,5 +1,6 @@
 package streetlight.model.data
 
+import kampfire.model.Url
 import kotlin.time.Instant
 import kotlinx.serialization.Serializable
 
@@ -8,6 +9,7 @@ data class EventPost(
     override val postId: PostId,
     override val galaxyId: GalaxyId,
     override val username: String?,
+    override val userThumb: Url?,
     val event: EventLocation,
     override val text: String?,
     override val createdAt: Instant,

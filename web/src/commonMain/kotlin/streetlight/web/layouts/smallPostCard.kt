@@ -4,7 +4,6 @@ import kabinet.utils.toRelativeDayFormat
 import kampfire.model.thumb
 import koala.SvgFile
 import koala.css.*
-import koala.html.AppRoute
 import koala.html.navigation
 import koala.html.card
 import koala.html.column
@@ -14,20 +13,8 @@ import koala.html.icon
 import koala.html.image
 import koala.html.row
 import koala.html.textBlock
-import koala.model.Doc
 import kotlinx.html.FlowContent
-import streetlight.model.data.ContentPost
-import streetlight.model.data.Event
-import streetlight.model.data.EventLocation
 import streetlight.model.data.EventPost
-import streetlight.model.data.Location
-import streetlight.model.data.LocationPost
-import streetlight.model.data.Post
-import streetlight.model.data.PostType
-import streetlight.web.EventSlugRoute
-import streetlight.web.HomeRoute
-import streetlight.web.LocationIdRoute
-import streetlight.web.SiteDocRoute
 
 fun FlowContent.smallPostCard(post: EventPost) {
     val thumbUrl = post.images.thumb

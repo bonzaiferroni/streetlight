@@ -15,6 +15,17 @@ fun FlowContent.section(
     }
 }
 
+fun FlowContent.section(
+    id: Id,
+    modifiers: ModifierSet? = null,
+    block: SECTION.() -> Unit = {}
+) {
+    section(modifiers) {
+        setId(id)
+        block()
+    }
+}
+
 object SectionKey {
     val Class = Class("section")
 }

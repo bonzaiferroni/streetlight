@@ -11,7 +11,7 @@ fun HTML.appBody(
     block: DIV.() -> Unit = { }
 ) {
     body {
-        column(AppBodyKey.ViewportId, modify(Gap0)) {
+        column(AppBodyKey.ViewportId) {
             appHeader()
             row(AppBodyKey.ContentRowId, modify(JustifyContentCenter, Flex1, Gap0)) {
                 // div(AppBodyKey.SpacerLeftId)
