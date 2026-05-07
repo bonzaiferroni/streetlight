@@ -122,7 +122,7 @@ class CommentView(
     fun ViewContext<TalkLog>.toggleEdit() {
         isEditing = !isEditing
         if (isEditing) {
-
+            editBlock.unmodify(DisplayNone)
             if (editBlock.hasChildNodes()) return
             replaceRender(editBlock) {
                 commentEditor("edit", comment.text) { text ->
@@ -130,6 +130,7 @@ class CommentView(
                     return@commentEditor when (isSuccess) {
                         true -> {
                             isEditing = false
+                            editBlock.modify(DisplayNone)
                             text
                         }
                         else -> {
@@ -138,6 +139,8 @@ class CommentView(
                     }
                 }
             }
+        } else {
+            editBlock.modify(DisplayNone)
         }
     }
 

@@ -35,6 +35,7 @@ import koala.html.heading1
 import koala.html.heading4
 import koala.html.image
 import koala.html.markdown
+import koala.html.mount
 import koala.html.row
 import koala.html.section
 import koala.html.textBlock
@@ -71,6 +72,8 @@ fun FlowContent.starPostShell(post: StarPost) {
             }
         }
 
+        mount(PostKey.TalkId)
+
         appFooter()
 
         dataIsland(PostKey.IslandId, post)
@@ -80,5 +83,6 @@ fun FlowContent.starPostShell(post: StarPost) {
 object PostKey {
     val ShellId = Id("post-shell")
     val IslandId = Id("post-data")
+    val TalkId = Id("post-talk")
 }
 

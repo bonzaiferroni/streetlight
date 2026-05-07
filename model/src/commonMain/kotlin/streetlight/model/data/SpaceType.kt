@@ -1,7 +1,8 @@
 package streetlight.model.data
 
 enum class SpaceType(paramValue: String? = null) {
-    Galaxy;
+    Galaxy,
+    Post;
 
     val paramValue = paramValue ?: name.lowercase()
 

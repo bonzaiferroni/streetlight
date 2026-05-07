@@ -50,7 +50,6 @@ class TalkLog(
         }
 
         client.connect()
-
     }
 
     fun setSortBy(value: PostOrder) {

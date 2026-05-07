@@ -35,8 +35,6 @@ fun ViewContext<TalkLog>.viewTalkLog() {
         }
 
         treeRoot = column { }
-
-        appFooter("")
     }
 
     renderScope.launch {
@@ -95,25 +93,28 @@ fun ViewContext<TalkLog>.buildTree(treeRoot: HTMLElement, comments: List<Comment
 }
 
 fun ViewContext<TalkLog>.growTree(treeRoot: HTMLElement, comment: Comment) {
+    val view = addCommentView(comment, emptyList()) ?: return
     when (val parentId = comment.parentId) {
         null -> {
             when (model.stateNow.sortBy) {
                 PostOrder.NewFirst -> {
                     prependRender(treeRoot) {
-                        addCommentView(comment, emptyList())
+                        with (view) {
+                            render()
+                        }
                     }
                 }
                 PostOrder.OldFirst -> {
                     appendRender(treeRoot) {
-                        addCommentView(comment, emptyList())
+                        with (view) {
+                            render()
+                        }
                     }
                 }
             }
         }
         else -> {
             val parentView = model.commentViews[parentId] ?: return
-            val isUserComment = comment.username != null && comment.username == model.app.gate.stateNow.star?.username
-            val view = CommentView(comment, isUserComment)
             with (parentView) {
                 stageReply(view, isUserComment)
             }
@@ -156,7 +157,7 @@ fun ViewContext<TalkLog>.commentEditor(
 
 fun ViewContext<TalkLog>.addCommentView(comment: Comment, comments: List<Comment>): CommentView? {
     if (model.commentViews.contains(comment.commentId)) return null
-    val isUserComment = comment.username != null && comment.username != gate.stateNow.star?.username
+    val isUserComment = comment.username != null && comment.username == gate.stateNow.star?.username
 
     val view = CommentView(comment, isUserComment)
     model.commentViews[comment.commentId] = view

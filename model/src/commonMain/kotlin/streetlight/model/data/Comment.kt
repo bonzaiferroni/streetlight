@@ -38,6 +38,7 @@ data class NewComment(
     val text: String,
 ) {
     val galaxyId get() = if (spaceType == SpaceType.Galaxy) GalaxyId(spaceId) else error("invalid SpaceType")
+    val postId get() = if (spaceType == SpaceType.Post) PostId(spaceId) else error("invalid SpaceType")
 }
 
 @Serializable
