@@ -117,7 +117,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object Top: GetEndpoint<List<Galaxy>>(this, "areas")
         object ReadGalaxies: PostEndpoint<List<GalaxyId>, List<Galaxy>>(this, "read-galaxies")
         object ReadSlug: GetByIdEndpoint<String, Galaxy>(this, "slug")
-        object ReadId: GetByIdEndpoint<GalaxyId, Galaxy>(this, "id")
+        object ReadId: GetByIdEndpoint<StringId, Galaxy>(this, "id")
         object PostEvent: PostEndpoint<EventPostEdit, Post>(this, "post-event")
         object PostContent: PostEndpoint<StarPostEdit, Post>(this, "post-content")
         object EditContent: PostEndpoint<StarPostEdit, Post>(this, "edit-content")

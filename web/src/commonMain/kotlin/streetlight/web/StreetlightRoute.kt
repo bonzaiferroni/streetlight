@@ -42,7 +42,7 @@ enum class StreetlightScreen(
     LocationAdmin("location-admin", IdParse { LocationAdminRoute(LocationId(it)) }),
     CreateGalaxy("create-galaxy", StaticParse { CreateGalaxyRoute }),
     GalaxyList("galaxies", StaticParse { GalaxyListRoute }),
-    Galaxy("g", IdParse { GalaxySlugRoute(it) }),
+    Galaxy("g", IdParse { GalaxyRoute(it) }),
     Star("s", IdParse { StarRoute(it) }),
     EventScout("post-event", IdParse { EventScoutRoute(it) }),
     LocationScout("post-location", IdParse { LocationScoutRoute(it) }),
@@ -195,18 +195,9 @@ object GalaxyListRoute: StreetlightRoute {
     override val title get() = "Galaxies"
 }
 
-sealed interface GalaxyRoute: StreetlightRoute {
+data class GalaxyRoute(override val id: StringId): StringIdRoute, StreetlightRoute {
     override val screen get() = StreetlightScreen.Galaxy
     override val title get() = "Galaxy"
-}
-
-data class GalaxySlugRoute(override val slug: Slug): GalaxyRoute, SlugRoute {
-    override val screen get() = StreetlightScreen.Galaxy
-    override val title get() = "Galaxy"
-}
-
-data class GalaxyIdRoute(val galaxyId: GalaxyId): GalaxyRoute, ProjectIdRoute {
-    override val id get() = galaxyId
 }
 
 data class EventSlugRoute(override val slug: Slug): StreetlightRoute, SlugRoute, EventRoute {

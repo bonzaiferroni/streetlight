@@ -28,7 +28,7 @@ class EarthMap(
                 when (route) {
                     is EarthMapRoute -> {
                         val galaxy = route.galaxySlug?.let {
-                            api.readGalaxySlug(it).handleResponse(toaster::toast)
+                            api.readGalaxy(it).handleResponse(toaster::toast)
                         }
                         val posts = galaxy?.let {
                             api.readPosts(it.galaxyId).getDataOrNull()

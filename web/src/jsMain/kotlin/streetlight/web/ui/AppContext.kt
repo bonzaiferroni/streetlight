@@ -18,5 +18,6 @@ val AppContext.toaster get() = model.toaster
 
 suspend inline fun <reified T> readIslandOrApi(
     id: Id,
-    block: suspend () -> T
-): T? = readIsland(id) ?: block()
+    checkId: (T) -> Boolean,
+    block: suspend () -> T?
+): T? = readIsland<T?>(id)?.takeIf { checkId(it) } ?: block()

@@ -14,8 +14,7 @@ import streetlight.model.data.Location
 import streetlight.model.data.LocationPostEdit
 import streetlight.model.data.Post
 import streetlight.model.data.PostId
-import streetlight.web.GalaxyIdRoute
-import streetlight.web.GalaxySlugRoute
+import streetlight.web.GalaxyRoute
 import streetlight.web.io.handleResponse
 import streetlight.web.ui.ViewModel
 
@@ -64,5 +63,5 @@ data class LocationScoutState(
 
 fun Streetlight.stagePostAndGo(post: Post) {
     stage.galaxy.addPost(post)
-    portal.go(GalaxyIdRoute(post.galaxyId))
+    portal.go(GalaxyRoute(post.galaxyId.value))
 }

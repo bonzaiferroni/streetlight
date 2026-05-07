@@ -11,6 +11,7 @@ import org.w3c.dom.HTMLAnchorElement
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.MANUAL
 import org.w3c.dom.ScrollRestoration
+import org.w3c.dom.Window
 import org.w3c.dom.events.MouseEvent
 import org.w3c.dom.url.URL
 
@@ -42,6 +43,7 @@ class Portal(
         window.history.scrollRestoration = ScrollRestoration.MANUAL
 
         fun handleRoute(href: String) {
+            val href = window.prefixContext(href)
             val sitePath = if (href.startsWith("/")) href else URL(href).pathname
 
             val route = routeOf(sitePath) ?: return
@@ -127,3 +129,9 @@ private data class Navigation(
     val route: AppRoute,
     val initialScrollY: Double,
 )
+
+private fun Window.prefixContext(href: String): String {
+    if ('/' in href) return href
+    val base = location.pathname.substringBeforeLast('/')
+    return "$base/$href"
+}

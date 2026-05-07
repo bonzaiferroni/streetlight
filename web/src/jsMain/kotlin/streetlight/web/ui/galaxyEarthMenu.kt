@@ -13,7 +13,6 @@ import koala.html.card
 import koala.html.row
 import streetlight.model.data.Galaxy
 import streetlight.web.EarthMapRoute
-import streetlight.web.GalaxySlugRoute
 import streetlight.web.model.Streetlight
 import streetlight.web.shells.GalaxyMenuKey
 import streetlight.web.shells.buttonOf

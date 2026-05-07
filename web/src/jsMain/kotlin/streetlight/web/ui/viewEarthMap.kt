@@ -14,7 +14,7 @@ import streetlight.model.data.StarPost
 import streetlight.model.data.EventPost
 import streetlight.model.data.LocationPost
 import streetlight.web.EarthMapRoute
-import streetlight.web.GalaxySlugRoute
+import streetlight.web.GalaxyRoute
 import streetlight.web.HomeRoute
 import streetlight.web.model.EarthMap
 import streetlight.web.model.Streetlight
@@ -30,7 +30,7 @@ fun ViewContext<EarthMap>.viewEarthMap() {
                     galaxyEarthMenu(galaxy, app, modify(ZIndex2))
                     row {
                         icon(SvgFile.Settings, modify(Width5, Aspect1, ZIndex2))
-                        val route = galaxy?.let { GalaxySlugRoute(it.slug) } ?: HomeRoute
+                        val route = galaxy?.let { GalaxyRoute(it.slug) } ?: HomeRoute
                         btn("View Feed", route, modify(ZIndex2))
                     }
                 }

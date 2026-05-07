@@ -1,22 +1,21 @@
 package streetlight.web.shells
 
-import kampfire.model.medium
 import kampfire.model.small
 import koala.css.*
 import koala.html.btn
 import kotlinx.html.FlowContent
 import streetlight.model.data.Galaxy
 import streetlight.model.data.GalaxyLight
-import streetlight.web.GalaxySlugRoute
+import streetlight.web.GalaxyRoute
 
 fun FlowContent.buttonOf(star: GalaxyLight, modifiers: ModifierSet? = null) {
-    btn(star.name, GalaxySlugRoute(star.path), star.imageUrl, modifiers)
+    btn(star.name, GalaxyRoute(star.slug), star.imageUrl, modifiers)
 }
 
 fun FlowContent.buttonOf(galaxy: Galaxy, modifiers: ModifierSet? = null) {
     btn(
         text = galaxy.name,
-        route = GalaxySlugRoute(galaxy.slug),
+        route = GalaxyRoute(galaxy.slug),
         background = galaxy.images.small,
         modifiers = modify(modifiers)
     )

@@ -37,7 +37,7 @@ fun ViewContext<Streetlight>.viewHome(content: HomeContent) {
 
 fun ViewContext<Streetlight>.viewHomeRoute() {
     routeBlock<HomeRoute, HomeContent>(model.portal, { route ->
-        readIslandOrApi(HomeKey.IslandId) {
+        readIslandOrApi(HomeKey.IslandId, { true }) {
             api.readHomeContent()?.getDataOrNull()
         }
     }) { content ->

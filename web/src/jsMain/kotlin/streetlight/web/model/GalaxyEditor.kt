@@ -12,7 +12,7 @@ import streetlight.model.data.GalaxyEdit
 import streetlight.model.data.PostPermission
 import streetlight.model.data.ReviewMode
 import streetlight.model.data.slugOf
-import streetlight.web.GalaxySlugRoute
+import streetlight.web.GalaxyRoute
 import streetlight.web.ui.ViewModel
 
 class GalaxyEditor(
@@ -61,7 +61,7 @@ class GalaxyEditor(
             }
             val galaxy = app.client.api.foundGalaxy(galaxy.copy(imageRef = imageUrl))
             if (galaxy != null) {
-                portal.go(GalaxySlugRoute(galaxy.slug))
+                portal.go(GalaxyRoute(galaxy.slug))
                 reset()
             }
         }

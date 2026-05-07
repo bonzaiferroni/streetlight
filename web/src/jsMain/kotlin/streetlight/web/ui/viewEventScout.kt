@@ -12,7 +12,7 @@ import streetlight.model.data.Event
 import streetlight.model.data.Galaxy
 import streetlight.model.data.Location
 import streetlight.web.EventScoutRoute
-import streetlight.web.GalaxySlugRoute
+import streetlight.web.GalaxyRoute
 import streetlight.web.io.handleResponse
 import streetlight.web.model.EventScout
 import streetlight.web.model.Streetlight
@@ -58,7 +58,7 @@ private data class EventScoutPanelState(
 
 fun ViewContext<Streetlight>.viewEventScoutRoute() {
     routeBlock<EventScoutRoute, Galaxy>({
-        api.readGalaxySlug(it.slug).handleResponse(toaster::toast)
+        api.readGalaxy(it.slug).handleResponse(toaster::toast)
     }) { galaxy ->
         viewEventScout(model, galaxy)
     }
@@ -70,7 +70,7 @@ fun ViewContext<EventScout>.reviewEventPanel(event: Event, galaxy: Galaxy) {
             messageBox(model.messageFlow)
             row {
                 button("start over", modify(Secondary), onClick = model::reset)
-                btn("back to ${galaxy.name}", GalaxySlugRoute(galaxy.slug), galaxy.images.small)
+                btn("back to ${galaxy.name}", GalaxyRoute(galaxy.slug), galaxy.images.small)
                 button("post another event at this location", onClick = model::resetEvent)
             }
 

@@ -32,7 +32,7 @@ fun ViewContext<ContentEditor>.viewContentPoster(galaxy: Galaxy) {
 
 fun ViewContext<Streetlight>.viewContentPosterRoute() {
     routeBlock<PostContentRoute, Galaxy>({
-        api.readGalaxySlug(it.slug).handleResponse(toaster::toast)
+        api.readGalaxy(it.slug).handleResponse(toaster::toast)
     }) { galaxy ->
         val model = ContentEditor(renderScope, model, StarPostEdit(null, galaxy.galaxyId))
         viewContextOf(model) {

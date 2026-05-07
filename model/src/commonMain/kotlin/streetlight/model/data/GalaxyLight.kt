@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class GalaxyLight(
-    val path: String,
+    val slug: String,
     val name: String,
     val imageUrl: Url?,
 )
