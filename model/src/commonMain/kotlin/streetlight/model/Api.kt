@@ -124,7 +124,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object PostLocation: PostEndpoint<LocationPostEdit, Post>(this, "post-location")
         object ReadMultiPosts: PostEndpoint<List<GalaxyId>, List<Post>>(this, "multi-posts")
         object ReadPosts: GetByIdEndpoint<GalaxyId, List<Post>>(this, "posts")
-        object ReadPost: GetByIdEndpoint<PostId, Post>(this, "post")
+        object ReadPost: GetByIdEndpoint<StringId, Post>(this, "post")
         object ReadLights: GetEndpoint<List<GalaxyId>>(this, "lights")
         object RemovePost: PostEndpoint<PostId, Boolean>(this, "remove")
     }

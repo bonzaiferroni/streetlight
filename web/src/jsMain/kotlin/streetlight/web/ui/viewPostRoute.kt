@@ -28,7 +28,7 @@ fun AppContext.viewStarPost(post: StarPost) {
 fun AppContext.viewStarPostRoute() {
     routeBlock<StarPostRoute, StarPost>(portal, { route ->
         readIslandOrApi(PostKey.IslandId) {
-            api.readPost(route.postId).handleResponse(toaster::toast) as? StarPost
+            api.readPost(route.id).handleResponse(toaster::toast) as? StarPost
         }
     }) { post ->
         viewContextOf(model) {

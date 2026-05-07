@@ -10,6 +10,7 @@ import kotlin.time.Instant
 data class StarPost(
     override val postId: PostId,
     override val galaxyId: GalaxyId,
+    val slug: String?,
     override val username: String?,
     override val userThumb: Url?,
     override val title: String,
