@@ -9,9 +9,11 @@ import koala.css.Aspect3By2
 import koala.css.Bold
 import koala.css.BorderRadius2
 import koala.css.BorderRadius50P
+import koala.css.Class
 import koala.css.Gap0
 import koala.css.Height5
 import koala.css.JustifyContentCenter
+import koala.css.JustifyContentEnd
 import koala.css.LargeText
 import koala.css.LineHeight1
 import koala.css.LineHeight115
@@ -23,9 +25,11 @@ import koala.css.OverflowClip
 import koala.css.Padding0
 import koala.css.Padding4
 import koala.css.TextAlignCenter
+import koala.css.Zen
 import koala.css.ZenBg
 import koala.css.modify
 import koala.html.Id
+import koala.html.btn
 import koala.html.card
 import koala.html.column
 import koala.html.dataIsland
@@ -40,7 +44,9 @@ import koala.html.row
 import koala.html.section
 import koala.html.textBlock
 import kotlinx.html.FlowContent
+import streetlight.model.data.PostId
 import streetlight.model.data.StarPost
+import streetlight.web.EditPostRoute
 import streetlight.web.layouts.cellRow
 import streetlight.web.layouts.postedAtCell
 import streetlight.web.layouts.starCell
@@ -72,7 +78,11 @@ fun FlowContent.starPostShell(post: StarPost) {
             }
         }
 
-        mount(PostKey.TalkId)
+        row(modify(JustifyContentEnd)) {
+            btn("edit", EditPostRoute(post.postId), modify(Zen))
+        }
+
+        mount(PostKey.TalkId, modify(MarginTop4))
 
         appFooter()
 
