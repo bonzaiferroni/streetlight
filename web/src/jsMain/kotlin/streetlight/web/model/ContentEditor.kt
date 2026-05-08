@@ -36,6 +36,8 @@ class ContentEditor(
 
     fun setTitle(title: String) = setContent { it.copy(title = title) }
 
+    fun setSubtitle(subtitle: String) = setContent { it.copy(subtitle = subtitle) }
+
     fun setText(text: String) = setContent { it.copy(text = text) }
 
     fun setImage(url: Url?) = setContent { it.copy(imageRef = url) }

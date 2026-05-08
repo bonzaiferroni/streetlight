@@ -10,6 +10,7 @@ import streetlight.model.data.EventPost
 import streetlight.model.data.Location
 import streetlight.model.data.LocationPost
 import streetlight.model.data.Post
+import streetlight.model.data.addressLineOf
 import streetlight.web.EventSlugRoute
 import streetlight.web.LocationIdRoute
 import streetlight.web.StarPostRoute
@@ -35,9 +36,9 @@ val Post.subRoute get(): AppRoute? = when (this) {
 }
 
 val Post.subtitle get(): String? = when (this) {
-    is StarPost -> null
+    is StarPost -> subtitle
     is EventPost -> "${event.locationName}, ${event.city}"
-    is LocationPost -> null
+    is LocationPost -> location.addressLine
 }
 
 val Post.cells get() = when (this) {

@@ -2,6 +2,7 @@ package streetlight.web.layouts
 
 import kabinet.utils.toAgoFormat
 import kampfire.model.medium
+import kampfire.utils.takeEllipsis
 import koala.SvgFile
 import koala.css.AlignItemsCenter
 import koala.css.Aspect1
@@ -51,12 +52,14 @@ import koala.html.column
 import koala.html.featureImage
 import koala.html.heading3
 import koala.html.icon
+import koala.html.markdown
 import koala.html.navigation
 import koala.html.navigationIfNotNull
 import koala.html.row
 import koala.html.setAttribute
 import koala.html.setPopoverTarget
 import koala.html.span
+import koala.html.stripMarkdown
 import koala.html.textBlock
 import kotlinx.html.FlowContent
 import kotlinx.html.onClick
@@ -104,7 +107,7 @@ fun FlowContent.layoutPost(
                         }
                         post.description?.let {
                             navigation(postRoute, modify(Flex1, OverflowHidden, FadeBottom)) {
-                                textBlock(it)
+                                textBlock(it.stripMarkdown(400))
                             }
                         }
 
