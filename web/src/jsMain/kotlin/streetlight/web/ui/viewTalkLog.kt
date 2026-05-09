@@ -42,6 +42,7 @@ fun ViewContext<TalkLog>.viewTalkLog() {
             model.messageFlow.collect { message ->
                 when (message) {
                     is TalkHistory -> {
+                        console.log(message.comments.size)
                         buildTree(treeRoot!!, message.comments)
                     }
 

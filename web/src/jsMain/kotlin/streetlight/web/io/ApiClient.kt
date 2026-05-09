@@ -63,7 +63,7 @@ class ApiClient(private val client: FetchClient) {
     fun connectChat(scope: CoroutineScope) = WebChatSocket(client.connectSocket(Api.Chat), scope)
     fun connectSpiritVision() = client.connectSocket(Api.Map.SpiritVision)
     fun connectOmniLog() = client.connectSocket(Api.Omni.Log)
-    fun connectTalkLog(stringId: StringId, space: SpaceType) = client.connectSocket(
+    fun connectTalkLog(stringId: StringId, space: SpaceType) = client.connectSSE(
         Api.Talk.Connect,
         "id" to stringId,
         "space" to space.paramValue

@@ -31,6 +31,7 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.serializer
 import org.khronos.webgl.Int8Array
 import org.khronos.webgl.Uint8Array
+import org.w3c.dom.EventSource
 import org.w3c.dom.WebSocket
 import org.w3c.fetch.RequestInit
 import org.w3c.fetch.Response
@@ -132,6 +133,21 @@ class FetchClient(
         val host = window.location.host
         val socket = WebSocket("$protocol//$host$path")
         return socket
+    }
+
+    fun connectSSE(
+        endpoint: Endpoint<*, *>,
+        vararg params: Pair<String, String>
+    ) = connectSSE(endpoint.path, *params)
+
+    fun connectSSE(
+        path: String,
+        vararg params: Pair<String, String>,
+    ): EventSource {
+        val fullPath = params.takeIf { it.isNotEmpty() }?.let {
+            "$path?" + it.joinToString("&") { (k, v) -> "$k=$v" }
+        } ?: path
+        return EventSource(fullPath)
     }
 
     fun <E: Endpoint<*, *>> resolvePath(

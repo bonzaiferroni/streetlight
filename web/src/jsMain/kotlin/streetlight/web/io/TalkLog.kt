@@ -21,7 +21,7 @@ class TalkLog(
     private val spaceId: StringId,
     private val spaceType: SpaceType,
 ): ViewModel {
-    private val client: SocketClient<TalkMessage, TalkRequest> = socketRequestClientOf(scope) {
+    private val client: SSEClient<TalkMessage> = sseClientOf(scope) {
         api.connectTalkLog(spaceId, spaceType)
     }
 
