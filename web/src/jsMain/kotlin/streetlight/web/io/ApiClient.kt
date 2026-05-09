@@ -39,7 +39,7 @@ class ApiClient(private val client: FetchClient) {
     suspend fun parseLocation(request: ParseRequest) = client.postApi(Api.Locations.ParseLocation, request)
     suspend fun readLocationsInBounds(bounds: GeoBounds) = client.post(Api.Locations.QueryBounds, bounds)
     suspend fun searchLocations(query: String) = client.get(Api.Locations.Search) {
-        param(it.query, query)
+        writeParam(it.query, query)
     }
     suspend fun createOrEditLocation(location: LocationEdit) = client.post(Api.Locations.CreateOrEdit, location)
     suspend fun queryMap(request: MapQuery) = client.get(Api.Events.QueryMap, request.toQuery())
@@ -56,7 +56,7 @@ class ApiClient(private val client: FetchClient) {
     suspend fun editLight(edit: EditLightRequest) = client.postApi(Api.Stars.EditLight, edit)
 
     suspend fun readStoryUrl(url: String) = client.get(Api.Stories.ReadUrl) {
-        param(it.url, url)
+        writeParam(it.url, url)
     }
 
     // websockets
@@ -96,7 +96,7 @@ class ApiClient(private val client: FetchClient) {
     suspend fun removePost(postId: PostId) = client.postApi(Api.Galaxies.RemovePost, postId)
 
     suspend fun readStarByUsername(username: String) = client.get(Api.Stars.ReadByUsername) {
-        param(it.username, username)
+        writeParam(it.username, username)
     }
 
     // docs
@@ -104,6 +104,10 @@ class ApiClient(private val client: FetchClient) {
     suspend fun readSiteDocTable() = client.get(Api.SiteDocTable)
 
     // talk
+    suspend fun readHistory(spaceId: StringId, spaceType: SpaceType) = client.getApi(Api.Talk.ReadHistory) {
+        writeParam(it.spaceId, spaceId)
+        writeParam(it.spaceType, spaceType)
+    }
     suspend fun createComment(comment: NewComment) = client.postApi(Api.Talk.CreateComment, comment)
     suspend fun updateComment(comment: UpdatedComment) = client.postApi(Api.Talk.UpdateComment, comment)
 }

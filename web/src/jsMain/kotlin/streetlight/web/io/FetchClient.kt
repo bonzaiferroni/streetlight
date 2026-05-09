@@ -84,9 +84,13 @@ class FetchClient(
         body: Sent,
     ): Returned? = authRequest("POST", endpoint.path, Json.encodeToString(body)) { it.tryDecodeText() }
 
-    suspend inline fun <reified Returned> getApi(
-        endpoint: GetEndpoint<Returned>,
-    ): ApiResponse<Returned>? = authRequest("GET", endpoint.path) { it.tryDecodeApiResponse() }
+    suspend inline fun <reified Returned, Endpoint: GetEndpoint<Returned>> getApi(
+        endpoint: Endpoint,
+        noinline block: (PathBuilder.(Endpoint) -> Unit)? = null,
+    ): ApiResponse<Returned>? = authRequest(
+        method = "GET",
+        path = resolvePath(endpoint, block)
+    ) { it.tryDecodeApiResponse() }
 
     suspend inline fun <Id, reified Returned> getApi(
         endpoint: GetByIdEndpoint<Id, Returned>,

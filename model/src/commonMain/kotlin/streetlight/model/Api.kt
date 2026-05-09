@@ -144,6 +144,10 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
 
     object Talk: ApiNode(this, "talk") {
         object ReadGalaxy: GetByIdEndpoint<GalaxyId, List<Comment>>(this, "galaxy")
+        object ReadHistory: GetEndpoint<List<Comment>>(this, "history") {
+            val spaceId = addStringParam("space-id")
+            val spaceType = addEnumParam<SpaceType>("space-type")
+        }
         object Connect: ApiNode(this, "connect")
         object CreateComment: PostEndpoint<NewComment, CommentId>(this, "create")
         object UpdateComment: PostEndpoint<UpdatedComment, Boolean>(this, "update")

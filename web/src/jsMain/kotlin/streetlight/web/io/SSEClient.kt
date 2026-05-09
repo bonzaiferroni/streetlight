@@ -20,7 +20,6 @@ class SSEClient<Message>(
     private var source: EventSource? = null
 
     fun connect() {
-        console.log("ey client connect")
         scope.launch {
             val source = provideSource().also { source = it }
             source.onmessage = { event ->

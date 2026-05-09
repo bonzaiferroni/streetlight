@@ -10,12 +10,12 @@ import kotlinx.coroutines.launch
 import kotlinx.html.DIV
 import org.w3c.dom.HTMLElement
 import streetlight.model.data.Comment
-import streetlight.model.data.TalkHistory
 import streetlight.model.data.CommentCreated
 import streetlight.model.data.CommentUpdated
 import streetlight.model.data.PostOrder
 import streetlight.web.TalkRoute
 import streetlight.web.io.TalkLog
+import streetlight.web.io.handleResponse
 import streetlight.web.model.Streetlight
 
 fun ViewContext<TalkLog>.viewTalkLog() {
@@ -38,16 +38,15 @@ fun ViewContext<TalkLog>.viewTalkLog() {
     }
 
     renderScope.launch {
+
         launch {
+            val comments = model.readHistory().handleResponse(toaster::toast) ?: return@launch
+            buildTree(treeRoot!!, comments)
+
             model.messageFlow.collect { message ->
                 when (message) {
-                    is TalkHistory -> {
-                        console.log(message.comments.size)
-                        buildTree(treeRoot!!, message.comments)
-                    }
-
                     is CommentCreated -> {
-                        growTree(treeRoot!!, message.comment)
+                        growTree(treeRoot, message.comment)
                     }
 
                     is CommentUpdated -> {

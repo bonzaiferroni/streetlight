@@ -52,6 +52,8 @@ class TalkLog(
         client.connect()
     }
 
+    suspend fun readHistory() = api.readHistory(spaceId, spaceType)
+
     fun setSortBy(value: PostOrder) {
         commentViews.clear() // is this a memory leak? we need to cancel a supervisor job
         state.set { it.copy(sortBy = value) }
@@ -89,9 +91,6 @@ class TalkLog(
             }
             is CommentUpdated -> {
                 // hmmm
-            }
-            is TalkHistory -> {
-                comments.addAll(message.comments)
             }
         }
 

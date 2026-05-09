@@ -6,11 +6,6 @@ import kotlinx.serialization.Serializable
 sealed interface TalkMessage
 
 @Serializable
-data class TalkHistory(
-    val comments: List<Comment>
-): TalkMessage
-
-@Serializable
 data class CommentCreated(
     val comment: Comment
 ): TalkMessage

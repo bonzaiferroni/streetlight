@@ -3,6 +3,7 @@ package kampfire.api
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.parameter
 import io.ktor.http.HttpMethod
+import kotlin.enums.enumEntries
 import kotlin.time.Instant
 
 abstract class Endpoint<SentType, ReturnType>(
@@ -32,6 +33,12 @@ abstract class Endpoint<SentType, ReturnType>(
         key = key,
         toValue = { it.toInt() },
         toString = { it.toString() }
+    )
+
+    inline fun <reified T : Enum<T>> addEnumParam(key: String) = EndpointParam(
+        key = key,
+        toValue = { enumEntries<T>()[it.toInt()] },
+        toString = { (it as Enum<T>).ordinal.toString() }
     )
 
     fun addInstantParam(key: String) = EndpointParam(
@@ -131,7 +138,7 @@ class PathBuilder(
 ) {
     private var params: MutableList<Pair<String, String>> = mutableListOf()
 
-    fun <T> param(param: EndpointParam<T>, value: T) {
+    fun <T> writeParam(param: EndpointParam<T>, value: T) {
         params.add(param.write(value))
     }
 
