@@ -15,7 +15,7 @@ import streetlight.web.model.Streetlight
 fun RenderContext.appNavigation(app: Streetlight) {
     flowBlock(
         flow = app.portal.screenFlow,
-        modifiers = modify(Magic, Blur, SlideUp),
+        modifiers = modify(Magic, Blur),
         renderCacheCount = 0, // allows unlimited caching
         onTransition = { window.scrollTo(0.0, app.portal.stateNow.initialScrollY) },
     ) { screen ->
