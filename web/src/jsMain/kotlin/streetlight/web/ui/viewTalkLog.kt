@@ -116,7 +116,7 @@ fun ViewContext<TalkLog>.growTree(treeRoot: HTMLElement, comment: Comment) {
         else -> {
             val parentView = model.commentViews[parentId] ?: return
             with (parentView) {
-                stageReply(view, isUserComment)
+                stageReply(view, view.isUserComment)
             }
         }
     }
