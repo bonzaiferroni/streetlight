@@ -10,7 +10,7 @@ import kampfire.model.BasicUserInfo
 object UserApi : ApiNode(ApiNode(ApiNode(null, "api"),
     "v1"
 ), "user") {
-    object Login : PostEndpoint<LoginRequest, Auth>(this, "login")
+    object Login : PostEndpoint<LoginRequest, Unit>(this, "login")
     object Create : PostEndpoint<SignUpRequest, SignUpResult>(this, "create")
     object Private : GetEndpoint<PrivateInfo>(this, "private")
     // object ReadInfo : GetEndpoint<BasicUserInfo>(this)

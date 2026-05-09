@@ -33,8 +33,10 @@ import org.khronos.webgl.Int8Array
 import org.khronos.webgl.Uint8Array
 import org.w3c.dom.EventSource
 import org.w3c.dom.WebSocket
+import org.w3c.fetch.RequestCredentials
 import org.w3c.fetch.RequestInit
 import org.w3c.fetch.Response
+import org.w3c.fetch.SAME_ORIGIN
 import org.w3c.files.Blob
 import streetlight.model.data.ProjectId
 import streetlight.model.data.toProjectId
@@ -50,7 +52,7 @@ class FetchClient(
 ) {
     val authClient = AuthClient(cred)
 
-    suspend inline fun <reified Returned, Endpoint: GetEndpoint<Returned>> get(
+    suspend inline fun <reified Returned, Endpoint : GetEndpoint<Returned>> get(
         endpoint: Endpoint,
         acceptEncoding: EncodingType? = null,
         noinline block: (PathBuilder.(Endpoint) -> Unit)? = null
@@ -66,7 +68,7 @@ class FetchClient(
         id: Id,
     ): Returned? = authRequest("GET", "${endpoint.path}/$id") { it.tryDecodeText() }
 
-    suspend inline fun <Id: TableId<*>, reified Returned> get(
+    suspend inline fun <Id : TableId<*>, reified Returned> get(
         endpoint: GetByTableIdEndpoint<Id, Returned>,
         id: Id
     ): Returned? = authRequest("GET", "${endpoint.path}/${id.value}") { it.tryDecodeText() }
@@ -84,7 +86,7 @@ class FetchClient(
         body: Sent,
     ): Returned? = authRequest("POST", endpoint.path, Json.encodeToString(body)) { it.tryDecodeText() }
 
-    suspend inline fun <reified Returned, Endpoint: GetEndpoint<Returned>> getApi(
+    suspend inline fun <reified Returned, Endpoint : GetEndpoint<Returned>> getApi(
         endpoint: Endpoint,
         noinline block: (PathBuilder.(Endpoint) -> Unit)? = null,
     ): ApiResponse<Returned>? = authRequest(
@@ -100,12 +102,14 @@ class FetchClient(
     suspend inline fun <reified Sent, reified Returned> postApi(
         endpoint: PostEndpoint<Sent, Returned>,
         body: Sent,
-    ): ApiResponse<Returned>? = authRequest("POST", endpoint.path, Json.encodeToString(body)) { it.tryDecodeApiResponse() }
+    ): ApiResponse<Returned>? =
+        authRequest("POST", endpoint.path, Json.encodeToString(body)) { it.tryDecodeApiResponse() }
 
     suspend inline fun <reified Sent, reified Returned> postAndReadStatus(
         endpoint: PostEndpoint<Sent, Returned>,
         body: Sent,
-    ): FetchResponse<Returned>? = authRequest("POST", endpoint.path, Json.encodeToString(body)) { it.tryDecodeWithStatus() }
+    ): FetchResponse<Returned>? =
+        authRequest("POST", endpoint.path, Json.encodeToString(body)) { it.tryDecodeWithStatus() }
 
     suspend inline fun <reified Returned> getProtobuf(
         path: String,
@@ -154,7 +158,7 @@ class FetchClient(
         return EventSource(fullPath)
     }
 
-    fun <E: Endpoint<*, *>> resolvePath(
+    fun <E : Endpoint<*, *>> resolvePath(
         endpoint: E,
         block: (PathBuilder.(E) -> Unit)? = null
     ): String {
@@ -172,13 +176,10 @@ class FetchClient(
         acceptEncoding: EncodingType? = null,
         handleResponse: suspend (Response) -> T
     ): T? {
-        val fetchWithJwt: suspend (String?) -> Response = { jwt ->
+        val fetchWithJwt: suspend () -> Response = {
             val headers = json(
                 "Content-Type" to contentType,
             )
-            jwt?.let {
-                headers["Authorization"] = "Bearer $jwt"
-            }
             acceptEncoding?.let {
                 headers["Accept"] = it.headerValue
             }
@@ -187,18 +188,18 @@ class FetchClient(
                 headers = headers,
                 body = body,
                 // cache = RequestCache.DEFAULT,
-            )
+                credentials = RequestCredentials.SAME_ORIGIN,
+
+                )
             window.fetch(path, request).await()
         }
 
-        var auth = cred.readAuth()
-        var response = fetchWithJwt(auth?.jwt)
+        var response = fetchWithJwt()
 
         // authenticate on 401
         if (response.status == 401.toShort()) {
-            auth = authClient.authenticate() ?: return null
-
-            response = fetchWithJwt(auth.jwt)
+            if (!authClient.authenticate()) return null
+            response = fetchWithJwt()
         }
 
         return handleResponse(response)
@@ -279,6 +280,7 @@ suspend inline fun <reified T> Response.tryDecodeApiResponse(): ApiResponse<T>? 
                 null
             }
         }
+
         409 -> Problem("There was a conflict.")
         500 -> Problem("The server ran into a problem.")
         else -> Problem("Unknown error: $status")
@@ -297,11 +299,12 @@ data class FetchResponse<T>(
     val status: Int,
     val payload: T?
 ) {
-    val reason get() = when (status) {
-        200 -> "Success"
-        409 -> "Conflict"
-        else -> "Unknown"
-    }
+    val reason
+        get() = when (status) {
+            200 -> "Success"
+            409 -> "Conflict"
+            else -> "Unknown"
+        }
 }
 
 enum class EncodingType(val headerValue: String) {
