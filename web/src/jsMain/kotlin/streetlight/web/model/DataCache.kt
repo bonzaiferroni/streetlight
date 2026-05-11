@@ -20,8 +20,8 @@ class DataCache(
 ) {
     init {
         scope.launch {
-            gate.starFlow.collect { user ->
-                if (user == null) {
+            gate.signedOutAtFlow.collect { signedOutAt ->
+                if (signedOutAt != null) {
                     reset()
                 }
             }

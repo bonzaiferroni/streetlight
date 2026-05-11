@@ -6,6 +6,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import streetlight.model.data.Star
 import streetlight.web.io.ApiClient
+import kotlin.time.Clock
+import kotlin.time.Instant
 
 class StarGate(
     private val scope: CoroutineScope,
@@ -17,6 +19,7 @@ class StarGate(
 
     val starFlow = state.flow.mapDistinct { it.star }
     val signedInFlow = state.flow.mapDistinct { it.isSignedIn }
+    val signedOutAtFlow = state.flow.mapDistinct { it.signedOutAt }
     val messageFlow = state.flow.mapDistinct { it.message }
 
     fun signIn() {
@@ -44,7 +47,7 @@ class StarGate(
         scope.launch {
             api.logout()
             // userCache.reset()
-            state.set { it.copy(star = null) }
+            state.set { it.copy(star = null, signedOutAt = Clock.System.now()) }
         }
     }
 
@@ -56,6 +59,7 @@ class StarGate(
 data class StarGateState(
     val star: Star? = null,
     val message: String? = null,
+    val signedOutAt: Instant? = null,
 ) {
     val isSignedIn get() = star != null
 }
