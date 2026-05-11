@@ -9,6 +9,7 @@ import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import streetlight.model.data.StarPost
 import streetlight.model.data.EventPost
@@ -70,21 +71,14 @@ fun ViewContext<Streetlight>.viewEarthMapRoute() {
     val app = model
     var isVisible = false
     val element = document.getElementById(AppBodyKey.FullScreenId)
-    var job: Job? = null
-
-    fun createScope(): CoroutineScope {
-        job = SupervisorJob()
-        return CoroutineScope(renderScope.coroutineContext + job)
-    }
 
     renderScope.launch {
         app.portal.routeFlow.collect { route ->
             when (route) {
                 is EarthMapRoute -> {
                     if (!isVisible) {
-                        val scope = createScope()
-                        val model = EarthMap(app, scope)
-                        wireBlock(element, scope = scope) {
+                        element.replaceRender(renderScope) {
+                            val model = EarthMap(app, renderScope)
                             viewContextOf(model) {
                                 viewEarthMap()
                             }
@@ -95,9 +89,10 @@ fun ViewContext<Streetlight>.viewEarthMapRoute() {
                 }
                 else -> {
                     if (isVisible) {
-                        job?.cancel()
                         element.unmodify(Reveal)
                         isVisible = false
+                        delay(KoalaTheme.MAGIC_INTERVAL.toLong())
+                        element.clearRender()
                     }
                 }
             }

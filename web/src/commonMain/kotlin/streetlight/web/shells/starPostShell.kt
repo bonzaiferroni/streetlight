@@ -11,6 +11,7 @@ import koala.css.BorderRadius2
 import koala.css.BorderRadius50P
 import koala.css.Class
 import koala.css.Gap0
+import koala.css.Gap2
 import koala.css.Height5
 import koala.css.JustifyContentCenter
 import koala.css.JustifyContentEnd
@@ -18,11 +19,13 @@ import koala.css.LargeText
 import koala.css.LineHeight1
 import koala.css.LineHeight115
 import koala.css.MarginTop4
+import koala.css.MaxHeight64
 import koala.css.MaxWidthTextBody
 import koala.css.MoonShadow
 import koala.css.OpacityMost
 import koala.css.OverflowClip
 import koala.css.Padding0
+import koala.css.Padding2
 import koala.css.Padding4
 import koala.css.TextAlignCenter
 import koala.css.Zen
@@ -61,18 +64,18 @@ fun FlowContent.starPostShell(post: StarPost) {
             }
         }
 
-        card(modify(OverflowClip, Gap0, ZenBg, Padding0)) {
-            post.images.largest?.let {
-                featureImage(it, modify(Aspect3By2))
-            }
+        post.images.largest?.let {
+            image(it, modify(AlignSelfCenter, MaxHeight64, BorderRadius2, MoonShadow))
+        }
 
+        card(modify(OverflowClip, Gap0, ZenBg, Padding0)) {
             cellRow(listOf(
                 { starCell(post.username, post.userThumb) },
                 { postedAtCell(post.createdAt) }
             ))
 
             post.text?.let {
-                column(modify(Padding4, AlignSelfCenter, MaxWidthTextBody, LargeText)) {
+                column(modify(Padding2, AlignSelfCenter, MaxWidthTextBody, LargeText)) {
                     markdown(it)
                 }
             }

@@ -32,6 +32,11 @@ fun HTMLElement.replaceRender(
     }
 }
 
+fun HTMLElement.clearRender() {
+    clear()
+    clearScope()
+}
+
 fun HTMLElement.appendRender(
     scope: CoroutineScope,
     block: RenderContext.() -> Unit

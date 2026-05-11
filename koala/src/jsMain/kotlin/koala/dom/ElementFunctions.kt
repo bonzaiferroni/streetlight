@@ -95,6 +95,12 @@ private var Element.scope: CoroutineScope? get() = asDynamic().scope
         element.scope = value
     }
 
+fun Element.clearScope() {
+    this.job?.cancel()
+    this.job = null
+    this.scope = null
+}
+
 fun Element.getElementScope(parentScope: CoroutineScope, cancelExistingScope: Boolean): CoroutineScope {
     if (cancelExistingScope) {
         this.job?.cancel()
