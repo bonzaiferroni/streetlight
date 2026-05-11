@@ -16,10 +16,6 @@ import kotlin.js.json
 class AuthClient(
     private val cred: StarCred
 ) {
-    private val authMutex = Mutex()
-    private var inFlightAuth: Deferred<Boolean?>? = null
-
-    // td: should be clearer
     suspend fun authenticate(): Boolean  {
         val loginRequest = cred.getLoginRequest()
         if (loginRequest == null) {
@@ -44,6 +40,8 @@ class AuthClient(
             console.log("Login failed")
             return false
         }
+
+        cred.followUpAuth(loginResponse.ok)
 
         return true
     }

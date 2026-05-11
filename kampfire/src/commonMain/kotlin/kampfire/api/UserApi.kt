@@ -11,6 +11,7 @@ object UserApi : ApiNode(ApiNode(ApiNode(null, "api"),
     "v1"
 ), "user") {
     object Login : PostEndpoint<LoginRequest, Unit>(this, "login")
+    object Refresh: PostEndpoint<Unit, Unit>(this, "refresh")
     object Create : PostEndpoint<SignUpRequest, SignUpResult>(this, "create")
     object Private : GetEndpoint<PrivateInfo>(this, "private")
     // object ReadInfo : GetEndpoint<BasicUserInfo>(this)
