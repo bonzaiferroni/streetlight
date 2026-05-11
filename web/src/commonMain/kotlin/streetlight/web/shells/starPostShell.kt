@@ -7,6 +7,7 @@ import koala.css.AntiShadow
 import koala.css.Aspect1
 import koala.css.Aspect3By2
 import koala.css.Bold
+import koala.css.BorderRadius1
 import koala.css.BorderRadius2
 import koala.css.BorderRadius50P
 import koala.css.Class
@@ -27,6 +28,7 @@ import koala.css.OverflowClip
 import koala.css.Padding0
 import koala.css.Padding2
 import koala.css.Padding4
+import koala.css.SideBorder
 import koala.css.TextAlignCenter
 import koala.css.Zen
 import koala.css.ZenBg
@@ -65,7 +67,9 @@ fun FlowContent.starPostShell(post: StarPost) {
         }
 
         post.images.largest?.let {
-            image(it, modify(AlignSelfCenter, MaxHeight64, BorderRadius2, MoonShadow))
+            column(modify(SideBorder, BorderRadius1)) {
+                image(it, modify(AlignSelfCenter, MaxHeight64, BorderRadius2, MoonShadow))
+            }
         }
 
         card(modify(OverflowClip, Gap0, ZenBg, Padding0)) {

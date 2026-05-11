@@ -13,6 +13,8 @@ val DisplayUtilityCss
         // Border Radius
         BorderRadius0, BorderRadius1, BorderRadius2, BorderRadius4, BorderRadius3, BorderRadius50P, BorderRadiusBottom1,
         BorderDashed2Px,
+        // Border
+        SideBorder,
         // Color
         NightInk, DayInk, PrimaryFg, AccentFg, ColorSchemeFg, ColorSchemeBg,
         // Overflow
@@ -68,8 +70,11 @@ val BorderRadius2 = utilityOf("border-radius-2", "border-radius: var(--unit-spac
 val BorderRadius3 = utilityOf("border-radius-3", "border-radius: var(--unit-spacing-3)")
 val BorderRadius4 = utilityOf("border-radius-4", "border-radius: var(--unit-spacing-4)")
 val BorderRadius50P = utilityOf("border-radius-50p", "border-radius: 50%")
-val BorderDashed2Px = utilityOf("border: 2px dashed currentColor;")
+val BorderDashed2Px = utilityOf("border-dashed", "border: 2px dashed currentColor")
 val BorderRadiusBottom1 = utilityOf("border-radius-bottom-1", "border-radius: 0 0 var(--unit-spacing) var(--unit-spacing)")
+
+// Border
+val SideBorder = utilityOf("side-border", "border-left: var(--ghost-border)", "border-right: var(--ghost-border)")
 
 // Color
 val Accent = Class("accent")

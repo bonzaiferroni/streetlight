@@ -79,6 +79,7 @@ val StylesCss get() = """
     --breakpoint-vlg: 1000px;
 
     --strong-blur: blur(10px);
+    --ghost-border: 2px solid rgba(var(--ink), .1);
 }
 
 :root$DayTheme {
