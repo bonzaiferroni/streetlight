@@ -54,10 +54,6 @@ class StarCred {
         }
         state.set { it.copy(passwordText = "") }
     }
-
-    fun clearToken() {
-
-    }
 }
 
 data class UserCredState(

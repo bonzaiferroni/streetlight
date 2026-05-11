@@ -111,6 +111,16 @@ class FetchClient(
     ): FetchResponse<Returned>? =
         authRequest("POST", endpoint.path, Json.encodeToString(body)) { it.tryDecodeWithStatus() }
 
+    suspend fun request(endpoint: Endpoint<*, *>): Response {
+        return window.fetch(
+            endpoint.path,
+            RequestInit(
+                method = endpoint.method?.value ?: error("method not found"),
+                credentials = RequestCredentials.SAME_ORIGIN,
+            )
+        ).await()
+    }
+
     suspend inline fun <reified Returned> getProtobuf(
         path: String,
         feedType: ProtobufType
@@ -187,10 +197,8 @@ class FetchClient(
                 method = method,
                 headers = headers,
                 body = body,
-                // cache = RequestCache.DEFAULT,
                 credentials = RequestCredentials.SAME_ORIGIN,
-
-                )
+            )
             window.fetch(path, request).await()
         }
 

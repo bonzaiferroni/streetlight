@@ -41,9 +41,11 @@ class StarGate(
     fun getUsername() = stateNow.star?.username
 
     fun signOut() {
-//        userCache.reset()
-        cred.clearToken()
-        state.set { it.copy(star = null) }
+        scope.launch {
+            api.logout()
+            // userCache.reset()
+            state.set { it.copy(star = null) }
+        }
     }
 
     fun setUpdate(star: Star) {

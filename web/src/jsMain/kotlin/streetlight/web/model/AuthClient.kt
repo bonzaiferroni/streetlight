@@ -10,7 +10,9 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.serialization.json.Json
+import org.w3c.fetch.RequestCredentials
 import org.w3c.fetch.RequestInit
+import org.w3c.fetch.SAME_ORIGIN
 import kotlin.js.json
 
 class AuthClient(
@@ -25,16 +27,26 @@ class AuthClient(
 
         console.log("authorizing")
 
-        val loginResponse = window.fetch(
-            UserApi.Login.path,
-            RequestInit(
-                method = "POST",
-                headers = json(
-                    "Content-Type" to "application/json"
-                ),
-                body = Json.encodeToString(loginRequest)
-            )
-        ).await()
+        val loginResponse = if (loginRequest.password != null) {
+            window.fetch(
+                UserApi.Login.path,
+                RequestInit(
+                    method = "POST",
+                    headers = json(
+                        "Content-Type" to "application/json"
+                    ),
+                    body = Json.encodeToString(loginRequest)
+                )
+            ).await()
+        } else {
+            window.fetch(
+                UserApi.Refresh.path,
+                RequestInit(
+                    method = "POST",
+                    credentials = RequestCredentials.SAME_ORIGIN,
+                )
+            ).await()
+        }
 
         if (!loginResponse.ok) {
             console.log("Login failed")
