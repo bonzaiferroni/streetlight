@@ -6,6 +6,8 @@ import koala.dom.*
 import koala.html.btn
 import koala.html.heading4
 import koala.html.centeredHeading
+import koala.html.filigree
+import koala.html.heading3
 import koala.model.mapDistinct
 import kotlinx.coroutines.flow.filterNotNull
 import streetlight.model.data.Event
@@ -142,15 +144,16 @@ fun ViewContext<EventScout>.findLocationPanel() {
 
     card {
         messageBox(model.messageFlow)
-        row(modify(JustifyContentEnd)) {
+        row(modify(JustifyContentEnd, AlignItemsCenter)) {
             textBlock("Move the map target to the location.", modify(Dim))
             button("Here", onClick = model::here)
         }
 
-        centeredHeading("or")
+        filigree {
+            heading3("Search")
+        }
 
-        heading4("Search")
-        textBlock("We can search for the location's name, address, city, etc.", modify(Dim))
+        textBlock("We can search for the location's name, address, city, etc.", modify(Dim, TextAlignCenter))
 
         row(modify(AlignItemsStart)) {
             column(modify(Flex1, AlignItemsEnd)) {

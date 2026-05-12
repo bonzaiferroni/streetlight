@@ -36,7 +36,7 @@ fun RenderContext.viewLocationEditor(
     val nameFlow = model.editFlow.mapDistinct { it.name }
     val linkFlow = model.editFlow.mapDistinct { it.website }
     val eventsLinkFlow = model.editFlow.mapDistinct { it.eventsUrl }
-    val imageFlow = model.editFlow.mapDistinct { it.imageRef }
+    val imageFlow = model.editFlow.mapDistinct { it.imageRef?.takeIf { url -> url.value.isNotBlank() } }
 
     onEdit?.let {
         renderScope.launch {

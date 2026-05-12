@@ -191,7 +191,6 @@ class EventScout(
         val edit = state.now.eventEdit.takeIf { it.isValid } ?: return
         msg.set("Posting ${edit.title}...")
         scope.launch {
-            console.log(edit.links?.size)
             val event = api.createOrEditEvent(edit)?.payload
             if (event == null) {
                 msg.set("Something went wrong")

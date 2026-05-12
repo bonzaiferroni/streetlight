@@ -198,7 +198,7 @@ fun LocationEdit.mergeLeft(edit: LocationEdit?) = edit?.let {
         eventsUrl = eventsUrl ?: edit.eventsUrl,
         aboutUrl = aboutUrl ?: edit.aboutUrl,
         menuUrl = menuUrl ?: edit.menuUrl,
-        imageRef = imageRef ?: edit.imageRef,
+        imageRef = imageRef ?: edit.imageRef?.takeIf { it.value.isNotEmpty() },
     )
 } ?: this
 
