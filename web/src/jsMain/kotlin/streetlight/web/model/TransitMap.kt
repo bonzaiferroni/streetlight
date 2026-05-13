@@ -23,11 +23,12 @@ import streetlight.model.data.TransitRouteId
 import streetlight.model.data.TransitVehicle
 import streetlight.model.data.VehicleType
 import streetlight.web.io.ProtobufType
+import streetlight.web.io.TransitClient
 import kotlin.time.Duration.Companion.seconds
 
 class TransitMap(
     private val scope: CoroutineScope,
-    private val client: ClientFacade,
+    private val client: TransitClient,
     private val geoMap: GeoMap,
     private val config: SiteConfig,
 ) {
@@ -78,7 +79,7 @@ class TransitMap(
 
             while (true) {
                 if (geoMap.stateNow.isViewed) {
-                    val transitState = client.transit.readVehiclePositions(timestamp)
+                    val transitState = client.readVehiclePositions(timestamp)
                     if (transitState != null) {
                         timestamp = transitState.timestamp
                         showTransitState(transitState)
@@ -102,7 +103,7 @@ class TransitMap(
         }
     }
 
-    private suspend fun readTransit() = transit ?: client.transit.readAreaTransit().also { transit = it }
+    private suspend fun readTransit() = transit ?: client.readAreaTransit().also { transit = it }
 
     private fun createRoutes(transit: AreaTransit): List<RouteEntity> {
         val routes = transit.routes.mapNotNull { route ->
@@ -135,7 +136,7 @@ class TransitMap(
 
     @Deprecated("Use showTransitState")
     private suspend fun fetchVehicles(feedType: ProtobufType, transit: AreaTransit) {
-        val feed = client.transit.readVehiclePositions(feedType) ?: return
+        val feed = client.readVehiclePositions(feedType) ?: return
         val timestamp = feed.header.timestamp.toString().toLong()
         val delta = (timestamp - stateNow.timestamp).toInt()
         console.log("fetching vehicles -- timestamp delta: $delta")

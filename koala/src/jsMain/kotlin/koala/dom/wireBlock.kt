@@ -9,13 +9,12 @@ fun RenderContext.wireBlock(
     elementId: Id,
     ancestor: HTMLElement? = null,
     wireOnView: Boolean = true,
-    scope: CoroutineScope = renderScope,
     block: RenderContext.() -> Unit
 ): HTMLElement {
     val element = (ancestor ?: document.body)?.querySelector(elementId) ?: document.getElementOrNullById(elementId)
         ?: error("couldn't find ${elementId.identifier}")
 
-    wireBlock(element, wireOnView, scope, block)
+    wireBlock(element, wireOnView, block)
 
     return element
 }
@@ -23,11 +22,10 @@ fun RenderContext.wireBlock(
 fun RenderContext.wireBlock(
     element: HTMLElement,
     wireOnView: Boolean = true,
-    scope: CoroutineScope = renderScope,
     block: RenderContext.() -> Unit
 ) {
     fun wireElement() {
-        element.replaceRender(scope, block)
+        replaceRender(element, block)
     }
 
     if (wireOnView) {

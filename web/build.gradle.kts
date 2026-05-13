@@ -39,6 +39,9 @@ kotlin {
             implementation(project(":model"))
             implementation(project(":koala"))
             implementation(project(":kabinet"))
+
+            implementation(project.dependencies.platform(libs.koin.bom))
+            implementation(libs.koin.core)
         }
 
         jsMain.dependencies {

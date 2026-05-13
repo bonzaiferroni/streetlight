@@ -1,5 +1,6 @@
 package streetlight.web.ui
 
+import koala.dom.RenderContext
 import koala.dom.ViewContext
 import koala.dom.column
 import koala.dom.routeBlock
@@ -8,14 +9,14 @@ import koala.dom.viewContextOf
 import streetlight.web.StarRoute
 import streetlight.web.model.Streetlight
 
-fun ViewContext<Streetlight>.viewStarProfile(username: String) {
+fun RenderContext.viewStarProfile(username: String) {
     column {
         textBlock("Profile of: $username")
     }
 }
 
-fun ViewContext<Streetlight>.viewStarProfileRoute() {
-    routeBlock<StarRoute, String>(model.portal, { route ->
+fun RenderContext.viewStarProfileRoute() {
+    routeBlock<StarRoute, String>(portal, { route ->
 //        val star = model.client.api.readStarByUsername(route.pathId) ?: return@routeBlock null
 //        val listing = model.client.api.readStarPosts(route.pathId) ?: return@routeBlock null
 //        GalaxyProfileContent(
@@ -24,8 +25,6 @@ fun ViewContext<Streetlight>.viewStarProfileRoute() {
 //        )
         route.slug
     }) { content ->
-        viewContextOf(model) {
-            viewStarProfile(content)
-        }
+        viewStarProfile(content)
     }
 }

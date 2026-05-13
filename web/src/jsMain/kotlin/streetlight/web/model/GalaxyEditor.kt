@@ -3,6 +3,8 @@ package streetlight.web.model
 import kampfire.model.Url
 import koala.dom.UIMessage
 import koala.dom.set
+import koala.model.GeoMap
+import koala.model.Portal
 import koala.model.mapDistinct
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
@@ -13,13 +15,16 @@ import streetlight.model.data.PostPermission
 import streetlight.model.data.ReviewMode
 import streetlight.model.data.slugOf
 import streetlight.web.GalaxyRoute
+import streetlight.web.io.ApiClient
 import streetlight.web.ui.ViewModel
 
 class GalaxyEditor(
     galaxy: GalaxyEdit?,
-    override val app: Streetlight,
-    val scope: CoroutineScope
-): ViewModel {
+    private val scope: CoroutineScope,
+    private val api: ApiClient,
+    private val geo: GeoMap,
+    private val portal: Portal,
+) {
     private val state = storeOf(GalaxyFoundryState())
     val stateFlow = state.flow
     val stateNow get() = state.now
@@ -59,7 +64,7 @@ class GalaxyEditor(
             val imageUrl = stateNow.blobUrl?.let {
                 api.uploadImage(it) ?: error("failed to upload image")
             }
-            val galaxy = app.client.api.foundGalaxy(galaxy.copy(imageRef = imageUrl))
+            val galaxy = api.foundGalaxy(galaxy.copy(imageRef = imageUrl))
             if (galaxy != null) {
                 portal.go(GalaxyRoute(galaxy.slug))
                 reset()

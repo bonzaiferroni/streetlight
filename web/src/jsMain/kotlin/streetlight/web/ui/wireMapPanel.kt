@@ -11,18 +11,23 @@ import koala.html.GeoMapKey
 import koala.html.Id
 import koala.html.heading2
 import koala.html.textLabel
+import koala.model.Portal
 import kotlinx.coroutines.launch
 import kotlinx.html.js.div
 import streetlight.web.HomeRoute
+import streetlight.web.io.ApiClient
 import streetlight.web.io.getDataOrNull
+import streetlight.web.model.DataCache
+import streetlight.web.model.StreetMap
 import streetlight.web.model.Streetlight
 
-fun ViewContext<Streetlight>.wireStreetMap() {
-    val streetMap = model.streetMap
+fun RenderContext.wireStreetMap() {
+    val streetMap = app.get<StreetMap>()
+    val cache = app.get<DataCache>()
 
     renderScope.launch {
         portal.routeFlowOf<HomeRoute>().collect {
-            val galaxyIds = userCache.topGalaxies.getItems().map { it.galaxyId }
+            val galaxyIds = cache.topGalaxies.getItems().map { it.galaxyId }
             // td: gather initial posts from json in html
             val posts = api.readPosts(galaxyIds).getDataOrNull() ?: return@collect
             streetMap.setPosts(posts)
@@ -32,7 +37,7 @@ fun ViewContext<Streetlight>.wireStreetMap() {
     // wireMapPanel()
 }
 
-fun ViewContext<Streetlight>.wireMapPanel() {
+fun RenderContext.wireMapPanel() {
     wireBlock(GeoMapKey.Panel) {
         tabs(Id("map-panel-tabs")) {
             tab("Posts") {
@@ -42,7 +47,7 @@ fun ViewContext<Streetlight>.wireMapPanel() {
             }
             tab("Controls") {
                 column {
-                    viewMapControls(model)
+                    viewMapControls()
                 }
             }
         }

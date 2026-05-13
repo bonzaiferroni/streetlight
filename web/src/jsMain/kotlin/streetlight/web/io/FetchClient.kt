@@ -2,7 +2,6 @@
 
 package streetlight.web.io
 
-import kampfire.api.ApiNode
 import kampfire.api.Endpoint
 import kampfire.api.GetByIdEndpoint
 import kampfire.api.GetByTableIdEndpoint
@@ -11,20 +10,16 @@ import kampfire.api.PathBuilder
 import kampfire.api.PostEndpoint
 import kampfire.api.QueryEndpoint
 import kampfire.api.TableId
-import kampfire.api.UserApi
 import kampfire.model.ApiResponse
 import kampfire.model.ApiResponseSerializer
-import kampfire.model.Auth
 import kampfire.model.Problem
 import kampfire.model.Url
 import kampfire.model.toUrl
 import koala.external.FeedMessage
 import koala.utils.jsonConfig
-import koala.utils.prettyPrint
 import kotlinx.browser.window
 import kotlinx.coroutines.await
 import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.KSerializer
 import kotlinx.serialization.cbor.Cbor
 import kotlinx.serialization.decodeFromByteArray
 import kotlinx.serialization.json.Json
@@ -41,14 +36,13 @@ import org.w3c.files.Blob
 import streetlight.model.data.ProjectId
 import streetlight.model.data.toProjectId
 import streetlight.web.model.AuthClient
-import streetlight.web.model.StarCred
-import kotlin.js.Promise
+import streetlight.web.model.CredentialStore
 import kotlin.js.json
 import kotlin.let
 import kotlin.text.ifEmpty
 
 class FetchClient(
-    private val cred: StarCred
+    private val cred: CredentialStore
 ) {
     val authClient = AuthClient(cred)
 

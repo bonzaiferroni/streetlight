@@ -10,18 +10,15 @@ import org.w3c.dom.HTMLElement
 private val popoverMap = mutableMapOf<String, HTMLElement>()
 private val menus = mutableMapOf<String, DOMContext.(String) -> Unit>()
 
-fun <Context, Data> ViewContext<Context>.registerMenu(
+fun <Data> RenderContext.registerMenu(
     id: Id,
     dataOf: (String) -> Data,
-    block: ViewContext<Context>.(Data) -> Unit
+    block: RenderContext.(Data) -> Unit
 ) {
     menus[id.identifier] = {
         val data = dataOf(it)
-        val element = card(modify(BlurBackdrop, BorderRadius3))
-        element.appendRender(renderScope) {
-            viewContextOf(model) {
-                block(data)
-            }
+        card(modify(BlurBackdrop, BorderRadius3)) {
+            block(data)
         }
     }
 }
@@ -44,7 +41,3 @@ fun callMenu(anchor: String, menu: String, data: String) {
     popover.setProperty(Property.PositionAnchor.to(anchor))
     popover.showPopover()
 }
-
-private class Menu(
-    val render: () -> Unit
-)

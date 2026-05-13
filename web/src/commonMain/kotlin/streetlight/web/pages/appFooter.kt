@@ -13,8 +13,6 @@ import koala.html.textBlock
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import streetlight.model.data.ExtraLink
-import streetlight.web.AboutRoute
-import streetlight.web.PrivacyPolicyRoute
 import streetlight.web.doc.SiteDoc
 import streetlight.web.layouts.route
 

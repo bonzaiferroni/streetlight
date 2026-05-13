@@ -17,26 +17,26 @@ import streetlight.model.data.Star
 import streetlight.web.SiteConfigRoute
 import streetlight.web.StarDashRoute
 import streetlight.web.StarRoute
+import streetlight.web.model.CredentialStore
 import streetlight.web.model.Streetlight
+import streetlight.web.model.UserGate
 import streetlight.web.pages.HelmBarKey
 import streetlight.web.pages.StarHelmKey
 
-fun RenderContext.queryAndWireStarHelm(app: Streetlight) {
+fun RenderContext.queryAndWireStarHelm() {
     val element = document.body?.querySelector(StarHelmKey.ContentId) ?: error("star helm content not found")
-    wireStarHelm(app, element)
+    wireStarHelm(element)
 }
 
-private fun RenderContext.wireStarHelm(app: Streetlight, element: HTMLElement) {
-    val gate = app.gate
+private fun RenderContext.wireStarHelm(element: HTMLElement) {
+    val gate = app.get<UserGate>()
 
     wireBlock(element) {
         flowBlock(gate.starFlow, defaultMagic) { star ->
-            viewContextOf(app) {
-                if (star != null) {
-                    starPanel(star)
-                } else {
-                    someonePanel()
-                }
+            if (star != null) {
+                starPanel(star)
+            } else {
+                someonePanel()
             }
         }
     }
@@ -44,9 +44,8 @@ private fun RenderContext.wireStarHelm(app: Streetlight, element: HTMLElement) {
 
 private val RowMod = modify(AlignItemsCenter, PaddingLeft3, JustifyContentEnd)
 
-private fun ViewContext<Streetlight>.starPanel(star: Star) {
-    val app = model
-    val gate = app.gate
+private fun RenderContext.starPanel(star: Star) {
+    val gate = app.get<UserGate>()
 
     column() {
         row(RowMod) {
@@ -81,9 +80,7 @@ private fun ViewContext<Streetlight>.starPanel(star: Star) {
     }
 }
 
-private fun ViewContext<Streetlight>.someonePanel() {
-    val app = model
-
+private fun RenderContext.someonePanel() {
     column(modify(OverflowClip, MinWidth32)) {
         row(RowMod) {
             heading3("Someone")
@@ -96,7 +93,7 @@ private fun ViewContext<Streetlight>.someonePanel() {
 
         tabs(Id("someone-tabs")) {
             tab("Sign in") {
-                gateForm(app)
+                gateForm()
             }
             tab("Alternative") {
                 // calendar route goes here
@@ -122,9 +119,9 @@ private fun ViewContext<Streetlight>.someonePanel() {
     }
 }
 
-fun RenderContext.gateForm(app: Streetlight) {
-    val gate = app.gate
-    val cred = gate.cred
+fun RenderContext.gateForm() {
+    val gate = app.get<UserGate>()
+    val cred = app.get<CredentialStore>()
 
     column {
         textField(

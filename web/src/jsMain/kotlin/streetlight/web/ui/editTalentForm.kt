@@ -7,12 +7,11 @@ import kotlinx.coroutines.launch
 import streetlight.model.data.TalentEdit
 import streetlight.model.data.toEdit
 import streetlight.web.EditTalentRoute
+import streetlight.web.model.DataCache
 import streetlight.web.model.Streetlight
 
-fun RenderContext.editTalentForm(app: Streetlight) {
-    val portal = app.portal
-    val api = app.client.api
-    val userCache = app.cache
+fun RenderContext.editTalentForm() {
+    val userCache = app.get<DataCache>()
 
     suspend fun provideEdit(route: EditTalentRoute) = route.talentId?.let {
         userCache.talent.getItem(it)?.toEdit()

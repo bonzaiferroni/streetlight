@@ -22,13 +22,12 @@ import streetlight.web.model.Streetlight
 import streetlight.web.pages.AppBodyKey
 
 fun ViewContext<EarthMap>.viewEarthMap() {
-    val app = model.app
 
     box(EarthKey.Id, modify(Size100P)) {
         flowBlock(model.galaxyFlow) { galaxy ->
             column(modify(Padding1)) {
                 row(modify(JustifyContentSpaceBetween)) {
-                    galaxyEarthMenu(galaxy, app, modify(ZIndex2))
+                    galaxyEarthMenu(galaxy, modify(ZIndex2))
                     row {
                         icon(SvgFile.Settings, modify(Width5, Aspect1, ZIndex2))
                         val route = galaxy?.let { GalaxyRoute(it.slug) } ?: HomeRoute
@@ -57,28 +56,27 @@ fun ViewContext<EarthMap>.viewEarthMap() {
                 }
             }
         }
-        geoMapMount(app.geoMap, app.appScope)
+        geoMapMount(geoMap, appScope)
     }
 
     renderScope.launch {
         model.postsFlow.collect { posts ->
-            app.streetMap.setPosts(posts)
+            streetMap.setPosts(posts)
         }
     }
 }
 
-fun ViewContext<Streetlight>.viewEarthMapRoute() {
-    val app = model
+fun RenderContext.viewEarthMapRoute() {
     var isVisible = false
     val element = document.getElementById(AppBodyKey.FullScreenId)
 
     renderScope.launch {
-        app.portal.routeFlow.collect { route ->
+        portal.routeFlow.collect { route ->
             when (route) {
                 is EarthMapRoute -> {
                     if (!isVisible) {
-                        element.replaceRender(renderScope) {
-                            val model = EarthMap(app, renderScope)
+                        replaceRender(element) {
+                            val model = app.getCoroutineScoped<EarthMap>(renderScope)
                             viewContextOf(model) {
                                 viewEarthMap()
                             }
@@ -92,7 +90,7 @@ fun ViewContext<Streetlight>.viewEarthMapRoute() {
                         element.unmodify(Reveal)
                         isVisible = false
                         delay(KoalaTheme.MAGIC_INTERVAL.toLong())
-                        element.clearRender()
+                        clearRender(element)
                     }
                 }
             }

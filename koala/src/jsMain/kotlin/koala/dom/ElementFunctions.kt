@@ -101,7 +101,7 @@ fun Element.clearScope() {
     this.scope = null
 }
 
-fun Element.getElementScope(parentScope: CoroutineScope, cancelExistingScope: Boolean): CoroutineScope {
+fun Element.getScope(parentScope: CoroutineScope, cancelExistingScope: Boolean): CoroutineScope {
     if (cancelExistingScope) {
         this.job?.cancel()
     }

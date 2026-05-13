@@ -6,6 +6,7 @@ import kampfire.model.distanceTo
 import kampfire.model.kilometers
 import koala.dom.UIMessage
 import koala.dom.set
+import koala.model.GeoMap
 import koala.model.PanPoint
 import koala.model.mapDistinct
 import koala.model.storeOf
@@ -17,19 +18,23 @@ import streetlight.model.data.Location
 import streetlight.model.data.mergeRight
 import streetlight.model.data.toEdit
 import streetlight.model.external.toPlace
+import streetlight.web.io.ApiClient
+import streetlight.web.io.OSMClient
 import streetlight.web.ui.ViewModel
 
 class LocationFinder(
     private val scope: CoroutineScope,
-    override val app: Streetlight,
-): ViewModel {
+    private val api: ApiClient,
+    private val osm: OSMClient,
+    private val geo: GeoMap
+) {
 
     private val state = storeOf(LocationFinderState())
     val stateFlow = state.flow
 
     val msg = storeOf<UIMessage?>(null)
 
-    val editor = LocationEditor(null, scope, app)
+    val editor = LocationEditor(null, scope, api)
 
     val queryFlow = stateFlow.mapDistinct { it.query }
 

@@ -12,7 +12,7 @@ import kotlin.js.json
 // acceptable use policy: https://operations.osmfoundation.org/policies/nominatim/
 // docs: https://nominatim.org/release-docs/develop/api/Search/
 
-class OSMFetchClient() {
+class OSMClient() {
     suspend fun readPlace(point: GeoPoint): OSMPlace? {
         val url = "https://nominatim.openstreetmap.org/reverse" +
                     "?lat=${point.lat}&lon=${point.lng}&format=jsonv2&addressdetails=1&extratags=1"

@@ -3,57 +3,69 @@ package koala.dom
 import koala.html.Id
 import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.dom.clear
 import kotlinx.html.dom.append
 import kotlinx.html.dom.prepend
 import org.w3c.dom.HTMLElement
 
 interface RenderContext: DOMContext {
+    val app: AppContext
     val renderScope: CoroutineScope
 }
 
 class DOMRenderContext(
     consumer: DOMContext,
+    override val app: AppContext,
     override val renderScope: CoroutineScope,
     val parent: HTMLElement,
 ): RenderContext, DOMContext by consumer
 
-fun HTMLElement.replaceRender(
+fun HTMLElement.renderRoot(
     scope: CoroutineScope,
+    app: AppContext,
     block: RenderContext.() -> Unit
 ): List<HTMLElement> {
     clear()
     return append {
-        val context = DOMRenderContext(this, getElementScope(scope, true), this@replaceRender)
+        val context = DOMRenderContext(this@append, app, getScope(scope, true), this@renderRoot)
         context.block()
     }
 }
 
-fun HTMLElement.clearRender() {
-    clear()
-    clearScope()
+fun RenderContext.replaceRender(
+    element: HTMLElement,
+    block: RenderContext.() -> Unit
+): List<HTMLElement> {
+    element.clear()
+    return element.append {
+        val context = DOMRenderContext(this@append, app, element.getScope(renderScope, true), element)
+        context.block()
+    }
 }
 
-fun HTMLElement.appendRender(
-    scope: CoroutineScope,
+fun RenderContext.clearRender(element: HTMLElement) {
+    element.clear()
+    element.clearScope()
+}
+
+fun RenderContext.appendRender(
+    element: HTMLElement,
     block: RenderContext.() -> Unit
-) = append {
-    val context = DOMRenderContext(this, getElementScope(scope, false), this@appendRender)
+) = element.append {
+    val context = DOMRenderContext(this@append, app, element.getScope(renderScope, false), element)
     context.block()
 }
 
-fun HTMLElement.prependRender(
-    scope: CoroutineScope,
+fun RenderContext.prependRender(
+    element: HTMLElement,
     block: RenderContext.() -> Unit
-) = prepend {
-    val context = DOMRenderContext(this, getElementScope(scope, false), this@prependRender)
+) = element.prepend {
+    val context = DOMRenderContext(this@prepend, app, element.getScope(renderScope, false), element)
     context.block()
 }
 
-fun Id.replaceRender(
-    scope: CoroutineScope,
+fun RenderContext.replaceRender(
+    id: Id,
+    ancestor: HTMLElement? = null,
     block: RenderContext.() -> Unit
-) = (document.body!!.querySelector(this) ?: error("element not found: $this")).replaceRender(scope, block)
+) = replaceRender(((ancestor ?: document.body!!).querySelector(id) ?: error("element not found: $this")), block)

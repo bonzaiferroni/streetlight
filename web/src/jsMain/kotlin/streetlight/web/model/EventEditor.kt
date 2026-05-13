@@ -11,11 +11,12 @@ import streetlight.model.data.EventEdit
 import kotlinx.datetime.LocalDate
 import streetlight.model.data.ExtraLink
 import streetlight.model.external.Address
+import streetlight.web.io.ApiClient
 
 class EventEditor(
     initialEvent: EventEdit?,
     private val scope: CoroutineScope,
-    private val client: ClientFacade,
+    private val api: ApiClient,
 ) {
     private val state = storeOf(EventEditorState(initialEvent ?: EventEdit()))
     val stateFlow = state.flow

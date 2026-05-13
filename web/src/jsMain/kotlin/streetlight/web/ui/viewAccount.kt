@@ -7,35 +7,32 @@ import koala.html.Id
 import kotlinx.html.InputType
 import kotlinx.html.js.p
 import streetlight.web.HomeRoute
+import streetlight.web.model.CredentialStore
 import streetlight.web.model.Streetlight
+import streetlight.web.model.UserGate
 
-fun RenderContext.viewStarDash(
-    app: Streetlight,
-) {
-    val gate = app.gate
+fun RenderContext.viewStarDash() {
+    val gate = app.get<UserGate>()
 
     flowBlock(gate.starFlow) { user ->
         if (user != null) {
-             viewStarDash(app, user)
+             viewStarDash(user)
         } else {
             tabs(Id("sign-in-tabs")) {
                 tab("Sign in") {
-                    signInContent(app)
+                    signInContent()
                 }
                 tab("Sign up") {
-                    createAccountContent(app)
+                    createAccountContent()
                 }
             }
         }
     }
 }
 
-fun RenderContext.signInContent(
-    app: Streetlight,
-) {
-    val gate = app.gate
-    val cred = gate.cred
-    val portal = app.portal
+fun RenderContext.signInContent() {
+    val gate = app.get<UserGate>()
+    val cred = app.get<CredentialStore>()
 
     column(modify(MediaMdRow, FlexItems1)) {
         card {

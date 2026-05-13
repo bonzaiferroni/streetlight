@@ -13,10 +13,13 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import streetlight.model.data.toEdit
 import streetlight.web.model.Streetlight
+import streetlight.web.model.UserGate
 import streetlight.web.pages.appFooter
 
-fun ViewContext<Streetlight>.viewStarEditor() {
-    starBlock(model, true) { star ->
+fun RenderContext.viewStarEditor() {
+    val gate = app.get<UserGate>()
+
+    starBlock(true) { star ->
         val state = storeOf(star.toEdit())
 
         val avatarFlow = state.flow.mapDistinct { it.imageRef }
@@ -39,7 +42,7 @@ fun ViewContext<Streetlight>.viewStarEditor() {
 
                 val star = api.updateStar(edit)
                 if (star != null) {
-                    model.gate.setUpdate(star)
+                    gate.setUpdate(star)
                 }
             }
         }

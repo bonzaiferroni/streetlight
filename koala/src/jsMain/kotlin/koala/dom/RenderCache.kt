@@ -7,7 +7,6 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.html.dom.append
 import org.w3c.dom.HTMLElement
 
-
 class RenderCache(
     val context: RenderContext,
     val job: Job,
@@ -17,7 +16,7 @@ class RenderCache(
     val firstElement get() = elements.first()
 }
 
-fun <T> createRender(
+fun <T> RenderContext.createRender(
     parent: HTMLElement,
     scope: CoroutineScope,
     value: T,
@@ -27,13 +26,13 @@ fun <T> createRender(
     val localScope = CoroutineScope(scope.coroutineContext + job)
     var context: RenderContext
     val elements = parent.append {
-        context = DOMRenderContext(this, localScope, parent)
+        context = DOMRenderContext(this, app, localScope, parent)
         context.block(value)
     }
     return RenderCache(context, job, localScope, elements)
 }
 
-fun createRender(
+fun RenderContext.createRender(
     parent: HTMLElement,
     scope: CoroutineScope = CoroutineScope(Dispatchers.Main),
     block: RenderContext.() -> Unit

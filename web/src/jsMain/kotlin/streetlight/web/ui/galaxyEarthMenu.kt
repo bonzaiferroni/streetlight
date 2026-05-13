@@ -13,16 +13,17 @@ import koala.html.card
 import koala.html.row
 import streetlight.model.data.Galaxy
 import streetlight.web.EarthMapRoute
+import streetlight.web.model.DataCache
 import streetlight.web.model.Streetlight
 import streetlight.web.shells.GalaxyMenuKey
 import streetlight.web.shells.buttonOf
 
 fun RenderContext.galaxyEarthMenu(
     currentGalaxy: Galaxy?,
-    app: Streetlight,
     modifiers: ModifierSet? = null
 ) {
-    val galaxies = app.cache.galaxyLights.stateNow.items
+    val cache = app.get<DataCache>()
+    val galaxies = cache.galaxyLights.stateNow.items
 
     box(modifiers) {
         buttonPopover(currentGalaxy?.name ?: "Galaxies") {

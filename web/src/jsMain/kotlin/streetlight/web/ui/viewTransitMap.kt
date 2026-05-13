@@ -20,7 +20,7 @@ fun RenderContext.viewTransitMap(
     maplibre: maplibregl.Map
 ) {
     val streetMap = app.streetMap
-    val transitMap = app.streetMap.transit
+    // val transitMap = app.streetMap.transit
     var stopMarkers: List<PointEntityView> = emptyList()
 //    var areaTransit = transitMap.stateNow.areaTransit
     val vehicleElements = mutableMapOf<String, PointEntityView>()

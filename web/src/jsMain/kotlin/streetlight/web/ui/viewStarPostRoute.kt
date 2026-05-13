@@ -1,5 +1,6 @@
 package streetlight.web.ui
 
+import koala.dom.RenderContext
 import koala.dom.replaceRender
 import koala.dom.routeBlock
 import koala.dom.shellBox
@@ -12,27 +13,25 @@ import streetlight.web.io.handleResponse
 import streetlight.web.shells.PostKey
 import streetlight.web.shells.starPostShell
 
-fun AppContext.viewStarPost(post: StarPost) {
+fun RenderContext.viewStarPost(post: StarPost) {
     val root = shellBox(PostKey.ShellId) {
         starPostShell(post)
     }
 
     replaceRender(PostKey.TalkId) {
-        val talkLog = TalkLog(renderScope, model, post.postId.value, SpaceType.Post)
+        val talkLog = TalkLog(renderScope, post.postId.value, SpaceType.Post, api)
         viewContextOf(talkLog) {
             viewTalkLog()
         }
     }
 }
 
-fun AppContext.viewStarPostRoute() {
+fun RenderContext.viewStarPostRoute() {
     routeBlock<StarPostRoute, StarPost>(portal, { route ->
         readIslandOrApi(PostKey.IslandId, { it.postId.value == route.id || it.slug == route.id }) {
             api.readPost(route.id).handleResponse(toaster::toast) as? StarPost
         }
     }) { post ->
-        viewContextOf(model) {
-            viewStarPost(post)
-        }
+        viewStarPost(post)
     }
 }

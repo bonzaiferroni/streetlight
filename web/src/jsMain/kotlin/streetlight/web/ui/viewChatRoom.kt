@@ -2,10 +2,11 @@ package streetlight.web.ui
 
 import koala.css.*
 import koala.dom.*
+import streetlight.web.model.ChatRoom
 import streetlight.web.model.Streetlight
 
-fun RenderContext.viewChatRoom(app: Streetlight) {
-    val model = app.chatRoom
+fun RenderContext.viewChatRoom() {
+    val model = app.get<ChatRoom>()
     val element = column(modify(JustifyContentEnd)) {
         itemsBlock(model.messagesFlow, modify(Magic, Blur, SlideLeft)) { message ->
             textBlock("${message.source}: ${message.text}")

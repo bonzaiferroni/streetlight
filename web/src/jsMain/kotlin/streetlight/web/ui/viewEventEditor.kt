@@ -21,7 +21,7 @@ import streetlight.web.layouts.route
 import streetlight.web.model.Streetlight
 
 // event editor content including introduction and form
-fun ViewContext<Streetlight>.viewEventEditor(
+fun RenderContext.viewEventEditor(
     event: EventEdit,
     callback: ((Event?) -> Unit)?
 ) {
@@ -61,13 +61,13 @@ fun ViewContext<Streetlight>.viewEventEditor(
                 heading2("Event Details")
             }
             card {
-                viewEventEditor(event, model, editStore.flow, editStore::setValue)
+                viewEventEditor(event, editStore.flow, editStore::setValue)
             }
         }
 
         row(modify(JustifyContentSpaceBetween, PaddingX1)) {
             button("cancel", modify(Secondary), onClick = {
-                model.portal.goBack()
+                portal.goBack()
             })
             row {
                 messageBox(msg.flow, modify(Flex1))
@@ -84,10 +84,10 @@ fun ViewContext<Streetlight>.viewEventEditor(
                             return@launch
                         }
                         if (callback != null) {
-                            model.portal.goBack()
+                            portal.goBack()
                             callback.invoke(savedEvent)
                         } else {
-                            model.portal.go(savedEvent.route)
+                            portal.go(savedEvent.route)
                         }
                     }
                 })
@@ -102,7 +102,7 @@ fun ViewContext<Streetlight>.viewEventEditor(
 }
 
 // event editor route, invoked by appNavigation
-fun ViewContext<Streetlight>.viewEventEditorRoute() {
+fun RenderContext.viewEventEditorRoute() {
     var callback: ((Event?) -> Unit)? = null
 
     routeBlock<EditEventRoute, EventEdit>({ route ->
@@ -118,9 +118,7 @@ fun ViewContext<Streetlight>.viewEventEditorRoute() {
             }
         }
     }) { event ->
-        viewContextOf(model) {
-            viewEventEditor(event, callback)
-        }
+        viewEventEditor(event, callback)
     }
 }
 

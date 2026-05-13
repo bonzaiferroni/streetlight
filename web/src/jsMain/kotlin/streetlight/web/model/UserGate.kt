@@ -9,9 +9,9 @@ import streetlight.web.io.ApiClient
 import kotlin.time.Clock
 import kotlin.time.Instant
 
-class StarGate(
+class UserGate(
     private val scope: CoroutineScope,
-    val cred: StarCred,
+    private val cred: CredentialStore,
     private val api: ApiClient,
 ) {
     private val state = storeOf(StarGateState())

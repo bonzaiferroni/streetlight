@@ -1,6 +1,7 @@
 package streetlight.web.ui
 
 import koala.css.Magic
+import koala.dom.RenderContext
 import koala.dom.ViewContext
 import koala.dom.modify
 import koala.dom.onClick
@@ -14,12 +15,11 @@ import org.w3c.dom.HTMLElement
 import streetlight.web.model.LightCache
 import streetlight.web.model.Streetlight
 
-fun <Id> ViewContext<Streetlight>.wireLights(
+fun <Id> RenderContext.wireLights(
     root: HTMLElement,
     attribute: Attribute<Id>,
     cache: LightCache<Id, *>
 ) {
-    val app = model
     val pairs = root.queryAttributeAll(attribute)
 
     renderScope.launch {

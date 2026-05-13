@@ -98,7 +98,7 @@ class CommentView(
         if (isReplying) {
             rootBlock.modify(CommentClass.HasNestedContent)
             if (replyBlock.hasChildNodes()) return
-            replaceRender(replyBlock) {
+            replaceView(replyBlock) {
                 commentEditor("reply", "", modify(AutoMagic, SlideLeft)) { text ->
                     val commentId = model.createComment(comment.commentId, text)
 
@@ -124,7 +124,7 @@ class CommentView(
         if (isEditing) {
             editBlock.unmodify(DisplayNone)
             if (editBlock.hasChildNodes()) return
-            replaceRender(editBlock) {
+            replaceView(editBlock) {
                 commentEditor("edit", comment.text) { text ->
                     val isSuccess = model.updateComment(comment.commentId, text)
                     return@commentEditor when (isSuccess) {

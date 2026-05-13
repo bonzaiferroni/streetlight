@@ -11,7 +11,6 @@ import streetlight.web.pages.appFooter
 import streetlight.web.shells.cardOf
 
 fun RenderContext.viewLocationAdmin(
-    app: Streetlight,
     location: Location,
 ) {
     column {
@@ -22,7 +21,7 @@ fun RenderContext.viewLocationAdmin(
                 // viewLocationEditor(edit, app, null, false, null)
             }
             tab("events") {
-                val events = flowerOf { app.client.api.readLocationEvents(location.locationId) }
+                val events = flowerOf { api.readLocationEvents(location.locationId) }
                 column {
                     location.eventsUrl.let { link ->
                         row {
@@ -46,11 +45,11 @@ fun RenderContext.viewLocationAdmin(
     }
 }
 
-fun RenderContext.viewLocationAdmin(app: Streetlight) {
+fun RenderContext.viewLocationAdmin() {
     routeBlock<LocationAdminRoute, Location>(
-        portal = app.portal,
-        provideData = { app.client.api.readLocation(it.locationId) }
+        portal = portal,
+        provideData = { api.readLocation(it.locationId) }
     ) {
-        viewLocationAdmin(app, it)
+        viewLocationAdmin(it)
     }
 }

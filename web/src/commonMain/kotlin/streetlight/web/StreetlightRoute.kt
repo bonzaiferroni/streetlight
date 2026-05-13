@@ -51,7 +51,6 @@ enum class StreetlightScreen(
     EditStar("edit-profile", StaticParse { EditStarRoute }),
     SiteConfig("config", StaticParse { SiteConfigRoute }),
     AboutApp("about", StaticParse { AboutRoute }),
-    PrivacyPolicy("privacy", StaticParse { PrivacyPolicyRoute }),
     SiteDoc("docs", IdParse { SiteDocRoute(it) }),
     Talk("talk", IdParse { TalkRoute(GalaxyId(it)) })
 }
@@ -242,11 +241,6 @@ object SiteConfigRoute: StreetlightRoute {
 object AboutRoute: StreetlightRoute {
     override val screen get() = StreetlightScreen.AboutApp
     override val title get() = "About"
-}
-
-object PrivacyPolicyRoute: StreetlightRoute {
-    override val screen get() = StreetlightScreen.PrivacyPolicy
-    override val title get() = "Privacy Policy"
 }
 
 data class SiteDocRoute(val docId: DocId): StreetlightRoute {

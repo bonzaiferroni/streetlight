@@ -64,7 +64,7 @@ fun RenderContext.viewLocationScoutProto(app: Streetlight, galaxy: Galaxy) {
     }
 }
 
-fun ViewContext<Streetlight>.viewLocationScoutRoute() {
+fun ViewContext<Streetlight>.viewLocationScoutRouteProto() {
     routeBlock<LocationScoutRoute, Galaxy>({
         api.readGalaxy(it.slug).handleResponse(toaster::toast)
     }) { galaxy ->

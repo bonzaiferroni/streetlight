@@ -14,19 +14,16 @@ import streetlight.model.data.EventPost
 import streetlight.model.data.Location
 import streetlight.model.data.LocationPost
 import streetlight.model.data.Post
+import streetlight.web.io.ApiClient
 
 class StreetMap(
     private val scope: CoroutineScope,
-    private val client: ClientFacade,
     private val cache: DataCache,
     private val geoMap: GeoMap,
-    private val config: SiteConfig,
 ) {
     private val state = storeOf(StreetMapState())
     val stateFlow = state.flow
     val stateNow = state.now
-    
-    val transit = TransitMap(scope, client, geoMap, config)
 
     fun setPosts(posts: List<Post>?) {
         val posts = posts?.let { createEntities(posts) } ?: emptyList()

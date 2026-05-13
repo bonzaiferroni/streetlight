@@ -10,7 +10,8 @@ import streetlight.web.io.ApiClient
 
 class UserCreator(
     private val scope: CoroutineScope,
-    private val gate: StarGate,
+    private val gate: UserGate,
+    private val cred: CredentialStore,
     private val api: ApiClient,
 ) {
     private val state = storeOf(UserCreatorState())
@@ -43,7 +44,7 @@ class UserCreator(
         scope.launch {
             val result = api.createUser(request) ?: return@launch
             if (result.isSuccess) {
-                gate.cred.setFromSignup(requestNow)
+                cred.setFromSignup(requestNow)
                 gate.signIn()
             }
         }

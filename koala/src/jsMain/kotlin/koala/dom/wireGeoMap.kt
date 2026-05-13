@@ -23,7 +23,7 @@ import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.coroutines.CoroutineScope
 
-fun wireGeoMap(
+fun RenderContext.wireGeoMap(
     geoMap: GeoMap,
     appScope: CoroutineScope,
     ancestor: HTMLElement,
@@ -51,7 +51,7 @@ fun wireGeoMap(
 
 private var geoMapWindow: HTMLElement? = null
 
-fun wireMapWindow(
+fun RenderContext.wireMapWindow(
     geoMap: GeoMap,
     appScope: CoroutineScope,
     mount: HTMLElement
@@ -69,7 +69,7 @@ fun wireMapWindow(
     // wireKeyboardControls(widget)
 
     val focusPanel = mapWindow.querySelector(GeoMapKey.FocusPanel.selector) as HTMLElement
-    focusPanel.replaceRender(appScope) {
+    replaceRender(focusPanel) {
         val nearestFlow = geoMap.stateFlow.mapDistinct { it.focus }
         flowBlock(nearestFlow, modify(Magic, SlideUp)) { entity ->
             val content = entity?.focusContent ?: return@flowBlock

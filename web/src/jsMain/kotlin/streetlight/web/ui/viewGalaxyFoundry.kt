@@ -11,17 +11,18 @@ import koala.html.heading1
 import koala.html.heading3
 import koala.html.section
 import koala.html.span
+import koala.model.GeoMap
 import koala.model.mapDistinct
+import kotlinx.coroutines.CoroutineScope
 import streetlight.model.data.GalaxyEdit
 import streetlight.model.data.PostPermission
 import streetlight.web.model.Streetlight
 import streetlight.web.model.GalaxyEditor
 
-fun ViewContext<Streetlight>.viewGalaxyFoundry() {
-    val app = model
-    val model = GalaxyEditor(null, app, renderScope)
+fun RenderContext.viewGalaxyFoundry() {
+    val model = app.getCoroutineScoped<GalaxyEditor>(null, renderScope)
+    val geoMap = app.get<GeoMap>()
 
-    val geoMap = app.geoMap
     val nameFlow = model.galaxyFlow.mapDistinct { it.name ?: "" }
     val blobFlow = model.stateFlow.mapDistinct { it.blobUrl }
     val descriptionFlow = model.galaxyFlow.mapDistinct { it.description ?: "" }
@@ -29,7 +30,7 @@ fun ViewContext<Streetlight>.viewGalaxyFoundry() {
     val permissionFlow = model.galaxyFlow.mapDistinct { it.postPermission }
     val reviewModeFlow = model.galaxyFlow.mapDistinct { it.reviewMode }
     val guideFlow = model.galaxyFlow.mapDistinct { it.postGuide ?: "" }
-    val pointFlow = app.geoMap.stateFlow.mapDistinct { it.center to it.zoom }
+    val pointFlow = geoMap.stateFlow.mapDistinct { it.center to it.zoom }
 
     val textMod = modify()
     val sectionMod = modify(QueryContainer)
@@ -186,7 +187,7 @@ fun ViewContext<Streetlight>.viewGalaxyFoundry() {
                         }
                     }
                     column(contentColumnMod) {
-                        geoMapMount(geoMap, app.appScope, modifiers = modify(Height48, BorderRadius2, OverflowClip, MoonShadow))
+                        geoMapMount(geoMap, appScope, modifiers = modify(Height48, BorderRadius2, OverflowClip, MoonShadow))
                     }
                 }
             }

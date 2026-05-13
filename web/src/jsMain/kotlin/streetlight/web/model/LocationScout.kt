@@ -11,6 +11,6 @@ class LocationScout(
     val galaxy: Galaxy,
 ): ViewModel {
 
-    val editor = LocationEditor(LocationEdit(), scope, app)
-    val finder = LocationFinderProto(scope, app)
+    // val editor = LocationEditor(LocationEdit(), scope, app)
+    // val finder = LocationFinderProto(scope, app)
 }

@@ -7,11 +7,11 @@ import streetlight.model.data.Galaxy
 import streetlight.web.model.Streetlight
 import streetlight.web.shells.cardOf
 
-fun RenderContext.viewGalaxyList(app: Streetlight) {
+fun RenderContext.viewGalaxyList() {
     val galaxyStore = storeOf<List<Galaxy>>(emptyList())
 
     renderScope.launch {
-        val galaxies = app.client.api.readTopGalaxies() ?: return@launch
+        val galaxies = api.readTopGalaxies() ?: return@launch
         galaxyStore.set { galaxies }
     }
 

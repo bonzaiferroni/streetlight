@@ -2,19 +2,26 @@ package streetlight.web.ui
 
 import koala.dom.*
 import koala.dom.routeBlock
+import koala.model.GeoMap
+import koala.model.Portal
+import kotlinx.coroutines.CoroutineScope
 import streetlight.model.data.HomeContent
 import streetlight.web.HomeRoute
+import streetlight.web.io.ApiClient
 import streetlight.web.io.getDataOrNull
+import streetlight.web.model.DataCache
 import streetlight.web.model.Streetlight
 import streetlight.web.shells.GalaxyContent
 import streetlight.web.shells.GalaxyKey
 import streetlight.web.shells.HomeKey
 import streetlight.web.shells.homeShell
 
-fun ViewContext<Streetlight>.viewHome(content: HomeContent) {
-    val app = model
+fun RenderContext.viewHome(content: HomeContent) {
+    val geoMap = app.get<GeoMap>()
+    val appScope = app.get<CoroutineScope>()
+    val cache = app.get<DataCache>()
 
-    val root = shellBox(HomeKey.ContainerId, app.geoMap, app.appScope) {
+    val root = shellBox(HomeKey.ContainerId, geoMap, appScope) {
         homeShell(content)
     }
 
@@ -22,27 +29,28 @@ fun ViewContext<Streetlight>.viewHome(content: HomeContent) {
     wireLights(
         root = root,
         attribute = StarLightKey.EventLightId,
-        cache = app.cache.eventLights
+        cache = cache.eventLights
     )
     wireLights(
         root = root,
         attribute = StarLightKey.GalaxyLightId,
-        cache = app.cache.galaxyLights,
+        cache = cache.galaxyLights,
     )
     wireLitEvents(root)
-    wireGalaxyMenu(app, root, null)
+    wireGalaxyMenu(root, null)
 
     wireStreetMap()
 }
 
-fun ViewContext<Streetlight>.viewHomeRoute() {
-    routeBlock<HomeRoute, HomeContent>(model.portal, { route ->
+fun RenderContext.viewHomeRoute() {
+    val portal = app.get<Portal>()
+    val api = app.get<ApiClient>()
+
+    routeBlock<HomeRoute, HomeContent>(portal, { route ->
         readIslandOrApi(HomeKey.IslandId, { true }) {
             api.readHomeContent()?.getDataOrNull()
         }
     }) { content ->
-        viewContextOf(model) {
-            viewHome(content)
-        }
+        viewHome(content)
     }
 }

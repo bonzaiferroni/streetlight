@@ -15,14 +15,15 @@ import streetlight.model.data.LocationEdit
 import streetlight.model.data.LocationId
 import streetlight.model.data.ResourceType
 import streetlight.model.external.Address
+import streetlight.web.io.ApiClient
 import streetlight.web.io.handleResponse
 import streetlight.web.ui.ViewModel
 
 class LocationEditor(
     initialData: LocationEdit?,
     private val scope: CoroutineScope,
-    override val app: Streetlight
-): ViewModel {
+    private val api: ApiClient
+) {
     private val state = storeOf(LocationEditorState(initialData))
     val stateNow get() = state.now
     val stateFlow = state.flow

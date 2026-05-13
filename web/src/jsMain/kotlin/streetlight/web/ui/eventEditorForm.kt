@@ -26,11 +26,10 @@ import kotlin.time.Clock
 
 fun RenderContext.viewEventEditor(
     event: EventEdit?,
-    app: Streetlight,
     bindFlow: Flow<EventEdit>? = null,
     onEdit: ((EventEdit) -> Unit)? = null,
 ) {
-    val model = EventEditor(event, renderScope, app.client)
+    val model = EventEditor(event, renderScope, api)
 
     onEdit?.let {
         renderScope.launch {

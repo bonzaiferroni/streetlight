@@ -13,7 +13,6 @@ import streetlight.web.model.Streetlight
 import streetlight.web.ui.viewLocationFinder
 
 fun ViewContext<EventScout>.viewEventScout(galaxy: Galaxy) {
-    val app = model.app
 
     section {
         column(modify(Gap0)) {
@@ -24,20 +23,20 @@ fun ViewContext<EventScout>.viewEventScout(galaxy: Galaxy) {
         }
 
         card(modify(Padding0)) {
-            geoMapMount(app.geoMap, app.appScope, modifiers = modify(Height48))
+            geoMapMount(geoMap, appScope, modifiers = modify(Height48))
 
-            viewContextOf(model.location) {
-                viewLocationFinder()
-            }
+//            viewContextOf(model.location) {
+//                viewLocationFinder()
+//            }
         }
     }
 }
 
-fun ViewContext<Streetlight>.viewEventScoutRoute() {
+fun RenderContext.viewEventScoutRoute() {
     routeBlock<EventScoutRoute, Galaxy>({
         api.readGalaxy(it.slug).handleResponse(toaster::toast)
     }) { galaxy ->
-        val model = EventScout(model, renderScope, galaxy)
+        val model = EventScout(galaxy, renderScope)
         viewContextOf(model) {
             viewEventScout(galaxy)
         }

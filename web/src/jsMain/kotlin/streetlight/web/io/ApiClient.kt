@@ -41,6 +41,7 @@ class ApiClient(private val client: FetchClient) {
     suspend fun searchLocations(query: String) = client.get(Api.Locations.Search) {
         writeParam(it.query, query)
     }
+
     suspend fun createOrEditLocation(location: LocationEdit) = client.postApi(Api.Locations.CreateOrEdit, location)
     suspend fun queryMap(request: MapQuery) = client.get(Api.Events.QueryMap, request.toQuery())
 
@@ -48,6 +49,7 @@ class ApiClient(private val client: FetchClient) {
     // suspend fun readUserFiles() = client.get(Api.Users.Files)
     // suspend fun updateUser(user: BasicUserInfo) = client.post(UserApi.Update, user)
     suspend fun checkUsername(username: String) = client.post(UserApi.CheckUsername, username)
+
     // suspend fun uploadAvatar(blobUrl: Url) = client.uploadBlob(Api.Users.UploadAvatar.path, blobUrl)
     suspend fun uploadImage(blobUrl: Url) = client.uploadBlob(Api.Users.UploadImage, blobUrl)
     suspend fun queryLocation(point: GeoPoint) = client.get(Api.Locations.QueryPoint, point.toQuery())
@@ -68,7 +70,7 @@ class ApiClient(private val client: FetchClient) {
         Api.Talk.Connect,
         "id" to stringId,
         "space" to space.paramValue
-        )
+    )
 
     suspend fun readSongs() = client.get(Api.Songs)
     suspend fun createSong(song: NewSong) = client.post(Api.Songs.Create, song)
@@ -109,6 +111,7 @@ class ApiClient(private val client: FetchClient) {
         writeParam(it.spaceId, spaceId)
         writeParam(it.spaceType, spaceType)
     }
+
     suspend fun createComment(comment: NewComment) = client.postApi(Api.Talk.CreateComment, comment)
     suspend fun updateComment(comment: UpdatedComment) = client.postApi(Api.Talk.UpdateComment, comment)
 }
@@ -135,10 +138,12 @@ fun <T1, T2> ApiResponse<T1>?.handleResponse(
         }
         block(data)
     }
+
     is Problem -> {
         onMessage(message)
         null
     }
+
     null -> {
         onMessage("No response.")
         null

@@ -35,6 +35,9 @@ kotlin {
             implementation(libs.kotlinx.html)
             implementation(kotlinWrappers.css)
             api(project(":kampfire"))
+
+            implementation(project.dependencies.platform(libs.koin.bom))
+            implementation(libs.koin.core)
         }
 
         jsMain.dependencies {

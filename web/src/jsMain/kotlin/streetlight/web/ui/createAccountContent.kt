@@ -10,10 +10,10 @@ import koala.css.modify
 import koala.dom.*
 import streetlight.web.model.Streetlight
 import streetlight.web.model.UserCreator
+import streetlight.web.model.UserGate
 
-fun RenderContext.createAccountContent(app: Streetlight) {
-    val gate = app.gate
-    val creator = UserCreator(renderScope, gate, app.client.api)
+fun RenderContext.createAccountContent() {
+    val creator = app.getCoroutineScoped<UserCreator>(renderScope)
 
     column(modify(QueryRowReverse, FlexItems1, AlignItemsStretch)) {
         card {

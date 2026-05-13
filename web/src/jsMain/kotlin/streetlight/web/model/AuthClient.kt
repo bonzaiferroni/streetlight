@@ -1,14 +1,8 @@
 package streetlight.web.model
 
 import kampfire.api.UserApi
-import kampfire.model.Auth
 import kotlinx.browser.window
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.async
 import kotlinx.coroutines.await
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import kotlinx.serialization.json.Json
 import org.w3c.fetch.RequestCredentials
 import org.w3c.fetch.RequestInit
@@ -16,7 +10,7 @@ import org.w3c.fetch.SAME_ORIGIN
 import kotlin.js.json
 
 class AuthClient(
-    private val cred: StarCred
+    private val cred: CredentialStore
 ) {
     suspend fun authenticate(): Boolean  {
         val loginRequest = cred.getLoginRequest()

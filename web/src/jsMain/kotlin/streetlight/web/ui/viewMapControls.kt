@@ -3,12 +3,12 @@ package streetlight.web.ui
 import koala.css.*
 import koala.dom.*
 import streetlight.web.EditEventIdRoute
+import streetlight.web.model.GateAgent
+import streetlight.web.model.StreetMap
 import streetlight.web.model.Streetlight
 
-fun RenderContext.viewMapControls(app: Streetlight) {
-    val gateAgent = app.gateAgent
-    val streetMap = app.streetMap
-    val portal = app.portal
+fun RenderContext.viewMapControls() {
+    val gateAgent = app.get<GateAgent>()
 
     column {
         row(modify(Width100P, AlignItemsStart)) {

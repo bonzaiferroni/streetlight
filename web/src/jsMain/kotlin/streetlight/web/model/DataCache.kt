@@ -16,7 +16,7 @@ class DataCache(
     scope: CoroutineScope,
     private val config: SiteConfig,
     private val api: ApiClient,
-    private val gate: StarGate,
+    private val gate: UserGate,
 ) {
     init {
         scope.launch {

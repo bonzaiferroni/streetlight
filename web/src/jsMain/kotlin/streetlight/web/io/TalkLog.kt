@@ -17,10 +17,10 @@ import streetlight.web.ui.ViewModel
 
 class TalkLog(
     private val scope: CoroutineScope,
-    override val app: Streetlight,
     private val spaceId: StringId,
     private val spaceType: SpaceType,
-): ViewModel {
+    private val api: ApiClient,
+) {
     private val client: SSEClient<TalkMessage> = sseClientOf(scope) {
         api.connectTalkLog(spaceId, spaceType)
     }

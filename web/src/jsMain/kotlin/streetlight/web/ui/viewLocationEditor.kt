@@ -1,25 +1,20 @@
 package streetlight.web.ui
 
-import koala.css.Accent
 import koala.css.AlignItemsStretch
 import koala.css.Aspect3By2
 import koala.css.BorderRadius1
 import koala.css.ContainerMdRow
 import koala.css.Flex1
-import koala.css.JustifyContentSpaceBetween
 import koala.css.QueryContainer
 import koala.css.modify
 import koala.dom.*
 import koala.model.mapDistinct
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.launch
 import streetlight.model.data.LocationEdit
 import streetlight.model.data.toEdit
 import streetlight.web.CreateLocationRoute
 import streetlight.web.EditLocationDataRoute
 import streetlight.web.EditLocationIdRoute
 import streetlight.web.EditLocationRoute
-import streetlight.web.model.Streetlight
 import streetlight.web.model.LocationEditor
 import streetlight.web.pages.appFooter
 
@@ -54,11 +49,7 @@ fun ViewContext<LocationEditor>.viewLocationEditor() {
     }
 }
 
-fun AppContext.viewEditLocationRoute() {
-    val app = model
-    val portal = app.portal
-    val api = app.client.api
-
+fun RenderContext.viewEditLocationRoute() {
     column {
         routeBlock<EditLocationRoute, LocationEdit>(
             portal = portal,
@@ -70,7 +61,7 @@ fun AppContext.viewEditLocationRoute() {
                 }
             }
         ) { edit ->
-            val editor = LocationEditor(edit, renderScope, app)
+            val editor = LocationEditor(edit, renderScope, api)
             viewContextOf(editor) {
                 viewLocationEditor()
             }

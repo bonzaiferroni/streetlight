@@ -9,11 +9,12 @@ import org.w3c.dom.HTMLElement
 import org.w3c.dom.SMOOTH
 import org.w3c.dom.ScrollBehavior
 import org.w3c.dom.ScrollToOptions
+import streetlight.web.io.OmniLog
 import streetlight.web.model.Streetlight
 import streetlight.web.pages.AppBodyKey
 
-fun RenderContext.wireRightPanel(app: Streetlight) {
-    val omni = app.omni
+fun RenderContext.wireRightPanel() {
+    val omni = app.get<OmniLog>()
     val recordFlow = omni.stateFlow.mapDistinct { it.records }
     var container: HTMLElement? = null
     val cardMod = modify(ZenBg, Height100P, JustifyContentEnd, OverflowYAuto, OverscrollBehaviorContain, OverflowXHidden)

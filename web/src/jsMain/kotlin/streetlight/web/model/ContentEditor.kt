@@ -7,15 +7,18 @@ import koala.model.mapDistinct
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import streetlight.model.data.Post
 import streetlight.model.data.StarPostEdit
+import streetlight.web.io.ApiClient
 import streetlight.web.io.handleResponse
 import streetlight.web.ui.ViewModel
 
 class ContentEditor(
-    private val scope: CoroutineScope,
-    override val app: Streetlight,
     initialContent: StarPostEdit,
-): ViewModel {
+    private val scope: CoroutineScope,
+    private val api: ApiClient,
+    private val toaster: Toaster,
+) {
 
     private val state = storeOf(ContentEditorState(initialContent))
     val stateFlow = state.flow
@@ -59,8 +62,8 @@ class ContentEditor(
             when (content.postId) {
                 null -> api.createPost(content)
                 else -> api.editPost(content)
-            }.handleResponse(toaster::toast) {
-                app.stagePostAndGo(it)
+            }.handleResponse(toaster::toast) { post ->
+                state.set { it.copy(post = post) }
             }
         }
     }
@@ -72,4 +75,5 @@ class ContentEditor(
 
 data class ContentEditorState(
     val content: StarPostEdit,
+    val post: Post? = null
 )

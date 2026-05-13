@@ -17,7 +17,7 @@ import koala.html.popover
 import streetlight.web.model.Streetlight
 import streetlight.web.pages.appFooter
 
-fun RenderContext.viewSandbox(app: Streetlight) {
+fun RenderContext.viewSandbox() {
     column {
         button("open") {
             setAnchorName(myAnchor)

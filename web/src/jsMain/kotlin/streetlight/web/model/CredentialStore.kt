@@ -1,6 +1,5 @@
 package streetlight.web.model
 
-import kampfire.model.Auth
 import kampfire.model.LoginRequest
 import kampfire.model.SignUpRequest
 import kampfire.utils.obfuscate
@@ -9,7 +8,7 @@ import koala.model.storeOf
 import kotlinx.browser.localStorage
 import org.w3c.dom.get
 
-class StarCred {
+class CredentialStore {
     private val state = storeOf(UserCredState(
         usernameText = localStorage[USERNAME_KEY] ?: "",
         stayLoggedIn = localStorage[STAY_LOGGED_KEY]?.toBooleanStrictOrNull() ?: false,

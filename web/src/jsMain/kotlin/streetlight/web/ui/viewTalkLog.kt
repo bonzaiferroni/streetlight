@@ -64,9 +64,9 @@ fun ViewContext<TalkLog>.viewTalkLog() {
     }
 }
 
-fun ViewContext<Streetlight>.viewTalkRoute() {
+fun RenderContext.viewTalkRoute() {
     routeBlock<TalkRoute> { route ->
-        val model = TalkLog(renderScope, model, route.stringId, route.type)
+        val model = TalkLog(renderScope, route.stringId, route.type, api)
         viewContextOf(model) {
             viewTalkLog()
         }
@@ -82,7 +82,7 @@ fun ViewContext<TalkLog>.buildTree(treeRoot: HTMLElement, comments: List<Comment
     }
     val roots = comments.filter { it.parentId == null }
 
-    replaceRender(treeRoot) {
+    replaceView(treeRoot) {
         roots.forEach {
             val view = addCommentView(it, comments) ?: return@forEach
             with(view) {
@@ -98,14 +98,14 @@ fun ViewContext<TalkLog>.growTree(treeRoot: HTMLElement, comment: Comment) {
         null -> {
             when (model.stateNow.sortBy) {
                 PostOrder.NewFirst -> {
-                    prependRender(treeRoot) {
+                    prependView(treeRoot) {
                         with (view) {
                             render()
                         }
                     }
                 }
                 PostOrder.OldFirst -> {
-                    appendRender(treeRoot) {
+                    appendView(treeRoot) {
                         with (view) {
                             render()
                         }

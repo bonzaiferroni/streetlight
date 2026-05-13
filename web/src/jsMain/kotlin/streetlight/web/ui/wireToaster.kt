@@ -3,12 +3,13 @@ package streetlight.web.ui
 import koala.css.*
 import koala.dom.*
 import streetlight.web.model.Streetlight
+import streetlight.web.model.Toaster
 import streetlight.web.pages.AppBodyKey
 
-fun wireToaster(app: Streetlight) {
-    val model = app.toaster
+fun RenderContext.wireToaster() {
+    val model = app.get<Toaster>()
 
-    AppBodyKey.ToasterId.replaceRender(app.appScope) {
+    replaceRender(AppBodyKey.ToasterId) {
         column(modify(Padding2)) {
             itemsBlock(model.messagesFlow, modify(Magic, SlideLeft)) {
                 val text = it.text ?: return@itemsBlock

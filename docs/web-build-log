@@ -17,3 +17,13 @@ modules with warnings 4.77 MiB [true warnings]
   + 8 modules
 ../../node_modules/@js-joda/core/dist/js-joda.esm.js 392 KiB [built] [code generated]
 webpack 5.101.3 compiled with 3 warnings in 12590 ms
+
+// added koin dependency
+
+asset web.js 1.68 MiB [emitted] [minimized] [big] (name: main) 2 related assets
+webpack 5.101.3 compiled with 3 warnings in 12921 ms
+
+// after refactoring
+
+asset web.js 1.59 MiB [emitted] [minimized] [big] (name: main) 2 related assets
+webpack 5.101.3 compiled with 3 warnings in 12064 ms

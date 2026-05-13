@@ -6,49 +6,47 @@ import koala.css.modify
 import koala.dom.RenderContext
 import koala.dom.flowBlock
 import koala.dom.textBlock
-import koala.dom.viewContextOf
+import koala.model.Portal
 import kotlinx.browser.window
 import streetlight.web.StreetlightScreen
-import streetlight.web.model.Streetlight
 
-fun RenderContext.appNavigation(app: Streetlight) {
+fun RenderContext.appNavigation() {
+    val portal = app.get<Portal>()
+
     flowBlock(
-        flow = app.portal.screenFlow,
+        flow = portal.screenFlow,
         modifiers = modify(Magic, Blur),
         renderCacheCount = 0, // allows unlimited caching
-        onTransition = { window.scrollTo(0.0, app.portal.stateNow.initialScrollY) },
+        onTransition = { window.scrollTo(0.0, portal.stateNow.initialScrollY) },
     ) { screen ->
-        viewContextOf(app) {
-            when (screen) {
-                StreetlightScreen.Home -> viewHomeRoute()
-                StreetlightScreen.EventProfile -> viewEventProfileRoute()
-                StreetlightScreen.StarDash -> viewStarDash(app)
-                StreetlightScreen.EditEvent -> viewEventEditorRoute()
-                StreetlightScreen.Sandbox -> viewSandbox(app)
-                StreetlightScreen.Earth -> viewEarthMapRoute()
-                StreetlightScreen.Post -> viewStarPostRoute()
-                StreetlightScreen.EditPost -> viewEditPostRoute()
-                StreetlightScreen.Chat -> viewChatRoom(app)
-                StreetlightScreen.SongProfile -> viewSongProfile(app)
-                StreetlightScreen.EditTalent -> editTalentForm(app)
-                StreetlightScreen.Location -> viewLocationProfile(app)
-                StreetlightScreen.EditLocation -> viewEditLocationRoute()
-                StreetlightScreen.LocationAdmin -> viewLocationAdmin(app)
-                StreetlightScreen.CreateGalaxy -> viewGalaxyFoundry()
-                StreetlightScreen.GalaxyList -> viewGalaxyList(app)
-                StreetlightScreen.Galaxy -> viewGalaxyRoute()
-                StreetlightScreen.Star -> viewStarProfileRoute()
-                StreetlightScreen.EventScout -> viewEventScoutProtoRoute()
-                StreetlightScreen.LocationScout -> viewLocationScoutRoute()
-                StreetlightScreen.PostContent -> viewContentPosterRoute()
-                StreetlightScreen.EditStar -> viewStarEditor()
-                StreetlightScreen.SiteConfig -> viewSiteConfig()
-                StreetlightScreen.AboutApp -> viewAboutApp()
-                StreetlightScreen.PrivacyPolicy -> viewPrivacyPolicy()
-                StreetlightScreen.SiteDoc -> viewSiteDocRoute()
-                StreetlightScreen.Talk -> viewTalkRoute()
-                else -> textBlock("Coming soon: $screen")
-            }
+        when (screen) {
+            StreetlightScreen.Home -> viewHomeRoute()
+            StreetlightScreen.EventProfile -> viewEventProfileRoute()
+            StreetlightScreen.StarDash -> viewStarDash()
+            StreetlightScreen.EditEvent -> viewEventEditorRoute()
+            StreetlightScreen.Sandbox -> viewSandbox()
+            StreetlightScreen.Earth -> viewEarthMapRoute()
+            StreetlightScreen.Post -> viewStarPostRoute()
+            StreetlightScreen.EditPost -> viewEditPostRoute()
+            StreetlightScreen.Chat -> viewChatRoom()
+            StreetlightScreen.SongProfile -> viewSongProfile()
+            StreetlightScreen.EditTalent -> editTalentForm()
+            StreetlightScreen.Location -> viewLocationProfile()
+            StreetlightScreen.EditLocation -> viewEditLocationRoute()
+            StreetlightScreen.LocationAdmin -> viewLocationAdmin()
+            StreetlightScreen.CreateGalaxy -> viewGalaxyFoundry()
+            StreetlightScreen.GalaxyList -> viewGalaxyList()
+            StreetlightScreen.Galaxy -> viewGalaxyRoute()
+            StreetlightScreen.Star -> viewStarProfileRoute()
+            // StreetlightScreen.EventScout -> viewEventScoutProtoRoute()
+            // StreetlightScreen.LocationScout -> viewLocationScoutRouteProto()
+            StreetlightScreen.PostContent -> viewContentPosterRoute()
+            StreetlightScreen.EditStar -> viewStarEditor()
+            StreetlightScreen.SiteConfig -> viewSiteConfig()
+            StreetlightScreen.AboutApp -> viewAboutApp()
+            StreetlightScreen.SiteDoc -> viewSiteDocRoute()
+            StreetlightScreen.Talk -> viewTalkRoute()
+            else -> textBlock("Coming soon: $screen")
         }
     }
 }

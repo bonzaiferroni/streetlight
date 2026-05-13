@@ -9,15 +9,14 @@ import kotlinx.html.js.div
 import streetlight.model.data.Star
 import streetlight.web.StarDashRoute
 import streetlight.web.model.Streetlight
+import streetlight.web.model.UserGate
 
 fun RenderContext.starBlock(
-    app: Streetlight,
     redirect: Boolean = false,
     modifiers: ModifierSet? = null,
     block: RenderContext.(Star) -> Unit
 ) {
-    val gate = app.gate
-    val portal = app.portal
+    val gate = app.get<UserGate>()
 
     flowBlock(gate.starFlow, modifiers) { user ->
         if (user != null) {

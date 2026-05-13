@@ -7,14 +7,14 @@ import streetlight.web.io.getDataOrNull
 import streetlight.web.io.handleResponse
 import streetlight.web.layouts.PostKey
 import streetlight.web.layouts.layoutPosts
+import streetlight.web.model.DataCache
 import streetlight.web.model.Streetlight
 import streetlight.web.shells.GalaxyKey
 import streetlight.web.shells.GalaxyContent
 import streetlight.web.shells.galaxyShell
 
-fun ViewContext<Streetlight>.viewGalaxy(content: GalaxyContent) {
-    val app = model
-    val stage = model.stage.galaxy
+fun RenderContext.viewGalaxy(content: GalaxyContent) {
+    val cache = app.get<DataCache>()
 
     val root = shellBox(GalaxyKey.ShellId) {
         galaxyShell(content)
@@ -24,17 +24,17 @@ fun ViewContext<Streetlight>.viewGalaxy(content: GalaxyContent) {
     wireLights(
         root = root,
         attribute = StarLightKey.EventLightId,
-        cache = app.cache.eventLights
+        cache = cache.eventLights
     )
-    wireGalaxyMenu(app, root, content.galaxy)
+    wireGalaxyMenu(root, content.galaxy)
 
-    app.streetMap.setPosts(content.posts)
+    streetMap.setPosts(content.posts)
     stage.setStage(content)
 
     renderScope.launch {
         stage.postFlow.collect { posts ->
             val posts = posts.takeIf { !stage.stateNow.isInitialStage } ?: return@collect
-            app.streetMap.setPosts(posts)
+            streetMap.setPosts(posts)
             replaceRender(PostKey.PostLayoutId, root) {
                 column(PostKey.PostLayoutColumnMod) {
                     layoutPosts(posts)
@@ -44,8 +44,8 @@ fun ViewContext<Streetlight>.viewGalaxy(content: GalaxyContent) {
     }
 }
 
-fun AppContext.viewGalaxyRoute() {
-    routeBlock<GalaxyRoute, GalaxyContent>(model.portal, { route ->
+fun RenderContext.viewGalaxyRoute() {
+    routeBlock<GalaxyRoute, GalaxyContent>(portal, { route ->
         readIslandOrApi(GalaxyKey.GalaxyContentId, { it.galaxy.galaxyId.value == route.id || it.galaxy.slug == route.id}) {
             val galaxy = api.readGalaxy(route.id).handleResponse(toaster::toast) ?: return@routeBlock null
             val listing = api.readPosts(galaxy.galaxyId).getDataOrNull() ?: return@routeBlock null
@@ -55,8 +55,6 @@ fun AppContext.viewGalaxyRoute() {
             )
         }
     }) { content ->
-        viewContextOf(model) {
-            viewGalaxy(content)
-        }
+        viewGalaxy(content)
     }
 }

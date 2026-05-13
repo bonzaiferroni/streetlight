@@ -6,11 +6,10 @@ import streetlight.web.SongProfileRoute
 import streetlight.web.model.Streetlight
 import streetlight.web.model.SongProfile
 
-fun RenderContext.viewSongProfile(app: Streetlight) {
-    val portal = app.portal
+fun RenderContext.viewSongProfile() {
 
     flowBlock(portal.routeFlowOf<SongProfileRoute>()) { route ->
-        val model = SongProfile(route.songId, renderScope, app.client.api)
+        val model = SongProfile(route.songId, renderScope, api)
 
         column {
             row {

@@ -6,14 +6,13 @@ import streetlight.model.data.Galaxy
 import streetlight.web.ui.ViewModel
 
 class EventScout(
-    override val app: Streetlight,
-    val scope: CoroutineScope,
     val galaxy: Galaxy,
-): ViewModel {
+    val scope: CoroutineScope,
+) {
     // private val state = storeOf(EventScoutState(blankEvent))
 
-    val location = LocationFinder(scope, app)
-    val editor = EventEditor(EventEdit(), scope, app.client)
+    // val location = LocationFinder(scope)
+    // val editor = EventEditor(EventEdit(), scope)
 
 
 }
