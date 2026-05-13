@@ -21,7 +21,7 @@ class ContentEditor(
     val stateFlow = state.flow
     val stateNow get() = state.now
 
-    val message = storeOf(UIMessage())
+    val msg = storeOf<UIMessage?>(null)
 
     val contentFlow = stateFlow.mapDistinct { it.content }
     val contentNow get() = state.now.content
@@ -29,7 +29,7 @@ class ContentEditor(
     init {
         scope.launch {
             contentFlow.mapDistinct { it.invalidMessage }.collect {
-                message.set(it ?: "Looks good.")
+                msg.set(it ?: "Looks good.")
             }
         }
     }
@@ -49,7 +49,7 @@ class ContentEditor(
             content = blobUrl?.let {
                 val refUrl = api.uploadImage(blobUrl)
                 if (refUrl == null) {
-                    message.set("Unable to upload image.")
+                    msg.set("Unable to upload image.")
                     return@launch
                 }
 

@@ -25,7 +25,7 @@ class GalaxyEditor(
     val stateNow get() = state.now
     val galaxyFlow = stateFlow.mapDistinct { it.galaxy }
     val galaxyNow get() = state.now.galaxy
-    val msg = storeOf(UIMessage(galaxy?.invalidMessage ?: "Looks good."))
+    val msg = storeOf<UIMessage?>(UIMessage(galaxy?.invalidMessage ?: "Looks good."))
 
     fun setName(value: String) {
         if (!GalaxyEdit.isValidName(value)) return

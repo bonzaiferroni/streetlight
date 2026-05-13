@@ -2,13 +2,11 @@ package streetlight.web.ui
 
 import koala.css.Accent
 import koala.css.AlignItemsStretch
-import koala.css.Aspect1
 import koala.css.Aspect3By2
 import koala.css.BorderRadius1
 import koala.css.ContainerMdRow
 import koala.css.Flex1
 import koala.css.JustifyContentSpaceBetween
-import koala.css.MinHeight8
 import koala.css.QueryContainer
 import koala.css.modify
 import koala.dom.*
@@ -25,34 +23,12 @@ import streetlight.web.model.Streetlight
 import streetlight.web.model.LocationEditor
 import streetlight.web.pages.appFooter
 
-fun RenderContext.viewLocationEditor(
-    location: LocationEdit,
-    app: Streetlight,
-    bindFlow: Flow<LocationEdit>?,
-    allowSubmit: Boolean,
-    onEdit: ((LocationEdit) -> Unit)?
-) {
-    val model = LocationEditor(location, renderScope, app.client)
+fun ViewContext<LocationEditor>.viewLocationEditor() {
     val nameFlow = model.editFlow.mapDistinct { it.name }
     val linkFlow = model.editFlow.mapDistinct { it.website }
     val eventsLinkFlow = model.editFlow.mapDistinct { it.eventsUrl }
     val imageFlow = model.editFlow.mapDistinct { it.imageRef?.takeIf { url -> url.value.isNotBlank() } }
 
-    onEdit?.let {
-        renderScope.launch {
-            model.editFlow.collect {
-                onEdit(it)
-            }
-        }
-    }
-
-    bindFlow?.let {
-        renderScope.launch {
-            it.collect { edit ->
-                model.setEdit(edit)
-            }
-        }
-    }
 
     column(modify(AlignItemsStretch, QueryContainer)) {
         column(modify(ContainerMdRow)) {
@@ -75,25 +51,6 @@ fun RenderContext.viewLocationEditor(
 
         textField("website", modify(Flex1), model::setLink, linkFlow)
         textField("calendar", modify(), model::setEventsLink, eventsLinkFlow)
-
-        if (allowSubmit) {
-            row(modify(JustifyContentSpaceBetween)) {
-                button("Back", onClick = {
-                    app.portal.goBack()
-                })
-                row {
-                    messageBox(model.message.flow)
-                    button("Edit", modify(Accent), onClick = {
-                        renderScope.launch {
-                            val locationId = model.saveLocation()
-                            if (locationId != null) {
-                                app.portal.goBack()
-                            }
-                        }
-                    })
-                }
-            }
-        }
     }
 }
 
@@ -112,8 +69,11 @@ fun AppContext.viewEditLocationRoute() {
                     is CreateLocationRoute -> LocationEdit()
                 }
             }
-        ) {
-            viewLocationEditor(it, app, null, true, null)
+        ) { edit ->
+            val editor = LocationEditor(edit, renderScope, app)
+            viewContextOf(editor) {
+                viewLocationEditor()
+            }
         }
         appFooter()
     }

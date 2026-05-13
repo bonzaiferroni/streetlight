@@ -14,8 +14,8 @@ enum class UIMessageType {
     Error
 }
 
-fun Store<UIMessage>.set(text: String, type: UIMessageType = UIMessageType.Info) = set { UIMessage(text, type) }
+fun Store<UIMessage?>.set(text: String, type: UIMessageType = UIMessageType.Info) = set { UIMessage(text, type) }
 
-fun Store<UIMessage>.set(problem: Problem<*>?) = set { UIMessage(problem?.message ?: "No response.") }
+fun Store<UIMessage?>.set(problem: Problem<*>?) = set { UIMessage(problem?.message ?: "No response.") }
 
-fun Store<UIMessage>.clear() = set { UIMessage() }
+fun Store<UIMessage?>.clear() = set { null }

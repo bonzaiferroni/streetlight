@@ -25,7 +25,7 @@ fun ViewContext<Streetlight>.viewEventEditor(
     event: EventEdit,
     callback: ((Event?) -> Unit)?
 ) {
-    val msg = storeOf(UIMessage())
+    val msg = storeOf<UIMessage?>(null)
     val editStore = storeOf(event)
 
     // give feedback on edit validity

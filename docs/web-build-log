@@ -1,0 +1,19 @@
+// 05-13-2026
+
+asset web.js 1.66 MiB [emitted] [minimized] [big] (name: main) 2 related assets
+runtime modules 670 bytes 3 modules
+modules with warnings 4.77 MiB [true warnings]
+  ./kotlin/streetlight-web.js 1.54 MiB [built] [code generated] [26 warnings]
+  ./kotlin/kotlin-kotlin-stdlib.js 552 KiB [built] [code generated] [171 warnings]
+  ./kotlin/streetlight-model.js 715 KiB [built] [code generated] [12 warnings]
+  ./kotlin/streetlight-kampfire.js 73.7 KiB [built] [code generated] [13 warnings]
+  ./kotlin/kotlinx-serialization-kotlinx-serialization-core.js 232 KiB [built] [code generated] [64 warnings]
+  ./kotlin/streetlight-koala.js 659 KiB [built] [code generated] [34 warnings]
+  ./kotlin/kotlinx-html.js 99.5 KiB [built] [code generated] [33 warnings]
+  ./kotlin/kotlinx-serialization-kotlinx-serialization-json.js 206 KiB [built] [code generated] [52 warnings]
+  ./kotlin/kotlinx-coroutines-core.js 376 KiB [built] [code generated] [94 warnings]
+  ./kotlin/kotlin_org_jetbrains_kotlin_kotlin_dom_api_compat.js 1.3 KiB [built] [code generated] [1 warning]
+  ./kotlin/streetlight-kabinet.js 16.2 KiB [built] [code generated] [5 warnings]
+  + 8 modules
+../../node_modules/@js-joda/core/dist/js-joda.esm.js 392 KiB [built] [code generated]
+webpack 5.101.3 compiled with 3 warnings in 12590 ms

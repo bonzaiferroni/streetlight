@@ -41,7 +41,7 @@ class ApiClient(private val client: FetchClient) {
     suspend fun searchLocations(query: String) = client.get(Api.Locations.Search) {
         writeParam(it.query, query)
     }
-    suspend fun createOrEditLocation(location: LocationEdit) = client.post(Api.Locations.CreateOrEdit, location)
+    suspend fun createOrEditLocation(location: LocationEdit) = client.postApi(Api.Locations.CreateOrEdit, location)
     suspend fun queryMap(request: MapQuery) = client.get(Api.Events.QueryMap, request.toQuery())
 
     // stars
