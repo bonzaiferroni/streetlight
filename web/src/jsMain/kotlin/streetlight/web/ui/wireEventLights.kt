@@ -3,7 +3,6 @@ package streetlight.web.ui
 import koala.core.queryFirstOrNull
 import koala.css.Property
 import koala.css.UrlValue
-import koala.dom.ViewContext
 import koala.dom.onClick
 import koala.dom.queryAttributeAll
 import koala.dom.setAttribute

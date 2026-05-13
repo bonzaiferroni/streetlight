@@ -21,7 +21,7 @@ import streetlight.web.model.EarthMap
 import streetlight.web.model.Streetlight
 import streetlight.web.pages.AppBodyKey
 
-fun ViewContext<EarthMap>.viewEarthMap() {
+fun RenderContext.viewEarthMap(model: EarthMap) {
 
     box(EarthKey.Id, modify(Size100P)) {
         flowBlock(model.galaxyFlow) { galaxy ->
@@ -77,9 +77,7 @@ fun RenderContext.viewEarthMapRoute() {
                     if (!isVisible) {
                         replaceRender(element) {
                             val model = app.getCoroutineScoped<EarthMap>(renderScope)
-                            viewContextOf(model) {
-                                viewEarthMap()
-                            }
+                            viewEarthMap(model)
                         }
                         element.modify(Reveal)
                         isVisible = true

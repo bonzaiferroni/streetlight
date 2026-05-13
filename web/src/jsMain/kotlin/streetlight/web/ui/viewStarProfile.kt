@@ -1,13 +1,10 @@
 package streetlight.web.ui
 
 import koala.dom.RenderContext
-import koala.dom.ViewContext
 import koala.dom.column
 import koala.dom.routeBlock
 import koala.dom.textBlock
-import koala.dom.viewContextOf
 import streetlight.web.StarRoute
-import streetlight.web.model.Streetlight
 
 fun RenderContext.viewStarProfile(username: String) {
     column {

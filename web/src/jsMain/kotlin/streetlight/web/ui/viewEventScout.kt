@@ -12,7 +12,7 @@ import streetlight.web.model.EventScout
 import streetlight.web.model.Streetlight
 import streetlight.web.ui.viewLocationFinder
 
-fun ViewContext<EventScout>.viewEventScout(galaxy: Galaxy) {
+fun RenderContext.viewEventScout(model: EventScout, galaxy: Galaxy) {
 
     section {
         column(modify(Gap0)) {
@@ -37,8 +37,6 @@ fun RenderContext.viewEventScoutRoute() {
         api.readGalaxy(it.slug).handleResponse(toaster::toast)
     }) { galaxy ->
         val model = EventScout(galaxy, renderScope)
-        viewContextOf(model) {
-            viewEventScout(galaxy)
-        }
+        viewEventScout(model, galaxy)
     }
 }

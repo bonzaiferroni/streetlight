@@ -12,7 +12,7 @@ import streetlight.web.io.handleResponse
 import streetlight.web.model.ContentEditor
 import streetlight.web.model.Streetlight
 
-fun ViewContext<ContentEditor>.viewContentPoster(galaxy: Galaxy) {
+fun RenderContext.viewContentPoster(model: ContentEditor, galaxy: Galaxy) {
     section(modify(Column)) {
         heading1(galaxy.name, modify(TextAlignCenter))
         filigree {
@@ -20,7 +20,7 @@ fun ViewContext<ContentEditor>.viewContentPoster(galaxy: Galaxy) {
         }
 
         card {
-            viewContentEditor()
+            viewContentEditor(model)
         }
 
         row(modify(JustifyContentEnd)) {
@@ -35,8 +35,6 @@ fun RenderContext.viewContentPosterRoute() {
         api.readGalaxy(it.slug).handleResponse(toaster::toast)
     }) { galaxy ->
         val model = ContentEditor(StarPostEdit(null, galaxy.galaxyId), renderScope, api, toaster)
-        viewContextOf(model) {
-            viewContentPoster(galaxy)
-        }
+        viewContentPoster(model, galaxy)
     }
 }

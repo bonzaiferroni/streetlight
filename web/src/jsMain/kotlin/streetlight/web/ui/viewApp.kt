@@ -48,9 +48,7 @@ fun viewApp() {
                 wireRightPanel()
                 wireToaster()
 
-                viewContextOf(app) {
-                    registerMenu(PostKey.PostMenuId, { PostId(it) }, RenderContext::postMenu)
-                }
+                registerMenu(PostKey.PostMenuId, { PostId(it) }, RenderContext::postMenu)
             }
 
             try {

@@ -8,7 +8,7 @@ import koala.css.modify
 import koala.dom.*
 import streetlight.web.model.LocationFinder
 
-fun ViewContext<LocationFinder>.viewLocationFinder() {
+fun RenderContext.viewLocationFinder(model: LocationFinder) {
     column {
         row(modify(AlignItemsStart)) {
             column(modify(Flex1, AlignItemsEnd)) {

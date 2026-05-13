@@ -2,6 +2,7 @@ package streetlight.web.ui
 
 import koala.dom.ViewContext
 
+@Deprecated("pass the model as an argument")
 typealias ModelContext = ViewContext<ViewModel>
 
 val ModelContext.portal get() = model.app.portal

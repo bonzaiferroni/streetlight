@@ -18,7 +18,7 @@ import streetlight.web.io.TalkLog
 import streetlight.web.io.handleResponse
 import streetlight.web.model.Streetlight
 
-fun ViewContext<TalkLog>.viewTalkLog() {
+fun RenderContext.viewTalkLog(model: TalkLog) {
     var treeRoot: HTMLElement? = null
 
     column {
@@ -41,16 +41,16 @@ fun ViewContext<TalkLog>.viewTalkLog() {
 
         launch {
             val comments = model.readHistory().handleResponse(toaster::toast) ?: return@launch
-            buildTree(treeRoot!!, comments)
+            buildTree(model, treeRoot!!, comments)
 
             model.messageFlow.collect { message ->
                 when (message) {
                     is CommentCreated -> {
-                        growTree(treeRoot, message.comment)
+                        growTree(model, treeRoot, message.comment)
                     }
 
                     is CommentUpdated -> {
-                        updateComment(message)
+                        updateComment(model, message)
                     }
                 }
             }
@@ -58,7 +58,7 @@ fun ViewContext<TalkLog>.viewTalkLog() {
 
         launch {
             model.sortByFlow.collect {
-                buildTree(treeRoot!!, model.comments.toList())
+                buildTree(model, treeRoot!!, model.comments.toList())
             }
         }
     }
@@ -67,13 +67,11 @@ fun ViewContext<TalkLog>.viewTalkLog() {
 fun RenderContext.viewTalkRoute() {
     routeBlock<TalkRoute> { route ->
         val model = TalkLog(renderScope, route.stringId, route.type, api)
-        viewContextOf(model) {
-            viewTalkLog()
-        }
+        viewTalkLog(model)
     }
 }
 
-fun ViewContext<TalkLog>.buildTree(treeRoot: HTMLElement, comments: List<Comment>) {
+fun RenderContext.buildTree(model: TalkLog, treeRoot: HTMLElement, comments: List<Comment>) {
     val sortBy = model.stateNow.sortBy
 
     val comments = when (sortBy) {
@@ -82,9 +80,9 @@ fun ViewContext<TalkLog>.buildTree(treeRoot: HTMLElement, comments: List<Comment
     }
     val roots = comments.filter { it.parentId == null }
 
-    replaceView(treeRoot) {
+    replaceRender(treeRoot) {
         roots.forEach {
-            val view = addCommentView(it, comments) ?: return@forEach
+            val view = addCommentView(model, it, comments) ?: return@forEach
             with(view) {
                 render()
             }
@@ -92,20 +90,20 @@ fun ViewContext<TalkLog>.buildTree(treeRoot: HTMLElement, comments: List<Comment
     }
 }
 
-fun ViewContext<TalkLog>.growTree(treeRoot: HTMLElement, comment: Comment) {
-    val view = addCommentView(comment, emptyList()) ?: return
+fun RenderContext.growTree(model: TalkLog, treeRoot: HTMLElement, comment: Comment) {
+    val view = addCommentView(model, comment, emptyList()) ?: return
     when (val parentId = comment.parentId) {
         null -> {
             when (model.stateNow.sortBy) {
                 PostOrder.NewFirst -> {
-                    prependView(treeRoot) {
+                    prependRender(treeRoot) {
                         with (view) {
                             render()
                         }
                     }
                 }
                 PostOrder.OldFirst -> {
-                    appendView(treeRoot) {
+                    appendRender(treeRoot) {
                         with (view) {
                             render()
                         }
@@ -122,7 +120,7 @@ fun ViewContext<TalkLog>.growTree(treeRoot: HTMLElement, comment: Comment) {
     }
 }
 
-fun ViewContext<TalkLog>.updateComment(message: CommentUpdated) {
+fun RenderContext.updateComment(model: TalkLog, message: CommentUpdated) {
     val view = model.commentViews[message.commentId] ?: return
 
     with(view) {
@@ -130,7 +128,7 @@ fun ViewContext<TalkLog>.updateComment(message: CommentUpdated) {
     }
 }
 
-fun ViewContext<TalkLog>.commentEditor(
+fun RenderContext.commentEditor(
     label: String,
     initialText: String,
     modifiers: ModifierSet? = null,
@@ -155,16 +153,20 @@ fun ViewContext<TalkLog>.commentEditor(
     }
 }
 
-fun ViewContext<TalkLog>.addCommentView(comment: Comment, comments: List<Comment>): CommentView? {
+fun RenderContext.addCommentView(
+    model: TalkLog,
+    comment: Comment,
+    comments: List<Comment>
+): CommentView? {
     if (model.commentViews.contains(comment.commentId)) return null
     val isUserComment = comment.username != null && comment.username == gate.stateNow.star?.username
 
-    val view = CommentView(comment, isUserComment)
+    val view = CommentView(comment, model, isUserComment)
     model.commentViews[comment.commentId] = view
 
     comments.forEach {
         if (it.parentId != comment.commentId) return@forEach
-        val reply = addCommentView(it, comments) ?: return@forEach
+        val reply = addCommentView(model, it, comments) ?: return@forEach
         view.addReply(reply)
     }
     return view

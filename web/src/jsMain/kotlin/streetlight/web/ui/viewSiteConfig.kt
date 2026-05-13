@@ -3,7 +3,6 @@ package streetlight.web.ui
 import koala.css.AlignItemsStart
 import koala.css.modify
 import koala.dom.RenderContext
-import koala.dom.ViewContext
 import koala.dom.column
 import koala.dom.dropMenu
 import koala.dom.row

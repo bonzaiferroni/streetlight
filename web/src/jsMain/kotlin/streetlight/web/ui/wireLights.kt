@@ -2,7 +2,6 @@ package streetlight.web.ui
 
 import koala.css.Magic
 import koala.dom.RenderContext
-import koala.dom.ViewContext
 import koala.dom.modify
 import koala.dom.onClick
 import koala.dom.queryAttributeAll

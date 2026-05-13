@@ -47,142 +47,139 @@ fun RenderContext.viewEventEditor(
         }
     }
 
-    viewContextOf(model) {
+    column(modify(AlignItemsStretch, QueryContainer, Gap4)) {
 
-        column(modify(AlignItemsStretch, QueryContainer, Gap4)) {
+        column(modify(ContainerMdRow)) {
 
-            column(modify(ContainerMdRow)) {
+            // provide event image
+            column(modify(Flex1)) {
+                filigree {
+                    heading3("Image")
+                }
+                imageDrop(model.imageUrlFlow, model::setImageRef, modify(Aspect3By2, BorderRadius1))
+            }
 
-                // provide event image
-                column(modify(Flex1)) {
+            column(modify(Flex2, Gap4)) {
+                column {
                     filigree {
-                        heading3("Image")
+                        heading3("Event title and cost")
                     }
-                    imageDrop(model.imageUrlFlow, model::setImageRef, modify(Aspect3By2, BorderRadius1))
-                }
-
-                column(modify(Flex2, Gap4)) {
-                    column {
-                        filigree {
-                            heading3("Event title and cost")
-                        }
-                        // provide event title
-                        textField(
-                            label = "title",
-                            onValue = model::setEventTitle,
-                            flow = model.titleFlow,
-                            modifiers = modify(Width100P),
-                            placeholder = "Event Title"
-                        )
-                        row {
-
-                            // provide event cost
-                            row {
-                                textField("cost", modify(Width12), onValue = model::setCost, flow = model.costFlow)
-                                checkBox("Free event", model::setFree, model.isFreeFlow)
-                            }
-
-                            // td: implement event tagging
-                            // textField(placeholder = "Add a tag")
-                        }
-                    }
-
-                    column {
-                        filigree {
-                            heading3("When though?")
-                        }
-                        row(modify(AlignItemsCenter, JustifyContentCenter)) {
-                            blockLabel("start time") {
-                                timeInput(model.startTimeFlow, model::setStartTime)
-                            }
-                            // end time is optional, not every event has a fixed end time
-                            blockLabel("end time") {
-                                timeInput(model.endTimeFlow, model::setEndTime)
-                            }
-                            blockLabel("day") {
-                                dateInput(model.dateFlow, model::setDate)
-                            }
-                        }
-                        flowBlock(model.startsAtFlow, modify(FlexColumn, AlignItemsCenter)) {
-                            val startsAt = it ?: return@flowBlock
-                            // must be boxed due to FlowContent context
-                            val dayDescription = when (startsAt < Clock.System.now()) {
-                                true -> "in the past"
-                                else -> startsAt.toRelativeDayFormat()
-                            }
-                            box {
-                                heading4("That's $dayDescription.")
-                            }
-                        }
-                    }
-                }
-            }
-
-            // provide event description
-            // td: render markdown hints in editor
-            column {
-                filigree {
-                    heading3("Description")
-                }
-                column(modify(OpacityMost, AlignItemsCenter)) {
-                    textBlock(
-                        "Tell us all about the event. Markdown features currently supported: Headings, paragraphs.",
+                    // provide event title
+                    textField(
+                        label = "title",
+                        onValue = model::setEventTitle,
+                        flow = model.titleFlow,
+                        modifiers = modify(Width100P),
+                        placeholder = "Event Title"
                     )
-                    textBlock("If you use content from the source, it is respectful to get permission. You may even gain a contact.")
+                    row {
+
+                        // provide event cost
+                        row {
+                            textField("cost", modify(Width12), onValue = model::setCost, flow = model.costFlow)
+                            checkBox("Free event", model::setFree, model.isFreeFlow)
+                        }
+
+                        // td: implement event tagging
+                        // textField(placeholder = "Add a tag")
+                    }
                 }
-                textEditor(
-                    label = "description",
-                    placeholder = "Event description",
-                    // 16 rows are default as roughly the desired content length, field can be resized
-                    rows = 16,
-                    onValue = model::setDescription,
-                    flow = model.descriptionFlow
-                )
-                row(modify(JustifyContentSpaceBetween)) {
-                    buttonPopover("Markdown Hints", flair = "💡") {
-                        card(modify(ButtonPopover.CardMod, Padding2)) {
-                            bulletsOf(
-                                "Add a blank line in between paragraphs.",
-                                "Use # symbols at the beginning of a line to provide a heading.",
-                                "One # provides the largest heading, two provides the next largest, etc.",
-                            )
-                            textProperty("Example", "### My Fancy Heading")
-                            textProperty("Becomes") {
-                                heading3("My Fancy Heading")
-                            }
+
+                column {
+                    filigree {
+                        heading3("When though?")
+                    }
+                    row(modify(AlignItemsCenter, JustifyContentCenter)) {
+                        blockLabel("start time") {
+                            timeInput(model.startTimeFlow, model::setStartTime)
+                        }
+                        // end time is optional, not every event has a fixed end time
+                        blockLabel("end time") {
+                            timeInput(model.endTimeFlow, model::setEndTime)
+                        }
+                        blockLabel("day") {
+                            dateInput(model.dateFlow, model::setDate)
                         }
                     }
-                    buttonDialog("Preview", emoji = "👀") {
-                        flowBlock(model.descriptionFlow) {
-                            box(modify(Padding2)) {
-                                markdown(it)
-                            }
+                    flowBlock(model.startsAtFlow, modify(FlexColumn, AlignItemsCenter)) {
+                        val startsAt = it ?: return@flowBlock
+                        // must be boxed due to FlowContent context
+                        val dayDescription = when (startsAt < Clock.System.now()) {
+                            true -> "in the past"
+                            else -> startsAt.toRelativeDayFormat()
+                        }
+                        box {
+                            heading4("That's $dayDescription.")
                         }
                     }
                 }
             }
-
-            // provide additional links
-            column {
-                filigree {
-                    heading3("Event Links")
-                }
-                eventLinks()
-            }
-
-            // td: provide a way to change the event location, in case it changes or the initial location was mistaken
-            // td: provide info if the event is limited by age or otherwise
-            // column(modify(Gap0)) {
-            //     heading3("Who?", modify(Padding1, Dim))
-            //     card {
-            //         textBlock("yer who")
-            //     }
-            // }
         }
+
+        // provide event description
+        // td: render markdown hints in editor
+        column {
+            filigree {
+                heading3("Description")
+            }
+            column(modify(OpacityMost, AlignItemsCenter)) {
+                textBlock(
+                    "Tell us all about the event. Markdown features currently supported: Headings, paragraphs.",
+                )
+                textBlock("If you use content from the source, it is respectful to get permission. You may even gain a contact.")
+            }
+            textEditor(
+                label = "description",
+                placeholder = "Event description",
+                // 16 rows are default as roughly the desired content length, field can be resized
+                rows = 16,
+                onValue = model::setDescription,
+                flow = model.descriptionFlow
+            )
+            row(modify(JustifyContentSpaceBetween)) {
+                buttonPopover("Markdown Hints", flair = "💡") {
+                    card(modify(ButtonPopover.CardMod, Padding2)) {
+                        bulletsOf(
+                            "Add a blank line in between paragraphs.",
+                            "Use # symbols at the beginning of a line to provide a heading.",
+                            "One # provides the largest heading, two provides the next largest, etc.",
+                        )
+                        textProperty("Example", "### My Fancy Heading")
+                        textProperty("Becomes") {
+                            heading3("My Fancy Heading")
+                        }
+                    }
+                }
+                buttonDialog("Preview", emoji = "👀") {
+                    flowBlock(model.descriptionFlow) {
+                        box(modify(Padding2)) {
+                            markdown(it)
+                        }
+                    }
+                }
+            }
+        }
+
+        // provide additional links
+        column {
+            filigree {
+                heading3("Event Links")
+            }
+            eventLinks(model)
+        }
+
+        // td: provide a way to change the event location, in case it changes or the initial location was mistaken
+        // td: provide info if the event is limited by age or otherwise
+        // column(modify(Gap0)) {
+        //     heading3("Who?", modify(Padding1, Dim))
+        //     card {
+        //         textBlock("yer who")
+        //     }
+        // }
     }
 }
 
-private fun ViewContext<EventEditor>.eventLinks() {
+private fun RenderContext.eventLinks(model: EventEditor) {
     val linksFlow = model.stateFlow.mapDistinct { it.event.links ?: emptyList() }
 
     val editState = storeOf(LinkEditState())

@@ -1,7 +1,6 @@
 package streetlight.web.ui
 
 import koala.dom.RenderContext
-import koala.dom.ViewContext
 import koala.dom.routeBlock
 import koala.html.AppRoute
 import koala.model.Portal

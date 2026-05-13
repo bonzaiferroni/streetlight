@@ -17,13 +17,13 @@ import streetlight.web.io.handleResponse
 import streetlight.web.model.ContentEditor
 import streetlight.web.model.Streetlight
 
-fun ViewContext<ContentEditor>.viewContentUpdater() {
+fun RenderContext.viewContentUpdater(model: ContentEditor) {
 
     section(modify(Column)) {
         heading1("Edit Post", modify(TextAlignCenter))
 
         card {
-            viewContentEditor()
+            viewContentEditor(model)
         }
 
         row(modify(JustifyContentEnd)) {
@@ -43,9 +43,7 @@ fun RenderContext.viewEditPostRoute() {
         }
     }) {
         val editor = ContentEditor(it, renderScope, api, toaster)
-        viewContextOf(editor) {
-            viewContentUpdater()
-        }
+        viewContentUpdater(editor)
     }
 }
 

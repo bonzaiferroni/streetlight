@@ -5,7 +5,7 @@ import koala.dom.*
 import koala.model.mapDistinct
 import streetlight.web.model.ContentEditor
 
-fun ViewContext<ContentEditor>.viewContentEditor() {
+fun RenderContext.viewContentEditor(model: ContentEditor) {
     val titleFlow = model.contentFlow.mapDistinct { it.title }
     val subtitleFlow = model.contentFlow.mapDistinct { it.subtitle }
     val textFlow = model.contentFlow.mapDistinct { it.text }

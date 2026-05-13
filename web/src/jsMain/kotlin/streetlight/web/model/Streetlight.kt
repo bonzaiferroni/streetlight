@@ -11,6 +11,7 @@ import streetlight.web.io.OSMClient
 import streetlight.web.io.OmniLog
 import streetlight.web.io.TransitClient
 
+@Deprecated("use dependency injection")
 interface Streetlight {
     val appScope: CoroutineScope
     val client: ClientFacade
@@ -27,12 +28,14 @@ interface Streetlight {
     val toaster: Toaster
 }
 
+@Deprecated("use dependency injection")
 interface ClientFacade {
     val transit: TransitClient
     val api: ApiClient
     val location: OSMClient
 }
 
+@Deprecated("use dependency injection")
 interface StageFacade {
     val galaxy: GalaxyStage
 }

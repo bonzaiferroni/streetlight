@@ -18,7 +18,7 @@ import streetlight.web.EditLocationRoute
 import streetlight.web.model.LocationEditor
 import streetlight.web.pages.appFooter
 
-fun ViewContext<LocationEditor>.viewLocationEditor() {
+fun RenderContext.viewLocationEditor(model: LocationEditor) {
     val nameFlow = model.editFlow.mapDistinct { it.name }
     val linkFlow = model.editFlow.mapDistinct { it.website }
     val eventsLinkFlow = model.editFlow.mapDistinct { it.eventsUrl }
@@ -62,9 +62,7 @@ fun RenderContext.viewEditLocationRoute() {
             }
         ) { edit ->
             val editor = LocationEditor(edit, renderScope, api)
-            viewContextOf(editor) {
-                viewLocationEditor()
-            }
+            viewLocationEditor(editor)
         }
         appFooter()
     }

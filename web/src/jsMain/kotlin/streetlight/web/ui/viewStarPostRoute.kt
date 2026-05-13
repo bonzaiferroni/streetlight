@@ -4,7 +4,6 @@ import koala.dom.RenderContext
 import koala.dom.replaceRender
 import koala.dom.routeBlock
 import koala.dom.shellBox
-import koala.dom.viewContextOf
 import streetlight.model.data.SpaceType
 import streetlight.model.data.StarPost
 import streetlight.web.StarPostRoute
@@ -20,9 +19,7 @@ fun RenderContext.viewStarPost(post: StarPost) {
 
     replaceRender(PostKey.TalkId) {
         val talkLog = TalkLog(renderScope, post.postId.value, SpaceType.Post, api)
-        viewContextOf(talkLog) {
-            viewTalkLog()
-        }
+        viewTalkLog(talkLog)
     }
 }
 

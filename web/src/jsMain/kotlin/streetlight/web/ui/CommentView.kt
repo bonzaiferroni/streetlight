@@ -17,6 +17,7 @@ import streetlight.web.io.TalkLog
 
 class CommentView(
     comment: Comment,
+    val model: TalkLog,
     val isUserComment: Boolean,
 ) {
     var comment = comment
@@ -85,7 +86,7 @@ class CommentView(
         replies.add(reply)
     }
 
-    fun ViewContext<TalkLog>.replyAction() {
+    fun RenderContext.replyAction() {
         if (stagedReplies.isNotEmpty()) {
             showStagedReplies()
         } else {
@@ -93,12 +94,12 @@ class CommentView(
         }
     }
 
-    fun ViewContext<TalkLog>.startReply() {
+    fun RenderContext.startReply() {
         isReplying = !isReplying
         if (isReplying) {
             rootBlock.modify(CommentClass.HasNestedContent)
             if (replyBlock.hasChildNodes()) return
-            replaceView(replyBlock) {
+            replaceRender(replyBlock) {
                 commentEditor("reply", "", modify(AutoMagic, SlideLeft)) { text ->
                     val commentId = model.createComment(comment.commentId, text)
 
@@ -119,12 +120,12 @@ class CommentView(
         }
     }
 
-    fun ViewContext<TalkLog>.toggleEdit() {
+    fun RenderContext.toggleEdit() {
         isEditing = !isEditing
         if (isEditing) {
             editBlock.unmodify(DisplayNone)
             if (editBlock.hasChildNodes()) return
-            replaceView(editBlock) {
+            replaceRender(editBlock) {
                 commentEditor("edit", comment.text) { text ->
                     val isSuccess = model.updateComment(comment.commentId, text)
                     return@commentEditor when (isSuccess) {
@@ -144,7 +145,7 @@ class CommentView(
         }
     }
 
-    fun ViewContext<TalkLog>.stageReply(comment: CommentView, isUserReply: Boolean) {
+    fun RenderContext.stageReply(comment: CommentView, isUserReply: Boolean) {
         if (isUserReply) {
             renderStagedReplies(listOf(comment))
         } else {
@@ -153,7 +154,7 @@ class CommentView(
         }
     }
 
-    fun ViewContext<TalkLog>.showStagedReplies() {
+    fun RenderContext.showStagedReplies() {
         val replies = stagedReplies.toList()
         stagedReplies.clear()
         renderStagedReplies(replies)
@@ -161,7 +162,7 @@ class CommentView(
         rootBlock.modify(CommentClass.HasNestedContent)
     }
 
-    private fun ViewContext<TalkLog>.renderStagedReplies(replies: List<CommentView>) {
+    private fun RenderContext.renderStagedReplies(replies: List<CommentView>) {
         prependRender(repliesBlock) {
             replies.forEach { reply ->
                 with (reply) {
@@ -171,7 +172,7 @@ class CommentView(
         }
     }
 
-    fun ViewContext<TalkLog>.stageUpdate(text: String) {
+    fun RenderContext.stageUpdate(text: String) {
         if (isUserComment) {
             updateTextContent(text)
         } else {
@@ -180,13 +181,13 @@ class CommentView(
         }
     }
 
-    fun ViewContext<TalkLog>.showStagedUpdate() {
+    fun RenderContext.showStagedUpdate() {
         val text = stagedUpdate ?: error("staged update not found")
         showUpdateButton.modify(DisplayNone)
         updateTextContent(text)
     }
 
-    private fun ViewContext<TalkLog>.updateTextContent(text: String) {
+    private fun RenderContext.updateTextContent(text: String) {
         comment = comment.copy(text = text)
 
         replaceRender(contentBlock) {
@@ -194,7 +195,7 @@ class CommentView(
         }
     }
 
-    fun ViewContext<TalkLog>.render() {
+    fun RenderContext.render() {
         if (isRendered) return
         isRendered = true
 

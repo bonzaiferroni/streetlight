@@ -46,8 +46,6 @@ fun RenderContext.viewEventProfileRoute() {
     }
 
     routeBlock(portal, ::provideData) { event ->
-        viewContextOf(app) {
-            viewEvent(event)
-        }
+        viewEvent(event)
     }
 }
