@@ -7,19 +7,17 @@ import ai.koog.prompt.executor.llms.all.simpleGoogleAIExecutor
 import ai.koog.prompt.params.LLMParams
 import com.fleeksoft.ksoup.nodes.Document
 import kabinet.console.globalConsole
+import kabinet.utils.Environment
 import kampfire.model.ApiResponse
 import kampfire.model.Ok
 import kampfire.model.Problem
 import kampfire.utils.takeEllipsis
 import kotlinx.io.files.Path
-import kotlinx.serialization.json.Json
-import looksLikeHtml
-import java.io.File
 
 // td: refactor, this is a hot mess
-class UrlParser(apiKey: String) {
-    val executor = simpleGoogleAIExecutor(apiKey)
-    val console = globalConsole.getHandle(UrlParser::class)
+class ParserService(env: Environment) {
+    val executor = simpleGoogleAIExecutor(env.read("GEMINI_KEY_A"))
+    val console = globalConsole.getHandle(ParserService::class)
     val cache = mutableMapOf<Int, ParserContent>()
     val trimmer = HtmlTrimmer()
 

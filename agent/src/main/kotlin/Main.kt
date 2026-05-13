@@ -1,9 +1,4 @@
-import klutch.environment.readEnvFromPath
 import kotlinx.coroutines.runBlocking
-import streetlight.agent.HtmlTrimmer
-import streetlight.agent.UrlParser
-import streetlight.model.data.ColdParse
-import java.io.File
 
 fun main(): Unit = runBlocking {
 //    val trimmer = HtmlTrimmer()
