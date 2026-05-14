@@ -97,6 +97,19 @@ fun OSMPlace.toGeoPoint() = GeoPoint(
     lng = lon
 )
 
+@Serializable
+data class OSMCity(
+    val name: String,
+    val state: String,
+    val country: String,
+)
+
+fun OSMPlace.toOSMCity() = OSMCity(
+    name = name,
+    state = address.state ?: "",
+    country = address.country ?: ""
+)
+
 fun OSMPlace.toPlace() = Place(
     name = name,
     address = address.road?.let { road ->

@@ -43,10 +43,10 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         @Deprecated("use edit")
         object Update: PostEndpoint<Location, Boolean>(this, "update")
         object Search: GetEndpoint<List<Location>>(this, "search") {
-            val query = addStringParam("q")
+            val query = stringParamOf("q")
         }
         object ReadTop: GetEndpoint<List<Location>>(this, "read-top") {
-            val count = addIntParam("count")
+            val count = intParamOf("count")
         }
         object QueryPoint: QueryEndpoint<GeoPoint, List<Location>>(this, "query-point")
         object ParseLocation: PostEndpoint<ParseRequest, LocationEdit>(this, "parse-location")
@@ -56,7 +56,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
     object Songs: GetEndpoint<List<Song>>(this, "songs") {
         object Create: PostEndpoint<NewSong, SongId>(this, "create")
         object TakeNextSong: GetByIdEndpoint<EventId, EventSong>(this, "take-next-song") {
-            val since = addInstantParam("since")
+            val since = instantParamOf("since")
         }
     }
 
@@ -70,7 +70,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object Update: PostEndpoint<Rendition, Boolean>(this, "update")
         object Delete: DeleteEndpoint<RenditionId>(this, "delete")
         object ReadAllSince: GetEndpoint<List<Rendition>>(this, "read-all-since") {
-            val since = addInstantParam("since")
+            val since = instantParamOf("since")
         }
     }
 
@@ -85,7 +85,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object VehiclePosition: GetEndpoint<Unit>(this, "VehiclePosition.pb")
         object Routes: GetEndpoint<AreaTransit>(this, "routes")
         object TransitState: GetEndpoint<AreaTransitState>(this, "state") {
-            val timestamp = addLongParam("timestamp")
+            val timestamp = longParamOf("timestamp")
         }
     }
 
@@ -99,7 +99,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
 
     object Stories: ApiNode(this, "story") {
         object ReadUrl: GetEndpoint<ProtoStoryParse>(this, "read-url") {
-            val url = addStringParam("url")
+            val url = stringParamOf("url")
         }
     }
 
@@ -113,7 +113,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
     }
 
     object Galaxies: ApiNode(this, "galaxy") {
-        object Found: PostEndpoint<GalaxyEdit, Galaxy>(this, "found")
+        object CreateOrEdit: PostEndpoint<GalaxyEdit, Galaxy>(this, "found")
         object Top: GetEndpoint<List<Galaxy>>(this, "areas")
         object ReadGalaxies: PostEndpoint<List<GalaxyId>, List<Galaxy>>(this, "read-galaxies")
         object ReadSlug: GetByIdEndpoint<String, Galaxy>(this, "slug")
@@ -129,9 +129,16 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object RemovePost: PostEndpoint<PostId, Boolean>(this, "remove")
     }
 
+    object Localities: ApiNode(this, "locality") {
+        object SearchCity: GetEndpoint<List<Locality>>(this, "search-city") {
+            val query = stringParamOf("name")
+            val country = stringParamOf("country")
+        }
+    }
+
     object Stars: ApiNode(this, "star") {
         object ReadByUsername: GetEndpoint<Star>(this, "star") {
-            val username = addStringParam("username")
+            val username = stringParamOf("username")
         }
 
         object ValidateLogin: GetEndpoint<Star>(this, "validate-login")
@@ -145,8 +152,8 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
     object Talk: ApiNode(this, "talk") {
         object ReadGalaxy: GetByIdEndpoint<GalaxyId, List<Comment>>(this, "galaxy")
         object ReadHistory: GetEndpoint<List<Comment>>(this, "history") {
-            val spaceId = addStringParam("space-id")
-            val spaceType = addEnumParam<SpaceType>("space-type")
+            val spaceId = stringParamOf("space-id")
+            val spaceType = enumParamOf<SpaceType>("space-type")
         }
         object Connect: ApiNode(this, "connect")
         object CreateComment: PostEndpoint<NewComment, CommentId>(this, "create")

@@ -82,7 +82,7 @@ class ApiClient(private val client: FetchClient) {
     suspend fun editTalent(talent: TalentEdit) = client.post(Api.Users.EditTalent, talent)
 
     // galaxies
-    suspend fun foundGalaxy(galaxy: GalaxyEdit) = client.post(Api.Galaxies.Found, galaxy)
+    suspend fun foundGalaxy(galaxy: GalaxyEdit) = client.post(Api.Galaxies.CreateOrEdit, galaxy)
     suspend fun readTopGalaxies() = client.get(Api.Galaxies.Top)
     suspend fun readGalaxies(galaxyIds: List<GalaxyId>) = client.post(Api.Galaxies.ReadGalaxies, galaxyIds)
     suspend fun readGalaxy(id: StringId) = client.getApi(Api.Galaxies.ReadId, id)
@@ -114,6 +114,12 @@ class ApiClient(private val client: FetchClient) {
 
     suspend fun createComment(comment: NewComment) = client.postApi(Api.Talk.CreateComment, comment)
     suspend fun updateComment(comment: UpdatedComment) = client.postApi(Api.Talk.UpdateComment, comment)
+
+    // locality
+    suspend fun searchCity(query: String, country: String) = client.getApi(Api.Localities.SearchCity) {
+        writeParam(it.query, query)
+        writeParam(it.country, country)
+    }
 }
 
 fun <T> ApiResponse<T>?.getDataOrNull() = when (this) {

@@ -13,13 +13,11 @@ import koala.html.section
 import koala.html.span
 import koala.model.GeoMap
 import koala.model.mapDistinct
-import kotlinx.coroutines.CoroutineScope
 import streetlight.model.data.GalaxyEdit
 import streetlight.model.data.PostPermission
-import streetlight.web.model.Streetlight
 import streetlight.web.model.GalaxyEditor
 
-fun RenderContext.viewGalaxyFoundry() {
+fun RenderContext.viewGalaxyEditor() {
     val model = app.getCoroutineScoped<GalaxyEditor>(null, renderScope)
     val geoMap = app.get<GeoMap>()
 
@@ -30,7 +28,11 @@ fun RenderContext.viewGalaxyFoundry() {
     val permissionFlow = model.galaxyFlow.mapDistinct { it.postPermission }
     val reviewModeFlow = model.galaxyFlow.mapDistinct { it.reviewMode }
     val guideFlow = model.galaxyFlow.mapDistinct { it.postGuide ?: "" }
+    val cityQueryFlow = model.stateFlow.mapDistinct { it.cityQuery }
+    val isNotLocalFlow = model.stateFlow.mapDistinct { it.isNotLocal }
     val pointFlow = geoMap.stateFlow.mapDistinct { it.center to it.zoom }
+    val localitiesFlow = model.stateFlow.mapDistinct { it.localities }
+    val countryFlow = model.stateFlow.mapDistinct { it.country }
 
     val textMod = modify()
     val sectionMod = modify(QueryContainer)
@@ -54,6 +56,37 @@ fun RenderContext.viewGalaxyFoundry() {
                 }
                 row(modify(Flex1, JustifyContentCenter)) {
                     lottie(LottieFile.AstronautReading, modify(MaxHeight32))
+                }
+            }
+        }
+
+        section(sectionMod) {
+            filigree {
+                heading3("City")
+            }
+            card(cardMod) {
+                column(queryColumnMod) {
+                    column(instructionsColumnMod) {
+                        textBlock(cityInstructions, textMod)
+                    }
+                    column(contentColumnMod) {
+                        flowBlock(isNotLocalFlow) { isNotLocal ->
+                            if (!isNotLocal) {
+                                row {
+                                    textField("city", modify(Flex1), onValue = model::setCityQuery, flow = cityQueryFlow)
+                                    textField("country", modify(Width24), onValue = model::setCountry, flow = countryFlow)
+                                }
+                            }
+                            column(modify(MaxHeight32)) {
+                                flowBlock(localitiesFlow) { localities ->
+                                    localities.forEach { locality ->
+                                        textBlock("${locality.city}, ${locality.state}")
+                                    }
+                                }
+                            }
+                        }
+                        checkBox("This galaxy doesn't focus on a city", model::setIsNotLocal, isNotLocalFlow)
+                    }
                 }
             }
         }
@@ -255,7 +288,7 @@ fun RenderContext.viewGalaxyFoundry() {
             }
         }
 
-        appFooter("web/src/jsMain/kotlin/streetlight/web/ui/viewGalaxyFoundry.kt")
+        appFooter("web/src/jsMain/kotlin/streetlight/web/ui/viewGalaxyEditor.kt")
     }
 }
 
@@ -268,6 +301,8 @@ private val introText2 = """
 Streetlight is in an early stage of development. It's current focus is our hometown, Denver.
 Theoretically, your map can focus on any part of the world, but features like transit updates may not be available.
 """
+
+private val cityInstructions = "What city does your galaxy focus on?"
 
 private val nameInstructions1 = "Let's give the galaxy a name, up to ${GalaxyEdit.MAX_NAME_LENGTH} characters."
 

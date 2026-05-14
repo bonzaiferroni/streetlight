@@ -13,6 +13,7 @@ data class Galaxy(
     val galaxyId: GalaxyId,
     val slug: Slug,
     val name: String,
+    val tagLine: String?,
     val description: String?,
     val center: GeoPoint,
     val zoom: Float,
@@ -45,8 +46,11 @@ value class GalaxyId(override val value: String): ProjectId {
 @Serializable
 data class GalaxyEdit(
     val galaxyId: GalaxyId? = null,
+    val cityId: CityId? = null,
+    val newCity: Locality? = null,
     val name: String? = null,
     val slug: Slug? = null,
+    val tagLine: String? = null,
     val description: String? = null,
     val center: GeoPoint? = null,
     val zoom: Float? = null,

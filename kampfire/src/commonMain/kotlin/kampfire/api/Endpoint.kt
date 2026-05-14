@@ -20,48 +20,48 @@ abstract class Endpoint<SentType, ReturnType>(
         it.add(pathNode)
     }
 
-    fun <T> addParam(key: String, toValue: (String) -> T, toString: (T) -> String, ) =
+    fun <T> paramOf(key: String, toValue: (String) -> T, toString: (T) -> String, ) =
         EndpointParam<T>(key, toValue, toString)
 
-    fun addLongParam(key: String) = EndpointParam(
+    fun longParamOf(key: String) = EndpointParam(
         key = key,
         toValue = { it.toLong() },
         toString = { it.toString() }
     )
 
-    fun addIntParam(key: String) = EndpointParam(
+    fun intParamOf(key: String) = EndpointParam(
         key = key,
         toValue = { it.toInt() },
         toString = { it.toString() }
     )
 
-    inline fun <reified T : Enum<T>> addEnumParam(key: String) = EndpointParam(
+    inline fun <reified T : Enum<T>> enumParamOf(key: String) = EndpointParam(
         key = key,
         toValue = { enumEntries<T>()[it.toInt()] },
         toString = { (it as Enum<T>).ordinal.toString() }
     )
 
-    fun addInstantParam(key: String) = EndpointParam(
+    fun instantParamOf(key: String) = EndpointParam(
         key = key,
         toValue = { Instant.fromEpochSeconds(it.toLong())},
         toString = { it.epochSeconds.toString() }
     )
 
-    fun addStringParam(key: String) = EndpointParam(
+    fun stringParamOf(key: String) = EndpointParam(
         key = key,
         toValue = { it },
         toString = { it }
     )
 
-    fun addBooleanParam(key: String) = EndpointParam(
+    fun booleanParamOf(key: String) = EndpointParam(
         key = key,
         toValue = { it.toBoolean() },
         toString = { it.toString() }
     )
 
-    fun addIntList(key: String) = addListParam(key, { it.toInt()}, { it.toString() })
+    fun intListParamOf(key: String) = listParamOf(key, { it.toInt()}, { it.toString() })
 
-    fun <T> addListParam(key: String, toValue: (String) -> T, toString: (T) -> String) = EndpointParam<Collection<T>>(
+    fun <T> listParamOf(key: String, toValue: (String) -> T, toString: (T) -> String) = EndpointParam<Collection<T>>(
         key = key,
         toValue = { it.takeIf { it.isNotEmpty() }?. split(",")?.map { toValue(it)} ?: emptyList() },
         toString = { it.joinToString(",") { toString(it)} }

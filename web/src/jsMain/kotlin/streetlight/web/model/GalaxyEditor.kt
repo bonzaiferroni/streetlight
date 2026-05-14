@@ -1,3 +1,5 @@
+@file:OptIn(FlowPreview::class)
+
 package streetlight.web.model
 
 import kampfire.model.Url
@@ -8,15 +10,18 @@ import koala.model.Portal
 import koala.model.mapDistinct
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
-import streetlight.model.data.Galaxy
 import streetlight.model.data.GalaxyEdit
+import streetlight.model.data.Locality
 import streetlight.model.data.PostPermission
 import streetlight.model.data.ReviewMode
 import streetlight.model.data.slugOf
 import streetlight.web.GalaxyRoute
 import streetlight.web.io.ApiClient
-import streetlight.web.ui.ViewModel
+import streetlight.web.io.getDataOrNull
+import streetlight.web.io.handleResponse
 
 class GalaxyEditor(
     galaxy: GalaxyEdit?,
@@ -31,6 +36,15 @@ class GalaxyEditor(
     val galaxyFlow = stateFlow.mapDistinct { it.galaxy }
     val galaxyNow get() = state.now.galaxy
     val msg = storeOf<UIMessage?>(UIMessage(galaxy?.invalidMessage ?: "Looks good."))
+
+    init {
+        scope.launch {
+            stateFlow.mapDistinct { it.cityQuery }.debounce(500L).collect { query ->
+                val localities = api.searchCity(query, stateNow.country).getDataOrNull() ?: return@collect
+                state.set { it.copy(localities = localities) }
+            }
+        }
+    }
 
     fun setName(value: String) {
         if (!GalaxyEdit.isValidName(value)) return
@@ -52,6 +66,12 @@ class GalaxyEditor(
     fun setPostGuide(value: String) = setGalaxy { it.copy(postGuide = value) }
 
     fun setReviewMode(value: ReviewMode) = setGalaxy { it.copy(reviewMode = value) }
+
+    fun setIsNotLocal(value: Boolean) = state.set { it.copy(isNotLocal = value) }
+
+    fun setCityQuery(query: String) = state.set { it.copy(cityQuery = query)}
+
+    fun setCountry(value: String) = state.set { it.copy(country = value) }
 
     fun foundGalaxy() {
         val geoState = geo.stateNow
@@ -85,5 +105,9 @@ class GalaxyEditor(
 
 data class GalaxyFoundryState(
     val galaxy: GalaxyEdit = GalaxyEdit(),
-    val blobUrl: Url? = null
+    val blobUrl: Url? = null,
+    val isNotLocal: Boolean = false,
+    val cityQuery: String = "",
+    val localities: List<Locality> = emptyList(),
+    val country: String = "United States",
 )
