@@ -87,6 +87,7 @@ val Zen = Class("zen")
 val Secondary = Class("secondary")
 val Danger = Class("danger")
 val Confirm = Class("confirm")
+val Selected = Class("selected")
 val NightInk = utilityOf("night-ink", "color: var(--white-fg)")
 val DayInk = utilityOf("day-ink", "color: var(--black-fg)")
 

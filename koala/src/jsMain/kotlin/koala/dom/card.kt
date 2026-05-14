@@ -51,8 +51,10 @@ fun DOMContext.cardOf(
         }
     }
 
-    onClick?.let {
-        element.onClick(it)
+    onClick?.let { onClick ->
+        element.onClick {
+            onClick()
+        }
     }
 
     return element

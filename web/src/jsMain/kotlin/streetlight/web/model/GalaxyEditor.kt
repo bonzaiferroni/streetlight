@@ -21,7 +21,6 @@ import streetlight.model.data.slugOf
 import streetlight.web.GalaxyRoute
 import streetlight.web.io.ApiClient
 import streetlight.web.io.getDataOrNull
-import streetlight.web.io.handleResponse
 
 class GalaxyEditor(
     galaxy: GalaxyEdit?,
@@ -72,6 +71,8 @@ class GalaxyEditor(
     fun setCityQuery(query: String) = state.set { it.copy(cityQuery = query)}
 
     fun setCountry(value: String) = state.set { it.copy(country = value) }
+
+    fun setNewCity(value: Locality) = setGalaxy { it.copy(newCity = value) }
 
     fun foundGalaxy() {
         val geoState = geo.stateNow

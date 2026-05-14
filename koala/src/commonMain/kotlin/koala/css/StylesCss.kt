@@ -204,7 +204,7 @@ a:hover {
 
 label {
     display: inline-flex;
-    align-items: center;
+    align-items: start;
     gap: var(--unit-spacing);
 }
 

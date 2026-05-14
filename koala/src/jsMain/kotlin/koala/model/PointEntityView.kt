@@ -197,7 +197,9 @@ fun PointEntity.toMapEntityView(pixelPoint: Point, focusEntity: () -> Unit): Poi
         { it(focusEntity) }
     } ?: focusEntity
 
-    element.onClick(onElementClick)
+    element.onClick {
+        onElementClick()
+    }
 
     return view
 }

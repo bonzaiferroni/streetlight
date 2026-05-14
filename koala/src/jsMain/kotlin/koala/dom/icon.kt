@@ -26,6 +26,8 @@ fun DOMContext.icon(
     block: DIV.() -> Unit = {}
 ): HTMLDivElement {
     val element = icon(file, modifiers, block)
-    element.onClick(onClick)
+    element.onClick {
+        onClick()
+    }
     return element
 }
