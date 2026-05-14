@@ -8,7 +8,7 @@ import kotlinx.html.dom.append
 import org.w3c.dom.HTMLElement
 
 private val popoverMap = mutableMapOf<String, HTMLElement>()
-private val menus = mutableMapOf<String, DOMContext.(String) -> Unit>()
+private val menus = mutableMapOf<String, (MenuElement) -> Unit>()
 
 fun <Data> RenderContext.registerMenu(
     id: Id,
@@ -16,9 +16,11 @@ fun <Data> RenderContext.registerMenu(
     block: RenderContext.(Data) -> Unit
 ) {
     menus[id.identifier] = {
-        val data = dataOf(it)
-        card(modify(BlurBackdrop, BorderRadius3)) {
-            block(data)
+        val data = dataOf(it.data)
+        replaceRender(it.element) {
+            card(modify(BlurBackdrop, BorderRadius3)) {
+                block(data)
+            }
         }
     }
 }
@@ -33,11 +35,10 @@ fun callMenu(anchor: String, menu: String, data: String) {
         }.first()
     }
 
-    popover.clear()
-    popover.append {
-        menuRender(data)
-    }
+    menuRender(MenuElement(data, popover))
 
     popover.setProperty(Property.PositionAnchor.to(anchor))
     popover.showPopover()
 }
+
+private data class MenuElement(val data: String, val element: HTMLElement)
