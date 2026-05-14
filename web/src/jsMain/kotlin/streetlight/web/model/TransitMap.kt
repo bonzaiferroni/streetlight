@@ -42,8 +42,11 @@ class TransitMap(
     private var transit: AreaTransit? = null
     private var currentRoutes: List<RouteEntity>? = null
     private var feedType: ProtobufType? = null
+    private var isInitialized: Boolean = false
 
-    init {
+    fun init() {
+        if (isInitialized) return
+        isInitialized = true
         scope.launch {
             config.showTransitFlow.collect {
                 setIsActive(it)

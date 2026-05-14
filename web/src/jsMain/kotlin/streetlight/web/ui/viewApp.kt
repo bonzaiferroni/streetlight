@@ -10,6 +10,7 @@ import streetlight.web.layouts.PostKey
 import streetlight.web.pages.AppBodyKey
 import org.koin.dsl.koinApplication
 import streetlight.web.io.OmniLog
+import streetlight.web.model.TransitMap
 import streetlight.web.model.UserGate
 
 @OptIn(ExperimentalSerializationApi::class)
@@ -23,9 +24,11 @@ fun viewApp() {
     val app = AppContext(koin)
 
     with (app) {
-        val scope: CoroutineScope = koin.get()
+        val scope: CoroutineScope = get()
         val gate: UserGate = get()
         val omni: OmniLog = get()
+        val transit: TransitMap = get()
+        transit.init()
 
         scope.launch {
             // signs in user if configured
