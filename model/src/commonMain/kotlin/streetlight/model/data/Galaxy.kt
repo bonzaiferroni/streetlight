@@ -48,7 +48,6 @@ value class GalaxyId(override val value: String): ProjectId {
 data class GalaxyEdit(
     val galaxyId: GalaxyId? = null,
     val cityId: CityId? = null,
-    val newCity: Locality? = null,
     val name: String? = null,
     val slug: Slug? = null,
     val tagLine: String? = null,

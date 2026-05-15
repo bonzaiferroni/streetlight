@@ -33,7 +33,7 @@ fun RenderContext.viewGalaxyEditor() {
     val pointFlow = geoMap.stateFlow.mapDistinct { it.center to it.zoom }
     val localitiesFlow = model.stateFlow.mapDistinct { it.localities }
     val countryFlow = model.stateFlow.mapDistinct { it.country }
-    val newCityFlow = model.galaxyFlow.mapDistinct { it.newCity }
+    val localityFlow = model.stateFlow.mapDistinct { it.locality }
 
     val textMod = modify()
     val sectionMod = modify(QueryContainer)
@@ -48,7 +48,7 @@ fun RenderContext.viewGalaxyEditor() {
     column(modify(Gap8)) {
         section {
             filigree {
-                heading1("Galaxy Foundry", modify(Shrinkable))
+                heading1("Galaxy Foundry", modify(Shrinkable, AntiShadow))
             }
             row(modify(AlignItemsCenter)) {
                 column(modify(Flex4, FlexMd2, PaddingLeft3)) {
@@ -83,11 +83,11 @@ fun RenderContext.viewGalaxyEditor() {
                                     textBlock("city", modify(OpacitySome, Italic))
                                     textBlock("galaxies", modify(OpacitySome, Italic))
                                 }
-                                selectionBlock(localitiesFlow, model::setNewCity, newCityFlow) { locality ->
+                                selectionBlock(localitiesFlow, model::setLocality, localityFlow) { locality ->
                                     card(modify(ZenBg, BorderRadius1)) {
                                         row(modify(JustifyContentSpaceBetween)) {
                                             textBlock("${locality.city}, ${locality.state}", modify(Flex1))
-                                            textBlock("0")
+                                            textBlock(locality.galaxyCount.toString())
                                         }
                                     }
                                 }

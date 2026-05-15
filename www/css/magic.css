@@ -34,22 +34,22 @@
 
 @keyframes anti-shadow {
     0% {
-        filter: drop-shadow(0 4px 2px black);
+        filter: drop-shadow(0 3px 1px black);
     }
     25% {
-        filter: drop-shadow(0 4px 2px black);
+        filter: drop-shadow(0 3px 1px black);
     }
     40% {
-        filter: drop-shadow(-2px 4px 1px black);
+        filter: drop-shadow(-1px 3px 1px black);
     }
     65% {
-        filter: drop-shadow(0 4px 2px black);
+        filter: drop-shadow(0 3px 1px black);
     }
     80% {
-        filter: drop-shadow(2px 4px 1px black);
+        filter: drop-shadow(1px 3px 2px black);
     }
     100% {
-        filter: drop-shadow(0 4px 2px black);
+        filter: drop-shadow(0 3px 1px black);
     }
 }
 

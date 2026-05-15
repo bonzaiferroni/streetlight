@@ -39,6 +39,7 @@ class GalaxyEditor(
     init {
         scope.launch {
             stateFlow.mapDistinct { it.cityQuery }.debounce(500L).collect { query ->
+                if (query == stateNow.locality?.city) return@collect
                 val localities = api.searchCity(query, stateNow.country).getDataOrNull() ?: return@collect
                 state.set { it.copy(localities = localities) }
             }
@@ -72,7 +73,11 @@ class GalaxyEditor(
 
     fun setCountry(value: String) = state.set { it.copy(country = value) }
 
-    fun setNewCity(value: Locality?) = setGalaxy { it.copy(newCity = value) }
+    fun setLocality(value: Locality?) = state.set { it.copy(
+        locality = value,
+        cityQuery = value?.city ?: it.cityQuery,
+        galaxy = it.galaxy.copy(cityId = value?.cityId),
+    ) }
 
     fun foundGalaxy() {
         val geoState = geo.stateNow
@@ -111,4 +116,5 @@ data class GalaxyFoundryState(
     val cityQuery: String = "",
     val localities: List<Locality> = emptyList(),
     val country: String = "United States",
+    val locality: Locality? = null,
 )
