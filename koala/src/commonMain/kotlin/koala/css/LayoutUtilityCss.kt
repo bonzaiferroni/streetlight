@@ -30,7 +30,8 @@ val LayoutUtilityCss
         TextAlignCenter, TextAlignRight,
         // Margin
         MarginAuto, Margin1, Margin2, MarginTop1, MarginTop2, MarginTop4, MarginTop8,
-        MarginLeft1, MarginLeft2, MarginRight1, MarginRight2, MarginBottom1, MarginBottom2, MarginBottom16,
+        MarginLeft1, MarginLeft2, MarginLeftAuto,
+        MarginRight1, MarginRight2, MarginBottom1, MarginBottom2, MarginBottom16,
         MarginX1, MarginX2, MarginX4,
         // Padding
         Padding0, Padding1, Padding2, Padding4, PaddingTiny, PaddingLeft1, PaddingLeft2, PaddingLeft3, PaddingRight3,
@@ -181,6 +182,7 @@ val MarginTop4 = utilityOf("margin-top-4", "margin-top: calc(var(--unit-spacing)
 val MarginTop8 = utilityOf("margin-top-8", "margin-top: calc(var(--unit-spacing) * 8)")
 val MarginLeft1 = utilityOf("margin-left-1", "margin-left: var(--unit-spacing)")
 val MarginLeft2 = utilityOf("margin-left-2", "margin-left: var(--unit-spacing-2)")
+val MarginLeftAuto = utilityOf("margin-left-auto", "margin-left: auto")
 val MarginRight1 = utilityOf("margin-right-1", "margin-right: var(--unit-spacing)")
 val MarginRight2 = utilityOf("margin-right-2", "margin-right: var(--unit-spacing-2)")
 val MarginBottom1 = utilityOf("margin-bottom-1", "margin-bottom: var(--unit-spacing)")

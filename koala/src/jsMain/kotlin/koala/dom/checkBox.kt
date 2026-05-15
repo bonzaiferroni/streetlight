@@ -1,5 +1,7 @@
 package koala.dom
 
+import koala.css.ModifierSet
+import koala.css.addModifiers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
@@ -15,8 +17,10 @@ fun RenderContext.checkBox(
     label: String,
     onChangeValue: ((Boolean) -> Unit)? = null,
     binding: Flow<Boolean>? = null,
+    modifiers: ModifierSet? = null,
     block: (INPUT.() -> Unit)? = null
 ) = label {
+    addModifiers(modifiers)
     checkBox(onChangeValue, binding, block)
     +label
 }

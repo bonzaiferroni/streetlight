@@ -67,7 +67,7 @@ class GalaxyEditor(
 
     fun setReviewMode(value: ReviewMode) = setGalaxy { it.copy(reviewMode = value) }
 
-    fun setIsNotLocal(value: Boolean) = state.set { it.copy(isNotLocal = value) }
+    fun setIsLocal(value: Boolean) = state.set { it.copy(isLocal = value) }
 
     fun setCityQuery(query: String) = state.set { it.copy(cityQuery = query)}
 
@@ -112,7 +112,7 @@ class GalaxyEditor(
 data class GalaxyFoundryState(
     val galaxy: GalaxyEdit = GalaxyEdit(),
     val blobUrl: Url? = null,
-    val isNotLocal: Boolean = false,
+    val isLocal: Boolean = true,
     val cityQuery: String = "",
     val localities: List<Locality> = emptyList(),
     val country: String = "United States",

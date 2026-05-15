@@ -8,7 +8,6 @@ import koala.html.bulletsOf
 import koala.html.filigree
 import koala.html.headerImage
 import koala.html.heading1
-import koala.html.heading3
 import koala.html.section
 import koala.html.span
 import koala.model.GeoMap
@@ -29,20 +28,12 @@ fun RenderContext.viewGalaxyEditor() {
     val reviewModeFlow = model.galaxyFlow.mapDistinct { it.reviewMode }
     val guideFlow = model.galaxyFlow.mapDistinct { it.postGuide ?: "" }
     val cityQueryFlow = model.stateFlow.mapDistinct { it.cityQuery }
-    val isNotLocalFlow = model.stateFlow.mapDistinct { it.isNotLocal }
+    val isLocalFlow = model.stateFlow.mapDistinct { it.isLocal }
     val pointFlow = geoMap.stateFlow.mapDistinct { it.center to it.zoom }
     val localitiesFlow = model.stateFlow.mapDistinct { it.localities }
     val countryFlow = model.stateFlow.mapDistinct { it.country }
     val localityFlow = model.stateFlow.mapDistinct { it.locality }
 
-    val textMod = modify()
-    val sectionMod = modify(QueryContainer)
-    val queryColumnMod = modify(ContainerMdRow)
-    val querySubColumnMod = queryColumnMod + MarginTop2
-    val instructionsColumnMod = modify(Flex1, JustifyContentCenter, Margin1)
-    val contentColumnMod = modify(Flex1)
-    val cardMod = modify(ZenBg)
-    val footnoteMod = modify(OpacityMost, Italic, JustifyContentSpaceBetween, WhiteSpaceNoWrap)
     val bulletsMod = modify(OpacityMost)
 
     column(modify(Gap8)) {
@@ -61,230 +52,152 @@ fun RenderContext.viewGalaxyEditor() {
             }
         }
 
-        section(sectionMod) {
-            filigree {
-                heading3("City")
-            }
-            card(cardMod) {
-                column(queryColumnMod) {
-                    column(instructionsColumnMod) {
-                        textBlock(cityInstructions, textMod)
+        editorSection("City") {
+            editorPart(
+                instructions = cityInstructions,
+            ) {
+                row {
+                    textField("city", modify(Flex1), onValue = model::setCityQuery, flow = cityQueryFlow)
+                    textField("country", modify(Width24), onValue = model::setCountry, flow = countryFlow)
+                }
+                column(modify(Height32, OverflowYAuto, Gap0)) {
+                    row(modify(Padding1, JustifyContentSpaceBetween)) {
+                        textBlock("city", modify(OpacitySome, Italic))
+                        textBlock("galaxies", modify(OpacitySome, Italic))
                     }
-                    column(contentColumnMod) {
-                        flowBlock(isNotLocalFlow) { isNotLocal ->
-                            if (!isNotLocal) {
-                                row {
-                                    textField("city", modify(Flex1), onValue = model::setCityQuery, flow = cityQueryFlow)
-                                    textField("country", modify(Width24), onValue = model::setCountry, flow = countryFlow)
-                                }
-                            }
-                            column(modify(Height32, OverflowYAuto, Gap0)) {
-                                row(modify(Padding1, JustifyContentSpaceBetween)) {
-                                    textBlock("city", modify(OpacitySome, Italic))
-                                    textBlock("galaxies", modify(OpacitySome, Italic))
-                                }
-                                selectionBlock(localitiesFlow, model::setLocality, localityFlow) { locality ->
-                                    card(modify(ZenBg, BorderRadius1)) {
-                                        row(modify(JustifyContentSpaceBetween)) {
-                                            textBlock("${locality.city}, ${locality.state}", modify(Flex1))
-                                            textBlock(locality.galaxyCount.toString())
-                                        }
-                                    }
-                                }
+                    selectionBlock(localitiesFlow, model::setLocality, localityFlow) { locality ->
+                        card(modify(ZenBg, BorderRadius1)) {
+                            row(modify(JustifyContentSpaceBetween)) {
+                                textBlock("${locality.city}, ${locality.state}", modify(Flex1))
+                                textBlock(locality.galaxyCount.toString())
                             }
                         }
-                        checkBox("This galaxy doesn't focus on a city", model::setIsNotLocal, isNotLocalFlow)
+                    }
+                }
+            } // .flowVisibility(isLocalFlow)
+
+            editorPart(
+                instructions = "You can also choose not to focus on any particular city.",
+            ) {
+                checkBox("This galaxy has a city", model::setIsLocal, isLocalFlow, modify(Padding1))
+            }
+        }
+
+        editorSection("Galaxy Name") {
+            editorPart(
+                instructions = nameInstructions1,
+                examples = listOf("Denver Book Club", "Page Turners"),
+            ) {
+                editorTextField("name", model::setName, nameFlow, nameCharacters, GalaxyEdit.MAX_NAME_LENGTH)
+            }
+            editorPart(
+                instructions = pathInstructions,
+                info = {
+                    flowBlock(pathFlow) { path ->
+                        textBlock("Currently: streetlight.ing/g/$path", modify(OpacityMost))
+                    }
+                }
+            ) {
+                editorTextField("path", model::setPath, pathFlow, pathCharacters, GalaxyEdit.MAX_NAME_LENGTH)
+            }
+        }
+
+        editorSection("Image") {
+            editorPart(
+                instructions = imageInstructions1,
+                bullets = listOf(
+                    "Ideally at least 1024 pixels wide and 512 pixels tall.",
+                    imageRequirements,
+                    canBeChangedText,
+                )
+            ) {
+                imageDrop(blobFlow, model::setBlobUrl) {
+                    box {
+                        headerImage(model.stateNow.galaxy.name ?: "", it)
                     }
                 }
             }
         }
 
-        section(sectionMod) {
-            filigree {
-                heading3("Galaxy Name")
-            }
-            card(cardMod) {
-                column(queryColumnMod) {
-                    column(instructionsColumnMod) {
-                        textBlock(nameInstructions1, textMod)
-                        column(modify(Gap0, OpacityMost)) {
-                            textBlock("Examples:")
-                            bulletsOf("Denver Book Club", "Page Turners")
+        editorSection("Description") {
+            editorPart(
+                info = {
+                    flowBlock(nameFlow) { name ->
+                        val galaxy = name.takeIf { it.isNotEmpty() } ?: "the galaxy"
+                        val mod = when (name.isEmpty()) {
+                            true -> null
+                            else -> modify(Italic, Bold)
+                        }
+                        textBlock {
+                            span("Describe ")
+                            span(galaxy, mod)
+                            span(" to newcomers.")
                         }
                     }
-                    column(contentColumnMod + Gap0) {
-                        textField("name", onValue = model::setName, flow = nameFlow)
-                        row(modify(footnoteMod)) {
-                            textBlock(nameCharacters)
-                            flowBlock(nameFlow) { name ->
-                                textBlock("${name.length}/${GalaxyEdit.MAX_NAME_LENGTH}")
-                            }
-                        }
-                    }
+                    bulletsOf(
+                        bulletsMod,
+                        "Can be brief or detailed.",
+                        canBeChangedText
+                    )
                 }
-                column(querySubColumnMod) {
-                    column(instructionsColumnMod) {
-                        textBlock(pathInstructions)
-                        column(modify(Gap0, OpacityMost)) {
-                            textBlock("Currently:")
-                            flowBlock(pathFlow) { path ->
-                                box {
-                                    bulletsOf("streetlight.ing/g/$path")
-                                }
-                            }
-                        }
-                    }
-                    column(contentColumnMod) {
-                        column(modify(Gap0)) {
-                            textField("path", onValue = model::setPath, flow = pathFlow)
-                            row(modify(footnoteMod)) {
-                                textBlock(pathCharacters)
-                                flowBlock(pathFlow) { path ->
-                                    textBlock("${path.length}/${GalaxyEdit.MAX_NAME_LENGTH}")
-                                }
-                            }
-                        }
-                    }
-                }
+            ) {
+                textEditor("description", onValue = model::setDescription, flow = descriptionFlow)
             }
         }
 
-        section(sectionMod) {
-            filigree {
-                heading3("Image")
-            }
-            card(cardMod) {
-                column(queryColumnMod) {
-                    column(instructionsColumnMod) {
-                        textBlock(imageInstructions1, textMod)
-                        bulletsOf(
-                            bulletsMod,
-                            "Ideally at least 1024 pixels wide and 512 pixels tall.",
-                            imageRequirements,
-                            canBeChangedText,
-                        )
-                    }
-                    column(contentColumnMod) {
-                        imageDrop(blobFlow, model::setBlobUrl) {
-                            box {
-                                headerImage(model.stateNow.galaxy.name ?: "", it)
-                            }
+        editorSection("Map location") {
+            editorPart(
+                instructions = mapInstructions1,
+                info = {
+                    flowBlock(pointFlow) { (point, zoom) ->
+                        box {
+                            bulletsOf(
+                                bulletsMod,
+                                "latitude: ${point.lat.toFloat().format(4)}",
+                                "longitude: ${point.lng.toFloat().format(4)}",
+                                "zoom: ${zoom.format(1)}",
+                                canBeChangedText,
+                            )
                         }
                     }
                 }
+            ) {
+                geoMapMount(
+                    geoMap,
+                    appScope,
+                    modifiers = modify(Height48, BorderRadius2, OverflowClip, MoonShadow)
+                )
             }
         }
 
-        section(sectionMod) {
-            filigree {
-                heading3("Description")
+        editorSection("Other details") {
+            editorPart(
+                instructions = "You can open up posting to the community or curate the content yourself.",
+                bullets = listOf(canBeChangedText),
+            ) {
+                dropMenu(model::setPostPermission, { it.label }, flow = permissionFlow)
             }
-            card(cardMod) {
-                column(queryColumnMod) {
-                    column(instructionsColumnMod) {
-                        flowBlock(nameFlow) { name ->
-                            val galaxy = name.takeIf { it.isNotEmpty() } ?: "the galaxy"
-                            val mod = when (name.isEmpty()) {
-                                true -> null
-                                else -> modify(Italic, Bold)
-                            }
-                            textBlock {
-                                span("Describe ")
-                                span(galaxy, mod)
-                                span(" to newcomers.")
-                            }
-                        }
-                        bulletsOf(
-                            bulletsMod,
-                            "Can be brief or detailed.",
-                            canBeChangedText
-                        )
-                    }
-                    column(contentColumnMod) {
-                        textEditor("description", onValue = model::setDescription, flow = descriptionFlow)
-                    }
-                }
-            }
-        }
-
-        section(sectionMod) {
-            filigree {
-                heading3("Map point")
-            }
-            card(cardMod) {
-                column(queryColumnMod) {
-                    column(instructionsColumnMod) {
-                        textBlock(mapInstructions1, textMod)
-                        flowBlock(pointFlow) { (point, zoom) ->
-                            box {
-                                bulletsOf(
-                                    bulletsMod,
-                                    "latitude: ${point.lat.toFloat().format(4)}",
-                                    "longitude: ${point.lng.toFloat().format(4)}",
-                                    "zoom: ${zoom.format(1)}",
-                                    canBeChangedText,
-                                )
-                            }
-                        }
-                    }
-                    column(contentColumnMod) {
-                        geoMapMount(geoMap, appScope, modifiers = modify(Height48, BorderRadius2, OverflowClip, MoonShadow))
-                    }
-                }
-            }
-        }
-
-        section(sectionMod) {
-            filigree {
-                heading3("Other details")
-            }
-            card(cardMod) {
-                column(queryColumnMod) {
-                    column(instructionsColumnMod) {
-                        textBlock("You can open up posting to the community or curate the content yourself.")
-                        bulletsOf(
-                            bulletsMod,
-                            canBeChangedText,
-                        )
-                    }
-                    column(contentColumnMod) {
-                        dropMenu(model::setPostPermission, { it.label }, flow = permissionFlow)
-                    }
-                }
-                flowBlock(permissionFlow) { permission ->
-                    if (permission == PostPermission.Founder) return@flowBlock
-                    column(modify(QueryContainer)) {
-                        column(querySubColumnMod) {
-                            column(instructionsColumnMod) {
-                                textBlock(permissionInfo1)
-                                bulletsOf(
-                                    bulletsMod,
-                                    "You can extend the role of moderation to other community members.",
-                                    canBeChangedText
-                                )
-                                if (permission == PostPermission.Everyone) {
-                                    textBlock(anonymousInfoText)
-                                }
-                            }
-                            column(contentColumnMod) {
-                                dropMenu(model::setReviewMode, { it.label }, flow = reviewModeFlow)
-                            }
+            editorPart(
+                instructions = permissionInfo1,
+                bullets = listOf(
+                    "You can extend the role of moderation to other community members.",
+                    canBeChangedText
+                ),
+                info = {
+                    flowBlock(permissionFlow) { permission ->
+                        if (permission == PostPermission.Everyone) {
+                            textBlock(anonymousInfoText)
                         }
                     }
                 }
-                column(querySubColumnMod) {
-                    column(instructionsColumnMod) {
-                        textBlock("Provide guidelines or requirements for the content of community posts.")
-                        bulletsOf(
-                            modify(OpacityMost),
-                            canBeChangedText,
-                            "Optional"
-                        )
-                    }
-                    column(contentColumnMod) {
-                        textEditor("Post Guide", onValue = model::setPostGuide, flow = guideFlow)
-                    }
-                }
+            ) {
+                dropMenu(model::setReviewMode, { it.label }, flow = reviewModeFlow)
+            }
+            editorPart(
+                instructions = "Provide guidelines or requirements for the content of community posts.",
+                bullets = listOf(canBeChangedText, "Optional")
+            ) {
+                textEditor("Post Guide", onValue = model::setPostGuide, flow = guideFlow)
             }
         }
 
@@ -332,4 +245,5 @@ Choose the point on the map and zoom level that people will see first. They can 
 
 private val permissionInfo1 = "You can choose to review posts before they appear in the feed."
 
-private val anonymousInfoText = "Posts from users who are not signed in will always need review before appearing in the feed."
+private val anonymousInfoText =
+    "Posts from users who are not signed in will always need review before appearing in the feed."

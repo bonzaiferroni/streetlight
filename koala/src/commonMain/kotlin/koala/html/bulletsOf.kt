@@ -11,6 +11,10 @@ fun FlowContent.bulletsOf(modifiers: ModifierSet? = null, vararg text: String) {
     }
 }
 
-fun FlowContent.bulletsOf(vararg text: String) {
-    bulletsOf(null, *text)
+fun FlowContent.bulletsOf(vararg text: String) = bulletsOf(null, *text)
+
+fun FlowContent.bulletsOf(content: List<String>) = bulletsOf(null, *content.toTypedArray())
+
+fun FlowContent.bulletsOf(modifiers: ModifierSet, content: List<String>) {
+    bulletsOf(modifiers, *content.toTypedArray())
 }
