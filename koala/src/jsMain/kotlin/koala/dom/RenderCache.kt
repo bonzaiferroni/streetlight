@@ -8,7 +8,6 @@ import kotlinx.html.dom.append
 import org.w3c.dom.HTMLElement
 
 class RenderCache(
-    val context: RenderContext,
     val job: Job,
     val localScope: CoroutineScope,
     val elements: List<HTMLElement>
@@ -18,24 +17,20 @@ class RenderCache(
 
 fun <T> RenderContext.createRender(
     parent: HTMLElement,
-    scope: CoroutineScope,
     value: T,
     block: RenderContext.(T) -> Unit
 ): RenderCache {
-    val job = SupervisorJob()
-    val localScope = CoroutineScope(scope.coroutineContext + job)
-    var context: RenderContext
-    val elements = parent.append {
-        context = DOMRenderContext(this, app, localScope, parent)
-        context.block(value)
+    val elements = replaceRender(parent) {
+        block(value)
     }
-    return RenderCache(context, job, localScope, elements)
+    val job = parent.queryJob() ?: error("job not found")
+    val scope = parent.queryScope() ?: error("scope not found")
+    return RenderCache(job, scope, elements)
 }
 
 fun RenderContext.createRender(
     parent: HTMLElement,
-    scope: CoroutineScope = CoroutineScope(Dispatchers.Main),
     block: RenderContext.() -> Unit
-) = createRender(parent, scope, Unit) {
+) = createRender(parent, Unit) {
     block()
 }

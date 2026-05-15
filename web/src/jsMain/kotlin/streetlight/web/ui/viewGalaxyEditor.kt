@@ -54,6 +54,12 @@ fun RenderContext.viewGalaxyEditor() {
 
         editorSection("City") {
             editorPart(
+                instructions = "Would you like your galaxy to focus on a city?",
+            ) {
+                checkBox("This galaxy has a city", model::setIsLocal, isLocalFlow, modify(Padding1))
+            }
+
+            editorPart(
                 instructions = cityInstructions,
             ) {
                 row {
@@ -74,13 +80,7 @@ fun RenderContext.viewGalaxyEditor() {
                         }
                     }
                 }
-            } // .flowVisibility(isLocalFlow)
-
-            editorPart(
-                instructions = "You can also choose not to focus on any particular city.",
-            ) {
-                checkBox("This galaxy has a city", model::setIsLocal, isLocalFlow, modify(Padding1))
-            }
+            }.flowVisibility(isLocalFlow, renderScope)
         }
 
         editorSection("Galaxy Name") {

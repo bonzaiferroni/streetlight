@@ -23,6 +23,7 @@ private var Element.scope: CoroutineScope? get() = asDynamic().scope
         if (existingScope != null && existingScope.isActive) {
             error("Active coroutine scope cannot be replaced")
         }
+        console.log("applied scope")
         element.scope = value
     }
 
@@ -49,3 +50,4 @@ fun Element.getScope(parentScope: CoroutineScope, cancelExistingScope: Boolean):
 }
 
 fun Element.queryScope(): CoroutineScope? = scope ?: parentElement?.queryScope()
+fun Element.queryJob(): Job? = job ?: parentElement?.queryJob()

@@ -7,6 +7,7 @@ import koala.css.Modifier
 import koala.html.Queryable
 import kotlinx.browser.document
 import kotlinx.browser.window
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import org.w3c.dom.Element
@@ -74,9 +75,8 @@ fun querySelectorAll(queryable: Queryable) = document.body!!.querySelectorAll(qu
 
 fun CSSStyleDeclaration.removeProperty(property: Property<*>) = removeProperty(property.identifier)
 
-fun HTMLElement.flowVisibility(isVisibleFlow: Flow<Boolean>) {
-    val renderScope = queryScope() ?: error("render scope not found")
-    renderScope.launch {
+fun HTMLElement.flowVisibility(isVisibleFlow: Flow<Boolean>, scope: CoroutineScope) {
+    scope.launch {
         isVisibleFlow.collect { isVisible ->
             document.startViewTransition {
                 when (isVisible) {
