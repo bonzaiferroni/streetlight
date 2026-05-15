@@ -3,26 +3,62 @@ package koala.dom
 import koala.css.ModifierSet
 import koala.css.Selected
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 import kotlinx.html.DIV
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 
-fun <State> RenderContext.selectionBlock(
-    flow: Flow<List<State>>,
-    onSelect: (State) -> Unit,
-    selectFlow: Flow<State?>,
+fun <Item> RenderContext.selectionBlock(
+    flow: Flow<List<Item>>,
+    onSelect: (Item?) -> Unit,
+    selectFlow: Flow<Item?>,
     modifiers: ModifierSet? = null,
-    renderCacheCount: Int? = null,
     config: (DIV.() -> Unit)? = null,
-    block: RenderContext.(State) -> HTMLElement
+    block: RenderContext.(Item) -> HTMLElement
 ): HTMLDivElement {
-    val element = flowBlock(flow) { items ->
-        column {
-            items.forEach { item ->
-                block(item).onClick { element ->
+    var selectedItem: Item? = null
+    var selectedElement: HTMLElement? = null
+    val elementMap = mutableMapOf<Item, HTMLElement>()
+
+    fun selectElement(item: Item?) {
+        selectedItem = item
+        when (item) {
+            null -> {
+                selectedElement?.unmodify(Selected)
+                selectedElement = null
+            }
+            else -> {
+                val element = elementMap.getValue(item)
+                if (element.isModified(Selected)) {
+                    onSelect(null)
+                    element.unmodify(Selected)
+                    selectedElement = null
+                } else {
+                    selectedElement?.unmodify(Selected)
                     element.modify(Selected)
+                    selectedElement = element
+                    onSelect(item)
                 }
             }
+        }
+    }
+
+    val element = flowBlock(flow, modifiers, config = config) { items ->
+        elementMap.clear()
+        column {
+            items.forEach { item ->
+                val element = block(item).onClick {
+                    selectElement(item)
+                }
+                elementMap[item] = element
+            }
+        }
+    }
+
+    renderScope.launch {
+        selectFlow.collect { item ->
+            if (item == selectedItem) return@collect
+            selectElement(item)
         }
     }
 

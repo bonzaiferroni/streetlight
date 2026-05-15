@@ -72,7 +72,7 @@ class GalaxyEditor(
 
     fun setCountry(value: String) = state.set { it.copy(country = value) }
 
-    fun setNewCity(value: Locality) = setGalaxy { it.copy(newCity = value) }
+    fun setNewCity(value: Locality?) = setGalaxy { it.copy(newCity = value) }
 
     fun foundGalaxy() {
         val geoState = geo.stateNow
