@@ -1,5 +1,6 @@
 package streetlight.web.ui
 
+import kampfire.model.handleResponse
 import koala.css.AlignItemsStretch
 import koala.css.Aspect3By2
 import koala.css.BorderRadius1
@@ -56,7 +57,9 @@ fun RenderContext.viewEditLocationRoute() {
             provideData = { route ->
                 when (route) {
                     is EditLocationDataRoute -> route.location
-                    is EditLocationIdRoute -> route.locationId?.let { api.readLocation(it)?.toEdit() } ?: LocationEdit()
+                    is EditLocationIdRoute -> route.locationId?.let {
+                        api.readLocation(it).handleResponse(toaster::toast)?.toEdit()
+                    } ?: LocationEdit()
                     is CreateLocationRoute -> LocationEdit()
                 }
             }

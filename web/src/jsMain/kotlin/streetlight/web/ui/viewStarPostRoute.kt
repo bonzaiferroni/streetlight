@@ -1,5 +1,6 @@
 package streetlight.web.ui
 
+import kampfire.model.handleResponse
 import koala.dom.RenderContext
 import koala.dom.replaceRender
 import koala.dom.routeBlock
@@ -8,7 +9,6 @@ import streetlight.model.data.SpaceType
 import streetlight.model.data.StarPost
 import streetlight.web.StarPostRoute
 import streetlight.web.io.TalkLog
-import streetlight.web.io.handleResponse
 import streetlight.web.shells.PostKey
 import streetlight.web.shells.starPostShell
 

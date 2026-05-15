@@ -138,7 +138,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
 
         object ValidateLogin: GetEndpoint<Star>(this, "validate-login")
         object EditStar: PostEndpoint<StarEdit, Star>(this, "edit")
-        object EditLight: PostEndpoint<EditLightRequest, Unit>(this, "edit-light")
+        object EditLight: PostEndpoint<EditLightRequest, Boolean>(this, "edit-light")
     }
 
     object Docs: GetByIdEndpoint<DocId, DocNode>(this, "doc")

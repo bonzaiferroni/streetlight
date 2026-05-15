@@ -3,6 +3,7 @@
 package streetlight.web.model
 
 import kampfire.model.Url
+import kampfire.model.handleResponse
 import koala.dom.UIMessage
 import koala.dom.set
 import koala.model.GeoMap
@@ -20,7 +21,6 @@ import streetlight.model.data.ReviewMode
 import streetlight.model.data.slugOf
 import streetlight.web.GalaxyRoute
 import streetlight.web.io.ApiClient
-import streetlight.web.io.getDataOrNull
 
 class GalaxyEditor(
     galaxy: GalaxyEdit?,
@@ -40,7 +40,7 @@ class GalaxyEditor(
         scope.launch {
             stateFlow.mapDistinct { it.cityQuery }.debounce(500L).collect { query ->
                 if (query == stateNow.locality?.city) return@collect
-                val localities = api.searchCity(query, stateNow.country).getDataOrNull() ?: return@collect
+                val localities = api.searchCity(query, stateNow.country).handleResponse(msg::set) ?: return@collect
                 state.set { it.copy(localities = localities) }
             }
         }
@@ -90,8 +90,7 @@ class GalaxyEditor(
             val imageUrl = stateNow.blobUrl?.let {
                 api.uploadImage(it) ?: error("failed to upload image")
             }
-            val galaxy = api.foundGalaxy(galaxy.copy(imageRef = imageUrl))
-            if (galaxy != null) {
+            api.foundGalaxy(galaxy.copy(imageRef = imageUrl)).handleResponse(msg::set) { galaxy ->
                 portal.go(GalaxyRoute(galaxy.slug))
                 reset()
             }

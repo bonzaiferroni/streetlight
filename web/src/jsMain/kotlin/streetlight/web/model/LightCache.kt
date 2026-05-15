@@ -1,6 +1,7 @@
 package streetlight.web.model
 
 import kampfire.model.ApiResponse
+import kampfire.model.handleResponse
 import koala.dom.setStorageOf
 import koala.model.mapDistinct
 import koala.model.storeOf
@@ -10,7 +11,6 @@ import streetlight.model.data.LightEdit
 import streetlight.model.data.EditLightRequest
 import streetlight.model.data.LightType
 import streetlight.model.data.MultiLightEdit
-import streetlight.web.io.isOk
 import kotlin.collections.minus
 import kotlin.collections.plus
 import kotlin.uuid.Uuid
@@ -21,9 +21,10 @@ class LightCache<Id, Item>(
     val idToUuid: (Id) -> Uuid,
     val uuidToId: (Uuid) -> Id,
     val itemToId: (Item) -> Id,
-    private val lightEdit: suspend (EditLightRequest) -> ApiResponse<Unit>?,
-    private val readRemoteLights: suspend () -> Set<Id>?,
-    private val readRemoteItems: suspend (List<Id>) -> List<Item>?,
+    private val lightEdit: suspend (EditLightRequest) -> ApiResponse<Boolean>?,
+    private val readRemoteLights: suspend () -> ApiResponse<List<Id>>?,
+    private val readRemoteItems: suspend (List<Id>) -> ApiResponse<List<Item>>?,
+    private val onError: (String) -> Unit,
     private val scope: CoroutineScope,
     private val gate: UserGate,
 ) {
@@ -49,8 +50,8 @@ class LightCache<Id, Item>(
                             lightEdit(request)
                             cachedLights = emptySet()
                         }
-                        val lights = readRemoteLights() ?: return@collect
-                        state.set { it.copy(lights = lights)}
+                        val lights = readRemoteLights().handleResponse(onError) ?: return@collect
+                        state.set { it.copy(lights = lights.toSet())}
                     }
                 }
             }
@@ -59,7 +60,7 @@ class LightCache<Id, Item>(
                     val newIds = lights.filter { lightId -> stateNow.items.none { itemToId(it) == lightId } }
                     val newItems = when (newIds.isEmpty()) {
                         true -> emptyList()
-                        else -> readRemoteItems(newIds.toList()) ?: emptyList() // td: fail message
+                        else -> readRemoteItems(newIds.toList()).handleResponse(onError) ?: emptyList() // td: fail message
                     }
                     state.set { it.copy(items = it.items.filter { item -> lights.contains(itemToId(item)) } + newItems) }
                 }
@@ -84,7 +85,7 @@ class LightCache<Id, Item>(
             true -> {
                 scope.launch {
                     val edit = LightEdit(idToUuid(id), isLit, lightType)
-                    val isSuccess = lightEdit(edit).isOk() ?: return@launch // td: ui message
+                    val isSuccess = lightEdit(edit).handleResponse(onError) ?: return@launch
                     if (isSuccess)
                         editState(id, isLit)
                 }
@@ -107,7 +108,7 @@ class LightCache<Id, Item>(
     }
 
     private suspend fun readLights() = when(gate.stateNow.isSignedIn) {
-        true -> readRemoteLights() ?: emptySet()
+        true -> readRemoteLights().handleResponse(onError) ?: emptySet()
         else -> cachedLights
     }
 }

@@ -1,5 +1,6 @@
 package streetlight.web.ui
 
+import kampfire.model.handleResponse
 import kampfire.model.small
 import koala.css.*
 import koala.dom.*
@@ -13,7 +14,6 @@ import streetlight.model.data.Galaxy
 import streetlight.model.data.Location
 import streetlight.web.EventScoutRoute
 import streetlight.web.GalaxyRoute
-import streetlight.web.io.handleResponse
 import streetlight.web.model.EventScoutProto
 import streetlight.web.model.Streetlight
 

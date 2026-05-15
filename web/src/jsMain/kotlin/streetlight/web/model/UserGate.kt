@@ -1,5 +1,6 @@
 package streetlight.web.model
 
+import kampfire.model.handleResponse
 import koala.model.mapDistinct
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
@@ -13,6 +14,7 @@ class UserGate(
     private val scope: CoroutineScope,
     private val cred: CredentialStore,
     private val api: ApiClient,
+    private val toaster: Toaster,
 ) {
     private val state = storeOf(StarGateState())
     val stateNow get() = state.now
@@ -31,7 +33,7 @@ class UserGate(
     }
 
     suspend fun readUser() {
-        val star = api.validateLogin()
+        val star = api.validateLogin().handleResponse(toaster::toast)
         if (star != null) {
             console.log("signed in")
             state.set { it.copy(star = star) }

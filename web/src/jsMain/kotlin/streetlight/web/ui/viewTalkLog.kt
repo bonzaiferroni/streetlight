@@ -1,5 +1,6 @@
 package streetlight.web.ui
 
+import kampfire.model.handleResponse
 import koala.css.*
 import koala.dom.*
 import koala.html.filigree
@@ -15,7 +16,6 @@ import streetlight.model.data.CommentUpdated
 import streetlight.model.data.PostOrder
 import streetlight.web.TalkRoute
 import streetlight.web.io.TalkLog
-import streetlight.web.io.handleResponse
 
 fun RenderContext.viewTalkLog(model: TalkLog) {
     var treeRoot: HTMLElement? = null

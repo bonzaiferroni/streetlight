@@ -1,5 +1,6 @@
 package streetlight.web.ui
 
+import kampfire.model.handleResponse
 import koala.css.*
 import koala.dom.*
 import koala.html.filigree
@@ -7,10 +8,7 @@ import koala.html.heading1
 import koala.html.heading3
 import streetlight.model.data.Galaxy
 import streetlight.web.EventScoutRoute
-import streetlight.web.io.handleResponse
 import streetlight.web.model.EventScout
-import streetlight.web.model.Streetlight
-import streetlight.web.ui.viewLocationFinder
 
 fun RenderContext.viewEventScout(model: EventScout, galaxy: Galaxy) {
 

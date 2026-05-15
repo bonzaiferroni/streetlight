@@ -1,6 +1,7 @@
 package streetlight.web.model
 
 import kampfire.model.Url
+import kampfire.model.handleResponse
 import koala.dom.UIMessage
 import koala.dom.set
 import koala.model.mapDistinct
@@ -10,7 +11,6 @@ import kotlinx.coroutines.launch
 import streetlight.model.data.Post
 import streetlight.model.data.StarPostEdit
 import streetlight.web.io.ApiClient
-import streetlight.web.io.handleResponse
 import streetlight.web.ui.ViewModel
 
 class ContentEditor(

@@ -2,6 +2,7 @@ package streetlight.web.model
 
 import kampfire.model.GeoPoint
 import kampfire.model.Url
+import kampfire.model.handleResponse
 import koala.dom.UIMessage
 import koala.dom.set
 import koala.model.mapDistinct
@@ -16,7 +17,6 @@ import streetlight.model.data.LocationId
 import streetlight.model.data.ResourceType
 import streetlight.model.external.Address
 import streetlight.web.io.ApiClient
-import streetlight.web.io.handleResponse
 import streetlight.web.ui.ViewModel
 
 class LocationEditor(

@@ -1,5 +1,6 @@
 package streetlight.web.ui
 
+import kampfire.model.handleResponse
 import koala.css.*
 import koala.dom.*
 import koala.html.filigree
@@ -8,9 +9,7 @@ import kotlinx.html.js.h3
 import streetlight.model.data.StarPostEdit
 import streetlight.model.data.Galaxy
 import streetlight.web.PostContentRoute
-import streetlight.web.io.handleResponse
 import streetlight.web.model.ContentEditor
-import streetlight.web.model.Streetlight
 
 fun RenderContext.viewContentPoster(model: ContentEditor, galaxy: Galaxy) {
     section(modify(Column)) {

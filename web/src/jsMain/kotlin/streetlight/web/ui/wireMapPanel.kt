@@ -1,5 +1,6 @@
 package streetlight.web.ui
 
+import kampfire.model.handleResponse
 import koala.css.AlignItemsCenter
 import koala.css.Magic
 import koala.css.Blur
@@ -16,7 +17,6 @@ import kotlinx.coroutines.launch
 import kotlinx.html.js.div
 import streetlight.web.HomeRoute
 import streetlight.web.io.ApiClient
-import streetlight.web.io.getDataOrNull
 import streetlight.web.model.DataCache
 import streetlight.web.model.StreetMap
 import streetlight.web.model.Streetlight
@@ -29,7 +29,7 @@ fun RenderContext.wireStreetMap() {
         portal.routeFlowOf<HomeRoute>().collect {
             val galaxyIds = cache.topGalaxies.getItems().map { it.galaxyId }
             // td: gather initial posts from json in html
-            val posts = api.readPosts(galaxyIds).getDataOrNull() ?: return@collect
+            val posts = api.readPosts(galaxyIds).handleResponse(toaster::toast) ?: return@collect
             streetMap.setPosts(posts)
         }
     }

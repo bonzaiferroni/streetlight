@@ -1,5 +1,6 @@
 package streetlight.web.model
 
+import kampfire.model.handleResponse
 import koala.dom.UIMessage
 import koala.model.mapDistinct
 import koala.model.storeOf
@@ -10,7 +11,6 @@ import streetlight.model.data.Location
 import streetlight.model.data.LocationPostEdit
 import streetlight.model.data.Post
 import streetlight.web.GalaxyRoute
-import streetlight.web.io.handleResponse
 import streetlight.web.ui.ViewModel
 
 class LocationScoutProto(

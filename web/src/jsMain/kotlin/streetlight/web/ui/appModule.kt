@@ -25,8 +25,8 @@ val appModule = module {
     single { ApiClient(get()) }
     single { OSMClient() }
 
-    single { UserGate(get(), get(), get()) }
-    single { DataCache(get(), get(), get(), get()) }
+    single { UserGate(get(), get(), get(), get()) }
+    single { DataCache(get(), get(), get(), get(), get()) }
     single { Portal(HomeRoute, StreetlightScreen.entries, get()) }
     single { GateAgent(get(), get(), get()) }
     single { GeoMap(get()) }
@@ -38,7 +38,7 @@ val appModule = module {
     single { GalaxyStage(get()) }
     single { Toaster(get()) }
 
-    factory { UserCreator(it.get(), get(), get(), get()) }
+    factory { UserCreator(it.get(), get(), get(), get(), get()) }
     factory { EarthMap(it.get(), get(), get(), get())}
     factory { EventEditor(it[0], it[1], get())}
     factory { GalaxyEditor(it[0], it[1], get(), get(), get())}

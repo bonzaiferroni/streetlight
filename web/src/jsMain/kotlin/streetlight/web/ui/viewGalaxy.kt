@@ -1,10 +1,10 @@
 package streetlight.web.ui
 
+import kampfire.model.getDataOrNull
+import kampfire.model.handleResponse
 import koala.dom.*
 import kotlinx.coroutines.launch
 import streetlight.web.GalaxyRoute
-import streetlight.web.io.getDataOrNull
-import streetlight.web.io.handleResponse
 import streetlight.web.layouts.PostKey
 import streetlight.web.layouts.layoutPosts
 import streetlight.web.model.DataCache
@@ -48,7 +48,7 @@ fun RenderContext.viewGalaxyRoute() {
     routeBlock<GalaxyRoute, GalaxyContent>(portal, { route ->
         readIslandOrApi(GalaxyKey.GalaxyContentId, { it.galaxy.galaxyId.toString() == route.id || it.galaxy.slug == route.id}) {
             val galaxy = api.readGalaxy(route.id).handleResponse(toaster::toast) ?: return@routeBlock null
-            val listing = api.readPosts(galaxy.galaxyId).getDataOrNull() ?: return@routeBlock null
+            val listing = api.readPosts(galaxy.galaxyId).handleResponse(toaster::toast) ?: return@routeBlock null
             GalaxyContent(
                 galaxy = galaxy,
                 posts = listing,

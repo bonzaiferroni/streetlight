@@ -1,5 +1,6 @@
 package streetlight.web.ui
 
+import kampfire.model.handleResponse
 import koala.css.*
 import koala.dom.*
 import koala.model.GeoMap
@@ -41,7 +42,7 @@ fun RenderContext.viewEventProfileRoute() {
             route.event
         }
         is EventSlugRoute -> {
-            api.readEventLocationBySlug(route.slug)
+            api.readEventLocationBySlug(route.slug).handleResponse(toaster::toast)
         }
     }
 

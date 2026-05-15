@@ -1,5 +1,6 @@
 package streetlight.web.ui
 
+import kampfire.model.handleResponse
 import koala.LottieFile
 import koala.css.*
 import koala.dom.*
@@ -18,7 +19,6 @@ import streetlight.web.EditEventCallbackRoute
 import streetlight.web.EditEventIdRoute
 import streetlight.web.EditEventRoute
 import streetlight.web.layouts.route
-import streetlight.web.model.Streetlight
 
 // event editor content including introduction and form
 fun RenderContext.viewEventEditor(
@@ -77,17 +77,13 @@ fun RenderContext.viewEventEditor(
                 }
                 button(text, modify(Accent), onClick = {
                     renderScope.launch {
-                        val response = api.createOrEditEvent(editStore.now)
-                        val savedEvent = response?.payload
-                        if (savedEvent == null) {
-                            msg.set("Unable to create event: ${response?.reason}")
-                            return@launch
-                        }
-                        if (callback != null) {
-                            portal.goBack()
-                            callback.invoke(savedEvent)
-                        } else {
-                            portal.go(savedEvent.route)
+                        api.createOrEditEvent(editStore.now).handleResponse(msg::set) {
+                            if (callback != null) {
+                                portal.goBack()
+                                callback.invoke(it)
+                            } else {
+                                portal.go(it.route)
+                            }
                         }
                     }
                 })
@@ -109,7 +105,9 @@ fun RenderContext.viewEventEditorRoute() {
         when (route) {
             // start with existing event or a blank slate to create a new event
             is EditEventIdRoute -> route.eventId?.let {
-                api.readEvent(it)?.toEdit()
+                api.readEvent(it).handleResponse(toaster::toast) { event ->
+                    event.toEdit()
+                }
             } ?: EventEdit()
             // for when the edit can be determined clientside by a view that consumes the edit
             is EditEventCallbackRoute -> {

@@ -6,6 +6,8 @@ import kampfire.model.GeoPoint
 import kampfire.model.Ok
 import kampfire.model.Problem
 import kampfire.model.distanceTo
+import kampfire.model.getDataOrNull
+import kampfire.model.handleResponse
 import kampfire.model.kilometers
 import koala.SvgFile
 import koala.dom.UIMessage
@@ -31,7 +33,6 @@ import streetlight.model.data.mergeLeft
 import streetlight.model.data.mergeRight
 import streetlight.model.data.toEdit
 import streetlight.model.external.toPlace
-import streetlight.web.io.handleResponse
 import streetlight.web.ui.ViewModel
 
 class EventScoutProto(
@@ -53,7 +54,7 @@ class EventScoutProto(
                 val locations = if (query.isBlank()) {
                     emptyList()
                 } else {
-                    api.searchLocations(query) ?: emptyList()
+                    api.searchLocations(query).getDataOrNull() ?: emptyList()
                 }
                 state.set { it.copy(locations = locations) }
             }
@@ -190,7 +191,7 @@ class EventScoutProto(
         val edit = state.now.eventEdit.takeIf { it.isValid } ?: return
         msg.set("Posting ${edit.title}...")
         scope.launch {
-            val event = api.createOrEditEvent(edit)?.payload
+            val event = api.createOrEditEvent(edit).handleResponse(toaster::toast)
             if (event == null) {
                 msg.set("Something went wrong")
                 return@launch

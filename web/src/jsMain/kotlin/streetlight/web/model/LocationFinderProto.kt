@@ -6,6 +6,7 @@ import kampfire.model.GeoPoint
 import kampfire.model.Ok
 import kampfire.model.Problem
 import kampfire.model.distanceTo
+import kampfire.model.handleResponse
 import kampfire.model.kilometers
 import koala.SvgFile
 import koala.dom.UIMessage
@@ -44,7 +45,7 @@ class LocationFinderProto(
                 val locations = if (query.isBlank()) {
                     emptyList()
                 } else {
-                    api.searchLocations(query) ?: emptyList()
+                    api.searchLocations(query).handleResponse(msg::set) ?: emptyList()
                 }
                 state.set { it.copy(locations = locations) }
             }

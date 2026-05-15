@@ -20,43 +20,43 @@ class ApiClient(private val client: FetchClient) {
     // content
     suspend fun readHomeContent() = client.getApi(Api.Content.Home)
 
-    suspend fun createUser(request: SignUpRequest) = client.post(UserApi.Create, request)
+    suspend fun createUser(request: SignUpRequest) = client.postApi(UserApi.Create, request)
     // suspend fun readStarInfo() = client.get(UserApi.ReadInfo)
 
     // events
-    suspend fun readEvent(eventId: EventId) = client.get(Api.Events.ReadById, eventId)
-    suspend fun readEventBySlug(slug: Slug) = client.get(Api.Events.ReadBySlug, slug)
-    suspend fun readEventLocationBySlug(slug: Slug) = client.get(Api.Events.ReadEventLocationBySlug, slug)
-    suspend fun readEventFeed() = client.get(Api.Events)
-    suspend fun createOrEditEvent(event: EventEdit) = client.postAndReadStatus(Api.Events.Edit, event)
-    suspend fun parseMultiEvent(request: ParseRequest) = client.post(Api.Events.ParseMultiEvents, request)
+    suspend fun readEvent(eventId: EventId) = client.getApi(Api.Events.ReadById, eventId)
+    suspend fun readEventBySlug(slug: Slug) = client.getApi(Api.Events.ReadBySlug, slug)
+    suspend fun readEventLocationBySlug(slug: Slug) = client.getApi(Api.Events.ReadEventLocationBySlug, slug)
+    suspend fun readEventFeed() = client.getApi(Api.Events)
+    suspend fun createOrEditEvent(event: EventEdit) = client.postApi(Api.Events.Edit, event)
+    suspend fun parseMultiEvent(request: ParseRequest) = client.postApi(Api.Events.ParseMultiEvents, request)
     suspend fun parseSingleEvent(request: ParseRequest) = client.postApi(Api.Events.ParseSingleEvent, request)
-    suspend fun readLocationEvents(locationId: LocationId) = client.get(Api.Events.AtLocation, locationId)
-    suspend fun readEventLocations(eventIds: List<EventId>) = client.post(Api.Events.ReadEventLocations, eventIds)
-    suspend fun readEventLights() = client.get(Api.Events.ReadLights)
+    suspend fun readLocationEvents(locationId: LocationId) = client.getApi(Api.Events.AtLocation, locationId)
+    suspend fun readEventLocations(eventIds: List<EventId>) = client.postApi(Api.Events.ReadEventLocations, eventIds)
+    suspend fun readEventLights() = client.getApi(Api.Events.ReadLights)
 
     // locations
-    suspend fun readLocation(locationId: LocationId) = client.get(Api.Locations, locationId)
+    suspend fun readLocation(locationId: LocationId) = client.getApi(Api.Locations, locationId)
     suspend fun parseLocation(request: ParseRequest) = client.postApi(Api.Locations.ParseLocation, request)
-    suspend fun readLocationsInBounds(bounds: GeoBounds) = client.post(Api.Locations.QueryBounds, bounds)
-    suspend fun searchLocations(query: String) = client.get(Api.Locations.Search) {
+    suspend fun readLocationsInBounds(bounds: GeoBounds) = client.postApi(Api.Locations.QueryBounds, bounds)
+    suspend fun searchLocations(query: String) = client.getApi(Api.Locations.Search) {
         writeParam(it.query, query)
     }
 
     suspend fun createOrEditLocation(location: LocationEdit) = client.postApi(Api.Locations.CreateOrEdit, location)
-    suspend fun queryMap(request: MapQuery) = client.get(Api.Events.QueryMap, request.toQuery())
+    suspend fun queryMap(request: MapQuery) = client.getApi(Api.Events.QueryMap, request.toQuery())
 
     // stars
     // suspend fun readUserFiles() = client.get(Api.Users.Files)
     // suspend fun updateUser(user: BasicUserInfo) = client.post(UserApi.Update, user)
-    suspend fun checkUsername(username: String) = client.post(UserApi.CheckUsername, username)
+    suspend fun checkUsername(username: String) = client.postApi(UserApi.CheckUsername, username)
 
     // suspend fun uploadAvatar(blobUrl: Url) = client.uploadBlob(Api.Users.UploadAvatar.path, blobUrl)
     suspend fun uploadImage(blobUrl: Url) = client.uploadBlob(Api.Users.UploadImage, blobUrl)
-    suspend fun queryLocation(point: GeoPoint) = client.get(Api.Locations.QueryPoint, point.toQuery())
-    suspend fun validateLogin() = client.get(Api.Stars.ValidateLogin)
+    suspend fun queryLocation(point: GeoPoint) = client.getApi(Api.Locations.QueryPoint, point.toQuery())
+    suspend fun validateLogin() = client.getApi(Api.Stars.ValidateLogin)
     suspend fun logout() = client.request(UserApi.Logout)
-    suspend fun updateStar(edit: StarEdit) = client.post(Api.Stars.EditStar, edit)
+    suspend fun updateStar(edit: StarEdit) = client.postApi(Api.Stars.EditStar, edit)
     suspend fun editLight(edit: EditLightRequest) = client.postApi(Api.Stars.EditLight, edit)
 
     // websockets
@@ -69,19 +69,19 @@ class ApiClient(private val client: FetchClient) {
         "space" to space.paramValue
     )
 
-    suspend fun readSongs() = client.get(Api.Songs)
-    suspend fun createSong(song: NewSong) = client.post(Api.Songs.Create, song)
-    suspend fun readSong(songId: SongId) = client.get(Api.SongProfile, songId)
-    suspend fun updateSong(song: Song) = client.post(Api.SongProfile.Update, song)
+    suspend fun readSongs() = client.getApi(Api.Songs)
+    suspend fun createSong(song: NewSong) = client.postApi(Api.Songs.Create, song)
+    suspend fun readSong(songId: SongId) = client.getApi(Api.SongProfile, songId)
+    suspend fun updateSong(song: Song) = client.postApi(Api.SongProfile.Update, song)
 
     // talents
-    suspend fun readTalents() = client.get(Api.Users.Talents)
-    suspend fun editTalent(talent: TalentEdit) = client.post(Api.Users.EditTalent, talent)
+    suspend fun readTalents() = client.getApi(Api.Users.Talents)
+    suspend fun editTalent(talent: TalentEdit) = client.postApi(Api.Users.EditTalent, talent)
 
     // galaxies
-    suspend fun foundGalaxy(galaxy: GalaxyEdit) = client.post(Api.Galaxies.CreateOrEdit, galaxy)
-    suspend fun readTopGalaxies() = client.get(Api.Galaxies.Top)
-    suspend fun readGalaxies(galaxyIds: List<GalaxyId>) = client.post(Api.Galaxies.ReadGalaxies, galaxyIds)
+    suspend fun foundGalaxy(galaxy: GalaxyEdit) = client.postApi(Api.Galaxies.CreateOrEdit, galaxy)
+    suspend fun readTopGalaxies() = client.getApi(Api.Galaxies.Top)
+    suspend fun readGalaxies(galaxyIds: List<GalaxyId>) = client.postApi(Api.Galaxies.ReadGalaxies, galaxyIds)
     suspend fun readGalaxy(id: StringId) = client.getApi(Api.Galaxies.ReadId, id)
     suspend fun readGalaxy(galaxyId: GalaxyId) = readGalaxy(galaxyId.value.toString())
     suspend fun createPost(post: EventPostEdit) = client.postApi(Api.Galaxies.PostEvent, post)
@@ -92,16 +92,16 @@ class ApiClient(private val client: FetchClient) {
     suspend fun readPosts(galaxyId: GalaxyId) = client.getApi(Api.Galaxies.ReadPosts, galaxyId)
     suspend fun readPost(postId: PostId) = client.getApi(Api.Galaxies.ReadPost, postId.value.toString())
     suspend fun readPost(id: StringId) = client.getApi(Api.Galaxies.ReadPost, id)
-    suspend fun readGalaxyLights() = client.get(Api.Galaxies.ReadLights)
+    suspend fun readGalaxyLights() = client.getApi(Api.Galaxies.ReadLights)
     suspend fun removePost(postId: PostId) = client.postApi(Api.Galaxies.RemovePost, postId)
 
-    suspend fun readStarByUsername(username: String) = client.get(Api.Stars.ReadByUsername) {
+    suspend fun readStarByUsername(username: String) = client.getApi(Api.Stars.ReadByUsername) {
         writeParam(it.username, username)
     }
 
     // docs
-    suspend fun readSiteDoc(docId: DocId) = client.get(Api.Docs, docId)
-    suspend fun readSiteDocTable() = client.get(Api.SiteDocTable)
+    suspend fun readSiteDoc(docId: DocId) = client.getApi(Api.Docs, docId)
+    suspend fun readSiteDocTable() = client.getApi(Api.SiteDocTable)
 
     // talk
     suspend fun readHistory(spaceId: Uuid, spaceType: SpaceType) = client.getApi(Api.Talk.ReadHistory) {
@@ -117,43 +117,4 @@ class ApiClient(private val client: FetchClient) {
         writeParam(it.query, query)
         writeParam(it.country, country)
     }
-}
-
-fun <T> ApiResponse<T>?.getDataOrNull() = when (this) {
-    is Ok -> this.data
-    is Problem -> null.also { console.log("Problem: ${this.message}") }
-    null -> null.also { console.log("Response was null") }
-}
-
-fun <T> ApiResponse<T>?.handleResponse(
-    onMessage: (String) -> Unit,
-    okMessage: String? = null,
-) = handleResponse(onMessage, okMessage) { it }
-
-fun <T1, T2> ApiResponse<T1>?.handleResponse(
-    onMessage: (String) -> Unit,
-    okMessage: String? = null,
-    block: (T1) -> T2
-): T2? = when (this) {
-    is Ok -> {
-        okMessage?.let {
-            onMessage(it)
-        }
-        block(data)
-    }
-
-    is Problem -> {
-        onMessage(message)
-        null
-    }
-
-    null -> {
-        onMessage("No response.")
-        null
-    }
-}
-
-fun <T> ApiResponse<T>?.isOk() = when (this) {
-    is Ok -> true
-    else -> false
 }

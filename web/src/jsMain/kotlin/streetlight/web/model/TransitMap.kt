@@ -1,6 +1,8 @@
 package streetlight.web.model
 
 import kampfire.model.GeoPoint
+import kampfire.model.getDataOrNull
+import kampfire.model.handleResponse
 import koala.SvgFile
 import koala.css.modify
 import koala.model.GeoMap
@@ -106,7 +108,7 @@ class TransitMap(
         }
     }
 
-    private suspend fun readTransit() = transit ?: client.readAreaTransit().also { transit = it }
+    private suspend fun readTransit() = transit ?: client.readAreaTransit().getDataOrNull().also { transit = it }
 
     private fun createRoutes(transit: AreaTransit): List<RouteEntity> {
         val routes = transit.routes.mapNotNull { route ->

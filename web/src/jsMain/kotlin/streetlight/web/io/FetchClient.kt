@@ -57,24 +57,19 @@ class FetchClient(
             acceptEncoding = acceptEncoding
         ) { it.tryDecode(acceptEncoding) }
 
+    @Deprecated("use getApi")
     suspend inline fun <Id, reified Returned> get(
         endpoint: GetByIdEndpoint<Id, Returned>,
         id: Id,
     ): Returned? = authRequest("GET", "${endpoint.path}/$id") { it.tryDecodeText() }
 
+    @Deprecated("use getApi")
     suspend inline fun <Id : TableId<*>, reified Returned> get(
         endpoint: GetByTableIdEndpoint<Id, Returned>,
         id: Id
     ): Returned? = authRequest("GET", "${endpoint.path}/${id.value}") { it.tryDecodeText() }
 
-    suspend inline fun <reified Sent, reified Returned> get(
-        endpoint: QueryEndpoint<Sent, Returned>,
-        query: String?
-    ): Returned? {
-        val url = if (!query.isNullOrEmpty()) "${endpoint.path}?$query" else endpoint.path
-        return authRequest("GET", url) { it.tryDecodeText() }
-    }
-
+    @Deprecated("use getApi")
     suspend inline fun <reified Sent, reified Returned> post(
         endpoint: PostEndpoint<Sent, Returned>,
         body: Sent,
@@ -93,17 +88,20 @@ class FetchClient(
         id: Id,
     ): ApiResponse<Returned>? = authRequest("GET", "${endpoint.path}/$id") { it.tryDecodeApiResponse() }
 
+    suspend inline fun <reified Sent, reified Returned> getApi(
+        endpoint: QueryEndpoint<Sent, Returned>,
+        query: String?
+    ): ApiResponse<Returned>? {
+        val url = if (!query.isNullOrEmpty()) "${endpoint.path}?$query" else endpoint.path
+        return authRequest("GET", url) { it.tryDecodeApiResponse() }
+    }
+
     suspend inline fun <reified Sent, reified Returned> postApi(
         endpoint: PostEndpoint<Sent, Returned>,
         body: Sent,
     ): ApiResponse<Returned>? =
         authRequest("POST", endpoint.path, Json.encodeToString(body)) { it.tryDecodeApiResponse() }
 
-    suspend inline fun <reified Sent, reified Returned> postAndReadStatus(
-        endpoint: PostEndpoint<Sent, Returned>,
-        body: Sent,
-    ): FetchResponse<Returned>? =
-        authRequest("POST", endpoint.path, Json.encodeToString(body)) { it.tryDecodeWithStatus() }
 
     suspend fun request(endpoint: Endpoint<*, *>): Response {
         return window.fetch(
@@ -230,7 +228,6 @@ suspend inline fun <reified Returned> Response.tryDecode(encoding: EncodingType?
     }
 }
 
-@OptIn(ExperimentalSerializationApi::class)
 suspend inline fun <reified Returned> Response.tryDecodeBytes(): Returned? {
     if (status.toInt() == 204 || !ok) return null
     val buffer = arrayBuffer().await()
@@ -266,7 +263,6 @@ suspend inline fun <reified Returned> Response.tryDecodeText(): Returned? {
     }
 }
 
-@ExperimentalSerializationApi
 suspend inline fun <reified T> Response.tryDecodeApiResponse(): ApiResponse<T>? {
     return when (status.toInt()) {
         200 -> {
@@ -287,26 +283,6 @@ suspend inline fun <reified T> Response.tryDecodeApiResponse(): ApiResponse<T>? 
         500 -> Problem("The server ran into a problem.")
         else -> Problem("Unknown error: $status")
     }
-}
-
-@Deprecated("use ApiResponse")
-suspend inline fun <reified Returned> Response.tryDecodeWithStatus(): FetchResponse<Returned> {
-    val status = status.toInt()
-    val payload: Returned? = if (status == 200) tryDecodeText() else null
-    return FetchResponse(status, payload)
-}
-
-@Deprecated("use ApiResponse")
-data class FetchResponse<T>(
-    val status: Int,
-    val payload: T?
-) {
-    val reason
-        get() = when (status) {
-            200 -> "Success"
-            409 -> "Conflict"
-            else -> "Unknown"
-        }
 }
 
 enum class EncodingType(val headerValue: String) {

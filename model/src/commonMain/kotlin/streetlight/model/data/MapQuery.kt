@@ -19,9 +19,9 @@ data class MapQuery(
     companion object {
         const val ZOOM_KEY = "zoom"
 
-        fun fromQuery(parameters: ParameterMap): MapQuery? {
-            val bounds = GeoBounds.fromQuery(parameters) ?: return null
-            val zoom = parameters.readFloat(ZOOM_KEY) ?: return null
+        fun fromQuery(parameters: ParameterMap): MapQuery {
+            val bounds = GeoBounds.fromQuery(parameters) ?: error("bounds not found")
+            val zoom = parameters.readFloat(ZOOM_KEY) ?: error("zoom not found")
             return MapQuery(bounds, zoom)
         }
     }

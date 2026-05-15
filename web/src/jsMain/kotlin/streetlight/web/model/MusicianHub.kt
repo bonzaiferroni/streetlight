@@ -1,5 +1,7 @@
 package streetlight.web.model
 
+import kampfire.model.getDataOrNull
+import kampfire.model.handleResponse
 import koala.model.mapDistinct
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
@@ -25,7 +27,7 @@ class MusicianHub(
 
     fun refreshSongs() {
         scope.launch {
-            val songs = api.readSongs() ?: emptyList()
+            val songs = api.readSongs().getDataOrNull() ?: emptyList()
             view.set { it.copy(songs = songs) }
         }
     }

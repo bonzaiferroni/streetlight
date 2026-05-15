@@ -23,7 +23,6 @@ private var Element.scope: CoroutineScope? get() = asDynamic().scope
         if (existingScope != null && existingScope.isActive) {
             error("Active coroutine scope cannot be replaced")
         }
-        console.log("applied scope")
         element.scope = value
     }
 

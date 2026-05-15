@@ -1,5 +1,6 @@
 package streetlight.web.model
 
+import kampfire.model.handleResponse
 import koala.model.Portal
 import koala.model.mapDistinct
 import koala.model.storeOf
@@ -9,8 +10,6 @@ import streetlight.model.data.Galaxy
 import streetlight.model.data.Post
 import streetlight.web.EarthMapRoute
 import streetlight.web.io.ApiClient
-import streetlight.web.io.getDataOrNull
-import streetlight.web.io.handleResponse
 import streetlight.web.ui.ViewModel
 
 class EarthMap(
@@ -35,7 +34,7 @@ class EarthMap(
                             api.readGalaxy(it).handleResponse(toaster::toast)
                         }
                         val posts = galaxy?.let {
-                            api.readPosts(it.galaxyId).getDataOrNull()
+                            api.readPosts(it.galaxyId).handleResponse(toaster::toast)
                         }
                         state.set { it.copy(galaxy = galaxy, posts = posts) }
                     }

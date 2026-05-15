@@ -1,5 +1,6 @@
 package streetlight.web.ui
 
+import kampfire.model.handleResponse
 import koala.css.*
 import koala.dom.*
 import koala.dom.routeBlock
@@ -13,7 +14,6 @@ import streetlight.model.data.StarPost
 import streetlight.model.data.toEdit
 import streetlight.web.EditPostRoute
 import streetlight.web.GalaxyRoute
-import streetlight.web.io.handleResponse
 import streetlight.web.model.ContentEditor
 import streetlight.web.model.Streetlight
 

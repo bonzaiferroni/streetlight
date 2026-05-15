@@ -39,37 +39,3 @@ interface ClientFacade {
 interface StageFacade {
     val galaxy: GalaxyStage
 }
-
-fun createStreetlight(scope: CoroutineScope): Streetlight {
-
-    val cred = CredentialStore()
-    val fetchClient = FetchClient(cred)
-
-    return object : Streetlight { // 220 KB
-        override val appScope = scope
-
-        override val config = SiteConfig()
-
-        override val client = object: ClientFacade {
-            override val transit = TransitClient(fetchClient)
-            override val api = ApiClient(fetchClient)
-            override val location = OSMClient()
-        }
-
-        override val gate = UserGate(scope, cred, client.api)
-        override val cache = DataCache(scope, config, client.api, gate)
-        override val portal = Portal(HomeRoute, StreetlightScreen.entries, scope)
-        override val gateAgent = GateAgent(scope, gate, portal)
-
-        override val geoMap = GeoMap(scope)
-        override val streetMap = StreetMap(scope, cache, geoMap)
-        override val chatRoom = ChatRoom(scope, client.api)
-        override val omni = OmniLog(scope, client.api)
-
-        override val stage = object: StageFacade {
-            override val galaxy = GalaxyStage(scope)
-        }
-
-        override val toaster = Toaster(scope)
-    } as Streetlight
-}

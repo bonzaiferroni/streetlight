@@ -17,6 +17,7 @@ class DataCache(
     private val config: SiteConfig,
     private val api: ApiClient,
     private val gate: UserGate,
+    private val toaster: Toaster,
 ) {
     init {
         scope.launch {
@@ -28,10 +29,10 @@ class DataCache(
         }
     }
 
-    val talent = ItemCache(scope, { it.talentId }) { api.readTalents() }
-    val song = ItemCache(scope, { it.songId }) { api.readSongs() }
+    val talent = ItemCache(scope, toaster::toast, { it.talentId }) { api.readTalents() }
+    val song = ItemCache(scope, toaster::toast, { it.songId }) { api.readSongs() }
     // val file = ItemCache(scope, { it }) { api.readUserFiles() }
-    val topGalaxies = ItemCache(scope, { it.galaxyId }) { api.readTopGalaxies() }
+    val topGalaxies = ItemCache(scope, toaster::toast, { it.galaxyId }) { api.readTopGalaxies() }
 
     val newPosts = MutableSharedFlow<Post>()
 
@@ -44,8 +45,9 @@ class DataCache(
         uuidToId = { GalaxyId(it) },
         itemToId = { it.galaxyId },
         lightEdit = { api.editLight(it) },
-        readRemoteLights = { api.readGalaxyLights()?.toSet() },
-        readRemoteItems = { api.readGalaxies(it)?.sortedBy { galaxy -> galaxy.createdAt } },
+        readRemoteLights = { api.readGalaxyLights() },
+        readRemoteItems = { api.readGalaxies(it) },
+        onError = toaster::toast,
         scope = scope,
         gate = gate,
     )
@@ -57,8 +59,9 @@ class DataCache(
         uuidToId = { EventId(it) },
         itemToId = { it.eventId },
         lightEdit = { api.editLight(it) },
-        readRemoteLights = { api.readEventLights()?.toSet() },
-        readRemoteItems = { api.readEventLocations(it)?.sortedBy { event -> event.startsAt } },
+        readRemoteLights = { api.readEventLights() },
+        readRemoteItems = { api.readEventLocations(it) },
+        onError = toaster::toast,
         scope = scope,
         gate = gate,
     )

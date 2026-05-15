@@ -1,6 +1,7 @@
 package streetlight.web.model
 
 import kampfire.model.SignUpRequest
+import kampfire.model.handleResponse
 import koala.model.mapDistinct
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
@@ -13,6 +14,7 @@ class UserCreator(
     private val gate: UserGate,
     private val cred: CredentialStore,
     private val api: ApiClient,
+    private val toaster: Toaster,
 ) {
     private val state = storeOf(UserCreatorState())
     private val requestNow get() = state.now.request
@@ -42,7 +44,7 @@ class UserCreator(
     fun createAccount() {
         val request = state.now.request.takeIf { it.isValid } ?: return
         scope.launch {
-            val result = api.createUser(request) ?: return@launch
+            val result = api.createUser(request).handleResponse(toaster::toast) ?: return@launch
             if (result.isSuccess) {
                 cred.setFromSignup(requestNow)
                 gate.signIn()

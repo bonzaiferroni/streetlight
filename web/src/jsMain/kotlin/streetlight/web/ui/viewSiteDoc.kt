@@ -1,5 +1,6 @@
 package streetlight.web.ui
 
+import kampfire.model.handleResponse
 import koala.css.*
 import koala.dom.*
 import koala.model.DocNode
@@ -22,9 +23,9 @@ fun RenderContext.viewSiteDoc(node: DocNode) {
 fun RenderContext.viewSiteDocRoute() {
     routeBlock<SiteDocRoute, DocNode>(portal, { route ->
         if (cachedTable == null) {
-            cachedTable = api.readSiteDocTable()
+            cachedTable = api.readSiteDocTable().handleResponse(toaster::toast)
         }
-        api.readSiteDoc(route.docId)
+        api.readSiteDoc(route.docId).handleResponse(toaster::toast)
     }) { node ->
         viewSiteDoc(node)
     }

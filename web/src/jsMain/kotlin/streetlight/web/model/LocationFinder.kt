@@ -3,6 +3,7 @@
 package streetlight.web.model
 
 import kampfire.model.distanceTo
+import kampfire.model.handleResponse
 import kampfire.model.kilometers
 import koala.dom.UIMessage
 import koala.dom.set
@@ -44,7 +45,7 @@ class LocationFinder(
                 val locations = if (query.isBlank()) {
                     emptyList()
                 } else {
-                    api.searchLocations(query) ?: emptyList()
+                    api.searchLocations(query).handleResponse(msg::set) ?: emptyList()
                 }
                 state.set { it.copy(locations = locations) }
             }

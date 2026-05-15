@@ -23,8 +23,8 @@ data class GeoPoint(
         val Denver = GeoPoint(-104.95, 39.75)
 
         fun fromQuery(parameters: ParameterMap) = parameters.let {
-            val lng = parameters["lng"]?.firstOrNull()?.toDoubleOrNull() ?: return@let null
-            val lat = parameters["lat"]?.firstOrNull()?.toDoubleOrNull() ?: return@let null
+            val lng = parameters["lng"]?.firstOrNull()?.toDoubleOrNull() ?: error("lng not found")
+            val lat = parameters["lat"]?.firstOrNull()?.toDoubleOrNull() ?: error("lat not found")
             GeoPoint(lng, lat)
         }
 

@@ -1,5 +1,6 @@
 package streetlight.web.ui
 
+import kampfire.model.handleResponse
 import koala.css.Secondary
 import koala.css.modify
 import koala.dom.RenderContext
@@ -11,7 +12,6 @@ import kotlinx.coroutines.launch
 import streetlight.model.data.PostId
 import streetlight.web.EditPostRoute
 import streetlight.web.io.ApiClient
-import streetlight.web.io.handleResponse
 import streetlight.web.model.GalaxyStage
 import streetlight.web.model.Toaster
 
