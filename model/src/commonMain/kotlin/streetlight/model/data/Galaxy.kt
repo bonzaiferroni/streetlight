@@ -11,6 +11,7 @@ import kotlin.jvm.JvmInline
 @Serializable
 data class Galaxy(
     val galaxyId: GalaxyId,
+    val cityId: CityId?,
     val slug: Slug,
     val name: String,
     val tagLine: String?,

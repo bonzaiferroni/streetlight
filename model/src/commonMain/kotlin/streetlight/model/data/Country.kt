@@ -12,9 +12,4 @@ data class Country(
 
 @Serializable
 @JvmInline
-value class CountryId(override val value: String): ProjectId {
-    companion object {
-        fun random() = CountryId(randomUuidString())
-    }
-    override fun toString() = value
-}
+value class CountryId(val value: Int)

@@ -13,9 +13,4 @@ data class State(
 
 @Serializable
 @JvmInline
-value class StateId(override val value: String): ProjectId {
-    companion object {
-        fun random() = StateId(randomUuidString())
-    }
-    override fun toString() = value
-}
+value class StateId(val value: Int)

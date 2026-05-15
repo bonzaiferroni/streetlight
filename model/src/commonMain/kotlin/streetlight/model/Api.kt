@@ -133,6 +133,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object SearchCity: GetEndpoint<List<Locality>>(this, "search-city") {
             val query = stringParamOf("name")
             val country = stringParamOf("country")
+            val limit = intParamOf("limit")
         }
     }
 

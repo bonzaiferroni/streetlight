@@ -21,8 +21,5 @@ inline fun <reified T> String.toProjectId(): T = when (T::class) {
     PostId::class -> PostId(this) as T
     PostId::class -> PostId(this) as T
     CommentId::class -> CommentId(this) as T
-    CityId::class -> CityId(this) as T
-    CountryId::class -> CountryId(this) as T
-    StateId::class -> StateId(this) as T
     else -> error("invalid projectId type: ${T::class.simpleName}")
 }

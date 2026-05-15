@@ -13,7 +13,8 @@ data class City(
 )
 
 @JvmInline @Serializable
-value class CityId(override val value: String): ProjectId {
-    companion object { fun random() = CityId(randomUuidString())}
-    override fun toString() = value
+value class CityId(val value: Int) {
+    companion object {
+        val empty = CityId(0)
+    }
 }
