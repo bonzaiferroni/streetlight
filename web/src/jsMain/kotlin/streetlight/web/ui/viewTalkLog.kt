@@ -16,7 +16,6 @@ import streetlight.model.data.PostOrder
 import streetlight.web.TalkRoute
 import streetlight.web.io.TalkLog
 import streetlight.web.io.handleResponse
-import streetlight.web.model.Streetlight
 
 fun RenderContext.viewTalkLog(model: TalkLog) {
     var treeRoot: HTMLElement? = null
@@ -66,7 +65,7 @@ fun RenderContext.viewTalkLog(model: TalkLog) {
 
 fun RenderContext.viewTalkRoute() {
     routeBlock<TalkRoute> { route ->
-        val model = TalkLog(renderScope, route.stringId, route.type, api)
+        val model = TalkLog(renderScope, route.id, route.type, api)
         viewTalkLog(model)
     }
 }

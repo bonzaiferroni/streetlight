@@ -4,6 +4,7 @@ import kampfire.utils.randomUuidString
 import kotlin.time.Instant
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
+import kotlin.uuid.Uuid
 
 @Serializable
 data class Talent(
@@ -21,8 +22,8 @@ data class Talent(
 
 @JvmInline
 @Serializable
-value class TalentId(override val value: String): ProjectId {
-    companion object { fun random() = TalentId(randomUuidString()) }
+value class TalentId(override val value: Uuid): ProjectId {
+    companion object { fun random() = TalentId(Uuid.random()) }
 }
 
 enum class TalentType {

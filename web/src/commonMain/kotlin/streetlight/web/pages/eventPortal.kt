@@ -92,7 +92,7 @@ fun FlowContent.requestItem(
     val (song, plays) = item
     card() {
 //        attributes[EventPortalSelector.songIdAttribute] = song.songId
-        onClick = invoke("startRequest", song.songId.value)
+        onClick = invoke("startRequest", song.songId.value.toString())
 
         row(modify(Flex1)) {
             column(modify(Flex1, Gap0, WidthAuto)) {
@@ -109,8 +109,8 @@ fun FlowContent.requestItem(
 
 object EventPortalSelector {
     val requestItem = Class("request-item")
-    val eventIdAttribute = Attribute("event-id", true) { EventId(it) }
-    val songIdAttribute = Attribute("song-id", true) { SongId(it) }
+    val eventIdAttribute = uuidAttributeOf("event-id") { EventId(it) }
+    val songIdAttribute = uuidAttributeOf("song-id") { SongId(it) }
     val sendRequestButtonId = Id("send-request-button")
 }
 

@@ -21,7 +21,7 @@ val Event.route get() = EventSlugRoute(slug)
 val EventLocation.eventRoute get() = EventSlugRoute(slug)
 val EventLocation.locationRoute get() = LocationIdRoute(locationId)
 val Doc.route get() = SiteDocRoute(docId)
-val StarPost.starPostRoute get() = StarPostRoute(slug ?: postId.value)
+val StarPost.starPostRoute get() = StarPostRoute(slug ?: postId.value.toString())
 
 val Post.route get(): AppRoute = when (this) {
     is StarPost -> starPostRoute

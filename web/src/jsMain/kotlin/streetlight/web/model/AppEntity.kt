@@ -26,7 +26,7 @@ import streetlight.web.ui.eventFocusContent
 data class LocationEntity(
     val location: Location,
 ): PointEntity {
-    override val entityId get() = location.locationId.value
+    override val entityId get() = location.locationId.value.toString()
     // override val label get() = location.name
     override val position get() = location.geoPoint
     override val thumbUrl get() = location.images.thumb ?: SiteImage.placeholderTh.url
@@ -63,7 +63,7 @@ data class EventEntity(
     val galaxy: Galaxy?,
     override val position: GeoPoint,
 ): PointEntity {
-    override val entityId get() = post.event?.locationId?.value ?: post.postId.value
+    override val entityId get() = post.event.locationId.value.toString()
     override val thumbUrl get() = post.images.thumb ?: galaxy?.images.thumb
         ?: SiteImage.placeholderTh.url
     override val light get() = Rgb(240, 100, 180 )

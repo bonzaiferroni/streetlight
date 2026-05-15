@@ -13,12 +13,13 @@ import streetlight.model.data.MultiLightEdit
 import streetlight.web.io.isOk
 import kotlin.collections.minus
 import kotlin.collections.plus
+import kotlin.uuid.Uuid
 
 class LightCache<Id, Item>(
     val lightType: LightType,
     private val cacheKey: String,
-    val idToString: (Id) -> String,
-    val stringToId: (String) -> Id,
+    val idToUuid: (Id) -> Uuid,
+    val uuidToId: (Uuid) -> Id,
     val itemToId: (Item) -> Id,
     private val lightEdit: suspend (EditLightRequest) -> ApiResponse<Unit>?,
     private val readRemoteLights: suspend () -> Set<Id>?,
@@ -32,6 +33,9 @@ class LightCache<Id, Item>(
     val lightsFlow = stateFlow.mapDistinct { it.lights }
     val itemsFlow = stateFlow.mapDistinct { it.items }
 
+    private val idToString: (Id) -> String = { idToUuid(it).toString() }
+    private val stringToId: (String) -> Id = { uuidToId(Uuid.parse(it)) }
+
     private var cachedLights by setStorageOf(cacheKey, idToString, stringToId)
 
     init {
@@ -40,7 +44,7 @@ class LightCache<Id, Item>(
                 gate.signedInFlow.collect { isSignedIn ->
                     if (isSignedIn) {
                         if (cachedLights.isNotEmpty()) {
-                            val request = MultiLightEdit(cachedLights.map { LightEdit(idToString(it), true, lightType) })
+                            val request = MultiLightEdit(cachedLights.map { LightEdit(idToUuid(it), true, lightType) })
                             // send lights cached while signed out
                             lightEdit(request)
                             cachedLights = emptySet()
@@ -79,7 +83,7 @@ class LightCache<Id, Item>(
         when (gate.stateNow.isSignedIn) {
             true -> {
                 scope.launch {
-                    val edit = LightEdit(idToString(id), isLit, lightType)
+                    val edit = LightEdit(idToUuid(id), isLit, lightType)
                     val isSuccess = lightEdit(edit).isOk() ?: return@launch // td: ui message
                     if (isSuccess)
                         editState(id, isLit)

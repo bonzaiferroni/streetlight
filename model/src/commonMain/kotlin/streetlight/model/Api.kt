@@ -97,12 +97,6 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object UploadImage: PostEndpoint<ByteArray, Url>(this, "upload")
     }
 
-    object Stories: ApiNode(this, "story") {
-        object ReadUrl: GetEndpoint<ProtoStoryParse>(this, "read-url") {
-            val url = stringParamOf("url")
-        }
-    }
-
     object Chat: ApiNode(this, "chat") { }
     object Omni: ApiNode(this, "omni") {
         object Log: ApiNode(this, "log")
@@ -153,7 +147,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
     object Talk: ApiNode(this, "talk") {
         object ReadGalaxy: GetByIdEndpoint<GalaxyId, List<Comment>>(this, "galaxy")
         object ReadHistory: GetEndpoint<List<Comment>>(this, "history") {
-            val spaceId = stringParamOf("space-id")
+            val spaceId = uuidParamOf("space-id")
             val spaceType = enumParamOf<SpaceType>("space-type")
         }
         object Connect: ApiNode(this, "connect")

@@ -6,6 +6,7 @@ import kampfire.utils.randomUuidString
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 import kotlin.time.Instant
+import kotlin.uuid.Uuid
 
 @Serializable
 data class Comment(
@@ -22,17 +23,17 @@ data class Comment(
 
 @JvmInline
 @Serializable
-value class CommentId(override val value: String) : ProjectId {
+value class CommentId(override val value: Uuid) : ProjectId {
     companion object {
-        fun random() = CommentId(randomUuidString())
+        fun random() = CommentId(Uuid.random())
     }
 
-    override fun toString() = value
+    override fun toString() = value.toString()
 }
 
 @Serializable
 data class NewComment(
-    val spaceId: StringId,
+    val spaceId: Uuid,
     val spaceType: SpaceType,
     val parentId: CommentId?,
     val text: String,
@@ -44,6 +45,6 @@ data class NewComment(
 @Serializable
 data class UpdatedComment(
     val commentId: CommentId,
-    val spaceId: StringId,
+    val spaceId: Uuid,
     val text: String,
 )

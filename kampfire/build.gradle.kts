@@ -34,4 +34,8 @@ kotlin {
         wasmJsMain.dependencies { }
 
     }
+
+    compilerOptions {
+        optIn.add("kotlin.uuid.ExperimentalUuidApi")
+    }
 }

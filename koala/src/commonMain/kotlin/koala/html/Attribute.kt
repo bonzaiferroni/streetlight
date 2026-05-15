@@ -4,6 +4,7 @@ import kampfire.model.GeoPoint
 import koala.Lottie
 import koala.utils.jsonConfig
 import kotlinx.html.CoreAttributeGroupFacade
+import kotlin.uuid.Uuid
 
 data class Attribute<T>(
     val identifier: String,
@@ -33,6 +34,9 @@ data class Attribute<T>(
         val Sizes = stringAttributeOf("sizes")
     }
 }
+
+fun <T> uuidAttributeOf(identifier: String, block: (Uuid) -> T ) =
+    Attribute(identifier, true) { block(Uuid.parse(it)) }
 
 fun stringAttributeOf(identifier: String, isCustom: Boolean = false) =
     Attribute(identifier, isCustom) { it }

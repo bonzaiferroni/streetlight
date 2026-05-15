@@ -4,6 +4,7 @@ import kampfire.utils.randomUuidString
 import kotlin.time.Instant
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
+import kotlin.uuid.Uuid
 
 @Serializable
 data class Song(
@@ -20,8 +21,8 @@ data class Song(
 )
 
 @JvmInline @Serializable
-value class SongId(override val value: String): ProjectId {
-    companion object { fun random() = SongId(randomUuidString()) }
+value class SongId(override val value: Uuid): ProjectId {
+    companion object { fun random() = SongId(Uuid.random()) }
 }
 
 @Serializable

@@ -4,6 +4,7 @@ import kampfire.utils.randomUuidString
 import kotlin.time.Instant
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
+import kotlin.uuid.Uuid
 
 @Serializable
 data class Guest(
@@ -16,9 +17,9 @@ data class Guest(
 
 @JvmInline
 @Serializable
-value class GuestId(override val value: String): ProjectId {
+value class GuestId(override val value: Uuid): ProjectId {
     companion object {
-        fun random(): GuestId = GuestId(randomUuidString())
+        fun random(): GuestId = GuestId(Uuid.random())
     }
 }
 

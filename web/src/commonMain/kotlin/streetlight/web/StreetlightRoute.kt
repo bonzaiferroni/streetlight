@@ -8,6 +8,7 @@ import koala.html.IdOrNullParse
 import koala.html.IdParse
 import koala.html.RouteParse
 import koala.html.StaticParse
+import koala.html.UuidParse
 import koala.model.DocId
 import streetlight.model.data.Event
 import streetlight.model.data.EventEdit
@@ -21,6 +22,7 @@ import streetlight.model.data.Slug
 import streetlight.model.data.SongId
 import streetlight.model.data.TalentId
 import streetlight.model.data.SpaceType
+import kotlin.uuid.Uuid
 
 enum class StreetlightScreen(
     override val pathRoot: String,
@@ -29,17 +31,17 @@ enum class StreetlightScreen(
     Home("", StaticParse { HomeRoute }),
     StarDash("account", StaticParse { StarDashRoute }),
     EventProfile("e", IdParse { EventSlugRoute(it) }),
-    EditEvent("edit-event", IdParse { EditEventIdRoute(EventId(it)) }),
-    EditPost("edit-post", IdParse { EditPostRoute(PostId(it)) }),
-    EditLocation("edit-location", IdParse { EditLocationIdRoute(LocationId(it)) }),
+    EditEvent("edit-event", UuidParse { EditEventIdRoute(EventId(it)) }),
+    EditPost("edit-post", UuidParse { EditPostRoute(PostId(it)) }),
+    EditLocation("edit-location", UuidParse { EditLocationIdRoute(LocationId(it)) }),
     Sandbox("sandbox", StaticParse { SandboxRoute }),
     Earth("earth", IdOrNullParse { EarthMapRoute(it) }),
     Chat("chat", StaticParse { ChatRoute }),
-    SongProfile("song-profile", IdParse { SongProfileRoute(SongId(it)) }),
-    TalentProfile("talent-profile", IdParse { TalentProfileRoute(TalentId(it)) }),
-    EditTalent("edit-talent", IdParse { EditTalentRoute(TalentId(it)) }),
-    Location("location", IdParse { LocationIdRoute(LocationId(it)) }),
-    LocationAdmin("location-admin", IdParse { LocationAdminRoute(LocationId(it)) }),
+    SongProfile("song-profile", UuidParse { SongProfileRoute(SongId(it)) }),
+    TalentProfile("talent-profile", UuidParse { TalentProfileRoute(TalentId(it)) }),
+    EditTalent("edit-talent", UuidParse { EditTalentRoute(TalentId(it)) }),
+    Location("location", UuidParse { LocationIdRoute(LocationId(it)) }),
+    LocationAdmin("location-admin", UuidParse { LocationAdminRoute(LocationId(it)) }),
     CreateGalaxy("create-galaxy", StaticParse { CreateGalaxyRoute }),
     GalaxyList("galaxies", StaticParse { GalaxyListRoute }),
     Galaxy("g", IdParse { GalaxyRoute(it) }),
@@ -52,13 +54,13 @@ enum class StreetlightScreen(
     SiteConfig("config", StaticParse { SiteConfigRoute }),
     AboutApp("about", StaticParse { AboutRoute }),
     SiteDoc("docs", IdParse { SiteDocRoute(it) }),
-    Talk("talk", IdParse { TalkRoute(GalaxyId(it)) })
+    Talk("talk", UuidParse { TalkRoute(GalaxyId(it)) })
 }
 
 sealed interface StreetlightRoute: AppRoute
 
 interface ProjectIdRoute: StreetlightRoute {
-    val id: TableId<String>?
+    val id: TableId<Uuid>?
 
     override fun toSitePath() = toIdSitePath(id)
 }
@@ -250,13 +252,13 @@ data class SiteDocRoute(val docId: DocId): StreetlightRoute {
     override fun toSitePath() = toIdSitePath(docId)
 }
 
-data class TalkRoute(val stringId: StringId, val type: SpaceType): StreetlightRoute {
+data class TalkRoute(val id: Uuid, val type: SpaceType): StreetlightRoute {
     constructor(galaxyId: GalaxyId): this(galaxyId.value, SpaceType.Galaxy)
 
     override val screen get() = StreetlightScreen.Talk
     override val title get() = "Talk"
 
-    override fun toSitePath() = toIdSitePath(stringId)
+    override fun toSitePath() = toIdSitePath(id)
 }
 
 data class StarPostRoute(override val id: StringId): StringIdRoute {
@@ -265,4 +267,5 @@ data class StarPostRoute(override val id: StringId): StringIdRoute {
 }
 
 private fun AppRoute.toIdSitePath(id: String?) = id?.let { "$basePath/$id" } ?: basePath
-private fun AppRoute.toIdSitePath(id: TableId<String>?) = toIdSitePath(id?.value)
+private fun AppRoute.toIdSitePath(id: TableId<Uuid>?) = toIdSitePath(id?.value.toString())
+private fun AppRoute.toIdSitePath(id: Uuid?) = toIdSitePath(id?.toString())

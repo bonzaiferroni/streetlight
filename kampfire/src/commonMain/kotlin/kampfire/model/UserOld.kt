@@ -5,6 +5,7 @@ import kampfire.utils.randomUuidString
 import kotlin.time.Instant
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
+import kotlin.uuid.Uuid
 
 //@Serializable
 //data class UserOld(
@@ -44,6 +45,6 @@ fun BasicUser.toPrivateInfo() = PrivateInfo(
 )
 
 @JvmInline @Serializable
-value class BasicUserId(override val value: String): TableId<String> {
-    companion object { fun random() = BasicUserId(randomUuidString()) }
+value class BasicUserId(override val value: Uuid): TableId<Uuid> {
+    companion object { fun random() = BasicUserId(Uuid.random()) }
 }

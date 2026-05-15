@@ -12,6 +12,7 @@ import org.koin.dsl.koinApplication
 import streetlight.web.io.OmniLog
 import streetlight.web.model.TransitMap
 import streetlight.web.model.UserGate
+import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalSerializationApi::class)
 fun viewApp() {
@@ -51,7 +52,7 @@ fun viewApp() {
                 wireRightPanel()
                 wireToaster()
 
-                registerMenu(PostKey.PostMenuId, { PostId(it) }, RenderContext::postMenu)
+                registerMenu(PostKey.PostMenuId, { PostId(Uuid.parse(it)) }, RenderContext::postMenu)
             }
 
             try {

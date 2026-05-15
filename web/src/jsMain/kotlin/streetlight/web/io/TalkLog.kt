@@ -14,10 +14,11 @@ import streetlight.model.data.*
 import streetlight.web.model.Streetlight
 import streetlight.web.ui.CommentView
 import streetlight.web.ui.ViewModel
+import kotlin.uuid.Uuid
 
 class TalkLog(
     private val scope: CoroutineScope,
-    private val spaceId: StringId,
+    private val spaceId: Uuid,
     private val spaceType: SpaceType,
     private val api: ApiClient,
 ) {

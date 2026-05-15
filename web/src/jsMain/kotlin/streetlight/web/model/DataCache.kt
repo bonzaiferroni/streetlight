@@ -40,8 +40,8 @@ class DataCache(
     val galaxyLights = LightCache(
         lightType = LightType.Galaxy,
         cacheKey = StarLightKey.GALAXY_LIGHT_CACHE,
-        idToString = { it.value },
-        stringToId = { GalaxyId(it) },
+        idToUuid = { it.value },
+        uuidToId = { GalaxyId(it) },
         itemToId = { it.galaxyId },
         lightEdit = { api.editLight(it) },
         readRemoteLights = { api.readGalaxyLights()?.toSet() },
@@ -53,8 +53,8 @@ class DataCache(
     val eventLights = LightCache(
         lightType = LightType.Event,
         cacheKey = StarLightKey.EVENT_LIGHT_CACHE,
-        idToString = { it.value },
-        stringToId = { EventId(it) },
+        idToUuid = { it.value },
+        uuidToId = { EventId(it) },
         itemToId = { it.eventId },
         lightEdit = { api.editLight(it) },
         readRemoteLights = { api.readEventLights()?.toSet() },

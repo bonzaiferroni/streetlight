@@ -13,6 +13,7 @@ import koala.model.DocId
 import kotlinx.coroutines.CoroutineScope
 import streetlight.model.Api
 import streetlight.model.data.*
+import kotlin.uuid.Uuid
 
 class ApiClient(private val client: FetchClient) {
 
@@ -58,17 +59,13 @@ class ApiClient(private val client: FetchClient) {
     suspend fun updateStar(edit: StarEdit) = client.post(Api.Stars.EditStar, edit)
     suspend fun editLight(edit: EditLightRequest) = client.postApi(Api.Stars.EditLight, edit)
 
-    suspend fun readStoryUrl(url: String) = client.get(Api.Stories.ReadUrl) {
-        writeParam(it.url, url)
-    }
-
     // websockets
     fun connectChat(scope: CoroutineScope) = WebChatSocket(client.connectSocket(Api.Chat), scope)
     fun connectSpiritVision() = client.connectSocket(Api.Map.SpiritVision)
     fun connectOmniLog() = client.connectSocket(Api.Omni.Log)
-    fun connectTalkLog(stringId: StringId, space: SpaceType) = client.connectSSE(
+    fun connectTalkLog(id: Uuid, space: SpaceType) = client.connectSSE(
         Api.Talk.Connect,
-        "id" to stringId,
+        "id" to id.toString(),
         "space" to space.paramValue
     )
 
@@ -86,14 +83,14 @@ class ApiClient(private val client: FetchClient) {
     suspend fun readTopGalaxies() = client.get(Api.Galaxies.Top)
     suspend fun readGalaxies(galaxyIds: List<GalaxyId>) = client.post(Api.Galaxies.ReadGalaxies, galaxyIds)
     suspend fun readGalaxy(id: StringId) = client.getApi(Api.Galaxies.ReadId, id)
-    suspend fun readGalaxy(galaxyId: GalaxyId) = readGalaxy(galaxyId.value)
+    suspend fun readGalaxy(galaxyId: GalaxyId) = readGalaxy(galaxyId.value.toString())
     suspend fun createPost(post: EventPostEdit) = client.postApi(Api.Galaxies.PostEvent, post)
     suspend fun createPost(post: StarPostEdit) = client.postApi(Api.Galaxies.PostContent, post)
     suspend fun editPost(post: StarPostEdit) = client.postApi(Api.Galaxies.EditContent, post)
     suspend fun postLocation(location: LocationPostEdit) = client.postApi(Api.Galaxies.PostLocation, location)
     suspend fun readPosts(galaxyIds: List<GalaxyId>) = client.postApi(Api.Galaxies.ReadMultiPosts, galaxyIds)
     suspend fun readPosts(galaxyId: GalaxyId) = client.getApi(Api.Galaxies.ReadPosts, galaxyId)
-    suspend fun readPost(postId: PostId) = client.getApi(Api.Galaxies.ReadPost, postId.value)
+    suspend fun readPost(postId: PostId) = client.getApi(Api.Galaxies.ReadPost, postId.value.toString())
     suspend fun readPost(id: StringId) = client.getApi(Api.Galaxies.ReadPost, id)
     suspend fun readGalaxyLights() = client.get(Api.Galaxies.ReadLights)
     suspend fun removePost(postId: PostId) = client.postApi(Api.Galaxies.RemovePost, postId)
@@ -107,7 +104,7 @@ class ApiClient(private val client: FetchClient) {
     suspend fun readSiteDocTable() = client.get(Api.SiteDocTable)
 
     // talk
-    suspend fun readHistory(spaceId: StringId, spaceType: SpaceType) = client.getApi(Api.Talk.ReadHistory) {
+    suspend fun readHistory(spaceId: Uuid, spaceType: SpaceType) = client.getApi(Api.Talk.ReadHistory) {
         writeParam(it.spaceId, spaceId)
         writeParam(it.spaceType, spaceType)
     }

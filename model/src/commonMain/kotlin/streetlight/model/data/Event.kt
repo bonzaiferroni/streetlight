@@ -14,6 +14,7 @@ import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 import kotlin.jvm.JvmInline
 import kotlin.time.Instant
+import kotlin.uuid.Uuid
 
 @Stable
 @Serializable
@@ -53,9 +54,9 @@ data class Event(
 
 @JvmInline
 @Serializable
-value class EventId(override val value: String): ProjectId {
-    companion object { fun random() = EventId(randomUuidString()) }
-    override fun toString() = value
+value class EventId(override val value: Uuid): ProjectId {
+    companion object { fun random() = EventId(Uuid.random()) }
+    override fun toString() = value.toString()
 }
 
 @Serializable

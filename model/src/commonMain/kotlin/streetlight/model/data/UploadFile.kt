@@ -7,6 +7,7 @@ import kampfire.utils.randomUuidString
 import kotlin.time.Instant
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
+import kotlin.uuid.Uuid
 
 @Serializable
 data class UploadFile(
@@ -22,8 +23,8 @@ data class UploadFile(
 
 @JvmInline
 @Serializable
-value class UploadFileId(override val value: String) : TableId<String>, ProjectId {
-    companion object { fun random() = UploadFileId(randomUuidString())}
+value class UploadFileId(override val value: Uuid): ProjectId {
+    companion object { fun random() = UploadFileId(Uuid.random())}
 }
 
 @Serializable

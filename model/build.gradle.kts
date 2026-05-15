@@ -30,4 +30,8 @@ kotlin {
             }
         }
     }
+
+    compilerOptions {
+        optIn.add("kotlin.uuid.ExperimentalUuidApi")
+    }
 }

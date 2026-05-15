@@ -48,4 +48,8 @@ kotlin {
             implementation(libs.kotlinx.browser)
         }
     }
+
+    compilerOptions {
+        optIn.add("kotlin.uuid.ExperimentalUuidApi")
+    }
 }

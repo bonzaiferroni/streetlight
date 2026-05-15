@@ -7,6 +7,7 @@ import kampfire.utils.randomUuidString
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 import kotlin.time.Instant
+import kotlin.uuid.Uuid
 
 @Serializable
 sealed interface Post {
@@ -29,11 +30,11 @@ sealed interface Post {
 
 @Serializable
 @JvmInline
-value class PostId(override val value: String): ProjectId {
-    override fun toString() = value
+value class PostId(override val value: Uuid): ProjectId {
+    override fun toString() = value.toString()
 
     companion object {
-        fun random() = PostId(randomUuidString())
+        fun random() = PostId(Uuid.random())
     }
 }
 

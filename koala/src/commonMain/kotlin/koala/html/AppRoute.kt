@@ -1,5 +1,7 @@
 package koala.html
 
+import kotlin.uuid.Uuid
+
 interface AppRoute {
     val screen: AppScreen
     fun toSitePath() = basePath
@@ -15,6 +17,7 @@ interface AppRoute {
 
             return when (val parse = screen.routeParse) {
                 is StaticParse -> parse.block()
+                is UuidParse -> segments.getOrNull(1)?.let { parse.block(Uuid.parse(it)) }
                 is IdParse -> segments.getOrNull(1)?.let { parse.block(it) }
                 is IdOrNullParse -> parse.block(segments.getOrNull(1))
             }
@@ -33,6 +36,11 @@ sealed interface RouteParse
 
 data class StaticParse(
     val block: () -> AppRoute
+): RouteParse
+
+data class UuidParse(
+    val label: String = "id",
+    val block: (Uuid) -> AppRoute
 ): RouteParse
 
 data class IdParse(

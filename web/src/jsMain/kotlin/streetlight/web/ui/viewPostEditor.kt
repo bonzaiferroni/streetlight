@@ -52,7 +52,7 @@ fun RenderContext.stagePostAndGo(postFlow: Flow<Post?>) {
         postFlow.collect { post ->
             if (post != null) {
                 stage.addPost(post)
-                portal.go(GalaxyRoute(post.galaxyId.value))
+                portal.go(GalaxyRoute(post.galaxyId.toString()))
             }
         }
     }

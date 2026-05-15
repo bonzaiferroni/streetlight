@@ -33,5 +33,5 @@ object PostKey {
     val PostLayoutId = Id("post-layout")
     val PostLayoutColumnMod = modify(Gap2)
 
-    val Attribute = Attribute("post-id", true) { PostId(it) }
+    val Attribute = uuidAttributeOf("post-id") { PostId(it) }
 }

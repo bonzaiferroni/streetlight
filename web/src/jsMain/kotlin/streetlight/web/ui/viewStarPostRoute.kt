@@ -25,7 +25,7 @@ fun RenderContext.viewStarPost(post: StarPost) {
 
 fun RenderContext.viewStarPostRoute() {
     routeBlock<StarPostRoute, StarPost>(portal, { route ->
-        readIslandOrApi(PostKey.IslandId, { it.postId.value == route.id || it.slug == route.id }) {
+        readIslandOrApi(PostKey.IslandId, { it.postId.toString() == route.id || it.slug == route.id }) {
             api.readPost(route.id).handleResponse(toaster::toast) as? StarPost
         }
     }) { post ->

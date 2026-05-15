@@ -5,6 +5,7 @@ import io.ktor.client.request.parameter
 import io.ktor.http.HttpMethod
 import kotlin.enums.enumEntries
 import kotlin.time.Instant
+import kotlin.uuid.Uuid
 
 abstract class Endpoint<SentType, ReturnType>(
     val method: HttpMethod?,
@@ -51,6 +52,12 @@ abstract class Endpoint<SentType, ReturnType>(
         key = key,
         toValue = { it },
         toString = { it }
+    )
+
+    fun uuidParamOf(key: String) = EndpointParam(
+        key = key,
+        toValue = { Uuid.parse(it) },
+        toString = { it.toString() }
     )
 
     fun booleanParamOf(key: String) = EndpointParam(

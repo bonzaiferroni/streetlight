@@ -27,3 +27,11 @@ webpack 5.101.3 compiled with 3 warnings in 12921 ms
 
 asset web.js 1.59 MiB [emitted] [minimized] [big] (name: main) 2 related assets
 webpack 5.101.3 compiled with 3 warnings in 12064 ms
+
+// after uuid
+
+asset web.js 1.6 MiB [emitted] [minimized] [big] (name: main) 2 related assets
+runtime modules 670 bytes 3 modules
+modules with warnings 4.64 MiB [true warnings]
+../../node_modules/@js-joda/core/dist/js-joda.esm.js 392 KiB [built] [code generated]
+webpack 5.101.3 compiled with 3 warnings in 12671 ms
