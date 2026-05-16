@@ -79,12 +79,3 @@ object EditorMod {
     val Instructions = modify(Flex1, JustifyContentCenter, Margin1)
     val Fields = modify(Flex1)
 }
-
-data class EditorPart(
-    val instructions: String? = null,
-    val examples: List<String>? = null,
-    val bullets: List<String>? = null,
-    val isVisibleFlow: Flow<Boolean>? = null,
-    val info: DOMContext.() -> Unit = {},
-    val fields: DOMContext.() -> Unit,
-)

@@ -73,6 +73,8 @@ class GalaxyEditor(
 
     fun setCountry(value: String) = state.set { it.copy(country = value) }
 
+    fun setTagline(value: String) = setGalaxy { it.copy(tagline = value) }
+
     fun setLocality(value: Locality?) = state.set { it.copy(
         locality = value,
         cityQuery = value?.city ?: it.cityQuery,

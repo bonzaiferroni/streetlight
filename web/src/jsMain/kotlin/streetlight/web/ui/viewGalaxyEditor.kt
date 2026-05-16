@@ -12,6 +12,7 @@ import koala.html.section
 import koala.html.span
 import koala.model.GeoMap
 import koala.model.mapDistinct
+import kotlinx.coroutines.flow.map
 import streetlight.model.data.GalaxyEdit
 import streetlight.model.data.PostPermission
 import streetlight.web.model.GalaxyEditor
@@ -23,6 +24,7 @@ fun RenderContext.viewGalaxyEditor() {
     val nameFlow = model.galaxyFlow.mapDistinct { it.name ?: "" }
     val blobFlow = model.stateFlow.mapDistinct { it.blobUrl }
     val descriptionFlow = model.galaxyFlow.mapDistinct { it.description ?: "" }
+    val taglineFlow = model.galaxyFlow.mapDistinct { it.tagline ?: "" }
     val pathFlow = model.galaxyFlow.mapDistinct { it.slug ?: "" }
     val permissionFlow = model.galaxyFlow.mapDistinct { it.postPermission }
     val reviewModeFlow = model.galaxyFlow.mapDistinct { it.reviewMode }
@@ -142,6 +144,12 @@ fun RenderContext.viewGalaxyEditor() {
                 }
             ) {
                 textEditor("description", onValue = model::setDescription, flow = descriptionFlow)
+            }
+            editorPart(
+                instructions = "Give your galaxy a tagline.",
+                bullets = listOf(canBeChangedText, "Optional")
+            ) {
+                editorTextField("tagline", model::setTagline, taglineFlow, maxLength = 100)
             }
         }
 

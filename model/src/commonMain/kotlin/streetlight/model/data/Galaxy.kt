@@ -3,7 +3,6 @@ package streetlight.model.data
 import kampfire.model.GeoPoint
 import kampfire.model.ScaledImageArray
 import kampfire.model.Url
-import kampfire.utils.randomUuidString
 import kotlin.time.Instant
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
@@ -51,7 +50,7 @@ data class GalaxyEdit(
     val cityId: CityId? = null,
     val name: String? = null,
     val slug: Slug? = null,
-    val tagLine: String? = null,
+    val tagline: String? = null,
     val description: String? = null,
     val center: GeoPoint? = null,
     val zoom: Float? = null,

@@ -21,8 +21,8 @@
     background: radial-gradient(
             circle,
             rgba(0, 0, 0, 0) 0%,
-            rgba(.2, .2, .2, 0.3) 60%,
-            rgba(.2, .2, .2, 0.6) 100%
+            rgba(.2, .2, .2, 0.25) 60%,
+            rgba(.2, .2, .2, 0.50) 100%
     );
     pointer-events: none;
     height: 100%;
