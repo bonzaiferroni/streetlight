@@ -34,6 +34,7 @@ fun Position.toLngLat() = maplibregl.LngLat(longitude.toDouble(), latitude.toDou
 fun Position.toGeoPoint() = GeoPoint(lng = longitude.toDouble(), lat = latitude.toDouble())
 
 fun maplibregl.LngLatBounds.toGeoBounds() = GeoBounds(getSouthWest().toGeoPoint(), getNorthEast().toGeoPoint())
+fun GeoBounds.toLngLatBounds() = maplibregl.LngLatBounds(sw.toLngLat(), ne.toLngLat())
 
 fun maplibregl.LngLat.toGeoPoint() = GeoPoint(lng = lng, lat = lat)
 

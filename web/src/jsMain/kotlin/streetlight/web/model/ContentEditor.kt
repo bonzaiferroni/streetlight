@@ -50,7 +50,7 @@ class ContentEditor(
         scope.launch {
             val blobUrl = content.imageRef?.takeIf { it.isBlob }
             content = blobUrl?.let {
-                val refUrl = api.uploadImage(blobUrl)
+                val refUrl = api.uploadImage(blobUrl).handleResponse(msg::set)
                 if (refUrl == null) {
                     msg.set("Unable to upload image.")
                     return@launch

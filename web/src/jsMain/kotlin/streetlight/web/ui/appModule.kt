@@ -41,7 +41,7 @@ val appModule = module {
     factory { UserCreator(it.get(), get(), get(), get(), get()) }
     factory { EarthMap(it.get(), get(), get(), get())}
     factory { EventEditor(it[0], it[1], get())}
-    factory { GalaxyEditor(it[0], it[1], get(), get(), get())}
+    factory { GalaxyEditor(it[0], it[1], get(), get(), get(), get())}
     factory { LocationEditor(it[0], it[1], get()) }
     factory { LocationFinder(it[0], get(), get(), get()) }
     factory { EventScout(it[0], it[1])}

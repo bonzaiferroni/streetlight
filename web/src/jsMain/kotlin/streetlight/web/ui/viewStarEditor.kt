@@ -3,6 +3,7 @@
 package streetlight.web.ui
 
 import kampfire.model.Url
+import kampfire.model.getDataOrNull
 import kampfire.model.handleResponse
 import koala.css.*
 import koala.dom.*
@@ -37,7 +38,7 @@ fun RenderContext.viewStarEditor() {
             val blobUrl = edit.imageRef?.takeIf { it.isBlob }
             renderScope.launch {
                 edit = if (blobUrl != null) {
-                    val refUrl = api.uploadImage(blobUrl) ?: error("error creating avatar")
+                    val refUrl = api.uploadImage(blobUrl).getDataOrNull() ?: error("error creating avatar")
                     edit.copy(imageRef = refUrl)
                 } else edit
 

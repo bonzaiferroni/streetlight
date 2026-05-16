@@ -52,7 +52,7 @@ class ApiClient(private val client: FetchClient) {
     suspend fun checkUsername(username: String) = client.postApi(UserApi.CheckUsername, username)
 
     // suspend fun uploadAvatar(blobUrl: Url) = client.uploadBlob(Api.Users.UploadAvatar.path, blobUrl)
-    suspend fun uploadImage(blobUrl: Url) = client.uploadBlob(Api.Users.UploadImage, blobUrl)
+    suspend fun uploadImage(blobUrl: Url) = client.uploadBlob(Api.Users.UploadImage.path, blobUrl)
     suspend fun queryLocation(point: GeoPoint) = client.getApi(Api.Locations.QueryPoint, point.toQuery())
     suspend fun validateLogin() = client.getApi(Api.Stars.ValidateLogin)
     suspend fun logout() = client.request(UserApi.Logout)

@@ -19,6 +19,7 @@ import koala.external.maplibregl.Point
 import koala.model.toGeoBounds
 import koala.model.toGeoPoint
 import koala.model.toLngLat
+import koala.model.toLngLatBounds
 import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.coroutines.CoroutineScope
@@ -134,6 +135,12 @@ fun RenderContext.wireMapWindow(
                 } else {
                     widget.panTo(pan.point.toLngLat())
                 }
+            }
+        }
+
+        launch {
+            geoMap.panBoundsFlow.collect {
+                widget.fitBounds(it.toLngLatBounds())
             }
         }
 

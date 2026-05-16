@@ -51,7 +51,7 @@ fun RenderContext.viewGalaxyEditor(model: GalaxyEditor) {
                 instructions = cityInstructions,
             ) {
                 row {
-                    textField("city", modify(Flex1), onValue = model::setCityQuery, flow = cityQueryFlow)
+                    textField("city search", modify(Flex1), onValue = model::setCityQuery, flow = cityQueryFlow)
                     textField("country", modify(Width24), onValue = model::setCountry, flow = countryFlow)
                 }
                 column(modify(Height32, OverflowYAuto, Gap0)) {
@@ -114,7 +114,7 @@ fun RenderContext.viewGalaxyEditor(model: GalaxyEditor) {
             ) {
                 imageDrop(blobFlow, model::setBlobUrl) {
                     box {
-                        headerImage(model.stateNow.galaxy.name ?: "", it)
+                        image(it)
                     }
                 }.setBlockLabel("image")
             }
@@ -184,7 +184,7 @@ fun RenderContext.viewGalaxyEditor(model: GalaxyEditor) {
             editorPart(
                 instructions = permissionInfo1,
                 bullets = listOf(
-                    "You can extend the role of moderation to other community members.",
+                    "You can extend the role of moderation to other community members. (Feature in progress)",
                 ),
                 info = {
                     flowBlock(permissionFlow) { permission ->

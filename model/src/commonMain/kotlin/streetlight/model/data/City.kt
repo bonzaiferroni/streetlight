@@ -1,15 +1,18 @@
 package streetlight.model.data
 
-import kampfire.utils.randomUuidString
+import kampfire.model.GeoBounds
+import kampfire.model.GeoPoint
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
-import kotlin.time.Instant
 
 @Serializable
 data class City(
     val cityId: CityId,
     val name: String,
     val galaxyCount: Int,
+    val geoRank: Float,
+    val geoPoint: GeoPoint,
+    val geoBounds: GeoBounds,
 )
 
 @JvmInline @Serializable

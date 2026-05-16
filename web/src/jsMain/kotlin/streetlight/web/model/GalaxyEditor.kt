@@ -3,6 +3,7 @@
 package streetlight.web.model
 
 import kampfire.model.Url
+import kampfire.model.getDataOrNull
 import kampfire.model.handleResponse
 import koala.dom.UIMessage
 import koala.dom.set
@@ -28,6 +29,7 @@ class GalaxyEditor(
     private val api: ApiClient,
     private val geo: GeoMap,
     private val portal: Portal,
+    private val toaster: Toaster,
 ) {
     private val state = storeOf(GalaxyFoundryState())
     val stateFlow = state.flow
@@ -75,22 +77,26 @@ class GalaxyEditor(
 
     fun setTagline(value: String) = setGalaxy { it.copy(tagline = value) }
 
-    fun setLocality(value: Locality?) = state.set { it.copy(
-        locality = value,
-        cityQuery = value?.city ?: it.cityQuery,
-        galaxy = it.galaxy.copy(cityId = value?.cityId),
-    ) }
+    fun setLocality(value: Locality?) {
+        state.set { it.copy(
+            locality = value,
+            cityQuery = value?.city ?: it.cityQuery,
+            galaxy = it.galaxy.copy(cityId = value?.cityId),
+        ) }
+        value?.geoPoint?.let {
+            geo.panMap(it)
+        }
+    }
 
     fun foundGalaxy() {
         val geoState = geo.stateNow
         val galaxy = galaxyNow.copy(
-            center = geoState.center,
-            zoom = geoState.zoom
+            geoBounds = geoState.bounds
         ).takeIf { it.isValid } ?: return
         msg.set("Founding ${galaxy.name}...")
         scope.launch {
-            val imageUrl = stateNow.blobUrl?.let {
-                api.uploadImage(it) ?: error("failed to upload image")
+            val imageUrl: Url? = stateNow.blobUrl?.let { url ->
+                api.uploadImage(url).getDataOrNull() ?: return@launch
             }
             api.foundGalaxy(galaxy.copy(imageRef = imageUrl)).handleResponse(msg::set) { galaxy ->
                 portal.go(GalaxyRoute(galaxy.slug))

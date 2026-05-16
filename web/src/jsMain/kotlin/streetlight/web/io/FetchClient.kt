@@ -35,6 +35,7 @@ import org.w3c.fetch.SAME_ORIGIN
 import org.w3c.files.Blob
 import streetlight.model.data.ProjectId
 import streetlight.model.data.toProjectId
+import streetlight.web.io.tryDecodeApiResponse
 import streetlight.web.model.AuthClient
 import streetlight.web.model.CredentialStore
 import kotlin.js.json
@@ -205,9 +206,7 @@ class FetchClient(
         return handleResponse(response)
     }
 
-    suspend fun uploadBlob(endpoint: Endpoint<*, *>, blobUrl: Url) = uploadBlob(endpoint.path, blobUrl)
-
-    suspend fun uploadBlob(postUrl: String, blobUrl: Url): Url? {
+    suspend fun uploadBlob(postUrl: String, blobUrl: Url): ApiResponse<Url>? {
         val response = window.fetch(blobUrl.value).await()
         val blob: Blob = response.blob().await()
         return authRequest(
@@ -216,7 +215,7 @@ class FetchClient(
             body = blob,
             contentType = blob.type.ifEmpty { "application/octet-stream" }
         ) {
-            it.text().await().removeSurrounding("\"").toUrl()
+            it.tryDecodeApiResponse()
         }
     }
 }

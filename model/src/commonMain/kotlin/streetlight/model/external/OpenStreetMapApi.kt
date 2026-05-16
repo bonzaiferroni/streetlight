@@ -32,7 +32,7 @@ data class OSMPlace(
     val displayName: String,
     val address: Address,
     @SerialName("boundingbox")
-    val bounds: List<Double>,
+    val bounds: List<Double>, // [south, north, west, east]
     @SerialName("extratags")
     val extraTags: OSMExtra? = null
 )
@@ -97,17 +97,28 @@ fun OSMPlace.toGeoPoint() = GeoPoint(
     lng = lon
 )
 
+fun OSMPlace.toGeoBounds() = GeoBounds(
+    sw = GeoPoint(lat = bounds[0], lng = bounds[2]),
+    ne = GeoPoint(lat = bounds[1], lng = bounds[3])
+)
+
 @Serializable
 data class OSMCity(
     val name: String,
     val state: String,
     val country: String,
+    val importance: Float,
+    val geoPoint: GeoPoint,
+    val geoBounds: GeoBounds,
 )
 
 fun OSMPlace.toOSMCity() = OSMCity(
     name = name,
     state = address.state ?: "",
-    country = address.country ?: ""
+    country = address.country ?: "",
+    importance = importance.toFloat(),
+    geoPoint = toGeoPoint(),
+    geoBounds = toGeoBounds(),
 )
 
 fun OSMPlace.toPlace() = Place(

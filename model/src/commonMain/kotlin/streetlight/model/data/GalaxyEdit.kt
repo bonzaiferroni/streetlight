@@ -1,5 +1,6 @@
 package streetlight.model.data
 
+import kampfire.model.GeoBounds
 import kampfire.model.GeoPoint
 import kampfire.model.Url
 import kotlinx.serialization.Serializable
@@ -12,8 +13,7 @@ data class GalaxyEdit(
     val slug: Slug? = null,
     val tagline: String? = null,
     val description: String? = null,
-    val center: GeoPoint? = null,
-    val zoom: Float? = null,
+    val geoBounds: GeoBounds? = null,
     val postPermission: PostPermission = PostPermission.Accounts,
     val reviewMode: ReviewMode = ReviewMode.PostImmediately,
     val postGuide: String? = null,

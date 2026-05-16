@@ -6,6 +6,7 @@ import koala.css.Blur
 import koala.css.BorderRadius1
 import koala.css.BorderRadius2
 import koala.css.JustifySelfEnd
+import koala.css.JustifySelfStart
 import koala.css.Magic
 import koala.css.Margin1
 import koala.css.MinWidthAuto
@@ -35,7 +36,7 @@ fun RenderContext.imageDrop(
             block(url)
             button(
                 text = "✕",
-                modifiers = modify(Secondary, MinWidthAuto, JustifySelfEnd, AlignSelfStart, Margin1, OpacityMost, ZIndex1),
+                modifiers = modify(Secondary, MinWidthAuto, JustifySelfStart, AlignSelfStart, Margin1, OpacityMost, ZIndex1),
                 onClick = {
                     onFileUrl(null)
                 })

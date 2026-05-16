@@ -1,5 +1,6 @@
 package streetlight.model.data
 
+import kampfire.model.GeoBounds
 import kampfire.model.GeoPoint
 import kampfire.model.ScaledImageArray
 import kampfire.model.Url
@@ -14,10 +15,10 @@ data class Galaxy(
     val cityId: CityId?,
     val slug: Slug,
     val name: String,
-    val tagLine: String?,
+    val tagline: String?,
     val description: String?,
-    val center: GeoPoint,
-    val zoom: Float,
+    val geoPoint: GeoPoint,
+    val geoBounds: GeoBounds,
     val postPermission: PostPermission,
     val reviewMode: ReviewMode,
     val postGuide: String?,
@@ -34,8 +35,6 @@ data class Galaxy(
     }
 
     val postTypes get() = setOf(PostType.Location, PostType.Event, PostType.Content)
-
-    val tagline get() = description
 }
 
 @JvmInline @Serializable

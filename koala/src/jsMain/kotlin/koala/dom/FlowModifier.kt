@@ -11,6 +11,7 @@ import org.w3c.dom.HTMLElement
 fun HTMLElement.flowVisibility(isVisibleFlow: Flow<Boolean>, scope: CoroutineScope) {
     scope.launch {
         isVisibleFlow.collect { isVisible ->
+            if (isVisible && !isModified(DisplayNone) || !isVisible && isModified(DisplayNone)) return@collect
             document.startViewTransition {
                 when (isVisible) {
                     true -> unmodify(DisplayNone)
