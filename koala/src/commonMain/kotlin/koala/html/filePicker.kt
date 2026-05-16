@@ -20,6 +20,7 @@ val FilePickerCss get() = """
     transition: box-shadow 200ms ease-in-out;
     width: 100%;
     height: 100%;
+    border-radius: inherit;
 }
 
 .file-picker-drop-zone.dragover {

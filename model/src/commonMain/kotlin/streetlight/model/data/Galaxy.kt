@@ -44,44 +44,6 @@ value class GalaxyId(override val value: Uuid): ProjectId {
     override fun toString() = value.toString()
 }
 
-@Serializable
-data class GalaxyEdit(
-    val galaxyId: GalaxyId? = null,
-    val cityId: CityId? = null,
-    val name: String? = null,
-    val slug: Slug? = null,
-    val tagline: String? = null,
-    val description: String? = null,
-    val center: GeoPoint? = null,
-    val zoom: Float? = null,
-    val postPermission: PostPermission = PostPermission.Accounts,
-    val reviewMode: ReviewMode = ReviewMode.PostImmediately,
-    val postGuide: String? = null,
-    val imageRef: Url? = null,
-) {
-    companion object {
-        val NameCharacters = setOf(' ', '.', ',', '\'', '!', '?', ':', '-', '+')
-        val PathCharacters = setOf('-')
-
-        fun isValidName(name: String) = name.all { it.isDigit() || it.isLetter() || NameCharacters.contains(it) }
-                && name.length <= MAX_NAME_LENGTH
-        fun isValidPath(path: String) = path.all { it.isDigit() || it.isLetter() || PathCharacters.contains(it) }
-                && path.length <= MAX_NAME_LENGTH
-
-        const val MAX_NAME_LENGTH = 32
-    }
-
-    val invalidPart get() = when {
-        name.isNullOrBlank() -> "name"
-        slug == null -> "address"
-        else -> null
-    }
-
-    val invalidMessage get() = invalidPart?.let { "missing: $it"}
-
-    val isValid get() = invalidPart == null
-}
-
 enum class PostPermission(label: String? = null) {
     Everyone,
     Accounts("Streetlight accounts"),

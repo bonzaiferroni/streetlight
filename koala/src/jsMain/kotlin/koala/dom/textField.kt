@@ -91,6 +91,7 @@ fun RenderContext.textField(
     return element
 }
 
+@Deprecated("use overload")
 fun <T> WireContext<T>.textField(
     label: String,
     read: (T) -> String?,

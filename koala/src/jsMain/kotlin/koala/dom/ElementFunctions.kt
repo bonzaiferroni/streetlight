@@ -75,15 +75,3 @@ fun querySelectorAll(queryable: Queryable) = document.body!!.querySelectorAll(qu
 
 fun CSSStyleDeclaration.removeProperty(property: Property<*>) = removeProperty(property.identifier)
 
-fun HTMLElement.flowVisibility(isVisibleFlow: Flow<Boolean>, scope: CoroutineScope) {
-    scope.launch {
-        isVisibleFlow.collect { isVisible ->
-            document.startViewTransition {
-                when (isVisible) {
-                    true -> unmodify(DisplayNone)
-                    false -> modify(DisplayNone)
-                }
-            }
-        }
-    }
-}

@@ -12,13 +12,12 @@ import koala.html.section
 import koala.html.span
 import koala.model.GeoMap
 import koala.model.mapDistinct
-import kotlinx.coroutines.flow.map
 import streetlight.model.data.GalaxyEdit
+import streetlight.model.data.GalaxyProperty
 import streetlight.model.data.PostPermission
 import streetlight.web.model.GalaxyEditor
 
-fun RenderContext.viewGalaxyEditor() {
-    val model = app.getCoroutineScoped<GalaxyEditor>(null, renderScope)
+fun RenderContext.viewGalaxyEditor(model: GalaxyEditor) {
     val geoMap = app.get<GeoMap>()
 
     val nameFlow = model.galaxyFlow.mapDistinct { it.name ?: "" }
@@ -35,24 +34,11 @@ fun RenderContext.viewGalaxyEditor() {
     val localitiesFlow = model.stateFlow.mapDistinct { it.localities }
     val countryFlow = model.stateFlow.mapDistinct { it.country }
     val localityFlow = model.stateFlow.mapDistinct { it.locality }
+    val invalidPartsFlow = model.galaxyFlow.mapDistinct { it.invalidParts }
 
     val bulletsMod = modify(OpacityMost)
 
     column(modify(Gap8)) {
-        section {
-            filigree {
-                heading1("Galaxy Foundry", modify(Shrinkable, AntiShadow))
-            }
-            row(modify(AlignItemsCenter)) {
-                column(modify(Flex4, FlexMd2, PaddingLeft3)) {
-                    textBlock(introText1)
-                    textBlock(introText2)
-                }
-                row(modify(Flex1, JustifyContentCenter)) {
-                    lottie(LottieFile.AstronautReading, modify(MaxHeight32))
-                }
-            }
-        }
 
         editorSection("City") {
             editorPart(
@@ -90,7 +76,14 @@ fun RenderContext.viewGalaxyEditor() {
                 instructions = nameInstructions1,
                 examples = listOf("Denver Book Club", "Page Turners"),
             ) {
-                editorTextField("name", model::setName, nameFlow, nameCharacters, GalaxyEdit.MAX_NAME_LENGTH)
+                editorTextField(
+                    label = GalaxyProperty.Name,
+                    onValue = model::setName,
+                    flow = nameFlow,
+                    modifiers = modify(Required),
+                    footnote = nameCharacters,
+                    maxLength = GalaxyEdit.MAX_NAME_LENGTH
+                ).flowValid(GalaxyProperty.Name, invalidPartsFlow, renderScope)
             }
             editorPart(
                 instructions = pathInstructions,
@@ -100,7 +93,14 @@ fun RenderContext.viewGalaxyEditor() {
                     }
                 }
             ) {
-                editorTextField("path", model::setPath, pathFlow, pathCharacters, GalaxyEdit.MAX_NAME_LENGTH)
+                editorTextField(
+                    label = GalaxyProperty.Path,
+                    onValue = model::setPath,
+                    flow = pathFlow,
+                    modifiers = modify(Required),
+                    footnote = pathCharacters,
+                    maxLength = GalaxyEdit.MAX_NAME_LENGTH
+                ).flowValid(GalaxyProperty.Path, invalidPartsFlow, renderScope)
             }
         }
 
@@ -110,14 +110,13 @@ fun RenderContext.viewGalaxyEditor() {
                 bullets = listOf(
                     "Ideally at least 1024 pixels wide and 512 pixels tall.",
                     imageRequirements,
-                    canBeChangedText,
                 )
             ) {
                 imageDrop(blobFlow, model::setBlobUrl) {
                     box {
                         headerImage(model.stateNow.galaxy.name ?: "", it)
                     }
-                }
+                }.setBlockLabel("image")
             }
         }
 
@@ -139,7 +138,7 @@ fun RenderContext.viewGalaxyEditor() {
                     bulletsOf(
                         bulletsMod,
                         "Can be brief or detailed.",
-                        canBeChangedText
+                        "This information appears at the top of the feed."
                     )
                 }
             ) {
@@ -147,7 +146,6 @@ fun RenderContext.viewGalaxyEditor() {
             }
             editorPart(
                 instructions = "Give your galaxy a tagline.",
-                bullets = listOf(canBeChangedText, "Optional")
             ) {
                 editorTextField("tagline", model::setTagline, taglineFlow, maxLength = 100)
             }
@@ -164,7 +162,6 @@ fun RenderContext.viewGalaxyEditor() {
                                 "latitude: ${point.lat.toFloat().format(4)}",
                                 "longitude: ${point.lng.toFloat().format(4)}",
                                 "zoom: ${zoom.format(1)}",
-                                canBeChangedText,
                             )
                         }
                     }
@@ -181,7 +178,6 @@ fun RenderContext.viewGalaxyEditor() {
         editorSection("Other details") {
             editorPart(
                 instructions = "You can open up posting to the community or curate the content yourself.",
-                bullets = listOf(canBeChangedText),
             ) {
                 dropMenu(model::setPostPermission, { it.label }, flow = permissionFlow)
             }
@@ -189,7 +185,6 @@ fun RenderContext.viewGalaxyEditor() {
                 instructions = permissionInfo1,
                 bullets = listOf(
                     "You can extend the role of moderation to other community members.",
-                    canBeChangedText
                 ),
                 info = {
                     flowBlock(permissionFlow) { permission ->
@@ -203,39 +198,16 @@ fun RenderContext.viewGalaxyEditor() {
             }
             editorPart(
                 instructions = "Provide guidelines or requirements for the content of community posts.",
-                bullets = listOf(canBeChangedText, "Optional")
             ) {
                 textEditor("Post Guide", onValue = model::setPostGuide, flow = guideFlow)
             }
         }
-
-        row(modify(JustifyContentSpaceBetween)) {
-            button("back", onClick = { portal.goBack() })
-            row {
-                messageBox(model.msg.flow)
-                button("Found Galaxy", modify(Accent), onClick = model::foundGalaxy)
-            }
-        }
-
-        appFooter("web/src/jsMain/kotlin/streetlight/web/ui/viewGalaxyEditor.kt")
     }
 }
-
-private val introText1 = """
-A galaxy is a streetlight community where events, locations, and other posts can be shared on a map. 
-As a galaxy founder, you may curate the content yourself or open it up to the community. 
-"""
-
-private val introText2 = """
-Streetlight is in an early stage of development. It's current focus is our hometown, Denver.
-Theoretically, your map can focus on any part of the world, but features like transit updates may not be available.
-"""
 
 private val cityInstructions = "What city does your galaxy focus on?"
 
 private val nameInstructions1 = "Let's give the galaxy a name, up to ${GalaxyEdit.MAX_NAME_LENGTH} characters."
-
-private val canBeChangedText = "Can be changed later on."
 
 private val nameCharacters = "Available: letters, numbers, spaces, and ${GalaxyEdit.NameCharacters.joinToString(" ")}"
 

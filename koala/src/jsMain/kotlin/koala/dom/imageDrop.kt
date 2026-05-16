@@ -4,6 +4,7 @@ import kampfire.model.Url
 import koala.css.AlignSelfStart
 import koala.css.Blur
 import koala.css.BorderRadius1
+import koala.css.BorderRadius2
 import koala.css.JustifySelfEnd
 import koala.css.Magic
 import koala.css.Margin1
@@ -28,22 +29,20 @@ fun RenderContext.imageDrop(
             fillImage(it)
         }
     }
-) {
-    flowBlock(urlFlow, modify(modifiers, Magic, Blur, SlideDown)) { url ->
-        if (url != null) {
-            box(modify(Size100P, OverflowHidden, BorderRadius1)) {
-                block(url)
-                button(
-                    text = "✕",
-                    modifiers = modify(Secondary, MinWidthAuto, JustifySelfEnd, AlignSelfStart, Margin1, OpacityMost, ZIndex1),
-                    onClick = {
-                        onFileUrl(null)
-                    })
-            }
-        } else {
-            filePicker(MimeType.Image, modify(Size100P)) {
-                onFileUrl(it)
-            }
+) = flowBlock(urlFlow, modify(modifiers, Magic, Blur, SlideDown)) { url ->
+    if (url != null) {
+        box(modify(Size100P, OverflowHidden, BorderRadius1)) {
+            block(url)
+            button(
+                text = "✕",
+                modifiers = modify(Secondary, MinWidthAuto, JustifySelfEnd, AlignSelfStart, Margin1, OpacityMost, ZIndex1),
+                onClick = {
+                    onFileUrl(null)
+                })
+        }
+    } else {
+        filePicker(MimeType.Image, modify(Size100P, BorderRadius2)) {
+            onFileUrl(it)
         }
     }
 }

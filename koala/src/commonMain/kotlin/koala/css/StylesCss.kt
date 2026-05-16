@@ -64,6 +64,13 @@ val StylesCss get() = """
     --danger: 255, 99, 132;
     --danger-fg: color-mix(in srgb, rgb(var(--danger)) 75%, rgb(var(--ink)));
     --danger-bg: color-mix(in srgb, rgb(var(--danger)) 75%, rgb(var(--paper)));
+    
+    --valid: 99, 255, 132;
+    --valid-bg: color-mix(in srgb, rgb(var(--valid)) 33%, rgb(var(--paper)));
+    
+    --required: 255, 240, 32;
+    --required-bg: color-mix(in srgb, rgb(var(--required)) 33%, rgb(var(--paper)));
+    
     --light-1: 255, 99, 132;
     --light-2: 88, 164, 255;
     --light-3: 88, 255, 188;

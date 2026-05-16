@@ -47,13 +47,13 @@ class GalaxyEditor(
     }
 
     fun setName(value: String) {
-        if (!GalaxyEdit.isValidName(value)) return
+        if (value.isNotEmpty() && !GalaxyEdit.isValidName(value)) return
         val path = slugOf(value)
         setGalaxy { it.copy(name = value, slug = path) }
     }
 
     fun setPath(value: String) {
-        if (!GalaxyEdit.isValidPath(value)) return
+        if (value.isNotEmpty() && !GalaxyEdit.isValidPath(value)) return
         setGalaxy { it.copy(slug = value) }
     }
 

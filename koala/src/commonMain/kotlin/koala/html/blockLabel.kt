@@ -1,5 +1,8 @@
 package koala.html
 
+import koala.css.Required
+import koala.css.Valid
+
 // language="CSS"
 val BlockLabelCss get() = """
 ${Attribute.BlockLabel} {
@@ -29,6 +32,14 @@ ${Attribute.BlockLabel}::after {
     border-radius: 0.4rem;
     box-shadow: var(--input-shadow);
 }
+
+$Required ${Attribute.BlockLabel}::after {
+    background: var(--required-bg);
+} 
+
+$Valid ${Attribute.BlockLabel}::after {
+    background: var(--valid-bg);
+} 
 
 ${Attribute.BlockLabel}.start::after {
     left: .5rem;

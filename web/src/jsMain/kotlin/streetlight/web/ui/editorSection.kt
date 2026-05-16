@@ -6,6 +6,8 @@ import koala.html.bulletsOf
 import koala.html.filigree
 import koala.html.heading3
 import kotlinx.coroutines.flow.Flow
+import org.w3c.dom.HTMLElement
+import org.w3c.dom.HTMLInputElement
 import streetlight.model.data.GalaxyEdit
 
 fun DOMContext.editorSection(
@@ -55,12 +57,13 @@ fun RenderContext.editorTextField(
     label: String,
     onValue: (String) -> Unit,
     flow: Flow<String>,
+    modifiers: ModifierSet? = null,
     footnote: String? = null,
     maxLength: Int? = null
-) {
+) = column(modifiers) {
     textField(label, onValue = onValue, flow = flow)
     if (footnote != null || maxLength != null) {
-        row(modify(OpacityMost, Italic, WhiteSpaceNoWrap, PaddingX1)) {
+        row(modify(OpacityMost, Italic, WhiteSpaceNoWrap, PaddingX1, SmallText)) {
             footnote?.let {
                 textBlock(footnote)
             }
