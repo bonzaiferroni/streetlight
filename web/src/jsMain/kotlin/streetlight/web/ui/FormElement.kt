@@ -35,6 +35,7 @@ fun DOMContext.formPart(
     instructions: String? = null,
     examples: List<String>? = null,
     bullets: List<String>? = null,
+    fieldsFlex: Modifier = Flex1,
     info: DOMContext.() -> Unit = {},
     fields: DOMContext.() -> Unit,
 ) = column(FormMod.Part) {
@@ -53,7 +54,7 @@ fun DOMContext.formPart(
         }
         info(this@formPart)
     }
-    column(FormMod.Fields) {
+    column(modify(fieldsFlex)) {
         fields(this@formPart)
     }
 }
@@ -61,7 +62,7 @@ fun DOMContext.formPart(
 fun RenderContext.formTextField(
     label: String,
     onValue: (String) -> Unit,
-    flow: Flow<String>,
+    flow: Flow<String?>,
     modifiers: ModifierSet? = null,
     footnote: String? = null,
     maxLength: Int? = null
@@ -74,7 +75,7 @@ fun RenderContext.formTextField(
             }
             maxLength?.let {
                 flowBlock(flow, modify(MarginLeftAuto)) { text ->
-                    textBlock("${text.length}/$maxLength")
+                    textBlock("${text?.length ?: 0}/$maxLength")
                 }
             }
         }
@@ -85,6 +86,5 @@ object FormMod {
     val Card = modify(ZenBg, QueryContainer, Gap3)
     val Part = modify(ContainerMdRow)
     val Instructions = modify(Flex1, JustifyContentCenter, Margin1)
-    val Fields = modify(Flex1)
     val Bullets = modify(OpacityMost)
 }

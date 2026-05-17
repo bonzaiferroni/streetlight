@@ -21,10 +21,9 @@ import kotlinx.coroutines.launch
 import streetlight.model.data.EventEdit
 import streetlight.model.data.ExtraLink
 import streetlight.web.model.EventEditor
-import streetlight.web.model.Streetlight
 import kotlin.time.Clock
 
-fun RenderContext.viewEventEditor(
+fun RenderContext.viewEventFormProto(
     event: EventEdit?,
     bindFlow: Flow<EventEdit>? = null,
     onEdit: ((EventEdit) -> Unit)? = null,
@@ -56,7 +55,7 @@ fun RenderContext.viewEventEditor(
                 filigree {
                     heading3("Image")
                 }
-                imageDrop(model.imageUrlFlow, model::setImageRef, modify(Aspect3By2, BorderRadius1))
+                imageDrop(model.imageFlow, model::setImageUrl, modify(Aspect3By2, BorderRadius1))
             }
 
             column(modify(Flex2, Gap4)) {
@@ -179,7 +178,7 @@ fun RenderContext.viewEventEditor(
     }
 }
 
-private fun RenderContext.eventLinks(model: EventEditor) {
+fun RenderContext.eventLinks(model: EventEditor) {
     val linksFlow = model.stateFlow.mapDistinct { it.event.links ?: emptyList() }
 
     val editState = storeOf(LinkEditState())

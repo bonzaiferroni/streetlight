@@ -7,7 +7,6 @@ import koala.html.bulletsOf
 import koala.html.span
 import koala.model.GeoMap
 import koala.model.mapDistinct
-import kotlinx.coroutines.flow.merge
 import streetlight.model.data.GalaxyEdit
 import streetlight.model.data.GalaxyProperty
 import streetlight.model.data.PostPermission
@@ -91,25 +90,10 @@ fun RenderContext.galaxyNameForm(model: GalaxyEditor) {
     }
 }
 
-fun RenderContext.galaxyImageForm(model: GalaxyEditor) {
-    val imageFlow = merge(model.stateFlow.mapDistinct { it.imageUrl }, model.galaxyFlow.mapDistinct { it.imageRef })
+fun RenderContext.galaxyImageForm(model: GalaxyEditor) =
+    imageFormSection(imageInstructions1, model::setImageUrl, model.stateFlow.mapDistinct { it.imageUrl })
 
-    formSection("Image") {
-        formPart(
-            instructions = imageInstructions1,
-            bullets = listOf(
-                "Ideally at least 1024 pixels wide and 512 pixels tall.",
-                imageRequirements,
-            )
-        ) {
-            imageDrop(imageFlow, model::setBlobUrl) {
-                box {
-                    image(it)
-                }
-            }.setBlockLabel("image")
-        }
-    }
-}
+private val imageInstructions1 = "This image will appear at the top of the galaxy page."
 
 fun RenderContext.galaxyDescriptionForm(model: GalaxyEditor) {
     val nameFlow = model.galaxyFlow.mapDistinct { it.name ?: "" }
@@ -146,7 +130,7 @@ fun RenderContext.galaxyDescriptionForm(model: GalaxyEditor) {
         formPart(
             instructions = "Give your galaxy a tagline.",
         ) {
-            formTextField("tagline", model::setTagline, taglineFlow, maxLength = 100)
+            formTextField("tagline", model::setTagline, taglineFlow, maxLength = 50)
         }
         formPart(
             instructions = "Provide guidelines or requirements for the content of community posts.",
@@ -221,11 +205,6 @@ private val nameCharacters = "Available: letters, numbers, spaces, and ${GalaxyE
 
 private val pathInstructions = "The path determines the web address of the galaxy."
 private val pathCharacters = "Available: letters, numbers, and ${GalaxyEdit.PathCharacters.joinToString(" ")}"
-
-private val imageInstructions1 = """
-This image will appear at the top of the galaxy page.
-"""
-private val imageRequirements = "Suitable for all audiences."
 
 private val mapInstructions1 = """
 Choose the point on the map and zoom level that people will see first. They can move around from there.

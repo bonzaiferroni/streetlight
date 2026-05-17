@@ -13,11 +13,9 @@ import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.launch
 import streetlight.model.data.Location
 import streetlight.model.data.LocationEdit
-import streetlight.model.data.LocationId
 import streetlight.model.data.ResourceType
 import streetlight.model.external.Address
 import streetlight.web.io.ApiClient
-import streetlight.web.ui.ViewModel
 
 class LocationEditor(
     initialData: LocationEdit?,
@@ -33,7 +31,15 @@ class LocationEditor(
     val msg = storeOf(initialData?.let { UIMessage(it.invalidMessage ?: "Looks good.") })
 //     override val placeFlow = editFlow.mapDistinct { it.toPlace() }
 
-    fun setPlaceName(value: String) {
+    val nameFlow = editFlow.mapDistinct { it.name }
+    val addressFlow = editFlow.mapDistinct { it.address }
+    val cityFlow = editFlow.mapDistinct { it.city }
+    val descriptionFlow = editFlow.mapDistinct { it.description }
+    val websiteFlow = editFlow.mapDistinct { it.website }
+    val linksFlow = editFlow.mapDistinct { it.eventsUrl }
+    val imageUrlFlow = stateFlow.mapDistinct { it.imageUrl }
+
+    fun setName(value: String) {
         setEdit { it.copy(name = value) }
     }
 
@@ -65,8 +71,8 @@ class LocationEditor(
         setEdit { it.copy(eventsUrl = value) }
     }
 
-    fun setImageRef(value: Url?) {
-        setEdit { it.copy(imageRef = value) }
+    fun setImageUrl(value: Url?) {
+        state.set { it.copy(imageUrl = value) }
     }
 
     fun setCity(value: String) {
@@ -137,7 +143,8 @@ class LocationEditor(
 }
 
 data class LocationEditorState(
-    val edit: LocationEdit? = null,
+    val edit: LocationEdit?,
+    val imageUrl: Url? = edit?.imageRef,
     val location: Location? = null,
 )
 

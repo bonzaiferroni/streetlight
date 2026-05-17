@@ -5,7 +5,6 @@ package streetlight.web.model
 import kampfire.model.Url
 import kampfire.model.getDataOrNull
 import kampfire.model.handleResponse
-import koala.dom.set
 import koala.model.GeoMap
 import koala.model.Portal
 import koala.model.mapDistinct
@@ -60,7 +59,7 @@ class GalaxyEditor(
         setGalaxy { it.copy(slug = value) }
     }
 
-    fun setBlobUrl(value: Url?) = state.set { it.copy(imageUrl = value) }
+    fun setImageUrl(value: Url?) = state.set { it.copy(imageUrl = value) }
 
     fun setDescription(value: String) = setGalaxy { it.copy(description = value) }
 

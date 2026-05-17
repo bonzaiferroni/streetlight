@@ -25,12 +25,11 @@ fun RenderContext.viewLocationEditor(model: LocationEditor) {
     val eventsLinkFlow = model.editFlow.mapDistinct { it.eventsUrl }
     val imageFlow = model.editFlow.mapDistinct { it.imageRef?.takeIf { url -> url.value.isNotBlank() } }
 
-
     column(modify(AlignItemsStretch, QueryContainer)) {
         column(modify(ContainerMdRow)) {
-            imageDrop(imageFlow, model::setImageRef, modify(Aspect3By2, BorderRadius1, Flex1))
+            imageDrop(imageFlow, model::setImageUrl, modify(Aspect3By2, BorderRadius1, Flex1))
             column(modify(Flex1)) {
-                textField("name", modify(), model::setPlaceName, nameFlow)
+                textField("name", modify(), model::setName, nameFlow)
                 textField("address", modify(), model::setAddress, model.editFlow.mapDistinct { it.address })
                 textField("city", modify(), model::setCity, model.editFlow.mapDistinct { it.city })
             }

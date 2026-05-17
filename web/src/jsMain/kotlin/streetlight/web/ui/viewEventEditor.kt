@@ -61,7 +61,7 @@ fun RenderContext.viewEventEditor(
                 heading2("Event Details")
             }
             card {
-                viewEventEditor(event, editStore.flow, editStore::setValue)
+                viewEventFormProto(event, editStore.flow, editStore::setValue)
             }
         }
 

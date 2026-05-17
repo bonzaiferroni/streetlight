@@ -23,13 +23,13 @@ class EventEditor(
     val stateNow get() = state.now
 
     val editFlow = state.flow.mapDistinct { it.event }
-    val imageUrlFlow = editFlow.mapDistinct { it.imageRef }
+    val imageFlow = editFlow.mapDistinct { it.imageRef }
     val startTimeFlow = editFlow.mapDistinct { it.startTime }
     val endTimeFlow = editFlow.mapDistinct { it.endTime }
     val dateFlow = editFlow.mapDistinct { it.date }
     val startsAtFlow = editFlow.mapDistinct { it.startsAt }
     val descriptionFlow = stateFlow.mapDistinct { it.event.description ?: "" }
-    val titleFlow = stateFlow.mapDistinct { it.event.title }
+    val titleFlow = stateFlow.mapDistinct { it.event.title ?: "" }
     val urlFlow = stateFlow.mapDistinct { it.event.link }
     val isFreeFlow = stateFlow.mapDistinct { it.event.isFree }
     val costFlow = stateFlow.mapDistinct { it.costString }
@@ -65,8 +65,8 @@ class EventEditor(
         setEvent { value }
     }
 
-    fun setImageRef(url: Url?) {
-        state.set { it.copy(event = eventNow.copy(imageRef = url)) }
+    fun setImageUrl(url: Url?) {
+        state.set { it.copy(imageUrl = url) }
     }
 
     fun setCost(value: String) {
@@ -112,7 +112,8 @@ data class EventEditorState(
     val isVisible: Boolean = false,
     val originalSourceLabel: String = "",
     val originalSourceUrl: String = "",
-    val costString: String = ""
+    val costString: String = "",
+    val imageUrl: Url? = null,
 )
 
 private fun Address.toBasicString(): String? {
