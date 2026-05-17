@@ -16,7 +16,7 @@ fun RenderContext.tabs(
     val scope = TabScope()
     scope.content()
     val tabPanelElements = Array<HTMLElement?>(3) { null }
-    val renders = Array<RenderCache?>(3) { null }
+    val renders = Array<RenderJob?>(3) { null }
     val root = column(id, modify(TabClass.tabs, modifiers)) {
         row(modify(TabClass.header)) {
             scope.tabs.forEachIndexed { index, tab ->
@@ -27,7 +27,7 @@ fun RenderContext.tabs(
                 }
                 fun createTab() {
                     val element = tabPanelElements.getOrNull(index) ?: error("tab not found: $index")
-                    val context = createRender(element, tab.content)
+                    val context = createRenderJob(element, tab.content)
                     renders[index] = context
                 }
                 fun selectTab(event: Event) {

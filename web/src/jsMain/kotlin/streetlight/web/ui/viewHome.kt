@@ -10,22 +10,16 @@ import streetlight.model.data.HomeContent
 import streetlight.web.HomeRoute
 import streetlight.web.io.ApiClient
 import streetlight.web.model.DataCache
-import streetlight.web.model.Streetlight
-import streetlight.web.shells.GalaxyContent
-import streetlight.web.shells.GalaxyKey
 import streetlight.web.shells.HomeKey
 import streetlight.web.shells.homeShell
 
 fun RenderContext.viewHome(content: HomeContent) {
-    val geoMap = app.get<GeoMap>()
-    val appScope = app.get<CoroutineScope>()
     val cache = app.get<DataCache>()
 
     val root = shellBox(HomeKey.ContainerId, geoMap, appScope) {
         homeShell(content)
     }
 
-    // queryAndWireSwitch(root, Id("bruh"), onToggle = { console.log("bruh") })
     wireLights(
         root = root,
         attribute = StarLightKey.EventLightId,

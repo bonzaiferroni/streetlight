@@ -20,7 +20,6 @@ fun RenderContext.viewGalaxy(content: GalaxyContent) {
         galaxyShell(content)
     }
 
-    // queryAndWireSwitch(root, GalaxyProfileKey.MapSwitchId, onToggle = ::setIsMapVisible, bindFlow = isMapVisibleFlow)
     wireLights(
         root = root,
         attribute = StarLightKey.EventLightId,
@@ -29,19 +28,6 @@ fun RenderContext.viewGalaxy(content: GalaxyContent) {
     wireGalaxyMenu(root, content.galaxy)
 
     streetMap.setPosts(content.posts)
-    stage.setStage(content)
-
-    renderScope.launch {
-        stage.postFlow.collect { posts ->
-            val posts = posts.takeIf { !stage.stateNow.isInitialStage } ?: return@collect
-            streetMap.setPosts(posts)
-            replaceRender(PostKey.PostLayoutId, root) {
-                column(PostKey.PostLayoutColumnMod) {
-                    layoutPosts(posts)
-                }
-            }
-        }
-    }
 }
 
 fun RenderContext.viewGalaxyRoute() {

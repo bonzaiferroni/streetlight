@@ -34,7 +34,6 @@ val appModule = module {
     single { ChatRoom(get(), get()) }
     single { OmniLog(get(), get()) }
 
-    single { GalaxyStage(get()) }
     single { Toaster(get()) }
 
     factory { UserCreator(it.get(), get(), get(), get(), get()) }

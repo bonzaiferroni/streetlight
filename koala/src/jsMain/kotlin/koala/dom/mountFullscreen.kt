@@ -29,5 +29,5 @@ fun RenderContext.mountFullscreen(
 //    }
 }
 
-private val fullscreenCache = mutableMapOf<Id, RenderCache>()
-private var currentCache: RenderCache? = null
+private val fullscreenCache = mutableMapOf<Id, RenderJob>()
+private var currentCache: RenderJob? = null

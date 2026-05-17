@@ -1,6 +1,7 @@
 package streetlight.web.ui
 
 import koala.dom.AppContext
+import koala.dom.RenderContext
 import koala.dom.ViewContext
 import koala.dom.readIsland
 import koala.html.Id
@@ -17,8 +18,11 @@ val AppContextProto.portal get() = model.portal
 val AppContextProto.userCache get() = model.cache
 val AppContextProto.toaster get() = model.toaster
 
-suspend inline fun <reified T> readIslandOrApi(
+suspend inline fun <reified T> RenderContext.readIslandOrApi(
     id: Id,
     checkId: (T) -> Boolean,
     block: suspend () -> T?
-): T? = readIsland<T?>(id)?.takeIf { checkId(it) } ?: block()
+): T? = when (portal.stateNow.isInitialRoute) {
+    true -> readIsland<T?>(id)?.takeIf { checkId(it) } ?: block()
+    else -> block()
+}

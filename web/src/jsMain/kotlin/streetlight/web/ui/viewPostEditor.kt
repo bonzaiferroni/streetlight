@@ -15,7 +15,6 @@ import streetlight.model.data.toEdit
 import streetlight.web.EditPostRoute
 import streetlight.web.GalaxyRoute
 import streetlight.web.model.ContentEditor
-import streetlight.web.model.Streetlight
 
 fun RenderContext.viewContentUpdater(model: ContentEditor) {
 
@@ -33,7 +32,7 @@ fun RenderContext.viewContentUpdater(model: ContentEditor) {
         appFooter("")
     }
 
-    stagePostAndGo(model.stateFlow.mapDistinct { it.post })
+    goOnPosted(model.stateFlow.mapDistinct { it.post })
 }
 
 fun RenderContext.viewEditPostRoute() {
@@ -47,11 +46,10 @@ fun RenderContext.viewEditPostRoute() {
     }
 }
 
-fun RenderContext.stagePostAndGo(postFlow: Flow<Post?>) {
+fun RenderContext.goOnPosted(postFlow: Flow<Post?>) {
     renderScope.launch {
         postFlow.collect { post ->
             if (post != null) {
-                stage.addPost(post)
                 portal.go(GalaxyRoute(post.galaxyId.toString()))
             }
         }

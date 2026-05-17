@@ -18,18 +18,8 @@ import streetlight.web.model.Streetlight
 import streetlight.web.pages.appFooter
 
 fun RenderContext.viewSandbox() {
-    column {
-        button("open") {
-            setAnchorName(myAnchor)
-            setAttribute(Attribute.PopoverTarget, menuId.identifier)
-        }
-        popover(menuId, myAnchor, modify(Magic, Blur)) {
-            card {
-                textBlock("ahoy!")
-            }
-        }
-        appFooter()
-    }
+    console.log("ey sandbox")
+    textBlock("hello sandbox")
 }
 
 private val menuId = Id("menu")

@@ -10,19 +10,14 @@ import koala.css.Transitioning
 import koala.css.addModifiers
 import koala.css.modify
 import koala.html.FlowBlockKey
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.dom.clear
 import kotlinx.html.DIV
 import kotlinx.html.classes
-import kotlinx.html.dom.append
 import kotlinx.html.js.div
 import org.w3c.dom.HTMLDivElement
-import org.w3c.dom.HTMLElement
 
 fun <State> RenderContext.flowBlock(
     flow: Flow<State>,
@@ -41,9 +36,9 @@ fun <State> RenderContext.flowBlock(
         config?.invoke(this)
     }
 
-    var render: RenderCache? = null
+    var render: RenderJob? = null
     var renderedOnce = false
-    val cache = mutableMapOf<State, RenderCache>()
+    val cache = mutableMapOf<State, RenderJob>()
 
     renderScope.launch {
         var currentValue: State? = null
@@ -59,7 +54,8 @@ fun <State> RenderContext.flowBlock(
                     it.elements.forEach { child ->
                         element.append(child)
                     }
-                } ?: createRender(element, value, block)
+                } ?: createRenderJob(element, value, block)
+
                 if (renderCacheCount != null) {
                     cache[value] = render
                     if (renderCacheCount > 0 && cache.size > renderCacheCount) {

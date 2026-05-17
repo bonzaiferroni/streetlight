@@ -6,7 +6,9 @@ import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.map
 import org.w3c.dom.HTMLAnchorElement
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.MANUAL
@@ -14,6 +16,8 @@ import org.w3c.dom.ScrollRestoration
 import org.w3c.dom.Window
 import org.w3c.dom.events.MouseEvent
 import org.w3c.dom.url.URL
+import kotlin.time.Clock
+import kotlin.time.Instant
 
 class Portal(
     initialRoute: AppRoute,
@@ -72,16 +76,29 @@ class Portal(
         })
     }
 
-    inline fun <reified T: AppRoute> routeFlowOf(): Flow<T> {
-        return routeFlow.mapDistinct {
+//    inline fun <reified T: AppRoute> routeFlowOf(): Flow<T> {
+//        return routeFlow.mapDistinct {
+//            try {
+//                it as? T
+//            } catch(e: Exception) {
+//                console.log("narr!")
+//                console.log(e)
+//                throw(e)
+//            }
+//        }.filterNotNull()
+//    }
+
+    inline fun <reified T : AppRoute> routeFlowOf(emitDistinct: Boolean = true): Flow<T> {
+        val base = stateFlow.map {
             try {
-                it as? T
-            } catch(e: Exception) {
-                console.log("narr!")
-                console.log(e)
-                throw(e)
+                it.route as? T
+            } catch (e: Exception) {
+                console.log("unable to cast route: ${e.message}")
+                throw (e)
             }
         }.filterNotNull()
+
+        return if (emitDistinct) base.distinctUntilChanged() else base
     }
 
     fun go(route: AppRoute) {
@@ -99,6 +116,10 @@ class Portal(
         return true
     }
 
+    fun refresh() {
+        state.set { it.copy(refreshedAt = Clock.System.now()) }
+    }
+
     private fun go(navigation: Navigation, backstack: List<Navigation>) {
         val route = navigation.route
         this.backstack = backstack
@@ -108,6 +129,7 @@ class Portal(
             canGoBack = backstack.isNotEmpty(),
             initialScrollY = navigation.initialScrollY,
             isInitialRoute = false,
+            refreshedAt = Clock.System.now()
         )}
         sitePath = route.toSitePath()
     }
@@ -123,6 +145,7 @@ data class PortalState(
     val canGoBack: Boolean = false,
     val initialScrollY: Double = window.scrollY,
     val isInitialRoute: Boolean = true,
+    val refreshedAt: Instant = Instant.DISTANT_PAST
 )
 
 private data class Navigation(

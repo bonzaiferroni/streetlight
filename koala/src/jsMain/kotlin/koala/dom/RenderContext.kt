@@ -1,11 +1,8 @@
 package koala.dom
 
-import koala.css.DisplayNone
 import koala.html.Id
 import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.launch
 import kotlinx.dom.clear
 import kotlinx.html.dom.append
 import kotlinx.html.dom.prepend
@@ -30,18 +27,18 @@ fun HTMLElement.renderRoot(
 ): List<HTMLElement> {
     clear()
     return append {
-        val context = DOMRenderContext(this@append, app, getScope(scope, true), this@renderRoot)
+        val context = DOMRenderContext(this@append, app, provisionScope(scope, true), this@renderRoot)
         context.block()
     }
 }
 
 fun RenderContext.replaceRender(
     element: HTMLElement,
-    block: RenderContext.() -> Unit
+    block: RenderContext.() -> Unit,
 ): List<HTMLElement> {
     element.clear()
     return element.append {
-        val context = DOMRenderContext(this@append, app, element.getScope(renderScope, true), element)
+        val context = DOMRenderContext(this@append, app, element.provisionScope(renderScope, true), element)
         context.block()
     }
 }
@@ -55,7 +52,7 @@ fun RenderContext.appendRender(
     element: HTMLElement,
     block: RenderContext.() -> Unit
 ) = element.append {
-    val context = DOMRenderContext(this@append, app, element.getScope(renderScope, false), element)
+    val context = DOMRenderContext(this@append, app, element.provisionScope(renderScope, false), element)
     context.block()
 }
 
@@ -63,7 +60,7 @@ fun RenderContext.prependRender(
     element: HTMLElement,
     block: RenderContext.() -> Unit
 ) = element.prepend {
-    val context = DOMRenderContext(this@prepend, app, element.getScope(renderScope, false), element)
+    val context = DOMRenderContext(this@prepend, app, element.provisionScope(renderScope, false), element)
     context.block()
 }
 
