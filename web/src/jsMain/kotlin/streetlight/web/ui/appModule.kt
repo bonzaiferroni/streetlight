@@ -42,5 +42,6 @@ val appModule = module {
     factory { GalaxyEditor(it[0], it[1], get(), get(), get(), get())}
     factory { LocationEditor(it[0], it[1], get()) }
     factory { LocationFinder(it[0], get(), get(), get()) }
+    factory { ContentEditor(it[0], it[1], get(), get()) }
     factory { EventScout(it[0], it[1])}
 }

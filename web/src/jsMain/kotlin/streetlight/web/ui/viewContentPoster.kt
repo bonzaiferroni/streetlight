@@ -5,13 +5,17 @@ import koala.css.*
 import koala.dom.*
 import koala.html.filigree
 import koala.html.heading1
+import koala.model.mapDistinct
 import kotlinx.html.js.h3
 import streetlight.model.data.StarPostEdit
 import streetlight.model.data.Galaxy
 import streetlight.web.PostContentRoute
 import streetlight.web.model.ContentEditor
 
-fun RenderContext.viewContentPoster(model: ContentEditor, galaxy: Galaxy) {
+fun RenderContext.viewContentPoster(galaxy: Galaxy) {
+    val model = app.getCoroutineScoped<ContentEditor>(StarPostEdit(null, galaxy.galaxyId), renderScope)
+    goOnPosted(model.stateFlow.mapDistinct { it.post })
+
     section(modify(Column)) {
         heading1(galaxy.name, modify(TextAlignCenter))
         filigree {
@@ -33,7 +37,6 @@ fun RenderContext.viewContentPosterRoute() {
     routeBlock<PostContentRoute, Galaxy>({
         api.readGalaxy(it.slug).handleResponse(toaster::toast)
     }) { galaxy ->
-        val model = ContentEditor(StarPostEdit(null, galaxy.galaxyId), renderScope, api, toaster)
-        viewContentPoster(model, galaxy)
+        viewContentPoster(galaxy)
     }
 }
