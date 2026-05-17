@@ -99,10 +99,10 @@ object LottieFile : FileSet<Lottie>() {
     val playPause = addLottie("play-pause.json")
     val Cat = addLottie("cat.json")
     val AstronautReading = addLottie("astronaut-reading.json")
-    val astronautWalking = addLottie("astronaut-walking.json")
+    val Astronaut404 = addLottie("astronaut-404.json")
     val rocket = addLottie("rocket.json")
     val secureCloudSync = addLottie("secure-cloud-sync.json")
-    val serverSync = addLottie("server-sync.json")
+    val ServerSync = addLottie("server-sync.json")
     val spinningCircles = addLottie("spinning-circles.json")
     val circleSync = addLottie("circle-sync.json")
 }

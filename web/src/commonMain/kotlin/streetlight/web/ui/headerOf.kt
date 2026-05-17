@@ -11,6 +11,8 @@ import streetlight.model.data.ExtraLink
 import streetlight.model.data.Galaxy
 import streetlight.model.data.Location
 import streetlight.model.data.Star
+import streetlight.web.GalaxyConfigRoute
+import streetlight.web.GalaxyRoute
 import streetlight.web.layouts.cellRow
 import streetlight.web.layouts.galaxyCells
 import streetlight.web.layouts.locationCells
@@ -47,6 +49,8 @@ fun FlowContent.headerOf(
         description = galaxy.description,
         modifiers = modifiers,
         cells = galaxyCells(galaxy),
+        links = emptyList(),
+        editRoute = GalaxyConfigRoute(galaxy.slug),
         block = block
     )
 }

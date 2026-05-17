@@ -3,7 +3,6 @@ package streetlight.web.ui
 import koala.model.GeoMap
 import koala.model.Portal
 import kotlinx.coroutines.MainScope
-import org.koin.core.Koin
 import org.koin.dsl.module
 import streetlight.web.HomeRoute
 import streetlight.web.StreetlightScreen

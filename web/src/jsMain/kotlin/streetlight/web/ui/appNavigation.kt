@@ -34,9 +34,13 @@ fun RenderContext.appNavigation() {
             StreetlightScreen.Location -> viewLocationProfile()
             StreetlightScreen.EditLocation -> viewEditLocationRoute()
             StreetlightScreen.LocationAdmin -> viewLocationAdmin()
-            StreetlightScreen.CreateGalaxy -> viewGalaxyFoundry()
-            StreetlightScreen.GalaxyList -> viewGalaxyList()
+
+            // galaxy
             StreetlightScreen.Galaxy -> viewGalaxyRoute()
+            StreetlightScreen.GalaxyFoundry -> viewGalaxyFoundry()
+            StreetlightScreen.GalaxyConfig -> viewGalaxyConfigRoute()
+            StreetlightScreen.GalaxyList -> viewGalaxyList()
+
             StreetlightScreen.Star -> viewStarProfileRoute()
             // StreetlightScreen.EventScout -> viewEventScoutProtoRoute()
             // StreetlightScreen.LocationScout -> viewLocationScoutRouteProto()

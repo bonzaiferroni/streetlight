@@ -7,7 +7,7 @@ import koala.html.*
 import kotlinx.html.FlowContent
 import streetlight.model.data.Galaxy
 import streetlight.model.data.HomeContent
-import streetlight.web.CreateGalaxyRoute
+import streetlight.web.GalaxyFoundryRoute
 import streetlight.web.EarthMapRoute
 import streetlight.web.layouts.postSection
 import streetlight.web.layouts.smallGalaxyCard
@@ -100,7 +100,7 @@ fun FlowContent.galaxiesSection(galaxies: List<Galaxy>) {
         }
         row {
             spacer(modify(Flex1))
-            btn("➕ Create a Galaxy", CreateGalaxyRoute, modify(Accent))
+            btn("➕ Create a Galaxy", GalaxyFoundryRoute, modify(Accent))
         }
     }
 }

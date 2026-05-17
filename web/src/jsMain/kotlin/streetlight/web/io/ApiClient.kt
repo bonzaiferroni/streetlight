@@ -2,11 +2,8 @@ package streetlight.web.io
 
 import kampfire.api.StringId
 import kampfire.api.UserApi
-import kampfire.model.ApiResponse
 import kampfire.model.GeoBounds
 import kampfire.model.GeoPoint
-import kampfire.model.Ok
-import kampfire.model.Problem
 import kampfire.model.SignUpRequest
 import kampfire.model.Url
 import koala.model.DocId
@@ -79,7 +76,7 @@ class ApiClient(private val client: FetchClient) {
     suspend fun editTalent(talent: TalentEdit) = client.postApi(Api.Users.EditTalent, talent)
 
     // galaxies
-    suspend fun foundGalaxy(galaxy: GalaxyEdit) = client.postApi(Api.Galaxies.CreateOrEdit, galaxy)
+    suspend fun createOrUpdateGalaxy(galaxy: GalaxyEdit) = client.postApi(Api.Galaxies.CreateOrEdit, galaxy)
     suspend fun readTopGalaxies() = client.getApi(Api.Galaxies.Top)
     suspend fun readGalaxies(galaxyIds: List<GalaxyId>) = client.postApi(Api.Galaxies.ReadGalaxies, galaxyIds)
     suspend fun readGalaxy(id: StringId) = client.getApi(Api.Galaxies.ReadId, id)

@@ -6,11 +6,16 @@ import koala.html.bulletsOf
 import koala.html.filigree
 import koala.html.heading3
 import kotlinx.coroutines.flow.Flow
-import org.w3c.dom.HTMLElement
-import org.w3c.dom.HTMLInputElement
-import streetlight.model.data.GalaxyEdit
+import kotlinx.html.DIV
 
-fun DOMContext.editorSection(
+fun RenderContext.formBody(
+    modifiers: ModifierSet? = null,
+    block: DIV.() -> Unit
+) = column(modify(modifiers, Gap8)) {
+    block()
+}
+
+fun DOMContext.formSection(
     name: String,
     modifiers: ModifierSet? = null,
     block: DOMContext.() -> Unit
@@ -20,20 +25,20 @@ fun DOMContext.editorSection(
         filigree {
             heading3(name)
         }
-        card(EditorMod.Card) {
+        card(FormMod.Card) {
             block()
         }
     }
 }
 
-fun DOMContext.editorPart(
+fun DOMContext.formPart(
     instructions: String? = null,
     examples: List<String>? = null,
     bullets: List<String>? = null,
     info: DOMContext.() -> Unit = {},
     fields: DOMContext.() -> Unit,
-) = column(EditorMod.Part) {
-    column(EditorMod.Instructions) {
+) = column(FormMod.Part) {
+    column(FormMod.Instructions) {
         instructions?.let {
             textBlock(it)
         }
@@ -44,16 +49,16 @@ fun DOMContext.editorPart(
             }
         }
         bullets?.let {
-            bulletsOf(modify(OpacityMost), it)
+            bulletsOf(FormMod.Bullets, it)
         }
-        info(this@editorPart)
+        info(this@formPart)
     }
-    column(EditorMod.Fields) {
-        fields(this@editorPart)
+    column(FormMod.Fields) {
+        fields(this@formPart)
     }
 }
 
-fun RenderContext.editorTextField(
+fun RenderContext.formTextField(
     label: String,
     onValue: (String) -> Unit,
     flow: Flow<String>,
@@ -76,9 +81,10 @@ fun RenderContext.editorTextField(
     }
 }
 
-object EditorMod {
+object FormMod {
     val Card = modify(ZenBg, QueryContainer, Gap3)
     val Part = modify(ContainerMdRow)
     val Instructions = modify(Flex1, JustifyContentCenter, Margin1)
     val Fields = modify(Flex1)
+    val Bullets = modify(OpacityMost)
 }

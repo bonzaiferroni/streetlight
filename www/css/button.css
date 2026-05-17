@@ -6,6 +6,8 @@
     --btn-padding: .75rem 1rem;
     --btn-border-radius: 1.25rem;
 
+    --zen-button-day: rgba(var(--paper), .5);
+
     --accent-shadow: 0 0 .8rem var(--accent-button), var(--btn-outline);
     --primary-shadow: 0 0 .8rem var(--primary-button), var(--btn-outline);
     --danger-shadow: 0 0 .8rem rgb(var(--danger)), var(--btn-outline);
@@ -30,6 +32,12 @@
     text-shadow: var(--btn-text-shadow);
     white-space: nowrap;
     min-width: calc(var(--unit-spacing) * 16);
+
+    > :first-child { width: 1rem; text-align: center; opacity: .75; }
+    > :only-child { grid-column: 1 / -1; justify-self: center; opacity: 1; width: auto; }
+    > :nth-child(2) { justify-self: center; }
+    > span { font-size: inherit; line-height: 1rem; }
+    :not(:has(*)) { grid-template-columns: 1fr; }
 }
 
 .btn-text {
@@ -40,24 +48,9 @@
     white-space: nowrap;
 }
 
-.btn > :first-child { width: 1rem; text-align: center; opacity: .75; }
-.btn > :only-child { grid-column: 1 / -1; justify-self: center; opacity: 1; width: auto; }
-.btn > :nth-child(2) { justify-self: center; }
-.btn > span { font-size: inherit; line-height: 1rem; }
-.btn:not(:has(*)) { grid-template-columns: 1fr; }
-
-.day-theme .btn {
-    box-shadow: var(--btn-outline);
-    background: var(--primary-button-day);
-}
-
 .btn.accent {
     box-shadow: var(--accent-shadow);
     background: var(--accent-button-day);
-}
-
-.day-theme .btn.accent {
-    box-shadow: var(--btn-outline);
 }
 
 .btn.secondary {
@@ -72,13 +65,28 @@
     text-shadow: none;
 }
 
+.day-theme {
+    .btn {
+        box-shadow: var(--btn-outline);
+        background: var(--primary-button-day);
+    }
+
+    .btn.secondary {
+        box-shadow: none;
+    }
+
+    .btn.accent {
+        box-shadow: var(--btn-outline);
+    }
+
+    .btn.zen {
+        background: var(--zen-button-day);
+    }
+}
+
 .btn.danger {
     background: var(--danger-bg);
     box-shadow: var(--danger-shadow);
-}
-
-.day-theme .btn.secondary {
-    box-shadow: none;
 }
 
 .btn.background-image {

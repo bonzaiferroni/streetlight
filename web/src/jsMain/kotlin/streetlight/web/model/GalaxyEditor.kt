@@ -5,7 +5,6 @@ package streetlight.web.model
 import kampfire.model.Url
 import kampfire.model.getDataOrNull
 import kampfire.model.handleResponse
-import koala.dom.UIMessage
 import koala.dom.set
 import koala.model.GeoMap
 import koala.model.Portal
@@ -31,18 +30,20 @@ class GalaxyEditor(
     private val portal: Portal,
     private val toaster: Toaster,
 ) {
-    private val state = storeOf(GalaxyFoundryState())
+    private val state = storeOf(GalaxyFoundryState(galaxy ?: GalaxyEdit()))
     val stateFlow = state.flow
     val stateNow get() = state.now
     val galaxyFlow = stateFlow.mapDistinct { it.galaxy }
-    val galaxyNow get() = state.now.galaxy
-    val msg = storeOf<UIMessage?>(UIMessage(galaxy?.invalidMessage ?: "Looks good."))
+    val editNow get() = state.now.galaxy
 
     init {
+        galaxy?.geoBounds?.let {
+            geo.panMap(it)
+        }
         scope.launch {
             stateFlow.mapDistinct { it.cityQuery }.debounce(500L).collect { query ->
                 if (query == stateNow.locality?.city) return@collect
-                val localities = api.searchCity(query, stateNow.country).handleResponse(msg::set) ?: return@collect
+                val localities = api.searchCity(query, stateNow.country).handleResponse(toaster::toast) ?: return@collect
                 state.set { it.copy(localities = localities) }
             }
         }
@@ -59,7 +60,7 @@ class GalaxyEditor(
         setGalaxy { it.copy(slug = value) }
     }
 
-    fun setBlobUrl(value: Url?) = state.set { it.copy(blobUrl = value) }
+    fun setBlobUrl(value: Url?) = state.set { it.copy(imageUrl = value) }
 
     fun setDescription(value: String) = setGalaxy { it.copy(description = value) }
 
@@ -88,37 +89,38 @@ class GalaxyEditor(
         }
     }
 
-    fun foundGalaxy() {
+    fun submit() {
         val geoState = geo.stateNow
-        val galaxy = galaxyNow.copy(
+        val edit = editNow.copy(
             geoBounds = geoState.bounds
-        ).takeIf { it.isValid } ?: return
-        msg.set("Founding ${galaxy.name}...")
+        )
+        val invalidParts = edit.invalidParts
+        if (invalidParts.isNotEmpty()) {
+            toaster.toast("Missing: ${invalidParts.joinToString(", ")}")
+            return
+        }
+
+        toaster.toast("Saving...")
+        val imageRef = stateNow.galaxy.imageRef
         scope.launch {
-            val imageUrl: Url? = stateNow.blobUrl?.let { url ->
+            val imageUrl: Url? = stateNow.imageUrl.takeIf { it != imageRef }?.let { url ->
                 api.uploadImage(url).getDataOrNull() ?: return@launch
-            }
-            api.foundGalaxy(galaxy.copy(imageRef = imageUrl)).handleResponse(msg::set) { galaxy ->
+            } ?: imageRef
+            api.createOrUpdateGalaxy(edit.copy(imageRef = imageUrl)).handleResponse(toaster::toast) { galaxy ->
                 portal.go(GalaxyRoute(galaxy.slug))
-                reset()
             }
         }
-    }
-
-    private fun reset() {
-        state.set { GalaxyFoundryState() }
     }
 
     private fun setGalaxy(block: (GalaxyEdit) -> GalaxyEdit) {
         val edit = block(stateNow.galaxy)
         state.set { it.copy(galaxy = edit) }
-        msg.set(edit.invalidMessage ?: "Looks good.")
     }
 }
 
 data class GalaxyFoundryState(
-    val galaxy: GalaxyEdit = GalaxyEdit(),
-    val blobUrl: Url? = null,
+    val galaxy: GalaxyEdit,
+    val imageUrl: Url? = galaxy.imageRef,
     val isLocal: Boolean = true,
     val cityQuery: String = "",
     val localities: List<Locality> = emptyList(),

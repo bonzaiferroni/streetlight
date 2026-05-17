@@ -42,9 +42,13 @@ enum class StreetlightScreen(
     EditTalent("edit-talent", UuidParse { EditTalentRoute(TalentId(it)) }),
     Location("location", UuidParse { LocationIdRoute(LocationId(it)) }),
     LocationAdmin("location-admin", UuidParse { LocationAdminRoute(LocationId(it)) }),
-    CreateGalaxy("create-galaxy", StaticParse { CreateGalaxyRoute }),
-    GalaxyList("galaxies", StaticParse { GalaxyListRoute }),
+
+    // galaxy
     Galaxy("g", IdParse { GalaxyRoute(it) }),
+    GalaxyFoundry("create-galaxy", StaticParse { GalaxyFoundryRoute }),
+    GalaxyConfig("edit-galaxy", IdParse { GalaxyConfigRoute(it) } ),
+    GalaxyList("galaxies", StaticParse { GalaxyListRoute }),
+
     Star("s", IdParse { StarRoute(it) }),
     EventScout("post-event", IdParse { EventScoutRoute(it) }),
     LocationScout("post-location", IdParse { LocationScoutRoute(it) }),
@@ -184,21 +188,6 @@ data class LocationAdminRoute(
     override val screen get() = StreetlightScreen.LocationAdmin
     override val id get() = locationId
     override val title get() = "Location Admin"
-}
-
-object CreateGalaxyRoute: StreetlightRoute {
-    override val screen get() = StreetlightScreen.CreateGalaxy
-    override val title get() = "Create Galaxy"
-}
-
-object GalaxyListRoute: StreetlightRoute {
-    override val screen get() = StreetlightScreen.GalaxyList
-    override val title get() = "Galaxies"
-}
-
-data class GalaxyRoute(override val id: StringId): StringIdRoute, StreetlightRoute {
-    override val screen get() = StreetlightScreen.Galaxy
-    override val title get() = "Galaxy"
 }
 
 data class EventSlugRoute(override val slug: Slug): StreetlightRoute, SlugRoute, EventRoute {

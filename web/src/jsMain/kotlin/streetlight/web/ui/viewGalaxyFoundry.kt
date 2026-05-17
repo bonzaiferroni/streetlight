@@ -2,50 +2,32 @@ package streetlight.web.ui
 
 import koala.LottieFile
 import koala.css.Accent
-import koala.css.AlignItemsCenter
-import koala.css.AntiShadow
-import koala.css.Flex1
-import koala.css.Flex4
-import koala.css.FlexMd2
-import koala.css.JustifyContentCenter
 import koala.css.JustifyContentSpaceBetween
-import koala.css.MaxHeight32
-import koala.css.PaddingLeft3
-import koala.css.Shrinkable
 import koala.css.modify
 import koala.dom.*
-import koala.html.filigree
-import koala.html.heading1
-import koala.html.section
 import streetlight.web.model.GalaxyEditor
 
 fun RenderContext.viewGalaxyFoundry() {
     val model = app.getCoroutineScoped<GalaxyEditor>(null, renderScope)
 
     column {
-        section {
-            filigree {
-                heading1("Galaxy Foundry", modify(Shrinkable, AntiShadow))
-            }
-            row(modify(AlignItemsCenter)) {
-                column(modify(Flex4, FlexMd2, PaddingLeft3)) {
-                    textBlock(introText1)
-                    textBlock(introText2)
-                }
-                row(modify(Flex1, JustifyContentCenter)) {
-                    lottie(LottieFile.AstronautReading, modify(MaxHeight32))
-                }
-            }
+        introSection("Galaxy Foundry", lottie = LottieFile.AstronautReading) {
+            textBlock(introText1)
+            textBlock(introText2)
         }
 
-        viewGalaxyEditor(model)
+        formBody {
+            galaxyCityForm(model)
+            galaxyNameForm(model)
+            galaxyImageForm(model)
+            galaxyDescriptionForm(model)
+            galaxyLocationForm(model)
+            galaxyAccessForm(model)
+        }
 
         row(modify(JustifyContentSpaceBetween)) {
             button("back", onClick = { portal.goBack() })
-            row {
-                messageBox(model.msg.flow)
-                button("Found Galaxy", modify(Accent), onClick = model::foundGalaxy)
-            }
+            button("Found Galaxy", modify(Accent), onClick = model::submit)
         }
 
         appFooter("web/src/jsMain/kotlin/streetlight/web/ui/viewGalaxyFoundry.kt")

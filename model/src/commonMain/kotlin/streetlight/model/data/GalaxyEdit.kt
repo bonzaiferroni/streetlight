@@ -49,3 +49,17 @@ object GalaxyProperty {
     val Name = "name"
     val Path = "path"
 }
+
+fun Galaxy.toEdit() = GalaxyEdit(
+    galaxyId = galaxyId,
+    cityId = cityId,
+    name = name,
+    slug = slug,
+    tagline = tagline,
+    description = description,
+    geoBounds = geoBounds,
+    postPermission = postPermission,
+    reviewMode = reviewMode,
+    postGuide = postGuide,
+    imageRef = imageRef,
+)
