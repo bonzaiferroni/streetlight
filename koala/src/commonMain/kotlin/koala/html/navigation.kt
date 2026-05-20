@@ -54,8 +54,8 @@ fun FlowContent.navigation(
 
 fun FlowContent.navigationIfNotNull(
     route: AppRoute? = null,
-    text: String = "",
     modifiers: ModifierSet? = null,
+    text: String = "",
     id: Id? = null,
     block: FlowContent.() -> Unit = {}
 ) {
@@ -70,7 +70,10 @@ fun FlowContent.navigationIfNotNull(
     block: FlowContent.() -> Unit = {}
 ) {
     if (href == null) {
-        block()
+        box(id, modifiers) {
+            block()
+            +text
+        }
     } else {
         navigation(href = href, text = text, modifiers = modifiers, id = id, block = block)
     }

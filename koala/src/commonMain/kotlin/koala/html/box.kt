@@ -17,12 +17,12 @@ fun FlowContent.box(
 }
 
 fun FlowContent.box(
-    id: Id,
+    id: Id?,
     modifiers: ModifierSet? = null,
     block: (DIV.() -> Unit)? = null,
 ) {
     box(modifiers = modifiers) {
-        this.id = id.identifier
+        setId(id)
         block?.invoke(this)
     }
 }

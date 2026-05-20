@@ -2,9 +2,7 @@ package streetlight.web.layouts
 
 import koala.css.*
 import koala.html.*
-import koala.utils.jsonConfig
 import kotlinx.html.FlowContent
-import kotlinx.serialization.Serializable
 import streetlight.model.data.*
 import streetlight.web.shells.SectionHeadingMod
 
@@ -24,7 +22,7 @@ fun FlowContent.postSection(posts: List<Post>) {
 
 fun FlowContent.layoutPosts(posts: List<Post>) {
     posts.forEach { post ->
-        layoutPost(post)
+        postCardOf(post)
     }
 }
 

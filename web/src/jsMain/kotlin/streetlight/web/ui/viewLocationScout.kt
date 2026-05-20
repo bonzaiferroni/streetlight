@@ -7,8 +7,11 @@ import koala.dom.*
 import streetlight.model.data.Galaxy
 import streetlight.model.data.LocationEdit
 import streetlight.web.LocationScoutRoute
+import streetlight.web.layouts.postCard
+import streetlight.web.layouts.postCardOf
 import streetlight.web.model.LocationEditor
 import streetlight.web.model.LocationScout
+import streetlight.web.model.LocationScoutStage
 
 fun RenderContext.viewLocationScout(galaxy: Galaxy) {
     // val model = app.getCoroutineScoped<GalaxyEditor>(null, renderScope)
@@ -21,9 +24,12 @@ fun RenderContext.viewLocationScout(galaxy: Galaxy) {
             textBlock("Let's post a location.")
         }
 
-        flowBlock(model.isEditorStaged, modify(Magic, Blur)) { isEditorStaged ->
-            when (isEditorStaged) {
-                true -> column {
+        flowBlock(model.stageFlow, modify(Magic, Blur)) { stage ->
+            when (stage) {
+                LocationScoutStage.Search -> formBody {
+                    locationScoutForm(model)
+                }
+                LocationScoutStage.Editor -> column {
                     formBody {
                         locationWebsiteForm(editor)
                         locationDetailsForm(editor)
@@ -34,8 +40,13 @@ fun RenderContext.viewLocationScout(galaxy: Galaxy) {
                         button("Post", onClick = model::postToGalaxy)
                     }
                 }
-                else -> formBody {
-                    locationFinderForm(model)
+                LocationScoutStage.Location -> column {
+                    val location = model.stateNow.location ?: error("location not found")
+                    postCardOf(location)
+
+                    row(modify(JustifyContentEnd)) {
+                        button("Post", onClick = model::postToGalaxy)
+                    }
                 }
             }
         }

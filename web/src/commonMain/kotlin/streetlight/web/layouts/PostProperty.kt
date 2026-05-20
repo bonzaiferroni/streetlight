@@ -1,5 +1,6 @@
 package streetlight.web.layouts
 
+import koala.Svg
 import koala.SvgFile
 import koala.html.AppRoute
 import koala.model.Doc
@@ -48,12 +49,22 @@ val Post.cells get() = when (this) {
 }
 
 val Post.colorScheme get() = when (this) {
-    is EventPost -> "var(--accent-fg)"
-    else -> "var(--primary-fg)"
+    is EventPost -> ColorScheme.Accent
+    else -> ColorScheme.Primary
 }
 
 val Post.flairIcon get() = when (this) {
-    is EventPost -> SvgFile.Calendar
-    is LocationPost -> SvgFile.Pin
+    is EventPost -> FlairIcon.Event
+    is LocationPost -> FlairIcon.Location
     else -> null
+}
+
+enum class ColorScheme(val cssValue: String) {
+    Accent("var(--accent-fg)"),
+    Primary("var(--primary-fg)"),
+}
+
+enum class FlairIcon(val svg: Svg) {
+    Event(SvgFile.Calendar),
+    Location(SvgFile.Pin),
 }

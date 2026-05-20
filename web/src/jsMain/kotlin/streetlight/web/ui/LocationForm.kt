@@ -49,7 +49,7 @@ fun RenderContext.locationWebsiteForm(model: LocationEditor) = formSection("Webs
     }
 }
 
-fun RenderContext.locationFinderForm(model: LocationScout) = formSection("Find a location") {
+fun RenderContext.locationScoutForm(model: LocationScout) = formSection("Find a location") {
     formPart(
         instructions = "Streetlight locations will appear as you type.",
         bullets = listOf("If you don't see the location in the list, you can search OpenStreetMap.")

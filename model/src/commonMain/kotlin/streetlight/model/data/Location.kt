@@ -41,6 +41,10 @@ data class Location(
     }
 
     val displayTitle get() = name ?: address ?: "(geocoordinates)"
+    val subtitle get() = when (name) {
+        null -> city
+        else -> addressLine
+    }
 
     val links by lazy {
         buildList {
@@ -59,6 +63,7 @@ data class Location(
         }.takeIf { it.isNotEmpty() }
     }
 
+    // td: implement contact info
     val phone: String? get() = null
     val email: String? get() = null
 }

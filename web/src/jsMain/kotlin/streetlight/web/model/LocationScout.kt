@@ -36,7 +36,7 @@ class LocationScout(
     val locationFlow = stateFlow.mapDistinct { it.location }
     val osmLocationsFlow = stateFlow.mapDistinct { it.osmLocations }
     val hasOsmLocations = stateFlow.mapDistinct { it.osmLocations.isNotEmpty() }
-    val isEditorStaged = stateFlow.mapDistinct { it.isEditorStaged }
+    val stageFlow = stateFlow.mapDistinct { it.stage }
     val postFlow = stateFlow.mapDistinct { it.post }
 
     init {
@@ -52,12 +52,12 @@ class LocationScout(
 
     fun setQuery(value: String) = state.set { it.copy(query = value) }
     fun setCity(value: String) = state.set { it.copy(city = value) }
-    fun setLocation(value: Location?) = state.set { it.copy(location = value)}
+    fun setLocation(value: Location?) = state.set { it.copy(location = value, stage = LocationScoutStage.Location)}
     fun setOSMLocation(value: LocationEdit?) {
         if (value == null) return
         editor.setEdit { value.mergeLeft(it) }
         editor.readWebsite()
-        state.set { it.copy(osmLocations = emptyList(), isEditorStaged = true) }
+        state.set { it.copy(osmLocations = emptyList(), stage = LocationScoutStage.Editor) }
     }
 
     fun queryOSM() {
@@ -106,6 +106,12 @@ data class LocationScoutState(
     val locations: List<Location> = emptyList(),
     val osmLocations: List<LocationEdit> = emptyList(),
     val location: Location? = null,
-    val isEditorStaged: Boolean = false,
+    val stage: LocationScoutStage = LocationScoutStage.Search,
     val post: Post? = null,
 )
+
+enum class LocationScoutStage {
+    Search,
+    Editor,
+    Location,
+}
