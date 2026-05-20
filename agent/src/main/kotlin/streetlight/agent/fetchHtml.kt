@@ -27,11 +27,11 @@ fun String.looksLikeHtml(): Boolean = htmlStart.containsMatchIn(this)
 private val httpClient by lazy {
     HttpClient {
         defaultRequest {
-            header("User-Agent", "Streetlight/1.0")
-//            header(
-//                "User-Agent",
-//                "Mozilla/5.0 (X11; Linux x86_64; rv:143.0) Gecko/20100101 Firefox/143.0"
-//            )
+//            header("User-Agent", "Streetlight/1.0")
+            header(
+                "User-Agent",
+                "Mozilla/5.0 (X11; Linux x86_64; rv:143.0) Gecko/20100101 Firefox/143.0"
+            )
             header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
             header("Accept-Language", "en-US,en;q=0.5")
             header("Connection", "keep-alive")

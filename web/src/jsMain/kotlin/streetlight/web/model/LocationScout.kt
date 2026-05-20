@@ -10,11 +10,10 @@ import kotlinx.coroutines.launch
 import streetlight.model.data.Galaxy
 import streetlight.model.data.Location
 import streetlight.model.data.LocationEdit
+import streetlight.model.data.LocationPostEdit
+import streetlight.model.data.Post
 import streetlight.model.data.mergeLeft
-import streetlight.model.data.toEdit
 import streetlight.model.data.toEditOrNull
-import streetlight.model.external.OSMLocation
-import streetlight.model.external.OSMQuery
 import streetlight.web.io.ApiClient
 import streetlight.web.io.OSMClient
 
@@ -38,6 +37,7 @@ class LocationScout(
     val osmLocationsFlow = stateFlow.mapDistinct { it.osmLocations }
     val hasOsmLocations = stateFlow.mapDistinct { it.osmLocations.isNotEmpty() }
     val isEditorStaged = stateFlow.mapDistinct { it.isEditorStaged }
+    val postFlow = stateFlow.mapDistinct { it.post }
 
     init {
         scope.launch {
@@ -56,6 +56,7 @@ class LocationScout(
     fun setOSMLocation(value: LocationEdit?) {
         if (value == null) return
         editor.setEdit { value.mergeLeft(it) }
+        editor.readWebsite()
         state.set { it.copy(osmLocations = emptyList(), isEditorStaged = true) }
     }
 
@@ -83,6 +84,20 @@ class LocationScout(
             // setEdit(location)
         }
     }
+
+    fun postToGalaxy() {
+        scope.launch {
+            val location = when(val location = stateNow.location) {
+                null -> editor.submitSuspended()
+                else -> location
+            } ?: return@launch
+
+            val edit = LocationPostEdit(null, galaxy.galaxyId, location.locationId, null)
+            api.postLocation(edit).handleResponse(toaster::toast, "Posted location to ${galaxy.name}.") { post ->
+                state.set { it.copy(post = post) }
+            }
+        }
+    }
 }
 
 data class LocationScoutState(
@@ -92,4 +107,5 @@ data class LocationScoutState(
     val osmLocations: List<LocationEdit> = emptyList(),
     val location: Location? = null,
     val isEditorStaged: Boolean = false,
+    val post: Post? = null,
 )

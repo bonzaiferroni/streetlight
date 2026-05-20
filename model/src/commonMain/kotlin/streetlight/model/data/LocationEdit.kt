@@ -48,6 +48,8 @@ fun LocationEdit.mergeLeft(edit: LocationEdit?) = edit?.let {
         locationId = locationId ?: edit.locationId,
         name = name ?: edit.name,
         city = city ?: edit.city,
+        state = state ?: edit.state,
+        country = country ?: edit.country,
         description = description ?: edit.description,
         address = address ?: edit.address,
         notes = notes ?: edit.notes,
@@ -74,10 +76,10 @@ fun OSMLocation.toEdit() = LocationEdit(
         address.number?.let { number ->
             "$number $road"
         } ?: road
-    } ?: error("address not found"),
+    },
     city = address.city,
-    state = address.state ?: error("state not found"),
-    country = address.country ?: error("country not found"),
+    state = address.state,
+    country = address.country,
     geoPoint = toGeoPoint(),
     mapRank = importance?.toFloat() ?: 0f,
     mapCategory = category,

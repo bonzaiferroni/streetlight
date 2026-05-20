@@ -25,15 +25,27 @@ fun RenderContext.locationDetailsForm(model: LocationEditor) = formSection("Loca
     }
 }
 
-private val imageInstructions = "This image will appear in the feed and at the top of the event page."
+private val imageInstructions = "This image will appear at the top of the location page."
 
 fun RenderContext.locationImageForm(model: LocationEditor) =
     imageFormSection(imageInstructions, model::setImageUrl, model.imageUrlFlow)
 
 fun RenderContext.locationLinksForm(model: LocationEditor) = formSection("Links") {
     column {
-        textField("website", modify(), model::setLink, model.websiteFlow)
         textField("calendar", modify(), model::setEventsLink, model.linksFlow)
+    }
+}
+
+fun RenderContext.locationWebsiteForm(model: LocationEditor) = formSection("Website") {
+    formPart(
+        instructions = "Does this location have a website? We can read it to find certain details.",
+        bullets = listOf("Image", "Description", "Links")
+    ) {
+        textField("website", modify(), model::setWebsite, model.websiteFlow)
+        row(modify(JustifyContentEnd)) {
+            messageBox(model.websiteMsg, modify(Magic))
+            button("🤖 read website", onClick = model::readWebsite)
+        }
     }
 }
 

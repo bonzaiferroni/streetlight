@@ -45,7 +45,7 @@ fun RenderContext.viewLocationEditorProto(model: LocationEditor) {
             flow = model.editFlow.mapDistinct { it.description }
         )
 
-        textField("website", modify(Flex1), model::setLink, linkFlow)
+        textField("website", modify(Flex1), model::setWebsite, linkFlow)
         textField("calendar", modify(), model::setEventsLink, eventsLinkFlow)
     }
 }

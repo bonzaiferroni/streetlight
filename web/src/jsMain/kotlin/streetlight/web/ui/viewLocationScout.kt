@@ -14,6 +14,7 @@ fun RenderContext.viewLocationScout(galaxy: Galaxy) {
     // val model = app.getCoroutineScoped<GalaxyEditor>(null, renderScope)
     val editor = app.getCoroutineScoped<LocationEditor>(LocationEdit(), renderScope)
     val model = app.getCoroutineScoped<LocationScout>(galaxy, editor, renderScope)
+    goOnPosted(model.postFlow)
 
     column {
         introSection("Location Scout", lottie = LottieFile.StrollingMan) {
@@ -22,10 +23,16 @@ fun RenderContext.viewLocationScout(galaxy: Galaxy) {
 
         flowBlock(model.isEditorStaged, modify(Magic, Blur)) { isEditorStaged ->
             when (isEditorStaged) {
-                true -> formBody {
-                    locationDetailsForm(editor)
-                    locationImageForm(editor)
-                    locationLinksForm(editor)
+                true -> column {
+                    formBody {
+                        locationWebsiteForm(editor)
+                        locationDetailsForm(editor)
+                        locationImageForm(editor)
+                        locationLinksForm(editor)
+                    }
+                    row(modify(JustifyContentEnd)) {
+                        button("Post", onClick = model::postToGalaxy)
+                    }
                 }
                 else -> formBody {
                     locationFinderForm(model)
@@ -44,3 +51,5 @@ fun RenderContext.viewLocationScoutRoute() {
         viewLocationScout(galaxy)
     }
 }
+
+// fun RenderContext.viewStagedEditorForm(editor: LocationEditor)

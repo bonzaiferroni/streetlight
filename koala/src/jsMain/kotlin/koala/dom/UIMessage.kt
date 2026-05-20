@@ -4,18 +4,19 @@ import kampfire.model.Problem
 import koala.model.Store
 
 data class UIMessage(
-    val text: String? = null,
+    val text: String,
     val type: UIMessageType = UIMessageType.Info,
 )
 
 enum class UIMessageType {
     Info,
     Warning,
-    Error
+    Error,
+    Working,
 }
 
 fun Store<UIMessage?>.set(text: String, type: UIMessageType = UIMessageType.Info) = set { UIMessage(text, type) }
 
-fun Store<UIMessage?>.set(problem: Problem<*>?) = set { UIMessage(problem?.message ?: "No response.") }
+fun Store<UIMessage?>.set(problem: Problem<*>?) = set { UIMessage(problem?.message ?: "Something went wrong.") }
 
 fun Store<UIMessage?>.clear() = set { null }

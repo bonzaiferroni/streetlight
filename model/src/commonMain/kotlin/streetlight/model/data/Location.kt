@@ -12,15 +12,17 @@ import kotlin.uuid.Uuid
 @Serializable
 data class Location(
     val locationId: LocationId,
+    val cityId: CityId?,
     val mapId: MapId?,
     val name: String?,
     val username: String?,
     val description: String?,
     val address: String?,
     val city: String?,
+    val state: String?,
     val geoPoint: GeoPoint,
     val mapRank: Float?,
-    val mapClass: String?,
+    val mapCategory: String?,
     val mapType: String?,
     val resources: Set<ResourceType>,
     val website: String?,

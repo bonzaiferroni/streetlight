@@ -3,7 +3,9 @@ package streetlight.web.model
 import kampfire.model.GeoPoint
 import kampfire.model.Url
 import kampfire.model.handleResponse
-import koala.dom.UIMessageType
+import koala.dom.UIMessage
+import koala.dom.clear
+import koala.dom.set
 import koala.model.mapDistinct
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
@@ -13,13 +15,10 @@ import kotlinx.coroutines.launch
 import streetlight.model.data.Location
 import streetlight.model.data.LocationEdit
 import streetlight.model.data.ResourceType
+import streetlight.model.data.UrlParseRequest
 import streetlight.model.data.mergeLeft
-import streetlight.model.data.toEdit
 import streetlight.model.external.Address
-import streetlight.model.external.OSMLocation
-import streetlight.model.external.OSMQuery
 import streetlight.web.io.ApiClient
-import streetlight.web.io.OSMClient
 
 class LocationEditor(
     initialData: LocationEdit,
@@ -30,6 +29,8 @@ class LocationEditor(
     private val state = storeOf(LocationEditorState(initialData))
     val stateNow get() = state.now
     val stateFlow = state.flow
+
+    val websiteMsg = storeOf<UIMessage?>(null)
 
     val editNow get() = state.now.edit
     val editFlow = state.flow.mapNotNull { it.edit }.distinctUntilChanged()
@@ -67,8 +68,10 @@ class LocationEditor(
         setEdit { it.copy(resources = value) }
     }
 
-    fun setLink(value: String?) {
+    fun setWebsite(value: String?) {
+        if (value == editNow.website) return
         setEdit { it.copy(website = value) }
+        websiteMsg.clear()
     }
 
     fun setEventsLink(value: String?) {
@@ -84,16 +87,34 @@ class LocationEditor(
     }
 
     fun setEdit(block: (LocationEdit) -> LocationEdit) {
+        console.log("ey: ${block(stateNow.edit)}")
         state.set { it.copy(edit = block(it.edit)) }
     }
 
-    fun postLocation() {
-        val edit = editNow.takeIf { it.isValid } ?: return
+    fun readWebsite() {
+        val website = editNow.website?.takeIf { it.startsWith("http") } ?: return
         scope.launch {
-            api.createOrEditLocation(edit).handleResponse(toaster::toast) { location ->
-                state.set { it.copy(location = location) }
+            websiteMsg.set("Reading the link, this will take a minute.")
+            api.parseLocation(UrlParseRequest(website)).handleResponse(websiteMsg::set) { edit ->
+                state.set { it.copy(edit = edit.mergeLeft(editNow), imageUrl = edit.imageRef) }
+                websiteMsg.set("Does this information look correct?")
             }
         }
+    }
+
+    fun submit() {
+        scope.launch {
+            submitSuspended()
+        }
+    }
+
+    suspend fun submitSuspended(): Location? {
+        val edit = editNow.takeIf { it.isValid } ?: return null
+        val location = api.createOrEditLocation(edit).handleResponse(toaster::toast)
+        if (location != null) {
+            state.set { it.copy(location = location) }
+        }
+        return location
     }
 }
 

@@ -23,7 +23,7 @@ class LocationScoutProto(
     private val initialState = LocationScoutProtoState()
     private var location: Location? = null
     private val state = storeOf(initialState)
-    val message = storeOf(UIMessage())
+    val message = storeOf<UIMessage?>(null)
     val stateFlow = state.flow
     val stateNow get() = state.now
 
