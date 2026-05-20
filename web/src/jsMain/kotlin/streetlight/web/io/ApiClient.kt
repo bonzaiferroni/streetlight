@@ -36,9 +36,13 @@ class ApiClient(private val client: FetchClient) {
     suspend fun readLocation(locationId: LocationId) = client.getApi(Api.Locations, locationId)
     suspend fun parseLocation(request: ParseRequest) = client.postApi(Api.Locations.ParseLocation, request)
     suspend fun readLocationsInBounds(bounds: GeoBounds) = client.postApi(Api.Locations.QueryBounds, bounds)
-    suspend fun searchLocations(query: String) = client.getApi(Api.Locations.Search) {
-        writeParam(it.query, query)
-    }
+    suspend fun searchLocations(query: String, city: String? = null, state: String? = null, limit: Int = 10) =
+        client.getApi(Api.Locations.Search) {
+            writeParam(it.query, query)
+            writeParam(it.city, city)
+            writeParam(it.state, state)
+            writeParam(it.limit, limit)
+        }
 
     suspend fun createOrEditLocation(location: LocationEdit) = client.postApi(Api.Locations.CreateOrEdit, location)
     suspend fun queryMap(request: MapQuery) = client.getApi(Api.Events.QueryMap, request.toQuery())

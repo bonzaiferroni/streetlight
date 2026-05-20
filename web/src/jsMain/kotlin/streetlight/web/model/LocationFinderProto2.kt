@@ -60,20 +60,20 @@ class LocationFinderProto2(
         val query = state.now.query.takeIf { it.isNotBlank() } ?: return
         msg.set("Searching OSM: ${state.now.query}")
         scope.launch {
-            val places = osm.readPlaces(query)?.map { it.toPlaceProto() }
-                ?.filter{ p -> p.geoPoint?.let { gp -> gp.distanceTo(geo.stateNow.center) < 100.kilometers } ?: false }
-            val place = places?.firstOrNull()
-            if (place == null) {
-                msg.set("We couldn't find anything.")
-                return@launch
-            }
-            place.geoPoint?.let {
-                geo.panMap(PanPoint(point = it, zoom = 15f))
-            }
-
-            val edit = place.toEdit()
-            editor.setEdit { edit.mergeRight(it) }
-            msg.set("Is this what you are looking for?")
+//            val places = osm.readLocations(query)?.map { it.toPlaceProto() }
+//                ?.filter{ p -> p.geoPoint?.let { gp -> gp.distanceTo(geo.stateNow.center) < 100.kilometers } ?: false }
+//            val place = places?.firstOrNull()
+//            if (place == null) {
+//                msg.set("We couldn't find anything.")
+//                return@launch
+//            }
+//            place.geoPoint?.let {
+//                geo.panMap(PanPoint(point = it, zoom = 15f))
+//            }
+//
+//            val edit = place.toEdit()
+//            editor.setEdit { edit.mergeRight(it) }
+//            msg.set("Is this what you are looking for?")
         }
     }
 }

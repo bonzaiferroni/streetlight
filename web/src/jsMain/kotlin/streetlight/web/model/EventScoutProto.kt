@@ -90,13 +90,13 @@ class EventScoutProto(
         msg.set("Looking for information about that place on OpenStreetMap...")
         val point = geo.stateNow.center
         scope.launch {
-            val place = osm.readPlaceAt(point)?.toPlaceProto()?.copy(geoPoint = point)
-            if (place == null) {
-                // td: handle
-                msg.set("Something went wrong")
-                return@launch
-            }
-            choosePlace(place)
+//            val place = osm.readPlaceAt(point)?.toPlaceProto()?.copy(geoPoint = point)
+//            if (place == null) {
+//                // td: handle
+//                msg.set("Something went wrong")
+//                return@launch
+//            }
+//            choosePlace(place)
         }
     }
 
@@ -117,20 +117,20 @@ class EventScoutProto(
         val query = state.now.query.takeIf { it.isNotBlank() } ?: return
         msg.set("Searching OSM: ${state.now.query}")
         scope.launch {
-            val places = osm.readPlaces(query)?.map { it.toPlaceProto() }
-                ?.filter{ p -> p.geoPoint?.let { gp -> gp.distanceTo(geo.stateNow.center) < 100.kilometers } ?: false }
-            val place = places?.firstOrNull()
-            if (place == null) {
-                msg.set("We couldn't find anything.")
-                return@launch
-            }
-            place.geoPoint?.let {
-                geo.panMap(PanPoint(point = it, zoom = 15f))
-            }
-
-            val edit = place.toEdit().mergeRight(state.now.locationEdit)
-            state.set { it.copy(locationEdit = edit) }
-            msg.set("Is this what you are looking for?")
+//            val places = osm.readLocations(query)?.map { it.toPlaceProto() }
+//                ?.filter{ p -> p.geoPoint?.let { gp -> gp.distanceTo(geo.stateNow.center) < 100.kilometers } ?: false }
+//            val place = places?.firstOrNull()
+//            if (place == null) {
+//                msg.set("We couldn't find anything.")
+//                return@launch
+//            }
+//            place.geoPoint?.let {
+//                geo.panMap(PanPoint(point = it, zoom = 15f))
+//            }
+//
+//            val edit = place.toEdit().mergeRight(state.now.locationEdit)
+//            state.set { it.copy(locationEdit = edit) }
+//            msg.set("Is this what you are looking for?")
         }
     }
 

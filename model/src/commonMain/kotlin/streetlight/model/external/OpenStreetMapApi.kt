@@ -17,8 +17,7 @@ data class OSMLocation(
     val osmId: Long,
     val lat: Double,
     val lon: Double,
-    @SerialName("class")
-    val nodeClass: String,
+    val category: String,
     val type: String,
     @SerialName("place_rank")
     val placeRank: Int,
@@ -81,7 +80,6 @@ data class OSMExtra(
 
 @Serializable
 data class OSMQuery(
-    val query: String? = null,
     val amenity: String? = null,
     val street: String? = null,
     val city: String? = null,

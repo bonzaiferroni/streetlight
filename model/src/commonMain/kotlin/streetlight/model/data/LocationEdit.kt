@@ -20,7 +20,7 @@ data class LocationEdit(
     val geoPoint: GeoPoint? = null,
     val mapId: MapId? = null,
     val mapRank: Float? = null,
-    val mapClass: String? = null,
+    val mapCategory: String? = null,
     val mapType: String? = null,
     val resources: Set<ResourceType>? = null,
     val website: String? = null,
@@ -38,6 +38,8 @@ data class LocationEdit(
         else -> null
     }
 
+    val displayTitle get() = name ?: address ?: "(geocoordinates)"
+
     val invalidMessage get() = invalidPart?.let { "missing: $it"}
 }
 
@@ -52,7 +54,7 @@ fun LocationEdit.mergeLeft(edit: LocationEdit?) = edit?.let {
         geoPoint = geoPoint ?: edit.geoPoint,
         mapId = mapId ?: edit.mapId,
         mapRank = mapRank ?: edit.mapRank,
-        mapClass = mapClass ?: edit.mapClass,
+        mapCategory = mapCategory ?: edit.mapCategory,
         mapType = mapType ?: edit.mapType,
         resources = resources ?: edit.resources,
         website = website ?: edit.website,
@@ -78,7 +80,9 @@ fun OSMLocation.toEdit() = LocationEdit(
     country = address.country ?: error("country not found"),
     geoPoint = toGeoPoint(),
     mapRank = importance?.toFloat() ?: 0f,
-    mapClass = nodeClass,
+    mapCategory = category,
     mapType = type,
     website = extraTags?.website
 )
+
+fun OSMLocation.toEditOrNull() = runCatching { toEdit() }.getOrNull()

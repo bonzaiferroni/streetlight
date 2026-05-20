@@ -3,6 +3,7 @@ package streetlight.web.ui
 import koala.css.*
 import koala.dom.*
 import streetlight.web.model.LocationEditor
+import streetlight.web.model.LocationScout
 
 fun RenderContext.locationDetailsForm(model: LocationEditor) = formSection("Location Details") {
     formPart("What is the name of the place?") {
@@ -36,14 +37,32 @@ fun RenderContext.locationLinksForm(model: LocationEditor) = formSection("Links"
     }
 }
 
-fun RenderContext.locationFinderForm(model: LocationEditor) = formSection("Find a location") {
+fun RenderContext.locationFinderForm(model: LocationScout) = formSection("Find a location") {
     formPart(
         instructions = "Streetlight locations will appear as you type.",
         bullets = listOf("If you don't see the location in the list, you can search OpenStreetMap.")
     ) {
         row {
-            // textField("search", modify(Flex1), model::, model.searchFlow)
-            textField("city", modify(), model::setCity, model.cityFlow)
+            textField("search", modify(Flex1), model::setQuery, model.queryFlow)
+            textField("city", modify(Width24), model::setCity, model.cityFlow)
+        }
+        row(modify(JustifyContentEnd)) {
+            // textField("state", modify(Flex1))
+            button("Search OSM", onClick = model::queryOSM)
+        }
+        flowBlock(model.hasOsmLocations, modify(Height32, OverflowYAuto)) { hasOsmLocations ->
+            when (hasOsmLocations) {
+                true -> {
+                    selectionBlock(model.osmLocationsFlow, model::setOSMLocation) { location ->
+                        textBlock(location.displayTitle)
+                    }
+                }
+                else -> {
+                    selectionBlock(model.locationsFlow, model::setLocation, model.locationFlow) { location ->
+                        textBlock(location.displayTitle)
+                    }
+                }
+            }
         }
     }
 }

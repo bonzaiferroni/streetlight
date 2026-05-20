@@ -44,5 +44,5 @@ val appModule = module {
     factory { LocationFinderProto2(it[0], get(), get(), get()) }
     factory { ContentEditor(it[0], it[1], get(), get()) }
     factory { EventScout(it[0], it[1])}
-    // factory { LocationScout(it[0], it[2], get()) }
+    factory { LocationScout(it[0], it[1], it[2], get(), get(), get(), get()) }
 }

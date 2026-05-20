@@ -12,9 +12,9 @@ import kampfire.api.QueryEndpoint
 import kampfire.api.TableId
 import kampfire.model.ApiResponse
 import kampfire.model.ApiResponseSerializer
+import kampfire.model.Ok
 import kampfire.model.Problem
 import kampfire.model.Url
-import kampfire.model.toUrl
 import koala.external.FeedMessage
 import koala.utils.jsonConfig
 import kotlinx.browser.window
@@ -35,7 +35,6 @@ import org.w3c.fetch.SAME_ORIGIN
 import org.w3c.files.Blob
 import streetlight.model.data.ProjectId
 import streetlight.model.data.toProjectId
-import streetlight.web.io.tryDecodeApiResponse
 import streetlight.web.model.AuthClient
 import streetlight.web.model.CredentialStore
 import kotlin.js.json
@@ -82,26 +81,26 @@ class FetchClient(
     ): ApiResponse<Returned>? = authRequest(
         method = "GET",
         path = resolvePath(endpoint, block)
-    ) { it.tryDecodeApiResponse() }
+    ) { it.tryDecodeBytesResponse() }
 
     suspend inline fun <Id, reified Returned> getApi(
         endpoint: GetByIdEndpoint<Id, Returned>,
         id: Id,
-    ): ApiResponse<Returned>? = authRequest("GET", "${endpoint.path}/$id") { it.tryDecodeApiResponse() }
+    ): ApiResponse<Returned>? = authRequest("GET", "${endpoint.path}/$id") { it.tryDecodeBytesResponse() }
 
     suspend inline fun <reified Sent, reified Returned> getApi(
         endpoint: QueryEndpoint<Sent, Returned>,
         query: String?
     ): ApiResponse<Returned>? {
         val url = if (!query.isNullOrEmpty()) "${endpoint.path}?$query" else endpoint.path
-        return authRequest("GET", url) { it.tryDecodeApiResponse() }
+        return authRequest("GET", url) { it.tryDecodeBytesResponse() }
     }
 
     suspend inline fun <reified Sent, reified Returned> postApi(
         endpoint: PostEndpoint<Sent, Returned>,
         body: Sent,
     ): ApiResponse<Returned>? =
-        authRequest("POST", endpoint.path, Json.encodeToString(body)) { it.tryDecodeApiResponse() }
+        authRequest("POST", endpoint.path, Json.encodeToString(body)) { it.tryDecodeBytesResponse() }
 
 
     suspend fun request(endpoint: Endpoint<*, *>): Response {
@@ -215,76 +214,7 @@ class FetchClient(
             body = blob,
             contentType = blob.type.ifEmpty { "application/octet-stream" }
         ) {
-            it.tryDecodeApiResponse()
+            it.tryDecodeBytesResponse()
         }
     }
-}
-
-suspend inline fun <reified Returned> Response.tryDecode(encoding: EncodingType?): Returned? {
-    return when (encoding) {
-        EncodingType.Cbor -> tryDecodeBytes()
-        EncodingType.Json, null -> tryDecodeText()
-    }
-}
-
-suspend inline fun <reified Returned> Response.tryDecodeBytes(): Returned? {
-    if (status.toInt() == 204 || !ok) return null
-    val buffer = arrayBuffer().await()
-    val bytes = Int8Array(buffer).unsafeCast<ByteArray>()
-    return Cbor.decodeFromByteArray<Returned>(bytes)
-}
-
-suspend inline fun <reified Returned> Response.tryDecodeText(): Returned? {
-    if (!ok) {
-        console.log("request failed: $status")
-        return null
-    }
-
-    val text = text().await()
-
-    return try {
-        when (Returned::class) {
-            String::class -> text as Returned
-
-            Int::class -> text.toIntOrNull() as Returned?
-            Long::class -> text.toLongOrNull() as Returned?
-
-            Double::class -> text.toDoubleOrNull() as Returned?
-            Float::class -> text.toFloatOrNull() as Returned?
-            Boolean::class -> text.toBooleanStrictOrNull() as Returned?
-            ProjectId::class -> text.toProjectId<Returned>()
-
-            else -> jsonConfig.decodeFromString<Returned>(text)
-        }
-    } catch (e: Exception) {
-        console.log("failed to parse response:\n${e}\n${url}\ndata: ${text.take(400)}")
-        null
-    }
-}
-
-suspend inline fun <reified T> Response.tryDecodeApiResponse(): ApiResponse<T>? {
-    return when (status.toInt()) {
-        200 -> {
-            val buffer = arrayBuffer().await()
-            val bytes = Int8Array(buffer).unsafeCast<ByteArray>()
-            try {
-                defaultCbor.decodeFromByteArray(
-                    ApiResponseSerializer(serializer<T>()),
-                    bytes
-                )
-            } catch (e: Exception) {
-                console.log("failed to parse response:\n${e}\n${url}")
-                null
-            }
-        }
-
-        409 -> Problem("There was a conflict.")
-        500 -> Problem("The server ran into a problem.")
-        else -> Problem("Unknown error: $status")
-    }
-}
-
-enum class EncodingType(val headerValue: String) {
-    Cbor("application/cbor"),
-    Json("application/json")
 }

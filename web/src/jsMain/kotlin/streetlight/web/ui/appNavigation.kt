@@ -19,7 +19,6 @@ fun RenderContext.appNavigation() {
         renderCacheCount = 0, // allows unlimited caching
         onTransition = { window.scrollTo(0.0, portal.stateNow.initialScrollY) },
     ) { screen ->
-        console.log("ey navigation: $screen")
         when (screen) {
             StreetlightScreen.Home -> viewHomeRoute()
             StreetlightScreen.EventProfile -> viewEventProfileRoute()

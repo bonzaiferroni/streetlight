@@ -95,11 +95,6 @@ class LocationEditor(
             }
         }
     }
-
-    private fun setEdit(location: OSMLocation) {
-        val edit = location.toEdit()
-        setEdit { edit.mergeLeft(stateNow.edit) }
-    }
 }
 
 data class LocationEditorState(

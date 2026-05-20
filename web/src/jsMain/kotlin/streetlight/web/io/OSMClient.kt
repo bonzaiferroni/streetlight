@@ -1,5 +1,6 @@
 package streetlight.web.io
 
+import kampfire.model.ApiResponse
 import kampfire.model.GeoBounds
 import kampfire.model.GeoPoint
 import kotlinx.browser.window
@@ -13,24 +14,28 @@ import kotlin.js.json
 // docs: https://nominatim.org/release-docs/develop/api/Search/
 
 class OSMClient() {
-    suspend fun readPlaceAt(point: GeoPoint): OSMLocation? {
+    suspend fun readPlaceAt(point: GeoPoint): ApiResponse<OSMLocation>? {
         val url = "https://nominatim.openstreetmap.org/reverse" +
                     "?lat=${point.lat}&lon=${point.lng}&format=jsonv2&addressdetails=1&extratags=1"
 
         val response = window.fetch(url, RequestInit(headers = headers)).await()
 
-        return response.tryDecodeText()
+        return response.tryDecodeTextResponse()
     }
 
-    suspend fun readPlaces(query: OSMQuery): List<OSMLocation>? {
+    suspend fun readLocations(query: OSMQuery): ApiResponse<List<OSMLocation>>? {
         val url = "https://nominatim.openstreetmap.org/search?" + query.toQuery()
 
         val response = window.fetch(url, RequestInit(headers = headers)).await()
 
-        return response.tryDecodeText()
+        return response.tryDecodeTextResponse()
     }
 
-    suspend fun readPlaces(query: String, bounds: GeoBounds? = null): List<OSMLocation>? {
+    suspend fun readLocations(query: String, city: String? = null, bounds: GeoBounds? = null): ApiResponse<List<OSMLocation>>? {
+        val query = when (city?.takeIf { it.isNotBlank() }) {
+            null -> query
+            else -> "$query, $city"
+        }
         val params = listOfNotNull(
             "q=${encodeURIComponent(query)}",
             bounds?.let {
@@ -49,7 +54,7 @@ class OSMClient() {
 
         val response = window.fetch(url, RequestInit(headers = headers)).await()
 
-        return response.tryDecodeText()
+        return response.tryDecodeTextResponse()
     }
 }
 
@@ -59,7 +64,6 @@ private val headers = json(
 )
 
 fun OSMQuery.toQuery() = listOfNotNull(
-    query?.let { "q={${encodeURIComponent(it)}"},
     amenity?.let { "amenity=${encodeURIComponent(it)}" },
     street?.let { "street=${encodeURIComponent(it)}" },
     city?.let { "city=${encodeURIComponent(it)}" },

@@ -51,7 +51,13 @@ abstract class Endpoint<SentType, ReturnType>(
     fun stringParamOf(key: String) = EndpointParam(
         key = key,
         toValue = { it },
-        toString = { it }
+        toString = { it },
+    )
+
+    fun stringOrNullParamOf(key: String) = EndpointParam<String?>(
+        key = key,
+        toValue = { it },
+        toString = { it ?: error("value not found") },
     )
 
     fun uuidParamOf(key: String) = EndpointParam(
@@ -131,6 +137,7 @@ class EndpointParam<T>(
     val key: String,
     val toValue: (String) -> T,
     val toString: (T) -> String,
+    val isOptional: Boolean = false,
 ) {
     fun write(value: T) = value.let { key to toString(value) }
     fun read(str: String) = toValue(str)
@@ -146,6 +153,9 @@ class PathBuilder(
     private var params: MutableList<Pair<String, String>> = mutableListOf()
 
     fun <T> writeParam(param: EndpointParam<T>, value: T) {
+        if (value == null) {
+            return
+        }
         params.add(param.write(value))
     }
 

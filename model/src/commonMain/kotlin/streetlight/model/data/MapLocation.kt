@@ -51,7 +51,7 @@ fun OSMLocation.toMapLocation() = MapLocation(
     country = address.country ?: error("country not found"),
     geoPoint = toGeoPoint(),
     mapRank = importance?.toFloat() ?: 0f,
-    mapClass = nodeClass,
+    mapClass = category,
     mapType = type,
     website = extraTags?.website
 )

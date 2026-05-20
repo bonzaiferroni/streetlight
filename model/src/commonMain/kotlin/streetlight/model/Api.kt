@@ -44,8 +44,8 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object Update: PostEndpoint<Location, Boolean>(this, "update")
         object Search: GetEndpoint<List<Location>>(this, "search") {
             val query = stringParamOf("q")
-            val city = stringParamOf("city")
-            val state = stringParamOf("state")
+            val city = stringOrNullParamOf("city")
+            val state = stringOrNullParamOf("state")
             val limit = intParamOf("limit")
         }
         object ReadTop: GetEndpoint<List<Location>>(this, "read-top") {

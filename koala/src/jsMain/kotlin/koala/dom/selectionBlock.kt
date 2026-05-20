@@ -11,7 +11,7 @@ import org.w3c.dom.HTMLElement
 fun <Item> RenderContext.selectionBlock(
     flow: Flow<List<Item>>,
     onSelect: (Item?) -> Unit,
-    selectFlow: Flow<Item?>,
+    selectFlow: Flow<Item?>? = null,
     modifiers: ModifierSet? = null,
     config: (DIV.() -> Unit)? = null,
     block: RenderContext.(Item) -> HTMLElement
@@ -56,7 +56,7 @@ fun <Item> RenderContext.selectionBlock(
     }
 
     renderScope.launch {
-        selectFlow.collect { item ->
+        selectFlow?.collect { item ->
             if (item == selectedItem) return@collect
             selectElement(item)
         }
