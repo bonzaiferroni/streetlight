@@ -1,6 +1,7 @@
 package streetlight.web.model
 
 import koala.dom.UIMessage
+import koala.dom.UIMessageType
 import koala.model.mapDistinct
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
@@ -17,7 +18,7 @@ class Toaster(
 
     val messagesFlow = stateFlow.mapDistinct { it.messages }
 
-    fun toast(message: String) = toast(UIMessage(message))
+    fun toast(message: String, messageType: UIMessageType = UIMessageType.Info) = toast(UIMessage(message, messageType))
 
     fun toast(message: UIMessage) {
         state.set { it.copy(messages = it.messages + message)}

@@ -5,7 +5,7 @@ import kampfire.model.GeoPoint
 import kotlinx.browser.window
 import kotlinx.coroutines.await
 import org.w3c.fetch.RequestInit
-import streetlight.model.external.OSMPlace
+import streetlight.model.external.OSMLocation
 import streetlight.model.external.OSMQuery
 import kotlin.js.json
 
@@ -13,7 +13,7 @@ import kotlin.js.json
 // docs: https://nominatim.org/release-docs/develop/api/Search/
 
 class OSMClient() {
-    suspend fun readPlace(point: GeoPoint): OSMPlace? {
+    suspend fun readPlaceAt(point: GeoPoint): OSMLocation? {
         val url = "https://nominatim.openstreetmap.org/reverse" +
                     "?lat=${point.lat}&lon=${point.lng}&format=jsonv2&addressdetails=1&extratags=1"
 
@@ -22,7 +22,7 @@ class OSMClient() {
         return response.tryDecodeText()
     }
 
-    suspend fun readPlaces(query: OSMQuery): List<OSMPlace>? {
+    suspend fun readPlaces(query: OSMQuery): List<OSMLocation>? {
         val url = "https://nominatim.openstreetmap.org/search?" + query.toQuery()
 
         val response = window.fetch(url, RequestInit(headers = headers)).await()
@@ -30,7 +30,7 @@ class OSMClient() {
         return response.tryDecodeText()
     }
 
-    suspend fun readPlaces(query: String, bounds: GeoBounds? = null): List<OSMPlace>? {
+    suspend fun readPlaces(query: String, bounds: GeoBounds? = null): List<OSMLocation>? {
         val params = listOfNotNull(
             "q=${encodeURIComponent(query)}",
             bounds?.let {
@@ -59,6 +59,7 @@ private val headers = json(
 )
 
 fun OSMQuery.toQuery() = listOfNotNull(
+    query?.let { "q={${encodeURIComponent(it)}"},
     amenity?.let { "amenity=${encodeURIComponent(it)}" },
     street?.let { "street=${encodeURIComponent(it)}" },
     city?.let { "city=${encodeURIComponent(it)}" },

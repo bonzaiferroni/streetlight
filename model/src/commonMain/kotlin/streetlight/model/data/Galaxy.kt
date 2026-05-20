@@ -17,6 +17,7 @@ data class Galaxy(
     val name: String,
     val tagline: String?,
     val description: String?,
+    val city: String?,
     val geoPoint: GeoPoint,
     val geoBounds: GeoBounds,
     val postPermission: PostPermission,

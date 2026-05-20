@@ -8,7 +8,6 @@ import kotlinx.html.InputType
 import kotlinx.html.js.p
 import streetlight.web.HomeRoute
 import streetlight.web.model.CredentialStore
-import streetlight.web.model.Streetlight
 import streetlight.web.model.UserGate
 
 fun RenderContext.viewStarDash() {
@@ -72,7 +71,7 @@ fun RenderContext.signInContent() {
             }
         }
         column(modify(AlignItemsCenter)) {
-            lottie(LottieFile.strollingMan, modify(MaxWidth50P))
+            lottie(LottieFile.StrollingMan, modify(MaxWidth50P))
         }
     }
 }

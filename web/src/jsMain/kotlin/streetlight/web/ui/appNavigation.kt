@@ -32,9 +32,12 @@ fun RenderContext.appNavigation() {
             StreetlightScreen.Chat -> viewChatRoom()
             StreetlightScreen.SongProfile -> viewSongProfile()
             StreetlightScreen.EditTalent -> editTalentForm()
+
+            // location
+            StreetlightScreen.LocationAdmin -> viewLocationAdmin()
             StreetlightScreen.Location -> viewLocationProfile()
             StreetlightScreen.EditLocation -> viewEditLocationRoute()
-            StreetlightScreen.LocationAdmin -> viewLocationAdmin()
+            StreetlightScreen.LocationScout -> viewLocationScoutRoute()
 
             // galaxy
             StreetlightScreen.Galaxy -> viewGalaxyRoute()
@@ -44,7 +47,6 @@ fun RenderContext.appNavigation() {
 
             StreetlightScreen.Star -> viewStarProfileRoute()
             // StreetlightScreen.EventScout -> viewEventScoutProtoRoute()
-            // StreetlightScreen.LocationScout -> viewLocationScoutRouteProto()
             StreetlightScreen.PostContent -> viewContentPosterRoute()
             StreetlightScreen.EditStar -> viewStarEditor()
             StreetlightScreen.SiteConfig -> viewSiteConfig()

@@ -15,9 +15,9 @@ import streetlight.web.model.GalaxyEditor
 fun RenderContext.galaxyCityForm(model: GalaxyEditor) {
     val cityQueryFlow = model.stateFlow.mapDistinct { it.cityQuery }
     val isLocalFlow = model.stateFlow.mapDistinct { it.isLocal }
-    val localitiesFlow = model.stateFlow.mapDistinct { it.localities }
+    val localitiesFlow = model.stateFlow.mapDistinct { it.cities }
     val countryFlow = model.stateFlow.mapDistinct { it.country }
-    val localityFlow = model.stateFlow.mapDistinct { it.locality }
+    val localityFlow = model.stateFlow.mapDistinct { it.city }
 
     formSection("City") {
         formPart(
@@ -38,11 +38,11 @@ fun RenderContext.galaxyCityForm(model: GalaxyEditor) {
                     textBlock("city", modify(OpacitySome, Italic))
                     textBlock("galaxies", modify(OpacitySome, Italic))
                 }
-                selectionBlock(localitiesFlow, model::setLocality, localityFlow) { locality ->
+                selectionBlock(localitiesFlow, model::setCity, localityFlow) { city ->
                     card(modify(BorderRadius1)) {
                         row(modify(JustifyContentSpaceBetween)) {
-                            textBlock("${locality.city}, ${locality.state}", modify(Flex1))
-                            textBlock(locality.galaxyCount.toString())
+                            textBlock("${city.name}, ${city.state}", modify(Flex1))
+                            textBlock(city.galaxyCount.toString())
                         }
                     }
                 }

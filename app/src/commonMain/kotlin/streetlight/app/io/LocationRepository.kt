@@ -5,12 +5,12 @@ import pondui.io.NeoApiClient
 import streetlight.model.Api
 import streetlight.model.data.Location
 import streetlight.model.data.LocationId
-import streetlight.model.data.Place
+import streetlight.model.data.PlaceProto
 import streetlight.model.mockDb
 
 interface LocationRepository {
     suspend fun readLocation(locationId: LocationId): Location?
-    suspend fun createLocation(place: Place): LocationId?
+    suspend fun createLocation(place: PlaceProto): LocationId?
     suspend fun updateLocation(location: Location): Boolean?
     suspend fun search(query: String): List<Location>?
     suspend fun readTop(count: Int = 10): List<Location>?
@@ -20,7 +20,7 @@ class LocationApiClient(
     private val client: NeoApiClient
 ): LocationRepository {
     override suspend fun readLocation(locationId: LocationId) = client.getById(Api.Locations, locationId)
-    override suspend fun createLocation(place: Place) = client.request(Api.Locations.Create, place)
+    override suspend fun createLocation(place: PlaceProto) = client.request(Api.Locations.Create, place)
     override suspend fun updateLocation(location: Location) = client.request(Api.Locations.Update, location)
     override suspend fun search(query: String) = client.request(Api.Locations.Search) {
         write(it.query, query)
@@ -32,7 +32,7 @@ class LocationApiClient(
 
 class LocationMockClient: LocationRepository {
     override suspend fun readLocation(locationId: LocationId): Location? = mockDb.locations.firstOrNull( { it.locationId == locationId })
-    override suspend fun createLocation(place: Place): LocationId? = TODO("Not yet implemented")
+    override suspend fun createLocation(place: PlaceProto): LocationId? = TODO("Not yet implemented")
     override suspend fun updateLocation(location: Location): Boolean? = TODO("Not yet implemented")
     override suspend fun search(query: String): List<Location>? = mockDb.locations.filter { it.name.contains(query, ignoreCase = true) }
     override suspend fun readTop(count: Int): List<Location>? = mockDb.locations.take(count)

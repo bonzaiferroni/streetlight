@@ -2,8 +2,6 @@ package streetlight.model.data
 
 import kampfire.model.GeoPoint
 import kampfire.model.ScaledImageArray
-import kampfire.model.Url
-import kampfire.model.toUrl
 import kotlin.time.Instant
 import kotlinx.serialization.Serializable
 import kotlin.time.Duration.Companion.hours
@@ -23,7 +21,7 @@ data class EventLocation(
     val visibility: Int,
     val geoPoint: GeoPoint,
     val eventLinks: List<ExtraLink>?,
-    val locationName: String,
+    val locationName: String?,
     val locationDescription: String?,
     val address: String?,
     val city: String?,
@@ -53,6 +51,8 @@ data class EventLocation(
     val addressLine by lazy {
         addressLineOf(address, city)
     }
+
+    val locationDisplayTitle get() = locationName ?: address ?: "(geocoordinates)"
 
     val endsAtOrLater get() = endsAt ?: (startsAt + 4.hours)
 }

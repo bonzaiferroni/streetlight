@@ -33,15 +33,18 @@ enum class StreetlightScreen(
     EventProfile("e", IdParse { EventSlugRoute(it) }),
     EditEvent("edit-event", UuidParse { EditEventIdRoute(EventId(it)) }),
     EditPost("edit-post", UuidParse { EditPostRoute(PostId(it)) }),
-    EditLocation("edit-location", UuidParse { EditLocationIdRoute(LocationId(it)) }),
     Sandbox("sandbox", StaticParse { SandboxRoute }),
     Earth("earth", IdOrNullParse { EarthMapRoute(it) }),
     Chat("chat", StaticParse { ChatRoute }),
     SongProfile("song-profile", UuidParse { SongProfileRoute(SongId(it)) }),
     TalentProfile("talent-profile", UuidParse { TalentProfileRoute(TalentId(it)) }),
     EditTalent("edit-talent", UuidParse { EditTalentRoute(TalentId(it)) }),
+
+    // location
     Location("location", UuidParse { LocationIdRoute(LocationId(it)) }),
     LocationAdmin("location-admin", UuidParse { LocationAdminRoute(LocationId(it)) }),
+    LocationScout("post-location", IdParse { LocationScoutRoute(it) }),
+    EditLocation("edit-location", UuidParse { EditLocationIdRoute(LocationId(it)) }),
 
     // galaxy
     Galaxy("g", IdParse { GalaxyRoute(it) }),
@@ -51,7 +54,6 @@ enum class StreetlightScreen(
 
     Star("s", IdParse { StarRoute(it) }),
     EventScout("post-event", IdParse { EventScoutRoute(it) }),
-    LocationScout("post-location", IdParse { LocationScoutRoute(it) }),
     PostContent("post-content", IdParse { PostContentRoute(it) }),
     Post("p", IdParse { StarPostRoute(it) }),
     EditStar("edit-profile", StaticParse { EditStarRoute }),

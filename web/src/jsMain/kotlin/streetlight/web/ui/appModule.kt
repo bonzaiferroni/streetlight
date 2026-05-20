@@ -40,8 +40,9 @@ val appModule = module {
     factory { EarthMap(it.get(), get(), get(), get())}
     factory { EventEditor(it[0], it[1], get())}
     factory { GalaxyEditor(it[0], it[1], get(), get(), get(), get())}
-    factory { LocationEditor(it[0], it[1], get()) }
-    factory { LocationFinder(it[0], get(), get(), get()) }
+    factory { LocationEditor(it[0], it[1], get(), get()) }
+    factory { LocationFinderProto2(it[0], get(), get(), get()) }
     factory { ContentEditor(it[0], it[1], get(), get()) }
     factory { EventScout(it[0], it[1])}
+    // factory { LocationScout(it[0], it[2], get()) }
 }

@@ -27,7 +27,7 @@ import koala.model.PanPoint
 import koala.model.mapDistinct
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import streetlight.model.data.Place
+import streetlight.model.data.PlaceProto
 import streetlight.web.model.Streetlight
 
 fun RenderContext.placeEditor(
@@ -93,7 +93,7 @@ fun RenderContext.placeEditor(
 }
 
 interface PlaceEditor {
-    val placeFlow: Flow<Place?>
+    val placeFlow: Flow<PlaceProto?>
 
     fun setPlaceName(value: String)
     fun setAddress(value: String)

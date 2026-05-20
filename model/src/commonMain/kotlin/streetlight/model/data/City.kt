@@ -9,8 +9,10 @@ import kotlin.jvm.JvmInline
 data class City(
     val cityId: CityId,
     val name: String,
+    val state: String,
+    val country: String,
     val galaxyCount: Int,
-    val geoRank: Float,
+    val mapRank: Float?,
     val geoPoint: GeoPoint,
     val geoBounds: GeoBounds,
 )

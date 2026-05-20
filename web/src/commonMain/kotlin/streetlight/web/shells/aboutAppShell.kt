@@ -22,7 +22,7 @@ fun FlowContent.aboutAppShell() {
             textBlock(introText, modify(Flex3, LargeText))
         }
         column(modify(MediaMdRow, AlignItemsCenter)) {
-            lottie(LottieFile.strollingMan, modify(Flex1, MaxWidth50P))
+            lottie(LottieFile.StrollingMan, modify(Flex1, MaxWidth50P))
             column(modify(Flex3)) {
                 column(modify(Gap0)) {
                     textBlock("Do you have a talent to share with passersby?")

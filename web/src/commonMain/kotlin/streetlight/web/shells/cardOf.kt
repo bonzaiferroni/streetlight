@@ -20,7 +20,7 @@ fun FlowContent.cardOf(event: Event, modifiers: ModifierSet? = null) {
 }
 
 fun FlowContent.cardOf(location: Location) {
-    cardOf(LocationIdRoute(location.locationId), location.name, location.images.thumb, location.description)
+    cardOf(LocationIdRoute(location.locationId), location.displayTitle, location.images.thumb, location.description)
 }
 
 fun FlowContent.cardOf(event: EventLocation) {

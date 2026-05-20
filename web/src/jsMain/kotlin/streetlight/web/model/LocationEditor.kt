@@ -3,8 +3,7 @@ package streetlight.web.model
 import kampfire.model.GeoPoint
 import kampfire.model.Url
 import kampfire.model.handleResponse
-import koala.dom.UIMessage
-import koala.dom.set
+import koala.dom.UIMessageType
 import koala.model.mapDistinct
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
@@ -14,13 +13,19 @@ import kotlinx.coroutines.launch
 import streetlight.model.data.Location
 import streetlight.model.data.LocationEdit
 import streetlight.model.data.ResourceType
+import streetlight.model.data.mergeLeft
+import streetlight.model.data.toEdit
 import streetlight.model.external.Address
+import streetlight.model.external.OSMLocation
+import streetlight.model.external.OSMQuery
 import streetlight.web.io.ApiClient
+import streetlight.web.io.OSMClient
 
 class LocationEditor(
-    initialData: LocationEdit?,
+    initialData: LocationEdit,
     private val scope: CoroutineScope,
-    private val api: ApiClient
+    private val api: ApiClient,
+    private val toaster: Toaster,
 ) {
     private val state = storeOf(LocationEditorState(initialData))
     val stateNow get() = state.now
@@ -28,7 +33,6 @@ class LocationEditor(
 
     val editNow get() = state.now.edit
     val editFlow = state.flow.mapNotNull { it.edit }.distinctUntilChanged()
-    val msg = storeOf(initialData?.let { UIMessage(it.invalidMessage ?: "Looks good.") })
 //     override val placeFlow = editFlow.mapDistinct { it.toPlace() }
 
     val nameFlow = editFlow.mapDistinct { it.name }
@@ -80,72 +84,29 @@ class LocationEditor(
     }
 
     fun setEdit(block: (LocationEdit) -> LocationEdit) {
-        state.set { it.copy(edit = block(it.edit ?: LocationEdit())) }
+        state.set { it.copy(edit = block(it.edit)) }
     }
 
     fun postLocation() {
-        val edit = editNow?.takeIf { it.isValid } ?: return
-        msg.set("Posting ${edit.name}...")
+        val edit = editNow.takeIf { it.isValid } ?: return
         scope.launch {
-            api.createOrEditLocation(edit).handleResponse(msg::set) { location ->
+            api.createOrEditLocation(edit).handleResponse(toaster::toast) { location ->
                 state.set { it.copy(location = location) }
-                msg.set("Posted. You can now add events to ${location.name}.")
             }
         }
     }
 
-//    fun lookUp() {
-//        queryLocation(false)
-//    }
-
-//    fun queryLocation(reverse: Boolean) {
-//        val edit = editNow ?: return
-//        if (reverse) {
-//            val center = edit.geoPoint ?: return
-//            scope.launch {
-//                val place = client.location.readPlace(center)
-//                if (place == null) {
-//                    message.set("Unable to read place", UIMessageType.Error)
-//                    return@launch
-//                }
-//                setPlace(place)
-//            }
-//        } else {
-//            val name = edit.name
-//            if (name.isNullOrBlank()) return
-//            scope.launch {
-//                val query = OSMQuery(amenity = name, state = "CO")
-//                val place = client.location.readPlaces(query)?.firstOrNull() ?: return@launch
-//                setPlace(place)
-//            }
-//        }
-//    }
-
-//    suspend fun saveLocation(): LocationId? {
-//        val edit = editNow ?: return null
-//        return api.createOrEditLocation(edit)?.locationId
-//    }
-
-//    private fun setPlace(place: OSMPlace) {
-//        val point = place.toGeoPoint()
-//        val address = place.address.toBasicString() ?: ""
-//        val name = place.name.takeIf { it.isNotBlank() }
-//        setPlace(Place(name = name, address = address, geoPoint = point))
-//    }
-//
-//    private fun setPlace(place: Place) {
-//        setEdit { it.copy(
-//            name = place.name ?: it.name,
-//            address = place.address ?: it.address,
-//            geoPoint = place.geoPoint ?: it.geoPoint)
-//        }
-//    }
+    private fun setEdit(location: OSMLocation) {
+        val edit = location.toEdit()
+        setEdit { edit.mergeLeft(stateNow.edit) }
+    }
 }
 
 data class LocationEditorState(
-    val edit: LocationEdit?,
-    val imageUrl: Url? = edit?.imageRef,
+    val edit: LocationEdit,
+    val imageUrl: Url? = edit.imageRef,
     val location: Location? = null,
+    val query: String = "",
 )
 
 private fun Address.toBasicString(): String? {

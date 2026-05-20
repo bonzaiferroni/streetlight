@@ -9,6 +9,7 @@ data class State(
     val stateId: StateId,
     val countryId: CountryId,
     val name: String,
+    val country: String,
 )
 
 @Serializable

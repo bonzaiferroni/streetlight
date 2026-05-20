@@ -36,7 +36,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
 
     object Locations: GetByIdEndpoint<LocationId, Location>(this, "locations") {
         @Deprecated("use edit")
-        object Create: PostEndpoint<Place, LocationId>(this, "create")
+        object Create: PostEndpoint<PlaceProto, LocationId>(this, "create")
         object CreateOrEdit: PostEndpoint<LocationEdit, Location>(this, "edit")
         @Deprecated("use posts to associate locations with galaxies")
         object Street: GetByIdEndpoint<GalaxyId, List<Location>>(this, "street")
@@ -44,6 +44,9 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object Update: PostEndpoint<Location, Boolean>(this, "update")
         object Search: GetEndpoint<List<Location>>(this, "search") {
             val query = stringParamOf("q")
+            val city = stringParamOf("city")
+            val state = stringParamOf("state")
+            val limit = intParamOf("limit")
         }
         object ReadTop: GetEndpoint<List<Location>>(this, "read-top") {
             val count = intParamOf("count")
@@ -123,10 +126,17 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object RemovePost: PostEndpoint<PostId, Boolean>(this, "remove")
     }
 
-    object Localities: ApiNode(this, "locality") {
-        object SearchCity: GetEndpoint<List<Locality>>(this, "search-city") {
+    object Cities: ApiNode(this, "locality") {
+        object Search: GetEndpoint<List<City>>(this, "search-city") {
             val query = stringParamOf("name")
             val country = stringParamOf("country")
+            val limit = intParamOf("limit")
+        }
+
+        object SearchLocation: GetEndpoint<List<Location>>(this, "search-place") {
+            val query = stringParamOf("name")
+            val city = stringParamOf("city")
+            val state = stringParamOf("state")
             val limit = intParamOf("limit")
         }
     }

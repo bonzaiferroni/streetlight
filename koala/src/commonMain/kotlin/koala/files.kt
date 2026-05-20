@@ -91,7 +91,7 @@ object LottieFile : FileSet<Lottie>() {
     val cloudSync = addLottie("cloud-sync.json")
     val confused = addLottie("confused.json")
     val cupShuffle = addLottie("cup-shuffle.json")
-    val strollingMan = addLottie("strolling-man.json")
+    val StrollingMan = addLottie("strolling-man.json")
     val dinoLoad = addLottie("dino-load.json")
     val ghost = addLottie("ghost.json")
     val friendWave = addLottie("friend-wave.json")

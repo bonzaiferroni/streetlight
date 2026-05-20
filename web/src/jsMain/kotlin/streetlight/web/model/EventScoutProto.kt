@@ -26,13 +26,13 @@ import streetlight.model.data.GalaxyId
 import streetlight.model.data.EventPostEdit
 import streetlight.model.data.Location
 import streetlight.model.data.LocationEdit
-import streetlight.model.data.Place
+import streetlight.model.data.PlaceProto
 import streetlight.model.data.Post
 import streetlight.model.data.UrlParseRequest
 import streetlight.model.data.mergeLeft
 import streetlight.model.data.mergeRight
 import streetlight.model.data.toEdit
-import streetlight.model.external.toPlace
+import streetlight.model.external.toPlaceProto
 import streetlight.web.ui.ViewModel
 
 class EventScoutProto(
@@ -90,7 +90,7 @@ class EventScoutProto(
         msg.set("Looking for information about that place on OpenStreetMap...")
         val point = geo.stateNow.center
         scope.launch {
-            val place = osm.readPlace(point)?.toPlace()?.copy(geoPoint = point)
+            val place = osm.readPlaceAt(point)?.toPlaceProto()?.copy(geoPoint = point)
             if (place == null) {
                 // td: handle
                 msg.set("Something went wrong")
@@ -100,7 +100,7 @@ class EventScoutProto(
         }
     }
 
-    fun choosePlace(place: Place) {
+    fun choosePlace(place: PlaceProto) {
         val website = place.website
         val point = place.geoPoint ?: error("geoPoint is null")
         addConstructionMarker(point)
@@ -117,7 +117,7 @@ class EventScoutProto(
         val query = state.now.query.takeIf { it.isNotBlank() } ?: return
         msg.set("Searching OSM: ${state.now.query}")
         scope.launch {
-            val places = osm.readPlaces(query)?.map { it.toPlace() }
+            val places = osm.readPlaces(query)?.map { it.toPlaceProto() }
                 ?.filter{ p -> p.geoPoint?.let { gp -> gp.distanceTo(geo.stateNow.center) < 100.kilometers } ?: false }
             val place = places?.firstOrNull()
             if (place == null) {

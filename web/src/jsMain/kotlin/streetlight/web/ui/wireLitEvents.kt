@@ -59,7 +59,7 @@ fun RenderContext.narrowEventCard(event: EventLocation, eventCache: LightCache<E
         column() {
             column(modify(Gap0)) {
                 textBlock(event.title, modify(WhiteSpaceNoWrap, TextOverflowHidden))
-                textBlock(event.locationName, modify(WhiteSpaceNoWrap, TextOverflowHidden, Dim))
+                textBlock(event.locationDisplayTitle, modify(WhiteSpaceNoWrap, TextOverflowHidden, Dim))
             }
             row(modify(JustifyContentSpaceBetween)) {
                 textBlock(event.startsAt.toTimeFormat())

@@ -4,7 +4,6 @@ import kampfire.model.GeoPoint
 import kampfire.model.ScaledImageArray
 import kampfire.model.Url
 import kampfire.model.toUrl
-import kampfire.utils.randomUuidString
 import kotlin.time.Instant
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
@@ -13,37 +12,33 @@ import kotlin.uuid.Uuid
 @Serializable
 data class Location(
     val locationId: LocationId,
-    val name: String,
+    val mapId: MapId?,
+    val name: String?,
     val username: String?,
     val description: String?,
     val address: String?,
-    val city: String,
-    // td: addressNumber
-    // td: street
-    // td: unit/suite
-    // td: postalCode
-    // td: state
-    // td: country
+    val city: String?,
     val geoPoint: GeoPoint,
+    val mapRank: Float?,
+    val mapClass: String?,
+    val mapType: String?,
     val resources: Set<ResourceType>,
     val website: String?,
     val lightCount: Int?,
     val eventsUrl: String?,
     val menuUrl: String?,
     val aboutUrl: String?,
-    // td: create -> tags
-    // td: aboutLink
     val imageRef: Url?,
     val images: ScaledImageArray?,
     val extraLinks: List<ExtraLink>?,
     val updatedAt: Instant,
     val createdAt: Instant,
-    // td: openedAt: LocalDate
-    // td: LocationTags
 ) {
     val addressLine by lazy {
         addressLineOf(address, city)
     }
+
+    val displayTitle get() = name ?: address ?: "(geocoordinates)"
 
     val links by lazy {
         buildList {
@@ -74,35 +69,6 @@ value class LocationId(override val value: Uuid): ProjectId {
 }
 
 @Serializable
-data class LocationEdit(
-    val locationId: LocationId? = null,
-    val name: String? = null,
-    val city: String? = null,
-    val isOwner: Boolean = false,
-    val description: String? = null,
-    val address: String? = null,
-    val notes: String? = null,
-    val geoPoint: GeoPoint? = null,
-    val resources: Set<ResourceType>? = null,
-    val website: String? = null,
-    val eventsUrl: String? = null,
-    val aboutUrl: String? = null,
-    val menuUrl: String? = null,
-    val imageRef: Url? = null,
-) {
-    val isValid get() = name != null && geoPoint != null
-
-    val invalidPart get() = when {
-        name.isNullOrBlank() -> "name"
-        geoPoint == null -> "geolocation"
-        city == null -> "city"
-        else -> null
-    }
-
-    val invalidMessage get() = invalidPart?.let { "missing: $it"}
-}
-
-@Serializable
 data class LocationAddress(
     val streetAddress: String,
     val postCode: String? = null,
@@ -110,20 +76,6 @@ data class LocationAddress(
     val state: String? = null,
     val country: String? = null,
 )
-
-@Serializable
-data class Place(
-    val name: String? = null,
-    val address: String? = null,
-    val postalCode: String? = null,
-    val city: String? = null,
-    val state: String? = null,
-    val country: String? = null,
-    val geoPoint: GeoPoint? = null,
-    val website: String? = null,
-) {
-    val isValid get() = !name.isNullOrBlank() && geoPoint != null
-}
 
 fun Location.toEdit() = LocationEdit(
     locationId = locationId,
@@ -138,19 +90,7 @@ fun Location.toEdit() = LocationEdit(
     imageRef = imageRef,
 )
 
-fun Location.toPlace() = Place(
-    name = name,
-    address = address,
-    geoPoint = geoPoint,
-)
-
-fun LocationEdit.toPlace() = Place(
-    name = name,
-    address = address,
-    geoPoint = geoPoint,
-)
-
-fun Place.toEdit() = LocationEdit(
+fun PlaceProto.toEdit() = LocationEdit(
     name = name,
     address = address,
     city = city,
@@ -186,21 +126,3 @@ fun LocationParse.toAddress() = address?.let {
     )
 }
 
-fun LocationEdit.mergeLeft(edit: LocationEdit?) = edit?.let {
-    LocationEdit(
-        locationId = locationId ?: edit.locationId,
-        name = name ?: edit.name,
-        description = description ?: edit.description,
-        address = address ?: edit.address,
-        city = city ?: edit.city,
-        geoPoint = geoPoint ?: edit.geoPoint,
-        resources = resources ?: edit.resources,
-        website = website ?: edit.website,
-        eventsUrl = eventsUrl ?: edit.eventsUrl,
-        aboutUrl = aboutUrl ?: edit.aboutUrl,
-        menuUrl = menuUrl ?: edit.menuUrl,
-        imageRef = imageRef ?: edit.imageRef?.takeIf { it.value.isNotEmpty() },
-    )
-} ?: this
-
-fun LocationEdit.mergeRight(edit: LocationEdit?) = edit?.mergeLeft(this) ?: this

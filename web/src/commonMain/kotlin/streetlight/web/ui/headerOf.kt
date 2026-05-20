@@ -24,7 +24,7 @@ fun FlowContent.headerOf(
 ) {
     // headerImage(location.name, location.images.medium, modifiers, block)
     featureHeader(
-        title = location.name,
+        title = location.displayTitle,
         descriptor = "at",
         subtitle = location.addressLine,
         image = location.images.large,

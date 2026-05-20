@@ -36,7 +36,7 @@ fun FlowContent.smallPostCard(post: EventPost) {
                                 heading5(title)
                             }
                             navigation(event.locationRoute) {
-                                textBlock(event.locationName, modify(Dim))
+                                textBlock(event.locationDisplayTitle, modify(Dim))
                             }
                         }
                         icon(SvgFile.Focus, modify(Height5, Aspect1, Dim))

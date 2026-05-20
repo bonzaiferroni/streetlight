@@ -6,9 +6,6 @@ import koala.css.*
 import koala.dom.*
 import koala.html.btn
 import kotlinx.browser.document
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import streetlight.model.data.StarPost
@@ -18,7 +15,6 @@ import streetlight.web.EarthMapRoute
 import streetlight.web.GalaxyRoute
 import streetlight.web.HomeRoute
 import streetlight.web.model.EarthMap
-import streetlight.web.model.Streetlight
 import streetlight.web.pages.AppBodyKey
 
 fun RenderContext.viewEarthMap(model: EarthMap) {
@@ -44,7 +40,7 @@ fun RenderContext.viewEarthMap(model: EarthMap) {
                                         image(post.images.thumb, modify(Aspect1, Width8, BorderRadius50P))
                                         column(modify(Flex1, Gap0)) {
                                             textBlock(post.title, modify(SingleLine))
-                                            textBlock(post.event.locationName, modify(OpacityMost, SingleLine))
+                                            textBlock(post.event.locationDisplayTitle, modify(OpacityMost, SingleLine))
                                         }
                                     }
                                 }

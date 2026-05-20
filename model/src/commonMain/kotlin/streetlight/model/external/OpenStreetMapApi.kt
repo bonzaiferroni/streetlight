@@ -4,10 +4,10 @@ import kampfire.model.GeoBounds
 import kampfire.model.GeoPoint
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import streetlight.model.data.Place
+import streetlight.model.data.PlaceProto
 
 @Serializable
-data class OSMPlace(
+data class OSMLocation(
     @SerialName("place_id")
     val placeId: Long,
     val licence: String,
@@ -18,16 +18,16 @@ data class OSMPlace(
     val lat: Double,
     val lon: Double,
     @SerialName("class")
-    val placeClass: String? = null,
+    val nodeClass: String,
     val type: String,
     @SerialName("place_rank")
     val placeRank: Int,
-    val importance: Double,
+    val importance: Double? = null,
     @SerialName("addresstype")
-    val addressType: String,
+    val addressType: String, // non-nullable if addressdetails=1
     @SerialName("house_number")
     val houseNumber: Int? = null,
-    val name: String,
+    val name: String? = null,
     @SerialName("display_name")
     val displayName: String,
     val address: Address,
@@ -81,6 +81,7 @@ data class OSMExtra(
 
 @Serializable
 data class OSMQuery(
+    val query: String? = null,
     val amenity: String? = null,
     val street: String? = null,
     val city: String? = null,
@@ -92,12 +93,12 @@ data class OSMQuery(
     val limit: Int = 10
 )
 
-fun OSMPlace.toGeoPoint() = GeoPoint(
+fun OSMLocation.toGeoPoint() = GeoPoint(
     lat = lat,
     lng = lon
 )
 
-fun OSMPlace.toGeoBounds() = GeoBounds(
+fun OSMLocation.toGeoBounds() = GeoBounds(
     sw = GeoPoint(lat = bounds[0], lng = bounds[2]),
     ne = GeoPoint(lat = bounds[1], lng = bounds[3])
 )
@@ -112,16 +113,20 @@ data class OSMCity(
     val geoBounds: GeoBounds,
 )
 
-fun OSMPlace.toOSMCity() = OSMCity(
-    name = name,
+fun OSMLocation.toOSMCity() = OSMCity(
+    name = name ?: error("name not found"),
     state = address.state ?: "",
     country = address.country ?: "",
-    importance = importance.toFloat(),
+    importance = importance?.toFloat() ?: 0f,
     geoPoint = toGeoPoint(),
     geoBounds = toGeoBounds(),
 )
 
-fun OSMPlace.toPlace() = Place(
+fun OSMLocation.toOSMCityOrNull() = runCatching {
+    toOSMCity()
+}.getOrNull()
+
+fun OSMLocation.toPlaceProto() = PlaceProto(
     name = name,
     address = address.road?.let { road ->
         address.number?.let { number ->

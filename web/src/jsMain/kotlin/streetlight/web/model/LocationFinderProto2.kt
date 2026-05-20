@@ -16,14 +16,14 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
 import streetlight.model.data.Location
+import streetlight.model.data.LocationEdit
 import streetlight.model.data.mergeRight
 import streetlight.model.data.toEdit
-import streetlight.model.external.toPlace
+import streetlight.model.external.toPlaceProto
 import streetlight.web.io.ApiClient
 import streetlight.web.io.OSMClient
-import streetlight.web.ui.ViewModel
 
-class LocationFinder(
+class LocationFinderProto2(
     private val scope: CoroutineScope,
     private val api: ApiClient,
     private val osm: OSMClient,
@@ -35,7 +35,7 @@ class LocationFinder(
 
     val msg = storeOf<UIMessage?>(null)
 
-    val editor = LocationEditor(null, scope, api)
+    val editor = LocationEditor(LocationEdit(), scope, api, Toaster(scope))
 
     val queryFlow = stateFlow.mapDistinct { it.query }
 
@@ -60,7 +60,7 @@ class LocationFinder(
         val query = state.now.query.takeIf { it.isNotBlank() } ?: return
         msg.set("Searching OSM: ${state.now.query}")
         scope.launch {
-            val places = osm.readPlaces(query)?.map { it.toPlace() }
+            val places = osm.readPlaces(query)?.map { it.toPlaceProto() }
                 ?.filter{ p -> p.geoPoint?.let { gp -> gp.distanceTo(geo.stateNow.center) < 100.kilometers } ?: false }
             val place = places?.firstOrNull()
             if (place == null) {

@@ -13,8 +13,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
+import streetlight.model.data.City
 import streetlight.model.data.GalaxyEdit
-import streetlight.model.data.Locality
 import streetlight.model.data.PostPermission
 import streetlight.model.data.ReviewMode
 import streetlight.model.data.slugOf
@@ -41,9 +41,9 @@ class GalaxyEditor(
         }
         scope.launch {
             stateFlow.mapDistinct { it.cityQuery }.debounce(500L).collect { query ->
-                if (query == stateNow.locality?.city) return@collect
+                if (query == stateNow.city?.name) return@collect
                 val localities = api.searchCity(query, stateNow.country).handleResponse(toaster::toast) ?: return@collect
-                state.set { it.copy(localities = localities) }
+                state.set { it.copy(cities = localities) }
             }
         }
     }
@@ -77,10 +77,10 @@ class GalaxyEditor(
 
     fun setTagline(value: String) = setGalaxy { it.copy(tagline = value) }
 
-    fun setLocality(value: Locality?) {
+    fun setCity(value: City?) {
         state.set { it.copy(
-            locality = value,
-            cityQuery = value?.city ?: it.cityQuery,
+            city = value,
+            cityQuery = value?.name ?: it.cityQuery,
             galaxy = it.galaxy.copy(cityId = value?.cityId),
         ) }
         value?.geoPoint?.let {
@@ -122,7 +122,7 @@ data class GalaxyFoundryState(
     val imageUrl: Url? = galaxy.imageRef,
     val isLocal: Boolean = true,
     val cityQuery: String = "",
-    val localities: List<Locality> = emptyList(),
+    val cities: List<City> = emptyList(),
     val country: String = "United States",
-    val locality: Locality? = null,
+    val city: City? = null,
 )
