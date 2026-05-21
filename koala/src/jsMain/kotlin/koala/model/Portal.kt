@@ -117,7 +117,7 @@ class Portal(
     }
 
     fun refresh() {
-        state.set { it.copy(refreshedAt = Clock.System.now()) }
+        state.set { it.copy(refreshedAt = Clock.System.now(), isInitialRoute = false) }
     }
 
     private fun go(navigation: Navigation, backstack: List<Navigation>) {

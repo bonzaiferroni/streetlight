@@ -5,6 +5,7 @@ import kampfire.model.medium
 import koala.Svg
 import koala.SvgFile
 import koala.css.AlignItemsCenter
+import koala.css.AlignSelfEnd
 import koala.css.Aspect1
 import koala.css.Bold
 import koala.css.ColorSchemeFg
@@ -17,6 +18,7 @@ import koala.css.Gap0
 import koala.css.Height24
 import koala.css.Height4
 import koala.css.Height9
+import koala.css.JustifySelfEnd
 import koala.css.KoalaFun
 import koala.css.LineHeight1
 import koala.css.MarginTop1
@@ -102,8 +104,9 @@ fun FlowContent.postCard(
                             }
                         }
                     }
-                    description?.let {
-                        navigationIfNotNull(postRoute, modify(Flex1, OverflowHidden, FadeBottom)) {
+
+                    navigationIfNotNull(postRoute, modify(Flex1, OverflowHidden, FadeBottom)) {
+                        description?.let {
                             textBlock(it.stripMarkdown(400))
                         }
                     }

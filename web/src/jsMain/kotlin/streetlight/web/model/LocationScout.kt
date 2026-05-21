@@ -70,14 +70,15 @@ class LocationScout(
 
     fun setQuery(value: String) = state.set { it.copy(query = value) }
     fun setCity(value: String) = state.set { it.copy(city = value) }
-    fun setLocation(value: Location?) = state.set { it.copy(location = value, stage = LocationScoutStage.Location) }
+    fun setLocation(value: Location?) = state.set { it.copy(location = value, stage = LocationScoutStage.Post) }
     fun setMode(value: LocationScoutMode) = state.set { it.copy(mode = value) }
+    fun setStage(value: LocationScoutStage) = state.set { it.copy(stage = value) }
 
     fun stageLocation(value: LocationEdit?) {
         if (value == null) return
         editor.setEdit { value.mergeLeft(it) }
         editor.readWebsite()
-        state.set { it.copy(osmLocations = emptyList(), stage = LocationScoutStage.Editor) }
+        state.set { it.copy(osmLocations = emptyList(), stage = LocationScoutStage.Edit) }
     }
 
     fun stageLocationFromMap() = stageLocation(stateNow.mapLocation)
@@ -124,8 +125,8 @@ data class LocationScoutState(
 
 enum class LocationScoutStage {
     Search,
-    Editor,
-    Location,
+    Edit,
+    Post,
 }
 
 enum class LocationScoutMode {

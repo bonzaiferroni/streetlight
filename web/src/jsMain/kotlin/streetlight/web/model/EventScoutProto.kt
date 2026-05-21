@@ -5,14 +5,11 @@ package streetlight.web.model
 import kampfire.model.GeoPoint
 import kampfire.model.Ok
 import kampfire.model.Problem
-import kampfire.model.distanceTo
 import kampfire.model.getDataOrNull
 import kampfire.model.handleResponse
-import kampfire.model.kilometers
 import koala.SvgFile
 import koala.dom.UIMessage
 import koala.dom.set
-import koala.model.PanPoint
 import koala.model.mapDistinct
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
@@ -32,7 +29,6 @@ import streetlight.model.data.UrlParseRequest
 import streetlight.model.data.mergeLeft
 import streetlight.model.data.mergeRight
 import streetlight.model.data.toEdit
-import streetlight.model.external.toPlaceProto
 import streetlight.web.ui.ViewModel
 
 class EventScoutProto(

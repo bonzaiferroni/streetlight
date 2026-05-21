@@ -14,7 +14,6 @@ import streetlight.model.data.EventPost
 import streetlight.model.data.Location
 import streetlight.model.data.LocationPost
 import streetlight.model.data.Post
-import streetlight.web.io.ApiClient
 
 class StreetMap(
     private val scope: CoroutineScope,

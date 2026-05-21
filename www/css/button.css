@@ -37,7 +37,7 @@
     > :only-child { grid-column: 1 / -1; justify-self: center; opacity: 1; width: auto; }
     > :nth-child(2) { justify-self: center; }
     > span { font-size: inherit; line-height: 1rem; }
-    :not(:has(*)) { grid-template-columns: 1fr; }
+    &:not(:has(*)) { grid-template-columns: 1fr; }
 }
 
 .btn-text {

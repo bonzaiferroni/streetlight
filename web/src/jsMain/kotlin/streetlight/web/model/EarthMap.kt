@@ -10,7 +10,6 @@ import streetlight.model.data.Galaxy
 import streetlight.model.data.Post
 import streetlight.web.EarthMapRoute
 import streetlight.web.io.ApiClient
-import streetlight.web.ui.ViewModel
 
 class EarthMap(
     private val scope: CoroutineScope,

@@ -5,10 +5,12 @@ import koala.dom.RenderContext
 import koala.dom.ViewContext
 import koala.dom.readIsland
 import koala.html.Id
+import koala.model.PortalState
 import kotlinx.coroutines.CoroutineScope
 import org.koin.core.Koin
 import org.koin.core.parameter.parametersOf
 import streetlight.web.model.Streetlight
+import kotlin.time.Instant
 
 @Deprecated("Use RenderContext")
 typealias AppContextProto = ViewContext<Streetlight>
@@ -26,3 +28,4 @@ suspend inline fun <reified T> RenderContext.readIslandOrApi(
     true -> readIsland<T?>(id)?.takeIf { checkId(it) } ?: block()
     else -> block()
 }
+

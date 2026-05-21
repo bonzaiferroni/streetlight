@@ -6,7 +6,11 @@ import kotlinx.css.Display
 import kotlinx.html.CoreAttributeGroupFacade
 import kotlinx.html.style
 
-data class Property<T>(val identifier: String, val isCustom: Boolean = true) {
+data class Property<T>(
+    val identifier: String,
+    val isCustom: Boolean = true,
+    val valueToString: (T) -> String = { it.toString() },
+) {
 
     fun to(value: T) = InlineStyle(this, value)
 
@@ -22,6 +26,7 @@ data class Property<T>(val identifier: String, val isCustom: Boolean = true) {
         val PositionAnchor = Property<PositionAnchor>("position-anchor", false)
         val Display = Property<Display>("display", false)
         val Width = Property<String>("width", false)
+        val HeightPx = Property<Int>("height", false) { "${it}px"}
 
         val MaskUrl = Property<UrlValue>("mask-url")
         val ColorScheme = Property<String>("color-scheme")
@@ -33,6 +38,8 @@ data class Property<T>(val identifier: String, val isCustom: Boolean = true) {
 
 data class InlineStyle<T>(val property: Property<T>, val value: T) {
     override fun toString() = "${property.expression}: $value"
+
+    val valueString get() = property.valueToString(value)
 }
 
 data class UrlValue(val url: Url) {

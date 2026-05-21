@@ -7,7 +7,6 @@ import streetlight.model.data.Galaxy
 import streetlight.model.data.Post
 import streetlight.model.data.PostId
 import streetlight.web.shells.GalaxyContent
-import streetlight.web.ui.ViewModel
 
 @Deprecated("Use refresh mechanism to reset stage")
 class GalaxyStage(

@@ -87,7 +87,6 @@ class LocationEditor(
     }
 
     fun setEdit(block: (LocationEdit) -> LocationEdit) {
-        console.log("ey: ${block(stateNow.edit)}")
         state.set { it.copy(edit = block(it.edit)) }
     }
 

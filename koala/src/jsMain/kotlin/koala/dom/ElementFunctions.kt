@@ -58,13 +58,6 @@ fun Element.isModified(modifier: Modifier) = classList.contains(modifier.identif
 
 fun Element.toggle(modifier: Modifier) = classList.toggle(modifier.identifier)
 
-fun <T> CSSStyleDeclaration.setProperty(style: InlineStyle<T>) =
-    setProperty(style.property.expression, style.value.toString())
-
-fun <T> HTMLElement.setProperty(style: InlineStyle<T>) {
-    this.style.setProperty(style.property.expression, style.value.toString())
-}
-
 fun Element.querySelector(queryable: Queryable) = querySelector(queryable.selector) as? HTMLElement
 fun Element.querySelectorAll(queryable: Queryable) = querySelectorAll(queryable.selector).asList().map {
     it as HTMLElement

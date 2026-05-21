@@ -4,12 +4,14 @@ import koala.css.Blur
 import koala.css.KoalaTheme
 import koala.css.Magic
 import koala.css.ModifierSet
+import koala.css.Property
 import koala.css.Reveal
 import koala.css.SlideLeft
 import koala.css.Transitioning
 import koala.css.addModifiers
 import koala.css.modify
 import koala.html.FlowBlockKey
+import kotlinx.browser.window
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -50,6 +52,7 @@ fun <State> RenderContext.flowBlock(
             currentValue = value
 
             fun appendRender() {
+                element.clear()
                 render = cache[value]?.also {
                     it.elements.forEach { child ->
                         element.append(child)
@@ -71,7 +74,6 @@ fun <State> RenderContext.flowBlock(
                     if (render != null) {
                         element.modify(Transitioning).unmodifyAfterFrame(Reveal)
                         delay(interval)
-                        element.clear()
                     }
                     appendRender()
                     element.modify(Reveal)
@@ -80,7 +82,6 @@ fun <State> RenderContext.flowBlock(
                     element.unmodify(Transitioning)
                 }
             } else {
-                element.clear()
                 appendRender()
                 onTransition?.invoke(value)
             }

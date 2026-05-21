@@ -7,7 +7,6 @@ import koala.dom.*
 import streetlight.model.data.Galaxy
 import streetlight.model.data.LocationEdit
 import streetlight.web.LocationScoutRoute
-import streetlight.web.layouts.postCard
 import streetlight.web.layouts.postCardOf
 import streetlight.web.model.LocationEditor
 import streetlight.web.model.LocationScout
@@ -24,12 +23,12 @@ fun RenderContext.viewLocationScout(galaxy: Galaxy) {
             textBlock("Let's post a location.")
         }
 
-        flowBlock(model.stageFlow, modify(Magic, Blur)) { stage ->
+        stageBlock(model.stageFlow, model::setStage) { stage ->
             when (stage) {
                 LocationScoutStage.Search -> formBody {
                     locationScoutForm(model)
                 }
-                LocationScoutStage.Editor -> column {
+                LocationScoutStage.Edit -> column {
                     formBody {
                         locationWebsiteForm(editor)
                         locationDetailsForm(editor)
@@ -40,7 +39,7 @@ fun RenderContext.viewLocationScout(galaxy: Galaxy) {
                         button("Post", onClick = model::postToGalaxy)
                     }
                 }
-                LocationScoutStage.Location -> column {
+                LocationScoutStage.Post -> column {
                     val location = model.stateNow.location ?: error("location not found")
                     postCardOf(location)
 

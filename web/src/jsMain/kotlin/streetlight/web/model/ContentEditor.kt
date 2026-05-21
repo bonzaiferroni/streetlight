@@ -11,7 +11,6 @@ import kotlinx.coroutines.launch
 import streetlight.model.data.Post
 import streetlight.model.data.StarPostEdit
 import streetlight.web.io.ApiClient
-import streetlight.web.ui.ViewModel
 
 class ContentEditor(
     initialContent: StarPostEdit,
