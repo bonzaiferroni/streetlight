@@ -15,7 +15,7 @@ fun queryAndInitLotties(ancestor: HTMLElement) {
 }
 
 fun initLottie(element: HTMLElement) {
-    val path = element.getAttribute(Attribute.Lottie.key) ?: return
+    val path = element.getAttribute(Attribute.Lottie.identifier) ?: return
     lottie.loadAnimation(
         LottieOptions(
             container = element,

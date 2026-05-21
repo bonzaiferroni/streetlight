@@ -19,16 +19,28 @@ fun DOMContext.formSection(
     name: String,
     modifiers: ModifierSet? = null,
     block: DOMContext.() -> Unit
-) {
-    section {
-        addModifiers(modifiers)
-        filigree {
-            heading3(name)
-        }
-        card(FormMod.Card) {
-            block()
-        }
+) = section {
+    addModifiers(modifiers)
+    filigree {
+        heading3(name)
     }
+    block()
+}
+
+fun DOMContext.formCard(
+    modifiers: ModifierSet? = null,
+    block: DOMContext.() -> Unit,
+) = card(FormMod.Card) {
+    addModifiers(modifiers)
+    block()
+}
+
+fun DOMContext.formCardSection(
+    name: String,
+    modifiers: ModifierSet? = null,
+    block: DOMContext.() -> Unit
+) = formSection(name, modifiers) {
+    formCard(null, block)
 }
 
 fun DOMContext.formPart(
@@ -87,4 +99,5 @@ object FormMod {
     val Part = modify(ContainerMdRow)
     val Instructions = modify(Flex1, JustifyContentCenter, Margin1)
     val Bullets = modify(OpacityMost)
+    val GeoMap = modify(Height48, BorderRadius2, OverflowClip, MoonShadow)
 }

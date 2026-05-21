@@ -19,7 +19,7 @@ fun RenderContext.galaxyCityForm(model: GalaxyEditor) {
     val countryFlow = model.stateFlow.mapDistinct { it.country }
     val localityFlow = model.stateFlow.mapDistinct { it.city }
 
-    formSection("City") {
+    formCardSection("City") {
         formPart(
             instructions = "Would you like your galaxy to focus on a city?",
         ) {
@@ -56,7 +56,7 @@ fun RenderContext.galaxyNameForm(model: GalaxyEditor) {
     val pathFlow = model.galaxyFlow.mapDistinct { it.slug ?: "" }
     val invalidPartsFlow = model.galaxyFlow.mapDistinct { it.invalidParts }
 
-    formSection("Galaxy Name") {
+    formCardSection("Galaxy Name") {
         formPart(
             instructions = nameInstructions1,
             examples = listOf("Denver Book Club", "Page Turners"),
@@ -101,7 +101,7 @@ fun RenderContext.galaxyDescriptionForm(model: GalaxyEditor) {
     val taglineFlow = model.galaxyFlow.mapDistinct { it.tagline ?: "" }
     val guideFlow = model.galaxyFlow.mapDistinct { it.postGuide ?: "" }
 
-    formSection("Description") {
+    formCardSection("Description") {
         formPart(
             info = {
                 flowBlock(nameFlow) { name ->
@@ -141,10 +141,9 @@ fun RenderContext.galaxyDescriptionForm(model: GalaxyEditor) {
 }
 
 fun RenderContext.galaxyLocationForm(model: GalaxyEditor) {
-    val geoMap = app.get<GeoMap>()
     val pointFlow = geoMap.stateFlow.mapDistinct { it.center to it.zoom }
 
-    formSection("Map location") {
+    formCardSection("Map location") {
         formPart(
             instructions = mapInstructions1,
             info = {
@@ -160,11 +159,7 @@ fun RenderContext.galaxyLocationForm(model: GalaxyEditor) {
                 }
             }
         ) {
-            geoMapMount(
-                geoMap,
-                appScope,
-                modifiers = modify(Height48, BorderRadius2, OverflowClip, MoonShadow)
-            )
+            geoMapMount(geoMap, appScope, modifiers = FormMod.GeoMap)
         }
     }
 }
@@ -173,7 +168,7 @@ fun RenderContext.galaxyAccessForm(model: GalaxyEditor) {
     val permissionFlow = model.galaxyFlow.mapDistinct { it.postPermission }
     val reviewModeFlow = model.galaxyFlow.mapDistinct { it.reviewMode }
 
-    formSection("Permissions") {
+    formCardSection("Permissions") {
         formPart(
             instructions = "You can open up posting to the community or curate the content yourself.",
         ) {

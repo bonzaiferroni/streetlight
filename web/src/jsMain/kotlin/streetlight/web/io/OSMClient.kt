@@ -14,7 +14,7 @@ import kotlin.js.json
 // docs: https://nominatim.org/release-docs/develop/api/Search/
 
 class OSMClient() {
-    suspend fun readPlaceAt(point: GeoPoint): ApiResponse<OSMLocation>? {
+    suspend fun readLocationAt(point: GeoPoint): ApiResponse<OSMLocation>? {
         val url = "https://nominatim.openstreetmap.org/reverse" +
                     "?lat=${point.lat}&lon=${point.lng}&format=jsonv2&addressdetails=1&extratags=1"
 

@@ -1,8 +1,11 @@
 package koala.dom
 
 import koala.css.*
+import koala.html.Attribute
 import koala.html.Id
 import koala.html.TabClass
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 import kotlinx.html.js.p
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
@@ -11,6 +14,9 @@ import org.w3c.dom.events.Event
 fun RenderContext.tabs(
     id: Id? = null,
     modifiers: ModifierSet? = null,
+    onChangeTab: ((String) -> Unit)? = null,
+    tabFlow: Flow<String>? = null,
+    defaultTab: String? = null,
     content: TabScope.() -> Unit,
 ): HTMLDivElement {
     val scope = TabScope()
@@ -32,7 +38,6 @@ fun RenderContext.tabs(
                 }
                 fun selectTab(event: Event) {
                     val context = renders.getOrNull(index) ?: createTab()
-                    // not sure what I wanted to do here
                 }
                 button.addEventListener("select-tab", ::selectTab)
             }
@@ -41,6 +46,31 @@ fun RenderContext.tabs(
             scope.tabs.forEachIndexed { index, tab ->
                 val element = box(modify(TabClass.panel))
                 tabPanelElements[index] = element
+            }
+        }
+    }
+
+    var currentTab = defaultTab ?: scope.tabs.firstOrNull()?.label
+
+    defaultTab?.let {
+        root.setAttribute(Attribute.TabName.to(it))
+    }
+
+    onChangeTab?.let {
+        root.observeAttribute(Attribute.TabName) {
+            val name = it ?: return@observeAttribute
+            if (name == currentTab) return@observeAttribute
+            currentTab = name
+            onChangeTab(name)
+        }
+    }
+
+    tabFlow?.let { flow ->
+        renderScope.launch {
+            flow.collect { name ->
+                if (name == currentTab) return@collect
+                currentTab = name
+                root.setAttribute(Attribute.TabName.to(name))
             }
         }
     }

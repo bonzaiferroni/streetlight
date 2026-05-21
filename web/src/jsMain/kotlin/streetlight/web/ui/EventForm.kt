@@ -14,7 +14,7 @@ import koala.model.mapDistinct
 import streetlight.web.model.EventEditor
 import kotlin.time.Clock
 
-fun RenderContext.eventDetailsForm(model: EventEditor) = formSection("Event Details") {
+fun RenderContext.eventDetailsForm(model: EventEditor) = formCardSection("Event Details") {
     formPart("What is the name of the event?") {
         formTextField("title", model::setEventTitle, model.titleFlow, maxLength = 50)
     }
@@ -88,6 +88,6 @@ private val imageInstructions = "This image will appear in the feed and at the t
 fun RenderContext.eventImageForm(model: EventEditor) =
     imageFormSection(imageInstructions, model::setImageUrl, model.stateFlow.mapDistinct { it.imageUrl })
 
-fun RenderContext.eventLinksForm(model: EventEditor) = formSection("Links") {
+fun RenderContext.eventLinksForm(model: EventEditor) = formCardSection("Links") {
     eventLinks(model)
 }

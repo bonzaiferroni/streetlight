@@ -71,7 +71,7 @@ fun LocationEdit.mergeRight(edit: LocationEdit?) = edit?.mergeLeft(this) ?: this
 
 fun OSMLocation.toEdit() = LocationEdit(
     mapId = osmId,
-    name = name,
+    name = name?.takeIf { it.isNotBlank() },
     address = address.road?.let { road ->
         address.number?.let { number ->
             "$number $road"

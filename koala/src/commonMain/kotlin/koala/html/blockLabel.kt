@@ -14,7 +14,7 @@ ${Attribute.BlockLabel} > * {
 }
 
 ${Attribute.BlockLabel}::after {
-    content: attr(${Attribute.BlockLabel.key});
+    content: attr(${Attribute.BlockLabel.identifier});
     position: absolute;
     top: -0.38rem;
     right: .5rem;

@@ -5,6 +5,8 @@ import koala.html.Attribute
 import koala.html.AttributeValue
 import org.w3c.dom.Element
 import org.w3c.dom.HTMLElement
+import org.w3c.dom.MutationObserver
+import org.w3c.dom.MutationObserverInit
 import org.w3c.dom.asList
 
 data class ElementAttribute<T>(
@@ -45,12 +47,22 @@ private fun <T> HTMLElement.getElementAttribute(
 //}
 
 fun Element.setAttribute(attribute: Attribute<*>, value: String) =
-    setAttribute(attribute.key, value)
+    setAttribute(attribute.identifier, value)
 
 fun <T> Element.setAttribute(expression: AttributeValue<T>) =
-    setAttribute(expression.attribute.key, expression.value.toString())
+    setAttribute(expression.attribute.identifier, expression.value.toString())
 
 fun <T> Element.getAttribute(attribute: Attribute<T>): T? = attributes[attribute]?.let {
-    val transform = attribute.toValue ?: error("transform not found: ${attribute.identifier}")
+    val transform = attribute.toValue ?: error("transform not found: ${attribute.name}")
     transform(it)
+}
+
+fun <T> Element.observeAttribute(attribute: Attribute<T>, block: (T?) -> Unit) {
+    val observer = MutationObserver({ _, _ ->
+        block(getAttribute(attribute))
+    })
+    observer.observe(this, MutationObserverInit(
+        attributes = true,
+        attributeFilter = arrayOf(attribute.identifier)
+    ))
 }

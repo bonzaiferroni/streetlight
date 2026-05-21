@@ -26,22 +26,23 @@ function initTabs(root) {
         .replace(/[^a-z0-9-]/g, "")
         .replace(/-+/g, "-");
 
-    const tabNameAt = (i) => {
+    const rawNameAt = (i) => {
         const btn = buttons[i];
         const pnl = panels[i];
         const fromData = btn?.dataset.name || pnl?.dataset?.name;
         const fromId = pnl?.id || btn?.id;
         const fallback = btn?.textContent || pnl?.getAttribute("aria-label") || `tab-${i + 1}`;
-        return slug(fromData || fromId || fallback);
+        return (fromData || fromId || fallback).trim();
     };
 
-    const names = panels.map((_, i) => tabNameAt(i));
+    const names = panels.map((_, i) => rawNameAt(i));
+    const slugs = names.map(slug);
 
     const readStorage = () => {
         if (!tabId) return "";
         try {
             const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
-            return (stored[tabId] || "").toLowerCase().trim();
+            return (stored[tabId] || "").trim();
         } catch {
             return "";
         }
@@ -61,20 +62,29 @@ function initTabs(root) {
         const hash = location.hash.startsWith("#") ? location.hash.slice(1) : "";
         const [_, query = ""] = hash.split("?", 2);
         const value = new URLSearchParams(query).get(tabId);
-        return (value || "").toLowerCase().trim();
+        if (!value) return "";
+        const idx = slugs.indexOf(slug(value.trim()));
+        return idx >= 0 ? names[idx] : "";
     };
-
     const readDefault = () => {
         const index = buttons.findIndex(b => b.hasAttribute("is-default"));
         return index === -1 ? -1 : index;
     };
 
-    // Resolve initial tab: URL query wins, then localStorage, then is-default, then first
+    const readAttribute = () => {
+        return (root.getAttribute("data-tab-name") || "").trim();
+    };
+
+    const writeAttribute = (name) => {
+        root.setAttribute("data-tab-name", name);
+    };
+
+    // Resolve initial tab: attribute wins, then URL query, then localStorage, then is-default, then first
     let current = panels.findIndex(p => p.classList.contains("is-active"));
     if (current < 0) current = 0;
 
-    const initialWanted = readQuery() || readStorage();
-    const wantedIdx = initialWanted ? names.indexOf(slug(initialWanted)) : readDefault();
+    const initialWanted = readAttribute() || readQuery() || readStorage();
+    const wantedIdx = initialWanted ? names.indexOf(initialWanted) : readDefault();
     if (wantedIdx >= 0) current = wantedIdx;
 
     // Apply initial state
@@ -90,20 +100,33 @@ function initTabs(root) {
     setTimeout(() => { viewport.style.height = "auto"; }, DURATION);
 
     writeStorage(names[current]);
+    writeAttribute(names[current]);
+
+    // Shared navigation logic
+    const selectTab = (next) => {
+        if (Number.isNaN(next) || next === current || next < 0 || next >= panels.length) return;
+
+        buttons[current]?.classList.remove("is-active");
+        buttons[next]?.classList.add("is-active");
+        swap(current, next);
+        current = next;
+        writeStorage(names[current]);
+        writeAttribute(names[current]);
+    };
 
     // Tab click handler
     buttons.forEach((btn) => {
         btn.addEventListener("click", () => {
-            const next = Number(btn.dataset.tab);
-            if (Number.isNaN(next) || next === current || next < 0 || next >= panels.length) return;
-
-            buttons[current]?.classList.remove("is-active");
-            buttons[next]?.classList.add("is-active");
-            swap(current, next);
-            current = next;
-            writeStorage(names[current]);
+            selectTab(Number(btn.dataset.tab));
         });
     });
+
+    // Observe external changes to data-tab-name
+    const observer = new MutationObserver(() => {
+        selectTab(names.indexOf(readAttribute()));
+    });
+
+    observer.observe(root, { attributes: true, attributeFilter: ["data-tab-name"] });
 
     function swap(fromIdx, toIdx) {
         const from = panels[fromIdx];

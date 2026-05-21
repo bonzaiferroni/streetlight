@@ -7,15 +7,15 @@ import kotlinx.html.CoreAttributeGroupFacade
 import kotlin.uuid.Uuid
 
 data class Attribute<T>(
-    val identifier: String,
+    val name: String,
     val isCustom: Boolean = false,
     val toStringValue: (T) -> String = { it.toString() },
     val toValue: ((String) -> T)? = null
 ): Queryable {
-    override val selector get() = "[$key]"
-    val key get() = when(isCustom) {
-        true -> "data-$identifier"
-        false -> identifier
+    override val selector get() = "[$identifier]"
+    val identifier get() = when(isCustom) {
+        true -> "data-$name"
+        false -> name
     }
 
     fun to(value: T) = AttributeValue(this, value)
@@ -27,6 +27,7 @@ data class Attribute<T>(
         val Lottie = Attribute<Lottie>("lottie", true)
         val IsOn = booleanAttributeOf("is-on", true)
         val GeoPointAttribute = Attribute("geo-point", true) { GeoPoint.fromString(it) }
+        val TabName = stringAttributeOf("tab-name", true)
 
         val PopoverTarget = stringAttributeOf("popovertarget")
         val Popover = stringAttributeOf("popover")
@@ -44,11 +45,14 @@ fun stringAttributeOf(identifier: String, isCustom: Boolean = false) =
 fun booleanAttributeOf(identifier: String, isCustom: Boolean = false) =
     Attribute(identifier, isCustom) { it.toBoolean() }
 
+fun intAttributeOf(identifier: String, isCustom: Boolean = false) =
+    Attribute(identifier, isCustom) { it.toInt() }
+
 inline fun <reified T> jsonAttributeOf(identifier: String) =
     Attribute<T>(identifier, true, jsonConfig::encodeToString, jsonConfig::decodeFromString)
 
 data class AttributeValue<T>(val attribute: Attribute<T>, val value: T): Queryable {
-    override val selector get() = "[${attribute.key}='${attribute.toStringValue(value)}']"
+    override val selector get() = "[${attribute.identifier}='${attribute.toStringValue(value)}']"
 }
 
 fun CoreAttributeGroupFacade.applyBlockLabel(label: String?) {
@@ -62,9 +66,9 @@ fun <T> CoreAttributeGroupFacade.setAttribute(expression: AttributeValue<T>) =
 
 fun <T> CoreAttributeGroupFacade.setAttribute(attribute: Attribute<T>, value: T?) {
     if (value != null) {
-        attributes[attribute.key] = value.toString()
+        attributes[attribute.identifier] = value.toString()
     } else {
-        attributes.remove(attribute.key)
+        attributes.remove(attribute.identifier)
     }
 }
 
@@ -73,7 +77,7 @@ fun CoreAttributeGroupFacade.setPopoverTarget(id: Id) {
 }
 
 var CoreAttributeGroupFacade.blockLabel: String?
-    get() = attributes[Attribute.BlockLabel.key]
+    get() = attributes[Attribute.BlockLabel.identifier]
     set(value) {
         setAttribute(Attribute.BlockLabel, value)
     }

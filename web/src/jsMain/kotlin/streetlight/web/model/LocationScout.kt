@@ -1,11 +1,13 @@
 package streetlight.web.model
 
 import kampfire.model.handleResponse
-import koala.dom.UIMessageType
+import koala.dom.messageStore
+import koala.dom.set
 import koala.model.GeoMap
 import koala.model.mapDistinct
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 import streetlight.model.data.Galaxy
 import streetlight.model.data.Location
@@ -29,6 +31,7 @@ class LocationScout(
     private val state = storeOf(LocationScoutState(city = galaxy.city))
     val stateNow get() = state.now
     val stateFlow = state.flow
+    val mapMsg = messageStore()
 
     val queryFlow = stateFlow.mapDistinct { it.query }
     val cityFlow = stateFlow.mapDistinct { it.city }
@@ -38,13 +41,28 @@ class LocationScout(
     val hasOsmLocations = stateFlow.mapDistinct { it.osmLocations.isNotEmpty() }
     val stageFlow = stateFlow.mapDistinct { it.stage }
     val postFlow = stateFlow.mapDistinct { it.post }
+    val modeFlow = stateFlow.mapDistinct { it.mode }
+    val mapLocationFlow = stateFlow.mapDistinct { it.mapLocation }
 
     init {
         scope.launch {
-            queryFlow.collect { query ->
-                api.searchLocations(query, stateNow.city?.takeIf { it.isNotBlank() })
-                    .handleResponse(toaster::toast) { locations ->
-                        state.set { it.copy(locations = locations) }
+            launch {
+                queryFlow.collect { query ->
+                    api.searchLocations(query, stateNow.city?.takeIf { it.isNotBlank() })
+                        .handleResponse(toaster::toast) { locations ->
+                            state.set { it.copy(locations = locations) }
+                        }
+                }
+            }
+
+            launch {
+                geo.stateFlow.filter { !it.isMoving && stateNow.mode == LocationScoutMode.Map }
+                    .mapDistinct { it.center }.collect { center ->
+                        osm.readLocationAt(center).handleResponse(mapMsg::set) { location ->
+                            val location = location.toEditOrNull() ?: return@handleResponse
+                            mapMsg.set(location.displayTitle)
+                            state.set { it.copy(mapLocation = location)}
+                        }
                     }
             }
         }
@@ -52,13 +70,17 @@ class LocationScout(
 
     fun setQuery(value: String) = state.set { it.copy(query = value) }
     fun setCity(value: String) = state.set { it.copy(city = value) }
-    fun setLocation(value: Location?) = state.set { it.copy(location = value, stage = LocationScoutStage.Location)}
-    fun setOSMLocation(value: LocationEdit?) {
+    fun setLocation(value: Location?) = state.set { it.copy(location = value, stage = LocationScoutStage.Location) }
+    fun setMode(value: LocationScoutMode) = state.set { it.copy(mode = value) }
+
+    fun stageLocation(value: LocationEdit?) {
         if (value == null) return
         editor.setEdit { value.mergeLeft(it) }
         editor.readWebsite()
         state.set { it.copy(osmLocations = emptyList(), stage = LocationScoutStage.Editor) }
     }
+
+    fun stageLocationFromMap() = stageLocation(stateNow.mapLocation)
 
     fun queryOSM() {
         val query = stateNow.query
@@ -73,21 +95,9 @@ class LocationScout(
         }
     }
 
-    fun reverseQueryOSM() {
-        val center = geo.stateNow.center
-        scope.launch {
-            val location = osm.readPlaceAt(center)
-            if (location == null) {
-                toaster.toast("Unable to read place", UIMessageType.Error)
-                return@launch
-            }
-            // setEdit(location)
-        }
-    }
-
     fun postToGalaxy() {
         scope.launch {
-            val location = when(val location = stateNow.location) {
+            val location = when (val location = stateNow.location) {
                 null -> editor.submitSuspended()
                 else -> location
             } ?: return@launch
@@ -108,10 +118,17 @@ data class LocationScoutState(
     val location: Location? = null,
     val stage: LocationScoutStage = LocationScoutStage.Search,
     val post: Post? = null,
+    val mapLocation: LocationEdit? = null,
+    val mode: LocationScoutMode = LocationScoutMode.Map,
 )
 
 enum class LocationScoutStage {
     Search,
     Editor,
     Location,
+}
+
+enum class LocationScoutMode {
+    Search,
+    Map,
 }

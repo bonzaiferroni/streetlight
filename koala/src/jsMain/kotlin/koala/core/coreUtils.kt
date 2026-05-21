@@ -49,7 +49,7 @@ fun Element.appendDiv(id: Id? = null): HTMLElement {
     return element
 }
 
-operator fun NamedNodeMap.get(attribute: Attribute<*>): String? = this.getNamedItem(attribute.key)?.value
+operator fun NamedNodeMap.get(attribute: Attribute<*>): String? = this.getNamedItem(attribute.identifier)?.value
 
 fun Window.setGlobalFunctions(pairs: List<Pair<Fun, KFunction<Any?>>>) {
     val windowDynamic = asDynamic()
