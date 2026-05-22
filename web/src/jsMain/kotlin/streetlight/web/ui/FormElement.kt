@@ -5,6 +5,7 @@ import koala.dom.*
 import koala.html.bulletsOf
 import koala.html.filigree
 import koala.html.heading3
+import koala.model.Store
 import kotlinx.coroutines.flow.Flow
 import kotlinx.html.DIV
 
@@ -91,6 +92,21 @@ fun RenderContext.formTextField(
                 }
             }
         }
+    }
+}
+
+fun RenderContext.formSubmit(
+    label: String,
+    onSubmit: () -> Unit,
+    modifiers: ModifierSet? = null,
+    messages: Store<UIMessage?>? = null,
+) {
+    row {
+        addModifiers(modifiers, JustifyContentEnd)
+        messages?.let {
+            messageBox(messages)
+        }
+        button(label, onClick = onSubmit)
     }
 }
 

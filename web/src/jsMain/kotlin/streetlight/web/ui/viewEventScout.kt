@@ -1,36 +1,39 @@
 package streetlight.web.ui
 
 import kampfire.model.handleResponse
-import koala.css.*
+import koala.LottieFile
 import koala.dom.*
-import koala.html.filigree
-import koala.html.heading1
-import koala.html.heading3
 import streetlight.model.data.EventEdit
 import streetlight.model.data.Galaxy
 import streetlight.model.data.LocationEdit
 import streetlight.web.EventScoutRoute
+import streetlight.web.model.EventScoutStage
 
 fun RenderContext.viewEventScout(galaxy: Galaxy) {
     val locationEditor = app.getLocationEditor(LocationEdit(), renderScope)
     val location = app.getLocationScout(galaxy, locationEditor, renderScope)
     val editor = app.getEventEditor(EventEdit(), renderScope)
     val model = app.getEventScout(galaxy, editor, location, renderScope)
+    goOnPosted(model.postFlow)
 
     section {
-        column(modify(Gap0)) {
-            heading1("Event Scout", modify(LineHeight115))
-            filigree {
-                heading3("Posting to ${galaxy.name}", modify(LineHeight115, OpacityMost))
-            }
+        introSection("Event Scout", lottie = LottieFile.StrollingMan) {
+            textBlock("Let's post an event to ${galaxy.name}.")
         }
 
-        card(modify(Padding0)) {
-            geoMapMount(geoMap, appScope, modifiers = modify(Height48))
-
-//            viewContextOf(model.location) {
-//                viewLocationFinder()
-//            }
+        stageBlock(model.stageFlow, model::setStage) { stage ->
+            when (stage) {
+                EventScoutStage.LocationSearch -> formBody {
+                    locationScoutForm(location)
+                }
+                EventScoutStage.LocationEdit -> column {
+                    locationEditFormBody(locationEditor)
+                    formSubmit("Done", location::review)
+                }
+                EventScoutStage.EventSearch -> TODO()
+                EventScoutStage.EventEdit -> TODO()
+                EventScoutStage.Post -> TODO()
+            }
         }
     }
 }

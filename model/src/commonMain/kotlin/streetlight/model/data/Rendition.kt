@@ -1,7 +1,6 @@
 package streetlight.model.data
 
-import kampfire.model.LabeledEnum
-import kampfire.utils.randomUuidString
+import kampfire.model.Labeled
 import kotlin.time.Instant
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
@@ -30,7 +29,7 @@ data class NewRendition(
     val rating: SelfRating?,
 )
 
-enum class SelfRating(override val label: String): LabeledEnum<SelfRating> {
+enum class SelfRating(override val label: String): Labeled<SelfRating> {
     FirstSteps("First Steps"),
     NeedsWork("Needs Work"),
     ComingAlong("Coming Along"),

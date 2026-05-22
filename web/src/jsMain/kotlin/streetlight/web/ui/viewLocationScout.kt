@@ -2,14 +2,11 @@ package streetlight.web.ui
 
 import kampfire.model.handleResponse
 import koala.LottieFile
-import koala.css.*
 import koala.dom.*
 import streetlight.model.data.Galaxy
 import streetlight.model.data.LocationEdit
 import streetlight.web.LocationScoutRoute
 import streetlight.web.layouts.postCardOf
-import streetlight.web.model.LocationEditor
-import streetlight.web.model.LocationScout
 import streetlight.web.model.LocationScoutStage
 
 fun RenderContext.viewLocationScout(galaxy: Galaxy) {
@@ -29,24 +26,14 @@ fun RenderContext.viewLocationScout(galaxy: Galaxy) {
                     locationScoutForm(model)
                 }
                 LocationScoutStage.Edit -> column {
-                    formBody {
-                        locationWebsiteForm(editor)
-                        locationDetailsForm(editor)
-                        locationImageForm(editor)
-                        locationLinksForm(editor)
-                    }
-                    row(modify(JustifyContentEnd)) {
-                        button("Post", onClick = model::postToGalaxy)
-                    }
+                    locationEditFormBody(editor)
+                    formSubmit("Done", model::review, messages = model.postMessage)
                 }
                 LocationScoutStage.Post -> column {
                     val location = model.stateNow.location ?: error("location not found")
                     postCardOf(location)
 
-                    row(modify(JustifyContentEnd)) {
-                        messageBox(model.postMessage)
-                        button("Post", onClick = model::postToGalaxy)
-                    }
+                    formSubmit("Post", model::postToGalaxy, messages = model.postMessage)
                 }
             }
         }

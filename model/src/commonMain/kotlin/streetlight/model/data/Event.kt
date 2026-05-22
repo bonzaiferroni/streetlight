@@ -1,10 +1,9 @@
 package streetlight.model.data
 
 import androidx.compose.runtime.Stable
-import kampfire.model.LabeledEnum
+import kampfire.model.Labeled
 import kampfire.model.ScaledImageArray
 import kampfire.model.Url
-import kampfire.utils.randomUuidString
 import kotlinx.serialization.Serializable
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
@@ -146,7 +145,7 @@ fun EventEdit.mergeLeft(other: EventEdit?) = other?.let {
 
 fun EventEdit.mergeRight(other: EventEdit?) = other?.mergeLeft(this) ?: this
 
-enum class EventStatus(override val label: String): LabeledEnum<EventStatus> {
+enum class EventStatus(override val label: String): Labeled<EventStatus> {
     Pending("Pending"),
     Canceled("Canceled"),
     Live("Live"),

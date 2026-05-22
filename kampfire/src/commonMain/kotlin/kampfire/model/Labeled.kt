@@ -1,5 +1,5 @@
 package kampfire.model
 
-interface LabeledEnum<T: Enum<T>> {
+interface Labeled {
     val label: String
 }

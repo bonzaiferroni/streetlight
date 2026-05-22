@@ -51,6 +51,13 @@ fun RenderContext.locationWebsiteForm(model: LocationEditor) = formCardSection("
     }
 }
 
+fun RenderContext.locationEditFormBody(model: LocationEditor) = formBody {
+    locationWebsiteForm(model)
+    locationDetailsForm(model)
+    locationImageForm(model)
+    locationLinksForm(model)
+}
+
 fun RenderContext.locationScoutForm(model: LocationScout) = formSection("Find a location") {
     val indexFlow = model.modeFlow.map { it.name }
 

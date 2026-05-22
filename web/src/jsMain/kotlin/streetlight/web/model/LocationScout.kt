@@ -1,5 +1,6 @@
 package streetlight.web.model
 
+import kampfire.model.Labeled
 import kampfire.model.handleResponse
 import koala.dom.messageStore
 import koala.dom.set
@@ -97,6 +98,11 @@ class LocationScout(
         }
     }
 
+    fun review() {
+
+        state.set { it.copy(stage = LocationScoutStage.Post) }
+    }
+
     fun postToGalaxy() {
         scope.launch {
             postMessage.set("Posting...")
@@ -125,10 +131,12 @@ data class LocationScoutState(
     val mode: LocationScoutMode = LocationScoutMode.Map,
 )
 
-enum class LocationScoutStage {
+enum class LocationScoutStage: Labeled {
     Search,
     Edit,
-    Post,
+    Post;
+
+    override val label get() = name
 }
 
 enum class LocationScoutMode {
