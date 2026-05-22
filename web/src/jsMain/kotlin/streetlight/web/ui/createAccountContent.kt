@@ -13,7 +13,7 @@ import streetlight.web.model.UserCreator
 import streetlight.web.model.UserGate
 
 fun RenderContext.createAccountContent() {
-    val creator = app.getCoroutineScoped<UserCreator>(renderScope)
+    val creator = app.getUserCreator(renderScope)
 
     column(modify(QueryRowReverse, FlexItems1, AlignItemsStretch)) {
         card {

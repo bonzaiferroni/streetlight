@@ -14,8 +14,8 @@ import streetlight.web.model.LocationScoutStage
 
 fun RenderContext.viewLocationScout(galaxy: Galaxy) {
     // val model = app.getCoroutineScoped<GalaxyEditor>(null, renderScope)
-    val editor = app.getCoroutineScoped<LocationEditor>(LocationEdit(), renderScope)
-    val model = app.getCoroutineScoped<LocationScout>(galaxy, editor, renderScope)
+    val editor = app.getLocationEditor(LocationEdit(), renderScope)
+    val model = app.getLocationScout(galaxy, editor, renderScope)
     goOnPosted(model.postFlow)
 
     column {
@@ -44,6 +44,7 @@ fun RenderContext.viewLocationScout(galaxy: Galaxy) {
                     postCardOf(location)
 
                     row(modify(JustifyContentEnd)) {
+                        messageBox(model.postMessage)
                         button("Post", onClick = model::postToGalaxy)
                     }
                 }

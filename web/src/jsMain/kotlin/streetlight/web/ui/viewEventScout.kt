@@ -6,11 +6,16 @@ import koala.dom.*
 import koala.html.filigree
 import koala.html.heading1
 import koala.html.heading3
+import streetlight.model.data.EventEdit
 import streetlight.model.data.Galaxy
+import streetlight.model.data.LocationEdit
 import streetlight.web.EventScoutRoute
-import streetlight.web.model.EventScout
 
-fun RenderContext.viewEventScout(model: EventScout, galaxy: Galaxy) {
+fun RenderContext.viewEventScout(galaxy: Galaxy) {
+    val locationEditor = app.getLocationEditor(LocationEdit(), renderScope)
+    val location = app.getLocationScout(galaxy, locationEditor, renderScope)
+    val editor = app.getEventEditor(EventEdit(), renderScope)
+    val model = app.getEventScout(galaxy, editor, location, renderScope)
 
     section {
         column(modify(Gap0)) {
@@ -34,7 +39,6 @@ fun RenderContext.viewEventScoutRoute() {
     routeBlock<EventScoutRoute, Galaxy>({
         api.readGalaxy(it.slug).handleResponse(toaster::toast)
     }) { galaxy ->
-        val model = EventScout(galaxy, renderScope)
-        viewEventScout(model, galaxy)
+        viewEventScout(galaxy)
     }
 }

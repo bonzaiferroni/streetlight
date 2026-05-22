@@ -1,9 +1,16 @@
 package streetlight.web.ui
 
+import koala.dom.AppContext
 import koala.model.GeoMap
 import koala.model.Portal
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import org.koin.dsl.module
+import streetlight.model.data.EventEdit
+import streetlight.model.data.Galaxy
+import streetlight.model.data.LocationEdit
+import streetlight.model.data.ContentEdit
+import streetlight.model.data.GalaxyEdit
 import streetlight.web.HomeRoute
 import streetlight.web.StreetlightScreen
 import streetlight.web.io.ApiClient
@@ -35,14 +42,28 @@ val appModule = module {
     single { OmniLog(get(), get()) }
 
     single { Toaster(get()) }
-
-    factory { UserCreator(it.get(), get(), get(), get(), get()) }
-    factory { EarthMap(it.get(), get(), get(), get())}
-    factory { EventEditor(it[0], it[1], get())}
-    factory { GalaxyEditor(it[0], it[1], get(), get(), get(), get())}
-    factory { LocationEditor(it[0], it[1], get(), get()) }
-    factory { LocationFinderProto2(it[0], get(), get(), get()) }
-    factory { ContentEditor(it[0], it[1], get(), get()) }
-    factory { EventScout(it[0], it[1])}
-    factory { LocationScout(it[0], it[1], it[2], get(), get(), get(), get()) }
 }
+
+fun AppContext.getUserCreator(scope: CoroutineScope) =
+    UserCreator(scope, koin.get(), koin.get(), koin.get(), koin.get())
+
+fun AppContext.getEarthMap(scope: CoroutineScope) =
+    EarthMap(scope, koin.get(), koin.get(), koin.get())
+
+fun AppContext.getLocationEditor(edit: LocationEdit, scope: CoroutineScope) =
+    LocationEditor(edit, scope, koin.get(), koin.get())
+
+fun AppContext.getContentEditor(edit: ContentEdit, scope: CoroutineScope) =
+    ContentEditor(edit, scope, koin.get(), koin.get())
+
+fun AppContext.getLocationScout(galaxy: Galaxy, editor: LocationEditor, scope: CoroutineScope) =
+    LocationScout(galaxy, editor, scope, koin.get(), koin.get(), koin.get(), koin.get())
+
+fun AppContext.getEventEditor(edit: EventEdit, scope: CoroutineScope) =
+    EventEditor(edit, scope, koin.get())
+
+fun AppContext.getEventScout(galaxy: Galaxy, editor: EventEditor, location: LocationScout, scope: CoroutineScope) =
+    EventScout(galaxy, editor, location, scope)
+
+fun AppContext.getGalaxyEditor(galaxy: GalaxyEdit, scope: CoroutineScope) =
+    GalaxyEditor(galaxy, scope, koin.get(), koin.get(), koin.get(), koin.get())

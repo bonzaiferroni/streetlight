@@ -70,10 +70,10 @@ fun CoreAttributeGroupFacade.setStyle(styles: StyleSet?) {
                 append(style)
                 append(' ')
             }
-            styles.forEach { (property, value) ->
-                append(property.expression)
+            styles.forEach { style ->
+                append(style.property.expression)
                 append(": ")
-                append(value)
+                append(style.valueString)
                 append("; ")
             }
         }

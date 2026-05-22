@@ -72,7 +72,7 @@ fun RenderContext.viewEarthMapRoute() {
                 is EarthMapRoute -> {
                     if (!isVisible) {
                         replaceRender(element) {
-                            val model = app.getCoroutineScoped<EarthMap>(renderScope)
+                            val model = app.getEarthMap(renderScope)
                             viewEarthMap(model)
                         }
                         element.modify(Reveal)

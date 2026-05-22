@@ -9,7 +9,7 @@ import koala.model.mapDistinct
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import streetlight.model.data.Post
-import streetlight.model.data.StarPostEdit
+import streetlight.model.data.ContentEdit
 import streetlight.model.data.StarPost
 import streetlight.model.data.toEdit
 import streetlight.web.EditPostRoute
@@ -36,7 +36,7 @@ fun RenderContext.viewContentUpdater(model: ContentEditor) {
 }
 
 fun RenderContext.viewEditPostRoute() {
-    routeBlock<EditPostRoute, StarPostEdit>(portal, { route ->
+    routeBlock<EditPostRoute, ContentEdit>(portal, { route ->
         api.readPost(route.postId).handleResponse(toaster::toast) {
             (it as? StarPost)?.toEdit()
         }

@@ -30,7 +30,7 @@ data class StarPost(
 }
 
 @Serializable
-data class StarPostEdit(
+data class ContentEdit(
     val postId: PostId?,
     val galaxyId: GalaxyId,
     val title: String? = null,
@@ -50,7 +50,7 @@ data class StarPostEdit(
     val isValid get() = invalidPart == null
 }
 
-fun StarPost.toEdit() = StarPostEdit(
+fun StarPost.toEdit() = ContentEdit(
     postId = postId,
     galaxyId = galaxyId,
     title = title,

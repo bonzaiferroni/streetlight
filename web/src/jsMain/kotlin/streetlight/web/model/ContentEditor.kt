@@ -9,11 +9,11 @@ import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import streetlight.model.data.Post
-import streetlight.model.data.StarPostEdit
+import streetlight.model.data.ContentEdit
 import streetlight.web.io.ApiClient
 
 class ContentEditor(
-    initialContent: StarPostEdit,
+    initialContent: ContentEdit,
     private val scope: CoroutineScope,
     private val api: ApiClient,
     private val toaster: Toaster,
@@ -67,12 +67,12 @@ class ContentEditor(
         }
     }
 
-    private fun setContent(block: (StarPostEdit) -> StarPostEdit) {
+    private fun setContent(block: (ContentEdit) -> ContentEdit) {
         state.set { it.copy(content = block(stateNow.content)) }
     }
 }
 
 data class ContentEditorState(
-    val content: StarPostEdit,
+    val content: ContentEdit,
     val post: Post? = null
 )

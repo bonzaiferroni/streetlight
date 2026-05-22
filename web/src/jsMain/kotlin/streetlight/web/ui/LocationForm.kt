@@ -104,7 +104,7 @@ private fun RenderContext.locationMapForm(model: LocationScout) = formCard {
     ) {
         geoMapMount(geoMap, appScope, modifiers = FormMod.GeoMap)
         row(modify(JustifyContentEnd, AlignItemsStart)) {
-            messageBox(model.mapMsg)
+            messageBox(model.mapMessage)
             button("Here", onClick = model::stageLocationFromMap)
         }
     }

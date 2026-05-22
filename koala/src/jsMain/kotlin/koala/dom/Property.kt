@@ -6,7 +6,7 @@ import org.w3c.dom.HTMLElement
 import org.w3c.dom.css.CSSStyleDeclaration
 
 fun <T> CSSStyleDeclaration.setProperty(style: InlineStyle<T>) =
-    setProperty(style.property.expression, style.value.toString())
+    setProperty(style.property.expression, style.valueString)
 
 fun <T> HTMLElement.setProperty(style: InlineStyle<T>): HTMLElement {
     this.style.setProperty(style.property.expression, style.valueString)

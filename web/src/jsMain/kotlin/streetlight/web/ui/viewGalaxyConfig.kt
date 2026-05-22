@@ -11,7 +11,7 @@ import streetlight.web.GalaxyConfigRoute
 import streetlight.web.model.GalaxyEditor
 
 fun RenderContext.viewGalaxyConfig(edit: GalaxyEdit) {
-    val model = app.getCoroutineScoped<GalaxyEditor>(edit, renderScope)
+    val model = app.getGalaxyEditor(edit, renderScope)
 
     column {
         introSection("Galaxy Settings", lottie = LottieFile.ServerSync) {

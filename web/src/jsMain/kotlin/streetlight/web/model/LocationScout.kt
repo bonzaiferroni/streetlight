@@ -31,7 +31,8 @@ class LocationScout(
     private val state = storeOf(LocationScoutState(city = galaxy.city))
     val stateNow get() = state.now
     val stateFlow = state.flow
-    val mapMsg = messageStore()
+    val mapMessage = messageStore()
+    val postMessage = messageStore()
 
     val queryFlow = stateFlow.mapDistinct { it.query }
     val cityFlow = stateFlow.mapDistinct { it.city }
@@ -58,9 +59,9 @@ class LocationScout(
             launch {
                 geo.stateFlow.filter { !it.isMoving && stateNow.mode == LocationScoutMode.Map }
                     .mapDistinct { it.center }.collect { center ->
-                        osm.readLocationAt(center).handleResponse(mapMsg::set) { location ->
+                        osm.readLocationAt(center).handleResponse(mapMessage::set) { location ->
                             val location = location.toEditOrNull() ?: return@handleResponse
-                            mapMsg.set(location.displayTitle)
+                            mapMessage.set(location.displayTitle)
                             state.set { it.copy(mapLocation = location)}
                         }
                     }
@@ -98,13 +99,14 @@ class LocationScout(
 
     fun postToGalaxy() {
         scope.launch {
+            postMessage.set("Posting...")
             val location = when (val location = stateNow.location) {
                 null -> editor.submitSuspended()
                 else -> location
             } ?: return@launch
 
             val edit = LocationPostEdit(null, galaxy.galaxyId, location.locationId, null)
-            api.postLocation(edit).handleResponse(toaster::toast, "Posted location to ${galaxy.name}.") { post ->
+            api.postLocation(edit).handleResponse(postMessage::set, "Posted location to ${galaxy.name}.") { post ->
                 state.set { it.copy(post = post) }
             }
         }

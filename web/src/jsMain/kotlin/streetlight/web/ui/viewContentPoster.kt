@@ -7,13 +7,13 @@ import koala.html.filigree
 import koala.html.heading1
 import koala.model.mapDistinct
 import kotlinx.html.js.h3
-import streetlight.model.data.StarPostEdit
+import streetlight.model.data.ContentEdit
 import streetlight.model.data.Galaxy
 import streetlight.web.PostContentRoute
 import streetlight.web.model.ContentEditor
 
 fun RenderContext.viewContentPoster(galaxy: Galaxy) {
-    val model = app.getCoroutineScoped<ContentEditor>(StarPostEdit(null, galaxy.galaxyId), renderScope)
+    val model = app.getContentEditor(ContentEdit(null, galaxy.galaxyId), renderScope)
     goOnPosted(model.stateFlow.mapDistinct { it.post })
 
     section(modify(Column)) {
