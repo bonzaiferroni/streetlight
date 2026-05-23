@@ -1,5 +1,6 @@
 package streetlight.model.data
 
+import kampfire.api.Slug
 import kampfire.model.GeoBounds
 import kampfire.model.GeoPoint
 import kampfire.model.ScaledImageArray

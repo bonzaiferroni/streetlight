@@ -9,7 +9,7 @@ import org.koin.dsl.module
 import streetlight.model.data.EventEdit
 import streetlight.model.data.Galaxy
 import streetlight.model.data.LocationEdit
-import streetlight.model.data.ContentEdit
+import streetlight.model.data.PostEdit
 import streetlight.model.data.GalaxyEdit
 import streetlight.web.HomeRoute
 import streetlight.web.StreetlightScreen
@@ -51,10 +51,10 @@ fun AppContext.getEarthMap(scope: CoroutineScope) =
     EarthMap(scope, koin.get(), koin.get(), koin.get())
 
 fun AppContext.getLocationEditor(edit: LocationEdit, scope: CoroutineScope) =
-    LocationEditor(edit, scope, koin.get(), koin.get())
+    LocationEditor(edit, scope, koin.get())
 
-fun AppContext.getContentEditor(edit: ContentEdit, scope: CoroutineScope) =
-    ContentEditor(edit, scope, koin.get(), koin.get())
+fun AppContext.getContentEditor(edit: PostEdit, scope: CoroutineScope) =
+    PostEditor(edit, scope, koin.get(), koin.get())
 
 fun AppContext.getLocationScout(galaxy: Galaxy, editor: LocationEditor, scope: CoroutineScope) =
     LocationScout(galaxy, editor, scope, koin.get(), koin.get(), koin.get(), koin.get())
@@ -63,7 +63,7 @@ fun AppContext.getEventEditor(edit: EventEdit, scope: CoroutineScope) =
     EventEditor(edit, scope, koin.get())
 
 fun AppContext.getEventScout(galaxy: Galaxy, editor: EventEditor, location: LocationScout, scope: CoroutineScope) =
-    EventScout(galaxy, editor, location, scope)
+    EventScout(galaxy, editor, location, scope, koin.get())
 
 fun AppContext.getGalaxyEditor(galaxy: GalaxyEdit, scope: CoroutineScope) =
     GalaxyEditor(galaxy, scope, koin.get(), koin.get(), koin.get(), koin.get())

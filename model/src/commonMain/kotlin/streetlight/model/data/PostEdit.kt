@@ -1,36 +1,11 @@
 package streetlight.model.data
 
 import kampfire.model.GeoPoint
-import kampfire.model.ScaledImageArray
 import kampfire.model.Url
 import kotlinx.serialization.Serializable
-import kotlin.time.Instant
 
 @Serializable
-data class StarPost(
-    override val postId: PostId,
-    override val galaxyId: GalaxyId,
-    val slug: String?,
-    override val username: String?,
-    override val userThumb: Url?,
-    override val title: String,
-    val subtitle: String?,
-    override val text: String?,
-    override val geoPoint: GeoPoint?,
-    val imageRef: Url?,
-    override val images: ScaledImageArray?,
-    override val links: List<ExtraLink>?,
-    override val createdAt: Instant,
-    override val updatedAt: Instant,
-): Post {
-
-    override val visibility: Int get() = 0
-    override val description get() = text
-    override val postType get() = PostType.Content
-}
-
-@Serializable
-data class ContentEdit(
+data class PostEdit(
     val postId: PostId?,
     val galaxyId: GalaxyId,
     val title: String? = null,
@@ -50,7 +25,7 @@ data class ContentEdit(
     val isValid get() = invalidPart == null
 }
 
-fun StarPost.toEdit() = ContentEdit(
+fun Post.toEdit() = PostEdit(
     postId = postId,
     galaxyId = galaxyId,
     title = title,

@@ -2,7 +2,7 @@ package streetlight.web
 
 import kampfire.api.StringId
 
-data class GalaxyRoute(override val id: StringId): StringIdRoute {
+data class GalaxyRoute(override val value: StringId): SlugOrIdRoute {
     override val screen get() = StreetlightScreen.Galaxy
     override val title get() = "Galaxy"
 }
@@ -12,7 +12,7 @@ object GalaxyFoundryRoute: StreetlightRoute {
     override val title get() = "Create Galaxy"
 }
 
-data class GalaxyConfigRoute(override val id: StringId): StringIdRoute {
+data class GalaxyConfigRoute(override val value: StringId): SlugOrIdRoute {
     override val screen get() = StreetlightScreen.GalaxyConfig
     override val title get() = "Galaxy Settings"
 }

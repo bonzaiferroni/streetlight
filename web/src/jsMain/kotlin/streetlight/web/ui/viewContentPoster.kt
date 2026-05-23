@@ -5,16 +5,16 @@ import koala.css.*
 import koala.dom.*
 import koala.html.filigree
 import koala.html.heading1
-import koala.model.mapDistinct
+import koala.model.mapDistinctNotNull
 import kotlinx.html.js.h3
-import streetlight.model.data.ContentEdit
+import streetlight.model.data.PostEdit
 import streetlight.model.data.Galaxy
 import streetlight.web.PostContentRoute
-import streetlight.web.model.ContentEditor
+import streetlight.web.PostRoute
 
 fun RenderContext.viewContentPoster(galaxy: Galaxy) {
-    val model = app.getContentEditor(ContentEdit(null, galaxy.galaxyId), renderScope)
-    goOnPosted(model.stateFlow.mapDistinct { it.post })
+    val model = app.getContentEditor(PostEdit(null, galaxy.galaxyId), renderScope)
+    goOnRoute(model.stateFlow.mapDistinctNotNull { it.postId?.let { postId -> PostRoute(postId.string) }  })
 
     section(modify(Column)) {
         heading1(galaxy.name, modify(TextAlignCenter))
@@ -23,7 +23,7 @@ fun RenderContext.viewContentPoster(galaxy: Galaxy) {
         }
 
         card {
-            viewContentEditor(model)
+            postForm(model)
         }
 
         row(modify(JustifyContentEnd)) {

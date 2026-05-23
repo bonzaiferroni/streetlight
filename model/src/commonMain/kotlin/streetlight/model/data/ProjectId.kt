@@ -3,7 +3,9 @@ package streetlight.model.data
 import kampfire.api.TableId
 import kotlin.uuid.Uuid
 
-sealed interface ProjectId: TableId<Uuid>
+sealed interface ProjectId: TableId<Uuid> {
+    val string get() = value.toString()
+}
 
 inline fun <reified T> Uuid.toProjectId(): T = when (T::class) {
     StarId::class -> StarId(this) as T

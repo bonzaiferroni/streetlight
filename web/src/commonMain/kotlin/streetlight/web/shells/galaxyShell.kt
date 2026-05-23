@@ -5,7 +5,8 @@ import koala.html.*
 import kotlinx.html.FlowContent
 import kotlinx.serialization.Serializable
 import streetlight.model.data.Galaxy
-import streetlight.model.data.Post
+import streetlight.model.data.GalaxyContent
+import streetlight.model.data.GalaxyPost
 import streetlight.web.EarthMapRoute
 import streetlight.web.layouts.postSection
 import streetlight.web.pages.appFooter
@@ -41,9 +42,3 @@ object GalaxyKey {
     val GalaxyContentId = Id("galaxy-island")
     const val SOURCE = "web/src/commonMain/kotlin/streetlight/web/shells/galaxyShell.kt"
 }
-
-@Serializable
-data class GalaxyContent(
-    val galaxy: Galaxy,
-    val posts: List<Post>,
-)

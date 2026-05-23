@@ -1,6 +1,8 @@
 package streetlight.model.data
 
+import kampfire.api.Slug
 import kampfire.model.GeoPoint
+import kampfire.model.Labeled
 import kampfire.model.ScaledImageArray
 import kotlin.time.Instant
 import kotlinx.serialization.Serializable
@@ -31,7 +33,7 @@ data class EventLocation(
     val endsAt: Instant?,
     val updatedAt: Instant,
     val createdAt: Instant,
-) {
+): Labeled {
     val links by lazy {
         buildList {
             url?.let { url ->
@@ -52,7 +54,9 @@ data class EventLocation(
         addressLineOf(address, city)
     }
 
-    val locationDisplayTitle get() = locationName ?: address ?: "(geocoordinates)"
+    override val label get() = title
+
+    val locationLabel get() = locationName ?: address ?: "(geolocation)"
 
     val endsAtOrLater get() = endsAt ?: (startsAt + 4.hours)
 }

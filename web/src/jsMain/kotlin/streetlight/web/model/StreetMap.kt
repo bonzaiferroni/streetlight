@@ -7,13 +7,13 @@ import koala.model.MapContextId
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.FlowPreview
-import streetlight.model.data.StarPost
+import streetlight.model.data.Post
 import streetlight.model.data.Galaxy
 import streetlight.model.data.EventLocation
 import streetlight.model.data.EventPost
 import streetlight.model.data.Location
 import streetlight.model.data.LocationPost
-import streetlight.model.data.Post
+import streetlight.model.data.GalaxyPost
 
 class StreetMap(
     private val scope: CoroutineScope,
@@ -24,27 +24,27 @@ class StreetMap(
     val stateFlow = state.flow
     val stateNow = state.now
 
-    fun setPosts(posts: List<Post>?) {
+    fun setPosts(posts: List<GalaxyPost>?) {
         val posts = posts?.let { createEntities(posts) } ?: emptyList()
         geoMap.removeEntities(state.now.posts.map { it.entityId })
         geoMap.addEntities(posts)
         state.set { it.copy(posts = posts) }
     }
 
-    fun addPosts(posts: List<Post>) {
+    fun addPosts(posts: List<GalaxyPost>) {
         val posts = createEntities(posts)
         geoMap.addEntities(posts)
         state.set { it.copy(posts = it.posts + posts)}
     }
 
-    private fun createEntities(posts: List<Post>): List<EventEntity> {
+    private fun createEntities(posts: List<GalaxyPost>): List<EventEntity> {
         return posts.mapNotNull { post ->
             val position = post.geoPoint ?: return@mapNotNull null
             val galaxy = post.galaxyId?.let { cache.topGalaxies.getCachedItem(it) }
             when (post) {
                 is EventPost -> EventEntity(post, galaxy, position)
                 is LocationPost -> return@mapNotNull null
-                is StarPost -> TODO()
+                is Post -> TODO()
             }
         }
     }

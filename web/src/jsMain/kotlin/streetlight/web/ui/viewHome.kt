@@ -3,9 +3,7 @@ package streetlight.web.ui
 import kampfire.model.handleResponse
 import koala.dom.*
 import koala.dom.routeBlock
-import koala.model.GeoMap
 import koala.model.Portal
-import kotlinx.coroutines.CoroutineScope
 import streetlight.model.data.HomeContent
 import streetlight.web.HomeRoute
 import streetlight.web.io.ApiClient
@@ -40,10 +38,9 @@ fun RenderContext.viewHomeRoute() {
     val portal = app.get<Portal>()
     val api = app.get<ApiClient>()
 
-    routeBlock<HomeRoute, HomeContent>(portal, { route ->
-        readIslandOrApi(HomeKey.IslandId, { true }) {
-            api.readHomeContent()?.handleResponse(toaster::toast)
-        }
+    routeBlock<HomeRoute, HomeContent>(portal, { _ ->
+        readIsland(HomeKey.IslandId) { true }
+            ?: api.readHomeContent().handleResponse(toaster::toast)
     }) { content ->
         viewHome(content)
     }

@@ -1,16 +1,24 @@
 package streetlight.web.model
 
 import kabinet.utils.replaceAt
+import kampfire.api.Slug
 import kampfire.model.Url
+import kampfire.model.handleResponse
+import koala.dom.MessageStore
+import koala.dom.set
 import koala.model.mapDistinct
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalTime
 import streetlight.model.data.Location
 import streetlight.model.data.EventEdit
 import kotlinx.datetime.LocalDate
+import streetlight.model.data.EventId
+import streetlight.model.data.EventLocation
 import streetlight.model.data.ExtraLink
-import streetlight.model.external.Address
+import streetlight.model.data.UrlParseRequest
+import streetlight.model.data.mergeRight
 import streetlight.web.io.ApiClient
 
 class EventEditor(
@@ -22,21 +30,23 @@ class EventEditor(
     val stateFlow = state.flow
     val stateNow get() = state.now
 
-    val editFlow = state.flow.mapDistinct { it.event }
-    val imageFlow = editFlow.mapDistinct { it.imageRef }
+    val message = MessageStore()
+
+    val editFlow = state.flow.mapDistinct { it.edit }
+    val imageUrlFlow = editFlow.mapDistinct { it.imageRef }
     val startTimeFlow = editFlow.mapDistinct { it.startTime }
     val endTimeFlow = editFlow.mapDistinct { it.endTime }
     val dateFlow = editFlow.mapDistinct { it.date }
     val startsAtFlow = editFlow.mapDistinct { it.startsAt }
-    val descriptionFlow = stateFlow.mapDistinct { it.event.description ?: "" }
-    val titleFlow = stateFlow.mapDistinct { it.event.title ?: "" }
-    val urlFlow = stateFlow.mapDistinct { it.event.link }
-    val isFreeFlow = stateFlow.mapDistinct { it.event.isFree }
+    val descriptionFlow = stateFlow.mapDistinct { it.edit.description ?: "" }
+    val titleFlow = stateFlow.mapDistinct { it.edit.title ?: "" }
+    val urlFlow = stateFlow.mapDistinct { it.edit.link }
+    val isFreeFlow = stateFlow.mapDistinct { it.edit.isFree }
     val costFlow = stateFlow.mapDistinct { it.costString }
 
-    val eventNow get() = stateNow.event
+    val editNow get() = stateNow.edit
 
-    fun setEventTitle(value: String) {
+    fun setTitle(value: String) {
         setEvent { it.copy(title = value)}
     }
 
@@ -61,7 +71,7 @@ class EventEditor(
     }
 
     fun setEdit(value: EventEdit) {
-        if (value == stateNow.event) return
+        if (value == stateNow.edit) return
         setEvent { value }
     }
 
@@ -87,36 +97,65 @@ class EventEditor(
     }
 
     fun addLink(value: ExtraLink) {
-        val linksNow = stateNow.event.links ?: emptyList()
+        val linksNow = stateNow.edit.links ?: emptyList()
         setEvent { it.copy(links = linksNow + value) }
     }
 
     fun removeLink(value: ExtraLink) {
-        val linksNow = stateNow.event.links ?: emptyList()
+        val linksNow = stateNow.edit.links ?: emptyList()
         setEvent { it.copy(links = (linksNow - value).takeIf { links -> links.isNotEmpty() }) }
     }
 
     fun editLink(index: Int, value: ExtraLink) {
-        val linksNow = stateNow.event.links ?: error("no links to edit")
+        val linksNow = stateNow.edit.links ?: error("no links to edit")
         setEvent { it.copy(links = linksNow.replaceAt(index, value)) }
     }
 
+    fun isEditValid(): Boolean {
+        val validMessage = editNow.validity.message
+        message.set(validMessage)
+        return validMessage == null
+    }
+
+    fun submit() {
+        scope.launch {
+            submitSuspend()
+        }
+    }
+
+    fun readEventWebsite() {
+//        val website = state.now.eventEdit.link?.takeIf { it.startsWith("http") } ?: return
+//        scope.launch {
+//            msg.set("Reading the link, this will take a minute.")
+//            val response = api.parseSingleEvent(UrlParseRequest(website))?.data
+//            if (response == null) {
+//                msg.set("We were unable to read the link.")
+//                return@launch
+//            }
+//            val event = response.mergeRight(state.now.eventEdit)
+//            msg.set("Does this information look correct?")
+//            state.set { it.copy(eventEdit = event) }
+//        }
+    }
+
+    suspend fun submitSuspend(): EventId? {
+        if (!isEditValid()) return null
+        message.set("Sending...")
+        return api.createOrEditEvent(editNow).handleResponse(message::set)
+    }
+
     private fun setEvent(provideEvent: (EventEdit) -> EventEdit) {
-        state.set { it.copy(event = provideEvent(eventNow)) }
+        state.set { it.copy(edit = provideEvent(editNow)) }
     }
 }
 
 data class EventEditorState(
-    val event: EventEdit,
+    val edit: EventEdit,
     val possibleLocations: List<Location> = emptyList(),
     val isVisible: Boolean = false,
     val originalSourceLabel: String = "",
     val originalSourceUrl: String = "",
     val costString: String = "",
     val imageUrl: Url? = null,
+    val eventId: EventId? = null
 )
-
-private fun Address.toBasicString(): String? {
-    val road = road ?: return null
-    return if (number != null) "$number $road" else road
-}

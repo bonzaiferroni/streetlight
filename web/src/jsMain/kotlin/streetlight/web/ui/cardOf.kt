@@ -12,7 +12,7 @@ fun RenderContext.cardOf(
     onClick: (() -> Unit)? = null,
 ) {
     cardOf(
-        title = location.displayTitle,
+        title = location.label,
         thumbUrl = location.images.thumb ?: SiteImage.placeholderTh.url,
         description = location.description ?: location.address,
         modifiers = modifiers,

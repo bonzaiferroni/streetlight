@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 
 fun <T1, T2> Flow<T1>.mapDistinct(block: suspend (T1) -> T2): Flow<T2> = map(block).distinctUntilChanged()
+fun <T1, T2> Flow<T1>.mapDistinctNotNull(block: suspend (T1) -> T2?): Flow<T2> = mapNotNull(block).distinctUntilChanged()
 
 fun <T1, T2, K> Flow<T1>.mapDistinctBy(provideKey: (T1) -> K, block: suspend (T1) -> T2): Flow<T2> =
     distinctUntilChangedBy(provideKey).map(block)

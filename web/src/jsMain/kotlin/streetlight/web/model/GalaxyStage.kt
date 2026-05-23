@@ -4,9 +4,9 @@ import koala.model.mapDistinct
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import streetlight.model.data.Galaxy
-import streetlight.model.data.Post
+import streetlight.model.data.GalaxyContent
+import streetlight.model.data.GalaxyPost
 import streetlight.model.data.PostId
-import streetlight.web.shells.GalaxyContent
 
 @Deprecated("Use refresh mechanism to reset stage")
 class GalaxyStage(
@@ -23,7 +23,7 @@ class GalaxyStage(
         state.set { it.copy(galaxy = content.galaxy, posts = posts) }
     }
 
-    fun addPost(post: Post) {
+    fun addPost(post: GalaxyPost) {
         val posts = stateNow.posts ?: emptyList()
         state.set { it.copy(posts = posts + post, isInitialStage = false) }
     }
@@ -33,7 +33,7 @@ class GalaxyStage(
         state.set { it.copy(posts = posts.filter { item -> item.postId != postId }, isInitialStage = false)}
     }
 
-    fun replacePost(post: Post) {
+    fun replacePost(post: GalaxyPost) {
         val posts = stateNow.posts?.map { if (it.postId == post.postId) post else it }
         state.set { it.copy(posts = posts, isInitialStage = false) }
     }
@@ -41,6 +41,6 @@ class GalaxyStage(
 
 data class GalaxyStageState(
     val galaxy: Galaxy? = null,
-    val posts: List<Post>? = null,
+    val posts: List<GalaxyPost>? = null,
     val isInitialStage: Boolean = true,
 )

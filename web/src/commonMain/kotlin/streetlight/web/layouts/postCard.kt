@@ -1,11 +1,8 @@
 package streetlight.web.layouts
 
 import kampfire.model.Url
-import kampfire.model.medium
-import koala.Svg
 import koala.SvgFile
 import koala.css.AlignItemsCenter
-import koala.css.AlignSelfEnd
 import koala.css.Aspect1
 import koala.css.Bold
 import koala.css.ColorSchemeFg
@@ -18,7 +15,6 @@ import koala.css.Gap0
 import koala.css.Height24
 import koala.css.Height4
 import koala.css.Height9
-import koala.css.JustifySelfEnd
 import koala.css.KoalaFun
 import koala.css.LineHeight1
 import koala.css.MarginTop1
@@ -52,7 +48,6 @@ import koala.html.column
 import koala.html.featureImage
 import koala.html.heading3
 import koala.html.icon
-import koala.html.navigation
 import koala.html.navigationIfNotNull
 import koala.html.row
 import koala.html.setPopoverTarget
@@ -65,8 +60,8 @@ import streetlight.model.data.PostId
 
 fun FlowContent.postCard(
     postId: PostId?,
-    title: String?,
-    subtitle: String?,
+    heading: String?,
+    subHeading: String?,
     postRoute: AppRoute?,
     subRoute: AppRoute?,
     imageUrl: Url?,
@@ -96,11 +91,11 @@ fun FlowContent.postCard(
 
                     column(modify(Gap0)) {
                         navigationIfNotNull(postRoute) {
-                            heading3(title, modify(LineHeight1, SingleLine, Bold, Shrinkable, Flex1, MarginTop1))
+                            heading3(heading, modify(LineHeight1, SingleLine, Bold, Shrinkable, Flex1, MarginTop1))
                         }
-                        subtitle?.let {
+                        subHeading?.let {
                             navigationIfNotNull(subRoute) {
-                                textBlock(subtitle, modify(OpacityMost))
+                                textBlock(subHeading, modify(OpacityMost))
                             }
                         }
                     }

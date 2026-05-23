@@ -6,7 +6,7 @@ import kotlinx.html.FlowContent
 import streetlight.model.data.*
 import streetlight.web.shells.SectionHeadingMod
 
-fun FlowContent.postSection(posts: List<Post>) {
+fun FlowContent.postSection(posts: List<GalaxyPost>) {
     section {
         filigree {
             heading2("Posts", SectionHeadingMod)
@@ -20,7 +20,7 @@ fun FlowContent.postSection(posts: List<Post>) {
     }
 }
 
-fun FlowContent.layoutPosts(posts: List<Post>) {
+fun FlowContent.layoutPosts(posts: List<GalaxyPost>) {
     posts.forEach { post ->
         postCardOf(post)
     }

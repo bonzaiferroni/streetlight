@@ -1,5 +1,6 @@
 package koala.dom
 
+import kampfire.model.ValidityCheck
 import koala.css.DisplayNone
 import koala.css.Valid
 import kotlinx.browser.document
@@ -22,10 +23,10 @@ fun HTMLElement.flowVisibility(isVisibleFlow: Flow<Boolean>, scope: CoroutineSco
     }
 }
 
-fun HTMLElement.flowValid(key: String, invalidParts: Flow<Set<String>>, scope: CoroutineScope) {
+fun HTMLElement.flowValid(key: String, check: Flow<ValidityCheck>, scope: CoroutineScope) {
     scope.launch {
-        invalidParts.collect { set ->
-            when (set.contains(key)) {
+        check.collect { check ->
+            when (check.invalidParts.contains(key)) {
                 true -> unmodify(Valid)
                 false -> modify(Valid)
             }

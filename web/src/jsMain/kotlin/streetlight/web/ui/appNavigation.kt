@@ -26,7 +26,7 @@ fun RenderContext.appNavigation() {
             StreetlightScreen.EditEvent -> viewEventEditorRoute()
             StreetlightScreen.Sandbox -> viewSandbox()
             StreetlightScreen.Earth -> viewEarthMapRoute()
-            StreetlightScreen.Post -> viewStarPostRoute()
+            StreetlightScreen.Post -> viewPostRoute()
             StreetlightScreen.EditPost -> viewEditPostRoute()
             StreetlightScreen.Chat -> viewChatRoom()
             StreetlightScreen.SongProfile -> viewSongProfile()

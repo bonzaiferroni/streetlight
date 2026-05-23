@@ -14,7 +14,7 @@ data class EventPost(
     override val text: String?,
     override val createdAt: Instant,
     override val updatedAt: Instant,
-): Post {
+): GalaxyPost {
     override val images get() = event.images ?: event.images
     override val geoPoint get() = event.geoPoint
     override val title get() = event.title
@@ -28,8 +28,8 @@ data class EventPost(
 @Serializable
 data class EventPostEdit(
     val postId: PostId? = null,
-    val galaxyId: GalaxyId? = null,
-    val eventId: EventId? = null,
+    val galaxyId: GalaxyId,
+    val eventId: EventId,
     val text: String? = null,
 ) {
     val isValid get () = true // !title.isNullOrBlank()

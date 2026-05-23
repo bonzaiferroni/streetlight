@@ -14,7 +14,6 @@ import streetlight.model.data.EventId
 import streetlight.model.data.EventLocation
 import streetlight.web.model.DataCache
 import streetlight.web.model.LightCache
-import streetlight.web.model.Streetlight
 import streetlight.web.shells.HomeKey
 import kotlin.collections.component1
 import kotlin.collections.component2
@@ -59,7 +58,7 @@ fun RenderContext.narrowEventCard(event: EventLocation, eventCache: LightCache<E
         column() {
             column(modify(Gap0)) {
                 textBlock(event.title, modify(WhiteSpaceNoWrap, TextOverflowHidden))
-                textBlock(event.locationDisplayTitle, modify(WhiteSpaceNoWrap, TextOverflowHidden, Dim))
+                textBlock(event.locationLabel, modify(WhiteSpaceNoWrap, TextOverflowHidden, Dim))
             }
             row(modify(JustifyContentSpaceBetween)) {
                 textBlock(event.startsAt.toTimeFormat())

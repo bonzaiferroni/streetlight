@@ -6,15 +6,15 @@ import koala.dom.replaceRender
 import koala.dom.routeBlock
 import koala.dom.shellBox
 import streetlight.model.data.SpaceType
-import streetlight.model.data.StarPost
-import streetlight.web.StarPostRoute
+import streetlight.model.data.Post
+import streetlight.web.PostRoute
 import streetlight.web.io.TalkLog
 import streetlight.web.shells.PostKey
-import streetlight.web.shells.starPostShell
+import streetlight.web.shells.postShell
 
-fun RenderContext.viewStarPost(post: StarPost) {
+fun RenderContext.viewPost(post: Post) {
     val root = shellBox(PostKey.ShellId) {
-        starPostShell(post)
+        postShell(post)
     }
 
     replaceRender(PostKey.TalkId) {
@@ -23,12 +23,11 @@ fun RenderContext.viewStarPost(post: StarPost) {
     }
 }
 
-fun RenderContext.viewStarPostRoute() {
-    routeBlock<StarPostRoute, StarPost>(portal, { route ->
-        readIslandOrApi(PostKey.IslandId, { it.postId.toString() == route.id || it.slug == route.id }) {
-            api.readPost(route.id).handleResponse(toaster::toast) as? StarPost
-        }
+fun RenderContext.viewPostRoute() {
+    routeBlock<PostRoute, Post>(portal, { route ->
+        readIsland<Post>(PostKey.IslandId) { it.slug == route.value || it.postId.string == route.value }
+            ?: api.readPost(route.value).handleResponse(toaster::toast) as? Post
     }) { post ->
-        viewStarPost(post)
+        viewPost(post)
     }
 }

@@ -55,7 +55,7 @@ fun RenderContext.viewEventFormProto(
                 filigree {
                     heading3("Image")
                 }
-                imageDrop(model.imageFlow, model::setImageUrl, modify(Aspect3By2, BorderRadius1))
+                imageDrop(model.imageUrlFlow, model::setImageUrl, modify(Aspect3By2, BorderRadius1))
             }
 
             column(modify(Flex2, Gap4)) {
@@ -66,7 +66,7 @@ fun RenderContext.viewEventFormProto(
                     // provide event title
                     textField(
                         label = "title",
-                        onValue = model::setEventTitle,
+                        onValue = model::setTitle,
                         flow = model.titleFlow,
                         modifiers = modify(Width100P),
                         placeholder = "Event Title"
@@ -179,7 +179,7 @@ fun RenderContext.viewEventFormProto(
 }
 
 fun RenderContext.eventLinks(model: EventEditor) {
-    val linksFlow = model.stateFlow.mapDistinct { it.event.links ?: emptyList() }
+    val linksFlow = model.stateFlow.mapDistinct { it.edit.links ?: emptyList() }
 
     val editState = storeOf(LinkEditState())
     val linkEditIndexFlow = editState.flow.mapDistinct { it.index }
@@ -198,7 +198,7 @@ fun RenderContext.eventLinks(model: EventEditor) {
         editState.set { LinkEditState() }
     }
     fun addLink() {
-        val index = model.stateNow.event.links?.size ?: 0
+        val index = model.stateNow.edit.links?.size ?: 0
         model.addLink(ExtraLink.Blank)
         editState.set { it.copy(index = index) }
     }

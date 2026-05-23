@@ -1,6 +1,6 @@
 package streetlight.model.data
 
-typealias Slug = String
+import kampfire.api.Slug
 
 fun slugOf(name: String): Slug =
     name

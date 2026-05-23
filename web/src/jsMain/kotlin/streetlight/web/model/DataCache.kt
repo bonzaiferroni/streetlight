@@ -8,7 +8,7 @@ import streetlight.model.data.EventId
 import streetlight.model.data.Galaxy
 import streetlight.model.data.GalaxyId
 import streetlight.model.data.LightType
-import streetlight.model.data.Post
+import streetlight.model.data.GalaxyPost
 import streetlight.web.io.ApiClient
 import streetlight.web.ui.StarLightKey
 
@@ -34,7 +34,7 @@ class DataCache(
     // val file = ItemCache(scope, { it }) { api.readUserFiles() }
     val topGalaxies = ItemCache(scope, toaster::toast, { it.galaxyId }) { api.readTopGalaxies() }
 
-    val newPosts = MutableSharedFlow<Post>()
+    val newPosts = MutableSharedFlow<GalaxyPost>()
 
     // val galaxy = GalaxyCache(scope, config, api)
 

@@ -7,7 +7,7 @@ import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import streetlight.model.data.Galaxy
-import streetlight.model.data.Post
+import streetlight.model.data.GalaxyPost
 import streetlight.web.EarthMapRoute
 import streetlight.web.io.ApiClient
 
@@ -45,5 +45,5 @@ class EarthMap(
 
 data class EarthMapState(
     val galaxy: Galaxy? = null,
-    val posts: List<Post>? = null,
+    val posts: List<GalaxyPost>? = null,
 )

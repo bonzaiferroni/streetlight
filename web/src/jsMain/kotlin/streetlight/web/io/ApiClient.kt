@@ -1,5 +1,7 @@
 package streetlight.web.io
 
+import kampfire.api.Slug
+import kampfire.api.SlugOrId
 import kampfire.api.StringId
 import kampfire.api.UserApi
 import kampfire.model.GeoBounds
@@ -25,7 +27,7 @@ class ApiClient(private val client: FetchClient) {
     suspend fun readEventBySlug(slug: Slug) = client.getApi(Api.Events.ReadBySlug, slug)
     suspend fun readEventLocationBySlug(slug: Slug) = client.getApi(Api.Events.ReadEventLocationBySlug, slug)
     suspend fun readEventFeed() = client.getApi(Api.Events)
-    suspend fun createOrEditEvent(event: EventEdit) = client.postApi(Api.Events.Edit, event)
+    suspend fun createOrEditEvent(event: EventEdit) = client.postApi(Api.Events.CreateOrEdit, event)
     suspend fun parseMultiEvent(request: ParseRequest) = client.postApi(Api.Events.ParseMultiEvents, request)
     suspend fun parseSingleEvent(request: ParseRequest) = client.postApi(Api.Events.ParseSingleEvent, request)
     suspend fun readLocationEvents(locationId: LocationId) = client.getApi(Api.Events.AtLocation, locationId)
@@ -83,12 +85,13 @@ class ApiClient(private val client: FetchClient) {
     suspend fun createOrUpdateGalaxy(galaxy: GalaxyEdit) = client.postApi(Api.Galaxies.CreateOrEdit, galaxy)
     suspend fun readTopGalaxies() = client.getApi(Api.Galaxies.Top)
     suspend fun readGalaxies(galaxyIds: List<GalaxyId>) = client.postApi(Api.Galaxies.ReadGalaxies, galaxyIds)
-    suspend fun readGalaxy(id: StringId) = client.getApi(Api.Galaxies.ReadId, id)
+    suspend fun readGalaxy(value: SlugOrId) = client.getApi(Api.Galaxies.ReadGalaxy, value)
+    suspend fun readGalaxyContent(value: SlugOrId) = client.getApi(Api.Galaxies.ReadContent, value)
     suspend fun readGalaxy(galaxyId: GalaxyId) = readGalaxy(galaxyId.value.toString())
-    suspend fun createPost(post: EventPostEdit) = client.postApi(Api.Galaxies.PostEvent, post)
-    suspend fun createPost(post: ContentEdit) = client.postApi(Api.Galaxies.PostContent, post)
-    suspend fun editPost(post: ContentEdit) = client.postApi(Api.Galaxies.EditContent, post)
-    suspend fun postLocation(location: LocationPostEdit) = client.postApi(Api.Galaxies.PostLocation, location)
+    suspend fun createPost(post: EventPostEdit) = client.postApi(Api.Galaxies.CreateEventPost, post)
+    suspend fun createPost(post: PostEdit) = client.postApi(Api.Galaxies.CreatePost, post)
+    suspend fun editPost(post: PostEdit) = client.postApi(Api.Galaxies.EditPost, post)
+    suspend fun postLocation(location: LocationPostEdit) = client.postApi(Api.Galaxies.CreateLocationPost, location)
     suspend fun readPosts(galaxyIds: List<GalaxyId>) = client.postApi(Api.Galaxies.ReadMultiPosts, galaxyIds)
     suspend fun readPosts(galaxyId: GalaxyId) = client.getApi(Api.Galaxies.ReadPosts, galaxyId)
     suspend fun readPost(postId: PostId) = client.getApi(Api.Galaxies.ReadPost, postId.value.toString())

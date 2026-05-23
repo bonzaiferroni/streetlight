@@ -1,19 +1,5 @@
 package streetlight.web.shells
 
-import koala.css.AlignItemsStart
-import koala.css.Dim
-import koala.css.FlexItems1
-import koala.css.MediaMdRow
-import koala.css.modify
-import koala.html.column
-import koala.html.heading3
-import koala.html.textBlock
-import kotlinx.html.FlowContent
-import streetlight.model.data.Galaxy
-import streetlight.model.data.EventPost
-import streetlight.model.data.Post
-import streetlight.web.pages.appFooter
-
 //fun FlowContent.spotlightTab(content: HomeContent) {
 //    val galaxies = content.galaxies; val posts = content.posts
 //    column {

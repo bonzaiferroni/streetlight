@@ -6,7 +6,6 @@ import koala.css.JustifyContentSpaceBetween
 import koala.css.modify
 import koala.dom.*
 import streetlight.model.data.GalaxyEdit
-import streetlight.web.model.GalaxyEditor
 
 fun RenderContext.viewGalaxyFoundry() {
     val model = app.getGalaxyEditor(GalaxyEdit(), renderScope)

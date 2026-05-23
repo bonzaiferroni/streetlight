@@ -1,5 +1,6 @@
 package streetlight.web.model
 
+import kampfire.api.Slug
 import kampfire.model.Url
 import kampfire.model.handleResponse
 import koala.dom.UIMessage
@@ -8,12 +9,12 @@ import koala.model.mapDistinct
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import streetlight.model.data.Post
-import streetlight.model.data.ContentEdit
+import streetlight.model.data.PostEdit
+import streetlight.model.data.PostId
 import streetlight.web.io.ApiClient
 
-class ContentEditor(
-    initialContent: ContentEdit,
+class PostEditor(
+    initialContent: PostEdit,
     private val scope: CoroutineScope,
     private val api: ApiClient,
     private val toaster: Toaster,
@@ -61,18 +62,18 @@ class ContentEditor(
             when (content.postId) {
                 null -> api.createPost(content)
                 else -> api.editPost(content)
-            }.handleResponse(toaster::toast) { post ->
-                state.set { it.copy(post = post) }
+            }.handleResponse(toaster::toast) { postId ->
+                state.set { it.copy(postId = postId) }
             }
         }
     }
 
-    private fun setContent(block: (ContentEdit) -> ContentEdit) {
+    private fun setContent(block: (PostEdit) -> PostEdit) {
         state.set { it.copy(content = block(stateNow.content)) }
     }
 }
 
 data class ContentEditorState(
-    val content: ContentEdit,
-    val post: Post? = null
+    val content: PostEdit,
+    val postId: PostId? = null
 )

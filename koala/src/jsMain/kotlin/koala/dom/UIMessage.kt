@@ -16,10 +16,12 @@ enum class UIMessageType {
     Working,
 }
 
-fun Store<UIMessage?>.set(text: String, type: UIMessageType = UIMessageType.Info) = set { UIMessage(text, type) }
+fun Store<UIMessage?>.set(text: String?, type: UIMessageType = UIMessageType.Info) = set {
+    text?.let { UIMessage(it, type)}
+}
 
 fun Store<UIMessage?>.set(problem: Problem<*>?) = set { UIMessage(problem?.message ?: "Something went wrong.") }
 
 fun Store<UIMessage?>.clear() = set { null }
 
-fun messageStore(value: UIMessage? = null) = storeOf(value)
+fun MessageStore(value: UIMessage? = null) = storeOf(value)

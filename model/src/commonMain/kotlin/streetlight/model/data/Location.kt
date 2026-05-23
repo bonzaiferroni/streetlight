@@ -1,6 +1,7 @@
 package streetlight.model.data
 
 import kampfire.model.GeoPoint
+import kampfire.model.Labeled
 import kampfire.model.ScaledImageArray
 import kampfire.model.Url
 import kampfire.model.toUrl
@@ -14,6 +15,7 @@ data class Location(
     val locationId: LocationId,
     val cityId: CityId?,
     val mapId: MapId?,
+    val slug: String,
     val name: String?,
     val username: String?,
     val description: String?,
@@ -35,13 +37,13 @@ data class Location(
     val extraLinks: List<ExtraLink>?,
     val updatedAt: Instant,
     val createdAt: Instant,
-) {
+): Labeled {
     val addressLine by lazy {
         addressLineOf(address, city)
     }
 
-    val displayTitle get() = name ?: address ?: "(geocoordinates)"
-    val subtitle get() = when (name) {
+    override val label get() = name ?: address ?: "(geolocation)"
+    val subLabel get() = when (name) {
         null -> city
         else -> addressLine
     }

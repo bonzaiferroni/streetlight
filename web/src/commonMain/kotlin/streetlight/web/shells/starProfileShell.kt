@@ -3,7 +3,7 @@ package streetlight.web.shells
 import koala.css.*
 import koala.html.*
 import kotlinx.html.FlowContent
-import streetlight.model.data.Post
+import streetlight.model.data.GalaxyPost
 import streetlight.model.data.Star
 import streetlight.web.pages.appFooter
 import streetlight.web.ui.headerOf
@@ -30,7 +30,7 @@ fun FlowContent.starProfileShell(content: StarProfileContent) {
 
 data class StarProfileContent(
     val star: Star,
-    val posts: List<Post>,
+    val posts: List<GalaxyPost>,
 )
 
 object StarProfileKey {

@@ -10,13 +10,18 @@ import koala.html.heading3
 import koala.html.heading4
 import koala.html.markdown
 import koala.html.textProperty
-import koala.model.mapDistinct
 import streetlight.web.model.EventEditor
 import kotlin.time.Clock
 
+fun RenderContext.eventEditFormBody(model: EventEditor) = formBody {
+    eventDetailsForm(model)
+    eventImageForm(model)
+    eventLinksForm(model)
+}
+
 fun RenderContext.eventDetailsForm(model: EventEditor) = formCardSection("Event Details") {
     formPart("What is the name of the event?") {
-        formTextField("title", model::setEventTitle, model.titleFlow, maxLength = 50)
+        formTextField("title", model::setTitle, model.titleFlow, maxLength = 50)
     }
     formPart("How much does it cost?") {
         row {
@@ -83,10 +88,12 @@ fun RenderContext.eventDetailsForm(model: EventEditor) = formCardSection("Event 
     }
 }
 
-private val imageInstructions = "This image will appear in the feed and at the top of the event page."
-
 fun RenderContext.eventImageForm(model: EventEditor) =
-    imageFormSection(imageInstructions, model::setImageUrl, model.stateFlow.mapDistinct { it.imageUrl })
+    imageFormSection(
+        instructions = "This image will appear in the feed and at the top of the event page.",
+        onValue = model::setImageUrl,
+        imageFlow = model.imageUrlFlow
+    )
 
 fun RenderContext.eventLinksForm(model: EventEditor) = formCardSection("Links") {
     eventLinks(model)

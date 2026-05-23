@@ -15,7 +15,7 @@ data class LocationPost(
     override val text: String?,
     override val createdAt: Instant,
     override val updatedAt: Instant,
-): Post {
+): GalaxyPost {
     override val images get() = location.images
     override val geoPoint get() = location.geoPoint ?: GeoPoint.Denver
     override val description get() = location.description

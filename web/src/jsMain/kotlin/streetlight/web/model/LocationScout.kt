@@ -1,8 +1,9 @@
 package streetlight.web.model
 
+import kampfire.api.Slug
 import kampfire.model.Labeled
 import kampfire.model.handleResponse
-import koala.dom.messageStore
+import koala.dom.MessageStore
 import koala.dom.set
 import koala.model.GeoMap
 import koala.model.mapDistinct
@@ -14,7 +15,7 @@ import streetlight.model.data.Galaxy
 import streetlight.model.data.Location
 import streetlight.model.data.LocationEdit
 import streetlight.model.data.LocationPostEdit
-import streetlight.model.data.Post
+import streetlight.model.data.PostId
 import streetlight.model.data.mergeLeft
 import streetlight.model.data.toEditOrNull
 import streetlight.web.io.ApiClient
@@ -32,17 +33,17 @@ class LocationScout(
     private val state = storeOf(LocationScoutState(city = galaxy.city))
     val stateNow get() = state.now
     val stateFlow = state.flow
-    val mapMessage = messageStore()
-    val postMessage = messageStore()
+    val mapMessage = MessageStore()
+    val postMessage = MessageStore()
 
     val queryFlow = stateFlow.mapDistinct { it.query }
     val cityFlow = stateFlow.mapDistinct { it.city }
-    val locationsFlow = stateFlow.mapDistinct { it.locations }
+    val queryLocationsFlow = stateFlow.mapDistinct { it.queryLocations }
     val locationFlow = stateFlow.mapDistinct { it.location }
     val osmLocationsFlow = stateFlow.mapDistinct { it.osmLocations }
     val hasOsmLocations = stateFlow.mapDistinct { it.osmLocations.isNotEmpty() }
     val stageFlow = stateFlow.mapDistinct { it.stage }
-    val postFlow = stateFlow.mapDistinct { it.post }
+    val postFlow = stateFlow.mapDistinct { it.postId }
     val modeFlow = stateFlow.mapDistinct { it.mode }
     val mapLocationFlow = stateFlow.mapDistinct { it.mapLocation }
 
@@ -52,7 +53,7 @@ class LocationScout(
                 queryFlow.collect { query ->
                     api.searchLocations(query, stateNow.city?.takeIf { it.isNotBlank() })
                         .handleResponse(toaster::toast) { locations ->
-                            state.set { it.copy(locations = locations) }
+                            state.set { it.copy(queryLocations = locations) }
                         }
                 }
             }
@@ -99,21 +100,20 @@ class LocationScout(
     }
 
     fun review() {
-
+        if (!editor.isEditValid()) return
         state.set { it.copy(stage = LocationScoutStage.Post) }
     }
 
     fun postToGalaxy() {
         scope.launch {
-            postMessage.set("Posting...")
-            val location = when (val location = stateNow.location) {
-                null -> editor.submitSuspended()
-                else -> location
+            val locationId = when (val location = stateNow.location) {
+                null -> editor.submitSuspend()
+                else -> location.locationId
             } ?: return@launch
 
-            val edit = LocationPostEdit(null, galaxy.galaxyId, location.locationId, null)
-            api.postLocation(edit).handleResponse(postMessage::set, "Posted location to ${galaxy.name}.") { post ->
-                state.set { it.copy(post = post) }
+            val edit = LocationPostEdit(null, galaxy.galaxyId, locationId, null)
+            api.postLocation(edit).handleResponse(postMessage::set) { postId ->
+                state.set { it.copy(postId = postId) }
             }
         }
     }
@@ -122,11 +122,11 @@ class LocationScout(
 data class LocationScoutState(
     val query: String = "",
     val city: String? = null,
-    val locations: List<Location> = emptyList(),
+    val queryLocations: List<Location> = emptyList(),
     val osmLocations: List<LocationEdit> = emptyList(),
     val location: Location? = null,
     val stage: LocationScoutStage = LocationScoutStage.Search,
-    val post: Post? = null,
+    val postId: PostId? = null,
     val mapLocation: LocationEdit? = null,
     val mode: LocationScoutMode = LocationScoutMode.Map,
 )

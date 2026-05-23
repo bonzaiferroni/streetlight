@@ -15,17 +15,18 @@ import koala.html.setAttribute
 import koala.html.span
 import koala.html.textBlock
 import kotlinx.html.FlowContent
+import streetlight.model.data.EventLocation
 import streetlight.model.data.Location
-import streetlight.model.data.Post
+import streetlight.model.data.GalaxyPost
 
-fun FlowContent.postCardOf(post: Post) {
+fun FlowContent.postCardOf(post: GalaxyPost) {
     column {
         setAttribute(PostKey.Attribute.to(post.postId))
 
         postCard(
             postId = post.postId,
-            title = post.title,
-            subtitle = post.subtitle,
+            heading = post.title,
+            subHeading = post.subtitle,
             postRoute = post.route,
             subRoute = post.subRoute,
             imageUrl = post.images.medium,
@@ -49,8 +50,8 @@ fun FlowContent.postCardOf(post: Post) {
 fun FlowContent.postCardOf(location: Location) {
     postCard(
         postId = null,
-        title = location.displayTitle,
-        subtitle = location.subtitle,
+        heading = location.label,
+        subHeading = location.subLabel,
         postRoute = null,
         subRoute = null,
         imageUrl = location.images.medium,
@@ -59,5 +60,21 @@ fun FlowContent.postCardOf(location: Location) {
         flairIcon = FlairIcon.Location,
         links = location.links,
         cells = locationCells(location)
+    )
+}
+
+fun FlowContent.postCardOf(event: EventLocation) {
+    postCard(
+        postId = null,
+        heading = event.label,
+        subHeading = event.locationLabel,
+        postRoute = null,
+        subRoute = null,
+        imageUrl = event.images.medium,
+        description = event.description,
+        colorScheme = ColorScheme.Accent,
+        flairIcon = FlairIcon.Event,
+        links = event.links,
+        cells = eventCells(event)
     )
 }

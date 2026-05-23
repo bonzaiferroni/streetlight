@@ -1,23 +1,13 @@
 package streetlight.web.shells
 
-import kabinet.utils.toAgoFormat
 import kampfire.model.largest
 import koala.css.AlignSelfCenter
 import koala.css.AntiShadow
-import koala.css.Aspect1
-import koala.css.Aspect3By2
-import koala.css.Bold
 import koala.css.BorderRadius1
 import koala.css.BorderRadius2
-import koala.css.BorderRadius50P
-import koala.css.Class
 import koala.css.Gap0
-import koala.css.Gap2
-import koala.css.Height5
-import koala.css.JustifyContentCenter
 import koala.css.JustifyContentEnd
 import koala.css.LargeText
-import koala.css.LineHeight1
 import koala.css.LineHeight115
 import koala.css.MarginTop4
 import koala.css.MaxHeight64
@@ -27,7 +17,6 @@ import koala.css.OpacityMost
 import koala.css.OverflowClip
 import koala.css.Padding0
 import koala.css.Padding2
-import koala.css.Padding4
 import koala.css.SideBorder
 import koala.css.TextAlignCenter
 import koala.css.Zen
@@ -38,7 +27,6 @@ import koala.html.btn
 import koala.html.card
 import koala.html.column
 import koala.html.dataIsland
-import koala.html.featureImage
 import koala.html.filigree
 import koala.html.heading1
 import koala.html.heading4
@@ -47,17 +35,15 @@ import koala.html.markdown
 import koala.html.mount
 import koala.html.row
 import koala.html.section
-import koala.html.textBlock
 import kotlinx.html.FlowContent
-import streetlight.model.data.PostId
-import streetlight.model.data.StarPost
+import streetlight.model.data.Post
 import streetlight.web.EditPostRoute
 import streetlight.web.layouts.cellRow
 import streetlight.web.layouts.postedAtCell
 import streetlight.web.layouts.starCell
 import streetlight.web.pages.appFooter
 
-fun FlowContent.starPostShell(post: StarPost) {
+fun FlowContent.postShell(post: Post) {
     section(PostKey.ShellId) {
         column(modify(Gap0)) {
             heading1(post.title, modify(TextAlignCenter, AntiShadow, LineHeight115, MarginTop4))

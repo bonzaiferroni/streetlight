@@ -5,7 +5,6 @@ import koala.css.*
 import koala.dom.*
 import koala.html.bulletsOf
 import koala.html.span
-import koala.model.GeoMap
 import koala.model.mapDistinct
 import streetlight.model.data.GalaxyEdit
 import streetlight.model.data.GalaxyProperty
@@ -54,7 +53,6 @@ fun RenderContext.galaxyCityForm(model: GalaxyEditor) {
 fun RenderContext.galaxyNameForm(model: GalaxyEditor) {
     val nameFlow = model.galaxyFlow.mapDistinct { it.name ?: "" }
     val pathFlow = model.galaxyFlow.mapDistinct { it.slug ?: "" }
-    val invalidPartsFlow = model.galaxyFlow.mapDistinct { it.invalidParts }
 
     formCardSection("Galaxy Name") {
         formPart(
@@ -68,7 +66,7 @@ fun RenderContext.galaxyNameForm(model: GalaxyEditor) {
                 modifiers = modify(Required),
                 footnote = nameCharacters,
                 maxLength = GalaxyEdit.MAX_NAME_LENGTH
-            ).flowValid(GalaxyProperty.Name, invalidPartsFlow, renderScope)
+            ).flowValid(GalaxyProperty.Name, model.validityFlow, renderScope)
         }
         formPart(
             instructions = pathInstructions,
@@ -85,7 +83,7 @@ fun RenderContext.galaxyNameForm(model: GalaxyEditor) {
                 modifiers = modify(Required),
                 footnote = pathCharacters,
                 maxLength = GalaxyEdit.MAX_NAME_LENGTH
-            ).flowValid(GalaxyProperty.Path, invalidPartsFlow, renderScope)
+            ).flowValid(GalaxyProperty.Path, model.validityFlow, renderScope)
         }
     }
 }

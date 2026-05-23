@@ -1,19 +1,15 @@
 package streetlight.web.ui
 
-import kampfire.model.Url
 import kampfire.model.large
 import kampfire.model.medium
 import koala.css.*
 import koala.html.*
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
-import streetlight.model.data.ExtraLink
 import streetlight.model.data.Galaxy
 import streetlight.model.data.Location
 import streetlight.model.data.Star
 import streetlight.web.GalaxyConfigRoute
-import streetlight.web.GalaxyRoute
-import streetlight.web.layouts.cellRow
 import streetlight.web.layouts.galaxyCells
 import streetlight.web.layouts.locationCells
 
@@ -24,7 +20,7 @@ fun FlowContent.headerOf(
 ) {
     // headerImage(location.name, location.images.medium, modifiers, block)
     featureHeader(
-        title = location.displayTitle,
+        title = location.label,
         descriptor = "at",
         subtitle = location.addressLine,
         image = location.images.large,

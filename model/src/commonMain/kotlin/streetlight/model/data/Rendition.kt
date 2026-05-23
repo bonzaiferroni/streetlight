@@ -29,7 +29,7 @@ data class NewRendition(
     val rating: SelfRating?,
 )
 
-enum class SelfRating(override val label: String): Labeled<SelfRating> {
+enum class SelfRating(override val label: String): Labeled {
     FirstSteps("First Steps"),
     NeedsWork("Needs Work"),
     ComingAlong("Coming Along"),

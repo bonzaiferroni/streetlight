@@ -18,10 +18,9 @@ import streetlight.model.data.toEdit
 import streetlight.web.EditEventCallbackRoute
 import streetlight.web.EditEventIdRoute
 import streetlight.web.EditEventRoute
-import streetlight.web.layouts.route
 
 // event editor content including introduction and form
-fun RenderContext.viewEventEditor(
+fun RenderContext.viewEventEditorProto(
     event: EventEdit,
     callback: ((Event?) -> Unit)?
 ) {
@@ -30,12 +29,12 @@ fun RenderContext.viewEventEditor(
 
     // give feedback on edit validity
     renderScope.launch {
-        editStore.flow.collect { edit ->
-            when (val text = edit.invalidMessage) {
-                null -> msg.set("Looks good.")
-                else -> msg.set(text)
-            }
-        }
+//        editStore.flow.collect { edit ->
+//            when (val text = edit.invalidMessage) {
+//                null -> msg.set("Looks good.")
+//                else -> msg.set(text)
+//            }
+//        }
     }
 
     val sectionMod = modify(QueryContainer)
@@ -77,14 +76,14 @@ fun RenderContext.viewEventEditor(
                 }
                 button(text, modify(Accent), onClick = {
                     renderScope.launch {
-                        api.createOrEditEvent(editStore.now).handleResponse(msg::set) {
-                            if (callback != null) {
-                                portal.goBack()
-                                callback.invoke(it)
-                            } else {
-                                portal.go(it.route)
-                            }
-                        }
+//                        api.createOrEditEvent(editStore.now).handleResponse(msg::set) {
+//                            if (callback != null) {
+//                                portal.goBack()
+//                                callback.invoke(it)
+//                            } else {
+//                                portal.go(it.route)
+//                            }
+//                        }
                     }
                 })
             }
@@ -116,7 +115,7 @@ fun RenderContext.viewEventEditorRoute() {
             }
         }
     }) { event ->
-        viewEventEditor(event, callback)
+        viewEventEditorProto(event, callback)
     }
 }
 

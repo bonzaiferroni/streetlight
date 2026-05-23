@@ -8,7 +8,6 @@ import koala.dom.routeBlock
 import streetlight.model.data.GalaxyEdit
 import streetlight.model.data.toEdit
 import streetlight.web.GalaxyConfigRoute
-import streetlight.web.model.GalaxyEditor
 
 fun RenderContext.viewGalaxyConfig(edit: GalaxyEdit) {
     val model = app.getGalaxyEditor(edit, renderScope)
@@ -49,7 +48,7 @@ fun RenderContext.viewGalaxyConfig(edit: GalaxyEdit) {
 
 fun RenderContext.viewGalaxyConfigRoute() {
     routeBlock<GalaxyConfigRoute, GalaxyEdit>(portal, { route ->
-        api.readGalaxy(route.id).handleResponse(toaster::toast)?.toEdit()
+        api.readGalaxy(route.value).handleResponse(toaster::toast)?.toEdit()
     }) {
         viewGalaxyConfig(it)
     }

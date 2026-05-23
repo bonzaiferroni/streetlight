@@ -20,7 +20,7 @@ class EventApiClient(
 ): EventRepository {
     override suspend fun readEventFeed() = client.request(Api.Events)
     override suspend fun readById(eventId: EventId) = client.getById(Api.EventProfile, eventId)
-    override suspend fun createEvent(event: EventEdit) = client.request(Api.Events.Edit, event)
+    override suspend fun createEvent(event: EventEdit) = client.request(Api.Events.CreateOrEdit, event)
     override suspend fun updateEvent(event: Event) = client.request(Api.EventProfile.Update, event)
     override suspend fun deleteEvent(eventId: EventId) = client.request(Api.Events.Delete, eventId)
 }

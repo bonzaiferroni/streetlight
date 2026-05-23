@@ -2,6 +2,7 @@ package streetlight.model.data
 
 import kampfire.model.GeoPoint
 import kampfire.model.Url
+import kampfire.model.toValidityCheck
 import kotlinx.serialization.Serializable
 import streetlight.model.external.OSMLocation
 import streetlight.model.external.toGeoPoint
@@ -29,18 +30,21 @@ data class LocationEdit(
     val menuUrl: String? = null,
     val imageRef: Url? = null,
 ) {
-    val isValid get() = name != null && geoPoint != null
-
-    val invalidPart get() = when {
-        name.isNullOrBlank() -> "name"
-        geoPoint == null -> "geolocation"
-        city == null -> "city"
-        else -> null
+    val validity by lazy {
+        buildSet {
+            if (name.isNullOrBlank()) add(LocationProperty.Name)
+            if (geoPoint == null) add(LocationProperty.GeoPoint)
+            if (city == null) add(LocationProperty.City)
+        }.toValidityCheck()
     }
 
-    val displayTitle get() = name ?: address ?: "(geocoordinates)"
+    val displayTitle get() = name ?: address ?: "(geolocation)"
+}
 
-    val invalidMessage get() = invalidPart?.let { "missing: $it"}
+object LocationProperty {
+    val Name = "name"
+    val GeoPoint = "geolocation"
+    val City = "city"
 }
 
 fun LocationEdit.mergeLeft(edit: LocationEdit?) = edit?.let {

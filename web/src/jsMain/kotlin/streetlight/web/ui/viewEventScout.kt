@@ -3,10 +3,13 @@ package streetlight.web.ui
 import kampfire.model.handleResponse
 import koala.LottieFile
 import koala.dom.*
+import koala.model.mapDistinctNotNull
 import streetlight.model.data.EventEdit
 import streetlight.model.data.Galaxy
 import streetlight.model.data.LocationEdit
 import streetlight.web.EventScoutRoute
+import streetlight.web.GalaxyRoute
+import streetlight.web.layouts.postCardOf
 import streetlight.web.model.EventScoutStage
 
 fun RenderContext.viewEventScout(galaxy: Galaxy) {
@@ -14,7 +17,8 @@ fun RenderContext.viewEventScout(galaxy: Galaxy) {
     val location = app.getLocationScout(galaxy, locationEditor, renderScope)
     val editor = app.getEventEditor(EventEdit(), renderScope)
     val model = app.getEventScout(galaxy, editor, location, renderScope)
-    goOnPosted(model.postFlow)
+    val routeFlow = model.stateFlow.mapDistinctNotNull { it.postId?.let { GalaxyRoute(galaxy.slug) } }
+    goOnRoute(routeFlow)
 
     section {
         introSection("Event Scout", lottie = LottieFile.StrollingMan) {
@@ -28,11 +32,20 @@ fun RenderContext.viewEventScout(galaxy: Galaxy) {
                 }
                 EventScoutStage.LocationEdit -> column {
                     locationEditFormBody(locationEditor)
-                    formSubmit("Done", location::review)
+                    formSubmit("Next", location::review, messages = locationEditor.message)
                 }
-                EventScoutStage.EventSearch -> TODO()
-                EventScoutStage.EventEdit -> TODO()
-                EventScoutStage.Post -> TODO()
+                EventScoutStage.EventSearch -> formBody {
+                    eventSearchForm(model)
+                }
+                EventScoutStage.EventEdit -> column {
+                    eventEditFormBody(editor)
+                    formSubmit("Next", model::review, messages = editor.message)
+                }
+                EventScoutStage.Post -> formBody {
+                    val event = model.stateNow.event ?: error("location not found")
+                    postCardOf(event)
+                    formSubmit("Post", model::post, messages = model.postMessage)
+                }
             }
         }
     }

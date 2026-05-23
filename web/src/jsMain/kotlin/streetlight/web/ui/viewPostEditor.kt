@@ -4,25 +4,27 @@ import kampfire.model.handleResponse
 import koala.css.*
 import koala.dom.*
 import koala.dom.routeBlock
+import koala.html.AppRoute
 import koala.html.heading1
-import koala.model.mapDistinct
+import koala.model.mapDistinctNotNull
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+import streetlight.model.data.PostEdit
 import streetlight.model.data.Post
-import streetlight.model.data.ContentEdit
-import streetlight.model.data.StarPost
 import streetlight.model.data.toEdit
 import streetlight.web.EditPostRoute
-import streetlight.web.GalaxyRoute
-import streetlight.web.model.ContentEditor
+import streetlight.web.PostRoute
+import streetlight.web.model.PostEditor
 
-fun RenderContext.viewContentUpdater(model: ContentEditor) {
+fun RenderContext.viewPostUpdater(model: PostEditor) {
+    val routeFlow = model.stateFlow.mapDistinctNotNull { it.postId?.let { postId -> PostRoute(postId.string) } }
+    goOnRoute(routeFlow)
 
     section(modify(Column)) {
         heading1("Edit Post", modify(TextAlignCenter))
 
         card {
-            viewContentEditor(model)
+            postForm(model)
         }
 
         row(modify(JustifyContentEnd)) {
@@ -31,27 +33,23 @@ fun RenderContext.viewContentUpdater(model: ContentEditor) {
 
         appFooter("")
     }
-
-    goOnPosted(model.stateFlow.mapDistinct { it.post })
 }
 
 fun RenderContext.viewEditPostRoute() {
-    routeBlock<EditPostRoute, ContentEdit>(portal, { route ->
+    routeBlock<EditPostRoute, PostEdit>(portal, { route ->
         api.readPost(route.postId).handleResponse(toaster::toast) {
-            (it as? StarPost)?.toEdit()
+            (it as? Post)?.toEdit()
         }
     }) {
-        val editor = ContentEditor(it, renderScope, api, toaster)
-        viewContentUpdater(editor)
+        val editor = PostEditor(it, renderScope, api, toaster)
+        viewPostUpdater(editor)
     }
 }
 
-fun RenderContext.goOnPosted(postFlow: Flow<Post?>) {
+fun RenderContext.goOnRoute(routeFlow: Flow<AppRoute>) {
     renderScope.launch {
-        postFlow.collect { post ->
-            if (post != null) {
-                portal.go(GalaxyRoute(post.galaxyId.toString()))
-            }
+        routeFlow.collect { route ->
+            portal.go(route)
         }
     }
 }

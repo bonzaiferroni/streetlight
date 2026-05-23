@@ -1,8 +1,9 @@
 package streetlight.model.data
 
+import kampfire.api.Slug
 import kampfire.model.GeoBounds
-import kampfire.model.GeoPoint
 import kampfire.model.Url
+import kampfire.model.toValidityCheck
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -33,16 +34,12 @@ data class GalaxyEdit(
         const val MAX_NAME_LENGTH = 36
     }
 
-    val invalidParts by lazy {
+    val validity by lazy {
         buildSet {
             if (!isValidName(name)) add(GalaxyProperty.Name)
             if (!isValidPath(slug)) add(GalaxyProperty.Path)
-        }
+        }.toValidityCheck()
     }
-
-    val invalidMessage get() = invalidParts.firstOrNull()?.let { "missing: $it"}
-
-    val isValid get() = invalidParts.isEmpty()
 }
 
 object GalaxyProperty {
