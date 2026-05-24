@@ -1,5 +1,6 @@
 package streetlight.web.ui
 
+import kampfire.api.toSlug
 import koala.dom.*
 import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
@@ -52,7 +53,7 @@ fun viewApp() {
                 wireRightPanel()
                 wireToaster()
 
-                registerMenu(PostKey.PostMenuId, { PostId(Uuid.parse(it)) }, RenderContext::postMenu)
+                registerMenu(PostKey.PostMenuId, { it.toSlug() }, RenderContext::postMenu)
             }
 
             try {

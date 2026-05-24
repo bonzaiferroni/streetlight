@@ -35,7 +35,9 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object ReadEventLocationBySlug: GetByIdEndpoint<Slug, EventLocation>(this, "event-location-slug")
     }
 
-    object Locations: GetByIdEndpoint<LocationId, Location>(this, "locations") {
+    object Locations: GetByIdEndpoint<LocationId, Location>(this) {
+        object ReadSlug: GetByIdEndpoint<Slug, Location>(this)
+
         object CreateLocation: PostEndpoint<LocationEdit, Slug>(this)
         object UpdateLocation: PostEndpoint<LocationEdit, Slug>(this)
         @Deprecated("use posts to associate locations with galaxies")
@@ -126,7 +128,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object ReadPostSlug: GetByIdEndpoint<Slug, GalaxyPost>(this, "read-post-slug")
         object ReadPostId: GetByIdEndpoint<PostId, GalaxyPost>(this, "read-post-id")
         object ReadLights: GetEndpoint<List<GalaxyId>>(this, "lights")
-        object RemovePost: PostEndpoint<PostId, Boolean>(this, "remove")
+        object RemovePost: PostEndpoint<Slug, Boolean>(this, "remove")
     }
 
     object Cities: ApiNode(this, "locality") {

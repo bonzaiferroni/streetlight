@@ -9,7 +9,7 @@ import koala.model.mapDistinctNotNull
 import kotlinx.html.js.h3
 import streetlight.model.data.PostEdit
 import streetlight.model.data.Galaxy
-import streetlight.web.PostContentRoute
+import streetlight.web.CreatePostRoute
 import streetlight.web.PostRoute
 
 fun RenderContext.viewContentPoster(galaxy: Galaxy) {
@@ -34,7 +34,7 @@ fun RenderContext.viewContentPoster(galaxy: Galaxy) {
 }
 
 fun RenderContext.viewContentPosterRoute() {
-    routeBlock<PostContentRoute, Galaxy>({
+    routeBlock<CreatePostRoute, Galaxy>({
         api.readGalaxy(it.slug).handleResponse(toaster::toast)
     }) { galaxy ->
         viewContentPoster(galaxy)

@@ -6,7 +6,7 @@ import koala.css.*
 import koala.html.*
 import kotlinx.html.FlowContent
 import streetlight.model.data.EventLocation
-import streetlight.web.EditEventIdRoute
+import streetlight.web.EventUpdateRoute
 import streetlight.web.layouts.costCell
 import streetlight.web.layouts.eventLightCell
 import streetlight.web.layouts.starCell
@@ -29,7 +29,7 @@ fun FlowContent.eventShell(event: EventLocation) {
                 { eventLightCell(event.lightCount, event.eventId) }
             ),
             links = event.links,
-            editRoute = EditEventIdRoute(event.eventId),
+            editRoute = EventUpdateRoute(event.eventSlug),
         )
 
         tabs {

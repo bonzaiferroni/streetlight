@@ -1,5 +1,6 @@
 package streetlight.model.data
 
+import kampfire.api.Slug
 import kampfire.model.GeoPoint
 import kampfire.model.ScaledImageArray
 import kampfire.model.Url
@@ -11,6 +12,7 @@ import kotlin.uuid.Uuid
 @Serializable
 sealed interface GalaxyPost {
     val postId: PostId
+    val slug: Slug
     val galaxyId: GalaxyId
     val username: String?
     val userThumb: Url?

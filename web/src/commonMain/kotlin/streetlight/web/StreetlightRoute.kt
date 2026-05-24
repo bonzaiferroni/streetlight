@@ -3,6 +3,7 @@ package streetlight.web
 import kampfire.api.Slug
 import kampfire.api.StringId
 import kampfire.api.TableId
+import kampfire.utils.pascalToKebabCase
 import koala.html.AppRoute
 import koala.html.AppScreen
 import koala.html.SlugOrNullParse
@@ -12,14 +13,8 @@ import koala.html.SlugParse
 import koala.html.StaticParse
 import koala.html.UuidParse
 import koala.model.DocId
-import streetlight.model.data.Event
-import streetlight.model.data.EventEdit
-import streetlight.model.data.EventId
-import streetlight.model.data.EventLocation
 import streetlight.model.data.GalaxyId
-import streetlight.model.data.LocationEdit
 import streetlight.model.data.LocationId
-import streetlight.model.data.PostId
 import streetlight.model.data.ProjectId
 import streetlight.model.data.SongId
 import streetlight.model.data.TalentId
@@ -27,42 +22,46 @@ import streetlight.model.data.SpaceType
 import kotlin.uuid.Uuid
 
 enum class StreetlightScreen(
-    override val pathRoot: String,
     override val routeParse: RouteParse,
+    pathRoot: String? = null,
 ): AppScreen {
-    Home("", StaticParse { HomeRoute }),
-    StarDash("account", StaticParse { StarDashRoute }),
-    EventProfile("e", SlugParse { EventSlugRoute(it) }),
-    EditEvent("edit-event", UuidParse { EditEventIdRoute(EventId(it)) }),
-    EditPost("edit-post", UuidParse { EditPostRoute(PostId(it)) }),
-    Sandbox("sandbox", StaticParse { SandboxRoute }),
-    Earth("earth", SlugOrNullParse { EarthMapRoute(it) }),
-    Chat("chat", StaticParse { ChatRoute }),
-    SongProfile("song-profile", UuidParse { SongProfileRoute(SongId(it)) }),
-    TalentProfile("talent-profile", UuidParse { TalentProfileRoute(TalentId(it)) }),
-    EditTalent("edit-talent", UuidParse { EditTalentRoute(TalentId(it)) }),
+    Home(StaticParse { HomeRoute }, ""),
+    Account(StaticParse { StarDashRoute }),
+    UpdatePost(SlugParse { PostUpdateRoute(it) }),
+    Sandbox(StaticParse { SandboxRoute }),
+    Earth(SlugOrNullParse { EarthMapRoute(it) }),
+    Chat(StaticParse { ChatRoute }),
+    SongProfile(UuidParse { SongProfileRoute(SongId(it)) }),
+    TalentProfile(UuidParse { TalentProfileRoute(TalentId(it)) }),
+    EditTalent(UuidParse { EditTalentRoute(TalentId(it)) }),
 
     // location
-    Location("location", UuidParse { LocationIdRoute(LocationId(it)) }),
-    LocationAdmin("location-admin", UuidParse { LocationAdminRoute(LocationId(it)) }),
-    LocationScout("post-location", SlugParse { LocationScoutRoute(it) }),
-    EditLocation("edit-location", UuidParse { EditLocationIdRoute(LocationId(it)) }),
+    Location(SlugParse { LocationRoute(it) }),
+    LocationAdmin(UuidParse { LocationAdminRoute(LocationId(it)) }),
+    LocationScout(SlugParse { LocationScoutRoute(it) }),
+    LocationUpdate(SlugParse { UpdateLocationRoute(it) }),
 
     // galaxy
-    Galaxy("g", SlugParse { GalaxyRoute(it) }),
-    GalaxyFoundry("create-galaxy", StaticParse { GalaxyFoundryRoute }),
-    GalaxyConfig("edit-galaxy", SlugParse { GalaxyConfigRoute(it) } ),
-    GalaxyList("galaxies", StaticParse { GalaxyListRoute }),
+    Galaxy(SlugParse { GalaxyRoute(it) }, "g"),
+    GalaxyFoundry(StaticParse { GalaxyFoundryRoute }),
+    GalaxyUpdate(SlugParse { GalaxyConfigRoute(it) } ),
+    Galaxies(StaticParse { GalaxyListRoute }),
 
-    Star("s", SlugParse { StarRoute(it) }),
-    EventScout("post-event", SlugParse { EventScoutRoute(it) }),
-    PostContent("post-content", SlugParse { PostContentRoute(it) }),
-    Post("p", SlugParse { PostRoute(it) }),
-    EditStar("edit-profile", StaticParse { EditStarRoute }),
-    SiteConfig("config", StaticParse { SiteConfigRoute }),
-    AboutApp("about", StaticParse { AboutRoute }),
-    SiteDoc("docs", IdParse { SiteDocRoute(it) }),
-    Talk("talk", UuidParse { TalkRoute(GalaxyId(it)) })
+    // event
+    Event(SlugParse { EventRoute(it) }, "e"),
+    UpdateEvent(SlugParse { EventUpdateRoute(it) }),
+
+    Star(SlugParse { StarRoute(it) }, "s"),
+    EventScout(SlugParse { EventScoutRoute(it) }),
+    CreatePost(SlugParse { CreatePostRoute(it) }),
+    Post(SlugParse { PostRoute(it) }, "p"),
+    EditStar(StaticParse { EditStarRoute }),
+    SiteConfig(StaticParse { SiteConfigRoute }),
+    AboutApp(StaticParse { AboutRoute }),
+    Docs(IdParse { SiteDocRoute(it) }),
+    Talk(UuidParse { TalkRoute(GalaxyId(it)) });
+
+    override val pathRoot = pathRoot ?: name.pascalToKebabCase()
 }
 
 sealed interface StreetlightRoute: AppRoute
@@ -90,32 +89,8 @@ object HomeRoute: StreetlightRoute {
 }
 
 object StarDashRoute: StreetlightRoute {
-    override val screen get() = StreetlightScreen.StarDash
+    override val screen get() = StreetlightScreen.Account
     override val title get() = "You"
-}
-
-sealed interface EventRoute: StreetlightRoute {
-    override val screen get() = StreetlightScreen.EventProfile
-    override val title get() = "Event"
-}
-
-data class EventObjectRoute(val event: EventLocation): EventRoute, ProjectIdRoute {
-    override val projectId get() = event.eventId
-    override val title get() = event.title
-}
-
-sealed interface EditEventRoute: StreetlightRoute {
-    override val screen get() = StreetlightScreen.EditEvent
-    override val title get() = "Post Event"
-}
-
-data class EditEventCallbackRoute(
-    val event: EventEdit,
-    val callback: (Event?) -> Unit
-): EditEventRoute
-
-data class EditEventIdRoute(val eventId: EventId? = null): EditEventRoute, ProjectIdRoute {
-    override val projectId get() = eventId
 }
 
 object SandboxRoute: StreetlightRoute {
@@ -159,68 +134,9 @@ data class EditTalentRoute(
     override val title get() = "Talent"
 }
 
-data class LocationIdRoute(
-    val locationId: LocationId
-): StreetlightRoute, ProjectIdRoute {
-    override val screen get() = StreetlightScreen.Location
-    override val projectId get() = locationId
-    override val title get() = "Location"
-}
-
-sealed interface EditLocationRoute: StreetlightRoute {
-    override val screen get() = StreetlightScreen.EditLocation
-    override val title get() = "Share Location"
-}
-
-object CreateLocationRoute: EditLocationRoute
-
-data class EditLocationIdRoute(
-    val locationId: LocationId? = null
-): EditLocationRoute, ProjectIdRoute {
-    override val projectId get() = locationId
-}
-
-data class EditLocationDataRoute(
-    val location: LocationEdit
-): EditLocationRoute, ProjectIdRoute {
-    override val projectId get() = location.locationId
-}
-
-data class LocationAdminRoute(
-    val locationId: LocationId
-): StreetlightRoute, ProjectIdRoute {
-    override val screen get() = StreetlightScreen.LocationAdmin
-    override val projectId get() = locationId
-    override val title get() = "Location Admin"
-}
-
-data class EventSlugRoute(override val slug: Slug): StreetlightRoute, SlugRoute, EventRoute {
-}
-
 data class StarRoute(override val slug: Slug): StreetlightRoute, SlugRoute {
     override val screen get() = StreetlightScreen.Star
     override val title get() = "Star"
-}
-
-data class EventScoutRoute(override val slug: Slug): StreetlightRoute, SlugRoute {
-    override val screen get() = StreetlightScreen.EventScout
-    override val title get() = "Event Scout"
-}
-
-data class LocationScoutRoute(override val slug: Slug): StreetlightRoute, SlugRoute {
-    override val screen get() = StreetlightScreen.LocationScout
-    override val title get() = "Location Scout"
-}
-
-data class PostContentRoute(override val slug: Slug): StreetlightRoute, SlugRoute {
-    override val screen get() = StreetlightScreen.PostContent
-    override val title get() = "Post Content"
-}
-
-data class EditPostRoute(val postId: PostId): ProjectIdRoute {
-    override val projectId get() = postId
-    override val screen get() = StreetlightScreen.EditPost
-    override val title get() = "Edit Post"
 }
 
 object EditStarRoute: StreetlightRoute {
@@ -239,7 +155,7 @@ object AboutRoute: StreetlightRoute {
 }
 
 data class SiteDocRoute(val docId: DocId): StreetlightRoute {
-    override val screen get() = StreetlightScreen.SiteDoc
+    override val screen get() = StreetlightScreen.Docs
     override val title get() = "Documentation"
 
     override fun toSitePath() = toIdSitePath(docId)
@@ -252,11 +168,6 @@ data class TalkRoute(val id: Uuid, val type: SpaceType): StreetlightRoute {
     override val title get() = "Talk"
 
     override fun toSitePath() = toIdSitePath(id)
-}
-
-data class PostRoute(override val slug: Slug): SlugRoute {
-    override val screen get() = StreetlightScreen.Post
-    override val title get() = "Post"
 }
 
 private fun AppRoute.toIdSitePath(id: String?) = id?.let { "$basePath/$id" } ?: basePath

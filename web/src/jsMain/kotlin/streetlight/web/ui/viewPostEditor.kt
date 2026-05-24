@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 import streetlight.model.data.PostEdit
 import streetlight.model.data.Post
 import streetlight.model.data.toEdit
-import streetlight.web.EditPostRoute
+import streetlight.web.PostUpdateRoute
 import streetlight.web.PostRoute
 import streetlight.web.model.PostEditor
 
@@ -36,8 +36,8 @@ fun RenderContext.viewPostUpdater(model: PostEditor) {
 }
 
 fun RenderContext.viewEditPostRoute() {
-    routeBlock<EditPostRoute, PostEdit>(portal, { route ->
-        api.readPost(route.postId).handleResponse(toaster::toast) {
+    routeBlock<PostUpdateRoute, PostEdit>(portal, { route ->
+        api.readPost(route.slug).handleResponse(toaster::toast) {
             (it as? Post)?.toEdit()
         }
     }) {

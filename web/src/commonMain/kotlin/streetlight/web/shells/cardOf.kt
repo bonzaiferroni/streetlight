@@ -11,7 +11,7 @@ import streetlight.model.data.Galaxy
 import streetlight.model.data.EventPost
 import streetlight.model.data.Location
 import streetlight.web.GalaxyRoute
-import streetlight.web.LocationIdRoute
+import streetlight.web.LocationRoute
 import streetlight.web.layouts.eventRoute
 import streetlight.web.layouts.route
 
@@ -20,7 +20,7 @@ fun FlowContent.cardOf(event: Event, modifiers: ModifierSet? = null) {
 }
 
 fun FlowContent.cardOf(location: Location) {
-    cardOf(LocationIdRoute(location.locationId), location.label, location.images.thumb, location.description)
+    cardOf(LocationRoute(location.slug), location.label, location.images.thumb, location.description)
 }
 
 fun FlowContent.cardOf(event: EventLocation) {

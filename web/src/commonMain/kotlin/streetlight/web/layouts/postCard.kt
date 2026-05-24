@@ -1,5 +1,6 @@
 package streetlight.web.layouts
 
+import kampfire.api.Slug
 import kampfire.model.Url
 import koala.SvgFile
 import koala.css.AlignItemsCenter
@@ -56,10 +57,10 @@ import koala.html.textBlock
 import kotlinx.html.FlowContent
 import kotlinx.html.onClick
 import streetlight.model.data.ExtraLink
-import streetlight.model.data.PostId
+import streetlight.model.data.GalaxyPost
 
 fun FlowContent.postCard(
-    postId: PostId?,
+    slug: Slug?,
     heading: String?,
     subHeading: String?,
     postRoute: AppRoute?,
@@ -114,12 +115,12 @@ fun FlowContent.postCard(
                             }
                         }
                         icon(SvgFile.MapPin, modify(Height4))
-                        postId?.let { postId ->
-                            val anchor = PositionAnchor("menu-${postId}")
+                        slug?.let { slug ->
+                            val anchor = PositionAnchor("menu-${slug}")
                             icon(SvgFile.DotsVertical, modify(Height4)) {
                                 setAnchorName(anchor)
                                 setPopoverTarget(PostKey.PostMenuId)
-                                onClick = KoalaFun.CallMenu.invoke(anchor, PostKey.PostMenuId, postId)
+                                onClick = KoalaFun.CallMenu.invoke(anchor, PostKey.PostMenuId, slug)
                             }
                         }
                     }

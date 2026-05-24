@@ -3,6 +3,7 @@ package kampfire.api
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.parameter
 import io.ktor.http.HttpMethod
+import kampfire.utils.pascalToKebabCase
 import kotlin.enums.enumEntries
 import kotlin.time.Instant
 import kotlin.uuid.Uuid
@@ -167,4 +168,5 @@ class PathBuilder(
     }
 }
 
-private fun String.pascalToKebabCase(): String = replace(Regex("([a-z])([A-Z])"), "$1-$2").lowercase()
+
+

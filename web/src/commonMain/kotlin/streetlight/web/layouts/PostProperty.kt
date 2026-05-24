@@ -11,15 +11,15 @@ import streetlight.model.data.EventPost
 import streetlight.model.data.Location
 import streetlight.model.data.LocationPost
 import streetlight.model.data.GalaxyPost
-import streetlight.web.EventSlugRoute
-import streetlight.web.LocationIdRoute
+import streetlight.web.EventRoute
+import streetlight.web.LocationRoute
 import streetlight.web.PostRoute
 import streetlight.web.SiteDocRoute
 
-val Location.route get() = LocationIdRoute(locationId)
-val Event.route get() = EventSlugRoute(slug)
-val EventLocation.eventRoute get() = EventSlugRoute(slug)
-val EventLocation.locationRoute get() = LocationIdRoute(locationId)
+val Location.route get() = LocationRoute(slug)
+val Event.route get() = EventRoute(slug)
+val EventLocation.eventRoute get() = EventRoute(eventSlug)
+val EventLocation.locationRoute get() = LocationRoute(locationSlug)
 val Doc.route get() = SiteDocRoute(docId)
 val Post.postRoute get() = PostRoute(slug)
 

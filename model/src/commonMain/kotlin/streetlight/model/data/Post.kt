@@ -11,7 +11,7 @@ import kotlin.time.Instant
 data class Post(
     override val postId: PostId,
     override val galaxyId: GalaxyId,
-    val slug: Slug,
+    override val slug: Slug,
     override val username: String?,
     override val userThumb: Url?,
     override val title: String,

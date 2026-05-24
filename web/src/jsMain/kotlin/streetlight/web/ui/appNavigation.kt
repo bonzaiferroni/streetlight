@@ -21,13 +21,13 @@ fun RenderContext.appNavigation() {
     ) { screen ->
         when (screen) {
             StreetlightScreen.Home -> viewHomeRoute()
-            StreetlightScreen.EventProfile -> viewEventProfileRoute()
-            StreetlightScreen.StarDash -> viewStarDash()
-            StreetlightScreen.EditEvent -> viewEventEditorRoute()
+            StreetlightScreen.Event -> viewEventProfileRoute()
+            StreetlightScreen.Account -> viewStarDash()
+            StreetlightScreen.UpdateEvent -> viewEventEditorRoute()
             StreetlightScreen.Sandbox -> viewSandbox()
             StreetlightScreen.Earth -> viewEarthMapRoute()
             StreetlightScreen.Post -> viewPostRoute()
-            StreetlightScreen.EditPost -> viewEditPostRoute()
+            StreetlightScreen.UpdatePost -> viewEditPostRoute()
             StreetlightScreen.Chat -> viewChatRoom()
             StreetlightScreen.SongProfile -> viewSongProfile()
             StreetlightScreen.EditTalent -> editTalentForm()
@@ -35,22 +35,22 @@ fun RenderContext.appNavigation() {
             // location
             StreetlightScreen.LocationAdmin -> viewLocationAdmin()
             StreetlightScreen.Location -> viewLocationProfile()
-            StreetlightScreen.EditLocation -> viewEditLocationRoute()
+            StreetlightScreen.LocationUpdate -> viewEditLocationRoute()
             StreetlightScreen.LocationScout -> viewLocationScoutRoute()
 
             // galaxy
             StreetlightScreen.Galaxy -> viewGalaxyRoute()
             StreetlightScreen.GalaxyFoundry -> viewGalaxyFoundry()
-            StreetlightScreen.GalaxyConfig -> viewGalaxyConfigRoute()
-            StreetlightScreen.GalaxyList -> viewGalaxyList()
+            StreetlightScreen.GalaxyUpdate -> viewGalaxyConfigRoute()
+            StreetlightScreen.Galaxies -> viewGalaxyList()
 
             StreetlightScreen.Star -> viewStarProfileRoute()
             // StreetlightScreen.EventScout -> viewEventScoutProtoRoute()
-            StreetlightScreen.PostContent -> viewContentPosterRoute()
+            StreetlightScreen.CreatePost -> viewContentPosterRoute()
             StreetlightScreen.EditStar -> viewStarEditor()
             StreetlightScreen.SiteConfig -> viewSiteConfig()
             StreetlightScreen.AboutApp -> viewAboutApp()
-            StreetlightScreen.SiteDoc -> viewSiteDocRoute()
+            StreetlightScreen.Docs -> viewSiteDocRoute()
             StreetlightScreen.Talk -> viewTalkRoute()
             else -> textBlock("Coming soon: $screen")
         }

@@ -24,7 +24,7 @@ fun FlowContent.postCardOf(post: GalaxyPost) {
         setAttribute(PostKey.Attribute.to(post.postId))
 
         postCard(
-            postId = post.postId,
+            slug = post.slug,
             heading = post.title,
             subHeading = post.subtitle,
             postRoute = post.route,
@@ -49,7 +49,7 @@ fun FlowContent.postCardOf(post: GalaxyPost) {
 
 fun FlowContent.postCardOf(location: Location) {
     postCard(
-        postId = null,
+        slug = location.slug,
         heading = location.label,
         subHeading = location.subLabel,
         postRoute = null,
@@ -65,7 +65,7 @@ fun FlowContent.postCardOf(location: Location) {
 
 fun FlowContent.postCardOf(event: EventLocation) {
     postCard(
-        postId = null,
+        slug = null,
         heading = event.label,
         subHeading = event.locationLabel,
         postRoute = null,

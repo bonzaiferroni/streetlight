@@ -1,16 +1,10 @@
 package streetlight.web.shells
 
-import kampfire.model.medium
 import koala.css.*
 import koala.html.*
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import streetlight.model.data.Location
-import streetlight.web.EditLocationIdRoute
-import streetlight.web.layouts.cellCard
-import streetlight.web.layouts.locationLightCell
-import streetlight.web.layouts.starCell
-import streetlight.web.layouts.textPropertyCell
 import streetlight.web.pages.appFooter
 import streetlight.web.ui.headerOf
 

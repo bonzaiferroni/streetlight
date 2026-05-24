@@ -4,15 +4,10 @@ import kampfire.model.handleResponse
 import koala.css.*
 import koala.dom.*
 import koala.model.GeoMap
-import koala.model.Portal
 import kotlinx.coroutines.CoroutineScope
 import streetlight.model.data.EventLocation
-import streetlight.web.EventObjectRoute
 import streetlight.web.EventRoute
-import streetlight.web.EventSlugRoute
-import streetlight.web.io.ApiClient
 import streetlight.web.model.DataCache
-import streetlight.web.model.Streetlight
 import streetlight.web.shells.EventProfileKey
 import streetlight.web.shells.eventShell
 
@@ -35,18 +30,10 @@ fun RenderContext.viewEvent(event: EventLocation) {
 }
 
 fun RenderContext.viewEventProfileRoute() {
-    // val model = app.eventProfile
 
-    suspend fun provideData(route: EventRoute) = when (route) {
-        is EventObjectRoute -> {
-            route.event
-        }
-        is EventSlugRoute -> {
-            api.readEventLocationBySlug(route.slug).handleResponse(toaster::toast)
-        }
-    }
-
-    routeBlock(portal, ::provideData) { event ->
+    routeBlock<EventRoute, EventLocation>(portal, { route ->
+        api.readEventSlug(route.slug).handleResponse(toaster::toast)
+    }) { event ->
         viewEvent(event)
     }
 }

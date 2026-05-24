@@ -37,7 +37,7 @@ import koala.html.row
 import koala.html.section
 import kotlinx.html.FlowContent
 import streetlight.model.data.Post
-import streetlight.web.EditPostRoute
+import streetlight.web.PostUpdateRoute
 import streetlight.web.layouts.cellRow
 import streetlight.web.layouts.postedAtCell
 import streetlight.web.layouts.starCell
@@ -72,7 +72,7 @@ fun FlowContent.postShell(post: Post) {
         }
 
         row(modify(JustifyContentEnd)) {
-            btn("edit", EditPostRoute(post.postId), modify(Zen))
+            btn("edit", PostUpdateRoute(post.slug), modify(Zen))
         }
 
         mount(PostKey.TalkId, modify(MarginTop4))

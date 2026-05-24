@@ -15,9 +15,7 @@ import streetlight.model.data.Event
 import streetlight.model.data.EventEdit
 import streetlight.model.data.ExtraLink
 import streetlight.model.data.toEdit
-import streetlight.web.EditEventCallbackRoute
-import streetlight.web.EditEventIdRoute
-import streetlight.web.EditEventRoute
+import streetlight.web.EventUpdateRoute
 
 // event editor content including introduction and form
 fun RenderContext.viewEventEditorProto(
@@ -100,23 +98,23 @@ fun RenderContext.viewEventEditorProto(
 fun RenderContext.viewEventEditorRoute() {
     var callback: ((Event?) -> Unit)? = null
 
-    routeBlock<EditEventRoute, EventEdit>({ route ->
-        when (route) {
-            // start with existing event or a blank slate to create a new event
-            is EditEventIdRoute -> route.eventId?.let {
-                api.readEvent(it).handleResponse(toaster::toast) { event ->
-                    event.toEdit()
-                }
-            } ?: EventEdit()
-            // for when the edit can be determined clientside by a view that consumes the edit
-            is EditEventCallbackRoute -> {
-                callback = route.callback
-                route.event
-            }
-        }
-    }) { event ->
-        viewEventEditorProto(event, callback)
-    }
+//    routeBlock<EventUpdateRoute, EventEdit>({ route ->
+//        when (route) {
+//            // start with existing event or a blank slate to create a new event
+//            is EditEventIdRoute -> route.eventId?.let {
+//                api.readEventId(it).handleResponse(toaster::toast) { event ->
+//                    event.toEdit()
+//                }
+//            } ?: EventEdit()
+//            // for when the edit can be determined clientside by a view that consumes the edit
+//            is EditEventCallbackRoute -> {
+//                callback = route.callback
+//                route.event
+//            }
+//        }
+//    }) { event ->
+//        viewEventEditorProto(event, callback)
+//    }
 }
 
 private val introText1 = """

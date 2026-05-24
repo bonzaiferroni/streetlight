@@ -67,7 +67,7 @@ class EventScout(
         scope.launch {
             val slug = when (val event = stateNow.event) {
                 null -> editor.submitSuspend()
-                else -> event.slug
+                else -> event.eventSlug
             } ?: return@launch
 
             val edit = EventPostEdit(null, galaxy.galaxyId, slug, null)

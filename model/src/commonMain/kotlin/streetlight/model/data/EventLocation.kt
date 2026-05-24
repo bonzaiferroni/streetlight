@@ -12,7 +12,8 @@ import kotlin.time.Duration.Companion.hours
 data class EventLocation(
     val eventId: EventId,
     val locationId: LocationId,
-    val slug: Slug,
+    val eventSlug: Slug,
+    val locationSlug: Slug,
     val username: String,
     val url: String?,
     val eventImages: ScaledImageArray?,

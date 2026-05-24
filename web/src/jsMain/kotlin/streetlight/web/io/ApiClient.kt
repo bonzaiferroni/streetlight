@@ -21,9 +21,8 @@ class ApiClient(private val client: FetchClient) {
     // suspend fun readStarInfo() = client.get(UserApi.ReadInfo)
 
     // events
-    suspend fun readEvent(eventId: EventId) = client.getApi(Api.Events.ReadById, eventId)
-    suspend fun readEventBySlug(slug: Slug) = client.getApi(Api.Events.ReadBySlug, slug)
-    suspend fun readEventLocationBySlug(slug: Slug) = client.getApi(Api.Events.ReadEventLocationBySlug, slug)
+    suspend fun readEventId(eventId: EventId) = client.getApi(Api.Events.ReadById, eventId)
+    suspend fun readEventSlug(slug: Slug) = client.getApi(Api.Events.ReadEventLocationBySlug, slug)
     suspend fun readEventFeed() = client.getApi(Api.Events)
     suspend fun createEvent(event: EventEdit) = client.postApi(Api.Events.CreateEvent, event)
     suspend fun updateEvent(event: EventEdit) = client.postApi(Api.Events.UpdateEvent, event)
@@ -35,6 +34,7 @@ class ApiClient(private val client: FetchClient) {
 
     // locations
     suspend fun readLocation(locationId: LocationId) = client.getApi(Api.Locations, locationId)
+    suspend fun readLocationSlug(slug: Slug) = client.getApi(Api.Locations.ReadSlug, slug)
     suspend fun parseLocation(request: ParseRequest) = client.postApi(Api.Locations.ParseLocation, request)
     suspend fun readLocationsInBounds(bounds: GeoBounds) = client.postApi(Api.Locations.QueryBounds, bounds)
     suspend fun searchLocations(query: String, city: String? = null, state: String? = null, limit: Int = 10) =
@@ -97,7 +97,7 @@ class ApiClient(private val client: FetchClient) {
     suspend fun readPost(postId: PostId) = client.getApi(Api.Galaxies.ReadPostId, postId)
     suspend fun readPost(slug: Slug) = client.getApi(Api.Galaxies.ReadPostSlug, slug)
     suspend fun readGalaxyLights() = client.getApi(Api.Galaxies.ReadLights)
-    suspend fun removePost(postId: PostId) = client.postApi(Api.Galaxies.RemovePost, postId)
+    suspend fun removePost(slug: Slug) = client.postApi(Api.Galaxies.RemovePost, slug)
 
     suspend fun readStarByUsername(username: String) = client.getApi(Api.Stars.ReadByUsername) {
         writeParam(it.username, username)

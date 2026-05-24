@@ -13,11 +13,11 @@ object GalaxyFoundryRoute: StreetlightRoute {
 }
 
 data class GalaxyConfigRoute(override val slug: Slug): SlugRoute {
-    override val screen get() = StreetlightScreen.GalaxyConfig
+    override val screen get() = StreetlightScreen.GalaxyUpdate
     override val title get() = "Galaxy Settings"
 }
 
 object GalaxyListRoute: StreetlightRoute {
-    override val screen get() = StreetlightScreen.GalaxyList
+    override val screen get() = StreetlightScreen.Galaxies
     override val title get() = "Galaxies"
 }

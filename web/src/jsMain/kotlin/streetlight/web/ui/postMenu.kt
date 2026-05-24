@@ -1,5 +1,6 @@
 package streetlight.web.ui
 
+import kampfire.api.Slug
 import kampfire.model.handleResponse
 import koala.css.Secondary
 import koala.css.modify
@@ -10,17 +11,15 @@ import koala.dom.dangerButton
 import koala.html.btn
 import kotlinx.coroutines.launch
 import streetlight.model.data.PostId
-import streetlight.web.EditPostRoute
-import streetlight.web.io.ApiClient
-import streetlight.web.model.Toaster
+import streetlight.web.PostUpdateRoute
 
-fun RenderContext.postMenu(postId: PostId) {
+fun RenderContext.postMenu(slug: Slug) {
     column {
-        btn("edit", EditPostRoute(postId), modify(Secondary))
+        btn("edit", PostUpdateRoute(slug), modify(Secondary))
         button("report", modify(Secondary))
         dangerButton("remove", onClick = {
             renderScope.launch {
-                api.removePost(postId).handleResponse(toaster::toast) {
+                api.removePost(slug).handleResponse(toaster::toast) {
                     portal.refresh()
                 }
             }

@@ -8,6 +8,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class EventPost(
     override val postId: PostId,
+    override val slug: Slug,
     override val galaxyId: GalaxyId,
     override val username: String?,
     override val userThumb: Url?,
