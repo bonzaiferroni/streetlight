@@ -48,7 +48,7 @@ fun RenderContext.viewGalaxyConfig(edit: GalaxyEdit) {
 
 fun RenderContext.viewGalaxyConfigRoute() {
     routeBlock<GalaxyConfigRoute, GalaxyEdit>(portal, { route ->
-        api.readGalaxy(route.value).handleResponse(toaster::toast)?.toEdit()
+        api.readGalaxy(route.slug).handleResponse(toaster::toast)?.toEdit()
     }) {
         viewGalaxyConfig(it)
     }

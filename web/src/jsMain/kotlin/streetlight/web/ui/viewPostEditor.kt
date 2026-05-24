@@ -17,7 +17,7 @@ import streetlight.web.PostRoute
 import streetlight.web.model.PostEditor
 
 fun RenderContext.viewPostUpdater(model: PostEditor) {
-    val routeFlow = model.stateFlow.mapDistinctNotNull { it.postId?.let { postId -> PostRoute(postId.string) } }
+    val routeFlow = model.stateFlow.mapDistinctNotNull { it.slug?.let { slug -> PostRoute(slug) } }
     goOnRoute(routeFlow)
 
     section(modify(Column)) {

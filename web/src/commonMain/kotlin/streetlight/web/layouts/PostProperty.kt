@@ -21,7 +21,7 @@ val Event.route get() = EventSlugRoute(slug)
 val EventLocation.eventRoute get() = EventSlugRoute(slug)
 val EventLocation.locationRoute get() = LocationIdRoute(locationId)
 val Doc.route get() = SiteDocRoute(docId)
-val Post.postRoute get() = PostRoute(slug ?: postId.value.toString())
+val Post.postRoute get() = PostRoute(slug)
 
 val GalaxyPost.route get(): AppRoute = when (this) {
     is Post -> postRoute

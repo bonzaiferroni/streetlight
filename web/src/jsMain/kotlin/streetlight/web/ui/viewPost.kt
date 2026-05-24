@@ -25,8 +25,8 @@ fun RenderContext.viewPost(post: Post) {
 
 fun RenderContext.viewPostRoute() {
     routeBlock<PostRoute, Post>(portal, { route ->
-        readIsland<Post>(PostKey.IslandId) { it.slug == route.value || it.postId.string == route.value }
-            ?: api.readPost(route.value).handleResponse(toaster::toast) as? Post
+        readIsland<Post>(PostKey.IslandId) { it.slug == route.slug }
+            ?: api.readPost(route.slug).handleResponse(toaster::toast) as? Post
     }) { post ->
         viewPost(post)
     }

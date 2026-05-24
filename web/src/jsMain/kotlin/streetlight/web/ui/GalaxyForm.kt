@@ -1,6 +1,7 @@
 package streetlight.web.ui
 
 import kabinet.utils.format
+import kampfire.api.Slug
 import koala.css.*
 import koala.dom.*
 import koala.html.bulletsOf
@@ -52,7 +53,7 @@ fun RenderContext.galaxyCityForm(model: GalaxyEditor) {
 
 fun RenderContext.galaxyNameForm(model: GalaxyEditor) {
     val nameFlow = model.galaxyFlow.mapDistinct { it.name ?: "" }
-    val pathFlow = model.galaxyFlow.mapDistinct { it.slug ?: "" }
+    val slugFlow = model.galaxyFlow.mapDistinct { it.slug?.string ?: "" }
 
     formCardSection("Galaxy Name") {
         formPart(
@@ -65,24 +66,24 @@ fun RenderContext.galaxyNameForm(model: GalaxyEditor) {
                 flow = nameFlow,
                 modifiers = modify(Required),
                 footnote = nameCharacters,
-                maxLength = GalaxyEdit.MAX_NAME_LENGTH
+                maxLength = Slug.MAX_LENGTH
             ).flowValid(GalaxyProperty.Name, model.validityFlow, renderScope)
         }
         formPart(
             instructions = pathInstructions,
             info = {
-                flowBlock(pathFlow) { path ->
+                flowBlock(slugFlow) { path ->
                     textBlock("Currently: streetlight.ing/g/$path", modify(OpacityMost))
                 }
             }
         ) {
             formTextField(
                 label = GalaxyProperty.Path,
-                onValue = model::setPath,
-                flow = pathFlow,
+                onValue = model::setSlug,
+                flow = slugFlow,
                 modifiers = modify(Required),
                 footnote = pathCharacters,
-                maxLength = GalaxyEdit.MAX_NAME_LENGTH
+                maxLength = Slug.MAX_LENGTH
             ).flowValid(GalaxyProperty.Path, model.validityFlow, renderScope)
         }
     }
@@ -192,7 +193,7 @@ fun RenderContext.galaxyAccessForm(model: GalaxyEditor) {
 
 private val cityInstructions = "What city does your galaxy focus on?"
 
-private val nameInstructions1 = "Let's give the galaxy a name, up to ${GalaxyEdit.MAX_NAME_LENGTH} characters."
+private val nameInstructions1 = "Let's give the galaxy a name, up to ${Slug.MAX_LENGTH} characters."
 
 private val nameCharacters = "Available: letters, numbers, spaces, and ${GalaxyEdit.NameCharacters.joinToString(" ")}"
 

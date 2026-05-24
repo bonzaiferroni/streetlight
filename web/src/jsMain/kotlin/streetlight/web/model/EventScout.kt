@@ -1,5 +1,6 @@
 package streetlight.web.model
 
+import kampfire.api.Slug
 import kampfire.model.GeoPoint
 import kampfire.model.Labeled
 import kampfire.model.handleResponse
@@ -71,8 +72,8 @@ class EventScout(
             } ?: return@launch
 
             val edit = EventPostEdit(null, galaxy.galaxyId, eventId, null)
-            api.createPost(edit).handleResponse(postMessage::set) { eventId ->
-                state.set { it.copy(postId = eventId) }
+            api.createPost(edit).handleResponse(postMessage::set) { slug ->
+                state.set { it.copy(slug = slug) }
             }
         }
     }
@@ -90,7 +91,7 @@ data class EventScoutState(
     val query: String = "",
     val event: EventLocation? = null,
     val queryEvents: List<EventLocation> = emptyList(),
-    val postId: PostId? = null,
+    val slug: Slug? = null,
 )
 
 enum class EventScoutStage(label: String? = null) : Labeled {

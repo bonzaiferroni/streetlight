@@ -1,6 +1,7 @@
 package streetlight.web.ui
 
 import kabinet.utils.toAgoFormat
+import kampfire.api.toSlug
 import koala.SvgFile
 import koala.css.*
 import koala.dom.*
@@ -202,7 +203,7 @@ class CommentView(
         _rootBlock = column(modify(CommentClass.Root, Gap0)) {
             card(modify(ZenBg, Gap0, Padding0, OverflowClip, AutoMagic)) {
                 row(modify(AlignItemsCenter, modify(ZenBg, Padding1))) {
-                    navigationIfNotNull(comment.username?.let { StarRoute(it) }) {
+                    navigationIfNotNull(comment.username?.let { StarRoute(it.toSlug()) }) {
                         row(modify(AlignItemsCenter)) {
                             image(comment.thumb, modify(Aspect1, Height6, BorderRadius50P))
                             column(modify(Gap0)) {

@@ -62,8 +62,8 @@ class PostEditor(
             when (content.postId) {
                 null -> api.createPost(content)
                 else -> api.editPost(content)
-            }.handleResponse(toaster::toast) { postId ->
-                state.set { it.copy(postId = postId) }
+            }.handleResponse(toaster::toast) { slug ->
+                state.set { it.copy(slug = slug) }
             }
         }
     }
@@ -75,5 +75,5 @@ class PostEditor(
 
 data class ContentEditorState(
     val content: PostEdit,
-    val postId: PostId? = null
+    val slug: Slug? = null
 )

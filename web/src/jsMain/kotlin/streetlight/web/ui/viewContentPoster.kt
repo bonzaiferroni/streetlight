@@ -14,7 +14,7 @@ import streetlight.web.PostRoute
 
 fun RenderContext.viewContentPoster(galaxy: Galaxy) {
     val model = app.getContentEditor(PostEdit(null, galaxy.galaxyId), renderScope)
-    goOnRoute(model.stateFlow.mapDistinctNotNull { it.postId?.let { postId -> PostRoute(postId.string) }  })
+    goOnRoute(model.stateFlow.mapDistinctNotNull { it.slug?.let { slug -> PostRoute(slug) }  })
 
     section(modify(Column)) {
         heading1(galaxy.name, modify(TextAlignCenter))

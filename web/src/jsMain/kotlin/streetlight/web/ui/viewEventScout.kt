@@ -17,7 +17,7 @@ fun RenderContext.viewEventScout(galaxy: Galaxy) {
     val location = app.getLocationScout(galaxy, locationEditor, renderScope)
     val editor = app.getEventEditor(EventEdit(), renderScope)
     val model = app.getEventScout(galaxy, editor, location, renderScope)
-    val routeFlow = model.stateFlow.mapDistinctNotNull { it.postId?.let { GalaxyRoute(galaxy.slug) } }
+    val routeFlow = model.stateFlow.mapDistinctNotNull { it.slug?.let { GalaxyRoute(galaxy.slug) } }
     goOnRoute(routeFlow)
 
     section {

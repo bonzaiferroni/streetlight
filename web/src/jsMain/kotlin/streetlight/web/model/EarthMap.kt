@@ -29,7 +29,7 @@ class EarthMap(
             portal.routeFlow.collect { route ->
                 when (route) {
                     is EarthMapRoute -> {
-                        val galaxy = route.galaxySlug?.let {
+                        val galaxy = route.slug?.let {
                             api.readGalaxy(it).handleResponse(toaster::toast)
                         }
                         val posts = galaxy?.let {

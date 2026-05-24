@@ -10,9 +10,9 @@ import kotlin.uuid.Uuid
 abstract class Endpoint<SentType, ReturnType>(
     val method: HttpMethod?,
     val parent: Endpoint<*, *>?,
-    val pathNode: String,
-    val appendId: Boolean = false,
+    pathNode: String?,
 ) {
+    val pathNode = pathNode ?: this::class.simpleName!!.pascalToKebabCase()
     val pathSegments: List<String> = createPathSegments()
     val path: String = "/${pathSegments.joinToString("/")}"
     val serverIdTemplate: String get() = "$path/{id}"
@@ -83,28 +83,28 @@ abstract class Endpoint<SentType, ReturnType>(
 
 open class ApiNode(
     parent: Endpoint<*, *>? = null,
-    pathNode: String,
+    pathNode: String? = null,
 ): Endpoint<Unit, Unit>(null, parent, pathNode)
 
 open class GetEndpoint<Returned>(
     parent: Endpoint<*, *>? = null,
-    pathNode: String = "",
+    pathNode: String? = null,
 ): Endpoint<Unit, Returned>(HttpMethod.Get, parent, pathNode)
 
 open class QueryEndpoint<Sent, Returned>(
     parent: Endpoint<*, *>? = null,
-    pathNode: String = "",
+    pathNode: String? = null,
 ): Endpoint<Sent, Returned>(HttpMethod.Get, parent, pathNode)
 
 open class PostEndpoint<Sent, Returned>(
     parent: Endpoint<*,*>? = null,
-    pathNode: String = "",
+    pathNode: String? = null,
 ): Endpoint<Sent, Returned>(HttpMethod.Post, parent, pathNode)
 
 open class GetByIdEndpoint<Sent, Returned>(
     parent: Endpoint<*, *>? = null,
-    pathNode: String = "",
-) : Endpoint<Sent, Returned>(HttpMethod.Get, parent, pathNode, true) {
+    pathNode: String? = null,
+) : Endpoint<Sent, Returned>(HttpMethod.Get, parent, pathNode) {
     val clientIdTemplate: String get() = "$path/:id"
     fun replaceClientId(id: Any) = this.clientIdTemplate.replace(":id", id.toString())
 }
@@ -112,32 +112,31 @@ open class GetByIdEndpoint<Sent, Returned>(
 @Deprecated("use GetByIdEndpoint")
 open class GetByTableIdEndpoint<Id: TableId<*>, Returned>(
     parent: Endpoint<*,*>? = null,
-    pathNode: String = "",
-): Endpoint<Id, Returned>(HttpMethod.Get, parent, pathNode, true) {
+    pathNode: String? = null,
+): Endpoint<Id, Returned>(HttpMethod.Get, parent, pathNode) {
     val clientIdTemplate: String get() = "$path/:id"
     fun replaceClientId(id: Id) = this.clientIdTemplate.replace(":id", id.value.toString())
 }
 
 open class DeleteEndpoint<Sent>(
     parent: Endpoint<*,*>? = null,
-    pathNode: String = "",
+    pathNode: String? = null,
 ) : Endpoint<Sent, Boolean>(HttpMethod.Delete, parent, pathNode)
 
 open class UpdateEndpoint<Sent>(
     parent: Endpoint<*,*>? = null,
-    pathNode: String = "",
+    pathNode: String? = null,
 ) : Endpoint<Sent, Boolean>(HttpMethod.Put, parent, pathNode)
 
 open class SocketDaoEndpoint<Item, ItemId, NewItem>(
     parent: Endpoint<*,*>? = null,
-    pathNode: String = "",
+    pathNode: String? = null,
 ): Endpoint<Unit, Unit>(null, parent, pathNode)
 
 class EndpointParam<T>(
     val key: String,
     val toValue: (String) -> T,
     val toString: (T) -> String,
-    val isOptional: Boolean = false,
 ) {
     fun write(value: T) = value.let { key to toString(value) }
     fun read(str: String) = toValue(str)
@@ -167,3 +166,5 @@ class PathBuilder(
         }
     }
 }
+
+private fun String.pascalToKebabCase(): String = replace(Regex("([a-z])([A-Z])"), "$1-$2").lowercase()

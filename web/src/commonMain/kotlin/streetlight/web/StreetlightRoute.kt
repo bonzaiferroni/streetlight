@@ -1,14 +1,14 @@
 package streetlight.web
 
 import kampfire.api.Slug
-import kampfire.api.SlugOrId
 import kampfire.api.StringId
 import kampfire.api.TableId
 import koala.html.AppRoute
 import koala.html.AppScreen
-import koala.html.IdOrNullParse
+import koala.html.SlugOrNullParse
 import koala.html.IdParse
 import koala.html.RouteParse
+import koala.html.SlugParse
 import koala.html.StaticParse
 import koala.html.UuidParse
 import koala.model.DocId
@@ -32,11 +32,11 @@ enum class StreetlightScreen(
 ): AppScreen {
     Home("", StaticParse { HomeRoute }),
     StarDash("account", StaticParse { StarDashRoute }),
-    EventProfile("e", IdParse { EventSlugRoute(it) }),
+    EventProfile("e", SlugParse { EventSlugRoute(it) }),
     EditEvent("edit-event", UuidParse { EditEventIdRoute(EventId(it)) }),
     EditPost("edit-post", UuidParse { EditPostRoute(PostId(it)) }),
     Sandbox("sandbox", StaticParse { SandboxRoute }),
-    Earth("earth", IdOrNullParse { EarthMapRoute(it) }),
+    Earth("earth", SlugOrNullParse { EarthMapRoute(it) }),
     Chat("chat", StaticParse { ChatRoute }),
     SongProfile("song-profile", UuidParse { SongProfileRoute(SongId(it)) }),
     TalentProfile("talent-profile", UuidParse { TalentProfileRoute(TalentId(it)) }),
@@ -45,19 +45,19 @@ enum class StreetlightScreen(
     // location
     Location("location", UuidParse { LocationIdRoute(LocationId(it)) }),
     LocationAdmin("location-admin", UuidParse { LocationAdminRoute(LocationId(it)) }),
-    LocationScout("post-location", IdParse { LocationScoutRoute(it) }),
+    LocationScout("post-location", SlugParse { LocationScoutRoute(it) }),
     EditLocation("edit-location", UuidParse { EditLocationIdRoute(LocationId(it)) }),
 
     // galaxy
-    Galaxy("g", IdParse { GalaxyRoute(it) }),
+    Galaxy("g", SlugParse { GalaxyRoute(it) }),
     GalaxyFoundry("create-galaxy", StaticParse { GalaxyFoundryRoute }),
-    GalaxyConfig("edit-galaxy", IdParse { GalaxyConfigRoute(it) } ),
+    GalaxyConfig("edit-galaxy", SlugParse { GalaxyConfigRoute(it) } ),
     GalaxyList("galaxies", StaticParse { GalaxyListRoute }),
 
-    Star("s", IdParse { StarRoute(it) }),
-    EventScout("post-event", IdParse { EventScoutRoute(it) }),
-    PostContent("post-content", IdParse { PostContentRoute(it) }),
-    Post("p", IdParse { PostRoute(it) }),
+    Star("s", SlugParse { StarRoute(it) }),
+    EventScout("post-event", SlugParse { EventScoutRoute(it) }),
+    PostContent("post-content", SlugParse { PostContentRoute(it) }),
+    Post("p", SlugParse { PostRoute(it) }),
     EditStar("edit-profile", StaticParse { EditStarRoute }),
     SiteConfig("config", StaticParse { SiteConfigRoute }),
     AboutApp("about", StaticParse { AboutRoute }),
@@ -123,11 +123,11 @@ object SandboxRoute: StreetlightRoute {
     override val title get() = "Sandbox"
 }
 
-data class EarthMapRoute(val galaxySlug: String?): StreetlightRoute {
+data class EarthMapRoute(override val slug: Slug?): SlugRoute {
     override val screen get() = StreetlightScreen.Earth
     override val title get() = "Earth"
 
-    override fun toSitePath() = toIdSitePath(galaxySlug)
+    override fun toSitePath() = toIdSitePath(slug)
 }
 
 object ChatRoute: StreetlightRoute {
@@ -254,11 +254,12 @@ data class TalkRoute(val id: Uuid, val type: SpaceType): StreetlightRoute {
     override fun toSitePath() = toIdSitePath(id)
 }
 
-data class PostRoute(override val value: SlugOrId): SlugOrIdRoute {
+data class PostRoute(override val slug: Slug): SlugRoute {
     override val screen get() = StreetlightScreen.Post
     override val title get() = "Post"
 }
 
 private fun AppRoute.toIdSitePath(id: String?) = id?.let { "$basePath/$id" } ?: basePath
+private fun AppRoute.toIdSitePath(id: Slug?) = toIdSitePath(id?.string)
 private fun AppRoute.toIdSitePath(id: TableId<Uuid>?) = toIdSitePath(id?.value.toString())
 private fun AppRoute.toIdSitePath(id: Uuid?) = toIdSitePath(id?.toString())

@@ -24,20 +24,18 @@ data class GalaxyEdit(
         val NameCharacters = setOf(' ', '.', ',', '\'', '!', '?', ':', '-', '+')
         val PathCharacters = setOf('-')
 
-        fun isValidName(name: String?) = !name.isNullOrBlank()
-                && name.all { it.isDigit() || it.isLetter() || NameCharacters.contains(it) }
-                && name.length <= MAX_NAME_LENGTH
-        fun isValidPath(path: String?) = !path.isNullOrBlank()
-                && path.all { it.isDigit() || it.isLetter() || PathCharacters.contains(it) }
-                && path.length <= MAX_NAME_LENGTH
+        fun isValidName(name: String?) = name != null && isValidString(name, NameCharacters)
+        fun isValidSlug(slug: Slug?) = slug != null && isValidString(slug.string, PathCharacters)
 
-        const val MAX_NAME_LENGTH = 36
+        private fun isValidString(path: String, validCharacters: Set<Char>) =
+            path.isNotBlank() && path.all { it.isDigit() || it.isLetter() || validCharacters.contains(it) }
+                && path.length <= Slug.MAX_LENGTH
     }
 
     val validity by lazy {
         buildSet {
             if (!isValidName(name)) add(GalaxyProperty.Name)
-            if (!isValidPath(slug)) add(GalaxyProperty.Path)
+            if (!isValidSlug(slug)) add(GalaxyProperty.Path)
         }.toValidityCheck()
     }
 }

@@ -1,5 +1,6 @@
 package streetlight.web.ui
 
+import kampfire.api.toSlug
 import kampfire.model.thumb
 import koala.SvgFile
 import koala.css.*
@@ -49,7 +50,7 @@ private fun RenderContext.starPanel(star: Star) {
 
     column() {
         row(RowMod) {
-            navigation(StarRoute(star.username)) {
+            navigation(StarRoute(star.username.toSlug())) {
                 heading3(star.username)
             }
 

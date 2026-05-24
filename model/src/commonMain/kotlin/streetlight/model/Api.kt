@@ -12,24 +12,24 @@ import streetlight.model.data.*
 
 object Api: ApiNode(ApiNode(null, "api"), "v1") {
 
-    object Content: ApiNode(this, "content") {
-        object Home: GetEndpoint<HomeContent>(this, "home")
+    object Content: ApiNode(this) {
+        object Home: GetEndpoint<HomeContent>(this)
     }
 
-    object Events: GetEndpoint<List<Event>>(this, "events") {
-        object ReadById: GetByIdEndpoint<EventId, Event>(this, "read-by-id")
-        object CreateOrEdit: PostEndpoint<EventEdit, EventId>(this, "create-or-edit")
-        object Delete: DeleteEndpoint<EventId>(this, "delete")
-        object QueryMap: QueryEndpoint<MapQuery, List<EventLocation>>(this, "bounds")
+    object Events: GetEndpoint<List<Event>>(this) {
+        object ReadById: GetByIdEndpoint<EventId, Event>(this)
+        object CreateOrEdit: PostEndpoint<EventEdit, EventId>(this)
+        object Delete: DeleteEndpoint<EventId>(this)
+        object QueryMap: QueryEndpoint<MapQuery, List<EventLocation>>(this)
         // object UserEvents: ApiDaoEndpoint<Event, EventId, NewEvent>(this, "user")
 
-        object ParseMultiEvents: PostEndpoint<ParseRequest, MultiEventParseResponse>(this, "parse-multi")
-        object ParseSingleEvent: PostEndpoint<ParseRequest, EventEdit>(this, "parse-single")
-        object ParseEvent: PostEndpoint<ParseRequest, EventParseResult>(this, "parse-event")
+        object ParseMultiEvents: PostEndpoint<ParseRequest, MultiEventParseResponse>(this)
+        object ParseSingleEvent: PostEndpoint<ParseRequest, EventEdit>(this)
+        object ParseEvent: PostEndpoint<ParseRequest, EventParseResult>(this)
 
-        object AtLocation: GetByIdEndpoint<LocationId, List<Event>>(this, "location")
-        object ReadEventLocations: PostEndpoint<List<EventId>, List<EventLocation>>(this, "read-event-locations")
-        object ReadLights: GetEndpoint<List<EventId>>(this, "lights")
+        object AtLocation: GetByIdEndpoint<LocationId, List<Event>>(this)
+        object ReadEventLocations: PostEndpoint<List<EventId>, List<EventLocation>>(this)
+        object ReadLights: GetEndpoint<List<EventId>>(this)
         object ReadBySlug: GetByIdEndpoint<Slug, Event>(this, "slug")
         object ReadEventLocationBySlug: GetByIdEndpoint<Slug, EventLocation>(this, "event-location-slug")
     }
@@ -113,15 +113,17 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object CreateOrEdit: PostEndpoint<GalaxyEdit, Galaxy>(this, "found")
         object Top: GetEndpoint<List<Galaxy>>(this, "areas")
         object ReadGalaxies: PostEndpoint<List<GalaxyId>, List<Galaxy>>(this, "read-galaxies")
-        object ReadGalaxy: GetByIdEndpoint<SlugOrId, Galaxy>(this, "read-galaxy")
-        object ReadContent: GetByIdEndpoint<SlugOrId, GalaxyContent>(this, "read-content")
-        object CreateEventPost: PostEndpoint<EventPostEdit, PostId>(this, "create-event-post")
-        object CreateLocationPost: PostEndpoint<LocationPostEdit, PostId>(this, "create-location-post")
-        object CreatePost: PostEndpoint<PostEdit, PostId>(this, "create-post")
-        object EditPost: PostEndpoint<PostEdit, PostId>(this, "edit-post")
+        object ReadGalaxySlug: GetByIdEndpoint<Slug, Galaxy>(this, "read-galaxy-slug")
+        object ReadGalaxyId: GetByIdEndpoint<GalaxyId, Galaxy>(this)
+        object ReadContent: GetByIdEndpoint<Slug, GalaxyContent>(this, "read-content")
+        object CreateEventPost: PostEndpoint<EventPostEdit, Slug>(this, "create-event-post")
+        object CreateLocationPost: PostEndpoint<LocationPostEdit, Slug>(this, "create-location-post")
+        object CreatePost: PostEndpoint<PostEdit, Slug>(this, "create-post")
+        object EditPost: PostEndpoint<PostEdit, Slug>(this, "edit-post")
         object ReadMultiPosts: PostEndpoint<List<GalaxyId>, List<GalaxyPost>>(this, "multi-posts")
         object ReadPosts: GetByIdEndpoint<GalaxyId, List<GalaxyPost>>(this, "posts")
-        object ReadPost: GetByIdEndpoint<StringId, GalaxyPost>(this, "post")
+        object ReadPostSlug: GetByIdEndpoint<Slug, GalaxyPost>(this, "read-post-slug")
+        object ReadPostId: GetByIdEndpoint<PostId, GalaxyPost>(this, "read-post-id")
         object ReadLights: GetEndpoint<List<GalaxyId>>(this, "lights")
         object RemovePost: PostEndpoint<PostId, Boolean>(this, "remove")
     }

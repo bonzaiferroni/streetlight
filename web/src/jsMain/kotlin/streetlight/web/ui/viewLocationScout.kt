@@ -15,7 +15,7 @@ fun RenderContext.viewLocationScout(galaxy: Galaxy) {
     // val model = app.getCoroutineScoped<GalaxyEditor>(null, renderScope)
     val editor = app.getLocationEditor(LocationEdit(), renderScope)
     val model = app.getLocationScout(galaxy, editor, renderScope)
-    val routeFlow = model.stateFlow.mapDistinctNotNull { it.postId?.let { GalaxyRoute(galaxy.slug) } }
+    val routeFlow = model.stateFlow.mapDistinctNotNull { it.slug?.let { GalaxyRoute(galaxy.slug) } }
     goOnRoute(routeFlow)
 
     column {

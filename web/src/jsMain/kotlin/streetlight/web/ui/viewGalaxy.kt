@@ -27,8 +27,8 @@ fun RenderContext.viewGalaxy(content: GalaxyContent) {
 
 fun RenderContext.viewGalaxyRoute() {
     routeBlock<GalaxyRoute, GalaxyContent>(portal, { route ->
-        readIsland<GalaxyContent>(GalaxyKey.GalaxyContentId) { it.galaxy.galaxyId.toString() == route.value || it.galaxy.slug == route.value }
-            ?: api.readGalaxyContent(route.value).handleResponse(toaster::toast)
+        readIsland<GalaxyContent>(GalaxyKey.GalaxyContentId) { it.galaxy.slug == route.slug }
+            ?: api.readGalaxyContent(route.slug).handleResponse(toaster::toast)
     }) { content ->
         viewGalaxy(content)
     }

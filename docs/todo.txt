@@ -1,3 +1,10 @@
+# EASY
+rename ProjectId to RecordId to avoid confusion
+change writeFull and writeUpdate to createRecord and updateRecord
+
+# EASY BUT LARGE
+
+
 # SIDE:
 allow upload of galaxy thumbnail
 EventTableDao // td: more precise time conflict handling
@@ -14,6 +21,7 @@ add visibility/interest to GalaxyPost
 fee: entry/ticket distinction
 isFull as a property on Event
 large grid content
+make username valid slugs
 
 # BEFORE UPDATE:
 stop caching html in UrlReader

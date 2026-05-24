@@ -1,5 +1,6 @@
 package streetlight.model.data
 
+import kampfire.api.Slug
 import kampfire.model.GeoPoint
 import kampfire.model.ScaledImageArray
 import kampfire.model.Url
@@ -10,7 +11,7 @@ import kotlin.time.Instant
 data class Post(
     override val postId: PostId,
     override val galaxyId: GalaxyId,
-    val slug: String?,
+    val slug: Slug,
     override val username: String?,
     override val userThumb: Url?,
     override val title: String,

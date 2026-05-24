@@ -20,7 +20,7 @@ fun RenderContext.viewStarProfileRoute() {
 //            galaxy = galaxy,
 //            listing = listing,
 //        )
-        route.slug
+        route.slug.string
     }) { content ->
         viewStarProfile(content)
     }

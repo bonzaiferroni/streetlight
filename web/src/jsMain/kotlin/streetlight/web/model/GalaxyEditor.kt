@@ -2,6 +2,7 @@
 
 package streetlight.web.model
 
+import kampfire.api.toSlug
 import kampfire.model.Url
 import kampfire.model.getDataOrNull
 import kampfire.model.handleResponse
@@ -60,9 +61,9 @@ class GalaxyEditor(
         setGalaxy { it.copy(name = value, slug = path) }
     }
 
-    fun setPath(value: String) {
-        if (value.isNotEmpty() && !GalaxyEdit.isValidPath(value)) return
-        setGalaxy { it.copy(slug = value) }
+    fun setSlug(value: String) {
+        if (value.isNotEmpty() && !GalaxyEdit.isValidSlug(value.trim().toSlug())) return
+        setGalaxy { it.copy(slug = value.toSlug()) }
     }
 
     fun setImageUrl(value: Url?) = state.set { it.copy(imageUrl = value) }

@@ -43,7 +43,7 @@ class LocationScout(
     val osmLocationsFlow = stateFlow.mapDistinct { it.osmLocations }
     val hasOsmLocations = stateFlow.mapDistinct { it.osmLocations.isNotEmpty() }
     val stageFlow = stateFlow.mapDistinct { it.stage }
-    val postFlow = stateFlow.mapDistinct { it.postId }
+    val postFlow = stateFlow.mapDistinct { it.slug }
     val modeFlow = stateFlow.mapDistinct { it.mode }
     val mapLocationFlow = stateFlow.mapDistinct { it.mapLocation }
 
@@ -112,8 +112,8 @@ class LocationScout(
             } ?: return@launch
 
             val edit = LocationPostEdit(null, galaxy.galaxyId, locationId, null)
-            api.postLocation(edit).handleResponse(postMessage::set) { postId ->
-                state.set { it.copy(postId = postId) }
+            api.postLocation(edit).handleResponse(postMessage::set) { slug ->
+                state.set { it.copy(slug = slug) }
             }
         }
     }
@@ -126,7 +126,7 @@ data class LocationScoutState(
     val osmLocations: List<LocationEdit> = emptyList(),
     val location: Location? = null,
     val stage: LocationScoutStage = LocationScoutStage.Search,
-    val postId: PostId? = null,
+    val slug: Slug? = null,
     val mapLocation: LocationEdit? = null,
     val mode: LocationScoutMode = LocationScoutMode.Map,
 )

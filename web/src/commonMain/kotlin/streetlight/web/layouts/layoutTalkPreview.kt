@@ -1,6 +1,7 @@
 package streetlight.web.layouts
 
 import kabinet.utils.toAgoFormat
+import kampfire.api.toSlug
 import koala.SvgFile
 import koala.css.*
 import koala.html.*
@@ -22,7 +23,7 @@ fun FlowContent.layoutTalkPreview(route: AppRoute, comments: List<Comment>) {
 
         column {
             row(modify(AlignItemsCenter, modify(Height5))) {
-                navigationIfNotNull(comment.username?.let { StarRoute(it)}) {
+                navigationIfNotNull(comment.username?.let { StarRoute(it.toSlug())}) {
                     row(modify(AlignItemsCenter)) {
                         image(comment.thumb, modify(Aspect1))
                         heading5(comment.username)
