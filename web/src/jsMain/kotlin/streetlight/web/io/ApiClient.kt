@@ -21,8 +21,8 @@ class ApiClient(private val client: FetchClient) {
     // suspend fun readStarInfo() = client.get(UserApi.ReadInfo)
 
     // events
-    suspend fun readEventId(eventId: EventId) = client.getApi(Api.Events.ReadById, eventId)
-    suspend fun readEventSlug(slug: Slug) = client.getApi(Api.Events.ReadEventLocationBySlug, slug)
+    suspend fun readEventId(eventId: EventId) = client.getApi(Api.Events.ReadId, eventId)
+    suspend fun readEventSlug(slug: Slug) = client.getApi(Api.Events.ReadSlug, slug)
     suspend fun readEventFeed() = client.getApi(Api.Events)
     suspend fun createEvent(event: EventEdit) = client.postApi(Api.Events.CreateEvent, event)
     suspend fun updateEvent(event: EventEdit) = client.postApi(Api.Events.UpdateEvent, event)
