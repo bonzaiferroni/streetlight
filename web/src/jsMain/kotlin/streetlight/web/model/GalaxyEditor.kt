@@ -110,8 +110,8 @@ class GalaxyEditor(
             val imageUrl: Url? = stateNow.imageUrl.takeIf { it != imageRef }?.let { url ->
                 api.uploadImage(url).getDataOrNull() ?: return@launch
             } ?: imageRef
-            api.createOrUpdateGalaxy(edit.copy(imageRef = imageUrl)).handleResponse(editMessage::set) { galaxy ->
-                portal.go(GalaxyRoute(galaxy.slug))
+            api.createOrUpdateGalaxy(edit.copy(imageRef = imageUrl)).handleResponse(editMessage::set) { slug ->
+                portal.go(GalaxyRoute(slug))
             }
         }
     }

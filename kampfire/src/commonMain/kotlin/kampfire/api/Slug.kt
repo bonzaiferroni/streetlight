@@ -8,6 +8,8 @@ import kotlin.jvm.JvmInline
 value class Slug(val string: String) {
     fun hasBase(base: String) = string.startsWith(base)
 
+    override fun toString() = string
+
     companion object {
         val Empty = Slug("")
         const val MAX_LENGTH = 36

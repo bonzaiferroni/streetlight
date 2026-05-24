@@ -1,5 +1,6 @@
 package streetlight.model.data
 
+import kampfire.api.Slug
 import kampfire.api.StringId
 import kotlinx.serialization.Serializable
 import kotlin.time.Instant
@@ -57,7 +58,7 @@ data class LocationEdited(
 
 @Serializable
 data class GalaxyFounded(
-    val galaxyId: GalaxyId,
+    val slug: Slug,
     val name: String,
     val username: String,
     override val recordAt: Instant
