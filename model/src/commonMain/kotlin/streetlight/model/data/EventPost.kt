@@ -1,5 +1,6 @@
 package streetlight.model.data
 
+import kampfire.api.Slug
 import kampfire.model.Url
 import kotlin.time.Instant
 import kotlinx.serialization.Serializable
@@ -29,7 +30,7 @@ data class EventPost(
 data class EventPostEdit(
     val postId: PostId? = null,
     val galaxyId: GalaxyId,
-    val eventId: EventId,
+    val eventSlug: Slug,
     val text: String? = null,
 ) {
     val isValid get () = true // !title.isNullOrBlank()

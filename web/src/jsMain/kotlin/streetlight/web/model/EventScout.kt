@@ -14,7 +14,6 @@ import streetlight.model.data.EventLocation
 import streetlight.model.data.EventPostEdit
 import streetlight.model.data.Galaxy
 import streetlight.model.data.GalaxyPost
-import streetlight.model.data.PostId
 import streetlight.web.io.ApiClient
 
 class EventScout(
@@ -66,12 +65,12 @@ class EventScout(
 
     fun post() {
         scope.launch {
-            val eventId = when (val event = stateNow.event) {
+            val slug = when (val event = stateNow.event) {
                 null -> editor.submitSuspend()
-                else -> event.eventId
+                else -> event.slug
             } ?: return@launch
 
-            val edit = EventPostEdit(null, galaxy.galaxyId, eventId, null)
+            val edit = EventPostEdit(null, galaxy.galaxyId, slug, null)
             api.createPost(edit).handleResponse(postMessage::set) { slug ->
                 state.set { it.copy(slug = slug) }
             }

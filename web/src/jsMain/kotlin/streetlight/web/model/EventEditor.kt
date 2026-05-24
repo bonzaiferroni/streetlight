@@ -15,10 +15,7 @@ import streetlight.model.data.Location
 import streetlight.model.data.EventEdit
 import kotlinx.datetime.LocalDate
 import streetlight.model.data.EventId
-import streetlight.model.data.EventLocation
 import streetlight.model.data.ExtraLink
-import streetlight.model.data.UrlParseRequest
-import streetlight.model.data.mergeRight
 import streetlight.web.io.ApiClient
 
 class EventEditor(
@@ -138,10 +135,13 @@ class EventEditor(
 //        }
     }
 
-    suspend fun submitSuspend(): EventId? {
+    suspend fun submitSuspend(): Slug? {
         if (!isEditValid()) return null
         message.set("Sending...")
-        return api.createOrEditEvent(editNow).handleResponse(message::set)
+        return when (editNow.eventId) {
+            null -> api.createEvent(editNow)
+            else -> api.updateEvent(editNow)
+        }.handleResponse(message::set)
     }
 
     private fun setEvent(provideEvent: (EventEdit) -> EventEdit) {
@@ -157,5 +157,4 @@ data class EventEditorState(
     val originalSourceUrl: String = "",
     val costString: String = "",
     val imageUrl: Url? = null,
-    val eventId: EventId? = null
 )

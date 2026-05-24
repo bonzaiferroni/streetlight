@@ -18,7 +18,8 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
 
     object Events: GetEndpoint<List<Event>>(this) {
         object ReadById: GetByIdEndpoint<EventId, Event>(this)
-        object CreateOrEdit: PostEndpoint<EventEdit, EventId>(this)
+        object CreateEvent: PostEndpoint<EventEdit, Slug>(this)
+        object UpdateEvent: PostEndpoint<EventEdit, Slug>(this)
         object Delete: DeleteEndpoint<EventId>(this)
         object QueryMap: QueryEndpoint<MapQuery, List<EventLocation>>(this)
         // object UserEvents: ApiDaoEndpoint<Event, EventId, NewEvent>(this, "user")

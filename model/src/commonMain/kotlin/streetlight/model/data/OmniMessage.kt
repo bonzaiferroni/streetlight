@@ -1,7 +1,6 @@
 package streetlight.model.data
 
 import kampfire.api.Slug
-import kampfire.api.StringId
 import kotlinx.serialization.Serializable
 import kotlin.time.Instant
 
@@ -16,7 +15,7 @@ sealed interface OmniRecord: OmniMessage {
 
 @Serializable
 data class EventCreated(
-    val eventId: EventId,
+    val slug: Slug,
     val title: String,
     val username: String,
     override val recordAt: Instant
@@ -25,8 +24,8 @@ data class EventCreated(
 }
 
 @Serializable
-data class EventEdited(
-    val eventId: EventId,
+data class EventUpdated(
+    val slug: Slug,
     val title: String,
     val username: String,
     // td: add edit note
