@@ -1,5 +1,6 @@
 package streetlight.web.model
 
+import kampfire.api.Slug
 import kampfire.model.GeoPoint
 import kampfire.model.Url
 import kampfire.model.handleResponse
@@ -12,7 +13,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.launch
-import streetlight.model.data.Location
 import streetlight.model.data.LocationEdit
 import streetlight.model.data.LocationId
 import streetlight.model.data.ResourceType
@@ -114,10 +114,13 @@ class LocationEditor(
         }
     }
 
-    suspend fun submitSuspend(): LocationId? {
+    suspend fun submitSuspend(): Slug? {
         if (!isEditValid()) return null
         message.set("Sending...")
-        return api.createOrEditLocation(editNow).handleResponse(message::set)
+        return when (editNow.locationId) {
+            null -> api.createLocation(editNow).handleResponse(message::set)
+            else -> api.updateLocation(editNow).handleResponse(message::set)
+        }
     }
 }
 

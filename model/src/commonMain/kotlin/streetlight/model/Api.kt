@@ -36,9 +36,8 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
     }
 
     object Locations: GetByIdEndpoint<LocationId, Location>(this, "locations") {
-        @Deprecated("use edit")
-        object Create: PostEndpoint<PlaceProto, LocationId>(this, "create")
-        object CreateOrEdit: PostEndpoint<LocationEdit, LocationId>(this, "edit")
+        object CreateLocation: PostEndpoint<LocationEdit, Slug>(this)
+        object UpdateLocation: PostEndpoint<LocationEdit, Slug>(this)
         @Deprecated("use posts to associate locations with galaxies")
         object Street: GetByIdEndpoint<GalaxyId, List<Location>>(this, "street")
         @Deprecated("use edit")

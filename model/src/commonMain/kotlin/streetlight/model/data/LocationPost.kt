@@ -1,5 +1,6 @@
 package streetlight.model.data
 
+import kampfire.api.Slug
 import kampfire.model.GeoPoint
 import kampfire.model.Url
 import kotlin.time.Instant
@@ -30,7 +31,7 @@ data class LocationPost(
 data class LocationPostEdit(
     val postId: PostId?,
     val galaxyId: GalaxyId,
-    val locationId: LocationId,
+    val locationSlug: Slug,
     val text: String? = null,
 ) {
     val isValid get () = true // !title.isNullOrBlank()

@@ -15,7 +15,6 @@ import streetlight.model.data.Galaxy
 import streetlight.model.data.Location
 import streetlight.model.data.LocationEdit
 import streetlight.model.data.LocationPostEdit
-import streetlight.model.data.PostId
 import streetlight.model.data.mergeLeft
 import streetlight.model.data.toEditOrNull
 import streetlight.web.io.ApiClient
@@ -106,12 +105,12 @@ class LocationScout(
 
     fun postToGalaxy() {
         scope.launch {
-            val locationId = when (val location = stateNow.location) {
+            val slug = when (val location = stateNow.location) {
                 null -> editor.submitSuspend()
-                else -> location.locationId
+                else -> location.slug
             } ?: return@launch
 
-            val edit = LocationPostEdit(null, galaxy.galaxyId, locationId, null)
+            val edit = LocationPostEdit(null, galaxy.galaxyId, slug, null)
             api.postLocation(edit).handleResponse(postMessage::set) { slug ->
                 state.set { it.copy(slug = slug) }
             }
