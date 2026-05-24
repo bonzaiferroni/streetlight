@@ -1,19 +1,11 @@
 # EASY
-change writeFull and writeUpdate to createRecord and updateRecord
 
 # SIDE:
-allow upload of galaxy thumbnail
 EventTableDao // td: more precise time conflict handling
 routeBlock.kt // td: retry provideData call n times
-largeGridOf // td: provide action/route
-fix issue with lazy map on galaxyProfile
 provide UI message for event conflict
 
 # MAIN:
-galaxy fields:
-    description
-wireMapPanel // td: gather posts from json in html
-add visibility/interest to GalaxyPost
 fee: entry/ticket distinction
 isFull as a property on Event
 large grid content
