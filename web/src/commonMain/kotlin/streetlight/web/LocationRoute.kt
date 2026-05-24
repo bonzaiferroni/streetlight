@@ -20,8 +20,8 @@ data class LocationScoutRoute(override val slug: Slug): SlugRoute {
 
 data class LocationAdminRoute(
     val locationId: LocationId
-): StreetlightRoute, ProjectIdRoute {
+): StreetlightRoute, RecordIdRoute {
     override val screen get() = StreetlightScreen.LocationAdmin
-    override val projectId get() = locationId
+    override val recordId get() = locationId
     override val title get() = "Location Admin"
 }

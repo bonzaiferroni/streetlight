@@ -6,12 +6,7 @@ import kampfire.model.Labeled
 import kampfire.model.ScaledImageArray
 import kampfire.model.Url
 import kotlinx.serialization.Serializable
-import kotlinx.datetime.LocalDate
-import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
-import kotlinx.datetime.atTime
-import kotlinx.datetime.toInstant
-import kotlinx.datetime.toLocalDateTime
 import kotlin.jvm.JvmInline
 import kotlin.time.Instant
 import kotlin.uuid.Uuid
@@ -54,7 +49,7 @@ data class Event(
 
 @JvmInline
 @Serializable
-value class EventId(override val value: Uuid): ProjectId {
+value class EventId(override val value: Uuid): RecordId {
     companion object { fun random() = EventId(Uuid.random()) }
     override fun toString() = value.toString()
 }

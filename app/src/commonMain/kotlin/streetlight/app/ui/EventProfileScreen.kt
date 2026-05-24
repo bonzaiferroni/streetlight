@@ -26,13 +26,13 @@ import pondui.ui.controls.UpdateStatus
 import pondui.utils.SinglePreview
 import streetlight.app.EventProfileRoute
 import streetlight.model.data.Event
-import streetlight.model.data.toProjectId
+import streetlight.model.data.toRecordId
 import streetlight.model.mockDb
 
 @Composable
 fun EventProfileScreen(
     route: EventProfileRoute,
-    viewModel: EventProfileModel = viewModel(key = route.id + "profile") { EventProfileModel(route.id.toProjectId()) }
+    viewModel: EventProfileModel = viewModel(key = route.id + "profile") { EventProfileModel(route.id.toRecordId()) }
 ) {
     val state by viewModel.stateFlow.collectAsState()
 

@@ -3,11 +3,11 @@ package streetlight.model.data
 import kampfire.api.TableId
 import kotlin.uuid.Uuid
 
-sealed interface ProjectId: TableId<Uuid> {
+sealed interface RecordId: TableId<Uuid> {
     val string get() = value.toString()
 }
 
-inline fun <reified T> Uuid.toProjectId(): T = when (T::class) {
+inline fun <reified T> Uuid.toRecordId(): T = when (T::class) {
     StarId::class -> StarId(this) as T
     GalaxyId::class -> GalaxyId(this) as T
     ContactId::class -> ContactId(this) as T
@@ -22,7 +22,7 @@ inline fun <reified T> Uuid.toProjectId(): T = when (T::class) {
     TalentId::class -> TalentId(this) as T
     PostId::class -> PostId(this) as T
     CommentId::class -> CommentId(this) as T
-    else -> error("invalid projectId type: ${T::class.simpleName}")
+    else -> error("invalid recordId type: ${T::class.simpleName}")
 }
 
-inline fun <reified T> String.toProjectId() = Uuid.parse(this).toProjectId<T>()
+inline fun <reified T> String.toRecordId() = Uuid.parse(this).toRecordId<T>()

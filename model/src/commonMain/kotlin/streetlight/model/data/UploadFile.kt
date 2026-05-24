@@ -1,9 +1,7 @@
 package streetlight.model.data
 
-import kampfire.api.TableId
 import kampfire.model.ImageSize
 import kampfire.model.Url
-import kampfire.utils.randomUuidString
 import kotlin.time.Instant
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
@@ -23,7 +21,7 @@ data class UploadFile(
 
 @JvmInline
 @Serializable
-value class UploadFileId(override val value: Uuid): ProjectId {
+value class UploadFileId(override val value: Uuid): RecordId {
     companion object { fun random() = UploadFileId(Uuid.random())}
 }
 

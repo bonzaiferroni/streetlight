@@ -8,7 +8,7 @@ import streetlight.app.AppProvider
 import streetlight.app.LocationProfileRoute
 import streetlight.app.RuntimeProvider
 import streetlight.model.data.Location
-import streetlight.model.data.toProjectId
+import streetlight.model.data.toRecordId
 
 class LocationProfileModel(
     route: LocationProfileRoute,
@@ -21,7 +21,7 @@ class LocationProfileModel(
 
     init {
         viewModelScope.launch {
-            val location = client.readLocation(route.id.toProjectId())
+            val location = client.readLocation(route.id.toRecordId())
             setState { it.copy(location = location, modLocation = location) }
         }
     }

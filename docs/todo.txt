@@ -1,9 +1,5 @@
 # EASY
-rename ProjectId to RecordId to avoid confusion
 change writeFull and writeUpdate to createRecord and updateRecord
-
-# EASY BUT LARGE
-
 
 # SIDE:
 allow upload of galaxy thumbnail
@@ -28,40 +24,3 @@ stop caching html in UrlReader
 
 # BEFORE LAUNCH
 hikariCP
-
-# DONE:
-go over
-trawl front end pages
-change primary color to secondary
-consolidate putRespondBool and put
-add something returned to delete and update endpoints
-EventScout: new event must appear on map on creation
-show galaxy posts on map
-GalaxyProfile: show post list under map
-viewGalaxyProfile: Show post list under map as table
-
-# ABANDONED:
-fix the height of outline buttons, make same
-set LIGHT style to something easier on the eyes
-add content to deletePage
-refactor song request creation
-create textBox()
-front end: catalogPage, portalMap, songStore
-figure out flex layout
-
-# Issues 5/3/2026
-* After posting an event to one galaxy it routed me back to a previous galaxy
-    * Related: the "back to galaxy" button does not give the correct galaxy
-    * Actually the issue seems to be that the header for the galaxy is not correct
-
-* Upload for location images does not appear to work:
-Applicat ERROR Application - Unhandled: POST - /api/v1/locations/edit
-java.lang.IllegalStateException: filename not found: null
-  at streetlight.server.routes.SaveImageKt.saveImageSizes-PzEVmHc(saveImage.kt:103)
-  at streetlight.server.routes.SaveImageKt.saveImages-fzpPIao(saveImage.kt:69)
-  at streetlight.server.routes.ServeLocationsKt$serveLocations$8$1.invokeSuspend(serveLocations.kt:53)
-  at streetlight.server.routes.ServeLocationsKt$serveLocations$8$1.invoke(serveLocations.kt)
-  at streetlight.server.routes.ServeLocationsKt$serveLocations$8$1.invoke(serveLocations.kt)
-  at streetlight.server.routes.ServeLocationsKt$ser
-
-* Routing to the home page appears to refresh the page again after loading

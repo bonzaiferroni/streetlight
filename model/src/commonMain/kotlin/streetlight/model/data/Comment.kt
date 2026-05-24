@@ -1,8 +1,6 @@
 package streetlight.model.data
 
-import kampfire.api.StringId
 import kampfire.model.Url
-import kampfire.utils.randomUuidString
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 import kotlin.time.Instant
@@ -23,7 +21,7 @@ data class Comment(
 
 @JvmInline
 @Serializable
-value class CommentId(override val value: Uuid) : ProjectId {
+value class CommentId(override val value: Uuid) : RecordId {
     companion object {
         fun random() = CommentId(Uuid.random())
     }

@@ -31,7 +31,7 @@ sealed interface GalaxyPost {
 
 @Serializable
 @JvmInline
-value class PostId(override val value: Uuid): ProjectId {
+value class PostId(override val value: Uuid): RecordId {
     override fun toString() = value.toString()
 
     companion object {

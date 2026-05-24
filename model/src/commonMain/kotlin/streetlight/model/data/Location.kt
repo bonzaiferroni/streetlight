@@ -72,7 +72,7 @@ data class Location(
 }
 
 @JvmInline @Serializable
-value class LocationId(override val value: Uuid): ProjectId {
+value class LocationId(override val value: Uuid): RecordId {
     override fun toString() = value.toString()
 
     companion object { fun random() = LocationId(Uuid.random())}

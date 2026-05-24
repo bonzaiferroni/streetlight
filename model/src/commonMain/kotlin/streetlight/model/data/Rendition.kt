@@ -18,7 +18,7 @@ data class Rendition(
 
 @JvmInline
 @Serializable
-value class RenditionId(override val value: Uuid): ProjectId {
+value class RenditionId(override val value: Uuid): RecordId {
     companion object { fun random() = RenditionId(Uuid.random()) }
 }
 

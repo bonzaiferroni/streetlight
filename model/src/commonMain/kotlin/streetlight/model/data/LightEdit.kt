@@ -12,7 +12,7 @@ data class LightEdit(
     val isLit: Boolean,
     val lightType: LightType,
 ): EditLightRequest {
-    fun getEventId(): EventId = targetId.toProjectId()
+    fun getEventId(): EventId = targetId.toRecordId()
 }
 
 @Serializable

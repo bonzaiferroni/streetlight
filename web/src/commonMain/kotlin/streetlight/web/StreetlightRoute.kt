@@ -15,7 +15,7 @@ import koala.html.UuidParse
 import koala.model.DocId
 import streetlight.model.data.GalaxyId
 import streetlight.model.data.LocationId
-import streetlight.model.data.ProjectId
+import streetlight.model.data.RecordId
 import streetlight.model.data.SongId
 import streetlight.model.data.TalentId
 import streetlight.model.data.SpaceType
@@ -66,16 +66,10 @@ enum class StreetlightScreen(
 
 sealed interface StreetlightRoute: AppRoute
 
-interface ProjectIdRoute: StreetlightRoute {
-    val projectId: ProjectId?
+interface RecordIdRoute: StreetlightRoute {
+    val recordId: RecordId?
 
-    override fun toSitePath() = toIdSitePath(projectId)
-}
-
-interface SlugOrIdRoute: StreetlightRoute {
-    val value: StringId
-
-    override fun toSitePath() = toIdSitePath(value)
+    override fun toSitePath() = toIdSitePath(recordId)
 }
 
 sealed interface SlugRoute: StreetlightRoute {
@@ -112,25 +106,25 @@ object ChatRoute: StreetlightRoute {
 
 data class SongProfileRoute(
     val songId: SongId
-): StreetlightRoute, ProjectIdRoute {
+): StreetlightRoute, RecordIdRoute {
     override val screen get() = StreetlightScreen.SongProfile
-    override val projectId get() = songId
+    override val recordId get() = songId
     override val title get() = "Song"
 }
 
 data class TalentProfileRoute(
     val talentId: TalentId
-): StreetlightRoute, ProjectIdRoute {
+): StreetlightRoute, RecordIdRoute {
     override val screen get() = StreetlightScreen.TalentProfile
-    override val projectId get() = talentId
+    override val recordId get() = talentId
     override val title get() = "Talent"
 }
 
 data class EditTalentRoute(
     val talentId: TalentId? = null
-): StreetlightRoute, ProjectIdRoute {
+): StreetlightRoute, RecordIdRoute {
     override val screen get() = StreetlightScreen.EditTalent
-    override val projectId get() = talentId
+    override val recordId get() = talentId
     override val title get() = "Talent"
 }
 

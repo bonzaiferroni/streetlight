@@ -3,7 +3,6 @@ package streetlight.model.data
 import kampfire.model.ScaledImageArray
 import kampfire.model.Url
 import kampfire.model.UserRole
-import kampfire.utils.randomUuidString
 import kotlin.time.Instant
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
@@ -23,7 +22,7 @@ data class Star(
 
 @JvmInline
 @Serializable
-value class StarId(override val value: Uuid): ProjectId {
+value class StarId(override val value: Uuid): RecordId {
     companion object { fun random() = StarId(Uuid.random())}
     override fun toString() = value.toString()
 }

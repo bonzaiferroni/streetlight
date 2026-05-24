@@ -14,8 +14,8 @@ import kotlinx.serialization.decodeFromByteArray
 import kotlinx.serialization.serializer
 import org.khronos.webgl.Int8Array
 import org.w3c.fetch.Response
-import streetlight.model.data.ProjectId
-import streetlight.model.data.toProjectId
+import streetlight.model.data.RecordId
+import streetlight.model.data.toRecordId
 
 suspend inline fun <reified Returned> Response.tryDecode(encoding: EncodingType?): Returned? {
     return when (encoding) {
@@ -61,7 +61,7 @@ suspend inline fun <reified Returned> Response.tryDecodeText(): Returned? {
             Double::class -> text.toDoubleOrNull() as Returned?
             Float::class -> text.toFloatOrNull() as Returned?
             Boolean::class -> text.toBooleanStrictOrNull() as Returned?
-            ProjectId::class -> text.toProjectId<Returned>()
+            RecordId::class -> text.toRecordId<Returned>()
 
             else -> jsonConfig.decodeFromString<Returned>(text)
         }
