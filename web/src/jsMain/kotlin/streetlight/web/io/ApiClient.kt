@@ -74,8 +74,8 @@ class ApiClient(private val client: FetchClient) {
 
     suspend fun readSongs() = client.getApi(Api.Songs)
     suspend fun createSong(song: NewSong) = client.postApi(Api.Songs.Create, song)
-    suspend fun readSong(songId: SongId) = client.getApi(Api.SongProfile, songId)
-    suspend fun updateSong(song: Song) = client.postApi(Api.SongProfile.Update, song)
+    suspend fun readSong(songId: SongId) = client.getApi(Api.Songs.ReadId, songId)
+    suspend fun updateSong(song: Song) = client.postApi(Api.Songs.Update, song)
 
     // talents
     suspend fun readTalents() = client.getApi(Api.Users.Talents)

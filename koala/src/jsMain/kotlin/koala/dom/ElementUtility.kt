@@ -1,15 +1,10 @@
 package koala.dom
 
-import koala.css.DisplayNone
-import koala.css.InlineStyle
 import koala.css.Property
 import koala.css.Modifier
 import koala.html.Queryable
 import kotlinx.browser.document
 import kotlinx.browser.window
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.launch
 import org.w3c.dom.Element
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.asList
