@@ -80,7 +80,7 @@ class ApiClient(private val client: FetchClient) {
     suspend fun editTalent(talent: TalentEdit) = client.postApi(Api.Users.EditTalent, talent)
 
     // galaxies
-    suspend fun createOrUpdateGalaxy(galaxy: GalaxyEdit) = client.postApi(Api.Galaxies.CreateOrEdit, galaxy)
+    suspend fun createOrUpdateGalaxy(galaxy: GalaxyEdit) = client.postApi(Api.Galaxies.CreateGalaxy, galaxy)
     suspend fun readTopGalaxies() = client.getApi(Api.Galaxies.Top)
     suspend fun readGalaxies(galaxyIds: List<GalaxyId>) = client.postApi(Api.Galaxies.ReadGalaxies, galaxyIds)
     suspend fun readGalaxy(slug: Slug) = client.getApi(Api.Galaxies.ReadGalaxySlug, slug)
