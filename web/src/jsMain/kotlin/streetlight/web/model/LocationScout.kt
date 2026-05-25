@@ -29,11 +29,13 @@ class LocationScout(
     private val toaster: Toaster,
     private val api: ApiClient,
 ) {
-    private val state = storeOf(LocationScoutState(city = galaxy.city))
+    private val initialState = LocationScoutState(city = galaxy.city)
+    private val state = storeOf(initialState)
     val stateNow get() = state.now
     val stateFlow = state.flow
     val mapMessage = MessageStore()
     val postMessage = MessageStore()
+    val queryMessage = MessageStore()
 
     val queryFlow = stateFlow.mapDistinct { it.query }
     val cityFlow = stateFlow.mapDistinct { it.city }
@@ -58,11 +60,11 @@ class LocationScout(
             }
 
             launch {
-                geo.stateFlow.filter { !it.isMoving && stateNow.mode == LocationScoutMode.Map }
+                geo.stateFlow.filter { !it.isMoving && stateNow.mode == SearchMode.Map }
                     .mapDistinct { it.center }.collect { center ->
                         osm.readLocationAt(center).handleResponse(mapMessage::set) { location ->
                             val location = location.toEditOrNull() ?: return@handleResponse
-                            mapMessage.set(location.displayTitle)
+                            mapMessage.set(location.label)
                             state.set { it.copy(mapLocation = location)}
                         }
                     }
@@ -73,14 +75,20 @@ class LocationScout(
     fun setQuery(value: String) = state.set { it.copy(query = value) }
     fun setCity(value: String) = state.set { it.copy(city = value) }
     fun setLocation(value: Location?) = state.set { it.copy(location = value, stage = LocationScoutStage.Post) }
-    fun setMode(value: LocationScoutMode) = state.set { it.copy(mode = value) }
-    fun setStage(value: LocationScoutStage) = state.set { it.copy(stage = value) }
+    fun setMode(value: SearchMode) = state.set { it.copy(mode = value) }
+
+    fun setStage(value: LocationScoutStage) {
+        if (value == LocationScoutStage.Search) {
+            editor.reset()
+        }
+        state.set { it.copy(stage = value) }
+    }
 
     fun stageLocation(value: LocationEdit?) {
         if (value == null) return
         editor.setEdit { value.mergeLeft(it) }
         editor.readWebsite()
-        state.set { it.copy(osmLocations = emptyList(), stage = LocationScoutStage.Edit) }
+        state.set { it.copy(stage = LocationScoutStage.Edit) }
     }
 
     fun stageLocationFromMap() = stageLocation(stateNow.mapLocation)
@@ -88,11 +96,10 @@ class LocationScout(
     fun queryOSM() {
         val query = stateNow.query
         if (query.isBlank()) return
+        queryMessage.set("Searching...")
         scope.launch {
-            osm.readLocations(query, stateNow.city).handleResponse(toaster::toast) { locations ->
-                if (locations.isEmpty()) {
-                    toaster.toast("Location not found: $query.")
-                }
+            osm.readLocations(query, stateNow.city).handleResponse(queryMessage::set) { locations ->
+                queryMessage.set("found: ${locations.size}")
                 state.set { it.copy(osmLocations = locations.mapNotNull { loc -> loc.toEditOrNull() }) }
             }
         }
@@ -127,7 +134,7 @@ data class LocationScoutState(
     val stage: LocationScoutStage = LocationScoutStage.Search,
     val slug: Slug? = null,
     val mapLocation: LocationEdit? = null,
-    val mode: LocationScoutMode = LocationScoutMode.Map,
+    val mode: SearchMode = SearchMode.Search,
 )
 
 enum class LocationScoutStage: Labeled {
@@ -138,7 +145,7 @@ enum class LocationScoutStage: Labeled {
     override val label get() = name
 }
 
-enum class LocationScoutMode {
+enum class SearchMode {
     Search,
     Map,
 }

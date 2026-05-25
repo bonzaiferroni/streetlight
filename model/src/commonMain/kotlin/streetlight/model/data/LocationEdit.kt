@@ -1,6 +1,7 @@
 package streetlight.model.data
 
 import kampfire.model.GeoPoint
+import kampfire.model.Labeled
 import kampfire.model.Url
 import kampfire.model.toValidityCheck
 import kotlinx.serialization.Serializable
@@ -29,7 +30,7 @@ data class LocationEdit(
     val aboutUrl: String? = null,
     val menuUrl: String? = null,
     val imageRef: Url? = null,
-) {
+): Labeled {
     val validity by lazy {
         buildSet {
             if (name.isNullOrBlank()) add(LocationProperty.Name)
@@ -38,7 +39,33 @@ data class LocationEdit(
         }.toValidityCheck()
     }
 
-    val displayTitle get() = name ?: address ?: "(geolocation)"
+    val addressLine by lazy {
+        addressLineOf(address, city)
+    }
+
+    val subLabel get() = when (name) {
+        null -> city
+        else -> addressLine
+    }
+
+    val links by lazy {
+        buildList {
+            website?.let {
+                add(ExtraLink("website", it))
+            }
+            eventsUrl?.let {
+                add(ExtraLink("calendar", it))
+            }
+            menuUrl?.let {
+                add(ExtraLink("menu", it))
+            }
+//            extraLinks?.let {
+//                addAll(it)
+//            }
+        }.takeIf { it.isNotEmpty() }
+    }
+
+    override val label get() = name ?: address ?: "(geolocation)"
 }
 
 object LocationProperty {

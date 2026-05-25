@@ -16,6 +16,7 @@ import streetlight.model.data.EventLocation
 import streetlight.model.data.Galaxy
 import streetlight.model.data.GalaxyId
 import streetlight.model.data.Location
+import streetlight.model.data.LocationEdit
 import streetlight.model.data.LocationId
 import streetlight.web.ui.StarLightKey
 import streetlight.web.ui.starLight
@@ -123,9 +124,18 @@ fun FlowContent.locationLightCell(visibility: Int?, locationId: LocationId) {
     }
 }
 
+fun FlowContent.exampleLightCell() {
+    starLight(0)
+}
+
 fun locationCells(location: Location): List<(FlowContent.() -> Unit)?> = listOf(
     { starCell(location.username) },
     { locationLightCell(location.lightCount, location.locationId)}
+)
+
+fun locationCells(username: String?, edit: LocationEdit): List<(FlowContent.() -> Unit)?> = listOf(
+    { starCell(username) },
+    { exampleLightCell() }
 )
 
 fun eventCells(event: EventLocation): List<(FlowContent.() -> Unit)?> = listOf(

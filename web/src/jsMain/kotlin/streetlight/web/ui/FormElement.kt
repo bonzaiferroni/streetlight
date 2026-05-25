@@ -2,12 +2,15 @@ package streetlight.web.ui
 
 import koala.css.*
 import koala.dom.*
+import koala.html.AppRoute
+import koala.html.btn
 import koala.html.bulletsOf
 import koala.html.filigree
 import koala.html.heading3
 import koala.model.Store
 import kotlinx.coroutines.flow.Flow
 import kotlinx.html.DIV
+import org.w3c.dom.HTMLElement
 
 fun RenderContext.formBody(
     modifiers: ModifierSet? = null,
@@ -100,13 +103,21 @@ fun RenderContext.formSubmit(
     onSubmit: () -> Unit,
     modifiers: ModifierSet? = null,
     messages: Store<UIMessage?>? = null,
+    back: LabeledAction? = null,
 ) {
     row {
-        addModifiers(modifiers, JustifyContentEnd)
-        messages?.let {
-            messageBox(messages)
+        addModifiers(modifiers, JustifyContentSpaceBetween)
+        row(modify(Flex1)) {
+            back?.let {
+                button(it.label, it.modifiers ?: modify(Secondary), it.onClick)
+            }
         }
-        button(label, onClick = onSubmit)
+        row {
+            messages?.let {
+                messageBox(messages)
+            }
+            button(label, onClick = onSubmit)
+        }
     }
 }
 
@@ -117,3 +128,9 @@ object FormMod {
     val Bullets = modify(OpacityMost)
     val GeoMap = modify(Height48, BorderRadius2, OverflowClip, MoonShadow)
 }
+
+data class LabeledAction(
+    val label: String,
+    val onClick: () -> Unit,
+    val modifiers: ModifierSet? = null,
+)

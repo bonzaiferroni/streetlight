@@ -18,6 +18,7 @@ import kotlinx.html.FlowContent
 import streetlight.model.data.EventLocation
 import streetlight.model.data.Location
 import streetlight.model.data.GalaxyPost
+import streetlight.model.data.LocationEdit
 
 fun FlowContent.postCardOf(post: GalaxyPost) {
     column {
@@ -60,6 +61,22 @@ fun FlowContent.postCardOf(location: Location) {
         flairIcon = FlairIcon.Location,
         links = location.links,
         cells = locationCells(location)
+    )
+}
+
+fun FlowContent.postCardOf(edit: LocationEdit, username: String?) {
+    postCard(
+        slug = null,
+        heading = edit.label,
+        subHeading = edit.subLabel,
+        postRoute = null,
+        subRoute = null,
+        imageUrl = edit.imageRef,
+        description = edit.description,
+        colorScheme = ColorScheme.Primary,
+        flairIcon = FlairIcon.Location,
+        links = edit.links,
+        cells = locationCells(username, edit)
     )
 }
 

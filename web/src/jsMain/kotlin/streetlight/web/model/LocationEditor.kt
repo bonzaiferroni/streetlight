@@ -10,6 +10,9 @@ import koala.dom.set
 import koala.model.mapDistinct
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.launch
@@ -23,10 +26,15 @@ import streetlight.web.io.ApiClient
 
 class LocationEditor(
     initialData: LocationEdit,
-    private val scope: CoroutineScope,
+    scope: CoroutineScope,
     private val api: ApiClient,
 ) {
-    private val state = storeOf(LocationEditorState(initialData))
+    private val scope = CoroutineScope(
+        scope.coroutineContext + SupervisorJob(scope.coroutineContext[Job])
+    )
+
+    private val initialState = LocationEditorState(initialData)
+    private val state = storeOf(initialState)
     val stateNow get() = state.now
     val stateFlow = state.flow
 
@@ -106,6 +114,12 @@ class LocationEditor(
         val validMessage = editNow.validity.message
         message.set(validMessage)
         return validMessage == null
+    }
+
+    fun reset() {
+        state.set { initialState }
+        scope.coroutineContext.cancelChildren()
+        message.clear()
     }
 
     fun submit() {

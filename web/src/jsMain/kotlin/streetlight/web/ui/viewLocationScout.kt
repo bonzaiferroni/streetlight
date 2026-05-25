@@ -30,13 +30,23 @@ fun RenderContext.viewLocationScout(galaxy: Galaxy) {
                 }
                 LocationScoutStage.Edit -> column {
                     locationEditFormBody(editor)
-                    formSubmit("Next", model::review, messages = editor.message)
+                    formSubmit(
+                        label = "Next",
+                        onSubmit = model::review,
+                        messages = editor.message,
+                        back = LabeledAction("Back", { model.setStage(LocationScoutStage.Search) })
+                    )
                 }
                 LocationScoutStage.Post -> column {
-                    val location = model.stateNow.location ?: error("location not found")
-                    postCardOf(location)
+                    val edit = editor.editNow
+                    postCardOf(edit, gate.stateNow.star?.username)
 
-                    formSubmit("Post", model::postToGalaxy, messages = editor.message)
+                    formSubmit(
+                        label = "Post",
+                        onSubmit = model::postToGalaxy,
+                        messages = editor.message,
+                        back = LabeledAction("Edit", { model.setStage(LocationScoutStage.Edit) })
+                    )
                 }
             }
         }

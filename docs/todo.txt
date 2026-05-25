@@ -1,11 +1,16 @@
 # EASY
+use sync triggers in place of joins
+make Username a type
+reorder button arguments
+reorder textfield arguments
 
-# SIDE:
+# MEDIUM:
 EventTableDao // td: more precise time conflict handling
 routeBlock.kt // td: retry provideData call n times
 provide UI message for event conflict
+convert .css to .kt
 
-# MAIN:
+# CHALLENGE:
 fee: entry/ticket distinction
 isFull as a property on Event
 large grid content
