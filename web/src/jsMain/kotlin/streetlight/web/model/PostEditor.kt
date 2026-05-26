@@ -3,8 +3,8 @@ package streetlight.web.model
 import kampfire.api.Slug
 import kampfire.model.Url
 import kampfire.model.handleResponse
+import koala.dom.MessageStore
 import koala.dom.UIMessage
-import koala.dom.set
 import koala.model.mapDistinct
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
@@ -23,7 +23,7 @@ class PostEditor(
     val stateFlow = state.flow
     val stateNow get() = state.now
 
-    val message = storeOf<UIMessage?>(null)
+    val message = MessageStore()
 
     val contentFlow = stateFlow.mapDistinct { it.content }
     val editNow get() = state.now.content
@@ -48,6 +48,7 @@ class PostEditor(
         scope.launch {
             if (!uploadImageIfBlob()) return@launch
             val content = editNow.takeIf { it.isValid } ?: return@launch
+            message.set("Posting...", true)
 
             when (content.postId) {
                 null -> api.createPost(content)
@@ -64,7 +65,7 @@ class PostEditor(
 
     private suspend fun uploadImageIfBlob(): Boolean {
         val blobUrl = editNow.imageRef?.takeIf { it.isBlob } ?: return true
-        message.set("Uploading image...")
+        message.set("Uploading image...", true)
         val refUrl = api.uploadImage(blobUrl).handleResponse(message::set)
         if (refUrl == null) {
             message.set("Unable to upload image.")

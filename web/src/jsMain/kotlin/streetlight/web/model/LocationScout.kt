@@ -4,7 +4,6 @@ import kampfire.api.Slug
 import kampfire.model.Labeled
 import kampfire.model.handleResponse
 import koala.dom.MessageStore
-import koala.dom.set
 import koala.model.GeoMap
 import koala.model.mapDistinct
 import koala.model.storeOf
@@ -96,10 +95,10 @@ class LocationScout(
     fun queryOSM() {
         val query = stateNow.query
         if (query.isBlank()) return
-        queryMessage.set("Searching...")
+        queryMessage.set("Searching...", true)
         scope.launch {
             val city = stateNow.city?.takeIf { it.isNotBlank() }
-            val bounds = galaxy.geoBounds.takeIf { city == null }?.expandBy(10f)
+            val bounds = galaxy.geoBounds.takeIf { city == null }?.expandBy(5f)
             osm.readLocations(query, stateNow.city, bounds).handleResponse(queryMessage::set) { locations ->
                 queryMessage.set("found: ${locations.size}")
                 state.set { it.copy(osmLocations = locations.mapNotNull { loc -> loc.toEditOrNull() }) }

@@ -18,7 +18,7 @@ class Toaster(
 
     val messagesFlow = stateFlow.mapDistinct { it.messages }
 
-    fun toast(message: String, messageType: UIMessageType = UIMessageType.Info) = toast(UIMessage(message, messageType))
+    fun toast(message: String, messageType: UIMessageType = UIMessageType.Info) = toast(UIMessage(message, false, messageType))
 
     fun toast(message: UIMessage) {
         state.set { it.copy(messages = it.messages + message)}

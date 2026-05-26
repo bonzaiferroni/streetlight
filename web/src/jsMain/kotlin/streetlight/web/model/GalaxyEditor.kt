@@ -7,7 +7,6 @@ import kampfire.model.Url
 import kampfire.model.getDataOrNull
 import kampfire.model.handleResponse
 import koala.dom.MessageStore
-import koala.dom.set
 import koala.model.GeoMap
 import koala.model.Portal
 import koala.model.mapDistinct
@@ -105,7 +104,7 @@ class GalaxyEditor(
             return
         }
 
-        editMessage.set("Saving...")
+        editMessage.set("Saving...", true)
         scope.launch {
             val imageUrl: Url? = stateNow.imageUrl.takeIf { it != imageRef }?.let { url ->
                 api.uploadImage(url).getDataOrNull() ?: return@launch

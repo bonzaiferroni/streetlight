@@ -5,6 +5,7 @@ import koala.css.DisplayNone
 import koala.css.Required
 import koala.css.Valid
 import koala.css.VisibilityHidden
+import koala.css.Working
 import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -48,6 +49,18 @@ fun HTMLElement.flowValid(key: String, check: Flow<ValidityCheck>, scope: Corout
             when (check.invalidParts.contains(key)) {
                 true -> unmodify(Valid)
                 false -> modify(Valid)
+            }
+        }
+    }
+    return this
+}
+
+fun HTMLElement.flowIsWorking(isWorkingFlow: Flow<Boolean>, scope: CoroutineScope): HTMLElement {
+    scope.launch {
+        isWorkingFlow.collect { isWorking ->
+            when (isWorking) {
+                true -> modify(Working)
+                else -> unmodify(Working)
             }
         }
     }

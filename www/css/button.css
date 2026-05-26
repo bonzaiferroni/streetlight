@@ -84,6 +84,13 @@
     }
 }
 
+.working {
+    &.btn, .btn {
+        pointer-events: none;
+        opacity: .9;
+    }
+}
+
 .btn.danger {
     background: var(--danger-bg);
     box-shadow: var(--danger-shadow);

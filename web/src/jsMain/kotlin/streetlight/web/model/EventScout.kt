@@ -5,7 +5,6 @@ import kampfire.model.GeoPoint
 import kampfire.model.Labeled
 import kampfire.model.handleResponse
 import koala.dom.MessageStore
-import koala.dom.set
 import koala.model.mapDistinct
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
@@ -80,7 +79,7 @@ class EventScout(
 
     fun post() {
         scope.launch {
-            postMessage.set("Posting...")
+            postMessage.set("Posting...", true)
             val eventId = when (val event = stateNow.event) {
                 null -> editor.submitSuspend()?.eventId
                 else -> event.eventId

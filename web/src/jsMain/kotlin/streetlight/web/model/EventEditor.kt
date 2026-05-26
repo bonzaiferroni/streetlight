@@ -4,7 +4,6 @@ import kabinet.utils.replaceAt
 import kampfire.model.Url
 import kampfire.model.handleResponse
 import koala.dom.MessageStore
-import koala.dom.set
 import koala.model.mapDistinct
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
@@ -99,7 +98,7 @@ class EventEditor(
     fun readUrl() {
         val url = state.now.edit.url?.takeIf { it.startsWith("http") } ?: return
         scope.launch {
-            urlMessage.set("Reading the link, this will take a minute.")
+            urlMessage.set("Reading the link, this will take a minute.", true)
             val response = api.parseSingleEvent(UrlParseRequest(url))?.data
             if (response == null) {
                 urlMessage.set("We were unable to read the link.")
@@ -114,7 +113,7 @@ class EventEditor(
     suspend fun submitSuspend(): Event? {
         if (!isEditValid() || !uploadImageIfBlob()) return null
 
-        message.set("Sending...")
+        message.set("Sending...", true)
         return when (editNow.eventId) {
             null -> api.createEvent(editNow)
             else -> api.updateEvent(editNow)
@@ -127,7 +126,7 @@ class EventEditor(
 
     private suspend fun uploadImageIfBlob(): Boolean {
         val blobUrl = editNow.imageRef?.takeIf { it.isBlob } ?: return true
-        message.set("Uploading image...")
+        message.set("Uploading image...", true)
         val refUrl = api.uploadImage(blobUrl).handleResponse(message::set)
         if (refUrl == null) {
             message.set("Unable to upload image.")

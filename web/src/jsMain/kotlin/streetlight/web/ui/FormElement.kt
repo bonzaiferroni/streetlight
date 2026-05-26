@@ -102,7 +102,7 @@ fun RenderContext.formSubmit(
     label: String,
     onSubmit: () -> Unit,
     modifiers: ModifierSet? = null,
-    messages: Store<UIMessage?>? = null,
+    messages: MessageStore? = null,
     back: LabeledAction? = null,
 ) {
     row {
@@ -116,7 +116,10 @@ fun RenderContext.formSubmit(
             messages?.let {
                 messageBox(messages)
             }
-            button(label, onClick = onSubmit)
+            val element = button(label, onClick = onSubmit)
+            messages?.let {
+                element.flowIsWorking(it.isWorkingFlow, renderScope)
+            }
         }
     }
 }

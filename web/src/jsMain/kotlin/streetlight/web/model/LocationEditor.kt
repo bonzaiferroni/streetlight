@@ -4,10 +4,9 @@ import kampfire.api.Slug
 import kampfire.model.GeoPoint
 import kampfire.model.Url
 import kampfire.model.handleResponse
-import koala.dom.clear
 import koala.dom.MessageStore
-import koala.dom.set
 import koala.model.mapDistinct
+import koala.model.mapDistinctNotNull
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -43,7 +42,7 @@ class LocationEditor(
     val message = MessageStore()
 
     val editNow get() = state.now.edit
-    val editFlow = state.flow.mapNotNull { it.edit }.distinctUntilChanged()
+    val editFlow = state.flow.mapDistinctNotNull { it.edit }
 //     override val placeFlow = editFlow.mapDistinct { it.toPlace() }
 
     val nameFlow = editFlow.mapDistinct { it.name }
@@ -54,47 +53,22 @@ class LocationEditor(
     val linksFlow = editFlow.mapDistinct { it.eventsUrl }
     val imageUrlFlow = editFlow.mapDistinct { it.imageRef }
     val validityFlow = editFlow.mapDistinct { it.validity }
+    val isWorkingFlow = state.flow.mapDistinct { it.isWorking }
 
-    fun setName(value: String) {
-        setEdit { it.copy(name = value) }
-    }
-
-    fun setDescription(value: String?) {
-        setEdit { it.copy(description = value) }
-    }
-
-    fun setAddress(value: String) {
-        setEdit { it.copy(address = value) }
-    }
-
-    fun setNotes(value: String?) {
-        setEdit { it.copy(notes = value) }
-    }
-
-    fun setPoint(value: GeoPoint) {
-        setEdit { it.copy(geoPoint = value) }
-    }
-
-    fun setResources(value: Set<ResourceType>) {
-        setEdit { it.copy(resources = value) }
-    }
+    fun setName(value: String) = setEdit { it.copy(name = value) }
+    fun setDescription(value: String?) = setEdit { it.copy(description = value) }
+    fun setAddress(value: String) = setEdit { it.copy(address = value) }
+    fun setNotes(value: String?) = setEdit { it.copy(notes = value) }
+    fun setPoint(value: GeoPoint) = setEdit { it.copy(geoPoint = value) }
+    fun setResources(value: Set<ResourceType>) = setEdit { it.copy(resources = value) }
+    fun setEventsLink(value: String?) = setEdit { it.copy(eventsUrl = value) }
+    fun setImageUrl(value: Url?) = setEdit { it.copy(imageRef = value) }
+    fun setCity(value: String) = setEdit { it.copy(city = value) }
 
     fun setWebsite(value: String?) {
         if (value == editNow.website) return
         setEdit { it.copy(website = value) }
         websiteMessage.clear()
-    }
-
-    fun setEventsLink(value: String?) {
-        setEdit { it.copy(eventsUrl = value) }
-    }
-
-    fun setImageUrl(value: Url?) {
-        setEdit { it.copy(imageRef = value) }
-    }
-
-    fun setCity(value: String) {
-        setEdit { it.copy(city = value) }
     }
 
     fun setEdit(block: (LocationEdit) -> LocationEdit) {
@@ -104,7 +78,7 @@ class LocationEditor(
     fun readWebsite() {
         val website = editNow.website?.takeIf { it.startsWith("http") } ?: return
         scope.launch {
-            websiteMessage.set("Reading the link, this will take a minute.")
+            websiteMessage.set("Reading the link, this will take a minute.", true)
             api.parseLocation(UrlParseRequest(website)).handleResponse(websiteMessage::set) { edit ->
                 state.set { it.copy(edit = edit.mergeLeft(editNow)) }
                 websiteMessage.set("Does this information look correct?")
@@ -132,7 +106,7 @@ class LocationEditor(
 
     suspend fun submitSuspend(): Location? {
         if (!isEditValid() || !uploadImageIfBlob()) return null
-        message.set("Sending...")
+        message.set("Sending...", true)
         return when (editNow.locationId) {
             null -> api.createLocation(editNow).handleResponse(message::set)
             else -> api.updateLocation(editNow).handleResponse(message::set)
@@ -141,7 +115,7 @@ class LocationEditor(
 
     private suspend fun uploadImageIfBlob(): Boolean {
         val blobUrl = editNow.imageRef?.takeIf { it.isBlob } ?: return true
-        message.set("Uploading image...")
+        message.set("Uploading image...", true)
         val refUrl = api.uploadImage(blobUrl).handleResponse(message::set)
         if (refUrl == null) {
             message.set("Unable to upload image.")
@@ -155,6 +129,7 @@ class LocationEditor(
 data class LocationEditorState(
     val edit: LocationEdit,
     val query: String = "",
+    val isWorking: Boolean = false,
 )
 
 private fun Address.toBasicString(): String? {

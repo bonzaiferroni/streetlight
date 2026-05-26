@@ -55,6 +55,7 @@ fun RenderContext.locationWebsiteForm(model: LocationEditor) = formCardSection("
         row(modify(JustifyContentEnd)) {
             messageBox(model.websiteMessage, modify(Magic))
             button("🤖 read website", onClick = model::readWebsite)
+                .flowIsWorking(model.isWorkingFlow, renderScope)
         }
     }
 }
