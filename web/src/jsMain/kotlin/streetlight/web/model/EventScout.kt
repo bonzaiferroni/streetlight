@@ -14,12 +14,13 @@ import streetlight.model.data.EventLocation
 import streetlight.model.data.EventPostEdit
 import streetlight.model.data.Galaxy
 import streetlight.model.data.GalaxyPost
+import streetlight.model.data.Location
 import streetlight.web.io.ApiClient
 
 class EventScout(
     val galaxy: Galaxy,
     private val editor: EventEditor,
-    private val location: LocationScout,
+    private val locationScout: LocationScout,
     private val scope: CoroutineScope,
     private val api: ApiClient,
 ) {
@@ -37,13 +38,20 @@ class EventScout(
 
     init {
         scope.launch {
-            location.stageFlow.collect { locationStage ->
-                val stage = when (locationStage) {
-                    LocationScoutStage.Search -> EventScoutStage.LocationSearch
-                    LocationScoutStage.Edit -> EventScoutStage.LocationEdit
-                    LocationScoutStage.Post -> EventScoutStage.EventSearch
+            launch {
+                locationScout.stageFlow.collect { locationStage ->
+                    val stage = when (locationStage) {
+                        LocationScoutStage.Search -> EventScoutStage.LocationSearch
+                        LocationScoutStage.Edit -> EventScoutStage.LocationEdit
+                        LocationScoutStage.Post -> EventScoutStage.EventSearch
+                    }
+                    state.set { it.copy(stage = stage) }
                 }
-                state.set { it.copy(stage = stage) }
+            }
+            launch {
+                locationScout.locationFlow.collect { location ->
+                    editor.setLocationId(location?.locationId)
+                }
             }
         }
     }
@@ -63,14 +71,20 @@ class EventScout(
         state.set { it.copy(stage = EventScoutStage.Post) }
     }
 
+    fun submitLocation() {
+        scope.launch {
+            locationScout.submitLocation()
+        }
+    }
+
     fun post() {
         scope.launch {
-            val slug = when (val event = stateNow.event) {
-                null -> editor.submitSuspend()
-                else -> event.eventSlug
+            val eventId = when (val event = stateNow.event) {
+                null -> editor.submitSuspend()?.eventId
+                else -> event.eventId
             } ?: return@launch
 
-            val edit = EventPostEdit(null, galaxy.galaxyId, slug, null)
+            val edit = EventPostEdit(null, galaxy.galaxyId, eventId, null)
             api.createPost(edit).handleResponse(postMessage::set) { slug ->
                 state.set { it.copy(slug = slug) }
             }
@@ -94,10 +108,10 @@ data class EventScoutState(
 )
 
 enum class EventScoutStage(label: String? = null) : Labeled {
-    LocationSearch("Location Search"),
-    LocationEdit("Location Edit"),
-    EventSearch("Event Search"),
-    EventEdit("Event Edit"),
+    LocationSearch("Find a location"),
+    LocationEdit,
+    EventSearch("Add an event"),
+    EventEdit,
     Post;
 
     override val label = label ?: name

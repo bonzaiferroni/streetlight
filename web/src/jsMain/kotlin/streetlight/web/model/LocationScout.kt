@@ -22,7 +22,7 @@ import streetlight.web.io.OSMClient
 
 class LocationScout(
     val galaxy: Galaxy,
-    private val editor: LocationEditor,
+    val editor: LocationEditor,
     private val scope: CoroutineScope,
     private val osm: OSMClient,
     private val geo: GeoMap,
@@ -110,14 +110,18 @@ class LocationScout(
         state.set { it.copy(stage = LocationScoutStage.Post) }
     }
 
+    suspend fun submitLocation() = when (val location = stateNow.location) {
+        null -> editor.submitSuspend().also {
+            state.set { it.copy(location = location) }
+        }
+        else -> location
+    }
+
     fun postToGalaxy() {
         scope.launch {
-            val slug = when (val location = stateNow.location) {
-                null -> editor.submitSuspend()
-                else -> location.slug
-            } ?: return@launch
+            val location = submitLocation() ?: return@launch
 
-            val edit = LocationPostEdit(null, galaxy.galaxyId, slug, null)
+            val edit = LocationPostEdit(null, galaxy.galaxyId, location.locationId, null)
             api.postLocation(edit).handleResponse(postMessage::set) { slug ->
                 state.set { it.copy(slug = slug) }
             }

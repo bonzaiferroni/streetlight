@@ -19,16 +19,16 @@ fun RenderContext.editTalentForm() {
 
     wireRouteTo(portal, TalentEdit(), ::provideEdit) {
         column {
-            textField(
-                label = "talent",
-                read = { it.name },
-                write = { it.state.copy(name = it.value) }
-            )
-            textField(
-                label = "description",
-                read = { it.description },
-                write = { it.state.copy(description = it.value) }
-            )
+//            textField(
+//                label = "talent",
+//                read = { it.name },
+//                write = { it.state.copy(name = it.value) }
+//            )
+//            textField(
+//                label = "description",
+//                read = { it.description },
+//                write = { it.state.copy(description = it.value) }
+//            )
             dropMenu(
                 onChangeValue = { value -> state.set { it.copy(talentType = value) } },
                 provideLabel = { it.name },

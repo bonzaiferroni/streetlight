@@ -38,6 +38,9 @@ fun RenderContext.appNavigation() {
             StreetlightScreen.LocationUpdate -> viewEditLocationRoute()
             StreetlightScreen.LocationScout -> viewLocationScoutRoute()
 
+            // event
+            StreetlightScreen.EventScout -> viewEventScoutRoute()
+
             // galaxy
             StreetlightScreen.Galaxy -> viewGalaxyRoute()
             StreetlightScreen.GalaxyFoundry -> viewGalaxyFoundry()
@@ -45,7 +48,6 @@ fun RenderContext.appNavigation() {
             StreetlightScreen.Galaxies -> viewGalaxyList()
 
             StreetlightScreen.Star -> viewStarProfileRoute()
-            // StreetlightScreen.EventScout -> viewEventScoutProtoRoute()
             StreetlightScreen.CreatePost -> viewContentPosterRoute()
             StreetlightScreen.EditStar -> viewStarEditor()
             StreetlightScreen.SiteConfig -> viewSiteConfig()

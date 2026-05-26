@@ -3,20 +3,35 @@ package koala.dom
 import kampfire.model.ValidityCheck
 import koala.css.DisplayNone
 import koala.css.Valid
+import koala.css.VisibilityHidden
 import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import org.w3c.dom.HTMLElement
 
+fun HTMLElement.flowDisplay(isDisplayedFlow: Flow<Boolean>, scope: CoroutineScope) {
+    scope.launch {
+        isDisplayedFlow.collect { isDisplayed ->
+            if (isDisplayed && !isModified(DisplayNone) || !isDisplayed && isModified(DisplayNone)) return@collect
+            document.startViewTransition {
+                when (isDisplayed) {
+                    true -> unmodify(DisplayNone)
+                    false -> modify(DisplayNone)
+                }
+            }
+        }
+    }
+}
+
 fun HTMLElement.flowVisibility(isVisibleFlow: Flow<Boolean>, scope: CoroutineScope) {
     scope.launch {
         isVisibleFlow.collect { isVisible ->
-            if (isVisible && !isModified(DisplayNone) || !isVisible && isModified(DisplayNone)) return@collect
+            if (isVisible && !isModified(VisibilityHidden) || !isVisible && isModified(VisibilityHidden)) return@collect
             document.startViewTransition {
                 when (isVisible) {
-                    true -> unmodify(DisplayNone)
-                    false -> modify(DisplayNone)
+                    true -> unmodify(VisibilityHidden)
+                    false -> modify(VisibilityHidden)
                 }
             }
         }

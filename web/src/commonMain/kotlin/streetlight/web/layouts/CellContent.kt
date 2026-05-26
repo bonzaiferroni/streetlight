@@ -11,6 +11,7 @@ import koala.css.*
 import koala.html.*
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
+import streetlight.model.data.EventEdit
 import streetlight.model.data.EventId
 import streetlight.model.data.EventLocation
 import streetlight.model.data.Galaxy
@@ -59,6 +60,13 @@ fun FlowContent.startsAtCell(startsAt: Instant) {
     row(CellContent.RowMod) {
         textBlock(startsAt.toRelativeDayFormat(), modify(CellContent.TextMod, ColorSchemeFg))
         textBlock(startsAt.toTimeFormat(), modify(CellContent.TextMod, MarginLeft1))
+    }
+}
+
+fun FlowContent.exampleStartsAtCell() {
+    row(CellContent.RowMod) {
+        textBlock("[Day]", modify(CellContent.TextMod, ColorSchemeFg))
+        textBlock("[Time]", modify(CellContent.TextMod, MarginLeft1))
     }
 }
 
@@ -136,6 +144,15 @@ fun locationCells(location: Location): List<(FlowContent.() -> Unit)?> = listOf(
 fun locationCells(username: String?, edit: LocationEdit): List<(FlowContent.() -> Unit)?> = listOf(
     { starCell(username) },
     { exampleLightCell() }
+)
+
+fun eventCells(event: EventEdit): List<(FlowContent.() -> Unit)?> = listOf(
+    { when (val startsAt = event.startsAt) {
+        null -> exampleStartsAtCell()
+        else -> startsAtCell(startsAt)
+    } },
+    { costCell(event.cost, event.url) },
+    { exampleLightCell() },
 )
 
 fun eventCells(event: EventLocation): List<(FlowContent.() -> Unit)?> = listOf(

@@ -126,7 +126,7 @@ fun EventParse.toEventEdit(
     description = description,
     ageMin = ageMin?.takeIf { it > 0 },
     cost = floatUSDOf(cost),
-    link = url,
+    url = url,
     sourceUrl = sourceUrl,
     sourceImageUrl = sourceImageUrl,
     startTime = startTime,

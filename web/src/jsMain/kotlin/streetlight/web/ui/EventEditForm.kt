@@ -10,13 +10,28 @@ import koala.html.heading3
 import koala.html.heading4
 import koala.html.markdown
 import koala.html.textProperty
+import kotlinx.coroutines.flow.map
 import streetlight.web.model.EventEditor
 import kotlin.time.Clock
 
 fun RenderContext.eventEditFormBody(model: EventEditor) = formBody {
+    eventWebsiteForm(model)
     eventDetailsForm(model)
     eventImageForm(model)
     eventLinksForm(model)
+}
+
+fun RenderContext.eventWebsiteForm(model: EventEditor) = formCardSection("Web page") {
+    formPart(
+        instructions = "Does this event have a web page? We can read it to find certain details.",
+        bullets = listOf("Some websites cannot be read automatically, but you can fill in the details yourself.")
+    ) {
+        textField("website", modify(), model::setUrl, model.urlFlow)
+        row(modify(JustifyContentEnd)) {
+            messageBox(model.urlMessage, modify(Magic))
+            button("🤖 read page", onClick = model::readUrl)
+        }
+    }
 }
 
 fun RenderContext.eventDetailsForm(model: EventEditor) = formCardSection("Event Details") {
@@ -24,10 +39,10 @@ fun RenderContext.eventDetailsForm(model: EventEditor) = formCardSection("Event 
         formTextField("title", model::setTitle, model.titleFlow, maxLength = 50)
     }
     formPart("How much does it cost?") {
-        row {
+        row(modify(AlignItemsCenter)) {
             checkBox("Free event", model::setFree, model.isFreeFlow)
             textField("cost", modify(Width12), onValue = model::setCost, flow = model.costFlow)
-                .flowVisibility(model.isFreeFlow, renderScope)
+                .flowVisibility(model.isFreeFlow.map { !it }, renderScope)
         }
     }
     formPart("What is the day and time?") {

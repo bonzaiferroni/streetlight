@@ -18,8 +18,8 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
 
     object Events: GetEndpoint<List<Event>>(this) {
         object ReadId: GetByIdEndpoint<EventId, Event>(this)
-        object CreateEvent: PostEndpoint<EventEdit, Slug>(this)
-        object UpdateEvent: PostEndpoint<EventEdit, Slug>(this)
+        object CreateEvent: PostEndpoint<EventEdit, Event>(this)
+        object UpdateEvent: PostEndpoint<EventEdit, Event>(this)
         object Delete: DeleteEndpoint<EventId>(this)
         object QueryMap: QueryEndpoint<MapQuery, List<EventLocation>>(this)
         // object UserEvents: ApiDaoEndpoint<Event, EventId, NewEvent>(this, "user")
@@ -37,8 +37,8 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
     object Locations: GetByIdEndpoint<LocationId, Location>(this) {
         object ReadSlug: GetByIdEndpoint<Slug, Location>(this)
 
-        object CreateLocation: PostEndpoint<LocationEdit, Slug>(this)
-        object UpdateLocation: PostEndpoint<LocationEdit, Slug>(this)
+        object CreateLocation: PostEndpoint<LocationEdit, Location>(this)
+        object UpdateLocation: PostEndpoint<LocationEdit, Location>(this)
         object Search: GetEndpoint<List<Location>>(this) {
             val query = stringParamOf("q")
             val city = stringOrNullParamOf("city")

@@ -14,25 +14,30 @@ import streetlight.web.model.EventScoutStage
 
 fun RenderContext.viewEventScout(galaxy: Galaxy) {
     val locationEditor = app.getLocationEditor(LocationEdit(), renderScope)
-    val location = app.getLocationScout(galaxy, locationEditor, renderScope)
-    val editor = app.getEventEditor(EventEdit(), renderScope)
-    val model = app.getEventScout(galaxy, editor, location, renderScope)
+    val locationScout = app.getLocationScout(galaxy, locationEditor, renderScope)
+    val editor = app.getEventEditor(EventEdit(timeZoneId = getTimeZoneId()), renderScope)
+    val model = app.getEventScout(galaxy, editor, locationScout, renderScope)
     val routeFlow = model.stateFlow.mapDistinctNotNull { it.slug?.let { GalaxyRoute(galaxy.slug) } }
     goOnRoute(routeFlow)
+
+    fun isHeadingStage(stage: EventScoutStage) = when (stage) {
+        EventScoutStage.LocationSearch, EventScoutStage.EventSearch, EventScoutStage.Post -> true
+        else -> false
+    }
 
     section {
         introSection("Event Scout", lottie = LottieFile.StrollingMan) {
             textBlock("Let's post an event to ${galaxy.name}.")
         }
 
-        stageBlock(model.stageFlow, model::setStage) { stage ->
+        stageBlock(model.stageFlow, model::setStage, isHeadingStage = ::isHeadingStage) { stage ->
             when (stage) {
                 EventScoutStage.LocationSearch -> formBody {
-                    locationScoutForm(location)
+                    locationScoutForm(locationScout)
                 }
                 EventScoutStage.LocationEdit -> column {
                     locationEditFormBody(locationEditor)
-                    formSubmit("Next", location::review, messages = locationEditor.message)
+                    formSubmit("Next", model::submitLocation, messages = locationEditor.message)
                 }
                 EventScoutStage.EventSearch -> formBody {
                     eventSearchForm(model)
@@ -42,12 +47,14 @@ fun RenderContext.viewEventScout(galaxy: Galaxy) {
                     formSubmit("Next", model::review, messages = editor.message)
                 }
                 EventScoutStage.Post -> formBody {
-                    val event = model.stateNow.event ?: error("location not found")
-                    postCardOf(event)
+                    val location = locationScout.stateNow.location ?: error("location not found")
+                    postCardOf(editor.editNow, location)
                     formSubmit("Post", model::post, messages = model.postMessage)
                 }
             }
         }
+
+        appFooter("")
     }
 }
 

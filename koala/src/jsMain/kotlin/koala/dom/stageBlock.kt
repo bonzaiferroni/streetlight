@@ -14,6 +14,7 @@ inline fun <reified State> RenderContext.stageBlock(
     flow: Flow<State>,
     crossinline onValue: (State) -> Unit,
     modifiers: ModifierSet? = null,
+    crossinline isHeadingStage: (State) -> Boolean = { true },
     noinline block: RenderContext.(State) -> Unit
 ): HTMLDivElement where State: Enum<State>, State: Labeled {
     val entries = enumEntries<State>()
@@ -24,22 +25,24 @@ inline fun <reified State> RenderContext.stageBlock(
         if (value != currentValue) {
             currentValue = value
             val currentOrdinal = currentValue.ordinal
-            elements.forEach { (value, element) ->
-                when  {
-                    value.ordinal < currentOrdinal -> {
-                        element.modify(Clickable)
-                        element.unmodify(Selected)
-                        element.unmodify(Dim)
-                    }
-                    value.ordinal == currentOrdinal -> {
-                        element.unmodify(Clickable)
-                        element.modify(Selected)
-                        element.unmodify(Dim)
-                    }
-                    value.ordinal > currentOrdinal -> {
-                        element.unmodify(Clickable)
-                        element.unmodify(Selected)
-                        element.modify(Dim)
+            if (elements.containsKey(value)) {
+                elements.forEach { (value, element) ->
+                    when  {
+                        value.ordinal < currentOrdinal -> {
+                            element.modify(Clickable)
+                            element.unmodify(Selected)
+                            element.unmodify(Dim)
+                        }
+                        value.ordinal == currentOrdinal -> {
+                            element.unmodify(Clickable)
+                            element.modify(Selected)
+                            element.unmodify(Dim)
+                        }
+                        value.ordinal > currentOrdinal -> {
+                            element.unmodify(Clickable)
+                            element.unmodify(Selected)
+                            element.modify(Dim)
+                        }
                     }
                 }
             }
@@ -50,9 +53,12 @@ inline fun <reified State> RenderContext.stageBlock(
     val element = column {
         addModifiers(modifiers, Gap4)
         row(modify(JustifyContentCenter, AlignItemsCenter)) {
+            var step = 1
             entries.forEach { value ->
+                if (!isHeadingStage(value)) return@forEach
+
                 elements[value] = box(modify(BorderRadius2, Padding1)) {
-                    heading3("${value.ordinal + 1}. ${value.label}")
+                    heading3("${step++}. ${value.label}")
                 }.onClick {
                     if (value.ordinal >= (currentValue?.ordinal ?: 0)) return@onClick
                     selectElement(value)
@@ -62,7 +68,7 @@ inline fun <reified State> RenderContext.stageBlock(
                 }
             }
         }
-        flowBlock(flow, modify(Blur), block = block)
+        flowBlock(flow, modify(Magic, Blur), block = block)
     }
 
     renderScope.launch {

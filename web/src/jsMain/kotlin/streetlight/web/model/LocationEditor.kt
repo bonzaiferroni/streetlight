@@ -16,6 +16,7 @@ import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.launch
+import streetlight.model.data.Location
 import streetlight.model.data.LocationEdit
 import streetlight.model.data.LocationId
 import streetlight.model.data.ResourceType
@@ -128,7 +129,7 @@ class LocationEditor(
         }
     }
 
-    suspend fun submitSuspend(): Slug? {
+    suspend fun submitSuspend(): Location? {
         if (!isEditValid()) return null
         message.set("Sending...")
         return when (editNow.locationId) {

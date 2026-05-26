@@ -3,12 +3,14 @@ use sync triggers in place of joins
 make Username a type
 reorder button arguments
 reorder textfield arguments
+remove deprecated Streetlight god object
 
 # MEDIUM:
 EventTableDao // td: more precise time conflict handling
 routeBlock.kt // td: retry provideData call n times
 provide UI message for event conflict
 convert .css to .kt
+add default images per post type
 
 # CHALLENGE:
 fee: entry/ticket distinction

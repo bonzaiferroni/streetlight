@@ -32,7 +32,7 @@ data class LocationPost(
 data class LocationPostEdit(
     val postId: PostId?,
     val galaxyId: GalaxyId,
-    val locationSlug: Slug,
+    val locationId: LocationId,
     val text: String? = null,
 ) {
     val isValid get () = true // !title.isNullOrBlank()

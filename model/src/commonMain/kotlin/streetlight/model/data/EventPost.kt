@@ -31,7 +31,7 @@ data class EventPost(
 data class EventPostEdit(
     val postId: PostId? = null,
     val galaxyId: GalaxyId,
-    val eventSlug: Slug,
+    val eventId: EventId,
     val text: String? = null,
 ) {
     val isValid get () = true // !title.isNullOrBlank()

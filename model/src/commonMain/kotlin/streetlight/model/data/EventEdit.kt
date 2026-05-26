@@ -9,6 +9,7 @@ import kotlinx.datetime.atTime
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 import kotlinx.serialization.Serializable
+import kotlin.getValue
 
 @Serializable
 data class EventEdit(
@@ -22,7 +23,7 @@ data class EventEdit(
     val cost: Float? = null,
     val links: List<ExtraLink>? = null,
     val isHost: Boolean? = null,
-    val link: String? = null,
+    val url: String? = null,
     val sourceUrl: String? = null,
     val sourceImageUrl: String? = null,
     val imageRef: Url? = null,
@@ -35,20 +36,34 @@ data class EventEdit(
     val timeZone
         get() = try {
             timeZoneId?.let { TimeZone.of(it) }
-        } catch (_: Exception) {
+        } catch (_: Exception) { // fails in browser
             TimeZone.currentSystemDefault()
-        } // fails in browser
+        }
 
     val startsAt get() = startTime?.let { timeZone?.let { date?.atTime(startTime)?.toInstant(it) } }
     val endsAt get() = endTime?.let { timeZone?.let { date?.atTime(endTime)?.toInstant(it) } }
 
+    val displayedLinks by lazy {
+        buildList {
+            url?.let { url ->
+                add(ExtraLink("web page", url))
+                cost?.takeIf { it > 0 }?.let {
+                    add(ExtraLink("tickets", url))
+                }
+            }
+            links?.let {
+                addAll(it)
+            }
+        }.takeIf { it.isNotEmpty() }
+    }
+
     val validity by lazy {
         buildSet {
             if (title.isNullOrBlank()) add(EventProperty.Title)
-            if (locationId == null) add(EventProperty.Location)
+            // if (locationId == null) add(EventProperty.Location)
             if (startTime == null) add(EventProperty.StartTime)
             if (date == null) add(EventProperty.Date)
-            if (timeZoneId == null) add(EventProperty.TimeZone)
+            // if (timeZoneId == null) add(EventProperty.TimeZone)
             if (cost == null) add(EventProperty.Cost)
         }.toValidityCheck()
     }
@@ -74,7 +89,7 @@ fun Event.toEdit() = EventEdit(
     ageMin = ageMin,
     cost = cost,
     links = links,
-    link = url,
+    url = url,
     sourceUrl = sourceUrl,
     sourceImageUrl = sourceImageUrl,
     startTime = startsAt.toLocalDateTime(timeZone).time,
@@ -95,7 +110,7 @@ fun EventEdit.mergeLeft(other: EventEdit?) = other?.let {
         cost = cost ?: it.cost,
         isHost = isHost ?: it.isHost,
         links = links ?: it.links,
-        link = link ?: it.link,
+        url = url ?: it.url,
         sourceUrl = sourceUrl ?: it.sourceUrl,
         sourceImageUrl = sourceImageUrl ?: it.sourceImageUrl,
         date = date ?: it.date,

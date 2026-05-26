@@ -47,7 +47,7 @@ fun RenderContext.galaxyCityForm(model: GalaxyEditor) {
                     }
                 }
             }
-        }.flowVisibility(isLocalFlow, renderScope)
+        }.flowDisplay(isLocalFlow, renderScope)
     }
 }
 
