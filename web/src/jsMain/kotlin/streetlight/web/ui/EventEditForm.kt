@@ -11,6 +11,8 @@ import koala.html.heading4
 import koala.html.markdown
 import koala.html.textProperty
 import kotlinx.coroutines.flow.map
+import streetlight.model.data.EventProperty
+import streetlight.model.data.GalaxyProperty
 import streetlight.web.model.EventEditor
 import kotlin.time.Clock
 
@@ -37,26 +39,28 @@ fun RenderContext.eventWebsiteForm(model: EventEditor) = formCardSection("Web pa
 fun RenderContext.eventDetailsForm(model: EventEditor) = formCardSection("Event Details") {
     formPart("What is the name of the event?") {
         formTextField("title", model::setTitle, model.titleFlow, maxLength = 50)
+            .flowValid(EventProperty.Title, model.validityFlow, renderScope)
     }
     formPart("How much does it cost?") {
         row(modify(AlignItemsCenter)) {
             checkBox("Free event", model::setFree, model.isFreeFlow)
             textField("cost", modify(Width12), onValue = model::setCost, flow = model.costFlow)
                 .flowVisibility(model.isFreeFlow.map { !it }, renderScope)
+                .flowValid(EventProperty.Cost, model.validityFlow, renderScope)
         }
     }
     formPart("What is the day and time?") {
         row(modify(AlignItemsCenter, JustifyContentCenter)) {
             blockLabel("start time") {
                 timeInput(model.startTimeFlow, model::setStartTime)
-            }
+            }.flowValid(EventProperty.StartTime, model.validityFlow, renderScope)
             // end time is optional, not every event has a fixed end time
             blockLabel("end time") {
                 timeInput(model.endTimeFlow, model::setEndTime)
             }
-            blockLabel("day") {
+            blockLabel("date") {
                 dateInput(model.dateFlow, model::setDate)
-            }
+            }.flowValid(EventProperty.Date, model.validityFlow, renderScope)
         }
         flowBlock(model.startsAtFlow, modify(FlexColumn, AlignItemsCenter)) {
             val startsAt = it ?: return@flowBlock

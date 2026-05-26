@@ -60,10 +60,8 @@ data class EventEdit(
     val validity by lazy {
         buildSet {
             if (title.isNullOrBlank()) add(EventProperty.Title)
-            // if (locationId == null) add(EventProperty.Location)
             if (startTime == null) add(EventProperty.StartTime)
             if (date == null) add(EventProperty.Date)
-            // if (timeZoneId == null) add(EventProperty.TimeZone)
             if (cost == null) add(EventProperty.Cost)
         }.toValidityCheck()
     }
@@ -71,10 +69,8 @@ data class EventEdit(
 
 object EventProperty {
     val Title = "title"
-    val Location = "location"
     val StartTime = "start time"
     val Date = "date"
-    val TimeZone = "time zone"
     val Cost = "cost"
 }
 

@@ -64,7 +64,6 @@ fun RenderContext.galaxyNameForm(model: GalaxyEditor) {
                 label = GalaxyProperty.Name,
                 onValue = model::setName,
                 flow = nameFlow,
-                modifiers = modify(Required),
                 footnote = nameCharacters,
                 maxLength = Slug.MAX_LENGTH
             ).flowValid(GalaxyProperty.Name, model.validityFlow, renderScope)
@@ -81,7 +80,6 @@ fun RenderContext.galaxyNameForm(model: GalaxyEditor) {
                 label = GalaxyProperty.Path,
                 onValue = model::setSlug,
                 flow = slugFlow,
-                modifiers = modify(Required),
                 footnote = pathCharacters,
                 maxLength = Slug.MAX_LENGTH
             ).flowValid(GalaxyProperty.Path, model.validityFlow, renderScope)

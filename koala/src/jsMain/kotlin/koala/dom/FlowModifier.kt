@@ -2,6 +2,7 @@ package koala.dom
 
 import kampfire.model.ValidityCheck
 import koala.css.DisplayNone
+import koala.css.Required
 import koala.css.Valid
 import koala.css.VisibilityHidden
 import kotlinx.browser.document
@@ -10,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import org.w3c.dom.HTMLElement
 
-fun HTMLElement.flowDisplay(isDisplayedFlow: Flow<Boolean>, scope: CoroutineScope) {
+fun HTMLElement.flowDisplay(isDisplayedFlow: Flow<Boolean>, scope: CoroutineScope): HTMLElement {
     scope.launch {
         isDisplayedFlow.collect { isDisplayed ->
             if (isDisplayed && !isModified(DisplayNone) || !isDisplayed && isModified(DisplayNone)) return@collect
@@ -22,9 +23,10 @@ fun HTMLElement.flowDisplay(isDisplayedFlow: Flow<Boolean>, scope: CoroutineScop
             }
         }
     }
+    return this
 }
 
-fun HTMLElement.flowVisibility(isVisibleFlow: Flow<Boolean>, scope: CoroutineScope) {
+fun HTMLElement.flowVisibility(isVisibleFlow: Flow<Boolean>, scope: CoroutineScope): HTMLElement {
     scope.launch {
         isVisibleFlow.collect { isVisible ->
             if (isVisible && !isModified(VisibilityHidden) || !isVisible && isModified(VisibilityHidden)) return@collect
@@ -36,9 +38,11 @@ fun HTMLElement.flowVisibility(isVisibleFlow: Flow<Boolean>, scope: CoroutineSco
             }
         }
     }
+    return this
 }
 
-fun HTMLElement.flowValid(key: String, check: Flow<ValidityCheck>, scope: CoroutineScope) {
+fun HTMLElement.flowValid(key: String, check: Flow<ValidityCheck>, scope: CoroutineScope): HTMLElement {
+    modify(Required)
     scope.launch {
         check.collect { check ->
             when (check.invalidParts.contains(key)) {
@@ -47,4 +51,5 @@ fun HTMLElement.flowValid(key: String, check: Flow<ValidityCheck>, scope: Corout
             }
         }
     }
+    return this
 }

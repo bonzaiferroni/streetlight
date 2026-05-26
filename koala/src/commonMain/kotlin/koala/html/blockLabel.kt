@@ -33,10 +33,12 @@ ${Attribute.BlockLabel}::after {
     box-shadow: var(--input-shadow);
 }
 
+$Required${Attribute.BlockLabel}::after,
 $Required ${Attribute.BlockLabel}::after {
     background: var(--required-bg);
 } 
 
+$Valid${Attribute.BlockLabel}::after,
 $Valid ${Attribute.BlockLabel}::after {
     background: var(--valid-bg);
 } 

@@ -53,6 +53,7 @@ class LocationEditor(
     val websiteFlow = editFlow.mapDistinct { it.website }
     val linksFlow = editFlow.mapDistinct { it.eventsUrl }
     val imageUrlFlow = editFlow.mapDistinct { it.imageRef }
+    val validityFlow = editFlow.mapDistinct { it.validity }
 
     fun setName(value: String) {
         setEdit { it.copy(name = value) }

@@ -43,6 +43,7 @@ class EventEditor(
     val urlFlow = stateFlow.mapDistinct { it.edit.url }
     val isFreeFlow = stateFlow.mapDistinct { it.edit.isFree }
     val costFlow = stateFlow.mapDistinct { it.costString }
+    val validityFlow = stateFlow.mapDistinct { it.edit.validity }
 
     val editNow get() = stateNow.edit
 

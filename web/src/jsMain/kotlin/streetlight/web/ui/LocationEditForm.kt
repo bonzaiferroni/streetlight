@@ -2,6 +2,7 @@ package streetlight.web.ui
 
 import koala.css.*
 import koala.dom.*
+import streetlight.model.data.LocationProperty
 import streetlight.web.model.LocationEditor
 
 fun RenderContext.locationEditFormBody(model: LocationEditor) = formBody {
@@ -14,6 +15,7 @@ fun RenderContext.locationEditFormBody(model: LocationEditor) = formBody {
 fun RenderContext.locationDetailsForm(model: LocationEditor) = formCardSection("Location Details") {
     formPart("What is the name of the place?") {
         formTextField("title", model::setName, model.nameFlow, maxLength = 50)
+            .flowValid(LocationProperty.Name, model.validityFlow, renderScope)
     }
     formPart("Where is it?") {
         row {
