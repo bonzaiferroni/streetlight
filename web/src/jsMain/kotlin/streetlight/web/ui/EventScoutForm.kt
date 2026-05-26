@@ -3,7 +3,6 @@ package streetlight.web.ui
 import koala.css.*
 import koala.dom.*
 import streetlight.web.model.EventScout
-import streetlight.web.model.LocationScout
 
 fun RenderContext.eventSearchForm(model: EventScout) = formSection("Add an event") {
     formCard {
@@ -13,7 +12,7 @@ fun RenderContext.eventSearchForm(model: EventScout) = formSection("Add an event
         ) {
             row {
                 textField("name", modify(Flex1), model::setQuery, model.queryFlow)
-                button("create", onClick = model::createFromQuery)
+                button("create", onClick = model::create)
             }
 
             selectionBlock(model.queryEventsFlow, model::setEvent, model.eventFlow) { event ->

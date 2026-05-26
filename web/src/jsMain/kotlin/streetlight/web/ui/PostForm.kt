@@ -12,7 +12,7 @@ fun RenderContext.postForm(model: PostEditor) {
     val imageFlow = model.contentFlow.mapDistinct { it.imageRef }
 
     row(modify()) {
-        imageDrop(imageFlow, model::setImage, modify(Height24, Aspect3By2, BorderRadius1))
+        imageDrop(imageFlow, model::setImageUrl, modify(Height24, Aspect3By2, BorderRadius1))
         column(modify(Flex1)) {
             textField("title", null, model::setTitle, titleFlow)
             textField("subtitle", null, model::setSubtitle, subtitleFlow )

@@ -18,7 +18,6 @@ import streetlight.web.model.Streetlight
 import streetlight.web.pages.appFooter
 
 fun RenderContext.viewSandbox() {
-    console.log("ey sandbox")
     textBlock("hello sandbox")
 }
 

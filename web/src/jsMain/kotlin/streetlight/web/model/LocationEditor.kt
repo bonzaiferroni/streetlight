@@ -52,7 +52,7 @@ class LocationEditor(
     val descriptionFlow = editFlow.mapDistinct { it.description }
     val websiteFlow = editFlow.mapDistinct { it.website }
     val linksFlow = editFlow.mapDistinct { it.eventsUrl }
-    val imageUrlFlow = stateFlow.mapDistinct { it.imageUrl }
+    val imageUrlFlow = editFlow.mapDistinct { it.imageRef }
 
     fun setName(value: String) {
         setEdit { it.copy(name = value) }
@@ -89,7 +89,7 @@ class LocationEditor(
     }
 
     fun setImageUrl(value: Url?) {
-        state.set { it.copy(imageUrl = value) }
+        setEdit { it.copy(imageRef = value) }
     }
 
     fun setCity(value: String) {
@@ -105,7 +105,7 @@ class LocationEditor(
         scope.launch {
             websiteMessage.set("Reading the link, this will take a minute.")
             api.parseLocation(UrlParseRequest(website)).handleResponse(websiteMessage::set) { edit ->
-                state.set { it.copy(edit = edit.mergeLeft(editNow), imageUrl = edit.imageRef) }
+                state.set { it.copy(edit = edit.mergeLeft(editNow)) }
                 websiteMessage.set("Does this information look correct?")
             }
         }
@@ -130,18 +130,29 @@ class LocationEditor(
     }
 
     suspend fun submitSuspend(): Location? {
-        if (!isEditValid()) return null
+        if (!isEditValid() || !uploadImageIfBlob()) return null
         message.set("Sending...")
         return when (editNow.locationId) {
             null -> api.createLocation(editNow).handleResponse(message::set)
             else -> api.updateLocation(editNow).handleResponse(message::set)
         }
     }
+
+    private suspend fun uploadImageIfBlob(): Boolean {
+        val blobUrl = editNow.imageRef?.takeIf { it.isBlob } ?: return true
+        message.set("Uploading image...")
+        val refUrl = api.uploadImage(blobUrl).handleResponse(message::set)
+        if (refUrl == null) {
+            message.set("Unable to upload image.")
+            return false
+        }
+        setImageUrl(refUrl)
+        return true
+    }
 }
 
 data class LocationEditorState(
     val edit: LocationEdit,
-    val imageUrl: Url? = edit.imageRef,
     val query: String = "",
 )
 

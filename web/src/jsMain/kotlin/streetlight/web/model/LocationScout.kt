@@ -29,7 +29,7 @@ class LocationScout(
     private val toaster: Toaster,
     private val api: ApiClient,
 ) {
-    private val initialState = LocationScoutState(city = galaxy.city)
+    private val initialState = LocationScoutState()
     private val state = storeOf(initialState)
     val stateNow get() = state.now
     val stateFlow = state.flow
@@ -98,7 +98,9 @@ class LocationScout(
         if (query.isBlank()) return
         queryMessage.set("Searching...")
         scope.launch {
-            osm.readLocations(query, stateNow.city).handleResponse(queryMessage::set) { locations ->
+            val city = stateNow.city?.takeIf { it.isNotBlank() }
+            val bounds = galaxy.geoBounds.takeIf { city == null }?.expandBy(10f)
+            osm.readLocations(query, stateNow.city, bounds).handleResponse(queryMessage::set) { locations ->
                 queryMessage.set("found: ${locations.size}")
                 state.set { it.copy(osmLocations = locations.mapNotNull { loc -> loc.toEditOrNull() }) }
             }
@@ -111,7 +113,7 @@ class LocationScout(
     }
 
     suspend fun submitLocation() = when (val location = stateNow.location) {
-        null -> editor.submitSuspend().also {
+        null -> editor.submitSuspend().also { location ->
             state.set { it.copy(location = location) }
         }
         else -> location

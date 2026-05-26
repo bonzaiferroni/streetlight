@@ -1,7 +1,6 @@
 package streetlight.web.model
 
 import kabinet.utils.replaceAt
-import kampfire.api.Slug
 import kampfire.model.Url
 import kampfire.model.handleResponse
 import koala.dom.MessageStore
@@ -53,7 +52,7 @@ class EventEditor(
     fun setDate(value: LocalDate) = setEvent { it.copy(date = value) }
     fun setDescription(value: String) = setEvent { it.copy(description = value) }
     fun setUrl(value: String) = setEvent { it.copy(url = value) }
-    fun setImageUrl(url: Url?) = state.set { it.copy(imageUrl = url) }
+    fun setImageUrl(url: Url?) = setEvent { it.copy(imageRef = url) }
     fun setFree(value: Boolean) = setEvent { it.copy(cost = if (value) 0f else null)}
     fun setOriginalSourceLabel(value: String) = state.set { it.copy(originalSourceLabel = value) }
     fun setOriginalSourceUrl(value: String) = state.set { it.copy(originalSourceUrl = value) }
@@ -112,7 +111,8 @@ class EventEditor(
     }
 
     suspend fun submitSuspend(): Event? {
-        if (!isEditValid()) return null
+        if (!isEditValid() || !uploadImageIfBlob()) return null
+
         message.set("Sending...")
         return when (editNow.eventId) {
             null -> api.createEvent(editNow)
@@ -123,6 +123,18 @@ class EventEditor(
     private fun setEvent(provideEvent: (EventEdit) -> EventEdit) {
         state.set { it.copy(edit = provideEvent(editNow)) }
     }
+
+    private suspend fun uploadImageIfBlob(): Boolean {
+        val blobUrl = editNow.imageRef?.takeIf { it.isBlob } ?: return true
+        message.set("Uploading image...")
+        val refUrl = api.uploadImage(blobUrl).handleResponse(message::set)
+        if (refUrl == null) {
+            message.set("Unable to upload image.")
+            return false
+        }
+        setImageUrl(refUrl)
+        return true
+    }
 }
 
 data class EventEditorState(
@@ -132,5 +144,4 @@ data class EventEditorState(
     val originalSourceLabel: String = "",
     val originalSourceUrl: String = "",
     val costString: String = "",
-    val imageUrl: Url? = null,
 )

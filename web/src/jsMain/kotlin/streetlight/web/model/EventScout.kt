@@ -14,7 +14,6 @@ import streetlight.model.data.EventLocation
 import streetlight.model.data.EventPostEdit
 import streetlight.model.data.Galaxy
 import streetlight.model.data.GalaxyPost
-import streetlight.model.data.Location
 import streetlight.web.io.ApiClient
 
 class EventScout(
@@ -51,6 +50,9 @@ class EventScout(
             launch {
                 locationScout.locationFlow.collect { location ->
                     editor.setLocationId(location?.locationId)
+                    if (location != null) {
+                        state.set { it.copy(stage = EventScoutStage.EventSearch)}
+                    }
                 }
             }
         }
@@ -60,9 +62,8 @@ class EventScout(
     fun setQuery(value: String) = state.set { it.copy(query = value) }
     fun setEvent(value: EventLocation?) = state.set { it.copy(event = value) }
 
-    fun createFromQuery() {
-        val title = stateNow.query.takeIf { it.isNotBlank() } ?: return
-        editor.setTitle(title)
+    fun create() {
+        editor.setTitle(stateNow.query)
         state.set { it.copy(stage = EventScoutStage.EventEdit) }
     }
 
@@ -79,6 +80,7 @@ class EventScout(
 
     fun post() {
         scope.launch {
+            postMessage.set("Posting...")
             val eventId = when (val event = stateNow.event) {
                 null -> editor.submitSuspend()?.eventId
                 else -> event.eventId

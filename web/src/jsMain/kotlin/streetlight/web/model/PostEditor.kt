@@ -10,7 +10,6 @@ import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import streetlight.model.data.PostEdit
-import streetlight.model.data.PostId
 import streetlight.web.io.ApiClient
 
 class PostEditor(
@@ -24,15 +23,15 @@ class PostEditor(
     val stateFlow = state.flow
     val stateNow get() = state.now
 
-    val msg = storeOf<UIMessage?>(null)
+    val message = storeOf<UIMessage?>(null)
 
     val contentFlow = stateFlow.mapDistinct { it.content }
-    val contentNow get() = state.now.content
+    val editNow get() = state.now.content
 
     init {
         scope.launch {
             contentFlow.mapDistinct { it.invalidMessage }.collect {
-                msg.set(it ?: "Looks good.")
+                message.set(it ?: "Looks good.")
             }
         }
     }
@@ -43,21 +42,12 @@ class PostEditor(
 
     fun setText(text: String) = setContent { it.copy(text = text) }
 
-    fun setImage(url: Url?) = setContent { it.copy(imageRef = url) }
+    fun setImageUrl(url: Url?) = setContent { it.copy(imageRef = url) }
 
     fun submitPost() {
-        var content = contentNow.takeIf { it.isValid } ?: return
         scope.launch {
-            val blobUrl = content.imageRef?.takeIf { it.isBlob }
-            content = blobUrl?.let {
-                val refUrl = api.uploadImage(blobUrl).handleResponse(msg::set)
-                if (refUrl == null) {
-                    msg.set("Unable to upload image.")
-                    return@launch
-                }
-
-                content.copy(imageRef = refUrl)
-            } ?: content
+            if (!uploadImageIfBlob()) return@launch
+            val content = editNow.takeIf { it.isValid } ?: return@launch
 
             when (content.postId) {
                 null -> api.createPost(content)
@@ -70,6 +60,18 @@ class PostEditor(
 
     private fun setContent(block: (PostEdit) -> PostEdit) {
         state.set { it.copy(content = block(stateNow.content)) }
+    }
+
+    private suspend fun uploadImageIfBlob(): Boolean {
+        val blobUrl = editNow.imageRef?.takeIf { it.isBlob } ?: return true
+        message.set("Uploading image...")
+        val refUrl = api.uploadImage(blobUrl).handleResponse(message::set)
+        if (refUrl == null) {
+            message.set("Unable to upload image.")
+            return false
+        }
+        setImageUrl(refUrl)
+        return true
     }
 }
 

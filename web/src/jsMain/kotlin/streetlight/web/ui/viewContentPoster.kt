@@ -27,7 +27,7 @@ fun RenderContext.viewContentPoster(galaxy: Galaxy) {
         }
 
         row(modify(JustifyContentEnd)) {
-            messageBox(model.msg.flow)
+            messageBox(model.message.flow)
             button("Post", onClick = model::submitPost)
         }
     }

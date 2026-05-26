@@ -4,6 +4,10 @@ make Username a type
 reorder button arguments
 reorder textfield arguments
 remove deprecated Streetlight god object
+use bcrypt
+support image updates on server without redundancy
+add flair icon before links in postCard
+add post card controls opposite of title
 
 # MEDIUM:
 EventTableDao // td: more precise time conflict handling
@@ -11,12 +15,20 @@ routeBlock.kt // td: retry provideData call n times
 provide UI message for event conflict
 convert .css to .kt
 add default images per post type
+add "working" state to buttons
+add rich text editor
+add paste from clipboard to imagedrop
+make osm location search not bound by city
 
 # CHALLENGE:
 fee: entry/ticket distinction
 isFull as a property on Event
 large grid content
 make username valid slugs
+add console interaction
+make a calendar view for galaxy, make it big
+add SOPS support for .env
+address OWASP insufficient logging concern
 
 # BEFORE UPDATE:
 stop caching html in UrlReader
