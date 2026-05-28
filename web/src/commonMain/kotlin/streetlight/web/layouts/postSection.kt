@@ -7,29 +7,28 @@ import streetlight.model.data.*
 import streetlight.web.shells.SectionHeadingMod
 
 fun FlowContent.postSection(posts: List<GalaxyPost>) {
-    section {
+    section(modify(FeedPostMod.SmallRow)) {
         filigree {
             heading2("Posts", SectionHeadingMod)
         }
 
         mount(PostKey.PostLayoutId) {
-            column(PostKey.PostLayoutColumnMod) {
-                layoutPosts(posts)
-            }
+            layoutPosts(posts)
         }
     }
 }
 
 fun FlowContent.layoutPosts(posts: List<GalaxyPost>) {
-    posts.forEach { post ->
-        postCardOf(post)
+    column(modify(FeedPostMod.FeedColumn)) {
+        posts.forEach { post ->
+            postCardOf(post)
+        }
     }
 }
 
 object PostKey {
     val PostMenuId = Id("post-menu")
     val PostLayoutId = Id("post-layout")
-    val PostLayoutColumnMod = modify(Gap2)
 
     val Attribute = uuidAttributeOf("post-id") { PostId(it) }
 }

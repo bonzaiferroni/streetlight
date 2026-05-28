@@ -28,7 +28,7 @@ fun FlowContent.featureImage(
         }
 
         img {
-            addModifiers(ContentClass, MoonShadow)
+            addModifiers(ContentClass)
             this.src = src
         }
     }
@@ -65,6 +65,7 @@ $ContentClass {
     height: 100%;
     position: relative;
     min-width: 0;
+    min-height: 0;
     object-fit: inherit;
 }
 """

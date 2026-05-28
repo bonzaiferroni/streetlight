@@ -12,7 +12,7 @@ val DisplayUtilityCss
         CircleShape, CircleClip,
         // Border Radius
         BorderRadius0, BorderRadius1, BorderRadius2, BorderRadius4, BorderRadius3, BorderRadius50P, BorderRadiusBottom1,
-        BorderDashed2Px,
+        BorderDashed2Px, BorderSolid2Px,
         // Border
         SideBorder,
         // Color
@@ -21,6 +21,7 @@ val DisplayUtilityCss
         OverflowHidden, OverflowWrapAnywhere, OverflowClip, OverflowXAuto, OverflowXHidden, OverflowYAuto, OverscrollBehaviorContain,
         // Background
         PrimaryBg, PrimaryCardBg, ZenBg, CardBg, BackgroundImage, SolidBg, BlurBackdrop, TransparentBg,
+        PaperGradientBg, InkGradientBg,
         // Transform
         FlipX, FlipY,
         // Shadow
@@ -71,7 +72,8 @@ val BorderRadius2 = utilityOf("border-radius-2", "border-radius: var(--unit-spac
 val BorderRadius3 = utilityOf("border-radius-3", "border-radius: var(--unit-spacing-3)")
 val BorderRadius4 = utilityOf("border-radius-4", "border-radius: var(--unit-spacing-4)")
 val BorderRadius50P = utilityOf("border-radius-50p", "border-radius: 50%")
-val BorderDashed2Px = utilityOf("border-dashed", "border: 2px dashed currentColor")
+val BorderDashed2Px = utilityOf("border-dashed", "border: 2px dashed var(--weak-outline)")
+val BorderSolid2Px = utilityOf("border-solid", "border: 2px solid var(--weak-outline)")
 val BorderRadiusBottom1 = utilityOf("border-radius-bottom-1", "border-radius: 0 0 var(--unit-spacing) var(--unit-spacing)")
 
 // Border
@@ -84,6 +86,8 @@ val Primary = Class("primary")
 val PrimaryFg = utilityOf("primary-fg", "color: var(--primary-fg)")
 val ColorSchemeFg = utilityOf("color-scheme-fg", "color: var(--color-scheme, currentColor)")
 val ColorSchemeBg = utilityOf("color-scheme-bg", "background-color: var(--color-scheme, currentColor)")
+val PaperGradientBg = utilityOf("gradient-bg", "background: var(--paper-gradient-bg)")
+val InkGradientBg = utilityOf("ink-gradient-bg", "background: var(--ink-gradient-bg)")
 val Zen = Class("zen")
 val Secondary = Class("secondary")
 val Danger = Class("danger")

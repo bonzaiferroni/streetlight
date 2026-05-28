@@ -24,11 +24,11 @@ import streetlight.web.ui.starLight
 import kotlin.time.Instant
 
 object CellContent {
-    val RowMod = modify(JustifyContentCenter, AlignItemsCenter, FlexWrap, Gap0, PaddingY1, PaddingX2)
-    val CardMod = modify(AlignItemsCenter, Gap0, BorderRadius0, JustifyContentCenter, MinWidth16, Padding0)
-    val IconMod = modify(Height3, Aspect1, MarginRight1, ColorSchemeBg)
-    val ThumbMod = modify(Height3, Aspect1, BorderRadius2, MarginRight1)
-    val TextMod = modify()
+    val RowMod = modify(JustifyContentCenter, AlignItemsCenter, Gap0, Padding1)
+    val CellMod = modify(AlignItemsCenter, Gap0, BorderRadius0, JustifyContentCenter, MinWidth12, Width16, Padding0)
+    val IconMod = modify(Height3, Aspect1, MarginRight4Px, ColorSchemeBg)
+    val ThumbMod = modify(Height3, Aspect1, BorderRadius2, MarginRight4Px)
+    val TextMod = modify(LineHeight1, SingleLine, TextOverflowEllipses)
 }
 
 fun FlowContent.cellRow(
@@ -36,7 +36,7 @@ fun FlowContent.cellRow(
     modifiers: ModifierSet? = null,
     block: DIV.() -> Unit = {}
 ) {
-    row(modify(modifiers, MinHeight6, MinWidth24, FlexItems1, GapTiny, TextAlignCenter, MoonShadow)) {
+    row(modify(modifiers, MinHeight4, MinWidth12, FlexItems1, GapTiny, TextAlignCenter, MoonShadow)) {
         block()
         cells.forEach {
             val cell = it ?: return@forEach
@@ -51,15 +51,22 @@ fun FlowContent.cellCard(
     modifiers: ModifierSet? = null,
     block: FlowContent.() -> Unit = {}
 ) {
-    card(modify(CellContent.CardMod, modifiers)) {
+    card(modify(CellContent.CellMod, modifiers)) {
         block()
     }
 }
 
 fun FlowContent.startsAtCell(startsAt: Instant) {
     row(CellContent.RowMod) {
-        textBlock(startsAt.toRelativeDayFormat(), modify(CellContent.TextMod, ColorSchemeFg))
-        textBlock(startsAt.toTimeFormat(), modify(CellContent.TextMod, MarginLeft1))
+        icon(SvgFile.Clock, CellContent.IconMod)
+        textBlock(startsAt.toTimeFormat(), modify(CellContent.TextMod))
+    }
+}
+
+fun FlowContent.dateCell(startsAt: Instant) {
+    row(CellContent.RowMod) {
+        icon(SvgFile.Calendar, CellContent.IconMod)
+        textBlock(startsAt.toRelativeDayFormat(), modify(CellContent.TextMod))
     }
 }
 
@@ -136,9 +143,10 @@ fun FlowContent.exampleLightCell() {
     starLight(0)
 }
 
+
 fun locationCells(location: Location): List<(FlowContent.() -> Unit)?> = listOf(
     { starCell(location.username) },
-    { locationLightCell(location.lightCount, location.locationId)}
+    { locationLightCell(location.lightCount, location.locationId)},
 )
 
 fun locationCells(username: String?, edit: LocationEdit): List<(FlowContent.() -> Unit)?> = listOf(
@@ -156,6 +164,7 @@ fun eventCells(event: EventEdit): List<(FlowContent.() -> Unit)?> = listOf(
 )
 
 fun eventCells(event: EventLocation): List<(FlowContent.() -> Unit)?> = listOf(
+    { dateCell(event.startsAt) },
     { startsAtCell(event.startsAt) },
     { costCell(event.cost, event.url) },
     { eventLightCell(event.lightCount, event.eventId) },
@@ -163,5 +172,5 @@ fun eventCells(event: EventLocation): List<(FlowContent.() -> Unit)?> = listOf(
 
 fun galaxyCells(galaxy: Galaxy): List<(FlowContent.() -> Unit)?> = listOf(
     { iconPropertyCell(SvgFile.Calendar, galaxy.eventCount?.toString() ?: "?") },
-    { galaxyLightCell(galaxy.lightCount, galaxy.galaxyId) }
+    { galaxyLightCell(galaxy.lightCount, galaxy.galaxyId) },
 )

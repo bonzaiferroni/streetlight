@@ -15,11 +15,12 @@ val LayoutUtilityCss
         // Width
         WidthAuto, Width100P, WidthFitContent,
         Width1, Width2, Width4, Width5, Width8, Width12, Width16, Width24, Width32, Width64,
-        MinWidth0, MinWidth16, MinWidth24, MinWidth32, MinWidth36, MinWidth48, MinWidthAuto, MaxWidth25P, MaxWidth50P,
+        MinWidth0, MinWidth12, MinWidth8, MinWidth16, MinWidth24, MinWidth32, MinWidth36, MinWidth48, MinWidthAuto, MaxWidth25P, MaxWidth50P,
         MaxWidth5, MaxWidth16, MaxWidth32, MaxWidth48, MaxWidth64, MaxWidthTextBody, MaxWidthNone,
         // Height
         HeightAuto, Height50P, Height100P,
-        Height2, Height3, Height4, Height5, Height6, Height7, Height8, Height9, Height10, Height12, Height16, Height24, Height32, Height48,
+        Height2, Height2Px, Height3, Height4, Height5, Height6, Height7, Height8, Height9, Height10, Height12, Height16,
+        Height24, Height32, Height48,
         MinHeightAuto, MinHeight0, MinHeight4, MinHeight5, MinHeight6, MinHeight8, MinHeight16, MinHeight24, MinHeight32, MinHeight48,
         MaxHeight5, MaxHeight8, MaxHeight16, MaxHeight24, MaxHeight32, MaxHeight64,
         // Size
@@ -29,9 +30,9 @@ val LayoutUtilityCss
         // Text
         TextAlignCenter, TextAlignRight,
         // Margin
-        MarginAuto, Margin1, Margin2, MarginTop1, MarginTop2, MarginTop4, MarginTop8,
+        MarginAuto, Margin1, Margin2, MarginTop1, MarginTop2, MarginTop2Px, MarginTop4, MarginTop8,
         MarginLeft1, MarginLeft2, MarginLeftAuto,
-        MarginRight1, MarginRight2, MarginBottom1, MarginBottom2, MarginBottom16,
+        MarginRight1, MarginRight2, MarginRight4Px, MarginBottom1, MarginBottom2, MarginBottom16,
         MarginX1, MarginX2, MarginX4,
         // Padding
         Padding0, Padding1, Padding2, Padding4, PaddingTiny, PaddingLeft1, PaddingLeft2, PaddingLeft3, PaddingRight3,
@@ -99,6 +100,8 @@ val Width24 = utilityOf("width-24", "width: calc(var(--unit-spacing) * 24)")
 val Width32 = utilityOf("width-32", "width: calc(var(--unit-spacing) * 32)")
 val Width64 = utilityOf("width-64", "width: calc(var(--unit-spacing) * 64)")
 val MinWidth0 = utilityOf("min-width-0", "min-width: 0")
+val MinWidth8 = utilityOf("min-width-16", "min-width: calc(var(--unit-spacing) * 8)")
+val MinWidth12 = utilityOf("min-width-12", "min-width: calc(var(--unit-spacing) * 12)")
 val MinWidth16 = utilityOf("min-width-16", "min-width: calc(var(--unit-spacing) * 16)")
 val MinWidth24 = utilityOf("min-width-24", "min-width: calc(var(--unit-spacing) * 24)")
 val MinWidth32 = utilityOf("min-width-32", "min-width: calc(var(--unit-spacing) * 32)")
@@ -120,6 +123,7 @@ val Height50P = utilityOf("height-50", "height: 50%")
 val Height100P = utilityOf("height-100", "height: 100%")
 val HeightAuto = utilityOf("height-auto", "height: auto")
 val Height2 = utilityOf("height-2", "height: calc(var(--unit-spacing) * 2)")
+val Height2Px = utilityOf("height-2px", "height: 2px")
 val Height3 = utilityOf("height-3", "height: calc(var(--unit-spacing) * 3)")
 val Height4 = utilityOf("height-4", "height: calc(var(--unit-spacing) * 4)")
 val Height5 = utilityOf("height-5", "height: calc(var(--unit-spacing) * 5)")
@@ -177,6 +181,7 @@ val MarginAuto = utilityOf("margin-auto", "margin: auto")
 val Margin1 = utilityOf("margin-1", "margin: var(--unit-spacing)")
 val Margin2 = utilityOf("margin-2", "margin: calc(var(--unit-spacing) * 2)")
 val MarginTop1 = utilityOf("margin-top-1", "margin-top: var(--unit-spacing)")
+val MarginTop2Px = utilityOf("margin-top-2px", "margin-top: 2px")
 val MarginTop2 = utilityOf("margin-top-2", "margin-top: calc(var(--unit-spacing) * 2)")
 val MarginTop4 = utilityOf("margin-top-4", "margin-top: calc(var(--unit-spacing) * 4)")
 val MarginTop8 = utilityOf("margin-top-8", "margin-top: calc(var(--unit-spacing) * 8)")
@@ -185,6 +190,7 @@ val MarginLeft2 = utilityOf("margin-left-2", "margin-left: var(--unit-spacing-2)
 val MarginLeftAuto = utilityOf("margin-left-auto", "margin-left: auto")
 val MarginRight1 = utilityOf("margin-right-1", "margin-right: var(--unit-spacing)")
 val MarginRight2 = utilityOf("margin-right-2", "margin-right: var(--unit-spacing-2)")
+val MarginRight4Px = utilityOf("margin-right-4px", "margin-right: 4px")
 val MarginBottom1 = utilityOf("margin-bottom-1", "margin-bottom: var(--unit-spacing)")
 val MarginBottom2 = utilityOf("margin-bottom-2", "margin-bottom: calc(var(--unit-spacing) * 2)")
 val MarginBottom16 = utilityOf("margin-bottom-16", "margin-bottom: calc(var(--unit-spacing) * 16)")

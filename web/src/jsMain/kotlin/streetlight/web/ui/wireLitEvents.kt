@@ -57,8 +57,8 @@ fun RenderContext.narrowEventCard(event: EventLocation, eventCache: LightCache<E
         fillImage(event.images.small, modify(Flex1), fillWidth = false)
         column() {
             column(modify(Gap0)) {
-                textBlock(event.title, modify(WhiteSpaceNoWrap, TextOverflowHidden))
-                textBlock(event.locationLabel, modify(WhiteSpaceNoWrap, TextOverflowHidden, Dim))
+                textBlock(event.title, modify(WhiteSpaceNoWrap, TextOverflowEllipses))
+                textBlock(event.locationLabel, modify(WhiteSpaceNoWrap, TextOverflowEllipses, Dim))
             }
             row(modify(JustifyContentSpaceBetween)) {
                 textBlock(event.startsAt.toTimeFormat())

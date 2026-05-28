@@ -19,6 +19,7 @@ add "working" state to buttons
 add rich text editor
 add paste from clipboard to imagedrop
 make osm location search not bound by city
+consolidate utilities to stylesheet
 
 # CHALLENGE:
 fee: entry/ticket distinction
@@ -35,3 +36,13 @@ stop caching html in UrlReader
 
 # BEFORE LAUNCH
 hikariCP
+
+
+Up    Image     Title               Icon Value1
+2131            Subtitle            Icon Value2
+                Link Link Link     Icon Value3
+
+Event icons: Date, Time,
+
+Image  [Concert Name]
+Image  An Event at [Venue]

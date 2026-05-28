@@ -32,7 +32,7 @@ fun FlowContent.largePostCard(
                     row {
                         column(modify(Flex1, Gap0)) {
                             navigation(postRoute) {
-                                heading3(title, modify(WhiteSpaceNoWrap, LineHeight1, MarginTop1, TextOverflowHidden))
+                                heading3(title, modify(WhiteSpaceNoWrap, LineHeight1, MarginTop1, TextOverflowEllipses))
                             }
 
                             subtitle?.let {
