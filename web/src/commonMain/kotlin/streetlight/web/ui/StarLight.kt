@@ -9,14 +9,15 @@ import streetlight.model.data.EventId
 import streetlight.model.data.GalaxyId
 import streetlight.model.data.LocationId
 import streetlight.web.layouts.CellContent
+import streetlight.web.layouts.cell
 
-fun FlowContent.starLight(
+fun FlowContent.starLightCell(
     visibility: Int?,
     modifiers: ModifierSet? = null,
     block: DIV.() -> Unit = {}
 ) {
-    row(CellContent.RowMod) {
-        addModifiers(modifiers, StarLightKey.Class, Size100P)
+    cell {
+        addModifiers(modifiers, StarLightKey.Class)
         block()
         icon(SvgFile.LoaderSmall, CellContent.IconMod)
         visibility?.let {

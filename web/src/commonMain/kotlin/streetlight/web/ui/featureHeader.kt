@@ -41,7 +41,7 @@ import koala.html.textBlock
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import streetlight.model.data.ExtraLink
-import streetlight.web.layouts.cellRow
+import streetlight.web.layouts.cellBlock
 
 fun FlowContent.featureHeader(
     title: String,
@@ -49,7 +49,7 @@ fun FlowContent.featureHeader(
     subtitle: String?,
     image: Url?,
     description: String? = null,
-    cells: List<(FlowContent.() -> Unit)?>? = null,
+    cellContent: (FlowContent.() -> Unit)? = null,
     links: List<ExtraLink>? = null,
     editRoute: AppRoute? = null,
     modifiers: ModifierSet? = null,
@@ -75,8 +75,8 @@ fun FlowContent.featureHeader(
         }
 
         // cell content
-        if (cells != null) {
-            cellRow(cells)
+        if (cellContent != null) {
+            cellBlock(block = cellContent)
         }
 
         if (description != null || links != null ) {

@@ -22,7 +22,7 @@ fun FlowContent.feedPost(
     colorScheme: ColorScheme,
     flairIcon: FlairIcon?,
     links: List<ExtraLink>?,
-    cells: List<(FlowContent.() -> Unit)?>?,
+    cellBlock: (FlowContent.() -> Unit)?,
 ) {
     row(modify(QueryContainer)) {
         column(modify(Width5)) {
@@ -57,22 +57,25 @@ fun FlowContent.feedPost(
                         }
                     }
                     spacer(modify(Height2Px, InkGradientBg, MarginTop2Px))
-                    textBlock("posted by Luke 12 minutes ago", modify(SmallText, OpacityMost, MarginTop2Px))
-                }
-
-                // controls
-                row(modify(modify(FeedPostMod.Controls, Height4, OpacityMost, JustifyContentCenter))) {
-                    icon(SvgFile.MapPin)
-                    icon(SvgFile.EyePlus)
-                    postSlug?.let { slug ->
-                        val anchor = PositionAnchor("menu-${slug}")
-                        icon(SvgFile.Dots) {
-                            setAnchorName(anchor)
-                            setPopoverTarget(PostKey.PostMenuId)
-                            onClick = KoalaFun.CallMenu.invoke(anchor, PostKey.PostMenuId, slug)
+                    row(modify(MarginTop2Px, AlignItemsCenter, OpacityMost)) {
+                        textBlock("posted by Luke 12 minutes ago", modify(SmallText))
+                        postId?.let { postId ->
+                            val anchor = PositionAnchor("menu-${postId}")
+                            icon(SvgFile.Dots, modify(Height3)) {
+                                setAnchorName(anchor)
+                                setPopoverTarget(PostKey.PostMenuId)
+                                onClick = KoalaFun.CallMenu.invoke(anchor, PostKey.PostMenuId, postId)
+                            }
                         }
                     }
                 }
+
+                // controls
+//                row(modify(modify(FeedPostMod.Controls, Height4, OpacityMost, JustifyContentCenter))) {
+//                    icon(SvgFile.MapPin)
+//                    icon(SvgFile.EyePlus)
+//
+//                }
 
                 // links
                 row(modify(FeedPostMod.Links, AlignItemsEnd)) {
@@ -85,8 +88,8 @@ fun FlowContent.feedPost(
             }
 
             // details
-            if (cells != null) {
-                cellRow(cells, modify(GridArea.Details, FlexWrap))
+            if (cellBlock != null) {
+                cellBlock(modify(GridArea.Details, FlexWrap), cellBlock)
             }
         }
     }
@@ -127,32 +130,35 @@ $Grid {
 
 $SmallRow {
     $Grid {
-        grid-template-columns: 6rem 2fr 6rem;
+        grid-template-columns: 6rem 1fr 6rem;
         grid-template-rows: auto;
         grid-template-areas: "image body details";
         
         > ${GridArea.Image} {
-            overflow: clip;
+            box-shadow: var(--moon-shadow);
+            height: 6rem;
         }
         
         > ${GridArea.Image}, > ${GridArea.Details} {
-            height: 6rem;
-            border-radius: var(--unit-spacing); 
-            box-shadow: var(--moon-shadow);
+            border-radius: var(--unit-spacing);
+            overflow: clip;
         }
         
         > ${GridArea.Details} {
-            overflow-y: auto;
-            overflow-x: hidden;
-            scrollbar-width: none;
+            
+            @container (max-width: 500px) {
+                > :not(:first-child):not(:last-child) {
+                    display: none;
+                }
+            }
         }
         
         $Links, $Controls {
             display: none;
         }
         
-        @container (min-width: 600px) {
-            grid-template-columns: 6rem 2fr 1fr;
+        @container (min-width: 500px) {
+            grid-template-columns: 6rem 3fr 2fr;
             grid-template-rows: auto;
             grid-template-areas: "image body details";
         }

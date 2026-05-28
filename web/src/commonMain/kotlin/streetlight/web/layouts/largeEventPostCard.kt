@@ -1,5 +1,6 @@
 package streetlight.web.layouts
 
+import kampfire.model.toUrl
 import kotlinx.html.FlowContent
 import streetlight.model.data.EventPost
 
@@ -16,7 +17,7 @@ fun FlowContent.largeEventPostCard(post: EventPost) {
         subRoute = event.locationRoute,
         cells = listOf(
             { startsAtCell(event.startsAt) },
-            { costCell(event.cost, event.url) },
+            { costCell(event.cost, event.url?.toUrl()) },
             { starCell(post.username) },
             { eventLightCell(event.lightCount, event.eventId) },
         )

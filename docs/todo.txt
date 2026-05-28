@@ -8,6 +8,9 @@ use bcrypt
 support image updates on server without redundancy
 add flair icon before links in postCard
 add post card controls opposite of title
+have navigation accept url, not string
+have ExtraLink hold url, not string
+have EventEdit hold url, not string
 
 # MEDIUM:
 EventTableDao // td: more precise time conflict handling

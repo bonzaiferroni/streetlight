@@ -1,13 +1,14 @@
 package streetlight.web.ui
 
 import kampfire.model.small
+import kampfire.model.toUrl
 import koala.css.*
 import koala.dom.*
 import koala.html.featureImage
 import koala.html.heading3
 import koala.html.row
 import streetlight.model.data.EventPost
-import streetlight.web.layouts.cellCard
+import streetlight.web.layouts.cell
 import streetlight.web.layouts.costCell
 import streetlight.web.layouts.eventLightCell
 import streetlight.web.layouts.starCell
@@ -33,16 +34,16 @@ fun RenderContext.eventFocusContent(post: EventPost) {
         }
         val event = event ?: return@card
         row(modify(Flex1, MinHeight8, FlexItems1, GapTiny, TextAlignCenter, FlexWrap, MoonShadow)) {
-            cellCard {
+            cell {
                 startsAtCell(event.startsAt)
             }
-            cellCard {
-                costCell(event.cost, event.url)
+            cell {
+                costCell(event.cost, event.url?.toUrl())
             }
-            cellCard {
+            cell {
                 starCell(event.username)
             }
-            cellCard {
+            cell {
                 eventLightCell(event.lightCount, event.eventId)
             }
         }

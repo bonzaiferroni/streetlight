@@ -2,6 +2,7 @@ package streetlight.web.shells
 
 import kampfire.model.large
 import kampfire.model.small
+import kampfire.model.toUrl
 import koala.css.*
 import koala.html.*
 import kotlinx.html.FlowContent
@@ -22,12 +23,12 @@ fun FlowContent.eventShell(event: EventLocation) {
             subtitle = event.locationName,
             image = event.images.large,
             description = event.description,
-            cells = listOf(
-                { startsAtCell(event.startsAt) },
-                { costCell(event.cost, event.url) },
-                { starCell(event.username) },
-                { eventLightCell(event.lightCount, event.eventId) }
-            ),
+            cellContent = {
+                startsAtCell(event.startsAt)
+                costCell(event.cost, event.url?.toUrl())
+                starCell(event.username)
+                eventLightCell(event.lightCount, event.eventId)
+            },
             links = event.links,
             editRoute = EventUpdateRoute(event.eventSlug),
         )

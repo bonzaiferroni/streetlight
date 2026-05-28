@@ -5,6 +5,7 @@ import kabinet.utils.toAgoFormat
 import kabinet.utils.toRelativeDayFormat
 import kabinet.utils.toTimeFormat
 import kampfire.model.Url
+import kampfire.model.toUrl
 import koala.Svg
 import koala.SvgFile
 import koala.css.*
@@ -14,70 +15,91 @@ import kotlinx.html.FlowContent
 import streetlight.model.data.EventEdit
 import streetlight.model.data.EventId
 import streetlight.model.data.EventLocation
+import streetlight.model.data.ExtraLink
 import streetlight.model.data.Galaxy
 import streetlight.model.data.GalaxyId
 import streetlight.model.data.Location
 import streetlight.model.data.LocationEdit
 import streetlight.model.data.LocationId
 import streetlight.web.ui.StarLightKey
-import streetlight.web.ui.starLight
+import streetlight.web.ui.starLightCell
 import kotlin.time.Instant
 
 object CellContent {
-    val RowMod = modify(JustifyContentCenter, AlignItemsCenter, Gap0, Padding1)
-    val CellMod = modify(AlignItemsCenter, Gap0, BorderRadius0, JustifyContentCenter, MinWidth12, Width16, Padding0)
+    val CellMod = modify(AlignItemsCenter, CardBg, JustifyContentCenter, Gap0, Padding1, MinWidth12)
     val IconMod = modify(Height3, Aspect1, MarginRight4Px, ColorSchemeBg)
     val ThumbMod = modify(Height3, Aspect1, BorderRadius2, MarginRight4Px)
-    val TextMod = modify(LineHeight1, SingleLine, TextOverflowEllipses)
+    val TextMod = modify(SmallText, SingleLine, TextOverflowEllipses, Flex1)
 }
 
-fun FlowContent.cellRow(
-    cells: List<(FlowContent.() -> Unit)?>,
+fun FlowContent.cellBlock(
     modifiers: ModifierSet? = null,
-    block: DIV.() -> Unit = {}
+    block: FlowContent.() -> Unit = {}
 ) {
     row(modify(modifiers, MinHeight4, MinWidth12, FlexItems1, GapTiny, TextAlignCenter, MoonShadow)) {
         block()
-        cells.forEach {
-            val cell = it ?: return@forEach
-            cellCard {
-                cell()
+    }
+}
+
+fun FlowContent.cell(
+    svg: Svg? = null,
+    text: String? = null,
+    label: String? = null,
+    modifiers: ModifierSet? = null,
+    block: DIV.() -> Unit = {}
+) {
+    row(modify(CellContent.CellMod, modifiers)) {
+        label?.let {
+            textBlock("$it:", modify(CellContent.TextMod, Dim))
+        }
+        svg?.let {
+            icon(svg, CellContent.IconMod)
+        }
+        text?.let {
+            textBlock(it, CellContent.TextMod)
+        }
+        block()
+    }
+}
+
+fun FlowContent.linkCell(
+    url: Url?,
+    svg: Svg,
+    text: String?,
+    modifiers: ModifierSet? = null,
+    block: FlowContent.() -> Unit = {}
+) {
+    // cell(modifiers, block)
+    when (url) {
+        null -> cell(svg, text, modifiers = modifiers, block = block)
+        else -> {
+            navigation(url.value, modify(CellContent.CellMod, Row)) {
+                icon(svg, CellContent.IconMod)
+                text?.let {
+                    textBlock(it, CellContent.TextMod)
+                }
+                block()
             }
         }
     }
 }
 
-fun FlowContent.cellCard(
-    modifiers: ModifierSet? = null,
-    block: FlowContent.() -> Unit = {}
-) {
-    card(modify(CellContent.CellMod, modifiers)) {
-        block()
-    }
-}
-
 fun FlowContent.startsAtCell(startsAt: Instant) {
-    row(CellContent.RowMod) {
-        icon(SvgFile.Clock, CellContent.IconMod)
-        textBlock(startsAt.toTimeFormat(), modify(CellContent.TextMod))
-    }
+    cell(SvgFile.Clock, startsAt.toTimeFormat())
 }
 
 fun FlowContent.dateCell(startsAt: Instant) {
-    row(CellContent.RowMod) {
-        icon(SvgFile.Calendar, CellContent.IconMod)
-        textBlock(startsAt.toRelativeDayFormat(), modify(CellContent.TextMod))
-    }
+    cell(SvgFile.Calendar, startsAt.toRelativeDayFormat())
 }
 
 fun FlowContent.exampleStartsAtCell() {
-    row(CellContent.RowMod) {
-        textBlock("[Day]", modify(CellContent.TextMod, ColorSchemeFg))
-        textBlock("[Time]", modify(CellContent.TextMod, MarginLeft1))
-    }
+//    cell {
+//        textBlock("[Day]", modify(CellContent.TextMod, ColorSchemeFg))
+//        textBlock("[Time]", modify(CellContent.TextMod, MarginLeft1))
+//    }
 }
 
-fun FlowContent.costCell(cost: Float?, purchaseUrl: String?) {
+fun FlowContent.costCell(cost: Float?, purchaseUrl: Url?) {
     val ticketsUrl = cost.takeIf { it != 0f }?.let {
         purchaseUrl
     }
@@ -86,26 +108,21 @@ fun FlowContent.costCell(cost: Float?, purchaseUrl: String?) {
         null -> "check source"
         else -> "$${cost.format(2, true)}"
     }
-    navigationIfNotNull(ticketsUrl) {
-        row(CellContent.RowMod) {
-            icon(SvgFile.TicketSmall, CellContent.IconMod)
-            textBlock(costText, modify(CellContent.TextMod))
-        }
-    }
+    linkCell(ticketsUrl, SvgFile.TicketSmall, costText)
 }
 
 fun FlowContent.starCell(username: String?) = iconPropertyCell(SvgFile.SomeoneSmall, username ?: "Someone")
 
 fun FlowContent.starCell(username: String?, userThumb: Url?) {
-    row(CellContent.RowMod) {
-        image(userThumb, CellContent.ThumbMod)
-        textBlock(username ?: "Someone", CellContent.TextMod)
-    }
+//    cell {
+//        image(userThumb, CellContent.ThumbMod)
+//        textBlock(username ?: "Someone", CellContent.TextMod)
+//    }
 }
 
 fun FlowContent.textPropertyCell(property: String, value: String) {
-    row(CellContent.RowMod) {
-        textBlock("$property:", modify(CellContent.TextMod, Dim))
+    cell {
+
         textBlock(value, modify(CellContent.TextMod, MarginLeft1))
     }
 }
@@ -115,62 +132,68 @@ fun FlowContent.postedAtCell(postedAt: Instant) {
 }
 
 fun FlowContent.iconPropertyCell(icon: Svg, value: String) {
-    row(CellContent.RowMod) {
+    cell {
         icon(icon, CellContent.IconMod)
         textBlock(value, CellContent.TextMod)
     }
 }
 
 fun FlowContent.galaxyLightCell(visibility: Int?, galaxyId: GalaxyId) {
-    starLight(visibility, CellContent.RowMod) {
+    starLightCell(visibility) {
         setData(StarLightKey.GalaxyLightId, galaxyId)
     }
 }
 
 fun FlowContent.eventLightCell(visibility: Int?, eventId: EventId) {
-    starLight(visibility, CellContent.RowMod) {
+    starLightCell(visibility) {
         setData(StarLightKey.EventLightId, eventId)
     }
 }
 
 fun FlowContent.locationLightCell(visibility: Int?, locationId: LocationId) {
-    starLight(visibility) {
+    starLightCell(visibility) {
         setData(StarLightKey.LocationLightId, locationId)
     }
 }
 
 fun FlowContent.exampleLightCell() {
-    starLight(0)
+    starLightCell(0)
 }
 
+fun FlowContent.linkCell(link: ExtraLink) {
+    linkCell(link.url.toUrl(), SvgFile.Link, link.label)
+}
 
-fun locationCells(location: Location): List<(FlowContent.() -> Unit)?> = listOf(
-    { starCell(location.username) },
-    { locationLightCell(location.lightCount, location.locationId)},
-)
+fun locationCells(location: Location): FlowContent.() -> Unit = {
+    starCell(location.username)
+    locationLightCell(location.lightCount, location.locationId)
+}
 
-fun locationCells(username: String?, edit: LocationEdit): List<(FlowContent.() -> Unit)?> = listOf(
-    { starCell(username) },
-    { exampleLightCell() }
-)
+fun locationCells(username: String?, edit: LocationEdit): FlowContent.() -> Unit = {
+    starCell(username)
+    exampleLightCell()
+}
 
-fun eventCells(event: EventEdit): List<(FlowContent.() -> Unit)?> = listOf(
-    { when (val startsAt = event.startsAt) {
+fun eventCells(event: EventEdit): FlowContent.() -> Unit = {
+    when (val startsAt = event.startsAt) {
         null -> exampleStartsAtCell()
         else -> startsAtCell(startsAt)
-    } },
-    { costCell(event.cost, event.url) },
-    { exampleLightCell() },
-)
+    }
+    costCell(event.cost, event.url?.toUrl())
+    exampleLightCell()
+}
 
-fun eventCells(event: EventLocation): List<(FlowContent.() -> Unit)?> = listOf(
-    { dateCell(event.startsAt) },
-    { startsAtCell(event.startsAt) },
-    { costCell(event.cost, event.url) },
-    { eventLightCell(event.lightCount, event.eventId) },
-)
+fun eventCells(event: EventLocation): FlowContent.() -> Unit = {
+    dateCell(event.startsAt)
+    startsAtCell(event.startsAt)
+    costCell(event.cost, event.url?.toUrl())
+    eventLightCell(event.lightCount, event.eventId)
+    event.links?.forEach {
+        linkCell(it)
+    }
+}
 
-fun galaxyCells(galaxy: Galaxy): List<(FlowContent.() -> Unit)?> = listOf(
-    { iconPropertyCell(SvgFile.Calendar, galaxy.eventCount?.toString() ?: "?") },
-    { galaxyLightCell(galaxy.lightCount, galaxy.galaxyId) },
-)
+fun galaxyCells(galaxy: Galaxy): FlowContent.() -> Unit = {
+    iconPropertyCell(SvgFile.Calendar, galaxy.eventCount?.toString() ?: "?")
+    galaxyLightCell(galaxy.lightCount, galaxy.galaxyId)
+}

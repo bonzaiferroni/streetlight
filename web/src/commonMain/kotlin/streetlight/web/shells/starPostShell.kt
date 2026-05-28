@@ -38,7 +38,7 @@ import koala.html.section
 import kotlinx.html.FlowContent
 import streetlight.model.data.Post
 import streetlight.web.PostUpdateRoute
-import streetlight.web.layouts.cellRow
+import streetlight.web.layouts.cellBlock
 import streetlight.web.layouts.postedAtCell
 import streetlight.web.layouts.starCell
 import streetlight.web.pages.appFooter
@@ -59,10 +59,10 @@ fun FlowContent.postShell(post: Post) {
         }
 
         card(modify(OverflowClip, Gap0, ZenBg, Padding0)) {
-            cellRow(listOf(
-                { starCell(post.username, post.userThumb) },
-                { postedAtCell(post.createdAt) }
-            ))
+            cellBlock {
+                starCell(post.username, post.userThumb)
+                postedAtCell(post.createdAt)
+            }
 
             post.text?.let {
                 column(modify(Padding2, AlignSelfCenter, MaxWidthTextBody, LargeText)) {

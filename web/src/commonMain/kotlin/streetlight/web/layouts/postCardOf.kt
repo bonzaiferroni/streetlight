@@ -21,7 +21,7 @@ fun FlowContent.postCardOf(post: GalaxyPost) {
         colorScheme = post.colorScheme,
         flairIcon = post.flairIcon,
         links = post.links,
-        cells = post.cells
+        cellBlock = post.cells
     )
 
     // row(modify(JustifyContentEnd, MarginRight2)) {
@@ -44,7 +44,7 @@ fun FlowContent.postCardOf(location: Location) {
         colorScheme = ColorScheme.Primary,
         flairIcon = FlairIcon.Location,
         links = location.links,
-        cells = locationCells(location)
+        cellBlock = locationCells(location)
     )
 }
 
@@ -59,7 +59,7 @@ fun FlowContent.postCardOf(edit: LocationEdit, username: String?) {
         colorScheme = ColorScheme.Primary,
         flairIcon = FlairIcon.Location,
         links = edit.links,
-        cells = locationCells(username, edit)
+        cellBlock = locationCells(username, edit)
     )
 }
 
@@ -74,7 +74,7 @@ fun FlowContent.postCardOf(event: EventLocation) {
         colorScheme = ColorScheme.Accent,
         flairIcon = FlairIcon.Event,
         links = event.links,
-        cells = eventCells(event)
+        cellBlock = eventCells(event)
     )
 }
 
@@ -89,6 +89,6 @@ fun FlowContent.postCardOf(event: EventEdit, location: Location) {
         colorScheme = ColorScheme.Accent,
         flairIcon = FlairIcon.Event,
         links = event.displayedLinks,
-        cells = eventCells(event)
+        cellBlock = eventCells(event)
     )
 }

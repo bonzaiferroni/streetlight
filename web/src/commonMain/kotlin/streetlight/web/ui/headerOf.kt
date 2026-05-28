@@ -26,7 +26,7 @@ fun FlowContent.headerOf(
         image = location.images.large,
         description = location.description,
         modifiers = modifiers,
-        cells = locationCells(location),
+        cellContent = locationCells(location),
         links = location.links,
         block = block
     )
@@ -44,7 +44,7 @@ fun FlowContent.headerOf(
         image = galaxy.images.large,
         description = galaxy.description,
         modifiers = modifiers,
-        cells = galaxyCells(galaxy),
+        cellContent = galaxyCells(galaxy),
         links = emptyList(),
         editRoute = GalaxyConfigRoute(galaxy.slug),
         block = block

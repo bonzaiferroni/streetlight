@@ -83,6 +83,7 @@ object SvgFile : FileSet<Svg>() {
     val LogoFlame = add("logo-flame.svg")
     val Boost = add("boost.svg")
     val Dots = add("dots.svg")
+    val Link = add("link.svg")
 }
 
 object LottieFile : FileSet<Lottie>() {

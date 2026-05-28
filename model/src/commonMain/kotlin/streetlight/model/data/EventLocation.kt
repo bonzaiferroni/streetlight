@@ -39,9 +39,6 @@ data class EventLocation(
         buildList {
             url?.let { url ->
                 add(ExtraLink("website", url))
-                cost?.takeIf { it > 0 }?.let {
-                    add(ExtraLink("tickets", url))
-                }
             }
             eventLinks?.let {
                 addAll(it)
