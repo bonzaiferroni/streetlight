@@ -12,6 +12,7 @@ import koala.css.*
 import koala.html.*
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
+import kotlinx.html.onClick
 import streetlight.model.data.EventEdit
 import streetlight.model.data.EventId
 import streetlight.model.data.EventLocation
@@ -80,8 +81,10 @@ fun FlowContent.comboCellItem(
 fun FlowContent.cellButton(
     svg: Svg,
     modifiers: ModifierSet? = null,
+    block: DIV.() -> Unit = {},
 ) {
     box(modify(modifiers, Padding1, PrimaryCardBg, PlaceItemsCenter)) {
+        block()
         icon(svg, modify(Height3, OpacityMost))
     }
 }
@@ -197,7 +200,9 @@ fun FlowContent.linkCell(link: ExtraLink) {
 }
 
 fun FlowContent.moreCell() {
-    cell(SvgFile.ExpandBelow, "more")
+    cellButton(SvgFile.ExpandBelow) {
+        onClick = KoalaFun.ToggleAncestor.invoke(ThisElement, FeedPost.Class, FeedPost.ToggleExpand)
+    }
 }
 
 fun locationCells(location: Location): FlowContent.() -> Unit = {
@@ -227,7 +232,7 @@ fun eventCells(event: EventLocation): FlowContent.() -> Unit = {
     costCell(event.cost, event.url?.toUrl())
     comboCell {
         eventLightCell(event.lightCount, event.eventId)
-        cellButton(SvgFile.ExpandBelow)
+        moreCell()
     }
 }
 

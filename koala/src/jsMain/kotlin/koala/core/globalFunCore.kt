@@ -12,3 +12,14 @@ val globalFunCore = listOf(
 )
 
 fun scrollToId(id: String) = document.getElementById(id)?.scrollIntoView(ScrollOptions(ScrollBehavior.SMOOTH))
+
+fun toggleAncestor(element: HTMLElement, ancestorClass: String, toggleClass: String) {
+    var ancestor = element.parentElement
+    while (ancestor != null) {
+        if (ancestor.classList.contains(ancestorClass)) {
+            ancestor.classList.toggle(toggleClass)
+            break
+        }
+        ancestor = ancestor.parentElement
+    }
+}

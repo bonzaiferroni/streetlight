@@ -23,7 +23,7 @@ fun FlowContent.feedPost(
     links: List<ExtraLink>?,
     details: (FlowContent.() -> Unit)?,
 ) {
-    div(modify(FeedPostMod.Grid, FeedPostMod.ToggleExpand)) {
+    div(modify(FeedPost.Class)) {
         postId?.let {
             setAttribute(PostKey.Attribute.to(postId))
         }
@@ -90,13 +90,13 @@ fun FlowContent.feedPost(
     }
 }
 
-object FeedPostMod {
+object FeedPost {
     val SmallRow = Class("small-row")
     val LargeRow = Class("large-row")
     val GridCard = Class("grid-card")
     val ToggleExpand = Class("expand-post")
 
-    val Grid = Class("post-grid")
+    val Class = Class("post-grid")
     val Controls = Class("controls")
     val Links = Class("links")
     val FeedColumn = Class("feed-column")
@@ -113,14 +113,15 @@ object GridArea {
 }
 
 //language=CSS
-val FeedPostCss get() = with(FeedPostMod) { """
-$Grid {
+val FeedPostCss get() = with(FeedPost) { """
+$Class {
     container-type: inline-size;
     padding: 0;
     display: grid;
     align-items: stretch;
     justify-items: stretch;
     gap: 0 var(--unit-spacing);
+    transition: grid-template-rows var(--magic-interval) var(--magic-easing);
     
     > ${GridArea.Boost}   { grid-area: boost; }
     > ${GridArea.Image}   { grid-area: image; }
@@ -134,7 +135,7 @@ $Grid {
 }
 
 $SmallRow {
-    $Grid {
+    $Class {
         grid-template-columns: 2.5rem 6rem 1fr 8rem;
         grid-template-rows: auto 0fr;
         grid-template-areas: 
@@ -168,7 +169,7 @@ $SmallRow {
         }
     }
     
-    $ToggleExpand$Grid {
+    $ToggleExpand$Class {
         grid-template-rows: auto 1fr;
         gap: var(--unit-spacing);
     }
@@ -179,7 +180,7 @@ $LargeRow {
         gap: var(--unit-spacing-2);
     }
     
-    $Grid {
+    $Class {
         background: var(--zen-bg);
         box-shadow: var(--moon-shadow);
         border-radius: var(--unit-spacing-2);

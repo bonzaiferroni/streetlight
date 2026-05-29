@@ -7,7 +7,7 @@ import streetlight.model.data.*
 import streetlight.web.shells.SectionHeadingMod
 
 fun FlowContent.postSection(posts: List<GalaxyPost>) {
-    section(modify(FeedPostMod.SmallRow)) {
+    section(modify(FeedPost.SmallRow)) {
         filigree {
             heading2("Posts", SectionHeadingMod)
         }
@@ -19,7 +19,7 @@ fun FlowContent.postSection(posts: List<GalaxyPost>) {
 }
 
 fun FlowContent.layoutPosts(posts: List<GalaxyPost>) {
-    column(modify(FeedPostMod.FeedColumn)) {
+    column(modify(FeedPost.FeedColumn)) {
         posts.forEach { post ->
             postCardOf(post)
         }

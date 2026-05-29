@@ -11,11 +11,12 @@ class Fun(val identifier: String, vararg val params: String) {
 
     fun invoke(vararg args: Any) = args.joinToString(", ", "$identifier(", ")") { arg ->
         when (arg) {
-            is This -> "this"
+            is ThisElement -> "this"
             is String -> "'$arg'"
             is Id -> "'${arg.identifier}'"
             is PositionAnchor -> "'${arg.identifier}'"
             is TableId<*> -> "'${arg.value}'"
+            is Modifier -> "'${arg.identifier}'"
             else -> arg.toString()
         }
     }

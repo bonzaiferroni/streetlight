@@ -5,11 +5,12 @@ object KoalaFun {
     val ScrollToId = Fun("scrollToId", idArg)
 
     val CallMenu = Fun("callMenu")
+    val ToggleAncestor = Fun("toggleAncestor")
 }
 
 sealed interface KoalaArg
 
-data object This: KoalaArg
+data object ThisElement: KoalaArg
 
 private val idArg = "id"
 
