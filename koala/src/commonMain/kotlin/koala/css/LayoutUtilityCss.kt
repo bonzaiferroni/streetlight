@@ -15,14 +15,14 @@ val LayoutUtilityCss
         // Width
         WidthAuto, Width100P, WidthFitContent,
         Width1, Width2, Width4, Width5, Width8, Width12, Width16, Width24, Width32, Width64,
-        MinWidth0, MinWidth12, MinWidth8, MinWidth16, MinWidth24, MinWidth32, MinWidth36, MinWidth48, MinWidthAuto, MaxWidth25P, MaxWidth50P,
+        MinWidth0, MinWidth12, MinWidth6, MinWidth8, MinWidth14, MinWidth16, MinWidth24, MinWidth32, MinWidth36, MinWidth48, MinWidthAuto, MaxWidth25P, MaxWidth50P,
         MaxWidth5, MaxWidth16, MaxWidth32, MaxWidth48, MaxWidth64, MaxWidthTextBody, MaxWidthNone,
         // Height
         HeightAuto, Height50P, Height100P,
         Height2, Height2Px, Height3, Height4, Height5, Height6, Height7, Height8, Height9, Height10, Height12, Height16,
         Height24, Height32, Height48,
         MinHeightAuto, MinHeight0, MinHeight4, MinHeight5, MinHeight6, MinHeight8, MinHeight16, MinHeight24, MinHeight32, MinHeight48,
-        MaxHeight5, MaxHeight8, MaxHeight16, MaxHeight24, MaxHeight32, MaxHeight64,
+        MaxHeight5, MaxHeight8, MaxHeight12, MaxHeight16, MaxHeight24, MaxHeight32, MaxHeight64,
         // Size
         Size100P, FillHeight, Aspect1, Aspect2By1, Aspect3By1, Aspect3By2,
         // Flex Items
@@ -37,13 +37,13 @@ val LayoutUtilityCss
         // Padding
         Padding0, Padding1, Padding2, Padding4, PaddingTiny, PaddingLeft1, PaddingLeft2, PaddingLeft3, PaddingRight3,
         PaddingTop1,
-        PaddingX1, PaddingX2, PaddingY1, PaddingY2,
+        PaddingX1, PaddingX2, PaddingY1, PaddingY2, PaddingBottom1,
         // Object Fit
         ObjectFitCover, ObjectFitContain, ObjectPositionCenter, ObjectFitFill,
         // Position
         PositionSticky, PositionRelative, PositionAbsolute, Top0, Right0, Bottom0, Left0,
         // Other
-        SpaceBetween, Start, End, Center, PlaceItemsCenter, RelativeParent, ZIndex1, ZIndex2, ZIndex3, Shrinkable, QueryContainer,
+        SpaceBetween, Start, End, PlaceSelfCenter, PlaceItemsCenter, RelativeParent, ZIndex1, ZIndex2, ZIndex3, Shrinkable, QueryContainer,
         TopSpacing1, TopSpacing8,
     )
 
@@ -100,8 +100,10 @@ val Width24 = utilityOf("width-24", "width: calc(var(--unit-spacing) * 24)")
 val Width32 = utilityOf("width-32", "width: calc(var(--unit-spacing) * 32)")
 val Width64 = utilityOf("width-64", "width: calc(var(--unit-spacing) * 64)")
 val MinWidth0 = utilityOf("min-width-0", "min-width: 0")
+val MinWidth6 = utilityOf("min-width-6", "min-width: calc(var(--unit-spacing) * 6)")
 val MinWidth8 = utilityOf("min-width-16", "min-width: calc(var(--unit-spacing) * 8)")
 val MinWidth12 = utilityOf("min-width-12", "min-width: calc(var(--unit-spacing) * 12)")
+val MinWidth14 = utilityOf("min-width-14", "min-width: calc(var(--unit-spacing) * 14)")
 val MinWidth16 = utilityOf("min-width-16", "min-width: calc(var(--unit-spacing) * 16)")
 val MinWidth24 = utilityOf("min-width-24", "min-width: calc(var(--unit-spacing) * 24)")
 val MinWidth32 = utilityOf("min-width-32", "min-width: calc(var(--unit-spacing) * 32)")
@@ -139,6 +141,7 @@ val Height32 = utilityOf("height-32", "height: calc(var(--unit-spacing) * 32)")
 val Height48 = utilityOf("height-48", "height: calc(var(--unit-spacing) * 48)")
 val MaxHeight5 = utilityOf("max-height-5", "max-height: calc(var(--unit-spacing) * 5)")
 val MaxHeight8 = utilityOf("max-height-8", "max-height: calc(var(--unit-spacing) * 8)")
+val MaxHeight12 = utilityOf("max-height-12", "max-height: calc(var(--unit-spacing) * 12)")
 val MaxHeight16 = utilityOf("max-height-16", "max-height: calc(var(--unit-spacing) * 16)")
 val MaxHeight24 = utilityOf("max-height-24", "max-height: calc(var(--unit-spacing) * 24)")
 val MaxHeight32 = utilityOf("max-height-32", "max-height: calc(var(--unit-spacing) * 32)")
@@ -225,6 +228,7 @@ val PaddingX1 = utilityOf("padding-x-1", "padding-left: var(--unit-spacing)", "p
 val PaddingX2 = utilityOf("padding-x-2", "padding-left: var(--unit-spacing-2)", "padding-right: var(--unit-spacing-2)")
 val PaddingY1 = utilityOf("padding-y-1", "padding-top: var(--unit-spacing)", "padding-bottom: var(--unit-spacing)")
 val PaddingY2 = utilityOf("padding-y-2", "padding-top: var(--unit-spacing-2)", "padding-bottom: var(--unit-spacing-2)")
+val PaddingBottom1 = utilityOf("padding-bottom-1", "padding-bottom: var(--unit-spacing)")
 
 // Object Fit
 val ObjectFitCover = utilityOf("object-fit-cover", "object-fit: cover")
@@ -236,8 +240,8 @@ val ObjectFitFill = utilityOf("object-fit-stretch", "object-fit: fill")
 val SpaceBetween = utilityOf("space-between", "justify-content: space-between")
 val Start = CssUtility("start")
 val End = CssUtility("end")
-val Center = CssUtility("center")
-val PlaceItemsCenter = CssUtility("center-items")
+val PlaceSelfCenter = utilityOf("place-self-center", "place-self: center")
+val PlaceItemsCenter = utilityOf("place-items-center", "place-items: center")
 val JustifySelfEnd = utilityOf("justify-self-end", "justify-self: end")
 val JustifySelfCenter = utilityOf("justify-self-center", "justify-self: center")
 val AlignSelfStart = utilityOf("align-self-start", "align-self: start")

@@ -26,7 +26,8 @@ import streetlight.web.ui.starLightCell
 import kotlin.time.Instant
 
 object CellContent {
-    val CellMod = modify(AlignItemsCenter, CardBg, JustifyContentCenter, Gap0, Padding1, MinWidth12)
+    val CellMod = modify(AlignItemsCenter, CardBg, Gap0, Padding1)
+    val DualCellMod = modify(GapTiny, FlexItems1)
     val IconMod = modify(Height3, Aspect1, MarginRight4Px, ColorSchemeBg)
     val ThumbMod = modify(Height3, Aspect1, BorderRadius2, MarginRight4Px)
     val TextMod = modify(SmallText, SingleLine, TextOverflowEllipses, Flex1)
@@ -48,18 +49,59 @@ fun FlowContent.cell(
     modifiers: ModifierSet? = null,
     block: DIV.() -> Unit = {}
 ) {
-    row(modify(CellContent.CellMod, modifiers)) {
-        label?.let {
-            textBlock("$it:", modify(CellContent.TextMod, Dim))
+    box(modify(MinWidth12)) {
+        row(modify(CellContent.CellMod, modifiers)) {
+            cellContent(svg, text, label, block)
         }
-        svg?.let {
-            icon(svg, CellContent.IconMod)
-        }
-        text?.let {
-            textBlock(it, CellContent.TextMod)
-        }
-        block()
     }
+}
+
+fun FlowContent.comboCell(
+    modifiers: ModifierSet? = null,
+    block: DIV.() -> Unit = {}
+) {
+    box(modify(MinWidth12)) {
+        row(modify(CellContent.DualCellMod, modifiers), block)
+    }
+}
+
+fun FlowContent.comboCellItem(
+    svg: Svg? = null,
+    text: String? = null,
+    label: String? = null,
+    modifiers: ModifierSet? = null,
+    block: DIV.() -> Unit = {}
+) {
+    row(modify(CellContent.CellMod, modifiers)) {
+        cellContent(svg, text, label, block)
+    }
+}
+
+fun FlowContent.cellButton(
+    svg: Svg,
+    modifiers: ModifierSet? = null,
+) {
+    box(modify(modifiers, Padding1, PrimaryCardBg, PlaceItemsCenter)) {
+        icon(svg, modify(Height3, OpacityMost))
+    }
+}
+
+fun DIV.cellContent(
+    svg: Svg? = null,
+    text: String? = null,
+    label: String? = null,
+    block: DIV.() -> Unit = {}
+) {
+    label?.let {
+        textBlock("$it:", modify(CellContent.TextMod, Dim))
+    }
+    svg?.let {
+        icon(svg, CellContent.IconMod)
+    }
+    text?.let {
+        textBlock(it, CellContent.TextMod)
+    }
+    block()
 }
 
 fun FlowContent.linkCell(
@@ -73,12 +115,10 @@ fun FlowContent.linkCell(
     when (url) {
         null -> cell(svg, text, modifiers = modifiers, block = block)
         else -> {
-            navigation(url.value, modify(CellContent.CellMod, Row)) {
-                icon(svg, CellContent.IconMod)
-                text?.let {
-                    textBlock(it, CellContent.TextMod)
+            navigation(url.value, modify(MinWidth12)) {
+                row(modify(CellContent.CellMod, modifiers)) {
+                    cellContent(svg, text, null, block)
                 }
-                block()
             }
         }
     }
@@ -111,7 +151,7 @@ fun FlowContent.costCell(cost: Float?, purchaseUrl: Url?) {
     linkCell(ticketsUrl, SvgFile.TicketSmall, costText)
 }
 
-fun FlowContent.starCell(username: String?) = iconPropertyCell(SvgFile.SomeoneSmall, username ?: "Someone")
+fun FlowContent.starCell(username: String?) = cell(SvgFile.SomeoneSmall, username ?: "Someone")
 
 fun FlowContent.starCell(username: String?, userThumb: Url?) {
 //    cell {
@@ -122,20 +162,12 @@ fun FlowContent.starCell(username: String?, userThumb: Url?) {
 
 fun FlowContent.textPropertyCell(property: String, value: String) {
     cell {
-
         textBlock(value, modify(CellContent.TextMod, MarginLeft1))
     }
 }
 
 fun FlowContent.postedAtCell(postedAt: Instant) {
-    iconPropertyCell(SvgFile.Clock, postedAt.toAgoFormat())
-}
-
-fun FlowContent.iconPropertyCell(icon: Svg, value: String) {
-    cell {
-        icon(icon, CellContent.IconMod)
-        textBlock(value, CellContent.TextMod)
-    }
+    cell(SvgFile.Clock, postedAt.toAgoFormat())
 }
 
 fun FlowContent.galaxyLightCell(visibility: Int?, galaxyId: GalaxyId) {
@@ -164,9 +196,15 @@ fun FlowContent.linkCell(link: ExtraLink) {
     linkCell(link.url.toUrl(), SvgFile.Link, link.label)
 }
 
+fun FlowContent.moreCell() {
+    cell(SvgFile.ExpandBelow, "more")
+}
+
 fun locationCells(location: Location): FlowContent.() -> Unit = {
     starCell(location.username)
-    locationLightCell(location.lightCount, location.locationId)
+    comboCell {
+        locationLightCell(location.lightCount, location.locationId)
+    }
 }
 
 fun locationCells(username: String?, edit: LocationEdit): FlowContent.() -> Unit = {
@@ -187,13 +225,13 @@ fun eventCells(event: EventLocation): FlowContent.() -> Unit = {
     dateCell(event.startsAt)
     startsAtCell(event.startsAt)
     costCell(event.cost, event.url?.toUrl())
-    eventLightCell(event.lightCount, event.eventId)
-    event.links?.forEach {
-        linkCell(it)
+    comboCell {
+        eventLightCell(event.lightCount, event.eventId)
+        cellButton(SvgFile.ExpandBelow)
     }
 }
 
 fun galaxyCells(galaxy: Galaxy): FlowContent.() -> Unit = {
-    iconPropertyCell(SvgFile.Calendar, galaxy.eventCount?.toString() ?: "?")
+    cell(SvgFile.Calendar, galaxy.eventCount?.toString() ?: "?")
     galaxyLightCell(galaxy.lightCount, galaxy.galaxyId)
 }

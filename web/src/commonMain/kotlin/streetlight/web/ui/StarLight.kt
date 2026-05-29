@@ -9,14 +9,14 @@ import streetlight.model.data.EventId
 import streetlight.model.data.GalaxyId
 import streetlight.model.data.LocationId
 import streetlight.web.layouts.CellContent
-import streetlight.web.layouts.cell
+import streetlight.web.layouts.comboCellItem
 
 fun FlowContent.starLightCell(
     visibility: Int?,
     modifiers: ModifierSet? = null,
     block: DIV.() -> Unit = {}
 ) {
-    cell {
+    comboCellItem {
         addModifiers(modifiers, StarLightKey.Class)
         block()
         icon(SvgFile.LoaderSmall, CellContent.IconMod)
