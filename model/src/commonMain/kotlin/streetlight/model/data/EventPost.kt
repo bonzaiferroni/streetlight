@@ -21,7 +21,7 @@ data class EventPost(
     override val geoPoint get() = event.geoPoint
     override val title get() = event.title
     override val description get() = event.description
-    override val visibility get() = 0
+    override val boosts get() = 0
     override val links get() = event.links
 
     override val postType get() = PostType.Event

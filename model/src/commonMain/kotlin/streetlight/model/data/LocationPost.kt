@@ -21,7 +21,7 @@ data class LocationPost(
     override val images get() = location.images
     override val geoPoint get() = location.geoPoint ?: GeoPoint.Denver
     override val description get() = location.description
-    override val visibility get() = 0
+    override val boosts get() = 0
     override val title get() = location.name ?: "[location removed]"
     override val links get() = location.extraLinks
 

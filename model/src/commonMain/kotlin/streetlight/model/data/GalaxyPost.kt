@@ -21,7 +21,7 @@ sealed interface GalaxyPost {
     val geoPoint: GeoPoint?
     val title: String
     val description: String?
-    val visibility: Int
+    val boosts: Int
     val links: List<ExtraLink>?
     val createdAt: Instant
     val updatedAt: Instant

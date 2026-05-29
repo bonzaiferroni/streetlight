@@ -25,7 +25,7 @@ data class Post(
     override val updatedAt: Instant,
 ): GalaxyPost {
 
-    override val visibility: Int get() = 0
+    override val boosts: Int get() = 0
     override val description get() = text
     override val postType get() = PostType.Content
 }
