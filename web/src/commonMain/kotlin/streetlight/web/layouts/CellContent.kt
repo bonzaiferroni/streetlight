@@ -156,13 +156,6 @@ fun FlowContent.costCell(cost: Float?, purchaseUrl: Url?) {
 
 fun FlowContent.starCell(username: String?) = cell(SvgFile.SomeoneSmall, username ?: "Someone")
 
-fun FlowContent.starCell(username: String?, userThumb: Url?) {
-//    cell {
-//        image(userThumb, CellContent.ThumbMod)
-//        textBlock(username ?: "Someone", CellContent.TextMod)
-//    }
-}
-
 fun FlowContent.textPropertyCell(property: String, value: String) {
     cell {
         textBlock(value, modify(CellContent.TextMod, MarginLeft1))

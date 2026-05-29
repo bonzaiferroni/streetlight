@@ -15,7 +15,6 @@ sealed interface GalaxyPost {
     val slug: Slug
     val galaxyId: GalaxyId
     val username: String?
-    val userThumb: Url?
     val text: String?
     val images: ScaledImageArray?
     val geoPoint: GeoPoint?

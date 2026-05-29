@@ -13,7 +13,6 @@ data class Post(
     override val galaxyId: GalaxyId,
     override val slug: Slug,
     override val username: String?,
-    override val userThumb: Url?,
     override val title: String,
     val subtitle: String?,
     override val text: String?,

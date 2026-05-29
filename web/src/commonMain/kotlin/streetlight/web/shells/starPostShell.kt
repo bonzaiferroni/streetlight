@@ -60,7 +60,7 @@ fun FlowContent.postShell(post: Post) {
 
         card(modify(OverflowClip, Gap0, ZenBg, Padding0)) {
             cellBlock {
-                starCell(post.username, post.userThumb)
+                starCell(post.username)
                 postedAtCell(post.createdAt)
             }
 

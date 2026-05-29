@@ -12,7 +12,6 @@ data class LocationPost(
     override val slug: Slug,
     override val galaxyId: GalaxyId,
     override val username: String?,
-    override val userThumb: Url?,
     val location: Location,
     override val text: String?,
     override val createdAt: Instant,
