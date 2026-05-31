@@ -14,13 +14,14 @@ data class LocationPost(
     override val username: String?,
     val location: Location,
     override val text: String?,
+    override val isLit: Boolean,
     override val createdAt: Instant,
     override val updatedAt: Instant,
 ): GalaxyPost {
     override val images get() = location.images
     override val geoPoint get() = location.geoPoint ?: GeoPoint.Denver
     override val description get() = location.description
-    override val boosts get() = 0
+    override val lightCount get() = 0
     override val title get() = location.name ?: "[location removed]"
     override val links get() = location.extraLinks
 

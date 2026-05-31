@@ -7,7 +7,7 @@ import koala.model.MapContextId
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.FlowPreview
-import streetlight.model.data.Post
+import streetlight.model.data.BasicPost
 import streetlight.model.data.Galaxy
 import streetlight.model.data.EventLocation
 import streetlight.model.data.EventPost
@@ -44,7 +44,7 @@ class StreetMap(
             when (post) {
                 is EventPost -> EventEntity(post, galaxy, position)
                 is LocationPost -> return@mapNotNull null
-                is Post -> TODO()
+                is BasicPost -> TODO()
             }
         }
     }

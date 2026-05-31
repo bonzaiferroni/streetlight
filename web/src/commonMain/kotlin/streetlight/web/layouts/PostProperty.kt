@@ -4,7 +4,7 @@ import koala.Svg
 import koala.SvgFile
 import koala.html.AppRoute
 import koala.model.Doc
-import streetlight.model.data.Post
+import streetlight.model.data.BasicPost
 import streetlight.model.data.Event
 import streetlight.model.data.EventLocation
 import streetlight.model.data.EventPost
@@ -21,28 +21,28 @@ val Event.route get() = EventRoute(slug)
 val EventLocation.eventRoute get() = EventRoute(eventSlug)
 val EventLocation.locationRoute get() = LocationRoute(locationSlug)
 val Doc.route get() = SiteDocRoute(docId)
-val Post.postRoute get() = PostRoute(slug)
+val BasicPost.postRoute get() = PostRoute(slug)
 
 val GalaxyPost.route get(): AppRoute = when (this) {
-    is Post -> postRoute
+    is BasicPost -> postRoute
     is EventPost -> event.eventRoute
     is LocationPost -> location.route
 }
 
 val GalaxyPost.subRoute get(): AppRoute? = when (this) {
-    is Post -> null
+    is BasicPost -> null
     is EventPost -> event.locationRoute
     is LocationPost -> null
 }
 
 val GalaxyPost.subtitle get(): String? = when (this) {
-    is Post -> subtitle
+    is BasicPost -> subtitle
     is EventPost -> "${event.locationName}, ${event.city}"
     is LocationPost -> location.addressLine
 }
 
 val GalaxyPost.cells get() = when (this) {
-    is Post -> null
+    is BasicPost -> null
     is EventPost -> eventCells(event)
     is LocationPost -> locationCells(location)
 }

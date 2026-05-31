@@ -36,14 +36,14 @@ import koala.html.mount
 import koala.html.row
 import koala.html.section
 import kotlinx.html.FlowContent
-import streetlight.model.data.Post
+import streetlight.model.data.BasicPost
 import streetlight.web.PostUpdateRoute
 import streetlight.web.layouts.cellBlock
 import streetlight.web.layouts.postedAtCell
 import streetlight.web.layouts.starCell
 import streetlight.web.pages.appFooter
 
-fun FlowContent.postShell(post: Post) {
+fun FlowContent.postShell(post: BasicPost) {
     section(PostKey.ShellId) {
         column(modify(Gap0)) {
             heading1(post.title, modify(TextAlignCenter, AntiShadow, LineHeight115, MarginTop4))

@@ -25,7 +25,7 @@ data class PostEdit(
     val isValid get() = invalidPart == null
 }
 
-fun Post.toEdit() = PostEdit(
+fun BasicPost.toEdit() = PostEdit(
     postId = postId,
     galaxyId = galaxyId,
     title = title,

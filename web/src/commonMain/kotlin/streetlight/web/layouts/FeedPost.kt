@@ -30,7 +30,7 @@ fun FlowContent.feedPost(
         setStyle(Property.ColorScheme.to(colorScheme.cssValue))
 
         // boost
-        column(modify(GridArea.Boost)) {
+        column(modify(GridArea.Boost, Gap0)) {
             box(modify(Aspect1, AlignItemsCenter, BorderRadius50P, BorderSolid2Px, MarginTop1)) {
                 textBlock("120k", modify(TextAlignCenter, SmallText, LineHeight1))
             }

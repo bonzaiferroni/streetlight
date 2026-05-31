@@ -3,7 +3,6 @@ package streetlight.model.data
 import kampfire.api.Slug
 import kampfire.model.GeoPoint
 import kampfire.model.ScaledImageArray
-import kampfire.model.Url
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 import kotlin.time.Instant
@@ -20,7 +19,8 @@ sealed interface GalaxyPost {
     val geoPoint: GeoPoint?
     val title: String
     val description: String?
-    val boosts: Int
+    val lightCount: Int
+    val isLit: Boolean
     val links: List<ExtraLink>?
     val createdAt: Instant
     val updatedAt: Instant

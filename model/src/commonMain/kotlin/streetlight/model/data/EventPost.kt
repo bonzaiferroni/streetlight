@@ -13,6 +13,7 @@ data class EventPost(
     override val username: String?,
     val event: EventLocation,
     override val text: String?,
+    override val isLit: Boolean,
     override val createdAt: Instant,
     override val updatedAt: Instant,
 ): GalaxyPost {
@@ -20,7 +21,7 @@ data class EventPost(
     override val geoPoint get() = event.geoPoint
     override val title get() = event.title
     override val description get() = event.description
-    override val boosts get() = 0
+    override val lightCount get() = 0
     override val links get() = event.links
 
     override val postType get() = PostType.Event

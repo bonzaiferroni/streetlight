@@ -199,7 +199,7 @@ fun FlowContent.moreCell() {
 }
 
 fun locationCells(location: Location): FlowContent.() -> Unit = {
-    starCell(location.username)
+    // starCell(location.username)
     comboCell {
         locationLightCell(location.lightCount, location.locationId)
     }

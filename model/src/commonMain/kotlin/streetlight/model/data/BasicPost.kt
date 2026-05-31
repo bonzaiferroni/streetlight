@@ -8,7 +8,7 @@ import kotlinx.serialization.Serializable
 import kotlin.time.Instant
 
 @Serializable
-data class Post(
+data class BasicPost(
     override val postId: PostId,
     override val galaxyId: GalaxyId,
     override val slug: Slug,
@@ -19,12 +19,13 @@ data class Post(
     override val geoPoint: GeoPoint?,
     val imageRef: Url?,
     override val images: ScaledImageArray?,
+    override val isLit: Boolean,
     override val links: List<ExtraLink>?,
     override val createdAt: Instant,
     override val updatedAt: Instant,
 ): GalaxyPost {
 
-    override val boosts: Int get() = 0
+    override val lightCount: Int get() = 0
     override val description get() = text
     override val postType get() = PostType.Content
 }

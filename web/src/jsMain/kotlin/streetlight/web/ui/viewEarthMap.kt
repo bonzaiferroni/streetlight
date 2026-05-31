@@ -8,7 +8,7 @@ import koala.html.btn
 import kotlinx.browser.document
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import streetlight.model.data.Post
+import streetlight.model.data.BasicPost
 import streetlight.model.data.EventPost
 import streetlight.model.data.LocationPost
 import streetlight.web.EarthMapRoute
@@ -45,7 +45,7 @@ fun RenderContext.viewEarthMap(model: EarthMap) {
                                     }
                                 }
                                 is LocationPost -> return@forEach
-                                is Post -> return@forEach
+                                is BasicPost -> return@forEach
                             }
                         }
                     }

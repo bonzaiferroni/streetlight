@@ -18,7 +18,6 @@ data class Location(
     val mapId: MapId?,
     val slug: Slug,
     val name: String?,
-    val username: String?,
     val description: String?,
     val address: String?,
     val city: String?,

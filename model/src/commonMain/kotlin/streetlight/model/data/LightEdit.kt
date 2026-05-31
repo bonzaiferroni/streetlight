@@ -24,4 +24,5 @@ enum class LightType {
     Event,
     Galaxy,
     Location,
+    Post,
 }
