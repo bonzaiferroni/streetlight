@@ -3,7 +3,7 @@ package koala.css
 import kampfire.api.TableId
 import koala.html.Id
 
-class Fun(val identifier: String, vararg val params: String) {
+class JsFun(val identifier: String, vararg val params: String) {
     override fun toString() = signature
 
     val paramsExpression get() = params.joinToString(", ")

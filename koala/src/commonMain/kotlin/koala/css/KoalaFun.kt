@@ -1,11 +1,11 @@
 package koala.css
 
 object KoalaFun {
-    val ToggleTheme = Fun("toggleTheme")
-    val ScrollToId = Fun("scrollToId", idArg)
+    val ToggleTheme = JsFun("toggleTheme")
+    val ScrollToId = JsFun("scrollToId", idArg)
 
-    val CallMenu = Fun("callMenu")
-    val ToggleAncestor = Fun("toggleAncestor")
+    val CallMenu = JsFun("callMenu")
+    val ToggleAncestor = JsFun("toggleAncestor")
 }
 
 sealed interface KoalaArg

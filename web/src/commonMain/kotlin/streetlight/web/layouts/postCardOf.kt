@@ -20,6 +20,8 @@ fun FlowContent.postCardOf(post: GalaxyPost) {
         description = post.description,
         colorScheme = post.colorScheme,
         links = post.links,
+        isLit = post.isLit,
+        lightCount = post.lightCount,
         details = post.cells
     )
 
@@ -42,6 +44,8 @@ fun FlowContent.postCardOf(location: Location) {
         description = location.description,
         colorScheme = ColorScheme.Primary,
         links = location.links,
+        isLit = false,
+        lightCount = 0,
         details = locationCells(location)
     )
 }
@@ -56,6 +60,8 @@ fun FlowContent.postCardOf(edit: LocationEdit, username: String?) {
         description = edit.description,
         colorScheme = ColorScheme.Primary,
         links = edit.links,
+        isLit = false,
+        lightCount = 0,
         details = locationCells(username, edit)
     )
 }
@@ -70,6 +76,8 @@ fun FlowContent.postCardOf(event: EventLocation) {
         description = event.description,
         colorScheme = ColorScheme.Accent,
         links = event.links,
+        isLit = false,
+        lightCount = 0,
         details = eventCells(event)
     )
 }
@@ -84,6 +92,8 @@ fun FlowContent.postCardOf(event: EventEdit, location: Location) {
         description = event.description,
         colorScheme = ColorScheme.Accent,
         links = event.displayedLinks,
+        isLit = false,
+        lightCount = 0,
         details = eventCells(event)
     )
 }

@@ -71,6 +71,9 @@ val StylesCss get() = """
     --required: 255, 240, 32;
     --required-bg: color-mix(in srgb, rgb(var(--required)) 33%, rgb(var(--paper)));
     
+    --lamp: 200, 178, 87;
+    --lamp-fg: color-mix(in srgb, rgb(var(--lamp)) 75%, rgb(var(--ink)));
+    
     --paper-gradient-bg: linear-gradient(to right, var(--card-bg) 0%, transparent 75%);
     --ink-gradient-bg: linear-gradient(to right, rgba(var(--ink), .3) 0%, transparent 75%);
     

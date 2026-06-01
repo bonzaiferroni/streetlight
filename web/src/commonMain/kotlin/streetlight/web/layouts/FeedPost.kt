@@ -1,5 +1,6 @@
 package streetlight.web.layouts
 
+import kabinet.utils.toMetricString
 import kampfire.api.Slug
 import kampfire.model.Url
 import koala.SvgFile
@@ -8,6 +9,7 @@ import koala.html.*
 import kotlinx.html.FlowContent
 import kotlinx.html.onClick
 import streetlight.model.data.ExtraLink
+import streetlight.model.data.LightType
 import streetlight.model.data.PostId
 
 fun FlowContent.feedPost(
@@ -19,10 +21,14 @@ fun FlowContent.feedPost(
     subRoute: AppRoute?,
     imageUrl: Url?,
     description: String?,
+    isLit: Boolean,
+    lightCount: Int,
     colorScheme: ColorScheme,
     links: List<ExtraLink>?,
     details: (FlowContent.() -> Unit)?,
 ) {
+    val litClass = if (isLit) LightControl.Lit else null
+
     div(modify(FeedPost.Class)) {
         postId?.let {
             setAttribute(PostKey.Attribute.to(postId))
@@ -30,11 +36,23 @@ fun FlowContent.feedPost(
         setStyle(Property.ColorScheme.to(colorScheme.cssValue))
 
         // boost
-        column(modify(GridArea.Boost, Gap0)) {
+        column(modify(GridArea.Light, LightControl.Class, litClass, Gap0)) {
+            setAttribute(LightControl.TypeData.to(LightType.Post))
+
             box(modify(Aspect1, AlignItemsCenter, BorderRadius50P, BorderSolid2Px, MarginTop1)) {
-                textBlock("120k", modify(TextAlignCenter, SmallText, LineHeight1))
+                textBlock(
+                    lightCount.toMetricString(),
+                    modifiers = modify(LightControl.Counter, TextAlignCenter, SmallText, LineHeight1)
+                )
             }
-            icon(SvgFile.Boost, modify(Height4, OpacityHalf))
+
+            box(modify(OpacityHalf)) {
+                postId?.let {
+                    onClick = LightControl.ToggleFun.invoke(ThisElement, postId)
+                }
+                icon(SvgFile.Boost, modify(LightControl.UnlitIcon))
+                icon(SvgFile.Minus, modify(LightControl.LitIcon))
+            }
         }
 
         // image
@@ -108,7 +126,7 @@ object GridArea {
     val Body = Class("body")
     val Image = Class("image")
     val Details = Class("details")
-    val Boost = Class("boost")
+    val Light = Class("boost")
     val Content = Class("content")
 }
 
@@ -123,7 +141,7 @@ $Class {
     gap: 0 var(--unit-spacing);
     transition: grid-template-rows var(--magic-interval) var(--magic-easing);
     
-    > ${GridArea.Boost}   { grid-area: boost; }
+    > ${GridArea.Light}   { grid-area: boost; }
     > ${GridArea.Image}   { grid-area: image; }
     > ${GridArea.Body}    { grid-area: body; }
     > ${GridArea.Details} { grid-area: details; }
@@ -157,7 +175,7 @@ $SmallRow {
         }
         
         @container (min-width: ${MinifiedWidth}px) {
-            grid-template-columns: 3rem 6rem 1fr 16rem;
+            grid-template-columns: 2.5rem 6rem 1fr 16rem;
         }
         
         @container (max-width: ${MinifiedWidth}px) {

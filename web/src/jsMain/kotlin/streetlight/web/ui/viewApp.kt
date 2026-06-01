@@ -1,19 +1,20 @@
 package streetlight.web.ui
 
 import kampfire.api.toSlug
+import koala.core.addGlobalFunctions
 import koala.dom.*
 import kotlinx.browser.document
+import kotlinx.browser.window
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.serialization.ExperimentalSerializationApi
-import streetlight.model.data.PostId
 import streetlight.web.layouts.PostKey
 import streetlight.web.pages.AppBodyKey
 import org.koin.dsl.koinApplication
 import streetlight.web.io.OmniLog
+import streetlight.web.layouts.LightControl
 import streetlight.web.model.TransitMap
 import streetlight.web.model.UserGate
-import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalSerializationApi::class)
 fun viewApp() {
@@ -24,6 +25,12 @@ fun viewApp() {
     }.koin
 
     val app = AppContext(koin)
+    val lightService = koin.get<LightService>()
+
+    window.addGlobalFunctions(globalFunExtended)
+    window.addGlobalFunctions(listOf(
+        LightControl.ToggleFun to lightService::toggleLight
+    ))
 
     with (app) {
         val scope: CoroutineScope = get()

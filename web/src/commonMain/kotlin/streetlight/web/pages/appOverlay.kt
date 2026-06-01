@@ -48,7 +48,7 @@ private val panelArg = "panelId"
 
 object AppOverlayKey {
     val AppOverlayId = Id("app-overlay")
-    val TogglePanel = Fun("togglePanel", panelArg)
+    val TogglePanel = JsFun("togglePanel", panelArg)
     val SpacerMiddleId = Id("spacer-middle")
     val MediaVlgReveal = Class("display-none-below-vlg")
 }

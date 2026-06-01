@@ -2,7 +2,7 @@ import koala.core.findAndInitGeoMap
 import koala.core.queryAndInitLotties
 import koala.core.findAndInitSwitches
 import koala.core.globalFunCore
-import koala.core.setGlobalFunctions
+import koala.core.addGlobalFunctions
 import koala.dom.findAndInitTabs
 import kotlinx.browser.document
 import kotlinx.browser.window
@@ -14,7 +14,7 @@ fun main() {
     console.log("koala rawr!!")
     val body = document.body ?: return
 
-    window.setGlobalFunctions(globalFunCore)
+    window.addGlobalFunctions(globalFunCore)
 
     initElement(body)
 }

@@ -50,6 +50,7 @@ fun <T: Element> T.unmodifyAfterFrame(vararg modifier: Modifier): T {
 }
 
 fun Element.isModified(modifier: Modifier) = classList.contains(modifier.identifier)
+fun Element.getAncestor(modifier: Modifier) = closest(modifier.selector) as? HTMLElement
 
 fun Element.toggle(modifier: Modifier) = classList.toggle(modifier.identifier)
 

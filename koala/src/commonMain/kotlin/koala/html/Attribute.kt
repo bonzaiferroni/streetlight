@@ -48,6 +48,9 @@ fun booleanAttributeOf(identifier: String, isCustom: Boolean = false) =
 fun intAttributeOf(identifier: String, isCustom: Boolean = false) =
     Attribute(identifier, isCustom) { it.toInt() }
 
+inline fun <reified T: Enum<T>> enumAttributeOf(identifier: String) =
+    Attribute<T>(identifier, true, { it.name }) { enumValueOf(it) }
+
 inline fun <reified T> jsonAttributeOf(identifier: String) =
     Attribute<T>(identifier, true, jsonConfig::encodeToString, jsonConfig::decodeFromString)
 

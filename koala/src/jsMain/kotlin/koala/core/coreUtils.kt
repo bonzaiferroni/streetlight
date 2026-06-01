@@ -1,7 +1,7 @@
 package koala.core
 
 import koala.css.Clickable
-import koala.css.Fun
+import koala.css.JsFun
 import koala.css.Modifier
 import koala.dom.modify
 import koala.html.Attribute
@@ -51,7 +51,7 @@ fun Element.appendDiv(id: Id? = null): HTMLElement {
 
 operator fun NamedNodeMap.get(attribute: Attribute<*>): String? = this.getNamedItem(attribute.identifier)?.value
 
-fun Window.setGlobalFunctions(pairs: List<Pair<Fun, KFunction<Any?>>>) {
+fun Window.addGlobalFunctions(pairs: List<Pair<JsFun, KFunction<Any?>>>) {
     val windowDynamic = asDynamic()
     pairs.forEach {
         windowDynamic[it.first.identifier] = it.second
