@@ -207,7 +207,7 @@ a {
 }
 
 p a {
-    color: rgb(var(--primary));
+    color: var(--primary-fg);
 }
 
 a:hover {

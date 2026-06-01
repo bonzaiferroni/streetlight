@@ -71,7 +71,7 @@ fun FlowContent.galaxiesSection(galaxies: List<Galaxy>) {
             heading2("Galaxies", SectionHeadingMod)
             textBlock(
                 content = "Galaxies are Streetlight communities, each with a particular focus.",
-                modifiers = modify(Dim, TextAlignCenter)
+                mod = modify(Dim, TextAlignCenter)
             )
         }
 

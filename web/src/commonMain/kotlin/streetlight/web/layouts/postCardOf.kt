@@ -11,7 +11,9 @@ import streetlight.model.data.LocationEdit
 fun FlowContent.postCardOf(post: GalaxyPost) {
     feedPost(
         postId = post.postId,
-        postSlug = post.slug,
+        galaxyName = post.galaxyName,
+        galaxySlug = post.galaxySlug,
+        username = post.username,
         heading = post.title,
         subHeading = post.subtitle,
         postRoute = post.route,
@@ -22,21 +24,17 @@ fun FlowContent.postCardOf(post: GalaxyPost) {
         links = post.links,
         isLit = post.isLit,
         lightCount = post.lightCount,
+        postedAt = post.createdAt,
         details = post.cells
     )
-
-    // row(modify(JustifyContentEnd, MarginRight2)) {
-    //     textBlock(modifiers = modify(SmallText, LineHeight1, OpacityMost)) {
-    //         span("— posted by ")
-    //         span(post.username ?: "Someone", modify(Bold))
-    //         span(" ${post.createdAt.toAgoFormat()}")
-    //     }
-    // }
 }
+
+// previews
 
 fun FlowContent.postCardOf(location: Location) {
     feedPost(
-        postId = null, postSlug = null,
+        postId = null, username = null,
+        galaxyName = null, galaxySlug = null,
         heading = location.label,
         subHeading = location.subLabel,
         postRoute = null, subRoute = null,
@@ -44,15 +42,14 @@ fun FlowContent.postCardOf(location: Location) {
         description = location.description,
         colorScheme = ColorScheme.Primary,
         links = location.links,
-        isLit = false,
-        lightCount = 0,
         details = locationCells(location)
     )
 }
 
 fun FlowContent.postCardOf(edit: LocationEdit, username: String?) {
     feedPost(
-        postId = null, postSlug = null,
+        postId = null, username = null,
+        galaxyName = null, galaxySlug = null,
         heading = edit.label,
         subHeading = edit.subLabel,
         postRoute = null, subRoute = null,
@@ -60,15 +57,14 @@ fun FlowContent.postCardOf(edit: LocationEdit, username: String?) {
         description = edit.description,
         colorScheme = ColorScheme.Primary,
         links = edit.links,
-        isLit = false,
-        lightCount = 0,
         details = locationCells(username, edit)
     )
 }
 
 fun FlowContent.postCardOf(event: EventLocation) {
     feedPost(
-        postId = null, postSlug = null,
+        postId = null, username = null,
+        galaxyName = null, galaxySlug = null,
         heading = event.label,
         subHeading = event.locationLabel,
         postRoute = null, subRoute = null,
@@ -76,15 +72,14 @@ fun FlowContent.postCardOf(event: EventLocation) {
         description = event.description,
         colorScheme = ColorScheme.Accent,
         links = event.links,
-        isLit = false,
-        lightCount = 0,
         details = eventCells(event)
     )
 }
 
 fun FlowContent.postCardOf(event: EventEdit, location: Location) {
     feedPost(
-        postId = null, postSlug = null,
+        postId = null, username = null,
+        galaxyName = null, galaxySlug = null,
         heading = event.title ?: "[Title]",
         subHeading = "${location.name ?: location.address ?: "[Location]"}, ${location.city ?: "[City]"}",
         postRoute = null, subRoute = null,
@@ -92,8 +87,6 @@ fun FlowContent.postCardOf(event: EventEdit, location: Location) {
         description = event.description,
         colorScheme = ColorScheme.Accent,
         links = event.displayedLinks,
-        isLit = false,
-        lightCount = 0,
         details = eventCells(event)
     )
 }

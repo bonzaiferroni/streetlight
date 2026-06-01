@@ -6,11 +6,11 @@ import koala.css.*
 
 inline fun FlowContent.textBlock(
     content: String = "",
-    modifiers: ModifierSet? = null,
+    mod: ModifierSet? = null,
     crossinline block: P.() -> Unit = { }
 ) {
     p {
-        addModifiers(modifiers)
+        addModifiers(mod)
         block()
         +content
     }

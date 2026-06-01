@@ -1,5 +1,6 @@
 package streetlight.web.layouts
 
+import kabinet.utils.toAgoFormat
 import kabinet.utils.toMetricString
 import kampfire.api.Slug
 import kampfire.model.Url
@@ -12,22 +13,30 @@ import kotlinx.html.onClick
 import streetlight.model.data.ExtraLink
 import streetlight.model.data.LightType
 import streetlight.model.data.PostId
+import streetlight.web.GalaxyRoute
+import streetlight.web.StarRoute
+import kotlin.time.Clock
+import kotlin.time.Instant
 
 fun FlowContent.feedPost(
     postId: PostId?,
-    postSlug: Slug?,
+    username: String?,
+    galaxyName: String?,
+    galaxySlug: Slug?,
     heading: String?,
     subHeading: String?,
     postRoute: AppRoute?,
     subRoute: AppRoute?,
     imageUrl: Url?,
     description: String?,
-    isLit: Boolean,
-    lightCount: Int,
-    colorScheme: ColorScheme,
+    isLit: Boolean = false,
+    lightCount: Int = 0,
+    postedAt: Instant = Clock.System.now(),
+    colorScheme: ColorScheme = ColorScheme.Primary,
     links: List<ExtraLink>?,
     details: (FlowContent.() -> Unit)?,
 ) {
+
     div(modify(FeedPost.Class)) {
         postId?.let {
             setAttribute(PostKey.Attribute.to(postId))
@@ -41,7 +50,7 @@ fun FlowContent.feedPost(
             box(modify(Aspect1, AlignItemsCenter, BorderRadius50P, BorderSolid2Px, MarginTop1)) {
                 textBlock(
                     lightCount.toMetricString(),
-                    modifiers = modify(LightControl.Counter, TextAlignCenter, SmallText, LineHeight1)
+                    mod = modify(LightControl.Counter, TextAlignCenter, SmallText, LineHeight1)
                 )
             }
 
@@ -73,8 +82,26 @@ fun FlowContent.feedPost(
                     }
                 }
                 spacer(modify(Height2Px, InkGradientBg, MarginTop2Px))
-                row(modify(MarginTop2Px, AlignItemsCenter, OpacityMost)) {
-                    textBlock("posted by Luke 12 minutes ago", modify(SmallText))
+                row(modify(MarginTop2Px, AlignItemsCenter)) {
+                    textBlock(mod = modify(SmallText)) {
+                        galaxySlug?.let {
+                            navigation(GalaxyRoute(it)) {
+                                span("${galaxyName ?: "g/$it"} • ")
+                            }
+                        }
+                        +"posted by "
+                        when (username) {
+                            null -> {
+                                span("Someone ", modify(Bold))
+                            }
+                            else -> {
+                                navigation(StarRoute(Slug("s/$username"))) {
+                                    span("$username ")
+                                }
+                            }
+                        }
+                        span((Clock.System.now() - postedAt).toAgoFormat())
+                    }
                     postId?.let { postId ->
                         val anchor = PositionAnchor("menu-${postId}")
                         icon(SvgFile.Dots, modify(Height3)) {

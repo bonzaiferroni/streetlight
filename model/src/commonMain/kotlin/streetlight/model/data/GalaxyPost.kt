@@ -13,6 +13,8 @@ sealed interface GalaxyPost {
     val postId: PostId
     val slug: Slug
     val galaxyId: GalaxyId
+    val galaxyName: String
+    val galaxySlug: Slug
     val username: String?
     val text: String?
     val images: ScaledImageArray?

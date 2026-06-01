@@ -12,6 +12,8 @@ data class BasicPost(
     override val postId: PostId,
     override val galaxyId: GalaxyId,
     override val slug: Slug,
+    override val galaxyName: String,
+    override val galaxySlug: Slug,
     override val username: String?,
     override val title: String,
     val subtitle: String?,
@@ -20,12 +22,12 @@ data class BasicPost(
     val imageRef: Url?,
     override val images: ScaledImageArray?,
     override val isLit: Boolean,
+    override val lightCount: Int,
     override val links: List<ExtraLink>?,
     override val createdAt: Instant,
     override val updatedAt: Instant,
 ): GalaxyPost {
 
-    override val lightCount: Int get() = 0
     override val description get() = text
     override val postType get() = PostType.Content
 }
