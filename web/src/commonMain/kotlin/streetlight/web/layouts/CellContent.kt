@@ -19,17 +19,21 @@ import streetlight.model.data.EventLocation
 import streetlight.model.data.ExtraLink
 import streetlight.model.data.Galaxy
 import streetlight.model.data.GalaxyId
+import streetlight.model.data.LightType
 import streetlight.model.data.Location
 import streetlight.model.data.LocationEdit
 import streetlight.model.data.LocationId
 import streetlight.web.ui.StarLightKey
+import streetlight.web.ui.exampleLightCell
 import streetlight.web.ui.starLightCell
 import kotlin.time.Instant
+import kotlin.uuid.Uuid
 
 object CellContent {
     val CellMod = modify(AlignItemsCenter, CardBg, Gap0, Padding1)
     val DualCellMod = modify(GapTiny, FlexItems1)
-    val IconMod = modify(Height3, Aspect1, MarginRight4Px, ColorSchemeBg)
+    val IconMod = modify(Height3, MarginRight4Px, ColorSchemeBg)
+    val ButtonIconMod = modify(Height3, OpacityMost)
     val ThumbMod = modify(Height3, Aspect1, BorderRadius2, MarginRight4Px)
     val TextMod = modify(SmallText, SingleLine, TextOverflowEllipses, Flex1)
 }
@@ -85,7 +89,7 @@ fun FlowContent.cellButton(
 ) {
     box(modify(modifiers, Padding1, PrimaryCardBg, PlaceItemsCenter)) {
         block()
-        icon(svg, modify(Height3, OpacityMost))
+        icon(svg, CellContent.ButtonIconMod)
     }
 }
 
@@ -166,27 +170,7 @@ fun FlowContent.postedAtCell(postedAt: Instant) {
     cell(SvgFile.Clock, postedAt.toAgoFormat())
 }
 
-fun FlowContent.galaxyLightCell(visibility: Int?, galaxyId: GalaxyId) {
-    starLightCell(visibility) {
-        setData(StarLightKey.GalaxyLightId, galaxyId)
-    }
-}
 
-fun FlowContent.eventLightCell(visibility: Int?, eventId: EventId) {
-    starLightCell(visibility) {
-        setData(StarLightKey.EventLightId, eventId)
-    }
-}
-
-fun FlowContent.locationLightCell(visibility: Int?, locationId: LocationId) {
-    starLightCell(visibility) {
-        setData(StarLightKey.LocationLightId, locationId)
-    }
-}
-
-fun FlowContent.exampleLightCell() {
-    starLightCell(0)
-}
 
 fun FlowContent.linkCell(link: ExtraLink) {
     linkCell(link.url.toUrl(), SvgFile.Link, link.label)
@@ -201,7 +185,7 @@ fun FlowContent.moreCell() {
 fun locationCells(location: Location): FlowContent.() -> Unit = {
     // starCell(location.username)
     comboCell {
-        locationLightCell(location.lightCount, location.locationId)
+        exampleLightCell()
     }
 }
 
@@ -224,12 +208,12 @@ fun eventCells(event: EventLocation): FlowContent.() -> Unit = {
     startsAtCell(event.startsAt)
     costCell(event.cost, event.url?.toUrl())
     comboCell {
-        eventLightCell(event.lightCount, event.eventId)
+        starLightCell(event)
         moreCell()
     }
 }
 
 fun galaxyCells(galaxy: Galaxy): FlowContent.() -> Unit = {
     cell(SvgFile.Calendar, galaxy.eventCount?.toString() ?: "?")
-    galaxyLightCell(galaxy.lightCount, galaxy.galaxyId)
+    starLightCell(galaxy)
 }

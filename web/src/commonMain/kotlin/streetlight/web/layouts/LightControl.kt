@@ -3,7 +3,6 @@ package streetlight.web.layouts
 import koala.css.Class
 import koala.css.JsFun
 import koala.html.enumAttributeOf
-import koala.html.intAttributeOf
 import streetlight.model.data.LightType
 
 object LightControl {
@@ -16,6 +15,8 @@ object LightControl {
     val ToggleFun = JsFun("toggleLight")
 
     val TypeData = enumAttributeOf<LightType>("light-type")
+
+    fun getLitMod(isLit: Boolean) = if (isLit) Lit else null
 }
 
 // language="CSS"

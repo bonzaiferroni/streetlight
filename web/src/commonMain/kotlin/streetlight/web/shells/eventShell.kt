@@ -9,11 +9,11 @@ import kotlinx.html.FlowContent
 import streetlight.model.data.EventLocation
 import streetlight.web.EventUpdateRoute
 import streetlight.web.layouts.costCell
-import streetlight.web.layouts.eventLightCell
 import streetlight.web.layouts.starCell
 import streetlight.web.layouts.startsAtCell
 import streetlight.web.pages.appFooter
 import streetlight.web.ui.featureHeader
+import streetlight.web.ui.starLightCell
 
 fun FlowContent.eventShell(event: EventLocation) {
     column(EventProfileKey.id, modify(AlignItemsStretch, Gap4)) {
@@ -27,7 +27,7 @@ fun FlowContent.eventShell(event: EventLocation) {
                 startsAtCell(event.startsAt)
                 costCell(event.cost, event.url?.toUrl())
                 starCell(event.username)
-                eventLightCell(event.lightCount, event.eventId)
+                starLightCell(event)
             },
             links = event.links,
             editRoute = EventUpdateRoute(event.eventSlug),

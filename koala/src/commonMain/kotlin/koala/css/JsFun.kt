@@ -2,6 +2,7 @@ package koala.css
 
 import kampfire.api.TableId
 import koala.html.Id
+import kotlin.uuid.Uuid
 
 class JsFun(val identifier: String, vararg val params: String) {
     override fun toString() = signature
@@ -12,7 +13,7 @@ class JsFun(val identifier: String, vararg val params: String) {
     fun invoke(vararg args: Any) = args.joinToString(", ", "$identifier(", ")") { arg ->
         when (arg) {
             is ThisElement -> "this"
-            is String -> "'$arg'"
+            is String, is Uuid -> "'$arg'"
             is Id -> "'${arg.identifier}'"
             is PositionAnchor -> "'${arg.identifier}'"
             is TableId<*> -> "'${arg.value}'"

@@ -15,6 +15,7 @@ import koala.html.row
 import koala.html.textBlock
 import kotlinx.html.FlowContent
 import streetlight.model.data.EventPost
+import streetlight.web.ui.starLightCell
 
 fun FlowContent.smallPostCard(post: EventPost) {
     val thumbUrl = post.images.thumb
@@ -71,7 +72,7 @@ fun FlowContent.smallPostCard(post: EventPost) {
                 post.event.let { event ->
                     card(cellModifiers) {
                         // val interest = EventStar(event.eventId, post.interest)
-                        eventLightCell(null, event.eventId)
+                        starLightCell(event)
                     }
                 }
             }

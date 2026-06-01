@@ -38,6 +38,8 @@ data class Location(
     val updatedAt: Instant,
     val createdAt: Instant,
 ): Labeled {
+    val isLit get() = false
+
     val addressLine by lazy {
         addressLineOf(address, city)
     }

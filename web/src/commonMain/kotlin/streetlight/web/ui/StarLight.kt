@@ -1,29 +1,65 @@
 package streetlight.web.ui
 
+import koala.Svg
 import koala.SvgFile
 import koala.css.*
 import koala.html.*
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
+import kotlinx.html.onClick
 import streetlight.model.data.EventId
+import streetlight.model.data.EventLocation
+import streetlight.model.data.Galaxy
 import streetlight.model.data.GalaxyId
+import streetlight.model.data.LightType
+import streetlight.model.data.Location
 import streetlight.model.data.LocationId
 import streetlight.web.layouts.CellContent
+import streetlight.web.layouts.LightControl
+import streetlight.web.layouts.cellButton
 import streetlight.web.layouts.comboCellItem
+import kotlin.uuid.Uuid
 
 fun FlowContent.starLightCell(
-    visibility: Int?,
+    lightType: LightType,
+    isLit: Boolean,
+    uuid: Uuid,
+    lightCount: Int?,
+    unlitSvg: Svg = SvgFile.StarOutline,
+    litSvg: Svg = SvgFile.StarFilled,
     modifiers: ModifierSet? = null,
     block: DIV.() -> Unit = {}
 ) {
     comboCellItem {
-        addModifiers(modifiers, StarLightKey.Class)
+        addModifiers(modifiers, LightControl.Class, LightControl.getLitMod(isLit))
+        setAttribute(LightControl.TypeData.to(lightType))
+        onClick = LightControl.ToggleFun.invoke(ThisElement, uuid)
+
         block()
-        icon(SvgFile.LoaderSmall, CellContent.IconMod)
-        visibility?.let {
-            textBlock(it.toString(), modify(CellContent.TextMod, StarLightKey.LightCounter, UserSelectNone))
+        box {
+            icon(unlitSvg, modify(CellContent.ButtonIconMod, LightControl.UnlitIcon))
+            icon(litSvg, modify(CellContent.ButtonIconMod, LightControl.LitIcon))
+        }
+        lightCount?.let {
+            textBlock(it.toString(), modify(CellContent.TextMod, LightControl.Counter, UserSelectNone))
         }
     }
+}
+
+fun FlowContent.starLightCell(galaxy: Galaxy) {
+    starLightCell(LightType.Galaxy, galaxy.isLit, galaxy.galaxyId.value, galaxy.lightCount)
+}
+
+fun FlowContent.starLightCell(event: EventLocation) {
+    starLightCell(LightType.Event, event.isLit, event.eventId.value, event.lightCount, SvgFile.CalendarPlus, SvgFile.CalendarMinus)
+}
+
+fun FlowContent.starLightCell(location: Location) {
+    starLightCell(LightType.Location, location.isLit, location.locationId.value, location.lightCount)
+}
+
+fun FlowContent.exampleLightCell() {
+    cellButton(SvgFile.StarOutline)
 }
 
 // td: find a better home

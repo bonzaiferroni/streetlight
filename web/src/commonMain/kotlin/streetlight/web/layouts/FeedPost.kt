@@ -27,8 +27,6 @@ fun FlowContent.feedPost(
     links: List<ExtraLink>?,
     details: (FlowContent.() -> Unit)?,
 ) {
-    val litClass = if (isLit) LightControl.Lit else null
-
     div(modify(FeedPost.Class)) {
         postId?.let {
             setAttribute(PostKey.Attribute.to(postId))
@@ -36,7 +34,7 @@ fun FlowContent.feedPost(
         setStyle(Property.ColorScheme.to(colorScheme.cssValue))
 
         // boost
-        column(modify(GridArea.Light, LightControl.Class, litClass, Gap0)) {
+        column(modify(GridArea.Light, LightControl.Class, LightControl.getLitMod(isLit), Gap0)) {
             setAttribute(LightControl.TypeData.to(LightType.Post))
 
             box(modify(Aspect1, AlignItemsCenter, BorderRadius50P, BorderSolid2Px, MarginTop1)) {

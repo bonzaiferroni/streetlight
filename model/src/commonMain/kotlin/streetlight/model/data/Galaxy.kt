@@ -26,7 +26,7 @@ data class Galaxy(
     val postGuide: String?,
     val imageRef: Url?,
     val images: ScaledImageArray?,
-    val lightCount: Int?,
+    val lightCount: Int,
     val eventCount: Int?,
     val locationCount: Int?,
     val updatedAt: Instant,
@@ -37,6 +37,7 @@ data class Galaxy(
     }
 
     val postTypes get() = setOf(PostType.Location, PostType.Event, PostType.Content)
+    val isLit get() = false
 }
 
 @JvmInline @Serializable

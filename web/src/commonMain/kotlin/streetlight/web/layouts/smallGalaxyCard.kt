@@ -6,6 +6,7 @@ import koala.html.*
 import kotlinx.html.FlowContent
 import streetlight.model.data.Galaxy
 import streetlight.web.toRoute
+import streetlight.web.ui.starLightCell
 
 fun FlowContent.smallGalaxyCard(galaxy: Galaxy) {
     val route = galaxy.toRoute()
@@ -36,7 +37,7 @@ fun FlowContent.smallGalaxyCard(galaxy: Galaxy) {
                         }
                     }
                     cell {
-                        galaxyLightCell(galaxy.lightCount, galaxy.galaxyId)
+                        starLightCell(galaxy)
                     }
                 }
             }

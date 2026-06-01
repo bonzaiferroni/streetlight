@@ -10,7 +10,6 @@ import koala.html.row
 import streetlight.model.data.EventPost
 import streetlight.web.layouts.cell
 import streetlight.web.layouts.costCell
-import streetlight.web.layouts.eventLightCell
 import streetlight.web.layouts.starCell
 import streetlight.web.layouts.startsAtCell
 
@@ -44,7 +43,7 @@ fun RenderContext.eventFocusContent(post: EventPost) {
                 starCell(event.username)
             }
             cell {
-                eventLightCell(event.lightCount, event.eventId)
+                starLightCell(event)
             }
         }
     }
