@@ -3,6 +3,7 @@ package streetlight.web.layouts
 import kabinet.utils.toMetricString
 import kampfire.api.Slug
 import kampfire.model.Url
+import kampfire.utils.takeEllipsis
 import koala.SvgFile
 import koala.css.*
 import koala.html.*
@@ -44,12 +45,12 @@ fun FlowContent.feedPost(
                 )
             }
 
-            box(modify(OpacityHalf)) {
+            box(modify(OpacityMost)) {
                 postId?.let {
                     onClick = LightControl.ToggleFun.invoke(ThisElement, postId)
                 }
                 icon(SvgFile.Boost, modify(LightControl.UnlitIcon))
-                icon(SvgFile.Minus, modify(LightControl.LitIcon))
+                icon(SvgFile.BoostFilled, modify(LightControl.LitIcon))
             }
         }
 
@@ -86,9 +87,11 @@ fun FlowContent.feedPost(
             }
         }
 
-        row(modify(GridArea.Content, MarginBottom2, MarginLeft1)) {
+        row(modify(GridArea.Content, MarginBottom2)) {
             description?.let {
-                markdown(it, modify(Flex1))
+                card(modify(PaperGradientBg, Padding2, Flex1)) {
+                    markdown(it.takeEllipsis(1000))
+                }
             }
             links?.let { links ->
                 row(modify(FlexWrap, AlignItemsStart)) {
@@ -143,11 +146,7 @@ $Class {
     > ${GridArea.Image}   { grid-area: image; }
     > ${GridArea.Body}    { grid-area: body; }
     > ${GridArea.Details} { grid-area: details; }
-    > ${GridArea.Content} { 
-        grid-area: content;
-        max-height: 32rem;
-        overflow: hidden;
-    }   
+    > ${GridArea.Content} { grid-area: content; overflow: hidden; }   
 }
 
 $SmallRow {
