@@ -61,6 +61,7 @@ val GalaxyPost.flairIcon get() = when (this) {
 enum class ColorScheme(val cssValue: String) {
     Accent("var(--accent-fg)"),
     Primary("var(--primary-fg)"),
+    Galaxy("var(--galaxy-fg)"),
 }
 
 enum class FlairIcon(val svg: Svg) {

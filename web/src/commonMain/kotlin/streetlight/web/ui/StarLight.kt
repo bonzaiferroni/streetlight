@@ -17,7 +17,7 @@ import streetlight.model.data.LocationId
 import streetlight.web.layouts.CellContent
 import streetlight.web.layouts.LightControl
 import streetlight.web.layouts.cellButton
-import streetlight.web.layouts.comboCellItem
+import streetlight.web.layouts.comboCell
 import kotlin.uuid.Uuid
 
 fun FlowContent.starLightCell(
@@ -30,7 +30,7 @@ fun FlowContent.starLightCell(
     modifiers: ModifierSet? = null,
     block: DIV.() -> Unit = {}
 ) {
-    comboCellItem {
+    comboCell {
         addModifiers(modifiers, LightControl.Class, LightControl.getLitMod(isLit))
         setAttribute(LightControl.TypeData.to(lightType))
         onClick = LightControl.ToggleFun.invoke(ThisElement, uuid)
@@ -47,7 +47,7 @@ fun FlowContent.starLightCell(
 }
 
 fun FlowContent.starLightCell(galaxy: Galaxy) {
-    starLightCell(LightType.Galaxy, galaxy.isLit, galaxy.galaxyId.value, galaxy.lightCount)
+    starLightCell(LightType.Galaxy, galaxy.isLit, galaxy.galaxyId.value, galaxy.starCount)
 }
 
 fun FlowContent.starLightCell(event: EventLocation) {

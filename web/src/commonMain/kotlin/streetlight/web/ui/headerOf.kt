@@ -10,6 +10,7 @@ import streetlight.model.data.Galaxy
 import streetlight.model.data.Location
 import streetlight.model.data.Star
 import streetlight.web.GalaxyConfigRoute
+import streetlight.web.layouts.ColorScheme
 import streetlight.web.layouts.galaxyCells
 import streetlight.web.layouts.locationCells
 
@@ -42,6 +43,7 @@ fun FlowContent.headerOf(
         descriptor = "a galaxy",
         subtitle = galaxy.tagline,
         image = galaxy.images.large,
+        colorScheme = ColorScheme.Galaxy,
         description = galaxy.description,
         modifiers = modifiers,
         cellContent = galaxyCells(galaxy),

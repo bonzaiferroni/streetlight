@@ -1,5 +1,6 @@
 package streetlight.web.ui
 
+import kampfire.model.getDataOrNull
 import kampfire.model.handleResponse
 import koala.dom.*
 import koala.dom.routeBlock

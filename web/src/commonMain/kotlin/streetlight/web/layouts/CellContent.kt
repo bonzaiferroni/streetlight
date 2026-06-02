@@ -2,6 +2,7 @@ package streetlight.web.layouts
 
 import kabinet.utils.format
 import kabinet.utils.toAgoFormat
+import kabinet.utils.toMetricString
 import kabinet.utils.toRelativeDayFormat
 import kabinet.utils.toTimeFormat
 import kampfire.model.Url
@@ -14,20 +15,14 @@ import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kotlinx.html.onClick
 import streetlight.model.data.EventEdit
-import streetlight.model.data.EventId
 import streetlight.model.data.EventLocation
 import streetlight.model.data.ExtraLink
 import streetlight.model.data.Galaxy
-import streetlight.model.data.GalaxyId
-import streetlight.model.data.LightType
 import streetlight.model.data.Location
 import streetlight.model.data.LocationEdit
-import streetlight.model.data.LocationId
-import streetlight.web.ui.StarLightKey
 import streetlight.web.ui.exampleLightCell
 import streetlight.web.ui.starLightCell
 import kotlin.time.Instant
-import kotlin.uuid.Uuid
 
 object CellContent {
     val CellMod = modify(AlignItemsCenter, CardBg, Gap0, Padding1)
@@ -61,7 +56,9 @@ fun FlowContent.cell(
     }
 }
 
-fun FlowContent.comboCell(
+
+
+fun FlowContent.combo(
     modifiers: ModifierSet? = null,
     block: DIV.() -> Unit = {}
 ) {
@@ -70,7 +67,7 @@ fun FlowContent.comboCell(
     }
 }
 
-fun FlowContent.comboCellItem(
+fun FlowContent.comboCell(
     svg: Svg? = null,
     text: String? = null,
     label: String? = null,
@@ -170,8 +167,6 @@ fun FlowContent.postedAtCell(postedAt: Instant) {
     cell(SvgFile.Clock, postedAt.toAgoFormat())
 }
 
-
-
 fun FlowContent.linkCell(link: ExtraLink) {
     linkCell(link.url.toUrl(), SvgFile.Link, link.label)
 }
@@ -184,7 +179,7 @@ fun FlowContent.moreCell() {
 
 fun locationCells(location: Location): FlowContent.() -> Unit = {
     // starCell(location.username)
-    comboCell {
+    combo {
         exampleLightCell()
     }
 }
@@ -207,13 +202,15 @@ fun eventCells(event: EventLocation): FlowContent.() -> Unit = {
     dateCell(event.startsAt)
     startsAtCell(event.startsAt)
     costCell(event.cost, event.url?.toUrl())
-    comboCell {
+    combo {
         starLightCell(event)
         moreCell()
     }
 }
 
 fun galaxyCells(galaxy: Galaxy): FlowContent.() -> Unit = {
-    cell(SvgFile.Calendar, galaxy.eventCount?.toString() ?: "?")
-    starLightCell(galaxy)
+    combo {
+        comboCell(SvgFile.Calendar, galaxy.eventCount.toMetricString())
+        starLightCell(galaxy)
+    }
 }

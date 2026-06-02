@@ -1,6 +1,8 @@
 package streetlight.web.layouts
 
+import kabinet.utils.toMetricString
 import kampfire.model.small
+import koala.SvgFile
 import koala.css.*
 import koala.html.*
 import kotlinx.html.FlowContent
@@ -11,6 +13,8 @@ import streetlight.web.ui.starLightCell
 fun FlowContent.smallGalaxyCard(galaxy: Galaxy) {
     val route = galaxy.toRoute()
     card(modify(Padding0, OverflowClip, MoonShadow)) {
+        setStyle(Property.ColorScheme.to(ColorScheme.Galaxy.cssValue))
+
         row(modify(Gap0, Height16)) {
             navigation(route, modify(Flex1)) {
                 featureImage(galaxy.images?.small, modify(Size100P))
@@ -28,17 +32,8 @@ fun FlowContent.smallGalaxyCard(galaxy: Galaxy) {
                     }
                     textBlock(galaxy.description ?: "Too mysterious for a description", modifiers)
                 }
-                row(modify(Height5, FlexItems1, GapTiny, MoonShadow)) {
-                    val cardMods = modify(BorderRadius0, JustifyContentCenter, AlignItemsCenter)
-                    card(modify(cardMods)) {
-                        row {
-                            textBlock("events:", modify(Dim))
-                            textBlock((0..10).random().toString())
-                        }
-                    }
-                    cell {
-                        starLightCell(galaxy)
-                    }
+                cellBlock(modify(Height5, MoonShadow)) {
+                    galaxyCells(galaxy)()
                 }
             }
         }

@@ -7,7 +7,6 @@ import koala.Svg
 import koala.css.modify
 import koala.dom.RenderContext
 import koala.dom.box
-import koala.dom.column
 import koala.model.MapEntityId
 import koala.model.MarkerUtility
 import koala.model.PointEntity
@@ -19,7 +18,6 @@ import streetlight.model.data.EventPost
 import streetlight.model.data.Location
 import streetlight.model.data.Spirit
 import streetlight.model.data.SpiritId
-import streetlight.web.layouts.smallPostCard
 import streetlight.web.shells.cardOf
 import streetlight.web.ui.eventFocusContent
 

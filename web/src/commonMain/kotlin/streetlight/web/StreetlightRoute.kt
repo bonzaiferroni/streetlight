@@ -1,7 +1,6 @@
 package streetlight.web
 
 import kampfire.api.Slug
-import kampfire.api.StringId
 import kampfire.api.TableId
 import kampfire.utils.pascalToKebabCase
 import koala.html.AppRoute
