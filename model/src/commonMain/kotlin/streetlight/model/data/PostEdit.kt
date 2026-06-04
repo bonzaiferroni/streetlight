@@ -28,8 +28,8 @@ data class PostEdit(
 fun BasicPost.toEdit() = PostEdit(
     postId = postId,
     galaxyId = galaxyId,
-    title = title,
-    subtitle = subtitle,
+    title = label,
+    subtitle = sublabel,
     text = text,
     geoPoint = geoPoint,
     imageRef = imageRef,

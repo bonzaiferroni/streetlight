@@ -1,6 +1,5 @@
 package streetlight.web.ui
 
-import kampfire.model.medium
 import kampfire.model.small
 import koala.css.ModifierSet
 import koala.css.modify
@@ -12,11 +11,9 @@ import koala.html.buttonPopover
 import koala.html.card
 import koala.html.row
 import streetlight.model.data.Galaxy
-import streetlight.web.EarthMapRoute
+import streetlight.web.EarthRoute
 import streetlight.web.model.DataCache
-import streetlight.web.model.Streetlight
 import streetlight.web.shells.GalaxyMenuKey
-import streetlight.web.shells.buttonOf
 
 fun RenderContext.galaxyEarthMenu(
     currentGalaxy: Galaxy?,
@@ -30,13 +27,13 @@ fun RenderContext.galaxyEarthMenu(
             card(modify(ButtonPopover.CardMod)) {
                 row(GalaxyMenuKey.RowMods) {
                     if (currentGalaxy != null) {
-                        btn("Top", EarthMapRoute(null))
+                        btn("Top", EarthRoute(null))
                     }
                     galaxies.forEach { galaxy ->
                         if (galaxy.name == currentGalaxy?.name) return@forEach
                         btn(
                             text = galaxy.name,
-                            route = EarthMapRoute(galaxy.slug),
+                            route = EarthRoute(galaxy.slug),
                             background = galaxy.images.small,
                             modifiers = modify(modifiers)
                         )

@@ -1,8 +1,6 @@
 package streetlight.model.data
 
 import kampfire.api.Slug
-import kampfire.model.GeoPoint
-import kampfire.model.Url
 import kotlin.time.Instant
 import kotlinx.serialization.Serializable
 
@@ -24,7 +22,8 @@ data class LocationPost(
     override val images get() = location.images
     override val geoPoint get() = location.geoPoint
     override val description get() = location.description
-    override val title get() = location.name ?: "[location removed]"
+    override val label get() = location.name ?: "[location removed]"
+    override val sublabel get() = location.sublabel
     override val links get() = location.extraLinks
 
     override val postType get() = PostType.Location

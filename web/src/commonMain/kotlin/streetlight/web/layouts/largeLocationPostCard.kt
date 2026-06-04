@@ -7,7 +7,7 @@ fun FlowContent.largeLocationPostCard(post: LocationPost) {
     val location = post.location ?: return // td: show removed content
 
     largePostCard(
-        title = post.title,
+        title = post.label,
         subtitle = location.address,
         description = location.description,
         links = null, // td: add location extra links

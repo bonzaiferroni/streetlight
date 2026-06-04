@@ -28,7 +28,7 @@ enum class StreetlightScreen(
     Account(StaticParse { StarDashRoute }),
     UpdatePost(SlugParse { PostUpdateRoute(it) }),
     Sandbox(StaticParse { SandboxRoute }),
-    Earth(SlugOrNullParse { EarthMapRoute(it) }),
+    Earth(SlugOrNullParse { EarthRoute(it) }),
     Chat(StaticParse { ChatRoute }),
     SongProfile(UuidParse { SongProfileRoute(SongId(it)) }),
     TalentProfile(UuidParse { TalentProfileRoute(TalentId(it)) }),
@@ -91,7 +91,7 @@ object SandboxRoute: StreetlightRoute {
     override val title get() = "Sandbox"
 }
 
-data class EarthMapRoute(override val slug: Slug?): SlugRoute {
+data class EarthRoute(override val slug: Slug?): SlugRoute {
     override val screen get() = StreetlightScreen.Earth
     override val title get() = "Earth"
 

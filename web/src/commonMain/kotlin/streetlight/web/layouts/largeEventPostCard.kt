@@ -9,7 +9,7 @@ fun FlowContent.largeEventPostCard(post: EventPost) {
     val event = post.event ?: return // td: show removed post content
 
     largePostCard(
-        title = post.title,
+        title = post.label,
         subtitle = "${event.locationName}, ${event.city}",
         description = post.description,
         links = event.links,

@@ -37,6 +37,7 @@ val LogoCss get() = """
 $Class {
     display: grid;
     aspect-ratio: 4 / 1;
+    width: 168px;
 }
 
 $ShadowBox {

@@ -46,7 +46,7 @@ import streetlight.web.pages.appFooter
 fun FlowContent.postShell(post: BasicPost) {
     section(PostKey.ShellId) {
         column(modify(Gap0)) {
-            heading1(post.title, modify(TextAlignCenter, AntiShadow, LineHeight115, MarginTop4))
+            heading1(post.label, modify(TextAlignCenter, AntiShadow, LineHeight115, MarginTop4))
             filigree {
                 heading4("in Denver This Weekend", modify(OpacityMost, LineHeight115))
             }

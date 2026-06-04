@@ -36,7 +36,7 @@ val GalaxyPost.subRoute get(): AppRoute? = when (this) {
 }
 
 val GalaxyPost.subtitle get(): String? = when (this) {
-    is BasicPost -> subtitle
+    is BasicPost -> sublabel
     is EventPost -> "${event.locationName}, ${event.city}"
     is LocationPost -> location.addressLine
 }

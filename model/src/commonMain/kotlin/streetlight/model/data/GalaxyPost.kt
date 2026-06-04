@@ -19,7 +19,8 @@ sealed interface GalaxyPost {
     val text: String?
     val images: ScaledImageArray?
     val geoPoint: GeoPoint?
-    val title: String
+    val label: String
+    val sublabel: String?
     val description: String?
     val lightCount: Int
     val isLit: Boolean

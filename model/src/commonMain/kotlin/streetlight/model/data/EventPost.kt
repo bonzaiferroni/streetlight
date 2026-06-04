@@ -22,7 +22,8 @@ data class EventPost(
 ): GalaxyPost {
     override val images get() = event.images ?: event.images
     override val geoPoint get() = event.geoPoint
-    override val title get() = event.title
+    override val label get() = event.title
+    override val sublabel get() = event.locationLabel
     override val description get() = event.description
     override val links get() = event.links
 

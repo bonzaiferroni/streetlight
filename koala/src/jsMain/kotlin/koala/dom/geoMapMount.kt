@@ -12,11 +12,11 @@ fun RenderContext.geoMapMount(
     geoMap: GeoMap,
     appScope: CoroutineScope,
     initialPoint: GeoPoint? = null,
-    modifiers: ModifierSet? = null,
+    mod: ModifierSet? = null,
     block: DIV.() -> Unit = {}
 ): HTMLElement {
     val element = box {
-        configureGeoMapMount(initialPoint, modifiers, block)
+        configureGeoMapMount(initialPoint, mod, block)
     }
 
     wireGeoMap(geoMap, appScope, element)

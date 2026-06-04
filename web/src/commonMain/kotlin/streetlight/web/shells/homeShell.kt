@@ -8,17 +8,17 @@ import kotlinx.html.FlowContent
 import streetlight.model.data.Galaxy
 import streetlight.model.data.HomeContent
 import streetlight.web.GalaxyFoundryRoute
-import streetlight.web.EarthMapRoute
+import streetlight.web.EarthRoute
 import streetlight.web.layouts.postSection
 import streetlight.web.layouts.smallGalaxyCard
 import streetlight.web.pages.appFooter
-import streetlight.web.ui.EarthKey
+import streetlight.web.ui.Earth
 
 fun FlowContent.homeShell(content: HomeContent) {
     column(HomeKey.ContainerId) {
         geoMapMount(null, modify(BorderRadius2, Height48, MoonShadow))
         box {
-            btn("View Map", EarthMapRoute(null), EarthKey.ViewMapButtonMod)
+            btn("View Map", EarthRoute(null), Earth.ViewMapButtonMod)
             column(modify(Gap8)) {
                 row(modify(JustifyContentSpaceBetween)) {
                     galaxyMenu(content.galaxies, null)

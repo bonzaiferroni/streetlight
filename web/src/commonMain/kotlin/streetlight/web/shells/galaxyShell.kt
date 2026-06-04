@@ -3,14 +3,11 @@ package streetlight.web.shells
 import koala.css.*
 import koala.html.*
 import kotlinx.html.FlowContent
-import kotlinx.serialization.Serializable
-import streetlight.model.data.Galaxy
 import streetlight.model.data.GalaxyContent
-import streetlight.model.data.GalaxyPost
-import streetlight.web.EarthMapRoute
+import streetlight.web.EarthRoute
 import streetlight.web.layouts.postSection
 import streetlight.web.pages.appFooter
-import streetlight.web.ui.EarthKey
+import streetlight.web.ui.Earth
 import streetlight.web.ui.headerOf
 
 fun FlowContent.galaxyShell(content: GalaxyContent) {
@@ -18,7 +15,7 @@ fun FlowContent.galaxyShell(content: GalaxyContent) {
     column(GalaxyKey.ShellId) {
         headerOf(galaxy)
         box {
-            btn("View Map", EarthMapRoute(galaxy.slug), EarthKey.ViewMapButtonMod)
+            btn("View Map", EarthRoute(galaxy.slug), Earth.ViewMapButtonMod)
             column(modify(Gap8)) {
                 row {
                     galaxyMenu(emptyList(), galaxy)
