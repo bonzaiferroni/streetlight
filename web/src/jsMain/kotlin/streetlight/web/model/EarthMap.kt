@@ -8,7 +8,6 @@ import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import streetlight.model.data.Galaxy
-import streetlight.model.data.GalaxyPost
 import streetlight.web.EarthRoute
 import streetlight.web.io.ApiClient
 import kotlin.collections.groupBy
@@ -29,8 +28,9 @@ class EarthMap(
     val galaxyFlow = stateFlow.mapDistinct { it.galaxy }
     // val postsFlow = stateFlow.mapDistinct { it.posts ?: emptyList() }
     // val postFlow = stateFlow.mapDistinct { it.post }
-    val boundedMarkersFlow = markerMap.boundedPointsFlow.mapDistinct { it ?: emptyList() }
-    val summaryFlow = markerMap.boundedPointsFlow.mapDistinct { points ->
+    val boundedMarkersFlow = markerMap.boundedMarkersFlow.mapDistinct { it ?: emptyList() }
+    val unboundedMarkersFlow = markerMap.unboundedMarkersFlow.mapDistinct { it ?: emptyList() }
+    val summaryFlow = markerMap.boundedMarkersFlow.mapDistinct { points ->
         points?.groupBy { it.markerType }
     }
     val isMovingFlow = markerMap.isMovingFlow

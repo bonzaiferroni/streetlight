@@ -9,6 +9,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 
 class MarkerMap(
     private val scope: CoroutineScope,
@@ -19,29 +20,31 @@ class MarkerMap(
     val stateFlow = state.flow
     val stateNow get() = state.now
 
-    val pointsFlow = stateFlow.mapDistinct { it.points }
-    val boundedPointsFlow = pointsFlow.combine(geoMap.boundsFlow) { points, bounds ->
-        points?.filter { bounds.contains(it.geoPoint) }
+    val markersFlow = stateFlow.mapDistinct { it.markers }
+    private val partitionedFlow = markersFlow.combine(geoMap.boundsFlow) { markers, bounds ->
+        markers?.partition { bounds.contains(it.geoPoint) }
     }.distinctUntilChanged()
+    val boundedMarkersFlow   = partitionedFlow.map { it?.first }
+    val unboundedMarkersFlow = partitionedFlow.map { it?.second }
     val isMovingFlow = geoMap.isMovingFlow
 
-    fun setPoints(points: List<AppMarker>?) {
-        stateNow.points?.let { pointsNow ->
-            geoMap.removeEntities(pointsNow.map { it.markerId })
+    fun setPoints(markers: List<AppMarker>?) {
+        stateNow.markers?.let { markersNow ->
+            geoMap.removeEntities(markersNow.map { it.markerId })
         }
-        points?.let {
-            geoMap.addEntities(points)
+        markers?.let {
+            geoMap.addEntities(markers)
         }
-        state.set { it.copy(points = points) }
+        state.set { it.copy(markers = markers) }
     }
 
-    fun addPoints(points: List<AppMarker>) {
-        geoMap.addEntities(points)
-        state.set { it.copy(points = (it.points ?: emptyList()) + points)}
+    fun addPoints(markers: List<AppMarker>) {
+        geoMap.addEntities(markers)
+        state.set { it.copy(markers = (it.markers ?: emptyList()) + markers)}
     }
 }
 
 data class StreetMapState(
-    val points: List<AppMarker>? = null,
+    val markers: List<AppMarker>? = null,
     val focus: AppMarker? = null,
 )

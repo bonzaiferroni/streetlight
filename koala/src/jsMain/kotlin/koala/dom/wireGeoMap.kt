@@ -28,15 +28,15 @@ fun RenderContext.wireGeoMap(
     geoMap: GeoMap,
     appScope: CoroutineScope,
     ancestor: HTMLElement,
-) {
+): MapViewContext {
     val mount = ancestor.takeIf { it.isModified(GeoMapKey.MapMount) }
         ?: ancestor.queryFirstOrNull(GeoMapKey.MapMount) ?: error("mount not found")
-    val mapWindow = wireMapWindow(geoMap, appScope, mount)
+    val context = wireMapContext(geoMap, appScope, mount)
 
     mount.onView { isVisible ->
         if (isVisible && mount.children.length == 0) {
             console.log("grabbing geomap window")
-            mount.appendChild(mapWindow)
+            mount.appendChild(context.windowElement)
 //            val geoPoint = mount.getAttribute(GeoMapSelector.geoPoint.key)
 //                ?.split(",")
 //                ?.mapNotNull { it.toDoubleOrNull() }
@@ -48,23 +48,27 @@ fun RenderContext.wireGeoMap(
             // mapWidget?.resize()
         }
     }
+
+    return context
 }
 
-private var geoMapWindow: HTMLElement? = null
+private var cachedContext: MapViewContext? = null
 
-fun RenderContext.wireMapWindow(
+fun RenderContext.wireMapContext(
     geoMap: GeoMap,
     appScope: CoroutineScope,
     mount: HTMLElement
-): HTMLElement {
-    geoMapWindow?.let {
+): MapViewContext {
+    cachedContext?.let {
         return it
     }
 
     console.log("creating geomap")
     val mapWindow = document.getElementOrNullById(GeoMapKey.Window) ?: findAndInitGeoMap(mount) ?: error("geomap window not found")
-    geoMapWindow = mapWindow
     val widget: maplibregl.Map = mapWindow.asDynamic().widget ?: error("geomap widget not found")
+    val context = MapViewContext(widget, mapWindow, geoMap) {
+        geoMap.setFocus(it)
+    }.also { cachedContext = it }
 
     mapWindow.onView(geoMap::setIsViewed)
     // wireKeyboardControls(widget)
@@ -79,10 +83,6 @@ fun RenderContext.wireMapWindow(
     }
 
     appScope.launch {
-
-        val context = MapViewContext(widget, mapWindow) {
-            geoMap.setFocus(it)
-        }
 
         fun relayBounds(isMoving: Boolean) {
             val center = widget.getCenter().toGeoPoint()
@@ -195,7 +195,7 @@ fun RenderContext.wireMapWindow(
         }
     }
 
-    return mapWindow
+    return context
 }
 
 fun wireKeyboardControls(widget: maplibregl.Map) {

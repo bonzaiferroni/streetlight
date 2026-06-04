@@ -23,8 +23,8 @@ class GeoMap(
 
     private val _markerFlow = MutableSharedFlow<List<MapMarker>>(1)
     val markerFlow: SharedFlow<List<MapMarker>> = _markerFlow
-    private val _removeMarker = MutableSharedFlow<List<MapMarkerId>>(1)
-    val removeMarker: SharedFlow<List<MapMarkerId>> = _removeMarker
+    private val _removeMarker = MutableSharedFlow<List<MarkerId>>(1)
+    val removeMarker: SharedFlow<List<MarkerId>> = _removeMarker
     private val _linesFlow = MutableSharedFlow<List<LineMarker>>(1)
     val linesFlow: SharedFlow<List<LineMarker>> = _linesFlow
     private val _panFlow = MutableSharedFlow<PanPoint>(1)
@@ -48,6 +48,7 @@ class GeoMap(
     val zoomFlow = settledStateFlow.mapDistinct { it.zoom }
     val centerFlow = settledStateFlow.mapDistinct { it.center }
     val boundsFlow = settledStateFlow.mapDistinct { it.bounds }
+    val movingBoundsFlow = viewedStateFlow.mapDistinct { it.bounds }
 
     fun addEntity(entity: MapMarker) {
         addEntities(listOf(entity))
@@ -59,13 +60,13 @@ class GeoMap(
         }
     }
 
-    fun moveEntity(entityId: MapMarkerId, position: GeoPoint) {
+    fun moveEntity(entityId: MarkerId, position: GeoPoint) {
         scope.launch {
             _movementFlow.emit(MarkerMovement(entityId, position))
         }
     }
 
-    fun removeEntities(entityIds: List<MapMarkerId>) {
+    fun removeEntities(entityIds: List<MarkerId>) {
         scope.launch {
             _removeMarker.emit(entityIds)
         }
@@ -139,11 +140,11 @@ data class GeoMapState(
     val focus: PointMarker? = null,
 )
 
-typealias MapMarkerId = String
+typealias MarkerId = String
 typealias MapContextId = String
 
 sealed interface MapMarker {
-    val markerId: MapMarkerId
+    val markerId: MarkerId
     val label: String? get() = null
 }
 
@@ -169,7 +170,7 @@ interface PointMarker: MapMarker {
 }
 
 data class MarkerMovement(
-    val markerId: MapMarkerId,
+    val markerId: MarkerId,
     val position: GeoPoint
 )
 

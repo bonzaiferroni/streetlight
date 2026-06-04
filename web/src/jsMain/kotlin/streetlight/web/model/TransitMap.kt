@@ -7,7 +7,7 @@ import koala.css.modify
 import koala.model.GeoMap
 import koala.model.LayerId
 import koala.model.LineMarker
-import koala.model.MapMarkerId
+import koala.model.MarkerId
 import koala.model.PointMarker
 import koala.external.VehiclePosition
 import koala.model.MarkerUtility
@@ -182,7 +182,7 @@ data class RouteEntity(
     val vehicleType: VehicleType,
     override val points: List<GeoPoint>
 ): LineMarker {
-    override val markerId: MapMarkerId get() = transitRouteId.value
+    override val markerId: MarkerId get() = transitRouteId.value
     override val layerId: LayerId
         get() = when(vehicleType) {
         VehicleType.Bus -> "bus-layer"

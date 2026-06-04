@@ -11,14 +11,12 @@ import kotlinx.html.js.img
 import kotlinx.html.style
 import org.w3c.dom.HTMLImageElement
 
-fun RenderContext.image(
-    initial: Url? = SiteImage.placeholderLg.url,
+fun DOMContext.image(
+    url: Url? = SiteImage.placeholderLg.url,
     modifiers: ModifierSet? = null,
-    binding: Flow<Url?>? = null,
-    hideOnError: Boolean = true,
     block: (IMG.() -> Unit)? = null
 ): HTMLImageElement {
-    val initialSrc = initial?.value ?: ""
+    val initialSrc = url?.value ?: ""
     val element = img {
         this.src = initialSrc
         addModifiers(modifiers)
@@ -27,6 +25,18 @@ fun RenderContext.image(
         }
         block?.invoke(this)
     }
+
+    return element
+}
+
+fun RenderContext.image(
+    binding: Flow<Url?>,
+    initial: Url? = SiteImage.placeholderLg.url,
+    modifiers: ModifierSet? = null,
+    hideOnError: Boolean = true,
+    block: (IMG.() -> Unit)? = null
+): HTMLImageElement {
+    val element = image(initial, modifiers, block)
 
     fun hideImage() {
         element.style.display = "none"
@@ -37,7 +47,7 @@ fun RenderContext.image(
     }
 
     renderScope.launch {
-        binding?.collect { url ->
+        binding.collect { url ->
             val url = url?.value ?: ""
             if (url.isEmpty()) {
                 hideImage()

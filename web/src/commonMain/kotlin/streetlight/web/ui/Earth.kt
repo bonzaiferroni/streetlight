@@ -19,6 +19,7 @@ object Earth {
     val Map = Class("earth-map")
     val Header = Class("earth-header")
     val Window = Class("earth-window")
+    val Unbounded = Class("earth-unbounded")
     val Panel = Class("panel")
 
     val MinifiedWidth = 800
@@ -57,6 +58,7 @@ $Id {
     > $Window    { grid-area: window; }
     > $Panel     { grid-area: panel; }
     > $Map       { grid-column: 1 / -1; grid-row: 1 / -1; }
+    > $Unbounded { grid-column: 1 / -1; grid-row: 2 / -1; }
     
     $MoveDimmer {
         transition: var(--transition-opacity);
@@ -77,4 +79,13 @@ $Id {
             "panel window";
     }
 }
+
+$Unbounded {
+    position: relative;
+    
+    > * {
+        position: absolute;
+    }
+}
+
 """ }

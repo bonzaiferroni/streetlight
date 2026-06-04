@@ -4,6 +4,7 @@ import kampfire.model.GeoPoint
 import koala.css.*
 import koala.html.configureGeoMapMount
 import koala.model.GeoMap
+import koala.model.MapViewContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.html.DIV
 import org.w3c.dom.HTMLElement
@@ -14,12 +15,10 @@ fun RenderContext.geoMapMount(
     initialPoint: GeoPoint? = null,
     mod: ModifierSet? = null,
     block: DIV.() -> Unit = {}
-): HTMLElement {
+): MapViewContext {
     val element = box {
         configureGeoMapMount(initialPoint, mod, block)
     }
 
-    wireGeoMap(geoMap, appScope, element)
-
-    return element
+    return wireGeoMap(geoMap, appScope, element)
 }

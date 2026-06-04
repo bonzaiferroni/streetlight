@@ -1,5 +1,8 @@
 package koala.dom
 
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 import org.w3c.dom.DOMRectReadOnly
 import org.w3c.dom.Element
 
@@ -26,4 +29,12 @@ external interface ResizeObserverSize {
 
 external interface ResizeObserverOptions {
     var box: String? // "content-box", "border-box", or "device-pixel-content-box"
+}
+
+fun Element.resizeFlow(): Flow<DOMRectReadOnly> = callbackFlow {
+    val observer = ResizeObserver { entries, _ ->
+        trySend(entries[0].contentRect)
+    }
+    observer.observe(this@resizeFlow)
+    awaitClose { observer.disconnect(); console.log("goodbye") }
 }

@@ -14,6 +14,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import streetlight.web.EarthRoute
+import streetlight.web.HomeRoute
 import streetlight.web.model.EarthMap
 import streetlight.web.model.EventMarker
 import streetlight.web.model.GalaxyMarker
@@ -22,8 +23,9 @@ import streetlight.web.pages.AppBodyKey
 
 fun RenderContext.viewEarthMap(model: EarthMap) {
     div(Earth.Id, modify(Size100P)) {
-        geoMapMount(geoMap, appScope, mod = modify(Earth.Map))
+        val mount = geoMapMount(geoMap, appScope, mod = modify(Earth.Map))
         earthHeader(model)
+        earthUnboundedOverlay(model, mount)
         earthWindow(model)
         earthPanel(model)
     }.flowModifier(model.isMovingFlow, Earth.IsMoving, renderScope)
@@ -76,7 +78,7 @@ fun RenderContext.earthHeader(model: EarthMap) {
                 }
             }
         }
-        icon(SvgFile.Settings, iconMod)
+        icon(SvgFile.Settings, iconMod).onClick { portal.go(HomeRoute) }
     }
 }
 
@@ -133,8 +135,4 @@ fun DOMContext.markerItem(
         }
     }.onClick(onClick)
 }
-
-// val route = galaxy?.let { GalaxyRoute(it.slug) } ?: HomeRoute
-//            btn("View Feed", route, modify(ZIndex2))
-
 

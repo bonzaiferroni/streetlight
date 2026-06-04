@@ -11,9 +11,10 @@ import org.w3c.dom.HTMLElement
 class MapViewContext(
     val widget: maplibregl.Map,
     val windowElement: HTMLElement,
+    val geoMap: GeoMap,
     val onFocus: (PointMarker?) -> Unit
 ) {
-    val markers = mutableMapOf<MapMarkerId, PointEntityView>()
+    val markers = mutableMapOf<MarkerId, PointEntityView>()
     val lineLayers = mutableMapOf<LayerId, MutableList<MapLine>>()
     val layers = mutableSetOf<LayerId>()
     private var visibilityFunction: ((MapMarker) -> Boolean)? = null
@@ -59,7 +60,7 @@ class MapViewContext(
         }
     }
 
-    fun removeEntities(entityIds: List<MapMarkerId>) {
+    fun removeEntities(entityIds: List<MarkerId>) {
         entityIds.forEach { entityId ->
             markers[entityId]?.marker?.remove()
             markers.remove(entityId)
@@ -89,7 +90,7 @@ class MapViewContext(
 //        }
 //    }
 
-    private fun updateVisibility(entityId: MapMarkerId) {
+    private fun updateVisibility(entityId: MarkerId) {
         val bounds = boundsNow ?: return
         val view = markers[entityId] ?: return
         val isVisible = bounds.contains(view.position)
