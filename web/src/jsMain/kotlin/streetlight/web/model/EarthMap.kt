@@ -18,7 +18,7 @@ class EarthMap(
     private val api: ApiClient,
     private val portal: Portal,
     private val toaster: Toaster,
-    private val mapEntityService: MapEntityService,
+    private val markerService: MarkerService,
     private val pointMap: PointMap
 ) {
 
@@ -30,7 +30,7 @@ class EarthMap(
     val postsFlow = stateFlow.mapDistinct { it.posts ?: emptyList() }
     val postFlow = stateFlow.mapDistinct { it.post }
     val summaryFlow = pointMap.boundedPointsFlow.mapDistinct { points ->
-        points?.groupBy { it.entityType }
+        points?.groupBy { it.markerType }
     }
 
     init {
@@ -48,7 +48,7 @@ class EarthMap(
                         api.readPosts(it.galaxyId).handleResponse(toaster::toast)
                     }
                     val points = posts?.let {
-                        mapEntityService.createEntities(it)
+                        markerService.createEntities(it)
                     }
                     pointMap.setPoints(points)
                     state.set { it.copy(galaxy = galaxy, posts = posts, post = null) }

@@ -21,20 +21,20 @@ class GeoMap(
     val stateFlow = state.flow
     val stateNow get() = state.now
 
-    private val _entityFlow = MutableSharedFlow<List<MapEntity>>(1)
-    val entityFlow: SharedFlow<List<MapEntity>> = _entityFlow
-    private val _removeEntity = MutableSharedFlow<List<MapEntityId>>(1)
-    val removeEntity: SharedFlow<List<MapEntityId>> = _removeEntity
-    private val _linesFlow = MutableSharedFlow<List<LineEntity>>(1)
-    val linesFlow: SharedFlow<List<LineEntity>> = _linesFlow
+    private val _markerFlow = MutableSharedFlow<List<MapMarker>>(1)
+    val markerFlow: SharedFlow<List<MapMarker>> = _markerFlow
+    private val _removeMarker = MutableSharedFlow<List<MapMarkerId>>(1)
+    val removeMarker: SharedFlow<List<MapMarkerId>> = _removeMarker
+    private val _linesFlow = MutableSharedFlow<List<LineMarker>>(1)
+    val linesFlow: SharedFlow<List<LineMarker>> = _linesFlow
     private val _panFlow = MutableSharedFlow<PanPoint>(1)
     val panFlow: SharedFlow<PanPoint> = _panFlow
     private val _panBoundsFlow = MutableSharedFlow<GeoBounds>(1)
     val panBoundsFlow: SharedFlow<GeoBounds> = _panBoundsFlow
-    private val _markerVisibilityFlow = MutableSharedFlow<(MapEntity) -> Boolean>(1)
-    val markerVisibilityFlow: SharedFlow<(MapEntity) -> Boolean> = _markerVisibilityFlow
-    private val _movementFlow = MutableSharedFlow<EntityMovement>(1)
-    val movementFlow: Flow<EntityMovement> = _movementFlow
+    private val _markerVisibilityFlow = MutableSharedFlow<(MapMarker) -> Boolean>(1)
+    val markerVisibilityFlow: SharedFlow<(MapMarker) -> Boolean> = _markerVisibilityFlow
+    private val _movementFlow = MutableSharedFlow<MarkerMovement>(1)
+    val movementFlow: Flow<MarkerMovement> = _movementFlow
     private val _tempEntityFlow = MutableSharedFlow<TempEntitySet?>(1)
     val tempEntityFlow: Flow<TempEntitySet?> = _tempEntityFlow
     private val _hideLayersFlow = MutableSharedFlow<List<LayerId>>()
@@ -48,41 +48,41 @@ class GeoMap(
     val centerFlow = settledStateFlow.mapDistinct { it.center }
     val boundsFlow = settledStateFlow.mapDistinct { it.bounds }
 
-    fun addEntity(entity: MapEntity) {
+    fun addEntity(entity: MapMarker) {
         addEntities(listOf(entity))
     }
 
-    fun addEntities(entities: List<MapEntity>) {
+    fun addEntities(entities: List<MapMarker>) {
         scope.launch {
-            _entityFlow.emit(entities)
+            _markerFlow.emit(entities)
         }
     }
 
-    fun moveEntity(entityId: MapEntityId, position: GeoPoint) {
+    fun moveEntity(entityId: MapMarkerId, position: GeoPoint) {
         scope.launch {
-            _movementFlow.emit(EntityMovement(entityId, position))
+            _movementFlow.emit(MarkerMovement(entityId, position))
         }
     }
 
-    fun removeEntities(entityIds: List<MapEntityId>) {
+    fun removeEntities(entityIds: List<MapMarkerId>) {
         scope.launch {
-            _removeEntity.emit(entityIds)
+            _removeMarker.emit(entityIds)
         }
     }
 
-    fun addLines(entities: List<LineEntity>) {
+    fun addLines(entities: List<LineMarker>) {
         scope.launch {
             _linesFlow.emit(entities)
         }
     }
 
-    fun setEntityVisibility(filter: (MapEntity) -> Boolean) {
+    fun setEntityVisibility(filter: (MapMarker) -> Boolean) {
         scope.launch {
             _markerVisibilityFlow.emit(filter)
         }
     }
 
-    fun setFocus(entity: PointEntity?) {
+    fun setFocus(entity: PointMarker?) {
         state.set { it.copy(focus = entity) }
     }
 
@@ -110,7 +110,7 @@ class GeoMap(
         state.set { it.copy(isViewed = value) }
     }
 
-    fun tempEntities(entities: List<MapEntity>?) {
+    fun tempEntities(entities: List<MapMarker>?) {
         scope.launch {
             _tempEntityFlow.emit(entities?.let { TempEntitySet(it)})
         }
@@ -135,14 +135,14 @@ data class GeoMapState(
     val zoom: Float = 11f,
     val isMoving: Boolean = false,
     val isViewed: Boolean = false,
-    val focus: PointEntity? = null,
+    val focus: PointMarker? = null,
 )
 
-typealias MapEntityId = String
+typealias MapMarkerId = String
 typealias MapContextId = String
 
-sealed interface MapEntity {
-    val entityId: MapEntityId
+sealed interface MapMarker {
+    val markerId: MapMarkerId
     val label: String? get() = null
 }
 
@@ -152,7 +152,7 @@ data class PanPoint(
     val snap: Boolean = false,
 )
 
-interface PointEntity: MapEntity {
+interface PointMarker: MapMarker {
     val geoPoint: GeoPoint
     val bearing: Float? get() = null
     val opacity: Float? get() = null
@@ -167,8 +167,8 @@ interface PointEntity: MapEntity {
     val light: Rgb? get() = null
 }
 
-data class EntityMovement(
-    val entityId: MapEntityId,
+data class MarkerMovement(
+    val markerId: MapMarkerId,
     val position: GeoPoint
 )
 

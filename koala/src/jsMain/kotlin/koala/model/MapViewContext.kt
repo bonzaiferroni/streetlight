@@ -11,12 +11,12 @@ import org.w3c.dom.HTMLElement
 class MapViewContext(
     val widget: maplibregl.Map,
     val windowElement: HTMLElement,
-    val onFocus: (PointEntity?) -> Unit
+    val onFocus: (PointMarker?) -> Unit
 ) {
-    val markers = mutableMapOf<MapEntityId, PointEntityView>()
+    val markers = mutableMapOf<MapMarkerId, PointEntityView>()
     val lineLayers = mutableMapOf<LayerId, MutableList<MapLine>>()
     val layers = mutableSetOf<LayerId>()
-    private var visibilityFunction: ((MapEntity) -> Boolean)? = null
+    private var visibilityFunction: ((MapMarker) -> Boolean)? = null
     private var focus: PointEntityView? = null
     private var tempSet: TempEntitySet? = null
     private var altitudeNow: Altitude? = null
@@ -29,7 +29,7 @@ class MapViewContext(
         })
     }
 
-    fun setVisibility(visibility: ((MapEntity) -> Boolean)?) {
+    fun setVisibility(visibility: ((MapMarker) -> Boolean)?) {
         this.visibilityFunction = visibility ?: { true }
         markers.forEach { (_, obj) ->
             applyOpacity(obj)
@@ -42,33 +42,33 @@ class MapViewContext(
         obj.setOpacity(if (isVisible) 1f else 0f)
     }
 
-    fun addEntities(entities: List<MapEntity>) {
+    fun addEntities(entities: List<MapMarker>) {
         entities.forEach { entity ->
             when (entity) {
-                is PointEntity -> {
+                is PointMarker -> {
                     val center = widget.getCenter().toGeoPoint()
                     val obj = recallObject(entity, center) ?: createObject(entity, center)
                     obj.setAttributes(entity)
                     applyOpacity(obj)
-                    updateVisibility(entity.entityId)
+                    updateVisibility(entity.markerId)
                 }
-                is LineEntity -> {
+                is LineMarker -> {
                     showLines(listOf(entity))
                 }
             }
         }
     }
 
-    fun removeEntities(entityIds: List<MapEntityId>) {
+    fun removeEntities(entityIds: List<MapMarkerId>) {
         entityIds.forEach { entityId ->
             markers[entityId]?.marker?.remove()
             markers.remove(entityId)
         }
     }
 
-    fun removeEntities(entities: List<MapEntity>) {
+    fun removeEntities(entities: List<MapMarker>) {
         entities.forEach { entity ->
-            val entityId = entity.entityId
+            val entityId = entity.markerId
             markers[entityId]?.marker?.remove()
             markers.remove(entityId)
         }
@@ -89,23 +89,23 @@ class MapViewContext(
 //        }
 //    }
 
-    private fun updateVisibility(entityId: MapEntityId) {
+    private fun updateVisibility(entityId: MapMarkerId) {
         val bounds = boundsNow ?: return
         val view = markers[entityId] ?: return
         val isVisible = bounds.contains(view.position)
         view.setIsVisible(isVisible, widget)
     }
 
-    private fun setFocus(entity: PointEntity?) {
+    private fun setFocus(entity: PointMarker?) {
         focus?.unfocus()
-        val view = entity?.let { markers[it.entityId] }
+        val view = entity?.let { markers[it.markerId] }
         view?.focus()
         focus = view
         onFocus(entity)
     }
 
-    fun moveEntity(movement: EntityMovement) {
-        val view = markers[movement.entityId] ?: return
+    fun moveEntity(movement: MarkerMovement) {
+        val view = markers[movement.markerId] ?: return
         view.move(movement.position)
         console.log("moved to ${movement.position}")
     }
@@ -145,8 +145,8 @@ class MapViewContext(
         widget.setLayoutProperty(layerId, "visibility", "visible")
     }
 
-    private fun recallObject(entity: PointEntity, center: GeoPoint): PointEntityView? {
-        val view = markers[entity.entityId] ?: return null
+    private fun recallObject(entity: PointMarker, center: GeoPoint): PointEntityView? {
+        val view = markers[entity.markerId] ?: return null
 
         // move marker
         view.move(entity.geoPoint)
@@ -158,14 +158,14 @@ class MapViewContext(
         return view
     }
 
-    private fun createObject(entity: PointEntity, center: GeoPoint): PointEntityView {
+    private fun createObject(entity: PointMarker, center: GeoPoint): PointEntityView {
         val pixelPoint = entity.geoPoint.toPoint(center.lat)
         val mapEntityView = entity.toMapEntityView(pixelPoint) {
             setFocus(entity)
         }
 
         mapEntityView.marker.setLngLat(entity.geoPoint.toLngLat())
-        markers[entity.entityId] = mapEntityView
+        markers[entity.markerId] = mapEntityView
         return mapEntityView
     }
 }
@@ -173,5 +173,5 @@ class MapViewContext(
 typealias LayerId = String
 
 data class TempEntitySet(
-    val entities: List<MapEntity>
+    val entities: List<MapMarker>
 )

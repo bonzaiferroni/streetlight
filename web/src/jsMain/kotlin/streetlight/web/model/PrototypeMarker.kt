@@ -2,8 +2,8 @@ package streetlight.web.model
 
 import kampfire.model.GeoPoint
 import koala.Svg
-import koala.model.MapEntityId
-import koala.model.PointEntity
+import koala.model.MapMarkerId
+import koala.model.PointMarker
 import koala.model.Rgb
 import kotlinx.html.DIV
 import kotlinx.html.p
@@ -12,8 +12,8 @@ import streetlight.model.data.SpiritId
 
 data class SpiritEntity(
     val spirit: Spirit
-): PointEntity {
-    override val entityId get() = spirit.spiritId.toEntityId()
+): PointMarker {
+    override val markerId get() = spirit.spiritId.toEntityId()
     override val geoPoint get() = spirit.position
     override val body: DIV.() -> Unit get() = {
         p { +spirit.name }
@@ -21,10 +21,10 @@ data class SpiritEntity(
     override val light get() = Rgb(100, 180, 240)
 }
 
-fun SpiritId.toEntityId(): MapEntityId = "spirit-${value}"
+fun SpiritId.toEntityId(): MapMarkerId = "spirit-${value}"
 
 data class IconEntity(
-    override val entityId: MapEntityId,
+    override val markerId: MapMarkerId,
     override val icon: Svg,
     override val geoPoint: GeoPoint
-): PointEntity
+): PointMarker

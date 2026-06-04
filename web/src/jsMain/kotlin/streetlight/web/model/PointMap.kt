@@ -3,7 +3,6 @@
 package streetlight.web.model
 
 import koala.model.GeoMap
-import koala.model.PointEntity
 import koala.model.mapDistinct
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
@@ -25,9 +24,9 @@ class PointMap(
         points?.filter { bounds.contains(it.geoPoint) }
     }.distinctUntilChanged()
 
-    fun setPoints(points: List<AppEntity>?) {
+    fun setPoints(points: List<AppMarker>?) {
         stateNow.points?.let { pointsNow ->
-            geoMap.removeEntities(pointsNow.map { it.entityId })
+            geoMap.removeEntities(pointsNow.map { it.markerId })
         }
         points?.let {
             geoMap.addEntities(points)
@@ -35,13 +34,13 @@ class PointMap(
         state.set { it.copy(points = points) }
     }
 
-    fun addPoints(points: List<AppEntity>) {
+    fun addPoints(points: List<AppMarker>) {
         geoMap.addEntities(points)
         state.set { it.copy(points = (it.points ?: emptyList()) + points)}
     }
 }
 
 data class StreetMapState(
-    val points: List<AppEntity>? = null,
-    val focus: AppEntity? = null,
+    val points: List<AppMarker>? = null,
+    val focus: AppMarker? = null,
 )

@@ -11,7 +11,7 @@ import koala.external.LinePaint
 import koala.external.LineStringGeometry
 import koala.external.MapSource
 
-interface LineEntity : MapEntity {
+interface LineMarker : MapMarker {
     val points: List<GeoPoint>
     val layerId: LayerId
     val color: String get() = "#4fd1c5"
@@ -22,13 +22,13 @@ interface LineEntity : MapEntity {
 
 data class MapLine(
     val feature: dynamic,
-    val entity: LineEntity,
+    val marker: LineMarker,
 )
 
-fun MapViewContext.showLines(entities: List<LineEntity>) {
-    val layerIds = entities.mapNotNull { entity ->
+fun MapViewContext.showLines(markers: List<LineMarker>) {
+    val layerIds = markers.mapNotNull { entity ->
         val lineSet = lineLayers.getOrPut(entity.layerId) { mutableListOf() }
-        if (lineSet.any { it.entity.entityId == entity.entityId }) return@mapNotNull null
+        if (lineSet.any { it.marker.markerId == entity.markerId }) return@mapNotNull null
         val line = entity.createLine()
         lineSet.add(line)
         entity.layerId
@@ -46,7 +46,7 @@ fun MapViewContext.showLines(entities: List<LineEntity>) {
             console.log("adding to existing layer")
             widget.getSource(layerId).setData(sourceData)
         } else {
-            val entity = lineLayers.getValue(layerId).first().entity
+            val entity = lineLayers.getValue(layerId).first().marker
             console.log("creating layer: $layerId")
             val sourceObj = MapSource(
                 type = "geojson",
@@ -72,7 +72,7 @@ fun MapViewContext.showLines(entities: List<LineEntity>) {
     }
 }
 
-fun LineEntity.createLine(): MapLine {
+fun LineMarker.createLine(): MapLine {
     val line = points.map { arrayOf(it.lng, it.lat) }.toJsArray()
     val feature = Feature(
         type = "Feature",

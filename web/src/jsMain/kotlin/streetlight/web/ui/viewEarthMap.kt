@@ -16,7 +16,6 @@ import kotlinx.coroutines.launch
 import streetlight.model.data.GalaxyPost
 import streetlight.web.EarthRoute
 import streetlight.web.model.EarthMap
-import streetlight.web.model.MapEntityService
 import streetlight.web.pages.AppBodyKey
 
 fun RenderContext.viewEarthMap(model: EarthMap) {

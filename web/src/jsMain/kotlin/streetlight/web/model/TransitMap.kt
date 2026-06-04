@@ -6,9 +6,9 @@ import koala.SvgFile
 import koala.css.modify
 import koala.model.GeoMap
 import koala.model.LayerId
-import koala.model.LineEntity
-import koala.model.MapEntityId
-import koala.model.PointEntity
+import koala.model.LineMarker
+import koala.model.MapMarkerId
+import koala.model.PointMarker
 import koala.external.VehiclePosition
 import koala.model.MarkerUtility
 import koala.model.mapDistinct
@@ -99,7 +99,7 @@ class TransitMap(
     private fun stopTracking() {
         trackingJob?.cancel()
         trackingJob = null
-        geoMap.removeEntities(currentEntities.map { it.entityId })
+        geoMap.removeEntities(currentEntities.map { it.markerId })
         currentEntities = emptyList()
         currentRoutes?.let { routes ->
             val layerIds = routes.map { it.layerId }.toSet().toList()
@@ -124,7 +124,7 @@ class TransitMap(
         val vehicles = transitState.vehicles
         val removedIds = currentEntities
             .filter { currentEntity -> vehicles.none { currentEntity.vehicleId == it.vehicleId } }
-            .map { it.entityId }
+            .map { it.markerId }
         val entities = transitState.vehicles.map {
             val vehicleType = transit.routes.firstOrNull() { route -> route.transitRouteId.value == it.routeId }
                 ?.vehicleType ?: VehicleType.Bus
@@ -156,7 +156,7 @@ class TransitMap(
 
         val removedIds = currentEntities
             .filter { currentEntity -> entities.none { currentEntity.vehicleId == it.vehicleId } }
-            .map { it.entityId }
+            .map { it.markerId }
 
         if (removedIds.isNotEmpty()) {
             console.log("removing ${removedIds.size} vehicles")
@@ -181,8 +181,8 @@ data class RouteEntity(
     override val label: String,
     val vehicleType: VehicleType,
     override val points: List<GeoPoint>
-): LineEntity {
-    override val entityId: MapEntityId get() = transitRouteId.value
+): LineMarker {
+    override val markerId: MapMarkerId get() = transitRouteId.value
     override val layerId: LayerId
         get() = when(vehicleType) {
         VehicleType.Bus -> "bus-layer"
@@ -198,8 +198,8 @@ data class TransitEntity(
     val vehicleType: VehicleType,
     override val opacity: Float,
     override val bearing: Float?,
-): PointEntity {
-    override val entityId get() = vehicleId
+): PointMarker {
+    override val markerId get() = vehicleId
     override val icon get() = when (vehicleType) {
         VehicleType.Bus -> SvgFile.Bus
         VehicleType.LightRail -> SvgFile.Train

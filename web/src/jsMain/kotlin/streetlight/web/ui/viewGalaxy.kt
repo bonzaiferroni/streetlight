@@ -5,13 +5,13 @@ import koala.dom.*
 import streetlight.model.data.GalaxyContent
 import streetlight.web.GalaxyRoute
 import streetlight.web.model.DataCache
-import streetlight.web.model.MapEntityService
+import streetlight.web.model.MarkerService
 import streetlight.web.shells.GalaxyKey
 import streetlight.web.shells.galaxyShell
 
 fun RenderContext.viewGalaxy(content: GalaxyContent) {
     val cache = app.get<DataCache>()
-    val mapEntityService = app.get<MapEntityService>()
+    val markerService = app.get<MarkerService>()
 
     val root = shellBox(GalaxyKey.ShellId) {
         galaxyShell(content)
@@ -24,7 +24,7 @@ fun RenderContext.viewGalaxy(content: GalaxyContent) {
     )
     wireGalaxyMenu(root, content.galaxy)
 
-    val points = mapEntityService.createEntities(content.posts)
+    val points = markerService.createEntities(content.posts)
     pointMap.setPoints(points)
 }
 

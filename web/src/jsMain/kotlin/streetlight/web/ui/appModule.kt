@@ -41,7 +41,7 @@ val appModule = module {
     single { PointMap(get(), get(), get()) }
     single { ChatRoom(get(), get()) }
     single { OmniLog(get(), get()) }
-    single { MapEntityService() }
+    single { MarkerService() }
 
     single { Toaster(get()) }
 }

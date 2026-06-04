@@ -24,7 +24,7 @@ import org.w3c.dom.HTMLParagraphElement
 
 class PointEntityView(
     val marker: maplibregl.Marker,
-    entity: PointEntity,
+    entity: PointMarker,
     pixelPoint: Point,
     val element: HTMLDivElement?,
     val base: HTMLDivElement?,
@@ -79,7 +79,7 @@ class PointEntityView(
         }
     }
 
-    fun setEntity(entity: PointEntity, point: Point) {
+    fun setEntity(entity: PointMarker, point: Point) {
         this.entity = entity
         this.point = point
     }
@@ -93,7 +93,7 @@ class PointEntityView(
     }
 }
 
-fun PointEntityView.setAttributes(entity: PointEntity) {
+fun PointEntityView.setAttributes(entity: PointMarker) {
     entity.bearing?.let {
         setBearing(it)
     }
@@ -118,7 +118,7 @@ object MarkerUtility {
     val twinkleAboveAirplane = Class("twinkle-above-airplane")
 }
 
-fun PointEntity.toMapEntityView(pixelPoint: Point, focusEntity: () -> Unit): PointEntityView {
+fun PointMarker.toMapEntityView(pixelPoint: Point, focusEntity: () -> Unit): PointEntityView {
     val element = document.createDiv()
     element.modify(MarkerCss.block)
 

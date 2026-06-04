@@ -97,11 +97,11 @@ fun RenderContext.wireMapWindow(
         }
 
         launch {
-            geoMap.entityFlow.collect(context::addEntities)
+            geoMap.markerFlow.collect(context::addEntities)
         }
 
         launch {
-            geoMap.removeEntity.collect(context::removeEntities)
+            geoMap.removeMarker.collect(context::removeEntities)
         }
 
         launch {
