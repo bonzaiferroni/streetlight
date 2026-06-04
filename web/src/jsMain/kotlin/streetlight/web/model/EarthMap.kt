@@ -51,20 +51,18 @@ class EarthMap(
                     }
                     val points = posts?.let {
                         markerService.createEntities(it)
+                    } ?: api.readTopGalaxies().handleResponse(toaster::toast)?.let {
+                        markerService.createEntities(it)
                     }
                     markerMap.setPoints(points)
-                    state.set { it.copy(galaxy = galaxy, posts = posts, post = null) }
+                    state.set { it.copy(galaxy = galaxy) }
                 }
             }
         }
     }
-
-    fun setPost(value: GalaxyPost?) = state.set { it.copy(post = value) }
 }
 
 data class EarthMapState(
     val galaxy: Galaxy? = null,
-    val posts: List<GalaxyPost>? = null,
     val galaxies: List<Galaxy> = emptyList(),
-    val post: GalaxyPost? = null,
 )

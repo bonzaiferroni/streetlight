@@ -70,7 +70,7 @@ fun <State> RenderContext.flowBlock(
 
             if (magic) {
                 val interval = KoalaTheme.MAGIC_INTERVAL.toLong()
-                renderScope.launch {
+                launch {
                     if (render != null) {
                         element.modify(Transitioning).unmodifyAfterFrame(Reveal)
                         delay(interval)
