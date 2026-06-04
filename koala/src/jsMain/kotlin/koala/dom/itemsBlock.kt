@@ -55,7 +55,7 @@ fun <Item> RenderContext.itemsBlock(
         return container
     }
 
-    renderScope.launch {
+    launchRender {
         flow.collect { items ->
             displayedItems?.forEach { (item, element) ->
                 if (!items.contains(item)) {

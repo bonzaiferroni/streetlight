@@ -42,7 +42,7 @@ fun <State> RenderContext.flowBlock(
     var renderedOnce = false
     val cache = mutableMapOf<State, RenderJob>()
 
-    renderScope.launch {
+    launchRender {
         var currentValue: State? = null
         flow.collect { value ->
             // do we need renderedOnce?

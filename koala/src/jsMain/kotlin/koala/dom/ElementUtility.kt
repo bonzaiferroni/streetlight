@@ -64,3 +64,12 @@ fun querySelectorAll(queryable: Queryable) = document.body!!.querySelectorAll(qu
 
 fun CSSStyleDeclaration.removeProperty(property: Property<*>) = removeProperty(property.identifier)
 
+fun Element.domPath(): String = buildString {
+    var current: Element? = this@domPath
+    while (current != null) {
+        if (isNotEmpty()) insert(0, " > ")
+        val name = current.id.takeIf { it.isNotEmpty() }?.let { "#$it" } ?: current.tagName.lowercase()
+        insert(0, name)
+        current = current.parentElement
+    }
+}

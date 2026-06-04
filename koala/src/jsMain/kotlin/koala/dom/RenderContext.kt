@@ -3,21 +3,34 @@ package koala.dom
 import koala.html.Id
 import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import kotlinx.dom.clear
 import kotlinx.html.dom.append
 import kotlinx.html.dom.prepend
 import org.w3c.dom.HTMLElement
+import kotlin.coroutines.CoroutineContext
 
 interface RenderContext: DOMContext {
     val app: AppContext
     val renderScope: CoroutineScope
+    val parent: HTMLElement
+
+    fun launchRender(block: suspend CoroutineScope.() -> Unit) {
+        renderScope.launch {
+            try {
+                block()
+            } catch(e: UnsupportedOperationException) {
+                throw InvalidRenderOperation(parent)
+            }
+        }
+    }
 }
 
 class DOMRenderContext(
     consumer: DOMContext,
     override val app: AppContext,
     override val renderScope: CoroutineScope,
-    val parent: HTMLElement,
+    override val parent: HTMLElement,
 ): RenderContext, DOMContext by consumer
 
 fun HTMLElement.renderRoot(
@@ -69,3 +82,5 @@ fun RenderContext.replaceRender(
     ancestor: HTMLElement? = null,
     block: RenderContext.() -> Unit
 ) = replaceRender(((ancestor ?: document.body!!).querySelector(id) ?: error("element not found: $this")), block)
+
+class InvalidRenderOperation(parent: HTMLElement): Exception("Appended to finalized element: ${parent.domPath()}")
