@@ -1,0 +1,4 @@
+UnsupportedOperationException
+- A function tried to append to a tag that has already been finalized.
+- We get this when invoke a function with misconfigured receiver RenderContext within another RenderContext.
+    - If it should be DOMContext, it will target the wrong receiver.

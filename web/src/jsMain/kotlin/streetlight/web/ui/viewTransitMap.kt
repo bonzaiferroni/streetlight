@@ -16,7 +16,7 @@ fun RenderContext.viewTransitMap(
     app: Streetlight,
     maplibre: maplibregl.Map
 ) {
-    val streetMap = app.pointMap
+    val streetMap = app.markerMap
     // val transitMap = app.streetMap.transit
     var stopMarkers: List<PointEntityView> = emptyList()
 //    var areaTransit = transitMap.stateNow.areaTransit

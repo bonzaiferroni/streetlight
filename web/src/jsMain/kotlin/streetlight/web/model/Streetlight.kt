@@ -16,7 +16,7 @@ interface Streetlight {
     val gate: UserGate
     val gateAgent: GateAgent
     val geoMap: GeoMap
-    val pointMap: PointMap
+    val markerMap: MarkerMap
     val chatRoom: ChatRoom
     val cache: DataCache
     val config: SiteConfig

@@ -5,6 +5,7 @@ import koala.html.ItemsBlockKey
 import koala.model.mapDistinct
 import kotlinx.browser.document
 import kotlinx.browser.window
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -19,7 +20,7 @@ import kotlin.collections.plus
 // dynamically render a list of items using a lambda of the individual item
 fun <Item> RenderContext.itemsBlock(
     flow: Flow<List<Item>>,
-    modifiers: ModifierSet? = null,
+    mod: ModifierSet? = null,
     gapRems: Float? = 0.5f,
     config: (DIV.() -> Unit)? = null,
     containerConfig: (DIV.() -> Unit)? = null,
@@ -29,29 +30,28 @@ fun <Item> RenderContext.itemsBlock(
     // base: item opacity fade on entrance/exit, item position is animated, base element height is animated
     // slide: items slide in/out from the given direction, slide left is most common
     // blur: item blur transitions on entrance/exit
-    val magic = modifiers?.contains(Magic) ?: false
+    // A gap is provided between items, similar to flex gap. Inelegant solution, should be determined by unit-spacing.
+    val magic = mod?.contains(Magic) ?: false
+    var displayedItems: Map<Item, HTMLElement>? = null
+    val gapPx = gapRems?.let { remToPx(it) }
+    var resizeJob: Job? = null
+    var heightNow = 0
 
     val parent = div {
-        addModifiers(ItemsBlockKey.Class, modifiers)
+        addModifiers(ItemsBlockKey.Class, mod)
         if (magic) {
             classes += Magic.identifier
         }
         config?.invoke(this)
     }
 
-    var displayedItems: Map<Item, HTMLElement>? = null
-    // A gap is provided between items, similar to flex gap. Inelegant solution, should be determined by unit-spacing.
-    val gapPx = gapRems?.let { remToPx(it) }
-
     fun createItem(item: Item): HTMLElement {
         val container = parent.append {
             div {
                 containerConfig?.invoke(this)
+                block(item)
             }
         }.first()
-        container.append {
-            block(item)
-        }
         return container
     }
 
@@ -87,7 +87,8 @@ fun <Item> RenderContext.itemsBlock(
             }
 
             // the base element height is set/animated each time the items change
-            window.requestAnimationFrame {
+            resizeJob = launch {
+                resizeJob?.cancel()
                 var index = 0
                 var height = 0
 
@@ -99,6 +100,14 @@ fun <Item> RenderContext.itemsBlock(
                         height += gapPx
                     }
                     index++
+                }
+
+                val isShrinking = height < heightNow
+                heightNow = height
+
+                if (magic && isShrinking) {
+                    // allow animated content to exit before shrink
+                    delay(200)
                 }
 
                 parent.style.height = "${height}px"
@@ -121,7 +130,7 @@ fun <Item> RenderContext.indexedItemsBlock(
     val flow = flow.mapDistinct { it.mapIndexed { index, item -> IndexedItem(index, item) } }
     return itemsBlock(
         flow = flow,
-        modifiers = modifiers,
+        mod = modifiers,
         gapRems = gapRems,
         config = config,
         containerConfig = containerConfig,

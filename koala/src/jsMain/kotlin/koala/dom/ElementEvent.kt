@@ -37,18 +37,17 @@ fun <T: Element> T.onClickEvent(block: (Event) -> Unit): T {
     return this
 }
 
-@Suppress("UNCHECKED_CAST")
 fun <T: Element> T.onClickElement(block: (T) -> Unit): T {
     onEvent(ElementEvent.onClick) {
-        block(it.target as T)
+        block(this)
     }
     modify(Clickable)
     return this
 }
 
-fun <T: Element> T.onClick(block: (T) -> Unit): T {
+fun <T: Element> T.onClick(block: () -> Unit): T {
     onEvent(ElementEvent.onClick) {
-        block(this)
+        block()
     }
     modify(Clickable)
     return this

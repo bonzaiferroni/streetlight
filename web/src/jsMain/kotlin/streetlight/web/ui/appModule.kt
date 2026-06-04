@@ -38,7 +38,7 @@ val appModule = module {
     single { GateAgent(get(), get(), get()) }
     single { GeoMap(get()) }
     single { TransitMap(get(), get(), get(), get()) }
-    single { PointMap(get(), get(), get()) }
+    single { MarkerMap(get(), get(), get()) }
     single { ChatRoom(get(), get()) }
     single { OmniLog(get(), get()) }
     single { MarkerService() }

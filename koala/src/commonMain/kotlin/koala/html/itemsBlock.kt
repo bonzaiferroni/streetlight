@@ -14,18 +14,20 @@ val ItemsBlockCss get() = """
 
 .items-block.magic {
     transition: height 200ms ease-in-out;
+    
+    > :not(.reveal) {
+        pointer-events: none;
+    }
 }
 
 .items-block.magic > * {
     position: absolute;
     opacity: 0;
     transition: opacity 200ms ease-in-out, transform 200ms ease-in-out, filter 200ms ease-in-out, top 200ms ease-in-out;
-    pointer-events: none;
 }
 
 .items-block.magic > .reveal {
     opacity: 1;
-    pointer-events: auto;
 }
 
 .items-block.magic.blur > * {

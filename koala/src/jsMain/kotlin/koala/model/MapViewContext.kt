@@ -75,7 +75,7 @@ class MapViewContext(
     }
 
     fun setBounds(bounds: GeoBounds, center: GeoPoint, zoom: Float) {
-        boundsNow = bounds.expandBy(1.2f)
+        boundsNow = bounds.resizeBy(1.2f)
         // set marker visibility
         markers.forEach {
             updateVisibility(it.key)

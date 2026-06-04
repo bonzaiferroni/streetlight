@@ -2,8 +2,6 @@ package kampfire.model
 
 import kampfire.utils.ParameterMap
 import kampfire.utils.readDoubleList
-import kampfire.utils.readFloat
-import kampfire.utils.readFloatList
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -24,7 +22,7 @@ data class GeoBounds(
     fun contains(bounds: GeoBounds) = bounds.sw.lng >= sw.lng && bounds.ne.lng < ne.lng
             && bounds.sw.lat >= sw.lat && bounds.ne.lat < ne.lat
 
-    fun expandBy(factor: Float): GeoBounds {
+    fun resizeBy(factor: Float): GeoBounds {
         val center = center
         val halfWidth = (ne.lng - sw.lng) / 2.0 * factor
         val halfHeight = (ne.lat - sw.lat) / 2.0 * factor

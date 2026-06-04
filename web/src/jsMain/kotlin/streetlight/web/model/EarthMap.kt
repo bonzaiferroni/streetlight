@@ -19,17 +19,18 @@ class EarthMap(
     private val portal: Portal,
     private val toaster: Toaster,
     private val markerService: MarkerService,
-    private val pointMap: PointMap
+    private val markerMap: MarkerMap
 ) {
 
     private val state = storeOf(EarthMapState())
     val stateFlow = state.flow
     val stateNow get() = state.now
-    val galaxiesFlow = stateFlow.mapDistinct { it.galaxies }
+    // val galaxiesFlow = stateFlow.mapDistinct { it.galaxies }
     val galaxyFlow = stateFlow.mapDistinct { it.galaxy }
-    val postsFlow = stateFlow.mapDistinct { it.posts ?: emptyList() }
-    val postFlow = stateFlow.mapDistinct { it.post }
-    val summaryFlow = pointMap.boundedPointsFlow.mapDistinct { points ->
+    // val postsFlow = stateFlow.mapDistinct { it.posts ?: emptyList() }
+    // val postFlow = stateFlow.mapDistinct { it.post }
+    val boundedMarkersFlow = markerMap.boundedPointsFlow.mapDistinct { it ?: emptyList() }
+    val summaryFlow = markerMap.boundedPointsFlow.mapDistinct { points ->
         points?.groupBy { it.markerType }
     }
 
@@ -50,7 +51,7 @@ class EarthMap(
                     val points = posts?.let {
                         markerService.createEntities(it)
                     }
-                    pointMap.setPoints(points)
+                    markerMap.setPoints(points)
                     state.set { it.copy(galaxy = galaxy, posts = posts, post = null) }
                 }
             }

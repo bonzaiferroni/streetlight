@@ -6,10 +6,10 @@ import kotlinx.coroutines.launch
 import streetlight.web.HomeRoute
 import streetlight.web.model.DataCache
 import streetlight.web.model.MarkerService
-import streetlight.web.model.PointMap
+import streetlight.web.model.MarkerMap
 
 fun RenderContext.wireStreetMap() {
-    val pointMap = app.get<PointMap>()
+    val markerMap = app.get<MarkerMap>()
     val cache = app.get<DataCache>()
     val markerService = app.get<MarkerService>()
 
@@ -19,7 +19,7 @@ fun RenderContext.wireStreetMap() {
             // td: gather initial posts from json in html
             val posts = api.readPosts(galaxyIds).handleResponse(toaster::toast) ?: return@collect
             val points = markerService.createEntities(posts)
-            pointMap.setPoints(points)
+            markerMap.setPoints(points)
         }
     }
 }

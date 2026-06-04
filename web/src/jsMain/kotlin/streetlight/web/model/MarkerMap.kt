@@ -10,7 +10,7 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 
-class PointMap(
+class MarkerMap(
     private val scope: CoroutineScope,
     private val cache: DataCache,
     private val geoMap: GeoMap,

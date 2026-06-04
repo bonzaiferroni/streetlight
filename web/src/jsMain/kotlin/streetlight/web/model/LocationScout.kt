@@ -98,7 +98,7 @@ class LocationScout(
         queryMessage.set("Searching...", true)
         scope.launch {
             val city = stateNow.city?.takeIf { it.isNotBlank() }
-            val bounds = galaxy.geoBounds.takeIf { city == null }?.expandBy(5f)
+            val bounds = galaxy.geoBounds.takeIf { city == null }?.resizeBy(5f)
             osm.readLocations(query, stateNow.city, bounds).handleResponse(queryMessage::set) { locations ->
                 queryMessage.set("found: ${locations.size}")
                 state.set { it.copy(osmLocations = locations.mapNotNull { loc -> loc.toEditOrNull() }) }
