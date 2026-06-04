@@ -39,7 +39,7 @@ class PointEntityView(
     var entity = entity
         private set
 
-    var position = entity.position
+    var position = entity.geoPoint
         private set
 
     var isVisible = false

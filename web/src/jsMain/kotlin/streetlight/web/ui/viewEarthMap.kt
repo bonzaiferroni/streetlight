@@ -6,29 +6,25 @@ import koala.SvgFile
 import koala.css.*
 import koala.dom.*
 import koala.html.featureImage
-import koala.html.heading2
 import koala.html.heading3
 import koala.html.logo
+import koala.html.spacer
 import kotlinx.browser.document
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import streetlight.model.data.GalaxyPost
 import streetlight.web.EarthRoute
 import streetlight.web.model.EarthMap
+import streetlight.web.model.MapEntityService
 import streetlight.web.pages.AppBodyKey
 
 fun RenderContext.viewEarthMap(model: EarthMap) {
-
     div(Earth.Id, modify(Size100P)) {
         geoMapMount(geoMap, appScope, mod = modify(Earth.Map))
         earthHeader(model)
+        earthWindow(model)
         earthPanel(model)
-    }
-
-    renderScope.launch {
-        model.postsFlow.collect { posts ->
-            streetMap.setPosts(posts)
-        }
     }
 }
 
@@ -80,6 +76,13 @@ fun RenderContext.earthHeader(model: EarthMap) {
             }
         }
         icon(SvgFile.Settings, iconMod)
+    }
+}
+
+fun RenderContext.earthWindow(model: EarthMap) {
+    column(modify(Earth.Window, ZIndex2, PointerEventsNone)) {
+        spacer(modify(Flex1))
+        textBlock(model.summaryFlow.map { map -> map?.entries?.joinToString(" • ") { "${it.key.label}: ${it.value.size}" } })
     }
 }
 

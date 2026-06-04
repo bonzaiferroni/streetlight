@@ -38,9 +38,10 @@ val appModule = module {
     single { GateAgent(get(), get(), get()) }
     single { GeoMap(get()) }
     single { TransitMap(get(), get(), get(), get()) }
-    single { StreetMap(get(), get(), get()) }
+    single { PointMap(get(), get(), get()) }
     single { ChatRoom(get(), get()) }
     single { OmniLog(get(), get()) }
+    single { MapEntityService() }
 
     single { Toaster(get()) }
 }
@@ -49,7 +50,7 @@ fun AppContext.getUserCreator(scope: CoroutineScope) =
     UserCreator(scope, koin.get(), koin.get(), koin.get(), koin.get())
 
 fun AppContext.getEarthMap(scope: CoroutineScope) =
-    EarthMap(scope, koin.get(), koin.get(), koin.get())
+    EarthMap(scope, koin.get(), koin.get(), koin.get(), koin.get(), koin.get())
 
 fun AppContext.getLocationEditor(edit: LocationEdit, scope: CoroutineScope) =
     LocationEditor(edit, scope, koin.get())

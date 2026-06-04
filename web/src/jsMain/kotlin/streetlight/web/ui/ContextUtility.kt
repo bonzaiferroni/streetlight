@@ -5,7 +5,7 @@ import koala.model.GeoMap
 import koala.model.Portal
 import kotlinx.coroutines.CoroutineScope
 import streetlight.web.io.ApiClient
-import streetlight.web.model.StreetMap
+import streetlight.web.model.PointMap
 import streetlight.web.model.Toaster
 import streetlight.web.model.UserGate
 
@@ -14,5 +14,5 @@ val RenderContext.portal get() = app.get<Portal>()
 val RenderContext.appScope get() = app.get<CoroutineScope>()
 val RenderContext.toaster get() = app.get<Toaster>()
 val RenderContext.gate get() = app.get<UserGate>()
-val RenderContext.streetMap get() = app.get<StreetMap>()
+val RenderContext.pointMap get() = app.get<PointMap>()
 val RenderContext.geoMap get() = app.get<GeoMap>()

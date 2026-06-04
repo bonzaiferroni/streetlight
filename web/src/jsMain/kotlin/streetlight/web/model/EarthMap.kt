@@ -11,12 +11,15 @@ import streetlight.model.data.Galaxy
 import streetlight.model.data.GalaxyPost
 import streetlight.web.EarthRoute
 import streetlight.web.io.ApiClient
+import kotlin.collections.groupBy
 
 class EarthMap(
     private val scope: CoroutineScope,
     private val api: ApiClient,
     private val portal: Portal,
     private val toaster: Toaster,
+    private val mapEntityService: MapEntityService,
+    private val pointMap: PointMap
 ) {
 
     private val state = storeOf(EarthMapState())
@@ -26,6 +29,9 @@ class EarthMap(
     val galaxyFlow = stateFlow.mapDistinct { it.galaxy }
     val postsFlow = stateFlow.mapDistinct { it.posts ?: emptyList() }
     val postFlow = stateFlow.mapDistinct { it.post }
+    val summaryFlow = pointMap.boundedPointsFlow.mapDistinct { points ->
+        points?.groupBy { it.entityType }
+    }
 
     init {
         scope.launch {
@@ -34,18 +40,18 @@ class EarthMap(
                 state.set { it.copy(galaxies = galaxies) }
             }
             launch {
-                portal.routeFlow.collect { route ->
-                    when (route) {
-                        is EarthRoute -> {
-                            val galaxy = route.slug?.let {
-                                api.readGalaxy(it).handleResponse(toaster::toast)
-                            }
-                            val posts = galaxy?.let {
-                                api.readPosts(it.galaxyId).handleResponse(toaster::toast)
-                            }
-                            state.set { it.copy(galaxy = galaxy, posts = posts, post = null) }
-                        }
+                portal.routeFlowOf<EarthRoute>(false).collect { route ->
+                    val galaxy = route.slug?.let {
+                        api.readGalaxy(it).handleResponse(toaster::toast)
                     }
+                    val posts = galaxy?.let {
+                        api.readPosts(it.galaxyId).handleResponse(toaster::toast)
+                    }
+                    val points = posts?.let {
+                        mapEntityService.createEntities(it)
+                    }
+                    pointMap.setPoints(points)
+                    state.set { it.copy(galaxy = galaxy, posts = posts, post = null) }
                 }
             }
         }

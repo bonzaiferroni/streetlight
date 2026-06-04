@@ -14,8 +14,9 @@ object Earth {
     val Id = Id("earth")
     val ViewMapButtonMod = modify(PositionSticky, TopSpacing1, JustifySelfCenter, AlignSelfStart, ZIndex1)
 
-    val Header = Class("earth-header")
     val Map = Class("earth-map")
+    val Header = Class("earth-header")
+    val Window = Class("earth-window")
     val Panel = Class("panel")
 
     val MinifiedWidth = 800
@@ -44,13 +45,14 @@ $DayTheme .maplibregl-canvas {
 $Id {
     display: grid;
     grid-template-columns: auto;
-    grid-template-rows: auto 1fr 300px;
+    grid-template-rows: auto 1fr auto;
     grid-template-areas: 
         "header"
         "window"
         "panel";
     
     > $Header    { grid-area: header; }
+    > $Window    { grid-area: window; }
     > $Panel     { grid-area: panel; }
     > $Map       { grid-column: 1 / -1; grid-row: 1 / -1; }
     

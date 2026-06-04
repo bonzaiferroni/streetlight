@@ -2,7 +2,6 @@ package streetlight.web.model
 
 import kampfire.model.GeoPoint
 import kampfire.model.getDataOrNull
-import kampfire.model.handleResponse
 import koala.SvgFile
 import koala.css.modify
 import koala.model.GeoMap
@@ -195,7 +194,7 @@ data class RouteEntity(
 data class TransitEntity(
     val vehicleId: String,
     override val label: String,
-    override val position: GeoPoint,
+    override val geoPoint: GeoPoint,
     val vehicleType: VehicleType,
     override val opacity: Float,
     override val bearing: Float?,
@@ -218,7 +217,7 @@ fun VehiclePosition.toEntity(currentTime: Long, vehicleType: VehicleType): Trans
     return TransitEntity(
         vehicleId = vehicleId,
         label = trip?.routeId ?: "Transit",
-        position = position.toGeoPoint(),
+        geoPoint = position.toGeoPoint(),
         vehicleType = vehicleType,
         opacity = opacity,
         bearing = position.bearing
@@ -232,7 +231,7 @@ fun TransitVehicle.toEntity(currentTime: Long, vehicleType: VehicleType): Transi
     return TransitEntity(
         vehicleId = vehicleId,
         label = routeId,
-        position = geoPoint,
+        geoPoint = geoPoint,
         vehicleType = vehicleType,
         opacity = opacity,
         bearing = bearing

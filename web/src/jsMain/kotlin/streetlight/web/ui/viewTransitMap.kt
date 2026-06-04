@@ -4,9 +4,6 @@ import koala.dom.RenderContext
 import koala.external.maplibregl
 import koala.model.PointEntityView
 import koala.model.jsObject
-import koala.model.mapDistinct
-import koala.model.mapDistinctBy
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 import streetlight.model.data.TransitRoute
 import streetlight.model.data.VehicleType
@@ -19,7 +16,7 @@ fun RenderContext.viewTransitMap(
     app: Streetlight,
     maplibre: maplibregl.Map
 ) {
-    val streetMap = app.streetMap
+    val streetMap = app.pointMap
     // val transitMap = app.streetMap.transit
     var stopMarkers: List<PointEntityView> = emptyList()
 //    var areaTransit = transitMap.stateNow.areaTransit

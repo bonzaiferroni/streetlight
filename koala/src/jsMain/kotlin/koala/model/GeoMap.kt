@@ -3,8 +3,6 @@ package koala.model
 import kampfire.model.GeoBounds
 import kampfire.model.GeoPoint
 import kampfire.model.Url
-import kampfire.model.distanceTo
-import kampfire.model.meters
 import koala.Svg
 import koala.css.ModifierSet
 import koala.dom.RenderContext
@@ -45,10 +43,10 @@ class GeoMap(
     val showLayersFlow: Flow<List<LayerId>> = _showLayersFlow
 
     val viewedStateFlow = stateFlow.filter { it.isViewed }
-    val zoomFlow = viewedStateFlow.mapDistinct { it.zoom }
-    val movingBoundsFlow = viewedStateFlow.mapDistinct { it.movingBounds }
-    val centerFlow = viewedStateFlow.filter { !it.isMoving }.mapDistinct { it.center }
-    val boundsFlow = viewedStateFlow.filter { it.isViewed }.mapDistinct { it.bounds }
+    val settledStateFlow = viewedStateFlow.filter { !it.isMoving }
+    val zoomFlow = settledStateFlow.mapDistinct { it.zoom }
+    val centerFlow = settledStateFlow.mapDistinct { it.center }
+    val boundsFlow = settledStateFlow.mapDistinct { it.bounds }
 
     fun addEntity(entity: MapEntity) {
         addEntities(listOf(entity))
@@ -88,12 +86,8 @@ class GeoMap(
         state.set { it.copy(focus = entity) }
     }
 
-    fun setBounds(center: GeoPoint, value: GeoBounds, zoom: Float, isMoving: Boolean) {
-        val isSmallMovement = isMoving && zoom == stateNow.zoom && value.center.distanceTo(stateNow.center) < (20 * zoom).meters
-        if (!isSmallMovement) {
-            val bounds = if (isMoving) stateNow.bounds else value
-            state.set { it.copy(center = center, bounds = bounds, movingBounds = value, zoom = zoom, isMoving = isMoving) }
-        }
+    fun setBounds(center: GeoPoint, bounds: GeoBounds, zoom: Float, isMoving: Boolean) {
+        state.set { it.copy(center = center, bounds = bounds, zoom = zoom, isMoving = isMoving) }
     }
 
     fun panMap(point: GeoPoint) {
@@ -138,7 +132,6 @@ class GeoMap(
 data class GeoMapState(
     val center: GeoPoint = GeoPoint.Denver,
     val bounds: GeoBounds = GeoBounds.Denver,
-    val movingBounds: GeoBounds = GeoBounds.Denver,
     val zoom: Float = 11f,
     val isMoving: Boolean = false,
     val isViewed: Boolean = false,
@@ -160,7 +153,7 @@ data class PanPoint(
 )
 
 interface PointEntity: MapEntity {
-    val position: GeoPoint
+    val geoPoint: GeoPoint
     val bearing: Float? get() = null
     val opacity: Float? get() = null
     val subpixelPositioning: Boolean get() = true

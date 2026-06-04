@@ -1,30 +1,25 @@
 package streetlight.web.ui
 
 import kampfire.model.handleResponse
-import koala.css.Class
 import koala.dom.*
 import kotlinx.coroutines.launch
 import streetlight.web.HomeRoute
 import streetlight.web.model.DataCache
-import streetlight.web.model.StreetMap
+import streetlight.web.model.MapEntityService
+import streetlight.web.model.PointMap
 
 fun RenderContext.wireStreetMap() {
-    val streetMap = app.get<StreetMap>()
+    val pointMap = app.get<PointMap>()
     val cache = app.get<DataCache>()
+    val mapEntityService = app.get<MapEntityService>()
 
     renderScope.launch {
         portal.routeFlowOf<HomeRoute>().collect {
             val galaxyIds = cache.topGalaxies.getItems().map { it.galaxyId }
             // td: gather initial posts from json in html
             val posts = api.readPosts(galaxyIds).handleResponse(toaster::toast) ?: return@collect
-            streetMap.setPosts(posts)
+            val points = mapEntityService.createEntities(posts)
+            pointMap.setPoints(points)
         }
     }
-}
-
-object MapPanel {
-    val container = Class("map-event-panel")
-    val card = Class("map-panel-card")
-    val cardHeading = Class("map-panel-card-heading")
-    val grid = Class("map-panel-card-grid")
 }

@@ -2,10 +2,8 @@ package koala.model
 
 import kampfire.model.GeoBounds
 import kampfire.model.GeoPoint
-import kampfire.model.regionalDistanceTo
 import kampfire.model.toPoint
 import koala.dom.modify
-import koala.dom.querySelector
 import koala.dom.unmodify
 import koala.external.maplibregl
 import org.w3c.dom.HTMLElement
@@ -151,22 +149,22 @@ class MapViewContext(
         val view = markers[entity.entityId] ?: return null
 
         // move marker
-        view.move(entity.position)
+        view.move(entity.geoPoint)
 
         // set entity
-        val pixelPoint = entity.position.toPoint(center.lat)
+        val pixelPoint = entity.geoPoint.toPoint(center.lat)
         view.setEntity(entity, pixelPoint)
 
         return view
     }
 
     private fun createObject(entity: PointEntity, center: GeoPoint): PointEntityView {
-        val pixelPoint = entity.position.toPoint(center.lat)
+        val pixelPoint = entity.geoPoint.toPoint(center.lat)
         val mapEntityView = entity.toMapEntityView(pixelPoint) {
             setFocus(entity)
         }
 
-        mapEntityView.marker.setLngLat(entity.position.toLngLat())
+        mapEntityView.marker.setLngLat(entity.geoPoint.toLngLat())
         markers[entity.entityId] = mapEntityView
         return mapEntityView
     }

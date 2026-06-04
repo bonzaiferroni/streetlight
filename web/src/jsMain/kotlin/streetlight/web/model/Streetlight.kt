@@ -3,10 +3,7 @@ package streetlight.web.model
 import koala.model.GeoMap
 import koala.model.Portal
 import kotlinx.coroutines.CoroutineScope
-import streetlight.web.HomeRoute
-import streetlight.web.StreetlightScreen
 import streetlight.web.io.ApiClient
-import streetlight.web.io.FetchClient
 import streetlight.web.io.OSMClient
 import streetlight.web.io.OmniLog
 import streetlight.web.io.TransitClient
@@ -19,7 +16,7 @@ interface Streetlight {
     val gate: UserGate
     val gateAgent: GateAgent
     val geoMap: GeoMap
-    val streetMap: StreetMap
+    val pointMap: PointMap
     val chatRoom: ChatRoom
     val cache: DataCache
     val config: SiteConfig
