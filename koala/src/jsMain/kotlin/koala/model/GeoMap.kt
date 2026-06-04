@@ -43,6 +43,7 @@ class GeoMap(
     val showLayersFlow: Flow<List<LayerId>> = _showLayersFlow
 
     val viewedStateFlow = stateFlow.filter { it.isViewed }
+    val isMovingFlow = viewedStateFlow.mapDistinct { it.isMoving }
     val settledStateFlow = viewedStateFlow.filter { !it.isMoving }
     val zoomFlow = settledStateFlow.mapDistinct { it.zoom }
     val centerFlow = settledStateFlow.mapDistinct { it.center }

@@ -86,7 +86,7 @@ fun RenderContext.wireMapWindow(
 
         fun relayBounds(isMoving: Boolean) {
             val center = widget.getCenter().toGeoPoint()
-            val bounds = widget.getBounds().toGeoBounds().resizeBy(.8f)
+            val bounds = widget.getBounds().toGeoBounds()
             val zoom = widget.getZoom().toFloat()
             context.setBounds(bounds, center, zoom)
             geoMap.setBounds(center, bounds, zoom, isMoving)

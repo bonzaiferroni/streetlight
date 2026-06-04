@@ -13,6 +13,8 @@ import koala.html.Id
 object Earth {
     val Id = Id("earth")
     val ViewMapButtonMod = modify(PositionSticky, TopSpacing1, JustifySelfCenter, AlignSelfStart, ZIndex1)
+    val IsMoving = Class("is-moving")
+    val MoveDimmer = Class("move-dimmer")
 
     val Map = Class("earth-map")
     val Header = Class("earth-header")
@@ -55,6 +57,17 @@ $Id {
     > $Window    { grid-area: window; }
     > $Panel     { grid-area: panel; }
     > $Map       { grid-column: 1 / -1; grid-row: 1 / -1; }
+    
+    $MoveDimmer {
+        transition: var(--transition-opacity);
+        opacity: 1;
+    }
+    
+    &$IsMoving {
+        $MoveDimmer {
+            opacity: .75;
+        }
+    }
     
     @media (min-width: ${MinifiedWidth}px) {
         grid-template-columns: 400px 1fr;

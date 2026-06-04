@@ -23,6 +23,7 @@ class MarkerMap(
     val boundedPointsFlow = pointsFlow.combine(geoMap.boundsFlow) { points, bounds ->
         points?.filter { bounds.contains(it.geoPoint) }
     }.distinctUntilChanged()
+    val isMovingFlow = geoMap.isMovingFlow
 
     fun setPoints(points: List<AppMarker>?) {
         stateNow.points?.let { pointsNow ->

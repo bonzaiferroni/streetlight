@@ -33,6 +33,7 @@ class EarthMap(
     val summaryFlow = markerMap.boundedPointsFlow.mapDistinct { points ->
         points?.groupBy { it.markerType }
     }
+    val isMovingFlow = markerMap.isMovingFlow
 
     init {
         scope.launch {

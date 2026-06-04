@@ -26,7 +26,7 @@ fun RenderContext.viewEarthMap(model: EarthMap) {
         earthHeader(model)
         earthWindow(model)
         earthPanel(model)
-    }
+    }.flowModifier(model.isMovingFlow, Earth.IsMoving, renderScope)
 }
 
 fun RenderContext.viewEarthMapRoute() {
@@ -81,7 +81,7 @@ fun RenderContext.earthHeader(model: EarthMap) {
 }
 
 fun RenderContext.earthWindow(model: EarthMap) {
-    column(modify(Earth.Window, ZIndex2, PointerEventsNone, PaddingLeft1)) {
+    column(modify(Earth.Window, Earth.MoveDimmer, ZIndex2, PointerEventsNone, PaddingLeft1)) {
         spacer(modify(Flex1))
         textBlock(model.summaryFlow.map { map -> map?.entries?.joinToString(" • ") { "${it.key.label}: ${it.value.size}" } })
     }
@@ -91,8 +91,7 @@ fun RenderContext.earthPanel(model: EarthMap) {
     val reversedItems = model.boundedMarkersFlow.map { it.reversed() } // reverse shows new items on top
     itemsBlock(
         flow = reversedItems,
-        mod = modify(Earth.Panel, ZIndex2, Magic, SlideLeft, Margin1, PointerEventsNone),
-        // containerConfig = { addModifiers(PointerEventsNone) }
+        mod = modify(Earth.Panel, Earth.MoveDimmer, ZIndex2, Magic, SlideLeft, Margin1, PointerEventsNone),
     ) { marker ->
         when (marker) {
             is GalaxyMarker -> {
