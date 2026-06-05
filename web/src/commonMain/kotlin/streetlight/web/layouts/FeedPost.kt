@@ -36,7 +36,6 @@ fun FlowContent.feedPost(
     links: List<ExtraLink>?,
     details: (FlowContent.() -> Unit)?,
 ) {
-
     div(modify(FeedPost.Class)) {
         postId?.let {
             setAttribute(PostKey.Attribute.to(postId))

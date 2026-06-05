@@ -82,18 +82,20 @@ $Grid {
     gap: var(--unit-spacing);
 
     > $Window    { grid-area: window; }
-    > $List      { grid-area: list; }
+    > $List      { grid-area: list; width: 4rem; }
     > $Focus     { grid-area: focus; max-width: 400px; }
     > $Unbounded { grid-column: 1 / -1; grid-row: 1 / -1; }
     
+    $ListDetail {
+        width: 350px;
+        transition: width var(--magic-interval) var(--magic-easing);
+        overflow: hidden;
+    }
+    
     @media (max-width: ${MinifiedWidth}px) {
-        &$IsFocused {
-            > $List {
-                width: 4rem;
-            }
-            
+        &$IsFocused { 
             $ListDetail {
-                display: none;
+                width: 0;
             }
         }
     }

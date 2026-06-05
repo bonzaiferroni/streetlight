@@ -6,6 +6,7 @@ import kampfire.model.thumb
 import koala.SvgFile
 import koala.css.*
 import koala.dom.*
+import koala.html.featureImage
 import koala.html.heading3
 import koala.html.heading4
 import koala.html.image
@@ -15,9 +16,14 @@ import kotlinx.browser.document
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import kotlinx.html.FlowContent
 import kotlinx.html.hr
 import streetlight.web.EarthRoute
 import streetlight.web.HomeRoute
+import streetlight.web.layouts.ColorScheme
+import streetlight.web.layouts.GridArea
+import streetlight.web.layouts.cellBlock
+import streetlight.web.layouts.eventCells
 import streetlight.web.model.EarthMap
 import streetlight.web.model.EventMarker
 import streetlight.web.model.GalaxyMarker
@@ -148,17 +154,20 @@ fun DOMContext.markerItem(
     }.onClick(onClick)
 }
 
-private val earthFocusMod = modify(
-    Earth.Focus, Magic, SlideRight, BorderRadius2, OverflowYAuto
-)
-
 fun RenderContext.earthFocus(model: EarthMap) {
-    flowBlock(model.focusFlow, earthFocusMod) { marker ->
+    flowBlock(model.focusFlow, modify(Earth.Focus, Magic, SlideLeft, BorderRadius2, OverflowYAuto)) { marker ->
         when (marker) {
             null -> return@flowBlock
             is EventMarker -> {
                 val post = marker.post
-                focusPanel(post.label, post.sublabel, post.images.medium, post.description)
+                focusPanel(
+                    label = post.label,
+                    sublabel = post.sublabel,
+                    imageUrl = post.images.medium,
+                    description = post.description,
+                    colorScheme = ColorScheme.Accent,
+                    details = eventCells(marker.post.event)
+                )
             }
         }
     }
@@ -168,10 +177,18 @@ fun RenderContext.focusPanel(
     label: String,
     sublabel: String?,
     imageUrl: Url?,
-    description: String?
+    description: String?,
+    colorScheme: ColorScheme = ColorScheme.Primary,
+    details: (FlowContent.() -> Unit)? = null,
 ) {
     card(modify(Gap0, Padding0, BlurBackdrop, PointerEventsAuto, Earth.MoveDimmer)) {
-        image(imageUrl)
+        setStyle(Property.ColorScheme.to(colorScheme.cssValue))
+        row(modify(Gap0)) {
+            featureImage(imageUrl, modify(Flex1))
+            details?.let {
+                cellBlock(modify(FlexWrap, Width16), details)
+            }
+        }
         column(modify(Padding1)) {
             column(modify(Gap0, LineHeight115)) {
                 heading3(label, modify(Bold))
