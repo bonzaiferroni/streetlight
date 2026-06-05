@@ -104,6 +104,7 @@ class GeoMap(
     }
 
     fun panMap(pan: PanPoint) {
+        if (pan.point.isTouching(stateNow.center) && (pan.zoom == null || pan.zoom == stateNow.zoom)) return
         scope.launch {
             _panFlow.emit(pan)
         }

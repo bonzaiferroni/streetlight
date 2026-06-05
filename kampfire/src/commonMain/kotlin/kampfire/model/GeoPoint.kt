@@ -19,6 +19,8 @@ data class GeoPoint(
 
     fun toQuery() = "lng=$lng&lat=$lat"
 
+    fun isTouching(other: GeoPoint) = abs(lng - other.lng) < 1e-9 && abs(lat - other.lat) < 1e-9
+
     companion object {
         val Denver = GeoPoint(-104.95, 39.75)
 

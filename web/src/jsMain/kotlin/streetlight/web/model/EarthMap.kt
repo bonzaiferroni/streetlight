@@ -32,6 +32,7 @@ class EarthMap(
     }
     val isMovingFlow = markerMap.isMovingFlow
     val focusFlow = markerMap.focusFlow
+    val isFocusedFlow = focusFlow.mapDistinct { it != null }
 
     init {
         scope.launch {

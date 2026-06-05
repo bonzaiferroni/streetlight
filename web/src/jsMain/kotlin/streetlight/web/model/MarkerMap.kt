@@ -56,6 +56,7 @@ class MarkerMap(
 
     fun setFocus(marker: AppMarker) {
         geoMap.setFocus(marker)
+        geoMap.panMap(marker.geoPoint)
         state.set { it.copy(focus = marker)}
     }
 }

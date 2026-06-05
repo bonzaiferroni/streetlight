@@ -25,13 +25,17 @@ import streetlight.web.model.LocationMarker
 import streetlight.web.pages.AppBodyKey
 
 fun RenderContext.viewEarthMap(model: EarthMap) {
-    div(Earth.Id, modify(Size100P)) {
+    box(Earth.Id, modify(Size100P)) {
         val mount = geoMapMount(geoMap, appScope, mod = modify(Earth.Map))
-        earthHeader(model)
-        earthUnboundedOverlay(model, mount)
-        earthWindow(model)
-        earthPanel(model)
-        earthFocus(model)
+        column(modify(Gap0, PointerEventsNone)) {
+            earthHeader(model)
+            div(modify(Earth.Grid, Padding1, Flex1, MinHeight0)) {
+                earthUnboundedOverlay(model, mount)
+                earthWindow(model)
+                earthList(model)
+                earthFocus(model)
+            }.flowModifier(model.isFocusedFlow, Earth.IsFocused, renderScope)
+        }
     }.flowModifier(model.isMovingFlow, Earth.IsMoving, renderScope)
 }
 
@@ -66,8 +70,8 @@ fun RenderContext.viewEarthMapRoute() {
 }
 
 fun RenderContext.earthHeader(model: EarthMap) {
-    val iconMod = modify(Width5, Aspect1, ZIndex2)
-    row(modify(Earth.Header, AlignItemsCenter, PaperGradientBg, Padding1, ZIndex2)) {
+    val iconMod = modify(Width5, Aspect1)
+    row(modify(Earth.Header, AlignItemsCenter, PaperGradientBg, Padding1)) {
         flowBlock(model.galaxyFlow, modify(Flex1)) { galaxy ->
             when (galaxy) {
                 null -> row {
@@ -87,18 +91,18 @@ fun RenderContext.earthHeader(model: EarthMap) {
 }
 
 fun RenderContext.earthWindow(model: EarthMap) {
-    column(modify(Earth.Window, Earth.MoveDimmer, ZIndex2, PointerEventsNone, PaddingLeft1)) {
+    column(modify(Earth.Window, Earth.MoveDimmer)) {
         spacer(modify(Flex1))
         textBlock(model.summaryFlow.map { map -> map?.entries?.joinToString(" • ") { "${it.key.label}: ${it.value.size}" } })
     }
 }
 
-fun RenderContext.earthPanel(model: EarthMap) {
+fun RenderContext.earthList(model: EarthMap) {
     val reversedItems = model.boundedMarkersFlow.map { it.reversed() } // reverse shows new items on top
-    box(modify(Earth.List, Earth.MoveDimmer, ZIndex2, PointerEventsNone)) {
+    box(modify(Earth.List, Earth.MoveDimmer)) {
         itemsBlock(
             flow = reversedItems,
-            mod = modify(Magic, SlideLeft, Margin1),
+            mod = modify(Magic, SlideLeft),
         ) { marker ->
             when (marker) {
                 is GalaxyMarker -> {
@@ -135,7 +139,7 @@ fun DOMContext.markerItem(
 ) {
     row(modify(Height8, BorderRadius2, OverflowClip, Gap0, WidthFitContent, PointerEventsAuto)) {
         image(thumb, modify(Aspect1))
-        column(modify(PaperGradientBg, Padding1, Gap0)) {
+        column(modify(Earth.ListDetail, PaperGradientBg, Padding1, Gap0)) {
             heading3(label, modify(Bold, LineHeight115, SingleLine))
             sublabel?.let {
                 textBlock(sublabel, modify(SmallText))
@@ -145,7 +149,7 @@ fun DOMContext.markerItem(
 }
 
 private val earthFocusMod = modify(
-    Earth.Focus, Magic, SlideRight, ZIndex2, BorderRadius2, OverflowYAuto, PointerEventsNone, Margin1
+    Earth.Focus, Magic, SlideRight, BorderRadius2, OverflowYAuto
 )
 
 fun RenderContext.earthFocus(model: EarthMap) {

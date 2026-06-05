@@ -36,7 +36,9 @@ fun RenderContext.earthUnboundedOverlay(model: EarthMap, mapContext: MapViewCont
     val hints = mutableMapOf<MarkerId, MarkerHint>()
 
     fun createHint(marker: AppMarker) = element.append {
-        image(marker.thumbUrl, modify(BorderRadius50P, Height5, Aspect1))
+        image(marker.thumbUrl, modify(BorderRadius50P, Height5, Aspect1, PointerEventsAuto)).onClick {
+            model.setFocus(marker)
+        }
     }.first().let { MarkerHint(marker, it) }
 
     fun setState(hint: MarkerHint, offset: Point) {

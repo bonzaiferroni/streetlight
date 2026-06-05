@@ -172,6 +172,12 @@ fun RenderContext.wireMapContext(
             }
         }
 
+        launch {
+            geoMap.focusFlow.collect { marker ->
+                context.setFocus(marker)
+            }
+        }
+
 //        launch {
 //            geoMap.contextIdFlow.collect {
 //                context.setContextId(it)

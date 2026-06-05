@@ -97,7 +97,7 @@ class MapViewContext(
         view.setIsVisible(isVisible, widget)
     }
 
-    private fun setFocus(entity: PointMarker?) {
+    fun setFocus(entity: PointMarker?) {
         focus?.unfocus()
         val view = entity?.let { markers[it.markerId] }
         view?.focus()

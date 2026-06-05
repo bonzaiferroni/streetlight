@@ -15,7 +15,10 @@ object Earth {
     val ViewMapButtonMod = modify(PositionSticky, TopSpacing1, JustifySelfCenter, AlignSelfStart, ZIndex1)
     val IsMoving = Class("is-moving")
     val MoveDimmer = Class("move-dimmer")
+    val IsFocused = Class("is-focused")
+    val ListDetail = Class("list-detail")
 
+    val Grid = Class("earth-grid")
     val Map = Class("earth-map")
     val Header = Class("earth-header")
     val Window = Class("earth-window")
@@ -47,21 +50,12 @@ $DayTheme .maplibregl-canvas {
 }
 
 $Id {
-    display: grid;
-    grid-template-columns: 1fr 400px;
-    grid-template-rows: auto 1fr auto;
-    grid-template-areas: 
-        "header header"
-        "window window"
-        "list" "focus";
+    height: 100vh;
     
-    > $Header    { grid-area: header; }
-    > $Window    { grid-area: window; }
-    > $List      { grid-area: list; }
-    > $Focus     { grid-area: focus; }
-    > $Map       { grid-column: 1 / -1; grid-row: 1 / -1; }
-    > $Unbounded { grid-column: 1 / -1; grid-row: 2 / -1; }
-    
+    > * {
+        height: 100vh;
+    }
+
     $MoveDimmer {
         transition: var(--transition-opacity);
         opacity: 1;
@@ -73,11 +67,41 @@ $Id {
         }
     }
     
+    > * {
+        isolation: isolate;
+    }
+}
+
+$Grid {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    grid-template-rows: 1fr 300px;
+    grid-template-areas: 
+        "window window"
+        "list focus";
+    gap: var(--unit-spacing);
+
+    > $Window    { grid-area: window; }
+    > $List      { grid-area: list; }
+    > $Focus     { grid-area: focus; max-width: 400px; }
+    > $Unbounded { grid-column: 1 / -1; grid-row: 1 / -1; }
+    
+    @media (max-width: ${MinifiedWidth}px) {
+        &$IsFocused {
+            > $List {
+                width: 4rem;
+            }
+            
+            $ListDetail {
+                display: none;
+            }
+        }
+    }
+    
     @media (min-width: ${MinifiedWidth}px) {
         grid-template-columns: 400px 1fr;
-        grid-template-rows: auto 1fr auto;
+        grid-template-rows: 1fr auto;
         grid-template-areas: 
-            "header header"
             "focus window"
             "list window";
     }
