@@ -54,7 +54,7 @@ fun FlowContent.feedPost(
                 )
             }
 
-            box(modify(OpacityMost)) {
+            box(modify(OpacityHigh)) {
                 postId?.let {
                     onClick = LightControl.ToggleFun.invoke(ThisElement, postId)
                 }
@@ -78,7 +78,7 @@ fun FlowContent.feedPost(
                 }
                 subHeading?.let {
                     navigationIfNotNull(subRoute) {
-                        textBlock(subHeading, modify(OpacityMost))
+                        textBlock(subHeading, modify(OpacityHigh))
                     }
                 }
                 spacer(modify(Height2Px, InkGradientBg, MarginTop2Px))

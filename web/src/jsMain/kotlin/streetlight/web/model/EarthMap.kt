@@ -24,16 +24,14 @@ class EarthMap(
     private val state = storeOf(EarthMapState())
     val stateFlow = state.flow
     val stateNow get() = state.now
-    // val galaxiesFlow = stateFlow.mapDistinct { it.galaxies }
     val galaxyFlow = stateFlow.mapDistinct { it.galaxy }
-    // val postsFlow = stateFlow.mapDistinct { it.posts ?: emptyList() }
-    // val postFlow = stateFlow.mapDistinct { it.post }
     val boundedMarkersFlow = markerMap.boundedMarkersFlow.mapDistinct { it ?: emptyList() }
     val unboundedMarkersFlow = markerMap.unboundedMarkersFlow.mapDistinct { it ?: emptyList() }
     val summaryFlow = markerMap.boundedMarkersFlow.mapDistinct { points ->
         points?.groupBy { it.markerType }
     }
     val isMovingFlow = markerMap.isMovingFlow
+    val focusFlow = markerMap.focusFlow
 
     init {
         scope.launch {
@@ -60,6 +58,8 @@ class EarthMap(
             }
         }
     }
+
+    fun setFocus(marker: AppMarker) = markerMap.setFocus(marker)
 }
 
 data class EarthMapState(

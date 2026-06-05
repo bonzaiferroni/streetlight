@@ -35,8 +35,8 @@ fun RenderContext.galaxyCityForm(model: GalaxyEditor) {
             }
             column(modify(Height32, OverflowYAuto, Gap0)) {
                 row(modify(Padding1, JustifyContentSpaceBetween)) {
-                    textBlock("city", modify(OpacitySome, Italic))
-                    textBlock("galaxies", modify(OpacitySome, Italic))
+                    textBlock("city", modify(OpacityLow, Italic))
+                    textBlock("galaxies", modify(OpacityLow, Italic))
                 }
                 selectionBlock(localitiesFlow, model::setCity, localityFlow) { city ->
                     card(modify(BorderRadius1)) {
@@ -72,7 +72,7 @@ fun RenderContext.galaxyNameForm(model: GalaxyEditor) {
             instructions = pathInstructions,
             info = {
                 flowBlock(slugFlow) { path ->
-                    textBlock("Currently: streetlight.ing/g/$path", modify(OpacityMost))
+                    textBlock("Currently: streetlight.ing/g/$path", modify(OpacityHigh))
                 }
             }
         ) {

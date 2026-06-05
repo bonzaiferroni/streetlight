@@ -26,7 +26,7 @@ fun DIV.configureAppFooter(sourcePath: String?, vararg additional: ExtraLink) {
     val prayer = "May we build a world of faithful giants."
     addModifiers(modify(JustifyContentCenter, AlignItemsCenter, Gap0, MarginBottom16))
     lottie(LottieFile.spinningCircles, modify(Height24))
-    textBlock(prayer, modify(Italic, OpacityMost))
+    textBlock(prayer, modify(Italic, OpacityHigh))
     row(modify(JustifyContentCenter)) {
         navigation(SiteDoc.About.route) {
             textBlock("about us")

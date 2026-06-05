@@ -62,7 +62,7 @@ fun FlowContent.layoutTalkPreview(route: AppRoute, comments: List<Comment>) {
         }
         navigation(route) {
             column(modify(AlignItemsCenter, JustifyContentCenter, Height12)) {
-                textBlock("No comments here yet, be the first.", modify(OpacityMost))
+                textBlock("No comments here yet, be the first.", modify(OpacityHigh))
             }
         }
     }

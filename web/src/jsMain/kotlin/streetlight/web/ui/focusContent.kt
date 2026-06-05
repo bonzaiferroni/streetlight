@@ -23,7 +23,7 @@ fun RenderContext.eventFocusContent(post: EventPost) {
                 column {
                     heading3(event?.title ?: "[removed]", modify(SingleLine))
                     event?.locationName?.let {
-                        textBlock(it, modify(OpacityMost))
+                        textBlock(it, modify(OpacityHigh))
                     }
                 }
                 event?.description?.let {

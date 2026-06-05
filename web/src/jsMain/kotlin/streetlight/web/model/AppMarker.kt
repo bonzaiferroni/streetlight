@@ -1,6 +1,7 @@
 package streetlight.web.model
 
 import kampfire.model.Labeled
+import kampfire.model.ScaledImageArray
 import kampfire.model.thumb
 import koala.SiteImage
 import koala.css.modify

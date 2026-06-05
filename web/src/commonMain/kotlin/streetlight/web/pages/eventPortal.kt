@@ -63,7 +63,7 @@ fun HTML.eventPortal(event: Event, performer: Performer?, requestItems: List<Req
         column(Id("tips-box"), modify(AlignItemsCenter)) {
             row(modify(AlignItemsCenter, WidthAuto)) {
                 row(modify(WidthAuto)) {
-                    heading3("Venmo:", modify(OpacityMost))
+                    heading3("Venmo:", modify(OpacityHigh))
                     a("https://venmo.com/colfaxband?txn=pay&note=street+music") {
                         heading3("@colfaxband", modify(GlowShadow))
                     }
@@ -100,7 +100,7 @@ fun FlowContent.requestItem(
                 textBlock(song.artist)
             }
             column(modify(Gap0, AlignItemsCenter, WidthAuto)) {
-                textBlock("plays", modify(OpacityMost))
+                textBlock("plays", modify(OpacityHigh))
                 textBlock(plays.toString())
             }
         }

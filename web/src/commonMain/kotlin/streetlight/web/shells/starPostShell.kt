@@ -13,7 +13,7 @@ import koala.css.MarginTop4
 import koala.css.MaxHeight64
 import koala.css.MaxWidthTextBody
 import koala.css.MoonShadow
-import koala.css.OpacityMost
+import koala.css.OpacityHigh
 import koala.css.OverflowClip
 import koala.css.Padding0
 import koala.css.Padding2
@@ -48,7 +48,7 @@ fun FlowContent.postShell(post: BasicPost) {
         column(modify(Gap0)) {
             heading1(post.label, modify(TextAlignCenter, AntiShadow, LineHeight115, MarginTop4))
             filigree {
-                heading4("in Denver This Weekend", modify(OpacityMost, LineHeight115))
+                heading4("in Denver This Weekend", modify(OpacityHigh, LineHeight115))
             }
         }
 

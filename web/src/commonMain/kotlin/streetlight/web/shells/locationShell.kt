@@ -40,7 +40,7 @@ object LocationProfileKey {
 
 fun FlowContent.propertyRow(property: String, block: DIV.() -> Unit) {
     row {
-        textBlock("${property}:", modify(Flex1, OpacityMost, TextAlignRight))
+        textBlock("${property}:", modify(Flex1, OpacityHigh, TextAlignRight))
         box(modify(Flex2), block = block)
     }
 }

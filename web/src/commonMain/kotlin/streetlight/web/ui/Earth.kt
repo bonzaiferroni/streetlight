@@ -20,7 +20,8 @@ object Earth {
     val Header = Class("earth-header")
     val Window = Class("earth-window")
     val Unbounded = Class("earth-unbounded")
-    val Panel = Class("panel")
+    val List = Class("earth-list")
+    val Focus = Class("earth-focus")
 
     val MinifiedWidth = 800
 }
@@ -47,16 +48,17 @@ $DayTheme .maplibregl-canvas {
 
 $Id {
     display: grid;
-    grid-template-columns: auto;
+    grid-template-columns: 1fr 400px;
     grid-template-rows: auto 1fr auto;
     grid-template-areas: 
-        "header"
-        "window"
-        "panel";
+        "header header"
+        "window window"
+        "list" "focus";
     
     > $Header    { grid-area: header; }
     > $Window    { grid-area: window; }
-    > $Panel     { grid-area: panel; }
+    > $List      { grid-area: list; }
+    > $Focus     { grid-area: focus; }
     > $Map       { grid-column: 1 / -1; grid-row: 1 / -1; }
     > $Unbounded { grid-column: 1 / -1; grid-row: 2 / -1; }
     
@@ -67,16 +69,17 @@ $Id {
     
     &$IsMoving {
         $MoveDimmer {
-            opacity: .75;
+            opacity: .6;
         }
     }
     
     @media (min-width: ${MinifiedWidth}px) {
         grid-template-columns: 400px 1fr;
-        grid-template-rows: auto 1fr;
+        grid-template-rows: auto 1fr auto;
         grid-template-areas: 
             "header header"
-            "panel window";
+            "focus window"
+            "list window";
     }
 }
 

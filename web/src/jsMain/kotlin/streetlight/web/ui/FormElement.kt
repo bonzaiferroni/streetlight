@@ -2,15 +2,11 @@ package streetlight.web.ui
 
 import koala.css.*
 import koala.dom.*
-import koala.html.AppRoute
-import koala.html.btn
 import koala.html.bulletsOf
 import koala.html.filigree
 import koala.html.heading3
-import koala.model.Store
 import kotlinx.coroutines.flow.Flow
 import kotlinx.html.DIV
-import org.w3c.dom.HTMLElement
 
 fun RenderContext.formBody(
     modifiers: ModifierSet? = null,
@@ -60,7 +56,7 @@ fun DOMContext.formPart(
             textBlock(it)
         }
         examples?.let {
-            column(modify(Gap0, OpacityMost)) {
+            column(modify(Gap0, OpacityHigh)) {
                 textBlock("Examples:")
                 bulletsOf(it)
             }
@@ -85,7 +81,7 @@ fun RenderContext.formTextField(
 ) = column(modifiers) {
     textField(label, onValue = onValue, flow = flow)
     if (footnote != null || maxLength != null) {
-        row(modify(OpacityMost, Italic, WhiteSpaceNoWrap, PaddingX1, SmallText)) {
+        row(modify(OpacityHigh, Italic, WhiteSpaceNoWrap, PaddingX1, SmallText)) {
             footnote?.let {
                 textBlock(footnote)
             }
@@ -128,7 +124,7 @@ object FormMod {
     val Card = modify(ZenBg, QueryContainer, Gap3)
     val Part = modify(ContainerMdRow)
     val Instructions = modify(Flex1, JustifyContentCenter, Margin1)
-    val Bullets = modify(OpacityMost)
+    val Bullets = modify(OpacityHigh)
     val GeoMap = modify(Height48, BorderRadius2, OverflowClip, MoonShadow)
 }
 

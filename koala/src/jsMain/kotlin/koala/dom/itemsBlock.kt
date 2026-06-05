@@ -57,6 +57,8 @@ fun <Item> RenderContext.itemsBlock(
 
     launchRender {
         flow.collect { items ->
+            if (items.isNotEmpty()) parent.unmodify(DisplayNone)
+
             displayedItems?.forEach { (item, element) ->
                 if (!items.contains(item)) {
 
@@ -86,9 +88,10 @@ fun <Item> RenderContext.itemsBlock(
                 element
             }
 
+            console.log("items change")
             // the base element height is set/animated each time the items change
+            resizeJob?.cancel()
             resizeJob = launch {
-                resizeJob?.cancel()
                 var index = 0
                 var height = 0
 
@@ -110,6 +113,7 @@ fun <Item> RenderContext.itemsBlock(
                     delay(200)
                 }
 
+                if (height == 0) parent.modify(DisplayNone)
                 parent.style.height = "${height}px"
             }
         }

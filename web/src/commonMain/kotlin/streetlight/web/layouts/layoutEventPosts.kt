@@ -23,7 +23,7 @@ fun FlowContent.layoutEventPosts(
             val dayFormat = posts.first().event!!.startsAt.toRelativeDayFormat()
             section {
                 filigree(modify(MarginTop2)) {
-                    heading4(dayFormat, SectionHeadingMod + OpacityMost)
+                    heading4(dayFormat, SectionHeadingMod + OpacityHigh)
                 }
                 olist {
                     posts.forEach {

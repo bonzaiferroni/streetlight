@@ -121,7 +121,7 @@ fun RenderContext.viewEventFormProto(
             filigree {
                 heading3("Description")
             }
-            column(modify(OpacityMost, AlignItemsCenter)) {
+            column(modify(OpacityHigh, AlignItemsCenter)) {
                 textBlock(
                     "Tell us all about the event. Markdown features currently supported: Headings, paragraphs.",
                 )
@@ -205,11 +205,11 @@ fun RenderContext.eventLinks(model: EventEditor) {
 
     column(modify(Gap2)) {
         column(modify(Gap1)) {
-            textBlock("Is there more information about this event somewhere out there?", modify(OpacityMost))
+            textBlock("Is there more information about this event somewhere out there?", modify(OpacityHigh))
             textField("Link", modify(Width100P), model::setUrl, model.urlFlow)
         }
         column(modify(Gap1)) {
-            textBlock("Want to give a shout out to the original place where you found the event?", modify(OpacityMost))
+            textBlock("Want to give a shout out to the original place where you found the event?", modify(OpacityHigh))
             row {
                 textField("Source label", modify(Flex1), model::setOriginalSourceLabel, originalSourceLabelFlow)
                 textField("Source url", modify(Flex3), model::setOriginalSourceUrl, originalSourceUrlFlow)

@@ -19,7 +19,6 @@ import streetlight.web.SiteConfigRoute
 import streetlight.web.StarDashRoute
 import streetlight.web.StarRoute
 import streetlight.web.model.CredentialStore
-import streetlight.web.model.Streetlight
 import streetlight.web.model.UserGate
 import streetlight.web.pages.HelmBarKey
 import streetlight.web.pages.StarHelmKey
@@ -57,7 +56,7 @@ private fun RenderContext.starPanel(star: Star) {
             button(modify(HelmBarKey.IconMod, FadeLoop)) {
                 onClick = StarHelmKey.ClosePopover
 
-                image(star.images.thumb, modify(OpacityMost, Size100P, BorderRadius50P))
+                image(star.images.thumb, modify(OpacityHigh, Size100P, BorderRadius50P))
             }
         }
 
@@ -88,7 +87,7 @@ private fun RenderContext.someonePanel() {
             button(modify(HelmBarKey.IconMod, FadeLoop)) {
                 onClick = StarHelmKey.ClosePopover
 
-                image(SvgFile.Someone, modify(OpacityMost, Size100P, BorderRadius50P))
+                image(SvgFile.Someone, modify(OpacityHigh, Size100P, BorderRadius50P))
             }
         }
 

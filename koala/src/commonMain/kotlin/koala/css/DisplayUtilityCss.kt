@@ -5,7 +5,7 @@ val DisplayUtilityCss
         // Display/Visibility
         DisplayNone, VisibilityHidden,
         // Opacity
-        Opacity1, OpacityMost, OpacityHalf, OpacitySome, OpacityGhost, Dim, NoDim,
+        Opacity1, OpacityHigh, OpacityHalf, OpacityLow, OpacityGhost, Dim, NoDim,
         // Animation
         Glow, GlowShadow, GlowBackground, SpinLoop,
         // Shape
@@ -46,9 +46,9 @@ val VisibilityHidden = utilityOf("visibility-hidden", "visibility: hidden !impor
 // Opacity
 // val Opacity1 = CssUtility("opacity-1", ".opacity-1 { opacity: 1; }")
 val Opacity1 = utilityOf("opacity-1", "opacity: 1")
-val OpacityMost = utilityOf("opacity-most", "opacity: .75")
+val OpacityHigh = utilityOf("opacity-high", "opacity: .75")
 val OpacityHalf = utilityOf("opacity-half", "opacity: .5")
-val OpacitySome = utilityOf("opacity-some", "opacity: .25")
+val OpacityLow = utilityOf("opacity-low", "opacity: .25")
 val OpacityGhost = utilityOf("opacity-ghost", "opacity: .1")
 val Dim = utilityOf("dim", "color: rgba(var(--ink), 0.6)")
 val NoDim = utilityOf("no-dim", "color: rgb(var(--ink)) !important")

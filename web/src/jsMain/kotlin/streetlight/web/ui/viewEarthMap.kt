@@ -1,11 +1,13 @@
 package streetlight.web.ui
 
 import kampfire.model.Url
+import kampfire.model.medium
 import kampfire.model.thumb
 import koala.SvgFile
 import koala.css.*
 import koala.dom.*
 import koala.html.heading3
+import koala.html.heading4
 import koala.html.image
 import koala.html.logo
 import koala.html.spacer
@@ -13,6 +15,7 @@ import kotlinx.browser.document
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import kotlinx.html.hr
 import streetlight.web.EarthRoute
 import streetlight.web.HomeRoute
 import streetlight.web.model.EarthMap
@@ -28,6 +31,7 @@ fun RenderContext.viewEarthMap(model: EarthMap) {
         earthUnboundedOverlay(model, mount)
         earthWindow(model)
         earthPanel(model)
+        earthFocus(model)
     }.flowModifier(model.isMovingFlow, Earth.IsMoving, renderScope)
 }
 
@@ -91,29 +95,33 @@ fun RenderContext.earthWindow(model: EarthMap) {
 
 fun RenderContext.earthPanel(model: EarthMap) {
     val reversedItems = model.boundedMarkersFlow.map { it.reversed() } // reverse shows new items on top
-    itemsBlock(
-        flow = reversedItems,
-        mod = modify(Earth.Panel, Earth.MoveDimmer, ZIndex2, Magic, SlideLeft, Margin1, PointerEventsNone),
-    ) { marker ->
-        when (marker) {
-            is GalaxyMarker -> {
-                val galaxy = marker.galaxy
-                if (galaxy.eventCount + galaxy.locationCount == 0) return@itemsBlock
-                markerItem(galaxy.images.thumb, galaxy.name, buildString {
-                    if (galaxy.eventCount > 0) append("${galaxy.eventCount} events")
-                    if (galaxy.locationCount > 0) {
-                        if (isNotEmpty()) append(" • ")
-                        append("${galaxy.locationCount} locations")
+    box(modify(Earth.List, Earth.MoveDimmer, ZIndex2, PointerEventsNone)) {
+        itemsBlock(
+            flow = reversedItems,
+            mod = modify(Magic, SlideLeft, Margin1),
+        ) { marker ->
+            when (marker) {
+                is GalaxyMarker -> {
+                    val galaxy = marker.galaxy
+                    if (galaxy.eventCount + galaxy.locationCount == 0) return@itemsBlock
+                    markerItem(galaxy.images.thumb, galaxy.name, buildString {
+                        if (galaxy.eventCount > 0) append("${galaxy.eventCount} events")
+                        if (galaxy.locationCount > 0) {
+                            if (isNotEmpty()) append(" • ")
+                            append("${galaxy.locationCount} locations")
+                        }
+                    }) {
+                        portal.go(EarthRoute(marker.galaxy.slug))
                     }
-                }) {
-                    portal.go(EarthRoute(marker.galaxy.slug))
                 }
-            }
-            is EventMarker -> {
-                markerItem(marker.post.images.thumb, marker.post.label, marker.post.sublabel) { }
-            }
-            is LocationMarker -> {
-                markerItem(marker.location.images.thumb, marker.location.label, marker.location.sublabel) { }
+                is EventMarker -> {
+                    markerItem(marker.post.images.thumb, marker.post.label, marker.post.sublabel) {
+                        model.setFocus(marker)
+                    }
+                }
+                is LocationMarker -> {
+                    markerItem(marker.location.images.thumb, marker.location.label, marker.location.sublabel) { }
+                }
             }
         }
     }
@@ -136,3 +144,41 @@ fun DOMContext.markerItem(
     }.onClick(onClick)
 }
 
+private val earthFocusMod = modify(
+    Earth.Focus, Magic, SlideRight, ZIndex2, BorderRadius2, OverflowYAuto, PointerEventsNone, Margin1
+)
+
+fun RenderContext.earthFocus(model: EarthMap) {
+    flowBlock(model.focusFlow, earthFocusMod) { marker ->
+        when (marker) {
+            null -> return@flowBlock
+            is EventMarker -> {
+                val post = marker.post
+                focusPanel(post.label, post.sublabel, post.images.medium, post.description)
+            }
+        }
+    }
+}
+
+fun RenderContext.focusPanel(
+    label: String,
+    sublabel: String?,
+    imageUrl: Url?,
+    description: String?
+) {
+    card(modify(Gap0, Padding0, BlurBackdrop, PointerEventsAuto, Earth.MoveDimmer)) {
+        image(imageUrl)
+        column(modify(Padding1)) {
+            column(modify(Gap0, LineHeight115)) {
+                heading3(label, modify(Bold))
+                sublabel?.let {
+                    heading4(sublabel, modify(OpacityHigh))
+                }
+            }
+            hr { }
+            description?.let {
+                markdown(it, modify(SmallText))
+            }
+        }
+    }
+}

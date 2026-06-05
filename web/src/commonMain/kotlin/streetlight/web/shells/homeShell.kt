@@ -76,7 +76,7 @@ fun FlowContent.galaxiesSection(galaxies: List<Galaxy>) {
         }
 
         column(modify(ContainerMdRow, FlexItems1)) {
-            val subHeadingMods = modify(LineHeight1, OpacityMost)
+            val subHeadingMods = modify(LineHeight1, OpacityHigh)
             column {
                 filigree {
                     heading4("Top Galaxies", subHeadingMods)

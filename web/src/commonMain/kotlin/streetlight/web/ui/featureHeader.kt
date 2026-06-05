@@ -16,7 +16,7 @@ import koala.css.LineHeight1
 import koala.css.ModifierSet
 import koala.css.MoonShadow
 import koala.css.OpacityHalf
-import koala.css.OpacityMost
+import koala.css.OpacityHigh
 import koala.css.OverflowClip
 import koala.css.Padding0
 import koala.css.Padding2
@@ -73,7 +73,7 @@ fun FlowContent.featureHeader(
                     heading2(title, modify(TextAlignCenter, LineHeight1))
                     filigree { textBlock(descriptor, modify(Italic, OpacityHalf)) }
                     subtitle?.let {
-                        heading4(subtitle, modify(OpacityMost, TextAlignCenter))
+                        heading4(subtitle, modify(OpacityHigh, TextAlignCenter))
                     }
                 }
             }

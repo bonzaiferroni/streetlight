@@ -47,7 +47,7 @@ fun FlowContent.eventShell(event: EventLocation) {
                                     heading2(event.locationName, modify(TextAlignCenter, MinWidth0))
                                     event.addressLine?.let {
                                         filigree {
-                                            heading4(it, modify(OpacityMost, TextAlignCenter))
+                                            heading4(it, modify(OpacityHigh, TextAlignCenter))
                                         }
                                     }
                                 }

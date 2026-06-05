@@ -3,6 +3,7 @@
     --magic-easing: ease-in-out;
     --magic-blur: blur(6px);
     --slide-left-initial: translate(20px, 0px);
+    --slide-right-initial: translate(-20px, 0px);
     --slide-up-initial: translate(0px, 20px);
     --glow-shadow-infinite: glow-shadow 9s infinite linear;
     --anti-shadow-infinite: anti-shadow 9s infinite linear;

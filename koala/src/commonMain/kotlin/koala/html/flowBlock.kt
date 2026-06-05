@@ -46,4 +46,12 @@ val FlowBlockCss get() = """
     transform: translate(0px, 0px);
 }
 
+.flow-block.transitioning.slide-right {
+    transform: var(--slide-right-initial);
+}
+
+.flow-block.transitioning.slide-right.reveal {
+    transform: translate(0px, 0px);
+}
+
 """

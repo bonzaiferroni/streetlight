@@ -44,7 +44,7 @@ fun FlowContent.siteDocContent(node: DocNode) {
             val idSections = doc.sections.filter { it.id != null && it.title != null }
             if (idSections.size > 1) {
                 row(modify(JustifyContentCenter, AlignItemsCenter, FlexWrap, PaddingX1)) {
-                    textBlock("Jump to:", modify(OpacityMost))
+                    textBlock("Jump to:", modify(OpacityHigh))
                     idSections.forEach {
                         navigation(it.id!!) {
                             textBlock(it.title!!, modify(Padding1))

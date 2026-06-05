@@ -208,12 +208,12 @@ class CommentView(
                             image(comment.thumb, modify(Aspect1, Height6, BorderRadius50P))
                             column(modify(Gap0)) {
                                 textBlock(comment.username ?: "Someone")
-                                textBlock(comment.createdAt.toAgoFormat(), modify(OpacityMost, SmallText))
+                                textBlock(comment.createdAt.toAgoFormat(), modify(OpacityHigh, SmallText))
                             }
                         }
                     }
                     spacer(modify(Flex1))
-                    icon(SvgFile.EyeMinus, modify(Height5, OpacityMost)).onClickElement {
+                    icon(SvgFile.EyeMinus, modify(Height5, OpacityHigh)).onClickElement {
                         val isHidden = rootBlock.toggle(Hide)
                         val svg = when (isHidden) {
                             true -> SvgFile.EyePlus

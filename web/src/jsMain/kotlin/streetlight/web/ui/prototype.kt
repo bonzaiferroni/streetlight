@@ -1,46 +1,20 @@
 package streetlight.web.ui
 
 import kampfire.model.medium
-import kampfire.model.thumb
-import koala.css.Aspect1
 import koala.css.BlurBackdrop
-import koala.css.Bold
-import koala.css.BorderRadius1
-import koala.css.BorderRadius2
-import koala.css.BorderRadiusTop1
 import koala.css.CardBg
-import koala.css.CardGradientBg
-import koala.css.Flex1
-import koala.css.Gap0
 import koala.css.Height100P
 import koala.css.Height24
-import koala.css.Height8
-import koala.css.LineHeight115
-import koala.css.OpacityMost
-import koala.css.OverflowClip
 import koala.css.OverflowYAuto
 import koala.css.Padding1
-import koala.css.PaddingTop1
-import koala.css.PaperGradientBg
-import koala.css.SingleLine
-import koala.css.SmallText
 import koala.css.Width100P
-import koala.css.Width32
 import koala.css.modify
 import koala.dom.RenderContext
 import koala.dom.column
-import koala.dom.flowBlock
-import koala.dom.image
 import koala.dom.markdown
-import koala.dom.navigation
-import koala.dom.row
-import koala.dom.selectionBlock
-import koala.dom.textBlock
 import koala.html.featureImage
 import koala.html.heading3
 import streetlight.model.data.GalaxyPost
-import streetlight.web.EarthRoute
-import streetlight.web.model.EarthMap
 
 //fun RenderContext.galaxyListPanel(model: EarthMap) {
 //    flowBlock(model.galaxiesFlow, modify(Height100P)) { galaxies ->

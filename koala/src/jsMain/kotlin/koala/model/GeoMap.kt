@@ -49,6 +49,7 @@ class GeoMap(
     val centerFlow = settledStateFlow.mapDistinct { it.center }
     val boundsFlow = settledStateFlow.mapDistinct { it.bounds }
     val movingBoundsFlow = viewedStateFlow.mapDistinct { it.bounds }
+    val focusFlow = viewedStateFlow.mapDistinct { it.focus }
 
     fun addEntity(entity: MapMarker) {
         addEntities(listOf(entity))
