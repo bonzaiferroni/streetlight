@@ -8,6 +8,7 @@ enum class Altitude(override val identifier: String, val zoom: Double): Modifier
     Kite("kite", 16.0),
     Raincloud("raincloud", 14.5),
     Airplane("airplane", 13.0),
+    Satellite("satellite",8.0),
     Astronaut("astronaut", 4.0),
     Comet("comet", Double.MAX_VALUE);
 
@@ -18,9 +19,12 @@ fun altitudeOf(zoom: Double) = Altitude.entries.first { it.zoom < zoom }
 
 // language="CSS"
 val AltitudeCss get() = with(GeoMapKey) { """
+    
+/* diminished visibility for markers just below altitude */
 $Window${Altitude.Raincloud}  ${MarkerClass.Base}${Altitude.Kite},
 $Window${Altitude.Airplane}   ${MarkerClass.Base}${Altitude.Raincloud},
-$Window${Altitude.Astronaut}  ${MarkerClass.Base}${Altitude.Airplane},
+$Window${Altitude.Satellite}  ${MarkerClass.Base}${Altitude.Airplane},
+$Window${Altitude.Astronaut}  ${MarkerClass.Base}${Altitude.Satellite},
 $Window${Altitude.Comet}      ${MarkerClass.Base}${Altitude.Astronaut} {
     width: 5px;
     height: 5px;
@@ -28,10 +32,19 @@ $Window${Altitude.Comet}      ${MarkerClass.Base}${Altitude.Astronaut} {
     background-color: rgba(255, 255, 255, 0.65);
     animation: twinkle 2.4s ease-in-out infinite;
     animation-delay: var(--twinkle-delay);
+    pointer-events: none;
     
     > * {
         opacity: 0;    
     }
+}
+
+/* hide markers well below altitude */
+$Window${Altitude.Airplane}   ${MarkerClass.Base}${Altitude.Kite},
+$Window${Altitude.Satellite}  ${MarkerClass.Base}${Altitude.Raincloud},
+$Window${Altitude.Astronaut}  ${MarkerClass.Base}${Altitude.Airplane},
+$Window${Altitude.Comet}      ${MarkerClass.Base}${Altitude.Satellite} {
+    display: none;
 }
 
 @keyframes twinkle {
