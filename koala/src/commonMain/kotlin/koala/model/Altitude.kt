@@ -1,31 +1,54 @@
 package koala.model
 
 import koala.css.Class
+import koala.css.Modifier
+import koala.html.GeoMapKey
 
-enum class Altitude(val selector: String) {
-    Kite("kite"),
-    Raincloud("raincloud"),
-    Airplane("airplane"),
-    Astronaut("astronaut"),
-    Comet("comet");
+enum class Altitude(override val identifier: String, val zoom: Double): Modifier {
+    Kite("kite", 16.0),
+    Raincloud("raincloud", 14.5),
+    Airplane("airplane", 13.0),
+    Astronaut("astronaut", 4.0),
+    Comet("comet", Double.MAX_VALUE);
 
-    val css = Class(selector)
-    val aboveCss = Class("above-$selector")
-    val belowCss = Class("below-$selector")
-    val modifiers by lazy {
-        entries.map {
-            if (it < this) it.aboveCss
-            else if (it > this) it.belowCss
-            else it.css
-        }.toSet()
+    override fun toString() = selector
+}
+
+fun altitudeOf(zoom: Double) = Altitude.entries.first { it.zoom < zoom }
+
+// language="CSS"
+val AltitudeCss get() = with(GeoMapKey) { """
+$Window${Altitude.Raincloud}  ${MarkerClass.Base}${Altitude.Kite},
+$Window${Altitude.Airplane}   ${MarkerClass.Base}${Altitude.Raincloud},
+$Window${Altitude.Astronaut}  ${MarkerClass.Base}${Altitude.Airplane},
+$Window${Altitude.Comet}      ${MarkerClass.Base}${Altitude.Astronaut} {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.65);
+    animation: twinkle 2.4s ease-in-out infinite;
+    animation-delay: var(--twinkle-delay);
+    
+    > * {
+        opacity: 0;    
     }
 }
 
-fun altitudeOf(zoom: Double): Altitude =
-    when {
-        zoom >= 16 -> Altitude.Kite
-        zoom >= 14.5 -> Altitude.Raincloud
-        zoom >= 13  -> Altitude.Airplane
-        zoom >= 4  -> Altitude.Astronaut
-        else       -> Altitude.Comet
+@keyframes twinkle {
+    0%, 100% {
+        background-color: rgba(255, 255, 255, 0.45);
     }
+    50% {
+        background-color: rgba(255, 255, 255, 1);
+    }
+}
+
+@keyframes twinkle-scale {
+    0%, 100% {
+        transform: translate(-50%, -50%) scale(1);
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(1.3);
+    }
+}
+""" }

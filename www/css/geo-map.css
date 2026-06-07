@@ -149,39 +149,4 @@
     transform: translate(-50%, -50%) scale(1.05);
 }
 
-/* utilities */
-.above-kite .twinkle-above-kite,
-.above-raincloud .twinkle-above-raincloud,
-.above-airplane .twinkle-above-airplane {
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    background-color: rgba(255, 255, 255, 0.65);
-    animation: twinkle 2.4s ease-in-out infinite;
-    animation-delay: var(--twinkle-delay);
-}
-
-.above-kite .twinkle-above-kite > *,
-.above-raincloud .twinkle-above-raincloud > *,
-.above-airplane .twinkle-above-airplane > * {
-    opacity: 0;
-}
-
-@keyframes twinkle {
-    0%, 100% {
-        background-color: rgba(255, 255, 255, 0.45);
-    }
-    50% {
-        background-color: rgba(255, 255, 255, 1);
-    }
-}
-
-@keyframes twinkle-scale {
-    0%, 100% {
-        transform: translate(-50%, -50%) scale(1);
-    }
-    50% {
-        transform: translate(-50%, -50%) scale(1.3);
-    }
-}
 

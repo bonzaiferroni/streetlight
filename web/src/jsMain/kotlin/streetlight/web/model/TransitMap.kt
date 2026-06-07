@@ -10,7 +10,7 @@ import koala.model.LineMarker
 import koala.model.MarkerId
 import koala.model.PointMarker
 import koala.external.VehiclePosition
-import koala.html.MarkerUtility
+import koala.model.Altitude
 import koala.model.mapDistinct
 import koala.model.storeOf
 import koala.model.toGeoPoint
@@ -205,7 +205,7 @@ data class TransitEntity(
         VehicleType.LightRail -> SvgFile.Train
         VehicleType.Train -> SvgFile.Train
     }
-    override val modifiers get() = modify(MarkerUtility.twinkleAboveAirplane)
+    override val altitude get() = Altitude.Raincloud
 }
 
 fun VehiclePosition.toEntity(currentTime: Long, vehicleType: VehicleType): TransitEntity? {

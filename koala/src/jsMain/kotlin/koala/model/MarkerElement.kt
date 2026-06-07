@@ -12,7 +12,6 @@ import koala.dom.onClick
 import koala.dom.unmodify
 import koala.external.MarkerOptions
 import koala.external.maplibregl
-import koala.html.MarkerElement
 import kotlinx.browser.document
 import kotlinx.html.dom.append
 import kotlinx.html.js.div
@@ -59,7 +58,7 @@ class MarkerElement(
     }
 
     fun setBearing(bearing: Float) {
-        val be = this@MarkerElement.bearing ?: return
+        val be = this.bearing ?: return
         val delta = ((bearing - lastBearing + 540) % 360) - 180;
         lastBearing += delta
         val adjusted = lastBearing - 90
@@ -94,7 +93,7 @@ class MarkerElement(
     }
 }
 
-fun koala.model.MarkerElement.setAttributes(entity: PointMarker) {
+fun MarkerElement.setAttributes(entity: PointMarker) {
     entity.bearing?.let {
         setBearing(it)
     }
@@ -103,9 +102,9 @@ fun koala.model.MarkerElement.setAttributes(entity: PointMarker) {
     }
 }
 
-fun PointMarker.toMarkerView(pixelPoint: Point, focusEntity: () -> Unit): koala.model.MarkerElement {
+fun PointMarker.toMarkerView(pixelPoint: Point, focusEntity: () -> Unit): MarkerElement {
     val element = document.createDiv()
-    element.modify(MarkerElement.Class)
+    element.modify(MarkerClass.Root)
 
     var baseElement: HTMLDivElement? = null
     var bearingElement: HTMLDivElement? = null
@@ -117,42 +116,48 @@ fun PointMarker.toMarkerView(pixelPoint: Point, focusEntity: () -> Unit): koala.
             val delay = provideDelay()
             element.style.setProperty("--twinkle-delay", "${delay}s")
 
-            val baseModifiers = modify(MarkerElement.Base).let { set ->
-                modifiers?.let { set + it } ?: set
-            }.let { set ->
+            val baseMod = buildSet {
+                add(MarkerClass.Base)
+                modifiers?.let {
+                    addAll(it)
+                }
                 light?.let {
                     style = "--light: ${it.css()};"
-                    set + Class("marker-glow")
-                } ?: set
+                    add(Class("marker-glow"))
+                }
+                altitude?.let {
+                    add(it)
+                }
             }
-            addModifiers(baseModifiers)
+
+            addModifiers(baseMod)
 
             bearingElement = bearing?.let {
                 div {
-                    addModifiers(MarkerElement.Bearing)
+                    addModifiers(MarkerClass.Bearing)
                 }
             }
 
             bodyElement = icon?.let {
                 div {
-                    addModifiers(modify(MarkerElement.Icon, MarkerElement.Body))
+                    addModifiers(modify(MarkerClass.Icon, MarkerClass.Body))
                     style = "--svg: url(${it.url});"
                 }
             } ?: thumbUrl?.let {
                 img {
                     src = it.value
-                    addModifiers(modify(MarkerElement.Body, MarkerElement.Thumb))
+                    addModifiers(modify(MarkerClass.Body, MarkerClass.Thumb))
                 }
             } ?: body?.let {
                 div {
-                    addModifiers(modify(MarkerElement.Body))
+                    addModifiers(modify(MarkerClass.Body))
                     body?.invoke(this)
                 }
             }
 
             labelElement = label?.let {
                 p {
-                    addModifiers(MarkerElement.Label)
+                    addModifiers(MarkerClass.Label)
                     +it
                 }
             }

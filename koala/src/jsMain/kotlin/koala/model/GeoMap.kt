@@ -143,11 +143,11 @@ data class GeoMapState(
 )
 
 typealias MarkerId = String
-typealias MapContextId = String
 
 sealed interface MapMarker {
     val markerId: MarkerId
     val label: String? get() = null
+    val altitude: Altitude? get() = null
 }
 
 data class PanPoint(

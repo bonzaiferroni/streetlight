@@ -1,13 +1,11 @@
 package streetlight.web.model
 
 import kampfire.model.Labeled
-import kampfire.model.ScaledImageArray
 import kampfire.model.thumb
 import koala.SiteImage
 import koala.css.modify
 import koala.dom.RenderContext
 import koala.dom.box
-import koala.html.MarkerUtility
 import koala.model.PointMarker
 import koala.model.Rgb
 import streetlight.model.data.Galaxy
@@ -41,7 +39,7 @@ data class LocationMarker(
         }
     }
     override val light get() = Rgb(180, 240, 100)
-    override val modifiers get() = modify(MarkerUtility.twinkleAboveRaincloud)
+    // override val modifiers get() = modify(MarkerUtility.twinkleAboveRaincloud)
     override val markerType get() = MarkerType.Location
 }
 

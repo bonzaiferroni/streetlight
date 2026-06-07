@@ -1,11 +1,11 @@
-package koala.html
+package koala.model
 
 import koala.css.Class
 import koala.css.Focus
 import koala.css.Scale
 
-object MarkerElement {
-    val Class = Class("map-marker")
+object MarkerClass {
+    val Root = Class("map-marker")
     val Base = Class("map-marker__base")
     val Bearing = Class("map-marker__bearing")
     val Icon = Class("map-marker__icon")
@@ -14,17 +14,11 @@ object MarkerElement {
     val Label = Class("map-marker__label")
 }
 
-object MarkerUtility {
-    val twinkleAboveKite = Class("twinkle-above-kite")
-    val twinkleAboveRaincloud = Class("twinkle-above-raincloud")
-    val twinkleAboveAirplane = Class("twinkle-above-airplane")
-}
-
 // language="CSS"
-val MarkerElementCss get() = with(MarkerElement) { """
+val MarkerElementCss get() = with(MarkerClass) { """
     
 /* Focus Properties */
-$Class$Focus {
+$Root$Focus {
     z-index: 1;
         
     $Base$Scale {

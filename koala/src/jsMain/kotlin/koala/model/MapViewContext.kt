@@ -123,15 +123,23 @@ class MapViewContext(
     }
 
     fun setAltitude(zoom: Double) {
-//        console.log(zoom)
         val altitude = altitudeOf(zoom)
         if (altitude == altitudeNow) return
-        val modifiersNow = altitudeNow?.modifiers ?: emptySet()
-        val unmodifiers = modifiersNow - altitude.modifiers
-        val modifiers = altitude.modifiers - modifiersNow
 
-        windowElement.unmodify(unmodifiers)
-        windowElement.modify(modifiers)
+        console.log(zoom)
+        Altitude.entries.forEach { 
+            when (zoom < it.zoom) {
+                true -> windowElement.modify(it)
+                else -> windowElement.unmodify(it)
+            }
+        }
+        
+        // val modifiersNow = altitudeNow?.modifiers ?: emptySet()
+        // val unmodifiers = modifiersNow - altitude.modifiers
+        // val modifiers = altitude.modifiers - modifiersNow
+
+        // windowElement.unmodify(unmodifiers)
+        // windowElement.modify(modifiers)
         altitudeNow = altitude
 //        console.log(altitude.selector)
 //        console.log("unmodify: ${unmodifiers.joinToString(", ") { it.value }}")
