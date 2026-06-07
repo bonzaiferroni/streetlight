@@ -28,7 +28,7 @@ class EarthMap(
     val boundedMarkersFlow = markerMap.boundedMarkersFlow.mapDistinct { it ?: emptyList() }
     val unboundedMarkersFlow = markerMap.unboundedMarkersFlow.mapDistinct { it ?: emptyList() }
     val summaryFlow = markerMap.boundedMarkersFlow.mapDistinct { points ->
-        points?.groupBy { it.markerType }
+        points?.groupingBy { it.markerType }?.eachCount()?.toList()
     }
     val isMovingFlow = markerMap.isMovingFlow
     val focusFlow = markerMap.focusFlow
@@ -61,6 +61,8 @@ class EarthMap(
     }
 
     fun setFocus(marker: AppMarker) = markerMap.setFocus(marker)
+
+    fun showAll() = markerMap.showAll()
 }
 
 data class EarthMapState(

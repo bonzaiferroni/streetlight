@@ -88,7 +88,6 @@ fun <Item> RenderContext.itemsBlock(
                 element
             }
 
-            console.log("items change")
             // the base element height is set/animated each time the items change
             resizeJob?.cancel()
             resizeJob = launch {

@@ -44,8 +44,6 @@ class UserGate(
         }
     }
 
-    fun getUsername() = stateNow.star?.username
-
     fun signOut() {
         scope.launch {
             api.logout()

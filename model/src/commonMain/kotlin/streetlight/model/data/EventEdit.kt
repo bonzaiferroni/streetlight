@@ -96,7 +96,7 @@ fun Event.toEdit() = EventEdit(
 fun EventEdit.mergeLeft(other: EventEdit?) = other?.let {
     EventEdit(
         eventId = eventId ?: it.eventId,
-        title = title ?: it.title,
+        title = title?.takeIf { it.isNotBlank() } ?: it.title,
         locationId = locationId ?: it.locationId,
         imageRef = imageRef ?: it.imageRef,
         description = description ?: it.description,

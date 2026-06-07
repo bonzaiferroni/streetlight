@@ -36,5 +36,5 @@ fun Element.resizeFlow(): Flow<DOMRectReadOnly> = callbackFlow {
         trySend(entries[0].contentRect)
     }
     observer.observe(this@resizeFlow)
-    awaitClose { observer.disconnect(); console.log("goodbye") }
+    awaitClose { observer.disconnect() }
 }

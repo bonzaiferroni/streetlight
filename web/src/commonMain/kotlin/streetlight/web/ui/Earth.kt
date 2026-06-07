@@ -87,7 +87,7 @@ $Grid {
     > $Unbounded { grid-column: 1 / -1; grid-row: 1 / -1; }
     
     $ListDetail {
-        width: 350px;
+        width: 400px;
         transition: width var(--magic-interval) var(--magic-easing);
         overflow: hidden;
     }

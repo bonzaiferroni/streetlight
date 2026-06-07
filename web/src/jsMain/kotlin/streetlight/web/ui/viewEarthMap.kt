@@ -7,11 +7,13 @@ import koala.SvgFile
 import koala.css.*
 import koala.dom.*
 import koala.html.featureImage
+import koala.html.filigree
 import koala.html.heading3
 import koala.html.heading4
 import koala.html.image
 import koala.html.logo
 import koala.html.spacer
+import koala.html.span
 import kotlinx.browser.document
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.map
@@ -19,6 +21,7 @@ import kotlinx.coroutines.launch
 import kotlinx.html.FlowContent
 import kotlinx.html.hr
 import streetlight.web.EarthRoute
+import streetlight.web.GalaxyRoute
 import streetlight.web.HomeRoute
 import streetlight.web.layouts.ColorScheme
 import streetlight.web.layouts.GridArea
@@ -28,6 +31,7 @@ import streetlight.web.model.EarthMap
 import streetlight.web.model.EventMarker
 import streetlight.web.model.GalaxyMarker
 import streetlight.web.model.LocationMarker
+import streetlight.web.model.MarkerType
 import streetlight.web.pages.AppBodyKey
 
 fun RenderContext.viewEarthMap(model: EarthMap) {
@@ -77,7 +81,7 @@ fun RenderContext.viewEarthMapRoute() {
 
 fun RenderContext.earthHeader(model: EarthMap) {
     val iconMod = modify(Width5, Aspect1)
-    row(modify(Earth.Header, AlignItemsCenter, PaperGradientBg, Padding1)) {
+    row(modify(Earth.Header, AlignItemsCenter, PaperGradientBg, Padding1, PointerEventsAuto)) {
         flowBlock(model.galaxyFlow, modify(Flex1)) { galaxy ->
             when (galaxy) {
                 null -> row {
@@ -97,9 +101,39 @@ fun RenderContext.earthHeader(model: EarthMap) {
 }
 
 fun RenderContext.earthWindow(model: EarthMap) {
-    column(modify(Earth.Window, Earth.MoveDimmer)) {
-        spacer(modify(Flex1))
-        textBlock(model.summaryFlow.map { map -> map?.entries?.joinToString(" • ") { "${it.key.label}: ${it.value.size}" } })
+    column(modify(Earth.Window, Earth.MoveDimmer, JustifyContentSpaceBetween)) {
+        row(modify(JustifyContentEnd)) {
+            button("Show All", modify(Zen, PointerEventsAuto)).onClick(model::showAll)
+            button("View Feed", modify(Zen, AlignSelfEnd, PointerEventsAuto)).onClick {
+                val route = when (val galaxy = model.stateNow.galaxy) {
+                    null -> HomeRoute
+                    else -> GalaxyRoute(galaxy.slug)
+                }
+                portal.go(route)
+            }
+        }
+
+        flowBlock(model.summaryFlow) { summary ->
+            if (summary.isNullOrEmpty()) return@flowBlock
+            column(modify(WidthFitContent, Gap0)) {
+                filigree {
+                    textBlock("In View", modify(OpacityHigh))
+                }
+                row(modify(Gap2)) {
+                    summary.forEach { (markerType, count) ->
+                        textBlock {
+                            when (markerType) {
+                                MarkerType.Event -> span("Events", modify(AccentFg))
+                                MarkerType.Location -> span("Locations", modify(PrimaryFg))
+                                MarkerType.Galaxy -> span("Galaxies", modify())
+                            }
+                            span(" | ", modify(OpacityLow))
+                            span(count.toString())
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -113,7 +147,7 @@ fun RenderContext.earthList(model: EarthMap) {
             when (marker) {
                 is GalaxyMarker -> {
                     val galaxy = marker.galaxy
-                    if (galaxy.eventCount + galaxy.locationCount == 0) return@itemsBlock
+                    // if (galaxy.eventCount + galaxy.locationCount == 0) return@itemsBlock
                     markerItem(galaxy.images.thumb, galaxy.name, buildString {
                         if (galaxy.eventCount > 0) append("${galaxy.eventCount} events")
                         if (galaxy.locationCount > 0) {
@@ -183,7 +217,7 @@ fun RenderContext.focusPanel(
 ) {
     card(modify(Gap0, Padding0, BlurBackdrop, PointerEventsAuto, Earth.MoveDimmer)) {
         setStyle(Property.ColorScheme.to(colorScheme.cssValue))
-        row(modify(Gap0)) {
+        row(modify(Gap0, Height24)) {
             featureImage(imageUrl, modify(Flex1))
             details?.let {
                 cellBlock(modify(FlexWrap, Width16), details)

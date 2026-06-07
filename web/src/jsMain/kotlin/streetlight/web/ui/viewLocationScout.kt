@@ -39,6 +39,7 @@ fun RenderContext.viewLocationScout(galaxy: Galaxy) {
                 }
                 LocationScoutStage.Post -> column {
                     val edit = editor.editNow
+                    console.log("ey: ${gate.stateNow.star?.username}")
                     postCardOf(edit, gate.stateNow.star?.username)
 
                     formSubmit(

@@ -2,6 +2,7 @@
 
 package streetlight.web.model
 
+import kampfire.model.getContainingBounds
 import koala.model.GeoMap
 import koala.model.mapDistinct
 import koala.model.storeOf
@@ -46,7 +47,7 @@ class MarkerMap(
         markers?.let {
             geoMap.addEntities(markers)
         }
-        state.set { it.copy(markers = markers) }
+        state.set { it.copy(markers = markers, focus = null) }
     }
 
     fun addPoints(markers: List<AppMarker>) {
@@ -58,6 +59,14 @@ class MarkerMap(
         geoMap.setFocus(marker)
         geoMap.panMap(marker.geoPoint)
         state.set { it.copy(focus = marker)}
+    }
+
+    fun showAll() {
+        val markers = stateNow.markers.takeIf { !it.isNullOrEmpty() } ?: return
+        when(val bounds = getContainingBounds(markers.map { it.geoPoint })) {
+            null -> geoMap.panMap(markers.first().geoPoint)
+            else -> geoMap.panMap(bounds.resizeBy(1.2f))
+        }
     }
 }
 

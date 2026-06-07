@@ -2,7 +2,9 @@ package streetlight.web.ui
 
 import koala.css.*
 import koala.dom.*
+import koala.html.span
 import kotlinx.coroutines.flow.map
+import streetlight.model.data.LocationEdit
 import streetlight.web.model.LocationScout
 import streetlight.web.model.SearchMode
 
@@ -38,16 +40,32 @@ private fun RenderContext.locationSearchForm(model: LocationScout) = formCard {
             when (hasOsmLocations) {
                 true -> {
                     selectionBlock(model.osmLocationsFlow, model::stageLocation) { location ->
-                        textBlock(location.label)
+                        searchItem(location.name, location.address, location.city)
                     }
                 }
                 else -> {
                     selectionBlock(model.queryLocationsFlow, model::setLocation, model.locationFlow) { location ->
-                        textBlock(location.label)
+                        searchItem(location.name, location.address, location.city)
                     }
                 }
             }
         }
+    }
+}
+
+private fun RenderContext.searchItem(
+    name: String?,
+    address: String?,
+    city: String?,
+) = row {
+    name?.let {
+        textBlock(it, modify(Bold))
+    }
+    address?.let {
+        textBlock(it)
+    }
+    city?.let {
+        textBlock(it, modify(OpacityHigh))
     }
 }
 

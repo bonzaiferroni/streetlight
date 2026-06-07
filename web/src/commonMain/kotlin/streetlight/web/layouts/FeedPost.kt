@@ -94,7 +94,7 @@ fun FlowContent.feedPost(
                                 span("Someone ", modify(Bold))
                             }
                             else -> {
-                                navigation(StarRoute(Slug("s/$username"))) {
+                                navigation(StarRoute(Slug(username))) {
                                     span("$username ")
                                 }
                             }
@@ -175,45 +175,43 @@ $Class {
     > ${GridArea.Content} { grid-area: content; overflow: hidden; }   
 }
 
-$SmallRow {
-    $Class {
-        grid-template-columns: 2.5rem 6rem 1fr 8rem;
-        grid-template-rows: auto 0fr;
-        grid-template-areas: 
-            "boost image body details"
-            "content content content content";
-        
-        > ${GridArea.Image} {
-            box-shadow: var(--moon-shadow);
-            height: 6rem;
-        }
-        
-        > ${GridArea.Image}, > ${GridArea.Details} {
-            border-radius: var(--unit-spacing);
-            overflow: clip;
-        }
-        
+$Class {
+    grid-template-columns: 2.5rem 6rem 1fr 8rem;
+    grid-template-rows: auto 0fr;
+    grid-template-areas: 
+        "boost image body details"
+        "content content content content";
+    
+    > ${GridArea.Image} {
+        box-shadow: var(--moon-shadow);
+        height: 6rem;
+    }
+    
+    > ${GridArea.Image}, > ${GridArea.Details} {
+        border-radius: var(--unit-spacing);
+        overflow: clip;
+    }
+    
+    > ${GridArea.Details} {
+        align-self: start;
+    }
+    
+    @container (min-width: ${MinifiedWidth}px) {
+        grid-template-columns: 2.5rem 6rem 1fr 16rem;
+    }
+    
+    @container (max-width: ${MinifiedWidth}px) {
         > ${GridArea.Details} {
-            align-self: start;
-        }
-        
-        @container (min-width: ${MinifiedWidth}px) {
-            grid-template-columns: 2.5rem 6rem 1fr 16rem;
-        }
-        
-        @container (max-width: ${MinifiedWidth}px) {
-            > ${GridArea.Details} {
-                > :not(:first-child):not(:last-child) {
-                    display: none;
-                }
+            > :not(:first-child):not(:last-child) {
+                display: none;
             }
         }
     }
-    
-    $ToggleExpand$Class {
-        grid-template-rows: auto 1fr;
-        gap: var(--unit-spacing);
-    }
+}
+
+$ToggleExpand$Class {
+    grid-template-rows: auto 1fr;
+    gap: var(--unit-spacing);
 }
     
 $LargeRow {
