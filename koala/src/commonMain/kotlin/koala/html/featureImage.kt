@@ -4,11 +4,9 @@ import kampfire.model.Url
 import koala.SiteImage
 import koala.css.Class
 import koala.css.ModifierSet
-import koala.css.MoonShadow
 import koala.css.addModifiers
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
-import kotlinx.html.IMG
 import kotlinx.html.div
 import kotlinx.html.img
 
@@ -40,7 +38,7 @@ private val ContentClass = Class("feature-image__content")
 
 // language="CSS"
 val FeatureImageCss get() = """
-$Class {
+${Class} {
     position: relative;
     display: flex;
     align-items: center;

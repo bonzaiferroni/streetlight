@@ -12,6 +12,7 @@ import koala.dom.onClick
 import koala.dom.unmodify
 import koala.external.MarkerOptions
 import koala.external.maplibregl
+import koala.html.MarkerElement
 import kotlinx.browser.document
 import kotlinx.html.dom.append
 import kotlinx.html.js.div
@@ -22,9 +23,9 @@ import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLParagraphElement
 
-class PointEntityView(
-    val marker: maplibregl.Marker,
-    entity: PointMarker,
+class MarkerElement(
+    val jsMarker: maplibregl.Marker,
+    marker: PointMarker,
     pixelPoint: Point,
     val element: HTMLDivElement?,
     val base: HTMLDivElement?,
@@ -36,29 +37,29 @@ class PointEntityView(
 
     var point = pixelPoint
         private set
-    var entity = entity
+    var marker = marker
         private set
 
-    var position = entity.geoPoint
+    var position = marker.geoPoint
         private set
 
     var isVisible = false
         private set
 
     fun move(position: GeoPoint) {
-        val current = marker.getLngLat()
+        val current = jsMarker.getLngLat()
         val destination = position.toLngLat()
         val distance = current.distanceTo(destination)
         if (distance > 1) {
-            marker.move(current, destination)
+            jsMarker.move(current, destination)
         } else {
-            marker.setLngLat(destination)
+            jsMarker.setLngLat(destination)
         }
         this.position = position
     }
 
     fun setBearing(bearing: Float) {
-        val be = this@PointEntityView.bearing ?: return
+        val be = this@MarkerElement.bearing ?: return
         val delta = ((bearing - lastBearing + 540) % 360) - 180;
         lastBearing += delta
         val adjusted = lastBearing - 90
@@ -66,21 +67,21 @@ class PointEntityView(
     }
 
     fun setOpacity(opacity: Float) {
-        marker.setOpacity(opacity.toString())
+        jsMarker.setOpacity(opacity.toString())
     }
 
     fun setIsVisible(value: Boolean, widget: maplibregl.Map) {
         if (isVisible == value) return
         isVisible = value
         if (isVisible) {
-            marker.addTo(widget)
+            jsMarker.addTo(widget)
         } else {
-            marker.remove()
+            jsMarker.remove()
         }
     }
 
     fun setEntity(entity: PointMarker, point: Point) {
-        this.entity = entity
+        this.marker = entity
         this.point = point
     }
 
@@ -93,7 +94,7 @@ class PointEntityView(
     }
 }
 
-fun PointEntityView.setAttributes(entity: PointMarker) {
+fun koala.model.MarkerElement.setAttributes(entity: PointMarker) {
     entity.bearing?.let {
         setBearing(it)
     }
@@ -102,25 +103,9 @@ fun PointEntityView.setAttributes(entity: PointMarker) {
     }
 }
 
-object MarkerCss {
-    val block = Class("map-marker")
-    val base = Class("map-marker__base")
-    val bearing = Class("map-marker__bearing")
-    val icon = Class("map-marker__icon")
-    val thumb = Class("map-marker__thumb")
-    val body = Class("map-marker__body")
-    val label = Class("map-marker__label")
-}
-
-object MarkerUtility {
-    val twinkleAboveKite = Class("twinkle-above-kite")
-    val twinkleAboveRaincloud = Class("twinkle-above-raincloud")
-    val twinkleAboveAirplane = Class("twinkle-above-airplane")
-}
-
-fun PointMarker.toMapEntityView(pixelPoint: Point, focusEntity: () -> Unit): PointEntityView {
+fun PointMarker.toMarkerView(pixelPoint: Point, focusEntity: () -> Unit): koala.model.MarkerElement {
     val element = document.createDiv()
-    element.modify(MarkerCss.block)
+    element.modify(MarkerElement.Class)
 
     var baseElement: HTMLDivElement? = null
     var bearingElement: HTMLDivElement? = null
@@ -132,7 +117,7 @@ fun PointMarker.toMapEntityView(pixelPoint: Point, focusEntity: () -> Unit): Poi
             val delay = provideDelay()
             element.style.setProperty("--twinkle-delay", "${delay}s")
 
-            val baseModifiers = modify(MarkerCss.base).let { set ->
+            val baseModifiers = modify(MarkerElement.Base).let { set ->
                 modifiers?.let { set + it } ?: set
             }.let { set ->
                 light?.let {
@@ -144,30 +129,30 @@ fun PointMarker.toMapEntityView(pixelPoint: Point, focusEntity: () -> Unit): Poi
 
             bearingElement = bearing?.let {
                 div {
-                    addModifiers(MarkerCss.bearing)
+                    addModifiers(MarkerElement.Bearing)
                 }
             }
 
             bodyElement = icon?.let {
                 div {
-                    addModifiers(modify(MarkerCss.icon, MarkerCss.body))
+                    addModifiers(modify(MarkerElement.Icon, MarkerElement.Body))
                     style = "--svg: url(${it.url});"
                 }
             } ?: thumbUrl?.let {
                 img {
                     src = it.value
-                    addModifiers(modify(MarkerCss.body, MarkerCss.thumb))
+                    addModifiers(modify(MarkerElement.Body, MarkerElement.Thumb))
                 }
             } ?: body?.let {
                 div {
-                    addModifiers(modify(MarkerCss.body))
+                    addModifiers(modify(MarkerElement.Body))
                     body?.invoke(this)
                 }
             }
 
             labelElement = label?.let {
                 p {
-                    addModifiers(MarkerCss.label)
+                    addModifiers(MarkerElement.Label)
                     +it
                 }
             }
@@ -180,11 +165,11 @@ fun PointMarker.toMapEntityView(pixelPoint: Point, focusEntity: () -> Unit): Poi
         element = element,
         subpixelPositioning = subpixelPositioning
     )
-    val view = PointEntityView(
-        marker = maplibregl.Marker(
+    val view = MarkerElement(
+        jsMarker = maplibregl.Marker(
             options = options
         ),
-        entity = this,
+        marker = this,
         pixelPoint = pixelPoint,
         element = element,
         base = baseElement,

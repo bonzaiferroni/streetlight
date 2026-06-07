@@ -10,7 +10,7 @@ import koala.model.LineMarker
 import koala.model.MarkerId
 import koala.model.PointMarker
 import koala.external.VehiclePosition
-import koala.model.MarkerUtility
+import koala.html.MarkerUtility
 import koala.model.mapDistinct
 import koala.model.storeOf
 import koala.model.toGeoPoint

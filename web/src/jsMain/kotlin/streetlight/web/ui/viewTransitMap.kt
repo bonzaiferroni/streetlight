@@ -2,7 +2,7 @@ package streetlight.web.ui
 
 import koala.dom.RenderContext
 import koala.external.maplibregl
-import koala.model.PointEntityView
+import koala.model.MarkerElement
 import koala.model.jsObject
 import kotlinx.coroutines.launch
 import streetlight.model.data.TransitRoute
@@ -18,9 +18,9 @@ fun RenderContext.viewTransitMap(
 ) {
     val streetMap = app.markerMap
     // val transitMap = app.streetMap.transit
-    var stopMarkers: List<PointEntityView> = emptyList()
+    var stopMarkers: List<MarkerElement> = emptyList()
 //    var areaTransit = transitMap.stateNow.areaTransit
-    val vehicleElements = mutableMapOf<String, PointEntityView>()
+    val vehicleElements = mutableMapOf<String, MarkerElement>()
     var markersVisible = false
 
     renderScope.launch {

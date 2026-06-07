@@ -7,7 +7,7 @@ import koala.SiteImage
 import koala.css.modify
 import koala.dom.RenderContext
 import koala.dom.box
-import koala.model.MarkerUtility
+import koala.html.MarkerUtility
 import koala.model.PointMarker
 import koala.model.Rgb
 import streetlight.model.data.Galaxy

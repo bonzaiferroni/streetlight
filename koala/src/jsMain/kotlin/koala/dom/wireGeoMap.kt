@@ -2,9 +2,6 @@ package koala.dom
 
 import koala.core.findAndInitGeoMap
 import koala.core.queryFirstOrNull
-import koala.css.Magic
-import koala.css.SlideUp
-import koala.css.modify
 import koala.external.CenterZoomBearing
 import koala.external.maplibregl
 import kotlinx.coroutines.delay
@@ -13,7 +10,6 @@ import org.w3c.dom.HTMLElement
 import koala.html.GeoMapKey
 import koala.model.GeoMap
 import koala.model.MapViewContext
-import koala.model.mapDistinct
 import koala.model.showLines
 import koala.external.maplibregl.Point
 import koala.model.toGeoBounds
@@ -111,7 +107,7 @@ fun RenderContext.wireMapContext(
         launch {
             geoMap.zoomFlow.collect { zoom ->
                 context.markers.forEach { (_, obj) ->
-                    val minZoom = obj.entity.minZoom ?: return@forEach
+                    val minZoom = obj.marker.minZoom ?: return@forEach
                     obj.setOpacity(if (zoom >= minZoom) 1f else 0f)
                 }
             }

@@ -14,11 +14,11 @@ class MapViewContext(
     val geoMap: GeoMap,
     val onFocus: (PointMarker?) -> Unit
 ) {
-    val markers = mutableMapOf<MarkerId, PointEntityView>()
+    val markers = mutableMapOf<MarkerId, MarkerElement>()
     val lineLayers = mutableMapOf<LayerId, MutableList<MapLine>>()
     val layers = mutableSetOf<LayerId>()
     private var visibilityFunction: ((MapMarker) -> Boolean)? = null
-    private var focus: PointEntityView? = null
+    private var focus: MarkerElement? = null
     private var tempSet: TempEntitySet? = null
     private var altitudeNow: Altitude? = null
     private var boundsNow: GeoBounds? = null
@@ -37,9 +37,9 @@ class MapViewContext(
         }
     }
 
-    fun applyOpacity(obj: PointEntityView) {
+    fun applyOpacity(obj: MarkerElement) {
         val visibility = visibilityFunction ?: return
-        val isVisible = visibility(obj.entity)
+        val isVisible = visibility(obj.marker)
         obj.setOpacity(if (isVisible) 1f else 0f)
     }
 
@@ -62,7 +62,7 @@ class MapViewContext(
 
     fun removeEntities(entityIds: List<MarkerId>) {
         entityIds.forEach { entityId ->
-            markers[entityId]?.marker?.remove()
+            markers[entityId]?.jsMarker?.remove()
             markers.remove(entityId)
         }
     }
@@ -70,7 +70,7 @@ class MapViewContext(
     fun removeEntities(entities: List<MapMarker>) {
         entities.forEach { entity ->
             val entityId = entity.markerId
-            markers[entityId]?.marker?.remove()
+            markers[entityId]?.jsMarker?.remove()
             markers.remove(entityId)
         }
     }
@@ -146,28 +146,28 @@ class MapViewContext(
         widget.setLayoutProperty(layerId, "visibility", "visible")
     }
 
-    private fun recallObject(entity: PointMarker, center: GeoPoint): PointEntityView? {
-        val view = markers[entity.markerId] ?: return null
+    private fun recallObject(marker: PointMarker, center: GeoPoint): MarkerElement? {
+        val view = markers[marker.markerId] ?: return null
 
         // move marker
-        view.move(entity.geoPoint)
+        view.move(marker.geoPoint)
 
         // set entity
-        val pixelPoint = entity.geoPoint.toPoint(center.lat)
-        view.setEntity(entity, pixelPoint)
+        val pixelPoint = marker.geoPoint.toPoint(center.lat)
+        view.setEntity(marker, pixelPoint)
 
         return view
     }
 
-    private fun createObject(entity: PointMarker, center: GeoPoint): PointEntityView {
-        val pixelPoint = entity.geoPoint.toPoint(center.lat)
-        val mapEntityView = entity.toMapEntityView(pixelPoint) {
-            setFocus(entity)
+    private fun createObject(marker: PointMarker, center: GeoPoint): MarkerElement {
+        val pixelPoint = marker.geoPoint.toPoint(center.lat)
+        val markerView = marker.toMarkerView(pixelPoint) {
+            setFocus(marker)
         }
 
-        mapEntityView.marker.setLngLat(entity.geoPoint.toLngLat())
-        markers[entity.markerId] = mapEntityView
-        return mapEntityView
+        markerView.jsMarker.setLngLat(marker.geoPoint.toLngLat())
+        markers[marker.markerId] = markerView
+        return markerView
     }
 }
 

@@ -3,7 +3,6 @@ package koala.html
 import koala.SvgFile
 import koala.css.AntiShadow
 import koala.css.Class
-import koala.css.Glow
 import koala.css.GlowBackground
 import koala.css.GlowShadow
 import koala.css.ModifierSet
@@ -34,7 +33,7 @@ private val LogoIcon = Class("logo-icon")
 
 // language="CSS"
 val LogoCss get() = """
-$Class {
+${Class} {
     display: grid;
     aspect-ratio: 4 / 1;
     width: 168px;
