@@ -1,6 +1,5 @@
 package koala.model
 
-import koala.css.Class
 import koala.css.Modifier
 import koala.html.GeoMapKey
 
@@ -21,11 +20,11 @@ fun altitudeOf(zoom: Double) = Altitude.entries.first { it.zoom < zoom }
 val AltitudeCss get() = with(GeoMapKey) { """
     
 /* diminished visibility for markers just below altitude */
-$Window${Altitude.Raincloud}  ${MarkerClass.Base}${Altitude.Kite},
-$Window${Altitude.Airplane}   ${MarkerClass.Base}${Altitude.Raincloud},
-$Window${Altitude.Satellite}  ${MarkerClass.Base}${Altitude.Airplane},
-$Window${Altitude.Astronaut}  ${MarkerClass.Base}${Altitude.Satellite},
-$Window${Altitude.Comet}      ${MarkerClass.Base}${Altitude.Astronaut} {
+$Window${Altitude.Raincloud}  ${MarkerStyle.Base}${Altitude.Kite},
+$Window${Altitude.Airplane}   ${MarkerStyle.Base}${Altitude.Raincloud},
+$Window${Altitude.Satellite}  ${MarkerStyle.Base}${Altitude.Airplane},
+$Window${Altitude.Astronaut}  ${MarkerStyle.Base}${Altitude.Satellite},
+$Window${Altitude.Comet}      ${MarkerStyle.Base}${Altitude.Astronaut} {
     width: 5px;
     height: 5px;
     border-radius: 50%;
@@ -40,10 +39,10 @@ $Window${Altitude.Comet}      ${MarkerClass.Base}${Altitude.Astronaut} {
 }
 
 /* hide markers well below altitude */
-$Window${Altitude.Airplane}   ${MarkerClass.Base}${Altitude.Kite},
-$Window${Altitude.Satellite}  ${MarkerClass.Base}${Altitude.Raincloud},
-$Window${Altitude.Astronaut}  ${MarkerClass.Base}${Altitude.Airplane},
-$Window${Altitude.Comet}      ${MarkerClass.Base}${Altitude.Satellite} {
+$Window${Altitude.Airplane}   ${MarkerStyle.Base}${Altitude.Kite},
+$Window${Altitude.Satellite}  ${MarkerStyle.Base}${Altitude.Raincloud},
+$Window${Altitude.Astronaut}  ${MarkerStyle.Base}${Altitude.Airplane},
+$Window${Altitude.Comet}      ${MarkerStyle.Base}${Altitude.Satellite} {
     display: none;
 }
 

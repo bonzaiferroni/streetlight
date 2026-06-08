@@ -4,7 +4,7 @@ import koala.css.Class
 import koala.css.Focus
 import koala.css.Scale
 
-object MarkerClass {
+object MarkerStyle {
     val Root = Class("map-marker")
     val Base = Class("map-marker__base")
     val Bearing = Class("map-marker__bearing")
@@ -15,7 +15,7 @@ object MarkerClass {
 }
 
 // language="CSS"
-val MarkerElementCss get() = with(MarkerClass) { """
+val MarkerSheet get() = with(MarkerStyle) { """
     
 /* Focus Properties */
 $Root$Focus {

@@ -104,7 +104,7 @@ fun MarkerElement.setAttributes(entity: PointMarker) {
 
 fun PointMarker.toMarkerView(pixelPoint: Point, focusEntity: () -> Unit): MarkerElement {
     val element = document.createDiv()
-    element.modify(MarkerClass.Root)
+    element.modify(MarkerStyle.Root)
 
     var baseElement: HTMLDivElement? = null
     var bearingElement: HTMLDivElement? = null
@@ -117,7 +117,7 @@ fun PointMarker.toMarkerView(pixelPoint: Point, focusEntity: () -> Unit): Marker
             element.style.setProperty("--twinkle-delay", "${delay}s")
 
             val baseMod = buildSet {
-                add(MarkerClass.Base)
+                add(MarkerStyle.Base)
                 modifiers?.let {
                     addAll(it)
                 }
@@ -134,30 +134,30 @@ fun PointMarker.toMarkerView(pixelPoint: Point, focusEntity: () -> Unit): Marker
 
             bearingElement = bearing?.let {
                 div {
-                    addModifiers(MarkerClass.Bearing)
+                    addModifiers(MarkerStyle.Bearing)
                 }
             }
 
             bodyElement = icon?.let {
                 div {
-                    addModifiers(modify(MarkerClass.Icon, MarkerClass.Body))
+                    addModifiers(modify(MarkerStyle.Icon, MarkerStyle.Body))
                     style = "--svg: url(${it.url});"
                 }
             } ?: thumbUrl?.let {
                 img {
                     src = it.value
-                    addModifiers(modify(MarkerClass.Body, MarkerClass.Thumb))
+                    addModifiers(modify(MarkerStyle.Body, MarkerStyle.Thumb))
                 }
             } ?: body?.let {
                 div {
-                    addModifiers(modify(MarkerClass.Body))
+                    addModifiers(modify(MarkerStyle.Body))
                     body?.invoke(this)
                 }
             }
 
             labelElement = label?.let {
                 p {
-                    addModifiers(MarkerClass.Label)
+                    addModifiers(MarkerStyle.Label)
                     +it
                 }
             }
