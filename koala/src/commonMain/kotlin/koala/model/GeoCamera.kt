@@ -1,0 +1,76 @@
+package koala.model
+
+import kampfire.model.GeoBounds
+import kampfire.model.GeoPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.launch
+
+class GeoCamera(
+    private val scope: CoroutineScope,
+) {
+    private val state = storeOf(GeoCameraState())
+    val stateFlow = state.flow
+    val stateNow get() = state.now
+
+    private val _panFlow = MutableSharedFlow<PanPoint>(1)
+    internal val panFlow: SharedFlow<PanPoint> = _panFlow
+    private val _panBoundsFlow = MutableSharedFlow<GeoBounds>(1)
+    internal val panBoundsFlow: SharedFlow<GeoBounds> = _panBoundsFlow
+    private val _movementFlow = MutableSharedFlow<MarkerMovement>(1)
+    internal val movementFlow: Flow<MarkerMovement> = _movementFlow
+//    private val _tempEntityFlow = MutableSharedFlow<TempEntitySet?>(1)
+//    internal val tempEntityFlow: Flow<TempEntitySet?> = _tempEntityFlow
+//    private val _hideLayersFlow = MutableSharedFlow<List<LayerId>>(1)
+//    internal val hideLayersFlow: Flow<List<LayerId>> = _hideLayersFlow
+//    private val _showLayersFlow = MutableSharedFlow<List<LayerId>>(1)
+//    internal val showLayersFlow: Flow<List<LayerId>> = _showLayersFlow
+
+    val viewedStateFlow = stateFlow.filter { it.isViewed }
+    val isMovingFlow = viewedStateFlow.mapDistinct { it.isMoving }
+    val settledStateFlow = viewedStateFlow.filter { !it.isMoving }
+    val zoomFlow = settledStateFlow.mapDistinct { it.zoom }
+    val centerFlow = settledStateFlow.mapDistinct { it.center }
+    val boundsFlow = settledStateFlow.mapDistinct { it.bounds }
+    val movingBoundsFlow = viewedStateFlow.mapDistinct { it.bounds }
+    val focusFlow = viewedStateFlow.mapDistinct { it.focus }
+
+
+    fun panMap(point: GeoPoint) {
+        panMap(PanPoint(point))
+    }
+
+    fun panMap(bounds: GeoBounds) {
+        scope.launch {
+            _panBoundsFlow.emit(bounds)
+        }
+    }
+
+    fun panMap(pan: PanPoint) {
+        if (pan.point.isTouching(stateNow.center) && (pan.zoom == null || pan.zoom == stateNow.zoom)) return
+        scope.launch {
+            _panFlow.emit(pan)
+        }
+    }
+
+    internal fun setIsViewed(value: Boolean) {
+        state.set { it.copy(isViewed = value) }
+    }
+
+    internal fun setBounds(center: GeoPoint, bounds: GeoBounds, zoom: Float, isMoving: Boolean) {
+        state.set { it.copy(center = center, bounds = bounds, zoom = zoom, isMoving = isMoving) }
+    }
+}
+
+data class GeoCameraState(
+    val center: GeoPoint = GeoPoint.Denver,
+    val bounds: GeoBounds = GeoBounds.Denver,
+    val zoom: Float = 11f,
+    val isMoving: Boolean = false,
+    val isViewed: Boolean = false,
+    val focus: PointMarker? = null,
+)
+

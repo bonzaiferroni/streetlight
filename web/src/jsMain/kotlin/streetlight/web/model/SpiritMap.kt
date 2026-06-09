@@ -1,6 +1,6 @@
 package streetlight.web.model
 
-import koala.model.GeoMap
+import koala.model.GeoCamera
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.filter
@@ -12,7 +12,7 @@ import streetlight.web.io.ApiClient
 import streetlight.web.io.SpiritSocket
 
 class SpiritMap(
-    private val geoMap: GeoMap,
+    private val geoMap: GeoCamera,
     private val scope: CoroutineScope,
     private val api: ApiClient
 ) {
@@ -32,10 +32,10 @@ class SpiritMap(
             }
             launch {
                 spiritVision.spiritFlow.collect { frame ->
-                    when (frame) {
-                        is SpiritFrame.Initial -> geoMap.addEntity(SpiritEntity(frame.spirit))
-                        is SpiritFrame.Position -> geoMap.moveEntity(frame.id.toEntityId(), frame.pos)
-                    }
+//                    when (frame) {
+//                        is SpiritFrame.Initial -> geoMap.addEntity(SpiritEntity(frame.spirit))
+//                        is SpiritFrame.Position -> geoMap.moveEntity(frame.id.toEntityId(), frame.pos)
+//                    }
                 }
             }
         }

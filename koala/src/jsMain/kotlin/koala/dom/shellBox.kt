@@ -4,7 +4,7 @@ import initElement
 import koala.css.*
 import koala.html.Id
 import koala.html.ShellBoxKey
-import koala.model.GeoMap
+import koala.model.GeoCamera
 import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.html.DIV
@@ -36,16 +36,14 @@ fun RenderContext.shellBox(
     }
 }
 
-fun RenderContext.shellBox(
+fun RenderContext.shellBoxWithMap(
     id: Id,
-    geoMap: GeoMap,
-    appScope: CoroutineScope,
     modifiers: ModifierSet? = null,
     block: DIV.() -> Unit
 ): HTMLDivElement {
     val element = shellBox(id, modifiers, block)
     element.onView {
-        wireGeoMap(geoMap, appScope, element)
+        wireGeoMap(element)
     }
     return element
 }

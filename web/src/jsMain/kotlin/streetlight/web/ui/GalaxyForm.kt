@@ -156,7 +156,7 @@ fun RenderContext.galaxyLocationForm(model: GalaxyEditor) {
                 }
             }
         ) {
-            geoMapMount(geoMap, appScope, mod = FormMod.GeoMap)
+            geoMapMount(mod = FormMod.GeoMap)
         }
     }
 }

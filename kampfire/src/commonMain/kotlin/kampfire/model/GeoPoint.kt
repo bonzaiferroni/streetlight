@@ -62,7 +62,7 @@ fun GeoPoint.regionalDistanceTo(other: GeoPoint): Distance {
     return Distance.ofMeters(earthRadius * sqrt(x * x + y * y))
 }
 
-fun GeoPoint.toPoint(refLat: Double): Point {
+fun GeoPoint.toPlanarPoint(refLat: Double): Point {
     val latRad = lat * degToRad
     val lngRad = lng * degToRad
     val refLatRad = refLat * degToRad

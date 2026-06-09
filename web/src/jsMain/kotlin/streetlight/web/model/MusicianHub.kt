@@ -1,7 +1,6 @@
 package streetlight.web.model
 
 import kampfire.model.getDataOrNull
-import kampfire.model.handleResponse
 import koala.model.mapDistinct
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope

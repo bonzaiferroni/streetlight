@@ -1,14 +1,11 @@
 package streetlight.web.ui
 
-import koala.css.*
 import koala.dom.*
 import koala.model.mapDistinct
-import kotlinx.coroutines.launch
 import streetlight.model.data.TalentEdit
 import streetlight.model.data.toEdit
 import streetlight.web.EditTalentRoute
 import streetlight.web.model.DataCache
-import streetlight.web.model.Streetlight
 
 fun RenderContext.editTalentForm() {
     val userCache = app.get<DataCache>()

@@ -1,9 +1,7 @@
 package koala.dom
 
 import koala.css.*
-import koala.html.ButtonPopover
 import koala.model.storeOf
-import kotlinx.html.FlowContent
 
 fun RenderContext.buttonDialog(
     label: String,

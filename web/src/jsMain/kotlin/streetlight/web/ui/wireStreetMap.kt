@@ -18,7 +18,7 @@ fun RenderContext.wireStreetMap() {
             val galaxyIds = cache.topGalaxies.getItems().map { it.galaxyId }
             // td: gather initial posts from json in html
             val posts = api.readPosts(galaxyIds).handleResponse(toaster::toast) ?: return@collect
-            val points = markerService.createEntities(posts)
+            val points = markerService.createMarkers(posts)
             markerMap.setPoints(points)
         }
     }

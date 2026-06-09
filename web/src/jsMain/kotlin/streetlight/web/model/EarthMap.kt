@@ -10,7 +10,6 @@ import kotlinx.coroutines.launch
 import streetlight.model.data.Galaxy
 import streetlight.web.EarthRoute
 import streetlight.web.io.ApiClient
-import kotlin.collections.groupBy
 
 class EarthMap(
     private val scope: CoroutineScope,
@@ -49,9 +48,9 @@ class EarthMap(
                         api.readPosts(it.galaxyId).handleResponse(toaster::toast)
                     }
                     val points = posts?.let {
-                        markerService.createEntities(it)
+                        markerService.createMarkers(it)
                     } ?: api.readTopGalaxies().handleResponse(toaster::toast)?.let {
-                        markerService.createEntities(it)
+                        markerService.createMarkers(it)
                     }
                     markerMap.setPoints(points)
                     state.set { it.copy(galaxy = galaxy) }

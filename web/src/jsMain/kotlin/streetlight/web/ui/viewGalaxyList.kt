@@ -5,7 +5,6 @@ import koala.dom.*
 import koala.model.storeOf
 import kotlinx.coroutines.launch
 import streetlight.model.data.Galaxy
-import streetlight.web.model.Streetlight
 import streetlight.web.shells.cardOf
 
 fun RenderContext.viewGalaxyList() {

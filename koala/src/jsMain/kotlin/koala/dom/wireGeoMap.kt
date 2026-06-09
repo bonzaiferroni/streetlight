@@ -8,12 +8,11 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.w3c.dom.HTMLElement
 import koala.html.GeoMapKey
-import koala.model.GeoMap
-import koala.model.MapViewContext
-import koala.model.showLines
+import koala.model.GeoCameraController
 import koala.external.maplibregl.Point
-import koala.model.toGeoBounds
-import koala.model.toGeoPoint
+import koala.model.GeoCamera
+import koala.model.GeoMap
+import koala.model.GeoRender
 import koala.model.toLngLat
 import koala.model.toLngLatBounds
 import kotlinx.browser.document
@@ -21,13 +20,11 @@ import kotlinx.browser.window
 import kotlinx.coroutines.CoroutineScope
 
 fun RenderContext.wireGeoMap(
-    geoMap: GeoMap,
-    appScope: CoroutineScope,
     ancestor: HTMLElement,
-): MapViewContext {
+): GeoCameraController {
     val mount = ancestor.takeIf { it.isModified(GeoMapKey.MapMount) }
         ?: ancestor.queryFirstOrNull(GeoMapKey.MapMount) ?: error("mount not found")
-    val context = wireMapContext(geoMap, appScope, mount)
+    val context = wireMapContext(mount)
 
     mount.onView { isVisible ->
         if (isVisible && mount.children.length == 0) {
@@ -48,156 +45,29 @@ fun RenderContext.wireGeoMap(
     return context
 }
 
-private var cachedContext: MapViewContext? = null
+// private var cachedContext: GeoCameraController? = null
 
 fun RenderContext.wireMapContext(
-    geoMap: GeoMap,
-    appScope: CoroutineScope,
     mount: HTMLElement
-): MapViewContext {
-    cachedContext?.let {
+): GeoCameraController {
+    app.getOrNull<GeoCameraController>()?.let {
         return it
     }
 
     console.log("creating geomap")
+    val camera = app.get<GeoCamera>()
+    val geoMap = app.get<GeoMap>()
+    val appScope = app.get<CoroutineScope>()
     val mapWindow = document.getElementOrNullById(GeoMapKey.Window) ?: findAndInitGeoMap(mount) ?: error("geomap window not found")
-    val widget: maplibregl.Map = mapWindow.asDynamic().widget ?: error("geomap widget not found")
-    val context = MapViewContext(widget, mapWindow, geoMap) {
-        geoMap.setFocus(it)
-    }.also { cachedContext = it }
+    val jsMap: maplibregl.Map = mapWindow.asDynamic().widget ?: error("geomap widget not found")
+    val cameraController = GeoCameraController(jsMap, mapWindow, camera, appScope)
+    val geoRender = GeoRender(mapWindow, jsMap, camera, appScope, geoMap)
+    app.koin.declare(geoRender)
+    app.koin.declare(cameraController)
 
-    mapWindow.onView(geoMap::setIsViewed)
     // wireKeyboardControls(widget)
 
-//    val focusPanel = mapWindow.querySelector(GeoMapKey.FocusPanel.selector) as HTMLElement
-//    replaceRender(focusPanel) {
-//        val nearestFlow = geoMap.stateFlow.mapDistinct { it.focus }
-//        flowBlock(nearestFlow, modify(Magic, SlideUp)) { entity ->
-//            val content = entity?.focusContent ?: return@flowBlock
-//            content()
-//        }
-//    }
-
-    appScope.launch {
-
-        fun relayBounds(isMoving: Boolean) {
-            val center = widget.getCenter().toGeoPoint()
-            val bounds = widget.getBounds().toGeoBounds()
-            val zoom = widget.getZoom().toFloat()
-            context.setBounds(bounds, center, zoom)
-            geoMap.setBounds(center, bounds, zoom, isMoving)
-        }
-
-        while (!widget.loaded()) {
-            delay(10)
-        }
-
-        launch {
-            geoMap.markerFlow.collect(context::addEntities)
-        }
-
-        launch {
-            geoMap.removeMarker.collect(context::removeEntities)
-        }
-
-        launch {
-            geoMap.tempEntityFlow.collect(context::tempEntitySet)
-        }
-
-        launch {
-            geoMap.zoomFlow.collect { zoom ->
-                context.markers.forEach { (_, obj) ->
-                    val minZoom = obj.marker.minZoom ?: return@forEach
-                    obj.setOpacity(if (zoom >= minZoom) 1f else 0f)
-                }
-            }
-        }
-
-        launch {
-            geoMap.linesFlow.collect(context::showLines)
-        }
-
-        launch {
-            geoMap.panFlow.collect { pan ->
-                console.log("panning to: ${pan.point.toLngLat()}")
-                val options = CenterZoomBearing(
-                    center = pan.point.toLngLat(),
-                    zoom = pan.zoom?.toDouble(),
-                )
-                if (pan.snap) {
-                    widget.jumpTo(options)
-                } else if (pan.zoom != null) {
-                    widget.flyTo(options)
-                } else {
-                    widget.panTo(pan.point.toLngLat())
-                }
-            }
-        }
-
-        launch {
-            geoMap.panBoundsFlow.collect {
-                widget.fitBounds(it.toLngLatBounds())
-            }
-        }
-
-        launch {
-            geoMap.markerVisibilityFlow.collect { provideVisibility ->
-                context.setVisibility(provideVisibility)
-            }
-        }
-
-        launch {
-            geoMap.movementFlow.collect { movement ->
-                context.moveEntity(movement)
-            }
-        }
-
-        launch {
-            geoMap.hideLayersFlow.collect { layerIds ->
-                layerIds.forEach {
-                    context.hideLayer(it)
-                }
-            }
-        }
-
-        launch {
-            geoMap.showLayersFlow.collect { layerIds ->
-                layerIds.forEach {
-                    context.showLayer(it)
-                }
-            }
-        }
-
-        launch {
-            geoMap.focusFlow.collect { marker ->
-                context.setFocus(marker)
-            }
-        }
-
-//        launch {
-//            geoMap.contextIdFlow.collect {
-//                context.setContextId(it)
-//            }
-//        }
-
-        // relay zoom
-        context.setAltitude(widget.getZoom())
-        widget.on("zoom") {
-            context.setAltitude(widget.getZoom())
-        }
-
-        // relay bounds
-        relayBounds(false)
-        widget.on("move") {
-            relayBounds(true)
-        }
-
-        widget.on("moveend") {
-            relayBounds(false)
-        }
-    }
-
-    return context
+    return cameraController
 }
 
 fun wireKeyboardControls(widget: maplibregl.Map) {

@@ -1,15 +1,10 @@
 package streetlight.web.ui
 
 import kampfire.model.handleResponse
-import koala.css.*
 import koala.dom.*
 import koala.model.DocNode
 import koala.model.DocTable
-import koala.model.DocTableItem
-import koala.model.storeOf
-import streetlight.model.Api
 import streetlight.web.SiteDocRoute
-import streetlight.web.model.Streetlight
 import streetlight.web.shells.SiteDocKey
 import streetlight.web.shells.siteDocShell
 

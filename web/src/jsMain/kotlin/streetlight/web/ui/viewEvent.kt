@@ -3,8 +3,7 @@ package streetlight.web.ui
 import kampfire.model.handleResponse
 import koala.css.*
 import koala.dom.*
-import koala.model.GeoMap
-import kotlinx.coroutines.CoroutineScope
+import koala.model.GeoCamera
 import streetlight.model.data.EventLocation
 import streetlight.web.EventRoute
 import streetlight.web.model.DataCache
@@ -12,15 +11,14 @@ import streetlight.web.shells.EventProfileKey
 import streetlight.web.shells.eventShell
 
 fun RenderContext.viewEvent(event: EventLocation) {
-    val geoMap = app.get<GeoMap>()
-    val appScope = app.get<CoroutineScope>()
+    val camera = app.get<GeoCamera>()
     val cache = app.get<DataCache>()
 
-    val root = shellBox(EventProfileKey.id, geoMap, appScope, modify(Width100P)) {
+    val root = shellBoxWithMap(EventProfileKey.id, modify(Width100P)) {
         eventShell(event)
     }
 
-    geoMap.panMap(event.geoPoint)
+    camera.panMap(event.geoPoint)
     wireLights(
         root = root,
         attribute = StarLightKey.EventLightId,

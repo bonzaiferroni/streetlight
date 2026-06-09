@@ -3,7 +3,6 @@ package streetlight.web.model
 import kampfire.model.Labeled
 import kampfire.model.thumb
 import koala.SiteImage
-import koala.css.modify
 import koala.dom.RenderContext
 import koala.dom.box
 import koala.model.PointMarker
@@ -33,11 +32,6 @@ data class LocationMarker(
     // override val label get() = location.name
     override val geoPoint get() = location.geoPoint
     override val thumbUrl get() = location.images.thumb ?: SiteImage.placeholderTh.url
-    override val focusContent: RenderContext.() -> Unit get() = {
-        box {
-            cardOf(location)
-        }
-    }
     override val light get() = Rgb(180, 240, 100)
     // override val modifiers get() = modify(MarkerUtility.twinkleAboveRaincloud)
     override val markerType get() = MarkerType.Location
@@ -49,9 +43,6 @@ data class EventMarker(
     override val markerId get() = post.event.locationId.value.toString()
     override val thumbUrl get() = post.images.thumb ?: SiteImage.placeholderTh.url
     override val light get() = Rgb(240, 100, 180 )
-    override val focusContent: RenderContext.() -> Unit get() = {
-        eventFocusContent(post)
-    }
     override val geoPoint get() = post.event.geoPoint
     override val markerType get() = MarkerType.Event
 }

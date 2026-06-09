@@ -22,10 +22,10 @@ import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLParagraphElement
 
-class MarkerElement(
+class PointRender(
     val jsMarker: maplibregl.Marker,
     marker: PointMarker,
-    pixelPoint: Point,
+    planarPoint: Point,
     val element: HTMLDivElement?,
     val base: HTMLDivElement?,
     val body: HTMLElement?,
@@ -34,7 +34,7 @@ class MarkerElement(
 ) {
     var lastBearing = 0f
 
-    var point = pixelPoint
+    var planarPoint = planarPoint
         private set
     var marker = marker
         private set
@@ -81,7 +81,7 @@ class MarkerElement(
 
     fun setEntity(entity: PointMarker, point: Point) {
         this.marker = entity
-        this.point = point
+        this.planarPoint = point
     }
 
     fun unfocus() {
@@ -91,9 +91,13 @@ class MarkerElement(
     fun focus() {
         element?.modify(Focus)
     }
+
+    fun dispose() {
+        jsMarker.remove()
+    }
 }
 
-fun MarkerElement.setAttributes(entity: PointMarker) {
+fun PointRender.setAttributes(entity: PointMarker) {
     entity.bearing?.let {
         setBearing(it)
     }
@@ -102,7 +106,7 @@ fun MarkerElement.setAttributes(entity: PointMarker) {
     }
 }
 
-fun PointMarker.toMarkerView(pixelPoint: Point, focusEntity: () -> Unit): MarkerElement {
+fun PointMarker.toPointView(pixelPoint: Point, focusEntity: () -> Unit): PointRender {
     val element = document.createDiv()
     element.modify(MarkerStyle.Root)
 
@@ -170,12 +174,12 @@ fun PointMarker.toMarkerView(pixelPoint: Point, focusEntity: () -> Unit): Marker
         element = element,
         subpixelPositioning = subpixelPositioning
     )
-    val view = MarkerElement(
+    val view = PointRender(
         jsMarker = maplibregl.Marker(
             options = options
         ),
         marker = this,
-        pixelPoint = pixelPoint,
+        planarPoint = pixelPoint,
         element = element,
         base = baseElement,
         body = bodyElement,

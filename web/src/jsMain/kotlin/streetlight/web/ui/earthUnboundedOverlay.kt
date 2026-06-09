@@ -3,8 +3,8 @@ package streetlight.web.ui
 import kampfire.model.Point
 import koala.css.*
 import koala.dom.*
-import koala.model.GeoMap
-import koala.model.MapViewContext
+import koala.model.GeoCamera
+import koala.model.GeoCameraController
 import koala.model.MarkerId
 import koala.model.toLngLat
 import kotlinx.coroutines.flow.combine
@@ -20,9 +20,9 @@ import kotlin.math.abs
 import kotlin.math.atan2
 import kotlin.math.min
 
-fun RenderContext.earthUnboundedOverlay(model: EarthMap, mapContext: MapViewContext) {
-    val geoMap = app.get<GeoMap>()
-    val widget = mapContext.widget
+fun RenderContext.earthUnboundedOverlay(model: EarthMap, mapContext: GeoCameraController) {
+    val geoMap = app.get<GeoCamera>()
+    val widget = mapContext.jsMap
     val element = div(modify(Earth.Unbounded, PointerEventsNone))
     val offsetFlow = element.resizeFlow()
         .combine(mapContext.windowElement.resizeFlow()) { _, _ -> Unit }

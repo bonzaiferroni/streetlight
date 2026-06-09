@@ -60,9 +60,11 @@ external object maplibregl {
         override fun on(type: String, listener: Listener): Subscription
 
         fun addSource(id: String, source: MapSource)
+        fun removeSource(id: String)
         fun getSource(id: String): Source
         fun addLayer(layer: dynamic, layerId: dynamic)
         fun addLayer(layer: dynamic)
+        fun removeLayer(id: String)
 
         fun project(point: LngLat): Point
 

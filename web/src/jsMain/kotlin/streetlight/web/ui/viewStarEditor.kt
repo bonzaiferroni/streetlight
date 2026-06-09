@@ -14,7 +14,6 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import streetlight.model.data.toEdit
-import streetlight.web.model.Streetlight
 import streetlight.web.model.UserGate
 import streetlight.web.pages.appFooter
 

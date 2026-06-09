@@ -3,6 +3,7 @@
 package streetlight.web.model
 
 import kampfire.model.getContainingBounds
+import koala.model.GeoCamera
 import koala.model.GeoMap
 import koala.model.mapDistinct
 import koala.model.storeOf
@@ -21,14 +22,15 @@ class MarkerMap(
     private val state = storeOf(StreetMapState())
     val stateFlow = state.flow
     val stateNow get() = state.now
+    val markerLayer = geoMap.getOrCreateLayer(MarkerLayerId.Markers)
 
     val markersFlow = stateFlow.mapDistinct { it.markers }
-    private val partitionedFlow = markersFlow.combine(geoMap.movingBoundsFlow) { markers, bounds ->
+    private val partitionedFlow = markersFlow.combine(geoMap.camera.movingBoundsFlow) { markers, bounds ->
         markers?.partition { bounds.contains(it.geoPoint) }
     }.distinctUntilChanged()
     val boundedMarkersFlow   = partitionedFlow.map { it?.first }
     val unboundedMarkersFlow = partitionedFlow.map { it?.second }
-    val isMovingFlow = geoMap.isMovingFlow
+    val isMovingFlow = geoMap.camera.isMovingFlow
     val focusFlow = stateFlow.mapDistinct { it.focus }
 
     init {
@@ -41,31 +43,26 @@ class MarkerMap(
     }
 
     fun setPoints(markers: List<AppMarker>?) {
-        stateNow.markers?.let { markersNow ->
-            geoMap.removeEntities(markersNow.map { it.markerId })
-        }
-        markers?.let {
-            geoMap.addEntities(markers)
-        }
+        markerLayer.setPoints(markers ?: emptyList())
         state.set { it.copy(markers = markers, focus = null) }
     }
 
-    fun addPoints(markers: List<AppMarker>) {
-        geoMap.addEntities(markers)
-        state.set { it.copy(markers = (it.markers ?: emptyList()) + markers)}
-    }
+//    fun addPoints(markers: List<AppMarker>) {
+//        geoMap.addEntities(markers)
+//        state.set { it.copy(markers = (it.markers ?: emptyList()) + markers)}
+//    }
 
     fun setFocus(marker: AppMarker) {
         geoMap.setFocus(marker)
-        geoMap.panMap(marker.geoPoint)
+        geoMap.camera.panMap(marker.geoPoint)
         state.set { it.copy(focus = marker)}
     }
 
     fun showAll() {
         val markers = stateNow.markers.takeIf { !it.isNullOrEmpty() } ?: return
         when(val bounds = getContainingBounds(markers.map { it.geoPoint })) {
-            null -> geoMap.panMap(markers.first().geoPoint)
-            else -> geoMap.panMap(bounds.resizeBy(1.2f))
+            null -> geoMap.camera.panMap(markers.first().geoPoint)
+            else -> geoMap.camera.panMap(bounds.resizeBy(1.2f))
         }
     }
 }

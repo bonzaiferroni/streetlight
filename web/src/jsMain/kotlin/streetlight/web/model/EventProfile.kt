@@ -1,13 +1,5 @@
 package streetlight.web.model
 
-import koala.model.BrowserModel
-import koala.model.mapDistinct
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.launch
-import streetlight.model.data.Event
-import streetlight.model.data.EventId
-
 //class EventProfile(
 //    scope: CoroutineScope,
 //    private val client: ClientContext,

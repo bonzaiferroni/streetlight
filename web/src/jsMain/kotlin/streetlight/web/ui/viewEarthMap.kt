@@ -12,7 +12,6 @@ import koala.html.heading3
 import koala.html.heading4
 import koala.html.image
 import koala.html.logo
-import koala.html.spacer
 import koala.html.span
 import kotlinx.browser.document
 import kotlinx.coroutines.delay
@@ -24,7 +23,6 @@ import streetlight.web.EarthRoute
 import streetlight.web.GalaxyRoute
 import streetlight.web.HomeRoute
 import streetlight.web.layouts.ColorScheme
-import streetlight.web.layouts.GridArea
 import streetlight.web.layouts.cellBlock
 import streetlight.web.layouts.eventCells
 import streetlight.web.model.EarthMap
@@ -36,11 +34,11 @@ import streetlight.web.pages.AppBodyKey
 
 fun RenderContext.viewEarthMap(model: EarthMap) {
     box(Earth.Id, modify(Size100P)) {
-        val mount = geoMapMount(geoMap, appScope, mod = modify(Earth.Map))
+        val cameraController = geoMapMount(mod = modify(Earth.Map))
         column(modify(Gap0, PointerEventsNone)) {
             earthHeader(model)
             div(modify(Earth.Grid, Padding1, Flex1, MinHeight0)) {
-                earthUnboundedOverlay(model, mount)
+                earthUnboundedOverlay(model, cameraController)
                 earthWindow(model)
                 earthList(model)
                 earthFocus(model)

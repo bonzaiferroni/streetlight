@@ -4,7 +4,7 @@ import kampfire.api.Slug
 import kampfire.model.Labeled
 import kampfire.model.handleResponse
 import koala.dom.MessageStore
-import koala.model.GeoMap
+import koala.model.GeoCamera
 import koala.model.mapDistinct
 import koala.model.storeOf
 import koala.utils.prettyPrint
@@ -25,7 +25,7 @@ class LocationScout(
     val editor: LocationEditor,
     private val scope: CoroutineScope,
     private val osm: OSMClient,
-    private val geo: GeoMap,
+    private val geo: GeoCamera,
     private val toaster: Toaster,
     private val api: ApiClient,
 ) {

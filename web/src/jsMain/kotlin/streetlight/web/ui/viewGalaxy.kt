@@ -24,7 +24,7 @@ fun RenderContext.viewGalaxy(content: GalaxyContent) {
     )
     wireGalaxyMenu(root, content.galaxy)
 
-    val points = markerService.createEntities(content.posts)
+    val points = markerService.createMarkers(content.posts)
     markerMap.setPoints(points)
 }
 

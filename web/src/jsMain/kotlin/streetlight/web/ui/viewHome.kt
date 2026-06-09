@@ -1,6 +1,5 @@
 package streetlight.web.ui
 
-import kampfire.model.getDataOrNull
 import kampfire.model.handleResponse
 import koala.dom.*
 import koala.dom.routeBlock
@@ -15,7 +14,7 @@ import streetlight.web.shells.homeShell
 fun RenderContext.viewHome(content: HomeContent) {
     val cache = app.get<DataCache>()
 
-    val root = shellBox(HomeKey.ContainerId, geoMap, appScope) {
+    val root = shellBoxWithMap(HomeKey.ContainerId) {
         homeShell(content)
     }
 

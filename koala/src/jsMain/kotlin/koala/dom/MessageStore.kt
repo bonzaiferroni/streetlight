@@ -3,7 +3,6 @@ package koala.dom
 import kampfire.model.Problem
 import koala.model.Store
 import koala.model.mapDistinct
-import koala.model.mapDistinctNotNull
 
 class MessageStore(value: UIMessage? = null): Store<UIMessage?>(value) {
     val isWorkingFlow = flow.mapDistinct { it?.isWorking ?: false }

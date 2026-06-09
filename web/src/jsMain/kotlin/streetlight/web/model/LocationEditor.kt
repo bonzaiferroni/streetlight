@@ -1,6 +1,5 @@
 package streetlight.web.model
 
-import kampfire.api.Slug
 import kampfire.model.GeoPoint
 import kampfire.model.Url
 import kampfire.model.handleResponse
@@ -12,12 +11,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancelChildren
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.launch
 import streetlight.model.data.Location
 import streetlight.model.data.LocationEdit
-import streetlight.model.data.LocationId
 import streetlight.model.data.ResourceType
 import streetlight.model.data.UrlParseRequest
 import streetlight.model.data.mergeLeft

@@ -3,14 +3,12 @@ package streetlight.web.model
 import kampfire.model.GeoPoint
 import kampfire.model.getDataOrNull
 import koala.SvgFile
-import koala.css.modify
-import koala.model.GeoMap
-import koala.model.LayerId
 import koala.model.LineMarker
 import koala.model.MarkerId
 import koala.model.PointMarker
 import koala.external.VehiclePosition
 import koala.model.Altitude
+import koala.model.GeoMap
 import koala.model.mapDistinct
 import koala.model.storeOf
 import koala.model.toGeoPoint
@@ -37,12 +35,12 @@ class TransitMap(
     val stateNow get() = state.now
     val stateFlow = state.flow
     val isActiveFlow = stateFlow.mapDistinct { it.isActive }
+    private val markerLayer = geoMap.getOrCreateLayer(MarkerLayerId.Transit)
 
     private var currentEntities: List<TransitEntity> = emptyList()
     private var trackingJob: Job? = null
     private var transit: AreaTransit? = null
-    private var currentRoutes: List<RouteEntity>? = null
-    private var feedType: ProtobufType? = null
+    private var currentRoutes: List<RouteMarker>? = null
     private var isInitialized: Boolean = false
 
     fun init() {
@@ -66,13 +64,14 @@ class TransitMap(
 
     private fun startTracking() {
         if (trackingJob?.isActive == true) return
+        markerLayer.setIsVisible(true)
         trackingJob = scope.launch {
             val transit = readTransit() ?: return@launch
 
             val routes = currentRoutes
             if (routes != null) {
-                val layerIds = routes.map { it.layerId }.toSet().toList()
-                geoMap.showLayers(layerIds)
+                // val layerIds = routes.map { it.layerId }.toSet().toList()
+                // geoMap.showLayers(layerIds)
             } else {
                 currentRoutes = createRoutes(transit)
             }
@@ -82,7 +81,7 @@ class TransitMap(
             var timestamp = 0L
 
             while (true) {
-                if (geoMap.stateNow.isViewed) {
+                if (geoMap.camera.stateNow.isViewed) {
                     val transitState = client.readVehiclePositions(timestamp)
                     if (transitState != null) {
                         timestamp = transitState.timestamp
@@ -99,75 +98,39 @@ class TransitMap(
     private fun stopTracking() {
         trackingJob?.cancel()
         trackingJob = null
-        geoMap.removeEntities(currentEntities.map { it.markerId })
+        markerLayer.setIsVisible(false)
         currentEntities = emptyList()
-        currentRoutes?.let { routes ->
-            val layerIds = routes.map { it.layerId }.toSet().toList()
-            geoMap.hideLayers(layerIds)
-        }
     }
 
     private suspend fun readTransit() = transit ?: client.readAreaTransit().getDataOrNull().also { transit = it }
 
-    private fun createRoutes(transit: AreaTransit): List<RouteEntity> {
+    private fun createRoutes(transit: AreaTransit): List<RouteMarker> {
         val routes = transit.routes.mapNotNull { route ->
             if (route.vehicleType == VehicleType.Bus) return@mapNotNull null
             val vehicleType = route.vehicleType ?: return@mapNotNull null
-            RouteEntity(route.transitRouteId, route.shortName, vehicleType, route.points)
+            RouteMarker(route.transitRouteId, route.shortName, vehicleType, listOf(route.points))
         }
-        geoMap.addLines(routes)
+        markerLayer.setLines(routes)
         return routes
     }
 
     private fun showTransitState(transitState: AreaTransitState) {
         val transit = transit ?: return
         val vehicles = transitState.vehicles
-        val removedIds = currentEntities
-            .filter { currentEntity -> vehicles.none { currentEntity.vehicleId == it.vehicleId } }
-            .map { it.markerId }
+//        val removedIds = currentEntities
+//            .filter { currentEntity -> vehicles.none { currentEntity.vehicleId == it.vehicleId } }
+//            .map { it.markerId }
         val entities = transitState.vehicles.map {
             val vehicleType = transit.routes.firstOrNull() { route -> route.transitRouteId.value == it.routeId }
                 ?.vehicleType ?: VehicleType.Bus
             it.toEntity(transitState.timestamp, vehicleType)
         }
-        geoMap.removeEntities(removedIds)
-        geoMap.addEntities(entities)
+//        geoMap.removeEntities(removedIds)
+        markerLayer.setPoints(entities)
 
         currentEntities = entities
 
         state.set { it.copy(timestamp = transitState.timestamp) }
-    }
-
-    @Deprecated("Use showTransitState")
-    private suspend fun fetchVehicles(feedType: ProtobufType, transit: AreaTransit) {
-        val feed = client.readVehiclePositions(feedType) ?: return
-        val timestamp = feed.header.timestamp.toString().toLong()
-        val delta = (timestamp - stateNow.timestamp).toInt()
-        console.log("fetching vehicles -- timestamp delta: $delta")
-        if (delta == 0) return
-        val entities = feed.entity.mapNotNull { feedEntity ->
-            val vehicle = feedEntity.vehicle ?: return@mapNotNull null
-            val trip = vehicle.trip ?: return@mapNotNull null
-            val vehicleType = transit.routes.firstOrNull() { it.transitRouteId.value == trip.routeId }
-                ?.vehicleType ?: VehicleType.Bus // return@mapNotNull null
-
-            vehicle.toEntity(timestamp, vehicleType)
-        }
-
-        val removedIds = currentEntities
-            .filter { currentEntity -> entities.none { currentEntity.vehicleId == it.vehicleId } }
-            .map { it.markerId }
-
-        if (removedIds.isNotEmpty()) {
-            console.log("removing ${removedIds.size} vehicles")
-        }
-
-        geoMap.removeEntities(removedIds)
-        geoMap.addEntities(entities)
-
-        currentEntities = entities
-
-        state.set { it.copy(timestamp = timestamp) }
     }
 }
 
@@ -176,19 +139,19 @@ data class TransitMapState(
     val isActive: Boolean = false,
 )
 
-data class RouteEntity(
+data class RouteMarker(
     val transitRouteId: TransitRouteId,
     override val label: String,
     val vehicleType: VehicleType,
-    override val points: List<GeoPoint>
+    override val lines: List<List<GeoPoint>>
 ): LineMarker {
     override val markerId: MarkerId get() = transitRouteId.value
-    override val layerId: LayerId
-        get() = when(vehicleType) {
-        VehicleType.Bus -> "bus-layer"
-        VehicleType.LightRail -> "light-rail-layer"
-        VehicleType.Train -> "train-layer"
-    }
+//    override val layerId: LayerIdProto
+//        get() = when(vehicleType) {
+//        VehicleType.Bus -> "bus-layer"
+//        VehicleType.LightRail -> "light-rail-layer"
+//        VehicleType.Train -> "train-layer"
+//    }
 }
 
 data class TransitEntity(

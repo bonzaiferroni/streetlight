@@ -10,7 +10,6 @@ import org.w3c.dom.SMOOTH
 import org.w3c.dom.ScrollBehavior
 import org.w3c.dom.ScrollToOptions
 import streetlight.web.io.OmniLog
-import streetlight.web.model.Streetlight
 import streetlight.web.pages.AppBodyKey
 
 fun RenderContext.wireRightPanel() {

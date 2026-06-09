@@ -4,7 +4,6 @@ import kampfire.api.Slug
 import kampfire.model.Url
 import kampfire.model.handleResponse
 import koala.dom.MessageStore
-import koala.dom.UIMessage
 import koala.model.mapDistinct
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope

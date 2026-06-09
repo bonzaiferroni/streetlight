@@ -1,11 +1,16 @@
 package streetlight.web.ui
 
 import koala.dom.AppContext
+import koala.external.maplibregl
+import koala.model.GeoCamera
+import koala.model.GeoCameraController
 import koala.model.GeoMap
+import koala.model.GeoRender
 import koala.model.Portal
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import org.koin.dsl.module
+import org.w3c.dom.HTMLElement
 import streetlight.model.data.EventEdit
 import streetlight.model.data.Galaxy
 import streetlight.model.data.LocationEdit
@@ -36,7 +41,8 @@ val appModule = module {
     single { DataCache(get(), get(), get(), get(), get()) }
     single { Portal(HomeRoute, StreetlightScreen.entries, get()) }
     single { GateAgent(get(), get(), get()) }
-    single { GeoMap(get()) }
+    single { GeoCamera(get()) }
+    single { GeoMap(get(), get()) }
     single { TransitMap(get(), get(), get(), get()) }
     single { MarkerMap(get(), get(), get()) }
     single { ChatRoom(get(), get()) }

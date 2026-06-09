@@ -1,6 +1,5 @@
 package streetlight.web.ui
 
-import kampfire.model.handleResponse
 import koala.LottieFile
 import koala.css.*
 import koala.dom.*
@@ -14,8 +13,6 @@ import kotlinx.coroutines.launch
 import streetlight.model.data.Event
 import streetlight.model.data.EventEdit
 import streetlight.model.data.ExtraLink
-import streetlight.model.data.toEdit
-import streetlight.web.EventUpdateRoute
 
 // event editor content including introduction and form
 fun RenderContext.viewEventEditorProto(

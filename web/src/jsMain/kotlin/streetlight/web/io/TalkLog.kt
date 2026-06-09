@@ -1,6 +1,5 @@
 package streetlight.web.io
 
-import kampfire.api.StringId
 import kampfire.model.Ok
 import kampfire.model.Problem
 import koala.model.mapDistinct
@@ -11,9 +10,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import streetlight.model.data.*
-import streetlight.web.model.Streetlight
 import streetlight.web.ui.CommentView
-import streetlight.web.ui.ViewModel
 import kotlin.uuid.Uuid
 
 class TalkLog(

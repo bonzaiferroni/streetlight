@@ -1,6 +1,6 @@
 package streetlight.web.model
 
-import koala.model.GeoMap
+import koala.model.GeoCamera
 import koala.model.Portal
 import kotlinx.coroutines.CoroutineScope
 import streetlight.web.io.ApiClient
@@ -15,7 +15,7 @@ interface Streetlight {
     val portal: Portal
     val gate: UserGate
     val gateAgent: GateAgent
-    val geoMap: GeoMap
+    val geoMap: GeoCamera
     val markerMap: MarkerMap
     val chatRoom: ChatRoom
     val cache: DataCache

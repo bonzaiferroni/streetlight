@@ -7,7 +7,7 @@ import kampfire.model.Url
 import kampfire.model.getDataOrNull
 import kampfire.model.handleResponse
 import koala.dom.MessageStore
-import koala.model.GeoMap
+import koala.model.GeoCamera
 import koala.model.Portal
 import koala.model.mapDistinct
 import koala.model.storeOf
@@ -27,7 +27,7 @@ class GalaxyEditor(
     galaxy: GalaxyEdit,
     private val scope: CoroutineScope,
     private val api: ApiClient,
-    private val geo: GeoMap,
+    private val geo: GeoCamera,
     private val portal: Portal,
     private val toaster: Toaster,
 ) {
