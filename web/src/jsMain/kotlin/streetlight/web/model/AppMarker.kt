@@ -40,7 +40,7 @@ data class LocationMarker(
 data class EventMarker(
     val post: EventPost,
 ): AppMarker {
-    override val markerId get() = post.event.locationId.value.toString()
+    override val markerId get() = post.event.eventId.value.toString()
     override val thumbUrl get() = post.images.thumb ?: SiteImage.placeholderTh.url
     override val light get() = Rgb(240, 100, 180 )
     override val geoPoint get() = post.event.geoPoint

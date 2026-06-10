@@ -4,11 +4,14 @@ import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 
 class GeoLayer(
-    val layerId: GeoLayerId
+    val config: GeoLayerConfig,
 ) {
+    val layerId get() = config.layerId
+
     private val state = storeOf(GeoLayerState())
     val stateFlow = state.flow
     val stateNow get() = state.now
+
 
     val pointsFlow = stateFlow.mapDistinct { it.points }
     val linesFlow = stateFlow.mapDistinct { it.lines }
@@ -30,3 +33,5 @@ data class GeoLayerState(
 value class GeoLayerId(val string: String) {
     override fun toString() = string
 }
+
+data class GeoLayerConfig(val layerId: GeoLayerId, val clusterRadiusPx: Int? = null)

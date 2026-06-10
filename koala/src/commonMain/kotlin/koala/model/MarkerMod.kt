@@ -4,18 +4,21 @@ import koala.css.Class
 import koala.css.Focus
 import koala.css.Scale
 
-object MarkerStyle {
+object MarkerMod {
     val Root = Class("map-marker")
-    val Base = Class("map-marker__base")
-    val Bearing = Class("map-marker__bearing")
-    val Icon = Class("map-marker__icon")
-    val Thumb = Class("map-marker__thumb")
-    val Body = Class("map-marker__body")
-    val Label = Class("map-marker__label")
+    val Base = Class("marker-base")
+    val Bearing = Class("marker-bearing")
+    val Icon = Class("marker-icon")
+    val Thumb = Class("marker-thumb")
+    val Body = Class("marker-body")
+    val Label = Class("marker-label")
+
+    val ClusterPrincipal = Class("cluster-principal")
+    val ClusterMember = Class("cluster-member")
 }
 
 // language="CSS"
-val MarkerSheet get() = with(MarkerStyle) { """
+val MarkerSheet get() = with(MarkerMod) { """
     
 /* Focus Properties */
 $Root$Focus {
@@ -116,4 +119,9 @@ $Label {
 
     transition: opacity 200ms ease-in-out;
 }
+
+$ClusterMember {
+    visibility: hidden;
+}
+
 """ }

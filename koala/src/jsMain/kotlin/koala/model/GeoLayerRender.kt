@@ -1,12 +1,14 @@
 package koala.model
 
 import kampfire.model.GeoBounds
-import kampfire.model.GeoPoint
+import kampfire.model.DEG_TO_RAD
+import kampfire.model.distanceSquaredTo
 import kampfire.model.toPlanarPoint
 import koala.external.maplibregl
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import kotlin.math.cos
+import kotlin.math.pow
 
 internal class GeoLayerRender(
     val layer: GeoLayer,
@@ -14,10 +16,18 @@ internal class GeoLayerRender(
     val scope: CoroutineScope,
     val onFocus: (PointMarker?) -> Unit
 ) {
-    val pointRenders = mutableMapOf<MarkerId, PointRender>()
-    val lineRenders = mutableMapOf<MarkerId, LineRender>()
+    var pointRenders: Map<MarkerId, PointRender> = emptyMap()
+        private set
+    var lineRenders: Map<MarkerId, LineRender> = emptyMap()
+        private set
 
+    private var pointClusters: Map<MarkerId, PointCluster?> = emptyMap()
+
+    private var refLatitudeNow: Double? = null
     private var boundsNow: GeoBounds? = null
+    private var zoomNow: Float? = null
+    private var isMovingNow: Boolean = false
+
     private val job = scope.launch {
         launch {
             layer.pointsFlow.collect(::setPoints)
@@ -29,39 +39,112 @@ internal class GeoLayerRender(
     }
 
     fun setPoints(markers: List<PointMarker>) {
-        console.log("setting points: ${layer.layerId}")
-        val center = jsMap.getCenter().toGeoPoint()
+        val pointBuffer = mutableMapOf<MarkerId, PointRender>()
+        val refLatitude = markers.sumOf { it.geoPoint.lat } / markers.size
+        refLatitudeNow = refLatitude
 
         // add or update points
-        markers.forEach { point ->
-            val render = recallPoint(point, center) ?: createPoint(point, center)
-            render.setAttributes(point)
+        markers.forEach { marker ->
+            val render = pointRenders[marker.markerId]?.also { render ->
+                // move render
+                render.move(marker.geoPoint)
+
+                // set marker
+                val planarPoint = marker.geoPoint.toPlanarPoint(refLatitude)
+                render.setMarker(marker, planarPoint)
+            } ?: marker.let {
+                // create render
+                val planarPoint = marker.geoPoint.toPlanarPoint(refLatitude)
+                val render = marker.toPointRender(planarPoint) {
+                    onFocus(marker)
+                }
+
+                render.jsMarker.setLngLat(marker.geoPoint.toLngLat())
+                render
+            }
+            pointBuffer[marker.markerId] = render
+            render.setAttributes(marker)
             updateVisibility(render)
         }
 
         // remove cached points not in list
-        pointRenders.toList().forEach { (key, render) ->
+        pointRenders.forEach { (key, render) ->
             if (markers.any { it.markerId == key }) return@forEach
             render.dispose()
-            pointRenders.remove(key)
+        }
+
+        pointRenders = pointBuffer
+
+        clusterPoints()
+    }
+
+    private fun clusterPoints() {
+        val clusterRadiusPx = layer.config.clusterRadiusPx ?: return
+        val zoom = zoomNow ?: return
+        val refLatitude = refLatitudeNow ?: return
+        val clusterRadiusMetersSq = clusterRadiusMetersOf(zoom, refLatitude, clusterRadiusPx).let { it * it }
+        pointClusters = defineClusters(clusterRadiusMetersSq)
+        applyClusters(pointClusters)
+    }
+
+    private fun defineClusters(clusterRadiusMetersSq: Double): Map<MarkerId, PointCluster?> {
+        val clusters = mutableMapOf<MarkerId, PointCluster?>()
+        val clustered = mutableSetOf<MarkerId>()
+        val currentSet = mutableSetOf<MarkerId>()
+
+        pointRenders.forEach { (markerId, render) ->
+            if (markerId in clustered) return@forEach
+
+            pointRenders.forEach { (otherId, otherRender) ->
+                if (otherId == markerId || otherId in clustered) return@forEach
+                val distanceSq = render.planarPoint.distanceSquaredTo(otherRender.planarPoint)
+                if (distanceSq > clusterRadiusMetersSq) return@forEach
+                currentSet.add(otherId)
+            }
+
+            when (currentSet.isEmpty()) {
+                true -> clusters[markerId] = null
+                else -> {
+                    currentSet.add(markerId)
+                    val cluster = PointCluster(markerId, currentSet.toSet())
+                    clustered.addAll(currentSet)
+                    currentSet.forEach {
+                        clusters[it] = cluster
+                    }
+                    currentSet.clear()
+                }
+            }
+        }
+
+        return clusters
+    }
+
+    private fun applyClusters(clusters: Map<MarkerId, PointCluster?>) {
+        clusters.forEach { (markerId, cluster) ->
+            val render = pointRenders[markerId] ?: return@forEach
+            val isClusterPrincipal = cluster?.principalId == markerId
+            render.setClustering(isClusterPrincipal)
         }
     }
 
     fun setLines(markers: List<LineMarker>) {
+        val lineBuffer = mutableMapOf<MarkerId, LineRender>()
+
         markers.forEach { line ->
-            if (lineRenders.any { it.key == line.markerId }) return@forEach
-            val render = line.toLineRender(jsMap)
-            jsMap.addSource(line.markerId, render.mapSource)
-            jsMap.addLayer(render.layerSpecification)
-            lineRenders[line.markerId] = render
+            val render = lineRenders[line.markerId] ?: line.toLineRender(jsMap).also { render ->
+                jsMap.addSource(line.markerId, render.mapSource)
+                jsMap.addLayer(render.layerSpecification)
+            }
+            lineBuffer[line.markerId] = render
         }
 
-        lineRenders.toList().forEach { (key, render) ->
+        lineRenders.forEach { (key, render) ->
             if (markers.any { it.markerId == key}) return@forEach
             jsMap.removeLayer(render.marker.markerId)
             jsMap.removeSource(render.marker.markerId)
-            lineRenders.remove(render.marker.markerId)
         }
+
+        lineRenders = lineBuffer
     }
 
     fun moveEntity(movement: MarkerMovement) {
@@ -70,8 +153,15 @@ internal class GeoLayerRender(
         console.log("moved to ${movement.position}")
     }
 
-    internal fun setBounds(bounds: GeoBounds) {
+    internal fun setBounds(bounds: GeoBounds, zoom: Float, isMoving: Boolean) {
+        val isClusterReady = !isMoving && zoom != zoomNow
+
         boundsNow = bounds
+        zoomNow = zoom
+        isMovingNow = isMoving
+
+        if (isClusterReady) clusterPoints()
+
         // set marker visibility
         pointRenders.forEach {
             updateVisibility(it.value)
@@ -89,33 +179,21 @@ internal class GeoLayerRender(
         }
     }
 
-    private fun recallPoint(marker: PointMarker, center: GeoPoint): PointRender? {
-        val view = pointRenders[marker.markerId] ?: return null
-
-        // move marker
-        view.move(marker.geoPoint)
-
-        // set entity
-        val planarPoint = marker.geoPoint.toPlanarPoint(center.lat)
-        view.setEntity(marker, planarPoint)
-
-        return view
-    }
-
-    private fun createPoint(point: PointMarker, center: GeoPoint): PointRender {
-        val pixelPoint = point.geoPoint.toPlanarPoint(center.lat)
-        val markerView = point.toPointView(pixelPoint) {
-            onFocus(point)
-        }
-
-        markerView.jsMarker.setLngLat(point.geoPoint.toLngLat())
-        pointRenders[point.markerId] = markerView
-        return markerView
-    }
-
     private fun updateVisibility(render: PointRender) {
         val bounds = boundsNow ?: return
         val isVisible = bounds.contains(render.position)
         render.setIsVisible(isVisible, jsMap)
     }
 }
+
+fun clusterRadiusMetersOf(zoom: Float, refLatitude: Double, pixelRadius: Int): Double {
+    val metersPerPixel = (40_075_016.686 * cos(refLatitude * DEG_TO_RAD)) / (2.0f.pow(zoom) * MAPLIBRE_TILE_SIZE)
+    return pixelRadius * metersPerPixel
+}
+
+const val MAPLIBRE_TILE_SIZE = 512.0
+
+internal class PointCluster(
+    val principalId: MarkerId,
+    val markerIds: Set<MarkerId>
+)

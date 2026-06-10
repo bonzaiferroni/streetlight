@@ -79,9 +79,26 @@ class PointRender(
         }
     }
 
-    fun setEntity(entity: PointMarker, point: Point) {
+    fun setMarker(entity: PointMarker, point: Point) {
         this.marker = entity
         this.planarPoint = point
+    }
+
+    fun setClustering(isClusterPrincipal: Boolean?) {
+        when (isClusterPrincipal) {
+            true -> {
+                element?.unmodify(MarkerMod.ClusterMember)
+                element?.modify(MarkerMod.ClusterPrincipal)
+            }
+            false -> {
+                element?.unmodify(MarkerMod.ClusterPrincipal)
+                element?.modify(MarkerMod.ClusterMember)
+            }
+            else -> {
+                element?.unmodify(MarkerMod.ClusterPrincipal)
+                element?.unmodify(MarkerMod.ClusterMember)
+            }
+        }
     }
 
     fun unfocus() {
@@ -106,9 +123,9 @@ fun PointRender.setAttributes(entity: PointMarker) {
     }
 }
 
-fun PointMarker.toPointView(pixelPoint: Point, focusEntity: () -> Unit): PointRender {
+fun PointMarker.toPointRender(pixelPoint: Point, focusEntity: () -> Unit): PointRender {
     val element = document.createDiv()
-    element.modify(MarkerStyle.Root)
+    element.modify(MarkerMod.Root)
 
     var baseElement: HTMLDivElement? = null
     var bearingElement: HTMLDivElement? = null
@@ -121,7 +138,7 @@ fun PointMarker.toPointView(pixelPoint: Point, focusEntity: () -> Unit): PointRe
             element.style.setProperty("--twinkle-delay", "${delay}s")
 
             val baseMod = buildSet {
-                add(MarkerStyle.Base)
+                add(MarkerMod.Base)
                 modifiers?.let {
                     addAll(it)
                 }
@@ -138,30 +155,30 @@ fun PointMarker.toPointView(pixelPoint: Point, focusEntity: () -> Unit): PointRe
 
             bearingElement = bearing?.let {
                 div {
-                    addModifiers(MarkerStyle.Bearing)
+                    addModifiers(MarkerMod.Bearing)
                 }
             }
 
             bodyElement = icon?.let {
                 div {
-                    addModifiers(modify(MarkerStyle.Icon, MarkerStyle.Body))
+                    addModifiers(modify(MarkerMod.Icon, MarkerMod.Body))
                     style = "--svg: url(${it.url});"
                 }
             } ?: thumbUrl?.let {
                 img {
                     src = it.value
-                    addModifiers(modify(MarkerStyle.Body, MarkerStyle.Thumb))
+                    addModifiers(modify(MarkerMod.Body, MarkerMod.Thumb))
                 }
             } ?: body?.let {
                 div {
-                    addModifiers(modify(MarkerStyle.Body))
+                    addModifiers(modify(MarkerMod.Body))
                     body?.invoke(this)
                 }
             }
 
             labelElement = label?.let {
                 p {
-                    addModifiers(MarkerStyle.Label)
+                    addModifiers(MarkerMod.Label)
                     +it
                 }
             }

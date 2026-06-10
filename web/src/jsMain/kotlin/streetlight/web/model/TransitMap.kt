@@ -21,7 +21,6 @@ import streetlight.model.data.AreaTransitState
 import streetlight.model.data.TransitRouteId
 import streetlight.model.data.TransitVehicle
 import streetlight.model.data.VehicleType
-import streetlight.web.io.ProtobufType
 import streetlight.web.io.TransitClient
 import kotlin.time.Duration.Companion.seconds
 
@@ -35,7 +34,7 @@ class TransitMap(
     val stateNow get() = state.now
     val stateFlow = state.flow
     val isActiveFlow = stateFlow.mapDistinct { it.isActive }
-    private val markerLayer = geoMap.getOrCreateLayer(MarkerLayerId.Transit)
+    private val markerLayer = geoMap.getOrCreateLayer(MarkerLayerConfig.Transit)
 
     private var currentEntities: List<TransitEntity> = emptyList()
     private var trackingJob: Job? = null

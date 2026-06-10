@@ -55,7 +55,9 @@ class GeoRender(
             }
 
             launch {
-                camera.movingBoundsFlow.collect(::setBounds)
+                camera.stateFlow.collect {
+                    setBounds(it.bounds, it.zoom, it.isMoving)
+                }
             }
         }
     }
@@ -74,12 +76,12 @@ class GeoRender(
         geoMap.setFocus(marker)
     }
 
-    fun setBounds(bounds: GeoBounds) {
+    fun setBounds(bounds: GeoBounds, zoom: Float, isMoving: Boolean) {
         // resize to ensure comprehensive view region
         val bounds = bounds.resizeBy(1.2f)
         // set marker visibility
         layerRenders.forEach { layer ->
-            layer.setBounds(bounds)
+            layer.setBounds(bounds, zoom, isMoving)
         }
     }
 }

@@ -37,10 +37,10 @@ data class GeoPoint(
 }
 
 fun GeoPoint.distanceTo(other: GeoPoint): Distance {
-    val lat1 = lat * degToRad
-    val lat2 = other.lat * degToRad
-    val dLat = (other.lat - lat) * degToRad
-    val dLng = (other.lng - lng) * degToRad
+    val lat1 = lat * DEG_TO_RAD
+    val lat2 = other.lat * DEG_TO_RAD
+    val dLat = (other.lat - lat) * DEG_TO_RAD
+    val dLng = (other.lng - lng) * DEG_TO_RAD
 
     val a =
         sin(dLat / 2).pow(2) +
@@ -48,30 +48,30 @@ fun GeoPoint.distanceTo(other: GeoPoint): Distance {
 
     val c = 2 * atan2(sqrt(a), sqrt(1 - a))
 
-    return Distance.ofMeters(earthRadius * c)
+    return Distance.ofMeters(EARTH_RADIUS * c)
 }
 
 fun GeoPoint.regionalDistanceTo(other: GeoPoint): Distance {
-    val lat1 = lat * degToRad
-    val lat2 = other.lat * degToRad
-    val dLat = (other.lat - lat) * degToRad
-    val dLng = (other.lng - lng) * degToRad
+    val lat1 = lat * DEG_TO_RAD
+    val lat2 = other.lat * DEG_TO_RAD
+    val dLat = (other.lat - lat) * DEG_TO_RAD
+    val dLng = (other.lng - lng) * DEG_TO_RAD
 
     val x = dLng * cos((lat1 + lat2) * 0.5)
     val y = dLat
-    return Distance.ofMeters(earthRadius * sqrt(x * x + y * y))
+    return Distance.ofMeters(EARTH_RADIUS * sqrt(x * x + y * y))
 }
 
 fun GeoPoint.toPlanarPoint(refLat: Double): Point {
-    val latRad = lat * degToRad
-    val lngRad = lng * degToRad
-    val refLatRad = refLat * degToRad
+    val latRad = lat * DEG_TO_RAD
+    val lngRad = lng * DEG_TO_RAD
+    val refLatRad = refLat * DEG_TO_RAD
 
-    val x = earthRadius * lngRad * cos(refLatRad)
-    val y = earthRadius * latRad
+    val x = EARTH_RADIUS * lngRad * cos(refLatRad)
+    val y = EARTH_RADIUS * latRad
 
     return Point(x, y)
 }
 
-const val earthRadius = 6_371_000.0
-const val degToRad = PI / 180.0
+const val EARTH_RADIUS = 6_371_000.0
+const val DEG_TO_RAD = PI / 180.0

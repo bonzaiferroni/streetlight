@@ -19,8 +19,8 @@ class GeoMap(
 
     val focusFlow = stateFlow.mapDistinct { it.focus }
 
-    fun getOrCreateLayer(layerId: GeoLayerId) = layers.firstOrNull { it.layerId == layerId }
-        ?: GeoLayer(layerId).also { layer ->
+    fun getOrCreateLayer(config: GeoLayerConfig) = layers.firstOrNull { it.layerId == config.layerId }
+        ?: GeoLayer(config).also { layer ->
             layers.add(layer)
             scope.launch {
                 _layersFlow.emit(layers.toList())

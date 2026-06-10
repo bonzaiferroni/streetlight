@@ -3,7 +3,6 @@
 package streetlight.web.model
 
 import kampfire.model.getContainingBounds
-import koala.model.GeoCamera
 import koala.model.GeoMap
 import koala.model.mapDistinct
 import koala.model.storeOf
@@ -22,7 +21,7 @@ class MarkerMap(
     private val state = storeOf(StreetMapState())
     val stateFlow = state.flow
     val stateNow get() = state.now
-    val markerLayer = geoMap.getOrCreateLayer(MarkerLayerId.Markers)
+    val markerLayer = geoMap.getOrCreateLayer(MarkerLayerConfig.Markers)
 
     val markersFlow = stateFlow.mapDistinct { it.markers }
     private val partitionedFlow = markersFlow.combine(geoMap.camera.movingBoundsFlow) { markers, bounds ->
