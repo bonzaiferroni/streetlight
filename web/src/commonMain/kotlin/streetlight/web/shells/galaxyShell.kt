@@ -2,6 +2,7 @@ package streetlight.web.shells
 
 import koala.css.*
 import koala.html.*
+import kotlinx.css.rem
 import kotlinx.html.FlowContent
 import streetlight.model.data.GalaxyContent
 import streetlight.web.EarthRoute
@@ -19,7 +20,7 @@ fun FlowContent.galaxyShell(content: GalaxyContent) {
             column(modify(Gap8)) {
                 row {
                     galaxyMenu(emptyList(), galaxy)
-                    filigree(modify(Flex1), MaxWidthNone) { spacer { setStyle(Property.Width.to("8rem")) } }
+                    filigree(modify(Flex1), MaxWidthNone) { spacer { setStyle(Property.Width.to(8.rem)) } }
                     createPostMenu(galaxy)
                 }
 //                if (galaxy.postTypes.contains(PostType.Content)) {

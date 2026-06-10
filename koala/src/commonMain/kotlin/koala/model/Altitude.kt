@@ -20,11 +20,11 @@ fun altitudeOf(zoom: Double) = Altitude.entries.first { it.zoom < zoom }
 val AltitudeCss get() = with(GeoMapKey) { """
     
 /* diminished visibility for markers just below altitude */
-$Window${Altitude.Raincloud}  ${MarkerMod.Base}${Altitude.Kite},
-$Window${Altitude.Airplane}   ${MarkerMod.Base}${Altitude.Raincloud},
-$Window${Altitude.Satellite}  ${MarkerMod.Base}${Altitude.Airplane},
-$Window${Altitude.Astronaut}  ${MarkerMod.Base}${Altitude.Satellite},
-$Window${Altitude.Comet}      ${MarkerMod.Base}${Altitude.Astronaut} {
+$Window${Altitude.Raincloud}  ${MarkerStyle.Base}${Altitude.Kite},
+$Window${Altitude.Airplane}   ${MarkerStyle.Base}${Altitude.Raincloud},
+$Window${Altitude.Satellite}  ${MarkerStyle.Base}${Altitude.Airplane},
+$Window${Altitude.Astronaut}  ${MarkerStyle.Base}${Altitude.Satellite},
+$Window${Altitude.Comet}      ${MarkerStyle.Base}${Altitude.Astronaut} {
     width: 5px;
     height: 5px;
     border-radius: 50%;
@@ -39,10 +39,10 @@ $Window${Altitude.Comet}      ${MarkerMod.Base}${Altitude.Astronaut} {
 }
 
 /* hide markers well below altitude */
-$Window${Altitude.Airplane}   ${MarkerMod.Base}${Altitude.Kite},
-$Window${Altitude.Satellite}  ${MarkerMod.Base}${Altitude.Raincloud},
-$Window${Altitude.Astronaut}  ${MarkerMod.Base}${Altitude.Airplane},
-$Window${Altitude.Comet}      ${MarkerMod.Base}${Altitude.Satellite} {
+$Window${Altitude.Airplane}   ${MarkerStyle.Base}${Altitude.Kite},
+$Window${Altitude.Satellite}  ${MarkerStyle.Base}${Altitude.Raincloud},
+$Window${Altitude.Astronaut}  ${MarkerStyle.Base}${Altitude.Airplane},
+$Window${Altitude.Comet}      ${MarkerStyle.Base}${Altitude.Satellite} {
     display: none;
 }
 

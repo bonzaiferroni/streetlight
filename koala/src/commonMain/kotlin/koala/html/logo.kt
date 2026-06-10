@@ -17,11 +17,11 @@ fun FlowContent.logo(
 ) {
     div(modify(modifiers, Class, AntiShadow)) {
         div(modify(LogoIcon)) {
-            setStyle(Property.MaskUrl.to(UrlValue(SvgFile.LogoText)))
+            setStyle(Property.MaskUrl.to(SvgFile.LogoText))
         }
         div(modify(ShadowBox, GlowShadow)) {
             div(modify(LogoIcon, GlowBackground)) {
-                setStyle(Property.MaskUrl.to(UrlValue(SvgFile.LogoFlame)))
+                setStyle(Property.MaskUrl.to(SvgFile.LogoFlame))
             }
         }
     }

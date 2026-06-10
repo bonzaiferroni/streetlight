@@ -2,22 +2,23 @@ package koala.model
 
 import kampfire.model.GeoPoint
 import kampfire.model.Point
-import koala.css.Class
 import koala.css.Focus
 import koala.css.Scale
 import koala.css.addModifiers
 import koala.css.modify
 import koala.dom.modify
 import koala.dom.onClick
+import koala.dom.setProperty
 import koala.dom.unmodify
 import koala.external.MarkerOptions
 import koala.external.maplibregl
 import kotlinx.browser.document
+import kotlinx.css.properties.deg
+import kotlinx.css.properties.s
 import kotlinx.html.dom.append
 import kotlinx.html.js.div
 import kotlinx.html.js.img
 import kotlinx.html.js.p
-import kotlinx.html.style
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLParagraphElement
@@ -62,7 +63,7 @@ class PointRender(
         val delta = ((bearing - lastBearing + 540) % 360) - 180;
         lastBearing += delta
         val adjusted = lastBearing - 90
-        be.style.setProperty("--bearing", "${adjusted}deg")
+        be.setProperty(MarkerStyle.MarkerBearing.to(adjusted.deg))
     }
 
     fun setOpacity(opacity: Float) {
@@ -87,16 +88,16 @@ class PointRender(
     fun setClustering(isClusterPrincipal: Boolean?) {
         when (isClusterPrincipal) {
             true -> {
-                element?.unmodify(MarkerMod.ClusterMember)
-                element?.modify(MarkerMod.ClusterPrincipal)
+                element?.unmodify(MarkerStyle.ClusterMember)
+                element?.modify(MarkerStyle.ClusterPrincipal)
             }
             false -> {
-                element?.unmodify(MarkerMod.ClusterPrincipal)
-                element?.modify(MarkerMod.ClusterMember)
+                element?.unmodify(MarkerStyle.ClusterPrincipal)
+                element?.modify(MarkerStyle.ClusterMember)
             }
             else -> {
-                element?.unmodify(MarkerMod.ClusterPrincipal)
-                element?.unmodify(MarkerMod.ClusterMember)
+                element?.unmodify(MarkerStyle.ClusterPrincipal)
+                element?.unmodify(MarkerStyle.ClusterMember)
             }
         }
     }
@@ -125,7 +126,7 @@ fun PointRender.setAttributes(entity: PointMarker) {
 
 fun PointMarker.toPointRender(pixelPoint: Point, focusEntity: () -> Unit): PointRender {
     val element = document.createDiv()
-    element.modify(MarkerMod.Root)
+    element.modify(MarkerStyle.Root)
 
     var baseElement: HTMLDivElement? = null
     var bearingElement: HTMLDivElement? = null
@@ -135,16 +136,17 @@ fun PointMarker.toPointRender(pixelPoint: Point, focusEntity: () -> Unit): Point
     element.append {
         baseElement = div {
             val delay = provideDelay()
-            element.style.setProperty("--twinkle-delay", "${delay}s")
+            element.setProperty(MarkerStyle.TwinkleDelay.to(delay.s))
+            element.setProperty(MarkerStyle.BodySize.to(bodySize))
 
             val baseMod = buildSet {
-                add(MarkerMod.Base)
+                add(MarkerStyle.Base)
                 modifiers?.let {
                     addAll(it)
                 }
                 light?.let {
-                    style = "--light: ${it.css()};"
-                    add(Class("marker-glow"))
+                    element.setProperty(MarkerStyle.MarkerLight.to(it))
+                    add(MarkerStyle.MarkerGlow)
                 }
                 altitude?.let {
                     add(it)
@@ -155,30 +157,30 @@ fun PointMarker.toPointRender(pixelPoint: Point, focusEntity: () -> Unit): Point
 
             bearingElement = bearing?.let {
                 div {
-                    addModifiers(MarkerMod.Bearing)
+                    addModifiers(MarkerStyle.Bearing)
                 }
             }
 
             bodyElement = icon?.let {
                 div {
-                    addModifiers(modify(MarkerMod.Icon, MarkerMod.Body))
-                    style = "--svg: url(${it.url});"
+                    addModifiers(modify(MarkerStyle.Icon, MarkerStyle.Body))
+                    element.setProperty(MarkerStyle.MarkerSvg.to(it))
                 }
             } ?: thumbUrl?.let {
                 img {
                     src = it.value
-                    addModifiers(modify(MarkerMod.Body, MarkerMod.Thumb))
+                    addModifiers(modify(MarkerStyle.Body, MarkerStyle.Thumb))
                 }
             } ?: body?.let {
                 div {
-                    addModifiers(modify(MarkerMod.Body))
+                    addModifiers(modify(MarkerStyle.Body))
                     body?.invoke(this)
                 }
             }
 
             labelElement = label?.let {
                 p {
-                    addModifiers(MarkerMod.Label)
+                    addModifiers(MarkerStyle.Label)
                     +it
                 }
             }

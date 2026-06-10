@@ -274,26 +274,26 @@ val TopSpacing1 = utilityOf("top-spacing-1", "top: var(--unit-spacing)")
 val TopSpacing8 = utilityOf("top-spacing-8", "top: calc(var(--unit-spacing) * 8)")
 
 // Query
-val MediaMdRow = CssUtility("media-md-row")
-val MediaMdColumn = CssUtility("media-md-column")
-val MediaLgRow = CssUtility("media-lg-row")
-val MediaLgColumn = CssUtility("media-lg-column")
+val MediaMdRow = Class("media-md-row")
+val MediaMdColumn = Class("media-md-column")
+val MediaLgRow = Class("media-lg-row")
+val MediaLgColumn = Class("media-lg-column")
 
 // Container Query
-val ContainerTnRow = CssUtility("container-tn-row")
-val ContainerSmRow = CssUtility("container-sm-row")
-val ContainerMdRow = CssUtility("container-md-row")
-val ContainerLgRow = CssUtility("container-lg-row")
+val ContainerTnRow = Class("container-tn-row")
+val ContainerSmRow = Class("container-sm-row")
+val ContainerMdRow = Class("container-md-row")
+val ContainerLgRow = Class("container-lg-row")
 
-val ContainerTnColumn = CssUtility("container-tn-column")
-val ContainerSmColumn = CssUtility("container-sm-column")
-val ContainerMdColumn = CssUtility("container-md-column")
-val ContainerLgColumn = CssUtility("container-lg-column")
+val ContainerTnColumn = Class("container-tn-column")
+val ContainerSmColumn = Class("container-sm-column")
+val ContainerMdColumn = Class("container-md-column")
+val ContainerLgColumn = Class("container-lg-column")
 
-val ContainerMdMarginTop0 = CssUtility("container-md-margin-top-0")
+val ContainerMdMarginTop0 = Class("container-md-margin-top-0")
 
 // Layouts
-val Box = CssUtility("box")
-val Row = CssUtility("row")
-val Column = CssUtility("column")
-val Card = CssUtility("card")
+val Box = Class("box")
+val Row = Class("row")
+val Column = Class("column")
+val Card = Class("card")

@@ -56,8 +56,6 @@ fun FlowContent.cell(
     }
 }
 
-
-
 fun FlowContent.combo(
     modifiers: ModifierSet? = null,
     block: DIV.() -> Unit = {}
@@ -119,7 +117,7 @@ fun FlowContent.linkCell(
     when (url) {
         null -> cell(svg, text, modifiers = modifiers, block = block)
         else -> {
-            navigation(url.value, modify(MinWidth12)) {
+            navigation(url.value, modify(Box, MinWidth12)) {
                 row(modify(CellContent.CellMod, modifiers)) {
                     cellContent(svg, text, null, block)
                 }

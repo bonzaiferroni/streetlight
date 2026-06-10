@@ -1,10 +1,17 @@
 package koala.model
 
+import koala.SiteFile
 import koala.css.Class
 import koala.css.Focus
+import koala.css.Property
+import koala.css.Rgb
 import koala.css.Scale
+import kotlinx.css.Color
+import kotlinx.css.LinearDimension
+import kotlinx.css.properties.Angle
+import kotlinx.css.properties.Time
 
-object MarkerMod {
+object MarkerStyle {
     val Root = Class("map-marker")
     val Base = Class("marker-base")
     val Bearing = Class("marker-bearing")
@@ -15,10 +22,18 @@ object MarkerMod {
 
     val ClusterPrincipal = Class("cluster-principal")
     val ClusterMember = Class("cluster-member")
+    val MarkerGlow = Class("marker-glow")
+
+    val BodySize = Property<LinearDimension>("body-size")
+    val TwinkleDelay = Property<Time>("twinkle-delay")
+    val MarkerLight = Property<Color>("marker-light")
+    val MarkerSvg = Property<SiteFile>("marker-svg")
+    val MarkerBearing = Property<Angle>("marker-bearing")
+    val MarkerBorder = Property<Rgb>("marker-border")
 }
 
 // language="CSS"
-val MarkerSheet get() = with(MarkerMod) { """
+val MarkerSheet get() = with(MarkerStyle) { """
     
 /* Focus Properties */
 $Root$Focus {
@@ -43,7 +58,7 @@ $Base {
     width: 0;
     height: 0;
 
-    transition: transform 200ms ease-in-out;
+    transition: var(--transition-transform);
     
     > * {
         position: absolute;
@@ -70,30 +85,30 @@ $Icon {
     width: 24px;
     height: 24px;
 
-    background-image: var(--svg);
+    background-image: var($MarkerSvg);
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
-    background-color: transparent; /* important */;
+    background-color: transparent; 
 }
 
 $Bearing {
     width: 40px;
     height: 40px;
 
-    transform: translate(-50%, -50%) rotate(var(--bearing));
+    transform: translate(-50%, -50%) rotate(var($MarkerBearing));
 
     background-image: url(/www/svg/bus-direction.svg);
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
-    background-color: transparent; /* important */
+    background-color: transparent; 
 
     transition: transform 1000ms ease-out;
 }
 
 $Thumb {
-    --thumb-border-rgb: 255, 255, 255; /* or whatever ye like */
+    $MarkerBorder: 255, 255, 255; /* or whatever ye like */
 
     width: 32px;
     height: 32px;
@@ -101,7 +116,7 @@ $Thumb {
 
     border-radius: 16px;
 
-    border: 2px solid rgba(var(--thumb-border-rgb), 0.8);
+    border: 2px solid rgba(var($MarkerBorder), 0.8);
 
     transition: opacity 200ms ease-in-out, border-radius 200ms ease-in-out;
 }
@@ -122,6 +137,45 @@ $Label {
 
 $ClusterMember {
     visibility: hidden;
+}
+
+$MarkerGlow::before {
+    content: "";
+    position: absolute;
+
+    left: 50%;
+    top: 50%;
+    width: 6rem;
+    height: 6rem;
+
+    transform: translate(-50%, -50%) scale(1);
+    border-radius: 50%;
+
+    pointer-events: none;
+    mix-blend-mode: screen;
+
+    opacity: 0.5;
+
+    background: radial-gradient(
+            circle at center,
+            rgba(var($MarkerLight), 0.35) 0%,
+            rgba(var($MarkerLight), 0.18) 12%,
+            rgba(var($MarkerLight), 0.08) 24%,
+            rgba(var($MarkerLight), 0) 70%
+    );
+
+    transition:
+            opacity 200ms ease,
+            transform 200ms ease;
+
+    animation: twinkle-scale 2.4s ease-in-out infinite;
+    animation-delay: var($TwinkleDelay, 0s);
+}
+
+/* brighter + slightly larger when focused */
+$MarkerGlow$Focus::before {
+    opacity: 0.75;
+    transform: translate(-50%, -50%) scale(1.05);
 }
 
 """ }

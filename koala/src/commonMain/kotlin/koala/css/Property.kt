@@ -3,13 +3,14 @@ package koala.css
 import kampfire.model.Url
 import koala.SiteFile
 import kotlinx.css.Display
+import kotlinx.css.LinearDimension
 import kotlinx.html.CoreAttributeGroupFacade
 import kotlinx.html.style
 
-data class Property<T>(
+data class Property<T: Any>(
     val identifier: String,
     val isCustom: Boolean = true,
-    val valueToString: (T) -> String = { it.toString() },
+    val valueToString: ((T) -> String)? = null,
 ) {
 
     fun to(value: T) = InlineStyle(this, value)
@@ -25,26 +26,21 @@ data class Property<T>(
         val AnchorName = Property<PositionAnchor>("anchor-name", false)
         val PositionAnchor = Property<PositionAnchor>("position-anchor", false)
         val Display = Property<Display>("display", false)
-        val Width = Property<String>("width", false)
-        val HeightPx = Property<Int>("height", false) { "${it}px"}
+        val Width = Property<LinearDimension>("width", false)
+        val Height = Property<LinearDimension>("height", false)
 
-        val MaskUrl = Property<UrlValue>("mask-url")
+        val MaskUrl = Property<SiteFile>("mask-url")
         val ColorScheme = Property<String>("color-scheme")
-        val BackgroundUrl = Property<UrlValue>("background-url")
+        val BackgroundUrl = Property<Url>("background-url")
         val AnchorId = Property<PositionAnchor>("anchor-id")
         val ContainerAnchorId = Property<PositionAnchor>("anchor-container-id")
     }
 }
 
-data class InlineStyle<T>(val property: Property<T>, val value: T) {
-    override fun toString() = "${property.expression}: $value"
+data class InlineStyle<T: Any>(val property: Property<T>, val value: T) {
+    override fun toString() = "${property.expression}: $valueString"
 
-    val valueString get() = property.valueToString(value)
-}
-
-data class UrlValue(val url: Url) {
-    constructor(file: SiteFile): this(file.url)
-    override fun toString() = "url('$url')"
+    val valueString get() = property.valueToString?.invoke(value) ?: styleValueOf(value)
 }
 
 data class PositionAnchor(val identifier: String) {

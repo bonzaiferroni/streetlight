@@ -4,7 +4,7 @@ import kampfire.model.GeoPoint
 import koala.Svg
 import koala.model.MarkerId
 import koala.model.PointMarker
-import koala.model.Rgb
+import kotlinx.css.rgb
 import kotlinx.html.DIV
 import kotlinx.html.p
 import streetlight.model.data.Spirit
@@ -18,7 +18,7 @@ data class SpiritEntity(
     override val body: DIV.() -> Unit get() = {
         p { +spirit.name }
     }
-    override val light get() = Rgb(100, 180, 240)
+    override val light get() = rgb(100, 180, 240)
 }
 
 fun SpiritId.toEntityId(): MarkerId = "spirit-${value}"

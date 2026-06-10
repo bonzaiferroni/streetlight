@@ -4,6 +4,9 @@ import kampfire.model.GeoPoint
 import kampfire.model.Url
 import koala.Svg
 import koala.css.ModifierSet
+import kotlinx.css.Color
+import kotlinx.css.LinearDimension
+import kotlinx.css.px
 import kotlinx.html.DIV
 
 typealias MarkerId = String
@@ -31,17 +34,14 @@ interface PointMarker: GeoMarker {
     val modifiers: ModifierSet? get() = null
     val onFocus: OnFocus? get() = null
     val body: (DIV.() -> Unit)? get() = null
-    val light: Rgb? get() = null
+    val light: Color? get() = null
+    val bodySize: LinearDimension get() = 32.px
 }
 
 data class MarkerMovement(
     val markerId: MarkerId,
     val position: GeoPoint
 )
-
-data class Rgb(val r: Int, val g: Int, val b: Int) {
-    fun css(): String = "${r.coerceIn(0, 255)}, ${g.coerceIn(0, 255)}, $${b.coerceIn(0, 255)}"
-}
 
 typealias OnFocus = (() -> Unit) -> Unit
 
