@@ -122,7 +122,7 @@ internal class GeoLayerRender(
     private fun applyClusters(clusters: Map<MarkerId, PointCluster?>) {
         clusters.forEach { (markerId, cluster) ->
             val render = pointRenders[markerId] ?: return@forEach
-            val isClusterPrincipal = cluster?.principalId == markerId
+            val isClusterPrincipal = cluster?.let { it.principalId == markerId}
             render.setClustering(isClusterPrincipal)
         }
     }
