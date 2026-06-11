@@ -4,11 +4,13 @@ import kampfire.model.getDataOrNull
 import kampfire.model.handleResponse
 import koala.model.Portal
 import koala.model.mapDistinct
+import koala.model.mapDistinctNotNull
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import streetlight.model.data.Galaxy
 import streetlight.web.EarthRoute
+import streetlight.web.GalaxyRoute
 import streetlight.web.io.ApiClient
 
 class EarthMap(
@@ -30,7 +32,15 @@ class EarthMap(
         points?.groupingBy { it.markerType }?.eachCount()?.toList()
     }
     val isMovingFlow = markerMap.isMovingFlow
-    val focusFlow = markerMap.focusFlow
+    val focusFlow = markerMap.focusFlow.mapDistinct { marker ->
+        when (marker) {
+            is GalaxyMarker -> {
+                portal.go(EarthRoute(marker.galaxy.slug))
+                null
+            }
+            else -> marker
+        }
+    }
     val isFocusedFlow = focusFlow.mapDistinct { it != null }
 
     init {
@@ -59,7 +69,7 @@ class EarthMap(
         }
     }
 
-    fun setFocus(marker: FeatureMarker) = markerMap.setFocus(marker)
+    fun setFocus(marker: FeatureMarker) = markerMap.setFocus(marker).also { console.log(marker.label) }
 
     fun showAll() = markerMap.showAll()
 }

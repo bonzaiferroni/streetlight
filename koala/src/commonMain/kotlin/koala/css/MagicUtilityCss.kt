@@ -1,15 +1,16 @@
 package koala.css
 
 // utilities
-val Magic = CssUtility("magic")
-val Transitioning = CssUtility("transitioning")
-val Reveal = CssUtility("reveal")
-val Hide = CssUtility("hide")
-val Blur = CssUtility("blur")
-val SlideLeft = CssUtility("slide-left")
-val SlideUp = CssUtility("slide-up")
-val SlideRight = CssUtility("slide-right")
-val SlideDown = CssUtility("slide-down")
-val Scale = CssUtility("scale")
+val Magic = Class("magic")
+val Transitioning = Class("transitioning")
+val Reveal = Class("reveal")
+val Hide = Class("hide")
+val Blur = Class("blur")
+val SlideLeft = Class("slide-left")
+val SlideUp = Class("slide-up")
+val SlideRight = Class("slide-right")
+val SlideDown = Class("slide-down")
+val Scale = Class("scale")
 
-val AutoMagic = CssUtility("auto-magic")
+val AutoMagic = Class("auto-magic")
+val StartingOpacity0 = Class("starting-opacity-0")

@@ -7,6 +7,7 @@ import kampfire.model.toPlanarPoint
 import koala.external.maplibregl
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.pow
 
@@ -143,11 +144,11 @@ internal class GeoLayerRender(
 //    }
 
     internal fun setBounds(bounds: GeoBounds, zoom: Float, isMoving: Boolean) {
-        val isClusterReady = !isMoving && zoom != zoomNow
+        val isClusterReady = !isMoving && zoom != zoomNow || abs((zoomNow ?: 0f) - zoom) >= 1
 
         boundsNow = bounds
         isMovingNow = isMoving
-        if (!isMoving) {
+        if (isClusterReady) {
             zoomNow = zoom
         }
 

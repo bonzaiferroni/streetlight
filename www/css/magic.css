@@ -257,3 +257,13 @@
     0% { transform: translateX(-100%); }
     100% { transform: translateX(100%); }
 }
+
+/* utils */
+
+.starting-opacity-0 {
+    transition: var(--transition-opacity);
+
+    @starting-style {
+        opacity: 0;
+    }
+}

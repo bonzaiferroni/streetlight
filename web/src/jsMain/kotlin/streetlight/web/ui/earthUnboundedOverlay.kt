@@ -3,6 +3,7 @@ package streetlight.web.ui
 import kampfire.model.Point
 import koala.css.*
 import koala.dom.*
+import koala.external.maplibregl
 import koala.model.GeoCamera
 import koala.model.GeoCameraController
 import koala.model.MarkerId
@@ -18,6 +19,7 @@ import streetlight.web.model.EarthMap
 import kotlin.collections.first
 import kotlin.math.abs
 import kotlin.math.atan2
+import kotlin.math.max
 import kotlin.math.min
 
 fun RenderContext.earthUnboundedOverlay(model: EarthMap, mapContext: GeoCameraController) {
@@ -36,14 +38,30 @@ fun RenderContext.earthUnboundedOverlay(model: EarthMap, mapContext: GeoCameraCo
     val hints = mutableMapOf<MarkerId, MarkerHint>()
 
     fun createHint(marker: FeatureMarker) = element.append {
-        image(marker.thumbUrl, modify(BorderRadius50P, Height5, Aspect1, PointerEventsAuto)).onClick {
+        image(marker.thumbUrl, modify(BorderRadius50P, Height5, Aspect1, PointerEventsAuto, StartingOpacity0)).onClick {
             model.setFocus(marker)
         }
     }.first().let { MarkerHint(marker, it) }
 
     fun setState(hint: MarkerHint, offset: Point) {
         val geo = hint.marker.geoPoint
-        val projected = widget.project(geo.toLngLat())
+        val center = widget.getCenter()
+
+        // clamp the target near the viewport so it can't fall behind the camera
+        val bounds = widget.getBounds()
+        val maxSpan = min(
+            bounds.getEast() - bounds.getWest(),
+            bounds.getNorth() - bounds.getSouth(),
+        )
+        var dLng = geo.lng - center.lng
+        var dLat = geo.lat - center.lat
+        val span = max(abs(dLng), abs(dLat))
+        if (span > maxSpan) {
+            val scale = maxSpan / span
+            dLng *= scale
+            dLat *= scale
+        }
+        val projected = widget.project(maplibregl.LngLat(center.lng + dLng, center.lat + dLat))
 
         // marker position in overlay coords
         val mx = projected.x - offset.x
@@ -63,11 +81,11 @@ fun RenderContext.earthUnboundedOverlay(model: EarthMap, mapContext: GeoCameraCo
         val edgeX = halfW + dx * t
         val edgeY = halfH + dy * t
 
-        val angle = atan2(dy, dx)
+        // val angle = atan2(dy, dx)
 
         hint.element.style.left = "${edgeX}px"
         hint.element.style.top = "${edgeY}px"
-        hint.element.style.transform = "translate(-50%, -50%) rotate(${angle}rad)"
+        hint.element.style.transform = "translate(-50%, -50%)"
     }
 
     launchRender {
