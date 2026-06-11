@@ -45,26 +45,16 @@ internal class GeoLayerRender(
 
         // add or update points
         markers.forEach { marker ->
+            val planarPoint = marker.geoPoint.toPlanarPoint(refLatitude)
+
             val render = pointRenders[marker.markerId]?.also { render ->
-                // move render
-                render.move(marker.geoPoint)
-
-                // set marker
-                val planarPoint = marker.geoPoint.toPlanarPoint(refLatitude)
-                render.setMarker(marker, planarPoint)
-            } ?: marker.let {
-                // create render
-                val planarPoint = marker.geoPoint.toPlanarPoint(refLatitude)
-                val render = marker.toPointRender(planarPoint) {
-                    onFocus(marker)
-                }
-
-                render.jsMarker.setLngLat(marker.geoPoint.toLngLat())
-                render
+                // update render
+                render.update(marker, planarPoint)
+            } ?: marker.toPointRender(planarPoint) {
+                onFocus(marker)
             }
             pointBuffer[marker.markerId] = render
-            render.setAttributes(marker)
-            updateVisibility(render)
+            cullOutsideBounds(render)
         }
 
         // remove cached points not in list
@@ -147,11 +137,11 @@ internal class GeoLayerRender(
         lineRenders = lineBuffer
     }
 
-    fun moveEntity(movement: MarkerMovement) {
-        val view = pointRenders[movement.markerId] ?: return
-        view.move(movement.position)
-        console.log("moved to ${movement.position}")
-    }
+//    fun moveEntity(movement: MarkerMovement) {
+//        val view = pointRenders[movement.markerId] ?: return
+//        view.move(movement.position)
+//        console.log("moved to ${movement.position}")
+//    }
 
     internal fun setBounds(bounds: GeoBounds, zoom: Float, isMoving: Boolean) {
         val isClusterReady = !isMoving && zoom != zoomNow
@@ -164,7 +154,7 @@ internal class GeoLayerRender(
 
         // set marker visibility
         pointRenders.forEach {
-            updateVisibility(it.value)
+            cullOutsideBounds(it.value)
         }
     }
 
@@ -179,7 +169,7 @@ internal class GeoLayerRender(
         }
     }
 
-    private fun updateVisibility(render: PointRender) {
+    private fun cullOutsideBounds(render: PointRender) {
         val bounds = boundsNow ?: return
         val isVisible = bounds.contains(render.position)
         render.setIsVisible(isVisible, jsMap)

@@ -59,7 +59,7 @@ class EarthMap(
         }
     }
 
-    fun setFocus(marker: AppMarker) = markerMap.setFocus(marker)
+    fun setFocus(marker: FeatureMarker) = markerMap.setFocus(marker)
 
     fun showAll() = markerMap.showAll()
 }

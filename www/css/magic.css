@@ -13,12 +13,11 @@
 
     --transition-opacity: opacity var(--magic-interval) var(--magic-easing);
     --transition-transform: transform var(--magic-interval) var(--magic-easing);
+    --transition-border-radius: border-radius var(--magic-interval) var(--magic-easing);
 }
 
 .glow {
-    animation:
-            var(--glow-shadow-infinite),
-            var(--glow-background-infinite);
+    animation: var(--glow-shadow-infinite), var(--glow-background-infinite);
 }
 
 .glow-shadow {

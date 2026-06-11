@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.html.dom.append
 import org.w3c.dom.HTMLElement
-import streetlight.web.model.AppMarker
+import streetlight.web.model.FeatureMarker
 import streetlight.web.model.EarthMap
 import kotlin.collections.first
 import kotlin.math.abs
@@ -35,7 +35,7 @@ fun RenderContext.earthUnboundedOverlay(model: EarthMap, mapContext: GeoCameraCo
 
     val hints = mutableMapOf<MarkerId, MarkerHint>()
 
-    fun createHint(marker: AppMarker) = element.append {
+    fun createHint(marker: FeatureMarker) = element.append {
         image(marker.thumbUrl, modify(BorderRadius50P, Height5, Aspect1, PointerEventsAuto)).onClick {
             model.setFocus(marker)
         }
@@ -94,6 +94,6 @@ fun RenderContext.earthUnboundedOverlay(model: EarthMap, mapContext: GeoCameraCo
 }
 
 private data class MarkerHint(
-    val marker: AppMarker,
+    val marker: FeatureMarker,
     val element: HTMLElement,
 )

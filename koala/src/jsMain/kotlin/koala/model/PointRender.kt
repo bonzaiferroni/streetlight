@@ -3,9 +3,7 @@ package koala.model
 import kampfire.model.GeoPoint
 import kampfire.model.Point
 import koala.css.Focus
-import koala.css.Scale
 import koala.css.addModifiers
-import koala.css.modify
 import koala.dom.modify
 import koala.dom.onClick
 import koala.dom.setProperty
@@ -13,28 +11,22 @@ import koala.dom.unmodify
 import koala.external.MarkerOptions
 import koala.external.maplibregl
 import kotlinx.browser.document
-import kotlinx.css.properties.deg
 import kotlinx.css.properties.s
 import kotlinx.html.dom.append
 import kotlinx.html.js.div
-import kotlinx.html.js.img
 import kotlinx.html.js.p
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLParagraphElement
 
-class PointRender(
+internal class PointRender(
     val jsMarker: maplibregl.Marker,
     marker: PointMarker,
     planarPoint: Point,
-    val element: HTMLDivElement?,
-    val base: HTMLDivElement?,
-    val body: HTMLElement?,
-    val label: HTMLElement?,
-    val bearing: HTMLElement? = null,
+    val element: HTMLDivElement,
+    val base: HTMLDivElement,
+    val body: PointRenderBody,
 ) {
-    var lastBearing = 0f
-
     var planarPoint = planarPoint
         private set
     var marker = marker
@@ -46,7 +38,21 @@ class PointRender(
     var isVisible = false
         private set
 
-    fun move(position: GeoPoint) {
+    init {
+        jsMarker.setLngLat(marker.geoPoint.toLngLat())
+    }
+
+    fun update(marker: PointMarker, planarPoint: Point) {
+        this.marker = marker
+        this.planarPoint = planarPoint
+        move(marker.geoPoint)
+        marker.opacity?.let {
+            setOpacity(it)
+        }
+        body.update(marker)
+    }
+
+    private fun move(position: GeoPoint) {
         val current = jsMarker.getLngLat()
         val destination = position.toLngLat()
         val distance = current.distanceTo(destination)
@@ -58,15 +64,7 @@ class PointRender(
         this.position = position
     }
 
-    fun setBearing(bearing: Float) {
-        val be = this.bearing ?: return
-        val delta = ((bearing - lastBearing + 540) % 360) - 180;
-        lastBearing += delta
-        val adjusted = lastBearing - 90
-        be.setProperty(MarkerStyle.MarkerBearing.to(adjusted.deg))
-    }
-
-    fun setOpacity(opacity: Float) {
+    private fun setOpacity(opacity: Float) {
         jsMarker.setOpacity(opacity.toString())
     }
 
@@ -80,34 +78,19 @@ class PointRender(
         }
     }
 
-    fun setMarker(entity: PointMarker, point: Point) {
-        this.marker = entity
-        this.planarPoint = point
-    }
-
     fun setClustering(isClusterPrincipal: Boolean?) {
-        when (isClusterPrincipal) {
-            true -> {
-                element?.unmodify(MarkerStyle.ClusterMember)
-                element?.modify(MarkerStyle.ClusterPrincipal)
-            }
-            false -> {
-                element?.unmodify(MarkerStyle.ClusterPrincipal)
-                element?.modify(MarkerStyle.ClusterMember)
-            }
-            else -> {
-                element?.unmodify(MarkerStyle.ClusterPrincipal)
-                element?.unmodify(MarkerStyle.ClusterMember)
-            }
-        }
+        if (isClusterPrincipal == true) element.modify(MarkerStyle.ClusterPrincipal)
+        else element.unmodify(MarkerStyle.ClusterPrincipal)
+        if (isClusterPrincipal == false) element.modify(MarkerStyle.ClusterMember)
+        else element.unmodify(MarkerStyle.ClusterMember)
     }
 
     fun unfocus() {
-        element?.unmodify(Focus)
+        element.unmodify(Focus)
     }
 
     fun focus() {
-        element?.modify(Focus)
+        element.modify(Focus)
     }
 
     fun dispose() {
@@ -115,26 +98,24 @@ class PointRender(
     }
 }
 
-fun PointRender.setAttributes(entity: PointMarker) {
-    entity.bearing?.let {
-        setBearing(it)
-    }
-    entity.opacity?.let {
-        setOpacity(it)
-    }
-}
-
-fun PointMarker.toPointRender(pixelPoint: Point, focusEntity: () -> Unit): PointRender {
+internal fun PointMarker.toPointRender(pixelPoint: Point, focusEntity: () -> Unit): PointRender {
     val element = document.createDiv()
     element.modify(MarkerStyle.Root)
 
-    var baseElement: HTMLDivElement? = null
-    var bearingElement: HTMLDivElement? = null
-    var bodyElement: HTMLElement? = null
-    var labelElement: HTMLParagraphElement? = null
+    val options = MarkerOptions(
+        element = element,
+        subpixelPositioning = subpixelPositioning
+    )
 
-    element.append {
-        baseElement = div {
+    val jsMarker = maplibregl.Marker(
+        options = options
+    )
+
+    var baseElement: HTMLDivElement? = null
+    var renderBody: PointRenderBody? = null
+
+    element.append { // this element is modified by maplibre
+        baseElement = div { // this element is all mine
             val delay = provideDelay()
             element.setProperty(MarkerStyle.TwinkleDelay.to(delay.s))
             element.setProperty(MarkerStyle.BodySize.to(bodySize))
@@ -155,55 +136,21 @@ fun PointMarker.toPointRender(pixelPoint: Point, focusEntity: () -> Unit): Point
 
             addModifiers(baseMod)
 
-            bearingElement = bearing?.let {
-                div {
-                    addModifiers(MarkerStyle.Bearing)
-                }
-            }
-
-            bodyElement = icon?.let {
-                div {
-                    addModifiers(modify(MarkerStyle.Icon, MarkerStyle.Body))
-                    element.setProperty(MarkerStyle.MarkerSvg.to(it))
-                }
-            } ?: thumbUrl?.let {
-                img {
-                    src = it.value
-                    addModifiers(modify(MarkerStyle.Body, MarkerStyle.Thumb))
-                }
-            } ?: body?.let {
-                div {
-                    addModifiers(modify(MarkerStyle.Body))
-                    body?.invoke(this)
-                }
-            }
-
-            labelElement = label?.let {
-                p {
-                    addModifiers(MarkerStyle.Label)
-                    +it
-                }
+            renderBody = when (val marker = this@toPointRender) {
+                is IconMarker -> configureIconRender(marker)
+                is ThumbMarker -> configureThumbRender(marker)
+                else -> error("unrecognized PointMarker")
             }
         }
     }
 
-    if (thumbUrl != null) baseElement?.modify(Scale)
-
-    val options = MarkerOptions(
-        element = element,
-        subpixelPositioning = subpixelPositioning
-    )
     val view = PointRender(
-        jsMarker = maplibregl.Marker(
-            options = options
-        ),
+        jsMarker = jsMarker,
         marker = this,
         planarPoint = pixelPoint,
         element = element,
-        base = baseElement,
-        body = bodyElement,
-        label = labelElement,
-        bearing = bearingElement,
+        base = baseElement!!,
+        body = renderBody!!,
     )
 
     val onElementClick = onFocus?.let {

@@ -25,17 +25,26 @@ data class PanPoint(
 
 interface PointMarker: GeoMarker {
     val geoPoint: GeoPoint
-    val bearing: Float? get() = null
-    val opacity: Float? get() = null
-    val subpixelPositioning: Boolean get() = true
-    val icon: Svg? get() = null
-    val thumbUrl: Url? get() = null
-    val minZoom: Float? get() = null
     val modifiers: ModifierSet? get() = null
     val onFocus: OnFocus? get() = null
-    val body: (DIV.() -> Unit)? get() = null
     val light: Color? get() = null
-    val bodySize: LinearDimension get() = 32.px
+    val opacity: Float? get() = null
+
+    val bodySize: LinearDimension
+    val subpixelPositioning: Boolean
+}
+
+interface IconMarker: PointMarker {
+    val icon: Svg
+    val bearing: Float? get() = null
+    override val bodySize: LinearDimension get() = 24.px
+    override val subpixelPositioning get() = true
+}
+
+interface ThumbMarker: PointMarker {
+    val thumbUrl: Url
+    override val bodySize: LinearDimension get() = 48.px
+    override val subpixelPositioning get() = false
 }
 
 data class MarkerMovement(

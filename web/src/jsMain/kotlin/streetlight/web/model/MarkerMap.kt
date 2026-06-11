@@ -35,13 +35,13 @@ class MarkerMap(
     init {
         scope.launch {
             geoMap.focusFlow.collect { focus ->
-                val focus = focus as? AppMarker
+                val focus = focus as? FeatureMarker
                 state.set { it.copy(focus = focus) }
             }
         }
     }
 
-    fun setPoints(markers: List<AppMarker>?) {
+    fun setPoints(markers: List<FeatureMarker>?) {
         markerLayer.setPoints(markers ?: emptyList())
         state.set { it.copy(markers = markers, focus = null) }
     }
@@ -51,7 +51,7 @@ class MarkerMap(
 //        state.set { it.copy(markers = (it.markers ?: emptyList()) + markers)}
 //    }
 
-    fun setFocus(marker: AppMarker) {
+    fun setFocus(marker: FeatureMarker) {
         geoMap.setFocus(marker)
         geoMap.camera.panMap(marker.geoPoint)
         state.set { it.copy(focus = marker)}
@@ -67,6 +67,6 @@ class MarkerMap(
 }
 
 data class StreetMapState(
-    val markers: List<AppMarker>? = null,
-    val focus: AppMarker? = null,
+    val markers: List<FeatureMarker>? = null,
+    val focus: FeatureMarker? = null,
 )

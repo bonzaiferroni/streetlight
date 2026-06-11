@@ -5,10 +5,10 @@ import kampfire.model.getDataOrNull
 import koala.SvgFile
 import koala.model.LineMarker
 import koala.model.MarkerId
-import koala.model.PointMarker
 import koala.external.VehiclePosition
 import koala.model.Altitude
 import koala.model.GeoMap
+import koala.model.IconMarker
 import koala.model.mapDistinct
 import koala.model.storeOf
 import koala.model.toGeoPoint
@@ -36,7 +36,7 @@ class TransitMap(
     val isActiveFlow = stateFlow.mapDistinct { it.isActive }
     private val markerLayer = geoMap.getOrCreateLayer(MarkerLayerConfig.Transit)
 
-    private var currentEntities: List<TransitEntity> = emptyList()
+    private var currentEntities: List<VehicleMarker> = emptyList()
     private var trackingJob: Job? = null
     private var transit: AreaTransit? = null
     private var currentRoutes: List<RouteMarker>? = null
@@ -119,15 +119,15 @@ class TransitMap(
 //        val removedIds = currentEntities
 //            .filter { currentEntity -> vehicles.none { currentEntity.vehicleId == it.vehicleId } }
 //            .map { it.markerId }
-        val entities = transitState.vehicles.map {
+        val markers = transitState.vehicles.map {
             val vehicleType = transit.routes.firstOrNull() { route -> route.transitRouteId.value == it.routeId }
                 ?.vehicleType ?: VehicleType.Bus
-            it.toEntity(transitState.timestamp, vehicleType)
+            it.toMarker(transitState.timestamp, vehicleType)
         }
 //        geoMap.removeEntities(removedIds)
-        markerLayer.setPoints(entities)
+        markerLayer.setPoints(markers)
 
-        currentEntities = entities
+        currentEntities = markers
 
         state.set { it.copy(timestamp = transitState.timestamp) }
     }
@@ -153,14 +153,14 @@ data class RouteMarker(
 //    }
 }
 
-data class TransitEntity(
+data class VehicleMarker(
     val vehicleId: String,
     override val label: String,
     override val geoPoint: GeoPoint,
     val vehicleType: VehicleType,
     override val opacity: Float,
     override val bearing: Float?,
-): PointMarker {
+): IconMarker {
     override val markerId get() = vehicleId
     override val icon get() = when (vehicleType) {
         VehicleType.Bus -> SvgFile.Bus
@@ -170,13 +170,13 @@ data class TransitEntity(
     override val altitude get() = Altitude.Raincloud
 }
 
-fun VehiclePosition.toEntity(currentTime: Long, vehicleType: VehicleType): TransitEntity? {
+fun VehiclePosition.toMarker(currentTime: Long, vehicleType: VehicleType): VehicleMarker? {
     val vehicleId = vehicle?.id ?: return null
     val position = position ?: return null
     val vehicleTime = timestamp.toString().toLong()
     val secondsSinceCapture = (currentTime - vehicleTime).toInt()
     val opacity = (1 - secondsSinceCapture / 240f).coerceIn(.5f, 1f)
-    return TransitEntity(
+    return VehicleMarker(
         vehicleId = vehicleId,
         label = trip?.routeId ?: "Transit",
         geoPoint = position.toGeoPoint(),
@@ -186,11 +186,11 @@ fun VehiclePosition.toEntity(currentTime: Long, vehicleType: VehicleType): Trans
     )
 }
 
-fun TransitVehicle.toEntity(currentTime: Long, vehicleType: VehicleType): TransitEntity {
+fun TransitVehicle.toMarker(currentTime: Long, vehicleType: VehicleType): VehicleMarker {
     val vehicleTime = timestamp.toString().toLong()
     val secondsSinceCapture = (currentTime - vehicleTime).toInt()
     val opacity = (1 - secondsSinceCapture / 240f).coerceIn(.5f, 1f)
-    return TransitEntity(
+    return VehicleMarker(
         vehicleId = vehicleId,
         label = routeId,
         geoPoint = geoPoint,

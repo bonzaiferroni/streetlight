@@ -3,18 +3,13 @@ package streetlight.web.model
 import kampfire.model.Labeled
 import kampfire.model.thumb
 import koala.SiteImage
-import koala.css.Rgb
-import koala.dom.RenderContext
-import koala.dom.box
-import koala.model.PointMarker
+import koala.model.ThumbMarker
 import kotlinx.css.rgb
 import streetlight.model.data.Galaxy
 import streetlight.model.data.EventPost
 import streetlight.model.data.Location
-import streetlight.web.shells.cardOf
-import streetlight.web.ui.eventFocusContent
 
-interface AppMarker: PointMarker {
+interface FeatureMarker: ThumbMarker {
     val markerType: MarkerType
 }
 
@@ -28,7 +23,7 @@ enum class MarkerType(label: String? = null): Labeled {
 
 data class LocationMarker(
     val location: Location,
-): AppMarker {
+): FeatureMarker {
     override val markerId get() = location.locationId.value.toString()
     // override val label get() = location.name
     override val geoPoint get() = location.geoPoint
@@ -40,7 +35,7 @@ data class LocationMarker(
 
 data class EventMarker(
     val post: EventPost,
-): AppMarker {
+): FeatureMarker {
     override val markerId get() = post.event.eventId.value.toString()
     override val thumbUrl get() = post.images.thumb ?: SiteImage.placeholderTh.url
     override val light get() = rgb(240, 100, 180 )
@@ -50,9 +45,9 @@ data class EventMarker(
 
 data class GalaxyMarker(
     val galaxy: Galaxy
-): AppMarker {
+): FeatureMarker {
+    override val thumbUrl get() = galaxy.images.thumb ?: SiteImage.placeholderTh.url
     override val geoPoint get() = galaxy.geoPoint
-    override val thumbUrl get() = galaxy.images.thumb
     override val markerId get() = galaxy.galaxyId.string
     override val markerType get() = MarkerType.Galaxy
 }

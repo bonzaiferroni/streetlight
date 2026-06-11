@@ -66,24 +66,21 @@ $Base {
         left: 0;    
     }
     
-    &$Scale {
-        transform: scale(1);    
-    }
-    
     &:hover {
         opacity: 1 !important;
     }
 }
 
 $Body {
-    transform: translate(-50%, -50%);
+    transform: translate(calc(var($BodySize) / -2), calc(var($BodySize) / -2));
     opacity: 1;
-    transition: opacity 200ms ease-in-out;
+    transition: var(--transition-opacity);
 }
 
 $Icon {
-    width: 24px;
-    height: 24px;
+    position: relative;
+    width: var($BodySize);
+    height: var($BodySize);
 
     background-image: var($MarkerSvg);
     background-size: contain;
@@ -93,8 +90,8 @@ $Icon {
 }
 
 $Bearing {
-    width: 40px;
-    height: 40px;
+    width: calc(var($BodySize) + 16px);
+    height: calc(var($BodySize) + 16px);
 
     transform: translate(-50%, -50%) rotate(var($MarkerBearing));
 
@@ -108,17 +105,17 @@ $Bearing {
 }
 
 $Thumb {
-    $MarkerBorder: 255, 255, 255; /* or whatever ye like */
+    $MarkerBorder: 255, 255, 255; 
 
-    width: 32px;
-    height: 32px;
+    width: var($BodySize);
+    height: var($BodySize);
     max-width: none;
 
-    border-radius: 16px;
+    border-radius: calc(var($BodySize) / 2);
 
     border: 2px solid rgba(var($MarkerBorder), 0.8);
 
-    transition: opacity 200ms ease-in-out, border-radius 200ms ease-in-out;
+    transition: var(--transition-opacity), var(--transition-border-radius);
 }
 
 $Label {
@@ -132,7 +129,7 @@ $Label {
     text-overflow: ellipsis;
     white-space: nowrap;
 
-    transition: opacity 200ms ease-in-out;
+    transition: var(--transition-opacity);
 }
 
 $ClusterMember {
@@ -164,9 +161,7 @@ $MarkerGlow::before {
             rgba(var($MarkerLight), 0) 70%
     );
 
-    transition:
-            opacity 200ms ease,
-            transform 200ms ease;
+    transition: var(--transition-opacity), var(--transition-transform);
 
     animation: twinkle-scale 2.4s ease-in-out infinite;
     animation-delay: var($TwinkleDelay, 0s);
