@@ -74,3 +74,8 @@ data class GeoCameraState(
     val focus: PointMarker? = null,
 )
 
+data class PanPoint(
+    val point: GeoPoint,
+    val zoom: Float? = null,
+    val snap: Boolean = false,
+)

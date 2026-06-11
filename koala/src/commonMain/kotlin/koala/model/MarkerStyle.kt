@@ -19,6 +19,7 @@ object MarkerStyle {
     val Thumb = Class("marker-thumb")
     val Body = Class("marker-body")
     val Label = Class("marker-label")
+    val ClusterCount = Class("marker-cluster-count")
 
     val ClusterPrincipal = Class("cluster-principal")
     val ClusterMember = Class("cluster-member")
@@ -133,7 +134,25 @@ $Label {
 }
 
 $ClusterMember {
+    $Body {
+        opacity: 0;
+    }
+    
+    &$Root {
+        pointer-events: none;
+    }
+}
+
+$ClusterCount {
     visibility: hidden;
+    font-size: 1.25rem;
+    transform: translate(calc(-100% - var($BodySize) / 2 - 4px), -50%)
+}
+
+$ClusterPrincipal {
+    $ClusterCount {
+        visibility: visible;
+    }
 }
 
 $MarkerGlow::before {

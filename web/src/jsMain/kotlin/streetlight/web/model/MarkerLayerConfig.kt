@@ -5,5 +5,5 @@ import koala.model.GeoLayerId
 
 object MarkerLayerConfig {
     val Transit = GeoLayerConfig(GeoLayerId("transit"))
-    val Markers = GeoLayerConfig(GeoLayerId("markers"), 5)
+    val Markers = GeoLayerConfig(GeoLayerId("markers"), 32)
 }

@@ -28,6 +28,7 @@ data class Property<T: Any>(
         val Display = Property<Display>("display", false)
         val Width = Property<LinearDimension>("width", false)
         val Height = Property<LinearDimension>("height", false)
+        val ZIndex = Property<Int>("z-index", false)
 
         val MaskUrl = Property<SiteFile>("mask-url")
         val ColorScheme = Property<String>("color-scheme")

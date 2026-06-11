@@ -9,7 +9,7 @@ enum class Altitude(override val identifier: String, val zoom: Double): Modifier
     Airplane("airplane", 13.0),
     Satellite("satellite",8.0),
     Astronaut("astronaut", 4.0),
-    Comet("comet", Double.MAX_VALUE);
+    Comet("comet", Double.MIN_VALUE);
 
     override fun toString() = selector
 }

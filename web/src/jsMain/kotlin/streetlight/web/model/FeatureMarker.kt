@@ -22,6 +22,7 @@ interface FeatureMarker: ThumbMarker {
     val markerType: MarkerType
     override val label: String
     val sublabel: String? get() = null
+    override val zIndex get() = 1
     override val labelContent: DIV.() -> Unit get() = {
         column(modify(GapTiny, LineHeight115)) {
             setStyle(Property.ColorScheme.to(markerType.colorScheme.cssValue))

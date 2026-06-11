@@ -2,12 +2,8 @@ package koala.model
 
 import kampfire.model.GeoPoint
 import kampfire.model.Point
-import koala.css.Focus
-import koala.css.addModifiers
-import koala.dom.modify
-import koala.dom.onClick
-import koala.dom.setProperty
-import koala.dom.unmodify
+import koala.css.*
+import koala.dom.*
 import koala.external.MarkerOptions
 import koala.external.maplibregl
 import kotlinx.browser.document
@@ -15,6 +11,7 @@ import kotlinx.css.properties.s
 import kotlinx.html.dom.append
 import kotlinx.html.js.div
 import org.w3c.dom.HTMLDivElement
+import org.w3c.dom.HTMLParagraphElement
 
 internal class PointRender(
     val jsMarker: maplibregl.Marker,
@@ -23,6 +20,7 @@ internal class PointRender(
     val element: HTMLDivElement,
     val base: HTMLDivElement,
     val body: PointRenderBody,
+    val clusterElement: HTMLParagraphElement
 ) {
     var planarPoint = planarPoint
         private set
@@ -75,11 +73,20 @@ internal class PointRender(
         }
     }
 
-    fun setClustering(isClusterPrincipal: Boolean?) {
-        if (isClusterPrincipal == true) element.modify(MarkerStyle.ClusterPrincipal)
-        else element.unmodify(MarkerStyle.ClusterPrincipal)
-        if (isClusterPrincipal == false) element.modify(MarkerStyle.ClusterMember)
-        else element.unmodify(MarkerStyle.ClusterMember)
+    fun setCluster(cluster: PointCluster?) {
+        if (cluster == null) {
+            element.unmodify(MarkerStyle.ClusterPrincipal, MarkerStyle.ClusterMember)
+            return
+        }
+
+        if (cluster.principalId == marker.markerId) {
+            element.modify(MarkerStyle.ClusterPrincipal)
+            element.unmodify(MarkerStyle.ClusterMember)
+            clusterElement.textContent = "+${cluster.markerIds.size - 1}"
+        } else {
+            element.modify(MarkerStyle.ClusterMember)
+            element.unmodify(MarkerStyle.ClusterPrincipal)
+        }
     }
 
     fun unfocus() {
@@ -110,12 +117,17 @@ internal fun PointMarker.toPointRender(pixelPoint: Point, focusEntity: () -> Uni
 
     var baseElement: HTMLDivElement? = null
     var renderBody: PointRenderBody? = null
+    var clusterElement: HTMLParagraphElement? = null
 
     element.append { // this element is modified by maplibre
         baseElement = div { // this element is all mine
             val delay = provideDelay()
             element.setProperty(MarkerStyle.TwinkleDelay.to(delay.s))
             element.setProperty(MarkerStyle.BodySize.to(bodySize))
+
+            zIndex?.let {
+                element.setProperty(Property.ZIndex.to(it))
+            }
 
             val baseMod = buildSet {
                 add(MarkerStyle.Base)
@@ -138,6 +150,8 @@ internal fun PointMarker.toPointRender(pixelPoint: Point, focusEntity: () -> Uni
                 is ThumbMarker -> configureThumbRender(marker)
                 else -> error("unrecognized PointMarker")
             }
+
+            clusterElement = textBlock(mod = modify(MarkerStyle.ClusterCount))
         }
     }
 
@@ -148,6 +162,7 @@ internal fun PointMarker.toPointRender(pixelPoint: Point, focusEntity: () -> Uni
         element = element,
         base = baseElement!!,
         body = renderBody!!,
+        clusterElement = clusterElement!!
     )
 
     val onElementClick = onFocus?.let {

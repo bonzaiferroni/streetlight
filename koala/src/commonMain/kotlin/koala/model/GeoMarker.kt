@@ -17,18 +17,13 @@ sealed interface GeoMarker {
     val altitude: Altitude? get() = null
 }
 
-data class PanPoint(
-    val point: GeoPoint,
-    val zoom: Float? = null,
-    val snap: Boolean = false,
-)
-
 interface PointMarker: GeoMarker {
     val geoPoint: GeoPoint
     val modifiers: ModifierSet? get() = null
     val onFocus: OnFocus? get() = null
     val light: Color? get() = null
     val opacity: Float? get() = null
+    val zIndex: Int? get() = null
 
     val bodySize: LinearDimension
     val subpixelPositioning: Boolean

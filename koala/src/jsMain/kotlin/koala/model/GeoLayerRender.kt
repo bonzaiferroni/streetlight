@@ -112,8 +112,7 @@ internal class GeoLayerRender(
     private fun applyClusters(clusters: Map<MarkerId, PointCluster?>) {
         clusters.forEach { (markerId, cluster) ->
             val render = pointRenders[markerId] ?: return@forEach
-            val isClusterPrincipal = cluster?.let { it.principalId == markerId}
-            render.setClustering(isClusterPrincipal)
+            render.setCluster(cluster)
         }
     }
 
@@ -147,8 +146,10 @@ internal class GeoLayerRender(
         val isClusterReady = !isMoving && zoom != zoomNow
 
         boundsNow = bounds
-        zoomNow = zoom
         isMovingNow = isMoving
+        if (!isMoving) {
+            zoomNow = zoom
+        }
 
         if (isClusterReady) clusterPoints()
 

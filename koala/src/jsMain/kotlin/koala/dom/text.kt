@@ -11,21 +11,21 @@ import org.w3c.dom.HTMLParagraphElement
 
 fun DOMContext.textBlock(
     text: String = "",
-    modifiers: ModifierSet? = null,
+    mod: ModifierSet? = null,
     block: (P.() -> Unit)? = null
 ) = p {
-    addModifiers(modifiers)
+    addModifiers(mod)
     +text
     block?.invoke(this)
 }
 
 fun <T> RenderContext.textBlock(
     binding: Flow<T>,
-    modifiers: ModifierSet? = null,
+    mod: ModifierSet? = null,
     provideValue: (T) -> String = { it.toString() },
     block: (P.() -> Unit)? = null
 ): HTMLParagraphElement {
-    val element = this@textBlock.textBlock(modifiers = modifiers, block = block)
+    val element = this@textBlock.textBlock(mod = mod, block = block)
     renderScope.launch {
         binding.distinctUntilChanged().collect {
             element.textContent = provideValue(it)
