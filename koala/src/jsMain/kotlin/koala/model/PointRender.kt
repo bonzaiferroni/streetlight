@@ -20,7 +20,6 @@ internal class PointRender(
     val element: HTMLDivElement,
     val base: HTMLDivElement,
     val body: PointRenderBody,
-    val clusterElement: HTMLParagraphElement
 ) {
     var planarPoint = planarPoint
         private set
@@ -82,7 +81,7 @@ internal class PointRender(
         if (cluster.principalId == marker.markerId) {
             element.modify(MarkerStyle.ClusterPrincipal)
             element.unmodify(MarkerStyle.ClusterMember)
-            clusterElement.textContent = "+${cluster.markerIds.size - 1}"
+            body.clusterElement?.textContent = "+${cluster.markerIds.size - 1}"
         } else {
             element.modify(MarkerStyle.ClusterMember)
             element.unmodify(MarkerStyle.ClusterPrincipal)
@@ -150,8 +149,6 @@ internal fun PointMarker.toPointRender(pixelPoint: Point, focusEntity: () -> Uni
                 is ThumbMarker -> configureThumbRender(marker)
                 else -> error("unrecognized PointMarker")
             }
-
-            clusterElement = textBlock(mod = modify(MarkerStyle.ClusterCount))
         }
     }
 
@@ -162,7 +159,6 @@ internal fun PointMarker.toPointRender(pixelPoint: Point, focusEntity: () -> Uni
         element = element,
         base = baseElement!!,
         body = renderBody!!,
-        clusterElement = clusterElement!!
     )
 
     val onElementClick = onFocus?.let {

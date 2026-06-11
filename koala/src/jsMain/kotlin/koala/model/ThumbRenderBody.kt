@@ -3,13 +3,14 @@ package koala.model
 import koala.css.*
 import koala.dom.DOMContext
 import koala.dom.row
-import koala.html.column
-import koala.html.heading5
+import koala.dom.textBlock
+import koala.html.box
 import kotlinx.html.js.img
 import org.w3c.dom.HTMLElement
 
 internal class ThumbRenderBody(
     override val element: HTMLElement,
+    override val clusterElement: HTMLElement,
 ): PointRenderBody {
     override val labelElement: HTMLElement? get() = null
 
@@ -19,12 +20,18 @@ internal class ThumbRenderBody(
 }
 
 internal fun DOMContext.configureThumbRender(marker: ThumbMarker): ThumbRenderBody {
+    var clusterElement: HTMLElement? = null
+
     with(marker) {
         // td: declare border radius in stylesheet
         val element = row(modify(MarkerStyle.Body, AlignItemsCenter, BorderRadius3, PaperGradientBg, GapHalf)) {
-            img {
-                addModifiers(MarkerStyle.Thumb)
-                src = thumbUrl.value
+            box(modify(MarkerStyle.Thumb)) {
+                img {
+                    src = thumbUrl.value
+                }
+                box(modify(MarkerStyle.ClusterCount, CardBg)) {
+                    clusterElement = textBlock(mod = modify(PlaceSelfCenter, LargeText))
+                }
             }
 
             labelContent?.let {
@@ -32,6 +39,6 @@ internal fun DOMContext.configureThumbRender(marker: ThumbMarker): ThumbRenderBo
             }
         }
 
-        return ThumbRenderBody(element)
+        return ThumbRenderBody(element, clusterElement!!)
     }
 }

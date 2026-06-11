@@ -117,6 +117,7 @@ $Thumb {
     max-width: none;
 
     border-radius: calc(var($BodySize) / 2);
+    overflow: clip;
 
     border: 2px solid rgba(var($MarkerBorder), 0.8);
 
@@ -148,14 +149,14 @@ $ClusterMember {
 }
 
 $ClusterCount {
-    visibility: hidden;
-    font-size: 1.25rem;
-    transform: translate(calc(-100% - var($BodySize) / 2 - 4px), -50%)
+    opacity: 0;
+    
+    transition: var(--transition-opacity);
 }
 
 $ClusterPrincipal {
     $ClusterCount {
-        visibility: visible;
+        opacity: 1;
     }
 }
 
