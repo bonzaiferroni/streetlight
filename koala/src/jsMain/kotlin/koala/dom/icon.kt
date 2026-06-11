@@ -7,7 +7,7 @@ import kotlinx.html.DIV
 import kotlinx.html.js.div
 import org.w3c.dom.HTMLDivElement
 
-fun DOMContext.icon(
+fun DOM.icon(
     file: Svg,
     modifiers: ModifierSet? = null,
     block: DIV.() -> Unit = {}
@@ -19,7 +19,7 @@ fun DOMContext.icon(
     )
 }
 
-fun DOMContext.icon(
+fun DOM.icon(
     file: Svg,
     onClick: () -> Unit,
     modifiers: ModifierSet? = null,

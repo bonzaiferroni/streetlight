@@ -22,7 +22,7 @@ import kotlinx.html.DIV
 import kotlinx.html.js.div
 import org.w3c.dom.HTMLElement
 
-fun DOMContext.card(
+fun DOM.card(
     modifiers: ModifierSet? = null,
     content: DIV.() -> Unit = {},
 ) = div {
@@ -30,7 +30,7 @@ fun DOMContext.card(
     content()
 }
 
-fun DOMContext.cardOf(
+fun DOM.cardOf(
     title: String,
     thumbUrl: Url?,
     description: String?,

@@ -171,7 +171,7 @@ fun RenderContext.addCommentView(
     return view
 }
 
-fun DOMContext.zenButton(modifiers: ModifierSet? = null, block: DIV.() -> Unit) =
+fun DOM.zenButton(modifiers: ModifierSet? = null, block: DIV.() -> Unit) =
     row(modify(modifiers, ZenBg, ButtonBorderRadius, ButtonPadding)) {
         block()
     }

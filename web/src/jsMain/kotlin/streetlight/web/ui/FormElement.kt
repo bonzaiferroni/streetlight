@@ -15,10 +15,10 @@ fun RenderContext.formBody(
     block()
 }
 
-fun DOMContext.formSection(
+fun DOM.formSection(
     name: String,
     modifiers: ModifierSet? = null,
-    block: DOMContext.() -> Unit
+    block: DOM.() -> Unit
 ) = section {
     addModifiers(modifiers)
     filigree {
@@ -27,29 +27,29 @@ fun DOMContext.formSection(
     block()
 }
 
-fun DOMContext.formCard(
+fun DOM.formCard(
     modifiers: ModifierSet? = null,
-    block: DOMContext.() -> Unit,
+    block: DOM.() -> Unit,
 ) = card(FormMod.Card) {
     addModifiers(modifiers)
     block()
 }
 
-fun DOMContext.formCardSection(
+fun DOM.formCardSection(
     name: String,
     modifiers: ModifierSet? = null,
-    block: DOMContext.() -> Unit
+    block: DOM.() -> Unit
 ) = formSection(name, modifiers) {
     formCard(null, block)
 }
 
-fun DOMContext.formPart(
+fun DOM.formPart(
     instructions: String? = null,
     examples: List<String>? = null,
     bullets: List<String>? = null,
     fieldsFlex: Modifier = Flex1,
-    info: DOMContext.() -> Unit = {},
-    fields: DOMContext.() -> Unit,
+    info: DOM.() -> Unit = {},
+    fields: DOM.() -> Unit,
 ) = column(FormMod.Part) {
     column(FormMod.Instructions) {
         instructions?.let {

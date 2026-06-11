@@ -169,7 +169,7 @@ fun RenderContext.earthList(model: EarthMap) {
     }
 }
 
-fun DOMContext.markerItem(
+fun DOM.markerItem(
     thumb: Url?,
     label: String,
     sublabel: String?,

@@ -8,7 +8,7 @@ import kotlinx.html.DIV
 import kotlinx.html.js.div
 import org.w3c.dom.HTMLDivElement
 
-fun DOMContext.lottie(
+fun DOM.lottie(
     file: Lottie,
     modifiers: ModifierSet? = null,
     block: (DIV.() -> Unit)? = null

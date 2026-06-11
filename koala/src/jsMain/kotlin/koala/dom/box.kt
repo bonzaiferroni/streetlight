@@ -8,7 +8,7 @@ import kotlinx.html.DIV
 import kotlinx.html.js.div
 import kotlinx.html.id
 
-inline fun DOMContext.box(
+inline fun DOM.box(
     modifiers: ModifierSet? = null,
     crossinline content: DIV.() -> Unit = { },
 ) = div {
@@ -16,7 +16,7 @@ inline fun DOMContext.box(
     content()
 }
 
-inline fun DOMContext.box(
+inline fun DOM.box(
     id: Id,
     modifiers: ModifierSet? = null,
     crossinline content: DIV.() -> Unit = { },
@@ -25,7 +25,7 @@ inline fun DOMContext.box(
     content()
 }
 
-fun DOMContext.container(
+fun DOM.container(
     modifiers: ModifierSet? = null,
     content: DIV.() -> Unit = { },
 ) = div {
@@ -33,7 +33,7 @@ fun DOMContext.container(
     content()
 }
 
-fun DOMContext.container(
+fun DOM.container(
     id: Id,
     modifiers: ModifierSet? = null,
     content: DIV.() -> Unit = { },

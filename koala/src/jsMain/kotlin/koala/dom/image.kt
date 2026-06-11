@@ -11,7 +11,7 @@ import kotlinx.html.js.img
 import kotlinx.html.style
 import org.w3c.dom.HTMLImageElement
 
-fun DOMContext.image(
+fun DOM.image(
     url: Url? = SiteImage.placeholderLg.url,
     modifiers: ModifierSet? = null,
     block: (IMG.() -> Unit)? = null

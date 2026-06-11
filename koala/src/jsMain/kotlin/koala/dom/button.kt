@@ -2,18 +2,14 @@ package koala.dom
 
 import koala.Svg
 import koala.css.Aspect1
-import koala.css.Confirm
 import koala.css.Danger
 import koala.css.Height3
 import koala.css.ModifierSet
 import koala.css.Secondary
-import koala.css.addModifiers
 import koala.css.modify
-import koala.html.BtnKey
 import koala.html.configureButton
 import koala.html.configureElementButton
 import koala.html.configureSvgButton
-import koala.html.span
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.html.BUTTON
@@ -21,7 +17,7 @@ import kotlinx.html.js.button
 import org.w3c.dom.HTMLButtonElement
 import org.w3c.dom.events.Event
 
-fun DOMContext.button(
+fun DOM.button(
     text: String,
     modifiers: ModifierSet? = null,
     onClick: (() -> Unit)? = null,
@@ -42,7 +38,7 @@ fun DOMContext.button(
     return element
 }
 
-fun DOMContext.button(
+fun DOM.button(
     svg: Svg,
     modifiers: ModifierSet? = modify(Aspect1, Height3),
     onClick: (() -> Unit)? = null,
@@ -62,7 +58,7 @@ fun DOMContext.button(
     return element
 }
 
-fun DOMContext.button(
+fun DOM.button(
     modifiers: ModifierSet? = null,
     onClick: (() -> Unit)? = null,
     onClickEvent: ((Event) -> Unit)? = null,
@@ -81,7 +77,7 @@ fun DOMContext.button(
     return element
 }
 
-fun DOMContext.dangerButton(
+fun DOM.dangerButton(
     text: String,
     modifiers: ModifierSet? = null,
     onClick: (() -> Unit)? = null,

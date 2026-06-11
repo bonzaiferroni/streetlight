@@ -8,7 +8,7 @@ import kotlinx.html.DIV
 import kotlinx.html.js.div
 import kotlinx.html.id
 
-inline fun DOMContext.row(
+inline fun DOM.row(
     id: Id,
     modifiers: ModifierSet? = null,
     crossinline content: DIV.() -> Unit,
@@ -17,7 +17,7 @@ inline fun DOMContext.row(
     content()
 }
 
-inline fun DOMContext.row(
+inline fun DOM.row(
     modifiers: ModifierSet? = null,
     crossinline content: DIV.() -> Unit,
 ) = div {

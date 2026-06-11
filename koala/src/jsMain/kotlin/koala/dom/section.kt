@@ -6,7 +6,7 @@ import koala.html.SectionKey
 import kotlinx.html.SECTION
 import kotlinx.html.js.section as sectionTag
 
-fun DOMContext.section(
+fun DOM.section(
     modifiers: ModifierSet? = null,
     block: SECTION.() -> Unit = {}
 ) {

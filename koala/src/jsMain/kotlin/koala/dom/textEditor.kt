@@ -2,22 +2,17 @@ package koala.dom
 
 import koala.css.ModifierSet
 import koala.css.Size100P
-import koala.css.Width100P
 import koala.css.addModifiers
-import koala.dom.setAttribute
 import koala.html.Id
 import koala.html.Attribute
 import koala.html.setId
 import koala.html.setAttribute
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import kotlinx.html.DIV
 import kotlinx.html.TEXTAREA
-import kotlinx.html.dom.append
 import kotlinx.html.js.div
 import kotlinx.html.js.onInputFunction
 import kotlinx.html.js.textArea
-import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLTextAreaElement
 
 fun RenderContext.textEditor(
@@ -68,7 +63,7 @@ fun RenderContext.textEditor(
     return textElement!!
 }
 
-fun DOMContext.configureTextEditor(
+fun DOM.configureTextEditor(
     label: String? = null,
     textModifiers: ModifierSet? = null,
     id: Id? = null,

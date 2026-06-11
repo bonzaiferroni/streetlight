@@ -15,7 +15,7 @@ import org.w3c.dom.url.URL
 import org.w3c.files.File
 import org.w3c.files.get
 
-fun DOMContext.filePicker(
+fun DOM.filePicker(
     mimeType: MimeType = MimeType.All,
     modifiers: ModifierSet? = null,
     onMessage: ((UIMessage) -> Unit)? = null,

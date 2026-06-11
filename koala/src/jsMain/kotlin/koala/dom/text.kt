@@ -9,7 +9,7 @@ import kotlinx.html.P
 import kotlinx.html.js.p
 import org.w3c.dom.HTMLParagraphElement
 
-fun DOMContext.textBlock(
+fun DOM.textBlock(
     text: String = "",
     mod: ModifierSet? = null,
     block: (P.() -> Unit)? = null

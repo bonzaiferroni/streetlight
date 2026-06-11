@@ -8,9 +8,8 @@ import kotlinx.dom.clear
 import kotlinx.html.dom.append
 import kotlinx.html.dom.prepend
 import org.w3c.dom.HTMLElement
-import kotlin.coroutines.CoroutineContext
 
-interface RenderContext: DOMContext {
+interface RenderContext: DOM {
     val app: AppContext
     val renderScope: CoroutineScope
     val parent: HTMLElement
@@ -27,11 +26,11 @@ interface RenderContext: DOMContext {
 }
 
 class DOMRenderContext(
-    consumer: DOMContext,
+    consumer: DOM,
     override val app: AppContext,
     override val renderScope: CoroutineScope,
     override val parent: HTMLElement,
-): RenderContext, DOMContext by consumer
+): RenderContext, DOM by consumer
 
 fun HTMLElement.renderRoot(
     scope: CoroutineScope,

@@ -6,9 +6,8 @@ import koala.markdown.MarkdownBlock
 import koala.markdown.markdownBlocksOf
 import kotlinx.html.DIV
 import kotlinx.html.js.div
-import org.w3c.dom.HTMLElement
 
-fun DOMContext.markdown(
+fun DOM.markdown(
     blocks: List<MarkdownBlock>,
     modifiers: ModifierSet? = null,
     block: DIV.() -> Unit = {}
@@ -16,7 +15,7 @@ fun DOMContext.markdown(
     configureMarkdown(blocks, modifiers, block)
 }
 
-fun DOMContext.markdown(
+fun DOM.markdown(
     text: String,
     modifiers: ModifierSet? = null,
     block: DIV.() -> Unit = {}
