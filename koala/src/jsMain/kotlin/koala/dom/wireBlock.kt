@@ -4,11 +4,11 @@ import koala.html.Id
 import kotlinx.browser.document
 import org.w3c.dom.HTMLElement
 
-fun DOMRender.wireBlock(
+fun ScopedDOM.wireBlock(
     elementId: Id,
     ancestor: HTMLElement? = null,
     wireOnView: Boolean = true,
-    block: DOMRender.() -> Unit
+    block: ScopedDOM.() -> Unit
 ): HTMLElement {
     val element = (ancestor ?: document.body)?.querySelector(elementId) ?: document.getElementOrNullById(elementId)
         ?: error("couldn't find ${elementId.identifier}")
@@ -18,10 +18,10 @@ fun DOMRender.wireBlock(
     return element
 }
 
-fun DOMRender.wireBlock(
+fun ScopedDOM.wireBlock(
     element: HTMLElement,
     wireOnView: Boolean = true,
-    block: DOMRender.() -> Unit
+    block: ScopedDOM.() -> Unit
 ) {
     fun wireElement() {
         replaceRender(element, block)

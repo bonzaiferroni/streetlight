@@ -5,14 +5,14 @@ import koala.dom.*
 import streetlight.model.data.LocationProperty
 import streetlight.web.model.LocationEditor
 
-fun DOMRender.locationEditFormBody(model: LocationEditor) = formBody {
+fun ScopedDOM.locationEditFormBody(model: LocationEditor) = formBody {
     locationWebsiteForm(model)
     locationDetailsForm(model)
     locationImageForm(model)
     locationLinksForm(model)
 }
 
-fun DOMRender.locationDetailsForm(model: LocationEditor) = formCardSection("Location Details") {
+fun ScopedDOM.locationDetailsForm(model: LocationEditor) = formCardSection("Location Details") {
     formPart("What is the name of the place?") {
         formTextField("title", model::setName, model.nameFlow, maxLength = 50)
             .flowValid(LocationProperty.Name, model.validityFlow, renderScope)
@@ -33,20 +33,20 @@ fun DOMRender.locationDetailsForm(model: LocationEditor) = formCardSection("Loca
     }
 }
 
-fun DOMRender.locationImageForm(model: LocationEditor) =
+fun ScopedDOM.locationImageForm(model: LocationEditor) =
     imageFormSection(
         instructions = "This image will appear at the top of the location page.",
         onValue = model::setImageUrl,
         imageFlow = model.imageUrlFlow
     )
 
-fun DOMRender.locationLinksForm(model: LocationEditor) = formCardSection("Links") {
+fun ScopedDOM.locationLinksForm(model: LocationEditor) = formCardSection("Links") {
     column {
         textField("calendar", modify(), model::setEventsLink, model.linksFlow)
     }
 }
 
-fun DOMRender.locationWebsiteForm(model: LocationEditor) = formCardSection("Website") {
+fun ScopedDOM.locationWebsiteForm(model: LocationEditor) = formCardSection("Website") {
     formPart(
         instructions = "Does this location have a website? We can read it to find certain details.",
         bullets = listOf("Image", "Description", "Links")

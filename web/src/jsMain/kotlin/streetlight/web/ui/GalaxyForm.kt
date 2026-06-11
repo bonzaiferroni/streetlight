@@ -12,7 +12,7 @@ import streetlight.model.data.GalaxyProperty
 import streetlight.model.data.PostPermission
 import streetlight.web.model.GalaxyEditor
 
-fun DOMRender.galaxyCityForm(model: GalaxyEditor) {
+fun ScopedDOM.galaxyCityForm(model: GalaxyEditor) {
     val cityQueryFlow = model.stateFlow.mapDistinct { it.cityQuery }
     val isLocalFlow = model.stateFlow.mapDistinct { it.isLocal }
     val localitiesFlow = model.stateFlow.mapDistinct { it.cities }
@@ -51,7 +51,7 @@ fun DOMRender.galaxyCityForm(model: GalaxyEditor) {
     }
 }
 
-fun DOMRender.galaxyNameForm(model: GalaxyEditor) {
+fun ScopedDOM.galaxyNameForm(model: GalaxyEditor) {
     val nameFlow = model.galaxyFlow.mapDistinct { it.name ?: "" }
     val slugFlow = model.galaxyFlow.mapDistinct { it.slug?.string ?: "" }
 
@@ -87,12 +87,12 @@ fun DOMRender.galaxyNameForm(model: GalaxyEditor) {
     }
 }
 
-fun DOMRender.galaxyImageForm(model: GalaxyEditor) =
+fun ScopedDOM.galaxyImageForm(model: GalaxyEditor) =
     imageFormSection(imageInstructions1, model::setImageUrl, model.stateFlow.mapDistinct { it.imageUrl })
 
 private val imageInstructions1 = "This image will appear at the top of the galaxy page."
 
-fun DOMRender.galaxyDescriptionForm(model: GalaxyEditor) {
+fun ScopedDOM.galaxyDescriptionForm(model: GalaxyEditor) {
     val nameFlow = model.galaxyFlow.mapDistinct { it.name ?: "" }
     val descriptionFlow = model.galaxyFlow.mapDistinct { it.description ?: "" }
     val taglineFlow = model.galaxyFlow.mapDistinct { it.tagline ?: "" }
@@ -137,7 +137,7 @@ fun DOMRender.galaxyDescriptionForm(model: GalaxyEditor) {
     }
 }
 
-fun DOMRender.galaxyLocationForm(model: GalaxyEditor) {
+fun ScopedDOM.galaxyLocationForm(model: GalaxyEditor) {
     val pointFlow = geoMap.stateFlow.mapDistinct { it.center to it.zoom }
 
     formCardSection("Map location") {
@@ -161,7 +161,7 @@ fun DOMRender.galaxyLocationForm(model: GalaxyEditor) {
     }
 }
 
-fun DOMRender.galaxyAccessForm(model: GalaxyEditor) {
+fun ScopedDOM.galaxyAccessForm(model: GalaxyEditor) {
     val permissionFlow = model.galaxyFlow.mapDistinct { it.postPermission }
     val reviewModeFlow = model.galaxyFlow.mapDistinct { it.reviewMode }
 

@@ -15,12 +15,12 @@ import kotlinx.coroutines.launch
 import kotlinx.html.js.dialog
 import org.w3c.dom.HTMLDialogElement
 
-fun DOMRender.dialogBox(
+fun ScopedDOM.dialogBox(
     title: String?,
     stateFlow: Flow<Boolean>? = null,
     modifiers: ModifierSet? = null,
     onClose: (() -> Unit)? = null,
-    block: DOMRender.(() -> Unit) -> Unit
+    block: ScopedDOM.(() -> Unit) -> Unit
 ): HTMLDialogElement {
 
     fun close(dialog: HTMLDialogElement) {

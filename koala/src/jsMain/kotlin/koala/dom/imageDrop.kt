@@ -20,11 +20,11 @@ import koala.css.modify
 import koala.html.fillImage
 import kotlinx.coroutines.flow.Flow
 
-fun DOMRender.imageDrop(
+fun ScopedDOM.imageDrop(
     urlFlow: Flow<Url?>,
     onFileUrl: (Url?) -> Unit,
     modifiers: ModifierSet? = null,
-    block: DOMRender.(Url) -> Unit = {
+    block: ScopedDOM.(Url) -> Unit = {
         box(modify(Size100P)) {
             fillImage(it)
         }

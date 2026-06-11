@@ -15,7 +15,7 @@ import streetlight.model.data.EventEdit
 import streetlight.model.data.ExtraLink
 
 // event editor content including introduction and form
-fun DOMRender.viewEventEditorProto(
+fun ScopedDOM.viewEventEditorProto(
     event: EventEdit,
     callback: ((Event?) -> Unit)?
 ) {
@@ -92,7 +92,7 @@ fun DOMRender.viewEventEditorProto(
 }
 
 // event editor route, invoked by appNavigation
-fun DOMRender.viewEventEditorRoute() {
+fun ScopedDOM.viewEventEditorRoute() {
     var callback: ((Event?) -> Unit)? = null
 
 //    routeBlock<EventUpdateRoute, EventEdit>({ route ->

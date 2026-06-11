@@ -87,7 +87,7 @@ class CommentView(
         replies.add(reply)
     }
 
-    fun DOMRender.replyAction() {
+    fun ScopedDOM.replyAction() {
         if (stagedReplies.isNotEmpty()) {
             showStagedReplies()
         } else {
@@ -95,7 +95,7 @@ class CommentView(
         }
     }
 
-    fun DOMRender.startReply() {
+    fun ScopedDOM.startReply() {
         isReplying = !isReplying
         if (isReplying) {
             rootBlock.modify(CommentClass.HasNestedContent)
@@ -121,7 +121,7 @@ class CommentView(
         }
     }
 
-    fun DOMRender.toggleEdit() {
+    fun ScopedDOM.toggleEdit() {
         isEditing = !isEditing
         if (isEditing) {
             editBlock.unmodify(DisplayNone)
@@ -146,7 +146,7 @@ class CommentView(
         }
     }
 
-    fun DOMRender.stageReply(comment: CommentView, isUserReply: Boolean) {
+    fun ScopedDOM.stageReply(comment: CommentView, isUserReply: Boolean) {
         if (isUserReply) {
             renderStagedReplies(listOf(comment))
         } else {
@@ -155,7 +155,7 @@ class CommentView(
         }
     }
 
-    fun DOMRender.showStagedReplies() {
+    fun ScopedDOM.showStagedReplies() {
         val replies = stagedReplies.toList()
         stagedReplies.clear()
         renderStagedReplies(replies)
@@ -163,7 +163,7 @@ class CommentView(
         rootBlock.modify(CommentClass.HasNestedContent)
     }
 
-    private fun DOMRender.renderStagedReplies(replies: List<CommentView>) {
+    private fun ScopedDOM.renderStagedReplies(replies: List<CommentView>) {
         prependRender(repliesBlock) {
             replies.forEach { reply ->
                 with (reply) {
@@ -173,7 +173,7 @@ class CommentView(
         }
     }
 
-    fun DOMRender.stageUpdate(text: String) {
+    fun ScopedDOM.stageUpdate(text: String) {
         if (isUserComment) {
             updateTextContent(text)
         } else {
@@ -182,13 +182,13 @@ class CommentView(
         }
     }
 
-    fun DOMRender.showStagedUpdate() {
+    fun ScopedDOM.showStagedUpdate() {
         val text = stagedUpdate ?: error("staged update not found")
         showUpdateButton.modify(DisplayNone)
         updateTextContent(text)
     }
 
-    private fun DOMRender.updateTextContent(text: String) {
+    private fun ScopedDOM.updateTextContent(text: String) {
         comment = comment.copy(text = text)
 
         replaceRender(contentBlock) {
@@ -196,7 +196,7 @@ class CommentView(
         }
     }
 
-    fun DOMRender.render() {
+    fun ScopedDOM.render() {
         if (isRendered) return
         isRendered = true
 

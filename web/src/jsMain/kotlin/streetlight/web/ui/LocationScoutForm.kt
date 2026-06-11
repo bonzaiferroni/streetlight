@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.map
 import streetlight.web.model.LocationScout
 import streetlight.web.model.SearchMode
 
-fun DOMRender.locationScoutForm(model: LocationScout) = formSection("Find a location") {
+fun ScopedDOM.locationScoutForm(model: LocationScout) = formSection("Find a location") {
     val indexFlow = model.modeFlow.map { it.name }
 
     tabs(
@@ -23,7 +23,7 @@ fun DOMRender.locationScoutForm(model: LocationScout) = formSection("Find a loca
     }
 }
 
-private fun DOMRender.locationSearchForm(model: LocationScout) = formCard {
+private fun ScopedDOM.locationSearchForm(model: LocationScout) = formCard {
     formPart(
         instructions = "Streetlight locations will appear as you type.",
         bullets = listOf("If you don't see the location in the list, you can search OpenStreetMap.")
@@ -51,7 +51,7 @@ private fun DOMRender.locationSearchForm(model: LocationScout) = formCard {
     }
 }
 
-private fun DOMRender.searchItem(
+private fun ScopedDOM.searchItem(
     name: String?,
     address: String?,
     city: String?,
@@ -67,7 +67,7 @@ private fun DOMRender.searchItem(
     }
 }
 
-private fun DOMRender.locationMapForm(model: LocationScout) = formCard {
+private fun ScopedDOM.locationMapForm(model: LocationScout) = formCard {
     formPart(
         instructions = "Move the map to the location you wish to create."
     ) {

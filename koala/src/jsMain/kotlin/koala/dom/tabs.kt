@@ -11,7 +11,7 @@ import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.events.Event
 
-fun DOMRender.tabs(
+fun ScopedDOM.tabs(
     id: Id? = null,
     modifiers: ModifierSet? = null,
     onChangeTab: ((String) -> Unit)? = null,
@@ -82,7 +82,7 @@ fun DOMRender.tabs(
 
 fun TabScope.tab(
     label: String,
-    content: DOMRender.() -> Unit
+    content: ScopedDOM.() -> Unit
 ) {
     add(label, content)
 }
@@ -91,7 +91,7 @@ class TabScope {
     private val _tabs: MutableList<Tab> = mutableListOf()
     val tabs: List<Tab> = _tabs
 
-    fun add(label: String, content: DOMRender.() -> Unit) {
+    fun add(label: String, content: ScopedDOM.() -> Unit) {
         _tabs.add(Tab(
             label = label,
             content = content
@@ -102,5 +102,5 @@ class TabScope {
 data class Tab(
     val label: String,
     val id: Id = Id(label),
-    val content: DOMRender.() -> Unit
+    val content: ScopedDOM.() -> Unit
 )

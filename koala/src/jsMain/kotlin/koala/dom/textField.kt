@@ -18,7 +18,7 @@ import kotlinx.html.js.div
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.events.KeyboardEvent
 
-fun DOMRender.textField(
+fun ScopedDOM.textField(
     label: String? = null,
     modifiers: ModifierSet? = null,
     onValue: ((String) -> Unit)? = null,
@@ -49,7 +49,7 @@ fun DOMRender.textField(
     return parent
 }
 
-fun DOMRender.textFieldInput(
+fun ScopedDOM.textFieldInput(
     placeholder: String? = null,
     modifiers: ModifierSet? = null,
     onValue: ((String) -> Unit)? = null,

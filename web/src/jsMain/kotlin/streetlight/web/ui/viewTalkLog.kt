@@ -17,7 +17,7 @@ import streetlight.model.data.PostOrder
 import streetlight.web.TalkRoute
 import streetlight.web.io.TalkLog
 
-fun DOMRender.viewTalkLog(model: TalkLog) {
+fun ScopedDOM.viewTalkLog(model: TalkLog) {
     var treeRoot: HTMLElement? = null
 
     column {
@@ -63,14 +63,14 @@ fun DOMRender.viewTalkLog(model: TalkLog) {
     }
 }
 
-fun DOMRender.viewTalkRoute() {
+fun ScopedDOM.viewTalkRoute() {
     routeBlock<TalkRoute> { route ->
         val model = TalkLog(renderScope, route.id, route.type, api)
         viewTalkLog(model)
     }
 }
 
-fun DOMRender.buildTree(model: TalkLog, treeRoot: HTMLElement, comments: List<Comment>) {
+fun ScopedDOM.buildTree(model: TalkLog, treeRoot: HTMLElement, comments: List<Comment>) {
     val sortBy = model.stateNow.sortBy
 
     val comments = when (sortBy) {
@@ -89,7 +89,7 @@ fun DOMRender.buildTree(model: TalkLog, treeRoot: HTMLElement, comments: List<Co
     }
 }
 
-fun DOMRender.growTree(model: TalkLog, treeRoot: HTMLElement, comment: Comment) {
+fun ScopedDOM.growTree(model: TalkLog, treeRoot: HTMLElement, comment: Comment) {
     val view = addCommentView(model, comment, emptyList()) ?: return
     when (val parentId = comment.parentId) {
         null -> {
@@ -119,7 +119,7 @@ fun DOMRender.growTree(model: TalkLog, treeRoot: HTMLElement, comment: Comment) 
     }
 }
 
-fun DOMRender.updateComment(model: TalkLog, message: CommentUpdated) {
+fun ScopedDOM.updateComment(model: TalkLog, message: CommentUpdated) {
     val view = model.commentViews[message.commentId] ?: return
 
     with(view) {
@@ -127,7 +127,7 @@ fun DOMRender.updateComment(model: TalkLog, message: CommentUpdated) {
     }
 }
 
-fun DOMRender.commentEditor(
+fun ScopedDOM.commentEditor(
     label: String,
     initialText: String,
     modifiers: ModifierSet? = null,
@@ -152,7 +152,7 @@ fun DOMRender.commentEditor(
     }
 }
 
-fun DOMRender.addCommentView(
+fun ScopedDOM.addCommentView(
     model: TalkLog,
     comment: Comment,
     comments: List<Comment>

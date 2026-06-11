@@ -4,7 +4,7 @@ import koala.css.*
 import koala.dom.*
 import streetlight.web.model.ChatRoom
 
-fun DOMRender.viewChatRoom() {
+fun ScopedDOM.viewChatRoom() {
     val model = app.get<ChatRoom>()
     val element = column(modify(JustifyContentEnd)) {
         itemsBlock(model.messagesFlow, modify(Magic, Blur, SlideLeft)) { message ->

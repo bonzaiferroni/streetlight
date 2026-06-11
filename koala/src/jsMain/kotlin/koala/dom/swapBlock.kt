@@ -12,7 +12,7 @@ import kotlinx.css.Display
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.asList
 
-fun DOMRender.wireSwapBlock(
+fun ScopedDOM.wireSwapBlock(
     element: HTMLElement,
     bindFlow: (Flow<Id>)? = null,
 ) {
@@ -34,7 +34,7 @@ fun DOMRender.wireSwapBlock(
     }
 }
 
-fun DOMRender.queryAndWireSwapBlock(
+fun ScopedDOM.queryAndWireSwapBlock(
     ancestor: HTMLElement,
     queryable: Queryable,
     bindFlow: (Flow<Id>)? = null,

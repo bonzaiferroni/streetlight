@@ -9,7 +9,7 @@ import streetlight.model.data.GalaxyEdit
 import streetlight.model.data.toEdit
 import streetlight.web.GalaxyConfigRoute
 
-fun DOMRender.viewGalaxyConfig(edit: GalaxyEdit) {
+fun ScopedDOM.viewGalaxyConfig(edit: GalaxyEdit) {
     val model = app.getGalaxyEditor(edit, renderScope)
 
     column {
@@ -46,7 +46,7 @@ fun DOMRender.viewGalaxyConfig(edit: GalaxyEdit) {
     }
 }
 
-fun DOMRender.viewGalaxyConfigRoute() {
+fun ScopedDOM.viewGalaxyConfigRoute() {
     routeBlock<GalaxyConfigRoute, GalaxyEdit>(portal, { route ->
         api.readGalaxy(route.slug).handleResponse(toaster::toast)?.toEdit()
     }) {

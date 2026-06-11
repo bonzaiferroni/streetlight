@@ -19,7 +19,7 @@ fun DOM.textBlock(
     block?.invoke(this)
 }
 
-fun <T> DOMRender.textBlock(
+fun <T> ScopedDOM.textBlock(
     binding: Flow<T>,
     mod: ModifierSet? = null,
     provideValue: (T) -> String = { it.toString() },

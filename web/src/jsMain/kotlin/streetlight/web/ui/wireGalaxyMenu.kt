@@ -11,7 +11,7 @@ import streetlight.web.model.DataCache
 import streetlight.web.shells.GalaxyMenuKey
 import streetlight.web.shells.galaxyMenuItems
 
-fun DOMRender.wireGalaxyMenu(
+fun ScopedDOM.wireGalaxyMenu(
     root: HTMLElement,
     currentGalaxy: Galaxy?
 ) {

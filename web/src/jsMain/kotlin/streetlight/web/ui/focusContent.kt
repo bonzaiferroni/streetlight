@@ -13,7 +13,7 @@ import streetlight.web.layouts.costCell
 import streetlight.web.layouts.starCell
 import streetlight.web.layouts.startsAtCell
 
-fun DOMRender.eventFocusContent(post: EventPost) {
+fun ScopedDOM.eventFocusContent(post: EventPost) {
     val event = post.event
 
     card(modify(Padding0, Gap0, BlurBackdrop, OverflowClip)) {

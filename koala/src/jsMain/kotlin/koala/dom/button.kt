@@ -116,7 +116,7 @@ private fun configureButtonEvents(
     }
 }
 
-fun DOMRender.configureEnabledFlow(
+fun ScopedDOM.configureEnabledFlow(
     element: HTMLButtonElement,
     flow: Flow<Boolean>? = null,
 ) {

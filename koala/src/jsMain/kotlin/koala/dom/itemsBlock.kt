@@ -18,7 +18,7 @@ import org.w3c.dom.HTMLElement
 import kotlin.collections.plus
 
 // dynamically render a list of items using a lambda of the individual item
-fun <Item> DOMRender.itemsBlock(
+fun <Item> ScopedDOM.itemsBlock(
     flow: Flow<List<Item>>,
     mod: ModifierSet? = null,
     gapRems: Float? = 0.5f,
@@ -122,13 +122,13 @@ fun <Item> DOMRender.itemsBlock(
 }
 
 // for when you really need to know the index of the item within its context
-fun <Item> DOMRender.indexedItemsBlock(
+fun <Item> ScopedDOM.indexedItemsBlock(
     flow: Flow<List<Item>>,
     modifiers: ModifierSet? = null,
     gapRems: Float? = 0.5f,
     config: (DIV.() -> Unit)? = null,
     containerConfig: (DIV.() -> Unit)? = null,
-    block: DOMRender.(IndexedItem<Item>) -> Unit
+    block: ScopedDOM.(IndexedItem<Item>) -> Unit
 ): HTMLDivElement {
     val flow = flow.mapDistinct { it.mapIndexed { index, item -> IndexedItem(index, item) } }
     return itemsBlock(

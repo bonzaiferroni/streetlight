@@ -6,7 +6,7 @@ import koala.css.ModifierSet
 import koala.dom.*
 import streetlight.model.data.Location
 
-fun DOMRender.cardOf(
+fun ScopedDOM.cardOf(
     location: Location,
     modifiers: ModifierSet? = null,
     onClick: (() -> Unit)? = null,

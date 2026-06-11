@@ -29,7 +29,7 @@ fun DOM.image(
     return element
 }
 
-fun DOMRender.image(
+fun ScopedDOM.image(
     binding: Flow<Url?>,
     initial: Url? = SiteImage.placeholderLg.url,
     modifiers: ModifierSet? = null,

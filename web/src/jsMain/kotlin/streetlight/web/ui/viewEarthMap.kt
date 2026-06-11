@@ -32,7 +32,7 @@ import streetlight.web.model.LocationMarker
 import streetlight.web.model.MarkerType
 import streetlight.web.pages.AppBodyKey
 
-fun DOMRender.viewEarthMap(model: EarthMap) {
+fun ScopedDOM.viewEarthMap(model: EarthMap) {
     box(Earth.Id, modify(Size100P)) {
         val cameraController = geoMapMount(mod = modify(Earth.Map))
         column(modify(Gap0, PointerEventsNone)) {
@@ -47,7 +47,7 @@ fun DOMRender.viewEarthMap(model: EarthMap) {
     }.flowModifier(model.isMovingFlow, Earth.IsMoving, renderScope)
 }
 
-fun DOMRender.viewEarthMapRoute() {
+fun ScopedDOM.viewEarthMapRoute() {
     var isVisible = false
     val element = document.getElementById(AppBodyKey.FullScreenId)
 
@@ -77,7 +77,7 @@ fun DOMRender.viewEarthMapRoute() {
     }
 }
 
-fun DOMRender.earthHeader(model: EarthMap) {
+fun ScopedDOM.earthHeader(model: EarthMap) {
     val iconMod = modify(Width5, Aspect1)
     row(modify(Earth.Header, AlignItemsCenter, PaperGradientBg, Padding1, PointerEventsAuto)) {
         flowBlock(model.galaxyFlow, modify(Flex1)) { galaxy ->
@@ -98,7 +98,7 @@ fun DOMRender.earthHeader(model: EarthMap) {
     }
 }
 
-fun DOMRender.earthWindow(model: EarthMap) {
+fun ScopedDOM.earthWindow(model: EarthMap) {
     column(modify(Earth.Window, Earth.MoveDimmer, JustifyContentSpaceBetween)) {
         row(modify(JustifyContentEnd)) {
             button("Show All", modify(Zen, PointerEventsAuto)).onClick(model::showAll)
@@ -135,7 +135,7 @@ fun DOMRender.earthWindow(model: EarthMap) {
     }
 }
 
-fun DOMRender.earthList(model: EarthMap) {
+fun ScopedDOM.earthList(model: EarthMap) {
     val reversedItems = model.boundedMarkersFlow.map { it.reversed() } // reverse shows new items on top
     box(modify(Earth.List, Earth.MoveDimmer)) {
         itemsBlock(
@@ -186,7 +186,7 @@ fun DOM.markerItem(
     }.onClick(onClick)
 }
 
-fun DOMRender.earthFocus(model: EarthMap) {
+fun ScopedDOM.earthFocus(model: EarthMap) {
     flowBlock(model.focusFlow, modify(Earth.Focus, Magic, SlideLeft, BorderRadius2, OverflowYAuto)) { marker ->
         when (marker) {
             null -> return@flowBlock
@@ -205,7 +205,7 @@ fun DOMRender.earthFocus(model: EarthMap) {
     }
 }
 
-fun DOMRender.focusPanel(
+fun ScopedDOM.focusPanel(
     label: String,
     sublabel: String?,
     imageUrl: Url?,

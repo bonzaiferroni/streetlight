@@ -9,17 +9,17 @@ import kotlinx.coroutines.launch
 
 class WireContext<T>(
     val state: Store<T>,
-    context: DOMRender
-): DOMRender by context
+    context: ScopedDOM
+): ScopedDOM by context
 
-fun <T> DOMRender.wireContextOf(
+fun <T> ScopedDOM.wireContextOf(
     initialState: T
 ): WireContext<T> {
     val state = storeOf(initialState)
     return WireContext(state, this)
 }
 
-fun <T> DOMRender.wireState(
+fun <T> ScopedDOM.wireState(
     initialState: T,
     block: WireContext<T>.() -> Unit
 ) {
@@ -27,7 +27,7 @@ fun <T> DOMRender.wireState(
     context.block()
 }
 
-fun <T> DOMRender.wireTo(
+fun <T> ScopedDOM.wireTo(
     state: Store<T>,
     block: WireContext<T>.() -> Unit
 ) {
@@ -35,7 +35,7 @@ fun <T> DOMRender.wireTo(
     context.block()
 }
 
-inline fun <reified Route: AppRoute, Data> DOMRender.wireRouteTo(
+inline fun <reified Route: AppRoute, Data> ScopedDOM.wireRouteTo(
     portal: Portal,
     initialState: Data,
     crossinline provideData: suspend (Route) -> Data?,

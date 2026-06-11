@@ -8,7 +8,7 @@ import koala.html.heading3
 import kotlinx.coroutines.flow.Flow
 import kotlinx.html.DIV
 
-fun DOMRender.formBody(
+fun ScopedDOM.formBody(
     modifiers: ModifierSet? = null,
     block: DIV.() -> Unit
 ) = column(modify(modifiers, Gap8)) {
@@ -71,7 +71,7 @@ fun DOM.formPart(
     }
 }
 
-fun DOMRender.formTextField(
+fun ScopedDOM.formTextField(
     label: String,
     onValue: (String) -> Unit,
     flow: Flow<String?>,
@@ -94,7 +94,7 @@ fun DOMRender.formTextField(
     }
 }
 
-fun DOMRender.formSubmit(
+fun ScopedDOM.formSubmit(
     label: String,
     onSubmit: () -> Unit,
     modifiers: ModifierSet? = null,

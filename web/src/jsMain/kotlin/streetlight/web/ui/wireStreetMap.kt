@@ -8,7 +8,7 @@ import streetlight.web.model.DataCache
 import streetlight.web.model.MarkerService
 import streetlight.web.model.MarkerMap
 
-fun DOMRender.wireStreetMap() {
+fun ScopedDOM.wireStreetMap() {
     val markerMap = app.get<MarkerMap>()
     val cache = app.get<DataCache>()
     val markerService = app.get<MarkerService>()

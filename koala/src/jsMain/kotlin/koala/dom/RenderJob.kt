@@ -15,10 +15,10 @@ internal class RenderJob(
     val firstElement get() = elements.first()
 }
 
-internal fun <T> DOMRender.createRenderJob(
+internal fun <T> ScopedDOM.createRenderJob(
     parent: HTMLElement,
     value: T,
-    block: DOMRender.(T) -> Unit
+    block: ScopedDOM.(T) -> Unit
 ): RenderJob {
     parent.clear()
     val job = SupervisorJob()
@@ -30,9 +30,9 @@ internal fun <T> DOMRender.createRenderJob(
     return RenderJob(job, scope, elements)
 }
 
-internal fun DOMRender.createRenderJob(
+internal fun ScopedDOM.createRenderJob(
     parent: HTMLElement,
-    block: DOMRender.() -> Unit
+    block: ScopedDOM.() -> Unit
 ) = createRenderJob(parent, Unit) {
     block()
 }

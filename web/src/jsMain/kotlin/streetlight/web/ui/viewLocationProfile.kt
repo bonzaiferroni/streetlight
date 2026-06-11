@@ -7,7 +7,7 @@ import streetlight.web.LocationRoute
 import streetlight.web.shells.LocationProfileKey
 import streetlight.web.shells.locationShell
 
-fun DOMRender.viewLocationProfile() {
+fun ScopedDOM.viewLocationProfile() {
     routeBlock<LocationRoute, Location>(
         portal = portal,
         provideData = { api.readLocationSlug(it.slug).handleResponse(toaster::toast) }

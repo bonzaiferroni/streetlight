@@ -19,13 +19,13 @@ import kotlinx.html.classes
 import kotlinx.html.js.div
 import org.w3c.dom.HTMLDivElement
 
-fun <State> DOMRender.flowBlock(
+fun <State> ScopedDOM.flowBlock(
     flow: Flow<State>,
     modifiers: ModifierSet? = null,
     renderCacheCount: Int? = null,
     config: (DIV.() -> Unit)? = null,
     onTransition: ((State) -> Unit)? = null,
-    block: DOMRender.(State) -> Unit
+    block: ScopedDOM.(State) -> Unit
 ): HTMLDivElement {
     val magic = modifiers?.contains(Magic) ?: false
     val element = div {

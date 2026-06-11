@@ -3,12 +3,12 @@ package koala.dom
 import koala.css.*
 import koala.model.storeOf
 
-fun DOMRender.buttonDialog(
+fun ScopedDOM.buttonDialog(
     label: String,
     modifiers: ModifierSet? = null,
     dialogModifiers: ModifierSet? = null,
     emoji: String = "👀",
-    block: DOMRender.() -> Unit
+    block: ScopedDOM.() -> Unit
 ) {
     val isOpen = storeOf(false)
 

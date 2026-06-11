@@ -12,7 +12,7 @@ import kotlinx.html.js.label
 import kotlinx.html.js.onInputFunction
 import org.w3c.dom.HTMLInputElement
 
-fun DOMRender.checkBox(
+fun ScopedDOM.checkBox(
     label: String,
     onChangeValue: ((Boolean) -> Unit)? = null,
     binding: Flow<Boolean>? = null,
@@ -24,7 +24,7 @@ fun DOMRender.checkBox(
     +label
 }
 
-fun DOMRender.checkBox(
+fun ScopedDOM.checkBox(
     onChangeValue: ((Boolean) -> Unit)? = null,
     binding: Flow<Boolean>? = null,
     block: (INPUT.() -> Unit)? = null

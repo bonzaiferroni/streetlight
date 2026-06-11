@@ -10,13 +10,13 @@ import kotlinx.html.INPUT
 import kotlinx.html.InputType
 import kotlinx.html.js.input
 
-fun DOMRender.datetimeInput() {
+fun ScopedDOM.datetimeInput() {
     input {
         type = InputType.dateTimeLocal
     }
 }
 
-fun DOMRender.dateInput(
+fun ScopedDOM.dateInput(
     flow: Flow<LocalDate?>,
     onValueChanged: (LocalDate) -> Unit,
     modifiers: ModifierSet? = null,
@@ -51,7 +51,7 @@ fun DOMRender.dateInput(
     }
 }
 
-fun DOMRender.timeInput(
+fun ScopedDOM.timeInput(
     flow: Flow<LocalTime?>,
     onValueChanged: (LocalTime) -> Unit,
     modifiers: ModifierSet? = null,

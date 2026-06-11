@@ -18,7 +18,7 @@ import streetlight.web.model.EarthMap
 import kotlin.collections.first
 import kotlin.math.min
 
-fun DOMRender.earthUnboundedOverlay(model: EarthMap, mapContext: GeoCameraController) {
+fun ScopedDOM.earthUnboundedOverlay(model: EarthMap, mapContext: GeoCameraController) {
     val geoMap = app.get<GeoCamera>()
     val widget = mapContext.jsMap
     val element = div(modify(Earth.Unbounded, PointerEventsNone))

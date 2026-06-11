@@ -1,6 +1,6 @@
 package streetlight.web.ui
 
-import koala.dom.DOMRender
+import koala.dom.ScopedDOM
 import koala.external.maplibregl
 import koala.model.MarkerStyle
 import koala.model.jsObject
@@ -12,7 +12,7 @@ import kotlin.js.json
 
 const val STOP_ZOOM = 14
 
-fun DOMRender.viewTransitMap(
+fun ScopedDOM.viewTransitMap(
     app: Streetlight,
     maplibre: maplibregl.Map
 ) {

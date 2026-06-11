@@ -15,7 +15,7 @@ import kotlinx.html.js.onInputFunction
 import kotlinx.html.js.textArea
 import org.w3c.dom.HTMLTextAreaElement
 
-fun DOMRender.textEditor(
+fun ScopedDOM.textEditor(
     label: String? = null,
     modifiers: ModifierSet? = null,
     textModifiers: ModifierSet? = null,

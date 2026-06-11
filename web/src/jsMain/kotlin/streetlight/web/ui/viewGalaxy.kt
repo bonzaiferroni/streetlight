@@ -9,7 +9,7 @@ import streetlight.web.model.MarkerService
 import streetlight.web.shells.GalaxyKey
 import streetlight.web.shells.galaxyShell
 
-fun DOMRender.viewGalaxy(content: GalaxyContent) {
+fun ScopedDOM.viewGalaxy(content: GalaxyContent) {
     val cache = app.get<DataCache>()
     val markerService = app.get<MarkerService>()
 
@@ -28,7 +28,7 @@ fun DOMRender.viewGalaxy(content: GalaxyContent) {
     markerMap.setPoints(points)
 }
 
-fun DOMRender.viewGalaxyRoute() {
+fun ScopedDOM.viewGalaxyRoute() {
     routeBlock<GalaxyRoute, GalaxyContent>(portal, { route ->
         readIsland<GalaxyContent>(GalaxyKey.GalaxyContentId) { it.galaxy.slug == route.slug }
             ?: api.readGalaxyContent(route.slug).handleResponse(toaster::toast)

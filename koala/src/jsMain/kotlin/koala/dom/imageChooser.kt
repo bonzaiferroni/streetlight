@@ -13,7 +13,7 @@ import org.w3c.dom.HTMLButtonElement
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLImageElement
 
-fun DOMRender.imageChooser(
+fun ScopedDOM.imageChooser(
     modifiers: ModifierSet? = null,
     onValueChanged: ((Url?) -> Unit)? = null,
     onUpload: suspend (Url) -> Url?,
