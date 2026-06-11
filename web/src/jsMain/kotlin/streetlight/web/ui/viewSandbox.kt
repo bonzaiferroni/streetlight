@@ -1,15 +1,22 @@
 package streetlight.web.ui
 
-import koala.css.PositionAnchor
-import koala.dom.ScopedDOM
-import koala.dom.button
-import koala.dom.flowIsWorking
+import koala.css.*
+import koala.dom.*
 import koala.html.Id
 import kotlinx.coroutines.flow.flowOf
 
 fun ScopedDOM.viewSandbox() {
-    button("my button")
-        .flowIsWorking(flowOf(true), renderScope)
+    tabs {
+        tab("one") {
+            textBlock("the first tab content")
+        }
+        tab("two") {
+            textBlock("the second tab content")
+        }
+        tab("three") {
+            textBlock("the third tab content")
+        }
+    }
 }
 
 private val menuId = Id("menu")

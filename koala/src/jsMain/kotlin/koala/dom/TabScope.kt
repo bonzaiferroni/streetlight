@@ -1,0 +1,71 @@
+package koala.dom
+
+import koala.css.modify
+import koala.html.Id
+import koala.html.TabClass
+import kotlinx.html.dom.append
+import org.w3c.dom.HTMLElement
+
+fun <T: DOM> TabScope<T>.tab(
+    label: String,
+    content: T.() -> Unit
+) {
+    add(label, content)
+}
+
+class TabScope<T: DOM>(
+    maxTabCount: Int = 5,
+    private val content: TabScope<T>.() -> Unit,
+) {
+    private val _tabs: MutableList<Tab<T>> = mutableListOf()
+    val tabs: List<Tab<T>> = _tabs
+
+    private var elementCache = Array<HTMLElement?>(maxTabCount) { null }
+    private var renderJobCache = Array<RenderJob?>(maxTabCount) { null }
+    private var viewport: HTMLElement? = null
+
+    init {
+        content()
+    }
+
+    fun add(label: String, content: T.() -> Unit) {
+        _tabs.add(Tab(
+            label = label,
+            content = content
+        ))
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    internal fun createTab(receiver: T, index: Int) {
+        val element = elementCache.getOrNull(index) ?: error("tab not found: $index")
+        val tab = tabs[index]
+        if (receiver is ScopedDOM) {
+            val tab = tab as Tab<ScopedDOM>
+            val renderJob = receiver.createRenderJob(element, tab.content)
+            renderJobCache[index] = renderJob
+        }
+    }
+
+    internal fun build(viewport: HTMLElement) {
+        this.viewport = viewport
+        viewport.append {
+            tabs.forEachIndexed { index, _ ->
+                val element = box(modify(TabClass.panel))
+                elementCache[index] = element
+            }
+        }
+    }
+
+    internal fun selectTab(receiver: T, index: Int) {
+        val element = elementCache.getOrNull(index) ?: error("tabs not built")
+        if (element.childElementCount == 0) {
+            createTab(receiver, index)
+        }
+    }
+}
+
+data class Tab<T: DOM>(
+    val label: String,
+    val id: Id = Id(label),
+    val content: T.() -> Unit
+)

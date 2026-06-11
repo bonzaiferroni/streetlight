@@ -6,10 +6,10 @@ function findAndInitTabs(parent) {
     parent.querySelectorAll(".tabs").forEach(initTabs);
 }
 
-function initTabs(root) {
+function initTabs(root, viewportArg) {
     const DURATION = 200;
     const STORAGE_KEY = "streetlight.tabValues";
-    const viewport = root.querySelector(".tabs-viewport");
+    const viewport = viewportArg ?? root.querySelector(".tabs-viewport");
     if (!viewport || viewport.isInitialized) return;
     viewport.isInitialized = true;
 
