@@ -1,20 +1,17 @@
 package streetlight.web.ui
 
-import koala.css.Magic
-import koala.dom.RenderContext
+import koala.dom.DOMRender
 import koala.dom.modify
 import koala.dom.onClick
 import koala.dom.queryAttributeAll
 import koala.dom.querySelector
-import koala.dom.trigger
 import koala.dom.unmodify
 import koala.html.Attribute
 import kotlinx.coroutines.launch
 import org.w3c.dom.HTMLElement
 import streetlight.web.model.LightCache
-import streetlight.web.model.Streetlight
 
-fun <Id> RenderContext.wireLights(
+fun <Id> DOMRender.wireLights(
     root: HTMLElement,
     attribute: Attribute<Id>,
     cache: LightCache<Id, *>

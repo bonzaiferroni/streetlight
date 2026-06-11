@@ -17,7 +17,7 @@ import streetlight.model.data.PostOrder
 import streetlight.web.TalkRoute
 import streetlight.web.io.TalkLog
 
-fun RenderContext.viewTalkLog(model: TalkLog) {
+fun DOMRender.viewTalkLog(model: TalkLog) {
     var treeRoot: HTMLElement? = null
 
     column {
@@ -63,14 +63,14 @@ fun RenderContext.viewTalkLog(model: TalkLog) {
     }
 }
 
-fun RenderContext.viewTalkRoute() {
+fun DOMRender.viewTalkRoute() {
     routeBlock<TalkRoute> { route ->
         val model = TalkLog(renderScope, route.id, route.type, api)
         viewTalkLog(model)
     }
 }
 
-fun RenderContext.buildTree(model: TalkLog, treeRoot: HTMLElement, comments: List<Comment>) {
+fun DOMRender.buildTree(model: TalkLog, treeRoot: HTMLElement, comments: List<Comment>) {
     val sortBy = model.stateNow.sortBy
 
     val comments = when (sortBy) {
@@ -89,7 +89,7 @@ fun RenderContext.buildTree(model: TalkLog, treeRoot: HTMLElement, comments: Lis
     }
 }
 
-fun RenderContext.growTree(model: TalkLog, treeRoot: HTMLElement, comment: Comment) {
+fun DOMRender.growTree(model: TalkLog, treeRoot: HTMLElement, comment: Comment) {
     val view = addCommentView(model, comment, emptyList()) ?: return
     when (val parentId = comment.parentId) {
         null -> {
@@ -119,7 +119,7 @@ fun RenderContext.growTree(model: TalkLog, treeRoot: HTMLElement, comment: Comme
     }
 }
 
-fun RenderContext.updateComment(model: TalkLog, message: CommentUpdated) {
+fun DOMRender.updateComment(model: TalkLog, message: CommentUpdated) {
     val view = model.commentViews[message.commentId] ?: return
 
     with(view) {
@@ -127,7 +127,7 @@ fun RenderContext.updateComment(model: TalkLog, message: CommentUpdated) {
     }
 }
 
-fun RenderContext.commentEditor(
+fun DOMRender.commentEditor(
     label: String,
     initialText: String,
     modifiers: ModifierSet? = null,
@@ -152,7 +152,7 @@ fun RenderContext.commentEditor(
     }
 }
 
-fun RenderContext.addCommentView(
+fun DOMRender.addCommentView(
     model: TalkLog,
     comment: Comment,
     comments: List<Comment>

@@ -12,7 +12,7 @@ import org.w3c.dom.ScrollToOptions
 import streetlight.web.io.OmniLog
 import streetlight.web.pages.AppBodyKey
 
-fun RenderContext.wireRightPanel() {
+fun DOMRender.wireRightPanel() {
     val omni = app.get<OmniLog>()
     val recordFlow = omni.stateFlow.mapDistinct { it.records }
     var container: HTMLElement? = null

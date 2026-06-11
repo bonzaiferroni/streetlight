@@ -4,13 +4,11 @@ import initElement
 import koala.css.*
 import koala.html.Id
 import koala.html.ShellBoxKey
-import koala.model.GeoCamera
 import kotlinx.browser.document
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.html.DIV
 import org.w3c.dom.HTMLDivElement
 
-fun RenderContext.shellBox(
+fun DOMRender.shellBox(
     id: Id,
     modifiers: ModifierSet? = null,
     block: DIV.() -> Unit
@@ -36,7 +34,7 @@ fun RenderContext.shellBox(
     }
 }
 
-fun RenderContext.shellBoxWithMap(
+fun DOMRender.shellBoxWithMap(
     id: Id,
     modifiers: ModifierSet? = null,
     block: DIV.() -> Unit

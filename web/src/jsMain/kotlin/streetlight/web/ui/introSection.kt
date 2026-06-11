@@ -6,9 +6,8 @@ import koala.dom.*
 import koala.html.filigree
 import koala.html.heading1
 import kotlinx.html.DIV
-import kotlinx.html.FlowContent
 
-fun RenderContext.introSection(
+fun DOMRender.introSection(
     name: String,
     modifiers: ModifierSet? = null,
     lottie: Lottie? = null,

@@ -60,7 +60,7 @@ fun viewApp() {
                 wireRightPanel()
                 wireToaster()
 
-                registerMenu(PostKey.PostMenuId, { it.toSlug() }, RenderContext::postMenu)
+                registerMenu(PostKey.PostMenuId, { it.toSlug() }, DOMRender::postMenu)
             }
 
             try {

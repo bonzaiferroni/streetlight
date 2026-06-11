@@ -1,13 +1,9 @@
 package streetlight.web.ui
 
-import kampfire.model.handleResponse
 import koala.dom.*
-import streetlight.model.data.LocationEdit
-import streetlight.model.data.toEdit
-import streetlight.web.UpdateLocationRoute
 import streetlight.web.pages.appFooter
 
-fun RenderContext.viewEditLocationRoute() {
+fun DOMRender.viewEditLocationRoute() {
     column {
 //        routeBlock<UpdateLocationRoute, LocationEdit>(
 //            portal = portal,

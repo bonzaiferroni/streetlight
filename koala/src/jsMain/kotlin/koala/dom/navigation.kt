@@ -7,7 +7,7 @@ import kotlinx.html.A
 import kotlinx.html.a
 
 // td: share code with common source set
-fun RenderContext.navigation(
+fun DOMRender.navigation(
     modifiers: ModifierSet? = null,
     block: (A.() -> Unit)? = null
 ) = a {
@@ -15,7 +15,7 @@ fun RenderContext.navigation(
     block?.invoke(this)
 }
 
-fun RenderContext.navigation(
+fun DOMRender.navigation(
     route: AppRoute,
     modifiers: ModifierSet? = null,
     block: (A.() -> Unit)? = null

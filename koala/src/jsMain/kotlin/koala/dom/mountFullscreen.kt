@@ -5,9 +5,9 @@ import koala.html.Id
 import kotlinx.browser.document
 import kotlinx.html.js.div
 
-fun RenderContext.mountFullscreen(
+fun DOMRender.mountFullscreen(
     id: Id,
-    block: RenderContext.() -> Unit
+    block: DOMRender.() -> Unit
 ) {
     val element = div { }
 

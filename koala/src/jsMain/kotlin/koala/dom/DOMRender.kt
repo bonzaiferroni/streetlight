@@ -9,7 +9,7 @@ import kotlinx.html.dom.append
 import kotlinx.html.dom.prepend
 import org.w3c.dom.HTMLElement
 
-interface RenderContext: DOM {
+interface DOMRender: DOM {
     val app: AppContext
     val renderScope: CoroutineScope
     val parent: HTMLElement
@@ -30,12 +30,12 @@ class DOMRenderContext(
     override val app: AppContext,
     override val renderScope: CoroutineScope,
     override val parent: HTMLElement,
-): RenderContext, DOM by consumer
+): DOMRender, DOM by consumer
 
 fun HTMLElement.renderRoot(
     scope: CoroutineScope,
     app: AppContext,
-    block: RenderContext.() -> Unit
+    block: DOMRender.() -> Unit
 ): List<HTMLElement> {
     clear()
     return append {
@@ -44,9 +44,9 @@ fun HTMLElement.renderRoot(
     }
 }
 
-fun RenderContext.replaceRender(
+fun DOMRender.replaceRender(
     element: HTMLElement,
-    block: RenderContext.() -> Unit,
+    block: DOMRender.() -> Unit,
 ): List<HTMLElement> {
     element.clear()
     return element.append {
@@ -55,31 +55,31 @@ fun RenderContext.replaceRender(
     }
 }
 
-fun RenderContext.clearRender(element: HTMLElement) {
+fun DOMRender.clearRender(element: HTMLElement) {
     element.clear()
     element.clearScope()
 }
 
-fun RenderContext.appendRender(
+fun DOMRender.appendRender(
     element: HTMLElement,
-    block: RenderContext.() -> Unit
+    block: DOMRender.() -> Unit
 ) = element.append {
     val context = DOMRenderContext(this@append, app, element.provisionScope(renderScope, false), element)
     context.block()
 }
 
-fun RenderContext.prependRender(
+fun DOMRender.prependRender(
     element: HTMLElement,
-    block: RenderContext.() -> Unit
+    block: DOMRender.() -> Unit
 ) = element.prepend {
     val context = DOMRenderContext(this@prepend, app, element.provisionScope(renderScope, false), element)
     context.block()
 }
 
-fun RenderContext.replaceRender(
+fun DOMRender.replaceRender(
     id: Id,
     ancestor: HTMLElement? = null,
-    block: RenderContext.() -> Unit
+    block: DOMRender.() -> Unit
 ) = replaceRender(((ancestor ?: document.body!!).querySelector(id) ?: error("element not found: $this")), block)
 
 class InvalidRenderOperation(parent: HTMLElement): Exception("Appended to finalized element: ${parent.domPath()}")

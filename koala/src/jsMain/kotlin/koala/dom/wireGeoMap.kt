@@ -2,10 +2,7 @@ package koala.dom
 
 import koala.core.findAndInitGeoMap
 import koala.core.queryFirstOrNull
-import koala.external.CenterZoomBearing
 import koala.external.maplibregl
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.w3c.dom.HTMLElement
 import koala.html.GeoMapKey
 import koala.model.GeoCameraController
@@ -13,13 +10,11 @@ import koala.external.maplibregl.Point
 import koala.model.GeoCamera
 import koala.model.GeoMap
 import koala.model.GeoRender
-import koala.model.toLngLat
-import koala.model.toLngLatBounds
 import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.coroutines.CoroutineScope
 
-fun RenderContext.wireGeoMap(
+fun DOMRender.wireGeoMap(
     ancestor: HTMLElement,
 ): GeoCameraController {
     val mount = ancestor.takeIf { it.isModified(GeoMapKey.MapMount) }
@@ -47,7 +42,7 @@ fun RenderContext.wireGeoMap(
 
 // private var cachedContext: GeoCameraController? = null
 
-fun RenderContext.wireMapContext(
+fun DOMRender.wireMapContext(
     mount: HTMLElement
 ): GeoCameraController {
     app.getOrNull<GeoCameraController>()?.let {

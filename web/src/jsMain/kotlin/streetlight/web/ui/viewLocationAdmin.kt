@@ -7,11 +7,10 @@ import koala.model.flowerOf
 import streetlight.model.data.Location
 import streetlight.model.data.toEdit
 import streetlight.web.LocationAdminRoute
-import streetlight.web.model.Streetlight
 import streetlight.web.pages.appFooter
 import streetlight.web.shells.cardOf
 
-fun RenderContext.viewLocationAdmin(
+fun DOMRender.viewLocationAdmin(
     location: Location,
 ) {
     column {
@@ -46,7 +45,7 @@ fun RenderContext.viewLocationAdmin(
     }
 }
 
-fun RenderContext.viewLocationAdmin() {
+fun DOMRender.viewLocationAdmin() {
     routeBlock<LocationAdminRoute, Location>(
         portal = portal,
         provideData = { api.readLocation(it.locationId).handleResponse(toaster::toast) }

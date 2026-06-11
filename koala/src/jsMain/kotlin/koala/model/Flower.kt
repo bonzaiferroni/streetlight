@@ -1,15 +1,14 @@
 package koala.model
 
-import koala.dom.RenderContext
+import koala.dom.DOMRender
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 class Flower<T>(
     replay: Int = 1,
     private val fetch: suspend () -> T?,
-    private val context: RenderContext
+    private val context: DOMRender
 ) {
     private val _flow = MutableSharedFlow<T>(replay)
     val flow: Flow<T> = _flow
@@ -24,7 +23,7 @@ class Flower<T>(
     }
 }
 
-fun <T> RenderContext.flowerOf(
+fun <T> DOMRender.flowerOf(
     initialRefresh: Boolean = true,
     replay: Int = 1,
     fetch: suspend () -> T?

@@ -1,18 +1,18 @@
 package streetlight.web.ui
 
-import koala.dom.RenderContext
+import koala.dom.DOMRender
 import koala.dom.column
 import koala.dom.routeBlock
 import koala.dom.textBlock
 import streetlight.web.StarRoute
 
-fun RenderContext.viewStarProfile(username: String) {
+fun DOMRender.viewStarProfile(username: String) {
     column {
         textBlock("Profile of: $username")
     }
 }
 
-fun RenderContext.viewStarProfileRoute() {
+fun DOMRender.viewStarProfileRoute() {
     routeBlock<StarRoute, String>(portal, { route ->
 //        val star = model.client.api.readStarByUsername(route.pathId) ?: return@routeBlock null
 //        val listing = model.client.api.readStarPosts(route.pathId) ?: return@routeBlock null

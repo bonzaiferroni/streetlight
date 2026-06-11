@@ -10,12 +10,12 @@ import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 import kotlin.enums.enumEntries
 
-inline fun <reified State> RenderContext.stageBlock(
+inline fun <reified State> DOMRender.stageBlock(
     flow: Flow<State>,
     crossinline onValue: (State) -> Unit,
     modifiers: ModifierSet? = null,
     crossinline isHeadingStage: (State) -> Boolean = { true },
-    noinline block: RenderContext.(State) -> Unit
+    noinline block: DOMRender.(State) -> Unit
 ): HTMLDivElement where State: Enum<State>, State: Labeled {
     val entries = enumEntries<State>()
     var currentValue: State? = null

@@ -13,7 +13,7 @@ import kotlinx.html.js.div
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 
-fun RenderContext.switch(
+fun DOMRender.switch(
     label: String,
     modifiers: ModifierSet? = null,
     id: Id? = null,
@@ -37,7 +37,7 @@ fun RenderContext.switch(
     return element
 }
 
-fun RenderContext.wireSwitch(
+fun DOMRender.wireSwitch(
     element: HTMLElement,
     initialOn: Boolean = false,
     onToggle: ((Boolean) -> Unit)? = null,
@@ -65,7 +65,7 @@ fun RenderContext.wireSwitch(
     }
 }
 
-fun RenderContext.queryAndWireSwitch(
+fun DOMRender.queryAndWireSwitch(
     ancestor: HTMLElement,
     queryable: Queryable,
     initialOn: Boolean = false,

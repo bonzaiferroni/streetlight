@@ -7,7 +7,7 @@ import koala.css.Flex1
 import koala.css.FlexItems1
 import koala.css.Width64
 import koala.css.modify
-import koala.dom.RenderContext
+import koala.dom.DOMRender
 import koala.dom.navigation
 import koala.dom.button
 import koala.dom.card
@@ -23,7 +23,7 @@ import koala.html.Id
 import streetlight.web.SongProfileRoute
 import streetlight.web.model.MusicianHub
 
-fun RenderContext.viewMusicianHub(
+fun DOMRender.viewMusicianHub(
     user: BasicUserInfo,
 ) {
     val model = MusicianHub(renderScope, api)

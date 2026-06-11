@@ -11,9 +11,8 @@ import kotlinx.html.input
 import kotlinx.html.js.label
 import kotlinx.html.js.onInputFunction
 import org.w3c.dom.HTMLInputElement
-import org.w3c.dom.HTMLLabelElement
 
-fun RenderContext.checkBox(
+fun DOMRender.checkBox(
     label: String,
     onChangeValue: ((Boolean) -> Unit)? = null,
     binding: Flow<Boolean>? = null,
@@ -25,7 +24,7 @@ fun RenderContext.checkBox(
     +label
 }
 
-fun RenderContext.checkBox(
+fun DOMRender.checkBox(
     onChangeValue: ((Boolean) -> Unit)? = null,
     binding: Flow<Boolean>? = null,
     block: (INPUT.() -> Unit)? = null

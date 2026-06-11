@@ -1,3 +1,3 @@
 package koala.dom
 
-// fun DOM.
+// fun DOM.tabsHeader()

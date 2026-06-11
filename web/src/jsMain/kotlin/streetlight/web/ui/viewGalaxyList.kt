@@ -7,7 +7,7 @@ import kotlinx.coroutines.launch
 import streetlight.model.data.Galaxy
 import streetlight.web.shells.cardOf
 
-fun RenderContext.viewGalaxyList() {
+fun DOMRender.viewGalaxyList() {
     val galaxyStore = storeOf<List<Galaxy>>(emptyList())
 
     renderScope.launch {

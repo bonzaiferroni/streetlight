@@ -8,13 +8,12 @@ import kotlinx.coroutines.launch
 import kotlinx.html.js.div
 import streetlight.model.data.Star
 import streetlight.web.StarDashRoute
-import streetlight.web.model.Streetlight
 import streetlight.web.model.UserGate
 
-fun RenderContext.starBlock(
+fun DOMRender.starBlock(
     redirect: Boolean = false,
     modifiers: ModifierSet? = null,
-    block: RenderContext.(Star) -> Unit
+    block: DOMRender.(Star) -> Unit
 ) {
     val gate = app.get<UserGate>()
 

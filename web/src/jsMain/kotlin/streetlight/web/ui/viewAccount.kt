@@ -10,7 +10,7 @@ import streetlight.web.HomeRoute
 import streetlight.web.model.CredentialStore
 import streetlight.web.model.UserGate
 
-fun RenderContext.viewStarDash() {
+fun DOMRender.viewStarDash() {
     val gate = app.get<UserGate>()
 
     flowBlock(gate.starFlow) { user ->
@@ -29,7 +29,7 @@ fun RenderContext.viewStarDash() {
     }
 }
 
-fun RenderContext.signInContent() {
+fun DOMRender.signInContent() {
     val gate = app.get<UserGate>()
     val cred = app.get<CredentialStore>()
 

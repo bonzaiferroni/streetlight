@@ -7,7 +7,6 @@ import koala.external.maplibregl
 import koala.model.GeoCamera
 import koala.model.GeoCameraController
 import koala.model.MarkerId
-import koala.model.toLngLat
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
@@ -17,12 +16,9 @@ import org.w3c.dom.HTMLElement
 import streetlight.web.model.FeatureMarker
 import streetlight.web.model.EarthMap
 import kotlin.collections.first
-import kotlin.math.abs
-import kotlin.math.atan2
-import kotlin.math.max
 import kotlin.math.min
 
-fun RenderContext.earthUnboundedOverlay(model: EarthMap, mapContext: GeoCameraController) {
+fun DOMRender.earthUnboundedOverlay(model: EarthMap, mapContext: GeoCameraController) {
     val geoMap = app.get<GeoCamera>()
     val widget = mapContext.jsMap
     val element = div(modify(Earth.Unbounded, PointerEventsNone))

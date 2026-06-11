@@ -8,13 +8,13 @@ import kotlinx.html.DIV
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 
-fun <Item> RenderContext.selectionBlock(
+fun <Item> DOMRender.selectionBlock(
     flow: Flow<List<Item>>,
     onSelect: (Item?) -> Unit,
     selectFlow: Flow<Item?>? = null,
     modifiers: ModifierSet? = null,
     config: (DIV.() -> Unit)? = null,
-    block: RenderContext.(Item) -> HTMLElement
+    block: DOMRender.(Item) -> HTMLElement
 ): HTMLDivElement {
     var selectedItem: Item? = null
     var selectedElement: HTMLElement? = null

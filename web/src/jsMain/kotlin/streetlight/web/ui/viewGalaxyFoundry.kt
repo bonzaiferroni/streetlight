@@ -7,7 +7,7 @@ import koala.css.modify
 import koala.dom.*
 import streetlight.model.data.GalaxyEdit
 
-fun RenderContext.viewGalaxyFoundry() {
+fun DOMRender.viewGalaxyFoundry() {
     val model = app.getGalaxyEditor(GalaxyEdit(), renderScope)
 
     column {

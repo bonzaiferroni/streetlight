@@ -2,11 +2,10 @@ package streetlight.web.ui
 
 import koala.css.*
 import koala.dom.*
-import streetlight.web.model.Streetlight
 import streetlight.web.model.Toaster
 import streetlight.web.pages.AppBodyKey
 
-fun RenderContext.wireToaster() {
+fun DOMRender.wireToaster() {
     val model = app.get<Toaster>()
 
     replaceRender(AppBodyKey.ToasterId) {

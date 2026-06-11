@@ -8,11 +8,10 @@ import org.w3c.dom.HTMLElement
 import streetlight.model.data.Galaxy
 import streetlight.web.layouts.GalaxyKey
 import streetlight.web.model.DataCache
-import streetlight.web.model.Streetlight
 import streetlight.web.shells.GalaxyMenuKey
 import streetlight.web.shells.galaxyMenuItems
 
-fun RenderContext.wireGalaxyMenu(
+fun DOMRender.wireGalaxyMenu(
     root: HTMLElement,
     currentGalaxy: Galaxy?
 ) {

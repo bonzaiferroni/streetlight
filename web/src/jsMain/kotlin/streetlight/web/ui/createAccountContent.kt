@@ -8,11 +8,8 @@ import koala.css.MaxWidth50P
 import koala.css.QueryRowReverse
 import koala.css.modify
 import koala.dom.*
-import streetlight.web.model.Streetlight
-import streetlight.web.model.UserCreator
-import streetlight.web.model.UserGate
 
-fun RenderContext.createAccountContent() {
+fun DOMRender.createAccountContent() {
     val creator = app.getUserCreator(renderScope)
 
     column(modify(QueryRowReverse, FlexItems1, AlignItemsStretch)) {

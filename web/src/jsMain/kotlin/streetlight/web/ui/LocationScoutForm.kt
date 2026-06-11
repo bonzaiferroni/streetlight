@@ -2,13 +2,11 @@ package streetlight.web.ui
 
 import koala.css.*
 import koala.dom.*
-import koala.html.span
 import kotlinx.coroutines.flow.map
-import streetlight.model.data.LocationEdit
 import streetlight.web.model.LocationScout
 import streetlight.web.model.SearchMode
 
-fun RenderContext.locationScoutForm(model: LocationScout) = formSection("Find a location") {
+fun DOMRender.locationScoutForm(model: LocationScout) = formSection("Find a location") {
     val indexFlow = model.modeFlow.map { it.name }
 
     tabs(
@@ -25,7 +23,7 @@ fun RenderContext.locationScoutForm(model: LocationScout) = formSection("Find a 
     }
 }
 
-private fun RenderContext.locationSearchForm(model: LocationScout) = formCard {
+private fun DOMRender.locationSearchForm(model: LocationScout) = formCard {
     formPart(
         instructions = "Streetlight locations will appear as you type.",
         bullets = listOf("If you don't see the location in the list, you can search OpenStreetMap.")
@@ -53,7 +51,7 @@ private fun RenderContext.locationSearchForm(model: LocationScout) = formCard {
     }
 }
 
-private fun RenderContext.searchItem(
+private fun DOMRender.searchItem(
     name: String?,
     address: String?,
     city: String?,
@@ -69,7 +67,7 @@ private fun RenderContext.searchItem(
     }
 }
 
-private fun RenderContext.locationMapForm(model: LocationScout) = formCard {
+private fun DOMRender.locationMapForm(model: LocationScout) = formCard {
     formPart(
         instructions = "Move the map to the location you wish to create."
     ) {

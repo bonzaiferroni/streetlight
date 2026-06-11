@@ -3,17 +3,16 @@ package koala.dom
 import koala.css.*
 import koala.html.Id
 import kotlinx.browser.document
-import kotlinx.dom.clear
 import kotlinx.html.dom.append
 import org.w3c.dom.HTMLElement
 
 private val popoverMap = mutableMapOf<String, HTMLElement>()
 private val menus = mutableMapOf<String, (MenuElement) -> Unit>()
 
-fun <Data> RenderContext.registerMenu(
+fun <Data> DOMRender.registerMenu(
     id: Id,
     dataOf: (String) -> Data,
-    block: RenderContext.(Data) -> Unit
+    block: DOMRender.(Data) -> Unit
 ) {
     menus[id.identifier] = {
         val data = dataOf(it.data)

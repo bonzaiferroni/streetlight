@@ -12,18 +12,17 @@ import koala.html.markdown
 import koala.html.textProperty
 import kotlinx.coroutines.flow.map
 import streetlight.model.data.EventProperty
-import streetlight.model.data.GalaxyProperty
 import streetlight.web.model.EventEditor
 import kotlin.time.Clock
 
-fun RenderContext.eventEditFormBody(model: EventEditor) = formBody {
+fun DOMRender.eventEditFormBody(model: EventEditor) = formBody {
     eventWebsiteForm(model)
     eventDetailsForm(model)
     eventImageForm(model)
     eventLinksForm(model)
 }
 
-fun RenderContext.eventWebsiteForm(model: EventEditor) = formCardSection("Web page") {
+fun DOMRender.eventWebsiteForm(model: EventEditor) = formCardSection("Web page") {
     formPart(
         instructions = "Does this event have a web page? We can read it to find certain details.",
         bullets = listOf("Some websites cannot be read automatically, but you can fill in the details yourself.")
@@ -36,7 +35,7 @@ fun RenderContext.eventWebsiteForm(model: EventEditor) = formCardSection("Web pa
     }
 }
 
-fun RenderContext.eventDetailsForm(model: EventEditor) = formCardSection("Event Details") {
+fun DOMRender.eventDetailsForm(model: EventEditor) = formCardSection("Event Details") {
     formPart("What is the name of the event?") {
         formTextField("title", model::setTitle, model.titleFlow, maxLength = 50)
             .flowValid(EventProperty.Title, model.validityFlow, renderScope)
@@ -107,13 +106,13 @@ fun RenderContext.eventDetailsForm(model: EventEditor) = formCardSection("Event 
     }
 }
 
-fun RenderContext.eventImageForm(model: EventEditor) =
+fun DOMRender.eventImageForm(model: EventEditor) =
     imageFormSection(
         instructions = "This image will appear in the feed and at the top of the event page.",
         onValue = model::setImageUrl,
         imageFlow = model.imageUrlFlow
     )
 
-fun RenderContext.eventLinksForm(model: EventEditor) = formCardSection("Links") {
+fun DOMRender.eventLinksForm(model: EventEditor) = formCardSection("Links") {
     eventLinks(model)
 }

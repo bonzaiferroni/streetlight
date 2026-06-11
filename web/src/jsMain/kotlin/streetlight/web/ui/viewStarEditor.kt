@@ -17,7 +17,7 @@ import streetlight.model.data.toEdit
 import streetlight.web.model.UserGate
 import streetlight.web.pages.appFooter
 
-fun RenderContext.viewStarEditor() {
+fun DOMRender.viewStarEditor() {
     val gate = app.get<UserGate>()
 
     starBlock(true) { star ->

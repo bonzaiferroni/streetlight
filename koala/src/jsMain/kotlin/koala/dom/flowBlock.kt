@@ -4,14 +4,12 @@ import koala.css.Blur
 import koala.css.KoalaTheme
 import koala.css.Magic
 import koala.css.ModifierSet
-import koala.css.Property
 import koala.css.Reveal
 import koala.css.SlideLeft
 import koala.css.Transitioning
 import koala.css.addModifiers
 import koala.css.modify
 import koala.html.FlowBlockKey
-import kotlinx.browser.window
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -21,13 +19,13 @@ import kotlinx.html.classes
 import kotlinx.html.js.div
 import org.w3c.dom.HTMLDivElement
 
-fun <State> RenderContext.flowBlock(
+fun <State> DOMRender.flowBlock(
     flow: Flow<State>,
     modifiers: ModifierSet? = null,
     renderCacheCount: Int? = null,
     config: (DIV.() -> Unit)? = null,
     onTransition: ((State) -> Unit)? = null,
-    block: RenderContext.(State) -> Unit
+    block: DOMRender.(State) -> Unit
 ): HTMLDivElement {
     val magic = modifiers?.contains(Magic) ?: false
     val element = div {

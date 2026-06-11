@@ -23,7 +23,7 @@ import streetlight.model.data.ExtraLink
 import streetlight.web.model.EventEditor
 import kotlin.time.Clock
 
-fun RenderContext.viewEventFormProto(
+fun DOMRender.viewEventFormProto(
     event: EventEdit?,
     bindFlow: Flow<EventEdit>? = null,
     onEdit: ((EventEdit) -> Unit)? = null,
@@ -178,7 +178,7 @@ fun RenderContext.viewEventFormProto(
     }
 }
 
-fun RenderContext.eventLinks(model: EventEditor) {
+fun DOMRender.eventLinks(model: EventEditor) {
     val linksFlow = model.stateFlow.mapDistinct { it.edit.links ?: emptyList() }
 
     val editState = storeOf(LinkEditState())
