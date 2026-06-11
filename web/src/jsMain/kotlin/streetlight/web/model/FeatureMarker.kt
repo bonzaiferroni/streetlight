@@ -24,9 +24,9 @@ interface FeatureMarker: ThumbMarker {
     val sublabel: String? get() = null
     override val zIndex get() = 1
     override val labelContent: DIV.() -> Unit get() = {
-        column(modify(GapTiny, LineHeight115)) {
+        column(modify(GapTiny, LineHeight115, WhiteSpaceNoWrap)) {
             setStyle(Property.ColorScheme.to(markerType.colorScheme.cssValue))
-            heading5(label, modify(WhiteSpaceNoWrap))
+            heading5(label)
             textBlock {
                 span(markerType.label, modify(ColorSchemeFg, Bold))
                 sublabel?.let {

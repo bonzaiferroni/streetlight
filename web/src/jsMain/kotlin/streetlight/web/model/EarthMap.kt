@@ -69,7 +69,7 @@ class EarthMap(
         }
     }
 
-    fun setFocus(marker: FeatureMarker) = markerMap.setFocus(marker).also { console.log(marker.label) }
+    fun setFocus(marker: FeatureMarker) = markerMap.setFocus(marker)
 
     fun showAll() = markerMap.showAll()
 }

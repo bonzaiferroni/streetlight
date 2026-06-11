@@ -47,45 +47,27 @@ fun RenderContext.earthUnboundedOverlay(model: EarthMap, mapContext: GeoCameraCo
         val geo = hint.marker.geoPoint
         val center = widget.getCenter()
 
-        // clamp the target near the viewport so it can't fall behind the camera
         val bounds = widget.getBounds()
         val maxSpan = min(
             bounds.getEast() - bounds.getWest(),
             bounds.getNorth() - bounds.getSouth(),
         )
-        var dLng = geo.lng - center.lng
-        var dLat = geo.lat - center.lat
-        val span = max(abs(dLng), abs(dLat))
-        if (span > maxSpan) {
-            val scale = maxSpan / span
-            dLng *= scale
-            dLat *= scale
-        }
+        val dLng = (geo.lng - center.lng).coerceIn(-maxSpan, maxSpan)
+        val dLat = (geo.lat - center.lat).coerceIn(-maxSpan, maxSpan)
         val projected = widget.project(maplibregl.LngLat(center.lng + dLng, center.lat + dLat))
 
-        // marker position in overlay coords
         val mx = projected.x - offset.x
         val my = projected.y - offset.y
 
-        val halfW = element.clientWidth / 2.0
-        val halfH = element.clientHeight / 2.0
-        val dx = mx - halfW
-        val dy = my - halfH
-
-        // ray-rect intersection, inset so the hint isn't clipped at the rim
         val padding = 8.0
-        val t = min(
-            (halfW - padding) / abs(dx),
-            (halfH - padding) / abs(dy),
-        )
-        val edgeX = halfW + dx * t
-        val edgeY = halfH + dy * t
+        val edgeX = mx.coerceIn(padding, element.clientWidth - padding)
+        val edgeY = my.coerceIn(padding, element.clientHeight - padding)
 
-        // val angle = atan2(dy, dx)
+        // val angle = atan2(my - edgeY, mx - edgeX)
 
         hint.element.style.left = "${edgeX}px"
         hint.element.style.top = "${edgeY}px"
-        hint.element.style.transform = "translate(-50%, -50%)"
+        hint.element.style.transform = "translate(-50%, -50%)" // rotate(${angle}rad)
     }
 
     launchRender {
