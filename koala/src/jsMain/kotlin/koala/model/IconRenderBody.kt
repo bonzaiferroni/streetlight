@@ -9,7 +9,6 @@ import kotlinx.css.properties.deg
 import kotlinx.html.js.div
 import kotlinx.html.js.p
 import org.w3c.dom.HTMLElement
-import org.w3c.dom.HTMLParagraphElement
 
 internal class IconRenderBody(
     override val element: HTMLElement,

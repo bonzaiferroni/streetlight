@@ -43,6 +43,7 @@ interface IconMarker: PointMarker {
 
 interface ThumbMarker: PointMarker {
     val thumbUrl: Url
+    val labelContent: (DIV.() -> Unit)? get() = null
     override val bodySize: LinearDimension get() = 48.px
     override val subpixelPositioning get() = false
 }

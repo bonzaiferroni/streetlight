@@ -1,8 +1,10 @@
 package koala.model
 
-import koala.css.addModifiers
-import koala.css.modify
+import koala.css.*
 import koala.dom.DOMContext
+import koala.dom.row
+import koala.html.column
+import koala.html.heading5
 import kotlinx.html.js.img
 import org.w3c.dom.HTMLElement
 
@@ -18,9 +20,16 @@ internal class ThumbRenderBody(
 
 internal fun DOMContext.configureThumbRender(marker: ThumbMarker): ThumbRenderBody {
     with(marker) {
-        val element = img {
-            src = thumbUrl.value
-            addModifiers(modify(MarkerStyle.Body, MarkerStyle.Thumb))
+        // td: declare border radius in stylesheet
+        val element = row(modify(MarkerStyle.Body, AlignItemsCenter, BorderRadius3, CardGradientBg, GapHalf)) {
+            img {
+                addModifiers(MarkerStyle.Thumb)
+                src = thumbUrl.value
+            }
+
+            labelContent?.let {
+                it()
+            }
         }
 
         return ThumbRenderBody(element)

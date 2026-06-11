@@ -14,10 +14,7 @@ import kotlinx.browser.document
 import kotlinx.css.properties.s
 import kotlinx.html.dom.append
 import kotlinx.html.js.div
-import kotlinx.html.js.p
 import org.w3c.dom.HTMLDivElement
-import org.w3c.dom.HTMLElement
-import org.w3c.dom.HTMLParagraphElement
 
 internal class PointRender(
     val jsMarker: maplibregl.Marker,

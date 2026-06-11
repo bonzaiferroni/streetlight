@@ -1,13 +1,11 @@
 package koala.model
 
 import kampfire.model.GeoBounds
-import kampfire.model.GeoPoint
 import koala.external.maplibregl
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.plus
 import org.w3c.dom.HTMLElement
 
 class GeoRender(

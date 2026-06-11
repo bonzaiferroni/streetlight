@@ -40,7 +40,7 @@ fun RenderContext.viewEarthMap(model: EarthMap) {
             div(modify(Earth.Grid, Padding1, Flex1, MinHeight0)) {
                 earthUnboundedOverlay(model, cameraController)
                 earthWindow(model)
-                earthList(model)
+                // earthList(model)
                 earthFocus(model)
             }.flowModifier(model.isFocusedFlow, Earth.IsFocused, renderScope)
         }
