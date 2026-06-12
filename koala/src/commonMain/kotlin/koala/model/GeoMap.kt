@@ -34,9 +34,22 @@ class GeoMap(
         }
     }
 
-    fun setFocus(value: PointMarker?) = state.set { it.copy(focus = value) }
+    // fun setFocus(value: PointMarker?) = state.set { it.copy(focus = value?.let { marker -> MarkerFocus(marker)} ) }
+
+    fun setFocus(value: GeoFocus?) = state.set { it.copy(focus = value) }
 }
 
 data class GeoMapState(
-    val focus: PointMarker? = null
+    val focus: GeoFocus? = null
 )
+
+sealed interface GeoFocus
+
+data class MarkerFocus(
+    val marker: PointMarker
+): GeoFocus
+
+data class ClusterFocus(
+    val principal: PointMarker,
+    val members: List<PointMarker>
+): GeoFocus

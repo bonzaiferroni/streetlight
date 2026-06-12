@@ -3,7 +3,9 @@
 package streetlight.web.model
 
 import kampfire.model.getContainingBounds
+import koala.model.GeoFocus
 import koala.model.GeoMap
+import koala.model.MarkerFocus
 import koala.model.mapDistinct
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
@@ -35,7 +37,6 @@ class MarkerMap(
     init {
         scope.launch {
             geoMap.focusFlow.collect { focus ->
-                val focus = focus as? FeatureMarker
                 state.set { it.copy(focus = focus) }
             }
         }
@@ -52,9 +53,10 @@ class MarkerMap(
 //    }
 
     fun setFocus(marker: FeatureMarker) {
-        geoMap.setFocus(marker)
+        val focus = MarkerFocus(marker)
+        geoMap.setFocus(focus)
         geoMap.camera.panMap(marker.geoPoint)
-        state.set { it.copy(focus = marker)}
+        state.set { it.copy(focus = focus)}
     }
 
     fun showAll() {
@@ -68,5 +70,5 @@ class MarkerMap(
 
 data class StreetMapState(
     val markers: List<FeatureMarker>? = null,
-    val focus: FeatureMarker? = null,
+    val focus: GeoFocus? = null,
 )

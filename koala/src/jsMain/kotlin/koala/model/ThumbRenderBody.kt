@@ -24,7 +24,7 @@ internal fun DOM.configureThumbRender(marker: ThumbMarker): ThumbRenderBody {
 
     with(marker) {
         // td: declare border radius in stylesheet
-        val element = row(modify(MarkerStyle.Body, AlignItemsCenter, BorderRadius3, PaperGradientBg, GapHalf)) {
+        val element = row(modify(MarkerStyle.Body, AlignItemsCenter, BorderRadius3, PaperGradientBg)) {
             box(modify(MarkerStyle.Thumb)) {
                 img {
                     src = thumbUrl.value

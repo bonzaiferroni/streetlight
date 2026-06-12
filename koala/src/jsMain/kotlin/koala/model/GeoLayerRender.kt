@@ -15,7 +15,7 @@ internal class GeoLayerRender(
     val layer: GeoLayer,
     val jsMap: maplibregl.Map,
     val scope: CoroutineScope,
-    val onFocus: (PointMarker?) -> Unit
+    val onFocus: (GeoFocus?) -> Unit
 ) {
     var pointRenders: Map<MarkerId, PointRender> = emptyMap()
         private set
@@ -52,7 +52,10 @@ internal class GeoLayerRender(
                 // update render
                 render.update(marker, planarPoint)
             } ?: marker.toPointRender(planarPoint) {
-                onFocus(marker)
+                val focus = pointClusters[marker.markerId]?.markerIds?.mapNotNull {
+                    pointRenders[it]?.marker
+                }?.let{ ClusterFocus(marker, it) } ?: MarkerFocus(marker)
+                onFocus(focus)
             }
             pointBuffer[marker.markerId] = render
             cullOutsideBounds(render)

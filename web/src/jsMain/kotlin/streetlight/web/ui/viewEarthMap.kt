@@ -13,6 +13,8 @@ import koala.html.heading4
 import koala.html.image
 import koala.html.logo
 import koala.html.span
+import koala.model.ClusterFocus
+import koala.model.MarkerFocus
 import kotlinx.browser.document
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.map
@@ -187,20 +189,24 @@ fun DOM.markerItem(
 }
 
 fun ScopedDOM.earthFocus(model: EarthMap) {
-    flowBlock(model.focusFlow, modify(Earth.Focus, Magic, SlideLeft, BorderRadius2, OverflowYAuto)) { marker ->
-        when (marker) {
+    flowBlock(model.focusFlow, modify(Earth.Focus, Magic, SlideLeft, BorderRadius2, OverflowYAuto)) { focus ->
+        when (focus) {
+
+//            null -> return@flowBlock
+//            is EventMarker -> {
+//                val post = focus.post
+//                focusPanel(
+//                    label = post.label,
+//                    sublabel = post.sublabel,
+//                    imageUrl = post.images.medium,
+//                    description = post.description,
+//                    colorScheme = ColorScheme.Accent,
+//                    details = eventCells(focus.post.event)
+//                )
+//            }
+            is ClusterFocus -> textBlock("yer cluster focus")
+            is MarkerFocus -> textBlock("yer marker focus")
             null -> return@flowBlock
-            is EventMarker -> {
-                val post = marker.post
-                focusPanel(
-                    label = post.label,
-                    sublabel = post.sublabel,
-                    imageUrl = post.images.medium,
-                    description = post.description,
-                    colorScheme = ColorScheme.Accent,
-                    details = eventCells(marker.post.event)
-                )
-            }
         }
     }
 }

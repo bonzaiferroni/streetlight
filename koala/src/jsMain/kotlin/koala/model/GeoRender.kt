@@ -16,7 +16,7 @@ class GeoRender(
     private val geoMap: GeoMap,
 ) {
     private var layerRenders: List<GeoLayerRender> = emptyList()
-    private var focus: PointRender? = null
+    private var focusRender: PointRender? = null
 
     init {
         val element = windowElement.querySelector(".maplibregl-canvas") ?: error("canvas not found")
@@ -60,18 +60,30 @@ class GeoRender(
         }
     }
 
-    fun setFocus(marker: PointMarker?) {
-        if (focus?.marker == marker) return
-        focus?.unfocus()
+    fun setFocus(focus: GeoFocus?) {
+        val markerId = when (focus) {
+            is MarkerFocus -> focus.marker.markerId
+            is ClusterFocus -> focus.principal.markerId
+            else -> null
+        }
 
-        val render = marker?.let { entity ->
+        val render = markerId?.let { markerId ->
             layerRenders.firstNotNullOfOrNull { render ->
-                render.pointRenders[entity.markerId]
+                render.pointRenders[markerId]
             }
         }
+
+        setFocusRender(render)
+        geoMap.setFocus(focus)
+    }
+
+    internal fun setFocusRender(render: PointRender?) {
+        if (focusRender == render) return
+        focusRender?.unfocus()
+
         render?.focus()
-        focus = render
-        geoMap.setFocus(marker)
+        focusRender = render
+
     }
 
     fun setBounds(bounds: GeoBounds, zoom: Float, isMoving: Boolean) {
