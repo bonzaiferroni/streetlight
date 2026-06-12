@@ -32,7 +32,7 @@ import streetlight.web.model.LocationMarker
 import streetlight.web.model.MarkerType
 import streetlight.web.pages.AppBodyKey
 
-fun RenderScope.viewEarthMap(model: EarthMap) {
+fun AppScope.viewEarthMap(model: EarthMap) {
     box(Earth.Id, modify(Size100P)) {
         val cameraController = geoMapMount(mod = modify(Earth.Map))
         column(modify(Gap0, PointerEventsNone)) {
@@ -47,7 +47,7 @@ fun RenderScope.viewEarthMap(model: EarthMap) {
     }.flowModifier(model.isMovingFlow, Earth.IsMoving, parentScope)
 }
 
-fun RenderScope.viewEarthMapRoute() {
+fun AppScope.viewEarthMapRoute() {
     var isVisible = false
     val element = document.getElementById(AppBodyKey.FullScreenId)
 
@@ -77,7 +77,7 @@ fun RenderScope.viewEarthMapRoute() {
     }
 }
 
-fun RenderScope.earthHeader(model: EarthMap) {
+fun AppScope.earthHeader(model: EarthMap) {
     val iconMod = modify(Width5, Aspect1)
     row(modify(Earth.Header, AlignItemsCenter, PaperGradientBg, Padding1, PointerEventsAuto)) {
         flowBlock(model.galaxyFlow, modify(Flex1)) { galaxy ->
@@ -98,7 +98,7 @@ fun RenderScope.earthHeader(model: EarthMap) {
     }
 }
 
-fun RenderScope.earthWindow(model: EarthMap) {
+fun AppScope.earthWindow(model: EarthMap) {
     column(modify(Earth.Window, Earth.MoveDimmer, JustifyContentSpaceBetween)) {
         row(modify(JustifyContentEnd)) {
             button("Show All", modify(Zen, PointerEventsAuto)).onClick(model::showAll)
@@ -135,7 +135,7 @@ fun RenderScope.earthWindow(model: EarthMap) {
     }
 }
 
-fun RenderScope.earthList(model: EarthMap) {
+fun AppScope.earthList(model: EarthMap) {
     val reversedItems = model.boundedMarkersFlow.map { it.reversed() } // reverse shows new items on top
     box(modify(Earth.List, Earth.MoveDimmer)) {
         itemsBlock(
@@ -169,7 +169,7 @@ fun RenderScope.earthList(model: EarthMap) {
     }
 }
 
-fun AppendScope.markerItem(
+fun TagScope.markerItem(
     thumb: Url?,
     label: String,
     sublabel: String?,
@@ -186,7 +186,7 @@ fun AppendScope.markerItem(
     }.onClick(onClick)
 }
 
-fun RenderScope.earthFocus(model: EarthMap) {
+fun AppScope.earthFocus(model: EarthMap) {
     flowBlock(model.focusFlow, modify(Earth.Focus, Magic, SlideLeft, BorderRadius2, OverflowYAuto)) { focus ->
         when (focus) {
 
@@ -209,7 +209,7 @@ fun RenderScope.earthFocus(model: EarthMap) {
     }
 }
 
-fun RenderScope.focusPanel(
+fun AppScope.focusPanel(
     label: String,
     sublabel: String?,
     imageUrl: Url?,

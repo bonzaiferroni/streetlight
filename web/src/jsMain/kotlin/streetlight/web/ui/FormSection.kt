@@ -1,14 +1,14 @@
 package streetlight.web.ui
 
 import kampfire.model.Url
-import koala.dom.RenderScope
+import koala.dom.AppScope
 import koala.dom.box
 import koala.dom.image
 import koala.dom.imageDrop
 import koala.dom.setBlockLabel
 import kotlinx.coroutines.flow.Flow
 
-fun RenderScope.imageFormSection(
+fun AppScope.imageFormSection(
     instructions: String,
     onValue: (Url?) -> Unit,
     imageFlow: Flow<Url?>,

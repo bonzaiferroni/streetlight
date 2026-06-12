@@ -1,7 +1,7 @@
 package streetlight.web.ui
 
 import kampfire.model.handleResponse
-import koala.dom.RenderScope
+import koala.dom.AppScope
 import koala.dom.replaceRender
 import koala.dom.routeBlock
 import koala.dom.shellBox
@@ -12,7 +12,7 @@ import streetlight.web.io.TalkLog
 import streetlight.web.shells.PostKey
 import streetlight.web.shells.postShell
 
-fun RenderScope.viewPost(post: BasicPost) {
+fun AppScope.viewPost(post: BasicPost) {
     val root = shellBox(PostKey.ShellId) {
         postShell(post)
     }
@@ -23,7 +23,7 @@ fun RenderScope.viewPost(post: BasicPost) {
     }
 }
 
-fun RenderScope.viewPostRoute() {
+fun AppScope.viewPostRoute() {
     routeBlock<PostRoute, BasicPost>(portal, { route ->
         readIsland<BasicPost>(PostKey.IslandId) { it.slug == route.slug }
             ?: api.readPost(route.slug).handleResponse(toaster::toast) as? BasicPost

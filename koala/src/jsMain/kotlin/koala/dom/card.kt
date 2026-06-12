@@ -22,7 +22,7 @@ import kotlinx.html.DIV
 import kotlinx.html.js.div
 import org.w3c.dom.HTMLElement
 
-fun AppendScope.card(
+fun TagScope.card(
     modifiers: ModifierSet? = null,
     content: DIV.() -> Unit = {},
 ) = div {
@@ -30,7 +30,7 @@ fun AppendScope.card(
     content()
 }
 
-fun AppendScope.cardOf(
+fun TagScope.cardOf(
     title: String,
     thumbUrl: Url?,
     description: String?,

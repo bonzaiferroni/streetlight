@@ -10,7 +10,7 @@ import kotlinx.html.js.p
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 
-fun <T : AppendScope> T.tabs(
+fun <T : TagScope> T.tabs(
     id: Id? = null,
     modifiers: ModifierSet? = null,
     onChangeTab: ((String) -> Unit)? = null,
@@ -41,7 +41,7 @@ fun <T : AppendScope> T.tabs(
         }
     }
 
-    if (this is RenderScope) {
+    if (this is AppScope) {
         tabFlow?.let { flow ->
             parentScope.launch {
                 flow.collect { name ->
@@ -62,7 +62,7 @@ fun <T : AppendScope> T.tabs(
     return root
 }
 
-fun <T : AppendScope> T.tabsHeader(tabScope: TabScope<T>) = row(modify(TabClass.header)) {
+fun <T : TagScope> T.tabsHeader(tabScope: TabScope<T>) = row(modify(TabClass.header)) {
     tabScope.tabs.forEachIndexed { index, tab ->
         val button = p {
             addModifiers(TabClass.button)
@@ -75,4 +75,4 @@ fun <T : AppendScope> T.tabsHeader(tabScope: TabScope<T>) = row(modify(TabClass.
     }
 }
 
-fun AppendScope.tabsViewport() = box(modify(TabClass.viewport))
+fun TagScope.tabsViewport() = box(modify(TabClass.viewport))

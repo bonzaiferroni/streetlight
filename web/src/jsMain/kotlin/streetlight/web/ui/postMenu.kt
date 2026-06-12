@@ -4,7 +4,7 @@ import kampfire.api.Slug
 import kampfire.model.handleResponse
 import koala.css.Secondary
 import koala.css.modify
-import koala.dom.RenderScope
+import koala.dom.AppScope
 import koala.dom.button
 import koala.dom.column
 import koala.dom.dangerButton
@@ -12,7 +12,7 @@ import koala.html.btn
 import kotlinx.coroutines.launch
 import streetlight.web.PostUpdateRoute
 
-fun RenderScope.postMenu(slug: Slug) {
+fun AppScope.postMenu(slug: Slug) {
     column {
         btn("edit", PostUpdateRoute(slug), modify(Secondary))
         button("report", modify(Secondary))

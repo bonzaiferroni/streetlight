@@ -6,14 +6,14 @@ import koala.html.TabClass
 import kotlinx.html.dom.append
 import org.w3c.dom.HTMLElement
 
-fun <T: AppendScope> TabScope<T>.tab(
+fun <T: TagScope> TabScope<T>.tab(
     label: String,
     content: T.() -> Unit
 ) {
     add(label, content)
 }
 
-class TabScope<T: AppendScope>(
+class TabScope<T: TagScope>(
     maxTabCount: Int = 5,
     private val content: TabScope<T>.() -> Unit,
 ) {
@@ -39,11 +39,11 @@ class TabScope<T: AppendScope>(
         val element = elementCache.getOrNull(index) ?: error("tab not found: $index")
         val tab = tabs[index]
         when (receiver) {
-            is RenderScope -> {
-                val tab = tab as Tab<RenderScope>
+            is AppScope -> {
+                val tab = tab as Tab<AppScope>
                 element.replaceRender(receiver.app, receiver.parentScope, tab.content)
             }
-            is AppendScope -> {
+            is TagScope -> {
                 element.append {
                     tab.content(receiver)
                 }
@@ -69,7 +69,7 @@ class TabScope<T: AppendScope>(
     }
 }
 
-data class Tab<T: AppendScope>(
+data class Tab<T: TagScope>(
     val label: String,
     val id: Id = Id(label),
     val content: T.() -> Unit

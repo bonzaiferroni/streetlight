@@ -18,13 +18,13 @@ import org.w3c.dom.HTMLElement
 import kotlin.collections.plus
 
 // dynamically render a list of items using a lambda of the individual item
-fun <Item> RenderScope.itemsBlock(
+fun <Item> AppScope.itemsBlock(
     flow: Flow<List<Item>>,
     mod: ModifierSet? = null,
     gapRems: Float? = 0.5f,
     config: (DIV.() -> Unit)? = null,
     containerConfig: (DIV.() -> Unit)? = null,
-    block: AppendScope.(Item) -> Unit
+    block: TagScope.(Item) -> Unit
 ): HTMLDivElement {
     // modification with Magic animates the element when items change
     // base: item opacity fade on entrance/exit, item position is animated, base element height is animated
@@ -122,13 +122,13 @@ fun <Item> RenderScope.itemsBlock(
 }
 
 // for when you really need to know the index of the item within its context
-fun <Item> RenderScope.indexedItemsBlock(
+fun <Item> AppScope.indexedItemsBlock(
     flow: Flow<List<Item>>,
     modifiers: ModifierSet? = null,
     gapRems: Float? = 0.5f,
     config: (DIV.() -> Unit)? = null,
     containerConfig: (DIV.() -> Unit)? = null,
-    block: RenderScope.(IndexedItem<Item>) -> Unit
+    block: AppScope.(IndexedItem<Item>) -> Unit
 ): HTMLDivElement {
     val flow = flow.mapDistinct { it.mapIndexed { index, item -> IndexedItem(index, item) } }
     return itemsBlock(

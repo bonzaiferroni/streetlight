@@ -5,7 +5,7 @@ import koala.dom.*
 import streetlight.web.model.Toaster
 import streetlight.web.pages.AppBodyKey
 
-fun RenderScope.wireToaster() {
+fun AppScope.wireToaster() {
     val model = app.get<Toaster>()
 
     replaceRender(AppBodyKey.ToasterId) {

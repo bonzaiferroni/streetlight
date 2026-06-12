@@ -3,11 +3,11 @@ package streetlight.web.ui
 import koala.dom.*
 import kotlinx.html.js.p
 
-fun RenderScope.viewSandbox() {
+fun AppScope.viewSandbox() {
     renderTabs()
 }
 
-fun RenderScope.renderTabs() {
+fun AppScope.renderTabs() {
     tabs {
         tab("one") {
             appendTabs()
@@ -21,7 +21,7 @@ fun RenderScope.renderTabs() {
     }
 }
 
-fun AppendScope.appendTabs() {
+fun TagScope.appendTabs() {
     tabs {
         tab("one") {
             textBlock("the first subtab content")
@@ -35,7 +35,7 @@ fun AppendScope.appendTabs() {
     }
 }
 
-fun RenderScope.myContent() {
+fun AppScope.myContent() {
     // fine, append hasn't completed yet
     p { +"yer UI" }
     launchEffect {

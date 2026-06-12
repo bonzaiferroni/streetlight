@@ -4,7 +4,7 @@ import koala.css.*
 import koala.dom.*
 import streetlight.web.model.EventScout
 
-fun RenderScope.eventSearchForm(model: EventScout) = formSection("Add an event") {
+fun AppScope.eventSearchForm(model: EventScout) = formSection("Add an event") {
     formCard {
         formPart(
             instructions = "What is the name of the event?",

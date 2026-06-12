@@ -8,14 +8,14 @@ import streetlight.web.SiteDocRoute
 import streetlight.web.shells.SiteDocKey
 import streetlight.web.shells.siteDocShell
 
-fun RenderScope.viewSiteDoc(node: DocNode) {
+fun AppScope.viewSiteDoc(node: DocNode) {
     val table = cachedTable ?: emptyList()
     shellBox(SiteDocKey.Id) {
         siteDocShell(node, table)
     }
 }
 
-fun RenderScope.viewSiteDocRoute() {
+fun AppScope.viewSiteDocRoute() {
     routeBlock<SiteDocRoute, DocNode>(portal, { route ->
         if (cachedTable == null) {
             cachedTable = api.readSiteDocTable().handleResponse(toaster::toast)

@@ -11,7 +11,7 @@ import kotlinx.html.dom.prepend
 import org.w3c.dom.HTMLElement
 
 @RenderMarker
-interface RenderScope: AppendScope {
+interface AppScope: TagScope {
     val app: AppContainer
     val parent: HTMLElement
     val parentScope: CoroutineScope
@@ -41,16 +41,16 @@ class EffectScope(
 }
 
 class DOMRenderContext(
-    consumer: AppendScope,
+    consumer: TagScope,
     override val app: AppContainer,
     override val parentScope: CoroutineScope,
     override val parent: HTMLElement,
-): RenderScope, AppendScope by consumer
+): AppScope, TagScope by consumer
 
 fun HTMLElement.renderRoot(
     scope: CoroutineScope,
     app: AppContainer,
-    block: RenderScope.() -> Unit
+    block: AppScope.() -> Unit
 ): List<HTMLElement> {
     clear()
     return append {
@@ -62,7 +62,7 @@ fun HTMLElement.renderRoot(
 fun HTMLElement.replaceRender(
     app: AppContainer,
     parentScope: CoroutineScope,
-    block: RenderScope.() -> Unit,
+    block: AppScope.() -> Unit,
 ): List<HTMLElement> {
     clear()
     return append {
@@ -71,12 +71,12 @@ fun HTMLElement.replaceRender(
     }
 }
 
-fun RenderScope.replaceRender(
+fun AppScope.replaceRender(
     element: HTMLElement,
-    block: RenderScope.() -> Unit,
+    block: AppScope.() -> Unit,
 ) = element.replaceRender(app, parentScope, block)
 
-fun RenderScope.clearRender(element: HTMLElement) {
+fun AppScope.clearRender(element: HTMLElement) {
     element.clear()
     element.clearScope()
 }
@@ -84,29 +84,29 @@ fun RenderScope.clearRender(element: HTMLElement) {
 fun HTMLElement.appendRender(
     app: AppContainer,
     parentScope: CoroutineScope,
-    block: RenderScope.() -> Unit
+    block: AppScope.() -> Unit
 ) = append {
     val context = DOMRenderContext(this@append, app, provisionScope(parentScope, false), this@appendRender)
     context.block()
 }
 
-fun RenderScope.appendRender(
+fun AppScope.appendRender(
     element: HTMLElement,
-    block: RenderScope.() -> Unit
+    block: AppScope.() -> Unit
 ) = element.appendRender(app, parentScope, block)
 
-fun RenderScope.prependRender(
+fun AppScope.prependRender(
     element: HTMLElement,
-    block: RenderScope.() -> Unit
+    block: AppScope.() -> Unit
 ) = element.prepend {
     val context = DOMRenderContext(this@prepend, app, element.provisionScope(parentScope, false), element)
     context.block()
 }
 
-fun RenderScope.replaceRender(
+fun AppScope.replaceRender(
     id: Id,
     ancestor: HTMLElement? = null,
-    block: RenderScope.() -> Unit
+    block: AppScope.() -> Unit
 ) = replaceRender(((ancestor ?: document.body!!).querySelector(id) ?: error("element not found: $this")), block)
 
 class InvalidRenderOperation(parent: HTMLElement): Exception("Appended to finalized element: ${parent.domPath()}")

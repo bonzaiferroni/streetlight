@@ -12,7 +12,7 @@ import streetlight.model.data.GalaxyProperty
 import streetlight.model.data.PostPermission
 import streetlight.web.model.GalaxyEditor
 
-fun RenderScope.galaxyCityForm(model: GalaxyEditor) {
+fun AppScope.galaxyCityForm(model: GalaxyEditor) {
     val cityQueryFlow = model.stateFlow.mapDistinct { it.cityQuery }
     val isLocalFlow = model.stateFlow.mapDistinct { it.isLocal }
     val localitiesFlow = model.stateFlow.mapDistinct { it.cities }
@@ -51,7 +51,7 @@ fun RenderScope.galaxyCityForm(model: GalaxyEditor) {
     }
 }
 
-fun RenderScope.galaxyNameForm(model: GalaxyEditor) {
+fun AppScope.galaxyNameForm(model: GalaxyEditor) {
     val nameFlow = model.galaxyFlow.mapDistinct { it.name ?: "" }
     val slugFlow = model.galaxyFlow.mapDistinct { it.slug?.string ?: "" }
 
@@ -87,12 +87,12 @@ fun RenderScope.galaxyNameForm(model: GalaxyEditor) {
     }
 }
 
-fun RenderScope.galaxyImageForm(model: GalaxyEditor) =
+fun AppScope.galaxyImageForm(model: GalaxyEditor) =
     imageFormSection(imageInstructions1, model::setImageUrl, model.stateFlow.mapDistinct { it.imageUrl })
 
 private val imageInstructions1 = "This image will appear at the top of the galaxy page."
 
-fun RenderScope.galaxyDescriptionForm(model: GalaxyEditor) {
+fun AppScope.galaxyDescriptionForm(model: GalaxyEditor) {
     val nameFlow = model.galaxyFlow.mapDistinct { it.name ?: "" }
     val descriptionFlow = model.galaxyFlow.mapDistinct { it.description ?: "" }
     val taglineFlow = model.galaxyFlow.mapDistinct { it.tagline ?: "" }
@@ -137,7 +137,7 @@ fun RenderScope.galaxyDescriptionForm(model: GalaxyEditor) {
     }
 }
 
-fun RenderScope.galaxyLocationForm(model: GalaxyEditor) {
+fun AppScope.galaxyLocationForm(model: GalaxyEditor) {
     val pointFlow = geoMap.stateFlow.mapDistinct { it.center to it.zoom }
 
     formCardSection("Map location") {
@@ -161,7 +161,7 @@ fun RenderScope.galaxyLocationForm(model: GalaxyEditor) {
     }
 }
 
-fun RenderScope.galaxyAccessForm(model: GalaxyEditor) {
+fun AppScope.galaxyAccessForm(model: GalaxyEditor) {
     val permissionFlow = model.galaxyFlow.mapDistinct { it.postPermission }
     val reviewModeFlow = model.galaxyFlow.mapDistinct { it.reviewMode }
 

@@ -10,10 +10,10 @@ import streetlight.model.data.Star
 import streetlight.web.StarDashRoute
 import streetlight.web.model.UserGate
 
-fun RenderScope.starBlock(
+fun AppScope.starBlock(
     redirect: Boolean = false,
     modifiers: ModifierSet? = null,
-    block: RenderScope.(Star) -> Unit
+    block: AppScope.(Star) -> Unit
 ) {
     val gate = app.get<UserGate>()
 

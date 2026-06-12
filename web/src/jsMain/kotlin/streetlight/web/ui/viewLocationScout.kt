@@ -11,7 +11,7 @@ import streetlight.web.LocationScoutRoute
 import streetlight.web.layouts.postCardOf
 import streetlight.web.model.LocationScoutStage
 
-fun RenderScope.viewLocationScout(galaxy: Galaxy) {
+fun AppScope.viewLocationScout(galaxy: Galaxy) {
     // val model = app.getCoroutineScoped<GalaxyEditor>(null, renderScope)
     val editor = app.getLocationEditor(LocationEdit(), parentScope)
     val model = app.getLocationScout(galaxy, editor, parentScope)
@@ -56,7 +56,7 @@ fun RenderScope.viewLocationScout(galaxy: Galaxy) {
     }
 }
 
-fun RenderScope.viewLocationScoutRoute() {
+fun AppScope.viewLocationScoutRoute() {
     routeBlock<LocationScoutRoute, Galaxy>({
         api.readGalaxy(it.slug).handleResponse(toaster::toast)
     }) { galaxy ->

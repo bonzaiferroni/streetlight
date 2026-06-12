@@ -3,7 +3,7 @@ package streetlight.web.ui
 import kampfire.model.small
 import koala.css.ModifierSet
 import koala.css.modify
-import koala.dom.RenderScope
+import koala.dom.AppScope
 import koala.dom.box
 import koala.html.ButtonPopover
 import koala.html.btn
@@ -15,7 +15,7 @@ import streetlight.web.EarthRoute
 import streetlight.web.model.DataCache
 import streetlight.web.shells.GalaxyMenuKey
 
-fun RenderScope.galaxyEarthMenu(
+fun AppScope.galaxyEarthMenu(
     currentGalaxy: Galaxy?,
     modifiers: ModifierSet? = null
 ) {

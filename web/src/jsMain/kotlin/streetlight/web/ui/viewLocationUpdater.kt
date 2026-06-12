@@ -3,7 +3,7 @@ package streetlight.web.ui
 import koala.dom.*
 import streetlight.web.pages.appFooter
 
-fun RenderScope.viewEditLocationRoute() {
+fun AppScope.viewEditLocationRoute() {
     column {
 //        routeBlock<UpdateLocationRoute, LocationEdit>(
 //            portal = portal,

@@ -9,10 +9,10 @@ import org.w3c.dom.HTMLElement
 private val popoverMap = mutableMapOf<String, HTMLElement>()
 private val menus = mutableMapOf<String, (MenuElement) -> Unit>()
 
-fun <Data> RenderScope.registerMenu(
+fun <Data> AppScope.registerMenu(
     id: Id,
     dataOf: (String) -> Data,
-    block: RenderScope.(Data) -> Unit
+    block: AppScope.(Data) -> Unit
 ) {
     menus[id.identifier] = {
         val data = dataOf(it.data)

@@ -11,7 +11,7 @@ import kotlinx.html.js.img
 import kotlinx.html.style
 import org.w3c.dom.HTMLImageElement
 
-fun AppendScope.image(
+fun TagScope.image(
     url: Url? = SiteImage.placeholderLg.url,
     modifiers: ModifierSet? = null,
     block: (IMG.() -> Unit)? = null
@@ -29,7 +29,7 @@ fun AppendScope.image(
     return element
 }
 
-fun RenderScope.image(
+fun AppScope.image(
     binding: Flow<Url?>,
     initial: Url? = SiteImage.placeholderLg.url,
     modifiers: ModifierSet? = null,

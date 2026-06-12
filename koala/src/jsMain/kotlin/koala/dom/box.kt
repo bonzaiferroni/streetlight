@@ -8,7 +8,7 @@ import kotlinx.html.DIV
 import kotlinx.html.js.div
 import kotlinx.html.id
 
-inline fun AppendScope.box(
+inline fun TagScope.box(
     modifiers: ModifierSet? = null,
     crossinline content: DIV.() -> Unit = { },
 ) = div {
@@ -16,7 +16,7 @@ inline fun AppendScope.box(
     content()
 }
 
-inline fun AppendScope.box(
+inline fun TagScope.box(
     id: Id,
     modifiers: ModifierSet? = null,
     crossinline content: DIV.() -> Unit = { },
@@ -25,7 +25,7 @@ inline fun AppendScope.box(
     content()
 }
 
-fun AppendScope.container(
+fun TagScope.container(
     modifiers: ModifierSet? = null,
     content: DIV.() -> Unit = { },
 ) = div {
@@ -33,7 +33,7 @@ fun AppendScope.container(
     content()
 }
 
-fun AppendScope.container(
+fun TagScope.container(
     id: Id,
     modifiers: ModifierSet? = null,
     content: DIV.() -> Unit = { },

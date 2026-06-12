@@ -9,17 +9,17 @@ import kotlinx.coroutines.launch
 
 class WireContext<T>(
     val state: Store<T>,
-    context: RenderScope
-): RenderScope by context
+    context: AppScope
+): AppScope by context
 
-fun <T> RenderScope.wireContextOf(
+fun <T> AppScope.wireContextOf(
     initialState: T
 ): WireContext<T> {
     val state = storeOf(initialState)
     return WireContext(state, this)
 }
 
-fun <T> RenderScope.wireState(
+fun <T> AppScope.wireState(
     initialState: T,
     block: WireContext<T>.() -> Unit
 ) {
@@ -27,7 +27,7 @@ fun <T> RenderScope.wireState(
     context.block()
 }
 
-fun <T> RenderScope.wireTo(
+fun <T> AppScope.wireTo(
     state: Store<T>,
     block: WireContext<T>.() -> Unit
 ) {
@@ -35,7 +35,7 @@ fun <T> RenderScope.wireTo(
     context.block()
 }
 
-inline fun <reified Route: AppRoute, Data> RenderScope.wireRouteTo(
+inline fun <reified Route: AppRoute, Data> AppScope.wireRouteTo(
     portal: Portal,
     initialState: Data,
     crossinline provideData: suspend (Route) -> Data?,

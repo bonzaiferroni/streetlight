@@ -8,7 +8,7 @@ import kotlinx.html.DIV
 import kotlinx.html.js.div
 import kotlinx.html.id
 
-inline fun AppendScope.row(
+inline fun TagScope.row(
     id: Id,
     modifiers: ModifierSet? = null,
     crossinline content: DIV.() -> Unit,
@@ -17,7 +17,7 @@ inline fun AppendScope.row(
     content()
 }
 
-inline fun AppendScope.row(
+inline fun TagScope.row(
     modifiers: ModifierSet? = null,
     crossinline content: DIV.() -> Unit,
 ) = div {

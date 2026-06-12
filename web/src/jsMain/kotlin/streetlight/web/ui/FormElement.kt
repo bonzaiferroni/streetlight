@@ -8,17 +8,17 @@ import koala.html.heading3
 import kotlinx.coroutines.flow.Flow
 import kotlinx.html.DIV
 
-fun RenderScope.formBody(
+fun AppScope.formBody(
     modifiers: ModifierSet? = null,
     block: DIV.() -> Unit
 ) = column(modify(modifiers, Gap8)) {
     block()
 }
 
-fun AppendScope.formSection(
+fun TagScope.formSection(
     name: String,
     modifiers: ModifierSet? = null,
-    block: AppendScope.() -> Unit
+    block: TagScope.() -> Unit
 ) = section {
     addModifiers(modifiers)
     filigree {
@@ -27,29 +27,29 @@ fun AppendScope.formSection(
     block()
 }
 
-fun AppendScope.formCard(
+fun TagScope.formCard(
     modifiers: ModifierSet? = null,
-    block: AppendScope.() -> Unit,
+    block: TagScope.() -> Unit,
 ) = card(FormMod.Card) {
     addModifiers(modifiers)
     block()
 }
 
-fun AppendScope.formCardSection(
+fun TagScope.formCardSection(
     name: String,
     modifiers: ModifierSet? = null,
-    block: AppendScope.() -> Unit
+    block: TagScope.() -> Unit
 ) = formSection(name, modifiers) {
     formCard(null, block)
 }
 
-fun AppendScope.formPart(
+fun TagScope.formPart(
     instructions: String? = null,
     examples: List<String>? = null,
     bullets: List<String>? = null,
     fieldsFlex: Modifier = Flex1,
-    info: AppendScope.() -> Unit = {},
-    fields: AppendScope.() -> Unit,
+    info: TagScope.() -> Unit = {},
+    fields: TagScope.() -> Unit,
 ) = column(FormMod.Part) {
     column(FormMod.Instructions) {
         instructions?.let {
@@ -71,7 +71,7 @@ fun AppendScope.formPart(
     }
 }
 
-fun RenderScope.formTextField(
+fun AppScope.formTextField(
     label: String,
     onValue: (String) -> Unit,
     flow: Flow<String?>,
@@ -94,7 +94,7 @@ fun RenderScope.formTextField(
     }
 }
 
-fun RenderScope.formSubmit(
+fun AppScope.formSubmit(
     label: String,
     onSubmit: () -> Unit,
     modifiers: ModifierSet? = null,

@@ -11,7 +11,7 @@ import kotlinx.html.js.option
 import kotlinx.html.js.select
 import org.w3c.dom.HTMLSelectElement
 
-fun RenderScope.dropMenu(
+fun AppScope.dropMenu(
     options: List<String>,
     flow: Flow<String>? = null,
     onChangeValue: ((String) -> Unit)? = null,
@@ -45,7 +45,7 @@ fun RenderScope.dropMenu(
     }
 }
 
-inline fun <reified E> RenderScope.dropMenu(
+inline fun <reified E> AppScope.dropMenu(
     noinline onChangeValue: ((E) -> Unit),
     crossinline provideLabel: (E) -> String,
     flow: Flow<E>? = null,

@@ -10,7 +10,6 @@ import koala.model.MarkerId
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
 import kotlinx.html.dom.append
 import org.w3c.dom.HTMLElement
 import streetlight.web.model.FeatureMarker
@@ -18,7 +17,7 @@ import streetlight.web.model.EarthMap
 import kotlin.collections.first
 import kotlin.math.min
 
-fun RenderScope.earthUnboundedOverlay(model: EarthMap, mapContext: GeoCameraController) {
+fun AppScope.earthUnboundedOverlay(model: EarthMap, mapContext: GeoCameraController) {
     val geoMap = app.get<GeoCamera>()
     val widget = mapContext.jsMap
     val element = div(modify(Earth.Unbounded, PointerEventsNone))

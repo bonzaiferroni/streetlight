@@ -18,7 +18,7 @@ internal class RenderJob(
 internal fun <T> EffectScope.createRenderJob(
     parent: HTMLElement,
     value: T,
-    block: RenderScope.(T) -> Unit
+    block: AppScope.(T) -> Unit
 ): RenderJob {
     parent.clear()
     val job = SupervisorJob()
@@ -32,7 +32,7 @@ internal fun <T> EffectScope.createRenderJob(
 
 internal fun EffectScope.createRenderJob(
     parent: HTMLElement,
-    block: RenderScope.() -> Unit
+    block: AppScope.() -> Unit
 ) = createRenderJob(parent, Unit) {
     block()
 }

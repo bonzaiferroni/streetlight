@@ -10,7 +10,7 @@ import streetlight.web.LocationAdminRoute
 import streetlight.web.pages.appFooter
 import streetlight.web.shells.cardOf
 
-fun RenderScope.viewLocationAdmin(
+fun AppScope.viewLocationAdmin(
     location: Location,
 ) {
     column {
@@ -45,7 +45,7 @@ fun RenderScope.viewLocationAdmin(
     }
 }
 
-fun RenderScope.viewLocationAdmin() {
+fun AppScope.viewLocationAdmin() {
     routeBlock<LocationAdminRoute, Location>(
         portal = portal,
         provideData = { api.readLocation(it.locationId).handleResponse(toaster::toast) }

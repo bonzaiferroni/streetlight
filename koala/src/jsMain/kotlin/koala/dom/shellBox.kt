@@ -8,7 +8,7 @@ import kotlinx.browser.document
 import kotlinx.html.DIV
 import org.w3c.dom.HTMLDivElement
 
-fun RenderScope.shellBox(
+fun AppScope.shellBox(
     id: Id,
     modifiers: ModifierSet? = null,
     block: DIV.() -> Unit
@@ -34,7 +34,7 @@ fun RenderScope.shellBox(
     }
 }
 
-fun RenderScope.shellBoxWithMap(
+fun AppScope.shellBoxWithMap(
     id: Id,
     modifiers: ModifierSet? = null,
     block: DIV.() -> Unit

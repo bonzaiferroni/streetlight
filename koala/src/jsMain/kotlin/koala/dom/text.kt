@@ -9,7 +9,7 @@ import kotlinx.html.P
 import kotlinx.html.js.p
 import org.w3c.dom.HTMLParagraphElement
 
-fun AppendScope.textBlock(
+fun TagScope.textBlock(
     text: String = "",
     mod: ModifierSet? = null,
     block: (P.() -> Unit)? = null
@@ -19,7 +19,7 @@ fun AppendScope.textBlock(
     block?.invoke(this)
 }
 
-fun <T> RenderScope.textBlock(
+fun <T> AppScope.textBlock(
     binding: Flow<T>,
     mod: ModifierSet? = null,
     provideValue: (T) -> String = { it.toString() },

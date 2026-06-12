@@ -1,6 +1,6 @@
 package koala.model
 
-import koala.dom.RenderScope
+import koala.dom.AppScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
@@ -8,7 +8,7 @@ import kotlinx.coroutines.launch
 class Flower<T>(
     replay: Int = 1,
     private val fetch: suspend () -> T?,
-    private val context: RenderScope
+    private val context: AppScope
 ) {
     private val _flow = MutableSharedFlow<T>(replay)
     val flow: Flow<T> = _flow
@@ -23,7 +23,7 @@ class Flower<T>(
     }
 }
 
-fun <T> RenderScope.flowerOf(
+fun <T> AppScope.flowerOf(
     initialRefresh: Boolean = true,
     replay: Int = 1,
     fetch: suspend () -> T?

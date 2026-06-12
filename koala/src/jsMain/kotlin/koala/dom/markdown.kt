@@ -7,7 +7,7 @@ import koala.markdown.markdownBlocksOf
 import kotlinx.html.DIV
 import kotlinx.html.js.div
 
-fun AppendScope.markdown(
+fun TagScope.markdown(
     blocks: List<MarkdownBlock>,
     modifiers: ModifierSet? = null,
     block: DIV.() -> Unit = {}
@@ -15,7 +15,7 @@ fun AppendScope.markdown(
     configureMarkdown(blocks, modifiers, block)
 }
 
-fun AppendScope.markdown(
+fun TagScope.markdown(
     text: String,
     modifiers: ModifierSet? = null,
     block: DIV.() -> Unit = {}

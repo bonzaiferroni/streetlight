@@ -17,7 +17,7 @@ import streetlight.model.data.PostOrder
 import streetlight.web.TalkRoute
 import streetlight.web.io.TalkLog
 
-fun RenderScope.viewTalkLog(model: TalkLog) {
+fun AppScope.viewTalkLog(model: TalkLog) {
     var treeRoot: HTMLElement? = null
 
     column {
@@ -63,14 +63,14 @@ fun RenderScope.viewTalkLog(model: TalkLog) {
     }
 }
 
-fun RenderScope.viewTalkRoute() {
+fun AppScope.viewTalkRoute() {
     routeBlock<TalkRoute> { route ->
         val model = TalkLog(parentScope, route.id, route.type, api)
         viewTalkLog(model)
     }
 }
 
-fun RenderScope.buildTree(model: TalkLog, treeRoot: HTMLElement, comments: List<Comment>) {
+fun AppScope.buildTree(model: TalkLog, treeRoot: HTMLElement, comments: List<Comment>) {
     val sortBy = model.stateNow.sortBy
 
     val comments = when (sortBy) {
@@ -89,7 +89,7 @@ fun RenderScope.buildTree(model: TalkLog, treeRoot: HTMLElement, comments: List<
     }
 }
 
-fun RenderScope.growTree(model: TalkLog, treeRoot: HTMLElement, comment: Comment) {
+fun AppScope.growTree(model: TalkLog, treeRoot: HTMLElement, comment: Comment) {
     val view = addCommentView(model, comment, emptyList()) ?: return
     when (val parentId = comment.parentId) {
         null -> {
@@ -119,7 +119,7 @@ fun RenderScope.growTree(model: TalkLog, treeRoot: HTMLElement, comment: Comment
     }
 }
 
-fun RenderScope.updateComment(model: TalkLog, message: CommentUpdated) {
+fun AppScope.updateComment(model: TalkLog, message: CommentUpdated) {
     val view = model.commentViews[message.commentId] ?: return
 
     with(view) {
@@ -127,7 +127,7 @@ fun RenderScope.updateComment(model: TalkLog, message: CommentUpdated) {
     }
 }
 
-fun RenderScope.commentEditor(
+fun AppScope.commentEditor(
     label: String,
     initialText: String,
     modifiers: ModifierSet? = null,
@@ -152,7 +152,7 @@ fun RenderScope.commentEditor(
     }
 }
 
-fun RenderScope.addCommentView(
+fun AppScope.addCommentView(
     model: TalkLog,
     comment: Comment,
     comments: List<Comment>
@@ -171,7 +171,7 @@ fun RenderScope.addCommentView(
     return view
 }
 
-fun AppendScope.zenButton(modifiers: ModifierSet? = null, block: DIV.() -> Unit) =
+fun TagScope.zenButton(modifiers: ModifierSet? = null, block: DIV.() -> Unit) =
     row(modify(modifiers, ZenBg, ButtonBorderRadius, ButtonPadding)) {
         block()
     }
