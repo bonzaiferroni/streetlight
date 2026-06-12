@@ -24,7 +24,7 @@ internal fun <T> EffectScope.createRenderJob(
     val job = SupervisorJob()
     val scope = CoroutineScope(parentScope.coroutineContext + job)
     val elements = parent.append {
-        val context = DOMRenderContext(this@append, app, scope, parent)
+        val context = RenderScope(this@append, app, scope, parent)
         context.block(value)
     }
     return RenderJob(job, scope, elements)

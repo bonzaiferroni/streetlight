@@ -40,7 +40,7 @@ class EffectScope(
         }
 }
 
-class DOMRenderContext(
+internal class RenderScope(
     consumer: TagScope,
     override val app: AppContainer,
     override val parentScope: CoroutineScope,
@@ -54,7 +54,7 @@ fun HTMLElement.renderRoot(
 ): List<HTMLElement> {
     clear()
     return append {
-        val context = DOMRenderContext(this@append, app, provisionScope(scope, true), this@renderRoot)
+        val context = RenderScope(this@append, app, provisionScope(scope, true), this@renderRoot)
         context.block()
     }
 }
@@ -66,7 +66,7 @@ fun HTMLElement.replaceRender(
 ): List<HTMLElement> {
     clear()
     return append {
-        val context = DOMRenderContext(this@append, app, provisionScope(parentScope, true), this@replaceRender)
+        val context = RenderScope(this@append, app, provisionScope(parentScope, true), this@replaceRender)
         context.block()
     }
 }
@@ -86,7 +86,7 @@ fun HTMLElement.appendRender(
     parentScope: CoroutineScope,
     block: AppScope.() -> Unit
 ) = append {
-    val context = DOMRenderContext(this@append, app, provisionScope(parentScope, false), this@appendRender)
+    val context = RenderScope(this@append, app, provisionScope(parentScope, false), this@appendRender)
     context.block()
 }
 
@@ -99,7 +99,7 @@ fun AppScope.prependRender(
     element: HTMLElement,
     block: AppScope.() -> Unit
 ) = element.prepend {
-    val context = DOMRenderContext(this@prepend, app, element.provisionScope(parentScope, false), element)
+    val context = RenderScope(this@prepend, app, element.provisionScope(parentScope, false), element)
     context.block()
 }
 
