@@ -1,6 +1,6 @@
 package streetlight.web.ui
 
-import koala.dom.ScopedDOM
+import koala.dom.RenderScope
 import koala.external.maplibregl
 import koala.model.MarkerStyle
 import koala.model.jsObject
@@ -12,7 +12,7 @@ import kotlin.js.json
 
 const val STOP_ZOOM = 14
 
-fun ScopedDOM.viewTransitMap(
+fun RenderScope.viewTransitMap(
     app: Streetlight,
     maplibre: maplibregl.Map
 ) {
@@ -23,7 +23,7 @@ fun ScopedDOM.viewTransitMap(
     val vehicleElements = mutableMapOf<String, MarkerStyle>()
     var markersVisible = false
 
-    renderScope.launch {
+    parentScope.launch {
         launch {
 //            streetMap.stateFlow.mapDistinct { it.zoom }.collect { zoom ->
 //                if (!markersVisible && zoom >= STOP_ZOOM) {

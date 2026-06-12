@@ -15,7 +15,7 @@ import streetlight.model.data.EventEdit
 import streetlight.model.data.ExtraLink
 
 // event editor content including introduction and form
-fun ScopedDOM.viewEventEditorProto(
+fun RenderScope.viewEventEditorProto(
     event: EventEdit,
     callback: ((Event?) -> Unit)?
 ) {
@@ -23,7 +23,7 @@ fun ScopedDOM.viewEventEditorProto(
     val editStore = storeOf(event)
 
     // give feedback on edit validity
-    renderScope.launch {
+    parentScope.launch {
 //        editStore.flow.collect { edit ->
 //            when (val text = edit.invalidMessage) {
 //                null -> msg.set("Looks good.")
@@ -70,7 +70,7 @@ fun ScopedDOM.viewEventEditorProto(
                     else -> "edit"
                 }
                 button(text, modify(Accent), onClick = {
-                    renderScope.launch {
+                    parentScope.launch {
 //                        api.createOrEditEvent(editStore.now).handleResponse(msg::set) {
 //                            if (callback != null) {
 //                                portal.goBack()
@@ -92,7 +92,7 @@ fun ScopedDOM.viewEventEditorProto(
 }
 
 // event editor route, invoked by appNavigation
-fun ScopedDOM.viewEventEditorRoute() {
+fun RenderScope.viewEventEditorRoute() {
     var callback: ((Event?) -> Unit)? = null
 
 //    routeBlock<EventUpdateRoute, EventEdit>({ route ->

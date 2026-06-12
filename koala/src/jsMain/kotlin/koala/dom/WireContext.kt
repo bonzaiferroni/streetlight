@@ -9,17 +9,17 @@ import kotlinx.coroutines.launch
 
 class WireContext<T>(
     val state: Store<T>,
-    context: ScopedDOM
-): ScopedDOM by context
+    context: RenderScope
+): RenderScope by context
 
-fun <T> ScopedDOM.wireContextOf(
+fun <T> RenderScope.wireContextOf(
     initialState: T
 ): WireContext<T> {
     val state = storeOf(initialState)
     return WireContext(state, this)
 }
 
-fun <T> ScopedDOM.wireState(
+fun <T> RenderScope.wireState(
     initialState: T,
     block: WireContext<T>.() -> Unit
 ) {
@@ -27,7 +27,7 @@ fun <T> ScopedDOM.wireState(
     context.block()
 }
 
-fun <T> ScopedDOM.wireTo(
+fun <T> RenderScope.wireTo(
     state: Store<T>,
     block: WireContext<T>.() -> Unit
 ) {
@@ -35,7 +35,7 @@ fun <T> ScopedDOM.wireTo(
     context.block()
 }
 
-inline fun <reified Route: AppRoute, Data> ScopedDOM.wireRouteTo(
+inline fun <reified Route: AppRoute, Data> RenderScope.wireRouteTo(
     portal: Portal,
     initialState: Data,
     crossinline provideData: suspend (Route) -> Data?,
@@ -45,7 +45,7 @@ inline fun <reified Route: AppRoute, Data> ScopedDOM.wireRouteTo(
 
     context.block()
 
-    renderScope.launch {
+    parentScope.launch {
         portal.routeFlowOf<Route>().map(provideData).collect {
             context.state.set { it }
         }

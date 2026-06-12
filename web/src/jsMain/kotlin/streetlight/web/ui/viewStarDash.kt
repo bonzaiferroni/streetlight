@@ -13,7 +13,7 @@ import streetlight.web.TalentProfileRoute
 import streetlight.web.model.DataCache
 import streetlight.web.model.UserGate
 
-fun ScopedDOM.viewStarDash(star: Star) {
+fun RenderScope.viewStarDash(star: Star) {
     // val model = UserHub(renderScope, app.client.api)
     val userCache = app.get<DataCache>()
     val gate = app.get<UserGate>()

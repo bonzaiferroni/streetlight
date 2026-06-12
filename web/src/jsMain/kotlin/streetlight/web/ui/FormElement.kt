@@ -8,17 +8,17 @@ import koala.html.heading3
 import kotlinx.coroutines.flow.Flow
 import kotlinx.html.DIV
 
-fun ScopedDOM.formBody(
+fun RenderScope.formBody(
     modifiers: ModifierSet? = null,
     block: DIV.() -> Unit
 ) = column(modify(modifiers, Gap8)) {
     block()
 }
 
-fun DOM.formSection(
+fun AppendScope.formSection(
     name: String,
     modifiers: ModifierSet? = null,
-    block: DOM.() -> Unit
+    block: AppendScope.() -> Unit
 ) = section {
     addModifiers(modifiers)
     filigree {
@@ -27,29 +27,29 @@ fun DOM.formSection(
     block()
 }
 
-fun DOM.formCard(
+fun AppendScope.formCard(
     modifiers: ModifierSet? = null,
-    block: DOM.() -> Unit,
+    block: AppendScope.() -> Unit,
 ) = card(FormMod.Card) {
     addModifiers(modifiers)
     block()
 }
 
-fun DOM.formCardSection(
+fun AppendScope.formCardSection(
     name: String,
     modifiers: ModifierSet? = null,
-    block: DOM.() -> Unit
+    block: AppendScope.() -> Unit
 ) = formSection(name, modifiers) {
     formCard(null, block)
 }
 
-fun DOM.formPart(
+fun AppendScope.formPart(
     instructions: String? = null,
     examples: List<String>? = null,
     bullets: List<String>? = null,
     fieldsFlex: Modifier = Flex1,
-    info: DOM.() -> Unit = {},
-    fields: DOM.() -> Unit,
+    info: AppendScope.() -> Unit = {},
+    fields: AppendScope.() -> Unit,
 ) = column(FormMod.Part) {
     column(FormMod.Instructions) {
         instructions?.let {
@@ -71,7 +71,7 @@ fun DOM.formPart(
     }
 }
 
-fun ScopedDOM.formTextField(
+fun RenderScope.formTextField(
     label: String,
     onValue: (String) -> Unit,
     flow: Flow<String?>,
@@ -94,7 +94,7 @@ fun ScopedDOM.formTextField(
     }
 }
 
-fun ScopedDOM.formSubmit(
+fun RenderScope.formSubmit(
     label: String,
     onSubmit: () -> Unit,
     modifiers: ModifierSet? = null,
@@ -114,7 +114,7 @@ fun ScopedDOM.formSubmit(
             }
             val element = button(label, onClick = onSubmit)
             messages?.let {
-                element.flowIsWorking(it.isWorkingFlow, renderScope)
+                element.flowIsWorking(it.isWorkingFlow, parentScope)
             }
         }
     }

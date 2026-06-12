@@ -9,7 +9,7 @@ import kotlinx.html.P
 import kotlinx.html.js.p
 import org.w3c.dom.HTMLParagraphElement
 
-fun DOM.textBlock(
+fun AppendScope.textBlock(
     text: String = "",
     mod: ModifierSet? = null,
     block: (P.() -> Unit)? = null
@@ -19,14 +19,14 @@ fun DOM.textBlock(
     block?.invoke(this)
 }
 
-fun <T> ScopedDOM.textBlock(
+fun <T> RenderScope.textBlock(
     binding: Flow<T>,
     mod: ModifierSet? = null,
     provideValue: (T) -> String = { it.toString() },
     block: (P.() -> Unit)? = null
 ): HTMLParagraphElement {
     val element = this@textBlock.textBlock(mod = mod, block = block)
-    renderScope.launch {
+    parentScope.launch {
         binding.distinctUntilChanged().collect {
             element.textContent = provideValue(it)
         }

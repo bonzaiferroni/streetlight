@@ -17,7 +17,7 @@ import streetlight.model.data.PostOrder
 import streetlight.web.TalkRoute
 import streetlight.web.io.TalkLog
 
-fun ScopedDOM.viewTalkLog(model: TalkLog) {
+fun RenderScope.viewTalkLog(model: TalkLog) {
     var treeRoot: HTMLElement? = null
 
     column {
@@ -36,7 +36,7 @@ fun ScopedDOM.viewTalkLog(model: TalkLog) {
         treeRoot = column { }
     }
 
-    renderScope.launch {
+    parentScope.launch {
 
         launch {
             val comments = model.readHistory().handleResponse(toaster::toast) ?: return@launch
@@ -63,14 +63,14 @@ fun ScopedDOM.viewTalkLog(model: TalkLog) {
     }
 }
 
-fun ScopedDOM.viewTalkRoute() {
+fun RenderScope.viewTalkRoute() {
     routeBlock<TalkRoute> { route ->
-        val model = TalkLog(renderScope, route.id, route.type, api)
+        val model = TalkLog(parentScope, route.id, route.type, api)
         viewTalkLog(model)
     }
 }
 
-fun ScopedDOM.buildTree(model: TalkLog, treeRoot: HTMLElement, comments: List<Comment>) {
+fun RenderScope.buildTree(model: TalkLog, treeRoot: HTMLElement, comments: List<Comment>) {
     val sortBy = model.stateNow.sortBy
 
     val comments = when (sortBy) {
@@ -89,7 +89,7 @@ fun ScopedDOM.buildTree(model: TalkLog, treeRoot: HTMLElement, comments: List<Co
     }
 }
 
-fun ScopedDOM.growTree(model: TalkLog, treeRoot: HTMLElement, comment: Comment) {
+fun RenderScope.growTree(model: TalkLog, treeRoot: HTMLElement, comment: Comment) {
     val view = addCommentView(model, comment, emptyList()) ?: return
     when (val parentId = comment.parentId) {
         null -> {
@@ -119,7 +119,7 @@ fun ScopedDOM.growTree(model: TalkLog, treeRoot: HTMLElement, comment: Comment) 
     }
 }
 
-fun ScopedDOM.updateComment(model: TalkLog, message: CommentUpdated) {
+fun RenderScope.updateComment(model: TalkLog, message: CommentUpdated) {
     val view = model.commentViews[message.commentId] ?: return
 
     with(view) {
@@ -127,7 +127,7 @@ fun ScopedDOM.updateComment(model: TalkLog, message: CommentUpdated) {
     }
 }
 
-fun ScopedDOM.commentEditor(
+fun RenderScope.commentEditor(
     label: String,
     initialText: String,
     modifiers: ModifierSet? = null,
@@ -141,7 +141,7 @@ fun ScopedDOM.commentEditor(
             spacer(modify(Flex1))
             button("send", onClick = {
                 if (text.now.isEmpty()) return@button
-                renderScope.launch {
+                parentScope.launch {
                     val resultText = send(text.now)
                     if (resultText != null) {
                         text.set(resultText)
@@ -152,7 +152,7 @@ fun ScopedDOM.commentEditor(
     }
 }
 
-fun ScopedDOM.addCommentView(
+fun RenderScope.addCommentView(
     model: TalkLog,
     comment: Comment,
     comments: List<Comment>
@@ -171,7 +171,7 @@ fun ScopedDOM.addCommentView(
     return view
 }
 
-fun DOM.zenButton(modifiers: ModifierSet? = null, block: DIV.() -> Unit) =
+fun AppendScope.zenButton(modifiers: ModifierSet? = null, block: DIV.() -> Unit) =
     row(modify(modifiers, ZenBg, ButtonBorderRadius, ButtonPadding)) {
         block()
     }

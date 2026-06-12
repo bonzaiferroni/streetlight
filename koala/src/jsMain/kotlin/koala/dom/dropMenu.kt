@@ -11,7 +11,7 @@ import kotlinx.html.js.option
 import kotlinx.html.js.select
 import org.w3c.dom.HTMLSelectElement
 
-fun ScopedDOM.dropMenu(
+fun RenderScope.dropMenu(
     options: List<String>,
     flow: Flow<String>? = null,
     onChangeValue: ((String) -> Unit)? = null,
@@ -37,7 +37,7 @@ fun ScopedDOM.dropMenu(
     }
 
     flow?.let {
-        renderScope.launch {
+        parentScope.launch {
             flow.distinctUntilChanged().collect {
                 element.value = it
             }
@@ -45,7 +45,7 @@ fun ScopedDOM.dropMenu(
     }
 }
 
-inline fun <reified E> ScopedDOM.dropMenu(
+inline fun <reified E> RenderScope.dropMenu(
     noinline onChangeValue: ((E) -> Unit),
     crossinline provideLabel: (E) -> String,
     flow: Flow<E>? = null,

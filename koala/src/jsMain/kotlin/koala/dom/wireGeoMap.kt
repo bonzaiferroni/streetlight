@@ -14,7 +14,7 @@ import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.coroutines.CoroutineScope
 
-fun ScopedDOM.wireGeoMap(
+fun RenderScope.wireGeoMap(
     ancestor: HTMLElement,
 ): GeoCameraController {
     val mount = ancestor.takeIf { it.isModified(GeoMapKey.MapMount) }
@@ -42,7 +42,7 @@ fun ScopedDOM.wireGeoMap(
 
 // private var cachedContext: GeoCameraController? = null
 
-fun ScopedDOM.wireMapContext(
+fun RenderScope.wireMapContext(
     mount: HTMLElement
 ): GeoCameraController {
     app.getOrNull<GeoCameraController>()?.let {

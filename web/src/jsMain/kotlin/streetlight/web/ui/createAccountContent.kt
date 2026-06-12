@@ -9,8 +9,8 @@ import koala.css.QueryRowReverse
 import koala.css.modify
 import koala.dom.*
 
-fun ScopedDOM.createAccountContent() {
-    val creator = app.getUserCreator(renderScope)
+fun RenderScope.createAccountContent() {
+    val creator = app.getUserCreator(parentScope)
 
     column(modify(QueryRowReverse, FlexItems1, AlignItemsStretch)) {
         card {

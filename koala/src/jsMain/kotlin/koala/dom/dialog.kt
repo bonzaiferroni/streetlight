@@ -15,16 +15,16 @@ import kotlinx.coroutines.launch
 import kotlinx.html.js.dialog
 import org.w3c.dom.HTMLDialogElement
 
-fun ScopedDOM.dialogBox(
+fun RenderScope.dialogBox(
     title: String?,
     stateFlow: Flow<Boolean>? = null,
     modifiers: ModifierSet? = null,
     onClose: (() -> Unit)? = null,
-    block: ScopedDOM.(() -> Unit) -> Unit
+    block: RenderScope.(() -> Unit) -> Unit
 ): HTMLDialogElement {
 
     fun close(dialog: HTMLDialogElement) {
-        renderScope.launch {
+        parentScope.launch {
             dialog.unmodify(Reveal)
             delay(200)
             dialog.close()
@@ -70,7 +70,7 @@ fun ScopedDOM.dialogBox(
         }
     })
 
-    renderScope.launch {
+    parentScope.launch {
         stateFlow?.collect {
             if (it) dialog.open() else close(dialog)
         }

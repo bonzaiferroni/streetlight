@@ -15,14 +15,14 @@ internal class RenderJob(
     val firstElement get() = elements.first()
 }
 
-internal fun <T> ScopedDOM.createRenderJob(
+internal fun <T> EffectScope.createRenderJob(
     parent: HTMLElement,
     value: T,
-    block: ScopedDOM.(T) -> Unit
+    block: RenderScope.(T) -> Unit
 ): RenderJob {
     parent.clear()
     val job = SupervisorJob()
-    val scope = CoroutineScope(renderScope.coroutineContext + job)
+    val scope = CoroutineScope(parentScope.coroutineContext + job)
     val elements = parent.append {
         val context = DOMRenderContext(this@append, app, scope, parent)
         context.block(value)
@@ -30,9 +30,9 @@ internal fun <T> ScopedDOM.createRenderJob(
     return RenderJob(job, scope, elements)
 }
 
-internal fun ScopedDOM.createRenderJob(
+internal fun EffectScope.createRenderJob(
     parent: HTMLElement,
-    block: ScopedDOM.() -> Unit
+    block: RenderScope.() -> Unit
 ) = createRenderJob(parent, Unit) {
     block()
 }

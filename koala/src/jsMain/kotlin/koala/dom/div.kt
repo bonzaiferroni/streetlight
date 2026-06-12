@@ -7,7 +7,7 @@ import koala.html.setId
 import kotlinx.html.DIV
 import kotlinx.html.js.div
 
-fun DOM.div(
+fun AppendScope.div(
     modifiers: ModifierSet?,
     block: DIV.() -> Unit = { }
 ) = div {
@@ -15,7 +15,7 @@ fun DOM.div(
     block()
 }
 
-fun DOM.div(
+fun AppendScope.div(
     id: Id,
     modifiers: ModifierSet?,
     block: DIV.() -> Unit = { }

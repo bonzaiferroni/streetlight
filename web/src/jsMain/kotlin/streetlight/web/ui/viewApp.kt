@@ -24,7 +24,7 @@ fun viewApp() {
         modules(appModule)
     }.koin
 
-    val app = AppContext(koin)
+    val app = AppContainer(koin)
     val lightService = koin.get<LightService>()
 
     window.addGlobalFunctions(globalFunExtended)
@@ -60,7 +60,7 @@ fun viewApp() {
                 wireRightPanel()
                 wireToaster()
 
-                registerMenu(PostKey.PostMenuId, { it.toSlug() }, ScopedDOM::postMenu)
+                registerMenu(PostKey.PostMenuId, { it.toSlug() }, RenderScope::postMenu)
             }
 
             try {

@@ -17,7 +17,7 @@ import streetlight.model.data.toEdit
 import streetlight.web.model.UserGate
 import streetlight.web.pages.appFooter
 
-fun ScopedDOM.viewStarEditor() {
+fun RenderScope.viewStarEditor() {
     val gate = app.get<UserGate>()
 
     starBlock(true) { star ->
@@ -35,7 +35,7 @@ fun ScopedDOM.viewStarEditor() {
         fun update() {
             var edit = state.now // td: check validity?
             val blobUrl = edit.imageRef?.takeIf { it.isBlob }
-            renderScope.launch {
+            parentScope.launch {
                 edit = if (blobUrl != null) {
                     val refUrl = api.uploadImage(blobUrl).getDataOrNull() ?: error("error creating avatar")
                     edit.copy(imageRef = refUrl)

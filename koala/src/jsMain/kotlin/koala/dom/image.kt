@@ -11,7 +11,7 @@ import kotlinx.html.js.img
 import kotlinx.html.style
 import org.w3c.dom.HTMLImageElement
 
-fun DOM.image(
+fun AppendScope.image(
     url: Url? = SiteImage.placeholderLg.url,
     modifiers: ModifierSet? = null,
     block: (IMG.() -> Unit)? = null
@@ -29,7 +29,7 @@ fun DOM.image(
     return element
 }
 
-fun ScopedDOM.image(
+fun RenderScope.image(
     binding: Flow<Url?>,
     initial: Url? = SiteImage.placeholderLg.url,
     modifiers: ModifierSet? = null,
@@ -46,7 +46,7 @@ fun ScopedDOM.image(
         element.style.removeProperty("display")
     }
 
-    renderScope.launch {
+    parentScope.launch {
         binding.collect { url ->
             val url = url?.value ?: ""
             if (url.isEmpty()) {

@@ -9,8 +9,8 @@ import streetlight.model.data.GalaxyEdit
 import streetlight.model.data.toEdit
 import streetlight.web.GalaxyConfigRoute
 
-fun ScopedDOM.viewGalaxyConfig(edit: GalaxyEdit) {
-    val model = app.getGalaxyEditor(edit, renderScope)
+fun RenderScope.viewGalaxyConfig(edit: GalaxyEdit) {
+    val model = app.getGalaxyEditor(edit, parentScope)
 
     column {
         introSection("Galaxy Settings", lottie = LottieFile.ServerSync) {
@@ -46,7 +46,7 @@ fun ScopedDOM.viewGalaxyConfig(edit: GalaxyEdit) {
     }
 }
 
-fun ScopedDOM.viewGalaxyConfigRoute() {
+fun RenderScope.viewGalaxyConfigRoute() {
     routeBlock<GalaxyConfigRoute, GalaxyEdit>(portal, { route ->
         api.readGalaxy(route.slug).handleResponse(toaster::toast)?.toEdit()
     }) {

@@ -18,7 +18,7 @@ import streetlight.web.model.EarthMap
 import kotlin.collections.first
 import kotlin.math.min
 
-fun ScopedDOM.earthUnboundedOverlay(model: EarthMap, mapContext: GeoCameraController) {
+fun RenderScope.earthUnboundedOverlay(model: EarthMap, mapContext: GeoCameraController) {
     val geoMap = app.get<GeoCamera>()
     val widget = mapContext.jsMap
     val element = div(modify(Earth.Unbounded, PointerEventsNone))
@@ -66,7 +66,7 @@ fun ScopedDOM.earthUnboundedOverlay(model: EarthMap, mapContext: GeoCameraContro
         hint.element.style.transform = "translate(-50%, -50%)" // rotate(${angle}rad)
     }
 
-    launchRender {
+    launchEffect {
         launch {
             combine(
                 model.unboundedMarkersFlow,

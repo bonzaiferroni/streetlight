@@ -18,13 +18,13 @@ import org.w3c.dom.HTMLElement
 import kotlin.collections.plus
 
 // dynamically render a list of items using a lambda of the individual item
-fun <Item> ScopedDOM.itemsBlock(
+fun <Item> RenderScope.itemsBlock(
     flow: Flow<List<Item>>,
     mod: ModifierSet? = null,
     gapRems: Float? = 0.5f,
     config: (DIV.() -> Unit)? = null,
     containerConfig: (DIV.() -> Unit)? = null,
-    block: DOM.(Item) -> Unit
+    block: AppendScope.(Item) -> Unit
 ): HTMLDivElement {
     // modification with Magic animates the element when items change
     // base: item opacity fade on entrance/exit, item position is animated, base element height is animated
@@ -55,7 +55,7 @@ fun <Item> ScopedDOM.itemsBlock(
         return container
     }
 
-    launchRender {
+    launchEffect {
         flow.collect { items ->
             if (items.isNotEmpty()) parent.unmodify(DisplayNone)
 
@@ -63,7 +63,7 @@ fun <Item> ScopedDOM.itemsBlock(
                 if (!items.contains(item)) {
 
                     if (magic) {
-                        renderScope.launch {
+                        parentScope.launch {
                             element.unmodify(Reveal)
                             delay(200)
                             element.remove()
@@ -79,7 +79,7 @@ fun <Item> ScopedDOM.itemsBlock(
                 val element = displayedItems?.get(item) ?: createItem(item)
 
                 if (magic && !isCurrentlyDisplayed) {
-                    renderScope.launch {
+                    parentScope.launch {
                         delay(200)
                         element.modify(Reveal)
                     }
@@ -122,13 +122,13 @@ fun <Item> ScopedDOM.itemsBlock(
 }
 
 // for when you really need to know the index of the item within its context
-fun <Item> ScopedDOM.indexedItemsBlock(
+fun <Item> RenderScope.indexedItemsBlock(
     flow: Flow<List<Item>>,
     modifiers: ModifierSet? = null,
     gapRems: Float? = 0.5f,
     config: (DIV.() -> Unit)? = null,
     containerConfig: (DIV.() -> Unit)? = null,
-    block: ScopedDOM.(IndexedItem<Item>) -> Unit
+    block: RenderScope.(IndexedItem<Item>) -> Unit
 ): HTMLDivElement {
     val flow = flow.mapDistinct { it.mapIndexed { index, item -> IndexedItem(index, item) } }
     return itemsBlock(

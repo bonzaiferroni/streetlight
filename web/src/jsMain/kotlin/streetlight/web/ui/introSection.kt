@@ -7,7 +7,7 @@ import koala.html.filigree
 import koala.html.heading1
 import kotlinx.html.DIV
 
-fun ScopedDOM.introSection(
+fun RenderScope.introSection(
     name: String,
     modifiers: ModifierSet? = null,
     lottie: Lottie? = null,

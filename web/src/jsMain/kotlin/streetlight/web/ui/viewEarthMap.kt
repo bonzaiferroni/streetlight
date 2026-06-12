@@ -1,7 +1,6 @@
 package streetlight.web.ui
 
 import kampfire.model.Url
-import kampfire.model.medium
 import kampfire.model.thumb
 import koala.SvgFile
 import koala.css.*
@@ -26,7 +25,6 @@ import streetlight.web.GalaxyRoute
 import streetlight.web.HomeRoute
 import streetlight.web.layouts.ColorScheme
 import streetlight.web.layouts.cellBlock
-import streetlight.web.layouts.eventCells
 import streetlight.web.model.EarthMap
 import streetlight.web.model.EventMarker
 import streetlight.web.model.GalaxyMarker
@@ -34,7 +32,7 @@ import streetlight.web.model.LocationMarker
 import streetlight.web.model.MarkerType
 import streetlight.web.pages.AppBodyKey
 
-fun ScopedDOM.viewEarthMap(model: EarthMap) {
+fun RenderScope.viewEarthMap(model: EarthMap) {
     box(Earth.Id, modify(Size100P)) {
         val cameraController = geoMapMount(mod = modify(Earth.Map))
         column(modify(Gap0, PointerEventsNone)) {
@@ -44,22 +42,22 @@ fun ScopedDOM.viewEarthMap(model: EarthMap) {
                 earthWindow(model)
                 // earthList(model)
                 earthFocus(model)
-            }.flowModifier(model.isFocusedFlow, Earth.IsFocused, renderScope)
+            }.flowModifier(model.isFocusedFlow, Earth.IsFocused, parentScope)
         }
-    }.flowModifier(model.isMovingFlow, Earth.IsMoving, renderScope)
+    }.flowModifier(model.isMovingFlow, Earth.IsMoving, parentScope)
 }
 
-fun ScopedDOM.viewEarthMapRoute() {
+fun RenderScope.viewEarthMapRoute() {
     var isVisible = false
     val element = document.getElementById(AppBodyKey.FullScreenId)
 
-    renderScope.launch {
+    parentScope.launch {
         portal.routeFlow.collect { route ->
             when (route) {
                 is EarthRoute -> {
                     if (!isVisible) {
                         replaceRender(element) {
-                            val model = app.getEarthMap(renderScope)
+                            val model = app.getEarthMap(parentScope)
                             viewEarthMap(model)
                         }
                         element.modify(Reveal)
@@ -79,7 +77,7 @@ fun ScopedDOM.viewEarthMapRoute() {
     }
 }
 
-fun ScopedDOM.earthHeader(model: EarthMap) {
+fun RenderScope.earthHeader(model: EarthMap) {
     val iconMod = modify(Width5, Aspect1)
     row(modify(Earth.Header, AlignItemsCenter, PaperGradientBg, Padding1, PointerEventsAuto)) {
         flowBlock(model.galaxyFlow, modify(Flex1)) { galaxy ->
@@ -100,7 +98,7 @@ fun ScopedDOM.earthHeader(model: EarthMap) {
     }
 }
 
-fun ScopedDOM.earthWindow(model: EarthMap) {
+fun RenderScope.earthWindow(model: EarthMap) {
     column(modify(Earth.Window, Earth.MoveDimmer, JustifyContentSpaceBetween)) {
         row(modify(JustifyContentEnd)) {
             button("Show All", modify(Zen, PointerEventsAuto)).onClick(model::showAll)
@@ -137,7 +135,7 @@ fun ScopedDOM.earthWindow(model: EarthMap) {
     }
 }
 
-fun ScopedDOM.earthList(model: EarthMap) {
+fun RenderScope.earthList(model: EarthMap) {
     val reversedItems = model.boundedMarkersFlow.map { it.reversed() } // reverse shows new items on top
     box(modify(Earth.List, Earth.MoveDimmer)) {
         itemsBlock(
@@ -171,7 +169,7 @@ fun ScopedDOM.earthList(model: EarthMap) {
     }
 }
 
-fun DOM.markerItem(
+fun AppendScope.markerItem(
     thumb: Url?,
     label: String,
     sublabel: String?,
@@ -188,7 +186,7 @@ fun DOM.markerItem(
     }.onClick(onClick)
 }
 
-fun ScopedDOM.earthFocus(model: EarthMap) {
+fun RenderScope.earthFocus(model: EarthMap) {
     flowBlock(model.focusFlow, modify(Earth.Focus, Magic, SlideLeft, BorderRadius2, OverflowYAuto)) { focus ->
         when (focus) {
 
@@ -211,7 +209,7 @@ fun ScopedDOM.earthFocus(model: EarthMap) {
     }
 }
 
-fun ScopedDOM.focusPanel(
+fun RenderScope.focusPanel(
     label: String,
     sublabel: String?,
     imageUrl: Url?,

@@ -18,7 +18,7 @@ import kotlinx.html.js.div
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.events.KeyboardEvent
 
-fun ScopedDOM.textField(
+fun RenderScope.textField(
     label: String? = null,
     modifiers: ModifierSet? = null,
     onValue: ((String) -> Unit)? = null,
@@ -49,7 +49,7 @@ fun ScopedDOM.textField(
     return parent
 }
 
-fun ScopedDOM.textFieldInput(
+fun RenderScope.textFieldInput(
     placeholder: String? = null,
     modifiers: ModifierSet? = null,
     onValue: ((String) -> Unit)? = null,
@@ -98,7 +98,7 @@ fun ScopedDOM.textFieldInput(
     }
 
     flow?.let {
-        renderScope.launch {
+        parentScope.launch {
             flow.collect { value ->
                 val value = value ?: ""
                 if (value != currentValue) {

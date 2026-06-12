@@ -8,13 +8,13 @@ import kotlinx.html.DIV
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 
-fun <Item> ScopedDOM.selectionBlock(
+fun <Item> RenderScope.selectionBlock(
     flow: Flow<List<Item>>,
     onSelect: (Item?) -> Unit,
     selectFlow: Flow<Item?>? = null,
     modifiers: ModifierSet? = null,
     config: (DIV.() -> Unit)? = null,
-    block: ScopedDOM.(Item) -> HTMLElement
+    block: RenderScope.(Item) -> HTMLElement
 ): HTMLDivElement {
     var selectedItem: Item? = null
     var selectedElement: HTMLElement? = null
@@ -55,7 +55,7 @@ fun <Item> ScopedDOM.selectionBlock(
         }
     }
 
-    renderScope.launch {
+    parentScope.launch {
         selectFlow?.collect { item ->
             if (item == selectedItem) return@collect
             selectElement(item)

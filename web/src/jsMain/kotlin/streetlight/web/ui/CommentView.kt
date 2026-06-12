@@ -87,7 +87,7 @@ class CommentView(
         replies.add(reply)
     }
 
-    fun ScopedDOM.replyAction() {
+    fun RenderScope.replyAction() {
         if (stagedReplies.isNotEmpty()) {
             showStagedReplies()
         } else {
@@ -95,7 +95,7 @@ class CommentView(
         }
     }
 
-    fun ScopedDOM.startReply() {
+    fun RenderScope.startReply() {
         isReplying = !isReplying
         if (isReplying) {
             rootBlock.modify(CommentClass.HasNestedContent)
@@ -121,7 +121,7 @@ class CommentView(
         }
     }
 
-    fun ScopedDOM.toggleEdit() {
+    fun RenderScope.toggleEdit() {
         isEditing = !isEditing
         if (isEditing) {
             editBlock.unmodify(DisplayNone)
@@ -146,7 +146,7 @@ class CommentView(
         }
     }
 
-    fun ScopedDOM.stageReply(comment: CommentView, isUserReply: Boolean) {
+    fun RenderScope.stageReply(comment: CommentView, isUserReply: Boolean) {
         if (isUserReply) {
             renderStagedReplies(listOf(comment))
         } else {
@@ -155,7 +155,7 @@ class CommentView(
         }
     }
 
-    fun ScopedDOM.showStagedReplies() {
+    fun RenderScope.showStagedReplies() {
         val replies = stagedReplies.toList()
         stagedReplies.clear()
         renderStagedReplies(replies)
@@ -163,7 +163,7 @@ class CommentView(
         rootBlock.modify(CommentClass.HasNestedContent)
     }
 
-    private fun ScopedDOM.renderStagedReplies(replies: List<CommentView>) {
+    private fun RenderScope.renderStagedReplies(replies: List<CommentView>) {
         prependRender(repliesBlock) {
             replies.forEach { reply ->
                 with (reply) {
@@ -173,7 +173,7 @@ class CommentView(
         }
     }
 
-    fun ScopedDOM.stageUpdate(text: String) {
+    fun RenderScope.stageUpdate(text: String) {
         if (isUserComment) {
             updateTextContent(text)
         } else {
@@ -182,13 +182,13 @@ class CommentView(
         }
     }
 
-    fun ScopedDOM.showStagedUpdate() {
+    fun RenderScope.showStagedUpdate() {
         val text = stagedUpdate ?: error("staged update not found")
         showUpdateButton.modify(DisplayNone)
         updateTextContent(text)
     }
 
-    private fun ScopedDOM.updateTextContent(text: String) {
+    private fun RenderScope.updateTextContent(text: String) {
         comment = comment.copy(text = text)
 
         replaceRender(contentBlock) {
@@ -196,7 +196,7 @@ class CommentView(
         }
     }
 
-    fun ScopedDOM.render() {
+    fun RenderScope.render() {
         if (isRendered) return
         isRendered = true
 

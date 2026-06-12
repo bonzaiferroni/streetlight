@@ -5,17 +5,17 @@ import koala.dom.*
 import streetlight.model.data.LocationProperty
 import streetlight.web.model.LocationEditor
 
-fun ScopedDOM.locationEditFormBody(model: LocationEditor) = formBody {
+fun RenderScope.locationEditFormBody(model: LocationEditor) = formBody {
     locationWebsiteForm(model)
     locationDetailsForm(model)
     locationImageForm(model)
     locationLinksForm(model)
 }
 
-fun ScopedDOM.locationDetailsForm(model: LocationEditor) = formCardSection("Location Details") {
+fun RenderScope.locationDetailsForm(model: LocationEditor) = formCardSection("Location Details") {
     formPart("What is the name of the place?") {
         formTextField("title", model::setName, model.nameFlow, maxLength = 50)
-            .flowValid(LocationProperty.Name, model.validityFlow, renderScope)
+            .flowValid(LocationProperty.Name, model.validityFlow, parentScope)
     }
     formPart("Where is it?") {
         row {
@@ -33,20 +33,20 @@ fun ScopedDOM.locationDetailsForm(model: LocationEditor) = formCardSection("Loca
     }
 }
 
-fun ScopedDOM.locationImageForm(model: LocationEditor) =
+fun RenderScope.locationImageForm(model: LocationEditor) =
     imageFormSection(
         instructions = "This image will appear at the top of the location page.",
         onValue = model::setImageUrl,
         imageFlow = model.imageUrlFlow
     )
 
-fun ScopedDOM.locationLinksForm(model: LocationEditor) = formCardSection("Links") {
+fun RenderScope.locationLinksForm(model: LocationEditor) = formCardSection("Links") {
     column {
         textField("calendar", modify(), model::setEventsLink, model.linksFlow)
     }
 }
 
-fun ScopedDOM.locationWebsiteForm(model: LocationEditor) = formCardSection("Website") {
+fun RenderScope.locationWebsiteForm(model: LocationEditor) = formCardSection("Website") {
     formPart(
         instructions = "Does this location have a website? We can read it to find certain details.",
         bullets = listOf("Image", "Description", "Links")
@@ -55,7 +55,7 @@ fun ScopedDOM.locationWebsiteForm(model: LocationEditor) = formCardSection("Webs
         row(modify(JustifyContentEnd)) {
             messageBox(model.websiteMessage, modify(Magic))
             button("🤖 read website", onClick = model::readWebsite)
-                .flowIsWorking(model.websiteMessage.isWorkingFlow, renderScope)
+                .flowIsWorking(model.websiteMessage.isWorkingFlow, parentScope)
         }
     }
 }

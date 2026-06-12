@@ -5,10 +5,10 @@ import koala.dom.*
 import streetlight.web.SongProfileRoute
 import streetlight.web.model.SongProfile
 
-fun ScopedDOM.viewSongProfile() {
+fun RenderScope.viewSongProfile() {
 
     flowBlock(portal.routeFlowOf<SongProfileRoute>()) { route ->
-        val model = SongProfile(route.songId, renderScope, api)
+        val model = SongProfile(route.songId, parentScope, api)
 
         column {
             row {

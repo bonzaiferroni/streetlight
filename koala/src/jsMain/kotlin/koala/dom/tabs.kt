@@ -6,13 +6,11 @@ import koala.html.Id
 import koala.html.TabClass
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import kotlinx.html.dom.append
 import kotlinx.html.js.p
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
-import org.w3c.dom.events.Event
 
-fun <T : DOM> T.tabs(
+fun <T : AppendScope> T.tabs(
     id: Id? = null,
     modifiers: ModifierSet? = null,
     onChangeTab: ((String) -> Unit)? = null,
@@ -43,9 +41,9 @@ fun <T : DOM> T.tabs(
         }
     }
 
-    if (this is ScopedDOM) {
+    if (this is RenderScope) {
         tabFlow?.let { flow ->
-            renderScope.launch {
+            parentScope.launch {
                 flow.collect { name ->
                     if (name == currentTab) return@collect
                     currentTab = name
@@ -64,7 +62,7 @@ fun <T : DOM> T.tabs(
     return root
 }
 
-fun <T : DOM> T.tabsHeader(tabScope: TabScope<T>) = row(modify(TabClass.header)) {
+fun <T : AppendScope> T.tabsHeader(tabScope: TabScope<T>) = row(modify(TabClass.header)) {
     tabScope.tabs.forEachIndexed { index, tab ->
         val button = p {
             addModifiers(TabClass.button)
@@ -77,4 +75,4 @@ fun <T : DOM> T.tabsHeader(tabScope: TabScope<T>) = row(modify(TabClass.header))
     }
 }
 
-fun DOM.tabsViewport() = box(modify(TabClass.viewport))
+fun AppendScope.tabsViewport() = box(modify(TabClass.viewport))

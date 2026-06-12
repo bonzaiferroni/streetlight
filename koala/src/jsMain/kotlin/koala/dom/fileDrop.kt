@@ -7,7 +7,7 @@ import koala.css.SlideDown
 import koala.css.modify
 import kotlinx.coroutines.flow.Flow
 
-fun ScopedDOM.fileDrop(urlFlow: Flow<String?>, onFileUrl: (Url) -> Unit) {
+fun RenderScope.fileDrop(urlFlow: Flow<String?>, onFileUrl: (Url) -> Unit) {
     flowBlock(urlFlow, modify(Magic, Blur, SlideDown)) { url ->
         if (url != null) {
             textBlock("file: $url")

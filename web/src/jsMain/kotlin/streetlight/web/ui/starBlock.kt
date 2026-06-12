@@ -10,10 +10,10 @@ import streetlight.model.data.Star
 import streetlight.web.StarDashRoute
 import streetlight.web.model.UserGate
 
-fun ScopedDOM.starBlock(
+fun RenderScope.starBlock(
     redirect: Boolean = false,
     modifiers: ModifierSet? = null,
-    block: ScopedDOM.(Star) -> Unit
+    block: RenderScope.(Star) -> Unit
 ) {
     val gate = app.get<UserGate>()
 
@@ -31,7 +31,7 @@ fun ScopedDOM.starBlock(
 
     val currentRoute = portal.stateNow.route
 
-    renderScope.launch {
+    parentScope.launch {
         gate.starFlow
             .filterNotNull()
             .first()

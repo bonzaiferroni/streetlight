@@ -12,8 +12,8 @@ import streetlight.model.data.Galaxy
 import streetlight.web.CreatePostRoute
 import streetlight.web.PostRoute
 
-fun ScopedDOM.viewContentPoster(galaxy: Galaxy) {
-    val model = app.getContentEditor(PostEdit(null, galaxy.galaxyId), renderScope)
+fun RenderScope.viewContentPoster(galaxy: Galaxy) {
+    val model = app.getContentEditor(PostEdit(null, galaxy.galaxyId), parentScope)
     goOnRoute(model.stateFlow.mapDistinctNotNull { it.slug?.let { slug -> PostRoute(slug) }  })
 
     section(modify(Column)) {
@@ -33,7 +33,7 @@ fun ScopedDOM.viewContentPoster(galaxy: Galaxy) {
     }
 }
 
-fun ScopedDOM.viewContentPosterRoute() {
+fun RenderScope.viewContentPosterRoute() {
     routeBlock<CreatePostRoute, Galaxy>({
         api.readGalaxy(it.slug).handleResponse(toaster::toast)
     }) { galaxy ->

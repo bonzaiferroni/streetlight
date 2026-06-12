@@ -13,7 +13,7 @@ import kotlinx.html.js.div
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 
-fun ScopedDOM.switch(
+fun RenderScope.switch(
     label: String,
     modifiers: ModifierSet? = null,
     id: Id? = null,
@@ -37,7 +37,7 @@ fun ScopedDOM.switch(
     return element
 }
 
-fun ScopedDOM.wireSwitch(
+fun RenderScope.wireSwitch(
     element: HTMLElement,
     initialOn: Boolean = false,
     onToggle: ((Boolean) -> Unit)? = null,
@@ -57,7 +57,7 @@ fun ScopedDOM.wireSwitch(
     }
 
     bindFlow?.let { flow ->
-        renderScope.launch {
+        parentScope.launch {
             flow.collect {
                 setOn(it)
             }
@@ -65,7 +65,7 @@ fun ScopedDOM.wireSwitch(
     }
 }
 
-fun ScopedDOM.queryAndWireSwitch(
+fun RenderScope.queryAndWireSwitch(
     ancestor: HTMLElement,
     queryable: Queryable,
     initialOn: Boolean = false,

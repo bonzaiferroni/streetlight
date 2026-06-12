@@ -17,7 +17,7 @@ import kotlinx.html.js.button
 import org.w3c.dom.HTMLButtonElement
 import org.w3c.dom.events.Event
 
-fun DOM.button(
+fun AppendScope.button(
     text: String,
     modifiers: ModifierSet? = null,
     onClick: (() -> Unit)? = null,
@@ -38,7 +38,7 @@ fun DOM.button(
     return element
 }
 
-fun DOM.button(
+fun AppendScope.button(
     svg: Svg,
     modifiers: ModifierSet? = modify(Aspect1, Height3),
     onClick: (() -> Unit)? = null,
@@ -58,7 +58,7 @@ fun DOM.button(
     return element
 }
 
-fun DOM.button(
+fun AppendScope.button(
     modifiers: ModifierSet? = null,
     onClick: (() -> Unit)? = null,
     onClickEvent: ((Event) -> Unit)? = null,
@@ -77,7 +77,7 @@ fun DOM.button(
     return element
 }
 
-fun DOM.dangerButton(
+fun AppendScope.dangerButton(
     text: String,
     modifiers: ModifierSet? = null,
     onClick: (() -> Unit)? = null,
@@ -116,12 +116,12 @@ private fun configureButtonEvents(
     }
 }
 
-fun ScopedDOM.configureEnabledFlow(
+fun RenderScope.configureEnabledFlow(
     element: HTMLButtonElement,
     flow: Flow<Boolean>? = null,
 ) {
     flow?.let {
-        renderScope.launch {
+        parentScope.launch {
             it.collect { isEnabled ->
                 element.disabled = !isEnabled
             }

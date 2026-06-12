@@ -12,20 +12,19 @@ import koala.css.modify
 import koala.html.FlowBlockKey
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.launch
 import kotlinx.dom.clear
 import kotlinx.html.DIV
 import kotlinx.html.classes
 import kotlinx.html.js.div
 import org.w3c.dom.HTMLDivElement
 
-fun <State> ScopedDOM.flowBlock(
+fun <State> RenderScope.flowBlock(
     flow: Flow<State>,
     modifiers: ModifierSet? = null,
     renderCacheCount: Int? = null,
     config: (DIV.() -> Unit)? = null,
     onTransition: ((State) -> Unit)? = null,
-    block: ScopedDOM.(State) -> Unit
+    block: RenderScope.(State) -> Unit
 ): HTMLDivElement {
     val magic = modifiers?.contains(Magic) ?: false
     val element = div {
@@ -40,7 +39,7 @@ fun <State> ScopedDOM.flowBlock(
     var renderedOnce = false
     val cache = mutableMapOf<State, RenderJob>()
 
-    launchRender {
+    launchEffect {
         var currentValue: State? = null
         flow.collect { value ->
             // do we need renderedOnce?

@@ -12,7 +12,7 @@ import kotlinx.html.js.label
 import kotlinx.html.js.onInputFunction
 import org.w3c.dom.HTMLInputElement
 
-fun ScopedDOM.checkBox(
+fun RenderScope.checkBox(
     label: String,
     onChangeValue: ((Boolean) -> Unit)? = null,
     binding: Flow<Boolean>? = null,
@@ -24,7 +24,7 @@ fun ScopedDOM.checkBox(
     +label
 }
 
-fun ScopedDOM.checkBox(
+fun RenderScope.checkBox(
     onChangeValue: ((Boolean) -> Unit)? = null,
     binding: Flow<Boolean>? = null,
     block: (INPUT.() -> Unit)? = null
@@ -41,7 +41,7 @@ fun ScopedDOM.checkBox(
     } as HTMLInputElement
 
     binding?.let {
-        renderScope.launch {
+        parentScope.launch {
             binding.distinctUntilChanged().collect {
                 element.checked = it
             }

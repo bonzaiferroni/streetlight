@@ -5,7 +5,7 @@ import koala.html.MessageBoxKey
 import koala.model.Store
 import kotlinx.coroutines.flow.Flow
 
-fun ScopedDOM.messageBox(
+fun RenderScope.messageBox(
     flow: Flow<UIMessage?>,
     modifiers: ModifierSet? = null,
 ) {
@@ -22,7 +22,7 @@ fun ScopedDOM.messageBox(
     }
 }
 
-fun ScopedDOM.messageBox(
+fun RenderScope.messageBox(
     store: Store<UIMessage?>,
     modifiers: ModifierSet? = null,
 ) = messageBox(store.flow, modifiers)

@@ -15,14 +15,14 @@ import streetlight.model.data.EventProperty
 import streetlight.web.model.EventEditor
 import kotlin.time.Clock
 
-fun ScopedDOM.eventEditFormBody(model: EventEditor) = formBody {
+fun RenderScope.eventEditFormBody(model: EventEditor) = formBody {
     eventWebsiteForm(model)
     eventDetailsForm(model)
     eventImageForm(model)
     eventLinksForm(model)
 }
 
-fun ScopedDOM.eventWebsiteForm(model: EventEditor) = formCardSection("Web page") {
+fun RenderScope.eventWebsiteForm(model: EventEditor) = formCardSection("Web page") {
     formPart(
         instructions = "Does this event have a web page? We can read it to find certain details.",
         bullets = listOf("Some websites cannot be read automatically, but you can fill in the details yourself.")
@@ -35,31 +35,31 @@ fun ScopedDOM.eventWebsiteForm(model: EventEditor) = formCardSection("Web page")
     }
 }
 
-fun ScopedDOM.eventDetailsForm(model: EventEditor) = formCardSection("Event Details") {
+fun RenderScope.eventDetailsForm(model: EventEditor) = formCardSection("Event Details") {
     formPart("What is the name of the event?") {
         formTextField("title", model::setTitle, model.titleFlow, maxLength = 50)
-            .flowValid(EventProperty.Title, model.validityFlow, renderScope)
+            .flowValid(EventProperty.Title, model.validityFlow, parentScope)
     }
     formPart("How much does it cost?") {
         row(modify(AlignItemsCenter)) {
             checkBox("Free event", model::setFree, model.isFreeFlow)
             textField("cost", modify(Width12), onValue = model::setCost, flow = model.costFlow)
-                .flowVisibility(model.isFreeFlow.map { !it }, renderScope)
-                .flowValid(EventProperty.Cost, model.validityFlow, renderScope)
+                .flowVisibility(model.isFreeFlow.map { !it }, parentScope)
+                .flowValid(EventProperty.Cost, model.validityFlow, parentScope)
         }
     }
     formPart("What is the day and time?") {
         row(modify(AlignItemsCenter, JustifyContentCenter)) {
             blockLabel("start time") {
                 timeInput(model.startTimeFlow, model::setStartTime)
-            }.flowValid(EventProperty.StartTime, model.validityFlow, renderScope)
+            }.flowValid(EventProperty.StartTime, model.validityFlow, parentScope)
             // end time is optional, not every event has a fixed end time
             blockLabel("end time") {
                 timeInput(model.endTimeFlow, model::setEndTime)
             }
             blockLabel("date") {
                 dateInput(model.dateFlow, model::setDate)
-            }.flowValid(EventProperty.Date, model.validityFlow, renderScope)
+            }.flowValid(EventProperty.Date, model.validityFlow, parentScope)
         }
         flowBlock(model.startsAtFlow, modify(FlexColumn, AlignItemsCenter)) {
             val startsAt = it ?: return@flowBlock
@@ -106,13 +106,13 @@ fun ScopedDOM.eventDetailsForm(model: EventEditor) = formCardSection("Event Deta
     }
 }
 
-fun ScopedDOM.eventImageForm(model: EventEditor) =
+fun RenderScope.eventImageForm(model: EventEditor) =
     imageFormSection(
         instructions = "This image will appear in the feed and at the top of the event page.",
         onValue = model::setImageUrl,
         imageFlow = model.imageUrlFlow
     )
 
-fun ScopedDOM.eventLinksForm(model: EventEditor) = formCardSection("Links") {
+fun RenderScope.eventLinksForm(model: EventEditor) = formCardSection("Links") {
     eventLinks(model)
 }

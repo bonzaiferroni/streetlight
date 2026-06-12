@@ -12,7 +12,7 @@ import streetlight.model.data.GalaxyProperty
 import streetlight.model.data.PostPermission
 import streetlight.web.model.GalaxyEditor
 
-fun ScopedDOM.galaxyCityForm(model: GalaxyEditor) {
+fun RenderScope.galaxyCityForm(model: GalaxyEditor) {
     val cityQueryFlow = model.stateFlow.mapDistinct { it.cityQuery }
     val isLocalFlow = model.stateFlow.mapDistinct { it.isLocal }
     val localitiesFlow = model.stateFlow.mapDistinct { it.cities }
@@ -47,11 +47,11 @@ fun ScopedDOM.galaxyCityForm(model: GalaxyEditor) {
                     }
                 }
             }
-        }.flowDisplay(isLocalFlow, renderScope)
+        }.flowDisplay(isLocalFlow, parentScope)
     }
 }
 
-fun ScopedDOM.galaxyNameForm(model: GalaxyEditor) {
+fun RenderScope.galaxyNameForm(model: GalaxyEditor) {
     val nameFlow = model.galaxyFlow.mapDistinct { it.name ?: "" }
     val slugFlow = model.galaxyFlow.mapDistinct { it.slug?.string ?: "" }
 
@@ -66,7 +66,7 @@ fun ScopedDOM.galaxyNameForm(model: GalaxyEditor) {
                 flow = nameFlow,
                 footnote = nameCharacters,
                 maxLength = Slug.MAX_LENGTH
-            ).flowValid(GalaxyProperty.Name, model.validityFlow, renderScope)
+            ).flowValid(GalaxyProperty.Name, model.validityFlow, parentScope)
         }
         formPart(
             instructions = pathInstructions,
@@ -82,17 +82,17 @@ fun ScopedDOM.galaxyNameForm(model: GalaxyEditor) {
                 flow = slugFlow,
                 footnote = pathCharacters,
                 maxLength = Slug.MAX_LENGTH
-            ).flowValid(GalaxyProperty.Path, model.validityFlow, renderScope)
+            ).flowValid(GalaxyProperty.Path, model.validityFlow, parentScope)
         }
     }
 }
 
-fun ScopedDOM.galaxyImageForm(model: GalaxyEditor) =
+fun RenderScope.galaxyImageForm(model: GalaxyEditor) =
     imageFormSection(imageInstructions1, model::setImageUrl, model.stateFlow.mapDistinct { it.imageUrl })
 
 private val imageInstructions1 = "This image will appear at the top of the galaxy page."
 
-fun ScopedDOM.galaxyDescriptionForm(model: GalaxyEditor) {
+fun RenderScope.galaxyDescriptionForm(model: GalaxyEditor) {
     val nameFlow = model.galaxyFlow.mapDistinct { it.name ?: "" }
     val descriptionFlow = model.galaxyFlow.mapDistinct { it.description ?: "" }
     val taglineFlow = model.galaxyFlow.mapDistinct { it.tagline ?: "" }
@@ -137,7 +137,7 @@ fun ScopedDOM.galaxyDescriptionForm(model: GalaxyEditor) {
     }
 }
 
-fun ScopedDOM.galaxyLocationForm(model: GalaxyEditor) {
+fun RenderScope.galaxyLocationForm(model: GalaxyEditor) {
     val pointFlow = geoMap.stateFlow.mapDistinct { it.center to it.zoom }
 
     formCardSection("Map location") {
@@ -161,7 +161,7 @@ fun ScopedDOM.galaxyLocationForm(model: GalaxyEditor) {
     }
 }
 
-fun ScopedDOM.galaxyAccessForm(model: GalaxyEditor) {
+fun RenderScope.galaxyAccessForm(model: GalaxyEditor) {
     val permissionFlow = model.galaxyFlow.mapDistinct { it.postPermission }
     val reviewModeFlow = model.galaxyFlow.mapDistinct { it.reviewMode }
 

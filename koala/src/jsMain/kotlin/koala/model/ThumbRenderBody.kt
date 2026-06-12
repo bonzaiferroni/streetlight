@@ -1,7 +1,7 @@
 package koala.model
 
 import koala.css.*
-import koala.dom.DOM
+import koala.dom.AppendScope
 import koala.dom.row
 import koala.dom.textBlock
 import koala.html.box
@@ -19,7 +19,7 @@ internal class ThumbRenderBody(
     }
 }
 
-internal fun DOM.configureThumbRender(marker: ThumbMarker): ThumbRenderBody {
+internal fun AppendScope.configureThumbRender(marker: ThumbMarker): ThumbRenderBody {
     var clusterElement: HTMLElement? = null
 
     with(marker) {

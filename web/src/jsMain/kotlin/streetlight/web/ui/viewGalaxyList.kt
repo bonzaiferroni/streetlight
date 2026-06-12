@@ -7,10 +7,10 @@ import kotlinx.coroutines.launch
 import streetlight.model.data.Galaxy
 import streetlight.web.shells.cardOf
 
-fun ScopedDOM.viewGalaxyList() {
+fun RenderScope.viewGalaxyList() {
     val galaxyStore = storeOf<List<Galaxy>>(emptyList())
 
-    renderScope.launch {
+    parentScope.launch {
         val galaxies = api.readTopGalaxies().handleResponse(toaster::toast) ?: return@launch
         galaxyStore.set { galaxies }
     }

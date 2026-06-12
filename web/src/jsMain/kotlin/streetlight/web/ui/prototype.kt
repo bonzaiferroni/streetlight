@@ -9,7 +9,7 @@ import koala.css.OverflowYAuto
 import koala.css.Padding1
 import koala.css.Width100P
 import koala.css.modify
-import koala.dom.ScopedDOM
+import koala.dom.RenderScope
 import koala.dom.column
 import koala.dom.markdown
 import koala.html.featureImage
@@ -66,7 +66,7 @@ import streetlight.model.data.GalaxyPost
 //    }
 //}
 
-fun ScopedDOM.postPanel(post: GalaxyPost) {
+fun RenderScope.postPanel(post: GalaxyPost) {
     column(modify(Height100P, OverflowYAuto, CardBg, BlurBackdrop)) {
         featureImage(post.images.medium, modify(Width100P, Height24))
         column(modify(Padding1)) {

@@ -1,6 +1,6 @@
 package streetlight.web.ui
 
-import koala.dom.ScopedDOM
+import koala.dom.RenderScope
 import koala.dom.modify
 import koala.dom.onClick
 import koala.dom.queryAttributeAll
@@ -11,14 +11,14 @@ import kotlinx.coroutines.launch
 import org.w3c.dom.HTMLElement
 import streetlight.web.model.LightCache
 
-fun <Id> ScopedDOM.wireLights(
+fun <Id> RenderScope.wireLights(
     root: HTMLElement,
     attribute: Attribute<Id>,
     cache: LightCache<Id, *>
 ) {
     val pairs = root.queryAttributeAll(attribute)
 
-    renderScope.launch {
+    parentScope.launch {
         launch {
             // modify flame
             cache.lightsFlow.collect { lights ->

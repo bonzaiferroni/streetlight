@@ -8,7 +8,7 @@ import kotlinx.html.DIV
 import kotlinx.html.js.div
 import org.w3c.dom.HTMLElement
 
-fun DOM.popover(
+fun AppendScope.popover(
     id: Id,
     anchor: PositionAnchor?,
     modifiers: ModifierSet? = null,

@@ -12,7 +12,7 @@ import org.w3c.dom.ScrollToOptions
 import streetlight.web.io.OmniLog
 import streetlight.web.pages.AppBodyKey
 
-fun ScopedDOM.wireRightPanel() {
+fun RenderScope.wireRightPanel() {
     val omni = app.get<OmniLog>()
     val recordFlow = omni.stateFlow.mapDistinct { it.records }
     var container: HTMLElement? = null
@@ -26,7 +26,7 @@ fun ScopedDOM.wireRightPanel() {
         }
     }
 
-    renderScope.launch {
+    parentScope.launch {
         recordFlow.collect {
             delay(100)
             container?.scrollTo(ScrollToOptions(

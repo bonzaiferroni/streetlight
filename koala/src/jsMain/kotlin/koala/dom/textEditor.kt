@@ -15,7 +15,7 @@ import kotlinx.html.js.onInputFunction
 import kotlinx.html.js.textArea
 import org.w3c.dom.HTMLTextAreaElement
 
-fun ScopedDOM.textEditor(
+fun RenderScope.textEditor(
     label: String? = null,
     modifiers: ModifierSet? = null,
     textModifiers: ModifierSet? = null,
@@ -49,7 +49,7 @@ fun ScopedDOM.textEditor(
     }
 
     flow?.let {
-        renderScope.launch {
+        parentScope.launch {
             flow.collect { value ->
                 val value = value ?: ""
                 if (value != currentValue) {
@@ -63,7 +63,7 @@ fun ScopedDOM.textEditor(
     return textElement!!
 }
 
-fun DOM.configureTextEditor(
+fun AppendScope.configureTextEditor(
     label: String? = null,
     textModifiers: ModifierSet? = null,
     id: Id? = null,

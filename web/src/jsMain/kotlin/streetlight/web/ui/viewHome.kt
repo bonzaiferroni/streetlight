@@ -11,7 +11,7 @@ import streetlight.web.model.DataCache
 import streetlight.web.shells.HomeKey
 import streetlight.web.shells.homeShell
 
-fun ScopedDOM.viewHome(content: HomeContent) {
+fun RenderScope.viewHome(content: HomeContent) {
     val cache = app.get<DataCache>()
 
     val root = shellBoxWithMap(HomeKey.ContainerId) {
@@ -34,7 +34,7 @@ fun ScopedDOM.viewHome(content: HomeContent) {
     wireStreetMap()
 }
 
-fun ScopedDOM.viewHomeRoute() {
+fun RenderScope.viewHomeRoute() {
     val portal = app.get<Portal>()
     val api = app.get<ApiClient>()
 

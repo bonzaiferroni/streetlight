@@ -10,13 +10,13 @@ import kotlinx.html.INPUT
 import kotlinx.html.InputType
 import kotlinx.html.js.input
 
-fun ScopedDOM.datetimeInput() {
+fun RenderScope.datetimeInput() {
     input {
         type = InputType.dateTimeLocal
     }
 }
 
-fun ScopedDOM.dateInput(
+fun RenderScope.dateInput(
     flow: Flow<LocalDate?>,
     onValueChanged: (LocalDate) -> Unit,
     modifiers: ModifierSet? = null,
@@ -41,7 +41,7 @@ fun ScopedDOM.dateInput(
         }
     })
 
-    renderScope.launch {
+    parentScope.launch {
         flow.collect { d ->
             if (d != last) {
                 last = d
@@ -51,7 +51,7 @@ fun ScopedDOM.dateInput(
     }
 }
 
-fun ScopedDOM.timeInput(
+fun RenderScope.timeInput(
     flow: Flow<LocalTime?>,
     onValueChanged: (LocalTime) -> Unit,
     modifiers: ModifierSet? = null,
@@ -77,7 +77,7 @@ fun ScopedDOM.timeInput(
         }
     })
 
-    renderScope.launch {
+    parentScope.launch {
         flow.collect { t ->
             if (t != last) {
                 last = t

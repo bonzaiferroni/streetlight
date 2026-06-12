@@ -5,7 +5,7 @@ import koala.dom.*
 import koala.model.mapDistinct
 import streetlight.web.model.PostEditor
 
-fun ScopedDOM.postForm(model: PostEditor) {
+fun RenderScope.postForm(model: PostEditor) {
     val titleFlow = model.contentFlow.mapDistinct { it.title }
     val subtitleFlow = model.contentFlow.mapDistinct { it.subtitle }
     val textFlow = model.contentFlow.mapDistinct { it.text }

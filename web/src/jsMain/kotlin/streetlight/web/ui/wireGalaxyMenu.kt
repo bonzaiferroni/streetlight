@@ -11,7 +11,7 @@ import streetlight.web.model.DataCache
 import streetlight.web.shells.GalaxyMenuKey
 import streetlight.web.shells.galaxyMenuItems
 
-fun ScopedDOM.wireGalaxyMenu(
+fun RenderScope.wireGalaxyMenu(
     root: HTMLElement,
     currentGalaxy: Galaxy?
 ) {
@@ -21,7 +21,7 @@ fun ScopedDOM.wireGalaxyMenu(
     val topGalaxies = result.value
     val element = result.element
 
-    renderScope.launch {
+    parentScope.launch {
         cache.galaxyLights.itemsFlow.collect { galaxies ->
             val galaxies = galaxies.takeIf { it.isNotEmpty() } ?: topGalaxies
             element.clear()

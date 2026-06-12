@@ -16,7 +16,7 @@ import streetlight.web.PostUpdateRoute
 import streetlight.web.PostRoute
 import streetlight.web.model.PostEditor
 
-fun ScopedDOM.viewPostUpdater(model: PostEditor) {
+fun RenderScope.viewPostUpdater(model: PostEditor) {
     val routeFlow = model.stateFlow.mapDistinctNotNull { it.slug?.let { slug -> PostRoute(slug) } }
     goOnRoute(routeFlow)
 
@@ -35,19 +35,19 @@ fun ScopedDOM.viewPostUpdater(model: PostEditor) {
     }
 }
 
-fun ScopedDOM.viewEditPostRoute() {
+fun RenderScope.viewEditPostRoute() {
     routeBlock<PostUpdateRoute, PostEdit>(portal, { route ->
         api.readPost(route.slug).handleResponse(toaster::toast) {
             (it as? BasicPost)?.toEdit()
         }
     }) {
-        val editor = PostEditor(it, renderScope, api, toaster)
+        val editor = PostEditor(it, parentScope, api, toaster)
         viewPostUpdater(editor)
     }
 }
 
-fun ScopedDOM.goOnRoute(routeFlow: Flow<AppRoute>) {
-    renderScope.launch {
+fun RenderScope.goOnRoute(routeFlow: Flow<AppRoute>) {
+    parentScope.launch {
         routeFlow.collect { route ->
             portal.go(route)
         }

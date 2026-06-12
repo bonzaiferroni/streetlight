@@ -23,12 +23,12 @@ import streetlight.web.model.UserGate
 import streetlight.web.pages.HelmBarKey
 import streetlight.web.pages.StarHelmKey
 
-fun ScopedDOM.queryAndWireStarHelm() {
+fun RenderScope.queryAndWireStarHelm() {
     val element = document.body?.querySelector(StarHelmKey.ContentId) ?: error("star helm content not found")
     wireStarHelm(element)
 }
 
-private fun ScopedDOM.wireStarHelm(element: HTMLElement) {
+private fun RenderScope.wireStarHelm(element: HTMLElement) {
     val gate = app.get<UserGate>()
 
     wireBlock(element) {
@@ -44,7 +44,7 @@ private fun ScopedDOM.wireStarHelm(element: HTMLElement) {
 
 private val RowMod = modify(AlignItemsCenter, PaddingLeft3, JustifyContentEnd)
 
-private fun ScopedDOM.starPanel(star: Star) {
+private fun RenderScope.starPanel(star: Star) {
     val gate = app.get<UserGate>()
 
     column() {
@@ -80,7 +80,7 @@ private fun ScopedDOM.starPanel(star: Star) {
     }
 }
 
-private fun ScopedDOM.someonePanel() {
+private fun RenderScope.someonePanel() {
     column(modify(OverflowClip, MinWidth32)) {
         row(RowMod) {
             heading3("Someone")
@@ -119,7 +119,7 @@ private fun ScopedDOM.someonePanel() {
     }
 }
 
-fun ScopedDOM.gateForm() {
+fun RenderScope.gateForm() {
     val gate = app.get<UserGate>()
     val cred = app.get<CredentialStore>()
 

@@ -3,14 +3,14 @@ package streetlight.web.ui
 import koala.css.Blur
 import koala.css.Magic
 import koala.css.modify
-import koala.dom.ScopedDOM
+import koala.dom.RenderScope
 import koala.dom.flowBlock
 import koala.dom.textBlock
 import koala.model.Portal
 import kotlinx.browser.window
 import streetlight.web.StreetlightScreen
 
-fun ScopedDOM.appNavigation() {
+fun RenderScope.appNavigation() {
     val portal = app.get<Portal>()
 
     flowBlock(

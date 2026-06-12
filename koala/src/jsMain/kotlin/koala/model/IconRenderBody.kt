@@ -3,7 +3,7 @@ package koala.model
 import koala.css.addModifiers
 import koala.css.modify
 import koala.css.setStyle
-import koala.dom.DOM
+import koala.dom.AppendScope
 import koala.dom.setProperty
 import kotlinx.css.properties.deg
 import kotlinx.html.js.div
@@ -40,7 +40,7 @@ internal class IconRenderBody(
     }
 }
 
-internal fun DOM.configureIconRender(marker: IconMarker): IconRenderBody {
+internal fun AppendScope.configureIconRender(marker: IconMarker): IconRenderBody {
     with(marker) {
         val body = div {
             addModifiers(modify(MarkerStyle.Icon, MarkerStyle.Body))

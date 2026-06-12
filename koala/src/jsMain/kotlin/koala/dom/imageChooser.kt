@@ -13,7 +13,7 @@ import org.w3c.dom.HTMLButtonElement
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLImageElement
 
-fun ScopedDOM.imageChooser(
+fun RenderScope.imageChooser(
     modifiers: ModifierSet? = null,
     onValueChanged: ((Url?) -> Unit)? = null,
     onUpload: suspend (Url) -> Url?,
@@ -52,7 +52,7 @@ fun ScopedDOM.imageChooser(
             })
             uploadButton = button("upload", modify(Accent), onClickEvent = {
                 val localUrl = localUrl ?: return@button
-                renderScope.launch {
+                parentScope.launch {
                     console.log("uploading: $localUrl")
                     val url = onUpload(localUrl)
                     onValueChanged?.invoke(url)
@@ -101,7 +101,7 @@ fun ScopedDOM.imageChooser(
         dialog.open()
     }
 
-    renderScope.launch {
+    parentScope.launch {
         launch {
             val image = image ?: return@launch
             val placeholder = placeholder ?: return@launch

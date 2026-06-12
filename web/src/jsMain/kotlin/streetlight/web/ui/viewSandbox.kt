@@ -1,14 +1,16 @@
 package streetlight.web.ui
 
-import koala.css.*
 import koala.dom.*
-import koala.html.Id
-import kotlinx.coroutines.flow.flowOf
+import kotlinx.html.js.p
 
-fun ScopedDOM.viewSandbox() {
+fun RenderScope.viewSandbox() {
+    renderTabs()
+}
+
+fun RenderScope.renderTabs() {
     tabs {
         tab("one") {
-            textBlock("the first tab content")
+            appendTabs()
         }
         tab("two") {
             textBlock("the second tab content")
@@ -19,5 +21,30 @@ fun ScopedDOM.viewSandbox() {
     }
 }
 
-private val menuId = Id("menu")
-private val myAnchor = PositionAnchor("my-anchor")
+fun AppendScope.appendTabs() {
+    tabs {
+        tab("one") {
+            textBlock("the first subtab content")
+        }
+        tab("two") {
+            textBlock("the second subtab content")
+        }
+        tab("three") {
+            textBlock("the third subtab content")
+        }
+    }
+}
+
+fun RenderScope.myContent() {
+    // fine, append hasn't completed yet
+    p { +"yer UI" }
+    launchEffect {
+        // now disallowed
+        // p { +"more UI" }
+
+        launch {
+        }
+    }
+}
+
+

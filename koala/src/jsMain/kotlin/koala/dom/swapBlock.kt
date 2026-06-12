@@ -12,7 +12,7 @@ import kotlinx.css.Display
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.asList
 
-fun ScopedDOM.wireSwapBlock(
+fun RenderScope.wireSwapBlock(
     element: HTMLElement,
     bindFlow: (Flow<Id>)? = null,
 ) {
@@ -20,7 +20,7 @@ fun ScopedDOM.wireSwapBlock(
         val children = element.children.asList().map { it as HTMLElement }
         console.log(element.id)
         val isMagic = element.classList.contains(Magic.identifier)
-        renderScope.launch {
+        parentScope.launch {
             var isInitial = true
             flow.collect { id ->
                 if (isMagic) {
@@ -34,7 +34,7 @@ fun ScopedDOM.wireSwapBlock(
     }
 }
 
-fun ScopedDOM.queryAndWireSwapBlock(
+fun RenderScope.queryAndWireSwapBlock(
     ancestor: HTMLElement,
     queryable: Queryable,
     bindFlow: (Flow<Id>)? = null,

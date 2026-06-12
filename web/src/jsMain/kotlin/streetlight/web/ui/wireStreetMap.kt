@@ -8,12 +8,12 @@ import streetlight.web.model.DataCache
 import streetlight.web.model.MarkerService
 import streetlight.web.model.MarkerMap
 
-fun ScopedDOM.wireStreetMap() {
+fun RenderScope.wireStreetMap() {
     val markerMap = app.get<MarkerMap>()
     val cache = app.get<DataCache>()
     val markerService = app.get<MarkerService>()
 
-    renderScope.launch {
+    parentScope.launch {
         portal.routeFlowOf<HomeRoute>().collect {
             val galaxyIds = cache.topGalaxies.getItems().map { it.galaxyId }
             // td: gather initial posts from json in html
