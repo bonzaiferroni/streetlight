@@ -52,7 +52,7 @@ fun <T : TagScope> T.tabs(
             }
         }
     } else {
-        if (tabFlow != null) error("tabflow requires ScopedDOM receiver")
+        if (tabFlow != null) error("tabFlow requires AppScope receiver")
     }
 
     scope.build(viewport!!)
@@ -62,7 +62,7 @@ fun <T : TagScope> T.tabs(
     return root
 }
 
-fun <T : TagScope> T.tabsHeader(tabScope: TabScope<T>) = row(modify(TabClass.header)) {
+fun <T : TagScope> T.tabsHeader(tabScope: TabScope<T>) = div(modify(TabClass.header)) {
     tabScope.tabs.forEachIndexed { index, tab ->
         val button = p {
             addModifiers(TabClass.button)

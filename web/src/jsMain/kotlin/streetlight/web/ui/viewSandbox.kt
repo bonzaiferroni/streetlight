@@ -9,28 +9,10 @@ fun AppScope.viewSandbox() {
 
 fun AppScope.renderTabs() {
     tabs {
-        tab("one") {
-            appendTabs()
-        }
-        tab("two") {
-            textBlock("the second tab content")
-        }
-        tab("three") {
-            textBlock("the third tab content")
-        }
-    }
-}
-
-fun TagScope.appendTabs() {
-    tabs {
-        tab("one") {
-            textBlock("the first subtab content")
-        }
-        tab("two") {
-            textBlock("the second subtab content")
-        }
-        tab("three") {
-            textBlock("the third subtab content")
+        (0..20).forEach {
+            tab("tab $it") {
+                textBlock("tab $it content")
+            }
         }
     }
 }
