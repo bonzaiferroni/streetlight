@@ -7,6 +7,7 @@ import koala.html.*
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kotlinx.html.onClick
+import streetlight.model.data.Event
 import streetlight.model.data.EventId
 import streetlight.model.data.EventLocation
 import streetlight.model.data.Galaxy
@@ -51,6 +52,10 @@ fun FlowContent.starLightCell(galaxy: Galaxy) {
 }
 
 fun FlowContent.starLightCell(event: EventLocation) {
+    starLightCell(LightType.Event, event.isLit, event.eventId.value, event.lightCount, SvgFile.CalendarPlus, SvgFile.CalendarMinus)
+}
+
+fun FlowContent.starLightCell(event: Event) {
     starLightCell(LightType.Event, event.isLit, event.eventId.value, event.lightCount, SvgFile.CalendarPlus, SvgFile.CalendarMinus)
 }
 

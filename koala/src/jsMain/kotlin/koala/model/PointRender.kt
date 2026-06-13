@@ -81,7 +81,7 @@ internal class PointRender(
         if (cluster.principalId == marker.markerId) {
             element.modify(MarkerStyle.ClusterPrincipal)
             element.unmodify(MarkerStyle.ClusterMember)
-            body.clusterElement?.textContent = "+${cluster.markerIds.size - 1}"
+            body.clusterElement?.textContent = cluster.markerIds.size.toString()
         } else {
             element.modify(MarkerStyle.ClusterMember)
             element.unmodify(MarkerStyle.ClusterPrincipal)
@@ -116,7 +116,6 @@ internal fun PointMarker.toPointRender(pixelPoint: Point, focusEntity: () -> Uni
 
     var baseElement: HTMLDivElement? = null
     var renderBody: PointRenderBody? = null
-    var clusterElement: HTMLParagraphElement? = null
 
     element.append { // this element is modified by maplibre
         baseElement = div { // this element is all mine

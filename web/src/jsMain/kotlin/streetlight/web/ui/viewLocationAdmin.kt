@@ -21,7 +21,7 @@ fun AppScope.viewLocationAdmin(
                 // viewLocationEditor(edit, app, null, false, null)
             }
             tab("events") {
-                val events = flowerOf { api.readLocationEvents(location.locationId).handleResponse(toaster::toast) }
+                val events = flowerOf { api.readLocationEvents(location.slug).handleResponse(toaster::toast) }
                 column {
                     location.eventsUrl.let { link ->
                         row {

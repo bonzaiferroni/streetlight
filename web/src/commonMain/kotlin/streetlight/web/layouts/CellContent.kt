@@ -14,6 +14,7 @@ import koala.html.*
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kotlinx.html.onClick
+import streetlight.model.data.Event
 import streetlight.model.data.EventEdit
 import streetlight.model.data.EventLocation
 import streetlight.model.data.ExtraLink
@@ -200,6 +201,16 @@ fun eventCells(event: EventLocation): FlowContent.() -> Unit = {
     dateCell(event.startsAt)
     startsAtCell(event.startsAt)
     costCell(event.cost, event.url?.toUrl())
+    combo {
+        starLightCell(event)
+        moreCell()
+    }
+}
+
+fun eventCells(event: Event): FlowContent.() -> Unit = {
+    dateCell(event.startsAt)
+    startsAtCell(event.startsAt)
+    costCell(event.cost, event.website?.toUrl())
     combo {
         starLightCell(event)
         moreCell()

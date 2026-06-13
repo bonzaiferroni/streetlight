@@ -28,13 +28,14 @@ class ApiClient(private val client: FetchClient) {
     suspend fun updateEvent(event: EventEdit) = client.postApi(Api.Events.UpdateEvent, event)
     suspend fun parseMultiEvent(request: ParseRequest) = client.postApi(Api.Events.ParseMultiEvents, request)
     suspend fun parseSingleEvent(request: ParseRequest) = client.postApi(Api.Events.ParseSingleEvent, request)
-    suspend fun readLocationEvents(locationId: LocationId) = client.getApi(Api.Events.AtLocation, locationId)
+    suspend fun readLocationEvents(slug: Slug) = client.getApi(Api.Events.AtLocation, slug)
     suspend fun readEventLocations(eventIds: List<EventId>) = client.postApi(Api.Events.ReadEventLocations, eventIds)
     suspend fun readEventLights() = client.getApi(Api.Events.ReadLights)
 
     // locations
     suspend fun readLocation(locationId: LocationId) = client.getApi(Api.Locations, locationId)
-    suspend fun readLocationSlug(slug: Slug) = client.getApi(Api.Locations.ReadSlug, slug)
+    suspend fun readLocation(slug: Slug) = client.getApi(Api.Locations.ReadLocation, slug)
+    suspend fun readLocationContent(slug: Slug) = client.getApi(Api.Locations.ReadContent, slug)
     suspend fun parseLocation(request: ParseRequest) = client.postApi(Api.Locations.ParseLocation, request)
     suspend fun readLocationsInBounds(bounds: GeoBounds) = client.postApi(Api.Locations.QueryBounds, bounds)
     suspend fun searchLocations(query: String, city: String? = null, state: String? = null, limit: Int = 10) =

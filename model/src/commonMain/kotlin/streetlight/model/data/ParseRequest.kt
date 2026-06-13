@@ -116,8 +116,6 @@ data class EventParse(
 }
 
 fun EventParse.toEventEdit(
-    sourceUrl: String?,
-    sourceImageUrl: String?,
     locationId: LocationId?
 ) = EventEdit(
     title = name ?: "",
@@ -127,8 +125,6 @@ fun EventParse.toEventEdit(
     ageMin = ageMin?.takeIf { it > 0 },
     cost = floatUSDOf(cost),
     url = url,
-    sourceUrl = sourceUrl,
-    sourceImageUrl = sourceImageUrl,
     startTime = startTime,
     endTime = endTime,
     date = date

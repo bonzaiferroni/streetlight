@@ -12,16 +12,18 @@ fun FlowContent.postSection(posts: List<GalaxyPost>) {
             heading2("Posts", SectionHeadingMod)
         }
 
-        mount(PostKey.PostLayoutId) {
-            layoutPosts(posts)
+        layoutPosts {
+            posts.forEach { post ->
+                postCardOf(post)
+            }
         }
     }
 }
 
-fun FlowContent.layoutPosts(posts: List<GalaxyPost>) {
-    column(modify(FeedPost.FeedColumn)) {
-        posts.forEach { post ->
-            postCardOf(post)
+fun FlowContent.layoutPosts(block: FlowContent.() -> Unit) {
+    mount(PostKey.PostLayoutId) {
+        column(modify(FeedPost.FeedColumn)) {
+            block()
         }
     }
 }

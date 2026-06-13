@@ -5,29 +5,38 @@ import koala.html.*
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import streetlight.model.data.Location
+import streetlight.model.data.LocationContent
+import streetlight.web.layouts.layoutPosts
+import streetlight.web.layouts.postCardOf
 import streetlight.web.pages.appFooter
 import streetlight.web.ui.headerOf
 
 fun FlowContent.locationShell(
-    location: Location
+    content: LocationContent,
 ) {
     column(LocationProfileKey.Id, modify(AlignItemsStretch, Gap4)) {
-        headerOf(location)
+        headerOf(content.location)
 
-        // td: add map
-
-        // td: tab content
-        // tabs(LocationProfileKey.tabsId) {
-        //     tab("events") {
-        //         textBlock("yer events")
-        //     }
-        //     tab("menu") {
-        //         textBlock("yer menu")
-        //     }
-        //     tab("talk") {
-        //         textBlock("yer talk")
-        //     }
-        // }
+        tabs(LocationProfileKey.tabsId) {
+            if (content.events.isNotEmpty()) {
+                tab("events") {
+                    layoutPosts {
+                        content.events.forEach {
+                            postCardOf(it)
+                        }
+                    }
+                }
+            }
+            tab("directions") {
+                textBlock("yer directions")
+            }
+            tab("menu") {
+                textBlock("yer menu")
+            }
+            tab("talk") {
+                textBlock("yer talk")
+            }
+        }
         appFooter()
     }
 }

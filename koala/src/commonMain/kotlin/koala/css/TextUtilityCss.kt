@@ -24,7 +24,7 @@ val ParagraphLineHeight = utilityOf("paragraph-line-height", "line-height: var(-
 val WhiteSpaceNoWrap = utilityOf("white-space-no-wrap", "white-space: nowrap")
 val SingleLine = utilityOf("single-line", "white-space: nowrap", "overflow: hidden", "text-overflow: ellipsis")
 val TextOverflowEllipses = utilityOf("text-overflow-ellipsis", "overflow: hidden", "text-overflow: ellipsis")
-val TextShadow = utilityOf("text-shadow", "text-shadow: var(--ink-shadow)")
+val TextShadow = utilityOf("text-shadow", "text-shadow: var(--btn-text-shadow)")
 val UserSelectNone = utilityOf("user-select-none", "user-select: none")
 
 // defined in stylesheet

@@ -2,6 +2,7 @@ package streetlight.web.layouts
 
 import kampfire.model.medium
 import kotlinx.html.FlowContent
+import streetlight.model.data.Event
 import streetlight.model.data.EventEdit
 import streetlight.model.data.EventLocation
 import streetlight.model.data.Location
@@ -72,6 +73,22 @@ fun FlowContent.postCardOf(event: EventLocation) {
         description = event.description,
         colorScheme = ColorScheme.Accent,
         links = event.links,
+        details = eventCells(event)
+    )
+}
+
+fun FlowContent.postCardOf(event: Event) {
+    feedPost(
+        postId = null, username = event.scout,
+        galaxyName = null, galaxySlug = null,
+        heading = event.title,
+        subHeading = null,
+        postRoute = null, subRoute = null,
+        imageUrl = event.images.medium,
+        description = event.description,
+        colorScheme = ColorScheme.Accent,
+        links = event.links,
+        postedAt = event.createdAt,
         details = eventCells(event)
     )
 }

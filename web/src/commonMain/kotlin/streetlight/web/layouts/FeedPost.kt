@@ -31,34 +31,36 @@ fun FlowContent.feedPost(
     description: String?,
     isLit: Boolean = false,
     lightCount: Int = 0,
-    postedAt: Instant = Clock.System.now(),
+    postedAt: Instant? = null,
     colorScheme: ColorScheme = ColorScheme.Primary,
     links: List<ExtraLink>?,
     details: (FlowContent.() -> Unit)?,
 ) {
     div(modify(FeedPost.Class)) {
+        setStyle(Property.ColorScheme.to(colorScheme.cssValue))
+        if (postId == null) addModifiers(FeedPost.HideLight)
+
         postId?.let {
             setAttribute(PostKey.Attribute.to(postId))
-        }
-        setStyle(Property.ColorScheme.to(colorScheme.cssValue))
 
-        // boost
-        column(modify(GridArea.Light, LightControl.Class, LightControl.getLitMod(isLit), Gap0)) {
-            setAttribute(LightControl.TypeData.to(LightType.Post))
+            // boost
+            column(modify(GridArea.Light, LightControl.Class, LightControl.getLitMod(isLit), Gap0)) {
+                setAttribute(LightControl.TypeData.to(LightType.Post))
 
-            box(modify(Aspect1, AlignItemsCenter, BorderRadius50P, BorderSolid2Px, MarginTop1)) {
-                textBlock(
-                    lightCount.toMetricString(),
-                    mod = modify(LightControl.Counter, TextAlignCenter, SmallText, LineHeight1)
-                )
-            }
-
-            box(modify(OpacityHigh)) {
-                postId?.let {
-                    onClick = LightControl.ToggleFun.invoke(ThisElement, postId)
+                box(modify(Aspect1, AlignItemsCenter, BorderRadius50P, BorderSolid2Px, MarginTop1)) {
+                    textBlock(
+                        lightCount.toMetricString(),
+                        mod = modify(LightControl.Counter, TextAlignCenter, SmallText, LineHeight1)
+                    )
                 }
-                icon(SvgFile.Boost, modify(LightControl.UnlitIcon))
-                icon(SvgFile.BoostFilled, modify(LightControl.LitIcon))
+
+                box(modify(OpacityHigh)) {
+                    postId.let {
+                        onClick = LightControl.ToggleFun.invoke(ThisElement, postId)
+                    }
+                    icon(SvgFile.Boost, modify(LightControl.UnlitIcon))
+                    icon(SvgFile.BoostFilled, modify(LightControl.LitIcon))
+                }
             }
         }
 
@@ -99,7 +101,9 @@ fun FlowContent.feedPost(
                                 }
                             }
                         }
-                        span((Clock.System.now() - postedAt).toAgoFormat())
+                        postedAt?.let {
+                            span((Clock.System.now() - postedAt).toAgoFormat())
+                        }
                     }
                     postId?.let { postId ->
                         val anchor = PositionAnchor("menu-${postId}")
@@ -140,6 +144,7 @@ object FeedPost {
     val LargeRow = Class("large-row")
     val GridCard = Class("grid-card")
     val ToggleExpand = Class("expand-post")
+    val HideLight = Class("hide-light")
 
     val Class = Class("post-grid")
     val Controls = Class("controls")
@@ -196,8 +201,16 @@ $Class {
         align-self: start;
     }
     
+    &$HideLight {
+        grid-template-columns: 0 6rem 1fr 8rem;
+    }
+    
     @container (min-width: ${MinifiedWidth}px) {
         grid-template-columns: 2.5rem 6rem 1fr 16rem;
+        
+        &$HideLight {
+            grid-template-columns: 0 6rem 1fr 16rem;
+        }
     }
     
     @container (max-width: ${MinifiedWidth}px) {

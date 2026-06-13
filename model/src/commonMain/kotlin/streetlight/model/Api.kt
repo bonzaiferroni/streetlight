@@ -28,14 +28,15 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object ParseSingleEvent: PostEndpoint<ParseRequest, EventEdit>(this)
         object ParseEvent: PostEndpoint<ParseRequest, EventParseResult>(this)
 
-        object AtLocation: GetByIdEndpoint<LocationId, List<Event>>(this)
+        object AtLocation: GetByIdEndpoint<Slug, List<Event>>(this)
         object ReadEventLocations: PostEndpoint<List<EventId>, List<EventLocation>>(this)
         object ReadLights: GetEndpoint<List<EventId>>(this)
         object ReadSlug: GetByIdEndpoint<Slug, EventLocation>(this)
     }
 
     object Locations: GetByIdEndpoint<LocationId, Location>(this) {
-        object ReadSlug: GetByIdEndpoint<Slug, Location>(this)
+        object ReadLocation: GetByIdEndpoint<Slug, Location>(this)
+        object ReadContent: GetByIdEndpoint<Slug, LocationContent>(this)
 
         object CreateLocation: PostEndpoint<LocationEdit, Location>(this)
         object UpdateLocation: PostEndpoint<LocationEdit, Location>(this)

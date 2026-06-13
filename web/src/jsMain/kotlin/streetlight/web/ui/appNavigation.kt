@@ -34,7 +34,7 @@ fun AppScope.appNavigation() {
 
             // location
             StreetlightScreen.LocationAdmin -> viewLocationAdmin()
-            StreetlightScreen.Location -> viewLocationProfile()
+            StreetlightScreen.Location -> viewLocation()
             StreetlightScreen.LocationUpdate -> viewEditLocationRoute()
             StreetlightScreen.LocationScout -> viewLocationScoutRoute()
 
