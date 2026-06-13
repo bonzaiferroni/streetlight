@@ -5,12 +5,15 @@ import kampfire.model.medium
 import koala.SvgFile
 import koala.css.*
 import koala.dom.*
+import koala.html.AppRoute
+import koala.html.btn
 import koala.html.featureImage
 import koala.html.filigree
 import koala.html.heading3
 import koala.html.heading4
 import koala.html.image
 import koala.html.logo
+import koala.html.navigationIfNotNull
 import koala.html.span
 import koala.model.ClusterFocus
 import koala.model.MarkerFocus
@@ -20,12 +23,16 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.html.FlowContent
 import kotlinx.html.hr
+import streetlight.model.data.ExtraLink
 import streetlight.web.EarthRoute
+import streetlight.web.EventRoute
 import streetlight.web.GalaxyRoute
 import streetlight.web.HomeRoute
 import streetlight.web.layouts.ColorScheme
 import streetlight.web.layouts.cellBlock
 import streetlight.web.layouts.eventCells
+import streetlight.web.layouts.eventRoute
+import streetlight.web.layouts.locationRoute
 import streetlight.web.model.EarthMap
 import streetlight.web.model.EventMarker
 import streetlight.web.model.FeatureMarker
@@ -135,23 +142,6 @@ fun AppScope.earthWindow(model: EarthMap) {
     }
 }
 
-fun TagScope.markerItem(
-    thumb: Url?,
-    label: String,
-    sublabel: String?,
-    onClick: () -> Unit
-) {
-    row(modify(Height8, BorderRadius2, OverflowClip, Gap0, WidthFitContent, PointerEventsAuto)) {
-        image(thumb, modify(Aspect1))
-        column(modify(EarthStyle.ListDetail, PaperGradientBg, Padding1, Gap0)) {
-            heading3(label, modify(Bold, LineHeight115, SingleLine))
-            sublabel?.let {
-                textBlock(sublabel, modify(SmallText))
-            }
-        }
-    }.onClick(onClick)
-}
-
 fun AppScope.earthFocus(model: EarthMap) {
     flowBlock(model.focusFlow, modify(EarthStyle.Focus, Magic)) { focus ->
         when (focus) {
@@ -167,7 +157,7 @@ fun AppScope.earthFocus(model: EarthMap) {
                 }
             }
 
-            is MarkerFocus -> box(modify(Height100P, BorderRadius2)) {
+            is MarkerFocus -> div(modify(Height100P, OverflowYAuto, BorderRadius2)) {
                 markerPanel(focus.marker)
             }
             null -> return@flowBlock
@@ -184,7 +174,10 @@ fun AppScope.markerPanel(marker: PointMarker) {
                 sublabel = post.sublabel,
                 imageUrl = post.images.medium,
                 description = post.description,
+                route = post.event.eventRoute,
+                subRoute = post.event.locationRoute,
                 colorScheme = ColorScheme.Accent,
+                extraLinks = post.links,
                 details = eventCells(post.event)
             )
         }
@@ -196,7 +189,10 @@ fun AppScope.focusPanel(
     sublabel: String?,
     imageUrl: Url?,
     description: String?,
+    route: AppRoute,
+    subRoute: AppRoute?,
     colorScheme: ColorScheme = ColorScheme.Primary,
+    extraLinks: List<ExtraLink>? = null,
     details: (FlowContent.() -> Unit)? = null,
 ) {
     card(modify(Gap0, Padding0, BlurBackdrop, PointerEventsAuto, EarthStyle.MoveDimmer)) {
@@ -208,21 +204,50 @@ fun AppScope.focusPanel(
             }
         }
         column(modify(Padding1)) {
-            column(modify(Gap0, LineHeight115)) {
-                heading3(label, modify(Bold))
+            column(modify(Gap0, TextAlignCenter)) {
+                navigation(route) {
+                    heading3(label, modify(Bold))
+                }
                 sublabel?.let {
-                    heading4(sublabel, modify(OpacityHigh))
+                    navigationIfNotNull(subRoute) {
+                        heading4(sublabel, modify(OpacityHigh))
+                    }
                 }
             }
-            hr { }
+            if (extraLinks != null) {
+                filigree {
+                    row {
+                        extraLinks.forEach {
+                            btn(it.label, it.url, modify(Zen))
+                        }
+                    }
+                }
+            } else {
+                hr { }
+            }
             description?.let {
-                markdown(it, modify(SmallText))
+                markdown(it, modify(Padding1))
             }
         }
     }
 }
 
-
+// fun TagScope.markerItem(
+//    thumb: Url?,
+//    label: String,
+//    sublabel: String?,
+//    onClick: () -> Unit
+//) {
+//    row(modify(Height8, BorderRadius2, OverflowClip, Gap0, WidthFitContent, PointerEventsAuto)) {
+//        image(thumb, modify(Aspect1))
+//        column(modify(EarthStyle.ListDetail, PaperGradientBg, Padding1, Gap0)) {
+//            heading3(label, modify(Bold, LineHeight115, SingleLine))
+//            sublabel?.let {
+//                textBlock(sublabel, modify(SmallText))
+//            }
+//        }
+//    }.onClick(onClick)
+//}
 
 //fun AppScope.earthList(model: EarthMap) {
 //    val reversedItems = model.boundedMarkersFlow.map { it.reversed() } // reverse shows new items on top
