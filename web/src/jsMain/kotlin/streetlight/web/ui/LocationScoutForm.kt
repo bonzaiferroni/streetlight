@@ -7,12 +7,12 @@ import streetlight.web.model.LocationScout
 import streetlight.web.model.SearchMode
 
 fun AppScope.locationScoutForm(model: LocationScout) = formSection("Find a location") {
-    val indexFlow = model.modeFlow.map { it.name }
+    val indexFlow = model.modeFlow.map { it.ordinal }
 
     tabs(
         tabFlow = indexFlow,
-        onChangeTab = { model.setMode(SearchMode.valueOf(it)) },
-        defaultTab = model.stateNow.mode.name
+        onChangeTab = { model.setMode(SearchMode.entries[it]) },
+        defaultTab = model.stateNow.mode.ordinal
     ) {
         tab(SearchMode.Search.name) {
             locationSearchForm(model)

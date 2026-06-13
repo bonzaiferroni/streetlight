@@ -18,7 +18,13 @@ interface AppScope: TagScope {
 
     fun launchEffect(block: suspend EffectScope.() -> Unit) {
         val effectScope = EffectScope(app, parent, parentScope)
-        parentScope.launch { effectScope.block() }
+        parentScope.launch {
+            try {
+                effectScope.block()
+            } catch (e: Exception) {
+                console.error("Failed in launch, see object", e)
+            }
+        }
     }
 }
 
@@ -33,9 +39,12 @@ class EffectScope(
 ) {
     fun launch(block: suspend CoroutineScope.() -> Unit): Job =
         parentScope.launch {
-            try { block() }
-            catch (e: UnsupportedOperationException) {
+            try {
+                block()
+            } catch (e: UnsupportedOperationException) {
                 throw InvalidRenderOperation(parent)
+            } catch (e: Exception) {
+                console.error("Failed in launch, see object", e)
             }
         }
 }

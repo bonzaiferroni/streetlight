@@ -2,6 +2,7 @@ package streetlight.web.model
 
 import kampfire.model.getDataOrNull
 import kampfire.model.handleResponse
+import koala.model.MarkerFocus
 import koala.model.Portal
 import koala.model.mapDistinct
 import koala.model.mapDistinctNotNull
@@ -32,13 +33,13 @@ class EarthMap(
         points?.groupingBy { it.markerType }?.eachCount()?.toList()
     }
     val isMovingFlow = markerMap.isMovingFlow
-    val focusFlow = markerMap.focusFlow.mapDistinct { marker ->
-        when (marker) {
-            is GalaxyMarker -> {
-                portal.go(EarthRoute(marker.galaxy.slug))
+    val focusFlow = markerMap.focusFlow.mapDistinct { focus ->
+        when (val galaxy = ((focus as? MarkerFocus)?.marker as? GalaxyMarker)?.galaxy) {
+            null -> focus
+            else -> {
+                portal.go(EarthRoute(galaxy.slug))
                 null
             }
-            else -> marker
         }
     }
     val isFocusedFlow = focusFlow.mapDistinct { it != null }

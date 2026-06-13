@@ -10,7 +10,7 @@ import koala.css.ZIndex1
 import koala.css.modify
 import koala.html.Id
 
-object Earth {
+object EarthStyle {
     val Id = Id("earth")
     val ViewMapButtonMod = modify(PositionSticky, TopSpacing1, JustifySelfCenter, AlignSelfStart, ZIndex1)
     val IsMoving = Class("is-moving")
@@ -23,16 +23,15 @@ object Earth {
     val Header = Class("earth-header")
     val Window = Class("earth-window")
     val Unbounded = Class("earth-unbounded")
-    val List = Class("earth-list")
     val Focus = Class("earth-focus")
 
     val MinifiedWidth = 800
 }
 
 // language="CSS"
-val EarthCss get() = with(Earth) { """
+val EarthCss get() = with(EarthStyle) { """
 
-${Earth.Id} .maplibregl-ctrl-top-right {
+${EarthStyle.Id} .maplibregl-ctrl-top-right {
     top: 50%;
     transform: translateY(-50%);
 }
@@ -74,15 +73,14 @@ $Id {
 
 $Grid {
     display: grid;
-    grid-template-columns: max-content 1fr;
+    grid-template-columns: auto;
     grid-template-rows: 1fr 300px;
     grid-template-areas: 
-        "window window"
-        "list focus";
+        "window"
+        "focus";
     gap: var(--unit-spacing);
 
     > $Window    { grid-area: window; }
-    > $List      { grid-area: list; width: 4rem; }
     > $Focus     { grid-area: focus; max-width: 400px; }
     > $Unbounded { grid-column: 1 / -1; grid-row: 1 / -1; }
     
@@ -102,10 +100,8 @@ $Grid {
     
     @media (min-width: ${MinifiedWidth}px) {
         grid-template-columns: 400px 1fr;
-        grid-template-rows: 1fr auto;
-        grid-template-areas: 
-            "focus window"
-            "list window";
+        grid-template-rows: auto;
+        grid-template-areas: "focus window";
     }
 }
 

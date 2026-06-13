@@ -20,7 +20,7 @@ import kotlin.math.min
 fun AppScope.earthUnboundedOverlay(model: EarthMap, mapContext: GeoCameraController) {
     val geoMap = app.get<GeoCamera>()
     val widget = mapContext.jsMap
-    val element = div(modify(Earth.Unbounded, PointerEventsNone))
+    val element = div(modify(EarthStyle.Unbounded, PointerEventsNone))
     val offsetFlow = element.resizeFlow()
         .combine(mapContext.windowElement.resizeFlow()) { _, _ -> Unit }
         .map {

@@ -27,7 +27,7 @@ data class Attribute<T>(
         val Lottie = Attribute<Lottie>("lottie", true)
         val IsOn = booleanAttributeOf("is-on", true)
         val GeoPointAttribute = Attribute("geo-point", true) { GeoPoint.fromString(it) }
-        val TabName = stringAttributeOf("tab-name", true)
+        val TabIndex = intAttributeOf("tab-index", true)
 
         val PopoverTarget = stringAttributeOf("popovertarget")
         val Popover = stringAttributeOf("popover")

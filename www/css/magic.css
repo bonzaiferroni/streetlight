@@ -14,6 +14,7 @@
     --transition-opacity: opacity var(--magic-interval) var(--magic-easing);
     --transition-transform: transform var(--magic-interval) var(--magic-easing);
     --transition-border-radius: border-radius var(--magic-interval) var(--magic-easing);
+    --transition-filter: filter var(--magic-interval) var(--magic-easing);
 }
 
 .glow {

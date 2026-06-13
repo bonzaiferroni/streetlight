@@ -12,13 +12,13 @@ import streetlight.web.EarthRoute
 import streetlight.web.layouts.postSection
 import streetlight.web.layouts.smallGalaxyCard
 import streetlight.web.pages.appFooter
-import streetlight.web.ui.Earth
+import streetlight.web.ui.EarthStyle
 
 fun FlowContent.homeShell(content: HomeContent) {
     column(HomeKey.ContainerId) {
         geoMapMount(null, modify(BorderRadius2, Height48, MoonShadow))
         box {
-            btn("View Map", EarthRoute(null), Earth.ViewMapButtonMod)
+            btn("View Map", EarthRoute(null), EarthStyle.ViewMapButtonMod)
             column(modify(Gap8)) {
                 row(modify(JustifyContentSpaceBetween)) {
                     galaxyMenu(content.galaxies, null)

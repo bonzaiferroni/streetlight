@@ -8,7 +8,7 @@ import streetlight.model.data.GalaxyContent
 import streetlight.web.EarthRoute
 import streetlight.web.layouts.postSection
 import streetlight.web.pages.appFooter
-import streetlight.web.ui.Earth
+import streetlight.web.ui.EarthStyle
 import streetlight.web.ui.headerOf
 
 fun FlowContent.galaxyShell(content: GalaxyContent) {
@@ -16,7 +16,7 @@ fun FlowContent.galaxyShell(content: GalaxyContent) {
     column(GalaxyKey.ShellId) {
         headerOf(galaxy)
         box {
-            btn("View Map", EarthRoute(galaxy.slug), Earth.ViewMapButtonMod)
+            btn("View Map", EarthRoute(galaxy.slug), EarthStyle.ViewMapButtonMod)
             column(modify(Gap8)) {
                 row {
                     galaxyMenu(emptyList(), galaxy)

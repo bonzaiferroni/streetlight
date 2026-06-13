@@ -34,6 +34,7 @@
     position: relative;
     transition: height 200ms ease;
     width: 100%;
+    overflow-x: hidden;
 }
 
 /* Panels stacked inside .tabs-viewport */
@@ -43,8 +44,6 @@
     inset: 0;
     opacity: 0;
     pointer-events: none;
-    transform: translateX(0);
-    transition: opacity 200ms ease, transform 200ms ease;
 }
 
 /* Active panel (visible state) */
@@ -53,7 +52,6 @@
     position: relative;
     opacity: 1;
     pointer-events: auto;
-    transform: translateX(0);
 }
 
 /* Simplified enter/exit with direction helpers */
@@ -64,17 +62,26 @@
 }
 
 /* During animation, keep active panel absolute so both can overlap */
-.tabs-viewport.animating .tabs-panel.is-active {
-    position: absolute;
+.tabs-viewport.animating {
+    .tabs-panel.is-active {
+        position: absolute;
+    }
+
+    .tabs-panel {
+        transform: translateX(0);
+        transition: var(--transition-opacity), var(--transition-transform);
+    }
+
+    .tabs-panel { z-index: 0; }
+    .tabs-panel.exit { z-index: 1; }
+    .tabs-panel.enter { z-index: 2; }
+
+    .tabs-panel.dir-left { --shift: -20px; }
+    .tabs-panel.dir-right { --shift: 20px; }
+
+    .tabs-panel.enter { transform: translateX(var(--shift)); }
+    .tabs-panel.exit  { transform: translateX(var(--shift)); }
 }
 
 /* Stacking order: ensure both entrance and exit are visible */
-.tabs-panel { z-index: 0; }
-.tabs-panel.exit { z-index: 1; }
-.tabs-panel.enter { z-index: 2; }
 
-.tabs-panel.dir-left { --shift: -20px; }
-.tabs-panel.dir-right { --shift: 20px; }
-
-.tabs-panel.enter { transform: translateX(var(--shift)); }
-.tabs-panel.exit  { transform: translateX(var(--shift)); }

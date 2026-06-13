@@ -12,28 +12,29 @@ import org.w3c.dom.HTMLElement
 
 fun <T : TagScope> T.tabs(
     id: Id? = null,
-    modifiers: ModifierSet? = null,
-    onChangeTab: ((String) -> Unit)? = null,
-    tabFlow: Flow<String>? = null,
-    defaultTab: String? = null,
+    mod: ModifierSet? = null,
+    viewportMod: ModifierSet? = null,
+    onChangeTab: ((Int) -> Unit)? = null,
+    tabFlow: Flow<Int>? = null,
+    defaultTab: Int? = null,
     content: TabScope<T>.() -> Unit,
 ): HTMLDivElement {
     val scope = TabScope(content = content)
     var viewport: HTMLElement? = null
 
-    val root = column(id, modify(TabClass.tabs, modifiers)) {
+    val root = column(id, modify(TabClass.tabs, mod)) {
         tabsHeader(scope)
-        viewport = tabsViewport()
+        viewport = tabsViewport(viewportMod)
     }
 
     var currentTab = defaultTab ?: scope.tabs.firstOrNull()?.label
 
     defaultTab?.let {
-        root.setAttribute(Attribute.TabName.to(it))
+        root.setAttribute(Attribute.TabIndex.to(it))
     }
 
     onChangeTab?.let {
-        root.observeAttribute(Attribute.TabName) {
+        root.observeAttribute(Attribute.TabIndex) {
             val name = it ?: return@observeAttribute
             if (name == currentTab) return@observeAttribute
             currentTab = name
@@ -47,7 +48,7 @@ fun <T : TagScope> T.tabs(
                 flow.collect { name ->
                     if (name == currentTab) return@collect
                     currentTab = name
-                    root.setAttribute(Attribute.TabName.to(name))
+                    root.setAttribute(Attribute.TabIndex.to(name))
                 }
             }
         }
@@ -75,4 +76,6 @@ fun <T : TagScope> T.tabsHeader(tabScope: TabScope<T>) = div(modify(TabClass.hea
     }
 }
 
-fun TagScope.tabsViewport() = box(modify(TabClass.viewport))
+fun TagScope.tabsViewport(
+    mod: ModifierSet? = null,
+) = box(modify(TabClass.viewport, mod))

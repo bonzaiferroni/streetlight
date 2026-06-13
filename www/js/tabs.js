@@ -72,11 +72,12 @@ function initTabs(root, viewportArg) {
     };
 
     const readAttribute = () => {
-        return (root.getAttribute("data-tab-name") || "").trim();
+        const val = root.getAttribute("data-tab-index");
+        return val == null ? -1 : Number(val);
     };
 
-    const writeAttribute = (name) => {
-        root.setAttribute("data-tab-name", name);
+    const writeAttribute = (idx) => {
+        root.setAttribute("data-tab-index", idx);
     };
 
     // Resolve initial tab: attribute wins, then URL query, then localStorage, then is-default, then first
@@ -121,12 +122,11 @@ function initTabs(root, viewportArg) {
         });
     });
 
-    // Observe external changes to data-tab-name
+    // Observe external changes to data-tab-index
     const observer = new MutationObserver(() => {
-        selectTab(names.indexOf(readAttribute()));
+        selectTab(readAttribute());
     });
-
-    observer.observe(root, { attributes: true, attributeFilter: ["data-tab-name"] });
+    observer.observe(root, { attributes: true, attributeFilter: ["data-tab-index"] });
 
     function swap(fromIdx, toIdx) {
         const from = panels[fromIdx];

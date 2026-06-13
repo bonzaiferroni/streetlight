@@ -10,11 +10,23 @@ object FlowBlockKey {
 val FlowBlockCss get() = """
 .flow-block.transitioning {
     opacity: 0;
-    transition: 
-        opacity var(--magic-interval) var(--magic-easing), 
-        transform var(--magic-interval) var(--magic-easing), 
-        filter var(--magic-interval) var(--magic-easing);
+    transition: var(--transition-opacity);
     pointer-events: none;
+    
+    &.blur {
+        transition: var(--transition-opacity), var(--transition-filter);
+    }
+    
+    &.slide-down,
+    &.slide-up,
+    &.slide-right,
+    &.slide-left {
+        transition: var(--transition-opacity), var(--transition-transform);
+        
+        &.blur {
+            transition: var(--transition-opacity), var(--transition-transform), var(--transition-filter);
+        }
+    }
 }
 
 .flow-block.transitioning.reveal {
