@@ -23,7 +23,6 @@ fun AppScope.appNavigation() {
             StreetlightScreen.Home -> viewHomeRoute()
             StreetlightScreen.Event -> viewEventProfileRoute()
             StreetlightScreen.Account -> viewStarDash()
-            StreetlightScreen.UpdateEvent -> viewEventEditorRoute()
             StreetlightScreen.Sandbox -> viewSandbox()
             StreetlightScreen.Earth -> viewEarthMapRoute()
             StreetlightScreen.Post -> viewPostRoute()
@@ -35,11 +34,12 @@ fun AppScope.appNavigation() {
             // location
             StreetlightScreen.LocationAdmin -> viewLocationAdmin()
             StreetlightScreen.Location -> viewLocation()
-            StreetlightScreen.LocationUpdate -> viewEditLocationRoute()
+            StreetlightScreen.LocationUpdate -> viewUpdateLocationRoute()
             StreetlightScreen.LocationScout -> viewLocationScoutRoute()
 
             // event
             StreetlightScreen.EventScout -> viewEventScoutRoute()
+            StreetlightScreen.UpdateEvent -> viewEventEditorRoute()
 
             // galaxy
             StreetlightScreen.Galaxy -> viewGalaxyRoute()

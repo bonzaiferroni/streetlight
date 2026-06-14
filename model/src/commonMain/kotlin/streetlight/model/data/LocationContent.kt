@@ -6,4 +6,5 @@ import kotlinx.serialization.Serializable
 data class LocationContent(
     val location: Location,
     val events: List<Event>,
+    val canEdit: Boolean,
 )

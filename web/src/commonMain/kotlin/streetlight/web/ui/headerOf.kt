@@ -16,6 +16,7 @@ import streetlight.web.layouts.locationCells
 
 fun FlowContent.headerOf(
     location: Location,
+    editRoute: AppRoute?,
     modifiers: ModifierSet? = null,
     block: DIV.() -> Unit = {}
 ) {
@@ -28,6 +29,7 @@ fun FlowContent.headerOf(
         description = location.description,
         modifiers = modifiers,
         cellContent = locationCells(location),
+        editRoute = editRoute,
         links = location.links,
         block = block
     )

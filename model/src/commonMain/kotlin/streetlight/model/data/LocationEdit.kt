@@ -30,7 +30,9 @@ data class LocationEdit(
     val aboutUrl: String? = null,
     val menuUrl: String? = null,
     val imageRef: Url? = null,
-): Labeled {
+): Labeled, RecordEdit {
+    override val recordType get() = RecordType.Location
+
     val validity by lazy {
         buildSet {
             if (name.isNullOrBlank()) add(LocationProperty.Name)

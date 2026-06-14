@@ -6,6 +6,7 @@ import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import streetlight.model.data.Location
 import streetlight.model.data.LocationContent
+import streetlight.web.UpdateLocationRoute
 import streetlight.web.layouts.layoutPosts
 import streetlight.web.layouts.postCardOf
 import streetlight.web.pages.appFooter
@@ -15,7 +16,10 @@ fun FlowContent.locationShell(
     content: LocationContent,
 ) {
     column(LocationProfileKey.Id, modify(AlignItemsStretch, Gap4)) {
-        headerOf(content.location)
+        headerOf(
+            location = content.location,
+            editRoute = if (content.canEdit) UpdateLocationRoute(content.location.slug) else null
+        )
 
         tabs(LocationProfileKey.tabsId) {
             if (content.events.isNotEmpty()) {

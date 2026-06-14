@@ -11,8 +11,8 @@ import kotlinx.html.dom.prepend
 import org.w3c.dom.HTMLElement
 
 @RenderMarker
-interface AppScope: TagScope {
-    val app: AppContainer
+interface AppScope: TagScope, AppFacade {
+    override val app: AppContainer
     val parent: HTMLElement
     val parentScope: CoroutineScope
 
@@ -28,15 +28,19 @@ interface AppScope: TagScope {
     }
 }
 
+interface AppFacade {
+    val app: AppContainer
+}
+
 @DslMarker
 annotation class RenderMarker
 
 @RenderMarker
 class EffectScope(
-    val app: AppContainer,
+    override val app: AppContainer,
     val parent: HTMLElement,
     val parentScope: CoroutineScope,
-) {
+): AppFacade {
     fun launch(block: suspend CoroutineScope.() -> Unit): Job =
         parentScope.launch {
             try {
