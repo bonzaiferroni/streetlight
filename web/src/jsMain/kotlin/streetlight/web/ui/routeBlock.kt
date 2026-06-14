@@ -7,13 +7,11 @@ import streetlight.web.StreetlightRoute
 
 // convenience functions so we don't need to pass portal as an arg, probably should nix
 inline fun <reified Route: StreetlightRoute> AppScope.routeBlock(
-    renderCacheCount: Int? = null,
     crossinline block: AppScope.(Route) -> Unit,
-): HTMLElement = routeBlock<Route>(portal, renderCacheCount, block)
+): HTMLElement = routeBlock<Route>(portal, block)
 
 inline fun <reified Route: StreetlightRoute, Data> AppScope.routeBlock(
     crossinline provideData: suspend (Route) -> Data?,
-    renderCacheCount: Int? = null,
     refreshOnRoute: Boolean = true,
     crossinline block: AppScope.(Data) -> Unit
-): HTMLElement = routeBlock<Route, Data>(portal, provideData, renderCacheCount, refreshOnRoute, block)
+): HTMLElement = routeBlock<Route, Data>(portal, provideData, refreshOnRoute, block)

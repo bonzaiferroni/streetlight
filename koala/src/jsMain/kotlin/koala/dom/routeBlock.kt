@@ -8,12 +8,11 @@ import org.w3c.dom.HTMLElement
 
 inline fun <reified Route: AppRoute> AppScope.routeBlock(
     portal: Portal,
-    renderCacheCount: Int? = null,
     crossinline block: AppScope.(Route) -> Unit
 ): HTMLElement {
     val routeFlow = portal.routeFlowOf<Route>()
 
-    val element = flowBlock(routeFlow, renderCacheCount = renderCacheCount) {
+    val element = flowBlock(routeFlow) {
         block(it)
     }
 
@@ -23,13 +22,12 @@ inline fun <reified Route: AppRoute> AppScope.routeBlock(
 inline fun <reified Route: AppRoute, Data> AppScope.routeBlock(
     portal: Portal,
     crossinline provideData: suspend (Route) -> Data?,
-    renderCacheCount: Int? = null,
     refreshOnRoute: Boolean = true,
     crossinline block: AppScope.(Data) -> Unit
 ): HTMLElement {
     val routeFlow = portal.routeFlowOf<Route>(!refreshOnRoute).map { provideData(it) }
 
-    val element = flowBlock(routeFlow, modify(Width100P, Magic), renderCacheCount = renderCacheCount) {
+    val element = flowBlock(routeFlow, modify(Width100P, Magic)) {
         if (it != null) {
             block(it)
         } else {

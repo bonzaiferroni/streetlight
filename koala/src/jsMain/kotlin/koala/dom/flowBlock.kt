@@ -21,7 +21,7 @@ import org.w3c.dom.HTMLDivElement
 fun <State> AppScope.flowBlock(
     flow: Flow<State>,
     modifiers: ModifierSet? = null,
-    renderCacheCount: Int? = null,
+    cacheElements: Boolean = false,
     config: (DIV.() -> Unit)? = null,
     onTransition: ((State) -> Unit)? = null,
     block: AppScope.(State) -> Unit
@@ -45,7 +45,7 @@ fun <State> AppScope.flowBlock(
             // do we need renderedOnce?
             if (renderedOnce && value == currentValue) return@collect
             renderedOnce = true
-            if (renderCacheCount == null) render?.job?.cancel()
+            if (cacheElements) render?.job?.cancel()
             currentValue = value
 
             fun appendRender() {
@@ -56,12 +56,10 @@ fun <State> AppScope.flowBlock(
                     }
                 } ?: createRenderJob(element, value, block)
 
-                if (renderCacheCount != null) {
+                if (cacheElements) {
                     cache[value] = render
-                    if (renderCacheCount > 0 && cache.size > renderCacheCount) {
-                        val key = cache.entries.firstOrNull()?.key
-                        cache.remove(key)
-                    }
+                    val key = cache.entries.firstOrNull()?.key
+                    cache.remove(key)
                 }
             }
 

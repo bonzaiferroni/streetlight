@@ -2,11 +2,13 @@ package streetlight.web.ui
 
 import kampfire.api.toSlug
 import koala.core.addGlobalFunctions
+import koala.css.Property
 import koala.dom.*
 import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.css.Display
 import kotlinx.serialization.ExperimentalSerializationApi
 import streetlight.web.layouts.PostKey
 import streetlight.web.pages.AppBodyKey
@@ -43,10 +45,6 @@ fun viewApp() {
             // signs in user if configured
             gate.readUser()
 
-            // hides the element that holds server rendered content
-            val shellBox = document.getElementById(AppBodyKey.ShellBoxId)
-            shellBox.style.display = "none" // td: use pointer-events: none
-
             val portalMount = document.getElementById(AppBodyKey.PortalMountId)
 
             portalMount.renderRoot(scope, app) {
@@ -61,6 +59,10 @@ fun viewApp() {
                 wireToaster()
 
                 registerMenu(PostKey.PostMenuId, { it.toSlug() }, AppScope::postMenu)
+
+                // hides the element that holds server rendered content
+                val shellBox = document.getElementById(AppBodyKey.ShellBoxId)
+                shellBox.setProperty(Property.Display.to(Display.none))
             }
 
             try {

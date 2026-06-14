@@ -16,8 +16,12 @@ fun AppScope.appNavigation() {
     flowBlock(
         flow = portal.screenFlow,
         modifiers = modify(Magic, Blur),
-        renderCacheCount = 0, // allows unlimited caching
-        onTransition = { window.scrollTo(0.0, portal.stateNow.initialScrollY) },
+        cacheElements = true,
+        onTransition = {
+            if (!portal.stateNow.isInitialRoute) {
+                window.scrollTo(0.0, portal.stateNow.initialScrollY)
+            }
+        },
     ) { screen ->
         when (screen) {
             StreetlightScreen.Home -> viewHomeRoute()
