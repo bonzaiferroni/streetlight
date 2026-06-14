@@ -10,7 +10,7 @@ import streetlight.web.shells.siteDocShell
 
 fun AppScope.viewSiteDoc(node: DocNode) {
     val table = cachedTable ?: emptyList()
-    shellBox(SiteDocKey.Id) {
+    shellBox(SiteDocKey.Id, hookInitializers) {
         siteDocShell(node, table)
     }
 }

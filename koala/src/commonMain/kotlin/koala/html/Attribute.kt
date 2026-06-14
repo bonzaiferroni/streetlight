@@ -1,5 +1,6 @@
 package koala.html
 
+import kampfire.api.toSlug
 import kampfire.model.GeoPoint
 import koala.Lottie
 import koala.utils.jsonConfig
@@ -47,6 +48,8 @@ fun booleanAttributeOf(identifier: String, isCustom: Boolean = false) =
 
 fun intAttributeOf(identifier: String, isCustom: Boolean = false) =
     Attribute(identifier, isCustom) { it.toInt() }
+
+fun slugAttributeOf(identifier: String) = Attribute(identifier, false) { it.toSlug() }
 
 inline fun <reified T: Enum<T>> enumAttributeOf(identifier: String) =
     Attribute<T>(identifier, true, { it.name }) { enumValueOf(it) }

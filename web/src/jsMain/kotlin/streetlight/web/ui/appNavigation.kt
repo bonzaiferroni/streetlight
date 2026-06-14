@@ -4,10 +4,14 @@ import koala.css.Blur
 import koala.css.Magic
 import koala.css.modify
 import koala.dom.AppScope
+import koala.dom.closeOpenPopovers
 import koala.dom.flowBlock
+import koala.dom.hidePopover
 import koala.dom.textBlock
 import koala.model.Portal
+import kotlinx.browser.document
 import kotlinx.browser.window
+import org.w3c.dom.asList
 import streetlight.web.StreetlightScreen
 
 fun AppScope.appNavigation() {
@@ -21,6 +25,7 @@ fun AppScope.appNavigation() {
             if (!portal.stateNow.isInitialRoute) {
                 window.scrollTo(0.0, portal.stateNow.initialScrollY)
             }
+            document.closeOpenPopovers()
         },
     ) { screen ->
         when (screen) {

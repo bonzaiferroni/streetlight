@@ -1,8 +1,10 @@
 package koala.dom
 
 import koala.html.Id
+import kotlinx.browser.document
 import org.w3c.dom.Document
 import org.w3c.dom.HTMLElement
+import org.w3c.dom.asList
 import kotlin.js.Promise
 
 fun Document.getElementById(id: Id) = getElementById(id.identifier) as HTMLElement
@@ -10,6 +12,10 @@ fun Document.getElementOrNullById(id: Id) = getElementById(id.identifier) as? HT
 
 fun Document.startViewTransition(updateCallback: () -> Unit): ViewTransition =
     this.asDynamic().startViewTransition(updateCallback).unsafeCast<ViewTransition>()
+
+fun Document.closeOpenPopovers() = document.querySelectorAll("[popover]:popover-open").asList().forEach { node ->
+    node.hidePopover()
+}
 
 external interface ViewTransition {
     val ready: Promise<Unit>

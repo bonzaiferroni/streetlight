@@ -13,7 +13,7 @@ import streetlight.web.shells.PostKey
 import streetlight.web.shells.postShell
 
 fun AppScope.viewPost(post: BasicPost) {
-    val root = shellBox(PostKey.ShellId) {
+    val root = shellBox(PostKey.ShellId, hookInitializers) {
         postShell(post)
     }
 

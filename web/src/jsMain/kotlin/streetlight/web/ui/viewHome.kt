@@ -14,7 +14,7 @@ import streetlight.web.shells.homeShell
 fun AppScope.viewHome(content: HomeContent) {
     val cache = app.get<DataCache>()
 
-    val root = shellBoxWithMap(HomeKey.ContainerId) {
+    val root = shellBoxWithMap(HomeKey.ContainerId, hookInitializers) {
         homeShell(content)
     }
 

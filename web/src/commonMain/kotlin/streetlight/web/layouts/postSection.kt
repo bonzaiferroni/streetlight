@@ -32,5 +32,5 @@ object PostKey {
     val PostMenuId = Id("post-menu")
     val PostLayoutId = Id("post-layout")
 
-    val Attribute = uuidAttributeOf("post-id") { PostId(it) }
+    val Attribute = slugAttributeOf("post-slug")
 }

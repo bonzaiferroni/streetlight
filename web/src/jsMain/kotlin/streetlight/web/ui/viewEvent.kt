@@ -14,7 +14,7 @@ fun AppScope.viewEvent(event: EventLocation) {
     val camera = app.get<GeoCamera>()
     val cache = app.get<DataCache>()
 
-    val root = shellBoxWithMap(EventProfileKey.id, modify(Width100P)) {
+    val root = shellBoxWithMap(EventProfileKey.id, hookInitializers, modify(Width100P)) {
         eventShell(event)
     }
 

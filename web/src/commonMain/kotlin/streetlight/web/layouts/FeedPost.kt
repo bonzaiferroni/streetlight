@@ -15,11 +15,12 @@ import streetlight.model.data.LightType
 import streetlight.model.data.PostId
 import streetlight.web.GalaxyRoute
 import streetlight.web.StarRoute
+import streetlight.web.ui.postMenu
 import kotlin.time.Clock
 import kotlin.time.Instant
 
 fun FlowContent.feedPost(
-    postId: PostId?,
+    postSlug: Slug?,
     username: String?,
     galaxyName: String?,
     galaxySlug: Slug?,
@@ -38,10 +39,10 @@ fun FlowContent.feedPost(
 ) {
     div(modify(FeedPost.Class)) {
         setStyle(Property.ColorScheme.to(colorScheme.cssValue))
-        if (postId == null) addModifiers(FeedPost.HideLight)
+        if (postSlug == null) addModifiers(FeedPost.HideLight)
 
-        postId?.let {
-            setAttribute(PostKey.Attribute.to(postId))
+        postSlug?.let {
+            setAttribute(PostKey.Attribute.to(it))
 
             // boost
             column(modify(GridArea.Light, LightControl.Class, LightControl.getLitMod(isLit), Gap0)) {
@@ -55,9 +56,9 @@ fun FlowContent.feedPost(
                 }
 
                 box(modify(OpacityHigh)) {
-                    postId.let {
-                        onClick = LightControl.ToggleFun.invoke(ThisElement, postId)
-                    }
+//                    postId.let {
+//                        onClick = LightControl.ToggleFun.invoke(ThisElement, postId)
+//                    }
                     icon(SvgFile.Boost, modify(LightControl.UnlitIcon))
                     icon(SvgFile.BoostFilled, modify(LightControl.LitIcon))
                 }
@@ -105,13 +106,14 @@ fun FlowContent.feedPost(
                             span((Clock.System.now() - postedAt).toAgoFormat())
                         }
                     }
-                    postId?.let { postId ->
-                        val anchor = PositionAnchor("menu-${postId}")
-                        icon(SvgFile.Dots, modify(Height3)) {
-                            setAnchorName(anchor)
-                            setPopoverTarget(PostKey.PostMenuId)
-                            onClick = KoalaFun.CallMenu.invoke(anchor, PostKey.PostMenuId, postId)
-                        }
+                    postSlug?.let { slug ->
+                        postMenu(slug)
+//                        val anchor = PositionAnchor("menu-${postId}")
+//                        icon(SvgFile.Dots, modify(Height3)) {
+//                            setAnchorName(anchor)
+//                            setPopoverTarget(PostKey.PostMenuId)
+//                            onClick = KoalaFun.CallMenu.invoke(anchor, PostKey.PostMenuId, postId)
+//                        }
                     }
                 }
             }

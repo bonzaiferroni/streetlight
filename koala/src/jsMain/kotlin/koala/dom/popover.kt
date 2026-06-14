@@ -7,6 +7,7 @@ import koala.html.configurePopover
 import kotlinx.html.DIV
 import kotlinx.html.js.div
 import org.w3c.dom.HTMLElement
+import org.w3c.dom.Node
 
 fun TagScope.popover(
     id: Id,
@@ -18,7 +19,7 @@ fun TagScope.popover(
     configurePopover(id, anchor, modifiers, isManual, block)
 }
 
-fun HTMLElement.showPopover() = asDynamic().showPopover()
-fun HTMLElement.hidePopover() = asDynamic().hidePopover()
-fun HTMLElement.togglePopover() = asDynamic().togglePopover()
+fun Node.showPopover() = asDynamic().showPopover()
+fun Node.hidePopover() = asDynamic().hidePopover()
+fun Node.togglePopover() = asDynamic().togglePopover()
 fun HTMLElement.isPopoverOpen() = matches(":popover-open")

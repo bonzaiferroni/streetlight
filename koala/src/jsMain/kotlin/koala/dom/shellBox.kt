@@ -7,9 +7,11 @@ import koala.html.ShellBoxKey
 import kotlinx.browser.document
 import kotlinx.html.DIV
 import org.w3c.dom.HTMLDivElement
+import org.w3c.dom.HTMLElement
 
 fun AppScope.shellBox(
     id: Id,
+    initializers: List<AppScope.(HTMLElement) -> Unit>,
     modifiers: ModifierSet? = null,
     block: DIV.() -> Unit
 ): HTMLDivElement {
@@ -31,15 +33,20 @@ fun AppScope.shellBox(
 
         initElement(element)
         element
+    }.also { element ->
+        initializers.forEach {
+            it(element)
+        }
     }
 }
 
 fun AppScope.shellBoxWithMap(
     id: Id,
+    initializers: List<AppScope.(HTMLElement) -> Unit>,
     modifiers: ModifierSet? = null,
     block: DIV.() -> Unit
 ): HTMLDivElement {
-    val element = shellBox(id, modifiers, block)
+    val element = shellBox(id, initializers, modifiers, block)
     element.onView {
         wireGeoMap(element)
     }

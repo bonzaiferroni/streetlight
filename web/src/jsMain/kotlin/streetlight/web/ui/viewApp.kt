@@ -58,7 +58,7 @@ fun viewApp() {
                 wireRightPanel()
                 wireToaster()
 
-                registerMenu(PostKey.PostMenuId, { it.toSlug() }, AppScope::postMenu)
+                // registerMenu(PostKey.PostMenuId, { it.toSlug() }, AppScope::postMenuProto)
 
                 // hides the element that holds server rendered content
                 val shellBox = document.getElementById(AppBodyKey.ShellBoxId)

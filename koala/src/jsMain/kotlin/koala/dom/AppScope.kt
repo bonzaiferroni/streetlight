@@ -9,6 +9,7 @@ import kotlinx.dom.clear
 import kotlinx.html.dom.append
 import kotlinx.html.dom.prepend
 import org.w3c.dom.HTMLElement
+import kotlin.coroutines.cancellation.CancellationException
 
 @RenderMarker
 interface AppScope: TagScope, AppFacade {
@@ -22,7 +23,8 @@ interface AppScope: TagScope, AppFacade {
             try {
                 effectScope.block()
             } catch (e: Exception) {
-                console.error("Failed in launch, see object", e)
+                if (e is CancellationException) throw e
+                else console.error("Failed in launch, see object", e)
             }
         }
     }
@@ -48,7 +50,8 @@ class EffectScope(
             } catch (e: UnsupportedOperationException) {
                 throw InvalidRenderOperation(parent)
             } catch (e: Exception) {
-                console.error("Failed in launch, see object", e)
+                if (e is CancellationException) throw e
+                else console.error("Failed in launch, see object", e)
             }
         }
 }

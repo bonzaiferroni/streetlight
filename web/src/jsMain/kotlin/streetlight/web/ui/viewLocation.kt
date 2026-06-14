@@ -13,7 +13,7 @@ fun AppScope.viewLocation() {
         portal = portal,
         provideData = { api.readLocationContent(it.slug).handleResponse(toaster::toast) }
     ) { location ->
-        val element = shellBox(LocationProfileKey.Id) { // app.geoMap, app.appScope
+        val element = shellBox(LocationProfileKey.Id, hookInitializers) { // app.geoMap, app.appScope
             locationShell(location)
         }
     }

@@ -11,7 +11,7 @@ import streetlight.model.data.LocationEdit
 
 fun FlowContent.postCardOf(post: GalaxyPost) {
     feedPost(
-        postId = post.postId,
+        postSlug = post.slug,
         galaxyName = post.galaxyName,
         galaxySlug = post.galaxySlug,
         username = post.username,
@@ -34,7 +34,7 @@ fun FlowContent.postCardOf(post: GalaxyPost) {
 
 fun FlowContent.postCardOf(location: Location) {
     feedPost(
-        postId = null, username = null,
+        postSlug = null, username = null,
         galaxyName = null, galaxySlug = null,
         heading = location.label,
         subHeading = location.sublabel,
@@ -49,7 +49,7 @@ fun FlowContent.postCardOf(location: Location) {
 
 fun FlowContent.postCardOf(edit: LocationEdit, username: String?) {
     feedPost(
-        postId = null, username = null,
+        postSlug = null, username = null,
         galaxyName = null, galaxySlug = null,
         heading = edit.label,
         subHeading = edit.subLabel,
@@ -64,7 +64,7 @@ fun FlowContent.postCardOf(edit: LocationEdit, username: String?) {
 
 fun FlowContent.postCardOf(event: EventLocation) {
     feedPost(
-        postId = null, username = null,
+        postSlug = null, username = null,
         galaxyName = null, galaxySlug = null,
         heading = event.label,
         subHeading = event.locationLabel,
@@ -79,7 +79,7 @@ fun FlowContent.postCardOf(event: EventLocation) {
 
 fun FlowContent.postCardOf(event: Event) {
     feedPost(
-        postId = null, username = event.scout,
+        postSlug = null, username = event.scout,
         galaxyName = null, galaxySlug = null,
         heading = event.title,
         subHeading = null,
@@ -95,7 +95,7 @@ fun FlowContent.postCardOf(event: Event) {
 
 fun FlowContent.postCardOf(event: EventEdit, location: Location) {
     feedPost(
-        postId = null, username = null,
+        postSlug = null, username = null,
         galaxyName = null, galaxySlug = null,
         heading = event.title ?: "[Title]",
         subHeading = "${location.name ?: location.address ?: "[Location]"}, ${location.city ?: "[City]"}",

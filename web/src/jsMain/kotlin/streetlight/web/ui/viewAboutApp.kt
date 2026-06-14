@@ -7,7 +7,7 @@ import streetlight.web.shells.aboutShell
 
 fun AppScope.viewAboutApp() {
 
-    val root = shellBox(AboutKey.id) {
+    val root = shellBox(AboutKey.id, hookInitializers) {
         aboutShell()
     }
 }
