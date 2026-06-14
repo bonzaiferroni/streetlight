@@ -1,6 +1,7 @@
 package streetlight.web
 
 import kampfire.api.Slug
+import kampfire.api.SlugValue
 import kampfire.api.TableId
 import kampfire.utils.pascalToKebabCase
 import koala.html.AppRoute
@@ -72,7 +73,7 @@ interface RecordIdRoute: StreetlightRoute {
 }
 
 sealed interface SlugRoute: StreetlightRoute {
-    val slug: Slug?
+    val slug: SlugValue?
     override fun toSitePath() = toIdSitePath(slug)
 }
 
@@ -127,7 +128,7 @@ data class EditTalentRoute(
     override val title get() = "Talent"
 }
 
-data class StarRoute(override val slug: Slug): StreetlightRoute, SlugRoute {
+data class StarRoute(override val slug: SlugValue): StreetlightRoute, SlugRoute {
     override val screen get() = StreetlightScreen.Star
     override val title get() = "Star"
 }
@@ -164,6 +165,6 @@ data class TalkRoute(val id: Uuid, val type: SpaceType): StreetlightRoute {
 }
 
 private fun AppRoute.toIdSitePath(id: String?) = id?.let { "$basePath/$id" } ?: basePath
-private fun AppRoute.toIdSitePath(id: Slug?) = toIdSitePath(id?.string)
+private fun AppRoute.toIdSitePath(id: SlugValue?) = toIdSitePath(id?.value)
 private fun AppRoute.toIdSitePath(id: TableId<Uuid>?) = toIdSitePath(id?.value.toString())
 private fun AppRoute.toIdSitePath(id: Uuid?) = toIdSitePath(id?.toString())

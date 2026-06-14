@@ -23,10 +23,10 @@ fun FlowContent.layoutTalkPreview(route: AppRoute, comments: List<Comment>) {
 
         column {
             row(modify(AlignItemsCenter, modify(Height5))) {
-                navigationIfNotNull(comment.username?.let { StarRoute(it.toSlug())}) {
+                navigationIfNotNull(comment.username?.let { StarRoute(it)}) {
                     row(modify(AlignItemsCenter)) {
                         image(comment.thumb, modify(Aspect1))
-                        heading5(comment.username)
+                        heading5(comment.username?.value ?: "[Former Guest]")
                     }
                 }
                 textBlock(comment.createdAt.toAgoFormat())

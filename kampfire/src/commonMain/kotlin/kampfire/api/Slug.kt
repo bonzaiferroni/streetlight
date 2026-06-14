@@ -5,10 +5,10 @@ import kotlin.jvm.JvmInline
 
 @JvmInline
 @Serializable
-value class Slug(val string: String) {
-    fun hasBase(base: String) = string.startsWith(base)
+value class Slug(override val value: String): SlugValue {
+    fun hasBase(base: String) = value.startsWith(base)
 
-    override fun toString() = string
+    override fun toString() = value
 
     companion object {
         val Empty = Slug("")
@@ -31,4 +31,8 @@ fun String.normalizeSlugSource(): String =
 private val VALID_SLUG = "^[a-z0-9]+(-[a-z0-9]+)*$".toRegex()
 
 fun Slug.isValid(): Boolean =
-    string.length in Slug.MIN_LENGTH..Slug.MAX_LENGTH && VALID_SLUG.matches(string)
+    value.length in Slug.MIN_LENGTH..Slug.MAX_LENGTH && VALID_SLUG.matches(value)
+
+interface SlugValue {
+    val value: String
+}

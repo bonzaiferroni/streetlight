@@ -1,6 +1,7 @@
 package kampfire.model
 
 import kampfire.api.TableId
+import kampfire.api.Username
 import kampfire.utils.randomUuidString
 import kotlin.time.Instant
 import kotlinx.serialization.Serializable
@@ -21,7 +22,7 @@ import kotlin.uuid.Uuid
 data class BasicUser(
     override val userId: BasicUserId,
     val name: String?,
-    override val username: String,
+    override val username: Username,
     override val hashedPassword: String,
     override val salt: String,
     override val email: String?,
@@ -33,7 +34,7 @@ data class BasicUser(
 
 @Serializable
 data class BasicUserInfo(
-    val username: String,
+    val username: Username,
     val roles: RoleSet,
     val avatarUrl: String?,
     val createdAt: Instant,

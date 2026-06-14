@@ -1,12 +1,13 @@
 package kampfire.model
 
 import kampfire.api.TableId
+import kampfire.api.Username
 import kotlin.time.Instant
 import kotlin.uuid.Uuid
 
 interface AuthUser {
     val userId: TableId<Uuid>
-    val username: String
+    val username: Username
     val hashedPassword: String
     val salt: String
     val email: String?

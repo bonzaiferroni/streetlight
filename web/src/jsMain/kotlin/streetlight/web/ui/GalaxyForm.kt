@@ -53,7 +53,7 @@ fun AppScope.galaxyCityForm(model: GalaxyEditor) {
 
 fun AppScope.galaxyNameForm(model: GalaxyEditor) {
     val nameFlow = model.galaxyFlow.mapDistinct { it.name ?: "" }
-    val slugFlow = model.galaxyFlow.mapDistinct { it.slug?.string ?: "" }
+    val slugFlow = model.galaxyFlow.mapDistinct { it.slug?.value ?: "" }
 
     formCardSection("Galaxy Name") {
         formPart(

@@ -1,12 +1,12 @@
 package streetlight.web.model
 
+import kampfire.api.toUsername
 import kampfire.model.SignUpRequest
 import kampfire.model.handleResponse
 import koala.model.mapDistinct
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import streetlight.model.utils.isValid
 import streetlight.web.io.ApiClient
 
 class UserCreator(
@@ -19,14 +19,14 @@ class UserCreator(
     private val state = storeOf(UserCreatorState())
     private val requestNow get() = state.now.request
 
-    val usernameFlow = state.flow.mapDistinct { it.request.username }
+    val usernameFlow = state.flow.mapDistinct { it.request.username.value }
     val emailFlow = state.flow.mapDistinct { it.request.email ?: "" }
     val passwordFlow = state.flow.mapDistinct { it.request.password }
     val confirmPasswordFlow = state.flow.mapDistinct { it.confirmPassword }
     val isValidFlow = state.flow.mapDistinct { it.isValid }
 
     fun setUsername(username: String) {
-        setRequest { it.copy(username = username) }
+        setRequest { it.copy(username = username.toUsername()) }
     }
 
     fun setEmail(email: String) {

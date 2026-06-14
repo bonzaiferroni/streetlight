@@ -1,6 +1,7 @@
 package streetlight.model.data
 
 import kampfire.api.Slug
+import kampfire.api.Username
 import kampfire.model.GeoPoint
 import kampfire.model.Labeled
 import kampfire.model.ScaledImageArray
@@ -17,8 +18,8 @@ data class Location(
     val cityId: CityId?,
     val mapId: MapId?,
     val slug: Slug,
-    val scout: String?,
-    val host: String?,
+    val scout: Username?,
+    val host: Username?,
     val name: String?,
     val description: String?,
     val address: String?,

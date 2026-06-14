@@ -1,5 +1,6 @@
 package streetlight.model.data
 
+import kampfire.api.Username
 import kampfire.model.ScaledImageArray
 import kampfire.model.Url
 import kampfire.model.UserRole
@@ -10,7 +11,7 @@ import kotlin.uuid.Uuid
 
 @Serializable
 data class Star(
-    val username: String,
+    val username: Username,
     val roles: Set<UserRole>,
     val name: String?,
     val description: String?,
@@ -29,7 +30,7 @@ value class StarId(override val value: Uuid): RecordId {
 
 @Serializable
 data class StarEdit(
-    val username: String? = null,
+    val username: Username? = null,
     val name: String? = null,
     val description: String? = null,
     val imageRef: Url? = null,

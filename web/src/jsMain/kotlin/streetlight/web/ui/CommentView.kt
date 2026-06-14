@@ -203,11 +203,11 @@ class CommentView(
         _rootBlock = column(modify(CommentClass.Root, Gap0)) {
             card(modify(ZenBg, Gap0, Padding0, OverflowClip, AutoMagic)) {
                 row(modify(AlignItemsCenter, modify(ZenBg, Padding1))) {
-                    navigationIfNotNull(comment.username?.let { StarRoute(it.toSlug()) }) {
+                    navigationIfNotNull(comment.username?.let { StarRoute(it) }) {
                         row(modify(AlignItemsCenter)) {
                             image(comment.thumb, modify(Aspect1, Height6, BorderRadius50P))
                             column(modify(Gap0)) {
-                                textBlock(comment.username ?: "Someone")
+                                textBlock(comment.username?.value ?: "[Former Guest]")
                                 textBlock(comment.createdAt.toAgoFormat(), modify(OpacityHigh, SmallText))
                             }
                         }

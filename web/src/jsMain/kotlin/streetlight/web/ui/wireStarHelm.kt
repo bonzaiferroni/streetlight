@@ -49,8 +49,8 @@ private fun AppScope.starPanel(star: Star) {
 
     column() {
         row(RowMod) {
-            navigation(StarRoute(star.username.toSlug())) {
-                heading3(star.username)
+            navigation(StarRoute(star.username)) {
+                heading3(star.username.value)
             }
 
             button(modify(HelmBarKey.IconMod, FadeLoop)) {

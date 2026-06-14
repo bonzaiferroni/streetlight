@@ -33,7 +33,7 @@ class CredentialStore {
     }
 
     fun setFromSignup(requestNow: SignUpRequest) {
-         state.set { it.copy(passwordText = requestNow.password, usernameText = requestNow.username) }
+         state.set { it.copy(passwordText = requestNow.password, usernameText = requestNow.username.value) }
     }
 
     fun getLoginRequest(): LoginRequest? {

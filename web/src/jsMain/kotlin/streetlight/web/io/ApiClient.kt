@@ -2,6 +2,7 @@ package streetlight.web.io
 
 import kampfire.api.Slug
 import kampfire.api.UserApi
+import kampfire.api.Username
 import kampfire.model.GeoBounds
 import kampfire.model.GeoPoint
 import kampfire.model.SignUpRequest
@@ -53,7 +54,7 @@ class ApiClient(private val client: FetchClient) {
     // stars
     // suspend fun readUserFiles() = client.get(Api.Users.Files)
     // suspend fun updateUser(user: BasicUserInfo) = client.post(UserApi.Update, user)
-    suspend fun checkUsername(username: String) = client.postApi(UserApi.CheckUsername, username)
+    suspend fun checkUsername(username: Username) = client.postApi(UserApi.CheckUsername, username)
 
     // suspend fun uploadAvatar(blobUrl: Url) = client.uploadBlob(Api.Users.UploadAvatar.path, blobUrl)
     suspend fun uploadImage(blobUrl: Url) = client.uploadBlob(Api.Users.UploadImage.path, blobUrl)

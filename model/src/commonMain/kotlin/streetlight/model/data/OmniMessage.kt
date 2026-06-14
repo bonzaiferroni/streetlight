@@ -1,6 +1,7 @@
 package streetlight.model.data
 
 import kampfire.api.Slug
+import kampfire.api.Username
 import kotlinx.serialization.Serializable
 import kotlin.time.Instant
 
@@ -17,7 +18,7 @@ sealed interface OmniRecord: OmniMessage {
 data class EventCreated(
     val slug: Slug,
     val title: String,
-    val username: String,
+    val username: Username,
     override val recordAt: Instant
 ): OmniRecord {
     override val text get() = "$username posted an event: $title"
@@ -27,7 +28,7 @@ data class EventCreated(
 data class EventUpdated(
     val slug: Slug,
     val title: String,
-    val username: String,
+    val username: Username,
     // td: add edit note
     override val recordAt: Instant
 ): OmniRecord {
@@ -38,7 +39,7 @@ data class EventUpdated(
 data class LocationCreated(
     val locationId: LocationId,
     val name: String,
-    val username: String?,
+    val username: Username?,
     override val recordAt: Instant
 ): OmniRecord {
     override val text get() = "$username created a location: $name"
@@ -48,7 +49,7 @@ data class LocationCreated(
 data class LocationEdited(
     val locationId: LocationId,
     val name: String,
-    val username: String?,
+    val username: Username?,
     // td: add edit note
     override val recordAt: Instant
 ): OmniRecord {
@@ -59,7 +60,7 @@ data class LocationEdited(
 data class GalaxyFounded(
     val slug: Slug,
     val name: String,
-    val username: String,
+    val username: Username,
     override val recordAt: Instant
 ): OmniRecord {
     override val text get() = "$username founded a galaxy: $name"

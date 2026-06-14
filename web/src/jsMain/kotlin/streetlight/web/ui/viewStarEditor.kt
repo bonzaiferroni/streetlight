@@ -2,6 +2,7 @@
 
 package streetlight.web.ui
 
+import kampfire.api.toUsername
 import kampfire.model.Url
 import kampfire.model.getDataOrNull
 import kampfire.model.handleResponse
@@ -24,13 +25,13 @@ fun AppScope.viewStarEditor() {
         val state = storeOf(star.toEdit())
 
         val avatarFlow = state.flow.mapDistinct { it.imageRef }
-        val nameFlow = state.flow.mapDistinct { it.username }
+        val nameFlow = state.flow.mapDistinct { it.username?.value }
         val isAvailableFlow = nameFlow.debounce(500).map {
-            if (it == null || it == star.username) null
-            else api.checkUsername(it).handleResponse(toaster::toast)
+            if (it == null || it == star.username.value) null
+            else api.checkUsername(it.toUsername()).handleResponse(toaster::toast)
         }
 
-        fun setUsername(value: String) = state.set { it.copy(username = value) }
+        fun setUsername(value: String) = state.set { it.copy(username = value.toUsername()) }
         fun setImageRef(value: Url?) = state.set { it.copy(imageRef = value) }
         fun update() {
             var edit = state.now // td: check validity?

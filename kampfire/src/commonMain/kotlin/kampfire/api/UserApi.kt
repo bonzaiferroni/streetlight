@@ -15,6 +15,6 @@ object UserApi: ApiNode(ApiNode(ApiNode(null, "api"),
     object Logout: PostEndpoint<Unit, Unit>(this, "logout")
     object Create: PostEndpoint<SignUpRequest, SignUpResult>(this, "create")
     object Private: GetEndpoint<PrivateInfo>(this, "private")
-    object CheckUsername: PostEndpoint<String, Boolean>(this, "check-username")
+    object CheckUsername: PostEndpoint<Username, Boolean>(this, "check-username")
 }
 

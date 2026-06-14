@@ -20,7 +20,7 @@ fun AppScope.viewStarProfileRoute() {
 //            galaxy = galaxy,
 //            listing = listing,
 //        )
-        route.slug.string
+        route.slug.value
     }) { content ->
         viewStarProfile(content)
     }

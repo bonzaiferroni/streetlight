@@ -25,7 +25,7 @@ data class GalaxyEdit(
         val PathCharacters = setOf('-')
 
         fun isValidName(name: String?) = name != null && isValidString(name, NameCharacters)
-        fun isValidSlug(slug: Slug?) = slug != null && isValidString(slug.string, PathCharacters)
+        fun isValidSlug(slug: Slug?) = slug != null && isValidString(slug.value, PathCharacters)
 
         private fun isValidString(path: String, validCharacters: Set<Char>) =
             path.isNotBlank() && path.all { it.isDigit() || it.isLetter() || validCharacters.contains(it) }
