@@ -10,11 +10,12 @@ import kampfire.model.BasicUserInfo
 object UserApi: ApiNode(ApiNode(ApiNode(null, "api"),
     "v1"
 ), "user") {
-    object Login: PostEndpoint<LoginRequest, Unit>(this, "login")
+    object Login: PostEndpoint<LoginRequest, Boolean>(this, "login")
     object Refresh: PostEndpoint<Unit, Unit>(this, "refresh")
     object Logout: PostEndpoint<Unit, Unit>(this, "logout")
-    object Create: PostEndpoint<SignUpRequest, SignUpResult>(this, "create")
+    object Create: PostEndpoint<SignUpRequest, Boolean>(this, "create")
     object Private: GetEndpoint<PrivateInfo>(this, "private")
     object CheckUsername: PostEndpoint<Username, Boolean>(this, "check-username")
+    object GenerateUsername: GetEndpoint<Username>(this, "generate-username")
 }
 

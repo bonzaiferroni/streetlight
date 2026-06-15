@@ -25,7 +25,7 @@ class UserGate(
     val messageFlow = state.flow.mapDistinct { it.message }
 
     fun signIn() {
-        if (stateNow.star != null && cred.stateNow.hasCredentials) return
+        if (stateNow.star != null) return
         console.log("signing in")
         scope.launch {
             readUser()

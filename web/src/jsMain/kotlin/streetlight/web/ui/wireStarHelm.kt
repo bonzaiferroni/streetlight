@@ -91,31 +91,35 @@ private fun AppScope.someonePanel() {
             }
         }
 
-        tabs(Id("someone-tabs")) {
-            tab("Sign in") {
-                gateForm()
-            }
-            tab("Alternative") {
-                // calendar route goes here
-                navigation(SiteConfigRoute) { // filler content
-                    onClick = StarHelmKey.ClosePopover
+        button("sign in", onClick = {
+            portal.go(StarDashRoute)
+        })
 
-                    row(RowMod + Width32) {
-                        textBlock("Using Streetlight while signed-out", modify(TextAlignRight))
-                        icon(SvgFile.Info, HelmBarKey.IconMod)
-                    }
-                }
-
-                navigation(SiteConfigRoute) { // filler content
-                    onClick = StarHelmKey.ClosePopover
-
-                    row(RowMod) {
-                        textBlock("Settings")
-                        icon(SvgFile.Settings, HelmBarKey.IconMod)
-                    }
-                }
-            }
-        }
+//        tabs(Id("someone-tabs")) {
+//            tab("Sign in") {
+//                gateForm()
+//            }
+//            tab("Alternative") {
+//                // calendar route goes here
+//                navigation(SiteConfigRoute) { // filler content
+//                    onClick = StarHelmKey.ClosePopover
+//
+//                    row(RowMod + Width32) {
+//                        textBlock("Using Streetlight while signed-out", modify(TextAlignRight))
+//                        icon(SvgFile.Info, HelmBarKey.IconMod)
+//                    }
+//                }
+//
+//                navigation(SiteConfigRoute) { // filler content
+//                    onClick = StarHelmKey.ClosePopover
+//
+//                    row(RowMod) {
+//                        textBlock("Settings")
+//                        icon(SvgFile.Settings, HelmBarKey.IconMod)
+//                    }
+//                }
+//            }
+//        }
     }
 }
 

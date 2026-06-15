@@ -1,13 +1,17 @@
 package streetlight.web.model
 
+import kampfire.api.Username
 import kampfire.api.toUsername
+import kampfire.model.AccountType
 import kampfire.model.SignUpRequest
+import kampfire.model.getDataOrNull
 import kampfire.model.handleResponse
 import koala.model.mapDistinct
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import streetlight.web.io.ApiClient
+import kotlin.uuid.Uuid
 
 class UserCreator(
     private val scope: CoroutineScope,
@@ -25,6 +29,15 @@ class UserCreator(
     val confirmPasswordFlow = state.flow.mapDistinct { it.confirmPassword }
     val isValidFlow = state.flow.mapDistinct { it.isValid }
 
+    init {
+        generateUsername()
+    }
+
+    fun generateUsername() = scope.launch {
+        val username = api.generateUsername().getDataOrNull()
+        setRequest { it.copy(username = username ?: Username.Empty)}
+    }
+
     fun setUsername(username: String) {
         setRequest { it.copy(username = username.toUsername()) }
     }
@@ -41,12 +54,20 @@ class UserCreator(
         state.set { it.copy(confirmPassword = confirmPassword) }
     }
 
-    fun createAccount() {
-        val request = state.now.request.takeIf { it.isValid } ?: return
+    fun createAccount(accountType: AccountType) {
+        val request = when (accountType) {
+            AccountType.Guest -> requestNow.copy(
+                accountType = AccountType.Guest,
+                password = Uuid.random().toString(),
+            )
+            AccountType.Registered -> requestNow.copy(
+                accountType = AccountType.Registered,
+            )
+        }.also{ println(it.isValid) }.takeIf { it.isValid } ?: return
         scope.launch {
-            val result = api.createUser(request).handleResponse(toaster::toast) ?: return@launch
-            if (result.isSuccess) {
-                cred.setFromSignup(requestNow)
+            val isSuccess = api.createUser(request).handleResponse(toaster::toast) ?: return@launch
+            if (isSuccess) {
+                cred.setFromSignup(request)
                 gate.signIn()
             }
         }

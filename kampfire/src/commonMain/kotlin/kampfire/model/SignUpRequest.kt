@@ -11,6 +11,8 @@ data class SignUpRequest(
     val username: Username = Username.Empty,
     val password: String = "",
     val email: String? = null,
+    val accountType: AccountType = AccountType.Registered,
+    val stayLoggedIn: Boolean = true,
 ) {
     val isValid get() = password.validPassword && username.validUsername && email.validEmail
 }

@@ -55,6 +55,7 @@ class ApiClient(private val client: FetchClient) {
     // suspend fun readUserFiles() = client.get(Api.Users.Files)
     // suspend fun updateUser(user: BasicUserInfo) = client.post(UserApi.Update, user)
     suspend fun checkUsername(username: Username) = client.postApi(UserApi.CheckUsername, username)
+    suspend fun generateUsername() = client.getApi(UserApi.GenerateUsername)
 
     // suspend fun uploadAvatar(blobUrl: Url) = client.uploadBlob(Api.Users.UploadAvatar.path, blobUrl)
     suspend fun uploadImage(blobUrl: Url) = client.uploadBlob(Api.Users.UploadImage.path, blobUrl)

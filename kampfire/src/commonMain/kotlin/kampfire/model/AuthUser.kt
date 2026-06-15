@@ -26,5 +26,11 @@ data class UserSeed(
     val request: SignUpRequest,
     val salt: String,
     val hashedPassword: String,
-    val roles: Set<UserRole>
+    val roles: Set<UserRole>,
+    val accountType: AccountType,
 )
+
+enum class AccountType {
+    Guest,
+    Registered
+}

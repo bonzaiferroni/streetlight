@@ -1,5 +1,6 @@
 package streetlight.web.ui
 
+import kampfire.model.AccountType
 import koala.LottieFile
 import koala.css.AlignItemsStretch
 import koala.css.PlaceItemsCenter
@@ -10,48 +11,59 @@ import koala.css.modify
 import koala.dom.*
 
 fun AppScope.createAccountContent() {
-    val creator = app.getUserCreator(parentScope)
+    val model = app.getUserCreator(parentScope)
 
     column(modify(QueryRowReverse, FlexItems1, AlignItemsStretch)) {
-        card {
-            textBlock("Not yet on Streetlight? Create a new account.")
-            textField(
-                label = "username",
-                placeholder = "username",
-                flow = creator.usernameFlow,
-                onValue = creator::setUsername
-            )
-            textField(
-                label = "email",
-                placeholder = "email (optional)",
-                flow = creator.emailFlow,
-                onValue = creator::setEmail
-            )
-            textBlock("Your email address is optional. It can be used to reset your password. " +
-                    "Streetlight will never contact you without your request.")
-            textField(
-                label = "password",
-                placeholder = "password",
-                flow = creator.passwordFlow,
-                onValue = creator::setPassword
-            )
-            textField(
-                label = "confirm password",
-                placeholder = "confirm password",
-                flow = creator.confirmPasswordFlow,
-                onValue = creator::setConfirmPassword
-            )
-            textBlock(
-                binding = creator.isValidFlow,
-                provideValue = { if (it) "✅" else "❌"}
-            )
-            val button = button("Sign up", onClick = creator::createAccount)
-            configureEnabledFlow(button, creator.isValidFlow)
+        textBlock("Not yet on Streetlight? Create a new account.")
+        tabs {
+            tab("Register") {
+                card {
+                    textField(
+                        label = "username",
+                        flow = model.usernameFlow,
+                        onValue = model::setUsername
+                    )
+                    textField(
+                        label = "email (optional)",
+                        placeholder = "email (optional)",
+                        flow = model.emailFlow,
+                        onValue = model::setEmail
+                    )
+                    textBlock("Your email address is optional. It can be used to reset your password. " +
+                            "Streetlight will never contact you without your request.")
+                    textField(
+                        label = "password",
+                        flow = model.passwordFlow,
+                        onValue = model::setPassword
+                    )
+                    textField(
+                        label = "confirm password",
+                        flow = model.confirmPasswordFlow,
+                        onValue = model::setConfirmPassword
+                    )
+                    textBlock(
+                        binding = model.isValidFlow,
+                        provideValue = { if (it) "✅" else "❌"}
+                    )
+                    val button = button("Sign up", onClick = { model.createAccount(AccountType.Registered) })
+                    configureEnabledFlow(button, model.isValidFlow)
+                }
+            }
+            tab("Guest") {
+                card {
+                    textField(
+                        label = "username",
+                        flow = model.usernameFlow,
+                        onValue = model::setUsername
+                    )
+                    button("register as guest", onClick = { model.createAccount(AccountType.Guest) })
+                }
+            }
         }
         box(modify(PlaceItemsCenter)) {
             column(modify(MaxWidth50P)) {
                 lottie(LottieFile.Cat)
-                textBlock("Streetlight is at an early stage in development. Only the bravest souls should enter.")
+                textBlock("Streetlight is at an early stage in development, please report the bugs.")
             }
         }
     }
