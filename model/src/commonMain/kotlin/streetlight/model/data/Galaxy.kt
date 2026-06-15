@@ -27,6 +27,7 @@ data class Galaxy(
     val imageRef: Url?,
     val images: ScaledImageArray?,
     val isLit: Boolean,
+    val isHost: Boolean,
     val starCount: Int,
     val eventCount: Int,
     val locationCount: Int,
