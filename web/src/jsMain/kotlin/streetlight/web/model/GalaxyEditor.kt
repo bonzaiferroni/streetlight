@@ -18,7 +18,6 @@ import kotlinx.coroutines.launch
 import streetlight.model.data.City
 import streetlight.model.data.GalaxyEdit
 import streetlight.model.data.PostPermission
-import streetlight.model.data.ReviewMode
 import streetlight.model.data.slugOf
 import streetlight.web.GalaxyRoute
 import streetlight.web.io.ApiClient
@@ -73,7 +72,7 @@ class GalaxyEditor(
 
     fun setPostGuide(value: String) = setGalaxy { it.copy(postGuide = value) }
 
-    fun setReviewMode(value: ReviewMode) = setGalaxy { it.copy(reviewMode = value) }
+    fun setReviewCount(value: Int?) = setGalaxy { it.copy(reviewCount = value) }
 
     fun setIsLocal(value: Boolean) = state.set { it.copy(isLocal = value) }
 

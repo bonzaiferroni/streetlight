@@ -16,7 +16,7 @@ data class GalaxyEdit(
     val description: String? = null,
     val geoBounds: GeoBounds? = null,
     val postPermission: PostPermission = PostPermission.Accounts,
-    val reviewMode: ReviewMode = ReviewMode.PostImmediately,
+    val reviewCount: Int? = 3,
     val postGuide: String? = null,
     val imageRef: Url? = null,
 ) {
@@ -54,7 +54,7 @@ fun Galaxy.toEdit() = GalaxyEdit(
     description = description,
     geoBounds = geoBounds,
     postPermission = postPermission,
-    reviewMode = reviewMode,
+    reviewCount = reviewCount,
     postGuide = postGuide,
     imageRef = imageRef,
 )

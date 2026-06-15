@@ -163,7 +163,7 @@ fun AppScope.galaxyLocationForm(model: GalaxyEditor) {
 
 fun AppScope.galaxyAccessForm(model: GalaxyEditor) {
     val permissionFlow = model.galaxyFlow.mapDistinct { it.postPermission }
-    val reviewModeFlow = model.galaxyFlow.mapDistinct { it.reviewMode }
+    val reviewCountFlow = model.galaxyFlow.mapDistinct { it.reviewCount?.toString() ?: "" }
 
     formCardSection("Permissions") {
         formPart(
@@ -184,7 +184,7 @@ fun AppScope.galaxyAccessForm(model: GalaxyEditor) {
                 }
             }
         ) {
-            dropMenu(model::setReviewMode, { it.label }, flow = reviewModeFlow)
+            textField("review count", modify(AlignSelfStart), { model.setReviewCount(it.toIntOrNull()) }, reviewCountFlow)
         }
     }
 }

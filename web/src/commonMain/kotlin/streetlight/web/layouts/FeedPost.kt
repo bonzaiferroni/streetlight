@@ -74,11 +74,11 @@ fun FlowContent.feedPost(
 
             // headings
             column(modify(Gap0, Flex1, MarginTop1)) {
-                navigationIfNotNull(postRoute) {
+                navigationIfNotNull(postRoute, modify(AlignSelfStart)) {
                     heading3(heading, modify(LineHeight115, Bold))
                 }
                 subHeading?.let {
-                    navigationIfNotNull(subRoute) {
+                    navigationIfNotNull(subRoute, modify(AlignSelfStart)) {
                         textBlock(subHeading, modify(OpacityHigh))
                     }
                 }

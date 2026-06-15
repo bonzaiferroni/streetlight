@@ -22,7 +22,7 @@ data class Galaxy(
     val geoPoint: GeoPoint,
     val geoBounds: GeoBounds,
     val postPermission: PostPermission,
-    val reviewMode: ReviewMode,
+    val reviewCount: Int,
     val postGuide: String?,
     val imageRef: Url?,
     val images: ScaledImageArray?,
@@ -50,9 +50,4 @@ enum class PostPermission(label: String? = null) {
     Founder;
 
     val label = label ?: name
-}
-
-enum class ReviewMode(val label: String) {
-    PostImmediately("User posts appear immediately"),
-    PostAfterReview("User posts appear after reviewed"),
 }
