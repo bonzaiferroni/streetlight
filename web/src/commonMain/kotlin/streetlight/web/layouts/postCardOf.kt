@@ -1,5 +1,6 @@
 package streetlight.web.layouts
 
+import kampfire.api.Username
 import kampfire.model.medium
 import kotlinx.html.FlowContent
 import streetlight.model.data.Event
@@ -47,7 +48,7 @@ fun FlowContent.postCardOf(location: Location) {
     )
 }
 
-fun FlowContent.postCardOf(edit: LocationEdit, username: String?) {
+fun FlowContent.postCardOf(edit: LocationEdit, username: Username?) {
     feedPost(
         postSlug = null, username = null,
         galaxyName = null, galaxySlug = null,

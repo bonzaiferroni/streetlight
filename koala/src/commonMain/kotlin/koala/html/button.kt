@@ -90,6 +90,7 @@ ${ButtonKey.IconClass}:hover {
 }
 
 ${ButtonKey.ElementClass} {
+    display: inline-flex;
     appearance: none;
     -webkit-appearance: none;
 

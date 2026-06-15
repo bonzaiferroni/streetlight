@@ -3,16 +3,15 @@ package streetlight.web.layouts
 import kabinet.utils.toAgoFormat
 import kabinet.utils.toMetricString
 import kampfire.api.Slug
+import kampfire.api.Username
 import kampfire.model.Url
 import kampfire.utils.takeEllipsis
 import koala.SvgFile
 import koala.css.*
 import koala.html.*
 import kotlinx.html.FlowContent
-import kotlinx.html.onClick
 import streetlight.model.data.ExtraLink
 import streetlight.model.data.LightType
-import streetlight.model.data.PostId
 import streetlight.web.GalaxyRoute
 import streetlight.web.StarRoute
 import streetlight.web.ui.postMenu
@@ -21,7 +20,7 @@ import kotlin.time.Instant
 
 fun FlowContent.feedPost(
     postSlug: Slug?,
-    username: String?,
+    username: Username?,
     galaxyName: String?,
     galaxySlug: Slug?,
     heading: String?,
@@ -97,7 +96,7 @@ fun FlowContent.feedPost(
                                 span("Someone ", modify(Bold))
                             }
                             else -> {
-                                navigation(StarRoute(Slug(username))) {
+                                navigation(StarRoute(Slug(username.value))) {
                                     span("$username ")
                                 }
                             }
@@ -107,7 +106,7 @@ fun FlowContent.feedPost(
                         }
                     }
                     postSlug?.let { slug ->
-                        postMenu(slug)
+                        postMenu(slug, username)
 //                        val anchor = PositionAnchor("menu-${postId}")
 //                        icon(SvgFile.Dots, modify(Height3)) {
 //                            setAnchorName(anchor)

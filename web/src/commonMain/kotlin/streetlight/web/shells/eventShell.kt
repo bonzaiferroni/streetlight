@@ -26,7 +26,7 @@ fun FlowContent.eventShell(event: EventLocation) {
             cellContent = {
                 startsAtCell(event.startsAt)
                 costCell(event.cost, event.url?.toUrl())
-                starCell(event.username)
+                starCell(event.scout)
                 starLightCell(event)
             },
             links = event.links,

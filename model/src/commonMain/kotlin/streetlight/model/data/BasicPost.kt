@@ -1,6 +1,7 @@
 package streetlight.model.data
 
 import kampfire.api.Slug
+import kampfire.api.Username
 import kampfire.model.GeoPoint
 import kampfire.model.ScaledImageArray
 import kampfire.model.Url
@@ -14,7 +15,7 @@ data class BasicPost(
     override val slug: Slug,
     override val galaxyName: String,
     override val galaxySlug: Slug,
-    override val username: String?,
+    override val username: Username?,
     override val label: String,
     override val sublabel: String?,
     override val text: String?,

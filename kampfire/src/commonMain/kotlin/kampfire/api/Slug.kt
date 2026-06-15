@@ -2,6 +2,7 @@ package kampfire.api
 
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
+import kotlin.jvm.JvmName
 
 @JvmInline
 @Serializable

@@ -1,6 +1,7 @@
 package streetlight.web.ui
 
 import kampfire.api.Slug
+import kampfire.api.Username
 import kampfire.model.handleResponse
 import koala.css.BlurBackdrop
 import koala.css.BorderRadius3
@@ -8,15 +9,13 @@ import koala.css.Magic
 import koala.css.Secondary
 import koala.css.SlideUp
 import koala.css.modify
-import koala.dom.AppFacade
 import koala.dom.AppScope
-import koala.dom.EffectScope
 import koala.dom.button
 import koala.dom.card
 import koala.dom.column
 import koala.dom.dangerButton
+import koala.dom.getAttribute
 import koala.dom.hidePopover
-import koala.dom.isPopoverOpen
 import koala.dom.onClick
 import koala.dom.popover
 import koala.dom.queryAttributeAll
@@ -29,28 +28,48 @@ import org.w3c.dom.HTMLElement
 import streetlight.web.PostUpdateRoute
 
 fun AppScope.initPostMenu(shellBase: HTMLElement) {
-    val targets = shellBase.queryAttributeAll(PostMenu.Attribute)
+    val targets = shellBase.queryAttributeAll(PostMenu.Slug)
+
+    var activeSlug: Slug? = null
+
     targets.forEach { (element, slug) ->
+        val username = element.getAttribute(PostMenu.Username)
+        var shouldSkip = false
+
+        element.addEventListener("pointerdown", {
+            shouldSkip = activeSlug == slug && cachedMenuElement?.matches(":popover-open") == true
+        })
+
         element.onClick {
+            if (shouldSkip) {
+                shouldSkip = false
+                return@onClick
+            }
             cachedMenuElement?.hidePopover()
-            callPostMenu(slug)
+            activeSlug = slug
+            callPostMenu(slug, username)
         }
     }
 }
 
 private var cachedMenuElement: HTMLElement? = null
 
-fun AppScope.callPostMenu(slug: Slug) {
+fun AppScope.callPostMenu(slug: Slug, username: Username?) {
     val menuElement = cachedMenuElement ?: document.body!!.append {
         popover(PostMenu.MenuId, null, modify(Magic, SlideUp))
     }.first().also { cachedMenuElement = it }
+
+    val isUser = gate.stateNow.star?.username == username
 
     menuElement.clear()
     menuElement.append {
         card(modify(BlurBackdrop, BorderRadius3)) {
             column {
-                btn("edit", PostUpdateRoute(slug), modify(Secondary))
-                button("report", modify(Secondary))
+                if (isUser) {
+                    btn("edit", PostUpdateRoute(slug), modify(Secondary))
+                } else {
+                    button("report", modify(Secondary))
+                }
                 dangerButton("remove", onClick = {
                     parentScope.launch {
                         api.removePost(slug).handleResponse(toaster::toast) {

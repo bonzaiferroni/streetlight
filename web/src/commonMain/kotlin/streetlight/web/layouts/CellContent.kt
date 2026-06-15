@@ -5,6 +5,7 @@ import kabinet.utils.toAgoFormat
 import kabinet.utils.toMetricString
 import kabinet.utils.toRelativeDayFormat
 import kabinet.utils.toTimeFormat
+import kampfire.api.Username
 import kampfire.model.Url
 import kampfire.model.toUrl
 import koala.Svg
@@ -154,7 +155,7 @@ fun FlowContent.costCell(cost: Float?, purchaseUrl: Url?) {
     linkCell(ticketsUrl, SvgFile.TicketSmall, costText)
 }
 
-fun FlowContent.starCell(username: String?) = cell(SvgFile.SomeoneSmall, username ?: "Someone")
+fun FlowContent.starCell(username: Username?) = cell(SvgFile.SomeoneSmall, username?.value ?: "Guest")
 
 fun FlowContent.textPropertyCell(property: String, value: String) {
     cell {
@@ -183,7 +184,7 @@ fun locationCells(location: Location): FlowContent.() -> Unit = {
     }
 }
 
-fun locationCells(username: String?, edit: LocationEdit): FlowContent.() -> Unit = {
+fun locationCells(username: Username?, edit: LocationEdit): FlowContent.() -> Unit = {
     starCell(username)
     exampleLightCell()
 }

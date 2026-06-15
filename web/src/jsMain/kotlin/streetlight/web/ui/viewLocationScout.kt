@@ -39,8 +39,7 @@ fun AppScope.viewLocationScout(galaxy: Galaxy) {
                 }
                 LocationScoutStage.Post -> column {
                     val edit = editor.editNow
-                    console.log("ey: ${gate.stateNow.star?.username}")
-                    postCardOf(edit, gate.stateNow.star?.username?.value)
+                    postCardOf(edit, gate.stateNow.star?.username)
 
                     formSubmit(
                         label = "Post",

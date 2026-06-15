@@ -2,6 +2,7 @@ package streetlight.model.data
 
 import androidx.compose.runtime.Stable
 import kampfire.api.Slug
+import kampfire.api.Username
 import kampfire.model.Labeled
 import kampfire.model.ScaledImageArray
 import kampfire.model.Url
@@ -18,7 +19,7 @@ data class Event(
     val locationId: LocationId,
     val currentRequestId: RequestId?,
     val slug: Slug,
-    val scout: String,
+    val scout: Username,
     val title: String,
     val description: String?,
     val status: EventStatus,

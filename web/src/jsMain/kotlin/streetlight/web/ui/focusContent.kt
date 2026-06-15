@@ -40,7 +40,7 @@ fun AppScope.eventFocusContent(post: EventPost) {
                 costCell(event.cost, event.url?.toUrl())
             }
             cell {
-                starCell(event.username)
+                starCell(event.scout)
             }
             cell {
                 starLightCell(event)

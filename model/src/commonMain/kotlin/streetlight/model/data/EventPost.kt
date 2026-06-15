@@ -1,6 +1,7 @@
 package streetlight.model.data
 
 import kampfire.api.Slug
+import kampfire.api.Username
 import kampfire.model.Url
 import kotlin.time.Instant
 import kotlinx.serialization.Serializable
@@ -12,7 +13,7 @@ data class EventPost(
     override val galaxyId: GalaxyId,
     override val galaxyName: String,
     override val galaxySlug: Slug,
-    override val username: String?,
+    override val username: Username?,
     val event: EventLocation,
     override val text: String?,
     override val isLit: Boolean,

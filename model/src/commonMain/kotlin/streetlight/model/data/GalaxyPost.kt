@@ -1,6 +1,7 @@
 package streetlight.model.data
 
 import kampfire.api.Slug
+import kampfire.api.Username
 import kampfire.model.GeoPoint
 import kampfire.model.ScaledImageArray
 import kotlinx.serialization.Serializable
@@ -15,7 +16,7 @@ sealed interface GalaxyPost {
     val galaxyId: GalaxyId
     val galaxyName: String
     val galaxySlug: Slug
-    val username: String?
+    val username: Username?
     val text: String?
     val images: ScaledImageArray?
     val geoPoint: GeoPoint?

@@ -1,32 +1,33 @@
 package streetlight.web.ui
 
 import kampfire.api.Slug
+import kampfire.api.Username
+import kampfire.api.toUsername
 import koala.SvgFile
+import koala.css.AlignSelfCenter
 import koala.css.Height3
-import koala.css.PositionAnchor
 import koala.css.modify
-import koala.css.setAnchorName
+import koala.html.Attribute
 import koala.html.Id
 import koala.html.button
 import koala.html.icon
 import koala.html.setAttribute
 import koala.html.setPopoverTarget
 import koala.html.slugAttributeOf
-import koala.html.uuidAttributeOf
 import kotlinx.html.FlowContent
-import streetlight.model.data.PostId
 
-fun FlowContent.postMenu(slug: Slug) {
+fun FlowContent.postMenu(slug: Slug, username: Username?) {
     // val anchor = PositionAnchor("menu-${slug}")
-    button {
+    button(modify(AlignSelfCenter)) {
         setPopoverTarget(PostMenu.MenuId)
-        setAttribute(PostMenu.Attribute.to(slug))
+        setAttribute(PostMenu.Slug.to(slug))
+        setAttribute(PostMenu.Username.to(username))
         icon(SvgFile.Dots, modify(Height3))
     }
 }
 
 object PostMenu {
     val MenuId = Id("post-menu")
-    val Attribute = slugAttributeOf("post-menu-slug")
-
+    val Slug = slugAttributeOf("post-menu-slug")
+    val Username = Attribute<Username?>("post-menu-username", true) { it.toUsername() }
 }
