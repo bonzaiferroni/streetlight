@@ -4,7 +4,6 @@ object KoalaFun {
     val ToggleTheme = JsFun("toggleTheme")
     val ScrollToId = JsFun("scrollToId", idArg)
 
-    val CallMenu = JsFun("callMenu")
     val ToggleAncestor = JsFun("toggleAncestor")
 }
 

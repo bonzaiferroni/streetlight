@@ -29,7 +29,6 @@ fun FlowContent.layoutPosts(block: FlowContent.() -> Unit) {
 }
 
 object PostKey {
-    val PostMenuId = Id("post-menu")
     val PostLayoutId = Id("post-layout")
 
     val Attribute = slugAttributeOf("post-slug")
