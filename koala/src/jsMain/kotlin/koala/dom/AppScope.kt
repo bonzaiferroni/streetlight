@@ -92,7 +92,7 @@ fun AppScope.replaceRender(
     block: AppScope.() -> Unit,
 ) = element.replaceRender(app, parentScope, block)
 
-fun AppScope.clearRender(element: HTMLElement) {
+fun clearRender(element: HTMLElement) {
     element.clear()
     element.clearScope()
 }

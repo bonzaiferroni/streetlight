@@ -45,7 +45,7 @@ fun <State> AppScope.flowBlock(
             // do we need renderedOnce?
             if (renderedOnce && value == currentValue) return@collect
             renderedOnce = true
-            if (cacheElements) render?.job?.cancel()
+            if (!cacheElements) render?.job?.cancel()
             currentValue = value
 
             fun appendRender() {

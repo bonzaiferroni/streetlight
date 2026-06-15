@@ -19,6 +19,7 @@ import koala.model.ClusterFocus
 import koala.model.MarkerFocus
 import koala.model.PointMarker
 import kotlinx.browser.document
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.html.FlowContent
@@ -58,12 +59,12 @@ fun AppScope.viewEarthMapRoute() {
     var isVisible = false
     val element = document.getElementById(AppBodyKey.FullScreenId)
 
-    parentScope.launch {
+    launchEffect {
         portal.routeFlow.collect { route ->
             when (route) {
                 is EarthRoute -> {
                     if (!isVisible) {
-                        replaceRender(element) {
+                        element.replaceRender(app, parentScope) {
                             val model = app.getEarthMap(parentScope)
                             viewEarthMap(model)
                         }
