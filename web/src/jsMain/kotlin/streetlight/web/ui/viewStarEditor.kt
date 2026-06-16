@@ -42,6 +42,7 @@ fun AppScope.viewStarEditor() {
                     edit.copy(imageRef = refUrl)
                 } else edit
 
+                console.log(edit.username)
                 val star = api.updateStar(edit).handleResponse(toaster::toast)
                 if (star != null) {
                     gate.setUpdate(star)
