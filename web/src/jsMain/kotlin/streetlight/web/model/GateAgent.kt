@@ -10,7 +10,7 @@ import streetlight.web.StarDashRoute
 
 class GateAgent(
     val scope: CoroutineScope,
-    val gate: UserGate,
+    val gate: StarSession,
     val portal: Portal,
 ) {
     @Deprecated("use userContent")

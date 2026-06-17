@@ -11,12 +11,12 @@ import streetlight.web.GalaxyListRoute
 import streetlight.web.SandboxRoute
 import streetlight.web.TalentProfileRoute
 import streetlight.web.model.DataCache
-import streetlight.web.model.UserGate
+import streetlight.web.model.StarSession
 
 fun AppScope.viewStarDash(star: Star) {
     // val model = UserHub(renderScope, app.client.api)
     val userCache = app.get<DataCache>()
-    val gate = app.get<UserGate>()
+    val gate = app.get<StarSession>()
 
     column {
         row {

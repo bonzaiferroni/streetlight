@@ -15,11 +15,11 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import streetlight.model.data.toEdit
-import streetlight.web.model.UserGate
+import streetlight.web.model.StarSession
 import streetlight.web.pages.appFooter
 
 fun AppScope.viewStarEditor() {
-    val gate = app.get<UserGate>()
+    val gate = app.get<StarSession>()
 
     starBlock(true) { star ->
         val state = storeOf(star.toEdit())

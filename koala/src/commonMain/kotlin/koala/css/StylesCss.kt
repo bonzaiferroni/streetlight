@@ -20,6 +20,7 @@ val StylesCss get() = """
     /* color-mix(in srgb, var(--paper-bg) 95%, var(--ink-fg)); */
     --body-bg: var(--paper-bg);   
     --card-bg: rgba(var(--paper), .4);
+    --dialog-bg: rgba(var(--paper), .8);
     --zen-bg: rgba(var(--paper), .25);
     --tabs-bg: rgba(var(--paper), .5);
     --ink-dim: rgba(var(--ink), .8);

@@ -158,7 +158,7 @@ fun AppScope.addCommentView(
     comments: List<Comment>
 ): CommentView? {
     if (model.commentViews.contains(comment.commentId)) return null
-    val isUserComment = comment.username != null && comment.username == gate.stateNow.star?.username
+    val isUserComment = comment.username != null && comment.username == session.stateNow.star?.username
 
     val view = CommentView(comment, model, isUserComment)
     model.commentViews[comment.commentId] = view

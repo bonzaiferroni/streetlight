@@ -8,14 +8,14 @@ import kotlinx.coroutines.launch
 import kotlinx.html.js.div
 import streetlight.model.data.Star
 import streetlight.web.StarDashRoute
-import streetlight.web.model.UserGate
+import streetlight.web.model.StarSession
 
 fun AppScope.starBlock(
     redirect: Boolean = false,
     modifiers: ModifierSet? = null,
     block: AppScope.(Star) -> Unit
 ) {
-    val gate = app.get<UserGate>()
+    val gate = app.get<StarSession>()
 
     flowBlock(gate.starFlow, modifiers) { user ->
         if (user != null) {

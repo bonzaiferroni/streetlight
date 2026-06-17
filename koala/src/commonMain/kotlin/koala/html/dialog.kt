@@ -3,36 +3,37 @@ package koala.html
 import koala.css.Class
 import koala.css.Reveal
 
-object DialogKey {
+object DialogStyle {
     val Class = Class("dialog")
+    val Card = Class("dialog-card")
+    val Content = Class("dialog-content")
 }
 
 // language="CSS"
-val DialogCss get() = """
-${DialogKey.Class} {
+val DialogCss get() = with(DialogStyle) { """
+$Class {
     position: fixed;
     inset: 0;
 
-    border-radius: var(--unit-spacing);
-    box-shadow: var(--btn-text-shadow);
-    background-color: var(--primary-bg);
-    margin: auto var(--unit-spacing);
-    padding: var(--unit-spacing-2) 0;
+    margin: var(--unit-spacing-8) auto;
     color: rgb(var(--ink));
     border: none;
     outline: none;
-    max-width: var(--body-width);
+    width: min(calc(100% - var(--unit-spacing-2)), var(--body-width));
     overflow-x: hidden;
+    background-color: transparent;
 
     opacity: 0;
     transform: translateY(10px);
 
-    transition:
-            opacity 200ms ease-in-out,
-            transform 200ms ease-in-out;
+    transition: var(--opacity-transition), var(--transform-transition);
 }
 
-${DialogKey.Class}[open]$Reveal {
+$Content, $Content > * {
+    max-height: 80vh;
+}
+
+$Class[open]$Reveal {
     opacity: 1;
     transform: translateY(0);
     display: flex;
@@ -40,13 +41,22 @@ ${DialogKey.Class}[open]$Reveal {
     justify-content: center;
 }
 
-${DialogKey.Class}::backdrop {
+$Class::backdrop {
     backdrop-filter: blur(0px);
     -webkit-backdrop-filter: blur(0px);
 }
 
-${DialogKey.Class}[open]$Reveal::backdrop {
+$Class[open]$Reveal::backdrop {
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
 }
-"""
+
+$Card {
+    border-radius: var(--unit-spacing-2);
+    box-shadow: var(--moon-shadow);
+    background-color: var(--dialog-bg);
+    padding: var(--unit-spacing-2);
+    height: 100%;
+    overflow-y: auto;
+}
+""" }

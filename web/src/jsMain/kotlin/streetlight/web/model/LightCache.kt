@@ -26,7 +26,7 @@ class LightCache<Id, Item>(
     private val readRemoteItems: suspend (List<Id>) -> ApiResponse<List<Item>>?,
     private val onError: (String) -> Unit,
     private val scope: CoroutineScope,
-    private val gate: UserGate,
+    private val gate: StarSession,
 ) {
     private val state = storeOf(LightCacheState<Id, Item>())
     val stateNow get() = state.now

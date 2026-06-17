@@ -12,7 +12,7 @@ fun AppScope.buttonDialog(
 ) {
     val isOpen = storeOf(false)
 
-    dialogBox(label, isOpen.flow, dialogModifiers, onClose = { isOpen.set { false } }) {
+    dialog(label, isOpen.flow, dialogModifiers, onClose = { isOpen.set { false } }) {
         block()
     }
 

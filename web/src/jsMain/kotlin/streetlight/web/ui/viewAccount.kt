@@ -8,10 +8,10 @@ import kotlinx.html.InputType
 import kotlinx.html.js.p
 import streetlight.web.HomeRoute
 import streetlight.web.model.CredentialStore
-import streetlight.web.model.UserGate
+import streetlight.web.model.StarSession
 
 fun AppScope.viewStarDash() {
-    val gate = app.get<UserGate>()
+    val gate = app.get<StarSession>()
 
     flowBlock(gate.starFlow) { user ->
         if (user != null) {
@@ -22,7 +22,7 @@ fun AppScope.viewStarDash() {
                     signInContent()
                 }
                 tab("Sign up") {
-                    createAccountContent()
+                    fullRegistrationForm()
                 }
             }
         }
@@ -30,7 +30,7 @@ fun AppScope.viewStarDash() {
 }
 
 fun AppScope.signInContent() {
-    val gate = app.get<UserGate>()
+    val gate = app.get<StarSession>()
     val cred = app.get<CredentialStore>()
 
     column(modify(MediaMdRow, FlexItems1)) {

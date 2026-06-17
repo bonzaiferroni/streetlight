@@ -59,7 +59,7 @@ fun AppScope.callPostMenu(slug: Slug, username: Username?) {
         popover(PostMenu.MenuId, null, modify(Magic, SlideUp))
     }.first().also { cachedMenuElement = it }
 
-    val isUser = gate.stateNow.star?.username == username
+    val isUser = session.stateNow.star?.username == username
 
     menuElement.clear()
     menuElement.append {

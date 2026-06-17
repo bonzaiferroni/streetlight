@@ -4,6 +4,8 @@
     --unit-spacing-3: calc(var(--unit-spacing) * 3);
     --unit-spacing-4: calc(var(--unit-spacing) * 4);
     --unit-spacing-8: calc(var(--unit-spacing) * 8);
+    --unit-spacing-16: calc(var(--unit-spacing) * 16);
+    --unit-spacing-32: calc(var(--unit-spacing) * 32);
 }
 
 .column {

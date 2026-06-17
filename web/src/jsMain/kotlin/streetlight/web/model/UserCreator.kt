@@ -15,7 +15,7 @@ import kotlin.uuid.Uuid
 
 class UserCreator(
     private val scope: CoroutineScope,
-    private val gate: UserGate,
+    private val gate: StarSession,
     private val cred: CredentialStore,
     private val api: ApiClient,
     private val toaster: Toaster,

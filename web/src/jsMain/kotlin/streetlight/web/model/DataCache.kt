@@ -16,7 +16,7 @@ class DataCache(
     scope: CoroutineScope,
     private val config: SiteConfig,
     private val api: ApiClient,
-    private val gate: UserGate,
+    private val gate: StarSession,
     private val toaster: Toaster,
 ) {
     init {

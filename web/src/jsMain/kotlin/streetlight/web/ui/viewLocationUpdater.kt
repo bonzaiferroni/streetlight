@@ -3,6 +3,7 @@ package streetlight.web.ui
 import kampfire.model.handleResponse
 import koala.dom.*
 import streetlight.model.data.LocationEdit
+import streetlight.model.data.Star
 import streetlight.model.data.toEdit
 import streetlight.web.LocationRoute
 import streetlight.web.UpdateLocationRoute
@@ -10,8 +11,9 @@ import streetlight.web.model.LocationEditor
 import streetlight.web.model.LocationScoutStage
 import streetlight.web.ui.appFooter
 
-fun AppScope.viewLocationUpdater(model: LocationEditor) {
+fun AppScope.viewLocationUpdater(model: LocationEditor, star: Star) {
     column {
+        textBlock("hello ${star.username}")
         locationEditFormBody(model)
         formSubmit(
             label = "Next",
@@ -31,16 +33,18 @@ fun AppScope.viewLocationUpdater(model: LocationEditor) {
 
 fun AppScope.viewUpdateLocationRoute() {
     column {
-        routeBlock<UpdateLocationRoute, LocationEdit?>(
-            portal = portal,
-            provideData = { route ->
-                api.readLocation(route.slug).handleResponse(toaster::toast)?.toEdit()
-            }
-        ) { edit ->
-            val editor = edit?.let { app.getLocationEditor(it, parentScope) }
-            when (editor) {
-                null -> textBlock("something went wrong")
-                else -> viewLocationUpdater(editor)
+        starGate { star ->
+            routeBlock<UpdateLocationRoute, LocationEdit?>(
+                portal = portal,
+                provideData = { route ->
+                    api.readLocation(route.slug).handleResponse(toaster::toast)?.toEdit()
+                }
+            ) { edit ->
+                val editor = edit?.let { app.getLocationEditor(it, parentScope) }
+                when (editor) {
+                    null -> textBlock("something went wrong")
+                    else -> viewLocationUpdater(editor, star)
+                }
             }
         }
         appFooter("")

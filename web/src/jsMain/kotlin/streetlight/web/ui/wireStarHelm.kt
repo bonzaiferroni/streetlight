@@ -1,11 +1,9 @@
 package streetlight.web.ui
 
-import kampfire.api.toSlug
 import kampfire.model.thumb
 import koala.SvgFile
 import koala.css.*
 import koala.dom.*
-import koala.html.Id
 import koala.html.button
 import koala.html.heading3
 import koala.html.icon
@@ -15,11 +13,10 @@ import kotlinx.html.InputType
 import kotlinx.html.onClick
 import org.w3c.dom.HTMLElement
 import streetlight.model.data.Star
-import streetlight.web.SiteConfigRoute
 import streetlight.web.StarDashRoute
 import streetlight.web.StarRoute
 import streetlight.web.model.CredentialStore
-import streetlight.web.model.UserGate
+import streetlight.web.model.StarSession
 import streetlight.web.pages.HelmBarKey
 import streetlight.web.pages.StarHelmKey
 
@@ -29,7 +26,7 @@ fun AppScope.queryAndWireStarHelm() {
 }
 
 private fun AppScope.wireStarHelm(element: HTMLElement) {
-    val gate = app.get<UserGate>()
+    val gate = app.get<StarSession>()
 
     wireBlock(element) {
         flowBlock(gate.starFlow, defaultMagic) { star ->
@@ -45,7 +42,7 @@ private fun AppScope.wireStarHelm(element: HTMLElement) {
 private val RowMod = modify(AlignItemsCenter, PaddingLeft3, JustifyContentEnd)
 
 private fun AppScope.starPanel(star: Star) {
-    val gate = app.get<UserGate>()
+    val gate = app.get<StarSession>()
 
     column() {
         row(RowMod) {
@@ -124,7 +121,7 @@ private fun AppScope.someonePanel() {
 }
 
 fun AppScope.gateForm() {
-    val gate = app.get<UserGate>()
+    val gate = app.get<StarSession>()
     val cred = app.get<CredentialStore>()
 
     column {

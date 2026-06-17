@@ -9,6 +9,7 @@ interface AppRoute {
     fun toSitePath() = basePath
     val title: String
     val basePath get() = "/${screen.pathRoot}"
+    val requireAuth get() = false
 
     companion object {
         fun routeOf(sitePath: String, screens: List<AppScreen>): AppRoute? {

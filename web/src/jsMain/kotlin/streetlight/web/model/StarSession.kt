@@ -10,13 +10,13 @@ import streetlight.web.io.ApiClient
 import kotlin.time.Clock
 import kotlin.time.Instant
 
-class UserGate(
+class StarSession(
     private val scope: CoroutineScope,
     private val cred: CredentialStore,
     private val api: ApiClient,
     private val toaster: Toaster,
 ) {
-    private val state = storeOf(StarGateState())
+    private val state = storeOf(StarSessionState())
     val stateNow get() = state.now
 
     val starFlow = state.flow.mapDistinct { it.star }
@@ -56,7 +56,7 @@ class UserGate(
     }
 }
 
-data class StarGateState(
+data class StarSessionState(
     val star: Star? = null,
     val message: String? = null,
     val signedOutAt: Instant? = null,

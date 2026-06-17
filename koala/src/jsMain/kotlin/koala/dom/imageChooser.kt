@@ -37,7 +37,7 @@ fun AppScope.imageChooser(
         }
     }
 
-    val dialog = dialogBox("Choose yer image") { close ->
+    val dialog = dialog("Choose yer image") { close ->
         choicesRow = row {
             addModifiers(FlexWrap)
             style = "display: none;"

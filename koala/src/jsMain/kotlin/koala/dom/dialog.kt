@@ -4,24 +4,25 @@ import koala.css.AlignItemsStretch
 import koala.css.ModifierSet
 import koala.css.Reveal
 import koala.css.TextAlignCenter
+import koala.css.Width100P
 import koala.css.addModifiers
 import koala.css.modify
-import koala.html.DialogKey
+import koala.html.DialogStyle
 import koala.html.filigree
-import koala.html.heading3
+import koala.html.heading2
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.html.js.dialog
 import org.w3c.dom.HTMLDialogElement
 
-fun AppScope.dialogBox(
+fun AppScope.dialog(
     title: String?,
     stateFlow: Flow<Boolean>? = null,
     modifiers: ModifierSet? = null,
     onClose: (() -> Unit)? = null,
-    block: AppScope.(() -> Unit) -> Unit
-): HTMLDialogElement {
+    content: AppScope.(() -> Unit) -> Unit
+): DialogElement {
 
     fun close(dialog: HTMLDialogElement) {
         parentScope.launch {
@@ -34,20 +35,68 @@ fun AppScope.dialogBox(
 
     var dialog: HTMLDialogElement? = null
     dialog = dialog {
-        addModifiers(DialogKey.Class, modifiers)
-        column(modify(AlignItemsStretch)) {
+        addModifiers(DialogStyle.Class, modifiers)
+        column(modify(Width100P)) {
             title?.let {
                 filigree {
-                    heading3(title, modify(TextAlignCenter))
+                    heading2(title, modify(TextAlignCenter))
                 }
             }
-            fun closeImage() {
+            fun closeDialog() {
                 val dialog = dialog ?: return
                 close(dialog)
             }
-            block(::closeImage)
+
+            div(modify(DialogStyle.Content)) {
+                content(::closeDialog)
+            }
         }
     }
+
+    dialog.addEventListener("click", { event ->
+        if (event.target == dialog) {
+            close(dialog)
+        }
+    })
+
+    parentScope.launch {
+        stateFlow?.collect {
+            if (it) dialog.open() else close(dialog)
+        }
+    }
+
+    return DialogElement(dialog) { close(dialog) }
+}
+
+data class DialogElement(val element: HTMLDialogElement, val close: () -> Unit) {
+    fun open() = this.also {
+        element.open()
+    }
+}
+
+fun HTMLDialogElement.open() {
+    showModal()
+    modify(Reveal)
+}
+
+fun AppScope.dialogWithCard(
+    title: String?,
+    stateFlow: Flow<Boolean>? = null,
+    modifiers: ModifierSet? = null,
+    onClose: (() -> Unit)? = null,
+    content: AppScope.(() -> Unit) -> Unit
+) = dialog(title, stateFlow, modifiers, onClose) {
+    dialogCard {
+        content(it)
+    }
+}
+
+fun TagScope.dialogCard(
+    modifiers: ModifierSet? = null,
+    content: TagScope.() -> Unit
+) = card(modify(DialogStyle.Card, modifiers)) {
+    content()
+}
 
 //    dialog.addEventListener("click", { event ->
 //        val mouse = event as MouseEvent
@@ -63,23 +112,3 @@ fun AppScope.dialogBox(
 //            close(dialog)
 //        }
 //    })
-
-    dialog.addEventListener("click", { event ->
-        if (event.target == dialog) {
-            close(dialog)
-        }
-    })
-
-    parentScope.launch {
-        stateFlow?.collect {
-            if (it) dialog.open() else close(dialog)
-        }
-    }
-
-    return dialog
-}
-
-fun HTMLDialogElement.open() {
-    showModal()
-    modify(Reveal)
-}

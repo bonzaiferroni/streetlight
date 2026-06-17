@@ -1,6 +1,5 @@
 package streetlight.web.ui
 
-import kampfire.api.toSlug
 import koala.core.addGlobalFunctions
 import koala.css.Property
 import koala.dom.*
@@ -10,13 +9,12 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.css.Display
 import kotlinx.serialization.ExperimentalSerializationApi
-import streetlight.web.layouts.PostKey
 import streetlight.web.pages.AppBodyKey
 import org.koin.dsl.koinApplication
 import streetlight.web.io.OmniLog
 import streetlight.web.layouts.LightControl
 import streetlight.web.model.TransitMap
-import streetlight.web.model.UserGate
+import streetlight.web.model.StarSession
 
 @OptIn(ExperimentalSerializationApi::class)
 fun viewApp() {
@@ -36,7 +34,7 @@ fun viewApp() {
 
     with (app) {
         val scope: CoroutineScope = get()
-        val gate: UserGate = get()
+        val gate: StarSession = get()
         val omni: OmniLog = get()
         val transit: TransitMap = get()
         transit.init()
