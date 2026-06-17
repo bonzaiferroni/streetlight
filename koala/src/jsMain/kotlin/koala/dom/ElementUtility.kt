@@ -1,5 +1,6 @@
 package koala.dom
 
+import kampfire.utils.takeEllipsis
 import koala.css.Property
 import koala.css.Modifier
 import koala.html.Queryable
@@ -64,9 +65,14 @@ fun querySelectorAll(queryable: Queryable) = document.body!!.querySelectorAll(qu
 
 fun CSSStyleDeclaration.removeProperty(property: Property<*>) = removeProperty(property.identifier)
 
-fun Element.domPath(): String = buildString {
-    var current: Element? = this@domPath
+fun Element.printPath(subject: Any? = null, limit: Int = Int.MAX_VALUE): String = buildString {
+    subject?.let {
+        append("[${it.toString().takeEllipsis(40)}]")
+    }
+    var count = 0
+    var current: Element? = this@printPath
     while (current != null) {
+        if (++count > limit) break
         if (isNotEmpty()) insert(0, " > ")
         val name = current.id.takeIf { it.isNotEmpty() }?.let { "#$it" } ?: current.tagName.lowercase()
         insert(0, name)

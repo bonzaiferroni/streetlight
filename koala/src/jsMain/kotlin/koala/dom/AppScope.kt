@@ -125,4 +125,4 @@ fun AppScope.replaceRender(
     block: AppScope.() -> Unit
 ) = replaceRender(((ancestor ?: document.body!!).querySelector(id) ?: error("element not found: $this")), block)
 
-class InvalidRenderOperation(parent: HTMLElement): Exception("Appended to finalized element: ${parent.domPath()}")
+class InvalidRenderOperation(parent: HTMLElement): Exception("Appended to finalized element: ${parent.printPath()}")

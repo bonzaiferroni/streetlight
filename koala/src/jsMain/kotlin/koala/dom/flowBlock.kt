@@ -58,8 +58,6 @@ fun <State> AppScope.flowBlock(
 
                 if (cacheElements) {
                     cache[value] = render
-                    val key = cache.entries.firstOrNull()?.key
-                    cache.remove(key)
                 }
             }
 
