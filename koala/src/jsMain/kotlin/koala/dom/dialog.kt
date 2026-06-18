@@ -1,6 +1,7 @@
 package koala.dom
 
 import koala.css.AlignItemsStretch
+import koala.css.FadeLoop
 import koala.css.ModifierSet
 import koala.css.PointerEventsAuto
 import koala.css.PointerEventsNone
@@ -41,7 +42,7 @@ fun AppScope.dialog(
         column(modify(Width100P, PointerEventsNone)) {
             title?.let {
                 filigree {
-                    heading2(title, modify(TextAlignCenter, PointerEventsAuto))
+                    heading2(title, modify(TextAlignCenter, PointerEventsAuto, FadeLoop))
                 }
             }
             fun closeDialog() {

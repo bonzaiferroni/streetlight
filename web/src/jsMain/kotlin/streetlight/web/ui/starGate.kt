@@ -1,26 +1,27 @@
 package streetlight.web.ui
 
-import kampfire.model.AccountType
 import koala.dom.AppScope
+import koala.dom.DialogElement
 import koala.dom.button
-import koala.dom.column
 import koala.dom.dialog
 import koala.dom.dialogCard
 import koala.dom.flowBlock
-import koala.dom.row
 import koala.dom.tab
 import koala.dom.tabs
 import koala.dom.textBlock
 import streetlight.model.data.Star
 
-fun AppScope.starGate(block: AppScope.(Star) -> Unit) {
+fun AppScope.starGate(
+    openInitially: Boolean = true,
+    baseContent: (AppScope.(DialogElement) -> Unit)? = null,
+    content: AppScope.(Star) -> Unit
+) {
     flowBlock(session.starFlow) { user ->
         when (user) {
             null -> {
                 val dialog = dialog("Sign In") {
                     tabs {
                         tab("guest") {
-                            console.log(">> rendering guest")
                             dialogCard {
                                 guestRegistrationForm()
                             }
@@ -36,12 +37,18 @@ fun AppScope.starGate(block: AppScope.(Star) -> Unit) {
                             }
                         }
                     }
-                }.open()
-                button(onClick = dialog::open) {
-                    textBlock("Sign in to continue.")
+                }
+                if (openInitially) dialog.open()
+                when (baseContent) {
+                    null -> {
+                        button(onClick = dialog::open) {
+                            textBlock("Sign in to continue.")
+                        }
+                    }
+                    else -> baseContent(dialog)
                 }
             }
-            else -> block(user)
+            else -> content(user)
         }
     }
 }

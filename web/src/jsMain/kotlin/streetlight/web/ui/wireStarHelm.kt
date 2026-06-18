@@ -28,25 +28,23 @@ fun AppScope.queryAndWireStarHelm() {
 private fun AppScope.wireStarHelm(element: HTMLElement) {
 
     wireBlock(element) {
-        starGate { star ->
+        starGate(
+            openInitially = false,
+            baseContent = {
+                someonePanel(it)
+            }
+        ) { star ->
             starPanel(star)
         }
-//        flowBlock(gate.starFlow, defaultMagic) { star ->
-//            if (star != null) {
-//
-//            } else {
-//                someonePanel()
-//            }
-//        }
     }
 }
 
 private val RowMod = modify(AlignItemsCenter, PaddingLeft3, JustifyContentEnd)
 
 private fun AppScope.starPanel(star: Star) {
-    val gate = app.get<StarSession>()
+    val session = app.get<StarSession>()
 
-    column() {
+    column(modify(AlignItemsEnd)) {
         row(RowMod) {
             navigation(StarRoute(star.username)) {
                 heading3(star.username.value)
@@ -70,7 +68,7 @@ private fun AppScope.starPanel(star: Star) {
             }
         }
 
-        button(onClick = gate::signOut) {
+        button(onClick = session::signOut) {
             row(RowMod) {
                 textBlock("Sign out", modify(WhiteSpaceNoWrap))
                 icon(SvgFile.SignOut, HelmBarKey.IconMod)
@@ -79,8 +77,8 @@ private fun AppScope.starPanel(star: Star) {
     }
 }
 
-private fun AppScope.someonePanel() {
-    column(modify(OverflowClip, MinWidth32)) {
+private fun AppScope.someonePanel(dialog: DialogElement) {
+    column(modify(MinWidth32)) {
         row(RowMod) {
             heading3("Someone")
             button(modify(HelmBarKey.IconMod, FadeLoop)) {
@@ -90,9 +88,7 @@ private fun AppScope.someonePanel() {
             }
         }
 
-        button("sign in", onClick = {
-            portal.go(StarDashRoute)
-        })
+        button("sign in", onClick = dialog::open)
 
 //        tabs(Id("someone-tabs")) {
 //            tab("Sign in") {

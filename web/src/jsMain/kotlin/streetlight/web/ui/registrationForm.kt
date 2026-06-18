@@ -38,7 +38,7 @@ fun AppScope.guestRegistrationForm() {
                 { textBlock("Guest accounts are automatically deleted after 30 days without activity.") },
                 {
                     textBlock {
-                        span("Please note: ", modify(OpacityHigh, Italic))
+                        span("Please note: ", modify(FadeLoop, Italic))
                         span("Anyone else with access to this device can also control the account.")
                     }
                 }
@@ -49,7 +49,7 @@ fun AppScope.guestRegistrationForm() {
     column(modify(QueryContainer)) {
         formPart("A username is all you need to get started.", info = {
             row {
-                button("Choose for me", modify(Zen), onClick = model::generateUsername)
+                button("Choose for me", modify(Secondary), onClick = model::generateUsername)
             }
         }) {
             formTextField("username", model::setUsername, model.usernameFlow, maxLength = Username.MAX_LENGTH)

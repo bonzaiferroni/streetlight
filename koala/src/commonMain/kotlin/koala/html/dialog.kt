@@ -20,8 +20,8 @@ $Class {
     border: none;
     outline: none;
     width: min(calc(100% - var(--unit-spacing-2)), var(--body-width));
-    overflow-x: hidden;
     background-color: transparent;
+    scrollbar-width: none;
 }
 
 $Content, $Content > * {
@@ -67,5 +67,6 @@ $Card {
     background-color: var(--dialog-bg);
     padding: var(--unit-spacing-2);
     overflow-y: auto;
+    max-height: 70vh;
 }
 """ }

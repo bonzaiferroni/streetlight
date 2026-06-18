@@ -1,6 +1,7 @@
 package streetlight.web.ui
 
 import kampfire.model.thumb
+import koala.SiteImage
 import koala.SvgFile
 import koala.dom.AppScope
 import koala.dom.querySelector
@@ -15,9 +16,13 @@ fun AppScope.wireBadge() {
 
     val element = document.body?.querySelector(StarBadgeKey.Id) as? HTMLImageElement ?: error("star badge not found")
 
-    parentScope.launch {
+    launchEffect {
         gate.starFlow.collect { star ->
-            element.src = (star?.images.thumb ?: SvgFile.Someone.url).value
+            val url = when (star) {
+                null -> SvgFile.Someone.url
+                else -> star.images.thumb ?: SiteImage.placeholderTh.url
+            }
+            element.src = url.value
         }
     }
 }
