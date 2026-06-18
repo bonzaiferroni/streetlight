@@ -46,7 +46,7 @@ val VisibilityHidden = utilityOf("visibility-hidden", "visibility: hidden !impor
 // Opacity
 // val Opacity1 = CssUtility("opacity-1", ".opacity-1 { opacity: 1; }")
 val Opacity1 = utilityOf("opacity-1", "opacity: 1")
-val OpacityHigh = utilityOf("opacity-high", "opacity: .75")
+val OpacityHigh = utilityOf("opacity-high", "opacity: .8")
 val OpacityHalf = utilityOf("opacity-half", "opacity: .5")
 val OpacityLow = utilityOf("opacity-low", "opacity: .25")
 val OpacityGhost = utilityOf("opacity-ghost", "opacity: .1")

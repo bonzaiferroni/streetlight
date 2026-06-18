@@ -14,7 +14,7 @@
     padding: 0.5rem 1rem;
     border-radius: 24px 24px 12px 12px;
     cursor: pointer;
-    transition: background-color 0.2s ease;
+    transition: background-color var(--magic-interval) var(--magic-easing);
     text-align: center;
     user-select: none;
 }
@@ -32,9 +32,8 @@
 /* Viewport container created by tabs.kt */
 .tabs-viewport {
     position: relative;
-    transition: height 200ms ease;
+    transition: height var(--magic-interval) var(--magic-easing);
     width: 100%;
-    overflow-x: hidden;
 }
 
 /* Panels stacked inside .tabs-viewport */

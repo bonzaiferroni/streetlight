@@ -1,10 +1,13 @@
 package streetlight.web.ui
 
+import kampfire.model.AccountType
 import koala.dom.AppScope
 import koala.dom.button
+import koala.dom.column
 import koala.dom.dialog
 import koala.dom.dialogCard
 import koala.dom.flowBlock
+import koala.dom.row
 import koala.dom.tab
 import koala.dom.tabs
 import koala.dom.textBlock
@@ -17,6 +20,7 @@ fun AppScope.starGate(block: AppScope.(Star) -> Unit) {
                 val dialog = dialog("Sign In") {
                     tabs {
                         tab("guest") {
+                            console.log(">> rendering guest")
                             dialogCard {
                                 guestRegistrationForm()
                             }

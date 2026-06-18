@@ -3,9 +3,9 @@ package koala.html
 import koala.css.*
 import kotlinx.html.FlowContent
 
-fun FlowContent.bulletsOf(modifiers: ModifierSet? = null, vararg text: String) {
+fun FlowContent.bulletsOf(modifiers: ModifierSet? = null, vararg content: String) {
     ulist(modify(modifiers, Gap0, ListStyleDisc, PaddingLeft3, ParagraphLineHeight), ListAxis.Column) {
-        text.forEach { text ->
+        content.forEach { text ->
             listItem(text)
         }
     }
@@ -18,3 +18,15 @@ fun FlowContent.bulletsOf(content: List<String>) = bulletsOf(null, *content.toTy
 fun FlowContent.bulletsOf(modifiers: ModifierSet, content: List<String>) {
     bulletsOf(modifiers, *content.toTypedArray())
 }
+
+fun FlowContent.bulletsOf(modifiers: ModifierSet? = null, vararg contents: FlowContent.() -> Unit) {
+    ulist(modify(modifiers, Gap0, ListStyleDisc, PaddingLeft3, ParagraphLineHeight), ListAxis.Column) {
+        contents.forEach { element ->
+            listItem {
+                element()
+            }
+        }
+    }
+}
+
+fun FlowContent.bulletsOf(vararg content: FlowContent.() -> Unit) = bulletsOf(null, *content)

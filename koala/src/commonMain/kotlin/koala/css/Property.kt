@@ -3,6 +3,7 @@ package koala.css
 import kampfire.model.Url
 import koala.SiteFile
 import kotlinx.css.Display
+import kotlinx.css.GridTemplateColumns
 import kotlinx.css.LinearDimension
 import kotlinx.html.CoreAttributeGroupFacade
 import kotlinx.html.style
@@ -29,6 +30,7 @@ data class Property<T: Any>(
         val Width = Property<LinearDimension>("width", false)
         val Height = Property<LinearDimension>("height", false)
         val ZIndex = Property<Int>("z-index", false)
+        val GridTemplateColumns = Property<GridTemplateColumns>("grid-template-columns", false)
 
         val MaskUrl = Property<SiteFile>("mask-url")
         val ColorScheme = Property<String>("color-scheme")

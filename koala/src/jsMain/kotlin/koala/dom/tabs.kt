@@ -27,6 +27,8 @@ fun <T : TagScope> T.tabs(
         viewport = tabsViewport(viewportMod)
     }
 
+    scope.build(viewport!!)
+
     var currentTab = defaultTab ?: scope.tabs.firstOrNull()?.label
 
     defaultTab?.let {
@@ -56,8 +58,6 @@ fun <T : TagScope> T.tabs(
         if (tabFlow != null) error("tabFlow requires AppScope receiver")
     }
 
-    scope.build(viewport!!)
-
     initTabs(root, viewport)
 
     return root
@@ -71,7 +71,7 @@ fun <T : TagScope> T.tabsHeader(tabScope: TabScope<T>) = div(modify(TabClass.hea
             +tab.label
         }
         button.addEventListener("select-tab", {
-            tabScope.selectTab(this@tabsHeader, index)
+            tabScope.renderTab(this@tabsHeader, index)
         })
     }
 }

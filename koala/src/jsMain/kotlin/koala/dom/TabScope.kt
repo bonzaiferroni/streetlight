@@ -42,6 +42,7 @@ class TabScope<T: TagScope>(
             is AppScope -> {
                 val tab = tab as Tab<AppScope>
                 element.replaceRender(receiver.app, receiver.parentScope, tab.content)
+                console.log("--rendered tab: ")
             }
             is TagScope -> {
                 element.append {
@@ -61,7 +62,7 @@ class TabScope<T: TagScope>(
         }
     }
 
-    internal fun selectTab(receiver: T, index: Int) {
+    internal fun renderTab(receiver: T, index: Int) {
         val element = elementCache.getOrNull(index) ?: error("tabs not built")
         if (element.childElementCount == 0) {
             createTab(receiver, index)

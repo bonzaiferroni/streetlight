@@ -48,10 +48,10 @@ $Window${Altitude.Comet}      ${MarkerStyle.Base}${Altitude.Satellite} {
 
 @keyframes twinkle {
     0%, 100% {
-        background-color: rgba(255, 255, 255, 0.45);
+        background-color: rgba(255, 255, 255, 0.2);
     }
     50% {
-        background-color: rgba(255, 255, 255, 1);
+        background-color: rgba(255, 255, 255, 0.6);
     }
 }
 

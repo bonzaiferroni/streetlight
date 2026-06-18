@@ -66,7 +66,7 @@ fun TagScope.formPart(
         }
         info(this@formPart)
     }
-    column(modify(fieldsFlex)) {
+    column(modify(FormMod.Controls, fieldsFlex)) {
         fields(this@formPart)
     }
 }
@@ -124,6 +124,7 @@ object FormMod {
     val Card = modify(ZenBg, QueryContainer, Gap3)
     val Part = modify(ContainerMdRow)
     val Instructions = modify(Flex1, JustifyContentCenter, Margin1)
+    val Controls = modify(JustifyContentCenter)
     val Bullets = modify(OpacityHigh)
     val GeoMap = modify(Height48, BorderRadius2, OverflowClip, MoonShadow)
 }

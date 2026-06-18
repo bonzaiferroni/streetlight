@@ -26,16 +26,18 @@ fun AppScope.queryAndWireStarHelm() {
 }
 
 private fun AppScope.wireStarHelm(element: HTMLElement) {
-    val gate = app.get<StarSession>()
 
     wireBlock(element) {
-        flowBlock(gate.starFlow, defaultMagic) { star ->
-            if (star != null) {
-                starPanel(star)
-            } else {
-                someonePanel()
-            }
+        starGate { star ->
+            starPanel(star)
         }
+//        flowBlock(gate.starFlow, defaultMagic) { star ->
+//            if (star != null) {
+//
+//            } else {
+//                someonePanel()
+//            }
+//        }
     }
 }
 

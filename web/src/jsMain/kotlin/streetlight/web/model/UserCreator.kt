@@ -29,30 +29,16 @@ class UserCreator(
     val confirmPasswordFlow = state.flow.mapDistinct { it.confirmPassword }
     val isValidFlow = state.flow.mapDistinct { it.isValid }
 
-    init {
-        generateUsername()
-    }
-
     fun generateUsername() = scope.launch {
         val username = api.generateUsername().getDataOrNull()
         setRequest { it.copy(username = username ?: Username.Empty)}
     }
 
-    fun setUsername(username: String) {
-        setRequest { it.copy(username = username.toUsername()) }
-    }
-
-    fun setEmail(email: String) {
-        setRequest { it.copy(email = email) }
-    }
-
-    fun setPassword(password: String) {
-        setRequest { it.copy(password = password) }
-    }
-
-    fun setConfirmPassword(confirmPassword: String) {
-        state.set { it.copy(confirmPassword = confirmPassword) }
-    }
+    fun setUsername(username: String) = setRequest { it.copy(username = username.toUsername()) }
+    fun setEmail(email: String) = setRequest { it.copy(email = email) }
+    fun setPassword(password: String) = setRequest { it.copy(password = password) }
+    fun setConfirmPassword(confirmPassword: String) = state.set { it.copy(confirmPassword = confirmPassword) }
+    fun setIsMinimumAge(value: Boolean) = state.set { it.copy(isMinimumAge = value) }
 
     fun createAccount(accountType: AccountType) {
         val request = when (accountType) {
@@ -81,6 +67,11 @@ class UserCreator(
 data class UserCreatorState(
     val request: SignUpRequest = SignUpRequest(),
     val confirmPassword: String = "",
+    val isMinimumAge: Boolean = false,
 ) {
-    val isValid get() = request.isValid && confirmPassword == request.password
+    val isValid get() = isMinimumAge && request.isValid && confirmPassword == request.password
+
+    companion object {
+        const val MINIMUM_AGE = 17
+    }
 }

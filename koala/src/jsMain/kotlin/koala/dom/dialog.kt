@@ -2,6 +2,8 @@ package koala.dom
 
 import koala.css.AlignItemsStretch
 import koala.css.ModifierSet
+import koala.css.PointerEventsAuto
+import koala.css.PointerEventsNone
 import koala.css.Reveal
 import koala.css.TextAlignCenter
 import koala.css.Width100P
@@ -36,10 +38,10 @@ fun AppScope.dialog(
     var dialog: HTMLDialogElement? = null
     dialog = dialog {
         addModifiers(DialogStyle.Class, modifiers)
-        column(modify(Width100P)) {
+        column(modify(Width100P, PointerEventsNone)) {
             title?.let {
                 filigree {
-                    heading2(title, modify(TextAlignCenter))
+                    heading2(title, modify(TextAlignCenter, PointerEventsAuto))
                 }
             }
             fun closeDialog() {
@@ -47,7 +49,7 @@ fun AppScope.dialog(
                 close(dialog)
             }
 
-            div(modify(DialogStyle.Content)) {
+            div(modify(DialogStyle.Content, PointerEventsAuto)) {
                 content(::closeDialog)
             }
         }

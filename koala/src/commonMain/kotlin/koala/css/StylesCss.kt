@@ -52,7 +52,7 @@ val StylesCss get() = """
     --primary-bg: color-mix(in srgb, rgb(var(--primary)) 75%, rgb(var(--paper)));
     --primary-button: rgb(var(--primary));
     --primary-button-day: color-mix(in srgb, var(--primary-button) 80%, black);
-    --primary-card-bg: color-mix(in srgb, rgb(var(--primary)) 0%, var(--card-bg));
+    --primary-card-bg: color-mix(in srgb, rgba(var(--primary), .2) 50%, var(--card-bg));
     
     --secondary-button: var(--gray-bg);
     
@@ -227,6 +227,10 @@ label {
 img {
     height: auto;
     display: block;
+}
+
+button {
+    font-family: inherit;
 }
 
 

@@ -19,18 +19,29 @@ fun FlowContent.navigation(
     block: A.() -> Unit = {}
 ) {
     a {
-        setId(id)
-        addModifiers(modify(ActionKey.Class, modifiers))
-        href?.let { this.href = href }
-        block()
-        flair?.let {
-            span {
-                +flair
-            }
-        }
+        configureNavigation(href, modifiers, text, id, flair, block)
+    }
+}
+
+internal fun A.configureNavigation(
+    href: String? = null,
+    modifiers: ModifierSet? = null,
+    text: String = "",
+    id: Id? = null,
+    flair: String? = null,
+    block: A.() -> Unit = {}
+) {
+    setId(id)
+    addModifiers(modify(ActionKey.Class, modifiers))
+    href?.let { this.href = href }
+    block()
+    flair?.let {
         span {
-            +text
+            +flair
         }
+    }
+    span {
+        +text
     }
 }
 

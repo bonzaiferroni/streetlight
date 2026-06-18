@@ -101,6 +101,7 @@ function initTabs(root, viewportArg) {
     buttons.forEach((btn, i) => btn.classList.toggle("is-active", i === current));
 
     viewport.style.height = panels[current].scrollHeight + "px";
+    console.log("peek: " + viewport.style.height);
     setTimeout(() => { viewport.style.height = "auto"; }, DURATION);
 
     writeStorage(current);
@@ -160,8 +161,11 @@ function initTabs(root, viewportArg) {
         viewport.style.height = startH + "px";
         restoreScroll();
 
+        console.log("peek: " + viewport.style.height);
+
         requestAnimationFrame(() => {
             viewport.style.height = endH + "px";
+            console.log("peek: " + viewport.style.height);
             restoreScroll();
         });
 

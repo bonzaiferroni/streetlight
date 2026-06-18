@@ -13,7 +13,8 @@ fun Document.getElementOrNullById(id: Id) = getElementById(id.identifier) as? HT
 fun Document.startViewTransition(updateCallback: () -> Unit): ViewTransition =
     this.asDynamic().startViewTransition(updateCallback).unsafeCast<ViewTransition>()
 
-fun Document.closeOpenPopovers() = document.querySelectorAll("[popover]:popover-open").asList().forEach { node ->
+fun Document.closeOpenPopovers() = querySelectorAll("[popover]:popover-open").asList().forEach { node ->
+    console.log("hiding popover")
     node.hidePopover()
 }
 

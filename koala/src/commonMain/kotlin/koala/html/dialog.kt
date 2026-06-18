@@ -22,23 +22,25 @@ $Class {
     width: min(calc(100% - var(--unit-spacing-2)), var(--body-width));
     overflow-x: hidden;
     background-color: transparent;
-
-    opacity: 0;
-    transform: translateY(10px);
-
-    transition: var(--opacity-transition), var(--transform-transition);
 }
 
 $Content, $Content > * {
     max-height: 80vh;
 }
 
-$Class[open]$Reveal {
-    opacity: 1;
-    transform: translateY(0);
+$Class[open] {
     display: flex;
     align-items: center;
     justify-content: center;
+    
+    opacity: 0;
+    transform: translateY(10px);
+    transition: var(--transition-opacity), var(--transition-transform);
+    
+    &$Reveal {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 $Class::backdrop {
@@ -46,17 +48,24 @@ $Class::backdrop {
     -webkit-backdrop-filter: blur(0px);
 }
 
+$Class[open]::backdrop {
+    backdrop-filter: blur(0px);
+    -webkit-backdrop-filter: blur(0px);
+    
+    background-color: rgba(var(--ink), 0);
+    transition: var(--transition-background-color), var(--transition-backdrop-filter);
+}
+
 $Class[open]$Reveal::backdrop {
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
+    background-color: rgba(var(--white), .2);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
 }
 
 $Card {
     border-radius: var(--unit-spacing-2);
-    box-shadow: var(--moon-shadow);
     background-color: var(--dialog-bg);
     padding: var(--unit-spacing-2);
-    height: 100%;
     overflow-y: auto;
 }
 """ }
