@@ -6,11 +6,11 @@ import kotlinx.css.fr
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 
-fun FlowContent.gridColumns(
+fun FlowContent.grid(
     template: GridTemplateColumns = GridTemplateColumns(1.fr, 1.fr),
     queryTemplate: GridTemplateColumns = template,
     mod: ModifierSet? = null,
-    content: FlowContent.() -> Unit,
+    content: DIV.() -> Unit,
 ) {
     div(modify(GridColumns.Class, mod)) {
         configureGridColumns(template, queryTemplate)

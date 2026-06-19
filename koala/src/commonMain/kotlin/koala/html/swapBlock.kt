@@ -11,6 +11,7 @@ import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kotlinx.html.div
 
+@Deprecated("td: replace swapBlock")
 fun FlowContent.swapBlock(
     id: Id,
     modifiers: ModifierSet? = null,

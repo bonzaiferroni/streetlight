@@ -5,8 +5,14 @@ import koala.css.addModifiers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
+import kotlinx.html.EM
 import kotlinx.html.P
+import kotlinx.html.SPAN
+import kotlinx.html.STRONG
 import kotlinx.html.js.p
+import kotlinx.html.js.em as emTag
+import kotlinx.html.js.strong as strongTag
+import kotlinx.html.js.span as spanTag
 import org.w3c.dom.HTMLParagraphElement
 
 fun TagScope.textBlock(
@@ -32,4 +38,34 @@ fun <T> AppScope.textBlock(
         }
     }
     return element
+}
+
+fun TagScope.em(
+    text: String = "",
+    mod: ModifierSet? = null,
+    block: EM.() -> Unit = { }
+) = emTag {
+    addModifiers(mod)
+    +text
+    block()
+}
+
+fun TagScope.strong(
+    text: String = "",
+    mod: ModifierSet? = null,
+    block: STRONG.() -> Unit = { }
+) = strongTag {
+    addModifiers(mod)
+    +text
+    block()
+}
+
+fun TagScope.span(
+    text: String = "",
+    mod: ModifierSet? = null,
+    block: SPAN.() -> Unit = { }
+) = spanTag {
+    addModifiers(mod)
+    +text
+    block()
 }

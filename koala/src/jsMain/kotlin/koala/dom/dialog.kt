@@ -10,21 +10,26 @@ import koala.css.TextAlignCenter
 import koala.css.Width100P
 import koala.css.addModifiers
 import koala.css.modify
+import koala.dom.column
+import koala.dom.div
 import koala.html.DialogStyle
 import koala.html.filigree
 import koala.html.heading2
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+import kotlinx.dom.clear
+import kotlinx.html.DIALOG
+import kotlinx.html.dom.append
 import kotlinx.html.js.dialog
 import org.w3c.dom.HTMLDialogElement
 
 fun AppScope.dialog(
-    title: String?,
+    title: String? = null,
     stateFlow: Flow<Boolean>? = null,
     modifiers: ModifierSet? = null,
     onClose: (() -> Unit)? = null,
-    content: AppScope.(() -> Unit) -> Unit
+    content: TagScope.(() -> Unit) -> Unit = { }
 ): DialogElement {
 
     fun close(dialog: HTMLDialogElement) {
@@ -37,23 +42,14 @@ fun AppScope.dialog(
     }
 
     var dialog: HTMLDialogElement? = null
+    fun closeDialog() {
+        val dialog = dialog ?: return
+        close(dialog)
+    }
+
     dialog = dialog {
         addModifiers(DialogStyle.Class, modifiers)
-        column(modify(Width100P, PointerEventsNone)) {
-            title?.let {
-                filigree {
-                    heading2(title, modify(TextAlignCenter, PointerEventsAuto, FadeLoop))
-                }
-            }
-            fun closeDialog() {
-                val dialog = dialog ?: return
-                close(dialog)
-            }
-
-            div(modify(DialogStyle.Content, PointerEventsAuto)) {
-                content(::closeDialog)
-            }
-        }
+        dialogContent(title, ::closeDialog, content)
     }
 
     dialog.addEventListener("click", { event ->
@@ -71,8 +67,37 @@ fun AppScope.dialog(
     return DialogElement(dialog) { close(dialog) }
 }
 
+internal fun TagScope.dialogContent(
+    title: String?,
+    closeDialog: () -> Unit,
+    content: TagScope.(() -> Unit) -> Unit
+) {
+    column(modify(Width100P, PointerEventsNone)) {
+        title?.let {
+            filigree {
+                heading2(title, modify(TextAlignCenter, PointerEventsAuto, FadeLoop))
+            }
+        }
+
+        div(modify(DialogStyle.Content, PointerEventsAuto)) {
+            content(closeDialog)
+        }
+    }
+}
+
 data class DialogElement(val element: HTMLDialogElement, val close: () -> Unit) {
     fun open() = this.also {
+        element.open()
+    }
+
+    fun updateContent(
+        title: String?,
+        content: TagScope.(() -> Unit) -> Unit,
+    ) {
+        element.clear()
+        element.append {
+            dialogContent(title, close, content)
+        }
         element.open()
     }
 }

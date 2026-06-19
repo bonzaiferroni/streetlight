@@ -12,11 +12,11 @@ import koala.css.columnsOf
 import koala.css.modify
 import koala.dom.*
 import koala.html.em
-import koala.html.span
 import koala.html.strong
 import kotlinx.css.LinearDimension
 import kotlinx.css.fr
 import streetlight.model.data.EditType
+import streetlight.model.data.LocationEdit
 import streetlight.model.data.LocationUpdaterContent
 import streetlight.model.data.Star
 import streetlight.model.data.toEdit
@@ -49,9 +49,13 @@ fun AppScope.viewLocationUpdater(content: LocationUpdaterContent, star: Star) {
             }
         }
         tab("history") {
+            val dialog = dialog()
             grid(columnsOf(1.fr, LinearDimension.auto)) {
+                var previousEdit: LocationEdit? = null
                 content.editLogs.forEachIndexed { index, log ->
                     val timeDescription = log.createdAt.toRelativeTimeFormat()
+                    val edit = log.recordEdit as? LocationEdit
+                    val compareEdit = previousEdit
                     textBlock("${log.username} ${log.editType.verb} the location $timeDescription")
 
                     row(modify(JustifyContentEnd)) {
@@ -60,13 +64,36 @@ fun AppScope.viewLocationUpdater(content: LocationUpdaterContent, star: Star) {
                                 +"revert"
                             }
                         }
-                        button {
-                            +"view"
-                        }
-                        button {
-                            +"dif"
+                        edit?.let {
+                            button(onClick = {
+                                dialog.updateContent(timeDescription) {
+                                    dialogCard {
+                                        box {
+                                            fieldGrid {
+                                                fieldValue(edit.name, compareEdit?.name, "name")
+                                                fieldValue(edit.address, compareEdit?.address, "address")
+                                                fieldValue(edit.description, compareEdit?.description, "description")
+                                                fieldValue(edit.geoPoint, compareEdit?.geoPoint)
+                                            }
+                                        }
+                                    }
+                                }
+                            }) {
+                                +"view"
+                            }
+
+                            button(onClick = {
+                                dialog.updateContent(timeDescription) {
+                                    dialogCard {
+                                        textBlock("yer dif")
+                                    }
+                                }
+                            }) {
+                                +"dif"
+                            }
                         }
                     }
+                    previousEdit = edit
                 }
             }
         }
