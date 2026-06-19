@@ -8,3 +8,9 @@ data class LocationContent(
     val events: List<Event>,
     val canEdit: Boolean,
 )
+
+@Serializable
+data class LocationUpdaterContent(
+    val location: Location,
+    val editLogs: List<EditLog>
+)

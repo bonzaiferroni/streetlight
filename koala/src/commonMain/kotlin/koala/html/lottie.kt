@@ -32,7 +32,6 @@ object LottieClass {
 // language="CSS"
 val LottieCss get() = """
 ${LottieClass.Core} {
-    height: 100%;
     aspect-ratio: 1 / 1;
 }
 """

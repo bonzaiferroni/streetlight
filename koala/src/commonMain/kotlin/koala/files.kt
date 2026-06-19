@@ -91,27 +91,28 @@ object SvgFile : FileSet<Svg>() {
 }
 
 object LottieFile : FileSet<Lottie>() {
-    val airplane = addLottie("airplane.json")
-    val fox = addLottie("fox.json")
-    val cassette = addLottie("cassette.json")
-    val Wombat = addLottie("wombat.json")
+    val Airplane = addLottie("airplane.json") // airplane circling earth
+    val Fox = addLottie("fox.json") // replace
+    val Cassette = addLottie("cassette.json")
+    val Wombat = addLottie("wombat.json") // wombat pond
     val cloudSync = addLottie("cloud-sync.json")
     val confused = addLottie("confused.json")
     val cupShuffle = addLottie("cup-shuffle.json")
     val StrollingMan = addLottie("strolling-man.json")
     val dinoLoad = addLottie("dino-load.json")
-    val ghost = addLottie("ghost.json")
-    val friendWave = addLottie("friend-wave.json")
+    val Ghost = addLottie("ghost.json")
+    val FriendWave = addLottie("friend-wave.json") // great motion, too cute
     val helicopter = addLottie("helicopter.json")
     val playPause = addLottie("play-pause.json")
     val Cat = addLottie("cat.json")
     val AstronautReading = addLottie("astronaut-reading.json")
-    val Astronaut404 = addLottie("astronaut-404.json")
-    val rocket = addLottie("rocket.json")
+    val Astronaut404 = addLottie("astronaut-404.json") // replace
+    val Rocket = addLottie("rocket.json") // replace
     val secureCloudSync = addLottie("secure-cloud-sync.json")
     val ServerSync = addLottie("server-sync.json")
-    val spinningCircles = addLottie("spinning-circles.json")
-    val circleSync = addLottie("circle-sync.json")
+    val SpinningCircles = addLottie("spinning-circles.json")
+    val CircleSync = addLottie("circle-sync.json")
+    val StreetlightNight = addLottie("streetlight-night.json")
 }
 
 object SiteImage : FileSet<Image>() {

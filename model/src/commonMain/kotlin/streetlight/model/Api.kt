@@ -36,6 +36,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
 
     object Locations: GetByIdEndpoint<LocationId, Location>(this) {
         object ReadLocation: GetByIdEndpoint<Slug, Location>(this)
+        object ReadUpdaterContent: GetByIdEndpoint<Slug, LocationUpdaterContent>(this)
         object ReadContent: GetByIdEndpoint<Slug, LocationContent>(this)
 
         object CreateLocation: PostEndpoint<LocationEdit, Location>(this)

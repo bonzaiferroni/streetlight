@@ -15,6 +15,7 @@ data class Star(
     val roles: Set<UserRole>,
     val name: String?,
     val description: String?,
+    val scoutLevel: Int,
     val imageRef: Url?,
     val images: ScaledImageArray?,
     val updatedAt: Instant,

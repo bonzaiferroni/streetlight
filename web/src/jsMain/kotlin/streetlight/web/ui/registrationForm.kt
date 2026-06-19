@@ -4,10 +4,8 @@ import kampfire.api.Username
 import kampfire.model.AccountType
 import koala.LottieFile
 import koala.css.Accent
-import koala.css.AlignItemsStart
 import koala.css.*
 import koala.dom.*
-import koala.html.GridColumns
 import koala.html.bulletsOf
 import koala.html.filigree
 import koala.html.heading3
@@ -19,7 +17,7 @@ import streetlight.web.model.UserCreatorState
 fun AppScope.guestRegistrationForm() {
     val model = app.getUserCreator(parentScope)
 
-    gridColumns(queryTemplate = GridTemplateColumns(1.fr), mod = modify(Gap2)) {
+    grid(queryTemplate = GridTemplateColumns(1.fr), mod = modify(Gap2)) {
         column {
             heading3("Guest accounts", modify(TextAlignCenter))
             textBlock(guestAccountIntro1)

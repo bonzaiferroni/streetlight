@@ -42,7 +42,6 @@ class TabScope<T: TagScope>(
             is AppScope -> {
                 val tab = tab as Tab<AppScope>
                 element.replaceRender(receiver.app, receiver.parentScope, tab.content)
-                console.log("--rendered tab: ")
             }
             is TagScope -> {
                 element.append {

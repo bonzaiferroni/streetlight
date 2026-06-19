@@ -6,12 +6,12 @@ import kotlin.time.Instant
 import kotlin.uuid.Uuid
 
 @Serializable
-data class EditLog<Edit: RecordEdit>(
+data class EditLog(
     val editLogId: EditLogId,
-    val recordId: RecordId,
+    val recordId: Uuid,
     val username: String,
     val recordType: RecordType,
-    val recordEdit: Edit,
+    val recordEdit: RecordEdit?,
     val editType: EditType,
     val updatedAt: Instant,
     val createdAt: Instant,
@@ -38,4 +38,15 @@ enum class EditType {
     Create,
     Update,
     Delete,
+}
+
+enum class EditStatus {
+    PendingReview,
+    Accepted,
+}
+
+val EditType.verb get() = when(this) {
+    EditType.Create -> "created"
+    EditType.Update -> "updated"
+    EditType.Delete -> "deleted"
 }

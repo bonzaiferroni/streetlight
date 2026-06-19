@@ -8,10 +8,10 @@ import kotlinx.css.GridTemplateColumns
 import kotlinx.css.fr
 import kotlinx.html.DIV
 
-fun TagScope.gridColumns(
+fun TagScope.grid(
     template: GridTemplateColumns = GridTemplateColumns(1.fr, 1.fr),
-    queryTemplate: GridTemplateColumns = template,
     mod: ModifierSet? = null,
+    queryTemplate: GridTemplateColumns = template,
     content: DIV.() -> Unit,
 ) {
     div(modify(GridColumns.Class, mod)) {

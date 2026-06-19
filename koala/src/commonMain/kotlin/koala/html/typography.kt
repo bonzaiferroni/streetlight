@@ -2,6 +2,8 @@ package koala.html
 
 import kotlinx.html.*
 import kotlinx.html.span as spanTag
+import kotlinx.html.em as emTag
+import kotlinx.html.strong as strongTag
 import koala.css.*
 
 inline fun FlowContent.textBlock(
@@ -112,6 +114,30 @@ fun FlowContent.span(
     block: SPAN.() -> Unit = {},
 ) {
     span(modifiers) {
+        block()
+        +text
+    }
+}
+
+fun FlowContent.em(
+    text: String,
+    modifiers: ModifierSet? = null,
+    block: EM.() -> Unit = {},
+) {
+    emTag {
+        addModifiers(modifiers)
+        block()
+        +text
+    }
+}
+
+fun FlowContent.strong(
+    text: String,
+    modifiers: ModifierSet? = null,
+    block: STRONG.() -> Unit = {},
+) {
+    strongTag {
+        addModifiers(modifiers)
         block()
         +text
     }
