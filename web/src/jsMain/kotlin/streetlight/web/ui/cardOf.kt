@@ -14,7 +14,7 @@ fun AppScope.cardOf(
     cardOf(
         title = location.label,
         thumbUrl = location.images.thumb ?: SiteImage.placeholderTh.url,
-        description = location.description ?: location.address,
+        description = location.description?.value ?: location.address,
         modifiers = modifiers,
         onClick = onClick,
     )

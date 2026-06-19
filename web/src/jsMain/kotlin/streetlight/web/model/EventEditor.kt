@@ -1,6 +1,8 @@
 package streetlight.web.model
 
 import kabinet.utils.replaceAt
+import kampfire.api.Markdown
+import kampfire.api.toMarkdown
 import kampfire.model.Url
 import kampfire.model.handleResponse
 import koala.dom.MessageStore
@@ -37,7 +39,7 @@ class EventEditor(
     val endTimeFlow = editFlow.mapDistinct { it.endTime }
     val dateFlow = editFlow.mapDistinct { it.date }
     val startsAtFlow = editFlow.mapDistinct { it.startsAt }
-    val descriptionFlow = stateFlow.mapDistinct { it.edit.description ?: "" }
+    val descriptionFlow = stateFlow.mapDistinct { it.edit.description ?: "".toMarkdown() }
     val titleFlow = stateFlow.mapDistinct { it.edit.title ?: "" }
     val urlFlow = stateFlow.mapDistinct { it.edit.url }
     val isFreeFlow = stateFlow.mapDistinct { it.edit.isFree }
@@ -50,7 +52,7 @@ class EventEditor(
     fun setStartTime(value: LocalTime) = setEvent { it.copy(startTime = value) }
     fun setEndTime(value: LocalTime) = setEvent { it.copy(endTime = value) }
     fun setDate(value: LocalDate) = setEvent { it.copy(date = value) }
-    fun setDescription(value: String) = setEvent { it.copy(description = value) }
+    fun setDescription(value: Markdown) = setEvent { it.copy(description = value) }
     fun setUrl(value: String) = setEvent { it.copy(url = value) }
     fun setImageUrl(url: Url?) = setEvent { it.copy(imageRef = url) }
     fun setFree(value: Boolean) = setEvent { it.copy(cost = if (value) 0f else null)}

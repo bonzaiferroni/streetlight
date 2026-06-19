@@ -1,5 +1,6 @@
 package koala.model
 
+import kampfire.api.Markdown
 import kampfire.model.Url
 import koala.html.Id
 import kotlinx.serialization.Serializable
@@ -17,7 +18,7 @@ data class Doc(
     constructor(
         docId: DocId,
         title: String,
-        content: String,
+        content: Markdown,
         url: Url? = null,
         links: List<DocLink>? = null
     ): this(docId, title, listOf(DocSection(null, content)), url, links)
@@ -44,7 +45,7 @@ data class DocLink(
 @Serializable
 data class DocSection(
     val title: String?,
-    val content: String,
+    val content: Markdown,
     val id: Id? = title?.toElementId()
 )
 

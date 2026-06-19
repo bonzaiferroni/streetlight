@@ -1,5 +1,6 @@
 package streetlight.model.data
 
+import kampfire.api.Markdown
 import kampfire.api.Slug
 import kampfire.api.Username
 import kampfire.model.GeoPoint
@@ -18,7 +19,7 @@ data class BasicPost(
     override val username: Username?,
     override val label: String,
     override val sublabel: String?,
-    override val text: String?,
+    override val text: Markdown?,
     override val geoPoint: GeoPoint?,
     val imageRef: Url?,
     override val images: ScaledImageArray?,

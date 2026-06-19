@@ -1,5 +1,6 @@
 package koala.dom
 
+import kampfire.api.Markdown
 import koala.css.ModifierSet
 import koala.html.configureMarkdown
 import koala.markdown.MarkdownBlock
@@ -16,7 +17,7 @@ fun TagScope.markdown(
 }
 
 fun TagScope.markdown(
-    text: String,
+    text: Markdown,
     modifiers: ModifierSet? = null,
     block: DIV.() -> Unit = {}
 ) = markdown(markdownBlocksOf(text), modifiers, block)

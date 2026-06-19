@@ -23,6 +23,7 @@ add rich text editor
 add paste from clipboard to imagedrop
 make osm location search not bound by city
 consolidate utilities to stylesheet
+add trim to string pipelines
 
 # CHALLENGE:
 fee: entry/ticket distinction

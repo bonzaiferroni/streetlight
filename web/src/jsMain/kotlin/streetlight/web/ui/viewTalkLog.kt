@@ -1,5 +1,7 @@
 package streetlight.web.ui
 
+import kampfire.api.Markdown
+import kampfire.api.toMarkdown
 import kampfire.model.handleResponse
 import koala.css.*
 import koala.dom.*
@@ -22,11 +24,11 @@ fun AppScope.viewTalkLog(model: TalkLog) {
 
     column {
         filigree { heading1("Talk") }
-        commentEditor("comment", "") {
+        commentEditor("comment", "".toMarkdown()) {
             val commentId = model.createComment(null, it)
             return@commentEditor when (commentId) {
                 null -> null
-                else -> ""
+                else -> "".toMarkdown()
             }
         }
         row {
@@ -129,9 +131,9 @@ fun AppScope.updateComment(model: TalkLog, message: CommentUpdated) {
 
 fun AppScope.commentEditor(
     label: String,
-    initialText: String,
+    initialText: Markdown,
     modifiers: ModifierSet? = null,
-    send: suspend (String) -> String?
+    send: suspend (Markdown) -> Markdown?
 ) {
     val text = storeOf(initialText)
 
@@ -140,7 +142,7 @@ fun AppScope.commentEditor(
         row {
             spacer(modify(Flex1))
             button("send", onClick = {
-                if (text.now.isEmpty()) return@button
+                if (text.now.value.isEmpty()) return@button
                 parentScope.launch {
                     val resultText = send(text.now)
                     if (resultText != null) {

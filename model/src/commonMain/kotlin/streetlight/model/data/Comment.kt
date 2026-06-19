@@ -1,5 +1,6 @@
 package streetlight.model.data
 
+import kampfire.api.Markdown
 import kampfire.api.Username
 import kampfire.model.Url
 import kotlinx.serialization.Serializable
@@ -13,7 +14,7 @@ data class Comment(
     val parentId: CommentId?,
     val username: Username?,
     val thumb: Url?,
-    val text: String,
+    val text: Markdown,
     val lightCount: Int,
     val replyCount: Int,
     val updatedAt: Instant,
@@ -35,7 +36,7 @@ data class NewComment(
     val spaceId: Uuid,
     val spaceType: SpaceType,
     val parentId: CommentId?,
-    val text: String,
+    val text: Markdown,
 ) {
     val galaxyId get() = if (spaceType == SpaceType.Galaxy) GalaxyId(spaceId) else error("invalid SpaceType")
     val postId get() = if (spaceType == SpaceType.Post) PostId(spaceId) else error("invalid SpaceType")
@@ -45,5 +46,5 @@ data class NewComment(
 data class UpdatedComment(
     val commentId: CommentId,
     val spaceId: Uuid,
-    val text: String,
+    val text: Markdown,
 )

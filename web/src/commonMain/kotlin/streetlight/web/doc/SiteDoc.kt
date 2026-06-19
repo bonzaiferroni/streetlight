@@ -1,5 +1,6 @@
 package streetlight.web.doc
 
+import kampfire.api.toMarkdown
 import koala.SiteImage
 import koala.model.Doc
 import koala.model.DocSection
@@ -12,7 +13,7 @@ import streetlight.web.shells.PrivacyIntro
 import streetlight.web.shells.UpcomingSectionsContent
 
 object SiteDoc {
-    val About = Doc("about-streetlight", "About Streetlight", "[Intro Content]")
+    val About = Doc("about-streetlight", "About Streetlight", "[Intro Content]".toMarkdown())
 
     val Team = Doc("about-team", "The Team", listOf(
         DocSection("Luke", AboutLuke)
@@ -20,7 +21,7 @@ object SiteDoc {
 
     val Ideas = Doc("about-ideas", "Theory", IdeasContent)
 
-    val Roadmap = Doc("about-roadmap", "Roadmap Page", "[information]")
+    val Roadmap = Doc("about-roadmap", "Roadmap Page", "[information]".toMarkdown())
 
     val Privacy = Doc(
         docId = "privacy-policy", title = "Privacy on Streetlight",

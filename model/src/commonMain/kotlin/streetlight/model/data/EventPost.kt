@@ -1,5 +1,6 @@
 package streetlight.model.data
 
+import kampfire.api.Markdown
 import kampfire.api.Slug
 import kampfire.api.Username
 import kampfire.model.Url
@@ -15,7 +16,7 @@ data class EventPost(
     override val galaxySlug: Slug,
     override val username: Username?,
     val event: EventLocation,
-    override val text: String?,
+    override val text: Markdown?,
     override val isLit: Boolean,
     override val lightCount: Int,
     override val createdAt: Instant,
@@ -36,7 +37,7 @@ data class EventPostEdit(
     val postId: PostId? = null,
     val galaxyId: GalaxyId,
     val eventId: EventId,
-    val text: String? = null,
+    val text: Markdown? = null,
 ) {
     val isValid get () = true // !title.isNullOrBlank()
 }

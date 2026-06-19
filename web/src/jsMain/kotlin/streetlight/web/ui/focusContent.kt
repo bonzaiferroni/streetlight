@@ -21,17 +21,16 @@ fun AppScope.eventFocusContent(post: EventPost) {
             featureImage(post.images.small, modify(Flex1, Aspect3By2))
             column(modify(Padding1, Flex2)) {
                 column {
-                    heading3(event?.title ?: "[removed]", modify(SingleLine))
-                    event?.locationName?.let {
+                    heading3(event.title ?: "[removed]", modify(SingleLine))
+                    event.locationName?.let {
                         textBlock(it, modify(OpacityHigh))
                     }
                 }
-                event?.description?.let {
-                    textBlock(it, modify(Flex1, MinHeight0, FadeBottom))
+                event.description?.let {
+                    textBlock(it.value, modify(Flex1, MinHeight0, FadeBottom))
                 }
             }
         }
-        val event = event ?: return@card
         row(modify(Flex1, MinHeight8, FlexItems1, GapTiny, TextAlignCenter, FlexWrap, MoonShadow)) {
             cell {
                 startsAtCell(event.startsAt)

@@ -1,6 +1,8 @@
 package streetlight.web.model
 
+import kampfire.api.Markdown
 import kampfire.api.Slug
+import kampfire.api.toMarkdown
 import kampfire.model.Url
 import kampfire.model.handleResponse
 import koala.dom.MessageStore
@@ -39,7 +41,7 @@ class PostEditor(
 
     fun setSubtitle(subtitle: String) = setContent { it.copy(subtitle = subtitle) }
 
-    fun setText(text: String) = setContent { it.copy(text = text) }
+    fun setText(text: Markdown) = setContent { it.copy(text = text) }
 
     fun setImageUrl(url: Url?) = setContent { it.copy(imageRef = url) }
 

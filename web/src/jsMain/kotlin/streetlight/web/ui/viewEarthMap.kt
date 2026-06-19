@@ -1,5 +1,6 @@
 package streetlight.web.ui
 
+import kampfire.api.Markdown
 import kampfire.model.Url
 import kampfire.model.medium
 import koala.SvgFile
@@ -189,7 +190,7 @@ fun AppScope.focusPanel(
     label: String,
     sublabel: String?,
     imageUrl: Url?,
-    description: String?,
+    description: Markdown?,
     route: AppRoute,
     subRoute: AppRoute?,
     colorScheme: ColorScheme = ColorScheme.Primary,

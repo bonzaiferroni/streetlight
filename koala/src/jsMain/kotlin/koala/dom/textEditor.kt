@@ -1,5 +1,7 @@
 package koala.dom
 
+import kampfire.api.Markdown
+import kampfire.api.toMarkdown
 import koala.css.ModifierSet
 import koala.css.Size100P
 import koala.css.addModifiers
@@ -20,8 +22,8 @@ fun AppScope.textEditor(
     modifiers: ModifierSet? = null,
     textModifiers: ModifierSet? = null,
     id: Id? = null,
-    onValue: ((String) -> Unit)? = null,
-    flow: Flow<String?>? = null,
+    onValue: ((Markdown) -> Unit)? = null,
+    flow: Flow<Markdown?>? = null,
     rows: Int = 5,
     placeholder: String? = label,
     block: TEXTAREA.() -> Unit = {}
@@ -39,7 +41,7 @@ fun AppScope.textEditor(
             onValue = { value ->
                 if (value != currentValue) {
                     currentValue = value
-                    onValue?.invoke(value)
+                    onValue?.invoke(value.toMarkdown())
                 }
             },
             rows = rows,
@@ -51,7 +53,7 @@ fun AppScope.textEditor(
     flow?.let {
         parentScope.launch {
             flow.collect { value ->
-                val value = value ?: ""
+                val value = value?.value ?: ""
                 if (value != currentValue) {
                     currentValue = value
                     textElement!!.value = value

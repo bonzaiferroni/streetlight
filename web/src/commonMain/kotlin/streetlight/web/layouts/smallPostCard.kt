@@ -44,7 +44,7 @@ fun FlowContent.smallPostCard(post: EventPost) {
                     }
                     description?.let {
                         navigation(postRoute) {
-                            textBlock(description, modify(Flex1, SmallText, Height2, OverflowHidden))
+                            textBlock(description.value, modify(Flex1, SmallText, Height2, OverflowHidden))
                         }
                     }
                 }

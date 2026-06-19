@@ -1,5 +1,6 @@
 package streetlight.model.data
 
+import kampfire.api.Markdown
 import kampfire.model.toUrl
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
@@ -72,7 +73,7 @@ data class EventParseResult(
 @Serializable
 data class LocationParse(
     val name: String? = null,
-    val description: String? = null,
+    val description: Markdown? = null,
     val address: String? = null,
     val postalCode: String? = null,
     val city: String? = null,
@@ -100,7 +101,7 @@ data class EventParse(
     val location: String? = null,
     val address: String? = null,
     val imageUrl: String? = null,
-    val description: String? = null,
+    val description: Markdown? = null,
     val ageMin: Int? = null,
     val cost: String? = null,
     val contact: String? = null,

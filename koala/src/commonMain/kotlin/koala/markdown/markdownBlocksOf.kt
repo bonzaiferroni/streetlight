@@ -2,6 +2,8 @@
 
 package koala.markdown
 
+import kampfire.api.Markdown
+import kampfire.api.toMarkdown
 import koala.html.Id
 
 internal enum class ListKind { Ordered, Unordered }
@@ -13,8 +15,8 @@ private val ORDERED_ITEM = Regex("^\\s*\\d+\\. .*")
 private val IMAGE_BLOCK = Regex("^!\\[([^\\]]*)\\]\\(([^)]+)\\)\\s*$")
 private val FENCE = Regex("^```.*")
 
-fun markdownBlocksOf(markdown: String): List<MarkdownBlock> {
-    val lines = markdown.split("\n")
+fun markdownBlocksOf(markdown: Markdown): List<MarkdownBlock> {
+    val lines = markdown.value.split("\n")
     val blocks = mutableListOf<MarkdownBlock>()
     val paragraphLines = mutableListOf<String>()
     val quoteLines = mutableListOf<String>()
@@ -172,7 +174,7 @@ fun parseHeading(chunk: String): MarkdownHeading? {
 fun parseBlockquote(lines: List<String>): MarkdownBlockquote? {
     if (lines.isEmpty()) return null
     val inner = lines.joinToString("\n")
-    val blocks = markdownBlocksOf(inner)
+    val blocks = markdownBlocksOf(inner.toMarkdown())
     if (blocks.isEmpty()) return null
     return MarkdownBlockquote(blocks = blocks)
 }

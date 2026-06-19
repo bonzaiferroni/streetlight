@@ -2,6 +2,7 @@ package streetlight.web.ui
 
 import kabinet.utils.format
 import kampfire.api.Slug
+import kampfire.api.toMarkdown
 import koala.css.*
 import koala.dom.*
 import koala.html.bulletsOf
@@ -94,9 +95,9 @@ private val imageInstructions1 = "This image will appear at the top of the galax
 
 fun AppScope.galaxyDescriptionForm(model: GalaxyEditor) {
     val nameFlow = model.galaxyFlow.mapDistinct { it.name ?: "" }
-    val descriptionFlow = model.galaxyFlow.mapDistinct { it.description ?: "" }
+    val descriptionFlow = model.galaxyFlow.mapDistinct { it.description ?: "".toMarkdown() }
     val taglineFlow = model.galaxyFlow.mapDistinct { it.tagline ?: "" }
-    val guideFlow = model.galaxyFlow.mapDistinct { it.postGuide ?: "" }
+    val guideFlow = model.galaxyFlow.mapDistinct { it.postGuide ?: "".toMarkdown() }
 
     formCardSection("Description") {
         formPart(

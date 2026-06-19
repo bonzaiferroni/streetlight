@@ -1,6 +1,8 @@
 package streetlight.web.ui
 
 import kabinet.utils.toAgoFormat
+import kampfire.api.Markdown
+import kampfire.api.toMarkdown
 import kampfire.api.toSlug
 import koala.SvgFile
 import koala.css.*
@@ -48,7 +50,7 @@ class CommentView(
     val replyButtonText get() = _replyButtonText ?: error("reply button text not")
     val showUpdateButton get() = _showUpdateButton ?: error("show update button not found")
 
-    private var stagedUpdate: String? = null
+    private var stagedUpdate: Markdown? = null
     private val stagedReplies = mutableListOf<CommentView>()
     private val replies = mutableListOf<CommentView>()
 
@@ -101,7 +103,7 @@ class CommentView(
             rootBlock.modify(CommentClass.HasNestedContent)
             if (replyBlock.hasChildNodes()) return
             replaceRender(replyBlock) {
-                commentEditor("reply", "", modify(AutoMagic, SlideLeft)) { text ->
+                commentEditor("reply", "".toMarkdown(), modify(AutoMagic, SlideLeft)) { text ->
                     val commentId = model.createComment(comment.commentId, text)
 
                     return@commentEditor when (commentId) {
@@ -109,7 +111,7 @@ class CommentView(
                         else -> {
                             replyBlock.clear()
                             isReplying = false
-                            ""
+                            "".toMarkdown()
                         }
                     }
                 }
@@ -173,7 +175,7 @@ class CommentView(
         }
     }
 
-    fun AppScope.stageUpdate(text: String) {
+    fun AppScope.stageUpdate(text: Markdown) {
         if (isUserComment) {
             updateTextContent(text)
         } else {
@@ -188,7 +190,7 @@ class CommentView(
         updateTextContent(text)
     }
 
-    private fun AppScope.updateTextContent(text: String) {
+    private fun AppScope.updateTextContent(text: Markdown) {
         comment = comment.copy(text = text)
 
         replaceRender(contentBlock) {

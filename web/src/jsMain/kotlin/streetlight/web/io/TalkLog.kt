@@ -1,5 +1,6 @@
 package streetlight.web.io
 
+import kampfire.api.Markdown
 import kampfire.model.Ok
 import kampfire.model.Problem
 import koala.model.mapDistinct
@@ -57,7 +58,7 @@ class TalkLog(
         state.set { it.copy(sortBy = value) }
     }
 
-    suspend fun updateComment(commentId: CommentId, text: String): Boolean? {
+    suspend fun updateComment(commentId: CommentId, text: Markdown): Boolean? {
         val response = api.updateComment(UpdatedComment(
             commentId = commentId,
             spaceId = spaceId,
@@ -69,7 +70,7 @@ class TalkLog(
         }
     }
 
-    suspend fun createComment(parentId: CommentId?, text: String): CommentId? {
+    suspend fun createComment(parentId: CommentId?, text: Markdown): CommentId? {
         val response = api.createComment(NewComment(
             spaceId = spaceId,
             spaceType = spaceType,

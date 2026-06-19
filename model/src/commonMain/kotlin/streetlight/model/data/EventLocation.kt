@@ -1,5 +1,6 @@
 package streetlight.model.data
 
+import kampfire.api.Markdown
 import kampfire.api.Slug
 import kampfire.api.Username
 import kampfire.model.GeoPoint
@@ -19,14 +20,14 @@ data class EventLocation(
     val url: String?,
     val eventImages: ScaledImageArray?,
     val title: String,
-    val description: String?,
+    val description: Markdown?,
     val cost: Float?,
     val status: EventStatus,
     val visibility: Int,
     val geoPoint: GeoPoint,
     val eventLinks: List<ExtraLink>?,
     val locationName: String?,
-    val locationDescription: String?,
+    val locationDescription: Markdown?,
     val address: String?,
     val city: String?,
     val locationImages: ScaledImageArray?,

@@ -1,5 +1,6 @@
 package streetlight.model.data
 
+import kampfire.api.Markdown
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -13,7 +14,7 @@ data class CommentCreated(
 @Serializable
 data class CommentUpdated(
     val commentId: CommentId,
-    val text: String,
+    val text: Markdown,
 ): TalkMessage
 
 @Serializable

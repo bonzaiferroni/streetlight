@@ -1,5 +1,8 @@
 package koala.html
 
+import kampfire.api.Markdown
+import kampfire.api.toMarkdown
+import kampfire.utils.takeEllipsis
 import koala.css.*
 import koala.markdown.MarkdownBlock
 import koala.markdown.markdownBlocksOf
@@ -9,10 +12,19 @@ import kotlinx.html.DIV
 import kotlinx.html.div
 
 fun FlowContent.markdown(
-    text: String,
+    text: Markdown,
     modifiers: ModifierSet? = null,
+    limit: Int? = null,
     block: DIV.() -> Unit = {}
-) = markdown(markdownBlocksOf(text), modifiers, block)
+) = markdown(
+    markdownBlocksOf(
+        when (limit) {
+            null -> text
+            // td: better markdown limit
+            else -> text.value.takeEllipsis(limit).toMarkdown()
+        }
+    ), modifiers, block
+)
 
 fun DIV.configureMarkdown(
     blocks: List<MarkdownBlock>,
@@ -47,7 +59,8 @@ val FloatLeft = Class("float-left")
 val FloatRight = Class("float-right")
 
 // language="CSS"
-val MarkdownCss get() = """
+val MarkdownCss
+    get() = """
 
 $FloatRight {
     float: right;
@@ -164,7 +177,9 @@ fun String.stripMarkdown(maxLength: Int = Int.MAX_VALUE): String {
             val close = indexOf(']', i + 2)
             if (close != -1 && getOrNull(close + 1) == '(') {
                 val end = indexOf(')', close + 2)
-                if (end != -1) { i = end + 1; continue }
+                if (end != -1) {
+                    i = end + 1; continue
+                }
             }
         }
 

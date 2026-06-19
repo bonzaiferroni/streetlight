@@ -1,5 +1,6 @@
 package streetlight.model.data
 
+import kampfire.api.Markdown
 import kampfire.model.GeoPoint
 import kampfire.model.Labeled
 import kampfire.model.Url
@@ -14,7 +15,7 @@ data class LocationEdit(
     val cityId: CityId? = null,
     val name: String? = null,
     val city: String? = null,
-    val description: String? = null,
+    val description: Markdown? = null,
     val address: String? = null,
     val state: String? = null,
     val country: String? = null,

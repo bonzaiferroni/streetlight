@@ -73,7 +73,7 @@ fun AppScope.viewLocationUpdater(content: LocationUpdaterContent, star: Star) {
                                                 fieldValue(edit.name, compareEdit?.name, "name")
                                                 fieldValue(edit.address, compareEdit?.address, "address")
                                                 fieldValue(edit.description, compareEdit?.description, "description")
-                                                fieldValue(edit.geoPoint, compareEdit?.geoPoint)
+                                                fieldValue(edit.geoPoint, compareEdit?.geoPoint, "geolocation")
                                             }
                                         }
                                     }

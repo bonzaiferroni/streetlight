@@ -30,7 +30,7 @@ fun FlowContent.smallGalaxyCard(galaxy: Galaxy) {
                             else -> it
                         }
                     }
-                    textBlock(galaxy.description ?: "Too mysterious for a description", modifiers)
+                    textBlock(galaxy.description?.value ?: "Too mysterious for a description", modifiers)
                 }
                 cellBlock(modify(Height5, MoonShadow)) {
                     galaxyCells(galaxy)()

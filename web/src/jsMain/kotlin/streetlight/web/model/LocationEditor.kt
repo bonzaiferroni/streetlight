@@ -1,5 +1,7 @@
 package streetlight.web.model
 
+import kampfire.api.Markdown
+import kampfire.api.toMarkdown
 import kampfire.model.GeoPoint
 import kampfire.model.Url
 import kampfire.model.handleResponse
@@ -51,7 +53,7 @@ class LocationEditor(
     val validityFlow = editFlow.mapDistinct { it.validity }
 
     fun setName(value: String) = setEdit { it.copy(name = value) }
-    fun setDescription(value: String?) = setEdit { it.copy(description = value) }
+    fun setDescription(value: Markdown?) = setEdit { it.copy(description = value) }
     fun setAddress(value: String) = setEdit { it.copy(address = value) }
     fun setNotes(value: String?) = setEdit { it.copy(notes = value) }
     fun setPoint(value: GeoPoint) = setEdit { it.copy(geoPoint = value) }

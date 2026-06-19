@@ -1,5 +1,6 @@
 package streetlight.model.data
 
+import kampfire.api.Markdown
 import kampfire.model.Url
 import kampfire.model.toValidityCheck
 import kotlinx.datetime.LocalDate
@@ -16,7 +17,7 @@ data class EventEdit(
     val eventId: EventId? = null,
     val title: String? = null,
     val locationId: LocationId? = null,
-    val description: String? = null,
+    val description: Markdown? = null,
     val contact: String? = null,
     val ageMin: Int? = null,
     val cost: Float? = null,

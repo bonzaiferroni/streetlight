@@ -1,5 +1,6 @@
 package streetlight.web.ui
 
+import kampfire.api.Markdown
 import kampfire.model.Url
 import koala.css.AlignItemsStart
 import koala.css.Aspect3By2
@@ -52,7 +53,7 @@ fun FlowContent.featureHeader(
     subtitle: String?,
     image: Url?,
     colorScheme: ColorScheme = ColorScheme.Primary,
-    description: String? = null,
+    description: Markdown? = null,
     cellContent: (FlowContent.() -> Unit)? = null,
     links: List<ExtraLink>? = null,
     editRoute: AppRoute? = null,

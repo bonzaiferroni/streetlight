@@ -1,5 +1,6 @@
 package streetlight.model.data
 
+import kampfire.api.Markdown
 import kampfire.api.Slug
 import kampfire.api.Username
 import kotlin.time.Instant
@@ -14,7 +15,7 @@ data class LocationPost(
     override val galaxySlug: Slug,
     override val username: Username?,
     val location: Location,
-    override val text: String?,
+    override val text: Markdown?,
     override val isLit: Boolean,
     override val lightCount: Int,
     override val createdAt: Instant,
@@ -35,7 +36,7 @@ data class LocationPostEdit(
     val postId: PostId?,
     val galaxyId: GalaxyId,
     val locationId: LocationId,
-    val text: String? = null,
+    val text: Markdown? = null,
 ) {
     val isValid get () = true // !title.isNullOrBlank()
 }

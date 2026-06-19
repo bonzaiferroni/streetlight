@@ -1,5 +1,6 @@
 package streetlight.model.data
 
+import kampfire.api.Markdown
 import kampfire.api.Slug
 import kampfire.api.Username
 import kampfire.model.GeoPoint
@@ -17,12 +18,12 @@ sealed interface GalaxyPost {
     val galaxyName: String
     val galaxySlug: Slug
     val username: Username?
-    val text: String?
+    val text: Markdown?
     val images: ScaledImageArray?
     val geoPoint: GeoPoint?
     val label: String
     val sublabel: String?
-    val description: String?
+    val description: Markdown?
     val lightCount: Int
     val isLit: Boolean
     val links: List<ExtraLink>?

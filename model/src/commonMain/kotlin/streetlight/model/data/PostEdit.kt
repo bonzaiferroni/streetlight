@@ -1,5 +1,6 @@
 package streetlight.model.data
 
+import kampfire.api.Markdown
 import kampfire.model.GeoPoint
 import kampfire.model.Url
 import kotlinx.serialization.Serializable
@@ -9,7 +10,7 @@ data class PostEdit(
     val postId: PostId?,
     val galaxyId: GalaxyId,
     val title: String? = null,
-    val text: String? = null,
+    val text: Markdown? = null,
     val subtitle: String? = null,
     val geoPoint: GeoPoint? = null,
     val imageRef: Url? = null,
@@ -17,7 +18,7 @@ data class PostEdit(
 ) {
     val invalidPart get() = when {
         title.isNullOrBlank() -> "title"
-        text.isNullOrBlank() -> "content"
+        text?.value.isNullOrBlank() -> "content"
         else -> null
     }
 

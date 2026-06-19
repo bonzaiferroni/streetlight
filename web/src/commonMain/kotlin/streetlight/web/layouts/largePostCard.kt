@@ -1,5 +1,6 @@
 package streetlight.web.layouts
 
+import kampfire.api.Markdown
 import kampfire.model.ScaledImageArray
 import kampfire.model.medium
 import koala.SiteImage
@@ -12,7 +13,7 @@ import streetlight.web.StreetlightRoute
 fun FlowContent.largePostCard(
     title: String,
     subtitle: String?,
-    description: String?,
+    description: Markdown?,
     links: List<ExtraLink>?,
     images: ScaledImageArray?,
     postRoute: StreetlightRoute,
@@ -46,7 +47,7 @@ fun FlowContent.largePostCard(
                     }
                     description?.let { description ->
                         navigation(postRoute, modify(Flex1, SmallText, OverflowHidden, FadeBottom)) {
-                            textBlock(description)
+                            textBlock(description.value)
                         }
                     }
 

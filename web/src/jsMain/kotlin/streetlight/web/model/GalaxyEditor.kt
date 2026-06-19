@@ -2,6 +2,8 @@
 
 package streetlight.web.model
 
+import kampfire.api.Markdown
+import kampfire.api.toMarkdown
 import kampfire.api.toSlug
 import kampfire.model.Url
 import kampfire.model.getDataOrNull
@@ -66,11 +68,11 @@ class GalaxyEditor(
 
     fun setImageUrl(value: Url?) = state.set { it.copy(imageUrl = value) }
 
-    fun setDescription(value: String) = setGalaxy { it.copy(description = value) }
+    fun setDescription(value: Markdown) = setGalaxy { it.copy(description = value) }
 
     fun setPostPermission(permission: PostPermission) = setGalaxy { it.copy(postPermission = permission) }
 
-    fun setPostGuide(value: String) = setGalaxy { it.copy(postGuide = value) }
+    fun setPostGuide(value: Markdown) = setGalaxy { it.copy(postGuide = value) }
 
     fun setReviewCount(value: Int?) = setGalaxy { it.copy(reviewCount = value) }
 

@@ -1,5 +1,6 @@
 package streetlight.web.ui
 
+import kampfire.api.Markdown
 import kampfire.model.GeoPoint
 import koala.css.*
 import koala.dom.*
@@ -22,8 +23,8 @@ fun TagScope.fieldGrid(
 }
 
 fun TagScope.fieldValue(
-    value: String?,
-    previousValue: String?,
+    value: Any?,
+    previousValue: Any?,
     label: String
 ) {
     strong(label)
@@ -36,17 +37,10 @@ fun TagScope.fieldValue(
     }
 }
 
-fun TagScope.valueCell(value: String?) {
+fun TagScope.valueCell(value: Any?) {
     when (value) {
         null -> em("none")
-        else -> span(value)
+        // is Markdown -> markdown(value)
+        else -> span(value.toString())
     }
-}
-
-fun TagScope.fieldValue(
-    value: GeoPoint?,
-    previousValue: GeoPoint?,
-    label: String = "geolocation"
-) {
-    fieldValue(value?.toString(), previousValue?.toString(), label)
 }

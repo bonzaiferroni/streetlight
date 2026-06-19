@@ -42,7 +42,7 @@ fun FlowContent.layoutTalkPreview(route: AppRoute, comments: List<Comment>) {
                     }
                 }
             }
-            textBlock(comment.text)
+            markdown(comment.text)
 
             if (children.isNotEmpty()) {
                 column(modify(PaddingLeft3)) {

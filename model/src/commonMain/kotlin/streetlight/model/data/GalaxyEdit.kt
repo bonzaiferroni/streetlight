@@ -1,5 +1,6 @@
 package streetlight.model.data
 
+import kampfire.api.Markdown
 import kampfire.api.Slug
 import kampfire.model.GeoBounds
 import kampfire.model.Url
@@ -13,11 +14,11 @@ data class GalaxyEdit(
     val name: String? = null,
     val slug: Slug? = null,
     val tagline: String? = null,
-    val description: String? = null,
+    val description: Markdown? = null,
     val geoBounds: GeoBounds? = null,
     val postPermission: PostPermission = PostPermission.Accounts,
     val reviewCount: Int? = 3,
-    val postGuide: String? = null,
+    val postGuide: Markdown? = null,
     val imageRef: Url? = null,
 ) {
     companion object {

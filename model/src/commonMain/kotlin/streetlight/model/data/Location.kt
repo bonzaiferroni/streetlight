@@ -1,5 +1,6 @@
 package streetlight.model.data
 
+import kampfire.api.Markdown
 import kampfire.api.Slug
 import kampfire.api.Username
 import kampfire.model.GeoPoint
@@ -21,7 +22,7 @@ data class Location(
     val scout: Username?,
     val host: Username?,
     val name: String?,
-    val description: String?,
+    val description: Markdown?,
     val address: String?,
     val city: String?,
     val state: String?,

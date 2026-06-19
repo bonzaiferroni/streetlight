@@ -2,6 +2,7 @@
 
 package streetlight.web.shells
 
+import kampfire.api.toMarkdown
 import koala.css.*
 import koala.html.*
 import koala.markdown.markdownBlocksOf
@@ -65,7 +66,7 @@ Sharing information on the internet can carry risk that is difficult to complete
 
 Streetlight is at an early stage of development, and certain privacy features are not yet available. For example, we plan to provide a way for you to download all of your data or remove it entirely from the site. In the long term, we believe that Streetlight's open source will be an important reason to trust the integrity of the site. In the short term, it may carry additional risk, since potential attackers can also inspect the code for vulnerabilities.
 
-"""
+""".toMarkdown()
 
 // language="MD"
 val InformationSharedContent get() = """
@@ -119,7 +120,7 @@ These credentials allow a user to sign in to the site. Users are strongly encour
 
 Streetlight uses your **email address** to reset your password and as an additional layer of authentication. They may also be used to receive news and messages from Streetlight, strictly on an opt-in basis. This functionality is not yet available on the site, and at this early stage of development we do not gather email addresses. Keep that password safe!
 
-"""
+""".toMarkdown()
 
 // language="MD"
 val UpcomingSectionsContent get() = """
@@ -133,6 +134,5 @@ This document will always be a work in progress, but at the moment there are imp
 this is a code test!
 val = 20
 ```
-"""
+""".toMarkdown()
 
-fun String.toMarkdown() = markdownBlocksOf(this)

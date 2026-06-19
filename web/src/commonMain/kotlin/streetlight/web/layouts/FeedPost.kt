@@ -2,6 +2,7 @@ package streetlight.web.layouts
 
 import kabinet.utils.toAgoFormat
 import kabinet.utils.toMetricString
+import kampfire.api.Markdown
 import kampfire.api.Slug
 import kampfire.api.Username
 import kampfire.model.Url
@@ -28,7 +29,7 @@ fun FlowContent.feedPost(
     postRoute: AppRoute?,
     subRoute: AppRoute?,
     imageUrl: Url?,
-    description: String?,
+    description: Markdown?,
     isLit: Boolean = false,
     lightCount: Int = 0,
     postedAt: Instant? = null,
@@ -121,7 +122,7 @@ fun FlowContent.feedPost(
         row(modify(GridArea.Content, MarginBottom2)) {
             description?.let {
                 card(modify(PaperGradientBg, Padding2, Flex1)) {
-                    markdown(it.takeEllipsis(1000))
+                    markdown(it, limit = 1000)
                 }
             }
             links?.let { links ->

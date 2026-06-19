@@ -1,5 +1,6 @@
 package streetlight.model.data
 
+import kampfire.api.Markdown
 import kampfire.api.Slug
 import kampfire.model.GeoBounds
 import kampfire.model.GeoPoint
@@ -17,13 +18,13 @@ data class Galaxy(
     val slug: Slug,
     val name: String,
     val tagline: String?,
-    val description: String?,
+    val description: Markdown?,
     val city: String?,
     val geoPoint: GeoPoint,
     val geoBounds: GeoBounds,
     val postPermission: PostPermission,
     val reviewCount: Int,
-    val postGuide: String?,
+    val postGuide: Markdown?,
     val imageRef: Url?,
     val images: ScaledImageArray?,
     val isLit: Boolean,

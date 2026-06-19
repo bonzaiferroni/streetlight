@@ -1,5 +1,6 @@
 package streetlight.web.shells
 
+import kampfire.api.toMarkdown
 import koala.css.Padding4
 import koala.css.Shrinkable
 import koala.css.ZenBg
@@ -39,7 +40,7 @@ fun FlowContent.aboutShell() {
             tab("Roadmap") {
 
                 card(modify(ZenBg, Padding4)) {
-                    markdown("yer roadmap")
+                    markdown("yer roadmap".toMarkdown())
                 }
             }
         }
@@ -69,7 +70,7 @@ I have a background in Psychology. After graduating, I worked for several years 
 Over that time, the internet has shaped our world profoundly, and not clearly for the best. It's never been easier to find other people, and at the same time there is a society level phenomenon where people report feelings of isolation at unprecedented levels. Something seems broken, and our relationship to social media seems to be a part of it. As someone with an unusual combination of work experience, I believe I can understand at least part of the puzzle.
   
 I've never been able to shake my optimism about the internet. I don't think technology was destined to drive us part, I think it happened because of the choices we made. Streetlight is an experiment in making a different set of choices, plant a different kind of seed, and to watch what grows.
-"""
+""".toMarkdown()
 
 // language="MD"
 val IdeasContent get() = """
@@ -102,4 +103,4 @@ Streetlight uses a slightly unconventional stack, at least for the web. I experi
  
 [WIP]
 
-"""
+""".toMarkdown()
