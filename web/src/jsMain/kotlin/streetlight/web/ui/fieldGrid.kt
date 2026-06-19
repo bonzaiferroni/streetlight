@@ -1,17 +1,16 @@
 package streetlight.web.ui
 
-import kampfire.api.Markdown
-import kampfire.model.GeoPoint
 import koala.css.*
 import koala.dom.*
-import koala.html.box
-import koala.html.em
-import koala.html.span
-import koala.html.strong
 import kotlinx.css.LinearDimension
 import kotlinx.css.fr
 import kotlinx.html.DIV
-import kotlinx.html.FlowContent
+import streetlight.model.utils.AddedText
+import streetlight.model.utils.CommonText
+import streetlight.model.utils.RemovedText
+import streetlight.model.utils.TextDelta
+import streetlight.model.utils.TextDeltaDisplay
+import streetlight.model.utils.createTextDelta
 
 fun TagScope.fieldGrid(
     mod: ModifierSet? = null,
@@ -28,19 +27,28 @@ fun TagScope.fieldValue(
     label: String
 ) {
     strong(label)
+    val valueText = value?.toString()
+    val previousValueText = previousValue?.toString()
+    val delta = createTextDelta(previousValueText, valueText)
     val swap = swap {
-        valueCell(value)
-        valueCell(previousValue)
+        valueCell(delta, TextDeltaDisplay.New)
+        valueCell(delta, TextDeltaDisplay.Old)
     }
     button(onClick = swap::next) {
         +"swap"
     }
 }
 
-fun TagScope.valueCell(value: Any?) {
-    when (value) {
-        null -> em("none")
-        // is Markdown -> markdown(value)
-        else -> span(value.toString())
+fun TagScope.valueCell(delta: TextDelta, display: TextDeltaDisplay) {
+    textBlock {
+        delta.segments.forEach { segment ->
+            when {
+                segment is CommonText -> span(segment.text)
+                segment is AddedText && display != TextDeltaDisplay.Old -> span(segment.text, modify(PrimaryFg))
+                segment is RemovedText && display != TextDeltaDisplay.New -> span(segment.text, modify(AccentFg))
+            }
+        }
     }
 }
+
+internal fun getValue(value: Any) = value.toString()
