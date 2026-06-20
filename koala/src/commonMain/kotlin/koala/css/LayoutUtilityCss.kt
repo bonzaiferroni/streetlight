@@ -19,9 +19,9 @@ val LayoutUtilityCss
         MaxWidth5, MaxWidth16, MaxWidth32, MaxWidth48, MaxWidth64, MaxWidthTextBody, MaxWidthNone,
         // Height
         HeightAuto, Height50P, Height100P,
-        Height2, Height2Px, Height3, Height4, Height5, Height6, Height7, Height8, Height9, Height10, Height12, Height16,
+        Height0, Height2, Height2Px, Height3, Height4, Height5, Height6, Height7, Height8, Height9, Height10, Height12, Height16,
         Height24, Height32, Height48,
-        MinHeightAuto, MinHeight0, MinHeight4, MinHeight5, MinHeight6, MinHeight8, MinHeight16, MinHeight24, MinHeight32, MinHeight48,
+        MinHeightAuto, MinHeight0, MinHeight4, MinHeight5, MinHeight6, MinHeight8, MinHeight16, MinHeight24, MinHeight32, MinHeight48, MinHeight100P,
         MaxHeight5, MaxHeight8, MaxHeight12, MaxHeight16, MaxHeight24, MaxHeight32, MaxHeight64,
         // Size
         Size100P, FillHeight, Aspect1, Aspect2By1, Aspect3By1, Aspect3By2,
@@ -125,6 +125,7 @@ val MaxWidthNone = utilityOf("max-width-none", "max-width: none")
 val Height50P = utilityOf("height-50", "height: 50%")
 val Height100P = utilityOf("height-100", "height: 100%")
 val HeightAuto = utilityOf("height-auto", "height: auto")
+val Height0 = utilityOf("height-0", "height: 0")
 val Height2 = utilityOf("height-2", "height: calc(var(--unit-spacing) * 2)")
 val Height2Px = utilityOf("height-2px", "height: 2px")
 val Height3 = utilityOf("height-3", "height: calc(var(--unit-spacing) * 3)")
@@ -157,6 +158,7 @@ val MinHeight16 = utilityOf("min-height-16", "min-height: calc(var(--unit-spacin
 val MinHeight24 = utilityOf("min-height-24", "min-height: calc(var(--unit-spacing) * 24)")
 val MinHeight32 = utilityOf("min-height-32", "min-height: calc(var(--unit-spacing) * 32)")
 val MinHeight48 = utilityOf("min-height-48", "min-height: calc(var(--unit-spacing) * 48)")
+val MinHeight100P = utilityOf("min-height-100", "min-height: 100%")
 
 // Size
 val Size100P = utilityOf("size-100", "width: 100%", "height: 100%")

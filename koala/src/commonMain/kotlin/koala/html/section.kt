@@ -26,6 +26,19 @@ fun FlowContent.section(
     }
 }
 
+fun FlowContent.section(
+    title: String,
+    modifiers: ModifierSet? = null,
+    block: SECTION.() -> Unit = {}
+) {
+    section(modifiers) {
+        filigree {
+            heading3(title)
+        }
+        block()
+    }
+}
+
 object SectionKey {
     val Class = Class("section")
 }

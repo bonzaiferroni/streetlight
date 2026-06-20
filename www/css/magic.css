@@ -271,3 +271,21 @@
         opacity: 0;
     }
 }
+
+.scale-out {
+    transition: var(--transition-transform);
+    transform: scale(0);
+
+    @starting-style {
+        transform: scale(1);
+    }
+}
+
+.scale-in {
+    transition: var(--transition-transform);
+    transform: scale(1);
+
+    @starting-style {
+        transform: scale(0);
+    }
+}

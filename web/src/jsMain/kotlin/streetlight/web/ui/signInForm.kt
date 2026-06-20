@@ -1,35 +1,28 @@
 package streetlight.web.ui
 
 import koala.LottieFile
-import koala.css.*
-import koala.dom.*
-import koala.html.Id
+import koala.css.Accent
+import koala.css.AlignItemsCenter
+import koala.css.FlexItems1
+import koala.css.MaxWidth50P
+import koala.css.MediaMdRow
+import koala.css.modify
+import koala.dom.AppScope
+import koala.dom.button
+import koala.dom.card
+import koala.dom.checkBox
+import koala.dom.column
+import koala.dom.flowBlock
+import koala.dom.lottie
+import koala.dom.row
+import koala.dom.textField
 import kotlinx.html.InputType
 import kotlinx.html.js.p
 import streetlight.web.HomeRoute
 import streetlight.web.model.CredentialStore
 import streetlight.web.model.StarSession
 
-fun AppScope.viewStarDash() {
-    val gate = app.get<StarSession>()
-
-    flowBlock(gate.starFlow) { user ->
-        if (user != null) {
-             viewStarDash(user)
-        } else {
-            tabs(Id("sign-in-tabs")) {
-                tab("Sign in") {
-                    signInContent()
-                }
-                tab("Sign up") {
-                    fullRegistrationForm()
-                }
-            }
-        }
-    }
-}
-
-fun AppScope.signInContent() {
+fun AppScope.signInForm() {
     val gate = app.get<StarSession>()
     val cred = app.get<CredentialStore>()
 

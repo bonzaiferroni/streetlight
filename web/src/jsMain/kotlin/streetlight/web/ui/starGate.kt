@@ -33,7 +33,7 @@ fun AppScope.starGate(
                         }
                         tab("sign in") {
                             dialogCard {
-                                signInContent()
+                                signInForm()
                             }
                         }
                     }

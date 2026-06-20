@@ -14,3 +14,5 @@ val Scale = Class("scale")
 
 val AutoMagic = Class("auto-magic")
 val StartingOpacity0 = Class("starting-opacity-0")
+val ScaleOut = Class("scale-out")
+val ScaleIn = Class("scale-in")

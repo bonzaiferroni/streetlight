@@ -61,7 +61,7 @@ ${IconKey.Stretch} {
 }
 
 ${IconKey.Class}.clickable {
-    transition: background-color var(--magic-interval) var(--magic-easing);
+    /*  transition: background-color var(--magic-interval) var(--magic-easing); */
 }
 
 ${IconKey.Class}.clickable:hover {

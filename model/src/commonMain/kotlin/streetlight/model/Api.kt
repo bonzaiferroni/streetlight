@@ -111,6 +111,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object UpdateGalaxy: PostEndpoint<GalaxyEdit, Slug>(this)
         object Top: GetEndpoint<List<Galaxy>>(this)
         object ReadGalaxies: PostEndpoint<List<GalaxyId>, List<Galaxy>>(this)
+        object ReadUserGalaxies: GetEndpoint<List<Galaxy>>(this)
         object ReadGalaxySlug: GetByIdEndpoint<Slug, Galaxy>(this)
         object ReadGalaxyId: GetByIdEndpoint<GalaxyId, Galaxy>(this)
         object ReadContent: GetByIdEndpoint<Slug, GalaxyContent>(this)

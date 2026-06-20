@@ -6,12 +6,10 @@ import koala.css.modify
 import koala.dom.AppScope
 import koala.dom.closeOpenPopovers
 import koala.dom.flowBlock
-import koala.dom.hidePopover
 import koala.dom.textBlock
 import koala.model.Portal
 import kotlinx.browser.document
 import kotlinx.browser.window
-import org.w3c.dom.asList
 import streetlight.web.StreetlightScreen
 
 fun AppScope.appNavigation() {
@@ -31,7 +29,7 @@ fun AppScope.appNavigation() {
         when (screen) {
             StreetlightScreen.Home -> viewHomeRoute()
             StreetlightScreen.Event -> viewEventProfileRoute()
-            StreetlightScreen.Account -> viewStarDash()
+            StreetlightScreen.Account -> viewStarDashRoute()
             StreetlightScreen.Sandbox -> viewSandbox()
             StreetlightScreen.Earth -> viewEarthMapRoute()
             StreetlightScreen.Post -> viewPostRoute()
