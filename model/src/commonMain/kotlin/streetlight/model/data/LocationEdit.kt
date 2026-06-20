@@ -30,7 +30,7 @@ data class LocationEdit(
     val eventsUrl: String? = null,
     val aboutUrl: String? = null,
     val menuUrl: String? = null,
-    val imageRef: Url? = null,
+    override val imageRef: Url? = null,
 ): Labeled, RecordEdit {
     override val recordType get() = RecordType.Location
 
@@ -46,6 +46,7 @@ data class LocationEdit(
         addressLineOf(address, city)
     }
 
+    override val label get() = name ?: address ?: "(geolocation)"
     val subLabel get() = when (name) {
         null -> city
         else -> addressLine
@@ -67,8 +68,6 @@ data class LocationEdit(
 //            }
         }.takeIf { it.isNotEmpty() }
     }
-
-    override val label get() = name ?: address ?: "(geolocation)"
 }
 
 object LocationProperty {

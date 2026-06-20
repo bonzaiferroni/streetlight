@@ -56,7 +56,7 @@ class EffectScope(
         }
 }
 
-internal class RenderScope(
+class RenderScope(
     consumer: TagScope,
     override val app: AppContainer,
     override val parentScope: CoroutineScope,

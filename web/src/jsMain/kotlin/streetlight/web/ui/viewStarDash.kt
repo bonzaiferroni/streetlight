@@ -39,7 +39,7 @@ fun AppScope.viewStarDashRoute() {
 }
 
 private fun AppScope.activityContent(star: Star) {
-    column {
+    grid {
         section("galaxies") {
             request({ api.readGalaxies() }) { galaxies ->
                 galaxies.forEach { galaxy ->
@@ -49,6 +49,14 @@ private fun AppScope.activityContent(star: Star) {
                         }
                         starToggle(galaxy.isLit, galaxy.galaxyId)
                     }
+                }
+            }
+        }
+        section("edits") {
+            request({ api.readPendingEdits() }) { logs ->
+                logs.forEach { log ->
+                    val label = log.recordEdit?.label ?: return@forEach
+                    listingOf(label, log.recordEdit?.imageRef)
                 }
             }
         }

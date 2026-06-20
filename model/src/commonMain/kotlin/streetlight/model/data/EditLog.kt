@@ -1,5 +1,6 @@
 package streetlight.model.data
 
+import kampfire.model.Url
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 import kotlin.time.Instant
@@ -25,6 +26,8 @@ value class EditLogId(override val value: Uuid): RecordId {
 @Serializable
 sealed interface RecordEdit {
     val recordType: RecordType
+    val label: String
+    val imageRef: Url? get() = null
 }
 
 enum class RecordType {

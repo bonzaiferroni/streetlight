@@ -142,14 +142,15 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         }
     }
 
-    object Stars: ApiNode(this, "star") {
-        object ReadByUsername: GetEndpoint<Star>(this, "star") {
+    object Stars: ApiNode(this) {
+        object ReadByUsername: GetEndpoint<Star>(this) {
             val username = stringParamOf("username")
         }
 
-        object ValidateLogin: GetEndpoint<Star>(this, "validate-login")
-        object EditStar: PostEndpoint<StarEdit, Star>(this, "edit")
-        object EditLight: PostEndpoint<EditLightRequest, Boolean>(this, "edit-light")
+        object ValidateLogin: GetEndpoint<Star>(this)
+        object EditStar: PostEndpoint<StarEdit, Star>(this)
+        object EditLight: PostEndpoint<EditLightRequest, Boolean>(this)
+        object PendingEdits: GetEndpoint<List<EditLog>>(this)
     }
 
     object Docs: GetByIdEndpoint<DocId, DocNode>(this, "doc")
