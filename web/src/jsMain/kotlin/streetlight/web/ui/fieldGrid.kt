@@ -40,7 +40,7 @@ fun TagScope.fieldValue(
 }
 
 fun TagScope.valueCell(delta: TextDelta, display: TextDeltaDisplay) {
-    textBlock {
+    textBlock(mod = modify(WhiteSpacePreLine)) {
         delta.segments.forEach { segment ->
             when {
                 segment is CommonText -> span(segment.text)

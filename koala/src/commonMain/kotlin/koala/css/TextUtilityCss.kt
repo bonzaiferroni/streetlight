@@ -9,7 +9,7 @@ val TextUtilityCss
         // line height
         LineHeight1, LineHeight115, ParagraphLineHeight,
         // misc
-        SingleLine, WhiteSpaceNormal, TextOverflowEllipses, TextShadow, WhiteSpaceNoWrap, UserSelectNone, Prose,
+        SingleLine, WhiteSpaceNormal, TextOverflowEllipses, TextShadow, WhiteSpaceNoWrap, WhiteSpacePreLine, UserSelectNone, Prose,
     )
 
 val Bold = utilityOf("bold", "font-weight: bold")
@@ -22,6 +22,7 @@ val LineHeight1 = utilityOf("line-height-1", "line-height: 1")
 val LineHeight115 = utilityOf("line-height-1-15", "line-height: 1.15")
 val ParagraphLineHeight = utilityOf("paragraph-line-height", "line-height: var(--paragraph-line-height)")
 val WhiteSpaceNoWrap = utilityOf("white-space-no-wrap", "white-space: nowrap")
+val WhiteSpacePreLine = utilityOf("white-space-pre-line", "white-space: pre-line")
 val SingleLine = utilityOf("single-line", "white-space: nowrap", "overflow: hidden", "text-overflow: ellipsis")
 val TextOverflowEllipses = utilityOf("text-overflow-ellipsis", "overflow: hidden", "text-overflow: ellipsis")
 val TextShadow = utilityOf("text-shadow", "text-shadow: var(--btn-text-shadow)")

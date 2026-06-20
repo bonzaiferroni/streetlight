@@ -23,4 +23,20 @@ $Class {
     }
 }
 
+::view-transition-old(swap) {
+    animation: slide-out 0.3s ease;
+}
+
+::view-transition-new(swap) {
+    animation: slide-in 0.3s ease;
+}
+
+@keyframes slide-out {
+    to { transform: translateX(-100%); opacity: 0; }
+}
+
+@keyframes slide-in {
+    from { transform: translateX(100%); opacity: 0; }
+}
+
 """}

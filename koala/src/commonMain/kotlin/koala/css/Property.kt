@@ -31,6 +31,7 @@ data class Property<T: Any>(
         val Height = Property<LinearDimension>("height", false)
         val ZIndex = Property<Int>("z-index", false)
         val GridTemplateColumns = Property<GridTemplateColumns>("grid-template-columns", false)
+        val ViewTransitionName = Property<String>("view-transition-name", false)
 
         val MaskUrl = Property<SiteFile>("mask-url")
         val ColorScheme = Property<String>("color-scheme")

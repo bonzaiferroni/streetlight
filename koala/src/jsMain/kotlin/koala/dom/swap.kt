@@ -2,6 +2,8 @@ package koala.dom
 
 import koala.css.*
 import koala.html.SwapStyle
+import kotlinx.browser.document
+import kotlinx.browser.window
 import kotlinx.html.dom.append
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
@@ -42,10 +44,16 @@ class SwapElement(
     fun setCurrent(element: HTMLElement) {
         val index = children.indexOf(element)
         require(index >= 0) { "must be a child of parent" }
-        current?.unmodify(Reveal)
-        element.modify(Reveal)
-        current = element
-        currentIndex = index
+        parent.setProperty(Property.ViewTransitionName.to("swap"))
+        val transition = document.startViewTransition {
+            current?.unmodify(Reveal)
+            element.modify(Reveal)
+            current = element
+            currentIndex = index
+        }
+        transition.finished.then {
+            parent.removeProperty(Property.ViewTransitionName)
+        }
     }
 
     fun next() {

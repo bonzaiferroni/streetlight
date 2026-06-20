@@ -53,7 +53,7 @@ $Class[open]::backdrop {
     -webkit-backdrop-filter: blur(0px);
     
     background-color: rgba(var(--ink), 0);
-    transition: var(--transition-background-color), var(--transition-backdrop-filter);
+    transition: var(--transition-background-color);
 }
 
 $Class[open]$Reveal::backdrop {
