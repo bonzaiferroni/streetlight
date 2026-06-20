@@ -63,7 +63,7 @@ fun Element.querySelectorAll(queryable: Queryable) = querySelectorAll(queryable.
 fun querySelector(queryable: Queryable) = document.body!!.querySelector(queryable)
 fun querySelectorAll(queryable: Queryable) = document.body!!.querySelectorAll(queryable)
 
-fun CSSStyleDeclaration.removeProperty(property: Property<*>) = removeProperty(property.identifier)
+fun CSSStyleDeclaration.removeStyle(property: Property<*>) = removeProperty(property.identifier)
 
 fun Element.printPath(subject: Any? = null, limit: Int = Int.MAX_VALUE): String = buildString {
     subject?.let {

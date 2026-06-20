@@ -3,7 +3,6 @@ package streetlight.web.ui
 import kabinet.utils.toAgoFormat
 import kampfire.api.Markdown
 import kampfire.api.toMarkdown
-import kampfire.api.toSlug
 import koala.SvgFile
 import koala.css.*
 import koala.dom.*
@@ -221,7 +220,7 @@ class CommentView(
                             true -> SvgFile.EyePlus
                             else -> SvgFile.EyeMinus
                         }
-                        it.setProperty(Property.MaskUrl.to(svg))
+                        it.setStyle(Property.MaskUrl.to(svg))
                     }
                 }
                 column(modify(Padding1, CommentClass.InnerCard)) {

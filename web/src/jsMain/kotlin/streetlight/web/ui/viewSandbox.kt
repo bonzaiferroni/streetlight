@@ -1,31 +1,28 @@
 package streetlight.web.ui
 
+import koala.css.columnsOf
 import koala.dom.*
+import kotlinx.css.LinearDimension
+import kotlinx.css.fr
 import kotlinx.html.js.p
 
 fun AppScope.viewSandbox() {
-    renderTabs()
-}
-
-fun AppScope.renderTabs() {
-    tabs {
-        (0..20).forEach {
-            tab("tab $it") {
-                textBlock("tab $it content")
+    column {
+        grid(columnsOf(1.fr, LinearDimension.auto)) {
+            val swap = swap {
+                box {
+                    textBlock("one")
+                }
+                box {
+                    textBlock("two")
+                    textBlock("three")
+                }
+            }
+            button(onClick = swap::next) {
+                +"swap"
             }
         }
-    }
-}
-
-fun AppScope.myContent() {
-    // fine, append hasn't completed yet
-    p { +"yer UI" }
-    launchEffect {
-        // now disallowed
-        // p { +"more UI" }
-
-        launch {
-        }
+        textBlock("content below")
     }
 }
 

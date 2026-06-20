@@ -17,6 +17,7 @@
     --transition-filter: filter var(--magic-interval) var(--magic-easing);
     --transition-background-color: background-color var(--magic-interval) var(--magic-easing);
     --transition-backdrop-filter: backdrop-filter var(--magic-interval) var(--magic-easing);
+    --transition-height: height var(--magic-interval) var(--magic-easing);
 }
 
 .glow {

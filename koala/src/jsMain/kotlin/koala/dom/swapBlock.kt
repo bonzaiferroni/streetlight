@@ -47,8 +47,8 @@ fun AppScope.queryAndWireSwapBlock(
 private fun List<HTMLElement>.setVisibility(id: Id) {
     forEach { child ->
         when (child.id == id.identifier) {
-            true -> child.style.removeProperty(Property.Display)
-            else -> child.style.setProperty(Property.Display.to(Display.none))
+            true -> child.style.removeStyle(Property.Display)
+            else -> child.style.setStyle(Property.Display.to(Display.none))
         }
     }
 }
@@ -57,7 +57,7 @@ private fun List<HTMLElement>.setReveal(id: Id, isInitial: Boolean) {
     forEach { child ->
         when (child.id == id.identifier) {
             true -> {
-                child.style.removeProperty(Property.Display)
+                child.style.removeStyle(Property.Display)
                 if (isInitial) {
                     // pops into view on the first switch, this doesn't seem to help
                     window.requestAnimationFrame {

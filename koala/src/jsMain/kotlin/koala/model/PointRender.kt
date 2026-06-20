@@ -11,7 +11,6 @@ import kotlinx.css.properties.s
 import kotlinx.html.dom.append
 import kotlinx.html.js.div
 import org.w3c.dom.HTMLDivElement
-import org.w3c.dom.HTMLParagraphElement
 
 internal class PointRender(
     val jsMarker: maplibregl.Marker,
@@ -120,11 +119,11 @@ internal fun PointMarker.toPointRender(pixelPoint: Point, focusEntity: () -> Uni
     element.append { // this element is modified by maplibre
         baseElement = div { // this element is all mine
             val delay = provideDelay()
-            element.setProperty(MarkerStyle.TwinkleDelay.to(delay.s))
-            element.setProperty(MarkerStyle.BodySize.to(bodySize))
+            element.setStyle(MarkerStyle.TwinkleDelay.to(delay.s))
+            element.setStyle(MarkerStyle.BodySize.to(bodySize))
 
             zIndex?.let {
-                element.setProperty(Property.ZIndex.to(it))
+                element.setStyle(Property.ZIndex.to(it))
             }
 
             val baseMod = buildSet {
@@ -133,7 +132,7 @@ internal fun PointMarker.toPointRender(pixelPoint: Point, focusEntity: () -> Uni
                     addAll(it)
                 }
                 light?.let {
-                    element.setProperty(MarkerStyle.MarkerLight.to(it))
+                    element.setStyle(MarkerStyle.MarkerLight.to(it))
                     add(MarkerStyle.MarkerGlow)
                 }
                 altitude?.let {

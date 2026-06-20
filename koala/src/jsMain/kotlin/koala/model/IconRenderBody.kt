@@ -4,7 +4,7 @@ import koala.css.addModifiers
 import koala.css.modify
 import koala.css.setStyle
 import koala.dom.TagScope
-import koala.dom.setProperty
+import koala.dom.setStyle
 import kotlinx.css.properties.deg
 import kotlinx.html.js.div
 import kotlinx.html.js.p
@@ -36,7 +36,7 @@ internal class IconRenderBody(
         val delta = ((bearing - lastBearing + 540) % 360) - 180;
         lastBearing += delta
         val adjusted = lastBearing - 90
-        be.setProperty(MarkerStyle.MarkerBearing.to(adjusted.deg))
+        be.setStyle(MarkerStyle.MarkerBearing.to(adjusted.deg))
     }
 }
 

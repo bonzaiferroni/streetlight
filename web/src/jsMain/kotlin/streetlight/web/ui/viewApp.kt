@@ -58,7 +58,7 @@ fun viewApp() {
 
                 // hides the element that holds server rendered content
                 val shellBox = document.getElementById(AppBodyKey.ShellBoxId)
-                shellBox.setProperty(Property.Display.to(Display.none))
+                shellBox.setStyle(Property.Display.to(Display.none))
             }
 
             try {

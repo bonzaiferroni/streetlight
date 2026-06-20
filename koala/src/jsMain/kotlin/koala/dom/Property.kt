@@ -5,15 +5,15 @@ import koala.css.Property
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.css.CSSStyleDeclaration
 
-fun <T: Any> CSSStyleDeclaration.setProperty(style: InlineStyle<T>) =
+fun <T: Any> CSSStyleDeclaration.setStyle(style: InlineStyle<T>) =
     setProperty(style.property.expression, style.valueString)
 
-fun <T: Any> HTMLElement.setProperty(style: InlineStyle<T>): HTMLElement {
+fun <T: Any> HTMLElement.setStyle(style: InlineStyle<T>): HTMLElement {
     this.style.setProperty(style.property.expression, style.valueString)
     return this
 }
 
-fun <T: Any> HTMLElement.removeProperty(property: Property<T>): HTMLElement {
+fun <T: Any> HTMLElement.removeStyle(property: Property<T>): HTMLElement {
     this.style.removeProperty(property.identifier)
     return this
 }

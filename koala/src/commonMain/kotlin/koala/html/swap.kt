@@ -14,29 +14,21 @@ object SwapStyle {
 val SwapCss get() = with(SwapStyle) { """
 
 $Class {
+    transition: var(--transition-height);
+
     > * {
         display: none;
     }
     
     > $Reveal {
         display: block;
+        opacity: 1;
+        transition: var(--transition-opacity);
+    
+        @starting-style {
+            opacity: 0;
+        }
     }
-}
-
-::view-transition-old(swap) {
-    animation: slide-out 0.3s ease;
-}
-
-::view-transition-new(swap) {
-    animation: slide-in 0.3s ease;
-}
-
-@keyframes slide-out {
-    to { transform: translateX(-100%); opacity: 0; }
-}
-
-@keyframes slide-in {
-    from { transform: translateX(100%); opacity: 0; }
 }
 
 """}
