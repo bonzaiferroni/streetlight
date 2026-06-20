@@ -1,5 +1,6 @@
 package streetlight.model.utils
 
+import kampfire.model.Labeled
 import kotlin.jvm.JvmInline
 
 data class TextDelta(
@@ -29,10 +30,12 @@ value class RemovedText(override val text: String) : DeltaText
 @JvmInline
 value class AddedText(override val text: String) : DeltaText
 
-enum class TextDeltaDisplay {
-    Old,
-    New,
-    Combined,
+enum class TextDeltaDisplay(override val label: String): Labeled {
+    Removed("Removed Content"),
+    Added("Added Content"),
+    Combined("Changed Content");
+
+    // override val label get() = name
 }
 
 fun createTextDelta(old: String?, new: String?): TextDelta {

@@ -1,6 +1,5 @@
 package koala.dom
 
-import koala.css.AlignItemsStretch
 import koala.css.FadeLoop
 import koala.css.ModifierSet
 import koala.css.PointerEventsAuto
@@ -10,17 +9,14 @@ import koala.css.TextAlignCenter
 import koala.css.Width100P
 import koala.css.addModifiers
 import koala.css.modify
-import koala.dom.column
-import koala.dom.div
 import koala.html.DialogStyle
 import koala.html.filigree
 import koala.html.heading2
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import kotlinx.dom.clear
-import kotlinx.html.DIALOG
-import kotlinx.html.dom.append
+import kotlinx.html.DIV
 import kotlinx.html.js.dialog
 import org.w3c.dom.HTMLDialogElement
 
@@ -29,48 +25,40 @@ fun AppScope.dialog(
     stateFlow: Flow<Boolean>? = null,
     modifiers: ModifierSet? = null,
     onClose: (() -> Unit)? = null,
-    content: TagScope.(() -> Unit) -> Unit = { }
+    content: (AppScope.(DialogElement) -> Unit)? = null
 ): DialogElement {
+//    fun closeDialog() {
+//        val dialog = dialog ?: return
+//        close(dialog)
+//    }
 
-    fun close(dialog: HTMLDialogElement) {
-        parentScope.launch {
-            dialog.unmodify(Reveal)
-            delay(200)
-            dialog.close()
-            onClose?.invoke()
-        }
-    }
-
-    var dialog: HTMLDialogElement? = null
-    fun closeDialog() {
-        val dialog = dialog ?: return
-        close(dialog)
-    }
-
-    dialog = dialog {
+    val element = dialog {
         addModifiers(DialogStyle.Class, modifiers)
-        dialogContent(title, ::closeDialog, content)
+        // dialogContent(title, ::closeDialog, content)
     }
 
-    dialog.addEventListener("click", { event ->
-        if (event.target == dialog) {
-            close(dialog)
+    return DialogElement(element, onClose, app, parentScope).also { dialog ->
+        content?.let {
+            dialog.updateContent(title, content)
         }
-    })
 
-    parentScope.launch {
-        stateFlow?.collect {
-            if (it) dialog.open() else close(dialog)
+        element.addEventListener("click", { event ->
+            if (event.target == element) {
+                dialog.close()
+            }
+        })
+
+        parentScope.launch {
+            stateFlow?.collect {
+                if (it) dialog.open() else dialog.close()
+            }
         }
     }
-
-    return DialogElement(dialog) { close(dialog) }
 }
 
-internal fun TagScope.dialogContent(
+private fun TagScope.dialogContent(
     title: String?,
-    closeDialog: () -> Unit,
-    content: TagScope.(() -> Unit) -> Unit
+    content: DIV.() -> Unit
 ) {
     column(modify(Width100P, PointerEventsNone)) {
         title?.let {
@@ -80,23 +68,38 @@ internal fun TagScope.dialogContent(
         }
 
         div(modify(DialogStyle.Content, PointerEventsAuto)) {
-            content(closeDialog)
+            content()
         }
     }
 }
 
-data class DialogElement(val element: HTMLDialogElement, val close: () -> Unit) {
+class DialogElement(
+    val element: HTMLDialogElement,
+    private val onClose: (() -> Unit)? = null,
+    private val app: AppContainer,
+    private val parentScope: CoroutineScope,
+) {
     fun open() = this.also {
         element.open()
     }
 
+    fun close() {
+        parentScope.launch {
+            element.unmodify(Reveal)
+            delay(200)
+            element.close()
+            onClose?.invoke()
+        }
+    }
+
     fun updateContent(
         title: String?,
-        content: TagScope.(() -> Unit) -> Unit,
+        content: AppScope.(DialogElement) -> Unit,
     ) {
-        element.clear()
-        element.append {
-            dialogContent(title, close, content)
+        element.replaceRender(app, parentScope) {
+            dialogContent(title) {
+                content(this@DialogElement)
+            }
         }
         element.open()
     }
@@ -111,9 +114,8 @@ fun AppScope.dialogWithCard(
     title: String?,
     stateFlow: Flow<Boolean>? = null,
     modifiers: ModifierSet? = null,
-    onClose: (() -> Unit)? = null,
-    content: AppScope.(() -> Unit) -> Unit
-) = dialog(title, stateFlow, modifiers, onClose) {
+    content: AppScope.(DialogElement) -> Unit
+) = dialog(title, stateFlow, modifiers) {
     dialogCard {
         content(it)
     }

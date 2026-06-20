@@ -57,7 +57,7 @@ $Class[open]::backdrop {
 }
 
 $Class[open]$Reveal::backdrop {
-    background-color: rgba(var(--white), .2);
+    background-color: rgba(var(--white), .1);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
 }

@@ -20,6 +20,7 @@ data class Attribute<T>(
     }
 
     fun to(value: T) = AttributeValue(this, value)
+    fun selector(value: T) = AttributeValue(this, value).selector
 
     override fun toString() = selector
 

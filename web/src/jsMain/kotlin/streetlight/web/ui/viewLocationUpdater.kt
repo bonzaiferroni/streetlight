@@ -5,6 +5,7 @@ import kampfire.model.handleResponse
 import koala.LottieFile
 import koala.css.AlignItemsCenter
 import koala.css.BorderRadius2
+import koala.css.Flex1
 import koala.css.JustifyContentEnd
 import koala.css.MoonShadow
 import koala.css.OverflowClip
@@ -12,7 +13,9 @@ import koala.css.columnsOf
 import koala.css.modify
 import koala.dom.*
 import koala.html.em
+import koala.html.spacer
 import koala.html.strong
+import koala.model.storeOf
 import kotlinx.css.LinearDimension
 import kotlinx.css.fr
 import streetlight.model.data.EditType
@@ -21,6 +24,7 @@ import streetlight.model.data.LocationUpdaterContent
 import streetlight.model.data.Star
 import streetlight.model.data.toEdit
 import streetlight.model.data.verb
+import streetlight.model.utils.TextDeltaDisplay
 import streetlight.web.LocationRoute
 import streetlight.web.UpdateLocationRoute
 
@@ -49,53 +53,7 @@ fun AppScope.viewLocationUpdater(content: LocationUpdaterContent, star: Star) {
             }
         }
         tab("history") {
-            val dialog = dialog()
-            grid(columnsOf(1.fr, LinearDimension.auto)) {
-                var previousEdit: LocationEdit? = null
-                content.editLogs.forEachIndexed { index, log ->
-                    val timeDescription = log.createdAt.toRelativeTimeFormat()
-                    val edit = log.recordEdit as? LocationEdit
-                    val compareEdit = previousEdit
-                    textBlock("${log.username} ${log.editType.verb} the location $timeDescription")
-
-                    row(modify(JustifyContentEnd)) {
-                        if (log.editType == EditType.Update && index == content.editLogs.size - 1) {
-                            button {
-                                +"revert"
-                            }
-                        }
-                        edit?.let {
-                            button(onClick = {
-                                dialog.updateContent(timeDescription) {
-                                    dialogCard {
-                                        box {
-                                            fieldGrid {
-                                                fieldValue(edit.name, compareEdit?.name, "name")
-                                                fieldValue(edit.address, compareEdit?.address, "address")
-                                                fieldValue(edit.description, compareEdit?.description, "description")
-                                                fieldValue(edit.geoPoint, compareEdit?.geoPoint, "geolocation")
-                                            }
-                                        }
-                                    }
-                                }
-                            }) {
-                                +"view"
-                            }
-
-                            button(onClick = {
-                                dialog.updateContent(timeDescription) {
-                                    dialogCard {
-                                        textBlock("yer dif")
-                                    }
-                                }
-                            }) {
-                                +"dif"
-                            }
-                        }
-                    }
-                    previousEdit = edit
-                }
-            }
+            viewHistory(content)
         }
     }
 }
@@ -140,4 +98,56 @@ fun AppScope.locationUpdaterGreeting(star: Star, locationName: String?) = grid(
         textBlock("Thank you for contributing, what can you tell us about ${locationName ?: "this location"}?")
     }
     lottie(LottieFile.StreetlightNight, modify(BorderRadius2, OverflowClip, MoonShadow))
+}
+
+private fun AppScope.viewHistory(content: LocationUpdaterContent) {
+    val display = storeOf(TextDeltaDisplay.Combined)
+    val dialog = dialog()
+
+    launchEffect {
+        display.flow.collect {
+            dialog.element.setAttribute(TextDeltaStyle.Display.to(it))
+        }
+    }
+
+    grid(columnsOf(1.fr, LinearDimension.auto)) {
+        var previousEdit: LocationEdit? = null
+        content.editLogs.forEachIndexed { index, log ->
+            val timeDescription = log.createdAt.toRelativeTimeFormat()
+            val edit = log.recordEdit as? LocationEdit
+            val compareEdit = previousEdit
+            textBlock("${log.username} ${log.editType.verb} the location $timeDescription")
+
+            row(modify(JustifyContentEnd)) {
+                if (log.editType == EditType.Update && index == content.editLogs.size - 1) {
+                    button {
+                        +"revert"
+                    }
+                }
+                edit?.let {
+                    button(onClick = {
+                        dialog.updateContent(timeDescription) {
+                            dialogCard {
+                                row {
+                                    spacer(modify(Flex1))
+                                    dropMenu(display)
+                                }
+                                box {
+                                    deltaGrid {
+                                        deltaRow(edit.name, compareEdit?.name, "name")
+                                        deltaRow(edit.address, compareEdit?.address, "address")
+                                        deltaRow(edit.description, compareEdit?.description, "description")
+                                        deltaRow(edit.geoPoint, compareEdit?.geoPoint, "geolocation")
+                                    }
+                                }
+                            }
+                        }
+                    }) {
+                        +"view"
+                    }
+                }
+            }
+            previousEdit = edit
+        }
+    }
 }

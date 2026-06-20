@@ -37,7 +37,7 @@ fun AppScope.imageChooser(
         }
     }
 
-    val dialog = dialog("Choose yer image") { close ->
+    val dialog = dialog("Choose yer image") { dialog ->
         choicesRow = row {
             addModifiers(FlexWrap)
             style = "display: none;"
@@ -48,7 +48,7 @@ fun AppScope.imageChooser(
         }
         row(modify(FlexItems1)) {
             button("cancel", modify(Secondary), onClickEvent = {
-                close()
+                dialog.close()
             })
             uploadButton = button("upload", modify(Accent), onClickEvent = {
                 val localUrl = localUrl ?: return@button
@@ -56,7 +56,7 @@ fun AppScope.imageChooser(
                     console.log("uploading: $localUrl")
                     val url = onUpload(localUrl)
                     onValueChanged?.invoke(url)
-                    close()
+                    dialog.close()
                 }
             }) {
                 disabled = true

@@ -1,7 +1,9 @@
 package koala.dom
 
+import kampfire.model.Labeled
 import koala.css.ModifierSet
 import koala.css.addModifiers
+import koala.model.Store
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
@@ -17,7 +19,7 @@ fun AppScope.dropMenu(
     onChangeValue: ((String) -> Unit)? = null,
     modifiers: ModifierSet? = null,
     block: (SELECT.() -> Unit)? = null
-) {
+): HTMLSelectElement {
     val element = select {
         addModifiers(modifiers)
         options.forEach {
@@ -43,15 +45,17 @@ fun AppScope.dropMenu(
             }
         }
     }
+
+    return element
 }
 
-inline fun <reified E> AppScope.dropMenu(
+inline fun <reified E: Enum<E>> AppScope.dropMenu(
     noinline onChangeValue: ((E) -> Unit),
     crossinline provideLabel: (E) -> String,
     flow: Flow<E>? = null,
     modifiers: ModifierSet? = null,
     noinline block: (SELECT.() -> Unit)? = null
-) where E : Enum<E> {
+): HTMLSelectElement {
     val enums = enumValues<E>()
     val values = enums.map { provideLabel(it) }
     val flow = flow?.map(provideLabel)
@@ -60,8 +64,14 @@ inline fun <reified E> AppScope.dropMenu(
         onChangeValue(enums[index])
     }
 
-    dropMenu(values, flow, callback, modifiers, block)
+    return dropMenu(values, flow, callback, modifiers, block)
 }
+
+inline fun <reified E> AppScope.dropMenu(
+    store: Store<E>,
+    modifiers: ModifierSet? = null,
+    noinline block: (SELECT.() -> Unit)? = null
+) where E: Enum<E>, E: Labeled = dropMenu(store::set, { it.label }, store.flow, modifiers, block)
 
 //inline fun <reified E, Data> WireContext<Data>.dropMenu(
 //    noinline write: (E) -> Data,
