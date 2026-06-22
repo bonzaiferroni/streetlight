@@ -22,6 +22,8 @@ inline fun <reified T> Uuid.toRecordId(): T = when (T::class) {
     TalentId::class -> TalentId(this) as T
     PostId::class -> PostId(this) as T
     CommentId::class -> CommentId(this) as T
+    EditLogId::class -> EditLogId(this) as T
+    ReviewId::class -> ReviewId(this) as T
     else -> error("invalid recordId type: ${T::class.simpleName}")
 }
 

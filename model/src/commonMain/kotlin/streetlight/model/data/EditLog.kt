@@ -21,6 +21,7 @@ data class EditLog(
 @Serializable
 @JvmInline
 value class EditLogId(override val value: Uuid): RecordId {
+    override fun toString() = value.toString()
 }
 
 @Serializable
@@ -35,6 +36,7 @@ enum class RecordType {
     Event,
     Galaxy,
     Wiki,
+    EditLog,
 }
 
 enum class EditType {
