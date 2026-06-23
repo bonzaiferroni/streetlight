@@ -13,20 +13,18 @@ import kotlinx.html.onClick
 fun FlowContent.navigation(
     href: String? = null,
     modifiers: ModifierSet? = null,
-    text: String = "",
     id: Id? = null,
     flair: String? = null,
     block: A.() -> Unit = {}
 ) {
     a {
-        configureNavigation(href, modifiers, text, id, flair, block)
+        configureNavigation(href, modifiers, id, flair, block)
     }
 }
 
 internal fun A.configureNavigation(
     href: String? = null,
     modifiers: ModifierSet? = null,
-    text: String = "",
     id: Id? = null,
     flair: String? = null,
     block: A.() -> Unit = {}
@@ -40,21 +38,16 @@ internal fun A.configureNavigation(
             +flair
         }
     }
-    span {
-        +text
-    }
 }
 
 fun FlowContent.navigation(
     route: AppRoute,
     modifiers: ModifierSet? = null,
-    text: String = "",
     id: Id? = null,
     flair: String? = null,
     block: A.() -> Unit = {}
 ) {
     navigation(
-        text = text,
         href = route.toSitePath(),
         modifiers = modifiers,
         id = id,
@@ -66,16 +59,14 @@ fun FlowContent.navigation(
 fun FlowContent.navigationIfNotNull(
     route: AppRoute? = null,
     modifiers: ModifierSet? = null,
-    text: String = "",
     id: Id? = null,
     block: FlowContent.() -> Unit = {}
 ) {
-    navigationIfNotNull(route?.toSitePath(), text, modifiers, id, block)
+    navigationIfNotNull(route?.toSitePath(), modifiers, id, block)
 }
 
 fun FlowContent.navigationIfNotNull(
     href: String? = null,
-    text: String = "",
     modifiers: ModifierSet? = null,
     id: Id? = null,
     block: FlowContent.() -> Unit = {}
@@ -83,10 +74,9 @@ fun FlowContent.navigationIfNotNull(
     if (href == null) {
         box(id, modifiers) {
             block()
-            +text
         }
     } else {
-        navigation(href = href, text = text, modifiers = modifiers, id = id, block = block)
+        navigation(href = href, modifiers = modifiers, id = id, block = block)
     }
 }
 

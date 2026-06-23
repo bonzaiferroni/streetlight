@@ -12,17 +12,15 @@ import kotlinx.html.a
 fun TagScope.navigation(
     href: String? = null,
     modifiers: ModifierSet? = null,
-    text: String = "",
     id: Id? = null,
     flair: String? = null,
     block: A.() -> Unit = {}
 ) = a {
-    configureNavigation(href, modifiers, text, id, flair, block)
+    configureNavigation(href, modifiers, id, flair, block)
 }
 
 fun TagScope.navigation(
     route: AppRoute,
     modifiers: ModifierSet? = null,
-    text: String = "",
     block: A.() -> Unit = {},
-) = navigation(route.toSitePath(), modifiers, text, block = block)
+) = navigation(route.toSitePath(), modifiers, block = block)

@@ -24,17 +24,9 @@ fun AppScope.editReviewContent(editReview: EditReview) {
             deltaRow("address", edit.address)
             deltaRow("description", edit.description)
             deltaRow("geolocation", edit.geoPoint)
-            textBlock("map")
-            val mapUrl = "https://www.google.com/maps/@${edit.geoPoint},15z"
-            navigation(mapUrl) { +mapUrl }
-            textBlock("pin")
-            val pinUrl = "https://www.google.com/maps?q=${edit.geoPoint}&z=10"
+            textBlock("Google maps")
+            val pinUrl = "https://www.google.com/maps?q=${edit.geoPoint}"
             navigation(pinUrl) { +pinUrl }
-            edit.name?.let { name ->
-                textBlock("named")
-                val namedUrl = "https://www.google.com/maps/search/$name/@${edit.geoPoint},15z"
-                navigation(namedUrl) { +namedUrl }
-            }
         }
     }
 }

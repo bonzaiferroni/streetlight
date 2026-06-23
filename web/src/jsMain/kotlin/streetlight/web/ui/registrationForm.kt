@@ -23,7 +23,7 @@ fun AppScope.guestRegistrationForm() {
             textBlock(guestAccountIntro1)
             textBlock {
                 span(guestAccountIntro2, modify(Flex1))
-                navigation(text = "→ Learn More")
+                navigation { +"→ Learn More" }
             }
         }
         card(modify(PrimaryCardBg)) {

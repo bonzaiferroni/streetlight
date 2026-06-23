@@ -91,7 +91,7 @@ fun AppScope.locationUpdaterGreeting(star: Star, locationName: String?) = grid(
             if (star.scoutLevel in 0..1) {
                 +"Your edits will become visible to the rest of Streetlight after they are reviewed. "
                 +"Please take a moment to become familiar with the "
-                navigation("", text = "content policy")
+                navigation { +"content policy" }
                 +" if you haven't already. "
             }
         }

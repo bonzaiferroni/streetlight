@@ -20,7 +20,6 @@ fun FlowContent.btn(
 ) {
     val flair = flair ?: if (addFlair) labelPrefixMap[text.lowercase()] else null
     navigation(
-        text = text,
         route = route,
         modifiers = modify(BtnKey.Class, modifiers),
         flair = flair,
@@ -37,7 +36,6 @@ fun FlowContent.btn(
     block: A.() -> Unit = {}
 ) {
     navigation(
-        text = text,
         route = route,
         flair = flair,
         modifiers = modify(modifiers, BtnKey.Class, BackgroundImage),
@@ -65,7 +63,6 @@ fun FlowContent.btn(
 
     navigation(
         href = href,
-        text = text,
         modifiers = modify(BtnKey.Class, modifiers),
         block = block,
         flair = flair,
