@@ -23,8 +23,10 @@ fun FlowContent.btn(
         route = route,
         modifiers = modify(BtnKey.Class, modifiers),
         flair = flair,
-        block = block,
-    )
+    ) {
+        block()
+        +text
+    }
 }
 
 fun FlowContent.btn(
@@ -44,6 +46,7 @@ fun FlowContent.btn(
             setStyle(Property.BackgroundUrl.to(it))
         }
         block()
+        +text
     }
 }
 
@@ -62,12 +65,13 @@ fun FlowContent.btn(
         }
 
     navigation(
-        href = href,
         modifiers = modify(BtnKey.Class, modifiers),
-        block = block,
         flair = flair,
         id = id,
-    )
+    ) {
+        block()
+        +text
+    }
 }
 
 fun domainOf(url: String): String? =
