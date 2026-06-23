@@ -37,6 +37,7 @@ enum class RecordType {
     Galaxy,
     Wiki,
     EditLog,
+    Quorum,
 }
 
 enum class EditType {

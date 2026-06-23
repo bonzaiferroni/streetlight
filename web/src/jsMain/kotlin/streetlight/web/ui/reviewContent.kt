@@ -4,19 +4,18 @@ import koala.css.*
 import koala.dom.*
 import koala.html.heading3
 import koala.html.textBlock
-import streetlight.model.data.EditReview
+import streetlight.model.data.QuorumReviewContent
 import streetlight.model.data.LocationEdit
-import streetlight.model.data.QuorumReview
 
-fun AppScope.reviewContent(quorumReview: QuorumReview) {
-    when (quorumReview) {
-        is EditReview -> editReviewContent(quorumReview)
-    }
-}
+//fun AppScope.reviewContent(task: QuorumReviewTask) {
+//    when (quorumTask) {
+//        is QuorumReviewTask -> editReviewContent(quorumTask)
+//    }
+//}
 
-fun AppScope.editReviewContent(editReview: EditReview) {
-    val quorum = editReview.quorum
-    val edit = editReview.editLog.recordEdit as? LocationEdit ?: error("edit not found")
+fun AppScope.editReviewContent(editReviewTask: QuorumReviewContent) {
+    val quorum = editReviewTask.quorum
+    val edit = editReviewTask.editLog.recordEdit as? LocationEdit ?: error("edit not found")
     column {
         heading3(quorum.question.label)
         deltaGrid(modify(TextDeltaStyle.Highlighter)) {

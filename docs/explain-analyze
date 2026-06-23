@@ -1,0 +1,38 @@
+Nested Loop Left Join  (cost=0.44..17.60 rows=1 width=408) (actual time=0.031..0.032 rows=1 loops=1)
+  Join Filter: (quorum.record_type = 4)
+  ->  Nested Loop Left Join  (cost=0.30..17.37 rows=1 width=272) (actual time=0.026..0.027 rows=1 loops=1)
+        Join Filter: (task.record_type = 5)
+        ->  Nested Loop Left Join  (cost=0.15..9.19 rows=1 width=212) (actual time=0.016..0.017 rows=1 loops=1)
+              Join Filter: (task.record_type = 4)
+              ->  Seq Scan on task  (cost=0.00..1.01 rows=1 width=76) (actual time=0.008..0.008 rows=1 loops=1)
+                    Filter: (star_id = 'd776154a-c437-4e58-80ca-6f359bd8383d'::uuid)
+              ->  Index Scan using edit_log_pkey on edit_log  (cost=0.15..8.17 rows=1 width=136) (actual time=0.006..0.006 rows=0 loops=1)
+                    Index Cond: (id = task.record_id)
+        ->  Index Scan using quorum_pkey on quorum  (cost=0.15..8.17 rows=1 width=60) (actual time=0.009..0.009 rows=1 loops=1)
+              Index Cond: (id = task.record_id)
+  ->  Index Scan using edit_log_pkey on edit_log quorum_edit_log  (cost=0.15..0.22 rows=1 width=136) (actual time=0.004..0.004 rows=1 loops=1)
+        Index Cond: (id = quorum.record_id)
+Planning Time: 0.768 ms
+Execution Time: 0.120 ms
+
+
+Nested Loop Left Join  (cost=36.79..60.26 rows=4 width=408) (actual time=0.044..0.047 rows=2 loops=1)
+  Join Filter: (quorum.record_type = 4)
+  ->  Hash Right Join  (cost=36.64..59.34 rows=4 width=272) (actual time=0.038..0.040 rows=2 loops=1)
+        Hash Cond: (quorum.id = task.record_id)
+        Join Filter: (task.record_type = 5)
+        ->  Seq Scan on quorum  (cost=0.00..19.20 rows=920 width=60) (actual time=0.004..0.004 rows=5 loops=1)
+        ->  Hash  (cost=36.59..36.59 rows=4 width=212) (actual time=0.026..0.027 rows=2 loops=1)
+              Buckets: 1024  Batches: 1  Memory Usage: 9kB
+              ->  Hash Right Join  (cost=19.80..36.59 rows=4 width=212) (actual time=0.022..0.024 rows=2 loops=1)
+                    Hash Cond: (edit_log.id = task.record_id)
+                    Join Filter: (task.record_type = 4)
+                    ->  Seq Scan on edit_log  (cost=0.00..14.90 rows=490 width=136) (actual time=0.004..0.005 rows=9 loops=1)
+                    ->  Hash  (cost=19.75..19.75 rows=4 width=76) (actual time=0.009..0.009 rows=2 loops=1)
+                          Buckets: 1024  Batches: 1  Memory Usage: 9kB
+                          ->  Seq Scan on task  (cost=0.00..19.75 rows=4 width=76) (actual time=0.005..0.005 rows=2 loops=1)
+                                Filter: (star_id = 'd776154a-c437-4e58-80ca-6f359bd8383d'::uuid)
+  ->  Index Scan using edit_log_pkey on edit_log quorum_edit_log  (cost=0.15..0.22 rows=1 width=136) (actual time=0.002..0.002 rows=0 loops=2)
+        Index Cond: (id = quorum.record_id)
+Planning Time: 0.474 ms
+Execution Time: 0.116 ms

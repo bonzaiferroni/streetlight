@@ -1,14 +1,16 @@
 package streetlight.web.ui
 
-import kampfire.api.toMarkdown
-import kampfire.model.handleResponse
 import kampfire.model.thumb
 import koala.css.*
 import koala.dom.*
 import koala.html.btn
 import kotlinx.css.LinearDimension
 import kotlinx.css.fr
+import streetlight.model.data.EditTask
+import streetlight.model.data.EditTaskContent
 import streetlight.model.data.LocationEdit
+import streetlight.model.data.QuorumReviewContent
+import streetlight.model.data.QuorumTask
 import streetlight.model.data.Star
 import streetlight.web.EditStarRoute
 import streetlight.web.EditTalentRoute
@@ -64,13 +66,28 @@ private fun AppScope.activityContent(star: Star) {
         }
         val dialog = dialog()
         section("reviews") {
-            request({ api.readUserReviews() } ) { reviews ->
-                reviews.forEach { quorumReview ->
-                    val label = quorumReview.quorum.question.label
-                    textBlock(label).onClick {
-                        dialog.updateContent(label) {
-                            dialogCard {
-                                reviewContent(quorumReview)
+            request({ api.readUserTasks() } ) { tasks ->
+                tasks.forEach { task ->
+                    when (task) {
+                        is EditTaskContent -> {
+                            val edit = task.editLog.recordEdit as? LocationEdit ?: return@forEach
+                            textBlock(edit.label).onClick {
+                                dialog.updateContent(edit.label) {
+                                    val editor = app.getLocationEditor(edit, parentScope)
+                                    dialogCard {
+                                        locationEditFormBody(editor)
+                                    }
+                                }
+                            }
+                        }
+                        is QuorumReviewContent -> {
+                            val label = task.quorum.question.label
+                            textBlock(label).onClick {
+                                dialog.updateContent(label) {
+                                    dialogCard {
+                                        editReviewContent(task)
+                                    }
+                                }
                             }
                         }
                     }
