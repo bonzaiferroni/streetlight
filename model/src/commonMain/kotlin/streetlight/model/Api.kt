@@ -167,4 +167,8 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object UpdateComment: PostEndpoint<UpdatedComment, Boolean>(this, "update")
     }
 
+    object Reviews: ApiNode(this) {
+        object UserReviews: GetEndpoint<List<EditReview>>(this)
+        object ReadReview: GetByIdEndpoint<ReviewId, EditReview>(this)
+    }
 }

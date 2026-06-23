@@ -62,18 +62,20 @@ val StylesCss get() = """
     --accent-button: rgb(var(--accent));
     --accent-button-day: color-mix(in srgb, var(--accent-button) 80%, black);
     
-    --danger: 255, 99, 132;
-    --danger-fg: color-mix(in srgb, rgb(var(--danger)) 75%, rgb(var(--ink)));
-    --danger-bg: color-mix(in srgb, rgb(var(--danger)) 75%, rgb(var(--paper)));
+    --red: 255, 99, 132;
+    --red-fg: color-mix(in srgb, rgb(var(--red)) 75%, rgb(var(--ink)));
+    --danger-fg: color-mix(in srgb, rgb(var(--red)) 75%, rgb(var(--ink)));
+    --danger-bg: color-mix(in srgb, rgb(var(--red)) 75%, rgb(var(--paper)));
     
-    --valid: 99, 255, 132;
-    --valid-bg: color-mix(in srgb, rgb(var(--valid)) 33%, rgb(var(--paper)));
+    --green: 99, 255, 132;
+    --green-fg: color-mix(in srgb, rgb(var(--green)) 75%, rgb(var(--ink)));
+    --valid-bg: color-mix(in srgb, rgb(var(--green)) 33%, rgb(var(--paper)));
     
-    --required: 255, 240, 32;
-    --required-bg: color-mix(in srgb, rgb(var(--required)) 33%, rgb(var(--paper)));
+    --yellow: 255, 240, 32;
+    --required-bg: color-mix(in srgb, rgb(var(--yellow)) 33%, rgb(var(--paper)));
     
-    --lamp: 200, 178, 87;
-    --lamp-fg: color-mix(in srgb, rgb(var(--lamp)) 75%, rgb(var(--ink)));
+    --gold: 200, 178, 87;
+    --lamp-fg: color-mix(in srgb, rgb(var(--gold)) 75%, rgb(var(--ink)));
     
     --paper-gradient2-bg: linear-gradient(to right, var(--card-bg) 50%, transparent 95%);
     --paper-gradient-bg: linear-gradient(to right, rgba(var(--paper), .8) 0%, transparent 100%);

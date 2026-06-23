@@ -20,9 +20,9 @@ fun TagScope.deltaGrid(
 }
 
 fun TagScope.deltaRow(
-    value: Any?,
-    previousValue: Any?,
     label: String,
+    value: Any?,
+    previousValue: Any? = null,
 ) {
     strong(label)
     val valueText = value?.toString()

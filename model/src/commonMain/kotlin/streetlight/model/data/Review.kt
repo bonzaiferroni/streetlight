@@ -5,6 +5,7 @@ import kotlin.jvm.JvmInline
 import kotlin.time.Instant
 import kotlin.uuid.Uuid
 
+@Serializable
 data class Review(
     val reviewId: ReviewId,
     val quorumId: QuorumId,

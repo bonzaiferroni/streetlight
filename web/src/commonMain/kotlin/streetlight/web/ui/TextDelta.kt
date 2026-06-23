@@ -8,6 +8,7 @@ object TextDeltaStyle {
     val CommonText = Class("common-text")
     val AddedText = Class("added-text")
     val RemovedText = Class("removed-text")
+    val Highlighter = Class("highlighter")
 
     val Display = enumAttributeOf<TextDeltaDisplay>("display")
 }
@@ -15,12 +16,14 @@ object TextDeltaStyle {
 //language="CSS"
 val TextDeltaCss get() = with(TextDeltaStyle) {"""
 
-$AddedText {
-    color: green;
-}
-
-$RemovedText {
-    color: red;
+$Highlighter {
+    $AddedText {
+        color: var(--green-fg);
+    }
+    
+    $RemovedText {
+        color: var(--red-fg);
+    }
 }
 
 ${Display.selector(TextDeltaDisplay.Removed)} $AddedText,

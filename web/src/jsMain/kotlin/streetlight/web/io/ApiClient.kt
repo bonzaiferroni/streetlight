@@ -58,6 +58,8 @@ class ApiClient(private val client: FetchClient) {
     suspend fun checkUsername(username: Username) = client.postApi(UserApi.CheckUsername, username)
     suspend fun generateUsername() = client.getApi(UserApi.GenerateUsername)
     suspend fun readPendingEdits() = client.getApi(Api.Stars.PendingEdits)
+    suspend fun readUserReviews() = client.getApi(Api.Reviews.UserReviews)
+    suspend fun readReview(reviewId: ReviewId) = client.getApi(Api.Reviews.ReadReview, reviewId)
 
     // suspend fun uploadAvatar(blobUrl: Url) = client.uploadBlob(Api.Users.UploadAvatar.path, blobUrl)
     suspend fun uploadImage(blobUrl: Url) = client.uploadBlob(Api.Users.UploadImage.path, blobUrl)
@@ -129,3 +131,4 @@ class ApiClient(private val client: FetchClient) {
     }
 
 }
+

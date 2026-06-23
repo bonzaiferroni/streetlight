@@ -133,11 +133,11 @@ private fun AppScope.viewHistory(content: LocationUpdaterContent) {
                                     dropMenu(display)
                                 }
                                 box {
-                                    deltaGrid {
-                                        deltaRow(edit.name, compareEdit?.name, "name")
-                                        deltaRow(edit.address, compareEdit?.address, "address")
-                                        deltaRow(edit.description, compareEdit?.description, "description")
-                                        deltaRow(edit.geoPoint, compareEdit?.geoPoint, "geolocation")
+                                    deltaGrid(mod = modify(TextDeltaStyle.Highlighter)) {
+                                        deltaRow("name", edit.name, compareEdit?.name)
+                                        deltaRow("address", edit.address, compareEdit?.address)
+                                        deltaRow("description", edit.description, compareEdit?.description)
+                                        deltaRow("geolocation", edit.geoPoint, compareEdit?.geoPoint)
                                     }
                                 }
                             }

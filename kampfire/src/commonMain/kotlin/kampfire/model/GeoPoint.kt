@@ -15,7 +15,7 @@ data class GeoPoint(
     fun toList(): List<Double> = listOf(lng, lat)
     fun toArray(): Array<Double> = arrayOf(lng, lat)
 
-    override fun toString() = "$lng,$lat"
+    override fun toString() = "$lat,$lng"
 
     fun toQuery() = "lng=$lng&lat=$lat"
 
@@ -31,7 +31,7 @@ data class GeoPoint(
         }
 
         fun fromString(value: String) = value.split(",").mapNotNull { it.toDoubleOrNull() }.takeIf { it.size == 2 }?.let {
-            GeoPoint(it[0], it[1])
+            GeoPoint(it[1], it[0])
         }
     }
 }

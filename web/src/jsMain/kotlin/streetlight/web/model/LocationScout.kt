@@ -102,7 +102,6 @@ class LocationScout(
             val bounds = galaxy.geoBounds.takeIf { city == null }?.resizeBy(5f)
             osm.readLocations(query, stateNow.city, bounds).handleResponse(queryMessage::set) { locations ->
                 queryMessage.set("found: ${locations.size}")
-                console.log(prettyPrint(locations))
                 state.set { it.copy(osmLocations = locations.mapNotNull { loc -> loc.toEditOrNull() }) }
             }
         }

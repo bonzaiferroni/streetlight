@@ -1,17 +1,19 @@
 package streetlight.web.ui
 
+import kampfire.api.toMarkdown
+import kampfire.model.handleResponse
 import kampfire.model.thumb
 import koala.css.*
 import koala.dom.*
 import koala.html.btn
 import kotlinx.css.LinearDimension
 import kotlinx.css.fr
+import streetlight.model.data.LocationEdit
 import streetlight.model.data.Star
 import streetlight.web.EditStarRoute
 import streetlight.web.EditTalentRoute
 import streetlight.web.HomeRoute
 import streetlight.web.GalaxyListRoute
-import streetlight.web.GalaxyRoute
 import streetlight.web.SandboxRoute
 import streetlight.web.StarDashRoute
 import streetlight.web.TalentProfileRoute
@@ -57,6 +59,21 @@ private fun AppScope.activityContent(star: Star) {
                 logs.forEach { log ->
                     val label = log.recordEdit?.label ?: return@forEach
                     listingOf(label, log.recordEdit?.imageRef)
+                }
+            }
+        }
+        val dialog = dialog()
+        section("reviews") {
+            request({ api.readUserReviews() } ) { reviews ->
+                reviews.forEach { quorumReview ->
+                    val label = quorumReview.quorum.question.label
+                    textBlock(label).onClick {
+                        dialog.updateContent(label) {
+                            dialogCard {
+                                reviewContent(quorumReview)
+                            }
+                        }
+                    }
                 }
             }
         }

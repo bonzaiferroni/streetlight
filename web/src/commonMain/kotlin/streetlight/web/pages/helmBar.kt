@@ -19,7 +19,7 @@ fun FlowContent.helmBar() {
         card(cardMod) {
             setAnchorName(StarHelmKey.PositionAnchor)
             button(HelmBarKey.IconMod) {
-                setPopoverTarget(StarHelmKey.Id)
+                setPopoverTarget(StarHelmKey.PopoverId)
                 starBadge()
             }
         }
