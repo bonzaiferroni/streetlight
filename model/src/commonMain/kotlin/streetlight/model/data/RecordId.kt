@@ -25,6 +25,8 @@ inline fun <reified T> Uuid.toRecordId(): T = when (T::class) {
     EditLogId::class -> EditLogId(this) as T
     TaskId::class -> TaskId(this) as T
     QuorumId::class -> QuorumId(this) as T
+    PolicyId::class -> PolicyId(this) as T
+    FlagId::class -> FlagId(this) as T
     else -> error("invalid recordId type: ${T::class.simpleName}")
 }
 
