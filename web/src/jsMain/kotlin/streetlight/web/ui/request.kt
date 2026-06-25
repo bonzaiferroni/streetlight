@@ -6,6 +6,7 @@ import koala.dom.AppScope
 import koala.dom.RenderScope
 import koala.dom.TagScope
 import koala.dom.column
+import koala.dom.onView
 import koala.dom.replaceRender
 import kotlinx.html.dom.append
 
@@ -14,12 +15,13 @@ fun <T> AppScope.request(
     content: AppScope.(T) -> Unit
 ) {
     val element = column()
-
-    launchEffect {
-        requestData().handleResponse(toaster::toast) { data ->
-            element.append {
-                val scope = RenderScope(this, app, parentScope, element)
-                scope.content(data)
+    element.onView {
+        launchEffect {
+            requestData().handleResponse(toaster::toast) { data ->
+                element.append {
+                    val scope = RenderScope(this, app, parentScope, element)
+                    scope.content(data)
+                }
             }
         }
     }

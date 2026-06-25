@@ -1,6 +1,8 @@
 package streetlight.model.data
 
+import kampfire.model.Labeled
 import kampfire.model.Url
+import kampfire.utils.pascalToTitle
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 import kotlin.time.Instant
@@ -31,13 +33,16 @@ sealed interface RecordEdit {
     val imageRef: Url? get() = null
 }
 
-enum class RecordType {
+enum class RecordType: Labeled {
     Location,
     Event,
     Galaxy,
     Wiki,
     EditLog,
-    Quorum,
+    Quorum;
+
+    override val label = name.pascalToTitle()
+    override fun toString() = label
 }
 
 enum class EditType {

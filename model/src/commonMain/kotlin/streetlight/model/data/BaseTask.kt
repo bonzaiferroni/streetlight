@@ -1,5 +1,6 @@
 package streetlight.model.data
 
+import kampfire.model.Labeled
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 import kotlin.time.Instant
@@ -69,20 +70,25 @@ data class EditTask(
     val createdAt: Instant,
 ): StarTask {
     val editLogId get() = EditLogId(recordId)
+
 }
 
 @Serializable
-sealed interface TaskContent
+sealed interface TaskContent: Labeled
 
 @Serializable
 data class QuorumReviewContent(
     val quorum: Quorum,
     val task: QuorumTask,
     val editLog: EditLog
-): TaskContent
+): TaskContent {
+    override val label get() = quorum.question.label
+}
 
 @Serializable
 data class EditTaskContent(
     val task: EditTask,
     val editLog: EditLog,
-): TaskContent
+): TaskContent {
+    override val label get() = "edit a ${editLog.recordType}"
+}

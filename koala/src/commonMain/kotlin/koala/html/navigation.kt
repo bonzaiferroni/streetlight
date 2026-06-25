@@ -32,12 +32,12 @@ internal fun A.configureNavigation(
     setId(id)
     addModifiers(modify(ActionKey.Class, modifiers))
     href?.let { this.href = href }
-    block()
     flair?.let {
         span {
             +flair
         }
     }
+    block()
 }
 
 fun FlowContent.navigation(

@@ -3,6 +3,7 @@ package streetlight.model.data
 import kampfire.api.Markdown
 import kampfire.api.Slug
 import kampfire.api.Username
+import kampfire.api.toMarkdown
 import kampfire.model.GeoPoint
 import kampfire.model.Labeled
 import kampfire.model.ScaledImageArray
@@ -119,7 +120,7 @@ fun LocationParse.toEdit(
 ) = LocationEdit(
     locationId = locationId,
     name = name ?: "",
-    description = description,
+    description = description?.toMarkdown(),
     address = address,
 //    val postalCode: String? = null,
     city = city,

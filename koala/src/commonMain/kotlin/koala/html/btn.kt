@@ -25,7 +25,9 @@ fun FlowContent.btn(
         flair = flair,
     ) {
         block()
-        +text
+        span {
+            +text
+        }
     }
 }
 
@@ -46,7 +48,9 @@ fun FlowContent.btn(
             setStyle(Property.BackgroundUrl.to(it))
         }
         block()
-        +text
+        span {
+            +text
+        }
     }
 }
 
@@ -70,7 +74,9 @@ fun FlowContent.btn(
         id = id,
     ) {
         block()
-        +text
+        span {
+            +text
+        }
     }
 }
 

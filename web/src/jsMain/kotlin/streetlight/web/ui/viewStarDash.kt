@@ -6,11 +6,8 @@ import koala.dom.*
 import koala.html.btn
 import kotlinx.css.LinearDimension
 import kotlinx.css.fr
-import streetlight.model.data.EditTask
 import streetlight.model.data.EditTaskContent
-import streetlight.model.data.LocationEdit
 import streetlight.model.data.QuorumReviewContent
-import streetlight.model.data.QuorumTask
 import streetlight.model.data.Star
 import streetlight.web.EditStarRoute
 import streetlight.web.EditTalentRoute
@@ -45,7 +42,7 @@ fun AppScope.viewStarDashRoute() {
 private fun AppScope.activityContent(star: Star) {
     grid {
         section("galaxies") {
-            request({ api.readGalaxies() }) { galaxies ->
+            request(api::readGalaxies) { galaxies ->
                 galaxies.forEach { galaxy ->
                     grid(columnsOf(1.fr, LinearDimension.auto)) {
                         navigation(galaxy.toRoute()) {
@@ -57,7 +54,7 @@ private fun AppScope.activityContent(star: Star) {
             }
         }
         section("edits") {
-            request({ api.readPendingEdits() }) { logs ->
+            request(api::readPendingEdits) { logs ->
                 logs.forEach { log ->
                     val label = log.recordEdit?.label ?: return@forEach
                     listingOf(label, log.recordEdit?.imageRef)
@@ -65,29 +62,13 @@ private fun AppScope.activityContent(star: Star) {
             }
         }
         val dialog = dialog()
-        section("reviews") {
-            request({ api.readUserTasks() } ) { tasks ->
+        section("requests") {
+            request(api::readUserTasks) { tasks ->
                 tasks.forEach { task ->
-                    when (task) {
-                        is EditTaskContent -> {
-                            val edit = task.editLog.recordEdit as? LocationEdit ?: return@forEach
-                            textBlock(edit.label).onClick {
-                                dialog.updateContent(edit.label) {
-                                    val editor = app.getLocationEditor(edit, parentScope)
-                                    dialogCard {
-                                        locationEditFormBody(editor)
-                                    }
-                                }
-                            }
-                        }
-                        is QuorumReviewContent -> {
-                            val label = task.quorum.question.label
-                            textBlock(label).onClick {
-                                dialog.updateContent(label) {
-                                    dialogCard {
-                                        editReviewContent(task)
-                                    }
-                                }
+                    textBlock(task.label).onClick {
+                        dialog.updateContent(task.label) {
+                            dialogCard {
+                                taskContent(task)
                             }
                         }
                     }

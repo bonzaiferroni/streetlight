@@ -7,6 +7,8 @@ import kotlin.jvm.JvmInline
 @Serializable
 value class Markdown(val value: String) {
     override fun toString() = value
+
+    val length get() = value.length
 }
 
 fun String.toMarkdown() = Markdown(this)
