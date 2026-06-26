@@ -70,7 +70,6 @@ data class EditTask(
     val createdAt: Instant,
 ): StarTask {
     val editLogId get() = EditLogId(recordId)
-
 }
 
 @Serializable

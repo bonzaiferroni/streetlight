@@ -20,12 +20,15 @@ fun AppScope.taskContent(task: TaskContent) {
 
 fun AppScope.editTaskContent(task: EditTaskContent) {
     val edit = task.editLog.recordEdit as? LocationEdit ?: return
-    console.log(edit.locationId)
     val editor = app.getLocationEditor(edit, parentScope)
     column {
         textBlock("Check to make sure this information is complete.")
         locationEditFormBody(editor)
-        formSubmit("done", editor::submit)
+        formSubmit("done", {
+            launchEffect {
+
+            }
+        })
     }
 }
 

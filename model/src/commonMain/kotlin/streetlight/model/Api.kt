@@ -170,5 +170,6 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
     object Tasks: ApiNode(this) {
         object ReadStarTasks: GetEndpoint<List<TaskContent>>(this)
         object ReadStarTask: GetByIdEndpoint<TaskId, TaskContent>(this)
+        object CompleteTask: PostEndpoint<TaskCompletion, Boolean>(this)
     }
 }

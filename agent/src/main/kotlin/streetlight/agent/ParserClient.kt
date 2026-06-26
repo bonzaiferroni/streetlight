@@ -15,9 +15,9 @@ import kampfire.utils.takeEllipsis
 import kotlinx.io.files.Path
 
 // td: refactor, this is a hot mess
-class ParserService(env: Environment) {
+class ParserClient(env: Environment) {
     val executor = simpleGoogleAIExecutor(env.read("GEMINI_KEY_A"))
-    val console = globalConsole.getHandle(ParserService::class)
+    val console = globalConsole.getHandle(ParserClient::class)
     val cache = mutableMapOf<Int, ParserContent>()
     val trimmer = HtmlTrimmer()
 

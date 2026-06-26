@@ -68,6 +68,8 @@ data class LocationEdit(
 //            }
         }.takeIf { it.isNotEmpty() }
     }
+
+    val needsReview get() = imageRef == null || website == null || description == null || description.length < 100
 }
 
 object LocationProperty {
