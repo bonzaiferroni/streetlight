@@ -1,6 +1,7 @@
 package streetlight.model.data
 
 import kampfire.api.Markdown
+import kampfire.model.Labeled
 import kampfire.model.Url
 import kampfire.model.toValidityCheck
 import kotlinx.datetime.LocalDate

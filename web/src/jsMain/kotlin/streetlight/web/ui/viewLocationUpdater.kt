@@ -126,7 +126,7 @@ private fun AppScope.viewHistory(content: LocationUpdaterContent) {
                 }
                 edit?.let {
                     button(onClick = {
-                        dialog.updateContent(timeDescription) {
+                        dialog.updateContent(timeDescription, true) {
                             dialogCard {
                                 row {
                                     spacer(modify(Flex1))

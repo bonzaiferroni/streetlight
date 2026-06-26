@@ -12,7 +12,7 @@ import kotlinx.serialization.encoding.decodeStructure
 import kotlinx.serialization.encoding.encodeStructure
 
 // must use ApiResponseSerializer because of generic argument
-sealed interface ApiResponse <T> {
+sealed interface Response <T> {
     val message: String?
     val data: T?
 }
@@ -21,26 +21,26 @@ sealed interface ApiResponse <T> {
 data class Ok<T>(
     override val data: T,
     override val message: String? = null
-): ApiResponse<T>
+): Response<T>
 
 // the purpose of this class is to communicate the issue to the user
 @Serializable
 data class Problem<T>(
     override val message: String,
-): ApiResponse<T> {
+): Response<T> {
     override val data: T? get() = null
 }
 
-fun <T> responseOf(data: T?): ApiResponse<T>? = when (data) {
+fun <T> responseOf(data: T?): Response<T>? = when (data) {
     null -> null
     else -> Ok(data)
 }
 
 fun <T> T?.toResponse() = responseOf(this)
 
-class ApiResponseSerializer<T>(
+class ResponseSerializer<T>(
     private val dataSerializer: KSerializer<T>
-) : KSerializer<ApiResponse<T>> {
+) : KSerializer<Response<T>> {
 
     @Suppress("UNCHECKED_CAST")
     override val descriptor: SerialDescriptor =
@@ -49,14 +49,14 @@ class ApiResponseSerializer<T>(
             element("data", dataSerializer.descriptor, isOptional = true)
         }
 
-    override fun serialize(encoder: Encoder, value: ApiResponse<T>) {
+    override fun serialize(encoder: Encoder, value: Response<T>) {
         encoder.encodeStructure(descriptor) {
             value.message?.let { encodeStringElement(descriptor, 0, it) }
             value.data?.let { encodeSerializableElement(descriptor, 1, dataSerializer, it) }
         }
     }
 
-    override fun deserialize(decoder: Decoder): ApiResponse<T> {
+    override fun deserialize(decoder: Decoder): Response<T> {
         var message: String? = null
         var data: T? = null
 

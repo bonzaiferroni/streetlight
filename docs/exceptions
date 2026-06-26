@@ -22,3 +22,14 @@ Object { stack: "", … }
 cause: undefined
 message: "couldn't find galaxy-map-panel"
 name: "Ts"
+
+
+ParserCl JsonDecodingException: Unexpected JSON token at offset 112: Expected quotation mark '"', but had ':' instead at path: $
+JSON input: .....ime": "18:30",
+  "url": "https://swallowhillmusic.org/events.....
+         unable to decode structured llm response:
+{
+  "name": "Grace Potter with Emily Brimlow at Denver Botanic Gardens",
+  "startTime": "18:30",
+  "url": "https://swallowhillmusic.org/events/gracepotterwithemilybrimlow/sandbox.html?_gl=1*10g089l*_ga*MTE1NjY0MDU0LjE3MTg3MjQzNzY.*_ga_S036720D23*MTcxODcyNDM3Ni4xLjEuMTcxODcyNDQxMC4wLjAuMA..#calendar.html?_gl=1*10g089l*_ga*MTE1NjY0MDU0LjE3MTg3MjQzNzY.*_ga_S036720D23*MTcxODcyNDM3Ni4xLjEuMTcxODcyNDQxM...
+

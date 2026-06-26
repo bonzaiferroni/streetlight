@@ -8,7 +8,7 @@ import ai.koog.prompt.params.LLMParams
 import com.fleeksoft.ksoup.nodes.Document
 import kabinet.console.globalConsole
 import kabinet.utils.Environment
-import kampfire.model.ApiResponse
+import kampfire.model.Response
 import kampfire.model.Ok
 import kampfire.model.Problem
 import kampfire.utils.takeEllipsis
@@ -21,7 +21,7 @@ class ParserClient(env: Environment) {
     val cache = mutableMapOf<Int, ParserContent>()
     val trimmer = HtmlTrimmer()
 
-    suspend inline fun <reified T: Any> readHtml(url: String, doc: Document, instructions: String): ApiResponse<T> {
+    suspend inline fun <reified T: Any> readHtml(url: String, doc: Document, instructions: String): Response<T> {
         val response = withCache(doc.hashCode()) {
             readHtmlContent<T>(url, doc, instructions)
         }
@@ -31,7 +31,7 @@ class ParserClient(env: Environment) {
         }
     }
 
-    inline fun withCache(cacheKey: Int, block: () -> ApiResponse<ParserContent>): ApiResponse<ParserContent> {
+    inline fun withCache(cacheKey: Int, block: () -> Response<ParserContent>): Response<ParserContent> {
         val cachedContent = cache[cacheKey]
         if (cachedContent != null) return Ok(cachedContent)
 
@@ -52,7 +52,7 @@ class ParserClient(env: Environment) {
         url: String,
         doc: Document,
         instructions: String
-    ): ApiResponse<ParserContent> {
+    ): Response<ParserContent> {
         val content = trimmer.trimHtml(doc)
 
         val prompt = prompt(

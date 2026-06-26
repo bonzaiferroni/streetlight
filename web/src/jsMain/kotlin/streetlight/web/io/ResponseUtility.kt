@@ -2,8 +2,8 @@
 
 package streetlight.web.io
 
-import kampfire.model.ApiResponse
-import kampfire.model.ApiResponseSerializer
+import kampfire.model.Response
+import kampfire.model.ResponseSerializer
 import kampfire.model.Ok
 import kampfire.model.Problem
 import koala.utils.jsonConfig
@@ -13,25 +13,25 @@ import kotlinx.serialization.cbor.Cbor
 import kotlinx.serialization.decodeFromByteArray
 import kotlinx.serialization.serializer
 import org.khronos.webgl.Int8Array
-import org.w3c.fetch.Response
+import org.w3c.fetch.Response as FetchResponse
 import streetlight.model.data.RecordId
 import streetlight.model.data.toRecordId
 
-suspend inline fun <reified Returned> Response.tryDecode(encoding: EncodingType?): Returned? {
+suspend inline fun <reified Returned> FetchResponse.tryDecode(encoding: EncodingType?): Returned? {
     return when (encoding) {
         EncodingType.Cbor -> tryDecodeBytes()
         EncodingType.Json, null -> tryDecodeText()
     }
 }
 
-suspend inline fun <reified Returned> Response.tryDecodeBytes(): Returned? {
+suspend inline fun <reified Returned> FetchResponse.tryDecodeBytes(): Returned? {
     if (status.toInt() == 204 || !ok) return null
     val buffer = arrayBuffer().await()
     val bytes = Int8Array(buffer).unsafeCast<ByteArray>()
     return Cbor.decodeFromByteArray<Returned>(bytes)
 }
 
-suspend inline fun <reified Returned> Response.tryDecodeTextResponse(): ApiResponse<Returned>? {
+suspend inline fun <reified Returned> FetchResponse.tryDecodeTextResponse(): Response<Returned>? {
     val status = status.toInt()
     return when (status) {
         404 -> Problem("Not found")
@@ -43,7 +43,7 @@ suspend inline fun <reified Returned> Response.tryDecodeTextResponse(): ApiRespo
     }
 }
 
-suspend inline fun <reified Returned> Response.tryDecodeText(): Returned? {
+suspend inline fun <reified Returned> FetchResponse.tryDecodeText(): Returned? {
     if (!ok) {
         console.log("request failed: $status")
         return null
@@ -71,14 +71,14 @@ suspend inline fun <reified Returned> Response.tryDecodeText(): Returned? {
     }
 }
 
-suspend inline fun <reified T> Response.tryDecodeBytesResponse(): ApiResponse<T>? {
+suspend inline fun <reified T> FetchResponse.tryDecodeBytesResponse(): Response<T>? {
     return when (status.toInt()) {
         200 -> {
             val buffer = arrayBuffer().await()
             val bytes = Int8Array(buffer).unsafeCast<ByteArray>()
             try {
                 defaultCbor.decodeFromByteArray(
-                    ApiResponseSerializer(serializer<T>()),
+                    ResponseSerializer(serializer<T>()),
                     bytes
                 )
             } catch (e: Exception) {

@@ -1,7 +1,6 @@
 package koala.model
 
-import kampfire.model.ApiResponse
-import kampfire.model.getDataOrNull
+import kampfire.model.Response
 import kampfire.model.handleResponse
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -13,7 +12,7 @@ class ItemCache<Item, ItemId>(
     private val scope: CoroutineScope,
     private val onError: (String) -> Unit,
     private val provideId: (Item) -> ItemId,
-    private val provideInitialItems: suspend () -> ApiResponse<List<Item>>?
+    private val provideInitialItems: suspend () -> Response<List<Item>>?
 ){
     private val _flow = MutableSharedFlow<List<Item>>(replay = 8)
     private val items = mutableListOf<Item>()

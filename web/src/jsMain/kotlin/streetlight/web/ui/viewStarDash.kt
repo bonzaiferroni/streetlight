@@ -66,7 +66,7 @@ private fun AppScope.activityContent(star: Star) {
             request(api::readUserTasks) { tasks ->
                 tasks.forEach { task ->
                     textBlock(task.label).onClick {
-                        dialog.updateContent(task.label) {
+                        dialog.updateContent(task.label, true) {
                             dialogCard {
                                 taskContent(task)
                             }

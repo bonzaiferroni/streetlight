@@ -1,6 +1,6 @@
 package streetlight.web.model
 
-import kampfire.model.ApiResponse
+import kampfire.model.Response
 import kampfire.model.handleResponse
 import koala.dom.setStorageOf
 import koala.model.mapDistinct
@@ -21,9 +21,9 @@ class LightCache<Id, Item>(
     val idToUuid: (Id) -> Uuid,
     val uuidToId: (Uuid) -> Id,
     val itemToId: (Item) -> Id,
-    private val lightEdit: suspend (EditLightRequest) -> ApiResponse<Boolean>?,
-    private val readRemoteLights: suspend () -> ApiResponse<List<Id>>?,
-    private val readRemoteItems: suspend (List<Id>) -> ApiResponse<List<Item>>?,
+    private val lightEdit: suspend (EditLightRequest) -> Response<Boolean>?,
+    private val readRemoteLights: suspend () -> Response<List<Id>>?,
+    private val readRemoteItems: suspend (List<Id>) -> Response<List<Item>>?,
     private val onError: (String) -> Unit,
     private val scope: CoroutineScope,
     private val gate: StarSession,

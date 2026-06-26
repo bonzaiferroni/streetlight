@@ -10,7 +10,7 @@ import kampfire.api.PathBuilder
 import kampfire.api.PostEndpoint
 import kampfire.api.QueryEndpoint
 import kampfire.api.TableId
-import kampfire.model.ApiResponse
+import kampfire.model.Response
 import kampfire.model.Url
 import koala.external.FeedMessage
 import kotlinx.browser.window
@@ -22,7 +22,7 @@ import org.w3c.dom.EventSource
 import org.w3c.dom.WebSocket
 import org.w3c.fetch.RequestCredentials
 import org.w3c.fetch.RequestInit
-import org.w3c.fetch.Response
+import org.w3c.fetch.Response as FetchResponse
 import org.w3c.fetch.SAME_ORIGIN
 import org.w3c.files.Blob
 import streetlight.web.model.AuthClient
@@ -68,7 +68,7 @@ class FetchClient(
     suspend inline fun <reified Returned, Endpoint : GetEndpoint<Returned>> getApi(
         endpoint: Endpoint,
         noinline block: (PathBuilder.(Endpoint) -> Unit)? = null,
-    ): ApiResponse<Returned>? = authRequest(
+    ): Response<Returned>? = authRequest(
         method = "GET",
         path = resolvePath(endpoint, block)
     ) { it.tryDecodeBytesResponse() }
@@ -76,12 +76,12 @@ class FetchClient(
     suspend inline fun <Id, reified Returned> getApi(
         endpoint: GetByIdEndpoint<Id, Returned>,
         id: Id,
-    ): ApiResponse<Returned>? = authRequest("GET", "${endpoint.path}/$id") { it.tryDecodeBytesResponse() }
+    ): Response<Returned>? = authRequest("GET", "${endpoint.path}/$id") { it.tryDecodeBytesResponse() }
 
     suspend inline fun <reified Sent, reified Returned> getApi(
         endpoint: QueryEndpoint<Sent, Returned>,
         query: String?
-    ): ApiResponse<Returned>? {
+    ): Response<Returned>? {
         val url = if (!query.isNullOrEmpty()) "${endpoint.path}?$query" else endpoint.path
         return authRequest("GET", url) { it.tryDecodeBytesResponse() }
     }
@@ -89,11 +89,11 @@ class FetchClient(
     suspend inline fun <reified Sent, reified Returned> postApi(
         endpoint: PostEndpoint<Sent, Returned>,
         body: Sent,
-    ): ApiResponse<Returned>? =
+    ): Response<Returned>? =
         authRequest("POST", endpoint.path, Json.encodeToString(body)) { it.tryDecodeBytesResponse() }
 
 
-    suspend fun request(endpoint: Endpoint<*, *>): Response {
+    suspend fun request(endpoint: Endpoint<*, *>): FetchResponse {
         return window.fetch(
             endpoint.path,
             RequestInit(
@@ -166,9 +166,9 @@ class FetchClient(
         body: dynamic? = null,
         contentType: String = "application/json",
         acceptEncoding: EncodingType? = null,
-        handleResponse: suspend (Response) -> T
+        handleResponse: suspend (FetchResponse) -> T
     ): T? {
-        val fetchWithJwt: suspend () -> Response = {
+        val fetchWithJwt: suspend () -> FetchResponse = {
             val headers = json(
                 "Content-Type" to contentType,
             )
@@ -195,7 +195,7 @@ class FetchClient(
         return handleResponse(response)
     }
 
-    suspend fun uploadBlob(postUrl: String, blobUrl: Url): ApiResponse<Url>? {
+    suspend fun uploadBlob(postUrl: String, blobUrl: Url): Response<Url>? {
         val response = window.fetch(blobUrl.value).await()
         val blob: Blob = response.blob().await()
         return authRequest(

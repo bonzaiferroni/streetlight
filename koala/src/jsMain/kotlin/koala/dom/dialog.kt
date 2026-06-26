@@ -39,7 +39,7 @@ fun AppScope.dialog(
 
     return DialogElement(element, onClose, app, parentScope).also { dialog ->
         content?.let {
-            dialog.updateContent(title, content)
+            dialog.updateContent(title, false, content)
         }
 
         element.addEventListener("click", { event ->
@@ -94,6 +94,7 @@ class DialogElement(
 
     fun updateContent(
         title: String?,
+        open: Boolean,
         content: AppScope.(DialogElement) -> Unit,
     ) {
         element.replaceRender(app, parentScope) {
@@ -101,7 +102,7 @@ class DialogElement(
                 content(this@DialogElement)
             }
         }
-        element.open()
+        if (open) element.open()
     }
 }
 
