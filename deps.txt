@@ -1,0 +1,11 @@
+Type-safe project accessors is an incubating feature.
+
+> Configure project :webscripts
+w: [33m[1m⚠️ `js()` Kotlin Target Already Declared[0m[0m
+Declaring multiple Kotlin Targets of the same type is not supported.
+[32m[1mSolution:[0m[0m
+[32m[3mPlease remove the duplicate target declaration.[0m[0m
+[36mSee [0m[34mhttps://kotl.in/declaring-multiple-targets[0m[36m for more details.[0m
+
+
+[Incubating] Problems report is available at: file:///home/starfox/projects/streetlight/build/reports/problems/problems-report.html

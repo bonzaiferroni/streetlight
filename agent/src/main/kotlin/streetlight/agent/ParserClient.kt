@@ -6,6 +6,7 @@ import ai.koog.prompt.executor.clients.google.GoogleModels
 import ai.koog.prompt.executor.llms.all.simpleGoogleAIExecutor
 import ai.koog.prompt.params.LLMParams
 import com.fleeksoft.ksoup.nodes.Document
+import io.github.oshai.kotlinlogging.KotlinLogging
 import kabinet.console.globalConsole
 import kabinet.utils.Environment
 import kampfire.model.Response
@@ -17,7 +18,7 @@ import kotlinx.io.files.Path
 // td: refactor, this is a hot mess
 class ParserClient(env: Environment) {
     val executor = simpleGoogleAIExecutor(env.read("GEMINI_KEY_A"))
-    val console = globalConsole.getHandle(ParserClient::class)
+    val console = KotlinLogging.logger("dao")
     val cache = mutableMapOf<Int, ParserContent>()
     val trimmer = HtmlTrimmer()
 
@@ -70,7 +71,7 @@ class ParserClient(env: Environment) {
         val json = try {
             executor.execute(prompt, GoogleModels.Gemini2_5Flash).first().content
         } catch (e: LLMClientException) {
-            console.log(e)
+            console.error { e }
             if (e.toString().contains("\"status\": \"UNAVAILABLE\"")) {
                 return Problem("Language model is busy.")
             } else null
@@ -129,8 +130,8 @@ class ParserClient(env: Environment) {
     inline fun <reified T> tryDecode(text: String): T? = try {
         decodeLenient(text)
     } catch (e: Exception) {
-        console.logThrowable(e)
-        console.logError("unable to decode structured llm response:\n${text.takeEllipsis(400)}")
+        console.error { e }
+        console.error { "unable to decode structured llm response:\n${text.takeEllipsis(400)}" }
         null
     }
 }

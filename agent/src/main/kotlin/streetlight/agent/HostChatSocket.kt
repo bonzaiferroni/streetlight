@@ -12,7 +12,7 @@ import kotlinx.serialization.json.Json
 import streetlight.model.Api
 import streetlight.model.data.ChatMessage
 
-private val console = globalConsole.getHandle(HostChatSocket::class)
+// private val console = globalConsole.getHandle(HostChatSocket::class)
 
 class HostChatSocket {
     private val _messageFlow = MutableSharedFlow<ChatMessage>(
@@ -25,7 +25,7 @@ class HostChatSocket {
     )
 
     suspend fun connect() {
-        console.log("connecting")
+        // console.log("connecting")
         client.webSocket(host = "localhost", port = 8080, path = Api.Chat.path) {
             val incomingJob = launch {
                 for (frame in incoming) {

@@ -5,7 +5,7 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlin.time.Clock
 
-private val console = globalConsole.getHandle(ChatAgentConnection::class)
+// private val console = globalConsole.getHandle(ChatAgentConnection::class)
 
 class ChatAgentConnection(
     apiKey: String,
