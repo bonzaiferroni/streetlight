@@ -8,11 +8,13 @@ import kampfire.model.toValidityCheck
 import kotlinx.serialization.Serializable
 import streetlight.model.external.OSMLocation
 import streetlight.model.external.toGeoPoint
+import streetlight.model.external.toHoursSchedule
 
 @Serializable
 data class LocationEdit(
     val locationId: LocationId? = null,
     val cityId: CityId? = null,
+    val timezoneId: String? = null,
     val name: String? = null,
     val city: String? = null,
     val description: Markdown? = null,
@@ -26,10 +28,10 @@ data class LocationEdit(
     val mapCategory: String? = null,
     val mapType: String? = null,
     val resources: Set<ResourceType>? = null,
+    val hours: HoursSchedule? = null,
     val website: String? = null,
     val eventsUrl: String? = null,
-    val aboutUrl: String? = null,
-    val menuUrl: String? = null,
+    val extraLinks: List<ExtraLink>? = null,
     override val imageRef: Url? = null,
 ): Labeled, RecordEdit {
     override val recordType get() = RecordType.Location
@@ -60,9 +62,6 @@ data class LocationEdit(
             eventsUrl?.let {
                 add(ExtraLink("calendar", it))
             }
-            menuUrl?.let {
-                add(ExtraLink("menu", it))
-            }
 //            extraLinks?.let {
 //                addAll(it)
 //            }
@@ -81,6 +80,7 @@ object LocationProperty {
 fun LocationEdit.mergeLeft(edit: LocationEdit?) = edit?.let {
     LocationEdit(
         locationId = locationId ?: edit.locationId,
+        timezoneId = timezoneId ?: edit.timezoneId,
         name = name ?: edit.name,
         city = city ?: edit.city,
         state = state ?: edit.state,
@@ -94,10 +94,10 @@ fun LocationEdit.mergeLeft(edit: LocationEdit?) = edit?.let {
         mapCategory = mapCategory ?: edit.mapCategory,
         mapType = mapType ?: edit.mapType,
         resources = resources ?: edit.resources,
+        hours = hours ?: edit.hours,
         website = website ?: edit.website,
         eventsUrl = eventsUrl ?: edit.eventsUrl,
-        aboutUrl = aboutUrl ?: edit.aboutUrl,
-        menuUrl = menuUrl ?: edit.menuUrl,
+        extraLinks = extraLinks ?: edit.extraLinks,
         imageRef = imageRef ?: edit.imageRef?.takeIf { it.value.isNotEmpty() },
     )
 } ?: this
@@ -112,6 +112,7 @@ fun OSMLocation.toEdit() = LocationEdit(
             "$number $road"
         } ?: road
     },
+    hours = toHoursSchedule(),
     city = address.city,
     state = address.state,
     country = address.country,

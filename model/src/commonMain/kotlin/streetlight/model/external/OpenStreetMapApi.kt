@@ -5,6 +5,7 @@ import kampfire.model.GeoPoint
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import streetlight.model.data.PlaceProto
+import streetlight.model.utils.osmHoursToSchedule
 
 @Serializable
 data class OSMLocation(
@@ -119,6 +120,8 @@ fun OSMLocation.toOSMCity() = OSMCity(
     geoPoint = toGeoPoint(),
     geoBounds = toGeoBounds(),
 )
+
+fun OSMLocation.toHoursSchedule() = extraTags?.opening_hours?.let { osmHoursToSchedule(it) }
 
 fun OSMLocation.toOSMCityOrNull() = runCatching {
     toOSMCity()

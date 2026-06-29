@@ -19,6 +19,7 @@ data class Location(
     val locationId: LocationId,
     val cityId: CityId?,
     val mapId: MapId?,
+    val timezoneId: String,
     val slug: Slug,
     val scout: Username?,
     val host: Username?,
@@ -32,11 +33,10 @@ data class Location(
     val mapCategory: String?,
     val mapType: String?,
     val resources: Set<ResourceType>,
+    val hours: HoursSchedule?,
     val website: String?,
     val lightCount: Int?,
     val eventsUrl: String?,
-    val menuUrl: String?,
-    val aboutUrl: String?,
     val imageRef: Url?,
     val images: ScaledImageArray?,
     val extraLinks: List<ExtraLink>?,
@@ -62,9 +62,6 @@ data class Location(
             }
             eventsUrl?.let {
                 add(ExtraLink("calendar", it))
-            }
-            menuUrl?.let {
-                add(ExtraLink("menu", it))
             }
             extraLinks?.let {
                 addAll(it)
@@ -95,15 +92,22 @@ data class LocationAddress(
 
 fun Location.toEdit() = LocationEdit(
     locationId = locationId,
+    mapId = mapId,
+    timezoneId = timezoneId,
     name = name,
     description = description,
     address = address,
     city = city,
     state = state,
     geoPoint = geoPoint,
+    mapRank = mapRank, // td: track rank some other way
+    mapCategory = mapCategory,
+    mapType = mapType,
     resources = resources,
+    hours = hours,
     website = website,
     eventsUrl = eventsUrl,
+    extraLinks = extraLinks,
     imageRef = imageRef,
 )
 
@@ -128,8 +132,10 @@ fun LocationParse.toEdit(
 //    val country: String? = null,
     website = url,
     eventsUrl = eventsUrl,
-    menuUrl = menuUrl,
-    aboutUrl = aboutUrl,
+    extraLinks = buildList {
+        menuUrl?.let { add(ExtraLink("menu", it)) }
+        aboutUrl?.let { add(ExtraLink("about", it))}
+    },
     imageRef = imageUrl?.toUrl(),
 )
 
