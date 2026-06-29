@@ -74,13 +74,18 @@ fun FlowContent.feedPost(
         column(modify(GridArea.Body)) {
 
             // headings
-            column(modify(Gap0, Flex1, MarginTop1)) {
+            div(modify(Gap0, Flex1)) {
+                // details
+                if (details != null) {
+                    cellBlock(modify(FeedPost.Details, FlexWrap), details)
+                }
+
                 navigationIfNotNull(postRoute, modify(AlignSelfStart)) {
-                    heading3(heading.takeEllipsis(60), modify(LineHeight115, Bold, Shrinkable))
+                    heading4(heading.takeEllipsis(60), modify(LineHeight115, Shrinkable))
                 }
                 subHeading?.let {
                     navigationIfNotNull(subRoute, modify(AlignSelfStart)) {
-                        textBlock(subHeading, modify(OpacityHigh))
+                        textBlock(subHeading, modify(OpacityHigh, SmallText))
                     }
                 }
                 spacer(modify(Height2Px, InkGradientBg, MarginTop2Px))
@@ -133,11 +138,6 @@ fun FlowContent.feedPost(
                 }
             }
         }
-
-        // details
-        if (details != null) {
-            cellBlock(modify(GridArea.Details, FlexWrap), details)
-        }
     }
 }
 
@@ -147,6 +147,7 @@ object FeedPost {
     val GridCard = Class("grid-card")
     val ToggleExpand = Class("expand-post")
     val HideLight = Class("hide-light")
+    val Details = Class("details")
 
     val Class = Class("post-grid")
     val Controls = Class("controls")
@@ -159,7 +160,6 @@ object FeedPost {
 object GridArea {
     val Body = Class("body")
     val Image = Class("image")
-    val Details = Class("details")
     val Light = Class("boost")
     val Content = Class("content")
 }
@@ -178,45 +178,48 @@ $Class {
     > ${GridArea.Light}   { grid-area: boost; }
     > ${GridArea.Image}   { grid-area: image; }
     > ${GridArea.Body}    { grid-area: body; }
-    > ${GridArea.Details} { grid-area: details; }
     > ${GridArea.Content} { grid-area: content; overflow: hidden; }   
 }
 
 $Class {
-    grid-template-columns: 2.5rem 6rem 1fr 8rem;
+    grid-template-columns: 2rem 5rem 1fr;
     grid-template-rows: auto 0fr;
     grid-template-areas: 
-        "boost image body details"
-        "content content content content";
+        "boost image body"
+        "content content content";
     
     > ${GridArea.Image} {
         box-shadow: var(--moon-shadow);
-        height: 6rem;
+        height: 5rem;
     }
     
-    > ${GridArea.Image}, > ${GridArea.Details} {
+    > ${GridArea.Image}, $Details {
         border-radius: var(--unit-spacing);
         overflow: clip;
     }
     
-    > ${GridArea.Details} {
-        align-self: start;
+    &$HideLight {
+        grid-template-columns: 0 5rem 1fr;
     }
     
-    &$HideLight {
-        grid-template-columns: 0 6rem 1fr 8rem;
+    $Details {
+        float: right;
+        width: 8rem;
+        margin-left: 1rem;
     }
     
     @container (min-width: ${MinifiedWidth}px) {
-        grid-template-columns: 2.5rem 6rem 1fr 16rem;
+        $Details {
+            width: 16rem;
+        }
         
         &$HideLight {
-            grid-template-columns: 0 6rem 1fr 16rem;
+            grid-template-columns: 0 5rem 1fr;
         }
     }
     
     @container (max-width: ${MinifiedWidth}px) {
-        > ${GridArea.Details} {
+        $Details {
             > :not(:first-child):not(:last-child) {
                 display: none;
             }
