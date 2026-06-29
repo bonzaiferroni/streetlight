@@ -9,6 +9,9 @@ import kotlinx.datetime.LocalTime
 import kotlinx.html.INPUT
 import kotlinx.html.InputType
 import kotlinx.html.js.input
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.minutes
+import kotlin.toString
 
 fun AppScope.datetimeInput() {
     input {
@@ -55,11 +58,13 @@ fun AppScope.timeInput(
     flow: Flow<LocalTime?>,
     onValueChanged: (LocalTime) -> Unit,
     modifiers: ModifierSet? = null,
+    step: Duration = 5.minutes,
     block: INPUT.() -> Unit = {}
 ) {
     val element = input {
         addModifiers(modifiers)
         type = InputType.time
+        this.step = step.inWholeSeconds.toString()
         block()
     }
 
@@ -69,7 +74,6 @@ fun AppScope.timeInput(
         val v = element.value
         if (v.isBlank()) return@addEventListener
 
-        console.log(v)
         val parsed = LocalTime.parse(v)
         if (parsed != last) {
             last = parsed

@@ -5,6 +5,7 @@ import kampfire.model.GeoPoint
 import kampfire.model.Labeled
 import kampfire.model.Url
 import kampfire.model.toValidityCheck
+import kampfire.utils.snakeToTitleCase
 import kotlinx.serialization.Serializable
 import streetlight.model.external.OSMLocation
 import streetlight.model.external.toGeoPoint
@@ -119,7 +120,7 @@ fun OSMLocation.toEdit() = LocationEdit(
     geoPoint = toGeoPoint(),
     mapRank = importance?.toFloat() ?: 0f,
     mapCategory = category,
-    mapType = type,
+    mapType = type.snakeToTitleCase(),
     website = extraTags?.website
 )
 

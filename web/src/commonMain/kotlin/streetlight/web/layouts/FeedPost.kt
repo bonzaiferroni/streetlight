@@ -24,7 +24,7 @@ fun FlowContent.feedPost(
     username: Username?,
     galaxyName: String?,
     galaxySlug: Slug?,
-    heading: String?,
+    heading: String,
     subHeading: String?,
     postRoute: AppRoute?,
     subRoute: AppRoute?,
@@ -76,7 +76,7 @@ fun FlowContent.feedPost(
             // headings
             column(modify(Gap0, Flex1, MarginTop1)) {
                 navigationIfNotNull(postRoute, modify(AlignSelfStart)) {
-                    heading3(heading, modify(LineHeight115, Bold))
+                    heading3(heading.takeEllipsis(60), modify(LineHeight115, Bold, Shrinkable))
                 }
                 subHeading?.let {
                     navigationIfNotNull(subRoute, modify(AlignSelfStart)) {

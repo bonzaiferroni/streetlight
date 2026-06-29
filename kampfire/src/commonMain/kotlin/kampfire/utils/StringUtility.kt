@@ -17,6 +17,7 @@ fun toFilenameFormat(input: String) = input
     .replace(Regex("[^A-Za-z0-9]"), "_")
 
 val pascalRegex = Regex("([a-z])([A-Z])")
-fun String.pascalToKebabCase(): String = replace(pascalRegex, "$1-$2").lowercase()
 fun String.pascalToSnakeCase(): String = replace(pascalRegex, "$1_$2").lowercase()
+fun String.pascalToKebabCase(): String = replace(pascalRegex, "$1-$2").lowercase()
 fun String.pascalToTitle(): String = replace(pascalRegex, "$1 $2")
+fun String.snakeToTitleCase(): String = split("_").joinToString(" ") { it.replaceFirstChar(Char::uppercaseChar) }
