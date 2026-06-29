@@ -13,6 +13,7 @@ chevron.svg
 clock.svg
 crosshairs.svg
 dashboard.svg
+directions.svg
 dots-vertical.svg
 dots.svg
 edit.svg
@@ -28,7 +29,8 @@ light.svg
 link.svg
 loader-small.svg
 magic.svg
-map-pin.svg
+map-pin-outline.svg
+map-with-pin.svg
 menu.svg
 message-minus.svg
 message-plus.svg

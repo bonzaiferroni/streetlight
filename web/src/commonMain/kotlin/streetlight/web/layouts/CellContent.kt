@@ -179,8 +179,11 @@ fun FlowContent.moreCell() {
 
 fun locationCells(location: Location): FlowContent.() -> Unit = {
     // starCell(location.username)
+    val mapType = location.mapType ?: "Location"
+    cell(SvgFile.MapPinOutline, mapType)
     combo {
-        exampleLightCell()
+        starLightCell(location)
+        moreCell()
     }
 }
 

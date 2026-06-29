@@ -4,11 +4,10 @@ import koala.css.*
 import koala.html.*
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
-import streetlight.model.data.Location
 import streetlight.model.data.LocationContent
 import streetlight.web.UpdateLocationRoute
 import streetlight.web.layouts.layoutPosts
-import streetlight.web.layouts.postCardOf
+import streetlight.web.layouts.feedPostOf
 import streetlight.web.pages.appFooter
 import streetlight.web.ui.headerOf
 
@@ -26,7 +25,7 @@ fun FlowContent.locationShell(
                 tab("events") {
                     layoutPosts {
                         content.events.forEach {
-                            postCardOf(it)
+                            feedPostOf(it)
                         }
                     }
                 }

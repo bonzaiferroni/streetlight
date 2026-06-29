@@ -10,7 +10,7 @@ import streetlight.model.data.Location
 import streetlight.model.data.GalaxyPost
 import streetlight.model.data.LocationEdit
 
-fun FlowContent.postCardOf(post: GalaxyPost) {
+fun FlowContent.feedPostOf(post: GalaxyPost) {
     feedPost(
         postSlug = post.slug,
         galaxyName = post.galaxyName,
@@ -33,7 +33,7 @@ fun FlowContent.postCardOf(post: GalaxyPost) {
 
 // previews
 
-fun FlowContent.postCardOf(location: Location) {
+fun FlowContent.feedPostOf(location: Location) {
     feedPost(
         postSlug = null, username = null,
         galaxyName = null, galaxySlug = null,
@@ -48,7 +48,7 @@ fun FlowContent.postCardOf(location: Location) {
     )
 }
 
-fun FlowContent.postCardOf(edit: LocationEdit, username: Username?) {
+fun FlowContent.feedPostOf(edit: LocationEdit, username: Username?) {
     feedPost(
         postSlug = null, username = null,
         galaxyName = null, galaxySlug = null,
@@ -63,7 +63,7 @@ fun FlowContent.postCardOf(edit: LocationEdit, username: Username?) {
     )
 }
 
-fun FlowContent.postCardOf(event: EventLocation) {
+fun FlowContent.feedPostOf(event: EventLocation) {
     feedPost(
         postSlug = null, username = null,
         galaxyName = null, galaxySlug = null,
@@ -78,7 +78,7 @@ fun FlowContent.postCardOf(event: EventLocation) {
     )
 }
 
-fun FlowContent.postCardOf(event: Event) {
+fun FlowContent.feedPostOf(event: Event) {
     feedPost(
         postSlug = null, username = event.scout,
         galaxyName = null, galaxySlug = null,
@@ -94,7 +94,7 @@ fun FlowContent.postCardOf(event: Event) {
     )
 }
 
-fun FlowContent.postCardOf(event: EventEdit, location: Location) {
+fun FlowContent.feedPostOf(event: EventEdit, location: Location) {
     feedPost(
         postSlug = null, username = null,
         galaxyName = null, galaxySlug = null,
