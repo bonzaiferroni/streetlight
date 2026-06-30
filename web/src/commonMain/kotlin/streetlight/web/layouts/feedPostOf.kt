@@ -17,15 +17,15 @@ fun FlowContent.feedPostOf(post: GalaxyPost) {
         galaxySlug = post.galaxySlug,
         username = post.username,
         heading = post.label,
-        subHeading = post.subtitle,
+        // subHeading = post.subtitle,
         postRoute = post.route,
-        subRoute = post.subRoute,
+        // subRoute = post.subRoute,
         imageUrl = post.images.medium,
         description = post.description,
         colorScheme = post.colorScheme,
         links = post.links,
-        isLit = post.isLit,
-        lightCount = post.lightCount,
+        // isLit = post.isLit,
+        // lightCount = post.lightCount,
         postedAt = post.createdAt,
         details = post.cells
     )
@@ -74,7 +74,7 @@ fun FlowContent.feedPostOf(event: EventLocation) {
         description = event.description,
         colorScheme = ColorScheme.Accent,
         links = event.links,
-        details = eventCells(event)
+        details = eventCells(event, null)
     )
 }
 

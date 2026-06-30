@@ -88,8 +88,8 @@ fun FlowContent.feedPost(
                         textBlock(subHeading, modify(OpacityHigh, SmallText))
                     }
                 }
-                spacer(modify(Height2Px, InkGradientBg, MarginTop2Px))
-                row(modify(MarginTop2Px, AlignItemsCenter)) {
+                spacer(modify(Height2Px, InkGradientBg, MarginTopTiny))
+                row(modify(MarginTopTiny, AlignItemsCenter)) {
                     textBlock(mod = modify(SmallText)) {
                         galaxySlug?.let {
                             navigation(GalaxyRoute(it)) {

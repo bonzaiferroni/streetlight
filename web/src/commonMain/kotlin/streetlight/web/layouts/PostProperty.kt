@@ -43,7 +43,7 @@ val GalaxyPost.subtitle get(): String? = when (this) {
 
 val GalaxyPost.cells get() = when (this) {
     is BasicPost -> null
-    is EventPost -> eventCells(event)
+    is EventPost -> eventCells(event, this)
     is LocationPost -> locationCells(location)
 }
 

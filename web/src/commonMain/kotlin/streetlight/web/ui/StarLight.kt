@@ -17,8 +17,6 @@ import streetlight.model.data.Location
 import streetlight.model.data.LocationId
 import streetlight.web.layouts.CellContent
 import streetlight.web.layouts.LightControl
-import streetlight.web.layouts.cellButton
-import streetlight.web.layouts.comboCell
 import kotlin.uuid.Uuid
 
 fun FlowContent.starLightCell(
@@ -31,7 +29,7 @@ fun FlowContent.starLightCell(
     modifiers: ModifierSet? = null,
     block: DIV.() -> Unit = {}
 ) {
-    comboCell {
+    row(modify(AlignItemsCenter, GapTiny)) {
         addModifiers(modifiers, LightControl.Class, LightControl.getLitMod(isLit))
         setAttribute(LightControl.TypeData.to(lightType))
         onClick = LightControl.ToggleFun.invoke(ThisElement, uuid)
@@ -63,9 +61,9 @@ fun FlowContent.starLightCell(location: Location) {
     starLightCell(LightType.Location, location.isLit, location.locationId.value, location.lightCount)
 }
 
-fun FlowContent.exampleLightCell() {
-    cellButton(SvgFile.StarOutline)
-}
+// fun FlowContent.exampleLightCell() {
+//     cellButtons(SvgFile.StarOutline)
+// }
 
 // td: find a better home
 object StarLightKey {

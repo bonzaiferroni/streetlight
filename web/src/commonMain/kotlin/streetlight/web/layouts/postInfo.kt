@@ -3,10 +3,13 @@ package streetlight.web.layouts
 import kabinet.utils.toAgoFormat
 import kampfire.api.Slug
 import kampfire.api.Username
+import koala.css.AlignItemsCenter
 import koala.css.Bold
+import koala.css.MarginTopTiny
 import koala.css.SmallText
 import koala.css.modify
 import koala.html.navigation
+import koala.html.row
 import koala.html.span
 import koala.html.textBlock
 import kotlinx.html.FlowContent
@@ -21,25 +24,27 @@ fun FlowContent.postInfo(
     username: Username?,
     postedAt: Instant? = null,
 ) {
-    textBlock(mod = modify(SmallText)) {
-        galaxySlug?.let {
-            navigation(GalaxyRoute(it)) {
-                span("${galaxyName ?: "g/$it"} • ")
-            }
-        }
-        +"posted by "
-        when (username) {
-            null -> {
-                span("Someone ", modify(Bold))
-            }
-            else -> {
-                navigation(StarRoute(Slug(username.value))) {
-                    span("$username ")
+    row(modify(AlignItemsCenter, MarginTopTiny)) {
+        textBlock(mod = modify(SmallText)) {
+            galaxySlug?.let {
+                navigation(GalaxyRoute(it)) {
+                    span("${galaxyName ?: "g/$it"} • ")
                 }
             }
-        }
-        postedAt?.let {
-            span((Clock.System.now() - postedAt).toAgoFormat())
+            +"posted by "
+            when (username) {
+                null -> {
+                    span("Someone ", modify(Bold))
+                }
+                else -> {
+                    navigation(StarRoute(Slug(username.value))) {
+                        span("$username ")
+                    }
+                }
+            }
+            postedAt?.let {
+                span((Clock.System.now() - postedAt).toAgoFormat())
+            }
         }
     }
 }

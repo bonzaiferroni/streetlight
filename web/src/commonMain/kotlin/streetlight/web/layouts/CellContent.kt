@@ -20,9 +20,10 @@ import streetlight.model.data.EventEdit
 import streetlight.model.data.EventLocation
 import streetlight.model.data.ExtraLink
 import streetlight.model.data.Galaxy
+import streetlight.model.data.GalaxyPost
 import streetlight.model.data.Location
 import streetlight.model.data.LocationEdit
-import streetlight.web.ui.exampleLightCell
+import streetlight.web.ui.postMenu
 import streetlight.web.ui.starLightCell
 import kotlin.time.Instant
 
@@ -40,8 +41,7 @@ object CellContent {
 val CellContentCss get() = with(CellContent) { """
 $Container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(6rem, 1fr));
-    grid-auto-rows: minmax(1fr, 3rem);
+    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
     gap: 2px;
 }
 """ }
@@ -50,7 +50,7 @@ fun FlowContent.cellBlock(
     modifiers: ModifierSet? = null,
     block: FlowContent.() -> Unit = {}
 ) {
-    div(modify(modifiers, CellContent.Container, TextAlignCenter, MoonShadow)) {
+    row(modify(modifiers, MinHeight4, MinWidth16, FlexWrap, FlexItems1, GapTiny, TextAlignCenter, MoonShadow)) {
         block()
     }
 }
@@ -59,30 +59,24 @@ fun FlowContent.cell(
     svg: Svg? = null,
     text: String? = null,
     label: String? = null,
+    minWidth: Modifier? = MinWidth16,
     modifiers: ModifierSet? = null,
     block: DIV.() -> Unit = {}
 ) {
-    row(modify(CellContent.CellMod, modifiers)) {
-        cellContent(svg, text, label, block)
+    box(modify(minWidth)) {
+        row(modify(CellContent.CellMod, modifiers)) {
+            cellContent(svg, text, label, block)
+        }
     }
 }
 
-fun FlowContent.combo(
+fun FlowContent.buttonsCell(
+    minWidth: Modifier? = MinWidth16,
     modifiers: ModifierSet? = null,
-    block: DIV.() -> Unit = {}
+    block: DIV.() -> Unit = {},
 ) {
-    row(modify(CellContent.DualCellMod, modifiers), block)
-}
-
-fun FlowContent.comboCell(
-    svg: Svg? = null,
-    text: String? = null,
-    label: String? = null,
-    modifiers: ModifierSet? = null,
-    block: DIV.() -> Unit = {}
-) {
-    row(modify(CellContent.CellMod, modifiers)) {
-        cellContent(svg, text, label, block)
+    box(modify(modifiers, minWidth, CardBg)) {
+        row(modify(AlignItemsCenter, JustifyContentSpaceAround, Padding1, Gap2), block)
     }
 }
 
@@ -91,9 +85,8 @@ fun FlowContent.cellButton(
     modifiers: ModifierSet? = null,
     block: DIV.() -> Unit = {},
 ) {
-    box(modify(modifiers, Padding1, PrimaryCardBg, PlaceItemsCenter)) {
+    icon(svg, modify(CellContent.ButtonIconMod, modifiers)) {
         block()
-        icon(svg, CellContent.ButtonIconMod)
     }
 }
 
@@ -178,9 +171,9 @@ fun FlowContent.linkCell(link: ExtraLink) {
     linkCell(link.url.toUrl(), SvgFile.Link, link.label)
 }
 
-fun FlowContent.moreCell() {
+fun FlowContent.moreButton() {
     cellButton(SvgFile.ExpandBelow) {
-        onClick = KoalaFun.ToggleAncestor.invoke(ThisElement, FeedPost.Class, FeedPost.ToggleExpand)
+        onClick = KoalaFun.ToggleAncestor.invoke(ThisElement, FeedProto.Base, FeedPost.ToggleExpand)
     }
 }
 
@@ -188,15 +181,15 @@ fun locationCells(location: Location): FlowContent.() -> Unit = {
     // starCell(location.username)
     val mapType = location.mapType ?: "Location"
     cell(SvgFile.MapPinOutline, mapType)
-    combo {
+    buttonsCell {
         starLightCell(location)
-        moreCell()
+        moreButton()
     }
 }
 
 fun locationCells(username: Username?, edit: LocationEdit): FlowContent.() -> Unit = {
     starCell(username)
-    exampleLightCell()
+    // exampleLightCell()
 }
 
 fun eventCells(event: EventEdit): FlowContent.() -> Unit = {
@@ -205,16 +198,28 @@ fun eventCells(event: EventEdit): FlowContent.() -> Unit = {
         else -> startsAtCell(startsAt)
     }
     costCell(event.cost, event.url?.toUrl())
-    exampleLightCell()
+    // exampleLightCell()
 }
 
-fun eventCells(event: EventLocation): FlowContent.() -> Unit = {
+fun eventCells(event: EventLocation, post: GalaxyPost?): FlowContent.() -> Unit = {
     dateCell(event.startsAt)
     startsAtCell(event.startsAt)
     costCell(event.cost, event.url?.toUrl())
-    combo {
+//    event.city?.let {
+//        cell(SvgFile.City, it)
+//    }
+    event.locationName?.let {
+        cell(SvgFile.MapPinOutline, it)
+    }
+    buttonsCell(MinWidth32) {
+        post?.let {
+            postLight(post)
+        }
         starLightCell(event)
-        moreCell()
+        moreButton()
+        post?.let {
+            postMenu(post.slug, post.username)
+        }
     }
 }
 
@@ -222,15 +227,13 @@ fun eventCells(event: Event): FlowContent.() -> Unit = {
     dateCell(event.startsAt)
     startsAtCell(event.startsAt)
     costCell(event.cost, event.website?.toUrl())
-    combo {
+    buttonsCell {
         starLightCell(event)
-        moreCell()
+        moreButton()
     }
 }
 
 fun galaxyCells(galaxy: Galaxy): FlowContent.() -> Unit = {
-    combo {
-        comboCell(SvgFile.Calendar, galaxy.eventCount.toMetricString())
-        starLightCell(galaxy)
-    }
+    cell(SvgFile.Calendar, galaxy.eventCount.toMetricString())
+    starLightCell(galaxy)
 }

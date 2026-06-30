@@ -98,8 +98,6 @@ val StylesCss get() = """
 
     --strong-blur: blur(10px);
     --ghost-border: 2px solid rgba(var(--ink), .1);
-    
-    view-transition-name: none;
 }
 
 :root$DayTheme {

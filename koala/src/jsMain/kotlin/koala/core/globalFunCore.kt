@@ -1,7 +1,10 @@
 package koala.core
 
 import koala.css.KoalaFun
+import koala.css.Transitioning
+import koala.dom.startViewTransition
 import kotlinx.browser.document
+import kotlinx.browser.window
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.SMOOTH
 import org.w3c.dom.ScrollBehavior
@@ -17,7 +20,9 @@ fun toggleAncestor(element: HTMLElement, ancestorClass: String, toggleClass: Str
     var ancestor = element.parentElement
     while (ancestor != null) {
         if (ancestor.classList.contains(ancestorClass)) {
-            ancestor.classList.toggle(toggleClass)
+            document.startViewTransition {
+                (ancestor as HTMLElement).classList.toggle(toggleClass)
+            }
             break
         }
         ancestor = ancestor.parentElement

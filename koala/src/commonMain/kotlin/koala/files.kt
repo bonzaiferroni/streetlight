@@ -60,6 +60,7 @@ object SvgFile : FileSet<Svg>() {
     val Calendar = add("calendar.svg")
     val CalendarPlus = add("calendar-plus.svg")
     val CalendarMinus = add("calendar-minus.svg")
+    val City = add("city.svg")
     val TicketSmall = add("ticket-small.svg")
     val Backspace = add("backspace.svg")
     val Light = add("light.svg")

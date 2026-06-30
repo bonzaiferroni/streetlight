@@ -180,7 +180,7 @@ fun AppScope.markerPanel(marker: PointMarker) {
                 subRoute = post.event.locationRoute,
                 colorScheme = ColorScheme.Accent,
                 extraLinks = post.links,
-                details = eventCells(post.event)
+                details = eventCells(post.event, post)
             )
         }
     }

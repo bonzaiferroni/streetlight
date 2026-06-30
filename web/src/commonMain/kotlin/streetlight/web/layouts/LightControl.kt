@@ -1,8 +1,12 @@
 package streetlight.web.layouts
 
-import koala.css.Class
-import koala.css.JsFun
-import koala.html.enumAttributeOf
+import kabinet.utils.toMetricString
+import koala.SvgFile
+import koala.css.*
+import koala.html.*
+import kotlinx.html.FlowContent
+import kotlinx.html.onClick
+import streetlight.model.data.GalaxyPost
 import streetlight.model.data.LightType
 
 object LightControl {
@@ -17,6 +21,22 @@ object LightControl {
     val TypeData = enumAttributeOf<LightType>("light-type")
 
     fun getLitMod(isLit: Boolean) = if (isLit) Lit else null
+}
+
+fun FlowContent.postLight(post: GalaxyPost) {
+    row(modify(LightControl.Class, AlignItemsCenter, GapTiny, LightControl.getLitMod(post.isLit))) {
+        setAttribute(LightControl.TypeData.to(LightType.Post))
+        onClick = LightControl.ToggleFun.invoke(ThisElement, post.postId)
+
+        box(modify(OpacityHigh, Height3, Aspect1)) {
+            icon(SvgFile.Boost, modify(LightControl.UnlitIcon))
+            icon(SvgFile.BoostFilled, modify(LightControl.LitIcon))
+        }
+        textBlock(
+            post.lightCount.toMetricString(),
+            mod = modify(LightControl.Counter, TextAlignCenter, SmallText, LineHeight1)
+        )
+    }
 }
 
 // language="CSS"
