@@ -44,7 +44,7 @@ class EventEditor(
     val startsAtFlow = editFlow.mapDistinct { it.startsAt }
     val descriptionFlow = stateFlow.mapDistinct { it.edit.description ?: "".toMarkdown() }
     val titleFlow = stateFlow.mapDistinct { it.edit.title ?: "" }
-    val urlFlow = stateFlow.mapDistinct { it.edit.url }
+    val urlFlow = stateFlow.mapDistinct { it.edit.website }
     val isFreeFlow = stateFlow.mapDistinct { it.edit.isFree }
     val costFlow = stateFlow.mapDistinct { it.costString }
     val validityFlow = stateFlow.mapDistinct { it.edit.validity }
@@ -56,7 +56,7 @@ class EventEditor(
     fun setEndTime(value: LocalTime) = setEvent { it.copy(endTime = value) }
     fun setDate(value: LocalDate) = setEvent { it.copy(date = value) }
     fun setDescription(value: Markdown) = setEvent { it.copy(description = value) }
-    fun setUrl(value: String) = setEvent { it.copy(url = value) }
+    fun setUrl(value: String) = setEvent { it.copy(website = value) }
     fun setImageUrl(url: Url?) = setEvent { it.copy(imageRef = url) }
     fun setFree(value: Boolean) = setEvent { it.copy(cost = if (value) 0f else null)}
     fun setOriginalSourceLabel(value: String) = state.set { it.copy(originalSourceLabel = value) }
@@ -101,7 +101,7 @@ class EventEditor(
     }
 
     fun readUrl() {
-        val url = state.now.edit.url?.takeIf { it.startsWith("http") } ?: return
+        val url = state.now.edit.website?.takeIf { it.startsWith("http") } ?: return
         scope.launch {
             urlMessage.set("Reading the link, this will take a minute.", true)
             val response = api.parseSingleEvent(UrlParseRequest(url))?.data

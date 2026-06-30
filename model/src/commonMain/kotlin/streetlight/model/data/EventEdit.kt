@@ -1,7 +1,6 @@
 package streetlight.model.data
 
 import kampfire.api.Markdown
-import kampfire.model.Labeled
 import kampfire.model.Url
 import kampfire.model.toValidityCheck
 import kotlinx.datetime.LocalDate
@@ -24,7 +23,7 @@ data class EventEdit(
     val cost: Float? = null,
     val links: List<ExtraLink>? = null,
     val isHost: Boolean? = null,
-    val url: String? = null,
+    val website: String? = null,
     override val imageRef: Url? = null,
     val startTime: LocalTime? = null,
     val endTime: LocalTime? = null,
@@ -46,7 +45,7 @@ data class EventEdit(
 
     val displayedLinks by lazy {
         buildList {
-            url?.let { url ->
+            website?.let { url ->
                 add(ExtraLink("web page", url))
                 cost?.takeIf { it > 0 }?.let {
                     add(ExtraLink("tickets", url))
@@ -66,6 +65,8 @@ data class EventEdit(
             if (cost == null) add(EventProperty.Cost)
         }.toValidityCheck()
     }
+
+    val needsReview get() = imageRef == null || website == null || description == null || description.length < 100
 }
 
 object EventProperty {
@@ -85,7 +86,7 @@ fun Event.toEdit() = EventEdit(
     ageMin = ageMin,
     cost = cost,
     links = links,
-    url = website,
+    website = website,
     startTime = startsAt.toLocalDateTime(timeZone).time,
     date = startsAt.toLocalDateTime(timeZone).date,
     timeZoneId = timeZone.id,
@@ -103,7 +104,7 @@ fun EventEdit.mergeLeft(other: EventEdit?) = other?.let {
         cost = cost ?: it.cost,
         isHost = isHost ?: it.isHost,
         links = links ?: it.links,
-        url = url ?: it.url,
+        website = website ?: it.website,
         date = date ?: it.date,
         startTime = startTime ?: it.startTime,
         endTime = endTime ?: it.endTime,

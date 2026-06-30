@@ -1,6 +1,5 @@
 package streetlight.model.data
 
-import kampfire.api.Markdown
 import kampfire.api.toMarkdown
 import kampfire.model.toUrl
 import kotlinx.datetime.LocalDate
@@ -126,7 +125,7 @@ fun EventParse.toEventEdit(
     description = description?.toMarkdown(),
     ageMin = ageMin?.takeIf { it > 0 },
     cost = floatUSDOf(cost),
-    url = url,
+    website = url,
     startTime = startTime,
     endTime = endTime,
     date = date

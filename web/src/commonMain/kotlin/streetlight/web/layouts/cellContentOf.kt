@@ -40,7 +40,7 @@ fun cellContentOf(event: EventEdit): FlowContent.() -> Unit = {
         null -> exampleStartsAtCell()
         else -> startsAtCell(startsAt)
     }
-    costCell(event.cost, event.url?.toUrl())
+    costCell(event.cost, event.website?.toUrl())
     // exampleLightCell()
 }
 

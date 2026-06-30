@@ -30,7 +30,7 @@ import streetlight.model.utils.TextDeltaDisplay
 
 inline fun <reified T: RecordEdit> AppScope.viewEditHistory(
     editLogs: List<EditLog>,
-    crossinline content: DIV.(T, T?) -> Unit
+    crossinline content: AppScope.(T, T?) -> Unit
 ) {
     val display = storeOf(TextDeltaDisplay.Combined)
     val dialog = dialog()
