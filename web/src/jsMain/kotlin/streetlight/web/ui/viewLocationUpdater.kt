@@ -35,10 +35,10 @@ fun AppScope.viewLocationUpdater(content: LocationUpdaterContent, star: Star) {
     tabs {
         tab("edit") {
             column {
-                locationUpdaterGreeting(star, model.stateNow.edit.name)
+                updaterGreeting(star, model.stateNow.edit.name ?: "this location")
                 locationEditFormBody(model)
                 formSubmit(
-                    label = "Next",
+                    label = "Save",
                     onSubmit = {
                         launchEffect {
                             val location = model.submitSuspend()
@@ -53,7 +53,12 @@ fun AppScope.viewLocationUpdater(content: LocationUpdaterContent, star: Star) {
             }
         }
         tab("history") {
-            viewHistory(content)
+            viewEditHistory<LocationEdit>(content.editLogs) { edit, compareEdit ->
+                deltaRow("name", edit.name, compareEdit?.name)
+                deltaRow("address", edit.address, compareEdit?.address)
+                deltaRow("description", edit.description, compareEdit?.description)
+                deltaRow("geolocation", edit.geoPoint, compareEdit?.geoPoint)
+            }
         }
     }
 }
@@ -76,78 +81,5 @@ fun AppScope.viewUpdateLocationRoute() {
             }
         }
         appFooter("")
-    }
-}
-
-fun AppScope.locationUpdaterGreeting(star: Star, locationName: String?) = grid(
-    IntroStyle.Columns, modify(AlignItemsCenter)
-) {
-    section(modify(IntroStyle.SectionMod)) {
-        textBlock {
-            +"Hello "
-            em(star.username.value)
-            +". You are a "
-            strong("level ${star.scoutLevel} scout. ")
-            if (star.scoutLevel in 0..1) {
-                +"Your edits will become visible to the rest of Streetlight after they are reviewed. "
-                +"Please take a moment to become familiar with the "
-                navigation { +"content policy" }
-                +" if you haven't already. "
-            }
-        }
-        textBlock("Thank you for contributing, what can you tell us about ${locationName ?: "this location"}?")
-    }
-    lottie(LottieFile.StreetlightNight, modify(BorderRadius2, OverflowClip, MoonShadow))
-}
-
-private fun AppScope.viewHistory(content: LocationUpdaterContent) {
-    val display = storeOf(TextDeltaDisplay.Combined)
-    val dialog = dialog()
-
-    launchEffect {
-        display.flow.collect {
-            dialog.element.setAttribute(TextDeltaStyle.Display.to(it))
-        }
-    }
-
-    grid(columnsOf(1.fr, LinearDimension.auto)) {
-        var previousEdit: LocationEdit? = null
-        content.editLogs.forEachIndexed { index, log ->
-            val timeDescription = log.createdAt.toRelativeTimeFormat()
-            val edit = log.recordEdit as? LocationEdit
-            val compareEdit = previousEdit
-            textBlock("${log.username} ${log.editType.verb} the location $timeDescription")
-
-            row(modify(JustifyContentEnd)) {
-                if (log.editType == EditType.Update && index == content.editLogs.size - 1) {
-                    button {
-                        +"revert"
-                    }
-                }
-                edit?.let {
-                    button(onClick = {
-                        dialog.updateContent(timeDescription, true) {
-                            dialogCard {
-                                row {
-                                    spacer(modify(Flex1))
-                                    dropMenu(display)
-                                }
-                                box {
-                                    deltaGrid(mod = modify(TextDeltaStyle.Highlighter)) {
-                                        deltaRow("name", edit.name, compareEdit?.name)
-                                        deltaRow("address", edit.address, compareEdit?.address)
-                                        deltaRow("description", edit.description, compareEdit?.description)
-                                        deltaRow("geolocation", edit.geoPoint, compareEdit?.geoPoint)
-                                    }
-                                }
-                            }
-                        }
-                    }) {
-                        +"view"
-                    }
-                }
-            }
-            previousEdit = edit
-        }
     }
 }

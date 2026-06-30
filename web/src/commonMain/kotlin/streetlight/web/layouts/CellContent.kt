@@ -2,7 +2,6 @@ package streetlight.web.layouts
 
 import kabinet.utils.format
 import kabinet.utils.toAgoFormat
-import kabinet.utils.toMetricString
 import kabinet.utils.toRelativeDayFormat
 import kabinet.utils.toTimeFormat
 import kampfire.api.Username
@@ -15,16 +14,7 @@ import koala.html.*
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kotlinx.html.onClick
-import streetlight.model.data.Event
-import streetlight.model.data.EventEdit
-import streetlight.model.data.EventLocation
 import streetlight.model.data.ExtraLink
-import streetlight.model.data.Galaxy
-import streetlight.model.data.GalaxyPost
-import streetlight.model.data.Location
-import streetlight.model.data.LocationEdit
-import streetlight.web.ui.postMenu
-import streetlight.web.ui.starLightCell
 import kotlin.time.Instant
 
 object CellContent {
@@ -173,67 +163,6 @@ fun FlowContent.linkCell(link: ExtraLink) {
 
 fun FlowContent.moreButton() {
     cellButton(SvgFile.ExpandBelow) {
-        onClick = KoalaFun.ToggleAncestor.invoke(ThisElement, FeedProto.Base, FeedPost.ToggleExpand)
+        onClick = KoalaFun.ToggleAncestor.invoke(ThisElement, FeedPost.Base, FeedPostLegacy.ToggleExpand)
     }
-}
-
-fun locationCells(location: Location): FlowContent.() -> Unit = {
-    // starCell(location.username)
-    val mapType = location.mapType ?: "Location"
-    cell(SvgFile.MapPinOutline, mapType)
-    buttonsCell {
-        starLightCell(location)
-        moreButton()
-    }
-}
-
-fun locationCells(username: Username?, edit: LocationEdit): FlowContent.() -> Unit = {
-    starCell(username)
-    // exampleLightCell()
-}
-
-fun eventCells(event: EventEdit): FlowContent.() -> Unit = {
-    when (val startsAt = event.startsAt) {
-        null -> exampleStartsAtCell()
-        else -> startsAtCell(startsAt)
-    }
-    costCell(event.cost, event.url?.toUrl())
-    // exampleLightCell()
-}
-
-fun eventCells(event: EventLocation, post: GalaxyPost?): FlowContent.() -> Unit = {
-    dateCell(event.startsAt)
-    startsAtCell(event.startsAt)
-    costCell(event.cost, event.url?.toUrl())
-//    event.city?.let {
-//        cell(SvgFile.City, it)
-//    }
-    event.locationName?.let {
-        cell(SvgFile.MapPinOutline, it)
-    }
-    buttonsCell(MinWidth32) {
-        post?.let {
-            postLight(post)
-        }
-        starLightCell(event)
-        moreButton()
-        post?.let {
-            postMenu(post.slug, post.username)
-        }
-    }
-}
-
-fun eventCells(event: Event): FlowContent.() -> Unit = {
-    dateCell(event.startsAt)
-    startsAtCell(event.startsAt)
-    costCell(event.cost, event.website?.toUrl())
-    buttonsCell {
-        starLightCell(event)
-        moreButton()
-    }
-}
-
-fun galaxyCells(galaxy: Galaxy): FlowContent.() -> Unit = {
-    cell(SvgFile.Calendar, galaxy.eventCount.toMetricString())
-    starLightCell(galaxy)
 }

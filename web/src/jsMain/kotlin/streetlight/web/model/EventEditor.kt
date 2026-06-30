@@ -26,7 +26,10 @@ class EventEditor(
     private val scope: CoroutineScope,
     private val api: ApiClient,
 ) {
-    private val state = storeOf(EventEditorState(initialEvent ?: EventEdit()))
+    private val state = storeOf(EventEditorState(
+        edit = initialEvent ?: EventEdit(),
+        costString = initialEvent?.cost?.toString() ?: "",
+    ))
     val stateFlow = state.flow
     val stateNow get() = state.now
 

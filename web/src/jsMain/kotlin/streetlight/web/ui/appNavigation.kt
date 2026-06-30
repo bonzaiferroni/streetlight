@@ -46,7 +46,7 @@ fun AppScope.appNavigation() {
 
             // event
             StreetlightScreen.EventScout -> viewEventScoutRoute()
-            StreetlightScreen.UpdateEvent -> viewEventEditorRoute()
+            StreetlightScreen.UpdateEvent -> viewEventUpdaterRoute()
 
             // galaxy
             StreetlightScreen.Galaxy -> viewGalaxyRoute()

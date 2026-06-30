@@ -22,6 +22,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object UpdateEvent: PostEndpoint<EventEdit, Event>(this)
         object Delete: DeleteEndpoint<EventId>(this)
         object QueryMap: QueryEndpoint<MapQuery, List<EventLocation>>(this)
+        object ReadUpdaterContent: GetByIdEndpoint<Slug, EventUpdaterContent>(this)
         // object UserEvents: ApiDaoEndpoint<Event, EventId, NewEvent>(this, "user")
 
         object ParseMultiEvents: PostEndpoint<ParseRequest, MultiEventParseResponse>(this)

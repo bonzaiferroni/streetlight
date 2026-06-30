@@ -1,14 +1,11 @@
 package streetlight.web.layouts
 
-import kabinet.utils.toMetricString
 import kampfire.model.small
-import koala.SvgFile
 import koala.css.*
 import koala.html.*
 import kotlinx.html.FlowContent
 import streetlight.model.data.Galaxy
 import streetlight.web.toRoute
-import streetlight.web.ui.starLightCell
 
 fun FlowContent.smallGalaxyCard(galaxy: Galaxy) {
     val route = galaxy.toRoute()
@@ -33,7 +30,7 @@ fun FlowContent.smallGalaxyCard(galaxy: Galaxy) {
                     textBlock(galaxy.description?.value ?: "Too mysterious for a description", modifiers)
                 }
                 cellBlock(modify(Height5, MoonShadow)) {
-                    galaxyCells(galaxy)()
+                    cellContentOf(galaxy)()
                 }
             }
         }

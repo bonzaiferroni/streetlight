@@ -7,7 +7,7 @@ import streetlight.model.data.*
 import streetlight.web.shells.SectionHeadingMod
 
 fun FlowContent.postSection(posts: List<GalaxyPost>) {
-    section(modify(FeedPost.SmallRow)) {
+    section(modify(FeedPostLegacy.SmallRow)) {
         filigree {
             heading2("Posts", SectionHeadingMod)
         }
@@ -22,7 +22,7 @@ fun FlowContent.postSection(posts: List<GalaxyPost>) {
 
 fun FlowContent.layoutPosts(block: FlowContent.() -> Unit) {
     mount(PostKey.PostLayoutId) {
-        column(modify(FeedPost.FeedColumn, Gap2)) {
+        column(modify(FeedPostLegacy.FeedColumn, Gap2)) {
             block()
         }
     }

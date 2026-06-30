@@ -12,7 +12,6 @@ import koala.html.featureImage
 import koala.html.filigree
 import koala.html.heading3
 import koala.html.heading4
-import koala.html.image
 import koala.html.logo
 import koala.html.navigationIfNotNull
 import koala.html.span
@@ -20,19 +19,16 @@ import koala.model.ClusterFocus
 import koala.model.MarkerFocus
 import koala.model.PointMarker
 import kotlinx.browser.document
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import kotlinx.html.FlowContent
 import kotlinx.html.hr
 import streetlight.model.data.ExtraLink
 import streetlight.web.EarthRoute
-import streetlight.web.EventRoute
 import streetlight.web.GalaxyRoute
 import streetlight.web.HomeRoute
 import streetlight.web.layouts.ColorScheme
 import streetlight.web.layouts.cellBlock
-import streetlight.web.layouts.eventCells
+import streetlight.web.layouts.cellContentOf
 import streetlight.web.layouts.eventRoute
 import streetlight.web.layouts.locationRoute
 import streetlight.web.model.EarthMap
@@ -180,7 +176,7 @@ fun AppScope.markerPanel(marker: PointMarker) {
                 subRoute = post.event.locationRoute,
                 colorScheme = ColorScheme.Accent,
                 extraLinks = post.links,
-                details = eventCells(post.event, post)
+                details = cellContentOf(post.event, post)
             )
         }
     }

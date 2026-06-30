@@ -11,8 +11,7 @@ import streetlight.model.data.GalaxyPost
 import streetlight.model.data.LocationEdit
 
 fun FlowContent.feedPostOf(post: GalaxyPost) {
-    feedPostProto(
-        postSlug = post.slug,
+    feedPost(
         galaxyName = post.galaxyName,
         galaxySlug = post.galaxySlug,
         username = post.username,
@@ -34,7 +33,7 @@ fun FlowContent.feedPostOf(post: GalaxyPost) {
 // previews
 
 fun FlowContent.feedPostOf(location: Location) {
-    feedPost(
+    feedPostLegacy(
         postSlug = null, username = null,
         galaxyName = null, galaxySlug = null,
         heading = location.label,
@@ -44,12 +43,12 @@ fun FlowContent.feedPostOf(location: Location) {
         description = location.description,
         colorScheme = ColorScheme.Primary,
         links = location.links,
-        details = locationCells(location)
+        details = cellContentOf(location)
     )
 }
 
 fun FlowContent.feedPostOf(edit: LocationEdit, username: Username?) {
-    feedPost(
+    feedPostLegacy(
         postSlug = null, username = null,
         galaxyName = null, galaxySlug = null,
         heading = edit.label,
@@ -59,12 +58,12 @@ fun FlowContent.feedPostOf(edit: LocationEdit, username: Username?) {
         description = edit.description,
         colorScheme = ColorScheme.Primary,
         links = edit.links,
-        details = locationCells(username, edit)
+        details = cellContentOf(username, edit)
     )
 }
 
 fun FlowContent.feedPostOf(event: EventLocation) {
-    feedPost(
+    feedPostLegacy(
         postSlug = null, username = null,
         galaxyName = null, galaxySlug = null,
         heading = event.label,
@@ -74,12 +73,12 @@ fun FlowContent.feedPostOf(event: EventLocation) {
         description = event.description,
         colorScheme = ColorScheme.Accent,
         links = event.links,
-        details = eventCells(event, null)
+        details = cellContentOf(event, null)
     )
 }
 
 fun FlowContent.feedPostOf(event: Event) {
-    feedPost(
+    feedPostLegacy(
         postSlug = null, username = event.scout,
         galaxyName = null, galaxySlug = null,
         heading = event.title,
@@ -90,12 +89,12 @@ fun FlowContent.feedPostOf(event: Event) {
         colorScheme = ColorScheme.Accent,
         links = event.links,
         postedAt = event.createdAt,
-        details = eventCells(event)
+        details = cellContentOf(event)
     )
 }
 
 fun FlowContent.feedPostOf(event: EventEdit, location: Location) {
-    feedPost(
+    feedPostLegacy(
         postSlug = null, username = null,
         galaxyName = null, galaxySlug = null,
         heading = event.title ?: "[Title]",
@@ -105,6 +104,6 @@ fun FlowContent.feedPostOf(event: EventEdit, location: Location) {
         description = event.description,
         colorScheme = ColorScheme.Accent,
         links = event.displayedLinks,
-        details = eventCells(event)
+        details = cellContentOf(event)
     )
 }

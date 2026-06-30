@@ -92,7 +92,7 @@ fun AppScope.viewEventEditorProto(
 }
 
 // event editor route, invoked by appNavigation
-fun AppScope.viewEventEditorRoute() {
+fun AppScope.viewEventEditorProtoRoute() {
     var callback: ((Event?) -> Unit)? = null
 
 //    routeBlock<EventUpdateRoute, EventEdit>({ route ->

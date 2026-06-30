@@ -11,8 +11,7 @@ import streetlight.model.data.Location
 import streetlight.model.data.Star
 import streetlight.web.GalaxyConfigRoute
 import streetlight.web.layouts.ColorScheme
-import streetlight.web.layouts.galaxyCells
-import streetlight.web.layouts.locationCells
+import streetlight.web.layouts.cellContentOf
 
 fun FlowContent.headerOf(
     location: Location,
@@ -28,7 +27,7 @@ fun FlowContent.headerOf(
         image = location.images.large,
         description = location.description,
         modifiers = modifiers,
-        cellContent = locationCells(location),
+        cellContent = cellContentOf(location),
         editRoute = editRoute,
         links = location.links,
         block = block
@@ -48,7 +47,7 @@ fun FlowContent.headerOf(
         colorScheme = ColorScheme.Galaxy,
         description = galaxy.description,
         modifiers = modifiers,
-        cellContent = galaxyCells(galaxy),
+        cellContent = cellContentOf(galaxy),
         links = emptyList(),
         editRoute = GalaxyConfigRoute(galaxy.slug),
         block = block

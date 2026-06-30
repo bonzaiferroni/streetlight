@@ -14,3 +14,9 @@ data class LocationUpdaterContent(
     val location: Location,
     val editLogs: List<EditLog>
 )
+
+@Serializable
+data class EventUpdaterContent(
+    val event: Event,
+    val editLogs: List<EditLog>
+)

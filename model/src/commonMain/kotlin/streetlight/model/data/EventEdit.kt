@@ -25,12 +25,14 @@ data class EventEdit(
     val links: List<ExtraLink>? = null,
     val isHost: Boolean? = null,
     val url: String? = null,
-    val imageRef: Url? = null,
+    override val imageRef: Url? = null,
     val startTime: LocalTime? = null,
     val endTime: LocalTime? = null,
     val date: LocalDate? = null,
     val timeZoneId: String? = null,
-) {
+): RecordEdit {
+    override val label get() = title ?: "Unnamed Event"
+    override val recordType get() = RecordType.Event
     val isFree get() = cost == 0f
     val timeZone
         get() = try {

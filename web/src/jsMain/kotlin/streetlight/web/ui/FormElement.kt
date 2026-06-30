@@ -112,7 +112,7 @@ fun AppScope.formSubmit(
             messages?.let {
                 messageBox(messages)
             }
-            val element = button(label, onClick = onSubmit)
+            val element = button(label, modify(Accent), onClick = onSubmit)
             messages?.let {
                 element.flowIsWorking(it.isWorkingFlow, parentScope)
             }
