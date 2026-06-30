@@ -11,7 +11,7 @@ import streetlight.model.data.GalaxyPost
 import streetlight.model.data.LocationEdit
 
 fun FlowContent.feedPostOf(post: GalaxyPost) {
-    feedPost(
+    feedPostProto(
         postSlug = post.slug,
         galaxyName = post.galaxyName,
         galaxySlug = post.galaxySlug,

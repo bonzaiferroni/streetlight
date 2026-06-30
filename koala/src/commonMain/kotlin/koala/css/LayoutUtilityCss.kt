@@ -14,7 +14,7 @@ val LayoutUtilityCss
         AlignSelfStart, AlignSelfCenter, AlignSelfEnd, AlignSelfStretch, JustifySelfStart, JustifySelfStretch,
         // Width
         WidthAuto, Width100P, WidthFitContent,
-        Width1, Width2, Width4, Width5, Width8, Width12, Width16, Width24, Width32, Width64,
+        Width1, Width2, Width4, Width5, Width8, Width10, Width12, Width16, Width24, Width32, Width64,
         MinWidth0, MinWidth12, MinWidth6, MinWidth8, MinWidth14, MinWidth16, MinWidth24, MinWidth32, MinWidth36, MinWidth48, MinWidthAuto, MaxWidth25P, MaxWidth50P,
         MaxWidth5, MaxWidth16, MaxWidth32, MaxWidth48, MaxWidth64, MaxWidthTextBody, MaxWidthNone,
         // Height
@@ -95,6 +95,7 @@ val Width2 = utilityOf("width-2", "width: calc(var(--unit-spacing) * 2)")
 val Width4 = utilityOf("width-4", "width: calc(var(--unit-spacing) * 4)")
 val Width5 = utilityOf("width-5", "width: calc(var(--unit-spacing) * 5)")
 val Width8 = utilityOf("width-8", "width: calc(var(--unit-spacing) * 8)")
+val Width10 = utilityOf("width-10", "width: calc(var(--unit-spacing) * 10)")
 val Width12 = utilityOf("width-12", "width: calc(var(--unit-spacing) * 12)")
 val Width16 = utilityOf("width-16", "width: calc(var(--unit-spacing) * 16)")
 val Width24 = utilityOf("width-24", "width: calc(var(--unit-spacing) * 24)")

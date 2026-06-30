@@ -27,6 +27,7 @@ import streetlight.web.ui.starLightCell
 import kotlin.time.Instant
 
 object CellContent {
+    val Container = Class("cell-content")
     val CellMod = modify(AlignItemsCenter, CardBg, Gap0, Padding1)
     val DualCellMod = modify(GapTiny, FlexItems1)
     val IconMod = modify(Height3, MarginRight4Px, ColorSchemeBg)
@@ -35,11 +36,21 @@ object CellContent {
     val TextMod = modify(SmallText, SingleLine, TextOverflowEllipses, Flex1)
 }
 
+//language="CSS"
+val CellContentCss get() = with(CellContent) { """
+$Container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(6rem, 1fr));
+    grid-auto-rows: minmax(1fr, 3rem);
+    gap: 2px;
+}
+""" }
+
 fun FlowContent.cellBlock(
     modifiers: ModifierSet? = null,
     block: FlowContent.() -> Unit = {}
 ) {
-    row(modify(modifiers, MinHeight4, MinWidth12, FlexItems1, GapTiny, TextAlignCenter, MoonShadow)) {
+    div(modify(modifiers, CellContent.Container, TextAlignCenter, MoonShadow)) {
         block()
     }
 }
@@ -51,10 +62,8 @@ fun FlowContent.cell(
     modifiers: ModifierSet? = null,
     block: DIV.() -> Unit = {}
 ) {
-    box(modify(MinWidth12)) {
-        row(modify(CellContent.CellMod, modifiers)) {
-            cellContent(svg, text, label, block)
-        }
+    row(modify(CellContent.CellMod, modifiers)) {
+        cellContent(svg, text, label, block)
     }
 }
 
@@ -62,9 +71,7 @@ fun FlowContent.combo(
     modifiers: ModifierSet? = null,
     block: DIV.() -> Unit = {}
 ) {
-    box(modify(MinWidth12)) {
-        row(modify(CellContent.DualCellMod, modifiers), block)
-    }
+    row(modify(CellContent.DualCellMod, modifiers), block)
 }
 
 fun FlowContent.comboCell(

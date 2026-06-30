@@ -22,7 +22,7 @@ fun FlowContent.postSection(posts: List<GalaxyPost>) {
 
 fun FlowContent.layoutPosts(block: FlowContent.() -> Unit) {
     mount(PostKey.PostLayoutId) {
-        column(modify(FeedPost.FeedColumn)) {
+        column(modify(FeedPost.FeedColumn, Gap2)) {
             block()
         }
     }

@@ -9,7 +9,7 @@ val TextUtilityCss
         // line height
         LineHeight1, LineHeight115, ParagraphLineHeight,
         // misc
-        SingleLine, WhiteSpaceNormal, TextOverflowEllipses, TextShadow, WhiteSpaceNoWrap, WhiteSpacePreLine, UserSelectNone, Prose,
+        SingleLine, WhiteSpaceNormal, TextOverflowEllipses, TextShadow, WhiteSpaceNoWrap, WhiteSpacePreLine, UserSelectNone,
     )
 
 val Bold = utilityOf("bold", "font-weight: bold")
@@ -29,5 +29,16 @@ val TextShadow = utilityOf("text-shadow", "text-shadow: var(--btn-text-shadow)")
 val UserSelectNone = utilityOf("user-select-none", "user-select: none")
 
 // defined in stylesheet
-val Prose = CssUtility("prose")
-val ButtonText = CssUtility("btn-text")
+val Prose = Class("prose")
+val ButtonText = Class("btn-text")
+val LineClamp2 = Class("line-clamp-2")
+
+//language="CSS"
+val TextUtilitySheet get() = """
+$LineClamp2 {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+}
+""".trimIndent()
