@@ -1,6 +1,6 @@
 package streetlight.web.ui
 
-import kampfire.model.handleResponse
+import kampfire.model.handleOutcome
 import koala.dom.*
 import koala.dom.routeBlock
 import koala.model.Portal
@@ -40,7 +40,7 @@ fun AppScope.viewHomeRoute() {
 
     routeBlock<HomeRoute, HomeContent>(portal, { _ ->
         readIsland(HomeKey.IslandId) { true }
-            ?: api.readHomeContent().handleResponse(toaster::toast)
+            ?: api.readHomeContent().handleOutcome(toaster::toast)
     }) { content ->
         viewHome(content)
     }

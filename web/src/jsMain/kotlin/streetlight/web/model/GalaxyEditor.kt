@@ -3,11 +3,10 @@
 package streetlight.web.model
 
 import kampfire.api.Markdown
-import kampfire.api.toMarkdown
 import kampfire.api.toSlug
 import kampfire.model.Url
 import kampfire.model.getDataOrNull
-import kampfire.model.handleResponse
+import kampfire.model.handleOutcome
 import koala.dom.MessageStore
 import koala.model.GeoCamera
 import koala.model.Portal
@@ -49,7 +48,7 @@ class GalaxyEditor(
         scope.launch {
             stateFlow.mapDistinct { it.cityQuery }.debounce(500L).collect { query ->
                 if (query == stateNow.city?.name) return@collect
-                val localities = api.searchCity(query, stateNow.country).handleResponse(toaster::toast) ?: return@collect
+                val localities = api.searchCity(query, stateNow.country).handleOutcome(toaster::toast) ?: return@collect
                 state.set { it.copy(cities = localities) }
             }
         }
@@ -110,7 +109,7 @@ class GalaxyEditor(
             val imageUrl: Url? = stateNow.imageUrl.takeIf { it != imageRef }?.let { url ->
                 api.uploadImage(url).getDataOrNull() ?: return@launch
             } ?: imageRef
-            api.createOrUpdateGalaxy(edit.copy(imageRef = imageUrl)).handleResponse(editMessage::set) { slug ->
+            api.createOrUpdateGalaxy(edit.copy(imageRef = imageUrl)).handleOutcome(editMessage::set) { slug ->
                 portal.go(GalaxyRoute(slug))
             }
         }

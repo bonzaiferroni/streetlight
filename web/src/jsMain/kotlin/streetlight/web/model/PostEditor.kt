@@ -2,9 +2,8 @@ package streetlight.web.model
 
 import kampfire.api.Markdown
 import kampfire.api.Slug
-import kampfire.api.toMarkdown
 import kampfire.model.Url
-import kampfire.model.handleResponse
+import kampfire.model.handleOutcome
 import koala.dom.MessageStore
 import koala.model.mapDistinct
 import koala.model.storeOf
@@ -54,7 +53,7 @@ class PostEditor(
             when (content.postId) {
                 null -> api.createPost(content)
                 else -> api.editPost(content)
-            }.handleResponse(toaster::toast) { slug ->
+            }.handleOutcome(toaster::toast) { slug ->
                 state.set { it.copy(slug = slug) }
             }
         }
@@ -67,7 +66,7 @@ class PostEditor(
     private suspend fun uploadImageIfBlob(): Boolean {
         val blobUrl = editNow.imageRef?.takeIf { it.isBlob } ?: return true
         message.set("Uploading image...", true)
-        val refUrl = api.uploadImage(blobUrl).handleResponse(message::set)
+        val refUrl = api.uploadImage(blobUrl).handleOutcome(message::set)
         if (refUrl == null) {
             message.set("Unable to upload image.")
             return false

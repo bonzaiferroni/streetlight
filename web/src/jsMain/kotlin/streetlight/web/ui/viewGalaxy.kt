@@ -1,6 +1,6 @@
 package streetlight.web.ui
 
-import kampfire.model.handleResponse
+import kampfire.model.handleOutcome
 import koala.dom.*
 import org.w3c.dom.HTMLElement
 import streetlight.model.data.GalaxyContent
@@ -32,7 +32,7 @@ fun AppScope.viewGalaxy(content: GalaxyContent) {
 fun AppScope.viewGalaxyRoute() {
     routeBlock<GalaxyRoute, GalaxyContent>(portal, { route ->
         readIsland<GalaxyContent>(GalaxyKey.GalaxyContentId) { it.galaxy.slug == route.slug }
-            ?: api.readGalaxyContent(route.slug).handleResponse(toaster::toast)
+            ?: api.readGalaxyContent(route.slug).handleOutcome(toaster::toast)
     }) { content ->
         viewGalaxy(content)
     }

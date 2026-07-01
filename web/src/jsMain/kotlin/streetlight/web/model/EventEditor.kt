@@ -4,7 +4,7 @@ import kabinet.utils.replaceAt
 import kampfire.api.Markdown
 import kampfire.api.toMarkdown
 import kampfire.model.Url
-import kampfire.model.handleResponse
+import kampfire.model.handleOutcome
 import koala.dom.MessageStore
 import koala.model.mapDistinct
 import koala.model.storeOf
@@ -104,14 +104,11 @@ class EventEditor(
         val url = state.now.edit.website?.takeIf { it.startsWith("http") } ?: return
         scope.launch {
             urlMessage.set("Reading the link, this will take a minute.", true)
-            val response = api.parseSingleEvent(UrlParseRequest(url))?.data
-            if (response == null) {
-                urlMessage.set("We were unable to read the link.")
-                return@launch
+            api.parseSingleEvent(UrlParseRequest(url)).handleOutcome(urlMessage::set) { edit ->
+                val event = edit.mergeRight(state.now.edit)
+                urlMessage.set("Does this information look correct?")
+                state.set { it.copy(edit = event) }
             }
-            val event = response.mergeRight(state.now.edit)
-            urlMessage.set("Does this information look correct?")
-            state.set { it.copy(edit = event) }
         }
     }
 
@@ -122,7 +119,7 @@ class EventEditor(
         return when (editNow.eventId) {
             null -> api.createEvent(editNow)
             else -> api.updateEvent(editNow)
-        }.handleResponse(message::set)
+        }.handleOutcome(message::set)
     }
 
     private fun setEvent(provideEvent: (EventEdit) -> EventEdit) {
@@ -132,7 +129,7 @@ class EventEditor(
     private suspend fun uploadImageIfBlob(): Boolean {
         val blobUrl = editNow.imageRef?.takeIf { it.isBlob } ?: return true
         message.set("Uploading image...", true)
-        val refUrl = api.uploadImage(blobUrl).handleResponse(message::set)
+        val refUrl = api.uploadImage(blobUrl).handleOutcome(message::set)
         if (refUrl == null) {
             message.set("Unable to upload image.")
             return false

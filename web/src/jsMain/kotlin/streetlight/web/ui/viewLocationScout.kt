@@ -1,6 +1,6 @@
 package streetlight.web.ui
 
-import kampfire.model.handleResponse
+import kampfire.model.handleOutcome
 import koala.LottieFile
 import koala.dom.*
 import koala.model.mapDistinctNotNull
@@ -57,7 +57,7 @@ fun AppScope.viewLocationScout(galaxy: Galaxy) {
 
 fun AppScope.viewLocationScoutRoute() {
     routeBlock<LocationScoutRoute, Galaxy>({
-        api.readGalaxy(it.slug).handleResponse(toaster::toast)
+        api.readGalaxy(it.slug).handleOutcome(toaster::toast)
     }) { galaxy ->
         viewLocationScout(galaxy)
     }

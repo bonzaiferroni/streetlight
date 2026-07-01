@@ -1,17 +1,17 @@
 package kampfire.model
 
-fun <T> Response<T>?.getDataOrNull() = when (this) {
+fun <T> Outcome<T>?.getDataOrNull() = when (this) {
     is Ok -> this.data
     is Problem -> null.also { println("Problem: ${this.message}") }
     null -> null.also { println("Response was null") }
 }
 
-fun <T> Response<T>?.handleResponse(
+fun <T> Outcome<T>?.handleOutcome(
     onMessage: (String) -> Unit,
     okMessage: String? = null,
-) = handleResponse(onMessage, okMessage) { it }
+) = handleOutcome(onMessage, okMessage) { it }
 
-fun <T1, T2> Response<T1>?.handleResponse(
+fun <T1, T2> Outcome<T1>?.handleOutcome(
     onMessage: (String) -> Unit,
     okMessage: String? = null,
     block: (T1) -> T2
@@ -34,7 +34,7 @@ fun <T1, T2> Response<T1>?.handleResponse(
     }
 }
 
-fun <T> Response<T>?.isOk() = when (this) {
+fun <T> Outcome<T>?.isOk() = when (this) {
     is Ok -> true
     else -> false
 }

@@ -5,6 +5,17 @@ import kampfire.api.Username
 import kotlin.time.Instant
 import kotlin.uuid.Uuid
 
+data class UserRecord(
+    val userId: TableId<Uuid>,
+    val username: Username,
+    val hashedPassword: String,
+    val salt: String,
+    val email: String?,
+    val roles: Set<UserRole>,
+    val createdAt: Instant,
+    val updatedAt: Instant,
+)
+
 interface AuthUser {
     val userId: TableId<Uuid>
     val username: Username

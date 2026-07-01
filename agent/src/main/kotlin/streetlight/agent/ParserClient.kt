@@ -7,9 +7,8 @@ import ai.koog.prompt.executor.llms.all.simpleGoogleAIExecutor
 import ai.koog.prompt.params.LLMParams
 import com.fleeksoft.ksoup.nodes.Document
 import io.github.oshai.kotlinlogging.KotlinLogging
-import kabinet.console.globalConsole
 import kabinet.utils.Environment
-import kampfire.model.Response
+import kampfire.model.Outcome
 import kampfire.model.Ok
 import kampfire.model.Problem
 import kampfire.utils.takeEllipsis
@@ -22,7 +21,7 @@ class ParserClient(env: Environment) {
     val cache = mutableMapOf<Int, ParserContent>()
     val trimmer = HtmlTrimmer()
 
-    suspend inline fun <reified T: Any> readHtml(url: String, doc: Document, instructions: String): Response<T> {
+    suspend inline fun <reified T: Any> readHtml(url: String, doc: Document, instructions: String): Outcome<T> {
         val response = withCache(doc.hashCode()) {
             readHtmlContent<T>(url, doc, instructions)
         }
@@ -32,7 +31,7 @@ class ParserClient(env: Environment) {
         }
     }
 
-    inline fun withCache(cacheKey: Int, block: () -> Response<ParserContent>): Response<ParserContent> {
+    inline fun withCache(cacheKey: Int, block: () -> Outcome<ParserContent>): Outcome<ParserContent> {
         val cachedContent = cache[cacheKey]
         if (cachedContent != null) return Ok(cachedContent)
 
@@ -53,7 +52,7 @@ class ParserClient(env: Environment) {
         url: String,
         doc: Document,
         instructions: String
-    ): Response<ParserContent> {
+    ): Outcome<ParserContent> {
         val content = trimmer.trimHtml(doc)
 
         val prompt = prompt(

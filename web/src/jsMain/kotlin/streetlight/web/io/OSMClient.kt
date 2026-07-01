@@ -1,6 +1,6 @@
 package streetlight.web.io
 
-import kampfire.model.Response
+import kampfire.model.Outcome
 import kampfire.model.GeoBounds
 import kampfire.model.GeoPoint
 import kotlinx.browser.window
@@ -14,7 +14,7 @@ import kotlin.js.json
 // docs: https://nominatim.org/release-docs/develop/api/Search/
 
 class OSMClient() {
-    suspend fun readLocationAt(point: GeoPoint): Response<OSMLocation>? {
+    suspend fun readLocationAt(point: GeoPoint): Outcome<OSMLocation>? {
         val url = "https://nominatim.openstreetmap.org/reverse" +
                     "?lat=${point.lat}&lon=${point.lng}&format=jsonv2&addressdetails=1&extratags=1"
 
@@ -23,7 +23,7 @@ class OSMClient() {
         return response.tryDecodeTextResponse()
     }
 
-    suspend fun readLocations(query: OSMQuery): Response<List<OSMLocation>>? {
+    suspend fun readLocations(query: OSMQuery): Outcome<List<OSMLocation>>? {
         val url = "https://nominatim.openstreetmap.org/search?" + query.toQuery()
 
         val response = window.fetch(url, RequestInit(headers = headers)).await()
@@ -31,7 +31,7 @@ class OSMClient() {
         return response.tryDecodeTextResponse()
     }
 
-    suspend fun readLocations(query: String, city: String? = null, bounds: GeoBounds? = null): Response<List<OSMLocation>>? {
+    suspend fun readLocations(query: String, city: String? = null, bounds: GeoBounds? = null): Outcome<List<OSMLocation>>? {
         val query = when (city?.takeIf { it.isNotBlank() }) {
             null -> query
             else -> "$query, $city"

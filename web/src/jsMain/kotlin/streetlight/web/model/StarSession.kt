@@ -1,6 +1,6 @@
 package streetlight.web.model
 
-import kampfire.model.handleResponse
+import kampfire.model.handleOutcome
 import koala.model.mapDistinct
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
@@ -33,7 +33,7 @@ class StarSession(
     }
 
     suspend fun readUser() {
-        val star = api.validateLogin().handleResponse(toaster::toast)
+        val star = api.validateLogin().handleOutcome(toaster::toast)
         if (star != null) {
             console.log("signed in")
             state.set { it.copy(star = star) }

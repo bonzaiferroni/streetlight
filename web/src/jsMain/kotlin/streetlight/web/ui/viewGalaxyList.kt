@@ -1,6 +1,6 @@
 package streetlight.web.ui
 
-import kampfire.model.handleResponse
+import kampfire.model.handleOutcome
 import koala.dom.*
 import koala.model.storeOf
 import kotlinx.coroutines.launch
@@ -11,7 +11,7 @@ fun AppScope.viewGalaxyList() {
     val galaxyStore = storeOf<List<Galaxy>>(emptyList())
 
     parentScope.launch {
-        val galaxies = api.readTopGalaxies().handleResponse(toaster::toast) ?: return@launch
+        val galaxies = api.readTopGalaxies().handleOutcome(toaster::toast) ?: return@launch
         galaxyStore.set { galaxies }
     }
 

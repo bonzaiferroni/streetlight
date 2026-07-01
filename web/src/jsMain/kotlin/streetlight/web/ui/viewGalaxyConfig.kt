@@ -1,6 +1,6 @@
 package streetlight.web.ui
 
-import kampfire.model.handleResponse
+import kampfire.model.handleOutcome
 import koala.LottieFile
 import koala.css.*
 import koala.dom.*
@@ -48,7 +48,7 @@ fun AppScope.viewGalaxyConfig(edit: GalaxyEdit) {
 
 fun AppScope.viewGalaxyConfigRoute() {
     routeBlock<GalaxyConfigRoute, GalaxyEdit>(portal, { route ->
-        api.readGalaxy(route.slug).handleResponse(toaster::toast)?.toEdit()
+        api.readGalaxy(route.slug).handleOutcome(toaster::toast)?.toEdit()
     }) {
         viewGalaxyConfig(it)
     }

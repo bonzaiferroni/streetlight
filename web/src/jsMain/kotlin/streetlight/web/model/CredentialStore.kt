@@ -42,7 +42,7 @@ class CredentialStore {
         val stayLoggedIn = state.now.stayLoggedIn
         return LoginRequest(
             usernameOrEmail = usernameOrEmail,
-            stayLoggedIn = stayLoggedIn,
+            isTemp = !stayLoggedIn,
             password = password,
         )
     }

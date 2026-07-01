@@ -1,30 +1,11 @@
 package streetlight.web.ui
 
-import kabinet.utils.toRelativeTimeFormat
-import kampfire.model.handleResponse
-import koala.LottieFile
-import koala.css.AlignItemsCenter
-import koala.css.BorderRadius2
-import koala.css.Flex1
-import koala.css.JustifyContentEnd
-import koala.css.MoonShadow
-import koala.css.OverflowClip
-import koala.css.columnsOf
-import koala.css.modify
+import kampfire.model.handleOutcome
 import koala.dom.*
-import koala.html.em
-import koala.html.spacer
-import koala.html.strong
-import koala.model.storeOf
-import kotlinx.css.LinearDimension
-import kotlinx.css.fr
-import streetlight.model.data.EditType
 import streetlight.model.data.LocationEdit
 import streetlight.model.data.LocationUpdaterContent
 import streetlight.model.data.Star
 import streetlight.model.data.toEdit
-import streetlight.model.data.verb
-import streetlight.model.utils.TextDeltaDisplay
 import streetlight.web.LocationRoute
 import streetlight.web.UpdateLocationRoute
 
@@ -69,7 +50,7 @@ fun AppScope.viewUpdateLocationRoute() {
             routeBlock<UpdateLocationRoute, LocationUpdaterContent?>(
                 portal = portal,
                 provideData = { route ->
-                    api.readLocationUpdaterContent(route.slug).handleResponse(toaster::toast)
+                    api.readLocationUpdaterContent(route.slug).handleOutcome(toaster::toast)
                 }
             ) { content ->
                 if (content == null) {

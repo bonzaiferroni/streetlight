@@ -11,52 +11,50 @@ import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.encoding.decodeStructure
 import kotlinx.serialization.encoding.encodeStructure
 
-// must use ApiResponseSerializer because of generic argument
-sealed interface Response <T> {
+@Serializable
+sealed interface Outcome <out T> {
     val message: String?
-    val data: T?
 }
 
 @Serializable
 data class Ok<T>(
-    override val data: T,
+    val data: T,
     override val message: String? = null
-): Response<T>
+): Outcome<T>
 
-// the purpose of this class is to communicate the issue to the user
 @Serializable
-data class Problem<T>(
+data class Problem(
     override val message: String,
-): Response<T> {
-    override val data: T? get() = null
-}
+): Outcome<Nothing>
 
-fun <T> responseOf(data: T?): Response<T>? = when (data) {
+fun <T> outcomeOf(data: T?): Outcome<T>? = when (data) {
     null -> null
     else -> Ok(data)
 }
 
-fun <T> T?.toResponse() = responseOf(this)
+fun <T> T?.toOutcome() = outcomeOf(this)
 
-class ResponseSerializer<T>(
+// I believe we must use ResponseSerializer because of generic argument
+// td: determine if this is necessary
+class OutcomeSerializer<T>(
     private val dataSerializer: KSerializer<T>
-) : KSerializer<Response<T>> {
+) : KSerializer<Outcome<T>> {
 
     @Suppress("UNCHECKED_CAST")
     override val descriptor: SerialDescriptor =
-        buildClassSerialDescriptor("ApiResponse") {
+        buildClassSerialDescriptor("Outcome") {
             element("message", serialDescriptor<String?>(), isOptional = true)
             element("data", dataSerializer.descriptor, isOptional = true)
         }
 
-    override fun serialize(encoder: Encoder, value: Response<T>) {
+    override fun serialize(encoder: Encoder, value: Outcome<T>) {
         encoder.encodeStructure(descriptor) {
             value.message?.let { encodeStringElement(descriptor, 0, it) }
-            value.data?.let { encodeSerializableElement(descriptor, 1, dataSerializer, it) }
+            if (value is Ok) encodeSerializableElement(descriptor, 1, dataSerializer, value.data)
         }
     }
 
-    override fun deserialize(decoder: Decoder): Response<T> {
+    override fun deserialize(decoder: Decoder): Outcome<T> {
         var message: String? = null
         var data: T? = null
 

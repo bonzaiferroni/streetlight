@@ -5,7 +5,7 @@ import kampfire.api.toUsername
 import kampfire.model.AccountType
 import kampfire.model.SignUpRequest
 import kampfire.model.getDataOrNull
-import kampfire.model.handleResponse
+import kampfire.model.handleOutcome
 import koala.model.mapDistinct
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
@@ -51,7 +51,7 @@ class UserCreator(
             )
         }.also{ println(it.isValid) }.takeIf { it.isValid } ?: return
         scope.launch {
-            val isSuccess = api.createUser(request).handleResponse(toaster::toast) ?: return@launch
+            val isSuccess = api.createUser(request).handleOutcome(toaster::toast) ?: return@launch
             if (isSuccess) {
                 cred.setFromSignup(request)
                 gate.signIn()

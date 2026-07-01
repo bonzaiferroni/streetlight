@@ -2,8 +2,8 @@
 
 package streetlight.web.io
 
-import kampfire.model.Response
-import kampfire.model.ResponseSerializer
+import kampfire.model.Outcome
+import kampfire.model.OutcomeSerializer
 import kampfire.model.Ok
 import kampfire.model.Problem
 import koala.utils.jsonConfig
@@ -31,7 +31,7 @@ suspend inline fun <reified Returned> FetchResponse.tryDecodeBytes(): Returned? 
     return Cbor.decodeFromByteArray<Returned>(bytes)
 }
 
-suspend inline fun <reified Returned> FetchResponse.tryDecodeTextResponse(): Response<Returned>? {
+suspend inline fun <reified Returned> FetchResponse.tryDecodeTextResponse(): Outcome<Returned>? {
     val status = status.toInt()
     return when (status) {
         404 -> Problem("Not found")
@@ -71,14 +71,14 @@ suspend inline fun <reified Returned> FetchResponse.tryDecodeText(): Returned? {
     }
 }
 
-suspend inline fun <reified T> FetchResponse.tryDecodeBytesResponse(): Response<T>? {
+suspend inline fun <reified T> FetchResponse.tryDecodeBytesResponse(): Outcome<T>? {
     return when (status.toInt()) {
         200 -> {
             val buffer = arrayBuffer().await()
             val bytes = Int8Array(buffer).unsafeCast<ByteArray>()
             try {
                 defaultCbor.decodeFromByteArray(
-                    ResponseSerializer(serializer<T>()),
+                    OutcomeSerializer(serializer<T>()),
                     bytes
                 )
             } catch (e: Exception) {

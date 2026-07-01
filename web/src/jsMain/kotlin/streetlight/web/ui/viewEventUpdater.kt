@@ -1,6 +1,6 @@
 package streetlight.web.ui
 
-import kampfire.model.handleResponse
+import kampfire.model.handleOutcome
 import koala.dom.AppScope
 import koala.dom.column
 import koala.dom.routeBlock
@@ -13,7 +13,6 @@ import streetlight.model.data.Star
 import streetlight.model.data.toEdit
 import streetlight.web.EventRoute
 import streetlight.web.EventUpdateRoute
-import streetlight.web.LocationRoute
 
 fun AppScope.viewEventUpdater(content: EventUpdaterContent, star: Star) {
     val edit = content.event.toEdit()
@@ -54,7 +53,7 @@ fun AppScope.viewEventUpdaterRoute() {
             routeBlock<EventUpdateRoute, EventUpdaterContent?>(
                 portal = portal,
                 provideData = { route ->
-                    api.readEventUpdaterContent(route.slug).handleResponse(toaster::toast)
+                    api.readEventUpdaterContent(route.slug).handleOutcome(toaster::toast)
                 }
             ) { content ->
                 if (content == null) {

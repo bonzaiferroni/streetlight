@@ -3,7 +3,7 @@ package streetlight.web.model
 import kampfire.api.Slug
 import kampfire.model.GeoPoint
 import kampfire.model.Labeled
-import kampfire.model.handleResponse
+import kampfire.model.handleOutcome
 import koala.dom.MessageStore
 import koala.model.mapDistinct
 import koala.model.storeOf
@@ -86,7 +86,7 @@ class EventScout(
             } ?: return@launch
 
             val edit = EventPostEdit(null, galaxy.galaxyId, eventId, null)
-            api.createPost(edit).handleResponse(postMessage::set) { slug ->
+            api.createPost(edit).handleOutcome(postMessage::set) { slug ->
                 state.set { it.copy(slug = slug) }
             }
         }

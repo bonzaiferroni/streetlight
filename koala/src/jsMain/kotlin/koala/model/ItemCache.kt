@@ -1,7 +1,7 @@
 package koala.model
 
-import kampfire.model.Response
-import kampfire.model.handleResponse
+import kampfire.model.Outcome
+import kampfire.model.handleOutcome
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -12,7 +12,7 @@ class ItemCache<Item, ItemId>(
     private val scope: CoroutineScope,
     private val onError: (String) -> Unit,
     private val provideId: (Item) -> ItemId,
-    private val provideInitialItems: suspend () -> Response<List<Item>>?
+    private val provideInitialItems: suspend () -> Outcome<List<Item>>?
 ){
     private val _flow = MutableSharedFlow<List<Item>>(replay = 8)
     private val items = mutableListOf<Item>()
@@ -57,7 +57,7 @@ class ItemCache<Item, ItemId>(
         if (isInitialized) return
         isInitialized = true
 
-        val initialItems = provideInitialItems().handleResponse(onError) ?: return
+        val initialItems = provideInitialItems().handleOutcome(onError) ?: return
         items.addAll(initialItems)
         _flow.emit(items)
     }

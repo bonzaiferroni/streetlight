@@ -1,6 +1,6 @@
 package streetlight.web.ui
 
-import kampfire.model.handleResponse
+import kampfire.model.handleOutcome
 import koala.css.*
 import koala.dom.*
 import koala.model.GeoCamera
@@ -30,7 +30,7 @@ fun AppScope.viewEvent(event: EventLocation) {
 fun AppScope.viewEventProfileRoute() {
 
     routeBlock<EventRoute, EventLocation>(portal, { route ->
-        api.readEventSlug(route.slug).handleResponse(toaster::toast)
+        api.readEventSlug(route.slug).handleOutcome(toaster::toast)
     }) { event ->
         viewEvent(event)
     }

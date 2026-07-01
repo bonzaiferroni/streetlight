@@ -5,7 +5,7 @@ package streetlight.web.ui
 import kampfire.api.toUsername
 import kampfire.model.Url
 import kampfire.model.getDataOrNull
-import kampfire.model.handleResponse
+import kampfire.model.handleOutcome
 import koala.css.*
 import koala.dom.*
 import koala.model.mapDistinct
@@ -28,7 +28,7 @@ fun AppScope.viewStarEditor() {
         val nameFlow = state.flow.mapDistinct { it.username?.value }
         val isAvailableFlow = nameFlow.debounce(500).map {
             if (it == null || it == star.username.value) null
-            else api.checkUsername(it.toUsername()).handleResponse(toaster::toast)
+            else api.checkUsername(it.toUsername()).handleOutcome(toaster::toast)
         }
 
         fun setUsername(value: String) = state.set { it.copy(username = value.toUsername()) }
@@ -43,7 +43,7 @@ fun AppScope.viewStarEditor() {
                 } else edit
 
                 console.log(edit.username)
-                val star = api.updateStar(edit).handleResponse(toaster::toast)
+                val star = api.updateStar(edit).handleOutcome(toaster::toast)
                 if (star != null) {
                     gate.setUpdate(star)
                 }

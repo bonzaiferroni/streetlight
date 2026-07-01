@@ -1,17 +1,15 @@
 package streetlight.web.model
 
 import kampfire.model.getDataOrNull
-import kampfire.model.handleResponse
+import kampfire.model.handleOutcome
 import koala.model.MarkerFocus
 import koala.model.Portal
 import koala.model.mapDistinct
-import koala.model.mapDistinctNotNull
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import streetlight.model.data.Galaxy
 import streetlight.web.EarthRoute
-import streetlight.web.GalaxyRoute
 import streetlight.web.io.ApiClient
 
 class EarthMap(
@@ -53,14 +51,14 @@ class EarthMap(
             launch {
                 portal.routeFlowOf<EarthRoute>(false).collect { route ->
                     val galaxy = route.slug?.let {
-                        api.readGalaxy(it).handleResponse(toaster::toast)
+                        api.readGalaxy(it).handleOutcome(toaster::toast)
                     }
                     val posts = galaxy?.let {
-                        api.readPosts(it.galaxyId).handleResponse(toaster::toast)
+                        api.readPosts(it.galaxyId).handleOutcome(toaster::toast)
                     }
                     val points = posts?.let {
                         markerService.createMarkers(it)
-                    } ?: api.readTopGalaxies().handleResponse(toaster::toast)?.let {
+                    } ?: api.readTopGalaxies().handleOutcome(toaster::toast)?.let {
                         markerService.createMarkers(it)
                     }
                     markerMap.setPoints(points)

@@ -1,6 +1,6 @@
 package streetlight.web.ui
 
-import kampfire.model.handleResponse
+import kampfire.model.handleOutcome
 import koala.css.*
 import koala.dom.*
 import koala.dom.routeBlock
@@ -37,7 +37,7 @@ fun AppScope.viewPostUpdater(model: PostEditor) {
 
 fun AppScope.viewEditPostRoute() {
     routeBlock<PostUpdateRoute, PostEdit>(portal, { route ->
-        api.readPost(route.slug).handleResponse(toaster::toast) {
+        api.readPost(route.slug).handleOutcome(toaster::toast) {
             (it as? BasicPost)?.toEdit()
         }
     }) {

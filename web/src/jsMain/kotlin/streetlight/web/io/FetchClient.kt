@@ -10,7 +10,7 @@ import kampfire.api.PathBuilder
 import kampfire.api.PostEndpoint
 import kampfire.api.QueryEndpoint
 import kampfire.api.TableId
-import kampfire.model.Response
+import kampfire.model.Outcome
 import kampfire.model.Url
 import koala.external.FeedMessage
 import kotlinx.browser.window
@@ -68,7 +68,7 @@ class FetchClient(
     suspend inline fun <reified Returned, Endpoint : GetEndpoint<Returned>> getApi(
         endpoint: Endpoint,
         noinline block: (PathBuilder.(Endpoint) -> Unit)? = null,
-    ): Response<Returned>? = authRequest(
+    ): Outcome<Returned>? = authRequest(
         method = "GET",
         path = resolvePath(endpoint, block)
     ) { it.tryDecodeBytesResponse() }
@@ -76,12 +76,12 @@ class FetchClient(
     suspend inline fun <Id, reified Returned> getApi(
         endpoint: GetByIdEndpoint<Id, Returned>,
         id: Id,
-    ): Response<Returned>? = authRequest("GET", "${endpoint.path}/$id") { it.tryDecodeBytesResponse() }
+    ): Outcome<Returned>? = authRequest("GET", "${endpoint.path}/$id") { it.tryDecodeBytesResponse() }
 
     suspend inline fun <reified Sent, reified Returned> getApi(
         endpoint: QueryEndpoint<Sent, Returned>,
         query: String?
-    ): Response<Returned>? {
+    ): Outcome<Returned>? {
         val url = if (!query.isNullOrEmpty()) "${endpoint.path}?$query" else endpoint.path
         return authRequest("GET", url) { it.tryDecodeBytesResponse() }
     }
@@ -89,7 +89,7 @@ class FetchClient(
     suspend inline fun <reified Sent, reified Returned> postApi(
         endpoint: PostEndpoint<Sent, Returned>,
         body: Sent,
-    ): Response<Returned>? =
+    ): Outcome<Returned>? =
         authRequest("POST", endpoint.path, Json.encodeToString(body)) { it.tryDecodeBytesResponse() }
 
 
@@ -195,7 +195,7 @@ class FetchClient(
         return handleResponse(response)
     }
 
-    suspend fun uploadBlob(postUrl: String, blobUrl: Url): Response<Url>? {
+    suspend fun uploadBlob(postUrl: String, blobUrl: Url): Outcome<Url>? {
         val response = window.fetch(blobUrl.value).await()
         val blob: Blob = response.blob().await()
         return authRequest(

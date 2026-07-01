@@ -2,12 +2,11 @@ package streetlight.web.model
 
 import kampfire.api.Slug
 import kampfire.model.Labeled
-import kampfire.model.handleResponse
+import kampfire.model.handleOutcome
 import koala.dom.MessageStore
 import koala.model.GeoCamera
 import koala.model.mapDistinct
 import koala.model.storeOf
-import koala.utils.prettyPrint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
@@ -53,7 +52,7 @@ class LocationScout(
             launch {
                 queryFlow.collect { query ->
                     api.searchLocations(query, stateNow.city?.takeIf { it.isNotBlank() })
-                        .handleResponse(toaster::toast) { locations ->
+                        .handleOutcome(toaster::toast) { locations ->
                             state.set { it.copy(queryLocations = locations) }
                         }
                 }
@@ -62,8 +61,8 @@ class LocationScout(
             launch {
                 geo.stateFlow.filter { !it.isMoving && stateNow.mode == SearchMode.Map }
                     .mapDistinct { it.center }.collect { center ->
-                        osm.readLocationAt(center).handleResponse(mapMessage::set) { location ->
-                            val location = location.toEditOrNull() ?: return@handleResponse
+                        osm.readLocationAt(center).handleOutcome(mapMessage::set) { location ->
+                            val location = location.toEditOrNull() ?: return@handleOutcome
                             mapMessage.set(location.label)
                             state.set { it.copy(mapLocation = location)}
                         }
@@ -100,7 +99,7 @@ class LocationScout(
         scope.launch {
             val city = stateNow.city?.takeIf { it.isNotBlank() }
             val bounds = galaxy.geoBounds.takeIf { city == null }?.resizeBy(5f)
-            osm.readLocations(query, stateNow.city, bounds).handleResponse(queryMessage::set) { locations ->
+            osm.readLocations(query, stateNow.city, bounds).handleOutcome(queryMessage::set) { locations ->
                 queryMessage.set("found: ${locations.size}")
                 state.set { it.copy(osmLocations = locations.mapNotNull { loc -> loc.toEditOrNull() }) }
             }
@@ -124,7 +123,7 @@ class LocationScout(
             val location = submitLocation() ?: return@launch
 
             val edit = LocationPostEdit(null, galaxy.galaxyId, location.locationId, null)
-            api.postLocation(edit).handleResponse(postMessage::set) { slug ->
+            api.postLocation(edit).handleOutcome(postMessage::set) { slug ->
                 state.set { it.copy(slug = slug) }
             }
         }

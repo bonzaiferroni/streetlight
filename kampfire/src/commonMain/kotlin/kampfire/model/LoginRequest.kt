@@ -5,6 +5,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class LoginRequest(
     val usernameOrEmail: String,
-    val stayLoggedIn: Boolean,
+    val isTemp: Boolean,
     val password: String? = null,
 )

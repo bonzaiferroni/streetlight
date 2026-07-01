@@ -1,6 +1,6 @@
 package streetlight.web.ui
 
-import kampfire.model.handleResponse
+import kampfire.model.handleOutcome
 import koala.SvgFile
 import koala.css.Height3
 import koala.css.ModifierSet
@@ -11,7 +11,6 @@ import koala.css.modify
 import koala.dom.AppScope
 import koala.dom.icon
 import koala.dom.modify
-import koala.dom.onClick
 import koala.dom.onClickElement
 import koala.dom.setStyle
 import koala.dom.unmodify
@@ -19,7 +18,6 @@ import streetlight.model.data.GalaxyId
 import streetlight.model.data.LightEdit
 import streetlight.model.data.LightType
 import streetlight.model.data.RecordId
-import kotlin.uuid.Uuid
 
 fun AppScope.starToggle(
     isLit: Boolean,
@@ -36,7 +34,7 @@ fun AppScope.starToggle(
         launchEffect {
             icon.unmodify(ScaleIn)
             icon.modify(ScaleOut)
-            api.editLight(LightEdit(recordId.value, !litNow, lightType)).handleResponse(toaster::toast) {
+            api.editLight(LightEdit(recordId.value, !litNow, lightType)).handleOutcome(toaster::toast) {
                 litNow = !litNow
                 icon.setStyle(Property.MaskUrl.to(svg()))
                 icon.modify(ScaleIn)

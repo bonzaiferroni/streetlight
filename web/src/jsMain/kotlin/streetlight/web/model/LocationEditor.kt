@@ -1,10 +1,9 @@
 package streetlight.web.model
 
 import kampfire.api.Markdown
-import kampfire.api.toMarkdown
 import kampfire.model.GeoPoint
 import kampfire.model.Url
-import kampfire.model.handleResponse
+import kampfire.model.handleOutcome
 import koala.dom.MessageStore
 import koala.model.mapDistinct
 import koala.model.mapDistinctNotNull
@@ -76,7 +75,7 @@ class LocationEditor(
         val website = editNow.website?.takeIf { it.startsWith("http") } ?: return
         scope.launch {
             websiteMessage.set("Reading the link, this will take a minute.", true)
-            api.parseLocation(UrlParseRequest(website)).handleResponse(websiteMessage::set) { edit ->
+            api.parseLocation(UrlParseRequest(website)).handleOutcome(websiteMessage::set) { edit ->
                 state.set { it.copy(edit = edit.mergeLeft(editNow)) }
                 websiteMessage.set("Does this information look correct?")
             }
@@ -105,15 +104,15 @@ class LocationEditor(
         if (!isEditValid() || !uploadImageIfBlob()) return null
         message.set("Sending...", true)
         return when (editNow.locationId) {
-            null -> api.createLocation(editNow).handleResponse(message::set)
-            else -> api.updateLocation(editNow).handleResponse(message::set)
+            null -> api.createLocation(editNow).handleOutcome(message::set)
+            else -> api.updateLocation(editNow).handleOutcome(message::set)
         }
     }
 
     private suspend fun uploadImageIfBlob(): Boolean {
         val blobUrl = editNow.imageRef?.takeIf { it.isBlob } ?: return true
         message.set("Uploading image...", true)
-        val refUrl = api.uploadImage(blobUrl).handleResponse(message::set)
+        val refUrl = api.uploadImage(blobUrl).handleOutcome(message::set)
         if (refUrl == null) {
             message.set("Unable to upload image.")
             return false

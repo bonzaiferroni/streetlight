@@ -1,6 +1,6 @@
 package streetlight.web.ui
 
-import kampfire.model.handleResponse
+import kampfire.model.handleOutcome
 import koala.css.*
 import koala.dom.*
 import koala.html.filigree
@@ -35,7 +35,7 @@ fun AppScope.viewContentPoster(galaxy: Galaxy) {
 
 fun AppScope.viewContentPosterRoute() {
     routeBlock<CreatePostRoute, Galaxy>({
-        api.readGalaxy(it.slug).handleResponse(toaster::toast)
+        api.readGalaxy(it.slug).handleOutcome(toaster::toast)
     }) { galaxy ->
         viewContentPoster(galaxy)
     }

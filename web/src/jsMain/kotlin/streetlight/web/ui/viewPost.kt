@@ -1,6 +1,6 @@
 package streetlight.web.ui
 
-import kampfire.model.handleResponse
+import kampfire.model.handleOutcome
 import koala.dom.AppScope
 import koala.dom.replaceRender
 import koala.dom.routeBlock
@@ -26,7 +26,7 @@ fun AppScope.viewPost(post: BasicPost) {
 fun AppScope.viewPostRoute() {
     routeBlock<PostRoute, BasicPost>(portal, { route ->
         readIsland<BasicPost>(PostKey.IslandId) { it.slug == route.slug }
-            ?: api.readPost(route.slug).handleResponse(toaster::toast) as? BasicPost
+            ?: api.readPost(route.slug).handleOutcome(toaster::toast) as? BasicPost
     }) { post ->
         viewPost(post)
     }
