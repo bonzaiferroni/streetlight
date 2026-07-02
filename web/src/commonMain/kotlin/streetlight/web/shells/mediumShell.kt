@@ -36,23 +36,23 @@ import koala.html.mount
 import koala.html.row
 import koala.html.section
 import kotlinx.html.FlowContent
-import streetlight.model.data.BasicPost
-import streetlight.web.PostUpdateRoute
+import streetlight.model.data.Medium
+import streetlight.web.MediumUpdateRoute
 import streetlight.web.layouts.cellBlock
 import streetlight.web.layouts.postedAtCell
 import streetlight.web.layouts.starCell
 import streetlight.web.pages.appFooter
 
-fun FlowContent.postShell(post: BasicPost) {
+fun FlowContent.mediumShell(medium: Medium) {
     section(PostKey.ShellId) {
         column(modify(Gap0)) {
-            heading1(post.label, modify(TextAlignCenter, AntiShadow, LineHeight115, MarginTop4))
+            heading1(medium.title, modify(TextAlignCenter, AntiShadow, LineHeight115, MarginTop4))
             filigree {
                 heading4("in Denver This Weekend", modify(OpacityHigh, LineHeight115))
             }
         }
 
-        post.images.largest?.let {
+        medium.images.largest?.let {
             column(modify(SideBorder, BorderRadius1)) {
                 image(it, modify(AlignSelfCenter, MaxHeight64, BorderRadius2, MoonShadow))
             }
@@ -60,11 +60,11 @@ fun FlowContent.postShell(post: BasicPost) {
 
         card(modify(OverflowClip, Gap0, ZenBg, Padding0)) {
             cellBlock {
-                starCell(post.username)
-                postedAtCell(post.createdAt)
+                starCell(medium.username)
+                postedAtCell(medium.createdAt)
             }
 
-            post.text?.let {
+            medium.text?.let {
                 column(modify(Padding2, AlignSelfCenter, MaxWidthTextBody, LargeText)) {
                     markdown(it)
                 }
@@ -72,14 +72,14 @@ fun FlowContent.postShell(post: BasicPost) {
         }
 
         row(modify(JustifyContentEnd)) {
-            btn("edit", PostUpdateRoute(post.slug), modify(Zen))
+            btn("edit", MediumUpdateRoute(medium.slug), modify(Zen))
         }
 
         mount(PostKey.TalkId, modify(MarginTop4))
 
         appFooter()
 
-        dataIsland(PostKey.IslandId, post)
+        dataIsland(PostKey.IslandId, medium)
     }
 }
 

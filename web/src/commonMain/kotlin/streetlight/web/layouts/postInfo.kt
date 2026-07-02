@@ -13,26 +13,25 @@ import koala.html.row
 import koala.html.span
 import koala.html.textBlock
 import kotlinx.html.FlowContent
+import streetlight.model.data.Post
 import streetlight.web.GalaxyRoute
 import streetlight.web.StarRoute
 import kotlin.time.Clock
 import kotlin.time.Instant
 
 fun FlowContent.postInfo(
-    galaxySlug: Slug?,
-    galaxyName: String?,
-    username: Username?,
-    postedAt: Instant? = null,
+    post: Post,
+    isGalaxyContext: Boolean,
 ) {
     row(modify(AlignItemsCenter, MarginTopTiny)) {
         textBlock(mod = modify(SmallText)) {
-            galaxySlug?.let {
-                navigation(GalaxyRoute(it)) {
-                    span("${galaxyName ?: "g/$it"} • ")
+            if (!isGalaxyContext) {
+                navigation(GalaxyRoute(post.galaxySlug)) {
+                    span("${post.galaxyName} • ")
                 }
             }
             +"posted by "
-            when (username) {
+            when (val username = post.username) {
                 null -> {
                     span("Someone ", modify(Bold))
                 }
@@ -42,9 +41,7 @@ fun FlowContent.postInfo(
                     }
                 }
             }
-            postedAt?.let {
-                span((Clock.System.now() - postedAt).toAgoFormat())
-            }
+            span((Clock.System.now() - post.createdAt).toAgoFormat())
         }
     }
 }

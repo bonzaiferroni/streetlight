@@ -116,16 +116,19 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object ReadGalaxySlug: GetByIdEndpoint<Slug, Galaxy>(this)
         object ReadGalaxyId: GetByIdEndpoint<GalaxyId, Galaxy>(this)
         object ReadContent: GetByIdEndpoint<Slug, GalaxyContent>(this)
-        object CreateEventPost: PostEndpoint<EventPostEdit, Slug>(this)
-        object CreateLocationPost: PostEndpoint<LocationPostEdit, Slug>(this)
-        object CreatePost: PostEndpoint<PostEdit, Slug>(this)
-        object EditPost: PostEndpoint<PostEdit, Slug>(this)
+        object CreatePost: PostEndpoint<PostEdit, PostId>(this)
+        object EditPost: PostEndpoint<PostEdit, PostId>(this)
         object ReadMultiPosts: PostEndpoint<List<GalaxyId>, List<GalaxyPost>>(this)
         object ReadPosts: GetByIdEndpoint<GalaxyId, List<GalaxyPost>>(this)
-        object ReadPostSlug: GetByIdEndpoint<Slug, GalaxyPost>(this)
         object ReadPostId: GetByIdEndpoint<PostId, GalaxyPost>(this)
         object ReadLights: GetEndpoint<List<GalaxyId>>(this)
-        object RemovePost: PostEndpoint<Slug, Boolean>(this)
+        object RemovePost: PostEndpoint<PostId, Boolean>(this)
+    }
+    
+    object Media: ApiNode(this) {
+        object ReadMedia: GetByIdEndpoint<Slug, Medium>(this)
+        object CreateMedia: PostEndpoint<MediumEdit, Slug>(this)
+        object UpdateMedia: PostEndpoint<MediumEdit, Slug>(this)
     }
 
     object Cities: ApiNode(this) {

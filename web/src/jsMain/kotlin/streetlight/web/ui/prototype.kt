@@ -71,7 +71,7 @@ fun AppScope.postPanel(post: GalaxyPost) {
         featureImage(post.images.medium, modify(Width100P, Height24))
         column(modify(Padding1)) {
             heading3(post.label)
-            post.description?.let {
+            post.body?.let {
                 markdown(it)
             }
         }

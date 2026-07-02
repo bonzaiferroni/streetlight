@@ -13,7 +13,9 @@ import kotlinx.coroutines.launch
 import streetlight.model.data.Galaxy
 import streetlight.model.data.Location
 import streetlight.model.data.LocationEdit
-import streetlight.model.data.LocationPostEdit
+import streetlight.model.data.PostEdit
+import streetlight.model.data.PostId
+import streetlight.model.data.PostType
 import streetlight.model.data.mergeLeft
 import streetlight.model.data.toEditOrNull
 import streetlight.web.io.ApiClient
@@ -43,7 +45,7 @@ class LocationScout(
     val osmLocationsFlow = stateFlow.mapDistinct { it.osmLocations }
     val hasOsmLocations = stateFlow.mapDistinct { it.osmLocations.isNotEmpty() }
     val stageFlow = stateFlow.mapDistinct { it.stage }
-    val postFlow = stateFlow.mapDistinct { it.slug }
+    val postFlow = stateFlow.mapDistinct { it.postId }
     val modeFlow = stateFlow.mapDistinct { it.mode }
     val mapLocationFlow = stateFlow.mapDistinct { it.mapLocation }
 
@@ -122,9 +124,9 @@ class LocationScout(
         scope.launch {
             val location = submitLocation() ?: return@launch
 
-            val edit = LocationPostEdit(null, galaxy.galaxyId, location.locationId, null)
-            api.postLocation(edit).handleOutcome(postMessage::set) { slug ->
-                state.set { it.copy(slug = slug) }
+            val edit = PostEdit(null, galaxy.galaxyId, PostType.Location, location.locationId.value, null)
+            api.createPost(edit).handleOutcome(postMessage::set) { postId ->
+                state.set { it.copy(postId = postId) }
             }
         }
     }
@@ -137,7 +139,7 @@ data class LocationScoutState(
     val osmLocations: List<LocationEdit> = emptyList(),
     val location: Location? = null,
     val stage: LocationScoutStage = LocationScoutStage.Search,
-    val slug: Slug? = null,
+    val postId: PostId? = null,
     val mapLocation: LocationEdit? = null,
     val mode: SearchMode = SearchMode.Search,
 )

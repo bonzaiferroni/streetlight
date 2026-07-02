@@ -10,9 +10,11 @@ import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import streetlight.model.data.EventLocation
-import streetlight.model.data.EventPostEdit
 import streetlight.model.data.Galaxy
 import streetlight.model.data.GalaxyPost
+import streetlight.model.data.PostEdit
+import streetlight.model.data.PostId
+import streetlight.model.data.PostType
 import streetlight.web.io.ApiClient
 
 class EventScout(
@@ -85,9 +87,9 @@ class EventScout(
                 else -> event.eventId
             } ?: return@launch
 
-            val edit = EventPostEdit(null, galaxy.galaxyId, eventId, null)
-            api.createPost(edit).handleOutcome(postMessage::set) { slug ->
-                state.set { it.copy(slug = slug) }
+            val edit = PostEdit(null, galaxy.galaxyId, PostType.Event, eventId.value, null)
+            api.createPost(edit).handleOutcome(postMessage::set) { postId ->
+                state.set { it.copy(postId = postId) }
             }
         }
     }
@@ -105,7 +107,7 @@ data class EventScoutState(
     val query: String = "",
     val event: EventLocation? = null,
     val queryEvents: List<EventLocation> = emptyList(),
-    val slug: Slug? = null,
+    val postId: PostId? = null,
 )
 
 enum class EventScoutStage(label: String? = null) : Labeled {

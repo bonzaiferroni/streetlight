@@ -19,7 +19,7 @@ class GalaxyStage(
     val postFlow = stateFlow.mapDistinct { it.posts }
 
     fun setStage(content: GalaxyContent) {
-        val posts = content.posts.sortedByDescending { it.createdAt } // td: implement other sorts
+        val posts = content.posts.sortedByDescending { it.base.createdAt } // td: implement other sorts
         state.set { it.copy(galaxy = content.galaxy, posts = posts) }
     }
 
@@ -30,11 +30,11 @@ class GalaxyStage(
 
     fun removePost(postId: PostId) {
         val posts = stateNow.posts ?: emptyList()
-        state.set { it.copy(posts = posts.filter { item -> item.postId != postId }, isInitialStage = false)}
+        state.set { it.copy(posts = posts.filter { item -> item.base.postId != postId }, isInitialStage = false)}
     }
 
     fun replacePost(post: GalaxyPost) {
-        val posts = stateNow.posts?.map { if (it.postId == post.postId) post else it }
+        val posts = stateNow.posts?.map { if (it.base.postId == post.base.postId) post else it }
         state.set { it.copy(posts = posts, isInitialStage = false) }
     }
 }

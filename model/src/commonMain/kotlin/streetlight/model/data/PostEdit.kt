@@ -4,17 +4,16 @@ import kampfire.api.Markdown
 import kampfire.model.GeoPoint
 import kampfire.model.Url
 import kotlinx.serialization.Serializable
+import kotlin.uuid.Uuid
 
 @Serializable
 data class PostEdit(
     val postId: PostId?,
     val galaxyId: GalaxyId,
+    val postType: PostType,
+    val recordId: Uuid,
     val title: String? = null,
     val text: Markdown? = null,
-    val subtitle: String? = null,
-    val geoPoint: GeoPoint? = null,
-    val imageRef: Url? = null,
-    val links: List<ExtraLink>? = null,
 ) {
     val invalidPart get() = when {
         title.isNullOrBlank() -> "title"
@@ -26,13 +25,11 @@ data class PostEdit(
     val isValid get() = invalidPart == null
 }
 
-fun BasicPost.toEdit() = PostEdit(
+fun Post.toEdit(recordId: Uuid, postType: PostType) = PostEdit(
     postId = postId,
     galaxyId = galaxyId,
-    title = label,
-    subtitle = sublabel,
+    recordId = recordId,
+    postType = postType,
+    title = title,
     text = text,
-    geoPoint = geoPoint,
-    imageRef = imageRef,
-    links = links
 )

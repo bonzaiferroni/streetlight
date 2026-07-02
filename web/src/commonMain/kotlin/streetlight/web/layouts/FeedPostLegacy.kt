@@ -112,15 +112,15 @@ fun FlowContent.feedPostLegacy(
                             span((Clock.System.now() - postedAt).toAgoFormat())
                         }
                     }
-                    postSlug?.let { slug ->
-                        postMenu(slug, username)
-//                        val anchor = PositionAnchor("menu-${postId}")
-//                        icon(SvgFile.Dots, modify(Height3)) {
-//                            setAnchorName(anchor)
-//                            setPopoverTarget(PostKey.PostMenuId)
-//                            onClick = KoalaFun.CallMenu.invoke(anchor, PostKey.PostMenuId, postId)
-//                        }
-                    }
+//                    postSlug?.let { slug ->
+//                        postMenu(slug, username)
+////                        val anchor = PositionAnchor("menu-${postId}")
+////                        icon(SvgFile.Dots, modify(Height3)) {
+////                            setAnchorName(anchor)
+////                            setPopoverTarget(PostKey.PostMenuId)
+////                            onClick = KoalaFun.CallMenu.invoke(anchor, PostKey.PostMenuId, postId)
+////                        }
+//                    }
                 }
             }
         }

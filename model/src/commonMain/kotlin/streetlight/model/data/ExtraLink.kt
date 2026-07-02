@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class ExtraLink(
     val label: String,
-    val url: String,
+    val url: String, // td: make this Url
 ) {
     private val urlIsValid: Boolean
         get() {

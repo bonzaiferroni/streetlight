@@ -8,7 +8,7 @@ data class LocationRoute(override val slug: Slug): SlugRoute {
     override val title get() = "Location"
 }
 
-data class UpdateLocationRoute(override val slug: Slug): SlugRoute {
+data class LocationUpdateRoute(override val slug: Slug): SlugRoute {
     override val screen get() = StreetlightScreen.LocationUpdate
     override val title get() = "Share Location"
 }

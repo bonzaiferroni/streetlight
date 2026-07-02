@@ -11,7 +11,7 @@ fun FlowContent.largeEventPostCard(post: EventPost) {
     largePostCard(
         title = post.label,
         subtitle = "${event.locationName}, ${event.city}",
-        description = post.description,
+        description = post.body,
         links = event.links,
         images = post.images,
         postRoute = event.eventRoute,
@@ -19,7 +19,7 @@ fun FlowContent.largeEventPostCard(post: EventPost) {
         cells = listOf(
             { startsAtCell(event.startsAt) },
             { costCell(event.cost, event.url?.toUrl()) },
-            { starCell(post.username) },
+            { starCell(post.base.username) },
             { starLightCell(event) },
         )
     )

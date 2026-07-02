@@ -12,7 +12,7 @@ data class PostListing(
 enum class PostType(label: String? = null) {
     Event,
     Location,
-    Content;
+    Medium;
 
     val label = label ?: name
 }

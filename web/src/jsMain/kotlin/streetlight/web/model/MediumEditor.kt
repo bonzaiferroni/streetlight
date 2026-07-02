@@ -9,11 +9,11 @@ import koala.model.mapDistinct
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import streetlight.model.data.PostEdit
+import streetlight.model.data.MediumEdit
 import streetlight.web.io.ApiClient
 
-class PostEditor(
-    initialContent: PostEdit,
+class MediumEditor(
+    initialContent: MediumEdit,
     private val scope: CoroutineScope,
     private val api: ApiClient,
     private val toaster: Toaster,
@@ -25,12 +25,12 @@ class PostEditor(
 
     val message = MessageStore()
 
-    val contentFlow = stateFlow.mapDistinct { it.content }
-    val editNow get() = state.now.content
+    val editFlow = stateFlow.mapDistinct { it.edit }
+    val editNow get() = state.now.edit
 
     init {
         scope.launch {
-            contentFlow.mapDistinct { it.invalidMessage }.collect {
+            editFlow.mapDistinct { it.invalidMessage }.collect {
                 message.set(it ?: "Looks good.")
             }
         }
@@ -47,20 +47,20 @@ class PostEditor(
     fun submitPost() {
         scope.launch {
             if (!uploadImageIfBlob()) return@launch
-            val content = editNow.takeIf { it.isValid } ?: return@launch
+            val edit = editNow.takeIf { it.isValid } ?: return@launch
             message.set("Posting...", true)
 
-            when (content.postId) {
-                null -> api.createPost(content)
-                else -> api.editPost(content)
+            when (edit.mediumId) {
+                null -> api.createMedia(edit)
+                else -> api.updateMedia(edit)
             }.handleOutcome(toaster::toast) { slug ->
                 state.set { it.copy(slug = slug) }
             }
         }
     }
 
-    private fun setContent(block: (PostEdit) -> PostEdit) {
-        state.set { it.copy(content = block(stateNow.content)) }
+    private fun setContent(block: (MediumEdit) -> MediumEdit) {
+        state.set { it.copy(edit = block(stateNow.edit)) }
     }
 
     private suspend fun uploadImageIfBlob(): Boolean {
@@ -77,6 +77,6 @@ class PostEditor(
 }
 
 data class ContentEditorState(
-    val content: PostEdit,
+    val edit: MediumEdit,
     val slug: Slug? = null
 )

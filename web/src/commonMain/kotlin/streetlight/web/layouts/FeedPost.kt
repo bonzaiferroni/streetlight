@@ -1,27 +1,23 @@
 package streetlight.web.layouts
 
 import kampfire.api.Markdown
-import kampfire.api.Slug
-import kampfire.api.Username
 import kampfire.model.Url
 import koala.css.*
 import koala.html.*
 import kotlinx.html.FlowContent
 import streetlight.model.data.ExtraLink
-import kotlin.time.Instant
+import streetlight.model.data.Post
 
 fun FlowContent.feedPost(
-    username: Username?,
-    galaxyName: String?,
-    galaxySlug: Slug?,
+    post: Post?,
+    isGalaxyContext: Boolean,
     heading: String,
     postRoute: AppRoute?,
     imageUrl: Url?,
     description: Markdown?,
-    postedAt: Instant? = null,
     colorScheme: ColorScheme = ColorScheme.Primary,
     links: List<ExtraLink>?,
-    details: (FlowContent.() -> Unit)?,
+    cells: (FlowContent.() -> Unit)?,
 ) {
     div(modify(FeedPost.Base)) {
         div(modify(FeedPost.Content)) {
@@ -35,12 +31,14 @@ fun FlowContent.feedPost(
                         heading4(heading, modify(LineHeight115, Shrinkable, LineClamp2, TextOverflowEllipses))
                     }
                     spacer(modify(Height2Px, InkGradientBg, MarginTopTiny))
-                    postInfo(galaxySlug, galaxyName, username, postedAt)
+                    post?.let {
+                        postInfo(post, isGalaxyContext)
+                    }
                 }
             }
             // spacer(modify(Height2Px, InkGradientBg, MarginTop2Px))
-            details?.let {
-                cellBlock(modify(FeedPostLegacy.Details, BorderRadius2, OverflowClip), details)
+            cells?.let {
+                cellBlock(modify(FeedPostLegacy.Details, BorderRadius2, OverflowClip), cells)
             }
         }
 

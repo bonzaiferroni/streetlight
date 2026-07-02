@@ -19,6 +19,7 @@ import streetlight.model.data.RecordId
 import streetlight.model.data.SongId
 import streetlight.model.data.TalentId
 import streetlight.model.data.SpaceType
+import streetlight.model.data.toRecordId
 import kotlin.uuid.Uuid
 
 enum class StreetlightScreen(
@@ -27,7 +28,7 @@ enum class StreetlightScreen(
 ): AppScreen {
     Home(StaticParse { HomeRoute }, ""),
     Account(StaticParse { StarDashRoute }),
-    UpdatePost(SlugParse { PostUpdateRoute(it) }),
+    MediaUpdate(UuidParse { MediumUpdateRoute(it.toRecordId()) }),
     Sandbox(StaticParse { SandboxRoute }),
     Earth(SlugOrNullParse { EarthRoute(it) }),
     Chat(StaticParse { ChatRoute }),
@@ -36,10 +37,10 @@ enum class StreetlightScreen(
     EditTalent(UuidParse { EditTalentRoute(TalentId(it)) }),
 
     // location
-    Location(SlugParse { LocationRoute(it) }),
+    Location(SlugParse { LocationRoute(it) }, "l"),
     LocationAdmin(UuidParse { LocationAdminRoute(LocationId(it)) }),
     LocationScout(SlugParse { LocationScoutRoute(it) }),
-    LocationUpdate(SlugParse { UpdateLocationRoute(it) }),
+    LocationUpdate(SlugParse { LocationUpdateRoute(it) }),
 
     // galaxy
     Galaxy(SlugParse { GalaxyRoute(it) }, "g"),
@@ -53,13 +54,15 @@ enum class StreetlightScreen(
 
     Star(SlugParse { StarRoute(it) }, "s"),
     EventScout(SlugParse { EventScoutRoute(it) }),
-    CreatePost(SlugParse { CreatePostRoute(it) }),
-    Post(SlugParse { PostRoute(it) }, "p"),
+    MediumForge(SlugParse { MediumForgeRoute(it) }),
     EditStar(StaticParse { EditStarRoute }),
     SiteConfig(StaticParse { SiteConfigRoute }),
     AboutApp(StaticParse { AboutRoute }),
     Docs(IdParse { SiteDocRoute(it) }),
-    Talk(UuidParse { TalkRoute(GalaxyId(it)) });
+    Talk(UuidParse { TalkRoute(GalaxyId(it)) }),
+
+    // media
+    Medium(SlugParse { MediumRoute(it) }, "m");
 
     override val pathRoot = pathRoot ?: name.pascalToKebabCase()
 }

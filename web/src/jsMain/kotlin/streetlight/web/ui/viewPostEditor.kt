@@ -9,15 +9,16 @@ import koala.html.heading1
 import koala.model.mapDistinctNotNull
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+import streetlight.model.data.Medium
+import streetlight.model.data.MediumEdit
 import streetlight.model.data.PostEdit
-import streetlight.model.data.BasicPost
 import streetlight.model.data.toEdit
-import streetlight.web.PostUpdateRoute
-import streetlight.web.PostRoute
-import streetlight.web.model.PostEditor
+import streetlight.web.MediumUpdateRoute
+import streetlight.web.MediumRoute
+import streetlight.web.model.MediumEditor
 
-fun AppScope.viewPostUpdater(model: PostEditor) {
-    val routeFlow = model.stateFlow.mapDistinctNotNull { it.slug?.let { slug -> PostRoute(slug) } }
+fun AppScope.viewMediumUpdater(model: MediumEditor) {
+    val routeFlow = model.stateFlow.mapDistinctNotNull { it.slug?.let { slug -> MediumRoute(slug) } }
     goOnRoute(routeFlow)
 
     section(modify(Column)) {
@@ -35,14 +36,15 @@ fun AppScope.viewPostUpdater(model: PostEditor) {
     }
 }
 
-fun AppScope.viewEditPostRoute() {
-    routeBlock<PostUpdateRoute, PostEdit>(portal, { route ->
-        api.readPost(route.slug).handleOutcome(toaster::toast) {
-            (it as? BasicPost)?.toEdit()
+fun AppScope.viewMediumUpdaterRoute() {
+    routeBlock<MediumUpdateRoute, MediumEdit>(
+        portal = portal,
+        provideData = { route ->
+            api.readMedium(route.slug).handleOutcome(toaster::toast) { it.toEdit() }
         }
-    }) {
-        val editor = PostEditor(it, parentScope, api, toaster)
-        viewPostUpdater(editor)
+    ) {
+        val editor = MediumEditor(it, parentScope, api, toaster)
+        viewMediumUpdater(editor)
     }
 }
 

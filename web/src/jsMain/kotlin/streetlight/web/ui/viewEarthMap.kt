@@ -171,7 +171,7 @@ fun AppScope.markerPanel(marker: PointMarker) {
                 label = post.label,
                 sublabel = post.sublabel,
                 imageUrl = post.images.medium,
-                description = post.description,
+                description = post.body,
                 route = post.event.eventRoute,
                 subRoute = post.event.locationRoute,
                 colorScheme = ColorScheme.Accent,

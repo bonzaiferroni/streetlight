@@ -12,21 +12,19 @@ import streetlight.model.data.LocationEdit
 
 fun FlowContent.feedPostOf(post: GalaxyPost) {
     feedPost(
-        galaxyName = post.galaxyName,
-        galaxySlug = post.galaxySlug,
-        username = post.username,
+        post = post.base,
+        isGalaxyContext = true,
         heading = post.label,
         // subHeading = post.subtitle,
         postRoute = post.route,
         // subRoute = post.subRoute,
         imageUrl = post.images.medium,
-        description = post.description,
+        description = post.body,
         colorScheme = post.colorScheme,
         links = post.links,
+        cells = post.cells,
         // isLit = post.isLit,
         // lightCount = post.lightCount,
-        postedAt = post.createdAt,
-        details = post.cells
     )
 }
 

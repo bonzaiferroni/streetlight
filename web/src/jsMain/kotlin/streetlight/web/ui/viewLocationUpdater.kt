@@ -7,7 +7,7 @@ import streetlight.model.data.LocationUpdaterContent
 import streetlight.model.data.Star
 import streetlight.model.data.toEdit
 import streetlight.web.LocationRoute
-import streetlight.web.UpdateLocationRoute
+import streetlight.web.LocationUpdateRoute
 
 fun AppScope.viewLocationUpdater(content: LocationUpdaterContent, star: Star) {
     val edit = content.location.toEdit()
@@ -47,7 +47,7 @@ fun AppScope.viewLocationUpdater(content: LocationUpdaterContent, star: Star) {
 fun AppScope.viewUpdateLocationRoute() {
     column {
         starGate { star ->
-            routeBlock<UpdateLocationRoute, LocationUpdaterContent?>(
+            routeBlock<LocationUpdateRoute, LocationUpdaterContent?>(
                 portal = portal,
                 provideData = { route ->
                     api.readLocationUpdaterContent(route.slug).handleOutcome(toaster::toast)

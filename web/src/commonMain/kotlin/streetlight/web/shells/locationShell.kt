@@ -5,7 +5,7 @@ import koala.html.*
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import streetlight.model.data.LocationContent
-import streetlight.web.UpdateLocationRoute
+import streetlight.web.LocationUpdateRoute
 import streetlight.web.layouts.layoutPosts
 import streetlight.web.layouts.feedPostOf
 import streetlight.web.pages.appFooter
@@ -17,7 +17,7 @@ fun FlowContent.locationShell(
     column(LocationProfileKey.Id, modify(AlignItemsStretch, Gap4)) {
         headerOf(
             location = content.location,
-            editRoute = if (content.canEdit) UpdateLocationRoute(content.location.slug) else null
+            editRoute = if (content.canEdit) LocationUpdateRoute(content.location.slug) else null
         )
 
         tabs(LocationProfileKey.tabsId) {

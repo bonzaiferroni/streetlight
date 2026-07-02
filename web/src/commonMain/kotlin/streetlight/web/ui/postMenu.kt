@@ -1,6 +1,5 @@
 package streetlight.web.ui
 
-import kampfire.api.Slug
 import kampfire.api.Username
 import kampfire.api.toUsername
 import koala.SvgFile
@@ -14,13 +13,15 @@ import koala.html.icon
 import koala.html.setAttribute
 import koala.html.setPopoverTarget
 import koala.html.slugAttributeOf
+import koala.html.uuidAttributeOf
 import kotlinx.html.FlowContent
+import streetlight.model.data.PostId
 
-fun FlowContent.postMenu(slug: Slug, username: Username?) {
+fun FlowContent.postMenu(postId: PostId, username: Username?) {
     // val anchor = PositionAnchor("menu-${slug}")
     button(modify(AlignSelfCenter)) {
         setPopoverTarget(PostMenu.MenuId)
-        setAttribute(PostMenu.Slug.to(slug))
+        setAttribute(PostMenu.PostId.to(postId))
         setAttribute(PostMenu.Username.to(username))
         icon(SvgFile.Dots, modify(Height3))
     }
@@ -28,6 +29,6 @@ fun FlowContent.postMenu(slug: Slug, username: Username?) {
 
 object PostMenu {
     val MenuId = Id("post-menu")
-    val Slug = slugAttributeOf("post-menu-slug")
+    val PostId = uuidAttributeOf("post-menu-slug") { PostId(it) }
     val Username = Attribute<Username?>("post-menu-username", true) { it.toUsername() }
 }

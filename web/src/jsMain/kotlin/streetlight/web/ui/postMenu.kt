@@ -1,6 +1,5 @@
 package streetlight.web.ui
 
-import kampfire.api.Slug
 import kampfire.api.Username
 import kampfire.model.handleOutcome
 import koala.css.BlurBackdrop
@@ -19,25 +18,24 @@ import koala.dom.hidePopover
 import koala.dom.onClick
 import koala.dom.popover
 import koala.dom.queryAttributeAll
-import koala.html.btn
 import kotlinx.browser.document
 import kotlinx.coroutines.launch
 import kotlinx.dom.clear
 import kotlinx.html.dom.append
 import org.w3c.dom.HTMLElement
-import streetlight.web.PostUpdateRoute
+import streetlight.model.data.PostId
 
 fun AppScope.initPostMenu(shellBase: HTMLElement) {
-    val targets = shellBase.queryAttributeAll(PostMenu.Slug)
+    val targets = shellBase.queryAttributeAll(PostMenu.PostId)
 
-    var activeSlug: Slug? = null
+    var activeId: PostId? = null
 
-    targets.forEach { (element, slug) ->
+    targets.forEach { (element, postId) ->
         val username = element.getAttribute(PostMenu.Username)
         var shouldSkip = false
 
         element.addEventListener("pointerdown", {
-            shouldSkip = activeSlug == slug && cachedMenuElement?.matches(":popover-open") == true
+            shouldSkip = activeId == postId && cachedMenuElement?.matches(":popover-open") == true
         })
 
         element.onClick {
@@ -46,15 +44,15 @@ fun AppScope.initPostMenu(shellBase: HTMLElement) {
                 return@onClick
             }
             cachedMenuElement?.hidePopover()
-            activeSlug = slug
-            callPostMenu(slug, username)
+            activeId = postId
+            callPostMenu(postId, username)
         }
     }
 }
 
 private var cachedMenuElement: HTMLElement? = null
 
-fun AppScope.callPostMenu(slug: Slug, username: Username?) {
+fun AppScope.callPostMenu(postId: PostId, username: Username?) {
     val menuElement = cachedMenuElement ?: document.body!!.append {
         popover(PostMenu.MenuId, null, modify(Magic, SlideUp))
     }.first().also { cachedMenuElement = it }
@@ -66,13 +64,15 @@ fun AppScope.callPostMenu(slug: Slug, username: Username?) {
         card(modify(BlurBackdrop, BorderRadius3)) {
             column {
                 if (isUser) {
-                    btn("edit", PostUpdateRoute(slug), modify(Secondary))
+                    // td: figure out what edit options to provide here
+                    // do we edit the post or the target record?
+                    // btn("edit", MediaUpdateRoute(postId), modify(Secondary))
                 } else {
                     button("report", modify(Secondary))
                 }
                 dangerButton("remove", onClick = {
                     parentScope.launch {
-                        api.removePost(slug).handleOutcome(toaster::toast) {
+                        api.removePost(postId).handleOutcome(toaster::toast) {
                             portal.refresh()
                         }
                     }

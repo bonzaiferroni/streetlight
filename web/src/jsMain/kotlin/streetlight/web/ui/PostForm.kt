@@ -3,13 +3,13 @@ package streetlight.web.ui
 import koala.css.*
 import koala.dom.*
 import koala.model.mapDistinct
-import streetlight.web.model.PostEditor
+import streetlight.web.model.MediumEditor
 
-fun AppScope.postForm(model: PostEditor) {
-    val titleFlow = model.contentFlow.mapDistinct { it.title }
-    val subtitleFlow = model.contentFlow.mapDistinct { it.subtitle }
-    val textFlow = model.contentFlow.mapDistinct { it.text }
-    val imageFlow = model.contentFlow.mapDistinct { it.imageRef }
+fun AppScope.postForm(model: MediumEditor) {
+    val titleFlow = model.editFlow.mapDistinct { it.title }
+    val subtitleFlow = model.editFlow.mapDistinct { it.subtitle }
+    val textFlow = model.editFlow.mapDistinct { it.text }
+    val imageFlow = model.editFlow.mapDistinct { it.imageRef }
 
     row(modify()) {
         imageDrop(imageFlow, model::setImageUrl, modify(Height24, Aspect3By2, BorderRadius1))

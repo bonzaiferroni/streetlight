@@ -24,16 +24,16 @@ object LightControl {
 }
 
 fun FlowContent.postLight(post: GalaxyPost) {
-    row(modify(LightControl.Class, AlignItemsCenter, GapTiny, LightControl.getLitMod(post.isLit))) {
+    row(modify(LightControl.Class, AlignItemsCenter, GapTiny, LightControl.getLitMod(post.base.isLit))) {
         setAttribute(LightControl.TypeData.to(LightType.Post))
-        onClick = LightControl.ToggleFun.invoke(ThisElement, post.postId)
+        onClick = LightControl.ToggleFun.invoke(ThisElement, post.base.postId)
 
         box(modify(OpacityHigh, Height3, Aspect1)) {
             icon(SvgFile.Boost, modify(LightControl.UnlitIcon))
             icon(SvgFile.BoostFilled, modify(LightControl.LitIcon))
         }
         textBlock(
-            post.lightCount.toMetricString(),
+            post.base.lightCount.toMetricString(),
             mod = modify(LightControl.Counter, TextAlignCenter, SmallText, LineHeight1)
         )
     }

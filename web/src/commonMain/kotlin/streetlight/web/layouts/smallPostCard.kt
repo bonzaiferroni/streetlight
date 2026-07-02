@@ -20,7 +20,7 @@ import streetlight.web.ui.starLightCell
 fun FlowContent.smallPostCard(post: EventPost) {
     val thumbUrl = post.images.thumb
     val title = post.label
-    val description = post.description
+    val description = post.body
     val event = post.event ?: return // td: show removed content
     val postRoute = event.eventRoute
 

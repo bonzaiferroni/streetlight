@@ -36,7 +36,7 @@ data class Galaxy(
     val updatedAt: Instant,
     val createdAt: Instant,
 ) {
-    val postTypes get() = setOf(PostType.Location, PostType.Event, PostType.Content)
+    val postTypes get() = setOf(PostType.Location, PostType.Event, PostType.Medium)
 }
 
 @JvmInline @Serializable

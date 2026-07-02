@@ -7,17 +7,17 @@ import koala.html.filigree
 import koala.html.heading1
 import koala.model.mapDistinctNotNull
 import kotlinx.html.js.h3
-import streetlight.model.data.PostEdit
 import streetlight.model.data.Galaxy
-import streetlight.web.CreatePostRoute
-import streetlight.web.PostRoute
+import streetlight.model.data.MediumEdit
+import streetlight.web.MediumForgeRoute
+import streetlight.web.MediumRoute
 
-fun AppScope.viewContentPoster(galaxy: Galaxy) {
-    val model = app.getContentEditor(PostEdit(null, galaxy.galaxyId), parentScope)
-    goOnRoute(model.stateFlow.mapDistinctNotNull { it.slug?.let { slug -> PostRoute(slug) }  })
+fun AppScope.viewMediumForge(galaxy: Galaxy?) {
+    val model = app.getMediumEditor(MediumEdit(), parentScope)
+    goOnRoute(model.stateFlow.mapDistinctNotNull { it.slug?.let { slug -> MediumRoute(slug) }  })
 
     section(modify(Column)) {
-        heading1(galaxy.name, modify(TextAlignCenter))
+        heading1(galaxy?.name ?: "Profile Post", modify(TextAlignCenter))
         filigree {
             h3("posting content")
         }
@@ -34,9 +34,9 @@ fun AppScope.viewContentPoster(galaxy: Galaxy) {
 }
 
 fun AppScope.viewContentPosterRoute() {
-    routeBlock<CreatePostRoute, Galaxy>({
-        api.readGalaxy(it.slug).handleOutcome(toaster::toast)
+    routeBlock<MediumForgeRoute, Galaxy?>({ route ->
+        route.slug?.let { api.readGalaxy(it).handleOutcome(toaster::toast) }
     }) { galaxy ->
-        viewContentPoster(galaxy)
+        viewMediumForge(galaxy)
     }
 }

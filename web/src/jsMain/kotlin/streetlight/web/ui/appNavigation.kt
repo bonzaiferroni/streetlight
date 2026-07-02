@@ -32,8 +32,7 @@ fun AppScope.appNavigation() {
             StreetlightScreen.Account -> viewStarDashRoute()
             StreetlightScreen.Sandbox -> viewSandbox()
             StreetlightScreen.Earth -> viewEarthMapRoute()
-            StreetlightScreen.Post -> viewPostRoute()
-            StreetlightScreen.UpdatePost -> viewEditPostRoute()
+            StreetlightScreen.MediaUpdate -> viewMediumUpdaterRoute()
             StreetlightScreen.Chat -> viewChatRoom()
             StreetlightScreen.SongProfile -> viewSongProfile()
             StreetlightScreen.EditTalent -> editTalentForm()
@@ -55,7 +54,7 @@ fun AppScope.appNavigation() {
             StreetlightScreen.Galaxies -> viewGalaxyList()
 
             StreetlightScreen.Star -> viewStarProfileRoute()
-            StreetlightScreen.CreatePost -> viewContentPosterRoute()
+            StreetlightScreen.MediumForge -> viewContentPosterRoute()
             StreetlightScreen.EditStar -> viewStarEditor()
             StreetlightScreen.SiteConfig -> viewSiteConfig()
             StreetlightScreen.AboutApp -> viewAboutApp()

@@ -1,17 +1,17 @@
 package streetlight.web.model
 
-import streetlight.model.data.BasicPost
 import streetlight.model.data.EventPost
 import streetlight.model.data.Galaxy
 import streetlight.model.data.GalaxyPost
 import streetlight.model.data.LocationPost
+import streetlight.model.data.MediumPost
 
 class MarkerService() {
     fun createMarkers(posts: List<GalaxyPost>) = posts.mapNotNull { post ->
         when (post) {
             is EventPost -> EventMarker(post)
             is LocationPost -> return@mapNotNull null
-            is BasicPost -> return@mapNotNull null
+            is MediumPost -> return@mapNotNull null
         }
     }
 
@@ -26,7 +26,7 @@ class MarkerService() {
     fun createMarker(value: Any) = when (value) {
         is EventPost -> EventMarker(value)
         is LocationPost -> null
-        is BasicPost -> null
+        is MediumPost -> null
         is Galaxy -> GalaxyMarker(value)
         else -> null
     }

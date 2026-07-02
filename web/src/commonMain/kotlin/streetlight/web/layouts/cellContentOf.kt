@@ -61,7 +61,7 @@ fun cellContentOf(event: EventLocation, post: GalaxyPost?): FlowContent.() -> Un
         starLightCell(event)
         moreButton()
         post?.let {
-            postMenu(post.slug, post.username)
+            postMenu(post.base.postId, post.base.username)
         }
     }
 }

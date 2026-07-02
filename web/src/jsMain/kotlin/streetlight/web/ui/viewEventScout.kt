@@ -17,7 +17,7 @@ fun AppScope.viewEventScout(galaxy: Galaxy) {
     val locationScout = app.getLocationScout(galaxy, locationEditor, parentScope)
     val editor = app.getEventEditor(EventEdit(timeZoneId = getTimeZoneId()), parentScope)
     val model = app.getEventScout(galaxy, editor, locationScout, parentScope)
-    val routeFlow = model.stateFlow.mapDistinctNotNull { it.slug?.let { GalaxyRoute(galaxy.slug) } }
+    val routeFlow = model.stateFlow.mapDistinctNotNull { it.postId?.let { GalaxyRoute(galaxy.slug) } }
     goOnRoute(routeFlow)
 
     fun isHeadingStage(stage: EventScoutStage) = when (stage) {

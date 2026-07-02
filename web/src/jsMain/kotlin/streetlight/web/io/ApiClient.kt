@@ -97,16 +97,13 @@ class ApiClient(private val client: FetchClient) {
     suspend fun readGalaxy(slug: Slug) = client.getApi(Api.Galaxies.ReadGalaxySlug, slug)
     suspend fun readGalaxyContent(slug: Slug) = client.getApi(Api.Galaxies.ReadContent, slug)
     suspend fun readGalaxy(galaxyId: GalaxyId) = client.getApi(Api.Galaxies.ReadGalaxyId, galaxyId)
-    suspend fun createPost(post: EventPostEdit) = client.postApi(Api.Galaxies.CreateEventPost, post)
     suspend fun createPost(post: PostEdit) = client.postApi(Api.Galaxies.CreatePost, post)
     suspend fun editPost(post: PostEdit) = client.postApi(Api.Galaxies.EditPost, post)
-    suspend fun postLocation(location: LocationPostEdit) = client.postApi(Api.Galaxies.CreateLocationPost, location)
     suspend fun readPosts(galaxyIds: List<GalaxyId>) = client.postApi(Api.Galaxies.ReadMultiPosts, galaxyIds)
     suspend fun readPosts(galaxyId: GalaxyId) = client.getApi(Api.Galaxies.ReadPosts, galaxyId)
     suspend fun readPost(postId: PostId) = client.getApi(Api.Galaxies.ReadPostId, postId)
-    suspend fun readPost(slug: Slug) = client.getApi(Api.Galaxies.ReadPostSlug, slug)
     suspend fun readGalaxyLights() = client.getApi(Api.Galaxies.ReadLights)
-    suspend fun removePost(slug: Slug) = client.postApi(Api.Galaxies.RemovePost, slug)
+    suspend fun removePost(postId: PostId) = client.postApi(Api.Galaxies.RemovePost, postId)
 
     suspend fun readStarByUsername(username: String) = client.getApi(Api.Stars.ReadByUsername) {
         writeParam(it.username, username)
@@ -130,6 +127,11 @@ class ApiClient(private val client: FetchClient) {
         writeParam(it.query, query)
         writeParam(it.country, country)
     }
+
+    // media
+    suspend fun readMedium(slug: Slug) = client.getApi(Api.Media.ReadMedia, slug)
+    suspend fun createMedia(edit: MediumEdit) = client.postApi(Api.Media.CreateMedia, edit)
+    suspend fun updateMedia(edit: MediumEdit) = client.postApi(Api.Media.UpdateMedia, edit)
 
 }
 
