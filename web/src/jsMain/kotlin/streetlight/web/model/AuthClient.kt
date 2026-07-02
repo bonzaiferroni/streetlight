@@ -21,26 +21,16 @@ class AuthClient(
 
         console.log("authorizing")
 
-        val loginResponse = if (loginRequest.password != null) {
-            window.fetch(
-                UserApi.Login.path,
-                RequestInit(
-                    method = "POST",
-                    headers = json(
-                        "Content-Type" to "application/json"
-                    ),
-                    body = Json.encodeToString(loginRequest)
-                )
-            ).await()
-        } else {
-            window.fetch(
-                UserApi.Refresh.path,
-                RequestInit(
-                    method = "POST",
-                    credentials = RequestCredentials.SAME_ORIGIN,
-                )
-            ).await()
-        }
+        val loginResponse = window.fetch(
+            UserApi.Login.path,
+            RequestInit(
+                method = "POST",
+                headers = json(
+                    "Content-Type" to "application/json"
+                ),
+                body = Json.encodeToString(loginRequest)
+            )
+        ).await()
 
         if (!loginResponse.ok) {
             console.log("Login failed")

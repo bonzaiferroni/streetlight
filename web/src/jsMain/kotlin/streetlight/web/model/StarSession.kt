@@ -28,6 +28,10 @@ class StarSession(
         if (stateNow.star != null) return
         console.log("signing in")
         scope.launch {
+//            val authClient = AuthClient(cred)
+//            if (authClient.authenticate()) {
+//
+//            }
             readUser()
         }
     }

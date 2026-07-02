@@ -92,12 +92,21 @@ class FetchClient(
     ): Outcome<Returned>? =
         authRequest("POST", endpoint.path, Json.encodeToString(body)) { it.tryDecodeBytesResponse() }
 
-
-    suspend fun request(endpoint: Endpoint<*, *>): FetchResponse {
+    @Deprecated("intended to be a general purpose request function but it is not working")
+    suspend fun request(
+        endpoint: Endpoint<*, *>,
+        encodingType: EncodingType,
+        acceptEncoding: EncodingType,
+    ): FetchResponse {
+        val headers = json(
+            "Content-Type" to encodingType.headerValue,
+            "Accept" to acceptEncoding.headerValue
+        )
         return window.fetch(
             endpoint.path,
             RequestInit(
                 method = endpoint.method?.value ?: error("method not found"),
+                headers = headers,
                 credentials = RequestCredentials.SAME_ORIGIN,
             )
         ).await()

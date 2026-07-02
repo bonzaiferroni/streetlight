@@ -95,5 +95,6 @@ suspend inline fun <reified T> FetchResponse.tryDecodeBytesResponse(): Outcome<T
 
 enum class EncodingType(val headerValue: String) {
     Cbor("application/cbor"),
-    Json("application/json")
+    Json("application/json"),
+    // OctetStream("application/octet-stream")
 }

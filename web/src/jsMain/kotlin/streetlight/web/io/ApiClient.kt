@@ -66,7 +66,7 @@ class ApiClient(private val client: FetchClient) {
     suspend fun uploadImage(blobUrl: Url) = client.uploadBlob(Api.Users.UploadImage.path, blobUrl)
     suspend fun queryLocation(point: GeoPoint) = client.getApi(Api.Locations.QueryPoint, point.toQuery())
     suspend fun validateLogin() = client.getApi(Api.Stars.ValidateLogin)
-    suspend fun logout() = client.request(UserApi.Logout)
+    suspend fun logout() = client.postApi(UserApi.Logout, Unit)
     suspend fun updateStar(edit: StarEdit) = client.postApi(Api.Stars.EditStar, edit)
     suspend fun editLight(edit: EditLightRequest) = client.postApi(Api.Stars.EditLight, edit)
 

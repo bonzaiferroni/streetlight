@@ -76,18 +76,6 @@ class Portal(
         })
     }
 
-//    inline fun <reified T: AppRoute> routeFlowOf(): Flow<T> {
-//        return routeFlow.mapDistinct {
-//            try {
-//                it as? T
-//            } catch(e: Exception) {
-//                console.log("narr!")
-//                console.log(e)
-//                throw(e)
-//            }
-//        }.filterNotNull()
-//    }
-
     inline fun <reified T : AppRoute> routeFlowOf(emitDistinct: Boolean = true): Flow<T> {
         val base = stateFlow.map {
             try {

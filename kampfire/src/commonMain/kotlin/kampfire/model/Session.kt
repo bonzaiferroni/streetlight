@@ -2,37 +2,29 @@ package kampfire.model
 
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
+import kotlin.time.Clock
+import kotlin.time.Duration.Companion.seconds
 import kotlin.time.Instant
 
 @Serializable
 data class Session(
     val token: Token,
-    val maxAgeSeconds: Int
-)
+    val ttlSeconds: Int,
+    val expiresAt: Instant
+) {
+    fun pastHalfLife(): Boolean = (expiresAt - Clock.System.now()) < ttlSeconds.seconds / 2
+}
 
 @Serializable
 @JvmInline
 value class Token(val value: String)
 
 @JvmInline
-value class HashedToken(val value: String)
+value class HashedToken(val hash: String)
 
-@Serializable
-data class AuthLegacy(
-    val jwt: TokenInfo,
-    val refreshToken: TokenInfo,
-)
+interface Identity
 
-@Serializable
-data class TokenInfo(
-    val value: Token,
-    val maxAgeSeconds: Int,
-)
-
-interface Principal
-
-data class SessionPrincipal(
-    val principal: Principal,
-    val createdAt: Instant,
-    val expiresAt: Instant,
+data class SessionIdentity(
+    val session: Session,
+    val identity: Identity,
 )
