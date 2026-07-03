@@ -209,7 +209,7 @@ class CommentView(
                             image(comment.thumb, modify(Aspect1, Height6, BorderRadius50P))
                             column(modify(Gap0)) {
                                 textBlock(comment.username?.value ?: "[Former Guest]")
-                                textBlock(comment.createdAt.toAgoFormat(), modify(OpacityHigh, SmallText))
+                                textBlock(comment.createdAt.toAgoFormat(), modify(OpacityHigh, TextSmall))
                             }
                         }
                     }

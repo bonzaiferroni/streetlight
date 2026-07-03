@@ -83,6 +83,7 @@ sealed interface SlugRoute: StreetlightRoute {
 object HomeRoute: StreetlightRoute {
     override val screen get() = StreetlightScreen.Home
     override val title get() = "Home"
+    override val label get() = "Feed"
 }
 
 object StarDashRoute: StreetlightRoute {
@@ -98,6 +99,7 @@ object SandboxRoute: StreetlightRoute {
 data class EarthRoute(override val slug: Slug?): SlugRoute {
     override val screen get() = StreetlightScreen.Earth
     override val title get() = "Earth"
+    override val label get() = "Map"
 
     override fun toSitePath() = toIdSitePath(slug)
 }

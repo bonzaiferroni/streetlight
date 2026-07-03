@@ -7,7 +7,7 @@ import koala.css.BorderRadius1
 import koala.css.BorderRadius2
 import koala.css.Gap0
 import koala.css.JustifyContentEnd
-import koala.css.LargeText
+import koala.css.TextLarge
 import koala.css.LineHeight115
 import koala.css.MarginTop4
 import koala.css.MaxHeight64
@@ -65,7 +65,7 @@ fun FlowContent.mediaShell(media: Media) {
             }
 
             media.text?.let {
-                column(modify(Padding2, AlignSelfCenter, MaxWidthTextBody, LargeText)) {
+                column(modify(Padding2, AlignSelfCenter, MaxWidthTextBody, TextLarge)) {
                     markdown(it)
                 }
             }

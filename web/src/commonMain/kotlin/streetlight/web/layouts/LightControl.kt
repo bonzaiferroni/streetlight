@@ -34,7 +34,7 @@ fun FlowContent.postLight(post: GalaxyPost) {
         }
         textBlock(
             post.base.lightCount.toMetricString(),
-            mod = modify(LightControl.Counter, TextAlignCenter, SmallText, LineHeight1)
+            mod = modify(LightControl.Counter, TextAlignCenter, TextSmall, LineHeight1)
         )
     }
 }

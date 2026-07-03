@@ -30,7 +30,7 @@ internal fun TagScope.configureThumbRender(marker: ThumbMarker): ThumbRenderBody
                     src = thumbUrl.value
                 }
                 box(modify(MarkerStyle.ClusterCount, CardBg)) {
-                    clusterElement = textBlock(mod = modify(PlaceSelfCenter, LargeText, Bold, NightInk, TextShadow))
+                    clusterElement = textBlock(mod = modify(PlaceSelfCenter, TextLarge, Bold, NightInk, TextShadow))
                 }
             }
 

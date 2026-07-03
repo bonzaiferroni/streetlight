@@ -9,16 +9,17 @@ import streetlight.model.data.Galaxy
 import streetlight.model.data.HomeContent
 import streetlight.web.GalaxyFoundryRoute
 import streetlight.web.EarthRoute
+import streetlight.web.HomeRoute
 import streetlight.web.layouts.postSection
 import streetlight.web.layouts.smallGalaxyCard
 import streetlight.web.pages.appFooter
-import streetlight.web.ui.EarthStyle
+import streetlight.web.ui.routeMenu
 
 fun FlowContent.homeShell(content: HomeContent) {
     column(HomeKey.ContainerId) {
         geoMapMount(null, modify(BorderRadius2, Height48, MoonShadow))
         box {
-            btn("View Map", EarthRoute(null), EarthStyle.ViewMapButtonMod)
+            // btn("View Map", EarthRoute(null), EarthStyle.ViewMapButtonMod)
             column(modify(Gap8)) {
                 row(modify(JustifyContentSpaceBetween)) {
                     galaxyMenu(content.galaxies, null)
@@ -60,9 +61,10 @@ fun FlowContent.homeShell(content: HomeContent) {
                 appFooter(HomeKey.SOURCE)
             }
         }
-    }
 
-    dataIsland(HomeKey.IslandId, content)
+        routeMenu(HomeRoute, listOf(HomeRoute, EarthRoute(null)))
+        dataIsland(HomeKey.IslandId, content)
+    }
 }
 
 fun FlowContent.galaxiesSection(galaxies: List<Galaxy>) {

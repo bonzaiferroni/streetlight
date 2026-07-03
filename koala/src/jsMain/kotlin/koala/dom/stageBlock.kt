@@ -30,17 +30,17 @@ inline fun <reified State> AppScope.stageBlock(
                     when  {
                         value.ordinal < currentOrdinal -> {
                             element.modify(Clickable)
-                            element.unmodify(Selected)
+                            element.unmodify(Outlined)
                             element.unmodify(Dim)
                         }
                         value.ordinal == currentOrdinal -> {
                             element.unmodify(Clickable)
-                            element.modify(Selected)
+                            element.modify(Outlined)
                             element.unmodify(Dim)
                         }
                         value.ordinal > currentOrdinal -> {
                             element.unmodify(Clickable)
-                            element.unmodify(Selected)
+                            element.unmodify(Outlined)
                             element.modify(Dim)
                         }
                     }

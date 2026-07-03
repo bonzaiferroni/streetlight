@@ -19,7 +19,7 @@ fun FlowContent.aboutAppShell() {
             lottie(LottieFile.cupShuffle, modify(Flex1, MaxWidth50P))
             val introText = "Streetlight is your front page for community events. " +
                     "It is cross-platform, open-source, and 100% Kotlin. "
-            textBlock(introText, modify(Flex3, LargeText))
+            textBlock(introText, modify(Flex3, TextLarge))
         }
         column(modify(MediaMdRow, AlignItemsCenter)) {
             lottie(LottieFile.StrollingMan, modify(Flex1, MaxWidth50P))
@@ -53,7 +53,7 @@ fun FlowContent.aboutAppShell() {
                     +"The nature of our work supports a level of collaboration as yet unrealized in human history. "
                     +"We are like giants who stand on the shoulders of other giants, each one reaching higher. "
                 }
-                textBlock("It's giants all the way down.", modify(LargeText))
+                textBlock("It's giants all the way down.", modify(TextLarge))
             }
         }
         column(modify(Gap0, AlignItemsStretch, Width100P, MarginTop4)) {

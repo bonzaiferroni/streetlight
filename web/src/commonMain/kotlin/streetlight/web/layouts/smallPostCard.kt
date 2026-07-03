@@ -44,7 +44,7 @@ fun FlowContent.smallPostCard(post: EventPost) {
                     }
                     description?.let {
                         navigation(postRoute) {
-                            textBlock(description.value, modify(Flex1, SmallText, Height2, OverflowHidden))
+                            textBlock(description.value, modify(Flex1, TextSmall, Height2, OverflowHidden))
                         }
                     }
                 }
@@ -65,7 +65,7 @@ fun FlowContent.smallPostCard(post: EventPost) {
                 }
                 card(cellModifiers) {
                     post.event.cost?.let {
-                        textBlock("Tickets", modify(Dim, SmallText))
+                        textBlock("Tickets", modify(Dim, TextSmall))
                         textBlock("$$it")
                     }
                 }

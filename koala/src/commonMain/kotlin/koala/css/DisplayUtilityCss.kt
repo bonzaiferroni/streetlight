@@ -11,8 +11,8 @@ val DisplayUtilityCss
         // Shape
         CircleShape, CircleClip,
         // Border Radius
-        BorderRadius0, BorderRadius1, BorderRadius2, BorderRadius4, BorderRadius3, BorderRadius50P, BorderRadiusBottom1,
-        BorderRadiusTop1, BorderDashed2Px, BorderSolid2Px,
+        BorderRadius0, BorderRadius1, BorderRadius2, BorderRadius4, BorderRadius3, BorderRadius50P, BorderRadiusPill,
+        BorderRadiusBottom1, BorderRadiusTop1, BorderDashed2Px, BorderSolid2Px,
         // Border
         SideBorder,
         // Color
@@ -20,7 +20,7 @@ val DisplayUtilityCss
         // Overflow
         OverflowHidden, OverflowWrapAnywhere, OverflowClip, OverflowXAuto, OverflowXHidden, OverflowYAuto, OverscrollBehaviorContain,
         // Background
-        PrimaryBg, PrimaryCardBg, ZenBg, CardBg, BackgroundImage, SolidBg, BlurBackdrop, TransparentBg,
+        PrimaryBg, PrimaryCardBg, ZenBg, CardBg, DialogBg, BackgroundImage, SolidBg, BlurBackdrop, TransparentBg,
         PaperGradientBg, CardGradientBg, InkGradientBg,
         // Transform
         FlipX, FlipY,
@@ -72,6 +72,7 @@ val BorderRadius2 = utilityOf("border-radius-2", "border-radius: var(--unit-spac
 val BorderRadius3 = utilityOf("border-radius-3", "border-radius: var(--unit-spacing-3)")
 val BorderRadius4 = utilityOf("border-radius-4", "border-radius: var(--unit-spacing-4)")
 val BorderRadius50P = utilityOf("border-radius-50p", "border-radius: 50%")
+val BorderRadiusPill = utilityOf("border-radius-x-50p", "border-radius: 9999px")
 val BorderDashed2Px = utilityOf("border-dashed", "border: 2px dashed var(--weak-outline)")
 val BorderSolid2Px = utilityOf("border-solid", "border: 2px solid var(--weak-outline)")
 val BorderRadiusTop1 = utilityOf("border-radius-top-1", "border-radius: var(--unit-spacing) var(--unit-spacing) 0 0")
@@ -94,6 +95,8 @@ val Zen = Class("zen")
 val Secondary = Class("secondary")
 val Danger = Class("danger")
 val Confirm = Class("confirm")
+val Outlined = Class("outlined")
+val Highlighted = Class("highlighted")
 val Selected = Class("selected")
 val Valid = Class("valid")
 val Required = Class("required")
@@ -115,6 +118,7 @@ val PrimaryBg = utilityOf("primary-bg", "background-color: var(--primary-bg)")
 val PrimaryCardBg = utilityOf("primary-card-bg", "background-color: var(--primary-card-bg)")
 val ZenBg = utilityOf("zen-card-bg", "background: var(--zen-bg)")
 val CardBg = utilityOf("card-bg", "background: var(--card-bg)")
+val DialogBg = utilityOf("dialog-bg", "background: var(--dialog-bg)")
 val HeavyCardBg = utilityOf("heavy-card-bg", "background: rgba(var(--paper), .8)")
 val BackgroundImage = CssUtility("background-image")
 val SolidBg = utilityOf("solid-bg", "background-color: var(--paper-bg)")

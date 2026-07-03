@@ -41,7 +41,7 @@ fun viewApp() {
 
         scope.launch {
             // signs in user if configured
-            gate.readUser()
+            gate.readUser(false)
 
             val portalMount = document.getElementById(AppBodyKey.PortalMountId)
 

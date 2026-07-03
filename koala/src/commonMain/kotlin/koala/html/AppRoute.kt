@@ -2,14 +2,16 @@ package koala.html
 
 import kampfire.api.Slug
 import kampfire.api.toSlug
+import kampfire.model.Labeled
 import kotlin.uuid.Uuid
 
-interface AppRoute {
+interface AppRoute: Labeled {
     val screen: AppScreen
     fun toSitePath() = basePath
     val title: String
     val basePath get() = "/${screen.pathRoot}"
     val requireAuth get() = false
+    override val label get() = title
 
     companion object {
         fun routeOf(sitePath: String, screens: List<AppScreen>): AppRoute? {

@@ -28,16 +28,14 @@ class StarSession(
         if (stateNow.star != null) return
         console.log("signing in")
         scope.launch {
-//            val authClient = AuthClient(cred)
-//            if (authClient.authenticate()) {
-//
-//            }
-            readUser()
+            readUser(true)
         }
     }
 
-    suspend fun readUser() {
-        val star = api.validateLogin().handleOutcome(toaster::toast)
+    suspend fun readUser(showToast: Boolean) {
+        val star = api.validateLogin().handleOutcome({
+            if (showToast) toaster.toast(it)
+        })
         if (star != null) {
             console.log("signed in")
             state.set { it.copy(star = star) }

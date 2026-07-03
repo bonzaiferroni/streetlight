@@ -15,7 +15,6 @@ import streetlight.model.data.ExtraLink
 import streetlight.model.data.LightType
 import streetlight.web.GalaxyRoute
 import streetlight.web.StarRoute
-import streetlight.web.ui.postMenu
 import kotlin.time.Clock
 import kotlin.time.Instant
 
@@ -52,7 +51,7 @@ fun FlowContent.feedPostLegacy(
                 box(modify(Aspect1, AlignItemsCenter, BorderRadius50P, BorderSolid2Px, MarginTop1)) {
                     textBlock(
                         lightCount.toMetricString(),
-                        mod = modify(LightControl.Counter, TextAlignCenter, SmallText, LineHeight1)
+                        mod = modify(LightControl.Counter, TextAlignCenter, TextSmall, LineHeight1)
                     )
                 }
 
@@ -86,12 +85,12 @@ fun FlowContent.feedPostLegacy(
                 }
                 subHeading?.let {
                     navigationIfNotNull(subRoute, modify(AlignSelfStart)) {
-                        textBlock(subHeading, modify(OpacityHigh, SmallText))
+                        textBlock(subHeading, modify(OpacityHigh, TextSmall))
                     }
                 }
                 spacer(modify(Height2Px, InkGradientBg, MarginTopTiny))
                 row(modify(MarginTopTiny, AlignItemsCenter)) {
-                    textBlock(mod = modify(SmallText)) {
+                    textBlock(mod = modify(TextSmall)) {
                         galaxySlug?.let {
                             navigation(GalaxyRoute(it)) {
                                 span("${galaxyName ?: "g/$it"} • ")

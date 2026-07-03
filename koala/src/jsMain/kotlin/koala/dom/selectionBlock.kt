@@ -1,7 +1,7 @@
 package koala.dom
 
 import koala.css.ModifierSet
-import koala.css.Selected
+import koala.css.Outlined
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.html.DIV
@@ -24,18 +24,18 @@ fun <Item> AppScope.selectionBlock(
         selectedItem = item
         when (item) {
             null -> {
-                selectedElement?.unmodify(Selected)
+                selectedElement?.unmodify(Outlined)
                 selectedElement = null
             }
             else -> {
                 val element = elementMap.getValue(item)
-                if (element.isModified(Selected)) {
+                if (element.isModified(Outlined)) {
                     onSelect(null)
-                    element.unmodify(Selected)
+                    element.unmodify(Outlined)
                     selectedElement = null
                 } else {
-                    selectedElement?.unmodify(Selected)
-                    element.modify(Selected)
+                    selectedElement?.unmodify(Outlined)
+                    element.modify(Outlined)
                     selectedElement = element
                     onSelect(item)
                 }

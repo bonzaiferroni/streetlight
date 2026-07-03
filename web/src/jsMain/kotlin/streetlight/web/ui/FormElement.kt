@@ -81,7 +81,7 @@ fun AppScope.formTextField(
 ) = column(modifiers) {
     textField(label, onValue = onValue, flow = flow)
     if (footnote != null || maxLength != null) {
-        row(modify(OpacityHigh, Italic, WhiteSpaceNoWrap, PaddingX1, SmallText)) {
+        row(modify(OpacityHigh, Italic, WhiteSpaceNoWrap, PaddingX1, TextSmall)) {
             footnote?.let {
                 textBlock(footnote)
             }

@@ -21,7 +21,7 @@ fun AppScope.wireRightPanel() {
     wireBlock(AppBodyKey.PanelRightId) {
         container = card(cardMod) {
             itemsBlock(recordFlow, modify(Magic, SlideLeft)) { record ->
-                textBlock(record.text, modify(SmallText))
+                textBlock(record.text, modify(TextSmall))
             }
         }
     }

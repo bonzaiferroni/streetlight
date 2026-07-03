@@ -46,7 +46,7 @@ fun FlowContent.largePostCard(
                         }
                     }
                     description?.let { description ->
-                        navigation(postRoute, modify(Flex1, SmallText, OverflowHidden, FadeBottom)) {
+                        navigation(postRoute, modify(Flex1, TextSmall, OverflowHidden, FadeBottom)) {
                             textBlock(description.value)
                         }
                     }

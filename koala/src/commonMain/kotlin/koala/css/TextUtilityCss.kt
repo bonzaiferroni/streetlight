@@ -3,19 +3,19 @@ package koala.css
 val TextUtilityCss
     get() = listOf(
         // font weight/style
-        Bold, Italic,
-        // font size
-        SmallText, LargeText, GrowText,
+        Bold, Italic, TextSmall, TextLarge, GrowText, TextThin,
         // line height
         LineHeight1, LineHeight115, ParagraphLineHeight,
         // misc
         SingleLine, WhiteSpaceNormal, TextOverflowEllipses, TextShadow, WhiteSpaceNoWrap, WhiteSpacePreLine, UserSelectNone,
+        TextTransformUppercase,
     )
 
 val Bold = utilityOf("bold", "font-weight: bold")
 val Italic = utilityOf("italic", "font-style: italic")
-val SmallText = utilityOf("small-text", "font-size: .9rem")
-val LargeText = utilityOf("large-text", "font-size: 1.2rem")
+val TextSmall = utilityOf("text-small", "font-size: .9rem")
+val TextLarge = utilityOf("text-large", "font-size: 1.2rem")
+val TextThin = utilityOf("text-thin", "font-weight: 300")
 val GrowText = utilityOf("grow-text", "font-size: 1.1em")
 val WhiteSpaceNormal = utilityOf("white-space-normal", "white-space: normal")
 val LineHeight1 = utilityOf("line-height-1", "line-height: 1")
@@ -27,6 +27,7 @@ val SingleLine = utilityOf("single-line", "white-space: nowrap", "overflow: hidd
 val TextOverflowEllipses = utilityOf("text-overflow-ellipsis", "overflow: hidden", "text-overflow: ellipsis")
 val TextShadow = utilityOf("text-shadow", "text-shadow: var(--btn-text-shadow)")
 val UserSelectNone = utilityOf("user-select-none", "user-select: none")
+val TextTransformUppercase = utilityOf("text-transform-uppercase", "text-transform: uppercase")
 
 // defined in stylesheet
 val Prose = Class("prose")

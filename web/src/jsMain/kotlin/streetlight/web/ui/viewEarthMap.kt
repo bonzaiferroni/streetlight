@@ -105,38 +105,39 @@ fun AppScope.earthHeader(model: EarthMap) {
 
 fun AppScope.earthWindow(model: EarthMap) {
     column(modify(EarthStyle.Window, EarthStyle.MoveDimmer, JustifyContentSpaceBetween)) {
-        row(modify(JustifyContentEnd)) {
-            button("Show All", modify(Zen, PointerEventsAuto, BlurBackdrop)).onClick(model::showAll)
-            button("View Feed", modify(Zen, AlignSelfEnd, PointerEventsAuto, BlurBackdrop)).onClick {
-                val route = when (val galaxy = model.stateNow.galaxy) {
-                    null -> HomeRoute
-                    else -> GalaxyRoute(galaxy.slug)
-                }
-                portal.go(route)
-            }
-        }
-
-        flowBlock(model.summaryFlow) { summary ->
-            if (summary.isNullOrEmpty()) return@flowBlock
-            column(modify(WidthFitContent, Gap0)) {
-                filigree {
-                    textBlock("In View", modify(OpacityHigh))
-                }
-                row(modify(Gap2)) {
-                    summary.forEach { (markerType, count) ->
-                        textBlock {
-                            when (markerType) {
-                                MarkerType.Event -> span("Events", modify(AccentFg))
-                                MarkerType.Location -> span("Locations", modify(PrimaryFg))
-                                MarkerType.Galaxy -> span("Galaxies", modify())
+        row(modify(JustifyContentEnd, AlignItemsStart)) {
+            flowBlock(model.summaryFlow) { summary ->
+                if (summary.isNullOrEmpty()) return@flowBlock
+                column(modify(WidthFitContent, Gap0)) {
+                    filigree {
+                        textBlock("In View", modify(OpacityHigh))
+                    }
+                    row(modify(Gap2)) {
+                        summary.forEach { (markerType, count) ->
+                            textBlock {
+                                when (markerType) {
+                                    MarkerType.Event -> span("Events", modify(AccentFg))
+                                    MarkerType.Location -> span("Locations", modify(PrimaryFg))
+                                    MarkerType.Galaxy -> span("Galaxies", modify())
+                                }
+                                span(" | ", modify(OpacityLow))
+                                span(count.toString())
                             }
-                            span(" | ", modify(OpacityLow))
-                            span(count.toString())
                         }
                     }
                 }
             }
+            button("Show All", modify(Zen, PointerEventsAuto, BlurBackdrop)).onClick(model::showAll)
+            // button("View Feed", modify(Zen, AlignSelfEnd, PointerEventsAuto, BlurBackdrop)).onClick {
+            //     val route = when (val galaxy = model.stateNow.galaxy) {
+            //         null -> HomeRoute
+            //         else -> GalaxyRoute(galaxy.slug)
+            //     }
+            //     portal.go(route)
+            // }
         }
+        val routeNow = EarthRoute(null)
+        routeMenu(routeNow, listOf(HomeRoute, routeNow), modify(PointerEventsAuto, AlignSelfEnd))
     }
 }
 

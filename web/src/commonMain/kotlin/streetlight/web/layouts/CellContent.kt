@@ -24,7 +24,7 @@ object CellContent {
     val IconMod = modify(Height3, MarginRight4Px, ColorSchemeBg)
     val ButtonIconMod = modify(Height3, OpacityHigh)
     val ThumbMod = modify(Height3, Aspect1, BorderRadius2, MarginRight4Px)
-    val TextMod = modify(SmallText, SingleLine, TextOverflowEllipses, Flex1)
+    val TextMod = modify(TextSmall, SingleLine, TextOverflowEllipses, Flex1)
 }
 
 //language="CSS"
