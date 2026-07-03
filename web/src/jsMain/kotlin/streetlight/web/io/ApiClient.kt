@@ -111,7 +111,7 @@ class ApiClient(private val client: FetchClient) {
 
     // docs
     suspend fun readSiteDoc(docId: DocId) = client.getApi(Api.Docs, docId)
-    suspend fun readSiteDocTable() = client.getApi(Api.SiteDocTable)
+    suspend fun readSiteDocTable() = client.getApi(Api.DocsTable)
 
     // talk
     suspend fun readHistory(spaceId: Uuid, spaceType: SpaceType) = client.getApi(Api.Talk.ReadHistory) {

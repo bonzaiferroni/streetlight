@@ -125,7 +125,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object RemovePost: PostEndpoint<PostId, Boolean>(this)
     }
 
-    object Medias: ApiNode(this) { // I have died a little inside but this avoids import conflicts
+    object Medias: ApiNode(this, "media") { // I have died a little inside but this avoids import conflicts
         object ReadMedia: GetByIdEndpoint<Slug, Media>(this)
         object CreateMedia: PostEndpoint<MediaEdit, Slug>(this)
         object UpdateMedia: PostEndpoint<MediaEdit, Slug>(this)
@@ -157,18 +157,18 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object PendingEdits: GetEndpoint<List<EditLog>>(this)
     }
 
-    object Docs: GetByIdEndpoint<DocId, DocNode>(this, "doc")
-    object SiteDocTable: GetEndpoint<List<DocTableItem>>(this, "doc-table")
+    object Docs: GetByIdEndpoint<DocId, DocNode>(this)
+    object DocsTable: GetEndpoint<List<DocTableItem>>(this)
 
-    object Talk: ApiNode(this, "talk") {
-        object ReadGalaxy: GetByIdEndpoint<GalaxyId, List<Comment>>(this, "galaxy")
-        object ReadHistory: GetEndpoint<List<Comment>>(this, "history") {
+    object Talk: ApiNode(this) {
+        object ReadGalaxy: GetByIdEndpoint<GalaxyId, List<Comment>>(this)
+        object ReadHistory: GetEndpoint<List<Comment>>(this) {
             val spaceId = uuidParamOf("space-id")
             val spaceType = enumParamOf<SpaceType>("space-type")
         }
-        object Connect: ApiNode(this, "connect")
-        object CreateComment: PostEndpoint<NewComment, CommentId>(this, "create")
-        object UpdateComment: PostEndpoint<UpdatedComment, Boolean>(this, "update")
+        object Connect: ApiNode(this)
+        object CreateComment: PostEndpoint<NewComment, CommentId>(this)
+        object UpdateComment: PostEndpoint<UpdatedComment, Boolean>(this)
     }
 
     object Tasks: ApiNode(this) {
