@@ -11,7 +11,7 @@ import streetlight.model.data.EventEdit
 import streetlight.model.data.Galaxy
 import streetlight.model.data.LocationEdit
 import streetlight.model.data.GalaxyEdit
-import streetlight.model.data.MediumEdit
+import streetlight.model.data.MediaEdit
 import streetlight.web.HomeRoute
 import streetlight.web.StreetlightScreen
 import streetlight.web.io.ApiClient
@@ -57,8 +57,8 @@ fun AppContainer.getEarthMap(scope: CoroutineScope) =
 fun AppContainer.getLocationEditor(edit: LocationEdit, scope: CoroutineScope) =
     LocationEditor(edit, scope, koin.get())
 
-fun AppContainer.getMediumEditor(edit: MediumEdit, scope: CoroutineScope) =
-    MediumEditor(edit, scope, koin.get(), koin.get())
+fun AppContainer.getMediaEditor(edit: MediaEdit, scope: CoroutineScope) =
+    MediaEditor(edit, scope, koin.get(), koin.get())
 
 fun AppContainer.getLocationScout(galaxy: Galaxy, editor: LocationEditor, scope: CoroutineScope) =
     LocationScout(galaxy, editor, scope, koin.get(), koin.get(), koin.get(), koin.get())

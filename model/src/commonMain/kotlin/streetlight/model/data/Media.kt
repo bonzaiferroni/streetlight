@@ -12,8 +12,8 @@ import kotlin.time.Instant
 import kotlin.uuid.Uuid
 
 @Serializable
-data class Medium(
-    val mediumId: MediumId,
+data class Media(
+    val mediaId: MediaId,
     val slug: Slug,
     val username: Username,
     val mediaType: MediaType,
@@ -31,23 +31,23 @@ data class Medium(
 
 @Serializable
 @JvmInline
-value class MediumId(override val value: Uuid): RecordId {
+value class MediaId(override val value: Uuid): RecordId {
     companion object {
-        fun random() = MediumId(Uuid.random())
+        fun random() = MediaId(Uuid.random())
     }
 }
 
 @Serializable
-data class MediumPost(
-    val medium: Medium,
+data class MediaPost(
+    val media: Media,
     override val base: Post,
 ): GalaxyPost {
-    override val images get() = medium.images
-    override val geoPoint get() = medium.geoPoint
-    override val label get() = medium.title ?: "Untitled"
-    override val sublabel get() = medium.subtitle
-    override val body get() = medium.text
-    override val links get() = medium.link?.let { listOf(ExtraLink("link", it.value)) }
+    override val images get() = media.images
+    override val geoPoint get() = media.geoPoint
+    override val label get() = media.title ?: "Untitled"
+    override val sublabel get() = media.subtitle
+    override val body get() = media.text
+    override val links get() = media.link?.let { listOf(ExtraLink("link", it.value)) }
 
 }
 

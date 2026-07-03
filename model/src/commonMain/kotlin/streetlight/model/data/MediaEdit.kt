@@ -6,8 +6,8 @@ import kampfire.model.Url
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class MediumEdit(
-    val mediumId: MediumId? = null,
+data class MediaEdit(
+    val mediaId: MediaId? = null,
     val title: String? = null,
     val subtitle: String? = null,
     val text: Markdown? = null,
@@ -19,8 +19,8 @@ data class MediumEdit(
     val invalidMessage: String? get() = null
 }
 
-fun Medium.toEdit() = MediumEdit(
-    mediumId = mediumId,
+fun Media.toEdit() = MediaEdit(
+    mediaId = mediaId,
     title = title,
     subtitle = subtitle,
     text = text,

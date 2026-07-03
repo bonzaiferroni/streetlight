@@ -2,17 +2,17 @@ package streetlight.web
 
 import kampfire.api.Slug
 
-data class MediumRoute(override val slug: Slug): SlugRoute {
-    override val screen get() = StreetlightScreen.Medium
+data class MediaRoute(override val slug: Slug): SlugRoute {
+    override val screen get() = StreetlightScreen.Media
     override val title get() = "Media"
 }
 
-data class MediumForgeRoute(override val slug: Slug?): SlugRoute {
-    override val screen get() = StreetlightScreen.MediumForge
+data class MediaForgeRoute(override val slug: Slug?): SlugRoute {
+    override val screen get() = StreetlightScreen.MediaForge
     override val title get() = "Media Forge"
 }
 
-data class MediumUpdateRoute(override val slug: Slug): SlugRoute {
+data class MediaUpdateRoute(override val slug: Slug): SlugRoute {
     override val screen get() = StreetlightScreen.MediaUpdate
     override val title get() = "Media Update"
 }

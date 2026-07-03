@@ -124,11 +124,11 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object ReadLights: GetEndpoint<List<GalaxyId>>(this)
         object RemovePost: PostEndpoint<PostId, Boolean>(this)
     }
-    
-    object Media: ApiNode(this) {
-        object ReadMedia: GetByIdEndpoint<Slug, Medium>(this)
-        object CreateMedia: PostEndpoint<MediumEdit, Slug>(this)
-        object UpdateMedia: PostEndpoint<MediumEdit, Slug>(this)
+
+    object Medias: ApiNode(this) { // I have died a little inside but this avoids import conflicts
+        object ReadMedia: GetByIdEndpoint<Slug, Media>(this)
+        object CreateMedia: PostEndpoint<MediaEdit, Slug>(this)
+        object UpdateMedia: PostEndpoint<MediaEdit, Slug>(this)
     }
 
     object Cities: ApiNode(this) {

@@ -3,9 +3,9 @@ package streetlight.web.ui
 import koala.css.*
 import koala.dom.*
 import koala.model.mapDistinct
-import streetlight.web.model.MediumEditor
+import streetlight.web.model.MediaEditor
 
-fun AppScope.postForm(model: MediumEditor) {
+fun AppScope.postForm(model: MediaEditor) {
     val titleFlow = model.editFlow.mapDistinct { it.title }
     val subtitleFlow = model.editFlow.mapDistinct { it.subtitle }
     val textFlow = model.editFlow.mapDistinct { it.text }

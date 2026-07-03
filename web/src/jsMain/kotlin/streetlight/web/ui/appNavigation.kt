@@ -54,7 +54,7 @@ fun AppScope.appNavigation() {
             StreetlightScreen.Galaxies -> viewGalaxyList()
 
             StreetlightScreen.Star -> viewStarProfileRoute()
-            StreetlightScreen.MediumForge -> viewContentPosterRoute()
+            StreetlightScreen.MediaForge -> viewContentPosterRoute()
             StreetlightScreen.EditStar -> viewStarEditor()
             StreetlightScreen.SiteConfig -> viewSiteConfig()
             StreetlightScreen.AboutApp -> viewAboutApp()

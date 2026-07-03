@@ -9,11 +9,11 @@ import koala.model.mapDistinct
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import streetlight.model.data.MediumEdit
+import streetlight.model.data.MediaEdit
 import streetlight.web.io.ApiClient
 
-class MediumEditor(
-    initialContent: MediumEdit,
+class MediaEditor(
+    initialContent: MediaEdit,
     private val scope: CoroutineScope,
     private val api: ApiClient,
     private val toaster: Toaster,
@@ -50,7 +50,7 @@ class MediumEditor(
             val edit = editNow.takeIf { it.isValid } ?: return@launch
             message.set("Posting...", true)
 
-            when (edit.mediumId) {
+            when (edit.mediaId) {
                 null -> api.createMedia(edit)
                 else -> api.updateMedia(edit)
             }.handleOutcome(toaster::toast) { slug ->
@@ -59,7 +59,7 @@ class MediumEditor(
         }
     }
 
-    private fun setContent(block: (MediumEdit) -> MediumEdit) {
+    private fun setContent(block: (MediaEdit) -> MediaEdit) {
         state.set { it.copy(edit = block(stateNow.edit)) }
     }
 
@@ -77,6 +77,6 @@ class MediumEditor(
 }
 
 data class ContentEditorState(
-    val edit: MediumEdit,
+    val edit: MediaEdit,
     val slug: Slug? = null
 )

@@ -10,11 +10,11 @@ import streetlight.model.data.EventPost
 import streetlight.model.data.Location
 import streetlight.model.data.LocationPost
 import streetlight.model.data.GalaxyPost
-import streetlight.model.data.Medium
-import streetlight.model.data.MediumPost
+import streetlight.model.data.Media
+import streetlight.model.data.MediaPost
 import streetlight.web.EventRoute
 import streetlight.web.LocationRoute
-import streetlight.web.MediumRoute
+import streetlight.web.MediaRoute
 import streetlight.web.SiteDocRoute
 
 val Location.route get() = LocationRoute(slug)
@@ -22,28 +22,28 @@ val Event.route get() = EventRoute(slug)
 val EventLocation.eventRoute get() = EventRoute(eventSlug)
 val EventLocation.locationRoute get() = LocationRoute(locationSlug)
 val Doc.route get() = SiteDocRoute(docId)
-val Medium.route get() = MediumRoute(slug)
+val Media.route get() = MediaRoute(slug)
 
 val GalaxyPost.route get(): AppRoute = when (this) {
-    is MediumPost -> medium.route
+    is MediaPost -> media.route
     is EventPost -> event.eventRoute
     is LocationPost -> location.route
 }
 
 val GalaxyPost.subRoute get(): AppRoute? = when (this) {
-    is MediumPost -> null
+    is MediaPost -> null
     is EventPost -> event.locationRoute
     is LocationPost -> null
 }
 
 val GalaxyPost.subtitle get(): String? = when (this) {
-    is MediumPost -> medium.subtitle
+    is MediaPost -> media.subtitle
     is EventPost -> "${event.locationName}, ${event.city}"
     is LocationPost -> location.addressLine
 }
 
 val GalaxyPost.cells get() = when (this) {
-    is MediumPost -> null
+    is MediaPost -> null
     is EventPost -> cellContentOf(event, this)
     is LocationPost -> cellContentOf(location)
 }

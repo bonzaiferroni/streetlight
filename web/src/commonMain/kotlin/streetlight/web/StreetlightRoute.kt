@@ -28,7 +28,7 @@ enum class StreetlightScreen(
 ): AppScreen {
     Home(StaticParse { HomeRoute }, ""),
     Account(StaticParse { StarDashRoute }),
-    MediaUpdate(UuidParse { MediumUpdateRoute(it.toRecordId()) }),
+    MediaUpdate(UuidParse { MediaUpdateRoute(it.toRecordId()) }),
     Sandbox(StaticParse { SandboxRoute }),
     Earth(SlugOrNullParse { EarthRoute(it) }),
     Chat(StaticParse { ChatRoute }),
@@ -54,7 +54,7 @@ enum class StreetlightScreen(
 
     Star(SlugParse { StarRoute(it) }, "s"),
     EventScout(SlugParse { EventScoutRoute(it) }),
-    MediumForge(SlugParse { MediumForgeRoute(it) }),
+    MediaForge(SlugParse { MediaForgeRoute(it) }),
     EditStar(StaticParse { EditStarRoute }),
     SiteConfig(StaticParse { SiteConfigRoute }),
     AboutApp(StaticParse { AboutRoute }),
@@ -62,7 +62,7 @@ enum class StreetlightScreen(
     Talk(UuidParse { TalkRoute(GalaxyId(it)) }),
 
     // media
-    Medium(SlugParse { MediumRoute(it) }, "m");
+    Media(SlugParse { MediaRoute(it) }, "m");
 
     override val pathRoot = pathRoot ?: name.pascalToKebabCase()
 }

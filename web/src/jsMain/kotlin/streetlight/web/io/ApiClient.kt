@@ -129,9 +129,9 @@ class ApiClient(private val client: FetchClient) {
     }
 
     // media
-    suspend fun readMedium(slug: Slug) = client.getApi(Api.Media.ReadMedia, slug)
-    suspend fun createMedia(edit: MediumEdit) = client.postApi(Api.Media.CreateMedia, edit)
-    suspend fun updateMedia(edit: MediumEdit) = client.postApi(Api.Media.UpdateMedia, edit)
+    suspend fun readMedia(slug: Slug) = client.getApi(Api.Medias.ReadMedia, slug)
+    suspend fun createMedia(edit: MediaEdit) = client.postApi(Api.Medias.CreateMedia, edit)
+    suspend fun updateMedia(edit: MediaEdit) = client.postApi(Api.Medias.UpdateMedia, edit)
 
 }
 

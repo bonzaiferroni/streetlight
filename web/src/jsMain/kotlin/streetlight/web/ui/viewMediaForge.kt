@@ -8,13 +8,13 @@ import koala.html.heading1
 import koala.model.mapDistinctNotNull
 import kotlinx.html.js.h3
 import streetlight.model.data.Galaxy
-import streetlight.model.data.MediumEdit
-import streetlight.web.MediumForgeRoute
-import streetlight.web.MediumRoute
+import streetlight.model.data.MediaEdit
+import streetlight.web.MediaForgeRoute
+import streetlight.web.MediaRoute
 
-fun AppScope.viewMediumForge(galaxy: Galaxy?) {
-    val model = app.getMediumEditor(MediumEdit(), parentScope)
-    goOnRoute(model.stateFlow.mapDistinctNotNull { it.slug?.let { slug -> MediumRoute(slug) }  })
+fun AppScope.viewMediaForge(galaxy: Galaxy?) {
+    val model = app.getMediaEditor(MediaEdit(), parentScope)
+    goOnRoute(model.stateFlow.mapDistinctNotNull { it.slug?.let { slug -> MediaRoute(slug) }  })
 
     section(modify(Column)) {
         heading1(galaxy?.name ?: "Profile Post", modify(TextAlignCenter))
@@ -34,9 +34,9 @@ fun AppScope.viewMediumForge(galaxy: Galaxy?) {
 }
 
 fun AppScope.viewContentPosterRoute() {
-    routeBlock<MediumForgeRoute, Galaxy?>({ route ->
+    routeBlock<MediaForgeRoute, Galaxy?>({ route ->
         route.slug?.let { api.readGalaxy(it).handleOutcome(toaster::toast) }
     }) { galaxy ->
-        viewMediumForge(galaxy)
+        viewMediaForge(galaxy)
     }
 }

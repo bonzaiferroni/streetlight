@@ -9,16 +9,14 @@ import koala.html.heading1
 import koala.model.mapDistinctNotNull
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import streetlight.model.data.Medium
-import streetlight.model.data.MediumEdit
-import streetlight.model.data.PostEdit
+import streetlight.model.data.MediaEdit
 import streetlight.model.data.toEdit
-import streetlight.web.MediumUpdateRoute
-import streetlight.web.MediumRoute
-import streetlight.web.model.MediumEditor
+import streetlight.web.MediaUpdateRoute
+import streetlight.web.MediaRoute
+import streetlight.web.model.MediaEditor
 
-fun AppScope.viewMediumUpdater(model: MediumEditor) {
-    val routeFlow = model.stateFlow.mapDistinctNotNull { it.slug?.let { slug -> MediumRoute(slug) } }
+fun AppScope.viewMediumUpdater(model: MediaEditor) {
+    val routeFlow = model.stateFlow.mapDistinctNotNull { it.slug?.let { slug -> MediaRoute(slug) } }
     goOnRoute(routeFlow)
 
     section(modify(Column)) {
@@ -37,13 +35,13 @@ fun AppScope.viewMediumUpdater(model: MediumEditor) {
 }
 
 fun AppScope.viewMediumUpdaterRoute() {
-    routeBlock<MediumUpdateRoute, MediumEdit>(
+    routeBlock<MediaUpdateRoute, MediaEdit>(
         portal = portal,
         provideData = { route ->
-            api.readMedium(route.slug).handleOutcome(toaster::toast) { it.toEdit() }
+            api.readMedia(route.slug).handleOutcome(toaster::toast) { it.toEdit() }
         }
     ) {
-        val editor = MediumEditor(it, parentScope, api, toaster)
+        val editor = MediaEditor(it, parentScope, api, toaster)
         viewMediumUpdater(editor)
     }
 }
