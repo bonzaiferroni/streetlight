@@ -136,8 +136,14 @@ fun AppScope.earthWindow(model: EarthMap) {
             //     portal.go(route)
             // }
         }
-        val routeNow = EarthRoute(null)
-        routeMenu(routeNow, listOf(HomeRoute, routeNow), modify(PointerEventsAuto, AlignSelfEnd))
+        val feedButton = MenuButton("Feed") {
+            when (val galaxy = model.stateNow.galaxy) {
+                null -> portal.go(HomeRoute)
+                else -> portal.go(GalaxyRoute(galaxy.slug))
+            }
+        }
+        val routeNow = MenuLabel("Map")
+        routeMenu(routeNow, listOf(feedButton, routeNow), modify(PointerEventsAuto, AlignSelfEnd))
     }
 }
 
@@ -177,7 +183,7 @@ fun AppScope.markerPanel(marker: PointMarker) {
                 subRoute = post.event.locationRoute,
                 colorScheme = ColorScheme.Accent,
                 extraLinks = post.links,
-                details = cellContentOf(post.event, post)
+                cells = cellContentOf(post.event, post)
             )
         }
     }
@@ -192,14 +198,14 @@ fun AppScope.focusPanel(
     subRoute: AppRoute?,
     colorScheme: ColorScheme = ColorScheme.Primary,
     extraLinks: List<ExtraLink>? = null,
-    details: (FlowContent.() -> Unit)? = null,
+    cells: (FlowContent.() -> Unit)? = null,
 ) {
     card(modify(Gap0, Padding0, BlurBackdrop, PointerEventsAuto, EarthStyle.MoveDimmer)) {
         setStyle(Property.ColorScheme.to(colorScheme.cssValue))
-        row(modify(Gap0, Height24)) {
+        column(modify(Gap0)) {
             featureImage(imageUrl, modify(Flex1))
-            details?.let {
-                cellBlock(modify(FlexWrap, Width16), details)
+            cells?.let {
+                cellBlock(modify(FlexWrap), cells)
             }
         }
         column(modify(Padding1)) {

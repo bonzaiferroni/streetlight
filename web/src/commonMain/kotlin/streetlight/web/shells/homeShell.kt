@@ -13,7 +13,7 @@ import streetlight.web.HomeRoute
 import streetlight.web.layouts.postSection
 import streetlight.web.layouts.smallGalaxyCard
 import streetlight.web.pages.appFooter
-import streetlight.web.ui.routeMenu
+import koala.html.routeMenu
 
 fun FlowContent.homeShell(content: HomeContent) {
     column(HomeKey.ContainerId) {

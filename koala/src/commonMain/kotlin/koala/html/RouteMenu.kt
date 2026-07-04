@@ -1,8 +1,13 @@
-package streetlight.web.ui
+package koala.html
 
 import koala.css.*
-import koala.html.*
 import kotlinx.html.FlowContent
+
+object RouteMenu {
+    val Mod = Class("route-menu")
+    val Route = Class("route-menu__route")
+    val RouteNow = Class("route-menu__route-now")
+}
 
 fun FlowContent.routeMenu(
     routeNow: AppRoute,
@@ -21,12 +26,6 @@ fun FlowContent.routeMenu(
             }
         }
     }
-}
-
-object RouteMenu {
-    val Mod = Class("nav-menu")
-    val Route = Class("nav-menu__route")
-    val RouteNow = Class("nav-menu__route-now")
 }
 
 //language="CSS"
