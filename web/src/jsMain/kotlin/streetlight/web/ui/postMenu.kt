@@ -4,9 +4,11 @@ import kampfire.api.Username
 import kampfire.model.handleOutcome
 import koala.css.BlurBackdrop
 import koala.css.BorderRadius3
+import koala.css.BorderSolid2Px
 import koala.css.Magic
 import koala.css.Secondary
 import koala.css.SlideUp
+import koala.css.Zen
 import koala.css.modify
 import koala.dom.AppScope
 import koala.dom.button
@@ -61,14 +63,14 @@ fun AppScope.callPostMenu(postId: PostId, username: Username?) {
 
     menuElement.clear()
     menuElement.append {
-        card(modify(BlurBackdrop, BorderRadius3)) {
+        card(modify(BlurBackdrop, BorderRadius3, BorderSolid2Px)) {
             column {
                 if (isUser) {
                     // td: figure out what edit options to provide here
                     // do we edit the post or the target record?
                     // btn("edit", MediaUpdateRoute(postId), modify(Secondary))
                 } else {
-                    button("report", modify(Secondary))
+                    button("report", modify(Zen))
                 }
                 dangerButton("remove", onClick = {
                     parentScope.launch {

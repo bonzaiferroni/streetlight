@@ -4,6 +4,7 @@ import kampfire.api.Markdown
 import kampfire.model.Url
 import koala.css.AlignItemsStart
 import koala.css.Aspect3By2
+import koala.css.BorderSolid2Px
 import koala.css.ContainerMdRow
 import koala.css.Flex4
 import koala.css.FlexBasisMin
@@ -60,7 +61,7 @@ fun FlowContent.featureHeader(
     modifiers: ModifierSet? = null,
     block: DIV.() -> Unit = { },
 ) {
-    card(modify(modifiers, QueryContainer, Padding0, Gap0, OverflowClip, MoonShadow, ZenBg)) {
+    card(modify(modifiers, QueryContainer, Padding0, Gap0, OverflowClip, MoonShadow, ZenBg, BorderSolid2Px)) {
         setStyle(Property.ColorScheme.to(colorScheme.cssValue))
         block()
 

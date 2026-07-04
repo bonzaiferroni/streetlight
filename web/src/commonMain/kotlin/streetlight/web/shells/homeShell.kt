@@ -20,7 +20,7 @@ fun FlowContent.homeShell(content: HomeContent) {
     column(HomeKey.ContainerId, modify(MarginTop1)) {
         appHeader(Height8)
 
-        geoMapMount(null, modify(BorderRadius2, Height48, MoonShadow))
+        geoMapMount(null, modify(BorderRadius2, Height48, MoonShadow, BorderSolid2Px))
         box {
             // btn("View Map", EarthRoute(null), EarthStyle.ViewMapButtonMod)
             column(modify(Gap8)) {

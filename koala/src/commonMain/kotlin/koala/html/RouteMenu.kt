@@ -79,12 +79,12 @@ $Base {
     user-select: none;
     opacity: 1;
     transition: opacity 500ms var(--magic-easing), transform 500ms var(--magic-easing);
-    transform: translateY(0px);
+    transform: scale(1);
     
     
     @starting-style {
         opacity: 0;
-        transform: translateY(10px);
+        transform: scale(.95);
     }
 }
 

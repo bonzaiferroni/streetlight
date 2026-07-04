@@ -6,6 +6,7 @@ import koala.css.Danger
 import koala.css.Height3
 import koala.css.ModifierSet
 import koala.css.Secondary
+import koala.css.Zen
 import koala.css.modify
 import koala.html.configureButton
 import koala.html.configureElementButton
@@ -87,13 +88,13 @@ fun TagScope.dangerButton(
     var isConfirm = false
 
     val element = button {
-        configureButton(text, modify(Secondary, modifiers), flair, block)
+        configureButton(text, modify(Zen, modifiers), flair, block)
     }
 
     element.onClick {
         if (!isConfirm) {
             isConfirm = true
-            element.unmodify(Secondary)
+            element.unmodify(Zen)
             element.modify(Danger)
             element.textContent = "Confirm"
         } else {
