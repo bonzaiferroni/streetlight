@@ -36,7 +36,7 @@ val LayoutUtilityCss
         MarginX1, MarginX2, MarginX4,
         // Padding
         Padding0, Padding1, Padding2, Padding4, PaddingTiny, PaddingLeft1, PaddingLeft2, PaddingLeft3, PaddingRight3,
-        PaddingTop1,
+        PaddingTop1, Padding2Px,
         PaddingX1, PaddingX2, PaddingY1, PaddingY2, PaddingBottom1,
         // Object Fit
         ObjectFitCover, ObjectFitContain, ObjectPositionCenter, ObjectFitFill,
@@ -221,6 +221,7 @@ val MarginX4 = utilityOf(
 val Padding0 = utilityOf("padding-0", "padding: 0")
 val Padding1 = utilityOf("padding-1", "padding: var(--unit-spacing)")
 val Padding2 = utilityOf("padding-2", "padding: calc(var(--unit-spacing) * 2)")
+val Padding2Px = utilityOf("padding-2px", "padding: 2px")
 val Padding4 = utilityOf("padding-4", "padding: calc(var(--unit-spacing) * 4)")
 val PaddingTiny = utilityOf("padding-tiny", "padding: 2px")
 val PaddingLeft1 = utilityOf("padding-left-1", "padding-left: var(--unit-spacing)")

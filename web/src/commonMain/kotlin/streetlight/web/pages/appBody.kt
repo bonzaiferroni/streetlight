@@ -12,7 +12,7 @@ fun HTML.appBody(
 ) {
     body {
         column(AppBodyKey.ViewportId) {
-            appHeader()
+            // appHeader()
             row(AppBodyKey.ContentRowId, modify(JustifyContentCenter, Flex1, Gap0)) {
                 // div(AppBodyKey.SpacerLeftId)
                 box(AppBodyKey.ContentBoxId, modify(Flex3, PaddingX1)) {

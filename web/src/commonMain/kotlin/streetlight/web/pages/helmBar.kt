@@ -6,17 +6,17 @@ import koala.html.*
 import kotlinx.html.FlowContent
 
 fun FlowContent.helmBar() {
-    val cardMod = modify(HelmBarKey.CardClass, BlurBackdrop, PointerEventsAuto, BorderRadius50P, TransparentBg)
+    val cardMod = modify(HelmBarKey.CardClass, BlurBackdrop, PointerEventsAuto, BorderRadius50P, ZenBg, BorderSolid2Px)
     siteHelm()
     starHelm()
-    row(HelmBarKey.StickyBarId, modify(JustifyContentSpaceBetween)) {
-        card(cardMod) {
+    row(HelmBarKey.StickyBarId, modify(JustifyContentSpaceBetween, Padding1)) {
+        div(cardMod) {
             setAnchorName(SiteHelmKey.PositionAnchor)
             button(SvgFile.Helm, HelmBarKey.IconMod) {
                 setPopoverTarget(SiteHelmKey.Id)
             }
         }
-        card(cardMod) {
+        div(cardMod) {
             setAnchorName(StarHelmKey.PositionAnchor)
             button(HelmBarKey.IconMod) {
                 setPopoverTarget(StarHelmKey.PopoverId)

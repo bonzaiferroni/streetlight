@@ -55,6 +55,7 @@ object SvgFile : FileSet<Svg>() {
     val LoaderSmall = add("loader-small.svg")
     val StarOff = add("star-off.svg")
     val Minus = add("minus.svg")
+    val Home = add("home.svg")
     val Helm = add("helm.svg")
     val Github = add("github.svg")
     val Calendar = add("calendar.svg")

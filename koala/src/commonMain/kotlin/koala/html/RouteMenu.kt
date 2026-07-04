@@ -15,10 +15,10 @@ fun FlowContent.routeMenu(
         filigree {
             textBlock(context)
         }
-        row(modify(mod, RouteMenu.Menu, Gap0, Padding1, Bold, AlignItemsCenter)) {
+        row(modify(mod, RouteMenu.Menu, Gap0, Padding1, Bold, AlignItemsCenter, BorderSolid2Px)) {
             backRoute?.let {
-                navigation(it, modify(RouteMenu.Back, Height4)) {
-                    icon(SvgFile.ArrowLeft, modify(Width4, Height4))
+                navigation(it, modify(RouteMenu.Back, Height3, OpacityHigh)) {
+                    icon(SvgFile.Home, modify(Height100P))
                 }
             }
             routes.forEach { route ->
@@ -63,7 +63,7 @@ $Menu {
     backdrop-filter: blur(3px);
     -webkit-backdrop-filter: blur(3px);
     border-radius: 9999px;
-    color: rgb(var(--white));
+    color: rgba(var(--white), .8);
     text-shadow: var(--btn-text-shadow);
     
     $Route, $RouteNow {
@@ -72,11 +72,8 @@ $Menu {
     }
     
     $RouteNow {
-        background-color: rgba(var(--primary), .2);
-    }
-    
-    $Route {
-        color: rgba(var(--white), .8);
+        outline: 2px solid rgb(var(--primary));
+        color: rgb(var(--white));
     }
 }
 
@@ -85,5 +82,6 @@ $Back {
     right: 100%;
     top: 50%;
     translate: 0 -50%;
+    padding-right: var(--unit-spacing)
 }
 """ }

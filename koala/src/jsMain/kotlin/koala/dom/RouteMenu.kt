@@ -24,8 +24,8 @@ fun TagScope.routeMenu(
         }
         row(modify(RouteMenu.Menu, Gap0, TextTransformUppercase, TextSmall, Padding1, Bold)) {
             backRoute?.let {
-                navigation(it, modify(RouteMenu.Back, Height4)) {
-                    icon(SvgFile.ArrowLeft, modify(Width4, Height4))
+                navigation(it, modify(RouteMenu.Back, Height3)) {
+                    icon(SvgFile.Home, modify(Height100P))
                 }
             }
             routes.forEach { item ->

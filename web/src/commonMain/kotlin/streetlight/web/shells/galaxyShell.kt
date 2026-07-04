@@ -17,7 +17,7 @@ import streetlight.web.ui.headerOf
 
 fun FlowContent.galaxyShell(content: GalaxyContent) {
     val galaxy = content.galaxy; val post = content.posts;
-    column(GalaxyKey.ShellId) {
+    column(GalaxyKey.ShellId, modify(MarginTop1)) {
         headerOf(galaxy)
         box {
             // btn("View Map", EarthRoute(galaxy.slug), EarthStyle.ViewMapButtonMod)

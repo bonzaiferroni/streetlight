@@ -14,9 +14,12 @@ import streetlight.web.layouts.postSection
 import streetlight.web.layouts.smallGalaxyCard
 import streetlight.web.pages.appFooter
 import koala.html.routeMenu
+import streetlight.web.pages.appHeader
 
 fun FlowContent.homeShell(content: HomeContent) {
-    column(HomeKey.ContainerId) {
+    column(HomeKey.ContainerId, modify(MarginTop1)) {
+        appHeader(Height8)
+
         geoMapMount(null, modify(BorderRadius2, Height48, MoonShadow))
         box {
             // btn("View Map", EarthRoute(null), EarthStyle.ViewMapButtonMod)

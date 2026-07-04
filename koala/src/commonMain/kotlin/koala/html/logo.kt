@@ -33,10 +33,9 @@ private val LogoIcon = Class("logo-icon")
 
 // language="CSS"
 val LogoCss get() = """
-${Class} {
+$Class {
     display: grid;
     aspect-ratio: 4 / 1;
-    width: 168px;
 }
 
 $ShadowBox {
