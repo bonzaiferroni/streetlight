@@ -3,18 +3,16 @@ package koala.html
 import koala.css.*
 import kotlinx.html.FlowContent
 
-object RouteMenu {
-    val Mod = Class("route-menu")
-    val Route = Class("route-menu__route")
-    val RouteNow = Class("route-menu__route-now")
-}
-
 fun FlowContent.routeMenu(
+    // context: String,
     routeNow: AppRoute,
     routes: List<AppRoute>,
     mod: ModifierSet? = null,
 ) {
-    row(modify(mod, RouteMenu.Mod, Gap0, TextTransformUppercase, TextSmall, Padding1, Bold)) {
+    column(modify()) {
+
+    }
+    row(modify(mod, RouteMenu.Menu, Gap0, TextTransformUppercase, TextSmall, Padding1, Bold)) {
         routes.forEach { route ->
             when (route == routeNow) {
                 true -> span(modify(RouteMenu.RouteNow)) {
@@ -28,9 +26,16 @@ fun FlowContent.routeMenu(
     }
 }
 
+object RouteMenu {
+    val Mod = Class("route-context")
+    val Menu = Class("route-context__menu")
+    val Route = Class("route-context__route")
+    val RouteNow = Class("route-context__route-now")
+}
+
 //language="CSS"
 val NavMenuCss get() = with(RouteMenu) { """
-$Mod {
+$Menu {
     background-color: rgba(var(--black), .6);
     backdrop-filter: blur(3px);
     -webkit-backdrop-filter: blur(3px);

@@ -63,8 +63,9 @@ fun FlowContent.homeShell(content: HomeContent) {
         }
 
         routeMenu(HomeRoute, listOf(HomeRoute, EarthRoute(null)))
-        dataIsland(HomeKey.IslandId, content)
     }
+
+    dataIsland(HomeKey.IslandId, content)
 }
 
 fun FlowContent.galaxiesSection(galaxies: List<Galaxy>) {

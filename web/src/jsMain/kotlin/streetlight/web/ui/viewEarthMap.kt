@@ -128,13 +128,6 @@ fun AppScope.earthWindow(model: EarthMap) {
                 }
             }
             button("Show All", modify(Zen, PointerEventsAuto, BlurBackdrop)).onClick(model::showAll)
-            // button("View Feed", modify(Zen, AlignSelfEnd, PointerEventsAuto, BlurBackdrop)).onClick {
-            //     val route = when (val galaxy = model.stateNow.galaxy) {
-            //         null -> HomeRoute
-            //         else -> GalaxyRoute(galaxy.slug)
-            //     }
-            //     portal.go(route)
-            // }
         }
         val feedButton = MenuButton("Feed") {
             when (val galaxy = model.stateNow.galaxy) {

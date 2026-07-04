@@ -5,6 +5,7 @@ import kampfire.api.Slug
 data class GalaxyRoute(override val slug: Slug): SlugRoute {
     override val screen get() = StreetlightScreen.Galaxy
     override val title get() = "Galaxy"
+    override val label get() = "Feed"
 }
 
 object GalaxyFoundryRoute: StreetlightRoute {
@@ -14,7 +15,8 @@ object GalaxyFoundryRoute: StreetlightRoute {
 
 data class GalaxyConfigRoute(override val slug: Slug): SlugRoute {
     override val screen get() = StreetlightScreen.GalaxyUpdate
-    override val title get() = "Galaxy Settings"
+    override val title get() = "Galaxy Config"
+    override val label get() = "Dash"
 }
 
 object GalaxyListRoute: StreetlightRoute {

@@ -49,7 +49,7 @@ fun FlowContent.headerOf(
         modifiers = modifiers,
         cellContent = cellContentOf(galaxy),
         links = emptyList(),
-        editRoute = GalaxyConfigRoute(galaxy.slug),
+        // editRoute = GalaxyConfigRoute(galaxy.slug),
         block = block
     )
 }

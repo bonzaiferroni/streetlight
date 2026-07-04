@@ -6,8 +6,12 @@ import kotlinx.css.rem
 import kotlinx.html.FlowContent
 import streetlight.model.data.GalaxyContent
 import streetlight.web.EarthRoute
+import streetlight.web.HomeRoute
 import streetlight.web.layouts.postSection
 import streetlight.web.pages.appFooter
+import streetlight.web.toConfigRoute
+import streetlight.web.toEarthRoute
+import streetlight.web.toRoute
 import streetlight.web.ui.EarthStyle
 import streetlight.web.ui.headerOf
 
@@ -16,11 +20,11 @@ fun FlowContent.galaxyShell(content: GalaxyContent) {
     column(GalaxyKey.ShellId) {
         headerOf(galaxy)
         box {
-            btn("View Map", EarthRoute(galaxy.slug), EarthStyle.ViewMapButtonMod)
+            // btn("View Map", EarthRoute(galaxy.slug), EarthStyle.ViewMapButtonMod)
             column(modify(Gap8)) {
-                row {
+                row(modify(JustifyContentSpaceBetween)) {
                     galaxyMenu(emptyList(), galaxy)
-                    filigree(modify(Flex1), MaxWidthNone) { spacer { setStyle(Property.Width.to(8.rem)) } }
+                    // filigree(modify(Flex1), MaxWidthNone) { spacer { setStyle(Property.Width.to(8.rem)) } }
                     createPostMenu(galaxy)
                 }
 //                if (galaxy.postTypes.contains(PostType.Content)) {
@@ -30,6 +34,9 @@ fun FlowContent.galaxyShell(content: GalaxyContent) {
                 appFooter(GalaxyKey.SOURCE)
             }
         }
+
+        val routeNow = galaxy.toRoute()
+        routeMenu(routeNow, listOf(routeNow, galaxy.toEarthRoute(), galaxy.toConfigRoute()))
     }
 
     dataIsland(GalaxyKey.GalaxyContentId, content)
