@@ -8,6 +8,7 @@ import koala.html.RouteMenu
 import koala.html.RouteMenuIcon
 import koala.html.filigree
 import koala.html.icon
+import koala.html.iconsTray
 import koala.html.navigation
 import koala.html.row
 import koala.html.textBlock
@@ -17,7 +18,8 @@ fun TagScope.routeMenu(
     routeNow: MenuItem,
     routes: List<MenuItem>,
     mod: ModifierSet? = null,
-    leftIcons: List<RouteMenuIcon>? = null
+    leftIcons: List<RouteMenuIcon>? = null,
+    rightIcons: List<RouteMenuIcon>? = null,
 ) {
     column(modify(mod, RouteMenu.Base, TextTransformUppercase, TextSmall, Gap0, AlignItemsCenter)) {
         filigree(modify(AlignSelfStretch)) {
@@ -25,19 +27,16 @@ fun TagScope.routeMenu(
         }
         row(modify(RouteMenu.ContextMenu, Gap0, TextTransformUppercase, TextSmall, Padding1, Bold, BorderSolid2Px)) {
             leftIcons?.let { icons ->
-                row(modify(RouteMenu.LeftTray, BorderSolid2Px)) {
-                    icons.forEach {
-                        navigation(it.route, modify(Height3)) {
-                            icon(it.svg, modify(Height100P))
-                        }
-                    }
-                }
+                iconsTray(icons, modify(RouteMenu.LeftTray))
             }
             routes.forEach { item ->
                 when (item.label == routeNow.label) {
                     true -> span(item.label, modify(RouteMenu.RouteNow))
                     else -> routeMenuItem(item)
                 }
+            }
+            rightIcons?.let { icons ->
+                iconsTray(icons, modify(RouteMenu.RightTray))
             }
         }
     }

@@ -65,7 +65,7 @@ fun FlowContent.homeShell(content: HomeContent) {
             }
         }
 
-        routeMenu("Home", HomeRoute, listOf(HomeRoute, EarthRoute(null)))
+        routeMenu("Streetlight", HomeRoute, listOf(HomeRoute, EarthRoute(null)))
     }
 
     dataIsland(HomeKey.IslandId, content)

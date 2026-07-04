@@ -131,18 +131,16 @@ fun AppScope.earthWindow(model: EarthMap) {
             button("Show All", modify(Zen, PointerEventsAuto, BlurBackdrop)).onClick(model::showAll)
         }
         flowBlock(model.galaxyFlow, modify(Magic)) { galaxy ->
-            val feedButton = MenuButton("Feed") {
-                when (galaxy) {
-                    null -> portal.go(HomeRoute)
-                    else -> portal.go(GalaxyRoute(galaxy.slug))
-                }
+            val feedRoute = when (galaxy) {
+                null -> MenuRoute(HomeRoute)
+                else -> MenuRoute(GalaxyRoute(galaxy.slug), "Feed")
             }
             val routeNow = MenuLabel("Map")
             val leftIcons = if (galaxy != null) listOf(RouteMenuIcon(SvgFile.CaretLeft, EarthRoute(null))) else null
             routeMenu(
                 context = galaxy?.name ?: "Streetlight",
                 routeNow = routeNow,
-                routes = listOf(feedButton, routeNow),
+                routes = listOf(feedRoute, routeNow),
                 mod = modify(PointerEventsAuto),
                 leftIcons = leftIcons
             )

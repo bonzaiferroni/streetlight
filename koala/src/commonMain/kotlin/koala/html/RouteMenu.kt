@@ -18,13 +18,7 @@ fun FlowContent.routeMenu(
         }
         row(modify(mod, RouteMenu.ContextMenu, Gap0, Padding1, Bold, AlignItemsCenter, BorderSolid2Px)) {
             leftIcons?.let { icons ->
-                row(modify(RouteMenu.LeftTray, BorderSolid2Px)) {
-                    icons.forEach {
-                        navigation(it.route, modify(Height3)) {
-                            icon(it.svg, modify(Height100P))
-                        }
-                    }
-                }
+                iconsTray(icons, modify(RouteMenu.LeftTray))
             }
             routes.forEach { route ->
                 when (route == routeNow) {
@@ -37,13 +31,20 @@ fun FlowContent.routeMenu(
                 }
             }
             rightIcons?.let { icons ->
-                row(modify(RouteMenu.RightTray, BorderSolid2Px)) {
-                    icons.forEach {
-                        navigation(it.route, modify(Height3)) {
-                            icon(it.svg, modify(Height100P))
-                        }
-                    }
-                }
+                iconsTray(icons, modify(RouteMenu.RightTray))
+            }
+        }
+    }
+}
+
+internal fun FlowContent.iconsTray(
+    icons: List<RouteMenuIcon>,
+    mod: ModifierSet
+) {
+    row(modify(mod, BorderSolid2Px)) {
+        icons.forEach {
+            navigation(it.route, modify(Height3)) {
+                icon(it.svg, modify(Height100P))
             }
         }
     }
