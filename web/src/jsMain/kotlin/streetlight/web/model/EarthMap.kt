@@ -53,6 +53,7 @@ class EarthMap(
                     val galaxy = route.slug?.let {
                         api.readGalaxy(it).handleOutcome(toaster::toast)
                     }
+                    // console.log(galaxy?.name) // ey
                     val posts = galaxy?.let {
                         api.readPosts(it.galaxyId).handleOutcome(toaster::toast)
                     }

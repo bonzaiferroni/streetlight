@@ -31,6 +31,8 @@ internal class PointRender(
     var isVisible = false
         private set
 
+    val isFocused get() = element.isModified(Focus)
+
     init {
         jsMarker.setLngLat(marker.geoPoint.toLngLat())
     }

@@ -129,14 +129,16 @@ fun AppScope.earthWindow(model: EarthMap) {
             }
             button("Show All", modify(Zen, PointerEventsAuto, BlurBackdrop)).onClick(model::showAll)
         }
-        val feedButton = MenuButton("Feed") {
-            when (val galaxy = model.stateNow.galaxy) {
-                null -> portal.go(HomeRoute)
-                else -> portal.go(GalaxyRoute(galaxy.slug))
+        flowBlock(model.galaxyFlow) { galaxy ->
+            val feedButton = MenuButton("Feed") {
+                when (val galaxy = model.stateNow.galaxy) {
+                    null -> portal.go(HomeRoute)
+                    else -> portal.go(GalaxyRoute(galaxy.slug))
+                }
             }
+            val routeNow = MenuLabel("Map")
+            routeMenu(galaxy?.name ?: "Streetlight", routeNow, listOf(feedButton, routeNow), modify(PointerEventsAuto, AlignSelfEnd))
         }
-        val routeNow = MenuLabel("Map")
-        routeMenu(routeNow, listOf(feedButton, routeNow), modify(PointerEventsAuto, AlignSelfEnd))
     }
 }
 

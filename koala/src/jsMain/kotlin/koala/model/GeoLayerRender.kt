@@ -64,6 +64,7 @@ internal class GeoLayerRender(
         // remove cached points not in list
         pointRenders.forEach { (key, render) ->
             if (markers.any { it.markerId == key }) return@forEach
+            if (render.isFocused) onFocus(null)
             render.dispose()
         }
 

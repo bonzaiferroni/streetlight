@@ -4,28 +4,43 @@ import kampfire.model.Labeled
 import koala.css.*
 import koala.html.AppRoute
 import koala.html.RouteMenu
+import koala.html.filigree
+import koala.html.textBlock
+import kotlinx.coroutines.flow.Flow
 
 fun TagScope.routeMenu(
+    context: String,
     routeNow: MenuItem,
     routes: List<MenuItem>,
     mod: ModifierSet? = null,
 ) {
-    row(modify(mod, RouteMenu.Mod, Gap0, TextTransformUppercase, TextSmall, Padding1, Bold)) {
-        routes.forEach { item ->
-            when (item.label == routeNow.label) {
-                true -> span(item.label, modify(RouteMenu.RouteNow))
-                else -> when (item) {
-                    is MenuButton -> span(item.label, modify(RouteMenu.Route)).onClick(item.onClick)
-                    is MenuRoute -> navigation(item.route, modify(RouteMenu.Route)) {
-                        +item.label
-                    }
+    column(modify(RouteMenu.Base, TextTransformUppercase, TextSmall, Gap0)) {
+        filigree {
+            textBlock(context)
+        }
+        filigree {
+            row(modify(mod, RouteMenu.Menu, Gap0, TextTransformUppercase, TextSmall, Padding1, Bold)) {
+                routes.forEach { item ->
+                    when (item.label == routeNow.label) {
+                        true -> span(item.label, modify(RouteMenu.RouteNow))
+                        else -> when (item) {
+                            is MenuButton -> span(item.label, modify(RouteMenu.Route)).onClick(item.onClick)
+                            is MenuRoute -> navigation(item.route, modify(RouteMenu.Route)) {
+                                +item.label
+                            }
 
-                    is MenuLabel -> span(item.label, modify(RouteMenu.Route))
+                            is MenuLabel -> span(item.label, modify(RouteMenu.Route))
+                        }
+                    }
                 }
             }
         }
     }
 }
+
+// fun <T> AppScope.routeMenu(
+//     flow: Flow<T>
+// )
 
 data class MenuRoute(
     val route: AppRoute,
