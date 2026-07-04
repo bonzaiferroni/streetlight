@@ -22,7 +22,7 @@ fun FlowContent.siteHelm() {
                 navigation(SiteConfigRoute) {
                     onClick = closePopover
                     row(rowMod) {
-                        icon(SvgFile.Settings, HelmBarKey.IconMod)
+                        icon(SvgFile.GearLarge, HelmBarKey.IconMod)
                         textBlock("Settings")
                     }
                 }

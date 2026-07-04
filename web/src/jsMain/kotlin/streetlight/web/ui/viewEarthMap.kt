@@ -7,6 +7,7 @@ import koala.SvgFile
 import koala.css.*
 import koala.dom.*
 import koala.html.AppRoute
+import koala.html.RouteMenuIcon
 import koala.html.btn
 import koala.html.featureImage
 import koala.html.filigree
@@ -99,7 +100,7 @@ fun AppScope.earthHeader(model: EarthMap) {
                 }
             }
         }
-        icon(SvgFile.Settings, iconMod).onClick { portal.go(HomeRoute) }
+        icon(SvgFile.GearLarge, iconMod).onClick { portal.go(HomeRoute) }
     }
 }
 
@@ -137,13 +138,13 @@ fun AppScope.earthWindow(model: EarthMap) {
                 }
             }
             val routeNow = MenuLabel("Map")
-            val backRoute = if (galaxy != null) EarthRoute(null) else null
+            val leftIcons = if (galaxy != null) listOf(RouteMenuIcon(SvgFile.CaretLeft, EarthRoute(null))) else null
             routeMenu(
                 context = galaxy?.name ?: "Streetlight",
                 routeNow = routeNow,
                 routes = listOf(feedButton, routeNow),
                 mod = modify(PointerEventsAuto),
-                backRoute = backRoute
+                leftIcons = leftIcons
             )
         }
     }

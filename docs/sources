@@ -4,6 +4,8 @@ arrow-right.svg
 backspace.svg
 boost-filled.svg
 boost.svg
+caret-left.svg
+caret-up.svg
 calendar-minus.svg
 calendar-plus.svg
 calendar.svg
@@ -24,6 +26,8 @@ eye-minus.svg
 eye-off.svg
 eye-plus.svg
 eye.svg
+gear-large.svg
+gear-small.svg
 home.svg
 info.svg
 light-filled.svg
@@ -43,7 +47,6 @@ panel-right.svg
 pin.svg
 plus.svg
 search.svg
-settings.svg
 sign-out.svg
 star-filled.svg
 star-off.svg

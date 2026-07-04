@@ -1,18 +1,16 @@
 package streetlight.web.shells
 
+import koala.SvgFile
 import koala.css.*
 import koala.html.*
-import kotlinx.css.rem
 import kotlinx.html.FlowContent
 import streetlight.model.data.GalaxyContent
-import streetlight.web.EarthRoute
 import streetlight.web.HomeRoute
 import streetlight.web.layouts.postSection
 import streetlight.web.pages.appFooter
 import streetlight.web.toConfigRoute
 import streetlight.web.toEarthRoute
 import streetlight.web.toRoute
-import streetlight.web.ui.EarthStyle
 import streetlight.web.ui.headerOf
 
 fun FlowContent.galaxyShell(content: GalaxyContent) {
@@ -37,8 +35,9 @@ fun FlowContent.galaxyShell(content: GalaxyContent) {
 
         val routeNow = galaxy.toRoute()
         routeMenu(
-            galaxy.name, routeNow, listOf(routeNow, galaxy.toEarthRoute(), galaxy.toConfigRoute()),
-            backRoute = HomeRoute,
+            galaxy.name, routeNow, listOf(routeNow, galaxy.toEarthRoute()),
+            leftIcons = listOf(RouteMenuIcon(SvgFile.Home, HomeRoute)),
+            rightIcons = listOf(RouteMenuIcon(SvgFile.GearSmall, galaxy.toConfigRoute()))
         )
     }
 

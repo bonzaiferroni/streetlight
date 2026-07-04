@@ -5,27 +5,32 @@ import koala.SvgFile
 import koala.css.*
 import koala.html.AppRoute
 import koala.html.RouteMenu
+import koala.html.RouteMenuIcon
 import koala.html.filigree
 import koala.html.icon
 import koala.html.navigation
+import koala.html.row
 import koala.html.textBlock
-import kotlinx.coroutines.flow.Flow
 
 fun TagScope.routeMenu(
     context: String,
     routeNow: MenuItem,
     routes: List<MenuItem>,
     mod: ModifierSet? = null,
-    backRoute: AppRoute? = null,
+    leftIcons: List<RouteMenuIcon>? = null
 ) {
     column(modify(mod, RouteMenu.Base, TextTransformUppercase, TextSmall, Gap0, AlignItemsCenter)) {
         filigree(modify(AlignSelfStretch)) {
             textBlock(context)
         }
-        row(modify(RouteMenu.Menu, Gap0, TextTransformUppercase, TextSmall, Padding1, Bold)) {
-            backRoute?.let {
-                navigation(it, modify(RouteMenu.Back, Height3)) {
-                    icon(SvgFile.Home, modify(Height100P))
+        row(modify(RouteMenu.ContextMenu, Gap0, TextTransformUppercase, TextSmall, Padding1, Bold, BorderSolid2Px)) {
+            leftIcons?.let { icons ->
+                row(modify(RouteMenu.LeftTray, BorderSolid2Px)) {
+                    icons.forEach {
+                        navigation(it.route, modify(Height3)) {
+                            icon(it.svg, modify(Height100P))
+                        }
+                    }
                 }
             }
             routes.forEach { item ->
