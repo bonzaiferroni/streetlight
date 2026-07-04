@@ -77,6 +77,21 @@ $Base {
     width: fit-content;
     margin-inline: auto;
     user-select: none;
+    opacity: 1;
+    transition: opacity 500ms var(--magic-easing), transform 500ms var(--magic-easing);
+    transform: translateY(0px);
+    
+    
+    @starting-style {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+}
+
+#shell-box {
+    $Base {
+        display: none;
+    }
 }
 
 $ContextMenu, $LeftTray, $RightTray {
