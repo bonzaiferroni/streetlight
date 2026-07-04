@@ -2,6 +2,7 @@ package streetlight.web.ui
 
 import kampfire.api.Markdown
 import kampfire.model.Url
+import kampfire.model.handleOutcome
 import kampfire.model.medium
 import koala.SvgFile
 import koala.css.*
@@ -62,8 +63,11 @@ fun AppScope.viewEarthMapRoute() {
             when (route) {
                 is EarthRoute -> {
                     if (!isVisible) {
+                        val galaxy = route.slug?.let {
+                            api.readGalaxy(it).handleOutcome(toaster::toast)
+                        }
                         element.replaceRender(app, parentScope) {
-                            val model = app.getEarthMap(parentScope)
+                            val model = app.getEarthMap(parentScope, galaxy)
                             viewEarthMap(model)
                         }
                         element.modify(Reveal)

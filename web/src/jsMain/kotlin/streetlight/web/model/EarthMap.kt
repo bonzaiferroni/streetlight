@@ -14,6 +14,7 @@ import streetlight.web.io.ApiClient
 
 class EarthMap(
     private val scope: CoroutineScope,
+    initialGalaxy: Galaxy?,
     private val api: ApiClient,
     private val portal: Portal,
     private val toaster: Toaster,
@@ -21,7 +22,7 @@ class EarthMap(
     private val markerMap: MarkerMap
 ) {
 
-    private val state = storeOf(EarthMapState())
+    private val state = storeOf(EarthMapState(initialGalaxy))
     val stateFlow = state.flow
     val stateNow get() = state.now
     val galaxyFlow = stateFlow.mapDistinct { it.galaxy }
@@ -75,6 +76,6 @@ class EarthMap(
 }
 
 data class EarthMapState(
-    val galaxy: Galaxy? = null,
+    val galaxy: Galaxy?,
     val galaxies: List<Galaxy> = emptyList(),
 )
