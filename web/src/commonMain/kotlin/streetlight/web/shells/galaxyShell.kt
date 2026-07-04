@@ -36,7 +36,10 @@ fun FlowContent.galaxyShell(content: GalaxyContent) {
         }
 
         val routeNow = galaxy.toRoute()
-        routeMenu(galaxy.name, routeNow, listOf(routeNow, galaxy.toEarthRoute(), galaxy.toConfigRoute()))
+        routeMenu(
+            galaxy.name, routeNow, listOf(routeNow, galaxy.toEarthRoute(), galaxy.toConfigRoute()),
+            backRoute = HomeRoute,
+        )
     }
 
     dataIsland(GalaxyKey.GalaxyContentId, content)

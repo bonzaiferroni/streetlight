@@ -1,5 +1,6 @@
 package koala.html
 
+import koala.SvgFile
 import koala.css.*
 import kotlinx.html.FlowContent
 
@@ -8,12 +9,18 @@ fun FlowContent.routeMenu(
     routeNow: AppRoute,
     routes: List<AppRoute>,
     mod: ModifierSet? = null,
+    backRoute: AppRoute? = null,
 ) {
     column(modify(RouteMenu.Base, TextTransformUppercase, TextSmall, Gap0)) {
         filigree {
             textBlock(context)
         }
-        row(modify(mod, RouteMenu.Menu, Gap0, Padding1, Bold)) {
+        row(modify(mod, RouteMenu.Menu, Gap0, Padding1, Bold, AlignItemsCenter)) {
+            backRoute?.let {
+                navigation(it, modify(RouteMenu.Back, Height4)) {
+                    icon(SvgFile.ArrowLeft, modify(Width4, Height4))
+                }
+            }
             routes.forEach { route ->
                 when (route == routeNow) {
                     true -> span(modify(RouteMenu.RouteNow)) {
@@ -33,6 +40,7 @@ object RouteMenu {
     val Menu = Class("route-context__menu")
     val Route = Class("route-context__route")
     val RouteNow = Class("route-context__route-now")
+    val Back = Class("route-context__back")
 }
 
 //language="CSS"
@@ -50,6 +58,7 @@ $Base {
 }
     
 $Menu {
+    position: relative;
     background-color: rgba(var(--black), .6);
     backdrop-filter: blur(3px);
     -webkit-backdrop-filter: blur(3px);
@@ -69,5 +78,12 @@ $Menu {
     $Route {
         color: rgba(var(--white), .8);
     }
+}
+
+$Back {
+    position: absolute;
+    right: 100%;
+    top: 50%;
+    translate: 0 -50%;
 }
 """ }

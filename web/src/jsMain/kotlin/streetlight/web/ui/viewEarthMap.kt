@@ -41,7 +41,7 @@ fun AppScope.viewEarthMap(model: EarthMap) {
     box(EarthStyle.Id, modify(Size100P)) {
         val cameraController = geoMapMount(mod = modify(EarthStyle.Map))
         column(modify(Gap0, PointerEventsNone)) {
-            earthHeader(model)
+            // earthHeader(model)
             div(modify(EarthStyle.Grid, Padding1, Flex1, MinHeight0)) {
                 earthUnboundedOverlay(model, cameraController)
                 earthWindow(model)
@@ -129,15 +129,22 @@ fun AppScope.earthWindow(model: EarthMap) {
             }
             button("Show All", modify(Zen, PointerEventsAuto, BlurBackdrop)).onClick(model::showAll)
         }
-        flowBlock(model.galaxyFlow) { galaxy ->
+        flowBlock(model.galaxyFlow, modify(Magic)) { galaxy ->
             val feedButton = MenuButton("Feed") {
-                when (val galaxy = model.stateNow.galaxy) {
+                when (galaxy) {
                     null -> portal.go(HomeRoute)
                     else -> portal.go(GalaxyRoute(galaxy.slug))
                 }
             }
             val routeNow = MenuLabel("Map")
-            routeMenu(galaxy?.name ?: "Streetlight", routeNow, listOf(feedButton, routeNow), modify(PointerEventsAuto, AlignSelfEnd))
+            val backRoute = if (galaxy != null) EarthRoute(null) else null
+            routeMenu(
+                context = galaxy?.name ?: "Streetlight",
+                routeNow = routeNow,
+                routes = listOf(feedButton, routeNow),
+                mod = modify(PointerEventsAuto),
+                backRoute = backRoute
+            )
         }
     }
 }

@@ -1,10 +1,13 @@
 package koala.dom
 
 import kampfire.model.Labeled
+import koala.SvgFile
 import koala.css.*
 import koala.html.AppRoute
 import koala.html.RouteMenu
 import koala.html.filigree
+import koala.html.icon
+import koala.html.navigation
 import koala.html.textBlock
 import kotlinx.coroutines.flow.Flow
 
@@ -13,34 +16,33 @@ fun TagScope.routeMenu(
     routeNow: MenuItem,
     routes: List<MenuItem>,
     mod: ModifierSet? = null,
+    backRoute: AppRoute? = null,
 ) {
-    column(modify(RouteMenu.Base, TextTransformUppercase, TextSmall, Gap0)) {
-        filigree {
+    column(modify(mod, RouteMenu.Base, TextTransformUppercase, TextSmall, Gap0, AlignItemsCenter)) {
+        filigree(modify(AlignSelfStretch)) {
             textBlock(context)
         }
-        filigree {
-            row(modify(mod, RouteMenu.Menu, Gap0, TextTransformUppercase, TextSmall, Padding1, Bold)) {
-                routes.forEach { item ->
-                    when (item.label == routeNow.label) {
-                        true -> span(item.label, modify(RouteMenu.RouteNow))
-                        else -> when (item) {
-                            is MenuButton -> span(item.label, modify(RouteMenu.Route)).onClick(item.onClick)
-                            is MenuRoute -> navigation(item.route, modify(RouteMenu.Route)) {
-                                +item.label
-                            }
-
-                            is MenuLabel -> span(item.label, modify(RouteMenu.Route))
-                        }
-                    }
+        row(modify(RouteMenu.Menu, Gap0, TextTransformUppercase, TextSmall, Padding1, Bold)) {
+            backRoute?.let {
+                navigation(it, modify(RouteMenu.Back, Height4)) {
+                    icon(SvgFile.ArrowLeft, modify(Width4, Height4))
+                }
+            }
+            routes.forEach { item ->
+                when (item.label == routeNow.label) {
+                    true -> span(item.label, modify(RouteMenu.RouteNow))
+                    else -> routeMenuItem(item)
                 }
             }
         }
     }
 }
 
-// fun <T> AppScope.routeMenu(
-//     flow: Flow<T>
-// )
+fun TagScope.routeMenuItem(item: MenuItem) = when (item) {
+    is MenuButton -> span(item.label, modify(RouteMenu.Route)).onClick(item.onClick)
+    is MenuRoute -> navigation(item.route, modify(RouteMenu.Route)) { +item.label }
+    is MenuLabel -> span(item.label, modify(RouteMenu.Route))
+}
 
 data class MenuRoute(
     val route: AppRoute,
@@ -57,10 +59,3 @@ data class MenuButton(
 data class MenuLabel(override val label: String): MenuItem
 
 sealed interface MenuItem: Labeled
-
-typealias MenuItemProto = Either<AppRoute, MenuButton>
-
-sealed interface Either<out L, out R> {
-    data class Left<out L>(val value: L) : Either<L, Nothing>
-    data class Right<out R>(val value: R) : Either<Nothing, R>
-}
