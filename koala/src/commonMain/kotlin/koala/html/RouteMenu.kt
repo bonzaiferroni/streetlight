@@ -82,13 +82,12 @@ $ContextMenu, $LeftTray, $RightTray {
     backdrop-filter: blur(3px);
     -webkit-backdrop-filter: blur(3px);
     border-radius: 9999px;
-    color: rgba(var(--white), .8);
-    background-color: rgba(var(--black), .6);
+    color: rgba(var(--ink), .8);
+    background-color: rgba(var(--paper), .6);
 }
     
 $ContextMenu {
     position: relative;
-    text-shadow: var(--btn-text-shadow);
     
     $Route, $RouteNow {
         padding: var(--unit-spacing) var(--unit-spacing-2);
@@ -97,7 +96,7 @@ $ContextMenu {
     
     $RouteNow {
         outline: 2px solid rgb(var(--primary));
-        color: rgb(var(--white));
+        color: rgb(var(--ink));
     }
 }
 
