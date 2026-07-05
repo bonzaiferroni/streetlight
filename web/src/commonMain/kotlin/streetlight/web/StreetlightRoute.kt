@@ -65,6 +65,9 @@ enum class StreetlightScreen(
     // earth
     Earth(parseEarthRoute),
 
+    // city
+    City(SlugParse { CityRoute(it) }),
+
     // media
     Media(SlugParse { MediaRoute(it) }, "m");
 

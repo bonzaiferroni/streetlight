@@ -53,8 +53,8 @@ val appModule = module {
 fun AppContainer.getUserCreator(scope: CoroutineScope) =
     UserCreator(scope, koin.get(), koin.get(), koin.get(), koin.get())
 
-fun AppContainer.getEarthMap(scope: CoroutineScope, initialMap: EarthMap?, initialLayer: EarthLayer) =
-    Earth(scope, initialMap, initialLayer, koin.get(), koin.get(), koin.get(), koin.get(), koin.get())
+fun AppContainer.getEarthMap(scope: CoroutineScope, initialMap: EarthMap) =
+    Earth(scope, initialMap, koin.get(), koin.get(), koin.get(), koin.get(), koin.get())
 
 fun AppContainer.getLocationEditor(edit: LocationEdit, scope: CoroutineScope) =
     LocationEditor(edit, scope, koin.get())

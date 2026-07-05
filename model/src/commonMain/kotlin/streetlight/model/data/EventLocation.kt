@@ -24,7 +24,7 @@ data class EventLocation(
     val cost: Float?,
     val status: EventStatus,
     val visibility: Int,
-    val geoPoint: GeoPoint,
+    override val geoPoint: GeoPoint,
     val eventLinks: List<ExtraLink>?,
     val locationName: String?,
     val locationDescription: Markdown?,
@@ -37,8 +37,8 @@ data class EventLocation(
     val endsAt: Instant?,
     val updatedAt: Instant,
     val createdAt: Instant,
-): Labeled {
-    val links by lazy {
+): StreetPost, Labeled {
+    override val links by lazy {
         buildList {
             url?.let { url ->
                 add(ExtraLink("website", url))
@@ -49,13 +49,15 @@ data class EventLocation(
         }.takeIf { it.isNotEmpty() }
     }
 
-    val images get() = eventImages ?: locationImages
+    override val images get() = eventImages ?: locationImages
 
     val addressLine by lazy {
         addressLineOf(address, city)
     }
 
     override val label get() = title
+    override val sublabel get() = locationLabel
+    override val body get() = description
 
     val locationLabel get() = locationName ?: address ?: "(geolocation)"
 

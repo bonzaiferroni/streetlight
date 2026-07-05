@@ -7,6 +7,7 @@ import koala.model.mapDistinct
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import streetlight.web.CityMap
 import streetlight.web.CityMapRoute
 import streetlight.web.EarthLayer
 import streetlight.web.EarthMap
@@ -17,8 +18,7 @@ import streetlight.web.io.ApiClient
 
 class Earth(
     private val scope: CoroutineScope,
-    initialMap: EarthMap?,
-    initialLayer: EarthLayer,
+    initialMap: EarthMap,
     private val api: ApiClient,
     private val portal: Portal,
     private val toaster: Toaster,
@@ -26,7 +26,7 @@ class Earth(
     private val markerMap: MarkerMap
 ) {
 
-    private val state = storeOf(EarthMapState(initialMap, initialLayer))
+    private val state = storeOf(EarthMapState(initialMap))
     val stateFlow = state.flow
     val stateNow get() = state.now
     val mapFlow = stateFlow.mapDistinct { it.map }
@@ -66,11 +66,11 @@ class Earth(
                         // val maps = api.readTopGalaxies().handleOutcome(toaster::toast)
                         //     ?.map { GalaxyMap(it) } ?: emptyList()
                         // state.set { it.copy(maps = maps) }
-                        val points = api.readTopGalaxies().handleOutcome(toaster::toast)?.let {
+                        val markers = api.readTopGalaxies().handleOutcome(toaster::toast)?.let {
                             markerService.createMarkers(it)
                         }
-                        markerMap.setPoints(points)
-                        state.set { it.copy(map = null, layer = EarthLayer.Galaxy) }
+                        markerMap.setPoints(markers)
+                        state.set { it.copy(map = GalaxyMap(null)) }
                     }
 
                     else -> {
@@ -80,25 +80,45 @@ class Earth(
                             return
                         }
 
-                        val points = api.readPosts(galaxy.galaxyId).handleOutcome(toaster::toast)?.let {
+                        val markers = api.readPosts(galaxy.galaxyId).handleOutcome(toaster::toast)?.let {
                             markerService.createMarkers(it)
                         }
-                        markerMap.setPoints(points)
-                        state.set { it.copy(map = GalaxyMap(galaxy), layer = EarthLayer.Galaxy) }
+                        markerMap.setPoints(markers)
+                        state.set { it.copy(map = GalaxyMap(galaxy)) }
                     }
                 }
             }
 
             is CityMapRoute -> {
-                console.log("yer city map") // ey
+                when (val slug = route.slug) {
+                    null -> {
+                        val markers = api.readTopCities().handleOutcome(toaster::toast)?.let {
+                            markerService.createMarkers(it)
+                        }
+                        markerMap.setPoints(markers)
+                        state.set { it.copy(map = CityMap(null))}
+                    }
+                    else -> {
+                        val city = api.readCity(slug).handleOutcome(toaster::toast)
+                        if (city == null) {
+                            toaster.toast("city not found: $slug")
+                            return
+                        }
+
+                        val markers = api.readCityPosts(slug).handleOutcome(toaster::toast)?.let {
+                            markerService.createMarkers(it)
+                        }
+                        markerMap.setPoints(markers)
+                        state.set{ it.copy(map = CityMap(city)) }
+                    }
+                }
             }
         }
     }
 }
 
 data class EarthMapState(
-    val map: EarthMap?,
-    val layer: EarthLayer,
+    val map: EarthMap,
 )
 
 // val maps: List<EarthMap> = emptyList(),

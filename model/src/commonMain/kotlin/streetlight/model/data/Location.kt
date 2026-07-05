@@ -28,7 +28,7 @@ data class Location(
     val address: String?,
     val city: String?,
     val state: String?,
-    val geoPoint: GeoPoint,
+    override val geoPoint: GeoPoint,
     val mapRank: Float?,
     val mapCategory: String?,
     val mapType: String?,
@@ -38,11 +38,11 @@ data class Location(
     val lightCount: Int?,
     val eventsUrl: String?,
     val imageRef: Url?,
-    val images: ScaledImageArray?,
+    override val images: ScaledImageArray?,
     val extraLinks: List<ExtraLink>?,
     val updatedAt: Instant,
     val createdAt: Instant,
-): Labeled {
+): StreetPost, Labeled {
     val isLit get() = false
 
     val addressLine by lazy {
@@ -50,12 +50,13 @@ data class Location(
     }
 
     override val label get() = name ?: address ?: "(geolocation)"
-    val sublabel get() = when (name) {
+    override val sublabel get() = when (name) {
         null -> city
         else -> addressLine
     }
+    override val body get() = description
 
-    val links by lazy {
+    override val links by lazy {
         buildList {
             website?.let {
                 add(ExtraLink("website", it))

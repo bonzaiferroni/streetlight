@@ -123,6 +123,9 @@ class ApiClient(private val client: FetchClient) {
     suspend fun updateComment(comment: UpdatedComment) = client.postApi(Api.Talk.UpdateComment, comment)
 
     // city
+    suspend fun readCity(slug: Slug) = client.getApi(Api.Cities.ReadCity, slug)
+    suspend fun readTopCities() = client.getApi(Api.Cities.ReadTopCities)
+    suspend fun readCityPosts(slug: Slug) = client.getApi(Api.Cities.ReadCityPosts, slug)
     suspend fun searchCity(query: String, country: String) = client.getApi(Api.Cities.Search) {
         writeParam(it.query, query)
         writeParam(it.country, country)

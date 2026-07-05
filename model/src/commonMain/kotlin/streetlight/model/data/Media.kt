@@ -21,12 +21,16 @@ data class Media(
     val subtitle: String?,
     val text: Markdown?,
     val link: Url?,
-    val geoPoint: GeoPoint?,
+    override val geoPoint: GeoPoint?,
     val imageRef: Url?,
-    val images: ScaledImageArray?,
+    override val images: ScaledImageArray?,
     val updatedAt: Instant,
     val createdAt: Instant,
-) {
+): StreetPost {
+    override val label get() = title ?: "(untitled)"
+    override val sublabel get() = subtitle
+    override val body get() = text
+    override val links get() = link?.let { listOf(ExtraLink("link", it.value)) } // deep mystery: why isn't extralink's url property an Url
 }
 
 @Serializable

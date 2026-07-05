@@ -1,50 +1,23 @@
 package streetlight.web.ui
 
-import kampfire.api.Markdown
-import kampfire.model.Url
 import kampfire.model.handleOutcome
-import kampfire.model.medium
 import koala.SvgFile
 import koala.css.*
 import koala.dom.*
-import koala.html.AppRoute
-import koala.html.RouteMenuIcon
-import koala.html.btn
-import koala.html.featureImage
-import koala.html.filigree
 import koala.html.heading3
-import koala.html.heading4
 import koala.html.logo
-import koala.html.navigationIfNotNull
-import koala.html.span
-import koala.model.ClusterFocus
-import koala.model.MarkerFocus
-import koala.model.PointMarker
 import kotlinx.browser.document
 import kotlinx.coroutines.delay
-import kotlinx.html.FlowContent
-import kotlinx.html.hr
-import streetlight.model.data.ExtraLink
-import streetlight.web.EarthRoute
-import streetlight.web.GalaxyMapRoute
-import streetlight.web.GalaxyRoute
-import streetlight.web.HomeRoute
-import streetlight.web.layouts.ColorScheme
-import streetlight.web.layouts.cellBlock
-import streetlight.web.layouts.cellContentOf
-import streetlight.web.layouts.eventRoute
-import streetlight.web.layouts.locationRoute
 import streetlight.web.CityMap
 import streetlight.web.CityMapRoute
-import streetlight.web.EarthLayer
+import streetlight.web.EarthRoute
+import streetlight.web.GalaxyMapRoute
+import streetlight.web.HomeRoute
 import streetlight.web.model.Earth
-import streetlight.web.model.EventMarker
-import streetlight.web.model.FeatureMarker
 import streetlight.web.GalaxyMap
-import streetlight.web.model.MarkerType
 import streetlight.web.pages.AppBodyKey
 
-fun AppScope.viewEarthMap(model: Earth) {
+fun AppScope.viewEarth(model: Earth) {
     box(EarthStyle.Id, modify(Size100P)) {
         val cameraController = geoMapMount(mod = modify(EarthStyle.Map))
         column(modify(Gap0, PointerEventsNone)) {
@@ -59,7 +32,7 @@ fun AppScope.viewEarthMap(model: Earth) {
     }.flowModifier(model.isMovingFlow, EarthStyle.IsMoving, parentScope)
 }
 
-fun AppScope.viewEarthMapRoute() {
+fun AppScope.viewEarthRoute() {
     var isVisible = false
     val element = document.getElementById(AppBodyKey.FullScreenId)
 
@@ -71,12 +44,14 @@ fun AppScope.viewEarthMapRoute() {
                         val map = when (route) {
                             is GalaxyMapRoute -> route.slug?.let { slug ->
                                 api.readGalaxy(slug).handleOutcome(toaster::toast)?.let { GalaxyMap(it) }
-                            }
-                            else -> error("not implemented")
+                            } ?: GalaxyMap(null)
+                            is CityMapRoute -> route.slug?.let { slug ->
+                                api.readCity(slug).handleOutcome(toaster::toast)?.let { CityMap(it) }
+                            } ?: CityMap(null)
                         }
                         element.replaceRender(app, parentScope) {
-                            val model = app.getEarthMap(parentScope, map, route.layer)
-                            viewEarthMap(model)
+                            val model = app.getEarthMap(parentScope, map)
+                            viewEarth(model)
                         }
                         element.modify(Reveal)
                         isVisible = true

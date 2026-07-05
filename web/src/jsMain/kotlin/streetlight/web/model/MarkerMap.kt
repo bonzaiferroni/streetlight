@@ -6,6 +6,7 @@ import kampfire.model.getContainingBounds
 import koala.model.GeoFocus
 import koala.model.GeoMap
 import koala.model.MarkerFocus
+import koala.model.PointMarker
 import koala.model.mapDistinct
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope

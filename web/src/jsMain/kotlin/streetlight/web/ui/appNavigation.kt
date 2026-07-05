@@ -31,7 +31,7 @@ fun AppScope.appNavigation() {
             StreetlightScreen.Event -> viewEventProfileRoute()
             StreetlightScreen.Account -> viewStarDashRoute()
             StreetlightScreen.Sandbox -> viewSandbox()
-            StreetlightScreen.Earth -> viewEarthMapRoute()
+            StreetlightScreen.Earth -> viewEarthRoute()
             StreetlightScreen.MediaUpdate -> viewMediumUpdaterRoute()
             StreetlightScreen.Chat -> viewChatRoom()
             StreetlightScreen.SongProfile -> viewSongProfile()

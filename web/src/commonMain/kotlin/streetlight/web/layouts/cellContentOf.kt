@@ -44,7 +44,7 @@ fun cellContentOf(event: EventEdit): FlowContent.() -> Unit = {
     // exampleLightCell()
 }
 
-fun cellContentOf(event: EventLocation, post: GalaxyPost?): FlowContent.() -> Unit = {
+fun cellContentOf(event: EventLocation, post: GalaxyPost? = null): FlowContent.() -> Unit = {
     dateCell(event.startsAt)
     startsAtCell(event.startsAt)
     costCell(event.cost, event.url?.toUrl())

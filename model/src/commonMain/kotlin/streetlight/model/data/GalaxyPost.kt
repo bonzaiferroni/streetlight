@@ -8,14 +8,8 @@ import kotlin.jvm.JvmInline
 import kotlin.uuid.Uuid
 
 @Serializable
-sealed interface GalaxyPost {
+sealed interface GalaxyPost: StreetPost {
     val base: Post
-    val images: ScaledImageArray?
-    val geoPoint: GeoPoint?
-    val label: String
-    val sublabel: String?
-    val body: Markdown?
-    val links: List<ExtraLink>?
 }
 
 @Serializable
@@ -35,3 +29,15 @@ enum class PostOrder(label: String? = null) {
 
     val label = label ?: name
 }
+
+@Serializable
+data class LocationPost(
+    val location: Location,
+    override val base: Post,
+): GalaxyPost, StreetPost by location
+
+@Serializable
+data class EventPost(
+    val event: EventLocation,
+    override val base: Post,
+): GalaxyPost, StreetPost by event

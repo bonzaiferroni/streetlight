@@ -6,12 +6,12 @@ import koala.html.AppRoute
 import koala.html.SegmentParse
 import streetlight.model.data.CityId
 
-sealed interface EarthRoute: AppRoute {
+sealed interface EarthRoute: StreetlightRoute, SlugRoute {
     override val screen get() = StreetlightScreen.Earth
     val layer: EarthLayer
 }
 
-data class GalaxyMapRoute(override val slug: Slug?): EarthRoute, SlugRoute {
+data class GalaxyMapRoute(override val slug: Slug?): EarthRoute {
     override val title get() = "Galaxy Map"
     override val label get() = "Map"
     override val layer get() = EarthLayer.Galaxy
@@ -19,17 +19,17 @@ data class GalaxyMapRoute(override val slug: Slug?): EarthRoute, SlugRoute {
     override fun toSitePath() = "/earth/galaxy/${slug?.toString() ?: ""}"
 }
 
-data class CityMapRoute(val cityId: CityId?): EarthRoute, StreetlightRoute {
+data class CityMapRoute(override val slug: Slug?): EarthRoute {
     override val title get() = "City Map"
     override val label get() = "Map"
     override val layer get() = EarthLayer.City
 
-    override fun toSitePath() = "/earth/city/${cityId?.toString() ?: ""}"
+    override fun toSitePath() = "/earth/city/${slug?.toString() ?: ""}"
 }
 
 val parseEarthRoute = SegmentParse(listOf("city", "galaxy")) { segments ->
     when (segments.getOrNull(1)) {
-        "city" -> CityMapRoute(segments.takeSegment(2)?.toIntOrNull()?.let { CityId(it) })
+        "city" -> CityMapRoute(segments.takeSegment(2)?.toSlug())
         else -> GalaxyMapRoute(segments.takeSegment(2)?.toSlug())
     }
 }

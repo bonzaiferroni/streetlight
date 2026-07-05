@@ -80,17 +80,17 @@ fun AppScope.earthFocus(model: Earth) {
 private fun AppScope.markerPanel(marker: PointMarker) {
     when (marker) {
         is EventMarker -> {
-            val post = marker.post
+            val event = marker.event
             focusPanel(
-                label = post.label,
-                sublabel = post.sublabel,
-                imageUrl = post.images.medium,
-                description = post.body,
-                route = post.event.eventRoute,
-                subRoute = post.event.locationRoute,
+                label = event.label,
+                sublabel = event.sublabel,
+                imageUrl = event.images.medium,
+                description = event.body,
+                route = event.eventRoute,
+                subRoute = event.locationRoute,
                 colorScheme = ColorScheme.Accent,
-                extraLinks = post.links,
-                cells = cellContentOf(post.event, post)
+                extraLinks = event.links,
+                cells = cellContentOf(event)
             )
         }
     }
