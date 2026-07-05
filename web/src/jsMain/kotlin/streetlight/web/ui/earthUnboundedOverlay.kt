@@ -13,11 +13,11 @@ import kotlinx.coroutines.flow.map
 import kotlinx.html.dom.append
 import org.w3c.dom.HTMLElement
 import streetlight.web.model.FeatureMarker
-import streetlight.web.model.EarthMap
+import streetlight.web.model.Earth
 import kotlin.collections.first
 import kotlin.math.min
 
-fun AppScope.earthUnboundedOverlay(model: EarthMap, mapContext: GeoCameraController) {
+fun AppScope.earthUnboundedOverlay(model: Earth, mapContext: GeoCameraController) {
     val geoMap = app.get<GeoCamera>()
     val widget = mapContext.jsMap
     val element = div(modify(EarthStyle.Unbounded, PointerEventsNone))

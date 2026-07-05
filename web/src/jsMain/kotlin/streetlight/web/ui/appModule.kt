@@ -12,6 +12,8 @@ import streetlight.model.data.Galaxy
 import streetlight.model.data.LocationEdit
 import streetlight.model.data.GalaxyEdit
 import streetlight.model.data.MediaEdit
+import streetlight.web.EarthLayer
+import streetlight.web.EarthMap
 import streetlight.web.HomeRoute
 import streetlight.web.StreetlightScreen
 import streetlight.web.io.ApiClient
@@ -51,8 +53,8 @@ val appModule = module {
 fun AppContainer.getUserCreator(scope: CoroutineScope) =
     UserCreator(scope, koin.get(), koin.get(), koin.get(), koin.get())
 
-fun AppContainer.getEarthMap(scope: CoroutineScope, initialGalaxy: Galaxy?) =
-    EarthMap(scope, initialGalaxy, koin.get(), koin.get(), koin.get(), koin.get(), koin.get())
+fun AppContainer.getEarthMap(scope: CoroutineScope, initialMap: EarthMap?, initialLayer: EarthLayer) =
+    Earth(scope, initialMap, initialLayer, koin.get(), koin.get(), koin.get(), koin.get(), koin.get())
 
 fun AppContainer.getLocationEditor(edit: LocationEdit, scope: CoroutineScope) =
     LocationEditor(edit, scope, koin.get())

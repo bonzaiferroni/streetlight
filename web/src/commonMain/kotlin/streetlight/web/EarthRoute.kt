@@ -8,11 +8,13 @@ import streetlight.model.data.CityId
 
 sealed interface EarthRoute: AppRoute {
     override val screen get() = StreetlightScreen.Earth
+    val layer: EarthLayer
 }
 
 data class GalaxyMapRoute(override val slug: Slug?): EarthRoute, SlugRoute {
     override val title get() = "Galaxy Map"
     override val label get() = "Map"
+    override val layer get() = EarthLayer.Galaxy
 
     override fun toSitePath() = "/earth/galaxy/${slug?.toString() ?: ""}"
 }
@@ -20,6 +22,7 @@ data class GalaxyMapRoute(override val slug: Slug?): EarthRoute, SlugRoute {
 data class CityMapRoute(val cityId: CityId?): EarthRoute, StreetlightRoute {
     override val title get() = "City Map"
     override val label get() = "Map"
+    override val layer get() = EarthLayer.City
 
     override fun toSitePath() = "/earth/city/${cityId?.toString() ?: ""}"
 }
