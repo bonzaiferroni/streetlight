@@ -16,7 +16,7 @@ import streetlight.web.ui.featureHeader
 import streetlight.web.ui.starLightCell
 
 fun FlowContent.eventShell(event: EventLocation) {
-    column(EventProfileKey.id, modify(AlignItemsStretch, Gap4)) {
+    column(EventProfileKey.id, modify(AlignItemsStretch, Gap4, MarginTop1)) {
         featureHeader(
             title = event.title,
             descriptor = "at",

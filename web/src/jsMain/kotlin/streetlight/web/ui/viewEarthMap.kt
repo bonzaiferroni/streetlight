@@ -136,11 +136,17 @@ fun AppScope.earthWindow(model: EarthMap) {
         }
         flowBlock(model.galaxyFlow, modify(Magic)) { galaxy ->
             val feedRoute = when (galaxy) {
-                null -> MenuRoute(HomeRoute)
+                null -> null
                 else -> MenuRoute(GalaxyRoute(galaxy.slug), "Feed")
             }
-            val routeNow = MenuLabel("Map")
-            val leftIcons = if (galaxy != null) listOf(RouteMenuIcon(SvgFile.CaretLeft, EarthRoute(null))) else null
+            val routeNow = when (galaxy) {
+                null -> MenuLabel("Galaxies")
+                else -> MenuLabel("Map")
+            }
+            val leftIcons = when (galaxy) {
+                null -> listOf(RouteMenuIcon(SvgFile.Home, HomeRoute))
+                else -> listOf(RouteMenuIcon(SvgFile.CaretLeft, EarthRoute(null)))
+            }
             routeMenu(
                 context = galaxy?.name ?: "Streetlight",
                 routeNow = routeNow,
@@ -205,7 +211,7 @@ fun AppScope.focusPanel(
     extraLinks: List<ExtraLink>? = null,
     cells: (FlowContent.() -> Unit)? = null,
 ) {
-    card(modify(Gap0, Padding0, BlurBackdrop, PointerEventsAuto, EarthStyle.MoveDimmer)) {
+    card(modify(Gap0, Padding0, BlurBackdrop, PointerEventsAuto, BorderSolid2Px, EarthStyle.MoveDimmer)) {
         setStyle(Property.ColorScheme.to(colorScheme.cssValue))
         column(modify(Gap0)) {
             featureImage(imageUrl, modify(Flex1))

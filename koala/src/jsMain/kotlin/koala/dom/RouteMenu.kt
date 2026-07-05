@@ -16,7 +16,7 @@ import koala.html.textBlock
 fun TagScope.routeMenu(
     context: String,
     routeNow: MenuItem,
-    routes: List<MenuItem>,
+    routes: List<MenuItem?>,
     mod: ModifierSet? = null,
     leftIcons: List<RouteMenuIcon>? = null,
     rightIcons: List<RouteMenuIcon>? = null,
@@ -30,6 +30,7 @@ fun TagScope.routeMenu(
                 iconsTray(icons, modify(RouteMenu.LeftTray))
             }
             routes.forEach { item ->
+                val item = item ?: return@forEach
                 when (item.label == routeNow.label) {
                     true -> span(item.label, modify(RouteMenu.RouteNow))
                     else -> routeMenuItem(item)

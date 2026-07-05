@@ -22,6 +22,10 @@ $Class {
     width: min(calc(100% - var(--unit-spacing-2)), var(--body-width));
     background-color: transparent;
     scrollbar-width: none;
+    
+    $Card, .tabs-header {
+        border: 2px solid var(--weak-outline);
+    }
 }
 
 $Content, $Content > * {

@@ -18,7 +18,7 @@ import streetlight.web.pages.appHeader
 
 fun FlowContent.homeShell(content: HomeContent) {
     column(HomeKey.ContainerId, modify(MarginTop1)) {
-        appHeader(Height8)
+        appHeader(Height10)
 
         geoMapMount(null, modify(BorderRadius2, Height48, MoonShadow, BorderSolid2Px))
         box {

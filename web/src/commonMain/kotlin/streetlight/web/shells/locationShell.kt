@@ -14,7 +14,7 @@ import streetlight.web.ui.headerOf
 fun FlowContent.locationShell(
     content: LocationContent,
 ) {
-    column(LocationProfileKey.Id, modify(AlignItemsStretch, Gap4)) {
+    column(LocationProfileKey.Id, modify(AlignItemsStretch, Gap4, MarginTop1)) {
         headerOf(
             location = content.location,
             editRoute = if (content.canEdit) LocationUpdateRoute(content.location.slug) else null

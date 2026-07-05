@@ -98,6 +98,7 @@ object SvgFile : FileSet<Svg>() {
 
     // filigree
     val CircularFiligree = add("circular-filigree.svg")
+    val CircularFiligreeAnimated = add("circular-filigree-animated.svg")
 }
 
 object LottieFile : FileSet<Lottie>() {

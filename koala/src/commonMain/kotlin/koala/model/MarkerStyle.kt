@@ -119,7 +119,7 @@ $Thumb {
     border-radius: calc(var($BodySize) / 2);
     overflow: clip;
 
-    border: 2px solid rgba(var($MarkerBorder), 0.8);
+    border: 2px solid rgba(var($MarkerBorder), 0.6);
 
     transition: var(--transition-opacity), var(--transition-border-radius);
 }
