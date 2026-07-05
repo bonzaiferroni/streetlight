@@ -8,7 +8,7 @@ import kotlinx.html.FlowContent
 import streetlight.model.data.Galaxy
 import streetlight.model.data.HomeContent
 import streetlight.web.GalaxyFoundryRoute
-import streetlight.web.EarthRoute
+import streetlight.web.GalaxyMapRoute
 import streetlight.web.HomeRoute
 import streetlight.web.layouts.postSection
 import streetlight.web.layouts.smallGalaxyCard
@@ -65,7 +65,7 @@ fun FlowContent.homeShell(content: HomeContent) {
             }
         }
 
-        routeMenu("Streetlight", HomeRoute, listOf(HomeRoute, EarthRoute(null)))
+        routeMenu("Streetlight", HomeRoute, listOf(HomeRoute, GalaxyMapRoute(null)))
     }
 
     dataIsland(HomeKey.IslandId, content)

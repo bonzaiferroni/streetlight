@@ -11,7 +11,7 @@ import koala.html.buttonPopover
 import koala.html.card
 import koala.html.row
 import streetlight.model.data.Galaxy
-import streetlight.web.EarthRoute
+import streetlight.web.GalaxyMapRoute
 import streetlight.web.model.DataCache
 import streetlight.web.shells.GalaxyMenuKey
 
@@ -27,13 +27,13 @@ fun AppScope.galaxyEarthMenu(
             card(modify(ButtonPopover.CardMod)) {
                 row(GalaxyMenuKey.RowMods) {
                     if (currentGalaxy != null) {
-                        btn("Top", EarthRoute(null))
+                        btn("Top", GalaxyMapRoute(null))
                     }
                     galaxies.forEach { galaxy ->
                         if (galaxy.name == currentGalaxy?.name) return@forEach
                         btn(
                             text = galaxy.name,
-                            route = EarthRoute(galaxy.slug),
+                            route = GalaxyMapRoute(galaxy.slug),
                             background = galaxy.images.small,
                             modifiers = modify(modifiers)
                         )

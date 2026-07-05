@@ -10,7 +10,6 @@ interface AppRoute: Labeled {
     fun toSitePath() = basePath
     val title: String
     val basePath get() = "/${screen.pathRoot}"
-    val requireAuth get() = false
     override val label get() = title
 
     companion object {
@@ -27,6 +26,7 @@ interface AppRoute: Labeled {
                 is IdParse -> idArg?.let { parse.block(it) }
                 is SlugOrNullParse -> parse.block(idArg?.toSlug())
                 is SlugParse -> idArg?.let { parse.block(idArg.toSlug()) }
+                is SegmentParse -> parse.block(segments)
             }
         }
     }
@@ -63,4 +63,9 @@ data class SlugOrNullParse(
 data class SlugParse(
     val label: String = "id",
     val block: (Slug) -> AppRoute
+): RouteParse
+
+data class SegmentParse(
+    val roots: List<String>,
+    val block: (List<String>) -> AppRoute
 ): RouteParse

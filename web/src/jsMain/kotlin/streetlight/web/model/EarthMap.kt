@@ -9,7 +9,7 @@ import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import streetlight.model.data.Galaxy
-import streetlight.web.EarthRoute
+import streetlight.web.GalaxyMapRoute
 import streetlight.web.io.ApiClient
 
 class EarthMap(
@@ -36,7 +36,7 @@ class EarthMap(
         when (val galaxy = ((focus as? MarkerFocus)?.marker as? GalaxyMarker)?.galaxy) {
             null -> focus
             else -> {
-                portal.go(EarthRoute(galaxy.slug))
+                portal.go(GalaxyMapRoute(galaxy.slug))
                 null
             }
         }
@@ -50,7 +50,7 @@ class EarthMap(
                 state.set { it.copy(galaxies = galaxies) }
             }
             launch {
-                portal.routeFlowOf<EarthRoute>(false).collect { route ->
+                portal.routeFlowOf<GalaxyMapRoute>(false).collect { route ->
                     val galaxy = route.slug?.let {
                         api.readGalaxy(it).handleOutcome(toaster::toast)
                     }

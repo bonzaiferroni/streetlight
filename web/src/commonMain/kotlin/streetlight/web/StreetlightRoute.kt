@@ -1,18 +1,20 @@
 package streetlight.web
 
-import kampfire.api.Slug
 import kampfire.api.SlugValue
 import kampfire.api.TableId
+import kampfire.api.toSlug
 import kampfire.utils.pascalToKebabCase
 import koala.html.AppRoute
 import koala.html.AppScreen
 import koala.html.SlugOrNullParse
 import koala.html.IdParse
 import koala.html.RouteParse
+import koala.html.SegmentParse
 import koala.html.SlugParse
 import koala.html.StaticParse
 import koala.html.UuidParse
 import koala.model.DocId
+import streetlight.model.data.CityId
 import streetlight.model.data.GalaxyId
 import streetlight.model.data.LocationId
 import streetlight.model.data.RecordId
@@ -30,7 +32,6 @@ enum class StreetlightScreen(
     Account(StaticParse { StarDashRoute }),
     MediaUpdate(UuidParse { MediaUpdateRoute(it.toRecordId()) }),
     Sandbox(StaticParse { SandboxRoute }),
-    Earth(SlugOrNullParse { EarthRoute(it) }),
     Chat(StaticParse { ChatRoute }),
     SongProfile(UuidParse { SongProfileRoute(SongId(it)) }),
     TalentProfile(UuidParse { TalentProfileRoute(TalentId(it)) }),
@@ -61,12 +62,16 @@ enum class StreetlightScreen(
     Docs(IdParse { SiteDocRoute(it) }),
     Talk(UuidParse { TalkRoute(GalaxyId(it)) }),
 
+    // earth
+    Earth(parseEarthRoute),
+
     // media
     Media(SlugParse { MediaRoute(it) }, "m");
 
     override val pathRoot = pathRoot ?: name.pascalToKebabCase()
 }
 
+// interfaces
 sealed interface StreetlightRoute: AppRoute
 
 interface RecordIdRoute: StreetlightRoute {
@@ -80,6 +85,12 @@ sealed interface SlugRoute: StreetlightRoute {
     override fun toSitePath() = toIdSitePath(slug)
 }
 
+interface IntIdRoute: StreetlightRoute {
+    val id: Int?
+    override fun toSitePath() = toIdSitePath(id)
+}
+
+// singletons
 object HomeRoute: StreetlightRoute {
     override val screen get() = StreetlightScreen.Home
     override val title get() = "Home"
@@ -95,18 +106,12 @@ object SandboxRoute: StreetlightRoute {
     override val title get() = "Sandbox"
 }
 
-data class EarthRoute(override val slug: Slug?): SlugRoute {
-    override val screen get() = StreetlightScreen.Earth
-    override val title get() = "Map"
-
-    override fun toSitePath() = toIdSitePath(slug)
-}
-
 object ChatRoute: StreetlightRoute {
     override val screen get() = StreetlightScreen.Chat
     override val title get() = "Chat"
 }
 
+// data class
 data class SongProfileRoute(
     val songId: SongId
 ): StreetlightRoute, RecordIdRoute {
@@ -167,7 +172,8 @@ data class TalkRoute(val id: Uuid, val type: SpaceType): StreetlightRoute {
     override fun toSitePath() = toIdSitePath(id)
 }
 
-private fun AppRoute.toIdSitePath(id: String?) = id?.let { "$basePath/$id" } ?: basePath
-private fun AppRoute.toIdSitePath(id: SlugValue?) = toIdSitePath(id?.value)
-private fun AppRoute.toIdSitePath(id: TableId<Uuid>?) = toIdSitePath(id?.value.toString())
-private fun AppRoute.toIdSitePath(id: Uuid?) = toIdSitePath(id?.toString())
+fun AppRoute.toIdSitePath(id: String?) = id?.let { "$basePath/$id" } ?: basePath
+fun AppRoute.toIdSitePath(id: SlugValue?) = toIdSitePath(id?.value)
+fun AppRoute.toIdSitePath(id: TableId<Uuid>?) = toIdSitePath(id?.value.toString())
+fun AppRoute.toIdSitePath(id: Uuid?) = toIdSitePath(id?.toString())
+fun AppRoute.toIdSitePath(id: Int?) = toIdSitePath(id?.toString())

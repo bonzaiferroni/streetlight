@@ -25,7 +25,7 @@ import kotlinx.coroutines.delay
 import kotlinx.html.FlowContent
 import kotlinx.html.hr
 import streetlight.model.data.ExtraLink
-import streetlight.web.EarthRoute
+import streetlight.web.GalaxyMapRoute
 import streetlight.web.GalaxyRoute
 import streetlight.web.HomeRoute
 import streetlight.web.layouts.ColorScheme
@@ -46,7 +46,7 @@ fun AppScope.viewEarthMap(model: EarthMap) {
             // earthHeader(model)
             div(modify(EarthStyle.Grid, Padding1, Flex1, MinHeight0)) {
                 earthUnboundedOverlay(model, cameraController)
-                earthWindow(model)
+                earthChrome(model)
                 // earthList(model)
                 earthFocus(model)
             }.flowModifier(model.isFocusedFlow, EarthStyle.IsFocused, parentScope)
@@ -61,7 +61,7 @@ fun AppScope.viewEarthMapRoute() {
     launchEffect {
         portal.routeFlow.collect { route ->
             when (route) {
-                is EarthRoute -> {
+                is GalaxyMapRoute -> {
                     if (!isVisible) {
                         val galaxy = route.slug?.let {
                             api.readGalaxy(it).handleOutcome(toaster::toast)
@@ -98,7 +98,7 @@ fun AppScope.earthHeader(model: EarthMap) {
                 }
                 else -> row(modify(AlignItemsCenter)) {
                     icon(SvgFile.ArrowLeft, iconMod).onClick {
-                        portal.go(EarthRoute(null))
+                        portal.go(GalaxyMapRoute(null))
                     }
                     heading3(galaxy.name, modify(LineHeight115, SingleLine, Bold))
                 }
@@ -108,7 +108,7 @@ fun AppScope.earthHeader(model: EarthMap) {
     }
 }
 
-fun AppScope.earthWindow(model: EarthMap) {
+fun AppScope.earthChrome(model: EarthMap) {
     column(modify(EarthStyle.Window, EarthStyle.MoveDimmer, JustifyContentSpaceBetween)) {
         row(modify(JustifyContentEnd, AlignItemsStart)) {
             flowBlock(model.summaryFlow) { summary ->
@@ -145,7 +145,7 @@ fun AppScope.earthWindow(model: EarthMap) {
             }
             val leftIcons = when (galaxy) {
                 null -> listOf(RouteMenuIcon(SvgFile.Home, HomeRoute))
-                else -> listOf(RouteMenuIcon(SvgFile.CaretLeft, EarthRoute(null)))
+                else -> listOf(RouteMenuIcon(SvgFile.CaretLeft, GalaxyMapRoute(null)))
             }
             routeMenu(
                 context = galaxy?.name ?: "Streetlight",
