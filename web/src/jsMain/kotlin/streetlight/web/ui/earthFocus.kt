@@ -3,6 +3,7 @@ package streetlight.web.ui
 import kampfire.api.Markdown
 import kampfire.model.Url
 import kampfire.model.medium
+import kampfire.utils.takeEllipsis
 import koala.css.*
 import koala.dom.*
 import koala.html.AppRoute
@@ -18,14 +19,22 @@ import koala.model.PointMarker
 import kotlinx.html.FlowContent
 import kotlinx.html.hr
 import streetlight.model.data.ExtraLink
+import streetlight.model.data.StreetPost
+import streetlight.web.CityRoute
+import streetlight.web.GalaxyRoute
+import streetlight.web.HomeRoute
 import streetlight.web.layouts.ColorScheme
 import streetlight.web.layouts.cellBlock
 import streetlight.web.layouts.cellContentOf
 import streetlight.web.layouts.eventRoute
 import streetlight.web.layouts.locationRoute
+import streetlight.web.layouts.route
+import streetlight.web.model.CityMarker
 import streetlight.web.model.Earth
 import streetlight.web.model.EventMarker
 import streetlight.web.model.FeatureMarker
+import streetlight.web.model.GalaxyMarker
+import streetlight.web.model.LocationMarker
 
 fun AppScope.earthFocus(model: Earth) {
     flowBlock(model.focusFlow, modify(EarthStyle.Focus, Magic)) { focus ->
@@ -34,9 +43,9 @@ fun AppScope.earthFocus(model: Earth) {
                 mod = modify(PointerEventsAuto, Height100P),
                 viewportMod = modify(Flex1, OverflowYAuto, BorderRadius2)
             ) {
-                focus.members.forEachIndexed { index, marker ->
-                    val tabName = (marker as? FeatureMarker)?.markerType?.name ?: marker.label ?: return@forEachIndexed
-                    tab("${index + 1}. $tabName") {
+                focus.members.forEach { marker ->
+                    val marker = marker as? FeatureMarker ?: return@forEach
+                    tab(marker.label) {
                         markerPanel(marker)
                     }
                 }
@@ -52,38 +61,42 @@ fun AppScope.earthFocus(model: Earth) {
 
 private fun AppScope.markerPanel(marker: PointMarker) {
     when (marker) {
-        is EventMarker -> {
-            val event = marker.event
-            focusPanel(
-                label = event.label,
-                sublabel = event.sublabel,
-                imageUrl = event.images.medium,
-                description = event.body,
-                route = event.eventRoute,
-                subRoute = event.locationRoute,
-                colorScheme = ColorScheme.Accent,
-                extraLinks = event.links,
-                cells = cellContentOf(event)
-            )
-        }
+        is EventMarker -> focusPanel(
+            post = marker.event,
+            route = marker.event.eventRoute,
+            subroute = marker.event.locationRoute,
+            colorScheme = ColorScheme.Accent,
+            cells = cellContentOf(marker.event, false)
+        )
+        is LocationMarker -> focusPanel(
+            post = marker.location,
+            route = marker.location.route,
+            colorScheme = ColorScheme.Primary,
+            cells = cellContentOf(marker.location)
+        )
+        is CityMarker -> focusPanel(
+            post = marker.city,
+            route = CityRoute(marker.city.slug), 
+        )
+        is GalaxyMarker -> focusPanel(
+            post = marker.galaxy,
+            route = GalaxyRoute(marker.galaxy.slug)
+        )
     }
 }
 
 private fun AppScope.focusPanel(
-    label: String,
-    sublabel: String?,
-    imageUrl: Url?,
-    description: Markdown?,
+    post: StreetPost,
     route: AppRoute,
-    subRoute: AppRoute?,
+    subroute: AppRoute? = null,
     colorScheme: ColorScheme = ColorScheme.Primary,
-    extraLinks: List<ExtraLink>? = null,
     cells: (FlowContent.() -> Unit)? = null,
 ) {
+    val extraLinks = post.links
     card(modify(Gap0, Padding0, BlurBackdrop, PointerEventsAuto, BorderSolid2Px, EarthStyle.MoveDimmer)) {
         setStyle(Property.ColorScheme.to(colorScheme.cssValue))
         column(modify(Gap0)) {
-            featureImage(imageUrl, modify(Flex1))
+            featureImage(post.images.medium, modify(Flex1))
             cells?.let {
                 cellBlock(modify(FlexWrap), cells)
             }
@@ -91,11 +104,11 @@ private fun AppScope.focusPanel(
         column(modify(Padding1)) {
             column(modify(Gap0, TextAlignCenter)) {
                 navigation(route) {
-                    heading3(label, modify(Bold))
+                    heading3(post.label, modify(Bold))
                 }
-                sublabel?.let {
-                    navigationIfNotNull(subRoute) {
-                        heading4(sublabel, modify(OpacityHigh))
+                post.sublabel?.let {
+                    navigationIfNotNull(subroute) {
+                        heading4(it, modify(OpacityHigh))
                     }
                 }
             }
@@ -110,7 +123,7 @@ private fun AppScope.focusPanel(
             } else {
                 hr { }
             }
-            description?.let {
+            post.body?.let {
                 markdown(it, modify(Padding1))
             }
         }

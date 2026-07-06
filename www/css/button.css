@@ -63,7 +63,7 @@
     background: var(--zen-bg);
     box-shadow: none;
     text-shadow: none;
-    outline: 2px solid var(--weak-outline);
+    outline: 2px solid var(--outline-low-fg);
     outline-offset: -2px;
 }
 

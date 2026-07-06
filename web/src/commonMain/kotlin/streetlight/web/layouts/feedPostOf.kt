@@ -22,7 +22,7 @@ fun FlowContent.feedPostOf(post: GalaxyPost) {
         description = post.body,
         colorScheme = post.colorScheme,
         links = post.links,
-        cells = post.cells,
+        cells = post.cellContent(true),
         // isLit = post.isLit,
         // lightCount = post.lightCount,
     )
@@ -71,7 +71,7 @@ fun FlowContent.feedPostOf(event: EventLocation) {
         description = event.description,
         colorScheme = ColorScheme.Accent,
         links = event.links,
-        details = cellContentOf(event, null)
+        details = cellContentOf(event, false, null)
     )
 }
 

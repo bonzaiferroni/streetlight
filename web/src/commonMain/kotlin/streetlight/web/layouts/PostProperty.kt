@@ -42,9 +42,9 @@ val GalaxyPost.subtitle get(): String? = when (this) {
     is LocationPost -> location.addressLine
 }
 
-val GalaxyPost.cells get() = when (this) {
+fun GalaxyPost.cellContent(showMore: Boolean) = when (this) {
     is MediaPost -> null
-    is EventPost -> cellContentOf(event, this)
+    is EventPost -> cellContentOf(event, showMore, this)
     is LocationPost -> cellContentOf(location)
 }
 

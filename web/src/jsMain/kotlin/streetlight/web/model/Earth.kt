@@ -71,6 +71,7 @@ class Earth(
                         }
                         markerMap.setPoints(markers)
                         state.set { it.copy(map = GalaxyMap(null)) }
+                        showAll()
                     }
 
                     else -> {
@@ -85,6 +86,7 @@ class Earth(
                         }
                         markerMap.setPoints(markers)
                         state.set { it.copy(map = GalaxyMap(galaxy)) }
+                        showAll()
                     }
                 }
             }
@@ -97,6 +99,7 @@ class Earth(
                         }
                         markerMap.setPoints(markers)
                         state.set { it.copy(map = CityMap(null))}
+                        showAll()
                     }
                     else -> {
                         val city = api.readCity(slug).handleOutcome(toaster::toast)
@@ -110,6 +113,7 @@ class Earth(
                         }
                         markerMap.setPoints(markers)
                         state.set{ it.copy(map = CityMap(city)) }
+                        showAll()
                     }
                 }
             }

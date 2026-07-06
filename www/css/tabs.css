@@ -17,6 +17,8 @@
     transition: background-color var(--magic-interval) var(--magic-easing);
     text-align: center;
     user-select: none;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 
 .tabs-button.is-active {

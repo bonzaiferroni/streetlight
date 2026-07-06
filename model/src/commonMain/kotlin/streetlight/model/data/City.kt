@@ -15,9 +15,11 @@ data class City(
     val country: String,
     val galaxyCount: Int,
     val mapRank: Float?,
-    val geoPoint: GeoPoint,
+    override val geoPoint: GeoPoint,
     val geoBounds: GeoBounds,
-)
+): StreetPost {
+    override val label get() = name
+}
 
 @JvmInline @Serializable
 value class CityId(val value: Int) {

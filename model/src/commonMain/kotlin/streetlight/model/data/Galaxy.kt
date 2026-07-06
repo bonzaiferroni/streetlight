@@ -20,13 +20,13 @@ data class Galaxy(
     val tagline: String?,
     val description: Markdown?,
     val city: String?,
-    val geoPoint: GeoPoint,
+    override val geoPoint: GeoPoint,
     val geoBounds: GeoBounds,
     val postPermission: PostPermission,
     val reviewCount: Int,
     val postGuide: Markdown?,
     val imageRef: Url?,
-    val images: ScaledImageArray?,
+    override val images: ScaledImageArray?,
     val isLit: Boolean,
     val isHost: Boolean,
     val starCount: Int,
@@ -35,8 +35,9 @@ data class Galaxy(
     val postCount: Int,
     val updatedAt: Instant,
     val createdAt: Instant,
-) {
+): StreetPost {
     val postTypes get() = setOf(PostType.Location, PostType.Event, PostType.Media)
+    override val label get() = name
 }
 
 @JvmInline @Serializable

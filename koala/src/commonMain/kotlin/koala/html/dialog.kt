@@ -24,7 +24,7 @@ $Class {
     scrollbar-width: none;
     
     $Card, .tabs-header {
-        border: 2px solid var(--weak-outline);
+        border: var(--outline-low);
     }
 }
 

@@ -74,8 +74,8 @@ val BorderRadius3 = utilityOf("border-radius-3", "border-radius: var(--unit-spac
 val BorderRadius4 = utilityOf("border-radius-4", "border-radius: var(--unit-spacing-4)")
 val BorderRadius50P = utilityOf("border-radius-50p", "border-radius: 50%")
 val BorderRadiusPill = utilityOf("border-radius-x-50p", "border-radius: 9999px")
-val BorderDashed2Px = utilityOf("border-dashed", "border: 2px dashed var(--weak-outline)")
-val BorderSolid2Px = utilityOf("border-solid", "border: 2px solid var(--weak-outline)")
+val BorderDashed2Px = utilityOf("border-dashed", "border: 2px dashed var(--outline-low-fg)")
+val BorderSolid2Px = utilityOf("border-solid", "border: var(--outline-low)")
 val BorderRadiusTop1 = utilityOf("border-radius-top-1", "border-radius: var(--unit-spacing) var(--unit-spacing) 0 0")
 val BorderRadiusBottom1 = utilityOf("border-radius-bottom-1", "border-radius: 0 0 var(--unit-spacing) var(--unit-spacing)")
 

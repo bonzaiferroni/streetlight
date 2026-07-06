@@ -50,9 +50,9 @@ data class Location(
     }
 
     override val label get() = name ?: address ?: "(geolocation)"
-    override val sublabel get() = when (name) {
+    override val sublabel get() = when (address) {
         null -> city
-        else -> addressLine
+        else -> address
     }
     override val body get() = description
 

@@ -25,7 +25,8 @@ val StylesCss get() = """
     --tabs-bg: rgba(var(--paper), .5);
     --ink-dim: rgba(var(--ink), .8);
     --ink-disabled: color-mix(in srgb, var(--ink-fg) 50%, var(--paper-bg));
-    --weak-outline: rgba(var(--ink), .2);
+    --outline-low-fg: rgba(var(--ink), .2);
+    --outline-low: 2px solid var(--outline-low-fg);
     
     --gray: 60, 62, 64;
     --gray-fg: rgb(var(--gray));

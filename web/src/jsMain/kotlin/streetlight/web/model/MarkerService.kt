@@ -12,15 +12,15 @@ import streetlight.model.data.MediaPost
 import streetlight.model.data.StreetPost
 
 class MarkerService() {
-    fun createMarkers(posts: List<GalaxyPost>) = posts.mapNotNull { post ->
-        when (post) {
-            is EventPost -> EventMarker(post.event)
-            is LocationPost -> LocationMarker(post.location)
-            is MediaPost -> post.media.geoPoint?.let { MediaMarker(post.media, it) }
-        }
-    }
+    // fun createMarkers(posts: List<GalaxyPost>) = posts.mapNotNull { post ->
+    //     when (post) {
+    //         is EventPost -> EventMarker(post.event)
+    //         is LocationPost -> LocationMarker(post.location)
+    //         is MediaPost -> post.media.geoPoint?.let { MediaMarker(post.media, it) }
+    //     }
+    // }
 
-    fun createMarkers(posts: List<StreetPost>) = posts.mapNotNull { post ->
+    fun createMarkers(posts: List<StreetPost>): List<FeatureMarker> = posts.mapNotNull { post ->
         when (post) {
             is EventLocation -> EventMarker(post)
             is Location -> LocationMarker(post)
@@ -28,10 +28,11 @@ class MarkerService() {
             is EventPost -> EventMarker(post.event)
             is LocationPost -> LocationMarker(post.location)
             is MediaPost -> post.media.geoPoint?.let { MediaMarker(post.media, it) }
+            is City -> CityMarker(post)
+            is Galaxy -> GalaxyMarker(post)
         }
     }
 
-    fun createMarkers(galaxies: List<Galaxy>) = galaxies.map { GalaxyMarker(it) }
-
-    fun createMarkers(cities: List<City>) = cities.map { CityMarker(it) }
+    // fun createMarkers(galaxies: List<Galaxy>) = galaxies.map { GalaxyMarker(it) }
+    // fun createMarkers(cities: List<City>) = cities.map { CityMarker(it) }
 }

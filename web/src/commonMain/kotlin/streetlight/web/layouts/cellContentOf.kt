@@ -44,7 +44,7 @@ fun cellContentOf(event: EventEdit): FlowContent.() -> Unit = {
     // exampleLightCell()
 }
 
-fun cellContentOf(event: EventLocation, post: GalaxyPost? = null): FlowContent.() -> Unit = {
+fun cellContentOf(event: EventLocation, showMore: Boolean, post: GalaxyPost? = null): FlowContent.() -> Unit = {
     dateCell(event.startsAt)
     startsAtCell(event.startsAt)
     costCell(event.cost, event.url?.toUrl())
@@ -59,7 +59,9 @@ fun cellContentOf(event: EventLocation, post: GalaxyPost? = null): FlowContent.(
             postLight(post)
         }
         starLightCell(event)
-        moreButton()
+        if (showMore) {
+            moreButton()
+        }
         post?.let {
             postMenu(post.base.postId, post.base.username)
         }

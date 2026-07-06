@@ -6,6 +6,7 @@ import kampfire.api.Username
 import kampfire.model.GeoPoint
 import kampfire.model.Labeled
 import kampfire.model.ScaledImageArray
+import koala.html.AppRoute
 import kotlin.time.Instant
 import kotlinx.serialization.Serializable
 import kotlin.time.Duration.Companion.hours
