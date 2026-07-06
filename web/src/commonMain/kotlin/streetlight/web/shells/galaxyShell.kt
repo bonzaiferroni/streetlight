@@ -36,8 +36,8 @@ fun FlowContent.galaxyShell(content: GalaxyContent) {
         val routeNow = galaxy.toRoute()
         routeMenu(
             galaxy.name, routeNow, listOf(routeNow, galaxy.toEarthRoute()),
-            leftIcons = listOf(RouteMenuIcon(SvgFile.Home, HomeRoute)),
-            rightIcons = listOf(RouteMenuIcon(SvgFile.GearSmall, galaxy.toConfigRoute()))
+            leftIcons = listOf(IconRoute(SvgFile.Home, HomeRoute)),
+            rightIcons = listOf(IconRoute(SvgFile.GearSmall, galaxy.toConfigRoute()))
         )
     }
 

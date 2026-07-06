@@ -1,25 +1,24 @@
 package koala.dom
 
 import kampfire.model.Labeled
-import koala.SvgFile
 import koala.css.*
 import koala.html.AppRoute
 import koala.html.RouteMenu
-import koala.html.RouteMenuIcon
 import koala.html.filigree
-import koala.html.icon
-import koala.html.iconsTray
 import koala.html.navigation
 import koala.html.row
 import koala.html.textBlock
+import koala.html.IconAction
+import koala.html.IconButton
+import koala.html.IconRoute
 
 fun TagScope.routeMenu(
     context: String,
     routeNow: MenuItem,
     routes: List<MenuItem?>,
     mod: ModifierSet? = null,
-    leftIcons: List<RouteMenuIcon>? = null,
-    rightIcons: List<RouteMenuIcon>? = null,
+    leftIcons: List<IconButton>? = null,
+    rightIcons: List<IconButton>? = null,
 ) {
     column(modify(mod, RouteMenu.Base, TextTransformUppercase, TextSmall, Gap0, AlignItemsCenter)) {
         filigree(modify(AlignSelfStretch)) {
@@ -38,6 +37,22 @@ fun TagScope.routeMenu(
             }
             rightIcons?.let { icons ->
                 iconsTray(icons, modify(RouteMenu.RightTray))
+            }
+        }
+    }
+}
+
+internal fun TagScope.iconsTray(
+    icons: List<IconButton>,
+    mod: ModifierSet
+) {
+    row(modify(mod, BorderSolid2Px)) {
+        icons.forEach { icon ->
+            when (icon) {
+                is IconAction -> icon(icon.svg, modify(Height3)).onClick(icon.action)
+                is IconRoute -> navigation(icon.route, modify(Height3)) {
+                    icon(icon.svg, modify(Height100P))
+                }
             }
         }
     }

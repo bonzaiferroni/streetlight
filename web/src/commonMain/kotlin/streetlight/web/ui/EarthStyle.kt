@@ -76,7 +76,7 @@ $Container {
 $Grid {
     display: grid;
     grid-template-columns: auto;
-    grid-template-rows: auto 1fr 300px;
+    grid-template-rows: auto 1fr 400px;
     grid-template-areas: 
         "header"
         "window"
@@ -85,7 +85,7 @@ $Grid {
 
     > $Header    { grid-area: header; }
     > $Window    { grid-area: window; }
-    > $Focus     { grid-area: focus; max-width: 400px; }
+    > $Focus     { grid-area: focus; max-width: 420px; }
     > $Unbounded { grid-area: 1 / 1 / -1 / -1; }
     
     $ListDetail {
@@ -126,12 +126,6 @@ $Header {
 
 $MapTitle {
     background: linear-gradient(to right, transparent 0%, rgba(var(--paper), .6) 50%, transparent 100%);
-}
-
-$Focus {
-    .tabs-viewport {
-        
-    }
 }
 
 """ }

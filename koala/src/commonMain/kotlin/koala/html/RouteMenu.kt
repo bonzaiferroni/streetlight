@@ -1,6 +1,5 @@
 package koala.html
 
-import koala.Svg
 import koala.css.*
 import kotlinx.html.FlowContent
 
@@ -9,8 +8,8 @@ fun FlowContent.routeMenu(
     routeNow: AppRoute,
     routes: List<AppRoute>,
     mod: ModifierSet? = null,
-    leftIcons: List<RouteMenuIcon>? = null,
-    rightIcons: List<RouteMenuIcon>? = null
+    leftIcons: List<IconRoute>? = null,
+    rightIcons: List<IconRoute>? = null
 ) {
     column(modify(RouteMenu.Base, TextTransformUppercase, TextSmall, Gap0, AlignItemsCenter)) {
         filigree(modify(AlignSelfStretch)) {
@@ -38,13 +37,13 @@ fun FlowContent.routeMenu(
 }
 
 internal fun FlowContent.iconsTray(
-    icons: List<RouteMenuIcon>,
+    icons: List<IconRoute>,
     mod: ModifierSet
 ) {
     row(modify(mod, BorderSolid2Px)) {
-        icons.forEach {
-            navigation(it.route, modify(Height3)) {
-                icon(it.svg, modify(Height100P))
+        icons.forEach { icon ->
+            navigation(icon.route, modify(Height3)) {
+                icon(icon.svg, modify(Height100P))
             }
         }
     }
@@ -59,11 +58,6 @@ object RouteMenu {
     val LeftTray = Class("route-menu__left-tray")
     val RightTray = Class("route-menu__right-tray")
 }
-
-data class RouteMenuIcon(
-    val svg: Svg,
-    val route: AppRoute
-)
 
 //language="CSS"
 val NavMenuCss get() = with(RouteMenu) { """

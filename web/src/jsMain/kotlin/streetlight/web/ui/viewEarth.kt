@@ -26,7 +26,7 @@ fun AppScope.viewEarth(model: Earth) {
             div(modify(EarthStyle.Grid, Padding1, Flex1, MinHeight0)) {
                 earthUnboundedOverlay(model, cameraController)
                 earthHeader(model)
-                earthChrome(model)
+                earthMenu(model)
                 // earthList(model)
                 earthFocus(model)
             }.flowModifier(model.isFocusedFlow, EarthStyle.IsFocused, parentScope)
@@ -78,31 +78,12 @@ fun AppScope.earthHeader(model: Earth) {
             filigree(modify(AlignSelfStretch, EarthStyle.MapTitle)) {
                 heading3(map.title)
             }
-            button("Show All", modify(Zen, PointerEventsAuto, BlurBackdrop)).onClick(model::showAll)
+            // button("Show All", modify(Zen, PointerEventsAuto, BlurBackdrop)).onClick(model::showAll)
         }
     }
 }
 
-fun AppScope.earthHeaderLegacy(model: Earth) {
-    val iconMod = modify(Width5, Aspect1)
-    row(modify(EarthStyle.Header, AlignItemsCenter, PaperGradientBg, Padding1, PointerEventsAuto, BlurBackdrop)) {
-        flowBlock(model.mapFlow, modify(Flex1)) { map ->
-            when (map) {
-                null -> row {
-                    icon(SvgFile.Helm, iconMod)
-                    logo()
-                }
-                else -> row(modify(AlignItemsCenter)) {
-                    icon(SvgFile.ArrowLeft, iconMod).onClick {
-                        portal.go(GalaxyMapRoute(null))
-                    }
-                    heading3(map.title, modify(LineHeight115, SingleLine, Bold))
-                }
-            }
-        }
-        icon(SvgFile.GearLarge, iconMod).onClick { portal.go(HomeRoute) }
-    }
-}
+
 
 // fun TagScope.markerItem(
 //    thumb: Url?,
