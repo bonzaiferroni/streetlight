@@ -11,9 +11,9 @@ fun FlowContent.helmBar() {
     starHelm()
     row(HelmBarKey.StickyBarId, modify(JustifyContentSpaceBetween, Padding1)) {
         div(cardMod) {
-            setAnchorName(SiteHelmKey.PositionAnchor)
-            button(SvgFile.Helm, HelmBarKey.IconMod) {
-                setPopoverTarget(SiteHelmKey.Id)
+            setAnchorName(SiteHelm.PositionAnchor)
+            button(SvgFile.Helm, HelmBarKey.IconMod + WhiteFg) {
+                setPopoverTarget(SiteHelm.Id)
             }
         }
         div(cardMod) {

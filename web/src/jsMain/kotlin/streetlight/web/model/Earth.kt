@@ -1,6 +1,7 @@
 package streetlight.web.model
 
 import kampfire.model.handleOutcome
+import koala.model.FeatureMarker
 import koala.model.MarkerFocus
 import koala.model.Portal
 import koala.model.mapDistinct
@@ -9,7 +10,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import streetlight.web.CityMap
 import streetlight.web.CityMapRoute
-import streetlight.web.EarthLayer
 import streetlight.web.EarthMap
 import streetlight.web.EarthRoute
 import streetlight.web.GalaxyMap
@@ -33,7 +33,7 @@ class Earth(
     val boundedMarkersFlow = markerMap.boundedMarkersFlow.mapDistinct { it ?: emptyList() }
     val unboundedMarkersFlow = markerMap.unboundedMarkersFlow.mapDistinct { it ?: emptyList() }
     val summaryFlow = markerMap.boundedMarkersFlow.mapDistinct { points ->
-        points?.groupingBy { it.markerType }?.eachCount()?.toList()
+        points?.groupingBy { it.typeLabel }?.eachCount()?.toList()
     }
     val isMovingFlow = markerMap.isMovingFlow
     val focusFlow = markerMap.focusFlow.mapDistinct { focus ->

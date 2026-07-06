@@ -2,7 +2,7 @@ package streetlight.web.model
 
 import kampfire.model.GeoPoint
 import koala.Svg
-import koala.model.IconMarker
+import koala.model.TravelMarker
 import koala.model.MarkerId
 import koala.model.PointMarker
 import kotlinx.css.LinearDimension
@@ -27,8 +27,8 @@ data class SpiritMarker(
 
 fun SpiritId.toEntityId(): MarkerId = "spirit-${value}"
 
-data class IconEntity(
+data class TravelEntity(
     override val markerId: MarkerId,
     override val icon: Svg,
     override val geoPoint: GeoPoint
-): IconMarker
+): TravelMarker

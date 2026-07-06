@@ -8,7 +8,7 @@ import koala.model.MarkerId
 import koala.external.VehiclePosition
 import koala.model.Altitude
 import koala.model.GeoMap
-import koala.model.IconMarker
+import koala.model.TravelMarker
 import koala.model.mapDistinct
 import koala.model.storeOf
 import koala.model.toGeoPoint
@@ -160,7 +160,7 @@ data class VehicleMarker(
     val vehicleType: VehicleType,
     override val opacity: Float,
     override val bearing: Float?,
-): IconMarker {
+): TravelMarker {
     override val markerId get() = vehicleId
     override val icon get() = when (vehicleType) {
         VehicleType.Bus -> SvgFile.Bus

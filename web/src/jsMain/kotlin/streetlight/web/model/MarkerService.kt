@@ -1,10 +1,10 @@
 package streetlight.web.model
 
+import koala.model.FeatureMarker
 import streetlight.model.data.City
 import streetlight.model.data.EventLocation
 import streetlight.model.data.EventPost
 import streetlight.model.data.Galaxy
-import streetlight.model.data.GalaxyPost
 import streetlight.model.data.Location
 import streetlight.model.data.LocationPost
 import streetlight.model.data.Media

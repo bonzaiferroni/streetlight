@@ -1,9 +1,6 @@
 package streetlight.web.ui
 
-import kampfire.api.Markdown
-import kampfire.model.Url
 import kampfire.model.medium
-import kampfire.utils.takeEllipsis
 import koala.css.*
 import koala.dom.*
 import koala.html.AppRoute
@@ -14,15 +11,14 @@ import koala.html.heading3
 import koala.html.heading4
 import koala.html.navigationIfNotNull
 import koala.model.ClusterFocus
+import koala.model.FeatureMarker
 import koala.model.MarkerFocus
 import koala.model.PointMarker
 import kotlinx.html.FlowContent
 import kotlinx.html.hr
-import streetlight.model.data.ExtraLink
 import streetlight.model.data.StreetPost
 import streetlight.web.CityRoute
 import streetlight.web.GalaxyRoute
-import streetlight.web.HomeRoute
 import streetlight.web.layouts.ColorScheme
 import streetlight.web.layouts.cellBlock
 import streetlight.web.layouts.cellContentOf
@@ -32,7 +28,6 @@ import streetlight.web.layouts.route
 import streetlight.web.model.CityMarker
 import streetlight.web.model.Earth
 import streetlight.web.model.EventMarker
-import streetlight.web.model.FeatureMarker
 import streetlight.web.model.GalaxyMarker
 import streetlight.web.model.LocationMarker
 
@@ -45,7 +40,7 @@ fun AppScope.earthFocus(model: Earth) {
             ) {
                 focus.members.forEach { marker ->
                     val marker = marker as? FeatureMarker ?: return@forEach
-                    tab(marker.label) {
+                    tab(marker.label ?: marker.typeLabel ?: "thing") {
                         markerPanel(marker)
                     }
                 }
@@ -76,7 +71,7 @@ private fun AppScope.markerPanel(marker: PointMarker) {
         )
         is CityMarker -> focusPanel(
             post = marker.city,
-            route = CityRoute(marker.city.slug), 
+            route = CityRoute(marker.city.slug),
         )
         is GalaxyMarker -> focusPanel(
             post = marker.galaxy,

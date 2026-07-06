@@ -25,7 +25,7 @@ internal class IconRenderBody(
     }
 
     override fun update(marker: PointMarker) {
-        val marker = marker as IconMarker
+        val marker = marker as TravelMarker
         marker.bearing?.let {
             setBearing(it)
         }
@@ -40,10 +40,10 @@ internal class IconRenderBody(
     }
 }
 
-internal fun TagScope.configureIconRender(marker: IconMarker): IconRenderBody {
+internal fun TagScope.configureIconRender(marker: TravelMarker): IconRenderBody {
     with(marker) {
         val body = div {
-            addModifiers(modify(MarkerStyle.Icon, MarkerStyle.Body))
+            addModifiers(modify(MarkerStyle.Travel, MarkerStyle.Body))
             setStyle(MarkerStyle.MarkerSvg.to(marker.icon))
         }
 

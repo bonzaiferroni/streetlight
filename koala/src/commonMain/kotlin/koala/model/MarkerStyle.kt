@@ -15,8 +15,9 @@ object MarkerStyle {
     val Root = Class("map-marker")
     val Base = Class("marker-base")
     val Bearing = Class("marker-bearing")
-    val Icon = Class("marker-icon")
+    val Travel = Class("marker-travel")
     val Thumb = Class("marker-thumb")
+    val Icon = Class("marker-icon")
     val Body = Class("marker-body")
     val Label = Class("marker-label")
     val ClusterCount = Class("marker-cluster-count")
@@ -37,7 +38,7 @@ object MarkerStyle {
 val MarkerSheet get() = with(MarkerStyle) { """
     
 :root {
-    --map-text-shadow: 0 1px 2px rgba(var(--paper), .8), 0 0 6px rgba(var(--paper), 1);
+    --map-text-shadow: 0 1px 2px rgba(var(--paper), .2), 0 0 12px rgba(var(--paper), 1);
 }
     
 /* Focus Properties */
@@ -91,7 +92,7 @@ $Body {
     }
 }
 
-$Icon {
+$Travel {
     position: relative;
     width: var($BodySize);
     height: var($BodySize);
@@ -133,6 +134,13 @@ $Thumb {
     transition: var(--transition-opacity), var(--transition-border-radius);
 }
 
+$Icon {
+    width: var($BodySize);
+    height: var($BodySize);
+    
+    transition: var(--transition-opacity), var(--transition-border-radius);
+}
+
 $Label {
     transform: translate(-50%, calc(50% + .1rem)); /* below body */
     pointer-events: none;
@@ -166,6 +174,10 @@ $ClusterCount {
 $ClusterPrincipal {
     $ClusterCount {
         opacity: 1;
+    }
+    
+    .icon {
+        opacity: 0;
     }
 }
 

@@ -20,6 +20,6 @@ data class GalaxyConfigRoute(override val slug: Slug): SlugRoute {
 }
 
 object GalaxyListRoute: StreetlightRoute {
-    override val screen get() = StreetlightScreen.Galaxies
+    override val screen get() = StreetlightScreen.GalaxyList
     override val title get() = "Galaxies"
 }

@@ -4,15 +4,17 @@ import kampfire.model.Point
 import koala.css.*
 import koala.dom.*
 import koala.external.maplibregl
+import koala.model.FeatureMarker
 import koala.model.GeoCamera
 import koala.model.GeoCameraController
+import koala.model.IconMarker
 import koala.model.MarkerId
+import koala.model.ThumbMarker
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.html.dom.append
 import org.w3c.dom.HTMLElement
-import streetlight.web.model.FeatureMarker
 import streetlight.web.model.Earth
 import kotlin.collections.first
 import kotlin.math.min
@@ -33,8 +35,15 @@ fun AppScope.earthUnboundedOverlay(model: Earth, mapContext: GeoCameraController
     val hints = mutableMapOf<MarkerId, MarkerHint>()
 
     fun createHint(marker: FeatureMarker) = element.append {
-        image(marker.thumbUrl, modify(BorderRadius50P, Height5, Aspect1, PointerEventsAuto, StartingOpacity0)).onClick {
-            model.setFocus(marker)
+        when (marker) {
+            is ThumbMarker -> image(marker.thumbUrl, modify(
+                BorderRadius50P, Height5, Aspect1, PointerEventsAuto, StartingOpacity0, OpacityHalf
+            )).onClick {
+                model.setFocus(marker)
+            }
+            is IconMarker -> icon(marker.svg, modify(Height3, OpacityHalf, PointerEventsAuto)).onClick {
+                model.setFocus(marker)
+            }
         }
     }.first().let { MarkerHint(marker, it) }
 

@@ -52,7 +52,7 @@ fun initGeoMap(mount: HTMLElement): HTMLElement {
     val window = mount.appendDiv(GeoMapKey.Window)
     val widgetBox = window.appendDiv(GeoMapKey.Widget)
     val overlay = widgetBox.appendDiv(GeoMapKey.Overlay)
-    overlay.appendDiv(GeoMapKey.Crosshairs)
+    // overlay.appendDiv(GeoMapKey.Crosshairs)
     overlay.appendDiv(GeoMapKey.FocusPanel)
 
     var zoom: Number = 11

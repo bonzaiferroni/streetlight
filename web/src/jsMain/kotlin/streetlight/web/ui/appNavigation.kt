@@ -51,7 +51,7 @@ fun AppScope.appNavigation() {
             StreetlightScreen.Galaxy -> viewGalaxyRoute()
             StreetlightScreen.GalaxyFoundry -> viewGalaxyFoundry()
             StreetlightScreen.GalaxyUpdate -> viewGalaxyConfigRoute()
-            StreetlightScreen.Galaxies -> viewGalaxyList()
+            StreetlightScreen.GalaxyList -> viewGalaxyList()
 
             StreetlightScreen.Star -> viewStarProfileRoute()
             StreetlightScreen.MediaForge -> viewContentPosterRoute()

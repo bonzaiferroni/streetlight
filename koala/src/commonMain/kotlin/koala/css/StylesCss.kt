@@ -58,7 +58,7 @@ val StylesCss get() = """
     --secondary-button: var(--gray-bg);
     
     --accent: 200, 87, 178; /* 170, 57, 148; 255, 53, 221 */
-    --accent-fg: color-mix(in srgb, rgb(var(--accent)) 75%, rgb(var(--ink)));
+    --accent-fg: color-mix(in srgb, rgb(var(--accent)) 50%, rgb(var(--ink)));
     --accent-bg: color-mix(in srgb, rgb(var(--accent)) 75%, rgb(var(--paper)));
     --accent-button: rgb(var(--accent));
     --accent-button-day: color-mix(in srgb, var(--accent-button) 80%, black);
@@ -68,11 +68,16 @@ val StylesCss get() = """
     --danger-fg: color-mix(in srgb, rgb(var(--red)) 75%, rgb(var(--ink)));
     --danger-bg: color-mix(in srgb, rgb(var(--red)) 75%, rgb(var(--paper)));
     
+    
+    --sea-green: 58, 200, 158; 
+    --sea-green-fg: color-mix(in srgb, rgb(var(--sea-green)) 50%, rgb(var(--ink)));
+    
     --green: 99, 255, 132;
-    --green-fg: color-mix(in srgb, rgb(var(--green)) 75%, rgb(var(--ink)));
+    --green-fg: color-mix(in srgb, rgb(var(--green)) 25%, rgb(var(--ink)));
     --valid-bg: color-mix(in srgb, rgb(var(--green)) 33%, rgb(var(--paper)));
     
     --yellow: 255, 240, 32;
+    --yellow-fg: color-mix(in srgb, rgb(var(--yellow)) 25%, rgb(var(--ink)));
     --required-bg: color-mix(in srgb, rgb(var(--yellow)) 33%, rgb(var(--paper)));
     
     --gold: 200, 178, 87;

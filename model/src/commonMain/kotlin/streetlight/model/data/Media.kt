@@ -4,6 +4,7 @@ import kampfire.api.Markdown
 import kampfire.api.Slug
 import kampfire.api.Username
 import kampfire.model.GeoPoint
+import kampfire.model.Labeled
 import kampfire.model.ScaledImageArray
 import kampfire.model.Url
 import kotlinx.serialization.Serializable
@@ -55,11 +56,13 @@ data class MediaPost(
 
 }
 
-enum class MediaType {
+enum class MediaType(label: String? = null): Labeled {
     Text,
-    Image,
+    Image;
     // Audio,
     // Link,
     // Gallery
     // News,
+
+    override val label = label ?: name
 }

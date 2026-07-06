@@ -34,7 +34,7 @@ object GeoMapKey {
     val Window = Id("map-window")
     val Widget = Id("map-widget")
     val Overlay = Id("map-overlay")
-    val Crosshairs = Id("map-crosshairs")
+    // val Crosshairs = Id("map-crosshairs")
     val Panel = Id("map-panel")
     val FocusPanel = Id("map-focus-panel")
 }

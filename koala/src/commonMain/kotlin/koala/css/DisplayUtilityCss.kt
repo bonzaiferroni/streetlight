@@ -16,7 +16,7 @@ val DisplayUtilityCss
         // Border
         SideBorder,
         // Color
-        NightInk, DayInk, PrimaryFg, AccentFg, ColorSchemeFg, ColorSchemeBg,
+        NightInk, DayInk, PrimaryFg, AccentFg, ColorSchemeFg, ColorSchemeBg, WhiteFg,
         // Overflow
         OverflowHidden, OverflowWrapAnywhere, OverflowClip, OverflowXAuto, OverflowXHidden, OverflowYAuto, OverflowYScroll,
         OverscrollBehaviorContain,
@@ -87,6 +87,7 @@ val Accent = Class("accent")
 val AccentFg = utilityOf("accent-fg", "color: var(--accent-fg)")
 val Primary = Class("primary")
 val PrimaryFg = utilityOf("primary-fg", "color: var(--primary-fg)")
+val WhiteFg = utilityOf("white-fg", "color: var(--white-fg)")
 val ColorSchemeFg = utilityOf("color-scheme-fg", "color: var(--color-scheme, currentColor)")
 val ColorSchemeBg = utilityOf("color-scheme-bg", "background-color: var(--color-scheme, currentColor)")
 val PaperGradientBg = utilityOf("paper-gradient-bg", "background: var(--paper-gradient-bg)")

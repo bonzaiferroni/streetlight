@@ -46,13 +46,7 @@ private fun AppScope.boundsHud(model: Earth) {
             row(modify(Gap2)) {
                 summary.forEach { (markerType, count) ->
                     textBlock {
-                        when (markerType) {
-                            MarkerType.Event -> span("Events", modify(AccentFg))
-                            MarkerType.Location -> span("Locations", modify(PrimaryFg))
-                            MarkerType.Galaxy -> span("Galaxies", modify())
-                            MarkerType.Media -> span("Media", modify())
-                            MarkerType.City -> span("Cities", modify())
-                        }
+                        span(markerType ?: "unknown")
                         span(" | ", modify(OpacityLow))
                         span(count.toString())
                     }

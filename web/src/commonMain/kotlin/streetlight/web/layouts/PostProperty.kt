@@ -49,20 +49,15 @@ fun GalaxyPost.cellContent(showMore: Boolean) = when (this) {
 }
 
 val GalaxyPost.colorScheme get() = when (this) {
-    is EventPost -> ColorScheme.Accent
-    else -> ColorScheme.Primary
+    is EventPost -> ColorScheme.Event
+    is LocationPost -> ColorScheme.Location
+    is MediaPost -> ColorScheme.Media
 }
 
 val GalaxyPost.flairIcon get() = when (this) {
     is EventPost -> FlairIcon.Event
     is LocationPost -> FlairIcon.Location
     else -> null
-}
-
-enum class ColorScheme(val cssValue: String) {
-    Accent("var(--accent-fg)"),
-    Primary("var(--primary-fg)"),
-    Galaxy("var(--galaxy-fg)"),
 }
 
 enum class FlairIcon(val svg: Svg) {

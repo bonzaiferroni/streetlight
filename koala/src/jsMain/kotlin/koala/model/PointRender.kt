@@ -145,8 +145,9 @@ internal fun PointMarker.toPointRender(pixelPoint: Point, focusEntity: () -> Uni
             addModifiers(baseMod)
 
             renderBody = when (val marker = this@toPointRender) {
-                is IconMarker -> configureIconRender(marker)
+                is TravelMarker -> configureIconRender(marker)
                 is ThumbMarker -> configureThumbRender(marker)
+                is IconMarker -> configureIconRender(marker)
                 else -> error("unrecognized PointMarker")
             }
         }

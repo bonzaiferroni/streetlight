@@ -2,19 +2,15 @@ package streetlight.web
 
 import kampfire.api.SlugValue
 import kampfire.api.TableId
-import kampfire.api.toSlug
 import kampfire.utils.pascalToKebabCase
 import koala.html.AppRoute
 import koala.html.AppScreen
-import koala.html.SlugOrNullParse
 import koala.html.IdParse
 import koala.html.RouteParse
-import koala.html.SegmentParse
 import koala.html.SlugParse
 import koala.html.StaticParse
 import koala.html.UuidParse
 import koala.model.DocId
-import streetlight.model.data.CityId
 import streetlight.model.data.GalaxyId
 import streetlight.model.data.LocationId
 import streetlight.model.data.RecordId
@@ -47,7 +43,7 @@ enum class StreetlightScreen(
     Galaxy(SlugParse { GalaxyRoute(it) }, "g"),
     GalaxyFoundry(StaticParse { GalaxyFoundryRoute }),
     GalaxyUpdate(SlugParse { GalaxyConfigRoute(it) } ),
-    Galaxies(StaticParse { GalaxyListRoute }),
+    GalaxyList(StaticParse { GalaxyListRoute }, "galaxies"),
 
     // event
     Event(SlugParse { EventRoute(it) }, "e"),
@@ -67,6 +63,7 @@ enum class StreetlightScreen(
 
     // city
     City(SlugParse { CityRoute(it) }),
+    CityList(StaticParse { CityListRoute }, "cities"),
 
     // media
     Media(SlugParse { MediaRoute(it) }, "m");

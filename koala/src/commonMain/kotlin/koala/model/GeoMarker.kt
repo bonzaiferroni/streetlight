@@ -3,7 +3,16 @@ package koala.model
 import kampfire.model.GeoPoint
 import kampfire.model.Url
 import koala.Svg
+import koala.css.Bold
+import koala.css.GapTiny
+import koala.css.LineHeight115
 import koala.css.ModifierSet
+import koala.css.Property
+import koala.css.WhiteSpaceNoWrap
+import koala.css.modify
+import koala.css.setStyle
+import koala.html.column
+import koala.html.textBlock
 import kotlinx.css.Color
 import kotlinx.css.LinearDimension
 import kotlinx.css.px
@@ -26,21 +35,30 @@ interface PointMarker: GeoMarker {
     val zIndex: Int? get() = null
 
     val bodySize: LinearDimension
-    val subpixelPositioning: Boolean
+    val subpixelPositioning: Boolean get() = false
 }
 
-interface IconMarker: PointMarker {
+interface TravelMarker: PointMarker {
     val icon: Svg
     val bearing: Float? get() = null
     override val bodySize: LinearDimension get() = 24.px
     override val subpixelPositioning get() = true
 }
 
-interface ThumbMarker: PointMarker {
+interface FeatureMarker: PointMarker {
+    val typeLabel: String? get() = null
+    val colorScheme: String? get() = null
+}
+
+interface ThumbMarker: FeatureMarker {
     val thumbUrl: Url
-    val labelContent: (DIV.() -> Unit)? get() = null
+    val sublabel: String? get() = null
     override val bodySize: LinearDimension get() = 48.px
-    override val subpixelPositioning get() = false
+}
+
+interface IconMarker: FeatureMarker {
+    val svg: Svg
+    override val bodySize: LinearDimension get() = 32.px
 }
 
 data class MarkerMovement(
