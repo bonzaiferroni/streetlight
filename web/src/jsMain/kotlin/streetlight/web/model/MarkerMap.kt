@@ -64,7 +64,7 @@ class MarkerMap(
         val markers = stateNow.markers.takeIf { !it.isNullOrEmpty() } ?: return
         when(val bounds = getContainingBounds(markers.map { it.geoPoint })) {
             null -> geoMap.camera.panMap(markers.first().geoPoint)
-            else -> geoMap.camera.panMap(bounds.resizeBy(1.2f))
+            else -> geoMap.camera.panMap(bounds.resizeBy(1.5f))
         }
     }
 }

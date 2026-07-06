@@ -2,12 +2,15 @@ package streetlight.web.ui
 
 import koala.SvgFile
 import koala.css.AccentFg
+import koala.css.AlignItemsCenter
 import koala.css.AlignItemsStart
+import koala.css.AlignSelfStretch
 import koala.css.BlurBackdrop
 import koala.css.Gap0
 import koala.css.Gap2
 import koala.css.JustifyContentEnd
 import koala.css.JustifyContentSpaceBetween
+import koala.css.LineHeight115
 import koala.css.Magic
 import koala.css.OpacityHigh
 import koala.css.OpacityLow
@@ -28,6 +31,9 @@ import koala.dom.row
 import koala.dom.textBlock
 import koala.html.RouteMenuIcon
 import koala.html.filigree
+import koala.html.heading1
+import koala.html.heading2
+import koala.html.heading3
 import koala.html.span
 import streetlight.web.CityMap
 import streetlight.web.CityMapRoute
@@ -42,35 +48,41 @@ import streetlight.web.model.Earth
 import streetlight.web.model.MarkerType
 
 fun AppScope.earthChrome(model: Earth) {
-    column(modify(EarthStyle.Window, EarthStyle.MoveDimmer, JustifyContentSpaceBetween)) {
-        row(modify(JustifyContentEnd, AlignItemsStart)) {
-            flowBlock(model.summaryFlow) { summary ->
-                if (summary.isNullOrEmpty()) return@flowBlock
-                column(modify(WidthFitContent, Gap0)) {
-                    filigree {
-                        textBlock("In View", modify(OpacityHigh))
-                    }
-                    row(modify(Gap2)) {
-                        summary.forEach { (markerType, count) ->
-                            textBlock {
-                                when (markerType) {
-                                    MarkerType.Event -> span("Events", modify(AccentFg))
-                                    MarkerType.Location -> span("Locations", modify(PrimaryFg))
-                                    MarkerType.Galaxy -> span("Galaxies", modify())
-                                    MarkerType.Media -> span("Media", modify())
-                                    MarkerType.City -> span("Cities", modify())
-                                }
-                                span(" | ", modify(OpacityLow))
-                                span(count.toString())
-                            }
+    flowBlock(model.mapFlow, modify(Magic, EarthStyle.Window, EarthStyle.MoveDimmer)) { map ->
+        column(modify(JustifyContentEnd)) {
+            // column(modify(AlignItemsCenter)) {
+            //     filigree(modify(AlignSelfStretch)) {
+            //         heading3(map.title, modify(LineHeight115))
+            //     }
+            //     button("Show All", modify(Zen, PointerEventsAuto, BlurBackdrop)).onClick(model::showAll)
+            // }
+            earthRouteMenu(map)
+        }
+    }
+}
+
+private fun AppScope.boundsHud(model: Earth) {
+    flowBlock(model.summaryFlow) { summary ->
+        if (summary.isNullOrEmpty()) return@flowBlock
+        column(modify(WidthFitContent, Gap0)) {
+            filigree {
+                textBlock("In View", modify(OpacityHigh))
+            }
+            row(modify(Gap2)) {
+                summary.forEach { (markerType, count) ->
+                    textBlock {
+                        when (markerType) {
+                            MarkerType.Event -> span("Events", modify(AccentFg))
+                            MarkerType.Location -> span("Locations", modify(PrimaryFg))
+                            MarkerType.Galaxy -> span("Galaxies", modify())
+                            MarkerType.Media -> span("Media", modify())
+                            MarkerType.City -> span("Cities", modify())
                         }
+                        span(" | ", modify(OpacityLow))
+                        span(count.toString())
                     }
                 }
             }
-            button("Show All", modify(Zen, PointerEventsAuto, BlurBackdrop)).onClick(model::showAll)
-        }
-        flowBlock(model.mapFlow, modify(Magic)) { map ->
-            earthRouteMenu(map)
         }
     }
 }

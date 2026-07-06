@@ -36,6 +36,10 @@ object MarkerStyle {
 // language="CSS"
 val MarkerSheet get() = with(MarkerStyle) { """
     
+:root {
+    --map-text-shadow: 0 1px 2px rgba(var(--paper), .8), 0 0 6px rgba(var(--paper), 1);
+}
+    
 /* Focus Properties */
 $Root$Focus {
     z-index: 1;
@@ -60,6 +64,7 @@ $Base {
     height: 0;
 
     transition: var(--transition-transform);
+    text-shadow: var(--map-text-shadow);
     
     > * {
         position: absolute;
@@ -69,6 +74,10 @@ $Base {
     
     &:hover {
         opacity: 1 !important;
+    }
+    
+    p {
+        font-size: 1rem;
     }
 }
 

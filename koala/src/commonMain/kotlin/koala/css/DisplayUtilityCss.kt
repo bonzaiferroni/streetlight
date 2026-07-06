@@ -18,7 +18,8 @@ val DisplayUtilityCss
         // Color
         NightInk, DayInk, PrimaryFg, AccentFg, ColorSchemeFg, ColorSchemeBg,
         // Overflow
-        OverflowHidden, OverflowWrapAnywhere, OverflowClip, OverflowXAuto, OverflowXHidden, OverflowYAuto, OverscrollBehaviorContain,
+        OverflowHidden, OverflowWrapAnywhere, OverflowClip, OverflowXAuto, OverflowXHidden, OverflowYAuto, OverflowYScroll,
+        OverscrollBehaviorContain,
         // Background
         PrimaryBg, PrimaryCardBg, ZenBg, CardBg, DialogBg, BackgroundImage, SolidBg, BlurBackdrop, TransparentBg,
         PaperGradientBg, CardGradientBg, InkGradientBg,
@@ -111,6 +112,7 @@ val OverflowClip = utilityOf("overflow-clip", "overflow: clip")
 val OverflowXAuto = utilityOf("overflow-x-auto", "overflow-x: auto")
 val OverflowXHidden = utilityOf("overflow-x-hidden", "overflow-x: hidden")
 val OverflowYAuto = utilityOf("overflow-y-auto", "overflow-y: auto")
+val OverflowYScroll = utilityOf("overflow-y-scroll", "overflow-y: scroll")
 val OverscrollBehaviorContain = utilityOf("overscroll-behavior-contain", "overscroll-behavior: contain")
 
 // Background

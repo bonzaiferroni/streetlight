@@ -28,7 +28,7 @@ fun FlowContent.feedPost(
                 }
                 column(modify(Gap0, JustifyContentCenter, Flex1)) {
                     navigationIfNotNull(postRoute) {
-                        heading4(heading, modify(LineHeight115, Shrinkable, LineClamp2, TextOverflowEllipses))
+                        heading5(heading, modify(LineHeight115, Shrinkable, LineClamp2, TextOverflowEllipses))
                     }
                     spacer(modify(Height2Px, InkGradientBg, MarginTopTiny))
                     post?.let {

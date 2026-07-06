@@ -32,12 +32,12 @@ interface FeatureMarker: ThumbMarker {
     override val labelContent: DIV.() -> Unit get() = {
         column(modify(GapTiny, LineHeight115, WhiteSpaceNoWrap)) {
             setStyle(Property.ColorScheme.to(markerType.colorScheme.cssValue))
-            heading5(label)
-            textBlock {
+            textBlock(label, modify(Bold))
+            textBlock(mod = modify(TextSmall)) {
                 span(markerType.label, modify(ColorSchemeFg, Bold))
                 sublabel?.let {
                     span(" • ", modify(OpacityHalf))
-                    span(it)
+                    span(it, modify(OpacityHigh))
                 }
             }
         }
@@ -62,6 +62,7 @@ data class LocationMarker(
 ): FeatureMarker {
     override val markerId get() = location.locationId.value.toString()
     override val label get() = location.label
+    override val sublabel get() = location.mapType
     override val geoPoint get() = location.geoPoint
     override val thumbUrl get() = location.images.thumb ?: SiteImage.placeholderTh.url
     override val light get() = rgb(180, 240, 100)

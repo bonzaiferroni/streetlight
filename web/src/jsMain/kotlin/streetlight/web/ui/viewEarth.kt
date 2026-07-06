@@ -3,7 +3,9 @@ package streetlight.web.ui
 import kampfire.model.handleOutcome
 import koala.SvgFile
 import koala.css.*
+import koala.css.Padding1
 import koala.dom.*
+import koala.html.filigree
 import koala.html.heading3
 import koala.html.logo
 import kotlinx.browser.document
@@ -18,12 +20,12 @@ import streetlight.web.GalaxyMap
 import streetlight.web.pages.AppBodyKey
 
 fun AppScope.viewEarth(model: Earth) {
-    box(EarthStyle.Id, modify(Size100P)) {
+    box(EarthStyle.Container, modify(Size100P)) {
         val cameraController = geoMapMount(mod = modify(EarthStyle.Map))
         column(modify(Gap0, PointerEventsNone)) {
-            // earthHeader(model)
             div(modify(EarthStyle.Grid, Padding1, Flex1, MinHeight0)) {
                 earthUnboundedOverlay(model, cameraController)
+                earthHeader(model)
                 earthChrome(model)
                 // earthList(model)
                 earthFocus(model)
@@ -71,6 +73,17 @@ fun AppScope.viewEarthRoute() {
 }
 
 fun AppScope.earthHeader(model: Earth) {
+    flowBlock(model.mapFlow, modify(EarthStyle.Header, EarthStyle.MoveDimmer, Magic)) { map ->
+        column(modify(AlignItemsCenter)) {
+            filigree(modify(AlignSelfStretch, EarthStyle.MapTitle)) {
+                heading3(map.title)
+            }
+            button("Show All", modify(Zen, PointerEventsAuto, BlurBackdrop)).onClick(model::showAll)
+        }
+    }
+}
+
+fun AppScope.earthHeaderLegacy(model: Earth) {
     val iconMod = modify(Width5, Aspect1)
     row(modify(EarthStyle.Header, AlignItemsCenter, PaperGradientBg, Padding1, PointerEventsAuto, BlurBackdrop)) {
         flowBlock(model.mapFlow, modify(Flex1)) { map ->

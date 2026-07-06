@@ -1,6 +1,7 @@
 package streetlight.web.ui
 
 import koala.css.AlignSelfStart
+import koala.css.Card
 import koala.css.Class
 import koala.css.DayTheme
 import koala.css.JustifySelfCenter
@@ -11,7 +12,7 @@ import koala.css.modify
 import koala.html.Id
 
 object EarthStyle {
-    val Id = Id("earth")
+    val Container = Id("earth")
     val ViewMapButtonMod = modify(PositionSticky, TopSpacing1, JustifySelfCenter, AlignSelfStart, ZIndex1)
     val IsMoving = Class("is-moving")
     val MoveDimmer = Class("move-dimmer")
@@ -24,6 +25,7 @@ object EarthStyle {
     val Window = Class("earth-window")
     val Unbounded = Class("earth-unbounded")
     val Focus = Class("earth-focus")
+    val MapTitle = Class("earth-map-title")
 
     val MinifiedWidth = 800
 }
@@ -31,7 +33,7 @@ object EarthStyle {
 // language="CSS"
 val EarthCss get() = with(EarthStyle) { """
 
-${EarthStyle.Id} .maplibregl-ctrl-top-right {
+${EarthStyle.Container} .maplibregl-ctrl-top-right {
     top: 50%;
     transform: translateY(-50%);
 }
@@ -48,7 +50,7 @@ $DayTheme .maplibregl-canvas {
     filter: invert(1) hue-rotate(180deg);
 }
 
-$Id {
+$Container {
     height: 100vh;
     
     > * {
@@ -74,15 +76,17 @@ $Id {
 $Grid {
     display: grid;
     grid-template-columns: auto;
-    grid-template-rows: 1fr 300px;
+    grid-template-rows: auto 1fr 300px;
     grid-template-areas: 
+        "header"
         "window"
         "focus";
     gap: var(--unit-spacing);
 
+    > $Header    { grid-area: header; }
     > $Window    { grid-area: window; }
     > $Focus     { grid-area: focus; max-width: 400px; }
-    > $Unbounded { grid-column: 1 / -1; grid-row: 1 / -1; }
+    > $Unbounded { grid-area: 1 / 1 / -1 / -1; }
     
     $ListDetail {
         width: 400px;
@@ -100,8 +104,10 @@ $Grid {
     
     @media (min-width: ${MinifiedWidth}px) {
         grid-template-columns: 400px 1fr;
-        grid-template-rows: auto;
-        grid-template-areas: "focus window";
+        grid-template-rows: auto 1fr;
+        grid-template-areas:
+            "header header"
+            "focus window";
     }
 }
 
@@ -110,6 +116,21 @@ $Unbounded {
     
     > * {
         position: absolute;
+    }
+}
+
+$Header {
+    text-shadow: var(--map-text-shadow);
+    z-index: 1; /* not ideal */
+}
+
+$MapTitle {
+    background: linear-gradient(to right, transparent 0%, rgba(var(--paper), .6) 50%, transparent 100%);
+}
+
+$Focus {
+    .tabs-viewport {
+        
     }
 }
 

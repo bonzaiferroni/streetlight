@@ -78,7 +78,7 @@ $Base {
     margin-inline: auto;
     user-select: none;
     opacity: 1;
-    transition: opacity 800ms var(--magic-easing), transform 800ms var(--magic-easing);
+    transition: opacity 400ms var(--magic-easing), transform 400ms var(--magic-easing);
     transform: scale(1);
     
     
