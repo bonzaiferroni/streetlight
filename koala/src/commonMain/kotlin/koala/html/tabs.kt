@@ -24,6 +24,9 @@ fun FlowContent.tabs(
                     if (tab.isDefault) {
                         attributes["is-default"] = ""
                     }
+                    tab.colorScheme?.let {
+                        setStyle(Property.ColorScheme.to(it))
+                    }
                     +tab.label
                 }
             }
@@ -45,6 +48,9 @@ object TabClass {
     val header = Class("tabs-header")
     val viewport = Class("tabs-viewport")
     val panel = Class("tabs-panel")
+
+    val tabIndex = intAttributeOf("tab") // td: didn't work, figure out why
+    val isDefault = booleanAttributeOf("default")
 }
 
 fun TabScope.tab(
@@ -72,5 +78,6 @@ data class Tab(
     val label: String,
     val id: Id = Id(label),
     val isDefault: Boolean = false,
+    val colorScheme: String? = null,
     val content: DIV.() -> Unit
 )

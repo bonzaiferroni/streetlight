@@ -4,6 +4,7 @@ import koala.css.*
 import koala.html.Attribute
 import koala.html.Id
 import koala.html.TabClass
+import koala.html.setAttribute
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.html.js.p
@@ -68,6 +69,9 @@ fun <T : TagScope> T.tabsHeader(tabScope: TabScope<T>) = div(modify(TabClass.hea
         val button = p {
             addModifiers(TabClass.button)
             attributes["data-tab"] = index.toString()
+            tab.colorScheme?.let {
+                setStyle(Property.ColorScheme.to(it))
+            }
             +tab.label
         }
         button.addEventListener("select-tab", {

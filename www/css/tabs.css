@@ -8,6 +8,8 @@
 }
 
 .tabs-button {
+    color: var(--color-scheme);
+
     flex: 1 0 100px;
     min-width: 0;
     white-space: nowrap;

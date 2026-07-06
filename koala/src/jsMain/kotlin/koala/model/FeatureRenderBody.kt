@@ -18,7 +18,7 @@ internal class FeatureRenderBody(
     override val labelElement: HTMLElement? get() = null
 
     override fun update(marker: PointMarker) {
-        val marker = marker as ThumbMarker
+        // val marker = marker as FeatureMarker
     }
 }
 

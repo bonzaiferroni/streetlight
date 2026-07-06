@@ -104,6 +104,7 @@ val StylesCss get() = """
 
     --strong-blur: blur(10px);
     --ghost-border: 2px solid rgba(var(--ink), .1);
+    --color-scheme: var(--ink-fg);
 }
 
 :root$DayTheme {

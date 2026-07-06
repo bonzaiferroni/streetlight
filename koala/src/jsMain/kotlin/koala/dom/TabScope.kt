@@ -8,9 +8,10 @@ import org.w3c.dom.HTMLElement
 
 fun <T: TagScope> TabScope<T>.tab(
     label: String,
+    colorScheme: String? = null,
     content: T.() -> Unit
 ) {
-    add(label, content)
+    add(label, colorScheme, content)
 }
 
 class TabScope<T: TagScope>(
@@ -27,9 +28,10 @@ class TabScope<T: TagScope>(
         content()
     }
 
-    fun add(label: String, content: T.() -> Unit) {
+    fun add(label: String, colorScheme: String?, content: T.() -> Unit) {
         _tabs.add(Tab(
             label = label,
+            colorScheme = colorScheme,
             content = content
         ))
     }
@@ -72,5 +74,6 @@ class TabScope<T: TagScope>(
 data class Tab<T: TagScope>(
     val label: String,
     val id: Id = Id(label),
+    val colorScheme: String?,
     val content: T.() -> Unit
 )

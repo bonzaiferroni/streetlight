@@ -40,7 +40,7 @@ fun AppScope.earthFocus(model: Earth) {
             ) {
                 focus.members.forEach { marker ->
                     val marker = marker as? FeatureMarker ?: return@forEach
-                    tab(marker.label ?: marker.typeLabel ?: "thing") {
+                    tab(marker.label ?: marker.typeLabel ?: "thing", marker.colorScheme) {
                         markerPanel(marker)
                     }
                 }

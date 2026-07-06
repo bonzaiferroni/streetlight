@@ -11,18 +11,17 @@ import streetlight.web.shells.GalaxyKey
 import streetlight.web.shells.galaxyShell
 
 fun AppScope.viewGalaxy(content: GalaxyContent) {
-    val cache = app.get<DataCache>()
     val markerService = app.get<MarkerService>()
 
     val root = shellBox(GalaxyKey.ShellId, hookInitializers) {
         galaxyShell(content)
     }
 
-    wireLights(
-        root = root,
-        attribute = StarLightKey.EventLightId,
-        cache = cache.eventLights
-    )
+    // wireLights(
+    //     root = root,
+    //     attribute = StarLightKey.EventLightId,
+    //     cache = cache.eventLights
+    // )
     wireGalaxyMenu(root, content.galaxy)
 
     val points = markerService.createMarkers(content.posts)
