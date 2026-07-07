@@ -19,8 +19,8 @@ fun AppScope.locationDetailsForm(model: LocationEditor) = formCardSection("Locat
     }
     formPart("Where is it?") {
         row {
-            textField("address", modify(Flex1), model::setAddress, model.addressFlow)
-            textField("city", modify(Flex1), model::setCity, model.cityFlow)
+            textField("address", model::setAddress, model.addressFlow, modify(Flex1))
+            textField("city", model::setCity, model.cityFlow, modify(Flex1))
         }
     }
     formPart("Describe the place.", fieldsFlex = Flex2) {
@@ -42,7 +42,7 @@ fun AppScope.locationImageForm(model: LocationEditor) =
 
 fun AppScope.locationLinksForm(model: LocationEditor) = formCardSection("Links") {
     column {
-        textField("calendar", modify(), model::setEventsLink, model.linksFlow)
+        textField("calendar", model::setEventsLink, model.linksFlow)
     }
 }
 
@@ -51,7 +51,7 @@ fun AppScope.locationWebsiteForm(model: LocationEditor) = formCardSection("Websi
         instructions = "Does this location have a website? We can read it to find certain details.",
         bullets = listOf("Image", "Description", "Links")
     ) {
-        textField("website", modify(), model::setWebsite, model.websiteFlow)
+        textField("website", model::setWebsite, model.websiteFlow)
         row(modify(JustifyContentEnd)) {
             messageBox(model.websiteMessage, modify(Magic))
             button("🤖 read website", onClick = model::readWebsite)

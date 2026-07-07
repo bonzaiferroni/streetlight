@@ -2,12 +2,10 @@ package streetlight.web
 
 import kampfire.api.Slug
 import kampfire.api.toSlug
-import koala.html.AppRoute
 import koala.html.SegmentParse
-import streetlight.model.data.CityId
 
 sealed interface EarthRoute: StreetlightRoute, SlugRoute {
-    override val screen get() = StreetlightScreen.Earth
+    override val screen get() = Screen.Earth
     val layer: EarthLayer
 }
 

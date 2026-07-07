@@ -9,6 +9,7 @@ import koala.model.DocId
 import koala.model.DocNode
 import koala.model.DocTableItem
 import streetlight.model.data.*
+import streetlight.model.data.Feedback as FeedbackDto
 
 object Api: ApiNode(ApiNode(null, "api"), "v1") {
 
@@ -179,5 +180,10 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object ReadStarTasks: GetEndpoint<List<TaskContent>>(this)
         object ReadStarTask: GetByIdEndpoint<TaskId, TaskContent>(this)
         object CompleteTask: PostEndpoint<TaskCompletion, Boolean>(this)
+    }
+
+    object Feedback: ApiNode(this) {
+        object Feed: GetEndpoint<List<FeedbackDto>>(this)
+        object Create: PostEndpoint<FeedbackEdit, Boolean>(this)
     }
 }

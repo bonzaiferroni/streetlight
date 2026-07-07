@@ -38,8 +38,8 @@ fun AppScope.viewGalaxyConfig(edit: GalaxyEdit) {
         }
 
         row(modify(JustifyContentSpaceBetween)) {
-            button("back", onClick = { portal.goBack() })
-            button("Save", modify(Accent), onClick = model::submit)
+            button("back", { portal.goBack() })
+            button("Save", model::submit, modify(Accent))
         }
 
         appFooter("")

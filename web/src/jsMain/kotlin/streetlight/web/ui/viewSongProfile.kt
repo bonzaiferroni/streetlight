@@ -26,7 +26,7 @@ fun AppScope.viewSongProfile() {
                         onValue = model::setArtist
                     )
                 }
-                button("Update", modify(Accent), onClick = model::updateSong)
+                button("Update", model::updateSong, modify(Accent))
             }
             textBlock(model.updatedAtFlow)
         }

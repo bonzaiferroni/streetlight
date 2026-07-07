@@ -142,7 +142,7 @@ fun AppScope.gateForm() {
         }
         checkBox("Stay signed in", cred::setStayLoggedIn, cred.stayLoggedInFlow)
         row {
-            button("sign in", modifiers = modify(Accent), onClickEvent = {
+            button("sign in", mod = modify(Accent), onClickEvent = {
                 gate.signIn()
             })
         }

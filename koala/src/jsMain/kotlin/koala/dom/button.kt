@@ -5,7 +5,6 @@ import koala.css.Aspect1
 import koala.css.Danger
 import koala.css.Height3
 import koala.css.ModifierSet
-import koala.css.Secondary
 import koala.css.Zen
 import koala.css.modify
 import koala.html.configureButton
@@ -20,14 +19,14 @@ import org.w3c.dom.events.Event
 
 fun TagScope.button(
     text: String,
-    modifiers: ModifierSet? = null,
     onClick: (() -> Unit)? = null,
+    mod: ModifierSet? = null,
     onClickEvent: ((Event) -> Unit)? = null,
     flair: String? = null,
     block: BUTTON.() -> Unit = {},
 ): HTMLButtonElement {
     val element = button {
-        configureButton(text, modifiers, flair, block)
+        configureButton(text, mod, flair, block)
     }
 
     configureButtonEvents(
@@ -41,13 +40,13 @@ fun TagScope.button(
 
 fun TagScope.button(
     svg: Svg,
-    modifiers: ModifierSet? = modify(Aspect1, Height3),
     onClick: (() -> Unit)? = null,
+    mod: ModifierSet? = modify(Aspect1, Height3),
     onClickEvent: ((Event) -> Unit)? = null,
     block: BUTTON.() -> Unit = {},
 ): HTMLButtonElement {
     val element = button {
-        configureSvgButton(svg, modifiers, block)
+        configureSvgButton(svg, mod, block)
     }
 
     configureButtonEvents(
@@ -60,13 +59,13 @@ fun TagScope.button(
 }
 
 fun TagScope.button(
-    modifiers: ModifierSet? = null,
     onClick: (() -> Unit)? = null,
+    mod: ModifierSet? = null,
     onClickEvent: ((Event) -> Unit)? = null,
     block: BUTTON.() -> Unit = {},
 ): HTMLButtonElement {
     val element = button {
-        configureElementButton(modifiers, block)
+        configureElementButton(mod, block)
     }
 
     configureButtonEvents(
@@ -80,15 +79,15 @@ fun TagScope.button(
 
 fun TagScope.dangerButton(
     text: String,
-    modifiers: ModifierSet? = null,
     onClick: (() -> Unit)? = null,
+    mod: ModifierSet? = null,
     flair: String? = null,
     block: BUTTON.() -> Unit = {},
 ) {
     var isConfirm = false
 
     val element = button {
-        configureButton(text, modify(Zen, modifiers), flair, block)
+        configureButton(text, modify(Zen, mod), flair, block)
     }
 
     element.onClick {

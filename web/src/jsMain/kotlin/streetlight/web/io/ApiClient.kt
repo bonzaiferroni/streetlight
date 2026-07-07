@@ -136,5 +136,8 @@ class ApiClient(private val client: FetchClient) {
     suspend fun createMedia(edit: MediaEdit) = client.postApi(Api.Medias.CreateMedia, edit)
     suspend fun updateMedia(edit: MediaEdit) = client.postApi(Api.Medias.UpdateMedia, edit)
 
+    // feedback
+    suspend fun feedFeedback() = client.getApi(Api.Feedback.Feed)
+    suspend fun createFeedback(edit: FeedbackEdit) = client.postApi(Api.Feedback.Create, edit)
 }
 

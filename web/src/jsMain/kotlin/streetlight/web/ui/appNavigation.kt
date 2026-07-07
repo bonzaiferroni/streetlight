@@ -10,7 +10,7 @@ import koala.dom.textBlock
 import koala.model.Portal
 import kotlinx.browser.document
 import kotlinx.browser.window
-import streetlight.web.StreetlightScreen
+import streetlight.web.Screen
 
 fun AppScope.appNavigation() {
     val portal = app.get<Portal>()
@@ -27,39 +27,40 @@ fun AppScope.appNavigation() {
         },
     ) { screen ->
         when (screen) {
-            StreetlightScreen.Home -> viewHomeRoute()
-            StreetlightScreen.Event -> viewEventProfileRoute()
-            StreetlightScreen.Account -> viewStarDashRoute()
-            StreetlightScreen.Sandbox -> viewSandbox()
-            StreetlightScreen.Earth -> viewEarthRoute()
-            StreetlightScreen.MediaUpdate -> viewMediumUpdaterRoute()
-            StreetlightScreen.Chat -> viewChatRoom()
-            StreetlightScreen.SongProfile -> viewSongProfile()
-            StreetlightScreen.EditTalent -> editTalentForm()
+            Screen.Home -> viewHomeRoute()
+            Screen.Event -> viewEventProfileRoute()
+            Screen.Account -> viewStarDashRoute()
+            Screen.Sandbox -> viewSandbox()
+            Screen.Earth -> viewEarthRoute()
+            Screen.MediaUpdate -> viewMediumUpdaterRoute()
+            Screen.Chat -> viewChatRoom()
+            Screen.SongProfile -> viewSongProfile()
+            Screen.EditTalent -> editTalentForm()
+            Screen.Feedback -> viewFrontDeskRoute()
 
             // location
-            StreetlightScreen.LocationAdmin -> viewLocationAdmin()
-            StreetlightScreen.Location -> viewLocation()
-            StreetlightScreen.LocationUpdate -> viewUpdateLocationRoute()
-            StreetlightScreen.LocationScout -> viewLocationScoutRoute()
+            Screen.LocationAdmin -> viewLocationAdmin()
+            Screen.Location -> viewLocation()
+            Screen.LocationUpdate -> viewUpdateLocationRoute()
+            Screen.LocationScout -> viewLocationScoutRoute()
 
             // event
-            StreetlightScreen.EventScout -> viewEventScoutRoute()
-            StreetlightScreen.UpdateEvent -> viewEventUpdaterRoute()
+            Screen.EventScout -> viewEventScoutRoute()
+            Screen.UpdateEvent -> viewEventUpdaterRoute()
 
             // galaxy
-            StreetlightScreen.Galaxy -> viewGalaxyRoute()
-            StreetlightScreen.GalaxyFoundry -> viewGalaxyFoundry()
-            StreetlightScreen.GalaxyUpdate -> viewGalaxyConfigRoute()
-            StreetlightScreen.GalaxyList -> viewGalaxyList()
+            Screen.Galaxy -> viewGalaxyRoute()
+            Screen.GalaxyFoundry -> viewGalaxyFoundry()
+            Screen.GalaxyUpdate -> viewGalaxyConfigRoute()
+            Screen.GalaxyList -> viewGalaxyList()
 
-            StreetlightScreen.Star -> viewStarProfileRoute()
-            StreetlightScreen.MediaForge -> viewContentPosterRoute()
-            StreetlightScreen.EditStar -> viewStarEditor()
-            StreetlightScreen.SiteConfig -> viewSiteConfig()
-            StreetlightScreen.AboutApp -> viewAboutApp()
-            StreetlightScreen.Docs -> viewSiteDocRoute()
-            StreetlightScreen.Talk -> viewTalkRoute()
+            Screen.Star -> viewStarProfileRoute()
+            Screen.MediaForge -> viewContentPosterRoute()
+            Screen.EditStar -> viewStarEditor()
+            Screen.SiteConfig -> viewSiteConfig()
+            Screen.AboutApp -> viewAboutApp()
+            Screen.Docs -> viewSiteDocRoute()
+            Screen.Talk -> viewTalkRoute()
             else -> textBlock("Coming soon: $screen")
         }
     }

@@ -11,8 +11,8 @@ fun AppScope.eventSearchForm(model: EventScout) = formSection("Add an event") {
             bullets = listOf("The event may already be on Streetlight and you can post it to ${model.galaxy.name}.")
         ) {
             row {
-                textField("name", modify(Flex1), model::setQuery, model.queryFlow)
-                button("create", onClick = model::create)
+                textField("name", model::setQuery, model.queryFlow, modify(Flex1))
+                button("create", model::create)
             }
 
             selectionBlock(model.queryEventsFlow, model::setEvent, model.eventFlow) { event ->

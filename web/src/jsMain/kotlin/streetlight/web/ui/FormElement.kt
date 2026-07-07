@@ -79,7 +79,7 @@ fun AppScope.formTextField(
     footnote: String? = null,
     maxLength: Int? = null
 ) = column(modifiers) {
-    textField(label, onValue = onValue, flow = flow)
+    textField(label, onValue, flow)
     if (footnote != null || maxLength != null) {
         row(modify(OpacityHigh, Italic, WhiteSpaceNoWrap, PaddingX1, TextSmall)) {
             footnote?.let {
@@ -105,14 +105,14 @@ fun AppScope.formSubmit(
         addModifiers(modifiers, JustifyContentSpaceBetween)
         row(modify(Flex1)) {
             back?.let {
-                button(it.label, it.modifiers ?: modify(Secondary), it.onClick)
+                button(it.label, it.onClick, it.modifiers ?: modify(Secondary))
             }
         }
         row {
             messages?.let {
                 messageBox(messages)
             }
-            val element = button(label, modify(Accent), onClick = onSubmit)
+            val element = button(label, onSubmit, modify(Accent))
             messages?.let {
                 element.flowIsWorking(it.isWorkingFlow, parentScope)
             }

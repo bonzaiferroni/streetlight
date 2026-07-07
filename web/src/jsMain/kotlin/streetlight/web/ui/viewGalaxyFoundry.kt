@@ -26,8 +26,8 @@ fun AppScope.viewGalaxyFoundry() {
         }
 
         row(modify(JustifyContentSpaceBetween)) {
-            button("back", onClick = { portal.goBack() })
-            button("Found Galaxy", modify(Accent), onClick = model::submit)
+            button("back", { portal.goBack() })
+            button("Found Galaxy", model::submit, modify(Accent))
         }
 
         appFooter("web/src/jsMain/kotlin/streetlight/web/ui/viewGalaxyFoundry.kt")

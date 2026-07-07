@@ -14,8 +14,8 @@ fun AppScope.postForm(model: MediaEditor) {
     row(modify()) {
         imageDrop(imageFlow, model::setImageUrl, modify(Height24, Aspect3By2, BorderRadius1))
         column(modify(Flex1)) {
-            textField("title", null, model::setTitle, titleFlow)
-            textField("subtitle", null, model::setSubtitle, subtitleFlow )
+            textField("title", model::setTitle, titleFlow)
+            textField("subtitle", model::setSubtitle, subtitleFlow )
             textEditor("content", onValue = model::setText, flow = textFlow)
         }
     }

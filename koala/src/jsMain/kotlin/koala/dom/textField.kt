@@ -20,9 +20,9 @@ import org.w3c.dom.events.KeyboardEvent
 
 fun AppScope.textField(
     label: String? = null,
-    modifiers: ModifierSet? = null,
     onValue: ((String) -> Unit)? = null,
     flow: Flow<String?>? = null,
+    modifiers: ModifierSet? = null,
     textModifiers: ModifierSet? = null,
     id: Id? = null,
     placeholder: String? = label,
@@ -51,9 +51,9 @@ fun AppScope.textField(
 
 fun AppScope.textFieldInput(
     placeholder: String? = null,
-    modifiers: ModifierSet? = null,
     onValue: ((String) -> Unit)? = null,
     flow: Flow<String?>? = null,
+    modifiers: ModifierSet? = null,
     id: Id? = null,
     size: Int = 25,
     onEnter: (() -> Unit)? = null,

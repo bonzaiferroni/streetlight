@@ -7,6 +7,7 @@ import koala.html.*
 import kotlinx.html.FlowContent
 import kotlinx.html.onClick
 import streetlight.web.CityListRoute
+import streetlight.web.FrontDeskRoute
 import streetlight.web.GalaxyListRoute
 import streetlight.web.GalaxyMapRoute
 import streetlight.web.HomeRoute
@@ -30,9 +31,9 @@ fun FlowContent.siteHelm() {
                 item("Cities", CityListRoute, SvgFile.CityLarge)
                 // radio
                 label("meta")
+                item("Help & Feedback", FrontDeskRoute, SvgFile.QuestionLarge)
+                item("Support us", HomeRoute, SvgFile.HeartHandshake) // td
                 item("Privacy", SiteDoc.Privacy.route, SvgFile.EyeClosed)
-                item("Feedback", HomeRoute, SvgFile.CommentLarge)
-                item("Support us", HomeRoute, SvgFile.HeartHandshake)
                 label("config")
                 item("Settings", SiteConfigRoute, SvgFile.GearLarge)
                 row(SiteHelm.rowMod + ThemeToggle) {

@@ -16,5 +16,5 @@ fun AppScope.buttonDialog(
         block()
     }
 
-    button("$emoji $label", modifiers, onClick = { isOpen.set { !isOpen.now } })
+    button("$emoji $label", { isOpen.set { !isOpen.now } }, modifiers)
 }

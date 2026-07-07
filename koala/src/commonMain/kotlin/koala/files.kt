@@ -64,4 +64,6 @@ object SiteImage : FileSet<Image>() {
         ScaledImage(ImageSize.Small, placeholderSm.url),
         ScaledImage(ImageSize.Thumb, placeholderTh.url),
     )
+
+    val FrontDesk = siteImageOf("front-desk.jpg")
 }

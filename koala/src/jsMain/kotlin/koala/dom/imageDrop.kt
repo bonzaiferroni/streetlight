@@ -35,7 +35,7 @@ fun AppScope.imageDrop(
             block(url)
             button(
                 text = "✕",
-                modifiers = modify(Secondary, MinWidthAuto, JustifySelfStart, AlignSelfStart, Margin1, OpacityHigh, ZIndex1),
+                mod = modify(Secondary, MinWidthAuto, JustifySelfStart, AlignSelfStart, Margin1, OpacityHigh, ZIndex1),
                 onClick = {
                     onFileUrl(null)
                 })

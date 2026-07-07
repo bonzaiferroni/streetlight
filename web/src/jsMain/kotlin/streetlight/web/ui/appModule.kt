@@ -12,10 +12,9 @@ import streetlight.model.data.Galaxy
 import streetlight.model.data.LocationEdit
 import streetlight.model.data.GalaxyEdit
 import streetlight.model.data.MediaEdit
-import streetlight.web.EarthLayer
 import streetlight.web.EarthMap
 import streetlight.web.HomeRoute
-import streetlight.web.StreetlightScreen
+import streetlight.web.Screen
 import streetlight.web.io.ApiClient
 import streetlight.web.io.FetchClient
 import streetlight.web.io.OSMClient
@@ -37,7 +36,7 @@ val appModule = module {
 
     single { StarSession(get(), get(), get(), get()) }
     single { DataCache(get(), get(), get(), get(), get()) }
-    single { Portal(HomeRoute, StreetlightScreen.entries, get()) }
+    single { Portal(HomeRoute, Screen.entries, get()) }
     single { GateAgent(get(), get(), get()) }
     single { GeoCamera(get()) }
     single { GeoMap(get(), get()) }
@@ -73,3 +72,6 @@ fun AppContainer.getEventScout(galaxy: Galaxy, editor: EventEditor, location: Lo
 
 fun AppContainer.getGalaxyEditor(galaxy: GalaxyEdit, scope: CoroutineScope) =
     GalaxyEditor(galaxy, scope, koin.get(), koin.get(), koin.get(), koin.get())
+
+fun AppContainer.getFeedbackDesk(scope: CoroutineScope) =
+    FrontDesk(scope, koin.get(), koin.get())

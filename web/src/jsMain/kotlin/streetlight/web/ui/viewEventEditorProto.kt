@@ -60,16 +60,14 @@ fun AppScope.viewEventEditorProto(
         }
 
         row(modify(JustifyContentSpaceBetween, PaddingX1)) {
-            button("cancel", modify(Secondary), onClick = {
-                portal.goBack()
-            })
+            button("cancel", { portal.goBack() }, modify(Secondary))
             row {
                 messageBox(msg.flow, modify(Flex1))
                 val text = when (event.eventId) {
                     null -> "create"
                     else -> "edit"
                 }
-                button(text, modify(Accent), onClick = {
+                button(text, {
                     parentScope.launch {
 //                        api.createOrEditEvent(editStore.now).handleResponse(msg::set) {
 //                            if (callback != null) {
@@ -80,7 +78,7 @@ fun AppScope.viewEventEditorProto(
 //                            }
 //                        }
                     }
-                })
+                }, modify(Accent))
             }
         }
 

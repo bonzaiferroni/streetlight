@@ -75,7 +75,7 @@ fun AppScope.viewEventFormProto(
 
                         // provide event cost
                         row {
-                            textField("cost", modify(Width12), onValue = model::setCost, flow = model.costFlow)
+                            textField("cost", model::setCost, model.costFlow, modify(Width12))
                             checkBox("Free event", model::setFree, model.isFreeFlow)
                         }
 
@@ -206,13 +206,13 @@ fun AppScope.eventLinks(model: EventEditor) {
     column(modify(Gap2)) {
         column(modify(Gap1)) {
             textBlock("Is there more information about this event somewhere out there?", modify(OpacityHigh))
-            textField("Link", modify(Width100P), model::setUrl, model.urlFlow)
+            textField("Link", model::setUrl, model.urlFlow, modify(Width100P))
         }
         column(modify(Gap1)) {
             textBlock("Want to give a shout out to the original place where you found the event?", modify(OpacityHigh))
             row {
-                textField("Source label", modify(Flex1), model::setOriginalSourceLabel, originalSourceLabelFlow)
-                textField("Source url", modify(Flex3), model::setOriginalSourceUrl, originalSourceUrlFlow)
+                textField("Source label", model::setOriginalSourceLabel, originalSourceLabelFlow, modify(Flex1))
+                textField("Source url", model::setOriginalSourceUrl, originalSourceUrlFlow, modify(Flex3))
             }
         }
         row(modify(AlignItemsEnd)) {
@@ -227,8 +227,8 @@ fun AppScope.eventLinks(model: EventEditor) {
                 val isEdit = index == linkIndex
                 if (isEdit) {
                     row() {
-                        textField("label", onValue = ::setLabel, flow = labelFlow)
-                        textField("url", modify(Flex1), onValue = ::setUrl, flow = urlFlow)
+                        textField("label", ::setLabel, labelFlow)
+                        textField("url", ::setUrl, urlFlow, modify(Flex1))
                         icon(SvgFile.Check, ::finalizeEdit, modify(Height5))
                     }
                 } else {

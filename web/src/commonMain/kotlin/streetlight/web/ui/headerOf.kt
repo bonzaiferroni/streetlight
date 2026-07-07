@@ -9,7 +9,6 @@ import kotlinx.html.FlowContent
 import streetlight.model.data.Galaxy
 import streetlight.model.data.Location
 import streetlight.model.data.Star
-import streetlight.web.GalaxyConfigRoute
 import streetlight.web.layouts.ColorScheme
 import streetlight.web.layouts.cellContentOf
 

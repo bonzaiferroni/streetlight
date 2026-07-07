@@ -27,10 +27,10 @@ fun AppScope.eventWebsiteForm(model: EventEditor) = formCardSection("Web page") 
         instructions = "Does this event have a web page? We can read it to find certain details.",
         bullets = listOf("Some websites cannot be read automatically, but you can fill in the details yourself.")
     ) {
-        textField("website", modify(), model::setUrl, model.urlFlow)
+        textField("website", model::setUrl, model.urlFlow)
         row(modify(JustifyContentEnd)) {
             messageBox(model.urlMessage, modify(Magic))
-            button("🤖 read page", onClick = model::readUrl)
+            button("🤖 read page", model::readUrl)
         }
     }
 }
@@ -43,7 +43,7 @@ fun AppScope.eventDetailsForm(model: EventEditor) = formCardSection("Event Detai
     formPart("How much does it cost?") {
         row(modify(AlignItemsCenter)) {
             checkBox("Free event", model::setFree, model.isFreeFlow)
-            textField("cost", modify(Width12), onValue = model::setCost, flow = model.costFlow)
+            textField("cost", model::setCost, model.costFlow, modify(Width12))
                 .flowVisibility(model.isFreeFlow.map { !it }, parentScope)
                 .flowValid(EventProperty.Cost, model.validityFlow, parentScope)
         }

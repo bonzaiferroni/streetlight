@@ -47,10 +47,10 @@ fun AppScope.imageChooser(
             uploadButton?.disabled = false
         }
         row(modify(FlexItems1)) {
-            button("cancel", modify(Secondary), onClickEvent = {
+            button("cancel", mod = modify(Secondary), onClickEvent = {
                 dialog.close()
             })
-            uploadButton = button("upload", modify(Accent), onClickEvent = {
+            uploadButton = button("upload", mod = modify(Accent), onClickEvent = {
                 val localUrl = localUrl ?: return@button
                 parentScope.launch {
                     console.log("uploading: $localUrl")

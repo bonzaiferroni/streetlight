@@ -17,6 +17,7 @@ import kotlinx.coroutines.launch
 import streetlight.model.data.toEdit
 import streetlight.web.model.StarSession
 import streetlight.web.pages.appFooter
+import kotlin.time.Duration.Companion.milliseconds
 
 fun AppScope.viewStarEditor() {
     val gate = app.get<StarSession>()
@@ -26,7 +27,7 @@ fun AppScope.viewStarEditor() {
 
         val avatarFlow = state.flow.mapDistinct { it.imageRef }
         val nameFlow = state.flow.mapDistinct { it.username?.value }
-        val isAvailableFlow = nameFlow.debounce(500).map {
+        val isAvailableFlow = nameFlow.debounce(500.milliseconds).map {
             if (it == null || it == star.username.value) null
             else api.checkUsername(it.toUsername()).handleOutcome(toaster::toast)
         }
@@ -55,7 +56,7 @@ fun AppScope.viewStarEditor() {
                 row(modify(AlignItemsStart)) {
                     imageDrop(avatarFlow, ::setImageRef, modify(Width16, Aspect1))
                     row {
-                        textField("username", onValue = ::setUsername, flow = nameFlow)
+                        textField("username", ::setUsername, nameFlow)
                         flowBlock(isAvailableFlow, defaultMagic) {
                             val isAvailable = it ?: return@flowBlock
                             val text = if (isAvailable) "👍" else "❌"
@@ -64,8 +65,8 @@ fun AppScope.viewStarEditor() {
                     }
                 }
                 row(modify(JustifyContentSpaceBetween)) {
-                    button("cancel", onClick = { portal.goBack() })
-                    button("update", modify(Accent), onClick = ::update)
+                    button("cancel", { portal.goBack() })
+                    button("update", ::update, modify(Accent))
                 }
             }
 

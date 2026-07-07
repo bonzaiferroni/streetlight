@@ -51,8 +51,8 @@ import streetlight.web.layouts.cellBlock
 fun FlowContent.featureHeader(
     title: String,
     descriptor: String,
-    subtitle: String?,
     image: Url?,
+    subtitle: String? = null,
     colorScheme: ColorScheme = ColorScheme.Primary,
     description: Markdown? = null,
     cellContent: (FlowContent.() -> Unit)? = null,

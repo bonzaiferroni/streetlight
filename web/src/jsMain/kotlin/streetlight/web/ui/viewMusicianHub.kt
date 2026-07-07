@@ -47,7 +47,7 @@ fun AppScope.viewMusicianHub(
                                 onValue = model::setArtist
                             )
                         }
-                        button("Add new song", modify(Accent), onClick = model::addSong)
+                        button("Add new song", model::addSong, modify(Accent))
                     }
                     itemsBlock(model.songsFlow, defaultMagic) { song ->
                         navigation(SongProfileRoute(song.songId)) {

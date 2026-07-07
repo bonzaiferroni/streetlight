@@ -47,7 +47,7 @@ fun AppScope.guestRegistrationForm() {
     column(modify(QueryContainer)) {
         formPart("A username is all you need to get started.", info = {
             row {
-                button("Choose for me", modify(Secondary), onClick = model::generateUsername)
+                button("Choose for me", model::generateUsername, modify(Secondary))
             }
         }) {
             formTextField("username", model::setUsername, model.usernameFlow, maxLength = Username.MAX_LENGTH)
@@ -55,7 +55,7 @@ fun AppScope.guestRegistrationForm() {
         formPart("To create a Streetlight account, you must be ${UserCreatorState.MINIMUM_AGE} or older.") {
             row(modify(JustifyContentSpaceBetween, AlignItemsCenter)) {
                 checkBox("I am ${UserCreatorState.MINIMUM_AGE} or older.")
-                button("Register as guest", modify(Accent), onClick = { model.createAccount(AccountType.Guest) })
+                button("Register as guest", { model.createAccount(AccountType.Guest) }, modify(Accent))
             }
         }
     }

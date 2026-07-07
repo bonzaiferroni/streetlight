@@ -31,8 +31,8 @@ fun AppScope.galaxyCityForm(model: GalaxyEditor) {
             instructions = cityInstructions,
         ) {
             row {
-                textField("city search", modify(Flex1), onValue = model::setCityQuery, flow = cityQueryFlow)
-                textField("country", modify(Width24), onValue = model::setCountry, flow = countryFlow)
+                textField("city search", model::setCityQuery, cityQueryFlow, modify(Flex1))
+                textField("country", model::setCountry, countryFlow, modify(Width24))
             }
             column(modify(Height32, OverflowYAuto, Gap0)) {
                 row(modify(Padding1, JustifyContentSpaceBetween)) {
@@ -185,7 +185,7 @@ fun AppScope.galaxyAccessForm(model: GalaxyEditor) {
                 }
             }
         ) {
-            textField("review count", modify(AlignSelfStart), { model.setReviewCount(it.toIntOrNull()) }, reviewCountFlow)
+            textField("review count", { model.setReviewCount(it.toIntOrNull()) }, reviewCountFlow, modify(AlignSelfStart))
         }
     }
 }

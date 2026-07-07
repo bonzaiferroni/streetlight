@@ -9,12 +9,13 @@ import streetlight.web.LocationUpdateRoute
 import streetlight.web.layouts.layoutPosts
 import streetlight.web.layouts.feedPostOf
 import streetlight.web.pages.appFooter
+import streetlight.web.ui.Body
 import streetlight.web.ui.headerOf
 
 fun FlowContent.locationShell(
     content: LocationContent,
 ) {
-    column(LocationProfileKey.Id, modify(AlignItemsStretch, Gap4, MarginTop1)) {
+    column(LocationProfileKey.Id, Body.mod) {
         headerOf(
             location = content.location,
             editRoute = if (content.canEdit) LocationUpdateRoute(content.location.slug) else null

@@ -29,8 +29,8 @@ private fun AppScope.locationSearchForm(model: LocationScout) = formCard {
         bullets = listOf("If you don't see the location in the list, you can search OpenStreetMap.")
     ) {
         row {
-            textField("search", modify(Flex1), model::setQuery, model.queryFlow)
-            textField("city", modify(Width24), model::setCity, model.cityFlow)
+            textField("search", model::setQuery, model.queryFlow, modify(Flex1))
+            textField("city", model::setCity, model.cityFlow, modify(Width24))
         }
         formSubmit("Search OSM", model::queryOSM, messages = model.queryMessage)
 

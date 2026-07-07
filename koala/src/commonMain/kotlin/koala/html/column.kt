@@ -4,12 +4,14 @@ import kotlinx.html.*
 import koala.css.*
 
 inline fun FlowContent.column(
-    id: Id,
+    id: Id?,
     modifiers: ModifierSet? = null,
     crossinline content: DIV.() -> Unit = { },
 ) {
     column(modifiers) {
-        this.id = id.identifier
+        id?.let {
+            this.id = id.identifier
+        }
         content()
     }
 }

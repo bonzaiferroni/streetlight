@@ -6,7 +6,6 @@ import koala.css.BlurBackdrop
 import koala.css.BorderRadius3
 import koala.css.BorderSolid2Px
 import koala.css.Magic
-import koala.css.Secondary
 import koala.css.SlideUp
 import koala.css.Zen
 import koala.css.modify
@@ -70,7 +69,7 @@ fun AppScope.callPostMenu(postId: PostId, username: Username?) {
                     // do we edit the post or the target record?
                     // btn("edit", MediaUpdateRoute(postId), modify(Secondary))
                 } else {
-                    button("report", modify(Zen))
+                    button("report", mod = modify(Zen))
                 }
                 dangerButton("remove", onClick = {
                     parentScope.launch {

@@ -20,7 +20,7 @@ import streetlight.model.data.SpaceType
 import streetlight.model.data.toRecordId
 import kotlin.uuid.Uuid
 
-enum class StreetlightScreen(
+enum class Screen(
     override val routeParse: RouteParse,
     pathRoot: String? = null,
 ): AppScreen {
@@ -32,6 +32,7 @@ enum class StreetlightScreen(
     SongProfile(UuidParse { SongProfileRoute(SongId(it)) }),
     TalentProfile(UuidParse { TalentProfileRoute(TalentId(it)) }),
     EditTalent(UuidParse { EditTalentRoute(TalentId(it)) }),
+    Feedback(StaticParse { FrontDeskRoute }),
 
     // location
     Location(SlugParse { LocationRoute(it) }, "l"),
@@ -92,22 +93,22 @@ interface IntIdRoute: StreetlightRoute {
 
 // singletons
 object HomeRoute: StreetlightRoute {
-    override val screen get() = StreetlightScreen.Home
+    override val screen get() = Screen.Home
     override val title get() = "Home"
 }
 
 object StarDashRoute: StreetlightRoute {
-    override val screen get() = StreetlightScreen.Account
+    override val screen get() = Screen.Account
     override val title get() = "You"
 }
 
 object SandboxRoute: StreetlightRoute {
-    override val screen get() = StreetlightScreen.Sandbox
+    override val screen get() = Screen.Sandbox
     override val title get() = "Sandbox"
 }
 
 object ChatRoute: StreetlightRoute {
-    override val screen get() = StreetlightScreen.Chat
+    override val screen get() = Screen.Chat
     override val title get() = "Chat"
 }
 
@@ -115,7 +116,7 @@ object ChatRoute: StreetlightRoute {
 data class SongProfileRoute(
     val songId: SongId
 ): StreetlightRoute, RecordIdRoute {
-    override val screen get() = StreetlightScreen.SongProfile
+    override val screen get() = Screen.SongProfile
     override val recordId get() = songId
     override val title get() = "Song"
 }
@@ -123,7 +124,7 @@ data class SongProfileRoute(
 data class TalentProfileRoute(
     val talentId: TalentId
 ): StreetlightRoute, RecordIdRoute {
-    override val screen get() = StreetlightScreen.TalentProfile
+    override val screen get() = Screen.TalentProfile
     override val recordId get() = talentId
     override val title get() = "Talent"
 }
@@ -131,33 +132,33 @@ data class TalentProfileRoute(
 data class EditTalentRoute(
     val talentId: TalentId? = null
 ): StreetlightRoute, RecordIdRoute {
-    override val screen get() = StreetlightScreen.EditTalent
+    override val screen get() = Screen.EditTalent
     override val recordId get() = talentId
     override val title get() = "Talent"
 }
 
 data class StarRoute(override val slug: SlugValue): StreetlightRoute, SlugRoute {
-    override val screen get() = StreetlightScreen.Star
+    override val screen get() = Screen.Star
     override val title get() = "Star"
 }
 
 object EditStarRoute: StreetlightRoute {
-    override val screen get() = StreetlightScreen.EditStar
+    override val screen get() = Screen.EditStar
     override val title get() = "Edit Profile"
 }
 
 object SiteConfigRoute: StreetlightRoute {
-    override val screen get() = StreetlightScreen.SiteConfig
+    override val screen get() = Screen.SiteConfig
     override val title get() = "Config"
 }
 
 object AboutRoute: StreetlightRoute {
-    override val screen get() = StreetlightScreen.AboutApp
+    override val screen get() = Screen.AboutApp
     override val title get() = "About"
 }
 
 data class SiteDocRoute(val docId: DocId): StreetlightRoute {
-    override val screen get() = StreetlightScreen.Docs
+    override val screen get() = Screen.Docs
     override val title get() = "Documentation"
 
     override fun toSitePath() = toIdSitePath(docId)
@@ -166,7 +167,7 @@ data class SiteDocRoute(val docId: DocId): StreetlightRoute {
 data class TalkRoute(val id: Uuid, val type: SpaceType): StreetlightRoute {
     constructor(galaxyId: GalaxyId): this(galaxyId.value, SpaceType.Galaxy)
 
-    override val screen get() = StreetlightScreen.Talk
+    override val screen get() = Screen.Talk
     override val title get() = "Talk"
 
     override fun toSitePath() = toIdSitePath(id)

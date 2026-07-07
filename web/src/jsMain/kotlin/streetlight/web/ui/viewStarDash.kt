@@ -95,14 +95,14 @@ private fun AppScope.sandboxContent(star: Star) {
                 textBlock("Add things to the map.", modify(Flex1))
                 btn("Edit Profile", EditStarRoute)
                 btn("Go to sandbox", SandboxRoute)
-                button("galaxy list", modify(Accent), onClick = { portal.go(GalaxyListRoute) })
+                button("galaxy list", { portal.go(GalaxyListRoute) }, modify(Accent))
             }
         }
 
         card {
             row {
                 textBlock("Share and grow your talents.", modify(Flex1))
-                button("add talent", modify(Accent), onClick = { portal.go(EditTalentRoute()) })
+                button("add talent", { portal.go(EditTalentRoute()) }, modify(Accent))
             }
         }
 
