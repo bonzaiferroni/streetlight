@@ -49,7 +49,7 @@ val StylesCss get() = """
     --vignette-gradient: radial-gradient(ellipse at center, transparent 50%, rgba(0, 0, 0, 0.3) 100%);
     
     --primary: 58, 158, 200; /* 48, 138, 170; 70, 117, 153; 45, 199, 255*/
-    --primary-fg: color-mix(in srgb, rgb(var(--primary)) 75%, rgb(var(--ink)));
+    --primary-fg: color-mix(in srgb, rgb(var(--primary)) 50%, rgb(var(--ink)));
     --primary-bg: color-mix(in srgb, rgb(var(--primary)) 75%, rgb(var(--paper)));
     --primary-button: rgb(var(--primary));
     --primary-button-day: color-mix(in srgb, var(--primary-button) 80%, black);

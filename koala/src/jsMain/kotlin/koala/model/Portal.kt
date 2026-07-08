@@ -1,5 +1,7 @@
 package koala.model
 
+import koala.css.KoalaBody
+import koala.dom.setAttribute
 import koala.html.AppRoute
 import koala.html.AppScreen
 import kotlinx.browser.document
@@ -120,6 +122,8 @@ class Portal(
             refreshedAt = Clock.System.now()
         )}
         sitePath = route.toSitePath()
+
+        document.body?.setAttribute(KoalaBody.ScreenId.to(route.screen.screenId))
     }
 
     private fun routeOf(hashPath: String): AppRoute? {
@@ -133,7 +137,7 @@ data class PortalState(
     val canGoBack: Boolean = false,
     val initialScrollY: Double = window.scrollY,
     val isInitialRoute: Boolean = true,
-    val refreshedAt: Instant = Instant.DISTANT_PAST
+    val refreshedAt: Instant = Instant.DISTANT_PAST,
 )
 
 private data class Navigation(

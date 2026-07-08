@@ -35,6 +35,7 @@ interface AppRoute: Labeled {
 interface AppScreen {
     val pathRoot: String
     val routeParse: RouteParse
+    val screenId: String
 }
 
 private fun String.dropStart(char: Char) = if (startsWith(char)) drop(1) else this

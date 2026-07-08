@@ -7,11 +7,15 @@ import koala.html.*
 import kotlinx.html.FlowContent
 import kotlinx.html.onClick
 import streetlight.web.CityListRoute
+import streetlight.web.ContributeRoute
+import streetlight.web.EarthRoute
 import streetlight.web.FrontDeskRoute
 import streetlight.web.GalaxyListRoute
 import streetlight.web.GalaxyMapRoute
 import streetlight.web.HomeRoute
+import streetlight.web.Screen
 import streetlight.web.SiteConfigRoute
+import streetlight.web.StatusRoute
 import streetlight.web.doc.SiteDoc
 import streetlight.web.layouts.route
 
@@ -39,6 +43,7 @@ fun FlowContent.siteMenuSidebar() {
     column {
         filigree {
             navigation(HomeRoute) {
+                setAttribute(KoalaBody.ScreenId.to(HomeRoute.screen.screenId))
                 logo(modify(Height5))
             }
         }
@@ -53,8 +58,8 @@ fun FlowContent.siteMenuItems() {
     // radio
     label("meta")
     item("Help & Feedback", FrontDeskRoute, SvgFile.QuestionLarge)
-    item("Status", HomeRoute, SvgFile.ChartLarge) // td
-    item("Support", HomeRoute, SvgFile.HeartHandshake) // td
+    item("Contribute", ContributeRoute, SvgFile.HeartHandshake) // td
+    item("Status", StatusRoute, SvgFile.ChartLarge) // td
     item("Privacy", SiteDoc.Privacy.route, SvgFile.EyeClosed)
     label("config")
     item("Settings", SiteConfigRoute, SvgFile.GearLarge)
@@ -73,6 +78,7 @@ private fun FlowContent.label(label: String) {
 
 private fun FlowContent.item(label: String, route: AppRoute, svg: Svg) {
     navigation(route) {
+        setAttribute(KoalaBody.ScreenId.to(route.screen.screenId))
         onClick = SiteHelm.closePopover
         row(SiteHelm.rowMod) {
             icon(svg, HelmBar.IconMod)
@@ -94,7 +100,7 @@ object SiteHelm {
 private val ThemeToggle = Class("theme-toggle")
 
 // language="CSS"
-val SiteHelmCss get() = """
+val SiteHelmCss get() = with(SiteHelm) { """
 ${SiteHelm.Container} {
     border-radius: 0 0 var(--unit-spacing-2) 0;
     max-height: 100vh;
@@ -111,4 +117,15 @@ ${SiteHelm.PopoverClass} {
 $DayTheme $ThemeToggle ${IconKey.Class} {
     ${Property.MaskUrl.to(SvgFile.Moon)} !important;
 }
-"""
+
+${generateScreenSelectors(highlightedScreens)} {
+    color: var(--primary-fg);
+}
+""" }
+
+val highlightedScreens = listOf(
+    Screen.Home, Screen.Earth, Screen.GalaxyList, Screen.CityList,
+    Screen.Feedback, Screen.Status, Screen.Contribute, Screen.Docs,
+    Screen.SiteConfig,
+)
+

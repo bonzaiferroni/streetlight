@@ -33,6 +33,8 @@ enum class Screen(
     TalentProfile(UuidParse { TalentProfileRoute(TalentId(it)) }),
     EditTalent(UuidParse { EditTalentRoute(TalentId(it)) }),
     Feedback(StaticParse { FrontDeskRoute }),
+    Status(StaticParse { StatusRoute }),
+    Contribute(StaticParse { ContributeRoute }),
 
     // location
     Location(SlugParse { LocationRoute(it) }, "l"),
@@ -70,6 +72,7 @@ enum class Screen(
     Media(SlugParse { MediaRoute(it) }, "m");
 
     override val pathRoot = pathRoot ?: name.pascalToKebabCase()
+    override val screenId = name.pascalToKebabCase()
 }
 
 // interfaces
@@ -110,6 +113,16 @@ object SandboxRoute: StreetlightRoute {
 object ChatRoute: StreetlightRoute {
     override val screen get() = Screen.Chat
     override val title get() = "Chat"
+}
+
+object StatusRoute: StreetlightRoute {
+    override val screen get() = Screen.Status
+    override val title get() = "Status"
+}
+
+object ContributeRoute: StreetlightRoute {
+    override val screen get() = Screen.Contribute
+    override val title get() = "Contribute"
 }
 
 // data class
