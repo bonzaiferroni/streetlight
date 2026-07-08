@@ -11,7 +11,7 @@ value class Id(val identifier: String): Queryable {
     override val selector get() = "#$identifier"
     override fun toString() = selector
 
-    val jsArg get() = "'$identifier'"
+    val jsLiteral get() = "'$identifier'"
 
     fun toPositionAnchor() = PositionAnchor("$identifier-anchor")
 }

@@ -17,7 +17,7 @@ import streetlight.web.StarDashRoute
 import streetlight.web.StarRoute
 import streetlight.web.model.CredentialStore
 import streetlight.web.model.StarSession
-import streetlight.web.pages.HelmBarKey
+import streetlight.web.pages.HelmBar
 import streetlight.web.pages.StarHelmKey
 
 fun AppScope.queryAndWireStarHelm() {
@@ -50,7 +50,7 @@ private fun AppScope.starPanel(star: Star) {
                 heading3(star.username.value)
             }
 
-            button(modify(HelmBarKey.IconMod, FadeLoop)) {
+            button(modify(HelmBar.IconMod, FadeLoop)) {
                 onClick = StarHelmKey.ClosePopover
 
                 image(star.images.thumb, modify(OpacityHigh, Size100P, BorderRadius50P))
@@ -64,14 +64,14 @@ private fun AppScope.starPanel(star: Star) {
 
             row(RowMod) {
                 textBlock("Dashboard")
-                icon(SvgFile.Dashboard, HelmBarKey.IconMod)
+                icon(SvgFile.Dashboard, HelmBar.IconMod)
             }
         }
 
         button(onClick = session::signOut) {
             row(RowMod) {
                 textBlock("Sign out", modify(WhiteSpaceNoWrap))
-                icon(SvgFile.SignOut, HelmBarKey.IconMod)
+                icon(SvgFile.SignOut, HelmBar.IconMod)
             }
         }
     }
@@ -81,7 +81,7 @@ private fun AppScope.someonePanel(dialog: DialogElement) {
     column(modify(MinWidth32)) {
         row(RowMod) {
             heading3("Someone")
-            button(modify(HelmBarKey.IconMod, FadeLoop)) {
+            button(modify(HelmBar.IconMod, FadeLoop)) {
                 onClick = StarHelmKey.ClosePopover
 
                 image(SvgFile.Someone, modify(OpacityHigh, Size100P, BorderRadius50P))

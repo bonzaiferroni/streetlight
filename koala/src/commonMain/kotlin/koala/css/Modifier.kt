@@ -15,6 +15,7 @@ interface Modifier: Queryable {
     val identifier: String
 
     override val selector get() = ".$identifier"
+    val jsLiteral get() = "'$identifier'"
 }
 
 @JvmInline

@@ -15,15 +15,17 @@ import streetlight.web.SiteConfigRoute
 import streetlight.web.doc.SiteDoc
 import streetlight.web.layouts.route
 
-fun FlowContent.siteMenu() {
+fun FlowContent.siteMenuPopover() {
     popover(SiteHelm.Id, SiteHelm.PositionAnchor, modify(SiteHelm.PopoverClass, Magic, SlideRight)) {
         card(modify(SiteHelm.Container, HeavyCardBg, BlurBackdrop, PointerEventsAuto)) {
             column(modify(PaddingRight1)) {
                 row(modify(AlignItemsCenter)) {
-                    button(SvgFile.Helm, modify(HelmBarKey.IconMod, SpinLoop, BorderDashed2Px, BorderRadius50P)) {
+                    button(SvgFile.Helm, modify(HelmBar.IconMod, SpinLoop, BorderDashed2Px, BorderRadius50P)) {
                         onClick = SiteHelm.closePopover
                     }
-                    logo(modify(Height6))
+                    navigation(HomeRoute) {
+                        logo(modify(Height5))
+                    }
                 }
                 siteMenuItems()
             }
@@ -33,21 +35,32 @@ fun FlowContent.siteMenu() {
     stylesheet(SiteHelmCss)
 }
 
+fun FlowContent.siteMenuSidebar() {
+    column {
+        filigree {
+            navigation(HomeRoute) {
+                logo(modify(Height5))
+            }
+        }
+        siteMenuItems()
+    }
+}
+
 fun FlowContent.siteMenuItems() {
-    item("Home", HomeRoute, SvgFile.HomeLarge)
     item("Earth", GalaxyMapRoute(null), SvgFile.Earth)
     item("Galaxies", GalaxyListRoute, SvgFile.Satellite)
     item("Cities", CityListRoute, SvgFile.CityLarge)
     // radio
     label("meta")
     item("Help & Feedback", FrontDeskRoute, SvgFile.QuestionLarge)
-    item("Support us", HomeRoute, SvgFile.HeartHandshake) // td
+    item("Status", HomeRoute, SvgFile.ChartLarge) // td
+    item("Support", HomeRoute, SvgFile.HeartHandshake) // td
     item("Privacy", SiteDoc.Privacy.route, SvgFile.EyeClosed)
     label("config")
     item("Settings", SiteConfigRoute, SvgFile.GearLarge)
     row(SiteHelm.rowMod + ThemeToggle) {
         onClick = KoalaFun.ToggleTheme.invoke()
-        icon(SvgFile.Sun, HelmBarKey.IconMod)
+        icon(SvgFile.Sun, HelmBar.IconMod)
         textBlock("Theme")
     }
 }
@@ -62,7 +75,7 @@ private fun FlowContent.item(label: String, route: AppRoute, svg: Svg) {
     navigation(route) {
         onClick = SiteHelm.closePopover
         row(SiteHelm.rowMod) {
-            icon(svg, HelmBarKey.IconMod)
+            icon(svg, HelmBar.IconMod)
             textBlock(label)
         }
     }

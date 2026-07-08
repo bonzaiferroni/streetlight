@@ -17,10 +17,10 @@ fun FlowContent.appOverlay() {
         // panel toggles
         row(modify(Height8, Padding1, JustifyContentSpaceBetween)) {
             icon(SvgFile.PanelLeft, modify(PointerEventsAuto, Dim, AppOverlay.MediaVlgReveal)) {
-                onClick = AppOverlay.TogglePanel.invoke(AppBody.LeftPanel)
+                onClick = AppOverlay.TogglePanel.invoke(AppOverlay.RevealLeftPanel)
             }
             icon(SvgFile.PanelRight, modify(PointerEventsAuto, Dim, AppOverlay.MediaVlgReveal)) {
-                onClick = AppOverlay.TogglePanel.invoke(AppBody.RightPanel)
+                onClick = AppOverlay.TogglePanel.invoke(AppOverlay.RevealRightPanel)
             }
         }
     }
@@ -30,33 +30,34 @@ fun FlowContent.appOverlay() {
 val AppOverlayJs get() = """
 
 ${AppOverlay.TogglePanel} {
-    const modifier = `${Reveal.identifier}`;
-    const element = document.getElementById($panelArg);
+    console.log($panelMod);
     document.startViewTransition(() => {
-        element.classList.toggle(modifier);
-        const isToggled = element.classList.contains(modifier);
-        localStorage.setItem($panelArg, isToggled ? 'true' : 'false');
+        document.body.classList.toggle($panelMod)
+        const isToggled = document.body.classList.contains($panelMod);
+        localStorage.setItem($panelMod, isToggled ? 'true' : 'false');
     })
 }
 
-function initPanel(id) {
-    if (localStorage.getItem(id) === 'true') {
-        document.getElementById(id).classList.add(`${Reveal.identifier}`);
+function initPanel(mod) {
+    if (localStorage.getItem(mod) === 'true') {
+        document.body.classList.add(mod);
     }
 }
 
-initPanel(${AppBody.RightPanel.jsArg});
-initPanel(${AppBody.LeftPanel.jsArg});
+initPanel(${AppOverlay.RevealLeftPanel.jsLiteral});
+initPanel(${AppOverlay.RevealRightPanel.jsLiteral});
 
 """
 
-private val panelArg = "panelId"
+private val panelMod = "panelMod"
 
 object AppOverlay {
     val Container = Id("app-overlay")
-    val TogglePanel = JsFun("togglePanel", panelArg)
+    val TogglePanel = JsFun("togglePanel", panelMod)
     val SpacerMiddleId = Id("spacer-middle")
     val MediaVlgReveal = Class("display-none-below-vlg")
+    val RevealLeftPanel = Class("reveal-left-panel")
+    val RevealRightPanel = Class("reveal-right-panel")
 
     val VlgWidthPx = 1000
 }

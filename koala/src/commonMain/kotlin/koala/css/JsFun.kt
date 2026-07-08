@@ -14,10 +14,10 @@ class JsFun(val identifier: String, vararg val params: String) {
         when (arg) {
             is ThisElement -> "this"
             is String, is Uuid -> "'$arg'"
-            is Id -> arg.jsArg
+            is Id -> arg.jsLiteral
             is PositionAnchor -> "'${arg.identifier}'"
             is TableId<*> -> "'${arg.value}'"
-            is Modifier -> "'${arg.identifier}'"
+            is Modifier -> arg.jsLiteral
             else -> arg.toString()
         }
     }

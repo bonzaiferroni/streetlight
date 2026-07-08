@@ -1,11 +1,13 @@
 package streetlight.web.pages
 
 import koala.JsFile
+import koala.SvgFile
 import koala.css.*
 import koala.html.*
 import kotlinx.html.DIV
 import kotlinx.html.HTML
 import kotlinx.html.body
+import streetlight.web.HomeRoute
 
 fun HTML.appBody(
     block: DIV.() -> Unit = { }
@@ -13,10 +15,8 @@ fun HTML.appBody(
     body {
         div(AppBody.Viewport) {
             div(AppBody.PanelGrid) {
-                box(AppBody.LeftPanel, modify(Reveal)) {
-                    column(modify(PlaceSelfCenter)) {
-                        siteMenuItems()
-                    }
+                box(AppBody.LeftPanel, modify(PlaceItemsCenter)) {
+                    siteMenuSidebar()
                 }
                 box(AppBody.ContentPanel) {
                     div(KoalaBody.PortalMount)
@@ -72,10 +72,11 @@ $RightPanel {
     top: calc(var(--unit-spacing) * 8);
     height: calc(100lvh - var(--unit-spacing) * 16);
     /* min-width: calc((100vw - ${CONTENT_PANEL_WIDTH_PX}px) / 2); */
+}
 
-    &:not($Reveal) {
-        display: none;
-    }
+body:not(${AppOverlay.RevealRightPanel}) $RightPanel,
+body:not(${AppOverlay.RevealLeftPanel}) $LeftPanel {
+    display: none;
 }
 
 $LeftPanel {

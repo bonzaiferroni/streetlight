@@ -6,19 +6,20 @@ import koala.html.*
 import kotlinx.html.FlowContent
 
 fun FlowContent.helmBar() {
-    val cardMod = modify(HelmBarKey.CardClass, BlurBackdrop, PointerEventsAuto, BorderRadius50P, ZenBg, BorderSolid2Px)
-    siteMenu()
+    val cardMod = modify(HelmBar.CardClass, BlurBackdrop, PointerEventsAuto, BorderRadius50P, ZenBg, BorderSolid2Px)
+    siteMenuPopover()
     starHelm()
-    row(HelmBarKey.StickyBarId, modify(JustifyContentSpaceBetween, Padding1)) {
-        div(cardMod) {
+    row(HelmBar.StickyBarId, modify(Padding1)) {
+        div(HelmBar.SiteHelmButton, cardMod) {
             setAnchorName(SiteHelm.PositionAnchor)
-            button(SvgFile.Helm, HelmBarKey.IconMod + WhiteFg) {
+            button(SvgFile.Helm, HelmBar.IconMod + WhiteFg) {
                 setPopoverTarget(SiteHelm.Id)
             }
         }
+        spacer(modify(Flex1))
         div(cardMod) {
             setAnchorName(StarHelmKey.PositionAnchor)
-            button(HelmBarKey.IconMod) {
+            button(HelmBar.IconMod) {
                 setPopoverTarget(StarHelmKey.PopoverId)
                 starBadge()
             }
@@ -28,14 +29,16 @@ fun FlowContent.helmBar() {
     stylesheet(StickyBarCss)
 }
 
-object HelmBarKey {
+object HelmBar {
     val StickyBarId = Id("helm-bar")
     val CardClass = Class("helm-card")
     val IconMod = modify(Height6, Aspect1, DisplayFlex)
+    val SiteHelmButton = Id("site-helm-button")
 }
 
 // language="CSS"
-val StickyBarCss get() = """
-${HelmBarKey.StickyBarId} {
-}
-"""
+val StickyBarCss get() = with(HelmBar) { """
+${AppOverlay.RevealLeftPanel} $SiteHelmButton {
+    display: none;
+} 
+""" }
