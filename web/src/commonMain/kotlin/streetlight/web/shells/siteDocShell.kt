@@ -8,14 +8,21 @@ import koala.model.DocTable
 import kotlinx.html.FlowContent
 import streetlight.web.SiteDocRoute
 import streetlight.web.pages.appFooter
+import streetlight.web.ui.BodyStyle
+import streetlight.web.ui.featureHeader
 
 fun FlowContent.siteDocShell(node: DocNode, table: DocTable) {
-    row(modify(AlignItemsStart, PaddingLeft1)) {
-        card(modify(Width32, ZenBg, Gap0, PositionSticky, TopSpacing8)) {
-            setId(SiteDocKey.TableId)
-            siteDocTable(table)
+    val doc = node.doc
+    column(BodyStyle.Mod) {
+        featureHeader(doc.title, "a Streetlight doc", doc.image)
+
+        row(modify(AlignItemsStart)) {
+            card(modify(Width32, ZenBg, Gap0, PositionSticky, TopSpacing8)) {
+                setId(SiteDocKey.TableId)
+                siteDocTable(table)
+            }
+            siteDocContent(node)
         }
-        siteDocContent(node)
     }
 }
 
@@ -36,11 +43,11 @@ fun FlowContent.siteDocContent(node: DocNode) {
     val doc = node.doc
     column(SiteDocKey.ContentId, modify(Flex1)) {
         card(modify(BorderRadius2, MoonShadow, OverflowClip, Gap0, Padding0)) {
-            box(modify(AlignItemsEnd, Aspect2By1)) {
-                image(doc.image, modify(Size100P, ObjectFitCover, MinHeight0))
-                spacer(modify(GradientDarkBottom, AlignSelfStretch, VignetteOver))
-                heading1(doc.title, modify(Shrinkable, TextAlignCenter, MoonShadowText, NightInk))
-            }
+            // box(modify(AlignItemsEnd, Aspect2By1)) {
+            //     image(doc.image, modify(Size100P, ObjectFitCover, MinHeight0))
+            //     spacer(modify(GradientDarkBottom, AlignSelfStretch, VignetteOver))
+            //     heading1(doc.title, modify(Shrinkable, TextAlignCenter, MoonShadowText, NightInk))
+            // }
             val idSections = doc.sections.filter { it.id != null && it.title != null }
             if (idSections.size > 1) {
                 row(modify(JustifyContentCenter, AlignItemsCenter, FlexWrap, PaddingX1)) {

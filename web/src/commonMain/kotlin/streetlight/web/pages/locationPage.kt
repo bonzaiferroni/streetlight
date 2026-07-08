@@ -4,6 +4,7 @@ import koala.html.appHead
 import kotlinx.html.HTML
 import streetlight.model.data.Location
 import streetlight.model.data.LocationContent
+import streetlight.web.Screen
 import streetlight.web.shells.locationShell
 
 fun HTML.locationPage(content: LocationContent, styles: String) {
@@ -11,7 +12,7 @@ fun HTML.locationPage(content: LocationContent, styles: String) {
         supportProtobuf()
         supportGeoMap()
     }
-    appBody {
+    appBody(Screen.Location) {
         locationShell(content)
     }
 }

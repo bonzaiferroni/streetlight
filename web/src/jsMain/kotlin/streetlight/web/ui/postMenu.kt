@@ -44,6 +44,7 @@ fun AppScope.initPostMenu(shellBase: HTMLElement) {
                 shouldSkip = false
                 return@onClick
             }
+            // bug: something wrong with this call, throws exception
             cachedMenuElement?.hidePopover()
             activeId = postId
             callPostMenu(postId, username)

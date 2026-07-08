@@ -23,6 +23,7 @@ fun Node.showPopover() = asDynamic().showModal()
 fun Node.hidePopover() = try {
     console.log("--close popover")
     asDynamic().close()
+    console.log("--close popover finished")
 } catch (e: Exception) {
     console.log(e.message)
 }

@@ -5,7 +5,7 @@ import koala.dom.*
 import streetlight.web.model.FrontDesk
 
 fun AppScope.viewFrontDesk(model: FrontDesk) {
-    column(Body.mod) {
+    column(BodyStyle.Mod) {
         featureHeader("Help & Feedback", "The Front Desk", SiteImage.FrontDesk.url)
 
         tabs {

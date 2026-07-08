@@ -10,9 +10,11 @@ import kotlinx.html.body
 import streetlight.web.HomeRoute
 
 fun HTML.appBody(
+    screen: AppScreen,
     block: DIV.() -> Unit = { }
 ) {
     body {
+        setAttribute(KoalaBody.ScreenId.to(screen.screenId))
         div(AppBody.Viewport) {
             div(AppBody.PanelGrid) {
                 box(AppBody.LeftPanel, modify(PlaceItemsCenter)) {

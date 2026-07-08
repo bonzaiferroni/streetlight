@@ -4,6 +4,6 @@ import koala.css.Gap4
 import koala.css.MarginTop1
 import koala.css.modify
 
-object Body {
-    val mod = modify(MarginTop1, Gap4)
+object BodyStyle {
+    val Mod = modify(MarginTop1, Gap4)
 }

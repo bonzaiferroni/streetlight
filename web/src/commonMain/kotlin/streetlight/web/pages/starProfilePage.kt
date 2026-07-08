@@ -2,6 +2,7 @@ package streetlight.web.pages
 
 import koala.html.appHead
 import kotlinx.html.HTML
+import streetlight.web.Screen
 import streetlight.web.shells.StarProfileContent
 import streetlight.web.shells.starProfileShell
 
@@ -11,7 +12,7 @@ fun HTML.starProfilePage(content: StarProfileContent, styles: String) {
         // supportProtobuf()
         supportGeoMap()
     }
-    appBody {
+    appBody(Screen.Star) {
         starProfileShell(content)
     }
 }
