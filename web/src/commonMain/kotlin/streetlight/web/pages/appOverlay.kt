@@ -1,4 +1,4 @@
-@file:Suppress("JSUnresolvedReference")
+@file:Suppress("JSUnresolvedReference", "CssInvalidMediaFeature")
 
 package streetlight.web.pages
 
@@ -9,13 +9,18 @@ import kotlinx.html.FlowContent
 import kotlinx.html.onClick
 
 fun FlowContent.appOverlay() {
-    column(AppOverlayKey.AppOverlayId) {
+    column(AppOverlay.Container) {
         helmBar()
         spacer(modify(Flex1))
-        row(modify(Height8, Padding1)) {
-            spacer(modify(Flex1))
-            icon(SvgFile.PanelRight, modify(PointerEventsAuto, Dim, AppOverlayKey.MediaVlgReveal)) {
-                onClick = AppOverlayKey.TogglePanel.invoke(AppBodyKey.PanelRightId)
+
+        // td: move panel toggles to panel containers for width-sensitive visibility
+        // panel toggles
+        row(modify(Height8, Padding1, JustifyContentSpaceBetween)) {
+            icon(SvgFile.PanelLeft, modify(PointerEventsAuto, Dim, AppOverlay.MediaVlgReveal)) {
+                onClick = AppOverlay.TogglePanel.invoke(AppBody.LeftPanel)
+            }
+            icon(SvgFile.PanelRight, modify(PointerEventsAuto, Dim, AppOverlay.MediaVlgReveal)) {
+                onClick = AppOverlay.TogglePanel.invoke(AppBody.RightPanel)
             }
         }
     }
@@ -24,44 +29,47 @@ fun FlowContent.appOverlay() {
 // language="JS"
 val AppOverlayJs get() = """
 
-${AppOverlayKey.TogglePanel} {
+${AppOverlay.TogglePanel} {
     const modifier = `${Reveal.identifier}`;
     const element = document.getElementById($panelArg);
     document.startViewTransition(() => {
         element.classList.toggle(modifier);
         const isToggled = element.classList.contains(modifier);
-        localStorage.setItem('$RIGHT_PANEL_KEY', isToggled ? 'true' : 'false');
+        localStorage.setItem($panelArg, isToggled ? 'true' : 'false');
     })
 }
 
-function initRightPanel() {
-    if (localStorage.getItem('$RIGHT_PANEL_KEY') === 'true') {
-        document.getElementById(${AppBodyKey.PanelRightId.arg}).classList.add(`${Reveal.identifier}`);
+function initPanel(id) {
+    if (localStorage.getItem(id) === 'true') {
+        document.getElementById(id).classList.add(`${Reveal.identifier}`);
     }
 }
 
-initRightPanel();
+initPanel(${AppBody.RightPanel.jsArg});
+initPanel(${AppBody.LeftPanel.jsArg});
 
 """
 
 private val panelArg = "panelId"
 
-object AppOverlayKey {
-    val AppOverlayId = Id("app-overlay")
+object AppOverlay {
+    val Container = Id("app-overlay")
     val TogglePanel = JsFun("togglePanel", panelArg)
     val SpacerMiddleId = Id("spacer-middle")
     val MediaVlgReveal = Class("display-none-below-vlg")
+
+    val VlgWidthPx = 1000
 }
 
 // language="CSS"
-val AppOverlayCss get() = """
-${AppOverlayKey.AppOverlayId} {
+val AppOverlayCss get() = with(AppOverlay) { """
+$Container {
     position: fixed;
     pointer-events: none;
     inset: 0;
 }
 
-${AppOverlayKey.MediaVlgReveal} {
+$MediaVlgReveal {
     opacity: 1;
     transform: translate(0px, 0px);
     
@@ -71,8 +79,8 @@ ${AppOverlayKey.MediaVlgReveal} {
         visibility var(--magic-interval) allow-discrete;
 }
 
-@media (max-width: 1000px) {
-    ${AppOverlayKey.MediaVlgReveal} {
+@media (max-width: ${CONTENT_PANEL_WIDTH_PX + 100}px) {
+    $MediaVlgReveal {
         transform: var(--slide-up-initial);
         opacity: 0;         
         visibility: hidden;    
@@ -80,10 +88,10 @@ ${AppOverlayKey.MediaVlgReveal} {
 }
 
 @starting-style {
-    ${AppOverlayKey.MediaVlgReveal} {
+    $MediaVlgReveal {
         opacity: 0;
         transform: var(--slide-up-initial);
     }
 }
 
-"""
+""" }

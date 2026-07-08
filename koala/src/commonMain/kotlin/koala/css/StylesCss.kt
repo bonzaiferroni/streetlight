@@ -2,8 +2,8 @@
 
 package koala.css
 
-const val BODY_WIDTH_PX = 1080
-const val SIDE_PANEL_WIDTH_PX = 480
+const val CONTENT_PANEL_WIDTH_PX = 1080
+const val RIGHT_PANEL_WIDTH_PX = 360
 
 // language="CSS"
 val StylesCss get() = """
@@ -93,7 +93,8 @@ val StylesCss get() = """
     --light-3: 88, 255, 188;
     --unit-spacing: 0.5rem;
 
-    --body-width: ${BODY_WIDTH_PX}px;
+    --content-panel-width: ${CONTENT_PANEL_WIDTH_PX}px;
+    --right-panel-width: ${RIGHT_PANEL_WIDTH_PX}px;
 
     --font-family: "Fira Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; /*  */
 

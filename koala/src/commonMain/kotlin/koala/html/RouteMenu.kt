@@ -11,11 +11,11 @@ fun FlowContent.routeMenu(
     leftIcons: List<IconRoute>? = null,
     rightIcons: List<IconRoute>? = null
 ) {
-    column(modify(RouteMenu.Base, TextTransformUppercase, TextSmall, Gap0, AlignItemsCenter)) {
+    column(modify(mod, RouteMenu.Base, TextTransformUppercase, TextSmall, Gap0, AlignItemsCenter)) {
         filigree(modify(AlignSelfStretch)) {
             textBlock(context)
         }
-        row(modify(mod, RouteMenu.ContextMenu, Gap0, Padding1, Bold, AlignItemsCenter, BorderSolid2Px)) {
+        row(modify(RouteMenu.ContextMenu, Gap0, Padding1, Bold, AlignItemsCenter, BorderSolid2Px)) {
             leftIcons?.let { icons ->
                 iconsTray(icons, modify(RouteMenu.LeftTray))
             }
@@ -64,10 +64,10 @@ val NavMenuCss get() = with(RouteMenu) { """
     
 $Base {
     position: fixed; 
-    bottom: 0;
+    bottom: var(--unit-spacing-2);
     left: 0;
     right: 0;
-    margin-bottom: var(--unit-spacing-2); 
+    /* margin-bottom: var(--unit-spacing-2); */ 
     width: fit-content;
     margin-inline: auto;
     user-select: none;
@@ -82,7 +82,7 @@ $Base {
     }
 }
 
-#shell-box {
+${KoalaBody.ShellMount} {
     $Base {
         display: none;
     }

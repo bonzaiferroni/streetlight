@@ -1,23 +1,20 @@
 package streetlight.web.ui
 
 import kampfire.model.handleOutcome
-import koala.SvgFile
 import koala.css.*
 import koala.css.Padding1
 import koala.dom.*
 import koala.html.filigree
 import koala.html.heading3
-import koala.html.logo
 import kotlinx.browser.document
 import kotlinx.coroutines.delay
 import streetlight.web.CityMap
 import streetlight.web.CityMapRoute
 import streetlight.web.EarthRoute
 import streetlight.web.GalaxyMapRoute
-import streetlight.web.HomeRoute
 import streetlight.web.model.Earth
 import streetlight.web.GalaxyMap
-import streetlight.web.pages.AppBodyKey
+import streetlight.web.pages.AppBody
 
 fun AppScope.viewEarth(model: Earth) {
     box(EarthStyle.Container, modify(Size100P)) {
@@ -36,7 +33,7 @@ fun AppScope.viewEarth(model: Earth) {
 
 fun AppScope.viewEarthRoute() {
     var isVisible = false
-    val element = document.getElementById(AppBodyKey.FullScreenId)
+    val element = document.getElementById(AppBody.FullScreenId)
 
     launchEffect {
         portal.routeFlow.collect { route ->

@@ -1,6 +1,7 @@
 package streetlight.web.ui
 
 import koala.core.addGlobalFunctions
+import koala.css.KoalaBody
 import koala.css.Property
 import koala.dom.*
 import kotlinx.browser.document
@@ -9,7 +10,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.css.Display
 import kotlinx.serialization.ExperimentalSerializationApi
-import streetlight.web.pages.AppBodyKey
+import streetlight.web.pages.AppBody
 import org.koin.dsl.koinApplication
 import streetlight.web.io.OmniLog
 import streetlight.web.layouts.LightControl
@@ -43,7 +44,7 @@ fun viewApp() {
             // signs in user if configured
             gate.readUser(false)
 
-            val portalMount = document.getElementById(AppBodyKey.PortalMountId)
+            val portalMount = document.getElementById(KoalaBody.PortalMount)
 
             portalMount.renderRoot(scope, app) {
                 // renders routes from portal.routeFlow
@@ -57,7 +58,7 @@ fun viewApp() {
                 wireToaster()
 
                 // hides the element that holds server rendered content
-                val shellBox = document.getElementById(AppBodyKey.ShellBoxId)
+                val shellBox = document.getElementById(KoalaBody.ShellMount)
                 shellBox.setStyle(Property.Display.to(Display.none))
             }
 

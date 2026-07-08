@@ -11,102 +11,104 @@ fun HTML.appBody(
     block: DIV.() -> Unit = { }
 ) {
     body {
-        column(AppBodyKey.ViewportId) {
-            // appHeader()
-            row(AppBodyKey.ContentRowId, modify(JustifyContentCenter, Flex1, Gap0)) {
-                // div(AppBodyKey.SpacerLeftId)
-                box(AppBodyKey.ContentBoxId, modify(Flex3, PaddingX1)) {
-                    div(AppBodyKey.PortalMountId)
-                    div(id = AppBodyKey.ShellBoxId, block = block)
+        div(AppBody.Viewport) {
+            div(AppBody.PanelGrid) {
+                box(AppBody.LeftPanel, modify(Reveal)) {
+                    column(modify(PlaceSelfCenter)) {
+                        siteMenuItems()
+                    }
                 }
-                div(AppBodyKey.PanelRightId, modify(Flex1, AppOverlayKey.MediaVlgReveal))
+                box(AppBody.ContentPanel) {
+                    div(KoalaBody.PortalMount)
+                    div(id = KoalaBody.ShellMount, block = block)
+                }
+                div(AppBody.RightPanel)
             }
         }
         appOverlay()
-        div(AppBodyKey.FullScreenId)
-        div(AppBodyKey.ToasterId)
+        div(AppBody.FullScreenId)
+        div(AppBody.ToasterId)
 
         scriptUnsafe(AppOverlayJs)
         linkScript(JsFile.Web)
     }
 }
 
-object AppBodyKey {
-    val ViewportId = Id("viewport-box")
-    val PortalMountId = Id("portal-mount")
-    val ShellBoxId = Id("shell-box")
-    val ContentBoxId = Id("content-box")
-    val SpacerLeftId = Id("spacer-left")
-    val SpacerRightId = Id("spacer-right")
-    val PanelLeftId = Id("panel-left")
-    val PanelRightId = Id("panel-right")
-    val ContentRowId = Id("app-content-row")
+object AppBody {
+    val Viewport = Id("app-viewport")
+    val PanelGrid = Id("panel-grid")
+    val ContentPanel = Id("content-panel")
+    val LeftPanel = Id("left-panel")
+    val RightPanel = Id("right-panel")
+    val RightSticky = Id("right-sticky")
     val FullScreenId = Id("full-screen")
     val ToasterId = Id("toaster")
 }
 
 // language="CSS"
-val AppBodyCss get() = """
-${AppBodyKey.ViewportId} {
+val AppBodyCss get() = with(AppBody) { """
+$Viewport {
     width: 100vw;
     isolation: isolate;
 }
 
-${AppBodyKey.ContentRowId} {
-    height: calc(100dvh - var(--unit-spacing) * 8)
+$PanelGrid {
+    display: grid;
+    min-height: 100lvh;
+    gap: var(--unit-spacing-1);
+    grid-template-columns: auto minmax(0, var(--content-panel-width)) auto;
+    grid-template-areas: "left content right";
+    /* grid-template-columns: minmax(auto, 1fr) minmax(0, var(--content-panel-width)) minmax(auto, 1fr); */
+    justify-content: center;
 }
 
-${AppBodyKey.ContentBoxId} {
-    max-width: var(--body-width);
-    width: 100%;
+$ContentPanel {
+    grid-area: content;
 }
 
-${AppBodyKey.PortalMountId},
-${AppBodyKey.ShellBoxId} {
+$LeftPanel,
+$RightPanel {
+    position: sticky;
+    top: calc(var(--unit-spacing) * 8);
+    height: calc(100lvh - var(--unit-spacing) * 16);
+    /* min-width: calc((100vw - ${CONTENT_PANEL_WIDTH_PX}px) / 2); */
+
+    &:not($Reveal) {
+        display: none;
+    }
+}
+
+$LeftPanel {
+    grid-area: left;
+}
+
+$RightPanel {
+    grid-area: right;
+    padding-right: var(--unit-spacing-1);
+    width: var(--right-panel-width);
+    
+    @media (max-width: ${CONTENT_PANEL_WIDTH_PX - RIGHT_PANEL_WIDTH_PX}px) {
+        display: none;
+    }
+}
+
+$LeftPanel {
+    padding-left: var(--unit-spacing-1);
+}
+
+${KoalaBody.PortalMount},
+${KoalaBody.ShellMount} {
     width: 100%;
     grid-area: 1 / 1;
     min-width: 0;
 }
 
-${AppBodyKey.PortalMountId} > *,
-${AppBodyKey.ShellBoxId} > * {
+${KoalaBody.PortalMount} > *,
+${KoalaBody.ShellMount} > * {
     width: 100%;
 }
 
-${AppBodyKey.SpacerLeftId},
-${AppBodyKey.SpacerRightId} {
-    display: none;
-    width: ${SIDE_PANEL_WIDTH_PX}px;
-}
-
-@media (min-width: 1000px) {
-    ${AppBodyKey.SpacerLeftId}$Reveal,
-    ${AppBodyKey.SpacerRightId}$Reveal {
-        display: block;
-    }
-    
-    ${AppBodyKey.PanelRightId}$Reveal {
-        display: block;
-    }
-}
-
-${AppBodyKey.SpacerLeftId} > *,
-${AppBodyKey.SpacerRightId} > * {
-    position: fixed;
-    top: 0;
-    width: inherit;
-}
-
-${AppBodyKey.PanelRightId} {
-    position: sticky;
-    top: calc(var(--unit-spacing) * 8);
-    height: calc(100dvh - var(--unit-spacing) * 16);
-    display: none;
-    padding-right: var(--unit-spacing-1);
-    max-width: 500px;
-}
-
-${AppBodyKey.FullScreenId} {
+${AppBody.FullScreenId} {
     position: fixed;
     inset: 0;
     pointer-events: none;
@@ -114,12 +116,12 @@ ${AppBodyKey.FullScreenId} {
     transition: opacity var(--magic-interval) var(--magic-easing);
 }
 
-${AppBodyKey.FullScreenId}$Reveal {
+${AppBody.FullScreenId}$Reveal {
     pointer-events: auto;
     opacity: 1;
 }
 
-${AppBodyKey.ToasterId} {
+${AppBody.ToasterId} {
     position: fixed;
     inset: 0;
     pointer-events: none;
@@ -128,6 +130,6 @@ ${AppBodyKey.ToasterId} {
     justify-content: end;
 }
 
-"""
+""" }
 
 const val RIGHT_PANEL_KEY = "streetlight.right-panel"

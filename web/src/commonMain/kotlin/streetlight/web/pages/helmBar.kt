@@ -7,7 +7,7 @@ import kotlinx.html.FlowContent
 
 fun FlowContent.helmBar() {
     val cardMod = modify(HelmBarKey.CardClass, BlurBackdrop, PointerEventsAuto, BorderRadius50P, ZenBg, BorderSolid2Px)
-    siteHelm()
+    siteMenu()
     starHelm()
     row(HelmBarKey.StickyBarId, modify(JustifyContentSpaceBetween, Padding1)) {
         div(cardMod) {

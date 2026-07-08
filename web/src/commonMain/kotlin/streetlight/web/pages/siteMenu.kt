@@ -15,7 +15,7 @@ import streetlight.web.SiteConfigRoute
 import streetlight.web.doc.SiteDoc
 import streetlight.web.layouts.route
 
-fun FlowContent.siteHelm() {
+fun FlowContent.siteMenu() {
     popover(SiteHelm.Id, SiteHelm.PositionAnchor, modify(SiteHelm.PopoverClass, Magic, SlideRight)) {
         card(modify(SiteHelm.Container, HeavyCardBg, BlurBackdrop, PointerEventsAuto)) {
             column(modify(PaddingRight1)) {
@@ -25,27 +25,31 @@ fun FlowContent.siteHelm() {
                     }
                     logo(modify(Height6))
                 }
-                item("Home", HomeRoute, SvgFile.HomeLarge)
-                item("Earth", GalaxyMapRoute(null), SvgFile.Earth)
-                item("Galaxies", GalaxyListRoute, SvgFile.Satellite)
-                item("Cities", CityListRoute, SvgFile.CityLarge)
-                // radio
-                label("meta")
-                item("Help & Feedback", FrontDeskRoute, SvgFile.QuestionLarge)
-                item("Support us", HomeRoute, SvgFile.HeartHandshake) // td
-                item("Privacy", SiteDoc.Privacy.route, SvgFile.EyeClosed)
-                label("config")
-                item("Settings", SiteConfigRoute, SvgFile.GearLarge)
-                row(SiteHelm.rowMod + ThemeToggle) {
-                    onClick = KoalaFun.ToggleTheme.invoke()
-                    icon(SvgFile.Sun, HelmBarKey.IconMod)
-                    textBlock("Theme")
-                }
+                siteMenuItems()
             }
         }
     }
 
     stylesheet(SiteHelmCss)
+}
+
+fun FlowContent.siteMenuItems() {
+    item("Home", HomeRoute, SvgFile.HomeLarge)
+    item("Earth", GalaxyMapRoute(null), SvgFile.Earth)
+    item("Galaxies", GalaxyListRoute, SvgFile.Satellite)
+    item("Cities", CityListRoute, SvgFile.CityLarge)
+    // radio
+    label("meta")
+    item("Help & Feedback", FrontDeskRoute, SvgFile.QuestionLarge)
+    item("Support us", HomeRoute, SvgFile.HeartHandshake) // td
+    item("Privacy", SiteDoc.Privacy.route, SvgFile.EyeClosed)
+    label("config")
+    item("Settings", SiteConfigRoute, SvgFile.GearLarge)
+    row(SiteHelm.rowMod + ThemeToggle) {
+        onClick = KoalaFun.ToggleTheme.invoke()
+        icon(SvgFile.Sun, HelmBarKey.IconMod)
+        textBlock("Theme")
+    }
 }
 
 private fun FlowContent.label(label: String) {
