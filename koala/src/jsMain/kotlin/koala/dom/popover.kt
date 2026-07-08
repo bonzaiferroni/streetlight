@@ -19,13 +19,11 @@ fun TagScope.popover(
     configurePopover(id, anchor, modifiers, isManual, block)
 }
 
-fun Node.showPopover() = asDynamic().showModal()
+fun Node.showPopover() = asDynamic().showPopover()
 fun Node.hidePopover() = try {
-    console.log("--close popover")
-    asDynamic().close()
-    console.log("--close popover finished")
+    asDynamic().hidePopover()
 } catch (e: Exception) {
     console.log(e.message)
 }
-// fun Node.togglePopover() = asDynamic().togglePopover()
+fun Node.togglePopover() = asDynamic().togglePopover()
 fun HTMLElement.isPopoverOpen() = matches(":popover-open")

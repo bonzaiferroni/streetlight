@@ -13,16 +13,16 @@ fun FlowContent.appOverlay() {
         helmBar()
         spacer(modify(Flex1))
 
-        // td: move panel toggles to panel containers for width-sensitive visibility
+        // td: move these toggles to site config
         // panel toggles
-        row(modify(Height8, Padding1, JustifyContentSpaceBetween)) {
-            icon(SvgFile.PanelLeft, modify(PointerEventsAuto, Dim, AppOverlay.MediaVlgReveal)) {
-                onClick = AppOverlay.TogglePanel.invoke(AppOverlay.RevealLeftPanel)
-            }
-            icon(SvgFile.PanelRight, modify(PointerEventsAuto, Dim, AppOverlay.MediaVlgReveal)) {
-                onClick = AppOverlay.TogglePanel.invoke(AppOverlay.RevealRightPanel)
-            }
-        }
+        // row(modify(Height8, Padding1, JustifyContentSpaceBetween)) {
+        //     icon(SvgFile.PanelLeft, modify(PointerEventsAuto, Dim, AppOverlay.MediaVlgReveal)) {
+        //         onClick = AppOverlay.TogglePanel.invoke(AppOverlay.RevealLeftPanel)
+        //     }
+        //     icon(SvgFile.PanelRight, modify(PointerEventsAuto, Dim, AppOverlay.MediaVlgReveal)) {
+        //         onClick = AppOverlay.TogglePanel.invoke(AppOverlay.RevealRightPanel)
+        //     }
+        // }
     }
 }
 

@@ -60,6 +60,8 @@ inline fun <reified T> jsonAttributeOf(identifier: String) =
 
 data class AttributeValue<T>(val attribute: Attribute<T>, val value: T): Queryable {
     override val selector get() = "[${attribute.identifier}='${attribute.toStringValue(value)}']"
+
+    override fun toString() = selector
 }
 
 fun CoreAttributeGroupFacade.applyBlockLabel(label: String?) {

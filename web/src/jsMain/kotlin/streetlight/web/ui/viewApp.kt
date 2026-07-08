@@ -54,7 +54,8 @@ fun viewApp() {
                 // shows content in user menu
                 queryAndWireStarHelm()
 
-                wireRightPanel()
+                // td: reimplement as sidebar option
+                // wireRightPanel()
                 wireToaster()
 
                 // hides the element that holds server rendered content
@@ -63,7 +64,8 @@ fun viewApp() {
             }
 
             try {
-                omni.connect()
+                // td: reimplement as sidebar option
+                // omni.connect()
             } catch (e: Exception) {
                 console.log("unable to connect to omni log:\n${e.message}")
             }

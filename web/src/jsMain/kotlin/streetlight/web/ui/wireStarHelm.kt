@@ -18,15 +18,16 @@ import streetlight.web.StarRoute
 import streetlight.web.model.CredentialStore
 import streetlight.web.model.StarSession
 import streetlight.web.pages.HelmBar
-import streetlight.web.pages.StarHelmKey
+import streetlight.web.pages.StarHelm
 
 fun AppScope.queryAndWireStarHelm() {
-    val element = document.body?.querySelector(StarHelmKey.ContentId) ?: error("star helm content not found")
-    wireStarHelm(element)
+    val helmElement = document.body?.querySelector(StarHelm.HelmMenu) ?: error("star helm content not found")
+    wireStarMenu(helmElement)
+    val barElement = document.body?.querySelector(StarHelm.BarMenu) ?: error("star bar element not found")
+    wireStarMenu(barElement)
 }
 
-private fun AppScope.wireStarHelm(element: HTMLElement) {
-
+fun AppScope.wireStarMenu(element: HTMLElement) {
     wireBlock(element) {
         starGate(
             openInitially = false,
@@ -50,8 +51,8 @@ private fun AppScope.starPanel(star: Star) {
                 heading3(star.username.value)
             }
 
-            button(modify(HelmBar.IconMod, FadeLoop)) {
-                onClick = StarHelmKey.ClosePopover
+            button(modify(HelmBar.IconMod)) {
+                onClick = StarHelm.ClosePopover
 
                 image(star.images.thumb, modify(OpacityHigh, Size100P, BorderRadius50P))
             }
@@ -60,7 +61,7 @@ private fun AppScope.starPanel(star: Star) {
         // calendar route goes here
 
         navigation(StarDashRoute) { // filler content
-            onClick = StarHelmKey.ClosePopover
+            onClick = StarHelm.ClosePopover
 
             row(RowMod) {
                 textBlock("Dashboard")
@@ -82,7 +83,7 @@ private fun AppScope.someonePanel(dialog: DialogElement) {
         row(RowMod) {
             heading3("Someone")
             button(modify(HelmBar.IconMod, FadeLoop)) {
-                onClick = StarHelmKey.ClosePopover
+                onClick = StarHelm.ClosePopover
 
                 image(SvgFile.Someone, modify(OpacityHigh, Size100P, BorderRadius50P))
             }

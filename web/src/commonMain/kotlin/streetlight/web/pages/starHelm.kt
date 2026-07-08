@@ -21,12 +21,12 @@ import koala.html.setId
 import kotlinx.html.FlowContent
 import kotlinx.html.onClick
 
-fun FlowContent.starHelm() {
-    popover(StarHelmKey.PopoverId, null, modify(StarHelmKey.PopoverClass, Magic, SlideLeft)) {
-        card(modify(StarHelmKey.PopoverCardClass, HeavyCardBg, BlurBackdrop, OverflowClip, PointerEventsAuto)) {
-            setId(StarHelmKey.ContentId)
+fun FlowContent.starHelmPopover() {
+    popover(StarHelm.Popover, null, modify(StarHelm.PopoverClass, Magic, SlideLeft)) {
+        card(modify(StarHelm.PopoverCardClass, HeavyCardBg, BlurBackdrop, OverflowClip, PointerEventsAuto)) {
+            setId(StarHelm.HelmMenu)
             button(SvgFile.LoaderSmall, modify(Height5, FadeLoop)) {
-                onClick = StarHelmKey.ClosePopover
+                onClick = StarHelm.ClosePopover
             }
         }
     }
@@ -34,22 +34,23 @@ fun FlowContent.starHelm() {
     stylesheet(StarHelmCss)
 }
 
-object StarHelmKey {
-    val PopoverId = Id("star-helm-popover")
-    val PositionAnchor = PopoverId.toPositionAnchor()
+object StarHelm {
+    val Popover = Id("star-helm-popover")
+    val PositionAnchor = Popover.toPositionAnchor()
     val PopoverClass = Class("star-helm-popover")
     val PopoverCardClass = Class("star-helm-popover-card")
-    val ClosePopover = InlineJs.closePopover(PopoverId)
-    val ContentId = Id("star-helm-content")
+    val ClosePopover = InlineJs.closePopover(Popover)
+    val HelmMenu = Id("star-helm-menu")
+    val BarMenu = Id("star-bar-menu")
 }
 
 // language="CSS"
 val StarHelmCss get() = """
-${StarHelmKey.PopoverCardClass} {
+${StarHelm.PopoverCardClass} {
     border-radius: 0 0 0 var(--unit-spacing-2);
 }
 
-${StarHelmKey.PopoverClass} {
+${StarHelm.PopoverClass} {
     position: fixed;
     top: 0;
     right: 0;

@@ -4,6 +4,7 @@ package koala.css
 
 const val CONTENT_PANEL_WIDTH_PX = 1080
 const val RIGHT_PANEL_WIDTH_PX = 360
+const val SIDE_PANEL_WIDTH_PX = 192
 
 // language="CSS"
 val StylesCss get() = """

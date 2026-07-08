@@ -1,13 +1,13 @@
+@file:Suppress("CssInvalidHtmlTagReference")
+
 package streetlight.web.pages
 
 import koala.JsFile
-import koala.SvgFile
 import koala.css.*
 import koala.html.*
 import kotlinx.html.DIV
 import kotlinx.html.HTML
 import kotlinx.html.body
-import streetlight.web.HomeRoute
 
 fun HTML.appBody(
     screen: AppScreen,
@@ -17,18 +17,20 @@ fun HTML.appBody(
         setAttribute(KoalaBody.ScreenId.to(screen.screenId))
         div(AppBody.Viewport) {
             div(AppBody.PanelGrid) {
-                box(AppBody.LeftPanel, modify(PlaceItemsCenter)) {
+                box(AppBody.LeftPanel) {
                     siteMenuSidebar()
                 }
                 box(AppBody.ContentPanel) {
                     div(KoalaBody.PortalMount)
                     div(id = KoalaBody.ShellMount, block = block)
                 }
-                div(AppBody.RightPanel)
+                div(AppBody.RightPanel) {
+                    div(StarHelm.BarMenu)
+                }
             }
         }
+        div(AppBody.FullScreen)
         appOverlay()
-        div(AppBody.FullScreenId)
         div(AppBody.ToasterId)
 
         scriptUnsafe(AppOverlayJs)
@@ -43,7 +45,7 @@ object AppBody {
     val LeftPanel = Id("left-panel")
     val RightPanel = Id("right-panel")
     val RightSticky = Id("right-sticky")
-    val FullScreenId = Id("full-screen")
+    val FullScreen = Id("full-screen")
     val ToasterId = Id("toaster")
 }
 
@@ -58,9 +60,9 @@ $PanelGrid {
     display: grid;
     min-height: 100lvh;
     gap: var(--unit-spacing-1);
-    grid-template-columns: auto minmax(0, var(--content-panel-width)) auto;
+    grid-template-columns: minmax(auto, 1fr) minmax(0, var(--content-panel-width)) minmax(auto, 1fr);
+    /* grid-template-columns: auto minmax(0, var(--content-panel-width)) auto; */
     grid-template-areas: "left content right";
-    /* grid-template-columns: minmax(auto, 1fr) minmax(0, var(--content-panel-width)) minmax(auto, 1fr); */
     justify-content: center;
 }
 
@@ -70,15 +72,22 @@ $ContentPanel {
 
 $LeftPanel,
 $RightPanel {
+    display: none;
     position: sticky;
+    place-items: center;
     top: calc(var(--unit-spacing) * 8);
     height: calc(100lvh - var(--unit-spacing) * 16);
     /* min-width: calc((100vw - ${CONTENT_PANEL_WIDTH_PX}px) / 2); */
+    min-width: ${SIDE_PANEL_WIDTH_PX}px;
+    
+    @media (min-width: ${CONTENT_PANEL_WIDTH_PX + SIDE_PANEL_WIDTH_PX * 2}px) {
+        display: grid;
+    }
 }
 
-body:not(${AppOverlay.RevealRightPanel}) $RightPanel,
-body:not(${AppOverlay.RevealLeftPanel}) $LeftPanel {
-    display: none;
+body${AppOverlay.RevealRightPanel} $RightPanel,
+body${AppOverlay.RevealLeftPanel} $LeftPanel {
+    display: grid;
 }
 
 $LeftPanel {
@@ -87,16 +96,12 @@ $LeftPanel {
 
 $RightPanel {
     grid-area: right;
-    padding-right: var(--unit-spacing-1);
-    width: var(--right-panel-width);
-    
-    @media (max-width: ${CONTENT_PANEL_WIDTH_PX - RIGHT_PANEL_WIDTH_PX}px) {
-        display: none;
-    }
+    /* padding-right: var(--unit-spacing-1); */
+    /* width: var(--right-panel-width); */
 }
 
 $LeftPanel {
-    padding-left: var(--unit-spacing-1);
+    /* padding-left: var(--unit-spacing-1); */
 }
 
 ${KoalaBody.PortalMount},
@@ -111,7 +116,7 @@ ${KoalaBody.ShellMount} > * {
     width: 100%;
 }
 
-${AppBody.FullScreenId} {
+${AppBody.FullScreen} {
     position: fixed;
     inset: 0;
     pointer-events: none;
@@ -119,7 +124,7 @@ ${AppBody.FullScreenId} {
     transition: opacity var(--magic-interval) var(--magic-easing);
 }
 
-${AppBody.FullScreenId}$Reveal {
+${AppBody.FullScreen}$Reveal {
     pointer-events: auto;
     opacity: 1;
 }

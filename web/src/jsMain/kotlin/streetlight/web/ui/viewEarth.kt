@@ -33,7 +33,7 @@ fun AppScope.viewEarth(model: Earth) {
 
 fun AppScope.viewEarthRoute() {
     var isVisible = false
-    val element = document.getElementById(AppBody.FullScreenId)
+    val element = document.getElementById(AppBody.FullScreen)
 
     launchEffect {
         portal.routeFlow.collect { route ->

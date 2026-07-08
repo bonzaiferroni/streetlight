@@ -15,7 +15,7 @@ fun Document.startViewTransition(updateCallback: () -> Unit): ViewTransition =
 
 fun Document.closeOpenPopovers() = querySelectorAll("[popover]:popover-open").asList().forEach { node ->
     console.log("hiding popover")
-    node.hidePopover()
+    (node as? HTMLElement)?.hidePopover()
 }
 
 external interface ViewTransition {
