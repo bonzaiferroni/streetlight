@@ -20,8 +20,13 @@ import kotlinx.serialization.json.Json
 import org.khronos.webgl.Uint8Array
 import org.w3c.dom.EventSource
 import org.w3c.dom.WebSocket
+import org.w3c.fetch.DEFAULT
+import org.w3c.fetch.FOLLOW
+import org.w3c.fetch.RequestCache
 import org.w3c.fetch.RequestCredentials
 import org.w3c.fetch.RequestInit
+import org.w3c.fetch.RequestMode
+import org.w3c.fetch.RequestRedirect
 import org.w3c.fetch.Response as FetchResponse
 import org.w3c.fetch.SAME_ORIGIN
 import org.w3c.files.Blob
@@ -188,7 +193,12 @@ class FetchClient(
                 method = method,
                 headers = headers,
                 body = body,
+                cache = RequestCache.DEFAULT,
+                mode = RequestMode.SAME_ORIGIN,
+                redirect = RequestRedirect.FOLLOW,
                 credentials = RequestCredentials.SAME_ORIGIN,
+                referrerPolicy = "".asDynamic(),
+                integrity = "",
             )
             window.fetch(path, request).await()
         }
