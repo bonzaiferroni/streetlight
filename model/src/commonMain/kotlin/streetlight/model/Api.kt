@@ -186,4 +186,11 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object Feed: GetEndpoint<List<FeedbackDto>>(this)
         object Create: PostEndpoint<FeedbackEdit, Boolean>(this)
     }
+
+    object Status: ApiNode(this) {
+        object Feed: GetEndpoint<List<SiteStatus>>(this)
+        object ReadLast: GetEndpoint<SiteStatus>(this) {
+            val resolution = enumParamOf<MetricResolution>("resolution")
+        }
+    }
 }

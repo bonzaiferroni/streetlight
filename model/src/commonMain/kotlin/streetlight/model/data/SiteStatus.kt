@@ -1,5 +1,6 @@
 package streetlight.model.data
 
+import kampfire.api.TableId
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 import kotlin.time.Duration
@@ -19,13 +20,20 @@ data class SiteStatus(
     val startedAt: Instant,
     val endedAt: Instant,
     val createdAt: Instant,
-)
+) {
+    fun getMetricOrNull(metric: SiteMetric): Double? = when(metric.metricType) {
+        MetricType.Count -> integers[metric]?.toDouble()
+        MetricType.Average -> doubles[metric]
+        MetricType.Max -> doubles[metric]
+    }
+    fun getMetricOrZero(metric: SiteMetric) = getMetricOrNull(metric) ?: 0.0
+}
 
 @Serializable
 @JvmInline
-value class SiteStatusId(override val value: Uuid): RecordId {
+value class SiteStatusId(override val value: Long): TableId<Long> {
     companion object {
-        fun random() = SiteStatusId(Uuid.random())
+        val Empty = SiteStatusId(0L)
     }
 }
 

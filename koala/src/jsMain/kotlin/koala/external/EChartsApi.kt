@@ -12,6 +12,7 @@ external object ECharts {
 
 external interface EChartsInstance {
     fun setOption(option: dynamic)
+    fun appendData(params: AppendDataParams)
     fun resize()
     fun dispose()
 }
@@ -37,13 +38,7 @@ external interface TooltipOption {
 @JsPlainObject
 external interface AxisOption {
     val type: String
-}
-
-@JsPlainObject
-external interface SeriesOption {
-    val type: String
-    val showSymbol: Boolean?
-    val data: Array<Array<Double>>
+    val axisLabel: AxisLabelOption?
 }
 
 @JsPlainObject
@@ -155,4 +150,38 @@ external interface ThemeTooltipOption {
     val borderColor: String?
     val borderWidth: Double?
     val textStyle: TextStyleOption?
+}
+
+@JsPlainObject
+external interface TimeLabelFormatter {
+    val year: String?
+    val month: String?
+    val day: String?
+    val hour: String?
+    val minute: String?
+}
+
+@JsPlainObject
+external interface AxisLabelOption {
+    val formatter: TimeLabelFormatter?
+}
+
+@JsPlainObject
+external interface AppendDataParams {
+    val seriesIndex: Int
+    val data: Array<Array<Double>>
+}
+
+@JsPlainObject
+external interface LinesDataItem {
+    val coords: Array<Array<Double>>
+}
+
+@JsPlainObject
+external interface SeriesOption {
+    val type: String
+    val coordinateSystem: String?
+    val showSymbol: Boolean?
+    val data: Array<LinesDataItem>
+    val polyline: Boolean?
 }

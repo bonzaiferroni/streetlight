@@ -75,3 +75,5 @@ fun AppContainer.getGalaxyEditor(galaxy: GalaxyEdit, scope: CoroutineScope) =
 
 fun AppContainer.getFeedbackDesk(scope: CoroutineScope) =
     FrontDesk(scope, koin.get(), koin.get())
+
+fun AppContainer.getSiteMonitor(scope: CoroutineScope) = SiteMonitor(scope, koin.get(), koin.get())
