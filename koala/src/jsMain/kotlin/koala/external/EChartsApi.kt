@@ -31,22 +31,11 @@ external interface TitleOption {
 }
 
 @JsPlainObject
-external interface TooltipOption {
-    val trigger: String
-}
-
-@JsPlainObject
-external interface AxisOption {
-    val type: String
-    val axisLabel: AxisLabelOption?
-}
-
-@JsPlainObject
 external interface ChartOption {
     val title: TitleOption?
     val tooltip: TooltipOption?
     val xAxis: AxisOption
-    val yAxis: AxisOption
+    val yAxis: Array<AxisOption>
     val series: Array<SeriesOption>
 }
 
@@ -163,6 +152,7 @@ external interface TimeLabelFormatter {
 
 @JsPlainObject
 external interface AxisLabelOption {
+    val show: Boolean?
     val formatter: TimeLabelFormatter?
 }
 
@@ -178,10 +168,30 @@ external interface LinesDataItem {
 }
 
 @JsPlainObject
+external interface AxisOption {
+    val type: String
+    val name: String?
+    val min: Double?
+    val max: Double?
+    val axisLabel: AxisLabelOption?
+    val splitLine: SplitLineOption?
+    val position: String?
+}
+
+@JsPlainObject
 external interface SeriesOption {
+    val name: String?
     val type: String
     val coordinateSystem: String?
-    val showSymbol: Boolean?
-    val data: Array<LinesDataItem>
     val polyline: Boolean?
+    val showSymbol: Boolean?
+    val data: dynamic
+    val lineStyle: LineStyleOption?
+    val yAxisIndex: Int
+}
+
+@JsPlainObject
+external interface TooltipOption {
+    val trigger: String
+    val valueFormatter: ((Number) -> String)?
 }

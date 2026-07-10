@@ -25,12 +25,29 @@ object ChartUtility {
         axisLabel = AxisLabelOption(formatter = TimeLabelFormatter(day = "{MMM} {d}"))
     )
 
+    val LineColors = listOf(
+        rgbVar("--light-1"),
+        rgbVar("--light-2"),
+        rgbVar("--light-3"),
+    )
+
+    fun getLineColor(index: Int) = LineColors[index % LineColors.size]
+
+    fun cssVar(name: String): String =
+        window.getComputedStyle(document.documentElement!!)
+            .getPropertyValue(name)
+            .trim()
+
+    fun rgb(value: String) = "rgb($value)"
+
+    fun rgbVar(cssVar: String) = rgb(cssVar(cssVar))
+
     fun buildTheme(): EChartsTheme {
         val ink = cssVar("--ink-fg")
         val muted = cssVar("--ink-dim")
         val grid = cssVar("--outline-low-fg")
         val font = cssVar("--font-family")
-        fun rgb(value: String) = "rgb($value)"
+
 
         val axis = ThemeAxisOption(
             axisLine = AxisLineOption(lineStyle = LineStyleOption(color = muted)),
@@ -40,9 +57,9 @@ object ChartUtility {
 
         return EChartsTheme(
             color = arrayOf(
-                rgb(cssVar("--light-1")),
-                rgb(cssVar("--light-2")),
-                rgb(cssVar("--light-3")),
+                rgbVar("--light-1"),
+                rgbVar("--light-2"),
+                rgbVar("--light-3"),
             ),
             backgroundColor = "transparent",
             textStyle = TextStyleOption(color = ink, fontFamily = font),
@@ -72,7 +89,3 @@ object ChartUtility {
     }
 }
 
-private fun cssVar(name: String): String =
-    window.getComputedStyle(document.documentElement!!)
-        .getPropertyValue(name)
-        .trim()

@@ -2,6 +2,7 @@ package koala.dom
 
 import koala.css.*
 import koala.model.LineChart
+import koala.model.storeOf
 import kotlinx.coroutines.flow.Flow
 import kotlin.random.Random
 import kotlin.time.Clock
@@ -11,22 +12,18 @@ import kotlin.time.Instant
 
 fun <T> AppScope.lineChart(
     title: String,
-    pointsFlow: Flow<List<T>>,
+    dataFlow: Flow<ChartData<T>>,
     pointFlow: Flow<T>?,
-    getX: (T) -> Double,
-    getY: (T) -> Double,
 ) {
-    val element = div(modify(Width64, Height48))
-    val chart = LineChart(
+    val element = div(modify(Height48))
+    val chart = LineChart<T>(
         container = element,
         title = title,
-        getX = getX,
-        getY = getY,
     )
 
     launchEffect {
         launch {
-            pointsFlow.collect(chart::renderPoints)
+            dataFlow.collect(chart::renderData)
         }
 
         pointFlow?.let {

@@ -1,6 +1,8 @@
 package streetlight.model.data
 
 import kampfire.api.TableId
+import kampfire.model.Labeled
+import kampfire.utils.pascalToTitle
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 import kotlin.time.Duration
@@ -37,10 +39,12 @@ value class SiteStatusId(override val value: Long): TableId<Long> {
     }
 }
 
-enum class SiteMetric(val metricType: MetricType, val meterName: String) {
+enum class SiteMetric(val metricType: MetricType, val meterName: String): Labeled {
     RequestCount(MetricType.Count, "ktor.http.server.requests"),
     ResponseLatencyAverage(MetricType.Average, "ktor.http.server.requests"),
     ResponseLatencyMax(MetricType.Max, "ktor.http.server.requests");
+
+    override val label = name.pascalToTitle()
 }
 
 enum class MetricType {
