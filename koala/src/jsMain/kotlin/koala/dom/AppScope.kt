@@ -75,22 +75,34 @@ fun HTMLElement.renderRoot(
     }
 }
 
-fun HTMLElement.replaceRender(
+fun HTMLElement.replaceDynamicRender(
     app: AppContainer,
     parentScope: CoroutineScope,
     block: AppScope.() -> Unit,
 ): List<HTMLElement> {
     clear()
     return append {
-        val context = RenderScope(this@append, app, provisionScope(parentScope, true), this@replaceRender)
+        val context = RenderScope(this@append, app, provisionScope(parentScope, true), this@replaceDynamicRender)
         context.block()
     }
 }
 
-fun AppScope.replaceRender(
+fun AppScope.replaceDynamicRender(
     element: HTMLElement,
     block: AppScope.() -> Unit,
-) = element.replaceRender(app, parentScope, block)
+) = element.replaceDynamicRender(app, parentScope, block)
+
+fun HTMLElement.replaceStaticRender(
+    app: AppContainer,
+    parentScope: CoroutineScope,
+    block: AppScope.() -> Unit,
+): List<HTMLElement> {
+    clear()
+    return append {
+        val scope = RenderScope(this, app, parentScope, this@replaceStaticRender)
+        scope.block()
+    }
+}
 
 fun clearRender(element: HTMLElement) {
     element.clear()
@@ -119,10 +131,10 @@ fun AppScope.prependRender(
     context.block()
 }
 
-fun AppScope.replaceRender(
+fun AppScope.replaceDynamicRender(
     id: Id,
     ancestor: HTMLElement? = null,
     block: AppScope.() -> Unit
-) = replaceRender(((ancestor ?: document.body!!).querySelector(id) ?: error("element not found: $this")), block)
+) = replaceDynamicRender(((ancestor ?: document.body!!).querySelector(id) ?: error("element not found: $this")), block)
 
 class InvalidRenderOperation(parent: HTMLElement): Exception("Appended to finalized element: ${parent.printPath()}")

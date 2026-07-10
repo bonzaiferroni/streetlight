@@ -32,6 +32,7 @@ data class KoalaTheme(
 ) {
     companion object {
         const val MAGIC_INTERVAL = 222
+        const val ThemeId = "koala"
     }
 }
 

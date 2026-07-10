@@ -27,6 +27,7 @@ val StylesCss get() = """
     --ink-dim: rgba(var(--ink), .8);
     --ink-disabled: color-mix(in srgb, var(--ink-fg) 50%, var(--paper-bg));
     --outline-low-fg: rgba(var(--ink), .2);
+    --outline-mid-fg: rgba(var(--ink), .5);
     --outline-low: 2px solid var(--outline-low-fg);
     
     --gray: 60, 62, 64;
@@ -93,7 +94,7 @@ val StylesCss get() = """
     --light-2: 88, 164, 255;
     --light-3: 88, 255, 188;
     --unit-spacing: 0.5rem;
-
+    
     --content-panel-width: ${CONTENT_PANEL_WIDTH_PX}px;
     --right-panel-width: ${RIGHT_PANEL_WIDTH_PX}px;
 

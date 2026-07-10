@@ -81,7 +81,7 @@ fun AppScope.buildTree(model: TalkLog, treeRoot: HTMLElement, comments: List<Com
     }
     val roots = comments.filter { it.parentId == null }
 
-    replaceRender(treeRoot) {
+    replaceDynamicRender(treeRoot) {
         roots.forEach {
             val view = addCommentView(model, it, comments) ?: return@forEach
             with(view) {

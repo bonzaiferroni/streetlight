@@ -8,7 +8,7 @@ import streetlight.web.pages.AppBody
 fun AppScope.wireToaster() {
     val model = app.get<Toaster>()
 
-    replaceRender(AppBody.ToasterId) {
+    replaceDynamicRender(AppBody.ToasterId) {
         column(modify(Padding2)) {
             itemsBlock(model.messagesFlow, modify(Magic, SlideLeft)) {
                 val text = it.text ?: return@itemsBlock

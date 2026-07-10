@@ -97,7 +97,7 @@ class DialogElement(
         open: Boolean,
         content: AppScope.(DialogElement) -> Unit,
     ) {
-        element.replaceRender(app, parentScope) {
+        element.replaceDynamicRender(app, parentScope) {
             dialogContent(title) {
                 content(this@DialogElement)
             }

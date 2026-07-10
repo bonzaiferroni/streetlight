@@ -8,7 +8,6 @@ import kotlinx.html.FlowContent
 import kotlinx.html.onClick
 import streetlight.web.CityListRoute
 import streetlight.web.ContributeRoute
-import streetlight.web.EarthRoute
 import streetlight.web.FrontDeskRoute
 import streetlight.web.GalaxyListRoute
 import streetlight.web.GalaxyMapRoute
@@ -125,7 +124,7 @@ ${generateScreenSelectors(highlightedScreens)} {
 
 val highlightedScreens = listOf(
     Screen.Home, Screen.Earth, Screen.GalaxyList, Screen.CityList,
-    Screen.Feedback, Screen.Status, Screen.Contribute, Screen.Docs,
+    Screen.Feedback, Screen.SiteStatus, Screen.Contribute, Screen.Docs,
     Screen.SiteConfig,
 )
 

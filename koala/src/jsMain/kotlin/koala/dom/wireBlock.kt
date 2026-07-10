@@ -24,7 +24,7 @@ fun AppScope.wireBlock(
     block: AppScope.() -> Unit
 ) {
     fun wireElement() {
-        replaceRender(element, block)
+        replaceDynamicRender(element, block)
     }
 
     if (wireOnView) {

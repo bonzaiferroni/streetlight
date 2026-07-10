@@ -66,4 +66,5 @@ object SiteImage : FileSet<Image>() {
     )
 
     val FrontDesk = siteImageOf("front-desk.jpg")
+    val ControlRoom = siteImageOf("control-room.jpg")
 }

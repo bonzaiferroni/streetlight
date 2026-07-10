@@ -37,6 +37,7 @@ fun AppScope.appNavigation() {
             Screen.SongProfile -> viewSongProfile()
             Screen.EditTalent -> editTalentForm()
             Screen.Feedback -> viewFrontDeskRoute()
+            Screen.SiteStatus -> viewSiteStatus()
 
             // location
             Screen.LocationAdmin -> viewLocationAdmin()

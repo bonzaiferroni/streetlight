@@ -16,6 +16,7 @@ import streetlight.web.io.OmniLog
 import streetlight.web.layouts.LightControl
 import streetlight.web.model.TransitMap
 import streetlight.web.model.StarSession
+import kotlin.js.Promise
 
 @OptIn(ExperimentalSerializationApi::class)
 fun viewApp() {

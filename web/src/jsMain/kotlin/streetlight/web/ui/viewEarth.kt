@@ -48,7 +48,7 @@ fun AppScope.viewEarthRoute() {
                                 api.readCity(slug).handleOutcome(toaster::toast)?.let { CityMap(it) }
                             } ?: CityMap(null)
                         }
-                        element.replaceRender(app, parentScope) {
+                        element.replaceDynamicRender(app, parentScope) {
                             val model = app.getEarthMap(parentScope, map)
                             viewEarth(model)
                         }

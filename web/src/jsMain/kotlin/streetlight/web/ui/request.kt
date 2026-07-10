@@ -6,6 +6,7 @@ import koala.dom.AppScope
 import koala.dom.RenderScope
 import koala.dom.column
 import koala.dom.onView
+import koala.dom.replaceStaticRender
 import kotlinx.html.dom.append
 
 fun <T> AppScope.request(
@@ -16,9 +17,8 @@ fun <T> AppScope.request(
     element.onView {
         launchEffect {
             requestData().handleOutcome(toaster::toast) { data ->
-                element.append {
-                    val scope = RenderScope(this, app, parentScope, element)
-                    scope.content(data)
+                element.replaceStaticRender(app, parentScope) {
+                    content(data)
                 }
             }
         }
