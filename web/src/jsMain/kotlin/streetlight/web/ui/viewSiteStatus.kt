@@ -1,7 +1,7 @@
 package streetlight.web.ui
 
 import koala.SiteImage
-import koala.css.KoalaTheme
+import koala.css.*
 import koala.dom.*
 import koala.external.ECharts
 
@@ -15,6 +15,7 @@ fun AppScope.viewSiteStatus() {
              { ECharts.registerTheme(KoalaTheme.ThemeId, ChartUtility.buildTheme()) }
         ) {
             column {
+                dropMenu(model::setTimeFrame, { it.label}, model.timeFrameFlow, modifiers = modify(AlignSelfStart))
                 lineChart(
                     title = "Status",
                     dataFlow = model.dataFlow,

@@ -1,5 +1,6 @@
 package streetlight.web.model
 
+import kampfire.model.Labeled
 import kampfire.model.getDataOrNull
 import kampfire.model.handleOutcome
 import koala.dom.ChartData
@@ -7,6 +8,7 @@ import koala.dom.ChartLine
 import koala.model.mapDistinct
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
@@ -28,6 +30,7 @@ class SiteMonitor(
 
     val pointsFlow = stateFlow.mapDistinct { it.points }
     val pointFlow = MutableSharedFlow<SiteStatus>()
+    val timeFrameFlow = stateFlow.mapDistinct { it.timeFrame }
     val dataFlow = stateFlow.mapDistinct { state ->
         ChartData(
             points = state.points,
@@ -40,21 +43,29 @@ class SiteMonitor(
             }
         ) }
 
+    var refreshJob: Job? = null
+
     init {
-        scope.launch {
-            launch {
-                val points = api.feedSiteStatus().handleOutcome(toaster::toast) ?: emptyList()
-                state.set { it.copy(points = points) }
-            }
-            launch {
-                while (true) {
-                    delay(50.seconds)
-                    console.log("ready")
-                    delay(10.seconds)
-                    val point = api.readLastSiteStatus(MetricResolution.OneMinute).getDataOrNull() ?: continue
-                    pointFlow.emit(point)
-                    console.log("emit")
-                }
+        refreshData()
+    }
+
+    fun setTimeFrame(value: TimeFrame) {
+        state.set { it.copy(timeFrame = value) }
+        refreshData()
+    }
+
+    private fun refreshData() {
+        refreshJob?.cancel()
+        refreshJob = scope.launch {
+            val points = api.feedSiteStatus(stateNow.timeFrame.resolution).handleOutcome(toaster::toast) ?: emptyList()
+            state.set { it.copy(points = points) }
+            while (true) {
+                delay(50.seconds)
+                console.log("ready")
+                delay(10.seconds)
+                val point = api.readLastSiteStatus(stateNow.timeFrame.resolution).getDataOrNull() ?: continue
+                pointFlow.emit(point)
+                console.log("emit")
             }
         }
     }
@@ -62,5 +73,16 @@ class SiteMonitor(
 
 data class SiteMonitorState(
     val points: List<SiteStatus> = emptyList(),
-    val metrics: Set<SiteMetric> = SiteMetric.entries.toSet()
+    val metrics: Set<SiteMetric> = SiteMetric.entries.toSet(),
+    val timeFrame: TimeFrame = TimeFrame.Hour
 )
+
+enum class TimeFrame(val resolution: MetricResolution): Labeled {
+    Hour(MetricResolution.OneMinute),
+    Day(MetricResolution.ThirtyMinutes),
+    Week(MetricResolution.ThreeHours),
+    Month(MetricResolution.OneDay),
+    Year(MetricResolution.OneWeek);
+
+    override val label = name
+}
