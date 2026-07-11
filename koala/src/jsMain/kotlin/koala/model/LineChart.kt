@@ -53,32 +53,48 @@ class LineChart<T>(
 
     private fun toPointArray(point: T, line: ChartLine<T>) = arrayOf(line.getX(point), line.getY(point))
 
-    private fun getOption() = ChartOption(
-        title = TitleOption(text = title),
-        tooltip = TooltipOption(trigger = "axis") { it.asDynamic().toFixed(1) as String },
-        xAxis = ChartUtility.DefaultTimeAxis,
-        yAxis = lines.mapIndexed { index, line ->
-            AxisOption(
-                type = "value",
-                name = line.name?.takeIf { index < 2 },
-                splitLine = SplitLineOption(show = index == 0),
-                axisLabel = AxisLabelOption(show = index < 2),
-                position = when(index) {
-                    0 -> "left"
-                    1 -> "right"
-                    else -> null
-                }
-            )
-        }.toTypedArray(),
-        series = lines.mapIndexed { index, line ->
-            SeriesOption(
-                name = line.name,
-                type = "line",
-                showSymbol = false,
-                yAxisIndex = index,
-                data = cache.map({ toPointArray(it, line) }).toTypedArray(),
-                lineStyle = LineStyleOption(color = line.color ?: ChartUtility.getLineColor(index), width = 2.0)
-            )
-        }.toTypedArray()
-    )
+    private fun getOption(): ChartOption {
+        val axisLabels = lines.map { it.axisLabel }.toSet()
+        return ChartOption(
+            title = TitleOption(text = title),
+            tooltip = TooltipOption(trigger = "axis") { it.asDynamic().toFixed(1) as String },
+            xAxis = ChartUtility.DefaultTimeAxis,
+            yAxis = axisLabels.mapIndexed { index, label ->
+                AxisOption(
+                    type = "value",
+                    name = label.takeIf { index < 2 },
+                    splitLine = SplitLineOption(show = index == 0),
+                    axisLabel = AxisLabelOption(show = index < 2),
+                    position = when(index) {
+                        0 -> "left"
+                        1 -> "right"
+                        else -> null
+                    }
+                )
+            }.toTypedArray(),
+//        yAxis = lines.mapIndexed { index, line ->
+//            AxisOption(
+//                type = "value",
+//                name = line.name?.takeIf { index < 2 },
+//                splitLine = SplitLineOption(show = index == 0),
+//                axisLabel = AxisLabelOption(show = index < 2),
+//                position = when(index) {
+//                    0 -> "left"
+//                    1 -> "right"
+//                    else -> null
+//                }
+//            )
+//        }.toTypedArray(),
+            series = lines.mapIndexed { index, line ->
+                SeriesOption(
+                    name = line.name,
+                    type = "line",
+                    showSymbol = false,
+                    yAxisIndex = axisLabels.indexOf(line.axisLabel),
+                    data = cache.map({ toPointArray(it, line) }).toTypedArray(),
+                    lineStyle = LineStyleOption(color = line.color ?: ChartUtility.getLineColor(index), width = 2.0)
+                )
+            }.toTypedArray()
+        )
+    }
 }

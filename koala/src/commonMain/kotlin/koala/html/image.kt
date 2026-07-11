@@ -3,7 +3,6 @@ package koala.html
 import kampfire.model.ScaledImageArray
 import kampfire.model.Url
 import kampfire.model.largest
-import kampfire.model.toHtmlSizes
 import kampfire.model.toHtmlSrcSet
 import koala.Image
 import koala.SiteImage
@@ -13,51 +12,58 @@ import kotlinx.html.*
 
 fun FlowOrInteractiveOrPhrasingContent.image(
     src: Url? = null,
-    modifiers: ModifierSet? = null,
+    mod: ModifierSet? = null,
     placeholder: Image = SiteImage.placeholderLg,
+    alt: String? = null,
     lazy: Boolean = true,
     block: IMG.() -> Unit = {}
 ) {
     img {
-        configureImage(src ?: placeholder.url, null, modifiers, lazy, block)
+        configureImage(src ?: placeholder.url, null, mod, alt, lazy, block)
     }
 }
 
 fun FlowOrInteractiveOrPhrasingContent.image(
     svg: Svg,
-    modifiers: ModifierSet? = null,
+    mod: ModifierSet? = null,
     placeholder: Image = SiteImage.placeholderLg,
+    alt: String? = null,
     lazy: Boolean = true,
     block: IMG.() -> Unit = {}
 ) {
-    image(svg.url, modifiers, placeholder, lazy, block)
+    image(svg.url, mod, placeholder, alt, lazy, block)
 }
 
 fun FlowOrInteractiveOrPhrasingContent.image(
     images: ScaledImageArray?,
-    modifiers: ModifierSet? = null,
+    mod: ModifierSet? = null,
     placeholder: ScaledImageArray = SiteImage.placeholder,
+    alt: String? = null,
     lazy: Boolean = true,
     block: IMG.() -> Unit = {}
 ) {
     val images = images ?: placeholder
     img {
-        configureImage(null, images, modifiers, lazy, block)
+        configureImage(null, images, mod, alt, lazy, block)
     }
 }
 
 fun IMG.configureImage(
     src: Url? = null,
     images: ScaledImageArray? = null,
-    modifiers: ModifierSet?,
+    mod: ModifierSet?,
+    alt: String? = null,
     lazy: Boolean,
     block: IMG.() -> Unit
 ) {
     this.src = (src ?: images.largest ?: SiteImage.placeholderLg.url).value
+    alt?.let {
+        this.alt = it
+    }
     images?.let {
         configureImages(it)
     }
-    addModifiers(modifiers)
+    addModifiers(mod)
     if (lazy) {
         loading = ImgLoading.lazy
     }

@@ -10,7 +10,7 @@ import streetlight.web.SiteMonitorRoute
 fun AppScope.viewSiteMonitor() {
     val model = app.getSiteMonitor(parentScope)
     column(BodyStyle.Mod) {
-        featureHeader("Streetlight Status", "live stats and charts", SiteImage.ControlRoom.url)
+        featureHeader("Streetlight Status", "live stats and charts", SiteImage.ControlRoom.url, SiteImage.ControlRoom)
 
         lazyScript(
             "https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js",

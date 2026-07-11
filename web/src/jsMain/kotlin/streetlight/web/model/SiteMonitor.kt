@@ -36,9 +36,10 @@ class SiteMonitor(
             points = state.points,
             lines = state.metrics.map { metric ->
                 ChartLine(
+                    name = metric.label,
                     getX = { it.endedAt.toEpochMilliseconds().toDouble() },
                     getY = { it.getMetricOrZero(metric) },
-                    name = metric.label
+                    axisLabel = metric.metricAxis?.label ?: metric.label,
                 )
             }
         ) }

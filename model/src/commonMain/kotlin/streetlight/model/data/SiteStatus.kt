@@ -39,10 +39,14 @@ value class SiteStatusId(override val value: Long): TableId<Long> {
     }
 }
 
-enum class SiteMetric(val metricType: MetricType, val meterName: String): Labeled {
+enum class SiteMetric(
+    val metricType: MetricType,
+    val meterName: String,
+    val metricAxis: MetricAxis? = null,
+): Labeled {
     RequestCount(MetricType.Count, "ktor.http.server.requests"),
-    ResponseLatencyAverage(MetricType.Average, "ktor.http.server.requests"),
-    ResponseLatencyMax(MetricType.Max, "ktor.http.server.requests");
+    ResponseLatencyAverage(MetricType.Average, "ktor.http.server.requests", MetricAxis.RequestLatency),
+    ResponseLatencyMax(MetricType.Max, "ktor.http.server.requests", MetricAxis.RequestLatency);
 
     override val label = name.pascalToTitle()
 }
@@ -51,6 +55,12 @@ enum class MetricType {
     Count,
     Average,
     Max,
+}
+
+enum class MetricAxis: Labeled {
+    RequestLatency;
+
+    override val label = name.pascalToTitle()
 }
 
 enum class MetricResolution(val duration: Duration) {

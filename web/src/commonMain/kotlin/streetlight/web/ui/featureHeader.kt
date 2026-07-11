@@ -2,6 +2,7 @@ package streetlight.web.ui
 
 import kampfire.api.Markdown
 import kampfire.model.Url
+import koala.Image
 import koala.css.AlignItemsStart
 import koala.css.Aspect3By2
 import koala.css.BorderSolid2Px
@@ -43,6 +44,7 @@ import koala.html.heading2
 import koala.html.heading4
 import koala.html.image
 import koala.html.markdown
+import koala.html.metaImage
 import koala.html.row
 import koala.html.textBlock
 import kotlinx.html.DIV
@@ -55,6 +57,7 @@ fun FlowContent.featureHeader(
     title: String,
     descriptor: String,
     image: Url?,
+    imageMeta: Image? = null,
     subtitle: String? = null,
     colorScheme: ColorScheme = ColorScheme.Primary,
     description: Markdown? = null,
@@ -70,7 +73,9 @@ fun FlowContent.featureHeader(
 
         column(modify(ContainerMdRow, FlexItems1, Gap0)) {
             // image
-            image(image, modify(Aspect3By2, VignetteOver, MinWidth0))
+            image?.let {
+                metaImage(image, imageMeta, modify(Aspect3By2, VignetteOver, MinWidth0))
+            }
 
             // title panel
             column(modify(JustifyContentCenter, ZenBg)) { // necessary for flex1 because the inner column has padding
