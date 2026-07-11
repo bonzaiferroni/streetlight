@@ -175,6 +175,8 @@ external interface AxisOption {
     val max: Double?
     val axisLabel: AxisLabelOption?
     val splitLine: SplitLineOption?
+    val splitNumber: Int?
+    val interval: Double?
     val position: String?
 }
 

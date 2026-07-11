@@ -1,14 +1,11 @@
 package streetlight.model.data
 
-import kampfire.api.Markdown
-import kampfire.model.GeoPoint
-import kampfire.model.ScaledImageArray
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 import kotlin.uuid.Uuid
 
 @Serializable
-sealed interface GalaxyPost: StreetPost {
+sealed interface GalaxyPost: Entity {
     val base: Post
 }
 
@@ -34,10 +31,10 @@ enum class PostOrder(label: String? = null) {
 data class LocationPost(
     val location: Location,
     override val base: Post,
-): GalaxyPost, StreetPost by location
+): GalaxyPost, Entity by location
 
 @Serializable
 data class EventPost(
     val event: EventLocation,
     override val base: Post,
-): GalaxyPost, StreetPost by event
+): GalaxyPost, Entity by event

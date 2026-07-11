@@ -27,7 +27,7 @@ data class SpiritMarker(
 
 fun SpiritId.toEntityId(): MarkerId = "spirit-${value}"
 
-data class TravelEntity(
+data class TravelMarker(
     override val markerId: MarkerId,
     override val icon: Svg,
     override val geoPoint: GeoPoint

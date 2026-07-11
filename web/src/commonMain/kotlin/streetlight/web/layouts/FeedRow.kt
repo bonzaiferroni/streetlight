@@ -4,13 +4,11 @@ import kampfire.api.Markdown
 import kampfire.model.Url
 import koala.css.*
 import koala.html.*
+import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import streetlight.model.data.ExtraLink
-import streetlight.model.data.Post
 
-fun FlowContent.feedPost(
-    post: Post?,
-    isGalaxyContext: Boolean,
+fun FlowContent.feedRow(
     heading: String,
     postRoute: AppRoute?,
     imageUrl: Url?,
@@ -18,9 +16,10 @@ fun FlowContent.feedPost(
     colorScheme: ColorScheme = ColorScheme.Primary,
     links: List<ExtraLink>?,
     cells: (FlowContent.() -> Unit)?,
+    subheading: (DIV.() -> Unit)?,
 ) {
-    div(modify(FeedPost.Base)) {
-        div(modify(FeedPost.Content)) {
+    div(modify(FeedRow.Base)) {
+        div(modify(FeedRow.Content)) {
             setStyle(Property.ColorScheme.to(colorScheme.cssValue))
             row(modify(Height10)) {
                 navigationIfNotNull(postRoute, modify(Width10, OverflowClip, BorderRadius50P, BorderSolid2Px, MoonShadow)) {
@@ -31,18 +30,16 @@ fun FlowContent.feedPost(
                         heading5(heading, modify(LineHeight115, Shrinkable, LineClamp2, TextOverflowEllipses))
                     }
                     spacer(modify(Height2Px, InkGradientBg, MarginTopTiny))
-                    post?.let {
-                        postInfo(post, isGalaxyContext)
-                    }
+                    subheading?.invoke(this)
                 }
             }
             // spacer(modify(Height2Px, InkGradientBg, MarginTop2Px))
             cells?.let {
-                cellBlock(modify(FeedPostLegacy.Details, BorderRadius2, OverflowClip), cells)
+                cellBlock(modify(FeedRow.Cells, BorderRadius2, OverflowClip), cells)
             }
         }
 
-        row(modify(FeedPost.ExpandedContent, MarginBottom2)) {
+        row(modify(FeedRow.ExpandedContent, MarginBottom2)) {
             description?.let {
                 card(modify(PaperGradientBg, Padding2, Flex1)) {
                     markdown(it, limit = 1000)
@@ -59,16 +56,17 @@ fun FlowContent.feedPost(
     }
 }
 
-object FeedPost {
-    val Base = Class("feed-post")
-    val Content = Class("feed-post__content")
-    val ExpandedContent = Class("feed-post__expanded-content")
+object FeedRow {
+    val Base = Class("feed-row")
+    val Content = Class("feed-row__content")
+    val ExpandedContent = Class("feed-row__expanded-content")
+    val Cells = Class("feed-row__cells")
 
-    val ToggleExpand = Class("expand-post")
+    val ToggleExpand = Class("expand-row")
 }
 
 //language="CSS"
-val FeedProtoCss get() = with(FeedPost) { """
+val FeedProtoCss get() = with(FeedRow) { """
     
 $Base {
     display: grid;

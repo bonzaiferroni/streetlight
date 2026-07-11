@@ -163,6 +163,6 @@ fun FlowContent.linkCell(link: ExtraLink) {
 
 fun FlowContent.moreButton() {
     cellButton(SvgFile.Info) {
-        onClick = KoalaFun.ToggleAncestor.invoke(ThisElement, FeedPost.Base, FeedPostLegacy.ToggleExpand)
+        onClick = KoalaFun.ToggleAncestor.invoke(ThisElement, FeedRow.Base, FeedPostLegacy.ToggleExpand)
     }
 }

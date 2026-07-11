@@ -8,7 +8,7 @@ import streetlight.model.data.Galaxy
 import streetlight.model.data.LocationEdit
 import streetlight.web.GalaxyRoute
 import streetlight.web.LocationScoutRoute
-import streetlight.web.layouts.feedPostOf
+import streetlight.web.layouts.postRow
 import streetlight.web.model.LocationScoutStage
 
 fun AppScope.viewLocationScout(galaxy: Galaxy) {
@@ -39,7 +39,7 @@ fun AppScope.viewLocationScout(galaxy: Galaxy) {
                 }
                 LocationScoutStage.Post -> column {
                     val edit = editor.editNow
-                    feedPostOf(edit, session.stateNow.star?.username)
+                    postRow(edit, session.stateNow.star?.username)
 
                     formSubmit(
                         label = "Post",

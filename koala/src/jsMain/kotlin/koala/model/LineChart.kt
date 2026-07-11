@@ -61,7 +61,7 @@ class LineChart<T>(
             AxisOption(
                 type = "value",
                 name = line.name?.takeIf { index < 2 },
-                splitLine = SplitLineOption(show = index < 2),
+                splitLine = SplitLineOption(show = index == 0),
                 axisLabel = AxisLabelOption(show = index < 2),
                 position = when(index) {
                     0 -> "left"

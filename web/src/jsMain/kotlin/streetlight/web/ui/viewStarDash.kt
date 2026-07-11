@@ -6,8 +6,6 @@ import koala.dom.*
 import koala.html.btn
 import kotlinx.css.LinearDimension
 import kotlinx.css.fr
-import streetlight.model.data.EditTaskContent
-import streetlight.model.data.QuorumReviewContent
 import streetlight.model.data.Star
 import streetlight.web.EditStarRoute
 import streetlight.web.EditTalentRoute
@@ -21,12 +19,14 @@ import streetlight.web.model.StarSession
 import streetlight.web.toRoute
 
 fun AppScope.viewStarDash(star: Star) {
-    tabs {
-        tab("activity") {
-            activityContent(star)
-        }
-        tab("sandbox") {
-            sandboxContent(star)
+    column(mod = BodyStyle.Mod) {
+        tabs {
+            tab("activity") {
+                activityContent(star)
+            }
+            tab("sandbox") {
+                sandboxContent(star)
+            }
         }
     }
 }
@@ -42,7 +42,7 @@ fun AppScope.viewStarDashRoute() {
 private fun AppScope.activityContent(star: Star) {
     grid {
         section("galaxies") {
-            request(api::readGalaxies) { galaxies ->
+            request(api::readUserGalaxies) { galaxies ->
                 galaxies.forEach { galaxy ->
                     grid(columnsOf(1.fr, LinearDimension.auto)) {
                         navigation(galaxy.toRoute()) {

@@ -135,7 +135,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
     object Cities: ApiNode(this) {
         object ReadTopCities: GetEndpoint<List<City>>(this)
         object ReadCity: GetByIdEndpoint<Slug, City>(this)
-        object ReadCityPosts: GetByIdEndpoint<Slug, List<StreetPost>>(this)
+        object ReadCityPosts: GetByIdEndpoint<Slug, List<Entity>>(this)
 
         object Search: GetEndpoint<List<City>>(this) {
             val query = stringParamOf("name")

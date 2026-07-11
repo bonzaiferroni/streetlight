@@ -42,7 +42,7 @@ data class Location(
     val extraLinks: List<ExtraLink>?,
     val updatedAt: Instant,
     val createdAt: Instant,
-): StreetPost, Labeled {
+): Entity, Labeled {
     val isLit get() = false
 
     val addressLine by lazy {

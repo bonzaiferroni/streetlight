@@ -17,7 +17,7 @@ data class City(
     val mapRank: Float?,
     override val geoPoint: GeoPoint,
     val geoBounds: GeoBounds,
-): StreetPost {
+): Entity {
     override val label get() = name
 }
 

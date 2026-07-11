@@ -7,7 +7,7 @@ import kotlinx.html.FlowContent
 import streetlight.model.data.LocationContent
 import streetlight.web.LocationUpdateRoute
 import streetlight.web.layouts.layoutPosts
-import streetlight.web.layouts.feedPostOf
+import streetlight.web.layouts.postRow
 import streetlight.web.pages.appFooter
 import streetlight.web.ui.BodyStyle
 import streetlight.web.ui.headerOf
@@ -26,7 +26,7 @@ fun FlowContent.locationShell(
                 tab("events") {
                     layoutPosts {
                         content.events.forEach {
-                            feedPostOf(it)
+                            postRow(it)
                         }
                     }
                 }

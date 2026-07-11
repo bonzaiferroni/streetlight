@@ -9,7 +9,7 @@ import streetlight.model.data.Location
 import streetlight.model.data.LocationPost
 import streetlight.model.data.Media
 import streetlight.model.data.MediaPost
-import streetlight.model.data.StreetPost
+import streetlight.model.data.Entity
 
 class MarkerService() {
     // fun createMarkers(posts: List<GalaxyPost>) = posts.mapNotNull { post ->
@@ -20,7 +20,7 @@ class MarkerService() {
     //     }
     // }
 
-    fun createMarkers(posts: List<StreetPost>): List<FeatureMarker> = posts.mapNotNull { post ->
+    fun createMarkers(posts: List<Entity>): List<FeatureMarker> = posts.mapNotNull { post ->
         when (post) {
             is EventLocation -> EventMarker(post)
             is Location -> LocationMarker(post)

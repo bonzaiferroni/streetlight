@@ -16,6 +16,7 @@ import koala.css.Gap4
 import koala.css.Italic
 import koala.css.JustifyContentCenter
 import koala.css.LineHeight1
+import koala.css.MinWidth0
 import koala.css.ModifierSet
 import koala.css.MoonShadow
 import koala.css.OpacityHalf
@@ -40,6 +41,7 @@ import koala.html.featureImage
 import koala.html.filigree
 import koala.html.heading2
 import koala.html.heading4
+import koala.html.image
 import koala.html.markdown
 import koala.html.row
 import koala.html.textBlock
@@ -68,7 +70,7 @@ fun FlowContent.featureHeader(
 
         column(modify(ContainerMdRow, FlexItems1, Gap0)) {
             // image
-            featureImage(image, modify(Aspect3By2, VignetteOver))
+            image(image, modify(Aspect3By2, VignetteOver, MinWidth0))
 
             // title panel
             column(modify(JustifyContentCenter, ZenBg)) { // necessary for flex1 because the inner column has padding

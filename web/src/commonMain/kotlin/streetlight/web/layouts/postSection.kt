@@ -14,7 +14,7 @@ fun FlowContent.postSection(posts: List<GalaxyPost>) {
 
         layoutPosts {
             posts.forEach { post ->
-                feedPostOf(post)
+                postRow(post)
             }
         }
     }

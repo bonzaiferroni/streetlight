@@ -27,7 +27,7 @@ data class Media(
     override val images: ScaledImageArray?,
     val updatedAt: Instant,
     val createdAt: Instant,
-): StreetPost {
+): Entity {
     override val label get() = title ?: "(untitled)"
     override val sublabel get() = subtitle
     override val body get() = text

@@ -9,7 +9,7 @@ import streetlight.model.data.Galaxy
 import streetlight.model.data.LocationEdit
 import streetlight.web.EventScoutRoute
 import streetlight.web.GalaxyRoute
-import streetlight.web.layouts.feedPostOf
+import streetlight.web.layouts.postRow
 import streetlight.web.model.EventScoutStage
 
 fun AppScope.viewEventScout(galaxy: Galaxy) {
@@ -48,7 +48,7 @@ fun AppScope.viewEventScout(galaxy: Galaxy) {
                 }
                 EventScoutStage.Post -> formBody {
                     val location = locationScout.stateNow.location ?: error("location not found")
-                    feedPostOf(editor.editNow, location)
+                    postRow(editor.editNow, location)
                     formSubmit("Post", model::post, messages = model.postMessage)
                 }
             }
