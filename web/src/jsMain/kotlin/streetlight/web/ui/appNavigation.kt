@@ -1,21 +1,25 @@
 package streetlight.web.ui
 
 import koala.css.Blur
+import koala.css.FocusTarget
 import koala.css.Magic
 import koala.css.modify
 import koala.dom.AppScope
 import koala.dom.closeOpenPopovers
 import koala.dom.flowBlock
+import koala.dom.querySelector
 import koala.dom.textBlock
 import koala.model.Portal
 import kotlinx.browser.document
 import kotlinx.browser.window
+import org.w3c.dom.HTMLElement
 import streetlight.web.Screen
 
 fun AppScope.appNavigation() {
     val portal = app.get<Portal>()
+    var element: HTMLElement? = null
 
-    flowBlock(
+    element = flowBlock(
         flow = portal.screenFlow,
         modifiers = modify(Magic, Blur),
         cacheElements = true,
@@ -24,6 +28,9 @@ fun AppScope.appNavigation() {
                 window.scrollTo(0.0, portal.stateNow.initialScrollY)
             }
             document.closeOpenPopovers()
+
+            // target element, typically a heading, for accessibility functionality
+            element?.querySelector(FocusTarget)?.focus()
         },
     ) { screen ->
         when (screen) {

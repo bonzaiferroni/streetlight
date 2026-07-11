@@ -10,6 +10,7 @@ import koala.css.Flex4
 import koala.css.FlexBasisMin
 import koala.css.FlexItems1
 import koala.css.FlexWrap
+import koala.css.FocusTarget
 import koala.css.Gap0
 import koala.css.Gap4
 import koala.css.Italic
@@ -72,7 +73,7 @@ fun FlowContent.featureHeader(
             // title panel
             column(modify(JustifyContentCenter, ZenBg)) { // necessary for flex1 because the inner column has padding
                 column(modify(Padding2)) {
-                    heading2(title, modify(TextAlignCenter, LineHeight1))
+                    heading2(title, modify(TextAlignCenter, LineHeight1, FocusTarget))
                     filigree { textBlock(descriptor, modify(Italic, OpacityHalf)) }
                     subtitle?.let {
                         heading4(subtitle, modify(OpacityHigh, TextAlignCenter))

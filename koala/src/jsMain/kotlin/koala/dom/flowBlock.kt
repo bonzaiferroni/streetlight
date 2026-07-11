@@ -17,6 +17,7 @@ import kotlinx.html.DIV
 import kotlinx.html.classes
 import kotlinx.html.js.div
 import org.w3c.dom.HTMLDivElement
+import kotlin.time.Duration.Companion.milliseconds
 
 fun <State> AppScope.flowBlock(
     flow: Flow<State>,
@@ -62,7 +63,7 @@ fun <State> AppScope.flowBlock(
             }
 
             if (magic) {
-                val interval = KoalaTheme.MAGIC_INTERVAL.toLong()
+                val interval = KoalaTheme.MAGIC_INTERVAL.milliseconds
                 launch {
                     if (render != null) {
                         element.modify(Transitioning).unmodifyAfterFrame(Reveal)

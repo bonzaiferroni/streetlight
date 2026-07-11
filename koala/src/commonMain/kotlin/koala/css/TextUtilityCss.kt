@@ -34,6 +34,9 @@ val Prose = Class("prose")
 val ButtonText = Class("btn-text")
 val LineClamp2 = Class("line-clamp-2")
 
+// accessibility
+val FocusTarget = Class("focus-target")
+
 //language="CSS"
 val TextUtilitySheet get() = """
 $LineClamp2 {
