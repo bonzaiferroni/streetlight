@@ -13,13 +13,13 @@ import org.w3c.dom.HTMLImageElement
 
 fun TagScope.image(
     url: Url? = SiteImage.placeholderLg.url,
-    modifiers: ModifierSet? = null,
+    mod: ModifierSet? = null,
     block: (IMG.() -> Unit)? = null
 ): HTMLImageElement {
     val initialSrc = url?.value ?: ""
     val element = img {
         this.src = initialSrc
-        addModifiers(modifiers)
+        addModifiers(mod)
         if (initialSrc.isEmpty()) {
             style = "display: none;"
         }
@@ -32,11 +32,11 @@ fun TagScope.image(
 fun AppScope.image(
     binding: Flow<Url?>,
     initial: Url? = SiteImage.placeholderLg.url,
-    modifiers: ModifierSet? = null,
+    mod: ModifierSet? = null,
     hideOnError: Boolean = true,
     block: (IMG.() -> Unit)? = null
 ): HTMLImageElement {
-    val element = image(initial, modifiers, block)
+    val element = image(initial, mod, block)
 
     fun hideImage() {
         element.style.display = "none"

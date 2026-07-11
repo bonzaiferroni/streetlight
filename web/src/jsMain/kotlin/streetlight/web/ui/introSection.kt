@@ -9,11 +9,11 @@ import kotlinx.html.DIV
 
 fun AppScope.introSection(
     name: String,
-    modifiers: ModifierSet? = null,
+    mod: ModifierSet? = null,
     lottie: Lottie? = null,
     block: DIV.() -> Unit
 ) {
-    section(modifiers) {
+    section(mod) {
         filigree {
             heading1(name, modify(Shrinkable, AntiShadow))
         }

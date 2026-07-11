@@ -13,7 +13,7 @@ import kotlin.enums.enumEntries
 inline fun <reified State> AppScope.stageBlock(
     flow: Flow<State>,
     crossinline onValue: (State) -> Unit,
-    modifiers: ModifierSet? = null,
+    mod: ModifierSet? = null,
     crossinline isHeadingStage: (State) -> Boolean = { true },
     noinline block: AppScope.(State) -> Unit
 ): HTMLDivElement where State: Enum<State>, State: Labeled {
@@ -51,7 +51,7 @@ inline fun <reified State> AppScope.stageBlock(
     }
 
     val element = column {
-        addModifiers(modifiers, Gap4)
+        addModifiers(mod, Gap4)
         row(modify(JustifyContentCenter, AlignItemsCenter)) {
             var step = 1
             entries.forEach { value ->

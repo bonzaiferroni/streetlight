@@ -12,12 +12,12 @@ import streetlight.web.model.StarSession
 
 fun AppScope.starBlock(
     redirect: Boolean = false,
-    modifiers: ModifierSet? = null,
+    mod: ModifierSet? = null,
     block: AppScope.(Star) -> Unit
 ) {
     val gate = app.get<StarSession>()
 
-    flowBlock(gate.starFlow, modifiers) { user ->
+    flowBlock(gate.starFlow, mod) { user ->
         if (user != null) {
             block(user)
         } else {

@@ -23,13 +23,13 @@ import kotlinx.coroutines.flow.Flow
 fun AppScope.imageDrop(
     urlFlow: Flow<Url?>,
     onFileUrl: (Url?) -> Unit,
-    modifiers: ModifierSet? = null,
+    mod: ModifierSet? = null,
     block: AppScope.(Url) -> Unit = {
         box(modify(Size100P)) {
             fillImage(it)
         }
     }
-) = flowBlock(urlFlow, modify(modifiers, Magic, Blur, SlideDown)) { url ->
+) = flowBlock(urlFlow, modify(mod, Magic, Blur, SlideDown)) { url ->
     if (url != null) {
         box(modify(Size100P, OverflowHidden, BorderRadius1)) {
             block(url)

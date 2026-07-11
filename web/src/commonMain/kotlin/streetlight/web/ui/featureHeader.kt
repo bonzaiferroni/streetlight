@@ -59,10 +59,10 @@ fun FlowContent.featureHeader(
     cellContent: (FlowContent.() -> Unit)? = null,
     links: List<ExtraLink>? = null,
     editRoute: AppRoute? = null,
-    modifiers: ModifierSet? = null,
+    mod: ModifierSet? = null,
     block: DIV.() -> Unit = { },
 ) {
-    card(modify(modifiers, QueryContainer, Padding0, Gap0, OverflowClip, MoonShadow, ZenBg, BorderSolid2Px)) {
+    card(modify(mod, QueryContainer, Padding0, Gap0, OverflowClip, MoonShadow, ZenBg, BorderSolid2Px)) {
         setStyle(Property.ColorScheme.to(colorScheme.cssValue))
         block()
 

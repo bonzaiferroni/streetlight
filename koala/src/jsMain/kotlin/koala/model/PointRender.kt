@@ -130,7 +130,7 @@ internal fun PointMarker.toPointRender(pixelPoint: Point, focusEntity: () -> Uni
 
             val baseMod = buildSet {
                 add(MarkerStyle.Base)
-                modifiers?.let {
+                mod?.let {
                     addAll(it)
                 }
                 light?.let {

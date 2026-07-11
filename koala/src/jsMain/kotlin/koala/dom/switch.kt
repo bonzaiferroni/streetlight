@@ -15,7 +15,7 @@ import org.w3c.dom.HTMLElement
 
 fun AppScope.switch(
     label: String,
-    modifiers: ModifierSet? = null,
+    mod: ModifierSet? = null,
     id: Id? = null,
     initialOn: Boolean = false,
     onToggle: ((Boolean) -> Unit)? = null,
@@ -23,7 +23,7 @@ fun AppScope.switch(
     block: (DIV.() -> Unit)? = null,
 ): HTMLDivElement {
     val element = div {
-        configureSwitch(label, modifiers, id, initialOn, block)
+        configureSwitch(label, mod, id, initialOn, block)
     }
 
     initSwitch(element)

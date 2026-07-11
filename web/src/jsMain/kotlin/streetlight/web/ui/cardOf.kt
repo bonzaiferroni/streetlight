@@ -8,14 +8,14 @@ import streetlight.model.data.Location
 
 fun AppScope.cardOf(
     location: Location,
-    modifiers: ModifierSet? = null,
+    mod: ModifierSet? = null,
     onClick: (() -> Unit)? = null,
 ) {
     cardOf(
         title = location.label,
         thumbUrl = location.images.thumb ?: SiteImage.placeholderTh.url,
         description = location.description?.value ?: location.address,
-        modifiers = modifiers,
+        mod = mod,
         onClick = onClick,
     )
 }

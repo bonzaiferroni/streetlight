@@ -13,7 +13,7 @@ fun AppScope.viewChatRoom() {
         textField(
             flow = model.sendFlow,
             onValue = model::setMessage,
-            modifiers = modify(Width100P),
+            mod = modify(Width100P),
             onEnter = model::sendMessage
         )
     }

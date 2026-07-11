@@ -17,12 +17,12 @@ import streetlight.web.shells.GalaxyMenuKey
 
 fun AppScope.galaxyEarthMenu(
     currentGalaxy: Galaxy?,
-    modifiers: ModifierSet? = null
+    mod: ModifierSet? = null
 ) {
     val cache = app.get<DataCache>()
     val galaxies = cache.galaxyLights.stateNow.items
 
-    box(modifiers) {
+    box(mod) {
         buttonPopover(currentGalaxy?.name ?: "Galaxies") {
             card(modify(ButtonPopover.CardMod)) {
                 row(GalaxyMenuKey.RowMods) {
@@ -35,7 +35,7 @@ fun AppScope.galaxyEarthMenu(
                             text = galaxy.name,
                             route = GalaxyMapRoute(galaxy.slug),
                             background = galaxy.images.small,
-                            modifiers = modify(modifiers)
+                            modifiers = modify(mod)
                         )
                     }
                 }

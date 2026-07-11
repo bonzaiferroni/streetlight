@@ -9,20 +9,20 @@ import kotlinx.html.FlowContent
 
 fun FlowContent.geoMapMount(
     initialPoint: GeoPoint? = null,
-    modifiers: ModifierSet? = null,
+    mod: ModifierSet? = null,
     block: DIV.() -> Unit = {}
 ) {
     box {
-        configureGeoMapMount(initialPoint, modifiers, block)
+        configureGeoMapMount(initialPoint, mod, block)
     }
 }
 
 fun DIV.configureGeoMapMount(
     initialPoint: GeoPoint? = null,
-    modifiers: ModifierSet? = null,
+    mod: ModifierSet? = null,
     block: DIV.() -> Unit = {}
 ) {
-    addModifiers(modifiers, GeoMapKey.MapMount)
+    addModifiers(mod, GeoMapKey.MapMount)
     setAriaLabel("map window")
     initialPoint?.let {
         setAttribute(Attribute.GeoPointAttribute, initialPoint)

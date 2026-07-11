@@ -23,7 +23,7 @@ import org.w3c.dom.HTMLDialogElement
 fun AppScope.dialog(
     title: String? = null,
     stateFlow: Flow<Boolean>? = null,
-    modifiers: ModifierSet? = null,
+    mod: ModifierSet? = null,
     onClose: (() -> Unit)? = null,
     content: (AppScope.(DialogElement) -> Unit)? = null
 ): DialogElement {
@@ -33,7 +33,7 @@ fun AppScope.dialog(
 //    }
 
     val element = dialog {
-        addModifiers(DialogStyle.Class, modifiers)
+        addModifiers(DialogStyle.Class, mod)
         // dialogContent(title, ::closeDialog, content)
     }
 
@@ -114,9 +114,9 @@ fun HTMLDialogElement.open() {
 fun AppScope.dialogWithCard(
     title: String?,
     stateFlow: Flow<Boolean>? = null,
-    modifiers: ModifierSet? = null,
+    mod: ModifierSet? = null,
     content: AppScope.(DialogElement) -> Unit
-) = dialog(title, stateFlow, modifiers) {
+) = dialog(title, stateFlow, mod) {
     dialogCard {
         content(it)
     }

@@ -17,7 +17,7 @@ fun AppScope.viewSiteMonitor() {
              { ECharts.registerTheme(KoalaTheme.ThemeId, ChartUtility.buildTheme()) }
         ) {
             column {
-                dropMenu(model::setTimeFrame, { it.label}, model.timeFrameFlow, modifiers = modify(AlignSelfStart))
+                dropMenu(model::setTimeFrame, { it.label}, model.timeFrameFlow, mod = modify(AlignSelfStart))
                 lineChart(
                     title = "Status",
                     dataFlow = model.dataFlow,

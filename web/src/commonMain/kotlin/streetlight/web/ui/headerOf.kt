@@ -15,7 +15,7 @@ import streetlight.web.layouts.cellContentOf
 fun FlowContent.headerOf(
     location: Location,
     editRoute: AppRoute?,
-    modifiers: ModifierSet? = null,
+    mod: ModifierSet? = null,
     block: DIV.() -> Unit = {}
 ) {
     // headerImage(location.name, location.images.medium, modifiers, block)
@@ -25,7 +25,7 @@ fun FlowContent.headerOf(
         subtitle = location.addressLine,
         image = location.images.large,
         description = location.description,
-        modifiers = modifiers,
+        mod = mod,
         cellContent = cellContentOf(location),
         editRoute = editRoute,
         links = location.links,
@@ -35,7 +35,7 @@ fun FlowContent.headerOf(
 
 fun FlowContent.headerOf(
     galaxy: Galaxy,
-    modifiers: ModifierSet? = null,
+    mod: ModifierSet? = null,
     block: DIV.() -> Unit = {}
 ) {
     featureHeader(
@@ -45,7 +45,7 @@ fun FlowContent.headerOf(
         image = galaxy.images.large,
         colorScheme = ColorScheme.Galaxy,
         description = galaxy.description,
-        modifiers = modifiers,
+        mod = mod,
         cellContent = cellContentOf(galaxy),
         links = emptyList(),
         // editRoute = GalaxyConfigRoute(galaxy.slug),
@@ -55,8 +55,8 @@ fun FlowContent.headerOf(
 
 fun FlowContent.headerOf(
     star: Star,
-    modifiers: ModifierSet? = null,
+    mod: ModifierSet? = null,
     block: DIV.() -> Unit = {}
 ) {
-    headerImage(star.username.value, star.images.medium, modifiers, block)
+    headerImage(star.username.value, star.images.medium, mod, block)
 }

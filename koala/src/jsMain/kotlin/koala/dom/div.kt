@@ -8,18 +8,18 @@ import kotlinx.html.DIV
 import kotlinx.html.js.div
 
 fun TagScope.div(
-    modifiers: ModifierSet?,
+    mod: ModifierSet?,
     block: DIV.() -> Unit = { }
 ) = div {
-    addModifiers(modifiers)
+    addModifiers(mod)
     block()
 }
 
 fun TagScope.div(
     id: Id,
-    modifiers: ModifierSet?,
+    mod: ModifierSet?,
     block: DIV.() -> Unit = { }
-) = div(modifiers) {
+) = div(mod) {
     setId(id)
     block()
 }

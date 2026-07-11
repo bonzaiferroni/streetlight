@@ -8,6 +8,11 @@ import streetlight.model.data.Galaxy
 import streetlight.web.shells.cardOf
 
 fun AppScope.viewGalaxyList() {
+
+    column(mod = BodyStyle.Mod) {
+
+    }
+
     val galaxyStore = storeOf<List<Galaxy>>(emptyList())
 
     parentScope.launch {

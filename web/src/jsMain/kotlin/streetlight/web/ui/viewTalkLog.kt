@@ -132,12 +132,12 @@ fun AppScope.updateComment(model: TalkLog, message: CommentUpdated) {
 fun AppScope.commentEditor(
     label: String,
     initialText: Markdown,
-    modifiers: ModifierSet? = null,
+    mod: ModifierSet? = null,
     send: suspend (Markdown) -> Markdown?
 ) {
     val text = storeOf(initialText)
 
-    column(modify(Height100P, modifiers)) {
+    column(modify(Height100P, mod)) {
         textEditor(label, modify(Flex1), flow = text.flow, onValue = text::set)
         row {
             spacer(modify(Flex1))
@@ -173,7 +173,7 @@ fun AppScope.addCommentView(
     return view
 }
 
-fun TagScope.zenButton(modifiers: ModifierSet? = null, block: DIV.() -> Unit) =
-    row(modify(modifiers, ZenBg, ButtonBorderRadius, ButtonPadding)) {
+fun TagScope.zenButton(mod: ModifierSet? = null, block: DIV.() -> Unit) =
+    row(modify(mod, ZenBg, ButtonBorderRadius, ButtonPadding)) {
         block()
     }

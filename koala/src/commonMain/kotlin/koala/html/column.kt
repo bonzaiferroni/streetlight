@@ -5,10 +5,10 @@ import koala.css.*
 
 inline fun FlowContent.column(
     id: Id?,
-    modifiers: ModifierSet? = null,
+    mod: ModifierSet? = null,
     crossinline content: DIV.() -> Unit = { },
 ) {
-    column(modifiers) {
+    column(mod) {
         id?.let {
             this.id = id.identifier
         }
@@ -17,11 +17,11 @@ inline fun FlowContent.column(
 }
 
 inline fun FlowContent.column(
-    modifiers: ModifierSet? = null,
+    mod: ModifierSet? = null,
     crossinline content: DIV.() -> Unit = { },
 ) {
     div {
-        addModifiers(modify(Column, modifiers))
+        addModifiers(modify(Column, mod))
         content()
     }
 }

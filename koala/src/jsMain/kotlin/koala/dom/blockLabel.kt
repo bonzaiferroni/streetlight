@@ -11,11 +11,11 @@ import org.w3c.dom.HTMLElement
 
 fun TagScope.blockLabel(
     label: String,
-    modifiers: ModifierSet? = null,
+    mod: ModifierSet? = null,
     block: (DIV.() -> Unit)? = null
 ) = div {
     this.blockLabel = label
-    addModifiers(modifiers)
+    addModifiers(mod)
     setAttribute(Attribute.BlockLabel, label)
     block?.invoke(this)
 }

@@ -11,17 +11,17 @@ import kotlinx.html.js.div
 
 fun TagScope.column(
     id: Id?,
-    modifiers: ModifierSet? = null,
+    mod: ModifierSet? = null,
     block: DIV.() -> Unit = { },
-) = column(modifiers) {
+) = column(mod) {
     setId(id)
     block()
 }
 
 fun TagScope.column(
-    modifiers: ModifierSet? = null,
+    mod: ModifierSet? = null,
     block: DIV.() -> Unit = { },
 ) = div {
-    addModifiers(modify(Column, modifiers))
+    addModifiers(modify(Column, mod))
     block()
 }

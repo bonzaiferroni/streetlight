@@ -17,11 +17,11 @@ fun AppScope.dropMenu(
     options: List<String>,
     flow: Flow<String>? = null,
     onChangeValue: ((String) -> Unit)? = null,
-    modifiers: ModifierSet? = null,
+    mod: ModifierSet? = null,
     block: (SELECT.() -> Unit)? = null
 ): HTMLSelectElement {
     val element = select {
-        addModifiers(modifiers)
+        addModifiers(mod)
         options.forEach {
             option {
                 value = it
@@ -53,7 +53,7 @@ inline fun <reified E: Enum<E>> AppScope.dropMenu(
     noinline onChangeValue: ((E) -> Unit),
     crossinline provideLabel: (E) -> String,
     flow: Flow<E>? = null,
-    modifiers: ModifierSet? = null,
+    mod: ModifierSet? = null,
     noinline block: (SELECT.() -> Unit)? = null
 ): HTMLSelectElement {
     val enums = enumValues<E>()
@@ -64,7 +64,7 @@ inline fun <reified E: Enum<E>> AppScope.dropMenu(
         onChangeValue(enums[index])
     }
 
-    return dropMenu(values, flow, callback, modifiers, block)
+    return dropMenu(values, flow, callback, mod, block)
 }
 
 inline fun <reified E> AppScope.dropMenu(

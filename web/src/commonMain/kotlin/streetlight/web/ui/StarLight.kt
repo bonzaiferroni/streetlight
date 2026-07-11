@@ -26,11 +26,11 @@ fun FlowContent.starLightCell(
     lightCount: Int?,
     unlitSvg: Svg = SvgFile.StarOutline,
     litSvg: Svg = SvgFile.StarFilled,
-    modifiers: ModifierSet? = null,
+    mod: ModifierSet? = null,
     block: DIV.() -> Unit = {}
 ) {
     row(modify(AlignItemsCenter, GapTiny)) {
-        addModifiers(modifiers, LightControl.Class, LightControl.getLitMod(isLit))
+        addModifiers(mod, LightControl.Class, LightControl.getLitMod(isLit))
         setAttribute(LightControl.TypeData.to(lightType))
         onClick = LightControl.ToggleFun.invoke(ThisElement, uuid)
 

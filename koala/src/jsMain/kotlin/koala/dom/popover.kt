@@ -12,11 +12,11 @@ import org.w3c.dom.Node
 fun TagScope.popover(
     id: Id,
     anchor: PositionAnchor?,
-    modifiers: ModifierSet? = null,
+    mod: ModifierSet? = null,
     isManual: Boolean = false,
     block: DIV.() -> Unit = {}
 ) = div {
-    configurePopover(id, anchor, modifiers, isManual, block)
+    configurePopover(id, anchor, mod, isManual, block)
 }
 
 fun Node.showPopover() = asDynamic().showPopover()

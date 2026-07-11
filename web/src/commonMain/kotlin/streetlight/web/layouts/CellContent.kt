@@ -37,10 +37,10 @@ $Container {
 """ }
 
 fun FlowContent.cellBlock(
-    modifiers: ModifierSet? = null,
+    mod: ModifierSet? = null,
     block: FlowContent.() -> Unit = {}
 ) {
-    row(modify(modifiers, MinHeight4, MinWidth16, FlexWrap, FlexItems1, GapTiny, TextAlignCenter, MoonShadow)) {
+    row(modify(mod, MinHeight4, MinWidth16, FlexWrap, FlexItems1, GapTiny, TextAlignCenter, MoonShadow)) {
         block()
     }
 }
@@ -50,11 +50,11 @@ fun FlowContent.cell(
     text: String? = null,
     label: String? = null,
     minWidth: Modifier? = MinWidth16,
-    modifiers: ModifierSet? = null,
+    mod: ModifierSet? = null,
     block: DIV.() -> Unit = {}
 ) {
     box(modify(minWidth)) {
-        row(modify(CellContent.CellMod, modifiers)) {
+        row(modify(CellContent.CellMod, mod)) {
             cellContent(svg, text, label, block)
         }
     }
@@ -62,20 +62,20 @@ fun FlowContent.cell(
 
 fun FlowContent.buttonsCell(
     minWidth: Modifier? = MinWidth16,
-    modifiers: ModifierSet? = null,
+    mod: ModifierSet? = null,
     block: DIV.() -> Unit = {},
 ) {
-    box(modify(modifiers, minWidth, CardBg)) {
+    box(modify(mod, minWidth, CardBg)) {
         row(modify(AlignItemsCenter, JustifyContentSpaceAround, Padding1, Gap2), block)
     }
 }
 
 fun FlowContent.cellButton(
     svg: Svg,
-    modifiers: ModifierSet? = null,
+    mod: ModifierSet? = null,
     block: DIV.() -> Unit = {},
 ) {
-    icon(svg, modify(CellContent.ButtonIconMod, modifiers)) {
+    icon(svg, modify(CellContent.ButtonIconMod, mod)) {
         block()
     }
 }
@@ -102,15 +102,15 @@ fun FlowContent.linkCell(
     url: Url?,
     svg: Svg,
     text: String?,
-    modifiers: ModifierSet? = null,
+    mod: ModifierSet? = null,
     block: FlowContent.() -> Unit = {}
 ) {
     // cell(modifiers, block)
     when (url) {
-        null -> cell(svg, text, modifiers = modifiers, block = block)
+        null -> cell(svg, text, mod = mod, block = block)
         else -> {
             navigation(url.value, modify(Box, MinWidth12)) {
-                row(modify(CellContent.CellMod, modifiers)) {
+                row(modify(CellContent.CellMod, mod)) {
                     cellContent(svg, text, null, block)
                 }
             }

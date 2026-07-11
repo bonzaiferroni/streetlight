@@ -16,10 +16,10 @@ fun AppScope.checkBox(
     label: String,
     onChangeValue: ((Boolean) -> Unit)? = null,
     binding: Flow<Boolean>? = null,
-    modifiers: ModifierSet? = null,
+    mod: ModifierSet? = null,
     block: (INPUT.() -> Unit)? = null
 ) = label {
-    addModifiers(modifiers)
+    addModifiers(mod)
     checkBox(onChangeValue, binding, block)
     +label
 }

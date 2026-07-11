@@ -22,7 +22,7 @@ import streetlight.model.data.RecordId
 fun AppScope.starToggle(
     isLit: Boolean,
     recordId: RecordId,
-    modifiers: ModifierSet? = null
+    mod: ModifierSet? = null
 ) {
     val lightType = when (recordId) {
         is GalaxyId -> LightType.Galaxy
@@ -30,7 +30,7 @@ fun AppScope.starToggle(
     }
     var litNow = isLit
     fun svg() = if (litNow) SvgFile.StarFilled else SvgFile.StarOutline
-    icon(svg(), modify(Height3, modifiers)).onClickElement { icon ->
+    icon(svg(), modify(Height3, mod)).onClickElement { icon ->
         launchEffect {
             icon.unmodify(ScaleIn)
             icon.modify(ScaleOut)

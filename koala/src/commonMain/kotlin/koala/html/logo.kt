@@ -7,15 +7,14 @@ import koala.css.GlowBackground
 import koala.css.GlowShadow
 import koala.css.ModifierSet
 import koala.css.Property
-import koala.css.UrlValue
 import koala.css.modify
 import koala.css.setStyle
 import kotlinx.html.FlowContent
 
 fun FlowContent.logo(
-    modifiers: ModifierSet? = null
+    mod: ModifierSet? = null
 ) {
-    div(modify(modifiers, Class, AntiShadow)) {
+    div(modify(mod, Class, AntiShadow)) {
         setAriaLabel("Streetlight Logo")
         div(modify(LogoIcon)) {
             setStyle(Property.MaskUrl.to(SvgFile.LogoText))

@@ -3,20 +3,10 @@ package koala.model
 import kampfire.model.GeoPoint
 import kampfire.model.Url
 import koala.Svg
-import koala.css.Bold
-import koala.css.GapTiny
-import koala.css.LineHeight115
 import koala.css.ModifierSet
-import koala.css.Property
-import koala.css.WhiteSpaceNoWrap
-import koala.css.modify
-import koala.css.setStyle
-import koala.html.column
-import koala.html.textBlock
 import kotlinx.css.Color
 import kotlinx.css.LinearDimension
 import kotlinx.css.px
-import kotlinx.html.DIV
 
 typealias MarkerId = String
 
@@ -28,7 +18,7 @@ sealed interface GeoMarker {
 
 interface PointMarker: GeoMarker {
     val geoPoint: GeoPoint
-    val modifiers: ModifierSet? get() = null
+    val mod: ModifierSet? get() = null
     val onFocus: OnFocus? get() = null
     val light: Color? get() = null
     val opacity: Float? get() = null

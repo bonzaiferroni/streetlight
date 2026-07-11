@@ -10,11 +10,11 @@ import org.w3c.dom.HTMLDivElement
 
 fun TagScope.lottie(
     file: Lottie,
-    modifiers: ModifierSet? = null,
+    mod: ModifierSet? = null,
     block: (DIV.() -> Unit)? = null
 ): HTMLDivElement {
     val div = div {
-        configureLottie(file, modifiers, block)
+        configureLottie(file, mod, block)
     }
     initLottie(div)
     return div

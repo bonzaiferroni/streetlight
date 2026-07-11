@@ -18,12 +18,12 @@ fun FlowContent.largePostCard(
     images: ScaledImageArray?,
     postRoute: StreetlightRoute,
     subRoute: StreetlightRoute?,
-    modifiers: ModifierSet? = null,
+    mod: ModifierSet? = null,
     cells: List<(FlowContent.() -> Unit)?>
 ) {
     val imageUrl = images?.medium ?: SiteImage.placeholderLg.url
 
-    card(modify(modifiers, QueryContainer, Padding0, OverflowHidden, MoonShadow)) {
+    card(modify(mod, QueryContainer, Padding0, OverflowHidden, MoonShadow)) {
         column(modify(QueryContainer, ContainerLgRow, Gap0)) {
 
             // non-grid content

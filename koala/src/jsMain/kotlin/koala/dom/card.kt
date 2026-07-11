@@ -23,10 +23,10 @@ import kotlinx.html.js.div
 import org.w3c.dom.HTMLElement
 
 fun TagScope.card(
-    modifiers: ModifierSet? = null,
+    mod: ModifierSet? = null,
     content: DIV.() -> Unit = {},
 ) = div {
-    addModifiers(Card, modifiers)
+    addModifiers(Card, mod)
     content()
 }
 
@@ -34,10 +34,10 @@ fun TagScope.cardOf(
     title: String,
     thumbUrl: Url?,
     description: String?,
-    modifiers: ModifierSet? = null,
+    mod: ModifierSet? = null,
     onClick: (() -> Unit)? = null,
 ): HTMLElement {
-    val element = card(modifiers) {
+    val element = card(mod) {
         row(modify(Height8, AlignItemsStart)) {
             thumbUrl?.let {
                 image(thumbUrl, modify(Height100P, Aspect1, BorderRadius1))

@@ -7,12 +7,12 @@ import kotlinx.html.p
 
 fun FlowContent.tabs(
     id: Id? = null,
-    modifiers: ModifierSet? = null,
+    mod: ModifierSet? = null,
     content: TabScope.() -> Unit,
 ) {
     val scope = TabScope()
     scope.content()
-    column(modify(TabClass.tabs, modifiers)) {
+    column(modify(TabClass.tabs, mod)) {
         id?.let {
             setId(it)
         }

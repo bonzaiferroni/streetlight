@@ -9,12 +9,12 @@ import org.w3c.dom.HTMLDivElement
 
 fun TagScope.icon(
     file: Svg,
-    modifiers: ModifierSet? = null,
+    mod: ModifierSet? = null,
     block: DIV.() -> Unit = {}
 ) = div {
     configureIcon(
         file = file,
-        modifiers = modifiers,
+        modifiers = mod,
         block = block
     )
 }
@@ -22,10 +22,10 @@ fun TagScope.icon(
 fun TagScope.icon(
     file: Svg,
     onClick: () -> Unit,
-    modifiers: ModifierSet? = null,
+    mod: ModifierSet? = null,
     block: DIV.() -> Unit = {}
 ): HTMLDivElement {
-    val element = icon(file, modifiers, block)
+    val element = icon(file, mod, block)
     element.onClick {
         onClick()
     }

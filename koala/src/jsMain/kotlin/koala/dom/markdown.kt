@@ -10,14 +10,14 @@ import kotlinx.html.js.div
 
 fun TagScope.markdown(
     blocks: List<MarkdownBlock>,
-    modifiers: ModifierSet? = null,
+    mod: ModifierSet? = null,
     block: DIV.() -> Unit = {}
 ) = div {
-    configureMarkdown(blocks, modifiers, block)
+    configureMarkdown(blocks, mod, block)
 }
 
 fun TagScope.markdown(
     text: Markdown,
-    modifiers: ModifierSet? = null,
+    mod: ModifierSet? = null,
     block: DIV.() -> Unit = {}
-) = markdown(markdownBlocksOf(text), modifiers, block)
+) = markdown(markdownBlocksOf(text), mod, block)

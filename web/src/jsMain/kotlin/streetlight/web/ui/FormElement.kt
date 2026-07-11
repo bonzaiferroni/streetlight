@@ -9,18 +9,18 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.html.DIV
 
 fun AppScope.formBody(
-    modifiers: ModifierSet? = null,
+    mod: ModifierSet? = null,
     block: DIV.() -> Unit
-) = column(modify(modifiers, Gap8)) {
+) = column(modify(mod, Gap8)) {
     block()
 }
 
 fun TagScope.formSection(
     name: String,
-    modifiers: ModifierSet? = null,
+    mod: ModifierSet? = null,
     block: TagScope.() -> Unit
 ) = section {
-    addModifiers(modifiers)
+    addModifiers(mod)
     filigree {
         heading3(name)
     }
@@ -28,18 +28,18 @@ fun TagScope.formSection(
 }
 
 fun TagScope.formCard(
-    modifiers: ModifierSet? = null,
+    mod: ModifierSet? = null,
     block: TagScope.() -> Unit,
 ) = card(FormMod.Card) {
-    addModifiers(modifiers)
+    addModifiers(mod)
     block()
 }
 
 fun TagScope.formCardSection(
     name: String,
-    modifiers: ModifierSet? = null,
+    mod: ModifierSet? = null,
     block: TagScope.() -> Unit
-) = formSection(name, modifiers) {
+) = formSection(name, mod) {
     formCard(null, block)
 }
 
@@ -75,10 +75,10 @@ fun AppScope.formTextField(
     label: String,
     onValue: (String) -> Unit,
     flow: Flow<String?>,
-    modifiers: ModifierSet? = null,
+    mod: ModifierSet? = null,
     footnote: String? = null,
     maxLength: Int? = null
-) = column(modifiers) {
+) = column(mod) {
     textField(label, onValue, flow)
     if (footnote != null || maxLength != null) {
         row(modify(OpacityHigh, Italic, WhiteSpaceNoWrap, PaddingX1, TextSmall)) {
@@ -97,15 +97,15 @@ fun AppScope.formTextField(
 fun AppScope.formSubmit(
     label: String,
     onSubmit: () -> Unit,
-    modifiers: ModifierSet? = null,
+    mod: ModifierSet? = null,
     messages: MessageStore? = null,
     back: LabeledAction? = null,
 ) {
     row {
-        addModifiers(modifiers, JustifyContentSpaceBetween)
+        addModifiers(mod, JustifyContentSpaceBetween)
         row(modify(Flex1)) {
             back?.let {
-                button(it.label, it.onClick, it.modifiers ?: modify(Secondary))
+                button(it.label, it.onClick, it.mod ?: modify(Secondary))
             }
         }
         row {
@@ -132,5 +132,5 @@ object FormMod {
 data class LabeledAction(
     val label: String,
     val onClick: () -> Unit,
-    val modifiers: ModifierSet? = null,
+    val mod: ModifierSet? = null,
 )

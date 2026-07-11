@@ -22,8 +22,8 @@ fun AppScope.textField(
     label: String? = null,
     onValue: ((String) -> Unit)? = null,
     flow: Flow<String?>? = null,
-    modifiers: ModifierSet? = null,
-    textModifiers: ModifierSet? = null,
+    mod: ModifierSet? = null,
+    textMod: ModifierSet? = null,
     id: Id? = null,
     placeholder: String? = label,
     size: Int = 25,
@@ -31,12 +31,12 @@ fun AppScope.textField(
     block: (INPUT.() -> Unit)? = null
 ): HTMLElement {
     val parent = div {
-        addModifiers(modifiers)
+        addModifiers(mod)
         setAttribute(Attribute.BlockLabel, label?.lowercase())
 
         textFieldInput(
             placeholder = placeholder,
-            modifiers = textModifiers,
+            mod = textMod,
             onValue = onValue,
             flow = flow,
             id = id,
@@ -53,7 +53,7 @@ fun AppScope.textFieldInput(
     placeholder: String? = null,
     onValue: ((String) -> Unit)? = null,
     flow: Flow<String?>? = null,
-    modifiers: ModifierSet? = null,
+    mod: ModifierSet? = null,
     id: Id? = null,
     size: Int = 25,
     onEnter: (() -> Unit)? = null,
@@ -61,7 +61,7 @@ fun AppScope.textFieldInput(
 ): HTMLElement {
     var currentValue = ""
     val element = input {
-        addModifiers(Width100P, modifiers)
+        addModifiers(Width100P, mod)
         setId(id)
         type = InputType.text
         onValue?.let { callback ->

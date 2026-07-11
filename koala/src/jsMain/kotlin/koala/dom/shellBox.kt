@@ -12,14 +12,14 @@ import org.w3c.dom.HTMLElement
 fun AppScope.shellBox(
     id: Id,
     initializers: List<AppScope.(HTMLElement) -> Unit>,
-    modifiers: ModifierSet? = null,
+    mod: ModifierSet? = null,
     block: DIV.() -> Unit
 ): HTMLDivElement {
     val shell = document.getElementOrNullById(id)
     return if (shell != null) {
         console.log("grabbing shell: $id")
         val element = container {
-            addModifiers(ShellBoxKey.Class, modifiers)
+            addModifiers(ShellBoxKey.Class, mod)
         }
 
         element.append(shell)
@@ -27,7 +27,7 @@ fun AppScope.shellBox(
     } else {
         console.log("generating shell: $id")
         val element = container {
-            addModifiers(ShellBoxKey.Class, modifiers)
+            addModifiers(ShellBoxKey.Class, mod)
             block()
         }
 
@@ -43,10 +43,10 @@ fun AppScope.shellBox(
 fun AppScope.shellBoxWithMap(
     id: Id,
     initializers: List<AppScope.(HTMLElement) -> Unit>,
-    modifiers: ModifierSet? = null,
+    mod: ModifierSet? = null,
     block: DIV.() -> Unit
 ): HTMLDivElement {
-    val element = shellBox(id, initializers, modifiers, block)
+    val element = shellBox(id, initializers, mod, block)
     element.onView {
         wireGeoMap(element)
     }

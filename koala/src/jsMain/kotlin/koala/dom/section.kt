@@ -9,18 +9,18 @@ import kotlinx.html.SECTION
 import kotlinx.html.js.section as sectionTag
 
 fun TagScope.section(
-    modifiers: ModifierSet? = null,
+    mod: ModifierSet? = null,
     block: SECTION.() -> Unit = {}
 ) = sectionTag {
-    addModifiers(SectionKey.Class, modifiers)
+    addModifiers(SectionKey.Class, mod)
     block()
 }
 
 fun TagScope.section(
     title: String,
-    modifiers: ModifierSet? = null,
+    mod: ModifierSet? = null,
     block: SECTION.() -> Unit = {}
-) = section(modifiers) {
+) = section(mod) {
     filigree {
         heading3(title)
     }

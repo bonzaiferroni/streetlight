@@ -10,17 +10,17 @@ import kotlinx.html.id
 
 inline fun TagScope.row(
     id: Id,
-    modifiers: ModifierSet? = null,
+    mod: ModifierSet? = null,
     crossinline content: DIV.() -> Unit,
-) = row(modifiers) {
+) = row(mod) {
     this.id = id.identifier
     content()
 }
 
 inline fun TagScope.row(
-    modifiers: ModifierSet? = null,
+    mod: ModifierSet? = null,
     crossinline content: DIV.() -> Unit,
 ) = div {
-    addModifiers(Row, modifiers)
+    addModifiers(Row, mod)
     content()
 }

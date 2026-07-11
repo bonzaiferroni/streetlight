@@ -17,7 +17,7 @@ import org.w3c.files.get
 
 fun TagScope.filePicker(
     mimeType: MimeType = MimeType.All,
-    modifiers: ModifierSet? = null,
+    mod: ModifierSet? = null,
     onMessage: ((UIMessage) -> Unit)? = null,
     onPickFile: (Url) -> Unit
 ) {
@@ -25,7 +25,7 @@ fun TagScope.filePicker(
     var preview: HTMLImageElement
     var dropZone: HTMLDivElement
     val element = div {
-        addModifiers(FilePickerKey.Class, modifiers)
+        addModifiers(FilePickerKey.Class, mod)
 
         input = input {
             type = InputType.file

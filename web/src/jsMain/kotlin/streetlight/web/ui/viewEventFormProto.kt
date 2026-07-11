@@ -68,7 +68,7 @@ fun AppScope.viewEventFormProto(
                         label = "title",
                         onValue = model::setTitle,
                         flow = model.titleFlow,
-                        modifiers = modify(Width100P),
+                        mod = modify(Width100P),
                         placeholder = "Event Title"
                     )
                     row {
