@@ -35,6 +35,7 @@ data class Attribute<T>(
         val Popover = stringAttributeOf("popover")
         val SrcSet = stringAttributeOf("srcset")
         val Sizes = stringAttributeOf("sizes")
+        val AriaLabel = stringAttributeOf("aria-label")
     }
 }
 
@@ -90,3 +91,7 @@ var CoreAttributeGroupFacade.blockLabel: String?
     set(value) {
         setAttribute(Attribute.BlockLabel, value)
     }
+
+fun CoreAttributeGroupFacade.setAriaLabel(label: String) {
+    setAttribute(Attribute.AriaLabel.to(label))
+}

@@ -1,5 +1,6 @@
 package koala.dom
 
+import koala.html.AppRoute
 import koala.html.Id
 import kotlinx.browser.document
 import org.w3c.dom.Document
@@ -24,3 +25,4 @@ external interface ViewTransition {
     val updateCallbackDone: Promise<Unit>
     fun skipTransition()
 }
+

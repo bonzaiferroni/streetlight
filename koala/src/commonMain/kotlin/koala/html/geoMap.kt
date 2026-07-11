@@ -23,6 +23,7 @@ fun DIV.configureGeoMapMount(
     block: DIV.() -> Unit = {}
 ) {
     addModifiers(modifiers, GeoMapKey.MapMount)
+    setAriaLabel("map window")
     initialPoint?.let {
         setAttribute(Attribute.GeoPointAttribute, initialPoint)
     }

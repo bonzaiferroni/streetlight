@@ -16,6 +16,7 @@ fun FlowContent.logo(
     modifiers: ModifierSet? = null
 ) {
     div(modify(modifiers, Class, AntiShadow)) {
+        setAriaLabel("Streetlight Logo")
         div(modify(LogoIcon)) {
             setStyle(Property.MaskUrl.to(SvgFile.LogoText))
         }

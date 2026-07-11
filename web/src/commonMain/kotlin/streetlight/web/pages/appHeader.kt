@@ -17,7 +17,7 @@ fun FlowContent.appHeader(
     row(modify(height, JustifyContentCenter, Gap0, Padding1, AlignItemsCenter)) {
         icon(SvgFile.CircularFiligreeAnimated, rayMod + FlipX)
         navigation(HomeRoute, modify(DisplayFlex)) {
-            logo(modify(height))
+            logo(modify(height, FocusTarget))
         }
         icon(SvgFile.CircularFiligreeAnimated, rayMod)
     }

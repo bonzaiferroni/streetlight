@@ -14,7 +14,7 @@ import streetlight.web.GalaxyMapRoute
 import streetlight.web.HomeRoute
 import streetlight.web.Screen
 import streetlight.web.SiteConfigRoute
-import streetlight.web.StatusRoute
+import streetlight.web.SiteMonitorRoute
 import streetlight.web.doc.SiteDoc
 import streetlight.web.layouts.route
 
@@ -58,7 +58,7 @@ fun FlowContent.siteMenuItems() {
     label("meta")
     item("Help & Feedback", FrontDeskRoute, SvgFile.QuestionLarge)
     item("Contribute", ContributeRoute, SvgFile.HeartHandshake) // td
-    item("Status", StatusRoute, SvgFile.ChartLarge) // td
+    item("Status", SiteMonitorRoute, SvgFile.ChartLarge) // td
     item("Privacy", SiteDoc.Privacy.route, SvgFile.EyeClosed)
     label("config")
     item("Settings", SiteConfigRoute, SvgFile.GearLarge)
@@ -124,7 +124,7 @@ ${generateScreenSelectors(highlightedScreens)} {
 
 val highlightedScreens = listOf(
     Screen.Home, Screen.Earth, Screen.GalaxyList, Screen.CityList,
-    Screen.Feedback, Screen.SiteStatus, Screen.Contribute, Screen.Docs,
+    Screen.Feedback, Screen.SiteMonitor, Screen.Contribute, Screen.Docs,
     Screen.SiteConfig,
 )
 

@@ -4,8 +4,10 @@ import koala.SiteImage
 import koala.css.*
 import koala.dom.*
 import koala.external.ECharts
+import kotlinx.browser.document
+import streetlight.web.SiteMonitorRoute
 
-fun AppScope.viewSiteStatus() {
+fun AppScope.viewSiteMonitor() {
     val model = app.getSiteMonitor(parentScope)
     column(BodyStyle.Mod) {
         featureHeader("Streetlight Status", "live stats and charts", SiteImage.ControlRoom.url)
@@ -24,4 +26,6 @@ fun AppScope.viewSiteStatus() {
             }
         }
     }
+
+    document.setTitle(SiteMonitorRoute)
 }

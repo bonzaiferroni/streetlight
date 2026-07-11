@@ -29,6 +29,7 @@ fun AppScope.appNavigation() {
             }
             document.closeOpenPopovers()
 
+            // td: set title, maybe not here
             // target element, typically a heading, for accessibility functionality
             element?.querySelector(FocusTarget)?.focus()
         },
@@ -44,7 +45,7 @@ fun AppScope.appNavigation() {
             Screen.SongProfile -> viewSongProfile()
             Screen.EditTalent -> editTalentForm()
             Screen.Feedback -> viewFrontDeskRoute()
-            Screen.SiteStatus -> viewSiteStatus()
+            Screen.SiteMonitor -> viewSiteMonitor()
 
             // location
             Screen.LocationAdmin -> viewLocationAdmin()

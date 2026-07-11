@@ -3,7 +3,9 @@ package streetlight.web.ui
 import kampfire.model.handleOutcome
 import koala.dom.*
 import koala.dom.routeBlock
+import koala.html.AppRoute
 import koala.model.Portal
+import kotlinx.browser.document
 import streetlight.model.data.HomeContent
 import streetlight.web.HomeRoute
 import streetlight.web.io.ApiClient
@@ -32,6 +34,8 @@ fun AppScope.viewHome(content: HomeContent) {
     wireGalaxyMenu(root, null)
 
     wireStreetMap()
+
+    document.setTitle(HomeRoute)
 }
 
 fun AppScope.viewHomeRoute() {

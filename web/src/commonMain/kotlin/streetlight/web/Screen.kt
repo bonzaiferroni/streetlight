@@ -33,7 +33,7 @@ enum class Screen(
     TalentProfile(UuidParse { TalentProfileRoute(TalentId(it)) }),
     EditTalent(UuidParse { EditTalentRoute(TalentId(it)) }),
     Feedback(StaticParse { FrontDeskRoute }),
-    SiteStatus(StaticParse { StatusRoute }),
+    SiteMonitor(StaticParse { SiteMonitorRoute }),
     Contribute(StaticParse { ContributeRoute }),
 
     // location
@@ -115,8 +115,8 @@ object ChatRoute: StreetlightRoute {
     override val title get() = "Chat"
 }
 
-object StatusRoute: StreetlightRoute {
-    override val screen get() = Screen.SiteStatus
+object SiteMonitorRoute: StreetlightRoute {
+    override val screen get() = Screen.SiteMonitor
     override val title get() = "Status"
 }
 
