@@ -3,7 +3,7 @@ package koala.html
 import koala.Css
 import koala.Js
 import koala.JsFile
-import koala.SiteFile
+import koala.Asset
 import koala.css.KoalaJs
 import kotlinx.html.*
 
@@ -34,11 +34,11 @@ fun HTML.appHead(
     }
 }
 
-fun HEAD.applyFiles(files: Collection<SiteFile>) {
+fun HEAD.applyFiles(files: Collection<Asset>) {
     files.forEach { applyFile(it) }
 }
 
-fun HEAD.applyFile(file: SiteFile) {
+fun HEAD.applyFile(file: Asset) {
     when (file) {
         is Js -> linkScript(file)
         is Css -> linkCssFile(file)

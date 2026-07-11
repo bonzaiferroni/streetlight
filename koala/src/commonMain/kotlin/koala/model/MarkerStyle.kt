@@ -1,6 +1,6 @@
 package koala.model
 
-import koala.SiteFile
+import koala.Asset
 import koala.css.Class
 import koala.css.Focus
 import koala.css.Property
@@ -29,7 +29,7 @@ object MarkerStyle {
     val BodySize = Property<LinearDimension>("body-size")
     val TwinkleDelay = Property<Time>("twinkle-delay")
     val MarkerLight = Property<Color>("marker-light")
-    val MarkerSvg = Property<SiteFile>("marker-svg")
+    val MarkerSvg = Property<Asset>("marker-svg")
     val MarkerBearing = Property<Angle>("marker-bearing")
     val MarkerBorder = Property<Rgb>("marker-border")
 }

@@ -1,7 +1,7 @@
 package koala.css
 
 import kampfire.model.Url
-import koala.SiteFile
+import koala.Asset
 import kotlinx.css.Display
 import kotlinx.css.GridTemplateColumns
 import kotlinx.css.LinearDimension
@@ -33,7 +33,7 @@ data class Property<T: Any>(
         val GridTemplateColumns = Property<GridTemplateColumns>("grid-template-columns", false)
         val ViewTransitionName = Property<String>("view-transition-name", false)
 
-        val MaskUrl = Property<SiteFile>("mask-url")
+        val MaskUrl = Property<Asset>("mask-url")
         val ColorScheme = Property<String>("color-scheme")
         val BackgroundUrl = Property<Url>("background-url")
         val AnchorId = Property<PositionAnchor>("anchor-id")

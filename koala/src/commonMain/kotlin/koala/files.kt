@@ -52,19 +52,3 @@ object LottieFile : FileSet<Lottie>() {
     val StreetlightNight = addLottie("streetlight-night.json")
 }
 
-object SiteImage : FileSet<Image>() {
-    val crossing = siteImageOf("crossing.jpg")
-    val placeholderLg = siteImageOf("placeholder-lg.jpg")
-    val placeholderMd = siteImageOf("placeholder-md.jpg")
-    val placeholderSm = siteImageOf("placeholder-sm.jpg")
-    val placeholderTh = siteImageOf("placeholder-th.jpg")
-    val placeholder: ScaledImageArray = listOf(
-        ScaledImage(ImageSize.Large, placeholderLg.url),
-        ScaledImage(ImageSize.Medium, placeholderMd.url),
-        ScaledImage(ImageSize.Small, placeholderSm.url),
-        ScaledImage(ImageSize.Thumb, placeholderTh.url),
-    )
-
-    val FrontDesk = siteImageOf("front-desk.jpg")
-    val ControlRoom = siteImageOf("control-room.jpg")
-}

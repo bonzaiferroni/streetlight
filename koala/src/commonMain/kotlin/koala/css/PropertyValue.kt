@@ -1,17 +1,16 @@
 package koala.css
 
 import kampfire.model.Url
-import koala.SiteFile
-import kotlin.jvm.JvmInline
+import koala.Asset
 
 fun styleValueOf(value: Any) = when (value) {
     is Url -> "url('${value.value}')"
-    is SiteFile -> "url('${value.url.value}')"
+    is Asset -> "url('${value.url.value}')"
     else -> value.toString()
 }
 
 data class UrlValue(val url: Url) {
-    constructor(file: SiteFile): this(file.url)
+    constructor(file: Asset): this(file.url)
     override fun toString() = "url('$url')"
 }
 
