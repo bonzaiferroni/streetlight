@@ -60,12 +60,9 @@ class SiteMonitor(
             val points = api.feedSiteStatus(stateNow.timeFrame.resolution).handleOutcome(toaster::toast) ?: emptyList()
             state.set { it.copy(points = points) }
             while (true) {
-                delay(50.seconds)
-                console.log("ready")
-                delay(10.seconds)
+                delay(stateNow.timeFrame.resolution.duration)
                 val point = api.readLastSiteStatus(stateNow.timeFrame.resolution).getDataOrNull() ?: continue
                 pointFlow.emit(point)
-                console.log("emit")
             }
         }
     }
