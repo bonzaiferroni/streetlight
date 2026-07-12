@@ -14,7 +14,7 @@ fun FlowContent.smallGalaxyCard(galaxy: Galaxy) {
 
         row(modify(Gap0, Height16)) {
             navigation(route, modify(Flex1)) {
-                featureImage(galaxy.images?.small, modify(Size100P))
+                featureImage(galaxy.image, modify(Size100P))
             }
             column(modify(Flex2, Height16, Gap0)) {
                 column(modify(Flex1, Padding1)) {

@@ -1,6 +1,6 @@
 package koala.html
 
-import kampfire.model.ScaledImageArray
+import kampfire.model.ImageVariants
 import kampfire.model.Url
 import kampfire.model.largest
 import kampfire.model.toHtmlSrcSet
@@ -13,20 +13,20 @@ import kotlinx.html.*
 fun FlowOrInteractiveOrPhrasingContent.image(
     src: Url? = null,
     mod: ModifierSet? = null,
-    placeholder: Image = SiteImage.placeholderLg,
+    placeholder: Url = SiteImage.placeholderLg,
     alt: String? = null,
     lazy: Boolean = true,
     block: IMG.() -> Unit = {}
 ) {
     img {
-        configureImage(src ?: placeholder.url, null, mod, alt, lazy, block)
+        configureImage(src ?: placeholder, null, mod, alt, lazy, block)
     }
 }
 
 fun FlowOrInteractiveOrPhrasingContent.image(
     svg: Svg,
     mod: ModifierSet? = null,
-    placeholder: Image = SiteImage.placeholderLg,
+    placeholder: Url = SiteImage.placeholderLg,
     alt: String? = null,
     lazy: Boolean = true,
     block: IMG.() -> Unit = {}
@@ -35,33 +35,33 @@ fun FlowOrInteractiveOrPhrasingContent.image(
 }
 
 fun FlowOrInteractiveOrPhrasingContent.image(
-    images: ScaledImageArray?,
+    images: Image?,
     mod: ModifierSet? = null,
-    placeholder: ScaledImageArray = SiteImage.placeholder,
+    placeholder: Image = SiteImage.placeholder,
     alt: String? = null,
     lazy: Boolean = true,
     block: IMG.() -> Unit = {}
 ) {
     val images = images ?: placeholder
     img {
-        configureImage(null, images, mod, alt, lazy, block)
+        configureImage(null, images.variants, mod, alt, lazy, block)
     }
 }
 
 fun IMG.configureImage(
     src: Url? = null,
-    images: ScaledImageArray? = null,
+    images: ImageVariants? = null,
     mod: ModifierSet?,
     alt: String? = null,
     lazy: Boolean,
     block: IMG.() -> Unit
 ) {
-    this.src = (src ?: images.largest ?: SiteImage.placeholderLg.url).value
+    this.src = (src ?: images.largest ?: SiteImage.placeholderLg).value
     alt?.let {
         this.alt = it
     }
     images?.let {
-        configureImages(it)
+        configureSrcSet(it)
     }
     addModifiers(mod)
     if (lazy) {
@@ -70,8 +70,8 @@ fun IMG.configureImage(
     block()
 }
 
-fun IMG.configureImages(
-    images: ScaledImageArray
+fun IMG.configureSrcSet(
+    images: ImageVariants
 ) {
     setAttribute(Attribute.SrcSet, images.toHtmlSrcSet())
     setAttribute(Attribute.Sizes, "auto")

@@ -1,6 +1,7 @@
 package streetlight.web.ui
 
 import kampfire.model.Url
+import koala.Image
 import koala.dom.AppScope
 import koala.dom.box
 import koala.dom.image
@@ -10,8 +11,8 @@ import kotlinx.coroutines.flow.Flow
 
 fun AppScope.imageFormSection(
     instructions: String,
-    onValue: (Url?) -> Unit,
-    imageFlow: Flow<Url?>,
+    onValue: (Image?) -> Unit,
+    imageFlow: Flow<Image?>,
 ) = formCardSection("Image") {
     formPart(
         instructions = instructions,
@@ -22,7 +23,7 @@ fun AppScope.imageFormSection(
     ) {
         imageDrop(imageFlow, onValue) {
             box {
-                image(it)
+                image(it.url)
             }
         }.setBlockLabel("image")
     }

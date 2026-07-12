@@ -5,7 +5,6 @@ package streetlight.web.model
 import kampfire.api.Markdown
 import kampfire.api.toSlug
 import kampfire.model.Url
-import kampfire.model.getDataOrNull
 import kampfire.model.handleOutcome
 import koala.dom.MessageStore
 import koala.model.GeoCamera
@@ -22,6 +21,7 @@ import streetlight.model.data.PostPermission
 import streetlight.model.data.slugOf
 import streetlight.web.GalaxyRoute
 import streetlight.web.io.ApiClient
+import kotlin.time.Duration.Companion.milliseconds
 
 class GalaxyEditor(
     galaxy: GalaxyEdit,
@@ -38,6 +38,7 @@ class GalaxyEditor(
     val editNow get() = state.now.edit
 
     val editMessage = MessageStore()
+    val imageEditor = ImageEditor(galaxy.image, api)
 
     val validityFlow = stateFlow.mapDistinct { it.edit.validity }
 
@@ -46,7 +47,7 @@ class GalaxyEditor(
             geo.panMap(it)
         }
         scope.launch {
-            stateFlow.mapDistinct { it.cityQuery }.debounce(500L).collect { query ->
+            stateFlow.mapDistinct { it.cityQuery }.debounce(500.milliseconds).collect { query ->
                 if (query == stateNow.city?.name) return@collect
                 val localities = api.searchCity(query, stateNow.country).handleOutcome(toaster::toast) ?: return@collect
                 state.set { it.copy(cities = localities) }
@@ -64,8 +65,6 @@ class GalaxyEditor(
         if (value.isNotEmpty() && !GalaxyEdit.isValidSlug(value.trim().toSlug())) return
         setGalaxy { it.copy(slug = value.toSlug()) }
     }
-
-    fun setImageUrl(value: Url?) = state.set { it.copy(imageUrl = value) }
 
     fun setDescription(value: Markdown) = setGalaxy { it.copy(description = value) }
 
@@ -95,9 +94,7 @@ class GalaxyEditor(
     }
 
     fun submit() {
-        val edit = editNow.copy(geoBounds = geo.stateNow.bounds)
-        val message = edit.validity.message
-        val imageRef = stateNow.edit.imageRef
+        val message = editNow.validity.message
 
         if (message != null) {
             editMessage.set(message)
@@ -106,10 +103,12 @@ class GalaxyEditor(
 
         editMessage.set("Saving...", true)
         scope.launch {
-            val imageUrl: Url? = stateNow.imageUrl.takeIf { it != imageRef }?.let { url ->
-                api.uploadImage(url).getDataOrNull() ?: return@launch
-            } ?: imageRef
-            api.createOrUpdateGalaxy(edit.copy(imageRef = imageUrl)).handleOutcome(editMessage::set) { slug ->
+            val image = imageEditor.finalizeImage(editMessage)
+            val edit = editNow.copy(geoBounds = geo.stateNow.bounds, image = image)
+            when (edit.galaxyId) {
+                null -> api.createGalaxy(edit)
+                else -> api.updateGalaxy(edit)
+            }.handleOutcome(editMessage::set) { slug ->
                 portal.go(GalaxyRoute(slug))
             }
         }
@@ -123,7 +122,7 @@ class GalaxyEditor(
 
 data class GalaxyFoundryState(
     val edit: GalaxyEdit,
-    val imageUrl: Url? = edit.imageRef,
+    val imageUrl: Url? = edit.image?.url,
     val isLocal: Boolean = true,
     val cityQuery: String = "",
     val cities: List<City> = emptyList(),

@@ -19,11 +19,8 @@ import koala.html.spacer
 import koala.model.storeOf
 import kotlinx.css.LinearDimension
 import kotlinx.css.fr
-import kotlinx.html.DIV
 import streetlight.model.data.EditLog
 import streetlight.model.data.EditType
-import streetlight.model.data.LocationEdit
-import streetlight.model.data.LocationUpdaterContent
 import streetlight.model.data.RecordEdit
 import streetlight.model.data.verb
 import streetlight.model.utils.TextDeltaDisplay

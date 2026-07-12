@@ -63,7 +63,7 @@ class ApiClient(private val client: FetchClient) {
     suspend fun readReview(taskId: TaskId) = client.getApi(Api.Tasks.ReadStarTask, taskId)
 
     // suspend fun uploadAvatar(blobUrl: Url) = client.uploadBlob(Api.Users.UploadAvatar.path, blobUrl)
-    suspend fun uploadImage(blobUrl: Url) = client.uploadBlob(Api.Users.UploadImage.path, blobUrl)
+    suspend fun uploadImageBlob(blobUrl: Url) = client.uploadBlob(Api.Users.UploadImage.path, blobUrl)
     suspend fun queryLocation(point: GeoPoint) = client.getApi(Api.Locations.QueryPoint, point.toQuery())
     suspend fun validateLogin() = client.getApi(Api.Stars.ValidateLogin)
     suspend fun logout() = client.postApi(UserApi.Logout, Unit)
@@ -90,7 +90,8 @@ class ApiClient(private val client: FetchClient) {
     suspend fun editTalent(talent: TalentEdit) = client.postApi(Api.Users.EditTalent, talent)
 
     // galaxies
-    suspend fun createOrUpdateGalaxy(galaxy: GalaxyEdit) = client.postApi(Api.Galaxies.CreateGalaxy, galaxy)
+    suspend fun createGalaxy(galaxy: GalaxyEdit) = client.postApi(Api.Galaxies.CreateGalaxy, galaxy)
+    suspend fun updateGalaxy(galaxy: GalaxyEdit) = client.postApi(Api.Galaxies.UpdateGalaxy, galaxy)
     suspend fun readTopGalaxies() = client.getApi(Api.Galaxies.Top)
     suspend fun readGalaxies(galaxyIds: List<GalaxyId>) = client.postApi(Api.Galaxies.ReadGalaxies, galaxyIds)
     suspend fun readUserGalaxies() = client.getApi(Api.Galaxies.ReadUserGalaxies)

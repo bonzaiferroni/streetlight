@@ -36,8 +36,8 @@ fun AppScope.locationDetailsForm(model: LocationEditor) = formCardSection("Locat
 fun AppScope.locationImageForm(model: LocationEditor) =
     imageFormSection(
         instructions = "This image will appear at the top of the location page.",
-        onValue = model::setImageUrl,
-        imageFlow = model.imageUrlFlow
+        onValue = model.imageEditor::setImage,
+        imageFlow = model.imageEditor.imageFlow
     )
 
 fun AppScope.locationLinksForm(model: LocationEditor) = formCardSection("Links") {

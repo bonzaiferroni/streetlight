@@ -6,9 +6,8 @@ import kampfire.api.Username
 import kampfire.api.toMarkdown
 import kampfire.model.GeoPoint
 import kampfire.model.Labeled
-import kampfire.model.ScaledImageArray
-import kampfire.model.Url
 import kampfire.model.toUrl
+import koala.Image
 import kotlin.time.Instant
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
@@ -37,8 +36,7 @@ data class Location(
     val website: String?,
     val lightCount: Int?,
     val eventsUrl: String?,
-    val imageRef: Url?,
-    override val images: ScaledImageArray?,
+    override val image: Image?,
     val extraLinks: List<ExtraLink>?,
     val updatedAt: Instant,
     val createdAt: Instant,
@@ -109,7 +107,7 @@ fun Location.toEdit() = LocationEdit(
     website = website,
     eventsUrl = eventsUrl,
     extraLinks = extraLinks,
-    imageRef = imageRef,
+    image = image,
 )
 
 fun PlaceProto.toEdit() = LocationEdit(
@@ -137,7 +135,7 @@ fun LocationParse.toEdit(
         menuUrl?.let { add(ExtraLink("menu", it)) }
         aboutUrl?.let { add(ExtraLink("about", it))}
     },
-    imageRef = imageUrl?.toUrl(),
+    image = imageUrl?.toUrl()?.let { Image(it) },
 )
 
 fun LocationParse.toAddress() = address?.let {

@@ -34,7 +34,7 @@ fun AppScope.galaxyEarthMenu(
                         btn(
                             text = galaxy.name,
                             route = GalaxyMapRoute(galaxy.slug),
-                            background = galaxy.images.small,
+                            background = galaxy.image?.small,
                             modifiers = modify(mod)
                         )
                     }

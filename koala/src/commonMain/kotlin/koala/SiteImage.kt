@@ -1,21 +1,29 @@
 package koala
 
 import kampfire.model.ImageSize
-import kampfire.model.ScaledImage
-import kampfire.model.ScaledImageArray
+import kampfire.model.ImageVariant
 
 object SiteImage : FileSet<Image>() {
     val crossing = siteImageOf("crossing.jpg")
-    val placeholderLg = siteImageOf("placeholder-lg.jpg")
-    val placeholderMd = siteImageOf("placeholder-md.jpg")
-    val placeholderSm = siteImageOf("placeholder-sm.jpg")
-    val placeholderTh = siteImageOf("placeholder-th.jpg")
-    val placeholder: ScaledImageArray = listOf(
-        ScaledImage(ImageSize.Large, placeholderLg.url),
-        ScaledImage(ImageSize.Medium, placeholderMd.url),
-        ScaledImage(ImageSize.Small, placeholderSm.url),
-        ScaledImage(ImageSize.Thumb, placeholderTh.url),
-    )
+
+    val placeholderLg = siteImageUrlOf("placeholder-lg.jpg")
+    val placeholderMd = siteImageUrlOf("placeholder-md.jpg")
+    val placeholderSm = siteImageUrlOf("placeholder-sm.jpg")
+    val placeholderTh = siteImageUrlOf("placeholder-th.jpg")
+
+    val placeholder = siteImageOf("placeholder-lg.jpg", variants = listOf(
+        ImageVariant(ImageSize.Large, placeholderLg),
+        ImageVariant(ImageSize.Medium, placeholderMd),
+        ImageVariant(ImageSize.Small, placeholderSm),
+        ImageVariant(ImageSize.Thumb, placeholderTh),
+    ))
+
+    fun getPlaceholder(size: ImageSize) = when(size) {
+        ImageSize.Thumb -> placeholderTh
+        ImageSize.Small -> placeholderSm
+        ImageSize.Medium -> placeholderMd
+        ImageSize.Large -> placeholderLg
+    }
 
     val FrontDesk = siteImageOf(
         "front-desk.jpg", 3 / 2f, "A woman sitting at a desk, answering the phone.",

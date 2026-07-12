@@ -5,8 +5,7 @@ import kampfire.api.Markdown
 import kampfire.api.Slug
 import kampfire.api.Username
 import kampfire.model.Labeled
-import kampfire.model.ScaledImageArray
-import kampfire.model.Url
+import koala.Image
 import kotlinx.serialization.Serializable
 import kotlinx.datetime.TimeZone
 import kotlin.jvm.JvmInline
@@ -30,8 +29,7 @@ data class Event(
     val visibility: Int?,
     val links: List<ExtraLink>?,
     val website: String?,
-    val imageRef: Url?,
-    val images: ScaledImageArray?,
+    val image: Image?,
     val streamUrl: String?,
     val timeZoneId: String,
     val lightCount: Int,

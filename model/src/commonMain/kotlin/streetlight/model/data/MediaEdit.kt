@@ -3,6 +3,7 @@ package streetlight.model.data
 import kampfire.api.Markdown
 import kampfire.model.GeoPoint
 import kampfire.model.Url
+import koala.Image
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -13,7 +14,7 @@ data class MediaEdit(
     val text: Markdown? = null,
     val link: Url? = null,
     val geoPoint: GeoPoint? = null,
-    val imageRef: Url? = null,
+    val image: Image? = null,
 ) {
     val isValid get() = true
     val invalidMessage: String? get() = null
@@ -26,5 +27,5 @@ fun Media.toEdit() = MediaEdit(
     text = text,
     link = link,
     geoPoint = geoPoint,
-    imageRef = imageRef,
+    image = image,
 )

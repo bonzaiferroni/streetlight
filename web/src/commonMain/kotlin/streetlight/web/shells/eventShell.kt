@@ -21,7 +21,7 @@ fun FlowContent.eventShell(event: EventLocation) {
             title = event.title,
             descriptor = "at",
             subtitle = event.locationName,
-            image = event.images.large,
+            image = event.image.large,
             description = event.description,
             cellContent = {
                 startsAtCell(event.startsAt)
@@ -40,7 +40,7 @@ fun FlowContent.eventShell(event: EventLocation) {
                         column(modify(ContainerMdRow, FlexItems1, CardBg, Gap0)) {
                             geoMapMount(event.geoPoint, modify(MinHeight48))
                             column(modify(JustifyContentCenter, AlignItemsCenter)) {
-                                event.locationImages.small?.let {
+                                event.locationImage?.small?.let {
                                     image(it, modify(Flex1, BorderRadius2, MaxHeight16))
                                 }
                                 column(modify(PaddingX1, PaddingY2, Gap0)) {

@@ -91,7 +91,7 @@ private fun AppScope.focusPanel(
     card(modify(Gap0, Padding0, BlurBackdrop, PointerEventsAuto, BorderSolid2Px, EarthStyle.MoveDimmer)) {
         setStyle(Property.ColorScheme.to(colorScheme.cssValue))
         column(modify(Gap0)) {
-            featureImage(post.images.medium, modify(Flex1))
+            featureImage(post.image, modify(Flex1))
             cells?.let {
                 cellBlock(modify(FlexWrap), cells)
             }

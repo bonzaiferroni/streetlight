@@ -1,8 +1,8 @@
 package streetlight.model.data
 
 import kampfire.api.Markdown
-import kampfire.model.Url
 import kampfire.model.toValidityCheck
+import koala.Image
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
@@ -24,7 +24,7 @@ data class EventEdit(
     val links: List<ExtraLink>? = null,
     val isHost: Boolean? = null,
     val website: String? = null,
-    override val imageRef: Url? = null,
+    override val image: Image? = null,
     val startTime: LocalTime? = null,
     val endTime: LocalTime? = null,
     val date: LocalDate? = null,
@@ -66,7 +66,7 @@ data class EventEdit(
         }.toValidityCheck()
     }
 
-    val needsReview get() = imageRef == null || website == null || description == null || description.length < 100
+    val needsReview get() = image == null || website == null || description == null || description.length < 100
 }
 
 object EventProperty {
@@ -80,7 +80,7 @@ fun Event.toEdit() = EventEdit(
     eventId = eventId,
     title = title,
     locationId = locationId,
-    imageRef = imageRef,
+    image = image,
     description = description,
     contact = contact,
     ageMin = ageMin,
@@ -97,7 +97,7 @@ fun EventEdit.mergeLeft(other: EventEdit?) = other?.let {
         eventId = eventId ?: it.eventId,
         title = title?.takeIf { it.isNotBlank() } ?: it.title,
         locationId = locationId ?: it.locationId,
-        imageRef = imageRef ?: it.imageRef,
+        image = image ?: it.image,
         description = description ?: it.description,
         contact = contact ?: it.contact,
         ageMin = ageMin ?: it.ageMin,

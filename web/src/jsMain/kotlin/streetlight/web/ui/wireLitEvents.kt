@@ -6,7 +6,7 @@ import kampfire.model.small
 import koala.SvgFile
 import koala.css.*
 import koala.dom.*
-import koala.html.fillImage
+import koala.html.fillImageSrcSet
 import koala.html.heading3
 import koala.model.mapDistinct
 import org.w3c.dom.HTMLElement
@@ -54,7 +54,7 @@ fun AppScope.wireLitEvents(root: HTMLElement) {
 
 fun AppScope.narrowEventCard(event: EventLocation, eventCache: LightCache<EventId, EventLocation>) {
     card(modify(Width24, BorderRadius1, MoonShadow)) {
-        fillImage(event.images.small, modify(Flex1), fillWidth = false)
+        fillImageSrcSet(event.image, modify(Flex1), fillWidth = false)
         column() {
             column(modify(Gap0)) {
                 textBlock(event.title, modify(WhiteSpaceNoWrap, TextOverflowEllipses))

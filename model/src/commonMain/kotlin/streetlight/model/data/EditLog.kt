@@ -1,8 +1,8 @@
 package streetlight.model.data
 
 import kampfire.model.Labeled
-import kampfire.model.Url
 import kampfire.utils.pascalToTitle
+import koala.Image
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 import kotlin.time.Instant
@@ -30,7 +30,7 @@ value class EditLogId(override val value: Uuid): RecordId {
 sealed interface RecordEdit {
     val recordType: RecordType
     val label: String
-    val imageRef: Url? get() = null
+    val image: Image? get() = null
 }
 
 enum class RecordType: Labeled {

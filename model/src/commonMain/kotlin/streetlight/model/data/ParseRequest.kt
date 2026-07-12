@@ -1,7 +1,7 @@
 package streetlight.model.data
 
 import kampfire.api.toMarkdown
-import kampfire.model.toUrl
+import koala.toImage
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
@@ -121,7 +121,7 @@ fun EventParse.toEventEdit(
 ) = EventEdit(
     title = name ?: "",
     locationId = locationId,
-    imageRef = imageUrl?.toUrl(),
+    image = imageUrl?.toImage(),
     description = description?.toMarkdown(),
     ageMin = ageMin?.takeIf { it > 0 },
     cost = floatUSDOf(cost),

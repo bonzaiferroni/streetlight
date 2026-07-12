@@ -5,6 +5,7 @@ import kampfire.api.Slug
 import kampfire.model.GeoBounds
 import kampfire.model.Url
 import kampfire.model.toValidityCheck
+import koala.Image
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -19,7 +20,7 @@ data class GalaxyEdit(
     val postPermission: PostPermission = PostPermission.Accounts,
     val reviewCount: Int? = 3,
     val postGuide: Markdown? = null,
-    val imageRef: Url? = null,
+    val image: Image? = null,
 ) {
     companion object {
         val NameCharacters = setOf(' ', '.', ',', '\'', '!', '?', ':', '-', '+')
@@ -57,5 +58,5 @@ fun Galaxy.toEdit() = GalaxyEdit(
     postPermission = postPermission,
     reviewCount = reviewCount,
     postGuide = postGuide,
-    imageRef = imageRef,
+    image = image,
 )

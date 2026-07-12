@@ -1,9 +1,5 @@
 package koala
 
-import kampfire.model.ImageSize
-import kampfire.model.ScaledImage
-import kampfire.model.ScaledImageArray
-
 object JsFile : FileSet<Js>() {
     val Utils = add("utils.js")
     val Tabs = add("tabs.js")

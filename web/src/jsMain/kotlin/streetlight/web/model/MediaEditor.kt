@@ -2,11 +2,12 @@ package streetlight.web.model
 
 import kampfire.api.Markdown
 import kampfire.api.Slug
-import kampfire.model.Url
 import kampfire.model.handleOutcome
+import koala.Image
 import koala.dom.MessageStore
 import koala.model.mapDistinct
 import koala.model.storeOf
+import koala.toImage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import streetlight.model.data.MediaEdit
@@ -22,11 +23,11 @@ class MediaEditor(
     private val state = storeOf(ContentEditorState(initialContent))
     val stateFlow = state.flow
     val stateNow get() = state.now
-
-    val message = MessageStore()
-
     val editFlow = stateFlow.mapDistinct { it.edit }
     val editNow get() = state.now.edit
+
+    val message = MessageStore()
+    val imageEditor = ImageEditor(initialContent.image, api)
 
     init {
         scope.launch {
@@ -42,17 +43,15 @@ class MediaEditor(
 
     fun setText(text: Markdown) = setContent { it.copy(text = text) }
 
-    fun setImageUrl(url: Url?) = setContent { it.copy(imageRef = url) }
-
     fun submitPost() {
         scope.launch {
-            if (!uploadImageIfBlob()) return@launch
             val edit = editNow.takeIf { it.isValid } ?: return@launch
+            val image = imageEditor.finalizeImage(message)
             message.set("Posting...", true)
 
             when (edit.mediaId) {
-                null -> api.createMedia(edit)
-                else -> api.updateMedia(edit)
+                null -> api.createMedia(edit.copy(image = image))
+                else -> api.updateMedia(edit.copy(image = image))
             }.handleOutcome(toaster::toast) { slug ->
                 state.set { it.copy(slug = slug) }
             }
@@ -61,18 +60,6 @@ class MediaEditor(
 
     private fun setContent(block: (MediaEdit) -> MediaEdit) {
         state.set { it.copy(edit = block(stateNow.edit)) }
-    }
-
-    private suspend fun uploadImageIfBlob(): Boolean {
-        val blobUrl = editNow.imageRef?.takeIf { it.isBlob } ?: return true
-        message.set("Uploading image...", true)
-        val refUrl = api.uploadImage(blobUrl).handleOutcome(message::set)
-        if (refUrl == null) {
-            message.set("Unable to upload image.")
-            return false
-        }
-        setImageUrl(refUrl)
-        return true
     }
 }
 

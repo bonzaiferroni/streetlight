@@ -1,9 +1,8 @@
 package streetlight.model.data
 
 import kampfire.api.Username
-import kampfire.model.ScaledImageArray
-import kampfire.model.Url
 import kampfire.model.UserRole
+import koala.Image
 import kotlin.time.Instant
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
@@ -16,8 +15,7 @@ data class Star(
     val name: String?,
     val description: String?,
     val scoutLevel: Int,
-    val imageRef: Url?,
-    val images: ScaledImageArray?,
+    val image: Image?,
     val updatedAt: Instant,
     val createdAt: Instant,
 )
@@ -34,12 +32,12 @@ data class StarEdit(
     val username: Username? = null,
     val name: String? = null,
     val description: String? = null,
-    val imageRef: Url? = null,
+    val image: Image? = null,
 )
 
 fun Star.toEdit() = StarEdit(
     username = username,
     name = name,
     description = description,
-    imageRef = imageRef
+    image = image
 )

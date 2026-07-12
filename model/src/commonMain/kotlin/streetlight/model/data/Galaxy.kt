@@ -4,8 +4,7 @@ import kampfire.api.Markdown
 import kampfire.api.Slug
 import kampfire.model.GeoBounds
 import kampfire.model.GeoPoint
-import kampfire.model.ScaledImageArray
-import kampfire.model.Url
+import koala.Image
 import kotlin.time.Instant
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
@@ -25,8 +24,7 @@ data class Galaxy(
     val postPermission: PostPermission,
     val reviewCount: Int,
     val postGuide: Markdown?,
-    val imageRef: Url?,
-    override val images: ScaledImageArray?,
+    override val image: Image?,
     val isLit: Boolean,
     val isHost: Boolean,
     val starCount: Int,

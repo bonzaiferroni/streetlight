@@ -46,7 +46,7 @@ private fun AppScope.activityContent(star: Star) {
                 galaxies.forEach { galaxy ->
                     grid(columnsOf(1.fr, LinearDimension.auto)) {
                         navigation(galaxy.toRoute()) {
-                            listingOf(galaxy.name, galaxy.images.thumb)
+                            listingOf(galaxy.name, galaxy.image?.thumb)
                         }
                         starToggle(galaxy.isLit, galaxy.galaxyId)
                     }
@@ -57,7 +57,7 @@ private fun AppScope.activityContent(star: Star) {
             request(api::readPendingEdits) { logs ->
                 logs.forEach { log ->
                     val label = log.recordEdit?.label ?: return@forEach
-                    listingOf(label, log.recordEdit?.imageRef)
+                    listingOf(label, log.recordEdit?.image?.thumb)
                 }
             }
         }

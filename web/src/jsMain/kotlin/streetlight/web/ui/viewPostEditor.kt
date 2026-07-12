@@ -23,7 +23,7 @@ fun AppScope.viewMediumUpdater(model: MediaEditor) {
         heading1("Edit Post", modify(TextAlignCenter))
 
         card {
-            postForm(model)
+            mediaForm(model)
         }
 
         row(modify(JustifyContentEnd)) {

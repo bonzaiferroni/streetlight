@@ -68,7 +68,7 @@ import streetlight.model.data.GalaxyPost
 
 fun AppScope.postPanel(post: GalaxyPost) {
     column(modify(Height100P, OverflowYAuto, CardBg, BlurBackdrop)) {
-        featureImage(post.images.medium, modify(Width100P, Height24))
+        featureImage(post.image, modify(Width100P, Height24))
         column(modify(Padding1)) {
             heading3(post.label)
             post.body?.let {

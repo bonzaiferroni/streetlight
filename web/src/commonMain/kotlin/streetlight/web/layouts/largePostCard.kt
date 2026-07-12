@@ -1,9 +1,7 @@
 package streetlight.web.layouts
 
 import kampfire.api.Markdown
-import kampfire.model.ScaledImageArray
-import kampfire.model.medium
-import koala.SiteImage
+import koala.Image
 import koala.css.*
 import koala.html.*
 import kotlinx.html.FlowContent
@@ -15,20 +13,18 @@ fun FlowContent.largePostCard(
     subtitle: String?,
     description: Markdown?,
     links: List<ExtraLink>?,
-    images: ScaledImageArray?,
+    image: Image?,
     postRoute: StreetlightRoute,
     subRoute: StreetlightRoute?,
     mod: ModifierSet? = null,
     cells: List<(FlowContent.() -> Unit)?>
 ) {
-    val imageUrl = images?.medium ?: SiteImage.placeholderLg.url
-
     card(modify(mod, QueryContainer, Padding0, OverflowHidden, MoonShadow)) {
         column(modify(QueryContainer, ContainerLgRow, Gap0)) {
 
             // non-grid content
             column(modify(Flex3, ContainerMdRow, Gap0)) {
-                featureImage(imageUrl, modify(Flex1, MinHeight24))
+                featureImage(image, modify(Flex1, MinHeight24))
                 column(modify(Flex2, Padding1, Height24, MaxHeight24)) {
                     row {
                         column(modify(Flex1, Gap0)) {

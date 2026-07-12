@@ -2,12 +2,13 @@ package streetlight.web.model
 
 import kampfire.api.Markdown
 import kampfire.model.GeoPoint
-import kampfire.model.Url
 import kampfire.model.handleOutcome
+import koala.Image
 import koala.dom.MessageStore
 import koala.model.mapDistinct
 import koala.model.mapDistinctNotNull
 import koala.model.storeOf
+import koala.toImage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
@@ -37,6 +38,7 @@ class LocationEditor(
 
     val websiteMessage = MessageStore()
     val message = MessageStore()
+    val imageEditor = ImageEditor(initialData.image, api)
 
     val editNow get() = state.now.edit
     val editFlow = state.flow.mapDistinctNotNull { it.edit }
@@ -48,7 +50,6 @@ class LocationEditor(
     val descriptionFlow = editFlow.mapDistinct { it.description }
     val websiteFlow = editFlow.mapDistinct { it.website }
     val linksFlow = editFlow.mapDistinct { it.eventsUrl }
-    val imageUrlFlow = editFlow.mapDistinct { it.imageRef }
     val validityFlow = editFlow.mapDistinct { it.validity }
 
     fun setName(value: String) = setEdit { it.copy(name = value) }
@@ -58,7 +59,6 @@ class LocationEditor(
     fun setPoint(value: GeoPoint) = setEdit { it.copy(geoPoint = value) }
     fun setResources(value: Set<ResourceType>) = setEdit { it.copy(resources = value) }
     fun setEventsLink(value: String?) = setEdit { it.copy(eventsUrl = value) }
-    fun setImageUrl(value: Url?) = setEdit { it.copy(imageRef = value) }
     fun setCity(value: String) = setEdit { it.copy(city = value) }
 
     fun setWebsite(value: String?) {
@@ -101,24 +101,15 @@ class LocationEditor(
     }
 
     suspend fun submitSuspend(): Location? {
-        if (!isEditValid() || !uploadImageIfBlob()) return null
+        if (!isEditValid()) return null
+        val image = imageEditor.finalizeImage(message)
+        val edit = editNow.copy(image = image)
+
         message.set("Sending...", true)
         return when (editNow.locationId) {
-            null -> api.createLocation(editNow).handleOutcome(message::set)
-            else -> api.updateLocation(editNow).handleOutcome(message::set)
+            null -> api.createLocation(edit).handleOutcome(message::set)
+            else -> api.updateLocation(edit).handleOutcome(message::set)
         }
-    }
-
-    private suspend fun uploadImageIfBlob(): Boolean {
-        val blobUrl = editNow.imageRef?.takeIf { it.isBlob } ?: return true
-        message.set("Uploading image...", true)
-        val refUrl = api.uploadImage(blobUrl).handleOutcome(message::set)
-        if (refUrl == null) {
-            message.set("Unable to upload image.")
-            return false
-        }
-        setImageUrl(refUrl)
-        return true
     }
 }
 

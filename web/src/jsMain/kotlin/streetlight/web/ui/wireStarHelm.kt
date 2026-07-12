@@ -54,7 +54,7 @@ private fun AppScope.starPanel(star: Star) {
             button(modify(HelmBar.IconMod)) {
                 onClick = StarHelm.ClosePopover
 
-                image(star.images.thumb, modify(OpacityHigh, Size100P, BorderRadius50P))
+                image(star.image?.thumb, modify(OpacityHigh, Size100P, BorderRadius50P))
             }
         }
 

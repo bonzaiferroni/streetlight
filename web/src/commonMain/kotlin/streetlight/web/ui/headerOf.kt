@@ -23,7 +23,7 @@ fun FlowContent.headerOf(
         title = location.label,
         descriptor = "at",
         subtitle = location.addressLine,
-        image = location.images.large,
+        image = location.image?.large,
         description = location.description,
         mod = mod,
         cellContent = cellContentOf(location),
@@ -42,7 +42,7 @@ fun FlowContent.headerOf(
         title = galaxy.name,
         descriptor = "a galaxy",
         subtitle = galaxy.tagline,
-        image = galaxy.images.large,
+        image = galaxy.image?.large,
         colorScheme = ColorScheme.Galaxy,
         description = galaxy.description,
         mod = mod,
@@ -58,5 +58,5 @@ fun FlowContent.headerOf(
     mod: ModifierSet? = null,
     block: DIV.() -> Unit = {}
 ) {
-    headerImage(star.username.value, star.images.medium, mod, block)
+    headerImage(star.username.value, star.image?.medium, mod, block)
 }

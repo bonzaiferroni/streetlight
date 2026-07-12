@@ -11,7 +11,7 @@ fun FlowContent.largeLocationPostCard(post: LocationPost) {
         subtitle = location.address,
         description = location.description,
         links = null, // td: add location extra links
-        images = location.images,
+        image = location.image,
         postRoute = location.route,
         subRoute = null,
         cells = listOf() // td: add cost to locations

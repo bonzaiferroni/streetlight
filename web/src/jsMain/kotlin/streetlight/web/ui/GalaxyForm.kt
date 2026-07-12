@@ -89,7 +89,7 @@ fun AppScope.galaxyNameForm(model: GalaxyEditor) {
 }
 
 fun AppScope.galaxyImageForm(model: GalaxyEditor) =
-    imageFormSection(imageInstructions1, model::setImageUrl, model.stateFlow.mapDistinct { it.imageUrl })
+    imageFormSection(imageInstructions1, model.imageEditor::setImage, model.imageEditor.imageFlow)
 
 private val imageInstructions1 = "This image will appear at the top of the galaxy page."
 

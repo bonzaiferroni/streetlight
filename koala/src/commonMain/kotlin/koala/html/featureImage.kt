@@ -1,6 +1,8 @@
 package koala.html
 
-import kampfire.model.Url
+import kampfire.model.ImageSize
+import kampfire.model.large
+import koala.Image
 import koala.SiteImage
 import koala.css.Class
 import koala.css.ModifierSet
@@ -11,23 +13,24 @@ import kotlinx.html.div
 import kotlinx.html.img
 
 fun FlowContent.featureImage(
-    src: Url? = null,
+    image: Image? = null,
     modifiers: ModifierSet? = null,
+    size: ImageSize = ImageSize.Medium,
     block: DIV.() -> Unit = {}
 ) {
-    val src = src?.value ?: SiteImage.placeholderLg.url.value
+    val src = image?.getVariantOrNull(size) ?: SiteImage.getPlaceholder(size)
     div {
         addModifiers(Class, modifiers)
         block()
 
         img {
             addModifiers(BackdropClass)
-            this.src = src
+            this.src = src.value
         }
 
         img {
             addModifiers(ContentClass)
-            this.src = src
+            this.src = src.value
         }
     }
 }
@@ -38,7 +41,7 @@ private val ContentClass = Class("feature-image__content")
 
 // language="CSS"
 val FeatureImageCss get() = """
-${Class} {
+$Class {
     position: relative;
     display: flex;
     align-items: center;

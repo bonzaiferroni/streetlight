@@ -109,8 +109,8 @@ fun AppScope.eventDetailsForm(model: EventEditor) = formCardSection("Event Detai
 fun AppScope.eventImageForm(model: EventEditor) =
     imageFormSection(
         instructions = "This image will appear in the feed and at the top of the event page.",
-        onValue = model::setImageUrl,
-        imageFlow = model.imageUrlFlow
+        onValue = model.imageEditor::setImage,
+        imageFlow = model.imageEditor.imageFlow
     )
 
 fun AppScope.eventLinksForm(model: EventEditor) = formCardSection("Links") {

@@ -6,10 +6,12 @@ import kampfire.api.toUsername
 import kampfire.model.Url
 import kampfire.model.getDataOrNull
 import kampfire.model.handleOutcome
+import koala.Image
 import koala.css.*
 import koala.dom.*
 import koala.model.mapDistinct
 import koala.model.storeOf
+import koala.toImage
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.map
@@ -25,7 +27,7 @@ fun AppScope.viewStarEditor() {
     starBlock(true) { star ->
         val state = storeOf(star.toEdit())
 
-        val avatarFlow = state.flow.mapDistinct { it.imageRef }
+        val avatarFlow = state.flow.mapDistinct { it.image }
         val nameFlow = state.flow.mapDistinct { it.username?.value }
         val isAvailableFlow = nameFlow.debounce(500.milliseconds).map {
             if (it == null || it == star.username.value) null
@@ -33,17 +35,16 @@ fun AppScope.viewStarEditor() {
         }
 
         fun setUsername(value: String) = state.set { it.copy(username = value.toUsername()) }
-        fun setImageRef(value: Url?) = state.set { it.copy(imageRef = value) }
+        fun setImage(value: Image?) = state.set { it.copy(image = value) }
         fun update() {
             var edit = state.now // td: check validity?
-            val blobUrl = edit.imageRef?.takeIf { it.isBlob }
+            val blobUrl = edit.image?.url?.takeIf { it.isBlob }
             parentScope.launch {
                 edit = if (blobUrl != null) {
-                    val refUrl = api.uploadImage(blobUrl).getDataOrNull() ?: error("error creating avatar")
-                    edit.copy(imageRef = refUrl)
+                    val image = api.uploadImageBlob(blobUrl).getDataOrNull()?.toImage() ?: error("error creating avatar")
+                    edit.copy(image = image)
                 } else edit
 
-                console.log(edit.username)
                 val star = api.updateStar(edit).handleOutcome(toaster::toast)
                 if (star != null) {
                     gate.setUpdate(star)
@@ -54,7 +55,7 @@ fun AppScope.viewStarEditor() {
         column {
             card {
                 row(modify(AlignItemsStart)) {
-                    imageDrop(avatarFlow, ::setImageRef, modify(Width16, Aspect1))
+                    imageDrop(avatarFlow, ::setImage, modify(Width16, Aspect1))
                     row {
                         textField("username", ::setUsername, nameFlow)
                         flowBlock(isAvailableFlow, defaultMagic) {

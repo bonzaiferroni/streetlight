@@ -3,9 +3,9 @@ package streetlight.model.data
 import kampfire.api.Markdown
 import kampfire.model.GeoPoint
 import kampfire.model.Labeled
-import kampfire.model.Url
 import kampfire.model.toValidityCheck
 import kampfire.utils.snakeToTitleCase
+import koala.Image
 import kotlinx.serialization.Serializable
 import streetlight.model.external.OSMLocation
 import streetlight.model.external.toGeoPoint
@@ -33,7 +33,7 @@ data class LocationEdit(
     val website: String? = null,
     val eventsUrl: String? = null,
     val extraLinks: List<ExtraLink>? = null,
-    override val imageRef: Url? = null,
+    override val image: Image? = null,
 ): Labeled, RecordEdit {
     override val recordType get() = RecordType.Location
 
@@ -69,7 +69,7 @@ data class LocationEdit(
         }.takeIf { it.isNotEmpty() }
     }
 
-    val needsReview get() = imageRef == null || website == null || description == null || description.length < 100
+    val needsReview get() = image == null || website == null || description == null || description.length < 100
 }
 
 object LocationProperty {
@@ -99,7 +99,7 @@ fun LocationEdit.mergeLeft(edit: LocationEdit?) = edit?.let {
         website = website ?: edit.website,
         eventsUrl = eventsUrl ?: edit.eventsUrl,
         extraLinks = extraLinks ?: edit.extraLinks,
-        imageRef = imageRef ?: edit.imageRef?.takeIf { it.value.isNotEmpty() },
+        image = image ?: edit.image?.takeIf { it.value.isNotEmpty() },
     )
 } ?: this
 

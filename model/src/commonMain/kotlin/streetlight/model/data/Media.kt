@@ -5,8 +5,8 @@ import kampfire.api.Slug
 import kampfire.api.Username
 import kampfire.model.GeoPoint
 import kampfire.model.Labeled
-import kampfire.model.ScaledImageArray
 import kampfire.model.Url
+import koala.Image
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 import kotlin.time.Instant
@@ -23,8 +23,7 @@ data class Media(
     val text: Markdown?,
     val link: Url?,
     override val geoPoint: GeoPoint?,
-    val imageRef: Url?,
-    override val images: ScaledImageArray?,
+    override val image: Image?,
     val updatedAt: Instant,
     val createdAt: Instant,
 ): Entity {
@@ -47,7 +46,7 @@ data class MediaPost(
     val media: Media,
     override val base: Post,
 ): GalaxyPost {
-    override val images get() = media.images
+    override val image get() = media.image
     override val geoPoint get() = media.geoPoint
     override val label get() = media.title ?: "Untitled"
     override val sublabel get() = media.subtitle

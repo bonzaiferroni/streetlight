@@ -18,7 +18,7 @@ fun AppScope.eventFocusContent(post: EventPost) {
 
     card(modify(Padding0, Gap0, BlurBackdrop, OverflowClip)) {
         row(modify(Gap0, Height16)) {
-            featureImage(post.images.small, modify(Flex1, Aspect3By2))
+            featureImage(post.image, modify(Flex1, Aspect3By2))
             column(modify(Padding1, Flex2)) {
                 column {
                     heading3(event.title ?: "[removed]", modify(SingleLine))

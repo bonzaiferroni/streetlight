@@ -1,6 +1,7 @@
 package koala.html
 
-import kampfire.model.ScaledImageArray
+import kampfire.model.ImageSize
+import kampfire.model.ImageVariants
 import kampfire.model.Url
 import kampfire.model.largest
 import koala.Image
@@ -19,18 +20,17 @@ import kotlinx.html.div
 import kotlinx.html.img
 
 fun FlowContent.fillImage(
-    src: Url? = null,
+    imageUrl: Url?,
     modifiers: ModifierSet? = null,
-    placeholder: Image = SiteImage.placeholderLg,
     fillWidth: Boolean = true,
     lazy: Boolean = true,
     block: IMG.() -> Unit = {}
 ) {
-    val src = src ?: placeholder.url
+    val src = imageUrl ?: SiteImage.placeholderLg
     div {
         configureFillImage(
             src = src,
-            images = null,
+            variants = null,
             modifiers = modifiers,
             fillWidth = fillWidth,
             lazy = lazy,
@@ -39,19 +39,18 @@ fun FlowContent.fillImage(
     }
 }
 
-fun FlowContent.fillImage(
-    images: ScaledImageArray? = null,
+fun FlowContent.fillImageSrcSet(
+    image: Image? = null,
     modifiers: ModifierSet? = null,
-    placeholder: ScaledImageArray = SiteImage.placeholder,
     fillWidth: Boolean = true,
     lazy: Boolean = true,
     block: IMG.() -> Unit = {}
 ) {
-    val images = images ?: placeholder
+    val variants = (image ?: SiteImage.placeholder).variants
     div {
         configureFillImage(
             src = null,
-            images = images,
+            variants = variants,
             modifiers = modifiers,
             fillWidth = fillWidth,
             lazy = lazy,
@@ -62,19 +61,19 @@ fun FlowContent.fillImage(
 
 fun DIV.configureFillImage(
     src: Url?,
-    images: ScaledImageArray?,
+    variants: ImageVariants?,
     modifiers: ModifierSet?,
     fillWidth: Boolean,
     lazy: Boolean,
     block: IMG.() -> Unit
 ) {
-    val src = src ?: images.largest ?: SiteImage.placeholderLg.url
+    val src = src ?: variants.largest ?: SiteImage.placeholderLg
     addModifiers(ImageWithBackdropKey.Class, modifiers)
     img {
         addModifiers(ImageWithBackdropKey.BackdropClass)
         this.src = src.value
-        images?.let {
-            configureImages(images)
+        variants?.let {
+            configureSrcSet(variants)
         }
     }
     div {
@@ -86,8 +85,8 @@ fun DIV.configureFillImage(
             }
             addModifiers(mod)
             this.src = src.value
-            images?.let {
-                configureImages(images)
+            variants?.let {
+                configureSrcSet(variants)
             }
             if (lazy) {
                 loading = ImgLoading.lazy

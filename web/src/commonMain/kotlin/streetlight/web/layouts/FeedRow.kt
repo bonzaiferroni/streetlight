@@ -2,6 +2,8 @@ package streetlight.web.layouts
 
 import kampfire.api.Markdown
 import kampfire.model.Url
+import koala.Image
+import koala.SiteImage
 import koala.css.*
 import koala.html.*
 import kotlinx.html.DIV
@@ -11,13 +13,15 @@ import streetlight.model.data.ExtraLink
 fun FlowContent.feedRow(
     heading: String,
     postRoute: AppRoute?,
-    imageUrl: Url?,
+    image: Image?,
     description: Markdown?,
     colorScheme: ColorScheme = ColorScheme.Primary,
     links: List<ExtraLink>?,
     cells: (FlowContent.() -> Unit)?,
     subheading: (DIV.() -> Unit)?,
 ) {
+    val imageUrl = image?.thumb ?: SiteImage.placeholder.thumb // td: make placeholder depend on post type
+
     div(modify(FeedRow.Base)) {
         div(modify(FeedRow.Content)) {
             setStyle(Property.ColorScheme.to(colorScheme.cssValue))

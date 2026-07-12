@@ -23,7 +23,7 @@ fun AppScope.viewMediaForge(galaxy: Galaxy?) {
         }
 
         card {
-            postForm(model)
+            mediaForm(model)
         }
 
         row(modify(JustifyContentEnd)) {

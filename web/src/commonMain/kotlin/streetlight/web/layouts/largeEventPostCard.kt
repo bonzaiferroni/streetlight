@@ -13,7 +13,7 @@ fun FlowContent.largeEventPostCard(post: EventPost) {
         subtitle = "${event.locationName}, ${event.city}",
         description = post.body,
         links = event.links,
-        images = post.images,
+        image = post.image,
         postRoute = event.eventRoute,
         subRoute = event.locationRoute,
         cells = listOf(

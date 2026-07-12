@@ -5,8 +5,8 @@ import kabinet.utils.toMetricString
 import kampfire.api.Markdown
 import kampfire.api.Slug
 import kampfire.api.Username
-import kampfire.model.Url
 import kampfire.utils.takeEllipsis
+import koala.Image
 import koala.SvgFile
 import koala.css.*
 import koala.html.*
@@ -28,7 +28,7 @@ fun FlowContent.feedPostLegacy(
     subHeading: String?,
     postRoute: AppRoute?,
     subRoute: AppRoute?,
-    imageUrl: Url?,
+    image: Image?,
     description: Markdown?,
     isLit: Boolean = false,
     lightCount: Int = 0,
@@ -67,7 +67,7 @@ fun FlowContent.feedPostLegacy(
 
         // image
         navigationIfNotNull(postRoute, modify(GridArea.Image)) {
-            featureImage(imageUrl, modify(Size100P, MinHeight0))
+            featureImage(image, modify(Size100P, MinHeight0))
         }
 
         // body

@@ -5,6 +5,7 @@ import koala.LottieFile
 import koala.css.*
 import koala.dom.*
 import koala.dom.routeBlock
+import koala.html.spacer
 import streetlight.model.data.GalaxyEdit
 import streetlight.model.data.toEdit
 import streetlight.web.GalaxyConfigRoute
@@ -37,8 +38,11 @@ fun AppScope.viewGalaxyConfig(edit: GalaxyEdit) {
             }
         }
 
-        row(modify(JustifyContentSpaceBetween)) {
+        row {
             button("back", { portal.goBack() })
+            spacer(modify(Flex1))
+
+            messageBox(model.editMessage)
             button("Save", model::submit, modify(Accent))
         }
 

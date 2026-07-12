@@ -3,11 +3,12 @@ package streetlight.web.model
 import kabinet.utils.replaceAt
 import kampfire.api.Markdown
 import kampfire.api.toMarkdown
-import kampfire.model.Url
 import kampfire.model.handleOutcome
+import koala.Image
 import koala.dom.MessageStore
 import koala.model.mapDistinct
 import koala.model.storeOf
+import koala.toImage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalTime
@@ -35,9 +36,9 @@ class EventEditor(
 
     val message = MessageStore()
     val urlMessage = MessageStore()
+    val imageEditor = ImageEditor(initialEvent?.image, api)
 
     val editFlow = state.flow.mapDistinct { it.edit }
-    val imageUrlFlow = editFlow.mapDistinct { it.imageRef }
     val startTimeFlow = editFlow.mapDistinct { it.startTime }
     val endTimeFlow = editFlow.mapDistinct { it.endTime }
     val dateFlow = editFlow.mapDistinct { it.date }
@@ -57,7 +58,6 @@ class EventEditor(
     fun setDate(value: LocalDate) = setEvent { it.copy(date = value) }
     fun setDescription(value: Markdown) = setEvent { it.copy(description = value) }
     fun setUrl(value: String) = setEvent { it.copy(website = value) }
-    fun setImageUrl(url: Url?) = setEvent { it.copy(imageRef = url) }
     fun setFree(value: Boolean) = setEvent { it.copy(cost = if (value) 0f else null)}
     fun setOriginalSourceLabel(value: String) = state.set { it.copy(originalSourceLabel = value) }
     fun setOriginalSourceUrl(value: String) = state.set { it.copy(originalSourceUrl = value) }
@@ -113,29 +113,19 @@ class EventEditor(
     }
 
     suspend fun submitSuspend(): Event? {
-        if (!isEditValid() || !uploadImageIfBlob()) return null
+        if (!isEditValid()) return null
+        val image = imageEditor.finalizeImage(message)
+        val edit = editNow.copy(image = image)
 
         message.set("Sending...", true)
         return when (editNow.eventId) {
-            null -> api.createEvent(editNow)
-            else -> api.updateEvent(editNow)
+            null -> api.createEvent(edit)
+            else -> api.updateEvent(edit)
         }.handleOutcome(message::set)
     }
 
     private fun setEvent(provideEvent: (EventEdit) -> EventEdit) {
         state.set { it.copy(edit = provideEvent(editNow)) }
-    }
-
-    private suspend fun uploadImageIfBlob(): Boolean {
-        val blobUrl = editNow.imageRef?.takeIf { it.isBlob } ?: return true
-        message.set("Uploading image...", true)
-        val refUrl = api.uploadImage(blobUrl).handleOutcome(message::set)
-        if (refUrl == null) {
-            message.set("Unable to upload image.")
-            return false
-        }
-        setImageUrl(refUrl)
-        return true
     }
 }
 

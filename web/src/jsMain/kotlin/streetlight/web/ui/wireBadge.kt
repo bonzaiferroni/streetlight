@@ -20,7 +20,7 @@ fun AppScope.wireBadge() {
         gate.starFlow.collect { star ->
             val url = when (star) {
                 null -> SvgFile.Someone.url
-                else -> star.images.thumb ?: SiteImage.placeholderTh.url
+                else -> star.image?.thumb ?: SiteImage.placeholderTh
             }
             element.src = url.value
         }

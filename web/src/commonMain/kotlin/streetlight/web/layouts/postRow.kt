@@ -2,9 +2,8 @@ package streetlight.web.layouts
 
 import kampfire.api.Markdown
 import kampfire.api.Username
-import kampfire.model.Url
 import kampfire.model.medium
-import kampfire.model.thumb
+import koala.Image
 import koala.html.AppRoute
 import koala.html.textBlock
 import kotlinx.html.FlowContent
@@ -23,7 +22,7 @@ fun FlowContent.postRow(
     isGalaxyContext: Boolean,
     heading: String,
     postRoute: AppRoute?,
-    imageUrl: Url?,
+    image: Image?,
     description: Markdown?,
     colorScheme: ColorScheme = ColorScheme.Primary,
     links: List<ExtraLink>?,
@@ -31,7 +30,7 @@ fun FlowContent.postRow(
 ) = feedRow(
     heading = heading,
     postRoute = postRoute,
-    imageUrl = imageUrl,
+    image = image,
     description = description,
     colorScheme = colorScheme,
     links = links,
@@ -49,7 +48,7 @@ fun FlowContent.postRow(post: GalaxyPost) = postRow(
     // subHeading = post.subtitle,
     postRoute = post.route,
     // subRoute = post.subRoute,
-    imageUrl = post.images.thumb,
+    image = post.image,
     description = post.body,
     colorScheme = post.colorScheme,
     links = post.links,
@@ -61,7 +60,7 @@ fun FlowContent.postRow(post: GalaxyPost) = postRow(
 fun FlowContent.entityRow(entity: Entity, showMore: Boolean = false) = feedRow(
     heading = entity.label,
     postRoute = entity.contentRoute,
-    imageUrl = entity.images.thumb,
+    image = entity.image,
     description = entity.body,
     colorScheme = entity.colorScheme,
     links = entity.links,
@@ -81,7 +80,7 @@ fun FlowContent.postRow(location: Location) {
         heading = location.label,
         subHeading = location.sublabel,
         postRoute = null, subRoute = null,
-        imageUrl = location.images.medium,
+        image = location.image,
         description = location.description,
         colorScheme = ColorScheme.Primary,
         links = location.links,
@@ -96,7 +95,7 @@ fun FlowContent.postRow(edit: LocationEdit, username: Username?) {
         heading = edit.label,
         subHeading = edit.subLabel,
         postRoute = null, subRoute = null,
-        imageUrl = edit.imageRef,
+        image = edit.image,
         description = edit.description,
         colorScheme = ColorScheme.Primary,
         links = edit.links,
@@ -111,7 +110,7 @@ fun FlowContent.postRow(event: EventLocation) {
         heading = event.label,
         subHeading = event.locationLabel,
         postRoute = null, subRoute = null,
-        imageUrl = event.images.medium,
+        image = event.image,
         description = event.description,
         colorScheme = ColorScheme.Accent,
         links = event.links,
@@ -126,7 +125,7 @@ fun FlowContent.postRow(event: Event) {
         heading = event.title,
         subHeading = null,
         postRoute = null, subRoute = null,
-        imageUrl = event.images.medium,
+        image = event.image,
         description = event.description,
         colorScheme = ColorScheme.Accent,
         links = event.links,
@@ -142,7 +141,7 @@ fun FlowContent.postRow(event: EventEdit, location: Location) {
         heading = event.title ?: "[Title]",
         subHeading = "${location.name ?: location.address ?: "[Location]"}, ${location.city ?: "[City]"}",
         postRoute = null, subRoute = null,
-        imageUrl = event.imageRef,
+        image = event.image,
         description = event.description,
         colorScheme = ColorScheme.Accent,
         links = event.displayedLinks,

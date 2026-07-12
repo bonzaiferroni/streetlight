@@ -12,7 +12,7 @@ import kotlinx.html.style
 import org.w3c.dom.HTMLImageElement
 
 fun TagScope.image(
-    url: Url? = SiteImage.placeholderLg.url,
+    url: Url? = SiteImage.placeholderLg,
     mod: ModifierSet? = null,
     block: (IMG.() -> Unit)? = null
 ): HTMLImageElement {
@@ -31,7 +31,7 @@ fun TagScope.image(
 
 fun AppScope.image(
     binding: Flow<Url?>,
-    initial: Url? = SiteImage.placeholderLg.url,
+    initial: Url? = SiteImage.placeholderLg,
     mod: ModifierSet? = null,
     hideOnError: Boolean = true,
     block: (IMG.() -> Unit)? = null

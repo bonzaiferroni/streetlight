@@ -52,7 +52,7 @@ fun FlowContent.mediaShell(media: Media) {
             }
         }
 
-        media.images.largest?.let {
+        media.image?.largest?.let {
             column(modify(SideBorder, BorderRadius1)) {
                 image(it, modify(AlignSelfCenter, MaxHeight64, BorderRadius2, MoonShadow))
             }

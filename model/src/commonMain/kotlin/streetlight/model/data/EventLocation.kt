@@ -5,7 +5,8 @@ import kampfire.api.Slug
 import kampfire.api.Username
 import kampfire.model.GeoPoint
 import kampfire.model.Labeled
-import kampfire.model.ScaledImageArray
+import koala.Image
+import koala.SiteImage
 import kotlin.time.Instant
 import kotlinx.serialization.Serializable
 import kotlin.time.Duration.Companion.hours
@@ -18,7 +19,7 @@ data class EventLocation(
     val locationSlug: Slug,
     val scout: Username,
     val url: String?,
-    val eventImages: ScaledImageArray?,
+    val eventImage: Image?,
     val title: String,
     val description: Markdown?,
     val cost: Float?,
@@ -30,7 +31,7 @@ data class EventLocation(
     val locationDescription: Markdown?,
     val address: String?,
     val city: String?,
-    val locationImages: ScaledImageArray?,
+    val locationImage: Image?,
     val lightCount: Int?,
     val isLit: Boolean,
     val startsAt: Instant,
@@ -49,7 +50,7 @@ data class EventLocation(
         }.takeIf { it.isNotEmpty() }
     }
 
-    override val images get() = eventImages ?: locationImages
+    override val image get() = eventImage ?: locationImage ?: SiteImage.placeholder
 
     val addressLine by lazy {
         addressLineOf(address, city)
