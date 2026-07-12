@@ -1,6 +1,9 @@
 package streetlight.model.data
 
+import kampfire.api.Markdown
 import kampfire.api.Username
+import kampfire.model.CallerId
+import kampfire.model.Identity
 import kampfire.model.UserRole
 import koala.Image
 import kotlin.time.Instant
@@ -13,7 +16,7 @@ data class Star(
     val username: Username,
     val roles: Set<UserRole>,
     val name: String?,
-    val description: String?,
+    val description: Markdown?,
     val scoutLevel: Int,
     val image: Image?,
     val updatedAt: Instant,
@@ -31,7 +34,7 @@ value class StarId(override val value: Uuid): RecordId {
 data class StarEdit(
     val username: Username? = null,
     val name: String? = null,
-    val description: String? = null,
+    val description: Markdown? = null,
     val image: Image? = null,
 )
 
@@ -41,3 +44,6 @@ fun Star.toEdit() = StarEdit(
     description = description,
     image = image
 )
+
+fun CallerId.toStarId() = StarId(value)
+val Identity.starId get() = callerId.toStarId()

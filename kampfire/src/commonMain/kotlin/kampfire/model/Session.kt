@@ -1,10 +1,13 @@
 package kampfire.model
 
+import kampfire.api.TableId
+import kampfire.api.Username
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.Instant
+import kotlin.uuid.Uuid
 
 @Serializable
 data class Session(
@@ -22,7 +25,14 @@ value class Token(val value: String)
 @JvmInline
 value class HashedToken(val hash: String)
 
-interface Identity
+data class Identity(
+    val callerId: CallerId,
+    val username: Username,
+    val roles: Set<UserRole>,
+)
+
+@JvmInline
+value class CallerId(override val value: Uuid): TableId<Uuid>
 
 data class SessionIdentity(
     val session: Session,

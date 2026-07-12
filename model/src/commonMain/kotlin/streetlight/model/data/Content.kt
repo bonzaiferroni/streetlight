@@ -20,3 +20,15 @@ data class EventUpdaterContent(
     val event: Event,
     val editLogs: List<EditLog>
 )
+
+@Serializable
+data class GalaxyContent(
+    val galaxy: Galaxy,
+    val posts: List<GalaxyPost>,
+)
+
+@Serializable
+data class StarContent(
+    val star: Star,
+    val posts: List<Media>,
+)

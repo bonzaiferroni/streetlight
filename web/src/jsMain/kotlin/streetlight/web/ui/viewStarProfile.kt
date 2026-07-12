@@ -6,7 +6,7 @@ import koala.dom.routeBlock
 import koala.dom.textBlock
 import streetlight.web.StarRoute
 
-fun AppScope.viewStarProfile(username: String) {
+fun AppScope.viewStar(username: String) {
     column {
         textBlock("Profile of: $username")
     }
@@ -22,6 +22,6 @@ fun AppScope.viewStarProfileRoute() {
 //        )
         route.slug.value
     }) { content ->
-        viewStarProfile(content)
+        viewStar(content)
     }
 }
