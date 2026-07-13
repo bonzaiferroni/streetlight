@@ -1,7 +1,6 @@
 package koala.html
 
 import kampfire.model.ImageSize
-import kampfire.model.large
 import koala.Image
 import koala.SiteImage
 import koala.css.Class
@@ -18,7 +17,7 @@ fun FlowContent.featureImage(
     size: ImageSize = ImageSize.Medium,
     block: DIV.() -> Unit = {}
 ) {
-    val src = image?.getVariantOrNull(size) ?: SiteImage.getPlaceholder(size)
+    val src = image?.getSizeOrNull(size) ?: SiteImage.getPlaceholder(size)
     div {
         addModifiers(Class, modifiers)
         block()

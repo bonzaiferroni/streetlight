@@ -21,6 +21,16 @@ fun ImageVariants?.getSize(size: ImageSize) = when (size) {
     ImageSize.Medium -> this?.firstOrNull { it.size == ImageSize.Medium }?.url
     ImageSize.Large -> this?.firstOrNull { it.size == ImageSize.Large }?.url
 }
+
+fun ImageVariants.getSizeOrLarger(size: ImageSize): Url? {
+    for (i in size.ordinal until ImageSize.entries.size) {
+        val candidate = ImageSize.entries[i]
+        val url = firstOrNull { it.size == candidate }?.url
+        if (url != null) return url
+    }
+    return null
+}
+
 fun ImageVariants?.target(size: ImageSize) = when (size) {
     ImageSize.Thumb -> getSize(ImageSize.Thumb)
     ImageSize.Small -> getSize(ImageSize.Small) ?: getSize(ImageSize.Thumb)

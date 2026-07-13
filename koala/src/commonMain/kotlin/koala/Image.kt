@@ -4,6 +4,7 @@ import kampfire.model.ImageSize
 import kampfire.model.ImageVariant
 import kampfire.model.Url
 import kampfire.model.getSize
+import kampfire.model.getSizeOrLarger
 import kampfire.model.large
 import kampfire.model.largest
 import kampfire.model.medium
@@ -30,7 +31,7 @@ data class Image(
     val value get() = url.value
     val filename get() = url.filename
 
-    fun getVariantOrNull(size: ImageSize) = variants.getSize(size)
+    fun getSizeOrNull(size: ImageSize) = variants.getSize(size)
 
     val thumb get() = variants.thumb
     val small get() = variants.small
@@ -62,4 +63,4 @@ fun siteImageOf(
 
 fun siteImageUrlOf(path: String) = "$imgPath$path".toUrl()
 
-fun Image?.getVariantOrPlaceholder(size: ImageSize) = this?.getVariantOrNull(size) ?: SiteImage.getPlaceholder(size)
+fun Image?.getVariantOrPlaceholder(size: ImageSize) = this?.getSizeOrNull(size) ?: SiteImage.getPlaceholder(size)

@@ -13,7 +13,7 @@ fun FlowContent.metaImage(
     size: ImageSize = ImageSize.Large,
     mod: ModifierSet? = null,
 ) {
-    val src = image.getVariantOrPlaceholder(size)
+    val src = image?.getSizeOrNull(size) ?: image?.url ?: SiteImage.getPlaceholder(size)
     box(mod) {
         image(src, mod = modify(ObjectFitCover, PlaceSelfStretch), alt = image?.description) {
             image?.aspectRatio?.let {
