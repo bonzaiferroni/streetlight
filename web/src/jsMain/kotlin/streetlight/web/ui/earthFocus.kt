@@ -1,6 +1,5 @@
 package streetlight.web.ui
 
-import kampfire.model.medium
 import koala.css.*
 import koala.dom.*
 import koala.html.AppRoute
@@ -17,8 +16,8 @@ import koala.model.PointMarker
 import kotlinx.html.FlowContent
 import kotlinx.html.hr
 import streetlight.model.data.Entity
-import streetlight.web.CityRoute
-import streetlight.web.GalaxyRoute
+import streetlight.model.ui.CityRoute
+import streetlight.model.ui.GalaxyRoute
 import streetlight.web.layouts.ColorScheme
 import streetlight.web.layouts.cellBlock
 import streetlight.web.layouts.cellContentOf

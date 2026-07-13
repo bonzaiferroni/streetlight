@@ -4,7 +4,7 @@ import kampfire.model.handleOutcome
 import koala.dom.*
 import koala.model.DocNode
 import koala.model.DocTable
-import streetlight.web.SiteDocRoute
+import streetlight.model.ui.SiteDocRoute
 import streetlight.web.shells.SiteDocKey
 import streetlight.web.shells.siteDocShell
 

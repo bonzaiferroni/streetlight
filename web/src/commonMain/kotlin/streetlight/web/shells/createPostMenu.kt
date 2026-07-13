@@ -4,9 +4,9 @@ import koala.css.*
 import koala.html.*
 import kotlinx.html.FlowContent
 import streetlight.model.data.Galaxy
-import streetlight.web.EventScoutRoute
-import streetlight.web.LocationScoutRoute
-import streetlight.web.MediaForgeRoute
+import streetlight.model.ui.EventScoutRoute
+import streetlight.model.ui.LocationScoutRoute
+import streetlight.model.ui.MediaForgeRoute
 
 fun FlowContent.createPostMenu(galaxy: Galaxy) {
     buttonPopover("Create Post", modify(Accent)) {

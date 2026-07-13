@@ -6,8 +6,8 @@ import koala.dom.*
 import koala.model.mapDistinctNotNull
 import streetlight.model.data.Galaxy
 import streetlight.model.data.LocationEdit
-import streetlight.web.GalaxyRoute
-import streetlight.web.LocationScoutRoute
+import streetlight.model.ui.GalaxyRoute
+import streetlight.model.ui.LocationScoutRoute
 import streetlight.web.layouts.postRow
 import streetlight.web.model.LocationScoutStage
 

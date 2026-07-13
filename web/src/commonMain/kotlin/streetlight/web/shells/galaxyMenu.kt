@@ -11,7 +11,7 @@ import koala.html.row
 import koala.html.setJsonData
 import kotlinx.html.FlowContent
 import streetlight.model.data.Galaxy
-import streetlight.web.HomeRoute
+import streetlight.model.ui.HomeRoute
 import streetlight.web.layouts.GalaxyKey
 
 fun FlowContent.galaxyMenu(

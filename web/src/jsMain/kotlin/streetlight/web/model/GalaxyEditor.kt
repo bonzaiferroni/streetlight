@@ -19,7 +19,7 @@ import streetlight.model.data.City
 import streetlight.model.data.GalaxyEdit
 import streetlight.model.data.PostPermission
 import streetlight.model.data.slugOf
-import streetlight.web.GalaxyRoute
+import streetlight.model.ui.GalaxyRoute
 import streetlight.web.io.ApiClient
 import kotlin.time.Duration.Companion.milliseconds
 

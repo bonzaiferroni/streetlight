@@ -14,7 +14,7 @@ import kotlinx.dom.clear
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLParagraphElement
 import streetlight.model.data.Comment
-import streetlight.web.StarRoute
+import streetlight.model.ui.StarRoute
 import streetlight.web.io.TalkLog
 
 class CommentView(

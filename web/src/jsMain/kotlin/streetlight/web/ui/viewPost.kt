@@ -7,7 +7,7 @@ import koala.dom.routeBlock
 import koala.dom.shellBox
 import streetlight.model.data.Media
 import streetlight.model.data.SpaceType
-import streetlight.web.MediaRoute
+import streetlight.model.ui.MediaRoute
 import streetlight.web.io.TalkLog
 import streetlight.web.shells.PostKey
 import streetlight.web.shells.mediaShell

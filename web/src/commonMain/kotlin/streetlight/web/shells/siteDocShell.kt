@@ -6,7 +6,7 @@ import koala.html.*
 import koala.model.DocNode
 import koala.model.DocTable
 import kotlinx.html.FlowContent
-import streetlight.web.SiteDocRoute
+import streetlight.model.ui.SiteDocRoute
 import streetlight.web.pages.appFooter
 import streetlight.web.ui.BodyStyle
 import streetlight.web.ui.featureHeader

@@ -6,7 +6,7 @@ import koala.css.*
 import koala.html.*
 import kotlinx.html.FlowContent
 import streetlight.model.data.ExtraLink
-import streetlight.web.StreetlightRoute
+import streetlight.model.ui.StreetlightRoute
 
 fun FlowContent.largePostCard(
     title: String,

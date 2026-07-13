@@ -13,7 +13,7 @@ import koala.model.Portal
 import kotlinx.browser.document
 import kotlinx.browser.window
 import org.w3c.dom.HTMLElement
-import streetlight.web.Screen
+import streetlight.model.ui.Screen
 
 fun AppScope.appNavigation() {
     val portal = app.get<Portal>()

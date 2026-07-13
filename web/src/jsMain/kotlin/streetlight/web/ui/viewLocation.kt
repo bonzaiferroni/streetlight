@@ -3,7 +3,7 @@ package streetlight.web.ui
 import kampfire.model.handleOutcome
 import koala.dom.*
 import streetlight.model.data.LocationContent
-import streetlight.web.LocationRoute
+import streetlight.model.ui.LocationRoute
 import streetlight.web.shells.LocationProfileKey
 import streetlight.web.shells.locationShell
 

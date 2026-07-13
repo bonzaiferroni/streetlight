@@ -1,11 +1,10 @@
 package streetlight.web.layouts
 
-import kampfire.model.small
 import koala.css.*
 import koala.html.*
 import kotlinx.html.FlowContent
 import streetlight.model.data.Galaxy
-import streetlight.web.toRoute
+import streetlight.model.ui.toRoute
 
 fun FlowContent.smallGalaxyCard(galaxy: Galaxy) {
     val route = galaxy.toRoute()

@@ -8,7 +8,7 @@ import koala.dom.routeBlock
 import koala.html.spacer
 import streetlight.model.data.GalaxyEdit
 import streetlight.model.data.toEdit
-import streetlight.web.GalaxyConfigRoute
+import streetlight.model.ui.GalaxyConfigRoute
 
 fun AppScope.viewGalaxyConfig(edit: GalaxyEdit) {
     val model = app.getGalaxyEditor(edit, parentScope)

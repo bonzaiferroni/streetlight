@@ -9,8 +9,8 @@ import koala.model.mapDistinctNotNull
 import kotlinx.html.js.h3
 import streetlight.model.data.Galaxy
 import streetlight.model.data.MediaEdit
-import streetlight.web.MediaForgeRoute
-import streetlight.web.MediaRoute
+import streetlight.model.ui.MediaForgeRoute
+import streetlight.model.ui.MediaRoute
 
 fun AppScope.viewMediaForge(galaxy: Galaxy?) {
     println(galaxy) // ey

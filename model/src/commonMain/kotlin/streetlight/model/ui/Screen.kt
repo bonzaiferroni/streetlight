@@ -1,4 +1,4 @@
-package streetlight.web
+package streetlight.model.ui
 
 import kampfire.api.SlugValue
 import kampfire.api.TableId

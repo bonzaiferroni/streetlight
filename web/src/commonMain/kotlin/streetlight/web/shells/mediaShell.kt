@@ -1,6 +1,5 @@
 package streetlight.web.shells
 
-import kampfire.model.largest
 import koala.css.AlignSelfCenter
 import koala.css.AntiShadow
 import koala.css.BorderRadius1
@@ -37,7 +36,7 @@ import koala.html.row
 import koala.html.section
 import kotlinx.html.FlowContent
 import streetlight.model.data.Media
-import streetlight.web.MediaUpdateRoute
+import streetlight.model.ui.MediaUpdateRoute
 import streetlight.web.layouts.cellBlock
 import streetlight.web.layouts.postedAtCell
 import streetlight.web.layouts.starCell

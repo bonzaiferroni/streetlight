@@ -2,8 +2,7 @@ package streetlight.web.pages
 
 import koala.html.appHead
 import kotlinx.html.HTML
-import streetlight.web.Screen
-import streetlight.web.shells.aboutAppShell
+import streetlight.model.ui.Screen
 import streetlight.web.shells.aboutShell
 
 fun HTML.aboutPage(styles: String) {

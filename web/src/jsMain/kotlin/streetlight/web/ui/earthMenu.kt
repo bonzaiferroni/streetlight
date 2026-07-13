@@ -5,21 +5,20 @@ import koala.css.Magic
 import koala.css.PointerEventsAuto
 import koala.css.modify
 import koala.dom.AppScope
-import koala.dom.MenuButton
 import koala.dom.MenuLabel
 import koala.dom.MenuRoute
 import koala.dom.flowBlock
 import koala.dom.routeMenu
 import koala.html.IconAction
 import koala.html.IconRoute
-import streetlight.web.CityMap
-import streetlight.web.CityMapRoute
-import streetlight.web.CityRoute
-import streetlight.web.EarthMap
-import streetlight.web.GalaxyMap
-import streetlight.web.GalaxyMapRoute
-import streetlight.web.GalaxyRoute
-import streetlight.web.HomeRoute
+import streetlight.model.ui.CityMap
+import streetlight.model.ui.CityMapRoute
+import streetlight.model.ui.CityRoute
+import streetlight.model.ui.EarthMap
+import streetlight.model.ui.GalaxyMap
+import streetlight.model.ui.GalaxyMapRoute
+import streetlight.model.ui.GalaxyRoute
+import streetlight.model.ui.HomeRoute
 import streetlight.web.model.Earth
 
 fun AppScope.earthMenu(model: Earth) {

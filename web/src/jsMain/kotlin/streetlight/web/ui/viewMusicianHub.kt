@@ -20,7 +20,7 @@ import koala.dom.tabs
 import koala.dom.textBlock
 import koala.dom.textField
 import koala.html.Id
-import streetlight.web.SongProfileRoute
+import streetlight.model.ui.SongProfileRoute
 import streetlight.web.model.MusicianHub
 
 fun AppScope.viewMusicianHub(

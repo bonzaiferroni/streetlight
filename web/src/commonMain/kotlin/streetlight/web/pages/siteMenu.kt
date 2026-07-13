@@ -6,15 +6,15 @@ import koala.css.*
 import koala.html.*
 import kotlinx.html.FlowContent
 import kotlinx.html.onClick
-import streetlight.web.CityListRoute
-import streetlight.web.ContributeRoute
-import streetlight.web.FrontDeskRoute
-import streetlight.web.GalaxyListRoute
-import streetlight.web.GalaxyMapRoute
-import streetlight.web.HomeRoute
-import streetlight.web.Screen
-import streetlight.web.SiteConfigRoute
-import streetlight.web.SiteMonitorRoute
+import streetlight.model.ui.CityListRoute
+import streetlight.model.ui.ContributeRoute
+import streetlight.model.ui.FrontDeskRoute
+import streetlight.model.ui.GalaxyListRoute
+import streetlight.model.ui.GalaxyMapRoute
+import streetlight.model.ui.HomeRoute
+import streetlight.model.ui.Screen
+import streetlight.model.ui.SiteConfigRoute
+import streetlight.model.ui.SiteMonitorRoute
 import streetlight.web.doc.SiteDoc
 import streetlight.web.layouts.route
 

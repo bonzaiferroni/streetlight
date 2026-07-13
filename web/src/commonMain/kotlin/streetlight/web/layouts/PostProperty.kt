@@ -15,12 +15,12 @@ import streetlight.model.data.GalaxyPost
 import streetlight.model.data.Media
 import streetlight.model.data.MediaPost
 import streetlight.model.data.Entity
-import streetlight.web.CityRoute
-import streetlight.web.EventRoute
-import streetlight.web.GalaxyRoute
-import streetlight.web.LocationRoute
-import streetlight.web.MediaRoute
-import streetlight.web.SiteDocRoute
+import streetlight.model.ui.CityRoute
+import streetlight.model.ui.EventRoute
+import streetlight.model.ui.GalaxyRoute
+import streetlight.model.ui.LocationRoute
+import streetlight.model.ui.MediaRoute
+import streetlight.model.ui.SiteDocRoute
 
 val Location.route get() = LocationRoute(slug)
 val Event.route get() = EventRoute(slug)

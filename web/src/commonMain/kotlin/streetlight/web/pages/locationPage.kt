@@ -2,9 +2,8 @@ package streetlight.web.pages
 
 import koala.html.appHead
 import kotlinx.html.HTML
-import streetlight.model.data.Location
 import streetlight.model.data.LocationContent
-import streetlight.web.Screen
+import streetlight.model.ui.Screen
 import streetlight.web.shells.locationShell
 
 fun HTML.locationPage(content: LocationContent, styles: String) {

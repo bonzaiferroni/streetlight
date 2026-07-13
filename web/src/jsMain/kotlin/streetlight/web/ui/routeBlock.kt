@@ -3,7 +3,7 @@ package streetlight.web.ui
 import koala.dom.AppScope
 import koala.dom.routeBlock
 import org.w3c.dom.HTMLElement
-import streetlight.web.StreetlightRoute
+import streetlight.model.ui.StreetlightRoute
 
 // convenience functions so we don't need to pass portal as an arg, probably should nix
 inline fun <reified Route: StreetlightRoute> AppScope.routeBlock(

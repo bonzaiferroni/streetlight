@@ -4,7 +4,7 @@ import koala.dom.*
 import koala.model.mapDistinct
 import streetlight.model.data.TalentEdit
 import streetlight.model.data.toEdit
-import streetlight.web.EditTalentRoute
+import streetlight.model.ui.EditTalentRoute
 import streetlight.web.model.DataCache
 
 fun AppScope.editTalentForm() {

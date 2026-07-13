@@ -7,7 +7,7 @@ import koala.html.icon
 import koala.html.logo
 import koala.html.row
 import kotlinx.html.FlowContent
-import streetlight.web.HomeRoute
+import streetlight.model.ui.HomeRoute
 
 
 fun FlowContent.appHeader(

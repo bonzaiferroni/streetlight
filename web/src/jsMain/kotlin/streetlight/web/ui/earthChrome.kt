@@ -1,7 +1,6 @@
 package streetlight.web.ui
 
 import koala.SvgFile
-import koala.css.AccentFg
 import koala.css.AlignItemsCenter
 import koala.css.Aspect1
 import koala.css.BlurBackdrop
@@ -15,7 +14,6 @@ import koala.css.OpacityLow
 import koala.css.Padding1
 import koala.css.PaperGradientBg
 import koala.css.PointerEventsAuto
-import koala.css.PrimaryFg
 import koala.css.SingleLine
 import koala.css.Width5
 import koala.css.WidthFitContent
@@ -31,10 +29,9 @@ import koala.html.filigree
 import koala.html.heading3
 import koala.html.logo
 import koala.html.span
-import streetlight.web.GalaxyMapRoute
-import streetlight.web.HomeRoute
+import streetlight.model.ui.GalaxyMapRoute
+import streetlight.model.ui.HomeRoute
 import streetlight.web.model.Earth
-import streetlight.web.model.MarkerType
 
 private fun AppScope.boundsHud(model: Earth) {
     flowBlock(model.summaryFlow) { summary ->

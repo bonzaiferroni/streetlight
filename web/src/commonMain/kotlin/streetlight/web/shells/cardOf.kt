@@ -1,6 +1,5 @@
 package streetlight.web.shells
 
-import kampfire.model.thumb
 import koala.SiteImage
 import koala.css.ModifierSet
 import koala.html.cardOf
@@ -10,8 +9,8 @@ import streetlight.model.data.EventLocation
 import streetlight.model.data.Galaxy
 import streetlight.model.data.EventPost
 import streetlight.model.data.Location
-import streetlight.web.GalaxyRoute
-import streetlight.web.LocationRoute
+import streetlight.model.ui.GalaxyRoute
+import streetlight.model.ui.LocationRoute
 import streetlight.web.layouts.eventRoute
 import streetlight.web.layouts.route
 

@@ -2,13 +2,10 @@ package streetlight.web.ui
 
 import kampfire.model.handleOutcome
 import koala.dom.AppScope
-import koala.dom.column
 import koala.dom.routeBlock
 import koala.dom.shellBox
-import koala.dom.textBlock
 import streetlight.model.data.StarContent
-import streetlight.web.StarRoute
-import streetlight.web.shells.GalaxyShell
+import streetlight.model.ui.StarRoute
 import streetlight.web.shells.StarShell
 import streetlight.web.shells.starShell
 

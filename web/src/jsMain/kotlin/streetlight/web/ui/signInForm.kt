@@ -18,7 +18,7 @@ import koala.dom.row
 import koala.dom.textField
 import kotlinx.html.InputType
 import kotlinx.html.js.p
-import streetlight.web.HomeRoute
+import streetlight.model.ui.HomeRoute
 import streetlight.web.model.CredentialStore
 import streetlight.web.model.StarSession
 

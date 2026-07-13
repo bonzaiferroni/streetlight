@@ -1,6 +1,5 @@
 package streetlight.web.ui
 
-import kampfire.model.small
 import koala.css.ModifierSet
 import koala.css.modify
 import koala.dom.AppScope
@@ -11,7 +10,7 @@ import koala.html.buttonPopover
 import koala.html.card
 import koala.html.row
 import streetlight.model.data.Galaxy
-import streetlight.web.GalaxyMapRoute
+import streetlight.model.ui.GalaxyMapRoute
 import streetlight.web.model.DataCache
 import streetlight.web.shells.GalaxyMenuKey
 

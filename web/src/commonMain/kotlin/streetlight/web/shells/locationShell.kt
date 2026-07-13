@@ -5,7 +5,7 @@ import koala.html.*
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import streetlight.model.data.LocationContent
-import streetlight.web.LocationUpdateRoute
+import streetlight.model.ui.LocationUpdateRoute
 import streetlight.web.layouts.layoutPosts
 import streetlight.web.layouts.postRow
 import streetlight.web.pages.appFooter

@@ -4,7 +4,7 @@ import koala.SvgFile
 import koala.css.*
 import koala.html.*
 import kotlinx.html.FlowContent
-import streetlight.web.Screen
+import streetlight.model.ui.Screen
 
 fun FlowContent.helmBar() {
     val cardMod = modify(HelmBar.CardClass, BlurBackdrop, PointerEventsAuto, BorderRadius50P, ZenBg, BorderSolid2Px)

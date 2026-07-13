@@ -1,7 +1,6 @@
 package streetlight.web.layouts
 
 import kabinet.utils.toAgoFormat
-import kampfire.api.Slug
 import koala.css.AlignItemsCenter
 import koala.css.Bold
 import koala.css.MarginTopTiny
@@ -13,8 +12,8 @@ import koala.html.span
 import koala.html.textBlock
 import kotlinx.html.FlowContent
 import streetlight.model.data.Post
-import streetlight.web.GalaxyRoute
-import streetlight.web.StarRoute
+import streetlight.model.ui.GalaxyRoute
+import streetlight.model.ui.StarRoute
 import kotlin.time.Clock
 
 fun FlowContent.postInfo(

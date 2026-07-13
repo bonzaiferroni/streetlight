@@ -1,14 +1,13 @@
 package streetlight.web.layouts
 
 import kabinet.utils.toAgoFormat
-import kampfire.api.toSlug
 import koala.SvgFile
 import koala.css.*
 import koala.html.*
 import kotlinx.html.FlowContent
 import streetlight.model.data.Comment
 import streetlight.model.data.CommentId
-import streetlight.web.StarRoute
+import streetlight.model.ui.StarRoute
 import streetlight.web.shells.SectionHeadingMod
 
 fun FlowContent.layoutTalkPreview(route: AppRoute, comments: List<Comment>) {

@@ -11,8 +11,8 @@ import streetlight.model.data.EventEdit
 import streetlight.model.data.EventUpdaterContent
 import streetlight.model.data.Star
 import streetlight.model.data.toEdit
-import streetlight.web.EventRoute
-import streetlight.web.EventUpdateRoute
+import streetlight.model.ui.EventRoute
+import streetlight.model.ui.EventUpdateRoute
 
 fun AppScope.viewEventUpdater(content: EventUpdaterContent, star: Star) {
     val edit = content.event.toEdit()

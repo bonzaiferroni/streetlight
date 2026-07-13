@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.html.js.div
 import streetlight.model.data.Star
-import streetlight.web.StarDashRoute
+import streetlight.model.ui.StarDashRoute
 import streetlight.web.model.StarSession
 
 fun AppScope.starBlock(

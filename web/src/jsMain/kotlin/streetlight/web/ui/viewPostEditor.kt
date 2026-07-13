@@ -11,8 +11,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import streetlight.model.data.MediaEdit
 import streetlight.model.data.toEdit
-import streetlight.web.MediaUpdateRoute
-import streetlight.web.MediaRoute
+import streetlight.model.ui.MediaUpdateRoute
+import streetlight.model.ui.MediaRoute
 import streetlight.web.model.MediaEditor
 
 fun AppScope.viewMediumUpdater(model: MediaEditor) {

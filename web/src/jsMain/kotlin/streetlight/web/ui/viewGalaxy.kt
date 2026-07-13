@@ -4,7 +4,7 @@ import kampfire.model.handleOutcome
 import koala.dom.*
 import org.w3c.dom.HTMLElement
 import streetlight.model.data.GalaxyContent
-import streetlight.web.GalaxyRoute
+import streetlight.model.ui.GalaxyRoute
 import streetlight.web.model.MarkerService
 import streetlight.web.shells.GalaxyShell
 import streetlight.web.shells.galaxyShell

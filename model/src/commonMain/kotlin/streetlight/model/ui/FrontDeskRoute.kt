@@ -1,4 +1,4 @@
-package streetlight.web
+package streetlight.model.ui
 
 object FrontDeskRoute: StreetlightRoute {
     override val screen get() = Screen.Feedback

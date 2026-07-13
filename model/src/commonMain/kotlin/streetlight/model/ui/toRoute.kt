@@ -1,4 +1,4 @@
-package streetlight.web
+package streetlight.model.ui
 
 import streetlight.model.data.Galaxy
 

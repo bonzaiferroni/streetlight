@@ -13,8 +13,8 @@ import koala.html.*
 import kotlinx.html.FlowContent
 import streetlight.model.data.ExtraLink
 import streetlight.model.data.LightType
-import streetlight.web.GalaxyRoute
-import streetlight.web.StarRoute
+import streetlight.model.ui.GalaxyRoute
+import streetlight.model.ui.StarRoute
 import kotlin.time.Clock
 import kotlin.time.Instant
 

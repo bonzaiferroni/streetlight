@@ -5,7 +5,7 @@ import koala.css.*
 import koala.html.*
 import kotlinx.html.FlowContent
 import streetlight.model.data.EventLocation
-import streetlight.web.EventUpdateRoute
+import streetlight.model.ui.EventUpdateRoute
 import streetlight.web.layouts.costCell
 import streetlight.web.layouts.starCell
 import streetlight.web.layouts.startsAtCell

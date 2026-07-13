@@ -6,7 +6,7 @@ import koala.dom.*
 import koala.model.flowerOf
 import streetlight.model.data.Location
 import streetlight.model.data.toEdit
-import streetlight.web.LocationAdminRoute
+import streetlight.model.ui.LocationAdminRoute
 import streetlight.web.pages.appFooter
 import streetlight.web.shells.cardOf
 

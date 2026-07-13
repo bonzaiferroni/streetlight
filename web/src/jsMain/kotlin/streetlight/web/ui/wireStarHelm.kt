@@ -1,6 +1,5 @@
 package streetlight.web.ui
 
-import kampfire.model.thumb
 import koala.SvgFile
 import koala.css.*
 import koala.dom.*
@@ -13,8 +12,8 @@ import kotlinx.html.InputType
 import kotlinx.html.onClick
 import org.w3c.dom.HTMLElement
 import streetlight.model.data.Star
-import streetlight.web.StarDashRoute
-import streetlight.web.StarRoute
+import streetlight.model.ui.StarDashRoute
+import streetlight.model.ui.StarRoute
 import streetlight.web.model.CredentialStore
 import streetlight.web.model.StarSession
 import streetlight.web.pages.HelmBar

@@ -3,11 +3,10 @@ package streetlight.web.ui
 import kampfire.model.handleOutcome
 import koala.dom.*
 import koala.dom.routeBlock
-import koala.html.AppRoute
 import koala.model.Portal
 import kotlinx.browser.document
 import streetlight.model.data.HomeContent
-import streetlight.web.HomeRoute
+import streetlight.model.ui.HomeRoute
 import streetlight.web.io.ApiClient
 import streetlight.web.model.DataCache
 import streetlight.web.shells.HomeKey

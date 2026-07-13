@@ -1,11 +1,10 @@
 package streetlight.web.ui
 
 import kampfire.model.handleOutcome
-import koala.css.*
 import koala.dom.*
 import koala.model.GeoCamera
 import streetlight.model.data.EventLocation
-import streetlight.web.EventRoute
+import streetlight.model.ui.EventRoute
 import streetlight.web.model.DataCache
 import streetlight.web.shells.EventShell
 import streetlight.web.shells.eventShell

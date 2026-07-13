@@ -8,12 +8,12 @@ import koala.model.mapDistinct
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import streetlight.web.CityMap
-import streetlight.web.CityMapRoute
-import streetlight.web.EarthMap
-import streetlight.web.EarthRoute
-import streetlight.web.GalaxyMap
-import streetlight.web.GalaxyMapRoute
+import streetlight.model.ui.CityMap
+import streetlight.model.ui.CityMapRoute
+import streetlight.model.ui.EarthMap
+import streetlight.model.ui.EarthRoute
+import streetlight.model.ui.GalaxyMap
+import streetlight.model.ui.GalaxyMapRoute
 import streetlight.web.io.ApiClient
 
 class Earth(

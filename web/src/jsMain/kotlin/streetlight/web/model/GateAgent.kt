@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import streetlight.model.data.Star
-import streetlight.web.StarDashRoute
+import streetlight.model.ui.StarDashRoute
 
 class GateAgent(
     val scope: CoroutineScope,

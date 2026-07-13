@@ -8,12 +8,12 @@ import koala.html.filigree
 import koala.html.heading3
 import kotlinx.browser.document
 import kotlinx.coroutines.delay
-import streetlight.web.CityMap
-import streetlight.web.CityMapRoute
-import streetlight.web.EarthRoute
-import streetlight.web.GalaxyMapRoute
+import streetlight.model.ui.CityMap
+import streetlight.model.ui.CityMapRoute
+import streetlight.model.ui.EarthRoute
+import streetlight.model.ui.GalaxyMapRoute
 import streetlight.web.model.Earth
-import streetlight.web.GalaxyMap
+import streetlight.model.ui.GalaxyMap
 import streetlight.web.pages.AppBody
 
 fun AppScope.viewEarth(model: Earth) {

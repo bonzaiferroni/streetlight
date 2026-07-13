@@ -12,9 +12,9 @@ import streetlight.model.data.Galaxy
 import streetlight.model.data.LocationEdit
 import streetlight.model.data.GalaxyEdit
 import streetlight.model.data.MediaEdit
-import streetlight.web.EarthMap
-import streetlight.web.HomeRoute
-import streetlight.web.Screen
+import streetlight.model.ui.EarthMap
+import streetlight.model.ui.HomeRoute
+import streetlight.model.ui.Screen
 import streetlight.web.io.ApiClient
 import streetlight.web.io.FetchClient
 import streetlight.web.io.OSMClient

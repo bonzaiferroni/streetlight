@@ -6,8 +6,8 @@ import streetlight.model.data.LocationEdit
 import streetlight.model.data.LocationUpdaterContent
 import streetlight.model.data.Star
 import streetlight.model.data.toEdit
-import streetlight.web.LocationRoute
-import streetlight.web.LocationUpdateRoute
+import streetlight.model.ui.LocationRoute
+import streetlight.model.ui.LocationUpdateRoute
 
 fun AppScope.viewLocationUpdater(content: LocationUpdaterContent, star: Star) {
     val edit = content.location.toEdit()

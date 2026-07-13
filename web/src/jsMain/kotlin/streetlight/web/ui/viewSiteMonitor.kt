@@ -5,7 +5,7 @@ import koala.css.*
 import koala.dom.*
 import koala.external.ECharts
 import kotlinx.browser.document
-import streetlight.web.SiteMonitorRoute
+import streetlight.model.ui.SiteMonitorRoute
 
 fun AppScope.viewSiteMonitor() {
     val model = app.getSiteMonitor(parentScope)

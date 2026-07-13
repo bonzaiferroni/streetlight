@@ -5,12 +5,12 @@ import koala.css.*
 import koala.html.*
 import kotlinx.html.FlowContent
 import streetlight.model.data.GalaxyContent
-import streetlight.web.HomeRoute
+import streetlight.model.ui.HomeRoute
 import streetlight.web.layouts.postSection
 import streetlight.web.pages.appFooter
-import streetlight.web.toConfigRoute
-import streetlight.web.toEarthRoute
-import streetlight.web.toRoute
+import streetlight.model.ui.toConfigRoute
+import streetlight.model.ui.toEarthRoute
+import streetlight.model.ui.toRoute
 import streetlight.web.ui.headerOf
 
 fun FlowContent.galaxyShell(content: GalaxyContent) {

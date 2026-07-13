@@ -3,7 +3,7 @@ package streetlight.web.ui
 import kampfire.model.handleOutcome
 import koala.dom.*
 import kotlinx.coroutines.launch
-import streetlight.web.HomeRoute
+import streetlight.model.ui.HomeRoute
 import streetlight.web.model.DataCache
 import streetlight.web.model.MarkerService
 import streetlight.web.model.MarkerMap

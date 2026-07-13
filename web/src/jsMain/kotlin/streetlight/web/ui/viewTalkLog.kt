@@ -16,7 +16,7 @@ import streetlight.model.data.Comment
 import streetlight.model.data.CommentCreated
 import streetlight.model.data.CommentUpdated
 import streetlight.model.data.PostOrder
-import streetlight.web.TalkRoute
+import streetlight.model.ui.TalkRoute
 import streetlight.web.io.TalkLog
 
 fun AppScope.viewTalkLog(model: TalkLog) {

@@ -1,22 +1,21 @@
 package streetlight.web.ui
 
-import kampfire.model.thumb
 import koala.css.*
 import koala.dom.*
 import koala.html.btn
 import kotlinx.css.LinearDimension
 import kotlinx.css.fr
 import streetlight.model.data.Star
-import streetlight.web.EditStarRoute
-import streetlight.web.EditTalentRoute
-import streetlight.web.HomeRoute
-import streetlight.web.GalaxyListRoute
-import streetlight.web.SandboxRoute
-import streetlight.web.StarDashRoute
-import streetlight.web.TalentProfileRoute
+import streetlight.model.ui.EditStarRoute
+import streetlight.model.ui.EditTalentRoute
+import streetlight.model.ui.HomeRoute
+import streetlight.model.ui.GalaxyListRoute
+import streetlight.model.ui.SandboxRoute
+import streetlight.model.ui.StarDashRoute
+import streetlight.model.ui.TalentProfileRoute
 import streetlight.web.model.DataCache
 import streetlight.web.model.StarSession
-import streetlight.web.toRoute
+import streetlight.model.ui.toRoute
 
 fun AppScope.viewStarDash(star: Star) {
     column(mod = BodyStyle.Mod) {
