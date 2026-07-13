@@ -63,7 +63,7 @@ fun AppScope.appNavigation() {
             Screen.GalaxyUpdate -> viewGalaxyConfigRoute()
             Screen.GalaxyList -> viewGalaxyList()
 
-            Screen.Star -> viewStarProfileRoute()
+            Screen.Star -> viewStarRoute()
             Screen.MediaForge -> viewContentPosterRoute()
             Screen.EditStar -> viewStarEditor()
             Screen.SiteConfig -> viewSiteConfig()

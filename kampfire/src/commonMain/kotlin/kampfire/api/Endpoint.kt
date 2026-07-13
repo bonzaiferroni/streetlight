@@ -55,6 +55,12 @@ abstract class Endpoint<SentType, ReturnType>(
         toString = { it },
     )
 
+    fun usernameParamOf(key: String) = EndpointParam(
+        key = key,
+        toValue = { it.toUsername() },
+        toString = { it.value },
+    )
+
     fun stringOrNullParamOf(key: String) = EndpointParam<String?>(
         key = key,
         toValue = { it },

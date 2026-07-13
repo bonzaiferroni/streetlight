@@ -61,6 +61,9 @@ class ApiClient(private val client: FetchClient) {
     suspend fun readPendingEdits() = client.getApi(Api.Stars.PendingEdits)
     suspend fun readUserTasks() = client.getApi(Api.Tasks.ReadStarTasks)
     suspend fun readReview(taskId: TaskId) = client.getApi(Api.Tasks.ReadStarTask, taskId)
+    suspend fun readStarContent(username: Username) = client.getApi(Api.Stars.ReadStarContent) {
+        writeParam(it.username, username)
+    }
 
     // suspend fun uploadAvatar(blobUrl: Url) = client.uploadBlob(Api.Users.UploadAvatar.path, blobUrl)
     suspend fun uploadImageBlob(blobUrl: Url) = client.uploadBlob(Api.Users.UploadImage.path, blobUrl)
@@ -99,16 +102,12 @@ class ApiClient(private val client: FetchClient) {
     suspend fun readGalaxyContent(slug: Slug) = client.getApi(Api.Galaxies.ReadContent, slug)
     suspend fun readGalaxy(galaxyId: GalaxyId) = client.getApi(Api.Galaxies.ReadGalaxyId, galaxyId)
     suspend fun createPost(post: PostEdit) = client.postApi(Api.Galaxies.CreatePost, post)
-    suspend fun editPost(post: PostEdit) = client.postApi(Api.Galaxies.EditPost, post)
+    suspend fun editPost(post: PostEdit) = client.postApi(Api.Galaxies.UpdatePost, post)
     suspend fun readPosts(galaxyIds: List<GalaxyId>) = client.postApi(Api.Galaxies.ReadMultiPosts, galaxyIds)
     suspend fun readPosts(galaxyId: GalaxyId) = client.getApi(Api.Galaxies.ReadPosts, galaxyId)
     suspend fun readPost(postId: PostId) = client.getApi(Api.Galaxies.ReadPostId, postId)
     suspend fun readGalaxyLights() = client.getApi(Api.Galaxies.ReadLights)
     suspend fun removePost(postId: PostId) = client.postApi(Api.Galaxies.RemovePost, postId)
-
-    suspend fun readStarByUsername(username: String) = client.getApi(Api.Stars.ReadByUsername) {
-        writeParam(it.username, username)
-    }
 
     // docs
     suspend fun readSiteDoc(docId: DocId) = client.getApi(Api.Docs, docId)

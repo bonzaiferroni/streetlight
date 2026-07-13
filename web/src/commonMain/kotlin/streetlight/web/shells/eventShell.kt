@@ -1,7 +1,5 @@
 package streetlight.web.shells
 
-import kampfire.model.large
-import kampfire.model.small
 import kampfire.model.toUrl
 import koala.css.*
 import koala.html.*
@@ -16,12 +14,12 @@ import streetlight.web.ui.featureHeader
 import streetlight.web.ui.starLightCell
 
 fun FlowContent.eventShell(event: EventLocation) {
-    column(EventProfileKey.id, modify(AlignItemsStretch, Gap4, MarginTop1)) {
+    column(EventShell.id, modify(AlignItemsStretch, Gap4, MarginTop1)) {
         featureHeader(
             title = event.title,
             descriptor = "at",
             subtitle = event.locationName,
-            image = event.image.large,
+            image = event.image,
             description = event.description,
             cellContent = {
                 startsAtCell(event.startsAt)
@@ -68,21 +66,14 @@ fun FlowContent.eventShell(event: EventLocation) {
                 textBlock("coming soon")
             }
         }
-        appFooter(EventProfileKey.SOURCE)
-
-//        tabs(EventProfileShell.tabsId) {
-//            tab("Profile") {
-//                textBlock("[Event information]")
-//                btn("edit", EditEventIdRoute(event.eventId))
-//            }
-//            tab("Requests") {
-//                textBlock("[Requests information]")
-//            }
-//        }
+        appFooter(EventShell.SourcePath)
     }
+
+    dataIsland(EventShell.island, event)
 }
 
-object EventProfileKey {
-    val id = Id("event-profile")
-    const val SOURCE = "web/src/commonMain/kotlin/streetlight/web/shells/eventShell.kt"
+object EventShell {
+    val id = Id("event-shell")
+    val island = Id("event-shell-island")
+    const val SourcePath = "web/src/commonMain/kotlin/streetlight/web/shells/eventShell.kt"
 }

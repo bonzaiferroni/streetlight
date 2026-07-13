@@ -2,6 +2,7 @@ package koala.model
 
 import kampfire.api.Markdown
 import kampfire.model.Url
+import koala.Image
 import koala.html.Id
 import kotlinx.serialization.Serializable
 import kotlin.String
@@ -12,16 +13,16 @@ data class Doc(
     val docId: DocId,
     val title: String,
     val sections: List<DocSection>,
-    val image: Url? = null,
+    val image: Image? = null,
     val links: List<DocLink>? = null,
 ) {
     constructor(
         docId: DocId,
         title: String,
         content: Markdown,
-        url: Url? = null,
+        image: Image? = null,
         links: List<DocLink>? = null
-    ): this(docId, title, listOf(DocSection(null, content)), url, links)
+    ): this(docId, title, listOf(DocSection(null, content)), image, links)
 }
 
 typealias DocId = String

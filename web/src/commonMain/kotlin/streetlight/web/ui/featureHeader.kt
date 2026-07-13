@@ -1,6 +1,7 @@
 package streetlight.web.ui
 
 import kampfire.api.Markdown
+import kampfire.model.ImageSize
 import kampfire.model.Url
 import koala.Image
 import koala.css.AlignItemsStart
@@ -56,8 +57,7 @@ import streetlight.web.layouts.cellBlock
 fun FlowContent.featureHeader(
     title: String,
     descriptor: String,
-    image: Url?,
-    imageMeta: Image? = null,
+    image: Image?,
     subtitle: String? = null,
     colorScheme: ColorScheme = ColorScheme.Primary,
     description: Markdown? = null,
@@ -74,7 +74,7 @@ fun FlowContent.featureHeader(
         column(modify(ContainerMdRow, FlexItems1, Gap0)) {
             // image
             image?.let {
-                metaImage(image, imageMeta, modify(Aspect3By2, VignetteOver, MinWidth0))
+                metaImage(image, ImageSize.Medium, modify(Aspect3By2, VignetteOver, MinWidth0))
             }
 
             // title panel

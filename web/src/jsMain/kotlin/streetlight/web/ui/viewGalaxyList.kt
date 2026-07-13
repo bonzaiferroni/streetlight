@@ -13,7 +13,7 @@ import streetlight.web.shells.cardOf
 fun AppScope.viewGalaxyList() {
 
     column(mod = BodyStyle.Mod) {
-        featureHeader("Galaxies", "Streetlight Communities", SiteImage.HelixNebula.url, SiteImage.HelixNebula)
+        featureHeader("Galaxies", "Streetlight Communities", SiteImage.HelixNebula)
 
         tabs(Id("galaxy-list-tabs")) {
             tab("My Galaxies") {

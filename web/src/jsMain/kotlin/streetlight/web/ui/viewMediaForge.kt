@@ -13,6 +13,7 @@ import streetlight.web.MediaForgeRoute
 import streetlight.web.MediaRoute
 
 fun AppScope.viewMediaForge(galaxy: Galaxy?) {
+    println(galaxy) // ey
     val model = app.getMediaEditor(MediaEdit(), parentScope)
     goOnRoute(model.stateFlow.mapDistinctNotNull { it.slug?.let { slug -> MediaRoute(slug) }  })
 
@@ -28,7 +29,9 @@ fun AppScope.viewMediaForge(galaxy: Galaxy?) {
 
         row(modify(JustifyContentEnd)) {
             messageBox(model.message.flow)
-            button("Post", onClick = model::submitPost)
+            button("Post", onClick = {
+                model.submitPost(galaxy)
+            })
         }
     }
 }

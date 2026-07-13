@@ -117,8 +117,8 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object ReadGalaxySlug: GetByIdEndpoint<Slug, Galaxy>(this)
         object ReadGalaxyId: GetByIdEndpoint<GalaxyId, Galaxy>(this)
         object ReadContent: GetByIdEndpoint<Slug, GalaxyContent>(this)
-        object CreatePost: PostEndpoint<PostEdit, PostId>(this)
-        object EditPost: PostEndpoint<PostEdit, PostId>(this)
+        object CreatePost: PostEndpoint<PostEdit, Post>(this)
+        object UpdatePost: PostEndpoint<PostEdit, Post>(this)
         object ReadMultiPosts: PostEndpoint<List<GalaxyId>, List<GalaxyPost>>(this)
         object ReadPosts: GetByIdEndpoint<GalaxyId, List<GalaxyPost>>(this)
         object ReadPostId: GetByIdEndpoint<PostId, GalaxyPost>(this)
@@ -128,8 +128,8 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
 
     object Medias: ApiNode(this, "media") { // I have died a little inside but this avoids import conflicts
         object ReadMedia: GetByIdEndpoint<Slug, Media>(this)
-        object CreateMedia: PostEndpoint<MediaEdit, Slug>(this)
-        object UpdateMedia: PostEndpoint<MediaEdit, Slug>(this)
+        object CreateMedia: PostEndpoint<MediaEdit, Media>(this)
+        object UpdateMedia: PostEndpoint<MediaEdit, Media>(this)
     }
 
     object Cities: ApiNode(this) {
@@ -152,14 +152,14 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
     }
 
     object Stars: ApiNode(this) {
-        object ReadByUsername: GetEndpoint<Star>(this) {
-            val username = stringParamOf("username")
-        }
-
         object ValidateLogin: GetEndpoint<Star>(this)
         object EditStar: PostEndpoint<StarEdit, Star>(this)
         object EditLight: PostEndpoint<EditLightRequest, Boolean>(this)
         object PendingEdits: GetEndpoint<List<EditLog>>(this)
+
+        object ReadStarContent: GetEndpoint<StarContent>(this) {
+            val username = usernameParamOf("username")
+        }
     }
 
     object Docs: GetByIdEndpoint<DocId, DocNode>(this)

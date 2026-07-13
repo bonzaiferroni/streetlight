@@ -1,17 +1,21 @@
 package koala.html
 
+import kampfire.model.ImageSize
 import kampfire.model.Url
 import koala.Image
+import koala.SiteImage
 import koala.css.*
+import koala.getVariantOrPlaceholder
 import kotlinx.html.FlowContent
 
 fun FlowContent.metaImage(
-    src: Url,
     image: Image?,
+    size: ImageSize = ImageSize.Large,
     mod: ModifierSet? = null,
 ) {
+    val src = image.getVariantOrPlaceholder(size)
     box(mod) {
-        image(src, alt = image?.description) {
+        image(src, mod = modify(ObjectFitCover, PlaceSelfStretch), alt = image?.description) {
             image?.aspectRatio?.let {
                 setStyle(Property.AspectRatio.to(it))
             }

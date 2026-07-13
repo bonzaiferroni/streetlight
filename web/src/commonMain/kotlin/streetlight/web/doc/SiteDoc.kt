@@ -30,7 +30,7 @@ object SiteDoc {
             DocSection("Information shared on Streetlight", InformationSharedContent),
             DocSection("Upcoming Sections", UpcomingSectionsContent),
         ),
-        image = SiteImage.crossing.url
+        image = SiteImage.crossing
     )
 }
 

@@ -1,7 +1,9 @@
 package koala.html
 
 import kampfire.api.Slug
+import kampfire.api.Username
 import kampfire.api.toSlug
+import kampfire.api.toUsername
 import kampfire.model.Labeled
 import kotlin.uuid.Uuid
 
@@ -26,6 +28,7 @@ interface AppRoute: Labeled {
                 is IdParse -> idArg?.let { parse.block(it) }
                 is SlugOrNullParse -> parse.block(idArg?.toSlug())
                 is SlugParse -> idArg?.let { parse.block(idArg.toSlug()) }
+                is UsernameParse -> idArg?.let { parse.block(idArg.toUsername()) }
                 is SegmentParse -> parse.block(segments)
             }
         }
@@ -40,30 +43,32 @@ interface AppScreen {
 
 private fun String.dropStart(char: Char) = if (startsWith(char)) drop(1) else this
 
-sealed interface RouteParse
+sealed interface RouteParse {
+    val label: String get() = "id"
+}
 
 data class StaticParse(
     val block: () -> AppRoute
 ): RouteParse
 
 data class UuidParse(
-    val label: String = "id",
     val block: (Uuid) -> AppRoute
 ): RouteParse
 
 data class IdParse(
-    val label: String = "id",
     val block: (String) -> AppRoute
 ): RouteParse
 
 data class SlugOrNullParse(
-    val label: String = "id",
     val block: (Slug?) -> AppRoute
 ): RouteParse
 
 data class SlugParse(
-    val label: String = "id",
     val block: (Slug) -> AppRoute
+): RouteParse
+
+data class UsernameParse(
+    val block: (Username) -> AppRoute
 ): RouteParse
 
 data class SegmentParse(

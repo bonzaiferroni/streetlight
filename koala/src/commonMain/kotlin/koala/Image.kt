@@ -61,3 +61,5 @@ fun siteImageOf(
 )
 
 fun siteImageUrlOf(path: String) = "$imgPath$path".toUrl()
+
+fun Image?.getVariantOrPlaceholder(size: ImageSize) = this?.getVariantOrNull(size) ?: SiteImage.getPlaceholder(size)

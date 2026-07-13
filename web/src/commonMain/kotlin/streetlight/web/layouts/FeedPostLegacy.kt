@@ -102,7 +102,7 @@ fun FlowContent.feedPostLegacy(
                                 span("Someone ", modify(Bold))
                             }
                             else -> {
-                                navigation(StarRoute(Slug(username.value))) {
+                                navigation(StarRoute(username)) {
                                     span("$username ")
                                 }
                             }

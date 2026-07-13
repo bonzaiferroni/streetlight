@@ -41,6 +41,11 @@ fun FlowContent.postRow(
     }
 }
 
+fun FlowContent.postRow(post: Entity) = when (post) {
+    is GalaxyPost -> postRow(post)
+    else -> entityRow(post, true)
+}
+
 fun FlowContent.postRow(post: GalaxyPost) = postRow(
     post = post.base,
     isGalaxyContext = true,

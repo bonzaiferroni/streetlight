@@ -2,6 +2,7 @@ package streetlight.web
 
 import kampfire.api.SlugValue
 import kampfire.api.TableId
+import kampfire.api.Username
 import kampfire.utils.pascalToKebabCase
 import koala.html.AppRoute
 import koala.html.AppScreen
@@ -9,6 +10,7 @@ import koala.html.IdParse
 import koala.html.RouteParse
 import koala.html.SlugParse
 import koala.html.StaticParse
+import koala.html.UsernameParse
 import koala.html.UuidParse
 import koala.model.DocId
 import streetlight.model.data.GalaxyId
@@ -52,7 +54,7 @@ enum class Screen(
     Event(SlugParse { EventRoute(it) }, "e"),
     UpdateEvent(SlugParse { EventUpdateRoute(it) }),
 
-    Star(SlugParse { StarRoute(it) }, "s"),
+    Star(UsernameParse { StarRoute(it) }, "s"),
     EventScout(SlugParse { EventScoutRoute(it) }),
     MediaForge(SlugParse { MediaForgeRoute(it) }),
     EditStar(StaticParse { EditStarRoute }),
@@ -150,9 +152,10 @@ data class EditTalentRoute(
     override val title get() = "Talent"
 }
 
-data class StarRoute(override val slug: SlugValue): StreetlightRoute, SlugRoute {
+data class StarRoute(val username: Username): StreetlightRoute, SlugRoute {
     override val screen get() = Screen.Star
     override val title get() = "Star"
+    override val slug get() = username
 }
 
 object EditStarRoute: StreetlightRoute {

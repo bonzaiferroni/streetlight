@@ -6,7 +6,7 @@ import kotlinx.html.FlowContent
 import streetlight.model.data.*
 import streetlight.web.shells.SectionHeadingMod
 
-fun FlowContent.postSection(posts: List<GalaxyPost>) {
+fun FlowContent.postSection(posts: List<Entity>) {
     section(modify(FeedPostLegacy.SmallRow)) {
         filigree {
             heading2("Posts", SectionHeadingMod)

@@ -1,0 +1,30 @@
+package streetlight.web.shells
+
+import koala.html.Id
+import koala.html.column
+import koala.html.dataIsland
+import kotlinx.html.FlowContent
+import streetlight.model.data.StarContent
+import streetlight.web.layouts.postSection
+import streetlight.web.pages.appFooter
+import streetlight.web.ui.BodyStyle
+import streetlight.web.ui.featureHeader
+
+fun FlowContent.starShell(content: StarContent) {
+    val star = content.star
+    column(StarShell.id, BodyStyle.Mod) {
+        featureHeader(star.username.value, "a user", star.image, description = star.description)
+
+        postSection(content.posts)
+
+        appFooter(StarShell.SourcePath)
+    }
+
+    dataIsland(StarShell.islandId, content)
+}
+
+object StarShell {
+    val id = Id("star-shell")
+    val islandId = Id("star-shell_island")
+    const val SourcePath = "web/src/commonMain/kotlin/streetlight/web/shells/starShell.kt"
+}

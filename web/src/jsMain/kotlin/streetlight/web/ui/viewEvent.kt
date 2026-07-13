@@ -7,14 +7,14 @@ import koala.model.GeoCamera
 import streetlight.model.data.EventLocation
 import streetlight.web.EventRoute
 import streetlight.web.model.DataCache
-import streetlight.web.shells.EventProfileKey
+import streetlight.web.shells.EventShell
 import streetlight.web.shells.eventShell
 
 fun AppScope.viewEvent(event: EventLocation) {
     val camera = app.get<GeoCamera>()
     val cache = app.get<DataCache>()
 
-    val root = shellBoxWithMap(EventProfileKey.id, hookInitializers, modify(Width100P)) {
+    val root = shellBoxWithMap(EventShell.id, hookInitializers) {
         eventShell(event)
     }
 
@@ -30,7 +30,8 @@ fun AppScope.viewEvent(event: EventLocation) {
 fun AppScope.viewEventProfileRoute() {
 
     routeBlock<EventRoute, EventLocation>(portal, { route ->
-        api.readEventSlug(route.slug).handleOutcome(toaster::toast)
+        readIsland<EventLocation>(EventShell.island) { it.eventSlug == route.slug }
+            ?: api.readEventSlug(route.slug).handleOutcome(toaster::toast)
     }) { event ->
         viewEvent(event)
     }

@@ -6,7 +6,6 @@ data class DocTree(
 )
 
 fun DocTree.toTable(): List<DocTableItem> {
-    println(roots.size)
     fun DocNode.toTableItem(): DocTableItem = DocTableItem(
         docId = doc.docId,
         label = doc.title,

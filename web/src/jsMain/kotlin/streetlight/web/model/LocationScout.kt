@@ -125,8 +125,8 @@ class LocationScout(
             val location = submitLocation() ?: return@launch
 
             val edit = PostEdit(null, galaxy.galaxyId, PostType.Location, location.locationId.value, null)
-            api.createPost(edit).handleOutcome(postMessage::set) { postId ->
-                state.set { it.copy(postId = postId) }
+            api.createPost(edit).handleOutcome(postMessage::set) { post ->
+                state.set { it.copy(postId = post.postId) }
             }
         }
     }

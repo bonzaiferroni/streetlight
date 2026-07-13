@@ -6,7 +6,7 @@ import streetlight.web.model.FrontDesk
 
 fun AppScope.viewFrontDesk(model: FrontDesk) {
     column(BodyStyle.Mod) {
-        featureHeader("Help & Feedback", "The Front Desk", SiteImage.FrontDesk.url)
+        featureHeader("Help & Feedback", "The Front Desk", SiteImage.FrontDesk)
 
         tabs {
             tab("Help") {

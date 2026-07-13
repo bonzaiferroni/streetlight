@@ -5,15 +5,14 @@ import koala.dom.*
 import org.w3c.dom.HTMLElement
 import streetlight.model.data.GalaxyContent
 import streetlight.web.GalaxyRoute
-import streetlight.web.model.DataCache
 import streetlight.web.model.MarkerService
-import streetlight.web.shells.GalaxyKey
+import streetlight.web.shells.GalaxyShell
 import streetlight.web.shells.galaxyShell
 
 fun AppScope.viewGalaxy(content: GalaxyContent) {
     val markerService = app.get<MarkerService>()
 
-    val root = shellBox(GalaxyKey.ShellId, hookInitializers) {
+    val root = shellBox(GalaxyShell.id, hookInitializers) {
         galaxyShell(content)
     }
 
@@ -30,7 +29,7 @@ fun AppScope.viewGalaxy(content: GalaxyContent) {
 
 fun AppScope.viewGalaxyRoute() {
     routeBlock<GalaxyRoute, GalaxyContent>(portal, { route ->
-        readIsland<GalaxyContent>(GalaxyKey.GalaxyContentId) { it.galaxy.slug == route.slug }
+        readIsland<GalaxyContent>(GalaxyShell.islandId) { it.galaxy.slug == route.slug }
             ?: api.readGalaxyContent(route.slug).handleOutcome(toaster::toast)
     }) { content ->
         viewGalaxy(content)

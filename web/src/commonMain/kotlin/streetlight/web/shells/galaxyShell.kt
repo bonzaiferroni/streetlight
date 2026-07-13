@@ -15,7 +15,7 @@ import streetlight.web.ui.headerOf
 
 fun FlowContent.galaxyShell(content: GalaxyContent) {
     val galaxy = content.galaxy; val post = content.posts;
-    column(GalaxyKey.ShellId, modify(MarginTop1)) {
+    column(GalaxyShell.id, modify(MarginTop1)) {
         headerOf(galaxy)
         box {
             // btn("View Map", EarthRoute(galaxy.slug), EarthStyle.ViewMapButtonMod)
@@ -29,7 +29,7 @@ fun FlowContent.galaxyShell(content: GalaxyContent) {
 //                    layoutTalkPreview(TalkRoute(galaxy.galaxyId), listing.comments)
 //                }
                 postSection(post)
-                appFooter(GalaxyKey.SOURCE)
+                appFooter(GalaxyShell.SOURCE)
             }
         }
 
@@ -41,11 +41,11 @@ fun FlowContent.galaxyShell(content: GalaxyContent) {
         )
     }
 
-    dataIsland(GalaxyKey.GalaxyContentId, content)
+    dataIsland(GalaxyShell.islandId, content)
 }
 
-object GalaxyKey {
-    val ShellId = Id("galaxy-profile-shell")
-    val GalaxyContentId = Id("galaxy-island")
+object GalaxyShell {
+    val id = Id("galaxy-shell")
+    val islandId = Id("galaxy-shell__island")
     const val SOURCE = "web/src/commonMain/kotlin/streetlight/web/shells/galaxyShell.kt"
 }

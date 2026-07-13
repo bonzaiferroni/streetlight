@@ -10,7 +10,11 @@ import koala.model.storeOf
 import koala.toImage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import streetlight.model.data.Galaxy
+import streetlight.model.data.GalaxyId
 import streetlight.model.data.MediaEdit
+import streetlight.model.data.PostEdit
+import streetlight.model.data.PostType
 import streetlight.web.io.ApiClient
 
 class MediaEditor(
@@ -43,17 +47,28 @@ class MediaEditor(
 
     fun setText(text: Markdown) = setContent { it.copy(text = text) }
 
-    fun submitPost() {
+    fun submitPost(galaxy: Galaxy? = null) {
         scope.launch {
             val edit = editNow.takeIf { it.isValid } ?: return@launch
             val image = imageEditor.finalizeImage(message)
             message.set("Posting...", true)
 
-            when (edit.mediaId) {
+            val media = when (edit.mediaId) {
                 null -> api.createMedia(edit.copy(image = image))
                 else -> api.updateMedia(edit.copy(image = image))
-            }.handleOutcome(toaster::toast) { slug ->
-                state.set { it.copy(slug = slug) }
+            }.handleOutcome(toaster::toast) { media ->
+                state.set { it.copy(slug = media.slug) }
+                media
+            }
+
+            if (media != null && galaxy != null) {
+                message.set("Posting to ${galaxy.name}...")
+                api.createPost(PostEdit(
+                    postId = null,
+                    galaxyId = galaxy.galaxyId,
+                    postType = PostType.Media,
+                    recordId = media.mediaId.value,
+                ))
             }
         }
     }

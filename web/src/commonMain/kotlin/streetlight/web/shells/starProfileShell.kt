@@ -8,6 +8,7 @@ import streetlight.model.data.Star
 import streetlight.web.pages.appFooter
 import streetlight.web.ui.headerOf
 
+@Deprecated("use starShell")
 fun FlowContent.starProfileShell(content: StarProfileContent) {
     val star = content.star; val listing = content.posts;
     column(StarProfileKey.ShellId, modify(Gap8)) {
@@ -28,6 +29,7 @@ fun FlowContent.starProfileShell(content: StarProfileContent) {
     }
 }
 
+@Deprecated("use StarContent")
 data class StarProfileContent(
     val star: Star,
     val posts: List<GalaxyPost>,
