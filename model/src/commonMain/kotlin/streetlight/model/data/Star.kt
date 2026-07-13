@@ -16,6 +16,7 @@ data class Star(
     val username: Username,
     val roles: Set<UserRole>,
     val name: String?,
+    val tagline: String?,
     val description: Markdown?,
     val scoutLevel: Int,
     val image: Image?,
@@ -34,6 +35,7 @@ value class StarId(override val value: Uuid): RecordId {
 data class StarEdit(
     val username: Username? = null,
     val name: String? = null,
+    val tagline: String? = null,
     val description: Markdown? = null,
     val image: Image? = null,
 )
@@ -41,6 +43,7 @@ data class StarEdit(
 fun Star.toEdit() = StarEdit(
     username = username,
     name = name,
+    tagline = tagline,
     description = description,
     image = image
 )

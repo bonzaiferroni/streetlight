@@ -13,7 +13,13 @@ import streetlight.web.ui.featureHeader
 fun FlowContent.starShell(content: StarContent) {
     val star = content.star
     column(StarShell.id, BodyStyle.Mod) {
-        featureHeader(star.username.value, "a user", star.image, description = star.description)
+        featureHeader(
+            title = star.username.value,
+            descriptor = "a streetlighter",
+            image = star.image,
+            subtitle = star.tagline,
+            description = star.description,
+        )
 
         postSection(content.posts)
 
@@ -25,6 +31,6 @@ fun FlowContent.starShell(content: StarContent) {
 
 object StarShell {
     val id = Id("star-shell")
-    val islandId = Id("star-shell_island")
+    val islandId = Id("star-shell-island")
     const val SourcePath = "web/src/commonMain/kotlin/streetlight/web/shells/starShell.kt"
 }
