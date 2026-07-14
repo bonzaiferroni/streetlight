@@ -1,11 +1,10 @@
 package streetlight.web.model
 
-import kampfire.api.Slug
 import kampfire.model.GeoPoint
 import kampfire.model.Labeled
-import kampfire.model.handleOutcome
+import kampfire.model.handleResponse
 import koala.dom.MessageStore
-import koala.model.mapDistinct
+import koala.model.tap
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -30,11 +29,11 @@ class EventScout(
 
     val postMessage = MessageStore()
 
-    val postFlow = stateFlow.mapDistinct { it.post }
-    val stageFlow = stateFlow.mapDistinct { it.stage }
-    val queryFlow = stateFlow.mapDistinct { it.query }
-    val eventFlow = stateFlow.mapDistinct { it.event }
-    val queryEventsFlow = stateFlow.mapDistinct { it.queryEvents }
+    val postFlow = stateFlow.tap { it.post }
+    val stageFlow = stateFlow.tap { it.stage }
+    val queryFlow = stateFlow.tap { it.query }
+    val eventFlow = stateFlow.tap { it.event }
+    val queryEventsFlow = stateFlow.tap { it.queryEvents }
 
     init {
         scope.launch {
@@ -88,7 +87,7 @@ class EventScout(
             } ?: return@launch
 
             val edit = PostEdit(null, galaxy.galaxyId, PostType.Event, eventId.value, null)
-            api.createPost(edit).handleOutcome(postMessage::set) { post ->
+            api.createPost(edit).handleResponse(postMessage::set) { post ->
                 state.set { it.copy(postId = post.postId) }
             }
         }

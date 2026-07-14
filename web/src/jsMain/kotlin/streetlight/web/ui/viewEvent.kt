@@ -1,6 +1,6 @@
 package streetlight.web.ui
 
-import kampfire.model.handleOutcome
+import kampfire.model.handleResponse
 import koala.dom.*
 import koala.model.GeoCamera
 import streetlight.model.data.EventLocation
@@ -26,11 +26,11 @@ fun AppScope.viewEvent(event: EventLocation) {
     // app.streetMap.setPosts td: make event marker visible on map
 }
 
-fun AppScope.viewEventProfileRoute() {
+fun AppScope.viewEventRoute() {
 
     routeBlock<EventRoute, EventLocation>(portal, { route ->
         readIsland<EventLocation>(EventShell.island) { it.eventSlug == route.slug }
-            ?: api.readEventSlug(route.slug).handleOutcome(toaster::toast)
+            ?: api.readEventSlug(route.slug).handleResponse(toaster::toast)
     }) { event ->
         viewEvent(event)
     }

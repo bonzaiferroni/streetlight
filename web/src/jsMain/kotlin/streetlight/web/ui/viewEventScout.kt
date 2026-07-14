@@ -1,6 +1,6 @@
 package streetlight.web.ui
 
-import kampfire.model.handleOutcome
+import kampfire.model.handleResponse
 import koala.LottieFile
 import koala.dom.*
 import koala.model.mapDistinctNotNull
@@ -32,21 +32,21 @@ fun AppScope.viewEventScout(galaxy: Galaxy) {
 
         stageBlock(model.stageFlow, model::setStage, isHeadingStage = ::isHeadingStage) { stage ->
             when (stage) {
-                EventScoutStage.LocationSearch -> formBody {
+                EventScoutStage.LocationSearch -> formBodyProto {
                     locationScoutForm(locationScout)
                 }
                 EventScoutStage.LocationEdit -> column {
                     locationEditFormBody(locationEditor)
                     formSubmit("Next", model::submitLocation, messages = locationEditor.message)
                 }
-                EventScoutStage.EventSearch -> formBody {
+                EventScoutStage.EventSearch -> formBodyProto {
                     eventSearchForm(model)
                 }
                 EventScoutStage.EventEdit -> column {
                     eventEditFormBody(editor)
                     formSubmit("Next", model::review, messages = editor.message)
                 }
-                EventScoutStage.Post -> formBody {
+                EventScoutStage.Post -> formBodyProto {
                     val location = locationScout.stateNow.location ?: error("location not found")
                     postRow(editor.editNow, location)
                     formSubmit("Post", model::post, messages = model.postMessage)
@@ -60,7 +60,7 @@ fun AppScope.viewEventScout(galaxy: Galaxy) {
 
 fun AppScope.viewEventScoutRoute() {
     routeBlock<EventScoutRoute, Galaxy>({
-        api.readGalaxy(it.slug).handleOutcome(toaster::toast)
+        api.readGalaxy(it.slug).handleResponse(toaster::toast)
     }) { galaxy ->
         viewEventScout(galaxy)
     }

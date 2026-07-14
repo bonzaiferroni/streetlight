@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.map
 import streetlight.web.model.LocationScout
 import streetlight.web.model.SearchMode
 
-fun AppScope.locationScoutForm(model: LocationScout) = formSection("Find a location") {
+fun AppScope.locationScoutForm(model: LocationScout) = formSectionLegacy("Find a location") {
     val indexFlow = model.modeFlow.map { it.ordinal }
 
     tabs(

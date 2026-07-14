@@ -56,7 +56,7 @@ class ApiClient(private val client: FetchClient) {
     // stars
     // suspend fun readUserFiles() = client.get(Api.Users.Files)
     // suspend fun updateUser(user: BasicUserInfo) = client.post(UserApi.Update, user)
-    suspend fun checkUsername(username: Username) = client.postApi(UserApi.CheckUsername, username)
+    suspend fun checkUsername(username: Username) = client.postApi(UserApi.CheckUsernameExists, username)
     suspend fun generateUsername() = client.getApi(UserApi.GenerateUsername)
     suspend fun readPendingEdits() = client.getApi(Api.Stars.PendingEdits)
     suspend fun readUserTasks() = client.getApi(Api.Tasks.ReadStarTasks)
@@ -64,6 +64,7 @@ class ApiClient(private val client: FetchClient) {
     suspend fun readStarContent(username: Username) = client.getApi(Api.Stars.ReadStarContent) {
         writeParam(it.username, username)
     }
+    suspend fun readIdentityInfo() = client.getApi(Api.Stars.ReadIdentityInfo)
 
     // suspend fun uploadAvatar(blobUrl: Url) = client.uploadBlob(Api.Users.UploadAvatar.path, blobUrl)
     suspend fun uploadImageBlob(blobUrl: Url) = client.uploadBlob(Api.Users.UploadImage.path, blobUrl)

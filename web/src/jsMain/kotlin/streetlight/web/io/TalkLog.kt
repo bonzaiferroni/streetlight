@@ -3,7 +3,7 @@ package streetlight.web.io
 import kampfire.api.Markdown
 import kampfire.model.Ok
 import kampfire.model.Problem
-import koala.model.mapDistinct
+import koala.model.tap
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -28,7 +28,7 @@ class TalkLog(
 
     val stateFlow = state.flow
     val stateNow get() = state.now
-    val sortByFlow = stateFlow.mapDistinct { it.sortBy }
+    val sortByFlow = stateFlow.tap { it.sortBy }
 
     private val _messageFlow = MutableSharedFlow<TalkMessage>()
     val messageFlow: Flow<TalkMessage> = _messageFlow

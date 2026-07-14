@@ -1,7 +1,7 @@
 package koala.model
 
 import kampfire.model.Outcome
-import kampfire.model.handleOutcome
+import kampfire.model.handleResponse
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -57,7 +57,7 @@ class ItemCache<Item, ItemId>(
         if (isInitialized) return
         isInitialized = true
 
-        val initialItems = provideInitialItems().handleOutcome(onError) ?: return
+        val initialItems = provideInitialItems().handleResponse(onError) ?: return
         items.addAll(initialItems)
         _flow.emit(items)
     }

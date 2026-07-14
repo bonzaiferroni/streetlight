@@ -12,6 +12,7 @@ import streetlight.model.data.Galaxy
 import streetlight.model.data.LocationEdit
 import streetlight.model.data.GalaxyEdit
 import streetlight.model.data.MediaEdit
+import streetlight.model.data.StarEdit
 import streetlight.model.ui.EarthMap
 import streetlight.model.ui.HomeRoute
 import streetlight.model.ui.Screen
@@ -77,3 +78,6 @@ fun AppContainer.getFeedbackDesk(scope: CoroutineScope) =
     FrontDesk(scope, koin.get(), koin.get())
 
 fun AppContainer.getSiteMonitor(scope: CoroutineScope) = SiteMonitor(scope, koin.get(), koin.get())
+
+fun AppContainer.getStarEditor(edit: StarEdit, scope: CoroutineScope) =
+    StarEditor(edit, scope, koin.get())

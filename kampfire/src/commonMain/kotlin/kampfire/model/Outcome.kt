@@ -14,6 +14,11 @@ import kotlinx.serialization.encoding.encodeStructure
 @Serializable
 sealed interface Outcome <out T> {
     val message: String?
+
+    val isOk get() = when(this) {
+        is Ok<T> -> true
+        else -> false
+    }
 }
 
 @Serializable

@@ -9,7 +9,7 @@ import koala.external.VehiclePosition
 import koala.model.Altitude
 import koala.model.GeoMap
 import koala.model.TravelMarker
-import koala.model.mapDistinct
+import koala.model.tap
 import koala.model.storeOf
 import koala.model.toGeoPoint
 import kotlinx.coroutines.CoroutineScope
@@ -33,7 +33,7 @@ class TransitMap(
     private val state = storeOf(TransitMapState())
     val stateNow get() = state.now
     val stateFlow = state.flow
-    val isActiveFlow = stateFlow.mapDistinct { it.isActive }
+    val isActiveFlow = stateFlow.tap { it.isActive }
     private val markerLayer = geoMap.getOrCreateLayer(MarkerLayerConfig.Transit)
 
     private var currentEntities: List<VehicleMarker> = emptyList()

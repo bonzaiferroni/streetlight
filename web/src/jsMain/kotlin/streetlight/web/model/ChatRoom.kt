@@ -1,6 +1,6 @@
 package streetlight.web.model
 
-import koala.model.mapDistinct
+import koala.model.tap
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -17,8 +17,8 @@ class ChatRoom(
     val stateFlow = state.flow
     val stateNow get() = state.now
 
-    val messagesFlow = stateFlow.mapDistinct { it.messages }
-    val sendFlow = stateFlow.mapDistinct { it.message }
+    val messagesFlow = stateFlow.tap { it.messages }
+    val sendFlow = stateFlow.tap { it.message }
 
     private var socket: WebChatSocket? = null
 

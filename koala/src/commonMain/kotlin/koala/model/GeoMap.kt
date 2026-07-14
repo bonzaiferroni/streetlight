@@ -17,7 +17,7 @@ class GeoMap(
     private val _layersFlow = MutableSharedFlow<List<GeoLayer>>(1)
     internal val layersFlow: Flow<List<GeoLayer>> = _layersFlow
 
-    val focusFlow = stateFlow.mapDistinct { it.focus }
+    val focusFlow = stateFlow.tap { it.focus }
 
     fun getOrCreateLayer(config: GeoLayerConfig) = layers.firstOrNull { it.layerId == config.layerId }
         ?: GeoLayer(config).also { layer ->

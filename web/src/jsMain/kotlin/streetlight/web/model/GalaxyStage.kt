@@ -1,6 +1,6 @@
 package streetlight.web.model
 
-import koala.model.mapDistinct
+import koala.model.tap
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import streetlight.model.data.Galaxy
@@ -16,7 +16,7 @@ class GalaxyStage(
     val stateNow get() = state.now
     val stateFlow = state.flow
 
-    val postFlow = stateFlow.mapDistinct { it.posts }
+    val postFlow = stateFlow.tap { it.posts }
 
     fun setStage(content: GalaxyContent) {
         val posts = content.posts.sortedByDescending { it.base.createdAt } // td: implement other sorts

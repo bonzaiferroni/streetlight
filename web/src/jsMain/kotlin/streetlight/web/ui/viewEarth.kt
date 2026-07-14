@@ -1,6 +1,6 @@
 package streetlight.web.ui
 
-import kampfire.model.handleOutcome
+import kampfire.model.handleResponse
 import koala.css.*
 import koala.css.Padding1
 import koala.dom.*
@@ -42,10 +42,10 @@ fun AppScope.viewEarthRoute() {
                     if (!isVisible) {
                         val map = when (route) {
                             is GalaxyMapRoute -> route.slug?.let { slug ->
-                                api.readGalaxy(slug).handleOutcome(toaster::toast)?.let { GalaxyMap(it) }
+                                api.readGalaxy(slug).handleResponse(toaster::toast)?.let { GalaxyMap(it) }
                             } ?: GalaxyMap(null)
                             is CityMapRoute -> route.slug?.let { slug ->
-                                api.readCity(slug).handleOutcome(toaster::toast)?.let { CityMap(it) }
+                                api.readCity(slug).handleResponse(toaster::toast)?.let { CityMap(it) }
                             } ?: CityMap(null)
                         }
                         element.replaceDynamicRender(app, parentScope) {

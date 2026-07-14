@@ -15,7 +15,7 @@ import streetlight.model.data.EventProperty
 import streetlight.web.model.EventEditor
 import kotlin.time.Clock
 
-fun AppScope.eventEditFormBody(model: EventEditor) = formBody {
+fun AppScope.eventEditFormBody(model: EventEditor) = formBodyProto {
     eventWebsiteForm(model)
     eventDetailsForm(model)
     eventImageForm(model)
@@ -109,8 +109,7 @@ fun AppScope.eventDetailsForm(model: EventEditor) = formCardSection("Event Detai
 fun AppScope.eventImageForm(model: EventEditor) =
     imageFormSection(
         instructions = "This image will appear in the feed and at the top of the event page.",
-        onValue = model.imageEditor::setImage,
-        imageFlow = model.imageEditor.imageFlow
+        imageEditor = model.imageEditor
     )
 
 fun AppScope.eventLinksForm(model: EventEditor) = formCardSection("Links") {

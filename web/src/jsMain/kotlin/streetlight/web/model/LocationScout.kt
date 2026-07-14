@@ -1,11 +1,10 @@
 package streetlight.web.model
 
-import kampfire.api.Slug
 import kampfire.model.Labeled
-import kampfire.model.handleOutcome
+import kampfire.model.handleResponse
 import koala.dom.MessageStore
 import koala.model.GeoCamera
-import koala.model.mapDistinct
+import koala.model.tap
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.filter
@@ -38,23 +37,23 @@ class LocationScout(
     val postMessage = MessageStore()
     val queryMessage = MessageStore()
 
-    val queryFlow = stateFlow.mapDistinct { it.query }
-    val cityFlow = stateFlow.mapDistinct { it.city }
-    val queryLocationsFlow = stateFlow.mapDistinct { it.queryLocations }
-    val locationFlow = stateFlow.mapDistinct { it.location }
-    val osmLocationsFlow = stateFlow.mapDistinct { it.osmLocations }
-    val hasOsmLocations = stateFlow.mapDistinct { it.osmLocations.isNotEmpty() }
-    val stageFlow = stateFlow.mapDistinct { it.stage }
-    val postFlow = stateFlow.mapDistinct { it.postId }
-    val modeFlow = stateFlow.mapDistinct { it.mode }
-    val mapLocationFlow = stateFlow.mapDistinct { it.mapLocation }
+    val queryFlow = stateFlow.tap { it.query }
+    val cityFlow = stateFlow.tap { it.city }
+    val queryLocationsFlow = stateFlow.tap { it.queryLocations }
+    val locationFlow = stateFlow.tap { it.location }
+    val osmLocationsFlow = stateFlow.tap { it.osmLocations }
+    val hasOsmLocations = stateFlow.tap { it.osmLocations.isNotEmpty() }
+    val stageFlow = stateFlow.tap { it.stage }
+    val postFlow = stateFlow.tap { it.postId }
+    val modeFlow = stateFlow.tap { it.mode }
+    val mapLocationFlow = stateFlow.tap { it.mapLocation }
 
     init {
         scope.launch {
             launch {
                 queryFlow.collect { query ->
                     api.searchLocations(query, stateNow.city?.takeIf { it.isNotBlank() })
-                        .handleOutcome(toaster::toast) { locations ->
+                        .handleResponse(toaster::toast) { locations ->
                             state.set { it.copy(queryLocations = locations) }
                         }
                 }
@@ -62,9 +61,9 @@ class LocationScout(
 
             launch {
                 geo.stateFlow.filter { !it.isMoving && stateNow.mode == SearchMode.Map }
-                    .mapDistinct { it.center }.collect { center ->
-                        osm.readLocationAt(center).handleOutcome(mapMessage::set) { location ->
-                            val location = location.toEditOrNull() ?: return@handleOutcome
+                    .tap { it.center }.collect { center ->
+                        osm.readLocationAt(center).handleResponse(mapMessage::set) { location ->
+                            val location = location.toEditOrNull() ?: return@handleResponse
                             mapMessage.set(location.label)
                             state.set { it.copy(mapLocation = location)}
                         }
@@ -101,7 +100,7 @@ class LocationScout(
         scope.launch {
             val city = stateNow.city?.takeIf { it.isNotBlank() }
             val bounds = galaxy.geoBounds.takeIf { city == null }?.resizeBy(5f)
-            osm.readLocations(query, stateNow.city, bounds).handleOutcome(queryMessage::set) { locations ->
+            osm.readLocations(query, stateNow.city, bounds).handleResponse(queryMessage::set) { locations ->
                 queryMessage.set("found: ${locations.size}")
                 state.set { it.copy(osmLocations = locations.mapNotNull { loc -> loc.toEditOrNull() }) }
             }
@@ -125,7 +124,7 @@ class LocationScout(
             val location = submitLocation() ?: return@launch
 
             val edit = PostEdit(null, galaxy.galaxyId, PostType.Location, location.locationId.value, null)
-            api.createPost(edit).handleOutcome(postMessage::set) { post ->
+            api.createPost(edit).handleResponse(postMessage::set) { post ->
                 state.set { it.copy(postId = post.postId) }
             }
         }

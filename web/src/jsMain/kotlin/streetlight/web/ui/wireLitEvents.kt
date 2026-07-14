@@ -2,13 +2,12 @@ package streetlight.web.ui
 
 import kabinet.utils.toRelativeDayFormat
 import kabinet.utils.toTimeFormat
-import kampfire.model.small
 import koala.SvgFile
 import koala.css.*
 import koala.dom.*
 import koala.html.fillImageSrcSet
 import koala.html.heading3
-import koala.model.mapDistinct
+import koala.model.tap
 import org.w3c.dom.HTMLElement
 import streetlight.model.data.EventId
 import streetlight.model.data.EventLocation
@@ -24,8 +23,8 @@ fun AppScope.wireLitEvents(root: HTMLElement) {
 
     val now = Clock.System.now()
     val eventCache = cache.eventLights
-    val eventsFlow = eventCache.stateFlow.mapDistinct { events -> events.items.filter { it.endsAtOrLater > now } }
-    val swapIdFlow = eventsFlow.mapDistinct {
+    val eventsFlow = eventCache.stateFlow.tap { events -> events.items.filter { it.endsAtOrLater > now } }
+    val swapIdFlow = eventsFlow.tap {
         when (it.isEmpty()) {
             true -> HomeKey.LightInfoId
             else -> HomeKey.LitEventsId

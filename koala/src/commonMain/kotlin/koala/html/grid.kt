@@ -29,6 +29,8 @@ internal fun DIV.configureGridColumns(
 object GridColumns {
     val Class = Class("grid")
 
+    fun repeatFill(minPx: Int) = GridTemplateColumns("repeat(auto-fill, minmax(${400}px, 1fr))")
+
     val QueryTemplate = Property<GridTemplateColumns>("grid-query-columns", true)
 }
 

@@ -1,13 +1,11 @@
 package streetlight.web.ui
 
 import kampfire.model.Outcome
-import kampfire.model.handleOutcome
+import kampfire.model.handleResponse
 import koala.dom.AppScope
-import koala.dom.RenderScope
 import koala.dom.column
 import koala.dom.onView
 import koala.dom.replaceStaticRender
-import kotlinx.html.dom.append
 
 fun <T> AppScope.request(
     requestData: suspend () -> Outcome<T>?,
@@ -16,7 +14,7 @@ fun <T> AppScope.request(
     val element = column()
     element.onView {
         launchEffect {
-            requestData().handleOutcome(toaster::toast) { data ->
+            requestData().handleResponse(toaster::toast) { data ->
                 element.replaceStaticRender(app, parentScope) {
                     content(data)
                 }

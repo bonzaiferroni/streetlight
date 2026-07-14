@@ -1,6 +1,6 @@
 package streetlight.web.ui
 
-import kampfire.model.handleOutcome
+import kampfire.model.handleResponse
 import koala.dom.AppScope
 import koala.dom.column
 import koala.dom.routeBlock
@@ -53,7 +53,7 @@ fun AppScope.viewEventUpdaterRoute() {
             routeBlock<EventUpdateRoute, EventUpdaterContent?>(
                 portal = portal,
                 provideData = { route ->
-                    api.readEventUpdaterContent(route.slug).handleOutcome(toaster::toast)
+                    api.readEventUpdaterContent(route.slug).handleResponse(toaster::toast)
                 }
             ) { content ->
                 if (content == null) {

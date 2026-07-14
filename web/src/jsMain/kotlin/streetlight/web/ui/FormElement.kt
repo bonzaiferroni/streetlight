@@ -8,14 +8,14 @@ import koala.html.heading3
 import kotlinx.coroutines.flow.Flow
 import kotlinx.html.DIV
 
-fun AppScope.formBody(
+fun AppScope.formBodyProto(
     mod: ModifierSet? = null,
     block: DIV.() -> Unit
 ) = column(modify(mod, Gap8)) {
     block()
 }
 
-fun TagScope.formSection(
+fun TagScope.formSectionLegacy(
     name: String,
     mod: ModifierSet? = null,
     block: TagScope.() -> Unit
@@ -39,14 +39,14 @@ fun TagScope.formCardSection(
     name: String,
     mod: ModifierSet? = null,
     block: TagScope.() -> Unit
-) = formSection(name, mod) {
+) = formSectionLegacy(name, mod) {
     formCard(null, block)
 }
 
 fun TagScope.formPart(
     instructions: String? = null,
-    examples: List<String>? = null,
     bullets: List<String>? = null,
+    bulletsHeading: String? = null,
     fieldsFlex: Modifier = Flex1,
     info: TagScope.() -> Unit = {},
     fields: TagScope.() -> Unit,
@@ -55,14 +55,13 @@ fun TagScope.formPart(
         instructions?.let {
             textBlock(it)
         }
-        examples?.let {
+        bullets?.let { bullets ->
             column(modify(Gap0, OpacityHigh)) {
-                textBlock("Examples:")
-                bulletsOf(it)
+                bulletsHeading?.let {
+                    textBlock(it)
+                }
+                bulletsOf(FormMod.Bullets, bullets)
             }
-        }
-        bullets?.let {
-            bulletsOf(FormMod.Bullets, it)
         }
         info(this@formPart)
     }
@@ -72,23 +71,19 @@ fun TagScope.formPart(
 }
 
 fun AppScope.formTextField(
-    label: String,
+    label: String? = null,
     onValue: (String) -> Unit,
     flow: Flow<String?>,
     mod: ModifierSet? = null,
     footnote: String? = null,
+    placeholder: String? = label,
     maxLength: Int? = null
 ) = column(mod) {
-    textField(label, onValue, flow)
+    textField(label, onValue, flow, placeholder = placeholder, maxLength = maxLength)
     if (footnote != null || maxLength != null) {
         row(modify(OpacityHigh, Italic, WhiteSpaceNoWrap, PaddingX1, TextSmall)) {
             footnote?.let {
                 textBlock(footnote)
-            }
-            maxLength?.let {
-                flowBlock(flow, modify(MarginLeftAuto)) { text ->
-                    textBlock("${text?.length ?: 0}/$maxLength")
-                }
             }
         }
     }

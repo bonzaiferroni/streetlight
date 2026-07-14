@@ -25,21 +25,21 @@ import koala.dom.textField
 import koala.html.heading4
 import koala.html.spacer
 import koala.html.textBlock
-import koala.model.mapDistinct
+import koala.model.tap
 import koala.model.storeOf
 import streetlight.model.data.ExtraLink
 import streetlight.web.model.EventEditor
 
 
 fun AppScope.eventLinks(model: EventEditor) {
-    val linksFlow = model.stateFlow.mapDistinct { it.edit.links ?: emptyList() }
+    val linksFlow = model.stateFlow.tap { it.edit.links ?: emptyList() }
 
     val editState = storeOf(LinkEditState())
-    val linkEditIndexFlow = editState.flow.mapDistinct { it.index }
-    val labelFlow = editState.flow.mapDistinct { it.link.label }
-    val urlFlow = editState.flow.mapDistinct { it.link.url }
-    val originalSourceLabelFlow = model.stateFlow.mapDistinct { it.originalSourceLabel }
-    val originalSourceUrlFlow = model.stateFlow.mapDistinct { it.originalSourceUrl }
+    val linkEditIndexFlow = editState.flow.tap { it.index }
+    val labelFlow = editState.flow.tap { it.link.label }
+    val urlFlow = editState.flow.tap { it.link.url }
+    val originalSourceLabelFlow = model.stateFlow.tap { it.originalSourceLabel }
+    val originalSourceUrlFlow = model.stateFlow.tap { it.originalSourceUrl }
 
     fun setLink(provider: (ExtraLink) -> ExtraLink) { editState.set { it.copy(link = provider(it.link)) }}
     fun setLabel(value: String) { setLink { it.copy(label = value) } }

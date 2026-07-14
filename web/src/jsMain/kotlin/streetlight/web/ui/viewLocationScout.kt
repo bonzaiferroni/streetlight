@@ -1,6 +1,6 @@
 package streetlight.web.ui
 
-import kampfire.model.handleOutcome
+import kampfire.model.handleResponse
 import koala.LottieFile
 import koala.dom.*
 import koala.model.mapDistinctNotNull
@@ -25,7 +25,7 @@ fun AppScope.viewLocationScout(galaxy: Galaxy) {
 
         stageBlock(model.stageFlow, model::setStage) { stage ->
             when (stage) {
-                LocationScoutStage.Search -> formBody {
+                LocationScoutStage.Search -> formBodyProto {
                     locationScoutForm(model)
                 }
                 LocationScoutStage.Edit -> column {
@@ -57,7 +57,7 @@ fun AppScope.viewLocationScout(galaxy: Galaxy) {
 
 fun AppScope.viewLocationScoutRoute() {
     routeBlock<LocationScoutRoute, Galaxy>({
-        api.readGalaxy(it.slug).handleOutcome(toaster::toast)
+        api.readGalaxy(it.slug).handleResponse(toaster::toast)
     }) { galaxy ->
         viewLocationScout(galaxy)
     }

@@ -1,7 +1,9 @@
 package kampfire.utils
 
+import kampfire.api.Password
+
 fun String.obfuscate() = map { it.code.xor('s'.code).toChar() }.joinToString("")
-fun String.deobfuscate() = map { it.code.xor('s'.code).toChar() }.joinToString("")
+fun String.deobfuscate() = Password(map { it.code.xor('s'.code).toChar() }.joinToString(""))
 
 fun String.takeEllipsis(length: Int, ellipsis: String = "...") = when {
     this.length > length -> take(length) + ellipsis

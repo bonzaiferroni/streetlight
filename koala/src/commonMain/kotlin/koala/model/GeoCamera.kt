@@ -30,13 +30,13 @@ class GeoCamera(
 //    internal val showLayersFlow: Flow<List<LayerId>> = _showLayersFlow
 
     val viewedStateFlow = stateFlow.filter { it.isViewed }
-    val isMovingFlow = viewedStateFlow.mapDistinct { it.isMoving }
+    val isMovingFlow = viewedStateFlow.tap { it.isMoving }
     val settledStateFlow = viewedStateFlow.filter { !it.isMoving }
-    val zoomFlow = settledStateFlow.mapDistinct { it.zoom }
-    val centerFlow = settledStateFlow.mapDistinct { it.center }
-    val boundsFlow = settledStateFlow.mapDistinct { it.bounds }
-    val movingBoundsFlow = viewedStateFlow.mapDistinct { it.bounds }
-    val focusFlow = viewedStateFlow.mapDistinct { it.focus }
+    val zoomFlow = settledStateFlow.tap { it.zoom }
+    val centerFlow = settledStateFlow.tap { it.center }
+    val boundsFlow = settledStateFlow.tap { it.bounds }
+    val movingBoundsFlow = viewedStateFlow.tap { it.bounds }
+    val focusFlow = viewedStateFlow.tap { it.focus }
 
 
     fun panMap(point: GeoPoint) {

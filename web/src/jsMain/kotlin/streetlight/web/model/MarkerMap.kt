@@ -7,7 +7,7 @@ import koala.model.FeatureMarker
 import koala.model.GeoFocus
 import koala.model.GeoMap
 import koala.model.MarkerFocus
-import koala.model.mapDistinct
+import koala.model.tap
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.FlowPreview
@@ -26,14 +26,14 @@ class MarkerMap(
     val stateNow get() = state.now
     val markerLayer = geoMap.getOrCreateLayer(MarkerLayerConfig.Markers)
 
-    val markersFlow = stateFlow.mapDistinct { it.markers }
+    val markersFlow = stateFlow.tap { it.markers }
     private val partitionedFlow = markersFlow.combine(geoMap.camera.movingBoundsFlow) { markers, bounds ->
         markers?.partition { bounds.contains(it.geoPoint) }
     }.distinctUntilChanged()
     val boundedMarkersFlow   = partitionedFlow.map { it?.first }
     val unboundedMarkersFlow = partitionedFlow.map { it?.second }
     val isMovingFlow = geoMap.camera.isMovingFlow
-    val focusFlow = stateFlow.mapDistinct { it.focus }
+    val focusFlow = stateFlow.tap { it.focus }
 
     init {
         scope.launch {

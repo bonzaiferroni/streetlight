@@ -1,5 +1,7 @@
 package kampfire.model
 
+import kampfire.api.Email
+import kampfire.api.HashedPassword
 import kampfire.api.TableId
 import kampfire.api.Username
 import kampfire.utils.randomUuidString
@@ -23,9 +25,9 @@ data class BasicUser(
     override val userId: BasicUserId,
     val name: String?,
     override val username: Username,
-    override val hashedPassword: String,
+    override val hashedPassword: HashedPassword,
     override val salt: String,
-    override val email: String?,
+    override val email: Email?,
     override val roles: Set<UserRole>,
     val avatarUrl: String?,
     override val createdAt: Instant,

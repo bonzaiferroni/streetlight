@@ -36,8 +36,6 @@ fun AppScope.appNavigation() {
     ) { screen ->
         when (screen) {
             Screen.Home -> viewHomeRoute()
-            Screen.Event -> viewEventProfileRoute()
-            Screen.Account -> viewStarDashRoute()
             Screen.Sandbox -> viewSandbox()
             Screen.Earth -> viewEarthRoute()
             Screen.MediaUpdate -> viewMediumUpdaterRoute()
@@ -47,6 +45,11 @@ fun AppScope.appNavigation() {
             Screen.Feedback -> viewFrontDeskRoute()
             Screen.SiteMonitor -> viewSiteMonitor()
 
+            // star
+            Screen.Star -> viewStarRoute()
+            Screen.StarDash -> viewStarDashRoute()
+            Screen.StarConfig -> viewStarConfigRoute()
+
             // location
             Screen.LocationAdmin -> viewLocationAdmin()
             Screen.Location -> viewLocation()
@@ -54,18 +57,17 @@ fun AppScope.appNavigation() {
             Screen.LocationScout -> viewLocationScoutRoute()
 
             // event
+            Screen.Event -> viewEventRoute()
             Screen.EventScout -> viewEventScoutRoute()
             Screen.UpdateEvent -> viewEventUpdaterRoute()
 
             // galaxy
             Screen.Galaxy -> viewGalaxyRoute()
             Screen.GalaxyFoundry -> viewGalaxyFoundry()
-            Screen.GalaxyUpdate -> viewGalaxyConfigRoute()
+            Screen.GalaxyConfig -> viewGalaxyConfigRoute()
             Screen.GalaxyList -> viewGalaxyList()
 
-            Screen.Star -> viewStarRoute()
             Screen.MediaForge -> viewContentPosterRoute()
-            Screen.EditStar -> viewStarEditor()
             Screen.SiteConfig -> viewSiteConfig()
             Screen.AboutApp -> viewAboutApp()
             Screen.Docs -> viewSiteDocRoute()

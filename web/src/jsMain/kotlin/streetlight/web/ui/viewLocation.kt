@@ -1,6 +1,6 @@
 package streetlight.web.ui
 
-import kampfire.model.handleOutcome
+import kampfire.model.handleResponse
 import koala.dom.*
 import streetlight.model.data.LocationContent
 import streetlight.model.ui.LocationRoute
@@ -10,7 +10,7 @@ import streetlight.web.shells.locationShell
 fun AppScope.viewLocation() {
     routeBlock<LocationRoute, LocationContent>(
         portal = portal,
-        provideData = { api.readLocationContent(it.slug).handleOutcome(toaster::toast) }
+        provideData = { api.readLocationContent(it.slug).handleResponse(toaster::toast) }
     ) { location ->
         val element = shellBox(LocationProfileKey.Id, hookInitializers) { // app.geoMap, app.appScope
             locationShell(location)

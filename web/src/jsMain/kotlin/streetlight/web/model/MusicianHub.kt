@@ -1,7 +1,7 @@
 package streetlight.web.model
 
 import kampfire.model.getDataOrNull
-import koala.model.mapDistinct
+import koala.model.tap
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -16,9 +16,9 @@ class MusicianHub(
     private val song = storeOf(NewSong())
     private val view = storeOf(MusicHubState())
 
-    val titleFlow = song.flow.mapDistinct { it.title }
-    val artistFlow = song.flow.mapDistinct { it.artist }
-    val songsFlow = view.flow.mapDistinct { it.songs }
+    val titleFlow = song.flow.tap { it.title }
+    val artistFlow = song.flow.tap { it.artist }
+    val songsFlow = view.flow.tap { it.songs }
 
     init {
         refreshSongs()

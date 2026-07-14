@@ -1,10 +1,10 @@
 package streetlight.web.model
 
-import kampfire.model.handleOutcome
+import kampfire.model.handleResponse
 import koala.model.FeatureMarker
 import koala.model.MarkerFocus
 import koala.model.Portal
-import koala.model.mapDistinct
+import koala.model.tap
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -29,14 +29,14 @@ class Earth(
     private val state = storeOf(EarthMapState(initialMap))
     val stateFlow = state.flow
     val stateNow get() = state.now
-    val mapFlow = stateFlow.mapDistinct { it.map }
-    val boundedMarkersFlow = markerMap.boundedMarkersFlow.mapDistinct { it ?: emptyList() }
-    val unboundedMarkersFlow = markerMap.unboundedMarkersFlow.mapDistinct { it ?: emptyList() }
-    val summaryFlow = markerMap.boundedMarkersFlow.mapDistinct { points ->
+    val mapFlow = stateFlow.tap { it.map }
+    val boundedMarkersFlow = markerMap.boundedMarkersFlow.tap { it ?: emptyList() }
+    val unboundedMarkersFlow = markerMap.unboundedMarkersFlow.tap { it ?: emptyList() }
+    val summaryFlow = markerMap.boundedMarkersFlow.tap { points ->
         points?.groupingBy { it.typeLabel }?.eachCount()?.toList()
     }
     val isMovingFlow = markerMap.isMovingFlow
-    val focusFlow = markerMap.focusFlow.mapDistinct { focus ->
+    val focusFlow = markerMap.focusFlow.tap { focus ->
         when (val galaxy = ((focus as? MarkerFocus)?.marker as? GalaxyMarker)?.galaxy) {
             null -> focus
             else -> {
@@ -45,7 +45,7 @@ class Earth(
             }
         }
     }
-    val isFocusedFlow = focusFlow.mapDistinct { it != null }
+    val isFocusedFlow = focusFlow.tap { it != null }
 
     init {
         scope.launch {
@@ -66,7 +66,7 @@ class Earth(
                         // val maps = api.readTopGalaxies().handleOutcome(toaster::toast)
                         //     ?.map { GalaxyMap(it) } ?: emptyList()
                         // state.set { it.copy(maps = maps) }
-                        val markers = api.readTopGalaxies().handleOutcome(toaster::toast)?.let {
+                        val markers = api.readTopGalaxies().handleResponse(toaster::toast)?.let {
                             markerService.createMarkers(it)
                         }
                         markerMap.setPoints(markers)
@@ -75,13 +75,13 @@ class Earth(
                     }
 
                     else -> {
-                        val galaxy = api.readGalaxy(slug).handleOutcome(toaster::toast)
+                        val galaxy = api.readGalaxy(slug).handleResponse(toaster::toast)
                         if (galaxy == null) {
                             toaster.toast("galaxy not found: $slug")
                             return
                         }
 
-                        val markers = api.readPosts(galaxy.galaxyId).handleOutcome(toaster::toast)?.let {
+                        val markers = api.readPosts(galaxy.galaxyId).handleResponse(toaster::toast)?.let {
                             markerService.createMarkers(it)
                         }
                         markerMap.setPoints(markers)
@@ -94,7 +94,7 @@ class Earth(
             is CityMapRoute -> {
                 when (val slug = route.slug) {
                     null -> {
-                        val markers = api.readTopCities().handleOutcome(toaster::toast)?.let {
+                        val markers = api.readTopCities().handleResponse(toaster::toast)?.let {
                             markerService.createMarkers(it)
                         }
                         markerMap.setPoints(markers)
@@ -102,13 +102,13 @@ class Earth(
                         showAll()
                     }
                     else -> {
-                        val city = api.readCity(slug).handleOutcome(toaster::toast)
+                        val city = api.readCity(slug).handleResponse(toaster::toast)
                         if (city == null) {
                             toaster.toast("city not found: $slug")
                             return
                         }
 
-                        val markers = api.readCityPosts(slug).handleOutcome(toaster::toast)?.let {
+                        val markers = api.readCityPosts(slug).handleResponse(toaster::toast)?.let {
                             markerService.createMarkers(it)
                         }
                         markerMap.setPoints(markers)

@@ -6,12 +6,12 @@ fun <T> Outcome<T>?.getDataOrNull() = when (this) {
     null -> null.also { println("Response was null") }
 }
 
-fun <T> Outcome<T>?.handleOutcome(
+fun <T> Outcome<T>?.handleResponse(
     onMessage: (String) -> Unit,
     okMessage: String? = null,
-) = handleOutcome(onMessage, okMessage) { it }
+) = handleResponse(onMessage, okMessage) { it }
 
-fun <T1, T2> Outcome<T1>?.handleOutcome(
+fun <T1, T2> Outcome<T1>?.handleResponse(
     onMessage: (String) -> Unit,
     okMessage: String? = null,
     block: (T1) -> T2
@@ -34,8 +34,26 @@ fun <T1, T2> Outcome<T1>?.handleOutcome(
     }
 }
 
-fun <T> Outcome<T>?.isOk() = when (this) {
-    is Ok -> true
-    else -> false
+fun <T> Outcome<T>.handleOutcome(
+    onMessage: (String) -> Unit,
+    okMessage: String? = null,
+) = handleOutcome(onMessage, okMessage) { it }
+
+fun <T1, T2> Outcome<T1>.handleOutcome(
+    onMessage: (String) -> Unit,
+    okMessage: String? = null,
+    block: (T1) -> T2
+): T2? = when (this) {
+    is Ok -> {
+        okMessage?.let {
+            onMessage(it)
+        }
+        block(data)
+    }
+
+    is Problem -> {
+        onMessage(message)
+        null
+    }
 }
 

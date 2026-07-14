@@ -8,11 +8,11 @@ import koala.dom.image
 import koala.dom.imageDrop
 import koala.dom.setBlockLabel
 import kotlinx.coroutines.flow.Flow
+import streetlight.web.model.ImageEditor
 
 fun AppScope.imageFormSection(
     instructions: String,
-    onValue: (Image?) -> Unit,
-    imageFlow: Flow<Image?>,
+    imageEditor: ImageEditor,
 ) = formCardSection("Image") {
     formPart(
         instructions = instructions,
@@ -21,7 +21,7 @@ fun AppScope.imageFormSection(
             imageRequirements,
         )
     ) {
-        imageDrop(imageFlow, onValue) {
+        imageDrop(imageEditor.imageFlow, imageEditor::setImage) {
             box {
                 image(it.url)
             }

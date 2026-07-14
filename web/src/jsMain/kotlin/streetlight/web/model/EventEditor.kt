@@ -3,12 +3,10 @@ package streetlight.web.model
 import kabinet.utils.replaceAt
 import kampfire.api.Markdown
 import kampfire.api.toMarkdown
-import kampfire.model.handleOutcome
-import koala.Image
+import kampfire.model.handleResponse
 import koala.dom.MessageStore
-import koala.model.mapDistinct
+import koala.model.tap
 import koala.model.storeOf
-import koala.toImage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalTime
@@ -38,17 +36,17 @@ class EventEditor(
     val urlMessage = MessageStore()
     val imageEditor = ImageEditor(initialEvent?.image, api)
 
-    val editFlow = state.flow.mapDistinct { it.edit }
-    val startTimeFlow = editFlow.mapDistinct { it.startTime }
-    val endTimeFlow = editFlow.mapDistinct { it.endTime }
-    val dateFlow = editFlow.mapDistinct { it.date }
-    val startsAtFlow = editFlow.mapDistinct { it.startsAt }
-    val descriptionFlow = stateFlow.mapDistinct { it.edit.description ?: "".toMarkdown() }
-    val titleFlow = stateFlow.mapDistinct { it.edit.title ?: "" }
-    val urlFlow = stateFlow.mapDistinct { it.edit.website }
-    val isFreeFlow = stateFlow.mapDistinct { it.edit.isFree }
-    val costFlow = stateFlow.mapDistinct { it.costString }
-    val validityFlow = stateFlow.mapDistinct { it.edit.validity }
+    val editFlow = state.flow.tap { it.edit }
+    val startTimeFlow = editFlow.tap { it.startTime }
+    val endTimeFlow = editFlow.tap { it.endTime }
+    val dateFlow = editFlow.tap { it.date }
+    val startsAtFlow = editFlow.tap { it.startsAt }
+    val descriptionFlow = stateFlow.tap { it.edit.description ?: "".toMarkdown() }
+    val titleFlow = stateFlow.tap { it.edit.title ?: "" }
+    val urlFlow = stateFlow.tap { it.edit.website }
+    val isFreeFlow = stateFlow.tap { it.edit.isFree }
+    val costFlow = stateFlow.tap { it.costString }
+    val validityFlow = stateFlow.tap { it.edit.validity }
 
     val editNow get() = stateNow.edit
 
@@ -104,7 +102,7 @@ class EventEditor(
         val url = state.now.edit.website?.takeIf { it.startsWith("http") } ?: return
         scope.launch {
             urlMessage.set("Reading the link, this will take a minute.", true)
-            api.parseSingleEvent(UrlParseRequest(url)).handleOutcome(urlMessage::set) { edit ->
+            api.parseSingleEvent(UrlParseRequest(url)).handleResponse(urlMessage::set) { edit ->
                 val event = edit.mergeRight(state.now.edit)
                 urlMessage.set("Does this information look correct?")
                 state.set { it.copy(edit = event) }
@@ -121,7 +119,7 @@ class EventEditor(
         return when (editNow.eventId) {
             null -> api.createEvent(edit)
             else -> api.updateEvent(edit)
-        }.handleOutcome(message::set)
+        }.handleResponse(message::set)
     }
 
     private fun setEvent(provideEvent: (EventEdit) -> EventEdit) {

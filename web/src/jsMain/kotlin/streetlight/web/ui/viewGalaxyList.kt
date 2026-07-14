@@ -1,14 +1,9 @@
 package streetlight.web.ui
 
-import kampfire.model.handleOutcome
 import koala.SiteImage
 import koala.dom.*
 import koala.html.Id
-import koala.model.storeOf
-import kotlinx.coroutines.launch
-import streetlight.model.data.Galaxy
 import streetlight.web.layouts.entityRow
-import streetlight.web.shells.cardOf
 
 fun AppScope.viewGalaxyList() {
 

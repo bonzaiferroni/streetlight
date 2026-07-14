@@ -1,6 +1,6 @@
 package streetlight.web.model
 
-import koala.model.mapDistinct
+import koala.model.tap
 import koala.model.storeOf
 import koala.utils.jsonConfig
 import kotlinx.browser.localStorage
@@ -13,8 +13,8 @@ class SiteConfig {
 
     val stateNow get() = state.now
     val stateFlow = state.flow
-    val showTransitFlow = state.flow.mapDistinct { it.showTransit }
-    val themeFlow = state.flow.mapDistinct { it.theme }
+    val showTransitFlow = state.flow.tap { it.showTransit }
+    val themeFlow = state.flow.tap { it.theme }
 
     fun setShowTransit(value: Boolean) {
         setState { it.copy(showTransit = value) }

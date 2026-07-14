@@ -1,6 +1,6 @@
 package streetlight.web.ui
 
-import kampfire.model.handleOutcome
+import kampfire.model.handleResponse
 import koala.LottieFile
 import koala.css.*
 import koala.dom.*
@@ -20,19 +20,19 @@ fun AppScope.viewGalaxyConfig(edit: GalaxyEdit) {
 
         tabs {
             tab("settings") {
-                formBody {
+                formBodyProto {
                     galaxyImageForm(model)
                     galaxyDescriptionForm(model)
                 }
             }
             tab("map") {
-                formBody {
+                formBodyProto {
                     // galaxyCityForm(model)
                     galaxyLocationForm(model)
                 }
             }
             tab("access") {
-                formBody {
+                formBodyProto {
                     galaxyAccessForm(model)
                 }
             }
@@ -52,7 +52,7 @@ fun AppScope.viewGalaxyConfig(edit: GalaxyEdit) {
 
 fun AppScope.viewGalaxyConfigRoute() {
     routeBlock<GalaxyConfigRoute, GalaxyEdit>(portal, { route ->
-        api.readGalaxy(route.slug).handleOutcome(toaster::toast)?.toEdit()
+        api.readGalaxy(route.slug).handleResponse(toaster::toast)?.toEdit()
     }) {
         viewGalaxyConfig(it)
     }

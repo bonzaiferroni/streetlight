@@ -1,7 +1,7 @@
 package streetlight.web.ui
 
 import kampfire.api.Username
-import kampfire.model.handleOutcome
+import kampfire.model.handleResponse
 import koala.css.BlurBackdrop
 import koala.css.BorderRadius3
 import koala.css.BorderSolid2Px
@@ -74,7 +74,7 @@ fun AppScope.callPostMenu(postId: PostId, username: Username?) {
                 }
                 dangerButton("remove", onClick = {
                     parentScope.launch {
-                        api.removePost(postId).handleOutcome(toaster::toast) {
+                        api.removePost(postId).handleResponse(toaster::toast) {
                             portal.refresh()
                         }
                     }

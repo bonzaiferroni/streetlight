@@ -10,7 +10,7 @@ ${Attribute.BlockLabel} {
 }
 
 ${Attribute.BlockLabel} > * {
-    width: 100%;
+    /* width: 100%; */
 }
 
 ${Attribute.BlockLabel}::after {
@@ -19,7 +19,7 @@ ${Attribute.BlockLabel}::after {
     top: -0.38rem;
     right: .5rem;
 
-    font-size: 0.65rem;
+    font-size: 0.75rem;
     padding: 0.12rem 0.5rem;
 
     background: var(--void-border);

@@ -1,6 +1,6 @@
 package streetlight.web.ui
 
-import kampfire.model.handleOutcome
+import kampfire.model.handleResponse
 import koala.css.*
 import koala.dom.*
 import koala.html.filigree
@@ -38,7 +38,7 @@ fun AppScope.viewMediaForge(galaxy: Galaxy?) {
 
 fun AppScope.viewContentPosterRoute() {
     routeBlock<MediaForgeRoute, Galaxy?>({ route ->
-        route.slug?.let { api.readGalaxy(it).handleOutcome(toaster::toast) }
+        route.slug?.let { api.readGalaxy(it).handleResponse(toaster::toast) }
     }) { galaxy ->
         viewMediaForge(galaxy)
     }

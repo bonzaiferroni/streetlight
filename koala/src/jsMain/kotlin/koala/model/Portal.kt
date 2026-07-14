@@ -30,8 +30,8 @@ class Portal(
     val stateFlow = state.flow
     val stateNow get() = state.now
 
-    val screenFlow = stateFlow.mapDistinct { it.route.screen }
-    val routeFlow = stateFlow.mapDistinct { it.route }
+    val screenFlow = stateFlow.tap { it.route.screen }
+    val routeFlow = stateFlow.tap { it.route }
 
     private var backstack: List<Navigation> = emptyList()
 

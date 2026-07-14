@@ -2,7 +2,7 @@ package streetlight.web.ui
 
 import koala.css.*
 import koala.dom.*
-import koala.model.mapDistinct
+import koala.model.tap
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.w3c.dom.HTMLElement
@@ -15,7 +15,7 @@ import kotlin.time.Duration.Companion.milliseconds
 
 fun AppScope.wireRightPanel() {
     val omni = app.get<OmniLog>()
-    val recordFlow = omni.stateFlow.mapDistinct { it.records }
+    val recordFlow = omni.stateFlow.tap { it.records }
     var container: HTMLElement? = null
     val cardMod = modify(ZenBg, Height100P, JustifyContentEnd, OverflowYAuto, OverscrollBehaviorContain, OverflowXHidden)
 

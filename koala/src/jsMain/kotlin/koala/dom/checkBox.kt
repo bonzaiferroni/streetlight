@@ -14,24 +14,24 @@ import org.w3c.dom.HTMLInputElement
 
 fun AppScope.checkBox(
     label: String,
-    onChangeValue: ((Boolean) -> Unit)? = null,
-    binding: Flow<Boolean>? = null,
+    onValue: ((Boolean) -> Unit)? = null,
+    flow: Flow<Boolean>? = null,
     mod: ModifierSet? = null,
     block: (INPUT.() -> Unit)? = null
 ) = label {
     addModifiers(mod)
-    checkBox(onChangeValue, binding, block)
+    checkBox(onValue, flow, block)
     +label
 }
 
 fun AppScope.checkBox(
-    onChangeValue: ((Boolean) -> Unit)? = null,
-    binding: Flow<Boolean>? = null,
+    onValue: ((Boolean) -> Unit)? = null,
+    flow: Flow<Boolean>? = null,
     block: (INPUT.() -> Unit)? = null
 ): HTMLInputElement {
     val element = input {
         type = InputType.checkBox
-        onChangeValue?.let { callback ->
+        onValue?.let { callback ->
             onInputFunction = {
                 val value = (it.target as HTMLInputElement).checked
                 callback(value)
@@ -40,9 +40,9 @@ fun AppScope.checkBox(
         block?.invoke(this)
     } as HTMLInputElement
 
-    binding?.let {
+    flow?.let {
         parentScope.launch {
-            binding.distinctUntilChanged().collect {
+            flow.distinctUntilChanged().collect {
                 element.checked = it
             }
         }

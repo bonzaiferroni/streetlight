@@ -2,16 +2,12 @@ package streetlight.web.model
 
 import kampfire.api.Markdown
 import kampfire.model.GeoPoint
-import kampfire.model.handleOutcome
-import koala.Image
+import kampfire.model.handleResponse
 import koala.dom.MessageStore
-import koala.model.mapDistinct
+import koala.model.tap
 import koala.model.mapDistinctNotNull
 import koala.model.storeOf
-import koala.toImage
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.launch
 import streetlight.model.data.Location
@@ -24,13 +20,9 @@ import streetlight.web.io.ApiClient
 
 class LocationEditor(
     initialData: LocationEdit,
-    scope: CoroutineScope,
+    private val scope: CoroutineScope,
     private val api: ApiClient,
 ) {
-    private val scope = CoroutineScope(
-        scope.coroutineContext + SupervisorJob(scope.coroutineContext[Job])
-    )
-
     private val initialState = LocationEditorState(initialData)
     private val state = storeOf(initialState)
     val stateNow get() = state.now
@@ -44,13 +36,13 @@ class LocationEditor(
     val editFlow = state.flow.mapDistinctNotNull { it.edit }
 //     override val placeFlow = editFlow.mapDistinct { it.toPlace() }
 
-    val nameFlow = editFlow.mapDistinct { it.name }
-    val addressFlow = editFlow.mapDistinct { it.address }
-    val cityFlow = editFlow.mapDistinct { it.city }
-    val descriptionFlow = editFlow.mapDistinct { it.description }
-    val websiteFlow = editFlow.mapDistinct { it.website }
-    val linksFlow = editFlow.mapDistinct { it.eventsUrl }
-    val validityFlow = editFlow.mapDistinct { it.validity }
+    val nameFlow = editFlow.tap { it.name }
+    val addressFlow = editFlow.tap { it.address }
+    val cityFlow = editFlow.tap { it.city }
+    val descriptionFlow = editFlow.tap { it.description }
+    val websiteFlow = editFlow.tap { it.website }
+    val linksFlow = editFlow.tap { it.eventsUrl }
+    val validityFlow = editFlow.tap { it.validity }
 
     fun setName(value: String) = setEdit { it.copy(name = value) }
     fun setDescription(value: Markdown?) = setEdit { it.copy(description = value) }
@@ -75,7 +67,7 @@ class LocationEditor(
         val website = editNow.website?.takeIf { it.startsWith("http") } ?: return
         scope.launch {
             websiteMessage.set("Reading the link, this will take a minute.", true)
-            api.parseLocation(UrlParseRequest(website)).handleOutcome(websiteMessage::set) { edit ->
+            api.parseLocation(UrlParseRequest(website)).handleResponse(websiteMessage::set) { edit ->
                 state.set { it.copy(edit = edit.mergeLeft(editNow)) }
                 websiteMessage.set("Does this information look correct?")
             }
@@ -107,8 +99,8 @@ class LocationEditor(
 
         message.set("Sending...", true)
         return when (editNow.locationId) {
-            null -> api.createLocation(edit).handleOutcome(message::set)
-            else -> api.updateLocation(edit).handleOutcome(message::set)
+            null -> api.createLocation(edit).handleResponse(message::set)
+            else -> api.updateLocation(edit).handleResponse(message::set)
         }
     }
 }

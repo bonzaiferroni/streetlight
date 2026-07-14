@@ -3,8 +3,8 @@ package koala.html
 import koala.css.*
 import kotlinx.html.FlowContent
 
-fun FlowContent.bulletsOf(modifiers: ModifierSet? = null, vararg content: String) {
-    ulist(modify(modifiers, Gap0, ListStyleDisc, PaddingLeft3, ParagraphLineHeight), ListAxis.Column) {
+fun FlowContent.bulletsOf(mod: ModifierSet? = null, vararg content: String) {
+    ulist(modify(mod, Gap0, ListStyleDisc, PaddingLeft3, ParagraphLineHeight), ListAxis.Column) {
         content.forEach { text ->
             listItem(text)
         }

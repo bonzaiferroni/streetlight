@@ -1,5 +1,7 @@
 package streetlight.web.ui
 
+import koala.css.Width64
+import koala.css.modify
 import koala.dom.AppScope
 import koala.dom.DialogElement
 import koala.dom.button
@@ -20,7 +22,7 @@ fun AppScope.starGate(
         when (user) {
             null -> {
                 val dialog = dialog("Sign In") {
-                    tabs {
+                    tabs { // mod = modify(Width64)
                         tab("guest") {
                             dialogCard {
                                 guestRegistrationForm()

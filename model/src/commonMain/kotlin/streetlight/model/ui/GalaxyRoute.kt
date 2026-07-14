@@ -14,7 +14,7 @@ object GalaxyFoundryRoute: StreetlightRoute {
 }
 
 data class GalaxyConfigRoute(override val slug: Slug): SlugRoute {
-    override val screen get() = Screen.GalaxyUpdate
+    override val screen get() = Screen.GalaxyConfig
     override val title get() = "Galaxy Config"
     override val label get() = "Dash"
 }

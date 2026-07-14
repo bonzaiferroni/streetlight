@@ -1,7 +1,7 @@
 package streetlight.web.model
 
-import kampfire.model.handleOutcome
-import koala.model.mapDistinct
+import kampfire.model.handleResponse
+import koala.model.tap
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -19,10 +19,10 @@ class StarSession(
     private val state = storeOf(StarSessionState())
     val stateNow get() = state.now
 
-    val starFlow = state.flow.mapDistinct { it.star }
-    val signedInFlow = state.flow.mapDistinct { it.isSignedIn }
-    val signedOutAtFlow = state.flow.mapDistinct { it.signedOutAt }
-    val messageFlow = state.flow.mapDistinct { it.message }
+    val starFlow = state.flow.tap { it.star }
+    val signedInFlow = state.flow.tap { it.isSignedIn }
+    val signedOutAtFlow = state.flow.tap { it.signedOutAt }
+    val messageFlow = state.flow.tap { it.message }
 
     fun signIn() {
         if (stateNow.star != null) return
@@ -33,7 +33,7 @@ class StarSession(
     }
 
     suspend fun readUser(showToast: Boolean) {
-        val star = api.validateLogin().handleOutcome({
+        val star = api.validateLogin().handleResponse({
             if (showToast) toaster.toast(it)
         })
         if (star != null) {

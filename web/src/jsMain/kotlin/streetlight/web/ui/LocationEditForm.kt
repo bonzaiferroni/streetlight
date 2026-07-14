@@ -5,7 +5,7 @@ import koala.dom.*
 import streetlight.model.data.LocationProperty
 import streetlight.web.model.LocationEditor
 
-fun AppScope.locationEditFormBody(model: LocationEditor) = formBody {
+fun AppScope.locationEditFormBody(model: LocationEditor) = formBodyProto {
     locationWebsiteForm(model)
     locationDetailsForm(model)
     locationImageForm(model)
@@ -36,8 +36,7 @@ fun AppScope.locationDetailsForm(model: LocationEditor) = formCardSection("Locat
 fun AppScope.locationImageForm(model: LocationEditor) =
     imageFormSection(
         instructions = "This image will appear at the top of the location page.",
-        onValue = model.imageEditor::setImage,
-        imageFlow = model.imageEditor.imageFlow
+        imageEditor = model.imageEditor
     )
 
 fun AppScope.locationLinksForm(model: LocationEditor) = formCardSection("Links") {

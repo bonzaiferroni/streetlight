@@ -6,7 +6,7 @@ import koala.html.btn
 import kotlinx.css.LinearDimension
 import kotlinx.css.fr
 import streetlight.model.data.Star
-import streetlight.model.ui.EditStarRoute
+import streetlight.model.ui.StarConfigRoute
 import streetlight.model.ui.EditTalentRoute
 import streetlight.model.ui.HomeRoute
 import streetlight.model.ui.GalaxyListRoute
@@ -92,7 +92,7 @@ private fun AppScope.sandboxContent(star: Star) {
         card {
             row {
                 textBlock("Add things to the map.", modify(Flex1))
-                btn("Edit Profile", EditStarRoute)
+                btn("Edit Profile", StarConfigRoute)
                 btn("Go to sandbox", SandboxRoute)
                 button("galaxy list", { portal.go(GalaxyListRoute) }, modify(Accent))
             }

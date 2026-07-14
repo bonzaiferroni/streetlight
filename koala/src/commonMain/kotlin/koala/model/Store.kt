@@ -1,5 +1,6 @@
 package koala.model
 
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
@@ -25,3 +26,15 @@ open class Store<T>(
 }
 
 fun <T> storeOf(initialValue: T) = Store(initialValue)
+
+fun <T, State> Store<State>.fieldOf(
+    readValue: (State) -> T,
+    onValue: State.(T) -> State
+) = StateField(
+    flow.tap { readValue(it) }
+) { value -> set { onValue(it, value) } }
+
+data class StateField<T>(
+    val flow: Flow<T>,
+    val onValue: (T) -> Unit,
+)

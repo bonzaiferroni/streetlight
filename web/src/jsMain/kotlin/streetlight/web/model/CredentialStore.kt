@@ -1,9 +1,10 @@
 package streetlight.web.model
 
+import kampfire.api.toLoginIdentity
 import kampfire.model.LoginRequest
 import kampfire.model.SignUpRequest
 import kampfire.utils.obfuscate
-import koala.model.mapDistinct
+import koala.model.tap
 import koala.model.storeOf
 import kotlinx.browser.localStorage
 import org.w3c.dom.get
@@ -15,9 +16,9 @@ class CredentialStore {
     ))
     val stateNow get() = state.now
 
-    val usernameFlow = state.flow.mapDistinct { it.usernameText }
-    val passwordFlow = state.flow.mapDistinct { it.passwordText }
-    val stayLoggedInFlow = state.flow.mapDistinct { it.stayLoggedIn }
+    val usernameFlow = state.flow.tap { it.usernameText }
+    val passwordFlow = state.flow.tap { it.passwordText }
+    val stayLoggedInFlow = state.flow.tap { it.stayLoggedIn }
 
     fun setUsername(username: String) {
         state.set { it.copy(usernameText = username) }
@@ -33,7 +34,7 @@ class CredentialStore {
     }
 
     fun setFromSignup(requestNow: SignUpRequest) {
-         state.set { it.copy(passwordText = requestNow.password, usernameText = requestNow.username.value) }
+         state.set { it.copy(passwordText = requestNow.password.value, usernameText = requestNow.username.value) }
     }
 
     fun getLoginRequest(): LoginRequest? {
@@ -41,7 +42,7 @@ class CredentialStore {
         val password = stateNow.passwordText.takeIf { it.isNotBlank() }?.obfuscate() ?: return null
         val stayLoggedIn = state.now.stayLoggedIn
         return LoginRequest(
-            usernameOrEmail = usernameOrEmail,
+            loginIdentity = usernameOrEmail.toLoginIdentity(),
             isTemp = !stayLoggedIn,
             password = password,
         )

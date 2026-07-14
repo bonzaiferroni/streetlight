@@ -13,9 +13,9 @@ class GeoLayer(
     val stateNow get() = state.now
 
 
-    val pointsFlow = stateFlow.mapDistinct { it.points }
-    val linesFlow = stateFlow.mapDistinct { it.lines }
-    val isVisibleFlow = stateFlow.mapDistinct { it.isVisible }
+    val pointsFlow = stateFlow.tap { it.points }
+    val linesFlow = stateFlow.tap { it.lines }
+    val isVisibleFlow = stateFlow.tap { it.isVisible }
 
     fun setLines(value: List<LineMarker>) = state.set { it.copy(lines = value) }
     fun setPoints(value: List<PointMarker>) = state.set { it.copy(points = value) }

@@ -16,7 +16,7 @@ fun AppScope.viewGalaxyFoundry() {
             textBlock(introText2)
         }
 
-        formBody {
+        formBodyProto {
             galaxyCityForm(model)
             galaxyNameForm(model)
             galaxyImageForm(model)

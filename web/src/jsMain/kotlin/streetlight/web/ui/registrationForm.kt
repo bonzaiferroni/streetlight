@@ -2,7 +2,6 @@ package streetlight.web.ui
 
 import kampfire.api.Username
 import kampfire.model.AccountType
-import koala.LottieFile
 import koala.css.Accent
 import koala.css.*
 import koala.dom.*
@@ -10,8 +9,12 @@ import koala.html.bulletsOf
 import koala.html.filigree
 import koala.html.heading3
 import koala.html.span
+import koala.model.StateField
 import kotlinx.css.GridTemplateColumns
 import kotlinx.css.fr
+import kotlinx.html.InputType
+import streetlight.web.model.EmailEditor
+import streetlight.web.model.PasswordEditor
 import streetlight.web.model.UserCreatorState
 
 fun AppScope.guestRegistrationForm() {
@@ -52,11 +55,15 @@ fun AppScope.guestRegistrationForm() {
         }) {
             formTextField("username", model::setUsername, model.usernameFlow, maxLength = Username.MAX_LENGTH)
         }
-        formPart("To create a Streetlight account, you must be ${UserCreatorState.MINIMUM_AGE} or older.") {
-            row(modify(JustifyContentSpaceBetween, AlignItemsCenter)) {
-                checkBox("I am ${UserCreatorState.MINIMUM_AGE} or older.")
-                button("Register as guest", { model.createAccount(AccountType.Guest) }, modify(Accent))
-            }
+        signUpPart({ model.createAccount(AccountType.Guest) })
+    }
+}
+
+fun AppScope.signUpPart(createAccount: () -> Unit) {
+    formPart("To create a Streetlight account, you must be ${UserCreatorState.MINIMUM_AGE} or older.") {
+        row(modify(JustifyContentSpaceBetween, AlignItemsCenter)) {
+            checkBox("I am ${UserCreatorState.MINIMUM_AGE} or older.")
+            button("Register as guest", createAccount, modify(Accent))
         }
     }
 }
@@ -70,46 +77,70 @@ val guestAccountIntro2 =
 fun AppScope.fullRegistrationForm() {
     val model = app.getUserCreator(parentScope)
 
-    column(modify(QueryRowReverse, FlexItems1, AlignItemsStretch)) {
-        textBlock("Not yet on Streetlight? Create a new account.")
-        card {
+    form {
+        formSection("Username") {
             textField(
-                label = "username",
+                label = null,
                 flow = model.usernameFlow,
-                onValue = model::setUsername
+                onValue = model::setUsername,
+                maxLength = Username.MAX_LENGTH,
+                placeholder = "Username"
             )
-            textField(
-                label = "email (optional)",
-                placeholder = "email (optional)",
-                flow = model.emailFlow,
-                onValue = model::setEmail
-            )
-            textBlock(
-                "Your email address is optional. It can be used to reset your password. " +
-                        "Streetlight will never contact you without your request."
-            )
-            textField(
-                label = "password",
-                flow = model.passwordFlow,
-                onValue = model::setPassword
-            )
-            textField(
-                label = "confirm password",
-                flow = model.confirmPasswordFlow,
-                onValue = model::setConfirmPassword
-            )
-            textBlock(
-                binding = model.isValidFlow,
-                provideValue = { if (it) "✅" else "❌" }
-            )
-            val button = button("Sign up", onClick = { model.createAccount(AccountType.Registered) })
-            configureEnabledFlow(button, model.isValidFlow)
+            formBullets("Between ${Username.MIN_LENGTH} and ${Username.MAX_LENGTH} characters.")
         }
-        box(modify(PlaceItemsCenter)) {
-            column(modify(MaxWidth50P)) {
-                lottie(LottieFile.Cat)
-                textBlock("Streetlight is at an early stage in development, please report the bugs.")
-            }
+
+        emailFormSection(model.emailEditor)
+        passwordFormSection(model.passwordEditor)
+
+        formSection("Requirements") {
+            minAgeToggle(model.minAgeField)
+            formSubmit(
+                buttonText = "Sign up",
+                onClick = { model.createAccount(AccountType.Registered) },
+                messages = model.messages,
+                enabledFlow = model.isValidFlow
+            )
         }
     }
+}
+
+fun AppScope.minAgeToggle(
+    field: StateField<Boolean>
+) = column(modify(AlignItemsCenter)) {
+    textBlock("To create an account you must be 17 or older.", modify(TextAlignCenter))
+    checkBox("I am ${UserCreatorState.MINIMUM_AGE} or older.", field.onValue, field.flow)
+}
+
+fun AppScope.emailFormSection(model: EmailEditor) = formSection("Email") {
+    textField("optional", model::setEmail, model.emailFlow, placeholder = "email")
+    formBullets(
+        "Providing an email address is optional",
+        "It can be used to reset your password",
+        "Streetlight will never share your email or contact you without your request"
+    )
+}
+
+// formTextField("email", model::setEmail, model.emailFlow)
+
+
+
+fun AppScope.passwordFormSection(model: PasswordEditor) = formSection("Password") {
+    textField(
+        label = "password",
+        flow = model.passwordFlow,
+        onValue = model::setPassword
+    ) {
+        type = InputType.password
+    }
+    textField(
+        label = "confirm password",
+        flow = model.confirmationFlow,
+        onValue = model::setConfirmation
+    ) {
+        type = InputType.password
+    }
+    // textBlock(
+    //     binding = model.isValidFlow,
+    //     provideValue = { if (it) "✅" else "❌" }
+    // )
 }

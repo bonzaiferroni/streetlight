@@ -10,6 +10,7 @@ import koala.css.modify
 import koala.html.configureButton
 import koala.html.configureElementButton
 import koala.html.configureSvgButton
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.html.BUTTON
@@ -125,6 +126,17 @@ fun AppScope.configureEnabledFlow(
             it.collect { isEnabled ->
                 element.disabled = !isEnabled
             }
+        }
+    }
+}
+
+fun HTMLButtonElement.enabledFlow(
+    scope: CoroutineScope,
+    flow: Flow<Boolean>
+) {
+    scope.launch {
+        flow.collect { isEnabled ->
+            disabled = !isEnabled
         }
     }
 }

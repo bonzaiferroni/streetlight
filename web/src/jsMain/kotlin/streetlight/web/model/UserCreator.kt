@@ -1,17 +1,18 @@
 package streetlight.web.model
 
-import kampfire.api.Username
 import kampfire.api.toUsername
+import kampfire.api.toValidOutcome
 import kampfire.model.AccountType
 import kampfire.model.SignUpRequest
-import kampfire.model.getDataOrNull
 import kampfire.model.handleOutcome
-import koala.model.mapDistinct
+import kampfire.model.handleResponse
+import koala.dom.MessageStore
+import koala.model.fieldOf
+import koala.model.tap
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import streetlight.web.io.ApiClient
-import kotlin.uuid.Uuid
 
 class UserCreator(
     private val scope: CoroutineScope,
@@ -21,55 +22,53 @@ class UserCreator(
     private val toaster: Toaster,
 ) {
     private val state = storeOf(UserCreatorState())
-    private val requestNow get() = state.now.request
+    val stateNow get() = state.now
+    val stateFlow = state.flow
 
-    val usernameFlow = state.flow.mapDistinct { it.request.username.value }
-    val emailFlow = state.flow.mapDistinct { it.request.email ?: "" }
-    val passwordFlow = state.flow.mapDistinct { it.request.password }
-    val confirmPasswordFlow = state.flow.mapDistinct { it.confirmPassword }
-    val isValidFlow = state.flow.mapDistinct { it.isValid }
+    val emailEditor = EmailEditor("")
+    val passwordEditor = PasswordEditor()
+    val messages = MessageStore()
+
+    val usernameFlow = stateFlow.tap { it.username }
+    val isValidFlow = stateFlow.tap { it.isValid }
+
+    val minAgeField = state.fieldOf({ it.isMinimumAge }) { copy(isMinimumAge = it) }
 
     fun generateUsername() = scope.launch {
-        val username = api.generateUsername().getDataOrNull()
-        setRequest { it.copy(username = username ?: Username.Empty)}
+        val username = api.generateUsername().handleResponse(toaster::toast) ?: return@launch
+        state.set { it.copy(username = username.value)}
     }
 
-    fun setUsername(username: String) = setRequest { it.copy(username = username.toUsername()) }
-    fun setEmail(email: String) = setRequest { it.copy(email = email) }
-    fun setPassword(password: String) = setRequest { it.copy(password = password) }
-    fun setConfirmPassword(confirmPassword: String) = state.set { it.copy(confirmPassword = confirmPassword) }
-    fun setIsMinimumAge(value: Boolean) = state.set { it.copy(isMinimumAge = value) }
+    fun setUsername(username: String) = state.set { it.copy(username = username) }
 
     fun createAccount(accountType: AccountType) {
-        val request = when (accountType) {
-            AccountType.Guest -> requestNow.copy(
-                accountType = AccountType.Guest,
-                password = Uuid.random().toString(),
-            )
-            AccountType.Registered -> requestNow.copy(
-                accountType = AccountType.Registered,
-            )
-        }.also{ println(it.isValid) }.takeIf { it.isValid } ?: return
+        val username = stateNow.username.toUsername().toValidOutcome().handleOutcome(messages::set) ?: return
+        val email = emailEditor.getOutcome().handleOutcome(messages::set)
+        val password = passwordEditor.getOutcome().handleOutcome(messages::set) ?: return
+
+        val request = SignUpRequest(
+            username = username,
+            password = password,
+            email = email,
+            accountType = accountType,
+            stayLoggedIn = true
+        )
+        messages.set("Creating account...")
         scope.launch {
-            val isSuccess = api.createUser(request).handleOutcome(toaster::toast) ?: return@launch
+            val isSuccess = api.createUser(request).handleResponse(messages::set) ?: return@launch
             if (isSuccess) {
                 cred.setFromSignup(request)
                 gate.signIn()
             }
         }
     }
-
-    private fun setRequest(block: (SignUpRequest) -> SignUpRequest) {
-        state.set { it.copy(request = block(requestNow)) }
-    }
 }
 
 data class UserCreatorState(
-    val request: SignUpRequest = SignUpRequest(),
-    val confirmPassword: String = "",
+    val username: String = "",
     val isMinimumAge: Boolean = false,
 ) {
-    val isValid get() = isMinimumAge && request.isValid && confirmPassword == request.password
+    val isValid get() = isMinimumAge && username.toUsername().toValidOutcome().isOk
 
     companion object {
         const val MINIMUM_AGE = 17

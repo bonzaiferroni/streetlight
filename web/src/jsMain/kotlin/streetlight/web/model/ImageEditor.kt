@@ -3,10 +3,9 @@ package streetlight.web.model
 import kampfire.model.getDataOrNull
 import koala.Image
 import koala.dom.MessageStore
-import koala.model.mapDistinct
+import koala.model.tap
 import koala.model.storeOf
 import koala.toImage
-import kotlinx.coroutines.CoroutineScope
 import streetlight.web.io.ApiClient
 
 class ImageEditor(
@@ -17,7 +16,7 @@ class ImageEditor(
     val stateNow get() = state.now
     val stateFlow = state.flow
 
-    val imageFlow = stateFlow.mapDistinct { it.image }
+    val imageFlow = stateFlow.tap { it.image }
 
     fun setImage(value: Image?) = state.set { it.copy(image = value)}
 

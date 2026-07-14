@@ -7,18 +7,18 @@ import koala.css.*
 import koala.dom.*
 import koala.html.bulletsOf
 import koala.html.span
-import koala.model.mapDistinct
+import koala.model.tap
 import streetlight.model.data.GalaxyEdit
 import streetlight.model.data.GalaxyProperty
 import streetlight.model.data.PostPermission
 import streetlight.web.model.GalaxyEditor
 
 fun AppScope.galaxyCityForm(model: GalaxyEditor) {
-    val cityQueryFlow = model.stateFlow.mapDistinct { it.cityQuery }
-    val isLocalFlow = model.stateFlow.mapDistinct { it.isLocal }
-    val localitiesFlow = model.stateFlow.mapDistinct { it.cities }
-    val countryFlow = model.stateFlow.mapDistinct { it.country }
-    val localityFlow = model.stateFlow.mapDistinct { it.city }
+    val cityQueryFlow = model.stateFlow.tap { it.cityQuery }
+    val isLocalFlow = model.stateFlow.tap { it.isLocal }
+    val localitiesFlow = model.stateFlow.tap { it.cities }
+    val countryFlow = model.stateFlow.tap { it.country }
+    val localityFlow = model.stateFlow.tap { it.city }
 
     formCardSection("City") {
         formPart(
@@ -53,13 +53,14 @@ fun AppScope.galaxyCityForm(model: GalaxyEditor) {
 }
 
 fun AppScope.galaxyNameForm(model: GalaxyEditor) {
-    val nameFlow = model.galaxyFlow.mapDistinct { it.name ?: "" }
-    val slugFlow = model.galaxyFlow.mapDistinct { it.slug?.value ?: "" }
+    val nameFlow = model.galaxyFlow.tap { it.name ?: "" }
+    val slugFlow = model.galaxyFlow.tap { it.slug?.value ?: "" }
 
     formCardSection("Galaxy Name") {
         formPart(
             instructions = nameInstructions1,
-            examples = listOf("Denver Book Club", "Page Turners"),
+            bullets = listOf("Denver Book Club", "Page Turners"),
+            bulletsHeading = "Examples"
         ) {
             formTextField(
                 label = GalaxyProperty.Name,
@@ -88,16 +89,15 @@ fun AppScope.galaxyNameForm(model: GalaxyEditor) {
     }
 }
 
-fun AppScope.galaxyImageForm(model: GalaxyEditor) =
-    imageFormSection(imageInstructions1, model.imageEditor::setImage, model.imageEditor.imageFlow)
+fun AppScope.galaxyImageForm(model: GalaxyEditor) = imageFormSection(imageInstructions1, model.imageEditor)
 
 private val imageInstructions1 = "This image will appear at the top of the galaxy page."
 
 fun AppScope.galaxyDescriptionForm(model: GalaxyEditor) {
-    val nameFlow = model.galaxyFlow.mapDistinct { it.name ?: "" }
-    val descriptionFlow = model.galaxyFlow.mapDistinct { it.description ?: "".toMarkdown() }
-    val taglineFlow = model.galaxyFlow.mapDistinct { it.tagline ?: "" }
-    val guideFlow = model.galaxyFlow.mapDistinct { it.postGuide ?: "".toMarkdown() }
+    val nameFlow = model.galaxyFlow.tap { it.name ?: "" }
+    val descriptionFlow = model.galaxyFlow.tap { it.description ?: "".toMarkdown() }
+    val taglineFlow = model.galaxyFlow.tap { it.tagline ?: "" }
+    val guideFlow = model.galaxyFlow.tap { it.postGuide ?: "".toMarkdown() }
 
     formCardSection("Description") {
         formPart(
@@ -139,7 +139,7 @@ fun AppScope.galaxyDescriptionForm(model: GalaxyEditor) {
 }
 
 fun AppScope.galaxyLocationForm(model: GalaxyEditor) {
-    val pointFlow = geoMap.stateFlow.mapDistinct { it.center to it.zoom }
+    val pointFlow = geoMap.stateFlow.tap { it.center to it.zoom }
 
     formCardSection("Map location") {
         formPart(
@@ -163,8 +163,8 @@ fun AppScope.galaxyLocationForm(model: GalaxyEditor) {
 }
 
 fun AppScope.galaxyAccessForm(model: GalaxyEditor) {
-    val permissionFlow = model.galaxyFlow.mapDistinct { it.postPermission }
-    val reviewCountFlow = model.galaxyFlow.mapDistinct { it.reviewCount?.toString() ?: "" }
+    val permissionFlow = model.galaxyFlow.tap { it.postPermission }
+    val reviewCountFlow = model.galaxyFlow.tap { it.reviewCount?.toString() ?: "" }
 
     formCardSection("Permissions") {
         formPart(

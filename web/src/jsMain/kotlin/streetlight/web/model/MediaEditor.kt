@@ -2,16 +2,13 @@ package streetlight.web.model
 
 import kampfire.api.Markdown
 import kampfire.api.Slug
-import kampfire.model.handleOutcome
-import koala.Image
+import kampfire.model.handleResponse
 import koala.dom.MessageStore
-import koala.model.mapDistinct
+import koala.model.tap
 import koala.model.storeOf
-import koala.toImage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import streetlight.model.data.Galaxy
-import streetlight.model.data.GalaxyId
 import streetlight.model.data.MediaEdit
 import streetlight.model.data.PostEdit
 import streetlight.model.data.PostType
@@ -27,7 +24,7 @@ class MediaEditor(
     private val state = storeOf(ContentEditorState(initialContent))
     val stateFlow = state.flow
     val stateNow get() = state.now
-    val editFlow = stateFlow.mapDistinct { it.edit }
+    val editFlow = stateFlow.tap { it.edit }
     val editNow get() = state.now.edit
 
     val message = MessageStore()
@@ -35,7 +32,7 @@ class MediaEditor(
 
     init {
         scope.launch {
-            editFlow.mapDistinct { it.invalidMessage }.collect {
+            editFlow.tap { it.invalidMessage }.collect {
                 message.set(it ?: "Looks good.")
             }
         }
@@ -56,7 +53,7 @@ class MediaEditor(
             val media = when (edit.mediaId) {
                 null -> api.createMedia(edit.copy(image = image))
                 else -> api.updateMedia(edit.copy(image = image))
-            }.handleOutcome(toaster::toast) { media ->
+            }.handleResponse(toaster::toast) { media ->
                 state.set { it.copy(slug = media.slug) }
                 media
             }

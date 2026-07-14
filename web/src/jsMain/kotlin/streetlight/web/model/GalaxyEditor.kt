@@ -5,11 +5,11 @@ package streetlight.web.model
 import kampfire.api.Markdown
 import kampfire.api.toSlug
 import kampfire.model.Url
-import kampfire.model.handleOutcome
+import kampfire.model.handleResponse
 import koala.dom.MessageStore
 import koala.model.GeoCamera
 import koala.model.Portal
-import koala.model.mapDistinct
+import koala.model.tap
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.FlowPreview
@@ -34,22 +34,22 @@ class GalaxyEditor(
     private val state = storeOf(GalaxyFoundryState(galaxy))
     val stateFlow = state.flow
     val stateNow get() = state.now
-    val galaxyFlow = stateFlow.mapDistinct { it.edit }
+    val galaxyFlow = stateFlow.tap { it.edit }
     val editNow get() = state.now.edit
 
     val editMessage = MessageStore()
     val imageEditor = ImageEditor(galaxy.image, api)
 
-    val validityFlow = stateFlow.mapDistinct { it.edit.validity }
+    val validityFlow = stateFlow.tap { it.edit.validity }
 
     init {
         galaxy.geoBounds?.let {
             geo.panMap(it)
         }
         scope.launch {
-            stateFlow.mapDistinct { it.cityQuery }.debounce(500.milliseconds).collect { query ->
+            stateFlow.tap { it.cityQuery }.debounce(500.milliseconds).collect { query ->
                 if (query == stateNow.city?.name) return@collect
-                val localities = api.searchCity(query, stateNow.country).handleOutcome(toaster::toast) ?: return@collect
+                val localities = api.searchCity(query, stateNow.country).handleResponse(toaster::toast) ?: return@collect
                 state.set { it.copy(cities = localities) }
             }
         }
@@ -108,7 +108,7 @@ class GalaxyEditor(
             when (edit.galaxyId) {
                 null -> api.createGalaxy(edit)
                 else -> api.updateGalaxy(edit)
-            }.handleOutcome(editMessage::set) { slug ->
+            }.handleResponse(editMessage::set) { slug ->
                 portal.go(GalaxyRoute(slug))
             }
         }

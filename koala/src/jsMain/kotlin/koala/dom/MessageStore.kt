@@ -2,10 +2,10 @@ package koala.dom
 
 import kampfire.model.Problem
 import koala.model.Store
-import koala.model.mapDistinct
+import koala.model.tap
 
 class MessageStore(value: UIMessage? = null): Store<UIMessage?>(value) {
-    val isWorkingFlow = flow.mapDistinct { it?.isWorking ?: false }
+    val isWorkingFlow = flow.tap { it?.isWorking ?: false }
 
     fun set(problem: Problem?) = set { UIMessage(problem?.message ?: "Something went wrong.") }
 

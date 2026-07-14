@@ -1,6 +1,6 @@
 package streetlight.web.ui
 
-import kampfire.model.handleOutcome
+import kampfire.model.handleResponse
 import koala.dom.*
 import streetlight.model.data.LocationEdit
 import streetlight.model.data.LocationUpdaterContent
@@ -50,7 +50,7 @@ fun AppScope.viewUpdateLocationRoute() {
             routeBlock<LocationUpdateRoute, LocationUpdaterContent?>(
                 portal = portal,
                 provideData = { route ->
-                    api.readLocationUpdaterContent(route.slug).handleOutcome(toaster::toast)
+                    api.readLocationUpdaterContent(route.slug).handleResponse(toaster::toast)
                 }
             ) { content ->
                 if (content == null) {

@@ -1,5 +1,7 @@
 package streetlight.model.data
 
+import kampfire.api.Email
+import kampfire.api.HashedPassword
 import kampfire.api.Username
 import kampfire.model.AuthUser
 import kampfire.model.UserRole
@@ -8,9 +10,9 @@ import kotlin.time.Instant
 data class StarRecord(
     val starId: StarId,
     override val username: Username,
-    override val hashedPassword: String,
+    override val hashedPassword: HashedPassword,
     override val salt: String,
-    override val email: String?,
+    override val email: Email?,
     override val roles: Set<UserRole>,
     override val createdAt: Instant,
     override val updatedAt: Instant,

@@ -2,7 +2,6 @@ package streetlight.model.ui
 
 import kampfire.api.SlugValue
 import kampfire.api.TableId
-import kampfire.api.Username
 import kampfire.utils.pascalToKebabCase
 import koala.html.AppRoute
 import koala.html.AppScreen
@@ -27,16 +26,20 @@ enum class Screen(
     pathRoot: String? = null,
 ): AppScreen {
     Home(StaticParse { HomeRoute }, ""),
-    Account(StaticParse { StarDashRoute }),
     MediaUpdate(UuidParse { MediaUpdateRoute(it.toRecordId()) }),
     Sandbox(StaticParse { SandboxRoute }),
     Chat(StaticParse { ChatRoute }),
     SongProfile(UuidParse { SongProfileRoute(SongId(it)) }),
-    TalentProfile(UuidParse { TalentProfileRoute(TalentId(it)) }),
     EditTalent(UuidParse { EditTalentRoute(TalentId(it)) }),
     Feedback(StaticParse { FrontDeskRoute }),
     SiteMonitor(StaticParse { SiteMonitorRoute }),
     Contribute(StaticParse { ContributeRoute }),
+
+    // star
+    TalentProfile(UuidParse { TalentProfileRoute(TalentId(it)) }),
+    Star(UsernameParse { StarRoute(it) }, "s"),
+    StarDash(StaticParse { StarDashRoute }),
+    StarConfig(StaticParse { StarConfigRoute }),
 
     // location
     Location(SlugParse { LocationRoute(it) }, "l"),
@@ -47,17 +50,15 @@ enum class Screen(
     // galaxy
     Galaxy(SlugParse { GalaxyRoute(it) }, "g"),
     GalaxyFoundry(StaticParse { GalaxyFoundryRoute }),
-    GalaxyUpdate(SlugParse { GalaxyConfigRoute(it) } ),
+    GalaxyConfig(SlugParse { GalaxyConfigRoute(it) } ),
     GalaxyList(StaticParse { GalaxyListRoute }, "galaxies"),
 
     // event
     Event(SlugParse { EventRoute(it) }, "e"),
     UpdateEvent(SlugParse { EventUpdateRoute(it) }),
 
-    Star(UsernameParse { StarRoute(it) }, "s"),
     EventScout(SlugParse { EventScoutRoute(it) }),
     MediaForge(SlugParse { MediaForgeRoute(it) }),
-    EditStar(StaticParse { EditStarRoute }),
     SiteConfig(StaticParse { SiteConfigRoute }),
     AboutApp(StaticParse { AboutRoute }),
     Docs(IdParse { SiteDocRoute(it) }),
@@ -100,11 +101,6 @@ interface IntIdRoute: StreetlightRoute {
 object HomeRoute: StreetlightRoute {
     override val screen get() = Screen.Home
     override val title get() = "Home"
-}
-
-object StarDashRoute: StreetlightRoute {
-    override val screen get() = Screen.Account
-    override val title get() = "You"
 }
 
 object SandboxRoute: StreetlightRoute {
@@ -150,17 +146,6 @@ data class EditTalentRoute(
     override val screen get() = Screen.EditTalent
     override val recordId get() = talentId
     override val title get() = "Talent"
-}
-
-data class StarRoute(val username: Username): StreetlightRoute, SlugRoute {
-    override val screen get() = Screen.Star
-    override val title get() = "Star"
-    override val slug get() = username
-}
-
-object EditStarRoute: StreetlightRoute {
-    override val screen get() = Screen.EditStar
-    override val title get() = "Edit Profile"
 }
 
 object SiteConfigRoute: StreetlightRoute {

@@ -1,7 +1,7 @@
 package streetlight.web.ui
 
 import koala.dom.*
-import koala.model.mapDistinct
+import koala.model.tap
 import streetlight.model.data.TalentEdit
 import streetlight.model.data.toEdit
 import streetlight.model.ui.EditTalentRoute
@@ -29,7 +29,7 @@ fun AppScope.editTalentForm() {
             dropMenu(
                 onChangeValue = { value -> state.set { it.copy(talentType = value) } },
                 provideLabel = { it.name },
-                flow = state.flow.mapDistinct { it.talentType }
+                flow = state.flow.tap { it.talentType }
             )
 
 //            button(

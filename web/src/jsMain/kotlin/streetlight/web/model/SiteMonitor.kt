@@ -2,10 +2,10 @@ package streetlight.web.model
 
 import kampfire.model.Labeled
 import kampfire.model.getDataOrNull
-import kampfire.model.handleOutcome
+import kampfire.model.handleResponse
 import koala.dom.ChartData
 import koala.dom.ChartLine
-import koala.model.mapDistinct
+import koala.model.tap
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -16,8 +16,6 @@ import streetlight.model.data.MetricResolution
 import streetlight.model.data.SiteMetric
 import streetlight.model.data.SiteStatus
 import streetlight.web.io.ApiClient
-import kotlin.time.Duration.Companion.minutes
-import kotlin.time.Duration.Companion.seconds
 
 class SiteMonitor(
     private val scope: CoroutineScope,
@@ -28,10 +26,10 @@ class SiteMonitor(
     val stateNow get() = state.now
     val stateFlow = state.flow
 
-    val pointsFlow = stateFlow.mapDistinct { it.points }
+    val pointsFlow = stateFlow.tap { it.points }
     val pointFlow = MutableSharedFlow<SiteStatus>()
-    val timeFrameFlow = stateFlow.mapDistinct { it.timeFrame }
-    val dataFlow = stateFlow.mapDistinct { state ->
+    val timeFrameFlow = stateFlow.tap { it.timeFrame }
+    val dataFlow = stateFlow.tap { state ->
         ChartData(
             points = state.points,
             lines = state.metrics.map { metric ->
@@ -58,7 +56,7 @@ class SiteMonitor(
     private fun refreshData() {
         refreshJob?.cancel()
         refreshJob = scope.launch {
-            val points = api.feedSiteStatus(stateNow.timeFrame.resolution).handleOutcome(toaster::toast) ?: emptyList()
+            val points = api.feedSiteStatus(stateNow.timeFrame.resolution).handleResponse(toaster::toast) ?: emptyList()
             state.set { it.copy(points = points) }
             while (true) {
                 delay(stateNow.timeFrame.resolution.duration)
