@@ -11,7 +11,6 @@ data class StarRecord(
     val starId: StarId,
     override val username: Username,
     override val hashedPassword: HashedPassword,
-    override val salt: String,
     override val email: Email?,
     override val roles: Set<UserRole>,
     override val createdAt: Instant,

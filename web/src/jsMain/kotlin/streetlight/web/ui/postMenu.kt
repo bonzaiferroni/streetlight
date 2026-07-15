@@ -15,7 +15,7 @@ import koala.dom.card
 import koala.dom.column
 import koala.dom.dangerButton
 import koala.dom.getAttribute
-import koala.dom.hidePopover
+import koala.dom.closePopover
 import koala.dom.onClick
 import koala.dom.popover
 import koala.dom.queryAttributeAll
@@ -45,7 +45,7 @@ fun AppScope.initPostMenu(shellBase: HTMLElement) {
                 return@onClick
             }
             // bug: something wrong with this call, throws exception
-            cachedMenuElement?.hidePopover()
+            cachedMenuElement?.closePopover()
             activeId = postId
             callPostMenu(postId, username)
         }

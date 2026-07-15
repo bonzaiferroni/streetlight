@@ -42,7 +42,7 @@ class CredentialStore {
         val password = stateNow.passwordText.takeIf { it.isNotBlank() }?.obfuscate() ?: return null
         val stayLoggedIn = state.now.stayLoggedIn
         return LoginRequest(
-            loginIdentity = usernameOrEmail.toLoginIdentity(),
+            loginIdentity = usernameOrEmail,
             isTemp = !stayLoggedIn,
             password = password,
         )

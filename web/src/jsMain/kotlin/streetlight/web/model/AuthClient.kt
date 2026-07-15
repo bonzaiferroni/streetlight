@@ -7,6 +7,7 @@ import kotlinx.serialization.json.Json
 import org.w3c.fetch.RequestCredentials
 import org.w3c.fetch.RequestInit
 import org.w3c.fetch.SAME_ORIGIN
+import streetlight.web.io.defaultRequest
 import kotlin.js.json
 
 class AuthClient(
@@ -23,7 +24,7 @@ class AuthClient(
 
         val loginResponse = window.fetch(
             UserApi.Login.path,
-            RequestInit(
+            defaultRequest(
                 method = "POST",
                 headers = json(
                     "Content-Type" to "application/json"

@@ -26,7 +26,6 @@ data class BasicUser(
     val name: String?,
     override val username: Username,
     override val hashedPassword: HashedPassword,
-    override val salt: String,
     override val email: Email?,
     override val roles: Set<UserRole>,
     val avatarUrl: String?,

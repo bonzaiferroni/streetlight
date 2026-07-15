@@ -19,8 +19,8 @@ fun TagScope.popover(
     configurePopover(id, anchor, mod, isManual, block)
 }
 
-fun Node.showPopover() = asDynamic().showPopover()
-fun Node.hidePopover() = try {
+fun Node.revealPopover() = asDynamic().showPopover()
+fun Node.closePopover() = try {
     asDynamic().hidePopover()
 } catch (e: Exception) {
     console.log(e.message)

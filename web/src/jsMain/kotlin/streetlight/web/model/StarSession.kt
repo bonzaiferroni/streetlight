@@ -1,5 +1,6 @@
 package streetlight.web.model
 
+import kampfire.model.LoginRequest
 import kampfire.model.MessageReceiver
 import kampfire.model.PrintLnReceiver
 import kampfire.model.handleResponse
@@ -28,6 +29,14 @@ class StarSession(
         console.log("signing in")
         scope.launch {
             readUser(receiver)
+        }
+    }
+
+    fun signIn(request: LoginRequest, receiver: MessageReceiver) {
+        scope.launch {
+            if (api.login(request).handleResponse(receiver) ?: false) {
+                readUser(receiver)
+            }
         }
     }
 

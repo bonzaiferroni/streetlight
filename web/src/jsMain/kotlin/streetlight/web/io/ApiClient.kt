@@ -5,6 +5,7 @@ import kampfire.api.UserApi
 import kampfire.api.Username
 import kampfire.model.GeoBounds
 import kampfire.model.GeoPoint
+import kampfire.model.LoginRequest
 import kampfire.model.SignUpRequest
 import kampfire.model.Url
 import koala.model.DocId
@@ -70,6 +71,7 @@ class ApiClient(private val client: FetchClient) {
     suspend fun uploadImageBlob(blobUrl: Url) = client.uploadBlob(Api.Users.UploadImage.path, blobUrl)
     suspend fun queryLocation(point: GeoPoint) = client.getApi(Api.Locations.QueryPoint, point.toQuery())
     suspend fun validateLogin() = client.getApi(Api.Stars.ValidateLogin)
+    suspend fun login(request: LoginRequest) = client.postApi(UserApi.Login, request)
     suspend fun logout() = client.postApi(UserApi.Logout, Unit)
     suspend fun updateStar(edit: StarEdit) = client.postApi(Api.Stars.EditStar, edit)
     suspend fun editLight(edit: EditLightRequest) = client.postApi(Api.Stars.EditLight, edit)

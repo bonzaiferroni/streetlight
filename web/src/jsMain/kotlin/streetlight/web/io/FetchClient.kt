@@ -189,16 +189,10 @@ class FetchClient(
             acceptEncoding?.let {
                 headers["Accept"] = it.headerValue
             }
-            val request = RequestInit(
+            val request = defaultRequest(
                 method = method,
                 headers = headers,
                 body = body,
-                cache = RequestCache.DEFAULT,
-                mode = RequestMode.SAME_ORIGIN,
-                redirect = RequestRedirect.FOLLOW,
-                credentials = RequestCredentials.SAME_ORIGIN,
-                referrerPolicy = "".asDynamic(),
-                integrity = "",
             )
             window.fetch(path, request).await()
         }
@@ -227,3 +221,19 @@ class FetchClient(
         }
     }
 }
+
+fun defaultRequest(
+    method: String,
+    headers: dynamic,
+    body: dynamic,
+) = RequestInit(
+    method = method,
+    headers = headers,
+    body = body,
+    cache = RequestCache.DEFAULT,
+    mode = RequestMode.SAME_ORIGIN,
+    redirect = RequestRedirect.FOLLOW,
+    credentials = RequestCredentials.SAME_ORIGIN,
+    referrerPolicy = "".asDynamic(),
+    integrity = "",
+)

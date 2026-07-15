@@ -11,7 +11,6 @@ data class UserRecord(
     val userId: TableId<Uuid>,
     val username: Username,
     val hashedPassword: HashedPassword,
-    val salt: String,
     val email: String?,
     val roles: Set<UserRole>,
     val createdAt: Instant,
@@ -23,7 +22,6 @@ interface AuthUser {
     val userId: TableId<Uuid>
     val username: Username
     val hashedPassword: HashedPassword
-    val salt: String
     val email: Email?
     val roles: Set<UserRole>
     val createdAt: Instant
@@ -38,7 +36,6 @@ val AuthUser.isUser: Boolean
 
 data class UserSeed(
     val request: SignUpRequest,
-    val salt: String,
     val hashedPassword: HashedPassword,
     val roles: Set<UserRole>,
     val accountType: AccountType,

@@ -39,7 +39,10 @@ fun AppScope.signInForm() {
                 checkBox("Stay signed in", cred::setStayLoggedIn, cred.stayLoggedInFlow)
             }
         }
-        formSubmit("Sign in", { gate.signIn(messages) }, messages)
+        formSubmit("Sign in", {
+            val request = cred.getLoginRequest() ?: return@formSubmit
+            gate.signIn(request, messages)
+        }, messages)
 
         column(modify(AlignItemsCenter)) {
             lottie(LottieFile.StrollingMan, modify(MaxWidth50P))

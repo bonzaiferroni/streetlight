@@ -1,8 +1,6 @@
 package koala.dom
 
-import koala.html.AppRoute
 import koala.html.Id
-import kotlinx.browser.document
 import org.w3c.dom.Document
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.asList
@@ -15,8 +13,7 @@ fun Document.startViewTransition(updateCallback: () -> Unit): ViewTransition =
     this.asDynamic().startViewTransition(updateCallback).unsafeCast<ViewTransition>()
 
 fun Document.closeOpenPopovers() = querySelectorAll("[popover]:popover-open").asList().forEach { node ->
-    console.log("hiding popover")
-    (node as? HTMLElement)?.hidePopover()
+    (node as? HTMLElement)?.closePopover()
 }
 
 external interface ViewTransition {
