@@ -43,7 +43,7 @@ fun viewApp() {
 
         scope.launch {
             // signs in user if configured
-            gate.readUser(false)
+            gate.readUser(null)
 
             val portalMount = document.getElementById(KoalaBody.PortalMount)
 

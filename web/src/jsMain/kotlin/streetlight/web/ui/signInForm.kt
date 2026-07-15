@@ -8,6 +8,7 @@ import koala.css.MaxWidth50P
 import koala.css.MediaMdRow
 import koala.css.modify
 import koala.dom.AppScope
+import koala.dom.MessageStore
 import koala.dom.button
 import koala.dom.card
 import koala.dom.checkBox
@@ -25,44 +26,30 @@ import streetlight.web.model.StarSession
 fun AppScope.signInForm() {
     val gate = app.get<StarSession>()
     val cred = app.get<CredentialStore>()
+    val messages = MessageStore()
 
-    column(modify(MediaMdRow, FlexItems1)) {
-        card {
-            flowBlock(gate.messageFlow) { msg ->
-                if (msg == null) {
-                    p {
-                        +"Sign in to continue!"
-                    }
-                } else {
-                    p {
-                        +msg
-                    }
+    form {
+        formSection("sign in") {
+            column {
+                textField(
+                    label = "username/email",
+                    onValue = cred::setUsername,
+                    placeholder = "username/email",
+                    flow = cred.usernameFlow
+                )
+                textField(
+                    label = "password",
+                    onValue = cred::setPassword,
+                    placeholder = "password",
+                    flow = cred.passwordFlow
+                ) {
+                    type = InputType.password
                 }
-            }
-            textField(
-                label = "username/email",
-                onValue = cred::setUsername,
-                placeholder = "username/email",
-                flow = cred.usernameFlow
-            )
-            textField(
-                label = "password",
-                onValue = cred::setPassword,
-                placeholder = "password",
-                flow = cred.passwordFlow
-            ) {
-                type = InputType.password
-            }
-            checkBox("Stay signed in", cred::setStayLoggedIn, cred.stayLoggedInFlow)
-            row {
-                button("go home", onClickEvent = {
-                    portal.go(HomeRoute)
-                })
-                button("sign in", mod = modify(Accent), onClickEvent = {
-                    gate.signIn()
-                })
+                checkBox("Stay signed in", cred::setStayLoggedIn, cred.stayLoggedInFlow)
             }
         }
+        formSubmit("Sign in", { gate.signIn(messages::set) }, messages)
+
         column(modify(AlignItemsCenter)) {
             lottie(LottieFile.StrollingMan, modify(MaxWidth50P))
         }

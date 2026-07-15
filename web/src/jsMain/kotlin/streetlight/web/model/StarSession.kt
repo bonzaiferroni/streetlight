@@ -12,9 +12,7 @@ import kotlin.time.Instant
 
 class StarSession(
     private val scope: CoroutineScope,
-    private val cred: CredentialStore,
     private val api: ApiClient,
-    private val toaster: Toaster,
 ) {
     private val state = storeOf(StarSessionState())
     val stateNow get() = state.now
@@ -22,26 +20,19 @@ class StarSession(
     val starFlow = state.flow.tap { it.star }
     val signedInFlow = state.flow.tap { it.isSignedIn }
     val signedOutAtFlow = state.flow.tap { it.signedOutAt }
-    val messageFlow = state.flow.tap { it.message }
 
-    fun signIn() {
+    fun signIn(onMessage: ((String) -> Unit)?) {
         if (stateNow.star != null) return
         console.log("signing in")
         scope.launch {
-            readUser(true)
+            readUser(onMessage)
         }
     }
 
-    suspend fun readUser(showToast: Boolean) {
-        val star = api.validateLogin().handleResponse({
-            if (showToast) toaster.toast(it)
-        })
-        if (star != null) {
+    suspend fun readUser(onMessage: ((String) -> Unit)?) {
+        api.validateLogin().handleResponse(onMessage ?: { console.log(it) }) { star ->
             console.log("signed in")
             state.set { it.copy(star = star) }
-        } else {
-            console.log("unable to sign in")
-            state.set { it.copy(message = "Unable to sign in.")}
         }
     }
 
@@ -51,10 +42,6 @@ class StarSession(
             // userCache.reset()
             state.set { it.copy(star = null, signedOutAt = Clock.System.now()) }
         }
-    }
-
-    fun setUpdate(star: Star) {
-        state.set { it.copy(star = star) }
     }
 }
 

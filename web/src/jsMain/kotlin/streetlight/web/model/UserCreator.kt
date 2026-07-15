@@ -1,5 +1,6 @@
 package streetlight.web.model
 
+import kampfire.api.Password
 import kampfire.api.toUsername
 import kampfire.api.toValidOutcome
 import kampfire.model.AccountType
@@ -13,6 +14,7 @@ import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import streetlight.web.io.ApiClient
+import kotlin.uuid.Uuid
 
 class UserCreator(
     private val scope: CoroutineScope,
@@ -44,7 +46,10 @@ class UserCreator(
     fun createAccount(accountType: AccountType) {
         val username = stateNow.username.toUsername().toValidOutcome().handleOutcome(messages::set) ?: return
         val email = emailEditor.getOutcome().handleOutcome(messages::set)
-        val password = passwordEditor.getOutcome().handleOutcome(messages::set) ?: return
+        val password = when (accountType) {
+            AccountType.Guest -> Password(Uuid.random().toString())
+            AccountType.Registered -> passwordEditor.getOutcome().handleOutcome(messages::set) ?: return
+        }
 
         val request = SignUpRequest(
             username = username,
@@ -58,7 +63,7 @@ class UserCreator(
             val isSuccess = api.createUser(request).handleResponse(messages::set) ?: return@launch
             if (isSuccess) {
                 cred.setFromSignup(request)
-                gate.signIn()
+                gate.signIn(messages::set)
             }
         }
     }

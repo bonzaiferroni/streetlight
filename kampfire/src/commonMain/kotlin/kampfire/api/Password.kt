@@ -34,23 +34,30 @@ val Password.passwordHasSpecial get() = value.any { !it.isLetterOrDigit() }
 val Password.passwordHasUppercase get() = value.any { it.isUpperCase() }
 val Password.passwordHasLowercase get() = value.any { it.isLowerCase() }
 
-val Password.aboveMinScore get() = passwordScore >= Password.SCORE_MIN
+val Password.aboveMinScore get() = lengthScore >= Password.SCORE_MIN
 
-val Password.passwordScore: Int get() {
+val Password.lengthScore: Int get() {
     var score = 0
-    if (passwordHasDigit) score++
-    if (passwordHasSpecial) score++
-    if (passwordHasUppercase) score++
-    if (passwordHasLowercase) score++
     if (validPasswordLength) score++
     if (strongPasswordLength) score++
     if (bestPasswordLength) score++
     return score
 }
 
-val Password.passwordStrength get() = when (passwordScore) {
-    in 0..2 -> PasswordStrength.Invalid
-    in 3..4 -> PasswordStrength.Weak
+val Password.complexityScore: Int get() {
+    var score = 0
+    if (passwordHasDigit) score++
+    if (passwordHasSpecial) score++
+    if (passwordHasUppercase) score++
+    if (passwordHasLowercase) score++
+    return score
+}
+
+val Password.totalScore: Int get() = lengthScore + complexityScore
+
+val Password.passwordStrength get() = when (totalScore) {
+    in 0..3 -> PasswordStrength.Invalid
+    4 -> PasswordStrength.Weak
     5 -> PasswordStrength.Medium
     6 -> PasswordStrength.Strong
     7 -> PasswordStrength.Diamond
@@ -65,7 +72,7 @@ enum class PasswordStrength: Labeled {
 
 fun Password.toValidOutcome(): Outcome<Password> = when {
     !validPasswordLength -> Problem(invalidLengthMessage)
-    passwordStrength == PasswordStrength.Invalid -> Problem(invalidComplexityMessage)
+    complexityScore < 3 -> Problem(invalidComplexityMessage)
     else -> Ok(this)
 }
 

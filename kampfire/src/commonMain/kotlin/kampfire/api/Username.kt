@@ -14,7 +14,7 @@ value class Username(override val value: String): SlugValue, LoginIdentity {
     companion object {
         val Empty = Username("")
         const val MAX_LENGTH = 24
-        const val MIN_LENGTH = 2
+        const val MIN_LENGTH = 3
     }
 }
 

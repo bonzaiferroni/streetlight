@@ -35,7 +35,7 @@ val appModule = module {
     single { LightService(get(), get()) }
     single { OSMClient() }
 
-    single { StarSession(get(), get(), get(), get()) }
+    single { StarSession(get(), get()) }
     single { DataCache(get(), get(), get(), get(), get()) }
     single { Portal(HomeRoute, Screen.entries, get()) }
     single { GateAgent(get(), get(), get()) }

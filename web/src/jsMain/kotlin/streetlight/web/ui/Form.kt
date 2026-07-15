@@ -2,9 +2,7 @@ package streetlight.web.ui
 
 import koala.css.*
 import koala.dom.*
-import koala.html.GridColumns
 import koala.html.bulletsOf
-import koala.html.heading4
 import koala.html.heading5
 import kotlinx.coroutines.flow.Flow
 import kotlinx.html.DIV
@@ -14,7 +12,7 @@ import kotlinx.html.SECTION
 fun AppScope.form(
     mod: ModifierSet? = null,
     content: DIV.() -> Unit,
-) = grid(template = GridColumns.repeatFill(300), mod = modify(mod, Gap2), content = content)
+) = column(mod = modify(mod, Gap2), content = content)
 
 fun AppScope.formSection(
     name: String? = null,
@@ -25,6 +23,11 @@ fun AppScope.formSection(
     }
     content()
 }
+
+fun AppScope.formRow(
+    mod: ModifierSet? = null,
+    content: DIV.() -> Unit
+) = row(modify(Form.Row, mod), content = content)
 
 fun AppScope.formHeading(
     text: String

@@ -118,34 +118,34 @@ private fun AppScope.someonePanel(dialog: DialogElement) {
     }
 }
 
-fun AppScope.gateForm() {
-    val gate = app.get<StarSession>()
-    val cred = app.get<CredentialStore>()
-
-    column {
-        textField(
-            label = "username/email",
-            onValue = cred::setUsername,
-            placeholder = "username/email",
-            flow = cred.usernameFlow
-        ) {
-            autoComplete = "username"
-        }
-        textField(
-            label = "password",
-            onValue = cred::setPassword,
-            placeholder = "password",
-            flow = cred.passwordFlow
-        ) {
-            type = InputType.password
-            autoComplete = "password"
-        }
-        checkBox("Stay signed in", cred::setStayLoggedIn, cred.stayLoggedInFlow)
-        row {
-            button("sign in", mod = modify(Accent), onClickEvent = {
-                gate.signIn()
-            })
-        }
-    }
-}
+// fun AppScope.gateForm() {
+//     val gate = app.get<StarSession>()
+//     val cred = app.get<CredentialStore>()
+//
+//     column {
+//         textField(
+//             label = "username/email",
+//             onValue = cred::setUsername,
+//             placeholder = "username/email",
+//             flow = cred.usernameFlow
+//         ) {
+//             autoComplete = "username"
+//         }
+//         textField(
+//             label = "password",
+//             onValue = cred::setPassword,
+//             placeholder = "password",
+//             flow = cred.passwordFlow
+//         ) {
+//             type = InputType.password
+//             autoComplete = "password"
+//         }
+//         checkBox("Stay signed in", cred::setStayLoggedIn, cred.stayLoggedInFlow)
+//         row {
+//             button("sign in", mod = modify(Accent), onClickEvent = {
+//                 gate.signIn()
+//             })
+//         }
+//     }
+// }
 

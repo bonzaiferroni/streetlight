@@ -1,5 +1,6 @@
 package streetlight.web.ui
 
+import kampfire.api.Password
 import kampfire.api.Username
 import kampfire.model.AccountType
 import koala.css.Accent
@@ -10,61 +11,50 @@ import koala.html.filigree
 import koala.html.heading3
 import koala.html.span
 import koala.model.StateField
-import kotlinx.css.GridTemplateColumns
-import kotlinx.css.fr
 import kotlinx.html.InputType
 import streetlight.web.model.EmailEditor
 import streetlight.web.model.PasswordEditor
+import streetlight.web.model.UserCreator
 import streetlight.web.model.UserCreatorState
 
 fun AppScope.guestRegistrationForm() {
     val model = app.getUserCreator(parentScope)
 
-    grid(queryTemplate = GridTemplateColumns(1.fr), mod = modify(Gap2)) {
-        column {
-            heading3("Guest accounts", modify(TextAlignCenter))
-            textBlock(guestAccountIntro1)
-            textBlock {
-                span(guestAccountIntro2, modify(Flex1))
-                navigation { +"→ Learn More" }
-            }
-        }
-        card(modify(PrimaryCardBg)) {
-            filigree {
-                textBlock("How it works", modify(OpacityHigh, Italic))
-            }
-            bulletsOf(
-                modify(Gap1),
-                { textBlock("Once you sign out or clear your browser's cookies, you won't be able to sign in again with the same identity.") },
-                { textBlock("Guest accounts are automatically deleted after 30 days without activity.") },
-                {
-                    textBlock {
-                        span("Please note: ", modify(FadeLoop, Italic))
-                        span("Anyone else with access to this device can also control the account.")
-                    }
+    form {
+        formRow {
+            column {
+                heading3("Guest accounts", modify(TextAlignCenter))
+                textBlock(guestAccountIntro1)
+                textBlock {
+                    span(guestAccountIntro2, modify(Flex1))
+                    navigation { +"→ Learn More" }
                 }
-            )
-        }
-    }
-
-    column(modify(QueryContainer)) {
-        formPart("A username is all you need to get started.", info = {
-            row {
-                button("Choose for me", model::generateUsername, modify(Secondary))
             }
-        }) {
-            formTextField("username", model::setUsername, model.usernameFlow, maxLength = Username.MAX_LENGTH)
+            card(modify(PrimaryCardBg)) {
+                filigree {
+                    textBlock("How it works", modify(OpacityHigh, Italic))
+                }
+                bulletsOf(
+                    modify(Gap1),
+                    { textBlock("Once you sign out or clear your browser's cookies, you won't be able to sign in again with the same identity.") },
+                    { textBlock("Guest accounts are automatically deleted after 30 days without activity.") },
+                    {
+                        textBlock {
+                            span("Please note: ", modify(FadeLoop, Italic))
+                            span("Anyone else with access to this device can also control the account.")
+                        }
+                    }
+                )
+            }
+            usernameSection(model)
+            requirementsSection(model)
         }
-        signUpPart({ model.createAccount(AccountType.Guest) })
-    }
-}
-
-fun AppScope.signUpPart(createAccount: () -> Unit) {
-    formPart("To create a Streetlight account, you must be ${UserCreatorState.MINIMUM_AGE} or older.") {
-        row(modify(JustifyContentSpaceBetween, AlignItemsCenter)) {
-            checkBox("I am ${UserCreatorState.MINIMUM_AGE} or older.")
-            button("Register as guest", createAccount, modify(Accent))
-        }
+        formSubmit(
+            buttonText = "Register as Guest",
+            onClick = { model.createAccount(AccountType.Guest) },
+            messages = model.messages,
+            enabledFlow = model.isValidFlow
+        )
     }
 }
 
@@ -78,30 +68,40 @@ fun AppScope.fullRegistrationForm() {
     val model = app.getUserCreator(parentScope)
 
     form {
-        formSection("Username") {
-            textField(
-                label = null,
-                flow = model.usernameFlow,
-                onValue = model::setUsername,
-                maxLength = Username.MAX_LENGTH,
-                placeholder = "Username"
-            )
-            formBullets("Between ${Username.MIN_LENGTH} and ${Username.MAX_LENGTH} characters.")
-        }
+        formRow {
+            usernameSection(model)
 
-        emailFormSection(model.emailEditor)
-        passwordFormSection(model.passwordEditor)
+            emailFormSection(model.emailEditor)
+            passwordFormSection(model.passwordEditor)
 
-        formSection("Requirements") {
-            minAgeToggle(model.minAgeField)
-            formSubmit(
-                buttonText = "Sign up",
-                onClick = { model.createAccount(AccountType.Registered) },
-                messages = model.messages,
-                enabledFlow = model.isValidFlow
-            )
+            requirementsSection(model)
         }
+        formSubmit(
+            buttonText = "Sign up",
+            onClick = { model.createAccount(AccountType.Registered) },
+            messages = model.messages,
+            enabledFlow = model.isValidFlow
+        )
     }
+}
+
+private fun AppScope.requirementsSection(model: UserCreator) = formSection("Requirements") {
+    minAgeToggle(model.minAgeField)
+}
+
+private fun AppScope.usernameSection(model: UserCreator) = formSection("Username") {
+    row {
+        textField(
+            label = null,
+            mod = modify(Flex1),
+            flow = model.usernameFlow,
+            onValue = model::setUsername,
+            maxLength = Username.MAX_LENGTH,
+            placeholder = "Username"
+        )
+        button("Choose for me", model::generateUsername, modify(Secondary))
+    }
+    formBullets("Between ${Username.MIN_LENGTH} and ${Username.MAX_LENGTH} characters.")
 }
 
 fun AppScope.minAgeToggle(
@@ -139,8 +139,8 @@ fun AppScope.passwordFormSection(model: PasswordEditor) = formSection("Password"
     ) {
         type = InputType.password
     }
-    // textBlock(
-    //     binding = model.isValidFlow,
-    //     provideValue = { if (it) "✅" else "❌" }
-    // )
+    formBullets(
+        "Must have at least 3: uppercase, lowercase, number, symbol",
+        "Must be at least ${Password.LENGTH_MIN} characters"
+    )
 }
