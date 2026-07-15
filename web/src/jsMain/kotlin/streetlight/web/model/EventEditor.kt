@@ -88,7 +88,7 @@ class EventEditor(
 
     fun isEditValid(): Boolean {
         val validMessage = editNow.validity.message
-        message.set(validMessage)
+        message.receive(validMessage)
         return validMessage == null
     }
 
@@ -102,9 +102,9 @@ class EventEditor(
         val url = state.now.edit.website?.takeIf { it.startsWith("http") } ?: return
         scope.launch {
             urlMessage.set("Reading the link, this will take a minute.", true)
-            api.parseSingleEvent(UrlParseRequest(url)).handleResponse(urlMessage::set) { edit ->
+            api.parseSingleEvent(UrlParseRequest(url)).handleResponse(urlMessage) { edit ->
                 val event = edit.mergeRight(state.now.edit)
-                urlMessage.set("Does this information look correct?")
+                urlMessage.receive("Does this information look correct?")
                 state.set { it.copy(edit = event) }
             }
         }
@@ -119,7 +119,7 @@ class EventEditor(
         return when (editNow.eventId) {
             null -> api.createEvent(edit)
             else -> api.updateEvent(edit)
-        }.handleResponse(message::set)
+        }.handleResponse(message)
     }
 
     private fun setEvent(provideEvent: (EventEdit) -> EventEdit) {

@@ -1,5 +1,6 @@
 package streetlight.web.model
 
+import kampfire.model.MessageReceiver
 import kampfire.model.Outcome
 import kampfire.model.handleResponse
 import koala.dom.setStorageOf
@@ -24,7 +25,7 @@ class LightCache<Id, Item>(
     private val lightEdit: suspend (EditLightRequest) -> Outcome<Boolean>?,
     private val readRemoteLights: suspend () -> Outcome<List<Id>>?,
     private val readRemoteItems: suspend (List<Id>) -> Outcome<List<Item>>?,
-    private val onError: (String) -> Unit,
+    private val onError: MessageReceiver,
     private val scope: CoroutineScope,
     private val gate: StarSession,
 ) {

@@ -15,6 +15,7 @@ import streetlight.model.ui.GalaxyMapRoute
 import streetlight.web.model.Earth
 import streetlight.model.ui.GalaxyMap
 import streetlight.web.pages.AppBody
+import kotlin.time.Duration.Companion.milliseconds
 
 fun AppScope.viewEarth(model: Earth) {
     box(EarthStyle.Container, modify(Size100P)) {
@@ -42,10 +43,10 @@ fun AppScope.viewEarthRoute() {
                     if (!isVisible) {
                         val map = when (route) {
                             is GalaxyMapRoute -> route.slug?.let { slug ->
-                                api.readGalaxy(slug).handleResponse(toaster::toast)?.let { GalaxyMap(it) }
+                                api.readGalaxy(slug).handleResponse(toaster)?.let { GalaxyMap(it) }
                             } ?: GalaxyMap(null)
                             is CityMapRoute -> route.slug?.let { slug ->
-                                api.readCity(slug).handleResponse(toaster::toast)?.let { CityMap(it) }
+                                api.readCity(slug).handleResponse(toaster)?.let { CityMap(it) }
                             } ?: CityMap(null)
                         }
                         element.replaceDynamicRender(app, parentScope) {
@@ -60,7 +61,7 @@ fun AppScope.viewEarthRoute() {
                     if (isVisible) {
                         element.unmodify(Reveal)
                         isVisible = false
-                        delay(KoalaTheme.MAGIC_INTERVAL.toLong())
+                        delay(KoalaTheme.MAGIC_INTERVAL.milliseconds)
                         clearRender(element)
                     }
                 }

@@ -1,5 +1,7 @@
 package koala.dom
 
+import kampfire.model.UIMessage
+import kampfire.model.UIMessageType
 import kampfire.model.Url
 import kampfire.model.toUrl
 import koala.css.*
@@ -51,7 +53,7 @@ fun TagScope.filePicker(
         val file = file ?: return
         if (!file.type.startsWith(mimeType.label)) {
             console.log("nay: $mimeType")
-            onMessage?.invoke(UIMessage("Chosen file needs to be an image", type = UIMessageType.Error))
+            onMessage?.invoke(UIMessage("Chosen file needs to be an image", messageType = UIMessageType.Error))
             return
         }
 

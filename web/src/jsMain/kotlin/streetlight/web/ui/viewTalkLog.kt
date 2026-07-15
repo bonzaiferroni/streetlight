@@ -41,7 +41,7 @@ fun AppScope.viewTalkLog(model: TalkLog) {
     parentScope.launch {
 
         launch {
-            val comments = model.readHistory().handleResponse(toaster::toast) ?: return@launch
+            val comments = model.readHistory().handleResponse(toaster) ?: return@launch
             buildTree(model, treeRoot!!, comments)
 
             model.messageFlow.collect { message ->

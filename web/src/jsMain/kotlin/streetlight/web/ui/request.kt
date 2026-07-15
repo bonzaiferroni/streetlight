@@ -14,7 +14,7 @@ fun <T> AppScope.request(
     val element = column()
     element.onView {
         launchEffect {
-            requestData().handleResponse(toaster::toast) { data ->
+            requestData().handleResponse(toaster) { data ->
                 element.replaceStaticRender(app, parentScope) {
                     content(data)
                 }

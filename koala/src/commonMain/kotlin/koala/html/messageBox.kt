@@ -2,20 +2,31 @@ package koala.html
 
 import koala.css.Class
 
-object MessageBoxKey {
+object MessageBox {
     val Class = Class("message-box")
+    val Error = Class("message-box--error")
+    val Success = Class("message-box--success")
 }
 
 // language="CSS"
-val MessageBoxCss get() = """
-.message-box {
+val MessageBoxCss get() = with(MessageBox) { """
+$Class {
     position: relative;
     background-color: var(--primary-card-bg);
     border-radius: calc(var(--unit-spacing));
     overflow: hidden;
+    white-space: pre-wrap;
+    
+    &$Error {
+        background-color: var(--error-bg);
+    }
+    
+    &$Success {
+        background-color: var(--success-bg);
+    }
 }
 
-.message-box::after {
+$Class::after {
     content: "";
     position: absolute;
     inset: 0;
@@ -29,4 +40,4 @@ val MessageBoxCss get() = """
     0%, 100% { opacity: 0; }
     50% { opacity: .05; }
 }
-"""
+""" }

@@ -43,7 +43,7 @@ fun AppScope.viewHomeRoute() {
 
     routeBlock<HomeRoute, HomeContent>(portal, { _ ->
         readIsland(HomeKey.IslandId) { true }
-            ?: api.readHomeContent().handleResponse(toaster::toast)
+            ?: api.readHomeContent().handleResponse(toaster)
     }) { content ->
         viewHome(content)
     }

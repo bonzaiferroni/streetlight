@@ -30,7 +30,7 @@ fun AppScope.viewGalaxy(content: GalaxyContent) {
 fun AppScope.viewGalaxyRoute() {
     routeBlock<GalaxyRoute, GalaxyContent>(portal, { route ->
         readIsland<GalaxyContent>(GalaxyShell.islandId) { it.galaxy.slug == route.slug }
-            ?: api.readGalaxyContent(route.slug).handleResponse(toaster::toast)
+            ?: api.readGalaxyContent(route.slug).handleResponse(toaster)
     }) { content ->
         viewGalaxy(content)
     }

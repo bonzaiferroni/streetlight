@@ -18,7 +18,7 @@ fun AppScope.viewStar(content: StarContent) {
 fun AppScope.viewStarRoute() {
     routeBlock<StarRoute, StarContent>(portal, { route ->
         readIsland<StarContent>(StarShell.islandId) { it.star.username == route.username } ?:
-            api.readStarContent(route.username).handleResponse(toaster::toast)
+            api.readStarContent(route.username).handleResponse(toaster)
     }) { content ->
         viewStar(content)
     }

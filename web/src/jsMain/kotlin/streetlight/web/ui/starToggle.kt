@@ -34,7 +34,7 @@ fun AppScope.starToggle(
         launchEffect {
             icon.unmodify(ScaleIn)
             icon.modify(ScaleOut)
-            api.editLight(LightEdit(recordId.value, !litNow, lightType)).handleResponse(toaster::toast) {
+            api.editLight(LightEdit(recordId.value, !litNow, lightType)).handleResponse(toaster) {
                 litNow = !litNow
                 icon.setStyle(Property.MaskUrl.to(svg()))
                 icon.modify(ScaleIn)

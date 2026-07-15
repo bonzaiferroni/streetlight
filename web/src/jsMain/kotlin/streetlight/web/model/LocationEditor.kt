@@ -67,16 +67,16 @@ class LocationEditor(
         val website = editNow.website?.takeIf { it.startsWith("http") } ?: return
         scope.launch {
             websiteMessage.set("Reading the link, this will take a minute.", true)
-            api.parseLocation(UrlParseRequest(website)).handleResponse(websiteMessage::set) { edit ->
+            api.parseLocation(UrlParseRequest(website)).handleResponse(websiteMessage) { edit ->
                 state.set { it.copy(edit = edit.mergeLeft(editNow)) }
-                websiteMessage.set("Does this information look correct?")
+                websiteMessage.receive("Does this information look correct?")
             }
         }
     }
 
     fun isEditValid(): Boolean {
         val validMessage = editNow.validity.message
-        message.set(validMessage)
+        message.receive(validMessage)
         return validMessage == null
     }
 
@@ -99,8 +99,8 @@ class LocationEditor(
 
         message.set("Sending...", true)
         return when (editNow.locationId) {
-            null -> api.createLocation(edit).handleResponse(message::set)
-            else -> api.updateLocation(edit).handleResponse(message::set)
+            null -> api.createLocation(edit).handleResponse(message)
+            else -> api.updateLocation(edit).handleResponse(message)
         }
     }
 }

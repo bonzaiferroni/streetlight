@@ -29,10 +29,10 @@ class DataCache(
         }
     }
 
-    val talent = ItemCache(scope, toaster::toast, { it.talentId }) { api.readTalents() }
-    val song = ItemCache(scope, toaster::toast, { it.songId }) { api.readSongs() }
+    val talent = ItemCache(scope, toaster, { it.talentId }) { api.readTalents() }
+    val song = ItemCache(scope, toaster, { it.songId }) { api.readSongs() }
     // val file = ItemCache(scope, { it }) { api.readUserFiles() }
-    val topGalaxies = ItemCache(scope, toaster::toast, { it.galaxyId }) { api.readTopGalaxies() }
+    val topGalaxies = ItemCache(scope, toaster, { it.galaxyId }) { api.readTopGalaxies() }
 
     val newPosts = MutableSharedFlow<GalaxyPost>()
 
@@ -47,7 +47,7 @@ class DataCache(
         lightEdit = { api.editLight(it) },
         readRemoteLights = { api.readGalaxyLights() },
         readRemoteItems = { api.readGalaxies(it) },
-        onError = toaster::toast,
+        onError = toaster,
         scope = scope,
         gate = gate,
     )
@@ -61,7 +61,7 @@ class DataCache(
         lightEdit = { api.editLight(it) },
         readRemoteLights = { api.readEventLights() },
         readRemoteItems = { api.readEventLocations(it) },
-        onError = toaster::toast,
+        onError = toaster,
         scope = scope,
         gate = gate,
     )

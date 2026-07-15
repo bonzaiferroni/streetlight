@@ -18,9 +18,9 @@ fun AppScope.viewSiteDoc(node: DocNode) {
 fun AppScope.viewSiteDocRoute() {
     routeBlock<SiteDocRoute, DocNode>(portal, { route ->
         if (cachedTable == null) {
-            cachedTable = api.readSiteDocTable().handleResponse(toaster::toast)
+            cachedTable = api.readSiteDocTable().handleResponse(toaster)
         }
-        api.readSiteDoc(route.docId).handleResponse(toaster::toast)
+        api.readSiteDoc(route.docId).handleResponse(toaster)
     }) { node ->
         viewSiteDoc(node)
     }

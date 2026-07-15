@@ -25,7 +25,7 @@ class ImageEditor(
         message?.set("Uploading image...", true)
         val image = api.uploadImageBlob(url).getDataOrNull()?.toImage()
         if (image == null) {
-            message?.set("Unable to upload image.")
+            message?.receive("Unable to upload image.")
         }
         return image
     }

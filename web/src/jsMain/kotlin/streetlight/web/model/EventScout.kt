@@ -87,7 +87,7 @@ class EventScout(
             } ?: return@launch
 
             val edit = PostEdit(null, galaxy.galaxyId, PostType.Event, eventId.value, null)
-            api.createPost(edit).handleResponse(postMessage::set) { post ->
+            api.createPost(edit).handleResponse(postMessage) { post ->
                 state.set { it.copy(postId = post.postId) }
             }
         }

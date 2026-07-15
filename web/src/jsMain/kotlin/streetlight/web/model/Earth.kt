@@ -66,7 +66,7 @@ class Earth(
                         // val maps = api.readTopGalaxies().handleOutcome(toaster::toast)
                         //     ?.map { GalaxyMap(it) } ?: emptyList()
                         // state.set { it.copy(maps = maps) }
-                        val markers = api.readTopGalaxies().handleResponse(toaster::toast)?.let {
+                        val markers = api.readTopGalaxies().handleResponse(toaster)?.let {
                             markerService.createMarkers(it)
                         }
                         markerMap.setPoints(markers)
@@ -75,13 +75,13 @@ class Earth(
                     }
 
                     else -> {
-                        val galaxy = api.readGalaxy(slug).handleResponse(toaster::toast)
+                        val galaxy = api.readGalaxy(slug).handleResponse(toaster)
                         if (galaxy == null) {
                             toaster.toast("galaxy not found: $slug")
                             return
                         }
 
-                        val markers = api.readPosts(galaxy.galaxyId).handleResponse(toaster::toast)?.let {
+                        val markers = api.readPosts(galaxy.galaxyId).handleResponse(toaster)?.let {
                             markerService.createMarkers(it)
                         }
                         markerMap.setPoints(markers)
@@ -94,7 +94,7 @@ class Earth(
             is CityMapRoute -> {
                 when (val slug = route.slug) {
                     null -> {
-                        val markers = api.readTopCities().handleResponse(toaster::toast)?.let {
+                        val markers = api.readTopCities().handleResponse(toaster)?.let {
                             markerService.createMarkers(it)
                         }
                         markerMap.setPoints(markers)
@@ -102,13 +102,13 @@ class Earth(
                         showAll()
                     }
                     else -> {
-                        val city = api.readCity(slug).handleResponse(toaster::toast)
+                        val city = api.readCity(slug).handleResponse(toaster)
                         if (city == null) {
                             toaster.toast("city not found: $slug")
                             return
                         }
 
-                        val markers = api.readCityPosts(slug).handleResponse(toaster::toast)?.let {
+                        val markers = api.readCityPosts(slug).handleResponse(toaster)?.let {
                             markerService.createMarkers(it)
                         }
                         markerMap.setPoints(markers)

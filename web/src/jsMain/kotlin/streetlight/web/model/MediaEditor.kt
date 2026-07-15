@@ -33,7 +33,7 @@ class MediaEditor(
     init {
         scope.launch {
             editFlow.tap { it.invalidMessage }.collect {
-                message.set(it ?: "Looks good.")
+                message.receive(it ?: "Looks good.")
             }
         }
     }
@@ -53,13 +53,13 @@ class MediaEditor(
             val media = when (edit.mediaId) {
                 null -> api.createMedia(edit.copy(image = image))
                 else -> api.updateMedia(edit.copy(image = image))
-            }.handleResponse(toaster::toast) { media ->
+            }.handleResponse(toaster) { media ->
                 state.set { it.copy(slug = media.slug) }
                 media
             }
 
             if (media != null && galaxy != null) {
-                message.set("Posting to ${galaxy.name}...")
+                message.receive("Posting to ${galaxy.name}...")
                 api.createPost(PostEdit(
                     postId = null,
                     galaxyId = galaxy.galaxyId,

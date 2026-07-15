@@ -74,7 +74,7 @@ fun AppScope.callPostMenu(postId: PostId, username: Username?) {
                 }
                 dangerButton("remove", onClick = {
                     parentScope.launch {
-                        api.removePost(postId).handleResponse(toaster::toast) {
+                        api.removePost(postId).handleResponse(toaster) {
                             portal.refresh()
                         }
                     }

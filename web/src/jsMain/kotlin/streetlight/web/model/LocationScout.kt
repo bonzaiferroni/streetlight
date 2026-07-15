@@ -53,7 +53,7 @@ class LocationScout(
             launch {
                 queryFlow.collect { query ->
                     api.searchLocations(query, stateNow.city?.takeIf { it.isNotBlank() })
-                        .handleResponse(toaster::toast) { locations ->
+                        .handleResponse(toaster) { locations ->
                             state.set { it.copy(queryLocations = locations) }
                         }
                 }
@@ -62,9 +62,9 @@ class LocationScout(
             launch {
                 geo.stateFlow.filter { !it.isMoving && stateNow.mode == SearchMode.Map }
                     .tap { it.center }.collect { center ->
-                        osm.readLocationAt(center).handleResponse(mapMessage::set) { location ->
+                        osm.readLocationAt(center).handleResponse(mapMessage) { location ->
                             val location = location.toEditOrNull() ?: return@handleResponse
-                            mapMessage.set(location.label)
+                            mapMessage.receive(location.label)
                             state.set { it.copy(mapLocation = location)}
                         }
                     }
@@ -100,8 +100,8 @@ class LocationScout(
         scope.launch {
             val city = stateNow.city?.takeIf { it.isNotBlank() }
             val bounds = galaxy.geoBounds.takeIf { city == null }?.resizeBy(5f)
-            osm.readLocations(query, stateNow.city, bounds).handleResponse(queryMessage::set) { locations ->
-                queryMessage.set("found: ${locations.size}")
+            osm.readLocations(query, stateNow.city, bounds).handleResponse(queryMessage) { locations ->
+                queryMessage.receive("found: ${locations.size}")
                 state.set { it.copy(osmLocations = locations.mapNotNull { loc -> loc.toEditOrNull() }) }
             }
         }
@@ -124,7 +124,7 @@ class LocationScout(
             val location = submitLocation() ?: return@launch
 
             val edit = PostEdit(null, galaxy.galaxyId, PostType.Location, location.locationId.value, null)
-            api.createPost(edit).handleResponse(postMessage::set) { post ->
+            api.createPost(edit).handleResponse(postMessage) { post ->
                 state.set { it.copy(postId = post.postId) }
             }
         }

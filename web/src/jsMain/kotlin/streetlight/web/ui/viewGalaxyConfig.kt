@@ -52,7 +52,7 @@ fun AppScope.viewGalaxyConfig(edit: GalaxyEdit) {
 
 fun AppScope.viewGalaxyConfigRoute() {
     routeBlock<GalaxyConfigRoute, GalaxyEdit>(portal, { route ->
-        api.readGalaxy(route.slug).handleResponse(toaster::toast)?.toEdit()
+        api.readGalaxy(route.slug).handleResponse(toaster)?.toEdit()
     }) {
         viewGalaxyConfig(it)
     }

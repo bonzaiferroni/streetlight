@@ -37,18 +37,18 @@ class UserCreator(
     val minAgeField = state.fieldOf({ it.isMinimumAge }) { copy(isMinimumAge = it) }
 
     fun generateUsername() = scope.launch {
-        val username = api.generateUsername().handleResponse(toaster::toast) ?: return@launch
+        val username = api.generateUsername().handleResponse(toaster) ?: return@launch
         state.set { it.copy(username = username.value)}
     }
 
     fun setUsername(username: String) = state.set { it.copy(username = username) }
 
     fun createAccount(accountType: AccountType) {
-        val username = stateNow.username.toUsername().toValidOutcome().handleOutcome(messages::set) ?: return
-        val email = emailEditor.getOutcome().handleOutcome(messages::set)
+        val username = stateNow.username.toUsername().toValidOutcome().handleOutcome(messages) ?: return
+        val email = emailEditor.getOutcome().handleOutcome(messages)
         val password = when (accountType) {
             AccountType.Guest -> Password(Uuid.random().toString())
-            AccountType.Registered -> passwordEditor.getOutcome().handleOutcome(messages::set) ?: return
+            AccountType.Registered -> passwordEditor.getOutcome().handleOutcome(messages) ?: return
         }
 
         val request = SignUpRequest(
@@ -58,12 +58,12 @@ class UserCreator(
             accountType = accountType,
             stayLoggedIn = true
         )
-        messages.set("Creating account...")
+        messages.receive("Creating account...")
         scope.launch {
-            val isSuccess = api.createUser(request).handleResponse(messages::set) ?: return@launch
+            val isSuccess = api.createUser(request).handleResponse(messages) ?: return@launch
             if (isSuccess) {
                 cred.setFromSignup(request)
-                gate.signIn(messages::set)
+                gate.signIn(messages)
             }
         }
     }

@@ -17,7 +17,7 @@ fun AppScope.wireStreetMap() {
         portal.routeFlowOf<HomeRoute>().collect {
             val galaxyIds = cache.topGalaxies.getItems().map { it.galaxyId }
             // td: gather initial posts from json in html
-            val posts = api.readPosts(galaxyIds).handleResponse(toaster::toast) ?: return@collect
+            val posts = api.readPosts(galaxyIds).handleResponse(toaster) ?: return@collect
             val points = markerService.createMarkers(posts)
             markerMap.setPoints(points)
         }

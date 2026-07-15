@@ -7,52 +7,52 @@ fun <T> Outcome<T>?.getDataOrNull() = when (this) {
 }
 
 fun <T> Outcome<T>?.handleResponse(
-    onMessage: (String) -> Unit,
-    okMessage: String? = null,
-) = handleResponse(onMessage, okMessage) { it }
+    receiver: MessageReceiver,
+    okReceiver: MessageReceiver = receiver,
+) = handleResponse(receiver, okReceiver) { it }
 
 fun <T1, T2> Outcome<T1>?.handleResponse(
-    onMessage: (String) -> Unit,
-    okMessage: String? = null,
+    receiver: MessageReceiver,
+    okReceiver: MessageReceiver = receiver,
     block: (T1) -> T2
 ): T2? = when (this) {
     is Ok -> {
-        okMessage?.let {
-            onMessage(it)
+        message?.let {
+            okReceiver.receive(UIMessage(it, UIMessageType.Success))
         }
         block(data)
     }
 
     is Problem -> {
-        onMessage(message)
+        receiver.receive(this)
         null
     }
 
     null -> {
-        onMessage("No response.")
+        receiver.receive(Problem("No response."))
         null
     }
 }
 
 fun <T> Outcome<T>.handleOutcome(
-    onMessage: (String) -> Unit,
-    okMessage: String? = null,
-) = handleOutcome(onMessage, okMessage) { it }
+    receiver: MessageReceiver,
+    okReceiver: MessageReceiver = receiver,
+) = handleOutcome(receiver, okReceiver) { it }
 
 fun <T1, T2> Outcome<T1>.handleOutcome(
-    onMessage: (String) -> Unit,
-    okMessage: String? = null,
+    receiver: MessageReceiver,
+    okReceiver: MessageReceiver = receiver,
     block: (T1) -> T2
 ): T2? = when (this) {
     is Ok -> {
-        okMessage?.let {
-            onMessage(it)
+        message?.let {
+            okReceiver.receive(it)
         }
         block(data)
     }
 
     is Problem -> {
-        onMessage(message)
+        receiver.receive(this)
         null
     }
 }

@@ -69,7 +69,7 @@ val StylesCss get() = """
     --red-fg: color-mix(in srgb, rgb(var(--red)) 75%, rgb(var(--ink)));
     --danger-fg: color-mix(in srgb, rgb(var(--red)) 75%, rgb(var(--ink)));
     --danger-bg: color-mix(in srgb, rgb(var(--red)) 75%, rgb(var(--paper)));
-    
+    --error-bg: color-mix(in srgb, rgb(var(--red)) 25%, rgb(var(--paper)));
     
     --sea-green: 58, 200, 158; 
     --sea-green-fg: color-mix(in srgb, rgb(var(--sea-green)) 50%, rgb(var(--ink)));
@@ -77,6 +77,7 @@ val StylesCss get() = """
     --green: 99, 255, 132;
     --green-fg: color-mix(in srgb, rgb(var(--green)) 25%, rgb(var(--ink)));
     --valid-bg: color-mix(in srgb, rgb(var(--green)) 33%, rgb(var(--paper)));
+    --success-bg : color-mix(in srgb, rgb(var(--green)) 25%, rgb(var(--paper)));
     
     --yellow: 255, 240, 32;
     --yellow-fg: color-mix(in srgb, rgb(var(--yellow)) 25%, rgb(var(--ink)));

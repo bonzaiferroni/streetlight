@@ -1,7 +1,9 @@
 package koala.dom
 
+import kampfire.model.UIMessage
+import kampfire.model.UIMessageType
 import koala.css.*
-import koala.html.MessageBoxKey
+import koala.html.MessageBox
 import koala.model.Store
 import kotlinx.coroutines.flow.Flow
 
@@ -11,13 +13,13 @@ fun AppScope.messageBox(
 ) {
     flowBlock(flow, modifiers) { message ->
         val message = message ?: return@flowBlock
-        card(modify(modifiers, MessageBoxKey.Class, MoonShadow)) {
-            column {
-                val paragraphs = message.text.split("\n\n")
-                paragraphs.forEach { text ->
-                    textBlock(text)
-                }
-            }
+        val typeMod = when (message.messageType) {
+            UIMessageType.Error -> MessageBox.Error
+            UIMessageType.Success -> MessageBox.Success
+            else -> null
+        }
+        card(modify(modifiers, MessageBox.Class, MoonShadow, typeMod)) {
+            textBlock(message.text)
         }
     }
 }

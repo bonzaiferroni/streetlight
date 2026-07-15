@@ -33,7 +33,7 @@ class FrontDesk(
     fun sendFeedback() {
         val edit = stateNow.edit.takeIf { it.isValid } ?: return
         scope.launch {
-            val isSuccess = api.createFeedback(edit).handleResponse(toaster::toast) ?: false
+            val isSuccess = api.createFeedback(edit).handleResponse(toaster) ?: false
             if (isSuccess) refreshFeedback()
         }
     }
@@ -41,7 +41,7 @@ class FrontDesk(
     private fun setEdit(block: (FeedbackEdit) -> FeedbackEdit) = state.set { it.copy(edit = block(it.edit)) }
 
     private suspend fun refreshFeedback() {
-        val list = api.feedFeedback().handleResponse(toaster::toast) ?: emptyList()
+        val list = api.feedFeedback().handleResponse(toaster) ?: emptyList()
         state.set { it.copy(feed = list) }
     }
 }

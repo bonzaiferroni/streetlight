@@ -38,7 +38,7 @@ fun AppScope.viewMediaForge(galaxy: Galaxy?) {
 
 fun AppScope.viewContentPosterRoute() {
     routeBlock<MediaForgeRoute, Galaxy?>({ route ->
-        route.slug?.let { api.readGalaxy(it).handleResponse(toaster::toast) }
+        route.slug?.let { api.readGalaxy(it).handleResponse(toaster) }
     }) { galaxy ->
         viewMediaForge(galaxy)
     }

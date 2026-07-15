@@ -30,7 +30,7 @@ fun AppScope.viewEventRoute() {
 
     routeBlock<EventRoute, EventLocation>(portal, { route ->
         readIsland<EventLocation>(EventShell.island) { it.eventSlug == route.slug }
-            ?: api.readEventSlug(route.slug).handleResponse(toaster::toast)
+            ?: api.readEventSlug(route.slug).handleResponse(toaster)
     }) { event ->
         viewEvent(event)
     }

@@ -57,7 +57,7 @@ fun AppScope.viewLocationScout(galaxy: Galaxy) {
 
 fun AppScope.viewLocationScoutRoute() {
     routeBlock<LocationScoutRoute, Galaxy>({
-        api.readGalaxy(it.slug).handleResponse(toaster::toast)
+        api.readGalaxy(it.slug).handleResponse(toaster)
     }) { galaxy ->
         viewLocationScout(galaxy)
     }

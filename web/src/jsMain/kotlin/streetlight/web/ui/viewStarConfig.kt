@@ -34,7 +34,7 @@ fun AppScope.viewStarConfig(model: StarEditor) {
 fun AppScope.viewStarConfigRoute() {
     starGate { star ->
         routeBlock<StarConfigRoute, StarEdit>(portal, { route ->
-            val info = api.readIdentityInfo().handleResponse(toaster::toast) ?: return@routeBlock null
+            val info = api.readIdentityInfo().handleResponse(toaster) ?: return@routeBlock null
             star.toEdit(info)
         }) { edit ->
             val model = app.getStarEditor(edit, parentScope)

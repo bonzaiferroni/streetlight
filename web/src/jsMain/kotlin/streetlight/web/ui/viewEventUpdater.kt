@@ -53,7 +53,7 @@ fun AppScope.viewEventUpdaterRoute() {
             routeBlock<EventUpdateRoute, EventUpdaterContent?>(
                 portal = portal,
                 provideData = { route ->
-                    api.readEventUpdaterContent(route.slug).handleResponse(toaster::toast)
+                    api.readEventUpdaterContent(route.slug).handleResponse(toaster)
                 }
             ) { content ->
                 if (content == null) {

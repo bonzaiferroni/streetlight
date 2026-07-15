@@ -50,7 +50,7 @@ fun AppScope.viewUpdateLocationRoute() {
             routeBlock<LocationUpdateRoute, LocationUpdaterContent?>(
                 portal = portal,
                 provideData = { route ->
-                    api.readLocationUpdaterContent(route.slug).handleResponse(toaster::toast)
+                    api.readLocationUpdaterContent(route.slug).handleResponse(toaster)
                 }
             ) { content ->
                 if (content == null) {

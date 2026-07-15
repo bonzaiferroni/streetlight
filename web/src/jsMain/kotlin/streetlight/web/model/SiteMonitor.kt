@@ -56,7 +56,7 @@ class SiteMonitor(
     private fun refreshData() {
         refreshJob?.cancel()
         refreshJob = scope.launch {
-            val points = api.feedSiteStatus(stateNow.timeFrame.resolution).handleResponse(toaster::toast) ?: emptyList()
+            val points = api.feedSiteStatus(stateNow.timeFrame.resolution).handleResponse(toaster) ?: emptyList()
             state.set { it.copy(points = points) }
             while (true) {
                 delay(stateNow.timeFrame.resolution.duration)

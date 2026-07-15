@@ -60,7 +60,7 @@ fun AppScope.viewEventScout(galaxy: Galaxy) {
 
 fun AppScope.viewEventScoutRoute() {
     routeBlock<EventScoutRoute, Galaxy>({
-        api.readGalaxy(it.slug).handleResponse(toaster::toast)
+        api.readGalaxy(it.slug).handleResponse(toaster)
     }) { galaxy ->
         viewEventScout(galaxy)
     }

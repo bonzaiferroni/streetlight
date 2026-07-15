@@ -1,5 +1,6 @@
 package koala.model
 
+import kampfire.model.MessageReceiver
 import kampfire.model.Outcome
 import kampfire.model.handleResponse
 import kotlinx.coroutines.CoroutineScope
@@ -10,7 +11,7 @@ import kotlin.collections.List
 
 class ItemCache<Item, ItemId>(
     private val scope: CoroutineScope,
-    private val onError: (String) -> Unit,
+    private val onError: MessageReceiver,
     private val provideId: (Item) -> ItemId,
     private val provideInitialItems: suspend () -> Outcome<List<Item>>?
 ){

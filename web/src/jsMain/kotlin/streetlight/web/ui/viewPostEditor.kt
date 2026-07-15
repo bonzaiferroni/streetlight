@@ -38,7 +38,7 @@ fun AppScope.viewMediumUpdaterRoute() {
     routeBlock<MediaUpdateRoute, MediaEdit>(
         portal = portal,
         provideData = { route ->
-            api.readMedia(route.slug).handleResponse(toaster::toast) { it.toEdit() }
+            api.readMedia(route.slug).handleResponse(toaster) { it.toEdit() }
         }
     ) {
         val editor = MediaEditor(it, parentScope, api, toaster)

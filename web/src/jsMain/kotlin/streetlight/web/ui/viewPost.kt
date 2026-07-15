@@ -26,7 +26,7 @@ fun AppScope.viewMedia(media: Media) {
 fun AppScope.viewPostRoute() {
     routeBlock<MediaRoute, Media>(portal, { route ->
         readIsland<Media>(PostKey.IslandId) { it.slug == route.slug }
-            ?: api.readMedia(route.slug).handleResponse(toaster::toast)
+            ?: api.readMedia(route.slug).handleResponse(toaster)
     }) { post ->
         viewMedia(post)
     }

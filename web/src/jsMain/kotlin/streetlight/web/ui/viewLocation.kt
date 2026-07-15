@@ -10,7 +10,7 @@ import streetlight.web.shells.locationShell
 fun AppScope.viewLocation() {
     routeBlock<LocationRoute, LocationContent>(
         portal = portal,
-        provideData = { api.readLocationContent(it.slug).handleResponse(toaster::toast) }
+        provideData = { api.readLocationContent(it.slug).handleResponse(toaster) }
     ) { location ->
         val element = shellBox(LocationProfileKey.Id, hookInitializers) { // app.geoMap, app.appScope
             locationShell(location)
