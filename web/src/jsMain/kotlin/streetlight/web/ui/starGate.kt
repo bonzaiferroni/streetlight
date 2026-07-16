@@ -22,20 +22,21 @@ fun AppScope.starGate(
         when (user) {
             null -> {
                 val dialog = dialog("Sign In") {
+                    val model = app.getUserCreator(parentScope)
                     tabs { // mod = modify(Width64)
                         tab("guest") {
                             dialogCard {
-                                guestRegistrationForm()
+                                guestRegistrationForm(model)
                             }
                         }
                         tab("register") {
                             dialogCard {
-                                fullRegistrationForm()
+                                fullRegistrationForm(model)
                             }
                         }
                         tab("sign in") {
                             dialogCard {
-                                signInForm()
+                                signInForm(model)
                             }
                         }
                     }
@@ -54,3 +55,4 @@ fun AppScope.starGate(
         }
     }
 }
+

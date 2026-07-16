@@ -1,5 +1,6 @@
 package streetlight.web.model
 
+import kampfire.model.AccountType
 import kampfire.model.LoginRequest
 import kampfire.model.MessageReceiver
 import kampfire.model.PrintLnReceiver
@@ -44,6 +45,14 @@ class StarSession(
         api.validateLogin().handleResponse(receiver ?: PrintLnReceiver) { star ->
             console.log("signed in")
             state.set { it.copy(star = star) }
+
+            // guest check in
+            if (star.accountType == AccountType.Guest) {
+                scope.launch {
+                    runCatching { api.checkGuest() }
+                        .onFailure { console.log("guest check-in failed: $it") }
+                }
+            }
         }
     }
 

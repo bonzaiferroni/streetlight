@@ -1,9 +1,11 @@
 package streetlight.web.model
 
 import kampfire.api.Password
+import kampfire.api.Username
 import kampfire.api.toUsername
 import kampfire.api.toValidOutcome
 import kampfire.model.AccountType
+import kampfire.model.PrintLnReceiver
 import kampfire.model.SignUpRequest
 import kampfire.model.handleOutcome
 import kampfire.model.handleResponse
@@ -33,8 +35,18 @@ class UserCreator(
 
     val usernameFlow = stateFlow.tap { it.username }
     val isValidFlow = stateFlow.tap { it.isValid }
+    val guestFlow = stateFlow.tap { it.guestUsername }
 
     val minAgeField = state.fieldOf({ it.isMinimumAge }) { copy(isMinimumAge = it) }
+
+    init {
+        scope.launch {
+            api.checkGuest().handleResponse(PrintLnReceiver) { username ->
+                println(username) // ey
+                state.set { it.copy(guestUsername = username) }
+            }
+        }
+    }
 
     fun generateUsername() = scope.launch {
         val username = api.generateUsername().handleResponse(toaster) ?: return@launch
@@ -62,8 +74,12 @@ class UserCreator(
         scope.launch {
             val isSuccess = api.createUser(request).handleResponse(messages) ?: return@launch
             if (isSuccess) {
-                cred.setFromSignup(request)
+                // cred.setFromSignup(request)
+                cred.followUpAuth(true)
                 gate.signIn(messages)
+                if (accountType == AccountType.Guest) {
+                    state.set { it.copy(guestUsername = username) }
+                }
             }
         }
     }
@@ -72,6 +88,7 @@ class UserCreator(
 data class UserCreatorState(
     val username: String = "",
     val isMinimumAge: Boolean = false,
+    val guestUsername: Username? = null,
 ) {
     val isValid get() = isMinimumAge && username.toUsername().toValidOutcome().isOk
 

@@ -10,9 +10,12 @@ import kotlin.uuid.Uuid
 data class UserRecord(
     val userId: TableId<Uuid>,
     val username: Username,
-    val hashedPassword: HashedPassword,
-    val email: String?,
+    val hashedPassword: HashedPassword?,
+    val email: Email?,
     val roles: Set<UserRole>,
+    val accountType: AccountType,
+    val guestToken: HashedToken?,
+    val activeAt: Instant,
     val createdAt: Instant,
     val updatedAt: Instant,
 )
@@ -36,9 +39,10 @@ val AuthUser.isUser: Boolean
 
 data class UserSeed(
     val request: SignUpRequest,
-    val hashedPassword: HashedPassword,
+    val hashedPassword: HashedPassword?,
     val roles: Set<UserRole>,
     val accountType: AccountType,
+    val guestToken: HashedToken?,
 )
 
 enum class AccountType {

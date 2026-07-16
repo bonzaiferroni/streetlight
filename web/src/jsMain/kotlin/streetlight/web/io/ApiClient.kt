@@ -75,6 +75,7 @@ class ApiClient(private val client: FetchClient) {
     suspend fun logout() = client.postApi(UserApi.Logout, Unit)
     suspend fun updateStar(edit: StarEdit) = client.postApi(Api.Stars.EditStar, edit)
     suspend fun editLight(edit: EditLightRequest) = client.postApi(Api.Stars.EditLight, edit)
+    suspend fun checkGuest() = client.getApi(UserApi.Login.CheckGuest)
 
     // websockets
     fun connectChat(scope: CoroutineScope) = WebChatSocket(client.connectSocket(Api.Chat), scope)

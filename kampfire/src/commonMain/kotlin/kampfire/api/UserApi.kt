@@ -7,7 +7,9 @@ import kampfire.model.SignUpRequest
 object UserApi: ApiNode(ApiNode(ApiNode(null, "api"),
     "v1"
 ), "user") {
-    object Login: PostEndpoint<LoginRequest, Boolean>(this, "login")
+    object Login: PostEndpoint<LoginRequest, Boolean>(this, "login") {
+        object CheckGuest: GetEndpoint<Username?>(this, "check-guest")
+    }
     object Refresh: PostEndpoint<Unit, Unit>(this, "refresh")
     object Logout: PostEndpoint<Unit, Boolean>(this, "logout")
     object Create: PostEndpoint<SignUpRequest, Boolean>(this, "create")

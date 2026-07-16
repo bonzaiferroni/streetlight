@@ -33,9 +33,9 @@ class CredentialStore {
         state.set { it.copy(stayLoggedIn = value) }
     }
 
-    fun setFromSignup(requestNow: SignUpRequest) {
-         state.set { it.copy(passwordText = requestNow.password.value, usernameText = requestNow.username.value) }
-    }
+    // fun setFromSignup(requestNow: SignUpRequest) {
+    //      state.set { it.copy(passwordText = "", usernameText = requestNow.username.value) }
+    // }
 
     fun getLoginRequest(): LoginRequest? {
         val usernameOrEmail = stateNow.usernameText.takeIf { it.isNotBlank() } ?: return null

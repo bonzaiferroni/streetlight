@@ -5,6 +5,7 @@ import kampfire.api.Username
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 import kotlin.time.Clock
+import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.Instant
 import kotlin.uuid.Uuid
@@ -13,9 +14,15 @@ import kotlin.uuid.Uuid
 data class Session(
     val token: Token,
     val ttlSeconds: Int,
-    val expiresAt: Instant
+    val activeAt: Instant,
+    val expiresAt: Instant,
 ) {
-    fun pastHalfLife(): Boolean = (expiresAt - Clock.System.now()) < ttlSeconds.seconds / 2
+    companion object {
+        val activityPeriod = 1.hours
+    }
+
+    fun activityRefreshDue() = activeAt < Clock.System.now() - activityPeriod
+    fun pastHalfLife() = (expiresAt - Clock.System.now()) < ttlSeconds.seconds / 2
 }
 
 @Serializable
@@ -23,12 +30,13 @@ data class Session(
 value class Token(val value: String)
 
 @JvmInline
-value class HashedToken(val hash: String)
+value class HashedToken(val value: String)
 
 data class Identity(
     val callerId: CallerId,
     val username: Username,
     val roles: Set<UserRole>,
+    val accountType: AccountType,
 )
 
 @JvmInline
@@ -38,3 +46,4 @@ data class SessionIdentity(
     val session: Session,
     val identity: Identity,
 )
+

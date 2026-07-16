@@ -17,9 +17,7 @@ import streetlight.web.model.PasswordEditor
 import streetlight.web.model.UserCreator
 import streetlight.web.model.UserCreatorState
 
-fun AppScope.guestRegistrationForm() {
-    val model = app.getUserCreator(parentScope)
-
+fun AppScope.guestRegistrationForm(model: UserCreator) {
     form {
         formRow {
             column {
@@ -64,8 +62,7 @@ Guest accounts are temporary and make it easy to participate in Streetlight even
 val guestAccountIntro2 =
     "If you decide to stick around, you can make the account permanent and more secure by adding a password. "
 
-fun AppScope.fullRegistrationForm() {
-    val model = app.getUserCreator(parentScope)
+fun AppScope.fullRegistrationForm(model: UserCreator) {
 
     form {
         formRow {
