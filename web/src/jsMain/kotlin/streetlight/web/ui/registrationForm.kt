@@ -34,8 +34,8 @@ fun AppScope.guestRegistrationForm(model: UserCreator) {
                 }
                 bulletsOf(
                     modify(Gap1),
-                    { textBlock("Once you sign out or clear your browser's cookies, you won't be able to sign in again with the same identity.") },
-                    { textBlock("Guest accounts are automatically deleted after 30 days without activity.") },
+                    { textBlock("Guest credentials are stored as secure browser cookies, so the account will only be available on this device.") },
+                    { textBlock("Clearing your cookies will remove access to the account.") },
                     {
                         textBlock {
                             span("Please note: ", modify(FadeLoop, Italic))
@@ -59,8 +59,10 @@ fun AppScope.guestRegistrationForm(model: UserCreator) {
 val guestAccountIntro1 = """
 Guest accounts are temporary and make it easy to participate in Streetlight events and submit content. 
 """
-val guestAccountIntro2 =
-    "If you decide to stick around, you can make the account permanent and more secure by adding a password. "
+val guestAccountIntro2 = """
+Guest accounts and user data are automatically deleted after 30 days without activity. 
+If you decide to stick around, you can make the account permanent and more secure by adding a password. 
+"""
 
 fun AppScope.fullRegistrationForm(model: UserCreator) {
 
@@ -98,19 +100,20 @@ private fun AppScope.usernameSection(model: UserCreator) = formSection("Username
         )
         button("Choose for me", model::generateUsername, modify(Secondary))
     }
-    formBullets("Between ${Username.MIN_LENGTH} and ${Username.MAX_LENGTH} characters.")
+    formBullets(null, "Between ${Username.MIN_LENGTH} and ${Username.MAX_LENGTH} characters.")
 }
 
 fun AppScope.minAgeToggle(
     field: StateField<Boolean>
 ) = column(modify(AlignItemsCenter)) {
-    textBlock("To create an account you must be 17 or older.", modify(TextAlignCenter))
+    textBlock("To create an account, you must be 17 or older.", modify(TextAlignCenter))
     checkBox("I am ${UserCreatorState.MINIMUM_AGE} or older.", field.onValue, field.flow)
 }
 
 fun AppScope.emailFormSection(model: EmailEditor) = formSection("Email") {
     textField("optional", model::setEmail, model.emailFlow, placeholder = "email")
     formBullets(
+        null,
         "Providing an email address is optional",
         "It can be used to reset your password",
         "Streetlight will never share your email or contact you without your request"
@@ -137,6 +140,7 @@ fun AppScope.passwordFormSection(model: PasswordEditor) = formSection("Password"
         type = InputType.password
     }
     formBullets(
+        null,
         "Must have at least 3: uppercase, lowercase, number, symbol",
         "Must be at least ${Password.LENGTH_MIN} characters"
     )

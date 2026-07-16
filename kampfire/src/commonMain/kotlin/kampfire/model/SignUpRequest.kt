@@ -13,3 +13,9 @@ data class SignUpRequest(
     val accountType: AccountType,
     val stayLoggedIn: Boolean,
 )
+
+@Serializable
+data class AccountUpgradeRequest(
+    val password: Password,
+    val email: Email?,
+)

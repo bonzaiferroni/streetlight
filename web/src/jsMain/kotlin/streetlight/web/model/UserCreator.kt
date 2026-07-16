@@ -5,7 +5,9 @@ import kampfire.api.Username
 import kampfire.api.toUsername
 import kampfire.api.toValidOutcome
 import kampfire.model.AccountType
+import kampfire.model.Ok
 import kampfire.model.PrintLnReceiver
+import kampfire.model.Problem
 import kampfire.model.SignUpRequest
 import kampfire.model.handleOutcome
 import kampfire.model.handleResponse
@@ -42,7 +44,6 @@ class UserCreator(
     init {
         scope.launch {
             api.checkGuest().handleResponse(PrintLnReceiver) { username ->
-                println(username) // ey
                 state.set { it.copy(guestUsername = username) }
             }
         }
@@ -56,10 +57,16 @@ class UserCreator(
     fun setUsername(username: String) = state.set { it.copy(username = username) }
 
     fun createAccount(accountType: AccountType) {
-        val username = stateNow.username.toUsername().toValidOutcome().handleOutcome(messages) ?: return
-        val email = emailEditor.getOutcome().handleOutcome(messages)
+        val username = stateNow.username.trim().toUsername().toValidOutcome().handleOutcome(messages) ?: return
+        val email = when (val emailOutcome = emailEditor.getOutcome()) {
+            is Problem -> {
+                emailOutcome.handleOutcome(messages)
+                return
+            }
+            is Ok -> emailOutcome.data
+        }
         val password = when (accountType) {
-            AccountType.Guest -> Password(Uuid.random().toString())
+            AccountType.Guest -> null
             AccountType.Registered -> passwordEditor.getOutcome().handleOutcome(messages) ?: return
         }
 

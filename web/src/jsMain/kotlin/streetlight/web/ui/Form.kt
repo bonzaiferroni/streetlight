@@ -3,7 +3,9 @@ package streetlight.web.ui
 import koala.css.*
 import koala.dom.*
 import koala.html.bulletsOf
+import koala.html.column
 import koala.html.heading5
+import koala.html.textBlock
 import kotlinx.coroutines.flow.Flow
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
@@ -36,8 +38,14 @@ fun AppScope.formHeading(
 }
 
 fun FlowContent.formBullets(
-    vararg bullets: String
-) = bulletsOf(Form.bulletsMod, *bullets)
+    heading: String?,
+    vararg bullets: String,
+) = column(modify(Gap0, OpacityHigh)) {
+    heading?.let {
+        textBlock(it)
+    }
+    bulletsOf(FormMod.Bullets, *bullets)
+}
 
 fun AppScope.formSubmit(
     buttonText: String = "submit",
@@ -53,3 +61,8 @@ fun AppScope.formSubmit(
         configureEnabledFlow(button, enabledFlow)
     }
 }
+
+fun AppScope.formText(
+    text: String,
+    mod: ModifierSet? = null,
+) = textBlock(text, mod = modify(mod, TextAlignCenter, OpacityHigh))

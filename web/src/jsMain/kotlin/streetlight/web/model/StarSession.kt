@@ -1,5 +1,6 @@
 package streetlight.web.model
 
+import kampfire.api.Username
 import kampfire.model.AccountType
 import kampfire.model.LoginRequest
 import kampfire.model.MessageReceiver
@@ -20,10 +21,11 @@ class StarSession(
 ) {
     private val state = storeOf(StarSessionState())
     val stateNow get() = state.now
+    val stateFlow = state.flow
 
-    val starFlow = state.flow.tap { it.star }
-    val signedInFlow = state.flow.tap { it.isSignedIn }
-    val signedOutAtFlow = state.flow.tap { it.signedOutAt }
+    val starFlow = stateFlow.tap { it.star }
+    val signedInFlow = stateFlow.tap { it.isSignedIn }
+    val signedOutAtFlow = stateFlow.tap { it.signedOutAt }
 
     fun signIn(receiver: MessageReceiver?) {
         if (stateNow.star != null) return
@@ -43,7 +45,7 @@ class StarSession(
 
     suspend fun readUser(receiver: MessageReceiver?) {
         api.validateLogin().handleResponse(receiver ?: PrintLnReceiver) { star ->
-            console.log("signed in")
+            console.log("signed in: ${star.accountType}")
             state.set { it.copy(star = star) }
 
             // guest check in

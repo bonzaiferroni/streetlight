@@ -31,4 +31,5 @@ data class GalaxyContent(
 data class StarContent(
     val star: Star,
     val posts: List<Media>,
+    val isCaller: Boolean,
 )

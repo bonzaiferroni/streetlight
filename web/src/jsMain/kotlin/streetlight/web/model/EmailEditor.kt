@@ -18,7 +18,7 @@ class EmailEditor(
     val emailFlow = stateFlow.tap { it.email }
 
     fun setEmail(value: String) = state.set { it.copy(email = value) }
-    fun getOutcome(): Outcome<Email?> = stateNow.email.takeIf { it.isNotBlank() }?.toEmail()?.toValidOutcome()
+    fun getOutcome(): Outcome<Email?> = stateNow.email.takeIf { it.isNotBlank() }?.trim()?.toEmail()?.toValidOutcome()
         ?: Ok(null)
 }
 

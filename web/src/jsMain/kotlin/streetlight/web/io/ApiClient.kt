@@ -3,6 +3,7 @@ package streetlight.web.io
 import kampfire.api.Slug
 import kampfire.api.UserApi
 import kampfire.api.Username
+import kampfire.model.AccountUpgradeRequest
 import kampfire.model.GeoBounds
 import kampfire.model.GeoPoint
 import kampfire.model.LoginRequest
@@ -56,9 +57,6 @@ class ApiClient(private val client: FetchClient) {
 
     // stars
     // suspend fun readUserFiles() = client.get(Api.Users.Files)
-    // suspend fun updateUser(user: BasicUserInfo) = client.post(UserApi.Update, user)
-    suspend fun checkUsername(username: Username) = client.postApi(UserApi.CheckUsernameExists, username)
-    suspend fun generateUsername() = client.getApi(UserApi.GenerateUsername)
     suspend fun readPendingEdits() = client.getApi(Api.Stars.PendingEdits)
     suspend fun readUserTasks() = client.getApi(Api.Tasks.ReadStarTasks)
     suspend fun readReview(taskId: TaskId) = client.getApi(Api.Tasks.ReadStarTask, taskId)
@@ -66,16 +64,19 @@ class ApiClient(private val client: FetchClient) {
         writeParam(it.username, username)
     }
     suspend fun readIdentityInfo() = client.getApi(Api.Stars.ReadIdentityInfo)
-
-    // suspend fun uploadAvatar(blobUrl: Url) = client.uploadBlob(Api.Users.UploadAvatar.path, blobUrl)
     suspend fun uploadImageBlob(blobUrl: Url) = client.uploadBlob(Api.Users.UploadImage.path, blobUrl)
     suspend fun queryLocation(point: GeoPoint) = client.getApi(Api.Locations.QueryPoint, point.toQuery())
     suspend fun validateLogin() = client.getApi(Api.Stars.ValidateLogin)
     suspend fun login(request: LoginRequest) = client.postApi(UserApi.Login, request)
-    suspend fun logout() = client.postApi(UserApi.Logout, Unit)
     suspend fun updateStar(edit: StarEdit) = client.postApi(Api.Stars.EditStar, edit)
     suspend fun editLight(edit: EditLightRequest) = client.postApi(Api.Stars.EditLight, edit)
+
+    // account
     suspend fun checkGuest() = client.getApi(UserApi.Login.CheckGuest)
+    suspend fun upgradeAccount(request: AccountUpgradeRequest) = client.postApi(UserApi.AccountUpgrade, request)
+    suspend fun logout() = client.postApi(UserApi.Logout, Unit)
+    suspend fun checkUsername(username: Username) = client.postApi(UserApi.CheckUsernameExists, username)
+    suspend fun generateUsername() = client.getApi(UserApi.GenerateUsername)
 
     // websockets
     fun connectChat(scope: CoroutineScope) = WebChatSocket(client.connectSocket(Api.Chat), scope)

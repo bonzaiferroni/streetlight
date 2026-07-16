@@ -80,4 +80,4 @@ fun AppContainer.getFeedbackDesk(scope: CoroutineScope) =
 fun AppContainer.getSiteMonitor(scope: CoroutineScope) = SiteMonitor(scope, koin.get(), koin.get())
 
 fun AppContainer.getStarEditor(edit: StarEdit, scope: CoroutineScope) =
-    StarEditor(edit, scope, koin.get())
+    StarEditor(edit, scope, koin.get(), koin.get())

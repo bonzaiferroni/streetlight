@@ -1,5 +1,6 @@
 package streetlight.web.ui
 
+import kampfire.model.AccountType
 import kampfire.model.handleResponse
 import koala.LottieFile
 import koala.dom.AppScope
@@ -20,6 +21,12 @@ fun AppScope.viewStarConfig(model: StarEditor) {
         }
 
         tabs {
+            if (model.stateNow.edit.accountType == AccountType.Guest) {
+                tab("registration") {
+                    registerAccountForm(model)
+                }
+            }
+
             tab("profile") {
                 starProfileForm(model)
             }
@@ -38,6 +45,7 @@ fun AppScope.viewStarConfigRoute() {
             star.toEdit(info)
         }) { edit ->
             val model = app.getStarEditor(edit, parentScope)
+            viewStarConfig(model)
         }
     }
 }
