@@ -1,6 +1,6 @@
 package streetlight.web.ui
 
-import koala.dom.AppScope
+import koala.dom.ViewScope
 import koala.dom.ViewContext
 import koala.dom.readIsland
 import koala.html.Id
@@ -14,7 +14,7 @@ val AppContextProto.portal get() = model.portal
 val AppContextProto.userCache get() = model.cache
 val AppContextProto.toaster get() = model.toaster
 
-inline fun <reified T> AppScope.readIsland(
+inline fun <reified T> ViewScope.readIsland(
     elementId: Id,
     checkId: (T) -> Boolean,
 ): T? = when (portal.stateNow.isInitialRoute) {

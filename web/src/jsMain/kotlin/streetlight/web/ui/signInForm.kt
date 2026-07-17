@@ -1,14 +1,11 @@
 package streetlight.web.ui
 
-import kampfire.api.Username
 import kampfire.model.LoginRequest
 import koala.LottieFile
 import koala.css.AlignItemsCenter
-import koala.css.MaxWidth16
 import koala.css.MaxWidth24
-import koala.css.MaxWidth50P
 import koala.css.modify
-import koala.dom.AppScope
+import koala.dom.ViewScope
 import koala.dom.MessageStore
 import koala.dom.checkBox
 import koala.dom.column
@@ -21,7 +18,7 @@ import streetlight.web.model.CredentialStore
 import streetlight.web.model.StarSession
 import streetlight.web.model.UserCreator
 
-fun AppScope.signInForm(model: UserCreator) {
+fun ViewScope.signInForm(model: UserCreator) {
     val gate = app.get<StarSession>()
     val cred = app.get<CredentialStore>()
     val messages = MessageStore()

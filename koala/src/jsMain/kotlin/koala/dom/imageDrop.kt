@@ -1,6 +1,5 @@
 package koala.dom
 
-import kampfire.model.ImageSize
 import koala.Image
 import koala.css.AlignSelfStart
 import koala.css.Blur
@@ -19,15 +18,14 @@ import koala.css.SlideDown
 import koala.css.ZIndex1
 import koala.css.modify
 import koala.html.fillImage
-import koala.html.fillImageSrcSet
 import koala.toImage
 import kotlinx.coroutines.flow.Flow
 
-fun AppScope.imageDrop(
+fun ViewScope.imageDrop(
     urlFlow: Flow<Image?>,
     onFileUrl: (Image?) -> Unit,
     mod: ModifierSet? = null,
-    block: AppScope.(Image) -> Unit = {
+    block: ViewScope.(Image) -> Unit = {
         box(modify(Size100P)) {
             fillImage(it.url)
         }

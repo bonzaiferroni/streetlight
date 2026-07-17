@@ -12,7 +12,7 @@ import streetlight.model.data.MediaEdit
 import streetlight.model.ui.MediaForgeRoute
 import streetlight.model.ui.MediaRoute
 
-fun AppScope.viewMediaForge(galaxy: Galaxy?) {
+fun ViewScope.viewMediaForge(galaxy: Galaxy?) {
     println(galaxy) // ey
     val model = app.getMediaEditor(MediaEdit(), parentScope)
     goOnRoute(model.stateFlow.mapDistinctNotNull { it.slug?.let { slug -> MediaRoute(slug) }  })
@@ -36,7 +36,7 @@ fun AppScope.viewMediaForge(galaxy: Galaxy?) {
     }
 }
 
-fun AppScope.viewContentPosterRoute() {
+fun ViewScope.viewContentPosterRoute() {
     routeBlock<MediaForgeRoute, Galaxy?>({ route ->
         route.slug?.let { api.readGalaxy(it).handleResponse(toaster) }
     }) { galaxy ->

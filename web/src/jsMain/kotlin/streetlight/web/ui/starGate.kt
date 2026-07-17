@@ -1,8 +1,6 @@
 package streetlight.web.ui
 
-import koala.css.Width64
-import koala.css.modify
-import koala.dom.AppScope
+import koala.dom.ViewScope
 import koala.dom.DialogElement
 import koala.dom.button
 import koala.dom.dialog
@@ -13,10 +11,10 @@ import koala.dom.tabs
 import koala.dom.textBlock
 import streetlight.model.data.Star
 
-fun AppScope.starGate(
+fun ViewScope.starGate(
     openInitially: Boolean = true,
-    baseContent: (AppScope.(DialogElement) -> Unit)? = null,
-    content: AppScope.(Star) -> Unit
+    baseContent: (ViewScope.(DialogElement) -> Unit)? = null,
+    content: ViewScope.(Star) -> Unit
 ) {
     flowBlock(session.starFlow) { user ->
         when (user) {

@@ -11,15 +11,14 @@ import kotlinx.html.InputType
 import kotlinx.html.js.input
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
-import kotlin.toString
 
-fun AppScope.datetimeInput() {
+fun ViewScope.datetimeInput() {
     input {
         type = InputType.dateTimeLocal
     }
 }
 
-fun AppScope.dateInput(
+fun ViewScope.dateInput(
     flow: Flow<LocalDate?>,
     onValueChanged: (LocalDate) -> Unit,
     modifiers: ModifierSet? = null,
@@ -54,7 +53,7 @@ fun AppScope.dateInput(
     }
 }
 
-fun AppScope.timeInput(
+fun ViewScope.timeInput(
     flow: Flow<LocalTime?>,
     onValueChanged: (LocalTime) -> Unit,
     modifiers: ModifierSet? = null,

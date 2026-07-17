@@ -3,14 +3,14 @@ package koala.html
 import koala.css.Class
 
 object MessageBox {
-    val Class = Class("message-box")
+    val Mod = Class("message-box")
     val Error = Class("message-box--error")
     val Success = Class("message-box--success")
 }
 
 // language="CSS"
 val MessageBoxCss get() = with(MessageBox) { """
-$Class {
+$Mod {
     position: relative;
     background-color: var(--primary-card-bg);
     border-radius: calc(var(--unit-spacing));
@@ -26,7 +26,7 @@ $Class {
     }
 }
 
-$Class::after {
+$Mod::after {
     content: "";
     position: absolute;
     inset: 0;

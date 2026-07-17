@@ -5,7 +5,7 @@ import koala.dom.*
 import koala.html.Id
 import streetlight.web.layouts.entityRow
 
-fun AppScope.viewGalaxyList() {
+fun ViewScope.viewGalaxyList() {
 
     column(mod = BodyStyle.Mod) {
         featureHeader("Galaxies", "Streetlight Communities", SiteImage.HelixNebula)

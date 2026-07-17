@@ -1,6 +1,5 @@
 package streetlight.web.ui
 
-import kampfire.model.medium
 import koala.css.BlurBackdrop
 import koala.css.CardBg
 import koala.css.Height100P
@@ -9,7 +8,7 @@ import koala.css.OverflowYAuto
 import koala.css.Padding1
 import koala.css.Width100P
 import koala.css.modify
-import koala.dom.AppScope
+import koala.dom.ViewScope
 import koala.dom.column
 import koala.dom.markdown
 import koala.html.featureImage
@@ -66,7 +65,7 @@ import streetlight.model.data.GalaxyPost
 //    }
 //}
 
-fun AppScope.postPanel(post: GalaxyPost) {
+fun ViewScope.postPanel(post: GalaxyPost) {
     column(modify(Height100P, OverflowYAuto, CardBg, BlurBackdrop)) {
         featureImage(post.image, modify(Width100P, Height24))
         column(modify(Padding1)) {

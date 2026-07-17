@@ -34,6 +34,7 @@ class Portal(
     val routeFlow = stateFlow.tap { it.route }
 
     private var backstack: List<Navigation> = emptyList()
+    private var isWrecked = false
 
     var sitePath
         get() = window.location.pathname
@@ -63,7 +64,7 @@ class Portal(
             val modifiedClick = event.ctrlKey || event.metaKey || event.shiftKey
 
             // Only intercept local paths, let external links sail free
-            if (anchor.hostname == window.location.hostname && anchor.target != "_blank" && !modifiedClick) {
+            if (anchor.hostname == window.location.hostname && anchor.target != "_blank" && !modifiedClick && !isWrecked) {
                 event.preventDefault()
                 val href = anchor.getAttribute("href") ?: return@addEventListener
                 handleRoute(href)
@@ -71,6 +72,10 @@ class Portal(
         })
 
         window.addEventListener("popstate", {
+            if (isWrecked) {
+                window.location.reload()
+                return@addEventListener
+            }
             val isSuccess = goBack(window.location.pathname)
             if (!isSuccess) {
                 handleRoute(window.location.pathname)
@@ -108,6 +113,10 @@ class Portal(
 
     fun refresh() {
         state.set { it.copy(refreshedAt = Clock.System.now(), isInitialRoute = false) }
+    }
+
+    fun notifyWrecked() {
+        isWrecked = true
     }
 
     private fun go(navigation: Navigation, backstack: List<Navigation>) {

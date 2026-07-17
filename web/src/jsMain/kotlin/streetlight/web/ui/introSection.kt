@@ -7,7 +7,7 @@ import koala.html.filigree
 import koala.html.heading1
 import kotlinx.html.DIV
 
-fun AppScope.introSection(
+fun ViewScope.introSection(
     name: String,
     mod: ModifierSet? = null,
     lottie: Lottie? = null,

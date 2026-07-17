@@ -12,7 +12,7 @@ import kotlinx.html.js.label
 import kotlinx.html.js.onInputFunction
 import org.w3c.dom.HTMLInputElement
 
-fun AppScope.checkBox(
+fun ViewScope.checkBox(
     label: String,
     onValue: ((Boolean) -> Unit)? = null,
     flow: Flow<Boolean>? = null,
@@ -24,7 +24,7 @@ fun AppScope.checkBox(
     +label
 }
 
-fun AppScope.checkBox(
+fun ViewScope.checkBox(
     onValue: ((Boolean) -> Unit)? = null,
     flow: Flow<Boolean>? = null,
     block: (INPUT.() -> Unit)? = null

@@ -18,7 +18,7 @@ import koala.css.SingleLine
 import koala.css.Width5
 import koala.css.WidthFitContent
 import koala.css.modify
-import koala.dom.AppScope
+import koala.dom.ViewScope
 import koala.dom.column
 import koala.dom.flowBlock
 import koala.dom.icon
@@ -33,7 +33,7 @@ import streetlight.model.ui.GalaxyMapRoute
 import streetlight.model.ui.HomeRoute
 import streetlight.web.model.Earth
 
-private fun AppScope.boundsHud(model: Earth) {
+private fun ViewScope.boundsHud(model: Earth) {
     flowBlock(model.summaryFlow) { summary ->
         if (summary.isNullOrEmpty()) return@flowBlock
         column(modify(WidthFitContent, Gap0)) {
@@ -53,7 +53,7 @@ private fun AppScope.boundsHud(model: Earth) {
     }
 }
 
-fun AppScope.earthHeaderLegacy(model: Earth) {
+fun ViewScope.earthHeaderLegacy(model: Earth) {
     val iconMod = modify(Width5, Aspect1)
     row(modify(EarthStyle.Header, AlignItemsCenter, PaperGradientBg, Padding1, PointerEventsAuto, BlurBackdrop)) {
         flowBlock(model.mapFlow, modify(Flex1)) { map ->

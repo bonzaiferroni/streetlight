@@ -10,6 +10,7 @@ import kotlinx.html.dom.append
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 
+@Deprecated("reconsider whether this is necessary")
 fun TagScope.swap(
     mod: ModifierSet? = null,
     content: TagScope.(SwapElement) -> Unit,

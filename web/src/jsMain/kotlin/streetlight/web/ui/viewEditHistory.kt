@@ -5,7 +5,7 @@ import koala.css.Flex1
 import koala.css.JustifyContentEnd
 import koala.css.columnsOf
 import koala.css.modify
-import koala.dom.AppScope
+import koala.dom.ViewScope
 import koala.dom.box
 import koala.dom.button
 import koala.dom.dialog
@@ -25,9 +25,9 @@ import streetlight.model.data.RecordEdit
 import streetlight.model.data.verb
 import streetlight.model.utils.TextDeltaDisplay
 
-inline fun <reified T: RecordEdit> AppScope.viewEditHistory(
+inline fun <reified T: RecordEdit> ViewScope.viewEditHistory(
     editLogs: List<EditLog>,
-    crossinline content: AppScope.(T, T?) -> Unit
+    crossinline content: ViewScope.(T, T?) -> Unit
 ) {
     val display = storeOf(TextDeltaDisplay.Combined)
     val dialog = dialog()

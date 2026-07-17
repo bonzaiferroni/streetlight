@@ -5,7 +5,7 @@ import koala.dom.*
 import koala.model.tap
 import streetlight.web.model.MediaEditor
 
-fun AppScope.mediaForm(model: MediaEditor) {
+fun ViewScope.mediaForm(model: MediaEditor) {
     val titleFlow = model.editFlow.tap { it.title }
     val subtitleFlow = model.editFlow.tap { it.subtitle }
     val textFlow = model.editFlow.tap { it.text }

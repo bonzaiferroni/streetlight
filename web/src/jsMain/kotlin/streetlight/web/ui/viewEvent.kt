@@ -9,7 +9,7 @@ import streetlight.web.model.DataCache
 import streetlight.web.shells.EventShell
 import streetlight.web.shells.eventShell
 
-fun AppScope.viewEvent(event: EventLocation) {
+fun ViewScope.viewEvent(event: EventLocation) {
     val camera = app.get<GeoCamera>()
     val cache = app.get<DataCache>()
 
@@ -26,7 +26,7 @@ fun AppScope.viewEvent(event: EventLocation) {
     // app.streetMap.setPosts td: make event marker visible on map
 }
 
-fun AppScope.viewEventRoute() {
+fun ViewScope.viewEventRoute() {
 
     routeBlock<EventRoute, EventLocation>(portal, { route ->
         readIsland<EventLocation>(EventShell.island) { it.eventSlug == route.slug }

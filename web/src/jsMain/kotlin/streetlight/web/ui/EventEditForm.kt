@@ -15,14 +15,14 @@ import streetlight.model.data.EventProperty
 import streetlight.web.model.EventEditor
 import kotlin.time.Clock
 
-fun AppScope.eventEditFormBody(model: EventEditor) = formBodyProto {
+fun ViewScope.eventEditFormBody(model: EventEditor) = formBodyProto {
     eventWebsiteForm(model)
     eventDetailsForm(model)
     eventImageForm(model)
     eventLinksForm(model)
 }
 
-fun AppScope.eventWebsiteForm(model: EventEditor) = formCardSection("Web page") {
+fun ViewScope.eventWebsiteForm(model: EventEditor) = formCardSection("Web page") {
     formPart(
         instructions = "Does this event have a web page? We can read it to find certain details.",
         bullets = listOf("Some websites cannot be read automatically, but you can fill in the details yourself.")
@@ -35,7 +35,7 @@ fun AppScope.eventWebsiteForm(model: EventEditor) = formCardSection("Web page") 
     }
 }
 
-fun AppScope.eventDetailsForm(model: EventEditor) = formCardSection("Event Details") {
+fun ViewScope.eventDetailsForm(model: EventEditor) = formCardSection("Event Details") {
     formPart("What is the name of the event?") {
         formTextField("title", model::setTitle, model.titleFlow, maxLength = 50)
             .flowValid(EventProperty.Title, model.validityFlow, parentScope)
@@ -106,12 +106,12 @@ fun AppScope.eventDetailsForm(model: EventEditor) = formCardSection("Event Detai
     }
 }
 
-fun AppScope.eventImageForm(model: EventEditor) =
+fun ViewScope.eventImageForm(model: EventEditor) =
     imageFormSection(
         instructions = "This image will appear in the feed and at the top of the event page.",
         imageEditor = model.imageEditor
     )
 
-fun AppScope.eventLinksForm(model: EventEditor) = formCardSection("Links") {
+fun ViewScope.eventLinksForm(model: EventEditor) = formCardSection("Links") {
     eventLinks(model)
 }

@@ -13,7 +13,7 @@ import koala.css.JustifyContentCenter
 import koala.css.OpacityHigh
 import koala.css.Width100P
 import koala.css.modify
-import koala.dom.AppScope
+import koala.dom.ViewScope
 import koala.dom.button
 import koala.dom.column
 import koala.dom.defaultMagic
@@ -31,7 +31,7 @@ import streetlight.model.data.ExtraLink
 import streetlight.web.model.EventEditor
 
 
-fun AppScope.eventLinks(model: EventEditor) {
+fun ViewScope.eventLinks(model: EventEditor) {
     val linksFlow = model.stateFlow.tap { it.edit.links ?: emptyList() }
 
     val editState = storeOf(LinkEditState())

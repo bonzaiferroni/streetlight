@@ -4,7 +4,7 @@ import koala.SvgFile
 import koala.css.Magic
 import koala.css.PointerEventsAuto
 import koala.css.modify
-import koala.dom.AppScope
+import koala.dom.ViewScope
 import koala.dom.MenuLabel
 import koala.dom.MenuRoute
 import koala.dom.flowBlock
@@ -21,13 +21,13 @@ import streetlight.model.ui.GalaxyRoute
 import streetlight.model.ui.HomeRoute
 import streetlight.web.model.Earth
 
-fun AppScope.earthMenu(model: Earth) {
+fun ViewScope.earthMenu(model: Earth) {
     flowBlock(model.mapFlow, modify(Magic, EarthStyle.Window, EarthStyle.MoveDimmer)) { map ->
         earthRouteMenu(model, map)
     }
 }
 
-fun AppScope.earthRouteMenu(model: Earth, map: EarthMap) {
+fun ViewScope.earthRouteMenu(model: Earth, map: EarthMap) {
     val showAll = IconAction(SvgFile.FrameEye, model::showAll)
     when (map) {
         is GalaxyMap -> {

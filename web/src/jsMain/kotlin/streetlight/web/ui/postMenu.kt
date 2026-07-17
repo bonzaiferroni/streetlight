@@ -9,7 +9,7 @@ import koala.css.Magic
 import koala.css.SlideUp
 import koala.css.Zen
 import koala.css.modify
-import koala.dom.AppScope
+import koala.dom.ViewScope
 import koala.dom.button
 import koala.dom.card
 import koala.dom.column
@@ -26,7 +26,7 @@ import kotlinx.html.dom.append
 import org.w3c.dom.HTMLElement
 import streetlight.model.data.PostId
 
-fun AppScope.initPostMenu(shellBase: HTMLElement) {
+fun ViewScope.initPostMenu(shellBase: HTMLElement) {
     val targets = shellBase.queryAttributeAll(PostMenu.PostId)
 
     var activeId: PostId? = null
@@ -54,7 +54,7 @@ fun AppScope.initPostMenu(shellBase: HTMLElement) {
 
 private var cachedMenuElement: HTMLElement? = null
 
-fun AppScope.callPostMenu(postId: PostId, username: Username?) {
+fun ViewScope.callPostMenu(postId: PostId, username: Username?) {
     val menuElement = cachedMenuElement ?: document.body!!.append {
         popover(PostMenu.MenuId, null, modify(Magic, SlideUp))
     }.first().also { cachedMenuElement = it }

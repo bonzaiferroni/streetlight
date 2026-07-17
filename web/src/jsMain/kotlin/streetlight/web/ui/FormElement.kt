@@ -8,7 +8,7 @@ import koala.html.heading3
 import kotlinx.coroutines.flow.Flow
 import kotlinx.html.DIV
 
-fun AppScope.formBodyProto(
+fun ViewScope.formBodyProto(
     mod: ModifierSet? = null,
     block: DIV.() -> Unit
 ) = column(modify(mod, Gap8)) {
@@ -70,7 +70,7 @@ fun TagScope.formPart(
     }
 }
 
-fun AppScope.formTextField(
+fun ViewScope.formTextField(
     label: String? = null,
     onValue: (String) -> Unit,
     flow: Flow<String?>,
@@ -89,7 +89,7 @@ fun AppScope.formTextField(
     }
 }
 
-fun AppScope.formSubmit(
+fun ViewScope.formSubmit(
     label: String,
     onSubmit: () -> Unit,
     mod: ModifierSet? = null,

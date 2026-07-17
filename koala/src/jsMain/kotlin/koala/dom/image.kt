@@ -29,7 +29,7 @@ fun TagScope.image(
     return element
 }
 
-fun AppScope.image(
+fun ViewScope.image(
     binding: Flow<Url?>,
     initial: Url? = SiteImage.placeholderLg,
     mod: ModifierSet? = null,

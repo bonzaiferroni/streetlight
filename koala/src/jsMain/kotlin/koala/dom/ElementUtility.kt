@@ -65,12 +65,12 @@ fun querySelectorAll(queryable: Queryable) = document.body!!.querySelectorAll(qu
 
 fun CSSStyleDeclaration.removeStyle(property: Property<*>) = removeProperty(property.identifier)
 
-fun Element.printPath(subject: Any? = null, limit: Int = Int.MAX_VALUE): String = buildString {
+fun Element.getPath(subject: Any? = null, limit: Int = Int.MAX_VALUE): String = buildString {
     subject?.let {
         append("[${it.toString().takeEllipsis(40)}]")
     }
     var count = 0
-    var current: Element? = this@printPath
+    var current: Element? = this@getPath
     while (current != null) {
         if (++count > limit) break
         if (isNotEmpty()) insert(0, " > ")

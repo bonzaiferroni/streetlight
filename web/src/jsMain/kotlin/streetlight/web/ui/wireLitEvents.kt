@@ -18,7 +18,7 @@ import kotlin.collections.component1
 import kotlin.collections.component2
 import kotlin.time.Clock
 
-fun AppScope.wireLitEvents(root: HTMLElement) {
+fun ViewScope.wireLitEvents(root: HTMLElement) {
     val cache = app.get<DataCache>()
 
     val now = Clock.System.now()
@@ -51,7 +51,7 @@ fun AppScope.wireLitEvents(root: HTMLElement) {
     }
 }
 
-fun AppScope.narrowEventCard(event: EventLocation, eventCache: LightCache<EventId, EventLocation>) {
+fun ViewScope.narrowEventCard(event: EventLocation, eventCache: LightCache<EventId, EventLocation>) {
     card(modify(Width24, BorderRadius1, MoonShadow)) {
         fillImageSrcSet(event.image, modify(Flex1), fillWidth = false)
         column() {

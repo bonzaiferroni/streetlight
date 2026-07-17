@@ -13,7 +13,7 @@ import streetlight.web.io.OmniLog
 import streetlight.web.pages.AppBody
 import kotlin.time.Duration.Companion.milliseconds
 
-fun AppScope.wireRightPanel() {
+fun ViewScope.wireRightPanel() {
     val omni = app.get<OmniLog>()
     val recordFlow = omni.stateFlow.tap { it.records }
     var container: HTMLElement? = null

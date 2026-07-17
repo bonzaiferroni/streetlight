@@ -4,7 +4,6 @@ import koala.css.*
 import koala.html.Attribute
 import koala.html.Id
 import koala.html.TabClass
-import koala.html.setAttribute
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.html.js.p
@@ -45,7 +44,7 @@ fun <T : TagScope> T.tabs(
         }
     }
 
-    if (this is AppScope) {
+    if (this is ViewScope) {
         tabFlow?.let { flow ->
             parentScope.launch {
                 flow.collect { name ->

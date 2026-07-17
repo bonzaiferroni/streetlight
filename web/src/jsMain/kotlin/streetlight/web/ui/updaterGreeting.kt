@@ -6,7 +6,7 @@ import koala.css.BorderRadius2
 import koala.css.MoonShadow
 import koala.css.OverflowClip
 import koala.css.modify
-import koala.dom.AppScope
+import koala.dom.ViewScope
 import koala.dom.grid
 import koala.dom.lottie
 import koala.dom.navigation
@@ -15,7 +15,7 @@ import koala.dom.textBlock
 import koala.html.em
 import streetlight.model.data.Star
 
-fun AppScope.updaterGreeting(star: Star, targetName: String) = grid(
+fun ViewScope.updaterGreeting(star: Star, targetName: String) = grid(
     IntroStyle.Columns, modify(AlignItemsCenter)
 ) {
     section(modify(IntroStyle.SectionMod)) {

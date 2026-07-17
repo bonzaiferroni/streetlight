@@ -1,11 +1,14 @@
 package streetlight.web.ui
 
+import koala.core.LaunchTelemetry
+import koala.core.appExceptionHandler
 import koala.dom.AppContainer
 import koala.model.GeoCamera
 import koala.model.GeoMap
 import koala.model.Portal
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.plus
 import org.koin.dsl.module
 import streetlight.model.data.EventEdit
 import streetlight.model.data.Galaxy
@@ -24,7 +27,7 @@ import streetlight.web.io.TransitClient
 import streetlight.web.model.*
 
 val appModule = module {
-    single { MainScope() }
+    single { MainScope() + appExceptionHandler + LaunchTelemetry("App") }
     single { SiteConfig() }
     single { CredentialStore() }
     single { FetchClient(get()) }

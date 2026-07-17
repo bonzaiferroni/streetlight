@@ -75,7 +75,7 @@ class ApiClient(private val client: FetchClient) {
     suspend fun checkGuest() = client.getApi(UserApi.Login.CheckGuest)
     suspend fun upgradeAccount(request: AccountUpgradeRequest) = client.postApi(UserApi.AccountUpgrade, request)
     suspend fun logout() = client.postApi(UserApi.Logout, Unit)
-    suspend fun checkUsername(username: Username) = client.postApi(UserApi.CheckUsernameExists, username)
+    suspend fun checkUsernameExists(username: Username) = client.postApi(UserApi.CheckUsernameExists, username)
     suspend fun generateUsername() = client.getApi(UserApi.GenerateUsername)
 
     // websockets

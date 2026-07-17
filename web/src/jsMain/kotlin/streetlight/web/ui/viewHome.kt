@@ -12,7 +12,7 @@ import streetlight.web.model.DataCache
 import streetlight.web.shells.HomeKey
 import streetlight.web.shells.homeShell
 
-fun AppScope.viewHome(content: HomeContent) {
+fun ViewScope.viewHome(content: HomeContent) {
     val cache = app.get<DataCache>()
 
     val root = shellBoxWithMap(HomeKey.ContainerId, hookInitializers) {
@@ -37,7 +37,7 @@ fun AppScope.viewHome(content: HomeContent) {
     document.setTitle(HomeRoute)
 }
 
-fun AppScope.viewHomeRoute() {
+fun ViewScope.viewHomeRoute() {
     val portal = app.get<Portal>()
     val api = app.get<ApiClient>()
 

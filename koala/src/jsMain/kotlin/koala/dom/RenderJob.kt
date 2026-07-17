@@ -1,5 +1,6 @@
 package koala.dom
 
+import koala.core.ScopeTelemetry
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
@@ -16,23 +17,35 @@ internal class RenderJob(
 }
 
 internal fun <T> EffectScope.createRenderJob(
+    name: String,
     parent: HTMLElement,
     value: T,
-    block: AppScope.(T) -> Unit
+    block: ViewScope.(T) -> Unit
 ): RenderJob {
     parent.clear()
-    val job = SupervisorJob()
-    val scope = CoroutineScope(parentScope.coroutineContext + job)
-    val elements = parent.append {
-        val context = RenderScope(this@append, app, scope, parent)
-        context.block(value)
+    val job = SupervisorJob(parentScope.coroutineContext[Job])
+    val telemetry = ScopeTelemetry(name, parent, parentScope.coroutineContext[ScopeTelemetry])
+    val scope = CoroutineScope(parentScope.coroutineContext + job + telemetry)
+    val elements = try {
+        parent.append {
+            val context = View(this@append, app, scope, parent)
+            context.block(value)
+        }
+    } catch (e: Throwable) {
+        parent.clear()
+        parent.append {
+            textBlock("Something went wrong.")
+        }
+        job.cancel()   // never leak a scope we can't hand over
+        throw e
     }
     return RenderJob(job, scope, elements)
 }
 
 internal fun EffectScope.createRenderJob(
+    name: String,
     parent: HTMLElement,
-    block: AppScope.() -> Unit
-) = createRenderJob(parent, Unit) {
+    block: ViewScope.() -> Unit
+) = createRenderJob(name, parent, Unit) {
     block()
 }

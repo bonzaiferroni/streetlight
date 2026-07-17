@@ -17,7 +17,7 @@ import streetlight.model.ui.GalaxyMap
 import streetlight.web.pages.AppBody
 import kotlin.time.Duration.Companion.milliseconds
 
-fun AppScope.viewEarth(model: Earth) {
+fun ViewScope.viewEarth(model: Earth) {
     box(EarthStyle.Container, modify(Size100P)) {
         val cameraController = geoMapMount(mod = modify(EarthStyle.Map))
         column(modify(Gap0, PointerEventsNone)) {
@@ -32,7 +32,7 @@ fun AppScope.viewEarth(model: Earth) {
     }.flowModifier(model.isMovingFlow, EarthStyle.IsMoving, parentScope)
 }
 
-fun AppScope.viewEarthRoute() {
+fun ViewScope.viewEarthRoute() {
     var isVisible = false
     val element = document.getElementById(AppBody.FullScreen)
 
@@ -49,7 +49,7 @@ fun AppScope.viewEarthRoute() {
                                 api.readCity(slug).handleResponse(toaster)?.let { CityMap(it) }
                             } ?: CityMap(null)
                         }
-                        element.replaceDynamicRender(app, parentScope) {
+                        element.replaceDynamicRender("earth", app, parentScope) {
                             val model = app.getEarthMap(parentScope, map)
                             viewEarth(model)
                         }
@@ -70,7 +70,7 @@ fun AppScope.viewEarthRoute() {
     }
 }
 
-fun AppScope.earthHeader(model: Earth) {
+fun ViewScope.earthHeader(model: Earth) {
     flowBlock(model.mapFlow, modify(EarthStyle.Header, EarthStyle.MoveDimmer, Magic)) { map ->
         column(modify(AlignItemsCenter)) {
             filigree(modify(AlignSelfStretch, EarthStyle.MapTitle)) {

@@ -2,7 +2,7 @@ package streetlight.web.ui
 
 import koala.css.ModifierSet
 import koala.css.modify
-import koala.dom.AppScope
+import koala.dom.ViewScope
 import koala.dom.box
 import koala.html.ButtonPopover
 import koala.html.btn
@@ -14,7 +14,7 @@ import streetlight.model.ui.GalaxyMapRoute
 import streetlight.web.model.DataCache
 import streetlight.web.shells.GalaxyMenuKey
 
-fun AppScope.galaxyEarthMenu(
+fun ViewScope.galaxyEarthMenu(
     currentGalaxy: Galaxy?,
     mod: ModifierSet? = null
 ) {

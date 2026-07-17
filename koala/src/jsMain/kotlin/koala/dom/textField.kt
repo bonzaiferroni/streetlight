@@ -1,7 +1,6 @@
 package koala.dom
 
 import koala.css.AlignSelfCenter
-import koala.css.AlignSelfEnd
 import koala.css.Italic
 import koala.css.JustifySelfEnd
 import koala.css.ModifierSet
@@ -16,18 +15,18 @@ import koala.html.Id
 import koala.html.Attribute
 import koala.html.setId
 import koala.html.setAttribute
+import koala.model.StateField
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.html.INPUT
 import kotlinx.html.InputType
 import kotlinx.html.js.onInputFunction
 import org.w3c.dom.HTMLInputElement
-import kotlinx.html.js.div
 import kotlinx.html.js.input
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.events.KeyboardEvent
 
-fun AppScope.textField(
+fun ViewScope.textField(
     label: String? = null,
     onValue: ((String) -> Unit)? = null,
     flow: Flow<String?>? = null,
@@ -105,3 +104,21 @@ fun AppScope.textField(
 
     return parent
 }
+
+fun ViewScope.textField(
+    label: String? = null,
+    field: StateField<String>,
+    mod: ModifierSet? = null,
+    textMod: ModifierSet? = null,
+    id: Id? = null,
+    placeholder: String? = label,
+    size: Int = 25,
+    maxLength: Int? = null,
+    onEnter: (() -> Unit)? = null,
+    block: (INPUT.() -> Unit)? = null
+) = textField(
+    label = label,
+    onValue = field.onValue,
+    flow = field.flow,
+    mod = mod
+)

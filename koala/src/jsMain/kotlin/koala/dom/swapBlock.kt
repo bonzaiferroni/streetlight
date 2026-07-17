@@ -12,7 +12,7 @@ import kotlinx.css.Display
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.asList
 
-fun AppScope.wireSwapBlock(
+fun ViewScope.wireSwapBlock(
     element: HTMLElement,
     bindFlow: (Flow<Id>)? = null,
 ) {
@@ -34,7 +34,7 @@ fun AppScope.wireSwapBlock(
     }
 }
 
-fun AppScope.queryAndWireSwapBlock(
+fun ViewScope.queryAndWireSwapBlock(
     ancestor: HTMLElement,
     queryable: Queryable,
     bindFlow: (Flow<Id>)? = null,

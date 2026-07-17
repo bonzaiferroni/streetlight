@@ -1,12 +1,11 @@
 package streetlight.web.ui
 
-import kampfire.model.thumb
 import koala.SiteImage
 import koala.css.ModifierSet
 import koala.dom.*
 import streetlight.model.data.Location
 
-fun AppScope.cardOf(
+fun ViewScope.cardOf(
     location: Location,
     mod: ModifierSet? = null,
     onClick: (() -> Unit)? = null,

@@ -1,6 +1,6 @@
 package streetlight.web.ui
 
-import koala.dom.AppScope
+import koala.dom.ViewScope
 import koala.dom.modify
 import koala.dom.onClick
 import koala.dom.queryAttributeAll
@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 import org.w3c.dom.HTMLElement
 import streetlight.web.model.LightCache
 
-fun <Id> AppScope.wireLights(
+fun <Id> ViewScope.wireLights(
     root: HTMLElement,
     attribute: Attribute<Id>,
     cache: LightCache<Id, *>

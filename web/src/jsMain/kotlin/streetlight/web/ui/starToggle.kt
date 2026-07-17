@@ -8,7 +8,7 @@ import koala.css.Property
 import koala.css.ScaleIn
 import koala.css.ScaleOut
 import koala.css.modify
-import koala.dom.AppScope
+import koala.dom.ViewScope
 import koala.dom.icon
 import koala.dom.modify
 import koala.dom.onClickElement
@@ -19,7 +19,7 @@ import streetlight.model.data.LightEdit
 import streetlight.model.data.LightType
 import streetlight.model.data.RecordId
 
-fun AppScope.starToggle(
+fun ViewScope.starToggle(
     isLit: Boolean,
     recordId: RecordId,
     mod: ModifierSet? = null

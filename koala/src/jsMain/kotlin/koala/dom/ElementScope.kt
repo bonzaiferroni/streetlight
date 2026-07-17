@@ -1,5 +1,6 @@
 package koala.dom
 
+import koala.core.ScopeTelemetry
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
@@ -34,7 +35,11 @@ internal fun Element.clearScope() {
     setScope(null)
 }
 
-internal fun Element.provisionScope(parentScope: CoroutineScope, cancelExistingScope: Boolean): CoroutineScope {
+internal fun Element.provisionScope(
+    name: String,
+    parentScope: CoroutineScope,
+    cancelExistingScope: Boolean
+): CoroutineScope {
     if (cancelExistingScope) {
         this.job?.cancel()
     }
@@ -43,8 +48,9 @@ internal fun Element.provisionScope(parentScope: CoroutineScope, cancelExistingS
         return scope
     }
 
-    val job = SupervisorJob()
-    val newScope = CoroutineScope(parentScope.coroutineContext + job)
+    val job = SupervisorJob(parentScope.coroutineContext[Job])
+    val telemetry = ScopeTelemetry(name, this, parentScope.coroutineContext[ScopeTelemetry])
+    val newScope = CoroutineScope(parentScope.coroutineContext + job + telemetry)
     setJob(job)
     setScope(newScope)
     return newScope

@@ -30,7 +30,7 @@ import streetlight.web.model.EventMarker
 import streetlight.web.model.GalaxyMarker
 import streetlight.web.model.LocationMarker
 
-fun AppScope.earthFocus(model: Earth) {
+fun ViewScope.earthFocus(model: Earth) {
     flowBlock(model.focusFlow, modify(EarthStyle.Focus, Magic)) { focus ->
         when (focus) {
             is ClusterFocus -> tabs(
@@ -53,7 +53,7 @@ fun AppScope.earthFocus(model: Earth) {
     }
 }
 
-private fun AppScope.markerPanel(marker: PointMarker) {
+private fun ViewScope.markerPanel(marker: PointMarker) {
     when (marker) {
         is EventMarker -> focusPanel(
             post = marker.event,
@@ -79,7 +79,7 @@ private fun AppScope.markerPanel(marker: PointMarker) {
     }
 }
 
-private fun AppScope.focusPanel(
+private fun ViewScope.focusPanel(
     post: Entity,
     route: AppRoute,
     subroute: AppRoute? = null,

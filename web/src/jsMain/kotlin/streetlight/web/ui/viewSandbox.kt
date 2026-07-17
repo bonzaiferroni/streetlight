@@ -1,29 +1,57 @@
 package streetlight.web.ui
 
-import koala.css.columnsOf
 import koala.dom.*
-import kotlinx.css.LinearDimension
-import kotlinx.css.fr
-import kotlinx.html.js.p
+import koala.html.heading1
+import kotlinx.coroutines.delay
+import kotlin.time.Duration.Companion.seconds
 
-fun AppScope.viewSandbox() {
-    column {
-        grid(columnsOf(1.fr, LinearDimension.auto)) {
-            val swap = swap {
-                box {
-                    textBlock("one")
-                }
-                box {
-                    textBlock("two")
-                    textBlock("three")
-                }
-            }
-            button(onClick = swap::next) {
-                +"swap"
-            }
-        }
-        textBlock("content below")
+fun ViewScope.viewSandbox() {
+    val model = Sandbox(parentScope, api, toaster)
+
+    console.log("welcome to sandbox")
+
+    filigree {
+        heading1("Yer Sandbox")
     }
+
+    row {
+        textBlock("What is your name?")
+        textField("name", model.nameField)
+    }
+
+    flowBlock(model.nameField.flow) { name ->
+        if (name == "wreck") throw SandboxException()
+        textBlock("Hello ${name.takeIf { it.isNotBlank() } ?: "Someone"}, welcome to the sandbox.")
+    }
+
+    button("Check availability", model::checkAvailability)
+
+    flowBlock(model.isNameTaken) { isNameTaken ->
+        when (isNameTaken) {
+            null -> return@flowBlock
+            true -> textBlock("That name is taken.")
+            false -> textBlock("That name is available.")
+        }
+    }
+
+    launchEffect("sandbox") {
+        var counter = 0
+        while (true) {
+            println(counter++)
+            delay(1.seconds)
+        }
+
+        launch {
+            // flow.collect
+        }
+
+        launch {
+            // flow.collect
+        }
+    }
+
+    // throw SandboxException()
 }
 
+class SandboxException : Exception("Arrr sandbox exception")
 

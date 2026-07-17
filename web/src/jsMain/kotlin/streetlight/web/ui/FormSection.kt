@@ -1,17 +1,14 @@
 package streetlight.web.ui
 
-import kampfire.model.Url
-import koala.Image
-import koala.dom.AppScope
+import koala.dom.ViewScope
 import koala.dom.box
 import koala.dom.image
 import koala.dom.imageDrop
 import koala.dom.setBlockLabel
 import koala.html.textBlock
-import kotlinx.coroutines.flow.Flow
 import streetlight.web.model.ImageEditor
 
-fun AppScope.imageFormSection(
+fun ViewScope.imageFormSection(
     instructions: String,
     imageEditor: ImageEditor,
 ) = formSection("Image") {

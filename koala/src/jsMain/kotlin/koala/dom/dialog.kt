@@ -20,12 +20,12 @@ import kotlinx.html.DIV
 import kotlinx.html.js.dialog
 import org.w3c.dom.HTMLDialogElement
 
-fun AppScope.dialog(
+fun ViewScope.dialog(
     title: String? = null,
     stateFlow: Flow<Boolean>? = null,
     mod: ModifierSet? = null,
     onClose: (() -> Unit)? = null,
-    content: (AppScope.(DialogElement) -> Unit)? = null
+    content: (ViewScope.(DialogElement) -> Unit)? = null
 ): DialogElement {
 //    fun closeDialog() {
 //        val dialog = dialog ?: return
@@ -95,9 +95,9 @@ class DialogElement(
     fun updateContent(
         title: String?,
         open: Boolean,
-        content: AppScope.(DialogElement) -> Unit,
+        content: ViewScope.(DialogElement) -> Unit,
     ) {
-        element.replaceDynamicRender(app, parentScope) {
+        element.replaceDynamicRender("dialog", app, parentScope) {
             dialogContent(title) {
                 content(this@DialogElement)
             }
@@ -111,11 +111,11 @@ fun HTMLDialogElement.open() {
     modify(Reveal)
 }
 
-fun AppScope.dialogWithCard(
+fun ViewScope.dialogWithCard(
     title: String?,
     stateFlow: Flow<Boolean>? = null,
     mod: ModifierSet? = null,
-    content: AppScope.(DialogElement) -> Unit
+    content: ViewScope.(DialogElement) -> Unit
 ) = dialog(title, stateFlow, mod) {
     dialogCard {
         content(it)

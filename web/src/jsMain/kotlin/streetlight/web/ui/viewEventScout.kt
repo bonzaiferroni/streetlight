@@ -12,7 +12,7 @@ import streetlight.model.ui.GalaxyRoute
 import streetlight.web.layouts.postRow
 import streetlight.web.model.EventScoutStage
 
-fun AppScope.viewEventScout(galaxy: Galaxy) {
+fun ViewScope.viewEventScout(galaxy: Galaxy) {
     val locationEditor = app.getLocationEditor(LocationEdit(), parentScope)
     val locationScout = app.getLocationScout(galaxy, locationEditor, parentScope)
     val editor = app.getEventEditor(EventEdit(timeZoneId = getTimeZoneId()), parentScope)
@@ -58,7 +58,7 @@ fun AppScope.viewEventScout(galaxy: Galaxy) {
     }
 }
 
-fun AppScope.viewEventScoutRoute() {
+fun ViewScope.viewEventScoutRoute() {
     routeBlock<EventScoutRoute, Galaxy>({
         api.readGalaxy(it.slug).handleResponse(toaster)
     }) { galaxy ->

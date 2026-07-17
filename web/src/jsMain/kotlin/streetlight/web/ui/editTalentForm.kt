@@ -7,7 +7,7 @@ import streetlight.model.data.toEdit
 import streetlight.model.ui.EditTalentRoute
 import streetlight.web.model.DataCache
 
-fun AppScope.editTalentForm() {
+fun ViewScope.editTalentForm() {
     val userCache = app.get<DataCache>()
 
     suspend fun provideEdit(route: EditTalentRoute) = route.talentId?.let {

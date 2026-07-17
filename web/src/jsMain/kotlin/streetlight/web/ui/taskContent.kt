@@ -1,7 +1,7 @@
 package streetlight.web.ui
 
 import koala.css.modify
-import koala.dom.AppScope
+import koala.dom.ViewScope
 import koala.dom.column
 import koala.dom.navigation
 import koala.html.heading3
@@ -11,14 +11,14 @@ import streetlight.model.data.LocationEdit
 import streetlight.model.data.QuorumReviewContent
 import streetlight.model.data.TaskContent
 
-fun AppScope.taskContent(task: TaskContent) {
+fun ViewScope.taskContent(task: TaskContent) {
     when (task) {
         is EditTaskContent -> editTaskContent(task)
         is QuorumReviewContent -> quorumReviewContent(task)
     }
 }
 
-fun AppScope.editTaskContent(task: EditTaskContent) {
+fun ViewScope.editTaskContent(task: EditTaskContent) {
     val edit = task.editLog.recordEdit as? LocationEdit ?: return
     val editor = app.getLocationEditor(edit, parentScope)
     column {
@@ -32,7 +32,7 @@ fun AppScope.editTaskContent(task: EditTaskContent) {
     }
 }
 
-fun AppScope.quorumReviewContent(task: QuorumReviewContent) {
+fun ViewScope.quorumReviewContent(task: QuorumReviewContent) {
     val quorum = task.quorum
     val edit = task.editLog.recordEdit as? LocationEdit ?: error("edit not found")
     column {

@@ -27,7 +27,7 @@ class Toaster(
         state.set { it.copy(messages = it.messages + message)}
         scope.launch {
             delay(ToastDelay)
-            state.set { it.copy(messages = it.messages - message) }
+            state.set { it.copy(messages = stateNow.messages - message) }
         }
     }
 

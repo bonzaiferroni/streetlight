@@ -4,19 +4,19 @@ import koala.core.addGlobalFunctions
 import koala.css.KoalaBody
 import koala.css.Property
 import koala.dom.*
+import koala.model.Portal
 import kotlinx.browser.document
 import kotlinx.browser.window
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 import kotlinx.css.Display
 import kotlinx.serialization.ExperimentalSerializationApi
-import streetlight.web.pages.AppBody
 import org.koin.dsl.koinApplication
 import streetlight.web.io.OmniLog
 import streetlight.web.layouts.LightControl
 import streetlight.web.model.TransitMap
 import streetlight.web.model.StarSession
-import kotlin.js.Promise
+import koala.dom.launch
 
 @OptIn(ExperimentalSerializationApi::class)
 fun viewApp() {
@@ -39,36 +39,44 @@ fun viewApp() {
         val gate: StarSession = get()
         val omni: OmniLog = get()
         val transit: TransitMap = get()
+        val portal: Portal = get()
         transit.init()
 
-        scope.launch {
-            // signs in user if configured
-            gate.readUser(null)
-
-            val portalMount = document.getElementById(KoalaBody.PortalMount)
-
-            portalMount.renderRoot(scope, app) {
-                // renders routes from portal.routeFlow
-                appNavigation()
-                // shows user badge in upper right corner
-                wireBadge()
-                // shows content in user menu
-                queryAndWireStarHelm()
-
-                // td: reimplement as sidebar option
-                // wireRightPanel()
-                wireToaster()
-
-                // hides the element that holds server rendered content
-                val shellBox = document.getElementById(KoalaBody.ShellMount)
-                shellBox.setStyle(Property.Display.to(Display.none))
-            }
+        scope.launch("viewApp") {
 
             try {
+
+                // signs in user if configured
+                gate.readUser(null)
+
+                val portalMount = document.getElementById(KoalaBody.PortalMount)
+
+                portalMount.renderRoot("app-root", scope, app) {
+                    // renders routes from portal.routeFlow
+                    appNavigation()
+                    // shows user badge in upper right corner
+                    wireBadge()
+                    // shows content in user menu
+                    queryAndWireStarHelm()
+
+                    // td: reimplement as sidebar option
+                    // wireRightPanel()
+                    wireToaster()
+
+                    // hides the element that holds server rendered content
+                    val shellBox = document.getElementById(KoalaBody.ShellMount)
+                    shellBox.setStyle(Property.Display.to(Display.none))
+                }
+
                 // td: reimplement as sidebar option
                 // omni.connect()
-            } catch (e: Exception) {
-                console.log("unable to connect to omni log:\n${e.message}")
+
+                throw SandboxException()
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Throwable) {
+                portal.notifyWrecked()
+                throw e
             }
         }
     }

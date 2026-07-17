@@ -13,7 +13,7 @@ import kotlinx.html.js.div
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 
-fun AppScope.switch(
+fun ViewScope.switch(
     label: String,
     mod: ModifierSet? = null,
     id: Id? = null,
@@ -37,7 +37,7 @@ fun AppScope.switch(
     return element
 }
 
-fun AppScope.wireSwitch(
+fun ViewScope.wireSwitch(
     element: HTMLElement,
     initialOn: Boolean = false,
     onToggle: ((Boolean) -> Unit)? = null,
@@ -65,7 +65,7 @@ fun AppScope.wireSwitch(
     }
 }
 
-fun AppScope.queryAndWireSwitch(
+fun ViewScope.queryAndWireSwitch(
     ancestor: HTMLElement,
     queryable: Queryable,
     initialOn: Boolean = false,

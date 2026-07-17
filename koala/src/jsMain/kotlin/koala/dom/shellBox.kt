@@ -9,9 +9,9 @@ import kotlinx.html.DIV
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 
-fun AppScope.shellBox(
+fun ViewScope.shellBox(
     id: Id,
-    initializers: List<AppScope.(HTMLElement) -> Unit>,
+    initializers: List<ViewScope.(HTMLElement) -> Unit>,
     mod: ModifierSet? = null,
     block: DIV.() -> Unit
 ): HTMLDivElement {
@@ -40,9 +40,9 @@ fun AppScope.shellBox(
     }
 }
 
-fun AppScope.shellBoxWithMap(
+fun ViewScope.shellBoxWithMap(
     id: Id,
-    initializers: List<AppScope.(HTMLElement) -> Unit>,
+    initializers: List<ViewScope.(HTMLElement) -> Unit>,
     mod: ModifierSet? = null,
     block: DIV.() -> Unit
 ): HTMLDivElement {

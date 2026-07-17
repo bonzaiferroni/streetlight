@@ -25,7 +25,7 @@ fun TagScope.textBlock(
     block?.invoke(this)
 }
 
-fun <T> AppScope.textBlock(
+fun <T> ViewScope.textBlock(
     binding: Flow<T>,
     mod: ModifierSet? = null,
     provideValue: (T) -> String = { it.toString() },

@@ -9,7 +9,7 @@ import streetlight.model.data.toEdit
 import streetlight.model.ui.LocationRoute
 import streetlight.model.ui.LocationUpdateRoute
 
-fun AppScope.viewLocationUpdater(content: LocationUpdaterContent, star: Star) {
+fun ViewScope.viewLocationUpdater(content: LocationUpdaterContent, star: Star) {
     val edit = content.location.toEdit()
     val model = edit.let { app.getLocationEditor(it, parentScope) }
 
@@ -44,7 +44,7 @@ fun AppScope.viewLocationUpdater(content: LocationUpdaterContent, star: Star) {
     }
 }
 
-fun AppScope.viewUpdateLocationRoute() {
+fun ViewScope.viewUpdateLocationRoute() {
     column {
         starGate { star ->
             routeBlock<LocationUpdateRoute, LocationUpdaterContent?>(

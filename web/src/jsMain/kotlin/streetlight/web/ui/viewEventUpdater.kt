@@ -1,7 +1,7 @@
 package streetlight.web.ui
 
 import kampfire.model.handleResponse
-import koala.dom.AppScope
+import koala.dom.ViewScope
 import koala.dom.column
 import koala.dom.routeBlock
 import koala.dom.tab
@@ -14,7 +14,7 @@ import streetlight.model.data.toEdit
 import streetlight.model.ui.EventRoute
 import streetlight.model.ui.EventUpdateRoute
 
-fun AppScope.viewEventUpdater(content: EventUpdaterContent, star: Star) {
+fun ViewScope.viewEventUpdater(content: EventUpdaterContent, star: Star) {
     val edit = content.event.toEdit()
     val model = edit.let { app.getEventEditor(it, parentScope) }
 
@@ -47,7 +47,7 @@ fun AppScope.viewEventUpdater(content: EventUpdaterContent, star: Star) {
     }
 }
 
-fun AppScope.viewEventUpdaterRoute() {
+fun ViewScope.viewEventUpdaterRoute() {
     column {
         starGate { star ->
             routeBlock<EventUpdateRoute, EventUpdaterContent?>(

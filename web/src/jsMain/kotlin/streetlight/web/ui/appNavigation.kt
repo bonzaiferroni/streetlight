@@ -4,7 +4,7 @@ import koala.css.Blur
 import koala.css.FocusTarget
 import koala.css.Magic
 import koala.css.modify
-import koala.dom.AppScope
+import koala.dom.ViewScope
 import koala.dom.closeOpenPopovers
 import koala.dom.flowBlock
 import koala.dom.querySelector
@@ -15,17 +15,19 @@ import kotlinx.browser.window
 import org.w3c.dom.HTMLElement
 import streetlight.model.ui.Screen
 
-fun AppScope.appNavigation() {
+fun ViewScope.appNavigation() {
     val portal = app.get<Portal>()
     var element: HTMLElement? = null
 
     element = flowBlock(
         flow = portal.screenFlow,
         modifiers = modify(Magic, Blur),
-        cacheElements = true,
+        name = ::appNavigation.name,
         onTransition = {
             if (!portal.stateNow.isInitialRoute) {
-                window.scrollTo(0.0, portal.stateNow.initialScrollY)
+                window.setTimeout({
+                    window.scrollTo(0.0, portal.stateNow.initialScrollY)
+                }, 100)
             }
             document.closeOpenPopovers()
 

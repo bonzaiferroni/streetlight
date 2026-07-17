@@ -13,7 +13,7 @@ import kotlinx.html.js.option
 import kotlinx.html.js.select
 import org.w3c.dom.HTMLSelectElement
 
-fun AppScope.dropMenu(
+fun ViewScope.dropMenu(
     options: List<String>,
     flow: Flow<String>? = null,
     onChangeValue: ((String) -> Unit)? = null,
@@ -49,7 +49,7 @@ fun AppScope.dropMenu(
     return element
 }
 
-inline fun <reified E: Enum<E>> AppScope.dropMenu(
+inline fun <reified E: Enum<E>> ViewScope.dropMenu(
     noinline onChangeValue: ((E) -> Unit),
     crossinline provideLabel: (E) -> String,
     flow: Flow<E>? = null,
@@ -67,7 +67,7 @@ inline fun <reified E: Enum<E>> AppScope.dropMenu(
     return dropMenu(values, flow, callback, mod, block)
 }
 
-inline fun <reified E> AppScope.dropMenu(
+inline fun <reified E> ViewScope.dropMenu(
     store: Store<E>,
     modifiers: ModifierSet? = null,
     noinline block: (SELECT.() -> Unit)? = null

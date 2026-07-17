@@ -11,12 +11,12 @@ import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kotlinx.html.SECTION
 
-fun AppScope.form(
+fun ViewScope.form(
     mod: ModifierSet? = null,
     content: DIV.() -> Unit,
 ) = column(mod = modify(mod, Gap2), content = content)
 
-fun AppScope.formSection(
+fun ViewScope.formSection(
     name: String? = null,
     content: SECTION.() -> Unit
 ) = section {
@@ -26,12 +26,12 @@ fun AppScope.formSection(
     content()
 }
 
-fun AppScope.formRow(
+fun ViewScope.formRow(
     mod: ModifierSet? = null,
     content: DIV.() -> Unit
 ) = row(modify(Form.Row, mod), content = content)
 
-fun AppScope.formHeading(
+fun ViewScope.formHeading(
     text: String
 ) = filigree {
     heading5(text, modify(OpacityHigh, TextTransformUppercase))
@@ -47,7 +47,7 @@ fun FlowContent.formBullets(
     bulletsOf(FormMod.Bullets, *bullets)
 }
 
-fun AppScope.formSubmit(
+fun ViewScope.formSubmit(
     buttonText: String = "submit",
     onClick: () -> Unit,
     messages: MessageStore? = null,
@@ -62,7 +62,7 @@ fun AppScope.formSubmit(
     }
 }
 
-fun AppScope.formText(
+fun ViewScope.formText(
     text: String,
     mod: ModifierSet? = null,
 ) = textBlock(text, mod = modify(mod, TextAlignCenter, OpacityHigh))

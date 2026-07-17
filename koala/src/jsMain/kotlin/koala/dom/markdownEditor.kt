@@ -9,7 +9,7 @@ import koala.html.Id
 import koala.html.setId
 import kotlinx.html.js.textArea
 
-fun AppScope.markdownEditor(
+fun ViewScope.markdownEditor(
     modifiers: ModifierSet? = null,
     id: Id? = null,
     placeholder: String? = null,

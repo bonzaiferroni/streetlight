@@ -13,7 +13,7 @@ import streetlight.model.data.GalaxyProperty
 import streetlight.model.data.PostPermission
 import streetlight.web.model.GalaxyEditor
 
-fun AppScope.galaxyCityForm(model: GalaxyEditor) {
+fun ViewScope.galaxyCityForm(model: GalaxyEditor) {
     val cityQueryFlow = model.stateFlow.tap { it.cityQuery }
     val isLocalFlow = model.stateFlow.tap { it.isLocal }
     val localitiesFlow = model.stateFlow.tap { it.cities }
@@ -52,7 +52,7 @@ fun AppScope.galaxyCityForm(model: GalaxyEditor) {
     }
 }
 
-fun AppScope.galaxyNameForm(model: GalaxyEditor) {
+fun ViewScope.galaxyNameForm(model: GalaxyEditor) {
     val nameFlow = model.galaxyFlow.tap { it.name ?: "" }
     val slugFlow = model.galaxyFlow.tap { it.slug?.value ?: "" }
 
@@ -89,11 +89,11 @@ fun AppScope.galaxyNameForm(model: GalaxyEditor) {
     }
 }
 
-fun AppScope.galaxyImageForm(model: GalaxyEditor) = imageFormSection(imageInstructions1, model.imageEditor)
+fun ViewScope.galaxyImageForm(model: GalaxyEditor) = imageFormSection(imageInstructions1, model.imageEditor)
 
 private val imageInstructions1 = "This image will appear at the top of the galaxy page."
 
-fun AppScope.galaxyDescriptionForm(model: GalaxyEditor) {
+fun ViewScope.galaxyDescriptionForm(model: GalaxyEditor) {
     val nameFlow = model.galaxyFlow.tap { it.name ?: "" }
     val descriptionFlow = model.galaxyFlow.tap { it.description ?: "".toMarkdown() }
     val taglineFlow = model.galaxyFlow.tap { it.tagline ?: "" }
@@ -138,7 +138,7 @@ fun AppScope.galaxyDescriptionForm(model: GalaxyEditor) {
     }
 }
 
-fun AppScope.galaxyLocationForm(model: GalaxyEditor) {
+fun ViewScope.galaxyLocationForm(model: GalaxyEditor) {
     val pointFlow = geoMap.stateFlow.tap { it.center to it.zoom }
 
     formCardSection("Map location") {
@@ -162,7 +162,7 @@ fun AppScope.galaxyLocationForm(model: GalaxyEditor) {
     }
 }
 
-fun AppScope.galaxyAccessForm(model: GalaxyEditor) {
+fun ViewScope.galaxyAccessForm(model: GalaxyEditor) {
     val permissionFlow = model.galaxyFlow.tap { it.postPermission }
     val reviewCountFlow = model.galaxyFlow.tap { it.reviewCount?.toString() ?: "" }
 

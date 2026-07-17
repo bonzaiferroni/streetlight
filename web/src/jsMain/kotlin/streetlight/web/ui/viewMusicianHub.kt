@@ -6,7 +6,7 @@ import koala.css.Flex1
 import koala.css.FlexItems1
 import koala.css.Width64
 import koala.css.modify
-import koala.dom.AppScope
+import koala.dom.ViewScope
 import koala.dom.navigation
 import koala.dom.button
 import koala.dom.card
@@ -22,7 +22,7 @@ import koala.html.Id
 import streetlight.model.ui.SongProfileRoute
 import streetlight.web.model.MusicianHub
 
-fun AppScope.viewMusicianHub(
+fun ViewScope.viewMusicianHub(
     // user: BasicUserInfo,
 ) {
     val model = MusicianHub(parentScope, api)

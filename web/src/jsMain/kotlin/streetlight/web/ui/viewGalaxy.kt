@@ -9,7 +9,7 @@ import streetlight.web.model.MarkerService
 import streetlight.web.shells.GalaxyShell
 import streetlight.web.shells.galaxyShell
 
-fun AppScope.viewGalaxy(content: GalaxyContent) {
+fun ViewScope.viewGalaxy(content: GalaxyContent) {
     val markerService = app.get<MarkerService>()
 
     val root = shellBox(GalaxyShell.id, hookInitializers) {
@@ -27,7 +27,7 @@ fun AppScope.viewGalaxy(content: GalaxyContent) {
     markerMap.setPoints(points)
 }
 
-fun AppScope.viewGalaxyRoute() {
+fun ViewScope.viewGalaxyRoute() {
     routeBlock<GalaxyRoute, GalaxyContent>(portal, { route ->
         readIsland<GalaxyContent>(GalaxyShell.islandId) { it.galaxy.slug == route.slug }
             ?: api.readGalaxyContent(route.slug).handleResponse(toaster)
@@ -36,6 +36,6 @@ fun AppScope.viewGalaxyRoute() {
     }
 }
 
-val hookInitializers: List<AppScope.(HTMLElement) -> Unit> = listOf(
-    AppScope::initPostMenu
+val hookInitializers: List<ViewScope.(HTMLElement) -> Unit> = listOf(
+    ViewScope::initPostMenu
 )

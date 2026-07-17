@@ -4,27 +4,28 @@ import koala.html.Id
 import kotlinx.browser.document
 import org.w3c.dom.HTMLElement
 
-fun AppScope.wireBlock(
+fun ViewScope.wireBlock(
     elementId: Id,
     ancestor: HTMLElement? = null,
     wireOnView: Boolean = true,
-    block: AppScope.() -> Unit
+    block: ViewScope.() -> Unit
 ): HTMLElement {
     val element = (ancestor ?: document.body)?.querySelector(elementId) ?: document.getElementOrNullById(elementId)
         ?: error("couldn't find ${elementId.identifier}")
 
-    wireBlock(element, wireOnView, block)
+    wireBlock(elementId.identifier, element, wireOnView, block)
 
     return element
 }
 
-fun AppScope.wireBlock(
+fun ViewScope.wireBlock(
+    name: String,
     element: HTMLElement,
     wireOnView: Boolean = true,
-    block: AppScope.() -> Unit
+    block: ViewScope.() -> Unit
 ) {
     fun wireElement() {
-        replaceDynamicRender(element, block)
+        replaceDynamicRender(name, element, block)
     }
 
     if (wireOnView) {

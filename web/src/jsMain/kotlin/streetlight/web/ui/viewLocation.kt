@@ -7,7 +7,7 @@ import streetlight.model.ui.LocationRoute
 import streetlight.web.shells.LocationProfileKey
 import streetlight.web.shells.locationShell
 
-fun AppScope.viewLocation() {
+fun ViewScope.viewLocation() {
     routeBlock<LocationRoute, LocationContent>(
         portal = portal,
         provideData = { api.readLocationContent(it.slug).handleResponse(toaster) }

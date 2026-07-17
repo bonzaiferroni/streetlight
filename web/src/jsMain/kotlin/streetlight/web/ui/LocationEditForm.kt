@@ -5,14 +5,14 @@ import koala.dom.*
 import streetlight.model.data.LocationProperty
 import streetlight.web.model.LocationEditor
 
-fun AppScope.locationEditFormBody(model: LocationEditor) = formBodyProto {
+fun ViewScope.locationEditFormBody(model: LocationEditor) = formBodyProto {
     locationWebsiteForm(model)
     locationDetailsForm(model)
     locationImageForm(model)
     locationLinksForm(model)
 }
 
-fun AppScope.locationDetailsForm(model: LocationEditor) = formCardSection("Location Details") {
+fun ViewScope.locationDetailsForm(model: LocationEditor) = formCardSection("Location Details") {
     formPart("What is the name of the place?") {
         formTextField("title", model::setName, model.nameFlow, maxLength = 50)
             .flowValid(LocationProperty.Name, model.validityFlow, parentScope)
@@ -33,19 +33,19 @@ fun AppScope.locationDetailsForm(model: LocationEditor) = formCardSection("Locat
     }
 }
 
-fun AppScope.locationImageForm(model: LocationEditor) =
+fun ViewScope.locationImageForm(model: LocationEditor) =
     imageFormSection(
         instructions = "This image will appear at the top of the location page.",
         imageEditor = model.imageEditor
     )
 
-fun AppScope.locationLinksForm(model: LocationEditor) = formCardSection("Links") {
+fun ViewScope.locationLinksForm(model: LocationEditor) = formCardSection("Links") {
     column {
         textField("calendar", model::setEventsLink, model.linksFlow)
     }
 }
 
-fun AppScope.locationWebsiteForm(model: LocationEditor) = formCardSection("Website") {
+fun ViewScope.locationWebsiteForm(model: LocationEditor) = formCardSection("Website") {
     formPart(
         instructions = "Does this location have a website? We can read it to find certain details.",
         bullets = listOf("Image", "Description", "Links")

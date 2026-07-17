@@ -3,7 +3,7 @@ package streetlight.web.ui
 import kampfire.model.AccountType
 import kampfire.model.handleResponse
 import koala.LottieFile
-import koala.dom.AppScope
+import koala.dom.ViewScope
 import koala.dom.column
 import koala.dom.routeBlock
 import koala.dom.tab
@@ -14,7 +14,7 @@ import streetlight.model.data.toEdit
 import streetlight.model.ui.StarConfigRoute
 import streetlight.web.model.StarEditor
 
-fun AppScope.viewStarConfig(model: StarEditor) {
+fun ViewScope.viewStarConfig(model: StarEditor) {
     column {
         introSection("User Settings", lottie = LottieFile.ServerSync) {
             textBlock("Here you can make changes to your account and profile.")
@@ -38,7 +38,7 @@ fun AppScope.viewStarConfig(model: StarEditor) {
     }
 }
 
-fun AppScope.viewStarConfigRoute() {
+fun ViewScope.viewStarConfigRoute() {
     starGate { star ->
         routeBlock<StarConfigRoute, StarEdit>(portal, { route ->
             val info = api.readIdentityInfo().handleResponse(toaster) ?: return@routeBlock null

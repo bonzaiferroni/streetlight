@@ -6,7 +6,7 @@ import koala.html.configureGeoMapMount
 import koala.model.GeoCameraController
 import kotlinx.html.DIV
 
-fun AppScope.geoMapMount(
+fun ViewScope.geoMapMount(
     initialPoint: GeoPoint? = null,
     mod: ModifierSet? = null,
     block: DIV.() -> Unit = {}

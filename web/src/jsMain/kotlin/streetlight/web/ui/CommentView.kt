@@ -88,7 +88,7 @@ class CommentView(
         replies.add(reply)
     }
 
-    fun AppScope.replyAction() {
+    fun ViewScope.replyAction() {
         if (stagedReplies.isNotEmpty()) {
             showStagedReplies()
         } else {
@@ -96,12 +96,12 @@ class CommentView(
         }
     }
 
-    fun AppScope.startReply() {
+    fun ViewScope.startReply() {
         isReplying = !isReplying
         if (isReplying) {
             rootBlock.modify(CommentClass.HasNestedContent)
             if (replyBlock.hasChildNodes()) return
-            replaceDynamicRender(replyBlock) {
+            replaceDynamicRender("comment-reply", replyBlock) {
                 commentEditor("reply", "".toMarkdown(), modify(AutoMagic, SlideLeft)) { text ->
                     val commentId = model.createComment(comment.commentId, text)
 
@@ -122,12 +122,12 @@ class CommentView(
         }
     }
 
-    fun AppScope.toggleEdit() {
+    fun ViewScope.toggleEdit() {
         isEditing = !isEditing
         if (isEditing) {
             editBlock.unmodify(DisplayNone)
             if (editBlock.hasChildNodes()) return
-            replaceDynamicRender(editBlock) {
+            replaceDynamicRender("comment-edit", editBlock) {
                 commentEditor("edit", comment.text) { text ->
                     val isSuccess = model.updateComment(comment.commentId, text)
                     return@commentEditor when (isSuccess) {
@@ -147,7 +147,7 @@ class CommentView(
         }
     }
 
-    fun AppScope.stageReply(comment: CommentView, isUserReply: Boolean) {
+    fun ViewScope.stageReply(comment: CommentView, isUserReply: Boolean) {
         if (isUserReply) {
             renderStagedReplies(listOf(comment))
         } else {
@@ -156,7 +156,7 @@ class CommentView(
         }
     }
 
-    fun AppScope.showStagedReplies() {
+    fun ViewScope.showStagedReplies() {
         val replies = stagedReplies.toList()
         stagedReplies.clear()
         renderStagedReplies(replies)
@@ -164,8 +164,8 @@ class CommentView(
         rootBlock.modify(CommentClass.HasNestedContent)
     }
 
-    private fun AppScope.renderStagedReplies(replies: List<CommentView>) {
-        prependRender(repliesBlock) {
+    private fun ViewScope.renderStagedReplies(replies: List<CommentView>) {
+        prependRender("comment-replies", repliesBlock) {
             replies.forEach { reply ->
                 with (reply) {
                     render()
@@ -174,7 +174,7 @@ class CommentView(
         }
     }
 
-    fun AppScope.stageUpdate(text: Markdown) {
+    fun ViewScope.stageUpdate(text: Markdown) {
         if (isUserComment) {
             updateTextContent(text)
         } else {
@@ -183,21 +183,21 @@ class CommentView(
         }
     }
 
-    fun AppScope.showStagedUpdate() {
+    fun ViewScope.showStagedUpdate() {
         val text = stagedUpdate ?: error("staged update not found")
         showUpdateButton.modify(DisplayNone)
         updateTextContent(text)
     }
 
-    private fun AppScope.updateTextContent(text: Markdown) {
+    private fun ViewScope.updateTextContent(text: Markdown) {
         comment = comment.copy(text = text)
 
-        replaceDynamicRender(contentBlock) {
+        replaceDynamicRender("comment-text", contentBlock) {
             markdown(text)
         }
     }
 
-    fun AppScope.render() {
+    fun ViewScope.render() {
         if (isRendered) return
         isRendered = true
 

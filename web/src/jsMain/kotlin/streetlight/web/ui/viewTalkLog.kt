@@ -19,7 +19,7 @@ import streetlight.model.data.PostOrder
 import streetlight.model.ui.TalkRoute
 import streetlight.web.io.TalkLog
 
-fun AppScope.viewTalkLog(model: TalkLog) {
+fun ViewScope.viewTalkLog(model: TalkLog) {
     var treeRoot: HTMLElement? = null
 
     column {
@@ -65,14 +65,14 @@ fun AppScope.viewTalkLog(model: TalkLog) {
     }
 }
 
-fun AppScope.viewTalkRoute() {
+fun ViewScope.viewTalkRoute() {
     routeBlock<TalkRoute> { route ->
         val model = TalkLog(parentScope, route.id, route.type, api)
         viewTalkLog(model)
     }
 }
 
-fun AppScope.buildTree(model: TalkLog, treeRoot: HTMLElement, comments: List<Comment>) {
+fun ViewScope.buildTree(model: TalkLog, treeRoot: HTMLElement, comments: List<Comment>) {
     val sortBy = model.stateNow.sortBy
 
     val comments = when (sortBy) {
@@ -81,7 +81,7 @@ fun AppScope.buildTree(model: TalkLog, treeRoot: HTMLElement, comments: List<Com
     }
     val roots = comments.filter { it.parentId == null }
 
-    replaceDynamicRender(treeRoot) {
+    replaceDynamicRender("comment-tree", treeRoot) {
         roots.forEach {
             val view = addCommentView(model, it, comments) ?: return@forEach
             with(view) {
@@ -91,20 +91,20 @@ fun AppScope.buildTree(model: TalkLog, treeRoot: HTMLElement, comments: List<Com
     }
 }
 
-fun AppScope.growTree(model: TalkLog, treeRoot: HTMLElement, comment: Comment) {
+fun ViewScope.growTree(model: TalkLog, treeRoot: HTMLElement, comment: Comment) {
     val view = addCommentView(model, comment, emptyList()) ?: return
     when (val parentId = comment.parentId) {
         null -> {
             when (model.stateNow.sortBy) {
                 PostOrder.NewFirst -> {
-                    prependRender(treeRoot) {
+                    prependRender("comment", treeRoot) {
                         with (view) {
                             render()
                         }
                     }
                 }
                 PostOrder.OldFirst -> {
-                    appendRender(treeRoot) {
+                    appendRender("comment", treeRoot) {
                         with (view) {
                             render()
                         }
@@ -121,7 +121,7 @@ fun AppScope.growTree(model: TalkLog, treeRoot: HTMLElement, comment: Comment) {
     }
 }
 
-fun AppScope.updateComment(model: TalkLog, message: CommentUpdated) {
+fun ViewScope.updateComment(model: TalkLog, message: CommentUpdated) {
     val view = model.commentViews[message.commentId] ?: return
 
     with(view) {
@@ -129,7 +129,7 @@ fun AppScope.updateComment(model: TalkLog, message: CommentUpdated) {
     }
 }
 
-fun AppScope.commentEditor(
+fun ViewScope.commentEditor(
     label: String,
     initialText: Markdown,
     mod: ModifierSet? = null,
@@ -154,7 +154,7 @@ fun AppScope.commentEditor(
     }
 }
 
-fun AppScope.addCommentView(
+fun ViewScope.addCommentView(
     model: TalkLog,
     comment: Comment,
     comments: List<Comment>

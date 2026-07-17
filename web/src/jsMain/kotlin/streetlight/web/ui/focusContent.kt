@@ -1,6 +1,5 @@
 package streetlight.web.ui
 
-import kampfire.model.small
 import kampfire.model.toUrl
 import koala.css.*
 import koala.dom.*
@@ -13,7 +12,7 @@ import streetlight.web.layouts.costCell
 import streetlight.web.layouts.starCell
 import streetlight.web.layouts.startsAtCell
 
-fun AppScope.eventFocusContent(post: EventPost) {
+fun ViewScope.eventFocusContent(post: EventPost) {
     val event = post.event
 
     card(modify(Padding0, Gap0, BlurBackdrop, OverflowClip)) {

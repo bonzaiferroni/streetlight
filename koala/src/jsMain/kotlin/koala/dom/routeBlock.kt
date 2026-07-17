@@ -6,9 +6,9 @@ import koala.model.Portal
 import kotlinx.coroutines.flow.map
 import org.w3c.dom.HTMLElement
 
-inline fun <reified Route: AppRoute> AppScope.routeBlock(
+inline fun <reified Route: AppRoute> ViewScope.routeBlock(
     portal: Portal,
-    crossinline block: AppScope.(Route) -> Unit
+    crossinline block: ViewScope.(Route) -> Unit
 ): HTMLElement {
     val routeFlow = portal.routeFlowOf<Route>()
 
@@ -19,11 +19,11 @@ inline fun <reified Route: AppRoute> AppScope.routeBlock(
     return element
 }
 
-inline fun <reified Route: AppRoute, Data> AppScope.routeBlock(
+inline fun <reified Route: AppRoute, Data> ViewScope.routeBlock(
     portal: Portal,
     crossinline provideData: suspend (Route) -> Data?,
     refreshOnRoute: Boolean = true,
-    crossinline block: AppScope.(Data) -> Unit
+    crossinline block: ViewScope.(Data) -> Unit
 ): HTMLElement {
     val routeFlow = portal.routeFlowOf<Route>(!refreshOnRoute).map { provideData(it) }
 

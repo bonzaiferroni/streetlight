@@ -2,13 +2,12 @@ package koala.dom
 
 import koala.css.ModifierSet
 import koala.model.ScriptLoader
-import kotlinx.html.div
 
-fun AppScope.lazyScript(
+fun ViewScope.lazyScript(
     src: String,
     onLoad: suspend () -> Unit = { },
     mod: ModifierSet? = null,
-    content: AppScope.() -> Unit
+    content: ViewScope.() -> Unit
 ) {
     val isLoaded = ScriptLoader.isLoaded(src)
     val element = div(mod) {

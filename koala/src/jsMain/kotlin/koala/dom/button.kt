@@ -117,7 +117,7 @@ private fun configureButtonEvents(
     }
 }
 
-fun AppScope.configureEnabledFlow(
+fun ViewScope.configureEnabledFlow(
     element: HTMLButtonElement,
     flow: Flow<Boolean>? = null,
 ) {

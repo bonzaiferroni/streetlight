@@ -15,7 +15,7 @@ import streetlight.model.ui.MediaUpdateRoute
 import streetlight.model.ui.MediaRoute
 import streetlight.web.model.MediaEditor
 
-fun AppScope.viewMediumUpdater(model: MediaEditor) {
+fun ViewScope.viewMediumUpdater(model: MediaEditor) {
     val routeFlow = model.stateFlow.mapDistinctNotNull { it.slug?.let { slug -> MediaRoute(slug) } }
     goOnRoute(routeFlow)
 
@@ -34,7 +34,7 @@ fun AppScope.viewMediumUpdater(model: MediaEditor) {
     }
 }
 
-fun AppScope.viewMediumUpdaterRoute() {
+fun ViewScope.viewMediumUpdaterRoute() {
     routeBlock<MediaUpdateRoute, MediaEdit>(
         portal = portal,
         provideData = { route ->
@@ -46,7 +46,7 @@ fun AppScope.viewMediumUpdaterRoute() {
     }
 }
 
-fun AppScope.goOnRoute(routeFlow: Flow<AppRoute>) {
+fun ViewScope.goOnRoute(routeFlow: Flow<AppRoute>) {
     parentScope.launch {
         routeFlow.collect { route ->
             portal.go(route)

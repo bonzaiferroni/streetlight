@@ -8,26 +8,24 @@ import koala.html.heading3
 import koala.html.icon
 import koala.html.image
 import kotlinx.browser.document
-import kotlinx.html.InputType
 import kotlinx.html.onClick
 import org.w3c.dom.HTMLElement
 import streetlight.model.data.Star
 import streetlight.model.ui.StarDashRoute
 import streetlight.model.ui.StarRoute
-import streetlight.web.model.CredentialStore
 import streetlight.web.model.StarSession
 import streetlight.web.pages.HelmBar
 import streetlight.web.pages.StarHelm
 
-fun AppScope.queryAndWireStarHelm() {
+fun ViewScope.queryAndWireStarHelm() {
     val helmElement = document.body?.querySelector(StarHelm.HelmMenu) ?: error("star helm content not found")
     wireStarMenu(helmElement)
     val barElement = document.body?.querySelector(StarHelm.BarMenu) ?: error("star bar element not found")
     wireStarMenu(barElement)
 }
 
-fun AppScope.wireStarMenu(element: HTMLElement) {
-    wireBlock(element) {
+fun ViewScope.wireStarMenu(element: HTMLElement) {
+    wireBlock("star-menu", element) {
         starGate(
             openInitially = false,
             baseContent = {
@@ -41,7 +39,7 @@ fun AppScope.wireStarMenu(element: HTMLElement) {
 
 private val RowMod = modify(AlignItemsCenter, PaddingLeft3, JustifyContentEnd)
 
-private fun AppScope.starPanel(star: Star) {
+private fun ViewScope.starPanel(star: Star) {
     val session = app.get<StarSession>()
 
     column(modify(AlignItemsEnd)) {
@@ -77,7 +75,7 @@ private fun AppScope.starPanel(star: Star) {
     }
 }
 
-private fun AppScope.someonePanel(dialog: DialogElement) {
+private fun ViewScope.someonePanel(dialog: DialogElement) {
     column(modify(MinWidth32)) {
         row(RowMod) {
             heading3("Someone")

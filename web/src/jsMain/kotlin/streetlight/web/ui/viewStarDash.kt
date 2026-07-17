@@ -17,7 +17,7 @@ import streetlight.web.model.DataCache
 import streetlight.web.model.StarSession
 import streetlight.model.ui.toRoute
 
-fun AppScope.viewStarDash(star: Star) {
+fun ViewScope.viewStarDash(star: Star) {
     column(mod = BodyStyle.Mod) {
         tabs {
             tab("activity") {
@@ -30,7 +30,7 @@ fun AppScope.viewStarDash(star: Star) {
     }
 }
 
-fun AppScope.viewStarDashRoute() {
+fun ViewScope.viewStarDashRoute() {
     routeBlock<StarDashRoute>() {
         starGate { star ->
             viewStarDash(star)
@@ -38,7 +38,7 @@ fun AppScope.viewStarDashRoute() {
     }
 }
 
-private fun AppScope.activityContent(star: Star) {
+private fun ViewScope.activityContent(star: Star) {
     grid {
         section("galaxies") {
             request(api::readUserGalaxies) { galaxies ->
@@ -77,7 +77,7 @@ private fun AppScope.activityContent(star: Star) {
     }
 }
 
-private fun AppScope.sandboxContent(star: Star) {
+private fun ViewScope.sandboxContent(star: Star) {
     // val model = UserHub(renderScope, app.client.api)
     val userCache = app.get<DataCache>()
     val gate = app.get<StarSession>()

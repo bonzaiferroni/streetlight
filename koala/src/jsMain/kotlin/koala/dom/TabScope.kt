@@ -41,9 +41,9 @@ class TabScope<T: TagScope>(
         val element = elementCache.getOrNull(index) ?: error("tab not found: $index")
         val tab = tabs[index]
         when (receiver) {
-            is AppScope -> {
-                val tab = tab as Tab<AppScope>
-                element.replaceDynamicRender(receiver.app, receiver.parentScope, tab.content)
+            is ViewScope -> {
+                val tab = tab as Tab<ViewScope>
+                element.replaceDynamicRender("tab", receiver.app, receiver.parentScope, tab.content)
             }
             is TagScope -> {
                 element.append {

@@ -10,29 +10,27 @@ import koala.css.Transitioning
 import koala.css.addModifiers
 import koala.css.modify
 import koala.html.FlowBlockKey
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.dom.clear
 import kotlinx.html.DIV
-import kotlinx.html.classes
 import kotlinx.html.js.div
 import org.w3c.dom.HTMLDivElement
 import kotlin.time.Duration.Companion.milliseconds
 
-fun <State> AppScope.flowBlock(
+fun <State> ViewScope.flowBlock(
     flow: Flow<State>,
     modifiers: ModifierSet? = null,
+    name: String = "flowBlock",
     cacheElements: Boolean = false,
     config: (DIV.() -> Unit)? = null,
     onTransition: ((State) -> Unit)? = null,
-    block: AppScope.(State) -> Unit
+    block: ViewScope.(State) -> Unit
 ): HTMLDivElement {
     val magic = modifiers?.contains(Magic) ?: false
     val element = div {
         addModifiers(FlowBlockKey.Class, modifiers)
-        if (magic) {
-            classes += Magic.identifier
-        }
         config?.invoke(this)
     }
 
@@ -40,14 +38,12 @@ fun <State> AppScope.flowBlock(
     var renderedOnce = false
     val cache = mutableMapOf<State, RenderJob>()
 
-    launchEffect {
+    launchEffect("$name > launchEffect") {
         var currentValue: State? = null
         flow.collect { value ->
-            // do we need renderedOnce?
             if (renderedOnce && value == currentValue) return@collect
             renderedOnce = true
             if (!cacheElements) render?.job?.cancel()
-            currentValue = value
 
             fun appendRender() {
                 element.clear()
@@ -55,16 +51,17 @@ fun <State> AppScope.flowBlock(
                     it.elements.forEach { child ->
                         element.append(child)
                     }
-                } ?: createRenderJob(element, value, block)
+                } ?: createRenderJob(name, element, value, block)
 
                 if (cacheElements) {
                     cache[value] = render
                 }
+                currentValue = value
             }
 
             if (magic) {
                 val interval = KoalaTheme.MAGIC_INTERVAL.milliseconds
-                launch {
+                launch("$name > render") {
                     if (render != null) {
                         element.modify(Transitioning).unmodifyAfterFrame(Reveal)
                         delay(interval)
@@ -76,8 +73,14 @@ fun <State> AppScope.flowBlock(
                     element.unmodify(Transitioning)
                 }
             } else {
-                appendRender()
-                onTransition?.invoke(value)
+                try {
+                    appendRender()
+                    onTransition?.invoke(value)
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (e: Throwable) {
+                    launch("$name > render") { throw e }
+                }
             }
         }
     }

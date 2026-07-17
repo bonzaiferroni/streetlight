@@ -3,7 +3,6 @@ package streetlight.web.ui
 import kampfire.api.Password
 import kampfire.api.Username
 import kampfire.model.AccountType
-import koala.css.Accent
 import koala.css.*
 import koala.dom.*
 import koala.html.bulletsOf
@@ -17,7 +16,7 @@ import streetlight.web.model.PasswordEditor
 import streetlight.web.model.UserCreator
 import streetlight.web.model.UserCreatorState
 
-fun AppScope.guestRegistrationForm(model: UserCreator) {
+fun ViewScope.guestRegistrationForm(model: UserCreator) {
     form {
         formRow {
             column {
@@ -64,7 +63,7 @@ Guest accounts and user data are automatically deleted after 30 days without act
 If you decide to stick around, you can make the account permanent and more secure by adding a password. 
 """
 
-fun AppScope.fullRegistrationForm(model: UserCreator) {
+fun ViewScope.fullRegistrationForm(model: UserCreator) {
 
     form {
         formRow {
@@ -84,11 +83,11 @@ fun AppScope.fullRegistrationForm(model: UserCreator) {
     }
 }
 
-private fun AppScope.requirementsSection(model: UserCreator) = formSection("Requirements") {
+private fun ViewScope.requirementsSection(model: UserCreator) = formSection("Requirements") {
     minAgeToggle(model.minAgeField)
 }
 
-private fun AppScope.usernameSection(model: UserCreator) = formSection("Username") {
+private fun ViewScope.usernameSection(model: UserCreator) = formSection("Username") {
     row {
         textField(
             label = null,
@@ -103,14 +102,14 @@ private fun AppScope.usernameSection(model: UserCreator) = formSection("Username
     formBullets(null, "Between ${Username.MIN_LENGTH} and ${Username.MAX_LENGTH} characters.")
 }
 
-fun AppScope.minAgeToggle(
+fun ViewScope.minAgeToggle(
     field: StateField<Boolean>
 ) = column(modify(AlignItemsCenter)) {
     textBlock("To create an account, you must be 17 or older.", modify(TextAlignCenter))
     checkBox("I am ${UserCreatorState.MINIMUM_AGE} or older.", field.onValue, field.flow)
 }
 
-fun AppScope.emailFormSection(model: EmailEditor) = formSection("Email") {
+fun ViewScope.emailFormSection(model: EmailEditor) = formSection("Email") {
     textField("optional", model::setEmail, model.emailFlow, placeholder = "email")
     formBullets(
         null,
@@ -124,7 +123,7 @@ fun AppScope.emailFormSection(model: EmailEditor) = formSection("Email") {
 
 
 
-fun AppScope.passwordFormSection(model: PasswordEditor) = formSection("Password") {
+fun ViewScope.passwordFormSection(model: PasswordEditor) = formSection("Password") {
     textField(
         label = "password",
         flow = model.passwordFlow,

@@ -4,7 +4,7 @@ import koala.SiteImage
 import koala.dom.*
 import streetlight.web.model.FrontDesk
 
-fun AppScope.viewFrontDesk(model: FrontDesk) {
+fun ViewScope.viewFrontDesk(model: FrontDesk) {
     column(BodyStyle.Mod) {
         featureHeader("Help & Feedback", "The Front Desk", SiteImage.FrontDesk)
 
@@ -31,7 +31,7 @@ fun AppScope.viewFrontDesk(model: FrontDesk) {
     }
 }
 
-fun AppScope.viewFrontDeskRoute() {
+fun ViewScope.viewFrontDeskRoute() {
     val model = app.getFeedbackDesk(parentScope)
     viewFrontDesk(model)
 }
