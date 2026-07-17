@@ -70,8 +70,6 @@ fun viewApp() {
 
                 // td: reimplement as sidebar option
                 // omni.connect()
-
-                throw SandboxException()
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Throwable) {

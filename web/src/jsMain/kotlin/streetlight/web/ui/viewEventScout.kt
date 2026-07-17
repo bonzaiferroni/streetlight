@@ -59,9 +59,11 @@ fun ViewScope.viewEventScout(galaxy: Galaxy) {
 }
 
 fun ViewScope.viewEventScoutRoute() {
-    routeBlock<EventScoutRoute, Galaxy>({
-        api.readGalaxy(it.slug).handleResponse(toaster)
-    }) { galaxy ->
-        viewEventScout(galaxy)
+    starGate { star ->
+        routeBlock<EventScoutRoute, Galaxy>({
+            api.readGalaxy(it.slug).handleResponse(toaster)
+        }) { galaxy ->
+            viewEventScout(galaxy)
+        }
     }
 }

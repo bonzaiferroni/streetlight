@@ -34,22 +34,6 @@ fun ViewScope.viewSandbox() {
         }
     }
 
-    launchEffect("sandbox") {
-        var counter = 0
-        while (true) {
-            println(counter++)
-            delay(1.seconds)
-        }
-
-        launch {
-            // flow.collect
-        }
-
-        launch {
-            // flow.collect
-        }
-    }
-
     // throw SandboxException()
 }
 

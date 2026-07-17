@@ -16,7 +16,6 @@ kotlin {
         browser {
             commonWebpackConfig {
                 sourceMaps = true
-                devtool = "source-map"
             }
             distribution {
                 outputDirectory.set(projectDir.resolve("../www/js/streetlight"))

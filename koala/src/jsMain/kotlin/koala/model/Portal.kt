@@ -116,6 +116,7 @@ class Portal(
     }
 
     fun notifyWrecked() {
+        console.log("arr the ship wrecked")
         isWrecked = true
     }
 

@@ -16,23 +16,23 @@ import kotlinx.html.div
 fun FlowContent.popover(
     id: Id,
     anchor: PositionAnchor?,
-    modifiers: ModifierSet? = null,
+    mod: ModifierSet? = null,
     isManual: Boolean = false,
     block: DIV.() -> Unit
 ) {
     div {
-        configurePopover(id, anchor, modifiers, isManual, block)
+        configurePopover(id, anchor, mod, isManual, block)
     }
 }
 
 fun DIV.configurePopover(
     id: Id,
     anchor: PositionAnchor?,
-    modifiers: ModifierSet? = null,
+    mod: ModifierSet? = null,
     isManual: Boolean = false,
     block: DIV.() -> Unit
 ) {
-    addModifiers(PopoverKey.Class, modifiers)
+    addModifiers(PopoverKey.Class, mod)
     setId(id)
     anchor?.let {
         setStyle(
