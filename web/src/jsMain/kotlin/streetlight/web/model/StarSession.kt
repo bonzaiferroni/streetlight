@@ -6,6 +6,7 @@ import kampfire.model.LoginRequest
 import kampfire.model.MessageReceiver
 import kampfire.model.PrintLnReceiver
 import kampfire.model.handleResponse
+import koala.dom.launch
 import koala.model.tap
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
@@ -36,7 +37,7 @@ class StarSession(
     }
 
     fun signIn(request: LoginRequest, receiver: MessageReceiver) {
-        scope.launch {
+        scope.launch("sign-in") {
             if (api.login(request).handleResponse(receiver) ?: false) {
                 readUser(receiver)
             }
@@ -45,21 +46,21 @@ class StarSession(
 
     suspend fun readUser(receiver: MessageReceiver?) {
         api.validateLogin().handleResponse(receiver ?: PrintLnReceiver) { star ->
+            val star = star ?: return@handleResponse
             console.log("signed in: ${star.accountType}")
             state.set { it.copy(star = star) }
 
             // guest check in
             if (star.accountType == AccountType.Guest) {
-                scope.launch {
-                    runCatching { api.checkGuest() }
-                        .onFailure { console.log("guest check-in failed: $it") }
+                scope.launch("StarSession > check-guest") {
+                    api.checkGuest()
                 }
             }
         }
     }
 
     fun signOut() {
-        scope.launch {
+        scope.launch(::signOut) {
             api.logout()
             // userCache.reset()
             state.set { it.copy(star = null, signedOutAt = Clock.System.now()) }

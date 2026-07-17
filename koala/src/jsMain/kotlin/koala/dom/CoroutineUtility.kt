@@ -8,6 +8,7 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import kotlin.reflect.KFunction
 
 fun CoroutineScope.launch(
     name: String,
@@ -30,3 +31,10 @@ fun CoroutineScope.launch(
         }
     }
 }
+
+fun CoroutineScope.launch(
+    function: KFunction<*>,
+    receiver: MessageReceiver? = null,
+    message: String? = "Something went wrong.",
+    block: suspend CoroutineScope.() -> Unit,
+) = launch(function.name, receiver, message, block)

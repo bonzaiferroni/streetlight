@@ -9,6 +9,8 @@ object UserApi: ApiNode(ApiNode(ApiNode(null, "api"),
     "v1"
 ), "user") {
     object Login: PostEndpoint<LoginRequest, Boolean>(this) {
+
+
         object CheckGuest: GetEndpoint<Username?>(this)
     }
     object Refresh: PostEndpoint<Unit, Unit>(this)

@@ -153,7 +153,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
     }
 
     object Stars: ApiNode(this) {
-        object ValidateLogin: GetEndpoint<Star>(this)
+        object ValidateLogin: GetEndpoint<Star?>(this)
         object EditStar: PostEndpoint<StarEdit, Star>(this)
         object EditLight: PostEndpoint<EditLightRequest, Boolean>(this)
         object PendingEdits: GetEndpoint<List<EditLog>>(this)
