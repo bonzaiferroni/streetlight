@@ -30,7 +30,7 @@ val appModule = module {
     single { MainScope() + appExceptionHandler + LaunchTelemetry("App") }
     single { SiteConfig() }
     single { CredentialStore() }
-    single { FetchClient(get()) }
+    single { FetchClient() }
 
     // clients
     single { TransitClient(get()) }

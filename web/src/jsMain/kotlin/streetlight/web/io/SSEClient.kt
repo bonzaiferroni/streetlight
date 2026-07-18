@@ -7,7 +7,8 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.serializer
-import org.w3c.dom.EventSource
+import web.events.EventHandler
+import web.sse.EventSource
 
 class SSEClient<Message>(
     private val scope: CoroutineScope,
@@ -22,7 +23,7 @@ class SSEClient<Message>(
     fun connect() {
         scope.launch {
             val source = provideSource().also { source = it }
-            source.onmessage = { event ->
+            source.onmessage = EventHandler { event ->
                 scope.launch {
                     val message = decode(event.data as String) ?: return@launch
                     _itemFlow.emit(message)

@@ -11,12 +11,11 @@ compose-multiplatform = "1.9.0"
 compose-navigation = "2.9.0"
 exposedVersion = "1.2.0"
 junit = "4.13.2"
-kotlin = "2.3.20"
+kotlin = "2.4.10"
 kotlinxDatetime = "0.7.1"
 kotlinx-coroutines = "1.10.2"
 kotlinxHtml = "0.12.0"
 kotlinx-browser = "0.5.0"
-kotlinxHtmlJs = "0.12.0"
 kotlinxSerializationCbor = "1.11.0"
 kotlinxSerializationJson = "1.11.0"
 kotlinxCollectionsImmutable = "0.4.0"
@@ -58,7 +57,7 @@ kotlinx-collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collec
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinxDatetime" }
 kotlinx-browser = { module = "org.jetbrains.kotlinx:kotlinx-browser-wasm-js", version.ref = "kotlinx-browser" }
 kotlinx-html = { module = "org.jetbrains.kotlinx:kotlinx-html", version.ref = "kotlinxHtml" }
-kotlinx-html-js = { module = "org.jetbrains.kotlinx:kotlinx-html-js", version.ref = "kotlinxHtmlJs" }
+kotlinx-html-js = { module = "org.jetbrains.kotlinx:kotlinx-html-js", version.ref = "kotlinxHtml" }
 kotlinx-serialization-cbor = { module = "org.jetbrains.kotlinx:kotlinx-serialization-cbor", version.ref = "kotlinxSerializationCbor" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 ktor-client-apache = { module = "io.ktor:ktor-client-apache", version.ref = "ktor" }

@@ -46,6 +46,7 @@ kotlin {
 
         jsMain.dependencies {
             implementation(libs.kotlinx.html.js)
+            implementation(kotlinWrappers.browser)
             // implementation(npm("@js-joda/timezone", "2.23.0"))
         }
 

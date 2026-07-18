@@ -4,118 +4,79 @@ package streetlight.web.io
 
 import kampfire.api.Endpoint
 import kampfire.api.GetByIdEndpoint
-import kampfire.api.GetByTableIdEndpoint
 import kampfire.api.GetEndpoint
 import kampfire.api.PathBuilder
 import kampfire.api.PostEndpoint
 import kampfire.api.QueryEndpoint
-import kampfire.api.TableId
 import kampfire.model.Outcome
+import kampfire.model.Problem
 import kampfire.model.Url
 import koala.external.FeedMessage
 import kotlinx.browser.window
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.await
+import kotlinx.coroutines.delay
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import org.khronos.webgl.Uint8Array
-import org.w3c.dom.EventSource
-import org.w3c.dom.WebSocket
-import org.w3c.fetch.DEFAULT
-import org.w3c.fetch.FOLLOW
-import org.w3c.fetch.RequestCache
-import org.w3c.fetch.RequestCredentials
-import org.w3c.fetch.RequestInit
-import org.w3c.fetch.RequestMode
-import org.w3c.fetch.RequestRedirect
-import org.w3c.fetch.Response as FetchResponse
-import org.w3c.fetch.SAME_ORIGIN
-import org.w3c.files.Blob
-import streetlight.web.model.AuthClient
-import streetlight.web.model.CredentialStore
+import web.abort.AbortSignal
+import web.http.BodyInit
+import web.http.GET
+import web.http.Headers
+import web.http.POST
+import web.http.RequestCredentials
+import web.http.RequestInit
+import web.http.RequestMethod
+import web.http.RequestMode
+import web.http.RequestRedirect
+import web.http.Response
+import web.http.blob
+import web.http.fetch
+import web.http.sameOrigin
+import web.sockets.WebSocket
+import web.sse.EventSource
 import kotlin.js.json
 import kotlin.let
-import kotlin.text.ifEmpty
+import kotlin.time.Duration.Companion.milliseconds
 
-class FetchClient(
-    private val cred: CredentialStore
-) {
-    val authClient = AuthClient(cred)
-
+class FetchClient() {
     suspend inline fun <reified Returned, Endpoint : GetEndpoint<Returned>> get(
         endpoint: Endpoint,
         acceptEncoding: EncodingType? = null,
         noinline block: (PathBuilder.(Endpoint) -> Unit)? = null
-    ): Returned? =
-        authRequest(
-            method = "GET",
+    ): Outcome<Returned>? =
+        request(
+            method = RequestMethod.GET,
             path = resolvePath(endpoint, block),
             acceptEncoding = acceptEncoding
         ) { it.tryDecode(acceptEncoding) }
 
-    @Deprecated("use getApi")
-    suspend inline fun <Id, reified Returned> get(
-        endpoint: GetByIdEndpoint<Id, Returned>,
-        id: Id,
-    ): Returned? = authRequest("GET", "${endpoint.path}/$id") { it.tryDecodeText() }
-
-    @Deprecated("use getApi")
-    suspend inline fun <Id : TableId<*>, reified Returned> get(
-        endpoint: GetByTableIdEndpoint<Id, Returned>,
-        id: Id
-    ): Returned? = authRequest("GET", "${endpoint.path}/${id.value}") { it.tryDecodeText() }
-
-    @Deprecated("use getApi")
-    suspend inline fun <reified Sent, reified Returned> post(
-        endpoint: PostEndpoint<Sent, Returned>,
-        body: Sent,
-    ): Returned? = authRequest("POST", endpoint.path, Json.encodeToString(body)) { it.tryDecodeText() }
-
     suspend inline fun <reified Returned, Endpoint : GetEndpoint<Returned>> getApi(
         endpoint: Endpoint,
         noinline block: (PathBuilder.(Endpoint) -> Unit)? = null,
-    ): Outcome<Returned>? = authRequest(
-        method = "GET",
+    ): Outcome<Returned>? = request(
+        method = RequestMethod.GET,
         path = resolvePath(endpoint, block)
     ) { it.tryDecodeBytesResponse() }
 
     suspend inline fun <Id, reified Returned> getApi(
         endpoint: GetByIdEndpoint<Id, Returned>,
         id: Id,
-    ): Outcome<Returned>? = authRequest("GET", "${endpoint.path}/$id") { it.tryDecodeBytesResponse() }
+    ): Outcome<Returned>? = request(RequestMethod.GET, "${endpoint.path}/$id") { it.tryDecodeBytesResponse() }
 
     suspend inline fun <reified Sent, reified Returned> getApi(
         endpoint: QueryEndpoint<Sent, Returned>,
         query: String?
     ): Outcome<Returned>? {
         val url = if (!query.isNullOrEmpty()) "${endpoint.path}?$query" else endpoint.path
-        return authRequest("GET", url) { it.tryDecodeBytesResponse() }
+        return request(RequestMethod.GET, url) { it.tryDecodeBytesResponse() }
     }
 
     suspend inline fun <reified Sent, reified Returned> postApi(
         endpoint: PostEndpoint<Sent, Returned>,
         body: Sent,
     ): Outcome<Returned>? =
-        authRequest("POST", endpoint.path, Json.encodeToString(body)) { it.tryDecodeBytesResponse() }
-
-    @Deprecated("intended to be a general purpose request function but it is not working")
-    suspend fun request(
-        endpoint: Endpoint<*, *>,
-        encodingType: EncodingType,
-        acceptEncoding: EncodingType,
-    ): FetchResponse {
-        val headers = json(
-            "Content-Type" to encodingType.headerValue,
-            "Accept" to acceptEncoding.headerValue
-        )
-        return window.fetch(
-            endpoint.path,
-            RequestInit(
-                method = endpoint.method?.value ?: error("method not found"),
-                headers = headers,
-                credentials = RequestCredentials.SAME_ORIGIN,
-            )
-        ).await()
-    }
+        request(RequestMethod.POST, endpoint.path, BodyInit(Json.encodeToString(body))) { it.tryDecodeBytesResponse() }
 
     suspend inline fun <reified Returned> getProtobuf(
         path: String,
@@ -174,45 +135,60 @@ class FetchClient(
         return builder.build()
     }
 
-    suspend fun <T> authRequest(
-        method: String,
+    suspend fun <T> request(
+        method: RequestMethod,
         path: String,
-        body: dynamic? = null,
+        body: BodyInit? = null,
         contentType: String = "application/json",
         acceptEncoding: EncodingType? = null,
-        handleResponse: suspend (FetchResponse) -> T
-    ): T? {
-        val fetchWithJwt: suspend () -> FetchResponse = {
-            val headers = json(
-                "Content-Type" to contentType,
-            )
-            acceptEncoding?.let {
-                headers["Accept"] = it.headerValue
-            }
-            val request = defaultRequest(
+        maxAttempts: Int = 3,
+        handleResponse: suspend (Response) -> Outcome<T>?
+    ): Outcome<T>? {
+        val fetchRequest: suspend () -> Response = {
+            fetch(path, RequestInit(
                 method = method,
-                headers = headers,
+                headers = Headers().apply {
+                    append("Content-Type", contentType)
+                    acceptEncoding?.let { append("Accept", it.headerValue) }
+                },
                 body = body,
-            )
-            window.fetch(path, request).await()
+                mode = RequestMode.sameOrigin,
+                credentials = RequestCredentials.sameOrigin,
+                signal = AbortSignal.timeout(10_000.0),
+            ))
         }
 
-        var response = fetchWithJwt()
+        var response: Response? = null
+        var attempt = 0
+        while (response == null) {
+            attempt++
+            response = try {
+                fetchRequest()
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Throwable) {
+                console.log("retrying request")
+                if (attempt >= maxAttempts) {
+                    console.log("Unable to fetch request: ${e.message}")
+                    return Problem("Unable to make a request.")
+                }
+                delay((500L * attempt).milliseconds)
+                null
+            }
+        }
 
-        // authenticate on 401
         if (response.status == 401.toShort()) {
-            if (!authClient.authenticate()) return null
-            response = fetchWithJwt()
+            return Problem("Not authorized.")
         }
 
         return handleResponse(response)
     }
 
     suspend fun uploadBlob(postUrl: String, blobUrl: Url): Outcome<Url>? {
-        val response = window.fetch(blobUrl.value).await()
-        val blob: Blob = response.blob().await()
-        return authRequest(
-            method = "POST",
+        val response = fetch(blobUrl.value)
+        val blob = response.blob()
+        return request(
+            method = RequestMethod.POST,
             path = postUrl,
             body = blob,
             contentType = blob.type.ifEmpty { "application/octet-stream" }
@@ -222,18 +198,18 @@ class FetchClient(
     }
 }
 
-fun defaultRequest(
-    method: String,
-    headers: dynamic,
-    body: dynamic,
-) = RequestInit(
-    method = method,
-    headers = headers,
-    body = body,
-    cache = RequestCache.DEFAULT,
-    mode = RequestMode.SAME_ORIGIN,
-    redirect = RequestRedirect.FOLLOW,
-    credentials = RequestCredentials.SAME_ORIGIN,
-    referrerPolicy = "".asDynamic(),
-    integrity = "",
-)
+// fun defaultRequest(
+//     method: String,
+//     headers: dynamic,
+//     body: dynamic,
+// ) = RequestInit(
+//     method = method,
+//     headers = headers,
+//     body = body,
+//     cache = RequestCache.DEFAULT,
+//     mode = RequestMode.SAME_ORIGIN,
+//     redirect = RequestRedirect.FOLLOW,
+//     credentials = RequestCredentials.SAME_ORIGIN,
+//     referrerPolicy = "".asDynamic(),
+//     integrity = "",
+// )

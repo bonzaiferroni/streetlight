@@ -5,8 +5,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
-import org.w3c.dom.WebSocket
 import streetlight.model.data.ChatMessage
+import web.events.EventHandler
+import web.sockets.WebSocket
 
 class WebChatSocket(
     private val socket: WebSocket,
@@ -19,7 +20,7 @@ class WebChatSocket(
     val messageFlow: Flow<ChatMessage> = _messageFlow
 
     init {
-        socket.onmessage = { event ->
+        socket.onmessage = EventHandler({ event ->
             scope.launch {
                 val data = event.data
                 if (data is String) {
@@ -31,7 +32,7 @@ class WebChatSocket(
                     }
                 }
             }
-        }
+        })
     }
 
     fun send(message: ChatMessage) {

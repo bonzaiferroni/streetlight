@@ -10,12 +10,14 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.cbor.Cbor
 import kotlinx.serialization.serializer
-import org.khronos.webgl.ArrayBuffer
-import org.khronos.webgl.Int8Array
-import org.w3c.dom.WebSocket
-import org.khronos.webgl.set
-import org.w3c.dom.ARRAYBUFFER
-import org.w3c.dom.BinaryType
+import web.buffer.BinaryType
+import web.buffer.arraybuffer
+import web.events.EventHandler
+import web.sockets.WebSocket
+import js.buffer.ArrayBuffer
+import js.typedarrays.Int8Array
+import js.typedarrays.toByteArray
+import js.typedarrays.toInt8Array
 
 class SocketClient<Message, Request>(
     private val scope: CoroutineScope,
@@ -33,13 +35,12 @@ class SocketClient<Message, Request>(
     fun connect() {
         scope.launch {
             val socket = provideSocket().also { socket = it }
-            socket.binaryType = BinaryType.ARRAYBUFFER
-            socket.onmessage = { event ->
+            socket.binaryType = BinaryType.arraybuffer
+            socket.onmessage = EventHandler { event ->
                 scope.launch {
                     val data = event.data
                     if (data is ArrayBuffer) {
-                        val bytes = Int8Array(data).unsafeCast<ByteArray>()
-                        val message = decode(bytes) ?: return@launch
+                        val message = decode(Int8Array(data).toByteArray()) ?: return@launch
                         _itemFlow.emit(message)
                     }
                 }
@@ -55,14 +56,8 @@ class SocketClient<Message, Request>(
 
     fun send(request: Request) {
         val socket = socket ?: error("socket not connected: ${this::class.simpleName}")
-        val bytes = encode(request)
-        socket.send(bytes.toInt8Array().buffer)
+        socket.send(encode(request).toInt8Array())
     }
-
-    private fun ByteArray.toInt8Array(): Int8Array =
-        Int8Array(size).also { arr ->
-            for (i in indices) arr[i] = this[i]
-        }
 
     private fun encode(request: Request): ByteArray = requestSerializer?.let {
         cbor.encodeToByteArray(it, request)

@@ -5,9 +5,12 @@ import kampfire.model.GeoBounds
 import kampfire.model.GeoPoint
 import kotlinx.browser.window
 import kotlinx.coroutines.await
-import org.w3c.fetch.RequestInit
 import streetlight.model.external.OSMLocation
 import streetlight.model.external.OSMQuery
+import streetlight.web.io.tryDecodeTextResponse
+import web.http.Headers
+import web.http.RequestInit
+import web.http.fetch
 import kotlin.js.json
 
 // acceptable use policy: https://operations.osmfoundation.org/policies/nominatim/
@@ -18,7 +21,7 @@ class OSMClient() {
         val url = "https://nominatim.openstreetmap.org/reverse" +
                     "?lat=${point.lat}&lon=${point.lng}&format=jsonv2&addressdetails=1&extratags=1"
 
-        val response = window.fetch(url, RequestInit(headers = headers)).await()
+        val response = fetch(url, RequestInit(headers = headers))
 
         return response.tryDecodeTextResponse()
     }
@@ -26,7 +29,7 @@ class OSMClient() {
     suspend fun readLocations(query: OSMQuery): Outcome<List<OSMLocation>>? {
         val url = "https://nominatim.openstreetmap.org/search?" + query.toQuery()
 
-        val response = window.fetch(url, RequestInit(headers = headers)).await()
+        val response = fetch(url, RequestInit(headers = headers))
 
         return response.tryDecodeTextResponse()
     }
@@ -52,16 +55,15 @@ class OSMClient() {
 
         val url = "https://nominatim.openstreetmap.org/search?$params"
 
-        val response = window.fetch(url, RequestInit(headers = headers)).await()
+        val response = fetch(url, RequestInit(headers = headers))
 
         return response.tryDecodeTextResponse()
     }
 }
 
-private val headers = json(
-    "Accept" to "application/json",
-    "User-Agent" to "Streetlight/1.0" //  (contact: you@example.com)
-)
+private val headers = Headers().apply {
+    append("Accept", "application/json")
+}
 
 fun OSMQuery.toQuery() = listOfNotNull(
     amenity?.let { "amenity=${encodeURIComponent(it)}" },

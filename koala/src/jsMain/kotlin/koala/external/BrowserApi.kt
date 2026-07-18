@@ -1,5 +1,6 @@
 package koala.external
 
+import io.ktor.client.fetch.AbortSignal
 import kotlinx.js.JsPlainObject
 import org.w3c.dom.Element
 

@@ -6,9 +6,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
-import org.w3c.dom.WebSocket
 import streetlight.model.data.Spirit
 import streetlight.model.data.SpiritFrame
+import web.events.EventHandler
+import web.sockets.WebSocket
 
 class SpiritSocket(
     private val api: ApiClient,
@@ -23,7 +24,7 @@ class SpiritSocket(
     fun connect(spirit: Spirit) {
         this.spirit = spirit
         val socket = api.connectSpiritVision().also { this.socket = it }
-        socket.onmessage = { event ->
+        socket.onmessage = EventHandler { event ->
             scope.launch {
                 val data = event.data
                 if (data is String) {
@@ -32,7 +33,7 @@ class SpiritSocket(
                 }
             }
         }
-        socket.onopen = {
+        socket.onopen = EventHandler {
             socket.send(SpiritFrame.Initial(spirit).encode())
         }
     }
