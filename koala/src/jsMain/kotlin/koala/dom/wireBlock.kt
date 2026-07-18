@@ -25,7 +25,7 @@ fun ViewScope.wireBlock(
     block: ViewScope.() -> Unit
 ) {
     fun wireElement() {
-        replaceDynamicRender(name, element, block)
+        mountChildView(name, element, block)
     }
 
     if (wireOnView) {

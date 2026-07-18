@@ -14,7 +14,6 @@ import koala.dom.column
 import koala.dom.defaultMagic
 import koala.dom.itemsBlock
 import koala.dom.row
-import koala.dom.tab
 import koala.dom.tabs
 import koala.dom.textBlock
 import koala.dom.textField
@@ -25,7 +24,7 @@ import streetlight.web.model.MusicianHub
 fun ViewScope.viewMusicianHub(
     // user: BasicUserInfo,
 ) {
-    val model = MusicianHub(parentScope, api)
+    val model = MusicianHub(scope, api)
 
     column {
         tabs(Id("user-hub-tabs")) {

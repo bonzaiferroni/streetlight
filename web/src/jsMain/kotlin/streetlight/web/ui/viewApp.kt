@@ -2,6 +2,7 @@ package streetlight.web.ui
 
 import koala.core.addGlobalFunctions
 import koala.css.KoalaBody
+import koala.css.KoalaTheme
 import koala.css.Property
 import koala.dom.*
 import koala.model.Portal
@@ -17,6 +18,12 @@ import streetlight.web.layouts.LightControl
 import streetlight.web.model.TransitMap
 import streetlight.web.model.StarSession
 import koala.dom.launch
+import kotlinx.coroutines.delay
+import streetlight.model.ui.EarthRoute
+import streetlight.model.ui.GalaxyMapRoute
+import streetlight.model.ui.HomeRoute
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.seconds
 
 @OptIn(ExperimentalSerializationApi::class)
 fun viewApp() {
@@ -51,7 +58,7 @@ fun viewApp() {
 
                 val portalMount = document.getElementById(KoalaBody.PortalMount)
 
-                portalMount.renderRoot("app-root", scope, app) {
+                portalMount.mountRootView("app-root", scope, app) {
                     // renders routes from portal.routeFlow
                     appNavigation()
                     // shows user badge in upper right corner

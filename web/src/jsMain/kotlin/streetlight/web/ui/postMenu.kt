@@ -73,7 +73,7 @@ fun ViewScope.callPostMenu(postId: PostId, username: Username?) {
                     button("report", mod = modify(Zen))
                 }
                 dangerButton("remove", onClick = {
-                    parentScope.launch {
+                    scope.launch {
                         api.removePost(postId).handleResponse(toaster) {
                             portal.refresh()
                         }

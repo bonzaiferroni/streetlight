@@ -57,7 +57,7 @@ fun ViewScope.wireSwitch(
     }
 
     bindFlow?.let { flow ->
-        parentScope.launch {
+        scope.launch {
             flow.collect {
                 setOn(it)
             }

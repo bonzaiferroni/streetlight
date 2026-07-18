@@ -5,7 +5,7 @@ import kampfire.model.handleResponse
 import koala.dom.ViewScope
 import koala.dom.column
 import koala.dom.onView
-import koala.dom.replaceStaticRender
+import koala.dom.mountChildView
 
 fun <T> ViewScope.request(
     requestData: suspend () -> Outcome<T>?,
@@ -15,7 +15,7 @@ fun <T> ViewScope.request(
     element.onView {
         launchEffect {
             requestData().handleResponse(toaster) { data ->
-                element.replaceStaticRender(app, parentScope) {
+                this@request.mountChildView("request", element) {
                     content(data)
                 }
             }

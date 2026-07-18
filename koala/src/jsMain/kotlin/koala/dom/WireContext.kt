@@ -45,7 +45,7 @@ inline fun <reified Route: AppRoute, Data> ViewScope.wireRouteTo(
 
     context.block()
 
-    parentScope.launch {
+    scope.launch {
         portal.routeFlowOf<Route>().map(provideData).collect {
             context.state.set { it }
         }

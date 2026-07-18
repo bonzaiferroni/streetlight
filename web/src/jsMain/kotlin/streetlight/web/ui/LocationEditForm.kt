@@ -15,7 +15,7 @@ fun ViewScope.locationEditFormBody(model: LocationEditor) = formBodyProto {
 fun ViewScope.locationDetailsForm(model: LocationEditor) = formCardSection("Location Details") {
     formPart("What is the name of the place?") {
         formTextField("title", model::setName, model.nameFlow, maxLength = 50)
-            .flowValid(LocationProperty.Name, model.validityFlow, parentScope)
+            .flowValid(LocationProperty.Name, model.validityFlow, scope)
     }
     formPart("Where is it?") {
         row {
@@ -54,7 +54,7 @@ fun ViewScope.locationWebsiteForm(model: LocationEditor) = formCardSection("Webs
         row(modify(JustifyContentEnd)) {
             messageBox(model.websiteMessage, modify(Magic))
             button("🤖 read website", onClick = model::readWebsite)
-                .flowIsWorking(model.websiteMessage.isWorkingFlow, parentScope)
+                .flowIsWorking(model.websiteMessage.isWorkingFlow, scope)
         }
     }
 }

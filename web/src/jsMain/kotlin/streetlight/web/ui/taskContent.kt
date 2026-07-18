@@ -20,7 +20,7 @@ fun ViewScope.taskContent(task: TaskContent) {
 
 fun ViewScope.editTaskContent(task: EditTaskContent) {
     val edit = task.editLog.recordEdit as? LocationEdit ?: return
-    val editor = app.getLocationEditor(edit, parentScope)
+    val editor = app.getLocationEditor(edit, scope)
     column {
         textBlock("Check to make sure this information is complete.")
         locationEditFormBody(editor)

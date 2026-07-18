@@ -1,9 +1,10 @@
 package koala.core
 
+import koala.dom.View
+import koala.dom.ViewScope
 import koala.dom.getPath
 import kotlinx.coroutines.CoroutineExceptionHandler
 import org.w3c.dom.Element
-import org.w3c.dom.HTMLElement
 import kotlin.coroutines.AbstractCoroutineContextElement
 import kotlin.coroutines.CoroutineContext
 
@@ -11,18 +12,18 @@ val appExceptionHandler = CoroutineExceptionHandler { context, throwable ->
     try {
         throwable.asDynamic().message = buildString {
             appendLine(throwable.message ?: "[No message]")
-            val scope = context[ScopeTelemetry]
-            scope?.let { telemetry ->
-                val path = telemetry.getPath()
-                append("Scope: ")
+            val viewTelemetry = context[ViewTelemetry]
+            viewTelemetry?.let { telemetry ->
+                val path = telemetry.view.getPath()
+                append("View: ")
                 appendLine(path)
             }
-            val launch = context[LaunchTelemetry]
-            launch?.let { telemetry ->
+            val launchTelemetry = context[LaunchTelemetry]
+            launchTelemetry?.let { telemetry ->
                 append("Launch: ")
                 appendLine(telemetry.name)
             }
-            (launch?.element ?: scope?.element)?.let { element ->
+            (launchTelemetry?.element ?: viewTelemetry?.view?.mount)?.let { element ->
                 val elementPath = element.getPath()
                 append("Element: ")
                 appendLine(elementPath)
@@ -44,21 +45,13 @@ class LaunchTelemetry(
     companion object Key : CoroutineContext.Key<LaunchTelemetry>
 }
 
-class ScopeTelemetry(
-    val name: String,
-    val element: Element? = null,
-    val parent: ScopeTelemetry? = null,
+class ViewTelemetry(
+    val view: View,
 ) : AbstractCoroutineContextElement(Key) {
-    companion object Key : CoroutineContext.Key<ScopeTelemetry>
+    companion object Key : CoroutineContext.Key<ViewTelemetry>
 }
 
-fun ScopeTelemetry.getPath(limit: Int = Int.MAX_VALUE): String = buildString {
-    var count = 0
-    var current: ScopeTelemetry? = this@getPath
-    while (current != null) {
-        if (++count > limit) break
-        if (isNotEmpty()) insert(0, " > ")
-        insert(0, current.name)
-        current = current.parent
-    }
-}
+fun ViewScope.getPath(): String =
+    generateSequence(this) { it.parent }
+        .toList().asReversed()
+        .joinToString(" > ") { it.name }

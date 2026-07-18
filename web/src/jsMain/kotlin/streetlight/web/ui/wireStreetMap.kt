@@ -13,7 +13,7 @@ fun ViewScope.wireStreetMap() {
     val cache = app.get<DataCache>()
     val markerService = app.get<MarkerService>()
 
-    parentScope.launch {
+    scope.launch {
         portal.routeFlowOf<HomeRoute>().collect {
             val galaxyIds = cache.topGalaxies.getItems().map { it.galaxyId }
             // td: gather initial posts from json in html

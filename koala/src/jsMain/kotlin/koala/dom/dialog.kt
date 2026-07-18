@@ -12,13 +12,13 @@ import koala.css.modify
 import koala.html.DialogStyle
 import koala.html.filigree
 import koala.html.heading2
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.html.DIV
 import kotlinx.html.js.dialog
 import org.w3c.dom.HTMLDialogElement
+import kotlin.time.Duration.Companion.milliseconds
 
 fun ViewScope.dialog(
     title: String? = null,
@@ -37,7 +37,7 @@ fun ViewScope.dialog(
         // dialogContent(title, ::closeDialog, content)
     }
 
-    return DialogElement(element, onClose, app, parentScope).also { dialog ->
+    return DialogElement(element, onClose, this).also { dialog ->
         content?.let {
             dialog.updateContent(title, false, content)
         }
@@ -48,7 +48,7 @@ fun ViewScope.dialog(
             }
         })
 
-        parentScope.launch {
+        scope.launch {
             stateFlow?.collect {
                 if (it) dialog.open() else dialog.close()
             }
@@ -76,17 +76,16 @@ private fun TagScope.dialogContent(
 class DialogElement(
     val element: HTMLDialogElement,
     private val onClose: (() -> Unit)? = null,
-    private val app: AppContainer,
-    private val parentScope: CoroutineScope,
+    private val view: ViewScope,
 ) {
     fun open() = this.also {
         element.open()
     }
 
     fun close() {
-        parentScope.launch {
+        view.scope.launch {
             element.unmodify(Reveal)
-            delay(200)
+            delay(200.milliseconds)
             element.close()
             onClose?.invoke()
         }
@@ -97,7 +96,7 @@ class DialogElement(
         open: Boolean,
         content: ViewScope.(DialogElement) -> Unit,
     ) {
-        element.replaceDynamicRender("dialog", app, parentScope) {
+        view.mountChildView("dialog", element) {
             dialogContent(title) {
                 content(this@DialogElement)
             }

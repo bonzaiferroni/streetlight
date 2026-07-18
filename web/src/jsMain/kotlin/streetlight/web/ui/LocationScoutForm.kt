@@ -10,7 +10,7 @@ fun ViewScope.locationScoutForm(model: LocationScout) = formSectionLegacy("Find 
     val indexFlow = model.modeFlow.map { it.ordinal }
 
     tabs(
-        tabFlow = indexFlow,
+        indexFlow = indexFlow,
         onChangeTab = { model.setMode(SearchMode.entries[it]) },
         defaultTab = model.stateNow.mode.ordinal
     ) {

@@ -122,7 +122,7 @@ fun ViewScope.configureEnabledFlow(
     flow: Flow<Boolean>? = null,
 ) {
     flow?.let {
-        parentScope.launch {
+        scope.launch {
             it.collect { isEnabled ->
                 element.disabled = !isEnabled
             }

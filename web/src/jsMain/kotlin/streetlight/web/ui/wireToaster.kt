@@ -9,7 +9,7 @@ import streetlight.web.pages.AppBody
 fun ViewScope.wireToaster() {
     val model = app.get<Toaster>()
 
-    replaceDynamicRender(AppBody.ToasterId) {
+    mountChildView(AppBody.ToasterId) {
         column(modify(Padding2)) {
             itemsBlock(model.messagesFlow, modify(Magic, SlideLeft)) { message ->
                 val typeMod = message.messageType.toModifier()

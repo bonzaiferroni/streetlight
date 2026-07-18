@@ -4,7 +4,6 @@ import kampfire.model.handleResponse
 import koala.dom.ViewScope
 import koala.dom.column
 import koala.dom.routeBlock
-import koala.dom.tab
 import koala.dom.tabs
 import koala.dom.textBlock
 import streetlight.model.data.EventEdit
@@ -16,7 +15,7 @@ import streetlight.model.ui.EventUpdateRoute
 
 fun ViewScope.viewEventUpdater(content: EventUpdaterContent, star: Star) {
     val edit = content.event.toEdit()
-    val model = edit.let { app.getEventEditor(it, parentScope) }
+    val model = edit.let { app.getEventEditor(it, scope) }
 
     tabs {
         tab("edit") {

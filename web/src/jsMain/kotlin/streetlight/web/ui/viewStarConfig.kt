@@ -6,7 +6,6 @@ import koala.LottieFile
 import koala.dom.ViewScope
 import koala.dom.column
 import koala.dom.routeBlock
-import koala.dom.tab
 import koala.dom.tabs
 import koala.dom.textBlock
 import streetlight.model.data.StarEdit
@@ -44,7 +43,7 @@ fun ViewScope.viewStarConfigRoute() {
             val info = api.readIdentityInfo().handleResponse(toaster) ?: return@routeBlock null
             star.toEdit(info)
         }) { edit ->
-            val model = app.getStarEditor(edit, parentScope)
+            val model = app.getStarEditor(edit, scope)
             viewStarConfig(model)
         }
     }

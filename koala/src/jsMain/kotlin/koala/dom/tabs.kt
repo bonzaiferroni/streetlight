@@ -10,26 +10,26 @@ import kotlinx.html.js.p
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 
-fun <T : TagScope> T.tabs(
+fun ViewScope.tabs(
     id: Id? = null,
     mod: ModifierSet? = null,
     viewportMod: ModifierSet? = null,
     onChangeTab: ((Int) -> Unit)? = null,
-    tabFlow: Flow<Int>? = null,
+    indexFlow: Flow<Int>? = null,
     defaultTab: Int? = null,
-    content: TabScope<T>.() -> Unit,
+    content: TabScope.() -> Unit,
 ): HTMLDivElement {
-    val scope = TabScope(content = content)
+    val tabScope = TabScope(content = content)
     var viewport: HTMLElement? = null
 
     val root = column(id, modify(TabClass.tabs, mod)) {
-        tabsHeader(scope)
+        tabsHeader(tabScope)
         viewport = tabsViewport(viewportMod)
     }
 
-    scope.build(viewport!!)
+    tabScope.build(viewport!!)
 
-    var currentTab = defaultTab ?: scope.tabs.firstOrNull()?.label
+    var currentTab = defaultTab ?: tabScope.tabs.firstOrNull()?.label
 
     defaultTab?.let {
         root.setAttribute(Attribute.TabIndex.to(it))
@@ -44,18 +44,14 @@ fun <T : TagScope> T.tabs(
         }
     }
 
-    if (this is ViewScope) {
-        tabFlow?.let { flow ->
-            parentScope.launch {
-                flow.collect { name ->
-                    if (name == currentTab) return@collect
-                    currentTab = name
-                    root.setAttribute(Attribute.TabIndex.to(name))
-                }
+    indexFlow?.let { flow ->
+        scope.launch {
+            flow.collect { name ->
+                if (name == currentTab) return@collect
+                currentTab = name
+                root.setAttribute(Attribute.TabIndex.to(name))
             }
         }
-    } else {
-        if (tabFlow != null) error("tabFlow requires AppScope receiver")
     }
 
     initTabs(root, viewport)
@@ -63,7 +59,7 @@ fun <T : TagScope> T.tabs(
     return root
 }
 
-fun <T : TagScope> T.tabsHeader(tabScope: TabScope<T>) = div(modify(TabClass.header)) {
+fun ViewScope.tabsHeader(tabScope: TabScope) = div(modify(TabClass.header)) {
     tabScope.tabs.forEachIndexed { index, tab ->
         val button = p {
             addModifiers(TabClass.button)
@@ -74,7 +70,7 @@ fun <T : TagScope> T.tabsHeader(tabScope: TabScope<T>) = div(modify(TabClass.hea
             +tab.label
         }
         button.addEventListener("select-tab", {
-            tabScope.renderTab(this@tabsHeader, index)
+            tabScope.createTab(this@tabsHeader, index)
         })
     }
 }

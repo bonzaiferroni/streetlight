@@ -6,7 +6,6 @@ import koala.dom.button
 import koala.dom.dialog
 import koala.dom.dialogCard
 import koala.dom.flowBlock
-import koala.dom.tab
 import koala.dom.tabs
 import koala.dom.textBlock
 import streetlight.model.data.Star
@@ -20,7 +19,7 @@ fun ViewScope.starGate(
         when (user) {
             null -> {
                 val dialog = dialog("Sign In") {
-                    val model = app.getUserCreator(parentScope)
+                    val model = app.getUserCreator(scope)
                     tabs { // mod = modify(Width64)
                         tab("guest") {
                             dialogCard {

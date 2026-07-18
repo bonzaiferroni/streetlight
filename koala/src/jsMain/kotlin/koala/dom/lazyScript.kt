@@ -20,7 +20,7 @@ fun ViewScope.lazyScript(
         launchEffect {
             ScriptLoader.load(src)
             onLoad()
-            element.replaceStaticRender(app, parentScope, content)
+            this@lazyScript.mountChildView("lazy-script", element, content)
         }
     }
 }

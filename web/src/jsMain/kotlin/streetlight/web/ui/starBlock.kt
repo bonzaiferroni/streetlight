@@ -31,7 +31,7 @@ fun ViewScope.starBlock(
 
     val currentRoute = portal.stateNow.route
 
-    parentScope.launch {
+    scope.launch {
         gate.starFlow
             .filterNotNull()
             .first()

@@ -23,7 +23,7 @@ fun ViewScope.viewTransitMap(
     val vehicleElements = mutableMapOf<String, MarkerStyle>()
     var markersVisible = false
 
-    parentScope.launch {
+    scope.launch {
         launch {
 //            streetMap.stateFlow.mapDistinct { it.zoom }.collect { zoom ->
 //                if (!markersVisible && zoom >= STOP_ZOOM) {

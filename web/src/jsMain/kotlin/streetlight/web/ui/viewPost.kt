@@ -2,7 +2,7 @@ package streetlight.web.ui
 
 import kampfire.model.handleResponse
 import koala.dom.ViewScope
-import koala.dom.replaceDynamicRender
+import koala.dom.mountChildView
 import koala.dom.routeBlock
 import koala.dom.shellBox
 import streetlight.model.data.Media
@@ -17,8 +17,8 @@ fun ViewScope.viewMedia(media: Media) {
         mediaShell(media)
     }
 
-    replaceDynamicRender(PostKey.TalkId) {
-        val talkLog = TalkLog(parentScope, media.mediaId.value, SpaceType.Post, api)
+    mountChildView(PostKey.TalkId) {
+        val talkLog = TalkLog(scope, media.mediaId.value, SpaceType.Post, api)
         viewTalkLog(talkLog)
     }
 }

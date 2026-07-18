@@ -51,7 +51,7 @@ fun ViewScope.textEditor(
     }
 
     flow?.let {
-        parentScope.launch {
+        scope.launch {
             flow.collect { value ->
                 val value = value?.value ?: ""
                 if (value != currentValue) {

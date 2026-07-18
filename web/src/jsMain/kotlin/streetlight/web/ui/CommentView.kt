@@ -101,7 +101,7 @@ class CommentView(
         if (isReplying) {
             rootBlock.modify(CommentClass.HasNestedContent)
             if (replyBlock.hasChildNodes()) return
-            replaceDynamicRender("comment-reply", replyBlock) {
+            mountChildView("comment-reply", replyBlock) {
                 commentEditor("reply", "".toMarkdown(), modify(AutoMagic, SlideLeft)) { text ->
                     val commentId = model.createComment(comment.commentId, text)
 
@@ -127,7 +127,7 @@ class CommentView(
         if (isEditing) {
             editBlock.unmodify(DisplayNone)
             if (editBlock.hasChildNodes()) return
-            replaceDynamicRender("comment-edit", editBlock) {
+            mountChildView("comment-edit", editBlock) {
                 commentEditor("edit", comment.text) { text ->
                     val isSuccess = model.updateComment(comment.commentId, text)
                     return@commentEditor when (isSuccess) {
@@ -165,7 +165,7 @@ class CommentView(
     }
 
     private fun ViewScope.renderStagedReplies(replies: List<CommentView>) {
-        prependRender("comment-replies", repliesBlock) {
+        prependChildView("comment-replies", repliesBlock) {
             replies.forEach { reply ->
                 with (reply) {
                     render()
@@ -192,7 +192,7 @@ class CommentView(
     private fun ViewScope.updateTextContent(text: Markdown) {
         comment = comment.copy(text = text)
 
-        replaceDynamicRender("comment-text", contentBlock) {
+        mountChildView("comment-text", contentBlock) {
             markdown(text)
         }
     }

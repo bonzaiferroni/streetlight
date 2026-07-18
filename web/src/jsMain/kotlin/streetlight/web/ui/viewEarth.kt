@@ -7,7 +7,6 @@ import koala.dom.*
 import koala.html.filigree
 import koala.html.heading3
 import kotlinx.browser.document
-import kotlinx.coroutines.delay
 import streetlight.model.ui.CityMap
 import streetlight.model.ui.CityMapRoute
 import streetlight.model.ui.EarthRoute
@@ -15,7 +14,6 @@ import streetlight.model.ui.GalaxyMapRoute
 import streetlight.web.model.Earth
 import streetlight.model.ui.GalaxyMap
 import streetlight.web.pages.AppBody
-import kotlin.time.Duration.Companion.milliseconds
 
 fun ViewScope.viewEarth(model: Earth) {
     box(EarthStyle.Container, modify(Size100P)) {
@@ -27,9 +25,9 @@ fun ViewScope.viewEarth(model: Earth) {
                 earthMenu(model)
                 // earthList(model)
                 earthFocus(model)
-            }.flowModifier(model.isFocusedFlow, EarthStyle.IsFocused, parentScope)
+            }.flowModifier(model.isFocusedFlow, EarthStyle.IsFocused, scope)
         }
-    }.flowModifier(model.isMovingFlow, EarthStyle.IsMoving, parentScope)
+    }.flowModifier(model.isMovingFlow, EarthStyle.IsMoving, scope)
 }
 
 fun ViewScope.viewEarthRoute() {
@@ -49,24 +47,19 @@ fun ViewScope.viewEarthRoute() {
                                 api.readCity(slug).handleResponse(toaster)?.let { CityMap(it) }
                             } ?: CityMap(null)
                         }
-                        element.replaceDynamicRender("earth", app, parentScope) {
-                            val model = app.getEarthMap(parentScope, map)
+                        this@viewEarthRoute.mountChildView("earth", element) {
+                            val model = app.getEarthMap(scope, map)
                             viewEarth(model)
                         }
                         element.modify(Reveal)
                         isVisible = true
                     }
                 }
-                else -> {
-                    if (isVisible) {
-                        element.unmodify(Reveal)
-                        isVisible = false
-                        delay(KoalaTheme.MAGIC_INTERVAL.milliseconds)
-                        clearRender(element)
-                    }
-                }
             }
         }
+    }
+    onDispose {
+        element.unmodify(Reveal)
     }
 }
 

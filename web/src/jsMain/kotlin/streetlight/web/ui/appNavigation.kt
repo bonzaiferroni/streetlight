@@ -23,6 +23,7 @@ fun ViewScope.appNavigation() {
         flow = portal.screenFlow,
         modifiers = modify(Magic, Blur),
         name = ::appNavigation.name,
+        // cacheElements = true,
         onTransition = {
             if (!portal.stateNow.isInitialRoute) {
                 window.setTimeout({

@@ -11,9 +11,9 @@ import koala.css.addModifiers
 import koala.css.modify
 import koala.html.FlowBlockKey
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.dom.clear
 import kotlinx.html.DIV
 import kotlinx.html.js.div
 import org.w3c.dom.HTMLDivElement
@@ -23,7 +23,6 @@ fun <State> ViewScope.flowBlock(
     flow: Flow<State>,
     modifiers: ModifierSet? = null,
     name: String = "flowBlock",
-    cacheElements: Boolean = false,
     config: (DIV.() -> Unit)? = null,
     onTransition: ((State) -> Unit)? = null,
     block: ViewScope.(State) -> Unit
@@ -34,39 +33,33 @@ fun <State> ViewScope.flowBlock(
         config?.invoke(this)
     }
 
-    var render: RenderJob? = null
+    var view: View? = null
     var renderedOnce = false
-    val cache = mutableMapOf<State, RenderJob>()
+    var launchJob: Job? = null
 
     launchEffect("$name > launchEffect") {
         var currentValue: State? = null
         flow.collect { value ->
             if (renderedOnce && value == currentValue) return@collect
             renderedOnce = true
-            if (!cacheElements) render?.job?.cancel()
+            view?.dispose()
 
-            fun appendRender() {
-                element.clear()
-                render = cache[value]?.also {
-                    it.elements.forEach { child ->
-                        element.append(child)
-                    }
-                } ?: createRenderJob(name, element, value, block)
-
-                if (cacheElements) {
-                    cache[value] = render
+            fun mountView() {
+                view = this@flowBlock.mountChildView(name, element) {
+                    block(value)
                 }
                 currentValue = value
             }
 
             if (magic) {
                 val interval = KoalaTheme.MAGIC_INTERVAL.milliseconds
-                launch("$name > render") {
-                    if (render != null) {
+                launchJob?.cancel()
+                launchJob = launch("$name > mountView") {
+                    if (view != null) {
                         element.modify(Transitioning).unmodifyAfterFrame(Reveal)
                         delay(interval)
                     }
-                    appendRender()
+                    mountView()
                     element.modify(Reveal)
                     onTransition?.invoke(value)
                     delay(interval)
@@ -74,7 +67,7 @@ fun <State> ViewScope.flowBlock(
                 }
             } else {
                 try {
-                    appendRender()
+                    mountView()
                     onTransition?.invoke(value)
                 } catch (e: CancellationException) {
                     throw e

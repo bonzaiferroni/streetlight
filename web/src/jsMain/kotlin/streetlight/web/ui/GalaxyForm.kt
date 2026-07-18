@@ -48,7 +48,7 @@ fun ViewScope.galaxyCityForm(model: GalaxyEditor) {
                     }
                 }
             }
-        }.flowDisplay(isLocalFlow, parentScope)
+        }.flowDisplay(isLocalFlow, scope)
     }
 }
 
@@ -68,7 +68,7 @@ fun ViewScope.galaxyNameForm(model: GalaxyEditor) {
                 flow = nameFlow,
                 footnote = nameCharacters,
                 maxLength = Slug.MAX_LENGTH
-            ).flowValid(GalaxyProperty.Name, model.validityFlow, parentScope)
+            ).flowValid(GalaxyProperty.Name, model.validityFlow, scope)
         }
         formPart(
             instructions = pathInstructions,
@@ -84,7 +84,7 @@ fun ViewScope.galaxyNameForm(model: GalaxyEditor) {
                 flow = slugFlow,
                 footnote = pathCharacters,
                 maxLength = Slug.MAX_LENGTH
-            ).flowValid(GalaxyProperty.Path, model.validityFlow, parentScope)
+            ).flowValid(GalaxyProperty.Path, model.validityFlow, scope)
         }
     }
 }

@@ -18,7 +18,7 @@ fun <Id> ViewScope.wireLights(
 ) {
     val pairs = root.queryAttributeAll(attribute)
 
-    parentScope.launch {
+    scope.launch {
         launch {
             // modify flame
             cache.lightsFlow.collect { lights ->

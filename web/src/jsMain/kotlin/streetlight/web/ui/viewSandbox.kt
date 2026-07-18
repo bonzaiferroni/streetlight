@@ -2,11 +2,9 @@ package streetlight.web.ui
 
 import koala.dom.*
 import koala.html.heading1
-import kotlinx.coroutines.delay
-import kotlin.time.Duration.Companion.seconds
 
 fun ViewScope.viewSandbox() {
-    val model = Sandbox(parentScope, api, toaster)
+    val model = Sandbox(scope, api, toaster)
 
     console.log("welcome to sandbox")
 

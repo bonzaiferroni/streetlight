@@ -71,7 +71,7 @@ inline fun <reified State> ViewScope.stageBlock(
         flowBlock(flow, modify(Magic, Blur), block = block)
     }
 
-    parentScope.launch {
+    scope.launch {
         flow.collect {
             selectElement(it)
         }

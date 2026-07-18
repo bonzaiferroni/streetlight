@@ -11,7 +11,7 @@ import streetlight.model.data.toEdit
 import streetlight.model.ui.GalaxyConfigRoute
 
 fun ViewScope.viewGalaxyConfig(edit: GalaxyEdit) {
-    val model = app.getGalaxyEditor(edit, parentScope)
+    val model = app.getGalaxyEditor(edit, scope)
 
     column {
         introSection("Galaxy Settings", lottie = LottieFile.ServerSync) {

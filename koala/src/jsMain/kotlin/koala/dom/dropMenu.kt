@@ -39,7 +39,7 @@ fun ViewScope.dropMenu(
     }
 
     flow?.let {
-        parentScope.launch {
+        scope.launch {
             flow.distinctUntilChanged().collect {
                 element.value = it
             }

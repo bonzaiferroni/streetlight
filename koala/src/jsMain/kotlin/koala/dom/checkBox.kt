@@ -41,7 +41,7 @@ fun ViewScope.checkBox(
     } as HTMLInputElement
 
     flow?.let {
-        parentScope.launch {
+        scope.launch {
             flow.distinctUntilChanged().collect {
                 element.checked = it
             }

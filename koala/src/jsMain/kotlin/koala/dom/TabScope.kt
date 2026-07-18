@@ -6,20 +6,12 @@ import koala.html.TabClass
 import kotlinx.html.dom.append
 import org.w3c.dom.HTMLElement
 
-fun <T: TagScope> TabScope<T>.tab(
-    label: String,
-    colorScheme: String? = null,
-    content: T.() -> Unit
-) {
-    add(label, colorScheme, content)
-}
-
-class TabScope<T: TagScope>(
+class TabScope(
     maxTabCount: Int = 5,
-    private val content: TabScope<T>.() -> Unit,
+    private val content: TabScope.() -> Unit,
 ) {
-    private val _tabs: MutableList<Tab<T>> = mutableListOf()
-    val tabs: List<Tab<T>> = _tabs
+    private val _tabs: MutableList<Tab> = mutableListOf()
+    val tabs: List<Tab> = _tabs
 
     private var elementCache = Array<HTMLElement?>(maxTabCount) { null }
     private var viewport: HTMLElement? = null
@@ -28,7 +20,11 @@ class TabScope<T: TagScope>(
         content()
     }
 
-    fun add(label: String, colorScheme: String?, content: T.() -> Unit) {
+    fun tab(
+        label: String,
+        colorScheme: String? = null,
+        content: ViewScope.() -> Unit
+    ) {
         _tabs.add(Tab(
             label = label,
             colorScheme = colorScheme,
@@ -37,20 +33,10 @@ class TabScope<T: TagScope>(
     }
 
     @Suppress("UNCHECKED_CAST")
-    internal fun createTab(receiver: T, index: Int) {
+    internal fun createTab(receiver: ViewScope, index: Int) {
         val element = elementCache.getOrNull(index) ?: error("tab not found: $index")
         val tab = tabs[index]
-        when (receiver) {
-            is ViewScope -> {
-                val tab = tab as Tab<ViewScope>
-                element.replaceDynamicRender("tab", receiver.app, receiver.parentScope, tab.content)
-            }
-            is TagScope -> {
-                element.append {
-                    tab.content(receiver)
-                }
-            }
-        }
+        receiver.mountChildView("tab", element, tab.content)
     }
 
     internal fun build(viewport: HTMLElement) {
@@ -62,18 +48,11 @@ class TabScope<T: TagScope>(
             }
         }
     }
-
-    internal fun renderTab(receiver: T, index: Int) {
-        val element = elementCache.getOrNull(index) ?: error("tabs not built")
-        if (element.childElementCount == 0) {
-            createTab(receiver, index)
-        }
-    }
 }
 
-data class Tab<T: TagScope>(
+data class Tab(
     val label: String,
     val id: Id = Id(label),
     val colorScheme: String?,
-    val content: T.() -> Unit
+    val content: ViewScope.() -> Unit
 )

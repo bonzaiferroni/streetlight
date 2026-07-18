@@ -13,8 +13,8 @@ import streetlight.web.model.LocationScoutStage
 
 fun ViewScope.viewLocationScout(galaxy: Galaxy) {
     // val model = app.getCoroutineScoped<GalaxyEditor>(null, renderScope)
-    val editor = app.getLocationEditor(LocationEdit(), parentScope)
-    val model = app.getLocationScout(galaxy, editor, parentScope)
+    val editor = app.getLocationEditor(LocationEdit(), scope)
+    val model = app.getLocationScout(galaxy, editor, scope)
     val routeFlow = model.stateFlow.mapDistinctNotNull { it.postId?.let { GalaxyRoute(galaxy.slug) } }
     goOnRoute(routeFlow)
 

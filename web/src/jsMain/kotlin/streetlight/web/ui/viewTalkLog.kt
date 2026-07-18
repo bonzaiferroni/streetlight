@@ -38,7 +38,7 @@ fun ViewScope.viewTalkLog(model: TalkLog) {
         treeRoot = column { }
     }
 
-    parentScope.launch {
+    scope.launch {
 
         launch {
             val comments = model.readHistory().handleResponse(toaster) ?: return@launch
@@ -67,7 +67,7 @@ fun ViewScope.viewTalkLog(model: TalkLog) {
 
 fun ViewScope.viewTalkRoute() {
     routeBlock<TalkRoute> { route ->
-        val model = TalkLog(parentScope, route.id, route.type, api)
+        val model = TalkLog(scope, route.id, route.type, api)
         viewTalkLog(model)
     }
 }
@@ -81,7 +81,7 @@ fun ViewScope.buildTree(model: TalkLog, treeRoot: HTMLElement, comments: List<Co
     }
     val roots = comments.filter { it.parentId == null }
 
-    replaceDynamicRender("comment-tree", treeRoot) {
+    mountChildView("comment-tree", treeRoot) {
         roots.forEach {
             val view = addCommentView(model, it, comments) ?: return@forEach
             with(view) {
@@ -97,14 +97,14 @@ fun ViewScope.growTree(model: TalkLog, treeRoot: HTMLElement, comment: Comment) 
         null -> {
             when (model.stateNow.sortBy) {
                 PostOrder.NewFirst -> {
-                    prependRender("comment", treeRoot) {
+                    prependChildView("comment", treeRoot) {
                         with (view) {
                             render()
                         }
                     }
                 }
                 PostOrder.OldFirst -> {
-                    appendRender("comment", treeRoot) {
+                    appendChildView("comment", treeRoot) {
                         with (view) {
                             render()
                         }
@@ -143,7 +143,7 @@ fun ViewScope.commentEditor(
             spacer(modify(Flex1))
             button("send", onClick = {
                 if (text.now.value.isEmpty()) return@button
-                parentScope.launch {
+                scope.launch {
                     val resultText = send(text.now)
                     if (resultText != null) {
                         text.set(resultText)

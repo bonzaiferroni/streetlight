@@ -8,7 +8,7 @@ import streetlight.web.model.SongProfile
 fun ViewScope.viewSongProfile() {
 
     flowBlock(portal.routeFlowOf<SongProfileRoute>()) { route ->
-        val model = SongProfile(route.songId, parentScope, api)
+        val model = SongProfile(route.songId, scope, api)
 
         column {
             row {

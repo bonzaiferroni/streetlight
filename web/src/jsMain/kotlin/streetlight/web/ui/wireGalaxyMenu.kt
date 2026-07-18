@@ -21,7 +21,7 @@ fun ViewScope.wireGalaxyMenu(
     val topGalaxies = result.value
     val element = result.element
 
-    parentScope.launch {
+    scope.launch {
         cache.galaxyLights.itemsFlow.collect { galaxies ->
             val galaxies = galaxies.takeIf { it.isNotEmpty() } ?: topGalaxies
             element.clear()

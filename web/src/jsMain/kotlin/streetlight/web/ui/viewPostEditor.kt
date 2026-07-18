@@ -41,13 +41,13 @@ fun ViewScope.viewMediumUpdaterRoute() {
             api.readMedia(route.slug).handleResponse(toaster) { it.toEdit() }
         }
     ) {
-        val editor = MediaEditor(it, parentScope, api, toaster)
+        val editor = MediaEditor(it, scope, api, toaster)
         viewMediumUpdater(editor)
     }
 }
 
 fun ViewScope.goOnRoute(routeFlow: Flow<AppRoute>) {
-    parentScope.launch {
+    scope.launch {
         routeFlow.collect { route ->
             portal.go(route)
         }
