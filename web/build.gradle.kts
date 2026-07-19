@@ -12,7 +12,7 @@ plugins {
 }
 
 kotlin {
-    js(IR) {
+    js {
         browser {
             commonWebpackConfig {
                 sourceMaps = true

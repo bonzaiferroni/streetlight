@@ -3,15 +3,11 @@ package streetlight.web.io
 import kampfire.model.Outcome
 import kampfire.model.GeoBounds
 import kampfire.model.GeoPoint
-import kotlinx.browser.window
-import kotlinx.coroutines.await
 import streetlight.model.external.OSMLocation
 import streetlight.model.external.OSMQuery
-import streetlight.web.io.tryDecodeTextResponse
 import web.http.Headers
 import web.http.RequestInit
 import web.http.fetch
-import kotlin.js.json
 
 // acceptable use policy: https://operations.osmfoundation.org/policies/nominatim/
 // docs: https://nominatim.org/release-docs/develop/api/Search/
@@ -23,7 +19,7 @@ class OSMClient() {
 
         val response = fetch(url, RequestInit(headers = headers))
 
-        return response.tryDecodeTextResponse()
+        return response.tryDecodeTextOutcome()
     }
 
     suspend fun readLocations(query: OSMQuery): Outcome<List<OSMLocation>>? {
@@ -31,7 +27,7 @@ class OSMClient() {
 
         val response = fetch(url, RequestInit(headers = headers))
 
-        return response.tryDecodeTextResponse()
+        return response.tryDecodeTextOutcome()
     }
 
     suspend fun readLocations(query: String, city: String? = null, bounds: GeoBounds? = null): Outcome<List<OSMLocation>>? {
@@ -57,7 +53,7 @@ class OSMClient() {
 
         val response = fetch(url, RequestInit(headers = headers))
 
-        return response.tryDecodeTextResponse()
+        return response.tryDecodeTextOutcome()
     }
 }
 

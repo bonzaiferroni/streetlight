@@ -62,23 +62,27 @@ class OutcomeSerializer<T>(
     override fun deserialize(decoder: Decoder): Outcome<T> {
         var message: String? = null
         var data: T? = null
+        var dataSet = false
 
         decoder.decodeStructure(descriptor) {
             while (true) {
                 when (val index = decodeElementIndex(descriptor)) {
                     0 -> message = decodeStringElement(descriptor, 0)
-                    1 -> data = decodeSerializableElement(descriptor, 1, dataSerializer)
+                    1 -> {
+                        data = decodeSerializableElement(descriptor, 1, dataSerializer)
+                        dataSet = true
+                    }
                     CompositeDecoder.DECODE_DONE -> break
                     else -> error("Unexpected index: $index")
                 }
             }
         }
 
-        return if (data != null) {
+        return if (dataSet) {
             @Suppress("UNCHECKED_CAST")
             Ok(data = data as T, message = message)
         } else {
-            Problem(message = message ?: "Unknown error")
+            Problem(message = message ?: "Expected data was null")
         }
     }
 }

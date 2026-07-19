@@ -9,7 +9,6 @@ import kampfire.model.OutcomeSerializer
 import kampfire.model.Ok
 import kampfire.model.Problem
 import koala.utils.jsonConfig
-import kotlinx.coroutines.await
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.cbor.Cbor
 import kotlinx.serialization.decodeFromByteArray
@@ -20,10 +19,10 @@ import streetlight.model.data.toRecordId
 import web.http.arrayBuffer
 import web.http.text
 
-suspend inline fun <reified Returned> Response.tryDecode(encoding: EncodingType?): Returned? {
+suspend inline fun <reified Returned> Response.tryDecode(encoding: EncodingType?): Outcome<Returned>? {
     return when (encoding) {
-        EncodingType.Cbor -> tryDecodeBytes()
-        EncodingType.Json, null -> tryDecodeText()
+        EncodingType.Cbor -> tryDecodeBytesOutcome()
+        EncodingType.Json, null -> tryDecodeTextOutcome()
     }
 }
 
@@ -33,7 +32,7 @@ suspend inline fun <reified Returned> Response.tryDecodeBytes(): Returned? {
     return Cbor.decodeFromByteArray<Returned>(bytes)
 }
 
-suspend inline fun <reified Returned> Response.tryDecodeTextResponse(): Outcome<Returned>? {
+suspend inline fun <reified Returned> Response.tryDecodeTextOutcome(): Outcome<Returned>? {
     val status = status.toInt()
     return when (status) {
         404 -> Problem("Not found")
@@ -73,7 +72,8 @@ suspend inline fun <reified Returned> Response.tryDecodeText(): Returned? {
     }
 }
 
-suspend inline fun <reified T> Response.tryDecodeBytesResponse(): Outcome<T>? {
+suspend inline fun <reified T> Response.tryDecodeBytesOutcome(): Outcome<T>? {
+    console.log("yer bytes")
     return when (status.toInt()) {
         200 -> {
             val buffer = arrayBuffer()

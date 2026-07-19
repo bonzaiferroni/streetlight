@@ -41,6 +41,8 @@ fun viewApp() {
         LightControl.ToggleFun to lightService::toggleLight
     ))
 
+    console.log("build three")
+
     with (app) {
         val scope: CoroutineScope = get()
         val gate: StarSession = get()

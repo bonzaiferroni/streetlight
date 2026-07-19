@@ -87,7 +87,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
     object Gtfs: ApiNode(this) {
         object VehiclePosition: GetEndpoint<Unit>(this, "VehiclePosition.pb")
         object Routes: GetEndpoint<AreaTransit>(this)
-        object TransitState: GetEndpoint<AreaTransitState>(this) {
+        object TransitState: GetEndpoint<AreaTransitState?>(this) {
             val timestamp = longParamOf("timestamp")
         }
     }

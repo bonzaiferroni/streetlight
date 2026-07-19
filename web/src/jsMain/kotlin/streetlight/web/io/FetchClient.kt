@@ -28,14 +28,12 @@ import web.http.RequestCredentials
 import web.http.RequestInit
 import web.http.RequestMethod
 import web.http.RequestMode
-import web.http.RequestRedirect
 import web.http.Response
 import web.http.blob
 import web.http.fetch
 import web.http.sameOrigin
 import web.sockets.WebSocket
 import web.sse.EventSource
-import kotlin.js.json
 import kotlin.let
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -49,7 +47,7 @@ class FetchClient() {
             method = RequestMethod.GET,
             path = resolvePath(endpoint, block),
             acceptEncoding = acceptEncoding
-        ) { it.tryDecode(acceptEncoding) }
+        ) { it.tryDecodeBytesOutcome() }
 
     suspend inline fun <reified Returned, Endpoint : GetEndpoint<Returned>> getApi(
         endpoint: Endpoint,
@@ -57,26 +55,26 @@ class FetchClient() {
     ): Outcome<Returned>? = request(
         method = RequestMethod.GET,
         path = resolvePath(endpoint, block)
-    ) { it.tryDecodeBytesResponse() }
+    ) { it.tryDecodeBytesOutcome() }
 
     suspend inline fun <Id, reified Returned> getApi(
         endpoint: GetByIdEndpoint<Id, Returned>,
         id: Id,
-    ): Outcome<Returned>? = request(RequestMethod.GET, "${endpoint.path}/$id") { it.tryDecodeBytesResponse() }
+    ): Outcome<Returned>? = request(RequestMethod.GET, "${endpoint.path}/$id") { it.tryDecodeBytesOutcome() }
 
     suspend inline fun <reified Sent, reified Returned> getApi(
         endpoint: QueryEndpoint<Sent, Returned>,
         query: String?
     ): Outcome<Returned>? {
         val url = if (!query.isNullOrEmpty()) "${endpoint.path}?$query" else endpoint.path
-        return request(RequestMethod.GET, url) { it.tryDecodeBytesResponse() }
+        return request(RequestMethod.GET, url) { it.tryDecodeBytesOutcome() }
     }
 
     suspend inline fun <reified Sent, reified Returned> postApi(
         endpoint: PostEndpoint<Sent, Returned>,
         body: Sent,
     ): Outcome<Returned>? =
-        request(RequestMethod.POST, endpoint.path, BodyInit(Json.encodeToString(body))) { it.tryDecodeBytesResponse() }
+        request(RequestMethod.POST, endpoint.path, BodyInit(Json.encodeToString(body))) { it.tryDecodeBytesOutcome() }
 
     suspend inline fun <reified Returned> getProtobuf(
         path: String,
@@ -193,7 +191,7 @@ class FetchClient() {
             body = blob,
             contentType = blob.type.ifEmpty { "application/octet-stream" }
         ) {
-            it.tryDecodeBytesResponse()
+            it.tryDecodeBytesOutcome()
         }
     }
 }
