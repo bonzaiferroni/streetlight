@@ -39,6 +39,8 @@ interface AppScreen {
     val pathRoot: String
     val routeParse: RouteParse
     val screenId: String
+    val hasShell: Boolean
+    val retainWithinScreen: Boolean
 }
 
 private fun String.dropStart(char: Char) = if (startsWith(char)) drop(1) else this

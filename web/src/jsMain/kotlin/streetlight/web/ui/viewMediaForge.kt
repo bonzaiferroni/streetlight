@@ -5,7 +5,7 @@ import koala.css.*
 import koala.dom.*
 import koala.html.filigree
 import koala.html.heading1
-import koala.model.mapDistinctNotNull
+import koala.model.tapNotNull
 import kotlinx.html.js.h3
 import streetlight.model.data.Galaxy
 import streetlight.model.data.MediaEdit
@@ -15,7 +15,7 @@ import streetlight.model.ui.MediaRoute
 fun ViewScope.viewMediaForge(galaxy: Galaxy?) {
     println(galaxy) // ey
     val model = app.getMediaEditor(MediaEdit(), scope)
-    goOnRoute(model.stateFlow.mapDistinctNotNull { it.slug?.let { slug -> MediaRoute(slug) }  })
+    goOnRoute(model.stateFlow.tapNotNull { it.slug?.let { slug -> MediaRoute(slug) }  })
 
     section(modify(Column)) {
         heading1(galaxy?.name ?: "Profile Post", modify(TextAlignCenter))

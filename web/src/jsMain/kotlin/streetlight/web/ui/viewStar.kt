@@ -1,6 +1,7 @@
 package streetlight.web.ui
 
 import kampfire.model.handleResponse
+import koala.dom.RouteScope
 import koala.dom.ViewScope
 import koala.dom.routeBlock
 import koala.dom.shellBox
@@ -15,11 +16,8 @@ fun ViewScope.viewStar(content: StarContent) {
     }
 }
 
-fun ViewScope.viewStarRoute() {
-    routeBlock<StarRoute, StarContent>(portal, { route ->
-        readIsland<StarContent>(StarShell.islandId) { it.star.username == route.username } ?:
-            api.readStarContent(route.username).handleResponse(toaster)
-    }) { content ->
+fun RouteScope.viewStarRoute() {
+    routeBlock<StarRoute, StarContent>(StarShell.islandId) { content ->
         viewStar(content)
     }
 }

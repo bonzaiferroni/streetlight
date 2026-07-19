@@ -24,8 +24,10 @@ import kotlin.uuid.Uuid
 enum class Screen(
     override val routeParse: RouteParse,
     pathRoot: String? = null,
+    override val hasShell: Boolean = false,
+    override val retainWithinScreen: Boolean = false,
 ): AppScreen {
-    Home(StaticParse { HomeRoute }, ""),
+    Home(StaticParse { HomeRoute }, "", true),
     MediaUpdate(UuidParse { MediaUpdateRoute(it.toRecordId()) }),
     Sandbox(StaticParse { SandboxRoute }),
     Chat(StaticParse { ChatRoute }),
@@ -37,24 +39,24 @@ enum class Screen(
 
     // star
     TalentProfile(UuidParse { TalentProfileRoute(TalentId(it)) }),
-    Star(UsernameParse { StarRoute(it) }, "s"),
+    Star(UsernameParse { StarRoute(it) }, "s", true),
     StarDash(StaticParse { StarDashRoute }),
     StarConfig(StaticParse { StarConfigRoute }),
 
     // location
-    Location(SlugParse { LocationRoute(it) }, "l"),
+    Location(SlugParse { LocationRoute(it) }, "l", true),
     LocationAdmin(UuidParse { LocationAdminRoute(LocationId(it)) }),
     LocationScout(SlugParse { LocationScoutRoute(it) }),
     LocationUpdate(SlugParse { LocationUpdateRoute(it) }),
 
     // galaxy
-    Galaxy(SlugParse { GalaxyRoute(it) }, "g"),
+    Galaxy(SlugParse { GalaxyRoute(it) }, "g", true),
     GalaxyFoundry(StaticParse { GalaxyFoundryRoute }),
     GalaxyConfig(SlugParse { GalaxyConfigRoute(it) } ),
     GalaxyList(StaticParse { GalaxyListRoute }, "galaxies"),
 
     // event
-    Event(SlugParse { EventRoute(it) }, "e"),
+    Event(SlugParse { EventRoute(it) }, "e", true),
     UpdateEvent(SlugParse { EventUpdateRoute(it) }),
 
     EventScout(SlugParse { EventScoutRoute(it) }),
@@ -65,7 +67,7 @@ enum class Screen(
     Talk(UuidParse { TalkRoute(GalaxyId(it)) }),
 
     // earth
-    Earth(parseEarthRoute),
+    Earth(parseEarthRoute, retainWithinScreen = true),
 
     // city
     City(SlugParse { CityRoute(it) }),

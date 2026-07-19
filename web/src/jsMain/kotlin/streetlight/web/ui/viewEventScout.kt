@@ -3,7 +3,7 @@ package streetlight.web.ui
 import kampfire.model.handleResponse
 import koala.LottieFile
 import koala.dom.*
-import koala.model.mapDistinctNotNull
+import koala.model.tapNotNull
 import streetlight.model.data.EventEdit
 import streetlight.model.data.Galaxy
 import streetlight.model.data.LocationEdit
@@ -17,7 +17,7 @@ fun ViewScope.viewEventScout(galaxy: Galaxy) {
     val locationScout = app.getLocationScout(galaxy, locationEditor, scope)
     val editor = app.getEventEditor(EventEdit(timeZoneId = getTimeZoneId()), scope)
     val model = app.getEventScout(galaxy, editor, locationScout, scope)
-    val routeFlow = model.stateFlow.mapDistinctNotNull { it.postId?.let { GalaxyRoute(galaxy.slug) } }
+    val routeFlow = model.stateFlow.tapNotNull { it.postId?.let { GalaxyRoute(galaxy.slug) } }
     goOnRoute(routeFlow)
 
     fun isHeadingStage(stage: EventScoutStage) = when (stage) {

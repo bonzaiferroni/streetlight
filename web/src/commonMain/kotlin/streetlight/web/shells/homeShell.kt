@@ -17,7 +17,7 @@ import koala.html.routeMenu
 import streetlight.web.pages.appHeader
 
 fun FlowContent.homeShell(content: HomeContent) {
-    column(HomeKey.ContainerId, modify(MarginTop1)) {
+    column(HomeShell.ContainerId, modify(MarginTop1)) {
         appHeader(Height10)
 
         geoMapMount(null, modify(BorderRadius2, Height48, MoonShadow, BorderSolid2Px))
@@ -42,9 +42,9 @@ fun FlowContent.homeShell(content: HomeContent) {
                     }
 
                     card(modify(Height32, MoonShadow, Padding0)) {
-                        swapBlock(HomeKey.LightSwapId, modify(Magic)) {
+                        swapBlock(HomeShell.LightSwapId, modify(Magic)) {
                             column(modify(JustifyContentCenter, Dim, Gap0)) {
-                                setId(HomeKey.LightInfoId)
+                                setId(HomeShell.LightInfoId)
                                 setReveal(true)
 
                                 row(modify(JustifyContentCenter)) {
@@ -54,21 +54,21 @@ fun FlowContent.homeShell(content: HomeContent) {
                                 }
                                 textBlock("This is saved on your device, unless you sign in.", modify(TextAlignCenter))
                             }
-                            box(HomeKey.LitEventsId) {
+                            box(HomeShell.LitEventsId) {
                                 setReveal(false)
                             }
                         }
                     }
                 }
 
-                appFooter(HomeKey.SOURCE)
+                appFooter(HomeShell.SOURCE)
             }
         }
 
         routeMenu("Streetlight", HomeRoute, listOf(HomeRoute, GalaxyMapRoute(null)), modify(PositionSticky))
     }
 
-    dataIsland(HomeKey.IslandId, content)
+    dataIsland(HomeShell.IslandId, content)
 }
 
 fun FlowContent.galaxiesSection(galaxies: List<Galaxy>) {
@@ -111,7 +111,7 @@ fun FlowContent.galaxiesSection(galaxies: List<Galaxy>) {
     }
 }
 
-object HomeKey {
+object HomeShell {
     val ContainerId = Id("home-box")
     val LightSwapId = Id("light-swap")
     val LightInfoId = Id("light-info")

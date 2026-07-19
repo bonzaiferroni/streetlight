@@ -3,7 +3,7 @@ package streetlight.web.ui
 import koala.dom.*
 import koala.html.heading1
 
-fun ViewScope.viewSandbox() {
+fun RouteScope.viewSandbox() {
     val model = Sandbox(scope, api, toaster)
 
     console.log("welcome to sandbox")

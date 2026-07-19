@@ -5,7 +5,7 @@ import koala.dom.*
 import streetlight.model.ui.SongProfileRoute
 import streetlight.web.model.SongProfile
 
-fun ViewScope.viewSongProfile() {
+fun RouteScope.viewSongProfile() {
 
     flowBlock(portal.routeFlowOf<SongProfileRoute>()) { route ->
         val model = SongProfile(route.songId, scope, api)

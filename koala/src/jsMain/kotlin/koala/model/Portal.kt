@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapNotNull
 import org.w3c.dom.HTMLAnchorElement
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.MANUAL
@@ -26,16 +27,14 @@ import kotlin.time.Instant
 
 class Portal(
     initialRoute: AppRoute,
-    // fetcher: suspend (AppRoute) -> Outcome<Any?>?,
     val screens: List<AppScreen>,
-    private val scope: CoroutineScope,
-    // private val messenger: Messenger,
 ) {
     private val state = storeOf(PortalState(routeOf(window.location.pathname) ?: initialRoute))
     val stateFlow = state.flow
     val stateNow get() = state.now
 
-    val screenFlow = stateFlow.tap { it.route.screen }
+    val screenFlow = stateFlow
+        .tapBy({ if (it.route.screen.retainWithinScreen) it.route.screen else it }) { it.route.screen }
     val routeFlow = stateFlow.tap { it.route }
 
     private var backstack: List<Navigation> = emptyList()
@@ -54,12 +53,17 @@ class Portal(
         // known issue: this prevents scroll restoration on refresh
         window.history.scrollRestoration = ScrollRestoration.MANUAL
 
-        fun handleRoute(href: String) {
+        fun handleRoute(href: String, isClick: Boolean) {
             val href = window.prefixContext(href)
             val sitePath = if (href.startsWith("/")) href else URL(href).pathname
 
             val route = routeOf(sitePath) ?: return
-            if (route == stateNow.route) return
+            if (route == stateNow.route) {
+                if (isClick) {
+                    refresh()
+                }
+                return
+            }
             go(route)
         }
 
@@ -72,7 +76,7 @@ class Portal(
             if (anchor.hostname == window.location.hostname && anchor.target != "_blank" && !modifiedClick && !isWrecked) {
                 event.preventDefault()
                 val href = anchor.getAttribute("href") ?: return@addEventListener
-                handleRoute(href)
+                handleRoute(href, true)
             }
         })
 
@@ -83,20 +87,13 @@ class Portal(
             }
             val isSuccess = goBack(window.location.pathname)
             if (!isSuccess) {
-                handleRoute(window.location.pathname)
+                handleRoute(window.location.pathname, false)
             }
         })
     }
 
     inline fun <reified T : AppRoute> routeFlowOf(emitDistinct: Boolean = true): Flow<T> {
-        val base = stateFlow.map {
-            try {
-                it.route as? T
-            } catch (e: Exception) {
-                console.log("unable to cast route: ${e.message}")
-                throw (e)
-            }
-        }.filterNotNull()
+        val base = stateFlow.mapNotNull { it.route as? T }
 
         return if (emitDistinct) base.distinctUntilChanged() else base
     }
@@ -107,11 +104,12 @@ class Portal(
     }
 
     fun goBack(sitePath: String? = null): Boolean {
-        val (index, route) = sitePath?.let {
-            backstack.asReversed()
-                .withIndex()
-                .firstOrNull { (_, value) -> value.route.toSitePath() == it }
-        } ?: backstack.lastOrNull()?.let { IndexedValue(0, it) } ?: return false
+        val (index, route) = when (sitePath) {
+            null -> backstack.lastOrNull()?.let { IndexedValue(0, it) } ?: return false
+            else -> backstack.asReversed().withIndex()
+                .firstOrNull { (_, value) -> value.route.toSitePath() == sitePath }
+                ?: return false
+        }
         go(route, backstack.dropLast(index + 1))
         return true
     }
@@ -126,6 +124,7 @@ class Portal(
     }
 
     private fun go(navigation: Navigation, backstack: List<Navigation>) {
+        console.log("setting route")
         val route = navigation.route
         this.backstack = backstack
         state.set { it.copy(

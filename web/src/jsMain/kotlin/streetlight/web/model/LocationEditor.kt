@@ -5,7 +5,7 @@ import kampfire.model.GeoPoint
 import kampfire.model.handleResponse
 import koala.dom.MessageStore
 import koala.model.tap
-import koala.model.mapDistinctNotNull
+import koala.model.tapNotNull
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancelChildren
@@ -33,7 +33,7 @@ class LocationEditor(
     val imageEditor = ImageEditor(initialData.image, api)
 
     val editNow get() = state.now.edit
-    val editFlow = state.flow.mapDistinctNotNull { it.edit }
+    val editFlow = state.flow.tapNotNull { it.edit }
 //     override val placeFlow = editFlow.mapDistinct { it.toPlace() }
 
     val nameFlow = editFlow.tap { it.name }

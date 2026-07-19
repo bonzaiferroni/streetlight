@@ -3,10 +3,8 @@ package streetlight.web.ui
 import koala.dom.AppFacade
 import koala.model.GeoCamera
 import koala.model.Portal
-import kotlinx.coroutines.CoroutineScope
 import streetlight.web.io.ApiClient
 import streetlight.web.model.MarkerMap
-import streetlight.web.model.RouteInflator
 import streetlight.web.model.Toaster
 import streetlight.web.model.StarSession
 

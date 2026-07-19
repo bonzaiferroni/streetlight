@@ -7,7 +7,7 @@ import koala.external.ECharts
 import kotlinx.browser.document
 import streetlight.model.ui.SiteMonitorRoute
 
-fun ViewScope.viewSiteMonitor() {
+fun RouteScope.viewSiteMonitor() {
     val model = app.getSiteMonitor(scope)
     column(BodyStyle.Mod) {
         featureHeader("Streetlight Status", "live stats and charts", SiteImage.ControlRoom)

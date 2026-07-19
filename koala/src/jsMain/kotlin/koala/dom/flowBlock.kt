@@ -25,6 +25,7 @@ fun <State> ViewScope.flowBlock(
     name: String = "flowBlock",
     config: (DIV.() -> Unit)? = null,
     onTransition: ((State) -> Unit)? = null,
+    rebuildOnEqual: Boolean = false,
     block: ViewScope.(State) -> Unit
 ): HTMLDivElement {
     val magic = modifiers?.contains(Magic) ?: false
@@ -40,7 +41,7 @@ fun <State> ViewScope.flowBlock(
     launchEffect("$name > launchEffect") {
         var currentValue: State? = null
         flow.collect { value ->
-            if (renderedOnce && value == currentValue) return@collect
+            if (renderedOnce && value == currentValue && !rebuildOnEqual) return@collect
             renderedOnce = true
             view?.dispose()
 

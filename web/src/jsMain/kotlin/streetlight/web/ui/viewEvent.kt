@@ -11,27 +11,23 @@ import streetlight.web.shells.eventShell
 
 fun ViewScope.viewEvent(event: EventLocation) {
     val camera = app.get<GeoCamera>()
-    val cache = app.get<DataCache>()
+    // val cache = app.get<DataCache>()
 
     val root = shellBoxWithMap(EventShell.id, hookInitializers) {
         eventShell(event)
     }
 
     camera.panMap(event.geoPoint)
-    wireLights(
-        root = root,
-        attribute = StarLightKey.EventLightId,
-        cache = cache.eventLights
-    )
+    // wireLights(
+    //     root = root,
+    //     attribute = StarLightKey.EventLightId,
+    //     cache = cache.eventLights
+    // )
     // app.streetMap.setPosts td: make event marker visible on map
 }
 
-fun ViewScope.viewEventRoute() {
-
-    routeBlock<EventRoute, EventLocation>(portal, { route ->
-        readIsland<EventLocation>(EventShell.island) { it.eventSlug == route.slug }
-            ?: api.readEventSlug(route.slug).handleResponse(toaster)
-    }) { event ->
+fun RouteScope.viewEventRoute() {
+    routeBlock<EventRoute, EventLocation>(EventShell.island) { event ->
         viewEvent(event)
     }
 }

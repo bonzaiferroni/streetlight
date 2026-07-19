@@ -5,6 +5,7 @@ import kampfire.api.Slug
 import kampfire.model.GeoBounds
 import kampfire.model.GeoPoint
 import koala.Image
+import koala.model.RouteContent
 import kotlin.time.Instant
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
@@ -33,7 +34,7 @@ data class Galaxy(
     val postCount: Int,
     val updatedAt: Instant,
     val createdAt: Instant,
-): Entity {
+): Entity, RouteContent {
     val postTypes get() = setOf(PostType.Location, PostType.Event, PostType.Media)
     override val label get() = name
     override val sublabel get() = tagline

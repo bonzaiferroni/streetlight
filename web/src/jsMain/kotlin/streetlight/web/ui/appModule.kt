@@ -1,14 +1,18 @@
 package streetlight.web.ui
 
+import kampfire.model.Messenger
 import koala.core.LaunchTelemetry
 import koala.core.appExceptionHandler
 import koala.dom.AppContainer
+import koala.model.ContentFetcher
 import koala.model.GeoCamera
 import koala.model.GeoMap
 import koala.model.Portal
+import koala.model.RouteInflator
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.plus
+import org.koin.dsl.bind
 import org.koin.dsl.module
 import streetlight.model.data.EventEdit
 import streetlight.model.data.Galaxy
@@ -40,7 +44,7 @@ val appModule = module {
 
     single { StarSession(get(), get()) }
     single { DataCache(get(), get(), get(), get(), get()) }
-    single { Portal(HomeRoute, Screen.entries, get()) }
+    single { Portal(HomeRoute, Screen.entries) }
     single { GateAgent(get(), get(), get()) }
     single { GeoCamera(get()) }
     single { GeoMap(get(), get()) }
@@ -49,10 +53,10 @@ val appModule = module {
     single { ChatRoom(get(), get()) }
     single { OmniLog(get(), get()) }
     single { MarkerService() }
-    single { ContentFetcher(get()) }
+    single<ContentFetcher> { AppContentFetcher(get()) }
     single { RouteInflator(get(), get(), get(), get()) }
 
-    single { Toaster(get()) }
+    single { Toaster(get()) } bind Messenger::class
 }
 
 fun AppContainer.getUserCreator(scope: CoroutineScope) =

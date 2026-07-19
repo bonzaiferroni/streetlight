@@ -15,13 +15,13 @@ import streetlight.web.ui.headerOf
 fun FlowContent.locationShell(
     content: LocationContent,
 ) {
-    column(LocationProfileKey.Id, BodyStyle.Mod) {
+    column(LocationShell.Id, BodyStyle.Mod) {
         headerOf(
             location = content.location,
             editRoute = if (content.canEdit) LocationUpdateRoute(content.location.slug) else null
         )
 
-        tabs(LocationProfileKey.tabsId) {
+        tabs(LocationShell.tabsId) {
             if (content.events.isNotEmpty()) {
                 tab("events") {
                     layoutPosts {
@@ -41,14 +41,19 @@ fun FlowContent.locationShell(
                 textBlock("yer talk")
             }
         }
+
+
         appFooter()
     }
+
+    dataIsland(LocationShell.islandId, content)
 }
 
-object LocationProfileKey {
+object LocationShell {
     val Id = Id("location-shell")
     val tabsId = Id("location-tabs")
     val adminCard = Id("location-admin-card")
+    val islandId = Id("location-island")
 }
 
 fun FlowContent.propertyRow(property: String, block: DIV.() -> Unit) {

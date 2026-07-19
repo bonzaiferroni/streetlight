@@ -14,8 +14,8 @@ fun ViewScope.editTalentForm() {
         userCache.talent.getItem(it)?.toEdit()
     } ?: TalentEdit()
 
-    wireRouteTo(portal, TalentEdit(), ::provideEdit) {
-        column {
+//    wireRouteTo(portal, TalentEdit(), ::provideEdit) {
+//        column {
 //            textField(
 //                label = "talent",
 //                read = { it.name },
@@ -26,12 +26,12 @@ fun ViewScope.editTalentForm() {
 //                read = { it.description },
 //                write = { it.state.copy(description = it.value) }
 //            )
-            dropMenu(
-                onChangeValue = { value -> state.set { it.copy(talentType = value) } },
-                provideLabel = { it.name },
-                flow = state.flow.tap { it.talentType }
-            )
-
+//            dropMenu(
+//                onChangeValue = { value -> state.set { it.copy(talentType = value) } },
+//                provideLabel = { it.name },
+//                flow = state.flow.tap { it.talentType }
+//            )
+//
 //            button(
 //                text = { if (it.talentId != null) "edit" else "share" },
 //                modifiers = modify(Accent),
@@ -44,8 +44,8 @@ fun ViewScope.editTalentForm() {
 //                    }
 //                }
 //            )
-        }
-    }
+//        }
+//    }
 }
 
 //data class NewTalent(

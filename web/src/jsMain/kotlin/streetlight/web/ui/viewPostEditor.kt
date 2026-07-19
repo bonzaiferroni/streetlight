@@ -6,9 +6,10 @@ import koala.dom.*
 import koala.dom.routeBlock
 import koala.html.AppRoute
 import koala.html.heading1
-import koala.model.mapDistinctNotNull
+import koala.model.tapNotNull
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+import streetlight.model.data.Media
 import streetlight.model.data.MediaEdit
 import streetlight.model.data.toEdit
 import streetlight.model.ui.MediaUpdateRoute
@@ -16,7 +17,7 @@ import streetlight.model.ui.MediaRoute
 import streetlight.web.model.MediaEditor
 
 fun ViewScope.viewMediumUpdater(model: MediaEditor) {
-    val routeFlow = model.stateFlow.mapDistinctNotNull { it.slug?.let { slug -> MediaRoute(slug) } }
+    val routeFlow = model.stateFlow.tapNotNull { it.slug?.let { slug -> MediaRoute(slug) } }
     goOnRoute(routeFlow)
 
     section(modify(Column)) {
@@ -34,13 +35,8 @@ fun ViewScope.viewMediumUpdater(model: MediaEditor) {
     }
 }
 
-fun ViewScope.viewMediumUpdaterRoute() {
-    routeBlock<MediaUpdateRoute, MediaEdit>(
-        portal = portal,
-        provideData = { route ->
-            api.readMedia(route.slug).handleResponse(toaster) { it.toEdit() }
-        }
-    ) {
+fun RouteScope.viewMediumUpdaterRoute() {
+    routeBlock<MediaUpdateRoute, MediaEdit>({ inflator.contentFor<Media>(it)?.toEdit() }) {
         val editor = MediaEditor(it, scope, api, toaster)
         viewMediumUpdater(editor)
     }

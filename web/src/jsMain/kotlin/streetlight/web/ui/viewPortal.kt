@@ -4,6 +4,7 @@ import koala.css.Blur
 import koala.css.FocusTarget
 import koala.css.Magic
 import koala.css.modify
+import koala.dom.RouteScope
 import koala.dom.ViewScope
 import koala.dom.closeOpenPopovers
 import koala.dom.flowBlock
@@ -11,11 +12,9 @@ import koala.dom.querySelector
 import koala.dom.textBlock
 import koala.model.Portal
 import kotlinx.browser.document
-import kotlinx.browser.window
 import org.w3c.dom.HTMLElement
 import streetlight.model.ui.Screen
-import streetlight.web.model.RouteInflator
-import streetlight.web.model.RouteScope
+import koala.model.RouteInflator
 
 fun ViewScope.viewPortal() {
     val portal = app.get<Portal>()
@@ -28,19 +27,15 @@ fun ViewScope.viewPortal() {
         name = ::viewPortal.name,
         // cacheElements = true,
         onTransition = {
-            if (!portal.stateNow.isInitialRoute) {
-                window.setTimeout({
-                    window.scrollTo(0.0, portal.stateNow.initialScrollY)
-                }, 100)
-            }
             document.closeOpenPopovers()
 
             // td: set title, maybe not here
             // target element, typically a heading, for accessibility functionality
             element?.querySelector(FocusTarget)?.focus()
         },
+        rebuildOnEqual = true,
     ) { screen ->
-        val routeScope = RouteScope(this, portal.stateNow.route, inflator)
+        val routeScope = RouteScope(this, inflator, portal.stateNow)
         with (routeScope) {
             when (screen) {
                 Screen.Home -> viewHomeRoute()
@@ -70,7 +65,7 @@ fun ViewScope.viewPortal() {
                 Screen.UpdateEvent -> viewEventUpdaterRoute()
 
                 // galaxy
-                Screen.Galaxy -> viewGalaxyRoute(inflator)
+                Screen.Galaxy -> viewGalaxyRoute()
                 Screen.GalaxyFoundry -> viewGalaxyFoundry()
                 Screen.GalaxyConfig -> viewGalaxyConfigRoute()
                 Screen.GalaxyList -> viewGalaxyList()

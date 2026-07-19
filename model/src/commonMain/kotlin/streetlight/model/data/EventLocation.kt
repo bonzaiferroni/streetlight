@@ -7,6 +7,7 @@ import kampfire.model.GeoPoint
 import kampfire.model.Labeled
 import koala.Image
 import koala.SiteImage
+import koala.model.RouteContent
 import kotlin.time.Instant
 import kotlinx.serialization.Serializable
 import kotlin.time.Duration.Companion.hours
@@ -38,7 +39,7 @@ data class EventLocation(
     val endsAt: Instant?,
     val updatedAt: Instant,
     val createdAt: Instant,
-): Entity, Labeled {
+): Entity, Labeled, RouteContent {
     override val links by lazy {
         buildList {
             url?.let { url ->

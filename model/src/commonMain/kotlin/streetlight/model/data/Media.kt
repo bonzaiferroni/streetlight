@@ -7,6 +7,7 @@ import kampfire.model.GeoPoint
 import kampfire.model.Labeled
 import kampfire.model.Url
 import koala.Image
+import koala.model.RouteContent
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 import kotlin.time.Instant
@@ -26,7 +27,7 @@ data class Media(
     override val image: Image?,
     val updatedAt: Instant,
     val createdAt: Instant,
-): Entity {
+): Entity, RouteContent {
     override val label get() = title ?: "(untitled)"
     override val sublabel get() = subtitle
     override val body get() = text

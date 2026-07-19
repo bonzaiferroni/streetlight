@@ -21,7 +21,7 @@ fun FlowContent.routeMenu(
             }
             routes.forEach { route ->
                 when (route == routeNow) {
-                    true -> span(modify(RouteMenu.RouteNow)) {
+                    true -> navigation(route, modify(RouteMenu.RouteNow)) {
                         +route.label
                     }
                     else -> navigation(route, modify(RouteMenu.Route)) {

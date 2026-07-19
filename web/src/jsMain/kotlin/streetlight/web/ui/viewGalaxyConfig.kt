@@ -6,6 +6,7 @@ import koala.css.*
 import koala.dom.*
 import koala.dom.routeBlock
 import koala.html.spacer
+import streetlight.model.data.Galaxy
 import streetlight.model.data.GalaxyEdit
 import streetlight.model.data.toEdit
 import streetlight.model.ui.GalaxyConfigRoute
@@ -50,9 +51,9 @@ fun ViewScope.viewGalaxyConfig(edit: GalaxyEdit) {
     }
 }
 
-fun ViewScope.viewGalaxyConfigRoute() {
-    routeBlock<GalaxyConfigRoute, GalaxyEdit>(portal, { route ->
-        api.readGalaxy(route.slug).handleResponse(toaster)?.toEdit()
+fun RouteScope.viewGalaxyConfigRoute() {
+    routeBlock<GalaxyConfigRoute, GalaxyEdit>({ route ->
+        inflator.contentFor<Galaxy>(route)?.toEdit()
     }) {
         viewGalaxyConfig(it)
     }
