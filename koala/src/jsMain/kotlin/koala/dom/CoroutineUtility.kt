@@ -1,19 +1,18 @@
 package koala.dom
 
-import kampfire.model.MessageReceiver
+import kampfire.model.Messenger
 import kampfire.model.UIMessage
 import kampfire.model.UIMessageType
 import koala.core.LaunchTelemetry
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
 import kotlin.reflect.KFunction
 
 fun CoroutineScope.launch(
     name: String,
-    receiver: MessageReceiver? = null,
+    receiver: Messenger? = null,
     message: String? = "Something went wrong.",
     block: suspend CoroutineScope.() -> Unit,
 ): Job {
@@ -35,7 +34,7 @@ fun CoroutineScope.launch(
 
 fun CoroutineScope.launch(
     function: KFunction<*>,
-    receiver: MessageReceiver? = null,
+    receiver: Messenger? = null,
     message: String? = "Something went wrong.",
     block: suspend CoroutineScope.() -> Unit,
 ) = launch(function.name, receiver, message, block)

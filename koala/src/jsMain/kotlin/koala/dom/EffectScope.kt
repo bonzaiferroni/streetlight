@@ -1,6 +1,6 @@
 package koala.dom
 
-import kampfire.model.MessageReceiver
+import kampfire.model.Messenger
 import kotlinx.coroutines.CoroutineScope
 
 @ViewMarker
@@ -12,7 +12,7 @@ class EffectScope(
 
     fun launch(
         name: String = "EffectScope.launch",
-        receiver: MessageReceiver? = null,
+        receiver: Messenger? = null,
         message: String? = "Something went wrong.",
         block: suspend CoroutineScope.() -> Unit
     ) = parentScope.launch(name, receiver, message) { block() }

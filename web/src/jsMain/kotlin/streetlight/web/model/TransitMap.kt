@@ -1,7 +1,7 @@
 package streetlight.web.model
 
 import kampfire.model.GeoPoint
-import kampfire.model.PrintLnReceiver
+import kampfire.model.PrintLnMessenger
 import kampfire.model.getDataOrNull
 import kampfire.model.handleResponse
 import koala.SvgFile
@@ -83,7 +83,7 @@ class TransitMap(
 
             while (true) {
                 if (geoMap.camera.stateNow.isViewed) {
-                    val transitState = client.readVehiclePositions(timestamp).handleResponse(PrintLnReceiver)
+                    val transitState = client.readVehiclePositions(timestamp).handleResponse(PrintLnMessenger)
                     if (transitState != null) {
                         timestamp = transitState.timestamp
                         showTransitState(transitState)

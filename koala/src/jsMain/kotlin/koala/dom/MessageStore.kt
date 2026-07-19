@@ -1,13 +1,13 @@
 package koala.dom
 
-import kampfire.model.MessageReceiver
+import kampfire.model.Messenger
 import kampfire.model.Problem
 import kampfire.model.UIMessage
 import kampfire.model.UIMessageType
 import koala.model.Store
 import koala.model.tap
 
-class MessageStore(value: UIMessage? = null): Store<UIMessage?>(value), MessageReceiver {
+class MessageStore(value: UIMessage? = null): Store<UIMessage?>(value), Messenger {
     val isWorkingFlow = flow.tap { it?.let { it.messageType == UIMessageType.Working } ?: false }
 
     fun set(text: String?, messageType: UIMessageType = UIMessageType.Info) = set {

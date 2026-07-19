@@ -7,13 +7,13 @@ fun <T> Outcome<T>?.getDataOrNull() = when (this) {
 }
 
 fun <T> Outcome<T>?.handleResponse(
-    receiver: MessageReceiver,
-    okReceiver: MessageReceiver = receiver,
+    receiver: Messenger,
+    okReceiver: Messenger = receiver,
 ) = handleResponse(receiver, okReceiver) { it }
 
 fun <T1, T2> Outcome<T1>?.handleResponse(
-    receiver: MessageReceiver,
-    okReceiver: MessageReceiver = receiver,
+    receiver: Messenger,
+    okReceiver: Messenger = receiver,
     block: (T1) -> T2
 ): T2? = when (this) {
     is Ok -> {
@@ -35,13 +35,13 @@ fun <T1, T2> Outcome<T1>?.handleResponse(
 }
 
 fun <T> Outcome<T>.handleOutcome(
-    receiver: MessageReceiver,
-    okReceiver: MessageReceiver = receiver,
+    receiver: Messenger,
+    okReceiver: Messenger = receiver,
 ) = handleOutcome(receiver, okReceiver) { it }
 
 fun <T1, T2> Outcome<T1>.handleOutcome(
-    receiver: MessageReceiver,
-    okReceiver: MessageReceiver = receiver,
+    receiver: Messenger,
+    okReceiver: Messenger = receiver,
     block: (T1) -> T2
 ): T2? = when (this) {
     is Ok -> {

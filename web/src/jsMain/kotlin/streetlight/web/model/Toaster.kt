@@ -1,6 +1,6 @@
 package streetlight.web.model
 
-import kampfire.model.MessageReceiver
+import kampfire.model.Messenger
 import kampfire.model.Problem
 import kampfire.model.UIMessage
 import kampfire.model.UIMessageType
@@ -13,7 +13,7 @@ import kotlin.time.Duration.Companion.seconds
 
 class Toaster(
     private val scope: CoroutineScope
-): MessageReceiver {
+): Messenger {
     private val state = storeOf(ToasterState())
     val stateNow get() = state.now
     val stateFlow = state.flow

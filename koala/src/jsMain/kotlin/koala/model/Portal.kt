@@ -1,6 +1,9 @@
 package koala.model
 
+import kampfire.model.Messenger
+import kampfire.model.Outcome
 import koala.css.KoalaBody
+import koala.dom.launch
 import koala.dom.setAttribute
 import koala.html.AppRoute
 import koala.html.AppScreen
@@ -23,8 +26,10 @@ import kotlin.time.Instant
 
 class Portal(
     initialRoute: AppRoute,
+    // fetcher: suspend (AppRoute) -> Outcome<Any?>?,
     val screens: List<AppScreen>,
-    private val scope: CoroutineScope
+    private val scope: CoroutineScope,
+    // private val messenger: Messenger,
 ) {
     private val state = storeOf(PortalState(routeOf(window.location.pathname) ?: initialRoute))
     val stateFlow = state.flow
@@ -125,7 +130,6 @@ class Portal(
         this.backstack = backstack
         state.set { it.copy(
             route = route,
-            title = route.title,
             canGoBack = backstack.isNotEmpty(),
             initialScrollY = navigation.initialScrollY,
             isInitialRoute = false,
@@ -141,13 +145,13 @@ class Portal(
     }
 }
 
+// Portal's state should change if and only if the route changes
 data class PortalState(
     val route: AppRoute,
-    val title: String? = null,
     val canGoBack: Boolean = false,
     val initialScrollY: Double = window.scrollY,
     val isInitialRoute: Boolean = true,
-    val refreshedAt: Instant = Instant.DISTANT_PAST,
+    val refreshedAt: Instant = Instant.DISTANT_PAST, // necessary for refreshing the same route
 )
 
 private data class Navigation(

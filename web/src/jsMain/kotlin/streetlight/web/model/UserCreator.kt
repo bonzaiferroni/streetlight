@@ -1,12 +1,11 @@
 package streetlight.web.model
 
-import kampfire.api.Password
 import kampfire.api.Username
 import kampfire.api.toUsername
 import kampfire.api.toValidOutcome
 import kampfire.model.AccountType
 import kampfire.model.Ok
-import kampfire.model.PrintLnReceiver
+import kampfire.model.PrintLnMessenger
 import kampfire.model.Problem
 import kampfire.model.SignUpRequest
 import kampfire.model.handleOutcome
@@ -18,7 +17,6 @@ import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import streetlight.web.io.ApiClient
-import kotlin.uuid.Uuid
 
 class UserCreator(
     private val scope: CoroutineScope,
@@ -43,7 +41,7 @@ class UserCreator(
 
     init {
         scope.launch {
-            api.checkGuest().handleResponse(PrintLnReceiver) { username ->
+            api.checkGuest().handleResponse(PrintLnMessenger) { username ->
                 state.set { it.copy(guestUsername = username) }
             }
         }

@@ -1,6 +1,6 @@
 package koala.dom
 
-import kampfire.model.MessageReceiver
+import kampfire.model.Messenger
 import koala.html.Id
 import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
@@ -21,7 +21,7 @@ sealed interface ViewScope: TagScope, AppFacade {
 
     fun launchEffect(
         name: String = "ViewScope.launchEffect",
-        receiver: MessageReceiver? = null,
+        receiver: Messenger? = null,
         message: String? = "Something went wrong.",
         block: suspend EffectScope.() -> Unit
     ) = scope.launch(name, receiver, message) {

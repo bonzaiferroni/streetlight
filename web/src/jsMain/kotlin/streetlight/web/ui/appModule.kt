@@ -49,6 +49,8 @@ val appModule = module {
     single { ChatRoom(get(), get()) }
     single { OmniLog(get(), get()) }
     single { MarkerService() }
+    single { ContentFetcher(get()) }
+    single { RouteInflator(get(), get(), get(), get()) }
 
     single { Toaster(get()) }
 }

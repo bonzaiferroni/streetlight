@@ -18,16 +18,11 @@ fun FlowContent.galaxyShell(content: GalaxyContent) {
     column(GalaxyShell.id, modify(MarginTop1)) {
         headerOf(galaxy)
         box {
-            // btn("View Map", EarthRoute(galaxy.slug), EarthStyle.ViewMapButtonMod)
             column(modify(Gap8)) {
                 row(modify(JustifyContentSpaceBetween)) {
                     galaxyMenu(emptyList(), galaxy)
-                    // filigree(modify(Flex1), MaxWidthNone) { spacer { setStyle(Property.Width.to(8.rem)) } }
                     createPostMenu(galaxy)
                 }
-//                if (galaxy.postTypes.contains(PostType.Content)) {
-//                    layoutTalkPreview(TalkRoute(galaxy.galaxyId), listing.comments)
-//                }
                 postSection(post)
                 appFooter(GalaxyShell.SOURCE)
             }

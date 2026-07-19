@@ -1,10 +1,9 @@
 package streetlight.web.model
 
-import kampfire.api.Username
 import kampfire.model.AccountType
 import kampfire.model.LoginRequest
-import kampfire.model.MessageReceiver
-import kampfire.model.PrintLnReceiver
+import kampfire.model.Messenger
+import kampfire.model.PrintLnMessenger
 import kampfire.model.handleResponse
 import koala.dom.launch
 import koala.model.tap
@@ -28,7 +27,7 @@ class StarSession(
     val signedInFlow = stateFlow.tap { it.isSignedIn }
     val signedOutAtFlow = stateFlow.tap { it.signedOutAt }
 
-    fun signIn(receiver: MessageReceiver?) {
+    fun signIn(receiver: Messenger?) {
         if (stateNow.star != null) return
         console.log("signing in")
         scope.launch {
@@ -36,7 +35,7 @@ class StarSession(
         }
     }
 
-    fun signIn(request: LoginRequest, receiver: MessageReceiver) {
+    fun signIn(request: LoginRequest, receiver: Messenger) {
         scope.launch("sign-in") {
             if (api.login(request).handleResponse(receiver) ?: false) {
                 readUser(receiver)
@@ -44,8 +43,8 @@ class StarSession(
         }
     }
 
-    suspend fun readUser(receiver: MessageReceiver?) {
-        api.validateLogin().handleResponse(receiver ?: PrintLnReceiver) { star ->
+    suspend fun readUser(receiver: Messenger?) {
+        api.validateLogin().handleResponse(receiver ?: PrintLnMessenger) { star ->
             val star = star ?: return@handleResponse
             console.log("signed in: ${star.accountType}")
             state.set { it.copy(star = star) }

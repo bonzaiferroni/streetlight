@@ -12,13 +12,13 @@ enum class UIMessageType {
     Success,
 }
 
-interface MessageReceiver {
+interface Messenger {
     fun receive(text: String?)
     fun receive(message: UIMessage)
     fun receive(problem: Problem)
 }
 
-object PrintLnReceiver: MessageReceiver {
+object PrintLnMessenger: Messenger {
     override fun receive(text: String?) {
         text?.let {
             println(it)

@@ -73,7 +73,6 @@ suspend inline fun <reified Returned> Response.tryDecodeText(): Returned? {
 }
 
 suspend inline fun <reified T> Response.tryDecodeBytesOutcome(): Outcome<T>? {
-    console.log("yer bytes")
     return when (status.toInt()) {
         200 -> {
             val buffer = arrayBuffer()
