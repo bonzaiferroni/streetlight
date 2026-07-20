@@ -23,6 +23,17 @@ fun HTMLElement.mountRootView(
     return view
 }
 
+fun mountRootView(
+    id: Id,
+    parentScope: CoroutineScope,
+    app: AppContainer,
+    ancestor: HTMLElement? = null,
+    block: ViewScope.() -> Unit
+): View {
+    val element = (ancestor ?: document.body!!).querySelector(id) ?: error("element not found: $id")
+    return element.mountRootView(id.selector, parentScope, app, block)
+}
+
 fun ViewScope.mountChildView(
     name: String,
     mount: HTMLElement,

@@ -34,8 +34,6 @@ fun viewApp() {
         LightControl.ToggleFun to lightService::toggleLight
     ))
 
-    console.log("build three")
-
     with (app) {
         val scope: CoroutineScope = get()
         val gate: StarSession = get()
@@ -44,16 +42,13 @@ fun viewApp() {
         val portal: Portal = get()
         transit.init()
 
-        scope.launch("viewApp") {
+        scope.launch(::viewApp) {
 
             try {
-
                 // signs in user if configured
                 gate.readUser(null)
 
-                val portalMount = document.getElementById(KoalaBody.PortalMount)
-
-                portalMount.mountRootView("app-root", scope, app) {
+                mountRootView(KoalaBody.PortalMount, scope, app) {
                     // renders routes from portal.routeFlow
                     viewPortal()
                     // shows user badge in upper right corner

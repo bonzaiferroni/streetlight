@@ -1,8 +1,10 @@
 package streetlight.web.model
 
+import kampfire.model.Ok
 import kampfire.model.Outcome
 import koala.html.AppRoute
 import koala.model.ContentFetcher
+import koala.model.NullFetcherContent
 import koala.model.RouteContent
 import streetlight.model.ui.EventRoute
 import streetlight.model.ui.GalaxyConfigRoute
@@ -26,7 +28,7 @@ class AppContentFetcher(
         is LocationRoute -> api.readLocationContent(route.slug)
         is EventRoute -> api.readEventSlug(route.slug)
         is StarRoute -> api.readStarContent(route.username)
-        else -> null
+        else -> Ok(NullFetcherContent)
     }
 }
 

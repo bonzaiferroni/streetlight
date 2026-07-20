@@ -8,6 +8,7 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
 
 fun CoroutineScope.launch(
@@ -38,3 +39,10 @@ fun CoroutineScope.launch(
     message: String? = "Something went wrong.",
     block: suspend CoroutineScope.() -> Unit,
 ) = launch(function.name, receiver, message, block)
+
+fun CoroutineScope.launch(
+    context: KClass<*>,
+    receiver: Messenger? = null,
+    message: String? = "Something went wrong.",
+    block: suspend CoroutineScope.() -> Unit,
+) = launch(context.simpleName ?: "[Unnamed class]", receiver, message, block)
