@@ -13,24 +13,24 @@ import web.http.fetch
 // docs: https://nominatim.org/release-docs/develop/api/Search/
 
 class OSMClient() {
-    suspend fun readLocationAt(point: GeoPoint): Outcome<OSMLocation>? {
+    suspend fun readLocationAt(point: GeoPoint): Outcome<OSMLocation> {
         val url = "https://nominatim.openstreetmap.org/reverse" +
                     "?lat=${point.lat}&lon=${point.lng}&format=jsonv2&addressdetails=1&extratags=1"
 
         val response = fetch(url, RequestInit(headers = headers))
 
-        return response.tryDecodeTextOutcome()
+        return response.decodeText()
     }
 
-    suspend fun readLocations(query: OSMQuery): Outcome<List<OSMLocation>>? {
+    suspend fun readLocations(query: OSMQuery): Outcome<List<OSMLocation>> {
         val url = "https://nominatim.openstreetmap.org/search?" + query.toQuery()
 
         val response = fetch(url, RequestInit(headers = headers))
 
-        return response.tryDecodeTextOutcome()
+        return response.decodeText()
     }
 
-    suspend fun readLocations(query: String, city: String? = null, bounds: GeoBounds? = null): Outcome<List<OSMLocation>>? {
+    suspend fun readLocations(query: String, city: String? = null, bounds: GeoBounds? = null): Outcome<List<OSMLocation>> {
         val query = when (city?.takeIf { it.isNotBlank() }) {
             null -> query
             else -> "$query, $city"
@@ -53,7 +53,7 @@ class OSMClient() {
 
         val response = fetch(url, RequestInit(headers = headers))
 
-        return response.tryDecodeTextOutcome()
+        return response.decodeText()
     }
 }
 

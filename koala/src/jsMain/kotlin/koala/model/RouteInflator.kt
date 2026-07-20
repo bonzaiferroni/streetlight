@@ -49,5 +49,5 @@ data class RouteDelivery(
 )
 
 interface ContentFetcher {
-    suspend fun fetchContent(route: AppRoute): Outcome<RouteContent>?
+    suspend fun fetchContent(route: AppRoute): Outcome<RouteContent>
 }

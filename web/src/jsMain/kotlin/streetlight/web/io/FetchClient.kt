@@ -42,39 +42,39 @@ class FetchClient() {
         endpoint: Endpoint,
         acceptEncoding: EncodingType? = null,
         noinline block: (PathBuilder.(Endpoint) -> Unit)? = null
-    ): Outcome<Returned>? =
+    ): Outcome<Returned> =
         request(
             method = RequestMethod.GET,
             path = resolvePath(endpoint, block),
             acceptEncoding = acceptEncoding
-        ) { it.tryDecodeBytesOutcome() }
+        ) { it.decodeBytes() }
 
     suspend inline fun <reified Returned, Endpoint : GetEndpoint<Returned>> getApi(
         endpoint: Endpoint,
         noinline block: (PathBuilder.(Endpoint) -> Unit)? = null,
-    ): Outcome<Returned>? = request(
+    ): Outcome<Returned> = request(
         method = RequestMethod.GET,
         path = resolvePath(endpoint, block)
-    ) { it.tryDecodeBytesOutcome() }
+    ) { it.decodeBytes() }
 
     suspend inline fun <Id, reified Returned> getApi(
         endpoint: GetByIdEndpoint<Id, Returned>,
         id: Id,
-    ): Outcome<Returned>? = request(RequestMethod.GET, "${endpoint.path}/$id") { it.tryDecodeBytesOutcome() }
+    ): Outcome<Returned> = request(RequestMethod.GET, "${endpoint.path}/$id") { it.decodeBytes() }
 
     suspend inline fun <reified Sent, reified Returned> getApi(
         endpoint: QueryEndpoint<Sent, Returned>,
         query: String?
-    ): Outcome<Returned>? {
+    ): Outcome<Returned> {
         val url = if (!query.isNullOrEmpty()) "${endpoint.path}?$query" else endpoint.path
-        return request(RequestMethod.GET, url) { it.tryDecodeBytesOutcome() }
+        return request(RequestMethod.GET, url) { it.decodeBytes() }
     }
 
     suspend inline fun <reified Sent, reified Returned> postApi(
         endpoint: PostEndpoint<Sent, Returned>,
         body: Sent,
-    ): Outcome<Returned>? =
-        request(RequestMethod.POST, endpoint.path, BodyInit(Json.encodeToString(body))) { it.tryDecodeBytesOutcome() }
+    ): Outcome<Returned> =
+        request(RequestMethod.POST, endpoint.path, BodyInit(Json.encodeToString(body))) { it.decodeBytes() }
 
     suspend inline fun <reified Returned> getProtobuf(
         path: String,
@@ -140,8 +140,8 @@ class FetchClient() {
         contentType: String = "application/json",
         acceptEncoding: EncodingType? = null,
         maxAttempts: Int = 3,
-        handleResponse: suspend (Response) -> Outcome<T>?
-    ): Outcome<T>? {
+        handleResponse: suspend (Response) -> Outcome<T>
+    ): Outcome<T> {
         val fetchRequest: suspend () -> Response = {
             fetch(path, RequestInit(
                 method = method,
@@ -182,7 +182,7 @@ class FetchClient() {
         return handleResponse(response)
     }
 
-    suspend fun uploadBlob(postUrl: String, blobUrl: Url): Outcome<Url>? {
+    suspend fun uploadBlob(postUrl: String, blobUrl: Url): Outcome<Url> {
         val response = fetch(blobUrl.value)
         val blob = response.blob()
         return request(
@@ -191,7 +191,7 @@ class FetchClient() {
             body = blob,
             contentType = blob.type.ifEmpty { "application/octet-stream" }
         ) {
-            it.tryDecodeBytesOutcome()
+            it.decodeBytes()
         }
     }
 }

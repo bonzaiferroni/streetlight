@@ -1,58 +1,53 @@
 package kampfire.model
 
-fun <T> Outcome<T>?.getDataOrNull() = when (this) {
+@Deprecated("use handleResponse with PrintLnMessenger")
+fun <T> Outcome<T>.getDataOrNull() = when (this) {
     is Ok -> this.data
     is Problem -> null.also { println("Problem: ${this.message}") }
-    null -> null.also { println("Response was null") }
 }
 
-fun <T> Outcome<T>?.handleResponse(
-    receiver: Messenger,
-    okReceiver: Messenger = receiver,
-) = handleResponse(receiver, okReceiver) { it }
+fun <T> Outcome<T>.handleResponse(
+    messenger: Messenger,
+    okMessenger: Messenger = messenger,
+) = handleResponse(messenger, okMessenger) { it }
 
-fun <T1, T2> Outcome<T1>?.handleResponse(
-    receiver: Messenger,
-    okReceiver: Messenger = receiver,
+fun <T1, T2> Outcome<T1>.handleResponse(
+    messenger: Messenger,
+    okMessenger: Messenger = messenger,
     block: (T1) -> T2
 ): T2? = when (this) {
     is Ok -> {
         message?.let {
-            okReceiver.receive(UIMessage(it, UIMessageType.Success))
+            okMessenger.receive(UIMessage(it, UIMessageType.Success))
         }
         block(data)
     }
 
     is Problem -> {
-        receiver.receive(this)
-        null
-    }
-
-    null -> {
-        receiver.receive(Problem("No response."))
+        messenger.receive(this)
         null
     }
 }
 
 fun <T> Outcome<T>.handleOutcome(
-    receiver: Messenger,
-    okReceiver: Messenger = receiver,
-) = handleOutcome(receiver, okReceiver) { it }
+    messenger: Messenger,
+    okMessenger: Messenger = messenger,
+) = handleOutcome(messenger, okMessenger) { it }
 
 fun <T1, T2> Outcome<T1>.handleOutcome(
-    receiver: Messenger,
-    okReceiver: Messenger = receiver,
+    messenger: Messenger,
+    okMessenger: Messenger = messenger,
     block: (T1) -> T2
 ): T2? = when (this) {
     is Ok -> {
         message?.let {
-            okReceiver.receive(it)
+            okMessenger.receive(it)
         }
         block(data)
     }
 
     is Problem -> {
-        receiver.receive(this)
+        messenger.receive(this)
         null
     }
 }

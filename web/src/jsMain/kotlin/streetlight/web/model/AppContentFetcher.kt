@@ -19,7 +19,7 @@ import streetlight.web.ui.api
 class AppContentFetcher(
     val api: ApiClient
 ): ContentFetcher {
-    override suspend fun fetchContent(route: AppRoute): Outcome<RouteContent>? = when (route) {
+    override suspend fun fetchContent(route: AppRoute): Outcome<RouteContent> = when (route) {
         is HomeRoute -> api.readHomeContent()
         is MediaUpdateRoute -> api.readMedia(route.slug)
 

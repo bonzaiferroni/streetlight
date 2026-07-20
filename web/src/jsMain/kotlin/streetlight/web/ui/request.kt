@@ -8,7 +8,7 @@ import koala.dom.onView
 import koala.dom.mountChildView
 
 fun <T> ViewScope.request(
-    requestData: suspend () -> Outcome<T>?,
+    requestData: suspend () -> Outcome<T>,
     content: ViewScope.(T) -> Unit
 ) {
     val element = column()

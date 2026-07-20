@@ -13,7 +13,7 @@ class ItemCache<Item, ItemId>(
     private val scope: CoroutineScope,
     private val onError: Messenger,
     private val provideId: (Item) -> ItemId,
-    private val provideInitialItems: suspend () -> Outcome<List<Item>>?
+    private val provideInitialItems: suspend () -> Outcome<List<Item>>
 ){
     private val _flow = MutableSharedFlow<List<Item>>(replay = 8)
     private val items = mutableListOf<Item>()

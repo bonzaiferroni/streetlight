@@ -3,15 +3,12 @@
 package streetlight.web.io
 
 import js.typedarrays.Int8Array
-import js.typedarrays.toByteArray
 import kampfire.model.Outcome
 import kampfire.model.OutcomeSerializer
 import kampfire.model.Ok
 import kampfire.model.Problem
 import koala.utils.jsonConfig
 import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.cbor.Cbor
-import kotlinx.serialization.decodeFromByteArray
 import kotlinx.serialization.serializer
 import web.http.Response
 import streetlight.model.data.RecordId
@@ -19,20 +16,14 @@ import streetlight.model.data.toRecordId
 import web.http.arrayBuffer
 import web.http.text
 
-suspend inline fun <reified Returned> Response.tryDecode(encoding: EncodingType?): Outcome<Returned>? {
+suspend inline fun <reified Returned> Response.tryDecode(encoding: EncodingType?): Outcome<Returned> {
     return when (encoding) {
-        EncodingType.Cbor -> tryDecodeBytesOutcome()
-        EncodingType.Json, null -> tryDecodeTextOutcome()
+        EncodingType.Cbor -> decodeBytes()
+        EncodingType.Json, null -> decodeText()
     }
 }
 
-suspend inline fun <reified Returned> Response.tryDecodeBytes(): Returned? {
-    if (status.toInt() == 204 || !ok) return null
-    val bytes = Int8Array(arrayBuffer()).toByteArray()
-    return Cbor.decodeFromByteArray<Returned>(bytes)
-}
-
-suspend inline fun <reified Returned> Response.tryDecodeTextOutcome(): Outcome<Returned>? {
+suspend inline fun <reified Returned> Response.decodeText(): Outcome<Returned> {
     val status = status.toInt()
     return when (status) {
         404 -> Problem("Not found")
@@ -72,7 +63,7 @@ suspend inline fun <reified Returned> Response.tryDecodeText(): Returned? {
     }
 }
 
-suspend inline fun <reified T> Response.tryDecodeBytesOutcome(): Outcome<T>? {
+suspend inline fun <reified T> Response.decodeBytes(): Outcome<T> {
     return when (status.toInt()) {
         200 -> {
             val buffer = arrayBuffer()
@@ -84,7 +75,7 @@ suspend inline fun <reified T> Response.tryDecodeBytesOutcome(): Outcome<T>? {
                 )
             } catch (e: Exception) {
                 console.log("failed to parse response:\n${e}\n${url}")
-                null
+                Problem("Unable to parse response.")
             }
         }
 
