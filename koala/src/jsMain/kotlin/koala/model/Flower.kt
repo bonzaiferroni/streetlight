@@ -15,7 +15,7 @@ class Flower<T>(
 
     fun refresh() {
         console.log("refreshing")
-        context.scope.launch {
+        context.contentScope.launch {
             // todo: handle retries
             val value = fetch() ?: return@launch
             _flow.emit(value)

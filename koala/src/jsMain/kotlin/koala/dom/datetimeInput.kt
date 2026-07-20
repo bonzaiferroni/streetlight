@@ -43,7 +43,7 @@ fun ViewScope.dateInput(
         }
     })
 
-    scope.launch {
+    contentScope.launch {
         flow.collect { d ->
             if (d != last) {
                 last = d
@@ -80,7 +80,7 @@ fun ViewScope.timeInput(
         }
     })
 
-    scope.launch {
+    contentScope.launch {
         flow.collect { t ->
             if (t != last) {
                 last = t

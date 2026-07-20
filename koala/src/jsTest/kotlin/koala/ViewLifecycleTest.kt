@@ -4,7 +4,6 @@ package koala
 
 import koala.dom.AppContainer
 import koala.dom.View
-import koala.dom.div
 import koala.dom.mountChildView
 import koala.dom.mountRootView
 import kotlinx.browser.document

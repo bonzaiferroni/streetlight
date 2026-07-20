@@ -89,7 +89,7 @@ fun ViewScope.textField(
         }
 
         flow?.let {
-            scope.launch {
+            contentScope.launch {
                 flow.collect { value ->
                     val value = value ?: ""
                     if (value != currentValue) {

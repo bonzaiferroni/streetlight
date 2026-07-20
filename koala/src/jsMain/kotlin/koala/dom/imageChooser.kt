@@ -52,7 +52,7 @@ fun ViewScope.imageChooser(
             })
             uploadButton = button("upload", mod = modify(Accent), onClickEvent = {
                 val localUrl = localUrl ?: return@button
-                scope.launch {
+                contentScope.launch {
                     console.log("uploading: $localUrl")
                     val url = onUpload(localUrl)
                     onValueChanged?.invoke(url)
@@ -101,7 +101,7 @@ fun ViewScope.imageChooser(
         dialog.open()
     }
 
-    scope.launch {
+    contentScope.launch {
         launch {
             val image = image ?: return@launch
             val placeholder = placeholder ?: return@launch

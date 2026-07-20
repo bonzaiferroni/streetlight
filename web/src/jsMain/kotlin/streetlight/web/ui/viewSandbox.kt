@@ -4,7 +4,7 @@ import koala.dom.*
 import koala.html.heading1
 
 fun RouteScope.viewSandbox() {
-    val model = Sandbox(scope, api, toaster)
+    val model = Sandbox(contentScope, api, toaster)
 
     console.log("welcome to sandbox")
 

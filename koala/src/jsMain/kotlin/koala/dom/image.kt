@@ -46,7 +46,7 @@ fun ViewScope.image(
         element.style.removeProperty("display")
     }
 
-    scope.launch {
+    contentScope.launch {
         binding.collect { url ->
             val url = url?.value ?: ""
             if (url.isEmpty()) {

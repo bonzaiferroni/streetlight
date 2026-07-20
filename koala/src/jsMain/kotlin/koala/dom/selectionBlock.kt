@@ -55,7 +55,7 @@ fun <Item> ViewScope.selectionBlock(
         }
     }
 
-    scope.launch {
+    contentScope.launch {
         selectFlow?.collect { item ->
             if (item == selectedItem) return@collect
             selectElement(item)

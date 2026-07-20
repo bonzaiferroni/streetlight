@@ -24,7 +24,7 @@ import streetlight.web.model.MusicianHub
 fun ViewScope.viewMusicianHub(
     // user: BasicUserInfo,
 ) {
-    val model = MusicianHub(scope, api)
+    val model = MusicianHub(contentScope, api)
 
     column {
         tabs(Id("user-hub-tabs")) {

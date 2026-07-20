@@ -14,7 +14,7 @@ import streetlight.model.ui.MediaRoute
 
 fun ViewScope.viewMediaForge(galaxy: Galaxy?) {
     println(galaxy) // ey
-    val model = app.getMediaEditor(MediaEdit(), scope)
+    val model = app.getMediaEditor(MediaEdit(), contentScope)
     goOnRoute(model.stateFlow.tapNotNull { it.slug?.let { slug -> MediaRoute(slug) }  })
 
     section(modify(Column)) {

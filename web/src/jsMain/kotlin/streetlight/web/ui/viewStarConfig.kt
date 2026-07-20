@@ -43,7 +43,7 @@ fun ViewScope.viewStarConfigRoute() {
             val info = api.readIdentityInfo().handleResponse(toaster) ?: return@routeBlock null
             star.toEdit(info)
         }) { edit ->
-            val model = app.getStarEditor(edit, scope)
+            val model = app.getStarEditor(edit, contentScope)
             viewStarConfig(model)
         }
     }

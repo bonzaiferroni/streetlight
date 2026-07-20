@@ -45,7 +45,7 @@ fun ViewScope.tabs(
     }
 
     indexFlow?.let { flow ->
-        scope.launch {
+        contentScope.launch {
             flow.collect { name ->
                 if (name == currentTab) return@collect
                 currentTab = name

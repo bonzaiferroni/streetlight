@@ -8,7 +8,7 @@ import kotlinx.browser.document
 import streetlight.model.ui.SiteMonitorRoute
 
 fun RouteScope.viewSiteMonitor() {
-    val model = app.getSiteMonitor(scope)
+    val model = app.getSiteMonitor(contentScope)
     column(BodyStyle.Mod) {
         featureHeader("Streetlight Status", "live stats and charts", SiteImage.ControlRoom)
 

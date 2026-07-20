@@ -1,6 +1,5 @@
 package streetlight.web.ui
 
-import kampfire.model.handleResponse
 import koala.css.*
 import koala.dom.*
 import koala.dom.routeBlock
@@ -37,13 +36,13 @@ fun ViewScope.viewMediumUpdater(model: MediaEditor) {
 
 fun RouteScope.viewMediumUpdaterRoute() {
     routeBlock<MediaUpdateRoute, MediaEdit>({ inflator.contentFor<Media>(it)?.toEdit() }) {
-        val editor = MediaEditor(it, scope, api, toaster)
+        val editor = MediaEditor(it, contentScope, api, toaster)
         viewMediumUpdater(editor)
     }
 }
 
 fun ViewScope.goOnRoute(routeFlow: Flow<AppRoute>) {
-    scope.launch {
+    contentScope.launch {
         routeFlow.collect { route ->
             portal.go(route)
         }

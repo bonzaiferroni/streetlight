@@ -18,7 +18,7 @@ fun ViewScope.viewMedia(media: Media) {
     }
 
     mountChildView(PostKey.TalkId) {
-        val talkLog = TalkLog(scope, media.mediaId.value, SpaceType.Post, api)
+        val talkLog = TalkLog(contentScope, media.mediaId.value, SpaceType.Post, api)
         viewTalkLog(talkLog)
     }
 }

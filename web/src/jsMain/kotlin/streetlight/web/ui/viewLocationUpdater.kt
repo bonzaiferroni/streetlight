@@ -11,7 +11,7 @@ import streetlight.model.ui.LocationUpdateRoute
 
 fun ViewScope.viewLocationUpdater(content: LocationUpdaterContent, star: Star) {
     val edit = content.location.toEdit()
-    val model = edit.let { app.getLocationEditor(it, scope) }
+    val model = edit.let { app.getLocationEditor(it, contentScope) }
 
     tabs {
         tab("edit") {

@@ -19,7 +19,7 @@ fun ViewScope.starGate(
         when (user) {
             null -> {
                 val dialog = dialog("Sign In") {
-                    val model = app.getUserCreator(scope)
+                    val model = app.getUserCreator(contentScope)
                     tabs { // mod = modify(Width64)
                         tab("guest") {
                             dialogCard {

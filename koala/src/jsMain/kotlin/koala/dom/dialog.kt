@@ -48,7 +48,7 @@ fun ViewScope.dialog(
             }
         })
 
-        scope.launch {
+        contentScope.launch {
             stateFlow?.collect {
                 if (it) dialog.open() else dialog.close()
             }
@@ -83,7 +83,7 @@ class DialogElement(
     }
 
     fun close() {
-        view.scope.launch {
+        view.contentScope.launch {
             element.unmodify(Reveal)
             delay(200.milliseconds)
             element.close()

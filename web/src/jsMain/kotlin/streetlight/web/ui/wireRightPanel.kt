@@ -27,7 +27,7 @@ fun ViewScope.wireRightPanel() {
         }
     }
 
-    scope.launch {
+    contentScope.launch {
         recordFlow.collect {
             delay(100.milliseconds)
             container?.scrollTo(ScrollToOptions(

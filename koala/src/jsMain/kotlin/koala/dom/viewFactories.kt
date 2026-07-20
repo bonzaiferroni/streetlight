@@ -31,7 +31,7 @@ fun ViewScope.mountChildView(
     mount.clear()
     lateinit var view: View
     mount.append {
-        view = View(this@append, scope, name, app, mount, this@mountChildView)
+        view = View(this@append, contentScope, name, app, mount, this@mountChildView)
         view.applyView(InsertEdge.Tail, block)
     }
     return view
@@ -50,7 +50,7 @@ fun ViewScope.appendChildView(
 ): View {
     lateinit var view: View
     element.append {
-        view = View(this@append, scope, name, app, element, this@appendChildView)
+        view = View(this@append, contentScope, name, app, element, this@appendChildView)
         view.applyView(InsertEdge.Tail, block)
     }
     return view
@@ -63,7 +63,7 @@ fun ViewScope.prependChildView(
 ): View {
     lateinit var view: View
     element.prepend {
-        view = View(this@prepend, scope, name, app, element, this@prependChildView)
+        view = View(this@prepend, contentScope, name, app, element, this@prependChildView)
         view.applyView(InsertEdge.Head, block)
     }
     return view

@@ -109,7 +109,7 @@ fun ViewScope.formSubmit(
             }
             val element = button(label, onSubmit, modify(Accent))
             messages?.let {
-                element.flowIsWorking(it.isWorkingFlow, scope)
+                element.flowIsWorking(it.isWorkingFlow, contentScope)
             }
         }
     }

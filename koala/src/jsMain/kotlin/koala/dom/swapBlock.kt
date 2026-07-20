@@ -20,7 +20,7 @@ fun ViewScope.wireSwapBlock(
         val children = element.children.asList().map { it as HTMLElement }
         console.log(element.id)
         val isMagic = element.classList.contains(Magic.identifier)
-        scope.launch {
+        contentScope.launch {
             var isInitial = true
             flow.collect { id ->
                 if (isMagic) {

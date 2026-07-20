@@ -1,6 +1,5 @@
 package streetlight.web.ui
 
-import kampfire.model.handleResponse
 import koala.LottieFile
 import koala.css.*
 import koala.dom.*
@@ -12,7 +11,7 @@ import streetlight.model.data.toEdit
 import streetlight.model.ui.GalaxyConfigRoute
 
 fun ViewScope.viewGalaxyConfig(edit: GalaxyEdit) {
-    val model = app.getGalaxyEditor(edit, scope)
+    val model = app.getGalaxyEditor(edit, contentScope)
 
     column {
         introSection("Galaxy Settings", lottie = LottieFile.ServerSync) {

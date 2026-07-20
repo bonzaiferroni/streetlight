@@ -32,7 +32,7 @@ fun <T> ViewScope.textBlock(
     block: (P.() -> Unit)? = null
 ): HTMLParagraphElement {
     val element = this@textBlock.textBlock(mod = mod, block = block)
-    scope.launch {
+    contentScope.launch {
         binding.distinctUntilChanged().collect {
             element.textContent = provideValue(it)
         }

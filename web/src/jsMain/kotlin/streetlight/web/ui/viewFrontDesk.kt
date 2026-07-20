@@ -32,6 +32,6 @@ fun ViewScope.viewFrontDesk(model: FrontDesk) {
 }
 
 fun RouteScope.viewFrontDeskRoute() {
-    val model = app.getFeedbackDesk(scope)
+    val model = app.getFeedbackDesk(contentScope)
     viewFrontDesk(model)
 }

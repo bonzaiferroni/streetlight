@@ -25,9 +25,9 @@ fun ViewScope.viewEarth(model: Earth) {
                 earthMenu(model)
                 // earthList(model)
                 earthFocus(model)
-            }.flowModifier(model.isFocusedFlow, EarthStyle.IsFocused, scope)
+            }.flowModifier(model.isFocusedFlow, EarthStyle.IsFocused, contentScope)
         }
-    }.flowModifier(model.isMovingFlow, EarthStyle.IsMoving, scope)
+    }.flowModifier(model.isMovingFlow, EarthStyle.IsMoving, contentScope)
 }
 
 fun ViewScope.viewEarthRoute() {
@@ -48,7 +48,7 @@ fun ViewScope.viewEarthRoute() {
                             } ?: CityMap(null)
                         }
                         this@viewEarthRoute.mountChildView("earth", element) {
-                            val model = app.getEarthMap(scope, map)
+                            val model = app.getEarthMap(contentScope, map)
                             viewEarth(model)
                         }
                         element.modify(Reveal)

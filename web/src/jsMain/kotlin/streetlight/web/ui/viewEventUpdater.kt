@@ -15,7 +15,7 @@ import streetlight.model.ui.EventUpdateRoute
 
 fun ViewScope.viewEventUpdater(content: EventUpdaterContent, star: Star) {
     val edit = content.event.toEdit()
-    val model = edit.let { app.getEventEditor(it, scope) }
+    val model = edit.let { app.getEventEditor(it, contentScope) }
 
     tabs {
         tab("edit") {

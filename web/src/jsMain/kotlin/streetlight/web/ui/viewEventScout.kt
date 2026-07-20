@@ -13,10 +13,10 @@ import streetlight.web.layouts.postRow
 import streetlight.web.model.EventScoutStage
 
 fun ViewScope.viewEventScout(galaxy: Galaxy) {
-    val locationEditor = app.getLocationEditor(LocationEdit(), scope)
-    val locationScout = app.getLocationScout(galaxy, locationEditor, scope)
-    val editor = app.getEventEditor(EventEdit(timeZoneId = getTimeZoneId()), scope)
-    val model = app.getEventScout(galaxy, editor, locationScout, scope)
+    val locationEditor = app.getLocationEditor(LocationEdit(), contentScope)
+    val locationScout = app.getLocationScout(galaxy, locationEditor, contentScope)
+    val editor = app.getEventEditor(EventEdit(timeZoneId = getTimeZoneId()), contentScope)
+    val model = app.getEventScout(galaxy, editor, locationScout, contentScope)
     val routeFlow = model.stateFlow.tapNotNull { it.postId?.let { GalaxyRoute(galaxy.slug) } }
     goOnRoute(routeFlow)
 

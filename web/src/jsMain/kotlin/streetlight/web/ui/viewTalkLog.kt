@@ -38,7 +38,7 @@ fun ViewScope.viewTalkLog(model: TalkLog) {
         treeRoot = column { }
     }
 
-    scope.launch {
+    contentScope.launch {
 
         launch {
             val comments = model.readHistory().handleResponse(toaster) ?: return@launch
@@ -67,7 +67,7 @@ fun ViewScope.viewTalkLog(model: TalkLog) {
 
 fun ViewScope.viewTalkRoute() {
     routeBlock<TalkRoute> { route ->
-        val model = TalkLog(scope, route.id, route.type, api)
+        val model = TalkLog(contentScope, route.id, route.type, api)
         viewTalkLog(model)
     }
 }
@@ -143,7 +143,7 @@ fun ViewScope.commentEditor(
             spacer(modify(Flex1))
             button("send", onClick = {
                 if (text.now.value.isEmpty()) return@button
-                scope.launch {
+                contentScope.launch {
                     val resultText = send(text.now)
                     if (resultText != null) {
                         text.set(resultText)
