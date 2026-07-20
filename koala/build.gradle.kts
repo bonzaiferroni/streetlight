@@ -7,15 +7,20 @@ import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalDistributionDsl
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.serialization)
-    kotlin("plugin.js-plain-objects") version "2.3.10"
+    alias(libs.plugins.jsPlainObjects)
 }
 
 kotlin {
     jvm()
-    js(IR) {
+    js {
         browser {
             commonWebpackConfig {
                 sourceMaps = true
+            }
+            testTask {
+                useKarma {
+                    useChromeHeadless()
+                }
             }
             distribution {
                 outputDirectory.set(projectDir.resolve("../www/js/koala"))
@@ -39,6 +44,9 @@ kotlin {
 
             implementation(project.dependencies.platform(libs.koin.bom))
             implementation(libs.koin.core)
+
+            implementation(kotlin("test"))
+            implementation(libs.kotlinx.coroutines.test)
         }
 
         jsMain.dependencies {
