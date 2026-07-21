@@ -42,23 +42,23 @@ fun <T> storeOf(initialValue: T) = Store(initialValue)
 
 fun <State, Value> MutableField<State>.mutableFieldOf(
     readValue: (State) -> Value,
-    applyFlow: (Flow<Value>) -> Flow<Value> = { it.distinctUntilChanged() },
+    applyFlow: (Flow<State>) -> Flow<Value> = { it.map(readValue).distinctUntilChanged() },
     onValue: State.(Value) -> State
 ): MutableField<Value> = MutableStoreField(this, applyFlow, readValue, onValue)
 
-fun <State, Value> MutableField<State>.fieldOf(
-    applyFlow: (Flow<Value>) -> Flow<Value> = { it.distinctUntilChanged() },
+fun <State, Value> Field<State>.fieldOf(
+    applyFlow: ((Flow<State>) -> Flow<Value>)? = null,
     readValue: (State) -> Value,
-): Field<Value> = StoreField(this, applyFlow, readValue)
+): Field<Value> = StoreField(this, applyFlow ?: { it.map(readValue).distinctUntilChanged() }, readValue)
 
 class MutableStoreField<State, Value>(
     private val store: MutableField<State>,
-    applyFlow: (Flow<Value>) -> Flow<Value>,
+    applyFlow: (Flow<State>) -> Flow<Value>,
     val readValue: (State) -> Value,
     val onValue: State.(Value) -> State
 ): MutableField<Value> {
     override val now: Value get() = readValue(store.now)
-    override val flow = applyFlow(store.flow.map(readValue))
+    override val flow = applyFlow(store.flow)
 
     override fun update(transform: (Value) -> Value) = store.update { it.onValue(transform(readValue(it))) }
     override fun set(value: Value) {
@@ -67,12 +67,12 @@ class MutableStoreField<State, Value>(
 }
 
 class StoreField<State, Value>(
-    private val store: MutableField<State>,
-    applyFlow: (Flow<Value>) -> Flow<Value>,
+    private val store: Field<State>,
+    applyFlow: (Flow<State>) -> Flow<Value>,
     val readValue: (State) -> Value,
 ): Field<Value> {
     override val now: Value get() = readValue(store.now)
-    override val flow = applyFlow(store.flow.map(readValue))
+    override val flow = applyFlow(store.flow)
 }
 
 interface Field<Value> {

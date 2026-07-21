@@ -29,6 +29,12 @@ class Portal(
 
     val screenFlow = stateFlow
         .dedupBy({ if (it.route.screen.retainWithinScreen) it.route.screen else it }) { it.route.screen }
+
+    val screenField = state.fieldOf(
+        applyFlow = { states ->
+            states.dedupBy({ if (it.route.screen.retainWithinScreen) it.route.screen else it }) { it.route.screen }
+        }
+    ) { it.route.screen }
     val routeFlow = stateFlow.dedup { it.route }
 
     private var backstack: List<Navigation> = emptyList()
@@ -109,6 +115,7 @@ class Portal(
     }
 
     fun refresh() {
+        console.log("refreshing")
         state.setValue { it.copy(refreshedAt = Clock.System.now(), isInitialRoute = false) }
     }
 

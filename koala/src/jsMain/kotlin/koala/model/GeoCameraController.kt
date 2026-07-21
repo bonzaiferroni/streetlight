@@ -1,5 +1,6 @@
 package koala.model
 
+import koala.dom.launch
 import koala.dom.modify
 import koala.dom.onView
 import koala.dom.unmodify
@@ -23,12 +24,12 @@ class GeoCameraController(
     init {
         windowElement.onView(camera::setIsViewed)
 
-        scope.launch {
+        scope.launch(GeoCameraController::class) {
             while (!jsMap.loaded()) {
                 delay(10)
             }
 
-            launch {
+            launch("collect pan") {
                 camera.panFlow.collect { pan ->
                     console.log("panning to: ${pan.point.toLngLat()}")
                     val options = CenterZoomBearing(
@@ -45,7 +46,7 @@ class GeoCameraController(
                 }
             }
 
-            launch {
+            launch("collect pan bounds") {
                 camera.panBoundsFlow.collect {
                     jsMap.fitBounds(it.toLngLatBounds())
                 }

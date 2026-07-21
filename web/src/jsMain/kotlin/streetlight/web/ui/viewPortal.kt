@@ -22,8 +22,7 @@ fun ViewScope.viewPortal() {
     var element: HTMLElement? = null
 
     element = flowBlock(
-        initialValue = portal.stateNow.route.screen,
-        flow = portal.screenFlow,
+        field = portal.screenField,
         modifiers = modify(Magic, Blur),
         name = ::viewPortal.name,
         // cacheElements = true,
@@ -34,7 +33,6 @@ fun ViewScope.viewPortal() {
             // target element, typically a heading, for accessibility functionality
             element?.querySelector(FocusTarget)?.focus()
         },
-        rebuildOnEqual = true,
     ) { screen ->
         val routeScope = RouteScope(this, inflator, portal.stateNow)
         with (routeScope) {

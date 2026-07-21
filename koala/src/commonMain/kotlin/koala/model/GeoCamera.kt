@@ -22,12 +22,6 @@ class GeoCamera(
     internal val panBoundsFlow: SharedFlow<GeoBounds> = _panBoundsFlow
     private val _movementFlow = MutableSharedFlow<MarkerMovement>(1)
     internal val movementFlow: Flow<MarkerMovement> = _movementFlow
-//    private val _tempEntityFlow = MutableSharedFlow<TempEntitySet?>(1)
-//    internal val tempEntityFlow: Flow<TempEntitySet?> = _tempEntityFlow
-//    private val _hideLayersFlow = MutableSharedFlow<List<LayerId>>(1)
-//    internal val hideLayersFlow: Flow<List<LayerId>> = _hideLayersFlow
-//    private val _showLayersFlow = MutableSharedFlow<List<LayerId>>(1)
-//    internal val showLayersFlow: Flow<List<LayerId>> = _showLayersFlow
 
     val viewedStateFlow = stateFlow.filter { it.isViewed }
     val isMovingFlow = viewedStateFlow.dedup { it.isMoving }
@@ -58,11 +52,11 @@ class GeoCamera(
     }
 
     internal fun setIsViewed(value: Boolean) {
-        state.setValue { it.copy(isViewed = value) }
+        state.set { copy(isViewed = value) }
     }
 
     internal fun setBounds(center: GeoPoint, bounds: GeoBounds, zoom: Float, isMoving: Boolean) {
-        state.setValue { it.copy(center = center, bounds = bounds, zoom = zoom, isMoving = isMoving) }
+        state.set { copy(center = center, bounds = bounds, zoom = zoom, isMoving = isMoving) }
     }
 }
 

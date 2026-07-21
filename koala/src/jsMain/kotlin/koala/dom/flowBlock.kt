@@ -28,7 +28,6 @@ fun <Value> ViewScope.flowBlock(
     name: String = "flowBlock",
     config: (DIV.() -> Unit)? = null,
     onTransition: ((Value) -> Unit)? = null,
-    rebuildOnEqual: Boolean = false,
     block: ViewScope.(Value) -> Unit
 ): HTMLDivElement {
     val magic = modifiers?.contains(Magic) ?: false
@@ -39,13 +38,11 @@ fun <Value> ViewScope.flowBlock(
 
     var view: View? = null
     var launchJob: Job? = null
-    var currentValue: Value? = null
 
     fun mountView(value: Value) {
         view = this@flowBlock.mountChildView(name, element) {
             block(value)
         }
-        currentValue = value
         if (magic) {
             element.modify(Reveal)
         }
@@ -62,23 +59,26 @@ fun <Value> ViewScope.flowBlock(
         }
     }
 
-    tryMountView(field.now)
+    val mountedValue = field.now
+    tryMountView(mountedValue)
 
     launchEffect("$name > launchEffect") {
+        var isFirstEmission = true
         field.flow.collect { value ->
-            if (value == currentValue && !rebuildOnEqual) return@collect
+            val isReplay = isFirstEmission && value == mountedValue && view != null
+            isFirstEmission = false
+            if (isReplay) return@collect
             view?.dispose()
 
             if (magic) {
                 val interval = KoalaTheme.MAGIC_INTERVAL.milliseconds
                 launchJob?.cancel()
-                launchJob = launch("$name > mountView") {
+                launchJob = launch("$name > transition") {
                     if (view != null) {
                         element.modify(Transitioning).unmodifyAfterFrame(Reveal)
                         delay(interval)
                     }
-                    mountView(value)
-                    onTransition?.invoke(value)
+                    tryMountView(value)
                     delay(interval)
                     element.unmodify(Transitioning)
                 }
@@ -98,7 +98,6 @@ fun <Value> ViewScope.flowBlock(
     name: String = "flowBlock",
     config: (DIV.() -> Unit)? = null,
     onTransition: ((Value) -> Unit)? = null,
-    rebuildOnEqual: Boolean = false,
     block: ViewScope.(Value) -> Unit
 ) = flowBlock(
     field = flow.toField(initialValue, contentScope, "$name > toField"),
@@ -106,7 +105,6 @@ fun <Value> ViewScope.flowBlock(
     name = name,
     config = config,
     onTransition = onTransition,
-    rebuildOnEqual = rebuildOnEqual,
     block = block
 )
 
