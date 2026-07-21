@@ -11,7 +11,7 @@ import koala.external.VehiclePosition
 import koala.model.Altitude
 import koala.model.GeoMap
 import koala.model.TravelMarker
-import koala.model.tap
+import koala.model.dedup
 import koala.model.storeOf
 import koala.model.toGeoPoint
 import kotlinx.coroutines.CoroutineScope
@@ -35,7 +35,7 @@ class TransitMap(
     private val state = storeOf(TransitMapState())
     val stateNow get() = state.now
     val stateFlow = state.flow
-    val isActiveFlow = stateFlow.tap { it.isActive }
+    val isActiveFlow = stateFlow.dedup { it.isActive }
     private val markerLayer = geoMap.getOrCreateLayer(MarkerLayerConfig.Transit)
 
     private var currentEntities: List<VehicleMarker> = emptyList()
@@ -60,7 +60,7 @@ class TransitMap(
         } else {
             stopTracking()
         }
-        state.set { it.copy(isActive = value, timestamp = 0L) }
+        state.setValue { it.copy(isActive = value, timestamp = 0L) }
     }
 
     private fun startTracking() {
@@ -131,7 +131,7 @@ class TransitMap(
 
         currentEntities = markers
 
-        state.set { it.copy(timestamp = transitState.timestamp) }
+        state.setValue { it.copy(timestamp = transitState.timestamp) }
     }
 }
 

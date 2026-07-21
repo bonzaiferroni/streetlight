@@ -1,7 +1,7 @@
 package streetlight.web.model
 
 import kampfire.model.getDataOrNull
-import koala.model.tap
+import koala.model.dedup
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -16,9 +16,9 @@ class SongProfile(
 ) {
     private val song = storeOf<Song?>(null)
 
-    val titleFlow = song.flow.tap { it?.title ?: "" }
-    val artistFlow = song.flow.tap { it?.artist ?: "" }
-    val updatedAtFlow = song.flow.tap { it?.updatedAt }
+    val titleFlow = song.flow.dedup { it?.title ?: "" }
+    val artistFlow = song.flow.dedup { it?.artist ?: "" }
+    val updatedAtFlow = song.flow.dedup { it?.updatedAt }
 
     init {
         refreshSong()
@@ -27,16 +27,16 @@ class SongProfile(
     fun refreshSong() {
         scope.launch {
             val value = api.readSong(songId).getDataOrNull() ?: return@launch
-            song.set { value }
+            song.setValue { value }
         }
     }
 
     fun setTitle(title: String) {
-        song.set { it?.copy(title = title) }
+        song.setValue { it?.copy(title = title) }
     }
 
     fun setArtist(artist: String) {
-        song.set { it?.copy(artist = artist) }
+        song.setValue { it?.copy(artist = artist) }
     }
 
     fun updateSong() {

@@ -7,12 +7,9 @@ import streetlight.web.model.LocationScout
 import streetlight.web.model.SearchMode
 
 fun ViewScope.locationScoutForm(model: LocationScout) = formSectionLegacy("Find a location") {
-    val indexFlow = model.modeFlow.map { it.ordinal }
 
     tabs(
-        indexFlow = indexFlow,
-        onChangeTab = { model.setMode(SearchMode.entries[it]) },
-        defaultTab = model.stateNow.mode.ordinal
+        indexField = model.modeField
     ) {
         tab(SearchMode.Search.name) {
             locationSearchForm(model)
@@ -29,20 +26,20 @@ private fun ViewScope.locationSearchForm(model: LocationScout) = formCard {
         bullets = listOf("If you don't see the location in the list, you can search OpenStreetMap.")
     ) {
         row {
-            textField("search", model::setQuery, model.queryFlow, modify(Flex1))
-            textField("city", model::setCity, model.cityFlow, modify(Width24))
+            textField(model.queryField, "search", modify(Flex1))
+            textField(model.cityField, "city", modify(Width24))
         }
         formSubmit("Search OSM", model::queryOSM, messages = model.queryMessage)
 
-        flowBlock(model.hasOsmLocations, modify(Height32, OverflowYAuto)) { hasOsmLocations ->
+        flowBlock(model.hasOsmLocationsField, modify(Height32, OverflowYAuto)) { hasOsmLocations ->
             when (hasOsmLocations) {
                 true -> {
-                    selectionBlock(model.osmLocationsFlow, model::stageLocation) { location ->
+                    selectionBlock(model.osmLocationsField, model.mapLocationField) { location ->
                         searchItem(location.name, location.address, location.city)
                     }
                 }
                 else -> {
-                    selectionBlock(model.queryLocationsFlow, model::setLocation, model.locationFlow) { location ->
+                    selectionBlock(model.queryLocationsField, model.locationField) { location ->
                         searchItem(location.name, location.address, location.city)
                     }
                 }

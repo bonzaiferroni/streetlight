@@ -4,7 +4,7 @@ import kampfire.model.handleResponse
 import koala.model.FeatureMarker
 import koala.model.MarkerFocus
 import koala.model.Portal
-import koala.model.tap
+import koala.model.dedup
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -29,14 +29,14 @@ class Earth(
     private val state = storeOf(EarthMapState(initialMap))
     val stateFlow = state.flow
     val stateNow get() = state.now
-    val mapFlow = stateFlow.tap { it.map }
-    val boundedMarkersFlow = markerMap.boundedMarkersFlow.tap { it ?: emptyList() }
-    val unboundedMarkersFlow = markerMap.unboundedMarkersFlow.tap { it ?: emptyList() }
-    val summaryFlow = markerMap.boundedMarkersFlow.tap { points ->
+    val mapFlow = stateFlow.dedup { it.map }
+    val boundedMarkersFlow = markerMap.boundedMarkersFlow.dedup { it ?: emptyList() }
+    val unboundedMarkersFlow = markerMap.unboundedMarkersFlow.dedup { it ?: emptyList() }
+    val summaryFlow = markerMap.boundedMarkersFlow.dedup { points ->
         points?.groupingBy { it.typeLabel }?.eachCount()?.toList()
     }
     val isMovingFlow = markerMap.isMovingFlow
-    val focusFlow = markerMap.focusFlow.tap { focus ->
+    val focusFlow = markerMap.focusFlow.dedup { focus ->
         when (val galaxy = ((focus as? MarkerFocus)?.marker as? GalaxyMarker)?.galaxy) {
             null -> focus
             else -> {
@@ -45,7 +45,7 @@ class Earth(
             }
         }
     }
-    val isFocusedFlow = focusFlow.tap { it != null }
+    val isFocusedFlow = focusFlow.dedup { it != null }
 
     init {
         scope.launch {
@@ -70,7 +70,7 @@ class Earth(
                             markerService.createMarkers(it)
                         }
                         markerMap.setPoints(markers)
-                        state.set { it.copy(map = GalaxyMap(null)) }
+                        state.setValue { it.copy(map = GalaxyMap(null)) }
                         showAll()
                     }
 
@@ -85,7 +85,7 @@ class Earth(
                             markerService.createMarkers(it)
                         }
                         markerMap.setPoints(markers)
-                        state.set { it.copy(map = GalaxyMap(galaxy)) }
+                        state.setValue { it.copy(map = GalaxyMap(galaxy)) }
                         showAll()
                     }
                 }
@@ -98,7 +98,7 @@ class Earth(
                             markerService.createMarkers(it)
                         }
                         markerMap.setPoints(markers)
-                        state.set { it.copy(map = CityMap(null))}
+                        state.setValue { it.copy(map = CityMap(null))}
                         showAll()
                     }
                     else -> {
@@ -112,7 +112,7 @@ class Earth(
                             markerService.createMarkers(it)
                         }
                         markerMap.setPoints(markers)
-                        state.set{ it.copy(map = CityMap(city)) }
+                        state.setValue{ it.copy(map = CityMap(city)) }
                         showAll()
                     }
                 }

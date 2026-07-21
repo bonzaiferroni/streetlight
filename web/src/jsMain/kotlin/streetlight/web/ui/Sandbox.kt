@@ -2,9 +2,9 @@ package streetlight.web.ui
 
 import kampfire.api.toUsername
 import kampfire.model.handleResponse
-import koala.model.fieldOf
+import koala.model.mutableFieldOf
 import koala.model.storeOf
-import koala.model.tap
+import koala.model.dedup
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import streetlight.web.io.ApiClient
@@ -23,9 +23,9 @@ class Sandbox(
     val stateNow get() = state.now
     val stateFlow = state.flow
 
-    val isNameTaken = stateFlow.tap { it.isNameTaken }
+    val isNameTaken = stateFlow.dedup { it.isNameTaken }
 
-    val nameField = state.fieldOf({ it.name }) { copy(name = it) }
+    val nameField = state.mutableFieldOf({ it.name }) { copy(name = it) }
 
     fun checkAvailability() {
         scope.launch(::checkAvailability.name, toaster, "arrr ${Random.nextInt()}") {
@@ -33,7 +33,7 @@ class Sandbox(
             println(null.asDynamic().anything)
             val isNameTaken = api.checkUsernameExists(stateNow.name.toUsername()).handleResponse(toaster)
             val name = if (isNameTaken == true) "" else stateNow.name
-            state.set { it.copy(isNameTaken = isNameTaken, name = name) }
+            state.setValue { it.copy(isNameTaken = isNameTaken, name = name) }
         }
     }
 }

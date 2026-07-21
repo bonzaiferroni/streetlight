@@ -10,12 +10,13 @@ fun RouteScope.viewChatRoom() {
         itemsBlock(model.messagesFlow, modify(Magic, Blur, SlideLeft)) { message ->
             textBlock("${message.source}: ${message.text}")
         }
-        textField(
-            flow = model.sendFlow,
-            onValue = model::setMessage,
-            mod = modify(Width100P),
-            onEnter = model::sendMessage
-        )
+        // td: fix or retire
+        // textField(
+        //     flow = model.sendFlow,
+        //     onValue = model::setMessage,
+        //     mod = modify(Width100P),
+        //     onEnter = model::sendMessage
+        // )
     }
 
     element.onView(model::setIsActive)

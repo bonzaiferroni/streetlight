@@ -24,10 +24,11 @@ fun ViewScope.viewMedia(media: Media) {
 }
 
 fun ViewScope.viewPostRoute() {
-    routeBlock<MediaRoute, Media>(portal, { route ->
-        readIsland<Media>(PostKey.IslandId) { it.slug == route.slug }
-            ?: api.readMedia(route.slug).handleResponse(toaster)
-    }) { post ->
-        viewMedia(post)
-    }
+    // td: fix
+    // routeBlock<MediaRoute, Media>(portal, { route ->
+    //     readIsland<Media>(PostKey.IslandId) { it.slug == route.slug }
+    //         ?: api.readMedia(route.slug).handleResponse(toaster)
+    // }) { post ->
+    //     viewMedia(post)
+    // }
 }

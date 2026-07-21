@@ -4,7 +4,7 @@ import kampfire.model.Messenger
 import kampfire.model.Outcome
 import kampfire.model.handleResponse
 import koala.dom.setStorageOf
-import koala.model.tap
+import koala.model.dedup
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -32,8 +32,8 @@ class LightCache<Id, Item>(
     private val state = storeOf(LightCacheState<Id, Item>())
     val stateNow get() = state.now
     val stateFlow = state.flow
-    val lightsFlow = stateFlow.tap { it.lights }
-    val itemsFlow = stateFlow.tap { it.items }
+    val lightsFlow = stateFlow.dedup { it.lights }
+    val itemsFlow = stateFlow.dedup { it.items }
 
     private val idToString: (Id) -> String = { idToUuid(it).toString() }
     private val stringToId: (String) -> Id = { uuidToId(Uuid.parse(it)) }
@@ -52,7 +52,7 @@ class LightCache<Id, Item>(
                             cachedLights = emptySet()
                         }
                         val lights = readRemoteLights().handleResponse(onError) ?: return@collect
-                        state.set { it.copy(lights = lights.toSet())}
+                        state.setValue { it.copy(lights = lights.toSet())}
                     }
                 }
             }
@@ -63,7 +63,7 @@ class LightCache<Id, Item>(
                         true -> emptyList()
                         else -> readRemoteItems(newIds.toList()).handleResponse(onError) ?: emptyList() // td: fail message
                     }
-                    state.set { it.copy(items = it.items.filter { item -> lights.contains(itemToId(item)) } + newItems) }
+                    state.setValue { it.copy(items = it.items.filter { item -> lights.contains(itemToId(item)) } + newItems) }
                 }
             }
         }
@@ -103,8 +103,8 @@ class LightCache<Id, Item>(
 
     private fun editState(id: Id, isLit: Boolean) {
         when (isLit) {
-            true -> state.set { it.copy(lights = it.lights + id) }
-            else -> state.set { it.copy(lights = it.lights - id) }
+            true -> state.setValue { it.copy(lights = it.lights + id) }
+            else -> state.setValue { it.copy(lights = it.lights - id) }
         }
     }
 

@@ -2,7 +2,7 @@ package streetlight.web.ui
 
 import koala.css.*
 import koala.dom.*
-import koala.model.tap
+import koala.model.dedup
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.w3c.dom.HTMLElement
@@ -15,7 +15,7 @@ import kotlin.time.Duration.Companion.milliseconds
 
 fun ViewScope.wireRightPanel() {
     val omni = app.get<OmniLog>()
-    val recordFlow = omni.stateFlow.tap { it.records }
+    val recordFlow = omni.stateFlow.dedup { it.records }
     var container: HTMLElement? = null
     val cardMod = modify(ZenBg, Height100P, JustifyContentEnd, OverflowYAuto, OverscrollBehaviorContain, OverflowXHidden)
 

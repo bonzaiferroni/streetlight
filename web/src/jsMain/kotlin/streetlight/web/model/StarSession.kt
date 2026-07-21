@@ -6,7 +6,8 @@ import kampfire.model.Messenger
 import kampfire.model.PrintLnMessenger
 import kampfire.model.handleResponse
 import koala.dom.launch
-import koala.model.tap
+import koala.model.dedup
+import koala.model.fieldOf
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -23,9 +24,9 @@ class StarSession(
     val stateNow get() = state.now
     val stateFlow = state.flow
 
-    val starFlow = stateFlow.tap { it.star }
-    val signedInFlow = stateFlow.tap { it.isSignedIn }
-    val signedOutAtFlow = stateFlow.tap { it.signedOutAt }
+    val starField = state.fieldOf { it.star }
+    val signedInFlow = stateFlow.dedup { it.isSignedIn }
+    val signedOutAtFlow = stateFlow.dedup { it.signedOutAt }
 
     fun signIn(receiver: Messenger?) {
         if (stateNow.star != null) return
@@ -47,7 +48,7 @@ class StarSession(
         api.validateLogin().handleResponse(receiver ?: PrintLnMessenger) { star ->
             val star = star ?: return@handleResponse
             console.log("signed in: ${star.accountType}")
-            state.set { it.copy(star = star) }
+            state.set { copy(star = star) }
 
             // guest check in
             if (star.accountType == AccountType.Guest) {
@@ -62,7 +63,7 @@ class StarSession(
         scope.launch(::signOut) {
             api.logout()
             // userCache.reset()
-            state.set { it.copy(star = null, signedOutAt = Clock.System.now()) }
+            state.setValue { it.copy(star = null, signedOutAt = Clock.System.now()) }
         }
     }
 }

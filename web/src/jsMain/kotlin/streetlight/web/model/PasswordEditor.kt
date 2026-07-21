@@ -4,19 +4,20 @@ import kampfire.api.Password
 import kampfire.api.toValidOutcome
 import kampfire.model.Outcome
 import kampfire.model.Problem
-import koala.model.tap
+import koala.model.fieldOf
+import koala.model.mutableFieldOf
 import koala.model.storeOf
 
 class PasswordEditor() {
     private val state = storeOf(PasswordEditorState())
     private val stateNow get() = state.now
 
-    val passwordFlow = state.flow.tap { it.password }
-    val confirmationFlow = state.flow.tap { it.confirmation }
-    val isValidFlow = state.flow.tap { it.isValid }
+    val passwordField = state.mutableFieldOf({ it.password }) { copy(password = it) }
+    val confirmationFlow = state.mutableFieldOf({ it.confirmation }) { copy(confirmation = it) }
+    val isValidFlow = state.fieldOf { it.isValid }
 
-    fun setPassword(value: String) = state.set { it.copy(password = value) }
-    fun setConfirmation(value: String) = state.set { it.copy(confirmation = value) }
+    // fun setPassword(value: String) = state.setValue { it.copy(password = value) }
+    // fun setConfirmation(value: String) = state.setValue { it.copy(confirmation = value) }
 
     fun getOutcome(): Outcome<Password> = when {
         stateNow.password != stateNow.confirmation -> Problem("Password input does not match")

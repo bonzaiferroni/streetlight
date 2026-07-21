@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 
+@Deprecated("Use a field")
 class Flower<T>(
     replay: Int = 1,
     private val fetch: suspend () -> T?,
@@ -23,6 +24,7 @@ class Flower<T>(
     }
 }
 
+@Deprecated("use a field")
 fun <T> ViewScope.flowerOf(
     initialRefresh: Boolean = true,
     replay: Int = 1,

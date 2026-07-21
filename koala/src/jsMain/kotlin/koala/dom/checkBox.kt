@@ -2,6 +2,7 @@ package koala.dom
 
 import koala.css.ModifierSet
 import koala.css.addModifiers
+import koala.model.MutableField
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
@@ -13,38 +14,46 @@ import kotlinx.html.js.onInputFunction
 import org.w3c.dom.HTMLInputElement
 
 fun ViewScope.checkBox(
+    field: MutableField<Boolean>,
     label: String,
-    onValue: ((Boolean) -> Unit)? = null,
-    flow: Flow<Boolean>? = null,
     mod: ModifierSet? = null,
     block: (INPUT.() -> Unit)? = null
 ) = label {
     addModifiers(mod)
-    checkBox(onValue, flow, block)
+    checkBox(field, block)
     +label
 }
 
 fun ViewScope.checkBox(
-    onValue: ((Boolean) -> Unit)? = null,
-    flow: Flow<Boolean>? = null,
+    field: MutableField<Boolean>,
     block: (INPUT.() -> Unit)? = null
 ): HTMLInputElement {
-    val element = input {
+    var currentValue = field.now
+    lateinit var element: HTMLInputElement
+
+    fun display(value: Boolean) {
+        currentValue = value
+        if (element.checked != value) {
+            element.checked = value
+        }
+    }
+
+    element = input {
         type = InputType.checkBox
-        onValue?.let { callback ->
-            onInputFunction = {
-                val value = (it.target as HTMLInputElement).checked
-                callback(value)
+        onInputFunction = {
+            val newValue = (it.target as HTMLInputElement).checked
+            if (newValue != currentValue) {
+                field.set(newValue)
+                display(field.now)
             }
         }
+        checked = currentValue
         block?.invoke(this)
     } as HTMLInputElement
 
-    flow?.let {
-        contentScope.launch {
-            flow.distinctUntilChanged().collect {
-                element.checked = it
-            }
+    launchEffect("checkBox") {
+        field.flow.collect {
+            display(it)
         }
     }
 

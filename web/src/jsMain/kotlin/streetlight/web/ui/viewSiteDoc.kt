@@ -16,14 +16,15 @@ fun ViewScope.viewSiteDoc(node: DocNode) {
 }
 
 fun ViewScope.viewSiteDocRoute() {
-    routeBlock<SiteDocRoute, DocNode>(portal, { route ->
-        if (cachedTable == null) {
-            cachedTable = api.readSiteDocTable().handleResponse(toaster)
-        }
-        api.readSiteDoc(route.docId).handleResponse(toaster)
-    }) { node ->
-        viewSiteDoc(node)
-    }
+    // td: fix
+    // routeBlock<SiteDocRoute, DocNode>(portal, { route ->
+    //     if (cachedTable == null) {
+    //         cachedTable = api.readSiteDocTable().handleResponse(toaster)
+    //     }
+    //     api.readSiteDoc(route.docId).handleResponse(toaster)
+    // }) { node ->
+    //     viewSiteDoc(node)
+    // }
 }
 
 private var cachedTable: DocTable? = null

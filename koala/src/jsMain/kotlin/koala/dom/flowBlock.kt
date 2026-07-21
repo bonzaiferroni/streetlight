@@ -10,7 +10,10 @@ import koala.css.Transitioning
 import koala.css.addModifiers
 import koala.css.modify
 import koala.html.FlowBlockKey
+import koala.model.Field
+import koala.model.Store
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -19,14 +22,14 @@ import kotlinx.html.js.div
 import org.w3c.dom.HTMLDivElement
 import kotlin.time.Duration.Companion.milliseconds
 
-fun <State> ViewScope.flowBlock(
-    flow: Flow<State>,
+fun <Value> ViewScope.flowBlock(
+    field: Field<Value>,
     modifiers: ModifierSet? = null,
     name: String = "flowBlock",
     config: (DIV.() -> Unit)? = null,
-    onTransition: ((State) -> Unit)? = null,
+    onTransition: ((Value) -> Unit)? = null,
     rebuildOnEqual: Boolean = false,
-    block: ViewScope.(State) -> Unit
+    block: ViewScope.(Value) -> Unit
 ): HTMLDivElement {
     val magic = modifiers?.contains(Magic) ?: false
     val element = div {
@@ -35,22 +38,36 @@ fun <State> ViewScope.flowBlock(
     }
 
     var view: View? = null
-    var renderedOnce = false
     var launchJob: Job? = null
+    var currentValue: Value? = null
+
+    fun mountView(value: Value) {
+        view = this@flowBlock.mountChildView(name, element) {
+            block(value)
+        }
+        currentValue = value
+        if (magic) {
+            element.modify(Reveal)
+        }
+    }
+
+    fun tryMountView(value: Value) {
+        try {
+            mountView(value)
+            onTransition?.invoke(value)
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Throwable) {
+            scope.launch("$name > mountView") { throw e }
+        }
+    }
+
+    tryMountView(field.now)
 
     launchEffect("$name > launchEffect") {
-        var currentValue: State? = null
-        flow.collect { value ->
-            if (renderedOnce && value == currentValue && !rebuildOnEqual) return@collect
-            renderedOnce = true
+        field.flow.collect { value ->
+            if (value == currentValue && !rebuildOnEqual) return@collect
             view?.dispose()
-
-            fun mountView() {
-                view = this@flowBlock.mountChildView(name, element) {
-                    block(value)
-                }
-                currentValue = value
-            }
 
             if (magic) {
                 val interval = KoalaTheme.MAGIC_INTERVAL.milliseconds
@@ -60,26 +77,49 @@ fun <State> ViewScope.flowBlock(
                         element.modify(Transitioning).unmodifyAfterFrame(Reveal)
                         delay(interval)
                     }
-                    mountView()
-                    element.modify(Reveal)
+                    mountView(value)
                     onTransition?.invoke(value)
                     delay(interval)
                     element.unmodify(Transitioning)
                 }
             } else {
-                try {
-                    mountView()
-                    onTransition?.invoke(value)
-                } catch (e: CancellationException) {
-                    throw e
-                } catch (e: Throwable) {
-                    launch("$name > render") { throw e }
-                }
+                tryMountView(value)
             }
         }
     }
 
     return element
+}
+
+fun <Value> ViewScope.flowBlock(
+    initialValue: Value,
+    flow: Flow<Value>,
+    modifiers: ModifierSet? = null,
+    name: String = "flowBlock",
+    config: (DIV.() -> Unit)? = null,
+    onTransition: ((Value) -> Unit)? = null,
+    rebuildOnEqual: Boolean = false,
+    block: ViewScope.(Value) -> Unit
+) = flowBlock(
+    field = flow.toField(initialValue, contentScope, "$name > toField"),
+    modifiers = modifiers,
+    name = name,
+    config = config,
+    onTransition = onTransition,
+    rebuildOnEqual = rebuildOnEqual,
+    block = block
+)
+
+fun <T> Flow<T>.toField(
+    initialValue: T,
+    scope: CoroutineScope,
+    name: String = "toField",
+): Field<T> {
+    val store = Store(initialValue)
+    scope.launch(name) {
+        collect { store.set(it) }
+    }
+    return store
 }
 
 val defaultMagic = modify(Magic, Blur, SlideLeft)

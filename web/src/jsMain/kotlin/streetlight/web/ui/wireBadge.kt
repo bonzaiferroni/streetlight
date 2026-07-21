@@ -15,7 +15,7 @@ fun ViewScope.wireBadge() {
     val element = document.body?.querySelector(StarBadgeKey.Id) as? HTMLImageElement ?: error("star badge not found")
 
     launchEffect {
-        gate.starFlow.collect { star ->
+        gate.starField.flow.collect { star ->
             val url = when (star) {
                 null -> SvgFile.Someone.url
                 else -> star.image?.thumb ?: SiteImage.placeholderTh

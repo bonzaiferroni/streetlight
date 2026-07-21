@@ -4,11 +4,10 @@ import kampfire.model.UIMessage
 import kampfire.model.UIMessageType
 import koala.css.*
 import koala.html.MessageBox
-import koala.model.Store
-import kotlinx.coroutines.flow.Flow
+import koala.model.Field
 
 fun ViewScope.messageBox(
-    flow: Flow<UIMessage?>,
+    flow: Field<UIMessage?>,
     modifiers: ModifierSet? = null,
 ) {
     flowBlock(flow, modifiers) { message ->
@@ -20,10 +19,10 @@ fun ViewScope.messageBox(
     }
 }
 
-fun ViewScope.messageBox(
-    store: Store<UIMessage?>,
-    modifiers: ModifierSet? = null,
-) = messageBox(store.flow, modifiers)
+// fun ViewScope.messageBox(
+//     store: Store<UIMessage?>,
+//     modifiers: ModifierSet? = null,
+// ) = messageBox(store, modifiers)
 
 fun UIMessageType.toModifier() = when (this) {
     UIMessageType.Error -> MessageBox.Error

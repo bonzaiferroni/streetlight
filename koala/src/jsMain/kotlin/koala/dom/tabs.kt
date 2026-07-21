@@ -4,6 +4,7 @@ import koala.css.*
 import koala.html.Attribute
 import koala.html.Id
 import koala.html.TabClass
+import koala.model.MutableField
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.html.js.p
@@ -14,8 +15,7 @@ fun ViewScope.tabs(
     id: Id? = null,
     mod: ModifierSet? = null,
     viewportMod: ModifierSet? = null,
-    onChangeTab: ((Int) -> Unit)? = null,
-    indexFlow: Flow<Int>? = null,
+    indexField: MutableField<Int>? = null,
     defaultTab: Int? = null,
     content: TabScope.() -> Unit,
 ): HTMLDivElement {
@@ -29,27 +29,29 @@ fun ViewScope.tabs(
 
     tabScope.build(viewport!!)
 
-    var currentTab = defaultTab ?: tabScope.tabs.firstOrNull()?.label
-
-    defaultTab?.let {
+    val initialTab = indexField?.now ?: defaultTab
+    initialTab?.let {
         root.setAttribute(Attribute.TabIndex.to(it))
     }
 
-    onChangeTab?.let {
+    indexField?.let { field ->
+        var currentTab = field.now
+
+        fun display(value: Int) {
+            currentTab = value
+            root.setAttribute(Attribute.TabIndex.to(value))
+        }
+
         root.observeAttribute(Attribute.TabIndex) {
             val name = it ?: return@observeAttribute
             if (name == currentTab) return@observeAttribute
-            currentTab = name
-            onChangeTab(name)
+            field.set(name)
+            display(field.now)
         }
-    }
 
-    indexFlow?.let { flow ->
-        contentScope.launch {
-            flow.collect { name ->
-                if (name == currentTab) return@collect
-                currentTab = name
-                root.setAttribute(Attribute.TabIndex.to(name))
+        launchEffect("tabs") {
+            field.flow.collect {
+                display(it)
             }
         }
     }

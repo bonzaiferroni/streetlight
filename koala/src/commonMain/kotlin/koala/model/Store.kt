@@ -3,38 +3,96 @@ package koala.model
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.update
 
 open class Store<T>(
     initialValue: T,
-) {
+): MutableField<T> {
     private val state = MutableStateFlow(initialValue)
 
-    val flow = state.asStateFlow()
-    val now get() = state.value
+    override val flow = state.asStateFlow()
+    override val now get() = state.value
 
-    fun set(value: T) {
-        state.value = value
+    override fun set(value: T) {
+        state.update { value }
     }
 
-    fun set(setter: (T) -> T) {
+    fun set(setter: T.() -> T) {
+        state.update { it.setter() }
+    }
+
+    @Deprecated("use set")
+    fun setValue(setter: (T) -> T) {
         state.value = setter(now)
     }
 
+    @Deprecated("use set")
     fun setValue(value: T) {
         state.value = value
+    }
+
+    override fun update(transform: (T) -> T) {
+        state.update(transform)
     }
 }
 
 fun <T> storeOf(initialValue: T) = Store(initialValue)
 
-fun <T, State> Store<State>.fieldOf(
+fun <State, Value> MutableField<State>.mutableFieldOf(
+    readValue: (State) -> Value,
+    applyFlow: (Flow<Value>) -> Flow<Value> = { it.distinctUntilChanged() },
+    onValue: State.(Value) -> State
+): MutableField<Value> = MutableStoreField(this, applyFlow, readValue, onValue)
+
+fun <State, Value> MutableField<State>.fieldOf(
+    applyFlow: (Flow<Value>) -> Flow<Value> = { it.distinctUntilChanged() },
+    readValue: (State) -> Value,
+): Field<Value> = StoreField(this, applyFlow, readValue)
+
+class MutableStoreField<State, Value>(
+    private val store: MutableField<State>,
+    applyFlow: (Flow<Value>) -> Flow<Value>,
+    val readValue: (State) -> Value,
+    val onValue: State.(Value) -> State
+): MutableField<Value> {
+    override val now: Value get() = readValue(store.now)
+    override val flow = applyFlow(store.flow.map(readValue))
+
+    override fun update(transform: (Value) -> Value) = store.update { it.onValue(transform(readValue(it))) }
+    override fun set(value: Value) {
+        store.update { it.onValue(value) }
+    }
+}
+
+class StoreField<State, Value>(
+    private val store: MutableField<State>,
+    applyFlow: (Flow<Value>) -> Flow<Value>,
+    val readValue: (State) -> Value,
+): Field<Value> {
+    override val now: Value get() = readValue(store.now)
+    override val flow = applyFlow(store.flow.map(readValue))
+}
+
+interface Field<Value> {
+    val flow: Flow<Value>
+    val now: Value
+}
+
+interface MutableField<Value>: Field<Value> {
+    fun update(transform: (Value) -> Value)
+    fun set(value: Value)
+}
+
+fun <T, State> Store<State>.protoFieldOf(
     readValue: (State) -> T,
     onValue: State.(T) -> State
-) = StateField(
-    flow.tap { readValue(it) }
-) { value -> set { onValue(it, value) } }
+) = StateFieldProto(
+    flow.dedup { readValue(it) }
+) { value -> setValue { onValue(it, value) } }
 
-data class StateField<T>(
+data class StateFieldProto<T>(
     val flow: Flow<T>,
     val onValue: (T) -> Unit,
 )

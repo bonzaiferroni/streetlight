@@ -3,7 +3,7 @@ package streetlight.web.io
 import kampfire.api.Markdown
 import kampfire.model.Ok
 import kampfire.model.Problem
-import koala.model.tap
+import koala.model.dedup
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -28,7 +28,7 @@ class TalkLog(
 
     val stateFlow = state.flow
     val stateNow get() = state.now
-    val sortByFlow = stateFlow.tap { it.sortBy }
+    val sortByFlow = stateFlow.dedup { it.sortBy }
 
     private val _messageFlow = MutableSharedFlow<TalkMessage>()
     val messageFlow: Flow<TalkMessage> = _messageFlow
@@ -55,7 +55,7 @@ class TalkLog(
 
     fun setSortBy(value: PostOrder) {
         commentViews.clear() // is this a memory leak? we need to cancel a supervisor job
-        state.set { it.copy(sortBy = value) }
+        state.setValue { it.copy(sortBy = value) }
     }
 
     suspend fun updateComment(commentId: CommentId, text: Markdown): Boolean? {

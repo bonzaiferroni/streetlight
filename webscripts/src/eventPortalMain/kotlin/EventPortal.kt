@@ -13,7 +13,7 @@ class EventPortal(
     private val view = storeOf(EventPortalState())
 
     fun setSongId(songId: SongId, ) {
-        view.set { it.copy(songId = songId) }
+        view.setValue { it.copy(songId = songId) }
     }
 
     fun sendRequest() {

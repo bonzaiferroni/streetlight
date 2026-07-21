@@ -4,15 +4,14 @@ import kampfire.model.Labeled
 import koala.SvgFile
 import koala.css.*
 import koala.html.heading3
-import kotlinx.coroutines.flow.Flow
+import koala.model.MutableField
 import kotlinx.coroutines.launch
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 import kotlin.enums.enumEntries
 
 inline fun <reified State> ViewScope.stageBlock(
-    flow: Flow<State>,
-    crossinline onValue: (State) -> Unit,
+    stage: MutableField<State>,
     mod: ModifierSet? = null,
     crossinline isHeadingStage: (State) -> Boolean = { true },
     noinline block: ViewScope.(State) -> Unit
@@ -46,7 +45,7 @@ inline fun <reified State> ViewScope.stageBlock(
                     }
                 }
             }
-            onValue(value)
+            stage.set(value)
         }
     }
 
@@ -68,11 +67,11 @@ inline fun <reified State> ViewScope.stageBlock(
                 }
             }
         }
-        flowBlock(flow, modify(Magic, Blur), block = block)
+        flowBlock(stage, modify(Magic, Blur), block = block)
     }
 
     contentScope.launch {
-        flow.collect {
+        stage.flow.collect {
             selectElement(it)
         }
     }

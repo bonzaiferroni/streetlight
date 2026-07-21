@@ -2,6 +2,7 @@ package koala.dom
 
 import koala.css.ModifierSet
 import koala.css.addModifiers
+import koala.model.MutableField
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
@@ -9,6 +10,7 @@ import kotlinx.datetime.LocalTime
 import kotlinx.html.INPUT
 import kotlinx.html.InputType
 import kotlinx.html.js.input
+import org.w3c.dom.HTMLInputElement
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
 
@@ -19,75 +21,87 @@ fun ViewScope.datetimeInput() {
 }
 
 fun ViewScope.dateInput(
-    flow: Flow<LocalDate?>,
-    onValueChanged: (LocalDate) -> Unit,
+    field: MutableField<LocalDate?>,
     modifiers: ModifierSet? = null,
     block: INPUT.() -> Unit = {},
-) {
-    val element = input {
+): HTMLInputElement {
+    var currentValue = field.now
+    lateinit var element: HTMLInputElement
+
+    fun display(value: LocalDate?) {
+        currentValue = value
+        val text = value?.toString() ?: ""
+        if (element.value != text) {
+            element.value = text
+        }
+    }
+
+    element = input {
         addModifiers(modifiers)
         type = InputType.date
+        value = currentValue?.toString() ?: ""
         block()
     }
 
-    var last: LocalDate? = null
-
     element.addEventListener("input", {
-        val v = element.value
-        if (v.isBlank()) return@addEventListener
-
-        val parsed = LocalDate.parse(v)
-        if (parsed != last) {
-            last = parsed
-            onValueChanged(parsed)
+        val text = element.value
+        val newValue = if (text.isBlank()) null else LocalDate.parse(text)
+        if (newValue != currentValue) {
+            field.set(newValue)
+            display(field.now)
         }
     })
 
-    contentScope.launch {
-        flow.collect { d ->
-            if (d != last) {
-                last = d
-                element.value = d?.toString() ?: ""
-            }
+    launchEffect("dateInput") {
+        field.flow.collect {
+            display(it)
         }
     }
+
+    return element
 }
 
 fun ViewScope.timeInput(
-    flow: Flow<LocalTime?>,
-    onValueChanged: (LocalTime) -> Unit,
+    field: MutableField<LocalTime?>,
     modifiers: ModifierSet? = null,
     step: Duration = 5.minutes,
     block: INPUT.() -> Unit = {}
-) {
-    val element = input {
+): HTMLInputElement {
+    var currentValue = field.now
+    lateinit var element: HTMLInputElement
+
+    fun display(value: LocalTime?) {
+        currentValue = value
+        val text = value?.toInputValue() ?: ""
+        if (element.value != text) {
+            element.value = text
+        }
+    }
+
+    element = input {
         addModifiers(modifiers)
         type = InputType.time
         this.step = step.inWholeSeconds.toString()
+        value = currentValue?.toInputValue() ?: ""
         block()
     }
 
-    var last: LocalTime? = null
-
     element.addEventListener("input", {
-        val v = element.value
-        if (v.isBlank()) return@addEventListener
-
-        val parsed = LocalTime.parse(v)
-        if (parsed != last) {
-            last = parsed
-            onValueChanged(parsed)
+        val text = element.value
+        val newValue = if (text.isBlank()) null else LocalTime.parse(text)
+        if (newValue != currentValue) {
+            field.set(newValue)
+            display(field.now)
         }
     })
 
-    contentScope.launch {
-        flow.collect { t ->
-            if (t != last) {
-                last = t
-                element.value = t?.toInputValue() ?: ""
-            }
+    launchEffect("timeInput") {
+        field.flow.collect {
+            display(it)
         }
     }
+
+    return element
 }
 
 private fun LocalTime.toInputValue(): String =

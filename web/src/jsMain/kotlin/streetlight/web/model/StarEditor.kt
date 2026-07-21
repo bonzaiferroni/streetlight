@@ -1,13 +1,15 @@
 package streetlight.web.model
 
 import kampfire.api.Markdown
+import kampfire.api.toMarkdown
 import kampfire.model.AccountUpgradeRequest
 import kampfire.model.Ok
 import kampfire.model.Problem
 import kampfire.model.handleOutcome
 import kampfire.model.handleResponse
 import koala.dom.MessageStore
-import koala.model.tap
+import koala.model.dedup
+import koala.model.mutableFieldOf
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -23,20 +25,25 @@ class StarEditor(
     private val state = storeOf(StarEditorState(initialData))
     val stateNow get() = state.now
     val stateFlow = state.flow
-    val editNow get() = state.now.edit
-    val editFlow = stateFlow.tap { it.edit }
-    val taglineFlow = editFlow.tap { it.tagline }
-    val descriptionFlow = editFlow.tap { it.description }
-    val nameFlow = editFlow.tap { it.name }
+    // val editNow get() = state.now.edit
+    // val editFlow = stateFlow.dedup { it.edit }
+    // val taglineFlow = editFlow.dedup { it.tagline }
+    // val descriptionFlow = editFlow.dedup { it.description }
+    // val nameFlow = editFlow.dedup { it.name }
 
     val messages = MessageStore()
     val imageEditor = ImageEditor(initialData.image, api)
     val emailEditor = EmailEditor(initialData.email?.value ?: "")
     val passwordEditor = PasswordEditor()
 
-    fun setTagline(tagline: String) = setEdit { it.copy(tagline = tagline) }
-    fun setDescription(description: Markdown) = setEdit { it.copy(description = description) }
-    fun setName(name: String?) = setEdit { it.copy(name = name) }
+    val editField = state.mutableFieldOf({ it.edit }) { copy(edit = it) }
+    val nameField = editField.mutableFieldOf({ it.name ?: "" }) { copy(name = it) }
+    val descriptionField = editField.mutableFieldOf({ it.description ?: "".toMarkdown() }) { copy(description = it) }
+    val taglineField = editField.mutableFieldOf({ it.tagline ?: "" }) { copy(tagline = it) }
+
+    // fun setTagline(tagline: String) = setEdit { it.copy(tagline = tagline) }
+    // fun setDescription(description: Markdown) = setEdit { it.copy(description = description) }
+    // fun setName(name: String?) = setEdit { it.copy(name = name) }
 
     fun completeRegistration() {
         val email = when (val emailOutcome = emailEditor.getOutcome()) {
@@ -58,9 +65,9 @@ class StarEditor(
         }
     }
 
-    private fun setEdit(block: (StarEdit) -> StarEdit) {
-        state.set { it.copy(edit = block(it.edit)) }
-    }
+    // private fun setEdit(block: (StarEdit) -> StarEdit) {
+    //     state.setValue { it.copy(edit = block(it.edit)) }
+    // }
 }
 
 data class StarEditorState(

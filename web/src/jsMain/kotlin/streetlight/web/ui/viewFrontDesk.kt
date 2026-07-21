@@ -14,7 +14,7 @@ fun ViewScope.viewFrontDesk(model: FrontDesk) {
             }
             tab("Feedback") {
                 column {
-                    textField("feedback", model::setText, model.textFlow)
+                    textField(model.textField, "feedback")
                     button("send", model::sendFeedback)
 
                     flowBlock(model.feedFlow) { feed ->

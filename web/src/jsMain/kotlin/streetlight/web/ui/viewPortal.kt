@@ -22,6 +22,7 @@ fun ViewScope.viewPortal() {
     var element: HTMLElement? = null
 
     element = flowBlock(
+        initialValue = portal.stateNow.route.screen,
         flow = portal.screenFlow,
         modifiers = modify(Magic, Blur),
         name = ::viewPortal.name,

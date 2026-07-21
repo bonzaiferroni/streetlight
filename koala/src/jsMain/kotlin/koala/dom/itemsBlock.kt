@@ -2,7 +2,7 @@ package koala.dom
 
 import koala.css.*
 import koala.html.ItemsBlockKey
-import koala.model.tap
+import koala.model.dedup
 import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.coroutines.Job
@@ -130,7 +130,7 @@ fun <Item> ViewScope.indexedItemsBlock(
     containerConfig: (DIV.() -> Unit)? = null,
     block: ViewScope.(IndexedItem<Item>) -> Unit
 ): HTMLDivElement {
-    val flow = flow.tap { it.mapIndexed { index, item -> IndexedItem(index, item) } }
+    val flow = flow.dedup { it.mapIndexed { index, item -> IndexedItem(index, item) } }
     return itemsBlock(
         flow = flow,
         mod = modifiers,

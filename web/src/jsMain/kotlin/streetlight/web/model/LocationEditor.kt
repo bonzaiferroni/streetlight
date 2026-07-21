@@ -1,11 +1,12 @@
 package streetlight.web.model
 
-import kampfire.api.Markdown
+import kampfire.api.toMarkdown
 import kampfire.model.GeoPoint
 import kampfire.model.handleResponse
 import koala.dom.MessageStore
-import koala.model.tap
-import koala.model.tapNotNull
+import koala.model.dedup
+import koala.model.dedupNotNull
+import koala.model.mutableFieldOf
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancelChildren
@@ -33,34 +34,40 @@ class LocationEditor(
     val imageEditor = ImageEditor(initialData.image, api)
 
     val editNow get() = state.now.edit
-    val editFlow = state.flow.tapNotNull { it.edit }
+    val editFlow = state.flow.dedupNotNull { it.edit }
 //     override val placeFlow = editFlow.mapDistinct { it.toPlace() }
 
-    val nameFlow = editFlow.tap { it.name }
-    val addressFlow = editFlow.tap { it.address }
-    val cityFlow = editFlow.tap { it.city }
-    val descriptionFlow = editFlow.tap { it.description }
-    val websiteFlow = editFlow.tap { it.website }
-    val linksFlow = editFlow.tap { it.eventsUrl }
-    val validityFlow = editFlow.tap { it.validity }
+    val editField = state.mutableFieldOf({ it.edit }) { copy(edit = it) }
 
-    fun setName(value: String) = setEdit { it.copy(name = value) }
-    fun setDescription(value: Markdown?) = setEdit { it.copy(description = value) }
-    fun setAddress(value: String) = setEdit { it.copy(address = value) }
+    val nameField = editField.mutableFieldOf({ it.name ?: "" }) { copy(name = it) }
+    val addressField = editField.mutableFieldOf({ it.address ?: "" }) { copy(address = it) }
+    val descriptionField = editField.mutableFieldOf({ it.description ?: "".toMarkdown() }) { copy(description = it) }
+    val cityField = editField.mutableFieldOf({ it.city ?: "" }) { copy(city = it) }
+    val eventsUrlField = editField.mutableFieldOf({ it.eventsUrl ?: "" }) { copy(eventsUrl = it) }
+    val validityFlow = editFlow.dedup { it.validity }
+
+    val websiteField = editField.mutableFieldOf({ it.website ?: "" }) { value ->
+        websiteMessage.clear()
+        copy(website = value)
+    }
+
+    // fun setName(value: String) = setEdit { it.copy(name = value) }
+    // fun setDescription(value: Markdown?) = setEdit { it.copy(description = value) }
+    // fun setAddress(value: String) = setEdit { it.copy(address = value) }
     fun setNotes(value: String?) = setEdit { it.copy(notes = value) }
     fun setPoint(value: GeoPoint) = setEdit { it.copy(geoPoint = value) }
     fun setResources(value: Set<ResourceType>) = setEdit { it.copy(resources = value) }
     fun setEventsLink(value: String?) = setEdit { it.copy(eventsUrl = value) }
-    fun setCity(value: String) = setEdit { it.copy(city = value) }
+    // fun setCity(value: String) = setEdit { it.copy(city = value) }
 
-    fun setWebsite(value: String?) {
-        if (value == editNow.website) return
-        setEdit { it.copy(website = value) }
-        websiteMessage.clear()
-    }
+    // fun setWebsite(value: String?) {
+    //     if (value == editNow.website) return
+    //     setEdit { it.copy(website = value) }
+    //     websiteMessage.clear()
+    // }
 
     fun setEdit(block: (LocationEdit) -> LocationEdit) {
-        state.set { it.copy(edit = block(it.edit)) }
+        state.setValue { it.copy(edit = block(it.edit)) }
     }
 
     fun readWebsite() {
@@ -68,7 +75,7 @@ class LocationEditor(
         scope.launch {
             websiteMessage.set("Reading the link, this will take a minute.", true)
             api.parseLocation(UrlParseRequest(website)).handleResponse(websiteMessage) { edit ->
-                state.set { it.copy(edit = edit.mergeLeft(editNow)) }
+                state.setValue { it.copy(edit = edit.mergeLeft(editNow)) }
                 websiteMessage.receive("Does this information look correct?")
             }
         }
@@ -81,7 +88,7 @@ class LocationEditor(
     }
 
     fun reset() {
-        state.set { initialState }
+        state.setValue { initialState }
         scope.coroutineContext.cancelChildren()
         message.clear()
     }

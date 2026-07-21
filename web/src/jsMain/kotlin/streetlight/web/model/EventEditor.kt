@@ -1,18 +1,17 @@
 package streetlight.web.model
 
 import kabinet.utils.replaceAt
-import kampfire.api.Markdown
 import kampfire.api.toMarkdown
 import kampfire.model.handleResponse
 import koala.dom.MessageStore
-import koala.model.tap
+import koala.model.dedup
+import koala.model.fieldOf
+import koala.model.mutableFieldOf
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import kotlinx.datetime.LocalTime
 import streetlight.model.data.Location
 import streetlight.model.data.EventEdit
-import kotlinx.datetime.LocalDate
 import streetlight.model.data.Event
 import streetlight.model.data.ExtraLink
 import streetlight.model.data.LocationId
@@ -31,44 +30,50 @@ class EventEditor(
     ))
     val stateFlow = state.flow
     val stateNow get() = state.now
+    val editNow get() = stateNow.edit
 
     val message = MessageStore()
     val urlMessage = MessageStore()
     val imageEditor = ImageEditor(initialEvent?.image, api)
 
-    val editFlow = state.flow.tap { it.edit }
-    val startTimeFlow = editFlow.tap { it.startTime }
-    val endTimeFlow = editFlow.tap { it.endTime }
-    val dateFlow = editFlow.tap { it.date }
-    val startsAtFlow = editFlow.tap { it.startsAt }
-    val descriptionFlow = stateFlow.tap { it.edit.description ?: "".toMarkdown() }
-    val titleFlow = stateFlow.tap { it.edit.title ?: "" }
-    val urlFlow = stateFlow.tap { it.edit.website }
-    val isFreeFlow = stateFlow.tap { it.edit.isFree }
-    val costFlow = stateFlow.tap { it.costString }
-    val validityFlow = stateFlow.tap { it.edit.validity }
+    val editField = state.mutableFieldOf({ it.edit }) { copy(edit = it) }
+    val startTime = editField.mutableFieldOf({ it.startTime }) { copy(startTime = it)}
+    val endTime = editField.mutableFieldOf({ it.endTime }) { copy(endTime = it) }
+    val date = editField.mutableFieldOf({ it.date }) { copy(date = it) }
+    val startsAt = editField.fieldOf { it.startsAt }
+    val description = editField.mutableFieldOf({ it.description ?: "".toMarkdown() }) { copy(description = it) }
+    val title = editField.mutableFieldOf({ it.title ?: "" }) { copy(title = it) }
+    val urlField = editField.mutableFieldOf({ it.website ?: "" }) { copy(website = it) }
+    val isFree = editField.mutableFieldOf({ it.isFree }) { copy(cost = if (it) 0f else null) }
 
-    val editNow get() = stateNow.edit
+    // fun setTitle(value: String) = setEvent { it.}
+    // fun setStartTime(value: LocalTime) = setEvent { it.copy(startTime = value) }
+    // fun setEndTime(value: LocalTime) = setEvent { it.copy(endTime = value) }
+    // fun setDate(value: LocalDate) = setEvent { it.copy(date = value) }
+    // fun setDescription(value: Markdown) = setEvent { it.copy(description = value) }
+    // fun setUrl(value: String) = setEvent { it.copy(website = value) }
+    // fun setFree(value: Boolean) = setEvent { it.copy(cost = if (value) 0f else null)}
 
-    fun setTitle(value: String) = setEvent { it.copy(title = value)}
-    fun setStartTime(value: LocalTime) = setEvent { it.copy(startTime = value) }
-    fun setEndTime(value: LocalTime) = setEvent { it.copy(endTime = value) }
-    fun setDate(value: LocalDate) = setEvent { it.copy(date = value) }
-    fun setDescription(value: Markdown) = setEvent { it.copy(description = value) }
-    fun setUrl(value: String) = setEvent { it.copy(website = value) }
-    fun setFree(value: Boolean) = setEvent { it.copy(cost = if (value) 0f else null)}
-    fun setOriginalSourceLabel(value: String) = state.set { it.copy(originalSourceLabel = value) }
-    fun setOriginalSourceUrl(value: String) = state.set { it.copy(originalSourceUrl = value) }
+    val cost = state.mutableFieldOf({ it.costString }) { costString ->
+        setEvent { it.copy(cost = costString.toFloatOrNull()) }
+        copy(costString = costString)
+    }
+    val validityFlow = stateFlow.dedup { it.edit.validity }
+
+    val originalSourceLabelField = state.mutableFieldOf({ it.originalSourceLabel }) { copy(originalSourceLabel = it) }
+    val originalSourceUrlField = state.mutableFieldOf({ it.originalSourceUrl }) { copy(originalSourceUrl = it) }
+
+    // fun setOriginalSourceLabel(value: String) = state.setValue { it.copy(originalSourceLabel = value) }
+    // fun setOriginalSourceUrl(value: String) = state.setValue { it.copy(originalSourceUrl = value) }
     fun setLocationId(value: LocationId?) = setEvent { it.copy(locationId = value) }
+
+    init {
+        // cost.
+    }
 
     fun addLink(value: ExtraLink) {
         val linksNow = stateNow.edit.links ?: emptyList()
         setEvent { it.copy(links = linksNow + value) }
-    }
-
-    fun setCost(value: String) {
-        setEvent { it.copy(cost = value.toFloatOrNull())}
-        state.set { it.copy(costString = value)}
     }
 
     fun removeLink(value: ExtraLink) {
@@ -105,7 +110,7 @@ class EventEditor(
             api.parseSingleEvent(UrlParseRequest(url)).handleResponse(urlMessage) { edit ->
                 val event = edit.mergeRight(state.now.edit)
                 urlMessage.receive("Does this information look correct?")
-                state.set { it.copy(edit = event) }
+                state.setValue { it.copy(edit = event) }
             }
         }
     }
@@ -123,7 +128,7 @@ class EventEditor(
     }
 
     private fun setEvent(provideEvent: (EventEdit) -> EventEdit) {
-        state.set { it.copy(edit = provideEvent(editNow)) }
+        state.set { copy(edit = provideEvent(editNow)) }
     }
 }
 

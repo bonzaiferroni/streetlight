@@ -15,7 +15,8 @@ import koala.html.Id
 import koala.html.Attribute
 import koala.html.setId
 import koala.html.setAttribute
-import koala.model.StateField
+import koala.model.MutableField
+import koala.model.StateFieldProto
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.html.INPUT
@@ -24,12 +25,13 @@ import kotlinx.html.js.onInputFunction
 import org.w3c.dom.HTMLInputElement
 import kotlinx.html.js.input
 import org.w3c.dom.HTMLElement
+import org.w3c.dom.HTMLParagraphElement
+import org.w3c.dom.HTMLParamElement
 import org.w3c.dom.events.KeyboardEvent
 
 fun ViewScope.textField(
+    field: MutableField<String>,
     label: String? = null,
-    onValue: ((String) -> Unit)? = null,
-    flow: Flow<String?>? = null,
     mod: ModifierSet? = null,
     textMod: ModifierSet? = null,
     id: Id? = null,
@@ -39,28 +41,31 @@ fun ViewScope.textField(
     onEnter: (() -> Unit)? = null,
     block: (INPUT.() -> Unit)? = null
 ): HTMLElement {
-    var currentValue = ""
+    var currentValue = field.now
+    lateinit var element: HTMLInputElement
+    var maxLengthText: HTMLParagraphElement? = null
+
+    fun display(value: String) {
+        currentValue = value
+        if (element.value != value) {
+            element.value = value
+        }
+        maxLengthText?.textContent = "${value.length}/$maxLength"
+    }
 
     val parent = box {
         addModifiers(mod)
         setAttribute(Attribute.BlockLabel, label?.lowercase())
 
-        val element = input {
+        element = input {
             addModifiers(Width100P, textMod)
             setId(id)
             type = InputType.text
-            onValue?.let { callback ->
-                onInputFunction = {
-                    val element = (it.target as HTMLInputElement)
-                    val newValue = element.value
-                    if (newValue != currentValue) {
-                        if (flow != null) {
-                            element.value = currentValue
-                        } else {
-                            currentValue = newValue
-                        }
-                        callback(newValue)
-                    }
+            onInputFunction = {
+                val newValue = (it.target as HTMLInputElement).value
+                if (newValue != currentValue) {
+                    field.set(newValue)
+                    display(field.now)
                 }
             }
             placeholder?.let {
@@ -70,11 +75,12 @@ fun ViewScope.textField(
                 this.placeholder = it
             }
             this.size = size.toString()
+            value = currentValue
             block?.invoke(this)
         }
 
-        val maxLengthText = maxLength?.let {
-            textBlock("0/$it",
+        maxLengthText = maxLength?.let {
+            textBlock("${currentValue.length}/$it",
                 modify(AlignSelfCenter, JustifySelfEnd, TextSmall, OpacityHalf, Padding1, PointerEventsNone, Italic)
             )
         }
@@ -88,37 +94,12 @@ fun ViewScope.textField(
             })
         }
 
-        flow?.let {
-            contentScope.launch {
-                flow.collect { value ->
-                    val value = value ?: ""
-                    if (value != currentValue) {
-                        currentValue = value
-                        element.value = value
-                        maxLengthText?.textContent = "${value.length}/${maxLength}"
-                    }
-                }
+        launchEffect(ViewScope::textField) {
+            field.flow.collect { value ->
+                display(value)
             }
         }
     }
 
     return parent
 }
-
-fun ViewScope.textField(
-    label: String? = null,
-    field: StateField<String>,
-    mod: ModifierSet? = null,
-    textMod: ModifierSet? = null,
-    id: Id? = null,
-    placeholder: String? = label,
-    size: Int = 25,
-    maxLength: Int? = null,
-    onEnter: (() -> Unit)? = null,
-    block: (INPUT.() -> Unit)? = null
-) = textField(
-    label = label,
-    onValue = field.onValue,
-    flow = field.flow,
-    mod = mod
-)

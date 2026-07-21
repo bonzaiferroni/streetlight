@@ -4,7 +4,9 @@ import kampfire.model.GeoPoint
 import kampfire.model.Labeled
 import kampfire.model.handleResponse
 import koala.dom.MessageStore
-import koala.model.tap
+import koala.model.dedup
+import koala.model.fieldOf
+import koala.model.mutableFieldOf
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -29,47 +31,46 @@ class EventScout(
 
     val postMessage = MessageStore()
 
-    val postFlow = stateFlow.tap { it.post }
-    val stageFlow = stateFlow.tap { it.stage }
-    val queryFlow = stateFlow.tap { it.query }
-    val eventFlow = stateFlow.tap { it.event }
-    val queryEventsFlow = stateFlow.tap { it.queryEvents }
+    val postFlow = stateFlow.dedup { it.post }
+    val stage = state.mutableFieldOf({ it.stage }) { copy(stage = it) }
+    val query = state.mutableFieldOf({ it.query }) { copy(query = it) }
+    val event = state.mutableFieldOf({ it.event }) { copy(event = it) }
+    val queryEventsFlow = state.fieldOf { it.queryEvents }
 
     init {
         scope.launch {
             launch {
-                locationScout.stageFlow.collect { locationStage ->
+                locationScout.stageField.flow.collect { locationStage ->
                     val stage = when (locationStage) {
                         LocationScoutStage.Search -> EventScoutStage.LocationSearch
                         LocationScoutStage.Edit -> EventScoutStage.LocationEdit
                         LocationScoutStage.Post -> EventScoutStage.EventSearch
                     }
-                    state.set { it.copy(stage = stage) }
+                    state.set { copy(stage = stage) }
                 }
             }
             launch {
-                locationScout.locationFlow.collect { location ->
+                locationScout.locationField.flow.collect { location ->
                     editor.setLocationId(location?.locationId)
                     if (location != null) {
-                        state.set { it.copy(stage = EventScoutStage.EventSearch)}
+                        state.set { copy(stage = EventScoutStage.EventSearch)}
                     }
                 }
             }
         }
     }
 
-    fun setStage(value: EventScoutStage) = state.set { it.copy(stage = value) }
-    fun setQuery(value: String) = state.set { it.copy(query = value) }
-    fun setEvent(value: EventLocation?) = state.set { it.copy(event = value) }
+    // fun setStage(value: EventScoutStage) = state.set { it. }
+    // fun setEvent(value: EventLocation?) = state.set { copy(event = value) }
 
     fun create() {
-        editor.setTitle(stateNow.query)
-        state.set { it.copy(stage = EventScoutStage.EventEdit) }
+        editor.title.set(stateNow.query)
+        state.set { copy(stage = EventScoutStage.EventEdit) }
     }
 
     fun review() {
         if (!editor.isEditValid()) return
-        state.set { it.copy(stage = EventScoutStage.Post) }
+        state.set { copy(stage = EventScoutStage.Post) }
     }
 
     fun submitLocation() {
@@ -88,7 +89,7 @@ class EventScout(
 
             val edit = PostEdit(null, galaxy.galaxyId, PostType.Event, eventId.value, null)
             api.createPost(edit).handleResponse(postMessage) { post ->
-                state.set { it.copy(postId = post.postId) }
+                state.set { copy(postId = post.postId) }
             }
         }
     }

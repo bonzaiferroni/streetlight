@@ -1,7 +1,6 @@
 package streetlight.web.ui
 
 import koala.dom.*
-import koala.model.tap
 import streetlight.model.data.TalentEdit
 import streetlight.model.data.toEdit
 import streetlight.model.ui.EditTalentRoute

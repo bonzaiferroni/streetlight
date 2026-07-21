@@ -3,7 +3,7 @@ package streetlight.web.model
 import kampfire.model.getDataOrNull
 import koala.Image
 import koala.dom.MessageStore
-import koala.model.tap
+import koala.model.mutableFieldOf
 import koala.model.storeOf
 import koala.toImage
 import streetlight.web.io.ApiClient
@@ -16,9 +16,7 @@ class ImageEditor(
     val stateNow get() = state.now
     val stateFlow = state.flow
 
-    val imageFlow = stateFlow.tap { it.image }
-
-    fun setImage(value: Image?) = state.set { it.copy(image = value)}
+    val imageField = state.mutableFieldOf({ it.image }) { copy(image = it) }
 
     suspend fun finalizeImage(message: MessageStore? = null): Image? {
         val url = stateNow.image?.url?.takeIf { it.isBlob } ?: return stateNow.image

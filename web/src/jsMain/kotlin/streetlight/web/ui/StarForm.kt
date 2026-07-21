@@ -19,11 +19,11 @@ fun ViewScope.starProfileForm(model: StarEditor) = form {
         imageFormSection(imageInstructions1, model.imageEditor)
         formSection("Content") {
             formText("The tagline will appear under your name.")
-            textField("tagline", model::setTagline, model.taglineFlow, maxLength = 50)
+            textField(model.taglineField, "tagline", maxLength = 50)
         }
     }
     formPart("The description will appear under the image, before your posts.") {
-        textEditor("description", onValue = model::setDescription, flow = model.descriptionFlow)
+        textEditor(model.descriptionField, "description")
     }
 }
 
@@ -33,7 +33,7 @@ fun ViewScope.starAccountForm(model: StarEditor) = form {
     formRow {
         formSection("Identity") {
             formText("You have the option of sharing your real name.")
-            textField("name", model::setName, model.nameFlow, maxLength = 50)
+            textField(model.nameField, "name", maxLength = 50)
         }
     }
 }

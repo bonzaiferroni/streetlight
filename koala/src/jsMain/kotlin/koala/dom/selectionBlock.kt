@@ -2,16 +2,16 @@ package koala.dom
 
 import koala.css.ModifierSet
 import koala.css.Outlined
-import kotlinx.coroutines.flow.Flow
+import koala.model.MutableField
+import koala.model.Field
 import kotlinx.coroutines.launch
 import kotlinx.html.DIV
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 
 fun <Item> ViewScope.selectionBlock(
-    flow: Flow<List<Item>>,
-    onSelect: (Item?) -> Unit,
-    selectFlow: Flow<Item?>? = null,
+    items: Field<List<Item>>,
+    selection: MutableField<Item?>,
     modifiers: ModifierSet? = null,
     config: (DIV.() -> Unit)? = null,
     block: ViewScope.(Item) -> HTMLElement
@@ -30,20 +30,20 @@ fun <Item> ViewScope.selectionBlock(
             else -> {
                 val element = elementMap.getValue(item)
                 if (element.isModified(Outlined)) {
-                    onSelect(null)
+                    selection.set(null)
                     element.unmodify(Outlined)
                     selectedElement = null
                 } else {
                     selectedElement?.unmodify(Outlined)
                     element.modify(Outlined)
                     selectedElement = element
-                    onSelect(item)
+                    selection.set(item)
                 }
             }
         }
     }
 
-    val element = flowBlock(flow, modifiers, config = config) { items ->
+    val element = flowBlock(items, modifiers, config = config) { items ->
         elementMap.clear()
         column {
             items.forEach { item ->
@@ -56,7 +56,7 @@ fun <Item> ViewScope.selectionBlock(
     }
 
     contentScope.launch {
-        selectFlow?.collect { item ->
+        selection.flow.collect { item ->
             if (item == selectedItem) return@collect
             selectElement(item)
         }

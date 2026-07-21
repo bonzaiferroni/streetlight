@@ -5,6 +5,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.dom.clear
 import kotlinx.html.dom.append
 import org.w3c.dom.HTMLElement
+import kotlin.reflect.KFunction
 
 @ViewMarker
 sealed interface ViewScope: TagScope, AppFacade {
@@ -18,23 +19,30 @@ sealed interface ViewScope: TagScope, AppFacade {
     fun onDispose(block: () -> Unit)
 
     fun launchEffect(
-        name: String = "ViewScope.launchEffect",
-        receiver: Messenger? = null,
-        message: String? = "Something went wrong.",
+        name: String = ::launchEffect.name,
+        messenger: Messenger? = null,
+        message: String? = GENERAL_ERROR_MESSAGE,
         block: suspend EffectScope.() -> Unit
-    ) = contentScope.launch(name, receiver, message) {
+    ) = contentScope.launch(name, messenger, message) {
         EffectScope(this@ViewScope).block()
     }
 
     fun launchViewEffect(
-        name: String = "ViewScope.launchViewEffect",
-        receiver: Messenger? = null,
-        message: String? = "Something went wrong.",
+        name: String = ::launchViewEffect.name,
+        messenger: Messenger? = null,
+        message: String? = GENERAL_ERROR_MESSAGE,
         block: suspend EffectScope.() -> Unit
-    ) = scope.launch(name, receiver, message) {
+    ) = scope.launch(name, messenger, message) {
         EffectScope(this@ViewScope).block()
     }
 }
+
+fun ViewScope.launchEffect(
+    function: KFunction<*>,
+    messenger: Messenger? = null,
+    message: String? = GENERAL_ERROR_MESSAGE,
+    block: suspend EffectScope.() -> Unit
+) = launchEffect(function.name, messenger, message, block)
 
 interface DelegatedViewScope: ViewScope {
     val viewDelegate: ViewScope
@@ -60,3 +68,5 @@ interface RebuildScope: DelegatedViewScope {
         }
     }
 }
+
+const val GENERAL_ERROR_MESSAGE = "Something went wrong."

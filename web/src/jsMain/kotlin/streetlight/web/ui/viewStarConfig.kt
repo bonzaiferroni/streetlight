@@ -39,13 +39,14 @@ fun ViewScope.viewStarConfig(model: StarEditor) {
 
 fun ViewScope.viewStarConfigRoute() {
     starGate { star ->
-        routeBlock<StarConfigRoute, StarEdit>(portal, { route ->
-            val info = api.readIdentityInfo().handleResponse(toaster) ?: return@routeBlock null
-            star.toEdit(info)
-        }) { edit ->
-            val model = app.getStarEditor(edit, contentScope)
-            viewStarConfig(model)
-        }
+        // td: fix
+        // routeBlock<StarConfigRoute, StarEdit>(portal, { route ->
+        //     val info = api.readIdentityInfo().handleResponse(toaster) ?: return@routeBlock null
+        //     star.toEdit(info)
+        // }) { edit ->
+        //     val model = app.getStarEditor(edit, contentScope)
+        //     viewStarConfig(model)
+        // }
     }
 }
 

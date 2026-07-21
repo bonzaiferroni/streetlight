@@ -25,47 +25,46 @@ import koala.dom.textField
 import koala.html.heading4
 import koala.html.spacer
 import koala.html.textBlock
-import koala.model.tap
+import koala.model.dedup
+import koala.model.fieldOf
 import koala.model.storeOf
 import streetlight.model.data.ExtraLink
 import streetlight.web.model.EventEditor
 
 
 fun ViewScope.eventLinks(model: EventEditor) {
-    val linksFlow = model.stateFlow.tap { it.edit.links ?: emptyList() }
+    val linksFlow = model.stateFlow.dedup { it.edit.links ?: emptyList() }
 
     val editState = storeOf(LinkEditState())
-    val linkEditIndexFlow = editState.flow.tap { it.index }
-    val labelFlow = editState.flow.tap { it.link.label }
-    val urlFlow = editState.flow.tap { it.link.url }
-    val originalSourceLabelFlow = model.stateFlow.tap { it.originalSourceLabel }
-    val originalSourceUrlFlow = model.stateFlow.tap { it.originalSourceUrl }
+    val linkEditIndexFlow = editState.fieldOf { it.index }
+    val labelFlow = editState.flow.dedup { it.link.label }
+    val urlFlow = editState.flow.dedup { it.link.url }
 
-    fun setLink(provider: (ExtraLink) -> ExtraLink) { editState.set { it.copy(link = provider(it.link)) }}
+    fun setLink(provider: (ExtraLink) -> ExtraLink) { editState.setValue { it.copy(link = provider(it.link)) }}
     fun setLabel(value: String) { setLink { it.copy(label = value) } }
     fun setUrl(value: String) { setLink { it.copy(url = value) } }
     fun finalizeEdit() {
         val link = editState.now.link.takeIf { it.isValid } ?: return
         val index = editState.now.index ?: error("no edit index")
         model.editLink(index, link)
-        editState.set { LinkEditState() }
+        editState.setValue { LinkEditState() }
     }
     fun addLink() {
         val index = model.stateNow.edit.links?.size ?: 0
         model.addLink(ExtraLink.Blank)
-        editState.set { it.copy(index = index) }
+        editState.setValue { it.copy(index = index) }
     }
 
     column(modify(Gap2)) {
         column(modify(Gap1)) {
             textBlock("Is there more information about this event somewhere out there?", modify(OpacityHigh))
-            textField("Link", model::setUrl, model.urlFlow, modify(Width100P))
+            textField(model.urlField, "Link", modify(Width100P))
         }
         column(modify(Gap1)) {
             textBlock("Want to give a shout out to the original place where you found the event?", modify(OpacityHigh))
             row {
-                textField("Source label", model::setOriginalSourceLabel, originalSourceLabelFlow, modify(Flex1))
-                textField("Source url", model::setOriginalSourceUrl, originalSourceUrlFlow, modify(Flex3))
+                textField(model.originalSourceLabelField, "Source label", modify(Flex1))
+                textField(model.originalSourceUrlField, "Source url", modify(Flex3))
             }
         }
         row(modify(AlignItemsEnd)) {
@@ -80,8 +79,9 @@ fun ViewScope.eventLinks(model: EventEditor) {
                 val isEdit = index == linkIndex
                 if (isEdit) {
                     row() {
-                        textField("label", ::setLabel, labelFlow)
-                        textField("url", ::setUrl, urlFlow, modify(Flex1))
+                        // td: fix and reintroduce
+                        // textField("label", ::setLabel, labelFlow)
+                        // textField("url", ::setUrl, urlFlow, modify(Flex1))
                         icon(SvgFile.Check, ::finalizeEdit, modify(Height5))
                     }
                 } else {
@@ -90,7 +90,7 @@ fun ViewScope.eventLinks(model: EventEditor) {
                         textBlock(link.url, modify(Dim))
                         spacer(modify(Flex1))
                         icon(SvgFile.Trash, onClick = { model.removeLink(link) }, modify(Dim, Danger))
-                        icon(SvgFile.Edit, onClick = { editState.set{ it.copy(index = linkIndex, link = link)} }, modify(Dim))
+                        icon(SvgFile.Edit, onClick = { editState.setValue{ it.copy(index = linkIndex, link = link)} }, modify(Dim))
                     }
                 }
             }

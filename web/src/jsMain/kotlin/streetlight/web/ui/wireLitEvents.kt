@@ -7,7 +7,7 @@ import koala.css.*
 import koala.dom.*
 import koala.html.fillImageSrcSet
 import koala.html.heading3
-import koala.model.tap
+import koala.model.dedup
 import org.w3c.dom.HTMLElement
 import streetlight.model.data.EventId
 import streetlight.model.data.EventLocation
@@ -23,8 +23,8 @@ fun ViewScope.wireLitEvents(root: HTMLElement) {
 
     val now = Clock.System.now()
     val eventCache = cache.eventLights
-    val eventsFlow = eventCache.stateFlow.tap { events -> events.items.filter { it.endsAtOrLater > now } }
-    val swapIdFlow = eventsFlow.tap {
+    val eventsFlow = eventCache.stateFlow.dedup { events -> events.items.filter { it.endsAtOrLater > now } }
+    val swapIdFlow = eventsFlow.dedup {
         when (it.isEmpty()) {
             true -> HomeShell.LightInfoId
             else -> HomeShell.LitEventsId
@@ -33,7 +33,8 @@ fun ViewScope.wireLitEvents(root: HTMLElement) {
 
     queryAndWireSwapBlock(root, HomeShell.LightSwapId, bindFlow = swapIdFlow)
     wireBlock(HomeShell.LitEventsId, root, wireOnView = false) {
-        flowBlock(eventsFlow) { events ->
+        // td: fix
+        flowBlock(emptyList(), eventsFlow) { events ->
             val eventMap = events.groupBy { it.startsAt.toRelativeDayFormat() }
             row(modify(OverflowXAuto, Height100P, Padding1)) {
                 eventMap.forEach { (day, events) ->

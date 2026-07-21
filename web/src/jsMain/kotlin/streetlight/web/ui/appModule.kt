@@ -45,7 +45,7 @@ val appModule = module {
     single { StarSession(get(), get()) }
     single { DataCache(get(), get(), get(), get(), get()) }
     single { Portal(HomeRoute, Screen.entries) }
-    single { GateAgent(get(), get(), get()) }
+    // single { GateAgent(get(), get(), get()) }
     single { GeoCamera(get()) }
     single { GeoMap(get(), get()) }
     single { TransitMap(get(), get(), get(), get()) }

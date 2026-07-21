@@ -11,8 +11,9 @@ import kampfire.model.SignUpRequest
 import kampfire.model.handleOutcome
 import kampfire.model.handleResponse
 import koala.dom.MessageStore
+import koala.model.mutableFieldOf
 import koala.model.fieldOf
-import koala.model.tap
+import koala.model.protoFieldOf
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -33,26 +34,26 @@ class UserCreator(
     val passwordEditor = PasswordEditor()
     val messages = MessageStore()
 
-    val usernameFlow = stateFlow.tap { it.username }
-    val isValidFlow = stateFlow.tap { it.isValid }
-    val guestFlow = stateFlow.tap { it.guestUsername }
+    val usernameField = state.mutableFieldOf({ it.username }) { copy(username = it) }
+    val isValidField = state.fieldOf { it.isValid }
+    val guestField = state.mutableFieldOf({ it.guestUsername }) { copy(guestUsername = it) }
 
-    val minAgeField = state.fieldOf({ it.isMinimumAge }) { copy(isMinimumAge = it) }
+    val minAgeField = state.mutableFieldOf({ it.isMinimumAge }) { copy(isMinimumAge = it) }
 
     init {
         scope.launch {
             api.checkGuest().handleResponse(PrintLnMessenger) { username ->
-                state.set { it.copy(guestUsername = username) }
+                state.setValue { it.copy(guestUsername = username) }
             }
         }
     }
 
     fun generateUsername() = scope.launch {
         val username = api.generateUsername().handleResponse(toaster) ?: return@launch
-        state.set { it.copy(username = username.value)}
+        state.setValue { it.copy(username = username.value)}
     }
 
-    fun setUsername(username: String) = state.set { it.copy(username = username) }
+    fun setUsername(username: String) = state.setValue { it.copy(username = username) }
 
     fun createAccount(accountType: AccountType) {
         val username = stateNow.username.trim().toUsername().toValidOutcome().handleOutcome(messages) ?: return
@@ -83,7 +84,7 @@ class UserCreator(
                 cred.followUpAuth(true)
                 gate.signIn(messages)
                 if (accountType == AccountType.Guest) {
-                    state.set { it.copy(guestUsername = username) }
+                    state.setValue { it.copy(guestUsername = username) }
                 }
             }
         }

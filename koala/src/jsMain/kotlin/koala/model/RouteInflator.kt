@@ -25,11 +25,11 @@ class RouteInflator(
         scope.launch(RouteInflator::class) {
             portal.stateFlow.filter { !it.isInitialRoute || !it.route.screen.hasShell }.map { it.route }.collectLatest { route ->
                 // console.log("inflating route")
-                state.set { it.copy(delivery = null) }
+                state.setValue { it.copy(delivery = null) }
                 val content = fetcher.fetchContent(route).handleResponse(messenger)
                 val delivery = RouteDelivery(route, content)
                 // console.log("inflate content: ${content != null}")
-                state.set { it.copy(delivery = delivery)}
+                state.setValue { it.copy(delivery = delivery)}
             }
         }
     }

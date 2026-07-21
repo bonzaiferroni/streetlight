@@ -2,9 +2,11 @@ package streetlight.web.model
 
 import kampfire.api.Markdown
 import kampfire.api.Slug
+import kampfire.api.toMarkdown
 import kampfire.model.handleResponse
 import koala.dom.MessageStore
-import koala.model.tap
+import koala.model.dedup
+import koala.model.mutableFieldOf
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -24,25 +26,28 @@ class MediaEditor(
     private val state = storeOf(ContentEditorState(initialContent))
     val stateFlow = state.flow
     val stateNow get() = state.now
-    val editFlow = stateFlow.tap { it.edit }
+    val editFlow = stateFlow.dedup { it.edit }
     val editNow get() = state.now.edit
 
     val message = MessageStore()
     val imageEditor = ImageEditor(initialContent.image, api)
 
+    val editField = state.mutableFieldOf({ it.edit }) { copy(edit = it) }
+    val titleField = editField.mutableFieldOf({ it.title ?: "" }) { copy(title = it) }
+    val subtitleField = editField.mutableFieldOf({ it.subtitle ?: "" }) { copy(subtitle = it) }
+    val textField = editField.mutableFieldOf({ it.text ?: "".toMarkdown() }) { copy(text = it) }
+
     init {
         scope.launch {
-            editFlow.tap { it.invalidMessage }.collect {
+            editFlow.dedup { it.invalidMessage }.collect {
                 message.receive(it ?: "Looks good.")
             }
         }
     }
 
-    fun setTitle(title: String) = setContent { it.copy(title = title) }
-
-    fun setSubtitle(subtitle: String) = setContent { it.copy(subtitle = subtitle) }
-
-    fun setText(text: Markdown) = setContent { it.copy(text = text) }
+    // fun setTitle(title: String) = setContent { it.copy(title = title) }
+    // fun setSubtitle(subtitle: String) = setContent { it.copy(subtitle = subtitle) }
+    // fun setText(text: Markdown) = setContent { it.copy(text = text) }
 
     fun submitPost(galaxy: Galaxy? = null) {
         scope.launch {
@@ -54,7 +59,7 @@ class MediaEditor(
                 null -> api.createMedia(edit.copy(image = image))
                 else -> api.updateMedia(edit.copy(image = image))
             }.handleResponse(toaster) { media ->
-                state.set { it.copy(slug = media.slug) }
+                state.setValue { it.copy(slug = media.slug) }
                 media
             }
 
@@ -68,10 +73,6 @@ class MediaEditor(
                 ))
             }
         }
-    }
-
-    private fun setContent(block: (MediaEdit) -> MediaEdit) {
-        state.set { it.copy(edit = block(stateNow.edit)) }
     }
 }
 

@@ -1,6 +1,6 @@
 package streetlight.web.model
 
-import koala.model.tap
+import koala.model.dedup
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import streetlight.model.data.Galaxy
@@ -16,26 +16,26 @@ class GalaxyStage(
     val stateNow get() = state.now
     val stateFlow = state.flow
 
-    val postFlow = stateFlow.tap { it.posts }
+    val postFlow = stateFlow.dedup { it.posts }
 
     fun setStage(content: GalaxyContent) {
         val posts = content.posts.sortedByDescending { it.base.createdAt } // td: implement other sorts
-        state.set { it.copy(galaxy = content.galaxy, posts = posts) }
+        state.setValue { it.copy(galaxy = content.galaxy, posts = posts) }
     }
 
     fun addPost(post: GalaxyPost) {
         val posts = stateNow.posts ?: emptyList()
-        state.set { it.copy(posts = posts + post, isInitialStage = false) }
+        state.setValue { it.copy(posts = posts + post, isInitialStage = false) }
     }
 
     fun removePost(postId: PostId) {
         val posts = stateNow.posts ?: emptyList()
-        state.set { it.copy(posts = posts.filter { item -> item.base.postId != postId }, isInitialStage = false)}
+        state.setValue { it.copy(posts = posts.filter { item -> item.base.postId != postId }, isInitialStage = false)}
     }
 
     fun replacePost(post: GalaxyPost) {
         val posts = stateNow.posts?.map { if (it.base.postId == post.base.postId) post else it }
-        state.set { it.copy(posts = posts, isInitialStage = false) }
+        state.setValue { it.copy(posts = posts, isInitialStage = false) }
     }
 }
 

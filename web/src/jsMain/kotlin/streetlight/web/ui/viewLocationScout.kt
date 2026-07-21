@@ -3,7 +3,7 @@ package streetlight.web.ui
 import kampfire.model.handleResponse
 import koala.LottieFile
 import koala.dom.*
-import koala.model.tapNotNull
+import koala.model.dedupNotNull
 import streetlight.model.data.Galaxy
 import streetlight.model.data.LocationEdit
 import streetlight.model.ui.GalaxyRoute
@@ -15,7 +15,7 @@ fun ViewScope.viewLocationScout(galaxy: Galaxy) {
     // val model = app.getCoroutineScoped<GalaxyEditor>(null, renderScope)
     val editor = app.getLocationEditor(LocationEdit(), contentScope)
     val model = app.getLocationScout(galaxy, editor, contentScope)
-    val routeFlow = model.stateFlow.tapNotNull { it.postId?.let { GalaxyRoute(galaxy.slug) } }
+    val routeFlow = model.stateFlow.dedupNotNull { it.postId?.let { GalaxyRoute(galaxy.slug) } }
     goOnRoute(routeFlow)
 
     column {
@@ -23,7 +23,7 @@ fun ViewScope.viewLocationScout(galaxy: Galaxy) {
             textBlock("Let's post a location.")
         }
 
-        stageBlock(model.stageFlow, model::setStage) { stage ->
+        stageBlock(model.stageField) { stage ->
             when (stage) {
                 LocationScoutStage.Search -> formBodyProto {
                     locationScoutForm(model)
@@ -34,7 +34,7 @@ fun ViewScope.viewLocationScout(galaxy: Galaxy) {
                         label = "Next",
                         onSubmit = model::review,
                         messages = editor.message,
-                        back = LabeledAction("Back", { model.setStage(LocationScoutStage.Search) })
+                        back = LabeledAction("Back", { model.stageField.set(LocationScoutStage.Search) })
                     )
                 }
                 LocationScoutStage.Post -> column {
@@ -45,7 +45,7 @@ fun ViewScope.viewLocationScout(galaxy: Galaxy) {
                         label = "Post",
                         onSubmit = model::postToGalaxy,
                         messages = editor.message,
-                        back = LabeledAction("Edit", { model.setStage(LocationScoutStage.Edit) })
+                        back = LabeledAction("Edit", { model.stageField.set(LocationScoutStage.Edit) })
                     )
                 }
             }
@@ -56,11 +56,12 @@ fun ViewScope.viewLocationScout(galaxy: Galaxy) {
 }
 
 fun ViewScope.viewLocationScoutRoute() {
-    routeBlock<LocationScoutRoute, Galaxy>({
-        api.readGalaxy(it.slug).handleResponse(toaster)
-    }) { galaxy ->
-        viewLocationScout(galaxy)
-    }
+    // td: fix
+    // routeBlock<LocationScoutRoute, Galaxy>({
+    //     api.readGalaxy(it.slug).handleResponse(toaster)
+    // }) { galaxy ->
+    //     viewLocationScout(galaxy)
+    // }
 }
 
 // fun RenderContext.viewStagedEditorForm(editor: LocationEditor)

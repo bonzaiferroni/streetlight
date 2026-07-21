@@ -3,7 +3,9 @@ package koala.dom
 import kampfire.model.Labeled
 import koala.css.ModifierSet
 import koala.css.addModifiers
+import koala.model.MutableField
 import koala.model.Store
+import koala.model.mutableFieldOf
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
@@ -15,34 +17,43 @@ import org.w3c.dom.HTMLSelectElement
 
 fun ViewScope.dropMenu(
     options: List<String>,
-    flow: Flow<String>? = null,
-    onChangeValue: ((String) -> Unit)? = null,
+    field: MutableField<String>,
     mod: ModifierSet? = null,
     block: (SELECT.() -> Unit)? = null
 ): HTMLSelectElement {
-    val element = select {
+    var currentValue = field.now
+    lateinit var element: HTMLSelectElement
+
+    fun display(value: String) {
+        currentValue = value
+        if (element.value != value) {
+            element.value = value
+        }
+    }
+
+    element = select {
         addModifiers(mod)
         options.forEach {
             option {
                 value = it
+                selected = it == currentValue
                 +it
             }
         }
         block?.invoke(this)
     }
 
-    onChangeValue?.let {
-        element.addEventListener("change", { event ->
-            val target = event.target as HTMLSelectElement
-            onChangeValue(target.value)
-        })
-    }
+    element.addEventListener("change", { event ->
+        val newValue = (event.target as HTMLSelectElement).value
+        if (newValue != currentValue) {
+            field.set(newValue)
+            display(field.now)
+        }
+    })
 
-    flow?.let {
-        contentScope.launch {
-            flow.distinctUntilChanged().collect {
-                element.value = it
-            }
+    launchEffect("dropMenu") {
+        field.flow.collect {
+            display(it)
         }
     }
 
@@ -50,28 +61,23 @@ fun ViewScope.dropMenu(
 }
 
 inline fun <reified E: Enum<E>> ViewScope.dropMenu(
-    noinline onChangeValue: ((E) -> Unit),
+    field: MutableField<E>,
     crossinline provideLabel: (E) -> String,
-    flow: Flow<E>? = null,
     mod: ModifierSet? = null,
     noinline block: (SELECT.() -> Unit)? = null
 ): HTMLSelectElement {
     val enums = enumValues<E>()
     val values = enums.map { provideLabel(it) }
-    val flow = flow?.map(provideLabel)
-    val callback: ((String) -> Unit) = { str ->
-        val index = values.indexOf(str)
-        onChangeValue(enums[index])
-    }
+    val textField = field.mutableFieldOf({ provideLabel(it) }) { enums[values.indexOf(it)] }
 
-    return dropMenu(values, flow, callback, mod, block)
+    return dropMenu(values, textField, mod, block)
 }
 
 inline fun <reified E> ViewScope.dropMenu(
     store: Store<E>,
     modifiers: ModifierSet? = null,
     noinline block: (SELECT.() -> Unit)? = null
-) where E: Enum<E>, E: Labeled = dropMenu(store::set, { it.label }, store.flow, modifiers, block)
+) where E: Enum<E>, E: Labeled = dropMenu(store, { it.label }, modifiers, block)
 
 //inline fun <reified E, Data> WireContext<Data>.dropMenu(
 //    noinline write: (E) -> Data,

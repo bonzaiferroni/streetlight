@@ -5,6 +5,7 @@ import koala.dom.*
 import koala.html.bulletsOf
 import koala.html.filigree
 import koala.html.heading3
+import koala.model.MutableField
 import kotlinx.coroutines.flow.Flow
 import kotlinx.html.DIV
 
@@ -70,16 +71,16 @@ fun TagScope.formPart(
     }
 }
 
+@Deprecated("use textField")
 fun ViewScope.formTextField(
+    field: MutableField<String>,
     label: String? = null,
-    onValue: (String) -> Unit,
-    flow: Flow<String?>,
     mod: ModifierSet? = null,
     footnote: String? = null,
     placeholder: String? = label,
     maxLength: Int? = null
 ) = column(mod) {
-    textField(label, onValue, flow, placeholder = placeholder, maxLength = maxLength)
+    textField(field, label, placeholder = placeholder, maxLength = maxLength)
     if (footnote != null || maxLength != null) {
         row(modify(OpacityHigh, Italic, WhiteSpaceNoWrap, PaddingX1, TextSmall)) {
             footnote?.let {

@@ -31,17 +31,18 @@ fun ViewScope.viewStarDash(star: Star) {
 }
 
 fun ViewScope.viewStarDashRoute() {
-    routeBlock<StarDashRoute>() {
-        starGate { star ->
-            viewStarDash(star)
-        }
-    }
+    // td: fix
+    // routeBlock<StarDashRoute>() {
+    //     starGate { star ->
+    //         viewStarDash(star)
+    //     }
+    // }
 }
 
 private fun ViewScope.activityContent(star: Star) {
     grid {
         section("galaxies") {
-            request(api::readUserGalaxies) { galaxies ->
+            dataBlock(api::readUserGalaxies) { galaxies ->
                 galaxies.forEach { galaxy ->
                     grid(columnsOf(1.fr, LinearDimension.auto)) {
                         navigation(galaxy.toRoute()) {
@@ -53,7 +54,7 @@ private fun ViewScope.activityContent(star: Star) {
             }
         }
         section("edits") {
-            request(api::readPendingEdits) { logs ->
+            dataBlock(api::readPendingEdits) { logs ->
                 logs.forEach { log ->
                     val label = log.recordEdit?.label ?: return@forEach
                     listingOf(label, log.recordEdit?.image?.thumb)
@@ -62,7 +63,7 @@ private fun ViewScope.activityContent(star: Star) {
         }
         val dialog = dialog()
         section("requests") {
-            request(api::readUserTasks) { tasks ->
+            dataBlock(api::readUserTasks) { tasks ->
                 tasks.forEach { task ->
                     textBlock(task.label).onClick {
                         dialog.updateContent(task.label, true) {

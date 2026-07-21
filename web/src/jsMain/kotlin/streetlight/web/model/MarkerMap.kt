@@ -7,7 +7,7 @@ import koala.model.FeatureMarker
 import koala.model.GeoFocus
 import koala.model.GeoMap
 import koala.model.MarkerFocus
-import koala.model.tap
+import koala.model.dedup
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.FlowPreview
@@ -26,26 +26,26 @@ class MarkerMap(
     val stateNow get() = state.now
     val markerLayer = geoMap.getOrCreateLayer(MarkerLayerConfig.Markers)
 
-    val markersFlow = stateFlow.tap { it.markers }
+    val markersFlow = stateFlow.dedup { it.markers }
     private val partitionedFlow = markersFlow.combine(geoMap.camera.movingBoundsFlow) { markers, bounds ->
         markers?.partition { bounds.contains(it.geoPoint) }
     }.distinctUntilChanged()
     val boundedMarkersFlow   = partitionedFlow.map { it?.first }
     val unboundedMarkersFlow = partitionedFlow.map { it?.second }
     val isMovingFlow = geoMap.camera.isMovingFlow
-    val focusFlow = stateFlow.tap { it.focus }
+    val focusFlow = stateFlow.dedup { it.focus }
 
     init {
         scope.launch {
             geoMap.focusFlow.collect { focus ->
-                state.set { it.copy(focus = focus) }
+                state.setValue { it.copy(focus = focus) }
             }
         }
     }
 
     fun setPoints(markers: List<FeatureMarker>?) {
         markerLayer.setPoints(markers ?: emptyList())
-        state.set { it.copy(markers = markers, focus = null) }
+        state.setValue { it.copy(markers = markers, focus = null) }
     }
 
 //    fun addPoints(markers: List<AppMarker>) {
@@ -57,7 +57,7 @@ class MarkerMap(
         val focus = MarkerFocus(marker)
         geoMap.setFocus(focus)
         geoMap.camera.panMap(marker.geoPoint)
-        state.set { it.copy(focus = focus)}
+        state.setValue { it.copy(focus = focus)}
     }
 
     fun showAll() {

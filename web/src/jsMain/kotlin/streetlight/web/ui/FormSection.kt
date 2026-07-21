@@ -24,7 +24,7 @@ fun ViewScope.imageFormSection(
 
         )
     ) {
-        imageDrop(imageEditor.imageFlow, imageEditor::setImage) {
+        imageDrop(imageEditor.imageField) {
             box {
                 image(it.url)
             }

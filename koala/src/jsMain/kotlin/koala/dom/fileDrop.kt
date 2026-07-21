@@ -5,16 +5,16 @@ import koala.css.Blur
 import koala.css.Magic
 import koala.css.SlideDown
 import koala.css.modify
-import kotlinx.coroutines.flow.Flow
+import koala.model.MutableField
 
-fun ViewScope.fileDrop(urlFlow: Flow<String?>, onFileUrl: (Url) -> Unit) {
-    flowBlock(urlFlow, modify(Magic, Blur, SlideDown)) { url ->
+fun ViewScope.fileDrop(field: MutableField<Url?>) {
+    flowBlock(field, modify(Magic, Blur, SlideDown)) { url ->
         if (url != null) {
             textBlock("file: $url")
         } else {
             filePicker() {
                 console.log(it)
-                onFileUrl(it)
+                field.set(it)
             }
         }
     }

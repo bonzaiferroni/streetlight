@@ -24,48 +24,48 @@ fun ViewScope.signInForm(model: UserCreator) {
     val messages = MessageStore()
 
     form {
-        flowBlock(model.guestFlow) { username ->
-            when (username) {
-                null -> form {
-                    formSection("sign in") {
-                        column {
-                            textField(
-                                label = "username/email",
-                                onValue = cred::setUsername,
-                                placeholder = "username/email",
-                                flow = cred.usernameFlow
-                            )
-                            textField(
-                                label = "password",
-                                onValue = cred::setPassword,
-                                placeholder = "password",
-                                flow = cred.passwordFlow
-                            ) {
-                                type = InputType.password
+        formRow {
+            flowBlock(model.guestField) { username ->
+                when (username) {
+                    null -> form {
+                        formSection("sign in") {
+                            column {
+                                textField(
+                                    field = cred.usernameField,
+                                    label = "username/email",
+                                    placeholder = "username/email",
+                                )
+                                textField(
+                                    label = "password",
+                                    placeholder = "password",
+                                    field = cred.passwordField
+                                ) {
+                                    type = InputType.password
+                                }
+                                checkBox(cred.stayLoggedInField, "Stay signed in")
                             }
-                            checkBox("Stay signed in", cred::setStayLoggedIn, cred.stayLoggedInFlow)
                         }
+                        formSubmit("Sign in", {
+                            val request = cred.getLoginRequest() ?: return@formSubmit
+                            gate.signIn(request, messages)
+                        }, messages)
                     }
-                    formSubmit("Sign in", {
-                        val request = cred.getLoginRequest() ?: return@formSubmit
-                        gate.signIn(request, messages)
-                    }, messages)
-                }
-                else -> form {
-                    formSection("guest sign in") {
-                        textBlock("There is a guest account registered on this device: $username")
-                        checkBox("Stay signed in", cred::setStayLoggedIn, cred.stayLoggedInFlow)
+                    else -> form {
+                        formSection("guest sign in") {
+                            textBlock("There is a guest account registered on this device: $username")
+                            checkBox(cred.stayLoggedInField, "Stay signed in")
+                        }
+                        formSubmit("Sign in", {
+                            val request = LoginRequest(username.value, cred.stateNow.stayLoggedIn)
+                            gate.signIn(request, messages)
+                        }, messages)
                     }
-                    formSubmit("Sign in", {
-                        val request = LoginRequest(username.value, cred.stateNow.stayLoggedIn)
-                        gate.signIn(request, messages)
-                    }, messages)
                 }
             }
-        }
 
-        column(modify(AlignItemsCenter)) {
-            lottie(LottieFile.StrollingMan, modify(MaxWidth24))
+            column(modify(AlignItemsCenter)) {
+                lottie(LottieFile.StrollingMan, modify(MaxWidth24))
+            }
         }
     }
 }

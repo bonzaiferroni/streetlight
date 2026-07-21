@@ -1,10 +1,8 @@
 package streetlight.web.model
 
-import kampfire.api.toLoginIdentity
 import kampfire.model.LoginRequest
-import kampfire.model.SignUpRequest
 import kampfire.utils.obfuscate
-import koala.model.tap
+import koala.model.mutableFieldOf
 import koala.model.storeOf
 import kotlinx.browser.localStorage
 import org.w3c.dom.get
@@ -16,26 +14,12 @@ class CredentialStore {
     ))
     val stateNow get() = state.now
 
-    val usernameFlow = state.flow.tap { it.usernameText }
-    val passwordFlow = state.flow.tap { it.passwordText }
-    val stayLoggedInFlow = state.flow.tap { it.stayLoggedIn }
-
-    fun setUsername(username: String) {
-        state.set { it.copy(usernameText = username) }
-    }
-
-    fun setPassword(password: String) {
-        state.set { it.copy(passwordText = password) }
-    }
-
-    fun setStayLoggedIn(value: Boolean) {
+    val usernameField = state.mutableFieldOf({ it.usernameText }) { copy(usernameText = it) }
+    val passwordField = state.mutableFieldOf({ it.passwordText }) { copy(passwordText = it) }
+    val stayLoggedInField = state.mutableFieldOf({ it.stayLoggedIn }) { value ->
         localStorage.setItem(STAY_LOGGED_KEY, value.toString())
-        state.set { it.copy(stayLoggedIn = value) }
+        copy(stayLoggedIn = value)
     }
-
-    // fun setFromSignup(requestNow: SignUpRequest) {
-    //      state.set { it.copy(passwordText = "", usernameText = requestNow.username.value) }
-    // }
 
     fun getLoginRequest(): LoginRequest? {
         val usernameOrEmail = stateNow.usernameText.takeIf { it.isNotBlank() } ?: return null
@@ -52,7 +36,7 @@ class CredentialStore {
         if (isSuccess && stateNow.stayLoggedIn) {
             localStorage.setItem(USERNAME_KEY, stateNow.usernameText)
         }
-        state.set { it.copy(passwordText = "") }
+        state.setValue { it.copy(passwordText = "") }
     }
 }
 

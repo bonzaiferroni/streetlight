@@ -18,19 +18,18 @@ import koala.css.SlideDown
 import koala.css.ZIndex1
 import koala.css.modify
 import koala.html.fillImage
+import koala.model.MutableField
 import koala.toImage
-import kotlinx.coroutines.flow.Flow
 
 fun ViewScope.imageDrop(
-    urlFlow: Flow<Image?>,
-    onFileUrl: (Image?) -> Unit,
+    field: MutableField<Image?>,
     mod: ModifierSet? = null,
     block: ViewScope.(Image) -> Unit = {
         box(modify(Size100P)) {
             fillImage(it.url)
         }
     }
-) = flowBlock(urlFlow, modify(mod, Magic, Blur, SlideDown)) { url ->
+) = flowBlock(field, modify(mod, Magic, Blur, SlideDown)) { url ->
     if (url != null) {
         box(modify(Size100P, OverflowHidden, BorderRadius1)) {
             block(url)
@@ -38,12 +37,12 @@ fun ViewScope.imageDrop(
                 text = "✕",
                 mod = modify(Secondary, MinWidthAuto, JustifySelfStart, AlignSelfStart, Margin1, OpacityHigh, ZIndex1),
                 onClick = {
-                    onFileUrl(null)
+                    field.set(null)
                 })
         }
     } else {
         filePicker(MimeType.Image, modify(Size100P, BorderRadius2)) {
-            onFileUrl(it.toImage())
+            field.set(it.toImage())
         }
     }
 }

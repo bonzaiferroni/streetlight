@@ -12,9 +12,9 @@ fun ViewScope.buttonDialog(
 ) {
     val isOpen = storeOf(false)
 
-    dialog(label, isOpen.flow, dialogModifiers, onClose = { isOpen.set { false } }) {
+    dialog(label, isOpen.flow, dialogModifiers, onClose = { isOpen.setValue { false } }) {
         block()
     }
 
-    button("$emoji $label", { isOpen.set { !isOpen.now } }, modifiers)
+    button("$emoji $label", { isOpen.setValue { !isOpen.now } }, modifiers)
 }

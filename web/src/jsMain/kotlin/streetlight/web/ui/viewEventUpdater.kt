@@ -48,21 +48,22 @@ fun ViewScope.viewEventUpdater(content: EventUpdaterContent, star: Star) {
 
 fun ViewScope.viewEventUpdaterRoute() {
     column {
-        starGate { star ->
-            routeBlock<EventUpdateRoute, EventUpdaterContent?>(
-                portal = portal,
-                provideData = { route ->
-                    api.readEventUpdaterContent(route.slug).handleResponse(toaster)
-                }
-            ) { content ->
-                if (content == null) {
-                    textBlock("something went wrong")
-                    return@routeBlock
-                }
-
-                viewEventUpdater(content, star)
-            }
-        }
+        // td: fix
+        // starGate { star ->
+        //     routeBlock<EventUpdateRoute, EventUpdaterContent?>(
+        //         portal = portal,
+        //         provideData = { route ->
+        //             api.readEventUpdaterContent(route.slug).handleResponse(toaster)
+        //         }
+        //     ) { content ->
+        //         if (content == null) {
+        //             textBlock("something went wrong")
+        //             return@routeBlock
+        //         }
+//
+        //         viewEventUpdater(content, star)
+        //     }
+        // }
         appFooter("")
     }
 }

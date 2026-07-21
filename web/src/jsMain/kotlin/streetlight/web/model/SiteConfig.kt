@@ -1,6 +1,7 @@
 package streetlight.web.model
 
-import koala.model.tap
+import koala.model.dedup
+import koala.model.mutableFieldOf
 import koala.model.storeOf
 import koala.utils.jsonConfig
 import kotlinx.browser.localStorage
@@ -13,20 +14,16 @@ class SiteConfig {
 
     val stateNow get() = state.now
     val stateFlow = state.flow
-    val showTransitFlow = state.flow.tap { it.showTransit }
-    val themeFlow = state.flow.tap { it.theme }
+    val showTransitFlow = state.flow.dedup { it.showTransit }
+    val themeFlow = state.mutableFieldOf({ it.theme }) { copy(theme = it) }
 
     fun setShowTransit(value: Boolean) {
         setState { it.copy(showTransit = value) }
     }
 
-    fun setTheme(theme: SiteTheme) {
-        setState { it.copy(theme = theme) }
-    }
-
     private fun setState(mutate: (SiteConfigState) -> SiteConfigState) {
         val newState = mutate(stateNow)
-        state.set { newState }
+        state.setValue { newState }
         writeStateToLocalStorage(newState)
     }
 

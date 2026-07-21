@@ -9,7 +9,7 @@ import koala.html.bulletsOf
 import koala.html.filigree
 import koala.html.heading3
 import koala.html.span
-import koala.model.StateField
+import koala.model.MutableField
 import kotlinx.html.InputType
 import streetlight.web.model.EmailEditor
 import streetlight.web.model.PasswordEditor
@@ -50,7 +50,7 @@ fun ViewScope.guestRegistrationForm(model: UserCreator) {
             buttonText = "Register as Guest",
             onClick = { model.createAccount(AccountType.Guest) },
             messages = model.messages,
-            enabledFlow = model.isValidFlow
+            enabledFlow = model.isValidField.flow
         )
     }
 }
@@ -78,7 +78,7 @@ fun ViewScope.fullRegistrationForm(model: UserCreator) {
             buttonText = "Sign up",
             onClick = { model.createAccount(AccountType.Registered) },
             messages = model.messages,
-            enabledFlow = model.isValidFlow
+            enabledFlow = model.isValidField.flow
         )
     }
 }
@@ -92,8 +92,7 @@ private fun ViewScope.usernameSection(model: UserCreator) = formSection("Usernam
         textField(
             label = null,
             mod = modify(Flex1),
-            flow = model.usernameFlow,
-            onValue = model::setUsername,
+            field = model.usernameField,
             maxLength = Username.MAX_LENGTH,
             placeholder = "Username"
         )
@@ -103,14 +102,14 @@ private fun ViewScope.usernameSection(model: UserCreator) = formSection("Usernam
 }
 
 fun ViewScope.minAgeToggle(
-    field: StateField<Boolean>
+    field: MutableField<Boolean>
 ) = column(modify(AlignItemsCenter)) {
     textBlock("To create an account, you must be 17 or older.", modify(TextAlignCenter))
-    checkBox("I am ${UserCreatorState.MINIMUM_AGE} or older.", field.onValue, field.flow)
+    checkBox(field, "I am ${UserCreatorState.MINIMUM_AGE} or older.")
 }
 
 fun ViewScope.emailFormSection(model: EmailEditor) = formSection("Email") {
-    textField("optional", model::setEmail, model.emailFlow, placeholder = "email")
+    textField(model.emailField, "optional", placeholder = "email")
     formBullets(
         null,
         "Providing an email address is optional",
@@ -124,18 +123,10 @@ fun ViewScope.emailFormSection(model: EmailEditor) = formSection("Email") {
 
 
 fun ViewScope.passwordFormSection(model: PasswordEditor) = formSection("Password") {
-    textField(
-        label = "password",
-        flow = model.passwordFlow,
-        onValue = model::setPassword
-    ) {
+    textField(model.passwordField, "password") {
         type = InputType.password
     }
-    textField(
-        label = "confirm password",
-        flow = model.confirmationFlow,
-        onValue = model::setConfirmation
-    ) {
+    textField(model.confirmationFlow, "confirm password") {
         type = InputType.password
     }
     formBullets(

@@ -5,7 +5,7 @@ import koala.dom.*
 import koala.dom.routeBlock
 import koala.html.AppRoute
 import koala.html.heading1
-import koala.model.tapNotNull
+import koala.model.dedupNotNull
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import streetlight.model.data.Media
@@ -16,7 +16,7 @@ import streetlight.model.ui.MediaRoute
 import streetlight.web.model.MediaEditor
 
 fun ViewScope.viewMediumUpdater(model: MediaEditor) {
-    val routeFlow = model.stateFlow.tapNotNull { it.slug?.let { slug -> MediaRoute(slug) } }
+    val routeFlow = model.stateFlow.dedupNotNull { it.slug?.let { slug -> MediaRoute(slug) } }
     goOnRoute(routeFlow)
 
     section(modify(Column)) {

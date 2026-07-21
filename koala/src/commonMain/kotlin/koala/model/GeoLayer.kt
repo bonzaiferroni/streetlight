@@ -13,13 +13,13 @@ class GeoLayer(
     val stateNow get() = state.now
 
 
-    val pointsFlow = stateFlow.tap { it.points }
-    val linesFlow = stateFlow.tap { it.lines }
-    val isVisibleFlow = stateFlow.tap { it.isVisible }
+    val pointsFlow = stateFlow.dedup { it.points }
+    val linesFlow = stateFlow.dedup { it.lines }
+    val isVisibleFlow = stateFlow.dedup { it.isVisible }
 
-    fun setLines(value: List<LineMarker>) = state.set { it.copy(lines = value) }
-    fun setPoints(value: List<PointMarker>) = state.set { it.copy(points = value) }
-    fun setIsVisible(value: Boolean) = state.set { it.copy(isVisible = value) }
+    fun setLines(value: List<LineMarker>) = state.setValue { it.copy(lines = value) }
+    fun setPoints(value: List<PointMarker>) = state.setValue { it.copy(points = value) }
+    fun setIsVisible(value: Boolean) = state.setValue { it.copy(isVisible = value) }
 }
 
 data class GeoLayerState(

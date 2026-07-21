@@ -3,7 +3,7 @@ package streetlight.web.ui
 import kampfire.model.handleResponse
 import koala.LottieFile
 import koala.dom.*
-import koala.model.tapNotNull
+import koala.model.dedupNotNull
 import streetlight.model.data.EventEdit
 import streetlight.model.data.Galaxy
 import streetlight.model.data.LocationEdit
@@ -17,7 +17,7 @@ fun ViewScope.viewEventScout(galaxy: Galaxy) {
     val locationScout = app.getLocationScout(galaxy, locationEditor, contentScope)
     val editor = app.getEventEditor(EventEdit(timeZoneId = getTimeZoneId()), contentScope)
     val model = app.getEventScout(galaxy, editor, locationScout, contentScope)
-    val routeFlow = model.stateFlow.tapNotNull { it.postId?.let { GalaxyRoute(galaxy.slug) } }
+    val routeFlow = model.stateFlow.dedupNotNull { it.postId?.let { GalaxyRoute(galaxy.slug) } }
     goOnRoute(routeFlow)
 
     fun isHeadingStage(stage: EventScoutStage) = when (stage) {
@@ -30,7 +30,7 @@ fun ViewScope.viewEventScout(galaxy: Galaxy) {
             textBlock("Let's post an event to ${galaxy.name}.")
         }
 
-        stageBlock(model.stageFlow, model::setStage, isHeadingStage = ::isHeadingStage) { stage ->
+        stageBlock(model.stage, isHeadingStage = ::isHeadingStage) { stage ->
             when (stage) {
                 EventScoutStage.LocationSearch -> formBodyProto {
                     locationScoutForm(locationScout)
@@ -60,10 +60,11 @@ fun ViewScope.viewEventScout(galaxy: Galaxy) {
 
 fun ViewScope.viewEventScoutRoute() {
     starGate { star ->
-        routeBlock<EventScoutRoute, Galaxy>({
-            api.readGalaxy(it.slug).handleResponse(toaster)
-        }) { galaxy ->
-            viewEventScout(galaxy)
-        }
+        // td: fix
+        // routeBlock<EventScoutRoute, Galaxy>({
+        //     api.readGalaxy(it.slug).handleResponse(toaster)
+        // }) { galaxy ->
+        //     viewEventScout(galaxy)
+        // }
     }
 }

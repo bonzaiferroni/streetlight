@@ -32,18 +32,19 @@ fun ViewScope.viewMusicianHub(
                 column(modify(AlignItemsCenter)) {
                     row(modify(Width64)) {
                         row(modify(Flex1, FlexItems1)) {
-                            textField(
-                                label = "title",
-                                placeholder = "Song title",
-                                flow = model.titleFlow,
-                                onValue = model::setSongTitle
-                            )
-                            textField(
-                                label = "artist",
-                                placeholder = "Artist",
-                                flow = model.artistFlow,
-                                onValue = model::setArtist
-                            )
+                            // td: fix
+                            // textField(
+                            //     label = "title",
+                            //     placeholder = "Song title",
+                            //     flow = model.titleFlow,
+                            //     onValue = model::setSongTitle
+                            // )
+                            // textField(
+                            //     label = "artist",
+                            //     placeholder = "Artist",
+                            //     flow = model.artistFlow,
+                            //     onValue = model::setArtist
+                            // )
                         }
                         button("Add new song", model::addSong, modify(Accent))
                     }

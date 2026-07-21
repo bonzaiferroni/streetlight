@@ -5,7 +5,8 @@ import kampfire.model.getDataOrNull
 import kampfire.model.handleResponse
 import koala.dom.ChartData
 import koala.dom.ChartLine
-import koala.model.tap
+import koala.model.dedup
+import koala.model.mutableFieldOf
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -26,10 +27,13 @@ class SiteMonitor(
     val stateNow get() = state.now
     val stateFlow = state.flow
 
-    val pointsFlow = stateFlow.tap { it.points }
+    val pointsFlow = stateFlow.dedup { it.points }
     val pointFlow = MutableSharedFlow<SiteStatus>()
-    val timeFrameFlow = stateFlow.tap { it.timeFrame }
-    val dataFlow = stateFlow.tap { state ->
+    val timeFrameField = state.mutableFieldOf({ it.timeFrame }) {
+        refreshData() // td: fix ordering
+        copy(timeFrame = it)
+    }
+    val dataFlow = stateFlow.dedup { state ->
         ChartData(
             points = state.points,
             lines = state.metrics.map { metric ->
@@ -48,16 +52,11 @@ class SiteMonitor(
         refreshData()
     }
 
-    fun setTimeFrame(value: TimeFrame) {
-        state.set { it.copy(timeFrame = value) }
-        refreshData()
-    }
-
     private fun refreshData() {
         refreshJob?.cancel()
         refreshJob = scope.launch {
             val points = api.feedSiteStatus(stateNow.timeFrame.resolution).handleResponse(toaster) ?: emptyList()
-            state.set { it.copy(points = points) }
+            state.setValue { it.copy(points = points) }
             while (true) {
                 delay(stateNow.timeFrame.resolution.duration)
                 val point = api.readLastSiteStatus(stateNow.timeFrame.resolution).getDataOrNull() ?: continue

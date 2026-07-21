@@ -17,7 +17,7 @@ class GeoMap(
     private val _layersFlow = MutableSharedFlow<List<GeoLayer>>(1)
     internal val layersFlow: Flow<List<GeoLayer>> = _layersFlow
 
-    val focusFlow = stateFlow.tap { it.focus }
+    val focusFlow = stateFlow.dedup { it.focus }
 
     fun getOrCreateLayer(config: GeoLayerConfig) = layers.firstOrNull { it.layerId == config.layerId }
         ?: GeoLayer(config).also { layer ->
@@ -36,7 +36,7 @@ class GeoMap(
 
     // fun setFocus(value: PointMarker?) = state.set { it.copy(focus = value?.let { marker -> MarkerFocus(marker)} ) }
 
-    fun setFocus(value: GeoFocus?) = state.set { it.copy(focus = value) }
+    fun setFocus(value: GeoFocus?) = state.setValue { it.copy(focus = value) }
 }
 
 data class GeoMapState(

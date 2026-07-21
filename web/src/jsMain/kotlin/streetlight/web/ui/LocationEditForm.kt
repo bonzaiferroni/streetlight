@@ -14,21 +14,20 @@ fun ViewScope.locationEditFormBody(model: LocationEditor) = formBodyProto {
 
 fun ViewScope.locationDetailsForm(model: LocationEditor) = formCardSection("Location Details") {
     formPart("What is the name of the place?") {
-        formTextField("title", model::setName, model.nameFlow, maxLength = 50)
+        formTextField(model.nameField, "title", maxLength = 50)
             .flowValid(LocationProperty.Name, model.validityFlow, contentScope)
     }
     formPart("Where is it?") {
         row {
-            textField("address", model::setAddress, model.addressFlow, modify(Flex1))
-            textField("city", model::setCity, model.cityFlow, modify(Flex1))
+            textField(model.addressField, "address", modify(Flex1))
+            textField(model.cityField, "city", modify(Flex1))
         }
     }
     formPart("Describe the place.", fieldsFlex = Flex2) {
         textEditor(
+            field = model.descriptionField,
             label = "description",
             rows = 8,
-            onValue = model::setDescription,
-            flow = model.descriptionFlow
         )
     }
 }
@@ -41,7 +40,7 @@ fun ViewScope.locationImageForm(model: LocationEditor) =
 
 fun ViewScope.locationLinksForm(model: LocationEditor) = formCardSection("Links") {
     column {
-        textField("calendar", model::setEventsLink, model.linksFlow)
+        textField(model.eventsUrlField, "calendar")
     }
 }
 
@@ -50,7 +49,7 @@ fun ViewScope.locationWebsiteForm(model: LocationEditor) = formCardSection("Webs
         instructions = "Does this location have a website? We can read it to find certain details.",
         bullets = listOf("Image", "Description", "Links")
     ) {
-        textField("website", model::setWebsite, model.websiteFlow)
+        textField(model.websiteField, "website")
         row(modify(JustifyContentEnd)) {
             messageBox(model.websiteMessage, modify(Magic))
             button("🤖 read website", onClick = model::readWebsite)

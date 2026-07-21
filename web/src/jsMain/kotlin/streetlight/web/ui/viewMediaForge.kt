@@ -5,7 +5,7 @@ import koala.css.*
 import koala.dom.*
 import koala.html.filigree
 import koala.html.heading1
-import koala.model.tapNotNull
+import koala.model.dedupNotNull
 import kotlinx.html.js.h3
 import streetlight.model.data.Galaxy
 import streetlight.model.data.MediaEdit
@@ -15,7 +15,7 @@ import streetlight.model.ui.MediaRoute
 fun ViewScope.viewMediaForge(galaxy: Galaxy?) {
     println(galaxy) // ey
     val model = app.getMediaEditor(MediaEdit(), contentScope)
-    goOnRoute(model.stateFlow.tapNotNull { it.slug?.let { slug -> MediaRoute(slug) }  })
+    goOnRoute(model.stateFlow.dedupNotNull { it.slug?.let { slug -> MediaRoute(slug) }  })
 
     section(modify(Column)) {
         heading1(galaxy?.name ?: "Profile Post", modify(TextAlignCenter))
@@ -28,7 +28,7 @@ fun ViewScope.viewMediaForge(galaxy: Galaxy?) {
         }
 
         row(modify(JustifyContentEnd)) {
-            messageBox(model.message.flow)
+            messageBox(model.message)
             button("Post", onClick = {
                 model.submitPost(galaxy)
             })
@@ -37,9 +37,10 @@ fun ViewScope.viewMediaForge(galaxy: Galaxy?) {
 }
 
 fun ViewScope.viewContentPosterRoute() {
-    routeBlock<MediaForgeRoute, Galaxy?>({ route ->
-        route.slug?.let { api.readGalaxy(it).handleResponse(toaster) }
-    }) { galaxy ->
-        viewMediaForge(galaxy)
-    }
+    // td: fix
+    // routeBlock<MediaForgeRoute, Galaxy?>({ route ->
+    //     route.slug?.let { api.readGalaxy(it).handleResponse(toaster) }
+    // }) { galaxy ->
+    //     viewMediaForge(galaxy)
+    // }
 }

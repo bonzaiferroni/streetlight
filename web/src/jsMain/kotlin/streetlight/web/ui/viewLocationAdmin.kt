@@ -31,7 +31,7 @@ fun ViewScope.viewLocationAdmin(
                             })
                         }
                     }
-                    flowBlock(events.flow, defaultMagic) { events ->
+                    flowBlock(emptyList(), events.flow, defaultMagic) { events ->
                         column {
                             events.forEach { event ->
                                 cardOf(event)
@@ -46,10 +46,11 @@ fun ViewScope.viewLocationAdmin(
 }
 
 fun ViewScope.viewLocationAdmin() {
-    routeBlock<LocationAdminRoute, Location>(
-        portal = portal,
-        provideData = { api.readLocation(it.locationId).handleResponse(toaster) }
-    ) {
-        viewLocationAdmin(it)
-    }
+    // td: fix
+    // routeBlock<LocationAdminRoute, Location>(
+    //     portal = portal,
+    //     provideData = { api.readLocation(it.locationId).handleResponse(toaster) }
+    // ) {
+    //     viewLocationAdmin(it)
+    // }
 }

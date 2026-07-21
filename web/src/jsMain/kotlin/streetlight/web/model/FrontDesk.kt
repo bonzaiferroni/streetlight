@@ -1,7 +1,9 @@
 package streetlight.web.model
 
 import kampfire.model.handleResponse
-import koala.model.tap
+import koala.model.dedup
+import koala.model.fieldOf
+import koala.model.mutableFieldOf
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -18,17 +20,15 @@ class FrontDesk(
     val stateNow get() = state.now
     val stateFlow get() = state.flow
 
-    val feedFlow = stateFlow.tap { it.feed }
-    val editFlow = stateFlow.tap { it.edit }
-    val textFlow = editFlow.tap { it.text }
+    val feedFlow = state.fieldOf { it.feed }
+    val editField = state.mutableFieldOf({ it.edit }) { copy(edit = it) }
+    val textField = editField.mutableFieldOf({ it.text }) { copy(text = it) }
 
     init {
         scope.launch {
             refreshFeedback()
         }
     }
-
-    fun setText(value: String) = setEdit { it.copy(text = value) }
 
     fun sendFeedback() {
         val edit = stateNow.edit.takeIf { it.isValid } ?: return
@@ -38,11 +38,11 @@ class FrontDesk(
         }
     }
 
-    private fun setEdit(block: (FeedbackEdit) -> FeedbackEdit) = state.set { it.copy(edit = block(it.edit)) }
+    private fun setEdit(block: (FeedbackEdit) -> FeedbackEdit) = state.setValue { it.copy(edit = block(it.edit)) }
 
     private suspend fun refreshFeedback() {
         val list = api.feedFeedback().handleResponse(toaster) ?: emptyList()
-        state.set { it.copy(feed = list) }
+        state.setValue { it.copy(feed = list) }
     }
 }
 

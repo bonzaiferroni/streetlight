@@ -4,7 +4,9 @@ import kampfire.model.Labeled
 import kampfire.model.handleResponse
 import koala.dom.MessageStore
 import koala.model.GeoCamera
-import koala.model.tap
+import koala.model.dedup
+import koala.model.fieldOf
+import koala.model.mutableFieldOf
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.filter
@@ -37,58 +39,67 @@ class LocationScout(
     val postMessage = MessageStore()
     val queryMessage = MessageStore()
 
-    val queryFlow = stateFlow.tap { it.query }
-    val cityFlow = stateFlow.tap { it.city }
-    val queryLocationsFlow = stateFlow.tap { it.queryLocations }
-    val locationFlow = stateFlow.tap { it.location }
-    val osmLocationsFlow = stateFlow.tap { it.osmLocations }
-    val hasOsmLocations = stateFlow.tap { it.osmLocations.isNotEmpty() }
-    val stageFlow = stateFlow.tap { it.stage }
-    val postFlow = stateFlow.tap { it.postId }
-    val modeFlow = stateFlow.tap { it.mode }
-    val mapLocationFlow = stateFlow.tap { it.mapLocation }
+    val queryField = state.mutableFieldOf({ it.query }) { copy(query = it) }
+    val cityField = state.mutableFieldOf({ it.city ?: "" }) { copy(city = it) }
+    val queryLocationsField = state.fieldOf { it.queryLocations }
+    val osmLocationsField = state.fieldOf { it.osmLocations }
+    val hasOsmLocationsField = state.fieldOf { it.osmLocations.isNotEmpty() }
+    val postField = state.fieldOf { it.postId }
+    val modeField = state.mutableFieldOf({ it.mode.ordinal }) { copy(mode = SearchMode.entries[it] ) }
+    val mapLocationField = state.mutableFieldOf({ it.mapLocation }) { copy(mapLocation = it) }
+
+    val locationField = state.mutableFieldOf({ it.location }) {
+        copy(location = it, stage = LocationScoutStage.Post)
+    }
+
+    val stageField = state.mutableFieldOf({ it.stage }) { value ->
+        if (value == LocationScoutStage.Search) {
+            editor.reset()
+        }
+        copy(stage = value)
+    }
 
     init {
         scope.launch {
             launch {
-                queryFlow.collect { query ->
+                queryField.flow.collect { query ->
                     api.searchLocations(query, stateNow.city?.takeIf { it.isNotBlank() })
                         .handleResponse(toaster) { locations ->
-                            state.set { it.copy(queryLocations = locations) }
+                            state.setValue { it.copy(queryLocations = locations) }
                         }
                 }
             }
 
             launch {
                 geo.stateFlow.filter { !it.isMoving && stateNow.mode == SearchMode.Map }
-                    .tap { it.center }.collect { center ->
+                    .dedup { it.center }.collect { center ->
                         osm.readLocationAt(center).handleResponse(mapMessage) { location ->
                             val location = location.toEditOrNull() ?: return@handleResponse
                             mapMessage.receive(location.label)
-                            state.set { it.copy(mapLocation = location)}
+                            state.setValue { it.copy(mapLocation = location)}
                         }
                     }
             }
         }
     }
 
-    fun setQuery(value: String) = state.set { it.copy(query = value) }
-    fun setCity(value: String) = state.set { it.copy(city = value) }
-    fun setLocation(value: Location?) = state.set { it.copy(location = value, stage = LocationScoutStage.Post) }
-    fun setMode(value: SearchMode) = state.set { it.copy(mode = value) }
+    // fun setQuery(value: String) = state.setValue { it.copy(query = value) }
+    // fun setCity(value: String) = state.setValue { it.copy(city = value) }
+    // fun setLocation(value: Location?) = state.setValue { it.copy(location = value, stage = LocationScoutStage.Post) }
+    // fun setMode(value: SearchMode) = state.setValue { it.copy(mode = value) }
 
-    fun setStage(value: LocationScoutStage) {
-        if (value == LocationScoutStage.Search) {
-            editor.reset()
-        }
-        state.set { it.copy(stage = value) }
-    }
+    // fun setStage(value: LocationScoutStage) {
+    //     if (value == LocationScoutStage.Search) {
+    //         editor.reset()
+    //     }
+    //     state.setValue { it.copy(stage = value) }
+    // }
 
     fun stageLocation(value: LocationEdit?) {
         if (value == null) return
         editor.setEdit { value.mergeLeft(it) }
         editor.readWebsite()
-        state.set { it.copy(stage = LocationScoutStage.Edit) }
+        state.set { copy(stage = LocationScoutStage.Edit) }
     }
 
     fun stageLocationFromMap() = stageLocation(stateNow.mapLocation)
@@ -102,19 +113,19 @@ class LocationScout(
             val bounds = galaxy.geoBounds.takeIf { city == null }?.resizeBy(5f)
             osm.readLocations(query, stateNow.city, bounds).handleResponse(queryMessage) { locations ->
                 queryMessage.receive("found: ${locations.size}")
-                state.set { it.copy(osmLocations = locations.mapNotNull { loc -> loc.toEditOrNull() }) }
+                state.setValue { it.copy(osmLocations = locations.mapNotNull { loc -> loc.toEditOrNull() }) }
             }
         }
     }
 
     fun review() {
         if (!editor.isEditValid()) return
-        state.set { it.copy(stage = LocationScoutStage.Post) }
+        state.setValue { it.copy(stage = LocationScoutStage.Post) }
     }
 
     suspend fun submitLocation() = when (val location = stateNow.location) {
         null -> editor.submitSuspend().also { location ->
-            state.set { it.copy(location = location) }
+            state.setValue { it.copy(location = location) }
         }
         else -> location
     }
@@ -125,7 +136,7 @@ class LocationScout(
 
             val edit = PostEdit(null, galaxy.galaxyId, PostType.Location, location.locationId.value, null)
             api.createPost(edit).handleResponse(postMessage) { post ->
-                state.set { it.copy(postId = post.postId) }
+                state.setValue { it.copy(postId = post.postId) }
             }
         }
     }

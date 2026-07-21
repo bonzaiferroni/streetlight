@@ -34,7 +34,7 @@ class OmniLog(
     private fun takeMessage(message: OmniMessage) {
         when (message) {
             is OmniStatus -> {
-                state.set { it.copy(starCount = message.starCount) }
+                state.setValue { it.copy(starCount = message.starCount) }
             }
             is OmniRecord -> {
                 takeRecord(message)
@@ -50,12 +50,12 @@ class OmniLog(
         if (records.size > MAX_RECORDS) {
             records.removeAt(0)
         }
-        state.set { it.copy(records = records.toList()) }
+        state.setValue { it.copy(records = records.toList()) }
     }
 
     private fun takeHistory(history: OmniHistory) {
         records.addAll(history.records)
-        state.set { it.copy(records = records.toList()) }
+        state.setValue { it.copy(records = records.toList()) }
     }
 }
 

@@ -1,19 +1,13 @@
 package koala.model
 
-import kampfire.model.Messenger
-import kampfire.model.Outcome
 import koala.css.KoalaBody
-import koala.dom.launch
 import koala.dom.setAttribute
 import koala.html.AppRoute
 import koala.html.AppScreen
 import kotlinx.browser.document
 import kotlinx.browser.window
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import org.w3c.dom.HTMLAnchorElement
 import org.w3c.dom.HTMLElement
@@ -34,8 +28,8 @@ class Portal(
     val stateNow get() = state.now
 
     val screenFlow = stateFlow
-        .tapBy({ if (it.route.screen.retainWithinScreen) it.route.screen else it }) { it.route.screen }
-    val routeFlow = stateFlow.tap { it.route }
+        .dedupBy({ if (it.route.screen.retainWithinScreen) it.route.screen else it }) { it.route.screen }
+    val routeFlow = stateFlow.dedup { it.route }
 
     private var backstack: List<Navigation> = emptyList()
     private var isWrecked = false
@@ -115,7 +109,7 @@ class Portal(
     }
 
     fun refresh() {
-        state.set { it.copy(refreshedAt = Clock.System.now(), isInitialRoute = false) }
+        state.setValue { it.copy(refreshedAt = Clock.System.now(), isInitialRoute = false) }
     }
 
     fun notifyWrecked() {
@@ -127,7 +121,7 @@ class Portal(
         console.log("setting route")
         val route = navigation.route
         this.backstack = backstack
-        state.set { it.copy(
+        state.setValue { it.copy(
             route = route,
             canGoBack = backstack.isNotEmpty(),
             initialScrollY = navigation.initialScrollY,

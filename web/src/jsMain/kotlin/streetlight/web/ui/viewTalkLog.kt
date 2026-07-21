@@ -32,7 +32,8 @@ fun ViewScope.viewTalkLog(model: TalkLog) {
             }
         }
         row {
-            dropMenu(model::setSortBy, { it.label }, model.sortByFlow)
+            // td: fix
+            // dropMenu(model::setSortBy, { it.label }, model.sortByFlow)
         }
 
         treeRoot = column { }
@@ -66,10 +67,11 @@ fun ViewScope.viewTalkLog(model: TalkLog) {
 }
 
 fun ViewScope.viewTalkRoute() {
-    routeBlock<TalkRoute> { route ->
-        val model = TalkLog(contentScope, route.id, route.type, api)
-        viewTalkLog(model)
-    }
+    // td: fix
+    // routeBlock<TalkRoute> { route ->
+    //     val model = TalkLog(contentScope, route.id, route.type, api)
+    //     viewTalkLog(model)
+    // }
 }
 
 fun ViewScope.buildTree(model: TalkLog, treeRoot: HTMLElement, comments: List<Comment>) {
@@ -138,7 +140,8 @@ fun ViewScope.commentEditor(
     val text = storeOf(initialText)
 
     column(modify(Height100P, mod)) {
-        textEditor(label, modify(Flex1), flow = text.flow, onValue = text::set)
+        // td: fix
+        // textEditor(label, modify(Flex1), flow = text.flow, onValue = text::set)
         row {
             spacer(modify(Flex1))
             button("send", onClick = {

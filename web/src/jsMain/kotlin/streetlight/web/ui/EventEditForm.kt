@@ -27,7 +27,7 @@ fun ViewScope.eventWebsiteForm(model: EventEditor) = formCardSection("Web page")
         instructions = "Does this event have a web page? We can read it to find certain details.",
         bullets = listOf("Some websites cannot be read automatically, but you can fill in the details yourself.")
     ) {
-        textField("website", model::setUrl, model.urlFlow)
+        textField(model.urlField, "website")
         row(modify(JustifyContentEnd)) {
             messageBox(model.urlMessage, modify(Magic))
             button("🤖 read page", model::readUrl)
@@ -37,31 +37,31 @@ fun ViewScope.eventWebsiteForm(model: EventEditor) = formCardSection("Web page")
 
 fun ViewScope.eventDetailsForm(model: EventEditor) = formCardSection("Event Details") {
     formPart("What is the name of the event?") {
-        formTextField("title", model::setTitle, model.titleFlow, maxLength = 50)
+        textField(model.title, "title", maxLength = 50)
             .flowValid(EventProperty.Title, model.validityFlow, contentScope)
     }
     formPart("How much does it cost?") {
         row(modify(AlignItemsCenter)) {
-            checkBox("Free event", model::setFree, model.isFreeFlow)
-            textField("cost", model::setCost, model.costFlow, modify(Width12))
-                .flowVisibility(model.isFreeFlow.map { !it }, contentScope)
+            checkBox(model.isFree, "Free event")
+            textField(model.cost, "cost", modify(Width12))
+                .flowVisibility(model.isFree.flow.map { !it }, contentScope)
                 .flowValid(EventProperty.Cost, model.validityFlow, contentScope)
         }
     }
     formPart("What is the day and time?") {
         row(modify(AlignItemsCenter, JustifyContentCenter)) {
             blockLabel("start time") {
-                timeInput(model.startTimeFlow, model::setStartTime)
+                timeInput(model.startTime)
             }.flowValid(EventProperty.StartTime, model.validityFlow, contentScope)
             // end time is optional, not every event has a fixed end time
             blockLabel("end time") {
-                timeInput(model.endTimeFlow, model::setEndTime)
+                timeInput(model.endTime)
             }
             blockLabel("date") {
-                dateInput(model.dateFlow, model::setDate)
+                dateInput(model.date)
             }.flowValid(EventProperty.Date, model.validityFlow, contentScope)
         }
-        flowBlock(model.startsAtFlow, modify(FlexColumn, AlignItemsCenter)) {
+        flowBlock(model.startsAt, modify(FlexColumn, AlignItemsCenter)) {
             val startsAt = it ?: return@flowBlock
             // must be boxed due to FlowContent context
             val dayDescription = when (startsAt < Clock.System.now()) {
@@ -75,11 +75,10 @@ fun ViewScope.eventDetailsForm(model: EventEditor) = formCardSection("Event Deta
     }
     formPart("Tell us all about the event.") {
         textEditor(
+            field = model.description,
             label = "description",
             placeholder = "Event description",
             rows = 8,
-            onValue = model::setDescription,
-            flow = model.descriptionFlow
         )
         row(modify(JustifyContentSpaceBetween)) {
             buttonPopover("Markdown Hints", flair = "💡") {
@@ -96,7 +95,7 @@ fun ViewScope.eventDetailsForm(model: EventEditor) = formCardSection("Event Deta
                 }
             }
             buttonDialog("Preview", emoji = "👀") {
-                flowBlock(model.descriptionFlow) {
+                flowBlock(model.description) {
                     box(modify(Padding2)) {
                         markdown(it)
                     }

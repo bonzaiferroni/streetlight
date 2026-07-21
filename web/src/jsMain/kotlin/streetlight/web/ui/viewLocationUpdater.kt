@@ -47,19 +47,20 @@ fun ViewScope.viewLocationUpdater(content: LocationUpdaterContent, star: Star) {
 fun ViewScope.viewUpdateLocationRoute() {
     column {
         starGate { star ->
-            routeBlock<LocationUpdateRoute, LocationUpdaterContent?>(
-                portal = portal,
-                provideData = { route ->
-                    api.readLocationUpdaterContent(route.slug).handleResponse(toaster)
-                }
-            ) { content ->
-                if (content == null) {
-                    textBlock("something went wrong")
-                    return@routeBlock
-                }
-
-                viewLocationUpdater(content, star)
-            }
+            // td: fix
+            // routeBlock<LocationUpdateRoute, LocationUpdaterContent?>(
+            //     portal = portal,
+            //     provideData = { route ->
+            //         api.readLocationUpdaterContent(route.slug).handleResponse(toaster)
+            //     }
+            // ) { content ->
+            //     if (content == null) {
+            //         textBlock("something went wrong")
+            //         return@routeBlock
+            //     }
+//
+            //     viewLocationUpdater(content, star)
+            // }
         }
         appFooter("")
     }

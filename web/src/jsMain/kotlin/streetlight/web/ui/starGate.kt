@@ -15,7 +15,7 @@ fun ViewScope.starGate(
     baseContent: (ViewScope.(DialogElement) -> Unit)? = null,
     content: ViewScope.(Star) -> Unit
 ) {
-    flowBlock(session.starFlow) { user ->
+    flowBlock(session.starField) { user ->
         when (user) {
             null -> {
                 val dialog = dialog("Sign In") {
