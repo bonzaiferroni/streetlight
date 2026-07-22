@@ -12,6 +12,7 @@ import kampfire.model.Outcome
 import kampfire.model.Ok
 import kampfire.model.Problem
 import kampfire.utils.takeEllipsis
+import klutch.utils.logger
 import kotlinx.io.files.Path
 
 // td: refactor, this is a hot mess
@@ -20,6 +21,7 @@ class ParserClient(env: Environment) {
     val console = KotlinLogging.logger("dao")
     val cache = mutableMapOf<Int, ParserContent>()
     val trimmer = HtmlTrimmer()
+    val log = KotlinLogging.logger(ParserClient::class)
 
     suspend inline fun <reified T: Any> readHtml(url: String, doc: Document, instructions: String): Outcome<T> {
         val response = withCache(doc.hashCode()) {
@@ -53,6 +55,7 @@ class ParserClient(env: Environment) {
         doc: Document,
         instructions: String
     ): Outcome<ParserContent> {
+        log.info { "Reading html: ${url.take(50)}" }
         val content = trimmer.trimHtml(doc)
 
         val prompt = prompt(

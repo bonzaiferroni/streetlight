@@ -33,11 +33,8 @@ class EventEditor(
     val stateNow get() = state.now
     val editNow get() = stateNow.edit
 
-    val message = MessageStore()
-    val urlMessage = MessageStore()
-    val imageEditor = ImageEditor(initialEvent?.image, api)
-
     val editField = state.mutableFieldOf({ it.edit }) { copy(edit = it) }
+    val imageField = editField.mutableFieldOf({ it.image }) { copy(image = it) }
     val startTime = editField.mutableFieldOf({ it.startTime }) { copy(startTime = it)}
     val endTime = editField.mutableFieldOf({ it.endTime }) { copy(endTime = it) }
     val date = editField.mutableFieldOf({ it.date }) { copy(date = it) }
@@ -50,6 +47,10 @@ class EventEditor(
     val validityCheckField = editField.fieldOf { it.validity }
     val originalSourceLabelField = state.mutableFieldOf({ it.originalSourceLabel }) { copy(originalSourceLabel = it) }
     val originalSourceUrlField = state.mutableFieldOf({ it.originalSourceUrl }) { copy(originalSourceUrl = it) }
+
+    val imageEditor = ImageEditor(imageField, api)
+    val message = MessageStore()
+    val urlMessage = MessageStore()
 
     init {
         costField.reactIn(scope) { costString ->
@@ -72,11 +73,6 @@ class EventEditor(
     fun editLink(index: Int, value: ExtraLink) {
         val linksNow = stateNow.edit.links ?: error("no links to edit")
         setEvent { it.copy(links = linksNow.replaceAt(index, value)) }
-    }
-
-    fun setEdit(value: EventEdit) {
-        if (value == stateNow.edit) return
-        setEvent { value }
     }
 
     fun isEditValid(): Boolean {

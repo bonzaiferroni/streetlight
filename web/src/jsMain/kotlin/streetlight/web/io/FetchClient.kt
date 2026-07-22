@@ -140,6 +140,7 @@ class FetchClient() {
         contentType: String = "application/json",
         acceptEncoding: EncodingType? = null,
         maxAttempts: Int = 3,
+        timeout: Double? = null,
         handleResponse: suspend (Response) -> Outcome<T>
     ): Outcome<T> {
         val fetchRequest: suspend () -> Response = {
@@ -152,7 +153,7 @@ class FetchClient() {
                 body = body,
                 mode = RequestMode.sameOrigin,
                 credentials = RequestCredentials.sameOrigin,
-                signal = AbortSignal.timeout(10_000.0),
+                signal = timeout?.let { AbortSignal.timeout(it) },
             ))
         }
 
@@ -195,19 +196,3 @@ class FetchClient() {
         }
     }
 }
-
-// fun defaultRequest(
-//     method: String,
-//     headers: dynamic,
-//     body: dynamic,
-// ) = RequestInit(
-//     method = method,
-//     headers = headers,
-//     body = body,
-//     cache = RequestCache.DEFAULT,
-//     mode = RequestMode.SAME_ORIGIN,
-//     redirect = RequestRedirect.FOLLOW,
-//     credentials = RequestCredentials.SAME_ORIGIN,
-//     referrerPolicy = "".asDynamic(),
-//     integrity = "",
-// )

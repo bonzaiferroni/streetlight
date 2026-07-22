@@ -27,9 +27,6 @@ class Portal(
     val stateFlow = state.flow
     val stateNow get() = state.now
 
-    val screenFlow = stateFlow
-        .dedupBy({ if (it.route.screen.retainWithinScreen) it.route.screen else it }) { it.route.screen }
-
     val screenField = state.fieldOf(
         applyFlow = { states ->
             states.dedupBy({ if (it.route.screen.retainWithinScreen) it.route.screen else it }) { it.route.screen }
@@ -116,7 +113,7 @@ class Portal(
 
     fun refresh() {
         console.log("refreshing")
-        state.setValue { it.copy(refreshedAt = Clock.System.now(), isInitialRoute = false) }
+        state.set { copy(refreshedAt = Clock.System.now(), isInitialRoute = false) }
     }
 
     fun notifyWrecked() {
@@ -125,10 +122,10 @@ class Portal(
     }
 
     private fun go(navigation: Navigation, backstack: List<Navigation>) {
-        console.log("setting route")
         val route = navigation.route
+        console.log("setting route: ${route.screen}")
         this.backstack = backstack
-        state.setValue { it.copy(
+        state.set { copy(
             route = route,
             canGoBack = backstack.isNotEmpty(),
             initialScrollY = navigation.initialScrollY,

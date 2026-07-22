@@ -29,23 +29,22 @@ class LocationEditor(
     val stateNow get() = state.now
     val stateFlow = state.flow
 
-    val websiteMessage = MessageStore()
-    val message = MessageStore()
-    val imageEditor = ImageEditor(initialData.image, api)
-
     val editNow get() = state.now.edit
     val editFlow = state.flow.dedupNotNull { it.edit }
 
     val editField = state.mutableFieldOf({ it.edit }) { copy(edit = it) }
-
+    val imageField = editField.mutableFieldOf({ it.image }) { copy(image = it) }
     val nameField = editField.mutableFieldOf({ it.name ?: "" }) { copy(name = it) }
     val addressField = editField.mutableFieldOf({ it.address ?: "" }) { copy(address = it) }
     val descriptionField = editField.mutableFieldOf({ it.description ?: "".toMarkdown() }) { copy(description = it) }
     val cityField = editField.mutableFieldOf({ it.city ?: "" }) { copy(city = it) }
     val eventsUrlField = editField.mutableFieldOf({ it.eventsUrl ?: "" }) { copy(eventsUrl = it) }
     val validityField = editField.fieldOf { it.validity }
-
     val websiteField = editField.mutableFieldOf({ it.website ?: "" }) { copy(website = it) }
+
+    val imageEditor = ImageEditor(imageField, api)
+    val websiteMessage = MessageStore()
+    val message = MessageStore()
 
     init {
         websiteField.reactIn(scope) { websiteMessage.clear() }
@@ -79,7 +78,6 @@ class LocationEditor(
     }
 
     fun reset() {
-        console.log("resetting")
         state.set { initialState }
         message.clear()
     }

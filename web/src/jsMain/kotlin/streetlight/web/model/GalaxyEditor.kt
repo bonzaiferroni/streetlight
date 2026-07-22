@@ -40,10 +40,8 @@ class GalaxyEditor(
     // val galaxyFlow = stateFlow.dedup { it.edit }
     val editNow get() = state.now.edit
 
-    val editMessage = MessageStore()
-    val imageEditor = ImageEditor(galaxy.image, api)
-
     val editField = state.mutableFieldOf({ it.edit }) { copy(edit = it) }
+    val imageField = editField.mutableFieldOf({ it.image }) { copy(image = it) }
     val isLocalField = state.mutableFieldOf({ it.isLocal }) { copy(isLocal = it) }
     val countryField = state.mutableFieldOf({ it.country }) { copy(country = it) }
     val validityField = editField.fieldOf { it.validity }
@@ -67,6 +65,9 @@ class GalaxyEditor(
     }
 
     val cityQueryField = state.mutableFieldOf({ it.cityQuery }) { copy(cityQuery = it) }
+
+    val editMessage = MessageStore()
+    val imageEditor = ImageEditor(imageField, api)
 
     init {
         galaxy.geoBounds?.let {

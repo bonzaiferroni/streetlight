@@ -7,6 +7,7 @@ import koala.model.ContentFetcher
 import koala.model.NullFetcherContent
 import koala.model.RouteContent
 import streetlight.model.ui.EventRoute
+import streetlight.model.ui.EventScoutRoute
 import streetlight.model.ui.GalaxyConfigRoute
 import streetlight.model.ui.GalaxyRoute
 import streetlight.model.ui.HomeRoute
@@ -32,6 +33,7 @@ class AppContentFetcher(
         is StarRoute -> api.readStarContent(route.username)
         is LocationScoutRoute -> api.readGalaxy(route.slug)
         is LocationUpdateRoute -> api.readLocationUpdaterContent(route.slug)
+        is EventScoutRoute -> api.readGalaxy(route.slug)
         else -> Ok(NullFetcherContent)
     }
 }

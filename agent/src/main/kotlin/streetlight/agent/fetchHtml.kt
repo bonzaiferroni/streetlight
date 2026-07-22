@@ -5,12 +5,18 @@ import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import com.fleeksoft.ksoup.Ksoup
 import com.fleeksoft.ksoup.nodes.Document
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.http.HttpStatusCode
 
+private val log = KotlinLogging.logger("fetchHtml")
+
 suspend fun fetchHtml(url: String): String? {
+    log.info { "fetching url: ${url.take(50)}" }
     val response: HttpResponse = httpClient.get(url)
-    if (response.status != HttpStatusCode.OK) return null
+    if (response.status != HttpStatusCode.OK) return null.also {
+        log.info { "Invalid status code: ${response.status}" }
+    }
     return response.bodyAsText()
 }
 

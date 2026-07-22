@@ -22,7 +22,7 @@ fun ViewScope.viewLocationUpdater(content: LocationUpdaterContent, star: Star) {
                     formSubmit(
                         label = "Save",
                         onSubmit = {
-                            launchEffect {
+                            launchEffect(::viewLocationUpdater) {
                                 val location = model.submitSuspend()
                                 if (location != null) {
                                     portal.go(LocationRoute(location.slug))

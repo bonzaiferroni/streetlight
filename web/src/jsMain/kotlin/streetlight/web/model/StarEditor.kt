@@ -26,15 +26,16 @@ class StarEditor(
     val stateNow get() = state.now
     val stateFlow = state.flow
 
-    val messages = MessageStore()
-    val imageEditor = ImageEditor(initialData.image, api)
-    val emailEditor = EmailEditor(initialData.email?.value ?: "")
-    val passwordEditor = PasswordEditor()
-
     val editField = state.mutableFieldOf({ it.edit }) { copy(edit = it) }
+    val imageField = editField.mutableFieldOf({ it.image }) { copy(image = it) }
     val nameField = editField.mutableFieldOf({ it.name ?: "" }) { copy(name = it) }
     val descriptionField = editField.mutableFieldOf({ it.description ?: "".toMarkdown() }) { copy(description = it) }
     val taglineField = editField.mutableFieldOf({ it.tagline ?: "" }) { copy(tagline = it) }
+
+    val messages = MessageStore()
+    val imageEditor = ImageEditor(imageField, api)
+    val emailEditor = EmailEditor(initialData.email?.value ?: "")
+    val passwordEditor = PasswordEditor()
 
     fun completeRegistration() {
         val email = when (val emailOutcome = emailEditor.getOutcome()) {
