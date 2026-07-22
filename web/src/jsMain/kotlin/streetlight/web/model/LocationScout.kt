@@ -3,7 +3,7 @@ package streetlight.web.model
 import kampfire.model.Labeled
 import kampfire.model.handleResponse
 import koala.dom.MessageStore
-import koala.dom.launch
+import koala.utils.launch
 import koala.model.GeoCamera
 import koala.model.dedup
 import koala.model.fieldOf

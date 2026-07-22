@@ -5,7 +5,7 @@ import kampfire.model.LoginRequest
 import kampfire.model.Messenger
 import kampfire.model.PrintLnMessenger
 import kampfire.model.handleResponse
-import koala.dom.launch
+import koala.utils.launch
 import koala.model.dedup
 import koala.model.fieldOf
 import koala.model.storeOf

@@ -1,17 +1,14 @@
 package streetlight.web.model
 
 import kampfire.model.handleResponse
-import koala.dom.launch
+import koala.utils.launch
 import koala.model.FeatureMarker
 import koala.model.GeoFocus
 import koala.model.MarkerFocus
 import koala.model.Portal
 import koala.model.fieldOf
-import koala.model.refine
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.launch
 import streetlight.model.ui.CityMap
 import streetlight.model.ui.CityMapRoute
 import streetlight.model.ui.EarthMap

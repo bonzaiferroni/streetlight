@@ -1,6 +1,7 @@
 package koala.dom
 
 import kampfire.model.Messenger
+import koala.utils.launch
 import kotlinx.coroutines.CoroutineScope
 
 @ViewMarker

@@ -1,15 +1,13 @@
 package koala.model
 
-import koala.dom.launch
+import koala.utils.launch
 import koala.dom.modify
 import koala.dom.onView
 import koala.dom.unmodify
 import koala.external.CenterZoomBearing
-import koala.external.CenterZoomBearing.Companion.invoke
 import koala.external.maplibregl
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.w3c.dom.HTMLElement
 
 class GeoCameraController(

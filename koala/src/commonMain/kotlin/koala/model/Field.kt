@@ -1,6 +1,7 @@
 package koala.model
 
 import io.ktor.utils.io.CancellationException
+import koala.utils.launch
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
@@ -32,7 +33,7 @@ fun <State, Value> Field<State>.fieldOf(
 fun <T> Field<T>.refine(applyFlow: (Flow<T>) -> Flow<T>): Field<T> = fieldOf(applyFlow) { it }
 
 fun <T> Field<T>.reactIn(scope: CoroutineScope, block: suspend (T) -> Unit): Field<T> {
-    scope.launch {
+    scope.launch(Field<*>::reactIn) {
         flow.collect { value ->
             block(value)
         }

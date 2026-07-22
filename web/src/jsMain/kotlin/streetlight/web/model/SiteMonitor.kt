@@ -5,7 +5,7 @@ import kampfire.model.getDataOrNull
 import kampfire.model.handleResponse
 import koala.dom.ChartData
 import koala.dom.ChartLine
-import koala.dom.launch
+import koala.utils.launch
 import koala.model.dedup
 import koala.model.mutableFieldOf
 import koala.model.storeOf
@@ -13,7 +13,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.launch
 import streetlight.model.data.MetricResolution
 import streetlight.model.data.SiteMetric
 import streetlight.model.data.SiteStatus

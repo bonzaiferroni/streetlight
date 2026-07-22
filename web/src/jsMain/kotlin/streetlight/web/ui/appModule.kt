@@ -1,7 +1,7 @@
 package streetlight.web.ui
 
 import kampfire.model.Messenger
-import koala.core.LaunchTelemetry
+import koala.utils.LaunchTelemetry
 import koala.core.appExceptionHandler
 import koala.dom.AppContainer
 import koala.model.ContentFetcher

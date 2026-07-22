@@ -16,7 +16,7 @@ import streetlight.web.io.OmniLog
 import streetlight.web.layouts.LightControl
 import streetlight.web.model.TransitMap
 import streetlight.web.model.StarSession
-import koala.dom.launch
+import koala.utils.launch
 
 @OptIn(ExperimentalSerializationApi::class)
 fun viewApp() {

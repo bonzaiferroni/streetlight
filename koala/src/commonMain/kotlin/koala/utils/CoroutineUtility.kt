@@ -1,9 +1,8 @@
-package koala.dom
+package koala.utils
 
 import kampfire.model.Messenger
 import kampfire.model.UIMessage
 import kampfire.model.UIMessageType
-import koala.core.LaunchTelemetry
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job

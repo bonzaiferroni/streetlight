@@ -1,13 +1,11 @@
 package streetlight.web.model
 
 import kampfire.model.handleResponse
-import koala.dom.launch
-import koala.model.dedup
+import koala.utils.launch
 import koala.model.fieldOf
 import koala.model.mutableFieldOf
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 import streetlight.model.data.Feedback
 import streetlight.model.data.FeedbackEdit
 import streetlight.web.io.ApiClient

@@ -3,7 +3,7 @@ package koala.model
 import kampfire.model.Messenger
 import kampfire.model.Outcome
 import kampfire.model.handleResponse
-import koala.dom.launch
+import koala.utils.launch
 import koala.html.AppRoute
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.collectLatest
