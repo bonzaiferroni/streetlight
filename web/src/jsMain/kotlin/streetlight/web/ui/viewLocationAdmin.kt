@@ -1,9 +1,7 @@
 package streetlight.web.ui
 
-import kampfire.model.handleResponse
 import koala.css.*
 import koala.dom.*
-import koala.model.flowerOf
 import streetlight.model.data.Location
 import streetlight.model.data.toEdit
 import streetlight.model.ui.LocationAdminRoute
@@ -13,7 +11,7 @@ import streetlight.web.shells.cardOf
 fun ViewScope.viewLocationAdmin(
     location: Location,
 ) {
-    column {
+    column(BodyStyle.Mod) {
         cardOf(location)
         tabs {
             tab("profile") {
@@ -21,7 +19,6 @@ fun ViewScope.viewLocationAdmin(
                 // viewLocationEditor(edit, app, null, false, null)
             }
             tab("events") {
-                val events = flowerOf { api.readLocationEvents(location.slug).handleResponse(toaster) }
                 column {
                     location.eventsUrl.let { link ->
                         row {
@@ -31,7 +28,7 @@ fun ViewScope.viewLocationAdmin(
                             })
                         }
                     }
-                    flowBlock(emptyList(), events.flow, defaultMagic) { events ->
+                    dataBlock({ api.readLocationEvents(location.slug) }) { events ->
                         column {
                             events.forEach { event ->
                                 cardOf(event)
@@ -45,12 +42,8 @@ fun ViewScope.viewLocationAdmin(
     }
 }
 
-fun ViewScope.viewLocationAdmin() {
-    // td: fix
-    // routeBlock<LocationAdminRoute, Location>(
-    //     portal = portal,
-    //     provideData = { api.readLocation(it.locationId).handleResponse(toaster) }
-    // ) {
-    //     viewLocationAdmin(it)
-    // }
+fun RouteScope.viewLocationAdmin() {
+    routeBlock<LocationAdminRoute, Location> {
+        viewLocationAdmin(it)
+    }
 }

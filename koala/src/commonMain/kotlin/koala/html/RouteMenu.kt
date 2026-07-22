@@ -6,7 +6,7 @@ import kotlinx.html.FlowContent
 fun FlowContent.routeMenu(
     context: String,
     routeNow: AppRoute,
-    routes: List<AppRoute>,
+    routes: List<AppRoute?>,
     mod: ModifierSet? = null,
     leftIcons: List<IconRoute>? = null,
     rightIcons: List<IconRoute>? = null
@@ -20,13 +20,13 @@ fun FlowContent.routeMenu(
                 iconsTray(icons, modify(RouteMenu.LeftTray))
             }
             routes.forEach { route ->
-                when (route == routeNow) {
-                    true -> navigation(route, modify(RouteMenu.RouteNow)) {
-                        +route.label
-                    }
-                    else -> navigation(route, modify(RouteMenu.Route)) {
-                        +route.label
-                    }
+                val route = route ?: return@forEach
+                val mod = when (route == routeNow) {
+                    true -> modify(RouteMenu.RouteNow)
+                    else -> modify(RouteMenu.Route)
+                }
+                navigation(route, mod) {
+                    +route.label
                 }
             }
             rightIcons?.let { icons ->

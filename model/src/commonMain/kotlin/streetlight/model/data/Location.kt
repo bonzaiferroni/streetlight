@@ -8,6 +8,7 @@ import kampfire.model.GeoPoint
 import kampfire.model.Labeled
 import kampfire.model.toUrl
 import koala.Image
+import koala.model.RouteContent
 import kotlin.time.Instant
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
@@ -40,7 +41,7 @@ data class Location(
     val extraLinks: List<ExtraLink>?,
     val updatedAt: Instant,
     val createdAt: Instant,
-): Entity, Labeled {
+): Entity, Labeled, RouteContent {
     val isLit get() = false
 
     val addressLine by lazy {

@@ -23,5 +23,5 @@ data class LocationAdminRoute(
 ): StreetlightRoute, RecordIdRoute {
     override val screen get() = Screen.LocationAdmin
     override val recordId get() = locationId
-    override val title get() = "Location Admin"
+    override val title get() = "Admin"
 }

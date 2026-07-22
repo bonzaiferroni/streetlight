@@ -13,6 +13,7 @@ fun <T> ViewScope.dataBlock(
     mod: ModifierSet? = null,
     content: ViewScope.(T) -> Unit
 ) {
+    // td: add retry button
     val element = column(mod)
     element.onView {
         launchEffect {

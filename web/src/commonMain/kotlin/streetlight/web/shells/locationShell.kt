@@ -5,6 +5,8 @@ import koala.html.*
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import streetlight.model.data.LocationContent
+import streetlight.model.ui.LocationAdminRoute
+import streetlight.model.ui.LocationRoute
 import streetlight.model.ui.LocationUpdateRoute
 import streetlight.web.layouts.layoutPosts
 import streetlight.web.layouts.postRow
@@ -15,10 +17,11 @@ import streetlight.web.ui.headerOf
 fun FlowContent.locationShell(
     content: LocationContent,
 ) {
+    val location = content.location
     column(LocationShell.Id, BodyStyle.Mod) {
         headerOf(
-            location = content.location,
-            editRoute = if (content.canEdit) LocationUpdateRoute(content.location.slug) else null
+            location = location,
+            editRoute = if (content.canEdit) LocationUpdateRoute(location.slug) else null
         )
 
         tabs(LocationShell.tabsId) {
@@ -42,8 +45,11 @@ fun FlowContent.locationShell(
             }
         }
 
-
         appFooter()
+
+        val routeNow = LocationRoute(location.slug)
+        val adminRoute = content.takeIf { it.canEdit }?.let { LocationAdminRoute(location.locationId) }
+        routeMenu(location.name ?: "Location", routeNow, listOf(routeNow, adminRoute))
     }
 
     dataIsland(LocationShell.islandId, content)
@@ -55,26 +61,3 @@ object LocationShell {
     val adminCard = Id("location-admin-card")
     val islandId = Id("location-island")
 }
-
-fun FlowContent.propertyRow(property: String, block: DIV.() -> Unit) {
-    row {
-        textBlock("${property}:", modify(Flex1, OpacityHigh, TextAlignRight))
-        box(modify(Flex2), block = block)
-    }
-}
-
-//    val locationId: LocationId,
-//    val hostId: UserId?,
-//    val name: String,
-//    val description: String?,
-//    val address: String?,
-//    val notes: String?,
-//    val geoPoint: GeoPoint,
-//    val resources: Set<ResourceType>,
-//    val link: String?,
-//    val eventsLink: String?,
-//    val imageUrl: String?,
-//    val thumbUrl: String?,
-//    val checkedAt: Instant?,
-//    val updatedAt: Instant,
-//    val createdAt: Instant,
