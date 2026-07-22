@@ -5,6 +5,7 @@ import kampfire.model.getDataOrNull
 import kampfire.model.handleResponse
 import koala.dom.ChartData
 import koala.dom.ChartLine
+import koala.dom.launch
 import koala.model.dedup
 import koala.model.mutableFieldOf
 import koala.model.storeOf
@@ -54,7 +55,7 @@ class SiteMonitor(
 
     private fun refreshData() {
         refreshJob?.cancel()
-        refreshJob = scope.launch {
+        refreshJob = scope.launch(::refreshData) {
             val points = api.feedSiteStatus(stateNow.timeFrame.resolution).handleResponse(toaster) ?: emptyList()
             state.setValue { it.copy(points = points) }
             while (true) {

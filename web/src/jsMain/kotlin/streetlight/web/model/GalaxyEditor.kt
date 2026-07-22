@@ -37,43 +37,44 @@ class GalaxyEditor(
     private val state = storeOf(GalaxyFoundryState(galaxy))
     val stateFlow = state.flow
     val stateNow get() = state.now
-    val galaxyFlow = stateFlow.dedup { it.edit }
+    // val galaxyFlow = stateFlow.dedup { it.edit }
     val editNow get() = state.now.edit
 
     val editMessage = MessageStore()
     val imageEditor = ImageEditor(galaxy.image, api)
 
     val editField = state.mutableFieldOf({ it.edit }) { copy(edit = it) }
-    val isLocal = state.mutableFieldOf({ it.isLocal }) { copy(isLocal = it) }
-    val country = state.mutableFieldOf({ it.country }) { copy(country = it) }
-    val validityFlow = stateFlow.dedup { it.edit.validity }
-    val cities = state.fieldOf { it.cities }
-    val city = state.mutableFieldOf({ it.city }) { copy(city = it) }
-    val description = editField.mutableFieldOf({ it.description ?: "".toMarkdown() }) { copy(description = it) }
-    val tagline = editField.mutableFieldOf({ it.tagline ?: "" }) { copy(tagline = it) }
-    val postGuide = editField.mutableFieldOf({ it.postGuide ?: "".toMarkdown() }) { copy(postGuide = it) }
-    val reviewCount = editField.mutableFieldOf({ it.reviewCount?.toString() ?: "" }) { copy(reviewCount = it.toIntOrNull()) }
-    val permission = editField.mutableFieldOf({ it.postPermission }) { copy(postPermission = it) }
+    val isLocalField = state.mutableFieldOf({ it.isLocal }) { copy(isLocal = it) }
+    val countryField = state.mutableFieldOf({ it.country }) { copy(country = it) }
+    val validityField = editField.fieldOf { it.validity }
+    val citiesField = state.fieldOf { it.cities }
+    val cityField = state.mutableFieldOf({ it.city }) { copy(city = it) }
+    val descriptionField = editField.mutableFieldOf({ it.description ?: "".toMarkdown() }) { copy(description = it) }
+    val taglineField = editField.mutableFieldOf({ it.tagline ?: "" }) { copy(tagline = it) }
+    val postGuideField = editField.mutableFieldOf({ it.postGuide ?: "".toMarkdown() }) { copy(postGuide = it) }
+    val reviewCountField = editField.mutableFieldOf({ it.reviewCount?.toString() ?: "" }) { copy(reviewCount = it.toIntOrNull()) }
+    val permissionField = editField.mutableFieldOf({ it.postPermission }) { copy(postPermission = it) }
 
-    val name = editField.mutableFieldOf({ it.name ?: "" }) { value ->
+    val nameField = editField.mutableFieldOf({ it.name ?: "" }) { value ->
         if (value.isNotEmpty() && !GalaxyEdit.isValidName(value)) return@mutableFieldOf this
         val slug = slugOf(value)
         copy(name = value, slug = slug)
     }
 
-    val slug = editField.mutableFieldOf({ it.slug?.value ?: "" }) { value ->
+    val slugField = editField.mutableFieldOf({ it.slug?.value ?: "" }) { value ->
         if (value.isNotEmpty() && !GalaxyEdit.isValidSlug(value.trim().toSlug())) return@mutableFieldOf this
         copy(slug = value.toSlug())
     }
 
-    val cityQuery = state.mutableFieldOf({ it.cityQuery }) { copy(cityQuery = it) }
+    val cityQueryField = state.mutableFieldOf({ it.cityQuery }) { copy(cityQuery = it) }
 
     init {
         galaxy.geoBounds?.let {
             geo.panMap(it)
         }
+
         scope.launch {
-            stateFlow.dedup { it.cityQuery }.debounce(500.milliseconds).collect { query ->
+            cityQueryField.flow.debounce(500.milliseconds).collect { query ->
                 if (query == stateNow.city?.name) return@collect
                 val localities = api.searchCity(query, stateNow.country).handleResponse(toaster) ?: return@collect
                 state.set { copy(cities = localities) }
@@ -81,38 +82,11 @@ class GalaxyEditor(
         }
     }
 
-    // fun setName(value: String) {
-    //     if (value.isNotEmpty() && !GalaxyEdit.isValidName(value)) return
-    //     val path = slugOf(value)
-    //     setGalaxy { it.copy(name = value, slug = path) }
-    // }
-
-    fun setSlug(value: String) {
-        if (value.isNotEmpty() && !GalaxyEdit.isValidSlug(value.trim().toSlug())) return
-        setGalaxy { it.copy(slug = value.toSlug()) }
-    }
-
-    fun setDescription(value: Markdown) = setGalaxy { it.copy(description = value) }
-
-    fun setPostPermission(permission: PostPermission) = setGalaxy { it.copy(postPermission = permission) }
-
-    fun setPostGuide(value: Markdown) = setGalaxy { it.copy(postGuide = value) }
-
-    fun setReviewCount(value: Int?) = setGalaxy { it.copy(reviewCount = value) }
-
-    fun setIsLocal(value: Boolean) = state.setValue { it.copy(isLocal = value) }
-
-    fun setCityQuery(query: String) = state.setValue { it.copy(cityQuery = query)}
-
-    fun setCountry(value: String) = state.setValue { it.copy(country = value) }
-
-    fun setTagline(value: String) = setGalaxy { it.copy(tagline = value) }
-
     fun setCity(value: City?) {
-        state.setValue { it.copy(
+        state.set { copy(
             city = value,
-            cityQuery = value?.name ?: it.cityQuery,
-            edit = it.edit.copy(cityId = value?.cityId),
+            cityQuery = value?.name ?: cityQuery,
+            edit = edit.copy(cityId = value?.cityId),
         ) }
         value?.geoPoint?.let {
             geo.panMap(it)
@@ -138,11 +112,6 @@ class GalaxyEditor(
                 portal.go(GalaxyRoute(slug))
             }
         }
-    }
-
-    private fun setGalaxy(block: (GalaxyEdit) -> GalaxyEdit) {
-        val edit = block(stateNow.edit)
-        state.setValue { it.copy(edit = edit) }
     }
 }
 

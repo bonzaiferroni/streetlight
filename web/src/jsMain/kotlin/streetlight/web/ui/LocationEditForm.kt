@@ -15,7 +15,7 @@ fun ViewScope.locationEditFormBody(model: LocationEditor) = formBodyProto {
 fun ViewScope.locationDetailsForm(model: LocationEditor) = formCardSection("Location Details") {
     formPart("What is the name of the place?") {
         formTextField(model.nameField, "title", maxLength = 50)
-            .flowValid(LocationProperty.Name, model.validityFlow, contentScope)
+            .flowValid(LocationProperty.Name, model.validityField, contentScope)
     }
     formPart("Where is it?") {
         row {

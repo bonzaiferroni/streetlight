@@ -7,6 +7,7 @@ import koala.dom.MessageStore
 import koala.model.dedup
 import koala.model.fieldOf
 import koala.model.mutableFieldOf
+import koala.model.reactIn
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -38,24 +39,18 @@ class EventScout(
     val queryEventsFlow = state.fieldOf { it.queryEvents }
 
     init {
-        scope.launch {
-            launch {
-                locationScout.stageField.flow.collect { locationStage ->
-                    val stage = when (locationStage) {
-                        LocationScoutStage.Search -> EventScoutStage.LocationSearch
-                        LocationScoutStage.Edit -> EventScoutStage.LocationEdit
-                        LocationScoutStage.Post -> EventScoutStage.EventSearch
-                    }
-                    state.set { copy(stage = stage) }
-                }
+        locationScout.stageField.reactIn(scope) { locationStage ->
+            val stage = when (locationStage) {
+                LocationScoutStage.Search -> EventScoutStage.LocationSearch
+                LocationScoutStage.Edit -> EventScoutStage.LocationEdit
+                LocationScoutStage.Post -> EventScoutStage.EventSearch
             }
-            launch {
-                locationScout.locationField.flow.collect { location ->
-                    editor.setLocationId(location?.locationId)
-                    if (location != null) {
-                        state.set { copy(stage = EventScoutStage.EventSearch)}
-                    }
-                }
+            state.set { copy(stage = stage) }
+        }
+        locationScout.locationField.reactIn(scope) { location ->
+            editor.setLocationId(location?.locationId)
+            if (location != null) {
+                state.set { copy(stage = EventScoutStage.EventSearch)}
             }
         }
     }

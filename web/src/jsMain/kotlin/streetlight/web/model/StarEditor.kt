@@ -25,11 +25,6 @@ class StarEditor(
     private val state = storeOf(StarEditorState(initialData))
     val stateNow get() = state.now
     val stateFlow = state.flow
-    // val editNow get() = state.now.edit
-    // val editFlow = stateFlow.dedup { it.edit }
-    // val taglineFlow = editFlow.dedup { it.tagline }
-    // val descriptionFlow = editFlow.dedup { it.description }
-    // val nameFlow = editFlow.dedup { it.name }
 
     val messages = MessageStore()
     val imageEditor = ImageEditor(initialData.image, api)
@@ -40,10 +35,6 @@ class StarEditor(
     val nameField = editField.mutableFieldOf({ it.name ?: "" }) { copy(name = it) }
     val descriptionField = editField.mutableFieldOf({ it.description ?: "".toMarkdown() }) { copy(description = it) }
     val taglineField = editField.mutableFieldOf({ it.tagline ?: "" }) { copy(tagline = it) }
-
-    // fun setTagline(tagline: String) = setEdit { it.copy(tagline = tagline) }
-    // fun setDescription(description: Markdown) = setEdit { it.copy(description = description) }
-    // fun setName(name: String?) = setEdit { it.copy(name = name) }
 
     fun completeRegistration() {
         val email = when (val emailOutcome = emailEditor.getOutcome()) {

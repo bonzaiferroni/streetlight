@@ -22,7 +22,7 @@ import streetlight.model.ui.HomeRoute
 import streetlight.web.model.Earth
 
 fun ViewScope.earthMenu(model: Earth) {
-    flowBlock(model.stateNow.map, model.mapFlow, modify(Magic, EarthStyle.Window, EarthStyle.MoveDimmer)) { map ->
+    flowBlock(model.mapField, modify(Magic, EarthStyle.Window, EarthStyle.MoveDimmer)) { map ->
         earthRouteMenu(model, map)
     }
 }

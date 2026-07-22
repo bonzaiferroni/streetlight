@@ -38,28 +38,28 @@ fun ViewScope.eventWebsiteForm(model: EventEditor) = formCardSection("Web page")
 fun ViewScope.eventDetailsForm(model: EventEditor) = formCardSection("Event Details") {
     formPart("What is the name of the event?") {
         textField(model.title, "title", maxLength = 50)
-            .flowValid(EventProperty.Title, model.validityFlow, contentScope)
+            .flowValid(EventProperty.Title, model.validityCheckField, contentScope)
     }
     formPart("How much does it cost?") {
         row(modify(AlignItemsCenter)) {
             checkBox(model.isFree, "Free event")
-            textField(model.cost, "cost", modify(Width12))
+            textField(model.costField, "cost", modify(Width12))
                 .flowVisibility(model.isFree.flow.map { !it }, contentScope)
-                .flowValid(EventProperty.Cost, model.validityFlow, contentScope)
+                .flowValid(EventProperty.Cost, model.validityCheckField, contentScope)
         }
     }
     formPart("What is the day and time?") {
         row(modify(AlignItemsCenter, JustifyContentCenter)) {
             blockLabel("start time") {
                 timeInput(model.startTime)
-            }.flowValid(EventProperty.StartTime, model.validityFlow, contentScope)
+            }.flowValid(EventProperty.StartTime, model.validityCheckField, contentScope)
             // end time is optional, not every event has a fixed end time
             blockLabel("end time") {
                 timeInput(model.endTime)
             }
             blockLabel("date") {
                 dateInput(model.date)
-            }.flowValid(EventProperty.Date, model.validityFlow, contentScope)
+            }.flowValid(EventProperty.Date, model.validityCheckField, contentScope)
         }
         flowBlock(model.startsAt, modify(FlexColumn, AlignItemsCenter)) {
             val startsAt = it ?: return@flowBlock

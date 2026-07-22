@@ -7,13 +7,12 @@ import koala.model.FeatureMarker
 import koala.model.GeoFocus
 import koala.model.GeoMap
 import koala.model.MarkerFocus
+import koala.model.combine
 import koala.model.dedup
+import koala.model.fieldOf
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 class MarkerMap(
@@ -26,14 +25,24 @@ class MarkerMap(
     val stateNow get() = state.now
     val markerLayer = geoMap.getOrCreateLayer(MarkerLayerConfig.Markers)
 
-    val markersFlow = stateFlow.dedup { it.markers }
-    private val partitionedFlow = markersFlow.combine(geoMap.camera.movingBoundsFlow) { markers, bounds ->
-        markers?.partition { bounds.contains(it.geoPoint) }
-    }.distinctUntilChanged()
-    val boundedMarkersFlow   = partitionedFlow.map { it?.first }
-    val unboundedMarkersFlow = partitionedFlow.map { it?.second }
-    val isMovingFlow = geoMap.camera.isMovingFlow
-    val focusFlow = stateFlow.dedup { it.focus }
+    // val markersFlow = stateFlow.dedup { it.markers }
+    // private val partitionedFlow = markersFlow.combine(geoMap.camera.movingBoundsFlow) { markers, bounds ->
+    //     markers?.partition { bounds.contains(it.geoPoint) }
+    // }.distinctUntilChanged()
+    // val boundedMarkersFlow   = partitionedFlow.map { it?.first }
+    // val unboundedMarkersFlow = partitionedFlow.map { it?.second }
+
+    val markersField = state.fieldOf { it.markers }
+    val partitionedField = markersField.combine(geoMap.camera.movingBoundsField) { markers, bounds ->
+        markers?.partition { bounds.contains(it.geoPoint) }?.let {
+            PartitionedMarkers(
+                bounded = it.first,
+                unbounded = it.second
+            )
+        }
+    }
+    val isMovingField = geoMap.camera.isMovingField
+    val focusField = state.fieldOf { it.focus }
 
     init {
         scope.launch {
@@ -72,4 +81,9 @@ class MarkerMap(
 data class StreetMapState(
     val markers: List<FeatureMarker>? = null,
     val focus: GeoFocus? = null,
+)
+
+data class PartitionedMarkers(
+    val bounded: List<FeatureMarker>,
+    val unbounded: List<FeatureMarker>,
 )

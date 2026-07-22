@@ -1,6 +1,7 @@
 package streetlight.web.model
 
 import kampfire.model.handleResponse
+import koala.dom.launch
 import koala.model.dedup
 import koala.model.fieldOf
 import koala.model.mutableFieldOf
@@ -25,24 +26,22 @@ class FrontDesk(
     val textField = editField.mutableFieldOf({ it.text }) { copy(text = it) }
 
     init {
-        scope.launch {
+        scope.launch(::refreshFeedback) {
             refreshFeedback()
         }
     }
 
     fun sendFeedback() {
         val edit = stateNow.edit.takeIf { it.isValid } ?: return
-        scope.launch {
+        scope.launch(::sendFeedback) {
             val isSuccess = api.createFeedback(edit).handleResponse(toaster) ?: false
             if (isSuccess) refreshFeedback()
         }
     }
 
-    private fun setEdit(block: (FeedbackEdit) -> FeedbackEdit) = state.setValue { it.copy(edit = block(it.edit)) }
-
     private suspend fun refreshFeedback() {
         val list = api.feedFeedback().handleResponse(toaster) ?: emptyList()
-        state.setValue { it.copy(feed = list) }
+        state.set { copy(feed = list) }
     }
 }
 

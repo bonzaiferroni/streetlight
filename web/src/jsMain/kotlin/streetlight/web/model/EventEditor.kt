@@ -7,6 +7,7 @@ import koala.dom.MessageStore
 import koala.model.dedup
 import koala.model.fieldOf
 import koala.model.mutableFieldOf
+import koala.model.reactIn
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -45,31 +46,18 @@ class EventEditor(
     val title = editField.mutableFieldOf({ it.title ?: "" }) { copy(title = it) }
     val urlField = editField.mutableFieldOf({ it.website ?: "" }) { copy(website = it) }
     val isFree = editField.mutableFieldOf({ it.isFree }) { copy(cost = if (it) 0f else null) }
-
-    // fun setTitle(value: String) = setEvent { it.}
-    // fun setStartTime(value: LocalTime) = setEvent { it.copy(startTime = value) }
-    // fun setEndTime(value: LocalTime) = setEvent { it.copy(endTime = value) }
-    // fun setDate(value: LocalDate) = setEvent { it.copy(date = value) }
-    // fun setDescription(value: Markdown) = setEvent { it.copy(description = value) }
-    // fun setUrl(value: String) = setEvent { it.copy(website = value) }
-    // fun setFree(value: Boolean) = setEvent { it.copy(cost = if (value) 0f else null)}
-
-    val cost = state.mutableFieldOf({ it.costString }) { costString ->
-        setEvent { it.copy(cost = costString.toFloatOrNull()) }
-        copy(costString = costString)
-    }
-    val validityFlow = stateFlow.dedup { it.edit.validity }
-
+    val costField = state.mutableFieldOf({ it.costString }) { copy(costString = it) }
+    val validityCheckField = editField.fieldOf { it.validity }
     val originalSourceLabelField = state.mutableFieldOf({ it.originalSourceLabel }) { copy(originalSourceLabel = it) }
     val originalSourceUrlField = state.mutableFieldOf({ it.originalSourceUrl }) { copy(originalSourceUrl = it) }
 
-    // fun setOriginalSourceLabel(value: String) = state.setValue { it.copy(originalSourceLabel = value) }
-    // fun setOriginalSourceUrl(value: String) = state.setValue { it.copy(originalSourceUrl = value) }
-    fun setLocationId(value: LocationId?) = setEvent { it.copy(locationId = value) }
-
     init {
-        // cost.
+        costField.reactIn(scope) { costString ->
+            editField.update { it.copy(cost = costString.toFloatOrNull()) }
+        }
     }
+
+    fun setLocationId(value: LocationId?) = editField.update { it.copy(locationId = value) }
 
     fun addLink(value: ExtraLink) {
         val linksNow = stateNow.edit.links ?: emptyList()
@@ -110,7 +98,7 @@ class EventEditor(
             api.parseSingleEvent(UrlParseRequest(url)).handleResponse(urlMessage) { edit ->
                 val event = edit.mergeRight(state.now.edit)
                 urlMessage.receive("Does this information look correct?")
-                state.setValue { it.copy(edit = event) }
+                state.set { copy(edit = event) }
             }
         }
     }

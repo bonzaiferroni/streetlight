@@ -1,19 +1,19 @@
 package streetlight.web.model
 
 import kampfire.api.toMarkdown
-import kampfire.model.GeoPoint
 import kampfire.model.handleResponse
 import koala.dom.MessageStore
 import koala.model.dedup
 import koala.model.dedupNotNull
+import koala.model.fieldOf
 import koala.model.mutableFieldOf
+import koala.model.reactIn
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.launch
 import streetlight.model.data.Location
 import streetlight.model.data.LocationEdit
-import streetlight.model.data.ResourceType
 import streetlight.model.data.UrlParseRequest
 import streetlight.model.data.mergeLeft
 import streetlight.model.external.Address
@@ -35,7 +35,6 @@ class LocationEditor(
 
     val editNow get() = state.now.edit
     val editFlow = state.flow.dedupNotNull { it.edit }
-//     override val placeFlow = editFlow.mapDistinct { it.toPlace() }
 
     val editField = state.mutableFieldOf({ it.edit }) { copy(edit = it) }
 
@@ -44,21 +43,13 @@ class LocationEditor(
     val descriptionField = editField.mutableFieldOf({ it.description ?: "".toMarkdown() }) { copy(description = it) }
     val cityField = editField.mutableFieldOf({ it.city ?: "" }) { copy(city = it) }
     val eventsUrlField = editField.mutableFieldOf({ it.eventsUrl ?: "" }) { copy(eventsUrl = it) }
-    val validityFlow = editFlow.dedup { it.validity }
+    val validityField = editField.fieldOf { it.validity }
 
-    val websiteField = editField.mutableFieldOf({ it.website ?: "" }) { value ->
-        websiteMessage.clear()
-        copy(website = value)
+    val websiteField = editField.mutableFieldOf({ it.website ?: "" }) { copy(website = it) }
+
+    init {
+        websiteField.reactIn(scope) { websiteMessage.clear() }
     }
-
-    // fun setName(value: String) = setEdit { it.copy(name = value) }
-    // fun setDescription(value: Markdown?) = setEdit { it.copy(description = value) }
-    // fun setAddress(value: String) = setEdit { it.copy(address = value) }
-    fun setNotes(value: String?) = setEdit { it.copy(notes = value) }
-    fun setPoint(value: GeoPoint) = setEdit { it.copy(geoPoint = value) }
-    fun setResources(value: Set<ResourceType>) = setEdit { it.copy(resources = value) }
-    fun setEventsLink(value: String?) = setEdit { it.copy(eventsUrl = value) }
-    // fun setCity(value: String) = setEdit { it.copy(city = value) }
 
     // fun setWebsite(value: String?) {
     //     if (value == editNow.website) return
@@ -66,16 +57,16 @@ class LocationEditor(
     //     websiteMessage.clear()
     // }
 
-    fun setEdit(block: (LocationEdit) -> LocationEdit) {
-        state.setValue { it.copy(edit = block(it.edit)) }
-    }
+    // fun setEdit(block: (LocationEdit) -> LocationEdit) {
+    //     state.set { copy(edit = block(it.edit)) }
+    // }
 
     fun readWebsite() {
         val website = editNow.website?.takeIf { it.startsWith("http") } ?: return
         scope.launch {
             websiteMessage.set("Reading the link, this will take a minute.", true)
             api.parseLocation(UrlParseRequest(website)).handleResponse(websiteMessage) { edit ->
-                state.setValue { it.copy(edit = edit.mergeLeft(editNow)) }
+                state.set { copy(edit = edit.mergeLeft(editNow)) }
                 websiteMessage.receive("Does this information look correct?")
             }
         }
@@ -88,7 +79,7 @@ class LocationEditor(
     }
 
     fun reset() {
-        state.setValue { initialState }
+        state.set { initialState }
         scope.coroutineContext.cancelChildren()
         message.clear()
     }

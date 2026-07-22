@@ -23,16 +23,26 @@ class GeoCamera(
     private val _movementFlow = MutableSharedFlow<MarkerMovement>(1)
     internal val movementFlow: Flow<MarkerMovement> = _movementFlow
 
-    val viewedStateFlow = stateFlow.filter { it.isViewed }
-    val isMovingFlow = viewedStateFlow.dedup { it.isMoving }
-    val settledStateFlow = viewedStateFlow.filter { !it.isMoving }
-    val zoomFlow = settledStateFlow.dedup { it.zoom }
-    val centerFlow = settledStateFlow.dedup { it.center }
-    val boundsFlow = settledStateFlow.dedup { it.bounds }
-    val movingBoundsFlow = viewedStateFlow.dedup { it.bounds }
-    val focusFlow = viewedStateFlow.dedup { it.focus }
+    // val viewedStateFlow = stateFlow.filter { it.isViewed }
+    // val isMovingFlow = viewedStateFlow.dedup { it.isMoving }
+    // val settledStateFlow = viewedStateFlow.filter { !it.isMoving }
+    // val zoomFlow = settledStateFlow.dedup { it.zoom }
+    // val centerFlow = settledStateFlow.dedup { it.center }
+    // val boundsFlow = settledStateFlow.dedup { it.bounds }
+    // val movingBoundsFlow = viewedStateFlow.dedup { it.bounds }
+    // val focusFlow = viewedStateFlow.dedup { it.focus }
 
     val pointAndZoom = state.fieldOf { it.center to it.zoom }
+
+    val viewedState = state.refine { states -> states.filter { it.isViewed } }
+    val settledState = viewedState.refine { states -> states.filter { !it.isMoving } }
+
+    val isMovingField = viewedState.fieldOf { it.isMoving }
+    val movingBoundsField = viewedState.fieldOf { it.bounds }
+    val focusField = viewedState.fieldOf { it.focus }
+    val zoomField = settledState.fieldOf { it.zoom }
+    val centerField = settledState.fieldOf { it.center }
+    val boundsField = settledState.fieldOf { it.bounds }
 
     fun panMap(point: GeoPoint) {
         panMap(PanPoint(point))

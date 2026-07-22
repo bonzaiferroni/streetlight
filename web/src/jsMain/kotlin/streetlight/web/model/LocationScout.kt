@@ -7,6 +7,7 @@ import koala.model.GeoCamera
 import koala.model.dedup
 import koala.model.fieldOf
 import koala.model.mutableFieldOf
+import koala.model.reactIn
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.filter
@@ -47,25 +48,22 @@ class LocationScout(
     val postField = state.fieldOf { it.postId }
     val modeField = state.mutableFieldOf({ it.mode.ordinal }) { copy(mode = SearchMode.entries[it] ) }
     val mapLocationField = state.mutableFieldOf({ it.mapLocation }) { copy(mapLocation = it) }
-
-    val locationField = state.mutableFieldOf({ it.location }) {
-        copy(location = it, stage = LocationScoutStage.Post)
-    }
-
-    val stageField = state.mutableFieldOf({ it.stage }) { value ->
-        if (value == LocationScoutStage.Search) {
-            editor.reset()
-        }
-        copy(stage = value)
-    }
+    val locationField = state.mutableFieldOf({ it.location }) { copy(location = it, stage = LocationScoutStage.Post) }
+    val stageField = state.mutableFieldOf({ it.stage }) { copy(stage = it) }
 
     init {
+        stageField.reactIn(scope) {
+            if (it == LocationScoutStage.Search) {
+                editor.reset()
+            }
+        }
+
         scope.launch {
             launch {
                 queryField.flow.collect { query ->
                     api.searchLocations(query, stateNow.city?.takeIf { it.isNotBlank() })
                         .handleResponse(toaster) { locations ->
-                            state.setValue { it.copy(queryLocations = locations) }
+                            state.set { copy(queryLocations = locations) }
                         }
                 }
             }
@@ -76,7 +74,7 @@ class LocationScout(
                         osm.readLocationAt(center).handleResponse(mapMessage) { location ->
                             val location = location.toEditOrNull() ?: return@handleResponse
                             mapMessage.receive(location.label)
-                            state.setValue { it.copy(mapLocation = location)}
+                            state.set { copy(mapLocation = location)}
                         }
                     }
             }
@@ -97,7 +95,7 @@ class LocationScout(
 
     fun stageLocation(value: LocationEdit?) {
         if (value == null) return
-        editor.setEdit { value.mergeLeft(it) }
+        editor.editField.update { value.mergeLeft(it) }
         editor.readWebsite()
         state.set { copy(stage = LocationScoutStage.Edit) }
     }
@@ -113,19 +111,19 @@ class LocationScout(
             val bounds = galaxy.geoBounds.takeIf { city == null }?.resizeBy(5f)
             osm.readLocations(query, stateNow.city, bounds).handleResponse(queryMessage) { locations ->
                 queryMessage.receive("found: ${locations.size}")
-                state.setValue { it.copy(osmLocations = locations.mapNotNull { loc -> loc.toEditOrNull() }) }
+                state.set { copy(osmLocations = locations.mapNotNull { loc -> loc.toEditOrNull() }) }
             }
         }
     }
 
     fun review() {
         if (!editor.isEditValid()) return
-        state.setValue { it.copy(stage = LocationScoutStage.Post) }
+        state.set { copy(stage = LocationScoutStage.Post) }
     }
 
     suspend fun submitLocation() = when (val location = stateNow.location) {
         null -> editor.submitSuspend().also { location ->
-            state.setValue { it.copy(location = location) }
+            state.set { copy(location = location) }
         }
         else -> location
     }
@@ -136,7 +134,7 @@ class LocationScout(
 
             val edit = PostEdit(null, galaxy.galaxyId, PostType.Location, location.locationId.value, null)
             api.createPost(edit).handleResponse(postMessage) { post ->
-                state.setValue { it.copy(postId = post.postId) }
+                state.set { copy(postId = post.postId) }
             }
         }
     }

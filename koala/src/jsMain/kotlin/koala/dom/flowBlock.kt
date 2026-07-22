@@ -23,7 +23,8 @@ import org.w3c.dom.HTMLDivElement
 import kotlin.time.Duration.Companion.milliseconds
 
 fun <Value> ViewScope.flowBlock(
-    field: Field<Value>,
+    initialValue: Value,
+    flow: Flow<Value>,
     modifiers: ModifierSet? = null,
     name: String = "flowBlock",
     config: (DIV.() -> Unit)? = null,
@@ -59,13 +60,12 @@ fun <Value> ViewScope.flowBlock(
         }
     }
 
-    val mountedValue = field.now
-    tryMountView(mountedValue)
+    tryMountView(initialValue)
 
     launchEffect("$name > launchEffect") {
         var isFirstEmission = true
-        field.flow.collect { value ->
-            val isReplay = isFirstEmission && value == mountedValue && view != null
+        flow.collect { value ->
+            val isReplay = isFirstEmission && value == initialValue && view != null
             isFirstEmission = false
             if (isReplay) return@collect
             view?.dispose()
@@ -92,33 +92,21 @@ fun <Value> ViewScope.flowBlock(
 }
 
 fun <Value> ViewScope.flowBlock(
-    initialValue: Value,
-    flow: Flow<Value>,
+    field: Field<Value>,
     modifiers: ModifierSet? = null,
     name: String = "flowBlock",
     config: (DIV.() -> Unit)? = null,
     onTransition: ((Value) -> Unit)? = null,
     block: ViewScope.(Value) -> Unit
 ) = flowBlock(
-    field = flow.toField(initialValue, contentScope, "$name > toField"),
+    initialValue = field.now,
+    flow = field.flow,
     modifiers = modifiers,
     name = name,
     config = config,
     onTransition = onTransition,
     block = block
 )
-
-fun <T> Flow<T>.toField(
-    initialValue: T,
-    scope: CoroutineScope,
-    name: String = "toField",
-): Field<T> {
-    val store = Store(initialValue)
-    scope.launch(name) {
-        collect { store.set(it) }
-    }
-    return store
-}
 
 val defaultMagic = modify(Magic, Blur, SlideLeft)
 

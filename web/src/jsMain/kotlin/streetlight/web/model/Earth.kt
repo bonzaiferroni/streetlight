@@ -1,12 +1,16 @@
 package streetlight.web.model
 
 import kampfire.model.handleResponse
+import koala.dom.launch
 import koala.model.FeatureMarker
+import koala.model.GeoFocus
 import koala.model.MarkerFocus
 import koala.model.Portal
-import koala.model.dedup
+import koala.model.fieldOf
+import koala.model.refine
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 import streetlight.model.ui.CityMap
 import streetlight.model.ui.CityMapRoute
@@ -25,31 +29,30 @@ class Earth(
     private val markerService: MarkerService,
     private val markerMap: MarkerMap
 ) {
-
     private val state = storeOf(EarthMapState(initialMap))
     val stateFlow = state.flow
     val stateNow get() = state.now
-    val mapFlow = stateFlow.dedup { it.map }
-    val boundedMarkersFlow = markerMap.boundedMarkersFlow.dedup { it ?: emptyList() }
-    val unboundedMarkersFlow = markerMap.unboundedMarkersFlow.dedup { it ?: emptyList() }
-    val summaryFlow = markerMap.boundedMarkersFlow.dedup { points ->
-        points?.groupingBy { it.typeLabel }?.eachCount()?.toList()
+
+    val mapField = state.fieldOf { it.map }
+    val boundedMarkersField = markerMap.partitionedField.fieldOf { it?.bounded ?: emptyList() }
+    val unboundedMarkersField = markerMap.partitionedField.fieldOf { it?.unbounded ?: emptyList() }
+    val summaryField = boundedMarkersField.fieldOf { points ->
+        points.groupingBy { it.typeLabel }.eachCount().toList()
     }
-    val isMovingFlow = markerMap.isMovingFlow
-    val focusFlow = markerMap.focusFlow.dedup { focus ->
-        when (val galaxy = ((focus as? MarkerFocus)?.marker as? GalaxyMarker)?.galaxy) {
-            null -> focus
-            else -> {
-                portal.go(GalaxyMapRoute(galaxy.slug))
-                null
-            }
-        }
-    }
-    val isFocusedFlow = focusFlow.dedup { it != null }
+    val isMovingField = markerMap.isMovingField
+    val focusField = markerMap.focusField.fieldOf { focus -> focus?.takeIf { it.toGalaxy() == null } }
+    val isFocusedField = focusField.fieldOf { it != null }
 
     init {
-        scope.launch {
+        scope.launch("Earth > routeFlowOf") {
             portal.routeFlowOf<EarthRoute>(false).collect(::collectRoute)
+        }
+        scope.launch("Earth > focus galaxy") {
+            markerMap.focusField.flow.collect {
+                it?.toGalaxy()?.let { galaxy ->
+                    portal.go(GalaxyMapRoute(galaxy.slug))
+                }
+            }
         }
     }
 
@@ -70,7 +73,7 @@ class Earth(
                             markerService.createMarkers(it)
                         }
                         markerMap.setPoints(markers)
-                        state.setValue { it.copy(map = GalaxyMap(null)) }
+                        state.set { copy(map = GalaxyMap(null)) }
                         showAll()
                     }
 
@@ -85,7 +88,7 @@ class Earth(
                             markerService.createMarkers(it)
                         }
                         markerMap.setPoints(markers)
-                        state.setValue { it.copy(map = GalaxyMap(galaxy)) }
+                        state.set { copy(map = GalaxyMap(galaxy)) }
                         showAll()
                     }
                 }
@@ -98,7 +101,7 @@ class Earth(
                             markerService.createMarkers(it)
                         }
                         markerMap.setPoints(markers)
-                        state.setValue { it.copy(map = CityMap(null))}
+                        state.set { copy(map = CityMap(null))}
                         showAll()
                     }
                     else -> {
@@ -112,13 +115,15 @@ class Earth(
                             markerService.createMarkers(it)
                         }
                         markerMap.setPoints(markers)
-                        state.setValue{ it.copy(map = CityMap(city)) }
+                        state.set { copy(map = CityMap(city)) }
                         showAll()
                     }
                 }
             }
         }
     }
+
+    private fun GeoFocus.toGalaxy() = ((this as? MarkerFocus)?.marker as? GalaxyMarker)?.galaxy
 }
 
 data class EarthMapState(

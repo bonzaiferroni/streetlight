@@ -6,7 +6,6 @@ import koala.css.*
 import koala.dom.*
 import koala.html.bulletsOf
 import koala.html.span
-import koala.model.dedup
 import streetlight.model.data.GalaxyEdit
 import streetlight.model.data.GalaxyProperty
 import streetlight.model.data.PostPermission
@@ -23,22 +22,22 @@ fun ViewScope.galaxyCityForm(model: GalaxyEditor) {
         formPart(
             instructions = "Would you like your galaxy to focus on a city?",
         ) {
-            checkBox(model.isLocal, "This galaxy has a city", modify(Padding1))
+            checkBox(model.isLocalField, "This galaxy has a city", modify(Padding1))
         }
 
         formPart(
             instructions = cityInstructions,
         ) {
             row {
-                textField(model.cityQuery, "city search", modify(Flex1))
-                textField(model.country, "country", modify(Width24))
+                textField(model.cityQueryField, "city search", modify(Flex1))
+                textField(model.countryField, "country", modify(Width24))
             }
             column(modify(Height32, OverflowYAuto, Gap0)) {
                 row(modify(Padding1, JustifyContentSpaceBetween)) {
                     textBlock("city", modify(OpacityLow, Italic))
                     textBlock("galaxies", modify(OpacityLow, Italic))
                 }
-                selectionBlock(model.cities, model.city) { city ->
+                selectionBlock(model.citiesField, model.cityField) { city ->
                     card(modify(BorderRadius1)) {
                         row(modify(JustifyContentSpaceBetween)) {
                             textBlock("${city.name}, ${city.state}", modify(Flex1))
@@ -47,7 +46,7 @@ fun ViewScope.galaxyCityForm(model: GalaxyEditor) {
                     }
                 }
             }
-        }.flowDisplay(model.isLocal.flow, contentScope)
+        }.flowDisplay(model.isLocalField.flow, contentScope)
     }
 }
 
@@ -62,26 +61,26 @@ fun ViewScope.galaxyNameForm(model: GalaxyEditor) {
             bulletsHeading = "Examples"
         ) {
             formTextField(
-                field = model.name,
+                field = model.nameField,
                 label = GalaxyProperty.Name,
                 footnote = nameCharacters,
                 maxLength = Slug.MAX_LENGTH
-            ).flowValid(GalaxyProperty.Name, model.validityFlow, contentScope)
+            ).flowValid(GalaxyProperty.Name, model.validityField, contentScope)
         }
         formPart(
             instructions = pathInstructions,
             info = {
-                flowBlock(model.slug) { path ->
+                flowBlock(model.slugField) { path ->
                     textBlock("Currently: streetlight.ing/g/$path", modify(OpacityHigh))
                 }
             }
         ) {
             formTextField(
-                field = model.slug,
+                field = model.slugField,
                 label = GalaxyProperty.Path,
                 footnote = pathCharacters,
                 maxLength = Slug.MAX_LENGTH
-            ).flowValid(GalaxyProperty.Path, model.validityFlow, contentScope)
+            ).flowValid(GalaxyProperty.Path, model.validityField, contentScope)
         }
     }
 }
@@ -99,7 +98,7 @@ fun ViewScope.galaxyDescriptionForm(model: GalaxyEditor) {
     formCardSection("Description") {
         formPart(
             info = {
-                flowBlock(model.name) { name ->
+                flowBlock(model.nameField) { name ->
                     val galaxy = name.takeIf { it.isNotEmpty() } ?: "the galaxy"
                     val mod = when (name.isEmpty()) {
                         true -> null
@@ -120,17 +119,17 @@ fun ViewScope.galaxyDescriptionForm(model: GalaxyEditor) {
                 }
             }
         ) {
-            textEditor(model.description, "description")
+            textEditor(model.descriptionField, "description")
         }
         formPart(
             instructions = "Give your galaxy a tagline.",
         ) {
-            formTextField(model.tagline, "tagline", maxLength = 50)
+            formTextField(model.taglineField, "tagline", maxLength = 50)
         }
         formPart(
             instructions = "Provide guidelines or requirements for the content of community posts.",
         ) {
-            textEditor(model.postGuide, "Post Guide")
+            textEditor(model.postGuideField, "Post Guide")
         }
     }
 }
@@ -166,7 +165,7 @@ fun ViewScope.galaxyAccessForm(model: GalaxyEditor) {
         formPart(
             instructions = "You can open up posting to the community or curate the content yourself.",
         ) {
-            dropMenu(model.permission, { it.label })
+            dropMenu(model.permissionField, { it.label })
         }
         formPart(
             instructions = permissionInfo1,
@@ -174,14 +173,14 @@ fun ViewScope.galaxyAccessForm(model: GalaxyEditor) {
                 "You can extend the role of moderation to other community members. (Feature in progress)",
             ),
             info = {
-                flowBlock(model.permission) { permission ->
+                flowBlock(model.permissionField) { permission ->
                     if (permission == PostPermission.Everyone) {
                         textBlock(anonymousInfoText)
                     }
                 }
             }
         ) {
-            textField(model.reviewCount, "review count", modify(AlignSelfStart))
+            textField(model.reviewCountField, "review count", modify(AlignSelfStart))
         }
     }
 }

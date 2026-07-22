@@ -78,12 +78,12 @@ fun ViewScope.earthUnboundedOverlay(model: Earth, mapContext: GeoCameraControlle
         hint.element.style.transform = "translate(-50%, -50%)" // rotate(${angle}rad)
     }
 
-    launchEffect {
+    launchEffect(ViewScope::earthUnboundedOverlay) {
         launch {
             combine(
-                model.unboundedMarkersFlow,
+                model.unboundedMarkersField.flow,
                 offsetFlow,
-                geoMap.movingBoundsFlow,
+                geoMap.movingBoundsField.flow,
             ) { markers, offset, _ -> markers to offset }
                 .collect { (markers, offset) ->
                     hints.entries.removeAll { (id, hint) ->

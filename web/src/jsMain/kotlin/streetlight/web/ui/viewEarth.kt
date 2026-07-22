@@ -25,16 +25,16 @@ fun ViewScope.viewEarth(model: Earth) {
                 earthMenu(model)
                 // earthList(model)
                 earthFocus(model)
-            }.flowModifier(model.isFocusedFlow, EarthStyle.IsFocused, contentScope)
+            }.flowModifier(model.isFocusedField, EarthStyle.IsFocused, contentScope)
         }
-    }.flowModifier(model.isMovingFlow, EarthStyle.IsMoving, contentScope)
+    }.flowModifier(model.isMovingField, EarthStyle.IsMoving, contentScope)
 }
 
 fun ViewScope.viewEarthRoute() {
     var isVisible = false
     val element = document.getElementById(AppBody.FullScreen)
 
-    launchEffect {
+    launchEffect(ViewScope::viewEarthRoute) {
         portal.routeFlow.collect { route ->
             when (route) {
                 is EarthRoute -> {
@@ -64,7 +64,7 @@ fun ViewScope.viewEarthRoute() {
 }
 
 fun ViewScope.earthHeader(model: Earth) {
-    flowBlock(model.stateNow.map, model.mapFlow, modify(EarthStyle.Header, EarthStyle.MoveDimmer, Magic)) { map ->
+    flowBlock(model.mapField, modify(EarthStyle.Header, EarthStyle.MoveDimmer, Magic)) { map ->
         column(modify(AlignItemsCenter)) {
             filigree(modify(AlignSelfStretch, EarthStyle.MapTitle)) {
                 heading3(map.title)

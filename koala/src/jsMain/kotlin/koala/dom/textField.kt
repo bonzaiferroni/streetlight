@@ -16,7 +16,6 @@ import koala.html.Attribute
 import koala.html.setId
 import koala.html.setAttribute
 import koala.model.MutableField
-import koala.model.StateFieldProto
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.html.INPUT
