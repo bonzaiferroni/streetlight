@@ -5,6 +5,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.dom.clear
 import kotlinx.html.dom.append
 import org.w3c.dom.HTMLElement
+import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
 
 @ViewMarker
@@ -43,6 +44,13 @@ fun ViewScope.launchEffect(
     message: String? = GENERAL_ERROR_MESSAGE,
     block: suspend EffectScope.() -> Unit
 ) = launchEffect(function.name, messenger, message, block)
+
+fun ViewScope.launchEffect(
+    type: KClass<*>,
+    messenger: Messenger? = null,
+    message: String? = GENERAL_ERROR_MESSAGE,
+    block: suspend EffectScope.() -> Unit
+) = launchEffect(type::class.simpleName ?: "launchEffect", messenger, message, block)
 
 interface DelegatedViewScope: ViewScope {
     val viewDelegate: ViewScope

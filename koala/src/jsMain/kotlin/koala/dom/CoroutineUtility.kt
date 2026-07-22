@@ -13,7 +13,7 @@ import kotlin.reflect.KFunction
 
 fun CoroutineScope.launch(
     name: String,
-    receiver: Messenger? = null,
+    messenger: Messenger? = null,
     message: String? = "Something went wrong.",
     block: suspend CoroutineScope.() -> Unit,
 ): Job {
@@ -26,7 +26,7 @@ fun CoroutineScope.launch(
         } catch (e: CancellationException) {
             throw e // sacred cargo
         } catch (e: Throwable) {
-            if (message != null) receiver?.receive(UIMessage(message, UIMessageType.Error))
+            if (message != null) messenger?.receive(UIMessage(message, UIMessageType.Error))
             // e.asDynamic().launchStack = launchSite.stack
             throw e
         }

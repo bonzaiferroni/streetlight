@@ -13,55 +13,44 @@ fun ViewScope.viewLocationUpdater(content: LocationUpdaterContent, star: Star) {
     val edit = content.location.toEdit()
     val model = edit.let { app.getLocationEditor(it, contentScope) }
 
-    tabs {
-        tab("edit") {
-            column {
-                updaterGreeting(star, model.stateNow.edit.name ?: "this location")
-                locationEditFormBody(model)
-                formSubmit(
-                    label = "Save",
-                    onSubmit = {
-                        launchEffect {
-                            val location = model.submitSuspend()
-                            if (location != null) {
-                                portal.go(LocationRoute(location.slug))
+    column(BodyStyle.Mod) {
+        tabs {
+            tab("edit") {
+                column {
+                    updaterGreeting(star, model.stateNow.edit.name ?: "this location")
+                    locationEditFormBody(model)
+                    formSubmit(
+                        label = "Save",
+                        onSubmit = {
+                            launchEffect {
+                                val location = model.submitSuspend()
+                                if (location != null) {
+                                    portal.go(LocationRoute(location.slug))
+                                }
                             }
-                        }
-                    },
-                    messages = model.message,
-                    back = LabeledAction("go back", portal::goBack)
-                )
+                        },
+                        messages = model.message,
+                        back = LabeledAction("go back", portal::goBack)
+                    )
+                }
+            }
+            tab("history") {
+                viewEditHistory<LocationEdit>(content.editLogs) { edit, compareEdit ->
+                    deltaRow("name", edit.name, compareEdit?.name)
+                    deltaRow("address", edit.address, compareEdit?.address)
+                    deltaRow("description", edit.description, compareEdit?.description)
+                    deltaRow("geolocation", edit.geoPoint, compareEdit?.geoPoint)
+                }
             }
         }
-        tab("history") {
-            viewEditHistory<LocationEdit>(content.editLogs) { edit, compareEdit ->
-                deltaRow("name", edit.name, compareEdit?.name)
-                deltaRow("address", edit.address, compareEdit?.address)
-                deltaRow("description", edit.description, compareEdit?.description)
-                deltaRow("geolocation", edit.geoPoint, compareEdit?.geoPoint)
-            }
-        }
+        appFooter("")
     }
 }
 
-fun ViewScope.viewUpdateLocationRoute() {
-    column {
+fun RouteScope.viewUpdateLocationRoute() {
+    routeBlock<LocationUpdateRoute, LocationUpdaterContent> { content ->
         starGate { star ->
-            // td: fix
-            // routeBlock<LocationUpdateRoute, LocationUpdaterContent?>(
-            //     portal = portal,
-            //     provideData = { route ->
-            //         api.readLocationUpdaterContent(route.slug).handleResponse(toaster)
-            //     }
-            // ) { content ->
-            //     if (content == null) {
-            //         textBlock("something went wrong")
-            //         return@routeBlock
-            //     }
-//
-            //     viewLocationUpdater(content, star)
-            // }
+            viewLocationUpdater(content, star)
         }
-        appFooter("")
     }
 }

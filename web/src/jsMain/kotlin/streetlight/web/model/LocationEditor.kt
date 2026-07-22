@@ -79,8 +79,8 @@ class LocationEditor(
     }
 
     fun reset() {
+        console.log("resetting")
         state.set { initialState }
-        scope.coroutineContext.cancelChildren()
         message.clear()
     }
 

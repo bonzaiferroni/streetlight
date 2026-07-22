@@ -20,7 +20,7 @@ inline fun <reified Route: AppRoute, Data> RouteScope.routeBlock(
     val state = state
     val route = state.route as? Route ?: error("route was not the expected type: ${Route::class.simpleName}")
 
-    launchEffect {
+    launchEffect(RouteScope::class) {
         val data = provideData(route)
         this@routeBlock.rebuildContent {
             when (data) {
@@ -47,5 +47,12 @@ inline fun <reified Route: AppRoute, reified Data: RouteContent> RouteScope.rout
             inflator.contentFor<Data>(route)
         }
     },
+    block = block
+)
+
+inline fun <reified Route: AppRoute, reified Data: RouteContent> RouteScope.routeBlock(
+    crossinline block: ViewScope.(Data) -> Unit
+) = routeBlock<Route, Data>(
+    provideData = { inflator.contentFor<Data>(it) },
     block = block
 )

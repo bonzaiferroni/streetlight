@@ -14,13 +14,13 @@ fun RouteScope.viewSandbox() {
 
     row {
         textBlock("What is your name?")
-        // textField("name", model.nameField)
+        textField(model.nameField)
     }
 
-    // flowBlock(model.nameField.flow) { name ->
-    //     if (name == "wreck") throw SandboxException()
-    //     textBlock("Hello ${name.takeIf { it.isNotBlank() } ?: "Someone"}, welcome to the sandbox.")
-    // }
+     flowBlock(model.nameField) { name ->
+         if (name == "wreck") throw SandboxException()
+         textBlock("Hello ${name.takeIf { it.isNotBlank() } ?: "Someone"}, welcome to the sandbox.")
+     }
 
     button("Check availability", model::checkAvailability)
 

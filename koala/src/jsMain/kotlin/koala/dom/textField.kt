@@ -83,20 +83,20 @@ fun ViewScope.textField(
                 modify(AlignSelfCenter, JustifySelfEnd, TextSmall, OpacityHalf, Padding1, PointerEventsNone, Italic)
             )
         }
+    }
 
-        onEnter?.let {
-            element.addEventListener("keydown", { event ->
-                val event = event as KeyboardEvent
-                if (event.key == "Enter") {
-                    onEnter()
-                }
-            })
-        }
-
-        launchEffect(ViewScope::textField) {
-            field.flow.collect { value ->
-                display(value)
+    onEnter?.let {
+        element.addEventListener("keydown", { event ->
+            val event = event as KeyboardEvent
+            if (event.key == "Enter") {
+                onEnter()
             }
+        })
+    }
+
+    launchEffect(ViewScope::textField) {
+        field.flow.collect { value ->
+            display(value)
         }
     }
 

@@ -11,6 +11,8 @@ import streetlight.model.ui.GalaxyConfigRoute
 import streetlight.model.ui.GalaxyRoute
 import streetlight.model.ui.HomeRoute
 import streetlight.model.ui.LocationRoute
+import streetlight.model.ui.LocationScoutRoute
+import streetlight.model.ui.LocationUpdateRoute
 import streetlight.model.ui.MediaUpdateRoute
 import streetlight.model.ui.StarRoute
 import streetlight.web.io.ApiClient
@@ -28,6 +30,8 @@ class AppContentFetcher(
         is LocationRoute -> api.readLocationContent(route.slug)
         is EventRoute -> api.readEventSlug(route.slug)
         is StarRoute -> api.readStarContent(route.username)
+        is LocationScoutRoute -> api.readGalaxy(route.slug)
+        is LocationUpdateRoute -> api.readLocationUpdaterContent(route.slug)
         else -> Ok(NullFetcherContent)
     }
 }

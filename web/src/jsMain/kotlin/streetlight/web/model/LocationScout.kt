@@ -3,6 +3,7 @@ package streetlight.web.model
 import kampfire.model.Labeled
 import kampfire.model.handleResponse
 import koala.dom.MessageStore
+import koala.dom.launch
 import koala.model.GeoCamera
 import koala.model.dedup
 import koala.model.fieldOf
@@ -58,17 +59,15 @@ class LocationScout(
             }
         }
 
-        scope.launch {
-            launch {
-                queryField.flow.collect { query ->
-                    api.searchLocations(query, stateNow.city?.takeIf { it.isNotBlank() })
-                        .handleResponse(toaster) { locations ->
-                            state.set { copy(queryLocations = locations) }
-                        }
+        queryField.reactIn(scope) { query ->
+            api.searchLocations(query, stateNow.city?.takeIf { it.isNotBlank() })
+                .handleResponse(toaster) { locations ->
+                    state.set { copy(queryLocations = locations) }
                 }
-            }
+        }
 
-            launch {
+        scope.launch(LocationScout::class) {
+            launch("collect geoState") {
                 geo.stateFlow.filter { !it.isMoving && stateNow.mode == SearchMode.Map }
                     .dedup { it.center }.collect { center ->
                         osm.readLocationAt(center).handleResponse(mapMessage) { location ->
@@ -80,11 +79,6 @@ class LocationScout(
             }
         }
     }
-
-    // fun setQuery(value: String) = state.setValue { it.copy(query = value) }
-    // fun setCity(value: String) = state.setValue { it.copy(city = value) }
-    // fun setLocation(value: Location?) = state.setValue { it.copy(location = value, stage = LocationScoutStage.Post) }
-    // fun setMode(value: SearchMode) = state.setValue { it.copy(mode = value) }
 
     // fun setStage(value: LocationScoutStage) {
     //     if (value == LocationScoutStage.Search) {

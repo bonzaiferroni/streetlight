@@ -55,13 +55,10 @@ fun ViewScope.viewLocationScout(galaxy: Galaxy) {
     }
 }
 
-fun ViewScope.viewLocationScoutRoute() {
-    // td: fix
-    // routeBlock<LocationScoutRoute, Galaxy>({
-    //     api.readGalaxy(it.slug).handleResponse(toaster)
-    // }) { galaxy ->
-    //     viewLocationScout(galaxy)
-    // }
+fun RouteScope.viewLocationScoutRoute() {
+    routeBlock<LocationScoutRoute, Galaxy> { galaxy ->
+        viewLocationScout(galaxy)
+    }
 }
 
 // fun RenderContext.viewStagedEditorForm(editor: LocationEditor)
