@@ -108,20 +108,6 @@ fun ViewScope.minAgeToggle(
     checkBox(field, "I am ${UserCreatorState.MINIMUM_AGE} or older.")
 }
 
-fun ViewScope.emailFormSection(model: EmailEditor) = formSection("Email") {
-    textField(model.emailField, "optional", placeholder = "email")
-    formBullets(
-        null,
-        "Providing an email address is optional",
-        "It can be used to reset your password",
-        "Streetlight will never share your email or contact you without your request"
-    )
-}
-
-// formTextField("email", model::setEmail, model.emailFlow)
-
-
-
 fun ViewScope.passwordFormSection(model: PasswordEditor) = formSection("Password") {
     textField(model.passwordField, "password") {
         type = InputType.password

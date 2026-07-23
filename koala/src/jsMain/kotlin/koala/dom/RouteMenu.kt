@@ -12,7 +12,7 @@ import koala.html.IconAction
 import koala.html.IconButton
 import koala.html.IconRoute
 
-fun TagScope.routeMenu(
+fun ViewScope.routeMenu(
     context: String,
     routeNow: MenuItem,
     routes: List<MenuItem?>,
@@ -42,7 +42,7 @@ fun TagScope.routeMenu(
     }
 }
 
-internal fun TagScope.iconsTray(
+internal fun ViewScope.iconsTray(
     icons: List<IconButton>,
     mod: ModifierSet
 ) {
@@ -58,7 +58,7 @@ internal fun TagScope.iconsTray(
     }
 }
 
-fun TagScope.routeMenuItem(item: MenuItem) = when (item) {
+fun ViewScope.routeMenuItem(item: MenuItem) = when (item) {
     is MenuButton -> span(item.label, modify(RouteMenu.Route)).onClick(item.onClick)
     is MenuRoute -> navigation(item.route, modify(RouteMenu.Route)) { +item.label }
     is MenuLabel -> span(item.label, modify(RouteMenu.Route))
@@ -79,3 +79,5 @@ data class MenuButton(
 data class MenuLabel(override val label: String): MenuItem
 
 sealed interface MenuItem: Labeled
+
+fun AppRoute.toMenuRoute() = MenuRoute(this)

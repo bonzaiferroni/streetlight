@@ -33,9 +33,11 @@ class StarEditor(
     val descriptionField = editField.mutableFieldOf({ it.description ?: "".toMarkdown() }) { copy(description = it) }
     val taglineField = editField.mutableFieldOf({ it.tagline ?: "" }) { copy(tagline = it) }
 
+    private val emailField = editField.mutableFieldOf({ it.email }) { copy(email = it) }
+
     val messages = MessageStore()
     val imageEditor = ImageEditor(imageField, api)
-    val emailEditor = EmailEditor(initialData.email?.value ?: "")
+    val emailEditor = EmailEditor(emailField, scope)
     val passwordEditor = PasswordEditor()
 
     fun completeRegistration() {
@@ -61,11 +63,11 @@ class StarEditor(
     fun submit() {
         scope.launch(::submit) {
             imageEditor.finalizeImage(messages)
-            println(editField.now.image)
 
             messages.set("Sending...", true)
 
             val star = api.updateStar(editField.now).handleResponse(messages) ?: return@launch
+            messages.set("Saved.")
             session.setUser(star)
         }
     }

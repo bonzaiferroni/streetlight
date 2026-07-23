@@ -29,15 +29,6 @@ fun ViewScope.starProfileForm(model: StarEditor) = form {
 
 private val imageInstructions1 = "This image will appear at the top of your profile."
 
-fun ViewScope.starAccountForm(model: StarEditor) = form {
-    formRow {
-        formSection("Identity") {
-            formText("You have the option of sharing your real name.")
-            textField(model.nameField, "name", maxLength = 50)
-        }
-    }
-}
-
 fun ViewScope.registerAccountForm(model: StarEditor) = form {
     formRow {
         column {

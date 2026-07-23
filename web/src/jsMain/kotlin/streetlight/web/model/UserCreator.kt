@@ -29,7 +29,7 @@ class UserCreator(
     val stateNow get() = state.now
     val stateFlow = state.flow
 
-    val emailEditor = EmailEditor("")
+    val emailEditor = EmailEditor(null, scope)
     val passwordEditor = PasswordEditor()
     val messages = MessageStore()
 
