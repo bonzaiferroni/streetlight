@@ -10,8 +10,10 @@ import koala.html.routeMenu
 import kotlinx.html.FlowContent
 import streetlight.model.data.Star
 import streetlight.model.data.StarContent
-import streetlight.model.ui.StarConfigRoute
+import streetlight.model.ui.StarDashRoute
+import streetlight.model.ui.UpdateProfileRoute
 import streetlight.model.ui.StarRoute
+import streetlight.model.ui.UpdateAccountRoute
 import streetlight.web.layouts.postSection
 import streetlight.web.pages.appFooter
 import streetlight.web.ui.BodyStyle
@@ -46,13 +48,23 @@ object StarShell {
 }
 
 fun FlowContent.starRouteMenu(star: Star, routeNow: AppRoute, isCaller: Boolean) {
-    // val rightIcons = when (isCaller) {
-    //     true -> listOf(IconRoute(SvgFile.GearSmall, StarConfigRoute))
-    //     else -> null
-    // }
+    val rightIcons = when (isCaller) {
+        true -> listOf(
+            IconRoute(SvgFile.MessageSmall, StarDashRoute),
+            IconRoute(SvgFile.UserSmall, UpdateAccountRoute)
+        )
+        else -> null
+    }
+
     val routes = when (isCaller) {
-        true -> listOf(StarRoute(star.username), StarConfigRoute)
+        true -> listOf(StarRoute(star.username), UpdateProfileRoute)
         else -> listOf(StarRoute(star.username))
     }
-    routeMenu(star.username.value, routeNow, routes)
+
+    routeMenu(
+        context = star.username.value,
+        routeNow = routeNow,
+        routes = routes,
+        rightIcons = rightIcons
+    )
 }

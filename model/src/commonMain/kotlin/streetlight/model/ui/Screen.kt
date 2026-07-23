@@ -41,7 +41,8 @@ enum class Screen(
     TalentProfile(UuidParse { TalentProfileRoute(TalentId(it)) }),
     Star(UsernameParse { StarRoute(it) }, "s", true),
     StarDash(StaticParse { StarDashRoute }),
-    StarConfig(StaticParse { StarConfigRoute }),
+    UpdateProfile(StaticParse { UpdateProfileRoute }),
+    UpdateAccount(StaticParse { UpdateAccountRoute}),
 
     // location
     Location(SlugParse { LocationRoute(it) }, "l", true),

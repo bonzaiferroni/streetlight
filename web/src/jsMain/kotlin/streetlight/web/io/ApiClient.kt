@@ -63,12 +63,13 @@ class ApiClient(private val client: FetchClient) {
     suspend fun readStarContent(username: Username) = client.getApi(Api.Stars.ReadStarContent) {
         writeParam(it.username, username)
     }
-    suspend fun readIdentityInfo() = client.getApi(Api.Stars.ReadIdentityInfo)
+    suspend fun readAccount() = client.getApi(Api.Stars.ReadAccount)
     suspend fun uploadImageBlob(blobUrl: Url) = client.uploadBlob(Api.Users.UploadImage.path, blobUrl)
     suspend fun queryLocation(point: GeoPoint) = client.getApi(Api.Locations.QueryPoint, point.toQuery())
     suspend fun validateLogin() = client.getApi(Api.Stars.ValidateLogin)
     suspend fun login(request: LoginRequest) = client.postApi(UserApi.Login, request)
-    suspend fun updateStar(edit: StarEdit) = client.postApi(Api.Stars.EditStar, edit)
+    suspend fun updateProfile(edit: StarEdit) = client.postApi(Api.Stars.UpdateProfile, edit)
+    suspend fun updateAccount(edit: Account) = client.postApi(Api.Stars.UpdateAccount, edit)
     suspend fun editLight(edit: EditLightRequest) = client.postApi(Api.Stars.EditLight, edit)
 
     // account

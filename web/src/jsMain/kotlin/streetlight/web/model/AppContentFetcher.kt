@@ -6,7 +6,6 @@ import koala.html.AppRoute
 import koala.model.ContentFetcher
 import koala.model.FetcherContent
 import koala.model.NullFetcherContent
-import koala.model.RouteContent
 import streetlight.model.ui.EventRoute
 import streetlight.model.ui.EventScoutRoute
 import streetlight.model.ui.EventUpdateRoute
@@ -21,11 +20,11 @@ import streetlight.model.ui.MediaForgeRoute
 import streetlight.model.ui.MediaRoute
 import streetlight.model.ui.MediaUpdateRoute
 import streetlight.model.ui.SiteDocRoute
-import streetlight.model.ui.StarConfigRoute
+import streetlight.model.ui.UpdateProfileRoute
 import streetlight.model.ui.StarDashRoute
 import streetlight.model.ui.StarRoute
+import streetlight.model.ui.UpdateAccountRoute
 import streetlight.web.io.ApiClient
-import streetlight.web.ui.api
 
 class AppContentFetcher(
     val api: ApiClient
@@ -47,7 +46,8 @@ class AppContentFetcher(
         is MediaForgeRoute -> route.slug?.let { api.readGalaxy(it) } ?: Ok(NullFetcherContent)
         is SiteDocRoute -> api.readSiteDoc(route.docId)
         is StarDashRoute -> Ok(NullFetcherContent)
-        is StarConfigRoute -> api.readIdentityInfo()
+        is UpdateProfileRoute -> Ok(NullFetcherContent)
+        is UpdateAccountRoute -> api.readAccount()
         else -> Ok(NullFetcherContent)
     }
 }

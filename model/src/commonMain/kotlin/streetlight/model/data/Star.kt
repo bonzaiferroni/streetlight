@@ -6,7 +6,6 @@ import kampfire.api.Username
 import kampfire.model.AccountType
 import kampfire.model.CallerId
 import kampfire.model.Identity
-import kampfire.model.PrivateInfo
 import kampfire.model.UserRole
 import koala.Image
 import kotlin.time.Instant
@@ -37,31 +36,17 @@ value class StarId(override val value: Uuid): RecordId {
 @Serializable
 data class StarEdit(
     val username: Username?,
-    val name: String?,
-    val email: Email?,
     val tagline: String?,
     val description: Markdown?,
     val image: Image?,
-    val identityVisibility: IdentityVisibility,
-    val accountType: AccountType,
 )
 
-fun Star.toEdit(info: IdentityInfo) = StarEdit(
+fun Star.toEdit() = StarEdit(
     username = username,
-    name = info.name,
-    email = info.email,
     tagline = tagline,
     description = description,
     image = image,
-    accountType = accountType,
-    identityVisibility = info.identityVisibility,
 )
 
 fun CallerId.toStarId() = StarId(value)
 val Identity.starId get() = callerId.toStarId()
-
-enum class IdentityVisibility {
-    Private,
-    Contacts,
-    Public
-}

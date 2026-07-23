@@ -21,8 +21,6 @@ object SvgFile : FileSet<Svg>() {
     val City = add("city.svg")
     val CityLarge = add("city-large.svg")
     val Clock = add("clock.svg")
-    val Comment = add("comment.svg")
-    val CommentLarge = add("comment-large.svg")
     val Crosshairs = add("crosshairs.svg")
     val Dashboard = add("dashboard.svg")
     val Directions = add("directions.svg")
@@ -60,8 +58,10 @@ object SvgFile : FileSet<Svg>() {
     val MapWithPin = add("map-pin.svg")
     val Meet = add("social.svg")
     val Menu = add("menu.svg")
+    val Message = add("message.svg")
     val MessageMinus = add("message-minus.svg")
     val MessagePlus = add("message-plus.svg")
+    val MessageSmall = add("message-small.svg")
     val Minus = add("minus.svg")
     val Moon = add("moon.svg")
     val PanelLeft = add("panel-left.svg")
@@ -85,6 +85,8 @@ object SvgFile : FileSet<Svg>() {
     val Train = add("train.svg")
     val TransitStop = add("transit-stop.svg")
     val Trash = add("trash.svg")
+    val UserSmall = add("user-small.svg")
+    val User = add("user.svg")
 
     // filigree
     val CircularFiligree = add("circular-filigree.svg")

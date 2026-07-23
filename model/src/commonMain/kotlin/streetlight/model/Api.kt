@@ -3,11 +3,9 @@ package streetlight.model
 import kampfire.api.*
 import kampfire.model.GeoBounds
 import kampfire.model.GeoPoint
-import kampfire.model.PrivateInfo
 import kampfire.model.SpeechRequest
 import kampfire.model.Url
 import koala.model.DocId
-import koala.model.DocNode
 import koala.model.DocTableItem
 import streetlight.model.data.*
 import streetlight.model.data.Feedback as FeedbackDto
@@ -154,10 +152,11 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
 
     object Stars: ApiNode(this) {
         object ValidateLogin: GetEndpoint<Star?>(this)
-        object EditStar: PostEndpoint<StarEdit, Star>(this)
         object EditLight: PostEndpoint<EditLightRequest, Boolean>(this)
         object PendingEdits: GetEndpoint<List<EditLog>>(this)
-        object ReadIdentityInfo: GetEndpoint<IdentityInfo>(this)
+        object ReadAccount: GetEndpoint<Account>(this)
+        object UpdateProfile: PostEndpoint<StarEdit, Star>(this)
+        object UpdateAccount: PostEndpoint<Account, Boolean>(this)
 
         object ReadStarContent: GetEndpoint<StarContent>(this) {
             val username = usernameParamOf("username")

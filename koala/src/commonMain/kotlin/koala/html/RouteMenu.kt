@@ -17,20 +17,16 @@ fun FlowContent.routeMenu(
         }
         row(modify(RouteMenu.ContextMenu, Gap0, Padding1, Bold, AlignItemsCenter, BorderSolid2Px)) {
             leftIcons?.let { icons ->
-                iconsTray(icons, modify(RouteMenu.LeftTray))
+                iconsTray(icons, routeNow, modify(RouteMenu.LeftTray))
             }
             routes.forEach { route ->
                 val route = route ?: return@forEach
-                val mod = when (route == routeNow) {
-                    true -> modify(RouteMenu.RouteNow)
-                    else -> modify(RouteMenu.Route)
-                }
-                navigation(route, mod) {
+                navigation(route, modify(RouteMenu.Route, route.routeNowMod(routeNow))) {
                     +route.label
                 }
             }
             rightIcons?.let { icons ->
-                iconsTray(icons, modify(RouteMenu.RightTray))
+                iconsTray(icons, routeNow, modify(RouteMenu.RightTray))
             }
         }
     }
@@ -38,15 +34,25 @@ fun FlowContent.routeMenu(
 
 internal fun FlowContent.iconsTray(
     icons: List<IconRoute>,
+    routeNow: AppRoute,
     mod: ModifierSet
 ) {
     row(modify(mod, BorderSolid2Px)) {
         icons.forEach { icon ->
-            navigation(icon.route, modify(Height3)) {
-                icon(icon.svg, modify(Height100P))
-            }
+            iconRoute(icon, routeNow)
         }
     }
+}
+
+internal fun FlowContent.iconRoute(icon: IconRoute, routeNow: AppRoute) {
+    navigation(icon.route, modify(Height3, RouteMenu.Route, icon.route.routeNowMod(routeNow))) {
+        icon(icon.svg, modify(Height100P))
+    }
+}
+
+internal fun AppRoute.routeNowMod(routeNow: AppRoute) = when (this == routeNow) {
+    true -> RouteMenu.RouteNow
+    else -> null
 }
 
 object RouteMenu {
@@ -99,9 +105,13 @@ $ContextMenu, $LeftTray, $RightTray {
 $ContextMenu {
     position: relative;
     
-    $Route, $RouteNow {
-        padding: var(--unit-spacing) var(--unit-spacing-2);
+    $Route {
         border-radius: 9999px;
+    }
+    
+    /* main route menu */
+    > $Route {
+        padding: var(--unit-spacing) var(--unit-spacing-2);
     }
     
     $RouteNow {

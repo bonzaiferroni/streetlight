@@ -1,42 +1,35 @@
 package streetlight.web.model
 
-import kampfire.api.Markdown
-import kampfire.api.toMarkdown
 import kampfire.model.AccountUpgradeRequest
 import kampfire.model.Ok
 import kampfire.model.Problem
 import kampfire.model.handleOutcome
 import kampfire.model.handleResponse
 import koala.dom.MessageStore
-import koala.model.dedup
 import koala.model.mutableFieldOf
 import koala.model.storeOf
 import koala.utils.launch
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import streetlight.model.data.StarEdit
+import streetlight.model.data.Account
 import streetlight.web.io.ApiClient
 
-class StarEditor(
-    initialData: StarEdit,
+class AccountEditor(
+    initialData: Account,
     private val scope: CoroutineScope,
     private val api: ApiClient,
     private val session: StarSession,
 ) {
-    private val state = storeOf(StarEditorState(initialData))
+    private val state = storeOf(AccountEditorState(initialData))
     val stateNow get() = state.now
     val stateFlow = state.flow
 
     val editField = state.mutableFieldOf({ it.edit }) { copy(edit = it) }
-    val imageField = editField.mutableFieldOf({ it.image }) { copy(image = it) }
     val nameField = editField.mutableFieldOf({ it.name ?: "" }) { copy(name = it) }
-    val descriptionField = editField.mutableFieldOf({ it.description ?: "".toMarkdown() }) { copy(description = it) }
-    val taglineField = editField.mutableFieldOf({ it.tagline ?: "" }) { copy(tagline = it) }
 
     private val emailField = editField.mutableFieldOf({ it.email }) { copy(email = it) }
 
     val messages = MessageStore()
-    val imageEditor = ImageEditor(imageField, api)
     val emailEditor = EmailEditor(emailField, scope)
     val passwordEditor = PasswordEditor()
 
@@ -62,21 +55,15 @@ class StarEditor(
 
     fun submit() {
         scope.launch(::submit) {
-            imageEditor.finalizeImage(messages)
-
             messages.set("Sending...", true)
-
-            val star = api.updateStar(editField.now).handleResponse(messages) ?: return@launch
-            messages.set("Saved.")
-            session.setUser(star)
+            val isSuccess = api.updateAccount(editField.now).handleResponse(messages) ?: return@launch
+            if (isSuccess) {
+                messages.set("Saved.")
+            }
         }
     }
-
-    // private fun setEdit(block: (StarEdit) -> StarEdit) {
-    //     state.setValue { it.copy(edit = block(it.edit)) }
-    // }
 }
 
-data class StarEditorState(
-    val edit: StarEdit
+data class AccountEditorState(
+    val edit: Account
 )

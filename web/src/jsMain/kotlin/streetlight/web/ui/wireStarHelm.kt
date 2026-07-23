@@ -13,6 +13,7 @@ import org.w3c.dom.HTMLElement
 import streetlight.model.data.Star
 import streetlight.model.ui.StarDashRoute
 import streetlight.model.ui.StarRoute
+import streetlight.model.ui.UpdateAccountRoute
 import streetlight.web.model.StarSession
 import streetlight.web.pages.HelmBar
 import streetlight.web.pages.StarHelm
@@ -63,6 +64,15 @@ private fun ViewScope.starPanel(star: Star) {
             row(RowMod) {
                 textBlock("Dashboard")
                 icon(SvgFile.Dashboard, HelmBar.IconMod)
+            }
+        }
+
+        navigation(UpdateAccountRoute) { // filler content
+            onClick = StarHelm.ClosePopover
+
+            row(RowMod) {
+                textBlock("Account")
+                icon(SvgFile.User, HelmBar.IconMod)
             }
         }
 

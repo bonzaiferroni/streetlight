@@ -7,7 +7,7 @@ import koala.model.NullFetcherContent
 import kotlinx.css.LinearDimension
 import kotlinx.css.fr
 import streetlight.model.data.Star
-import streetlight.model.ui.StarConfigRoute
+import streetlight.model.ui.UpdateProfileRoute
 import streetlight.model.ui.EditTalentRoute
 import streetlight.model.ui.HomeRoute
 import streetlight.model.ui.GalaxyListRoute
@@ -17,6 +17,7 @@ import streetlight.model.ui.TalentProfileRoute
 import streetlight.web.model.DataCache
 import streetlight.web.model.StarSession
 import streetlight.model.ui.toRoute
+import streetlight.web.shells.starRouteMenu
 
 fun ViewScope.viewStarDash(star: Star) {
     column(mod = BodyStyle.Mod) {
@@ -28,6 +29,10 @@ fun ViewScope.viewStarDash(star: Star) {
                 sandboxContent(star)
             }
         }
+
+        appFooter("")
+
+        starRouteMenu(star, StarDashRoute, true)
     }
 }
 
@@ -93,7 +98,7 @@ private fun ViewScope.sandboxContent(star: Star) {
         card {
             row {
                 textBlock("Add things to the map.", modify(Flex1))
-                btn("Edit Profile", StarConfigRoute)
+                btn("Edit Profile", UpdateProfileRoute)
                 btn("Go to sandbox", SandboxRoute)
                 button("galaxy list", { portal.go(GalaxyListRoute) }, modify(Accent))
             }

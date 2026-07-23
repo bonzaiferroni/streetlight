@@ -50,7 +50,8 @@ fun ViewScope.viewPortal() {
                 // star
                 Screen.Star -> viewStarRoute()
                 Screen.StarDash -> viewStarDashRoute()
-                Screen.StarConfig -> viewStarConfigRoute()
+                Screen.UpdateProfile -> viewUpdateProfileRoute()
+                Screen.UpdateAccount -> viewUpdateAccountRoute()
 
                 // location
                 Screen.LocationAdmin -> viewLocationAdmin()
