@@ -1,5 +1,9 @@
 package koala.model
 
-interface RouteContent
+sealed interface FetcherContent
 
-object NullFetcherContent: RouteContent
+interface RouteContent : FetcherContent
+
+object NullFetcherContent: FetcherContent
+
+inline fun <reified T> FetcherContent.toContentOrNull(): T? = this as? T

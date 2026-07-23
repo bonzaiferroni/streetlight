@@ -15,7 +15,7 @@ class RouteInflator(
     private val scope: CoroutineScope, // appScope
     private val fetcher: ContentFetcher,
     private val portal: Portal,
-    private val messenger: Messenger,
+    val messenger: Messenger,
 ) {
     private val state = storeOf(RouteInflatorState())
     val stateNow get() = state.now
@@ -25,17 +25,23 @@ class RouteInflator(
         scope.launch(RouteInflator::class) {
             portal.stateFlow.filter { !it.isInitialRoute || !it.route.screen.hasShell }.map { it.route }.collectLatest { route ->
                 // console.log("inflating route")
-                state.setValue { it.copy(delivery = null) }
+                state.set { copy(delivery = null) }
                 val content = fetcher.fetchContent(route).handleResponse(messenger)
                 val delivery = RouteDelivery(route, content)
                 // console.log("inflate content: ${content != null}")
-                state.setValue { it.copy(delivery = delivery)}
+                state.set { copy(delivery = delivery) }
             }
         }
     }
 
-    suspend inline fun <reified T: RouteContent> contentFor(route: AppRoute): T? =
-        stateFlow.first { it.delivery?.route == route }.delivery?.content as? T
+    suspend inline fun <reified T: FetcherContent> contentFor(route: AppRoute): T {
+        val content = stateFlow.first { it.delivery?.route == route }.delivery?.content as? T
+        if (content == null) {
+            messenger.receive("Something went wrong")
+            error("no content for route: $route")
+        }
+        return content
+    }
 }
 
 data class RouteInflatorState(
@@ -45,9 +51,9 @@ data class RouteInflatorState(
 
 data class RouteDelivery(
     val route: AppRoute,
-    val content: RouteContent?
+    val content: FetcherContent?
 )
 
 interface ContentFetcher {
-    suspend fun fetchContent(route: AppRoute): Outcome<RouteContent>
+    suspend fun fetchContent(route: AppRoute): Outcome<FetcherContent>
 }

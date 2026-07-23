@@ -164,7 +164,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         }
     }
 
-    object Docs: GetByIdEndpoint<DocId, DocNode>(this)
+    object Docs: GetByIdEndpoint<DocId, DocContent>(this)
     object DocsTable: GetEndpoint<List<DocTableItem>>(this)
 
     object Talk: ApiNode(this) {

@@ -6,17 +6,15 @@ import streetlight.web.model.ChatRoom
 
 fun RouteScope.viewChatRoom() {
     val model = app.get<ChatRoom>()
-    val element = column(modify(JustifyContentEnd)) {
+    val element = column(modify(BodyStyle.Mod, JustifyContentEnd)) {
         itemsBlock(model.messagesFlow, modify(Magic, Blur, SlideLeft)) { message ->
             textBlock("${message.source}: ${message.text}")
         }
-        // td: fix or retire
-        // textField(
-        //     flow = model.sendFlow,
-        //     onValue = model::setMessage,
-        //     mod = modify(Width100P),
-        //     onEnter = model::sendMessage
-        // )
+        textField(
+            field = model.messageField,
+            mod = modify(Width100P),
+            onEnter = model::sendMessage
+        )
     }
 
     element.onView(model::setIsActive)

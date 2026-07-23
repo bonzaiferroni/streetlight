@@ -9,13 +9,12 @@ import koala.model.dedupNotNull
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import streetlight.model.data.Media
-import streetlight.model.data.MediaEdit
 import streetlight.model.data.toEdit
 import streetlight.model.ui.MediaUpdateRoute
 import streetlight.model.ui.MediaRoute
 import streetlight.web.model.MediaEditor
 
-fun ViewScope.viewMediumUpdater(model: MediaEditor) {
+fun ViewScope.viewMedia(model: MediaEditor) {
     val routeFlow = model.stateFlow.dedupNotNull { it.slug?.let { slug -> MediaRoute(slug) } }
     goOnRoute(routeFlow)
 
@@ -35,9 +34,9 @@ fun ViewScope.viewMediumUpdater(model: MediaEditor) {
 }
 
 fun RouteScope.viewMediumUpdaterRoute() {
-    routeBlock<MediaUpdateRoute, MediaEdit>({ inflator.contentFor<Media>(it)?.toEdit() }) {
-        val editor = MediaEditor(it, contentScope, api, toaster)
-        viewMediumUpdater(editor)
+    routeBlock<MediaUpdateRoute, Media> {
+        val editor = MediaEditor(it.toEdit(), contentScope, api, toaster)
+        viewMedia(editor)
     }
 }
 

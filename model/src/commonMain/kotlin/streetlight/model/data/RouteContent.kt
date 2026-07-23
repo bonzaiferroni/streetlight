@@ -1,5 +1,7 @@
 package streetlight.model.data
 
+import koala.model.DocNode
+import koala.model.DocTable
 import koala.model.RouteContent
 import kotlinx.serialization.Serializable
 
@@ -39,4 +41,10 @@ data class StarContent(
 data class HomeContent(
     val galaxies: List<Galaxy>,
     val posts: List<GalaxyPost>
+): RouteContent
+
+@Serializable
+data class DocContent(
+    val node: DocNode,
+    val table: DocTable,
 ): RouteContent

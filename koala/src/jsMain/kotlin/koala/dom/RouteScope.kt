@@ -2,9 +2,11 @@ package koala.dom
 
 import koala.html.AppRoute
 import koala.html.Id
+import koala.model.FetcherContent
 import koala.model.PortalState
 import koala.model.RouteContent
 import koala.model.RouteInflator
+import koala.model.toContentOrNull
 import kotlinx.browser.window
 
 class RouteScope(
@@ -13,8 +15,8 @@ class RouteScope(
     val state: PortalState,
 ): RebuildScope, ViewScope by viewDelegate
 
-inline fun <reified Route: AppRoute, Data> RouteScope.routeBlock(
-    crossinline provideData: suspend (Route) -> Data?,
+inline fun <reified Route: AppRoute, Data: FetcherContent> RouteScope.routeBlock(
+    crossinline provideData: suspend (Route) -> Data,
     crossinline block: ViewScope.(Data) -> Unit
 ) {
     val state = state
@@ -23,20 +25,15 @@ inline fun <reified Route: AppRoute, Data> RouteScope.routeBlock(
     launchEffect(RouteScope::class) {
         val data = provideData(route)
         this@routeBlock.rebuildContent {
-            when (data) {
-                null -> textBlock("Something went wrong.")
-                else -> {
-                    block(data)
-                    if (!state.isInitialRoute) {
-                        window.scrollTo(0.0, state.initialScrollY)
-                    }
-                }
+            block(data)
+            if (!state.isInitialRoute) {
+                window.scrollTo(0.0, state.initialScrollY)
             }
         }
     }
 }
 
-inline fun <reified Route: AppRoute, reified Data: RouteContent> RouteScope.routeBlock(
+inline fun <reified Route: AppRoute, reified Data: FetcherContent> RouteScope.routeBlock(
     shellId: Id,
     crossinline block: ViewScope.(Data) -> Unit
 ) = routeBlock<Route, Data>(
@@ -50,7 +47,7 @@ inline fun <reified Route: AppRoute, reified Data: RouteContent> RouteScope.rout
     block = block
 )
 
-inline fun <reified Route: AppRoute, reified Data: RouteContent> RouteScope.routeBlock(
+inline fun <reified Route: AppRoute, reified Data: FetcherContent> RouteScope.routeBlock(
     crossinline block: ViewScope.(Data) -> Unit
 ) = routeBlock<Route, Data>(
     provideData = { inflator.contentFor<Data>(it) },

@@ -4,27 +4,19 @@ import kampfire.model.handleResponse
 import koala.dom.*
 import koala.model.DocNode
 import koala.model.DocTable
+import streetlight.model.data.DocContent
 import streetlight.model.ui.SiteDocRoute
 import streetlight.web.shells.SiteDocKey
 import streetlight.web.shells.siteDocShell
 
-fun ViewScope.viewSiteDoc(node: DocNode) {
-    val table = cachedTable ?: emptyList()
+fun ViewScope.viewSiteDoc(content: DocContent) {
     shellBox(SiteDocKey.Id, hookInitializers) {
-        siteDocShell(node, table)
+        siteDocShell(content)
     }
 }
 
-fun ViewScope.viewSiteDocRoute() {
-    // td: fix
-    // routeBlock<SiteDocRoute, DocNode>(portal, { route ->
-    //     if (cachedTable == null) {
-    //         cachedTable = api.readSiteDocTable().handleResponse(toaster)
-    //     }
-    //     api.readSiteDoc(route.docId).handleResponse(toaster)
-    // }) { node ->
-    //     viewSiteDoc(node)
-    // }
+fun RouteScope.viewSiteDocRoute() {
+    routeBlock<SiteDocRoute, DocContent> { node ->
+        viewSiteDoc(node)
+    }
 }
-
-private var cachedTable: DocTable? = null

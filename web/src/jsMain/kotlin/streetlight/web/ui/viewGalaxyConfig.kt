@@ -51,9 +51,7 @@ fun ViewScope.viewGalaxyConfig(edit: GalaxyEdit) {
 }
 
 fun RouteScope.viewGalaxyConfigRoute() {
-    routeBlock<GalaxyConfigRoute, GalaxyEdit>({ route ->
-        inflator.contentFor<Galaxy>(route)?.toEdit()
-    }) {
-        viewGalaxyConfig(it)
+    routeBlock<GalaxyConfigRoute, Galaxy> {
+        viewGalaxyConfig(it.toEdit())
     }
 }

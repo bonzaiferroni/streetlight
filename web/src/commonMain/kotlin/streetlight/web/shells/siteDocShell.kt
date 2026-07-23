@@ -6,13 +6,16 @@ import koala.html.*
 import koala.model.DocNode
 import koala.model.DocTable
 import kotlinx.html.FlowContent
+import streetlight.model.data.DocContent
 import streetlight.model.ui.SiteDocRoute
 import streetlight.web.pages.appFooter
 import streetlight.web.ui.BodyStyle
 import streetlight.web.ui.featureHeader
 
-fun FlowContent.siteDocShell(node: DocNode, table: DocTable) {
-    val doc = node.doc
+fun FlowContent.siteDocShell(content: DocContent) {
+    val doc = content.node.doc
+    val table = content.table
+    val node = content.node
     column(BodyStyle.Mod) {
         featureHeader(doc.title, "a Streetlight doc", doc.image)
 

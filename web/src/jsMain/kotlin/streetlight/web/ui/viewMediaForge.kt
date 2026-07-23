@@ -5,7 +5,9 @@ import koala.css.*
 import koala.dom.*
 import koala.html.filigree
 import koala.html.heading1
+import koala.model.FetcherContent
 import koala.model.dedupNotNull
+import koala.model.toContentOrNull
 import kotlinx.html.js.h3
 import streetlight.model.data.Galaxy
 import streetlight.model.data.MediaEdit
@@ -13,7 +15,6 @@ import streetlight.model.ui.MediaForgeRoute
 import streetlight.model.ui.MediaRoute
 
 fun ViewScope.viewMediaForge(galaxy: Galaxy?) {
-    println(galaxy) // ey
     val model = app.getMediaEditor(MediaEdit(), contentScope)
     goOnRoute(model.stateFlow.dedupNotNull { it.slug?.let { slug -> MediaRoute(slug) }  })
 
@@ -36,11 +37,8 @@ fun ViewScope.viewMediaForge(galaxy: Galaxy?) {
     }
 }
 
-fun ViewScope.viewContentPosterRoute() {
-    // td: fix
-    // routeBlock<MediaForgeRoute, Galaxy?>({ route ->
-    //     route.slug?.let { api.readGalaxy(it).handleResponse(toaster) }
-    // }) { galaxy ->
-    //     viewMediaForge(galaxy)
-    // }
+fun RouteScope.viewContentPosterRoute() {
+    routeBlock<MediaForgeRoute, FetcherContent> { content ->
+        viewMediaForge(content.toContentOrNull<Galaxy>())
+    }
 }

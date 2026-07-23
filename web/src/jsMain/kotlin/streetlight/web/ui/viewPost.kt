@@ -1,6 +1,7 @@
 package streetlight.web.ui
 
 import kampfire.model.handleResponse
+import koala.dom.RouteScope
 import koala.dom.ViewScope
 import koala.dom.mountChildView
 import koala.dom.routeBlock
@@ -23,12 +24,8 @@ fun ViewScope.viewMedia(media: Media) {
     }
 }
 
-fun ViewScope.viewPostRoute() {
-    // td: fix
-    // routeBlock<MediaRoute, Media>(portal, { route ->
-    //     readIsland<Media>(PostKey.IslandId) { it.slug == route.slug }
-    //         ?: api.readMedia(route.slug).handleResponse(toaster)
-    // }) { post ->
-    //     viewMedia(post)
-    // }
+fun RouteScope.viewPostRoute() {
+    routeBlock<MediaRoute, Media> { post ->
+        viewMedia(post)
+    }
 }
