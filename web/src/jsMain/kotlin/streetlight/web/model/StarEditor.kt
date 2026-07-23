@@ -11,6 +11,7 @@ import koala.dom.MessageStore
 import koala.model.dedup
 import koala.model.mutableFieldOf
 import koala.model.storeOf
+import koala.utils.launch
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import streetlight.model.data.StarEdit
@@ -54,6 +55,18 @@ class StarEditor(
             if (isSuccess) {
                 session.readUser(messages)
             }
+        }
+    }
+
+    fun submit() {
+        scope.launch(::submit) {
+            imageEditor.finalizeImage(messages)
+            println(editField.now.image)
+
+            messages.set("Sending...", true)
+
+            val star = api.updateStar(editField.now).handleResponse(messages) ?: return@launch
+            session.setUser(star)
         }
     }
 

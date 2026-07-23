@@ -1,6 +1,5 @@
 package streetlight.web.ui
 
-import kampfire.model.handleResponse
 import koala.dom.*
 import streetlight.model.data.LocationEdit
 import streetlight.model.data.LocationUpdaterContent
@@ -29,7 +28,7 @@ fun ViewScope.viewLocationUpdater(content: LocationUpdaterContent, star: Star) {
                                 }
                             }
                         },
-                        messages = model.message,
+                        messages = model.messages,
                         back = LabeledAction("go back", portal::goBack)
                     )
                 }

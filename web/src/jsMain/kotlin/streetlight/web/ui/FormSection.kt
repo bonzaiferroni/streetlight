@@ -12,24 +12,17 @@ fun ViewScope.imageFormSection(
     instructions: String,
     imageEditor: ImageEditor,
 ) = formSection("Image") {
-    textBlock(instructions)
+    imageDrop(imageEditor.imageField) {
+        box {
+            image(it.url)
+        }
+    }.setBlockLabel("image")
     formBullets(
         null,
+        instructions,
         "Ideally at least 1024 pixels wide and 512 pixels tall.",
         imageRequirements,
     )
-    formPart(
-        instructions = instructions,
-        bullets = listOf(
-
-        )
-    ) {
-        imageDrop(imageEditor.imageField) {
-            box {
-                image(it.url)
-            }
-        }.setBlockLabel("image")
-    }
 }
 
 private val imageRequirements = "Suitable for all audiences."

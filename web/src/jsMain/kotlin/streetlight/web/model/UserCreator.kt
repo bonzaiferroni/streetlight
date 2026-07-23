@@ -75,7 +75,7 @@ class UserCreator(
             accountType = accountType,
             stayLoggedIn = true
         )
-        messages.receive("Creating account...")
+        messages.deliver("Creating account...")
         scope.launch {
             val isSuccess = api.createUser(request).handleResponse(messages) ?: return@launch
             if (isSuccess) {

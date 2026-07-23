@@ -4,7 +4,6 @@ import kabinet.utils.replaceAt
 import kampfire.api.toMarkdown
 import kampfire.model.handleResponse
 import koala.dom.MessageStore
-import koala.model.dedup
 import koala.model.fieldOf
 import koala.model.mutableFieldOf
 import koala.model.reactIn
@@ -77,7 +76,7 @@ class EventEditor(
 
     fun isEditValid(): Boolean {
         val validMessage = editNow.validity.message
-        message.receive(validMessage)
+        message.set(validMessage)
         return validMessage == null
     }
 
@@ -93,7 +92,7 @@ class EventEditor(
             urlMessage.set("Reading the link, this will take a minute.", true)
             api.parseSingleEvent(UrlParseRequest(url)).handleResponse(urlMessage) { edit ->
                 val event = edit.mergeRight(state.now.edit)
-                urlMessage.receive("Does this information look correct?")
+                urlMessage.deliver("Does this information look correct?")
                 state.set { copy(edit = event) }
             }
         }
@@ -101,8 +100,8 @@ class EventEditor(
 
     suspend fun submitSuspend(): Event? {
         if (!isEditValid()) return null
-        val image = imageEditor.finalizeImage(message)
-        val edit = editNow.copy(image = image)
+        imageEditor.finalizeImage(message)
+        val edit = editField.now
 
         message.set("Sending...", true)
         return when (editNow.eventId) {

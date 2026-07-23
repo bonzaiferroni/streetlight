@@ -1,6 +1,5 @@
 package streetlight.web.ui
 
-import kampfire.model.handleResponse
 import koala.LottieFile
 import koala.dom.*
 import koala.model.dedupNotNull
@@ -33,7 +32,7 @@ fun ViewScope.viewLocationScout(galaxy: Galaxy) {
                     formSubmit(
                         label = "Next",
                         onSubmit = model::review,
-                        messages = editor.message,
+                        messages = editor.messages,
                         back = LabeledAction("Back", { model.stageField.set(LocationScoutStage.Search) })
                     )
                 }
@@ -44,7 +43,7 @@ fun ViewScope.viewLocationScout(galaxy: Galaxy) {
                     formSubmit(
                         label = "Post",
                         onSubmit = model::postToGalaxy,
-                        messages = editor.message,
+                        messages = editor.messages,
                         back = LabeledAction("Edit", { model.stageField.set(LocationScoutStage.Edit) })
                     )
                 }

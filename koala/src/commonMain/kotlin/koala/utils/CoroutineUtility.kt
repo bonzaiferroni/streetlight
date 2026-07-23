@@ -25,7 +25,7 @@ fun CoroutineScope.launch(
         } catch (e: CancellationException) {
             throw e // sacred cargo
         } catch (e: Throwable) {
-            if (message != null) messenger?.receive(UIMessage(message, UIMessageType.Error))
+            if (message != null) messenger?.deliver(UIMessage(message, UIMessageType.Error))
             // e.asDynamic().launchStack = launchSite.stack
             throw e
         }

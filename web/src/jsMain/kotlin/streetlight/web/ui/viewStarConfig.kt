@@ -10,13 +10,15 @@ import koala.dom.column
 import koala.dom.routeBlock
 import koala.dom.tabs
 import koala.dom.textBlock
+import streetlight.model.data.IdentityInfo
+import streetlight.model.data.Star
 import streetlight.model.data.StarEdit
 import streetlight.model.data.toEdit
 import streetlight.model.ui.StarConfigRoute
 import streetlight.web.model.StarEditor
 
 fun ViewScope.viewStarConfig(model: StarEditor) {
-    column {
+    column(mod = BodyStyle.Mod) {
         introSection("User Settings", lottie = LottieFile.ServerSync) {
             textBlock("Here you can make changes to your account and profile.")
         }
@@ -36,24 +38,17 @@ fun ViewScope.viewStarConfig(model: StarEditor) {
                 starAccountForm(model)
             }
         }
+
+        appFooter("")
     }
 }
 
 fun RouteScope.viewStarConfigRoute() {
-    // td: hot mess, find a way to get private info as RouteContent
-    // routeBlock<StarConfigRoute, PrivateInfo> { privateInfo ->
-    //     starGate { star ->
-    //         val model = app.getStarEditor(edit, contentScope)
-    //         viewStarConfig(model)
-    //     }
-    // }
-    // starGate { star ->
-    //     routeBlock<StarConfigRoute, StarEdit>(portal, { route ->
-    //         val info = api.readIdentityInfo().handleResponse(toaster) ?: return@routeBlock null
-    //         star.toEdit(info)
-    //     }) { edit ->
-    //
-    //     }
-    // }
+    routeBlock<StarConfigRoute, IdentityInfo> { identityInfo ->
+        starGate { star ->
+            val model = app.getStarEditor(star.toEdit(identityInfo), contentScope)
+            viewStarConfig(model)
+        }
+    }
 }
 

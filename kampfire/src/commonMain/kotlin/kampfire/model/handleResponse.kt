@@ -18,13 +18,13 @@ fun <T1, T2> Outcome<T1>.handleResponse(
 ): T2? = when (this) {
     is Ok -> {
         message?.let {
-            okMessenger.receive(UIMessage(it, UIMessageType.Success))
+            okMessenger.deliver(UIMessage(it, UIMessageType.Success))
         }
         block(data)
     }
 
     is Problem -> {
-        messenger.receive(this)
+        messenger.deliver(this)
         null
     }
 }
@@ -41,13 +41,13 @@ fun <T1, T2> Outcome<T1>.handleOutcome(
 ): T2? = when (this) {
     is Ok -> {
         message?.let {
-            okMessenger.receive(it)
+            okMessenger.deliver(it)
         }
         block(data)
     }
 
     is Problem -> {
-        messenger.receive(this)
+        messenger.deliver(this)
         null
     }
 }

@@ -3,14 +3,12 @@ package streetlight.web.model
 import kampfire.api.toMarkdown
 import kampfire.model.handleResponse
 import koala.dom.MessageStore
-import koala.model.dedup
 import koala.model.dedupNotNull
 import koala.model.fieldOf
 import koala.model.mutableFieldOf
 import koala.model.reactIn
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.launch
 import streetlight.model.data.Location
 import streetlight.model.data.LocationEdit
@@ -44,7 +42,7 @@ class LocationEditor(
 
     val imageEditor = ImageEditor(imageField, api)
     val websiteMessage = MessageStore()
-    val message = MessageStore()
+    val messages = MessageStore()
 
     init {
         websiteField.reactIn(scope) { websiteMessage.clear() }
@@ -66,20 +64,20 @@ class LocationEditor(
             websiteMessage.set("Reading the link, this will take a minute.", true)
             api.parseLocation(UrlParseRequest(website)).handleResponse(websiteMessage) { edit ->
                 state.set { copy(edit = edit.mergeLeft(editNow)) }
-                websiteMessage.receive("Does this information look correct?")
+                websiteMessage.deliver("Does this information look correct?")
             }
         }
     }
 
     fun isEditValid(): Boolean {
         val validMessage = editNow.validity.message
-        message.receive(validMessage)
+        messages.set(validMessage)
         return validMessage == null
     }
 
     fun reset() {
         state.set { initialState }
-        message.clear()
+        messages.clear()
     }
 
     fun submit() {
@@ -90,13 +88,13 @@ class LocationEditor(
 
     suspend fun submitSuspend(): Location? {
         if (!isEditValid()) return null
-        val image = imageEditor.finalizeImage(message)
-        val edit = editNow.copy(image = image)
+        imageEditor.finalizeImage(messages)
+        val edit = editField.now
 
-        message.set("Sending...", true)
+        messages.set("Sending...", true)
         return when (editNow.locationId) {
-            null -> api.createLocation(edit).handleResponse(message)
-            else -> api.updateLocation(edit).handleResponse(message)
+            null -> api.createLocation(edit).handleResponse(messages)
+            else -> api.updateLocation(edit).handleResponse(messages)
         }
     }
 }

@@ -51,7 +51,7 @@ fun ViewScope.launchEffect(
     messenger: Messenger? = null,
     message: String? = GENERAL_ERROR_MESSAGE,
     block: suspend EffectScope.() -> Unit
-) = launchEffect(type::class.simpleName ?: "launchEffect", messenger, message, block)
+) = launchEffect(type.simpleName ?: "launchEffect", messenger, message, block)
 
 interface DelegatedViewScope: ViewScope {
     val viewDelegate: ViewScope

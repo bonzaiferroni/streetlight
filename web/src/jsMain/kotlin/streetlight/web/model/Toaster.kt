@@ -24,16 +24,16 @@ class Toaster(
         toast(UIMessage(message, messageType))
 
     fun toast(message: UIMessage) {
-        state.setValue { it.copy(messages = it.messages + message)}
+        state.set { copy(messages = messages + message)}
         scope.launch {
             delay(ToastDelay)
-            state.setValue { it.copy(messages = stateNow.messages - message) }
+            state.set { copy(messages = stateNow.messages - message) }
         }
     }
 
-    override fun receive(text: String?) { text?.let { toast(text, UIMessageType.Info) } }
-    override fun receive(problem: Problem) = toast(problem.message, UIMessageType.Error)
-    override fun receive(message: UIMessage) = toast(message)
+    override fun deliver(text: String) { toast(text, UIMessageType.Info) }
+    override fun deliver(problem: Problem) = toast(problem.message, UIMessageType.Error)
+    override fun deliver(message: UIMessage) = toast(message)
 }
 
 data class ToasterState(

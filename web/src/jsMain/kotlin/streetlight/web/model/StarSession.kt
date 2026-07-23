@@ -59,11 +59,15 @@ class StarSession(
         }
     }
 
+    fun setUser(star: Star) {
+        state.set { copy(star = star) }
+    }
+
     fun signOut() {
         scope.launch(::signOut) {
             api.logout()
             // userCache.reset()
-            state.setValue { it.copy(star = null, signedOutAt = Clock.System.now()) }
+            state.set { copy(star = null, signedOutAt = Clock.System.now()) }
         }
     }
 }

@@ -1,12 +1,13 @@
 package streetlight.web.model
 
+import kampfire.model.Messenger
+import kampfire.model.PrintLnMessenger
+import kampfire.model.UIMessage
+import kampfire.model.UIMessageType
 import kampfire.model.getDataOrNull
+import kampfire.model.handleResponse
 import koala.Image
-import koala.dom.MessageStore
-import koala.model.Field
 import koala.model.MutableField
-import koala.model.mutableFieldOf
-import koala.model.storeOf
 import koala.toImage
 import streetlight.web.io.ApiClient
 
@@ -19,14 +20,12 @@ class ImageEditor(
 
     // val imageField = state.mutableFieldOf({ it.image }) { copy(image = it) }
 
-    suspend fun finalizeImage(message: MessageStore? = null): Image? {
-        val url = imageField.now?.url?.takeIf { it.isBlob } ?: return imageField.now
-        message?.set("Uploading image...", true)
-        val image = api.uploadImageBlob(url).getDataOrNull()?.toImage()
-        if (image == null) {
-            message?.receive("Unable to upload image.")
-        }
-        return image
+    suspend fun finalizeImage(messenger: Messenger? = null) {
+        val url = imageField.now?.url?.takeIf { it.isBlob } ?: return
+        println("uploading image: $url")
+        messenger?.deliver(UIMessage("Uploading image...", UIMessageType.Working))
+        val image = api.uploadImageBlob(url).handleResponse(messenger ?: PrintLnMessenger)?.toImage() ?: return
+        imageField.set(image)
     }
 }
 

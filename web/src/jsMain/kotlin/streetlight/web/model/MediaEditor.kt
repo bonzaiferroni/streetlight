@@ -1,6 +1,5 @@
 package streetlight.web.model
 
-import kampfire.api.Markdown
 import kampfire.api.Slug
 import kampfire.api.toMarkdown
 import kampfire.model.handleResponse
@@ -41,7 +40,7 @@ class MediaEditor(
     init {
         scope.launch {
             editFlow.dedup { it.invalidMessage }.collect {
-                message.receive(it ?: "Looks good.")
+                message.deliver(it ?: "Looks good.")
             }
         }
     }
@@ -52,20 +51,21 @@ class MediaEditor(
 
     fun submitPost(galaxy: Galaxy? = null) {
         scope.launch {
-            val edit = editNow.takeIf { it.isValid } ?: return@launch
-            val image = imageEditor.finalizeImage(message)
+            if (!editField.now.isValid) return@launch
+            imageEditor.finalizeImage(message)
+            val edit = editField.now
             message.set("Posting...", true)
 
             val media = when (edit.mediaId) {
-                null -> api.createMedia(edit.copy(image = image))
-                else -> api.updateMedia(edit.copy(image = image))
+                null -> api.createMedia(edit)
+                else -> api.updateMedia(edit)
             }.handleResponse(toaster) { media ->
-                state.setValue { it.copy(slug = media.slug) }
+                state.set { copy(slug = media.slug) }
                 media
             }
 
             if (media != null && galaxy != null) {
-                message.receive("Posting to ${galaxy.name}...")
+                message.deliver("Posting to ${galaxy.name}...")
                 api.createPost(PostEdit(
                     postId = null,
                     galaxyId = galaxy.galaxyId,

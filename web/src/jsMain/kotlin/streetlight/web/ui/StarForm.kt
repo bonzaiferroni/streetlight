@@ -18,13 +18,13 @@ fun ViewScope.starProfileForm(model: StarEditor) = form {
     formRow {
         imageFormSection(imageInstructions1, model.imageEditor)
         formSection("Content") {
-            formText("The tagline will appear under your name.")
             textField(model.taglineField, "tagline", maxLength = 50)
+            formText("The tagline will appear under your name.")
+            textEditor(model.descriptionField, "description")
+            formText("The description will appear under the image, before your posts.")
         }
     }
-    formPart("The description will appear under the image, before your posts.") {
-        textEditor(model.descriptionField, "description")
-    }
+    formSubmit("Save", model::submit, model.messages)
 }
 
 private val imageInstructions1 = "This image will appear at the top of your profile."

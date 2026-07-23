@@ -72,7 +72,7 @@ class LocationScout(
                     .dedup { it.center }.collect { center ->
                         osm.readLocationAt(center).handleResponse(mapMessage) { location ->
                             val location = location.toEditOrNull() ?: return@handleResponse
-                            mapMessage.receive(location.label)
+                            mapMessage.deliver(location.label)
                             state.set { copy(mapLocation = location)}
                         }
                     }
@@ -104,7 +104,7 @@ class LocationScout(
             val city = stateNow.city?.takeIf { it.isNotBlank() }
             val bounds = galaxy.geoBounds.takeIf { city == null }?.resizeBy(5f)
             osm.readLocations(query, stateNow.city, bounds).handleResponse(queryMessage) { locations ->
-                queryMessage.receive("found: ${locations.size}")
+                queryMessage.deliver("found: ${locations.size}")
                 state.set { copy(osmLocations = locations.mapNotNull { loc -> loc.toEditOrNull() }) }
             }
         }

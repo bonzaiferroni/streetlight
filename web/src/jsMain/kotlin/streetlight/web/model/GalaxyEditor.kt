@@ -2,7 +2,6 @@
 
 package streetlight.web.model
 
-import kampfire.api.Markdown
 import kampfire.api.toMarkdown
 import kampfire.api.toSlug
 import kampfire.model.Url
@@ -10,7 +9,6 @@ import kampfire.model.handleResponse
 import koala.dom.MessageStore
 import koala.model.GeoCamera
 import koala.model.Portal
-import koala.model.dedup
 import koala.model.fieldOf
 import koala.model.mutableFieldOf
 import koala.model.storeOf
@@ -20,7 +18,6 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
 import streetlight.model.data.City
 import streetlight.model.data.GalaxyEdit
-import streetlight.model.data.PostPermission
 import streetlight.model.data.slugOf
 import streetlight.model.ui.GalaxyRoute
 import streetlight.web.io.ApiClient
@@ -95,17 +92,17 @@ class GalaxyEditor(
     }
 
     fun submit() {
-        val message = editNow.validity.message
+        val message = editField.now.validity.message
 
         if (message != null) {
-            editMessage.receive(message)
+            editMessage.deliver(message)
             return
         }
 
         editMessage.set("Saving...", true)
         scope.launch {
-            val image = imageEditor.finalizeImage(editMessage)
-            val edit = editNow.copy(geoBounds = geo.stateNow.bounds, image = image)
+            imageEditor.finalizeImage(editMessage)
+            val edit = editField.now.copy(geoBounds = geo.stateNow.bounds)
             when (edit.galaxyId) {
                 null -> api.createGalaxy(edit)
                 else -> api.updateGalaxy(edit)

@@ -13,23 +13,21 @@ enum class UIMessageType {
 }
 
 interface Messenger {
-    fun receive(text: String?)
-    fun receive(message: UIMessage)
-    fun receive(problem: Problem)
+    fun deliver(text: String)
+    fun deliver(message: UIMessage)
+    fun deliver(problem: Problem)
 }
 
 object PrintLnMessenger: Messenger {
-    override fun receive(text: String?) {
-        text?.let {
-            println(it)
-        }
+    override fun deliver(text: String) {
+        println(text)
     }
 
-    override fun receive(message: UIMessage) {
+    override fun deliver(message: UIMessage) {
         println(message.text)
     }
 
-    override fun receive(problem: Problem) {
+    override fun deliver(problem: Problem) {
         println("Problem: ${problem.message}")
     }
 }

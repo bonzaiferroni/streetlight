@@ -1,6 +1,5 @@
 package streetlight.web.ui
 
-import kampfire.model.handleResponse
 import koala.LottieFile
 import koala.dom.*
 import koala.model.dedupNotNull
@@ -37,7 +36,7 @@ fun ViewScope.viewEventScout(galaxy: Galaxy) {
                 }
                 EventScoutStage.LocationEdit -> column {
                     locationEditFormBody(locationEditor)
-                    formSubmit("Next", model::submitLocation, messages = locationEditor.message)
+                    formSubmit("Next", model::submitLocation, messages = locationEditor.messages)
                 }
                 EventScoutStage.EventSearch -> formBodyProto {
                     eventSearchForm(model)

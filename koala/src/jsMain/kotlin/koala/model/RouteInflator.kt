@@ -37,7 +37,7 @@ class RouteInflator(
     suspend inline fun <reified T: FetcherContent> contentFor(route: AppRoute): T {
         val content = stateFlow.first { it.delivery?.route == route }.delivery?.content as? T
         if (content == null) {
-            messenger.receive("Something went wrong")
+            messenger.deliver("Something went wrong")
             error("no content for route: $route")
         }
         return content
