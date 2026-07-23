@@ -16,10 +16,10 @@ import streetlight.model.data.Comment
 import streetlight.model.data.CommentCreated
 import streetlight.model.data.CommentUpdated
 import streetlight.model.data.PostOrder
-import streetlight.model.ui.TalkRoute
 import streetlight.web.io.TalkLog
 
 fun ViewScope.viewTalkLog(model: TalkLog) {
+    // this could be flawed
     var treeRoot: HTMLElement? = null
 
     column {
@@ -32,14 +32,13 @@ fun ViewScope.viewTalkLog(model: TalkLog) {
             }
         }
         row {
-            // td: fix
-            // dropMenu(model::setSortBy, { it.label }, model.sortByFlow)
+            dropMenu(model.sortByField)
         }
 
         treeRoot = column { }
     }
 
-    contentScope.launch {
+    contentScope.launch() {
 
         launch {
             val comments = model.readHistory().handleResponse(toaster) ?: return@launch
@@ -59,21 +58,22 @@ fun ViewScope.viewTalkLog(model: TalkLog) {
         }
 
         launch {
-            model.sortByFlow.collect {
+            model.sortByField.flow.collect {
                 buildTree(model, treeRoot!!, model.comments.toList())
             }
         }
     }
 }
 
-fun ViewScope.viewTalkRoute() {
-    // td: fix
+fun RouteScope.viewTalkRoute() {
+    // td: fix later
     // routeBlock<TalkRoute> { route ->
     //     val model = TalkLog(contentScope, route.id, route.type, api)
     //     viewTalkLog(model)
     // }
 }
 
+// should not have ViewScope receiver and then mountChildView, mountChildView first
 fun ViewScope.buildTree(model: TalkLog, treeRoot: HTMLElement, comments: List<Comment>) {
     val sortBy = model.stateNow.sortBy
 
@@ -140,8 +140,7 @@ fun ViewScope.commentEditor(
     val text = storeOf(initialText)
 
     column(modify(Height100P, mod)) {
-        // td: fix
-        // textEditor(label, modify(Flex1), flow = text.flow, onValue = text::set)
+        textEditor(text, label, modify(Flex1))
         row {
             spacer(modify(Flex1))
             button("send", onClick = {

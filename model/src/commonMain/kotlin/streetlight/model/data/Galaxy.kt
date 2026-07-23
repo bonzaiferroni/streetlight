@@ -4,6 +4,7 @@ import kampfire.api.Markdown
 import kampfire.api.Slug
 import kampfire.model.GeoBounds
 import kampfire.model.GeoPoint
+import kampfire.model.Labeled
 import koala.Image
 import koala.model.RouteContent
 import kotlin.time.Instant
@@ -46,10 +47,10 @@ value class GalaxyId(override val value: Uuid): RecordId {
     override fun toString() = value.toString()
 }
 
-enum class PostPermission(label: String? = null) {
+enum class PostPermission(label: String? = null): Labeled {
     Everyone,
     Accounts("Streetlight accounts"),
     Founder;
 
-    val label = label ?: name
+    override val label = label ?: name
 }

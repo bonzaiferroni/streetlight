@@ -26,7 +26,7 @@ fun ViewScope.viewHome(content: HomeContent) {
         attribute = StarLightKey.GalaxyLightId,
         cache = cache.galaxyLights,
     )
-    wireLitEvents(root)
+    // wireLitEvents(root)
     wireGalaxyMenu(root, null)
 
     wireStreetMap()

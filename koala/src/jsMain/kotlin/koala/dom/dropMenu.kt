@@ -60,25 +60,17 @@ fun ViewScope.dropMenu(
     return element
 }
 
-inline fun <reified E: Enum<E>> ViewScope.dropMenu(
+inline fun <reified E> ViewScope.dropMenu(
     field: MutableField<E>,
-    crossinline provideLabel: (E) -> String,
     mod: ModifierSet? = null,
     noinline block: (SELECT.() -> Unit)? = null
-): HTMLSelectElement {
+): HTMLSelectElement where E : Enum<E>, E : Labeled {
     val enums = enumValues<E>()
-    val values = enums.map { provideLabel(it) }
-    val textField = field.mutableFieldOf({ provideLabel(it) }) { enums[values.indexOf(it)] }
+    val values = enums.map { it.label }
+    val textField = field.mutableFieldOf({ it.label }) { enums[values.indexOf(it)] }
 
     return dropMenu(values, textField, mod, block)
 }
-
-inline fun <reified E> ViewScope.dropMenu(
-    store: Store<E>,
-    modifiers: ModifierSet? = null,
-    noinline block: (SELECT.() -> Unit)? = null
-) where E: Enum<E>, E: Labeled = dropMenu(store, { it.label }, modifiers, block)
-
 //inline fun <reified E, Data> WireContext<Data>.dropMenu(
 //    noinline write: (E) -> Data,
 //    crossinline provideLabel: (E) -> String,

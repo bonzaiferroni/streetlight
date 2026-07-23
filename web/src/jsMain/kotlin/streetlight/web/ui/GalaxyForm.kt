@@ -165,7 +165,7 @@ fun ViewScope.galaxyAccessForm(model: GalaxyEditor) {
         formPart(
             instructions = "You can open up posting to the community or curate the content yourself.",
         ) {
-            dropMenu(model.permissionField, { it.label })
+            dropMenu(model.permissionField)
         }
         formPart(
             instructions = permissionInfo1,

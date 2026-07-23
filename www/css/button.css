@@ -50,7 +50,7 @@
 
 .btn.accent {
     box-shadow: var(--accent-shadow);
-    background: var(--accent-button-day);
+    background: var(--accent-button);
 }
 
 .btn.secondary {
@@ -74,10 +74,12 @@
 
     .btn.secondary {
         box-shadow: none;
+        background: var(--secondary-button);
     }
 
     .btn.accent {
         box-shadow: var(--btn-outline);
+        background: var(--accent-button-day);
     }
 
     .btn.zen {

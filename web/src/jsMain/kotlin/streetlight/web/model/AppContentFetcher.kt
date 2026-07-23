@@ -21,6 +21,8 @@ import streetlight.model.ui.MediaForgeRoute
 import streetlight.model.ui.MediaRoute
 import streetlight.model.ui.MediaUpdateRoute
 import streetlight.model.ui.SiteDocRoute
+import streetlight.model.ui.StarConfigRoute
+import streetlight.model.ui.StarDashRoute
 import streetlight.model.ui.StarRoute
 import streetlight.web.io.ApiClient
 import streetlight.web.ui.api
@@ -30,8 +32,6 @@ class AppContentFetcher(
 ): ContentFetcher {
     override suspend fun fetchContent(route: AppRoute): Outcome<FetcherContent> = when (route) {
         is HomeRoute -> api.readHomeContent()
-        is MediaUpdateRoute -> api.readMedia(route.slug)
-
         is GalaxyRoute -> api.readGalaxyContent(route.slug)
         is GalaxyConfigRoute -> api.readGalaxy(route.slug)
         is LocationRoute -> api.readLocationContent(route.slug)
@@ -43,8 +43,11 @@ class AppContentFetcher(
         is LocationAdminRoute -> api.readLocation(route.locationId)
         is EventUpdateRoute -> api.readEventUpdaterContent(route.slug)
         is MediaRoute -> api.readMedia(route.slug)
+        is MediaUpdateRoute -> api.readMedia(route.slug)
         is MediaForgeRoute -> route.slug?.let { api.readGalaxy(it) } ?: Ok(NullFetcherContent)
         is SiteDocRoute -> api.readSiteDoc(route.docId)
+        is StarDashRoute -> Ok(NullFetcherContent)
+        is StarConfigRoute -> api.readIdentityInfo()
         else -> Ok(NullFetcherContent)
     }
 }

@@ -13,6 +13,6 @@ fun ViewScope.viewSiteConfig() {
 
     column(modify(AlignItemsStart)) {
         switch("show transit", onToggle = config::setShowTransit, bindFlow = config.showTransitFlow)
-        dropMenu(config.themeFlow, { it.name })
+        dropMenu(config.themeFlow)
     }
 }

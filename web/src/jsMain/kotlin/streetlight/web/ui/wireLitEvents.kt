@@ -33,7 +33,7 @@ fun ViewScope.wireLitEvents(root: HTMLElement) {
 
     queryAndWireSwapBlock(root, HomeShell.LightSwapId, bindFlow = swapIdFlow)
     wireBlock(HomeShell.LitEventsId, root, wireOnView = false) {
-        // td: fix
+        // td: fix later or delete
         flowBlock(emptyList(), eventsFlow) { events ->
             val eventMap = events.groupBy { it.startsAt.toRelativeDayFormat() }
             row(modify(OverflowXAuto, Height100P, Padding1)) {

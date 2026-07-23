@@ -3,8 +3,9 @@ package streetlight.web.io
 import kampfire.api.Markdown
 import kampfire.model.Ok
 import kampfire.model.Problem
-import koala.model.dedup
+import koala.model.mutableFieldOf
 import koala.model.storeOf
+import koala.utils.launch
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
@@ -28,7 +29,7 @@ class TalkLog(
 
     val stateFlow = state.flow
     val stateNow get() = state.now
-    val sortByFlow = stateFlow.dedup { it.sortBy }
+    val sortByField = state.mutableFieldOf({ it.sortBy }) { copy(sortBy = it) }
 
     private val _messageFlow = MutableSharedFlow<TalkMessage>()
     val messageFlow: Flow<TalkMessage> = _messageFlow
@@ -38,7 +39,9 @@ class TalkLog(
     val comments = mutableListOf<Comment>()
 
     init {
-        scope.launch {
+
+
+        scope.launch("collect messages") {
             client.messageFlow.collect {
                 takeMessage(it)
             }

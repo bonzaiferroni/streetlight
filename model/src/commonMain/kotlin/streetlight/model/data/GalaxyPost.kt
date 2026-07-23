@@ -1,5 +1,6 @@
 package streetlight.model.data
 
+import kampfire.model.Labeled
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 import kotlin.uuid.Uuid
@@ -19,12 +20,12 @@ value class PostId(override val value: Uuid): RecordId {
     }
 }
 
-enum class PostOrder(label: String? = null) {
+enum class PostOrder(label: String? = null): Labeled {
     NewFirst("Newest first"),
     OldFirst("Oldest first");
     // Visibility;
 
-    val label = label ?: name
+    override val label = label ?: name
 }
 
 @Serializable

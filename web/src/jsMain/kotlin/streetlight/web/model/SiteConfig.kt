@@ -1,5 +1,6 @@
 package streetlight.web.model
 
+import kampfire.model.Labeled
 import koala.model.dedup
 import koala.model.mutableFieldOf
 import koala.model.storeOf
@@ -44,7 +45,9 @@ data class SiteConfigState(
 
 private const val SITE_CONFIG_KEY = "streetlight.site-config"
 
-enum class SiteTheme {
+enum class SiteTheme: Labeled {
     Dark,
-    Light,
+    Light;
+
+    override val label get() = name
 }
