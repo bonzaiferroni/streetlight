@@ -27,10 +27,14 @@ data class Session(
 
 @Serializable
 @JvmInline
-value class Token(val value: String)
+value class Token(val value: String) {
+    override fun toString() = value
+}
 
 @JvmInline
-value class HashedToken(val value: String)
+value class HashedToken(val value: String) {
+    override fun toString() = value
+}
 
 data class Identity(
     val callerId: CallerId,

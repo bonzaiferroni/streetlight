@@ -11,7 +11,7 @@ import streetlight.web.shells.cardOf
 fun ViewScope.viewLocationAdmin(
     location: Location,
 ) {
-    column(BodyStyle.Mod) {
+    column(BodyStyle.Column) {
         cardOf(location)
         tabs {
             tab("profile") {

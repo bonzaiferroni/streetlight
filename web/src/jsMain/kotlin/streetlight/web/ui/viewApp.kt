@@ -1,5 +1,6 @@
 package streetlight.web.ui
 
+import kampfire.model.Token
 import koala.core.addGlobalFunctions
 import koala.css.KoalaBody
 import koala.css.Property
@@ -17,6 +18,7 @@ import streetlight.web.layouts.LightControl
 import streetlight.web.model.TransitMap
 import streetlight.web.model.StarSession
 import koala.utils.launch
+import streetlight.model.ui.VerifyEmailRoute
 
 @OptIn(ExperimentalSerializationApi::class)
 fun viewApp() {
@@ -25,6 +27,8 @@ fun viewApp() {
     val koin = koinApplication {
         modules(appModule)
     }.koin
+
+    println(VerifyEmailRoute(Token("mytoken")).toAbsolutePath())
 
     val app = AppContainer(koin)
     val lightService = koin.get<LightService>()

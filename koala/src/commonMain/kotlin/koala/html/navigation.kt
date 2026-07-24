@@ -48,7 +48,7 @@ fun FlowContent.navigation(
     block: A.() -> Unit = {}
 ) {
     navigation(
-        href = route.toSitePath(),
+        href = route.toRelativePath(),
         modifiers = modifiers,
         id = id,
         flair = flair,
@@ -62,7 +62,7 @@ fun FlowContent.navigationIfNotNull(
     id: Id? = null,
     block: FlowContent.() -> Unit = {}
 ) {
-    navigationIfNotNull(route?.toSitePath(), modifiers, id, block)
+    navigationIfNotNull(route?.toRelativePath(), modifiers, id, block)
 }
 
 fun FlowContent.navigationIfNotNull(

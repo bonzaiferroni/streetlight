@@ -1,8 +1,6 @@
 package streetlight.web.shells
 
-import koala.css.*
 import koala.html.*
-import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import streetlight.model.data.LocationContent
 import streetlight.model.ui.LocationAdminRoute
@@ -18,7 +16,7 @@ fun FlowContent.locationShell(
     content: LocationContent,
 ) {
     val location = content.location
-    column(LocationShell.Id, BodyStyle.Mod) {
+    column(LocationShell.Id, BodyStyle.Column) {
         headerOf(
             location = location,
             editRoute = if (content.canEdit) LocationUpdateRoute(location.slug) else null

@@ -9,7 +9,9 @@ import kotlin.uuid.Uuid
 
 interface AppRoute: Labeled {
     val screen: AppScreen
-    fun toSitePath() = basePath
+    val origin: String
+    fun toRelativePath() = basePath
+    fun toAbsolutePath() = "$origin${toRelativePath()}"
     val title: String
     val basePath get() = "/${screen.pathRoot}"
     override val label get() = title

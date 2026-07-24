@@ -10,13 +10,13 @@ import streetlight.model.data.GalaxyEdit
 fun ViewScope.viewGalaxyFoundry() {
     val model = app.getGalaxyEditor(GalaxyEdit(), contentScope)
 
-    column(BodyStyle.Mod) {
+    column(BodyStyle.Column) {
         introSection("Galaxy Foundry", lottie = LottieFile.AstronautReading) {
             textBlock(introText1)
             textBlock(introText2)
         }
 
-        column(BodyStyle.Mod) {
+        column(BodyStyle.Column) {
             formCard("Galaxy Name") {
                 galaxyNameFormRow(model)
             }

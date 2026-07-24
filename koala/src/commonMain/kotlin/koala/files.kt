@@ -5,6 +5,7 @@ object JsFile : FileSet<Js>() {
     val Tabs = add("tabs.js")
     val Koala = add("koala/koala.js")
 
+    // not part of FileSet collection
     val Web = jsFileOf("web.js", basePath = "/js/streetlight/")
 }
 

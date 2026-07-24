@@ -20,7 +20,7 @@ import streetlight.model.ui.toRoute
 import streetlight.web.shells.starRouteMenu
 
 fun ViewScope.viewStarDash(star: Star) {
-    column(mod = BodyStyle.Mod) {
+    column(mod = BodyStyle.Column) {
         tabs {
             tab("activity") {
                 activityContent(star)

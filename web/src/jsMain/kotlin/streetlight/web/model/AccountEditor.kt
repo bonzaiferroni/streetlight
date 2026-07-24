@@ -53,6 +53,14 @@ class AccountEditor(
         }
     }
 
+    fun validateEmail() {
+        scope.launch(::validateEmail) {
+            messages.set("Sending request...")
+            if (api.verifyEmail().handleResponse(messages) == null) return@launch
+            messages.set("Request sent, check your email.")
+        }
+    }
+
     fun submit() {
         scope.launch(::submit) {
             messages.set("Sending...", true)

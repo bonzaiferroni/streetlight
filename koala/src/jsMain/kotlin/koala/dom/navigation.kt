@@ -1,7 +1,6 @@
 package koala.dom
 
 import koala.css.*
-import koala.html.ActionKey
 import koala.html.AppRoute
 import koala.html.Id
 import koala.html.configureNavigation
@@ -23,4 +22,4 @@ fun TagScope.navigation(
     route: AppRoute,
     modifiers: ModifierSet? = null,
     block: A.() -> Unit = {},
-) = navigation(route.toSitePath(), modifiers, block = block)
+) = navigation(route.toRelativePath(), modifiers, block = block)

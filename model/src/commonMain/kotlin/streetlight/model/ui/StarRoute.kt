@@ -1,6 +1,7 @@
 package streetlight.model.ui
 
 import kampfire.api.Username
+import kampfire.model.Token
 
 data class StarRoute(val username: Username): StreetlightRoute, SlugRoute {
     override val screen get() = Screen.Star
@@ -21,4 +22,10 @@ object UpdateProfileRoute: StreetlightRoute {
 object UpdateAccountRoute: StreetlightRoute {
     override val screen get() = Screen.UpdateAccount
     override val title get() = "Account"
+}
+
+data class VerifyEmailRoute(val token: Token): StreetlightRoute, StringIdRoute {
+    override val screen get() = Screen.VerifyEmail
+    override val title get() = "Verify Email"
+    override val id get() = token.value
 }

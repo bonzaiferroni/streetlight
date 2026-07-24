@@ -2,6 +2,7 @@ package streetlight.model.ui
 
 import kampfire.api.SlugValue
 import kampfire.api.TableId
+import kampfire.model.Token
 import kampfire.utils.pascalToKebabCase
 import koala.html.AppRoute
 import koala.html.AppScreen
@@ -43,6 +44,7 @@ enum class Screen(
     StarDash(StaticParse { StarDashRoute }),
     UpdateProfile(StaticParse { UpdateProfileRoute }),
     UpdateAccount(StaticParse { UpdateAccountRoute}),
+    VerifyEmail(IdParse { VerifyEmailRoute(Token(it)) }),
 
     // location
     Location(SlugParse { LocationRoute(it) }, "l", true),
@@ -82,22 +84,30 @@ enum class Screen(
 }
 
 // interfaces
-sealed interface StreetlightRoute: AppRoute
+sealed interface StreetlightRoute: AppRoute {
+    // td: gather as build parameter
+    override val origin get() = "http://localhost:8080"
+}
 
 interface RecordIdRoute: StreetlightRoute {
     val recordId: RecordId?
 
-    override fun toSitePath() = toIdSitePath(recordId)
+    override fun toRelativePath() = toIdSitePath(recordId)
 }
 
 sealed interface SlugRoute: StreetlightRoute {
     val slug: SlugValue?
-    override fun toSitePath() = toIdSitePath(slug)
+    override fun toRelativePath() = toIdSitePath(slug)
 }
 
 interface IntIdRoute: StreetlightRoute {
     val id: Int?
-    override fun toSitePath() = toIdSitePath(id)
+    override fun toRelativePath() = toIdSitePath(id)
+}
+
+interface StringIdRoute: StreetlightRoute {
+    val id: String
+    override fun toRelativePath() = toIdSitePath(id)
 }
 
 // singletons
@@ -165,7 +175,7 @@ data class SiteDocRoute(val docId: DocId): StreetlightRoute {
     override val screen get() = Screen.Docs
     override val title get() = "Documentation"
 
-    override fun toSitePath() = toIdSitePath(docId)
+    override fun toRelativePath() = toIdSitePath(docId)
 }
 
 data class TalkRoute(val id: Uuid, val type: SpaceType): StreetlightRoute {
@@ -174,7 +184,7 @@ data class TalkRoute(val id: Uuid, val type: SpaceType): StreetlightRoute {
     override val screen get() = Screen.Talk
     override val title get() = "Talk"
 
-    override fun toSitePath() = toIdSitePath(id)
+    override fun toRelativePath() = toIdSitePath(id)
 }
 
 fun AppRoute.toIdSitePath(id: String?) = id?.let { "$basePath/$id" } ?: basePath

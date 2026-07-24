@@ -1,12 +1,10 @@
 package streetlight.web.ui
 
-import kampfire.model.handleResponse
 import koala.dom.RouteScope
 import koala.dom.ViewScope
 import koala.dom.column
 import koala.dom.routeBlock
 import koala.dom.tabs
-import koala.dom.textBlock
 import streetlight.model.data.EventEdit
 import streetlight.model.data.EventUpdaterContent
 import streetlight.model.data.Star
@@ -18,7 +16,7 @@ fun ViewScope.viewEventUpdater(content: EventUpdaterContent, star: Star) {
     val edit = content.event.toEdit()
     val model = edit.let { app.getEventEditor(it, contentScope) }
 
-    column(BodyStyle.Mod) {
+    column(BodyStyle.Column) {
         tabs {
             tab("edit") {
                 column {

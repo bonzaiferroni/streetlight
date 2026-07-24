@@ -1,5 +1,6 @@
 package streetlight.web.io
 
+import kampfire.api.Email
 import kampfire.api.Slug
 import kampfire.api.UserApi
 import kampfire.api.Username
@@ -71,6 +72,7 @@ class ApiClient(private val client: FetchClient) {
     suspend fun updateProfile(edit: StarEdit) = client.postApi(Api.Stars.UpdateProfile, edit)
     suspend fun updateAccount(edit: Account) = client.postApi(Api.Stars.UpdateAccount, edit)
     suspend fun editLight(edit: EditLightRequest) = client.postApi(Api.Stars.EditLight, edit)
+    suspend fun verifyEmail() = client.getApi(Api.Stars.VerifyEmail)
 
     // account
     suspend fun checkGuest() = client.getApi(UserApi.Login.CheckGuest)

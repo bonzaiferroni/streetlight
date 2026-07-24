@@ -11,7 +11,8 @@ data class Account(
     val name: String?,
     val email: Email?,
     val cityId: CityId?,
-    val accountType: AccountType
+    val accountType: AccountType,
+    val emailStatus: EmailStatus?,
 ): RouteContent
 
 enum class IdentityVisibility {
@@ -19,3 +20,18 @@ enum class IdentityVisibility {
     Contacts,
     Public
 }
+
+enum class EmailStatus {
+    Unverified,
+    Verified,
+    Bounced,
+}
+
+// enum class AuthResult {
+//     Confirmed,
+//     AlreadyConsumed,
+//     Expired,
+//     NotFound,
+//     ExpiredSource,
+//     InternalError,
+// }

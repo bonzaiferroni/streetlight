@@ -9,7 +9,7 @@ data class CityRoute(override val slug: Slug): SlugRoute {
     override val label get() = "Feed"
 }
 
-object CityListRoute: AppRoute {
+object CityListRoute: StreetlightRoute {
     override val screen get() = Screen.CityList
     override val title get() = "Cities"
 }

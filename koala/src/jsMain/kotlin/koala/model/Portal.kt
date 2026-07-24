@@ -104,7 +104,7 @@ class Portal(
         val (index, route) = when (sitePath) {
             null -> backstack.lastOrNull()?.let { IndexedValue(0, it) } ?: return false
             else -> backstack.asReversed().withIndex()
-                .firstOrNull { (_, value) -> value.route.toSitePath() == sitePath }
+                .firstOrNull { (_, value) -> value.route.toRelativePath() == sitePath }
                 ?: return false
         }
         go(route, backstack.dropLast(index + 1))
@@ -132,7 +132,7 @@ class Portal(
             isInitialRoute = false,
             refreshedAt = Clock.System.now()
         )}
-        sitePath = route.toSitePath()
+        sitePath = route.toRelativePath()
 
         document.body?.setAttribute(KoalaBody.ScreenId.to(route.screen.screenId))
     }
