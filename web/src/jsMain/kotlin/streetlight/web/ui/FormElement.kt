@@ -36,6 +36,7 @@ fun TagScope.formCard(
     block()
 }
 
+@Deprecated("use formSection")
 fun TagScope.formCardSection(
     name: String,
     mod: ModifierSet? = null,
@@ -44,6 +45,7 @@ fun TagScope.formCardSection(
     formCard(null, block)
 }
 
+@Deprecated("use formField")
 fun TagScope.formPart(
     instructions: String? = null,
     bullets: List<String>? = null,
@@ -68,25 +70,6 @@ fun TagScope.formPart(
     }
     column(modify(FormMod.Controls, fieldsFlex)) {
         fields(this@formPart)
-    }
-}
-
-@Deprecated("use textField")
-fun ViewScope.formTextField(
-    field: MutableField<String>,
-    label: String? = null,
-    mod: ModifierSet? = null,
-    footnote: String? = null,
-    placeholder: String? = label,
-    maxLength: Int? = null
-) = column(mod) {
-    textField(field, label, placeholder = placeholder, maxLength = maxLength)
-    if (footnote != null || maxLength != null) {
-        row(modify(OpacityHigh, Italic, WhiteSpaceNoWrap, PaddingX1, TextSmall)) {
-            footnote?.let {
-                textBlock(footnote)
-            }
-        }
     }
 }
 

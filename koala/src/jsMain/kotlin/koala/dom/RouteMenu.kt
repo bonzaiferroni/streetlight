@@ -31,7 +31,7 @@ fun ViewScope.routeMenu(
             routes.forEach { item ->
                 val item = item ?: return@forEach
                 when (item.label == routeNow.label) {
-                    true -> span(item.label, modify(RouteMenu.RouteNow))
+                    true -> span(item.label, modify(RouteMenu.Route, RouteMenu.RouteNow))
                     else -> routeMenuItem(item)
                 }
             }

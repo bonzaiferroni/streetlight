@@ -20,20 +20,18 @@ fun ViewScope.viewGalaxyConfig(edit: GalaxyEdit) {
 
         tabs {
             tab("settings") {
-                formBodyProto {
-                    galaxyImageForm(model)
-                    galaxyDescriptionForm(model)
+                form {
+                    galaxyDescriptionFormRow(model)
                 }
             }
             tab("map") {
-                formBodyProto {
-                    // galaxyCityForm(model)
-                    galaxyLocationForm(model)
+                form {
+                    galaxyMapFormRow(model)
                 }
             }
             tab("access") {
-                formBodyProto {
-                    galaxyAccessForm(model)
+                form {
+                    galaxyAccessFormRow(model)
                 }
             }
         }

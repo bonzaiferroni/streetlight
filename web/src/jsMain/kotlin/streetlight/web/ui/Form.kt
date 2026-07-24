@@ -2,10 +2,14 @@ package streetlight.web.ui
 
 import koala.css.*
 import koala.dom.*
+import koala.dom.textBlock
 import koala.html.bulletsOf
 import koala.html.column
+import koala.html.filigree
+import koala.html.heading3
 import koala.html.heading5
 import koala.html.textBlock
+import koala.model.MutableField
 import kotlinx.coroutines.flow.Flow
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
@@ -15,6 +19,19 @@ fun ViewScope.form(
     mod: ModifierSet? = null,
     content: DIV.() -> Unit,
 ) = column(mod = modify(mod, Gap2), content = content)
+
+fun ViewScope.formCard(
+    name: String,
+    mod: ModifierSet? = null,
+    content: DIV.() -> Unit,
+) = column(mod = mod) {
+    filigree {
+        heading3(name)
+    }
+    card(modify(ZenBg, Gap2)) {
+        content()
+    }
+}
 
 fun ViewScope.formSection(
     name: String? = null,
@@ -66,3 +83,24 @@ fun ViewScope.formText(
     text: String,
     mod: ModifierSet? = null,
 ) = textBlock(text, mod = modify(mod, TextAlignCenter, OpacityHigh))
+
+fun ViewScope.formField(
+    mod: ModifierSet? = null,
+    block: ViewScope.() -> Unit
+) = column(mod) {
+    block()
+}
+
+fun ViewScope.formTextField(
+    field: MutableField<String>,
+    label: String? = null,
+    mod: ModifierSet? = null,
+    footnote: String? = null,
+    placeholder: String? = label,
+    maxLength: Int? = null
+) = column(mod) {
+    textField(field, label, placeholder = placeholder, maxLength = maxLength)
+    footnote?.let {
+        textBlock(footnote, modify(OpacityHigh, Italic, WhiteSpaceNoWrap, PaddingX1, TextSmall))
+    }
+}
