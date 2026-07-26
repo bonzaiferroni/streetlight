@@ -23,7 +23,7 @@ value class Password(val value: String) {
 
 @JvmInline
 @Serializable
-value class HashedPassword(val value: String)
+value class PasswordHash(val value: String)
 
 val Password.validPasswordLength get() = value.length in Password.LENGTH_MIN..Password.LENGTH_MAX
 val Password.strongPasswordLength get() = value.length >= Password.LENGTH_STRONG

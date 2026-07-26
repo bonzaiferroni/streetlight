@@ -7,6 +7,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Account(
+    val starId: StarId,
     val identityVisibility: IdentityVisibility,
     val name: String?,
     val email: Email?,
@@ -25,6 +26,7 @@ enum class EmailStatus {
     Unverified,
     Verified,
     Bounced,
+    NotOwned,
 }
 
 // enum class AuthResult {

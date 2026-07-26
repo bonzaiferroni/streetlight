@@ -1,7 +1,7 @@
 package kampfire.model
 
 import kampfire.api.Email
-import kampfire.api.HashedPassword
+import kampfire.api.PasswordHash
 import kampfire.api.TableId
 import kampfire.api.Username
 import kotlin.time.Instant
@@ -10,7 +10,8 @@ import kotlin.uuid.Uuid
 data class UserRecord(
     val userId: TableId<Uuid>,
     val username: Username,
-    val hashedPassword: HashedPassword?,
+    val passwordHash: PasswordHash?,
+    val disabledPasswordHash: PasswordHash?,
     val email: Email?,
     val roles: Set<UserRole>,
     val accountType: AccountType,
@@ -24,7 +25,7 @@ data class UserRecord(
 interface AuthUser {
     val userId: TableId<Uuid>
     val username: Username
-    val hashedPassword: HashedPassword
+    val passwordHash: PasswordHash
     val email: Email?
     val roles: Set<UserRole>
     val createdAt: Instant
@@ -39,7 +40,7 @@ val AuthUser.isUser: Boolean
 
 data class UserSeed(
     val request: SignUpRequest,
-    val hashedPassword: HashedPassword?,
+    val passwordHash: PasswordHash?,
     val roles: Set<UserRole>,
     val accountType: AccountType,
     val guestToken: HashedToken?,

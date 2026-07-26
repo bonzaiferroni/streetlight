@@ -45,6 +45,9 @@ enum class Screen(
     UpdateProfile(StaticParse { UpdateProfileRoute }),
     UpdateAccount(StaticParse { UpdateAccountRoute}),
     VerifyEmail(IdParse { VerifyEmailRoute(Token(it)) }),
+    DisavowEmail(IdParse { NotOwnedEmailRoute(Token(it)) }),
+    PasswordReset(IdParse { PasswordResetRoute(Token(it)) }),
+    AccountLockdown(IdParse { AccountLockdownRoute(Token(it)) }),
 
     // location
     Location(SlugParse { LocationRoute(it) }, "l", true),

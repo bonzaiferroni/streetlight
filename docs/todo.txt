@@ -11,6 +11,7 @@ add post card controls opposite of title
 have navigation accept url, not string
 have ExtraLink hold url, not string
 have EventEdit hold url, not string
+describe "this email is already registered" compromise in privacy policy
 
 # MEDIUM:
 EventTableDao // td: more precise time conflict handling

@@ -28,8 +28,6 @@ fun viewApp() {
         modules(appModule)
     }.koin
 
-    println(VerifyEmailRoute(Token("mytoken")).toAbsolutePath())
-
     val app = AppContainer(koin)
     val lightService = koin.get<LightService>()
 

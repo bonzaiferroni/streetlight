@@ -1,15 +1,5 @@
 package kampfire.model
 
-import kampfire.api.Email
-import kampfire.api.HashedPassword
-import kampfire.api.TableId
-import kampfire.api.Username
-import kampfire.utils.randomUuidString
-import kotlin.time.Instant
-import kotlinx.serialization.Serializable
-import kotlin.jvm.JvmInline
-import kotlin.uuid.Uuid
-
 //@Serializable
 //data class UserOld(
 //    val userId: UserId,

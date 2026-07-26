@@ -8,9 +8,14 @@ import kotlin.jvm.JvmInline
 
 @JvmInline
 @Serializable
-value class Email(val value: String): LoginIdentity
+value class Email(val value: String): LoginIdentity {
+    init {
+        require(value == value.lowercase()) { "Email must be normalized" }
+    }
+}
 
-fun String.toEmail() = Email(this)
+// this is the only valid constructor call
+fun String.toEmail() = Email(this.lowercase())
 
 val Email.containsOneArroba get() = value.count { it == '@' } == 1
 val Email.containsDot get() = value.split('@').getOrNull(1)?.contains('.') ?: false

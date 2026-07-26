@@ -3,8 +3,8 @@ package streetlight.model
 import kampfire.api.*
 import kampfire.model.GeoBounds
 import kampfire.model.GeoPoint
+import kampfire.model.PasswordResetRedemption
 import kampfire.model.SpeechRequest
-import kampfire.model.Token
 import kampfire.model.Url
 import koala.model.DocId
 import koala.model.DocTableItem
@@ -158,7 +158,10 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object ReadAccount: GetEndpoint<Account>(this)
         object UpdateProfile: PostEndpoint<StarEdit, Star>(this)
         object UpdateAccount: PostEndpoint<Account, Boolean>(this)
-        object VerifyEmail: GetEndpoint<Unit>(this)
+        object VerifyEmail: GetEndpoint<Unit>(this) // td: not idempotent, convert to post
+        object ResetPassword: PostEndpoint<Email, Unit>(this) {
+            object Redemption: PostEndpoint<PasswordResetRedemption, Unit>(this)
+        }
 
         object ReadStarContent: GetEndpoint<StarContent>(this) {
             val username = usernameParamOf("username")
