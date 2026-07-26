@@ -1,5 +1,6 @@
 package streetlight.model.ui
 
+import kampfire.api.ActionResult
 import kampfire.api.SlugValue
 import kampfire.api.TableId
 import kampfire.model.Token
@@ -44,10 +45,13 @@ enum class Screen(
     StarDash(StaticParse { StarDashRoute }),
     UpdateProfile(StaticParse { UpdateProfileRoute }),
     UpdateAccount(StaticParse { UpdateAccountRoute}),
+
+    // token
     VerifyEmail(IdParse { VerifyEmailRoute(Token(it)) }),
-    DisavowEmail(IdParse { NotOwnedEmailRoute(Token(it)) }),
+    AccountNotOwned(IdParse { AccountNotOwnedRoute(Token(it)) }),
     PasswordReset(IdParse { PasswordResetRoute(Token(it)) }),
     AccountLockdown(IdParse { AccountLockdownRoute(Token(it)) }),
+    ActionReport(IdParse { ActionReportRoute(ActionResult.of(it)) }),
 
     // location
     Location(SlugParse { LocationRoute(it) }, "l", true),
