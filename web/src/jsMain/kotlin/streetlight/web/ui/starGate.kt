@@ -8,6 +8,7 @@ import koala.dom.dialogCard
 import koala.dom.flowBlock
 import koala.dom.tabs
 import koala.dom.textBlock
+import koala.html.Id
 import streetlight.model.data.Star
 
 fun ViewScope.starGate(
@@ -20,7 +21,7 @@ fun ViewScope.starGate(
             null -> {
                 val dialog = dialog("Sign In") {
                     val model = app.getUserCreator(contentScope)
-                    tabs { // mod = modify(Width64)
+                    tabs(Id("sign-in-tabs")) { // mod = modify(Width64)
                         tab("guest") {
                             dialogCard {
                                 guestRegistrationForm(model)

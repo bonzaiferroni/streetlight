@@ -24,7 +24,7 @@ fun ViewScope.editTaskContent(task: EditTaskContent) {
     column {
         textBlock("Check to make sure this information is complete.")
         locationEditFormBody(editor)
-        formSubmit("done", {
+        formSubmitLegacy("done", {
             launchEffect {
 
             }

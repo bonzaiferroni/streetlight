@@ -18,7 +18,7 @@ fun ViewScope.viewLocationUpdater(content: LocationUpdaterContent, star: Star) {
                 column {
                     updaterGreeting(star, model.stateNow.edit.name ?: "this location")
                     locationEditFormBody(model)
-                    formSubmit(
+                    formSubmitLegacy(
                         label = "Save",
                         onSubmit = {
                             launchEffect(::viewLocationUpdater) {

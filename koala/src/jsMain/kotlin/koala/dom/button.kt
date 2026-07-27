@@ -10,6 +10,7 @@ import koala.css.modify
 import koala.html.configureButton
 import koala.html.configureElementButton
 import koala.html.configureSvgButton
+import koala.model.Field
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -117,6 +118,7 @@ private fun configureButtonEvents(
     }
 }
 
+@Deprecated("use field")
 fun ViewScope.configureEnabledFlow(
     element: HTMLButtonElement,
     flow: Flow<Boolean>? = null,
@@ -130,13 +132,14 @@ fun ViewScope.configureEnabledFlow(
     }
 }
 
-fun HTMLButtonElement.enabledFlow(
-    scope: CoroutineScope,
-    flow: Flow<Boolean>
+fun ViewScope.configureEnabledFlow(
+    element: HTMLButtonElement,
+    field: Field<Boolean>,
 ) {
-    scope.launch {
-        flow.collect { isEnabled ->
-            disabled = !isEnabled
+    element.disabled = field.now
+    contentScope.launch {
+        field.flow.collect { isEnabled ->
+            element.disabled = !isEnabled
         }
     }
 }

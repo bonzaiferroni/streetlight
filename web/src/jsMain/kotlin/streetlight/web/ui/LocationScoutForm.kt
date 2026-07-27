@@ -2,7 +2,6 @@ package streetlight.web.ui
 
 import koala.css.*
 import koala.dom.*
-import kotlinx.coroutines.flow.map
 import streetlight.web.model.LocationScout
 import streetlight.web.model.SearchMode
 
@@ -29,7 +28,7 @@ private fun ViewScope.locationSearchForm(model: LocationScout) = formCard {
             textField(model.queryField, "search", modify(Flex1))
             textField(model.cityField, "city", modify(Width24))
         }
-        formSubmit("Search OSM", model::queryOSM, messages = model.queryMessage)
+        formSubmitLegacy("Search OSM", model::queryOSM, messages = model.queryMessage)
 
         flowBlock(model.hasOsmLocationsField, modify(Height32, OverflowYAuto)) { hasOsmLocations ->
             when (hasOsmLocations) {

@@ -99,7 +99,7 @@ fun ViewScope.galaxyMapFormRow(model: GalaxyEditor) = formRow {
                     }
                 }
             }
-        }.flowDisplay(model.isLocalField.flow, contentScope)
+        }.flowIsDisplayed(model.isLocalField.flow, contentScope)
     }
 }
 

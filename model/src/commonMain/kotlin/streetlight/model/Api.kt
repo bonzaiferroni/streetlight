@@ -3,7 +3,7 @@ package streetlight.model
 import kampfire.api.*
 import kampfire.model.GeoBounds
 import kampfire.model.GeoPoint
-import kampfire.model.PasswordResetRedemption
+import kampfire.model.PasswordResetRequest
 import kampfire.model.SpeechRequest
 import kampfire.model.Url
 import koala.model.DocId
@@ -167,7 +167,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
 
     object AccountAction: ApiNode(this) {
         object ResetPassword: PostEndpoint<Email, Unit>(this) {
-            object Redemption: PostEndpoint<PasswordResetRedemption, Unit>(this)
+            object Redemption: PostEndpoint<PasswordResetRequest, String>(this)
         }
         object AccountNotOwned: PostEndpoint<Unit, Unit>(this)
     }

@@ -36,19 +36,19 @@ fun ViewScope.viewEventScout(galaxy: Galaxy) {
                 }
                 EventScoutStage.LocationEdit -> column {
                     locationEditFormBody(locationEditor)
-                    formSubmit("Next", model::submitLocation, messages = locationEditor.messages)
+                    formSubmitLegacy("Next", model::submitLocation, messages = locationEditor.messages)
                 }
                 EventScoutStage.EventSearch -> formBodyProto {
                     eventSearchForm(model)
                 }
                 EventScoutStage.EventEdit -> column {
                     eventEditFormBody(editor)
-                    formSubmit("Next", model::review, messages = editor.message)
+                    formSubmitLegacy("Next", model::review, messages = editor.message)
                 }
                 EventScoutStage.Post -> formBodyProto {
                     val location = locationScout.stateNow.location ?: error("location not found")
                     postRow(editor.editNow, location)
-                    formSubmit("Post", model::post, messages = model.postMessage)
+                    formSubmitLegacy("Post", model::post, messages = model.postMessage)
                 }
             }
         }

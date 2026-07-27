@@ -8,6 +8,8 @@ import koala.css.Valid
 import koala.css.VisibilityHidden
 import koala.css.Working
 import koala.model.Field
+import koala.model.fieldOf
+import koala.model.refine
 import koala.utils.launch
 import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
@@ -56,7 +58,8 @@ fun HTMLElement.flowModifier(
     viewTransition: Boolean = false,
 ) = flowModifier(isModified.now, isModified.flow, modifier, scope, viewTransition)
 
-fun HTMLElement.flowDisplay(isDisplayedFlow: Flow<Boolean>, scope: CoroutineScope): HTMLElement {
+@Deprecated("use field")
+fun HTMLElement.flowIsDisplayed(isDisplayedFlow: Flow<Boolean>, scope: CoroutineScope): HTMLElement {
     scope.launch {
         isDisplayedFlow.collect { isDisplayed ->
             if (isDisplayed && !isModified(DisplayNone) || !isDisplayed && isModified(DisplayNone)) return@collect
@@ -68,6 +71,15 @@ fun HTMLElement.flowDisplay(isDisplayedFlow: Flow<Boolean>, scope: CoroutineScop
             }
         }
     }
+    return this
+}
+
+fun HTMLElement.flowIsDisplayed(
+    isDisplayedFlow: Field<Boolean>,
+    scope: CoroutineScope,
+    viewTransition: Boolean = false,
+): HTMLElement {
+    flowModifier(isDisplayedFlow.fieldOf { !it }, DisplayNone, scope, viewTransition)
     return this
 }
 

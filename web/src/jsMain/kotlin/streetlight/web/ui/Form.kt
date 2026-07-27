@@ -9,8 +9,8 @@ import koala.html.filigree
 import koala.html.heading3
 import koala.html.heading5
 import koala.html.textBlock
+import koala.model.Field
 import koala.model.MutableField
-import kotlinx.coroutines.flow.Flow
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kotlinx.html.SECTION
@@ -68,14 +68,18 @@ fun ViewScope.formSubmit(
     buttonText: String = "submit",
     onClick: () -> Unit,
     messages: MessageStore? = null,
-    enabledFlow: Flow<Boolean>? = null,
+    enabledField: Field<Boolean>? = null,
+    isDisplayedFlow: Field<Boolean>? = null,
 ) = row(mod = modify(AlignItemsStart, JustifyContentEnd)) {
     messages?.let {
         messageBox(it)
     }
     val button = button(buttonText, onClick, modify(Accent))
-    enabledFlow?.let {
-        configureEnabledFlow(button, enabledFlow)
+    enabledField?.let {
+        configureEnabledFlow(button, enabledField)
+    }
+    isDisplayedFlow?.let {
+        button.flowIsDisplayed(it, contentScope)
     }
 }
 

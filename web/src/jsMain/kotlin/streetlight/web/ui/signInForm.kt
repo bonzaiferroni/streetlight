@@ -54,15 +54,20 @@ fun ViewScope.recoverOrSignInForm(cred: CredentialStore, gate: SessionGate) {
             true -> form {
                 val messages = MessageStore()
                 val emailField = storeOf("")
+                val isSubmitVisible = storeOf(true)
                 formSection("Reset Password") {
                     formText("If you have an email address registered with Streetlight you can reset your password.")
                     textField(emailField)
                     formSubmit("Reset my password", {
                         val email = emailField.now.toEmail().toValidOutcome().handleOutcome(messages) ?: return@formSubmit
                         launchEffect {
-                            api.resetPassword(email).handleOutcome(messages)
+                            val unit = api.resetPassword(email).handleOutcome(messages)
+                            if (unit != null) {
+                                isSubmitVisible.set(false)
+                                messages.set("Check your email for a link to reset your password.")
+                            }
                         }
-                    }, messages)
+                    }, messages, isDisplayedFlow = isSubmitVisible)
                 }
             }
             else -> registeredSignInForm(isRecoveringField, cred, gate)

@@ -29,7 +29,7 @@ fun ViewScope.viewLocationScout(galaxy: Galaxy) {
                 }
                 LocationScoutStage.Edit -> column {
                     locationEditFormBody(editor)
-                    formSubmit(
+                    formSubmitLegacy(
                         label = "Next",
                         onSubmit = model::review,
                         messages = editor.messages,
@@ -40,7 +40,7 @@ fun ViewScope.viewLocationScout(galaxy: Galaxy) {
                     val edit = editor.editNow
                     postRow(edit, session.stateNow.star?.username)
 
-                    formSubmit(
+                    formSubmitLegacy(
                         label = "Post",
                         onSubmit = model::postToGalaxy,
                         messages = editor.messages,

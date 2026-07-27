@@ -10,7 +10,7 @@ data class PasswordChange(
 )
 
 @Serializable
-data class PasswordResetRedemption(
+data class PasswordResetRequest(
     val token: Token,
     val password: Password,
 )

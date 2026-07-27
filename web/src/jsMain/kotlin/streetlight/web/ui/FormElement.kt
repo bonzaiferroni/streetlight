@@ -5,8 +5,6 @@ import koala.dom.*
 import koala.html.bulletsOf
 import koala.html.filigree
 import koala.html.heading3
-import koala.model.MutableField
-import kotlinx.coroutines.flow.Flow
 import kotlinx.html.DIV
 
 fun ViewScope.formBodyProto(
@@ -73,7 +71,8 @@ fun TagScope.formPart(
     }
 }
 
-fun ViewScope.formSubmit(
+@Deprecated("Use formSubmit")
+fun ViewScope.formSubmitLegacy(
     label: String,
     onSubmit: () -> Unit,
     mod: ModifierSet? = null,

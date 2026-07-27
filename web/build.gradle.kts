@@ -11,23 +11,26 @@ plugins {
     kotlin("plugin.js-plain-objects") version "2.3.10"
 }
 
+val standalones = file("standalones.txt").readText()
+    .split(",", "\n")
+    .map { it.trim() }
+    .filter { it.isNotEmpty() }
+
+fun String.capital() = replaceFirstChar { it.uppercase() }
+
 kotlin {
     js {
         browser {
             commonWebpackConfig {
                 sourceMaps = true
             }
-            // distribution {
-            //     outputDirectory.set(projectDir.resolve("../www/js/streetlight"))
-            // }
         }
         binaries.executable()
 
-        listOf("passwordReset").forEach { name ->
+        standalones.forEach { name ->
             val standalone = compilations.create(name) {
                 associateWith(this@js.compilations.getByName("main"))
                 defaultSourceSet {
-                    println("building $name")
                     kotlin.setSrcDirs(listOf("src/jsStandalone/$name/kotlin"))
                 }
             }
@@ -58,7 +61,6 @@ kotlin {
         jsMain.dependencies {
             implementation(libs.kotlinx.html.js)
             implementation(kotlinWrappers.browser)
-            // implementation(npm("@js-joda/timezone", "2.23.0"))
         }
 
         wasmJsMain.dependencies {
@@ -71,32 +73,20 @@ kotlin {
     }
 }
 
-tasks.named("jsBrowserDevelopmentWebpack") {
-    dependsOn("jsPasswordResetPasswordResetDevelopmentExecutableCompileSync")
-}
-
-tasks.named("jsBrowserProductionWebpack") {
-    dependsOn("jsPasswordResetPasswordResetProductionExecutableCompileSync")
-}
-
 tasks.withType<KotlinJsIrLink>().configureEach {
-    if (name.contains("PasswordReset")) {
+    val taskName = name
+    if (standalones.any { taskName.startsWith("compile${it.capital()}") }) {
         compilerOptions.main.set(JsMainFunctionExecutionMode.CALL)
     }
 }
 
-tasks.named("jsBrowserDevelopmentWebpack") {
-    inputs.dir(
-        layout.buildDirectory.dir(
-            "compileSync/js/passwordReset/passwordResetDevelopmentExecutable/kotlin"
-        )
-    ).withPropertyName("passwordResetBundleInput")
-}
-
-tasks.named("jsBrowserProductionWebpack") {
-    inputs.dir(
-        layout.buildDirectory.dir(
-            "compileSync/js/passwordReset/passwordResetProductionExecutable/kotlin"
-        )
-    ).withPropertyName("passwordResetBundleInput")
+listOf("Development", "Production").forEach { mode ->
+    tasks.named("jsBrowser${mode}Webpack") {
+        standalones.forEach { name ->
+            val capital = name.capital()
+            dependsOn("js$capital$capital${mode}ExecutableCompileSync")
+            inputs.dir(layout.buildDirectory.dir("compileSync/js/$name/$name${mode}Executable/kotlin"))
+                .withPropertyName("$name${mode}Bundle")
+        }
+    }
 }

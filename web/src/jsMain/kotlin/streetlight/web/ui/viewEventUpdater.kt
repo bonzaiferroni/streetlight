@@ -22,7 +22,7 @@ fun ViewScope.viewEventUpdater(content: EventUpdaterContent, star: Star) {
                 column {
                     updaterGreeting(star, model.stateNow.edit.title ?: "this event")
                     eventEditFormBody(model)
-                    formSubmit(
+                    formSubmitLegacy(
                         label = "Save",
                         onSubmit = {
                             launchEffect {

@@ -11,7 +11,6 @@ import koala.html.heading3
 import koala.html.span
 import koala.model.MutableField
 import kotlinx.html.InputType
-import streetlight.web.model.EmailEditor
 import streetlight.web.model.PasswordEditor
 import streetlight.web.model.UserCreator
 import streetlight.web.model.UserCreatorState
@@ -50,7 +49,7 @@ fun ViewScope.guestRegistrationForm(model: UserCreator) {
             buttonText = "Register as Guest",
             onClick = { model.createAccount(AccountType.Guest) },
             messages = model.messages,
-            enabledFlow = model.isValidField.flow
+            enabledField = model.isValidField
         )
     }
 }
@@ -78,7 +77,7 @@ fun ViewScope.fullRegistrationForm(model: UserCreator) {
             buttonText = "Sign up",
             onClick = { model.createAccount(AccountType.Registered) },
             messages = model.messages,
-            enabledFlow = model.isValidField.flow
+            enabledField = model.isValidField
         )
     }
 }
