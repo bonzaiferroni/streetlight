@@ -51,9 +51,9 @@ fun Element.appendDiv(id: Id? = null): HTMLElement {
 
 operator fun NamedNodeMap.get(attribute: Attribute<*>): String? = this.getNamedItem(attribute.identifier)?.value
 
-fun Window.addGlobalFunctions(pairs: List<Pair<JsFun, KFunction<Any?>>>) {
-    val windowDynamic = asDynamic()
+fun addGlobalFunctions(pairs: List<Pair<JsFun, KFunction<Any?>>>) {
+    // val windowDynamic = asDynamic()
     pairs.forEach {
-        windowDynamic[it.first.identifier] = it.second
+        globalThis[it.first.identifier] = it.second
     }
 }

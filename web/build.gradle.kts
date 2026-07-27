@@ -1,9 +1,9 @@
 @file:OptIn(ExperimentalDistributionDsl::class, ExperimentalWasmDsl::class)
 
-import org.gradle.api.tasks.Copy
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
+import org.jetbrains.kotlin.gradle.dsl.JsMainFunctionExecutionMode
 import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalDistributionDsl
-import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpack
+import org.jetbrains.kotlin.gradle.targets.js.ir.KotlinJsIrLink
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -17,11 +17,22 @@ kotlin {
             commonWebpackConfig {
                 sourceMaps = true
             }
-            distribution {
-                outputDirectory.set(projectDir.resolve("../www/js/streetlight"))
-            }
+            // distribution {
+            //     outputDirectory.set(projectDir.resolve("../www/js/streetlight"))
+            // }
         }
         binaries.executable()
+
+        listOf("passwordReset").forEach { name ->
+            val standalone = compilations.create(name) {
+                associateWith(this@js.compilations.getByName("main"))
+                defaultSourceSet {
+                    println("building $name")
+                    kotlin.setSrcDirs(listOf("src/jsStandalone/$name/kotlin"))
+                }
+            }
+            binaries.executable(standalone)
+        }
     }
     jvm()
     wasmJs {
@@ -58,4 +69,34 @@ kotlin {
     compilerOptions {
         optIn.add("kotlin.uuid.ExperimentalUuidApi")
     }
+}
+
+tasks.named("jsBrowserDevelopmentWebpack") {
+    dependsOn("jsPasswordResetPasswordResetDevelopmentExecutableCompileSync")
+}
+
+tasks.named("jsBrowserProductionWebpack") {
+    dependsOn("jsPasswordResetPasswordResetProductionExecutableCompileSync")
+}
+
+tasks.withType<KotlinJsIrLink>().configureEach {
+    if (name.contains("PasswordReset")) {
+        compilerOptions.main.set(JsMainFunctionExecutionMode.CALL)
+    }
+}
+
+tasks.named("jsBrowserDevelopmentWebpack") {
+    inputs.dir(
+        layout.buildDirectory.dir(
+            "compileSync/js/passwordReset/passwordResetDevelopmentExecutable/kotlin"
+        )
+    ).withPropertyName("passwordResetBundleInput")
+}
+
+tasks.named("jsBrowserProductionWebpack") {
+    inputs.dir(
+        layout.buildDirectory.dir(
+            "compileSync/js/passwordReset/passwordResetProductionExecutable/kotlin"
+        )
+    ).withPropertyName("passwordResetBundleInput")
 }

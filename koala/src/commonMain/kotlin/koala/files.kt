@@ -7,6 +7,7 @@ object JsFile : FileSet<Js>() {
 
     // not part of FileSet collection
     val Web = jsFileOf("web.js", basePath = "/js/streetlight/")
+    val PasswordReset = jsFileOf("passwordReset.js", basePath = "/js/streetlight/")
 }
 
 object CssFile : FileSet<Css>() {

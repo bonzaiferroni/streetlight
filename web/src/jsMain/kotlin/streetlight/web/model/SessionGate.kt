@@ -16,7 +16,7 @@ import streetlight.web.io.ApiClient
 import kotlin.time.Clock
 import kotlin.time.Instant
 
-class StarSession(
+class SessionGate(
     private val scope: CoroutineScope,
     private val api: ApiClient,
 ) {

@@ -160,14 +160,13 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object UpdateAccount: PostEndpoint<Account, Boolean>(this)
         object VerifyEmail: GetEndpoint<Unit>(this) // td: not idempotent, convert to post
 
-
         object ReadStarContent: GetEndpoint<StarContent>(this) {
             val username = usernameParamOf("username")
         }
     }
 
-    object Tokens: ApiNode(this) {
-        object ResetPassword: PostEndpoint<Unit, Unit>(this) {
+    object AccountAction: ApiNode(this) {
+        object ResetPassword: PostEndpoint<Email, Unit>(this) {
             object Redemption: PostEndpoint<PasswordResetRedemption, Unit>(this)
         }
         object AccountNotOwned: PostEndpoint<Unit, Unit>(this)

@@ -29,8 +29,8 @@ fun HTML.eventSignUp(event: Event, styles: String) {
             }
             column(Id("sign-up-box"), modify(Width100P)) {
                 column(Id("guest-details"), modify(DisplayNone)) {
-                    textField(Id("name"), "Your name")
-                    textField(Id("email"), "Email")
+                    textField(id = Id("name"), label = "Your name")
+                    textField(id = Id("email"), label = "Email")
                     btn("Send", invoke("sendRequest"))
                 }
                 column(Id("user-details"), modify(DisplayNone)) {

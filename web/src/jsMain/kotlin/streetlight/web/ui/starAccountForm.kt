@@ -16,8 +16,8 @@ fun ViewScope.starAccountForm(model: AccountEditor) = form {
         emailFormSection(model.emailEditor)
         formSection("Validate") {
             button("Validate email", model::validateEmail)
+            // button("Reset Password", model::resetPassword)
         }
-        column {  }
     }
     formSubmit("save", model::submit, model.messages)
 }

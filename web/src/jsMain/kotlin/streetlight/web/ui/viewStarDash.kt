@@ -15,7 +15,7 @@ import streetlight.model.ui.SandboxRoute
 import streetlight.model.ui.StarDashRoute
 import streetlight.model.ui.TalentProfileRoute
 import streetlight.web.model.DataCache
-import streetlight.web.model.StarSession
+import streetlight.web.model.SessionGate
 import streetlight.model.ui.toRoute
 import streetlight.web.shells.starRouteMenu
 
@@ -86,7 +86,7 @@ private fun ViewScope.activityContent(star: Star) {
 private fun ViewScope.sandboxContent(star: Star) {
     // val model = UserHub(renderScope, app.client.api)
     val userCache = app.get<DataCache>()
-    val gate = app.get<StarSession>()
+    val gate = app.get<SessionGate>()
 
     column {
         row {

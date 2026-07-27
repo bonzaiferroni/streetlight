@@ -1,6 +1,5 @@
 package streetlight.web.ui
 
-import kampfire.model.Token
 import koala.core.addGlobalFunctions
 import koala.css.KoalaBody
 import koala.css.Property
@@ -16,9 +15,8 @@ import org.koin.dsl.koinApplication
 import streetlight.web.io.OmniLog
 import streetlight.web.layouts.LightControl
 import streetlight.web.model.TransitMap
-import streetlight.web.model.StarSession
+import streetlight.web.model.SessionGate
 import koala.utils.launch
-import streetlight.model.ui.VerifyEmailRoute
 
 @OptIn(ExperimentalSerializationApi::class)
 fun viewApp() {
@@ -31,14 +29,14 @@ fun viewApp() {
     val app = AppContainer(koin)
     val lightService = koin.get<LightService>()
 
-    window.addGlobalFunctions(globalFunExtended)
-    window.addGlobalFunctions(listOf(
+    addGlobalFunctions(globalFunExtended)
+    addGlobalFunctions(listOf(
         LightControl.ToggleFun to lightService::toggleLight
     ))
 
     with (app) {
         val scope: CoroutineScope = get()
-        val gate: StarSession = get()
+        val gate: SessionGate = get()
         val omni: OmniLog = get()
         val transit: TransitMap = get()
         val portal: Portal = get()

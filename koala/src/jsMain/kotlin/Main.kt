@@ -14,7 +14,7 @@ fun main() {
     console.log("koala rawr!!")
     val body = document.body ?: return
 
-    window.addGlobalFunctions(globalFunCore)
+    addGlobalFunctions(globalFunCore)
 
     initElement(body)
 }

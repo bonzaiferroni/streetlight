@@ -70,6 +70,7 @@ val StylesCss get() = """
     --danger-fg: color-mix(in srgb, rgb(var(--red)) 75%, rgb(var(--ink)));
     --danger-bg: color-mix(in srgb, rgb(var(--red)) 75%, rgb(var(--paper)));
     --error-bg: color-mix(in srgb, rgb(var(--red)) 25%, rgb(var(--paper)));
+    --error-fg: color-mix(in srgb, rgb(var(--red)) 75%, rgb(var(--ink)));
     
     --sea-green: 58, 200, 158; 
     --sea-green-fg: color-mix(in srgb, rgb(var(--sea-green)) 50%, rgb(var(--ink)));

@@ -1,32 +1,63 @@
 package koala.html
 
+import koala.css.ModifierSet
+import koala.css.Width100P
+import koala.css.addModifiers
 import kotlinx.html.*
-import kotlinx.html.id
 
 fun FlowContent.textField(
-    id: Id,
-    placeholder: String,
+    label: String? = null,
+    mod: ModifierSet? = null,
+    textMod: ModifierSet? = null,
+    id: Id? = null,
+    placeholder: String? = label,
+    name: String? = null,
+    size: Int = 25,
+    maxLength: Int? = null,
+    initialValue: String? = null,
     block: (INPUT.() -> Unit)? = null
 ) {
-    textInput {
-        this.id = id.identifier
-        this.name = id.identifier
-        this.placeholder = placeholder
+    box {
+        configureTextFieldContainer(label, mod)
 
-        block?.invoke(this)
+        input {
+            configureTextFieldInput(id, textMod, placeholder, size, maxLength, name, initialValue)
+
+            block?.invoke(this)
+        }
     }
 }
 
-fun FlowContent.textField(
-    id: Id,
-    label: String,
-    placeholder: String,
-    block: (INPUT.() -> Unit)? = null
+fun DIV.configureTextFieldContainer(
+    label: String?,
+    mod: ModifierSet?
 ) {
-    textField(id, placeholder) {
-        attributes["aria-label"] = label
-        setAttribute(Attribute.BlockLabel, label)
+    addModifiers(mod)
+    setAttribute(Attribute.BlockLabel, label?.lowercase())
+}
 
-        block?.invoke(this)
+fun INPUT.configureTextFieldInput(
+    id: Id?,
+    textMod: ModifierSet?,
+    placeholder: String?,
+    size: Int,
+    maxLength: Int?,
+    name: String?,
+    initialValue: String?
+) {
+    setId(id)
+    type = InputType.text
+    addModifiers(Width100P, textMod)
+    placeholder?.let {
+        attributes["aria-label"] = it
+        this.placeholder = it
     }
+    this.size = size.toString()
+    maxLength?.let {
+        this.maxLength = it.toString()
+    }
+    name?.let {
+        this.name = it
+    }
+    value = initialValue ?: ""
 }

@@ -14,7 +14,7 @@ import streetlight.model.data.Star
 import streetlight.model.ui.StarDashRoute
 import streetlight.model.ui.StarRoute
 import streetlight.model.ui.UpdateAccountRoute
-import streetlight.web.model.StarSession
+import streetlight.web.model.SessionGate
 import streetlight.web.pages.HelmBar
 import streetlight.web.pages.StarHelm
 
@@ -41,7 +41,7 @@ fun ViewScope.wireStarMenu(element: HTMLElement) {
 private val RowMod = modify(AlignItemsCenter, PaddingLeft3, JustifyContentEnd)
 
 private fun ViewScope.starPanel(star: Star) {
-    val session = app.get<StarSession>()
+    val session = app.get<SessionGate>()
 
     column(modify(AlignItemsEnd)) {
         row(RowMod) {

@@ -13,7 +13,7 @@ interface Streetlight {
     val appScope: CoroutineScope
     val client: ClientFacade
     val portal: Portal
-    val gate: StarSession
+    val gate: SessionGate
     // val gateAgent: GateAgent
     val geoMap: GeoCamera
     val markerMap: MarkerMap

@@ -44,8 +44,8 @@ fun HTML.eventPortal(event: Event, performer: Performer?, requestItems: List<Req
                             }
                         }
                         column(Id("request-details"), modify(DisplayNone)) {
-                            textField(Id("name"), "Your name (optional)")
-                            textField(Id("comment"), "Comment (optional)")
+                            textField(id = Id("name"), placeholder = "Your name (optional)")
+                            textField(id = Id("comment"), placeholder = "Comment (optional)")
                             checkBox(Id("join"), "Would you like to sing with me?")
                             btn("Send", invoke("sendRequest"))
                         }

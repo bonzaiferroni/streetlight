@@ -13,11 +13,11 @@ import koala.css.addModifiers
 import koala.css.modify
 import koala.html.Id
 import koala.html.Attribute
+import koala.html.configureTextFieldContainer
+import koala.html.configureTextFieldInput
 import koala.html.setId
 import koala.html.setAttribute
 import koala.model.MutableField
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.launch
 import kotlinx.html.INPUT
 import kotlinx.html.InputType
 import kotlinx.html.js.onInputFunction
@@ -25,7 +25,6 @@ import org.w3c.dom.HTMLInputElement
 import kotlinx.html.js.input
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLParagraphElement
-import org.w3c.dom.HTMLParamElement
 import org.w3c.dom.events.KeyboardEvent
 
 fun ViewScope.textField(
@@ -35,6 +34,7 @@ fun ViewScope.textField(
     textMod: ModifierSet? = null,
     id: Id? = null,
     placeholder: String? = label,
+    name: String? = null,
     size: Int = 25,
     maxLength: Int? = null,
     onEnter: (() -> Unit)? = null,
@@ -53,13 +53,11 @@ fun ViewScope.textField(
     }
 
     val parent = box {
-        addModifiers(mod)
-        setAttribute(Attribute.BlockLabel, label?.lowercase())
+        configureTextFieldContainer(label, mod)
 
         element = input {
-            addModifiers(Width100P, textMod)
-            setId(id)
-            type = InputType.text
+            configureTextFieldInput(id, textMod, placeholder, size, maxLength, name, currentValue)
+
             onInputFunction = {
                 val newValue = (it.target as HTMLInputElement).value
                 if (newValue != currentValue) {
@@ -67,14 +65,6 @@ fun ViewScope.textField(
                     display(field.now)
                 }
             }
-            placeholder?.let {
-                attributes["aria-label"] = it
-            }
-            placeholder?.let {
-                this.placeholder = it
-            }
-            this.size = size.toString()
-            value = currentValue
             block?.invoke(this)
         }
 

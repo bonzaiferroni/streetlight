@@ -6,11 +6,11 @@ import koala.dom.ViewScope
 import koala.dom.querySelector
 import kotlinx.browser.document
 import org.w3c.dom.HTMLImageElement
-import streetlight.web.model.StarSession
+import streetlight.web.model.SessionGate
 import streetlight.web.pages.StarBadgeKey
 
 fun ViewScope.wireBadge() {
-    val gate = app.get<StarSession>()
+    val gate = app.get<SessionGate>()
 
     val element = document.body?.querySelector(StarBadgeKey.Id) as? HTMLImageElement ?: error("star badge not found")
 

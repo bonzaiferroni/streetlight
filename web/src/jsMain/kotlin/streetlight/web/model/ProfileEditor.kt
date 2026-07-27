@@ -14,7 +14,7 @@ class ProfileEditor(
     initialData: StarEdit,
     private val scope: CoroutineScope,
     private val api: ApiClient,
-    private val session: StarSession,
+    private val session: SessionGate,
 ) {
     private val state = storeOf(ProfileEditorState(initialData))
     val stateNow get() = state.now
