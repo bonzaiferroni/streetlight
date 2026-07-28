@@ -70,11 +70,13 @@ class ApiClient(private val client: FetchClient) {
     suspend fun validateLogin() = client.getApi(Api.Stars.ValidateLogin)
     suspend fun login(request: LoginRequest) = client.postApi(UserApi.Login, request)
     suspend fun updateProfile(edit: StarEdit) = client.postApi(Api.Stars.UpdateProfile, edit)
-    suspend fun updateAccount(edit: Account) = client.postApi(Api.Stars.UpdateAccount, edit)
+    suspend fun addEmail(email: Email) = client.postApi(Api.Stars.AddEmail, email)
     suspend fun editLight(edit: EditLightRequest) = client.postApi(Api.Stars.EditLight, edit)
 
     // account actions
-    suspend fun verifyEmail() = client.getApi(Api.Stars.VerifyEmail)
+    suspend fun verifyEmail() = client.postApi(Api.AccountAction.VerifyEmail)
+    suspend fun readEmailVerificationIsSent() = client.getApi(Api.AccountAction.VerifyEmail.CheckStatus)
+    suspend fun removeEmail() = client.postApi(Api.AccountAction.RemoveEmail)
     suspend fun resetPassword(email: Email) = client.postApi(Api.AccountAction.ResetPassword, email)
 
     // account

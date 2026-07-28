@@ -8,10 +8,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Account(
     val starId: StarId,
-    val identityVisibility: IdentityVisibility,
-    val name: String?,
     val email: Email?,
-    val cityId: CityId?,
     val accountType: AccountType,
     val emailStatus: EmailStatus?,
 ): RouteContent

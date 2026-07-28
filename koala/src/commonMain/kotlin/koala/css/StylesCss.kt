@@ -78,11 +78,13 @@ val StylesCss get() = """
     --green: 99, 255, 132;
     --green-fg: color-mix(in srgb, rgb(var(--green)) 25%, rgb(var(--ink)));
     --valid-bg: color-mix(in srgb, rgb(var(--green)) 33%, rgb(var(--paper)));
+    --valid-fg: color-mix(in srgb, rgb(var(--green)) 75%, rgb(var(--ink)));
     --success-bg : color-mix(in srgb, rgb(var(--green)) 25%, rgb(var(--paper)));
     
     --yellow: 255, 240, 32;
     --yellow-fg: color-mix(in srgb, rgb(var(--yellow)) 25%, rgb(var(--ink)));
     --required-bg: color-mix(in srgb, rgb(var(--yellow)) 33%, rgb(var(--paper)));
+    --caution-fg: color-mix(in srgb, rgb(var(--yellow)) 75%, rgb(var(--ink)));
     
     --gold: 200, 178, 87;
     --lamp-fg: color-mix(in srgb, rgb(var(--gold)) 75%, rgb(var(--ink)));

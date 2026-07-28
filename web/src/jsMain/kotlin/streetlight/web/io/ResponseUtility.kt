@@ -81,7 +81,7 @@ suspend inline fun <reified T> Response.decodeBytes(): Outcome<T> {
 
         409 -> Problem("There was a conflict.")
         500 -> Problem("The server ran into a problem.")
-        else -> Problem("Unknown error: $status")
+        else -> Problem("Unhandled error: $status")
     }
 }
 

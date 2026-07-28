@@ -157,8 +157,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object PendingEdits: GetEndpoint<List<EditLog>>(this)
         object ReadAccount: GetEndpoint<Account>(this)
         object UpdateProfile: PostEndpoint<StarEdit, Star>(this)
-        object UpdateAccount: PostEndpoint<Account, Boolean>(this)
-        object VerifyEmail: GetEndpoint<Unit>(this) // td: not idempotent, convert to post
+        object AddEmail: PostEndpoint<Email, Unit>(this)
 
         object ReadStarContent: GetEndpoint<StarContent>(this) {
             val username = usernameParamOf("username")
@@ -170,6 +169,10 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
             object Redemption: PostEndpoint<PasswordResetRequest, String>(this)
         }
         object AccountNotOwned: PostEndpoint<Unit, Unit>(this)
+        object RemoveEmail: PostEndpoint<Unit, Unit>(this)
+        object VerifyEmail: PostEndpoint<Unit, Unit>(this) {
+            object CheckStatus: GetEndpoint<Boolean>(this)
+        }
     }
 
     object Docs: GetByIdEndpoint<DocId, DocContent>(this)

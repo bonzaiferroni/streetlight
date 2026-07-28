@@ -14,6 +14,17 @@ value class Email(val value: String): LoginIdentity {
     }
 }
 
+fun Email.obfuscate(stars: Int = 10): String {
+    val alias = value.substringBefore('@')
+    val domain = value.substringAfter('@')
+    val masked = "•".repeat(stars)
+    return when (alias.length) {
+        0 -> "@$domain"
+        1 -> "${alias.first()}$masked@$domain"
+        else -> "${alias.first()}$masked${alias.last()}@$domain"
+    }
+}
+
 // this is the only valid constructor call
 fun String.toEmail() = Email(this.lowercase())
 

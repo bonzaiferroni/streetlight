@@ -11,7 +11,6 @@ import koala.html.configureButton
 import koala.html.configureElementButton
 import koala.html.configureSvgButton
 import koala.model.Field
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.html.BUTTON
@@ -77,31 +76,6 @@ fun TagScope.button(
     )
 
     return element
-}
-
-fun TagScope.dangerButton(
-    text: String,
-    onClick: (() -> Unit)? = null,
-    mod: ModifierSet? = null,
-    flair: String? = null,
-    block: BUTTON.() -> Unit = {},
-) {
-    var isConfirm = false
-
-    val element = button {
-        configureButton(text, modify(Zen, mod), flair, block)
-    }
-
-    element.onClick {
-        if (!isConfirm) {
-            isConfirm = true
-            element.unmodify(Zen)
-            element.modify(Danger)
-            element.textContent = "Confirm"
-        } else {
-            onClick?.invoke()
-        }
-    }
 }
 
 private fun configureButtonEvents(

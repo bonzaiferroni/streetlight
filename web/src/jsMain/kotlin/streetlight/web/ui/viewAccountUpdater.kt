@@ -9,13 +9,13 @@ import koala.css.OpacityHigh
 import koala.css.PrimaryCardBg
 import koala.css.TextAlignCenter
 import koala.css.modify
+import koala.dom.MessageStore
 import koala.dom.RouteScope
 import koala.dom.ViewScope
 import koala.dom.card
 import koala.dom.column
 import koala.dom.navigation
 import koala.dom.routeBlock
-import koala.dom.tabs
 import koala.dom.textBlock
 import koala.html.bulletsOf
 import koala.html.filigree
@@ -33,16 +33,10 @@ fun ViewScope.viewAccountUpdater(star: Star, model: AccountEditor) {
             textBlock("Here you can make changes to your account.")
         }
 
-        tabs {
-            if (star.accountType == AccountType.Guest) {
-                tab("registration") {
-                    registerAccountForm(model)
-                }
-            }
-
-            tab("account") {
-                starAccountForm(model)
-            }
+        if (star.accountType == AccountType.Guest) {
+            registerAccountForm(model)
+        } else {
+            starAccountForm(model)
         }
 
         appFooter("")
@@ -61,6 +55,7 @@ fun RouteScope.viewUpdateAccountRoute() {
 }
 
 fun ViewScope.registerAccountForm(model: AccountEditor) = form {
+    val messages = MessageStore()
     formRow {
         column {
             heading3("Register Account", modify(TextAlignCenter))
@@ -85,7 +80,7 @@ fun ViewScope.registerAccountForm(model: AccountEditor) = form {
         emailFormSection(model.emailEditor)
     }
 
-    formSubmit("Register Account", model::completeRegistration)
+    formSubmit("Register Account", { model.completeRegistration(messages) })
 }
 
 private val registerInfo1 = """

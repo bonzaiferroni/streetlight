@@ -103,7 +103,7 @@ object FormMod {
     val Part = modify(ContainerMdRow)
     val Instructions = modify(Flex1, JustifyContentCenter, Margin1)
     val Controls = modify(JustifyContentCenter)
-    val Bullets = modify(OpacityHigh)
+    val Bullets = modify(TextSmall)
     val GeoMap = modify(Height48, BorderRadius2, OverflowClip, MoonShadow)
 }
 

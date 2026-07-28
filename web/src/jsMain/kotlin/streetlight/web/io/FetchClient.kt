@@ -76,6 +76,11 @@ class FetchClient() {
     ): Outcome<Returned> =
         request(RequestMethod.POST, endpoint.path, BodyInit(Json.encodeToString(body))) { it.decodeBytes() }
 
+    suspend inline fun <reified Returned> postApi(
+        endpoint: PostEndpoint<Unit, Returned>,
+    ): Outcome<Returned> =
+        request(RequestMethod.POST, endpoint.path, null) { it.decodeBytes() }
+
     suspend inline fun <reified Returned> getProtobuf(
         path: String,
         feedType: ProtobufType

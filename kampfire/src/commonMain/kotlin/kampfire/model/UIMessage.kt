@@ -18,6 +18,8 @@ interface Messenger {
     fun deliver(problem: Problem)
 }
 
+fun Messenger.deliverSending() = deliver(UIMessage("Sending...", UIMessageType.Working))
+
 object PrintLnMessenger: Messenger {
     override fun deliver(text: String) {
         println(text)

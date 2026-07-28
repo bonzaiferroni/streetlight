@@ -7,10 +7,10 @@ import koala.html.MessageBox
 import koala.model.Field
 
 fun ViewScope.messageBox(
-    flow: Field<UIMessage?>,
+    field: Field<UIMessage?>,
     modifiers: ModifierSet? = null,
 ) {
-    flowBlock(flow, modifiers) { message ->
+    flowBlock(field, modifiers) { message ->
         val message = message ?: return@flowBlock
         val typeMod = message.messageType.toModifier()
         card(modify(modifiers, MessageBox.Mod, MoonShadow, typeMod)) {

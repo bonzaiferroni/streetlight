@@ -16,7 +16,7 @@ val DisplayUtilityCss
         // Border
         SideBorder,
         // Color
-        NightInk, DayInk, PrimaryFg, AccentFg, ColorSchemeFg, ColorSchemeBg, WhiteFg, ErrorFg,
+        NightInk, DayInk, PrimaryFg, AccentFg, ColorSchemeFg, ColorSchemeBg, WhiteFg, ErrorFg, CautionFg, ValidFg,
         // Overflow
         OverflowHidden, OverflowWrapAnywhere, OverflowClip, OverflowXAuto, OverflowXHidden, OverflowYAuto, OverflowYScroll,
         OverscrollBehaviorContain,
@@ -47,7 +47,7 @@ val VisibilityHidden = utilityOf("visibility-hidden", "visibility: hidden !impor
 // Opacity
 // val Opacity1 = CssUtility("opacity-1", ".opacity-1 { opacity: 1; }")
 val Opacity1 = utilityOf("opacity-1", "opacity: 1")
-val OpacityHigh = utilityOf("opacity-high", "opacity: .8")
+val OpacityHigh = utilityOf("opacity-high", "opacity: .85")
 val OpacityHalf = utilityOf("opacity-half", "opacity: .5")
 val OpacityLow = utilityOf("opacity-low", "opacity: .25")
 val OpacityGhost = utilityOf("opacity-ghost", "opacity: .1")
@@ -89,6 +89,8 @@ val Primary = Class("primary")
 val PrimaryFg = utilityOf("primary-fg", "color: var(--primary-fg)")
 val WhiteFg = utilityOf("white-fg", "color: var(--white-fg)")
 val ErrorFg = utilityOf("red-fg", "color: var(--error-fg)")
+val CautionFg = utilityOf("caution-fg", "color: var(--caution-fg)")
+val ValidFg = utilityOf("valid-fg", "color: var(--valid-fg)")
 val ColorSchemeFg = utilityOf("color-scheme-fg", "color: var(--color-scheme, currentColor)")
 val ColorSchemeBg = utilityOf("color-scheme-bg", "background-color: var(--color-scheme, currentColor)")
 val PaperGradientBg = utilityOf("paper-gradient-bg", "background: var(--paper-gradient-bg)")

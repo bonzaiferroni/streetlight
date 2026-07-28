@@ -54,7 +54,7 @@ fun ViewScope.formHeading(
     heading5(text, modify(OpacityHigh, TextTransformUppercase))
 }
 
-fun FlowContent.formBullets(
+fun ViewScope.formBullets(
     heading: String?,
     vararg bullets: String,
 ) = column(modify(Gap0, OpacityHigh)) {

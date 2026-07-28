@@ -13,7 +13,7 @@ import koala.dom.ViewScope
 import koala.dom.button
 import koala.dom.card
 import koala.dom.column
-import koala.dom.dangerButton
+import koala.dom.safetyButton
 import koala.dom.getAttribute
 import koala.dom.closePopover
 import koala.dom.onClick
@@ -72,7 +72,7 @@ fun ViewScope.callPostMenu(postId: PostId, username: Username?) {
                 } else {
                     button("report", mod = modify(Zen))
                 }
-                dangerButton("remove", onClick = {
+                safetyButton("remove", onConfirm = {
                     contentScope.launch {
                         api.removePost(postId).handleResponse(toaster) {
                             portal.refresh()
