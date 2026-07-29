@@ -13,7 +13,7 @@ interface AppRoute: Labeled {
     fun toRelativePath() = basePath
     fun toAbsolutePath() = "$origin${toRelativePath()}"
     val title: String
-    val basePath get() = "/${screen.pathRoot}"
+    val basePath get() = screen.pathRoot
     override val label get() = title
 
     companion object {

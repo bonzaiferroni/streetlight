@@ -86,7 +86,7 @@ enum class Screen(
     // media
     Media(SlugParse { MediaRoute(it) }, "m");
 
-    override val pathRoot = pathRoot ?: name.pascalToKebabCase()
+    override val pathRoot = "/${pathRoot ?: name.pascalToKebabCase()}"
     override val screenId = name.pascalToKebabCase()
 }
 

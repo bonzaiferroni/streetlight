@@ -39,8 +39,6 @@ fun <T> outcomeOf(data: T?): Outcome<T>? = when (data) {
 
 fun <T> T?.toOutcome() = outcomeOf(this)
 
-// I believe we must use ResponseSerializer because of generic argument
-// td: determine if this is necessary
 class OutcomeSerializer<T>(
     private val dataSerializer: KSerializer<T>
 ) : KSerializer<Outcome<T>> {
