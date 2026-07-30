@@ -1,6 +1,7 @@
 package streetlight.model
 
 import kampfire.api.*
+import kampfire.model.EmailChange
 import kampfire.model.GeoBounds
 import kampfire.model.GeoPoint
 import kampfire.model.PasswordChange
@@ -175,7 +176,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
             object CheckStatus: GetEndpoint<Boolean>(this)
         }
         object ChangePassword: PostEndpoint<PasswordChange, Unit>(this)
-        object AddEmail: PostEndpoint<Email, Unit>(this)
+        object AddEmail: PostEndpoint<EmailChange, Unit>(this)
     }
 
     object Docs: GetByIdEndpoint<DocId, DocContent>(this)

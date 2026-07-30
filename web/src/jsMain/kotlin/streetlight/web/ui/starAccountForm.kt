@@ -86,9 +86,18 @@ fun ViewScope.emailSection(model: AccountEditor) = formSection("Email") {
                 formSubmit("add email", model::addEmail, model.emailMessages)
             }
         } else if (email == null) {
+            val submitLabel = when (model.stateNow.isChangingEmail) {
+                true -> "change email"
+                else -> "add email"
+            }
             column {
+                if (model.stateNow.isChangingEmail && model.hasVerifiedEmail) {
+                    textField(model.passwordNowField, "current password") {
+                        type = InputType.password
+                    }
+                }
                 emailFormInput(model.emailEditor)
-                formSubmit("add email", model::addEmail, model.emailMessages)
+                formSubmit(submitLabel, model::addEmail, model.emailMessages)
             }
         } else  {
             val isUnverified = status == null || status == EmailStatus.Unverified

@@ -5,6 +5,7 @@ import kampfire.api.Slug
 import kampfire.api.UserApi
 import kampfire.api.Username
 import kampfire.model.AccountUpgradeRequest
+import kampfire.model.EmailChange
 import kampfire.model.GeoBounds
 import kampfire.model.GeoPoint
 import kampfire.model.LoginRequest
@@ -78,7 +79,7 @@ class ApiClient(private val client: FetchClient) {
     suspend fun readEmailVerificationIsSent() = client.getApi(Api.AccountAction.VerifyExistingEmail.CheckStatus)
     suspend fun removeEmail() = client.postApi(Api.AccountAction.RemoveEmail)
     suspend fun resetPassword(email: Email) = client.postApi(Api.AccountAction.ResetPassword, email)
-    suspend fun addEmail(email: Email) = client.postApi(Api.AccountAction.AddEmail, email)
+    suspend fun addEmail(value: EmailChange) = client.postApi(Api.AccountAction.AddEmail, value)
     suspend fun changePassword(value: PasswordChange) = client.postApi(Api.AccountAction.ChangePassword, value)
 
     // account
