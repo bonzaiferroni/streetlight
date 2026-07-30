@@ -8,6 +8,7 @@ import kampfire.model.AccountUpgradeRequest
 import kampfire.model.GeoBounds
 import kampfire.model.GeoPoint
 import kampfire.model.LoginRequest
+import kampfire.model.PasswordChange
 import kampfire.model.SignUpRequest
 import kampfire.model.Url
 import koala.model.DocId
@@ -70,14 +71,15 @@ class ApiClient(private val client: FetchClient) {
     suspend fun validateLogin() = client.getApi(Api.Stars.ValidateLogin)
     suspend fun login(request: LoginRequest) = client.postApi(UserApi.Login, request)
     suspend fun updateProfile(edit: StarEdit) = client.postApi(Api.Stars.UpdateProfile, edit)
-    suspend fun addEmail(email: Email) = client.postApi(Api.Stars.AddEmail, email)
     suspend fun editLight(edit: EditLightRequest) = client.postApi(Api.Stars.EditLight, edit)
 
     // account actions
-    suspend fun verifyEmail() = client.postApi(Api.AccountAction.VerifyEmail)
-    suspend fun readEmailVerificationIsSent() = client.getApi(Api.AccountAction.VerifyEmail.CheckStatus)
+    suspend fun verifyExistingEmail() = client.postApi(Api.AccountAction.VerifyExistingEmail)
+    suspend fun readEmailVerificationIsSent() = client.getApi(Api.AccountAction.VerifyExistingEmail.CheckStatus)
     suspend fun removeEmail() = client.postApi(Api.AccountAction.RemoveEmail)
     suspend fun resetPassword(email: Email) = client.postApi(Api.AccountAction.ResetPassword, email)
+    suspend fun addEmail(email: Email) = client.postApi(Api.AccountAction.AddEmail, email)
+    suspend fun changePassword(value: PasswordChange) = client.postApi(Api.AccountAction.ChangePassword, value)
 
     // account
     suspend fun checkGuest() = client.getApi(UserApi.Login.CheckGuest)

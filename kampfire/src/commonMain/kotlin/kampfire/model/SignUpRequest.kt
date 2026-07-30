@@ -8,7 +8,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class SignUpRequest(
     val username: Username,
-    val password: Password?,
+    val password: String?,
     val email: Email?,
     val accountType: AccountType,
     val stayLoggedIn: Boolean,
@@ -16,6 +16,6 @@ data class SignUpRequest(
 
 @Serializable
 data class AccountUpgradeRequest(
-    val password: Password,
+    val password: String,
     val email: Email?,
 )

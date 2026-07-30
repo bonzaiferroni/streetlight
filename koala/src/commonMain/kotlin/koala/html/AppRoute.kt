@@ -13,7 +13,7 @@ interface AppRoute: Labeled {
     fun toRelativePath() = basePath
     fun toAbsolutePath() = "$origin${toRelativePath()}"
     val title: String
-    val basePath get() = screen.pathRoot
+    val basePath get() = screen.pathBase
     override val label get() = title
 
     companion object {
@@ -21,7 +21,7 @@ interface AppRoute: Labeled {
             val fragment = sitePath.dropStart('/')
             val segments = fragment.split('/')
             val root = segments[0].lowercase()
-            val screen = screens.firstOrNull { it.pathRoot == root } ?: return null
+            val screen = screens.firstOrNull { it.screenId == root } ?: return null
 
             val idArg = segments.getOrNull(1)
             return when (val parse = screen.routeParse) {
@@ -39,6 +39,7 @@ interface AppRoute: Labeled {
 
 interface AppScreen {
     val pathRoot: String
+    val pathBase: String
     val routeParse: RouteParse
     val screenId: String
     val hasShell: Boolean

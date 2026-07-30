@@ -1,6 +1,7 @@
 package streetlight.web.model
 
 import kampfire.api.Username
+import kampfire.api.obfuscatePassword
 import kampfire.api.toUsername
 import kampfire.api.toValidOutcome
 import kampfire.model.AccountType
@@ -70,7 +71,7 @@ class UserCreator(
 
         val request = SignUpRequest(
             username = username,
-            password = password,
+            password = password?.obfuscatePassword(),
             email = email,
             accountType = accountType,
             stayLoggedIn = true

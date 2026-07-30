@@ -4,7 +4,6 @@ import kampfire.api.Password
 import kampfire.api.toValidOutcome
 import kampfire.model.Outcome
 import kampfire.model.Problem
-import koala.model.fieldOf
 import koala.model.mutableFieldOf
 import koala.model.storeOf
 
@@ -13,14 +12,14 @@ class PasswordEditor() {
     private val stateNow get() = state.now
 
     val passwordField = state.mutableFieldOf({ it.password }) { copy(password = it) }
-    val confirmationFlow = state.mutableFieldOf({ it.confirmation }) { copy(confirmation = it) }
-    val isValidFlow = state.fieldOf { it.isValid }
+    val confirmationField = state.mutableFieldOf({ it.confirmation }) { copy(confirmation = it) }
 
-    // fun setPassword(value: String) = state.setValue { it.copy(password = value) }
-    // fun setConfirmation(value: String) = state.setValue { it.copy(confirmation = value) }
+    fun clear() {
+        state.set { copy(password = "", confirmation = "")}
+    }
 
     fun getOutcome(): Outcome<Password> = when {
-        stateNow.password != stateNow.confirmation -> Problem("Password input does not match")
+        stateNow.password != stateNow.confirmation -> Problem("Password input does not match").also { println("${stateNow.password} ${stateNow.confirmation}") }
         else -> Password(stateNow.password).toValidOutcome()
     }
 }
@@ -28,6 +27,4 @@ class PasswordEditor() {
 data class PasswordEditorState(
     val password: String = "",
     val confirmation: String = "",
-) {
-    val isValid get() = password == confirmation
-}
+)

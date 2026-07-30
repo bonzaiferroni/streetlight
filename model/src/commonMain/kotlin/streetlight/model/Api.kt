@@ -3,6 +3,7 @@ package streetlight.model
 import kampfire.api.*
 import kampfire.model.GeoBounds
 import kampfire.model.GeoPoint
+import kampfire.model.PasswordChange
 import kampfire.model.PasswordResetRequest
 import kampfire.model.SpeechRequest
 import kampfire.model.Url
@@ -157,7 +158,6 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object PendingEdits: GetEndpoint<List<EditLog>>(this)
         object ReadAccount: GetEndpoint<Account>(this)
         object UpdateProfile: PostEndpoint<StarEdit, Star>(this)
-        object AddEmail: PostEndpoint<Email, Unit>(this)
 
         object ReadStarContent: GetEndpoint<StarContent>(this) {
             val username = usernameParamOf("username")
@@ -170,9 +170,11 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         }
         object AccountNotOwned: PostEndpoint<Unit, Unit>(this)
         object RemoveEmail: PostEndpoint<Unit, Unit>(this)
-        object VerifyEmail: PostEndpoint<Unit, Unit>(this) {
+        object VerifyExistingEmail: PostEndpoint<Unit, Unit>(this) {
             object CheckStatus: GetEndpoint<Boolean>(this)
         }
+        object ChangePassword: PostEndpoint<PasswordChange, Unit>(this)
+        object AddEmail: PostEndpoint<Email, Unit>(this)
     }
 
     object Docs: GetByIdEndpoint<DocId, DocContent>(this)

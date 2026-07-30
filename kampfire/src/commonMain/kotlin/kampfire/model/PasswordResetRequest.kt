@@ -5,8 +5,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class PasswordChange(
-    val currentPassword: Password,
-    val newPassword: Password,
+    val passwordNow: String?,
+    val newPassword: String,
 )
 
 @Serializable

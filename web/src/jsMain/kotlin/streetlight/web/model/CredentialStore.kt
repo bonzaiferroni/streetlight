@@ -1,7 +1,8 @@
 package streetlight.web.model
 
+import kampfire.api.Password
+import kampfire.api.obfuscatePassword
 import kampfire.model.LoginRequest
-import kampfire.utils.obfuscate
 import koala.model.mutableFieldOf
 import koala.model.storeOf
 import kotlinx.browser.localStorage
@@ -23,7 +24,8 @@ class CredentialStore {
 
     fun getLoginRequest(): LoginRequest? {
         val usernameOrEmail = stateNow.usernameText.takeIf { it.isNotBlank() } ?: return null
-        val password = stateNow.passwordText.takeIf { it.isNotBlank() }?.obfuscate() ?: return null
+        val password = stateNow.passwordText.takeIf { it.isNotBlank() }?.let { Password(it).obfuscatePassword() }
+            ?: return null
         val stayLoggedIn = state.now.stayLoggedIn
         return LoginRequest(
             loginIdentity = usernameOrEmail,
@@ -36,7 +38,7 @@ class CredentialStore {
         if (isSuccess && stateNow.stayLoggedIn) {
             localStorage.setItem(USERNAME_KEY, stateNow.usernameText)
         }
-        state.setValue { it.copy(passwordText = "") }
+        state.set { copy(passwordText = "") }
     }
 }
 

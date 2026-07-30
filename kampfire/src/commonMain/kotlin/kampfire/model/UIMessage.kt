@@ -16,9 +16,10 @@ interface Messenger {
     fun deliver(text: String)
     fun deliver(message: UIMessage)
     fun deliver(problem: Problem)
-}
 
-fun Messenger.deliverSending() = deliver(UIMessage("Sending...", UIMessageType.Working))
+    fun deliverSending() = deliver(UIMessage("Sending...", UIMessageType.Working))
+    fun deliverSuccess(text: String) = deliver(UIMessage(text, UIMessageType.Success))
+}
 
 object PrintLnMessenger: Messenger {
     override fun deliver(text: String) {

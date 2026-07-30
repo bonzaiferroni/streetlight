@@ -26,6 +26,11 @@ enum class EmailStatus {
     NotOwned,
 }
 
+val Account.viableEmail get() = when (emailStatus) {
+    EmailStatus.Bounced, EmailStatus.NotOwned -> null
+    else -> email
+}
+
 // enum class AuthResult {
 //     Confirmed,
 //     AlreadyConsumed,

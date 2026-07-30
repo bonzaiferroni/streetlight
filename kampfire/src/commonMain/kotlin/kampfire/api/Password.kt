@@ -25,6 +25,10 @@ value class Password(val value: String) {
 @Serializable
 value class PasswordHash(val value: String)
 
+// avoids only transit in plain text
+fun Password.obfuscatePassword() = value.map { it.code.xor('s'.code).toChar() }.joinToString("")
+fun String.deobfuscatePassword() = Password(map { it.code.xor('s'.code).toChar() }.joinToString(""))
+
 val Password.validPasswordLength get() = value.length in Password.LENGTH_MIN..Password.LENGTH_MAX
 val Password.strongPasswordLength get() = value.length >= Password.LENGTH_STRONG
 val Password.bestPasswordLength get() = value.length >= Password.LENGTH_BEST

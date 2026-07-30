@@ -10,8 +10,6 @@ import koala.html.filigree
 import koala.html.heading3
 import koala.html.span
 import koala.model.MutableField
-import kotlinx.html.InputType
-import streetlight.web.model.PasswordEditor
 import streetlight.web.model.UserCreator
 import streetlight.web.model.UserCreatorState
 
@@ -105,18 +103,4 @@ fun ViewScope.minAgeToggle(
 ) = column(modify(AlignItemsCenter)) {
     textBlock("To create an account, you must be 17 or older.", modify(TextAlignCenter))
     checkBox(field, "I am ${UserCreatorState.MINIMUM_AGE} or older.")
-}
-
-fun ViewScope.passwordFormSection(model: PasswordEditor) = formSection("Password") {
-    textField(model.passwordField, "password") {
-        type = InputType.password
-    }
-    textField(model.confirmationFlow, "confirm password") {
-        type = InputType.password
-    }
-    formBullets(
-        null,
-        "Must have at least 3: uppercase, lowercase, number, symbol",
-        "Must be at least ${Password.LENGTH_MIN} characters"
-    )
 }

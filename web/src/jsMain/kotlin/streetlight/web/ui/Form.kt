@@ -68,18 +68,24 @@ fun ViewScope.formSubmit(
     buttonText: String = "submit",
     onClick: () -> Unit,
     messages: MessageStore? = null,
+    onCancel: (() -> Unit)? = null,
     enabledField: Field<Boolean>? = null,
     isDisplayedFlow: Field<Boolean>? = null,
 ) = row(mod = modify(AlignItemsStart, JustifyContentEnd)) {
     messages?.let {
         messageBox(it)
     }
-    val button = button(buttonText, onClick, modify(Accent))
-    enabledField?.let {
-        configureEnabledFlow(button, enabledField)
-    }
-    isDisplayedFlow?.let {
-        button.flowIsDisplayed(it, contentScope)
+    column {
+        val button = button(buttonText, onClick, modify(Accent))
+        enabledField?.let {
+            configureEnabledFlow(button, enabledField)
+        }
+        isDisplayedFlow?.let {
+            button.flowIsDisplayed(it, contentScope)
+        }
+        onCancel?.let {
+            button("cancel", it, modify(Zen))
+        }
     }
 }
 

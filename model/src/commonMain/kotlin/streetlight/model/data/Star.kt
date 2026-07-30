@@ -4,8 +4,6 @@ import kampfire.api.Email
 import kampfire.api.Markdown
 import kampfire.api.Username
 import kampfire.model.AccountType
-import kampfire.model.CallerId
-import kampfire.model.Identity
 import kampfire.model.UserRole
 import koala.Image
 import kotlin.time.Instant
@@ -48,5 +46,4 @@ fun Star.toEdit() = StarEdit(
     image = image,
 )
 
-fun CallerId.toStarId() = StarId(value)
-val Identity.starId get() = callerId.toStarId()
+

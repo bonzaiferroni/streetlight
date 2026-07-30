@@ -23,10 +23,9 @@ fun FlowContent.appFooter(sourcePath: String? = null) {
 }
 
 fun DIV.configureAppFooter(sourcePath: String?, vararg additional: ExtraLink) {
-    val prayer = "May we build a world of faithful giants."
     addModifiers(modify(JustifyContentCenter, AlignItemsCenter, Gap0, MarginBottom16))
     lottie(LottieFile.SpinningCircles, modify(Height24))
-    textBlock(prayer, modify(Italic, OpacityHigh))
+    textBlock(prayers.random(), modify(Italic, OpacityHigh))
     row(modify(JustifyContentCenter)) {
         navigation(SiteDoc.About.route) {
             textBlock("about us")
@@ -62,3 +61,8 @@ fun DIV.configureAppFooter(sourcePath: String?, vararg additional: ExtraLink) {
 }
 
 private fun sourceUrlOf(path: String) = "https://github.com/bonzaiferroni/streetlight/blob/main/$path"
+
+val prayers get() = listOf(
+    "May we build a world of faithful giants.",
+    "It all, theoretically, works.",
+)
