@@ -2,9 +2,7 @@ package streetlight.web.pages
 
 import kampfire.api.PostEndpoint
 import kampfire.model.Token
-import koala.SvgFile
 import koala.css.AlignItemsCenter
-import koala.css.AlignSelfCenter
 import koala.css.AlignSelfEnd
 import koala.css.AlignSelfStretch
 import koala.css.Height5
@@ -17,7 +15,6 @@ import koala.html.card
 import koala.html.column
 import koala.html.filigree
 import koala.html.heading1
-import koala.html.icon
 import koala.html.logo
 import koala.html.navigation
 import koala.html.textBlock
@@ -31,7 +28,7 @@ import streetlight.web.ui.BodyStyle
 
 fun HTML.messagePage(
     title: String,
-    message: String,
+    message: FlowContent.() -> Unit,
     styles: String,
     block: FlowContent.() -> Unit = { }
 ) {
@@ -41,13 +38,27 @@ fun HTML.messagePage(
                 logo(modify(Height5))
             }
             filigree(modify(AlignSelfStretch)) { heading1(title) }
-            card(modify(MaxWidth64)) {
-                textBlock(message, modify(Padding1))
+            card(modify(MaxWidth64, Padding1)) {
+                message()
                 block()
             }
             appFooter()
         }
     }
+}
+
+fun HTML.messagePage(
+    title: String,
+    message: String,
+    styles: String,
+    block: FlowContent.() -> Unit = { }
+) {
+    messagePage(
+        title = title,
+        message = { textBlock(message) },
+        styles = styles,
+        block = block,
+    )
 }
 
 fun FlowContent.formSubmit(

@@ -169,6 +169,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
             object Redemption: PostEndpoint<PasswordResetRequest, String>(this)
         }
         object AccountNotOwned: PostEndpoint<Unit, Unit>(this)
+        object LockdownAccount: PostEndpoint<Unit, Unit>(this)
         object RemoveEmail: PostEndpoint<Unit, Unit>(this)
         object VerifyExistingEmail: PostEndpoint<Unit, Unit>(this) {
             object CheckStatus: GetEndpoint<Boolean>(this)
