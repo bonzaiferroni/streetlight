@@ -1,6 +1,6 @@
 package streetlight.web.model
 
-import kampfire.api.Email
+import kampfire.api.EmailAddress
 import kampfire.api.Password
 import kampfire.api.obfuscatePassword
 import kampfire.model.AccountUpgradeRequest
@@ -155,7 +155,7 @@ class AccountEditor(
         }
     }
 
-    fun resetPassword(email: Email, messenger: Messenger) {
+    fun resetPassword(email: EmailAddress, messenger: Messenger) {
         scope.launch(::resetPassword) {
             messenger.deliverSending()
             api.resetPassword(email).handleResponse(messenger) ?: return@launch

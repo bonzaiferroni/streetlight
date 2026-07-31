@@ -8,13 +8,13 @@ import kotlin.jvm.JvmInline
 
 @JvmInline
 @Serializable
-value class Email(val value: String): LoginIdentity {
+value class EmailAddress(val value: String): LoginIdentity {
     init {
         require(value == value.lowercase()) { "Email must be normalized" }
     }
 }
 
-fun Email.obfuscate(stars: Int = 10): String {
+fun EmailAddress.obfuscate(stars: Int = 10): String {
     val alias = value.substringBefore('@')
     val domain = value.substringAfter('@')
     val masked = "•".repeat(stars)
@@ -26,16 +26,16 @@ fun Email.obfuscate(stars: Int = 10): String {
 }
 
 // this is the only valid constructor call
-fun String.toEmail() = Email(this.lowercase())
+fun String.toEmailAddress() = EmailAddress(this.lowercase())
 
-val Email.containsOneArroba get() = value.count { it == '@' } == 1
-val Email.containsDot get() = value.split('@').getOrNull(1)?.contains('.') ?: false
-val Email.invalidCharacter get() = value.firstOrNull { !it.isLetterOrDigit() && !validEmailSymbols.contains(it) }
-val Email.validCharacters get() = invalidCharacter == null
+val EmailAddress.containsOneArroba get() = value.count { it == '@' } == 1
+val EmailAddress.containsDot get() = value.split('@').getOrNull(1)?.contains('.') ?: false
+val EmailAddress.invalidCharacter get() = value.firstOrNull { !it.isLetterOrDigit() && !validEmailSymbols.contains(it) }
+val EmailAddress.validCharacters get() = invalidCharacter == null
 
 private val validEmailSymbols = setOf('@', '.', '+', '-', '_')
 
-fun Email.toValidOutcome(): Outcome<Email> = when {
+fun EmailAddress.toValidOutcome(): Outcome<EmailAddress> = when {
     !containsOneArroba -> Problem("Email is missing the @ symbol")
     !containsDot -> Problem("Email is missing a proper domain")
     !validCharacters -> Problem("Email has invalid character: $invalidCharacter")
@@ -44,4 +44,4 @@ fun Email.toValidOutcome(): Outcome<Email> = when {
 
 sealed interface LoginIdentity
 
-fun String.toLoginIdentity() = if (contains('@')) toEmail() else toUsername()
+fun String.toLoginIdentity() = if (contains('@')) toEmailAddress() else toUsername()

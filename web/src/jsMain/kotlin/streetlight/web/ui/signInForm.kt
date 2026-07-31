@@ -1,7 +1,7 @@
 package streetlight.web.ui
 
 import kampfire.api.Username
-import kampfire.api.toEmail
+import kampfire.api.toEmailAddress
 import kampfire.api.toValidOutcome
 import kampfire.model.LoginRequest
 import kampfire.model.handleOutcome
@@ -59,7 +59,7 @@ fun ViewScope.recoverOrSignInForm(cred: CredentialStore, gate: SessionGate) {
                     formText("If you have an email address registered with Streetlight you can reset your password.")
                     textField(emailField)
                     formSubmit("Reset my password", {
-                        val email = emailField.now.toEmail().toValidOutcome().handleOutcome(messages) ?: return@formSubmit
+                        val email = emailField.now.toEmailAddress().toValidOutcome().handleOutcome(messages) ?: return@formSubmit
                         launchEffect {
                             val unit = api.resetPassword(email).handleOutcome(messages)
                             if (unit != null) {

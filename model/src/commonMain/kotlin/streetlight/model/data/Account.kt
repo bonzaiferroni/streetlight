@@ -1,6 +1,6 @@
 package streetlight.model.data
 
-import kampfire.api.Email
+import kampfire.api.EmailAddress
 import kampfire.model.AccountType
 import koala.model.RouteContent
 import kotlinx.serialization.Serializable
@@ -8,7 +8,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Account(
     val starId: StarId,
-    val email: Email?,
+    val email: EmailAddress?,
     val accountType: AccountType,
     val emailStatus: EmailStatus?,
 ): RouteContent

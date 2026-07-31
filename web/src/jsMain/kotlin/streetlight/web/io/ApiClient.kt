@@ -1,6 +1,6 @@
 package streetlight.web.io
 
-import kampfire.api.Email
+import kampfire.api.EmailAddress
 import kampfire.api.Slug
 import kampfire.api.UserApi
 import kampfire.api.Username
@@ -78,7 +78,7 @@ class ApiClient(private val client: FetchClient) {
     suspend fun verifyExistingEmail() = client.postApi(Api.AccountAction.VerifyExistingEmail)
     suspend fun readEmailVerificationIsSent() = client.getApi(Api.AccountAction.VerifyExistingEmail.CheckStatus)
     suspend fun removeEmail() = client.postApi(Api.AccountAction.RemoveEmail)
-    suspend fun resetPassword(email: Email) = client.postApi(Api.AccountAction.ResetPassword, email)
+    suspend fun resetPassword(email: EmailAddress) = client.postApi(Api.AccountAction.ResetPassword, email)
     suspend fun addEmail(value: EmailChange) = client.postApi(Api.AccountAction.AddEmail, value)
     suspend fun changePassword(value: PasswordChange) = client.postApi(Api.AccountAction.ChangePassword, value)
 

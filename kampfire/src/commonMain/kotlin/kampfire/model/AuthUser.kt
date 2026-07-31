@@ -1,6 +1,6 @@
 package kampfire.model
 
-import kampfire.api.Email
+import kampfire.api.EmailAddress
 import kampfire.api.PasswordHash
 import kampfire.api.TableId
 import kampfire.api.Username
@@ -12,7 +12,7 @@ data class UserRecord(
     val username: Username,
     val passwordHash: PasswordHash?,
     val disabledPasswordHash: PasswordHash?,
-    val email: Email?,
+    val email: EmailAddress?, // probably should not be a property on UserRecord
     val roles: Set<UserRole>,
     val accountType: AccountType,
     val guestToken: HashedToken?,
@@ -26,7 +26,7 @@ interface AuthUser {
     val userId: TableId<Uuid>
     val username: Username
     val passwordHash: PasswordHash
-    val email: Email?
+    val email: EmailAddress?
     val roles: Set<UserRole>
     val createdAt: Instant
     val updatedAt: Instant

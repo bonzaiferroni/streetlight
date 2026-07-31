@@ -166,7 +166,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
     }
 
     object AccountAction: ApiNode(this) {
-        object ResetPassword: PostEndpoint<Email, Unit>(this) {
+        object ResetPassword: PostEndpoint<EmailAddress, Unit>(this) {
             object Redemption: PostEndpoint<PasswordResetRequest, String>(this)
         }
         object AccountNotOwned: PostEndpoint<Unit, Unit>(this)

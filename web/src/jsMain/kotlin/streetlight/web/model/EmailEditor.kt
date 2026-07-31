@@ -1,22 +1,18 @@
 package streetlight.web.model
 
-import kampfire.api.Email
-import kampfire.api.toEmail
+import kampfire.api.EmailAddress
+import kampfire.api.toEmailAddress
 import kampfire.api.toValidOutcome
-import kampfire.model.Messenger
 import kampfire.model.Ok
 import kampfire.model.Outcome
-import kampfire.model.Problem
-import kampfire.model.handleOutcome
 import koala.model.Field
-import koala.model.MutableField
 import koala.model.mutableFieldOf
 import koala.model.reactIn
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 
 class EmailEditor(
-    private val emailField: Field<Email?>?,
+    private val emailField: Field<EmailAddress?>?,
     private val scope: CoroutineScope
 ) {
     private val state = storeOf(EmailEditorState(emailField?.now?.value ?: ""))
@@ -31,8 +27,8 @@ class EmailEditor(
 
     val emailStringField = state.mutableFieldOf({ it.emailString }) { copy(emailString = it) }
 
-    fun getOutcome(): Outcome<Email?> = stateNow.emailString.takeIf { emailField?.now == null && it.isNotBlank() }
-        ?.trim()?.toEmail()?.toValidOutcome()
+    fun getOutcome(): Outcome<EmailAddress?> = stateNow.emailString.takeIf { emailField?.now == null && it.isNotBlank() }
+        ?.trim()?.toEmailAddress()?.toValidOutcome()
         ?: Ok(null)
 }
 

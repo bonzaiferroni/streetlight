@@ -16,12 +16,12 @@ import klutch.utils.logger
 import kotlinx.io.files.Path
 
 // td: refactor, this is a hot mess
-class ParserClient(env: Environment) {
+class KoogParserClient(env: Environment) {
     val executor = simpleGoogleAIExecutor(env.read("GEMINI_KEY_A"))
     val console = KotlinLogging.logger("dao")
     val cache = mutableMapOf<Int, ParserContent>()
     val trimmer = HtmlTrimmer()
-    val log = KotlinLogging.logger(ParserClient::class)
+    val log = KotlinLogging.logger(KoogParserClient::class)
 
     suspend inline fun <reified T: Any> readHtml(url: String, doc: Document, instructions: String): Outcome<T> {
         val response = withCache(doc.hashCode()) {

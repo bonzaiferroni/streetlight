@@ -1,6 +1,5 @@
 package streetlight.model.data
 
-import kampfire.api.Email
 import kampfire.api.Markdown
 import kampfire.api.Username
 import kampfire.model.AccountType

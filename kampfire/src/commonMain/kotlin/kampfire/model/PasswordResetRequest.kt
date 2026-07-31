@@ -1,6 +1,6 @@
 package kampfire.model
 
-import kampfire.api.Email
+import kampfire.api.EmailAddress
 import kampfire.api.Password
 import kotlinx.serialization.Serializable
 
@@ -13,7 +13,7 @@ data class PasswordChange(
 @Serializable
 data class EmailChange(
     val passwordNow: String?,
-    val newEmail: Email,
+    val newEmail: EmailAddress,
 )
 
 @Serializable
