@@ -8,6 +8,7 @@ import kampfire.api.GetEndpoint
 import kampfire.api.PathBuilder
 import kampfire.api.PostEndpoint
 import kampfire.api.QueryEndpoint
+import kampfire.model.HttpProblem
 import kampfire.model.Outcome
 import kampfire.model.Problem
 import kampfire.model.Url
@@ -181,8 +182,11 @@ class FetchClient() {
             }
         }
 
-        if (response.status == 401.toShort()) {
-            return Problem("Not authorized.")
+        when (response.status.toInt()) {
+            401 -> return HttpProblem.NotAuthorized
+            429 -> return HttpProblem.TooManyRequests
+            409 -> return HttpProblem.Conflict
+            500 -> return HttpProblem.InternalServerError
         }
 
         return handleResponse(response)
