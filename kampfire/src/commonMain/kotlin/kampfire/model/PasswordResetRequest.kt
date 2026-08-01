@@ -19,5 +19,5 @@ data class EmailChange(
 @Serializable
 data class PasswordResetRequest(
     val token: Token,
-    val password: Password,
+    val password: String,
 )

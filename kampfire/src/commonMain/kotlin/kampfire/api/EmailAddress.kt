@@ -9,6 +9,7 @@ import kotlin.jvm.JvmInline
 @JvmInline
 @Serializable
 value class EmailAddress(val value: String): LoginIdentity {
+    override fun toString() = value
     init {
         require(value == value.lowercase()) { "Email must be normalized" }
     }
