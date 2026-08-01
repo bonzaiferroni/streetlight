@@ -75,10 +75,12 @@ enum class PasswordStrength: Labeled {
 }
 
 fun Password.toValidOutcome(): Outcome<Password> = when {
-    !validPasswordLength -> Problem(invalidLengthMessage)
-    complexityScore < 3 -> Problem(invalidComplexityMessage)
+    !validPasswordLength -> PasswordProblem.InvalidComplexity
+    complexityScore < 3 -> PasswordProblem.InvalidLength
     else -> Ok(this)
 }
 
-private val invalidLengthMessage = "Password must be between ${Password.LENGTH_MIN} and ${Password.LENGTH_MAX} characters"
-private val invalidComplexityMessage = "Password must have at least 3: uppercase, lowercase, number, symbol"
+object PasswordProblem {
+    val InvalidComplexity = Problem("Password must have at least 3: uppercase, lowercase, number, symbol")
+    val InvalidLength = Problem("Password must be between ${Password.LENGTH_MIN} and ${Password.LENGTH_MAX} characters")
+}

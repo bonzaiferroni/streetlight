@@ -11,6 +11,11 @@ data class PasswordChange(
 )
 
 @Serializable
+data class PasswordVerification(
+    val passwordNow: String?,
+)
+
+@Serializable
 data class EmailChange(
     val passwordNow: String?,
     val newEmail: EmailAddress,

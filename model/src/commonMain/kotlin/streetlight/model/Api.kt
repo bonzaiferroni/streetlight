@@ -6,6 +6,7 @@ import kampfire.model.GeoBounds
 import kampfire.model.GeoPoint
 import kampfire.model.PasswordChange
 import kampfire.model.PasswordResetRequest
+import kampfire.model.PasswordVerification
 import kampfire.model.SpeechRequest
 import kampfire.model.Url
 import koala.model.DocId
@@ -171,12 +172,12 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         }
         object AccountNotOwned: PostEndpoint<Unit, Unit>(this)
         object LockdownAccount: PostEndpoint<Unit, Unit>(this)
-        object RemoveEmail: PostEndpoint<Unit, Unit>(this)
+        object RemoveEmail: PostEndpoint<PasswordVerification, Unit>(this)
         object VerifyExistingEmail: PostEndpoint<Unit, Unit>(this) {
             object CheckStatus: GetEndpoint<Boolean>(this)
         }
         object ChangePassword: PostEndpoint<PasswordChange, Unit>(this)
-        object AddEmail: PostEndpoint<EmailChange, Unit>(this)
+        object ChangeEmail: PostEndpoint<EmailChange, Unit>(this)
     }
 
     object Docs: GetByIdEndpoint<DocId, DocContent>(this)

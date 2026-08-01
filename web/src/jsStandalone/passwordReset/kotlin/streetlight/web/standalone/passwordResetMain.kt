@@ -1,6 +1,7 @@
 package streetlight.web.standalone
 
 import kampfire.api.Password
+import kampfire.api.obfuscatePassword
 import kampfire.api.toValidOutcome
 import kampfire.model.Ok
 import kampfire.model.PasswordResetRequest
@@ -48,7 +49,7 @@ fun sendReset(tokenArg: String) {
         when (val outcome = Password(password).toValidOutcome()) {
             is Ok -> CoroutineScope(Dispatchers.Main).launch {
                 setMessage("Sending...")
-                val redemption = PasswordResetRequest(Token(tokenArg), outcome.data)
+                val redemption = PasswordResetRequest(Token(tokenArg), outcome.data.obfuscatePassword())
                 val init = RequestInit(
                     method = RequestMethod.POST,
                     headers = Headers().apply {

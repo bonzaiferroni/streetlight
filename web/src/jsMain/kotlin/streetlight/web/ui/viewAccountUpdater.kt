@@ -36,7 +36,7 @@ fun ViewScope.viewAccountUpdater(star: Star, model: AccountEditor) {
         if (star.accountType == AccountType.Guest) {
             registerAccountForm(model)
         } else {
-            starAccountForm(model)
+            updateAccountForm(model)
         }
 
         appFooter("")

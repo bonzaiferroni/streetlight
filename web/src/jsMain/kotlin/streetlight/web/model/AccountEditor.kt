@@ -8,6 +8,7 @@ import kampfire.model.EmailChange
 import kampfire.model.Messenger
 import kampfire.model.Ok
 import kampfire.model.PasswordChange
+import kampfire.model.PasswordVerification
 import kampfire.model.PrintLnMessenger
 import kampfire.model.Problem
 import kampfire.model.UIMessage
@@ -17,6 +18,7 @@ import kampfire.model.handleResponse
 import koala.dom.MessageStore
 import koala.model.fieldOf
 import koala.model.mutableFieldOf
+import koala.model.reactIn
 import koala.model.storeOf
 import koala.utils.launch
 import kotlinx.coroutines.CoroutineScope
@@ -44,12 +46,12 @@ class AccountEditor(
     val emailAndStatusField = editField.fieldOf { Pair(it.email, it.emailStatus) }
     val isVerifySentField = state.fieldOf { it.emailVerificationSent }
     val isEditingPasswordField = state.mutableFieldOf({ it.isEditingPassword }) { copy(isEditingPassword = it) }
-    val passwordNowField = state.mutableFieldOf({ it.passwordNow }) { copy(passwordNow = it) }
+    val isRemovingEmailField = state.mutableFieldOf({ it.isRemovingEmail }) { copy(isRemovingEmail = it) }
+    val verifyPasswordField = state.mutableFieldOf({ it.verifyPassword }) { copy(verifyPassword = it) }
 
     val emailEditor = EmailEditor(emailMutableField, scope)
     val passwordEditor = PasswordEditor()
     val emailMessages = MessageStore()
-    val hasVerifiedEmail = initialAccount.email != null && initialAccount.emailStatus == EmailStatus.Verified
 
     init {
         val isUnverified = initialAccount.email != null && initialAccount.emailStatus == null
@@ -102,17 +104,25 @@ class AccountEditor(
             account = account.copy(email = null, emailStatus = null),
             emailVerificationSent = false,
             isChangingEmail = true,
-            passwordNow = "",
+            verifyPassword = "",
         ) }
     }
 
     fun removeEmail() {
         scope.launch(::removeEmail) {
+            val password = when (stateNow.hasVerifiedEmail) {
+                true -> stateNow.verifyPassword.takeIf { it.isNotBlank() }?.let { Password(it).obfuscatePassword() }
+                    ?: return@launch
+                else -> ""
+            }
             emailMessages.deliverSending()
-            if (api.removeEmail().handleResponse(emailMessages) == null) return@launch
+            if (api.removeEmail(PasswordVerification(password)).handleResponse(emailMessages) == null) return@launch
             state.set { copy(
                 account = account.copy(email = null, emailStatus = null),
                 emailVerificationSent = false,
+                isRemovingEmail = false,
+                hasVerifiedEmail = false,
+                verifyPassword = "",
             ) }
             emailMessages.deliver("Your email address has been removed from our database.")
         }
@@ -121,7 +131,7 @@ class AccountEditor(
     fun addEmail() {
         val email = emailEditor.getOutcome().handleOutcome(emailMessages) ?: return
         val passwordNow = if (stateNow.account.viableEmail != null) {
-            stateNow.passwordNow.takeIf { it.isNotBlank() }?.let { Password(it) } ?: return
+            stateNow.verifyPassword.takeIf { it.isNotBlank() }?.let { Password(it) } ?: return
         } else null
         scope.launch(::addEmail) {
             emailMessages.deliverSending()
@@ -132,7 +142,8 @@ class AccountEditor(
             state.set { copy(
                 account = account.copy(email = email, emailStatus = EmailStatus.Unverified),
                 emailVerificationSent = true,
-                passwordNow = "",
+                hasVerifiedEmail = false,
+                verifyPassword = "",
             ) }
             emailMessages.deliver("Check your inbox to verify your email.")
         }
@@ -141,7 +152,7 @@ class AccountEditor(
     fun changePassword(messenger: Messenger) {
         val password = passwordEditor.getOutcome().handleOutcome(messenger) ?: return
         val passwordNow = if (stateNow.account.viableEmail != null) {
-            stateNow.passwordNow.takeIf { it.isNotBlank() }?.let { Password(it) } ?: return
+            stateNow.verifyPassword.takeIf { it.isNotBlank() }?.let { Password(it) } ?: return
         } else null
         scope.launch(::changePassword) {
             messenger.deliverSending()
@@ -150,7 +161,7 @@ class AccountEditor(
                 newPassword = password.obfuscatePassword()
             )).handleOutcome(messenger) == null) return@launch
             passwordEditor.clear()
-            state.set { copy(isEditingPassword = false, passwordNow = "")}
+            state.set { copy(isEditingPassword = false, verifyPassword = "")}
             messenger.deliver(UIMessage("Password successfully changed.", UIMessageType.Success))
         }
     }
@@ -169,7 +180,9 @@ data class AccountEditorState(
     val emailVerificationSent: Boolean = account.emailStatus == EmailStatus.Verified,
     val isEditingPassword: Boolean = false,
     val isChangingEmail: Boolean = false,
-    val passwordNow: String = "",
+    val isRemovingEmail: Boolean = false,
+    val hasVerifiedEmail: Boolean = account.email != null && account.emailStatus == EmailStatus.Verified,
+    val verifyPassword: String = "",
 ) {
     // val validEmail = edit.email.takeIf { edit.emailStatus }
 }

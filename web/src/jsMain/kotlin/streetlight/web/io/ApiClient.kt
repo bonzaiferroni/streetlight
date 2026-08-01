@@ -10,6 +10,7 @@ import kampfire.model.GeoBounds
 import kampfire.model.GeoPoint
 import kampfire.model.LoginRequest
 import kampfire.model.PasswordChange
+import kampfire.model.PasswordVerification
 import kampfire.model.SignUpRequest
 import kampfire.model.Url
 import koala.model.DocId
@@ -77,9 +78,9 @@ class ApiClient(private val client: FetchClient) {
     // account actions
     suspend fun verifyExistingEmail() = client.postApi(Api.AccountAction.VerifyExistingEmail)
     suspend fun readEmailVerificationIsSent() = client.getApi(Api.AccountAction.VerifyExistingEmail.CheckStatus)
-    suspend fun removeEmail() = client.postApi(Api.AccountAction.RemoveEmail)
+    suspend fun removeEmail(password: PasswordVerification) = client.postApi(Api.AccountAction.RemoveEmail, password)
     suspend fun resetPassword(email: EmailAddress) = client.postApi(Api.AccountAction.ResetPassword, email)
-    suspend fun addEmail(value: EmailChange) = client.postApi(Api.AccountAction.AddEmail, value)
+    suspend fun addEmail(value: EmailChange) = client.postApi(Api.AccountAction.ChangeEmail, value)
     suspend fun changePassword(value: PasswordChange) = client.postApi(Api.AccountAction.ChangePassword, value)
 
     // account
