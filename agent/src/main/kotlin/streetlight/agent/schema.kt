@@ -6,15 +6,15 @@ import kotlinx.serialization.json.*
 import kotlinx.serialization.descriptors.*
 import kotlin.reflect.KClass
 
-inline fun <reified T: Any> KClass<T>.toBasicSchema(): LLMParams.Schema {
+fun <T: Any> KClass<T>.toBasicSchema(): LLMParams.Schema {
     return LLMParams.Schema.JSON.Basic(
-        name = T::class.simpleName ?: error("must be a named type"),
+        name = simpleName ?: error("must be a named type"),
         schema = toJsonSchema()
     )
 }
 
 @OptIn(InternalSerializationApi::class)
-inline fun <reified T: Any> KClass<T>.toJsonSchema(): JsonObject {
+fun <T: Any> KClass<T>.toJsonSchema(): JsonObject {
     val serializer = serializer()
     val descriptor = serializer.descriptor
 
@@ -82,18 +82,18 @@ fun SerialDescriptor.toSchema(): JsonObject =
 
         // Known temporal types → explicit formats + examples + pattern
         when (serialName) {
-            "kotlinx.datetime.Instant" -> {
+            "kotlin.datetime.Instant" -> {
                 put("type", JsonPrimitive("string"))
                 put("format", JsonPrimitive("date-time"))
                 put("examples", JsonArray(listOf(JsonPrimitive("2025-03-11T14:30:00Z"))))
             }
-            "kotlinx.datetime.LocalDate" -> {
+            "kotlin.datetime.LocalDate" -> {
                 put("type", JsonPrimitive("string"))
                 put("format", JsonPrimitive("date"))
                 put("pattern", JsonPrimitive("^\\d{4}-\\d{2}-\\d{2}$")) // YYYY-MM-DD
                 put("examples", JsonArray(listOf(JsonPrimitive("2025-03-11"))))
             }
-            "kotlinx.datetime.LocalTime" -> {
+            "kotlin.datetime.LocalTime" -> {
                 put("type", JsonPrimitive("string"))
                 put("format", JsonPrimitive("time"))
                 put("pattern", JsonPrimitive("^\\d{2}:\\d{2}(:\\d{2})?$")) // HH:MM or HH:MM:SS

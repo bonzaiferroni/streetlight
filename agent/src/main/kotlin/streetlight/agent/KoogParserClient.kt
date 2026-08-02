@@ -14,26 +14,26 @@ import kampfire.model.Problem
 import kampfire.utils.takeEllipsis
 import klutch.utils.logger
 import kotlinx.io.files.Path
+import kotlin.reflect.KClass
 
-// td: refactor, this is a hot mess
 class KoogParserClient(env: Environment) {
-    val executor = simpleGoogleAIExecutor(env.read("GEMINI_KEY_A"))
-    val console = KotlinLogging.logger("dao")
-    val cache = mutableMapOf<Int, ParserContent>()
-    val trimmer = HtmlTrimmer()
-    val log = KotlinLogging.logger(KoogParserClient::class)
+    private val executor = simpleGoogleAIExecutor(env.read("GEMINI_KEY_A"))
+    private val console = KotlinLogging.logger("dao")
+    private val cache = mutableMapOf<Int, ParserContent>()
+    private val trimmer = HtmlTrimmer()
+    private val log = KotlinLogging.logger(KoogParserClient::class)
 
-    suspend inline fun <reified T: Any> readHtml(url: String, doc: Document, instructions: String): Outcome<T> {
+    suspend fun <T: Any> readHtml(url: String, doc: Document, instructions: String, type: KClass<T>): Outcome<T> {
         val response = withCache(doc.hashCode()) {
-            readHtmlContent<T>(url, doc, instructions)
+            readHtmlContent(url, doc, instructions, type)
         }
         return when (response) {
-            is Ok -> tryDecode<T>(response.data.json)?.let { Ok(it) } ?: Problem("Unable to decode LM response.")
+            is Ok -> tryDecode(response.data.json, type)?.let { Ok(it) } ?: Problem("Unable to decode LM response.")
             is Problem -> Problem(response.message)
         }
     }
 
-    inline fun withCache(cacheKey: Int, block: () -> Outcome<ParserContent>): Outcome<ParserContent> {
+    private suspend fun withCache(cacheKey: Int, block: suspend () -> Outcome<ParserContent>): Outcome<ParserContent> {
         val cachedContent = cache[cacheKey]
         if (cachedContent != null) return Ok(cachedContent)
 
@@ -50,10 +50,11 @@ class KoogParserClient(env: Environment) {
         return response
     }
 
-    suspend inline fun <reified T: Any> readHtmlContent(
+    private suspend fun <T: Any> readHtmlContent(
         url: String,
         doc: Document,
-        instructions: String
+        instructions: String,
+        type: KClass<T>,
     ): Outcome<ParserContent> {
         log.info { "Reading html: ${url.take(50)}" }
         val content = trimmer.trimHtml(doc)
@@ -62,7 +63,7 @@ class KoogParserClient(env: Environment) {
             id = "dev-assistant",
             params = LLMParams(
                 temperature = 0.5,
-                schema = T::class.toBasicSchema()
+                schema = type.toBasicSchema()
             )
         ) {
             system("You read web pages and extract relevant information as json.")
@@ -87,16 +88,16 @@ class KoogParserClient(env: Environment) {
         )
     }
 
-    suspend inline fun <reified T: Any> readImage(url: String, instructions: String): T? {
+    suspend fun <T: Any> readImage(url: String, instructions: String, type: KClass<T>): T? {
         val cacheKey = url.hashCode()
         val cached = cache[cacheKey]
-        if (cached != null) return tryDecode(cached.json)
+        if (cached != null) return tryDecode(cached.json, type)
 
         val prompt = prompt(
             id = "dev-assistant",
             params = LLMParams(
                 temperature = 0.5,
-                schema = T::class.toBasicSchema()
+                schema = type.toBasicSchema()
             )
         ) {
             system("You read images and extract relevant information as json.")
@@ -126,11 +127,11 @@ class KoogParserClient(env: Environment) {
             val firstKey = cache.keys.firstOrNull()
             firstKey?.let { cache.remove(it) }
         }
-        return tryDecode(json)
+        return tryDecode(json, type)
     }
 
-    inline fun <reified T> tryDecode(text: String): T? = try {
-        decodeLenient(text)
+    private fun <T: Any> tryDecode(text: String, type: KClass<T>): T? = try {
+        decodeLenient(text, type)
     } catch (e: Exception) {
         console.error { e }
         console.error { "unable to decode structured llm response:\n${text.takeEllipsis(400)}" }

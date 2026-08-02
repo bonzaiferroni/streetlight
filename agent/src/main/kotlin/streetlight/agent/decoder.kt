@@ -1,13 +1,17 @@
+@file:OptIn(InternalSerializationApi::class)
+
 package streetlight.agent
 
 import kotlin.time.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
+import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.descriptors.*
 import kotlinx.serialization.json.*
 import kotlinx.serialization.serializer
+import kotlin.reflect.KClass
 
 val LenientJson = Json {
     ignoreUnknownKeys = true
@@ -20,8 +24,8 @@ val LenientJson = Json {
  * Decode JSON into T, but if any field can't be parsed, it becomes null
  * (assuming the field is nullable/optional in your model).
  */
-inline fun <reified T> decodeLenient(text: String): T {
-    val serializer = serializer<T>()
+fun <T: Any> decodeLenient(text: String, type: KClass<T>): T {
+    val serializer = type.serializer()
     val root = LenientJson.parseToJsonElement(text)
     val sanitized = sanitize(root, serializer.descriptor)
     return LenientJson.decodeFromJsonElement(serializer, sanitized)
