@@ -34,9 +34,9 @@ class EventEditor(
 
     val editField = state.mutableFieldOf({ it.edit }) { copy(edit = it) }
     val imageField = editField.mutableFieldOf({ it.image }) { copy(image = it) }
-    val startTime = editField.mutableFieldOf({ it.startTime }) { copy(startTime = it)}
-    val endTime = editField.mutableFieldOf({ it.endTime }) { copy(endTime = it) }
-    val date = editField.mutableFieldOf({ it.date }) { copy(date = it) }
+    val startTimeField = editField.mutableFieldOf({ it.startTime }) { copy(startTime = it)}
+    val endTimeField = editField.mutableFieldOf({ it.endTime }) { copy(endTime = it) }
+    val dateField = editField.mutableFieldOf({ it.date }) { copy(date = it) }
     val startsAt = editField.fieldOf { it.startsAt }
     val description = editField.mutableFieldOf({ it.description ?: "".toMarkdown() }) { copy(description = it) }
     val title = editField.mutableFieldOf({ it.title ?: "" }) { copy(title = it) }
@@ -49,7 +49,7 @@ class EventEditor(
 
     val imageEditor = ImageEditor(imageField, api)
     val message = MessageStore()
-    val urlMessage = MessageStore()
+    val parseMessage = MessageStore()
 
     init {
         costField.reactIn(scope) { costString ->
@@ -86,13 +86,13 @@ class EventEditor(
         }
     }
 
-    fun readUrl() {
+    fun parseFromUrl() {
         val url = state.now.edit.website?.takeIf { it.startsWith("http") } ?: return
         scope.launch {
-            urlMessage.set("Reading the link, this will take a minute.", true)
-            api.parseSingleEvent(UrlParseRequest(url)).handleResponse(urlMessage) { edit ->
+            parseMessage.set("Reading the link, this will take a minute.", true)
+            api.parseSingleEvent(UrlParseRequest(url)).handleResponse(parseMessage) { edit ->
                 val event = edit.mergeRight(state.now.edit)
-                urlMessage.deliver("Does this information look correct?")
+                parseMessage.deliver("Does this information look correct?")
                 state.set { copy(edit = event) }
             }
         }

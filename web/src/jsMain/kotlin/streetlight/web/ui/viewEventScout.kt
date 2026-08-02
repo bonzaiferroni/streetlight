@@ -11,7 +11,7 @@ import streetlight.model.ui.GalaxyRoute
 import streetlight.web.layouts.postRow
 import streetlight.web.model.EventScoutStage
 
-fun ViewScope.viewEventScout(galaxy: Galaxy) {
+fun ViewScope.viewEventScout(galaxy: Galaxy, isAdmin: Boolean) {
     val locationEditor = app.getLocationEditor(LocationEdit(), contentScope)
     val locationScout = app.getLocationScout(galaxy, locationEditor, contentScope)
     val editor = app.getEventEditor(EventEdit(timeZoneId = getTimeZoneId()), contentScope)
@@ -42,7 +42,7 @@ fun ViewScope.viewEventScout(galaxy: Galaxy) {
                     eventSearchForm(model)
                 }
                 EventScoutStage.EventEdit -> column {
-                    eventEditFormBody(editor)
+                    eventEditFormBody(editor, isAdmin)
                     formSubmitLegacy("Next", model::review, messages = editor.message)
                 }
                 EventScoutStage.Post -> formBodyProto {
@@ -60,7 +60,7 @@ fun ViewScope.viewEventScout(galaxy: Galaxy) {
 fun RouteScope.viewEventScoutRoute() {
     routeBlock<EventScoutRoute, Galaxy> { galaxy ->
         starGate { star ->
-            viewEventScout(galaxy)
+            viewEventScout(galaxy, star.isAdmin)
         }
     }
 }

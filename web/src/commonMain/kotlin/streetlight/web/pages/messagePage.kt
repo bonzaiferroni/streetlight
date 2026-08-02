@@ -18,6 +18,7 @@ import koala.html.heading1
 import koala.html.logo
 import koala.html.navigation
 import koala.html.textBlock
+import koala.html.topLogo
 import kotlinx.html.FlowContent
 import kotlinx.html.FormMethod
 import kotlinx.html.HTML
@@ -34,9 +35,7 @@ fun HTML.messagePage(
 ) {
     staticPage("$title | Streetlight", styles) {
         column(modify(BodyStyle.Column, AlignItemsCenter)) {
-            navigation("/") {
-                logo(modify(Height5))
-            }
+            topLogo()
             filigree(modify(AlignSelfStretch)) { heading1(title) }
             card(modify(MaxWidth64, Padding1)) {
                 message()

@@ -1,6 +1,5 @@
 package streetlight.web.ui
 
-import kampfire.api.Password
 import kampfire.api.Username
 import kampfire.model.AccountType
 import koala.css.*
@@ -14,7 +13,7 @@ import streetlight.web.model.UserCreator
 import streetlight.web.model.UserCreatorState
 
 fun ViewScope.guestRegistrationForm(model: UserCreator) {
-    form {
+    formColumn {
         formRow {
             column {
                 heading3("Guest accounts", modify(TextAlignCenter))
@@ -62,7 +61,7 @@ If you decide to stick around, you can make the account permanent and more secur
 
 fun ViewScope.fullRegistrationForm(model: UserCreator) {
 
-    form {
+    formColumn {
         formRow {
             usernameSection(model)
 

@@ -12,10 +12,9 @@ import koala.html.textBlock
 import koala.model.Field
 import koala.model.MutableField
 import kotlinx.html.DIV
-import kotlinx.html.FlowContent
 import kotlinx.html.SECTION
 
-fun ViewScope.form(
+fun ViewScope.formColumn(
     mod: ModifierSet? = null,
     content: DIV.() -> Unit,
 ) = column(mod = modify(mod, Gap2), content = content)

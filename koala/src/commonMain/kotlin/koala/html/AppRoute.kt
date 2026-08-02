@@ -21,7 +21,7 @@ interface AppRoute: Labeled {
             val fragment = sitePath.dropStart('/')
             val segments = fragment.split('/')
             val root = segments[0].lowercase()
-            val screen = screens.firstOrNull { it.screenId == root } ?: return null
+            val screen = screens.firstOrNull { it.pathRoot == root } ?: return null
 
             val idArg = segments.getOrNull(1)
             return when (val parse = screen.routeParse) {

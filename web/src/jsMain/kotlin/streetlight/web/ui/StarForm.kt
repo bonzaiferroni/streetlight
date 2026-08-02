@@ -1,10 +1,9 @@
 package streetlight.web.ui
 
 import koala.dom.*
-import streetlight.web.model.AccountEditor
 import streetlight.web.model.ProfileEditor
 
-fun ViewScope.starProfileForm(model: ProfileEditor) = form {
+fun ViewScope.starProfileForm(model: ProfileEditor) = formColumn {
     formRow {
         imageFormSection(imageInstructions1, model.imageEditor)
         formSection("Content") {

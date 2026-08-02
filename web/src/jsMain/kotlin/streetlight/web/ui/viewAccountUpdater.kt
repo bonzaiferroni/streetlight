@@ -21,6 +21,7 @@ import koala.html.bulletsOf
 import koala.html.filigree
 import koala.html.heading3
 import koala.html.span
+import koala.html.topLogo
 import streetlight.model.data.Account
 import streetlight.model.data.Star
 import streetlight.model.ui.UpdateAccountRoute
@@ -29,6 +30,8 @@ import streetlight.web.shells.starRouteMenu
 
 fun ViewScope.viewAccountUpdater(star: Star, model: AccountEditor) {
     column(mod = BodyStyle.Column) {
+        topLogo()
+
         introSection("Account", lottie = LottieFile.ServerSync) {
             textBlock("Here you can make changes to your account.")
         }
@@ -54,7 +57,7 @@ fun RouteScope.viewUpdateAccountRoute() {
     }
 }
 
-fun ViewScope.registerAccountForm(model: AccountEditor) = form {
+fun ViewScope.registerAccountForm(model: AccountEditor) = formColumn {
     val messages = MessageStore()
     formRow {
         column {

@@ -13,14 +13,12 @@ import koala.css.ValidFg
 import koala.css.Zen
 import koala.css.modify
 import koala.dom.*
-import koala.model.MutableField
-import koala.model.storeOf
 import kotlinx.html.InputType
 import streetlight.model.data.EmailStatus
 import streetlight.model.data.viableEmail
 import streetlight.web.model.AccountEditor
 
-fun ViewScope.updateAccountForm(model: AccountEditor) = form {
+fun ViewScope.updateAccountForm(model: AccountEditor) = formColumn {
     formRow {
         // formSection("Identity") {
         //     textField(model.nameField, "name", maxLength = 50)

@@ -21,7 +21,9 @@ data class Star(
     val image: Image?,
     val accountType: AccountType,
     val createdAt: Instant,
-)
+) {
+    val isAdmin get() = roles.contains(UserRole.Admin)
+}
 
 @JvmInline
 @Serializable

@@ -31,7 +31,7 @@ fun ViewScope.signInForm(model: UserCreator) {
     val gate = app.get<SessionGate>()
     val cred = app.get<CredentialStore>()
 
-    form {
+    formColumn {
         formRow {
             flowBlock(model.guestField) { username ->
                 when (username) {
@@ -51,7 +51,7 @@ fun ViewScope.recoverOrSignInForm(cred: CredentialStore, gate: SessionGate) {
     val isRecoveringField = storeOf(false)
     flowBlock(isRecoveringField) { isRecovering ->
         when (isRecovering) {
-            true -> form {
+            true -> formColumn {
                 val messages = MessageStore()
                 val emailField = storeOf("")
                 val isSubmitVisible = storeOf(true)
@@ -77,7 +77,7 @@ fun ViewScope.recoverOrSignInForm(cred: CredentialStore, gate: SessionGate) {
 
 fun ViewScope.guestSignInForm(username: Username, cred: CredentialStore, gate: SessionGate) {
     val messages = MessageStore()
-    form {
+    formColumn {
         formSection("guest sign in") {
             textBlock("There is a guest account registered on this device: $username")
             checkBox(cred.stayLoggedInField, "Stay signed in")
@@ -90,7 +90,7 @@ fun ViewScope.guestSignInForm(username: Username, cred: CredentialStore, gate: S
 }
 
 fun ViewScope.registeredSignInForm(isRecoveringField: MutableField<Boolean>, cred: CredentialStore, gate: SessionGate) {
-    form {
+    formColumn {
         val messages = MessageStore()
         formSection("sign in") {
             column {
