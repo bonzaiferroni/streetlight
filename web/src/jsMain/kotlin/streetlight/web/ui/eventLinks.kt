@@ -1,5 +1,7 @@
 package streetlight.web.ui
 
+import kampfire.model.Url
+import kampfire.model.toUrl
 import koala.SvgFile
 import koala.css.AlignItemsEnd
 import koala.css.Danger
@@ -42,7 +44,7 @@ fun ViewScope.eventLinks(model: EventEditor) {
 
     fun setLink(provider: (ExtraLink) -> ExtraLink) { editState.setValue { it.copy(link = provider(it.link)) }}
     fun setLabel(value: String) { setLink { it.copy(label = value) } }
-    fun setUrl(value: String) { setLink { it.copy(url = value) } }
+    fun setUrl(value: String) { setLink { it.copy(url = value.toUrl()) } }
     fun finalizeEdit() {
         val link = editState.now.link.takeIf { it.isValid } ?: return
         val index = editState.now.index ?: error("no edit index")
@@ -87,7 +89,7 @@ fun ViewScope.eventLinks(model: EventEditor) {
                 } else {
                     row() {
                         textBlock(link.label)
-                        textBlock(link.url, modify(Dim))
+                        textBlock(link.url.value, modify(Dim))
                         spacer(modify(Flex1))
                         icon(SvgFile.Trash, onClick = { model.removeLink(link) }, modify(Dim, Danger))
                         icon(SvgFile.Edit, onClick = { editState.setValue{ it.copy(index = linkIndex, link = link)} }, modify(Dim))
@@ -100,5 +102,5 @@ fun ViewScope.eventLinks(model: EventEditor) {
 
 private data class LinkEditState(
     val index: Int? = null,
-    val link: ExtraLink = ExtraLink("", ""),
+    val link: ExtraLink = ExtraLink("", Url.Empty),
 )

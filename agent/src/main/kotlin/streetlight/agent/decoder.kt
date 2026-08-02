@@ -60,11 +60,7 @@ private fun sanitizeClass(element: JsonElement, desc: SerialDescriptor): JsonEle
 
             // If it failed to parse, turn it into null.
             // Nullable/optional fields will survive; non-nullable may still fail (as they should).
-            if (sanitizedChild !is JsonNull) {
-                put(name, sanitizedChild)
-            } else {
-                put(name, JsonNull)
-            }
+            put(name, sanitizedChild)
         }
     }
 
@@ -83,7 +79,7 @@ private fun sanitizeList(element: JsonElement, desc: SerialDescriptor): JsonElem
 
 private fun sanitizeMap(element: JsonElement, desc: SerialDescriptor): JsonElement {
     val obj = element as? JsonObject ?: return JsonNull
-    val keyDesc = desc.getElementDescriptor(0)
+    // val keyDesc = desc.getElementDescriptor(0)
     val valDesc = desc.getElementDescriptor(1)
 
     // JSON object keys are strings; if yer map key ain't a string, decoding will still be strict.
@@ -112,10 +108,10 @@ private fun sanitizePrimitive(element: JsonElement, desc: SerialDescriptor): Jso
         "kotlinx.datetime.LocalTime" -> {
             return if (runCatching { LocalTime.parse(raw) }.isSuccess) JsonPrimitive(raw) else JsonNull
         }
-        "kotlinx.datetime.Instant" -> {
+        "kotlin.time.Instant" -> {
             if (runCatching { Instant.parse(raw) }.isSuccess) return JsonPrimitive(raw)
             val n = raw.toLongOrNull()
-            if (n != null) return JsonPrimitive(n)
+            if (n != null) return JsonPrimitive(Instant.fromEpochSeconds(n).toString())
             return JsonNull
         }
     }

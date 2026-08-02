@@ -31,7 +31,7 @@ data class Media(
     override val label get() = title ?: "(untitled)"
     override val sublabel get() = subtitle
     override val body get() = text
-    override val links get() = link?.let { listOf(ExtraLink("link", it.value)) } // deep mystery: why isn't extralink's url property an Url
+    override val links get() = link?.let { listOf(ExtraLink("link", it)) }
 }
 
 @Serializable
@@ -52,7 +52,7 @@ data class MediaPost(
     override val label get() = media.title ?: "Untitled"
     override val sublabel get() = media.subtitle
     override val body get() = media.text
-    override val links get() = media.link?.let { listOf(ExtraLink("link", it.value)) }
+    override val links get() = media.link?.let { listOf(ExtraLink("link", it)) }
 
 }
 

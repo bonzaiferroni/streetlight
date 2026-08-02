@@ -12,6 +12,10 @@ value class Url(val value: String) {
     val isBlob get() = value.startsWith("blob")
     val filename get() = value.split('/').last().takeIf { it.contains('.') }
     val host get() = Regex("^https?://([^/?#]+)").find(value)?.groupValues?.get(1)
+
+    companion object {
+        val Empty get() = Url("")
+    }
 }
 
 fun String.toUrl() = Url(this)

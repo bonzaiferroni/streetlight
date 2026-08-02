@@ -11,6 +11,7 @@ import kabinet.utils.Environment
 import kampfire.model.Outcome
 import kampfire.model.Ok
 import kampfire.model.Problem
+import kampfire.model.Url
 import kampfire.utils.takeEllipsis
 import klutch.utils.logger
 import kotlinx.io.files.Path
@@ -23,7 +24,7 @@ class KoogParserClient(env: Environment) {
     private val trimmer = HtmlTrimmer()
     private val log = KotlinLogging.logger(KoogParserClient::class)
 
-    suspend fun <T: Any> readHtml(url: String, doc: Document, instructions: String, type: KClass<T>): Outcome<T> {
+    suspend fun <T: Any> readHtml(url: Url, doc: Document, instructions: String, type: KClass<T>): Outcome<T> {
         val response = withCache(doc.hashCode()) {
             readHtmlContent(url, doc, instructions, type)
         }
@@ -51,12 +52,12 @@ class KoogParserClient(env: Environment) {
     }
 
     private suspend fun <T: Any> readHtmlContent(
-        url: String,
+        url: Url,
         doc: Document,
         instructions: String,
         type: KClass<T>,
     ): Outcome<ParserContent> {
-        log.info { "Reading html: ${url.take(50)}" }
+        log.info { "Reading html: ${url.value.take(50)}" }
         val content = trimmer.trimHtml(doc)
 
         val prompt = prompt(

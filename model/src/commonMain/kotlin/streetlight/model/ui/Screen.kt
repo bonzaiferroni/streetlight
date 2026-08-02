@@ -55,7 +55,7 @@ enum class Screen(
 
     // location
     Location(SlugParse { LocationRoute(it) }, "l", true),
-    LocationAdmin(UuidParse { LocationAdminRoute(LocationId(it)) }),
+    LocationAdmin(UuidParse { LocationConfigRoute(LocationId(it)) }),
     LocationScout(SlugParse { LocationScoutRoute(it) }),
     LocationUpdate(SlugParse { LocationUpdateRoute(it) }),
 

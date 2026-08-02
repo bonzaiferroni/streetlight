@@ -3,7 +3,7 @@ package streetlight.web.shells
 import koala.html.*
 import kotlinx.html.FlowContent
 import streetlight.model.data.LocationContent
-import streetlight.model.ui.LocationAdminRoute
+import streetlight.model.ui.LocationConfigRoute
 import streetlight.model.ui.LocationRoute
 import streetlight.model.ui.LocationUpdateRoute
 import streetlight.web.layouts.layoutPosts
@@ -46,7 +46,7 @@ fun FlowContent.locationShell(
         appFooter()
 
         val routeNow = LocationRoute(location.slug)
-        val adminRoute = content.takeIf { it.canEdit }?.let { LocationAdminRoute(location.locationId) }
+        val adminRoute = content.takeIf { it.canEdit }?.let { LocationConfigRoute(location.locationId) }
         routeMenu(location.name ?: "Location", routeNow, listOf(routeNow, adminRoute))
     }
 

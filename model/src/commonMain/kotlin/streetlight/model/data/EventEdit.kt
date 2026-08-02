@@ -1,6 +1,7 @@
 package streetlight.model.data
 
 import kampfire.api.Markdown
+import kampfire.model.Url
 import kampfire.model.toValidityCheck
 import koala.Image
 import kotlinx.datetime.LocalDate
@@ -23,7 +24,7 @@ data class EventEdit(
     val cost: Float? = null,
     val links: List<ExtraLink>? = null,
     val isHost: Boolean? = null,
-    val website: String? = null,
+    val website: Url? = null,
     override val image: Image? = null,
     val startTime: LocalTime? = null,
     val endTime: LocalTime? = null,

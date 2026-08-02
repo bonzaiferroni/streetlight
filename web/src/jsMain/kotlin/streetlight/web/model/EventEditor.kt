@@ -3,6 +3,7 @@ package streetlight.web.model
 import kabinet.utils.replaceAt
 import kampfire.api.toMarkdown
 import kampfire.model.handleResponse
+import kampfire.model.toUrl
 import koala.dom.MessageStore
 import koala.model.fieldOf
 import koala.model.mutableFieldOf
@@ -40,7 +41,7 @@ class EventEditor(
     val startsAt = editField.fieldOf { it.startsAt }
     val description = editField.mutableFieldOf({ it.description ?: "".toMarkdown() }) { copy(description = it) }
     val title = editField.mutableFieldOf({ it.title ?: "" }) { copy(title = it) }
-    val urlField = editField.mutableFieldOf({ it.website ?: "" }) { copy(website = it) }
+    val urlField = editField.mutableFieldOf({ it.website?.value ?: "" }) { copy(website = it.toUrl()) }
     val isFree = editField.mutableFieldOf({ it.isFree }) { copy(cost = if (it) 0f else null) }
     val costField = state.mutableFieldOf({ it.costString }) { copy(costString = it) }
     val validityCheckField = editField.fieldOf { it.validity }
@@ -87,7 +88,7 @@ class EventEditor(
     }
 
     fun parseFromUrl() {
-        val url = state.now.edit.website?.takeIf { it.startsWith("http") } ?: return
+        val url = state.now.edit.website?.takeIf { it.isAbsolute } ?: return
         scope.launch {
             parseMessage.set("Reading the link, this will take a minute.", true)
             api.parseSingleEvent(UrlParseRequest(url)).handleResponse(parseMessage) { edit ->

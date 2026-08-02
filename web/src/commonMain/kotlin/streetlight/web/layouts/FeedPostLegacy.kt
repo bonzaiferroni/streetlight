@@ -133,7 +133,7 @@ fun FlowContent.feedPostLegacy(
             links?.let { links ->
                 row(modify(FlexWrap, AlignItemsStart)) {
                     links.forEach { link ->
-                        btn(link.label, link.url, modify(Zen))
+                        btn(link.label, link.url.value, modify(Zen))
                     }
                 }
             }

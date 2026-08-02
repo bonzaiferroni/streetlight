@@ -2,6 +2,7 @@ package streetlight.web.model
 
 import kampfire.api.toMarkdown
 import kampfire.model.handleResponse
+import kampfire.model.toUrl
 import koala.dom.MessageStore
 import koala.model.dedupNotNull
 import koala.model.fieldOf
@@ -36,9 +37,9 @@ class LocationEditor(
     val addressField = editField.mutableFieldOf({ it.address ?: "" }) { copy(address = it) }
     val descriptionField = editField.mutableFieldOf({ it.description ?: "".toMarkdown() }) { copy(description = it) }
     val cityField = editField.mutableFieldOf({ it.city ?: "" }) { copy(city = it) }
-    val eventsUrlField = editField.mutableFieldOf({ it.eventsUrl ?: "" }) { copy(eventsUrl = it) }
+    val eventsUrlField = editField.mutableFieldOf({ it.eventsUrl?.value ?: "" }) { copy(eventsUrl = it.toUrl()) }
     val validityField = editField.fieldOf { it.validity }
-    val websiteField = editField.mutableFieldOf({ it.website ?: "" }) { copy(website = it) }
+    val websiteField = editField.mutableFieldOf({ it.website?.value ?: "" }) { copy(website = it.toUrl()) }
 
     val imageEditor = ImageEditor(imageField, api)
     val websiteMessage = MessageStore()
@@ -59,7 +60,7 @@ class LocationEditor(
     // }
 
     fun readWebsite() {
-        val website = editNow.website?.takeIf { it.startsWith("http") } ?: return
+        val website = editNow.website?.takeIf { it.isAbsolute } ?: return
         scope.launch {
             websiteMessage.set("Reading the link, this will take a minute.", true)
             api.parseLocation(UrlParseRequest(website)).handleResponse(websiteMessage) { edit ->

@@ -1,6 +1,8 @@
 package streetlight.model.data
 
 import kampfire.api.toMarkdown
+import kampfire.model.Url
+import kampfire.model.toUrl
 import koala.toImage
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
@@ -12,23 +14,23 @@ import kotlin.time.Instant
 
 @Serializable
 sealed interface ParseRequest {
-    val url: String
+    val url: Url
 }
 
 @Serializable
 data class UrlParseRequest(
-    override val url: String
+    override val url: Url
 ): ParseRequest
 
 @Serializable
 data class HtmlParseRequest(
-    override val url: String,
+    override val url: Url,
     val html: String,
 ): ParseRequest
 
 @Serializable
 data class ImageParseRequest(
-    override val url: String,
+    override val url: Url,
 ): ParseRequest
 
 @Serializable
@@ -125,7 +127,7 @@ fun EventParse.toEventEdit(
     description = description?.toMarkdown(),
     ageMin = ageMin?.takeIf { it > 0 },
     cost = floatUSDOf(cost),
-    website = url,
+    website = url?.toUrl(),
     startTime = startTime,
     endTime = endTime,
     date = date

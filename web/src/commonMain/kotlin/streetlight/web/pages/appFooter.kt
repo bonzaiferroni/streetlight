@@ -51,7 +51,7 @@ fun DIV.configureAppFooter(sourcePath: String?, vararg additional: ExtraLink) {
             }
             additional.takeIf { it.isNotEmpty() }?.let {
                 it.forEach { link ->
-                    navigation(sourceUrlOf(link.url)) {
+                    navigation(sourceUrlOf(link.url.value)) {
                         textBlock("+ ${link.label}", modify(OpacityHalf))
                     }
                 }

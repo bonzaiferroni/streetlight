@@ -1,5 +1,9 @@
 package kampfire.model
 
+object CoreProblem {
+    val NotImplemented = Problem("This feature is not yet implemented.")
+}
+
 object AuthProblem {
     val PasswordRequired = Problem("A password is required.")
     val InvalidPassword = Problem("Invalid password")

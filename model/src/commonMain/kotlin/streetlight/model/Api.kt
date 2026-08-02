@@ -58,6 +58,8 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object QueryPoint: QueryEndpoint<GeoPoint, List<Location>>(this)
         object ParseLocation: PostEndpoint<ParseRequest, LocationEdit>(this)
         object QueryBounds: PostEndpoint<GeoBounds, List<LocationInfo>>(this)
+        object ReadConfig: GetByIdEndpoint<LocationId, LocationConfig>(this)
+        object ParseEventSchema: PostEndpoint<Url, EventSelectorSchema>(this)
     }
 
     object Songs: GetEndpoint<List<Song>>(this) {

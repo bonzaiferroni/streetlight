@@ -1,15 +1,16 @@
 package streetlight.model.data
 
+import kampfire.model.Url
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class ExtraLink(
     val label: String,
-    val url: String, // td: make this Url
+    val url: Url,
 ) {
     private val urlIsValid: Boolean
         get() {
-            val trimmed = url.trim()
+            val trimmed = url.value.trim()
             val regex = Regex(
                 pattern = """^(https?)://([a-zA-Z0-9\-._~%]+)(:\d+)?(/\S*)?$"""
             )
@@ -18,6 +19,6 @@ data class ExtraLink(
     val isValid get() = label.isNotBlank() && urlIsValid
 
     companion object {
-        val Blank get () = ExtraLink("", "")
+        val Blank get () = ExtraLink("", Url(""))
     }
 }

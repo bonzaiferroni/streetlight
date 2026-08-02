@@ -8,21 +8,26 @@ import com.fleeksoft.ksoup.nodes.Document
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.http.HttpStatusCode
+import kampfire.model.Url
+import kampfire.model.toUrl
 
 private val log = KotlinLogging.logger("fetchHtml")
 
-suspend fun fetchHtml(url: String): String? {
-    log.info { "fetching url: ${url.take(50)}" }
-    val response: HttpResponse = httpClient.get(url)
+suspend fun fetchHtml(url: Url): String? {
+    log.info { "fetching url: ${url.value.take(50)}" }
+    val response: HttpResponse = httpClient.get(url.value)
     if (response.status != HttpStatusCode.OK) return null.also {
         log.info { "Invalid status code: ${response.status}" }
     }
     return response.bodyAsText()
 }
 
-fun parseDocument(html: String, baseUri: String): Document? {
+@Deprecated("Use overload that takes Url")
+suspend fun fetchHtml(url: String) = fetchHtml(url.toUrl())
+
+fun parseDocument(html: String, url: Url): Document? {
     if (!html.looksLikeHtml()) return null
-    return Ksoup.parse(html, baseUri)
+    return Ksoup.parse(html, url.value)
 }
 
 private val htmlStart = Regex("""^\s*(<!DOCTYPE\s+html|<html|<[a-zA-Z]+)""", RegexOption.IGNORE_CASE)

@@ -6,6 +6,7 @@ import kampfire.api.Username
 import kampfire.api.toMarkdown
 import kampfire.model.GeoPoint
 import kampfire.model.Labeled
+import kampfire.model.Url
 import kampfire.model.toUrl
 import koala.Image
 import koala.model.RouteContent
@@ -34,15 +35,15 @@ data class Location(
     val mapType: String?,
     val resources: Set<ResourceType>,
     val hours: HoursSchedule?,
-    val website: String?,
+    val website: Url?,
     val lightCount: Int?,
-    val eventsUrl: String?,
+    val isLit: Boolean,
+    val eventsUrl: Url?,
     override val image: Image?,
     val extraLinks: List<ExtraLink>?,
     val updatedAt: Instant,
     val createdAt: Instant,
 ): Entity, Labeled, RouteContent {
-    val isLit get() = false
 
     val addressLine by lazy {
         addressLineOf(address, city)
@@ -116,7 +117,7 @@ fun PlaceProto.toEdit() = LocationEdit(
     address = address,
     city = city,
     geoPoint = geoPoint,
-    website = website
+    website = website?.toUrl()
 )
 
 fun LocationParse.toEdit(
@@ -130,11 +131,11 @@ fun LocationParse.toEdit(
     city = city,
 //    val state: String? = null,
 //    val country: String? = null,
-    website = url,
-    eventsUrl = eventsUrl,
+    website = url?.toUrl(),
+    eventsUrl = eventsUrl?.toUrl(),
     extraLinks = buildList {
-        menuUrl?.let { add(ExtraLink("menu", it)) }
-        aboutUrl?.let { add(ExtraLink("about", it))}
+        menuUrl?.let { add(ExtraLink("menu", it.toUrl())) }
+        aboutUrl?.let { add(ExtraLink("about", it.toUrl()))}
     },
     image = imageUrl?.toUrl()?.let { Image(it) },
 )

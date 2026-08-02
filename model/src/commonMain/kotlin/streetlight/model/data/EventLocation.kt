@@ -5,6 +5,7 @@ import kampfire.api.Slug
 import kampfire.api.Username
 import kampfire.model.GeoPoint
 import kampfire.model.Labeled
+import kampfire.model.Url
 import koala.Image
 import koala.SiteImage
 import koala.model.RouteContent
@@ -19,7 +20,7 @@ data class EventLocation(
     val eventSlug: Slug,
     val locationSlug: Slug,
     val scout: Username,
-    val url: String?,
+    val url: Url?,
     val eventImage: Image?,
     val title: String,
     val description: Markdown?,

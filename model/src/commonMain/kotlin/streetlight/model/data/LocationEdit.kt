@@ -3,6 +3,8 @@ package streetlight.model.data
 import kampfire.api.Markdown
 import kampfire.model.GeoPoint
 import kampfire.model.Labeled
+import kampfire.model.Url
+import kampfire.model.toUrl
 import kampfire.model.toValidityCheck
 import kampfire.utils.snakeToTitleCase
 import koala.Image
@@ -30,8 +32,8 @@ data class LocationEdit(
     val mapType: String? = null,
     val resources: Set<ResourceType>? = null,
     val hours: HoursSchedule? = null,
-    val website: String? = null,
-    val eventsUrl: String? = null,
+    val website: Url? = null,
+    val eventsUrl: Url? = null,
     val extraLinks: List<ExtraLink>? = null,
     override val image: Image? = null,
 ): Labeled, RecordEdit {
@@ -121,7 +123,7 @@ fun OSMLocation.toEdit() = LocationEdit(
     mapRank = importance?.toFloat() ?: 0f,
     mapCategory = category,
     mapType = type.snakeToTitleCase(),
-    website = extraTags?.website
+    website = extraTags?.website?.toUrl()
 )
 
 fun OSMLocation.toEditOrNull() = runCatching { toEdit() }.getOrNull()

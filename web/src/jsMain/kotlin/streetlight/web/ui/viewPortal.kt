@@ -54,7 +54,7 @@ fun ViewScope.viewPortal() {
                 Screen.UpdateAccount -> viewUpdateAccountRoute()
 
                 // location
-                Screen.LocationAdmin -> viewLocationAdmin()
+                Screen.LocationAdmin -> viewLocationConfigRoute()
                 Screen.Location -> viewLocation()
                 Screen.LocationUpdate -> viewUpdateLocationRoute()
                 Screen.LocationScout -> viewLocationScoutRoute()

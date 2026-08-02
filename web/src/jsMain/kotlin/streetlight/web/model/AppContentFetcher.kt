@@ -12,7 +12,7 @@ import streetlight.model.ui.EventUpdateRoute
 import streetlight.model.ui.GalaxyConfigRoute
 import streetlight.model.ui.GalaxyRoute
 import streetlight.model.ui.HomeRoute
-import streetlight.model.ui.LocationAdminRoute
+import streetlight.model.ui.LocationConfigRoute
 import streetlight.model.ui.LocationRoute
 import streetlight.model.ui.LocationScoutRoute
 import streetlight.model.ui.LocationUpdateRoute
@@ -39,7 +39,7 @@ class AppContentFetcher(
         is LocationScoutRoute -> api.readGalaxy(route.slug)
         is LocationUpdateRoute -> api.readLocationUpdaterContent(route.slug)
         is EventScoutRoute -> api.readGalaxy(route.slug)
-        is LocationAdminRoute -> api.readLocation(route.locationId)
+        is LocationConfigRoute -> api.readLocationConfig(route.locationId)
         is EventUpdateRoute -> api.readEventUpdaterContent(route.slug)
         is MediaRoute -> api.readMedia(route.slug)
         is MediaUpdateRoute -> api.readMedia(route.slug)

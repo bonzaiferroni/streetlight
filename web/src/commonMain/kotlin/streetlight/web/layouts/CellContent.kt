@@ -158,7 +158,7 @@ fun FlowContent.postedAtCell(postedAt: Instant) {
 }
 
 fun FlowContent.linkCell(link: ExtraLink) {
-    linkCell(link.url.toUrl(), SvgFile.Link, link.label)
+    linkCell(link.url, SvgFile.Link, link.label)
 }
 
 fun FlowContent.moreButton() {

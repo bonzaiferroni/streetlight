@@ -54,6 +54,7 @@ fun FlowContent.btn(
     }
 }
 
+@Deprecated("use overload that takes url")
 fun FlowContent.btn(
     text: String,
     href: String,
@@ -79,6 +80,16 @@ fun FlowContent.btn(
         }
     }
 }
+
+fun FlowContent.btn(
+    text: String,
+    href: Url,
+    modifiers: ModifierSet? = null,
+    id: Id? = null,
+    addFlair: Boolean = true,
+    flair: String? = null,
+    block: A.() -> Unit = {},
+) = btn(text, href.value, modifiers, id, addFlair, flair, block)
 
 fun domainOf(url: String): String? =
     Regex("""^(?:[a-zA-Z][a-zA-Z\d+\-.]*://)?(?:[^@/\n]+@)?([^:/\n?#]+)""")
