@@ -8,16 +8,19 @@ fun <T> Outcome<T>.getDataOrNull() = when (this) {
 
 fun <T> Outcome<T>.handleResponse(
     messenger: Messenger,
+    defaultOkMessage: String? = null,
     okMessenger: Messenger = messenger,
-) = handleResponse(messenger, okMessenger) { it }
+) = handleResponse(messenger, defaultOkMessage, okMessenger) { it }
 
 fun <T1, T2> Outcome<T1>.handleResponse(
     messenger: Messenger,
+    defaultOkMessage: String? = null,
     okMessenger: Messenger = messenger,
     block: (T1) -> T2
 ): T2? = when (this) {
     is Ok -> {
-        message?.let {
+        val deliveredMessage = message ?: defaultOkMessage
+        deliveredMessage?.let {
             okMessenger.deliver(UIMessage(it, UIMessageType.Success))
         }
         block(data)

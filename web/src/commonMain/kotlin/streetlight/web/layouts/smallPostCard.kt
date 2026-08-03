@@ -58,7 +58,7 @@ fun FlowContent.smallPostCard(post: EventPost) {
 //                    }
 //                }
                 card(cellModifiers) {
-                    post.event.startsAt.let { startsAt ->
+                    post.event.startsAt?.let { startsAt ->
                         heading4(startsAt.toRelativeDayFormat())
                         textBlock("8:00 PM")
                     }

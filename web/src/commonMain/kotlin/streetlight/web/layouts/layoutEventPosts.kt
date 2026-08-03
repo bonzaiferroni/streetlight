@@ -16,11 +16,11 @@ fun FlowContent.layoutEventPosts(
         headingText?.let {
             heading2(headingText, SectionHeadingMod)
         }
-        val groupings = posts.groupBy { it.event?.startsAt?.toLocalDateTime()?.date }
+        val groupings = posts.groupBy { it.event.startsAt?.toLocalDateTime()?.date }
         groupings.forEach { grouping ->
-            val date = grouping.key ?: return@forEach // td: show removed post content
+            // val date = grouping.key ?: return@forEach // td: show removed post content
             val posts = grouping.value
-            val dayFormat = posts.first().event!!.startsAt.toRelativeDayFormat()
+            val dayFormat = posts.first().event.startsAt?.toRelativeDayFormat() ?: return@forEach
             section {
                 filigree(modify(MarginTop2)) {
                     heading4(dayFormat, SectionHeadingMod + OpacityHigh)

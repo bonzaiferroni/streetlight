@@ -1,5 +1,6 @@
 package streetlight.agent
 
+import ai.koog.prompt.dsl.Prompt
 import ai.koog.prompt.dsl.prompt
 import ai.koog.prompt.executor.clients.LLMClientException
 import ai.koog.prompt.executor.clients.google.GoogleModels
@@ -14,10 +15,13 @@ import kampfire.model.Problem
 import kampfire.model.Url
 import kampfire.utils.takeEllipsis
 import klutch.utils.logger
+import kotlinx.coroutines.delay
 import kotlinx.io.files.Path
 import kotlin.reflect.KClass
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
 
-class KoogParserClient(env: Environment) {
+class KoogParserClient(env: Environment, private val retryDelay: Duration = 10.seconds) {
     private val executor = simpleGoogleAIExecutor(env.read("GEMINI_KEY_A"))
     private val console = KotlinLogging.logger("dao")
     private val cache = mutableMapOf<Int, ParserContent>()
@@ -56,6 +60,7 @@ class KoogParserClient(env: Environment) {
         doc: Document,
         instructions: String,
         type: KClass<T>,
+        retryCount: Int = 3,
     ): Outcome<ParserContent> {
         log.info { "Reading html: ${url.value.take(50)}" }
         val content = trimmer.trimHtml(doc)
@@ -72,21 +77,28 @@ class KoogParserClient(env: Environment) {
             user("$instructions\n\nFor reference, here is the url:\n$url\n\nHere is the HTML:\n$content")
         }
 
-        val json = try {
-            executor.execute(prompt, GoogleModels.Gemini2_5Flash).first().content
-        } catch (e: LLMClientException) {
-            console.error { e }
-            if (e.toString().contains("\"status\": \"UNAVAILABLE\"")) {
-                return Problem("Language model is busy.")
-            } else null
-        } ?: return Problem("Unspecified language model error.")
+        return when (val outcome = executePrompt(prompt, retryCount)) {
+            is Problem -> outcome
+            is Ok -> Ok(ParserContent(document = doc, json = outcome.data))
+        }
+    }
 
-        return Ok(
-            ParserContent(
-                document = doc,
-                json = json
-            )
-        )
+    private fun LLMClientException.isBusy(): Boolean =
+        toString().contains("UNAVAILABLE") || toString().contains("503")
+
+    private suspend fun executePrompt(prompt: Prompt, retryCount: Int): Outcome<String> {
+        repeat(retryCount) { attempt ->
+            try {
+                return Ok(executor.execute(prompt, GoogleModels.Gemini2_5Flash).first().content)
+            } catch (e: LLMClientException) {
+                log.error { e }
+                if (!e.isBusy()) return Problem("Language model error.")
+                if (attempt == retryCount - 1) return Problem("Language model is busy.")
+                log.info { "Model busy, retrying in ${retryDelay.inWholeSeconds}s (attempt ${attempt + 1} of $retryCount)" }
+                delay(retryDelay)
+            }
+        }
+        return Problem("Unspecified language model error.")
     }
 
     suspend fun <T: Any> readImage(url: String, instructions: String, type: KClass<T>): T? {

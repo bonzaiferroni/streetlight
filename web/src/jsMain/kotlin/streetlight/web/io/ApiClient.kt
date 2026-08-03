@@ -54,8 +54,9 @@ class ApiClient(private val client: FetchClient) {
             writeParam(it.state, state)
             writeParam(it.limit, limit)
         }
-    suspend fun readLocationConfig(locationId: LocationId) = client.getApi(Api.Locations.ReadConfig, locationId)
+    suspend fun readLocationConfigContent(locationId: LocationId) = client.getApi(Api.Locations.ReadConfigContent, locationId)
     suspend fun parseEventSchema(url: Url) = client.postApi(Api.Locations.ParseEventSchema, url)
+    suspend fun editLocationConfig(edit: LocationConfig) = client.postApi(Api.Locations.EditConfig, edit)
 
     suspend fun createLocation(location: LocationEdit) = client.postApi(Api.Locations.CreateLocation, location)
     suspend fun updateLocation(location: LocationEdit) = client.postApi(Api.Locations.UpdateLocation, location)

@@ -36,7 +36,7 @@ data class EventLocation(
     val locationImage: Image?,
     val lightCount: Int?,
     val isLit: Boolean,
-    val startsAt: Instant,
+    val startsAt: Instant?,
     val endsAt: Instant?,
     val updatedAt: Instant,
     val createdAt: Instant,
@@ -64,7 +64,7 @@ data class EventLocation(
 
     val locationLabel get() = locationName ?: address ?: "(geolocation)"
 
-    val endsAtOrLater get() = endsAt ?: (startsAt + 4.hours)
+    // val endsAtOrLater get() = if (endsAt != null && startsAt != null) endsAt - startsAt else null
 }
 
 fun addressLineOf(address: String?, city: String?) = buildString {

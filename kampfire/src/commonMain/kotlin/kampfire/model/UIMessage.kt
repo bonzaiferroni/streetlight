@@ -17,8 +17,12 @@ interface Messenger {
     fun deliver(message: UIMessage)
     fun deliver(problem: Problem)
 
-    fun deliverSending() = deliver(UIMessage("Sending...", UIMessageType.Working))
+    fun deliverSending() = deliver(UIMessage(SendingMessage, UIMessageType.Working))
     fun deliverSuccess(text: String) = deliver(UIMessage(text, UIMessageType.Success))
+
+    companion object {
+        val SendingMessage = "Sending..."
+    }
 }
 
 object PrintLnMessenger: Messenger {

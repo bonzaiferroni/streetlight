@@ -54,7 +54,7 @@ data class EventMarker(
 ): ThumbMarker {
     override val markerId get() = event.eventId.value.toString()
     override val label get() = event.label
-    override val sublabel get() = event.startsAt.toRelativeDayFormat()
+    override val sublabel get() = event.startsAt?.toRelativeDayFormat()
     override val thumbUrl get() = event.image.thumb ?: SiteImage.placeholderTh
     override val light get() = rgb(240, 100, 180 )
     override val geoPoint get() = event.geoPoint

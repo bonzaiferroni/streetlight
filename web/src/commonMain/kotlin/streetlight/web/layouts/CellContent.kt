@@ -118,7 +118,8 @@ fun FlowContent.linkCell(
     }
 }
 
-fun FlowContent.startsAtCell(startsAt: Instant) {
+fun FlowContent.startsAtCell(startsAt: Instant?) {
+    val startsAt = startsAt ?: return
     cell(SvgFile.Clock, startsAt.toTimeFormat())
 }
 

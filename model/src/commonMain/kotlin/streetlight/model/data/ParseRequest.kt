@@ -67,12 +67,6 @@ data class SingleEventParse(
 )
 
 @Serializable
-data class EventParseResult(
-    val hasContent: Boolean? = null,
-    val event: EventEdit? = null,
-)
-
-@Serializable
 data class LocationParse(
     val name: String? = null,
     val description: String? = null,
@@ -86,12 +80,6 @@ data class LocationParse(
     val aboutUrl: String? = null,
     val menuUrl: String? = null,
     val imageUrl: String? = null,
-)
-
-@Serializable
-data class LocationParseResult(
-    val location: Location?,
-    val edit: LocationEdit?,
 )
 
 @Serializable

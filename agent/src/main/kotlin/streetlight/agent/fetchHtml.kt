@@ -5,9 +5,15 @@ import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import com.fleeksoft.ksoup.Ksoup
 import com.fleeksoft.ksoup.nodes.Document
+import com.fleeksoft.ksoup.nodes.Element
+import com.fleeksoft.ksoup.select.Elements
+import com.fleeksoft.ksoup.select.Selector
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.http.HttpStatusCode
+import kampfire.model.Ok
+import kampfire.model.Outcome
+import kampfire.model.Problem
 import kampfire.model.Url
 import kampfire.model.toUrl
 
@@ -34,7 +40,6 @@ private val htmlStart = Regex("""^\s*(<!DOCTYPE\s+html|<html|<[a-zA-Z]+)""", Reg
 
 fun String.looksLikeHtml(): Boolean = htmlStart.containsMatchIn(this)
 
-
 private val httpClient by lazy {
     HttpClient {
         defaultRequest {
@@ -44,5 +49,19 @@ private val httpClient by lazy {
             header("Accept-Language", "en-US,en;q=0.5")
             header("Connection", "keep-alive")
         }
+    }
+}
+
+
+
+fun Element.tryQuery(selector: String): Outcome<Elements> {
+    if (selector == ".") return Ok(Elements(this))
+
+    return try {
+        Ok(select(selector))
+    } catch (e: Selector.SelectorParseException) {
+        Problem("Malformed selector: $selector")
+    } catch (e: IllegalArgumentException) {
+        Problem("Invalid selector: $selector")
     }
 }

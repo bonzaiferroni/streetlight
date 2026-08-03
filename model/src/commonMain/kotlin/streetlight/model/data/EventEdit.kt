@@ -88,8 +88,8 @@ fun Event.toEdit() = EventEdit(
     cost = cost,
     links = links,
     website = website,
-    startTime = startsAt.toLocalDateTime(timeZone).time,
-    date = startsAt.toLocalDateTime(timeZone).date,
+    startTime = startsAt?.toLocalDateTime(timeZone)?.time,
+    date = startsAt?.toLocalDateTime(timeZone)?.date,
     timeZoneId = timeZone.id,
 )
 

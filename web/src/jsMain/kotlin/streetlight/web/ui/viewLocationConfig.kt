@@ -5,15 +5,16 @@ import koala.dom.*
 import koala.html.Id
 import koala.html.topLogo
 import streetlight.model.data.LocationConfig
+import streetlight.model.data.LocationConfigContent
 import streetlight.model.data.toEdit
 import streetlight.model.ui.LocationConfigRoute
 import streetlight.web.pages.appFooter
 import streetlight.web.shells.cardOf
 
 fun ViewScope.viewLocationConfig(
-    config: LocationConfig,
+    content: LocationConfigContent,
 ) {
-    val location = config.location
+    val location = content.location
     column(BodyStyle.Column) {
         topLogo()
         cardOf(location)
@@ -42,7 +43,7 @@ fun ViewScope.viewLocationConfig(
                 }
             }
             tab("automate") {
-                viewLocationAutomation(config)
+                locationAutomationForm(content)
             }
         }
         appFooter()
@@ -50,7 +51,7 @@ fun ViewScope.viewLocationConfig(
 }
 
 fun RouteScope.viewLocationConfigRoute() {
-    routeBlock<LocationConfigRoute, LocationConfig> { config ->
+    routeBlock<LocationConfigRoute, LocationConfigContent> { config ->
         viewLocationConfig(config)
     }
 }

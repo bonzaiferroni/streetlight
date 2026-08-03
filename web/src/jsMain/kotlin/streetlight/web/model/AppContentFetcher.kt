@@ -39,7 +39,7 @@ class AppContentFetcher(
         is LocationScoutRoute -> api.readGalaxy(route.slug)
         is LocationUpdateRoute -> api.readLocationUpdaterContent(route.slug)
         is EventScoutRoute -> api.readGalaxy(route.slug)
-        is LocationConfigRoute -> api.readLocationConfig(route.locationId)
+        is LocationConfigRoute -> api.readLocationConfigContent(route.locationId)
         is EventUpdateRoute -> api.readEventUpdaterContent(route.slug)
         is MediaRoute -> api.readMedia(route.slug)
         is MediaUpdateRoute -> api.readMedia(route.slug)

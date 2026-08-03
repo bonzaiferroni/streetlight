@@ -17,13 +17,17 @@ import streetlight.web.shells.HomeShell
 import kotlin.collections.component1
 import kotlin.collections.component2
 import kotlin.time.Clock
+import kotlin.time.Duration.Companion.hours
 
 fun ViewScope.wireLitEvents(root: HTMLElement) {
     val cache = app.get<DataCache>()
 
     val now = Clock.System.now()
     val eventCache = cache.eventLights
-    val eventsFlow = eventCache.stateFlow.dedup { events -> events.items.filter { it.endsAtOrLater > now } }
+    val eventsFlow = eventCache.stateFlow.dedup { events -> events.items.filter {
+        true
+        // td: fix (it.endsAt ?: it.startsAt != null && it.startsAt + 4.hours) > now
+    } }
     val swapIdFlow = eventsFlow.dedup {
         when (it.isEmpty()) {
             true -> HomeShell.LightInfoId
@@ -35,7 +39,7 @@ fun ViewScope.wireLitEvents(root: HTMLElement) {
     wireBlock(HomeShell.LitEventsId, root, wireOnView = false) {
         // td: fix later or delete
         flowBlock(emptyList(), eventsFlow) { events ->
-            val eventMap = events.groupBy { it.startsAt.toRelativeDayFormat() }
+            val eventMap = events.groupBy { it.startsAt?.toRelativeDayFormat() }
             row(modify(OverflowXAuto, Height100P, Padding1)) {
                 eventMap.forEach { (day, events) ->
                     column(modify(Gap0, FlexShrink0)) {
@@ -61,7 +65,9 @@ fun ViewScope.narrowEventCard(event: EventLocation, eventCache: LightCache<Event
                 textBlock(event.locationLabel, modify(WhiteSpaceNoWrap, TextOverflowEllipses, Dim))
             }
             row(modify(JustifyContentSpaceBetween)) {
-                textBlock(event.startsAt.toTimeFormat())
+                event.startsAt?.let {
+                    textBlock(it.toTimeFormat())
+                }
                 icon(SvgFile.Minus, modify(Dim)).onClick {
                     eventCache.removeLight(event.eventId)
                 }

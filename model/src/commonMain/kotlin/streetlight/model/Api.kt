@@ -31,7 +31,6 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
 
         object ParseMultiEvents: PostEndpoint<ParseRequest, MultiEventParseResponse>(this)
         object ParseSingleEvent: PostEndpoint<ParseRequest, EventEdit>(this)
-        object ParseEvent: PostEndpoint<ParseRequest, EventParseResult>(this)
 
         object AtLocation: GetByIdEndpoint<Slug, List<Event>>(this)
         object ReadEventLocations: PostEndpoint<List<EventId>, List<EventLocation>>(this)
@@ -58,8 +57,9 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object QueryPoint: QueryEndpoint<GeoPoint, List<Location>>(this)
         object ParseLocation: PostEndpoint<ParseRequest, LocationEdit>(this)
         object QueryBounds: PostEndpoint<GeoBounds, List<LocationInfo>>(this)
-        object ReadConfig: GetByIdEndpoint<LocationId, LocationConfig>(this)
+        object ReadConfigContent: GetByIdEndpoint<LocationId, LocationConfigContent>(this)
         object ParseEventSchema: PostEndpoint<Url, EventSelectorSchema>(this)
+        object EditConfig: PostEndpoint<LocationConfig, Unit>(this)
     }
 
     object Songs: GetEndpoint<List<Song>>(this) {
