@@ -5,17 +5,18 @@ import kotlinx.serialization.*
 import kotlinx.serialization.json.*
 import kotlinx.serialization.descriptors.*
 import kotlin.reflect.KClass
+import kotlin.reflect.KType
 
-fun <T: Any> KClass<T>.toBasicSchema(): LLMParams.Schema {
+fun KType.toBasicSchema(): LLMParams.Schema {
     return LLMParams.Schema.JSON.Basic(
-        name = simpleName ?: error("must be a named type"),
+        name = (classifier as? KClass<*>)?.simpleName ?: error("must be a named type"),
         schema = toJsonSchema()
     )
 }
 
 @OptIn(InternalSerializationApi::class)
-fun <T: Any> KClass<T>.toJsonSchema(): JsonObject {
-    val serializer = serializer()
+fun KType.toJsonSchema(): JsonObject {
+    val serializer = serializer(this)
     val descriptor = serializer.descriptor
 
     require(descriptor.kind == StructureKind.CLASS) {

@@ -35,3 +35,21 @@ Version 1
         "contact": ".et_pb_text_5_tb_footer a"
     }
 }
+
+{
+    "feed": {
+        "event": ".fwpl-result",
+        "title": ".event-title a",
+        "link": ".event-title a",
+        "image": ".event-image img",
+        "date": ".elevent-grid-event-date .event-dates"
+    },
+    "page": {
+        "title": "h1.entry-title",
+        "image": ".et_pb_image_0_tb_body img",
+        "description": ".et_pb_code_inner",
+        "date": ".et_pb_text_1_tb_body .et_pb_text_inner p",
+        "startTime": ".et_pb_text_1_tb_body .et_pb_text_inner p",
+        "contact": "div.et_pb_text_5_tb_footer a[href^=\"tel:\"]"
+    }
+}

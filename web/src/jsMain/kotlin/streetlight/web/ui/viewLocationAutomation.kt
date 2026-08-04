@@ -3,10 +3,11 @@ package streetlight.web.ui
 import kampfire.model.handleResponse
 import koala.css.*
 import koala.dom.*
+import koala.model.addAll
 import koala.model.storeOf
 import koala.utils.jsonPrettyConfig
-import streetlight.model.data.LocationConfig
 import streetlight.model.data.LocationConfigContent
+import streetlight.model.data.UrlSchemas
 
 fun ViewScope.locationAutomationForm(content: LocationConfigContent) = formColumn {
     formRow {
@@ -15,7 +16,7 @@ fun ViewScope.locationAutomationForm(content: LocationConfigContent) = formColum
 }
 
 fun ViewScope.eventSchemaSection(content: LocationConfigContent) = formSection("Event Schema") {
-    val eventSchemaField = storeOf(content.config.eventSchema)
+    val schemasField = storeOf(content.origins.firstOrNull()?.schemas?.map { it.content } ?: emptyList())
     val messages = MessageStore()
     when (val eventsUrl = content.location.eventsUrl) {
         null -> textBlock("No calendar url available.")
@@ -23,18 +24,17 @@ fun ViewScope.eventSchemaSection(content: LocationConfigContent) = formSection("
             formSubmit("reload schema", {
                 launchEffect {
                     messages.deliverSending()
-                    val schema = api.parseEventSchema(eventsUrl).handleResponse(messages, "schema delivered")
+                    val schemas = api.parseEventSchema(eventsUrl).handleResponse(messages, "schema delivered")
                         ?: return@launchEffect
-                    eventSchemaField.set(schema)
+                    schemasField.addAll(schemas)
                 }
             }, messages)
-            flowBlock(eventSchemaField) { eventSchema ->
-                if (eventSchema == null) return@flowBlock
+            flowBlock(schemasField) { eventSchema ->
                 val uploadMessages = MessageStore()
                 column {
                     formSubmit("Upload", {
                         launchEffect {
-                            api.editLocationConfig(content.config.copy(eventSchema = eventSchemaField.now))
+                            api.uploadSchemas(UrlSchemas(eventsUrl, schemasField.now))
                                 .handleResponse(uploadMessages)
                         }
                     }, uploadMessages)

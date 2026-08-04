@@ -44,3 +44,6 @@ open class Store<T>(
 
 fun <T> storeOf(initialValue: T) = Store(initialValue)
 
+fun <T> Store<List<T>>.addAll(values: List<T>) {
+    set(now + values)
+}

@@ -1,5 +1,7 @@
 package kampfire.model
 
+import io.ktor.http.HttpStatusCode
+
 object CoreProblem {
     val NotImplemented = Problem("This feature is not yet implemented.")
 }
@@ -17,4 +19,14 @@ object HttpProblem {
     val TooManyRequests = Problem("Too many requests.")
     val Conflict = Problem("There was a conflict.")
     val InternalServerError = Problem("The server ran into a problem.")
+}
+
+fun HttpStatusCode.toProblem() = this.value.toHttpProblem()
+
+fun Int.toHttpProblem() = when (this) {
+    401 -> HttpProblem.NotAuthorized
+    429 -> HttpProblem.TooManyRequests
+    409 -> HttpProblem.Conflict
+    500 -> HttpProblem.InternalServerError
+    else -> Problem("HTTP error: $this")
 }

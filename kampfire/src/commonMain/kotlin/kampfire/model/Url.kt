@@ -11,7 +11,7 @@ value class Url(val value: String) {
     val isRelative get() = value.startsWith("/")
     val isBlob get() = value.startsWith("blob")
     val filename get() = value.split('/').last().takeIf { it.contains('.') }
-    val host get() = Regex("^https?://([^/?#]+)").find(value)?.groupValues?.get(1)
+    val host get() = hostRegex.find(value)?.groupValues?.get(1)
 
     companion object {
         val Empty get() = Url("")
@@ -36,3 +36,5 @@ fun String.appendToFilename(appended: String) = buildString {
         }
     }
 }
+
+private val hostRegex = Regex("^https?://([^/?#]+)")

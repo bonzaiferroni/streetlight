@@ -1,15 +1,15 @@
 package streetlight.model.data
 
+import kampfire.model.Url
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class EventSelectorSchema(
-    val feed: EventFeedSelectors,
-    val page: EventPageSelectors?,
-)
+sealed interface ContentSchema {
+    val schemaType: SchemaType
+}
 
 @Serializable
-data class EventFeedSelectors(
+data class EventFeedSchema(
     val event: String? = null,
     val title: String? = null,
     val link: String? = null,
@@ -18,10 +18,12 @@ data class EventFeedSelectors(
     val description: String? = null,
     val date: String? = null,
     val time: String? = null,
-)
+): ContentSchema {
+    override val schemaType get() = SchemaType.EventFeed
+}
 
 @Serializable
-data class EventPageSelectors(
+data class EventPageSchema(
     val title: String? = null,
     val image: String? = null,
     val cost: String? = null,
@@ -31,7 +33,12 @@ data class EventPageSelectors(
     val endTime: String? = null,
     val ageMin: String? = null,
     val contact: String? = null,
-)
+): ContentSchema {
+    override val schemaType get() = SchemaType.EventPage
+}
 
-// td: implement requirements
-// val requirements: String?,
+@Serializable
+data class UrlSchemas(
+    val url: Url,
+    val schemas: List<ContentSchema>
+)

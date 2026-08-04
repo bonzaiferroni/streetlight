@@ -19,6 +19,11 @@ sealed interface Outcome <out T> {
         is Ok<T> -> true
         else -> false
     }
+
+    fun toDataOrNull(): T? = when (this) {
+        is Ok -> data
+        else -> null
+    }
 }
 
 @Serializable

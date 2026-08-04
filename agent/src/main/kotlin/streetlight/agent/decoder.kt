@@ -12,6 +12,7 @@ import kotlinx.serialization.descriptors.*
 import kotlinx.serialization.json.*
 import kotlinx.serialization.serializer
 import kotlin.reflect.KClass
+import kotlin.reflect.KType
 
 val LenientJson = Json {
     ignoreUnknownKeys = true
@@ -24,11 +25,12 @@ val LenientJson = Json {
  * Decode JSON into T, but if any field can't be parsed, it becomes null
  * (assuming the field is nullable/optional in your model).
  */
-fun <T: Any> decodeLenient(text: String, type: KClass<T>): T {
-    val serializer = type.serializer()
+fun <T: Any> decodeLenient(text: String, type: KType): T {
+    val serializer = serializer(type)
     val root = LenientJson.parseToJsonElement(text)
     val sanitized = sanitize(root, serializer.descriptor)
-    return LenientJson.decodeFromJsonElement(serializer, sanitized)
+    @Suppress("UNCHECKED_CAST")
+    return LenientJson.decodeFromJsonElement(serializer, sanitized) as T
 }
 
 fun sanitize(element: JsonElement, desc: SerialDescriptor): JsonElement {

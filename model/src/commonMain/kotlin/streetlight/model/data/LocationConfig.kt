@@ -3,24 +3,17 @@ package streetlight.model.data
 import koala.model.RouteContent
 import kotlinx.serialization.Serializable
 import kotlin.time.Instant
+import kotlin.uuid.Uuid
 
 @Serializable
 data class LocationConfig(
     val locationId: LocationId,
-    val eventSchema: EventSelectorSchema?,
 )
 
 @Serializable
 data class LocationConfigContent(
     val location: Location,
     val config: LocationConfig,
-    val parseResult: EventParseResult?,
-    val parsedAt: Instant?,
+    val origins: List<Origin>
 ): RouteContent
 
-@Serializable
-data class EventParseResult(
-    val isSuccess: Boolean,
-    val eventCount: Int,
-    val newCount: Int,
-)

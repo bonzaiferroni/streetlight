@@ -18,6 +18,9 @@ import klutch.utils.logger
 import kotlinx.coroutines.delay
 import kotlinx.io.files.Path
 import kotlin.reflect.KClass
+import kotlin.reflect.KType
+import kotlin.reflect.full.createType
+import kotlin.reflect.typeOf
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
@@ -28,12 +31,18 @@ class KoogParserClient(env: Environment, private val retryDelay: Duration = 10.s
     private val trimmer = HtmlTrimmer()
     private val log = KotlinLogging.logger(KoogParserClient::class)
 
-    suspend fun <T: Any> readHtml(url: Url, doc: Document, instructions: String, type: KClass<T>): Outcome<T> {
+    suspend inline fun <reified T> readHtml(url: Url, doc: Document, instructions: String): Outcome<T>
+        = readHtml(url, doc, instructions, typeOf<T>())
+
+    suspend fun <T: Any> readHtml(url: Url, doc: Document, instructions: String, type: KClass<T>): Outcome<T>
+        = readHtml(url, doc, instructions, type.createType())
+
+    suspend fun <T: Any> readHtml(url: Url, doc: Document, instructions: String, type: KType): Outcome<T> {
         val response = withCache(doc.hashCode()) {
             readHtmlContent(url, doc, instructions, type)
         }
         return when (response) {
-            is Ok -> tryDecode(response.data.json, type)?.let { Ok(it) } ?: Problem("Unable to decode LM response.")
+            is Ok -> tryDecode<T>(response.data.json, type)?.let { Ok(it) } ?: Problem("Unable to decode LM response.")
             is Problem -> Problem(response.message)
         }
     }
@@ -55,11 +64,11 @@ class KoogParserClient(env: Environment, private val retryDelay: Duration = 10.s
         return response
     }
 
-    private suspend fun <T: Any> readHtmlContent(
+    private suspend fun readHtmlContent(
         url: Url,
         doc: Document,
         instructions: String,
-        type: KClass<T>,
+        type: KType,
         retryCount: Int = 3,
     ): Outcome<ParserContent> {
         log.info { "Reading html: ${url.value.take(50)}" }
@@ -101,7 +110,7 @@ class KoogParserClient(env: Environment, private val retryDelay: Duration = 10.s
         return Problem("Unspecified language model error.")
     }
 
-    suspend fun <T: Any> readImage(url: String, instructions: String, type: KClass<T>): T? {
+    suspend fun <T> readImage(url: String, instructions: String, type: KType): T? {
         val cacheKey = url.hashCode()
         val cached = cache[cacheKey]
         if (cached != null) return tryDecode(cached.json, type)
@@ -143,7 +152,7 @@ class KoogParserClient(env: Environment, private val retryDelay: Duration = 10.s
         return tryDecode(json, type)
     }
 
-    private fun <T: Any> tryDecode(text: String, type: KClass<T>): T? = try {
+    private fun <T> tryDecode(text: String, type: KType): T? = try {
         decodeLenient(text, type)
     } catch (e: Exception) {
         console.error { e }

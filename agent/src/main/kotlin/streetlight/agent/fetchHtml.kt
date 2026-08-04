@@ -15,17 +15,16 @@ import kampfire.model.Ok
 import kampfire.model.Outcome
 import kampfire.model.Problem
 import kampfire.model.Url
+import kampfire.model.toProblem
 import kampfire.model.toUrl
 
 private val log = KotlinLogging.logger("fetchHtml")
 
-suspend fun fetchHtml(url: Url): String? {
+suspend fun fetchHtml(url: Url): Outcome<String> {
     log.info { "fetching url: ${url.value.take(50)}" }
     val response: HttpResponse = httpClient.get(url.value)
-    if (response.status != HttpStatusCode.OK) return null.also {
-        log.info { "Invalid status code: ${response.status}" }
-    }
-    return response.bodyAsText()
+    if (response.status != HttpStatusCode.OK) return response.status.toProblem()
+    return Ok(response.bodyAsText())
 }
 
 @Deprecated("Use overload that takes Url")
