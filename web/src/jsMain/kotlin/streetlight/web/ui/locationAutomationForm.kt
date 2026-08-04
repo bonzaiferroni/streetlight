@@ -34,7 +34,7 @@ fun ViewScope.eventSchemaSection(content: LocationConfigContent) = formSection("
                 column {
                     formSubmit("Upload", {
                         launchEffect {
-                            api.uploadSchemas(UrlSchemas(eventsUrl, schemasField.now))
+                            api.uploadSchemas(UrlSchemas(content.location.locationId, eventsUrl, schemasField.now))
                                 .handleResponse(uploadMessages)
                         }
                     }, uploadMessages)

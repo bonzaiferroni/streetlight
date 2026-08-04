@@ -25,7 +25,7 @@ import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
 class KoogParserClient(env: Environment, private val retryDelay: Duration = 10.seconds) {
-    private val executor = simpleGoogleAIExecutor(env.read("GEMINI_KEY_A"))
+    private val executor = simpleGoogleAIExecutor(env.read("GEMINI_KEY_B"))
     private val console = KotlinLogging.logger("dao")
     private val cache = mutableMapOf<Int, ParserContent>()
     private val trimmer = HtmlTrimmer()

@@ -53,3 +53,68 @@ Version 1
         "contact": "div.et_pb_text_5_tb_footer a[href^=\"tel:\"]"
     }
 }
+
+[
+    {
+        "type": "streetlight.model.data.EventFeedSchema",
+        "event": ".fwpl-result",
+        "title": ".event-title a",
+        "link": ".event-title a",
+        "image": ".event-image img",
+        "cost": ".fwpl-item.elevent-grid-event-price",
+        "description": ".fwpl-item.elevent-grid-event-description",
+        "date": ".event-dates.dates-wrapper",
+        "time": ".elevent-grid-event-time"
+    },
+    {
+        "type": "streetlight.model.data.EventPageSchema",
+        "title": "h1.entry-title",
+        "image": "div.et_pb_image_wrap img",
+        "description": ".et_pb_code_inner",
+        "date": "div.et_pb_text_1_tb_body .et_pb_text_inner p",
+        "startTime": "div.et_pb_text_1_tb_body .et_pb_text_inner p",
+        "contact": "footer a[href^=\"tel:\"]"
+    }
+]
+
+[
+    {
+        "type": "streetlight.model.data.EventFeedSchema",
+        "event": "div.fwpl-result",
+        "feedLocation": "div.et_pb_text_6 h2",
+        "title": ".event-title a",
+        "eventLocation": ".elevent-grid-venue span",
+        "link": ".event-title a",
+        "image": ".event-image img",
+        "date": ".elevent-grid-event-date .event-dates"
+    },
+    {
+        "type": "streetlight.model.data.EventPageSchema",
+        "title": "The document contains the expected content.",
+        "image": "The document contains the expected content.",
+        "description": "The document contains the expected content."
+    }
+]
+
+[
+    {
+        "type": "streetlight.model.data.EventFeedSchema",
+        "event": ".fwpl-result",
+        "feedLocation": "meta[property=\"og:site_name\"]",
+        "title": ".event-title a",
+        "eventLocation": ".elevent-grid-venue .fwpl-term-venue",
+        "link": ".event-title a",
+        "image": ".event-image img",
+        "date": ".event-dates"
+    },
+    {
+        "type": "streetlight.model.data.EventPageSchema",
+        "title": "h1.entry-title",
+        "location": ".shortcode-term.denver-botanic-gardens a",
+        "image": ".et_pb_image_0_tb_body img",
+        "description": ".et_pb_code_0_tb_body .et_pb_code_inner",
+        "date": ".et_pb_text_1_tb_body p",
+        "startTime": ".et_pb_text_1_tb_body p",
+        "contact": ".et_pb_text_5_tb_footer a"
+    }
+]

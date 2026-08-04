@@ -11,7 +11,10 @@ sealed interface ContentSchema {
 @Serializable
 data class EventFeedSchema(
     val event: String? = null,
+    val feedLocation: String? = null,
+    val address: String? = null,
     val title: String? = null,
+    val eventLocation: String? = null,
     val link: String? = null,
     val image: String? = null,
     val cost: String? = null,
@@ -25,6 +28,8 @@ data class EventFeedSchema(
 @Serializable
 data class EventPageSchema(
     val title: String? = null,
+    val location: String? = null,
+    val address: String? = null,
     val image: String? = null,
     val cost: String? = null,
     val description: String? = null,
@@ -39,6 +44,7 @@ data class EventPageSchema(
 
 @Serializable
 data class UrlSchemas(
+    val locationId: LocationId,
     val url: Url,
     val schemas: List<ContentSchema>
 )

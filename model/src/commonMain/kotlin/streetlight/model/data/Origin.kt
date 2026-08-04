@@ -38,7 +38,7 @@ fun Url.toOriginId(): OriginId? = takeIf { it.isAbsolute }?.let { url ->
 @Serializable
 data class OriginSchema(
     val originSchemaId: OriginSchemaId,
-    val originId: TableId<String>,
+    val originId: OriginId,
     val schemaType: SchemaType,
     val content: ContentSchema,
     val consecutiveFailCount: Int,
