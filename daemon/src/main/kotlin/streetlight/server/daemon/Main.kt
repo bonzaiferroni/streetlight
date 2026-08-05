@@ -3,9 +3,6 @@ package streetlight.server.daemon
 import kabinet.utils.Environment
 import klutch.server.KoinProvider
 import klutch.server.provide
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.koin.dsl.koinApplication
 import streetlight.server.db.connectDb
@@ -28,5 +25,5 @@ fun main() = runBlocking {
 
     val db = connectDb(env)
 
-    ParseDaemon(server).start()
+    startParseDaemon(server)
 }

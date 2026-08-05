@@ -12,9 +12,20 @@ application {
 }
 
 dependencies {
+    implementation(libs.kotlinx.datetime)
+
     testImplementation(kotlin("test"))
+
     implementation(project(":server"))
     implementation(project(":model"))
+    implementation(project(":kabinet"))
+    implementation(project(":klutch"))
+    implementation(project(":kampfire"))
+    implementation(project(":koala"))
+    implementation(project(":agent"))
+
+    implementation(libs.fleeksoft.ksoup)
+    implementation("com.vladsch.flexmark:flexmark-html2md-converter:0.64.8")
 }
 
 kotlin {

@@ -29,6 +29,8 @@ ksp = "2.2.10-2.0.2"
 sqlite = "2.6.1"
 koin-bom = "4.1.1"  # Stable version
 
+ksoup = "0.2.6"
+
 [libraries]
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coilCompose" }
 coil-network-ktor3 = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "coilCompose" }
@@ -106,6 +108,8 @@ maplibre-android-vulkan = { module = "org.maplibre.gl:android-sdk-vulkan", versi
 testcontainers-bom = { module = "org.testcontainers:testcontainers-bom", version.ref = "testcontainers" }
 testcontainers-junit = { module = "org.testcontainers:testcontainers-junit-jupiter" }
 testcontainers-postgresql = { module = "org.testcontainers:testcontainers-postgresql" }
+
+fleeksoft-ksoup = { module = "com.fleeksoft.ksoup:ksoup", version.ref = "ksoup" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
