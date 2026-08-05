@@ -13,6 +13,13 @@ value class Url(val value: String) {
     val filename get() = value.split('/').last().takeIf { it.contains('.') }
     val host get() = hostRegex.find(value)?.groupValues?.get(1)
 
+    fun toRelativePath(): String {
+        val withoutScheme = value.substringAfter("://", value)
+        val start = if (withoutScheme == value) 0 else withoutScheme.indexOf('/')
+        val tail = if (start < 0) "/" else withoutScheme.substring(start)
+        return tail.substringBefore('#').ifEmpty { "/" }
+    }
+
     companion object {
         val Empty get() = Url("")
     }

@@ -86,6 +86,8 @@ class KoogParserClient(env: Environment, private val retryDelay: Duration = 10.s
             user("$instructions\n\nFor reference, here is the url:\n$url\n\nHere is the HTML:\n$content")
         }
 
+        logger.info { "LM Parse: $url" }
+
         return when (val outcome = executePrompt(prompt, retryCount)) {
             is Problem -> outcome
             is Ok -> Ok(ParserContent(document = doc, json = outcome.data))
@@ -165,3 +167,5 @@ data class ParserContent(
     val document: Document?,
     val json: String,
 )
+
+private val logger = KotlinLogging.logger(KoogParserClient::class)

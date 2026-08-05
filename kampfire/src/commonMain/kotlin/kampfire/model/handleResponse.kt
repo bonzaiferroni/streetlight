@@ -54,4 +54,3 @@ fun <T1, T2> Outcome<T1>.handleOutcome(
         null
     }
 }
-

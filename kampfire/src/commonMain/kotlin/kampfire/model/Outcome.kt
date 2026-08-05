@@ -20,9 +20,25 @@ sealed interface Outcome <out T> {
         else -> false
     }
 
-    fun toDataOrNull(): T? = when (this) {
+    fun toDataOrNull(onProblem: ((Problem) -> Unit)? = null): T? = when (this) {
         is Ok -> data
-        else -> null
+        is Problem -> {
+            onProblem?.invoke(this)
+            null
+        }
+    }
+}
+
+inline fun <T> Outcome<T>.toDataOr(onProblem: (Problem) -> Nothing): T = when (this) {
+    is Ok -> data
+    is Problem -> onProblem(this)
+}
+
+inline fun <T> Outcome<T>.toDataOr(onProblem: (Problem) -> Unit, onFinished: () -> Nothing): T = when (this) {
+    is Ok -> data
+    is Problem -> {
+        onProblem(this)
+        onFinished()
     }
 }
 
