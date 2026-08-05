@@ -40,7 +40,9 @@ fun cellContentOf(event: EventEdit): FlowContent.() -> Unit = {
         null -> exampleStartsAtCell()
         else -> startsAtCell(startsAt)
     }
-    costCell(event.cost, event.website)
+    event.cost?.let {
+        costCell(it, event.website)
+    }
     // exampleLightCell()
 }
 
@@ -50,7 +52,10 @@ fun cellContentOf(event: EventLocation, showMore: Boolean, post: GalaxyPost? = n
         startsAtCell(startsAt)
     }
 
-    costCell(event.cost, event.url)
+    event.cost?.let {
+        costCell(it, event.url)
+    }
+
 //    event.city?.let {
 //        cell(SvgFile.City, it)
 //    }
@@ -76,7 +81,10 @@ fun cellContentOf(event: Event): FlowContent.() -> Unit = {
         dateCell(startsAt)
         startsAtCell(startsAt)
     }
-    costCell(event.cost, event.website)
+    event.cost?.let {
+        costCell(it, event.website)
+    }
+
     buttonsCell {
         starLightCell(event)
         moreButton()

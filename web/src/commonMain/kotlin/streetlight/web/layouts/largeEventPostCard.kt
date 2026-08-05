@@ -18,7 +18,9 @@ fun FlowContent.largeEventPostCard(post: EventPost) {
         subRoute = event.locationRoute,
         cells = listOf(
             { startsAtCell(event.startsAt) },
-            { costCell(event.cost, event.url) },
+            event.cost?.let {
+                { costCell(it, event.url) }
+            },
             { starCell(post.base.username) },
             { starLightCell(event) },
         )

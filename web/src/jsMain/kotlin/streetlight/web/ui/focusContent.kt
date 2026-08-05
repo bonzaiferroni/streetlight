@@ -34,8 +34,10 @@ fun ViewScope.eventFocusContent(post: EventPost) {
             cell {
                 startsAtCell(event.startsAt)
             }
-            cell {
-                costCell(event.cost, event.url)
+            event.cost?.let {
+                cell {
+                    costCell(it, event.url)
+                }
             }
             cell {
                 starCell(event.scout)

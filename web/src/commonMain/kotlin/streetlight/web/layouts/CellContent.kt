@@ -134,13 +134,12 @@ fun FlowContent.exampleStartsAtCell() {
 //    }
 }
 
-fun FlowContent.costCell(cost: Float?, purchaseUrl: Url?) {
+fun FlowContent.costCell(cost: Float, purchaseUrl: Url?) {
     val ticketsUrl = cost.takeIf { it != 0f }?.let {
         purchaseUrl
     }
     val costText = when (cost) {
         0f -> "FREE"
-        null -> "check source"
         else -> "$${cost.format(2, true)}"
     }
     linkCell(ticketsUrl, SvgFile.TicketSmall, costText)
