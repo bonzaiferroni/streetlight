@@ -22,7 +22,7 @@ import kampfire.model.toUrl
 private val log = KotlinLogging.logger("fetchHtml")
 
 suspend fun fetchText(url: Url): Outcome<String> {
-    log.info { "fetching url: ${url.value.take(50)}" }
+    log.info { "fetching url: ${url.value.take(100)}" }
     val response: HttpResponse = httpClient.get(url.value)
     if (response.status != HttpStatusCode.OK) return response.status.toProblem()
     return Ok(response.bodyAsText())

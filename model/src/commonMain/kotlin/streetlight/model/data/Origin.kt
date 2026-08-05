@@ -40,7 +40,7 @@ data class OriginSchema(
     val originSchemaId: OriginSchemaId,
     val originId: OriginId,
     val schemaType: SchemaType,
-    val content: ContentSchema,
+    val selector: SelectorSchema,
     val consecutiveFailCount: Int,
     val lastSuccessAt: Instant?,
     val updatedAt: Instant,

@@ -4,7 +4,7 @@ import kampfire.model.Url
 import kotlinx.serialization.Serializable
 
 @Serializable
-sealed interface ContentSchema {
+sealed interface SelectorSchema {
     val schemaType: SchemaType
 }
 
@@ -21,7 +21,7 @@ data class EventFeedSchema(
     val description: String? = null,
     val date: String? = null,
     val time: String? = null,
-): ContentSchema {
+): SelectorSchema {
     override val schemaType get() = SchemaType.EventFeed
 }
 
@@ -38,7 +38,7 @@ data class EventPageSchema(
     val endTime: String? = null,
     val ageMin: String? = null,
     val contact: String? = null,
-): ContentSchema {
+): SelectorSchema {
     override val schemaType get() = SchemaType.EventPage
 }
 
@@ -46,5 +46,5 @@ data class EventPageSchema(
 data class UrlSchemas(
     val locationId: LocationId,
     val url: Url,
-    val schemas: List<ContentSchema>
+    val schemas: List<SelectorSchema>
 )

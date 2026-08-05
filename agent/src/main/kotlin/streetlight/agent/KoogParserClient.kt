@@ -25,7 +25,7 @@ import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
 class KoogParserClient(env: Environment, private val retryDelay: Duration = 10.seconds) {
-    private val executor = simpleGoogleAIExecutor(env.read("GEMINI_KEY_B"))
+    private val executor = simpleGoogleAIExecutor(env.read("GEMINI_KEY_A"))
     private val console = KotlinLogging.logger("dao")
     private val cache = mutableMapOf<Int, ParserContent>()
     private val trimmer = HtmlTrimmer()
@@ -42,7 +42,7 @@ class KoogParserClient(env: Environment, private val retryDelay: Duration = 10.s
             readHtmlContent(url, doc, instructions, type)
         }
         return when (response) {
-            is Ok -> tryDecode<T>(response.data.json, type)?.let { Ok(it) } ?: Problem("Unable to decode LM response.")
+            is Ok -> tryDecode<T>(response.data.json, type)?.let { Ok(it) } ?: LMProblem.Decoding
             is Problem -> Problem(response.message)
         }
     }
@@ -103,13 +103,13 @@ class KoogParserClient(env: Environment, private val retryDelay: Duration = 10.s
                 return Ok(executor.execute(prompt, GoogleModels.Gemini2_5Flash).first().content)
             } catch (e: LLMClientException) {
                 log.error { e }
-                if (!e.isBusy()) return Problem("Language model error.")
-                if (attempt == retryCount - 1) return Problem("Language model is busy.")
+                if (!e.isBusy()) return LMProblem.Unspecified
+                if (attempt == retryCount - 1) return LMProblem.Busy
                 log.info { "Model busy, retrying in ${retryDelay.inWholeSeconds}s (attempt ${attempt + 1} of $retryCount)" }
                 delay(retryDelay)
             }
         }
-        return Problem("Unspecified language model error.")
+        return LMProblem.Unspecified
     }
 
     suspend fun <T> readImage(url: String, instructions: String, type: KType): T? {
@@ -169,3 +169,10 @@ data class ParserContent(
 )
 
 private val logger = KotlinLogging.logger(KoogParserClient::class)
+
+object LMProblem {
+    val Busy = Problem("Language model is busy.")
+    val Unspecified = Problem("Unspecified language model error.")
+    val Decoding = Problem("Unable to decode LM response.")
+    val UsageLimit = Problem("LM has reached its usage limit.")
+}

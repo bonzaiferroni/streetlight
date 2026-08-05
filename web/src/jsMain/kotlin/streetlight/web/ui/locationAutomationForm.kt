@@ -16,7 +16,7 @@ fun ViewScope.locationAutomationForm(content: LocationConfigContent) = formColum
 }
 
 fun ViewScope.eventSchemaSection(content: LocationConfigContent) = formSection("Event Schema") {
-    val schemasField = storeOf(content.origins.firstOrNull()?.schemas?.map { it.content } ?: emptyList())
+    val schemasField = storeOf(content.origins.firstOrNull()?.schemas?.map { it.selector } ?: emptyList())
     val messages = MessageStore()
     when (val eventsUrl = content.location.eventsUrl) {
         null -> textBlock("No calendar url available.")
