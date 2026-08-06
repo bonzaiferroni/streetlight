@@ -19,10 +19,26 @@ import kampfire.model.Url
 import kampfire.model.toProblem
 import kampfire.model.toUrl
 
-private val log = KotlinLogging.logger("fetchHtml")
+private val logger = KotlinLogging.logger("ktor-fetch-client")
+
+private val httpClient by lazy {
+    HttpClient {
+        install(HttpTimeout) {
+            requestTimeoutMillis = StreetlightAgent.Timeout.toLong()
+            connectTimeoutMillis = StreetlightAgent.Timeout.toLong()
+            socketTimeoutMillis = StreetlightAgent.Timeout.toLong()
+        }
+        defaultRequest {
+            header("User-Agent", StreetlightAgent.UserAgent)
+            header("Accept", StreetlightAgent.Accept)
+            header("Accept-Language", StreetlightAgent.AcceptLanguage)
+            header("Connection", StreetlightAgent.Connection)
+        }
+    }
+}
 
 suspend fun fetchText(url: Url): Outcome<String> {
-    log.info { "fetching url: ${url.value.take(100)}" }
+    logger.info { "fetching url: ${url.value.take(100)}" }
     val response: HttpResponse = httpClient.get(url.value)
     if (response.status != HttpStatusCode.OK) return response.status.toProblem()
     return Ok(response.bodyAsText())
@@ -39,24 +55,6 @@ private val htmlStart = Regex("""^\s*(<!DOCTYPE\s+html|<html|<[a-zA-Z]+)""", Reg
 
 fun String.looksLikeHtml(): Boolean = htmlStart.containsMatchIn(this)
 
-private val httpClient by lazy {
-    HttpClient {
-        install(HttpTimeout) {
-            requestTimeoutMillis = 60_000
-            connectTimeoutMillis = 60_000
-            socketTimeoutMillis = 60_000
-        }
-        defaultRequest {
-            header("User-Agent", "${AGENT_TOKEN}/${AGENT_VERSION} (lucas@streetlight.ing)")
-            header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
-            header("Accept-Language", "en-US,en;q=0.5")
-            header("Connection", "keep-alive")
-        }
-    }
-}
-
-
-
 fun Element.tryQuery(selector: String): Outcome<Elements> {
     if (selector == ".") return Ok(Elements(this))
 
@@ -69,5 +67,3 @@ fun Element.tryQuery(selector: String): Outcome<Elements> {
     }
 }
 
-const val AGENT_TOKEN = "Streetlight"
-const val AGENT_VERSION = "1.0"

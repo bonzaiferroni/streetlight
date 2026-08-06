@@ -15,9 +15,9 @@ import koala.Image
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import streetlight.agent.AGENT_TOKEN
 import streetlight.agent.KoogParserClient
 import streetlight.agent.LMProblem
+import streetlight.agent.StreetlightAgent
 import streetlight.agent.fetchText
 import streetlight.agent.parseHtmlDocument
 import streetlight.agent.tryQuery
@@ -63,12 +63,11 @@ class ParseDaemon(private val server: Server) {
 
         val feedUrl = requireNotNull(location.eventsUrl)
         val originId = feedUrl.toOriginId() ?: return
-        // if (originId.value != "swallowhillmusic.org") return@forEach
 
         val origin = dao.origin.readOrCreateOrigin(originId)
         val gate = origin.getRobotGate()
 
-        val feedHtml = gate.fetchWhenOpen(feedUrl).toDataOr(::logProblem) { return }
+        val feedHtml = gate.fetchWhenOpen(feedUrl, origin.fetchMode).toDataOr(::logProblem) { return }
         val feedDoc = parseHtmlDocument(feedHtml, feedUrl).toDataOr(::logProblem) { return }
         val feedSchema = origin.getFeedSchema(feedUrl, feedDoc).toDataOr(::logProblem) { return }
 
@@ -76,7 +75,7 @@ class ParseDaemon(private val server: Server) {
         val body = feedDoc.body()
         val pageElements = body.tryQuery(eventSelector).toDataOr(::logProblem) { return }
         var pageFailCount = 0
-        val schemaCache = SchemaCache(origin.schemas)
+        val schemaCache = SchemaCache(origin.schemas.filter { it.fetchMode == origin.fetchMode })
 
         val edits = pageElements.mapNotNull { element ->
             val feedEvent = RawEvent(
@@ -91,7 +90,7 @@ class ParseDaemon(private val server: Server) {
             val pageUrl = element.queryElement(feedSchema.link).absoluteUrl("href")?.toUrl()
             val pageEvent = pageUrl?.let { url ->
                 if (pageFailCount > 0) return@let null
-                val pageHtml = gate.fetchWhenOpen(url).toDataOr(::logProblem) { return@let null }
+                val pageHtml = gate.fetchWhenOpen(url, origin.fetchMode).toDataOr(::logProblem) { return@let null }
                 val pageDoc = parseHtmlDocument(pageHtml, url).toDataOr(::logProblem) { return@let null }
 
                 val pageSchema = origin.getPageSchema(url, pageDoc, schemaCache).toDataOr(::logProblem) {
@@ -100,6 +99,8 @@ class ParseDaemon(private val server: Server) {
                 }
                 parsePageEvent(pageSchema, pageDoc)
             }
+
+            println("Cost: ${pageEvent?.cost}")
 
             val event = RawEvent(
                 title = pageEvent?.title ?: feedEvent.title,
@@ -144,7 +145,7 @@ class ParseDaemon(private val server: Server) {
         robotsTxt?.let {
             return it.toRobotGate()
         }
-        val txt = fetchText(originId.toRobotsTxtUrl()).toDataOrNull() ?: return RobotGate(null, AGENT_TOKEN)
+        val txt = fetchText(originId.toRobotsTxtUrl()).toDataOrNull() ?: return RobotGate(null, StreetlightAgent.AgentToken)
         dao.origin.updateRobotsTxt(originId, txt)
         return txt.toRobotGate()
     }
@@ -177,7 +178,7 @@ class ParseDaemon(private val server: Server) {
             return Problem("Document content was not an event feed")
         }
 
-        dao.origin.create(originId, contentSchema)
+        dao.origin.create(originId, contentSchema, fetchMode)
         return Ok(contentSchema)
     }
 
@@ -224,7 +225,7 @@ class ParseDaemon(private val server: Server) {
             return Problem("Document content was not an event page")
         }
 
-        val originSchema = dao.origin.create(originId, contentSchema)
+        val originSchema = dao.origin.create(originId, contentSchema, fetchMode)
         schemaCache.add(originSchema)
         return Ok(contentSchema)
     }
@@ -256,6 +257,7 @@ class ParseDaemon(private val server: Server) {
 fun CoroutineScope.startParseDaemon(server: Server) {
     launch {
         ParseDaemon(server).start()
+        closeBrowser()
     }
 }
 
@@ -312,6 +314,12 @@ private fun RawEvent.toEventEdit(website: Url?, timeZoneId: String?, locationId:
         timeZoneId = timeZoneId,
         // td: parse ageMin
     )
+}
+
+sealed interface FieldResult {
+    data object Absent : FieldResult
+    data class Invalid(val text: String, val reason: String) : FieldResult
+    data class Valid(val value: String, val confidence: Double) : FieldResult
 }
 
 //         val chromeFields = setOfNotNull(

@@ -26,6 +26,7 @@ dependencies {
 
     implementation(libs.fleeksoft.ksoup)
     implementation("com.vladsch.flexmark:flexmark-html2md-converter:0.64.8")
+    implementation(libs.playwright)
 }
 
 kotlin {

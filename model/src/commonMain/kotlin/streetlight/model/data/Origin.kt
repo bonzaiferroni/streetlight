@@ -10,6 +10,7 @@ import kotlin.uuid.Uuid
 @Serializable
 data class Origin(
     val originId: OriginId, // eg. swallowhillmusic.org
+    val fetchMode: FetchMode,
     val schemas: List<OriginSchema>,
     val robotsTxt: String?,
     val updatedAt: Instant,
@@ -40,6 +41,7 @@ data class OriginSchema(
     val originSchemaId: OriginSchemaId,
     val originId: OriginId,
     val schemaType: SchemaType,
+    val fetchMode: FetchMode,
     val selector: SelectorSchema,
     val consecutiveFailCount: Int,
     val lastSuccessAt: Instant?,
@@ -60,3 +62,7 @@ enum class SchemaType {
     EventPage,
 }
 
+enum class FetchMode {
+    Basic,
+    Scripting,
+}

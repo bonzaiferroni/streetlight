@@ -3,8 +3,9 @@ package streetlight.server.daemon
 import kampfire.model.Outcome
 import kampfire.model.Url
 import kotlinx.coroutines.delay
-import streetlight.agent.AGENT_TOKEN
+import streetlight.agent.StreetlightAgent
 import streetlight.agent.fetchText
+import streetlight.model.data.FetchMode
 import kotlin.time.Clock
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
@@ -63,9 +64,9 @@ class RobotGate(
         interval = delays[key] ?: defaultDelay
     }
 
-    suspend fun fetchWhenOpen(url: Url): Outcome<String> {
+    suspend fun fetchWhenOpen(url: Url, mode: FetchMode): Outcome<String> {
         waitUntilOpen(url)
-        return fetchText(url)
+        return fetchText(url, mode)
     }
 
     suspend fun waitUntilOpen(url: Url) = waitUntilOpen(url.toRelativePath())
@@ -109,4 +110,4 @@ class RobotGate(
     }
 }
 
-fun String?.toRobotGate() = RobotGate(this, AGENT_TOKEN)
+fun String?.toRobotGate() = RobotGate(this, StreetlightAgent.AgentToken)

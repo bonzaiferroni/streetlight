@@ -30,6 +30,7 @@ sqlite = "2.6.1"
 koin-bom = "4.1.1"  # Stable version
 
 ksoup = "0.2.6"
+playwright = "1.61.0"
 
 [libraries]
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coilCompose" }
@@ -110,6 +111,7 @@ testcontainers-junit = { module = "org.testcontainers:testcontainers-junit-jupit
 testcontainers-postgresql = { module = "org.testcontainers:testcontainers-postgresql" }
 
 fleeksoft-ksoup = { module = "com.fleeksoft.ksoup:ksoup", version.ref = "ksoup" }
+playwright = { module = "com.microsoft.playwright:playwright", version.ref = "playwright" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
