@@ -1,11 +1,16 @@
 package streetlight.server.daemon
 
+import com.fleeksoft.ksoup.nodes.Document
 import kampfire.model.Outcome
 import kampfire.model.Url
+import kampfire.model.toDataOr
 import kotlinx.coroutines.delay
+import streetlight.agent.FetchText
 import streetlight.agent.StreetlightAgent
-import streetlight.agent.fetchText
+import streetlight.agent.parseHtmlDocument
 import streetlight.model.data.FetchMode
+import streetlight.model.data.Origin
+import streetlight.model.data.toOriginId
 import kotlin.time.Clock
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
@@ -64,7 +69,7 @@ class RobotGate(
         interval = delays[key] ?: defaultDelay
     }
 
-    suspend fun fetchWhenOpen(url: Url, mode: FetchMode): Outcome<String> {
+    suspend fun fetchWhenOpen(url: Url, mode: FetchMode): Outcome<FetchText> {
         waitUntilOpen(url)
         return fetchText(url, mode)
     }
@@ -111,3 +116,4 @@ class RobotGate(
 }
 
 fun String?.toRobotGate() = RobotGate(this, StreetlightAgent.AgentToken)
+

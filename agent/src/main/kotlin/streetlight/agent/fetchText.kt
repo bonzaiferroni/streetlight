@@ -11,6 +11,7 @@ import com.fleeksoft.ksoup.select.Selector
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.defaultRequest
+import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import kampfire.model.Ok
 import kampfire.model.Outcome
@@ -18,6 +19,8 @@ import kampfire.model.Problem
 import kampfire.model.Url
 import kampfire.model.toProblem
 import kampfire.model.toUrl
+import kotlin.time.Clock
+import kotlin.time.Instant
 
 private val logger = KotlinLogging.logger("ktor-fetch-client")
 
@@ -37,11 +40,19 @@ private val httpClient by lazy {
     }
 }
 
-suspend fun fetchText(url: Url): Outcome<String> {
-    logger.info { "fetching url: ${url.value.take(100)}" }
-    val response: HttpResponse = httpClient.get(url.value)
-    if (response.status != HttpStatusCode.OK) return response.status.toProblem()
-    return Ok(response.bodyAsText())
+suspend fun fetchText(initialUrl: Url): Outcome<FetchText> {
+    logger.info { "fetching url: ${initialUrl.value.take(100)}" }
+    val response: HttpResponse = httpClient.get(initialUrl.value)
+    if (response.status != HttpStatusCode.OK) {
+        logger.info { "non-OK ${response.status} for ${initialUrl.value}, location=${response.headers[HttpHeaders.Location]}" }
+        return response.status.toProblem()
+    }
+    return Ok(FetchText(
+        fetchUrl = initialUrl,
+        pageUrl = response.request.url.toString().toUrl(),
+        text = response.bodyAsText(),
+        fetchedAt = Clock.System.now()
+    ))
 }
 
 suspend fun fetchText(url: String) = fetchText(url.toUrl())
@@ -67,3 +78,9 @@ fun Element.tryQuery(selector: String): Outcome<Elements> {
     }
 }
 
+data class FetchText(
+    val fetchUrl: Url,
+    val pageUrl: Url,
+    val text: String,
+    val fetchedAt: Instant,
+)

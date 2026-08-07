@@ -15,14 +15,17 @@ import kampfire.model.Outcome
 import kampfire.model.Problem
 import kampfire.model.Url
 import kampfire.model.toProblem
+import kampfire.model.toUrl
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.newSingleThreadContext
 import kotlinx.coroutines.withContext
+import streetlight.agent.FetchText
 import streetlight.agent.StreetlightAgent
 import streetlight.agent.fetchText
 import streetlight.model.data.FetchMode
 import java.net.URI
+import kotlin.time.Clock
 
 private val logger = KotlinLogging.logger("playwright-fetch-client")
 
@@ -50,8 +53,8 @@ suspend fun fetchText(url: Url, mode: FetchMode) = when (mode) {
 }
 
 @OptIn(ExperimentalCoroutinesApi::class)
-suspend fun fetchTextWithScripting(url: Url): Outcome<String> = withContext(browserContext) {
-    logger.info { "fetching url with scripting: ${url.value.take(100)}" }
+suspend fun fetchTextWithScripting(initialUrl: Url): Outcome<FetchText> = withContext(browserContext) {
+    logger.info { "fetching url with scripting: ${initialUrl.value.take(100)}" }
     browser.newContext(contextOptions()).use { context ->
         context.setDefaultTimeout(StreetlightAgent.Timeout.toDouble())
         context.setDefaultNavigationTimeout(StreetlightAgent.Timeout.toDouble())
@@ -65,28 +68,24 @@ suspend fun fetchTextWithScripting(url: Url): Outcome<String> = withContext(brow
             }
         }
         context.newPage().use { page ->
-            // page.onRequest { logger.info { "${it.resourceType()}: ${it.url().take(120)}" } }
             val response = page.navigate(
-                url.value,
+                initialUrl.value,
                 Page.NavigateOptions()
                     .setTimeout(StreetlightAgent.Timeout.toDouble())
                     .setWaitUntil(WaitUntilState.DOMCONTENTLOADED)
-            ) ?: return@withContext Problem("Unable to navigate: $url")
+            ) ?: return@withContext Problem("Unable to navigate: $initialUrl")
 
             val status = HttpStatusCode.fromValue(response.status())
             if (status != HttpStatusCode.OK) return@withContext status.toProblem()
 
             return@withContext try {
                 page.waitForLoadState(LoadState.LOAD)
-                // val hasPrice = page.evaluate("document.body.innerText.includes('\$')")
-                // logger.info { "price text present in live page: $hasPrice" }
-                // logger.info { "price probe: ${page.evaluate(priceProbeScript)}" }
-                Ok(page.content())
+                Ok(FetchText(initialUrl, page.url().toUrl(), page.content(), Clock.System.now()))
             } catch (e: TimeoutError) {
-                logger.warn { "timeout fetching ${url.value.take(100)}" }
-                Problem("Url timed out: $url")
+                logger.warn { "timeout fetching ${initialUrl.value.take(100)}" }
+                Problem("Url timed out: $initialUrl")
             } catch (e: PlaywrightException) {
-                logger.warn(e) { "playwright failure fetching ${url.value.take(100)}" }
+                logger.warn(e) { "playwright failure fetching ${initialUrl.value.take(100)}" }
                 Problem("Playwright exception: ${e.message}")
             }
         }

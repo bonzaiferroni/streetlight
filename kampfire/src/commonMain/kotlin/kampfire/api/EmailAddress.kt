@@ -26,6 +26,9 @@ fun EmailAddress.obfuscate(stars: Int = 10): String {
     }
 }
 
+fun EmailAddress.obfuscateForm() = value.replace("@", " at ")
+fun String.deobfuscateForm() = EmailAddress(replace(" at ", "@"))
+
 // this is the only valid constructor call
 fun String.toEmailAddress() = EmailAddress(this.lowercase())
 

@@ -60,6 +60,8 @@ fun <T> outcomeOf(data: T?): Outcome<T>? = when (data) {
 
 fun <T> T?.toOutcome() = outcomeOf(this)
 
+fun <T> T.toOk() = Ok(this)
+
 class OutcomeSerializer<T>(
     private val dataSerializer: KSerializer<T>
 ) : KSerializer<Outcome<T>> {

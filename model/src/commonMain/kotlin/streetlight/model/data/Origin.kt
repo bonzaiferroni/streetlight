@@ -11,7 +11,6 @@ import kotlin.uuid.Uuid
 data class Origin(
     val originId: OriginId, // eg. swallowhillmusic.org
     val fetchMode: FetchMode,
-    val schemas: List<OriginSchema>,
     val robotsTxt: String?,
     val updatedAt: Instant,
     val createdAt: Instant,
@@ -33,33 +32,6 @@ fun Url.toOriginId(): OriginId? = takeIf { it.isAbsolute }?.let { url ->
         ?.removeSuffix(".")
         ?.takeIf { it.isNotEmpty() }
         ?.let { OriginId(it) }
-}
-
-
-@Serializable
-data class OriginSchema(
-    val originSchemaId: OriginSchemaId,
-    val originId: OriginId,
-    val schemaType: SchemaType,
-    val fetchMode: FetchMode,
-    val selector: SelectorSchema,
-    val consecutiveFailCount: Int,
-    val lastSuccessAt: Instant?,
-    val updatedAt: Instant,
-    val createdAt: Instant,
-)
-
-@JvmInline
-@Serializable
-value class OriginSchemaId(override val value: Uuid): RecordId {
-    override fun toString() = value.toString()
-
-    companion object { fun random() = OriginSchemaId(Uuid.random())}
-}
-
-enum class SchemaType {
-    EventFeed,
-    EventPage,
 }
 
 enum class FetchMode {
