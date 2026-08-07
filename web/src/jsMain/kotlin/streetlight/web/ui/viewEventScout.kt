@@ -25,7 +25,7 @@ fun ViewScope.viewEventScout(galaxy: Galaxy, isAdmin: Boolean) {
         else -> false
     }
 
-    section(BodyStyle.Column) {
+    section(BodyStyle.column) {
         topLogo()
 
         introSection("Event Scout", lottie = LottieFile.StrollingMan) {

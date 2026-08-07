@@ -21,7 +21,7 @@ import streetlight.web.ui.featureHeader
 
 fun FlowContent.starShell(content: StarContent) {
     val star = content.star
-    column(StarShell.id, BodyStyle.Column) {
+    column(StarShell.id, BodyStyle.column) {
         featureHeader(
             title = star.username.value,
             descriptor = "a streetlighter",

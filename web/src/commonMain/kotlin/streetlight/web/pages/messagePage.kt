@@ -5,7 +5,6 @@ import kampfire.model.Token
 import koala.css.AlignItemsCenter
 import koala.css.AlignSelfEnd
 import koala.css.AlignSelfStretch
-import koala.css.Height5
 import koala.css.MaxWidth64
 import koala.css.Padding1
 import koala.css.addModifiers
@@ -15,8 +14,6 @@ import koala.html.card
 import koala.html.column
 import koala.html.filigree
 import koala.html.heading1
-import koala.html.logo
-import koala.html.navigation
 import koala.html.textBlock
 import koala.html.topLogo
 import kotlinx.html.FlowContent
@@ -34,7 +31,7 @@ fun HTML.messagePage(
     block: FlowContent.() -> Unit = { }
 ) {
     staticPage("$title | Streetlight", styles) {
-        column(modify(BodyStyle.Column, AlignItemsCenter)) {
+        column(modify(BodyStyle.column, AlignItemsCenter)) {
             topLogo()
             filigree(modify(AlignSelfStretch)) { heading1(title) }
             card(modify(MaxWidth64, Padding1)) {

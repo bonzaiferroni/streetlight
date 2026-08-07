@@ -6,8 +6,8 @@ import kotlinx.html.FlowContent
 import streetlight.model.data.*
 import streetlight.web.shells.SectionHeadingMod
 
-fun FlowContent.postSection(posts: List<Entity>) {
-    section(modify(FeedPostLegacy.SmallRow)) {
+fun FlowContent.postSection(posts: List<FeedEntity>) {
+    section {
         filigree {
             heading2("Posts", SectionHeadingMod)
         }
@@ -22,7 +22,7 @@ fun FlowContent.postSection(posts: List<Entity>) {
 
 fun FlowContent.layoutPosts(block: FlowContent.() -> Unit) {
     mount(PostKey.PostLayoutId) {
-        column(modify(FeedPostLegacy.FeedColumn, Gap2)) {
+        column(modify(Gap2)) {
             block()
         }
     }

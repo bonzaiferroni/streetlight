@@ -2,7 +2,6 @@ package streetlight.web.layouts
 
 import kampfire.api.Markdown
 import kampfire.api.Username
-import kampfire.model.medium
 import koala.Image
 import koala.html.AppRoute
 import koala.html.textBlock
@@ -15,7 +14,7 @@ import streetlight.model.data.GalaxyPost
 import streetlight.model.data.Location
 import streetlight.model.data.LocationEdit
 import streetlight.model.data.Post
-import streetlight.model.data.Entity
+import streetlight.model.data.FeedEntity
 
 fun FlowContent.postRow(
     post: Post?,
@@ -41,7 +40,7 @@ fun FlowContent.postRow(
     }
 }
 
-fun FlowContent.postRow(post: Entity) = when (post) {
+fun FlowContent.postRow(post: FeedEntity) = when (post) {
     is GalaxyPost -> postRow(post)
     else -> entityRow(post, true)
 }
@@ -62,7 +61,7 @@ fun FlowContent.postRow(post: GalaxyPost) = postRow(
     // lightCount = post.lightCount,
 )
 
-fun FlowContent.entityRow(entity: Entity, showMore: Boolean = false) = feedRow(
+fun FlowContent.entityRow(entity: FeedEntity, showMore: Boolean = false) = feedRow(
     heading = entity.label,
     postRoute = entity.contentRoute,
     image = entity.image,

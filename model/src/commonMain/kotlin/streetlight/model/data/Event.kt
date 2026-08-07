@@ -28,9 +28,9 @@ data class Event(
     val ageMin: Int?,
     val cost: Float?,
     val visibility: Int?,
-    val links: List<ExtraLink>?,
+    override val links: List<ExtraLink>?,
     val website: Url?,
-    val image: Image?,
+    override val image: Image?,
     val streamUrl: String?,
     val timeZoneId: String,
     val lightCount: Int,
@@ -39,9 +39,12 @@ data class Event(
     val endsAt: Instant?,
     val updatedAt: Instant,
     val createdAt: Instant,
-) {
+): FeedEntity {
     val timeZone get() = TimeZone.currentSystemDefault() // notsure
     val isFree get() = cost == 0f
+
+    override val label get() = title
+    override val geoPoint get() = null
 
     // repeatInterval
     // val doorsAt: Instant?,

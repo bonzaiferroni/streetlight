@@ -14,7 +14,7 @@ import streetlight.model.data.LocationPost
 import streetlight.model.data.GalaxyPost
 import streetlight.model.data.Media
 import streetlight.model.data.MediaPost
-import streetlight.model.data.Entity
+import streetlight.model.data.FeedEntity
 import streetlight.model.ui.CityRoute
 import streetlight.model.ui.EventRoute
 import streetlight.model.ui.GalaxyRoute
@@ -36,10 +36,11 @@ val GalaxyPost.route get(): AppRoute = when (this) {
     is LocationPost -> location.route
 }
 
-val Entity.contentRoute get(): AppRoute = when (this) {
+val FeedEntity.contentRoute get(): AppRoute = when (this) {
     is City -> CityRoute(slug)
     is EventLocation -> eventRoute
     is EventPost -> event.eventRoute
+    is Event -> route
     is Galaxy -> route
     is LocationPost -> location.route
     is MediaPost -> media.route
@@ -47,10 +48,11 @@ val Entity.contentRoute get(): AppRoute = when (this) {
     is Media -> route
 }
 
-val Entity.colorScheme get(): ColorScheme = when (this) {
+val FeedEntity.colorScheme get(): ColorScheme = when (this) {
     is City -> ColorScheme.City
     is EventLocation -> ColorScheme.Event
     is EventPost -> ColorScheme.Event
+    is Event -> ColorScheme.Event
     is Galaxy -> ColorScheme.Galaxy
     is LocationPost -> ColorScheme.Location
     is Location -> ColorScheme.Location
@@ -58,10 +60,11 @@ val Entity.colorScheme get(): ColorScheme = when (this) {
     is Media -> ColorScheme.Media
 }
 
-fun Entity.getCells(showMore: Boolean = false) = when(this) {
+fun FeedEntity.getCells(showMore: Boolean = false) = when(this) {
     is City -> null
     is EventLocation -> cellContentOf(this, showMore)
     is EventPost -> cellContentOf(event, showMore)
+    is Event -> cellContentOf(this)
     is Galaxy -> cellContentOf(this)
     is LocationPost -> cellContentOf(location)
     is MediaPost -> null

@@ -15,7 +15,7 @@ import koala.model.MarkerFocus
 import koala.model.PointMarker
 import kotlinx.html.FlowContent
 import kotlinx.html.hr
-import streetlight.model.data.Entity
+import streetlight.model.data.FeedEntity
 import streetlight.model.ui.CityRoute
 import streetlight.model.ui.GalaxyRoute
 import streetlight.web.layouts.ColorScheme
@@ -80,7 +80,7 @@ private fun ViewScope.markerPanel(marker: PointMarker) {
 }
 
 private fun ViewScope.focusPanel(
-    post: Entity,
+    post: FeedEntity,
     route: AppRoute,
     subroute: AppRoute? = null,
     colorScheme: ColorScheme = ColorScheme.Primary,

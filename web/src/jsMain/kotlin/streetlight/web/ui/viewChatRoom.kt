@@ -6,7 +6,7 @@ import streetlight.web.model.ChatRoom
 
 fun RouteScope.viewChatRoom() {
     val model = app.get<ChatRoom>()
-    val element = column(modify(BodyStyle.Column, JustifyContentEnd)) {
+    val element = column(modify(BodyStyle.column, JustifyContentEnd)) {
         itemsBlock(model.messagesFlow, modify(Magic, Blur, SlideLeft)) { message ->
             textBlock("${message.source}: ${message.text}")
         }

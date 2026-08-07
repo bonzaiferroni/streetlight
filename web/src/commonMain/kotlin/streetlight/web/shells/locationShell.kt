@@ -6,6 +6,7 @@ import streetlight.model.data.LocationContent
 import streetlight.model.ui.LocationConfigRoute
 import streetlight.model.ui.LocationRoute
 import streetlight.model.ui.LocationUpdateRoute
+import streetlight.web.layouts.buildLayout
 import streetlight.web.layouts.layoutPosts
 import streetlight.web.layouts.postRow
 import streetlight.web.pages.appFooter
@@ -16,34 +17,8 @@ fun FlowContent.locationShell(
     content: LocationContent,
 ) {
     val location = content.location
-    column(LocationShell.Id, BodyStyle.Column) {
-        headerOf(
-            location = location,
-            editRoute = if (content.canEdit) LocationUpdateRoute(location.slug) else null
-        )
-
-        tabs(LocationShell.tabsId) {
-            if (content.events.isNotEmpty()) {
-                tab("events") {
-                    layoutPosts {
-                        content.events.forEach {
-                            postRow(it)
-                        }
-                    }
-                }
-            }
-            tab("directions") {
-                textBlock("yer directions")
-            }
-            tab("menu") {
-                textBlock("yer menu")
-            }
-            tab("talk") {
-                textBlock("yer talk")
-            }
-        }
-
-        appFooter()
+    column(LocationShell.shellId, BodyStyle.column) {
+        buildLayout(content)
 
         val routeNow = LocationRoute(location.slug)
         val adminRoute = content.takeIf { it.canEdit }?.let { LocationConfigRoute(location.locationId) }
@@ -54,7 +29,7 @@ fun FlowContent.locationShell(
 }
 
 object LocationShell {
-    val Id = Id("location-shell")
+    val shellId = Id("location-shell")
     val tabsId = Id("location-tabs")
     val adminCard = Id("location-admin-card")
     val islandId = Id("location-island")

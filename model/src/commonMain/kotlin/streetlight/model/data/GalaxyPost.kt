@@ -6,7 +6,7 @@ import kotlin.jvm.JvmInline
 import kotlin.uuid.Uuid
 
 @Serializable
-sealed interface GalaxyPost: Entity {
+sealed interface GalaxyPost: FeedEntity {
     val base: Post
 }
 
@@ -32,10 +32,10 @@ enum class PostOrder(label: String? = null): Labeled {
 data class LocationPost(
     val location: Location,
     override val base: Post,
-): GalaxyPost, Entity by location
+): GalaxyPost, FeedEntity by location
 
 @Serializable
 data class EventPost(
     val event: EventLocation,
     override val base: Post,
-): GalaxyPost, Entity by event
+): GalaxyPost, FeedEntity by event

@@ -3,7 +3,6 @@ package streetlight.web.model
 import kabinet.utils.toRelativeDayFormat
 import kampfire.model.GeoPoint
 import kampfire.model.Labeled
-import kampfire.model.thumb
 import koala.SiteImage
 import koala.SvgFile
 import koala.model.IconMarker

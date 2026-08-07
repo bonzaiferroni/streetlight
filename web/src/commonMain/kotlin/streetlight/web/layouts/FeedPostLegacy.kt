@@ -142,7 +142,7 @@ fun FlowContent.feedPostLegacy(
 }
 
 object FeedPostLegacy {
-    val SmallRow = Class("small-row")
+    // val SmallRow = Class("small-row")
     val LargeRow = Class("large-row")
     val GridCard = Class("grid-card")
     val ToggleExpand = Class("expand-post")

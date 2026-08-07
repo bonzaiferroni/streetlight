@@ -11,7 +11,6 @@ import koala.SiteImage
 import koala.model.RouteContent
 import kotlin.time.Instant
 import kotlinx.serialization.Serializable
-import kotlin.time.Duration.Companion.hours
 
 @Serializable
 data class EventLocation(
@@ -40,7 +39,7 @@ data class EventLocation(
     val endsAt: Instant?,
     val updatedAt: Instant,
     val createdAt: Instant,
-): Entity, Labeled, RouteContent {
+): FeedEntity, Labeled, RouteContent {
     override val links by lazy {
         buildList {
             url?.let { url ->

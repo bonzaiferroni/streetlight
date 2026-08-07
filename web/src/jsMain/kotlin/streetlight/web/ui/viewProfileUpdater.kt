@@ -12,7 +12,7 @@ import streetlight.web.model.ProfileEditor
 import streetlight.web.shells.starRouteMenu
 
 fun ViewScope.viewProfileUpdater(star: Star, model: ProfileEditor) {
-    column(mod = BodyStyle.Column) {
+    column(mod = BodyStyle.column) {
         introSection("Update Profile", lottie = LottieFile.ServerSync) {
             textBlock("Here you can make changes to your profile.")
         }

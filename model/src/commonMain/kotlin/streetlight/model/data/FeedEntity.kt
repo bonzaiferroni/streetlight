@@ -6,7 +6,7 @@ import koala.Image
 import kotlinx.serialization.Serializable
 
 @Serializable
-sealed interface Entity {
+sealed interface FeedEntity {
     val label: String
     val geoPoint: GeoPoint?
     val image: Image? get() = null

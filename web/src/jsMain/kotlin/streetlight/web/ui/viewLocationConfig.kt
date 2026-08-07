@@ -4,7 +4,6 @@ import koala.css.*
 import koala.dom.*
 import koala.html.Id
 import koala.html.topLogo
-import streetlight.model.data.LocationConfig
 import streetlight.model.data.LocationConfigContent
 import streetlight.model.data.toEdit
 import streetlight.model.ui.LocationConfigRoute
@@ -15,7 +14,7 @@ fun ViewScope.viewLocationConfig(
     content: LocationConfigContent,
 ) {
     val location = content.location
-    column(BodyStyle.Column) {
+    column(BodyStyle.column) {
         topLogo()
         cardOf(location)
         tabs(Id("location-config-tabs")) {

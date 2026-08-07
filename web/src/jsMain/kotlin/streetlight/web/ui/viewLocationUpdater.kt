@@ -12,7 +12,7 @@ fun ViewScope.viewLocationUpdater(content: LocationUpdaterContent, star: Star) {
     val edit = content.location.toEdit()
     val model = edit.let { app.getLocationEditor(it, contentScope) }
 
-    column(BodyStyle.Column) {
+    column(BodyStyle.column) {
         tabs {
             tab("edit") {
                 column {

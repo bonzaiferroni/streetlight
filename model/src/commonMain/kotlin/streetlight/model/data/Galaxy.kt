@@ -35,7 +35,7 @@ data class Galaxy(
     val postCount: Int,
     val updatedAt: Instant,
     val createdAt: Instant,
-): Entity, RouteContent {
+): FeedEntity, RouteContent {
     val postTypes get() = setOf(PostType.Location, PostType.Event, PostType.Media)
     override val label get() = name
     override val sublabel get() = tagline
