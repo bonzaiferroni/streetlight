@@ -2,19 +2,17 @@ package streetlight.web.ui
 
 import kampfire.api.Markdown
 import koala.Image
-import koala.SvgFile
 import koala.css.*
 import koala.dom.*
 import koala.dom.button
 import koala.dom.row
 import koala.html.Id
 import koala.html.setPopoverTarget
-import koala.model.storeOf
+import koala.html.spacer
 import kotlinx.html.BUTTON
 import streetlight.model.data.EventsBlock
 import streetlight.model.data.HeaderBlock
 import streetlight.model.data.ImageBlock
-import streetlight.model.data.LayoutBlock
 import streetlight.model.data.LocationContent
 import streetlight.model.data.MapBlock
 import streetlight.model.data.RichTextBlock
@@ -44,7 +42,7 @@ fun ViewScope.containerBuilder(model: LayoutEditor, containerId: Uuid, content: 
 
 fun ViewScope.menuEditRow(name: String, editor: BlockEditor, menuContent: ViewScope.() -> Unit) {
     val popoverId = Id(Uuid.random().toString())
-    popoverCard(popoverId, mod = modify(EditorBg)) {
+    popoverCard(popoverId, cardMod = modify(EditorBg)) {
         menuContent()
     }
     editorRow(name, editor, null) {
@@ -58,17 +56,48 @@ fun ViewScope.editorRow(
     onClick: (() -> Unit)?,
     configButton: BUTTON.() -> Unit = { }
 ) {
-    row(modify(JustifyContentSpaceBetween, AlignItemsCenter)) {
-        categoryMenu("add block", BlockMenu.categories, { editor.addBlockAbove(it)} )
-        button("edit $name", onClick, modify(Zen, EditorBg), block = configButton)
+    flowBlock(editor.model.movingBlockField, modify(Magic, Scale)) { movingBlockId ->
+        when (movingBlockId) {
+            null -> {
+                row(modify(AlignItemsCenter)) {
+                    blockMenu(BlockMenu.categories, { editor.addBlockAbove(it)} )
+                    spacer(modify(Flex1))
+                    button({
+                        editor.model.startMove(editor.blockId)
+                    }) {
+                        textBlock("move", modify(TextTransformUppercase, TextSmall, Bold, EditorFg))
+                    }
+                    button("edit $name", onClick, modify(Zen, EditorBg), block = configButton)
+                }
+            }
+            else -> {
+                val isOriginalLocation = editor.model.movingBlockField.now == editor.blockId
+                val label = if (isOriginalLocation) "cancel move" else "move here"
+                button(label, {
+                    if (isOriginalLocation) editor.model.cancelMove()
+                    else editor.model.finishMove(editor.blockId)
+                }, modify(Zen, EditorBg, OutlineDashed2Px, Width100P))
+            }
+        }
     }
 }
 
 fun ViewScope.lastEditorRow(
     editor: ContainerEditor
 ) {
-    row(modify(JustifyContentSpaceBetween, AlignItemsCenter)) {
-        categoryMenu("add block", BlockMenu.categories, { editor.addBlock(it)} )
+    flowBlock(editor.model.movingBlockField, modify(Magic, Scale)) { movingBlockId ->
+        when (movingBlockId) {
+            null -> {
+                row(modify(AlignItemsCenter)) {
+                    blockMenu(BlockMenu.categories, { editor.createBlock(it)} )
+                }
+            }
+            else -> {
+                button("move here", {
+                    editor.model.finishMoveToContainer(editor.containerId)
+                }, modify(Zen, EditorBg, OutlineDashed2Px, Width100P))
+            }
+        }
     }
 }
 

@@ -1,5 +1,6 @@
 package koala.dom
 
+import koala.css.AutoMagic
 import koala.css.BlurBackdrop
 import koala.css.BorderRadius3
 import koala.css.BorderSolid2Px
@@ -8,6 +9,7 @@ import koala.css.Modifier
 import koala.css.ModifierSet
 import koala.css.OverflowClip
 import koala.css.PositionAnchor
+import koala.css.Scale
 import koala.css.modify
 import koala.html.Id
 import koala.html.configurePopover
@@ -30,10 +32,11 @@ fun TagScope.popoverCard(
     id: Id,
     anchor: PositionAnchor? = null,
     mod: ModifierSet? = null,
+    cardMod: ModifierSet? = null,
     isManual: Boolean = false,
     block: DIV.() -> Unit = {}
-) = popover(id, anchor, null, isManual) {
-    card(modify(mod, BlurBackdrop, BorderRadius3, BorderSolid2Px, MarginTop1, OverflowClip)) {
+) = popover(id, anchor, mod, isManual) {
+    card(modify(cardMod, BlurBackdrop, BorderRadius3, BorderSolid2Px, MarginTop1, AutoMagic, Scale, OverflowClip)) {
         block()
     }
 }

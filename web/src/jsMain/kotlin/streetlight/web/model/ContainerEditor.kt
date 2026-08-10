@@ -8,7 +8,7 @@ import kotlin.uuid.Uuid
 class ContainerEditor(
     val containerId: Uuid,
     name: String,
-    blockIds: Set<Uuid>,
+    blockIds: List<Uuid>,
     depth: Int,
     val model: LayoutEditor,
 ) {
@@ -17,19 +17,25 @@ class ContainerEditor(
     val blockIds get() = state.now.blockIds
     val depth get() = state.now.depth
 
-    fun addBlock(block: LayoutBlock) {
+    fun createBlock(block: LayoutBlock) {
         model.addBlock(block, containerId, blockIds.size)
     }
 
-    fun addBlock(blockId: Uuid, index: Int) {
+    fun addBlock(blockId: Uuid, index: Int = blockIds.size) {
         val newBlockIds = blockIdsField.now.toMutableList()
         newBlockIds.add(index, blockId)
-        blockIdsField.set(newBlockIds.toSet())
+        blockIdsField.set(newBlockIds)
+    }
+
+    fun removeBlock(blockId: Uuid) {
+        val newBlockIds = blockIdsField.now.toMutableList()
+        newBlockIds.remove(blockId)
+        blockIdsField.set(newBlockIds)
     }
 }
 
 data class ContainerState(
     val name: String,
-    val blockIds: Set<Uuid>,
+    val blockIds: List<Uuid>,
     val depth: Int,
 )

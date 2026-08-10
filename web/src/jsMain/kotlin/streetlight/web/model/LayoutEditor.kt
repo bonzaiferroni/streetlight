@@ -1,27 +1,29 @@
 package streetlight.web.model
 
-import koala.utils.launch
-import kotlinx.coroutines.CoroutineScope
+import koala.model.fieldOf
+import koala.model.storeOf
 import streetlight.model.data.Layout
 import streetlight.model.data.LayoutBlock
 import streetlight.model.data.LayoutContainer
-import streetlight.model.data.LocationId
 import streetlight.model.data.TabsBlock
-import streetlight.web.io.ApiClient
 import kotlin.uuid.Uuid
 
 class LayoutEditor(initialLayout: Layout) {
+    private val state = storeOf(LayoutEditorState())
+
     private val blocks = mutableMapOf<Uuid, BlockEditor>()
     private val containers = mutableMapOf<Uuid, ContainerEditor>()
 
-    val mainContainerId = addContainer(initialLayout, 0).id
+    val movingBlockField = state.fieldOf { it.movingBlockId }
+
+    val mainContainerId = createContainer(initialLayout, 0).id
 
     fun getBlock(blockId: Uuid) = blocks.getValue(blockId)
     fun getContainer(containerId: Uuid) = containers.getValue(containerId)
 
     fun addBlock(block: LayoutBlock, containerId: Uuid, index: Int) {
         val container = getContainer(containerId)
-        val blockId = addBlock(block, container.depth)
+        val blockId = createBlock(block, container.depth)
         container.addBlock(blockId, index)
     }
 
@@ -35,25 +37,25 @@ class LayoutEditor(initialLayout: Layout) {
         if (it.value.blockIds.contains(blockId)) it.value else null
     }
 
-    fun addContainer(blockId: Uuid, container: LayoutContainer): ContainerKey {
+    fun createContainer(blockId: Uuid, container: LayoutContainer): ContainerKey {
         val parentContainer = getContainerWithBlock(blockId)
-        return addContainer(container, parentContainer.depth + 1)
+        return createContainer(container, parentContainer.depth + 1)
     }
 
-    fun addContainer(container: LayoutContainer, depth: Int): ContainerKey {
+    fun createContainer(container: LayoutContainer, depth: Int): ContainerKey {
         val containerId = Uuid.random()
         val blockIds = container.blocks.map { block ->
-            addBlock(block, depth)
-        }.toSet()
+            createBlock(block, depth)
+        }
         containers[containerId] = ContainerEditor(containerId, container.name, blockIds, depth, this)
         return ContainerKey(container.name, containerId)
     }
 
-    private fun addBlock(block: LayoutBlock, depth: Int): Uuid {
+    private fun createBlock(block: LayoutBlock, depth: Int): Uuid {
         val blockId = Uuid.random()
         val containers = block.getContainers()
         val containerKeys = containers?.map { subContainer ->
-            addContainer(subContainer, depth + 1)
+            createContainer(subContainer, depth + 1)
         }
         blocks[blockId] = BlockEditor(blockId, block, containerKeys, this)
         return blockId
@@ -62,6 +64,37 @@ class LayoutEditor(initialLayout: Layout) {
     fun buildLayout(): Layout? {
         val blocks = buildContainer(mainContainerId).takeIf { it.isNotEmpty() } ?: return null
         return Layout(blocks)
+    }
+
+    fun startMove(blockId: Uuid) {
+        state.set { copy(movingBlockId = blockId) }
+    }
+
+    fun cancelMove() {
+        state.set { copy(movingBlockId = null) }
+    }
+
+    fun cutBlock(blockId: Uuid) {
+        val container = getContainerWithBlock(blockId)
+        container.removeBlock(blockId)
+    }
+
+    fun finishMove(blockId: Uuid) {
+        val movingBlockId = state.now.movingBlockId ?: error("moving blockId not found")
+        cutBlock(movingBlockId)
+        val container = getContainerWithBlock(blockId)
+        val index = container.blockIds.indexOf(blockId)
+        container.addBlock(movingBlockId, index)
+        state.set { copy(movingBlockId = null) }
+    }
+
+    fun finishMoveToContainer(containerId: Uuid) {
+        val movingBlockId = state.now.movingBlockId ?: error("moving blockId not found")
+        cutBlock(movingBlockId)
+        val container = getContainer(containerId)
+        val blockEditor = getBlock(movingBlockId)
+        container.addBlock(blockEditor.blockId)
+        state.set { copy(movingBlockId = null) }
     }
 
     private fun buildContainer(containerId: Uuid): List<LayoutBlock> {
@@ -81,6 +114,10 @@ class LayoutEditor(initialLayout: Layout) {
         return buildBlock(block, containers)
     }
 }
+
+data class LayoutEditorState(
+    val movingBlockId: Uuid? = null,
+)
 
 fun LayoutBlock.getContainers(): List<LayoutContainer>? = when (this) {
     is TabsBlock -> tabs

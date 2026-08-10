@@ -44,7 +44,7 @@ class BlockEditor(
     }
 
     fun addContainer(container: LayoutContainer) {
-        val key = model.addContainer(blockId, container)
+        val key = model.createContainer(blockId, container)
         state.set {
             copy(
                 containerKeys = (containerKeys ?: emptyList()) + key,
@@ -70,5 +70,5 @@ class BlockEditor(
 data class BlockState(
     val block: LayoutBlock,
     val containerKeys: List<ContainerKey>?,
-    val refreshAt: Instant = Instant.DISTANT_PAST
+    val refreshAt: Instant = Instant.DISTANT_PAST,
 )

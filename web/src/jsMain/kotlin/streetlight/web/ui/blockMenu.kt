@@ -8,15 +8,14 @@ import koala.model.storeOf
 import streetlight.model.data.LayoutBlock
 import kotlin.uuid.Uuid
 
-fun ViewScope.categoryMenu(
-    name: String,
+fun ViewScope.blockMenu(
     categories: Map<String, List<LabeledItem<out LayoutBlock>>>,
     onSelection: (LayoutBlock) -> Unit,
 ) {
     val popoverId = Id(Uuid.random().toString())
-    popoverCard(popoverId, mod = modify(EditorBg, Padding0)) {
+    popoverCard(popoverId, mod = modify(), cardMod = modify(EditorBg, Padding0)) {
         val categoryField = storeOf<String?>(null)
-        flowBlock(categoryField, modify(Magic, Blur, Scale)) { category ->
+        flowBlock(categoryField, modify(Magic, Scale)) { category ->
             val options = when (category) {
                 null -> {
                     categories.map {
@@ -41,7 +40,8 @@ fun ViewScope.categoryMenu(
             }
         }
     }
-    button(name, mod = modify(Zen, EditorBg)) {
+    button(mod = modify(PaddingX2, PaddingY1)) {
+        textBlock("+ block", modify(Bold, TextTransformUppercase, TextSmall, EditorFg))
         setPopoverTarget(popoverId)
     }
 }

@@ -65,6 +65,7 @@ ${Popover.Class} {
     border: none;
     background: none;
     color: inherit;
+    padding: var(--unit-spacing-1);
 }
 
 ${Popover.Class}.magic {

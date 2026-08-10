@@ -1,6 +1,7 @@
 :root {
     --magic-interval: 222ms;
     --magic-easing: ease-in-out;
+    --magic-easing-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
     --magic-blur: blur(6px);
     --slide-left-initial: translate(20px, 0px);
     --slide-right-initial: translate(-20px, 0px);
@@ -13,6 +14,7 @@
 
     --transition-opacity: opacity var(--magic-interval) var(--magic-easing);
     --transition-transform: transform var(--magic-interval) var(--magic-easing);
+    --transition-transform-bounce: transform var(--magic-interval) var(--magic-easing-bounce);
     --transition-border-radius: border-radius var(--magic-interval) var(--magic-easing);
     --transition-filter: filter var(--magic-interval) var(--magic-easing);
     --transition-background-color: background-color var(--magic-interval) var(--magic-easing);
@@ -234,6 +236,25 @@
 
     @starting-style {
         transform: var(--slide-left-initial);
+    }
+}
+
+.auto-magic.slide-up {
+    transform: translate(0px, 0px);
+
+    transition: var(--transition-opacity), var(--transition-transform);
+
+    @starting-style {
+        transform: var(--slide-up-initial);
+    }
+}
+
+.auto-magic.scale {
+    transform: scale(1);
+    transition: var(--transition-opacity), var(--transition-transform-bounce);
+
+    @starting-style {
+        transform: scale(.8);
     }
 }
 

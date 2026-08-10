@@ -12,11 +12,11 @@ val DisplayUtilityCss
         CircleShape, CircleClip,
         // Border Radius
         BorderRadius0, BorderRadius1, BorderRadius2, BorderRadius4, BorderRadius3, BorderRadius50P, BorderRadiusPill,
-        BorderRadiusBottom1, BorderRadiusTop1, BorderDashed2Px, BorderSolid2Px,
+        BorderRadiusBottom1, BorderRadiusTop1, BorderDashed2Px, BorderSolid2Px, OutlineSolid2Px, OutlineDashed2Px,
         // Border
         SideBorder,
         // Color
-        NightInk, DayInk, PrimaryFg, AccentFg, ColorSchemeFg, ColorSchemeBg, WhiteFg, ErrorFg, CautionFg, ValidFg,
+        NightInk, DayInk, PrimaryFg, AccentFg, ColorSchemeFg, ColorSchemeBg, EditorFg, WhiteFg, ErrorFg, CautionFg, ValidFg,
         // Overflow
         OverflowHidden, OverflowWrapAnywhere, OverflowClip, OverflowXAuto, OverflowXHidden, OverflowYAuto, OverflowYScroll,
         OverscrollBehaviorContain,
@@ -78,6 +78,8 @@ val BorderDashed2Px = utilityOf("border-dashed", "border: 2px dashed var(--outli
 val BorderSolid2Px = utilityOf("border-solid", "border: var(--outline-low)")
 val BorderRadiusTop1 = utilityOf("border-radius-top-1", "border-radius: var(--unit-spacing) var(--unit-spacing) 0 0")
 val BorderRadiusBottom1 = utilityOf("border-radius-bottom-1", "border-radius: 0 0 var(--unit-spacing) var(--unit-spacing)")
+val OutlineSolid2Px = utilityOf("outline-solid", "outline: var(--outline-low)")
+val OutlineDashed2Px = utilityOf("outline-dashed", "outline: 2px dashed var(--outline-low-fg)")
 
 // Border
 val SideBorder = utilityOf("side-border", "border-left: var(--ghost-border)", "border-right: var(--ghost-border)")
@@ -88,6 +90,7 @@ val AccentFg = utilityOf("accent-fg", "color: var(--accent-fg)")
 val Primary = Class("primary")
 val PrimaryFg = utilityOf("primary-fg", "color: var(--primary-fg)")
 val WhiteFg = utilityOf("white-fg", "color: var(--white-fg)")
+val EditorFg = utilityOf("editor-fg", "color: var(--editor-fg)")
 val ErrorFg = utilityOf("red-fg", "color: var(--error-fg)")
 val CautionFg = utilityOf("caution-fg", "color: var(--caution-fg)")
 val ValidFg = utilityOf("valid-fg", "color: var(--valid-fg)")
