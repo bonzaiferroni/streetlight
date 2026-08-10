@@ -38,6 +38,10 @@ data class Image(
     val medium get() = variants.medium
     val large get() = variants.large
     val largest get() = variants.largest
+
+    companion object {
+        val Empty = Image(Url.Empty)
+    }
 }
 
 fun Url.toImage() = Image(this)

@@ -1,5 +1,6 @@
 package streetlight.web.ui
 
+import initElement
 import koala.SvgFile
 import koala.css.AlignItemsCenter
 import koala.css.Flex1
@@ -36,7 +37,7 @@ import kotlin.uuid.Uuid
 
 fun ViewScope.blockBuilder(model: LayoutEditor, blockId: Uuid, content: LocationContent) {
     val editor = model.getBlock(blockId)
-    box {
+    val element = box {
         when (val block = editor.blockField.now) {
             EventsBlock -> buildEvents(content)
             HeaderBlock -> buildHeader(content)
@@ -47,18 +48,19 @@ fun ViewScope.blockBuilder(model: LayoutEditor, blockId: Uuid, content: Location
             is TabsBlock -> tabsBuilder(editor, content)
         }
     }
+    initElement(element)
 }
 
 fun ViewScope.textBuilder(editor: BlockEditor) {
     val textField = editor.mutableFieldOf<TextBlock, String>({ it.text }) { copy(text = it) }
-    val isEditingField = storeOf(false)
+    val isEditingField = storeOf(textField.now.isEmpty())
     column {
         editorRow("text", editor, isEditingField::toggle)
         flowBlock(isEditingField) { isEditing ->
             if (isEditing) {
                 textField(textField)
             } else {
-                textBlock(textField.now)
+                textBlock(textField.now.takeIf { it.isNotEmpty() } ?: "[Text content]")
             }
         }
     }

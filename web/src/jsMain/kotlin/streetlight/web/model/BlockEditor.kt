@@ -44,7 +44,7 @@ class BlockEditor(
     }
 
     fun addContainer(container: LayoutContainer) {
-        val key = model.addContainer(container)
+        val key = model.addContainer(blockId, container)
         state.set {
             copy(
                 containerKeys = (containerKeys ?: emptyList()) + key,

@@ -65,6 +65,13 @@
     text-shadow: none;
     outline: 2px solid var(--outline-low-fg);
     outline-offset: -2px;
+
+    &.primary-bg {
+        background: var(--primary-card-bg);
+    }
+    &.editor-bg {
+        background: var(--editor-zen-bg);
+    }
 }
 
 .day-theme {

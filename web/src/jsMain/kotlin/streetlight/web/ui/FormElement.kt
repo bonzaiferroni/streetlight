@@ -112,3 +112,9 @@ data class LabeledAction(
     val onClick: () -> Unit,
     val mod: ModifierSet? = null,
 )
+
+data class LabeledItem<T>(
+    val label: String,
+    val item: T,
+    val mod: ModifierSet? = null,
+)

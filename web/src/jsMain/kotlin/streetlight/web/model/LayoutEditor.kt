@@ -14,14 +14,14 @@ class LayoutEditor(initialLayout: Layout) {
     private val blocks = mutableMapOf<Uuid, BlockEditor>()
     private val containers = mutableMapOf<Uuid, ContainerEditor>()
 
-    val mainContainerId = addContainer(initialLayout).id
+    val mainContainerId = addContainer(initialLayout, 0).id
 
     fun getBlock(blockId: Uuid) = blocks.getValue(blockId)
     fun getContainer(containerId: Uuid) = containers.getValue(containerId)
 
     fun addBlock(block: LayoutBlock, containerId: Uuid, index: Int) {
-        val blockId = addBlock(block)
         val container = getContainer(containerId)
+        val blockId = addBlock(block, container.depth)
         container.addBlock(blockId, index)
     }
 
@@ -35,20 +35,25 @@ class LayoutEditor(initialLayout: Layout) {
         if (it.value.blockIds.contains(blockId)) it.value else null
     }
 
-    fun addContainer(container: LayoutContainer): ContainerKey {
+    fun addContainer(blockId: Uuid, container: LayoutContainer): ContainerKey {
+        val parentContainer = getContainerWithBlock(blockId)
+        return addContainer(container, parentContainer.depth + 1)
+    }
+
+    fun addContainer(container: LayoutContainer, depth: Int): ContainerKey {
         val containerId = Uuid.random()
         val blockIds = container.blocks.map { block ->
-            addBlock(block)
+            addBlock(block, depth)
         }.toSet()
-        containers[containerId] = ContainerEditor(containerId, container.name, blockIds)
+        containers[containerId] = ContainerEditor(containerId, container.name, blockIds, depth, this)
         return ContainerKey(container.name, containerId)
     }
 
-    private fun addBlock(block: LayoutBlock): Uuid {
+    private fun addBlock(block: LayoutBlock, depth: Int): Uuid {
         val blockId = Uuid.random()
         val containers = block.getContainers()
         val containerKeys = containers?.map { subContainer ->
-            addContainer(subContainer)
+            addContainer(subContainer, depth + 1)
         }
         blocks[blockId] = BlockEditor(blockId, block, containerKeys, this)
         return blockId

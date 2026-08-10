@@ -21,7 +21,7 @@ val DisplayUtilityCss
         OverflowHidden, OverflowWrapAnywhere, OverflowClip, OverflowXAuto, OverflowXHidden, OverflowYAuto, OverflowYScroll,
         OverscrollBehaviorContain,
         // Background
-        PrimaryBg, PrimaryCardBg, ZenBg, CardBg, DialogBg, BackgroundImage, SolidBg, BlurBackdrop, TransparentBg,
+        PrimaryBg, PrimaryCardBg, ZenBg, CardBg, EditorBg, DialogBg, BackgroundImage, SolidBg, BlurBackdrop, TransparentBg,
         PaperGradientBg, CardGradientBg, InkGradientBg,
         // Transform
         FlipX, FlipY,
@@ -122,6 +122,7 @@ val OverscrollBehaviorContain = utilityOf("overscroll-behavior-contain", "oversc
 // Background
 val PrimaryBg = utilityOf("primary-bg", "background-color: var(--primary-bg)")
 val PrimaryCardBg = utilityOf("primary-card-bg", "background-color: var(--primary-card-bg)")
+val EditorBg = utilityOf("editor-bg", "background-color: var(--editor-bg)")
 val ZenBg = utilityOf("zen-card-bg", "background: var(--zen-bg)")
 val CardBg = utilityOf("card-bg", "background: var(--card-bg)")
 val DialogBg = utilityOf("dialog-bg", "background: var(--dialog-bg)")

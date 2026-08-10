@@ -1,6 +1,8 @@
 package streetlight.web.layouts
 
 import kampfire.model.GeoPoint
+import koala.css.MinHeight48
+import koala.css.modify
 import koala.html.column
 import koala.html.div
 import koala.html.geoMapMount
@@ -71,7 +73,7 @@ fun FlowContent.buildImage(block: ImageBlock) {
 }
 
 fun FlowContent.buildMap(geoPoint: GeoPoint) {
-    geoMapMount(geoPoint)
+    geoMapMount(geoPoint, modify(MinHeight48))
 }
 
 fun FlowContent.buildTabs(block: TabsBlock, content: LocationContent) {

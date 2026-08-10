@@ -91,6 +91,8 @@ val StylesCss get() = """
     
     --purple: 158, 87, 200;
     --selection-overlay: rgba(var(--purple), .2);
+    --editor-bg: color-mix(in srgb, rgba(var(--purple), .5) 50%, var(--card-bg));
+    --editor-zen-bg: color-mix(in srgb, rgba(var(--purple), .75) 50%, var(--zen-bg));
     
     --paper-gradient2-bg: linear-gradient(to right, var(--card-bg) 50%, transparent 95%);
     --paper-gradient-bg: linear-gradient(to right, rgba(var(--paper), .8) 0%, transparent 100%);
