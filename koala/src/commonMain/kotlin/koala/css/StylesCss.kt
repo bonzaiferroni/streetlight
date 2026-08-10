@@ -89,6 +89,9 @@ val StylesCss get() = """
     --gold: 200, 178, 87;
     --lamp-fg: color-mix(in srgb, rgb(var(--gold)) 75%, rgb(var(--ink)));
     
+    --purple: 158, 87, 200;
+    --selection-overlay: rgba(var(--purple), .2);
+    
     --paper-gradient2-bg: linear-gradient(to right, var(--card-bg) 50%, transparent 95%);
     --paper-gradient-bg: linear-gradient(to right, rgba(var(--paper), .8) 0%, transparent 100%);
     --card-gradient-bg: linear-gradient(to right, var(--card-bg) 0%, transparent 100%);

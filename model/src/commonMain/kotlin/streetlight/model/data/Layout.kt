@@ -6,11 +6,18 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Layout(
-    val blocks: List<LayoutBlock>
-)
+    override val blocks: List<LayoutBlock>
+): LayoutContainer {
+    override val name get() = "main"
+}
 
 @Serializable
 sealed interface LayoutBlock
+
+interface LayoutContainer {
+    val name: String
+    val blocks: List<LayoutBlock>
+}
 
 @Serializable
 data class ImageBlock(
@@ -31,9 +38,6 @@ data class RichTextBlock(
 object HeaderBlock: LayoutBlock
 
 @Serializable
-object FooterBlock: LayoutBlock
-
-@Serializable
 object MapBlock: LayoutBlock
 
 @Serializable
@@ -46,6 +50,6 @@ data class TabsBlock(
 
 @Serializable
 data class TabContent(
-    val name: String,
-    val blocks: List<LayoutBlock>
-)
+    override val name: String,
+    override val blocks: List<LayoutBlock>
+): LayoutContainer

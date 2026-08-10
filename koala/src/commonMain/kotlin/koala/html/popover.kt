@@ -26,13 +26,13 @@ fun FlowContent.popover(
 }
 
 fun DIV.configurePopover(
-    id: Id,
+    id: Id?,
     anchor: PositionAnchor?,
     mod: ModifierSet? = null,
     isManual: Boolean = false,
     block: DIV.() -> Unit
 ) {
-    addModifiers(PopoverKey.Class, mod)
+    addModifiers(Popover.Class, mod)
     setId(id)
     anchor?.let {
         setStyle(
@@ -50,14 +50,14 @@ fun CommonAttributeGroupFacade.popoverContainer(anchor: PositionAnchor) {
 
 private fun PositionAnchor.containerPosition(): PositionAnchor = PositionAnchor("${this.identifier}-container")
 
-object PopoverKey {
+object Popover {
     val Class = Class("popover")
     val TargetAction = stringAttributeOf("popovertargetaction")
 }
 
 // language="CSS"
 val PopoverCss get() = """
-${PopoverKey.Class} {
+${Popover.Class} {
     position: fixed;
     inset: auto;
     top: anchor(bottom);
@@ -67,7 +67,7 @@ ${PopoverKey.Class} {
     color: inherit;
 }
 
-${PopoverKey.Class}.magic {
+${Popover.Class}.magic {
     transition: 
         opacity 200ms ease-in-out, 
         transform 200ms ease-in-out, 
@@ -75,39 +75,39 @@ ${PopoverKey.Class}.magic {
         display 200ms allow-discrete;
 }
 
-${PopoverKey.Class}.magic:popover-open {
+${Popover.Class}.magic:popover-open {
     opacity: 1;
 }
 
-${PopoverKey.Class}.magic.blur:popover-open {
+${Popover.Class}.magic.blur:popover-open {
     filter: blur(0px);
 }
 
-${PopoverKey.Class}.magic.slide-down:popover-open,
-${PopoverKey.Class}.magic.slide-right:popover-open,
-${PopoverKey.Class}.magic.slide-left:popover-open,
-${PopoverKey.Class}.magic.slide-up:popover-open {
+${Popover.Class}.magic.slide-down:popover-open,
+${Popover.Class}.magic.slide-right:popover-open,
+${Popover.Class}.magic.slide-left:popover-open,
+${Popover.Class}.magic.slide-up:popover-open {
     transform: translate(0px, 0px);
 }
 
 @starting-style {
-    ${PopoverKey.Class}.magic:popover-open {
+    ${Popover.Class}.magic:popover-open {
         opacity: 0;
     }
     
-    ${PopoverKey.Class}.magic.blur:popover-open {
+    ${Popover.Class}.magic.blur:popover-open {
         filter: var(--magic-blur);
     }
     
-    ${PopoverKey.Class}.magic.slide-up:popover-open {
+    ${Popover.Class}.magic.slide-up:popover-open {
         transform: translate(0px, 20px);
     }
     
-    ${PopoverKey.Class}.magic.slide-left:popover-open {
+    ${Popover.Class}.magic.slide-left:popover-open {
         transform: translate(20px, 0px);
     }
     
-    ${PopoverKey.Class}.magic.slide-right:popover-open {
+    ${Popover.Class}.magic.slide-right:popover-open {
         transform: translate(-20px, 0px);
     }
 }

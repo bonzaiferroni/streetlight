@@ -23,7 +23,7 @@ open class Store<T>(
         state.update { value }
     }
 
-    fun set(setter: T.() -> T) {
+    override fun set(setter: T.() -> T) {
         state.update { it.setter() }
     }
 

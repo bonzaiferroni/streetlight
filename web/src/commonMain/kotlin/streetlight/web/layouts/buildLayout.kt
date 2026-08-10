@@ -12,7 +12,6 @@ import koala.html.textBlock
 import kotlinx.html.FlowContent
 import streetlight.model.data.DefaultLayout
 import streetlight.model.data.EventsBlock
-import streetlight.model.data.FooterBlock
 import streetlight.model.data.HeaderBlock
 import streetlight.model.data.ImageBlock
 import streetlight.model.data.LayoutBlock
@@ -42,7 +41,6 @@ fun FlowContent.buildColumn(blocks: List<LayoutBlock>, content: LocationContent)
 fun FlowContent.buildBlock(block: LayoutBlock, content: LocationContent) {
     when (block) {
         EventsBlock -> buildEvents(content)
-        FooterBlock -> buildFooter()
         HeaderBlock -> buildHeader(content)
         is ImageBlock -> buildImage(block)
         MapBlock -> buildMap(content.location.geoPoint)
@@ -85,10 +83,6 @@ fun FlowContent.buildTabs(block: TabsBlock, content: LocationContent) {
             }
         }
     }
-}
-
-fun FlowContent.buildFooter() {
-    appFooter()
 }
 
 fun FlowContent.buildText(block: TextBlock) {

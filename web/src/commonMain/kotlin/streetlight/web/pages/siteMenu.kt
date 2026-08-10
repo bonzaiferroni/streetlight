@@ -19,7 +19,7 @@ import streetlight.web.doc.SiteDoc
 import streetlight.web.layouts.route
 
 fun FlowContent.siteMenuPopover() {
-    popover(SiteHelm.Id, SiteHelm.PositionAnchor, modify(SiteHelm.PopoverClass, Magic, SlideRight)) {
+    popover(SiteHelm.popoverId, SiteHelm.PositionAnchor, modify(SiteHelm.PopoverClass, Magic, SlideRight)) {
         card(modify(SiteHelm.Container, HeavyCardBg, BlurBackdrop, PointerEventsAuto)) {
             column(modify(PaddingRight1)) {
                 row(modify(AlignItemsCenter)) {
@@ -87,12 +87,12 @@ private fun FlowContent.item(label: String, route: AppRoute, svg: Svg) {
 }
 
 object SiteHelm {
-    val Id = Id("site-helm")
-    val PositionAnchor = Id.toPositionAnchor()
+    val popoverId = Id("site-helm")
+    val PositionAnchor = popoverId.toPositionAnchor()
     val Container = Class("site-helm-menu")
     val PopoverClass = Class("site-helm-popover")
 
-    val closePopover = InlineJs.closePopover(Id)
+    val closePopover = InlineJs.closePopover(popoverId)
     val rowMod = modify(AlignItemsCenter)
 }
 

@@ -16,7 +16,6 @@ object DefaultLayout {
                 TabContent("events", listOf(EventsBlock)),
                 TabContent("directions", listOf(MapBlock))
             )),
-            FooterBlock,
         ),
     )
 }

@@ -14,7 +14,7 @@ fun FlowContent.helmBar() {
         div(HelmBar.SiteHelmButton, cardMod) {
             setAnchorName(SiteHelm.PositionAnchor)
             button(SvgFile.Helm, HelmBar.IconMod + WhiteFg) {
-                setPopoverTarget(SiteHelm.Id)
+                setPopoverTarget(SiteHelm.popoverId)
             }
         }
         spacer(modify(Flex1))

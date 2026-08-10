@@ -1,13 +1,11 @@
 package koala.model
 
-import io.ktor.utils.io.CancellationException
 import koala.utils.launch
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
 
 interface Field<Value> {
     val flow: Flow<Value>
@@ -17,13 +15,14 @@ interface Field<Value> {
 interface MutableField<Value>: Field<Value> {
     fun update(transform: (Value) -> Value)
     fun set(value: Value)
+    fun set(setter: Value.() -> Value)
 }
 
 fun <State, Value> MutableField<State>.mutableFieldOf(
     readValue: (State) -> Value,
     applyFlow: (Flow<State>) -> Flow<Value> = { it.map(readValue).distinctUntilChanged() },
-    onValue: State.(Value) -> State
-): MutableField<Value> = MutableStoreField(this, applyFlow, readValue, onValue)
+    writeValue: State.(Value) -> State
+): MutableField<Value> = MutableStoreField(this, applyFlow, readValue, writeValue)
 
 fun <State, Value> Field<State>.fieldOf(
     applyFlow: ((Flow<State>) -> Flow<Value>)? = null,
@@ -31,6 +30,9 @@ fun <State, Value> Field<State>.fieldOf(
 ): Field<Value> = StoreField(this, applyFlow ?: { it.map(readValue).distinctUntilChanged() }, readValue)
 
 fun <T> Field<T>.refine(applyFlow: (Flow<T>) -> Flow<T>): Field<T> = fieldOf(applyFlow) { it }
+
+inline fun <Base, reified T : Base> MutableField<Base>.narrow(): MutableField<T> =
+    mutableFieldOf(readValue = { it as T }, writeValue = { it })
 
 fun <T> Field<T>.reactIn(scope: CoroutineScope, block: suspend (T) -> Unit): Field<T> {
     scope.launch(Field<*>::reactIn) {
@@ -45,14 +47,19 @@ class MutableStoreField<State, Value>(
     private val store: MutableField<State>,
     applyFlow: (Flow<State>) -> Flow<Value>,
     val readValue: (State) -> Value,
-    val onValue: State.(Value) -> State
+    val writeValue: State.(Value) -> State
 ): MutableField<Value> {
     override val now: Value get() = readValue(store.now)
     override val flow = applyFlow(store.flow)
 
-    override fun update(transform: (Value) -> Value) = store.update { it.onValue(transform(readValue(it))) }
+    override fun update(transform: (Value) -> Value) {
+        store.update { it.writeValue(transform(readValue(it))) }
+    }
     override fun set(value: Value) {
-        store.update { it.onValue(value) }
+        store.update { it.writeValue(value) }
+    }
+    override fun set(setter: Value.() -> Value) {
+        store.update { it.writeValue(readValue(it).setter()) }
     }
 }
 
