@@ -59,7 +59,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object QueryBounds: PostEndpoint<GeoBounds, List<LocationInfo>>(this)
         object ReadConfigContent: GetByIdEndpoint<LocationId, LocationConfigContent>(this)
         object ParseEventSchema: PostEndpoint<Url, List<SelectorSchema>>(this)
-        object EditConfig: PostEndpoint<LocationConfig, Unit>(this)
+        object UpdateConfig: PostEndpoint<LocationConfig, Unit>(this)
         object UploadSchemas: PostEndpoint<UrlSchemas, Unit>(this)
     }
 

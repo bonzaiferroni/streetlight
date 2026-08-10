@@ -14,7 +14,7 @@ class BlockEditor(
     val blockId: Uuid,
     block: LayoutBlock,
     containerIds: List<ContainerKey>?,
-    private val model: LayoutEditor,
+    val model: LayoutEditor,
 ) {
     private val state = storeOf(BlockState(block, containerIds))
     val blockField = state.mutableFieldOf({ it.block }) { copy(block = it) }
@@ -30,6 +30,10 @@ class BlockEditor(
         writeValue = { value -> (this as T).setter(value) }
     )
 
+    fun addBlockAbove(block: LayoutBlock) {
+        model.addBlockAbove(blockId, block)
+    }
+
     fun renameContainer(containerId: Uuid, name: String) {
         state.set {
             copy(
@@ -40,7 +44,7 @@ class BlockEditor(
     }
 
     fun addContainer(container: LayoutContainer) {
-        val key = model.buildContainer(container)
+        val key = model.addContainer(container)
         state.set {
             copy(
                 containerKeys = (containerKeys ?: emptyList()) + key,

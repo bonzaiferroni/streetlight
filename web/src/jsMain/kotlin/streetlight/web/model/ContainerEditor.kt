@@ -11,6 +11,7 @@ class ContainerEditor(
 ) {
     private val state = storeOf(ContainerState(name, blockIds))
     val blockIdsField = state.mutableFieldOf({ it.blockIds }) { copy(blockIds = it) }
+    val blockIds get() = state.now.blockIds
 
     fun addBlock(blockId: Uuid, index: Int) {
         val newBlockIds = blockIdsField.now.toMutableList()
