@@ -155,12 +155,12 @@ function initTabs(root, viewportArg) {
         to.classList.add(toDir, "enter");
 
         const startH = from.scrollHeight;
-        const endH = to.scrollHeight;
 
         viewport.style.height = startH + "px";
         restoreScroll();
 
         requestAnimationFrame(() => {
+            const endH = to.scrollHeight;
             viewport.style.height = endH + "px";
             restoreScroll();
         });
