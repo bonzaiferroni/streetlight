@@ -8,6 +8,7 @@ import koala.css.MarginTop1
 import koala.css.Modifier
 import koala.css.ModifierSet
 import koala.css.OverflowClip
+import koala.css.Padding1
 import koala.css.PositionAnchor
 import koala.css.Scale
 import koala.css.modify
@@ -35,7 +36,7 @@ fun TagScope.popoverCard(
     cardMod: ModifierSet? = null,
     isManual: Boolean = false,
     block: DIV.() -> Unit = {}
-) = popover(id, anchor, mod, isManual) {
+) = popover(id, anchor, modify(mod, Padding1), isManual) {
     card(modify(cardMod, BlurBackdrop, BorderRadius3, BorderSolid2Px, MarginTop1, AutoMagic, Scale, OverflowClip)) {
         block()
     }

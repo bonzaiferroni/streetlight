@@ -18,7 +18,7 @@ value class Slug(override val value: String): SlugValue {
     }
 }
 
-fun String.toSlug() = Slug(this)
+fun String.toSlug() = Slug(this.lowercase())
 
 fun String.normalizeSlugSource(): String =
     take(Slug.MAX_LENGTH)
@@ -31,8 +31,10 @@ fun String.normalizeSlugSource(): String =
 
 private val VALID_SLUG = "^[a-z0-9]+(-[a-z0-9]+)*$".toRegex()
 
-fun Slug.isValid(): Boolean =
-    value.length in Slug.MIN_LENGTH..Slug.MAX_LENGTH && VALID_SLUG.matches(value)
+fun String.isValidSlug() =
+    length in Slug.MIN_LENGTH..Slug.MAX_LENGTH && VALID_SLUG.matches(this)
+
+fun Slug.isValid(): Boolean = value.isValidSlug()
 
 interface SlugValue {
     val value: String

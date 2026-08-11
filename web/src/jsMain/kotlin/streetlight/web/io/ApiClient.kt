@@ -62,6 +62,7 @@ class ApiClient(private val client: FetchClient) {
     suspend fun createLocation(location: LocationEdit) = client.postApi(Api.Locations.CreateLocation, location)
     suspend fun updateLocation(location: LocationEdit) = client.postApi(Api.Locations.UpdateLocation, location)
     suspend fun queryMap(request: MapQuery) = client.getApi(Api.Events.QueryMap, request.toQuery())
+    suspend fun configSubdomain(config: SubdomainConfig) = client.postApi(Api.Locations.UpdateSubdomain, config)
 
     // stars
     // suspend fun readUserFiles() = client.get(Api.Users.Files)

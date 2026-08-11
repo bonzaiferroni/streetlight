@@ -5,6 +5,7 @@ import io.ktor.http.HttpStatusCode
 object CoreProblem {
     val NotImplemented = Problem("This feature is not yet implemented.")
     val Something = Problem("The server ran into a problem.")
+    val InvalidSlug = Problem("A slug can have only letters, numbers, and hyphens.")
 }
 
 object AuthProblem {
@@ -20,6 +21,7 @@ object HttpProblem {
     val TooManyRequests = Problem("Too many requests.")
     val Conflict = Problem("There was a conflict.")
     val InternalServerError = CoreProblem.Something
+    val NotFound = Problem("That resource doesn't exist.")
 }
 
 fun HttpStatusCode.toProblem() = this.value.toHttpProblem()

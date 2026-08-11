@@ -1,9 +1,11 @@
 package koala.model
 
+import koala.core.queryAttribute
 import koala.css.KoalaBody
 import koala.dom.setAttribute
 import koala.html.AppRoute
 import koala.html.AppScreen
+import koala.html.Attribute
 import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.coroutines.flow.Flow
@@ -23,7 +25,7 @@ class Portal(
     initialRoute: AppRoute,
     val screens: List<AppScreen>,
 ) {
-    private val state = storeOf(PortalState(routeOf(window.location.pathname) ?: initialRoute))
+    private val state = storeOf(PortalState(queryRoute() ?: routeOf(window.location.pathname) ?: initialRoute))
     val stateFlow = state.flow
     val stateNow get() = state.now
 
@@ -139,6 +141,10 @@ class Portal(
 
     private fun routeOf(hashPath: String): AppRoute? {
         return AppRoute.routeOf(hashPath, screens)
+    }
+
+    private fun queryRoute(): AppRoute? {
+        return document.queryAttribute(Attribute.RoutePath)?.let { routeOf(it) }
     }
 }
 

@@ -30,6 +30,7 @@ data class Attribute<T>(
         val IsOn = booleanAttributeOf("is-on", true)
         val GeoPointAttribute = Attribute("geo-point", true) { GeoPoint.fromString(it) }
         val TabIndex = intAttributeOf("tab-index", true)
+        val RoutePath = stringAttributeOf("route-path", true)
 
         val PopoverTarget = stringAttributeOf("popovertarget")
         val Popover = stringAttributeOf("popover")

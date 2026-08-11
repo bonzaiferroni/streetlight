@@ -17,10 +17,11 @@ fun FlowContent.locationShell(
     content: LocationContent,
 ) {
     val location = content.location
+    val routeNow = LocationRoute(location.slug)
     column(LocationShell.shellId, BodyStyle.column) {
+        setAttribute(Attribute.RoutePath, routeNow.toRelativePath())
         buildLayout(content)
 
-        val routeNow = LocationRoute(location.slug)
         val adminRoute = content.takeIf { it.canEdit }?.let { LocationConfigRoute(location.locationId) }
         routeMenu(location.name ?: "Location", routeNow, listOf(routeNow, adminRoute))
     }

@@ -12,15 +12,14 @@ import streetlight.model.data.LocationContent
 import streetlight.model.data.toEdit
 import streetlight.model.ui.LocationConfigRoute
 import streetlight.web.model.LayoutEditor
-import streetlight.web.pages.formSubmit
 import streetlight.web.shells.cardOf
 
 fun ViewScope.viewLocationConfig(
     content: LocationConfigContent,
 ) {
     val location = content.location
-    val configField = storeOf(content.config)
-    val layoutEditor = LayoutEditor(configField.now.layout ?: DefaultLayout.location)
+    val configState = storeOf(content.config)
+    val layoutEditor = LayoutEditor(configState.now.layout ?: DefaultLayout.location)
     column(BodyStyle.column) {
         topLogo()
         cardOf(location)
@@ -34,7 +33,7 @@ fun ViewScope.viewLocationConfig(
                     // td: fix layout source
                     val locationContent = LocationContent(
                         location = location,
-                        layout = configField.now.layout ?: DefaultLayout.location,
+                        layout = configState.now.layout ?: DefaultLayout.location,
                         events = events,
                         canEdit = true
                     )
@@ -44,9 +43,9 @@ fun ViewScope.viewLocationConfig(
                         layoutBuilder(layoutEditor, locationContent)
                         formSubmit("save layout", {
                             val layout = layoutEditor.buildLayout() ?: return@formSubmit
-                            configField.set { copy(layout = layout) }
+                            configState.set { copy(layout = layout) }
                             launchEffect("upload layout") {
-                                api.updateLocationConfig(configField.now).handleResponse(messages)
+                                api.updateLocationConfig(configState.now).handleResponse(messages)
                             }
                         }, messages)
                     }
@@ -71,8 +70,9 @@ fun ViewScope.viewLocationConfig(
                     }
                 }
             }
-            tab("automate") {
-                locationAutomationForm(content)
+            tab("settings") {
+                locationSettingsForm(configState)
+                // locationAutomationForm(content)
             }
         }
         appFooter("")

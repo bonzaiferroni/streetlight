@@ -61,6 +61,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object ParseEventSchema: PostEndpoint<Url, List<SelectorSchema>>(this)
         object UpdateConfig: PostEndpoint<LocationConfig, Unit>(this)
         object UploadSchemas: PostEndpoint<UrlSchemas, Unit>(this)
+        object UpdateSubdomain: PostEndpoint<SubdomainConfig, Unit>(this)
     }
 
     object Songs: GetEndpoint<List<Song>>(this) {
