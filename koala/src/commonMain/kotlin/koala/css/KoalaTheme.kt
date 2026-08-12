@@ -13,9 +13,9 @@ data class KoalaTheme(
     val accent: Rgb = Rgb(200, 87, 178),
     val primary: Rgb = Rgb(58, 158, 200),
 
-    val rho: Glow = Glow(Rgb(255, 99, 132), GlowPosition(18, 22, 48), 50, 0),
-    val beta: Glow = Glow(Rgb(88, 164, 255), GlowPosition(82, 20, 48), 50, 0),
-    val gamma: Glow = Glow(Rgb(88, 255, 188), GlowPosition(50, 65, 43), 40, 0),
+    val rho: Glow = Glow(Rgb(255, 99, 132), GlowPosition(18, 22, 39), 50, 0),
+    val beta: Glow = Glow(Rgb(88, 164, 255), GlowPosition(82, 20, 39), 50, 0),
+    val gamma: Glow = Glow(Rgb(88, 255, 188), GlowPosition(50, 65, 36), 40, 0),
 ) {
     companion object {
         const val MagicInterval = 222
@@ -30,6 +30,7 @@ val Koala = KoalaTheme()
 object KoalaStyle {
     val Accent = Property<Rgb>("accent")
     val Primary = Property<Rgb>("primary")
+    val ColorFlux = Property<String>("color-flux")
     val RhoColor = Property<String>("rho-color")
     val BetaColor = Property<String>("beta-color")
     val GammaColor = Property<String>("gamma-color")
@@ -39,9 +40,9 @@ object KoalaStyle {
     val RhoY = Property<LinearDimension>("rho-y")
     val BetaY = Property<LinearDimension>("beta-y")
     val GammaY = Property<LinearDimension>("gamma-y")
-    val RhoRadius = Property<LinearDimension>("rho-radius")
-    val BetaRadius = Property<LinearDimension>("beta-radius")
-    val GammaRadius = Property<LinearDimension>("gamma-radius")
+    val RhoRadius = Property<Int>("rho-radius")
+    val BetaRadius = Property<Int>("beta-radius")
+    val GammaRadius = Property<Int>("gamma-radius")
     val RhoFocus = Property<LinearDimension>("rho-focus")
     val BetaFocus = Property<LinearDimension>("beta-focus")
     val GammaFocus = Property<LinearDimension>("gamma-focus")

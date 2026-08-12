@@ -1,4 +1,4 @@
-@file:Suppress("CssInvalidPseudoSelector")
+@file:Suppress("CssInvalidPseudoSelector", "CssInvalidHtmlTagReference")
 
 package koala.css
 
@@ -112,12 +112,13 @@ val ThemeCss get() = """
     --rho-y: ${Koala.rho.position.y}%;
     --beta-y: ${Koala.beta.position.y}%;
     --gamma-y: ${Koala.gamma.position.y}%;
-    --rho-radius: ${Koala.rho.position.radius}vw;
-    --beta-radius: ${Koala.beta.position.radius}vw;
-    --gamma-radius: ${Koala.gamma.position.radius}vw;
+    --rho-radius: ${Koala.rho.position.radius};
+    --beta-radius: ${Koala.beta.position.radius};
+    --gamma-radius: ${Koala.gamma.position.radius};
     --rho-focus: ${Koala.rho.focus}%;
     --beta-focus: ${Koala.beta.focus}%;
     --gamma-focus: ${Koala.gamma.focus}%;
+    --color-flux: hueSpin 30s linear infinite;
 }
 
 @property --rho-color { syntax: '<color>'; inherits: true; initial-value: ${Koala.rho.rgba()}; }
@@ -129,9 +130,9 @@ val ThemeCss get() = """
 @property --rho-y { syntax: '<percentage>'; inherits: true; initial-value: ${Koala.rho.position.y}%; }
 @property --beta-y { syntax: '<percentage>'; inherits: true; initial-value: ${Koala.beta.position.y}%; }
 @property --gamma-y { syntax: '<percentage>'; inherits: true; initial-value: ${Koala.gamma.position.y}%; }
-@property --rho-radius { syntax: '<length-percentage>'; inherits: true; initial-value: ${Koala.rho.position.radius}vw; }
-@property --beta-radius { syntax: '<length-percentage>'; inherits: true; initial-value: ${Koala.beta.position.radius}vw; }
-@property --gamma-radius { syntax: '<length-percentage>'; inherits: true; initial-value: ${Koala.gamma.position.radius}vw; }
+@property --rho-radius { syntax: '<number>'; inherits: true; initial-value: ${Koala.rho.position.radius}; }
+@property --beta-radius { syntax: '<number>'; inherits: true; initial-value: ${Koala.beta.position.radius}; }
+@property --gamma-radius { syntax: '<number>'; inherits: true; initial-value: ${Koala.gamma.position.radius}; }
 @property --rho-focus { syntax: '<percentage>'; inherits: true; initial-value: ${Koala.rho.focus}%; }
 @property --beta-focus { syntax: '<percentage>'; inherits: true; initial-value: ${Koala.beta.focus}%; }
 @property --gamma-focus { syntax: '<percentage>'; inherits: true; initial-value: ${Koala.gamma.focus}%; }
@@ -157,11 +158,11 @@ body::before {
     pointer-events: none;
     z-index: -1;
     background:
-        radial-gradient(circle var(--rho-radius) at var(--rho-x) var(--rho-y), var(--rho-color) var(--rho-focus), transparent 100%),
-        radial-gradient(circle var(--beta-radius) at var(--beta-x) var(--beta-y), var(--beta-color) var(--beta-focus), transparent 100%),
-        radial-gradient(circle var(--gamma-radius) at var(--gamma-x) var(--gamma-y), var(--gamma-color) var(--gamma-focus), transparent 100%);
-    /* filter: hue-rotate(0deg); */
-    animation: hueSpin 30s linear infinite;
-    /* will-change: filter; */
+        radial-gradient(circle calc(hypot(100vw, 100vh) * var(--rho-radius) / 100) at var(--rho-x) var(--rho-y), var(--rho-color) var(--rho-focus), transparent 100%),
+        radial-gradient(circle calc(hypot(100vw, 100vh) * var(--beta-radius) / 100) at var(--beta-x) var(--beta-y), var(--beta-color) var(--beta-focus), transparent 100%),
+        radial-gradient(circle calc(hypot(100vw, 100vh) * var(--gamma-radius) / 100) at var(--gamma-x) var(--gamma-y), var(--gamma-color) var(--gamma-focus), transparent 100%);
+    animation: var(--color-flux);
+    will-change: filter;
+    filter: hue-rotate(0deg);
 }
 """

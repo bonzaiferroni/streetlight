@@ -5,49 +5,17 @@ import koala.css.ModifierSet
 import koala.css.addModifiers
 import koala.css.modify
 import kotlinx.html.DIV
-import kotlinx.html.FlowContent
-import kotlinx.html.div
 import kotlinx.html.span
 
-fun FlowContent.switch(
-    label: String,
-    modifiers: ModifierSet? = null,
-    id: Id? = null,
-    initialOn: Boolean = false,
-    block: (DIV.() -> Unit)? = null,
-) {
-    div {
-        configureSwitch(label, modifiers, id, initialOn, block)
-    }
-}
-
-fun DIV.configureSwitch(
-    label: String,
-    modifiers: ModifierSet? = null,
-    id: Id? = null,
-    initialOn: Boolean = false,
-    block: (DIV.() -> Unit)? = null,
-) {
-    addModifiers(modify(SwitchKey.Class, modifiers))
-    setId(id)
-    attributes["role"] = "switch"
-    attributes["aria-checked"] = initialOn.toString()
-    setAttribute(Attribute.IsOn, initialOn)
-
-    // ghost text defines the inner pill width; outer padding makes the “constraints” larger
-    span("switch__ghost") { +label }
-    span("switch__pill") { +label }
-
-    block?.invoke(this)
-}
-
-object SwitchKey {
+object SwitchStyle {
     val Class = Class("switch")
+    val Pill = Class("switch__pill")
+    val Ghost = Class("switch__ghost")
 }
 
 // language="CSS"
-val SwitchCss get() = """
-.switch {
+val SwitchCss get() = with(SwitchStyle) { """
+$Class {
     position: relative;
     display: inline-flex;
     align-items: center;
@@ -63,9 +31,11 @@ val SwitchCss get() = """
     -webkit-tap-highlight-color: transparent;
 }
 
-.switch__pill {
+$Pill {
     position: absolute;
     top: 50%;
+    left: 0;
+    right: 1rem;
     transform: translate(0, -50%);
     transition:
             transform var(--magic-interval) var(--magic-easing),
@@ -81,11 +51,12 @@ val SwitchCss get() = """
     line-height: 1rem;
     text-transform: uppercase;
     text-shadow: var(--btn-text-shadow);
+    text-align: center;
     white-space: nowrap;
 }
 
 /* sizing helper: invisible text to define track width */
-.switch__ghost {
+$Ghost {
     visibility: hidden;
     pointer-events: none;
 
@@ -97,15 +68,15 @@ val SwitchCss get() = """
 }
 
 /* ON state: slide pill to the right, full opacity */
-.switch[data-is-on="true"] .switch__pill {
+$Class[data-is-on="true"] $Pill {
     background: var(--primary-button);
     transform: translate(1rem, -50%);
     box-shadow: 0 0 .8rem var(--primary-button), var(--btn-outline);
 }
 
 /* optional: keyboard focus.svg ring if you add tabindex */
-.switch:focus-visible {
+$Class:focus-visible {
     outline: 2px solid color-mix(in srgb, var(--primary-button) 70%, white);
     outline-offset: 2px;
 }
-"""
+""" }

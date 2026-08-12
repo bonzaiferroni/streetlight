@@ -18,4 +18,5 @@ data class PageTheme(
     val rho: Glow = Koala.rho,
     val beta: Glow = Koala.beta,
     val gamma: Glow = Koala.gamma,
+    val colorFlux: Boolean = true,
 )

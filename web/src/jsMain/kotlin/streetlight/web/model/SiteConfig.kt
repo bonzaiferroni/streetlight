@@ -1,31 +1,30 @@
 package streetlight.web.model
 
 import kampfire.model.Labeled
-import koala.model.dedup
 import koala.model.mutableTapOf
+import koala.model.reactIn
 import koala.model.storeOf
 import koala.utils.jsonConfig
 import kotlinx.browser.localStorage
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.serialization.Serializable
 import org.w3c.dom.get
 import org.w3c.dom.set
 
-class SiteConfig {
+class SiteConfig(
+    private val scope: CoroutineScope
+) {
     private val state = storeOf(readStateFromLocalStorage() ?: SiteConfigState())
 
     val stateNow get() = state.now
     val stateFlow = state.flow
-    val showTransitFlow = state.flow.dedup { it.showTransit }
+    val showTransitState = state.mutableTapOf({ it.showTransit }) { copy(showTransit = it) }
     val themeFlow = state.mutableTapOf({ it.theme }) { copy(theme = it) }
 
-    fun setShowTransit(value: Boolean) {
-        setState { it.copy(showTransit = value) }
-    }
-
-    private fun setState(mutate: (SiteConfigState) -> SiteConfigState) {
-        val newState = mutate(stateNow)
-        state.setValue { newState }
-        writeStateToLocalStorage(newState)
+    init {
+        state.reactIn(scope) {
+            writeStateToLocalStorage(it)
+        }
     }
 
     private fun readStateFromLocalStorage(): SiteConfigState? = localStorage[SITE_CONFIG_KEY]?.let {

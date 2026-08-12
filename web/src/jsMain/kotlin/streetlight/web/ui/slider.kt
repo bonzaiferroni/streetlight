@@ -24,6 +24,8 @@ fun ViewScope.slider(
     mod: ModifierSet? = null,
     config: INPUT.() -> Unit = { }
 ): HTMLInputElement {
+    var currentValue = state.now
+
     val inputElement = input {
         addModifiers(mod)
         config()
@@ -35,18 +37,24 @@ fun ViewScope.slider(
 
         onInputFunction = {
             (it.target as HTMLInputElement).value.toIntOrNull()?.let { newValue ->
-                state.set(newValue)
+                if (newValue != currentValue) {
+                    currentValue = newValue
+                    state.set(newValue)
+                }
             }
         }
     }
 
-    inputElement.value = state.now.toString()
+    fun display(value: Int) {
+        if (value == currentValue) return
+        currentValue = value
+        inputElement.value = value.toString()
+    }
+
+    inputElement.value = currentValue.toString()
 
     launchEffect("slider") {
-        state.flow.collect { value ->
-            val text = value.toString()
-            if (inputElement.value != text) inputElement.value = text
-        }
+        state.flow.collect { display(it) }
     }
     return inputElement
 }

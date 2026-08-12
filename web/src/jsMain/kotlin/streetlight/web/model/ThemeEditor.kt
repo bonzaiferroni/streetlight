@@ -7,6 +7,7 @@ import koala.model.MutableTap
 import koala.model.mutableTapOf
 import koala.model.storeOf
 import streetlight.model.data.PageTheme
+import kotlin.collections.copy
 import kotlin.math.roundToInt
 
 class ThemeEditor(initialTheme: PageTheme?) {
@@ -18,6 +19,7 @@ class ThemeEditor(initialTheme: PageTheme?) {
     val rhoState = state.mutableTapOf({ it.rho }) { copy(rho = it) }
     val betaState = state.mutableTapOf({ it.beta }) { copy(beta = it) }
     val gammaState = state.mutableTapOf({ it.gamma }) { copy(gamma = it) }
+    val colorFluxState = state.mutableTapOf({ it.colorFlux }) { copy(colorFlux = it) }
 
     fun buildTheme(): PageTheme? {
         return state.now.takeIf { it != Koala }

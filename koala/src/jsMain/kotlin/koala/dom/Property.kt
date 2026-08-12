@@ -16,6 +16,6 @@ fun <T: Any> HTMLElement.setStyle(style: InlineStyle<T>): ElementCSSInlineStyle 
 }
 
 fun <T: Any> HTMLElement.removeStyle(property: Property<T>): HTMLElement {
-    this.style.removeProperty(property.identifier)
+    this.style.removeProperty(property.expression)
     return this
 }

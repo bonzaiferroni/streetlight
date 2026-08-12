@@ -12,7 +12,7 @@ import org.w3c.dom.HTMLElement
 import org.w3c.dom.pointerevents.PointerEvent
 import kotlin.math.roundToInt
 
-fun ViewScope.glowControl(
+fun ViewScope.glowField(
     state: MutableTap<Glow>,
     mod: ModifierSet? = null,
 ) {
@@ -22,7 +22,7 @@ fun ViewScope.glowControl(
     fun place(glow: Glow) {
         handleElement.setStyle(Property.Left.to(glow.position.x.pct))
         handleElement.setStyle(Property.Top.to(glow.position.y.pct))
-        handleElement.setStyle(Property.Width.to(glow.position.radius.pct))
+        handleElement.setStyle(Property.Width.to((glow.position.radius / 2.0).pct))
         handleElement.setStyle(Property.BackgroundColor.to(glow.rgba()))
     }
 
@@ -55,7 +55,7 @@ fun ViewScope.glowControl(
 
     place(state.now)
 
-    launchEffect(::glowControl) {
+    launchEffect(::glowField) {
         state.flow.collect { place(it) }
     }
 }

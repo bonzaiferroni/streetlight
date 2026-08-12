@@ -1,6 +1,5 @@
 import koala.core.findAndInitGeoMap
 import koala.core.queryAndInitLotties
-import koala.core.findAndInitSwitches
 import koala.core.globalFunCore
 import koala.core.addGlobalFunctions
 import koala.dom.findAndInitTabs
@@ -22,6 +21,5 @@ fun main() {
 fun initElement(element: HTMLElement) {
     findAndInitGeoMap(element)
     queryAndInitLotties(element)
-    findAndInitSwitches(element)
     findAndInitTabs(element)
 }

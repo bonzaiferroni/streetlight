@@ -39,7 +39,7 @@ fun FlowContent.feedRow(
             }
             // spacer(modify(Height2Px, InkGradientBg, MarginTop2Px))
             cells?.let {
-                cellBlock(modify(FeedRow.Cells, BorderRadius2, OverflowClip), cells)
+                cellBlock(modify(FeedRow.Cells, BorderRadius2, OverflowClip, OutlineSolid2Px), cells)
             }
         }
 

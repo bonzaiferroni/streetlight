@@ -7,7 +7,7 @@ import koala.model.MutableTap
 import koala.model.mutableTapOf
 import kotlinx.browser.document
 import kotlinx.css.pct
-import kotlinx.css.vw
+import kotlinx.css.vh
 import streetlight.model.data.PageTheme
 import streetlight.web.model.ThemeEditor
 
@@ -19,12 +19,15 @@ fun ViewScope.themeForm(model: ThemeEditor) {
                     colorPicker("accent", model.accentState)
                     colorPicker("primary", model.primaryState)
                 }
+                row(modify(FlexItems1)) {
+                    switch("color flux", model.colorFluxState)
+                }
             }
             formSection("Background") {
                 box(modify(VoidBg, BorderRadius2, OutlineSolid2Px, OverflowClip)) {
-                    glowControl(model.rhoState)
-                    glowControl(model.betaState)
-                    glowControl(model.gammaState)
+                    glowField(model.rhoState)
+                    glowField(model.betaState)
+                    glowField(model.gammaState)
                 }
             }
         }
@@ -73,10 +76,15 @@ fun applyTheme(theme: PageTheme) {
     body.setStyle(KoalaStyle.RhoY.to(theme.rho.position.y.pct))
     body.setStyle(KoalaStyle.BetaY.to(theme.beta.position.y.pct))
     body.setStyle(KoalaStyle.GammaY.to(theme.gamma.position.y.pct))
-    body.setStyle(KoalaStyle.RhoRadius.to(theme.rho.position.radius.vw))
-    body.setStyle(KoalaStyle.BetaRadius.to(theme.beta.position.radius.vw))
-    body.setStyle(KoalaStyle.GammaRadius.to(theme.gamma.position.radius.vw))
+    body.setStyle(KoalaStyle.RhoRadius.to(theme.rho.position.radius))
+    body.setStyle(KoalaStyle.BetaRadius.to(theme.beta.position.radius))
+    body.setStyle(KoalaStyle.GammaRadius.to(theme.gamma.position.radius))
     body.setStyle(KoalaStyle.RhoFocus.to(theme.rho.focus.pct))
     body.setStyle(KoalaStyle.BetaFocus.to(theme.beta.focus.pct))
     body.setStyle(KoalaStyle.GammaFocus.to(theme.gamma.focus.pct))
+
+    when (theme.colorFlux) {
+        true -> body.removeStyle(KoalaStyle.ColorFlux)
+        else -> body.setStyle(KoalaStyle.ColorFlux.to("none"))
+    }
 }

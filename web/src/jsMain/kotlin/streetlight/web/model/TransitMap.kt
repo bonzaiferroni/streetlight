@@ -48,7 +48,7 @@ class TransitMap(
         if (isInitialized) return
         isInitialized = true
         scope.launch {
-            config.showTransitFlow.collect {
+            config.showTransitState.flow.collect {
                 setIsActive(it)
             }
         }

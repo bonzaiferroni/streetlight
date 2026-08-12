@@ -33,7 +33,7 @@ import streetlight.web.model.*
 
 val appModule = module {
     single { MainScope() + appExceptionHandler + LaunchTelemetry("App") }
-    single { SiteConfig() }
+    single { SiteConfig(get()) }
     single { CredentialStore() }
     single { FetchClient() }
 
