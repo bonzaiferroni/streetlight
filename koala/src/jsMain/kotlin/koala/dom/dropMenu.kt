@@ -3,13 +3,8 @@ package koala.dom
 import kampfire.model.Labeled
 import koala.css.ModifierSet
 import koala.css.addModifiers
-import koala.model.MutableField
-import koala.model.Store
-import koala.model.mutableFieldOf
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
+import koala.model.MutableTap
+import koala.model.mutableTapOf
 import kotlinx.html.SELECT
 import kotlinx.html.js.option
 import kotlinx.html.js.select
@@ -17,7 +12,7 @@ import org.w3c.dom.HTMLSelectElement
 
 fun ViewScope.dropMenu(
     options: List<String>,
-    field: MutableField<String>,
+    field: MutableTap<String>,
     mod: ModifierSet? = null,
     block: (SELECT.() -> Unit)? = null
 ): HTMLSelectElement {
@@ -61,13 +56,13 @@ fun ViewScope.dropMenu(
 }
 
 inline fun <reified E> ViewScope.dropMenu(
-    field: MutableField<E>,
+    field: MutableTap<E>,
     mod: ModifierSet? = null,
     noinline block: (SELECT.() -> Unit)? = null
 ): HTMLSelectElement where E : Enum<E>, E : Labeled {
     val enums = enumValues<E>()
     val values = enums.map { it.label }
-    val textField = field.mutableFieldOf({ it.label }) { enums[values.indexOf(it)] }
+    val textField = field.mutableTapOf({ it.label }) { enums[values.indexOf(it)] }
 
     return dropMenu(values, textField, mod, block)
 }

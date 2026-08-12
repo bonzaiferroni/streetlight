@@ -8,7 +8,7 @@ import koala.html.bulletsOf
 import koala.html.filigree
 import koala.html.heading3
 import koala.html.span
-import koala.model.MutableField
+import koala.model.MutableTap
 import streetlight.web.model.UserCreator
 import streetlight.web.model.UserCreatorState
 
@@ -46,7 +46,7 @@ fun ViewScope.guestRegistrationForm(model: UserCreator) {
             buttonText = "Register as Guest",
             onClick = { model.createAccount(AccountType.Guest) },
             messages = model.messages,
-            enabledField = model.isValidField
+            enabledTap = model.isValidField
         )
     }
 }
@@ -74,7 +74,7 @@ fun ViewScope.fullRegistrationForm(model: UserCreator) {
             buttonText = "Sign up",
             onClick = { model.createAccount(AccountType.Registered) },
             messages = model.messages,
-            enabledField = model.isValidField
+            enabledTap = model.isValidField
         )
     }
 }
@@ -98,7 +98,7 @@ private fun ViewScope.usernameSection(model: UserCreator) = formSection("Usernam
 }
 
 fun ViewScope.minAgeToggle(
-    field: MutableField<Boolean>
+    field: MutableTap<Boolean>
 ) = column(modify(AlignItemsCenter)) {
     textBlock("To create an account, you must be 17 or older.", modify(TextAlignCenter))
     checkBox(field, "I am ${UserCreatorState.MINIMUM_AGE} or older.")

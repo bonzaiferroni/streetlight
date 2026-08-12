@@ -9,8 +9,8 @@ import koala.html.filigree
 import koala.html.heading3
 import koala.html.heading5
 import koala.html.textBlock
-import koala.model.Field
-import koala.model.MutableField
+import koala.model.Tap
+import koala.model.MutableTap
 import kotlinx.html.DIV
 import kotlinx.html.SECTION
 
@@ -68,16 +68,16 @@ fun ViewScope.formSubmit(
     onClick: () -> Unit,
     messages: MessageStore? = null,
     onCancel: (() -> Unit)? = null,
-    enabledField: Field<Boolean>? = null,
-    isDisplayedFlow: Field<Boolean>? = null,
+    enabledTap: Tap<Boolean>? = null,
+    isDisplayedFlow: Tap<Boolean>? = null,
 ) = row(mod = modify(AlignItemsStart, JustifyContentEnd)) {
     messages?.let {
         messageBox(it)
     }
     column {
         val button = button(buttonText, onClick, modify(Accent))
-        enabledField?.let {
-            configureEnabledFlow(button, enabledField)
+        enabledTap?.let {
+            configureEnabledFlow(button, enabledTap)
         }
         isDisplayedFlow?.let {
             button.flowIsDisplayed(it, contentScope)
@@ -101,7 +101,7 @@ fun ViewScope.formField(
 }
 
 fun ViewScope.formTextField(
-    field: MutableField<String>,
+    field: MutableTap<String>,
     label: String? = null,
     mod: ModifierSet? = null,
     footnote: String? = null,

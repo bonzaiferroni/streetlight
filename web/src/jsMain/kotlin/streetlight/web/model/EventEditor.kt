@@ -5,8 +5,8 @@ import kampfire.api.toMarkdown
 import kampfire.model.handleResponse
 import kampfire.model.toUrl
 import koala.dom.MessageStore
-import koala.model.fieldOf
-import koala.model.mutableFieldOf
+import koala.model.tapOf
+import koala.model.mutableTapOf
 import koala.model.reactIn
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
@@ -33,20 +33,20 @@ class EventEditor(
     val stateNow get() = state.now
     val editNow get() = stateNow.edit
 
-    val editField = state.mutableFieldOf({ it.edit }) { copy(edit = it) }
-    val imageField = editField.mutableFieldOf({ it.image }) { copy(image = it) }
-    val startTimeField = editField.mutableFieldOf({ it.startTime }) { copy(startTime = it)}
-    val endTimeField = editField.mutableFieldOf({ it.endTime }) { copy(endTime = it) }
-    val dateField = editField.mutableFieldOf({ it.date }) { copy(date = it) }
-    val startsAt = editField.fieldOf { it.startsAt }
-    val description = editField.mutableFieldOf({ it.description ?: "".toMarkdown() }) { copy(description = it) }
-    val title = editField.mutableFieldOf({ it.title ?: "" }) { copy(title = it) }
-    val urlField = editField.mutableFieldOf({ it.website?.value ?: "" }) { copy(website = it.toUrl()) }
-    val isFree = editField.mutableFieldOf({ it.isFree }) { copy(cost = if (it) 0f else null) }
-    val costField = state.mutableFieldOf({ it.costString }) { copy(costString = it) }
-    val validityCheckField = editField.fieldOf { it.validity }
-    val originalSourceLabelField = state.mutableFieldOf({ it.originalSourceLabel }) { copy(originalSourceLabel = it) }
-    val originalSourceUrlField = state.mutableFieldOf({ it.originalSourceUrl }) { copy(originalSourceUrl = it) }
+    val editField = state.mutableTapOf({ it.edit }) { copy(edit = it) }
+    val imageField = editField.mutableTapOf({ it.image }) { copy(image = it) }
+    val startTimeField = editField.mutableTapOf({ it.startTime }) { copy(startTime = it)}
+    val endTimeField = editField.mutableTapOf({ it.endTime }) { copy(endTime = it) }
+    val dateField = editField.mutableTapOf({ it.date }) { copy(date = it) }
+    val startsAt = editField.tapOf { it.startsAt }
+    val description = editField.mutableTapOf({ it.description ?: "".toMarkdown() }) { copy(description = it) }
+    val title = editField.mutableTapOf({ it.title ?: "" }) { copy(title = it) }
+    val urlField = editField.mutableTapOf({ it.website?.value ?: "" }) { copy(website = it.toUrl()) }
+    val isFree = editField.mutableTapOf({ it.isFree }) { copy(cost = if (it) 0f else null) }
+    val costField = state.mutableTapOf({ it.costString }) { copy(costString = it) }
+    val validityCheckField = editField.tapOf { it.validity }
+    val originalSourceLabelField = state.mutableTapOf({ it.originalSourceLabel }) { copy(originalSourceLabel = it) }
+    val originalSourceUrlField = state.mutableTapOf({ it.originalSourceUrl }) { copy(originalSourceUrl = it) }
 
     val imageEditor = ImageEditor(imageField, api)
     val message = MessageStore()

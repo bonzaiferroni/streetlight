@@ -3,7 +3,7 @@ package streetlight.web.model
 import kampfire.api.toMarkdown
 import kampfire.model.handleResponse
 import koala.dom.MessageStore
-import koala.model.mutableFieldOf
+import koala.model.mutableTapOf
 import koala.model.storeOf
 import koala.utils.launch
 import kotlinx.coroutines.CoroutineScope
@@ -20,10 +20,10 @@ class ProfileEditor(
     val stateNow get() = state.now
     val stateFlow = state.flow
 
-    val editField = state.mutableFieldOf({ it.edit }) { copy(edit = it) }
-    val imageField = editField.mutableFieldOf({ it.image }) { copy(image = it) }
-    val descriptionField = editField.mutableFieldOf({ it.description ?: "".toMarkdown() }) { copy(description = it) }
-    val taglineField = editField.mutableFieldOf({ it.tagline ?: "" }) { copy(tagline = it) }
+    val editField = state.mutableTapOf({ it.edit }) { copy(edit = it) }
+    val imageField = editField.mutableTapOf({ it.image }) { copy(image = it) }
+    val descriptionField = editField.mutableTapOf({ it.description ?: "".toMarkdown() }) { copy(description = it) }
+    val taglineField = editField.mutableTapOf({ it.tagline ?: "" }) { copy(tagline = it) }
 
     val messages = MessageStore()
     val imageEditor = ImageEditor(imageField, api)

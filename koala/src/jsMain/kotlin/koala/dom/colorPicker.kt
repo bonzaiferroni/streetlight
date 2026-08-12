@@ -1,7 +1,7 @@
 package koala.dom
 
 import koala.css.*
-import koala.model.MutableField
+import koala.model.MutableTap
 import kotlinx.html.InputType
 import kotlinx.html.js.input
 import kotlinx.html.js.onInputFunction
@@ -10,7 +10,7 @@ import org.w3c.dom.HTMLInputElement
 
 fun ViewScope.colorPicker(
     text: String,
-    colorState: MutableField<Rgb>,
+    colorState: MutableTap<Rgb>,
     mod: ModifierSet? = null,
 ) {
     var currentColor: Rgb? = null

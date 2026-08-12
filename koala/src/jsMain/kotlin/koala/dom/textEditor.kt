@@ -9,9 +9,7 @@ import koala.html.Id
 import koala.html.Attribute
 import koala.html.setId
 import koala.html.setAttribute
-import koala.model.MutableField
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.launch
+import koala.model.MutableTap
 import kotlinx.html.TEXTAREA
 import kotlinx.html.js.div
 import kotlinx.html.js.onInputFunction
@@ -19,7 +17,7 @@ import kotlinx.html.js.textArea
 import org.w3c.dom.HTMLTextAreaElement
 
 fun ViewScope.textEditor(
-    field: MutableField<Markdown>,
+    field: MutableTap<Markdown>,
     label: String? = null,
     modifiers: ModifierSet? = null,
     textModifiers: ModifierSet? = null,

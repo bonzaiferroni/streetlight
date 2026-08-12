@@ -7,35 +7,35 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 
-interface Field<Value> {
+interface Tap<Value> {
     val flow: Flow<Value>
     val now: Value
 }
 
-interface MutableField<Value>: Field<Value> {
+interface MutableTap<Value>: Tap<Value> {
     fun update(transform: (Value) -> Value)
     fun set(value: Value)
     fun set(setter: Value.() -> Value)
 }
 
-fun <State, Value> MutableField<State>.mutableFieldOf(
+fun <State, Value> MutableTap<State>.mutableTapOf(
     readValue: (State) -> Value,
     applyFlow: (Flow<State>) -> Flow<Value> = { it.map(readValue).distinctUntilChanged() },
     writeValue: State.(Value) -> State
-): MutableField<Value> = MutableStoreField(this, applyFlow, readValue, writeValue)
+): MutableTap<Value> = MutableLens(this, applyFlow, readValue, writeValue)
 
-fun <State, Value> Field<State>.fieldOf(
+fun <State, Value> Tap<State>.tapOf(
     applyFlow: ((Flow<State>) -> Flow<Value>)? = null,
     readValue: (State) -> Value,
-): Field<Value> = StoreField(this, applyFlow ?: { it.map(readValue).distinctUntilChanged() }, readValue)
+): Tap<Value> = Lens(this, applyFlow ?: { it.map(readValue).distinctUntilChanged() }, readValue)
 
-fun <T> Field<T>.refine(applyFlow: (Flow<T>) -> Flow<T>): Field<T> = fieldOf(applyFlow) { it }
+fun <T> Tap<T>.refine(applyFlow: (Flow<T>) -> Flow<T>): Tap<T> = tapOf(applyFlow) { it }
 
-inline fun <Base, reified T : Base> MutableField<Base>.narrow(): MutableField<T> =
-    mutableFieldOf(readValue = { it as T }, writeValue = { it })
+inline fun <Base, reified T : Base> MutableTap<Base>.narrow(): MutableTap<T> =
+    mutableTapOf(readValue = { it as T }, writeValue = { it })
 
-fun <T> Field<T>.reactIn(scope: CoroutineScope, block: suspend (T) -> Unit): Field<T> {
-    scope.launch(Field<*>::reactIn) {
+fun <T> Tap<T>.reactIn(scope: CoroutineScope, block: suspend (T) -> Unit): Tap<T> {
+    scope.launch(Tap<*>::reactIn) {
         flow.collect { value ->
             block(value)
         }
@@ -43,12 +43,12 @@ fun <T> Field<T>.reactIn(scope: CoroutineScope, block: suspend (T) -> Unit): Fie
     return this
 }
 
-class MutableStoreField<State, Value>(
-    private val store: MutableField<State>,
+class MutableLens<State, Value>(
+    private val store: MutableTap<State>,
     applyFlow: (Flow<State>) -> Flow<Value>,
     val readValue: (State) -> Value,
     val writeValue: State.(Value) -> State
-): MutableField<Value> {
+): MutableTap<Value> {
     override val now: Value get() = readValue(store.now)
     override val flow = applyFlow(store.flow)
 
@@ -63,27 +63,27 @@ class MutableStoreField<State, Value>(
     }
 }
 
-class StoreField<State, Value>(
-    private val store: Field<State>,
+class Lens<State, Value>(
+    private val store: Tap<State>,
     applyFlow: (Flow<State>) -> Flow<Value>,
     val readValue: (State) -> Value,
-): Field<Value> {
+): Tap<Value> {
     override val now: Value get() = readValue(store.now)
     override val flow = applyFlow(store.flow)
 }
 
-class CombinedField<A, B, Value>(
-    private val fieldA: Field<A>,
-    private val fieldB: Field<B>,
+class CombinedTap<A, B, Value>(
+    private val tapA: Tap<A>,
+    private val tapB: Tap<B>,
     applyFlow: (Flow<Value>) -> Flow<Value>,
     val readValue: (A, B) -> Value,
-): Field<Value> {
-    override val now: Value get() = readValue(fieldA.now, fieldB.now)
-    override val flow = applyFlow(combine(fieldA.flow, fieldB.flow, readValue))
+): Tap<Value> {
+    override val now: Value get() = readValue(tapA.now, tapB.now)
+    override val flow = applyFlow(combine(tapA.flow, tapB.flow, readValue))
 }
 
-fun <A, B, Value> Field<A>.combine(
-    b: Field<B>,
+fun <A, B, Value> Tap<A>.combine(
+    b: Tap<B>,
     applyFlow: ((Flow<Value>) -> Flow<Value>)? = null,
     readValue: (A, B) -> Value,
-): Field<Value> = CombinedField(this, b, applyFlow ?: { it.distinctUntilChanged() }, readValue)
+): Tap<Value> = CombinedTap(this, b, applyFlow ?: { it.distinctUntilChanged() }, readValue)

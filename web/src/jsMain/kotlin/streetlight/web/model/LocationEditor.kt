@@ -5,8 +5,8 @@ import kampfire.model.handleResponse
 import kampfire.model.toUrl
 import koala.dom.MessageStore
 import koala.model.dedupNotNull
-import koala.model.fieldOf
-import koala.model.mutableFieldOf
+import koala.model.tapOf
+import koala.model.mutableTapOf
 import koala.model.reactIn
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
@@ -31,15 +31,15 @@ class LocationEditor(
     val editNow get() = state.now.edit
     val editFlow = state.flow.dedupNotNull { it.edit }
 
-    val editField = state.mutableFieldOf({ it.edit }) { copy(edit = it) }
-    val imageField = editField.mutableFieldOf({ it.image }) { copy(image = it) }
-    val nameField = editField.mutableFieldOf({ it.name ?: "" }) { copy(name = it) }
-    val addressField = editField.mutableFieldOf({ it.address ?: "" }) { copy(address = it) }
-    val descriptionField = editField.mutableFieldOf({ it.description ?: "".toMarkdown() }) { copy(description = it) }
-    val cityField = editField.mutableFieldOf({ it.city ?: "" }) { copy(city = it) }
-    val eventsUrlField = editField.mutableFieldOf({ it.eventsUrl?.value ?: "" }) { copy(eventsUrl = it.toUrl()) }
-    val validityField = editField.fieldOf { it.validity }
-    val websiteField = editField.mutableFieldOf({ it.website?.value ?: "" }) { copy(website = it.toUrl()) }
+    val editField = state.mutableTapOf({ it.edit }) { copy(edit = it) }
+    val imageField = editField.mutableTapOf({ it.image }) { copy(image = it) }
+    val nameField = editField.mutableTapOf({ it.name ?: "" }) { copy(name = it) }
+    val addressField = editField.mutableTapOf({ it.address ?: "" }) { copy(address = it) }
+    val descriptionField = editField.mutableTapOf({ it.description ?: "".toMarkdown() }) { copy(description = it) }
+    val cityField = editField.mutableTapOf({ it.city ?: "" }) { copy(city = it) }
+    val eventsUrlField = editField.mutableTapOf({ it.eventsUrl?.value ?: "" }) { copy(eventsUrl = it.toUrl()) }
+    val validityField = editField.tapOf { it.validity }
+    val websiteField = editField.mutableTapOf({ it.website?.value ?: "" }) { copy(website = it.toUrl()) }
 
     val imageEditor = ImageEditor(imageField, api)
     val websiteMessage = MessageStore()

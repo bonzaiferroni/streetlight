@@ -4,9 +4,7 @@ import koala.css.*
 import koala.html.Attribute
 import koala.html.Id
 import koala.html.TabClass
-import koala.model.MutableField
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.launch
+import koala.model.MutableTap
 import kotlinx.html.js.p
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
@@ -15,7 +13,7 @@ fun ViewScope.tabs(
     id: Id? = null,
     mod: ModifierSet? = null,
     viewportMod: ModifierSet? = null,
-    indexField: MutableField<Int>? = null,
+    indexField: MutableTap<Int>? = null,
     defaultTab: Int? = null,
     content: TabScope.() -> Unit,
 ): HTMLDivElement {

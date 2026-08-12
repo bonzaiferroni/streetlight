@@ -5,29 +5,29 @@ import kampfire.api.toEmailAddress
 import kampfire.api.toValidOutcome
 import kampfire.model.Ok
 import kampfire.model.Outcome
-import koala.model.Field
-import koala.model.mutableFieldOf
+import koala.model.Tap
+import koala.model.mutableTapOf
 import koala.model.reactIn
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 
 class EmailEditor(
-    private val emailField: Field<EmailAddress?>?,
+    private val emailTap: Tap<EmailAddress?>?,
     private val scope: CoroutineScope
 ) {
-    private val state = storeOf(EmailEditorState(emailField?.now?.value ?: ""))
+    private val state = storeOf(EmailEditorState(emailTap?.now?.value ?: ""))
     val stateNow get() = state.now
     val stateFlow = state.flow
 
     init {
-        emailField?.reactIn(scope) {
+        emailTap?.reactIn(scope) {
             state.set { copy(emailString = it?.value ?: "") }
         }
     }
 
-    val emailStringField = state.mutableFieldOf({ it.emailString }) { copy(emailString = it) }
+    val emailStringField = state.mutableTapOf({ it.emailString }) { copy(emailString = it) }
 
-    fun getOutcome(): Outcome<EmailAddress?> = stateNow.emailString.takeIf { emailField?.now == null && it.isNotBlank() }
+    fun getOutcome(): Outcome<EmailAddress?> = stateNow.emailString.takeIf { emailTap?.now == null && it.isNotBlank() }
         ?.trim()?.toEmailAddress()?.toValidOutcome()
         ?: Ok(null)
 }

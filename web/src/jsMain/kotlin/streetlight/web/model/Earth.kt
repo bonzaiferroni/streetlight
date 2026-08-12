@@ -6,7 +6,7 @@ import koala.model.FeatureMarker
 import koala.model.GeoFocus
 import koala.model.MarkerFocus
 import koala.model.Portal
-import koala.model.fieldOf
+import koala.model.tapOf
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import streetlight.model.ui.CityMap
@@ -30,15 +30,15 @@ class Earth(
     val stateFlow = state.flow
     val stateNow get() = state.now
 
-    val mapField = state.fieldOf { it.map }
-    val boundedMarkersField = markerMap.partitionedField.fieldOf { it?.bounded ?: emptyList() }
-    val unboundedMarkersField = markerMap.partitionedField.fieldOf { it?.unbounded ?: emptyList() }
-    val summaryField = boundedMarkersField.fieldOf { points ->
+    val mapField = state.tapOf { it.map }
+    val boundedMarkersField = markerMap.partitionedField.tapOf { it?.bounded ?: emptyList() }
+    val unboundedMarkersField = markerMap.partitionedField.tapOf { it?.unbounded ?: emptyList() }
+    val summaryField = boundedMarkersField.tapOf { points ->
         points.groupingBy { it.typeLabel }.eachCount().toList()
     }
     val isMovingField = markerMap.isMovingField
-    val focusField = markerMap.focusField.fieldOf { focus -> focus?.takeIf { it.toGalaxy() == null } }
-    val isFocusedField = focusField.fieldOf { it != null }
+    val focusField = markerMap.focusField.tapOf { focus -> focus?.takeIf { it.toGalaxy() == null } }
+    val isFocusedField = focusField.tapOf { it != null }
 
     init {
         scope.launch("Earth > routeFlowOf") {

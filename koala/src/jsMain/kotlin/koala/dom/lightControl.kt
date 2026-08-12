@@ -5,16 +5,15 @@ import koala.css.ModifierSet
 import koala.css.Property
 import koala.css.modify
 import koala.css.toHex
-import koala.model.MutableField
+import koala.model.MutableTap
 import koala.model.LightControl
-import kotlinx.browser.window
 import kotlinx.css.pct
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.pointerevents.PointerEvent
 import kotlin.math.roundToInt
 
 fun ViewScope.lightControl(
-    lightState: MutableField<BackgroundLight>,
+    lightState: MutableTap<BackgroundLight>,
     mod: ModifierSet? = null,
 ) {
     lateinit var fieldElement: HTMLElement

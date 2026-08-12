@@ -4,14 +4,14 @@ import kampfire.model.Labeled
 import koala.SvgFile
 import koala.css.*
 import koala.html.heading3
-import koala.model.MutableField
+import koala.model.MutableTap
 import kotlinx.coroutines.launch
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 import kotlin.enums.enumEntries
 
 inline fun <reified State> ViewScope.stageBlock(
-    stage: MutableField<State>,
+    stage: MutableTap<State>,
     mod: ModifierSet? = null,
     crossinline isHeadingStage: (State) -> Boolean = { true },
     noinline block: ViewScope.(State) -> Unit

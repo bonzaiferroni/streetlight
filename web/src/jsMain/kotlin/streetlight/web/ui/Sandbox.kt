@@ -2,7 +2,7 @@ package streetlight.web.ui
 
 import kampfire.api.toUsername
 import kampfire.model.handleResponse
-import koala.model.mutableFieldOf
+import koala.model.mutableTapOf
 import koala.model.storeOf
 import koala.model.dedup
 import kotlinx.coroutines.CoroutineScope
@@ -25,7 +25,7 @@ class Sandbox(
 
     val isNameTaken = stateFlow.dedup { it.isNameTaken }
 
-    val nameField = state.mutableFieldOf({ it.name }) { copy(name = it) }
+    val nameField = state.mutableTapOf({ it.name }) { copy(name = it) }
 
     fun checkAvailability() {
         scope.launch(::checkAvailability.name, toaster, "arrr ${Random.nextInt()}") {

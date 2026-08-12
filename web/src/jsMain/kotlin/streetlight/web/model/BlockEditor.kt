@@ -1,8 +1,8 @@
 package streetlight.web.model
 
-import koala.model.MutableField
-import koala.model.fieldOf
-import koala.model.mutableFieldOf
+import koala.model.MutableTap
+import koala.model.tapOf
+import koala.model.mutableTapOf
 import koala.model.storeOf
 import streetlight.model.data.LayoutBlock
 import streetlight.model.data.LayoutContainer
@@ -17,15 +17,15 @@ class BlockEditor(
     val model: LayoutEditor,
 ) {
     private val state = storeOf(BlockState(block, containerIds))
-    val blockField = state.mutableFieldOf({ it.block }) { copy(block = it) }
+    val blockField = state.mutableTapOf({ it.block }) { copy(block = it) }
     // val containerIdsField = state.mutableFieldOf({ it.containerKeys!! }) { copy(containerKeys = it) }
-    val refreshField = state.fieldOf { it.refreshAt }
+    val refreshField = state.tapOf { it.refreshAt }
     val containerKeys get() = state.now.containerKeys
 
     inline fun <reified T : LayoutBlock, V> mutableFieldOf(
         crossinline getter: (T) -> V,
         crossinline setter: T.(V) -> T
-    ): MutableField<V> = blockField.mutableFieldOf(
+    ): MutableTap<V> = blockField.mutableTapOf(
         readValue = { getter(it as T) },
         writeValue = { value -> (this as T).setter(value) }
     )

@@ -20,7 +20,7 @@ import koala.dom.lottie
 import koala.dom.row
 import koala.dom.textBlock
 import koala.dom.textField
-import koala.model.MutableField
+import koala.model.MutableTap
 import koala.model.storeOf
 import kotlinx.html.InputType
 import streetlight.web.model.CredentialStore
@@ -89,7 +89,7 @@ fun ViewScope.guestSignInForm(username: Username, cred: CredentialStore, gate: S
     }
 }
 
-fun ViewScope.registeredSignInForm(isRecoveringField: MutableField<Boolean>, cred: CredentialStore, gate: SessionGate) {
+fun ViewScope.registeredSignInForm(isRecoveringField: MutableTap<Boolean>, cred: CredentialStore, gate: SessionGate) {
     formColumn {
         val messages = MessageStore()
         formSection("sign in") {

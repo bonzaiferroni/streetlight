@@ -7,7 +7,7 @@ import kampfire.model.PrintLnMessenger
 import kampfire.model.handleResponse
 import koala.utils.launch
 import koala.model.dedup
-import koala.model.fieldOf
+import koala.model.tapOf
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -24,7 +24,7 @@ class SessionGate(
     val stateNow get() = state.now
     val stateFlow = state.flow
 
-    val starField = state.fieldOf { it.star }
+    val starField = state.tapOf { it.star }
     val signedInFlow = stateFlow.dedup { it.isSignedIn }
     val signedOutAtFlow = stateFlow.dedup { it.signedOutAt }
 

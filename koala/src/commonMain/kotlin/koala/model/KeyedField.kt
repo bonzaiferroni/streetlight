@@ -9,10 +9,10 @@ data class KeyValue<K,T>(
     val value: T,
 )
 
-class KeyedListField<K, T>(
-    private val source: MutableField<List<T>>,
+class KeyedListTap<K, T>(
+    private val source: MutableTap<List<T>>,
     private val newKey: () -> K
-): MutableField<List<KeyValue<K, T>>> {
+): MutableTap<List<KeyValue<K, T>>> {
 
     private var keys: List<K> = List(source.now.size) { newKey() }
 
@@ -41,11 +41,11 @@ class KeyedListField<K, T>(
     override fun update(transform: (List<KeyValue<K, T>>) -> List<KeyValue<K, T>>) = write(transform)
 }
 
-fun <T> MutableField<List<T>>.keyedListField(): MutableField<List<KeyValue<Uuid, T>>> =
-    KeyedListField(this) { Uuid.random() }
+fun <T> MutableTap<List<T>>.keyedListField(): MutableTap<List<KeyValue<Uuid, T>>> =
+    KeyedListTap(this) { Uuid.random() }
 
-fun <K, T> Field<List<KeyValue<K, T>>>.keysField() = fieldOf { items -> items.map { it.key } }
+fun <K, T> Tap<List<KeyValue<K, T>>>.keysField() = tapOf { items -> items.map { it.key } }
 
-fun <K, T> MutableField<List<KeyValue<K, T>>>.mutableFieldOf(key: K) = mutableFieldOf({ items -> items.first { it.key == key }.value }) { value ->
+fun <K, T> MutableTap<List<KeyValue<K, T>>>.mutableTapOf(key: K) = mutableTapOf({ items -> items.first { it.key == key }.value }) { value ->
     map { if (it.key == key) it.copy(value = value) else it }
 }

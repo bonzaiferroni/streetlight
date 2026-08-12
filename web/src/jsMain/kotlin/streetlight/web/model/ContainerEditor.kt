@@ -1,6 +1,6 @@
 package streetlight.web.model
 
-import koala.model.mutableFieldOf
+import koala.model.mutableTapOf
 import koala.model.storeOf
 import streetlight.model.data.LayoutBlock
 import kotlin.uuid.Uuid
@@ -13,7 +13,7 @@ class ContainerEditor(
     val model: LayoutEditor,
 ) {
     private val state = storeOf(ContainerState(name, blockIds, depth))
-    val blockIdsField = state.mutableFieldOf({ it.blockIds }) { copy(blockIds = it) }
+    val blockIdsField = state.mutableTapOf({ it.blockIds }) { copy(blockIds = it) }
     val blockIds get() = state.now.blockIds
     val depth get() = state.now.depth
 

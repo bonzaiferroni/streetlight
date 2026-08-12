@@ -32,17 +32,17 @@ class GeoCamera(
     // val movingBoundsFlow = viewedStateFlow.dedup { it.bounds }
     // val focusFlow = viewedStateFlow.dedup { it.focus }
 
-    val pointAndZoom = state.fieldOf { it.center to it.zoom }
+    val pointAndZoom = state.tapOf { it.center to it.zoom }
 
     val viewedState = state.refine { states -> states.filter { it.isViewed } }
     val settledState = viewedState.refine { states -> states.filter { !it.isMoving } }
 
-    val isMovingField = viewedState.fieldOf { it.isMoving }
-    val movingBoundsField = viewedState.fieldOf { it.bounds }
-    val focusField = viewedState.fieldOf { it.focus }
-    val zoomField = settledState.fieldOf { it.zoom }
-    val centerField = settledState.fieldOf { it.center }
-    val boundsField = settledState.fieldOf { it.bounds }
+    val isMovingField = viewedState.tapOf { it.isMoving }
+    val movingBoundsField = viewedState.tapOf { it.bounds }
+    val focusField = viewedState.tapOf { it.focus }
+    val zoomField = settledState.tapOf { it.zoom }
+    val centerField = settledState.tapOf { it.center }
+    val boundsField = settledState.tapOf { it.bounds }
 
     fun panMap(point: GeoPoint) {
         panMap(PanPoint(point))

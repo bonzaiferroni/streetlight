@@ -1,7 +1,6 @@
 package streetlight.web.ui
 
 import kabinet.utils.toLocalDate
-import kabinet.utils.toLongFormat
 import kabinet.utils.toRelativeDayFormat
 import kabinet.utils.toTimeFormat
 import koala.SvgFile
@@ -12,28 +11,17 @@ import koala.html.bulletsOf
 import koala.html.buttonPopover
 import koala.html.heading3
 import koala.html.heading4
-import koala.html.heading5
-import koala.html.hr
 import koala.html.markdown
 import koala.html.textProperty
-import koala.model.MutableField
+import koala.model.MutableTap
 import kotlinx.coroutines.flow.map
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.atTime
 import kotlinx.datetime.plus
-import kotlinx.datetime.toInstant
-import kotlinx.datetime.toLocalDateTime
-import kotlinx.html.hr
 import streetlight.model.data.EventProperty
-import streetlight.model.utils.toLocalDateTime
 import streetlight.web.model.EventEditor
 import kotlin.time.Clock
-import kotlin.time.Duration
-import kotlin.time.Duration.Companion.days
-import kotlin.time.Instant
 
 fun ViewScope.eventEditFormBody(model: EventEditor, isAdmin: Boolean = false) = formColumn {
     if (isAdmin) eventWebsiteForm(model)
@@ -141,7 +129,7 @@ fun ViewScope.eventLinksForm(model: EventEditor) = formCardSection("Links") {
     eventLinks(model)
 }
 
-fun ViewScope.dayIndicator(field: MutableField<LocalDate?>) {
+fun ViewScope.dayIndicator(field: MutableTap<LocalDate?>) {
     fun changeDate(delta: Int) {
         val date = field.now ?: Clock.System.now().toLocalDate()
         field.set(date.plus(delta, DateTimeUnit.DAY))
@@ -163,7 +151,7 @@ fun ViewScope.dayIndicator(field: MutableField<LocalDate?>) {
     }
 }
 
-fun ViewScope.timeIndicator(field: MutableField<LocalTime?>, defaultLabel: String) {
+fun ViewScope.timeIndicator(field: MutableTap<LocalTime?>, defaultLabel: String) {
     fun changeTime(delta: Int) {
         val time = field.now ?: LocalTime(12, 0)
         val seconds = (time.toSecondOfDay() + delta * 60).mod(86400)

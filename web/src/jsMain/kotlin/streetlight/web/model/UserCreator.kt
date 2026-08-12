@@ -12,8 +12,8 @@ import kampfire.model.SignUpRequest
 import kampfire.model.handleOutcome
 import kampfire.model.handleResponse
 import koala.dom.MessageStore
-import koala.model.mutableFieldOf
-import koala.model.fieldOf
+import koala.model.mutableTapOf
+import koala.model.tapOf
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -34,11 +34,11 @@ class UserCreator(
     val passwordEditor = PasswordEditor()
     val messages = MessageStore()
 
-    val usernameField = state.mutableFieldOf({ it.username }) { copy(username = it) }
-    val isValidField = state.fieldOf { it.isValid }
-    val guestField = state.mutableFieldOf({ it.guestUsername }) { copy(guestUsername = it) }
+    val usernameField = state.mutableTapOf({ it.username }) { copy(username = it) }
+    val isValidField = state.tapOf { it.isValid }
+    val guestField = state.mutableTapOf({ it.guestUsername }) { copy(guestUsername = it) }
 
-    val minAgeField = state.mutableFieldOf({ it.isMinimumAge }) { copy(isMinimumAge = it) }
+    val minAgeField = state.mutableTapOf({ it.isMinimumAge }) { copy(isMinimumAge = it) }
 
     init {
         scope.launch {

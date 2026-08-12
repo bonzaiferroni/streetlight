@@ -4,13 +4,13 @@ import kampfire.model.UIMessage
 import kampfire.model.UIMessageType
 import koala.css.*
 import koala.html.MessageBox
-import koala.model.Field
+import koala.model.Tap
 
 fun ViewScope.messageBox(
-    field: Field<UIMessage?>,
+    tap: Tap<UIMessage?>,
     modifiers: ModifierSet? = null,
 ) {
-    flowBlock(field, modifiers) { message ->
+    flowBlock(tap, modifiers) { message ->
         val message = message ?: return@flowBlock
         val typeMod = message.messageType.toModifier()
         card(modify(modifiers, MessageBox.Mod, MoonShadow, typeMod)) {

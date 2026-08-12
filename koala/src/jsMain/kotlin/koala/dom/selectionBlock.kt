@@ -2,16 +2,16 @@ package koala.dom
 
 import koala.css.ModifierSet
 import koala.css.Outlined
-import koala.model.MutableField
-import koala.model.Field
+import koala.model.MutableTap
+import koala.model.Tap
 import kotlinx.coroutines.launch
 import kotlinx.html.DIV
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 
 fun <Item> ViewScope.selectionBlock(
-    items: Field<List<Item>>,
-    selection: MutableField<Item?>,
+    items: Tap<List<Item>>,
+    selection: MutableTap<Item?>,
     modifiers: ModifierSet? = null,
     config: (DIV.() -> Unit)? = null,
     block: ViewScope.(Item) -> HTMLElement

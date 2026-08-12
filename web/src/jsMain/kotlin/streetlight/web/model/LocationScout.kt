@@ -6,8 +6,8 @@ import koala.dom.MessageStore
 import koala.utils.launch
 import koala.model.GeoCamera
 import koala.model.dedup
-import koala.model.fieldOf
-import koala.model.mutableFieldOf
+import koala.model.tapOf
+import koala.model.mutableTapOf
 import koala.model.reactIn
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
@@ -41,16 +41,16 @@ class LocationScout(
     val postMessage = MessageStore()
     val queryMessage = MessageStore()
 
-    val queryField = state.mutableFieldOf({ it.query }) { copy(query = it) }
-    val cityField = state.mutableFieldOf({ it.city ?: "" }) { copy(city = it) }
-    val queryLocationsField = state.fieldOf { it.queryLocations }
-    val osmLocationsField = state.fieldOf { it.osmLocations }
-    val hasOsmLocationsField = state.fieldOf { it.osmLocations.isNotEmpty() }
-    val postField = state.fieldOf { it.postId }
-    val modeField = state.mutableFieldOf({ it.mode.ordinal }) { copy(mode = SearchMode.entries[it] ) }
-    val mapLocationField = state.mutableFieldOf({ it.mapLocation }) { copy(mapLocation = it) }
-    val locationField = state.mutableFieldOf({ it.location }) { copy(location = it, stage = LocationScoutStage.Post) }
-    val stageField = state.mutableFieldOf({ it.stage }) { copy(stage = it) }
+    val queryField = state.mutableTapOf({ it.query }) { copy(query = it) }
+    val cityField = state.mutableTapOf({ it.city ?: "" }) { copy(city = it) }
+    val queryLocationsField = state.tapOf { it.queryLocations }
+    val osmLocationsField = state.tapOf { it.osmLocations }
+    val hasOsmLocationsField = state.tapOf { it.osmLocations.isNotEmpty() }
+    val postField = state.tapOf { it.postId }
+    val modeField = state.mutableTapOf({ it.mode.ordinal }) { copy(mode = SearchMode.entries[it] ) }
+    val mapLocationField = state.mutableTapOf({ it.mapLocation }) { copy(mapLocation = it) }
+    val locationField = state.mutableTapOf({ it.location }) { copy(location = it, stage = LocationScoutStage.Post) }
+    val stageField = state.mutableTapOf({ it.stage }) { copy(stage = it) }
 
     init {
         stageField.reactIn(scope) {

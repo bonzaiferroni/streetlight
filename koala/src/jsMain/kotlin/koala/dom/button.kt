@@ -2,15 +2,13 @@ package koala.dom
 
 import koala.Svg
 import koala.css.Aspect1
-import koala.css.Danger
 import koala.css.Height3
 import koala.css.ModifierSet
-import koala.css.Zen
 import koala.css.modify
 import koala.html.configureButton
 import koala.html.configureElementButton
 import koala.html.configureSvgButton
-import koala.model.Field
+import koala.model.Tap
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.html.BUTTON
@@ -108,11 +106,11 @@ fun ViewScope.configureEnabledFlow(
 
 fun ViewScope.configureEnabledFlow(
     element: HTMLButtonElement,
-    field: Field<Boolean>,
+    tap: Tap<Boolean>,
 ) {
-    element.disabled = field.now
+    element.disabled = tap.now
     contentScope.launch {
-        field.flow.collect { isEnabled ->
+        tap.flow.collect { isEnabled ->
             element.disabled = !isEnabled
         }
     }

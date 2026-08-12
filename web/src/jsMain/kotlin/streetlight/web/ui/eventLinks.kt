@@ -28,7 +28,7 @@ import koala.html.heading4
 import koala.html.spacer
 import koala.html.textBlock
 import koala.model.dedup
-import koala.model.fieldOf
+import koala.model.tapOf
 import koala.model.storeOf
 import streetlight.model.data.ExtraLink
 import streetlight.web.model.EventEditor
@@ -38,7 +38,7 @@ fun ViewScope.eventLinks(model: EventEditor) {
     val linksFlow = model.stateFlow.dedup { it.edit.links ?: emptyList() }
 
     val editState = storeOf(LinkEditState())
-    val linkEditIndexFlow = editState.fieldOf { it.index }
+    val linkEditIndexFlow = editState.tapOf { it.index }
     val labelFlow = editState.flow.dedup { it.link.label }
     val urlFlow = editState.flow.dedup { it.link.url }
 

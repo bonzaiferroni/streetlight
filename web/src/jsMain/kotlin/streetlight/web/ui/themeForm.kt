@@ -2,7 +2,7 @@ package streetlight.web.ui
 
 import koala.css.*
 import koala.dom.*
-import koala.model.MutableField
+import koala.model.MutableTap
 import kotlinx.browser.document
 import streetlight.model.data.PageTheme
 import streetlight.web.model.ThemeEditor
@@ -36,7 +36,7 @@ fun ViewScope.themeForm(model: ThemeEditor) {
     applyThemeState(model.themeState)
 }
 
-fun ViewScope.applyThemeState(state: MutableField<PageTheme>) {
+fun ViewScope.applyThemeState(state: MutableTap<PageTheme>) {
     launchEffect {
         state.flow.collect {
             applyTheme(it)

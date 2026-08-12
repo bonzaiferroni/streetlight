@@ -7,7 +7,7 @@ import koala.dom.ChartData
 import koala.dom.ChartLine
 import koala.utils.launch
 import koala.model.dedup
-import koala.model.mutableFieldOf
+import koala.model.mutableTapOf
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -29,7 +29,7 @@ class SiteMonitor(
 
     val pointsFlow = stateFlow.dedup { it.points }
     val pointFlow = MutableSharedFlow<SiteStatus>()
-    val timeFrameField = state.mutableFieldOf({ it.timeFrame }) {
+    val timeFrameField = state.mutableTapOf({ it.timeFrame }) {
         refreshData() // td: fix ordering
         copy(timeFrame = it)
     }

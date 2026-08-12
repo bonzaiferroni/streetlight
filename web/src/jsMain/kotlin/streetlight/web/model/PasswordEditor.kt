@@ -4,15 +4,15 @@ import kampfire.api.Password
 import kampfire.api.toValidOutcome
 import kampfire.model.Outcome
 import kampfire.model.Problem
-import koala.model.mutableFieldOf
+import koala.model.mutableTapOf
 import koala.model.storeOf
 
 class PasswordEditor() {
     private val state = storeOf(PasswordEditorState())
     private val stateNow get() = state.now
 
-    val passwordField = state.mutableFieldOf({ it.password }) { copy(password = it) }
-    val confirmationField = state.mutableFieldOf({ it.confirmation }) { copy(confirmation = it) }
+    val passwordField = state.mutableTapOf({ it.password }) { copy(password = it) }
+    val confirmationField = state.mutableTapOf({ it.confirmation }) { copy(confirmation = it) }
 
     fun clear() {
         state.set { copy(password = "", confirmation = "")}

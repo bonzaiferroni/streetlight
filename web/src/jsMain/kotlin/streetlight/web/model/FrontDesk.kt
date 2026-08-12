@@ -2,8 +2,8 @@ package streetlight.web.model
 
 import kampfire.model.handleResponse
 import koala.utils.launch
-import koala.model.fieldOf
-import koala.model.mutableFieldOf
+import koala.model.tapOf
+import koala.model.mutableTapOf
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import streetlight.model.data.Feedback
@@ -19,9 +19,9 @@ class FrontDesk(
     val stateNow get() = state.now
     val stateFlow get() = state.flow
 
-    val feedFlow = state.fieldOf { it.feed }
-    val editField = state.mutableFieldOf({ it.edit }) { copy(edit = it) }
-    val textField = editField.mutableFieldOf({ it.text }) { copy(text = it) }
+    val feedFlow = state.tapOf { it.feed }
+    val editField = state.mutableTapOf({ it.edit }) { copy(edit = it) }
+    val textField = editField.mutableTapOf({ it.text }) { copy(text = it) }
 
     init {
         scope.launch(::refreshFeedback) {

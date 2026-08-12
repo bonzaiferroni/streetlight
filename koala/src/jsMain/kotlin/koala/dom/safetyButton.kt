@@ -2,14 +2,11 @@ package koala.dom
 
 import kampfire.model.Messenger
 import kampfire.model.UIMessage
-import koala.css.AlignSelfStart
 import koala.css.Danger
-import koala.css.Flex1
 import koala.css.ModifierSet
 import koala.css.Zen
 import koala.css.modify
 import koala.html.configureButton
-import koala.model.MutableField
 import kotlinx.html.BUTTON
 import kotlinx.html.js.button
 

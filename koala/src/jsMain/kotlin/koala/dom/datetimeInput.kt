@@ -2,9 +2,7 @@ package koala.dom
 
 import koala.css.ModifierSet
 import koala.css.addModifiers
-import koala.model.MutableField
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.launch
+import koala.model.MutableTap
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
 import kotlinx.html.INPUT
@@ -21,7 +19,7 @@ fun ViewScope.datetimeInput() {
 }
 
 fun ViewScope.dateInput(
-    field: MutableField<LocalDate?>,
+    field: MutableTap<LocalDate?>,
     modifiers: ModifierSet? = null,
     block: INPUT.() -> Unit = {},
 ): HTMLInputElement {
@@ -62,7 +60,7 @@ fun ViewScope.dateInput(
 }
 
 fun ViewScope.timeInput(
-    field: MutableField<LocalTime?>,
+    field: MutableTap<LocalTime?>,
     modifiers: ModifierSet? = null,
     step: Duration = 5.minutes,
     block: INPUT.() -> Unit = {}

@@ -3,7 +3,7 @@ package streetlight.web.model
 import kampfire.api.Password
 import kampfire.api.obfuscatePassword
 import kampfire.model.LoginRequest
-import koala.model.mutableFieldOf
+import koala.model.mutableTapOf
 import koala.model.storeOf
 import kotlinx.browser.localStorage
 import org.w3c.dom.get
@@ -15,9 +15,9 @@ class CredentialStore {
     ))
     val stateNow get() = state.now
 
-    val usernameField = state.mutableFieldOf({ it.usernameText }) { copy(usernameText = it) }
-    val passwordField = state.mutableFieldOf({ it.passwordText }) { copy(passwordText = it) }
-    val stayLoggedInField = state.mutableFieldOf({ it.stayLoggedIn }) { value ->
+    val usernameField = state.mutableTapOf({ it.usernameText }) { copy(usernameText = it) }
+    val passwordField = state.mutableTapOf({ it.passwordText }) { copy(passwordText = it) }
+    val stayLoggedInField = state.mutableTapOf({ it.stayLoggedIn }) { value ->
         localStorage.setItem(STAY_LOGGED_KEY, value.toString())
         copy(stayLoggedIn = value)
     }

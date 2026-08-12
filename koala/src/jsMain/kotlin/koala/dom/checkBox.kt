@@ -2,10 +2,7 @@ package koala.dom
 
 import koala.css.ModifierSet
 import koala.css.addModifiers
-import koala.model.MutableField
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.launch
+import koala.model.MutableTap
 import kotlinx.html.INPUT
 import kotlinx.html.InputType
 import kotlinx.html.input
@@ -14,7 +11,7 @@ import kotlinx.html.js.onInputFunction
 import org.w3c.dom.HTMLInputElement
 
 fun ViewScope.checkBox(
-    field: MutableField<Boolean>,
+    field: MutableTap<Boolean>,
     label: String,
     mod: ModifierSet? = null,
     block: (INPUT.() -> Unit)? = null
@@ -25,7 +22,7 @@ fun ViewScope.checkBox(
 }
 
 fun ViewScope.checkBox(
-    field: MutableField<Boolean>,
+    field: MutableTap<Boolean>,
     block: (INPUT.() -> Unit)? = null
 ): HTMLInputElement {
     var currentValue = field.now

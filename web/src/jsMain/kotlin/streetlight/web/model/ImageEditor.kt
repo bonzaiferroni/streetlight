@@ -4,15 +4,14 @@ import kampfire.model.Messenger
 import kampfire.model.PrintLnMessenger
 import kampfire.model.UIMessage
 import kampfire.model.UIMessageType
-import kampfire.model.getDataOrNull
 import kampfire.model.handleResponse
 import koala.Image
-import koala.model.MutableField
+import koala.model.MutableTap
 import koala.toImage
 import streetlight.web.io.ApiClient
 
 class ImageEditor(
-    val imageField: MutableField<Image?>,
+    val imageField: MutableTap<Image?>,
     private val api: ApiClient,
 ) {
     // val stateNow get() = state.now

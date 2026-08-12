@@ -7,9 +7,8 @@ import koala.css.Required
 import koala.css.Valid
 import koala.css.VisibilityHidden
 import koala.css.Working
-import koala.model.Field
-import koala.model.fieldOf
-import koala.model.refine
+import koala.model.Tap
+import koala.model.tapOf
 import koala.utils.launch
 import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
@@ -52,7 +51,7 @@ fun HTMLElement.flowModifier(
 }
 
 fun HTMLElement.flowModifier(
-    isModified: Field<Boolean>,
+    isModified: Tap<Boolean>,
     modifier: Modifier,
     scope: CoroutineScope,
     viewTransition: Boolean = false,
@@ -75,11 +74,11 @@ fun HTMLElement.flowIsDisplayed(isDisplayedFlow: Flow<Boolean>, scope: Coroutine
 }
 
 fun HTMLElement.flowIsDisplayed(
-    isDisplayedFlow: Field<Boolean>,
+    isDisplayedFlow: Tap<Boolean>,
     scope: CoroutineScope,
     viewTransition: Boolean = false,
 ): HTMLElement {
-    flowModifier(isDisplayedFlow.fieldOf { !it }, DisplayNone, scope, viewTransition)
+    flowModifier(isDisplayedFlow.tapOf { !it }, DisplayNone, scope, viewTransition)
     return this
 }
 
@@ -121,9 +120,9 @@ fun HTMLElement.flowValid(
 
 fun HTMLElement.flowValid(
     key: String,
-    checkField: Field<ValidityCheck>,
+    checkTap: Tap<ValidityCheck>,
     scope: CoroutineScope
-) = flowValid(key, checkField.now, checkField.flow, scope)
+) = flowValid(key, checkTap.now, checkTap.flow, scope)
 
 fun HTMLElement.flowIsWorking(isWorkingFlow: Flow<Boolean>, scope: CoroutineScope): HTMLElement {
     scope.launch {

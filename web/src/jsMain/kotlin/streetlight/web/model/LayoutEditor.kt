@@ -1,6 +1,6 @@
 package streetlight.web.model
 
-import koala.model.fieldOf
+import koala.model.tapOf
 import koala.model.storeOf
 import streetlight.model.data.PageLayout
 import streetlight.model.data.LayoutBlock
@@ -14,7 +14,7 @@ class LayoutEditor(initialLayout: PageLayout) {
     private val blocks = mutableMapOf<Uuid, BlockEditor>()
     private val containers = mutableMapOf<Uuid, ContainerEditor>()
 
-    val movingBlockField = state.fieldOf { it.movingBlockId }
+    val movingBlockField = state.tapOf { it.movingBlockId }
 
     val mainContainerId = createContainer(initialLayout, 0).id
 

@@ -8,18 +8,12 @@ import koala.css.OpacityHalf
 import koala.css.Padding1
 import koala.css.PointerEventsNone
 import koala.css.TextSmall
-import koala.css.Width100P
-import koala.css.addModifiers
 import koala.css.modify
 import koala.html.Id
-import koala.html.Attribute
 import koala.html.configureTextFieldContainer
 import koala.html.configureTextFieldInput
-import koala.html.setId
-import koala.html.setAttribute
-import koala.model.MutableField
+import koala.model.MutableTap
 import kotlinx.html.INPUT
-import kotlinx.html.InputType
 import kotlinx.html.js.onInputFunction
 import org.w3c.dom.HTMLInputElement
 import kotlinx.html.js.input
@@ -28,7 +22,7 @@ import org.w3c.dom.HTMLParagraphElement
 import org.w3c.dom.events.KeyboardEvent
 
 fun ViewScope.textField(
-    field: MutableField<String>,
+    field: MutableTap<String>,
     label: String? = null,
     mod: ModifierSet? = null,
     textMod: ModifierSet? = null,

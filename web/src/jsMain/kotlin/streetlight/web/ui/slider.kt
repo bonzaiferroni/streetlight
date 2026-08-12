@@ -3,14 +3,14 @@ package streetlight.web.ui
 import koala.css.ModifierSet
 import koala.css.addModifiers
 import koala.dom.ViewScope
-import koala.model.MutableField
+import koala.model.MutableTap
 import kotlinx.html.InputType
 import kotlinx.html.js.input
 import kotlinx.html.js.onInputFunction
 import org.w3c.dom.HTMLInputElement
 
 fun ViewScope.slider(
-    valueState: MutableField<Int>,
+    valueState: MutableTap<Int>,
     range: IntRange,
     step: Int = range.step,
     mod: ModifierSet? = null,

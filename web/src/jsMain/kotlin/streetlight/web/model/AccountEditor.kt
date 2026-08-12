@@ -16,9 +16,8 @@ import kampfire.model.UIMessageType
 import kampfire.model.handleOutcome
 import kampfire.model.handleResponse
 import koala.dom.MessageStore
-import koala.model.fieldOf
-import koala.model.mutableFieldOf
-import koala.model.reactIn
+import koala.model.tapOf
+import koala.model.mutableTapOf
 import koala.model.storeOf
 import koala.utils.launch
 import kotlinx.coroutines.CoroutineScope
@@ -39,15 +38,15 @@ class AccountEditor(
     val stateNow get() = state.now
     val stateFlow = state.flow
 
-    val editField = state.mutableFieldOf({ it.account }) { copy(account = it) }
+    val editField = state.mutableTapOf({ it.account }) { copy(account = it) }
     // val nameField = editField.mutableFieldOf({ it.name ?: "" }) { copy(name = it) }
 
-    private val emailMutableField = editField.mutableFieldOf({ it.email }) { copy(email = it) }
-    val emailAndStatusField = editField.fieldOf { Pair(it.email, it.emailStatus) }
-    val isVerifySentField = state.fieldOf { it.emailVerificationSent }
-    val isEditingPasswordField = state.mutableFieldOf({ it.isEditingPassword }) { copy(isEditingPassword = it) }
-    val isRemovingEmailField = state.mutableFieldOf({ it.isRemovingEmail }) { copy(isRemovingEmail = it) }
-    val verifyPasswordField = state.mutableFieldOf({ it.verifyPassword }) { copy(verifyPassword = it) }
+    private val emailMutableField = editField.mutableTapOf({ it.email }) { copy(email = it) }
+    val emailAndStatusField = editField.tapOf { Pair(it.email, it.emailStatus) }
+    val isVerifySentField = state.tapOf { it.emailVerificationSent }
+    val isEditingPasswordField = state.mutableTapOf({ it.isEditingPassword }) { copy(isEditingPassword = it) }
+    val isRemovingEmailField = state.mutableTapOf({ it.isRemovingEmail }) { copy(isRemovingEmail = it) }
+    val verifyPasswordField = state.mutableTapOf({ it.verifyPassword }) { copy(verifyPassword = it) }
 
     val emailEditor = EmailEditor(emailMutableField, scope)
     val passwordEditor = PasswordEditor()

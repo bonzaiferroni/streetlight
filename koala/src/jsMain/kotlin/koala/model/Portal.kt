@@ -29,7 +29,7 @@ class Portal(
     val stateFlow = state.flow
     val stateNow get() = state.now
 
-    val screenField = state.fieldOf(
+    val screenField = state.tapOf(
         applyFlow = { states ->
             states.dedupBy({ if (it.route.screen.retainWithinScreen) it.route.screen else it }) { it.route.screen }
         }

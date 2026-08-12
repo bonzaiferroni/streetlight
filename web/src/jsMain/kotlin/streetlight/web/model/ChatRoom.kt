@@ -1,8 +1,7 @@
 package streetlight.web.model
 
 import koala.model.dedup
-import koala.model.fieldOf
-import koala.model.mutableFieldOf
+import koala.model.mutableTapOf
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -20,7 +19,7 @@ class ChatRoom(
     val stateNow get() = state.now
 
     val messagesFlow = stateFlow.dedup { it.messages }
-    val messageField = state.mutableFieldOf({ it.message }) { copy(message = it) }
+    val messageField = state.mutableTapOf({ it.message }) { copy(message = it) }
 
     private var socket: WebChatSocket? = null
 

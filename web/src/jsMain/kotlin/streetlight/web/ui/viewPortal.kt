@@ -22,7 +22,7 @@ fun ViewScope.viewPortal() {
     var element: HTMLElement? = null
 
     element = flowBlock(
-        field = portal.screenField,
+        tap = portal.screenField,
         modifiers = modify(Magic, Blur),
         name = ::viewPortal.name,
         // cacheElements = true,

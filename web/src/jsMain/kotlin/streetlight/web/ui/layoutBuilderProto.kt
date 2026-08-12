@@ -19,31 +19,21 @@ import koala.dom.textBlock
 import koala.dom.textField
 import koala.html.Id
 import koala.html.setPopoverTarget
-import koala.model.MutableField
-import koala.model.fieldOf
+import koala.model.MutableTap
+import koala.model.tapOf
 import koala.model.insertAt
 import koala.model.keyedListField
 import koala.model.keysField
-import koala.model.mutableFieldOf
+import koala.model.mutableTapOf
 import koala.model.storeOf
 import koala.model.toggle
-import streetlight.model.data.EventsBlock
-import streetlight.model.data.HeaderBlock
-import streetlight.model.data.ImageBlock
 import streetlight.model.data.LayoutBlock
 import streetlight.model.data.LocationContent
-import streetlight.model.data.MapBlock
-import streetlight.model.data.RichTextBlock
 import streetlight.model.data.TabContent
 import streetlight.model.data.TabsBlock
 import streetlight.model.data.TextBlock
-import streetlight.web.layouts.buildEvents
-import streetlight.web.layouts.buildHeader
-import streetlight.web.layouts.buildImage
-import streetlight.web.layouts.buildMap
-import streetlight.web.layouts.buildRichText
 
-fun ViewScope.containerBuilder(blocksField: MutableField<List<LayoutBlock>>, content: LocationContent) {
+fun ViewScope.containerBuilder(blocksField: MutableTap<List<LayoutBlock>>, content: LocationContent) {
     val keyedListField = blocksField.keyedListField()
     val keysField = keyedListField.keysField()
     flowBlock(keysField) { keys ->
@@ -51,7 +41,7 @@ fun ViewScope.containerBuilder(blocksField: MutableField<List<LayoutBlock>>, con
             blocksField.insertAt(0, it)
         }
         keys.forEachIndexed { index, key ->
-            val blockField = keyedListField.mutableFieldOf(key)
+            val blockField = keyedListField.mutableTapOf(key)
             blockBuilder(blockField, content)
             blockZone {
                 blocksField.insertAt(index + 1, it)
@@ -66,7 +56,7 @@ fun ViewScope.blockZone(onBlock: (LayoutBlock) -> Unit) {
     })
 }
 
-fun ViewScope.blockBuilder(blockField: MutableField<LayoutBlock>, content: LocationContent) {
+fun ViewScope.blockBuilder(blockField: MutableTap<LayoutBlock>, content: LocationContent) {
     box {
 //        when (val block = blockField.now) {
 //            EventsBlock -> buildEvents(content)
@@ -80,8 +70,8 @@ fun ViewScope.blockBuilder(blockField: MutableField<LayoutBlock>, content: Locat
     }
 }
 
-fun ViewScope.tabsBuilder(tabsField: MutableField<TabsBlock>, content: LocationContent) {
-    val tabNamesField = tabsField.fieldOf { it.tabs.map {it.name} }
+fun ViewScope.tabsBuilder(tabsField: MutableTap<TabsBlock>, content: LocationContent) {
+    val tabNamesField = tabsField.tapOf { it.tabs.map {it.name} }
     val popoverId = Id("tabs-popover")
     popoverCard(popoverId) {
         flowBlock(tabNamesField) { tabNames ->
@@ -129,7 +119,7 @@ fun ViewScope.tabsBuilder(tabsField: MutableField<TabsBlock>, content: LocationC
             tabs {
                 tabsBlock.tabs.forEachIndexed { index, tabContent ->
                     tab(tabContent.name) {
-                        val blocksField = tabsField.mutableFieldOf({ it.tabs[index].blocks }) {
+                        val blocksField = tabsField.mutableTapOf({ it.tabs[index].blocks }) {
                             copy(tabs = tabs.mapIndexed { i, t -> if (i == index) t.copy(blocks = it) else t })
                         }
                         containerBuilder(blocksField, content)

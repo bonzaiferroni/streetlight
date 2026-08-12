@@ -18,11 +18,11 @@ import koala.css.SlideDown
 import koala.css.ZIndex1
 import koala.css.modify
 import koala.html.fillImage
-import koala.model.MutableField
+import koala.model.MutableTap
 import koala.toImage
 
 fun ViewScope.imageDrop(
-    field: MutableField<Image?>,
+    field: MutableTap<Image?>,
     mod: ModifierSet? = null,
     block: ViewScope.(Image) -> Unit = {
         box(modify(Size100P)) {

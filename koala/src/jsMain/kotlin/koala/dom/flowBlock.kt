@@ -10,7 +10,7 @@ import koala.css.Transitioning
 import koala.css.addModifiers
 import koala.css.modify
 import koala.html.FlowBlockKey
-import koala.model.Field
+import koala.model.Tap
 import koala.utils.launch
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
@@ -91,15 +91,15 @@ fun <Value> ViewScope.flowBlock(
 }
 
 fun <Value> ViewScope.flowBlock(
-    field: Field<Value>,
+    tap: Tap<Value>,
     modifiers: ModifierSet? = null,
     name: String = "flowBlock",
     config: (DIV.() -> Unit)? = null,
     onTransition: ((Value) -> Unit)? = null,
     block: ViewScope.(Value) -> Unit
 ) = flowBlock(
-    initialValue = field.now,
-    flow = field.flow,
+    initialValue = tap.now,
+    flow = tap.flow,
     modifiers = modifiers,
     name = name,
     config = config,

@@ -6,20 +6,20 @@ import kampfire.model.CoreProblem
 import kampfire.model.handleResponse
 import koala.dom.*
 import koala.html.div
-import koala.model.MutableField
-import koala.model.mutableFieldOf
+import koala.model.MutableTap
+import koala.model.mutableTapOf
 import streetlight.model.data.LocationConfig
 import streetlight.model.data.SubdomainConfig
 
-fun ViewScope.locationSettingsForm(configState: MutableField<LocationConfig>) = formColumn {
+fun ViewScope.locationSettingsForm(configState: MutableTap<LocationConfig>) = formColumn {
     formRow {
         subdomainSection(configState)
         div { }
     }
 }
 
-fun ViewScope.subdomainSection(configState: MutableField<LocationConfig>) = formSection("subdomain") {
-    val subdomainState = configState.mutableFieldOf({ it.subdomain?.value ?: "" }) { copy(subdomain = it.toSlug())}
+fun ViewScope.subdomainSection(configState: MutableTap<LocationConfig>) = formSection("subdomain") {
+    val subdomainState = configState.mutableTapOf({ it.subdomain?.value ?: "" }) { copy(subdomain = it.toSlug())}
     val messages = MessageStore()
 
     formText("A subdomain provides easy access to your Streetlight page.")

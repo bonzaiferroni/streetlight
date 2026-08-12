@@ -5,8 +5,8 @@ import kampfire.model.Labeled
 import kampfire.model.handleResponse
 import koala.dom.MessageStore
 import koala.model.dedup
-import koala.model.fieldOf
-import koala.model.mutableFieldOf
+import koala.model.tapOf
+import koala.model.mutableTapOf
 import koala.model.reactIn
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
@@ -33,10 +33,10 @@ class EventScout(
     val postMessage = MessageStore()
 
     val postFlow = stateFlow.dedup { it.post }
-    val stage = state.mutableFieldOf({ it.stage }) { copy(stage = it) }
-    val query = state.mutableFieldOf({ it.query }) { copy(query = it) }
-    val event = state.mutableFieldOf({ it.event }) { copy(event = it) }
-    val queryEventsFlow = state.fieldOf { it.queryEvents }
+    val stage = state.mutableTapOf({ it.stage }) { copy(stage = it) }
+    val query = state.mutableTapOf({ it.query }) { copy(query = it) }
+    val event = state.mutableTapOf({ it.event }) { copy(event = it) }
+    val queryEventsFlow = state.tapOf { it.queryEvents }
 
     init {
         locationScout.stageField.reactIn(scope) { locationStage ->

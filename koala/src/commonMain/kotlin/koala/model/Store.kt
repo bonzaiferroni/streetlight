@@ -1,19 +1,12 @@
 package koala.model
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 
 open class Store<T>(
     initialValue: T,
-): MutableField<T> {
+): MutableTap<T> {
     private val state = MutableStateFlow(initialValue)
 
     override val flow = state.asStateFlow()
