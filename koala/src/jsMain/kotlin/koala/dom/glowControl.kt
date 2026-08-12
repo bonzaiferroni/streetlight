@@ -1,37 +1,35 @@
 package koala.dom
 
-import koala.css.BackgroundLight
+import koala.css.Glow
 import koala.css.ModifierSet
 import koala.css.Property
 import koala.css.modify
-import koala.css.toHex
+import koala.css.rgba
 import koala.model.MutableTap
-import koala.model.LightControl
+import koala.model.GlowControlStyle
 import kotlinx.css.pct
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.pointerevents.PointerEvent
 import kotlin.math.roundToInt
 
-fun ViewScope.lightControl(
-    lightState: MutableTap<BackgroundLight>,
+fun ViewScope.glowControl(
+    state: MutableTap<Glow>,
     mod: ModifierSet? = null,
 ) {
     lateinit var fieldElement: HTMLElement
     lateinit var handleElement: HTMLElement
 
-    fun place(light: BackgroundLight) {
-        handleElement.setStyle(Property.Left.to(light.position.x.pct))
-        handleElement.setStyle(Property.Top.to(light.position.y.pct))
-        handleElement.setStyle(Property.BackgroundColor.to(light.color.toHex()))
-        light.position.radius.let {
-            handleElement.setStyle(Property.Width.to((it / 4).pct))
-        }
+    fun place(glow: Glow) {
+        handleElement.setStyle(Property.Left.to(glow.position.x.pct))
+        handleElement.setStyle(Property.Top.to(glow.position.y.pct))
+        handleElement.setStyle(Property.Width.to(glow.position.radius.pct))
+        handleElement.setStyle(Property.BackgroundColor.to(glow.rgba()))
     }
 
     fun report(event: PointerEvent) {
         val rect = fieldElement.getBoundingClientRect()
         if (rect.width == 0.0 || rect.height == 0.0) return
-        lightState.set {
+        state.set {
             copy(
                 position = position.copy(
                     x = ((event.clientX - rect.left) / rect.width * 100).roundToInt().coerceIn(0, 100),
@@ -41,8 +39,8 @@ fun ViewScope.lightControl(
         }
     }
 
-    fieldElement = box(modify(mod, LightControl.Field)) {
-        handleElement = box(modify(LightControl.Handle))
+    fieldElement = box(modify(mod, GlowControlStyle.Field)) {
+        handleElement = box(modify(GlowControlStyle.Handle))
     }
 
     handleElement.addEventListener("pointerdown", { event ->
@@ -55,9 +53,9 @@ fun ViewScope.lightControl(
         if (handleElement.hasPointerCapture(event.pointerId)) report(event)
     })
 
-    place(lightState.now)
+    place(state.now)
 
-    launchEffect(::lightControl) {
-        lightState.flow.collect { place(it) }
+    launchEffect(::glowControl) {
+        state.flow.collect { place(it) }
     }
 }

@@ -1,22 +1,32 @@
 package streetlight.web.ui
 
+import koala.Svg
+import koala.css.AlignItemsCenter
+import koala.css.Flex1
+import koala.css.Height3
 import koala.css.ModifierSet
 import koala.css.addModifiers
+import koala.css.modify
 import koala.dom.ViewScope
+import koala.dom.icon
+import koala.dom.row
 import koala.model.MutableTap
+import kotlinx.html.INPUT
 import kotlinx.html.InputType
 import kotlinx.html.js.input
 import kotlinx.html.js.onInputFunction
 import org.w3c.dom.HTMLInputElement
 
 fun ViewScope.slider(
-    valueState: MutableTap<Int>,
-    range: IntRange,
+    state: MutableTap<Int>,
+    range: IntRange = (0..100),
     step: Int = range.step,
     mod: ModifierSet? = null,
-) {
+    config: INPUT.() -> Unit = { }
+): HTMLInputElement {
     val inputElement = input {
         addModifiers(mod)
+        config()
 
         type = InputType.range
         min = range.first.toString()
@@ -25,17 +35,30 @@ fun ViewScope.slider(
 
         onInputFunction = {
             (it.target as HTMLInputElement).value.toIntOrNull()?.let { newValue ->
-                valueState.set(newValue)
+                state.set(newValue)
             }
         }
     }
 
-    inputElement.value = valueState.now.toString()
+    inputElement.value = state.now.toString()
 
     launchEffect("slider") {
-        valueState.flow.collect { value ->
+        state.flow.collect { value ->
             val text = value.toString()
             if (inputElement.value != text) inputElement.value = text
         }
     }
+    return inputElement
+}
+
+fun ViewScope.slider(
+    icon: Svg,
+    state: MutableTap<Int>,
+    range: IntRange = (0..100),
+    step: Int = range.step,
+    mod: ModifierSet? = null,
+    config: INPUT.() -> Unit = { }
+) = row(modify(mod, AlignItemsCenter)) {
+    icon(icon, modify(Height3))
+    slider(state, range, step, modify(Flex1), config)
 }

@@ -70,7 +70,7 @@ fun <Value> ViewScope.flowBlock(
             view?.dispose()
 
             if (magic) {
-                val interval = KoalaTheme.MAGIC_INTERVAL.milliseconds
+                val interval = KoalaTheme.MagicInterval.milliseconds
                 launchJob?.cancel()
                 launchJob = launch("$name > transition") {
                     if (view != null) {

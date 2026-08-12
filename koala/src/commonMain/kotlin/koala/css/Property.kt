@@ -37,6 +37,7 @@ data class Property<T: Any>(
         val Top = Property<LinearDimension>("top", false)
         val Left = Property<LinearDimension>("left", false)
         val Margin = Property<String>("margin", false)
+        val BackgroundImage = Property<String>("background-image", false)
 
         val MaskUrl = Property<Asset>("mask-url")
         val ColorScheme = Property<String>("color-scheme")

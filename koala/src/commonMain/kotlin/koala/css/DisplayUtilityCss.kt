@@ -7,7 +7,7 @@ val DisplayUtilityCss
         // Opacity
         Opacity0, Opacity1, OpacityHigh, OpacityHalf, OpacityLow, OpacityGhost, Dim, NoDim,
         // Animation
-        Glow, GlowShadow, GlowBackground, SpinLoop,
+        GlowShadow, GlowBackground, SpinLoop,
         // Shape
         CircleShape, CircleClip,
         // Border Radius
@@ -21,7 +21,7 @@ val DisplayUtilityCss
         OverflowHidden, OverflowWrapAnywhere, OverflowClip, OverflowXAuto, OverflowXHidden, OverflowYAuto, OverflowYScroll,
         OverscrollBehaviorContain,
         // Background
-        PrimaryBg, PrimaryCardBg, ZenBg, CardBg, EditorBg, DialogBg, BackgroundImage, SolidBg, BlurBackdrop, TransparentBg,
+        PrimaryBg, PrimaryCardBg, ZenBg, CardBg, VoidBg, EditorBg, DialogBg, BackgroundImage, SolidBg, BlurBackdrop, TransparentBg,
         PaperGradientBg, CardGradientBg, InkGradientBg,
         // Transform
         FlipX, FlipY,
@@ -56,7 +56,6 @@ val Dim = utilityOf("dim", "color: rgba(var(--ink), 0.6)")
 val NoDim = utilityOf("no-dim", "color: rgb(var(--ink)) !important")
 
 // Glow
-val Glow = CssUtility("glow")
 val GlowShadow = CssUtility("glow-shadow")
 val AntiShadow = CssUtility("anti-shadow")
 val GlowBackground = CssUtility("glow-background")
@@ -129,6 +128,7 @@ val PrimaryCardBg = utilityOf("primary-card-bg", "background-color: var(--primar
 val EditorBg = utilityOf("editor-bg", "background-color: var(--editor-bg)")
 val ZenBg = utilityOf("zen-card-bg", "background: var(--zen-bg)")
 val CardBg = utilityOf("card-bg", "background: var(--card-bg)")
+val VoidBg = utilityOf("void-bg", "background: var(--void-bg)")
 val DialogBg = utilityOf("dialog-bg", "background: var(--dialog-bg)")
 val HeavyCardBg = utilityOf("heavy-card-bg", "background: rgba(var(--paper), .8)")
 val BackgroundImage = CssUtility("background-image")

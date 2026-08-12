@@ -2,13 +2,13 @@ package koala.model
 
 import koala.css.Class
 
-object LightControl {
-    val Field = Class("position-field")
-    val Handle = Class("position-handle")
+object GlowControlStyle {
+    val Field = Class("glow-control-field")
+    val Handle = Class("glow-control-handle")
 }
 
 // language="CSS"
-val LightControlCss = with(LightControl) { """
+val GlowControlCss = with(GlowControlStyle) { """
 $Field {
     position: relative;
     aspect-ratio: 16 / 9;
@@ -19,6 +19,7 @@ $Field {
 $Handle {
     position: absolute;
     aspect-ratio: 1;
+    min-width: 1.5rem;
     transform: translate(-50%, -50%);
     border-radius: 50%;
     pointer-events: auto;

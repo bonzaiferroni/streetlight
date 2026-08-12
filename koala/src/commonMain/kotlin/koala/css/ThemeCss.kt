@@ -100,24 +100,49 @@ val ThemeCss get() = """
     --ghost-border: 2px solid rgba(var(--ink), .1);
     --color-scheme: var(--ink-fg);
 
-    --rho-color: ${Koala.rho.color};
-    --beta-color: ${Koala.beta.color};
-    --gamma-color: ${Koala.gamma.color};
-    --rho-position: ${Koala.rho.position};
-    --beta-position: ${Koala.beta.position};
-    --gamma-position: ${Koala.gamma.position};
-    --rho-brightness: ${Koala.rho.brightness / 100.0};
-    --beta-brightness: ${Koala.beta.brightness / 100.0};
-    --gamma-brightness: ${Koala.gamma.brightness / 100.0};
+    --rho-rgb: ${Koala.rho.color};
+    --beta-rgb: ${Koala.beta.color};
+    --gamma-rgb: ${Koala.gamma.color};
+    --rho-color: ${Koala.rho.rgba()};
+    --beta-color: ${Koala.beta.rgba()};
+    --gamma-color: ${Koala.gamma.rgba()};
+    --rho-x: ${Koala.rho.position.x}%;
+    --beta-x: ${Koala.beta.position.x}%;
+    --gamma-x: ${Koala.gamma.position.x}%;
+    --rho-y: ${Koala.rho.position.y}%;
+    --beta-y: ${Koala.beta.position.y}%;
+    --gamma-y: ${Koala.gamma.position.y}%;
+    --rho-radius: ${Koala.rho.position.radius}vw;
+    --beta-radius: ${Koala.beta.position.radius}vw;
+    --gamma-radius: ${Koala.gamma.position.radius}vw;
+    --rho-focus: ${Koala.rho.focus}%;
+    --beta-focus: ${Koala.beta.focus}%;
+    --gamma-focus: ${Koala.gamma.focus}%;
 }
+
+@property --rho-color { syntax: '<color>'; inherits: true; initial-value: ${Koala.rho.rgba()}; }
+@property --beta-color { syntax: '<color>'; inherits: true; initial-value: ${Koala.beta.rgba()}; }
+@property --gamma-color { syntax: '<color>'; inherits: true; initial-value: ${Koala.gamma.rgba()}; }
+@property --rho-x { syntax: '<percentage>'; inherits: true; initial-value: ${Koala.rho.position.x}%; }
+@property --beta-x { syntax: '<percentage>'; inherits: true; initial-value: ${Koala.beta.position.x}%; }
+@property --gamma-x { syntax: '<percentage>'; inherits: true; initial-value: ${Koala.gamma.position.x}%; }
+@property --rho-y { syntax: '<percentage>'; inherits: true; initial-value: ${Koala.rho.position.y}%; }
+@property --beta-y { syntax: '<percentage>'; inherits: true; initial-value: ${Koala.beta.position.y}%; }
+@property --gamma-y { syntax: '<percentage>'; inherits: true; initial-value: ${Koala.gamma.position.y}%; }
+@property --rho-radius { syntax: '<length-percentage>'; inherits: true; initial-value: ${Koala.rho.position.radius}vw; }
+@property --beta-radius { syntax: '<length-percentage>'; inherits: true; initial-value: ${Koala.beta.position.radius}vw; }
+@property --gamma-radius { syntax: '<length-percentage>'; inherits: true; initial-value: ${Koala.gamma.position.radius}vw; }
+@property --rho-focus { syntax: '<percentage>'; inherits: true; initial-value: ${Koala.rho.focus}%; }
+@property --beta-focus { syntax: '<percentage>'; inherits: true; initial-value: ${Koala.beta.focus}%; }
+@property --gamma-focus { syntax: '<percentage>'; inherits: true; initial-value: ${Koala.gamma.focus}%; }
 
 body {
     --primary-button: rgb(var(--primary));
     --accent-button: rgb(var(--accent));
     
-    --rho-bg: rgb(var(--rho-color));
-    --beta-bg: rgb(var(--beta-color));
-    --gamma-bg: rgb(var(--gamma-color));
+    --rho-bg: rgb(var(--rho-rgb));
+    --beta-bg: rgb(var(--beta-rgb));
+    --gamma-bg: rgb(var(--gamma-rgb));
 }
 
 :root$DayTheme {
@@ -132,15 +157,11 @@ body::before {
     pointer-events: none;
     z-index: -1;
     background:
-            radial-gradient(var(--rho-position), rgba(var(--rho-color), var(--rho-brightness)) 0%, transparent 50%),
-            radial-gradient(var(--beta-position), rgba(var(--beta-color), var(--beta-brightness)) 0%, transparent 48%),
-            radial-gradient(var(--gamma-position), rgba(var(--gamma-color), var(--gamma-brightness)) 0%, transparent 65%);
-    filter: hue-rotate(0deg);
+        radial-gradient(circle var(--rho-radius) at var(--rho-x) var(--rho-y), var(--rho-color) var(--rho-focus), transparent 100%),
+        radial-gradient(circle var(--beta-radius) at var(--beta-x) var(--beta-y), var(--beta-color) var(--beta-focus), transparent 100%),
+        radial-gradient(circle var(--gamma-radius) at var(--gamma-x) var(--gamma-y), var(--gamma-color) var(--gamma-focus), transparent 100%);
+    /* filter: hue-rotate(0deg); */
     animation: hueSpin 30s linear infinite;
-    will-change: filter;
-}
-
-@keyframes hueSpin {
-    to { filter: hue-rotate(360deg); }
+    /* will-change: filter; */
 }
 """

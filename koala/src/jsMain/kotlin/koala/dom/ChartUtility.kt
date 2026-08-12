@@ -26,9 +26,9 @@ object ChartUtility {
     )
 
     val LineColors = listOf(
-        rgbVar("--rho-color"),
-        rgbVar("--beta-color"),
-        rgbVar("--gamma-color"),
+        rgbVar("--rho-rgb"),
+        rgbVar("--beta-rgb"),
+        rgbVar("--gamma-rgb"),
     )
 
     fun getLineColor(index: Int) = LineColors[index % LineColors.size]
@@ -57,9 +57,9 @@ object ChartUtility {
 
         return EChartsTheme(
             color = arrayOf(
-                rgbVar("--rho-color"),
-                rgbVar("--beta-color"),
-                rgbVar("--gamma-color"),
+                rgbVar("--rho-rgb"),
+                rgbVar("--beta-rgb"),
+                rgbVar("--gamma-rgb"),
             ),
             backgroundColor = "transparent",
             textStyle = TextStyleOption(color = ink, fontFamily = font),

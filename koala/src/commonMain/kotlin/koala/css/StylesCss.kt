@@ -42,6 +42,10 @@ body {
         color var(--magic-interval) var(--magic-easing);
 }
 
+@keyframes hueSpin {
+    to { filter: hue-rotate(360deg); }
+}
+
 input[type="text"],
 input[type="password"],
 input[type="datetime-local"],

@@ -61,82 +61,82 @@
 
 @keyframes glow-shadow {
     0% {
-        filter: drop-shadow(0 0 2px rgb(var(--rho-color)));
+        filter: drop-shadow(0 0 2px rgb(var(--rho-rgb)));
     }
     25% {
-        filter: drop-shadow(0 -1px 3px rgb(var(--beta-color)));
+        filter: drop-shadow(0 -1px 3px rgb(var(--beta-rgb)));
     }
     40% {
-        filter: drop-shadow(1px 0 1px rgb(var(--rho-color)));
+        filter: drop-shadow(1px 0 1px rgb(var(--rho-rgb)));
     }
     65% {
-        filter: drop-shadow(0 -1px 2px rgb(var(--gamma-color)));
+        filter: drop-shadow(0 -1px 2px rgb(var(--gamma-rgb)));
     }
     80% {
-        filter: drop-shadow(-1px 0 1px rgb(var(--beta-color)));
+        filter: drop-shadow(-1px 0 1px rgb(var(--beta-rgb)));
     }
     100% {
-        filter: drop-shadow(0 0 2px rgb(var(--rho-color)));
+        filter: drop-shadow(0 0 2px rgb(var(--rho-rgb)));
     }
 }
 
 @keyframes glow-background {
     0% {
-        background-color: rgb(var(--rho-color));
+        background-color: rgb(var(--rho-rgb));
     }
     25% {
-        background-color: rgb(var(--beta-color));
+        background-color: rgb(var(--beta-rgb));
     }
     40% {
-        background-color: rgb(var(--rho-color));
+        background-color: rgb(var(--rho-rgb));
     }
     65% {
-        background-color: rgb(var(--gamma-color));
+        background-color: rgb(var(--gamma-rgb));
     }
     80% {
-        background-color: rgb(var(--beta-color));
+        background-color: rgb(var(--beta-rgb));
     }
     100% {
-        background-color: rgb(var(--rho-color));
+        background-color: rgb(var(--rho-rgb));
     }
 }
 
 @keyframes glow-flash {
     0%   {
         box-shadow:
-                inset 0 0 20px rgba(var(--gamma-color), 0),
-                inset 0 0 20px rgba(var(--beta-color), 0),
-                inset 0 0 20px rgba(var(--rho-color), 0);
+                inset 0 0 20px rgba(var(--gamma-rgb), 0),
+                inset 0 0 20px rgba(var(--beta-rgb), 0),
+                inset 0 0 20px rgba(var(--rho-rgb), 0);
     }
     20%  {
         box-shadow:
-                inset -15px -10px 30px rgba(var(--gamma-color), .3),
-                inset 20px 5px 25px rgba(var(--beta-color), .2),
-                inset -5px 15px 20px rgba(var(--rho-color), .1);
+                inset -15px -10px 30px rgba(var(--gamma-rgb), .3),
+                inset 20px 5px 25px rgba(var(--beta-rgb), .2),
+                inset -5px 15px 20px rgba(var(--rho-rgb), .1);
     }
     45%  {
         box-shadow:
-                inset -30px 15px 50px rgba(var(--gamma-color), .5),
-                inset 35px -20px 45px rgba(var(--beta-color), .45),
-                inset 10px 30px 40px rgba(var(--rho-color), .35);
+                inset -30px 15px 50px rgba(var(--gamma-rgb), .5),
+                inset 35px -20px 45px rgba(var(--beta-rgb), .45),
+                inset 10px 30px 40px rgba(var(--rho-rgb), .35);
     }
     65%  {
         box-shadow:
-                inset 20px 25px 45px rgba(var(--gamma-color), .35),
-                inset -25px -30px 50px rgba(var(--beta-color), .4),
-                inset -20px 10px 45px rgba(var(--rho-color), .5);
+                inset 20px 25px 45px rgba(var(--gamma-rgb), .35),
+                inset -25px -30px 50px rgba(var(--beta-rgb), .4),
+                inset -20px 10px 45px rgba(var(--rho-rgb), .5);
     }
     85%  {
         box-shadow:
-                inset 10px -15px 30px rgba(var(--gamma-color), .15),
-                inset -10px 20px 25px rgba(var(--beta-color), .2),
-                inset 15px -5px 30px rgba(var(--rho-color), .15);
+                inset 10px -15px 30px rgba(var(--gamma-rgb), .15),
+                inset -10px 20px 25px rgba(var(--beta-rgb), .2),
+                inset 15px -5px 30px rgba(var(--rho-rgb), .15);
     }
     100% {
         box-shadow:
-                inset 0 0 20px rgba(var(--gamma-color), 0),
-                inset 0 0 20px rgba(var(--beta-color), 0),
-                inset 0 0 20px rgba(var(--rho-color), 0);
+                inset 0 0 20px rgba(var(--gamma-rgb), 0),
+                inset 0 0 20px rgba(var(--beta-rgb), 0),
+                inset 0 0 20px rgba(var(--rho-rgb), 0);
     }
 }
 

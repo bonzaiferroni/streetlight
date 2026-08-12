@@ -1,17 +1,15 @@
 Tabler: (MIT License)
 arrow-left.svg
 arrow-right.svg
+aperture.svg
 backspace.svg
 book.svg
 boost.svg
-caret-left.svg
-caret-up.svg
-calendar-minus.svg
-calendar-plus.svg
+bulb.svg
+caret-*.svg
 calendar.svg
 chart.svg
 check.svg
-chevron-down.svg
 chevron.svg
 city.svg
 clock.svg
@@ -52,6 +50,7 @@ panel-right.svg
 pin.svg
 plus.svg
 question.svg
+ruler.svg
 satellite.svg
 search.svg
 shooting-star.svg
