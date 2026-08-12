@@ -5,11 +5,11 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class LocationLayout(
     val location: Location,
-    val layout: Layout?,
+    val design: PageDesign?,
 )
 
 object DefaultLayout {
-    val location = Layout(
+    val location = PageLayout(
         blocks = listOf(
             HeaderBlock,
             TabsBlock(listOf(

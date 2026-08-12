@@ -4,14 +4,17 @@ import kampfire.model.handleResponse
 import koala.css.*
 import koala.dom.*
 import koala.html.Id
+import koala.html.heading3
 import koala.html.topLogo
 import koala.model.storeOf
 import streetlight.model.data.DefaultLayout
 import streetlight.model.data.LocationConfigContent
 import streetlight.model.data.LocationContent
+import streetlight.model.data.PageDesign
 import streetlight.model.data.toEdit
 import streetlight.model.ui.LocationConfigRoute
 import streetlight.web.model.LayoutEditor
+import streetlight.web.model.ThemeEditor
 import streetlight.web.shells.cardOf
 
 fun ViewScope.viewLocationConfig(
@@ -19,7 +22,9 @@ fun ViewScope.viewLocationConfig(
 ) {
     val location = content.location
     val configState = storeOf(content.config)
-    val layoutEditor = LayoutEditor(configState.now.layout ?: DefaultLayout.location)
+    val initialLayout = configState.now.design?.layout ?: DefaultLayout.location
+    val layoutEditor = LayoutEditor(initialLayout)
+    val themeEditor = ThemeEditor(content.config.design?.theme)
     column(BodyStyle.column) {
         topLogo()
         cardOf(location)
@@ -28,23 +33,36 @@ fun ViewScope.viewLocationConfig(
                 val edit = location.toEdit()
                 // viewLocationEditor(edit, app, null, false, null)
             }
-            tab("layout") {
+            tab("design") {
                 dataBlock({ api.readLocationEvents(location.slug) }) { events ->
                     // td: fix layout source
                     val locationContent = LocationContent(
                         location = location,
-                        layout = configState.now.layout ?: DefaultLayout.location,
+                        design = PageDesign(initialLayout, null),
                         events = events,
                         canEdit = true
                     )
 
                     column {
                         val messages = MessageStore()
-                        layoutBuilder(layoutEditor, locationContent)
-                        formSubmit("save layout", {
-                            val layout = layoutEditor.buildLayout() ?: return@formSubmit
-                            configState.set { copy(layout = layout) }
-                            launchEffect("upload layout") {
+                        column(BodyStyle.column) {
+                            column {
+                                filigree { heading3("Theme") }
+                                themeForm(themeEditor)
+                            }
+
+                            column {
+                                filigree { heading3("Layout") }
+                                layoutBuilder(layoutEditor, locationContent)
+                            }
+
+                        }
+
+                        formSubmit("save design", {
+                            val layout = layoutEditor.buildLayout()
+                            val theme = themeEditor.buildTheme()
+                            configState.set { copy(design = PageDesign(layout, theme)) }
+                            launchEffect("save design") {
                                 api.updateLocationConfig(configState.now).handleResponse(messages)
                             }
                         }, messages)

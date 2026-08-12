@@ -33,6 +33,10 @@ data class Property<T: Any>(
         val GridTemplateColumns = Property<GridTemplateColumns>("grid-template-columns", false)
         val ViewTransitionName = Property<String>("view-transition-name", false)
         val AspectRatio = Property<Float>("aspect-ratio", false)
+        val BackgroundColor = Property<String>("background-color", false)
+        val Top = Property<LinearDimension>("top", false)
+        val Left = Property<LinearDimension>("left", false)
+        val Margin = Property<String>("margin", false)
 
         val MaskUrl = Property<Asset>("mask-url")
         val ColorScheme = Property<String>("color-scheme")

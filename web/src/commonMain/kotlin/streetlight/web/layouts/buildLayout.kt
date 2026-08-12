@@ -4,7 +4,6 @@ import kampfire.model.GeoPoint
 import koala.css.MinHeight48
 import koala.css.modify
 import koala.html.column
-import koala.html.div
 import koala.html.geoMapMount
 import koala.html.image
 import koala.html.markdown
@@ -23,12 +22,11 @@ import streetlight.model.data.RichTextBlock
 import streetlight.model.data.TabsBlock
 import streetlight.model.data.TextBlock
 import streetlight.model.ui.LocationUpdateRoute
-import streetlight.web.pages.appFooter
 import streetlight.web.ui.BodyStyle
 import streetlight.web.ui.headerOf
 
 fun FlowContent.buildLayout(content: LocationContent) {
-    val layout = content.layout ?: DefaultLayout.location
+    val layout = content.design?.layout ?: DefaultLayout.location
     buildColumn(layout.blocks, content)
 }
 

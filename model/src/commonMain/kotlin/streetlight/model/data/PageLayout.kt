@@ -5,7 +5,7 @@ import koala.Image
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Layout(
+data class PageLayout(
     override val blocks: List<LayoutBlock>
 ): LayoutContainer {
     override val name get() = "main"

@@ -8,7 +8,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class LocationContent(
     val location: Location,
-    val layout: Layout?,
+    val design: PageDesign?,
     val events: List<Event>,
     val canEdit: Boolean,
 ): RouteContent
