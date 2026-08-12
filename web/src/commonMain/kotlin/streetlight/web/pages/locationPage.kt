@@ -11,7 +11,7 @@ fun HTML.locationPage(content: LocationContent, styles: String) {
         supportProtobuf()
         supportGeoMap()
     }
-    appBody(Screen.Location) {
+    appBody(Screen.Location, content.design?.theme) {
         locationShell(content)
     }
 }

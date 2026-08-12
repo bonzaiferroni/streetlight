@@ -164,5 +164,13 @@ body::before {
     animation: var(--color-flux);
     will-change: filter;
     filter: hue-rotate(0deg);
+    
+    transition-property:
+        --accent, --primary,
+        --rho-color, --rho-x, --rho-y, --rho-radius, --rho-focus,
+        --beta-color, --beta-x, --beta-y, --beta-radius, --beta-focus,
+        --gamma-color, --gamma-x, --gamma-y, --gamma-radius, --gamma-focus;
+    transition-duration: 1.2s;
+    transition-timing-function: ease;
 }
 """

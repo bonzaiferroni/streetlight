@@ -32,6 +32,7 @@ fun ViewScope.viewHome(content: HomeContent) {
     wireStreetMap()
 
     document.setTitle(HomeRoute)
+    applyTheme(null)
 }
 
 fun RouteScope.viewHomeRoute() {

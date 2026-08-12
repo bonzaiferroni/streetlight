@@ -63,7 +63,8 @@ fun ViewScope.viewLocationConfig(
                             val theme = themeEditor.buildTheme()
                             configState.set { copy(design = PageDesign(layout, theme)) }
                             launchEffect("save design") {
-                                api.updateLocationConfig(configState.now).handleResponse(messages)
+                                messages.deliverSending()
+                                api.updateLocationConfig(configState.now).handleResponse(messages, "Design saved.")
                             }
                         }, messages)
                     }

@@ -2,6 +2,7 @@ package streetlight.web.model
 
 import koala.model.tapOf
 import koala.model.storeOf
+import streetlight.model.data.DefaultLayout
 import streetlight.model.data.PageLayout
 import streetlight.model.data.LayoutBlock
 import streetlight.model.data.LayoutContainer
@@ -63,7 +64,7 @@ class LayoutEditor(initialLayout: PageLayout) {
 
     fun buildLayout(): PageLayout? {
         val blocks = buildContainer(mainContainerId).takeIf { it.isNotEmpty() } ?: return null
-        return PageLayout(blocks)
+        return PageLayout(blocks).takeIf { it != DefaultLayout.location }
     }
 
     fun startMove(blockId: Uuid) {

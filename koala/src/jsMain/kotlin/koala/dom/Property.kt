@@ -19,3 +19,10 @@ fun <T: Any> HTMLElement.removeStyle(property: Property<T>): HTMLElement {
     this.style.removeProperty(property.expression)
     return this
 }
+
+fun <T: Any> HTMLElement.setStyle(property: Property<T>, value: T?) {
+    when (value) {
+        null -> removeStyle(property)
+        else -> setStyle(property.to(value))
+    }
+}

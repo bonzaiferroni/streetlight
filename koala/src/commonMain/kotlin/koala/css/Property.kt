@@ -57,7 +57,7 @@ data class PositionAnchor(val identifier: String) {
     override fun toString() = "--$identifier"
 }
 
-typealias StyleSet = List<InlineStyle<*>>
+typealias StyleSet = List<InlineStyle<*>?>
 
 fun styleOf(set: StyleSet?, vararg styles: InlineStyle<*>) = styles.asList().let { styles ->
     set?.let {
@@ -65,18 +65,19 @@ fun styleOf(set: StyleSet?, vararg styles: InlineStyle<*>) = styles.asList().let
     } ?: styles
 }
 
-fun styleOf(vararg styles: InlineStyle<*>) = styles.asList()
+fun styleOf(vararg styles: InlineStyle<*>?) = styles.asList()
 
-fun CoreAttributeGroupFacade.setStyle(vararg styles: InlineStyle<*>) = setStyle(styleOf(*styles))
+fun CoreAttributeGroupFacade.setStyle(vararg styles: InlineStyle<*>?) = setStyle(styleOf(*styles))
 
-fun CoreAttributeGroupFacade.setStyle(styles: StyleSet?) {
-    styles?.let {
+fun CoreAttributeGroupFacade.setStyle(styles: StyleSet) {
+    styles.let {
         style = buildString {
             attributes["style"]?.let { style ->
                 append(style)
                 append(' ')
             }
             styles.forEach { style ->
+                if (style == null) return@forEach
                 append(style.property.expression)
                 append(": ")
                 append(style.valueString)

@@ -8,12 +8,17 @@ import koala.html.*
 import kotlinx.html.DIV
 import kotlinx.html.HTML
 import kotlinx.html.body
+import streetlight.model.data.PageTheme
 
 fun HTML.appBody(
     screen: AppScreen,
+    theme: PageTheme? = null,
     block: DIV.() -> Unit = { }
 ) {
     body {
+        theme?.let {
+            applyTheme(theme)
+        }
         setAttribute(KoalaBody.ScreenId.to(screen.screenId))
         div(AppBody.Viewport) {
             div(AppBody.PanelGrid) {
