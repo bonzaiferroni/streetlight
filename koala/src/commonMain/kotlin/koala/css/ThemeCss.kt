@@ -164,7 +164,7 @@ body::before {
     animation: var(--color-flux);
     will-change: filter;
     filter: hue-rotate(0deg);
-        
+
     transition-property:
         --accent, --primary,
         --rho-color, --rho-x, --rho-y, --rho-radius, --rho-focus,

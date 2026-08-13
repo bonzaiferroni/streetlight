@@ -101,7 +101,7 @@ async function collectPageTimings(page) {
     });
 }
 
-async function runOnce(browser, flow, tracePath) {
+async function runOnce(browser, flow, url, tracePath) {
     const context = await browser.newContext();
     const page = await context.newPage();
 
@@ -112,7 +112,7 @@ async function runOnce(browser, flow, tracePath) {
 
     let timings = { domContentLoaded: null, load: null, fcp: null };
     try {
-        await flow.steps(page, flow);
+        await flow.steps(page, { ...flow, url });
         timings = await collectPageTimings(page);
     } finally {
         await browser.stopTracing();
@@ -135,15 +135,24 @@ function slug(name) {
     return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 }
 
-function appendResults(flow, variant, headless, timestamp, sha, results) {
+function shuffle(items) {
+    const out = items.slice();
+    for (let i = out.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [out[i], out[j]] = [out[j], out[i]];
+    }
+    return out;
+}
+
+function appendResults(flow, headless, timestamp, sha, results) {
     const dir = path.join(__dirname, 'results');
     fs.mkdirSync(dir, { recursive: true });
     const file = path.join(dir, 'results.csv');
     const header = `timestamp,sha,benchmark,variant,cache,headless,run,${COLUMNS.join(',')}\n`;
     if (!fs.existsSync(file)) fs.writeFileSync(file, header);
 
-    const rows = results.map((r, i) => [
-        timestamp, sha, `"${flow.benchmark}"`, `"${variant}"`, flow.cache, headless, i + 1,
+    const rows = results.map(r => [
+        timestamp, sha, `"${flow.benchmark}"`, `"${r.variant}"`, flow.cache, headless, r.run,
         ...COLUMNS.map(key => (typeof r[key] === 'number' ? r[key].toFixed(1) : ''))
     ]);
 
@@ -159,7 +168,7 @@ function median(values) {
     return clean.length % 2 === 0 ? (clean[mid - 1] + clean[mid]) / 2 : clean[mid];
 }
 
-async function run(flow, variant = 'default', options = {}) {
+async function run(flow, conditions, options = {}) {
     const headless = options.headless ?? flow.headless ?? true;
     const traceDir = path.join(__dirname, 'traces', slug(flow.benchmark));
     fs.mkdirSync(traceDir, { recursive: true });
@@ -169,28 +178,37 @@ async function run(flow, variant = 'default', options = {}) {
     const browser = await chromium.launch({ headless });
     const results = [];
 
-    console.log(`${flow.benchmark} [${variant}] ${headless ? 'headless' : 'headed'} — ${flow.runs} runs against ${flow.url}\n`);
+    console.log(`${flow.benchmark} ${headless ? 'headless' : 'headed'} — ${flow.runs} runs each\n`);
+    for (const c of conditions) console.log(`  ${c.variant.padEnd(20)} ${c.url}`);
+    console.log('');
 
     try {
         for (let i = 1; i <= flow.runs; i++) {
-            const result = await runOnce(browser, flow, path.join(traceDir, `run-${i}.json`));
-            results.push(result);
-            console.log(
-                `  run ${i}:  scripting ${result.scripting.toFixed(0)}ms  ` +
-                `rendering ${result.rendering.toFixed(0)}ms  ` +
-                `painting ${result.painting.toFixed(0)}ms`
-            );
+            for (const condition of shuffle(conditions)) {
+                const tracePath = path.join(traceDir, `${slug(condition.variant)}-run-${i}.json`);
+                const metrics = await runOnce(browser, flow, condition.url, tracePath);
+                results.push({ variant: condition.variant, run: i, ...metrics });
+                console.log(
+                    `  run ${i}  ${condition.variant.padEnd(20)} ` +
+                    `scripting ${metrics.scripting.toFixed(0).padStart(5)}ms  ` +
+                    `rendering ${metrics.rendering.toFixed(0).padStart(5)}ms  ` +
+                    `painting ${metrics.painting.toFixed(0).padStart(5)}ms`
+                );
+            }
         }
     } finally {
         await browser.close();
     }
 
-    appendResults(flow, variant, headless, timestamp, sha, results);
+    appendResults(flow, headless, timestamp, sha, results);
 
-    console.log('\n  medians');
-    for (const key of COLUMNS) {
-        const value = median(results.map(r => r[key]));
-        console.log(`    ${key.padEnd(18)} ${value === null ? 'n/a' : value.toFixed(0) + 'ms'}`);
+    for (const condition of conditions) {
+        const own = results.filter(r => r.variant === condition.variant);
+        console.log(`\n  medians — ${condition.variant}`);
+        for (const key of COLUMNS) {
+            const value = median(own.map(r => r[key]));
+            console.log(`    ${key.padEnd(18)} ${value === null ? 'n/a' : value.toFixed(0) + 'ms'}`);
+        }
     }
     console.log(`\n  ${results.length} rows appended to results/results.csv`);
 }

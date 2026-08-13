@@ -2,6 +2,7 @@
 
 package streetlight.web.pages
 
+import koala.JsBundle
 import koala.JsFile
 import koala.css.*
 import koala.html.*
@@ -39,7 +40,7 @@ fun HTML.appBody(
         div(AppBody.ToasterId)
 
         scriptUnsafe(AppOverlayJs)
-        linkScript(JsFile.Web)
+        linkScript(JsBundle.Web)
     }
 }
 

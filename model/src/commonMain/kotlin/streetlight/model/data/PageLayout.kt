@@ -53,3 +53,6 @@ data class TabContent(
     override val name: String,
     override val blocks: List<LayoutBlock>
 ): LayoutContainer
+
+@Serializable
+object FooterBlock: LayoutBlock

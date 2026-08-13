@@ -13,6 +13,7 @@ import koala.html.textBlock
 import kotlinx.html.FlowContent
 import streetlight.model.data.DefaultLayout
 import streetlight.model.data.EventsBlock
+import streetlight.model.data.FooterBlock
 import streetlight.model.data.HeaderBlock
 import streetlight.model.data.ImageBlock
 import streetlight.model.data.LayoutBlock
@@ -22,6 +23,7 @@ import streetlight.model.data.RichTextBlock
 import streetlight.model.data.TabsBlock
 import streetlight.model.data.TextBlock
 import streetlight.model.ui.LocationUpdateRoute
+import streetlight.web.pages.appFooter
 import streetlight.web.ui.BodyStyle
 import streetlight.web.ui.headerOf
 
@@ -40,13 +42,14 @@ fun FlowContent.buildColumn(blocks: List<LayoutBlock>, content: LocationContent)
 
 fun FlowContent.buildBlock(block: LayoutBlock, content: LocationContent) {
     when (block) {
-        EventsBlock -> buildEvents(content)
         HeaderBlock -> buildHeader(content)
+        EventsBlock -> buildEvents(content)
         is ImageBlock -> buildImage(block)
         MapBlock -> buildMap(content.location.geoPoint)
         is TabsBlock -> buildTabs(block, content)
         is TextBlock -> buildText(block)
         is RichTextBlock -> buildRichText(block)
+        is FooterBlock -> buildFooter()
     }
 }
 
@@ -91,4 +94,8 @@ fun FlowContent.buildText(block: TextBlock) {
 
 fun FlowContent.buildRichText(block: RichTextBlock) {
     markdown(block.text)
+}
+
+fun FlowContent.buildFooter() {
+    appFooter()
 }

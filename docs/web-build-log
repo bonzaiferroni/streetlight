@@ -35,3 +35,24 @@ runtime modules 670 bytes 3 modules
 modules with warnings 4.64 MiB [true warnings]
 ../../node_modules/@js-joda/core/dist/js-joda.esm.js 392 KiB [built] [code generated]
 webpack 5.101.3 compiled with 3 warnings in 12671 ms
+
+// Aug 13
+
+asset web.js 1.92 MiB [emitted] [minimized] [big] (name: web) 2 related assets
+asset passwordReset.js 212 KiB [emitted] [minimized] (name: passwordReset) 1 related asset
+runtime modules 670 bytes 3 modules
+modules with warnings 6.39 MiB [true warnings]
+  modules by path ./kotlin/*.js 5.69 MiB
+    ./kotlin/streetlight-web.js 1.56 MiB [built] [code generated] [31 warnings]
+    ./kotlin/streetlight-kampfire.js 134 KiB [built] [code generated] [18 warnings]
+    ./kotlin/kotlin-kotlin-stdlib.js 610 KiB [built] [code generated] [184 warnings]
+    + 22 modules
+  modules by path ../../../../web/build/compileSync/js/passwordReset/passwordResetProductionExecut...(truncated) 714 KiB
+    ../../../../web/build/compileSync/js/passwordReset/passwordResetProductionExecut...(truncated) 14.3 KiB [built] [code generated] [3 warnings]
+    ../../../../web/build/compileSync/js/passwordReset/passwordResetProductionExecut...(truncated) 322 KiB [built] [code generated] [148 warnings]
+    ../../../../web/build/compileSync/js/passwordReset/passwordResetProductionExecut...(truncated) 18.9 KiB [built] [code generated] [4 warnings]
+    + 12 modules
+../../../../web/build/compileSync/js/passwordReset/passwordResetProductionExecut...(truncated) 3.87 KiB [built] [code generated]
+../../../../web/build/compileSync/js/passwordReset/passwordResetProductionExecut...(truncated) 54.7 KiB [built] [code generated]
+../../node_modules/@js-joda/core/dist/js-joda.esm.js 392 KiB [built] [code generated]
+webpack 5.101.3 compiled with 3 warnings in 18440 ms

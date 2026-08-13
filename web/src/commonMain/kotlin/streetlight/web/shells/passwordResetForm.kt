@@ -1,6 +1,7 @@
 package streetlight.web.shells
 
 import kampfire.model.Token
+import koala.JsBundle
 import koala.JsFile
 import koala.css.AlignItemsCenter
 import koala.css.Flex1
@@ -38,7 +39,7 @@ fun FlowContent.passwordResetForm(token: Token) {
                 onClick = PasswordResetForm.SendReset.invoke(token.toString())
             }
         }
-        linkScript(JsFile.PasswordReset)
+        linkScript(JsBundle.PasswordReset)
     }
 }
 

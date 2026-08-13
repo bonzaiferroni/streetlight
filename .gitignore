@@ -40,3 +40,4 @@ users.json
 
 benchmark/node_modules/
 benchmark/traces/
+benchmark/server

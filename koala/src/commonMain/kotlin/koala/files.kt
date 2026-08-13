@@ -4,11 +4,15 @@ object JsFile : FileSet<Js>() {
     val Utils = add("utils.js")
     val Tabs = add("tabs.js")
     val Koala = add("koala/koala.js")
-
-    // not part of FileSet collection
-    val Web = jsFileOf("web.js", basePath = "/js/streetlight/")
-    val PasswordReset = jsFileOf("passwordReset.js", basePath = "/js/streetlight/")
 }
+
+object JsBundle {
+    val Web = jsFileOf("web.js", basePath = DEV_PATH)
+    val PasswordReset = jsFileOf("passwordReset.js", basePath = DEV_PATH)
+}
+
+const val DEV_PATH = "/dev/streetlight/"
+const val PROD_PATH = "/prod/streetlight/"
 
 object CssFile : FileSet<Css>() {
     val Reset = add("reset.css")
@@ -22,8 +26,6 @@ object CssFile : FileSet<Css>() {
     val GeoMap = add("geo-map.css")
     // val Sandbox = add("sandbox.css")
 }
-
-
 
 object LottieFile : FileSet<Lottie>() {
     val Airplane = addLottie("airplane.json") // airplane circling earth

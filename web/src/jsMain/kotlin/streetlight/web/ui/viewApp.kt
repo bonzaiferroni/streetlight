@@ -20,6 +20,7 @@ import koala.utils.launch
 
 @OptIn(ExperimentalSerializationApi::class)
 fun viewApp() {
+    println("ey 8080")
     // val app = createStreetlight(scope)
 
     val koin = koinApplication {
