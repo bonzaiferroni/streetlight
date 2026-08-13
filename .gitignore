@@ -37,3 +37,6 @@ users.json
 /app/release
 /server-old
 /debug
+
+benchmark/node_modules/
+benchmark/traces/
