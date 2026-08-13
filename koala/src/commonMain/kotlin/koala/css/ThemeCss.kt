@@ -1,9 +1,9 @@
-@file:Suppress("CssInvalidPseudoSelector", "CssInvalidHtmlTagReference")
+@file:Suppress("CssInvalidPseudoSelector", "CssInvalidHtmlTagReference", "CssInvalidPropertyValue")
 
 package koala.css
 
 // language="CSS"
-val ThemeCss get() = """
+val ThemeCss get() = with(Koala) { """
 :root {
     --paper: ${Koala.paper};
     --ink: ${Koala.ink};
@@ -46,7 +46,7 @@ val ThemeCss get() = """
             
     --vignette-gradient: radial-gradient(ellipse at center, transparent 50%, rgba(0, 0, 0, 0.3) 100%);
     
-    --primary: ${Koala.primary}; 
+    --primary: $primary; 
     --primary-fg: color-mix(in srgb, rgb(var(--primary)) 50%, rgb(var(--ink)));
     --primary-bg: color-mix(in srgb, rgb(var(--primary)) 75%, rgb(var(--paper)));
     --primary-button-day: color-mix(in srgb, var(--primary-button) 80%, black);
@@ -54,7 +54,7 @@ val ThemeCss get() = """
     
     --secondary-button: var(--gray-bg);
     
-    --accent: ${Koala.accent}; /* 170, 57, 148; 255, 53, 221 */
+    --accent: $accent; /* 170, 57, 148; 255, 53, 221 */
     --accent-fg: color-mix(in srgb, rgb(var(--accent)) 50%, rgb(var(--ink)));
     --accent-bg: color-mix(in srgb, rgb(var(--accent)) 75%, rgb(var(--paper)));
     --accent-button-day: color-mix(in srgb, var(--accent-button) 80%, black);
@@ -100,42 +100,42 @@ val ThemeCss get() = """
     --ghost-border: 2px solid rgba(var(--ink), .1);
     --color-scheme: var(--ink-fg);
 
-    --rho-rgb: ${Koala.rho.color};
-    --beta-rgb: ${Koala.beta.color};
-    --gamma-rgb: ${Koala.gamma.color};
-    --rho-color: ${Koala.rho.rgba()};
-    --beta-color: ${Koala.beta.rgba()};
-    --gamma-color: ${Koala.gamma.rgba()};
-    --rho-x: ${Koala.rho.position.x}%;
-    --beta-x: ${Koala.beta.position.x}%;
-    --gamma-x: ${Koala.gamma.position.x}%;
-    --rho-y: ${Koala.rho.position.y}%;
-    --beta-y: ${Koala.beta.position.y}%;
-    --gamma-y: ${Koala.gamma.position.y}%;
-    --rho-radius: ${Koala.rho.position.radius};
-    --beta-radius: ${Koala.beta.position.radius};
-    --gamma-radius: ${Koala.gamma.position.radius};
-    --rho-focus: ${Koala.rho.focus}%;
-    --beta-focus: ${Koala.beta.focus}%;
-    --gamma-focus: ${Koala.gamma.focus}%;
+    --rho-rgb: ${rho.color};
+    --beta-rgb: ${beta.color};
+    --gamma-rgb: ${gamma.color};
+    --rho-color: ${rho.rgba()};
+    --beta-color: ${beta.rgba()};
+    --gamma-color: ${gamma.rgba()};
+    --rho-x: ${rho.position.x}%;
+    --beta-x: ${beta.position.x}%;
+    --gamma-x: ${gamma.position.x}%;
+    --rho-y: ${rho.position.y}%;
+    --beta-y: ${beta.position.y}%;
+    --gamma-y: ${gamma.position.y}%;
+    --rho-radius: ${rho.position.radius};
+    --beta-radius: ${beta.position.radius};
+    --gamma-radius: ${gamma.position.radius};
+    --rho-focus: ${rho.focus}%;
+    --beta-focus: ${beta.focus}%;
+    --gamma-focus: ${gamma.focus}%;
     --color-flux: hueSpin 30s linear infinite;
 }
 
-@property --rho-color { syntax: '<color>'; inherits: true; initial-value: ${Koala.rho.rgba()}; }
-@property --beta-color { syntax: '<color>'; inherits: true; initial-value: ${Koala.beta.rgba()}; }
-@property --gamma-color { syntax: '<color>'; inherits: true; initial-value: ${Koala.gamma.rgba()}; }
-@property --rho-x { syntax: '<percentage>'; inherits: true; initial-value: ${Koala.rho.position.x}%; }
-@property --beta-x { syntax: '<percentage>'; inherits: true; initial-value: ${Koala.beta.position.x}%; }
-@property --gamma-x { syntax: '<percentage>'; inherits: true; initial-value: ${Koala.gamma.position.x}%; }
-@property --rho-y { syntax: '<percentage>'; inherits: true; initial-value: ${Koala.rho.position.y}%; }
-@property --beta-y { syntax: '<percentage>'; inherits: true; initial-value: ${Koala.beta.position.y}%; }
-@property --gamma-y { syntax: '<percentage>'; inherits: true; initial-value: ${Koala.gamma.position.y}%; }
-@property --rho-radius { syntax: '<number>'; inherits: true; initial-value: ${Koala.rho.position.radius}; }
-@property --beta-radius { syntax: '<number>'; inherits: true; initial-value: ${Koala.beta.position.radius}; }
-@property --gamma-radius { syntax: '<number>'; inherits: true; initial-value: ${Koala.gamma.position.radius}; }
-@property --rho-focus { syntax: '<percentage>'; inherits: true; initial-value: ${Koala.rho.focus}%; }
-@property --beta-focus { syntax: '<percentage>'; inherits: true; initial-value: ${Koala.beta.focus}%; }
-@property --gamma-focus { syntax: '<percentage>'; inherits: true; initial-value: ${Koala.gamma.focus}%; }
+@property --rho-color { syntax: '<color>'; inherits: true; initial-value: ${rho.rgba()}; }
+@property --beta-color { syntax: '<color>'; inherits: true; initial-value: ${beta.rgba()}; }
+@property --gamma-color { syntax: '<color>'; inherits: true; initial-value: ${gamma.rgba()}; }
+@property --rho-x { syntax: '<percentage>'; inherits: true; initial-value: ${rho.position.x}%; }
+@property --beta-x { syntax: '<percentage>'; inherits: true; initial-value: ${beta.position.x}%; }
+@property --gamma-x { syntax: '<percentage>'; inherits: true; initial-value: ${gamma.position.x}%; }
+@property --rho-y { syntax: '<percentage>'; inherits: true; initial-value: ${rho.position.y}%; }
+@property --beta-y { syntax: '<percentage>'; inherits: true; initial-value: ${beta.position.y}%; }
+@property --gamma-y { syntax: '<percentage>'; inherits: true; initial-value: ${gamma.position.y}%; }
+@property --rho-radius { syntax: '<number>'; inherits: true; initial-value: ${rho.position.radius}; }
+@property --beta-radius { syntax: '<number>'; inherits: true; initial-value: ${beta.position.radius}; }
+@property --gamma-radius { syntax: '<number>'; inherits: true; initial-value: ${gamma.position.radius}; }
+@property --rho-focus { syntax: '<percentage>'; inherits: true; initial-value: ${rho.focus}%; }
+@property --beta-focus { syntax: '<percentage>'; inherits: true; initial-value: ${beta.focus}%; }
+@property --gamma-focus { syntax: '<percentage>'; inherits: true; initial-value: ${gamma.focus}%; }
 
 body {
     --primary-button: rgb(var(--primary));
@@ -147,8 +147,8 @@ body {
 }
 
 :root$DayTheme {
-    --paper: ${Koala.ink};
-    --ink: ${Koala.paper * 2};
+    --paper: $ink;
+    --ink: ${paper * 2};
 }
 
 body::before {
@@ -164,13 +164,13 @@ body::before {
     animation: var(--color-flux);
     will-change: filter;
     filter: hue-rotate(0deg);
-    
+        
     transition-property:
         --accent, --primary,
         --rho-color, --rho-x, --rho-y, --rho-radius, --rho-focus,
         --beta-color, --beta-x, --beta-y, --beta-radius, --beta-focus,
         --gamma-color, --gamma-x, --gamma-y, --gamma-radius, --gamma-focus;
-    transition-duration: 1.2s;
+    transition-duration: ${KoalaTheme.ThemeTransitionSeconds}s;
     transition-timing-function: ease;
 }
-"""
+""" }

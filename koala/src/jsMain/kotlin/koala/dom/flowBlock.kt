@@ -1,6 +1,7 @@
 package koala.dom
 
 import koala.css.Blur
+import koala.css.Dummy
 import koala.css.KoalaTheme
 import koala.css.Magic
 import koala.css.ModifierSet
@@ -32,7 +33,7 @@ fun <Value> ViewScope.flowBlock(
 ): HTMLDivElement {
     val magic = modifiers?.contains(Magic) ?: false
     val element = div {
-        addModifiers(FlowBlockKey.Class, modifiers)
+        addModifiers(modifiers, FlowBlockKey.Class, if (magic) Transitioning else null)
         config?.invoke(this)
     }
 
@@ -74,12 +75,12 @@ fun <Value> ViewScope.flowBlock(
                 launchJob?.cancel()
                 launchJob = launch("$name > transition") {
                     if (view != null) {
-                        element.modify(Transitioning).unmodifyAfterFrame(Reveal)
+                        element.modify(Dummy).unmodifyAfterFrame(Reveal)
                         delay(interval)
                     }
                     tryMountView(value)
                     delay(interval)
-                    element.unmodify(Transitioning)
+                    element.unmodify(Dummy)
                 }
             } else {
                 tryMountView(value)

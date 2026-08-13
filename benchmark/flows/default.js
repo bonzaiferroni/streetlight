@@ -3,7 +3,7 @@ const LOGO = '#app-overlay div.logo-shadow-box > div';
 const EVENT_TEXT = 'Swallow Hill Music';
 
 module.exports = {
-    benchmark: 'Theme Transition',
+    benchmark: 'Default',
     cache: 'cold',
     url: 'http://localhost:8080/',
     runs: 5,

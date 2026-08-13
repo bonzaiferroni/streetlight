@@ -22,6 +22,7 @@ data class KoalaTheme(
         const val ThemeId = "koala"
         const val MaxEnergy = 50
         const val MaxFocus = 99
+        val ThemeTransitionSeconds = 1.2
     }
 }
 

@@ -1,7 +1,6 @@
 package koala.core
 
 import koala.css.KoalaFun
-import koala.css.Transitioning
 import koala.dom.startViewTransition
 import kotlinx.browser.document
 import kotlinx.browser.window

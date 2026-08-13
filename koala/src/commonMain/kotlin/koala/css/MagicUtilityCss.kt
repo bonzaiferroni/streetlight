@@ -3,6 +3,7 @@ package koala.css
 // utilities
 val Magic = Class("magic")
 val Transitioning = Class("transitioning")
+val Dummy = Class("dummy")
 val Reveal = Class("reveal")
 val Hide = Class("hide")
 val Blur = Class("blur")
