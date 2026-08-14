@@ -12,62 +12,65 @@ import kotlin.uuid.Uuid
 class LayoutEditor(initialLayout: PageLayout) {
     private val state = storeOf(LayoutEditorState())
 
-    private val blocks = mutableMapOf<Uuid, BlockEditor>()
-    private val containers = mutableMapOf<Uuid, ContainerEditor>()
+    private val blocks = mutableMapOf<BlockId, BlockEditor>()
+    private val containers = mutableMapOf<ContainerId, ContainerEditor>()
 
     val movingBlockField = state.tapOf { it.movingBlockId }
 
-    val mainContainerId = createContainer(initialLayout, 0).id
+    val mainContainerId = createContainer(initialLayout, 0)
 
-    fun getBlock(blockId: Uuid) = blocks.getValue(blockId)
-    fun getContainer(containerId: Uuid) = containers.getValue(containerId)
+    fun getBlock(blockId: BlockId) = blocks.getValue(blockId)
+    fun getContainer(containerId: ContainerId) = containers.getValue(containerId)
 
-    fun addBlock(block: LayoutBlock, containerId: Uuid, index: Int) {
+    fun addBlock(block: LayoutBlock, containerId: ContainerId, index: Int) {
         val container = getContainer(containerId)
         val blockId = createBlock(block, container.depth)
         container.addBlock(blockId, index)
     }
 
-    fun addBlockAbove(blockId: Uuid, block: LayoutBlock) {
-        val container = getContainerWithBlock(blockId)
-        val index = container.blockIds.indexOf(blockId)
+    fun addBlockAbove(blockId: BlockId, block: LayoutBlock) {
+        val container = getParent(blockId)
+        val index = container.childIds.indexOf(blockId)
         addBlock(block, container.containerId, index)
     }
 
-    fun getContainerWithBlock(blockId: Uuid) = containers.firstNotNullOf {
-        if (it.value.blockIds.contains(blockId)) it.value else null
+    fun getParentOrNull(blockId: BlockId) = containers.firstNotNullOfOrNull {
+        if (it.value.childIds.contains(blockId)) it.value else null
     }
 
-    fun createContainer(blockId: Uuid, container: LayoutContainer): ContainerKey {
-        val parentContainer = getContainerWithBlock(blockId)
+    fun getParent(blockId: BlockId) = getParentOrNull(blockId) ?: error("parent container not found")
+
+    fun getParentOrNull(containerId: ContainerId) = blocks.firstNotNullOfOrNull {
+        if (it.value.childIds.contains(containerId)) it.value else null
+    }
+
+    fun getParent(containerId: ContainerId) = getParentOrNull(containerId) ?: error("parent block not found")
+
+    fun createContainer(blockId: BlockId, container: LayoutContainer): ContainerId {
+        val parentContainer = getParent(blockId)
         return createContainer(container, parentContainer.depth + 1)
     }
 
-    fun createContainer(container: LayoutContainer, depth: Int): ContainerKey {
-        val containerId = Uuid.random()
+    fun createContainer(container: LayoutContainer, depth: Int): ContainerId {
+        val containerId = ContainerId(Uuid.random())
         val blockIds = container.blocks.map { block ->
             createBlock(block, depth)
         }
         containers[containerId] = ContainerEditor(containerId, container.name, blockIds, depth, this)
-        return ContainerKey(container.name, containerId)
+        return containerId
     }
 
-    private fun createBlock(block: LayoutBlock, depth: Int): Uuid {
-        val blockId = Uuid.random()
+    private fun createBlock(block: LayoutBlock, depth: Int): BlockId {
+        val blockId = BlockId(Uuid.random())
         val containers = block.getContainers()
-        val containerKeys = containers?.map { subContainer ->
+        val childIds = containers?.map { subContainer ->
             createContainer(subContainer, depth + 1)
-        }
-        blocks[blockId] = BlockEditor(blockId, block, containerKeys, this)
+        } ?: emptyList()
+        blocks[blockId] = BlockEditor(blockId, block, childIds, this)
         return blockId
     }
 
-    fun buildLayout(): PageLayout? {
-        val blocks = buildContainer(mainContainerId).takeIf { it.isNotEmpty() } ?: return null
-        return PageLayout(blocks).takeIf { it != DefaultLayout.location }
-    }
-
-    fun startMove(blockId: Uuid) {
+    fun startMove(blockId: BlockId) {
         state.set { copy(movingBlockId = blockId) }
     }
 
@@ -75,21 +78,21 @@ class LayoutEditor(initialLayout: PageLayout) {
         state.set { copy(movingBlockId = null) }
     }
 
-    fun cutBlock(blockId: Uuid) {
-        val container = getContainerWithBlock(blockId)
+    fun cutBlock(blockId: BlockId) {
+        val container = getParent(blockId)
         container.removeBlock(blockId)
     }
 
-    fun finishMove(blockId: Uuid) {
+    fun finishMove(blockId: BlockId) {
         val movingBlockId = state.now.movingBlockId ?: error("moving blockId not found")
         cutBlock(movingBlockId)
-        val container = getContainerWithBlock(blockId)
-        val index = container.blockIds.indexOf(blockId)
+        val container = getParent(blockId)
+        val index = container.childIds.indexOf(blockId)
         container.addBlock(movingBlockId, index)
         state.set { copy(movingBlockId = null) }
     }
 
-    fun finishMoveToContainer(containerId: Uuid) {
+    fun finishMoveToContainer(containerId: ContainerId) {
         val movingBlockId = state.now.movingBlockId ?: error("moving blockId not found")
         cutBlock(movingBlockId)
         val container = getContainer(containerId)
@@ -98,26 +101,32 @@ class LayoutEditor(initialLayout: PageLayout) {
         state.set { copy(movingBlockId = null) }
     }
 
-    private fun buildContainer(containerId: Uuid): List<LayoutBlock> {
+    fun buildLayout(): PageLayout? {
+        val blocks = buildContainer(mainContainerId).takeIf { it.isNotEmpty() } ?: return null
+        return PageLayout(blocks).takeIf { it != DefaultLayout.location }
+    }
+
+    private fun buildContainer(containerId: ContainerId): List<LayoutBlock> {
         val container = getContainer(containerId)
 
-        return container.blockIds.mapNotNull { blockId ->
+        return container.childIds.mapNotNull { blockId ->
             buildBlock(blockId)
         }
     }
 
-    private fun buildBlock(blockId: Uuid): LayoutBlock? {
+    private fun buildBlock(blockId: BlockId): LayoutBlock? {
         val blockEditor = getBlock(blockId)
         val block = blockEditor.blockField.now
-        val containers = blockEditor.containerKeys?.map { key ->
-            ContainerDefinition(key.name, buildContainer(key.id))
+        val containers = blockEditor.childIds.map { containerId ->
+            val container = getContainer(containerId)
+            ContainerDefinition(container.name, buildContainer(containerId))
         }
         return buildBlock(block, containers)
     }
 }
 
 data class LayoutEditorState(
-    val movingBlockId: Uuid? = null,
+    val movingBlockId: BlockId? = null,
 )
 
 fun LayoutBlock.getContainers(): List<LayoutContainer>? = when (this) {
@@ -125,12 +134,10 @@ fun LayoutBlock.getContainers(): List<LayoutContainer>? = when (this) {
     else -> null
 }
 
-data class ContainerKey(
-    val name: String,
-    val id: Uuid,
-)
-
 data class ContainerDefinition(
     val name: String,
     val blocks: List<LayoutBlock>
 )
+
+value class ContainerId(val value: Uuid)
+value class BlockId(val value: Uuid)

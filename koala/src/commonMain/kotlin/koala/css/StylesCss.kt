@@ -34,7 +34,6 @@ body {
     font-family: var(--font-family);
     font-size: var(--paragraph-size);
     line-height: var(--paragraph-line-height);
-    background-color: var(--body-bg);
     color: var(--ink-fg);
     -webkit-font-smoothing: antialiased;
     transition: 

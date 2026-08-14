@@ -1,10 +1,13 @@
 .tabs-header {
-    background-color: rgba(var(--paper), 0.4);
+    background-color: var(--void-bg);
     display: flex;
     flex-wrap: wrap;
     gap: var(--unit-spacing);
     border-radius: 24px 24px 12px 12px;
     width: 100%;
+    text-transform: uppercase;
+    font-size: var(--text-small);
+    outline: var(--outline-low);
 }
 
 .tabs-button {

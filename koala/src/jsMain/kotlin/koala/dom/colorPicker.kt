@@ -32,14 +32,14 @@ fun ViewScope.colorPicker(
             type = InputType.color
 
             onInputFunction = {
-                val newColor = rgbOf((it.target as HTMLInputElement).value)
+                val newColor = rgbOfOrNull((it.target as HTMLInputElement).value)
                 if (newColor != null && newColor != currentColor) {
                     colorState.set(newColor)
                     display(newColor)
                 }
             }
         }
-        buttonElement = button(text, { inputElement.click() })
+        buttonElement = button(text, { inputElement.click() }, modify(Secondary))
     }
 
     display(colorState.now)

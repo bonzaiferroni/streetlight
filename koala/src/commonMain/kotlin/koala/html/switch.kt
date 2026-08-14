@@ -19,6 +19,7 @@ $Class {
     position: relative;
     display: inline-flex;
     align-items: center;
+    align-self: start;
 
     padding-right: 1rem;
     border-radius: 2rem;

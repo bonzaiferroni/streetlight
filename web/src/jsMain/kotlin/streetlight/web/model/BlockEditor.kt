@@ -8,19 +8,22 @@ import streetlight.model.data.LayoutBlock
 import streetlight.model.data.LayoutContainer
 import kotlin.time.Clock
 import kotlin.time.Instant
-import kotlin.uuid.Uuid
 
 class BlockEditor(
-    val blockId: Uuid,
+    val blockId: BlockId,
     block: LayoutBlock,
-    containerIds: List<ContainerKey>?,
+    containerIds: List<ContainerId>,
     val model: LayoutEditor,
 ) {
     private val state = storeOf(BlockState(block, containerIds))
     val blockField = state.mutableTapOf({ it.block }) { copy(block = it) }
     // val containerIdsField = state.mutableFieldOf({ it.containerKeys!! }) { copy(containerKeys = it) }
     val refreshField = state.tapOf { it.refreshAt }
-    val containerKeys get() = state.now.containerKeys
+    val childIds get() = state.now.childIds
+    val parent get() = model.getParent(blockId)
+    val parentId get() = parent.containerId
+    val index get() = parent.childIds.indexOf(blockId)
+    val depth get() = parent.depth
 
     inline fun <reified T : LayoutBlock, V> mutableFieldOf(
         crossinline getter: (T) -> V,
@@ -30,33 +33,36 @@ class BlockEditor(
         writeValue = { value -> (this as T).setter(value) }
     )
 
+    fun isChildOf(otherId: BlockId) = model.getBlock(otherId).childIds.any { it == parentId }
+
+    fun isNextSiblingOf(otherId: BlockId) = model.getParent(otherId).takeIf { it.containerId == parentId }?.let {
+        it.childIds.indexOf(otherId) + 1 == index
+    } ?: false
+
     fun addBlockAbove(block: LayoutBlock) {
         model.addBlockAbove(blockId, block)
     }
 
-    fun renameContainer(containerId: Uuid, name: String) {
-        state.set {
-            copy(
-                containerKeys = containerKeys?.map { if (it.id == containerId) it.copy(name = name) else it },
-                refreshAt = Clock.System.now()
-            )
-        }
+    fun renameContainer(containerId: ContainerId, name: String) {
+        val container = model.getContainer(containerId)
+        container.rename(name)
+        state.set { copy(refreshAt = Clock.System.now()) }
     }
 
     fun addContainer(container: LayoutContainer) {
         val key = model.createContainer(blockId, container)
         state.set {
             copy(
-                containerKeys = (containerKeys ?: emptyList()) + key,
+                childIds = this.childIds + key,
                 refreshAt = Clock.System.now()
             )
         }
     }
 
-    fun removeContainer(containerId: Uuid) {
+    fun removeContainer(containerId: ContainerId) {
         state.set {
             copy(
-                containerKeys = containerKeys?.filter { it.id != containerId },
+                childIds = childIds.filter { it != containerId },
                 refreshAt = Clock.System.now()
             )
         }
@@ -69,6 +75,6 @@ class BlockEditor(
 
 data class BlockState(
     val block: LayoutBlock,
-    val containerKeys: List<ContainerKey>?,
+    val childIds: List<ContainerId>,
     val refreshAt: Instant = Instant.DISTANT_PAST,
 )

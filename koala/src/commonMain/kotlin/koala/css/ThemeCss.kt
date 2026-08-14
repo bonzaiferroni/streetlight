@@ -46,18 +46,11 @@ val ThemeCss get() = with(Koala) { """
             
     --vignette-gradient: radial-gradient(ellipse at center, transparent 50%, rgba(0, 0, 0, 0.3) 100%);
     
-    --primary: $primary; 
-    --primary-fg: color-mix(in srgb, rgb(var(--primary)) 50%, rgb(var(--ink)));
-    --primary-bg: color-mix(in srgb, rgb(var(--primary)) 75%, rgb(var(--paper)));
-    --primary-button-day: color-mix(in srgb, var(--primary-button) 80%, black);
-    --primary-card-bg: color-mix(in srgb, rgba(var(--primary), .2) 50%, var(--card-bg));
-    
+    --primary: $primary;
     --secondary-button: var(--gray-bg);
     
-    --accent: $accent; /* 170, 57, 148; 255, 53, 221 */
-    --accent-fg: color-mix(in srgb, rgb(var(--accent)) 50%, rgb(var(--ink)));
-    --accent-bg: color-mix(in srgb, rgb(var(--accent)) 75%, rgb(var(--paper)));
-    --accent-button-day: color-mix(in srgb, var(--accent-button) 80%, black);
+    --accent: $accent;
+    
     
     --red: 255, 99, 132;
     --red-fg: color-mix(in srgb, rgb(var(--red)) 75%, rgb(var(--ink)));
@@ -138,12 +131,24 @@ val ThemeCss get() = with(Koala) { """
 @property --gamma-focus { syntax: '<percentage>'; inherits: true; initial-value: ${gamma.focus}%; }
 
 body {
+    background-color: var(--body-bg);
+
     --primary-button: rgb(var(--primary));
+    --primary-fg: color-mix(in srgb, rgb(var(--primary)) 50%, rgb(var(--ink)));
+    --primary-bg: color-mix(in srgb, rgb(var(--primary)) 75%, rgb(var(--paper)));
+    --primary-button-day: color-mix(in srgb, var(--primary-button) 80%, black);
+    --primary-card-bg: color-mix(in srgb, rgba(var(--primary), .2) 50%, var(--card-bg));
+    
     --accent-button: rgb(var(--accent));
+    --accent-fg: color-mix(in srgb, rgb(var(--accent)) 50%, rgb(var(--ink)));
+    --accent-bg: color-mix(in srgb, rgb(var(--accent)) 75%, rgb(var(--paper)));
+    --accent-button-day: color-mix(in srgb, var(--accent-button) 80%, black);
     
     --rho-bg: rgb(var(--rho-rgb));
     --beta-bg: rgb(var(--beta-rgb));
     --gamma-bg: rgb(var(--gamma-rgb));
+    
+    
 }
 
 :root$DayTheme {

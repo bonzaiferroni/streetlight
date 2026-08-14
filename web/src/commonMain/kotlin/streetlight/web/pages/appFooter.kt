@@ -64,5 +64,5 @@ private fun sourceUrlOf(path: String) = "https://github.com/bonzaiferroni/street
 
 val prayers get() = listOf(
     "May we build a world of faithful giants.",
-    "It all, theoretically, works.",
+    // "It all, theoretically, works.",
 )

@@ -11,17 +11,7 @@ import koala.html.tab
 import koala.html.tabs
 import koala.html.textBlock
 import kotlinx.html.FlowContent
-import streetlight.model.data.DefaultLayout
-import streetlight.model.data.EventsBlock
-import streetlight.model.data.FooterBlock
-import streetlight.model.data.HeaderBlock
-import streetlight.model.data.ImageBlock
-import streetlight.model.data.LayoutBlock
-import streetlight.model.data.LocationContent
-import streetlight.model.data.MapBlock
-import streetlight.model.data.RichTextBlock
-import streetlight.model.data.TabsBlock
-import streetlight.model.data.TextBlock
+import streetlight.model.data.*
 import streetlight.model.ui.LocationUpdateRoute
 import streetlight.web.pages.appFooter
 import streetlight.web.ui.BodyStyle
@@ -49,7 +39,6 @@ fun FlowContent.buildBlock(block: LayoutBlock, content: LocationContent) {
         is TabsBlock -> buildTabs(block, content)
         is TextBlock -> buildText(block)
         is RichTextBlock -> buildRichText(block)
-        is FooterBlock -> buildFooter()
     }
 }
 

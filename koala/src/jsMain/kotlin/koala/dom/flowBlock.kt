@@ -33,7 +33,7 @@ fun <Value> ViewScope.flowBlock(
 ): HTMLDivElement {
     val magic = modifiers?.contains(Magic) ?: false
     val element = div {
-        addModifiers(modifiers, FlowBlockKey.Class, if (magic) Transitioning else null)
+        addModifiers(modifiers, FlowBlockKey.Class)
         config?.invoke(this)
     }
 
@@ -75,12 +75,12 @@ fun <Value> ViewScope.flowBlock(
                 launchJob?.cancel()
                 launchJob = launch("$name > transition") {
                     if (view != null) {
-                        element.modify(Dummy).unmodifyAfterFrame(Reveal)
+                        element.modify(Transitioning).unmodifyAfterFrame(Reveal)
                         delay(interval)
                     }
                     tryMountView(value)
                     delay(interval)
-                    element.unmodify(Dummy)
+                    element.unmodify(Transitioning)
                 }
             } else {
                 tryMountView(value)

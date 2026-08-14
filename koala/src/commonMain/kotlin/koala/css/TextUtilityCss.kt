@@ -13,8 +13,8 @@ val TextUtilityCss
 
 val Bold = utilityOf("bold", "font-weight: 600")
 val Italic = utilityOf("italic", "font-style: italic")
-val TextSmall = utilityOf("text-small", "font-size: .9rem !important")
-val TextLarge = utilityOf("text-large", "font-size: 1.2rem !important")
+val TextSmall = utilityOf("text-small", "font-size: var(--text-small) !important")
+val TextLarge = utilityOf("text-large", "font-size: var(--text-large) !important")
 val TextThin = utilityOf("text-thin", "font-weight: 300")
 val GrowText = utilityOf("grow-text", "font-size: 1.1em")
 val WhiteSpaceNormal = utilityOf("white-space-normal", "white-space: normal")

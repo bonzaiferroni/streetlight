@@ -10,17 +10,10 @@ import koala.html.Id
 import koala.html.setPopoverTarget
 import koala.html.spacer
 import kotlinx.html.BUTTON
-import streetlight.model.data.EventsBlock
-import streetlight.model.data.HeaderBlock
-import streetlight.model.data.ImageBlock
 import streetlight.model.data.LocationContent
-import streetlight.model.data.MapBlock
-import streetlight.model.data.RichTextBlock
-import streetlight.model.data.TabContent
-import streetlight.model.data.TabsBlock
-import streetlight.model.data.TextBlock
 import streetlight.web.model.BlockEditor
 import streetlight.web.model.ContainerEditor
+import streetlight.web.model.ContainerId
 import streetlight.web.model.LayoutEditor
 import kotlin.uuid.Uuid
 
@@ -28,10 +21,10 @@ fun ViewScope.layoutBuilder(model: LayoutEditor, content: LocationContent) {
     containerBuilder(model, model.mainContainerId, content)
 }
 
-fun ViewScope.containerBuilder(model: LayoutEditor, containerId: Uuid, content: LocationContent) {
+fun ViewScope.containerBuilder(model: LayoutEditor, containerId: ContainerId, content: LocationContent) {
     val editor = model.getContainer(containerId)
     flowBlock(editor.blockIdsField) { blockIds ->
-        column(modify(BorderRadius1, if (editor.depth > 0) ZenBg else null)) {
+        column(modify(if (editor.depth > 0) modify(ZenBg, MoonShadow, Padding1) else null, BorderRadius1)) {
             blockIds.forEach { blockId ->
                 blockBuilder(model, blockId, content)
             }
@@ -56,21 +49,24 @@ fun ViewScope.editorRow(
     onClick: (() -> Unit)?,
     configButton: BUTTON.() -> Unit = { }
 ) {
-    flowBlock(editor.model.movingBlockField, modify(Magic, Scale)) { movingBlockId ->
+    flowBlock(editor.model.movingBlockField, modify(Magic, Scale, Height5)) { movingBlockId ->
         when (movingBlockId) {
             null -> {
-                row(modify(AlignItemsCenter)) {
-                    blockMenu(BlockMenu.categories, { editor.addBlockAbove(it)} )
-                    spacer(modify(Flex1))
-                    button({
-                        editor.model.startMove(editor.blockId)
-                    }) {
-                        textBlock("move", modify(TextTransformUppercase, TextSmall, Bold, EditorFg))
+                box {
+                    row(modify(AlignItemsCenter, PaddingX1)) {
+                        blockMenu(editor.depth, { editor.addBlockAbove(it)} )
+                        spacer(modify(Flex1))
+                        button({
+                            editor.model.startMove(editor.blockId)
+                        }, modify(Padding1)) {
+                            textBlock("move", modify(TextTransformUppercase, TextSmall, Bold, EditorFg))
+                        }
                     }
-                    button("edit $name", onClick, modify(Zen, EditorBg), block = configButton)
+                    button("edit $name", onClick, modify(Zen, EditorBg, JustifySelfCenter), block = configButton)
                 }
             }
             else -> {
+                if (editor.isNextSiblingOf(movingBlockId) || editor.isChildOf(movingBlockId)) return@flowBlock
                 val isOriginalLocation = editor.model.movingBlockField.now == editor.blockId
                 val label = if (isOriginalLocation) "cancel move" else "move here"
                 button(label, {
@@ -85,36 +81,21 @@ fun ViewScope.editorRow(
 fun ViewScope.lastEditorRow(
     editor: ContainerEditor
 ) {
-    flowBlock(editor.model.movingBlockField, modify(Magic, Scale)) { movingBlockId ->
+    flowBlock(editor.model.movingBlockField, modify(Magic, Scale, Height5)) { movingBlockId ->
         when (movingBlockId) {
             null -> {
                 row(modify(AlignItemsCenter)) {
-                    blockMenu(BlockMenu.categories, { editor.createBlock(it)} )
+                    blockMenu(editor.depth, { editor.createBlock(it)} )
                 }
             }
             else -> {
+                val blockEditor = editor.model.getBlock(movingBlockId)
+                val isNextPosition = blockEditor.parentId == editor.containerId && blockEditor.index + 1 == editor.childIds.size
+                if (editor.isChildOf(movingBlockId) || isNextPosition) return@flowBlock
                 button("move here", {
                     editor.model.finishMoveToContainer(editor.containerId)
                 }, modify(Zen, EditorBg, OutlineDashed2Px, Width100P))
             }
         }
     }
-}
-
-object BlockMenu {
-    val categories = mapOf(
-        "basic" to listOf(
-            LabeledItem("text", TextBlock("")),
-            LabeledItem("image", ImageBlock(Image.Empty)),
-            LabeledItem("rich text", RichTextBlock(Markdown.Empty)),
-        ),
-        "containers" to listOf(
-            LabeledItem("tabs", TabsBlock(listOf(TabContent("My Tab", emptyList()))))
-        ),
-        "content" to listOf(
-            LabeledItem("header", HeaderBlock),
-            LabeledItem("events", EventsBlock),
-            LabeledItem("map", MapBlock),
-        )
-    )
 }
