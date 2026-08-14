@@ -1,69 +1,57 @@
 package koala.html
 
-import koala.css.Class
+import koala.css.*
 
 object FlowBlockKey {
     val Class = Class("flow-block")
 }
 
 // language="CSS"
-val FlowBlockCss get() = """
-.flow-block.transitioning {
+val FlowBlockCss get() = with(FlowBlockKey) { """
+$Class$Transitioning {
     opacity: 0;
     transition: var(--transition-opacity);
     pointer-events: none;
-    
-    &.blur {
-        transition: var(--transition-opacity), var(--transition-filter);
+
+    &$Reveal {
+        opacity: 1;
+        pointer-events: auto;
     }
     
-    &.slide-down,
-    &.slide-up,
-    &.slide-right,
-    &.slide-left {
+    &$SlideDown, &$SlideUp, &$SlideRight, &$SlideLeft {
         transition: var(--transition-opacity), var(--transition-transform);
         
-        &.blur {
+        &$Blur {
             transition: var(--transition-opacity), var(--transition-transform), var(--transition-filter);
+        }
+        
+        &$Reveal {
+            transform: translate(0px, 0px);
+        }
+    }
+    
+    &$SlideUp    { transform: var(--slide-up-initial); }
+    &$SlideDown  { transform: var(--slide-down-initial); }
+    &$SlideLeft  { transform: var(--slide-left-initial); }
+    &$SlideRight { transform: var(--slide-right-initial); }
+    
+    &$Scale {
+        transition: var(--transition-opacity), var(--transition-transform-bounce);
+        transform: scale(${MagicStyle.InitialScale});
+        
+        &$Reveal {
+            transform: scale(1);            
+        }
+    }
+    
+    &$Blur {
+        transition: var(--transition-opacity), var(--transition-filter);
+        filter: var(--magic-blur);
+    
+        &$Reveal {
+            filter: blur(0px);
         }
     }
 }
 
-.flow-block.transitioning.reveal {
-    opacity: 1;
-    pointer-events: auto;
-}
-
-.flow-block.transitioning.blur {
-    filter: var(--magic-blur);
-}
-
-.flow-block.transitioning.blur.reveal {
-    filter: blur(0px);
-}
-
-.flow-block.transitioning.slide-left {
-    transform: var(--slide-left-initial);
-}
-
-.flow-block.transitioning.slide-left.reveal {
-    transform: translate(0px, 0px);
-}
-
-.flow-block.transitioning.slide-up {
-    transform: var(--slide-up-initial);
-}
-
-.flow-block.transitioning.slide-up.reveal {
-    transform: translate(0px, 0px);
-}
-
-.flow-block.transitioning.slide-right {
-    transform: var(--slide-right-initial);
-}
-
-.flow-block.transitioning.slide-right.reveal {
-    transform: translate(0px, 0px);
-}
-
-"""
+"""}

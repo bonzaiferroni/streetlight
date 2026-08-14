@@ -36,7 +36,8 @@ val ThemeCss get() = with(Koala) { """
     --ink-shadow: 0 1px 2px rgba(var(--paper), 0.8), 0 0 6px rgba(var(--paper), 0.6);
     --moon-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.05), 0 0 12px 12px rgba(0, 0, 0, 0.05);
     --moon-shadow-inset: 0 0 4px 4px rgba(0, 0, 0, 0.05) inset, 0 0 8px 8px rgba(0, 0, 0, 0.02) inset;
-    --moon-shadow-text: 0 0 12px rgba(0, 0, 0, 0.25);
+    --moon-shadow-text: 0px 2px 4px var(--paper-bg), 0px 2px 8px var(--paper-bg);
+    --moon-drop-shadow: drop-shadow(0px 4px 4px var(--paper-bg));
     --btn-text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8), 0 0 6px rgba(0, 0, 0, 0.6);
     --zen-button-shadow: 0 0 20px 5px rgba(0, 0, 0, 0.1) inset;
     --vignette-shadow: 0 0 100px rgba(0, 0, 0, 0.4) inset;
@@ -134,13 +135,13 @@ body {
     background-color: var(--body-bg);
 
     --primary-button: rgb(var(--primary));
-    --primary-fg: color-mix(in srgb, rgb(var(--primary)) 50%, rgb(var(--ink)));
+    --primary-fg: color-mix(in srgb, rgb(var(--primary)) 75%, rgb(var(--ink)));
     --primary-bg: color-mix(in srgb, rgb(var(--primary)) 75%, rgb(var(--paper)));
     --primary-button-day: color-mix(in srgb, var(--primary-button) 80%, black);
     --primary-card-bg: color-mix(in srgb, rgba(var(--primary), .2) 50%, var(--card-bg));
     
     --accent-button: rgb(var(--accent));
-    --accent-fg: color-mix(in srgb, rgb(var(--accent)) 50%, rgb(var(--ink)));
+    --accent-fg: color-mix(in srgb, rgb(var(--accent)) 75%, rgb(var(--ink)));
     --accent-bg: color-mix(in srgb, rgb(var(--accent)) 75%, rgb(var(--paper)));
     --accent-button-day: color-mix(in srgb, var(--accent-button) 80%, black);
     
@@ -163,9 +164,27 @@ body::before {
     pointer-events: none;
     z-index: -1;
     background:
-        radial-gradient(circle calc(hypot(100vw, 100vh) * var(--rho-radius) / 100) at var(--rho-x) var(--rho-y), var(--rho-color) var(--rho-focus), transparent 100%),
-        radial-gradient(circle calc(hypot(100vw, 100vh) * var(--beta-radius) / 100) at var(--beta-x) var(--beta-y), var(--beta-color) var(--beta-focus), transparent 100%),
-        radial-gradient(circle calc(hypot(100vw, 100vh) * var(--gamma-radius) / 100) at var(--gamma-x) var(--gamma-y), var(--gamma-color) var(--gamma-focus), transparent 100%);
+    radial-gradient(circle calc(hypot(100vw, 100vh) * var(--rho-radius) / 100) at var(--rho-x) var(--rho-y),
+        var(--rho-color) var(--rho-focus),
+        color-mix(in oklab, var(--rho-color), transparent 45%) calc(var(--rho-focus) + (100% - var(--rho-focus)) * 0.30),
+        color-mix(in oklab, var(--rho-color), transparent 72%) calc(var(--rho-focus) + (100% - var(--rho-focus)) * 0.55),
+        color-mix(in oklab, var(--rho-color), transparent 88%) calc(var(--rho-focus) + (100% - var(--rho-focus)) * 0.75),
+        color-mix(in oklab, var(--rho-color), transparent 96%) calc(var(--rho-focus) + (100% - var(--rho-focus)) * 0.90),
+        transparent 100%),
+    radial-gradient(circle calc(hypot(100vw, 100vh) * var(--beta-radius) / 100) at var(--beta-x) var(--beta-y),
+        var(--beta-color) var(--beta-focus),
+        color-mix(in oklab, var(--beta-color), transparent 45%) calc(var(--beta-focus) + (100% - var(--beta-focus)) * 0.30),
+        color-mix(in oklab, var(--beta-color), transparent 72%) calc(var(--beta-focus) + (100% - var(--beta-focus)) * 0.55),
+        color-mix(in oklab, var(--beta-color), transparent 88%) calc(var(--beta-focus) + (100% - var(--beta-focus)) * 0.75),
+        color-mix(in oklab, var(--beta-color), transparent 96%) calc(var(--beta-focus) + (100% - var(--beta-focus)) * 0.90),
+        transparent 100%),
+    radial-gradient(circle calc(hypot(100vw, 100vh) * var(--gamma-radius) / 100) at var(--gamma-x) var(--gamma-y),
+        var(--gamma-color) var(--gamma-focus),
+        color-mix(in oklab, var(--gamma-color), transparent 45%) calc(var(--gamma-focus) + (100% - var(--gamma-focus)) * 0.30),
+        color-mix(in oklab, var(--gamma-color), transparent 72%) calc(var(--gamma-focus) + (100% - var(--gamma-focus)) * 0.55),
+        color-mix(in oklab, var(--gamma-color), transparent 88%) calc(var(--gamma-focus) + (100% - var(--gamma-focus)) * 0.75),
+        color-mix(in oklab, var(--gamma-color), transparent 96%) calc(var(--gamma-focus) + (100% - var(--gamma-focus)) * 0.90),
+        transparent 100%);
     animation: var(--color-flux);
     will-change: filter;
     filter: hue-rotate(0deg);
@@ -176,6 +195,6 @@ body::before {
         --beta-color, --beta-x, --beta-y, --beta-radius, --beta-focus,
         --gamma-color, --gamma-x, --gamma-y, --gamma-radius, --gamma-focus;
     transition-duration: ${KoalaTheme.ThemeTransitionSeconds}s;
-    transition-timing-function: ease;
+    transition-timing-function: var(--magic-cubic-bounce);
 }
 """ }

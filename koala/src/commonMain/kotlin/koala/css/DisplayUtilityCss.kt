@@ -6,8 +6,6 @@ val DisplayUtilityCss
         DisplayNone, VisibilityHidden,
         // Opacity
         Opacity0, Opacity1, OpacityHigh, OpacityHalf, OpacityLow, OpacityGhost, Dim, NoDim,
-        // Animation
-        GlowShadow, GlowBackground, SpinLoop,
         // Shape
         CircleShape, CircleClip,
         // Border Radius
@@ -26,7 +24,7 @@ val DisplayUtilityCss
         // Transform
         FlipX, FlipY,
         // Shadow
-        MoonShadow, MoonShadowText, MoonShadowInset,
+        MoonShadow, MoonShadowText, MoonShadowInset, MoonDropShadow,
         // Theme
         DayTheme,
         // Overlays
@@ -56,11 +54,11 @@ val Dim = utilityOf("dim", "color: rgba(var(--ink), 0.6)")
 val NoDim = utilityOf("no-dim", "color: rgb(var(--ink)) !important")
 
 // Glow
-val GlowShadow = CssUtility("glow-shadow")
-val AntiShadow = CssUtility("anti-shadow")
-val GlowBackground = CssUtility("glow-background")
-val SpinLoop = CssUtility("spin-loop")
-val FadeLoop = CssUtility("fade-loop")
+val GlowShadow = Class("glow-shadow")
+val AntiShadow = Class("anti-shadow")
+val GlowBackground = Class("glow-background")
+val SpinLoop = Class("spin-loop")
+val FadeLoop = Class("fade-loop")
 
 // Shape
 val CircleShape = utilityOf("circle-shape", "border-radius: 50%", "overflow: hidden", "border: 3px solid #b4bd7d")
@@ -147,6 +145,7 @@ val FlipY = utilityOf("flip-y", "transform: scaleY(-1)")
 val MoonShadow = utilityOf("moon-shadow", "box-shadow: var(--moon-shadow)")
 val MoonShadowText = utilityOf("moon-shadow-text", "text-shadow: var(--moon-shadow-text)")
 val MoonShadowInset = utilityOf("moon-shadow-inset", "box-shadow: var(--moon-shadow-inset)")
+val MoonDropShadow = utilityOf("moon-drop-shadow", "filter: var(--moon-drop-shadow)")
 
 // Button
 val ButtonPadding = utilityOf("btn-padding", "padding: var(--btn-padding)")

@@ -3,6 +3,8 @@ package streetlight.web.ui
 import koala.css.Blur
 import koala.css.FocusTarget
 import koala.css.Magic
+import koala.css.Scale
+import koala.css.SlideUp
 import koala.css.modify
 import koala.dom.RouteScope
 import koala.dom.ViewScope

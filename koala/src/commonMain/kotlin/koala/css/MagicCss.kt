@@ -1,11 +1,21 @@
+package koala.css
+
+object MagicStyle {
+    const val Interval = 222
+    const val InitialScale = .8
+}
+
+// language="CSS"
+val MagicCss get() = with (MagicStyle) { """
 :root {
-    --magic-interval: 222ms;
+    --magic-interval: ${Interval}ms;
     --magic-easing: ease-in-out;
     --magic-cubic-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
     --magic-blur: blur(6px);
     --slide-left-initial: translate(20px, 0px);
     --slide-right-initial: translate(-20px, 0px);
     --slide-up-initial: translate(0px, 20px);
+    --slide-down-initial: translate(0px, -20px);
     --glow-shadow-infinite: glow-shadow 9s infinite linear;
     --anti-shadow-infinite: anti-shadow 9s infinite linear;
     --glow-background-infinite: glow-background 10s infinite linear;
@@ -254,7 +264,7 @@
     transition: var(--transition-opacity), var(--transition-transform-bounce);
 
     @starting-style {
-        transform: scale(.8);
+        transform: scale($InitialScale);
     }
 }
 
@@ -295,7 +305,7 @@
 
 .scale-out {
     transition: var(--transition-transform);
-    transform: scale(0);
+    transform: scale($InitialScale);
 
     @starting-style {
         transform: scale(1);
@@ -303,10 +313,13 @@
 }
 
 .scale-in {
-    transition: var(--transition-transform);
+    transition: var(--transition-transform-bounce);
     transform: scale(1);
 
     @starting-style {
-        transform: scale(0);
+        transform: scale($InitialScale);
     }
+}
+ 
+"""
 }

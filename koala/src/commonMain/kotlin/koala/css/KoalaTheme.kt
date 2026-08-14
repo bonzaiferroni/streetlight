@@ -10,7 +10,7 @@ data class KoalaTheme(
     val bg: Rgb = Rgb(9, 13, 13),
     val fg: Rgb = Rgb(245, 246, 246),
     val void: Rgb = Rgb(24, 31, 31),
-    val accent: Rgb = rgbOf("#f22867"),  // Rgb(200, 87, 178)
+    val accent: Rgb = rgbOf("#EC2E6A"),  // Rgb(200, 87, 178)
     val primary: Rgb = rgbOf("#1abcc8"), // Rgb(58, 158, 200)
 
     val rho: Glow = Glow(Rgb(255, 99, 132), GlowPosition(18, 22, 39), 50, 0),
@@ -18,8 +18,8 @@ data class KoalaTheme(
     val gamma: Glow = Glow(Rgb(88, 255, 188), GlowPosition(50, 65, 36), 40, 0),
 ) {
     companion object {
-        const val MagicInterval = 222
         const val ThemeId = "koala"
+        const val MaxRadius = 200
         const val MaxEnergy = 50
         const val MaxFocus = 99
         val ThemeTransitionSeconds = 1.2
@@ -51,12 +51,12 @@ object KoalaStyle {
 
 @Serializable
 data class GlowPosition(
-    val x: Int, // 0-100
+    val x: Int, // 0-100% of viewport
     val y: Int,
-    val radius: Int = 90 // % of viewport width
+    val radius: Int = 90 //
 ) {
     override fun toString() =
-        "circle ${radius.coerceIn(0, 100)}vw at ${x.coerceIn(0, 100)}% ${y.coerceIn(0, 100)}%"
+        "circle ${radius.coerceIn(0, 200)}vw at ${x.coerceIn(0, 200)}% ${y.coerceIn(0, 200)}%"
 }
 
 @Serializable

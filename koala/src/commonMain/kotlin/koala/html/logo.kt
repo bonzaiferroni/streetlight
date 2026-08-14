@@ -1,6 +1,8 @@
 package koala.html
 
 import koala.SvgFile
+import koala.css.Accent
+import koala.css.AccentFg
 import koala.css.AlignSelfCenter
 import koala.css.AntiShadow
 import koala.css.Class
@@ -8,6 +10,8 @@ import koala.css.GlowBackground
 import koala.css.GlowShadow
 import koala.css.Height5
 import koala.css.ModifierSet
+import koala.css.MoonDropShadow
+import koala.css.PrimaryFg
 import koala.css.Property
 import koala.css.modify
 import koala.css.setStyle
@@ -16,10 +20,13 @@ import kotlinx.html.FlowContent
 fun FlowContent.logo(
     mod: ModifierSet? = null
 ) {
-    div(modify(mod, Class, AntiShadow)) {
+    div(modify(mod, Class, MoonDropShadow)) {
         setAriaLabel("Streetlight Logo")
-        div(modify(LogoIcon)) {
-            setStyle(Property.MaskUrl.to(SvgFile.LogoText))
+        box(modify(LogoIcon, AccentFg)) {
+            setStyle(Property.MaskUrl.to(SvgFile.LogoTextStreet))
+        }
+        box(modify(LogoIcon, PrimaryFg)) {
+            setStyle(Property.MaskUrl.to(SvgFile.LogoTextLight))
         }
         div(modify(ShadowBox, GlowShadow)) {
             div(modify(LogoIcon, GlowBackground)) {

@@ -21,7 +21,6 @@ object CssFile : FileSet<Css>() {
     val Typography = add("typography.css")
     val Button = add("button.css")
     val Layout = add("layout.css")
-    val Magic = add("magic.css")
     val Tabs = add("tabs.css")
     val GeoMap = add("geo-map.css")
     // val Sandbox = add("sandbox.css")

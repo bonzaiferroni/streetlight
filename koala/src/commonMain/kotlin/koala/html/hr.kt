@@ -1,5 +1,6 @@
 package koala.html
 
+import koala.css.Class
 import koala.css.ModifierSet
 import koala.css.addModifiers
 import kotlinx.html.FlowContent
@@ -15,3 +16,4 @@ fun FlowContent.hr(
         block()
     }
 }
+

@@ -51,7 +51,7 @@ fun ViewScope.glowConfig(name: String, state: MutableTap<Glow>) {
 
     row(modify(FlexItems1)) {
         colorPicker(name, colorState)
-        slider(SvgFile.Ruler, radiusState)
+        slider(SvgFile.Ruler, radiusState, (0..KoalaTheme.MaxRadius))
         slider(SvgFile.Bulb, energyState, (0..KoalaTheme.MaxEnergy))
         slider(SvgFile.Aperture, focusState, (0..KoalaTheme.MaxFocus))
     }

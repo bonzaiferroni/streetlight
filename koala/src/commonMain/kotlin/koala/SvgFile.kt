@@ -55,6 +55,8 @@ object SvgFile : FileSet<Svg>() {
     val LoaderSmall = add("loader-small.svg")
     val LogoFlame = add("logo-flame.svg")
     val LogoText = add("logo-text.svg")
+    val LogoTextStreet = add("logo-text-street.svg")
+    val LogoTextLight = add("logo-text-light.svg")
     val Magic = add("magic.svg")
     val MapPinOutline = add("map-pin-outline.svg")
     val MapWithPin = add("map-pin.svg")

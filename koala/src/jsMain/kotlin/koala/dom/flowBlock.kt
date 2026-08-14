@@ -4,6 +4,7 @@ import koala.css.Blur
 import koala.css.Dummy
 import koala.css.KoalaTheme
 import koala.css.Magic
+import koala.css.MagicStyle
 import koala.css.ModifierSet
 import koala.css.Reveal
 import koala.css.SlideLeft
@@ -71,7 +72,7 @@ fun <Value> ViewScope.flowBlock(
             view?.dispose()
 
             if (magic) {
-                val interval = KoalaTheme.MagicInterval.milliseconds
+                val interval = MagicStyle.Interval.milliseconds
                 launchJob?.cancel()
                 launchJob = launch("$name > transition") {
                     if (view != null) {

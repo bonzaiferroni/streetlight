@@ -22,6 +22,8 @@ fun FlowContent.locationShell(
         setAttribute(Attribute.RoutePath, routeNow.toRelativePath())
         buildLayout(content)
 
+        appFooter()
+
         val adminRoute = content.takeIf { it.canEdit }?.let { LocationConfigRoute(location.locationId) }
         routeMenu(location.name ?: "Location", routeNow, listOf(routeNow, adminRoute))
     }
