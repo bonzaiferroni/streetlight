@@ -33,3 +33,11 @@ JSON input: .....ime": "18:30",
   "startTime": "18:30",
   "url": "https://swallowhillmusic.org/events/gracepotterwithemilybrimlow/sandbox.html?_gl=1*10g089l*_ga*MTE1NjY0MDU0LjE3MTg3MjQzNzY.*_ga_S036720D23*MTcxODcyNDM3Ni4xLjEuMTcxODcyNDQxMC4wLjAuMA..#calendar.html?_gl=1*10g089l*_ga*MTE1NjY0MDU0LjE3MTg3MjQzNzY.*_ga_S036720D23*MTcxODcyNDM3Ni4xLjEuMTcxODcyNDQxM...
 
+2026-08-15:
+e: Incremental compilation failed: The following FqNames can't be derived from DirtyData.dirtyLookupSymbols: kampfire.model.ImageSize.
+DirtyData = DirtyData(dirtyLookupSymbols=[LookupSymbol(name=image, scope=koala.html), LookupSymbol(name=configureImage, scope=koala.html), LookupSymbol(name=<SAM-CONSTRUCTOR>, scope=kampfire.model.ImageSize.Companion), LookupSymbol(name=<SAM-CONSTRUCTOR>, scope=kampfire.model.ImageSize), LookupSymbol(name=<SAM-CONSTRUCTOR>, scope=koala.html), LookupSymbol(name=All, scope=kampfire.model.ImageSize.Companion), LookupSymbol(name=Companion, scope=kampfire.model.ImageSize)], dirtyClassesFqNames=[koala.html, kampfire.model.ImageSize, kampfire.model.ImageSize.Companion], dirtyClassesFqNamesForceRecompile=[])
+java.lang.IllegalStateException: The following FqNames can't be derived from DirtyData.dirtyLookupSymbols: kampfire.model.ImageSize.
+DirtyData = DirtyData(dirtyLookupSymbols=[LookupSymbol(name=image, scope=koala.html), LookupSymbol(name=configureImage, scope=koala.html), LookupSymbol(name=<SAM-CONSTRUCTOR>, scope=kampfire.model.ImageSize.Companion), LookupSymbol(name=<SAM-CONSTRUCTOR>, scope=kampfire.model.ImageSize), LookupSymbol(name=<SAM-CONSTRUCTOR>, scope=koala.html), LookupSymbol(name=All, scope=kampfire.model.ImageSize.Companion), LookupSymbol(name=Companion, scope=kampfire.model.ImageSize)], dirtyClassesFqNames=[koala.html, kampfire.model.ImageSize, kampfire.model.ImageSize.Companion], dirtyClassesFqNamesForceRecompile=[])
+	at org.jetbrains.kotlin.incremental.classpathDiff.ClasspathChangesComputer.toProgramSymbols(ClasspathChangesComputer.kt:362)
+	at org.jetbrains.kotlin.incremental.classpathDiff.ClasspathChangesComputer.computeFineGrainedKotlinClassChanges(ClasspathChangesComputer.kt:262)
+	at org.jetbrains.kotlin.incremental.classpathDiff.ClasspathChangesComputer.computeKotlinClassChanges(ClasspathChangesComputer.kt:162)

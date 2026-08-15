@@ -21,7 +21,7 @@ class ImageEditor(
     // val imageField = state.mutableFieldOf({ it.image }) { copy(image = it) }
 
     suspend fun finalizeImage(messenger: Messenger? = null) {
-        val image = uploadImage(imageField.now?.url, messenger, api)?.toImage() ?: return
+        val image = uploadImage(imageField.now?.url, messenger, api) ?: return
         imageField.set(image)
     }
 }
@@ -30,7 +30,7 @@ data class ImageEditorState(
     val image: Image?,
 )
 
-suspend fun uploadImage(url: Url?, messenger: Messenger?, api: ApiClient): Url? {
+suspend fun uploadImage(url: Url?, messenger: Messenger?, api: ApiClient): Image? {
     val url = url?.takeIf { it.isBlob } ?: return null
     println("uploading image: $url")
     messenger?.deliver(UIMessage("Uploading image...", UIMessageType.Working))

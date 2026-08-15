@@ -2,6 +2,7 @@ package streetlight.web.model
 
 import kampfire.model.Messenger
 import koala.Image
+import koala.merge
 import koala.model.tapOf
 import koala.model.storeOf
 import streetlight.model.data.DefaultLayout
@@ -141,8 +142,8 @@ class LayoutEditor(
     private suspend fun processBlock(block: LayoutBlock, messenger: Messenger) = when (block) {
         is ImageBlock -> {
             block.image?.let { image ->
-                uploadImage(image.url, messenger, api)?.let { url ->
-                    block.copy(image = image.copy(url = url))
+                uploadImage(image.url, messenger, api)?.let { storedImage ->
+                    block.copy(image = storedImage.merge(image))
                 }
             } ?: block
         }

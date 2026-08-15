@@ -7,6 +7,7 @@ import koala.html.column
 import koala.html.geoMapMount
 import koala.html.image
 import koala.html.markdown
+import koala.html.metaImage
 import koala.html.tab
 import koala.html.tabs
 import koala.html.textBlock
@@ -59,7 +60,7 @@ fun FlowContent.renderHeader(content: LocationContent) {
 }
 
 fun FlowContent.renderImage(block: ImageBlock) {
-    image(block.image)
+    metaImage(block.image)
 }
 
 fun FlowContent.renderMap(geoPoint: GeoPoint) {

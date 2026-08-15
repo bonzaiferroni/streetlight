@@ -13,6 +13,7 @@ import streetlight.model.data.LocationContent
 import streetlight.model.data.PageDesign
 import streetlight.model.data.toEdit
 import streetlight.model.ui.LocationConfigRoute
+import streetlight.web.layouts.route
 import streetlight.web.model.LayoutEditor
 import streetlight.web.model.ThemeEditor
 import streetlight.web.shells.cardOf
@@ -43,7 +44,7 @@ fun ViewScope.viewLocationConfig(
                 heading3("configure", modify(TextUppercase, OpacityHalf))
             }
             flowBlock(locationState) { location ->
-                box {
+                navigation(location.route) {
                     heading1(location.name, modify(TextAlignCenter))
                 }
             }

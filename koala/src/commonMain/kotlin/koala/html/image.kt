@@ -35,33 +35,36 @@ fun FlowOrInteractiveOrPhrasingContent.image(
 }
 
 fun FlowOrInteractiveOrPhrasingContent.image(
-    images: Image?,
+    image: Image?,
     mod: ModifierSet? = null,
     placeholder: Image = SiteImage.placeholder,
     alt: String? = null,
     lazy: Boolean = true,
     block: IMG.() -> Unit = {}
 ) {
-    val images = images ?: placeholder
+    val image = image ?: placeholder
     img {
-        configureImage(null, images.variants, mod, alt, lazy, block)
+        configureImage(null, image, mod, alt, lazy, block)
     }
 }
 
 fun IMG.configureImage(
     src: Url? = null,
-    images: ImageVariants? = null,
+    image: Image? = null,
     mod: ModifierSet?,
     alt: String? = null,
     lazy: Boolean,
     block: IMG.() -> Unit
 ) {
-    this.src = (src ?: images.largest ?: SiteImage.placeholderLg).value
+    this.src = (src ?: image?.variants.largest ?: SiteImage.placeholderLg).value
     alt?.let {
         this.alt = it
     }
-    images?.let {
+    image?.variants?.let {
         configureSrcSet(it)
+    }
+    image?.aspectRatio?.let {
+        setStyle(Property.AspectRatio.to(it))
     }
     addModifiers(mod)
     if (lazy) {

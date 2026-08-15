@@ -64,3 +64,13 @@ fun siteImageOf(
 fun siteImageUrlOf(path: String) = "$imgPath$path".toUrl()
 
 fun Image?.getVariantOrPlaceholder(size: ImageSize) = this?.getSizeOrNull(size) ?: SiteImage.getPlaceholder(size)
+
+fun Image.merge(image: Image) = Image(
+    url = this.url,
+    aspectRatio = this.aspectRatio ?: image.aspectRatio,
+    description = this.description ?: image.description,
+    attribution = this.attribution ?: image.attribution,
+    attributionUrl = this.attributionUrl ?: image.attributionUrl,
+    caption = this.caption ?: image.caption,
+    variants = this.variants ?: image.variants
+)

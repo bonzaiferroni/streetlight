@@ -12,6 +12,7 @@ import kampfire.model.HttpProblem
 import kampfire.model.Outcome
 import kampfire.model.Problem
 import kampfire.model.Url
+import koala.Image
 import koala.external.FeedMessage
 import kotlinx.browser.window
 import kotlinx.coroutines.CancellationException
@@ -192,7 +193,7 @@ class FetchClient() {
         return handleResponse(response)
     }
 
-    suspend fun uploadBlob(postUrl: String, blobUrl: Url): Outcome<Url> {
+    suspend fun uploadBlob(postUrl: String, blobUrl: Url): Outcome<Image> {
         val response = fetch(blobUrl.value)
         val blob = response.blob()
         return request(

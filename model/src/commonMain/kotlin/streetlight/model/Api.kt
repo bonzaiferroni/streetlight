@@ -9,6 +9,7 @@ import kampfire.model.PasswordResetRequest
 import kampfire.model.PasswordVerification
 import kampfire.model.SpeechRequest
 import kampfire.model.Url
+import koala.Image
 import koala.model.DocId
 import koala.model.DocTableItem
 import streetlight.model.data.*
@@ -103,7 +104,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object Talents: GetEndpoint<List<Talent>>(this)
         object EditTalent: PostEndpoint<TalentEdit, Talent>(this)
         object UploadAvatar: PostEndpoint<ByteArray, String>(this)
-        object UploadImage: PostEndpoint<ByteArray, Url>(this)
+        object UploadImage: PostEndpoint<ByteArray, Image>(this)
     }
 
     object Chat: ApiNode(this) { }

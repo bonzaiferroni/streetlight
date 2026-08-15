@@ -74,7 +74,7 @@ fun FlowContent.featureHeader(
         column(modify(ContainerMdRow, FlexItems1, Gap0)) {
             // image
             image?.let {
-                metaImage(image, ImageSize.Medium, modify(Aspect3By2, VignetteOver, MinWidth0))
+                metaImage(image, modify(VignetteOver, MinWidth0))
             }
 
             // title panel
