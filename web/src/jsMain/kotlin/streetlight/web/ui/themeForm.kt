@@ -5,14 +5,11 @@ import koala.css.*
 import koala.dom.*
 import koala.model.MutableTap
 import koala.model.mutableTapOf
-import kotlinx.browser.document
-import kotlinx.css.pct
-import kotlinx.css.vh
 import streetlight.model.data.PageTheme
 import streetlight.web.model.ThemeEditor
 
 fun ViewScope.themeForm(model: ThemeEditor) {
-    formColumn {
+    formCard("Theme") {
         formRow {
             formSection("Colors") {
                 row(modify(FlexItems1)) {
@@ -25,7 +22,7 @@ fun ViewScope.themeForm(model: ThemeEditor) {
                 }
             }
             formSection("Background") {
-                box(modify(VoidBg, BorderRadius2, OutlineSolid2Px, OverflowClip)) {
+                box(modify(VoidBg, BorderRadius2, Outline, OverflowClip)) {
                     glowField(model.rhoState)
                     glowField(model.betaState)
                     glowField(model.gammaState)

@@ -1,3 +1,10 @@
+package koala.css
+
+object ButtonStyle {
+}
+
+// language="CSS"
+val ButtonCss get() = with(ButtonStyle) {"""
 body {
     --btn-text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8), 0 0 6px rgba(0, 0, 0, 0.6);
     --btn-outline: 1px 1px 1px rgba(0, 0, 0, 0.2);
@@ -152,11 +159,13 @@ body {
     box-shadow: inset 0 0 0 9999px rgba(255,255,255,.04);
 }
 
-.outlined {
+$Selected {
     outline: 2px solid rgb(var(--primary));
     outline-offset: -2px;
+    border-radius: var(--unit-spacing-1);
 }
 
 .highlighted {
     color: var(--primary-fg);
-}
+}    
+"""}

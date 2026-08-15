@@ -17,17 +17,17 @@ import kotlin.uuid.Uuid
 
 @Serializable
 data class Location(
-    val locationId: LocationId,
+    override val locationId: LocationId,
     val cityId: CityId?,
     val mapId: MapId?,
     val timezoneId: String,
     val slug: Slug,
     val scout: Username?,
     val host: Username?,
-    val name: String?,
+    override val name: String?,
     val description: Markdown?,
-    val address: String?,
-    val city: String?,
+    override val address: String?,
+    override val city: String?,
     val state: String?,
     override val geoPoint: GeoPoint,
     val mapRank: Float?,
@@ -43,7 +43,7 @@ data class Location(
     val extraLinks: List<ExtraLink>?,
     val updatedAt: Instant,
     val createdAt: Instant,
-): FeedEntity, Labeled, RouteContent {
+): FeedEntity, LocationEntity, Labeled, RouteContent {
 
     val addressLine by lazy {
         addressLineOf(address, city)

@@ -44,7 +44,7 @@ data class LocationMarker(
     // override val thumbUrl get() = location.images.thumb ?: SiteImage.placeholderTh.url
     override val light get() = rgb(180, 240, 100)
     override val typeLabel get() = location.mapType ?: MarkerType.Location.label
-    override val svg get() = location.mapType?.let { MapTypeIcon[it] } ?: SvgFile.MapPinOutline
+    override val svg get() = location.mapType?.let { MapTypeIcon[it] } ?: SvgFile.MapPin
     override val colorScheme get() = ColorScheme.Location.cssValue
 }
 

@@ -15,17 +15,17 @@ import streetlight.model.external.toHoursSchedule
 
 @Serializable
 data class LocationEdit(
-    val locationId: LocationId? = null,
+    override val locationId: LocationId? = null,
     val cityId: CityId? = null,
     val timezoneId: String? = null,
-    val name: String? = null,
-    val city: String? = null,
+    override val name: String? = null,
+    override val city: String? = null,
     val description: Markdown? = null,
-    val address: String? = null,
+    override val address: String? = null,
     val state: String? = null,
     val country: String? = null,
     val notes: String? = null,
-    val geoPoint: GeoPoint? = null,
+    override val geoPoint: GeoPoint? = null,
     val mapId: MapId? = null,
     val mapRank: Float? = null,
     val mapCategory: String? = null,
@@ -36,7 +36,7 @@ data class LocationEdit(
     val eventsUrl: Url? = null,
     val extraLinks: List<ExtraLink>? = null,
     override val image: Image? = null,
-): Labeled, RecordEdit {
+): Labeled, RecordEdit, LocationEntity {
     override val recordType get() = RecordType.Location
 
     val validity by lazy {

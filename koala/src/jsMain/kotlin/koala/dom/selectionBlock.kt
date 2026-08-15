@@ -1,7 +1,6 @@
 package koala.dom
 
-import koala.css.ModifierSet
-import koala.css.Outlined
+import koala.css.*
 import koala.model.MutableTap
 import koala.model.Tap
 import kotlinx.coroutines.launch
@@ -13,51 +12,58 @@ fun <Item> ViewScope.selectionBlock(
     items: Tap<List<Item>>,
     selection: MutableTap<Item?>,
     modifiers: ModifierSet? = null,
+    emptyText: String? = null,
     config: (DIV.() -> Unit)? = null,
     block: ViewScope.(Item) -> HTMLElement
 ): HTMLDivElement {
-    var selectedItem: Item? = null
     var selectedElement: HTMLElement? = null
     val elementMap = mutableMapOf<Item, HTMLElement>()
 
     fun selectElement(item: Item?) {
-        selectedItem = item
         when (item) {
             null -> {
-                selectedElement?.unmodify(Outlined)
+                selectedElement?.unmodify(Selected)
                 selectedElement = null
             }
             else -> {
-                val element = elementMap.getValue(item)
-                if (element.isModified(Outlined)) {
-                    selection.set(null)
-                    element.unmodify(Outlined)
+                val element = elementMap[item] ?: return
+                if (element.isModified(Selected)) {
+                    element.unmodify(Selected)
                     selectedElement = null
                 } else {
-                    selectedElement?.unmodify(Outlined)
-                    element.modify(Outlined)
+                    selectedElement?.unmodify(Selected)
+                    element.modify(Selected)
                     selectedElement = element
-                    selection.set(item)
+
                 }
             }
         }
+        if (item == selection.now) return
+        selection.set(item)
     }
 
     val element = flowBlock(items, modifiers, config = config) { items ->
         elementMap.clear()
-        column {
-            items.forEach { item ->
-                val element = block(item).onClick {
-                    selectElement(item)
+        when (items.isNotEmpty()) {
+            true -> column {
+                items.forEach { item ->
+                    val element = block(item).onClick {
+                        selectElement(item)
+                    }
+                    elementMap[item] = element
                 }
-                elementMap[item] = element
+            }
+            else -> box {
+                emptyText?.let {
+                    textBlock(it, modify(TextSmall, PlaceSelfCenter, OpacityHigh))
+                }
             }
         }
+
     }
 
     contentScope.launch {
         selection.flow.collect { item ->
-            if (item == selectedItem) return@collect
             selectElement(item)
         }
     }

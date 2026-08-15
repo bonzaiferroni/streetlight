@@ -27,7 +27,7 @@ fun ViewScope.formCard(
     filigree {
         heading3(name)
     }
-    card(modify(ZenBg, Gap2)) {
+    card(modify(ZenBg, Gap2, Outline, Padding2)) {
         content()
     }
 }
@@ -49,7 +49,7 @@ fun ViewScope.formRow(
 
 fun ViewScope.formHeading(
     text: String
-) = filigree {
+) = filigree(ruleMaxWidth = MaxWidth32) {
     heading5(text, modify(OpacityHigh, TextTransformUppercase))
 }
 
@@ -67,6 +67,7 @@ fun ViewScope.formSubmit(
     buttonText: String = "submit",
     onClick: () -> Unit,
     messages: MessageStore? = null,
+    buttonMod: ModifierSet = modify(Accent),
     onCancel: (() -> Unit)? = null,
     enabledTap: Tap<Boolean>? = null,
     isDisplayedFlow: Tap<Boolean>? = null,
@@ -75,7 +76,7 @@ fun ViewScope.formSubmit(
         messageBox(it)
     }
     column {
-        val button = button(buttonText, onClick, modify(Accent))
+        val button = button(buttonText, onClick, buttonMod)
         enabledTap?.let {
             configureEnabledFlow(button, enabledTap)
         }
@@ -91,7 +92,7 @@ fun ViewScope.formSubmit(
 fun ViewScope.formText(
     text: String,
     mod: ModifierSet? = null,
-) = textBlock(text, mod = modify(mod, TextAlignCenter, OpacityHigh))
+) = textBlock(text, mod = modify(mod, TextAlignCenter, OpacityHigh, WhiteSpacePreLine))
 
 fun ViewScope.formField(
     mod: ModifierSet? = null,

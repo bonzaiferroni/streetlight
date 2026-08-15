@@ -6,6 +6,7 @@ import koala.html.topLogo
 import koala.model.dedupNotNull
 import streetlight.model.data.EventEdit
 import streetlight.model.data.Galaxy
+import streetlight.model.data.Location
 import streetlight.model.data.LocationEdit
 import streetlight.model.ui.EventScoutRoute
 import streetlight.model.ui.GalaxyRoute
@@ -35,7 +36,7 @@ fun ViewScope.viewEventScout(galaxy: Galaxy, isAdmin: Boolean) {
         stageBlock(model.stage, isHeadingStage = ::isHeadingStage) { stage ->
             when (stage) {
                 EventScoutStage.LocationSearch -> formBodyProto {
-                    locationScoutForm(locationScout)
+                    locationFinder(locationScout)
                 }
                 EventScoutStage.LocationEdit -> column {
                     locationEditFormBody(locationEditor)
@@ -49,7 +50,7 @@ fun ViewScope.viewEventScout(galaxy: Galaxy, isAdmin: Boolean) {
                     formSubmitLegacy("Next", model::review, messages = editor.message)
                 }
                 EventScoutStage.Post -> formBodyProto {
-                    val location = locationScout.stateNow.location ?: error("location not found")
+                    val location = locationScout.stateNow.location as? Location ?: error("location not found")
                     postRow(editor.editNow, location)
                     formSubmitLegacy("Post", model::post, messages = model.postMessage)
                 }

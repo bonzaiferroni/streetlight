@@ -29,17 +29,17 @@ inline fun <reified State> ViewScope.stageBlock(
                     when  {
                         value.ordinal < currentOrdinal -> {
                             element.modify(Clickable)
-                            element.unmodify(Outlined)
+                            element.unmodify(Selected)
                             element.unmodify(Dim)
                         }
                         value.ordinal == currentOrdinal -> {
                             element.unmodify(Clickable)
-                            element.modify(Outlined)
+                            element.modify(Selected)
                             element.unmodify(Dim)
                         }
                         value.ordinal > currentOrdinal -> {
                             element.unmodify(Clickable)
-                            element.unmodify(Outlined)
+                            element.unmodify(Selected)
                             element.modify(Dim)
                         }
                     }

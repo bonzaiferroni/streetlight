@@ -24,9 +24,7 @@ fun ViewScope.viewLocationScout(galaxy: Galaxy) {
 
         stageBlock(model.stageField) { stage ->
             when (stage) {
-                LocationScoutStage.Search -> formBodyProto {
-                    locationScoutForm(model)
-                }
+                LocationScoutStage.Search -> locationFinder(model)
                 LocationScoutStage.Edit -> column {
                     locationEditFormBody(editor)
                     formSubmitLegacy(
@@ -36,7 +34,7 @@ fun ViewScope.viewLocationScout(galaxy: Galaxy) {
                         back = LabeledAction("Back", { model.stageField.set(LocationScoutStage.Search) })
                     )
                 }
-                LocationScoutStage.Post -> column {
+                LocationScoutStage.Review -> column {
                     val edit = editor.editNow
                     postRow(edit, session.stateNow.star?.username)
 

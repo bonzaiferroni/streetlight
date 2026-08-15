@@ -4,6 +4,7 @@ import kampfire.model.handleResponse
 import koala.css.*
 import koala.dom.*
 import koala.html.Id
+import koala.html.heading1
 import koala.html.heading3
 import koala.html.topLogo
 import koala.model.storeOf
@@ -26,14 +27,22 @@ fun ViewScope.viewLocationConfig(
     val layoutEditor = LayoutEditor(initialLayout)
     val themeEditor = ThemeEditor(content.config.design?.theme)
     column(BodyStyle.column) {
-        topLogo()
-        cardOf(location)
+        column(modify(Gap0, MarginTop1)) {
+            filigree {
+                heading3("configure", modify(TextTransformUppercase, OpacityHalf))
+            }
+            heading1(location.name, modify(TextAlignCenter))
+        }
+
         tabs(Id("location-config-tabs")) {
             tab("profile") {
                 val edit = location.toEdit()
                 // viewLocationEditor(edit, app, null, false, null)
             }
-            tab("design") {
+            tab("theme") {
+                themeForm(themeEditor)
+            }
+            tab("layout") {
                 dataBlock({ api.readLocationEvents(location.slug) }) { events ->
                     // td: fix layout source
                     val locationContent = LocationContent(
@@ -43,31 +52,7 @@ fun ViewScope.viewLocationConfig(
                         canEdit = true
                     )
 
-                    column {
-                        val messages = MessageStore()
-                        column(BodyStyle.column) {
-                            column {
-                                filigree { heading3("Theme") }
-                                themeForm(themeEditor)
-                            }
-
-                            column {
-                                filigree { heading3("Layout") }
-                                layoutBuilder(layoutEditor, locationContent)
-                            }
-
-                        }
-
-                        formSubmit("save design", {
-                            val layout = layoutEditor.buildLayout()
-                            val theme = themeEditor.buildTheme()
-                            configState.set { copy(design = PageDesign(layout, theme)) }
-                            launchEffect("save design") {
-                                messages.deliverSending()
-                                api.updateLocationConfig(configState.now).handleResponse(messages, "Design saved.")
-                            }
-                        }, messages)
-                    }
+                    layoutBuilder(layoutEditor, locationContent)
                 }
             }
             tab("events") {
@@ -94,6 +79,16 @@ fun ViewScope.viewLocationConfig(
                 // locationAutomationForm(content)
             }
         }
+        val messages = MessageStore()
+        formSubmit("save config", {
+            val layout = layoutEditor.buildLayout()
+            val theme = themeEditor.buildTheme()
+            configState.set { copy(design = PageDesign(layout, theme)) }
+            launchEffect("save config") {
+                messages.deliverSending()
+                api.updateLocationConfig(configState.now).handleResponse(messages, "Design saved.")
+            }
+        }, messages)
         appFooter("")
     }
 }

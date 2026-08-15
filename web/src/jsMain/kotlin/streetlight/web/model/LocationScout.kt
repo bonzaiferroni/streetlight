@@ -4,18 +4,16 @@ import kampfire.model.Labeled
 import kampfire.model.handleResponse
 import koala.dom.MessageStore
 import koala.utils.launch
-import koala.model.GeoCamera
-import koala.model.dedup
 import koala.model.tapOf
 import koala.model.mutableTapOf
 import koala.model.reactIn
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 import streetlight.model.data.Galaxy
 import streetlight.model.data.Location
 import streetlight.model.data.LocationEdit
+import streetlight.model.data.LocationEntity
 import streetlight.model.data.PostEdit
 import streetlight.model.data.PostId
 import streetlight.model.data.PostType
@@ -29,7 +27,7 @@ class LocationScout(
     val editor: LocationEditor,
     private val scope: CoroutineScope,
     private val osm: OSMClient,
-    private val geo: GeoCamera,
+    private val map: MarkerMap,
     private val toaster: Toaster,
     private val api: ApiClient,
 ) {
@@ -43,14 +41,34 @@ class LocationScout(
 
     val queryField = state.mutableTapOf({ it.query }) { copy(query = it) }
     val cityField = state.mutableTapOf({ it.city ?: "" }) { copy(city = it) }
-    val queryLocationsField = state.tapOf { it.queryLocations }
-    val osmLocationsField = state.tapOf { it.osmLocations }
-    val hasOsmLocationsField = state.tapOf { it.osmLocations.isNotEmpty() }
+    val locationsState = state.tapOf { it.locations }
     val postField = state.tapOf { it.postId }
-    val modeField = state.mutableTapOf({ it.mode.ordinal }) { copy(mode = SearchMode.entries[it] ) }
-    val mapLocationField = state.mutableTapOf({ it.mapLocation }) { copy(mapLocation = it) }
-    val locationField = state.mutableTapOf({ it.location }) { copy(location = it, stage = LocationScoutStage.Post) }
-    val stageField = state.mutableTapOf({ it.stage }) { copy(stage = it) }
+    val locationState = state.mutableTapOf({ it.location }) { copy(location = it) }
+    val selectionState = state.mutableTapOf<LocationScoutState, LocationEntity?>({ it.location ?: it.edit }) {
+        when (it) {
+            is Location -> copy(location = it)
+            is LocationEdit -> copy(edit = it)
+            null -> copy(location = null, edit = null)
+        }
+    }
+
+    val stageField = state.mutableTapOf({
+        if (it.location == null && it.edit == null) LocationScoutStage.Search
+        else if (it.location != null || it.isReviewing) LocationScoutStage.Review
+        else LocationScoutStage.Edit
+    }) {
+        when (it) {
+            LocationScoutStage.Search -> copy(location = null, edit = null)
+            LocationScoutStage.Edit -> {
+                if (edit != null) copy(isReviewing = false)
+                else this
+            }
+            LocationScoutStage.Review -> {
+                if (edit == null && location == null) this
+                else copy(isReviewing = true)
+            }
+        }
+    }
 
     init {
         stageField.reactIn(scope) {
@@ -62,57 +80,56 @@ class LocationScout(
         queryField.reactIn(scope) { query ->
             api.searchLocations(query, stateNow.city?.takeIf { it.isNotBlank() })
                 .handleResponse(toaster) { locations ->
-                    state.set { copy(queryLocations = locations) }
+                    state.set { copy(locations = locations) }
                 }
         }
 
-        scope.launch(LocationScout::class) {
-            launch("collect geoState") {
-                geo.stateFlow.filter { !it.isMoving && stateNow.mode == SearchMode.Map }
-                    .dedup { it.center }.collect { center ->
-                        osm.readLocationAt(center).handleResponse(mapMessage) { location ->
-                            val location = location.toEditOrNull() ?: return@handleResponse
-                            mapMessage.deliver(location.label)
-                            state.set { copy(mapLocation = location)}
-                        }
-                    }
-            }
+        state.tapOf{ it.edit }.reactIn(scope) { edit ->
+            val edit = edit ?: return@reactIn
+            editor.editField.update { edit.mergeLeft(it) }
+            editor.readWebsite()
         }
     }
 
-    // fun setStage(value: LocationScoutStage) {
-    //     if (value == LocationScoutStage.Search) {
-    //         editor.reset()
-    //     }
-    //     state.setValue { it.copy(stage = value) }
-    // }
-
-    fun stageLocation(value: LocationEdit?) {
-        if (value == null) return
-        editor.editField.update { value.mergeLeft(it) }
-        editor.readWebsite()
-        state.set { copy(stage = LocationScoutStage.Edit) }
-    }
-
-    fun stageLocationFromMap() = stageLocation(stateNow.mapLocation)
-
     fun queryOSM() {
         val query = stateNow.query
-        if (query.isBlank()) return
-        queryMessage.set("Searching...", true)
+        if (query.isBlank()) {
+            queryMessage.deliver("First you have to type something.")
+            return
+        }
+        queryMessage.deliverSending("Searching OSM...")
         scope.launch {
             val city = stateNow.city?.takeIf { it.isNotBlank() }
             val bounds = galaxy.geoBounds.takeIf { city == null }?.resizeBy(5f)
             osm.readLocations(query, stateNow.city, bounds).handleResponse(queryMessage) { locations ->
-                queryMessage.deliver("found: ${locations.size}")
-                state.set { copy(osmLocations = locations.mapNotNull { loc -> loc.toEditOrNull() }) }
+                queryMessage.deliverSuccess("found: ${locations.size}")
+                state.set { copy(locations = locations.mapNotNull { loc -> loc.toEditOrNull() }) }
             }
         }
     }
 
+    fun whatIsHere() {
+        scope.launch(::whatIsHere) {
+            val center = map.geoMap.camera.centerField.now
+            osm.readLocationAt(center).handleResponse(mapMessage) { location ->
+                val location = location.toEditOrNull() ?: return@handleResponse
+                mapMessage.deliver(location.label)
+                state.set { copy(locations = listOf(location))}
+            }
+        }
+    }
+
+    fun createLocation() {
+        val name = stateNow.query.takeIf { it.isNotBlank() } ?: run {
+            mapMessage.deliver("What's it called, though?")
+            return
+        }
+        state.set { copy(edit = LocationEdit(name = name, geoPoint = map.centerNow)) }
+    }
+
     fun review() {
         if (!editor.isEditValid()) return
-        state.set { copy(stage = LocationScoutStage.Post) }
+        state.set { copy(isReviewing = true) }
     }
 
     suspend fun submitLocation() = when (val location = stateNow.location) {
@@ -137,19 +154,17 @@ class LocationScout(
 data class LocationScoutState(
     val query: String = "",
     val city: String? = null,
-    val queryLocations: List<Location> = emptyList(),
-    val osmLocations: List<LocationEdit> = emptyList(),
+    val locations: List<LocationEntity> = emptyList(),
+    val edit: LocationEdit? = null,
     val location: Location? = null,
-    val stage: LocationScoutStage = LocationScoutStage.Search,
+    val isReviewing: Boolean = false,
     val postId: PostId? = null,
-    val mapLocation: LocationEdit? = null,
-    val mode: SearchMode = SearchMode.Search,
 )
 
 enum class LocationScoutStage: Labeled {
     Search,
     Edit,
-    Post;
+    Review;
 
     override val label get() = name
 }

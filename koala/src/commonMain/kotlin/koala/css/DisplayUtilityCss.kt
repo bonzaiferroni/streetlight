@@ -10,7 +10,7 @@ val DisplayUtilityCss
         CircleShape, CircleClip,
         // Border Radius
         BorderRadius0, BorderRadius1, BorderRadius2, BorderRadius4, BorderRadius3, BorderRadius50P, BorderRadiusPill,
-        BorderRadiusBottom1, BorderRadiusTop1, BorderDashed2Px, BorderSolid2Px, OutlineSolid2Px, OutlineDashed2Px,
+        BorderRadiusBottom1, BorderRadiusTop1, BorderDashed2Px, BorderSolid2Px, Outline, OutlineDashed2Px,
         // Border
         SideBorder,
         // Color
@@ -76,7 +76,7 @@ val BorderDashed2Px = utilityOf("border-dashed", "border: 2px dashed var(--outli
 val BorderSolid2Px = utilityOf("border-solid", "border: var(--outline-low)")
 val BorderRadiusTop1 = utilityOf("border-radius-top-1", "border-radius: var(--unit-spacing) var(--unit-spacing) 0 0")
 val BorderRadiusBottom1 = utilityOf("border-radius-bottom-1", "border-radius: 0 0 var(--unit-spacing) var(--unit-spacing)")
-val OutlineSolid2Px = utilityOf("outline-solid", "outline: var(--outline-low)")
+val Outline = utilityOf("outline-solid", "outline: var(--outline-low)")
 val OutlineDashed2Px = utilityOf("outline-dashed", "outline: 2px dashed var(--outline-low-fg)")
 
 // Border
@@ -100,9 +100,6 @@ val InkGradientBg = utilityOf("ink-gradient-bg", "background: var(--ink-gradient
 val Zen = Class("zen")
 val Secondary = Class("secondary")
 val Danger = Class("danger")
-val Confirm = Class("confirm")
-val Outlined = Class("outlined")
-val Highlighted = Class("highlighted")
 val Selected = Class("selected")
 val Valid = Class("valid")
 val Required = Class("required")

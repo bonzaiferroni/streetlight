@@ -2,7 +2,6 @@ package streetlight.web.layouts
 
 import kabinet.utils.toMetricString
 import kampfire.api.Username
-import kampfire.model.toUrl
 import koala.SvgFile
 import koala.css.MinWidth32
 import kotlinx.html.FlowContent
@@ -20,7 +19,7 @@ import streetlight.web.ui.starLightCell
 fun cellContentOf(location: Location): FlowContent.() -> Unit = {
     // starCell(location.username)
     val mapType = location.mapType ?: "Location"
-    cell(SvgFile.MapPinOutline, mapType)
+    cell(SvgFile.MapPin, mapType)
     location.city?.let {
         cell(SvgFile.City, it)
     }
@@ -60,7 +59,7 @@ fun cellContentOf(event: EventLocation, showMore: Boolean, post: GalaxyPost? = n
 //        cell(SvgFile.City, it)
 //    }
     event.locationName?.let {
-        cell(SvgFile.MapPinOutline, it)
+        cell(SvgFile.MapPin, it)
     }
     buttonsCell(MinWidth32) {
         post?.let {

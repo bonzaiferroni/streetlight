@@ -62,7 +62,10 @@ fun DIV.configureAppFooter(sourcePath: String?, vararg additional: ExtraLink) {
 
 private fun sourceUrlOf(path: String) = "https://github.com/bonzaiferroni/streetlight/blob/main/$path"
 
-val prayers get() = listOf(
+val prayers = listOf(
     "May we build a world of faithful giants.",
+    "Sometimes the best step forward is a tiny step back.",
+    "Left unfilled, the moment fills us.",
+    "Just trying not to fall off this tiny sidewalk."
     // "It all, theoretically, works.",
 )

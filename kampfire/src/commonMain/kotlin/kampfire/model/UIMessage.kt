@@ -17,7 +17,7 @@ interface Messenger {
     fun deliver(message: UIMessage)
     fun deliver(problem: Problem)
 
-    fun deliverSending() = deliver(UIMessage(SendingMessage, UIMessageType.Working))
+    fun deliverSending(text: String = SendingMessage) = deliver(UIMessage(text, UIMessageType.Working))
     fun deliverSuccess(text: String) = deliver(UIMessage(text, UIMessageType.Success))
 
     companion object {

@@ -50,7 +50,7 @@ val appModule = module {
     single { GeoCamera(get()) }
     single { GeoMap(get(), get()) }
     single { TransitMap(get(), get(), get(), get()) }
-    single { MarkerMap(get(), get(), get()) }
+    single { MarkerMap(get(), get()) }
     single { ChatRoom(get(), get()) }
     single { OmniLog(get(), get()) }
     single { MarkerService() }

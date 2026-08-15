@@ -16,13 +16,13 @@ import kotlinx.coroutines.launch
 
 class MarkerMap(
     private val scope: CoroutineScope,
-    private val cache: DataCache,
-    private val geoMap: GeoMap,
+    val geoMap: GeoMap,
 ) {
     private val state = storeOf(StreetMapState())
     val stateFlow = state.flow
     val stateNow get() = state.now
     val markerLayer = geoMap.getOrCreateLayer(MarkerLayerConfig.Markers)
+    val centerNow get() = geoMap.camera.stateNow.center
 
     // val markersFlow = stateFlow.dedup { it.markers }
     // private val partitionedFlow = markersFlow.combine(geoMap.camera.movingBoundsFlow) { markers, bounds ->
@@ -46,14 +46,14 @@ class MarkerMap(
     init {
         scope.launch {
             geoMap.focusFlow.collect { focus ->
-                state.setValue { it.copy(focus = focus) }
+                state.set { copy(focus = focus) }
             }
         }
     }
 
     fun setPoints(markers: List<FeatureMarker>?) {
         markerLayer.setPoints(markers ?: emptyList())
-        state.setValue { it.copy(markers = markers, focus = null) }
+        state.set { copy(markers = markers, focus = null) }
     }
 
 //    fun addPoints(markers: List<AppMarker>) {
@@ -65,7 +65,7 @@ class MarkerMap(
         val focus = MarkerFocus(marker)
         geoMap.setFocus(focus)
         geoMap.camera.panMap(marker.geoPoint)
-        state.setValue { it.copy(focus = focus)}
+        state.set { copy(focus = focus)}
     }
 
     fun showAll() {

@@ -1,7 +1,6 @@
 package streetlight.web.layouts
 
 import kampfire.api.Markdown
-import kampfire.model.Url
 import koala.Image
 import koala.SiteImage
 import koala.css.*
@@ -39,7 +38,7 @@ fun FlowContent.feedRow(
             }
             // spacer(modify(Height2Px, InkGradientBg, MarginTop2Px))
             cells?.let {
-                cellBlock(modify(FeedRow.Cells, BorderRadius2, OverflowClip, OutlineSolid2Px), cells)
+                cellBlock(modify(FeedRow.Cells, BorderRadius2, OverflowClip, Outline), cells)
             }
         }
 

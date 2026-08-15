@@ -43,11 +43,11 @@ class EventScout(
             val stage = when (locationStage) {
                 LocationScoutStage.Search -> EventScoutStage.LocationSearch
                 LocationScoutStage.Edit -> EventScoutStage.LocationEdit
-                LocationScoutStage.Post -> EventScoutStage.EventSearch
+                LocationScoutStage.Review -> EventScoutStage.EventSearch
             }
             state.set { copy(stage = stage) }
         }
-        locationScout.locationField.reactIn(scope) { location ->
+        locationScout.locationState.reactIn(scope) { location ->
             editor.setLocationId(location?.locationId)
             if (location != null) {
                 state.set { copy(stage = EventScoutStage.EventSearch)}
