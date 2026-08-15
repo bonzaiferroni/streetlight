@@ -73,7 +73,14 @@ fun ViewScope.blockBuilder(
     editor: BlockEditor,
     content: FlowContent.() -> Unit
 ) = column {
-    editorRow(name, editor, null)
+
+    menuEditRow(name, editor) {
+        button({
+            editor.removeFromLayout()
+        }) {
+            textBlock("remove $name")
+        }
+    }
     content()
 }
 

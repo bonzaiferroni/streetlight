@@ -86,6 +86,7 @@ val SideBorder = utilityOf("side-border", "border-left: var(--ghost-border)", "b
 val Accent = Class("accent")
 val AccentFg = utilityOf("accent-fg", "color: var(--accent-fg)")
 val Primary = Class("primary")
+val Editor = Class("editor")
 val PrimaryFg = utilityOf("primary-fg", "color: var(--primary-fg)")
 val WhiteFg = utilityOf("white-fg", "color: var(--white-fg)")
 val EditorFg = utilityOf("editor-fg", "color: var(--editor-fg)")

@@ -15,7 +15,8 @@ class LayoutEditor(initialLayout: PageLayout) {
     private val blocks = mutableMapOf<BlockId, BlockEditor>()
     private val containers = mutableMapOf<ContainerId, ContainerEditor>()
 
-    val movingBlockField = state.tapOf { it.movingBlockId }
+    val movingBlockIdState = state.tapOf { it.movingBlockId }
+    val removedBlockIdsState = state.tapOf { it.removedBlockIds }
 
     val mainContainerId = createContainer(initialLayout, 0)
 
@@ -78,27 +79,32 @@ class LayoutEditor(initialLayout: PageLayout) {
         state.set { copy(movingBlockId = null) }
     }
 
-    fun cutBlock(blockId: BlockId) {
-        val container = getParent(blockId)
+    fun removeFromContainer(blockId: BlockId) {
+        val container = getParentOrNull(blockId) ?: return
         container.removeBlock(blockId)
     }
 
     fun finishMove(blockId: BlockId) {
         val movingBlockId = state.now.movingBlockId ?: error("moving blockId not found")
-        cutBlock(movingBlockId)
+        removeFromContainer(movingBlockId)
         val container = getParent(blockId)
         val index = container.childIds.indexOf(blockId)
         container.addBlock(movingBlockId, index)
-        state.set { copy(movingBlockId = null) }
+        state.set { copy(movingBlockId = null, removedBlockIds = removedBlockIds - movingBlockId) }
     }
 
     fun finishMoveToContainer(containerId: ContainerId) {
         val movingBlockId = state.now.movingBlockId ?: error("moving blockId not found")
-        cutBlock(movingBlockId)
+        removeFromContainer(movingBlockId)
         val container = getContainer(containerId)
         val blockEditor = getBlock(movingBlockId)
         container.addBlock(blockEditor.blockId)
-        state.set { copy(movingBlockId = null) }
+        state.set { copy(movingBlockId = null, removedBlockIds = removedBlockIds - movingBlockId) }
+    }
+
+    fun removeFromLayout(blockId: BlockId) {
+        removeFromContainer(blockId)
+        state.set { copy(removedBlockIds = removedBlockIds + blockId) }
     }
 
     fun buildLayout(): PageLayout? {
@@ -127,6 +133,7 @@ class LayoutEditor(initialLayout: PageLayout) {
 
 data class LayoutEditorState(
     val movingBlockId: BlockId? = null,
+    val removedBlockIds: List<BlockId> = emptyList(),
 )
 
 fun LayoutBlock.getContainers(): List<LayoutContainer>? = when (this) {

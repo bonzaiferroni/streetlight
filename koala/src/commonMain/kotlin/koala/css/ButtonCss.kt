@@ -45,6 +45,13 @@ body {
     > :nth-child(2) { justify-self: center; }
     > span { font-size: inherit; line-height: 1rem; }
     &:not(:has(*)) { grid-template-columns: 1fr; }
+    
+    &$Editor {
+        box-shadow: none;
+        background: var(--editor-bg);
+        outline: var(--outline-low);
+        outline-offset: -2px;
+    }
 }
 
 .btn-text {
@@ -70,14 +77,11 @@ body {
     background: var(--zen-bg);
     box-shadow: none;
     text-shadow: none;
-    outline: 2px solid var(--outline-low-fg);
+    outline: var(--outline-low);
     outline-offset: -2px;
 
     &.primary-bg {
         background: var(--primary-card-bg);
-    }
-    &.editor-bg {
-        background: var(--editor-zen-bg);
     }
 }
 

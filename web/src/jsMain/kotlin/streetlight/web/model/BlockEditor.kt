@@ -17,13 +17,13 @@ class BlockEditor(
 ) {
     private val state = storeOf(BlockState(block, containerIds))
     val blockField = state.mutableTapOf({ it.block }) { copy(block = it) }
-    // val containerIdsField = state.mutableFieldOf({ it.containerKeys!! }) { copy(containerKeys = it) }
     val refreshField = state.tapOf { it.refreshAt }
     val childIds get() = state.now.childIds
-    val parent get() = model.getParent(blockId)
-    val parentId get() = parent.containerId
-    val index get() = parent.childIds.indexOf(blockId)
-    val depth get() = parent.depth
+    val parent get() = model.getParentOrNull(blockId)
+    val parentId get() = parent?.containerId
+    val index get() = parent?.childIds?.indexOf(blockId)
+    val depth get() = parent?.depth
+    val block get() = state.now.block
 
     inline fun <reified T : LayoutBlock, V> mutableFieldOf(
         crossinline getter: (T) -> V,
@@ -35,7 +35,7 @@ class BlockEditor(
 
     fun isChildOf(otherId: BlockId) = model.getBlock(otherId).childIds.any { it == parentId }
 
-    fun isNextSiblingOf(otherId: BlockId) = model.getParent(otherId).takeIf { it.containerId == parentId }?.let {
+    fun isNextSiblingOf(otherId: BlockId) = model.getParentOrNull(otherId)?.takeIf { it.containerId == parentId }?.let {
         it.childIds.indexOf(otherId) + 1 == index
     } ?: false
 
@@ -66,6 +66,10 @@ class BlockEditor(
                 refreshAt = Clock.System.now()
             )
         }
+    }
+
+    fun removeFromLayout() {
+        model.removeFromLayout(blockId)
     }
 
     fun refresh() {
