@@ -24,6 +24,8 @@ class BlockEditor(
     val index get() = parent?.childIds?.indexOf(blockId)
     val depth get() = parent?.depth
     val block get() = state.now.block
+    val blockType get() = block.blockType
+    val label get() = blockType.label
 
     inline fun <reified T : LayoutBlock, V> mutableFieldOf(
         crossinline getter: (T) -> V,

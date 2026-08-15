@@ -5,12 +5,14 @@ import koala.dom.*
 import koala.dom.button
 import koala.dom.row
 import koala.html.Id
+import koala.html.box
 import koala.html.heading3
 import koala.html.hr
 import koala.html.setPopoverTarget
-import koala.html.spacer
+import koala.html.textBlock
 import kotlinx.html.BUTTON
-import streetlight.model.data.LocationContent
+import kotlinx.html.FlowContent
+import streetlight.model.data.BlockType
 import streetlight.web.model.BlockEditor
 import streetlight.web.model.BlockId
 import streetlight.web.model.ContainerEditor
@@ -18,9 +20,9 @@ import streetlight.web.model.ContainerId
 import streetlight.web.model.LayoutEditor
 import kotlin.uuid.Uuid
 
-fun ViewScope.layoutBuilder(model: LayoutEditor, content: LocationContent) {
+fun ViewScope.layoutBuilder(model: LayoutEditor) {
     column(BodyStyle.column) {
-        containerBuilder(model, model.mainContainerId, content)
+        containerBuilder(model, model.mainContainerId)
         // td: footer designer
         flowBlock(model.removedBlockIdsState) { removedBlockIds ->
             if (removedBlockIds.isEmpty()) return@flowBlock
@@ -29,30 +31,29 @@ fun ViewScope.layoutBuilder(model: LayoutEditor, content: LocationContent) {
     }
 }
 
-fun ViewScope.containerBuilder(model: LayoutEditor, containerId: ContainerId, content: LocationContent) {
+fun ViewScope.containerBuilder(model: LayoutEditor, containerId: ContainerId) {
     val editor = model.getContainer(containerId)
     flowBlock(editor.blockIdsField) { blockIds ->
         column(modify(if (editor.depth > 0) modify(ZenBg, MoonShadow, Padding1) else null, BorderRadius1)) {
             blockIds.forEach { blockId ->
-                blockBuilder(model, blockId, content)
+                blockBuilder(model, blockId)
             }
             lastEditorRow(editor)
         }
     }
 }
 
-fun ViewScope.menuEditRow(name: String, editor: BlockEditor, menuContent: ViewScope.() -> Unit) {
+fun ViewScope.menuEditRow(editor: BlockEditor, menuContent: ViewScope.() -> Unit) {
     val popoverId = Id(Uuid.random().toString())
     popoverCard(popoverId, cardMod = modify(EditorBg)) {
         menuContent()
     }
-    editorRow(name, editor, null) {
+    editorRow(editor, null) {
         setPopoverTarget(popoverId)
     }
 }
 
 fun ViewScope.editorRow(
-    name: String,
     editor: BlockEditor,
     onClick: (() -> Unit)?,
     configButton: BUTTON.() -> Unit = { }
@@ -65,7 +66,7 @@ fun ViewScope.editorRow(
                         blockMenu(editor.depth ?: error("depth is null")) { editor.addBlockAbove(it) }
                         hr(modify(Flex1))
                     }
-                    button("edit $name", onClick, modify(Editor, JustifySelfCenter), block = configButton)
+                    button("edit ${editor.label}", onClick, modify(Editor, JustifySelfCenter), block = configButton)
                     row(modify(AlignItemsCenter, Flex1)) {
                         hr(modify(Flex1))
                         button({
@@ -132,5 +133,5 @@ fun ViewScope.removedBlockList(model: LayoutEditor, blockIds: List<BlockId>) {
 }
 
 object LayoutBuilder {
-    val TextButtonMod = modify(TextTransformUppercase, TextSmall, Bold, EditorFg)
+    val TextButtonMod = modify(TextUppercase, TextSmall, Bold, EditorFg)
 }

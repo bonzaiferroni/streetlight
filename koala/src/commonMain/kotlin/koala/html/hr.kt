@@ -12,8 +12,21 @@ fun FlowContent.hr(
     block: HR.() -> Unit = { }
 ) {
     hrElement {
-        addModifiers(mod)
+        addModifiers(HrStyle.Class, mod)
         block()
     }
 }
+
+object HrStyle {
+    val Class = Class("hr")
+}
+
+// language="CSS"
+val HrCss = with(HrStyle) {"""
+$Class {
+    border: none;
+    height: 2px;
+    background-color: currentColor;
+}
+"""}
 

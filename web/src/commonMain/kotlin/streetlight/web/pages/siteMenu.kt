@@ -71,7 +71,7 @@ fun FlowContent.siteMenuItems() {
 
 private fun FlowContent.label(label: String) {
     filigree {
-        textBlock(label, modify(TextSmall, TextTransformUppercase, OpacityHalf))
+        textBlock(label, modify(TextSmall, TextUppercase, OpacityHalf))
     }
 }
 

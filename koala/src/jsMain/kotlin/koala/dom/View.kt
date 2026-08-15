@@ -14,7 +14,7 @@ import org.w3c.dom.HTMLElement
 class View(
     private var consumer: TagScope,
     parentScope: CoroutineScope,
-    override val name: String,
+    override val scopeName: String,
     override val app: AppContainer,
     override val mount: HTMLElement,
     override val parent: ViewScope?
@@ -44,7 +44,7 @@ class View(
     }
 
     private fun addChild(view: View) {
-        if (disposed) error("added child to disposed view: $name")
+        if (disposed) error("added child to disposed view: $scopeName")
         children.add(view)
     }
 
@@ -55,7 +55,7 @@ class View(
     override fun onDispose(block: () -> Unit) {
         // note: disposers belong to the content generation — they run on every
         // clear(), not only at true disposal
-        if (disposed) error("onDispose registered on a disposed view: $name")
+        if (disposed) error("onDispose registered on a disposed view: $scopeName")
         disposers += block
     }
 

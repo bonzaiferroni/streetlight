@@ -8,7 +8,6 @@ import koala.html.Id
 import koala.html.setPopoverTarget
 import koala.model.storeOf
 import streetlight.model.data.*
-import streetlight.web.model.BlockEditor
 import kotlin.uuid.Uuid
 
 fun ViewScope.blockMenu(
@@ -23,7 +22,7 @@ fun ViewScope.blockMenu(
                 null -> {
                     val categories = getCategories(depth)
                     categories.map {
-                        LabeledAction(it.name, { categoryField.set(it) }, modify(TextSmall, TextTransformUppercase))
+                        LabeledAction(it.name, { categoryField.set(it) }, modify(TextSmall, TextUppercase))
                     }
                 }
 
@@ -32,7 +31,7 @@ fun ViewScope.blockMenu(
                     listOf(LabeledAction(
                         label = "← $category",
                         onClick = { categoryField.set(null) },
-                        mod = modify(Bold, ZenBg, TextSmall, TextTransformUppercase)
+                        mod = modify(Bold, ZenBg, TextSmall, TextUppercase)
                     )) + options.map { LabeledAction(it.label, { onSelection(it.item) }) }
                 }
             }
@@ -46,7 +45,7 @@ fun ViewScope.blockMenu(
         }
     }
     button(mod = modify(Padding1)) {
-        textBlock("+ block", modify(Bold, TextTransformUppercase, TextSmall, EditorFg))
+        textBlock("+ block", modify(Bold, TextUppercase, TextSmall, EditorFg))
         setPopoverTarget(popoverId)
     }
 }

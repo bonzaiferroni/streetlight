@@ -43,4 +43,4 @@ class ViewTelemetry(
 fun ViewScope.getPath(): String =
     generateSequence(this) { it.parent }
         .toList().asReversed()
-        .joinToString(" > ") { it.name }
+        .joinToString(" > ") { it.scopeName }

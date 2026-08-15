@@ -20,11 +20,11 @@ fun ViewScope.routeMenu(
     leftIcons: List<IconButton>? = null,
     rightIcons: List<IconButton>? = null,
 ) {
-    column(modify(mod, RouteMenu.Base, TextTransformUppercase, TextSmall, Gap0, AlignItemsCenter)) {
+    column(modify(mod, RouteMenu.Base, TextUppercase, TextSmall, Gap0, AlignItemsCenter)) {
         filigree(modify(AlignSelfStretch)) {
             textBlock(context)
         }
-        row(modify(RouteMenu.ContextMenu, Gap0, TextTransformUppercase, TextSmall, Padding1, Bold, BorderSolid2Px)) {
+        row(modify(RouteMenu.ContextMenu, Gap0, TextUppercase, TextSmall, Padding1, Bold, BorderSolid2Px)) {
             leftIcons?.let { icons ->
                 iconsTray(icons, modify(RouteMenu.LeftTray))
             }

@@ -2,92 +2,81 @@ package streetlight.web.ui
 
 import initElement
 import koala.SvgFile
-import koala.css.AlignItemsCenter
-import koala.css.Flex1
-import koala.css.Height5
-import koala.css.modify
-import koala.dom.ViewScope
-import koala.dom.button
-import koala.dom.column
-import koala.dom.flowBlock
-import koala.dom.row
-import koala.dom.tabs
-import koala.dom.textBlock
-import koala.dom.textField
+import koala.css.*
+import koala.dom.*
 import koala.model.storeOf
 import koala.model.toggle
 import kotlinx.html.FlowContent
 import org.w3c.dom.HTMLElement
 import streetlight.model.data.*
-import streetlight.web.layouts.buildEvents
-import streetlight.web.layouts.buildFooter
-import streetlight.web.layouts.buildHeader
-import streetlight.web.layouts.buildImage
-import streetlight.web.layouts.buildMap
-import streetlight.web.layouts.buildRichText
+import streetlight.web.layouts.renderEvents
+import streetlight.web.layouts.renderHeader
+import streetlight.web.layouts.renderImage
+import streetlight.web.layouts.renderMap
+import streetlight.web.layouts.renderRichText
 import streetlight.web.model.BlockEditor
 import streetlight.web.model.BlockId
 import streetlight.web.model.LayoutEditor
 
-fun ViewScope.blockBuilder(model: LayoutEditor, blockId: BlockId, content: LocationContent) {
+fun ViewScope.blockBuilder(model: LayoutEditor, blockId: BlockId) {
     val editor = model.getBlock(blockId)
-    val element: HTMLElement? = when (val block = editor.blockField.now) {
-        HeaderBlock -> blockBuilder("header", editor) {
-            buildHeader(content)
+    when (val block = editor.blockField.now) {
+        HeaderBlock, EventsBlock, MapBlock -> blockBuilder(editor)
+        is ImageBlock -> blockBuilder(editor) {
+            renderImage(block)
         }
-        EventsBlock -> blockBuilder("events", editor) {
-            buildEvents(content)
-        }
-        is ImageBlock -> blockBuilder("image", editor) {
-            buildImage(block)
-        }
-        MapBlock -> blockBuilder("map", editor) {
-            buildMap(content.location.geoPoint)
-        }
-        is RichTextBlock -> blockBuilder("rich text", editor) {
-            buildRichText(block)
+        is RichTextBlock -> blockBuilder(editor) {
+            renderRichText(block)
         }
         is TextBlock -> textBuilder(editor)
-        is TabsBlock -> tabsBuilder(editor, content)
-    }
-
-    element?.let {
-        initElement(element)
+        is TabsBlock -> tabsBuilder(editor)
     }
 }
 
 fun ViewScope.blockBuilder(
-    name: String,
     editor: BlockEditor,
     onClick: (() -> Unit)?,
     content: ViewScope.() -> Unit
 ) {
     column {
-        editorRow(name, editor, onClick)
+        editorRow(editor, onClick)
         content()
     }
 }
 
 fun ViewScope.blockBuilder(
-    name: String,
     editor: BlockEditor,
     content: FlowContent.() -> Unit
 ) = column {
-
-    menuEditRow(name, editor) {
+    menuEditRow(editor) {
         button({
             editor.removeFromLayout()
         }) {
-            textBlock("remove $name")
+            textBlock("remove ${editor.label}")
         }
     }
     content()
 }
 
-fun ViewScope.textBuilder(editor: BlockEditor): HTMLElement? {
+fun ViewScope.blockBuilder(
+    editor: BlockEditor,
+) {
+    val blockType = editor.block.blockType
+    blockBuilder(editor) {
+        buildContentBlock(blockType)
+    }
+}
+
+fun ViewScope.buildContentBlock(type: BlockType) {
+    box(modify(Outline, BorderRadius1, ZenBg, Height48)) {
+        textBlock("${type.label} content", modify(TextUppercase, TextSmall, OpacityHigh, PlaceSelfCenter))
+    }
+}
+
+fun ViewScope.textBuilder(editor: BlockEditor) {
     val textField = editor.mutableFieldOf<TextBlock, String>({ it.text }) { copy(text = it) }
     val isEditingField = storeOf(textField.now.isEmpty())
-    blockBuilder("text", editor, isEditingField::toggle) {
+    blockBuilder(editor, isEditingField::toggle) {
         flowBlock(isEditingField) { isEditing ->
             if (isEditing) {
                 textField(textField)
@@ -96,13 +85,12 @@ fun ViewScope.textBuilder(editor: BlockEditor): HTMLElement? {
             }
         }
     }
-    return null
 }
 
-fun ViewScope.tabsBuilder(editor: BlockEditor, content: LocationContent): HTMLElement? {
+fun ViewScope.tabsBuilder(editor: BlockEditor) {
     // val tabsField = editor.blockField.narrow<LayoutBlock, TabsBlock>()
     column {
-        menuEditRow("tabs", editor) {
+        menuEditRow(editor) {
             flowBlock(editor.refreshField) {
                 column {
                     editor.childIds.forEach { containerId ->
@@ -137,11 +125,10 @@ fun ViewScope.tabsBuilder(editor: BlockEditor, content: LocationContent): HTMLEl
                 editor.childIds.forEach { containerId ->
                     val container = editor.model.getContainer(containerId)
                     tab(container.name) {
-                        containerBuilder(editor.model, containerId, content)
+                        containerBuilder(editor.model, containerId)
                     }
                 }
             }
         }
     }
-    return null
 }

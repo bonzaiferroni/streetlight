@@ -11,7 +11,7 @@ fun FlowContent.routeMenu(
     leftIcons: List<IconRoute>? = null,
     rightIcons: List<IconRoute>? = null
 ) {
-    column(modify(mod, RouteMenu.Base, TextTransformUppercase, TextSmall, Gap0, AlignItemsCenter)) {
+    column(modify(mod, RouteMenu.Base, TextUppercase, TextSmall, Gap0, AlignItemsCenter)) {
         filigree(modify(AlignSelfStretch)) {
             textBlock(context)
         }

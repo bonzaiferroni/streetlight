@@ -8,7 +8,7 @@ val TextUtilityCss
         LineHeight1, LineHeight115, ParagraphLineHeight,
         // misc
         SingleLine, WhiteSpaceNormal, TextOverflowEllipses, TextShadow, WhiteSpaceNoWrap, WhiteSpacePreLine, UserSelectNone,
-        TextTransformUppercase,
+        TextUppercase,
     )
 
 val Bold = utilityOf("bold", "font-weight: 600")
@@ -27,7 +27,7 @@ val SingleLine = utilityOf("single-line", "white-space: nowrap", "overflow: hidd
 val TextOverflowEllipses = utilityOf("text-overflow-ellipsis", "overflow: hidden", "text-overflow: ellipsis")
 val TextShadow = utilityOf("text-shadow", "text-shadow: var(--btn-text-shadow)")
 val UserSelectNone = utilityOf("user-select-none", "user-select: none")
-val TextTransformUppercase = utilityOf("text-transform-uppercase", "text-transform: uppercase")
+val TextUppercase = utilityOf("text-transform-uppercase", "text-transform: uppercase")
 
 // defined in stylesheet
 val Prose = Class("prose")

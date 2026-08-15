@@ -33,7 +33,7 @@ import streetlight.model.data.TabContent
 import streetlight.model.data.TabsBlock
 import streetlight.model.data.TextBlock
 
-fun ViewScope.containerBuilder(blocksField: MutableTap<List<LayoutBlock>>, content: LocationContent) {
+fun ViewScope.containerBuilder(blocksField: MutableTap<List<LayoutBlock>>) {
     val keyedListField = blocksField.keyedListField()
     val keysField = keyedListField.keysField()
     flowBlock(keysField) { keys ->
@@ -42,7 +42,7 @@ fun ViewScope.containerBuilder(blocksField: MutableTap<List<LayoutBlock>>, conte
         }
         keys.forEachIndexed { index, key ->
             val blockField = keyedListField.mutableTapOf(key)
-            blockBuilder(blockField, content)
+            blockBuilderProto(blockField)
             blockZone {
                 blocksField.insertAt(index + 1, it)
             }
@@ -56,7 +56,7 @@ fun ViewScope.blockZone(onBlock: (LayoutBlock) -> Unit) {
     })
 }
 
-fun ViewScope.blockBuilder(blockField: MutableTap<LayoutBlock>, content: LocationContent) {
+fun ViewScope.blockBuilderProto(blockField: MutableTap<LayoutBlock>) {
     box {
 //        when (val block = blockField.now) {
 //            EventsBlock -> buildEvents(content)
@@ -70,7 +70,7 @@ fun ViewScope.blockBuilder(blockField: MutableTap<LayoutBlock>, content: Locatio
     }
 }
 
-fun ViewScope.tabsBuilder(tabsField: MutableTap<TabsBlock>, content: LocationContent) {
+fun ViewScope.tabsBuilder(tabsField: MutableTap<TabsBlock>) {
     val tabNamesField = tabsField.tapOf { it.tabs.map {it.name} }
     val popoverId = Id("tabs-popover")
     popoverCard(popoverId) {
@@ -105,10 +105,6 @@ fun ViewScope.tabsBuilder(tabsField: MutableTap<TabsBlock>, content: LocationCon
         }
     }
 
-    // val tabContentsField = tabsField.mutableFieldOf({ it.tabs } ) { copy(tabs = it)}
-    // val keyedTabContentsField = tabContentsField.keyedListField()
-    // val keysField = keyedTabContentsField.keysField()
-
     column {
         row(modify(JustifyContentEnd)) {
             button("tabs", mod = modify(Zen)) {
@@ -122,24 +118,10 @@ fun ViewScope.tabsBuilder(tabsField: MutableTap<TabsBlock>, content: LocationCon
                         val blocksField = tabsField.mutableTapOf({ it.tabs[index].blocks }) {
                             copy(tabs = tabs.mapIndexed { i, t -> if (i == index) t.copy(blocks = it) else t })
                         }
-                        containerBuilder(blocksField, content)
+                        containerBuilder(blocksField)
                     }
                 }
             }
-
-            // println("tabNames: $tabNames")
-            // println("tabFieldNames: ${tabsField.now.tabs.map { it.name }}")
-            // tabs {
-            //     keys.forEach { key ->
-            //         val tabContent = keyedTabContentsField.now.first { it.key == key }.value
-            //         val tabName = tabContent.name
-            //         tab(tabName) {
-            //             println("building: $tabName")
-            //             val tabBlocksField = keyedTabContentsField.mutableFieldOf(key).mutableFieldOf({ it.blocks }) { copy(blocks = it)}
-            //             containerBuilder(tabBlocksField, content)
-            //         }
-            //     }
-            // }
         }
     }
 }

@@ -12,7 +12,7 @@ import kotlin.reflect.KFunction
 @ViewMarker
 sealed interface ViewScope: TagScope, AppFacade {
     override val app: AppContainer
-    val name: String
+    val scopeName: String
     val mount: HTMLElement
     val scope: CoroutineScope
     val contentScope: CoroutineScope

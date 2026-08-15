@@ -17,32 +17,32 @@ import streetlight.web.pages.appFooter
 import streetlight.web.ui.BodyStyle
 import streetlight.web.ui.headerOf
 
-fun FlowContent.buildLayout(content: LocationContent) {
+fun FlowContent.renderLayout(content: LocationContent) {
     val layout = content.design?.layout ?: DefaultLayout.location
-    buildColumn(layout.blocks, content)
+    renderColumn(layout.blocks, content)
 }
 
-fun FlowContent.buildColumn(blocks: List<LayoutBlock>, content: LocationContent) {
+fun FlowContent.renderColumn(blocks: List<LayoutBlock>, content: LocationContent) {
     column(BodyStyle.column) {
         blocks.forEach {
-            buildBlock(it, content)
+            renderBlock(it, content)
         }
     }
 }
 
-fun FlowContent.buildBlock(block: LayoutBlock, content: LocationContent) {
+fun FlowContent.renderBlock(block: LayoutBlock, content: LocationContent) {
     when (block) {
-        HeaderBlock -> buildHeader(content)
-        EventsBlock -> buildEvents(content)
-        is ImageBlock -> buildImage(block)
-        MapBlock -> buildMap(content.location.geoPoint)
-        is TabsBlock -> buildTabs(block, content)
-        is TextBlock -> buildText(block)
-        is RichTextBlock -> buildRichText(block)
+        HeaderBlock -> renderHeader(content)
+        EventsBlock -> renderEvents(content)
+        is ImageBlock -> renderImage(block)
+        MapBlock -> renderMap(content.location.geoPoint)
+        is TabsBlock -> renderTabs(block, content)
+        is TextBlock -> renderText(block)
+        is RichTextBlock -> renderRichText(block)
     }
 }
 
-fun FlowContent.buildEvents(content: LocationContent) {
+fun FlowContent.renderEvents(content: LocationContent) {
     layoutPosts {
         content.events.forEach {
             entityRow(it)
@@ -50,7 +50,7 @@ fun FlowContent.buildEvents(content: LocationContent) {
     }
 }
 
-fun FlowContent.buildHeader(content: LocationContent) {
+fun FlowContent.renderHeader(content: LocationContent) {
     val location = content.location
     headerOf(
         location = location,
@@ -58,33 +58,33 @@ fun FlowContent.buildHeader(content: LocationContent) {
     )
 }
 
-fun FlowContent.buildImage(block: ImageBlock) {
+fun FlowContent.renderImage(block: ImageBlock) {
     image(block.image)
 }
 
-fun FlowContent.buildMap(geoPoint: GeoPoint) {
+fun FlowContent.renderMap(geoPoint: GeoPoint) {
     geoMapMount(geoPoint, modify(MinHeight48))
 }
 
-fun FlowContent.buildTabs(block: TabsBlock, content: LocationContent) {
+fun FlowContent.renderTabs(block: TabsBlock, content: LocationContent) {
     tabs {
         block.tabs.forEach {
             if (it.name == "events" && content.events.isEmpty()) return@forEach // td: better solution
             tab(it.name) {
-                buildColumn(it.blocks, content)
+                renderColumn(it.blocks, content)
             }
         }
     }
 }
 
-fun FlowContent.buildText(block: TextBlock) {
+fun FlowContent.renderText(block: TextBlock) {
     textBlock(block.text)
 }
 
-fun FlowContent.buildRichText(block: RichTextBlock) {
+fun FlowContent.renderRichText(block: RichTextBlock) {
     markdown(block.text)
 }
 
-fun FlowContent.buildFooter() {
+fun FlowContent.renderFooter() {
     appFooter()
 }

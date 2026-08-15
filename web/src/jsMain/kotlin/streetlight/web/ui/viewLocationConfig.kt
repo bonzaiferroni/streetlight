@@ -40,7 +40,7 @@ fun ViewScope.viewLocationConfig(
     column(BodyStyle.column) {
         column(modify(Gap0, MarginTop1)) {
             filigree {
-                heading3("configure", modify(TextTransformUppercase, OpacityHalf))
+                heading3("configure", modify(TextUppercase, OpacityHalf))
             }
             flowBlock(locationState) { location ->
                 box {
@@ -74,20 +74,9 @@ fun ViewScope.viewLocationConfig(
                 }
             }
             tab("layout") {
-                val location = locationState.now
-                dataBlock({ api.readLocationEvents(location.slug) }) { events ->
-                    // td: fix layout source
-                    val locationContent = LocationContent(
-                        location = location,
-                        design = PageDesign(initialLayout, null),
-                        events = events,
-                        canEdit = true
-                    )
-
-                    column {
-                        layoutBuilder(layoutEditor, locationContent)
-                        formSubmit("save config", ::saveConfig, saveMessages)
-                    }
+                column {
+                    layoutBuilder(layoutEditor)
+                    formSubmit("save config", ::saveConfig, saveMessages)
                 }
             }
             tab("events") {
