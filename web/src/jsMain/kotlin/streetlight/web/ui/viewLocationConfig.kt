@@ -6,7 +6,6 @@ import koala.dom.*
 import koala.html.Id
 import koala.html.heading1
 import koala.html.heading3
-import koala.html.topLogo
 import koala.model.storeOf
 import streetlight.model.data.DefaultLayout
 import streetlight.model.data.LocationConfigContent
@@ -21,28 +20,61 @@ import streetlight.web.shells.cardOf
 fun ViewScope.viewLocationConfig(
     content: LocationConfigContent,
 ) {
-    val location = content.location
+    val locationState = storeOf(content.location)
     val configState = storeOf(content.config)
     val initialLayout = configState.now.design?.layout ?: DefaultLayout.location
     val layoutEditor = LayoutEditor(initialLayout)
     val themeEditor = ThemeEditor(content.config.design?.theme)
+    val saveMessages = MessageStore()
+
+    fun saveConfig() {
+        val layout = layoutEditor.buildLayout()
+        val theme = themeEditor.buildTheme()
+        configState.set { copy(design = PageDesign(layout, theme)) }
+        launchEffect("save config") {
+            saveMessages.deliverSending()
+            api.updateLocationConfig(configState.now).handleResponse(saveMessages, "Config saved.")
+        }
+    }
+
     column(BodyStyle.column) {
         column(modify(Gap0, MarginTop1)) {
             filigree {
                 heading3("configure", modify(TextTransformUppercase, OpacityHalf))
             }
-            heading1(location.name, modify(TextAlignCenter))
+            flowBlock(locationState) { location ->
+                box {
+                    heading1(location.name, modify(TextAlignCenter))
+                }
+            }
         }
 
         tabs(Id("location-config-tabs")) {
             tab("profile") {
-                val edit = location.toEdit()
-                // viewLocationEditor(edit, app, null, false, null)
+                val editor = app.getLocationEditor(locationState.now.toEdit(), contentScope)
+                column {
+                    locationEditFormBody(editor)
+                    formSubmit(
+                        label = "Save profile",
+                        onSubmit = {
+                            launchEffect {
+                                val editedLocation = editor.submitSuspend() ?: return@launchEffect
+                                editor.messages.deliverSuccess("Profile saved")
+                                locationState.set { editedLocation }
+                            }
+                        },
+                        messenger = editor.messages,
+                    )
+                }
             }
             tab("theme") {
-                themeForm(themeEditor)
+                column {
+                    themeForm(themeEditor)
+                    formSubmit("save config", ::saveConfig, saveMessages)
+                }
             }
             tab("layout") {
+                val location = locationState.now
                 dataBlock({ api.readLocationEvents(location.slug) }) { events ->
                     // td: fix layout source
                     val locationContent = LocationContent(
@@ -52,19 +84,15 @@ fun ViewScope.viewLocationConfig(
                         canEdit = true
                     )
 
-                    layoutBuilder(layoutEditor, locationContent)
+                    column {
+                        layoutBuilder(layoutEditor, locationContent)
+                        formSubmit("save config", ::saveConfig, saveMessages)
+                    }
                 }
             }
             tab("events") {
+                val location = locationState.now
                 column {
-                    location.eventsUrl.let { link ->
-                        row {
-                            textBlock("This location has an event page that we can try to read.", modify(Flex1))
-                            button("read events", onClick = {
-                                // app.portal.go(OldEventScoutRoute(location, link))
-                            })
-                        }
-                    }
                     dataBlock({ api.readLocationEvents(location.slug) }) { events ->
                         column {
                             events.forEach { event ->
@@ -79,16 +107,7 @@ fun ViewScope.viewLocationConfig(
                 // locationAutomationForm(content)
             }
         }
-        val messages = MessageStore()
-        formSubmit("save config", {
-            val layout = layoutEditor.buildLayout()
-            val theme = themeEditor.buildTheme()
-            configState.set { copy(design = PageDesign(layout, theme)) }
-            launchEffect("save config") {
-                messages.deliverSending()
-                api.updateLocationConfig(configState.now).handleResponse(messages, "Design saved.")
-            }
-        }, messages)
+
         appFooter("")
     }
 }

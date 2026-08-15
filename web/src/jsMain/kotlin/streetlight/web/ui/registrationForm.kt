@@ -43,9 +43,9 @@ fun ViewScope.guestRegistrationForm(model: UserCreator) {
             requirementsSection(model)
         }
         formSubmit(
-            buttonText = "Register as Guest",
-            onClick = { model.createAccount(AccountType.Guest) },
-            messages = model.messages,
+            label = "Register as Guest",
+            onSubmit = { model.createAccount(AccountType.Guest) },
+            messenger = model.messages,
             enabledTap = model.isValidField
         )
     }
@@ -71,9 +71,9 @@ fun ViewScope.fullRegistrationForm(model: UserCreator) {
             requirementsSection(model)
         }
         formSubmit(
-            buttonText = "Sign up",
-            onClick = { model.createAccount(AccountType.Registered) },
-            messages = model.messages,
+            label = "Sign up",
+            onSubmit = { model.createAccount(AccountType.Registered) },
+            messenger = model.messages,
             enabledTap = model.isValidField
         )
     }

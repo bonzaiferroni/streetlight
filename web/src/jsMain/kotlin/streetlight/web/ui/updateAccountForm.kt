@@ -57,9 +57,9 @@ fun ViewScope.passwordSection(model: AccountEditor) = formSection("Password") {
                     }
                 }
                 formSubmit(
-                    buttonText = "change",
-                    onClick = { model.changePassword(messages) },
-                    messages = messages,
+                    label = "change",
+                    onSubmit = { model.changePassword(messages) },
+                    messenger = messages,
                     onCancel = { model.isEditingPasswordField.set(false) }
                 )
             }

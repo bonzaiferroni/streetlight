@@ -27,10 +27,10 @@ fun ViewScope.viewLocationScout(galaxy: Galaxy) {
                 LocationScoutStage.Search -> locationFinder(model)
                 LocationScoutStage.Edit -> column {
                     locationEditFormBody(editor)
-                    formSubmitLegacy(
+                    formSubmit(
                         label = "Next",
                         onSubmit = model::review,
-                        messages = editor.messages,
+                        messenger = editor.messages,
                         back = LabeledAction("Back", { model.stageField.set(LocationScoutStage.Search) })
                     )
                 }

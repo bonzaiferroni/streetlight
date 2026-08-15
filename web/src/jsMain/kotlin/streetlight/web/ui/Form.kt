@@ -64,19 +64,25 @@ fun ViewScope.formBullets(
 }
 
 fun ViewScope.formSubmit(
-    buttonText: String = "submit",
-    onClick: () -> Unit,
-    messages: MessageStore? = null,
+    label: String = "submit",
+    onSubmit: () -> Unit,
+    messenger: MessageStore? = null,
     buttonMod: ModifierSet = modify(Accent),
     onCancel: (() -> Unit)? = null,
     enabledTap: Tap<Boolean>? = null,
     isDisplayedFlow: Tap<Boolean>? = null,
-) = row(mod = modify(AlignItemsStart, JustifyContentEnd)) {
-    messages?.let {
+    back: LabeledAction? = null,
+) = row(mod = modify(AlignItemsStart)) {
+    row(modify(Flex1)) {
+        back?.let {
+            button(it.label, it.onClick, it.mod ?: modify(Secondary))
+        }
+    }
+    messenger?.let {
         messageBox(it)
     }
     column {
-        val button = button(buttonText, onClick, buttonMod)
+        val button = button(label, onSubmit, buttonMod)
         enabledTap?.let {
             configureEnabledFlow(button, enabledTap)
         }
