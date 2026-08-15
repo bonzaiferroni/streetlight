@@ -1,6 +1,7 @@
 package koala.css
 
 object ButtonStyle {
+
 }
 
 // language="CSS"

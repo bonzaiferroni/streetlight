@@ -1,18 +1,14 @@
 package streetlight.web.ui
 
-import initElement
+import koala.Image
 import koala.SvgFile
 import koala.css.*
 import koala.dom.*
 import koala.model.storeOf
 import koala.model.toggle
 import kotlinx.html.FlowContent
-import org.w3c.dom.HTMLElement
 import streetlight.model.data.*
-import streetlight.web.layouts.renderEvents
-import streetlight.web.layouts.renderHeader
 import streetlight.web.layouts.renderImage
-import streetlight.web.layouts.renderMap
 import streetlight.web.layouts.renderRichText
 import streetlight.web.model.BlockEditor
 import streetlight.web.model.BlockId
@@ -22,9 +18,7 @@ fun ViewScope.blockBuilder(model: LayoutEditor, blockId: BlockId) {
     val editor = model.getBlock(blockId)
     when (val block = editor.blockField.now) {
         HeaderBlock, EventsBlock, MapBlock -> blockBuilder(editor)
-        is ImageBlock -> blockBuilder(editor) {
-            renderImage(block)
-        }
+        is ImageBlock -> imageBuilder(editor)
         is RichTextBlock -> blockBuilder(editor) {
             renderRichText(block)
         }
@@ -73,20 +67,6 @@ fun ViewScope.buildContentBlock(type: BlockType) {
     }
 }
 
-fun ViewScope.textBuilder(editor: BlockEditor) {
-    val textField = editor.mutableFieldOf<TextBlock, String>({ it.text }) { copy(text = it) }
-    val isEditingField = storeOf(textField.now.isEmpty())
-    blockBuilder(editor, isEditingField::toggle) {
-        flowBlock(isEditingField) { isEditing ->
-            if (isEditing) {
-                textField(textField)
-            } else {
-                textBlock(textField.now.takeIf { it.isNotEmpty() } ?: "[Text content]")
-            }
-        }
-    }
-}
-
 fun ViewScope.tabsBuilder(editor: BlockEditor) {
     // val tabsField = editor.blockField.narrow<LayoutBlock, TabsBlock>()
     column {
@@ -129,6 +109,29 @@ fun ViewScope.tabsBuilder(editor: BlockEditor) {
                     }
                 }
             }
+        }
+    }
+}
+
+fun ViewScope.textBuilder(editor: BlockEditor) {
+    val textState = editor.mutableTapOf<TextBlock, String>({ it.text }) { copy(text = it) }
+    val isEditingState = storeOf(textState.now.isEmpty())
+    blockBuilder(editor, isEditingState::toggle) {
+        flowBlock(isEditingState) { isEditing ->
+            if (isEditing) {
+                textField(textState)
+            } else {
+                textBlock(textState.now.takeIf { it.isNotEmpty() } ?: "[Text content]")
+            }
+        }
+    }
+}
+
+fun ViewScope.imageBuilder(editor: BlockEditor) {
+    val imageState = editor.mutableTapOf<ImageBlock, Image?>({ it.image }) { copy(image = it)}
+    blockBuilder(editor) {
+        imageDrop(imageState) { image ->
+            image(image.url)
         }
     }
 }

@@ -43,7 +43,7 @@ val LayoutUtilityCss
         // Position
         PositionSticky, PositionRelative, PositionAbsolute, Top0, Right0, Bottom0, Left0,
         // Other
-        SpaceBetween, Start, End, PlaceSelfCenter, PlaceSelfStretch,
+        SpaceBetween, Start, End, PlaceSelfStart, PlaceSelfCenter, PlaceSelfStretch,
         PlaceItemsCenter, RelativeParent, ZIndex1, ZIndex2, ZIndex3, Shrinkable, QueryContainer,
         TopSpacing1, TopSpacing8,
     )
@@ -248,6 +248,7 @@ val ObjectFitFill = utilityOf("object-fit-stretch", "object-fit: fill")
 val SpaceBetween = utilityOf("space-between", "justify-content: space-between")
 val Start = CssUtility("start")
 val End = CssUtility("end")
+val PlaceSelfStart = utilityOf("place-self-start", "place-self: start")
 val PlaceSelfCenter = utilityOf("place-self-center", "place-self: center")
 val PlaceSelfStretch = utilityOf("place-self-stretch", "place-self: stretch")
 val PlaceItemsCenter = utilityOf("place-items-center", "place-items: center")

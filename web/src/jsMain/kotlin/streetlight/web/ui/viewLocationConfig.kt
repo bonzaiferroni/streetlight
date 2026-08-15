@@ -23,15 +23,15 @@ fun ViewScope.viewLocationConfig(
     val locationState = storeOf(content.location)
     val configState = storeOf(content.config)
     val initialLayout = configState.now.design?.layout ?: DefaultLayout.location
-    val layoutEditor = LayoutEditor(initialLayout)
+    val layoutEditor = LayoutEditor(initialLayout, api)
     val themeEditor = ThemeEditor(content.config.design?.theme)
     val saveMessages = MessageStore()
 
     fun saveConfig() {
-        val layout = layoutEditor.buildLayout()
         val theme = themeEditor.buildTheme()
-        configState.set { copy(design = PageDesign(layout, theme)) }
         launchEffect("save config") {
+            val layout = layoutEditor.buildLayout(saveMessages)
+            configState.set { copy(design = PageDesign(layout, theme)) }
             saveMessages.deliverSending()
             api.updateLocationConfig(configState.now).handleResponse(saveMessages, "Config saved.")
         }

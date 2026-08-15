@@ -1,9 +1,11 @@
 package koala.dom
 
 import kampfire.model.Url
+import koala.Image
 import koala.SiteImage
 import koala.css.ModifierSet
 import koala.css.addModifiers
+import koala.model.Tap
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.html.IMG
@@ -30,13 +32,12 @@ fun TagScope.image(
 }
 
 fun ViewScope.image(
-    binding: Flow<Url?>,
-    initial: Url? = SiteImage.placeholderLg,
+    state: Tap<Image?>,
     mod: ModifierSet? = null,
     hideOnError: Boolean = true,
     block: (IMG.() -> Unit)? = null
 ): HTMLImageElement {
-    val element = image(initial, mod, block)
+    val element = image(state.now?.url ?: SiteImage.placeholderLg, mod, block)
 
     fun hideImage() {
         element.style.display = "none"
@@ -46,8 +47,8 @@ fun ViewScope.image(
         element.style.removeProperty("display")
     }
 
-    contentScope.launch {
-        binding.collect { url ->
+    launchEffect("image") {
+        state.flow.collect { url ->
             val url = url?.value ?: ""
             if (url.isEmpty()) {
                 hideImage()

@@ -2,6 +2,7 @@ package streetlight.web.ui
 
 import kampfire.api.Markdown
 import koala.Image
+import koala.SiteImage
 import koala.css.*
 import koala.dom.*
 import koala.html.Id
@@ -60,7 +61,7 @@ fun getOptions(category: BlockCategory, depth: Int) = buildList {
     when (category) {
         BlockCategory.Basic -> {
             add(LabeledItem("text", TextBlock("")))
-            add(LabeledItem("image", ImageBlock(Image.Empty)))
+            add(LabeledItem("image", ImageBlock(null)))
             add(LabeledItem("rich text", RichTextBlock(Markdown.Empty)))
         }
         BlockCategory.Containers -> {

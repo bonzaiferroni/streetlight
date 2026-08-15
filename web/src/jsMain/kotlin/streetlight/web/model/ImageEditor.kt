@@ -4,6 +4,7 @@ import kampfire.model.Messenger
 import kampfire.model.PrintLnMessenger
 import kampfire.model.UIMessage
 import kampfire.model.UIMessageType
+import kampfire.model.Url
 import kampfire.model.handleResponse
 import koala.Image
 import koala.model.MutableTap
@@ -20,10 +21,7 @@ class ImageEditor(
     // val imageField = state.mutableFieldOf({ it.image }) { copy(image = it) }
 
     suspend fun finalizeImage(messenger: Messenger? = null) {
-        val url = imageField.now?.url?.takeIf { it.isBlob } ?: return
-        println("uploading image: $url")
-        messenger?.deliver(UIMessage("Uploading image...", UIMessageType.Working))
-        val image = api.uploadImageBlob(url).handleResponse(messenger ?: PrintLnMessenger)?.toImage() ?: return
+        val image = uploadImage(imageField.now?.url, messenger, api)?.toImage() ?: return
         imageField.set(image)
     }
 }
@@ -31,3 +29,10 @@ class ImageEditor(
 data class ImageEditorState(
     val image: Image?,
 )
+
+suspend fun uploadImage(url: Url?, messenger: Messenger?, api: ApiClient): Url? {
+    val url = url?.takeIf { it.isBlob } ?: return null
+    println("uploading image: $url")
+    messenger?.deliver(UIMessage("Uploading image...", UIMessageType.Working))
+    return api.uploadImageBlob(url).handleResponse(messenger ?: PrintLnMessenger)
+}

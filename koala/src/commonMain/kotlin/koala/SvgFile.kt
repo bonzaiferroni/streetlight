@@ -94,6 +94,7 @@ object SvgFile : FileSet<Svg>() {
     val Trash = add("trash.svg")
     val UserSmall = add("user-small.svg")
     val User = add("user.svg")
+    val X = add("x.svg")
 
     // filigree
     val CircularFiligree = add("circular-filigree.svg")

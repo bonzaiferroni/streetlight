@@ -37,7 +37,7 @@ fun TagScope.popoverCard(
     isManual: Boolean = false,
     block: DIV.() -> Unit = {}
 ) = popover(id, anchor, modify(mod, Padding1), isManual) {
-    card(modify(cardMod, BlurBackdrop, BorderRadius3, BorderSolid2Px, MarginTop1, AutoMagic, Scale, OverflowClip)) {
+    card(modify(cardMod, BlurBackdrop, BorderRadius3, BorderSolid2Px, AutoMagic, Scale, OverflowClip)) {
         block()
     }
 }

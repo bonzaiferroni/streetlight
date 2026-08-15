@@ -27,7 +27,7 @@ class BlockEditor(
     val blockType get() = block.blockType
     val label get() = blockType.label
 
-    inline fun <reified T : LayoutBlock, V> mutableFieldOf(
+    inline fun <reified T : LayoutBlock, V> mutableTapOf(
         crossinline getter: (T) -> V,
         crossinline setter: T.(V) -> T
     ): MutableTap<V> = blockField.mutableTapOf(

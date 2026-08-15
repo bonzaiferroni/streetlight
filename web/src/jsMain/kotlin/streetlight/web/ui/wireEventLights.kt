@@ -1,17 +1,5 @@
 package streetlight.web.ui
 
-import koala.core.queryFirstOrNull
-import koala.css.Property
-import koala.css.UrlValue
-import koala.dom.onClick
-import koala.dom.queryAttributeAll
-import koala.dom.setAttribute
-import koala.html.IconKey
-import kotlinx.coroutines.launch
-import org.w3c.dom.HTMLElement
-import streetlight.model.data.EventId
-import streetlight.web.model.Streetlight
-
 //fun ViewContext<Streetlight>.wireEventLights(root: HTMLElement) {
 //    val app = model
 //    val cache = app.cache.event

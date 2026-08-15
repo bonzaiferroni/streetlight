@@ -1,15 +1,22 @@
 package streetlight.web.model
 
+import kampfire.model.Messenger
+import koala.Image
 import koala.model.tapOf
 import koala.model.storeOf
 import streetlight.model.data.DefaultLayout
+import streetlight.model.data.ImageBlock
 import streetlight.model.data.PageLayout
 import streetlight.model.data.LayoutBlock
 import streetlight.model.data.LayoutContainer
 import streetlight.model.data.TabsBlock
+import streetlight.web.io.ApiClient
 import kotlin.uuid.Uuid
 
-class LayoutEditor(initialLayout: PageLayout) {
+class LayoutEditor(
+    initialLayout: PageLayout,
+    private val api: ApiClient,
+) {
     private val state = storeOf(LayoutEditorState())
 
     private val blocks = mutableMapOf<BlockId, BlockEditor>()
@@ -107,27 +114,39 @@ class LayoutEditor(initialLayout: PageLayout) {
         state.set { copy(removedBlockIds = removedBlockIds + blockId) }
     }
 
-    fun buildLayout(): PageLayout? {
-        val blocks = buildContainer(mainContainerId).takeIf { it.isNotEmpty() } ?: return null
+    suspend fun buildLayout(messenger: Messenger): PageLayout? {
+        val blocks = buildContainer(mainContainerId, messenger).takeIf { it.isNotEmpty() } ?: return null
         return PageLayout(blocks).takeIf { it != DefaultLayout.location }
     }
 
-    private fun buildContainer(containerId: ContainerId): List<LayoutBlock> {
+    private suspend fun buildContainer(containerId: ContainerId, messenger: Messenger): List<LayoutBlock> {
         val container = getContainer(containerId)
 
         return container.childIds.mapNotNull { blockId ->
-            buildBlock(blockId)
+            buildBlock(blockId, messenger)
         }
     }
 
-    private fun buildBlock(blockId: BlockId): LayoutBlock? {
+    private suspend fun buildBlock(blockId: BlockId, messenger: Messenger): LayoutBlock? {
         val blockEditor = getBlock(blockId)
-        val block = blockEditor.blockField.now
+        val block = processBlock(blockEditor.blockField.now, messenger)
+
         val containers = blockEditor.childIds.map { containerId ->
             val container = getContainer(containerId)
-            ContainerDefinition(container.name, buildContainer(containerId))
+            ContainerDefinition(container.name, buildContainer(containerId, messenger))
         }
         return buildBlock(block, containers)
+    }
+
+    private suspend fun processBlock(block: LayoutBlock, messenger: Messenger) = when (block) {
+        is ImageBlock -> {
+            block.image?.let { image ->
+                uploadImage(image.url, messenger, api)?.let { url ->
+                    block.copy(image = image.copy(url = url))
+                }
+            } ?: block
+        }
+        else -> block
     }
 }
 

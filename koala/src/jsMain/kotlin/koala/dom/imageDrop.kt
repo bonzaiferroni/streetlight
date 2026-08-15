@@ -1,22 +1,8 @@
 package koala.dom
 
 import koala.Image
-import koala.css.AlignSelfStart
-import koala.css.Blur
-import koala.css.BorderRadius1
-import koala.css.BorderRadius2
-import koala.css.JustifySelfStart
-import koala.css.Magic
-import koala.css.Margin1
-import koala.css.MinWidthAuto
-import koala.css.ModifierSet
-import koala.css.OpacityHigh
-import koala.css.OverflowHidden
-import koala.css.Secondary
-import koala.css.Size100P
-import koala.css.SlideDown
-import koala.css.ZIndex1
-import koala.css.modify
+import koala.SvgFile
+import koala.css.*
 import koala.html.fillImage
 import koala.model.MutableTap
 import koala.toImage
@@ -24,25 +10,31 @@ import koala.toImage
 fun ViewScope.imageDrop(
     field: MutableTap<Image?>,
     mod: ModifierSet? = null,
-    block: ViewScope.(Image) -> Unit = {
-        box(modify(Size100P)) {
-            fillImage(it.url)
-        }
-    }
-) = flowBlock(field, modify(mod, Magic, Blur, SlideDown)) { url ->
+    block: ViewScope.(Image) -> Unit
+) = flowBlock(field, modify(mod, Magic, Scale)) { url ->
     if (url != null) {
         box(modify(Size100P, OverflowHidden, BorderRadius1)) {
             block(url)
             button(
-                text = "✕",
-                mod = modify(Secondary, MinWidthAuto, JustifySelfStart, AlignSelfStart, Margin1, OpacityHigh, ZIndex1),
+                mod = modify(EditorBg, Outline, BorderRadius50P, PlaceSelfStart, Aspect1, Padding1, Margin1, OpacityHigh),
                 onClick = {
                     field.set(null)
-                })
+                }) {
+                icon(SvgFile.X)
+            }
         }
     } else {
         filePicker(MimeType.Image, modify(Size100P, BorderRadius2)) {
             field.set(it.toImage())
         }
+    }
+}
+
+fun ViewScope.imageDrop(
+    field: MutableTap<Image?>,
+    mod: ModifierSet? = null,
+) = imageDrop(field, mod) {
+    box(modify(Size100P)) {
+        fillImage(it.url, modify(Size100P))
     }
 }

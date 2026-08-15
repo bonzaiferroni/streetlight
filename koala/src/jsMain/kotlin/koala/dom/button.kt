@@ -2,9 +2,11 @@ package koala.dom
 
 import koala.Svg
 import koala.css.Aspect1
+import koala.css.ButtonStyle
 import koala.css.Height3
 import koala.css.ModifierSet
 import koala.css.modify
+import koala.html.IconStyle
 import koala.html.configureButton
 import koala.html.configureElementButton
 import koala.html.configureSvgButton
@@ -40,7 +42,7 @@ fun TagScope.button(
 fun TagScope.button(
     svg: Svg,
     onClick: (() -> Unit)? = null,
-    mod: ModifierSet? = modify(Aspect1, Height3),
+    mod: ModifierSet = IconStyle.DefaultMod,
     onClickEvent: ((Event) -> Unit)? = null,
     block: BUTTON.() -> Unit = {},
 ): HTMLButtonElement {
