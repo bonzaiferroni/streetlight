@@ -31,7 +31,7 @@ fun HTML.messagePage(
     block: FlowContent.() -> Unit = { }
 ) {
     staticPage("$title | Streetlight", styles) {
-        column(modify(BodyStyle.column, AlignItemsCenter)) {
+        column(modify(BodyStyle.Column, AlignItemsCenter)) {
             topLogo()
             filigree(modify(AlignSelfStretch)) { heading1(title) }
             card(modify(MaxWidth64, Padding1)) {

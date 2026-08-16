@@ -9,7 +9,6 @@ import koala.html.heading3
 import koala.model.storeOf
 import streetlight.model.data.DefaultLayout
 import streetlight.model.data.LocationConfigContent
-import streetlight.model.data.LocationContent
 import streetlight.model.data.PageDesign
 import streetlight.model.data.toEdit
 import streetlight.model.ui.LocationConfigRoute
@@ -38,7 +37,7 @@ fun ViewScope.viewLocationConfig(
         }
     }
 
-    column(BodyStyle.column) {
+    column(BodyStyle.Column) {
         column(modify(Gap0, MarginTop1)) {
             filigree {
                 heading3("configure", modify(TextUppercase, OpacityHalf))

@@ -5,14 +5,13 @@ import koala.dom.*
 import koala.dom.button
 import koala.dom.row
 import koala.html.Id
-import koala.html.box
 import koala.html.heading3
 import koala.html.hr
 import koala.html.setPopoverTarget
 import koala.html.textBlock
+import koala.model.MutableTap
+import koala.model.toggle
 import kotlinx.html.BUTTON
-import kotlinx.html.FlowContent
-import streetlight.model.data.BlockType
 import streetlight.web.model.BlockEditor
 import streetlight.web.model.BlockId
 import streetlight.web.model.ContainerEditor
@@ -21,7 +20,7 @@ import streetlight.web.model.LayoutEditor
 import kotlin.uuid.Uuid
 
 fun ViewScope.layoutBuilder(model: LayoutEditor) {
-    column(BodyStyle.column) {
+    column(BodyStyle.Column) {
         containerBuilder(model, model.mainContainerId)
         // td: footer designer
         flowBlock(model.removedBlockIdsState) { removedBlockIds ->
@@ -43,37 +42,42 @@ fun ViewScope.containerBuilder(model: LayoutEditor, containerId: ContainerId) {
     }
 }
 
-fun ViewScope.menuEditRow(editor: BlockEditor, menuContent: ViewScope.() -> Unit) {
-    val popoverId = Id(Uuid.random().toString())
-    popoverCard(popoverId, cardMod = modify(EditorBg)) {
-        menuContent()
-    }
-    editorRow(editor, null) {
-        setPopoverTarget(popoverId)
-    }
-}
-
 fun ViewScope.editorRow(
     editor: BlockEditor,
-    onClick: (() -> Unit)?,
-    configButton: BUTTON.() -> Unit = { }
+    isEditingState: MutableTap<Boolean>? = null,
+    menuContent: (ViewScope.() -> Unit)? = null,
 ) {
+    val popoverId = menuContent?.let {
+        Id(Uuid.random().toString()).also {
+            popoverCard(it, cardMod = modify(EditorBg)) {
+                menuContent()
+            }
+        }
+    }
     flowBlock(editor.model.movingBlockIdState, modify(Magic, Scale, Height5)) { movingBlockId ->
         when (movingBlockId) {
             null -> {
-                row(modify(AlignItemsCenter, PaddingX1)) {
+                row(modify(AlignItemsCenter)) {
                     row(modify(AlignItemsCenter, Flex1)) {
                         blockMenu(editor.depth ?: error("depth is null")) { editor.addBlockAbove(it) }
+                        editorTextButton("remove", { editor.removeFromLayout() })
                         hr(modify(Flex1))
                     }
-                    button("edit ${editor.label}", onClick, modify(Editor, JustifySelfCenter), block = configButton)
+                    when (popoverId) {
+                        null -> textBlock(editor.label, modify(BodyStyle.LabelHeading, EditorFg, Bold))
+                        else -> button("edit ${editor.label}", mod = modify(Editor, JustifySelfCenter)) {
+                            setPopoverTarget(popoverId)
+                        }
+                    }
+
                     row(modify(AlignItemsCenter, Flex1)) {
                         hr(modify(Flex1))
-                        button({
-                            editor.model.startMove(editor.blockId)
-                        }, modify(Padding1)) {
-                            textBlock("move", LayoutBuilder.TextButtonMod)
+                        isEditingState?.let { state ->
+                            flowBlock(state) { isEditing ->
+                                editorTextButton(if (isEditing) "done" else "edit", { state.toggle() })
+                            }
                         }
+                        editorTextButton("move", { editor.model.startMove(editor.blockId) })
                     }
                 }
             }
@@ -125,7 +129,7 @@ fun ViewScope.removedBlockList(model: LayoutEditor, blockIds: List<BlockId>) {
                 textBlock(blockName)
                 button({
                     model.startMove(blockId)
-                }, LayoutBuilder.TextButtonMod) {
+                }, EditorStyle.TextButton) {
                     textBlock("restore")
                 }
             }
@@ -133,6 +137,15 @@ fun ViewScope.removedBlockList(model: LayoutEditor, blockIds: List<BlockId>) {
     }
 }
 
-object LayoutBuilder {
-    val TextButtonMod = modify(TextUppercase, TextSmall, Bold, EditorFg)
+fun ViewScope.editorTextButton(
+    name: String,
+    onClick: (() -> Unit)? = null,
+    config: BUTTON.() -> Unit = { }
+) = button(onClick, modify(Padding1)) {
+    config()
+    textBlock(name, EditorStyle.TextButton)
+}
+
+object EditorStyle {
+    val TextButton = modify(TextUppercase, TextSmall, Bold, EditorFg)
 }

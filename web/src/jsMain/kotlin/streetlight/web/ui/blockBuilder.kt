@@ -29,26 +29,9 @@ fun ViewScope.blockBuilder(model: LayoutEditor, blockId: BlockId) {
 
 fun ViewScope.blockBuilder(
     editor: BlockEditor,
-    onClick: (() -> Unit)?,
-    content: ViewScope.() -> Unit
-) {
-    column {
-        editorRow(editor, onClick)
-        content()
-    }
-}
-
-fun ViewScope.blockBuilder(
-    editor: BlockEditor,
     content: FlowContent.() -> Unit
 ) = column {
-    menuEditRow(editor) {
-        button({
-            editor.removeFromLayout()
-        }) {
-            textBlock("remove ${editor.label}")
-        }
-    }
+    editorRow(editor)
     content()
 }
 
@@ -70,7 +53,7 @@ fun ViewScope.buildContentBlock(type: BlockType) {
 fun ViewScope.tabsBuilder(editor: BlockEditor) {
     // val tabsField = editor.blockField.narrow<LayoutBlock, TabsBlock>()
     column {
-        menuEditRow(editor) {
+        editorRow(editor) {
             flowBlock(editor.refreshField) {
                 column {
                     editor.childIds.forEach { containerId ->
@@ -116,7 +99,8 @@ fun ViewScope.tabsBuilder(editor: BlockEditor) {
 fun ViewScope.textBuilder(editor: BlockEditor) {
     val textState = editor.mutableTapOf<TextBlock, String>({ it.text }) { copy(text = it) }
     val isEditingState = storeOf(textState.now.isEmpty())
-    blockBuilder(editor, isEditingState::toggle) {
+    column {
+        editorRow(editor, isEditingState)
         flowBlock(isEditingState) { isEditing ->
             if (isEditing) {
                 textField(textState)
@@ -129,7 +113,10 @@ fun ViewScope.textBuilder(editor: BlockEditor) {
 
 fun ViewScope.imageBuilder(editor: BlockEditor) {
     val imageState = editor.mutableTapOf<ImageBlock, Image?>({ it.image }) { copy(image = it)}
-    blockBuilder(editor) {
+    column {
+        editorRow(editor) {
+
+        }
         imageDrop(imageState) { image ->
             image(image.url)
         }

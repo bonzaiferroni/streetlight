@@ -9,7 +9,7 @@ import streetlight.model.ui.SiteMonitorRoute
 
 fun RouteScope.viewSiteMonitor() {
     val model = app.getSiteMonitor(contentScope)
-    column(BodyStyle.column) {
+    column(BodyStyle.Column) {
         featureHeader("Streetlight Status", "live stats and charts", SiteImage.ControlRoom)
 
         lazyScript(

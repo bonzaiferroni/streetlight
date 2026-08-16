@@ -20,8 +20,8 @@ $Class {
     display: inline-flex;
     align-items: center;
     align-self: start;
+    min-width: 0;
 
-    padding-right: 1rem;
     border-radius: 2rem;
 
     background: color-mix(in srgb, var(--primary-button) 25%, transparent);
@@ -54,6 +54,8 @@ $Pill {
     text-shadow: var(--btn-text-shadow);
     text-align: center;
     white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 
 /* sizing helper: invisible text to define track width */

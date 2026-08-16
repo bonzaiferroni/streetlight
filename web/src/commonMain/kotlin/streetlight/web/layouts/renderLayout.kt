@@ -5,7 +5,6 @@ import koala.css.MinHeight48
 import koala.css.modify
 import koala.html.column
 import koala.html.geoMapMount
-import koala.html.image
 import koala.html.markdown
 import koala.html.metaImage
 import koala.html.tab
@@ -24,7 +23,7 @@ fun FlowContent.renderLayout(content: LocationContent) {
 }
 
 fun FlowContent.renderColumn(blocks: List<LayoutBlock>, content: LocationContent) {
-    column(BodyStyle.column) {
+    column(BodyStyle.Column) {
         blocks.forEach {
             renderBlock(it, content)
         }

@@ -45,8 +45,7 @@ fun ViewScope.blockMenu(
             }
         }
     }
-    button(mod = modify(Padding1)) {
-        textBlock("+ block", modify(Bold, TextUppercase, TextSmall, EditorFg))
+    editorTextButton("+ block") {
         setPopoverTarget(popoverId)
     }
 }

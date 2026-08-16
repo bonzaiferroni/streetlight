@@ -16,7 +16,7 @@ fun FlowContent.siteDocShell(content: DocContent) {
     val doc = content.node.doc
     val table = content.table
     val node = content.node
-    column(BodyStyle.column) {
+    column(BodyStyle.Column) {
         featureHeader(doc.title, "a Streetlight doc", doc.image)
 
         row(modify(AlignItemsStart)) {

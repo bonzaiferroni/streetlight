@@ -10,7 +10,6 @@ import koala.html.row
 import kotlinx.html.FlowContent
 import streetlight.model.ui.HomeRoute
 
-
 fun FlowContent.appHeader(
     height: Modifier = Height8
 ) {
