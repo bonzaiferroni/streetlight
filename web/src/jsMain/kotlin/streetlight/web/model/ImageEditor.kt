@@ -1,6 +1,7 @@
 package streetlight.web.model
 
 import kampfire.model.Messenger
+import kampfire.model.Outcome
 import kampfire.model.PrintLnMessenger
 import kampfire.model.UIMessage
 import kampfire.model.UIMessageType
@@ -15,24 +16,21 @@ class ImageEditor(
     val imageField: MutableTap<Image?>,
     private val api: ApiClient,
 ) {
-    // val stateNow get() = state.now
-    // val stateFlow = state.flow
-
-    // val imageField = state.mutableFieldOf({ it.image }) { copy(image = it) }
+    // td: add meta
 
     suspend fun finalizeImage(messenger: Messenger? = null) {
-        val image = uploadImage(imageField.now?.url, messenger, api) ?: return
+        val image = uploadImage(imageField.now ?: return, messenger, api) ?: return
         imageField.set(image)
     }
 }
 
-data class ImageEditorState(
-    val image: Image?,
-)
-
-suspend fun uploadImage(url: Url?, messenger: Messenger?, api: ApiClient): Image? {
-    val url = url?.takeIf { it.isBlob } ?: return null
-    println("uploading image: $url")
+suspend fun uploadImage(image: Image, messenger: Messenger?, api: ApiClient): Image? {
     messenger?.deliver(UIMessage("Uploading image...", UIMessageType.Working))
-    return api.uploadImageBlob(url).handleResponse(messenger ?: PrintLnMessenger)
+    return uploadImage(image, api).handleResponse(messenger ?: PrintLnMessenger, "Image uploaded.")
+}
+
+suspend fun uploadImage(image: Image, api: ApiClient): Outcome<Image> {
+    if (!image.url.isBlob) error("is not a blob")
+    println("uploading image: $image")
+    return api.uploadImageBlob(image)
 }

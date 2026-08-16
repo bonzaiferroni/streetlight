@@ -13,6 +13,7 @@ import kampfire.model.PasswordChange
 import kampfire.model.PasswordVerification
 import kampfire.model.SignUpRequest
 import kampfire.model.Url
+import koala.Image
 import koala.model.DocId
 import kotlinx.coroutines.CoroutineScope
 import streetlight.model.Api
@@ -73,7 +74,7 @@ class ApiClient(private val client: FetchClient) {
         writeParam(it.username, username)
     }
     suspend fun readAccount() = client.getApi(Api.Stars.ReadAccount)
-    suspend fun uploadImageBlob(blobUrl: Url) = client.uploadBlob(Api.Users.UploadImage.path, blobUrl)
+    suspend fun uploadImageBlob(blobImage: Image) = client.uploadBlob(Api.Users.UploadImage.path, blobImage)
     suspend fun queryLocation(point: GeoPoint) = client.getApi(Api.Locations.QueryPoint, point.toQuery())
     suspend fun validateLogin() = client.getApi(Api.Stars.ValidateLogin)
     suspend fun login(request: LoginRequest) = client.postApi(UserApi.Login, request)

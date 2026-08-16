@@ -81,10 +81,11 @@ fun ViewScope.editorRow(
                 if (editor.isNextSiblingOf(movingBlockId) || editor.isChildOf(movingBlockId)) return@flowBlock
                 val isOriginalLocation = editor.model.movingBlockIdState.now == editor.blockId
                 val label = if (isOriginalLocation) "cancel move" else "move here"
+                val mod = if (isOriginalLocation) Secondary else Editor
                 button(label, {
                     if (isOriginalLocation) editor.model.cancelMove()
                     else editor.model.finishMove(editor.blockId)
-                }, modify(Editor, OutlineDashed2Px, Width100P))
+                }, modify(mod, Width100P))
             }
         }
     }

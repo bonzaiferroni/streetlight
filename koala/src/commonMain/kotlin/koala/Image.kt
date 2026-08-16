@@ -1,10 +1,10 @@
 package koala
 
+import kampfire.api.TableId
 import kampfire.model.ImageSize
 import kampfire.model.ImageVariant
 import kampfire.model.Url
 import kampfire.model.getSize
-import kampfire.model.getSizeOrLarger
 import kampfire.model.large
 import kampfire.model.largest
 import kampfire.model.medium
@@ -12,16 +12,20 @@ import kampfire.model.small
 import kampfire.model.thumb
 import kampfire.model.toUrl
 import kotlinx.serialization.Serializable
+import kotlin.jvm.JvmInline
+import kotlin.uuid.Uuid
 
 @Serializable
 data class Image(
     override val url: Url,
-    val aspectRatio: Float? = null,
+    val imageId: ImageId? = null,
+    val variants: List<ImageVariant>? = null,
+    val name: String? = null,
+    val aspect: Float? = null,
     val description: String? = null,
     val attribution: String? = null,
     val attributionUrl: Url? = null,
     val caption: String? = null,
-    val variants: List<ImageVariant>? = null
 ): Asset {
     override val assetType get() = AssetType.Image
     override fun toString() = url.value
@@ -40,6 +44,12 @@ data class Image(
     val largest get() = variants.largest
 }
 
+@JvmInline
+@Serializable
+value class ImageId(override val value: Uuid): TableId<Uuid> {
+    companion object { fun random() = ImageId(Uuid.random())}
+}
+
 fun Url.toImage() = Image(this)
 fun String.toImage() = Image(Url(this))
 
@@ -50,15 +60,17 @@ fun siteImageOf(
     attribution: String? = null,
     attributionUrl: String? = null,
     caption: String? = null,
-    variants: List<ImageVariant>? = null
+    variants: List<ImageVariant>? = null,
+    name: String = path.filenameWithoutExtension(),
 ) = Image(
     url = siteImageUrlOf(path),
-    aspectRatio = aspectRatio,
+    variants = variants,
+    name = name,
+    aspect = aspectRatio,
     attribution = attribution,
     attributionUrl = attributionUrl?.toUrl(),
     caption = caption,
     description = description,
-    variants = variants,
 )
 
 fun siteImageUrlOf(path: String) = "$imgPath$path".toUrl()
@@ -67,10 +79,12 @@ fun Image?.getVariantOrPlaceholder(size: ImageSize) = this?.getSizeOrNull(size) 
 
 fun Image.merge(image: Image) = Image(
     url = this.url,
-    aspectRatio = this.aspectRatio ?: image.aspectRatio,
+    aspect = this.aspect ?: image.aspect,
     description = this.description ?: image.description,
     attribution = this.attribution ?: image.attribution,
     attributionUrl = this.attributionUrl ?: image.attributionUrl,
     caption = this.caption ?: image.caption,
     variants = this.variants ?: image.variants
 )
+
+fun String.filenameWithoutExtension(): String = substringAfterLast('/').substringBeforeLast('.')

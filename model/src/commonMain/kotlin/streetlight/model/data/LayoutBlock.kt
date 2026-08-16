@@ -11,9 +11,14 @@ sealed interface LayoutBlock {
 
 @Serializable
 data class ImageBlock(
-    val image: Image?
+    val image: Image?,
+    val frame: ImageFrame? = null,
 ): LayoutBlock {
     override val blockType get() = BlockType.Image
+}
+
+enum class ImageFrame {
+    Circle,
 }
 
 @Serializable

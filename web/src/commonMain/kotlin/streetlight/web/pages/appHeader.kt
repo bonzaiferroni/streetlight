@@ -16,11 +16,11 @@ fun FlowContent.appHeader(
 ) {
     row(modify(height, JustifyContentCenter, Gap0, Padding1, AlignItemsCenter)) {
         val rayMod = modify(Flex1, MaxWidth24, Margin1, MoonDropShadow, Height2Px, BorderRadius1)
-        hr(modify(rayMod, AccentFg))
+        hr(modify(rayMod, PrimaryFg))
         navigation(HomeRoute, modify(DisplayFlex)) {
             logo(modify(Height7, FocusTarget))
         }
-        hr(modify(rayMod, PrimaryFg))
+        hr(modify(rayMod, AccentFg))
     }
 }
 

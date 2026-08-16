@@ -22,6 +22,9 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import org.khronos.webgl.Uint8Array
 import web.abort.AbortSignal
+import web.blob.Blob
+import web.blob.BlobPropertyBag
+import web.form.FormData
 import web.http.BodyInit
 import web.http.GET
 import web.http.Headers
@@ -144,7 +147,7 @@ class FetchClient() {
         method: RequestMethod,
         path: String,
         body: BodyInit? = null,
-        contentType: String = "application/json",
+        contentType: String? = "application/json",
         acceptEncoding: EncodingType? = null,
         maxAttempts: Int = 3,
         timeout: Double? = null,
@@ -154,7 +157,9 @@ class FetchClient() {
             fetch(path, RequestInit(
                 method = method,
                 headers = Headers().apply {
-                    append("Content-Type", contentType)
+                    contentType?.let {
+                        append("Content-Type", contentType)
+                    }
                     acceptEncoding?.let { append("Accept", it.headerValue) }
                 },
                 body = body,
@@ -193,14 +198,25 @@ class FetchClient() {
         return handleResponse(response)
     }
 
-    suspend fun uploadBlob(postUrl: String, blobUrl: Url): Outcome<Image> {
-        val response = fetch(blobUrl.value)
+    suspend fun uploadBlob(postUrl: String, blobImage: Image): Outcome<Image> {
+        val response = fetch(blobImage.url.value)
         val blob = response.blob()
+
+        val form = FormData()
+        form.append(
+            "metadata",
+            Blob(
+                arrayOf(Json.encodeToString(blobImage)),
+                BlobPropertyBag(type = "application/json")
+            )
+        )
+        form.append("file", blob, "upload")
+
         return request(
             method = RequestMethod.POST,
             path = postUrl,
-            body = blob,
-            contentType = blob.type.ifEmpty { "application/octet-stream" }
+            body = form,
+            contentType = null
         ) {
             it.decodeBytes()
         }

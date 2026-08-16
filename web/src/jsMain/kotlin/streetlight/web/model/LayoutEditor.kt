@@ -142,7 +142,7 @@ class LayoutEditor(
     private suspend fun processBlock(block: LayoutBlock, messenger: Messenger) = when (block) {
         is ImageBlock -> {
             block.image?.let { image ->
-                uploadImage(image.url, messenger, api)?.let { storedImage ->
+                uploadImage(image, messenger, api)?.let { storedImage ->
                     block.copy(image = storedImage.merge(image))
                 }
             } ?: block
