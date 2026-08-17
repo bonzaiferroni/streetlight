@@ -1,5 +1,6 @@
 package streetlight.web.ui
 
+import kampfire.api.toMarkdown
 import koala.Image
 import koala.SvgFile
 import koala.css.*
@@ -20,9 +21,7 @@ fun ViewScope.blockBuilder(model: LayoutEditor, blockId: BlockId) {
     when (val block = editor.blockState.now) {
         HeaderBlock, EventsBlock, MapBlock -> blockBuilder(editor)
         is ImageBlock -> imageBuilder(editor)
-        is RichTextBlock -> blockBuilder(editor) {
-            renderRichText(block)
-        }
+        is RichTextBlock -> richTextBuilder(editor)
         is TextBlock -> textBuilder(editor)
         is TabsBlock -> tabsBuilder(editor)
         is ColumnBlock -> columnBuilder(editor)
@@ -109,6 +108,22 @@ fun ViewScope.textBuilder(editor: BlockEditor) {
                 textField(textState)
             } else {
                 textBlock(textState.now.takeIf { it.isNotEmpty() } ?: "[Text content]")
+            }
+        }
+    }
+}
+
+fun ViewScope.richTextBuilder(editor: BlockEditor) {
+    val blockState = editor.blockState.mutableTapOf({ it as RichTextBlock }) { it }
+    val textState = blockState.mutableTapOf({ it.text }) { copy(text = it) }
+    val isEditingState = storeOf(textState.now.value.isEmpty())
+    column {
+        editorRow(editor, isEditingState)
+        flowBlock(isEditingState) { isEditing ->
+            if (isEditing) {
+                textEditor(textState)
+            } else {
+                markdown(textState.now.takeIf { it.value.isNotEmpty() } ?: "[RichText content]".toMarkdown())
             }
         }
     }
