@@ -10,7 +10,7 @@ fun buildBlock(block: LayoutBlock, containers: List<ContainerDefinition>?): Layo
             } ?: return null
             TabsBlock(tabContents)
         }
-        is ColumnBlock -> {
+        is ColumnsBlock -> {
             block.copy(blocks = containers?.firstOrNull()?.blocks ?: return block)
         }
         else -> block

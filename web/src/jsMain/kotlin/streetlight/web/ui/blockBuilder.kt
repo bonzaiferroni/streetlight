@@ -1,17 +1,14 @@
 package streetlight.web.ui
 
 import kampfire.api.toMarkdown
-import koala.Image
 import koala.SvgFile
 import koala.css.*
 import koala.dom.*
 import koala.model.mutableTapOf
-import koala.model.refine
 import koala.model.storeOf
 import koala.model.toggle
 import kotlinx.html.FlowContent
 import streetlight.model.data.*
-import streetlight.web.layouts.renderRichText
 import streetlight.web.model.BlockEditor
 import streetlight.web.model.BlockId
 import streetlight.web.model.LayoutEditor
@@ -24,7 +21,7 @@ fun ViewScope.blockBuilder(model: LayoutEditor, blockId: BlockId) {
         is RichTextBlock -> richTextBuilder(editor)
         is TextBlock -> textBuilder(editor)
         is TabsBlock -> tabsBuilder(editor)
-        is ColumnBlock -> columnBuilder(editor)
+        is ColumnsBlock -> columnBuilder(editor)
     }
 }
 
@@ -171,12 +168,15 @@ fun ViewScope.columnBuilder(editor: BlockEditor) {
     // val blockState = editor.blockState.mutableTapOf({ it as ColumnBlock }) { it }
     val containerId = editor.childIds.first()
     val container = editor.model.getContainer(containerId)
-    flowBlock(container.blockIdsField) { blockIds ->
-        row(modify(EditorStyle.Container, BodyStyle.FlexGrid2)) {
-            blockIds.forEach { blockId ->
-                blockBuilder(editor.model, blockId)
+    column {
+        editorRow(editor)
+        flowBlock(container.blockIdsField) { blockIds ->
+            row(modify(BodyStyle.FlexGrid2)) {
+                blockIds.forEach { blockId ->
+                    blockBuilder(editor.model, blockId)
+                }
+                lastEditorRow(container)
             }
-            lastEditorRow(container)
         }
     }
 }

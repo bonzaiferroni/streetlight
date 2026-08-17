@@ -16,9 +16,19 @@ class ContainerEditor(
     val childIds get() = state.now.blockIds
     val depth get() = state.now.depth
     val name get() = state.now.name
-    // val parentId get() = model.getParent(containerId).blockId
+    val parent get() = model.getParentOrNull(containerId)
+    // val parentId get() = parent.blockId
 
     fun isChildOf(blockId: BlockId) = model.getBlock(blockId).childIds.any { it == containerId }
+
+    fun isDescendentOf(blockId: BlockId): Boolean {
+        var container: ContainerEditor? = this
+        while (container != null) {
+            if (container.isChildOf(blockId)) return true
+            container = parent?.parent
+        }
+        return false
+    }
 
     fun rename(name: String) = state.set { copy(name = name) }
 

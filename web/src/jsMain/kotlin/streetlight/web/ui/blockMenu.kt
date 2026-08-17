@@ -1,8 +1,7 @@
 package streetlight.web.ui
 
 import kampfire.api.Markdown
-import koala.Image
-import koala.SiteImage
+import koala.SvgFile
 import koala.css.*
 import koala.dom.*
 import koala.html.Id
@@ -12,6 +11,7 @@ import streetlight.model.data.*
 import kotlin.uuid.Uuid
 
 fun ViewScope.blockMenu(
+    name: String?,
     depth: Int,
     onSelection: (LayoutBlock) -> Unit,
 ) {
@@ -45,8 +45,13 @@ fun ViewScope.blockMenu(
             }
         }
     }
-    editorTextButton("+ block") {
-        setPopoverTarget(popoverId)
+    row(modify(AlignItemsCenter, Height5)) {
+        name?.let {
+            textBlock("add to $name", modify(TextSmall, TextUppercase, OpacityHalf))
+        }
+        editorIconButton(SvgFile.Plus) {
+            setPopoverTarget(popoverId)
+        }
     }
 }
 
@@ -65,7 +70,7 @@ fun getOptions(category: BlockCategory, depth: Int) = buildList {
         }
         BlockCategory.Containers -> {
             if (depth == 0) add(LabeledItem("tabs", TabsBlock(listOf(TabContent("My Tab", emptyList())))))
-            add(LabeledItem("column", ColumnBlock(emptyList())))
+            add(LabeledItem("column", ColumnsBlock(emptyList())))
             // containers for depth == 1 to be added
         }
         BlockCategory.Content -> {

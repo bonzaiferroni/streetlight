@@ -1,5 +1,7 @@
 package streetlight.web.ui
 
+import koala.Svg
+import koala.SvgFile
 import koala.css.*
 import koala.dom.*
 import koala.dom.button
@@ -33,7 +35,7 @@ fun ViewScope.layoutBuilder(model: LayoutEditor) {
 fun ViewScope.containerBuilder(model: LayoutEditor, containerId: ContainerId) {
     val editor = model.getContainer(containerId)
     flowBlock(editor.blockIdsField) { blockIds ->
-        column(modify(if (editor.depth > 0) EditorStyle.Container else null, BorderRadius1)) {
+        column(modify(BorderRadius1)) {
             blockIds.forEach { blockId ->
                 blockBuilder(model, blockId)
             }
@@ -58,33 +60,30 @@ fun ViewScope.editorRow(
         when (movingBlockId) {
             null -> {
                 row(modify(AlignItemsCenter)) {
-                    row(modify(AlignItemsCenter, Flex1)) {
-                        blockMenu(editor.depth ?: error("depth is null")) { editor.addBlockAbove(it) }
-                        editorTextButton("remove", { editor.removeFromLayout() })
-                        hr(modify(Flex1))
-                    }
-                    when (popoverId) {
-                        null -> textBlock(editor.label, modify(BodyStyle.LabelHeading, EditorFg, Bold))
-                        else -> button("edit ${editor.label}", mod = modify(Editor, JustifySelfCenter)) {
-                            setPopoverTarget(popoverId)
-                        }
-                    }
+                    blockMenu(null, editor.depth ?: error("depth is null")) { editor.addBlockAbove(it) }
+                    hr(modify(EditorFg, Flex1, OpacityLow))
+                    row(modify(AlignItemsCenter)) {
+                        editorIconButton(SvgFile.Trash, { editor.removeFromLayout() })
+                        editorIconButton(SvgFile.ArrowsSort, { editor.model.startMove(editor.blockId) })
 
-                    row(modify(AlignItemsCenter, Flex1)) {
-                        hr(modify(Flex1))
                         isEditingState?.let { state ->
-                            flowBlock(state) { isEditing ->
-                                editorTextButton(if (isEditing) "done" else "edit", { state.toggle() })
+                            editorIconButton(SvgFile.Edit, { state.toggle() }).also {
+                                it.flowModifier(state, AccentFg, contentScope)
                             }
                         }
-                        editorTextButton("move", { editor.model.startMove(editor.blockId) })
+                        when (popoverId) {
+                            null -> button(editor.label, mod = modify(Secondary, Outline, ZenBg, PointerEventsNone))
+                            else -> button("edit ${editor.label}", mod = modify(Editor, JustifySelfCenter)) {
+                                setPopoverTarget(popoverId)
+                            }
+                        }
                     }
                 }
             }
             else -> {
                 if (editor.isNextSiblingOf(movingBlockId) || editor.isChildOf(movingBlockId)) return@flowBlock
                 val isOriginalLocation = editor.model.movingBlockIdState.now == editor.blockId
-                val label = if (isOriginalLocation) "cancel move" else "move here"
+                val label = if (isOriginalLocation) "cancel move" else "move before ${editor.label}"
                 val mod = if (isOriginalLocation) Secondary else Editor
                 button(label, {
                     if (isOriginalLocation) editor.model.cancelMove()
@@ -102,7 +101,8 @@ fun ViewScope.lastEditorRow(
         when (movingBlockId) {
             null -> {
                 row(modify(AlignItemsCenter)) {
-                    blockMenu(editor.depth, { editor.createBlock(it)} )
+                    hr(modify(EditorFg, Flex1, OpacityLow))
+                    blockMenu(editor.name, editor.depth, { editor.createBlock(it)} )
                 }
             }
             else -> {
@@ -110,10 +110,10 @@ fun ViewScope.lastEditorRow(
                 val index = blockEditor.index
                 val isNextPosition = blockEditor.parentId == editor.containerId
                         && index != null && index + 1 == editor.childIds.size
-                if (editor.isChildOf(movingBlockId) || isNextPosition) return@flowBlock
-                button("move here", {
+                if (editor.isDescendentOf(movingBlockId) || isNextPosition) return@flowBlock
+                button("move to ${editor.name}", {
                     editor.model.finishMoveToContainer(editor.containerId)
-                }, modify(Zen, EditorBg, OutlineDashed2Px, Width100P))
+                }, modify(Editor, Width100P))
             }
         }
     }
@@ -144,6 +144,14 @@ fun ViewScope.editorTextButton(
 ) = button(onClick, modify(Padding1)) {
     config()
     textBlock(name, EditorStyle.TextButton)
+}
+
+fun ViewScope.editorIconButton(
+    icon: Svg,
+    onClick: (() -> Unit)? = null,
+    config: BUTTON.() -> Unit = { }
+) = button(icon, onClick, modify(EditorFg, Height3)) {
+    config()
 }
 
 object EditorStyle {

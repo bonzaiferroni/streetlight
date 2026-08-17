@@ -18,7 +18,7 @@ enum class BlockType(label: String? = null): Labeled {
     Map,
     Events,
     Tabs,
-    Column;
+    Columns;
 
     override val label = label ?: name
 }

@@ -3,6 +3,7 @@ package koala
 object SvgFile : FileSet<Svg>() {
     val ArrowLeft = add("arrow-left.svg")
     val ArrowRight = add("arrow-right.svg")
+    val ArrowsSort = add("arrows-sort.svg")
     val Aperture = add("aperture.svg")
     val Backspace = add("backspace.svg")
     val Book = add("book.svg")

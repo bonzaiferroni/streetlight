@@ -40,7 +40,7 @@ fun FlowContent.renderBlock(block: LayoutBlock, content: LocationContent) {
         is TabsBlock -> renderTabs(block, content)
         is TextBlock -> renderText(block)
         is RichTextBlock -> renderRichText(block)
-        is ColumnBlock -> renderColumn(block, content)
+        is ColumnsBlock -> renderColumn(block, content)
     }
 }
 
@@ -91,7 +91,7 @@ fun FlowContent.renderFooter() {
     appFooter()
 }
 
-fun FlowContent.renderColumn(block: ColumnBlock, content: LocationContent) {
+fun FlowContent.renderColumn(block: ColumnsBlock, content: LocationContent) {
     row(modify(BodyStyle.FlexGrid2)) {
         block.blocks.forEach {
             renderBlock(it, content)

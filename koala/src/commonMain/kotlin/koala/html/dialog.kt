@@ -25,6 +25,7 @@ $Class {
     
     $Card, .tabs-header {
         border: var(--outline-low);
+        outline-offset: -2px;
     }
 }
 

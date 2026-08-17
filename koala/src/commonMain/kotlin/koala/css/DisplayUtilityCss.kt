@@ -76,7 +76,7 @@ val BorderDashed2Px = utilityOf("border-dashed", "border: 2px dashed var(--outli
 val BorderSolid2Px = utilityOf("border-solid", "border: var(--outline-low)")
 val BorderRadiusTop1 = utilityOf("border-radius-top-1", "border-radius: var(--unit-spacing) var(--unit-spacing) 0 0")
 val BorderRadiusBottom1 = utilityOf("border-radius-bottom-1", "border-radius: 0 0 var(--unit-spacing) var(--unit-spacing)")
-val Outline = utilityOf("outline-solid", "outline: var(--outline-low)")
+val Outline = utilityOf("outline-solid", "outline: var(--outline-low)", "outline-offset: -2px")
 val OutlineDashed2Px = utilityOf("outline-dashed", "outline: 2px dashed var(--outline-low-fg)")
 val Chopped = utilityOf("chopped", "--chop: var(--unit-spacing-8)",
     "clip-path: polygon(var(--chop) 0, 100% 0, 100% calc(100% - var(--chop)), calc(100% - var(--chop)) 100%, 0 100%, 0 var(--chop))")

@@ -45,9 +45,9 @@ data class TabsBlock(
 }
 
 @Serializable
-data class ColumnBlock(
+data class ColumnsBlock(
     override val blocks: List<LayoutBlock>
 ): LayoutBlock, LayoutContainer {
-    override val blockType get() = BlockType.Column
+    override val blockType get() = BlockType.Columns
     override val name get() = blockType.label
 }

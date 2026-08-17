@@ -4,7 +4,7 @@ import kampfire.model.Messenger
 import koala.merge
 import koala.model.tapOf
 import koala.model.storeOf
-import streetlight.model.data.ColumnBlock
+import streetlight.model.data.ColumnsBlock
 import streetlight.model.data.DefaultLayout
 import streetlight.model.data.ImageBlock
 import streetlight.model.data.PageLayout
@@ -161,7 +161,7 @@ data class LayoutEditorState(
 
 fun LayoutBlock.getContainers(): List<LayoutContainer>? = when (this) {
     is TabsBlock -> tabs
-    is ColumnBlock -> listOf(this)
+    is ColumnsBlock -> listOf(this)
     else -> null
 }
 
