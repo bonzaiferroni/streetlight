@@ -5,7 +5,6 @@ open class ElementEvent(
 ) {
 
     companion object {
-        val onToggle = CustomElementEvent<Boolean>("on-toggle")
         val onClick = ElementEvent("click")
         val onClose = ElementEvent("close")
         // val onEvent = HtmlEvent("on-event")

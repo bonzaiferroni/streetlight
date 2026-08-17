@@ -4,11 +4,12 @@ import koala.Image
 import koala.SvgFile
 import koala.css.*
 import koala.dom.*
+import koala.model.mutableTapOf
+import koala.model.refine
 import koala.model.storeOf
 import koala.model.toggle
 import kotlinx.html.FlowContent
 import streetlight.model.data.*
-import streetlight.web.layouts.renderImage
 import streetlight.web.layouts.renderRichText
 import streetlight.web.model.BlockEditor
 import streetlight.web.model.BlockId
@@ -16,7 +17,7 @@ import streetlight.web.model.LayoutEditor
 
 fun ViewScope.blockBuilder(model: LayoutEditor, blockId: BlockId) {
     val editor = model.getBlock(blockId)
-    when (val block = editor.blockField.now) {
+    when (val block = editor.blockState.now) {
         HeaderBlock, EventsBlock, MapBlock -> blockBuilder(editor)
         is ImageBlock -> imageBuilder(editor)
         is RichTextBlock -> blockBuilder(editor) {
@@ -54,7 +55,7 @@ fun ViewScope.tabsBuilder(editor: BlockEditor) {
     // val tabsField = editor.blockField.narrow<LayoutBlock, TabsBlock>()
     column {
         editorRow(editor) {
-            flowBlock(editor.refreshField) {
+            flowBlock(editor.refreshState) {
                 column {
                     editor.childIds.forEach { containerId ->
                         val tabName = editor.model.getContainer(containerId).name
@@ -83,7 +84,7 @@ fun ViewScope.tabsBuilder(editor: BlockEditor) {
             }
         }
 
-        flowBlock(editor.refreshField) {
+        flowBlock(editor.refreshState) {
             tabs {
                 editor.childIds.forEach { containerId ->
                     val container = editor.model.getContainer(containerId)
@@ -112,13 +113,39 @@ fun ViewScope.textBuilder(editor: BlockEditor) {
 }
 
 fun ViewScope.imageBuilder(editor: BlockEditor) {
-    val imageState = editor.mutableTapOf<ImageBlock, Image?>({ it.image }) { copy(image = it)}
+    val blockState = editor.blockState.mutableTapOf({ it as ImageBlock }) { it }
+    val imageState = blockState.mutableTapOf({ it.image }) { copy(image = it) }
+    val shapeState = blockState.mutableTapOf({ it.frame }) { copy(frame = it) }
+    val fitState = blockState.mutableTapOf({ it.fit }) { copy(fit = it) }
     column {
         editorRow(editor) {
-
+            formColumn {
+                formRow {
+                    formSection("Shape / Fit") {
+                        dropMenuNullable(shapeState)
+                        dropMenuNullable(fitState)
+                    }
+                }
+            }
         }
         imageDrop(imageState) { image ->
-            image(image.url)
+            flowBlock(blockState, modify(Magic, Scale)) { block ->
+                val shapeMod = when (block.frame) {
+                    ImageFrame.Circle -> CircleShape
+                    ImageFrame.Ellipse -> BorderRadius50P
+                    ImageFrame.Pill -> BorderRadiusPill
+                    ImageFrame.Chopped -> Chopped
+                    null -> null
+                }
+                val fitMod = when (block.fit) {
+                    ObjectFit.Fill -> ObjectFitFill
+                    ObjectFit.Contain -> ObjectFitContain
+                    ObjectFit.Cover -> ObjectFitCover
+                    ObjectFit.ScaleDown -> ObjectFitScaleDown
+                    null -> null
+                }
+                image(image.url, modify(shapeMod, fitMod))
+            }
         }
     }
 }

@@ -1,24 +1,13 @@
 package streetlight.model.data
 
 import kampfire.api.Markdown
+import kampfire.model.Labeled
 import koala.Image
 import kotlinx.serialization.Serializable
 
 @Serializable
 sealed interface LayoutBlock {
     val blockType: BlockType
-}
-
-@Serializable
-data class ImageBlock(
-    val image: Image?,
-    val frame: ImageFrame? = null,
-): LayoutBlock {
-    override val blockType get() = BlockType.Image
-}
-
-enum class ImageFrame {
-    Circle,
 }
 
 @Serializable

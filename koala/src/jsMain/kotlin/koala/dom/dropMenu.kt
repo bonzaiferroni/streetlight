@@ -66,22 +66,17 @@ inline fun <reified E> ViewScope.dropMenu(
 
     return dropMenu(values, textField, mod, block)
 }
-//inline fun <reified E, Data> WireContext<Data>.dropMenu(
-//    noinline write: (E) -> Data,
-//    crossinline provideLabel: (E) -> String,
-//) {
-//    dropMenu(
-//        onChangeValue = { value -> state.set { write(value) } },
-//        provideLabel = provideLabel,
-//        flow =
-//    )
-//}
 
-// inline fun <reified T> DropMenu(
-//    selected: T,
-//    crossinline labelOf: (T) -> String,
-//    modifier: Modifier = Modifier,
-//    color: Color = Pond.colors.primary,
-//    label: String? = null,
-//    crossinline onChange: (T) -> Unit
-//) where T : Enum<T> {
+inline fun <reified E> ViewScope.dropMenuNullable(
+    field: MutableTap<E?>,
+    mod: ModifierSet? = null,
+    noinline block: (SELECT.() -> Unit)? = null
+): HTMLSelectElement where E : Enum<E>, E : Labeled {
+    val enums = enumValues<E>()
+    val values = listOf("None") + enums.map { it.label }
+    val textField = field.mutableTapOf({ it?.label ?: "None" }) { value ->
+        if (value == "None") null else enums[values.indexOf(value) - 1]
+    }
+
+    return dropMenu(values, textField, mod, block)
+}

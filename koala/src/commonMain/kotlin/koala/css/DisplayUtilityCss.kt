@@ -10,7 +10,7 @@ val DisplayUtilityCss
         CircleShape, CircleClip,
         // Border Radius
         BorderRadius0, BorderRadius1, BorderRadius2, BorderRadius4, BorderRadius3, BorderRadius50P, BorderRadiusPill,
-        BorderRadiusBottom1, BorderRadiusTop1, BorderDashed2Px, BorderSolid2Px, Outline, OutlineDashed2Px,
+        BorderRadiusBottom1, BorderRadiusTop1, BorderDashed2Px, BorderSolid2Px, Outline, OutlineDashed2Px, Chopped,
         // Border
         SideBorder,
         // Color
@@ -61,7 +61,7 @@ val SpinLoop = Class("spin-loop")
 val FadeLoop = Class("fade-loop")
 
 // Shape
-val CircleShape = utilityOf("circle-shape", "border-radius: 50%", "overflow: hidden", "border: 3px solid #b4bd7d")
+val CircleShape = utilityOf("circle-shape", "border-radius: 50%", "overflow: hidden", "aspect-ratio: 1 / 1", "width: 100%")
 val CircleClip = utilityOf("circle-clip", "border-radius: 50%", "overflow: hidden")
 
 // Border Radius
@@ -78,6 +78,8 @@ val BorderRadiusTop1 = utilityOf("border-radius-top-1", "border-radius: var(--un
 val BorderRadiusBottom1 = utilityOf("border-radius-bottom-1", "border-radius: 0 0 var(--unit-spacing) var(--unit-spacing)")
 val Outline = utilityOf("outline-solid", "outline: var(--outline-low)")
 val OutlineDashed2Px = utilityOf("outline-dashed", "outline: 2px dashed var(--outline-low-fg)")
+val Chopped = utilityOf("chopped", "--chop: var(--unit-spacing-8)",
+    "clip-path: polygon(var(--chop) 0, 100% 0, 100% calc(100% - var(--chop)), calc(100% - var(--chop)) 100%, 0 100%, 0 var(--chop))")
 
 // Border
 val SideBorder = utilityOf("side-border", "border-left: var(--ghost-border)", "border-right: var(--ghost-border)")

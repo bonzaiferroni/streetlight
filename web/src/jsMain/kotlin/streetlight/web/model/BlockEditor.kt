@@ -16,8 +16,8 @@ class BlockEditor(
     val model: LayoutEditor,
 ) {
     private val state = storeOf(BlockState(block, containerIds))
-    val blockField = state.mutableTapOf({ it.block }) { copy(block = it) }
-    val refreshField = state.tapOf { it.refreshAt }
+    val blockState = state.mutableTapOf({ it.block }) { copy(block = it) }
+    val refreshState = state.tapOf { it.refreshAt }
     val childIds get() = state.now.childIds
     val parent get() = model.getParentOrNull(blockId)
     val parentId get() = parent?.containerId
@@ -30,7 +30,7 @@ class BlockEditor(
     inline fun <reified T : LayoutBlock, V> mutableTapOf(
         crossinline getter: (T) -> V,
         crossinline setter: T.(V) -> T
-    ): MutableTap<V> = blockField.mutableTapOf(
+    ): MutableTap<V> = blockState.mutableTapOf(
         readValue = { getter(it as T) },
         writeValue = { value -> (this as T).setter(value) }
     )

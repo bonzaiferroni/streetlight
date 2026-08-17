@@ -1,7 +1,6 @@
 package streetlight.web.model
 
 import kampfire.model.Messenger
-import koala.Image
 import koala.merge
 import koala.model.tapOf
 import koala.model.storeOf
@@ -130,7 +129,7 @@ class LayoutEditor(
 
     private suspend fun buildBlock(blockId: BlockId, messenger: Messenger): LayoutBlock? {
         val blockEditor = getBlock(blockId)
-        val block = processBlock(blockEditor.blockField.now, messenger)
+        val block = processBlock(blockEditor.blockState.now, messenger)
 
         val containers = blockEditor.childIds.map { containerId ->
             val container = getContainer(containerId)

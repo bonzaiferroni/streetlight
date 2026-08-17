@@ -39,7 +39,7 @@ val LayoutUtilityCss
         PaddingTop1, Padding2Px,
         PaddingX1, PaddingX2, PaddingY1, PaddingY2, PaddingBottom1,
         // Object Fit
-        ObjectFitCover, ObjectFitContain, ObjectPositionCenter, ObjectFitFill,
+        ObjectFitCover, ObjectFitContain, ObjectPositionCenter, ObjectFitFill, ObjectFitScaleDown,
         // Position
         PositionSticky, PositionRelative, PositionAbsolute, Top0, Right0, Bottom0, Left0,
         // Other
@@ -241,8 +241,9 @@ val PaddingBottom1 = utilityOf("padding-bottom-1", "padding-bottom: var(--unit-s
 // Object Fit
 val ObjectFitCover = utilityOf("object-fit-cover", "object-fit: cover")
 val ObjectFitContain = utilityOf("object-fit-contain", "object-fit: contain")
-val ObjectPositionCenter = utilityOf("object-position-center", "object-position: center")
 val ObjectFitFill = utilityOf("object-fit-stretch", "object-fit: fill")
+val ObjectFitScaleDown = utilityOf("object-fit-scale-down", "object-fit: scale-down")
+val ObjectPositionCenter = utilityOf("object-position-center", "object-position: center")
 
 // Other
 val SpaceBetween = utilityOf("space-between", "justify-content: space-between")

@@ -48,10 +48,9 @@ fun ViewScope.switch(
         currentValue = value
         element.setAttribute(Attribute.IsOn.to(value))
         element.setAttribute("aria-checked", value.toString())
-        element.sendCustomEvent(ElementEvent.onToggle, value)
     }
 
-    element.addEventListener("click", { state.set(!currentValue) })
+    element.onClick { state.set(!currentValue) }
     element.addEventListener("keydown", { event ->
         val key = (event as? KeyboardEvent)?.key
         if (key == "Enter" || key == " ") {
@@ -59,9 +58,6 @@ fun ViewScope.switch(
             state.set(!currentValue)
         }
     })
-    element.onCustomEvent(ElementEvent.onToggle) {
-        state.set(it)
-    }
 
     launchEffect(::switch) {
         state.flow.collect { display(it) }
