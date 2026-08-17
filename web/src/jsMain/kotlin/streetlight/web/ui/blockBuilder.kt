@@ -25,6 +25,7 @@ fun ViewScope.blockBuilder(model: LayoutEditor, blockId: BlockId) {
         }
         is TextBlock -> textBuilder(editor)
         is TabsBlock -> tabsBuilder(editor)
+        is ColumnBlock -> columnBuilder(editor)
     }
 }
 
@@ -98,7 +99,8 @@ fun ViewScope.tabsBuilder(editor: BlockEditor) {
 }
 
 fun ViewScope.textBuilder(editor: BlockEditor) {
-    val textState = editor.mutableTapOf<TextBlock, String>({ it.text }) { copy(text = it) }
+    val blockState = editor.blockState.mutableTapOf({ it as TextBlock }) { it }
+    val textState = blockState.mutableTapOf({ it.text }) { copy(text = it) }
     val isEditingState = storeOf(textState.now.isEmpty())
     column {
         editorRow(editor, isEditingState)
@@ -146,6 +148,20 @@ fun ViewScope.imageBuilder(editor: BlockEditor) {
                 }
                 image(image.url, modify(shapeMod, fitMod))
             }
+        }
+    }
+}
+
+fun ViewScope.columnBuilder(editor: BlockEditor) {
+    // val blockState = editor.blockState.mutableTapOf({ it as ColumnBlock }) { it }
+    val containerId = editor.childIds.first()
+    val container = editor.model.getContainer(containerId)
+    flowBlock(container.blockIdsField) { blockIds ->
+        row(modify(EditorStyle.Container, BodyStyle.FlexGrid2)) {
+            blockIds.forEach { blockId ->
+                blockBuilder(editor.model, blockId)
+            }
+            lastEditorRow(container)
         }
     }
 }

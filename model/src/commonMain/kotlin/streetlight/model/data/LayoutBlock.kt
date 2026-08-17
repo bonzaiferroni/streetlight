@@ -1,8 +1,6 @@
 package streetlight.model.data
 
 import kampfire.api.Markdown
-import kampfire.model.Labeled
-import koala.Image
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -44,4 +42,12 @@ data class TabsBlock(
     val tabs: List<TabContent>
 ): LayoutBlock {
     override val blockType get() = BlockType.Tabs
+}
+
+@Serializable
+data class ColumnBlock(
+    override val blocks: List<LayoutBlock>
+): LayoutBlock, LayoutContainer {
+    override val blockType get() = BlockType.Column
+    override val name get() = blockType.label
 }

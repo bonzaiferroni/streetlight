@@ -65,6 +65,7 @@ fun getOptions(category: BlockCategory, depth: Int) = buildList {
         }
         BlockCategory.Containers -> {
             if (depth == 0) add(LabeledItem("tabs", TabsBlock(listOf(TabContent("My Tab", emptyList())))))
+            add(LabeledItem("column", ColumnBlock(emptyList())))
             // containers for depth == 1 to be added
         }
         BlockCategory.Content -> {

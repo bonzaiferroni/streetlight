@@ -27,14 +27,6 @@ class BlockEditor(
     val blockType get() = block.blockType
     val label get() = blockType.label
 
-    inline fun <reified T : LayoutBlock, V> mutableTapOf(
-        crossinline getter: (T) -> V,
-        crossinline setter: T.(V) -> T
-    ): MutableTap<V> = blockState.mutableTapOf(
-        readValue = { getter(it as T) },
-        writeValue = { value -> (this as T).setter(value) }
-    )
-
     fun isChildOf(otherId: BlockId) = model.getBlock(otherId).childIds.any { it == parentId }
 
     fun isNextSiblingOf(otherId: BlockId) = model.getParentOrNull(otherId)?.takeIf { it.containerId == parentId }?.let {

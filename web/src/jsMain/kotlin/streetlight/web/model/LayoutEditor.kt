@@ -4,6 +4,7 @@ import kampfire.model.Messenger
 import koala.merge
 import koala.model.tapOf
 import koala.model.storeOf
+import streetlight.model.data.ColumnBlock
 import streetlight.model.data.DefaultLayout
 import streetlight.model.data.ImageBlock
 import streetlight.model.data.PageLayout
@@ -141,8 +142,11 @@ class LayoutEditor(
     private suspend fun processBlock(block: LayoutBlock, messenger: Messenger) = when (block) {
         is ImageBlock -> {
             block.image?.let { image ->
-                uploadImage(image, messenger, api)?.let { storedImage ->
-                    block.copy(image = storedImage.merge(image))
+                when (image.url.isBlob) {
+                    true -> uploadImage(image, messenger, api)?.let { storedImage ->
+                        block.copy(image = storedImage.merge(image))
+                    }.also { println("uploaded") }
+                    else -> block
                 }
             } ?: block
         }
@@ -157,6 +161,7 @@ data class LayoutEditorState(
 
 fun LayoutBlock.getContainers(): List<LayoutContainer>? = when (this) {
     is TabsBlock -> tabs
+    is ColumnBlock -> listOf(this)
     else -> null
 }
 

@@ -33,7 +33,7 @@ fun ViewScope.layoutBuilder(model: LayoutEditor) {
 fun ViewScope.containerBuilder(model: LayoutEditor, containerId: ContainerId) {
     val editor = model.getContainer(containerId)
     flowBlock(editor.blockIdsField) { blockIds ->
-        column(modify(if (editor.depth > 0) modify(ZenBg, MoonShadow, Padding1) else null, BorderRadius1)) {
+        column(modify(if (editor.depth > 0) EditorStyle.Container else null, BorderRadius1)) {
             blockIds.forEach { blockId ->
                 blockBuilder(model, blockId)
             }
@@ -148,4 +148,5 @@ fun ViewScope.editorTextButton(
 
 object EditorStyle {
     val TextButton = modify(TextUppercase, TextSmall, Bold, EditorFg)
+    val Container = modify(ZenBg, MoonShadow, Padding1)
 }

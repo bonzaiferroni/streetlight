@@ -1,8 +1,6 @@
 package streetlight.model.data
 
-import kampfire.api.Markdown
 import kampfire.model.Labeled
-import koala.Image
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -19,7 +17,8 @@ enum class BlockType(label: String? = null): Labeled {
     Header,
     Map,
     Events,
-    Tabs;
+    Tabs,
+    Column;
 
     override val label = label ?: name
 }

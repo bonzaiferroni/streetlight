@@ -7,6 +7,7 @@ import koala.html.column
 import koala.html.geoMapMount
 import koala.html.markdown
 import koala.html.metaImage
+import koala.html.row
 import koala.html.tab
 import koala.html.tabs
 import koala.html.textBlock
@@ -39,6 +40,7 @@ fun FlowContent.renderBlock(block: LayoutBlock, content: LocationContent) {
         is TabsBlock -> renderTabs(block, content)
         is TextBlock -> renderText(block)
         is RichTextBlock -> renderRichText(block)
+        is ColumnBlock -> renderColumn(block, content)
     }
 }
 
@@ -87,4 +89,12 @@ fun FlowContent.renderRichText(block: RichTextBlock) {
 
 fun FlowContent.renderFooter() {
     appFooter()
+}
+
+fun FlowContent.renderColumn(block: ColumnBlock, content: LocationContent) {
+    row(modify(BodyStyle.FlexGrid2)) {
+        block.blocks.forEach {
+            renderBlock(it, content)
+        }
+    }
 }

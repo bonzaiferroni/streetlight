@@ -68,6 +68,6 @@ val prayers = listOf(
     "Left unfilled, the moment fills us.",
     "Just trying not to fall off this tiny sidewalk.",
     "You are the music school. The music school is you, always in school.",
-    "All the questions from dreams-- like, why doesn't anyone care that I'm not wearing pants?",
+    "Got some growing up to do, I'm sure glad it will be with you.",
     // "It all, theoretically, works.",
 )
