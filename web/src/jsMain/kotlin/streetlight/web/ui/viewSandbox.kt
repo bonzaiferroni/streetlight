@@ -2,8 +2,7 @@ package streetlight.web.ui
 
 import kampfire.api.Markdown
 import koala.SvgFile
-import koala.css.AlignSelfEnd
-import koala.css.Height3
+import koala.css.JustifyContentEnd
 import koala.css.Magic
 import koala.css.Scale
 import koala.css.modify
@@ -25,10 +24,15 @@ fun RouteScope.viewSandbox() {
     val textState = localStoreOf("sandbox-md", Markdown(""))
     val isEditingState = storeOf(true)
     column {
-        button(SvgFile.Edit, isEditingState::toggle, modify(AlignSelfEnd, Height3))
+        row(modify(JustifyContentEnd)) {
+            button(SvgFile.Magic, {
+                textState.set { Markdown("$value!") }
+            })
+            button(SvgFile.Edit, isEditingState::toggle)
+        }
         flowBlock(isEditingState, modify(Magic, Scale)) { isEditing ->
             when (isEditing) {
-                true -> markdownEditor(textState)
+                true -> styledMarkdownEditor(textState)
                 else -> markdown(textState.now)
             }
         }

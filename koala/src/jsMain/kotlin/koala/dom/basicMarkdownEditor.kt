@@ -12,7 +12,7 @@ import kotlinx.html.js.div
 import kotlinx.html.js.onInputFunction
 import org.w3c.dom.HTMLElement
 
-fun ViewScope.markdownEditor(
+fun ViewScope.basicMarkdownEditor(
     state: MutableTap<Markdown>,
     label: String? = null,
     modifiers: ModifierSet? = null,
@@ -23,10 +23,9 @@ fun ViewScope.markdownEditor(
     lateinit var element: HTMLElement
 
     fun display(value: Markdown) {
+        if (currentValue == value) return
         currentValue = value
-        if (element.innerText != value.value) {
-            element.textContent = value.value
-        }
+        element.textContent = value.value
     }
 
     element = div {

@@ -28,6 +28,12 @@ fun <T: Element> T.modify(modifiers: Collection<Modifier>): T {
     return this
 }
 
+fun <T: Element> T.setModifiers(vararg modifier: Modifier): T {
+    className = modifier.joinToString(" ") { it.identifier }
+    return this
+}
+
+
 fun <T: Element> T.trigger(modifier: Modifier): T {
     unmodify(modifier)
     window.requestAnimationFrame {
