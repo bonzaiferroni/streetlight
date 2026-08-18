@@ -1,10 +1,20 @@
 package streetlight.web.ui
 
+import kampfire.api.Markdown
+import koala.SvgFile
+import koala.css.AlignSelfEnd
+import koala.css.Height3
+import koala.css.Magic
+import koala.css.Scale
+import koala.css.modify
 import koala.dom.*
 import koala.html.heading1
+import koala.model.storeOf
+import koala.model.toggle
+import streetlight.web.utils.localStoreOf
 
 fun RouteScope.viewSandbox() {
-    val model = Sandbox(contentScope, api, toaster)
+    // val model = Sandbox(contentScope, api, toaster)
 
     console.log("welcome to sandbox")
 
@@ -12,27 +22,18 @@ fun RouteScope.viewSandbox() {
         heading1("Yer Sandbox")
     }
 
-    row {
-        textBlock("What is your name?")
-        textField(model.nameField)
+    val textState = localStoreOf("sandbox-md", Markdown(""))
+    val isEditingState = storeOf(true)
+    column {
+        button(SvgFile.Edit, isEditingState::toggle, modify(AlignSelfEnd, Height3))
+        flowBlock(isEditingState, modify(Magic, Scale)) { isEditing ->
+            when (isEditing) {
+                true -> markdownEditor(textState)
+                else -> markdown(textState.now)
+            }
+        }
     }
 
-     flowBlock(model.nameField) { name ->
-         if (name == "wreck") throw SandboxException()
-         textBlock("Hello ${name.takeIf { it.isNotBlank() } ?: "Someone"}, welcome to the sandbox.")
-     }
-
-    button("Check availability", model::checkAvailability)
-
-    // flowBlock(model.isNameTaken) { isNameTaken ->
-    //     when (isNameTaken) {
-    //         null -> return@flowBlock
-    //         true -> textBlock("That name is taken.")
-    //         false -> textBlock("That name is available.")
-    //     }
-    // }
-
-    // throw SandboxException()
 }
 
 class SandboxException : Exception("Arrr sandbox exception")

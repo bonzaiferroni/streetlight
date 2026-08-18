@@ -17,7 +17,7 @@ import kotlinx.html.js.textArea
 import org.w3c.dom.HTMLTextAreaElement
 
 fun ViewScope.textEditor(
-    field: MutableTap<Markdown>,
+    state: MutableTap<Markdown>,
     label: String? = null,
     modifiers: ModifierSet? = null,
     textModifiers: ModifierSet? = null,
@@ -26,7 +26,7 @@ fun ViewScope.textEditor(
     placeholder: String? = label,
     block: TEXTAREA.() -> Unit = {}
 ): HTMLTextAreaElement {
-    var currentValue = field.now
+    var currentValue = state.now
     lateinit var element: HTMLTextAreaElement
 
     fun display(value: Markdown) {
@@ -53,8 +53,8 @@ fun ViewScope.textEditor(
             onInputFunction = {
                 val newValue = (it.target as HTMLTextAreaElement).value.toMarkdown()
                 if (newValue != currentValue) {
-                    field.set(newValue)
-                    display(field.now)
+                    state.set(newValue)
+                    display(state.now)
                 }
             }
             +currentValue.value
@@ -62,7 +62,7 @@ fun ViewScope.textEditor(
         }
 
         launchEffect("textEditor") {
-            field.flow.collect {
+            state.flow.collect {
                 display(it)
             }
         }

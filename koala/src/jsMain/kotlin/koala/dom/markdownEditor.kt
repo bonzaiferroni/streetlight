@@ -1,32 +1,66 @@
 package koala.dom
 
-import koala.css.ModifierSet
-import koala.css.Width100P
-import koala.css.addModifiers
-import koala.external.SimpleMDE
-import koala.external.SimpleMDEOptions
-import koala.html.Id
-import koala.html.setId
-import kotlinx.html.js.textArea
+import kampfire.api.Markdown
+import kampfire.api.toMarkdown
+import koala.css.*
+import koala.html.Attribute
+import koala.html.setAttribute
+import koala.model.MutableTap
+import koala.model.MarkdownEditorStyle
+import kotlinx.html.DIV
+import kotlinx.html.js.div
+import kotlinx.html.js.onInputFunction
+import org.w3c.dom.HTMLElement
 
 fun ViewScope.markdownEditor(
+    state: MutableTap<Markdown>,
+    label: String? = null,
     modifiers: ModifierSet? = null,
-    id: Id? = null,
-    placeholder: String? = null,
-) {
-    val element = textArea {
-        addModifiers(Width100P, modifiers)
-        setId(id)
+    placeholder: String? = label,
+    block: DIV.() -> Unit = {}
+): HTMLElement {
+    var currentValue = state.now
+    lateinit var element: HTMLElement
 
-        placeholder?.let {
-            this.placeholder = it
+    fun display(value: Markdown) {
+        currentValue = value
+        if (element.innerText != value.value) {
+            element.textContent = value.value
         }
     }
 
-    val editor = SimpleMDE(
-        SimpleMDEOptions(
-            element = element,
+    element = div {
+        addModifiers(MarkdownEditorStyle.Class, modifiers)
+        label?.let {
+            setAttribute(Attribute.BlockLabel, label.lowercase())
+        }
+        setAttribute(Attribute.ContentEditable, "plaintext-only")
+        setAttribute(Attribute.Role, "textbox")
+        setAttribute(Attribute.AriaMultiline, true)
+        label?.let {
+            setAttribute(Attribute.AriaLabel , it)
+        }
+        placeholder?.let {
+            setAttribute(Attribute.Placeholder, it)
+        }
 
-        )
-    )
+        onInputFunction = {
+            val newValue = element.innerText.toMarkdown()
+            if (newValue != currentValue) {
+                currentValue = newValue
+                state.set(newValue)
+            }
+        }
+
+        +currentValue.value
+        block()
+    }
+
+    launchEffect("textEditor") {
+        state.flow.collect {
+            display(it)
+        }
+    }
+
+    return element
 }

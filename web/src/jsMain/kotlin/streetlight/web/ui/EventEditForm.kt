@@ -88,7 +88,7 @@ fun ViewScope.eventDetailsForm(model: EventEditor) = formCard("Event Details") {
         }
         formSection("Description") {
             textEditor(
-                field = model.description,
+                state = model.description,
                 label = "description",
                 placeholder = "Event description",
                 rows = 8,

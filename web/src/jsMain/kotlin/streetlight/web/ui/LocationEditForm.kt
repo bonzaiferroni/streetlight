@@ -25,7 +25,7 @@ fun ViewScope.locationDetailsForm(model: LocationEditor) = formCardSection("Loca
     }
     formPart("Describe the place.", fieldsFlex = Flex2) {
         textEditor(
-            field = model.descriptionField,
+            state = model.descriptionField,
             label = "description",
             rows = 8,
         )

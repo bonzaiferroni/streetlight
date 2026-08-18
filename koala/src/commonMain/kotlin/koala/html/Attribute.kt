@@ -31,12 +31,16 @@ data class Attribute<T>(
         val GeoPointAttribute = Attribute("geo-point", true) { GeoPoint.fromString(it) }
         val TabIndex = intAttributeOf("tab-index", true)
         val RoutePath = stringAttributeOf("route-path", true)
+        val Placeholder = stringAttributeOf("placeholder", true)
 
         val PopoverTarget = stringAttributeOf("popovertarget")
         val Popover = stringAttributeOf("popover")
         val SrcSet = stringAttributeOf("srcset")
         val Sizes = stringAttributeOf("sizes")
         val AriaLabel = stringAttributeOf("aria-label")
+        val AriaMultiline = booleanAttributeOf("aria-multiline")
+        val ContentEditable = stringAttributeOf("contenteditable")
+        val Role = stringAttributeOf("role")
     }
 }
 
