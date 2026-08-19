@@ -5,6 +5,8 @@ import kampfire.api.toMarkdown
 import koala.css.*
 import koala.html.Attribute
 import koala.html.setAttribute
+import koala.markdown.markdownSpansOf
+import koala.markdown.renderMarkdownSpans
 import koala.model.MutableTap
 import koala.model.MarkdownEditorStyle
 import kotlinx.browser.document
@@ -12,7 +14,6 @@ import kotlinx.html.DIV
 import kotlinx.html.dom.create
 import kotlinx.html.js.onInputFunction
 import kotlinx.html.js.p
-import org.w3c.dom.Element
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.asList
 import org.w3c.dom.get
@@ -71,7 +72,7 @@ fun ViewScope.styledMarkdownEditor(
 
 private fun HTMLElement.syncFromCollect(model: MarkdownEditor, markdown: Markdown) {
     val lines = markdown.value.split("\n\n")
-    model.linesState.set(lines)
+    val blocks = model.syncFromCollect(lines)
 
     lines.forEachIndexed { index, line ->
         val element = children[index] as? HTMLElement
@@ -79,7 +80,8 @@ private fun HTMLElement.syncFromCollect(model: MarkdownEditor, markdown: Markdow
             val lineMod = lineModOf(line)
             val p = document.create.p {
                 addModifiers(lineMod)
-                +line
+                val spans = markdownSpansOf(line)
+                renderMarkdownSpans(spans, true)
             }
             appendChild(p)
         } else {
@@ -89,6 +91,7 @@ private fun HTMLElement.syncFromCollect(model: MarkdownEditor, markdown: Markdow
 }
 
 private fun HTMLElement.syncFromInput(model: MarkdownEditor): Markdown {
+    console.log("----------- from input")
     val lines = buildList {
         children.asList().toList().forEach { element ->
             val element = element as? HTMLElement ?: return@forEach
@@ -106,7 +109,8 @@ private fun HTMLElement.syncFromInput(model: MarkdownEditor): Markdown {
                         val lineMod = lineModOf(line)
                         val p = document.create.p {
                             addModifiers(lineMod)
-                            +line
+                            val spans = markdownSpansOf(line)
+                            renderMarkdownSpans(spans)
                         }
                         insertBefore(p, element)
                     }
@@ -134,15 +138,3 @@ private fun HTMLElement.syncElement(line: String) {
 private fun lineModOf(line: String): Modifier =
     if (line.trimStart().startsWith("#")) MarkdownEditorStyle.HeadingLine
     else MarkdownEditorStyle.Line
-
-
-private fun HTMLElement.adoptTextNodes() {
-    childNodes.asList()
-        .filter { it !is Element }
-        .forEach { node ->
-            println("adopting ${node.textContent}")
-            val p = document.create.p { }
-            insertBefore(p, node)
-            p.appendChild(node)
-        }
-}

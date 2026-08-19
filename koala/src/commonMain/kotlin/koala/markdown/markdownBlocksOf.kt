@@ -1,155 +1,89 @@
-@file:Suppress("RegExpRedundantEscape") // necessary for regex in js context
-
 package koala.markdown
 
 import kampfire.api.Markdown
 import kampfire.api.toMarkdown
-import koala.html.Id
-
-internal enum class ListKind { Ordered, Unordered }
-
-private val HORIZONTAL_RULE = Regex("^(-{3,}|\\*{3,})\\s*$")
-private val UNORDERED_ITEM = Regex("^\\s*[-*+_] .*")
-private val TABLE_LINE = Regex("^\\s*\\|.*\\|\\s*$")
-private val ORDERED_ITEM = Regex("^\\s*\\d+\\. .*")
-private val IMAGE_BLOCK = Regex("^!\\[([^\\]]*)\\]\\(([^)]+)\\)\\s*$")
-private val FENCE = Regex("^```.*")
 
 fun markdownBlocksOf(markdown: Markdown): List<MarkdownBlock> {
-    val lines = markdown.value.split("\n")
     val blocks = mutableListOf<MarkdownBlock>()
-    val paragraphLines = mutableListOf<String>()
-    val quoteLines = mutableListOf<String>()
-    val listLines = mutableListOf<String>()
-    val fenceLines = mutableListOf<String>()
-    var inFence = false
-    var fenceLanguage: String? = null
-    val tableLines = mutableListOf<String>()
+    val open = OpenBlock()
 
-    fun flushTable() {
-        if (tableLines.isNotEmpty()) {
-            markdownTableOf(tableLines)?.let { blocks.add(it) }
-            tableLines.clear()
-        }
+    fun close() {
+        open.close()?.let { blocks.add(it) }
     }
 
-    fun flushParagraph() {
-        if (paragraphLines.isNotEmpty()) {
-            parseParagraph(paragraphLines.joinToString("\n"))?.let { blocks.add(it) }
-            paragraphLines.clear()
-        }
-    }
-
-    fun flushQuote() {
-        if (quoteLines.isNotEmpty()) {
-            parseBlockquote(quoteLines)?.let { blocks.add(it) }
-            quoteLines.clear()
-        }
-    }
-
-    fun flushList() {
-        if (listLines.isNotEmpty()) {
-            blocks.addAll(markdownListsOf(listLines))
-            listLines.clear()
-        }
-    }
-
-    fun flushAll() {
-        flushParagraph()
-        flushQuote()
-        flushList()
-        flushTable()
-    }
-
-    for (line in lines) {
-        val trimmed = line.trimStart()
-
-        if (FENCE.matches(trimmed)) {
-            flushAll()
-            fenceLanguage = trimmed.removePrefix("```").trim().takeIf { it.isNotEmpty() }
-            inFence = true
-            continue
-        }
-
-        if (inFence) {
-            if (trimmed.startsWith("```")) {
-                blocks.add(parseCodeBlock(fenceLines, fenceLanguage))
-                fenceLines.clear()
-                fenceLanguage = null
-                inFence = false
-            } else {
-                fenceLines.add(line)
+    for (line in markdown.value.split("\n")) {
+        val type = open.type
+        if (type != null) {
+            if (type.closes(line)) {
+                close()
+                continue
             }
-            continue
+            if (type.accepts(line)) {
+                open.lines.add(line)
+                continue
+            }
+            close()
         }
 
-        if (FENCE.matches(trimmed)) {
-            flushAll()
-            inFence = true
-            continue
-        }
+        if (line.isBlank()) continue
 
-        if (line.isBlank()) {
-            flushAll()
-            continue
+        markdownBlockTypeOf(line)?.let {
+            open.open(it, line)
         }
-
-        if (HORIZONTAL_RULE.matches(trimmed)) {
-            flushAll()
-            blocks.add(MarkdownHorizontalRule)
-            continue
-        }
-
-        if (trimmed.startsWith("#")) {
-            flushAll()
-            parseHeading(trimmed)?.let { blocks.add(it) }
-            continue
-        }
-
-        val match = IMAGE_BLOCK.matchEntire(trimmed)
-        if (match != null) {
-            flushAll()
-            val args = parseImageArgs(match.groupValues[2])
-            blocks.add(
-                MarkdownBlockImage(
-                    altText = match.groupValues[1],
-                    url = args.url,
-                    maxWidthPercent = args.maxWidthPercent,
-                    type = args.type,
-                )
-            )
-            continue
-        }
-
-        if (trimmed.startsWith("> ") || trimmed == ">") {
-            flushParagraph()
-            flushList()
-            quoteLines.add(trimmed.removePrefix(">").removePrefix(" "))
-            continue
-        }
-
-        if (UNORDERED_ITEM.matches(line) || ORDERED_ITEM.matches(line)) {
-            flushParagraph()
-            flushQuote()
-            listLines.add(line)
-            continue
-        }
-
-        if (TABLE_LINE.matches(line)) {
-            flushParagraph()
-            flushQuote()
-            flushList()
-            tableLines.add(line)
-            continue
-        }
-
-        flushQuote()
-        flushList()
-        paragraphLines.add(line)
     }
-    flushAll()
+    close()
 
     return blocks
+}
+
+private class OpenBlock {
+    var type: MarkdownBlockType? = null
+        private set
+    var language: String? = null
+        private set
+
+    val lines = mutableListOf<String>()
+
+    fun open(type: MarkdownBlockType, firstLine: String) {
+        this.type = type
+        lines.clear()
+        language = when (type) {
+            MarkdownBlockType.Code ->
+                firstLine.removePrefix("```").trim().takeIf { it.isNotEmpty() }
+            else -> null
+        }
+        if (type != MarkdownBlockType.Code) lines.add(firstLine)
+    }
+
+    fun close(): MarkdownBlock? {
+        val type = type ?: return null
+        this.type = null
+        return when (type) {
+            MarkdownBlockType.Code -> parseCodeBlock(lines, language)
+            MarkdownBlockType.Heading -> parseHeading(lines.first())
+            MarkdownBlockType.HorizontalRule -> MarkdownHorizontalRule
+            MarkdownBlockType.Image -> parseBlockImage(lines.first())
+            MarkdownBlockType.BlockQuote -> parseBlockquote(
+                lines.map { it.removePrefix(">").removePrefix(" ") }
+            )
+            MarkdownBlockType.UnorderedList, MarkdownBlockType.OrderedList -> markdownListOf(lines)
+            MarkdownBlockType.Table -> markdownTableOf(lines)
+            MarkdownBlockType.Paragraph -> parseParagraph(lines.joinToString("\n"))
+        }
+    }
+}
+
+fun markdownBlockTypeOf(line: String): MarkdownBlockType? = when {
+    MarkdownRegex.Fence.matches(line) -> MarkdownBlockType.Code
+    MarkdownRegex.HorizontalRule.matches(line) -> MarkdownBlockType.HorizontalRule
+    line.startsWith("#") -> MarkdownBlockType.Heading
+    line.startsWith(">") -> MarkdownBlockType.BlockQuote
+    MarkdownRegex.ImageBlock.matches(line) -> MarkdownBlockType.Image
+    MarkdownRegex.UnorderedItem.matches(line) -> MarkdownBlockType.UnorderedList
+    MarkdownRegex.OrderedItem.matches(line) -> MarkdownBlockType.OrderedList
+    MarkdownRegex.TableLine.matches(line) -> MarkdownBlockType.Table
+    line.isNotBlank() -> MarkdownBlockType.Paragraph
+    else -> null
 }
 
 fun parseParagraph(chunk: String): MarkdownParagraph? {
@@ -183,5 +117,16 @@ fun parseCodeBlock(lines: List<String>, language: String?): MarkdownCodeBlock {
     return MarkdownCodeBlock(
         language = language,
         code = lines.joinToString("\n")
+    )
+}
+
+fun parseBlockImage(chunk: String): MarkdownBlockImage? {
+    val match = MarkdownRegex.ImageBlock.matchEntire(chunk) ?: return null
+    val args = parseImageArgs(match.groupValues[2])
+    return MarkdownBlockImage(
+        altText = match.groupValues[1],
+        url = args.url,
+        maxWidthPercent = args.maxWidthPercent,
+        type = args.type,
     )
 }

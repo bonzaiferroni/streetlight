@@ -43,12 +43,12 @@ fun FlowContent.renderHeading(heading: MarkdownHeading) {
     val headingMod = modify(TextAlignCenter)
     val block: FlowContent.() -> Unit = {
         when (heading.level) {
-            1 -> heading1(modifiers = headingMod) { renderSpans(heading.spans) }
-            2 -> heading2(modifiers = headingMod) { renderSpans(heading.spans) }
-            3 -> heading3(modifiers = headingMod) { renderSpans(heading.spans) }
-            4 -> heading4(modifiers = headingMod) { renderSpans(heading.spans) }
-            5 -> heading5(modifiers = headingMod) { renderSpans(heading.spans) }
-            6 -> heading5(modifiers = headingMod) { renderSpans(heading.spans) }  // td: support h6
+            1 -> heading1(modifiers = headingMod) { renderMarkdownSpans(heading.spans) }
+            2 -> heading2(modifiers = headingMod) { renderMarkdownSpans(heading.spans) }
+            3 -> heading3(modifiers = headingMod) { renderMarkdownSpans(heading.spans) }
+            4 -> heading4(modifiers = headingMod) { renderMarkdownSpans(heading.spans) }
+            5 -> heading5(modifiers = headingMod) { renderMarkdownSpans(heading.spans) }
+            6 -> heading5(modifiers = headingMod) { renderMarkdownSpans(heading.spans) }  // td: support h6
             else -> error("invalid markdown")
         }
     }
@@ -57,7 +57,7 @@ fun FlowContent.renderHeading(heading: MarkdownHeading) {
 
 fun FlowContent.renderParagraph(block: MarkdownParagraph) {
     textBlock {
-        renderSpans(block.spans)
+        renderMarkdownSpans(block.spans)
     }
 }
 
@@ -105,7 +105,7 @@ fun FlowContent.renderOrderedList(block: MarkdownOrderedList) {
         block.items.forEach { item ->
             listItem {
                 span {
-                    renderSpans(item.spans)
+                    renderMarkdownSpans(item.spans)
                 }
                 item.sublist?.let {
                     renderList(it)
@@ -140,7 +140,7 @@ fun FlowContent.renderUnorderedList(block: MarkdownUnorderedList) {
         block.items.forEach { item ->
             listItem {
                 span {
-                    renderSpans(item.spans)
+                    renderMarkdownSpans(item.spans)
                 }
                 item.sublist?.let {
                     renderList(it)
@@ -161,7 +161,7 @@ fun FlowContent.renderTable(block: MarkdownTable) {
                     block.header.cells.forEachIndexed { index, cell ->
                         th {
                             applyAlignment(block.alignments.getOrNull(index))
-                            renderSpans(cell.spans)
+                            renderMarkdownSpans(cell.spans)
                         }
                     }
                 }
@@ -173,7 +173,7 @@ fun FlowContent.renderTable(block: MarkdownTable) {
                     row.cells.forEachIndexed { index, cell ->
                         td {
                             applyAlignment(block.alignments.getOrNull(index))
-                            renderSpans(cell.spans)
+                            renderMarkdownSpans(cell.spans)
                         }
                     }
                 }

@@ -6,14 +6,14 @@ import koala.html.LottieClass
 import koala.html.MarkdownClass
 import kotlinx.html.*
 
-fun FlowOrPhrasingContent.renderSpans(spans: List<MarkdownSpan>) {
+fun FlowOrPhrasingContent.renderMarkdownSpans(spans: List<MarkdownSpan>, withSyntax: Boolean = false) {
     spans.forEach { span ->
         when (span) {
             is MarkdownInlineCode -> renderInlineCode(span)
             is MarkdownInlineImage -> renderInlineImage(span)
-            is MarkdownEmphasis -> renderEmphasis(span)
+            is MarkdownEmphasis -> renderEmphasis(span, withSyntax)
             is MarkdownLink -> renderLink(span)
-            is MarkdownStrong -> renderStrong(span)
+            is MarkdownStrong -> renderStrong(span, withSyntax)
             is MarkdownText -> renderText(span)
         }
     }
@@ -25,22 +25,29 @@ fun FlowOrPhrasingContent.renderInlineCode(span: MarkdownInlineCode) {
     }
 }
 
-fun FlowOrPhrasingContent.renderEmphasis(span: MarkdownEmphasis) {
+fun FlowOrPhrasingContent.renderEmphasis(span: MarkdownEmphasis, withSyntax: Boolean) {
     em {
-        +span.text
+        when (withSyntax) {
+            true -> +"*${span.text}*"
+            else -> +span.text
+        }
     }
 }
 
 fun FlowOrPhrasingContent.renderLink(span: MarkdownLink) {
     a {
         href = span.url
-        renderSpans(span.spans)
+        renderMarkdownSpans(span.spans)
     }
 }
 
-fun FlowOrPhrasingContent.renderStrong(span: MarkdownStrong) {
+fun FlowOrPhrasingContent.renderStrong(span: MarkdownStrong, withSyntax: Boolean) {
     strong {
-        +span.text
+        when (withSyntax) {
+            true -> +"**${span.text}**"
+            else -> +span.text
+        }
+
     }
 }
 

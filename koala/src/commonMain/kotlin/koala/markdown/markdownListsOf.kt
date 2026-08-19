@@ -1,86 +1,56 @@
 package koala.markdown
 
-private val UNORDERED_MARKER = Regex("^([-*+_])\\s+(.*)$")
-private val ORDERED_MARKER = Regex("^(\\d+)\\.\\s+(.*)$")
+fun markdownListOf(lines: List<String>): MarkdownList? {
+    val firstLine = lines.firstOrNull() ?: return null
+    val baseIndent = firstLine.takeWhile { it == ' ' }.length
 
-fun markdownListsOf(lines: List<String>): List<MarkdownList> {
-    if (lines.isEmpty()) return emptyList()
-
-    val baseIndent = lines.first().takeWhile { it == ' ' }.length
-    val results = mutableListOf<MarkdownList>()
-    val currentItems = mutableListOf<MarkdownListItem>()
+    val items = mutableListOf<MarkdownListItem>()
     val childLines = mutableListOf<String>()
-    var currentKind: ListKind? = null
-    var currentStart = 1
+    var ordered = false
+    var startNumber = 1
     var marker = '-'
 
-    fun attachChildrenToLastItem() {
+    fun attachChildren() {
         if (childLines.isEmpty()) return
-        val sublist = markdownListsOf(childLines).firstOrNull()
+        val sublist = markdownListOf(childLines)
         childLines.clear()
-        if (sublist != null && currentItems.isNotEmpty()) {
-            val last = currentItems.removeLast()
-            currentItems.add(last.copy(sublist = sublist))
+        if (sublist != null && items.isNotEmpty()) {
+            items.add(items.removeLast().copy(sublist = sublist))
         }
-    }
-
-    fun flushCurrentList() {
-        attachChildrenToLastItem()
-        if (currentItems.isEmpty()) return
-        val list: MarkdownList = when (currentKind) {
-            ListKind.Ordered -> MarkdownOrderedList(startNumber = currentStart, items = currentItems.toList())
-            ListKind.Unordered -> MarkdownUnorderedList(marker = marker, items = currentItems.toList())
-            null -> return
-        }
-        results.add(list)
-        currentItems.clear()
-        currentKind = null
     }
 
     for (line in lines) {
         val indent = line.takeWhile { it == ' ' }.length
-
         if (indent > baseIndent) {
             childLines.add(line)
             continue
         }
-
-        attachChildrenToLastItem()
+        attachChildren()
 
         val trimmed = line.substring(indent)
-        val orderedMatch = ORDERED_MARKER.matchEntire(trimmed)
-        val unorderedMatch = if (orderedMatch == null) UNORDERED_MARKER.matchEntire(trimmed) else null
 
-        val kind: ListKind
-        val content: String
-        val number: Int
-        when {
-            orderedMatch != null -> {
-                kind = ListKind.Ordered
-                content = orderedMatch.groupValues[2]
-                number = orderedMatch.groupValues[1].toInt()
+        val orderedMatch = MarkdownRegex.OrderedListMarker.matchEntire(trimmed)
+        if (orderedMatch != null) {
+            if (items.isEmpty()) {
+                ordered = true
+                startNumber = orderedMatch.groupValues[1].toInt()
             }
-            unorderedMatch != null -> {
-                kind = ListKind.Unordered
-                marker = unorderedMatch.groupValues[1][0]
-                content = unorderedMatch.groupValues[2]
-                number = 1
-            }
-            else -> continue
+            items.add(MarkdownListItem(spans = markdownSpansOf(orderedMatch.groupValues[2])))
+            continue
         }
 
-        if (currentKind != null && currentKind != kind) {
-            flushCurrentList()
+        val unorderedMatch = MarkdownRegex.UnorderedListMarker.matchEntire(trimmed) ?: continue
+        if (items.isEmpty()) {
+            marker = unorderedMatch.groupValues[1][0]
         }
-
-        if (currentKind == null) {
-            currentKind = kind
-            if (kind == ListKind.Ordered) currentStart = number
-        }
-
-        currentItems.add(MarkdownListItem(spans = markdownSpansOf(content)))
+        items.add(MarkdownListItem(spans = markdownSpansOf(unorderedMatch.groupValues[2])))
     }
+    attachChildren()
 
-    flushCurrentList()
-    return results
+    if (items.isEmpty()) return null
+
+    return when (ordered) {
+        true -> MarkdownOrderedList(startNumber = startNumber, items = items.toList())
+        else -> MarkdownUnorderedList(marker = marker, items = items.toList())
+    }
 }

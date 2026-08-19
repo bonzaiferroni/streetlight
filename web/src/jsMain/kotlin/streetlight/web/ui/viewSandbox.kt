@@ -32,12 +32,11 @@ fun RouteScope.viewSandbox() {
         }
         flowBlock(isEditingState, modify(Magic, Scale)) { isEditing ->
             when (isEditing) {
-                true -> styledMarkdownEditor(textState)
+                true -> textEditor(textState)
                 else -> markdown(textState.now)
             }
         }
     }
-
 }
 
 class SandboxException : Exception("Arrr sandbox exception")
