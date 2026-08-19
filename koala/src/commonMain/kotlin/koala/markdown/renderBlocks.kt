@@ -21,7 +21,7 @@ import kotlinx.html.ul
 
 fun FlowContent.renderBlocks(blocks: List<MarkdownBlock>) {
     div {
-        addModifiers(MarkdownClass.Block)
+        addModifiers(MarkdownStyle.Block)
         blocks.forEach { block ->
             when (block) {
                 is MarkdownHeading -> renderHeading(block)
@@ -63,7 +63,7 @@ fun FlowContent.renderParagraph(block: MarkdownParagraph) {
 
 fun FlowContent.renderBlockquote(block: MarkdownBlockquote) {
     blockQuote {
-        renderBlocks(block.blocks)
+        renderBlocks(block.paragraphs)
     }
 }
 
@@ -82,7 +82,7 @@ fun FlowContent.renderHorizontalRule() {
 
 fun FlowContent.renderImage(block: MarkdownBlockImage) {
     figure {
-        addModifiers(MarkdownClass.BlockImage)
+        addModifiers(MarkdownStyle.BlockImage)
         block.maxWidthPercent?.let {
             style = "max-width: $it%;"
         }
@@ -99,7 +99,7 @@ fun FlowContent.renderImage(block: MarkdownBlockImage) {
 
 fun FlowContent.renderOrderedList(block: MarkdownOrderedList) {
     ol {
-        addModifiers(MarkdownClass.List)
+        addModifiers(MarkdownStyle.List)
         start = block.startNumber.toString()
         
         block.items.forEach { item ->
@@ -136,7 +136,7 @@ fun FlowContent.renderUnorderedList(block: MarkdownUnorderedList) {
     }
 
     ul {
-        addModifiers(MarkdownClass.List, paddingMod, markerMod)
+        addModifiers(MarkdownStyle.List, paddingMod, markerMod)
         block.items.forEach { item ->
             listItem {
                 span {

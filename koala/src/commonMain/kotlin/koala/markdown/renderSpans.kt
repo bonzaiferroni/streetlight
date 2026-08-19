@@ -1,9 +1,7 @@
 package koala.markdown
 
 import koala.css.*
-import koala.html.FloatRight
 import koala.html.LottieClass
-import koala.html.MarkdownClass
 import kotlinx.html.*
 
 fun FlowOrPhrasingContent.renderMarkdownSpans(spans: List<MarkdownSpan>, withSyntax: Boolean = false) {
@@ -57,7 +55,7 @@ fun FlowOrPhrasingContent.renderText(span: MarkdownText) {
 
 fun FlowOrPhrasingContent.renderInlineImage(span: MarkdownInlineImage) {
     span {
-        addModifiers(MarkdownClass.InlineImage, FloatRight, MarginLeft2, MarginBottom2)
+        addModifiers(MarkdownStyle.InlineImage, FloatRight, MarginLeft2, MarginBottom2)
         span.maxWidthPercent?.let {
             style = "max-width: $it%;"
         }
@@ -66,7 +64,7 @@ fun FlowOrPhrasingContent.renderInlineImage(span: MarkdownInlineImage) {
             ImageType.Image -> renderBasicImage(span)
         }
         span {
-            addModifiers(MarkdownClass.InlineImageCaption)
+            addModifiers(MarkdownStyle.InlineImageCaption)
             +span.altText
         }
     }

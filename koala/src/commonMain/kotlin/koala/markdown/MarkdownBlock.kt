@@ -1,7 +1,5 @@
 package koala.markdown
 
-import koala.html.Id
-
 sealed interface MarkdownBlock {
 }
 
@@ -46,7 +44,7 @@ data class MarkdownCodeBlock(
 // Blockquote
 
 data class MarkdownBlockquote(
-    val blocks: List<MarkdownBlock>
+    val paragraphs: List<MarkdownParagraph>
 ): MarkdownBlock
 
 // Lists

@@ -118,6 +118,7 @@ private fun HTMLElement.syncFromInput(model: MarkdownEditor): Markdown {
             }
         }
     }
+    // model.syncFromInput(lines, blocks)
     model.linesState.set(lines)
     return lines.joinToString("\n\n").toMarkdown()
 }

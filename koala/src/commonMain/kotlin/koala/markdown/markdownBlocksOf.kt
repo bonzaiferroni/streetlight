@@ -1,9 +1,10 @@
 package koala.markdown
 
 import kampfire.api.Markdown
-import kampfire.api.toMarkdown
 
-fun markdownBlocksOf(markdown: Markdown): List<MarkdownBlock> {
+fun markdownBlocksOf(markdown: Markdown) = markdownBlocksOf(markdown.value.split("\n"))
+
+fun markdownBlocksOf(lines: List<String>): List<MarkdownBlock> {
     val blocks = mutableListOf<MarkdownBlock>()
     val open = OpenBlock()
 
@@ -11,7 +12,7 @@ fun markdownBlocksOf(markdown: Markdown): List<MarkdownBlock> {
         open.close()?.let { blocks.add(it) }
     }
 
-    for (line in markdown.value.split("\n")) {
+    for (line in lines) {
         val type = open.type
         if (type != null) {
             if (type.closes(line)) {
@@ -106,11 +107,11 @@ fun parseHeading(chunk: String): MarkdownHeading? {
 }
 
 fun parseBlockquote(lines: List<String>): MarkdownBlockquote? {
-    if (lines.isEmpty()) return null
-    val inner = lines.joinToString("\n")
-    val blocks = markdownBlocksOf(inner.toMarkdown())
-    if (blocks.isEmpty()) return null
-    return MarkdownBlockquote(blocks = blocks)
+    val paragraphs = lines
+        .filter { it.isNotBlank() }
+        .map { MarkdownParagraph(markdownSpansOf(it)) }
+    return paragraphs.takeIf { it.isNotEmpty() }
+        ?.let { MarkdownBlockquote(paragraphs = it) }
 }
 
 fun parseCodeBlock(lines: List<String>, language: String?): MarkdownCodeBlock {
