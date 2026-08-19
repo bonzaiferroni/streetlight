@@ -19,7 +19,7 @@ import kotlinx.html.thead
 import kotlinx.html.tr
 import kotlinx.html.ul
 
-fun FlowContent.renderBlocks(blocks: List<MarkdownBlock>) {
+fun FlowContent.renderMarkdownBlocks(blocks: List<MarkdownBlock>) {
     div {
         addModifiers(MarkdownStyle.Block)
         blocks.forEach { block ->
@@ -63,7 +63,7 @@ fun FlowContent.renderParagraph(block: MarkdownParagraph) {
 
 fun FlowContent.renderBlockquote(block: MarkdownBlockquote) {
     blockQuote {
-        renderBlocks(block.paragraphs)
+        renderMarkdownBlocks(block.paragraphs)
     }
 }
 

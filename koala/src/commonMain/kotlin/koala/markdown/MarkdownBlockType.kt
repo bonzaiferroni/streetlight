@@ -50,4 +50,5 @@ object MarkdownRegex {
     val Fence = Regex("^```.*")
     val UnorderedListMarker = Regex("^([-*+_])\\s+(.*)$")
     val OrderedListMarker = Regex("^(\\d+)\\.\\s+(.*)$")
+    val TableDelimiterCell = Regex("^\\s*:?-{3,}:?\\s*$")
 }

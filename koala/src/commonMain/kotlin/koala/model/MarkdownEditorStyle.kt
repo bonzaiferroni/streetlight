@@ -3,14 +3,22 @@ package koala.model
 import koala.css.Class
 
 object MarkdownEditorStyle {
-    val Class = Class("markdown-editor")
-    val HeadingLine = Class("markdown-editor__heading-line")
-    val Line = Class("markdown-editor__line")
+    val Container = Class("markdown-editor")
+    val Paragraph = Container.withElement("paragraph")
+    val Heading = Container.withElement("heading-line")
+    val HorizontalRule = Container.withElement("horizontal-rule")
+    val Code = Container.withElement("code-block")
+    val BlockQuote = Container.withElement("blockquote")
+    val UnorderedList = Container.withElement("unordered-list")
+    val OrderedList = Container.withElement("ordered-list")
+    val Table = Container.withElement("table")
+    val BlockImage = Container.withElement("block-image")
+    val Chunk = Container.withElement("line")
 }
 
 // language="CSS"
 val TextEditorCss get() = with(MarkdownEditorStyle) { """
-$Class {
+$Container {
     font-family: ui-monospace, Menlo, Consolas, monospace;
     outline: none;
     padding: var(--unit-spacing);
@@ -29,7 +37,7 @@ $Class {
     }
 }
 
-$HeadingLine {
+$Heading {
     font-weight: bold;
     font-size: 2rem;
     text-align: center;

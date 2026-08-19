@@ -1,6 +1,7 @@
 package koala.markdown
 
 sealed interface MarkdownBlock {
+    val blockType: MarkdownBlockType
 }
 
 interface MarkdownImage {
@@ -20,7 +21,9 @@ interface MarkdownTextBlock {
 
 data class MarkdownParagraph(
     override val spans: List<MarkdownSpan>
-): MarkdownBlock, MarkdownTextBlock
+): MarkdownBlock, MarkdownTextBlock {
+    override val blockType get() = MarkdownBlockType.Paragraph
+}
 
 // Heading
 
@@ -28,24 +31,32 @@ data class MarkdownHeading(
     val level: Int,
     val filigree: Boolean,
     override val spans: List<MarkdownSpan>
-): MarkdownBlock, MarkdownTextBlock
+): MarkdownBlock, MarkdownTextBlock {
+    override val blockType get() = MarkdownBlockType.Heading
+}
 
 // Horizontal Rule
 
-data object MarkdownHorizontalRule: MarkdownBlock
+data object MarkdownHorizontalRule: MarkdownBlock {
+    override val blockType get() = MarkdownBlockType.HorizontalRule
+}
 
 // Code Block
 
 data class MarkdownCodeBlock(
     val language: String?,
     val code: String
-): MarkdownBlock
+): MarkdownBlock {
+    override val blockType get() = MarkdownBlockType.Code
+}
 
 // Blockquote
 
 data class MarkdownBlockquote(
     val paragraphs: List<MarkdownParagraph>
-): MarkdownBlock
+): MarkdownBlock {
+    override val blockType get() = MarkdownBlockType.BlockQuote
+}
 
 // Lists
 
@@ -56,12 +67,16 @@ sealed interface MarkdownList: MarkdownBlock {
 data class MarkdownUnorderedList(
     val marker: Char,
     override val items: List<MarkdownListItem>
-): MarkdownList
+): MarkdownList {
+    override val blockType get() = MarkdownBlockType.UnorderedList
+}
 
 data class MarkdownOrderedList(
     val startNumber: Int,
     override val items: List<MarkdownListItem>
-): MarkdownList
+): MarkdownList {
+    override val blockType get() = MarkdownBlockType.OrderedList
+}
 
 data class MarkdownListItem(
     val spans: List<MarkdownSpan>,
@@ -75,4 +90,14 @@ data class MarkdownBlockImage(
     override val url: String,
     override val maxWidthPercent: Int?,
     override val type: ImageType,
-): MarkdownBlock, MarkdownImage
+): MarkdownBlock, MarkdownImage {
+    override val blockType get() = MarkdownBlockType.Image
+}
+
+data class MarkdownTable(
+    val header: MarkdownTableRow,
+    val alignments: List<MarkdownTableAlignment>,
+    val rows: List<MarkdownTableRow>
+) : MarkdownBlock {
+    override val blockType get() = MarkdownBlockType.Table
+}

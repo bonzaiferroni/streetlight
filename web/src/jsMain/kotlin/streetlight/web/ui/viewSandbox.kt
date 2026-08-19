@@ -32,7 +32,7 @@ fun RouteScope.viewSandbox() {
         }
         flowBlock(isEditingState, modify(Magic, Scale)) { isEditing ->
             when (isEditing) {
-                true -> basicMarkdownEditor(textState)
+                true -> styledMarkdownEditor(textState)
                 else -> markdown(textState.now)
             }
         }

@@ -7,7 +7,7 @@ import koala.css.*
 import koala.markdown.MarkdownBlock
 import koala.markdown.MarkdownStyle
 import koala.markdown.markdownBlocksOf
-import koala.markdown.renderBlocks
+import koala.markdown.renderMarkdownBlocks
 import kotlinx.html.FlowContent
 import kotlinx.html.DIV
 import kotlinx.html.div
@@ -34,7 +34,7 @@ fun DIV.configureMarkdown(
 ) {
     addModifiers(modify(MarkdownStyle.Container, Prose), modifiers)
     block()
-    renderBlocks(blocks)
+    renderMarkdownBlocks(blocks)
 }
 
 fun FlowContent.markdown(

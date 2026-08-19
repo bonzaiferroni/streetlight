@@ -5,11 +5,16 @@ import kampfire.api.toMarkdown
 import koala.css.*
 import koala.html.Attribute
 import koala.html.setAttribute
+import koala.markdown.MarkdownBlock
+import koala.markdown.MarkdownBlockType
+import koala.markdown.markdownBlockTypeOf
+import koala.markdown.markdownBlocksOf
 import koala.markdown.markdownSpansOf
 import koala.markdown.renderMarkdownSpans
 import koala.model.MutableTap
 import koala.model.MarkdownEditorStyle
 import kotlinx.browser.document
+import kotlinx.dom.clear
 import kotlinx.html.DIV
 import kotlinx.html.dom.create
 import kotlinx.html.js.onInputFunction
@@ -36,7 +41,7 @@ fun ViewScope.styledMarkdownEditor(
     }
 
     element = column {
-        addModifiers(MarkdownEditorStyle.Class, modifiers)
+        addModifiers(MarkdownEditorStyle.Container, modifiers)
         label?.let {
             setAttribute(Attribute.BlockLabel, it.lowercase())
         }
@@ -71,71 +76,107 @@ fun ViewScope.styledMarkdownEditor(
 }
 
 private fun HTMLElement.syncFromCollect(model: MarkdownEditor, markdown: Markdown) {
-    val lines = markdown.value.split("\n\n")
-    val blocks = model.syncFromCollect(lines)
+    val chunks = markdown.value.split("\n\n")
+    val blocks = model.syncFromCollect(chunks)
 
-    lines.forEachIndexed { index, line ->
+    chunks.forEachIndexed { index, chunk ->
         val element = children[index] as? HTMLElement
+        val block = blocks[index]
         if (element == null) {
-            val lineMod = lineModOf(line)
+            val lineMod = chunkModOf(block?.blockType)
             val p = document.create.p {
                 addModifiers(lineMod)
-                val spans = markdownSpansOf(line)
-                renderMarkdownSpans(spans, true)
+                +chunk
             }
             appendChild(p)
         } else {
-            element.syncElement(line)
+            element.syncElement(chunk, block)
         }
     }
 }
 
 private fun HTMLElement.syncFromInput(model: MarkdownEditor): Markdown {
     console.log("----------- from input")
-    val lines = buildList {
-        children.asList().toList().forEach { element ->
-            val element = element as? HTMLElement ?: return@forEach
-            val textContent = element.textContent ?: ""
-            val lines = textContent.split('\n')
-            lines.forEachIndexed { index, line ->
-                println(line)
-                add(line)
-                val isOriginalElement = index + 1 == lines.size
-                when (isOriginalElement) {
-                    true -> {
-                        element.syncElement(line)
+    val blocks = mutableListOf<MarkdownBlock?>()
+    val chunks = mutableListOf<String>()
+    children.asList().toList().forEach { element ->
+        val element = element as? HTMLElement ?: return@forEach
+        val elementChunk = element.textContent ?: ""
+        val cachedBlock = model.getCachedBlockOrNull(elementChunk)
+        if (cachedBlock != null) {
+            element.syncChunkMod(cachedBlock.blockType)
+            chunks.add(elementChunk)
+            blocks.add(cachedBlock)
+            return@forEach
+        }
+
+        // val blocks = markdownBlocksOf(elementChunk.toMarkdown())
+        // blocks.forEachIndexed { index, block ->
+        //     val isOriginalElement = index + 1 == blocks.size
+        //     when (isOriginalElement) {
+        //         true -> {
+        //             element.syncElement(text, block)
+        //         }
+        //     }
+        // }
+
+        val splitChunks = elementChunk.split("\n\n")
+        console.log("chunks: ${splitChunks.size}")
+        splitChunks.forEachIndexed { index, chunk ->
+            val block = markdownBlocksOf(chunk.toMarkdown()).firstOrNull() ?: return@forEachIndexed
+            chunks.add(chunk)
+            blocks.add(block)
+            val isOriginalElement = index + 1 == splitChunks.size
+            when (isOriginalElement) {
+                true -> {
+                    element.syncElement(chunk, block)
+                }
+                else -> {
+                    val blockType = markdownBlockTypeOf(chunk)
+                    println("chunk: $chunk")
+                    val lineMod = chunkModOf(blockType)
+                    val p = document.create.p {
+                        addModifiers(lineMod)
+                        val spans = markdownSpansOf(chunk)
+                        renderMarkdownSpans(spans)
                     }
-                    else -> {
-                        val lineMod = lineModOf(line)
-                        val p = document.create.p {
-                            addModifiers(lineMod)
-                            val spans = markdownSpansOf(line)
-                            renderMarkdownSpans(spans)
-                        }
-                        insertBefore(p, element)
-                    }
+                    insertBefore(p, element)
                 }
             }
         }
     }
-    // model.syncFromInput(lines, blocks)
-    model.linesState.set(lines)
-    return lines.joinToString("\n\n").toMarkdown()
+    model.syncFromInput(chunks, blocks)
+    return chunks.joinToString("\n\n").toMarkdown()
 }
 
-private fun HTMLElement.syncElement(line: String) {
-    val lineMod = lineModOf(line)
-    if (textContent != line) {
+private fun HTMLElement.syncElement(chunk: String, block: MarkdownBlock?) {
+    val blockType = block?.blockType
+    if (textContent != chunk) {
         console.log("content sync")
         // possible caret work
-        textContent = line
+        textContent = chunk
     }
-    if (!isModified(lineMod)) {
+    syncChunkMod(blockType)
+}
+
+private fun HTMLElement.syncChunkMod(blockType: MarkdownBlockType?) {
+    val chunkMod = chunkModOf(blockType)
+    if (!isModified(chunkMod)) {
         console.log("setting mod")
-        setModifiers(lineMod)
+        setModifiers(chunkMod)
     }
 }
 
-private fun lineModOf(line: String): Modifier =
-    if (line.trimStart().startsWith("#")) MarkdownEditorStyle.HeadingLine
-    else MarkdownEditorStyle.Line
+private fun chunkModOf(blockType: MarkdownBlockType?): Modifier = blockType?.let {
+    when (blockType) {
+        MarkdownBlockType.Image -> MarkdownEditorStyle.BlockImage
+        MarkdownBlockType.Paragraph -> MarkdownEditorStyle.Paragraph
+        MarkdownBlockType.Heading -> MarkdownEditorStyle.Heading
+        MarkdownBlockType.HorizontalRule -> MarkdownEditorStyle.HorizontalRule
+        MarkdownBlockType.Code -> MarkdownEditorStyle.Code
+        MarkdownBlockType.BlockQuote -> MarkdownEditorStyle.BlockQuote
+        MarkdownBlockType.UnorderedList -> MarkdownEditorStyle.UnorderedList
+        MarkdownBlockType.OrderedList -> MarkdownEditorStyle.OrderedList
+        MarkdownBlockType.Table -> MarkdownEditorStyle.Table
+    }
+} ?: MarkdownEditorStyle.Chunk

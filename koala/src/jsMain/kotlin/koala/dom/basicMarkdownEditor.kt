@@ -29,7 +29,7 @@ fun ViewScope.basicMarkdownEditor(
     }
 
     element = div {
-        addModifiers(MarkdownEditorStyle.Class, modifiers)
+        addModifiers(MarkdownEditorStyle.Container, modifiers)
         label?.let {
             setAttribute(Attribute.BlockLabel, label.lowercase())
         }

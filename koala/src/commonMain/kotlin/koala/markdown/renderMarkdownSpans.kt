@@ -4,14 +4,14 @@ import koala.css.*
 import koala.html.LottieClass
 import kotlinx.html.*
 
-fun FlowOrPhrasingContent.renderMarkdownSpans(spans: List<MarkdownSpan>, withSyntax: Boolean = false) {
+fun FlowOrPhrasingContent.renderMarkdownSpans(spans: List<MarkdownSpan>) {
     spans.forEach { span ->
         when (span) {
             is MarkdownInlineCode -> renderInlineCode(span)
             is MarkdownInlineImage -> renderInlineImage(span)
-            is MarkdownEmphasis -> renderEmphasis(span, withSyntax)
+            is MarkdownEmphasis -> renderEmphasis(span)
             is MarkdownLink -> renderLink(span)
-            is MarkdownStrong -> renderStrong(span, withSyntax)
+            is MarkdownStrong -> renderStrong(span)
             is MarkdownText -> renderText(span)
         }
     }
@@ -23,12 +23,9 @@ fun FlowOrPhrasingContent.renderInlineCode(span: MarkdownInlineCode) {
     }
 }
 
-fun FlowOrPhrasingContent.renderEmphasis(span: MarkdownEmphasis, withSyntax: Boolean) {
+fun FlowOrPhrasingContent.renderEmphasis(span: MarkdownEmphasis) {
     em {
-        when (withSyntax) {
-            true -> +"*${span.text}*"
-            else -> +span.text
-        }
+        +span.text
     }
 }
 
@@ -39,13 +36,9 @@ fun FlowOrPhrasingContent.renderLink(span: MarkdownLink) {
     }
 }
 
-fun FlowOrPhrasingContent.renderStrong(span: MarkdownStrong, withSyntax: Boolean) {
+fun FlowOrPhrasingContent.renderStrong(span: MarkdownStrong) {
     strong {
-        when (withSyntax) {
-            true -> +"**${span.text}**"
-            else -> +span.text
-        }
-
+        +span.text
     }
 }
 

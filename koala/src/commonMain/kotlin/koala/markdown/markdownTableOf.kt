@@ -1,26 +1,12 @@
 package koala.markdown
 
-enum class MarkdownTableAlignment { Left, Center, Right, None }
-
-data class MarkdownTableCell(val spans: List<MarkdownSpan>)
-
-data class MarkdownTableRow(val cells: List<MarkdownTableCell>)
-
-data class MarkdownTable(
-    val header: MarkdownTableRow,
-    val alignments: List<MarkdownTableAlignment>,
-    val rows: List<MarkdownTableRow>
-) : MarkdownBlock
-
-private val TABLE_DELIMITER_CELL = Regex("^\\s*:?-{3,}:?\\s*$")
-
 fun markdownTableOf(lines: List<String>): MarkdownTable? {
     if (lines.size < 2) return null
 
     val header = splitRow(lines[0]) ?: return null
     val delimiterCells = splitRow(lines[1]) ?: return null
     if (delimiterCells.size != header.size) return null
-    if (delimiterCells.any { !TABLE_DELIMITER_CELL.matches(it) }) return null
+    if (delimiterCells.any { !MarkdownRegex.TableDelimiterCell.matches(it) }) return null
 
     val alignments = delimiterCells.map { cell ->
         val trimmed = cell.trim()
@@ -56,3 +42,10 @@ private fun splitRow(line: String): List<String>? {
     if (!trimmed.startsWith("|") || !trimmed.endsWith("|")) return null
     return trimmed.substring(1, trimmed.length - 1).split("|")
 }
+
+enum class MarkdownTableAlignment { Left, Center, Right, None }
+
+data class MarkdownTableCell(val spans: List<MarkdownSpan>)
+
+data class MarkdownTableRow(val cells: List<MarkdownTableCell>)
+
