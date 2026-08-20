@@ -56,7 +56,7 @@ fun ViewScope.dialog(
     }
 }
 
-private fun TagScope.dialogContent(
+private fun AppendScope.dialogContent(
     title: String?,
     content: DIV.() -> Unit
 ) {
@@ -121,9 +121,9 @@ fun ViewScope.dialogWithCard(
     }
 }
 
-fun TagScope.dialogCard(
+fun AppendScope.dialogCard(
     modifiers: ModifierSet? = null,
-    content: TagScope.() -> Unit
+    content: AppendScope.() -> Unit
 ) = card(modify(DialogStyle.Card, modifiers)) {
     content()
 }

@@ -8,7 +8,7 @@ import kotlinx.html.A
 import kotlinx.html.a
 
 // td: share code with common source set
-fun TagScope.navigation(
+fun AppendScope.navigation(
     href: String? = null,
     modifiers: ModifierSet? = null,
     id: Id? = null,
@@ -18,7 +18,7 @@ fun TagScope.navigation(
     configureNavigation(href, modifiers, id, flair, block)
 }
 
-fun TagScope.navigation(
+fun AppendScope.navigation(
     route: AppRoute,
     modifiers: ModifierSet? = null,
     block: A.() -> Unit = {},

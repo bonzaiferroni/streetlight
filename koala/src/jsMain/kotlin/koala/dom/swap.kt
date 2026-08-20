@@ -1,9 +1,7 @@
 package koala.dom
 
 import koala.css.*
-import koala.css.setStyle
 import koala.html.SwapStyle
-import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.css.px
 import kotlinx.html.dom.append
@@ -11,9 +9,9 @@ import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 
 @Deprecated("reconsider whether this is necessary")
-fun TagScope.swap(
+fun AppendScope.swap(
     mod: ModifierSet? = null,
-    content: TagScope.(SwapElement) -> Unit,
+    content: AppendScope.(SwapElement) -> Unit,
 ): SwapElement {
     val parent = div(modify(SwapStyle.Class, mod)) {
 

@@ -6,14 +6,12 @@ import koala.SiteImage
 import koala.css.ModifierSet
 import koala.css.addModifiers
 import koala.model.Tap
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.launch
 import kotlinx.html.IMG
 import kotlinx.html.js.img
 import kotlinx.html.style
 import org.w3c.dom.HTMLImageElement
 
-fun TagScope.image(
+fun AppendScope.image(
     url: Url? = SiteImage.placeholderLg,
     mod: ModifierSet? = null,
     block: (IMG.() -> Unit)? = null

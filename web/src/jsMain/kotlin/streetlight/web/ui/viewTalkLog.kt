@@ -175,7 +175,7 @@ fun ViewScope.addCommentView(
     return view
 }
 
-fun TagScope.zenButton(mod: ModifierSet? = null, block: DIV.() -> Unit) =
+fun AppendScope.zenButton(mod: ModifierSet? = null, block: DIV.() -> Unit) =
     row(modify(mod, ZenBg, ButtonBorderRadius, ButtonPadding)) {
         block()
     }

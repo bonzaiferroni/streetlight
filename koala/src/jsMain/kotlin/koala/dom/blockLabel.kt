@@ -9,7 +9,7 @@ import kotlinx.html.DIV
 import kotlinx.html.js.div
 import org.w3c.dom.HTMLElement
 
-fun TagScope.blockLabel(
+fun AppendScope.blockLabel(
     label: String,
     mod: ModifierSet? = null,
     block: (DIV.() -> Unit)? = null

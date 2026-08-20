@@ -14,6 +14,8 @@ object MarkdownEditorStyle {
     val Table = Container.withElement("table")
     val BlockImage = Container.withElement("block-image")
     val Chunk = Container.withElement("line")
+
+    val Syntax = Container.withElement("syntax")
 }
 
 // language="CSS"
@@ -41,5 +43,9 @@ $Heading {
     font-weight: bold;
     font-size: 2rem;
     text-align: center;
+}
+
+$Syntax {
+    color: green;
 }
 """ }

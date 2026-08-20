@@ -12,13 +12,13 @@ import kotlinx.html.org.w3c.dom.events.Event
 import org.w3c.dom.HTMLElement
 
 class View(
-    private var consumer: TagScope,
+    private var consumer: AppendScope,
     parentScope: CoroutineScope,
     override val scopeName: String,
     override val app: AppContainer,
     override val mount: HTMLElement,
     override val parent: ViewScope?
-): ViewScope, TagScope {
+): ViewScope, AppendScope {
 
     private val disposers: MutableList<() -> Unit> = mutableListOf()
     private val children: MutableList<View> = mutableListOf()
@@ -74,7 +74,7 @@ class View(
         contentScope = createContentScope()
     }
 
-    internal fun setConsumer(value: TagScope) {
+    internal fun setConsumer(value: AppendScope) {
         consumer = value
     }
 

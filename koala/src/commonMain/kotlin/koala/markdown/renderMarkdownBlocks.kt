@@ -19,20 +19,21 @@ import kotlinx.html.thead
 import kotlinx.html.tr
 import kotlinx.html.ul
 
-fun FlowContent.renderMarkdownBlocks(blocks: List<MarkdownBlock>) {
+fun FlowContent.renderMarkdownBlocks(blocks: List<ParsedBlock>) {
     div {
         addModifiers(MarkdownStyle.Block)
         blocks.forEach { block ->
-            when (block) {
-                is MarkdownHeading -> renderHeading(block)
-                is MarkdownParagraph -> renderParagraph(block)
-                is MarkdownBlockquote -> renderBlockquote(block)
-                is MarkdownCodeBlock -> renderCodeBlock(block)
+            when (val markdown = block.markdown) {
+                is MarkdownHeading -> renderHeading(markdown)
+                is MarkdownParagraph -> renderParagraph(markdown)
+                is MarkdownBlockquote -> renderBlockquote(markdown)
+                is MarkdownCodeBlock -> renderCodeBlock(markdown)
                 MarkdownHorizontalRule -> renderHorizontalRule()
-                is MarkdownBlockImage -> renderImage(block)
-                is MarkdownOrderedList -> renderOrderedList(block)
-                is MarkdownUnorderedList -> renderUnorderedList(block)
-                is MarkdownTable -> renderTable(block)
+                is MarkdownBlockImage -> renderImage(markdown)
+                is MarkdownOrderedList -> renderOrderedList(markdown)
+                is MarkdownUnorderedList -> renderUnorderedList(markdown)
+                is MarkdownTable -> renderTable(markdown)
+                null -> { }
             }
         }
     }
@@ -63,7 +64,9 @@ fun FlowContent.renderParagraph(block: MarkdownParagraph) {
 
 fun FlowContent.renderBlockquote(block: MarkdownBlockquote) {
     blockQuote {
-        renderMarkdownBlocks(block.paragraphs)
+        block.paragraphs.forEach {
+            renderParagraph(it)
+        }
     }
 }
 

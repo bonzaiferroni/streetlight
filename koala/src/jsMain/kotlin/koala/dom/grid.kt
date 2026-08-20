@@ -8,7 +8,7 @@ import kotlinx.css.GridTemplateColumns
 import kotlinx.css.fr
 import kotlinx.html.DIV
 
-fun TagScope.grid(
+fun AppendScope.grid(
     template: GridTemplateColumns = GridTemplateColumns(1.fr, 1.fr),
     mod: ModifierSet? = null,
     queryTemplate: GridTemplateColumns = template,

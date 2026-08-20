@@ -24,7 +24,7 @@ fun <Item> ViewScope.itemsBlock(
     gapRems: Float? = 0.5f,
     config: (DIV.() -> Unit)? = null,
     containerConfig: (DIV.() -> Unit)? = null,
-    block: TagScope.(Item) -> Unit
+    block: AppendScope.(Item) -> Unit
 ): HTMLDivElement {
     // modification with Magic animates the element when items change
     // base: item opacity fade on entrance/exit, item position is animated, base element height is animated

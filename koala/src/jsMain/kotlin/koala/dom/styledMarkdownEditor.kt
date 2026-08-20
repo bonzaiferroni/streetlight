@@ -3,23 +3,26 @@ package koala.dom
 import kampfire.api.Markdown
 import kampfire.api.toMarkdown
 import koala.css.*
+import koala.external.selection
 import koala.html.Attribute
 import koala.html.setAttribute
+import koala.html.span
 import koala.markdown.MarkdownBlock
 import koala.markdown.MarkdownBlockType
-import koala.markdown.markdownBlockTypeOf
+import koala.markdown.ParsedBlock
 import koala.markdown.markdownBlocksOf
-import koala.markdown.markdownSpansOf
-import koala.markdown.renderMarkdownSpans
 import koala.model.MutableTap
 import koala.model.MarkdownEditorStyle
 import kotlinx.browser.document
+import kotlinx.browser.window
 import kotlinx.dom.clear
 import kotlinx.html.DIV
+import kotlinx.html.dom.append
 import kotlinx.html.dom.create
 import kotlinx.html.js.onInputFunction
 import kotlinx.html.js.p
 import org.w3c.dom.HTMLElement
+import org.w3c.dom.Node
 import org.w3c.dom.asList
 import org.w3c.dom.get
 
@@ -31,7 +34,7 @@ fun ViewScope.styledMarkdownEditor(
     block: DIV.() -> Unit = {}
 ): HTMLElement {
     val model = MarkdownEditor()
-    var currentValue = Markdown.Empty
+    var currentValue: Markdown? = null
     lateinit var element: HTMLElement
 
     fun display(value: Markdown) {
@@ -66,6 +69,12 @@ fun ViewScope.styledMarkdownEditor(
         block()
     }
 
+    document.addEventListener("selectionchange", {
+        element.activeChunk()?.let {
+            // console.log("offset ${it.caretOffset()} in ${it.className}")
+        }
+    })
+
     launchEffect("styledMarkdownEditor") {
         state.flow.collect {
             display(it)
@@ -79,90 +88,83 @@ private fun HTMLElement.syncFromCollect(model: MarkdownEditor, markdown: Markdow
     val chunks = markdown.value.split("\n\n")
     val blocks = model.syncFromCollect(chunks)
 
-    chunks.forEachIndexed { index, chunk ->
+    blocks.forEachIndexed { index, block ->
         val element = children[index] as? HTMLElement
-        val block = blocks[index]
         if (element == null) {
-            val lineMod = chunkModOf(block?.blockType)
-            val p = document.create.p {
-                addModifiers(lineMod)
-                +chunk
-            }
+            val p = createMarkdownElement(block)
             appendChild(p)
         } else {
-            element.syncElement(chunk, block)
+            if (element.textContent == block.chunk) return@forEachIndexed
+            element.syncMarkdownElement(block)
         }
     }
 }
 
 private fun HTMLElement.syncFromInput(model: MarkdownEditor): Markdown {
     console.log("----------- from input")
-    val blocks = mutableListOf<MarkdownBlock?>()
-    val chunks = mutableListOf<String>()
-    children.asList().toList().forEach { element ->
-        val element = element as? HTMLElement ?: return@forEach
-        val elementChunk = element.textContent ?: ""
-        val cachedBlock = model.getCachedBlockOrNull(elementChunk)
-        if (cachedBlock != null) {
-            element.syncChunkMod(cachedBlock.blockType)
-            chunks.add(elementChunk)
-            blocks.add(cachedBlock)
-            return@forEach
-        }
 
-        // val blocks = markdownBlocksOf(elementChunk.toMarkdown())
-        // blocks.forEachIndexed { index, block ->
-        //     val isOriginalElement = index + 1 == blocks.size
-        //     when (isOriginalElement) {
-        //         true -> {
-        //             element.syncElement(text, block)
-        //         }
-        //     }
-        // }
+    val blocks = buildList {
+        children.asList().toList().forEach { element ->
+            val element = element as? HTMLElement ?: return@forEach
+            val elementChunk = element.textContent ?: ""
+            val cachedBlock = model.getCachedBlockOrNull(elementChunk)
+            if (cachedBlock != null) {
+                element.syncChunkMod(cachedBlock.markdown?.blockType)
+                add(cachedBlock)
+                return@forEach
+            }
 
-        val splitChunks = elementChunk.split("\n\n")
-        console.log("chunks: ${splitChunks.size}")
-        splitChunks.forEachIndexed { index, chunk ->
-            val block = markdownBlocksOf(chunk.toMarkdown()).firstOrNull() ?: return@forEachIndexed
-            chunks.add(chunk)
-            blocks.add(block)
-            val isOriginalElement = index + 1 == splitChunks.size
-            when (isOriginalElement) {
-                true -> {
-                    element.syncElement(chunk, block)
-                }
-                else -> {
-                    val blockType = markdownBlockTypeOf(chunk)
-                    println("chunk: $chunk")
-                    val lineMod = chunkModOf(blockType)
-                    val p = document.create.p {
-                        addModifiers(lineMod)
-                        val spans = markdownSpansOf(chunk)
-                        renderMarkdownSpans(spans)
+            val blocks = markdownBlocksOf(elementChunk.toMarkdown())
+            blocks.forEachIndexed { index, block ->
+                add(block)
+                val isOriginalElement = index + 1 == blocks.size
+                when (isOriginalElement) {
+                    true -> {
+                        element.syncMarkdownElement(block)
                     }
-                    insertBefore(p, element)
+                    else -> {
+                        val p = createMarkdownElement(block)
+                        insertBefore(p, element)
+                    }
                 }
             }
         }
     }
-    model.syncFromInput(chunks, blocks)
-    return chunks.joinToString("\n\n").toMarkdown()
+
+    model.syncFromInput(blocks)
+    return blocks.joinToString("\n\n") { it.chunk }.toMarkdown()
 }
 
-private fun HTMLElement.syncElement(chunk: String, block: MarkdownBlock?) {
-    val blockType = block?.blockType
-    if (textContent != chunk) {
-        console.log("content sync")
-        // possible caret work
-        textContent = chunk
+private fun createMarkdownElement(block: ParsedBlock): HTMLElement {
+    val (chunk, markdown) = block
+    val chunkMod = chunkModOf(markdown?.blockType)
+    val p = document.create.p {
+        addModifiers(chunkMod)
+        if (markdown == null) {
+            span {
+                +chunk
+            }
+        }
     }
-    syncChunkMod(blockType)
+    if (markdown == null) return p
+    p.append {
+        renderEditorBlock(block)
+    }
+    return p
+}
+
+private fun HTMLElement.syncMarkdownElement(block: ParsedBlock) {
+    syncChunkMod(block.markdown?.blockType)
+    clear()
+    append {
+        renderEditorBlock(block)
+    }
 }
 
 private fun HTMLElement.syncChunkMod(blockType: MarkdownBlockType?) {
     val chunkMod = chunkModOf(blockType)
     if (!isModified(chunkMod)) {
-        console.log("setting mod")
+        // console.log("setting mod")
         setModifiers(chunkMod)
     }
 }
@@ -180,3 +182,27 @@ private fun chunkModOf(blockType: MarkdownBlockType?): Modifier = blockType?.let
         MarkdownBlockType.Table -> MarkdownEditorStyle.Table
     }
 } ?: MarkdownEditorStyle.Chunk
+
+fun HTMLElement.caretOffset(): Int? {
+    val selection = window.selection() ?: return null
+    if (selection.rangeCount == 0) return null
+
+    val range = selection.getRangeAt(0)
+    if (!contains(range.startContainer)) return null
+
+    val probe = range.cloneRange()
+    probe.selectNodeContents(this)
+    probe.setEnd(range.startContainer, range.startOffset)
+    return probe.toString().length
+}
+
+fun HTMLElement.activeChunk(): HTMLElement? {
+    val selection = window.selection() ?: return null
+    if (selection.rangeCount == 0) return null
+
+    var node: Node? = selection.getRangeAt(0).startContainer
+    while (node != null && node.parentNode != this) {
+        node = node.parentNode
+    }
+    return node as? HTMLElement
+}

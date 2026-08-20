@@ -17,7 +17,7 @@ import org.w3c.dom.url.URL
 import org.w3c.files.File
 import org.w3c.files.get
 
-fun TagScope.filePicker(
+fun AppendScope.filePicker(
     mimeType: MimeType = MimeType.All,
     mod: ModifierSet? = null,
     onMessage: ((UIMessage) -> Unit)? = null,

@@ -15,7 +15,7 @@ import kotlinx.html.js.strong as strongTag
 import kotlinx.html.js.span as spanTag
 import org.w3c.dom.HTMLParagraphElement
 
-fun TagScope.textBlock(
+fun AppendScope.textBlock(
     text: String = "",
     mod: ModifierSet? = null,
     block: (P.() -> Unit)? = null
@@ -40,7 +40,7 @@ fun <T> ViewScope.textBlock(
     return element
 }
 
-fun TagScope.em(
+fun AppendScope.em(
     text: String = "",
     mod: ModifierSet? = null,
     block: EM.() -> Unit = { }
@@ -50,7 +50,7 @@ fun TagScope.em(
     block()
 }
 
-fun TagScope.strong(
+fun AppendScope.strong(
     text: String = "",
     mod: ModifierSet? = null,
     block: STRONG.() -> Unit = { }
@@ -60,7 +60,7 @@ fun TagScope.strong(
     block()
 }
 
-fun TagScope.span(
+fun AppendScope.span(
     text: String = "",
     mod: ModifierSet? = null,
     block: SPAN.() -> Unit = { }

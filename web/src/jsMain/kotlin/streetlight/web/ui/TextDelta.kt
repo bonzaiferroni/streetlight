@@ -10,7 +10,7 @@ import streetlight.model.utils.CommonText
 import streetlight.model.utils.RemovedText
 import streetlight.model.utils.createTextDelta
 
-fun TagScope.deltaGrid(
+fun AppendScope.deltaGrid(
     mod: ModifierSet? = null,
     content: DIV.() -> Unit
 ) {
@@ -19,7 +19,7 @@ fun TagScope.deltaGrid(
     }
 }
 
-fun TagScope.deltaRow(
+fun AppendScope.deltaRow(
     label: String,
     value: Any?,
     previousValue: Any? = null,

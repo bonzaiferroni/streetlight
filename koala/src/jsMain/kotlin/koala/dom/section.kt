@@ -8,7 +8,7 @@ import koala.html.heading3
 import kotlinx.html.SECTION
 import kotlinx.html.js.section as sectionTag
 
-fun TagScope.section(
+fun AppendScope.section(
     mod: ModifierSet? = null,
     block: SECTION.() -> Unit = {}
 ) = sectionTag {
@@ -16,7 +16,7 @@ fun TagScope.section(
     block()
 }
 
-fun TagScope.section(
+fun AppendScope.section(
     title: String,
     mod: ModifierSet? = null,
     block: SECTION.() -> Unit = {}

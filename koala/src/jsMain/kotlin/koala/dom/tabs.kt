@@ -75,6 +75,6 @@ fun ViewScope.tabsHeader(tabScope: TabScope) = div(modify(TabClass.header)) {
     }
 }
 
-fun TagScope.tabsViewport(
+fun AppendScope.tabsViewport(
     mod: ModifierSet? = null,
 ) = box(modify(TabClass.viewport, mod))

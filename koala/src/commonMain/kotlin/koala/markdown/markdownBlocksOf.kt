@@ -4,8 +4,8 @@ import kampfire.api.Markdown
 
 fun markdownBlocksOf(markdown: Markdown) = markdownBlocksOf(markdown.value.split("\n"))
 
-fun markdownBlocksOf(lines: List<String>): List<MarkdownBlock> {
-    val blocks = mutableListOf<MarkdownBlock>()
+fun markdownBlocksOf(lines: List<String>): List<ParsedBlock> {
+    val blocks = mutableListOf<ParsedBlock>()
     val open = OpenBlock()
 
     fun close() {
@@ -56,23 +56,28 @@ private class OpenBlock {
         if (type != MarkdownBlockType.Code) lines.add(firstLine)
     }
 
-    fun close(): MarkdownBlock? {
+    fun close(): ParsedBlock? {
         val type = type ?: return null
         this.type = null
-        return when (type) {
-            MarkdownBlockType.Code -> parseCodeBlock(lines, language)
-            MarkdownBlockType.Heading -> parseHeading(lines.first())
+        val text = lines.takeIf { it.size == 1 }?.first() ?: lines.joinToString("\n")
+        val block = when (type) {
+            MarkdownBlockType.Code -> parseCodeBlock(text, language)
+            MarkdownBlockType.Heading -> parseHeading(text)
             MarkdownBlockType.HorizontalRule -> MarkdownHorizontalRule
-            MarkdownBlockType.Image -> parseBlockImage(lines.first())
-            MarkdownBlockType.BlockQuote -> parseBlockquote(
-                lines.map { it.removePrefix(">").removePrefix(" ") }
-            )
+            MarkdownBlockType.Image -> parseBlockImage(text)
+            MarkdownBlockType.BlockQuote -> parseBlockquote(lines)
             MarkdownBlockType.UnorderedList, MarkdownBlockType.OrderedList -> markdownListOf(lines)
             MarkdownBlockType.Table -> markdownTableOf(lines)
-            MarkdownBlockType.Paragraph -> parseParagraph(lines.joinToString("\n"))
+            MarkdownBlockType.Paragraph -> parseParagraph(text)
         }
+        return ParsedBlock(text, block)
     }
 }
+
+data class ParsedBlock(
+    val chunk: String,
+    val markdown: MarkdownBlock?
+)
 
 fun markdownBlockTypeOf(line: String): MarkdownBlockType? = when {
     MarkdownRegex.Fence.matches(line) -> MarkdownBlockType.Code
@@ -107,17 +112,17 @@ fun parseHeading(chunk: String): MarkdownHeading? {
 }
 
 fun parseBlockquote(lines: List<String>): MarkdownBlockquote? {
-    val paragraphs = lines
+    val paragraphs = lines.map { it.removePrefix(">").removePrefix(" ") }
         .filter { it.isNotBlank() }
         .map { MarkdownParagraph(markdownSpansOf(it)) }
     return paragraphs.takeIf { it.isNotEmpty() }
         ?.let { MarkdownBlockquote(paragraphs = it) }
 }
 
-fun parseCodeBlock(lines: List<String>, language: String?): MarkdownCodeBlock {
+fun parseCodeBlock(text: String, language: String?): MarkdownCodeBlock {
     return MarkdownCodeBlock(
         language = language,
-        code = lines.joinToString("\n")
+        code = text
     )
 }
 

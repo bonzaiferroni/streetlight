@@ -10,7 +10,7 @@ import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
 
 @ViewMarker
-sealed interface ViewScope: TagScope, AppFacade {
+sealed interface ViewScope: AppendScope, AppFacade {
     override val app: AppContainer
     val scopeName: String
     val mount: HTMLElement

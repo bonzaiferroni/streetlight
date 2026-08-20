@@ -14,10 +14,10 @@ fun ViewScope.formBodyProto(
     block()
 }
 
-fun TagScope.formSectionLegacy(
+fun AppendScope.formSectionLegacy(
     name: String,
     mod: ModifierSet? = null,
-    block: TagScope.() -> Unit
+    block: AppendScope.() -> Unit
 ) = section {
     addModifiers(mod)
     filigree {
@@ -26,31 +26,31 @@ fun TagScope.formSectionLegacy(
     block()
 }
 
-fun TagScope.formCard(
+fun AppendScope.formCard(
     mod: ModifierSet? = null,
-    block: TagScope.() -> Unit,
+    block: AppendScope.() -> Unit,
 ) = card(FormMod.Card) {
     addModifiers(mod)
     block()
 }
 
 @Deprecated("use formSection")
-fun TagScope.formCardSection(
+fun AppendScope.formCardSection(
     name: String,
     mod: ModifierSet? = null,
-    block: TagScope.() -> Unit
+    block: AppendScope.() -> Unit
 ) = formSectionLegacy(name, mod) {
     formCard(null, block)
 }
 
 @Deprecated("use formField")
-fun TagScope.formPart(
+fun AppendScope.formPart(
     instructions: String? = null,
     bullets: List<String>? = null,
     bulletsHeading: String? = null,
     fieldsFlex: Modifier = Flex1,
-    info: TagScope.() -> Unit = {},
-    fields: TagScope.() -> Unit,
+    info: AppendScope.() -> Unit = {},
+    fields: AppendScope.() -> Unit,
 ) = column(FormMod.Part) {
     column(FormMod.Instructions) {
         instructions?.let {

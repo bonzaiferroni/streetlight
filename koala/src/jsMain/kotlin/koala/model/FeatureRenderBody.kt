@@ -1,7 +1,7 @@
 package koala.model
 
 import koala.css.*
-import koala.dom.TagScope
+import koala.dom.AppendScope
 import koala.dom.row
 import koala.dom.textBlock
 import koala.html.box
@@ -22,7 +22,7 @@ internal class FeatureRenderBody(
     }
 }
 
-internal fun TagScope.configureThumbRender(marker: ThumbMarker): FeatureRenderBody {
+internal fun AppendScope.configureThumbRender(marker: ThumbMarker): FeatureRenderBody {
     var clusterElement: HTMLElement? = null
 
     with(marker) {
@@ -63,7 +63,7 @@ internal fun TagScope.configureThumbRender(marker: ThumbMarker): FeatureRenderBo
     }
 }
 
-internal fun TagScope.configureIconRender(marker: IconMarker): FeatureRenderBody {
+internal fun AppendScope.configureIconRender(marker: IconMarker): FeatureRenderBody {
     var clusterElement: HTMLElement? = null
 
     with(marker) {

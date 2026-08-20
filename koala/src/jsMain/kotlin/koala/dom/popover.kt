@@ -4,8 +4,6 @@ import koala.css.AutoMagic
 import koala.css.BlurBackdrop
 import koala.css.BorderRadius3
 import koala.css.BorderSolid2Px
-import koala.css.MarginTop1
-import koala.css.Modifier
 import koala.css.ModifierSet
 import koala.css.OverflowClip
 import koala.css.Padding1
@@ -19,7 +17,7 @@ import kotlinx.html.js.div
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.Node
 
-fun TagScope.popover(
+fun AppendScope.popover(
     id: Id,
     anchor: PositionAnchor? = null,
     mod: ModifierSet? = null,
@@ -29,7 +27,7 @@ fun TagScope.popover(
     configurePopover(id, anchor, mod, isManual, block)
 }
 
-fun TagScope.popoverCard(
+fun AppendScope.popoverCard(
     id: Id,
     anchor: PositionAnchor? = null,
     mod: ModifierSet? = null,

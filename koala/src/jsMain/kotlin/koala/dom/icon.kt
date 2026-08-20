@@ -8,7 +8,7 @@ import kotlinx.html.DIV
 import kotlinx.html.js.div
 import org.w3c.dom.HTMLDivElement
 
-fun TagScope.icon(
+fun AppendScope.icon(
     file: Svg,
     mod: ModifierSet = IconStyle.DefaultMod,
     block: DIV.() -> Unit = {}
@@ -20,7 +20,7 @@ fun TagScope.icon(
     )
 }
 
-fun TagScope.icon(
+fun AppendScope.icon(
     file: Svg,
     onClick: () -> Unit,
     mod: ModifierSet = IconStyle.DefaultMod,

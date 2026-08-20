@@ -10,7 +10,7 @@ import koala.html.configureButton
 import kotlinx.html.BUTTON
 import kotlinx.html.js.button
 
-fun TagScope.safetyButton(
+fun AppendScope.safetyButton(
     text: String,
     onConfirm: (() -> Unit)? = null,
     onClick: ((Boolean) -> Unit)?= null,

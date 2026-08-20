@@ -6,6 +6,7 @@ import kampfire.utils.takeEllipsis
 import koala.css.*
 import koala.markdown.MarkdownBlock
 import koala.markdown.MarkdownStyle
+import koala.markdown.ParsedBlock
 import koala.markdown.markdownBlocksOf
 import koala.markdown.renderMarkdownBlocks
 import kotlinx.html.FlowContent
@@ -28,7 +29,7 @@ fun FlowContent.markdown(
 )
 
 fun DIV.configureMarkdown(
-    blocks: List<MarkdownBlock>,
+    blocks: List<ParsedBlock>,
     modifiers: ModifierSet? = null,
     block: DIV.() -> Unit = {}
 ) {
@@ -38,7 +39,7 @@ fun DIV.configureMarkdown(
 }
 
 fun FlowContent.markdown(
-    blocks: List<MarkdownBlock>,
+    blocks: List<ParsedBlock>,
     modifiers: ModifierSet? = null,
     block: DIV.() -> Unit = {}
 ) {
