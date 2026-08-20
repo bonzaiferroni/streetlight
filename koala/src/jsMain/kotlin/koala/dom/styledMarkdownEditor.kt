@@ -43,7 +43,7 @@ fun ViewScope.styledMarkdownEditor(
         element.syncFromCollect(model, value)
     }
 
-    element = column {
+    element = column(modify(Gap0)) {
         addModifiers(MarkdownEditorStyle.Container, modifiers)
         label?.let {
             setAttribute(Attribute.BlockLabel, it.lowercase())
@@ -85,8 +85,7 @@ fun ViewScope.styledMarkdownEditor(
 }
 
 private fun HTMLElement.syncFromCollect(model: MarkdownEditor, markdown: Markdown) {
-    val chunks = markdown.value.split("\n\n")
-    val blocks = model.syncFromCollect(chunks)
+    val blocks = model.syncFromCollect(markdown)
 
     blocks.forEachIndexed { index, block ->
         val element = children[index] as? HTMLElement
@@ -94,59 +93,69 @@ private fun HTMLElement.syncFromCollect(model: MarkdownEditor, markdown: Markdow
             val p = createMarkdownElement(block)
             appendChild(p)
         } else {
-            if (element.textContent == block.chunk) return@forEachIndexed
+            if (element.normalizedTextContent() == block.chunk) return@forEachIndexed
             element.syncMarkdownElement(block)
         }
     }
 }
 
 private fun HTMLElement.syncFromInput(model: MarkdownEditor): Markdown {
-    console.log("----------- from input")
+    val activeElement = activeChunk()
+    val caretOffset = activeElement?.caretOffset()
+    var caretTargets: List<Pair<HTMLElement, String>>? = null
 
     val blocks = buildList {
         children.asList().toList().forEach { element ->
             val element = element as? HTMLElement ?: return@forEach
-            val elementChunk = element.textContent ?: ""
+
+            val elementChunk = element.normalizedTextContent()
             val cachedBlock = model.getCachedBlockOrNull(elementChunk)
             if (cachedBlock != null) {
-                element.syncChunkMod(cachedBlock.markdown?.blockType)
+                element.syncChunkMod(cachedBlock.markdown.blockType)
                 add(cachedBlock)
                 return@forEach
             }
 
-            val blocks = markdownBlocksOf(elementChunk.toMarkdown())
-            blocks.forEachIndexed { index, block ->
+            // console.log("text: ${JSON.stringify(element.textContent)}")
+            // console.log("inner: ${JSON.stringify(element.innerText)}")
+            // console.log("html: ${element.innerHTML}")
+
+            val parsed = markdownBlocksOf(elementChunk.toMarkdown(), true)
+            val produced = mutableListOf<Pair<HTMLElement, String>>()
+            parsed.forEachIndexed { index, block ->
                 add(block)
-                val isOriginalElement = index + 1 == blocks.size
+                val isOriginalElement = index + 1 == parsed.size
                 when (isOriginalElement) {
                     true -> {
                         element.syncMarkdownElement(block)
+                        produced.add(element to block.chunk)
                     }
                     else -> {
                         val p = createMarkdownElement(block)
                         insertBefore(p, element)
+                        produced.add(p to block.chunk)
                     }
                 }
             }
+            if (element === activeElement) caretTargets = produced
         }
     }
 
     model.syncFromInput(blocks)
-    return blocks.joinToString("\n\n") { it.chunk }.toMarkdown()
+
+    caretOffset?.let { offset ->
+        caretTargets?.let { placeCaretAcross(it, offset) }
+    }
+
+    return blocks.joinToString("\n") { it.chunk }.toMarkdown()
 }
 
 private fun createMarkdownElement(block: ParsedBlock): HTMLElement {
     val (chunk, markdown) = block
-    val chunkMod = chunkModOf(markdown?.blockType)
+    val chunkMod = chunkModOf(markdown.blockType)
     val p = document.create.p {
         addModifiers(chunkMod)
-        if (markdown == null) {
-            span {
-                +chunk
-            }
-        }
     }
-    if (markdown == null) return p
     p.append {
         renderEditorBlock(block)
     }
@@ -154,14 +163,14 @@ private fun createMarkdownElement(block: ParsedBlock): HTMLElement {
 }
 
 private fun HTMLElement.syncMarkdownElement(block: ParsedBlock) {
-    syncChunkMod(block.markdown?.blockType)
+    syncChunkMod(block.markdown.blockType)
     clear()
     append {
         renderEditorBlock(block)
     }
 }
 
-private fun HTMLElement.syncChunkMod(blockType: MarkdownBlockType?) {
+private fun HTMLElement.syncChunkMod(blockType: MarkdownBlockType) {
     val chunkMod = chunkModOf(blockType)
     if (!isModified(chunkMod)) {
         // console.log("setting mod")
@@ -169,19 +178,17 @@ private fun HTMLElement.syncChunkMod(blockType: MarkdownBlockType?) {
     }
 }
 
-private fun chunkModOf(blockType: MarkdownBlockType?): Modifier = blockType?.let {
-    when (blockType) {
-        MarkdownBlockType.Image -> MarkdownEditorStyle.BlockImage
-        MarkdownBlockType.Paragraph -> MarkdownEditorStyle.Paragraph
-        MarkdownBlockType.Heading -> MarkdownEditorStyle.Heading
-        MarkdownBlockType.HorizontalRule -> MarkdownEditorStyle.HorizontalRule
-        MarkdownBlockType.Code -> MarkdownEditorStyle.Code
-        MarkdownBlockType.BlockQuote -> MarkdownEditorStyle.BlockQuote
-        MarkdownBlockType.UnorderedList -> MarkdownEditorStyle.UnorderedList
-        MarkdownBlockType.OrderedList -> MarkdownEditorStyle.OrderedList
-        MarkdownBlockType.Table -> MarkdownEditorStyle.Table
-    }
-} ?: MarkdownEditorStyle.Chunk
+private fun chunkModOf(blockType: MarkdownBlockType): Modifier = when (blockType) {
+    MarkdownBlockType.Image -> MarkdownEditorStyle.BlockImage
+    MarkdownBlockType.Paragraph -> MarkdownEditorStyle.Paragraph
+    MarkdownBlockType.Heading -> MarkdownEditorStyle.Heading
+    MarkdownBlockType.HorizontalRule -> MarkdownEditorStyle.HorizontalRule
+    MarkdownBlockType.Code -> MarkdownEditorStyle.Code
+    MarkdownBlockType.BlockQuote -> MarkdownEditorStyle.BlockQuote
+    MarkdownBlockType.UnorderedList -> MarkdownEditorStyle.UnorderedList
+    MarkdownBlockType.OrderedList -> MarkdownEditorStyle.OrderedList
+    MarkdownBlockType.Table -> MarkdownEditorStyle.Table
+}
 
 fun HTMLElement.caretOffset(): Int? {
     val selection = window.selection() ?: return null

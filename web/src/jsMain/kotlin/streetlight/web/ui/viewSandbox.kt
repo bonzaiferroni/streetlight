@@ -37,6 +37,8 @@ fun RouteScope.viewSandbox() {
             }
         }
     }
+
+    appFooter("")
 }
 
 class SandboxException : Exception("Arrr sandbox exception")

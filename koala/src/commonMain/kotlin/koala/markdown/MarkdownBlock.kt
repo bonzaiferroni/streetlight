@@ -23,6 +23,10 @@ data class MarkdownParagraph(
     override val spans: List<MarkdownSpan>
 ): MarkdownBlock, MarkdownTextBlock {
     override val blockType get() = MarkdownBlockType.Paragraph
+
+    companion object {
+        val Empty get() = MarkdownParagraph(emptyList())
+    }
 }
 
 // Heading

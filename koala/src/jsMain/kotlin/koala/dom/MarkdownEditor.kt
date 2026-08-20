@@ -1,7 +1,9 @@
 package koala.dom
 
+import kampfire.api.Markdown
 import kampfire.api.toMarkdown
 import koala.markdown.MarkdownBlock
+import koala.markdown.MarkdownParagraph
 import koala.markdown.ParsedBlock
 import koala.markdown.markdownBlocksOf
 import koala.model.mutableTapOf
@@ -20,12 +22,8 @@ class MarkdownEditor() {
         state.set { copy(blocks = blocks) }
     }
 
-    fun syncFromCollect(chunks: List<String>): List<ParsedBlock> {
-        val blocks = chunks.map { chunk ->
-            getCachedBlockOrNull(chunk)
-                ?: markdownBlocksOf(chunk.toMarkdown()).firstOrNull()
-                ?: ParsedBlock(chunk, null)
-        }
+    fun syncFromCollect(markdown: Markdown): List<ParsedBlock> {
+        val blocks = markdownBlocksOf(markdown, true)
         state.set { copy(blocks = blocks) }
         return blocks
     }

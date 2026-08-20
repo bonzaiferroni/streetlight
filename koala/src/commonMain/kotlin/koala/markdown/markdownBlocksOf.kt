@@ -2,11 +2,12 @@ package koala.markdown
 
 import kampfire.api.Markdown
 
-fun markdownBlocksOf(markdown: Markdown) = markdownBlocksOf(markdown.value.split("\n"))
+fun markdownBlocksOf(markdown: Markdown, keepBlanks: Boolean = false) =
+    markdownBlocksOf(markdown.value.split("\n"), keepBlanks)
 
-fun markdownBlocksOf(lines: List<String>): List<ParsedBlock> {
+fun markdownBlocksOf(lines: List<String>, keepBlanks: Boolean = false): List<ParsedBlock> {
     val blocks = mutableListOf<ParsedBlock>()
-    val open = OpenBlock()
+    val open = OpenBlock(keepBlanks)
 
     fun close() {
         open.close()?.let { blocks.add(it) }
@@ -26,7 +27,12 @@ fun markdownBlocksOf(lines: List<String>): List<ParsedBlock> {
             close()
         }
 
-        if (line.isBlank()) continue
+        if (line.isBlank()) {
+            println("found blank")
+            open.close()?.let { blocks.add(it) }
+            if (keepBlanks) blocks.add(ParsedBlock("", MarkdownParagraph.Empty))
+            continue
+        }
 
         markdownBlockTypeOf(line)?.let {
             open.open(it, line)
@@ -37,7 +43,7 @@ fun markdownBlocksOf(lines: List<String>): List<ParsedBlock> {
     return blocks
 }
 
-private class OpenBlock {
+private class OpenBlock(private val keepBlanks: Boolean) {
     var type: MarkdownBlockType? = null
         private set
     var language: String? = null
@@ -68,15 +74,15 @@ private class OpenBlock {
             MarkdownBlockType.BlockQuote -> parseBlockquote(lines)
             MarkdownBlockType.UnorderedList, MarkdownBlockType.OrderedList -> markdownListOf(lines)
             MarkdownBlockType.Table -> markdownTableOf(lines)
-            MarkdownBlockType.Paragraph -> parseParagraph(text)
-        }
+            MarkdownBlockType.Paragraph -> null
+        } ?: parseParagraph(text, keepBlanks)
         return ParsedBlock(text, block)
     }
 }
 
 data class ParsedBlock(
     val chunk: String,
-    val markdown: MarkdownBlock?
+    val markdown: MarkdownBlock
 )
 
 fun markdownBlockTypeOf(line: String): MarkdownBlockType? = when {
@@ -92,9 +98,9 @@ fun markdownBlockTypeOf(line: String): MarkdownBlockType? = when {
     else -> null
 }
 
-fun parseParagraph(chunk: String): MarkdownParagraph? {
-    val text = chunk.trim()
-    if (text.isEmpty()) return null
+fun parseParagraph(chunk: String, keepBlanks: Boolean): MarkdownParagraph {
+    val text = if (keepBlanks) chunk else chunk.trim()
+    if (text.isEmpty()) return MarkdownParagraph.Empty
     return MarkdownParagraph(markdownSpansOf(text))
 }
 

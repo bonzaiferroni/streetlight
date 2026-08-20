@@ -38,6 +38,7 @@ import koala.model.MarkdownEditorStyle
 import kotlinx.html.FlowContent
 import kotlinx.html.FlowOrPhrasingContent
 import kotlinx.html.a
+import kotlinx.html.br
 import kotlinx.html.code
 import kotlinx.html.div
 import kotlinx.html.em
@@ -58,12 +59,15 @@ fun AppendScope.renderEditorBlock(block: ParsedBlock) {
         is MarkdownUnorderedList -> renderChunk(block.chunk)
         is MarkdownParagraph -> renderEditorParagraph(markdown)
         is MarkdownTable -> renderChunk(block.chunk)
-        null -> renderChunk(block.chunk)
     }
 }
 
 fun AppendScope.renderEditorParagraph(block: MarkdownParagraph) {
-    renderEditorSpans(block.spans)
+    if (block.spans.isEmpty()) {
+        br { }
+    } else {
+        renderEditorSpans(block.spans)
+    }
 }
 
 fun AppendScope.renderChunk(chunk: String) {

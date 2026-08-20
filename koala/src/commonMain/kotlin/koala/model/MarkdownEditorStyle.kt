@@ -13,7 +13,6 @@ object MarkdownEditorStyle {
     val OrderedList = Container.withElement("ordered-list")
     val Table = Container.withElement("table")
     val BlockImage = Container.withElement("block-image")
-    val Chunk = Container.withElement("line")
 
     val Syntax = Container.withElement("syntax")
 }
@@ -46,6 +45,6 @@ $Heading {
 }
 
 $Syntax {
-    color: green;
+    color: var(--primary-fg);
 }
 """ }
