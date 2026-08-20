@@ -34,6 +34,7 @@ fun ViewScope.styledMarkdownEditor(
     block: DIV.() -> Unit = {}
 ): HTMLElement {
     val model = MarkdownEditor()
+    val inputParser = MarkdownInputParser(model)
     var currentValue: Markdown? = null
     lateinit var element: HTMLElement
 
@@ -59,7 +60,7 @@ fun ViewScope.styledMarkdownEditor(
         }
 
         onInputFunction = {
-            val newValue = element.syncFromInput(model)
+            val newValue = inputParser.syncFromInput(element)
             if (newValue != currentValue) {
                 currentValue = newValue
                 state.set(newValue)
@@ -97,119 +98,4 @@ private fun HTMLElement.syncFromCollect(model: MarkdownEditor, markdown: Markdow
             element.syncMarkdownElement(block)
         }
     }
-}
-
-private fun HTMLElement.syncFromInput(model: MarkdownEditor): Markdown {
-    val activeElement = activeChunk()
-    val caretOffset = activeElement?.caretOffset()
-    var caretTargets: List<Pair<HTMLElement, String>>? = null
-
-    val blocks = buildList {
-        children.asList().toList().forEach { element ->
-            val element = element as? HTMLElement ?: return@forEach
-
-            val elementChunk = element.normalizedTextContent()
-            val cachedBlock = model.getCachedBlockOrNull(elementChunk)
-            if (cachedBlock != null) {
-                element.syncChunkMod(cachedBlock.markdown.blockType)
-                add(cachedBlock)
-                return@forEach
-            }
-
-            // console.log("text: ${JSON.stringify(element.textContent)}")
-            // console.log("inner: ${JSON.stringify(element.innerText)}")
-            // console.log("html: ${element.innerHTML}")
-
-            val parsed = markdownBlocksOf(elementChunk.toMarkdown(), true)
-            val produced = mutableListOf<Pair<HTMLElement, String>>()
-            parsed.forEachIndexed { index, block ->
-                add(block)
-                val isOriginalElement = index + 1 == parsed.size
-                when (isOriginalElement) {
-                    true -> {
-                        element.syncMarkdownElement(block)
-                        produced.add(element to block.chunk)
-                    }
-                    else -> {
-                        val p = createMarkdownElement(block)
-                        insertBefore(p, element)
-                        produced.add(p to block.chunk)
-                    }
-                }
-            }
-            if (element === activeElement) caretTargets = produced
-        }
-    }
-
-    model.syncFromInput(blocks)
-
-    caretOffset?.let { offset ->
-        caretTargets?.let { placeCaretAcross(it, offset) }
-    }
-
-    return blocks.joinToString("\n") { it.chunk }.toMarkdown()
-}
-
-private fun createMarkdownElement(block: ParsedBlock): HTMLElement {
-    val (chunk, markdown) = block
-    val chunkMod = chunkModOf(markdown.blockType)
-    val p = document.create.p {
-        addModifiers(chunkMod)
-    }
-    p.append {
-        renderEditorBlock(block)
-    }
-    return p
-}
-
-private fun HTMLElement.syncMarkdownElement(block: ParsedBlock) {
-    syncChunkMod(block.markdown.blockType)
-    clear()
-    append {
-        renderEditorBlock(block)
-    }
-}
-
-private fun HTMLElement.syncChunkMod(blockType: MarkdownBlockType) {
-    val chunkMod = chunkModOf(blockType)
-    if (!isModified(chunkMod)) {
-        // console.log("setting mod")
-        setModifiers(chunkMod)
-    }
-}
-
-private fun chunkModOf(blockType: MarkdownBlockType): Modifier = when (blockType) {
-    MarkdownBlockType.Image -> MarkdownEditorStyle.BlockImage
-    MarkdownBlockType.Paragraph -> MarkdownEditorStyle.Paragraph
-    MarkdownBlockType.Heading -> MarkdownEditorStyle.Heading
-    MarkdownBlockType.HorizontalRule -> MarkdownEditorStyle.HorizontalRule
-    MarkdownBlockType.Code -> MarkdownEditorStyle.Code
-    MarkdownBlockType.BlockQuote -> MarkdownEditorStyle.BlockQuote
-    MarkdownBlockType.UnorderedList -> MarkdownEditorStyle.UnorderedList
-    MarkdownBlockType.OrderedList -> MarkdownEditorStyle.OrderedList
-    MarkdownBlockType.Table -> MarkdownEditorStyle.Table
-}
-
-fun HTMLElement.caretOffset(): Int? {
-    val selection = window.selection() ?: return null
-    if (selection.rangeCount == 0) return null
-
-    val range = selection.getRangeAt(0)
-    if (!contains(range.startContainer)) return null
-
-    val probe = range.cloneRange()
-    probe.selectNodeContents(this)
-    probe.setEnd(range.startContainer, range.startOffset)
-    return probe.toString().length
-}
-
-fun HTMLElement.activeChunk(): HTMLElement? {
-    val selection = window.selection() ?: return null
-    if (selection.rangeCount == 0) return null
-
-    var node: Node? = selection.getRangeAt(0).startContainer
-    while (node != null && node.parentNode != this) {
-        node = node.parentNode
-    }
-    return node as? HTMLElement
 }
