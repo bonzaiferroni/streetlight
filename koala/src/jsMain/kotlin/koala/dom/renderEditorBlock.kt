@@ -1,8 +1,9 @@
 package koala.dom
 
-import kampfire.model.Url
 import koala.css.Modifier
+import koala.css.addModifiers
 import koala.css.modify
+import koala.markdown.MarkdownBlock
 import koala.markdown.MarkdownBlockImage
 import koala.markdown.MarkdownBlockquote
 import koala.markdown.MarkdownCodeBlock
@@ -12,120 +13,132 @@ import koala.markdown.MarkdownHorizontalRule
 import koala.markdown.MarkdownInlineCode
 import koala.markdown.MarkdownInlineImage
 import koala.markdown.MarkdownLink
-import koala.markdown.MarkdownOrderedList
+import koala.markdown.MarkdownList
+import koala.markdown.MarkdownListItem
 import koala.markdown.MarkdownParagraph
 import koala.markdown.MarkdownSpan
 import koala.markdown.MarkdownStrong
 import koala.markdown.MarkdownTable
 import koala.markdown.MarkdownText
-import koala.markdown.MarkdownUnorderedList
+import koala.markdown.MarkdownUrl
 import koala.markdown.ParsedBlock
 import koala.model.MarkdownEditorStyle
-import kotlinx.html.a
+import kotlinx.browser.document
+import kotlinx.dom.clear
 import kotlinx.html.br
-import kotlinx.html.span
+import kotlinx.html.dom.append
+import kotlinx.html.dom.create
+import kotlinx.html.js.p
+import org.w3c.dom.HTMLElement
 
-fun AppendScope.renderEditorBlock(block: ParsedBlock) {
-    when (val markdown = block.markdown) {
-        is MarkdownBlockImage -> renderChunk(block.chunk)
-        is MarkdownBlockquote -> renderBlockquote(block.chunk, block.markdown)
-        is MarkdownCodeBlock -> renderChunk(block.chunk).also { println(block.chunk) }
-        is MarkdownHeading -> renderChunk(block.chunk)
-        MarkdownHorizontalRule -> renderChunk(block.chunk)
-        is MarkdownOrderedList -> renderChunk(block.chunk)
-        is MarkdownUnorderedList -> renderChunk(block.chunk)
-        is MarkdownParagraph -> renderParagraph(block.chunk, markdown)
-        is MarkdownTable -> renderChunk(block.chunk)
+fun createMarkdownElement(block: ParsedBlock): HTMLElement {
+    val (chunk, markdown) = block
+    val chunkMod = blockModOf(markdown.blockType)
+    val p = document.create.p {
+        addModifiers(chunkMod)
+    }
+    p.append {
+        renderEditorBlock(block)
+    }
+    return p
+}
+
+fun HTMLElement.syncMarkdownElement(block: ParsedBlock) {
+    syncChunkMod(block.markdown.blockType)
+    val segments = block.editorSegments()
+    if (matchesEditorSegments(block.chunk, segments)) return
+    println("rebuilt")
+    clear()
+    append {
+        renderEditorBlock(block.chunk, segments)
     }
 }
 
-private fun AppendScope.renderChunk(chunk: String) {
-    span {
-        +chunk
+fun AppendScope.renderEditorBlock(chunk: String, segments: List<EditorSegment>) {
+    segments.forEach {
+        span(chunk.substring(it.from, it.to), modify(it.mod))
     }
-    if (chunk.endsWith("\n")) {
+    if (chunk.isEmpty() || chunk.endsWith("\n")) {
         br { }
     }
 }
 
-private fun AppendScope.renderParagraph(chunk: String, block: MarkdownParagraph) {
-    if (block.spans.isEmpty()) {
-        br { }
-    } else {
-        renderSpans(chunk, 0, block.spans)
-    }
-}
+fun AppendScope.renderEditorBlock(block: ParsedBlock) = renderEditorBlock(block.chunk, block.editorSegments())
 
-private fun AppendScope.renderBlockquote(chunk: String, block: MarkdownBlockquote) {
+class EditorSegment(val from: Int, val to: Int, val mod: Modifier)
+
+fun ParsedBlock.editorSegments(): List<EditorSegment> = buildList {
     var index = 0
-    block.paragraphs.forEach { paragraph ->
-        index = renderSpans(chunk, index, paragraph.spans)
-        index = renderTrailingExtra(chunk, index) + 1
+
+    markdown.editorSpans().forEach { span ->
+        if (span.index > index) {
+            add(EditorSegment(index, span.index, MarkdownEditorStyle.Extra))
+        }
+        index = span.index
+
+        val contentEnd = index + span.contentLength
+        if (contentEnd > index) {
+            add(EditorSegment(index, contentEnd, span.contentMod))
+        }
+        index = contentEnd
+
+        val urlLength = span.urlLength
+        if (urlLength > 0) {
+            val urlStart = (span as? MarkdownUrl)?.urlIndex ?: -1
+            if (urlStart > index) {
+                add(EditorSegment(index, urlStart, MarkdownEditorStyle.Extra))
+            }
+            add(EditorSegment(urlStart, urlStart + urlLength, MarkdownEditorStyle.Url))
+            index = urlStart + urlLength
+        }
+    }
+
+    if (chunk.length > index) {
+        add(EditorSegment(index, chunk.length, MarkdownEditorStyle.Extra))
     }
 }
 
-private fun AppendScope.renderSpans(chunk: String, startIndex: Int, spans: List<MarkdownSpan>): Int {
-    var index = startIndex
-    spans.forEach { span ->
-        index = renderLeadingExtra(chunk, index, span)
-        index = renderSpan(chunk, index, span)
+private fun MarkdownBlock.editorSpans(): Sequence<MarkdownSpan> = when (this) {
+    is MarkdownParagraph -> spans.asSequence()
+    is MarkdownHeading -> spans.asSequence()
+    is MarkdownBlockquote -> paragraphs.asSequence().flatMap { it.spans }
+    is MarkdownList -> items.asSequence().flatMap { it.editorSpans() }
+    is MarkdownTable -> (sequenceOf(header) + rows).flatMap { row ->
+        row.cells.asSequence().flatMap { it.spans }
     }
-    return index
+    is MarkdownCodeBlock -> when {
+        code.isEmpty() -> emptySequence()
+        else -> sequenceOf(MarkdownInlineCode(code, codeIndex))
+    }
+    is MarkdownBlockImage -> sequenceOf(
+        MarkdownInlineImage(altText, altTextIndex, url, urlIndex, maxWidthPercent, type)
+    )
+    MarkdownHorizontalRule -> emptySequence()
 }
 
-private fun AppendScope.renderSpan(chunk: String, startIndex: Int, span: MarkdownSpan) = when (span) {
-    is MarkdownEmphasis, is MarkdownStrong, is MarkdownText, is MarkdownInlineCode ->
-        renderSpanContent(chunk, startIndex, span)
-    is MarkdownInlineImage -> {
-        var index = renderSpanContent(chunk, startIndex, span)
-        index = renderExtra(chunk, index, span.urlIndex)
-        renderLink(index, span.url)
-    }
-    is MarkdownLink -> {
-        var index = renderSpanContent(chunk, startIndex, span)
-        index = renderExtra(chunk, index, span.urlIndex)
-        renderLink(index, span.url)
-    }
+private fun MarkdownListItem.editorSpans(): Sequence<MarkdownSpan> =
+    spans.asSequence() + (sublist?.editorSpans() ?: emptySequence())
+
+private val MarkdownSpan.contentLength get() = when (this) {
+    is MarkdownInlineImage -> altText.length
+    is MarkdownText -> text.length
+    is MarkdownEmphasis -> text.length
+    is MarkdownStrong -> text.length
+    is MarkdownInlineCode -> text.length
+    is MarkdownLink -> text.length
 }
 
-private fun AppendScope.renderSpanContent(
-    chunk: String,
-    startIndex: Int,
-    span: MarkdownSpan,
-    mod: Modifier? = span.contentMod
-) = renderSpan(chunk, startIndex, startIndex + span.text.length, mod)
-
-private fun AppendScope.renderLink(startIndex: Int, url: Url): Int {
-    // do we use the url or a substring from chunk?
-    a {
-        // td: make clickable with shift or something
-        // href = url.value
-        +url.value
-    }
-    return startIndex + url.value.length
-}
-
-private fun AppendScope.renderExtra(chunk: String, startIndex: Int, endIndex: Int) =
-    renderSpan(chunk, startIndex, endIndex, MarkdownEditorStyle.Extra)
-
-private fun AppendScope.renderLeadingExtra(chunk: String, startIndex: Int, span: MarkdownSpan) =
-    renderExtra(chunk, startIndex, span.index)
-
-private fun AppendScope.renderTrailingExtra(chunk: String, startIndex: Int): Int {
-    val endIndex = chunk.indexOf("\n", startIndex).takeIf { it >= 0 } ?: chunk.length
-    return renderExtra(chunk, startIndex, endIndex)
-}
-
-private fun AppendScope.renderSpan(chunk: String, startIndex: Int, endIndex: Int, mod: Modifier?): Int {
-    if (startIndex == endIndex) return endIndex
-    span(chunk.substring(startIndex, endIndex), modify(mod))
-    return endIndex
+private val MarkdownSpan.urlLength get() = when (this) {
+    is MarkdownLink -> url.value.length
+    is MarkdownInlineImage -> url.value.length
+    else -> 0
 }
 
 private val MarkdownSpan.contentMod get() = when (this) {
     is MarkdownStrong -> MarkdownEditorStyle.Strong
     is MarkdownEmphasis -> MarkdownEditorStyle.Emphasis
     is MarkdownInlineCode -> MarkdownEditorStyle.InlineCode
-    is MarkdownInlineImage, is MarkdownLink, is MarkdownText -> null
+    is MarkdownLink, is MarkdownInlineImage -> MarkdownEditorStyle.LinkText
+    is MarkdownText -> MarkdownEditorStyle.Text
 }
 

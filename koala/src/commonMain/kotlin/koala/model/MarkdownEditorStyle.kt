@@ -19,6 +19,8 @@ object MarkdownEditorStyle {
     val Strong = Container.withElement("strong")
     val InlineCode = Container.withElement("inline-code")
     val Text = Container.withElement("text")
+    val LinkText = Container.withElement("link-text")
+    val Url = Container.withElement("url")
 }
 
 // language="CSS"

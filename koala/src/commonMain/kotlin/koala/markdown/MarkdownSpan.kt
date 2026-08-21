@@ -7,6 +7,11 @@ sealed interface MarkdownSpan {
     val index: Int
 }
 
+interface MarkdownUrl {
+    val url: Url
+    val urlIndex: Int
+}
+
 data class MarkdownText(
     override val text: String,
     override val index: Int,
@@ -42,6 +47,6 @@ data class MarkdownInlineImage(
 data class MarkdownLink(
     override val text: String,
     override val index: Int,
-    val url: Url,
-    val urlIndex: Int,
-): MarkdownSpan
+    override val url: Url,
+    override val urlIndex: Int,
+): MarkdownSpan, MarkdownUrl

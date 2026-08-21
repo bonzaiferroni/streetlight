@@ -6,11 +6,9 @@ sealed interface MarkdownBlock {
     val blockType: MarkdownBlockType
 }
 
-interface MarkdownImage {
+interface MarkdownImage: MarkdownUrl {
     val altText: String
     val altTextIndex: Int
-    val url: Url
-    val urlIndex: Int
     val maxWidthPercent: Int?
     val type: ImageType
 }

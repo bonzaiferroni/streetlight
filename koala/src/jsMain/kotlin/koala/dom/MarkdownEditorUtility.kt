@@ -1,20 +1,12 @@
 package koala.dom
 
 import koala.css.Modifier
-import koala.css.addModifiers
-import koala.dom.renderEditorBlock
 import koala.external.selection
 import koala.markdown.MarkdownBlockType
-import koala.markdown.ParsedBlock
-import koala.markdown.accepts
-import koala.markdown.markdownBlockTypeOf
 import koala.model.MarkdownEditorStyle
 import kotlinx.browser.document
 import kotlinx.browser.window
-import kotlinx.dom.clear
-import kotlinx.html.dom.append
-import kotlinx.html.dom.create
-import kotlinx.html.js.p
+import org.w3c.dom.HTMLBRElement
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.Node
 import org.w3c.dom.asList
@@ -86,34 +78,35 @@ fun HTMLElement.normalizedTextContent(): String {
 }
 
 fun HTMLElement.syncChunkMod(blockType: MarkdownBlockType) {
-    val chunkMod = chunkModOf(blockType)
+    val chunkMod = blockModOf(blockType)
     if (!isModified(chunkMod)) {
         // console.log("setting mod")
         setModifiers(chunkMod)
     }
 }
 
-fun createMarkdownElement(block: ParsedBlock): HTMLElement {
-    val (chunk, markdown) = block
-    val chunkMod = chunkModOf(markdown.blockType)
-    val p = document.create.p {
-        addModifiers(chunkMod)
+fun HTMLElement.matchesEditorSegments(chunk: String, segments: List<EditorSegment>): Boolean {
+    val nodes = childNodes.asList()
+    var nodeIndex = 0
+
+    segments.forEach { segment ->
+        val node = nodes.getOrNull(nodeIndex++) as? HTMLElement ?: return false
+        if (node.tagName != "SPAN") return false
+        if (!node.isModified(segment.mod)) return false
+
+        val text = node.textContent ?: return false
+        if (text.length != segment.to - segment.from) return false
+        if (!chunk.regionMatches(segment.from, text, 0, text.length)) return false
     }
-    p.append {
-        renderEditorBlock(block)
+
+    if (chunk.isEmpty() || chunk.endsWith("\n")) {
+        if (nodes.getOrNull(nodeIndex++) !is HTMLBRElement) return false
     }
-    return p
+
+    return nodeIndex == nodes.size
 }
 
-fun HTMLElement.syncMarkdownElement(block: ParsedBlock) {
-    syncChunkMod(block.markdown.blockType)
-    clear()
-    append {
-        renderEditorBlock(block)
-    }
-}
-
-private fun chunkModOf(blockType: MarkdownBlockType): Modifier = when (blockType) {
+fun blockModOf(blockType: MarkdownBlockType): Modifier = when (blockType) {
     MarkdownBlockType.Image -> MarkdownEditorStyle.BlockImage
     MarkdownBlockType.Paragraph -> MarkdownEditorStyle.Paragraph
     MarkdownBlockType.Heading -> MarkdownEditorStyle.Heading

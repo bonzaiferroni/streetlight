@@ -10,6 +10,7 @@ import org.w3c.dom.Element
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.asList
 import org.w3c.dom.css.CSSStyleDeclaration
+import kotlin.text.contains
 
 fun <T: Element> T.unmodify(vararg modifier: Modifier): T {
     modifier.forEach { classList.remove(it.identifier) }
