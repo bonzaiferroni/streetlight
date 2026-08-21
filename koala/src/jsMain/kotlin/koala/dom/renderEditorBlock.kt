@@ -43,6 +43,7 @@ import kotlinx.html.code
 import kotlinx.html.div
 import kotlinx.html.em
 import kotlinx.html.img
+import kotlinx.html.p
 import kotlinx.html.span
 import kotlinx.html.strong
 import kotlinx.html.style
@@ -51,18 +52,27 @@ import kotlin.collections.set
 fun AppendScope.renderEditorBlock(block: ParsedBlock) {
     when (val markdown = block.markdown) {
         is MarkdownBlockImage -> renderChunk(block.chunk)
-        is MarkdownBlockquote -> renderChunk(block.chunk)
-        is MarkdownCodeBlock -> renderChunk(block.chunk)
+        is MarkdownBlockquote -> renderBlockquote(markdown)
+        is MarkdownCodeBlock -> renderChunk(block.chunk).also { println(block.chunk) }
         is MarkdownHeading -> renderChunk(block.chunk)
         MarkdownHorizontalRule -> renderChunk(block.chunk)
         is MarkdownOrderedList -> renderChunk(block.chunk)
         is MarkdownUnorderedList -> renderChunk(block.chunk)
-        is MarkdownParagraph -> renderEditorParagraph(markdown)
+        is MarkdownParagraph -> renderParagraph(markdown)
         is MarkdownTable -> renderChunk(block.chunk)
     }
 }
 
-fun AppendScope.renderEditorParagraph(block: MarkdownParagraph) {
+private fun AppendScope.renderChunk(chunk: String) {
+    span {
+        +chunk
+    }
+    if (chunk.endsWith("\n")) {
+        br { }
+    }
+}
+
+private fun AppendScope.renderParagraph(block: MarkdownParagraph) {
     if (block.spans.isEmpty()) {
         br { }
     } else {
@@ -70,84 +80,10 @@ fun AppendScope.renderEditorParagraph(block: MarkdownParagraph) {
     }
 }
 
-fun AppendScope.renderChunk(chunk: String) {
-    span {
-        +chunk
+fun AppendScope.renderBlockquote(block: MarkdownBlockquote) {
+    block.paragraphs.forEachIndexed { index, paragraph ->
+        if (index > 0) renderChunk("\n")
+        renderSyntax(">")
+        renderParagraph(paragraph)
     }
-}
-
-fun AppendScope.renderEditorSpans(spans: List<MarkdownSpan>) {
-    spans.forEach { span ->
-        when (span) {
-            is MarkdownInlineCode -> renderInlineCode(span)
-            is MarkdownInlineImage -> renderInlineImage(span)
-            is MarkdownEmphasis -> renderEmphasis(span)
-            is MarkdownLink -> renderLink(span)
-            is MarkdownStrong -> renderStrong(span)
-            is MarkdownText -> renderText(span)
-        }
-    }
-}
-
-fun AppendScope.renderSyntax(syntax: String) {
-    span {
-        addModifiers(MarkdownEditorStyle.Syntax)
-        +syntax
-    }
-}
-
-fun AppendScope.renderInlineCode(span: MarkdownInlineCode) {
-    renderSyntax("`")
-    code {
-        +span.text
-    }
-    renderSyntax("`")
-}
-
-fun AppendScope.renderEmphasis(span: MarkdownEmphasis) {
-    renderSyntax("*")
-    em {
-        +span.text
-    }
-    renderSyntax("*")
-}
-
-fun AppendScope.renderLink(span: MarkdownLink) {
-    // td: render input text
-    renderSyntax("[")
-    renderEditorSpans(span.spans)
-    renderSyntax("](")
-    a {
-        // td: make clickable with ctrl or otherwise
-        // href = span.url
-        renderMarkdownSpans(span.spans)
-    }
-    renderSyntax(")")
-}
-
-fun AppendScope.renderStrong(span: MarkdownStrong) {
-    renderSyntax("**")
-    strong {
-        +span.text
-    }
-    renderSyntax("**")
-}
-
-fun AppendScope.renderText(span: MarkdownText) {
-    span {
-        +span.text
-    }
-}
-
-fun AppendScope.renderInlineImage(span: MarkdownInlineImage) {
-    // td: render input text
-    renderSyntax("![")
-    span {
-        +span.altText
-    }
-    renderSyntax("](")
-    span {
-        +span.url
-    }
-    renderSyntax(")")
 }

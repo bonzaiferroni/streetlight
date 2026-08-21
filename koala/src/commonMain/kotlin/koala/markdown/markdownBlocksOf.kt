@@ -2,40 +2,40 @@ package koala.markdown
 
 import kampfire.api.Markdown
 
-fun markdownBlocksOf(markdown: Markdown, keepBlanks: Boolean = false) =
-    markdownBlocksOf(markdown.value.split("\n"), keepBlanks)
+fun markdownBlocksOf(markdown: Markdown, keepSyntax: Boolean = false) =
+    markdownBlocksOf(markdown.value.split("\n"), keepSyntax)
 
-fun markdownBlocksOf(lines: List<String>, keepBlanks: Boolean = false): List<ParsedBlock> {
+fun markdownBlocksOf(lines: List<String>, keepSyntax: Boolean = false): List<ParsedBlock> {
     val blocks = mutableListOf<ParsedBlock>()
-    val open = OpenBlock(keepBlanks)
+    val openBlock = OpenBlock(keepSyntax)
 
     fun close() {
-        open.close()?.let { blocks.add(it) }
+        openBlock.close()?.let { blocks.add(it) }
     }
 
     for (line in lines) {
-        val type = open.type
+        val type = openBlock.type
         if (type != null) {
             if (type.closes(line)) {
+                openBlock.lines.add(line)
                 close()
                 continue
             }
             if (type.accepts(line)) {
-                open.lines.add(line)
+                openBlock.lines.add(line)
                 continue
             }
             close()
         }
 
         if (line.isBlank()) {
-            println("found blank")
-            open.close()?.let { blocks.add(it) }
-            if (keepBlanks) blocks.add(ParsedBlock("", MarkdownParagraph.Empty))
+            openBlock.close()?.let { blocks.add(it) }
+            if (keepSyntax) blocks.add(ParsedBlock("", MarkdownParagraph.Empty))
             continue
         }
 
         markdownBlockTypeOf(line)?.let {
-            open.open(it, line)
+            openBlock.open(it, line)
         }
     }
     close()
@@ -43,10 +43,8 @@ fun markdownBlocksOf(lines: List<String>, keepBlanks: Boolean = false): List<Par
     return blocks
 }
 
-private class OpenBlock(private val keepBlanks: Boolean) {
+private class OpenBlock(private val keepSyntax: Boolean) {
     var type: MarkdownBlockType? = null
-        private set
-    var language: String? = null
         private set
 
     val lines = mutableListOf<String>()
@@ -54,12 +52,7 @@ private class OpenBlock(private val keepBlanks: Boolean) {
     fun open(type: MarkdownBlockType, firstLine: String) {
         this.type = type
         lines.clear()
-        language = when (type) {
-            MarkdownBlockType.Code ->
-                firstLine.removePrefix("```").trim().takeIf { it.isNotEmpty() }
-            else -> null
-        }
-        if (type != MarkdownBlockType.Code) lines.add(firstLine)
+        lines.add(firstLine)
     }
 
     fun close(): ParsedBlock? {
@@ -67,7 +60,7 @@ private class OpenBlock(private val keepBlanks: Boolean) {
         this.type = null
         val text = lines.takeIf { it.size == 1 }?.first() ?: lines.joinToString("\n")
         val block = when (type) {
-            MarkdownBlockType.Code -> parseCodeBlock(text, language)
+            MarkdownBlockType.Code -> parseCodeBlock(lines)
             MarkdownBlockType.Heading -> parseHeading(text)
             MarkdownBlockType.HorizontalRule -> MarkdownHorizontalRule
             MarkdownBlockType.Image -> parseBlockImage(text)
@@ -75,7 +68,7 @@ private class OpenBlock(private val keepBlanks: Boolean) {
             MarkdownBlockType.UnorderedList, MarkdownBlockType.OrderedList -> markdownListOf(lines)
             MarkdownBlockType.Table -> markdownTableOf(lines)
             MarkdownBlockType.Paragraph -> null
-        } ?: parseParagraph(text, keepBlanks)
+        } ?: parseParagraph(text, keepSyntax)
         return ParsedBlock(text, block)
     }
 }
@@ -125,10 +118,16 @@ fun parseBlockquote(lines: List<String>): MarkdownBlockquote? {
         ?.let { MarkdownBlockquote(paragraphs = it) }
 }
 
-fun parseCodeBlock(text: String, language: String?): MarkdownCodeBlock {
+fun parseCodeBlock(lines: List<String>): MarkdownCodeBlock {
+    val language = lines.first().removePrefix("```").trim().takeIf { it.isNotEmpty() }
+    val body = lines.drop(1)
+    val closed = body.lastOrNull()?.let { MarkdownRegex.Fence.matches(it) } == true
     return MarkdownCodeBlock(
         language = language,
-        code = text
+        code = when (closed) {
+            true -> body.dropLast(1)
+            else -> body
+        }.joinToString("\n")
     )
 }
 

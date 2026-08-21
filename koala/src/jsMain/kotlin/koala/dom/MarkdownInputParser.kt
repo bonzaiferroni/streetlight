@@ -3,6 +3,7 @@ package koala.dom
 import kampfire.api.Markdown
 import kampfire.api.toMarkdown
 import koala.markdown.MarkdownBlockType
+import koala.markdown.MarkdownRegex
 import koala.markdown.ParsedBlock
 import koala.markdown.accepts
 import koala.markdown.markdownBlockTypeOf
@@ -15,14 +16,11 @@ class MarkdownInputParser(private val model: MarkdownEditor) {
     private val blocks = mutableListOf<ParsedBlock>()
     private val produced = mutableListOf<Pair<HTMLElement, String>>()
     private val caretTargets = mutableListOf<Pair<HTMLElement, String>>()
+    private val pending = PendingChunk()
 
     private var activeElement: HTMLElement? = null
     private var activeOffset: Int? = null
     private var caretTargetOffset: Int? = null
-
-    private var pendingElement: HTMLElement? = null
-    private var pendingChunk = ""
-    private var pendingOffset: Int? = null
 
     fun syncFromInput(container: HTMLElement): Markdown {
         reset()
@@ -32,16 +30,16 @@ class MarkdownInputParser(private val model: MarkdownEditor) {
         container.children.asList().toList().forEach { child ->
             val childElement = child as? HTMLElement ?: return@forEach
             val childChunk = childElement.normalizedTextContent()
+            val childOffset = if (childElement === activeElement) activeOffset else null
 
-            if (pendingElement != null && mergesWith(pendingChunk, childChunk)) {
-                absorb(container, childElement, childChunk)
+            if (pending.isOpen && pending.accepts(childChunk)) {
+                pending.absorb(childChunk, childOffset)
+                container.removeChild(childElement)
                 return@forEach
             }
 
             commit(container)
-            pendingElement = childElement
-            pendingChunk = childChunk
-            pendingOffset = if (childElement === activeElement) activeOffset else null
+            pending.open(childElement, childChunk, childOffset)
         }
         commit(container)
 
@@ -55,28 +53,21 @@ class MarkdownInputParser(private val model: MarkdownEditor) {
         blocks.clear()
         caretTargets.clear()
         caretTargetOffset = null
-        pendingElement = null
-        pendingChunk = ""
-        pendingOffset = null
-    }
-
-    private fun absorb(container: HTMLElement, childElement: HTMLElement, childChunk: String) {
-        if (childElement === activeElement) {
-            pendingOffset = pendingChunk.length + 1 + (activeOffset ?: 0)
-        }
-        pendingChunk = "$pendingChunk\n$childChunk"
-        container.removeChild(childElement)
+        pending.close()
     }
 
     private fun commit(container: HTMLElement) {
-        val element = pendingElement ?: return
-        pendingElement = null
+        val element = pending.close() ?: return
+        val chunk = pending.chunk
+        val caretOffset = pending.caretOffset
+        produced.clear()
 
-        val cachedBlock = model.getCachedBlockOrNull(pendingChunk)
+        val cachedBlock = model.getCachedBlockOrNull(chunk)
         if (cachedBlock != null) {
             element.syncChunkMod(cachedBlock.markdown.blockType)
             blocks.add(cachedBlock)
-            pendingOffset?.let { markCaretTarget(it, element, pendingChunk) }
+            produced.add(element to chunk)
+            markCaret(caretOffset)
             return
         }
 
@@ -84,8 +75,7 @@ class MarkdownInputParser(private val model: MarkdownEditor) {
         // console.log("inner: ${JSON.stringify(element.innerText)}")
         // console.log("html: ${element.innerHTML}")
 
-        val parsed = markdownBlocksOf(pendingChunk.toMarkdown(), true)
-        produced.clear()
+        val parsed = markdownBlocksOf(chunk.toMarkdown(), true)
         parsed.forEachIndexed { index, block ->
             blocks.add(block)
             val isOriginalElement = index + 1 == parsed.size
@@ -101,16 +91,11 @@ class MarkdownInputParser(private val model: MarkdownEditor) {
                 }
             }
         }
-        pendingOffset?.let { markCaretTargets(it) }
+        markCaret(caretOffset)
     }
 
-    private fun markCaretTarget(offset: Int, element: HTMLElement, chunk: String) {
-        caretTargets.clear()
-        caretTargets.add(element to chunk)
-        caretTargetOffset = offset
-    }
-
-    private fun markCaretTargets(offset: Int) {
+    private fun markCaret(offset: Int?) {
+        offset ?: return
         caretTargets.clear()
         caretTargets.addAll(produced)
         caretTargetOffset = offset
@@ -120,11 +105,50 @@ class MarkdownInputParser(private val model: MarkdownEditor) {
         val offset = caretTargetOffset ?: return
         placeCaretAcross(caretTargets, offset)
     }
+}
 
-    private fun mergesWith(previousChunk: String, nextChunk: String): Boolean {
-        if (previousChunk.isEmpty() || nextChunk.isEmpty()) return false
-        val type = markdownBlockTypeOf(previousChunk.substringBefore('\n')) ?: return false
-        if (type == MarkdownBlockType.Code) return false
+private class PendingChunk {
+    var element: HTMLElement? = null
+        private set
+    var chunk = ""
+        private set
+    var caretOffset: Int? = null
+        private set
+
+    private var type: MarkdownBlockType? = null
+    private var openFence = false
+
+    val isOpen get() = element != null
+
+    fun open(element: HTMLElement, chunk: String, caretOffset: Int?) {
+        this.element = element
+        this.caretOffset = caretOffset
+        setChunk(chunk)
+    }
+
+    fun absorb(chunk: String, caretOffset: Int?) {
+        caretOffset?.let { this.caretOffset = this.chunk.length + 1 + it }
+        setChunk("${this.chunk}\n$chunk")
+    }
+
+    fun accepts(nextChunk: String): Boolean {
+        val type = type ?: return false
+        if (type == MarkdownBlockType.Code) return openFence
         return type.accepts(nextChunk.substringBefore('\n'))
     }
+
+    fun close(): HTMLElement? {
+        val element = element ?: return null
+        this.element = null
+        return element
+    }
+
+    private fun setChunk(chunk: String) {
+        this.chunk = chunk
+        type = markdownBlockTypeOf(chunk.substringBefore('\n'))
+        openFence = type == MarkdownBlockType.Code && chunk.hasOpenFence()
+    }
 }
+
+private fun String.hasOpenFence(): Boolean =
+    lineSequence().count { MarkdownRegex.Fence.matches(it) } % 2 == 1

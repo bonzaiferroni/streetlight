@@ -38,7 +38,15 @@ fun HTMLElement.placeCaret(offset: Int) {
     val safeOffset = offset.coerceIn(0, textContent?.length ?: 0)
     val (node, nodeOffset) = textNodeAt(safeOffset) ?: (this to 0)
     val range = document.createRange()
-    range.setStart(node, nodeOffset)
+
+    val text = node.textContent ?: ""
+    val parent = node.parentNode
+    if (node !== this && parent != null && nodeOffset == text.length && text.endsWith("\n")) {
+        range.setStart(parent, parent.childNodes.asList().indexOf(node) + 1)
+    } else {
+        range.setStart(node, nodeOffset)
+    }
+
     range.collapse(true)
     selection.removeAllRanges()
     selection.addRange(range)
@@ -84,8 +92,6 @@ fun HTMLElement.syncChunkMod(blockType: MarkdownBlockType) {
         setModifiers(chunkMod)
     }
 }
-
-
 
 fun createMarkdownElement(block: ParsedBlock): HTMLElement {
     val (chunk, markdown) = block
