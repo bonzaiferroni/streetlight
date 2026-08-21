@@ -3,7 +3,7 @@ package koala.model
 import koala.css.Class
 
 object MarkdownEditorStyle {
-    val Container = Class("markdown-editor")
+    val Container = Class("mde")
     val Paragraph = Container.withElement("paragraph")
     val Heading = Container.withElement("heading-line")
     val HorizontalRule = Container.withElement("horizontal-rule")
@@ -14,7 +14,11 @@ object MarkdownEditorStyle {
     val Table = Container.withElement("table")
     val BlockImage = Container.withElement("block-image")
 
-    val Syntax = Container.withElement("syntax")
+    val Extra = Container.withElement("extra")
+    val Emphasis = Container.withElement("emphasis")
+    val Strong = Container.withElement("strong")
+    val InlineCode = Container.withElement("inline-code")
+    val Text = Container.withElement("text")
 }
 
 // language="CSS"
@@ -44,7 +48,21 @@ $Heading {
     text-align: center;
 }
 
-$Syntax {
+$Emphasis {
+    font-style: italic;
+}
+
+$Strong {
+    font-weight: bold;
+}
+
+$InlineCode {
+    color: var(--green-fg);
+    background: var(--zen-bg);
+    border-radius: 2px;
+}
+
+$Extra {
     color: var(--primary-fg);
 }
 """ }

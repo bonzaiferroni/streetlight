@@ -1,12 +1,16 @@
 package koala.markdown
 
+import kampfire.model.Url
+
 sealed interface MarkdownBlock {
     val blockType: MarkdownBlockType
 }
 
 interface MarkdownImage {
     val altText: String
-    val url: String
+    val altTextIndex: Int
+    val url: Url
+    val urlIndex: Int
     val maxWidthPercent: Int?
     val type: ImageType
 }
@@ -49,7 +53,8 @@ data object MarkdownHorizontalRule: MarkdownBlock {
 
 data class MarkdownCodeBlock(
     val language: String?,
-    val code: String
+    val code: String,
+    val codeIndex: Int,
 ): MarkdownBlock {
     override val blockType get() = MarkdownBlockType.Code
 }
@@ -91,12 +96,16 @@ data class MarkdownListItem(
 
 data class MarkdownBlockImage(
     override val altText: String,
-    override val url: String,
+    override val altTextIndex: Int,
+    override val url: Url,
+    override val urlIndex: Int,
     override val maxWidthPercent: Int?,
     override val type: ImageType,
 ): MarkdownBlock, MarkdownImage {
     override val blockType get() = MarkdownBlockType.Image
 }
+
+// Table
 
 data class MarkdownTable(
     val header: MarkdownTableRow,
@@ -105,3 +114,9 @@ data class MarkdownTable(
 ) : MarkdownBlock {
     override val blockType get() = MarkdownBlockType.Table
 }
+
+enum class MarkdownTableAlignment { Left, Center, Right, None }
+
+data class MarkdownTableCell(val spans: List<MarkdownSpan>)
+
+data class MarkdownTableRow(val cells: List<MarkdownTableCell>)

@@ -31,8 +31,8 @@ fun FlowOrPhrasingContent.renderEmphasis(span: MarkdownEmphasis) {
 
 fun FlowOrPhrasingContent.renderLink(span: MarkdownLink) {
     a {
-        href = span.url
-        renderMarkdownSpans(span.spans)
+        href = span.url.value
+        +span.text
     }
 }
 
@@ -66,7 +66,7 @@ fun FlowOrPhrasingContent.renderInlineImage(span: MarkdownInlineImage) {
 fun FlowOrPhrasingContent.renderBasicImage(span: MarkdownImage) {
     img {
         addModifiers(BorderRadius1, MoonShadow)
-        src = span.url
+        src = span.url.value
         alt = span.altText
     }
 }
@@ -74,6 +74,6 @@ fun FlowOrPhrasingContent.renderBasicImage(span: MarkdownImage) {
 fun FlowContent.renderLottieImage(span: MarkdownImage) {
     div {
         addModifiers(LottieClass.Core)
-        attributes["data-lottie"] = span.url
+        attributes["data-lottie"] = span.url.value
     }
 }

@@ -1,6 +1,7 @@
 package koala.dom
 
 import koala.css.addModifiers
+import koala.css.modify
 import koala.markdown.MarkdownEmphasis
 import koala.markdown.MarkdownInlineCode
 import koala.markdown.MarkdownInlineImage
@@ -8,7 +9,6 @@ import koala.markdown.MarkdownLink
 import koala.markdown.MarkdownSpan
 import koala.markdown.MarkdownStrong
 import koala.markdown.MarkdownText
-import koala.markdown.renderMarkdownSpans
 import koala.model.MarkdownEditorStyle
 import kotlinx.html.a
 import kotlinx.html.code
@@ -30,48 +30,54 @@ fun AppendScope.renderEditorSpans(spans: List<MarkdownSpan>) {
     }
 }
 
-fun AppendScope.renderSyntax(syntax: String) {
+fun AppendScope.renderExtra(/* args */) {
+    span("my content", modify(MarkdownEditorStyle.Extra))
+}
+
+fun AppendScope.renderExtra(syntax: String) {
     span {
-        addModifiers(MarkdownEditorStyle.Syntax)
+        addModifiers(MarkdownEditorStyle.Extra)
         +syntax
     }
 }
 
 fun AppendScope.renderInlineCode(span: MarkdownInlineCode) {
-    renderSyntax("`")
+    renderExtra("`")
     code {
         +span.text
     }
-    renderSyntax("`")
+    renderExtra("`")
 }
 
 fun AppendScope.renderEmphasis(span: MarkdownEmphasis) {
-    renderSyntax("*")
+    renderExtra("*")
     em {
         +span.text
     }
-    renderSyntax("*")
+    renderExtra("*")
 }
 
 fun AppendScope.renderLink(span: MarkdownLink) {
     // td: render input text
-    renderSyntax("[")
-    renderEditorSpans(span.spans)
-    renderSyntax("](")
+    renderExtra("[")
+    span {
+        +span.text
+    }
+    renderExtra("](")
     a {
         // td: make clickable with ctrl or otherwise
         // href = span.url
-        renderMarkdownSpans(span.spans)
+        +span.url.value
     }
-    renderSyntax(")")
+    renderExtra(")")
 }
 
 fun AppendScope.renderStrong(span: MarkdownStrong) {
-    renderSyntax("**")
+    renderExtra("**")
     strong {
         +span.text
     }
-    renderSyntax("**")
+    renderExtra("**")
 }
 
 fun AppendScope.renderText(span: MarkdownText) {
@@ -82,13 +88,13 @@ fun AppendScope.renderText(span: MarkdownText) {
 
 fun AppendScope.renderInlineImage(span: MarkdownInlineImage) {
     // td: render input text
-    renderSyntax("![")
+    renderExtra("![")
     span {
         +span.altText
     }
-    renderSyntax("](")
+    renderExtra("](")
     span {
-        +span.url
+        +span.url.value
     }
-    renderSyntax(")")
+    renderExtra(")")
 }

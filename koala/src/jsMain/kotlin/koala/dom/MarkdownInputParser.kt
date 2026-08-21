@@ -3,6 +3,7 @@ package koala.dom
 import kampfire.api.Markdown
 import kampfire.api.toMarkdown
 import koala.markdown.MarkdownBlockType
+import koala.markdown.MarkdownParser
 import koala.markdown.MarkdownRegex
 import koala.markdown.ParsedBlock
 import koala.markdown.accepts
@@ -17,6 +18,7 @@ class MarkdownInputParser(private val model: MarkdownEditor) {
     private val produced = mutableListOf<Pair<HTMLElement, String>>()
     private val caretTargets = mutableListOf<Pair<HTMLElement, String>>()
     private val pending = PendingChunk()
+    private val parser = MarkdownParser()
 
     private var activeElement: HTMLElement? = null
     private var activeOffset: Int? = null
@@ -75,7 +77,7 @@ class MarkdownInputParser(private val model: MarkdownEditor) {
         // console.log("inner: ${JSON.stringify(element.innerText)}")
         // console.log("html: ${element.innerHTML}")
 
-        val parsed = markdownBlocksOf(chunk.toMarkdown(), true)
+        val parsed = parser.parseBlocks(chunk, true)
         parsed.forEachIndexed { index, block ->
             blocks.add(block)
             val isOriginalElement = index + 1 == parsed.size

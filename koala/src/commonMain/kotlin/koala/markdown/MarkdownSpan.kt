@@ -1,32 +1,47 @@
 package koala.markdown
 
+import kampfire.model.Url
+
 sealed interface MarkdownSpan {
+    val text: String
+    val index: Int
 }
 
 data class MarkdownText(
-    val text: String
+    override val text: String,
+    override val index: Int,
 ): MarkdownSpan
 
 data class MarkdownEmphasis(
-    val text: String
+    override val text: String,
+    override val index: Int,
 ): MarkdownSpan
 
 data class MarkdownStrong(
-    val text: String
+    override val text: String,
+    override val index: Int,
 ): MarkdownSpan
 
 data class MarkdownInlineCode(
-    val text: String
+    override val text: String,
+    override val index: Int,
 ): MarkdownSpan
 
 data class MarkdownInlineImage(
     override val altText: String,
-    override val url: String,
+    override val altTextIndex: Int,
+    override val url: Url,
+    override val urlIndex: Int,
     override val maxWidthPercent: Int?,
     override val type: ImageType,
-) : MarkdownSpan, MarkdownImage
+) : MarkdownSpan, MarkdownImage {
+    override val text get() = altText
+    override val index get() = altTextIndex
+}
 
 data class MarkdownLink(
-    val spans: List<MarkdownSpan>,
-    val url: String
+    override val text: String,
+    override val index: Int,
+    val url: Url,
+    val urlIndex: Int,
 ): MarkdownSpan
