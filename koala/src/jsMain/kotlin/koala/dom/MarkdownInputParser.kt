@@ -2,13 +2,12 @@ package koala.dom
 
 import kampfire.api.Markdown
 import kampfire.api.toMarkdown
-import koala.markdown.MarkdownBlockType
+import koala.markdown.ContentType
 import koala.markdown.MarkdownParser
 import koala.markdown.MarkdownRegex
 import koala.markdown.ParsedBlock
 import koala.markdown.accepts
 import koala.markdown.markdownBlockTypeOf
-import koala.markdown.markdownBlocksOf
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.asList
 
@@ -66,7 +65,7 @@ class MarkdownInputParser(private val model: MarkdownEditor) {
 
         val cachedBlock = model.getCachedBlockOrNull(chunk)
         if (cachedBlock != null) {
-            element.syncChunkMod(cachedBlock.markdown.blockType)
+            element.syncBlockMod(cachedBlock.markdown)
             blocks.add(cachedBlock)
             produced.add(element to chunk)
             markCaret(caretOffset)
@@ -117,7 +116,7 @@ private class PendingChunk {
     var caretOffset: Int? = null
         private set
 
-    private var type: MarkdownBlockType? = null
+    private var type: ContentType? = null
     private var openFence = false
 
     val isOpen get() = element != null
@@ -135,7 +134,7 @@ private class PendingChunk {
 
     fun accepts(nextChunk: String): Boolean {
         val type = type ?: return false
-        if (type == MarkdownBlockType.Code) return openFence
+        if (type == ContentType.Code) return openFence
         return type.accepts(nextChunk.substringBefore('\n'))
     }
 
@@ -148,7 +147,7 @@ private class PendingChunk {
     private fun setChunk(chunk: String) {
         this.chunk = chunk
         type = markdownBlockTypeOf(chunk.substringBefore('\n'))
-        openFence = type == MarkdownBlockType.Code && chunk.hasOpenFence()
+        openFence = type == ContentType.Code && chunk.hasOpenFence()
     }
 }
 

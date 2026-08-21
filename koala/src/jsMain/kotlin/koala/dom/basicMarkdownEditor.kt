@@ -6,7 +6,7 @@ import koala.css.*
 import koala.html.Attribute
 import koala.html.setAttribute
 import koala.model.MutableTap
-import koala.model.MarkdownEditorStyle
+import koala.model.EditorStyle
 import kotlinx.html.DIV
 import kotlinx.html.js.div
 import kotlinx.html.js.onInputFunction
@@ -29,7 +29,7 @@ fun ViewScope.basicMarkdownEditor(
     }
 
     element = div {
-        addModifiers(MarkdownEditorStyle.Container, modifiers)
+        addModifiers(EditorStyle.Container, modifiers)
         label?.let {
             setAttribute(Attribute.BlockLabel, label.lowercase())
         }

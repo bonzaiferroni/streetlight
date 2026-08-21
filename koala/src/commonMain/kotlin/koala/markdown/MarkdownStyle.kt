@@ -1,7 +1,7 @@
 package koala.markdown
 
 import koala.css.Class
-import koala.model.MarkdownEditorStyle
+import koala.model.EditorStyle
 
 object MarkdownStyle {
     val Container = Class("markdown-content")
@@ -54,7 +54,7 @@ $BlockImage {
     text-align: center;
 }
 
-${MarkdownEditorStyle.BlockQuote},
+${EditorStyle.BlockQuote},
 blockquote {
     margin-inline-start: 1rem;
     padding-inline-start: 1rem;

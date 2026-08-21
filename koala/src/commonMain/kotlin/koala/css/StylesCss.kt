@@ -12,8 +12,6 @@ val StylesCss get() = """
     --content-panel-width: ${CONTENT_PANEL_WIDTH_PX}px;
     --right-panel-width: ${RIGHT_PANEL_WIDTH_PX}px;
 
-    --font-family: "Fira Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; /*  */
-
     --breakpoint-sm: 0px;
     --breakpoint-md: 600px;
     --breakpoint-lg: 760px;

@@ -22,7 +22,8 @@ interface Modifier: Queryable {
 value class Class(override val identifier: String): Modifier {
     override fun toString() = selector
 
-    fun withElement(name: String) = Class("${identifier}__$name")
+    fun withBemElement(name: String) = Class("${identifier}__$name")
+    fun withBemModifier(name: String) = Class("${identifier}--$name")
 }
 
 typealias ModifierSet = Set<Modifier>

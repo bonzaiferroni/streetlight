@@ -2,9 +2,9 @@
 
 package koala.markdown
 
-import koala.markdown.MarkdownBlockType.*
+import koala.markdown.ContentType.*
 
-enum class MarkdownBlockType {
+enum class ContentType {
     Image,
     Paragraph,
     Heading,
@@ -16,7 +16,7 @@ enum class MarkdownBlockType {
     Table,
 }
 
-fun MarkdownBlockType.opens(line: String): Boolean = when (this) {
+fun ContentType.opens(line: String): Boolean = when (this) {
     Image -> MarkdownRegex.ImageBlock.matches(line)
     Heading -> line.startsWith("#")
     HorizontalRule -> MarkdownRegex.HorizontalRule.matches(line)
@@ -28,17 +28,17 @@ fun MarkdownBlockType.opens(line: String): Boolean = when (this) {
     Paragraph -> line.isNotBlank()
 }
 
-fun MarkdownBlockType.accepts(line: String): Boolean = when (this) {
+fun ContentType.accepts(line: String): Boolean = when (this) {
     Code -> true
     BlockQuote, UnorderedList, OrderedList, Table -> opens(line)
-    Paragraph -> line.isNotBlank() && MarkdownBlockType.entries.none {
+    Paragraph -> line.isNotBlank() && ContentType.entries.none {
         it != Paragraph && it.opens(line)
     }
 
     Image, Heading, HorizontalRule -> false
 }
 
-fun MarkdownBlockType.closes(line: String): Boolean =
+fun ContentType.closes(line: String): Boolean =
     this == Code && line.startsWith("```")
 
 object MarkdownRegex {

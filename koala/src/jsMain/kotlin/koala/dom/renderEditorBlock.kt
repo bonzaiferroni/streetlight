@@ -4,39 +4,23 @@ import koala.css.Modifier
 import koala.css.addModifiers
 import koala.css.modify
 import koala.markdown.MarkdownBlock
-import koala.markdown.MarkdownBlockImage
-import koala.markdown.MarkdownBlockquote
-import koala.markdown.MarkdownCodeBlock
-import koala.markdown.MarkdownEmphasis
+import koala.markdown.ContentType
 import koala.markdown.MarkdownHeading
-import koala.markdown.MarkdownHorizontalRule
-import koala.markdown.MarkdownInlineCode
-import koala.markdown.MarkdownInlineImage
-import koala.markdown.MarkdownLink
-import koala.markdown.MarkdownList
-import koala.markdown.MarkdownListItem
-import koala.markdown.MarkdownParagraph
-import koala.markdown.MarkdownSpan
-import koala.markdown.MarkdownStrong
-import koala.markdown.MarkdownTable
-import koala.markdown.MarkdownText
-import koala.markdown.MarkdownUrl
 import koala.markdown.ParsedBlock
-import koala.model.MarkdownEditorStyle
+import koala.model.EditorStyle
 import kotlinx.browser.document
 import kotlinx.dom.clear
 import kotlinx.html.br
 import kotlinx.html.dom.append
 import kotlinx.html.dom.create
 import kotlinx.html.js.p
+import org.w3c.dom.HTMLBRElement
 import org.w3c.dom.HTMLElement
+import org.w3c.dom.asList
 
 fun createMarkdownElement(block: ParsedBlock): HTMLElement {
-    val (chunk, markdown) = block
-    val chunkMod = blockModOf(markdown.blockType)
-    val p = document.create.p {
-        addModifiers(chunkMod)
-    }
+    val p = document.create.p { }
+    p.syncBlockMod(block.markdown)
     p.append {
         renderEditorBlock(block)
     }
@@ -44,7 +28,7 @@ fun createMarkdownElement(block: ParsedBlock): HTMLElement {
 }
 
 fun HTMLElement.syncMarkdownElement(block: ParsedBlock) {
-    syncChunkMod(block.markdown.blockType)
+    syncBlockMod(block.markdown)
     val segments = block.editorSegments()
     if (matchesEditorSegments(block.chunk, segments)) return
     println("rebuilt")
@@ -65,80 +49,58 @@ fun AppendScope.renderEditorBlock(chunk: String, segments: List<EditorSegment>) 
 
 fun AppendScope.renderEditorBlock(block: ParsedBlock) = renderEditorBlock(block.chunk, block.editorSegments())
 
-class EditorSegment(val from: Int, val to: Int, val mod: Modifier)
+fun HTMLElement.syncBlockMod(block: MarkdownBlock) {
+    val blockMod = block.blockType.contentMod
+    setAttributes(block)
+    if (!isModified(blockMod)) {
+        setModifiers(blockMod)
+    }
+}
 
-fun ParsedBlock.editorSegments(): List<EditorSegment> = buildList {
-    var index = 0
+fun HTMLElement.matchesEditorSegments(chunk: String, segments: List<EditorSegment>): Boolean {
+    val nodes = childNodes.asList()
+    var nodeIndex = 0
 
-    markdown.editorSpans().forEach { span ->
-        if (span.index > index) {
-            add(EditorSegment(index, span.index, MarkdownEditorStyle.Extra))
-        }
-        index = span.index
+    segments.forEach { segment ->
+        val node = nodes.getOrNull(nodeIndex++) as? HTMLElement ?: return false
+        if (node.tagName != "SPAN") return false
+        if (!node.isModified(segment.mod)) return false
 
-        val contentEnd = index + span.contentLength
-        if (contentEnd > index) {
-            add(EditorSegment(index, contentEnd, span.contentMod))
-        }
-        index = contentEnd
+        val text = node.textContent ?: return false
+        if (text.length != segment.to - segment.from) return false
+        if (!chunk.regionMatches(segment.from, text, 0, text.length)) return false
+    }
 
-        val urlLength = span.urlLength
-        if (urlLength > 0) {
-            val urlStart = (span as? MarkdownUrl)?.urlIndex ?: -1
-            if (urlStart > index) {
-                add(EditorSegment(index, urlStart, MarkdownEditorStyle.Extra))
+    if (chunk.isEmpty() || chunk.endsWith("\n")) {
+        if (nodes.getOrNull(nodeIndex++) !is HTMLBRElement) return false
+    }
+
+    return nodeIndex == nodes.size
+}
+
+private val ContentType.contentMod: Modifier get() = when (this) {
+    ContentType.Image -> EditorStyle.BlockImage
+    ContentType.Paragraph -> EditorStyle.Paragraph
+    ContentType.Heading -> EditorStyle.Heading
+    ContentType.HorizontalRule -> EditorStyle.HorizontalRule
+    ContentType.Code -> EditorStyle.Code
+    ContentType.BlockQuote -> EditorStyle.BlockQuote
+    ContentType.UnorderedList -> EditorStyle.UnorderedList
+    ContentType.OrderedList -> EditorStyle.OrderedList
+    ContentType.Table -> EditorStyle.Table
+}
+
+fun HTMLElement.setAttributes(block: MarkdownBlock) {
+    when (block) {
+        is MarkdownHeading -> {
+            println("${block.level}: ${block.filigree}")
+            setAttribute(EditorStyle.HeadingLevel.to(block.level))
+            when {
+                block.filigree -> modify(EditorStyle.HeadingFiligree)
+                else -> unmodify(EditorStyle.HeadingFiligree)
             }
-            add(EditorSegment(urlStart, urlStart + urlLength, MarkdownEditorStyle.Url))
-            index = urlStart + urlLength
         }
+        else -> return
     }
-
-    if (chunk.length > index) {
-        add(EditorSegment(index, chunk.length, MarkdownEditorStyle.Extra))
-    }
-}
-
-private fun MarkdownBlock.editorSpans(): Sequence<MarkdownSpan> = when (this) {
-    is MarkdownParagraph -> spans.asSequence()
-    is MarkdownHeading -> spans.asSequence()
-    is MarkdownBlockquote -> paragraphs.asSequence().flatMap { it.spans }
-    is MarkdownList -> items.asSequence().flatMap { it.editorSpans() }
-    is MarkdownTable -> (sequenceOf(header) + rows).flatMap { row ->
-        row.cells.asSequence().flatMap { it.spans }
-    }
-    is MarkdownCodeBlock -> when {
-        code.isEmpty() -> emptySequence()
-        else -> sequenceOf(MarkdownInlineCode(code, codeIndex))
-    }
-    is MarkdownBlockImage -> sequenceOf(
-        MarkdownInlineImage(altText, altTextIndex, url, urlIndex, maxWidthPercent, type)
-    )
-    MarkdownHorizontalRule -> emptySequence()
-}
-
-private fun MarkdownListItem.editorSpans(): Sequence<MarkdownSpan> =
-    spans.asSequence() + (sublist?.editorSpans() ?: emptySequence())
-
-private val MarkdownSpan.contentLength get() = when (this) {
-    is MarkdownInlineImage -> altText.length
-    is MarkdownText -> text.length
-    is MarkdownEmphasis -> text.length
-    is MarkdownStrong -> text.length
-    is MarkdownInlineCode -> text.length
-    is MarkdownLink -> text.length
-}
-
-private val MarkdownSpan.urlLength get() = when (this) {
-    is MarkdownLink -> url.value.length
-    is MarkdownInlineImage -> url.value.length
-    else -> 0
-}
-
-private val MarkdownSpan.contentMod get() = when (this) {
-    is MarkdownStrong -> MarkdownEditorStyle.Strong
-    is MarkdownEmphasis -> MarkdownEditorStyle.Emphasis
-    is MarkdownInlineCode -> MarkdownEditorStyle.InlineCode
-    is MarkdownLink, is MarkdownInlineImage -> MarkdownEditorStyle.LinkText
-    is MarkdownText -> MarkdownEditorStyle.Text
 }
 

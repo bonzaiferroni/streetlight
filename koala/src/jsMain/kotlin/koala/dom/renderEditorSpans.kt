@@ -9,7 +9,7 @@ import koala.markdown.MarkdownLink
 import koala.markdown.MarkdownSpan
 import koala.markdown.MarkdownStrong
 import koala.markdown.MarkdownText
-import koala.model.MarkdownEditorStyle
+import koala.model.EditorStyle
 import kotlinx.html.a
 import kotlinx.html.code
 import kotlinx.html.em
@@ -31,12 +31,12 @@ fun AppendScope.renderEditorSpans(spans: List<MarkdownSpan>) {
 }
 
 fun AppendScope.renderExtra(/* args */) {
-    span("my content", modify(MarkdownEditorStyle.Extra))
+    span("my content", modify(EditorStyle.Extra))
 }
 
 fun AppendScope.renderExtra(syntax: String) {
     span {
-        addModifiers(MarkdownEditorStyle.Extra)
+        addModifiers(EditorStyle.Extra)
         +syntax
     }
 }

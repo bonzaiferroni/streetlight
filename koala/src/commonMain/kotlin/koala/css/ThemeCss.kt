@@ -112,6 +112,10 @@ val ThemeCss get() = with(Koala) { """
     --beta-focus: ${beta.focus}%;
     --gamma-focus: ${gamma.focus}%;
     --color-flux: hueSpin 30s linear infinite;
+    
+    --opacity-low: 0.25;
+    --opacity-half: 0.5;
+    --opacity-high: 0.85;
 }
 
 @property --rho-color { syntax: '<color>'; inherits: true; initial-value: ${rho.rgba()}; }

@@ -1,29 +1,15 @@
 package koala.dom
 
 import kampfire.api.Markdown
-import kampfire.api.toMarkdown
 import koala.css.*
-import koala.external.selection
 import koala.html.Attribute
 import koala.html.setAttribute
-import koala.html.span
-import koala.markdown.MarkdownBlock
-import koala.markdown.MarkdownBlockType
-import koala.markdown.ParsedBlock
-import koala.markdown.markdownBlocksOf
 import koala.model.MutableTap
-import koala.model.MarkdownEditorStyle
+import koala.model.EditorStyle
 import kotlinx.browser.document
-import kotlinx.browser.window
-import kotlinx.dom.clear
 import kotlinx.html.DIV
-import kotlinx.html.dom.append
-import kotlinx.html.dom.create
 import kotlinx.html.js.onInputFunction
-import kotlinx.html.js.p
 import org.w3c.dom.HTMLElement
-import org.w3c.dom.Node
-import org.w3c.dom.asList
 import org.w3c.dom.get
 
 fun ViewScope.styledMarkdownEditor(
@@ -45,7 +31,7 @@ fun ViewScope.styledMarkdownEditor(
     }
 
     element = column(modify(Gap0)) {
-        addModifiers(MarkdownEditorStyle.Container, modifiers)
+        addModifiers(EditorStyle.Container, modifiers)
         label?.let {
             setAttribute(Attribute.BlockLabel, it.lowercase())
         }

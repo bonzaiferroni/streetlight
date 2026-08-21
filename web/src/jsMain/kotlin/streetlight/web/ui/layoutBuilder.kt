@@ -129,7 +129,7 @@ fun ViewScope.removedBlockList(model: LayoutEditor, blockIds: List<BlockId>) {
                 textBlock(blockName)
                 button({
                     model.startMove(blockId)
-                }, EditorStyle.TextButton) {
+                }, LayoutBuilderMod.TextButton) {
                     textBlock("restore")
                 }
             }
@@ -143,7 +143,7 @@ fun ViewScope.editorTextButton(
     config: BUTTON.() -> Unit = { }
 ) = button(onClick, modify(Padding1)) {
     config()
-    textBlock(name, EditorStyle.TextButton)
+    textBlock(name, LayoutBuilderMod.TextButton)
 }
 
 fun ViewScope.editorIconButton(
@@ -154,7 +154,7 @@ fun ViewScope.editorIconButton(
     config()
 }
 
-object EditorStyle {
+object LayoutBuilderMod {
     val TextButton = modify(TextUppercase, TextSmall, Bold, EditorFg)
     val Container = modify(ZenBg, MoonShadow, Padding1)
 }
