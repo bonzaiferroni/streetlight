@@ -15,6 +15,7 @@ import koala.markdown.MarkdownList
 import koala.markdown.MarkdownListItem
 import koala.markdown.MarkdownParagraph
 import koala.markdown.MarkdownSpan
+import koala.markdown.MarkdownStrikethrough
 import koala.markdown.MarkdownStrong
 import koala.markdown.MarkdownTable
 import koala.markdown.MarkdownText
@@ -126,6 +127,7 @@ private val MarkdownSpan.contentMod get() = when (this) {
     is MarkdownStrong -> EditorStyle.Strong
     is MarkdownEmphasis -> EditorStyle.Emphasis
     is MarkdownInlineCode -> EditorStyle.InlineCode
+    is MarkdownStrikethrough -> EditorStyle.Strikethrough
     is MarkdownLink, is MarkdownInlineImage -> EditorStyle.LinkText
     is MarkdownText -> EditorStyle.Text
 }

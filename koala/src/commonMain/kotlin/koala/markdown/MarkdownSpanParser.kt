@@ -21,6 +21,7 @@ class MarkdownSpanParser {
         while (cursor < to) {
             val matched = parseStrong()
                     || parseEmphasis()
+                    || parseStrikethrough()
                     || parseInlineCode()
                     || parseInlineImage()
                     || parseLink()
@@ -80,6 +81,20 @@ class MarkdownSpanParser {
                 index = cursor + 1,
             ),
             end + 1,
+        )
+        return true
+    }
+
+    private fun parseStrikethrough(): Boolean {
+        if (cursor + 1 >= to || !text.startsWith("~~", cursor)) return false
+        val end = find("~~", cursor + 2)
+        if (end == -1) return false
+        emit(
+            MarkdownStrikethrough(
+                text = text.substring(cursor + 2, end),
+                index = cursor + 2,
+            ),
+            end + 2,
         )
         return true
     }

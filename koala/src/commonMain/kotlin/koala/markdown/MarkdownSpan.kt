@@ -32,6 +32,11 @@ data class MarkdownInlineCode(
     override val index: Int,
 ): MarkdownSpan
 
+data class MarkdownStrikethrough(
+    override val text: String,
+    override val index: Int,
+): MarkdownSpan
+
 data class MarkdownInlineImage(
     override val altText: String,
     override val altTextIndex: Int,

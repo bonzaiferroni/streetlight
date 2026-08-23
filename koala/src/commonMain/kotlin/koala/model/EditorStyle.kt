@@ -15,6 +15,7 @@ object EditorStyle {
     val Emphasis = Container.withBemElement("emphasis")
     val Strong = Container.withBemElement("strong")
     val InlineCode = Container.withBemElement("inline-code")
+    val Strikethrough = Container.withBemElement("strikethrough")
     val Text = Container.withBemElement("text")
     val LinkText = Container.withBemElement("link-text")
     val Url = Container.withBemElement("url")
@@ -121,6 +122,10 @@ $Container {
     $InlineCode {
         color: var(--green-fg);
         border-radius: 2px;
+    }
+    
+    $Strikethrough {
+        text-decoration: line-through;
     }
     
     :not(${BlockType.selector(ContentBlock.Code)}) {

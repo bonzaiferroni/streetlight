@@ -1,7 +1,10 @@
+@file:Suppress("DSL_MARKER_APPLIED_TO_WRONG_TARGET")
+
 package koala.markdown
 
 import koala.css.*
 import koala.html.LottieClass
+import kotlinx.css.s
 import kotlinx.html.*
 
 fun FlowOrPhrasingContent.renderMarkdownSpans(spans: List<MarkdownSpan>) {
@@ -12,6 +15,7 @@ fun FlowOrPhrasingContent.renderMarkdownSpans(spans: List<MarkdownSpan>) {
             is MarkdownEmphasis -> renderEmphasis(span)
             is MarkdownLink -> renderLink(span)
             is MarkdownStrong -> renderStrong(span)
+            is MarkdownStrikethrough -> renderStrikethrough(span)
             is MarkdownText -> renderText(span)
         }
     }
@@ -38,6 +42,12 @@ fun FlowOrPhrasingContent.renderLink(span: MarkdownLink) {
 
 fun FlowOrPhrasingContent.renderStrong(span: MarkdownStrong) {
     strong {
+        +span.text
+    }
+}
+
+fun FlowOrPhrasingContent.renderStrikethrough(span: MarkdownStrikethrough) {
+    s {
         +span.text
     }
 }
@@ -77,3 +87,12 @@ fun FlowContent.renderLottieImage(span: MarkdownImage) {
         attributes["data-lottie"] = span.url.value
     }
 }
+
+open class S(
+    initialAttributes: Map<String, String>,
+    override val consumer: TagConsumer<*>,
+) : HTMLTag("s", consumer, initialAttributes, null, inlineTag = true, emptyTag = false), HtmlInlineTag
+
+@HtmlTagMarker
+inline fun FlowOrPhrasingContent.s(classes: String? = null, crossinline block: S.() -> Unit = {}): Unit =
+    S(attributesMapOf("class", classes), consumer).visit(block)
