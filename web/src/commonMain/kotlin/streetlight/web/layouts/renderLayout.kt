@@ -1,16 +1,11 @@
 package streetlight.web.layouts
 
 import kampfire.model.GeoPoint
-import koala.css.MinHeight48
-import koala.css.modify
-import koala.html.column
-import koala.html.geoMapMount
-import koala.html.markdown
-import koala.html.metaImage
-import koala.html.row
-import koala.html.tab
-import koala.html.tabs
+import koala.css.*
+import koala.html.*
 import koala.html.textBlock
+import koala.markdown.HeadingLevel
+import koala.markdown.renderHeading
 import kotlinx.html.FlowContent
 import streetlight.model.data.*
 import streetlight.model.ui.LocationUpdateRoute
@@ -33,14 +28,22 @@ fun FlowContent.renderColumn(blocks: List<LayoutBlock>, content: LocationContent
 
 fun FlowContent.renderBlock(block: LayoutBlock, content: LocationContent) {
     when (block) {
-        HeaderBlock -> renderHeader(content)
-        EventsBlock -> renderEvents(content)
-        is ImageBlock -> renderImage(block)
-        MapBlock -> renderMap(content.location.geoPoint)
-        is TabsBlock -> renderTabs(block, content)
         is TextBlock -> renderText(block)
         is RichTextBlock -> renderRichText(block)
+        is HeadingBlock -> renderHeading(block)
+        is ImageBlock -> renderImage(block)
+        HeaderBlock -> renderHeader(content)
+        EventsBlock -> renderEvents(content)
+        MapBlock -> renderMap(content.location.geoPoint)
+        is TabsBlock -> renderTabs(block, content)
         is ColumnsBlock -> renderColumn(block, content)
+    }
+}
+
+fun FlowContent.renderHeading(block: HeadingBlock) {
+    when (block.hasFiligree) {
+        true -> filigree { heading(block.level, block.text) }
+        else -> heading(block.level, block.text)
     }
 }
 

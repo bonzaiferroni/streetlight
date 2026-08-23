@@ -6,9 +6,11 @@
     --heading-3-size: 2rem;
     --heading-3-weight: 300;
     --heading-4-size: 1.5rem;
-    --heading-4-weight: 400;
+    --heading-4-weight: 300;
     --heading-5-size: 1.25rem;
-    --heading-5-weight: 400;
+    --heading-5-weight: 300;
+    --heading-6-size: 1rem;
+    --heading-6-weight: 400;
     --paragraph-size: 1.1rem;
     --paragraph-line-height: 1.4;
     --text-small: .9rem;
@@ -48,11 +50,18 @@ h3.bold {
 h4 {
     font-size: var(--heading-4-size);
     font-weight: var(--heading-4-weight);
+    text-transform: uppercase;
 }
 
 h5 {
     font-size: var(--heading-5-size);
     font-weight: var(--heading-5-weight);
+    text-transform: uppercase;
+}
+
+h6 {
+    font-size: var(--heading-6-size);
+    font-weight: var(--heading-6-weight);
 }
 
 .prose .column {

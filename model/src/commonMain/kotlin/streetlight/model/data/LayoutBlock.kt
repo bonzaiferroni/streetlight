@@ -1,6 +1,7 @@
 package streetlight.model.data
 
 import kampfire.api.Markdown
+import koala.markdown.HeadingLevel
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -20,6 +21,15 @@ data class RichTextBlock(
     val text: Markdown,
 ): LayoutBlock {
     override val blockType get() = BlockType.RichText
+}
+
+@Serializable
+data class HeadingBlock(
+    val text: String,
+    val level: HeadingLevel,
+    val hasFiligree: Boolean,
+): LayoutBlock {
+    override val blockType get() = BlockType.Heading
 }
 
 @Serializable

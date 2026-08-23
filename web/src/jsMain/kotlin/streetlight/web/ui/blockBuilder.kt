@@ -9,6 +9,7 @@ import koala.model.storeOf
 import koala.model.toggle
 import kotlinx.html.FlowContent
 import streetlight.model.data.*
+import streetlight.web.layouts.renderHeading
 import streetlight.web.model.BlockEditor
 import streetlight.web.model.BlockId
 import streetlight.web.model.LayoutEditor
@@ -17,6 +18,7 @@ fun ViewScope.blockBuilder(model: LayoutEditor, blockId: BlockId) {
     val editor = model.getBlock(blockId)
     when (val block = editor.blockState.now) {
         HeaderBlock, EventsBlock, MapBlock -> blockBuilder(editor)
+        is HeadingBlock -> headingBuilder(editor)
         is ImageBlock -> imageBuilder(editor)
         is RichTextBlock -> richTextBuilder(editor)
         is TextBlock -> textBuilder(editor)
@@ -110,6 +112,37 @@ fun ViewScope.textBuilder(editor: BlockEditor) {
     }
 }
 
+fun ViewScope.headingBuilder(editor: BlockEditor) {
+    val blockState = editor.blockState.mutableTapOf({ it as HeadingBlock }) { it }
+    val textState = blockState.mutableTapOf({ it.text }) { copy(text = it) }
+    val isEditingState = storeOf(textState.now.isEmpty())
+    val levelState = blockState.mutableTapOf({ it.level }) { copy(level = it) }
+    val hasFiligreeState = blockState.mutableTapOf({ it.hasFiligree }) { copy(hasFiligree = it) }
+    column {
+        editorRow(editor, isEditingState) {
+            formColumn {
+                formRow {
+                    formSection("Level") {
+                        dropMenu(levelState)
+                        checkBox(hasFiligreeState, "filigree")
+                    }
+                }
+            }
+        }
+        flowBlock(isEditingState) { isEditing ->
+            if (isEditing) {
+                textField(textState)
+            } else {
+                flowBlock(blockState) { block ->
+                    box {
+                        renderHeading(block)
+                    }
+                }
+            }
+        }
+    }
+}
+
 fun ViewScope.richTextBuilder(editor: BlockEditor) {
     val blockState = editor.blockState.mutableTapOf({ it as RichTextBlock }) { it }
     val textState = blockState.mutableTapOf({ it.text }) { copy(text = it) }
@@ -118,7 +151,7 @@ fun ViewScope.richTextBuilder(editor: BlockEditor) {
         editorRow(editor, isEditingState)
         flowBlock(isEditingState) { isEditing ->
             if (isEditing) {
-                textEditor(textState)
+                styledMarkdownEditor(textState)
             } else {
                 markdown(textState.now.takeIf { it.value.isNotEmpty() } ?: "[RichText content]".toMarkdown())
             }

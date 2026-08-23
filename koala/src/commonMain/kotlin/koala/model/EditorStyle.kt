@@ -72,6 +72,7 @@ $Container {
         &${HeadingLevel.selector(4)} {
             font-size: var(--heading-4-size);
             font-weight: var(--heading-4-weight);
+            text-transform: uppercase;
         }
         
         &${HeadingLevel.selector(5)} {

@@ -11,9 +11,10 @@ data class PageLayout(
 }
 
 enum class BlockType(label: String? = null): Labeled {
-    Image,
     Text,
     RichText("Rich Text"),
+    Heading,
+    Image,
     Header,
     Map,
     Events,

@@ -5,6 +5,7 @@ import kotlinx.html.span as spanTag
 import kotlinx.html.em as emTag
 import kotlinx.html.strong as strongTag
 import koala.css.*
+import koala.markdown.HeadingLevel
 
 inline fun FlowContent.textBlock(
     content: String = "",
@@ -85,6 +86,35 @@ fun FlowContent.heading5(
         content?.let {
             +it
         }
+    }
+}
+
+fun FlowContent.heading6(
+    content: String? = null,
+    modifiers: ModifierSet? = null,
+    block: H6.() -> Unit = {},
+) {
+    h6 {
+        addModifiers(modifiers)
+        block()
+        content?.let {
+            +it
+        }
+    }
+}
+
+fun FlowContent.heading(
+    level: HeadingLevel,
+    text: String,
+    mod: ModifierSet? = null,
+) {
+    when (level) {
+        HeadingLevel.H1 -> heading1(text, mod)
+        HeadingLevel.H2 -> heading2(text, mod)
+        HeadingLevel.H3 -> heading3(text, mod)
+        HeadingLevel.H4 -> heading4(text, mod)
+        HeadingLevel.H5 -> heading5(text, mod)
+        HeadingLevel.H6 -> heading6(text, mod)
     }
 }
 

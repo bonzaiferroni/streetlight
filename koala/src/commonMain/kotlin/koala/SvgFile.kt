@@ -74,6 +74,7 @@ object SvgFile : FileSet<Svg>() {
     val PanelRight = add("panel-right.svg")
     val Pin = add("pin.svg")
     val Plus = add("plus.svg")
+    val PlusAbove = add("plus-above.svg")
     val Question = add("question.svg")
     val QuestionLarge = add("question-large.svg")
     val Rays = add("rays.svg")

@@ -6,6 +6,7 @@ import koala.css.*
 import koala.dom.*
 import koala.html.Id
 import koala.html.setPopoverTarget
+import koala.markdown.HeadingLevel
 import koala.model.storeOf
 import streetlight.model.data.*
 import kotlin.uuid.Uuid
@@ -49,7 +50,7 @@ fun ViewScope.blockMenu(
         name?.let {
             textBlock("add to $name", modify(TextSmall, TextUppercase, OpacityHalf))
         }
-        editorIconButton(SvgFile.Plus) {
+        editorIconButton(if (name == null) SvgFile.PlusAbove else SvgFile.Plus) {
             setPopoverTarget(popoverId)
         }
     }
@@ -65,6 +66,7 @@ fun getOptions(category: BlockCategory, depth: Int) = buildList {
     when (category) {
         BlockCategory.Basic -> {
             add(LabeledItem("text", TextBlock("")))
+            add(LabeledItem("heading", HeadingBlock("", HeadingLevel.H3, true)))
             add(LabeledItem("image", ImageBlock(null)))
             add(LabeledItem("rich text", RichTextBlock(Markdown.Empty)))
         }
