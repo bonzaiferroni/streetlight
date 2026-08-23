@@ -2,7 +2,7 @@ package koala.dom
 
 import kampfire.api.Markdown
 import kampfire.api.toMarkdown
-import koala.markdown.ContentType
+import koala.markdown.ContentBlock
 import koala.markdown.MarkdownParser
 import koala.markdown.MarkdownRegex
 import koala.markdown.ParsedBlock
@@ -65,7 +65,7 @@ class MarkdownInputParser(private val model: MarkdownEditor) {
 
         val cachedBlock = model.getCachedBlockOrNull(chunk)
         if (cachedBlock != null) {
-            element.syncBlockMod(cachedBlock.markdown)
+            element.syncAttributes(cachedBlock)
             blocks.add(cachedBlock)
             produced.add(element to chunk)
             markCaret(caretOffset)
@@ -82,11 +82,11 @@ class MarkdownInputParser(private val model: MarkdownEditor) {
             val isOriginalElement = index + 1 == parsed.size
             when (isOriginalElement) {
                 true -> {
-                    element.syncMarkdownElement(block)
+                    element.syncEditorBlock(block)
                     produced.add(element to block.chunk)
                 }
                 else -> {
-                    val p = createMarkdownElement(block)
+                    val p = createEditorBlock(block)
                     container.insertBefore(p, element)
                     produced.add(p to block.chunk)
                 }
@@ -116,7 +116,7 @@ private class PendingChunk {
     var caretOffset: Int? = null
         private set
 
-    private var type: ContentType? = null
+    private var type: ContentBlock? = null
     private var openFence = false
 
     val isOpen get() = element != null
@@ -134,7 +134,7 @@ private class PendingChunk {
 
     fun accepts(nextChunk: String): Boolean {
         val type = type ?: return false
-        if (type == ContentType.Code) return openFence
+        if (type == ContentBlock.Code) return openFence
         return type.accepts(nextChunk.substringBefore('\n'))
     }
 
@@ -147,7 +147,7 @@ private class PendingChunk {
     private fun setChunk(chunk: String) {
         this.chunk = chunk
         type = markdownBlockTypeOf(chunk.substringBefore('\n'))
-        openFence = type == ContentType.Code && chunk.hasOpenFence()
+        openFence = type == ContentBlock.Code && chunk.hasOpenFence()
     }
 }
 

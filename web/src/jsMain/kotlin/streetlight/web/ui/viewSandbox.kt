@@ -8,6 +8,7 @@ import koala.css.Scale
 import koala.css.modify
 import koala.dom.*
 import koala.html.heading1
+import koala.model.EditorStyle
 import koala.model.storeOf
 import koala.model.toggle
 import streetlight.web.utils.localStoreOf
@@ -23,16 +24,18 @@ fun RouteScope.viewSandbox() {
 
     val textState = localStoreOf("sandbox-md", Markdown(""))
     val isEditingState = storeOf(true)
+    val isSwyg = storeOf(false)
     column {
         row(modify(JustifyContentEnd)) {
             button(SvgFile.Magic, {
                 textState.set { Markdown("$value!") }
             })
+            button(SvgFile.Eye, isSwyg::toggle)
             button(SvgFile.Edit, isEditingState::toggle)
         }
         flowBlock(isEditingState, modify(Magic, Scale)) { isEditing ->
             when (isEditing) {
-                true -> styledMarkdownEditor(textState)
+                true -> styledMarkdownEditor(textState).flowModifier(isSwyg, EditorStyle.SWYG, contentScope)
                 else -> markdown(textState.now)
             }
         }

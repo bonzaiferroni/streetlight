@@ -53,14 +53,14 @@ class MarkdownParser {
         openBlock.reset()
 
         val markdown = when (type) {
-            ContentType.Code -> parseCodeBlock(chunk)
-            ContentType.Heading -> parseHeading(chunk)
-            ContentType.HorizontalRule -> MarkdownHorizontalRule
-            ContentType.Image -> parseBlockImage(chunk)
-            ContentType.BlockQuote -> parseBlockquote(chunk)
-            ContentType.UnorderedList, ContentType.OrderedList -> listParser.parse(chunk)
-            ContentType.Table -> tableParser.parse(chunk)
-            ContentType.Paragraph -> null
+            ContentBlock.Code -> parseCodeBlock(chunk)
+            ContentBlock.Heading -> parseHeading(chunk)
+            ContentBlock.HorizontalRule -> MarkdownHorizontalRule
+            ContentBlock.Image -> parseBlockImage(chunk)
+            ContentBlock.BlockQuote -> parseBlockquote(chunk)
+            ContentBlock.UnorderedList, ContentBlock.OrderedList -> listParser.parse(chunk)
+            ContentBlock.Table -> tableParser.parse(chunk)
+            ContentBlock.Paragraph -> null
         } ?: parseParagraph(chunk)
 
         blocks.add(ParsedBlock(chunk, markdown))
@@ -161,14 +161,14 @@ class MarkdownParser {
 }
 
 private class OpenBlock {
-    var type: ContentType? = null
+    var type: ContentBlock? = null
         private set
 
     val lines = mutableListOf<String>()
 
     val chunk: String get() = lines.takeIf { it.size == 1 }?.first() ?: lines.joinToString("\n")
 
-    fun open(type: ContentType, firstLine: String) {
+    fun open(type: ContentBlock, firstLine: String) {
         this.type = type
         lines.clear()
         lines.add(firstLine)
@@ -188,16 +188,16 @@ data class ParsedBlock(
     val markdown: MarkdownBlock
 )
 
-fun markdownBlockTypeOf(line: String): ContentType? = when {
-    MarkdownRegex.Fence.matches(line) -> ContentType.Code
-    MarkdownRegex.HorizontalRule.matches(line) -> ContentType.HorizontalRule
-    line.startsWith("#") -> ContentType.Heading
-    line.startsWith(">") -> ContentType.BlockQuote
-    MarkdownRegex.ImageBlock.matches(line) -> ContentType.Image
-    MarkdownRegex.UnorderedItem.matches(line) -> ContentType.UnorderedList
-    MarkdownRegex.OrderedItem.matches(line) -> ContentType.OrderedList
-    MarkdownRegex.TableLine.matches(line) -> ContentType.Table
-    line.isNotBlank() -> ContentType.Paragraph
+fun markdownBlockTypeOf(line: String): ContentBlock? = when {
+    MarkdownRegex.Fence.matches(line) -> ContentBlock.Code
+    MarkdownRegex.HorizontalRule.matches(line) -> ContentBlock.HorizontalRule
+    line.startsWith("#") -> ContentBlock.Heading
+    line.startsWith(">") -> ContentBlock.BlockQuote
+    MarkdownRegex.ImageBlock.matches(line) -> ContentBlock.Image
+    MarkdownRegex.UnorderedItem.matches(line) -> ContentBlock.UnorderedList
+    MarkdownRegex.OrderedItem.matches(line) -> ContentBlock.OrderedList
+    MarkdownRegex.TableLine.matches(line) -> ContentBlock.Table
+    line.isNotBlank() -> ContentBlock.Paragraph
     else -> null
 }
 

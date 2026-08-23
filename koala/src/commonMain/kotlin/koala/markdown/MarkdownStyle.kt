@@ -54,7 +54,7 @@ $BlockImage {
     text-align: center;
 }
 
-${EditorStyle.BlockQuote},
+${EditorStyle.BlockType.selector(ContentBlock.BlockQuote)},
 blockquote {
     margin-inline-start: 1rem;
     padding-inline-start: 1rem;

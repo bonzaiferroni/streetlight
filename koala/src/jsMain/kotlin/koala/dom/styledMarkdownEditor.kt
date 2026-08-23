@@ -2,15 +2,24 @@ package koala.dom
 
 import kampfire.api.Markdown
 import koala.css.*
+import koala.external.selection
 import koala.html.Attribute
 import koala.html.setAttribute
+import koala.markdown.ContentBlock
 import koala.model.MutableTap
 import koala.model.EditorStyle
 import kotlinx.browser.document
+import kotlinx.browser.window
 import kotlinx.html.DIV
 import kotlinx.html.js.onInputFunction
+import kotlinx.html.js.onKeyDownFunction
 import org.w3c.dom.HTMLElement
+import org.w3c.dom.Node
+import org.w3c.dom.asList
+import org.w3c.dom.clipboard.ClipboardEvent
+import org.w3c.dom.events.KeyboardEvent
 import org.w3c.dom.get
+import kotlin.js.unsafeCast
 
 fun ViewScope.styledMarkdownEditor(
     state: MutableTap<Markdown>,
@@ -56,6 +65,15 @@ fun ViewScope.styledMarkdownEditor(
         block()
     }
 
+//    element.addEventListener("copy", { event ->
+//        val range = window.selection()?.getRangeAt(0) ?: return@addEventListener
+//        val fragment = range.cloneContents()
+//        val text = range.cloneContents().childNodes.asList()
+//            .joinToString("\n") { it.textContent ?: "" }
+//        event.unsafeCast<ClipboardEvent>().clipboardData?.setData("text/plain", text)
+//        event.preventDefault()
+//    })
+
     document.addEventListener("selectionchange", {
         element.activeChunk()?.let {
             // console.log("offset ${it.caretOffset()} in ${it.className}")
@@ -77,11 +95,12 @@ private fun HTMLElement.syncFromCollect(model: MarkdownEditor, markdown: Markdow
     blocks.forEachIndexed { index, block ->
         val element = children[index] as? HTMLElement
         if (element == null) {
-            val p = createMarkdownElement(block)
+            val p = createEditorBlock(block)
             appendChild(p)
         } else {
             if (element.normalizedTextContent() == block.chunk) return@forEachIndexed
-            element.syncMarkdownElement(block)
+            element.syncEditorBlock(block)
         }
     }
 }
+

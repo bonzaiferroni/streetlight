@@ -1,10 +1,6 @@
 package koala.dom
 
-import koala.css.Modifier
-import koala.css.addModifiers
 import koala.css.modify
-import koala.markdown.MarkdownBlock
-import koala.markdown.ContentType
 import koala.markdown.MarkdownHeading
 import koala.markdown.ParsedBlock
 import koala.model.EditorStyle
@@ -13,90 +9,40 @@ import kotlinx.dom.clear
 import kotlinx.html.br
 import kotlinx.html.dom.append
 import kotlinx.html.dom.create
-import kotlinx.html.js.p
-import org.w3c.dom.HTMLBRElement
+import kotlinx.html.js.div
 import org.w3c.dom.HTMLElement
-import org.w3c.dom.asList
 
-fun createMarkdownElement(block: ParsedBlock): HTMLElement {
-    val p = document.create.p { }
-    p.syncBlockMod(block.markdown)
-    p.append {
-        renderEditorBlock(block)
+fun createEditorBlock(block: ParsedBlock): HTMLElement {
+    val div = document.create.div { }
+    div.syncAttributes(block)
+    div.append {
+        renderEditorBlock(block, div)
     }
-    return p
+    return div
 }
 
-fun HTMLElement.syncMarkdownElement(block: ParsedBlock) {
-    syncBlockMod(block.markdown)
-    val segments = block.editorSegments()
+fun HTMLElement.syncEditorBlock(block: ParsedBlock) {
+    syncAttributes(block)
+    val segments = block.toEditorSegments()
     if (matchesEditorSegments(block.chunk, segments)) return
     println("rebuilt")
     clear()
     append {
-        renderEditorBlock(block.chunk, segments)
+        renderEditorBlock(block, this@syncEditorBlock, segments)
     }
 }
 
-fun AppendScope.renderEditorBlock(chunk: String, segments: List<EditorSegment>) {
-    segments.forEach {
-        span(chunk.substring(it.from, it.to), modify(it.mod))
-    }
-    if (chunk.isEmpty() || chunk.endsWith("\n")) {
-        br { }
-    }
-}
+private fun AppendScope.renderEditorBlock(block: ParsedBlock, element: HTMLElement) =
+    renderEditorBlock(block, element, block.toEditorSegments())
 
-fun AppendScope.renderEditorBlock(block: ParsedBlock) = renderEditorBlock(block.chunk, block.editorSegments())
-
-fun HTMLElement.syncBlockMod(block: MarkdownBlock) {
-    val blockMod = block.blockType.contentMod
-    setAttributes(block)
-    if (!isModified(blockMod)) {
-        setModifiers(blockMod)
-    }
-}
-
-fun HTMLElement.matchesEditorSegments(chunk: String, segments: List<EditorSegment>): Boolean {
-    val nodes = childNodes.asList()
-    var nodeIndex = 0
-
-    segments.forEach { segment ->
-        val node = nodes.getOrNull(nodeIndex++) as? HTMLElement ?: return false
-        if (node.tagName != "SPAN") return false
-        if (!node.isModified(segment.mod)) return false
-
-        val text = node.textContent ?: return false
-        if (text.length != segment.to - segment.from) return false
-        if (!chunk.regionMatches(segment.from, text, 0, text.length)) return false
-    }
-
-    if (chunk.isEmpty() || chunk.endsWith("\n")) {
-        if (nodes.getOrNull(nodeIndex++) !is HTMLBRElement) return false
-    }
-
-    return nodeIndex == nodes.size
-}
-
-private val ContentType.contentMod: Modifier get() = when (this) {
-    ContentType.Image -> EditorStyle.BlockImage
-    ContentType.Paragraph -> EditorStyle.Paragraph
-    ContentType.Heading -> EditorStyle.Heading
-    ContentType.HorizontalRule -> EditorStyle.HorizontalRule
-    ContentType.Code -> EditorStyle.Code
-    ContentType.BlockQuote -> EditorStyle.BlockQuote
-    ContentType.UnorderedList -> EditorStyle.UnorderedList
-    ContentType.OrderedList -> EditorStyle.OrderedList
-    ContentType.Table -> EditorStyle.Table
-}
-
-fun HTMLElement.setAttributes(block: MarkdownBlock) {
-    when (block) {
+fun HTMLElement.syncAttributes(block: ParsedBlock) {
+    setAttribute(EditorStyle.BlockType.to(block.markdown.blockType))
+    when (val markdown = block.markdown) {
         is MarkdownHeading -> {
-            println("${block.level}: ${block.filigree}")
-            setAttribute(EditorStyle.HeadingLevel.to(block.level))
+            println("${markdown.level}: ${markdown.filigree}")
+            setAttribute(EditorStyle.HeadingLevel.to(markdown.level))
             when {
-                block.filigree -> modify(EditorStyle.HeadingFiligree)
+                markdown.filigree -> modify(EditorStyle.HeadingFiligree)
                 else -> unmodify(EditorStyle.HeadingFiligree)
             }
         }
@@ -104,3 +50,22 @@ fun HTMLElement.setAttributes(block: MarkdownBlock) {
     }
 }
 
+// every character of the chunk appears exactly once, in order, as a text node
+// in SWYG layout, Extra spans will not displayed. They cannot define layout structure
+// structure lives on wrapper elements, never on segment spans
+private fun AppendScope.renderEditorBlock(block: ParsedBlock, element: HTMLElement, segments: List<EditorSegment>?) {
+    renderSegmentsBlock(block.chunk, segments ?: error("segments not found"))
+//    when (val markdown = block.markdown) {
+//        is MarkdownTable -> renderEditorTable(block.chunk, element, markdown)
+//        else -> renderSegmentsBlock(block.chunk, segments ?: error("segments not found"))
+//    }
+}
+
+private fun AppendScope.renderSegmentsBlock(chunk: String, segments: List<EditorSegment>) {
+    segments.forEach {
+        span(chunk.substring(it.from, it.to), modify(it.mod))
+    }
+    if (chunk.isEmpty() || chunk.endsWith("\n")) {
+        br { }
+    }
+}

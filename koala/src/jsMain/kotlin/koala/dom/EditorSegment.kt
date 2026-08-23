@@ -21,47 +21,67 @@ import koala.markdown.MarkdownText
 import koala.markdown.MarkdownUrl
 import koala.markdown.ParsedBlock
 import koala.model.EditorStyle
+import org.w3c.dom.HTMLBRElement
+import org.w3c.dom.HTMLElement
+import org.w3c.dom.asList
+import kotlin.collections.forEach
 import kotlin.sequences.forEach
 import kotlin.sequences.plus
 
-class EditorSegment(val from: Int, val to: Int, val mod: Modifier)
+data class EditorSegment(val from: Int, val to: Int, val mod: Modifier)
 
-fun ParsedBlock.editorSegments(): List<EditorSegment> = buildList {
-    var index = 0
+fun ParsedBlock.toEditorSegments(): List<EditorSegment>? = markdown.editorSpans()?.let { spans ->
+    segmentsIn(chunk, 0, chunk.length, spans)
+}
 
-    markdown.editorSpans().forEach { span ->
-        if (span.index > index) {
-            add(EditorSegment(index, span.index, EditorStyle.Extra))
-        }
+fun segmentsIn(chunk: String, from: Int, to: Int, spans: Sequence<MarkdownSpan>): List<EditorSegment> = buildList {
+    var index = from
+
+    spans.forEach { span ->
+        addExtra(chunk, index, span.index)
         index = span.index
 
-        val contentEnd = index + span.contentLength
+        val contentEnd = index + span.text.length
         if (contentEnd > index) {
             add(EditorSegment(index, contentEnd, span.contentMod))
         }
         index = contentEnd
 
-        val urlLength = span.urlLength
-        if (urlLength > 0) {
-            val urlStart = (span as? MarkdownUrl)?.urlIndex ?: -1
-            if (urlStart > index) {
-                add(EditorSegment(index, urlStart, EditorStyle.Extra))
-            }
-            add(EditorSegment(urlStart, urlStart + urlLength, EditorStyle.Url))
-            index = urlStart + urlLength
+        if (span is MarkdownUrl) {
+            addExtra(chunk, index, span.urlIndex)
+            val urlEnd = span.urlIndex + span.url.value.length
+            add(EditorSegment(span.urlIndex, urlEnd, EditorStyle.Url))
+            index = urlEnd
         }
     }
 
-    if (chunk.length > index) {
-        add(EditorSegment(index, chunk.length, EditorStyle.Extra))
+    addExtra(chunk, index, to)
+}
+
+private fun MutableList<EditorSegment>.addExtra(chunk: String, from: Int, to: Int) {
+    var start = from
+    while (start < to) {
+        val newline = chunk.indexOf('\n', start)
+        if (newline == -1 || newline >= to) {
+            add(EditorSegment(start, to, EditorStyle.Extra))
+            return
+        }
+        if (newline > start) {
+            add(EditorSegment(start, newline, EditorStyle.Extra))
+        }
+        var end = newline
+        while (end < to && chunk[end] == '\n') end++
+        add(EditorSegment(newline, end, EditorStyle.Space))
+        start = end
     }
 }
 
-private fun MarkdownBlock.editorSpans(): Sequence<MarkdownSpan> = when (this) {
+private fun MarkdownBlock.editorSpans(): Sequence<MarkdownSpan>? = when (this) {
     is MarkdownParagraph -> spans.asSequence()
     is MarkdownHeading -> spans.asSequence()
     is MarkdownBlockquote -> paragraphs.asSequence().flatMap { it.spans }
     is MarkdownList -> items.asSequence().flatMap { it.editorSpans() }
+//    is MarkdownTable -> null
     is MarkdownTable -> (sequenceOf(header) + rows).flatMap { row ->
         row.cells.asSequence().flatMap { it.spans }
     }
@@ -78,19 +98,28 @@ private fun MarkdownBlock.editorSpans(): Sequence<MarkdownSpan> = when (this) {
 private fun MarkdownListItem.editorSpans(): Sequence<MarkdownSpan> =
     spans.asSequence() + (sublist?.editorSpans() ?: emptySequence())
 
-private val MarkdownSpan.contentLength get() = when (this) {
-    is MarkdownInlineImage -> altText.length
-    is MarkdownText -> text.length
-    is MarkdownEmphasis -> text.length
-    is MarkdownStrong -> text.length
-    is MarkdownInlineCode -> text.length
-    is MarkdownLink -> text.length
-}
 
-private val MarkdownSpan.urlLength get() = when (this) {
-    is MarkdownLink -> url.value.length
-    is MarkdownInlineImage -> url.value.length
-    else -> 0
+fun HTMLElement.matchesEditorSegments(chunk: String, segments: List<EditorSegment>?): Boolean {
+    if (segments == null) return false
+
+    val nodes = childNodes.asList()
+    var nodeIndex = 0
+
+    segments.forEach { segment ->
+        val node = nodes.getOrNull(nodeIndex++) as? HTMLElement ?: return false
+        if (node.tagName != "SPAN") return false
+        if (!node.isModified(segment.mod)) return false
+
+        val text = node.textContent ?: return false
+        if (text.length != segment.to - segment.from) return false
+        if (!chunk.regionMatches(segment.from, text, 0, text.length)) return false
+    }
+
+    if (chunk.isEmpty() || chunk.endsWith("\n")) {
+        if (nodes.getOrNull(nodeIndex++) !is HTMLBRElement) return false
+    }
+
+    return nodeIndex == nodes.size
 }
 
 private val MarkdownSpan.contentMod get() = when (this) {
@@ -100,3 +129,4 @@ private val MarkdownSpan.contentMod get() = when (this) {
     is MarkdownLink, is MarkdownInlineImage -> EditorStyle.LinkText
     is MarkdownText -> EditorStyle.Text
 }
+
