@@ -4,12 +4,13 @@ import koala.css.Class
 import koala.model.EditorStyle
 
 object MarkdownStyle {
-    val Container = Class("markdown-content")
-    val Block = Class("markdown-block")
-    val List = Class("markdown-list")
-    val InlineImage = Class("markdown-inline-image")
-    val InlineImageCaption = Class("markdown-inline-image-caption")
-    val BlockImage = Class("markdown-block-image")
+    val Container = Class("md")
+    val Block = Container.withBemElement("block")
+    val List = Container.withBemElement("list")
+    val InlineImage = Container.withBemElement("inline-image")
+    val InlineImageCaption = Container.withBemElement("inline-image-caption")
+    val BlockImage = Container.withBemElement("block-image")
+    val Blockquote = Container.withBemElement("blockquote")
 }
 
 val FloatLeft = Class("float-left")
@@ -58,7 +59,14 @@ ${EditorStyle.BlockType.selector(ContentBlock.BlockQuote)},
 blockquote {
     margin-inline-start: 1rem;
     padding-inline-start: 1rem;
-    border-inline-start: 2px solid currentColor;
+    border-inline-start: 2px solid var(--primary-fg);
+}
+
+$Blockquote {
+    figcaption {
+        text-align: right;
+        opacity: var(--opacity-high);
+    }
 }
 
 """ }

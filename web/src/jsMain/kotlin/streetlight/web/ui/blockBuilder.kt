@@ -10,6 +10,7 @@ import koala.model.toggle
 import kotlinx.html.FlowContent
 import streetlight.model.data.*
 import streetlight.web.layouts.renderHeading
+import streetlight.web.layouts.renderImage
 import streetlight.web.model.BlockEditor
 import streetlight.web.model.BlockId
 import streetlight.web.model.LayoutEditor
@@ -162,36 +163,34 @@ fun ViewScope.richTextBuilder(editor: BlockEditor) {
 fun ViewScope.imageBuilder(editor: BlockEditor) {
     val blockState = editor.blockState.mutableTapOf({ it as ImageBlock }) { it }
     val imageState = blockState.mutableTapOf({ it.image }) { copy(image = it) }
-    val shapeState = blockState.mutableTapOf({ it.frame }) { copy(frame = it) }
-    val fitState = blockState.mutableTapOf({ it.fit }) { copy(fit = it) }
+    val shapeState = blockState.mutableTapOf({ it.frame ?: ImageShape.default }) {
+        copy(frame = it.takeIf { it != ImageShape.default })
+    }
+    val fitState = blockState.mutableTapOf({ it.fit ?: ObjectFit.default }) {
+        copy(fit = it.takeIf { it != ObjectFit.default })
+    }
+    val widthState = blockState.mutableTapOf({ it.width ?: 100 }) { copy(width = it.takeIf { it != 100 }) }
     column {
         editorRow(editor) {
             formColumn {
-                formRow {
-                    formSection("Shape / Fit") {
-                        dropMenuNullable(shapeState)
-                        dropMenuNullable(fitState)
+                row(modify(FlexItems1)) {
+                    formSection("Shape") {
+                        dropMenu(shapeState)
                     }
+                    formSection("Fit") {
+                        dropMenu(fitState)
+                    }
+                }
+                formSection("Width") {
+                    slider(widthState)
                 }
             }
         }
-        imageDrop(imageState) { image ->
-            flowBlock(blockState, modify(Magic, Scale)) { block ->
-                val shapeMod = when (block.frame) {
-                    ImageFrame.Circle -> CircleShape
-                    ImageFrame.Ellipse -> BorderRadius50P
-                    ImageFrame.Pill -> BorderRadiusPill
-                    ImageFrame.Chopped -> Chopped
-                    null -> null
+        imageDrop(imageState) { _ ->
+            flowBlock(blockState) { block ->
+                box {
+                    renderImage(block)
                 }
-                val fitMod = when (block.fit) {
-                    ObjectFit.Fill -> ObjectFitFill
-                    ObjectFit.Contain -> ObjectFitContain
-                    ObjectFit.Cover -> ObjectFitCover
-                    ObjectFit.ScaleDown -> ObjectFitScaleDown
-                    null -> null
-                }
-                image(image.url, modify(shapeMod, fitMod))
             }
         }
     }

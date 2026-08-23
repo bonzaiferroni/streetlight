@@ -6,13 +6,16 @@ import koala.Image
 import koala.SiteImage
 import koala.css.*
 import koala.getVariantOrPlaceholder
+import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 
 fun FlowContent.metaImage(
     image: Image?,
     mod: ModifierSet? = null,
+    config: DIV.() -> Unit = { }
 ) {
     box(mod) {
+        config()
         image(image, mod = modify(ObjectFitCover, PlaceSelfStretch), alt = image?.description)
         image?.attribution?.let {
             navigationIfNotNull(image.attributionUrl?.value, modify(AlignSelfEnd, JustifySelfEnd, Padding1)) {

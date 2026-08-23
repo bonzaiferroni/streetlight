@@ -4,13 +4,13 @@ import kampfire.model.GeoPoint
 import koala.css.*
 import koala.html.*
 import koala.html.textBlock
-import koala.markdown.HeadingLevel
-import koala.markdown.renderHeading
+import kotlinx.css.pct
 import kotlinx.html.FlowContent
 import streetlight.model.data.*
 import streetlight.model.ui.LocationUpdateRoute
 import streetlight.web.pages.appFooter
 import streetlight.web.ui.BodyStyle
+import streetlight.web.ui.LayoutStyle
 import streetlight.web.ui.headerOf
 
 fun FlowContent.renderLayout(content: LocationContent) {
@@ -64,7 +64,26 @@ fun FlowContent.renderHeader(content: LocationContent) {
 }
 
 fun FlowContent.renderImage(block: ImageBlock) {
-    metaImage(block.image)
+    val shapeMod = when (block.frame) {
+        ImageShape.Square -> null
+        ImageShape.Rounded, null -> BorderRadius2
+        ImageShape.Circle -> CircleShape
+        ImageShape.Ellipse -> BorderRadius50P
+        ImageShape.Pill -> BorderRadiusPill
+        ImageShape.Chopped -> Chopped
+    }
+    val fitMod = when (block.fit) {
+        ObjectFit.Fill, null, -> ObjectFitFill
+        ObjectFit.Stretch -> null
+        ObjectFit.Contain -> ObjectFitContain
+        ObjectFit.Cover -> ObjectFitCover
+        ObjectFit.ScaleDown -> ObjectFitScaleDown
+    }
+    metaImage(block.image, modify(LayoutStyle.Image, shapeMod, fitMod)) {
+        block.width?.let {
+            setStyle(Property.Width.to(it.pct))
+        }
+    }
 }
 
 fun FlowContent.renderMap(geoPoint: GeoPoint) {

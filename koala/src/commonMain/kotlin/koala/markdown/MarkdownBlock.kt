@@ -60,7 +60,8 @@ data class MarkdownCodeBlock(
 // Blockquote
 
 data class MarkdownBlockquote(
-    val paragraphs: List<MarkdownParagraph>
+    val paragraphs: List<MarkdownParagraph>,
+    val citation: String?
 ): MarkdownBlock {
     override val blockType get() = ContentBlock.BlockQuote
 }

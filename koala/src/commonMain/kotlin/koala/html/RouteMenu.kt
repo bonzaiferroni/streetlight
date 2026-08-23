@@ -13,7 +13,7 @@ fun FlowContent.routeMenu(
 ) {
     column(modify(mod, RouteMenu.Base, TextUppercase, TextSmall, Gap0, AlignItemsCenter)) {
         filigree(modify(AlignSelfStretch)) {
-            textBlock(context)
+            textBlock(context, modify(PrimaryFg))
         }
         row(modify(RouteMenu.ContextMenu, Gap0, Padding1, Bold, AlignItemsCenter, BorderSolid2Px)) {
             leftIcons?.let { icons ->

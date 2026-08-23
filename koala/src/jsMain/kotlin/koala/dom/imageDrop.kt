@@ -13,7 +13,7 @@ fun ViewScope.imageDrop(
     block: ViewScope.(Image) -> Unit
 ) = flowBlock(field, modify(mod, Magic, Scale)) { url ->
     if (url != null) {
-        box(modify(Size100P, OverflowHidden, BorderRadius1)) {
+        box(modify(Size100P, OverflowHidden)) {
             block(url)
             button(
                 mod = modify(EditorBg, Outline, BorderRadius50P, PlaceSelfStart, Aspect1, Padding1, Margin1, OpacityHigh),

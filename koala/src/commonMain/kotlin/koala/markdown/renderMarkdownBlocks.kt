@@ -4,6 +4,7 @@ import koala.css.*
 import koala.html.*
 import kotlinx.html.FlowContent
 import kotlinx.html.blockQuote
+import kotlinx.html.cite
 import kotlinx.html.code
 import kotlinx.html.figcaption
 import kotlinx.html.figure
@@ -49,7 +50,7 @@ fun FlowContent.renderHeading(heading: MarkdownHeading) {
             3 -> heading3(modifiers = headingMod) { renderMarkdownSpans(heading.spans) }
             4 -> heading4(modifiers = headingMod) { renderMarkdownSpans(heading.spans) }
             5 -> heading5(modifiers = headingMod) { renderMarkdownSpans(heading.spans) }
-            6 -> heading6(modifiers = headingMod) { renderMarkdownSpans(heading.spans) }  // td: support h6
+            6 -> heading6(modifiers = headingMod) { renderMarkdownSpans(heading.spans) }
             else -> error("invalid markdown")
         }
     }
@@ -63,9 +64,18 @@ fun FlowContent.renderParagraph(block: MarkdownParagraph) {
 }
 
 fun FlowContent.renderBlockquote(block: MarkdownBlockquote) {
-    blockQuote {
-        block.paragraphs.forEach {
-            renderParagraph(it)
+    figure {
+        addModifiers(modify(MarkdownStyle.Blockquote))
+        blockQuote {
+            block.paragraphs.forEach {
+                renderParagraph(it)
+            }
+        }
+        block.citation?.let {
+            figcaption {
+                +"— "
+                cite { +it }
+            }
         }
     }
 }

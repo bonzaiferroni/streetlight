@@ -96,18 +96,32 @@ class MarkdownParser {
 
     private fun parseBlockquote(chunk: String): MarkdownBlockquote? {
         val paragraphs = mutableListOf<MarkdownParagraph>()
+        var citeFrom = -1
+        var citeTo = -1
 
         chunk.forEachLine { lineFrom, lineTo ->
             val marker = chunk.skip('>', lineFrom, lineTo)
             val from = chunk.contentStart(marker, lineTo)
             val to = chunk.contentEnd(from, lineTo)
             if (to > from) {
-                paragraphs.add(MarkdownParagraph(spanParser.parse(chunk, from, to)))
+                if (citeFrom >= 0) {
+                    paragraphs.add(MarkdownParagraph(spanParser.parse(chunk, citeFrom, citeTo)))
+                    citeFrom = -1
+                }
+                if (chunk.startsWith("--", from) && to > from + 2) {
+                    citeFrom = from
+                    citeTo = to
+                } else {
+                    paragraphs.add(MarkdownParagraph(spanParser.parse(chunk, from, to)))
+                }
             }
         }
 
+        val citation = citeFrom.takeIf { it >= 0 }
+            ?.let { chunk.substring(chunk.contentStart(it + 2, citeTo), citeTo) }
+
         return paragraphs.takeIf { it.isNotEmpty() }
-            ?.let { MarkdownBlockquote(paragraphs = it) }
+            ?.let { MarkdownBlockquote(paragraphs = it, citation = citation) }
     }
 
     private fun parseCodeBlock(chunk: String): MarkdownCodeBlock {
