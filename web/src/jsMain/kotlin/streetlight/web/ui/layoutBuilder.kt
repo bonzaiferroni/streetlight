@@ -8,8 +8,12 @@ import koala.dom.button
 import koala.dom.row
 import koala.html.Id
 import koala.html.heading3
+import koala.html.heading4
+import koala.html.heading5
+import koala.html.heading6
 import koala.html.hr
 import koala.html.setPopoverTarget
+import koala.html.spacer
 import koala.html.textBlock
 import koala.model.MutableTap
 import koala.model.toggle
@@ -60,23 +64,32 @@ fun ViewScope.editorRow(
         when (movingBlockId) {
             null -> {
                 row(modify(AlignItemsCenter)) {
-                    blockMenu(null, editor.depth ?: error("depth is null")) { editor.addBlockAbove(it) }
-                    hr(modify(EditorFg, Flex1, OpacityLow))
-                    row(modify(AlignItemsCenter)) {
-                        editorIconButton(SvgFile.Trash, { editor.removeFromLayout() })
-                        editorIconButton(SvgFile.ArrowsSort, { editor.model.startMove(editor.blockId) })
-
+                    row(modify(Flex1, AlignItemsCenter)) {
+                        blockMenu(null, editor.depth ?: error("depth is null")) { editor.addBlockAbove(it) }
+                        hr(modify(EditorFg, Flex1))
                         isEditingState?.let { state ->
                             editorIconButton(SvgFile.Edit, { state.toggle() }).also {
                                 it.flowModifier(state, AccentFg, contentScope)
                             }
                         }
-                        when (popoverId) {
-                            null -> button(editor.label, mod = modify(Secondary, Outline, ZenBg, PointerEventsNone))
-                            else -> button("edit ${editor.label}", mod = modify(Editor, JustifySelfCenter)) {
-                                setPopoverTarget(popoverId)
-                            }
+                    }
+
+                    val headingMod = modify(
+                        PaddingX2, PaddingY1, BorderRadiusPill, OutlineEditorFg,
+                        MinWidth16, TextAlignCenter
+                    )
+                    when (popoverId) {
+                        null -> heading6(editor.label, headingMod)
+                        else -> button(mod = modify(Editor, JustifySelfCenter)) {
+                            setPopoverTarget(popoverId)
+                            heading6(editor.label, headingMod)
                         }
+                    }
+
+                    row(modify(Flex1, AlignItemsCenter)) {
+                        editorIconButton(SvgFile.Trash, { editor.removeFromLayout() })
+                        hr(modify(EditorFg, Flex1))
+                        editorIconButton(SvgFile.ArrowsSort, { editor.model.startMove(editor.blockId) })
                     }
                 }
             }

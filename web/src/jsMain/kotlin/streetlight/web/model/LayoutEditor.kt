@@ -80,6 +80,7 @@ class LayoutEditor(
     }
 
     fun startMove(blockId: BlockId) {
+        println("starting move")
         state.set { copy(movingBlockId = blockId) }
     }
 

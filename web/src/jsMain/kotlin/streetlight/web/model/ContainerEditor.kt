@@ -25,7 +25,7 @@ class ContainerEditor(
         var container: ContainerEditor? = this
         while (container != null) {
             if (container.isChildOf(blockId)) return true
-            container = parent?.parent
+            container = container.parent?.parent
         }
         return false
     }

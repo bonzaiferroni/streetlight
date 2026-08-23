@@ -10,7 +10,8 @@ val DisplayUtilityCss
         CircleShape, CircleClip,
         // Border Radius
         BorderRadius0, BorderRadius1, BorderRadius2, BorderRadius4, BorderRadius3, BorderRadius50P, BorderRadiusPill,
-        BorderRadiusBottom1, BorderRadiusTop1, BorderDashed2Px, BorderSolid2Px, Outline, OutlineDashed2Px, Chopped,
+        BorderRadiusBottom1, BorderRadiusTop1, BorderDashed2Px, BorderSolid2Px, Outline, OutlineCurrentColor, OutlineEditorFg,
+        OutlineDashed2Px, Chopped,
         // Border
         SideBorder,
         // Color
@@ -77,6 +78,8 @@ val BorderSolid2Px = utilityOf("border-solid", "border: var(--outline-low)")
 val BorderRadiusTop1 = utilityOf("border-radius-top-1", "border-radius: var(--unit-spacing) var(--unit-spacing) 0 0")
 val BorderRadiusBottom1 = utilityOf("border-radius-bottom-1", "border-radius: 0 0 var(--unit-spacing) var(--unit-spacing)")
 val Outline = utilityOf("outline-solid", "outline: var(--outline-low)", "outline-offset: -2px")
+val OutlineCurrentColor = utilityOf("outline-current-color", "outline: 2px solid currentColor", "outline-offset: -2px")
+val OutlineEditorFg = utilityOf("outline-editor-fg", "outline: 2px solid var(--editor-fg)", "outline-offset: -2px")
 val OutlineDashed2Px = utilityOf("outline-dashed", "outline: 2px dashed var(--outline-low-fg)")
 val Chopped = utilityOf("chopped", "--chop: var(--unit-spacing-8)",
     "clip-path: polygon(var(--chop) 0, 100% 0, 100% calc(100% - var(--chop)), calc(100% - var(--chop)) 100%, 0 100%, 0 var(--chop))")

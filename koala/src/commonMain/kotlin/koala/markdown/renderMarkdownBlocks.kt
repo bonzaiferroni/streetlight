@@ -49,7 +49,7 @@ fun FlowContent.renderHeading(heading: MarkdownHeading) {
             3 -> heading3(modifiers = headingMod) { renderMarkdownSpans(heading.spans) }
             4 -> heading4(modifiers = headingMod) { renderMarkdownSpans(heading.spans) }
             5 -> heading5(modifiers = headingMod) { renderMarkdownSpans(heading.spans) }
-            6 -> heading5(modifiers = headingMod) { renderMarkdownSpans(heading.spans) }  // td: support h6
+            6 -> heading6(modifiers = headingMod) { renderMarkdownSpans(heading.spans) }  // td: support h6
             else -> error("invalid markdown")
         }
     }
