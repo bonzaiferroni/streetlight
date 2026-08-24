@@ -2,29 +2,20 @@ package koala.dom
 
 import kampfire.api.Markdown
 import koala.css.*
-import koala.external.selection
 import koala.html.Attribute
 import koala.html.setAttribute
-import koala.markdown.ContentBlock
 import koala.model.MutableTap
 import koala.model.EditorStyle
 import kotlinx.browser.document
-import kotlinx.browser.window
 import kotlinx.html.DIV
 import kotlinx.html.js.onInputFunction
-import kotlinx.html.js.onKeyDownFunction
 import org.w3c.dom.HTMLElement
-import org.w3c.dom.Node
-import org.w3c.dom.asList
-import org.w3c.dom.clipboard.ClipboardEvent
-import org.w3c.dom.events.KeyboardEvent
 import org.w3c.dom.get
-import kotlin.js.unsafeCast
 
 fun ViewScope.styledMarkdownEditor(
     state: MutableTap<Markdown>,
     label: String? = null,
-    modifiers: ModifierSet? = null,
+    mod: ModifierSet? = null,
     placeholder: String? = label,
     block: DIV.() -> Unit = {}
 ): HTMLElement {
@@ -40,7 +31,7 @@ fun ViewScope.styledMarkdownEditor(
     }
 
     element = column(modify(Gap0)) {
-        addModifiers(EditorStyle.Container, modifiers)
+        addModifiers(EditorStyle.Container, mod)
         label?.let {
             setAttribute(Attribute.BlockLabel, it.lowercase())
         }

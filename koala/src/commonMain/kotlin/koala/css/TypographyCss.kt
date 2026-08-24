@@ -60,7 +60,6 @@ h4 {
 h5 {
     font-size: var(--heading-5-size);
     font-weight: var(--heading-5-weight);
-    text-transform: uppercase;
 }
 
 h6 {

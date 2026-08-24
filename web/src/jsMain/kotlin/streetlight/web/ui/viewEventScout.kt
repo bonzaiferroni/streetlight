@@ -50,7 +50,7 @@ fun ViewScope.viewEventScout(galaxy: Galaxy, isAdmin: Boolean) {
                     formSubmitLegacy("Next", model::review, messages = editor.message)
                 }
                 EventScoutStage.Post -> formBodyProto {
-                    val location = locationScout.stateNow.location as? Location ?: error("location not found")
+                    val location = locationScout.stateNow.location ?: error("location not found")
                     postRow(editor.editNow, location)
                     formSubmitLegacy("Post", model::post, messages = model.postMessage)
                 }

@@ -47,6 +47,8 @@ data class Image(
 @JvmInline
 @Serializable
 value class ImageId(override val value: Uuid): TableId<Uuid> {
+    override fun toString() = value.toString()
+
     companion object { fun random() = ImageId(Uuid.random())}
 }
 

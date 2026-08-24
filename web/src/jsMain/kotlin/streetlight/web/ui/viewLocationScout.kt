@@ -29,7 +29,7 @@ fun ViewScope.viewLocationScout(galaxy: Galaxy) {
                     locationEditFormBody(editor)
                     formSubmit(
                         label = "Next",
-                        onSubmit = model::review,
+                        onClick = model::review,
                         messenger = editor.messages,
                         back = LabeledAction("Back", { model.stageField.set(LocationScoutStage.Search) })
                     )

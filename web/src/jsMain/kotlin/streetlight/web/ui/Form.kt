@@ -1,5 +1,6 @@
 package streetlight.web.ui
 
+import koala.Lottie
 import koala.css.*
 import koala.dom.*
 import koala.dom.textBlock
@@ -34,8 +35,9 @@ fun ViewScope.formCard(
 
 fun ViewScope.formSection(
     name: String? = null,
+    mod: ModifierSet? = null,
     content: SECTION.() -> Unit
-) = section {
+) = section(mod) {
     name?.let {
         formHeading(name)
     }
@@ -65,9 +67,9 @@ fun ViewScope.formBullets(
 
 fun ViewScope.formSubmit(
     label: String = "submit",
-    onSubmit: () -> Unit,
+    onClick: () -> Unit,
     messenger: MessageStore? = null,
-    buttonMod: ModifierSet = modify(Accent),
+    buttonMod: ModifierSet = modify(Primary),
     onCancel: (() -> Unit)? = null,
     enabledTap: Tap<Boolean>? = null,
     isDisplayedFlow: Tap<Boolean>? = null,
@@ -82,7 +84,7 @@ fun ViewScope.formSubmit(
         messageBox(it)
     }
     column {
-        val button = button(label, onSubmit, buttonMod)
+        val button = button(label, onClick, buttonMod)
         enabledTap?.let {
             configureEnabledFlow(button, enabledTap)
         }
@@ -120,3 +122,7 @@ fun ViewScope.formTextField(
         textBlock(footnote, modify(OpacityHigh, Italic, WhiteSpaceNoWrap, PaddingX1, TextSmall))
     }
 }
+
+fun ViewScope.formFiller(
+    lottie: Lottie
+) = lottie(lottie, modify(MaxHeight16))

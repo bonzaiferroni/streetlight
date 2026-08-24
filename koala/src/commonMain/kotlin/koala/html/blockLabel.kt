@@ -24,6 +24,7 @@ ${Attribute.BlockLabel}::after {
 
     background: var(--void-border);
     color: var(--ink-dim);
+    font-family: var(--font-family);
     line-height: 1;
     max-width: 75%;
     white-space: nowrap;

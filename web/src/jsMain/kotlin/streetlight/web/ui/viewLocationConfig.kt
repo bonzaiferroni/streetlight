@@ -56,7 +56,7 @@ fun ViewScope.viewLocationConfig(
                     locationEditFormBody(editor)
                     formSubmit(
                         label = "Save profile",
-                        onSubmit = {
+                        onClick = {
                             launchEffect {
                                 val editedLocation = editor.submitSuspend() ?: return@launchEffect
                                 editor.messages.deliverSuccess("Profile saved")
