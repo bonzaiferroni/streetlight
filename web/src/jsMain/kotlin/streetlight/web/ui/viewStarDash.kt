@@ -66,20 +66,20 @@ private fun ViewScope.activityContent(star: Star) {
                 }
             }
         }
-        val dialog = dialog()
-        section("requests") {
-            dataBlock(api::readUserTasks) { tasks ->
-                tasks.forEach { task ->
-                    textBlock(task.label).onClick {
-                        dialog.updateContent(task.label, true) {
-                            dialogCard {
-                                taskContent(task)
-                            }
-                        }
-                    }
-                }
-            }
-        }
+//        val dialog = dialog()
+//        section("requests") {
+//            dataBlock(api::readUserTasks) { tasks ->
+//                tasks.forEach { task ->
+//                    textBlock(task.label).onClick {
+//                        dialog.updateContent(task.label, true) {
+//                            dialogCard {
+//                                taskContent(task)
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
     }
 }
 

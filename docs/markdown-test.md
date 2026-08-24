@@ -35,12 +35,3 @@ fun soundings(): Int {
 ![A chart of the passage](/www/img/bridge.jpg)
 
 Closing prose after the image.
-
-test
-
-```kotlin
-fun dohicky() { }
-```
-1. One
-2. Two
-3. Three

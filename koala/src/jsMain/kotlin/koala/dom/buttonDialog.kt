@@ -2,6 +2,7 @@ package koala.dom
 
 import koala.css.*
 import koala.model.storeOf
+import koala.model.toggle
 
 fun ViewScope.buttonDialog(
     label: String,
@@ -12,9 +13,11 @@ fun ViewScope.buttonDialog(
 ) {
     val isOpen = storeOf(false)
 
-    dialog(label, isOpen.flow, dialogModifiers, onClose = { isOpen.setValue { false } }) {
-        block()
+    dialog(isOpen, dialogModifiers) {
+        dialogContent(label) {
+            block()
+        }
     }
 
-    button("$emoji $label", { isOpen.setValue { !isOpen.now } }, modifiers)
+    button("$emoji $label", isOpen::toggle, modifiers)
 }

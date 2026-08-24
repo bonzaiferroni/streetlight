@@ -7,6 +7,9 @@ import koala.html.button
 import koala.html.heading3
 import koala.html.icon
 import koala.html.image
+import koala.model.MutableTap
+import koala.model.setTrue
+import koala.model.storeOf
 import kotlinx.browser.document
 import kotlinx.html.onClick
 import org.w3c.dom.HTMLElement
@@ -26,11 +29,12 @@ fun ViewScope.queryAndWireStarHelm() {
 }
 
 fun ViewScope.wireStarMenu(element: HTMLElement) {
+    val isOpenState = storeOf(false)
     wireBlock("star-menu", element) {
         starGate(
-            openInitially = false,
+            isOpenState,
             baseContent = {
-                someonePanel(it)
+                someonePanel(isOpenState)
             }
         ) { star ->
             starPanel(star)
@@ -85,7 +89,7 @@ private fun ViewScope.starPanel(star: Star) {
     }
 }
 
-private fun ViewScope.someonePanel(dialog: DialogElement) {
+private fun ViewScope.someonePanel(isOpen: MutableTap<Boolean>) {
     column(modify(MinWidth32)) {
         row(RowMod) {
             heading3("Someone")
@@ -96,7 +100,7 @@ private fun ViewScope.someonePanel(dialog: DialogElement) {
             }
         }
 
-        button("sign in", onClick = dialog::open)
+        button("sign in", onClick = isOpen::setTrue)
 
 //        tabs(Id("someone-tabs")) {
 //            tab("Sign in") {

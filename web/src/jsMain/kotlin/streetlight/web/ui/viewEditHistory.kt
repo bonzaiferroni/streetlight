@@ -10,6 +10,7 @@ import koala.dom.box
 import koala.dom.button
 import koala.dom.dialog
 import koala.dom.dialogCard
+import koala.dom.dialogContent
 import koala.dom.dropMenu
 import koala.dom.grid
 import koala.dom.row
@@ -30,13 +31,6 @@ inline fun <reified T: RecordEdit> ViewScope.viewEditHistory(
     crossinline content: ViewScope.(T, T?) -> Unit
 ) {
     val display = storeOf(TextDeltaDisplay.Combined)
-    val dialog = dialog()
-
-    launchEffect {
-        display.flow.collect {
-            dialog.element.setAttribute(TextDeltaStyle.Display.to(it))
-        }
-    }
 
     grid(columnsOf(1.fr, LinearDimension.auto)) {
         var previousEdit: T? = null
@@ -52,22 +46,26 @@ inline fun <reified T: RecordEdit> ViewScope.viewEditHistory(
                         +"revert"
                     }
                 }
-                button(onClick = {
-                    dialog.updateContent(timeDescription, true) {
-                        dialogCard {
-                            row {
-                                spacer(modify(Flex1))
-                                dropMenu(display)
-                            }
-                            box {
-                                deltaGrid(mod = modify(TextDeltaStyle.Highlighter)) {
-                                    content(edit, compareEdit)
-                                }
+
+                val dialogState = storeOf(false)
+                dialog(dialogState) {
+                    val content = dialogContent(timeDescription) {
+                        row {
+                            spacer(modify(Flex1))
+                            dropMenu(display)
+                        }
+                        box {
+                            deltaGrid(mod = modify(TextDeltaStyle.Highlighter)) {
+                                content(edit, compareEdit)
                             }
                         }
                     }
-                }) {
-                    +"view"
+
+                    launchEffect {
+                        display.flow.collect {
+                            content.setAttribute(TextDeltaStyle.Display.to(it))
+                        }
+                    }
                 }
             }
             previousEdit = edit

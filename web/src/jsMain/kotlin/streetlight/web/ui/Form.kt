@@ -8,6 +8,7 @@ import koala.html.bulletsOf
 import koala.html.column
 import koala.html.filigree
 import koala.html.heading3
+import koala.html.heading4
 import koala.html.heading5
 import koala.html.textBlock
 import koala.model.Tap
@@ -52,7 +53,7 @@ fun ViewScope.formRow(
 fun ViewScope.formHeading(
     text: String
 ) = filigree(ruleMaxWidth = MaxWidth32) {
-    heading5(text, BodyStyle.LabelHeading)
+    heading4(text, modify(EditorFg))
 }
 
 fun ViewScope.formBullets(

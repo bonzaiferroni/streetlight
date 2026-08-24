@@ -13,119 +13,119 @@ import org.w3c.dom.HTMLButtonElement
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLImageElement
 
-fun ViewScope.imageChooser(
-    modifiers: ModifierSet? = null,
-    onValueChanged: ((Url?) -> Unit)? = null,
-    onUpload: suspend (Url) -> Url?,
-    urlFlow: Flow<Url?>? = null,
-    choicesFlow: Flow<List<Url>>? = null,
-): HTMLDivElement {
-    var localUrl: Url? = null
-    var uploadButton: HTMLButtonElement? = null
-    var image: HTMLImageElement? = null
-    var placeholder: HTMLDivElement? = null
-    var choicesRow: HTMLDivElement? = null
-    var choiceUrl: Url? = null
-    var choices: List<Url>? = null
-    var isInitialized = false
-
-    val element = box(modify(ImageChooserKey.Class, modifiers)) {
-        placeholder = box(modify(ImageChooserKey.Placeholder))
-        image = img {
-            addModifiers(modify(BorderRadius1, MaxHeight64))
-            style = "display: none;"
-        }
-    }
-
-    val dialog = dialog("Choose yer image") { dialog ->
-        choicesRow = row {
-            addModifiers(FlexWrap)
-            style = "display: none;"
-        }
-        filePicker(MimeType.Image) {
-            localUrl = it
-            uploadButton?.disabled = false
-        }
-        row(modify(FlexItems1)) {
-            button("cancel", mod = modify(Secondary), onClickEvent = {
-                dialog.close()
-            })
-            uploadButton = button("upload", mod = modify(Accent), onClickEvent = {
-                val localUrl = localUrl ?: return@button
-                contentScope.launch {
-                    console.log("uploading: $localUrl")
-                    val url = onUpload(localUrl)
-                    onValueChanged?.invoke(url)
-                    dialog.close()
-                }
-            }) {
-                disabled = true
-            }
-        }
-    }
-
-    fun initializeChoiceRow() {
-        val choicesRow = choicesRow ?: return
-        choicesRow.clear()
-        choicesRow.append {
-            choiceUrl?.let { choiceUrl ->
-                val image = img(src = choiceUrl.value) {
-                    addModifiers(Height16)
-                }
-                image.onClick {
-                    dialog.close()
-                }
-            }
-            choices?.forEach { url ->
-                val image =img(src = url.value) {
-                    addModifiers(Height16)
-                }
-                image.onClick {
-                    onValueChanged?.invoke(url)
-                    dialog.close()
-                }
-            }
-        }
-        if (choiceUrl == null && choices.isNullOrEmpty()) {
-            choicesRow.style.display = "none"
-        } else {
-            choicesRow.style.display = "flex"
-        }
-    }
-
-    element.onClick {
-        if (!isInitialized) {
-            isInitialized = true
-            initializeChoiceRow()
-        }
-        dialog.open()
-    }
-
-    contentScope.launch {
-        launch {
-            val image = image ?: return@launch
-            val placeholder = placeholder ?: return@launch
-            urlFlow?.collect { url ->
-                isInitialized = false
-                choiceUrl = url
-                if (url != null) {
-                    image.src = url.value
-                    image.style.display = "block"
-                    placeholder.style.display = "none"
-                } else {
-                    image.style.display = "none"
-                    placeholder.style.display = "block"
-                }
-            }
-        }
-        launch {
-            choicesFlow?.collect {
-                choices = it
-                isInitialized = false
-            }
-        }
-    }
-
-    return element
-}
+//fun ViewScope.imageChooser(
+//    modifiers: ModifierSet? = null,
+//    onValueChanged: ((Url?) -> Unit)? = null,
+//    onUpload: suspend (Url) -> Url?,
+//    urlFlow: Flow<Url?>? = null,
+//    choicesFlow: Flow<List<Url>>? = null,
+//): HTMLDivElement {
+//    var localUrl: Url? = null
+//    var uploadButton: HTMLButtonElement? = null
+//    var image: HTMLImageElement? = null
+//    var placeholder: HTMLDivElement? = null
+//    var choicesRow: HTMLDivElement? = null
+//    var choiceUrl: Url? = null
+//    var choices: List<Url>? = null
+//    var isInitialized = false
+//
+//    val element = box(modify(ImageChooserKey.Class, modifiers)) {
+//        placeholder = box(modify(ImageChooserKey.Placeholder))
+//        image = img {
+//            addModifiers(modify(BorderRadius1, MaxHeight64))
+//            style = "display: none;"
+//        }
+//    }
+//
+//    val dialog = dialog("Choose yer image") { dialog ->
+//        choicesRow = row {
+//            addModifiers(FlexWrap)
+//            style = "display: none;"
+//        }
+//        filePicker(MimeType.Image) {
+//            localUrl = it
+//            uploadButton?.disabled = false
+//        }
+//        row(modify(FlexItems1)) {
+//            button("cancel", mod = modify(Secondary), onClickEvent = {
+//                dialog.close()
+//            })
+//            uploadButton = button("upload", mod = modify(Accent), onClickEvent = {
+//                val localUrl = localUrl ?: return@button
+//                contentScope.launch {
+//                    console.log("uploading: $localUrl")
+//                    val url = onUpload(localUrl)
+//                    onValueChanged?.invoke(url)
+//                    dialog.close()
+//                }
+//            }) {
+//                disabled = true
+//            }
+//        }
+//    }
+//
+//    fun initializeChoiceRow() {
+//        val choicesRow = choicesRow ?: return
+//        choicesRow.clear()
+//        choicesRow.append {
+//            choiceUrl?.let { choiceUrl ->
+//                val image = img(src = choiceUrl.value) {
+//                    addModifiers(Height16)
+//                }
+//                image.onClick {
+//                    dialog.close()
+//                }
+//            }
+//            choices?.forEach { url ->
+//                val image =img(src = url.value) {
+//                    addModifiers(Height16)
+//                }
+//                image.onClick {
+//                    onValueChanged?.invoke(url)
+//                    dialog.close()
+//                }
+//            }
+//        }
+//        if (choiceUrl == null && choices.isNullOrEmpty()) {
+//            choicesRow.style.display = "none"
+//        } else {
+//            choicesRow.style.display = "flex"
+//        }
+//    }
+//
+//    element.onClick {
+//        if (!isInitialized) {
+//            isInitialized = true
+//            initializeChoiceRow()
+//        }
+//        dialog.open()
+//    }
+//
+//    contentScope.launch {
+//        launch {
+//            val image = image ?: return@launch
+//            val placeholder = placeholder ?: return@launch
+//            urlFlow?.collect { url ->
+//                isInitialized = false
+//                choiceUrl = url
+//                if (url != null) {
+//                    image.src = url.value
+//                    image.style.display = "block"
+//                    placeholder.style.display = "none"
+//                } else {
+//                    image.style.display = "none"
+//                    placeholder.style.display = "block"
+//                }
+//            }
+//        }
+//        launch {
+//            choicesFlow?.collect {
+//                choices = it
+//                isInitialized = false
+//            }
+//        }
+//    }
+//
+//    return element
+//}
 

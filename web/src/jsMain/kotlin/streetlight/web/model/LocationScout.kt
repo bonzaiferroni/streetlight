@@ -120,11 +120,7 @@ class LocationScout(
     }
 
     fun createLocation() {
-        val name = stateNow.query.takeIf { it.isNotBlank() } ?: run {
-            mapMessage.deliver("What's it called, though?")
-            return
-        }
-        state.set { copy(edit = LocationEdit(name = name, geoPoint = map.centerNow)) }
+        state.set { copy(edit = LocationEdit(name = stateNow.query, geoPoint = map.centerNow)) }
     }
 
     fun review() {

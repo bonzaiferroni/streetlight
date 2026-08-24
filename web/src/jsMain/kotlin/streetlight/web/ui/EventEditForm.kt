@@ -3,6 +3,7 @@ package streetlight.web.ui
 import kabinet.utils.toLocalDate
 import kabinet.utils.toRelativeDayFormat
 import kabinet.utils.toTimeFormat
+import koala.LottieFile
 import koala.SvgFile
 import koala.css.*
 import koala.dom.*
@@ -11,6 +12,7 @@ import koala.html.bulletsOf
 import koala.html.buttonPopover
 import koala.html.heading3
 import koala.html.heading4
+import koala.html.heading5
 import koala.html.markdown
 import koala.html.textProperty
 import koala.model.MutableTap
@@ -37,7 +39,7 @@ fun ViewScope.eventWebsiteForm(model: EventEditor) = formCard("Parse Event") {
             textField(model.urlField, "website")
             formSubmit("🤖 read page", model::parseFromUrl, model.parseMessage)
         }
-        column { }
+        formFiller(LottieFile.Ghost)
     }
 }
 
@@ -86,34 +88,30 @@ fun ViewScope.eventDetailsForm(model: EventEditor) = formCard("Event Details") {
             //     }
             // }
         }
-        formSection("Description") {
-            textEditor(
-                state = model.description,
-                label = "description",
-                placeholder = "Event description",
-                rows = 8,
-            )
-            row(modify(JustifyContentSpaceBetween)) {
-                buttonPopover("Markdown Hints", flair = "💡") {
-                    card(modify(ButtonPopover.CardMod, Padding2)) {
-                        bulletsOf(
-                            "Add a blank line in between paragraphs.",
-                            "Use # symbols at the beginning of a line to provide a heading.",
-                            "One # provides the largest heading, two provides the next largest, etc.",
-                        )
-                        textProperty("Example", "### My Fancy Heading")
-                        textProperty("Becomes") {
-                            heading3("My Fancy Heading")
-                        }
+    }
+    formSection("Description") {
+        styledMarkdownEditor(
+            state = model.description,
+            label = "description",
+            mod = modify(MinHeight48)
+        )
+        row(modify(JustifyContentSpaceBetween)) {
+            buttonPopover("Markdown Hints", flair = "💡") {
+                card(modify(ButtonPopover.CardMod, Padding2)) {
+                    bulletsOf(
+                        "Add a blank line in between paragraphs.",
+                        "Use # symbols at the beginning of a line to provide a heading.",
+                        "One # provides the largest heading, two provides the next largest, etc.",
+                    )
+                    textProperty("Example", "### My Fancy Heading")
+                    textProperty("Becomes") {
+                        heading3("My Fancy Heading")
                     }
                 }
-                buttonDialog("Preview", emoji = "👀") {
-                    flowBlock(model.description) {
-                        box(modify(Padding2)) {
-                            markdown(it)
-                        }
-                    }
-                }
+            }
+            buttonDialog("Preview", emoji = "👀") {
+                println("ey")
+                markdown(model.description.now)
             }
         }
     }
@@ -140,9 +138,9 @@ fun ViewScope.dayIndicator(field: MutableTap<LocalDate?>) {
         flowBlock(field, modify(Magic, Blur, Width24)) { date ->
             column(modify(Gap0, AlignItemsCenter, JustifyContentCenter, Height100P)) {
                 when (date) {
-                    null -> heading4("Someday", modify(OpacityHalf))
+                    null -> heading5("someday", modify(OpacityHalf))
                     else -> {
-                        heading4(date.toRelativeDayFormat())
+                        heading5(date.toRelativeDayFormat())
                     }
                 }
             }
@@ -163,8 +161,8 @@ fun ViewScope.timeIndicator(field: MutableTap<LocalTime?>, defaultLabel: String)
         flowBlock(field, modify(Magic, Blur, Width24)) { time ->
             column(modify(Gap0, AlignItemsCenter, JustifyContentCenter, Height100P)) {
                 when (time) {
-                    null -> heading4(defaultLabel, modify(OpacityHalf))
-                    else -> heading4(time.toTimeFormat())
+                    null -> heading5(defaultLabel, modify(OpacityHalf))
+                    else -> heading5(time.toTimeFormat())
                 }
             }
         }

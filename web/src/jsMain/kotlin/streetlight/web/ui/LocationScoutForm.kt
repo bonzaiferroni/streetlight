@@ -28,15 +28,16 @@ fun ViewScope.locationFinder(model: LocationScout) = formCard("Location Finder")
                 searchItem(location.name, location.address, location.city)
             }
         }
-        formSection("or just put it on the map") {
-            geoMapMount(mod = FormMod.GeoMap)
-            row(modify(AlignItemsStart)) {
-                button("What is Here?", model::whatIsHere)
-                spacer(modify(Flex1))
-                messageBox(model.mapMessage)
-                textField(model.queryField)
-                button("Create", onClick = model::createLocation, modify(Accent))
-            }
+    }
+
+    formSection("or just put it on the map") {
+        geoMapMount(mod = FormMod.GeoMap)
+        row(modify(AlignItemsStart)) {
+            button("What is Here?", model::whatIsHere)
+            spacer(modify(Flex1))
+            messageBox(model.mapMessage)
+            textField(model.queryField)
+            button("Create", onClick = model::createLocation, modify(Accent))
         }
     }
 }

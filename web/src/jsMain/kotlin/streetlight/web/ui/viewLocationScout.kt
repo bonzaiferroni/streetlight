@@ -9,6 +9,7 @@ import streetlight.model.ui.GalaxyRoute
 import streetlight.model.ui.LocationScoutRoute
 import streetlight.web.layouts.postRow
 import streetlight.web.model.LocationScoutStage
+import streetlight.web.ui.formSubmit
 
 fun ViewScope.viewLocationScout(galaxy: Galaxy) {
     // val model = app.getCoroutineScoped<GalaxyEditor>(null, renderScope)
@@ -38,10 +39,10 @@ fun ViewScope.viewLocationScout(galaxy: Galaxy) {
                     val edit = editor.editNow
                     postRow(edit, session.stateNow.star?.username)
 
-                    formSubmitLegacy(
+                    formSubmit(
                         label = "Post",
-                        onSubmit = model::postToGalaxy,
-                        messages = editor.messages,
+                        onClick = model::postToGalaxy,
+                        messenger = editor.messages,
                         back = LabeledAction("Edit", { model.stageField.set(LocationScoutStage.Edit) })
                     )
                 }

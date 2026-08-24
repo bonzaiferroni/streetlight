@@ -1,6 +1,7 @@
 package koala.dom
 
 import koala.css.FadeLoop
+import koala.css.MagicStyle
 import koala.css.ModifierSet
 import koala.css.PointerEventsAuto
 import koala.css.PointerEventsNone
@@ -12,8 +13,9 @@ import koala.css.modify
 import koala.html.DialogStyle
 import koala.html.filigree
 import koala.html.heading2
+import koala.model.MutableTap
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.html.DIV
 import kotlinx.html.js.dialog
@@ -21,124 +23,90 @@ import org.w3c.dom.HTMLDialogElement
 import kotlin.time.Duration.Companion.milliseconds
 
 fun ViewScope.dialog(
-    title: String? = null,
-    stateFlow: Flow<Boolean>? = null,
+    state: MutableTap<Boolean>,
     mod: ModifierSet? = null,
-    onClose: (() -> Unit)? = null,
-    content: (ViewScope.(DialogElement) -> Unit)? = null
-): DialogElement {
-//    fun closeDialog() {
-//        val dialog = dialog ?: return
-//        close(dialog)
-//    }
+    content: ViewScope.() -> Unit
+): HTMLDialogElement {
 
     val element = dialog {
         addModifiers(DialogStyle.Class, mod)
-        // dialogContent(title, ::closeDialog, content)
     }
 
-    return DialogElement(element, onClose, this).also { dialog ->
-        content?.let {
-            dialog.updateContent(title, false, content)
+    var closeJob: Job? = null
+    fun closeDialog() {
+        closeJob?.cancel()
+        closeJob = launchEffect {
+            element.unmodify(Reveal)
+            delay(MagicStyle.Interval.milliseconds)
+            element.close()
         }
-
-        element.addEventListener("click", { event ->
-            if (event.target == element) {
-                dialog.close()
-            }
-        })
-
-        contentScope.launch {
-            stateFlow?.collect {
-                if (it) dialog.open() else dialog.close()
-            }
-        }
+        if (state.now)
+            state.set(false)
     }
-}
 
-private fun AppendScope.dialogContent(
-    title: String?,
-    content: DIV.() -> Unit
-) {
-    column(modify(Width100P, PointerEventsNone)) {
-        title?.let {
-            filigree {
-                heading2(title, modify(TextAlignCenter, PointerEventsAuto, FadeLoop))
-            }
-        }
-
-        div(modify(DialogStyle.Content, PointerEventsAuto)) {
+    fun openDialog() {
+        closeJob?.cancel()
+        mountChildView("dialog", element) {
             content()
         }
+        element.open()
+        if (!state.now)
+            state.set(true)
+    }
+
+    element.addEventListener("click", { event ->
+        if (event.target == element) {
+            closeDialog()
+        }
+    })
+
+    launchEffect(::dialog) {
+        state.flow.collect { isOpen ->
+            if (isOpen) {
+                openDialog()
+            } else {
+                closeDialog()
+            }
+        }
+    }
+
+    return element
+}
+
+fun ViewScope.dialogContent(
+    title: String?,
+    mod: ModifierSet? = null,
+    content: ViewScope.() -> Unit
+) = rawDialogContent(title) {
+    dialogCard(mod) {
+        content()
     }
 }
 
-class DialogElement(
-    val element: HTMLDialogElement,
-    private val onClose: (() -> Unit)? = null,
-    private val view: ViewScope,
-) {
-    fun open() = this.also {
-        element.open()
-    }
-
-    fun close() {
-        view.contentScope.launch {
-            element.unmodify(Reveal)
-            delay(200.milliseconds)
-            element.close()
-            onClose?.invoke()
+fun ViewScope.rawDialogContent(
+    title: String?,
+    mod: ModifierSet? = null,
+    content: ViewScope.() -> Unit
+) = column(modify(Width100P, PointerEventsNone)) {
+    title?.let {
+        filigree {
+            heading2(title, modify(TextAlignCenter, PointerEventsAuto, FadeLoop))
         }
     }
 
-    fun updateContent(
-        title: String?,
-        open: Boolean,
-        content: ViewScope.(DialogElement) -> Unit,
-    ) {
-        view.mountChildView("dialog", element) {
-            dialogContent(title) {
-                content(this@DialogElement)
-            }
-        }
-        if (open) element.open()
+    div(modify(mod, DialogStyle.Content, PointerEventsAuto)) {
+        content()
     }
+}
+
+fun ViewScope.dialogCard(
+    mod: ModifierSet? = null,
+    content: ViewScope.() -> Unit
+) = card(modify(DialogStyle.Card, mod)) {
+    content()
 }
 
 fun HTMLDialogElement.open() {
     showModal()
     modify(Reveal)
 }
-
-fun ViewScope.dialogWithCard(
-    title: String?,
-    stateFlow: Flow<Boolean>? = null,
-    mod: ModifierSet? = null,
-    content: ViewScope.(DialogElement) -> Unit
-) = dialog(title, stateFlow, mod) {
-    dialogCard {
-        content(it)
-    }
-}
-
-fun AppendScope.dialogCard(
-    modifiers: ModifierSet? = null,
-    content: AppendScope.() -> Unit
-) = card(modify(DialogStyle.Card, modifiers)) {
-    content()
-}
-
-//    dialog.addEventListener("click", { event ->
-//        val mouse = event as MouseEvent
-//        val rect = dialog.getBoundingClientRect()
-//
-//        val inside =
-//            mouse.clientY >= rect.top &&
-//                    mouse.clientY <= rect.top + rect.height &&
-//                    mouse.clientX >= rect.left &&
-//                    mouse.clientX <= rect.left + rect.width
-//
-//        if (!inside) {
-//            close(dialog)
-//        }
-//    })
