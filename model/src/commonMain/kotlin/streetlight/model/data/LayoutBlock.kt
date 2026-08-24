@@ -1,6 +1,7 @@
 package streetlight.model.data
 
 import kampfire.api.Markdown
+import kampfire.model.Labeled
 import koala.markdown.HeadingLevel
 import kotlinx.serialization.Serializable
 
@@ -63,8 +64,14 @@ data class ColumnsBlock(
     override val name get() = blockType.label
 }
 
-enum class Size3 {
+enum class Size3: Labeled {
     Small,
     Normal,
-    Large,
+    Large;
+
+    override val label get() = name
+
+    companion object {
+        val default = Normal
+    }
 }

@@ -103,7 +103,8 @@ fun FlowContent.renderText(block: TextBlock) {
 }
 
 fun FlowContent.renderRichText(block: RichTextBlock) {
-    markdown(block.text)
+    val sizeMod = block.size.toMod()
+    markdown(block.text, modify(sizeMod))
 }
 
 fun FlowContent.renderFooter() {
@@ -133,4 +134,10 @@ fun ObjectFit?.toMod() = when (this) {
     ObjectFit.Contain -> ObjectFitContain
     ObjectFit.Cover -> ObjectFitCover
     ObjectFit.ScaleDown -> ObjectFitScaleDown
+}
+
+fun Size3?.toMod() = when (this) {
+    Size3.Small -> TextSmall
+    Size3.Normal, null -> null
+    Size3.Large -> TextLarge
 }

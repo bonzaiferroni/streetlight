@@ -13,6 +13,7 @@ import kotlinx.html.FlowContent
 import streetlight.model.data.*
 import streetlight.web.layouts.renderHeading
 import streetlight.web.layouts.renderImage
+import streetlight.web.layouts.renderRichText
 import streetlight.web.layouts.toMod
 import streetlight.web.model.BlockEditor
 import streetlight.web.model.BlockId
@@ -151,14 +152,27 @@ fun ViewScope.headingBuilder(editor: BlockEditor) {
 fun ViewScope.richTextBuilder(editor: BlockEditor) {
     val blockState = editor.blockState.mutableTapOf({ it as RichTextBlock }) { it }
     val textState = blockState.mutableTapOf({ it.text }) { copy(text = it) }
+    val sizeState = blockState.mutableTapOf({ it.size ?: Size3.default }) {
+        copy(size = it.takeIf { it != Size3.default })
+    }
     val isEditingState = storeOf(textState.now.value.isEmpty())
     column {
-        editorRow(editor, isEditingState)
+        editorRow(editor, isEditingState) {
+            formColumn {
+                formSection("Size") {
+                    dropMenu(sizeState)
+                }
+            }
+        }
         flowBlock(isEditingState) { isEditing ->
             if (isEditing) {
                 styledMarkdownEditor(textState)
             } else {
-                markdown(textState.now.takeIf { it.value.isNotEmpty() } ?: "[RichText content]".toMarkdown())
+                flowBlock(blockState) { block ->
+                    box {
+                        renderRichText(block)
+                    }
+                }
             }
         }
     }
