@@ -21,9 +21,9 @@ fun ViewScope.wireRightPanel() {
 
     wireBlock(AppBody.RightPanel) {
         container = card(cardMod) {
-            itemsBlock(recordFlow, modify(Magic, SlideLeft)) { record ->
-                textBlock(record.text, modify(TextSmall))
-            }
+//            itemsBlock(recordFlow, modify(Magic, SlideLeft)) { record ->
+//                textBlock(record.text, modify(TextSmall))
+//            }
         }
     }
 

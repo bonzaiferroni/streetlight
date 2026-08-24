@@ -11,9 +11,7 @@ import koala.html.ButtonPopover
 import koala.html.bulletsOf
 import koala.html.buttonPopover
 import koala.html.heading3
-import koala.html.heading4
 import koala.html.heading5
-import koala.html.markdown
 import koala.html.textProperty
 import koala.model.MutableTap
 import kotlinx.coroutines.flow.map
@@ -36,7 +34,7 @@ fun ViewScope.eventWebsiteForm(model: EventEditor) = formCard("Parse Event") {
     formRow {
         formSection("Website") {
             formText("Does this event have a web page? We can read it to find certain details.")
-            textField(model.urlField, "website")
+            textField(model.urlState, "website")
             formSubmit("🤖 read page", model::parseFromUrl, model.parseMessage)
         }
         formFiller(LottieFile.Ghost)
@@ -46,52 +44,41 @@ fun ViewScope.eventWebsiteForm(model: EventEditor) = formCard("Parse Event") {
 fun ViewScope.eventDetailsForm(model: EventEditor) = formCard("Event Details") {
     formRow {
         formSection("Title") {
-            textField(model.title, "title", maxLength = 50)
-                .flowValid(EventProperty.Title, model.validityCheckField, contentScope)
+            textField(model.titleState, "title", maxLength = 50)
+                .flowValid(EventProperty.Title, model.validityState, contentScope)
         }
         formSection("Cost") {
             row(modify(AlignItemsCenter, JustifyContentCenter)) {
-                checkBox(model.isFree, "Free event")
-                textField(model.costField, "cost", modify(Width12))
-                    .flowVisibility(model.isFree.flow.map { !it }, contentScope)
-                    .flowValid(EventProperty.Cost, model.validityCheckField, contentScope)
+                checkBox(model.isFreeState, "Free event")
+                textField(model.costState, "cost", modify(Width12))
+                    .flowVisibility(model.isFreeState.flow.map { !it }, contentScope)
+                    .flowValid(EventProperty.Cost, model.validityState, contentScope)
             }
         }
         formSection("Time") {
             row(modify(AlignItemsCenter, JustifyContentCenter)) {
                 blockLabel("start time") {
-                    timeInput(model.startTimeField)
-                }.flowValid(EventProperty.StartTime, model.validityCheckField, contentScope)
+                    timeInput(model.startTimeState)
+                }.flowValid(EventProperty.StartTime, model.validityState, contentScope)
                 // end time is optional, not every event has a fixed end time
                 blockLabel("end time") {
-                    timeInput(model.endTimeField)
+                    timeInput(model.endTimeState)
                 }
                 blockLabel("date") {
-                    dateInput(model.dateField)
-                }.flowValid(EventProperty.Date, model.validityCheckField, contentScope)
+                    dateInput(model.dateState)
+                }.flowValid(EventProperty.Date, model.validityState, contentScope)
             }
             column(modify(Gap0, MarginTop2)) {
                 textBlock("that's", modify(AlignSelfCenter, TextSmall, OpacityHigh))
-                dayIndicator(model.dateField)
+                dayIndicator(model.dateState)
                 textBlock("at", modify(AlignSelfCenter, TextSmall, OpacityHigh))
-                timeIndicator(model.startTimeField, "some time")
+                timeIndicator(model.startTimeState, "some time")
             }
-            // flowBlock(model.startsAt, modify(FlexColumn, AlignItemsCenter)) {
-            //     val startsAt = it ?: return@flowBlock
-            //     // must be boxed due to FlowContent context
-            //     val dayDescription = when (startsAt < Clock.System.now()) {
-            //         true -> "in the past"
-            //         else -> startsAt.toRelativeDayFormat()
-            //     }
-            //     box {
-            //         heading4("That's $dayDescription.")
-            //     }
-            // }
         }
     }
     formSection("Description") {
         styledMarkdownEditor(
-            state = model.description,
+            state = model.descriptionState,
             label = "description",
             mod = modify(MinHeight48)
         )
@@ -111,7 +98,7 @@ fun ViewScope.eventDetailsForm(model: EventEditor) = formCard("Event Details") {
             }
             buttonDialog("Preview", emoji = "👀") {
                 println("ey")
-                markdown(model.description.now)
+                markdown(model.descriptionState.now)
             }
         }
     }
@@ -122,10 +109,6 @@ fun ViewScope.eventImageForm(model: EventEditor) =
         instructions = "This image will appear in the feed and at the top of the event page.",
         imageEditor = model.imageEditor
     )
-
-fun ViewScope.eventLinksForm(model: EventEditor) = formCardSection("Links") {
-    eventLinks(model)
-}
 
 fun ViewScope.dayIndicator(field: MutableTap<LocalDate?>) {
     fun changeDate(delta: Int) {

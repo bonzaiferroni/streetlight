@@ -54,27 +54,27 @@ fun ViewScope.mountChildView(
     block: ViewScope.() -> Unit
 ) = mountChildView(id.identifier, ((ancestor ?: document.body!!).querySelector(id) ?: error("element not found: $id")), block)
 
-fun ViewScope.appendChildView(
+fun HTMLElement.appendChildView(
     name: String,
-    element: HTMLElement,
+    viewScope: ViewScope,
     block: ViewScope.() -> Unit
 ): View {
     lateinit var view: View
-    element.append {
-        view = View(this@append, contentScope, name, app, element, this@appendChildView)
+    append {
+        view = View(this@append, viewScope.contentScope, name, viewScope.app, this@appendChildView, viewScope)
         view.applyView(InsertEdge.Tail, block)
     }
     return view
 }
 
-fun ViewScope.prependChildView(
+fun HTMLElement.prependChildView(
     name: String,
-    element: HTMLElement,
+    viewScope: ViewScope,
     block: ViewScope.() -> Unit
 ): View {
     lateinit var view: View
-    element.prepend {
-        view = View(this@prepend, contentScope, name, app, element, this@prependChildView)
+    prepend {
+        view = View(this@prepend, viewScope.contentScope, name, viewScope.app, this@prependChildView, viewScope)
         view.applyView(InsertEdge.Head, block)
     }
     return view

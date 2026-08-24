@@ -17,6 +17,7 @@ import koala.dom.row
 import koala.dom.setAttribute
 import koala.dom.textBlock
 import koala.html.spacer
+import koala.model.setTrue
 import koala.model.storeOf
 import kotlinx.css.LinearDimension
 import kotlinx.css.fr
@@ -41,6 +42,7 @@ inline fun <reified T: RecordEdit> ViewScope.viewEditHistory(
             textBlock("${log.username} ${log.editType.verb} the location $timeDescription")
 
             row(modify(JustifyContentEnd)) {
+                println("ey 0")
                 if (log.editType == EditType.Update && index == editLogs.size - 1) {
                     button {
                         +"revert"
@@ -66,6 +68,9 @@ inline fun <reified T: RecordEdit> ViewScope.viewEditHistory(
                             content.setAttribute(TextDeltaStyle.Display.to(it))
                         }
                     }
+                }
+                button(dialogState::setTrue) {
+                    +"view"
                 }
             }
             previousEdit = edit

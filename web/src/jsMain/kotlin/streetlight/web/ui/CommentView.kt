@@ -165,7 +165,7 @@ class CommentView(
     }
 
     private fun ViewScope.renderStagedReplies(replies: List<CommentView>) {
-        prependChildView("comment-replies", repliesBlock) {
+        repliesBlock.prependChildView("comment-replies", this) {
             replies.forEach { reply ->
                 with (reply) {
                     render()

@@ -26,6 +26,8 @@ value class Url(val value: String) {
 }
 
 fun String.toUrl() = Url(this)
+fun String.isValidAbsoluteUrl(): Boolean = absoluteUrlRegex.matches(this)
+fun String.toValidAbsoluteUrlOrNull(): Url? = if (isValidAbsoluteUrl()) Url(this) else null
 
 fun String.appendToFilename(appended: String) = buildString {
     val parts = this@appendToFilename.split('.')
@@ -45,3 +47,7 @@ fun String.appendToFilename(appended: String) = buildString {
 }
 
 private val hostRegex = Regex("^https?://([^/?#]+)")
+private val absoluteUrlRegex = Regex(
+    "^https?://[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)+(:\\d+)?(/[^\\s]*)?$",
+    RegexOption.IGNORE_CASE
+)

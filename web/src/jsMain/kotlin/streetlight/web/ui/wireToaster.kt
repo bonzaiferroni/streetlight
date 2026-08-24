@@ -11,7 +11,7 @@ fun ViewScope.wireToaster() {
 
     mountChildView(AppBody.ToasterId) {
         column(modify(Padding2)) {
-            itemsBlock(model.messagesFlow, modify(Magic, SlideLeft)) { message ->
+            itemsBlock(model.messagesState, modify(Magic, SlideLeft)) { message ->
                 val typeMod = message.messageType.toModifier()
                 row {
                     card(modify(MessageBox.Mod, BlurBackdrop, typeMod)) {

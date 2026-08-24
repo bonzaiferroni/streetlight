@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import compose.icons.TablerIcons
 import compose.icons.tablericons.Plus
 import compose.icons.tablericons.Settings
-import kabinet.utils.replaceOrRemoveAt
+import kabinet.utils.replaceOrWithoutItemAt
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import pondui.ui.controls.Button
 import pondui.ui.controls.Carousel
@@ -102,7 +102,7 @@ fun SongPartEditor(
                     capo = capo,
                     tempo = tempo,
                 ) { modifiedSequence ->
-                    val sequences = part.sequences.replaceOrRemoveAt(sequenceIndex, modifiedSequence)
+                    val sequences = part.sequences.replaceOrWithoutItemAt(sequenceIndex, modifiedSequence)
                     modifyPart(part.copy(sequences = sequences))
                 }
             }

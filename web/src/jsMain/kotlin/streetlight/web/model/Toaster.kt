@@ -6,6 +6,7 @@ import kampfire.model.UIMessage
 import kampfire.model.UIMessageType
 import koala.model.dedup
 import koala.model.storeOf
+import koala.model.tapOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -18,7 +19,7 @@ class Toaster(
     val stateNow get() = state.now
     val stateFlow = state.flow
 
-    val messagesFlow = stateFlow.dedup { it.messages }
+    val messagesState = state.tapOf { it.messages }
 
     fun toast(message: String, messageType: UIMessageType = UIMessageType.Info) =
         toast(UIMessage(message, messageType))

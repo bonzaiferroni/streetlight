@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import compose.icons.TablerIcons
 import compose.icons.tablericons.Minus
 import compose.icons.tablericons.Plus
-import kabinet.utils.replaceOrRemoveAt
+import kabinet.utils.replaceOrWithoutItemAt
 import pondui.ui.controls.LazyColumnTab
 import pondui.ui.controls.MoreMenu
 import pondui.ui.controls.MoreMenuItem
@@ -64,7 +64,7 @@ fun TabContentScope.EditSongTab(
                             midiPlayer = midi,
                             capo = song.capo,
                             tempo = song.tempo,
-                        ) { updateNotation(notation.copy(parts = notation.parts.replaceOrRemoveAt(partIndex, it))) }
+                        ) { updateNotation(notation.copy(parts = notation.parts.replaceOrWithoutItemAt(partIndex, it))) }
                     }
                 }
             }

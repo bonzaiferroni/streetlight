@@ -5,11 +5,9 @@ import kampfire.model.Outcome
 import kampfire.model.PrintLnMessenger
 import kampfire.model.UIMessage
 import kampfire.model.UIMessageType
-import kampfire.model.Url
 import kampfire.model.handleResponse
 import koala.Image
 import koala.model.MutableTap
-import koala.toImage
 import streetlight.web.io.ApiClient
 
 class ImageEditor(
@@ -19,8 +17,9 @@ class ImageEditor(
     // td: add meta
 
     suspend fun finalizeImage(messenger: Messenger? = null) {
-        val image = uploadImage(imageField.now ?: return, messenger, api) ?: return
-        imageField.set(image)
+        val blobImage = imageField.now?.takeIf { it.url.isBlob } ?: return
+        val uploadedImage = uploadImage(blobImage, messenger, api) ?: return
+        imageField.set(uploadedImage)
     }
 }
 

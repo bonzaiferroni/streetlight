@@ -19,3 +19,21 @@ fun <T> MutableTap<List<T>>.insertAt(index: Int, item: T) {
         mutableList
     }
 }
+
+fun <T> MutableTap<List<T>>.removeAt(index: Int) {
+    set { filterIndexed { i, _ -> i != index } }
+}
+
+fun <T> MutableTap<List<T>>.replaceAt(index: Int, item: T) {
+    update { list ->
+        val mutableList = list.toMutableList()
+        mutableList[index] = item
+        mutableList
+    }
+}
+
+fun <T> MutableTap<List<T>>.append(item: T) {
+    update { list ->
+        list + item
+    }
+}

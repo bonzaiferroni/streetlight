@@ -19,6 +19,6 @@ data class ExtraLink(
     val isValid get() = label.isNotBlank() && urlIsValid
 
     companion object {
-        val Blank get () = ExtraLink("", Url(""))
+        val Empty get () = ExtraLink("", Url(""))
     }
 }

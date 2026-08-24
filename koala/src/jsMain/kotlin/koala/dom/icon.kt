@@ -19,16 +19,3 @@ fun AppendScope.icon(
         block = block
     )
 }
-
-fun AppendScope.icon(
-    file: Svg,
-    onClick: () -> Unit,
-    mod: ModifierSet = IconStyle.DefaultMod,
-    block: DIV.() -> Unit = {}
-): HTMLDivElement {
-    val element = icon(file, mod, block)
-    element.onClick {
-        onClick()
-    }
-    return element
-}

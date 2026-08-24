@@ -111,12 +111,12 @@ private fun ViewScope.sandboxContent(star: Star) {
             }
         }
 
-        itemsBlock(userCache.talent.flow) { talent ->
-            navigation(TalentProfileRoute(talent.talentId)) {
-                card {
-                    textBlock(talent.name)
-                }
-            }
-        }
+//        itemsBlock(userCache.talent.flow) { talent ->
+//            navigation(TalentProfileRoute(talent.talentId)) {
+//                card {
+//                    textBlock(talent.name)
+//                }
+//            }
+//        }
     }
 }

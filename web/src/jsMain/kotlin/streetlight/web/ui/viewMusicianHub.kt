@@ -48,13 +48,13 @@ fun ViewScope.viewMusicianHub(
                         }
                         button("Add new song", model::addSong, modify(Accent))
                     }
-                    itemsBlock(model.songsFlow, defaultMagic) { song ->
-                        navigation(SongProfileRoute(song.songId)) {
-                            card {
-                                textBlock(song.title)
-                            }
-                        }
-                    }
+//                    itemsBlock(model.songsFlow, defaultMagic) { song ->
+//                        navigation(SongProfileRoute(song.songId)) {
+//                            card {
+//                                textBlock(song.title)
+//                            }
+//                        }
+//                    }
                 }
             }
         }

@@ -99,14 +99,14 @@ fun ViewScope.growTree(model: TalkLog, treeRoot: HTMLElement, comment: Comment) 
         null -> {
             when (model.stateNow.sortBy) {
                 PostOrder.NewFirst -> {
-                    prependChildView("comment", treeRoot) {
+                    treeRoot.prependChildView("comment", this@growTree) {
                         with (view) {
                             render()
                         }
                     }
                 }
                 PostOrder.OldFirst -> {
-                    appendChildView("comment", treeRoot) {
+                    treeRoot.appendChildView("comment", this@growTree) {
                         with (view) {
                             render()
                         }

@@ -59,7 +59,7 @@ class EventScout(
     // fun setEvent(value: EventLocation?) = state.set { copy(event = value) }
 
     fun create() {
-        editor.title.set(stateNow.query)
+        editor.titleState.set(stateNow.query)
         state.set { copy(stage = EventScoutStage.EventEdit) }
     }
 
