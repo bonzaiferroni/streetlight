@@ -32,6 +32,7 @@ fun FlowContent.renderBlock(block: LayoutBlock, content: LocationContent) {
         is RichTextBlock -> renderRichText(block)
         is HeadingBlock -> renderHeading(block)
         is ImageBlock -> renderImage(block)
+        is GalleryBlock -> renderGallery(block)
         HeaderBlock -> renderHeader(content)
         EventsBlock -> renderEvents(content)
         MapBlock -> renderMap(content.location.geoPoint)
@@ -64,24 +65,20 @@ fun FlowContent.renderHeader(content: LocationContent) {
 }
 
 fun FlowContent.renderImage(block: ImageBlock) {
-    val shapeMod = when (block.frame) {
-        ImageShape.Square -> null
-        ImageShape.Rounded, null -> BorderRadius2
-        ImageShape.Circle -> CircleShape
-        ImageShape.Ellipse -> BorderRadius50P
-        ImageShape.Pill -> BorderRadiusPill
-        ImageShape.Chopped -> Chopped
-    }
-    val fitMod = when (block.fit) {
-        ObjectFit.Fill, null, -> ObjectFitFill
-        ObjectFit.Stretch -> null
-        ObjectFit.Contain -> ObjectFitContain
-        ObjectFit.Cover -> ObjectFitCover
-        ObjectFit.ScaleDown -> ObjectFitScaleDown
-    }
+    val shapeMod = block.shape.toMod()
+    val fitMod = block.fit.toMod()
     metaImage(block.image, modify(LayoutStyle.Image, shapeMod, fitMod)) {
         block.width?.let {
             setStyle(Property.Width.to(it.pct))
+        }
+    }
+}
+
+fun FlowContent.renderGallery(block: GalleryBlock) {
+    div(modify(LayoutStyle.Gallery)) {
+        setStyle(Property.ColumnCount.to(block.columns))
+        block.images.forEach {
+            image(it, modify(block.shape.toMod(), OverflowClip))
         }
     }
 }
@@ -119,4 +116,21 @@ fun FlowContent.renderColumn(block: ColumnsBlock, content: LocationContent) {
             renderBlock(it, content)
         }
     }
+}
+
+fun ImageShape?.toMod() = when (this) {
+    ImageShape.Square -> null
+    ImageShape.Rounded, null -> BorderRadius2
+    ImageShape.Circle -> CircleShape
+    ImageShape.Ellipse -> BorderRadius50P
+    ImageShape.Pill -> BorderRadiusPill
+    ImageShape.Chopped -> Chopped
+}
+
+fun ObjectFit?.toMod() = when (this) {
+    ObjectFit.Fill, null, -> ObjectFitFill
+    ObjectFit.Stretch -> null
+    ObjectFit.Contain -> ObjectFitContain
+    ObjectFit.Cover -> ObjectFitCover
+    ObjectFit.ScaleDown -> ObjectFitScaleDown
 }

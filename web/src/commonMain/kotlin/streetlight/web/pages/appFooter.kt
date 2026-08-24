@@ -69,5 +69,6 @@ val prayers = listOf(
     "Just trying not to fall off this tiny sidewalk.",
     "You are the music school. The music school is you, always in school.",
     "Got some growing up to do, I'm sure glad it will be with you.",
+    "I didn’t have time to write a short letter, so I wrote a long one instead.",
     // "It all, theoretically, works.",
 )

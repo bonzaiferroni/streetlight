@@ -6,6 +6,7 @@ import koala.model.tapOf
 import koala.model.storeOf
 import streetlight.model.data.ColumnsBlock
 import streetlight.model.data.DefaultLayout
+import streetlight.model.data.GalleryBlock
 import streetlight.model.data.ImageBlock
 import streetlight.model.data.PageLayout
 import streetlight.model.data.LayoutBlock
@@ -150,6 +151,15 @@ class LayoutEditor(
                     else -> block
                 }
             } ?: block
+        }
+        is GalleryBlock -> {
+            val images = block.images.map { image ->
+                when (image.url.isBlob) {
+                    true -> uploadImage(image, messenger, api)?.also { println("uploaded") } ?: error("upload fail")
+                    else -> image
+                }
+            }
+            block.copy(images = images)
         }
         else -> block
     }

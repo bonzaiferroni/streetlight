@@ -68,7 +68,8 @@ fun getOptions(category: BlockCategory, depth: Int) = buildList {
             add(LabeledItem("text", TextBlock("")))
             add(LabeledItem("heading", HeadingBlock("", HeadingLevel.H3, true)))
             add(LabeledItem("image", ImageBlock(null)))
-            add(LabeledItem("rich text", RichTextBlock(Markdown.Empty)))
+            add(LabeledItem("rich text", RichTextBlock(Markdown.Empty, null)))
+            add(LabeledItem("gallery", GalleryBlock(emptyList(), 2)))
         }
         BlockCategory.Containers -> {
             if (depth == 0) add(LabeledItem("tabs", TabsBlock(listOf(TabContent("My Tab", emptyList())))))

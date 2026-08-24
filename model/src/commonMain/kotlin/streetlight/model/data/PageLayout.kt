@@ -15,6 +15,7 @@ enum class BlockType(label: String? = null): Labeled {
     RichText("Rich Text"),
     Heading,
     Image,
+    Gallery,
     Header,
     Map,
     Events,

@@ -38,12 +38,13 @@ data class Property<T: Any>(
         val Left = Property<LinearDimension>("left", false)
         val Margin = Property<String>("margin", false)
         val BackgroundImage = Property<String>("background-image", false)
-
         val MaskUrl = Property<Asset>("mask-url")
+
         val ColorScheme = Property<String>("color-scheme")
         val BackgroundUrl = Property<Url>("background-url")
         val AnchorId = Property<PositionAnchor>("anchor-id")
         val ContainerAnchorId = Property<PositionAnchor>("anchor-container-id")
+        val ColumnCount = Property<Int>("column-count")
     }
 }
 

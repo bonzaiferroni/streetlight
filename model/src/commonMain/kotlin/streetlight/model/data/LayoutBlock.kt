@@ -19,6 +19,7 @@ data class TextBlock(
 @Serializable
 data class RichTextBlock(
     val text: Markdown,
+    val size: Size3?,
 ): LayoutBlock {
     override val blockType get() = BlockType.RichText
 }
@@ -60,4 +61,10 @@ data class ColumnsBlock(
 ): LayoutBlock, LayoutContainer {
     override val blockType get() = BlockType.Columns
     override val name get() = blockType.label
+}
+
+enum class Size3 {
+    Small,
+    Normal,
+    Large,
 }

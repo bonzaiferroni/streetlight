@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class ImageBlock(
     val image: Image?,
-    val frame: ImageShape? = null,
+    val shape: ImageShape? = null,
     val fit: ObjectFit? = null,
     val width: Int? = null,
 ): LayoutBlock {
@@ -30,4 +30,13 @@ enum class ObjectFit(label: String? = null): Labeled {
     companion object {
         val default = Fill
     }
+}
+
+@Serializable
+data class GalleryBlock(
+    val images: List<Image>,
+    val columns: Int = 2,
+    val shape: ImageShape? = null,
+): LayoutBlock {
+    override val blockType get() = BlockType.Gallery
 }

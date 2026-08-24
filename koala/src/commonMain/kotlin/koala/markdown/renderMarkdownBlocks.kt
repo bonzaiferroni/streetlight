@@ -34,7 +34,6 @@ fun FlowContent.renderMarkdownBlocks(blocks: List<ParsedBlock>) {
                 is MarkdownOrderedList -> renderOrderedList(markdown)
                 is MarkdownUnorderedList -> renderUnorderedList(markdown)
                 is MarkdownTable -> renderTable(markdown)
-                null -> { }
             }
         }
     }
@@ -110,11 +109,18 @@ fun FlowContent.renderImage(block: MarkdownBlockImage) {
     }
 }
 
+fun FlowContent.renderList(block: MarkdownList) {
+    when (block) {
+        is MarkdownOrderedList -> renderOrderedList(block)
+        is MarkdownUnorderedList -> renderUnorderedList(block)
+    }
+}
+
 fun FlowContent.renderOrderedList(block: MarkdownOrderedList) {
     ol {
-        addModifiers(MarkdownStyle.List)
+        addModifiers(MarkdownStyle.OrderedList)
         start = block.startNumber.toString()
-        
+
         block.items.forEach { item ->
             listItem {
                 span {
@@ -125,13 +131,6 @@ fun FlowContent.renderOrderedList(block: MarkdownOrderedList) {
                 }
             }
         }
-    }
-}
-
-fun FlowContent.renderList(block: MarkdownList) {
-    when (block) {
-        is MarkdownOrderedList -> renderOrderedList(block)
-        is MarkdownUnorderedList -> renderUnorderedList(block)
     }
 }
 
@@ -149,7 +148,7 @@ fun FlowContent.renderUnorderedList(block: MarkdownUnorderedList) {
     }
 
     ul {
-        addModifiers(MarkdownStyle.List, paddingMod, markerMod)
+        addModifiers(MarkdownStyle.UnorderedList, paddingMod, markerMod)
         block.items.forEach { item ->
             listItem {
                 span {

@@ -1,9 +1,11 @@
 package streetlight.web.ui
 
 import kampfire.api.toMarkdown
+import koala.Image
 import koala.SvgFile
 import koala.css.*
 import koala.dom.*
+import koala.html.image
 import koala.model.mutableTapOf
 import koala.model.storeOf
 import koala.model.toggle
@@ -11,6 +13,7 @@ import kotlinx.html.FlowContent
 import streetlight.model.data.*
 import streetlight.web.layouts.renderHeading
 import streetlight.web.layouts.renderImage
+import streetlight.web.layouts.toMod
 import streetlight.web.model.BlockEditor
 import streetlight.web.model.BlockId
 import streetlight.web.model.LayoutEditor
@@ -21,6 +24,7 @@ fun ViewScope.blockBuilder(model: LayoutEditor, blockId: BlockId) {
         HeaderBlock, EventsBlock, MapBlock -> blockBuilder(editor)
         is HeadingBlock -> headingBuilder(editor)
         is ImageBlock -> imageBuilder(editor)
+        is GalleryBlock -> galleryBuilder(editor)
         is RichTextBlock -> richTextBuilder(editor)
         is TextBlock -> textBuilder(editor)
         is TabsBlock -> tabsBuilder(editor)
@@ -163,8 +167,8 @@ fun ViewScope.richTextBuilder(editor: BlockEditor) {
 fun ViewScope.imageBuilder(editor: BlockEditor) {
     val blockState = editor.blockState.mutableTapOf({ it as ImageBlock }) { it }
     val imageState = blockState.mutableTapOf({ it.image }) { copy(image = it) }
-    val shapeState = blockState.mutableTapOf({ it.frame ?: ImageShape.default }) {
-        copy(frame = it.takeIf { it != ImageShape.default })
+    val shapeState = blockState.mutableTapOf({ it.shape ?: ImageShape.default }) {
+        copy(shape = it.takeIf { it != ImageShape.default })
     }
     val fitState = blockState.mutableTapOf({ it.fit ?: ObjectFit.default }) {
         copy(fit = it.takeIf { it != ObjectFit.default })
@@ -191,6 +195,41 @@ fun ViewScope.imageBuilder(editor: BlockEditor) {
                 box {
                     renderImage(block)
                 }
+            }
+        }
+    }
+}
+
+fun ViewScope.galleryBuilder(editor: BlockEditor) {
+    val blockState = editor.blockState.mutableTapOf({ it as GalleryBlock }) { it }
+    val newImageState = blockState.mutableTapOf<GalleryBlock, Image?>({ null }) {
+        if (it == null) return@mutableTapOf this
+        copy(images = images + it)
+    }
+    val shapeState = blockState.mutableTapOf({ it.shape ?: ImageShape.default }) {
+        copy(shape = it.takeIf { it != ImageShape.default })
+    }
+    column {
+        editorRow(editor) {
+            formColumn {
+                formSection("Shape") {
+                    dropMenu(shapeState)
+                }
+            }
+        }
+        flowBlock(blockState) { block ->
+            div(modify(LayoutStyle.Gallery)) {
+                setStyle(Property.ColumnCount.to(block.columns))
+                block.images.forEachIndexed { index, _ ->
+                    val indexedImageState = blockState.mutableTapOf({ it.images.getOrNull(index) }) { indexedImage ->
+                        copy(images = if (indexedImage == null) {
+                            images - images[index]
+                        } else images )
+                    }
+                    imageDrop(indexedImageState, modify(block.shape.toMod(), OverflowClip))
+                }
+
+                imageDrop(newImageState)
             }
         }
     }

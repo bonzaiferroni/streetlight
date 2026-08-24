@@ -6,7 +6,8 @@ import koala.model.EditorStyle
 object MarkdownStyle {
     val Container = Class("md")
     val Block = Container.withBemElement("block")
-    val List = Container.withBemElement("list")
+    val UnorderedList = Container.withBemElement("unordered-list")
+    val OrderedList = Container.withBemElement("ordered-list")
     val InlineImage = Container.withBemElement("inline-image")
     val InlineImageCaption = Container.withBemElement("inline-image-caption")
     val BlockImage = Container.withBemElement("block-image")
@@ -31,7 +32,11 @@ $Block > * + * {
     margin-top: var(--unit-spacing-2);
 }
 
-$List {
+$OrderedList {
+    padding-inline-start: var(--unit-spacing-3);
+}
+
+$UnorderedList {
     list-style: none;
 }
 
