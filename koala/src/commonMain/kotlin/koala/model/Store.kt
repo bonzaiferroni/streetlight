@@ -20,16 +20,6 @@ open class Store<T>(
         state.update { it.setter() }
     }
 
-    @Deprecated("use set")
-    fun setValue(setter: (T) -> T) {
-        state.value = setter(now)
-    }
-
-    @Deprecated("use set")
-    fun setValue(value: T) {
-        state.value = value
-    }
-
     override fun update(transform: (T) -> T) {
         state.update(transform)
     }

@@ -27,16 +27,16 @@ class SongProfile(
     fun refreshSong() {
         scope.launch {
             val value = api.readSong(songId).toDataOr { return@launch }
-            song.setValue { value }
+            song.update { value }
         }
     }
 
     fun setTitle(title: String) {
-        song.setValue { it?.copy(title = title) }
+        song.update { it?.copy(title = title) }
     }
 
     fun setArtist(artist: String) {
-        song.setValue { it?.copy(artist = artist) }
+        song.update { it?.copy(artist = artist) }
     }
 
     fun updateSong() {

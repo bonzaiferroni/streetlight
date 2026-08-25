@@ -60,7 +60,7 @@ class TransitMap(
         } else {
             stopTracking()
         }
-        state.setValue { it.copy(isActive = value, timestamp = 0L) }
+        state.update { it.copy(isActive = value, timestamp = 0L) }
     }
 
     private fun startTracking() {
@@ -131,7 +131,7 @@ class TransitMap(
 
         currentEntities = markers
 
-        state.setValue { it.copy(timestamp = transitState.timestamp) }
+        state.update { it.copy(timestamp = transitState.timestamp) }
     }
 }
 

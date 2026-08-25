@@ -36,7 +36,7 @@ class GeoMap(
 
     // fun setFocus(value: PointMarker?) = state.set { it.copy(focus = value?.let { marker -> MarkerFocus(marker)} ) }
 
-    fun setFocus(value: GeoFocus?) = state.setValue { it.copy(focus = value) }
+    fun setFocus(value: GeoFocus?) = state.update { it.copy(focus = value) }
 }
 
 data class GeoMapState(

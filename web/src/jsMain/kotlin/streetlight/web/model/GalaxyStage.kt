@@ -20,22 +20,22 @@ class GalaxyStage(
 
     fun setStage(content: GalaxyContent) {
         val posts = content.posts.sortedByDescending { it.base.createdAt } // td: implement other sorts
-        state.setValue { it.copy(galaxy = content.galaxy, posts = posts) }
+        state.update { it.copy(galaxy = content.galaxy, posts = posts) }
     }
 
     fun addPost(post: GalaxyPost) {
         val posts = stateNow.posts ?: emptyList()
-        state.setValue { it.copy(posts = posts + post, isInitialStage = false) }
+        state.update { it.copy(posts = posts + post, isInitialStage = false) }
     }
 
     fun removePost(postId: PostId) {
         val posts = stateNow.posts ?: emptyList()
-        state.setValue { it.copy(posts = posts.filter { item -> item.base.postId != postId }, isInitialStage = false)}
+        state.update { it.copy(posts = posts.filter { item -> item.base.postId != postId }, isInitialStage = false)}
     }
 
     fun replacePost(post: GalaxyPost) {
         val posts = stateNow.posts?.map { if (it.base.postId == post.base.postId) post else it }
-        state.setValue { it.copy(posts = posts, isInitialStage = false) }
+        state.update { it.copy(posts = posts, isInitialStage = false) }
     }
 }
 

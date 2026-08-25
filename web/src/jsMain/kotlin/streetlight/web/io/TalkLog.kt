@@ -58,7 +58,7 @@ class TalkLog(
 
     fun setSortBy(value: PostOrder) {
         commentViews.clear() // is this a memory leak? we need to cancel a supervisor job
-        state.setValue { it.copy(sortBy = value) }
+        state.update { it.copy(sortBy = value) }
     }
 
     suspend fun updateComment(commentId: CommentId, text: Markdown): Boolean? {
