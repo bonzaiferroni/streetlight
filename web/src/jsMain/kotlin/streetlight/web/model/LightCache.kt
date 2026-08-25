@@ -2,7 +2,8 @@ package streetlight.web.model
 
 import kampfire.model.Messenger
 import kampfire.model.Outcome
-import kampfire.model.handleResponse
+import kampfire.model.toDataOr
+import kampfire.model.toDataOrNull
 import koala.dom.setStorageOf
 import koala.model.dedup
 import koala.model.storeOf
@@ -51,8 +52,8 @@ class LightCache<Id, Item>(
                             lightEdit(request)
                             cachedLights = emptySet()
                         }
-                        val lights = readRemoteLights().handleResponse(onError) ?: return@collect
-                        state.setValue { it.copy(lights = lights.toSet())}
+                        val lights = readRemoteLights().toDataOr(onError) { return@collect }
+                        state.set { copy(lights = lights.toSet())}
                     }
                 }
             }
@@ -61,9 +62,9 @@ class LightCache<Id, Item>(
                     val newIds = lights.filter { lightId -> stateNow.items.none { itemToId(it) == lightId } }
                     val newItems = when (newIds.isEmpty()) {
                         true -> emptyList()
-                        else -> readRemoteItems(newIds.toList()).handleResponse(onError) ?: emptyList() // td: fail message
+                        else -> readRemoteItems(newIds.toList()).toDataOr(onError) { return@collect }
                     }
-                    state.setValue { it.copy(items = it.items.filter { item -> lights.contains(itemToId(item)) } + newItems) }
+                    state.set { copy(items = items.filter { item -> lights.contains(itemToId(item)) } + newItems) }
                 }
             }
         }
@@ -86,7 +87,7 @@ class LightCache<Id, Item>(
             true -> {
                 scope.launch {
                     val edit = LightEdit(idToUuid(id), isLit, lightType)
-                    val isSuccess = lightEdit(edit).handleResponse(onError) ?: return@launch
+                    val isSuccess = lightEdit(edit).toDataOr(onError) { return@launch }
                     if (isSuccess)
                         editState(id, isLit)
                 }
@@ -103,14 +104,9 @@ class LightCache<Id, Item>(
 
     private fun editState(id: Id, isLit: Boolean) {
         when (isLit) {
-            true -> state.setValue { it.copy(lights = it.lights + id) }
-            else -> state.setValue { it.copy(lights = it.lights - id) }
+            true -> state.set { copy(lights = lights + id) }
+            else -> state.set { copy(lights = lights - id) }
         }
-    }
-
-    private suspend fun readLights() = when(gate.stateNow.isSignedIn) {
-        true -> readRemoteLights().handleResponse(onError) ?: emptySet()
-        else -> cachedLights
     }
 }
 

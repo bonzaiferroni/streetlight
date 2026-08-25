@@ -1,7 +1,7 @@
 package streetlight.web.model
 
 import kampfire.api.toMarkdown
-import kampfire.model.handleResponse
+import kampfire.model.toDataOr
 import koala.dom.MessageStore
 import koala.model.mutableTapOf
 import koala.model.storeOf
@@ -34,7 +34,7 @@ class ProfileEditor(
 
             messages.set("Sending...", true)
 
-            val star = api.updateProfile(editField.now).handleResponse(messages) ?: return@launch
+            val star = api.updateProfile(editField.now).toDataOr(messages) { return@launch }
             messages.set("Saved.")
             session.setUser(star)
         }

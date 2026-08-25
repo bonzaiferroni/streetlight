@@ -2,7 +2,7 @@ package koala.model
 
 import kampfire.model.Messenger
 import kampfire.model.Outcome
-import kampfire.model.handleResponse
+import kampfire.model.toDataOr
 import koala.utils.launch
 import koala.html.AppRoute
 import kotlinx.coroutines.CoroutineScope
@@ -26,7 +26,7 @@ class RouteInflator(
             portal.stateFlow.filter { !it.isInitialRoute || !it.route.screen.hasShell }.map { it.route }.collectLatest { route ->
                 // console.log("inflating route")
                 state.set { copy(delivery = null) }
-                val content = fetcher.fetchContent(route).handleResponse(messenger)
+                val content = fetcher.fetchContent(route).toDataOr(messenger) { return@collectLatest }
                 val delivery = RouteDelivery(route, content)
                 // console.log("inflate content: ${content != null}")
                 state.set { copy(delivery = delivery) }

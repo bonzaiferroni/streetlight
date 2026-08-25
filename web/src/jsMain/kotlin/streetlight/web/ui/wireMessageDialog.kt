@@ -2,7 +2,6 @@ package streetlight.web.ui
 
 import kampfire.api.Markdown
 import kampfire.api.Username
-import kampfire.model.handleResponse
 import kampfire.model.toDataOr
 import koala.css.*
 import koala.dom.*

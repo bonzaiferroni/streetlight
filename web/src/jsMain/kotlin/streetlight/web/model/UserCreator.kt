@@ -10,7 +10,7 @@ import kampfire.model.PrintLnMessenger
 import kampfire.model.Problem
 import kampfire.model.SignUpRequest
 import kampfire.model.handleOutcome
-import kampfire.model.handleResponse
+import kampfire.model.toDataOr
 import koala.dom.MessageStore
 import koala.model.mutableTapOf
 import koala.model.tapOf
@@ -42,14 +42,13 @@ class UserCreator(
 
     init {
         scope.launch {
-            api.checkGuest().handleResponse(PrintLnMessenger) { username ->
-                state.set { copy(guestUsername = username) }
-            }
+            val username = api.checkGuest().toDataOr(PrintLnMessenger) { return@launch }
+            state.set { copy(guestUsername = username) }
         }
     }
 
     fun generateUsername() = scope.launch {
-        val username = api.generateUsername().handleResponse(toaster) ?: return@launch
+        val username = api.generateUsername().toDataOr(toaster) { return@launch }
         state.set { copy(username = username.value)}
     }
 
@@ -78,14 +77,11 @@ class UserCreator(
         )
         messages.deliver("Creating account...")
         scope.launch {
-            val isSuccess = api.createUser(request).handleResponse(messages) ?: return@launch
-            if (isSuccess) {
-                // cred.setFromSignup(request)
-                cred.followUpAuth(true)
-                gate.signIn(messages)
-                if (accountType == AccountType.Guest) {
-                    state.set { copy(guestUsername = username) }
-                }
+            api.createUser(request).toDataOr(messages) { return@launch }
+            cred.followUpAuth(true)
+            gate.signIn(messages)
+            if (accountType == AccountType.Guest) {
+                state.set { copy(guestUsername = username) }
             }
         }
     }

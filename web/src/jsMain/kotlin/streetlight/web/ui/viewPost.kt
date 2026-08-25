@@ -1,6 +1,5 @@
 package streetlight.web.ui
 
-import kampfire.model.handleResponse
 import koala.dom.RouteScope
 import koala.dom.ViewScope
 import koala.dom.mountChildView

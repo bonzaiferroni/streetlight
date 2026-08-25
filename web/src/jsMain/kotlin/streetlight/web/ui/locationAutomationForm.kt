@@ -1,7 +1,5 @@
 package streetlight.web.ui
 
-import kampfire.model.handleResponse
-import koala.css.*
 import koala.dom.*
 import koala.model.addAll
 import koala.model.storeOf

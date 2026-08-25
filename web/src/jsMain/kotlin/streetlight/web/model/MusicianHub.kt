@@ -1,6 +1,6 @@
 package streetlight.web.model
 
-import kampfire.model.getDataOrNull
+import kampfire.model.toDataOr
 import koala.model.dedup
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
@@ -26,28 +26,26 @@ class MusicianHub(
 
     fun refreshSongs() {
         scope.launch {
-            val songs = api.readSongs().getDataOrNull() ?: emptyList()
-            view.setValue { it.copy(songs = songs) }
+            val songs = api.readSongs().toDataOr { return@launch }
+            view.set { copy(songs = songs) }
         }
     }
 
     fun setArtist(artist: String) {
-        song.setValue { it.copy(artist = artist) }
+        song.set { copy(artist = artist) }
     }
 
     fun setSongTitle(title: String) {
-        song.setValue { it.copy(title = title) }
+        song.set { copy(title = title) }
     }
 
     fun addSong() {
         val songNow = song.now
         if (!songNow.isValid) return
         scope.launch {
-            val id = api.createSong(songNow)
-            if (id != null) {
-                refreshSongs()
-                song.setValue { NewSong() }
-            }
+            api.createSong(songNow).toDataOr { return@launch }
+            refreshSongs()
+            song.set { NewSong() }
         }
     }
 }

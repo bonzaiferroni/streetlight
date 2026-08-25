@@ -1,8 +1,7 @@
 package streetlight.web.model
 
 import kampfire.model.Labeled
-import kampfire.model.getDataOrNull
-import kampfire.model.handleResponse
+import kampfire.model.toDataOr
 import koala.dom.ChartData
 import koala.dom.ChartLine
 import koala.utils.launch
@@ -55,11 +54,11 @@ class SiteMonitor(
     private fun refreshData() {
         refreshJob?.cancel()
         refreshJob = scope.launch(::refreshData) {
-            val points = api.feedSiteStatus(stateNow.timeFrame.resolution).handleResponse(toaster) ?: emptyList()
-            state.setValue { it.copy(points = points) }
+            val points = api.feedSiteStatus(stateNow.timeFrame.resolution).toDataOr(toaster) { return@launch }
+            state.set { copy(points = points) }
             while (true) {
                 delay(stateNow.timeFrame.resolution.duration)
-                val point = api.readLastSiteStatus(stateNow.timeFrame.resolution).getDataOrNull() ?: continue
+                val point = api.readLastSiteStatus(stateNow.timeFrame.resolution).toDataOr{ continue }
                 pointFlow.emit(point)
             }
         }

@@ -1,6 +1,6 @@
 package streetlight.web.ui
 
-import kampfire.model.handleResponse
+import kampfire.model.toDataOr
 import koala.SvgFile
 import koala.css.Height3
 import koala.css.ModifierSet
@@ -34,12 +34,12 @@ fun ViewScope.starToggle(
         launchEffect {
             icon.unmodify(ScaleIn)
             icon.modify(ScaleOut)
-            api.editLight(LightEdit(recordId.value, !litNow, lightType)).handleResponse(toaster) {
-                litNow = !litNow
-                icon.setStyle(Property.MaskUrl.to(svg()))
-                icon.modify(ScaleIn)
-                icon.unmodify(ScaleOut)
-            }
+            api.editLight(LightEdit(recordId.value, !litNow, lightType)).toDataOr(toaster) { return@launchEffect }
+
+            litNow = !litNow
+            icon.setStyle(Property.MaskUrl.to(svg()))
+            icon.modify(ScaleIn)
+            icon.unmodify(ScaleOut)
         }
     }
 }

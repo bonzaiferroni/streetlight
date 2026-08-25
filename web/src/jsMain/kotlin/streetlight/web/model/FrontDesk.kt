@@ -1,6 +1,6 @@
 package streetlight.web.model
 
-import kampfire.model.handleResponse
+import kampfire.model.toDataOr
 import koala.utils.launch
 import koala.model.tapOf
 import koala.model.mutableTapOf
@@ -32,13 +32,13 @@ class FrontDesk(
     fun sendFeedback() {
         val edit = stateNow.edit.takeIf { it.isValid } ?: return
         scope.launch(::sendFeedback) {
-            val isSuccess = api.createFeedback(edit).handleResponse(toaster) ?: false
-            if (isSuccess) refreshFeedback()
+            api.createFeedback(edit).toDataOr(toaster) { return@launch }
+            refreshFeedback()
         }
     }
 
     private suspend fun refreshFeedback() {
-        val list = api.feedFeedback().handleResponse(toaster) ?: emptyList()
+        val list = api.feedFeedback().toDataOr(toaster) { return }
         state.set { copy(feed = list) }
     }
 }

@@ -3,7 +3,7 @@ package streetlight.web.ui
 import kampfire.api.isValid
 import kampfire.api.toSlug
 import kampfire.model.CoreProblem
-import kampfire.model.handleResponse
+import kampfire.model.toDataOr
 import koala.dom.*
 import koala.html.div
 import koala.model.MutableTap
@@ -36,9 +36,8 @@ fun ViewScope.subdomainSection(configState: MutableTap<LocationConfig>) = formSe
          val locationId = configState.now.locationId
         launchEffect {
             messages.deliverSending()
-            api.configSubdomain(SubdomainConfig(locationId, slug)).handleResponse(messages, "Subdomain is active.") {
-                configState.set { copy(subdomain = slug) }
-            }
+            api.configSubdomain(SubdomainConfig(locationId, slug)).toDataOr(messages, "Subdomain is active.") { return@launchEffect }
+            configState.set { copy(subdomain = slug) }
         }
     }, messages)
 }

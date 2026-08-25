@@ -1,6 +1,6 @@
 package streetlight.web.ui
 
-import kampfire.model.handleResponse
+import kampfire.model.toDataOrNull
 import koala.css.*
 import koala.dom.*
 import koala.html.Id
@@ -33,7 +33,7 @@ fun ViewScope.viewLocationConfig(
             val layout = layoutEditor.buildLayout(saveMessages)
             configState.set { copy(design = PageDesign(layout, theme)) }
             saveMessages.deliverSending()
-            api.updateLocationConfig(configState.now).handleResponse(saveMessages, "Config saved.")
+            api.updateLocationConfig(configState.now).toDataOrNull(saveMessages, "Config saved.")
         }
     }
 

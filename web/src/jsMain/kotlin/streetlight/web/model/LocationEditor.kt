@@ -1,7 +1,8 @@
 package streetlight.web.model
 
 import kampfire.api.toMarkdown
-import kampfire.model.handleResponse
+import kampfire.model.toDataOr
+import kampfire.model.toDataOrNull
 import kampfire.model.toUrl
 import koala.dom.MessageStore
 import koala.model.dedupNotNull
@@ -63,10 +64,9 @@ class LocationEditor(
         val website = editNow.website?.takeIf { it.isAbsolute } ?: return
         scope.launch {
             websiteMessage.set("Reading the link, this will take a minute.", true)
-            api.parseLocation(UrlParseRequest(website)).handleResponse(websiteMessage) { edit ->
-                state.set { copy(edit = edit.mergeLeft(editNow)) }
-                websiteMessage.deliver("Does this information look correct?")
-            }
+            val edit = api.parseLocation(UrlParseRequest(website)).toDataOr(websiteMessage) { return@launch }
+            state.set { copy(edit = edit.mergeLeft(editNow)) }
+            websiteMessage.deliver("Does this information look correct?")
         }
     }
 
@@ -94,8 +94,8 @@ class LocationEditor(
 
         messages.set("Sending...", true)
         return when (editNow.locationId) {
-            null -> api.createLocation(edit).handleResponse(messages)
-            else -> api.updateLocation(edit).handleResponse(messages)
+            null -> api.createLocation(edit).toDataOrNull(messages)
+            else -> api.updateLocation(edit).toDataOrNull(messages)
         }
     }
 }

@@ -1,6 +1,6 @@
 package streetlight.web.ui
 
-import kampfire.model.handleResponse
+import kampfire.model.toDataOr
 import koala.dom.*
 import kotlinx.coroutines.launch
 import streetlight.model.ui.HomeRoute
@@ -17,7 +17,7 @@ fun ViewScope.wireStreetMap() {
         portal.routeFlowOf<HomeRoute>().collect {
             val galaxyIds = cache.topGalaxies.getItems().map { it.galaxyId }
             // td: gather initial posts from json in html
-            val posts = api.readPosts(galaxyIds).handleResponse(toaster) ?: return@collect
+            val posts = api.readPosts(galaxyIds).toDataOr(toaster) { return@collect }
             val points = markerService.createMarkers(posts)
             markerMap.setPoints(points)
         }

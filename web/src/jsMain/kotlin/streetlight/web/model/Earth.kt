@@ -1,6 +1,6 @@
 package streetlight.web.model
 
-import kampfire.model.handleResponse
+import kampfire.model.toDataOr
 import koala.utils.launch
 import koala.model.FeatureMarker
 import koala.model.GeoFocus
@@ -66,7 +66,7 @@ class Earth(
                         // val maps = api.readTopGalaxies().handleOutcome(toaster::toast)
                         //     ?.map { GalaxyMap(it) } ?: emptyList()
                         // state.set { it.copy(maps = maps) }
-                        val markers = api.readTopGalaxies().handleResponse(toaster)?.let {
+                        val markers = api.readTopGalaxies().toDataOr(toaster) { return }.let {
                             markerService.createMarkers(it)
                         }
                         markerMap.setPoints(markers)
@@ -75,13 +75,9 @@ class Earth(
                     }
 
                     else -> {
-                        val galaxy = api.readGalaxy(slug).handleResponse(toaster)
-                        if (galaxy == null) {
-                            toaster.toast("galaxy not found: $slug")
-                            return
-                        }
+                        val galaxy = api.readGalaxy(slug).toDataOr(toaster) { return }
 
-                        val markers = api.readPosts(galaxy.galaxyId).handleResponse(toaster)?.let {
+                        val markers = api.readPosts(galaxy.galaxyId).toDataOr(toaster) { return }.let {
                             markerService.createMarkers(it)
                         }
                         markerMap.setPoints(markers)
@@ -94,7 +90,7 @@ class Earth(
             is CityMapRoute -> {
                 when (val slug = route.slug) {
                     null -> {
-                        val markers = api.readTopCities().handleResponse(toaster)?.let {
+                        val markers = api.readTopCities().toDataOr(toaster) { return }.let {
                             markerService.createMarkers(it)
                         }
                         markerMap.setPoints(markers)
@@ -102,13 +98,9 @@ class Earth(
                         showAll()
                     }
                     else -> {
-                        val city = api.readCity(slug).handleResponse(toaster)
-                        if (city == null) {
-                            toaster.toast("city not found: $slug")
-                            return
-                        }
+                        val city = api.readCity(slug).toDataOr(toaster) { return }
 
-                        val markers = api.readCityPosts(slug).handleResponse(toaster)?.let {
+                        val markers = api.readCityPosts(slug).toDataOr(toaster) { return }.let {
                             markerService.createMarkers(it)
                         }
                         markerMap.setPoints(markers)

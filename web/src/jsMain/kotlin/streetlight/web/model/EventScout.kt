@@ -2,7 +2,7 @@ package streetlight.web.model
 
 import kampfire.model.GeoPoint
 import kampfire.model.Labeled
-import kampfire.model.handleResponse
+import kampfire.model.toDataOr
 import koala.dom.MessageStore
 import koala.model.dedup
 import koala.model.tapOf
@@ -83,9 +83,8 @@ class EventScout(
             } ?: return@launch
 
             val edit = PostEdit(null, galaxy.galaxyId, PostType.Event, eventId.value, null)
-            api.createPost(edit).handleResponse(postMessage) { post ->
-                state.set { copy(postId = post.postId) }
-            }
+            val post = api.createPost(edit).toDataOr(postMessage) { return@launch }
+            state.set { copy(postId = post.postId) }
         }
     }
 

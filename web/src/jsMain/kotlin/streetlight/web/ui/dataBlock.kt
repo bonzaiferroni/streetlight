@@ -1,7 +1,7 @@
 package streetlight.web.ui
 
 import kampfire.model.Outcome
-import kampfire.model.handleResponse
+import kampfire.model.toDataOr
 import koala.css.ModifierSet
 import koala.dom.ViewScope
 import koala.dom.column
@@ -17,10 +17,9 @@ fun <T> ViewScope.dataBlock(
     val element = column(mod)
     element.onView {
         launchEffect {
-            requestData().handleResponse(toaster) { data ->
-                this@dataBlock.mountChildView("request", element) {
-                    content(data)
-                }
+            val data = requestData().toDataOr(toaster) { return@launchEffect }
+            this@dataBlock.mountChildView("request", element) {
+                content(data)
             }
         }
     }

@@ -1,8 +1,8 @@
 package streetlight.web.model
 
-import kabinet.utils.replaceAt
 import kampfire.api.toMarkdown
-import kampfire.model.handleResponse
+import kampfire.model.toDataOr
+import kampfire.model.toDataOrNull
 import kampfire.model.toUrl
 import koala.dom.MessageStore
 import koala.model.tapOf
@@ -14,7 +14,6 @@ import kotlinx.coroutines.launch
 import streetlight.model.data.Location
 import streetlight.model.data.EventEdit
 import streetlight.model.data.Event
-import streetlight.model.data.ExtraLink
 import streetlight.model.data.LocationId
 import streetlight.model.data.UrlParseRequest
 import streetlight.model.data.mergeRight
@@ -77,11 +76,10 @@ class EventEditor(
         val url = state.now.edit.website?.takeIf { it.isAbsolute } ?: return
         scope.launch {
             parseMessage.set("Reading the link, this will take a minute.", true)
-            api.parseSingleEvent(UrlParseRequest(url)).handleResponse(parseMessage) { edit ->
-                val event = edit.mergeRight(state.now.edit)
-                parseMessage.deliver("Does this information look correct?")
-                state.set { copy(edit = event) }
-            }
+            val edit = api.parseSingleEvent(UrlParseRequest(url)).toDataOr(parseMessage) { return@launch }
+            val event = edit.mergeRight(state.now.edit)
+            parseMessage.deliver("Does this information look correct?")
+            state.set { copy(edit = event) }
         }
     }
 
@@ -94,7 +92,7 @@ class EventEditor(
         return when (editNow.eventId) {
             null -> api.createEvent(edit)
             else -> api.updateEvent(edit)
-        }.handleResponse(message)
+        }.toDataOrNull(message)
     }
 }
 

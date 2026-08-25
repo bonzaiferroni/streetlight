@@ -2,7 +2,7 @@ package streetlight.web.model
 
 import kampfire.api.Slug
 import kampfire.api.toMarkdown
-import kampfire.model.handleResponse
+import kampfire.model.toDataOr
 import koala.dom.MessageStore
 import koala.model.dedup
 import koala.model.mutableTapOf
@@ -59,12 +59,11 @@ class MediaEditor(
             val media = when (edit.mediaId) {
                 null -> api.createMedia(edit)
                 else -> api.updateMedia(edit)
-            }.handleResponse(toaster) { media ->
-                state.set { copy(slug = media.slug) }
-                media
-            }
+            }.toDataOr(toaster) { return@launch }
 
-            if (media != null && galaxy != null) {
+            state.set { copy(slug = media.slug) }
+
+            if (galaxy != null) {
                 message.deliver("Posting to ${galaxy.name}...")
                 api.createPost(PostEdit(
                     postId = null,

@@ -1,7 +1,7 @@
 package streetlight.web.ui
 
 import kampfire.api.toUsername
-import kampfire.model.handleResponse
+import kampfire.model.toDataOr
 import koala.model.mutableTapOf
 import koala.model.storeOf
 import koala.model.dedup
@@ -31,9 +31,9 @@ class Sandbox(
         scope.launch(::checkAvailability.name, toaster, "arrr ${Random.nextInt()}") {
             delay(5.seconds)
             println(null.asDynamic().anything)
-            val isNameTaken = api.checkUsernameExists(stateNow.name.toUsername()).handleResponse(toaster)
-            val name = if (isNameTaken == true) "" else stateNow.name
-            state.setValue { it.copy(isNameTaken = isNameTaken, name = name) }
+            val isNameTaken = api.checkUsernameExists(stateNow.name.toUsername()).toDataOr(toaster) { return@launch }
+            val name = if (isNameTaken) "" else stateNow.name
+            state.set { copy(isNameTaken = isNameTaken, name = name) }
         }
     }
 }

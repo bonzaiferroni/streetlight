@@ -1,6 +1,6 @@
 package streetlight.web.model
 
-import kampfire.model.getDataOrNull
+import kampfire.model.toDataOr
 import koala.model.dedup
 import koala.model.storeOf
 import kotlinx.coroutines.CoroutineScope
@@ -26,7 +26,7 @@ class SongProfile(
 
     fun refreshSong() {
         scope.launch {
-            val value = api.readSong(songId).getDataOrNull() ?: return@launch
+            val value = api.readSong(songId).toDataOr { return@launch }
             song.setValue { value }
         }
     }
@@ -42,7 +42,7 @@ class SongProfile(
     fun updateSong() {
         val song = song.now ?: return
         scope.launch {
-            val isSuccess = api.updateSong(song).getDataOrNull() ?: return@launch
+            val isSuccess = api.updateSong(song).toDataOr { return@launch }
             if (isSuccess) {
                 refreshSong()
             }

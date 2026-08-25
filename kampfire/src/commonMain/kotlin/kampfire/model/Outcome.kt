@@ -10,6 +10,9 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.encoding.decodeStructure
 import kotlinx.serialization.encoding.encodeStructure
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.InvocationKind
+import kotlin.contracts.contract
 
 @Serializable
 sealed interface Outcome <out T> {
@@ -19,19 +22,76 @@ sealed interface Outcome <out T> {
         is Ok<T> -> true
         else -> false
     }
+}
 
-    fun toDataOrNull(onProblem: ((Problem) -> Unit)? = null): T? = when (this) {
+@OptIn(ExperimentalContracts::class)
+inline fun <T> Outcome<T>.toDataOr(onProblem: (Problem) -> Nothing): T {
+    contract {
+        callsInPlace(onProblem, InvocationKind.AT_MOST_ONCE)
+    }
+    return when (this) {
         is Ok -> data
+        is Problem -> onProblem(this)
+    }
+}
+
+@OptIn(ExperimentalContracts::class)
+inline fun <T> Outcome<T>.toDataOr(
+    messenger: Messenger,
+    defaultOkMessage: String? = null,
+    okMessenger: Messenger = messenger,
+    onProblem: (Problem) -> Nothing
+): T {
+    contract {
+        callsInPlace(onProblem, InvocationKind.AT_MOST_ONCE)
+    }
+    return when (this) {
+        is Ok -> {
+            val deliveredMessage = message ?: defaultOkMessage
+            deliveredMessage?.let {
+                okMessenger.deliverSuccess(it)
+            }
+            data
+        }
         is Problem -> {
-            onProblem?.invoke(this)
-            null
+            messenger.deliver(this)
+            onProblem(this)
         }
     }
 }
 
-inline fun <T> Outcome<T>.toDataOr(onProblem: (Problem) -> Nothing): T = when (this) {
+fun <T> Outcome<T>.toDataOrNull(onProblem: ((Problem) -> Unit)? = null): T? = when (this) {
     is Ok -> data
-    is Problem -> onProblem(this)
+    is Problem -> {
+        onProblem?.invoke(this)
+        null
+    }
+}
+
+fun <T> Outcome<T>.toDataOrNull(
+    messenger: Messenger,
+    defaultOkMessage: String? = null,
+    okMessenger: Messenger = messenger,
+) = toDataOrNull(messenger, defaultOkMessage, okMessenger) { it }
+
+fun <T1, T2> Outcome<T1>.toDataOrNull(
+    messenger: Messenger,
+    defaultOkMessage: String? = null,
+    okMessenger: Messenger = messenger,
+    block: (T1) -> T2
+): T2? = when (this) {
+    is Ok -> {
+        val deliveredMessage = message ?: defaultOkMessage
+        deliveredMessage?.let {
+            okMessenger.deliver(UIMessage(it, UIMessageType.Success))
+        }
+        block(data)
+    }
+
+    is Problem -> {
+        messenger.deliver(this)
+        null
+    }
 }
 
 inline fun <T> Outcome<T>.toDataOr(onProblem: (Problem) -> Unit, onFinished: () -> Nothing): T = when (this) {

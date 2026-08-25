@@ -1,32 +1,10 @@
 package streetlight.web.ui
 
 import kampfire.api.Username
-import kampfire.model.handleResponse
-import koala.css.BlurBackdrop
-import koala.css.BorderRadius3
-import koala.css.BorderSolid2Px
-import koala.css.Magic
-import koala.css.SlideUp
-import koala.css.Zen
-import koala.css.modify
-import koala.dom.ViewScope
-import koala.dom.button
-import koala.dom.card
-import koala.dom.column
-import koala.dom.safetyButton
-import koala.dom.getAttribute
-import koala.dom.closePopover
-import koala.dom.flowBlock
-import koala.dom.onClick
-import koala.dom.popoverRaw
-import koala.dom.popover
+import kampfire.model.toDataOr
+import koala.css.*
+import koala.dom.*
 import koala.html.Attribute
-import koala.model.storeOf
-import kotlinx.browser.document
-import kotlinx.coroutines.launch
-import kotlinx.dom.clear
-import kotlinx.html.dom.append
-import org.w3c.dom.HTMLElement
 import streetlight.model.data.PostId
 
 fun ViewScope.wirePostMenu() {
@@ -46,9 +24,8 @@ fun ViewScope.wirePostMenu() {
             }
             safetyButton("remove", onConfirm = {
                 launchEffect("remove post") {
-                    api.removePost(postId).handleResponse(toaster) {
-                        portal.refresh()
-                    }
+                    api.removePost(postId).toDataOr(toaster) { return@launchEffect }
+                    portal.refresh()
                 }
             })
         }

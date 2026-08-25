@@ -2,7 +2,7 @@ package streetlight.web.ui
 
 import kampfire.api.Markdown
 import kampfire.api.toMarkdown
-import kampfire.model.handleResponse
+import kampfire.model.toDataOr
 import koala.css.*
 import koala.dom.*
 import koala.html.filigree
@@ -41,7 +41,7 @@ fun ViewScope.viewTalkLog(model: TalkLog) {
     contentScope.launch() {
 
         launch {
-            val comments = model.readHistory().handleResponse(toaster) ?: return@launch
+            val comments = model.readHistory().toDataOr(toaster) { return@launch }
             buildTree(model, treeRoot!!, comments)
 
             model.messageFlow.collect { message ->

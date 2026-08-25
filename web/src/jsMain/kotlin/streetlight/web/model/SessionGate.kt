@@ -4,7 +4,7 @@ import kampfire.model.AccountType
 import kampfire.model.LoginRequest
 import kampfire.model.Messenger
 import kampfire.model.PrintLnMessenger
-import kampfire.model.handleResponse
+import kampfire.model.toDataOr
 import koala.utils.launch
 import koala.model.dedup
 import koala.model.tapOf
@@ -38,23 +38,20 @@ class SessionGate(
 
     fun signIn(request: LoginRequest, receiver: Messenger) {
         scope.launch("sign-in") {
-            if (api.login(request).handleResponse(receiver) ?: false) {
-                readUser(receiver)
-            }
+            api.login(request).toDataOr(receiver) { return@launch }
+            readUser(receiver)
         }
     }
 
     suspend fun readUser(receiver: Messenger?) {
-        api.validateLogin().handleResponse(receiver ?: PrintLnMessenger) { star ->
-            val star = star ?: return@handleResponse
-            console.log("signed in: ${star.accountType}")
-            state.set { copy(star = star) }
+        val star = api.validateLogin().toDataOr(receiver ?: PrintLnMessenger) { return }
+        console.log("signed in: ${star.accountType}")
+        state.set { copy(star = star) }
 
-            // guest check in
-            if (star.accountType == AccountType.Guest) {
-                scope.launch("StarSession > check-guest") {
-                    api.checkGuest()
-                }
+        // guest check in
+        if (star.accountType == AccountType.Guest) {
+            scope.launch("StarSession > check-guest") {
+                api.checkGuest()
             }
         }
     }

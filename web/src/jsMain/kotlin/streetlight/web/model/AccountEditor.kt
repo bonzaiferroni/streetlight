@@ -13,8 +13,8 @@ import kampfire.model.PrintLnMessenger
 import kampfire.model.Problem
 import kampfire.model.UIMessage
 import kampfire.model.UIMessageType
-import kampfire.model.handleOutcome
-import kampfire.model.handleResponse
+import kampfire.model.toDataOr
+import kampfire.model.toDataOrNull
 import koala.dom.MessageStore
 import koala.model.tapOf
 import koala.model.mutableTapOf
@@ -57,7 +57,7 @@ class AccountEditor(
                 || initialAccount.emailStatus == EmailStatus.Unverified
         if (isUnverified) {
             scope.launch("check verification status") {
-                val isSent = api.readEmailVerificationIsSent().handleResponse(PrintLnMessenger) ?: return@launch
+                val isSent = api.readEmailVerificationIsSent().toDataOr(PrintLnMessenger) { return@launch }
                 state.set { copy(emailVerificationSent = isSent) }
                 if (isSent) {
                     emailMessages.deliver("Check your inbox to verify your email.")
@@ -67,19 +67,13 @@ class AccountEditor(
     }
 
     fun completeRegistration(messenger: Messenger) {
-        val email = when (val emailOutcome = emailEditor.getOutcome()) {
-            is Problem -> {
-                emailOutcome.handleOutcome(messenger)
-                return
-            }
-            is Ok -> emailOutcome.data
-        }
+        val email = emailEditor.getOutcome().toDataOr(messenger) { return }
 
-        val password = passwordEditor.getOutcome().handleOutcome(messenger) ?: return
+        val password = passwordEditor.getOutcome().toDataOr(messenger) { return }
 
         val request = AccountUpgradeRequest(password.obfuscatePassword(), email)
         scope.launch {
-            val isSuccess = api.upgradeAccount(request).handleResponse(messenger) ?: return@launch
+            val isSuccess = api.upgradeAccount(request).toDataOr(messenger) { return@launch }
             if (isSuccess) {
                 if (email != null) {
                     toaster.deliver("Check your inbox to verify your email.")
@@ -92,7 +86,7 @@ class AccountEditor(
     fun verifyExistingEmail() {
         scope.launch(::verifyExistingEmail) {
             emailMessages.deliverSending()
-            if (api.verifyExistingEmail().handleResponse(emailMessages) == null) return@launch
+            api.verifyExistingEmail().toDataOr(emailMessages) { return@launch }
             state.set { copy(emailVerificationSent = true) }
             emailMessages.deliver("Request sent, check your email.")
         }
@@ -115,7 +109,7 @@ class AccountEditor(
                 else -> ""
             }
             emailMessages.deliverSending()
-            if (api.removeEmail(PasswordVerification(password)).handleResponse(emailMessages) == null) return@launch
+            api.removeEmail(PasswordVerification(password)).toDataOr { return@launch }
             state.set { copy(
                 account = account.copy(email = null, emailStatus = null),
                 emailVerificationSent = false,
@@ -128,7 +122,7 @@ class AccountEditor(
     }
 
     fun addEmail() {
-        val email = emailEditor.getOutcome().handleOutcome(emailMessages) ?: return
+        val email = emailEditor.getOutcome().toDataOrNull(emailMessages) ?: return
         val passwordNow = if (stateNow.account.viableEmail != null) {
             stateNow.verifyPassword.takeIf { it.isNotBlank() }?.let { Password(it) } ?: return
         } else null
@@ -137,7 +131,7 @@ class AccountEditor(
             api.addEmail(EmailChange(
                 passwordNow = passwordNow?.obfuscatePassword(),
                 newEmail = email,
-            )).handleResponse(emailMessages) ?: return@launch
+            )).toDataOr(emailMessages) { return@launch }
             state.set { copy(
                 account = account.copy(email = email, emailStatus = EmailStatus.Unverified),
                 emailVerificationSent = true,
@@ -149,16 +143,16 @@ class AccountEditor(
     }
 
     fun changePassword(messenger: Messenger) {
-        val password = passwordEditor.getOutcome().handleOutcome(messenger) ?: return
+        val password = passwordEditor.getOutcome().toDataOr(messenger) { return }
         val passwordNow = if (stateNow.account.viableEmail != null) {
             stateNow.verifyPassword.takeIf { it.isNotBlank() }?.let { Password(it) } ?: return
         } else null
         scope.launch(::changePassword) {
             messenger.deliverSending()
-            if (api.changePassword(PasswordChange(
+            api.changePassword(PasswordChange(
                 passwordNow = passwordNow?.obfuscatePassword(),
                 newPassword = password.obfuscatePassword()
-            )).handleOutcome(messenger) == null) return@launch
+            )).toDataOr(messenger) { return@launch }
             passwordEditor.clear()
             state.set { copy(isEditingPassword = false, verifyPassword = "")}
             messenger.deliver(UIMessage("Password successfully changed.", UIMessageType.Success))
@@ -168,7 +162,7 @@ class AccountEditor(
     fun resetPassword(email: EmailAddress, messenger: Messenger) {
         scope.launch(::resetPassword) {
             messenger.deliverSending()
-            api.resetPassword(email).handleResponse(messenger) ?: return@launch
+            api.resetPassword(email).toDataOr(messenger) { return@launch }
             messenger.deliver("Check your email inbox for a link to reset your password.")
         }
     }

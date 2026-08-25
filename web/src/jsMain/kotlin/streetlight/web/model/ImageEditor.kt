@@ -5,7 +5,7 @@ import kampfire.model.Outcome
 import kampfire.model.PrintLnMessenger
 import kampfire.model.UIMessage
 import kampfire.model.UIMessageType
-import kampfire.model.handleResponse
+import kampfire.model.toDataOr
 import koala.Image
 import koala.model.MutableTap
 import streetlight.web.io.ApiClient
@@ -25,7 +25,7 @@ class ImageEditor(
 
 suspend fun uploadImage(image: Image, messenger: Messenger?, api: ApiClient): Image? {
     messenger?.deliver(UIMessage("Uploading image...", UIMessageType.Working))
-    return uploadImage(image, api).handleResponse(messenger ?: PrintLnMessenger, "Image uploaded.")
+    return uploadImage(image, api).toDataOr(messenger ?: PrintLnMessenger, "Image uploaded.") { return null }
 }
 
 suspend fun uploadImage(image: Image, api: ApiClient): Outcome<Image> {

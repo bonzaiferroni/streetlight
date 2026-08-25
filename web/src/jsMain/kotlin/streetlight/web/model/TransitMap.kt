@@ -2,8 +2,8 @@ package streetlight.web.model
 
 import kampfire.model.GeoPoint
 import kampfire.model.PrintLnMessenger
-import kampfire.model.getDataOrNull
-import kampfire.model.handleResponse
+import kampfire.model.toDataOr
+import kampfire.model.toDataOrNull
 import koala.SvgFile
 import koala.model.LineMarker
 import koala.model.MarkerId
@@ -40,7 +40,7 @@ class TransitMap(
 
     private var currentEntities: List<VehicleMarker> = emptyList()
     private var trackingJob: Job? = null
-    private var transit: AreaTransit? = null
+    private var cachedTransit: AreaTransit? = null
     private var currentRoutes: List<RouteMarker>? = null
     private var isInitialized: Boolean = false
 
@@ -67,7 +67,9 @@ class TransitMap(
         if (trackingJob?.isActive == true) return
         markerLayer.setIsVisible(true)
         trackingJob = scope.launch {
-            val transit = readTransit() ?: return@launch
+            val transit = cachedTransit ?: client.readAreaTransit().toDataOr { return@launch }.also {
+                cachedTransit = it
+            }
 
             val routes = currentRoutes
             if (routes != null) {
@@ -83,7 +85,7 @@ class TransitMap(
 
             while (true) {
                 if (geoMap.camera.stateNow.isViewed) {
-                    val transitState = client.readVehiclePositions(timestamp).handleResponse(PrintLnMessenger)
+                    val transitState = client.readVehiclePositions(timestamp).toDataOrNull(PrintLnMessenger)
                     if (transitState != null) {
                         timestamp = transitState.timestamp
                         showTransitState(transitState)
@@ -103,8 +105,6 @@ class TransitMap(
         currentEntities = emptyList()
     }
 
-    private suspend fun readTransit() = transit ?: client.readAreaTransit().getDataOrNull().also { transit = it }
-
     private fun createRoutes(transit: AreaTransit): List<RouteMarker> {
         val routes = transit.routes.mapNotNull { route ->
             if (route.vehicleType == VehicleType.Bus) return@mapNotNull null
@@ -116,7 +116,7 @@ class TransitMap(
     }
 
     private fun showTransitState(transitState: AreaTransitState) {
-        val transit = transit ?: return
+        val transit = cachedTransit ?: return
         val vehicles = transitState.vehicles
 //        val removedIds = currentEntities
 //            .filter { currentEntity -> vehicles.none { currentEntity.vehicleId == it.vehicleId } }

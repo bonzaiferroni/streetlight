@@ -1,7 +1,7 @@
 package streetlight.web.model
 
 import kampfire.model.Labeled
-import kampfire.model.handleResponse
+import kampfire.model.toDataOr
 import koala.dom.MessageStore
 import koala.utils.launch
 import koala.model.tapOf
@@ -78,10 +78,9 @@ class LocationScout(
         }
 
         queryField.reactIn(scope) { query ->
-            api.searchLocations(query, stateNow.city?.takeIf { it.isNotBlank() })
-                .handleResponse(toaster) { locations ->
-                    state.set { copy(locations = locations) }
-                }
+            val locations = api.searchLocations(query, stateNow.city?.takeIf { it.isNotBlank() })
+                .toDataOr(toaster) { return@reactIn }
+            state.set { copy(locations = locations) }
         }
 
         state.tapOf{ it.edit }.reactIn(scope) { edit ->
@@ -101,18 +100,17 @@ class LocationScout(
         scope.launch {
             val city = stateNow.city?.takeIf { it.isNotBlank() }
             val bounds = galaxy.geoBounds.takeIf { city == null }?.resizeBy(5f)
-            osm.readLocations(query, stateNow.city, bounds).handleResponse(queryMessage) { locations ->
-                queryMessage.deliverSuccess("found: ${locations.size}")
-                state.set { copy(locations = locations.mapNotNull { loc -> loc.toEditOrNull() }) }
-            }
+            val locations = osm.readLocations(query, stateNow.city, bounds).toDataOr(queryMessage) { return@launch }
+            queryMessage.deliverSuccess("found: ${locations.size}")
+            state.set { copy(locations = locations.mapNotNull { loc -> loc.toEditOrNull() }) }
         }
     }
 
     fun whatIsHere() {
         scope.launch(::whatIsHere) {
             val center = map.geoMap.camera.centerField.now
-            osm.readLocationAt(center).handleResponse(mapMessage) { location ->
-                val location = location.toEditOrNull() ?: return@handleResponse
+            osm.readLocationAt(center).toDataOr(mapMessage) { return@launch }.let { location ->
+                val location = location.toEditOrNull() ?: return@launch
                 mapMessage.deliver(location.label)
                 state.set { copy(locations = listOf(location))}
             }
@@ -140,9 +138,8 @@ class LocationScout(
             val location = submitLocation() ?: return@launch
 
             val edit = PostEdit(null, galaxy.galaxyId, PostType.Location, location.locationId.value, null)
-            api.createPost(edit).handleResponse(postMessage) { post ->
-                state.set { copy(postId = post.postId) }
-            }
+            val post = api.createPost(edit).toDataOr(postMessage) { return@launch }
+            state.set { copy(postId = post.postId) }
         }
     }
 }

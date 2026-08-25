@@ -1,6 +1,5 @@
 package streetlight.web.ui
 
-import kampfire.model.handleResponse
 import koala.dom.*
 import koala.model.GeoCamera
 import streetlight.model.data.EventLocation

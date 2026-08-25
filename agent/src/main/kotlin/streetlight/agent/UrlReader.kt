@@ -3,6 +3,7 @@ package streetlight.agent
 import ai.koog.agents.core.tools.annotations.LLMDescription
 import ai.koog.agents.core.tools.annotations.Tool
 import ai.koog.agents.core.tools.reflect.ToolSet
+import kampfire.model.toDataOrNull
 
 class UrlToolSet : ToolSet {
     @Tool

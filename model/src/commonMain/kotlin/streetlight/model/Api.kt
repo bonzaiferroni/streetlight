@@ -166,7 +166,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
     }
 
     object Stars: ApiNode(this) {
-        object ValidateLogin: GetEndpoint<Star?>(this)
+        object ValidateLogin: GetEndpoint<Star>(this)
         object EditLight: PostEndpoint<EditLightRequest, Boolean>(this)
         object PendingEdits: GetEndpoint<List<EditLog>>(this)
         object ReadAccount: GetEndpoint<Account>(this)
@@ -213,7 +213,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
 
     object Feedback: ApiNode(this) {
         object Feed: GetEndpoint<List<FeedbackDto>>(this)
-        object Create: PostEndpoint<FeedbackEdit, Boolean>(this)
+        object Create: PostEndpoint<FeedbackEdit, Unit>(this)
     }
 
     object Status: ApiNode(this) {
