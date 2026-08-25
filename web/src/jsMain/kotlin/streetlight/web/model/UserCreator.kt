@@ -9,7 +9,6 @@ import kampfire.model.Ok
 import kampfire.model.PrintLnMessenger
 import kampfire.model.Problem
 import kampfire.model.SignUpRequest
-import kampfire.model.handleOutcome
 import kampfire.model.toDataOr
 import koala.dom.MessageStore
 import koala.model.mutableTapOf
@@ -55,17 +54,11 @@ class UserCreator(
     fun setUsername(username: String) = state.set { copy(username = username) }
 
     fun createAccount(accountType: AccountType) {
-        val username = stateNow.username.trim().toUsername().toValidOutcome().handleOutcome(messages) ?: return
-        val email = when (val emailOutcome = emailEditor.getOutcome()) {
-            is Problem -> {
-                emailOutcome.handleOutcome(messages)
-                return
-            }
-            is Ok -> emailOutcome.data
-        }
+        val username = stateNow.username.trim().toUsername().toValidOutcome().toDataOr(messages) { return }
+        val email = emailEditor.getOutcome().toDataOr { return }
         val password = when (accountType) {
             AccountType.Guest -> null
-            AccountType.Registered -> passwordEditor.getOutcome().handleOutcome(messages) ?: return
+            AccountType.Registered -> passwordEditor.getOutcome().toDataOr(messages) { return }
         }
 
         val request = SignUpRequest(

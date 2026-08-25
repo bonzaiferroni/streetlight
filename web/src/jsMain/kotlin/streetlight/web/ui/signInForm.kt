@@ -4,7 +4,7 @@ import kampfire.api.Username
 import kampfire.api.toEmailAddress
 import kampfire.api.toValidOutcome
 import kampfire.model.LoginRequest
-import kampfire.model.handleOutcome
+import kampfire.model.toDataOr
 import koala.LottieFile
 import koala.css.AlignItemsCenter
 import koala.css.Flex1
@@ -59,13 +59,11 @@ fun ViewScope.recoverOrSignInForm(cred: CredentialStore, gate: SessionGate) {
                     formText("If you have an email address registered with Streetlight you can reset your password.")
                     textField(emailField)
                     formSubmit("Reset my password", {
-                        val email = emailField.now.toEmailAddress().toValidOutcome().handleOutcome(messages) ?: return@formSubmit
+                        val email = emailField.now.toEmailAddress().toValidOutcome().toDataOr(messages) { return@formSubmit }
                         launchEffect {
-                            val unit = api.resetPassword(email).handleOutcome(messages)
-                            if (unit != null) {
-                                isSubmitVisible.set(false)
-                                messages.set("Check your email for a link to reset your password.")
-                            }
+                            api.resetPassword(email).toDataOr(messages) { return@launchEffect }
+                            isSubmitVisible.set(false)
+                            messages.set("Check your email for a link to reset your password.")
                         }
                     }, messages, isDisplayedFlow = isSubmitVisible)
                 }
