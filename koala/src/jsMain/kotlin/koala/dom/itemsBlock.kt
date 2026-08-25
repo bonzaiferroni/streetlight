@@ -29,7 +29,7 @@ fun <Item> ViewScope.itemsBlock(
     var displayedItems: Map<Item, ViewElement>? = null
     val gapPx = gapRems?.let { remToPx(it) }
     var resizeJob: Job? = null
-    var heightNow = 0
+    // var heightNow = 0
 
     val parent = div {
         addModifiers(ItemsBlockKey.Class, mod)
@@ -55,7 +55,6 @@ fun <Item> ViewScope.itemsBlock(
 
             displayedItems?.forEach { (item, viewElement) ->
                 if (!items.contains(item)) {
-
                     if (magic) {
                         parentScope.launch {
                             viewElement.element.unmodify(Reveal)
@@ -85,6 +84,13 @@ fun <Item> ViewScope.itemsBlock(
             // the base element height is set/animated each time the items change
             resizeJob?.cancel()
             resizeJob = launch {
+                // val isShrinking = height < heightNow
+                // heightNow = height
+                if (magic) {
+                    // allow animated content to exit before shrink
+                    delay(MagicStyle.Interval.milliseconds)
+                }
+
                 var index = 0
                 var height = 0
 
@@ -96,14 +102,6 @@ fun <Item> ViewScope.itemsBlock(
                         height += gapPx
                     }
                     index++
-                }
-
-                val isShrinking = height < heightNow
-                heightNow = height
-
-                if (magic && isShrinking) {
-                    // allow animated content to exit before shrink
-                    delay(MagicStyle.Interval.milliseconds)
                 }
 
                 if (height == 0) parent.modify(DisplayNone)

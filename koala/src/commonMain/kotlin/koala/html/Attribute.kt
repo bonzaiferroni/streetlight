@@ -41,6 +41,7 @@ data class Attribute<T>(
         val AriaMultiline = booleanAttributeOf("aria-multiline")
         val ContentEditable = stringAttributeOf("contenteditable")
         val Role = stringAttributeOf("role")
+        val Spellcheck = booleanAttributeOf("spellcheck")
     }
 }
 

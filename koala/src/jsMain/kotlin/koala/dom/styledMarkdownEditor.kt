@@ -38,6 +38,7 @@ fun ViewScope.styledMarkdownEditor(
         setAttribute(Attribute.ContentEditable, "plaintext-only")
         setAttribute(Attribute.Role, "textbox")
         setAttribute(Attribute.AriaMultiline, true)
+        setAttribute(Attribute.Spellcheck, true)
         label?.let {
             setAttribute(Attribute.AriaLabel, it)
         }
