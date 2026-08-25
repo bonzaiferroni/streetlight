@@ -17,7 +17,7 @@ fun ViewScope.blockMenu(
     onSelection: (LayoutBlock) -> Unit,
 ) {
     val popoverId = Id(Uuid.random().toString())
-    popoverCard(popoverId, mod = modify(), cardMod = modify(EditorBg, Padding0)) {
+    popover(popoverId, modify(EditorBg)) {
         val categoryField = storeOf<BlockCategory?>(null)
         flowBlock(categoryField, modify(Magic, Scale)) { category ->
             val options = when (category) {

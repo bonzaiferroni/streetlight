@@ -12,7 +12,7 @@ import koala.dom.box
 import koala.dom.button
 import koala.dom.column
 import koala.dom.flowBlock
-import koala.dom.popoverCard
+import koala.dom.popover
 import koala.dom.row
 import koala.dom.tabs
 import koala.dom.textBlock
@@ -28,7 +28,6 @@ import koala.model.mutableTapOf
 import koala.model.storeOf
 import koala.model.toggle
 import streetlight.model.data.LayoutBlock
-import streetlight.model.data.LocationContent
 import streetlight.model.data.TabContent
 import streetlight.model.data.TabsBlock
 import streetlight.model.data.TextBlock
@@ -73,7 +72,7 @@ fun ViewScope.blockBuilderProto(blockField: MutableTap<LayoutBlock>) {
 fun ViewScope.tabsBuilder(tabsField: MutableTap<TabsBlock>) {
     val tabNamesField = tabsField.tapOf { it.tabs.map {it.name} }
     val popoverId = Id("tabs-popover")
-    popoverCard(popoverId) {
+    popover(popoverId) {
         flowBlock(tabNamesField) { tabNames ->
             column {
                 tabNames.forEach { tabName ->

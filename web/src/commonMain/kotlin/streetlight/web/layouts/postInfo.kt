@@ -41,7 +41,7 @@ fun FlowContent.postInfo(
                 else -> {
                     button {
                         setPopoverTarget(StarMenu.PopoverId)
-                        setAttribute(Attribute.Username.to(username.value))
+                        setAttribute(Attribute.Username.to(username))
                         span(username.value, modify(PrimaryFg))
                     }
 //                    navigation(StarRoute(username)) {

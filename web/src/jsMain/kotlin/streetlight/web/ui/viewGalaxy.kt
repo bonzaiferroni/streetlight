@@ -11,7 +11,7 @@ import streetlight.web.shells.galaxyShell
 fun ViewScope.viewGalaxy(content: GalaxyContent) {
     val markerService = app.get<MarkerService>()
 
-    val root = shellBox(GalaxyShell.id, hookInitializers) {
+    val root = shellBox(GalaxyShell.id) {
         galaxyShell(content)
     }
 
@@ -27,6 +27,6 @@ fun RouteScope.viewGalaxyRoute() {
     }
 }
 
-val hookInitializers: List<ViewScope.(HTMLElement) -> Unit> = listOf(
-    ViewScope::initPostMenu
-)
+// val hookInitializers: List<ViewScope.(HTMLElement) -> Unit> = listOf(
+//     ViewScope::initPostMenu
+// )

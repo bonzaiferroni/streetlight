@@ -1,6 +1,8 @@
 package koala.html
 
+import kampfire.api.Username
 import kampfire.api.toSlug
+import kampfire.api.toUsername
 import kampfire.model.GeoPoint
 import koala.Lottie
 import koala.utils.jsonConfig
@@ -32,7 +34,7 @@ data class Attribute<T>(
         val TabIndex = intAttributeOf("tab-index", true)
         val RoutePath = stringAttributeOf("route-path", true)
         val Placeholder = stringAttributeOf("placeholder", true)
-        val Username = stringAttributeOf("username", true)
+        val Username = Attribute<Username?>("username", true) { it.toUsername() }
 
         val PopoverTarget = stringAttributeOf("popovertarget")
         val PopoverTargetAction = stringAttributeOf("popovertargetaction")

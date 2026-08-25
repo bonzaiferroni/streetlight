@@ -11,7 +11,6 @@ import org.w3c.dom.HTMLElement
 
 fun ViewScope.shellBox(
     id: Id,
-    initializers: List<ViewScope.(HTMLElement) -> Unit>,
     mod: ModifierSet? = null,
     block: DIV.() -> Unit
 ): HTMLDivElement {
@@ -33,20 +32,15 @@ fun ViewScope.shellBox(
 
         initElement(element)
         element
-    }.also { element ->
-        initializers.forEach {
-            it(element)
-        }
     }
 }
 
 fun ViewScope.shellBoxWithMap(
     id: Id,
-    initializers: List<ViewScope.(HTMLElement) -> Unit>,
     mod: ModifierSet? = null,
     block: DIV.() -> Unit
 ): HTMLDivElement {
-    val element = shellBox(id, initializers, mod, block)
+    val element = shellBox(id, mod, block)
     element.onView {
         wireGeoMap(element)
     }

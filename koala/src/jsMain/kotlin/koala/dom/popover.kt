@@ -22,27 +22,33 @@ import kotlinx.html.js.div
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.Node
 
+fun AppendScope.popoverRaw(
+    id: Id,
+    mod: ModifierSet = modify(Padding1),
+    anchor: PositionAnchor? = null,
+    isManual: Boolean = false,
+    config: DIV.() -> Unit = {}
+) = div {
+    configurePopover(id, anchor, mod, isManual, config)
+}
+
 fun AppendScope.popover(
     id: Id,
     mod: ModifierSet? = null,
     anchor: PositionAnchor? = null,
     isManual: Boolean = false,
-    block: DIV.() -> Unit = {}
-) = div {
-    configurePopover(id, anchor, mod, isManual, block)
+    content: DIV.() -> Unit = {}
+) = popoverRaw(id, modify(Padding1), anchor, isManual) {
+    popoverCard(mod) {
+        content()
+    }
 }
 
 fun AppendScope.popoverCard(
-    id: Id,
     mod: ModifierSet? = null,
-    anchor: PositionAnchor? = null,
-    cardMod: ModifierSet? = null,
-    isManual: Boolean = false,
-    block: DIV.() -> Unit = {}
-) = popover(id, modify(mod, Padding1), anchor, isManual) {
-    card(modify(cardMod, BlurBackdrop, BorderRadius3, BorderSolid2Px, AutoMagic, Scale, OverflowClip, Padding0)) {
-        block()
-    }
+    content: DIV.() -> Unit = {}
+) = card(modify(mod, BlurBackdrop, BorderRadius3, BorderSolid2Px, AutoMagic, Scale, OverflowClip, Padding0)) {
+    content()
 }
 
 fun Node.revealPopover() = asDynamic().showPopover()

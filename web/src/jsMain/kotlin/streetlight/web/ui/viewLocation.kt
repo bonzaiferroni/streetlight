@@ -8,7 +8,7 @@ import streetlight.web.shells.locationShell
 
 fun RouteScope.viewLocation() {
     routeBlock<LocationRoute, LocationContent>(LocationShell.islandId) { location ->
-        val element = shellBox(LocationShell.shellId, hookInitializers) { // app.geoMap, app.appScope
+        val element = shellBox(LocationShell.shellId) { // app.geoMap, app.appScope
             locationShell(location)
             applyTheme(location.design?.theme)
         }

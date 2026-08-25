@@ -14,7 +14,7 @@ import kotlin.time.Duration.Companion.seconds
 fun ViewScope.viewHome(content: HomeContent) {
     val cache = app.get<DataCache>()
 
-    val root = shellBoxWithMap(HomeShell.ContainerId, hookInitializers) {
+    val root = shellBoxWithMap(HomeShell.ContainerId) {
         homeShell(content)
     }
 

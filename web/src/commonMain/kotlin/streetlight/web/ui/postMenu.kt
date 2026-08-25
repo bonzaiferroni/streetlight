@@ -12,7 +12,6 @@ import koala.html.button
 import koala.html.icon
 import koala.html.setAttribute
 import koala.html.setPopoverTarget
-import koala.html.slugAttributeOf
 import koala.html.uuidAttributeOf
 import kotlinx.html.FlowContent
 import streetlight.model.data.PostId
@@ -20,15 +19,14 @@ import streetlight.model.data.PostId
 fun FlowContent.postMenu(postId: PostId, username: Username?) {
     // val anchor = PositionAnchor("menu-${slug}")
     button(modify(AlignSelfCenter)) {
-        setPopoverTarget(PostMenu.MenuId)
+        setPopoverTarget(PostMenu.PopoverId)
         setAttribute(PostMenu.PostId.to(postId))
-        setAttribute(PostMenu.Username.to(username))
+        setAttribute(Attribute.Username.to(username))
         icon(SvgFile.Dots, modify(Height3))
     }
 }
 
 object PostMenu {
-    val MenuId = Id("post-menu")
+    val PopoverId = Id("post-menu-popover")
     val PostId = uuidAttributeOf("post-menu-slug") { PostId(it) }
-    val Username = Attribute<Username?>("post-menu-username", true) { it.toUsername() }
 }

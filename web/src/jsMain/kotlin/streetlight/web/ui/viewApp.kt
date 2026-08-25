@@ -55,6 +55,8 @@ fun viewApp() {
                     // shows content in user menu
                     queryAndWireStarNav()
                     wireStarMenu()
+                    wirePostMenu()
+                    // wireMessageDialog()
 
                     // td: reimplement as sidebar option
                     // wireRightPanel()

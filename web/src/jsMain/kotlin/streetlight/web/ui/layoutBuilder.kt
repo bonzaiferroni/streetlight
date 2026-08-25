@@ -8,12 +8,9 @@ import koala.dom.button
 import koala.dom.row
 import koala.html.Id
 import koala.html.heading3
-import koala.html.heading4
-import koala.html.heading5
 import koala.html.heading6
 import koala.html.hr
 import koala.html.setPopoverTarget
-import koala.html.spacer
 import koala.html.textBlock
 import koala.model.MutableTap
 import koala.model.toggle
@@ -55,7 +52,7 @@ fun ViewScope.editorRow(
 ) {
     val popoverId = menuContent?.let {
         Id(Uuid.random().toString()).also {
-            popoverCard(it, cardMod = modify(EditorBg)) {
+            popover(it, mod = modify(EditorBg)) {
                 menuContent()
             }
         }

@@ -14,7 +14,7 @@ import streetlight.web.shells.PostKey
 import streetlight.web.shells.mediaShell
 
 fun ViewScope.viewMedia(media: Media) {
-    val root = shellBox(PostKey.ShellId, hookInitializers) {
+    val root = shellBox(PostKey.ShellId) {
         mediaShell(media)
     }
 

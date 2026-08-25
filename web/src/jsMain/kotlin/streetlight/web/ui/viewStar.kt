@@ -11,7 +11,7 @@ import streetlight.web.shells.StarShell
 import streetlight.web.shells.starShell
 
 fun ViewScope.viewStar(content: StarContent) {
-    shellBox(StarShell.id, hookInitializers) {
+    shellBox(StarShell.id) {
         starShell(content)
     }
 }
