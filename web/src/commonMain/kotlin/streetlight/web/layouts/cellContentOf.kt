@@ -16,7 +16,7 @@ import streetlight.web.ui.postMenu
 import streetlight.web.ui.starLightCell
 
 
-fun cellContentOf(location: Location): FlowContent.() -> Unit = {
+fun cellContentOf(location: Location, post: GalaxyPost? = null): FlowContent.() -> Unit = {
     // starCell(location.username)
     val mapType = location.mapType ?: "Location"
     cell(SvgFile.MapPin, mapType)
@@ -26,6 +26,9 @@ fun cellContentOf(location: Location): FlowContent.() -> Unit = {
     buttonsCell {
         starLightCell(location)
         moreButton()
+        post?.let {
+            postMenu(post.base.postId, post.base.username)
+        }
     }
 }
 

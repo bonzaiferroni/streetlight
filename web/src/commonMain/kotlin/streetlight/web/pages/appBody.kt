@@ -112,14 +112,10 @@ $LeftPanel {
 
 ${KoalaBody.PortalMount},
 ${KoalaBody.ShellMount} {
-    width: 100%;
+    display: flex;
+    flex-direction: column;
     grid-area: 1 / 1;
     min-width: 0;
-}
-
-${KoalaBody.PortalMount} > *,
-${KoalaBody.ShellMount} > * {
-    width: 100%;
 }
 
 ${AppBody.FullScreen} {

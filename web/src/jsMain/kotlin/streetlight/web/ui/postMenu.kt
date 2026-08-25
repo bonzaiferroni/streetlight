@@ -56,7 +56,7 @@ private var cachedMenuElement: HTMLElement? = null
 
 fun ViewScope.callPostMenu(postId: PostId, username: Username?) {
     val menuElement = cachedMenuElement ?: document.body!!.append {
-        popover(PostMenu.MenuId, null, modify(Magic, SlideUp))
+        popover(PostMenu.MenuId, modify(Magic, SlideUp))
     }.first().also { cachedMenuElement = it }
 
     val isUser = session.stateNow.star?.username == username

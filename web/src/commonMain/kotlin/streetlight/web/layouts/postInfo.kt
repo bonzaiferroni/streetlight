@@ -4,16 +4,22 @@ import kabinet.utils.toAgoFormat
 import koala.css.AlignItemsCenter
 import koala.css.Bold
 import koala.css.MarginTopTiny
+import koala.css.PrimaryFg
 import koala.css.TextSmall
 import koala.css.modify
+import koala.html.Attribute
+import koala.html.button
 import koala.html.navigation
 import koala.html.row
+import koala.html.setAttribute
+import koala.html.setPopoverTarget
 import koala.html.span
 import koala.html.textBlock
 import kotlinx.html.FlowContent
 import streetlight.model.data.Post
 import streetlight.model.ui.GalaxyRoute
 import streetlight.model.ui.StarRoute
+import streetlight.web.ui.StarMenu
 import kotlin.time.Clock
 
 fun FlowContent.postInfo(
@@ -30,15 +36,20 @@ fun FlowContent.postInfo(
             +"posted by "
             when (val username = post.username) {
                 null -> {
-                    span("Someone ", modify(Bold))
+                    span("Someone", modify(Bold))
                 }
                 else -> {
-                    navigation(StarRoute(username)) {
-                        span("$username ")
+                    button {
+                        setPopoverTarget(StarMenu.PopoverId)
+                        setAttribute(Attribute.Username.to(username.value))
+                        span(username.value, modify(PrimaryFg))
                     }
+//                    navigation(StarRoute(username)) {
+//                        span("$username ")
+//                    }
                 }
             }
-            span((Clock.System.now() - post.createdAt).toAgoFormat())
+            span(" ${(Clock.System.now() - post.createdAt).toAgoFormat()}")
         }
     }
 }

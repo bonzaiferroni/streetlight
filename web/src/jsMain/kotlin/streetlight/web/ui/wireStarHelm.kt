@@ -21,16 +21,16 @@ import streetlight.web.model.SessionGate
 import streetlight.web.pages.HelmBar
 import streetlight.web.pages.StarHelm
 
-fun ViewScope.queryAndWireStarHelm() {
+fun ViewScope.queryAndWireStarNav() {
     val helmElement = document.body?.querySelector(StarHelm.HelmMenu) ?: error("star helm content not found")
-    wireStarMenu(helmElement)
+    wireStarNav(helmElement)
     val barElement = document.body?.querySelector(StarHelm.BarMenu) ?: error("star bar element not found")
-    wireStarMenu(barElement)
+    wireStarNav(barElement)
 }
 
-fun ViewScope.wireStarMenu(element: HTMLElement) {
+fun ViewScope.wireStarNav(element: HTMLElement) {
     val isOpenState = storeOf(false)
-    wireBlock("star-menu", element) {
+    wireBlock("wire-star-nav", element) {
         starGate(
             isOpenState,
             baseContent = {

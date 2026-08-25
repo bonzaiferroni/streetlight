@@ -1,6 +1,5 @@
 package koala.dom
 
-import kampfire.model.Labeled
 import koala.css.*
 import koala.html.AppRoute
 import koala.html.RouteMenu
@@ -14,8 +13,8 @@ import koala.html.IconRoute
 
 fun ViewScope.routeMenu(
     context: String,
-    routeNow: MenuItem,
-    routes: List<MenuItem?>,
+    optionNow: MenuOption,
+    options: List<MenuOption?>,
     mod: ModifierSet? = null,
     leftIcons: List<IconButton>? = null,
     rightIcons: List<IconButton>? = null,
@@ -28,9 +27,9 @@ fun ViewScope.routeMenu(
             leftIcons?.let { icons ->
                 iconsTray(icons, modify(RouteMenu.LeftTray))
             }
-            routes.forEach { item ->
+            options.forEach { item ->
                 val item = item ?: return@forEach
-                when (item.label == routeNow.label) {
+                when (item.label == optionNow.label) {
                     true -> span(item.label, modify(RouteMenu.Route, RouteMenu.RouteNow))
                     else -> routeMenuItem(item)
                 }
@@ -58,26 +57,10 @@ internal fun ViewScope.iconsTray(
     }
 }
 
-fun ViewScope.routeMenuItem(item: MenuItem) = when (item) {
-    is MenuButton -> span(item.label, modify(RouteMenu.Route)).onClick(item.onClick)
+fun ViewScope.routeMenuItem(item: MenuOption) = when (item) {
+    is MenuAction -> span(item.label, modify(RouteMenu.Route)).onClick(item.onClick)
     is MenuRoute -> navigation(item.route, modify(RouteMenu.Route)) { +item.label }
     is MenuLabel -> span(item.label, modify(RouteMenu.Route))
 }
-
-data class MenuRoute(
-    val route: AppRoute,
-    val customLabel: String? = null,
-): MenuItem {
-    override val label get() = customLabel ?: route.title
-}
-
-data class MenuButton(
-    override val label: String,
-    val onClick: () -> Unit
-): MenuItem
-
-data class MenuLabel(override val label: String): MenuItem
-
-sealed interface MenuItem: Labeled
 
 fun AppRoute.toMenuRoute() = MenuRoute(this)

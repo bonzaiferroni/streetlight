@@ -87,7 +87,7 @@ val GalaxyPost.subtitle get(): String? = when (this) {
 fun GalaxyPost.cellContent(showMore: Boolean) = when (this) {
     is MediaPost -> null
     is EventPost -> cellContentOf(event, showMore, this)
-    is LocationPost -> cellContentOf(location)
+    is LocationPost -> cellContentOf(location, this)
 }
 
 val GalaxyPost.colorScheme get() = when (this) {

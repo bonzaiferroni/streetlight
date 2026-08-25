@@ -9,8 +9,8 @@ import koala.html.column
 import koala.html.filigree
 import koala.html.heading3
 import koala.html.heading4
-import koala.html.heading5
 import koala.html.textBlock
+import koala.dom.MenuAction
 import koala.model.Tap
 import koala.model.MutableTap
 import kotlinx.html.DIV
@@ -74,7 +74,7 @@ fun ViewScope.formSubmit(
     onCancel: (() -> Unit)? = null,
     enabledTap: Tap<Boolean>? = null,
     isDisplayedFlow: Tap<Boolean>? = null,
-    back: LabeledAction? = null,
+    back: MenuAction? = null,
 ) = row(mod = modify(AlignItemsStart)) {
     row(modify(Flex1)) {
         back?.let {

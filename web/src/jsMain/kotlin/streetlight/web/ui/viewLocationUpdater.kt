@@ -1,6 +1,7 @@
 package streetlight.web.ui
 
 import koala.dom.*
+import koala.dom.MenuAction
 import streetlight.model.data.LocationEdit
 import streetlight.model.data.LocationUpdaterContent
 import streetlight.model.data.Star
@@ -29,7 +30,7 @@ fun ViewScope.viewLocationUpdater(content: LocationUpdaterContent, star: Star) {
                             }
                         },
                         messages = model.messages,
-                        back = LabeledAction("go back", portal::goBack)
+                        back = MenuAction("go back", onClick = portal::goBack)
                     )
                 }
             }

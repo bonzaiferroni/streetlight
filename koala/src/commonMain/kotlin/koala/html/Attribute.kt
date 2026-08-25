@@ -32,8 +32,10 @@ data class Attribute<T>(
         val TabIndex = intAttributeOf("tab-index", true)
         val RoutePath = stringAttributeOf("route-path", true)
         val Placeholder = stringAttributeOf("placeholder", true)
+        val Username = stringAttributeOf("username", true)
 
         val PopoverTarget = stringAttributeOf("popovertarget")
+        val PopoverTargetAction = stringAttributeOf("popovertargetaction")
         val Popover = stringAttributeOf("popover")
         val SrcSet = stringAttributeOf("srcset")
         val Sizes = stringAttributeOf("sizes")
@@ -88,8 +90,11 @@ fun <T> CoreAttributeGroupFacade.setAttribute(attribute: Attribute<T>, value: T?
     }
 }
 
-fun CoreAttributeGroupFacade.setPopoverTarget(id: Id) {
+fun CoreAttributeGroupFacade.setPopoverTarget(id: Id, action: String? = null) {
     setAttribute(Attribute.PopoverTarget, id.identifier)
+    action?.let {
+        setAttribute(Attribute.PopoverTargetAction, it)
+    }
 }
 
 var CoreAttributeGroupFacade.blockLabel: String?

@@ -36,8 +36,8 @@ fun ViewScope.earthRouteMenu(model: Earth, map: EarthMap) {
                     val routeNow = MenuLabel("Galaxies")
                     routeMenu(
                         context = "Streetlight",
-                        routeNow = routeNow,
-                        routes = listOf(routeNow, MenuRoute(CityMapRoute(null), "Cities")),
+                        optionNow = routeNow,
+                        options = listOf(routeNow, MenuRoute(CityMapRoute(null), "Cities")),
                         mod = modify(PointerEventsAuto),
                         leftIcons = listOf(IconRoute(SvgFile.Home, HomeRoute)),
                         rightIcons = listOf(showAll)
@@ -47,8 +47,8 @@ fun ViewScope.earthRouteMenu(model: Earth, map: EarthMap) {
                     val routeNow = MenuLabel("Map")
                     routeMenu(
                         context = galaxy.name,
-                        routeNow = routeNow,
-                        routes = listOf(
+                        optionNow = routeNow,
+                        options = listOf(
                             MenuRoute(GalaxyRoute(galaxy.slug), "Feed"),
                             routeNow
                         ),
@@ -65,8 +65,8 @@ fun ViewScope.earthRouteMenu(model: Earth, map: EarthMap) {
                     val routeNow = MenuLabel("Cities")
                     routeMenu(
                         context = "Streetlight",
-                        routeNow = routeNow,
-                        routes = listOf(MenuRoute(GalaxyMapRoute(null), "Galaxies"), routeNow),
+                        optionNow = routeNow,
+                        options = listOf(MenuRoute(GalaxyMapRoute(null), "Galaxies"), routeNow),
                         mod = modify(PointerEventsAuto),
                         leftIcons = listOf(IconRoute(SvgFile.Home, HomeRoute)),
                         rightIcons = listOf(showAll)
@@ -76,8 +76,8 @@ fun ViewScope.earthRouteMenu(model: Earth, map: EarthMap) {
                     val routeNow = MenuLabel("Map")
                     routeMenu(
                         context = city.name,
-                        routeNow = routeNow,
-                        routes = listOf(
+                        optionNow = routeNow,
+                        options = listOf(
                             MenuRoute(CityRoute(city.slug), "Feed"),
                             routeNow,
                         ),

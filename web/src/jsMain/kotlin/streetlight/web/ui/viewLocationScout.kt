@@ -2,6 +2,7 @@ package streetlight.web.ui
 
 import koala.LottieFile
 import koala.dom.*
+import koala.dom.MenuAction
 import koala.model.dedupNotNull
 import streetlight.model.data.Galaxy
 import streetlight.model.data.LocationEdit
@@ -9,7 +10,6 @@ import streetlight.model.ui.GalaxyRoute
 import streetlight.model.ui.LocationScoutRoute
 import streetlight.web.layouts.postRow
 import streetlight.web.model.LocationScoutStage
-import streetlight.web.ui.formSubmit
 
 fun ViewScope.viewLocationScout(galaxy: Galaxy) {
     // val model = app.getCoroutineScoped<GalaxyEditor>(null, renderScope)
@@ -32,7 +32,7 @@ fun ViewScope.viewLocationScout(galaxy: Galaxy) {
                         label = "Next",
                         onClick = model::review,
                         messenger = editor.messages,
-                        back = LabeledAction("Back", { model.stageField.set(LocationScoutStage.Search) })
+                        back = MenuAction("Back") { model.stageField.set(LocationScoutStage.Search) }
                     )
                 }
                 LocationScoutStage.Review -> column {
@@ -43,7 +43,7 @@ fun ViewScope.viewLocationScout(galaxy: Galaxy) {
                         label = "Post",
                         onClick = model::postToGalaxy,
                         messenger = editor.messages,
-                        back = LabeledAction("Edit", { model.stageField.set(LocationScoutStage.Edit) })
+                        back = MenuAction("Edit") { model.stageField.set(LocationScoutStage.Edit) }
                     )
                 }
             }

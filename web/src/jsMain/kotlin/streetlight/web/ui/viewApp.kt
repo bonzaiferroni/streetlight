@@ -6,7 +6,6 @@ import koala.css.Property
 import koala.dom.*
 import koala.model.Portal
 import kotlinx.browser.document
-import kotlinx.browser.window
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.css.Display
@@ -54,7 +53,8 @@ fun viewApp() {
                     // shows user badge in upper right corner
                     wireBadge()
                     // shows content in user menu
-                    queryAndWireStarHelm()
+                    queryAndWireStarNav()
+                    wireStarMenu()
 
                     // td: reimplement as sidebar option
                     // wireRightPanel()

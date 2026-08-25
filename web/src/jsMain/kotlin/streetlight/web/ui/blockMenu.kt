@@ -24,24 +24,20 @@ fun ViewScope.blockMenu(
                 null -> {
                     val categories = getCategories(depth)
                     categories.map {
-                        LabeledAction(it.name, { categoryField.set(it) }, modify(TextSmall, TextUppercase))
+                        MenuAction(it.name, modify(TextSmall, TextUppercase)) { categoryField.set(it) }
                     }
                 }
 
                 else -> {
                     val options = getOptions(category, depth)
-                    listOf(LabeledAction(
-                        label = "← $category",
-                        onClick = { categoryField.set(null) },
-                        mod = modify(Bold, ZenBg, TextSmall, TextUppercase)
-                    )) + options.map { LabeledAction(it.label, { onSelection(it.item) }) }
+                    listOf(
+                        MenuAction("← $category", modify(Bold, ZenBg, TextSmall, TextUppercase)) { categoryField.set(null) }
+                    ) + options.map { MenuAction(it.label) { onSelection(it.value) } }
                 }
             }
             column(modify(Gap0)) {
                 options.forEach { option ->
-                    button(option.onClick, mod = modify(option.mod, Padding1, MinWidth16)) {
-                        textBlock(option.label, modify(TextAlignCenter, Width100P))
-                    }
+                    popoverOption(option)
                 }
             }
         }
@@ -65,21 +61,21 @@ fun getCategories(depth: Int) = buildList {
 fun getOptions(category: BlockCategory, depth: Int) = buildList {
     when (category) {
         BlockCategory.Basic -> {
-            add(LabeledItem("text", TextBlock("")))
-            add(LabeledItem("heading", HeadingBlock("", HeadingLevel.H3, true)))
-            add(LabeledItem("image", ImageBlock(null)))
-            add(LabeledItem("rich text", RichTextBlock(Markdown.Empty, null)))
-            add(LabeledItem("gallery", GalleryBlock(emptyList(), 2)))
+            add(MenuValue("text", TextBlock("")))
+            add(MenuValue("heading", HeadingBlock("", HeadingLevel.H3, true)))
+            add(MenuValue("image", ImageBlock(null)))
+            add(MenuValue("rich text", RichTextBlock(Markdown.Empty, null)))
+            add(MenuValue("gallery", GalleryBlock(emptyList(), 2)))
         }
         BlockCategory.Containers -> {
-            if (depth == 0) add(LabeledItem("tabs", TabsBlock(listOf(TabContent("My Tab", emptyList())))))
-            add(LabeledItem("column", ColumnsBlock(emptyList())))
+            if (depth == 0) add(MenuValue("tabs", TabsBlock(listOf(TabContent("My Tab", emptyList())))))
+            add(MenuValue("column", ColumnsBlock(emptyList())))
             // containers for depth == 1 to be added
         }
         BlockCategory.Content -> {
-            add(LabeledItem("header", HeaderBlock))
-            add(LabeledItem("events", EventsBlock))
-            add(LabeledItem("map", MapBlock))
+            add(MenuValue("header", HeaderBlock))
+            add(MenuValue("events", EventsBlock))
+            add(MenuValue("map", MapBlock))
         }
     }
 }

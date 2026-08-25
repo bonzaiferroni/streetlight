@@ -5,6 +5,7 @@ import koala.dom.*
 import koala.html.bulletsOf
 import koala.html.filigree
 import koala.html.heading3
+import koala.dom.MenuAction
 import kotlinx.html.DIV
 
 fun ViewScope.formBodyProto(
@@ -77,7 +78,7 @@ fun ViewScope.formSubmitLegacy(
     onSubmit: () -> Unit,
     mod: ModifierSet? = null,
     messages: MessageStore? = null,
-    back: LabeledAction? = null,
+    back: MenuAction? = null,
 ) {
     row {
         addModifiers(mod, JustifyContentSpaceBetween)
@@ -107,14 +108,3 @@ object FormMod {
     val GeoMap = modify(Height48, BorderRadius2, OverflowClip, MoonShadow)
 }
 
-data class LabeledAction(
-    val label: String,
-    val onClick: () -> Unit,
-    val mod: ModifierSet? = null,
-)
-
-data class LabeledItem<T>(
-    val label: String,
-    val item: T,
-    val mod: ModifierSet? = null,
-)

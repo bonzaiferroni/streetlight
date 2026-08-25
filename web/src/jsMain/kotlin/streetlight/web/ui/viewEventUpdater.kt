@@ -1,5 +1,6 @@
 package streetlight.web.ui
 
+import koala.dom.MenuAction
 import koala.dom.RouteScope
 import koala.dom.ViewScope
 import koala.dom.column
@@ -33,7 +34,7 @@ fun ViewScope.viewEventUpdater(content: EventUpdaterContent, star: Star) {
                             }
                         },
                         messages = model.message,
-                        back = LabeledAction("go back", portal::goBack)
+                        back = MenuAction("go back", onClick = portal::goBack)
                     )
                 }
             }

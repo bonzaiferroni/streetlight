@@ -10,16 +10,16 @@ import kotlinx.html.a
 // td: share code with common source set
 fun AppendScope.navigation(
     href: String? = null,
-    modifiers: ModifierSet? = null,
+    mod: ModifierSet? = null,
     id: Id? = null,
     flair: String? = null,
     block: A.() -> Unit = {}
 ) = a {
-    configureNavigation(href, modifiers, id, flair, block)
+    configureNavigation(href, mod, id, flair, block)
 }
 
 fun AppendScope.navigation(
     route: AppRoute,
-    modifiers: ModifierSet? = null,
+    mod: ModifierSet? = null,
     block: A.() -> Unit = {},
-) = navigation(route.toRelativePath(), modifiers, block = block)
+) = navigation(route.toRelativePath(), mod, block = block)
