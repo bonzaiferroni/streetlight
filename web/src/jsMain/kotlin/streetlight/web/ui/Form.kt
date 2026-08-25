@@ -71,7 +71,6 @@ fun ViewScope.formSubmit(
     onClick: () -> Unit,
     messenger: MessageStore? = null,
     buttonMod: ModifierSet = modify(Primary),
-    onCancel: (() -> Unit)? = null,
     enabledTap: Tap<Boolean>? = null,
     isDisplayedFlow: Tap<Boolean>? = null,
     back: MenuAction? = null,
@@ -91,9 +90,6 @@ fun ViewScope.formSubmit(
         }
         isDisplayedFlow?.let {
             button.flowIsDisplayed(it, contentScope)
-        }
-        onCancel?.let {
-            button("cancel", it, modify(Zen))
         }
     }
 }

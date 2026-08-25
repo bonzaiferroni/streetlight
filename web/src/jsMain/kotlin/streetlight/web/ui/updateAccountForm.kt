@@ -60,7 +60,7 @@ fun ViewScope.passwordSection(model: AccountEditor) = formSection("Password") {
                     label = "change",
                     onClick = { model.changePassword(messages) },
                     messenger = messages,
-                    onCancel = { model.isEditingPasswordField.set(false) }
+                    back = MenuAction("back") { model.isEditingPasswordField.set(false) }
                 )
             }
         } else {

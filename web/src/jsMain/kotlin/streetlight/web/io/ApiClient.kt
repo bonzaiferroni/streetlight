@@ -81,6 +81,9 @@ class ApiClient(private val client: FetchClient) {
     suspend fun updateProfile(edit: StarEdit) = client.postApi(Api.Stars.UpdateProfile, edit)
     suspend fun editLight(edit: EditLightRequest) = client.postApi(Api.Stars.EditLight, edit)
 
+    // messages
+    suspend fun sendMessage(message: MessageEdit) = client.postApi(Api.Messages.Send, message)
+
     // account actions
     suspend fun verifyExistingEmail() = client.postApi(Api.AccountAction.VerifyExistingEmail)
     suspend fun readEmailVerificationIsSent() = client.getApi(Api.AccountAction.VerifyExistingEmail.CheckStatus)

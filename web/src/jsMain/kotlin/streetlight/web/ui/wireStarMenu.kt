@@ -30,6 +30,7 @@ fun ViewScope.wireStarMenu() {
     ) { username ->
         column {
             popoverOption(StarRoute(username))
+            popoverOption("Message") { startMessage(username) }
         }
     }
 }
