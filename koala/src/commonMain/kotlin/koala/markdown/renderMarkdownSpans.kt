@@ -11,7 +11,7 @@ fun FlowOrPhrasingContent.renderMarkdownSpans(spans: List<MarkdownSpan>) {
     spans.forEach { span ->
         when (span) {
             is MarkdownInlineCode -> renderInlineCode(span)
-            is MarkdownInlineImage -> renderInlineImage(span)
+            is MarkdownInlineImage -> { } // renderInlineImage(span)
             is MarkdownEmphasis -> renderEmphasis(span)
             is MarkdownLink -> renderLink(span)
             is MarkdownStrong -> renderStrong(span)
@@ -54,6 +54,12 @@ fun FlowOrPhrasingContent.renderStrikethrough(span: MarkdownStrikethrough) {
 
 fun FlowOrPhrasingContent.renderText(span: MarkdownText) {
     +span.text
+}
+
+fun FlowOrPhrasingContent.renderFirstInlineImage(spans: List<MarkdownSpan>) {
+    spans.firstNotNullOfOrNull { it as? MarkdownInlineImage }?.let {
+        renderInlineImage(it)
+    }
 }
 
 fun FlowOrPhrasingContent.renderInlineImage(span: MarkdownInlineImage) {

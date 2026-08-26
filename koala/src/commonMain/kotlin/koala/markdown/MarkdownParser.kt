@@ -2,6 +2,15 @@ package koala.markdown
 
 import kampfire.api.Markdown
 import kampfire.model.toUrl
+import koala.markdown.ContentBlock.BlockQuote
+import koala.markdown.ContentBlock.Code
+import koala.markdown.ContentBlock.Heading
+import koala.markdown.ContentBlock.HorizontalRule
+import koala.markdown.ContentBlock.Image
+import koala.markdown.ContentBlock.OrderedList
+import koala.markdown.ContentBlock.Paragraph
+import koala.markdown.ContentBlock.Table
+import koala.markdown.ContentBlock.UnorderedList
 
 fun markdownBlocksOf(markdown: Markdown) =
     MarkdownParser().parseBlocks(markdown.value)
@@ -53,14 +62,14 @@ class MarkdownParser {
         openBlock.reset()
 
         val markdown = when (type) {
-            ContentBlock.Code -> parseCodeBlock(chunk)
-            ContentBlock.Heading -> parseHeading(chunk)
-            ContentBlock.HorizontalRule -> MarkdownHorizontalRule
-            ContentBlock.Image -> parseBlockImage(chunk)
-            ContentBlock.BlockQuote -> parseBlockquote(chunk)
-            ContentBlock.UnorderedList, ContentBlock.OrderedList -> listParser.parse(chunk)
-            ContentBlock.Table -> tableParser.parse(chunk)
-            ContentBlock.Paragraph -> null
+            Code -> parseCodeBlock(chunk)
+            Heading -> parseHeading(chunk)
+            HorizontalRule -> MarkdownHorizontalRule
+            Image -> parseBlockImage(chunk)
+            BlockQuote -> parseBlockquote(chunk)
+            UnorderedList, OrderedList -> listParser.parse(chunk)
+            Table -> tableParser.parse(chunk)
+            Paragraph -> null
         } ?: parseParagraph(chunk)
 
         blocks.add(ParsedBlock(chunk, markdown))
@@ -202,66 +211,55 @@ data class ParsedBlock(
     val markdown: MarkdownBlock
 )
 
-fun markdownBlockTypeOf(line: String): ContentBlock? = when {
-    MarkdownRegex.Fence.matches(line) -> ContentBlock.Code
-    MarkdownRegex.HorizontalRule.matches(line) -> ContentBlock.HorizontalRule
-    line.startsWith("#") -> ContentBlock.Heading
-    line.startsWith(">") -> ContentBlock.BlockQuote
-    MarkdownRegex.ImageBlock.matches(line) -> ContentBlock.Image
-    MarkdownRegex.UnorderedItem.matches(line) -> ContentBlock.UnorderedList
-    MarkdownRegex.OrderedItem.matches(line) -> ContentBlock.OrderedList
-    MarkdownRegex.TableLine.matches(line) -> ContentBlock.Table
-    line.isNotBlank() -> ContentBlock.Paragraph
-    else -> null
+fun ContentBlock.opens(line: String): Boolean = when (this) {
+    Image -> MarkdownRegex.ImageBlock.matches(line)
+    Heading -> line.startsWith("#")
+    HorizontalRule -> MarkdownRegex.HorizontalRule.matches(line)
+    Code -> MarkdownRegex.Fence.matches(line)
+    BlockQuote -> line.startsWith(">")
+    UnorderedList -> MarkdownRegex.UnorderedItem.matches(line)
+    OrderedList -> MarkdownRegex.OrderedItem.matches(line)
+    Table -> MarkdownRegex.TableLine.matches(line)
+    Paragraph -> line.isNotBlank()
 }
 
-// fun parseParagraph(chunk: String, keepBlanks: Boolean): MarkdownParagraph {
-//     val text = if (keepBlanks) chunk else chunk.trim()
-//     if (text.isEmpty()) return MarkdownParagraph.Empty
-//     return MarkdownParagraph(markdownSpansOf(text))
-// }
+fun ContentBlock.accepts(line: String): Boolean = when (this) {
+    Code -> true
+    BlockQuote, UnorderedList, OrderedList, Table -> opens(line)
+    Paragraph -> line.isNotBlank() && ContentBlock.entries.none {
+        // an image on a line following a paragraph is added as a span
+        it != Paragraph && it != Image && it.opens(line)
+    }
 
-// fun parseHeading(chunk: String): MarkdownHeading? {
-//     val level = chunk.takeWhile { it == '#' }.length
-//     if (level !in 1..6) return null
-//     if (chunk.length <= level || chunk[level] != ' ') return null
-//     val filigree = chunk.endsWith("---")
-//     val endIndex = when (filigree) {
-//         true -> chunk.length - 3
-//         else -> chunk.length
-//     }
-//     val content = chunk.substring(level + 1, endIndex).trim()
-//     return MarkdownHeading(level, filigree, markdownSpansOf(content))
-// }
+    Image, Heading, HorizontalRule -> false
+}
 
-// fun parseBlockquote(lines: List<String>): MarkdownBlockquote? {
-//     val paragraphs = lines.map { it.removePrefix(">").removePrefix(" ") }
-//         .filter { it.isNotBlank() }
-//         .map { MarkdownParagraph(markdownSpansOf(it)) }
-//     return paragraphs.takeIf { it.isNotEmpty() }
-//         ?.let { MarkdownBlockquote(paragraphs = it) }
-// }
+fun ContentBlock.closes(line: String): Boolean =
+    this == Code && line.startsWith("```")
 
-// fun parseCodeBlock(lines: List<String>): MarkdownCodeBlock {
-//     val language = lines.first().removePrefix("```").trim().takeIf { it.isNotEmpty() }
-//     val body = lines.drop(1)
-//     val closed = body.lastOrNull()?.let { MarkdownRegex.Fence.matches(it) } == true
-//     return MarkdownCodeBlock(
-//         language = language,
-//         code = when (closed) {
-//             true -> body.dropLast(1)
-//             else -> body
-//         }.joinToString("\n")
-//     )
-// }
+fun markdownBlockTypeOf(line: String): ContentBlock? =
+    blockPrecedence.firstOrNull { it.opens(line) }
 
-// fun parseBlockImage(chunk: String): MarkdownBlockImage? {
-//     val match = MarkdownRegex.ImageBlock.matchEntire(chunk) ?: return null
-//     val args = parseImageArgs(match.groupValues[2])
-//     return MarkdownBlockImage(
-//         altText = match.groupValues[1],
-//         url = args.url,
-//         maxWidthPercent = args.maxWidthPercent,
-//         type = args.type,
-//     )
-// }
+object MarkdownRegex {
+    val HorizontalRule = Regex("""^(-{3,}|\*{3,})\s*$""")
+    val UnorderedItem = Regex("""^\s*[-*+_] .*""")
+    val TableLine = Regex("""^\s*\|.*\|\s*$""")
+    val OrderedItem = Regex("""^\s*\d+\. .*""")
+    val ImageBlock = Regex("""^!\[([^\]]*)\]\(([^)]+)\)\s*$""")
+    val Fence = Regex("^```.*")
+    val UnorderedListMarker = Regex("""^([-*+_])\s+(.*)$""")
+    val OrderedListMarker = Regex("""^(\d+)\.\s+(.*)$""")
+    val TableDelimiterCell = Regex("""^\s*:?-{3,}:?\s*$""")
+}
+
+private val blockPrecedence = listOf(
+    Code,
+    HorizontalRule,
+    Heading,
+    BlockQuote,
+    Image,
+    UnorderedList,
+    OrderedList,
+    Table,
+    Paragraph,
+)

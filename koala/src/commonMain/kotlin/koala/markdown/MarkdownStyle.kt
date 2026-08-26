@@ -6,6 +6,7 @@ import koala.model.EditorStyle
 object MarkdownStyle {
     val Container = Class("md")
     val Block = Container.withBemElement("block")
+    val Paragraph = Container.withBemElement("paragraph")
     val UnorderedList = Container.withBemElement("unordered-list")
     val OrderedList = Container.withBemElement("ordered-list")
     val InlineImage = Container.withBemElement("inline-image")
@@ -44,6 +45,10 @@ $InlineImage {
     max-width: 33%;
     height: auto;
     display: inline-block;
+}
+
+$Paragraph {
+    white-space: pre-line;
 }
 
 $BlockImage figcaption,

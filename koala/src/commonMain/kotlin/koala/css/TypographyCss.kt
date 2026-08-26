@@ -1,5 +1,7 @@
 package koala.css
 
+val Prose = Class("prose")
+
 // language="CSS"
 val TypographyCss get() = """
 :root {
@@ -68,12 +70,12 @@ h6 {
     text-transform: uppercase;
 }
 
-.prose .column {
-    gap: var(--unit-spacing-2);
-}
-
-.prose {
-    line-height: 1.8rem;
+$Prose {
+    line-height: 1.7;
+    
+    $Column {
+        gap: var(--unit-spacing-2);
+    }
 }
 
 @media (max-width: 600px) {

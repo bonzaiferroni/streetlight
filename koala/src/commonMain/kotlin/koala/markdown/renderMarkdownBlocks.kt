@@ -58,13 +58,15 @@ fun FlowContent.renderHeading(heading: MarkdownHeading) {
 
 fun FlowContent.renderParagraph(block: MarkdownParagraph) {
     textBlock {
+        addModifiers(MarkdownStyle.Paragraph)
+        renderFirstInlineImage(block.spans)
         renderMarkdownSpans(block.spans)
     }
 }
 
 fun FlowContent.renderBlockquote(block: MarkdownBlockquote) {
     figure {
-        addModifiers(modify(MarkdownStyle.Blockquote))
+        addModifiers(MarkdownStyle.Blockquote)
         blockQuote {
             block.paragraphs.forEach {
                 renderParagraph(it)
@@ -185,7 +187,12 @@ fun FlowContent.renderTable(block: MarkdownTable) {
                     row.cells.forEachIndexed { index, cell ->
                         td {
                             applyAlignment(block.alignments.getOrNull(index))
-                            renderMarkdownSpans(cell.spans)
+                            val image = cell.spans.singleOrNull() as? MarkdownInlineImage
+                            if (image != null) {
+                                renderBasicImage(image)
+                            } else {
+                                renderMarkdownSpans(cell.spans)
+                            }
                         }
                     }
                 }

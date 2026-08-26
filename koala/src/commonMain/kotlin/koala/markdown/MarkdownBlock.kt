@@ -77,6 +77,10 @@ data class MarkdownUnorderedList(
     override val items: List<MarkdownListItem>
 ): MarkdownList {
     override val blockType get() = ContentBlock.UnorderedList
+
+    companion object {
+        val Markers = setOf('-', '*', '+', '_')
+    }
 }
 
 data class MarkdownOrderedList(

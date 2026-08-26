@@ -30,7 +30,6 @@ val UserSelectNone = utilityOf("user-select-none", "user-select: none")
 val TextUppercase = utilityOf("text-transform-uppercase", "text-transform: uppercase")
 
 // defined in stylesheet
-val Prose = Class("prose")
 val ButtonText = Class("btn-text")
 val LineClamp2 = Class("line-clamp-2")
 

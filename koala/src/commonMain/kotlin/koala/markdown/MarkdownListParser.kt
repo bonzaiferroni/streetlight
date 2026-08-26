@@ -35,7 +35,7 @@ class MarkdownListParser(private val spanParser: MarkdownSpanParser) {
         if (from >= to) return null
         val marker = chunk[from]
 
-        if (marker == '-' || marker == '*' || marker == '+') {
+        if (MarkdownUnorderedList.Markers.contains(marker)) {
             if (from + 1 >= to || chunk[from + 1] != ' ') return null
             return ListMarker(
                 contentStart = chunk.contentStart(from + 1, to),
