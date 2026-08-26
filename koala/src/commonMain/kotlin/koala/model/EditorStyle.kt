@@ -122,6 +122,7 @@ $Container {
                 background-size: cover;
                 border-radius: var(--unit-spacing-1);
                 float: right;
+                clear: right;
                 width: 20%;
                 aspect-ratio: 3 / 2;
                 margin-left: 1rem;

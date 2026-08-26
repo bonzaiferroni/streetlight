@@ -78,7 +78,7 @@ fun HTMLElement.syncAttributes(block: ParsedBlock) {
 }
 
 // every character of the chunk appears exactly once, in order, as a text node
-// in SWYG layout, Extra spans will not displayed. They cannot define layout structure
+// in SWYG layout, Extra spans will not be displayed. They cannot define layout structure.
 // structure lives on wrapper elements, never on segment spans
 private fun AppendScope.renderEditorBlock(block: ParsedBlock, element: HTMLElement, segments: List<EditorSegment>) {
     // renderSegmentsBlock(block.chunk, segments ?: error("segments not found"))

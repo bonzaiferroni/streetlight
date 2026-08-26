@@ -23,10 +23,12 @@ val MarkdownCss get() = with(MarkdownStyle) { """
 
 $FloatRight {
     float: right;
+    clear: right;
 }
 
 $FloatLeft {
     float: left;
+    clear: left;
 }
 
 $Block > * + * {
@@ -61,8 +63,11 @@ $InlineImageCaption {
 }
 
 $BlockImage {
-    margin: 0 auto;
     text-align: center;
+    
+    img {
+        margin: auto;
+    }
 }
 
 ${EditorStyle.BlockType.selector(ContentBlock.BlockQuote)},
