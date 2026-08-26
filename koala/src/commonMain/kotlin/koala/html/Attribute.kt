@@ -46,6 +46,7 @@ data class Attribute<T>(
         val ContentEditable = stringAttributeOf("contenteditable")
         val Role = stringAttributeOf("role")
         val Spellcheck = booleanAttributeOf("spellcheck")
+        val Draggable = booleanAttributeOf("draggable")
     }
 }
 

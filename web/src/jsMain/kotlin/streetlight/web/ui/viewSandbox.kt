@@ -35,7 +35,7 @@ fun RouteScope.viewSandbox() {
         }
         flowBlock(isEditingState, modify(Magic, Scale)) { isEditing ->
             when (isEditing) {
-                true -> styledMarkdownEditor(textState).flowModifier(isSwyg, EditorStyle.SWYG, contentScope)
+                true -> styledMarkdownEditor(textState, "sandbox").flowModifier(isSwyg, EditorStyle.SWYG, contentScope)
                 else -> markdown(textState.now)
             }
         }

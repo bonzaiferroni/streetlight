@@ -8,6 +8,7 @@ import koala.model.MutableTap
 import koala.model.EditorStyle
 import kotlinx.browser.document
 import kotlinx.html.DIV
+import kotlinx.html.js.div
 import kotlinx.html.js.onInputFunction
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.get
@@ -30,7 +31,7 @@ fun ViewScope.styledMarkdownEditor(
         element.syncFromCollect(model, value)
     }
 
-    element = column(modify(Gap0)) {
+    element = div {
         addModifiers(EditorStyle.Container, mod)
         label?.let {
             setAttribute(Attribute.BlockLabel, it.lowercase())

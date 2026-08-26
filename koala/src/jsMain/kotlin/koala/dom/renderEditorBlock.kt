@@ -1,15 +1,37 @@
 package koala.dom
 
+import kampfire.model.Url
+import koala.css.BorderRadius1
+import koala.css.MarginBottom2
+import koala.css.MarginLeft2
+import koala.css.MoonShadow
+import koala.css.Property
+import koala.css.addModifiers
 import koala.css.modify
+import koala.html.Attribute
+import koala.html.setAttribute
+import koala.markdown.FloatRight
+import koala.markdown.ImageType
+import koala.markdown.MarkdownBlockImage
 import koala.markdown.MarkdownHeading
+import koala.markdown.MarkdownImage
+import koala.markdown.MarkdownInlineImage
+import koala.markdown.MarkdownParagraph
+import koala.markdown.MarkdownSpan
+import koala.markdown.MarkdownStyle
 import koala.markdown.ParsedBlock
+import koala.markdown.renderLottieImage
 import koala.model.EditorStyle
 import kotlinx.browser.document
 import kotlinx.dom.clear
+import kotlinx.html.FlowOrPhrasingContent
 import kotlinx.html.br
 import kotlinx.html.dom.append
 import kotlinx.html.dom.create
+import kotlinx.html.img
 import kotlinx.html.js.div
+import kotlinx.html.span
+import kotlinx.html.style
 import org.w3c.dom.HTMLElement
 
 fun createEditorBlock(block: ParsedBlock): HTMLElement {
@@ -39,12 +61,17 @@ fun HTMLElement.syncAttributes(block: ParsedBlock) {
     setAttribute(EditorStyle.BlockType.to(block.markdown.blockType))
     when (val markdown = block.markdown) {
         is MarkdownHeading -> {
-            println("${markdown.level}: ${markdown.filigree}")
             setAttribute(EditorStyle.HeadingLevel.to(markdown.level))
             when {
                 markdown.filigree -> modify(EditorStyle.HeadingFiligree)
                 else -> unmodify(EditorStyle.HeadingFiligree)
             }
+        }
+        is MarkdownParagraph -> {
+            syncFirstImage(markdown.spans)
+        }
+        is MarkdownBlockImage -> {
+            syncImage(markdown.url)
         }
         else -> return
     }
@@ -53,12 +80,15 @@ fun HTMLElement.syncAttributes(block: ParsedBlock) {
 // every character of the chunk appears exactly once, in order, as a text node
 // in SWYG layout, Extra spans will not displayed. They cannot define layout structure
 // structure lives on wrapper elements, never on segment spans
-private fun AppendScope.renderEditorBlock(block: ParsedBlock, element: HTMLElement, segments: List<EditorSegment>?) {
-    renderSegmentsBlock(block.chunk, segments ?: error("segments not found"))
-//    when (val markdown = block.markdown) {
-//        is MarkdownTable -> renderEditorTable(block.chunk, element, markdown)
-//        else -> renderSegmentsBlock(block.chunk, segments ?: error("segments not found"))
-//    }
+private fun AppendScope.renderEditorBlock(block: ParsedBlock, element: HTMLElement, segments: List<EditorSegment>) {
+    // renderSegmentsBlock(block.chunk, segments ?: error("segments not found"))
+    when (val markdown = block.markdown) {
+        is MarkdownParagraph -> {
+            // renderFirstImage(markdown.spans)
+            renderSegmentsBlock(block.chunk, segments)
+        }
+        else -> renderSegmentsBlock(block.chunk, segments)
+    }
 }
 
 private fun AppendScope.renderSegmentsBlock(chunk: String, segments: List<EditorSegment>) {
@@ -68,4 +98,17 @@ private fun AppendScope.renderSegmentsBlock(chunk: String, segments: List<Editor
     if (chunk.isEmpty() || chunk.endsWith("\n")) {
         br { }
     }
+}
+
+fun HTMLElement.syncFirstImage(spans: List<MarkdownSpan>) =
+    syncImage(spans.firstNotNullOfOrNull { it as? MarkdownInlineImage }?.url)
+
+fun HTMLElement.syncImage(url: Url?) {
+    if (url == null) {
+        unmodify(EditorStyle.WithImage)
+        return
+    }
+
+    modify(EditorStyle.WithImage)
+    setStyle(Property.InlineImage.to(url))
 }

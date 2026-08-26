@@ -31,9 +31,7 @@ import kotlin.sequences.plus
 
 data class EditorSegment(val from: Int, val to: Int, val mod: Modifier)
 
-fun ParsedBlock.toEditorSegments(): List<EditorSegment>? = markdown.editorSpans()?.let { spans ->
-    segmentsIn(chunk, 0, chunk.length, spans)
-}
+fun ParsedBlock.toEditorSegments(): List<EditorSegment> = segmentsIn(chunk, 0, chunk.length, markdown.editorSpans())
 
 fun segmentsIn(chunk: String, from: Int, to: Int, spans: Sequence<MarkdownSpan>): List<EditorSegment> = buildList {
     var index = from
@@ -77,12 +75,11 @@ private fun MutableList<EditorSegment>.addExtra(chunk: String, from: Int, to: In
     }
 }
 
-private fun MarkdownBlock.editorSpans(): Sequence<MarkdownSpan>? = when (this) {
+private fun MarkdownBlock.editorSpans(): Sequence<MarkdownSpan> = when (this) {
     is MarkdownParagraph -> spans.asSequence()
     is MarkdownHeading -> spans.asSequence()
     is MarkdownBlockquote -> paragraphs.asSequence().flatMap { it.spans }
     is MarkdownList -> items.asSequence().flatMap { it.editorSpans() }
-//    is MarkdownTable -> null
     is MarkdownTable -> (sequenceOf(header) + rows).flatMap { row ->
         row.cells.asSequence().flatMap { it.spans }
     }

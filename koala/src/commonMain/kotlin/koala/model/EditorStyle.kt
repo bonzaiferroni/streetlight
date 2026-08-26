@@ -27,11 +27,15 @@ object EditorStyle {
     val TableRow = Container.withBemElement("table-row")
     val TableCell = Container.withBemElement("table-cell")
     val TableTail = Container.withBemElement("table-tail")
+
+    val NoEdit = Container.withBemModifier("no-edit")
+    val WithImage = Container.withBemModifier("with-image")
 }
 
 // language="CSS"
 val TextEditorCss get() = with(EditorStyle) { """
 $Container {
+    display: flow-root;
     font-family: ui-monospace, Menlo, Consolas, monospace;
     outline: none;
     padding: var(--unit-spacing);
@@ -109,6 +113,23 @@ $Container {
         border-radius: 2px;
     }
     
+    ${BlockType.selector(ContentBlock.Image)},
+    ${BlockType.selector(ContentBlock.Paragraph)} {
+        &$WithImage {
+            &::before {
+                content: "";
+                background-image: var(--inline-image);
+                background-size: cover;
+                border-radius: var(--unit-spacing-1);
+                float: right;
+                width: 20%;
+                aspect-ratio: 3 / 2;
+                margin-left: 1rem;
+                margin-bottom: 1rem;
+            }
+        }
+    }
+    
     /* Inline styling */
     
     $Emphasis {
@@ -156,6 +177,10 @@ $Container {
                 white-space: nowrap;
             }
         }
+    }
+    
+    $NoEdit {
+        user-select: none;
     }
 }
 """ }
