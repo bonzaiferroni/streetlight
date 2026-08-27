@@ -5,7 +5,7 @@ import koala.model.Portal
 import kotlinx.coroutines.CoroutineScope
 import streetlight.web.io.ApiClient
 import streetlight.web.io.OSMClient
-import streetlight.web.io.OmniLog
+import streetlight.web.io.OmniClient
 import streetlight.web.io.TransitClient
 
 @Deprecated("use dependency injection")
@@ -20,7 +20,7 @@ interface Streetlight {
     val chatRoom: ChatRoom
     val cache: DataCache
     val config: SiteConfig
-    val omni: OmniLog
+    val omni: OmniClient
     val stage: StageFacade
     val toaster: Toaster
 }

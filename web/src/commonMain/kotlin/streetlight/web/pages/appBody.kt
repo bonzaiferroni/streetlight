@@ -3,7 +3,6 @@
 package streetlight.web.pages
 
 import koala.JsBundle
-import koala.JsFile
 import koala.css.*
 import koala.html.*
 import kotlinx.html.DIV
@@ -31,7 +30,7 @@ fun HTML.appBody(
                     div(id = KoalaBody.ShellMount, block = block)
                 }
                 div(AppBody.RightPanel) {
-                    div(StarHelm.BarMenu)
+                    div(StarHelm.StarMenu)
                 }
             }
         }
@@ -50,7 +49,6 @@ object AppBody {
     val ContentPanel = Id("content-panel")
     val LeftPanel = Id("left-panel")
     val RightPanel = Id("right-panel")
-    val RightSticky = Id("right-sticky")
     val FullScreen = Id("full-screen")
     val ToasterId = Id("toaster")
 }

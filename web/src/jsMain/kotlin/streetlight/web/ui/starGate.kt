@@ -19,7 +19,7 @@ fun ViewScope.starGate(
     baseContent: (ViewScope.() -> Unit)? = null,
     content: ViewScope.(Star) -> Unit
 ) {
-    flowBlock(session.starField) { user ->
+    flowBlock(session.starState) { user ->
         when (user) {
             null -> {
                 dialog(isOpenState) {

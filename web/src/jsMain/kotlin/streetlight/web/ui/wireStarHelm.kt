@@ -18,13 +18,14 @@ import streetlight.model.ui.StarDashRoute
 import streetlight.model.ui.StarRoute
 import streetlight.model.ui.UpdateAccountRoute
 import streetlight.web.model.SessionGate
+import streetlight.web.pages.AppOverlay
 import streetlight.web.pages.HelmBar
 import streetlight.web.pages.StarHelm
 
 fun ViewScope.queryAndWireStarNav() {
     val helmElement = document.body?.querySelector(StarHelm.HelmMenu) ?: error("star helm content not found")
     wireStarNav(helmElement)
-    val barElement = document.body?.querySelector(StarHelm.BarMenu) ?: error("star bar element not found")
+    val barElement = document.body?.querySelector(StarHelm.StarMenu) ?: error("star bar element not found")
     wireStarNav(barElement)
 }
 
@@ -80,7 +81,17 @@ private fun ViewScope.starPanel(star: Star) {
             }
         }
 
-        button(onClick = session::signOut) {
+        button({
+            eval(StarHelm.ClosePopover)
+            eval(AppOverlay.TogglePanel.invoke(AppOverlay.RevealRightPanel))
+        }) {
+            row(RowMod) {
+                textBlock("Pin menu")
+                icon(SvgFile.PanelRight, HelmBar.IconMod)
+            }
+        }
+
+        button(session::signOut) {
             row(RowMod) {
                 textBlock("Sign out", modify(WhiteSpaceNoWrap))
                 icon(SvgFile.SignOut, HelmBar.IconMod)

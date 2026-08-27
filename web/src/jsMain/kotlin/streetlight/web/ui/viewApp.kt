@@ -11,7 +11,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.css.Display
 import kotlinx.serialization.ExperimentalSerializationApi
 import org.koin.dsl.koinApplication
-import streetlight.web.io.OmniLog
+import streetlight.web.io.OmniClient
 import streetlight.web.layouts.LightControl
 import streetlight.web.model.TransitMap
 import streetlight.web.model.SessionGate
@@ -36,7 +36,7 @@ fun viewApp() {
     with (app) {
         val scope: CoroutineScope = get()
         val gate: SessionGate = get()
-        val omni: OmniLog = get()
+        val omni: OmniClient = get()
         val transit: TransitMap = get()
         val portal: Portal = get()
         transit.init()
@@ -61,6 +61,7 @@ fun viewApp() {
                     // td: reimplement as sidebar option
                     // wireRightPanel()
                     wireToaster()
+                    wireOmni(omni)
 
                     // hides the element that holds server rendered content
                     val shellBox = document.getElementById(KoalaBody.ShellMount)

@@ -9,13 +9,12 @@ import org.w3c.dom.HTMLElement
 import org.w3c.dom.SMOOTH
 import org.w3c.dom.ScrollBehavior
 import org.w3c.dom.ScrollToOptions
-import streetlight.web.io.OmniLog
+import streetlight.web.io.OmniClient
 import streetlight.web.pages.AppBody
 import kotlin.time.Duration.Companion.milliseconds
 
 fun ViewScope.wireRightPanel() {
-    val omni = app.get<OmniLog>()
-    val recordFlow = omni.stateFlow.dedup { it.records }
+    val omni = app.get<OmniClient>()
     var container: HTMLElement? = null
     val cardMod = modify(ZenBg, Height100P, JustifyContentEnd, OverflowYAuto, OverscrollBehaviorContain, OverflowXHidden)
 
@@ -28,7 +27,7 @@ fun ViewScope.wireRightPanel() {
     }
 
     contentScope.launch {
-        recordFlow.collect {
+        omni.recordsState.flow.collect {
             delay(100.milliseconds)
             container?.scrollTo(ScrollToOptions(
                 top = container.scrollHeight.toDouble(),

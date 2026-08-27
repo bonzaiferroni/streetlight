@@ -8,7 +8,11 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.serializer
 import web.events.EventHandler
+import web.events.EventType
+import web.events.addEventListener
+import web.history.PageTransitionEvent
 import web.sse.EventSource
+import web.window.window
 
 class SSEClient<Message>(
     private val scope: CoroutineScope,
@@ -19,6 +23,12 @@ class SSEClient<Message>(
     val messageFlow: Flow<Message> = _itemFlow
 
     private var source: EventSource? = null
+
+    init {
+        window.addEventListener(EventType<PageTransitionEvent>("pagehide"), {
+            source?.close()
+        })
+    }
 
     fun connect() {
         scope.launch {

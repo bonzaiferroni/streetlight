@@ -1,21 +1,22 @@
 package streetlight.web.io
 
 import koala.model.storeOf
+import koala.model.tapOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import streetlight.model.data.OmniHistory
 import streetlight.model.data.OmniMessage
 import streetlight.model.data.OmniRecord
 
-class OmniLog(
+class OmniClient(
     private val scope: CoroutineScope,
     private val api: ApiClient
 ) {
     private val client: SSEClient<OmniMessage> = sseClientOf(scope) { api.connectOmniLog() }
 
     private val state = storeOf(OmniLogState())
-    val stateFlow = state.flow
-    val stateNow get() = state.now
+    val recordsState = state.tapOf { it.records }
+    val lastRecordState = recordsState.tapOf { it.lastOrNull() }
 
     private val records = mutableListOf<OmniRecord>()
 
@@ -56,7 +57,6 @@ class OmniLog(
 }
 
 data class OmniLogState(
-    val starCount: Int = 0,
     val records: List<OmniRecord> = emptyList()
 )
 

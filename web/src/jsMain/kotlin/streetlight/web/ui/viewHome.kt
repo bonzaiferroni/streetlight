@@ -35,14 +35,6 @@ fun ViewScope.viewHome(content: HomeContent) {
 
     document.setTitle(HomeRoute)
     applyTheme(null)
-
-    launchEffect {
-        toaster.deliver("hello")
-        delay(1.seconds)
-        toaster.deliver("hello again")
-        delay(1.seconds)
-        toaster.deliver("this is the last hello")
-    }
 }
 
 fun RouteScope.viewHomeRoute() {

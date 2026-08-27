@@ -24,7 +24,7 @@ class SessionGate(
     val stateNow get() = state.now
     val stateFlow = state.flow
 
-    val starField = state.tapOf { it.star }
+    val starState = state.tapOf { it.star }
     val signedInFlow = stateFlow.dedup { it.isSignedIn }
     val signedOutAtFlow = stateFlow.dedup { it.signedOutAt }
 

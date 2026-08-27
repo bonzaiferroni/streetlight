@@ -27,7 +27,7 @@ import streetlight.model.ui.Screen
 import streetlight.web.io.ApiClient
 import streetlight.web.io.FetchClient
 import streetlight.web.io.OSMClient
-import streetlight.web.io.OmniLog
+import streetlight.web.io.OmniClient
 import streetlight.web.io.TransitClient
 import streetlight.web.model.*
 
@@ -52,7 +52,7 @@ val appModule = module {
     single { TransitMap(get(), get(), get(), get()) }
     single { MarkerMap(get(), get()) }
     single { ChatRoom(get(), get()) }
-    single { OmniLog(get(), get()) }
+    single { OmniClient(get(), get()) }
     single { MarkerService() }
     single<ContentFetcher> { AppContentFetcher(get()) }
     single { RouteInflator(get(), get(), get(), get()) }

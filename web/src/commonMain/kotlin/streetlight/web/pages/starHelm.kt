@@ -41,7 +41,7 @@ object StarHelm {
     val PopoverCardClass = Class("star-helm-popover-card")
     val ClosePopover = InlineJs.closePopover(Popover)
     val HelmMenu = Id("star-helm-menu")
-    val BarMenu = Id("star-bar-menu")
+    val StarMenu = Id("star-bar-menu")
 }
 
 // language="CSS"
