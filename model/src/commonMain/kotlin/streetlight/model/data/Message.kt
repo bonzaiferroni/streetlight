@@ -21,9 +21,7 @@ data class Message(
     val isArchived: Boolean,
     val isRead: Boolean,
     val createdAt: Instant,
-) {
-
-}
+)
 
 @Serializable
 @JvmInline

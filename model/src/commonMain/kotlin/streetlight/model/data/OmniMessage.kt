@@ -67,7 +67,7 @@ data class GalaxyFounded(
 }
 
 @Serializable
-data class OmniStatus(val starCount: Int): OmniMessage
+data class MessageSent( val username: Username, val sentAt: Instant)
 
 @Serializable
 data class OmniHistory(val records: List<OmniRecord>): OmniMessage

@@ -64,12 +64,4 @@ private fun sourceUrlOf(path: String) = "https://github.com/bonzaiferroni/street
 
 val prayers = listOf(
     "May we build a world of faithful giants.",
-    "Sometimes the best step forward is a tiny step back.",
-    "Left unfilled, the moment fills you.",
-    "Just trying not to fall off this tiny sidewalk.",
-    "You are the music school. The music school is you, always in school.",
-    "I didn’t have time to write a short letter, so I wrote a long one instead.",
-    "Peace is the decision not to fight, courage the decision to move forward.",
-    "May all our bugs be tiny and cute.",
-    // "It all, theoretically, works.",
 )

@@ -6,6 +6,10 @@ val jsonConfig = Json {
     ignoreUnknownKeys = true
 }
 
+val cborConfig = Json {
+    ignoreUnknownKeys = true
+}
+
 val jsonPrettyConfig = Json {
     ignoreUnknownKeys = true
     prettyPrint = true

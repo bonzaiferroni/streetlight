@@ -6,13 +6,12 @@ import kotlinx.coroutines.launch
 import streetlight.model.data.OmniHistory
 import streetlight.model.data.OmniMessage
 import streetlight.model.data.OmniRecord
-import streetlight.model.data.OmniStatus
 
 class OmniLog(
     private val scope: CoroutineScope,
     private val api: ApiClient
 ) {
-    private val client: SocketClient<OmniMessage, Unit> = socketClientOf(scope) { api.connectOmniLog() }
+    private val client: SSEClient<OmniMessage> = sseClientOf(scope) { api.connectOmniLog() }
 
     private val state = storeOf(OmniLogState())
     val stateFlow = state.flow
@@ -33,9 +32,6 @@ class OmniLog(
 
     private fun takeMessage(message: OmniMessage) {
         when (message) {
-            is OmniStatus -> {
-                state.update { it.copy(starCount = message.starCount) }
-            }
             is OmniRecord -> {
                 takeRecord(message)
             }
