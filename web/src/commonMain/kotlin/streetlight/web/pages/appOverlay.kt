@@ -3,9 +3,8 @@
 package streetlight.web.pages
 
 import koala.css.*
-import koala.interop.KoalaInlineJs.initRootModifier
+import koala.interop.KoalaFun.initRootModifier
 import koala.html.*
-import koala.interop.jsFunctionOf
 import kotlinx.html.FlowContent
 
 fun FlowContent.appOverlay() {

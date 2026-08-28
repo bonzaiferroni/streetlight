@@ -4,7 +4,8 @@ import koala.Svg
 import koala.SvgFile
 import koala.css.*
 import koala.html.*
-import koala.interop.KoalaInlineJs
+import koala.interop.InlineJs
+import koala.interop.KoalaFun
 import kotlinx.html.FlowContent
 import kotlinx.html.onClick
 import streetlight.model.ui.CityListRoute
@@ -25,7 +26,7 @@ fun FlowContent.siteMenuPopover() {
             column(modify(PaddingRight1)) {
                 row(modify(AlignItemsCenter)) {
                     button(SvgFile.Helm, modify(HelmBar.IconMod, SpinLoop, BorderDashed2Px, BorderRadius50P)) {
-                        onClick = SiteHelm.closePopover
+                        onClick = SiteHelm.closePopover.block
                     }
                     navigation(HomeRoute) {
                         logo(modify(Height5))
@@ -64,7 +65,7 @@ fun FlowContent.siteMenuItems() {
     label("config")
     item("Settings", SiteConfigRoute, SvgFile.GearLarge)
     row(SiteHelm.rowMod + ThemeToggle) {
-        onClick = KoalaInlineJs.toggleRootModifier.invokeJs(DayTheme)
+        onClick = KoalaFun.toggleRootModifier.invokeJs(DayTheme)
         icon(SvgFile.Sun, HelmBar.IconMod)
         textBlock("Theme")
     }
@@ -79,7 +80,7 @@ private fun FlowContent.label(label: String) {
 private fun FlowContent.item(label: String, route: AppRoute, svg: Svg) {
     navigation(route) {
         setAttribute(KoalaBody.ScreenId.to(route.screen.screenId))
-        onClick = SiteHelm.closePopover
+        onClick = SiteHelm.closePopover.block
         row(SiteHelm.rowMod) {
             icon(svg, HelmBar.IconMod)
             textBlock(label)

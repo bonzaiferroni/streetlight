@@ -11,10 +11,10 @@ import web.scroll.smooth
 import web.storage.localStorage
 
 val interopUtilities = listOf(
-    KtFunction(KoalaInlineJs.ScrollToId, ::scrollToId),
-    KtFunction(KoalaInlineJs.ToggleAncestor, ::toggleAncestor),
-    KtFunction(KoalaInlineJs.toggleRootModifier, ::toggleRootModifier),
-    KtFunction(KoalaInlineJs.toggleRootModifierWithTransition, ::toggleRootModifierWithTransition),
+    KtFunction(KoalaFun.ScrollToId, ::scrollToId),
+    KtFunction(KoalaFun.ToggleAncestor, ::toggleAncestor),
+    KtFunction(KoalaFun.toggleRootModifier, ::toggleRootModifier),
+    KtFunction(KoalaFun.toggleRootModifierWithTransition, ::toggleRootModifierWithTransition),
 )
 
 fun scrollToId(id: String) = document.getElementOrNullById(id)?.scrollIntoView(ScrollIntoViewOptions(ScrollBehavior.smooth))

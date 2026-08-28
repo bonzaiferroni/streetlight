@@ -56,3 +56,38 @@ modules with warnings 6.39 MiB [true warnings]
 ../../../../web/build/compileSync/js/passwordReset/passwordResetProductionExecut...(truncated) 54.7 KiB [built] [code generated]
 ../../node_modules/@js-joda/core/dist/js-joda.esm.js 392 KiB [built] [code generated]
 webpack 5.101.3 compiled with 3 warnings in 18440 ms
+
+// Aug 28 -- before kotlin-wrappers migration:
+
+asset web.js 2.35 MiB [emitted] [minimized] [big] (name: web) 2 related assets
+asset passwordReset.js 213 KiB [emitted] [minimized] (name: passwordReset) 1 related asset
+runtime modules 670 bytes 3 modules
+modules with warnings 6.58 MiB [true warnings]
+  modules by path ./kotlin/*.js 5.88 MiB
+    ./kotlin/streetlight-web.js 1.65 MiB [built] [code generated] [33 warnings]
+    ./kotlin/streetlight-kampfire.js 135 KiB [built] [code generated] [18 warnings]
+    ./kotlin/kotlin-kotlin-stdlib.js 611 KiB [built] [code generated] [187 warnings]
+    + 22 modules
+  modules by path ../../../../web/build/compileSync/js/passwordReset/passwordResetProductionExecut...(truncated) 715 KiB
+    ../../../../web/build/compileSync/js/passwordReset/passwordResetProductionExecut...(truncated) 14.3 KiB [built] [code generated] [3 warnings]
+    ../../../../web/build/compileSync/js/passwordReset/passwordResetProductionExecut...(truncated) 322 KiB [built] [code generated] [148 warnings]
+    ../../../../web/build/compileSync/js/passwordReset/passwordResetProductionExecut...(truncated) 20.6 KiB [built] [code generated] [4 warnings]
+    + 12 modules
+../../../../web/build/compileSync/js/passwordReset/passwordResetProductionExecut...(truncated) 3.78 KiB [built] [code generated]
+../../../../web/build/compileSync/js/passwordReset/passwordResetProductionExecut...(truncated) 56.3 KiB [built] [code generated]
+../../node_modules/@js-joda/core/dist/js-joda.esm.js 392 KiB [built] [code generated]
+webpack 5.101.3 compiled with 3 warnings in 14342 ms
+
+asset koala.js 52 KiB [emitted] [minimized] (name: main) 1 related asset
+./kotlin/streetlight-koala.js 31.7 KiB [built] [code generated] [9 warnings]
+./kotlin/kotlin-kotlin-stdlib.js 133 KiB [built] [code generated] [81 warnings]
+./kotlin/streetlight-kampfire.js 4.94 KiB [built] [code generated] [2 warnings]
+./kotlin/ktor-ktor-client-core.js 3.89 KiB [built] [code generated] [3 warnings]
+./kotlin/kotlinx-atomicfu.js 2.87 KiB [built] [code generated] [2 warnings]
+webpack 5.101.3 compiled successfully in 1138 ms
+
+// Aug 28 -- after kotlin-wrappers migration:
+
+asset web.js 2.35 MiB [emitted] [minimized] [big] (name: web) 2 related assets
+asset passwordReset.js 213 KiB [emitted] [minimized] (name: passwordReset) 1 related asset
+asset koala.js 52.2 KiB [emitted] [minimized] (name: main) 1 related asset

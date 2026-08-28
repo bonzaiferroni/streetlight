@@ -13,7 +13,7 @@ import koala.css.SlideLeft
 import koala.css.modify
 import koala.css.stylesheet
 import koala.html.Id
-import koala.html.InlineJs
+import koala.interop.InlineJs
 import koala.html.button
 import koala.html.card
 import koala.html.popover
@@ -26,7 +26,7 @@ fun FlowContent.starHelmPopover() {
         card(modify(StarHelm.PopoverCardClass, HeavyCardBg, BlurBackdrop, OverflowClip, PointerEventsAuto)) {
             setId(StarHelm.HelmMenu)
             button(SvgFile.LoaderSmall, modify(Height5, FadeLoop)) {
-                onClick = StarHelm.ClosePopover
+                onClick = StarHelm.ClosePopover.block
             }
         }
     }

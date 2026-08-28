@@ -9,7 +9,7 @@ import koala.html.button
 import koala.html.heading3
 import koala.html.icon
 import koala.html.image
-import koala.interop.KoalaInlineJs
+import koala.interop.KoalaFun
 import koala.model.MutableTap
 import koala.model.setTrue
 import koala.model.storeOf
@@ -59,7 +59,7 @@ private fun ViewScope.starPanel(star: Star) {
             }
 
             button(modify(HelmBar.IconMod)) {
-                onClick = StarHelm.ClosePopover
+                onClick = StarHelm.ClosePopover.block
 
                 image(star.image?.thumb, modify(OpacityHigh, Size100P, BorderRadius50P))
             }
@@ -71,8 +71,8 @@ private fun ViewScope.starPanel(star: Star) {
         routeItem(InboxRoute, "Inbox", SvgFile.MailLarge)
 
         button({
-            eval(StarHelm.ClosePopover)
-            eval(KoalaInlineJs.toggleRootModifierWithTransition.invokeJs(AppOverlay.RevealRightPanel))
+            eval(StarHelm.ClosePopover.block)
+            eval(KoalaFun.toggleRootModifierWithTransition.invokeJs(AppOverlay.RevealRightPanel))
         }) {
             row(RowMod) {
                 textBlock("Pin menu")
@@ -91,7 +91,7 @@ private fun ViewScope.starPanel(star: Star) {
 
 private fun ViewScope.routeItem(route: AppRoute, text: String, svg: Svg) {
     navigation(route) { // filler content
-        onClick = StarHelm.ClosePopover
+        onClick = StarHelm.ClosePopover.block
 
         row(RowMod) {
             textBlock(text)
@@ -105,7 +105,7 @@ private fun ViewScope.someonePanel(isOpen: MutableTap<Boolean>) {
         row(RowMod) {
             heading3("Someone")
             button(modify(HelmBar.IconMod, FadeLoop)) {
-                onClick = StarHelm.ClosePopover
+                onClick = StarHelm.ClosePopover.block
 
                 image(SvgFile.Someone, modify(OpacityHigh, Size100P, BorderRadius50P))
             }

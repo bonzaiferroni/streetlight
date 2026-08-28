@@ -4,7 +4,7 @@ import koala.css.DayTheme
 import koala.css.jsScriptOf
 
 //language="JS"
-object KoalaInlineJs {
+object KoalaFun {
     val ScrollToId = JsSignature("scrollToId")
     val ToggleAncestor = JsSignature("toggleAncestor")
     val toggleRootModifier = JsSignature("toggleRootModifier")
@@ -19,7 +19,7 @@ object KoalaInlineJs {
     """.trimIndent())
 }
 
-val KoalaHeadScript get() = with(KoalaInlineJs) {
+val KoalaHeadScript get() = with(KoalaFun) {
     jsScriptOf {
         define(initRootModifier)
         invoke(initRootModifier, DayTheme)

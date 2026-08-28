@@ -1,7 +1,7 @@
 package koala.html
 
 import koala.css.Class
-import koala.interop.KoalaInlineJs
+import koala.interop.KoalaFun
 import koala.css.ModifierSet
 import koala.css.addModifiers
 import koala.css.modify
@@ -87,7 +87,7 @@ fun FlowContent.navigation(
 ) {
     a {
         addModifiers(modifiers)
-        onClick = KoalaInlineJs.ScrollToId.invokeJs(targetId)
+        onClick = KoalaFun.ScrollToId.invokeJs(targetId)
         block()
     }
 }

@@ -10,7 +10,7 @@ import koala.Svg
 import koala.SvgFile
 import koala.css.*
 import koala.html.*
-import koala.interop.KoalaInlineJs
+import koala.interop.KoalaFun
 import koala.interop.ThisElement
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
@@ -164,6 +164,6 @@ fun FlowContent.linkCell(link: ExtraLink) {
 
 fun FlowContent.moreButton() {
     cellButton(SvgFile.Info) {
-        onClick = KoalaInlineJs.ToggleAncestor.invokeJs(ThisElement, FeedRow.Base, FeedRow.ToggleExpand)
+        onClick = KoalaFun.ToggleAncestor.invokeJs(ThisElement, FeedRow.Base, FeedRow.ToggleExpand)
     }
 }
