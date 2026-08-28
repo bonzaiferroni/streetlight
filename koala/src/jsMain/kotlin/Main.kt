@@ -1,10 +1,9 @@
 import koala.core.findAndInitGeoMap
 import koala.core.queryAndInitLotties
-import koala.core.globalFunCore
-import koala.core.addGlobalFunctions
+import koala.interop.interopUtilities
 import koala.dom.findAndInitTabs
+import koala.interop.addGlobalFunctions
 import kotlinx.browser.document
-import kotlinx.browser.window
 import org.w3c.dom.HTMLElement
 
 // the purpose of this module is to provide some basic ui functionality while the larger scripts are inbound
@@ -13,7 +12,7 @@ fun main() {
     console.log("koala rawr!!")
     val body = document.body ?: return
 
-    addGlobalFunctions(globalFunCore)
+    addGlobalFunctions(interopUtilities)
 
     initElement(body)
 }

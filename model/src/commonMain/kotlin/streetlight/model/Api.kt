@@ -105,13 +105,12 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object EditTalent: PostEndpoint<TalentEdit, Talent>(this)
         object UploadAvatar: PostEndpoint<ByteArray, String>(this)
         object UploadImage: PostEndpoint<ByteArray, Image>(this)
-        object SendMessage: PostEndpoint<MessageEdit, Unit>(this)
     }
 
     object Messages: ApiNode(this) {
         object Send: PostEndpoint<MessageEdit, Unit>(this)
+        object Inbox: GetEndpoint<InboxContent>(this)
     }
-
 
     object Chat: ApiNode(this) { }
     object Omni: ApiNode(this) {

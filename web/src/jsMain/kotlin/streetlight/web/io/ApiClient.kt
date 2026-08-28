@@ -83,6 +83,7 @@ class ApiClient(private val client: FetchClient) {
 
     // messages
     suspend fun sendMessage(message: MessageEdit) = client.postApi(Api.Messages.Send, message)
+    suspend fun readInbox() = client.getApi(Api.Messages.Inbox)
 
     // account actions
     suspend fun verifyExistingEmail() = client.postApi(Api.AccountAction.VerifyExistingEmail)

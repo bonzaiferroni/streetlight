@@ -1,16 +1,18 @@
-package koala.core
+package koala.interop
 
-import koala.css.KoalaFun
 import koala.dom.startViewTransition
 import kotlinx.browser.document
-import kotlinx.browser.window
+import kotlinx.browser.localStorage
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.SMOOTH
 import org.w3c.dom.ScrollBehavior
 import org.w3c.dom.ScrollOptions
 
-val globalFunCore = listOf(
-    KoalaFun.ScrollToId to ::scrollToId,
+val interopUtilities = listOf(
+    KtFunction(KoalaInlineJs.ScrollToId, ::scrollToId),
+    KtFunction(KoalaInlineJs.ToggleAncestor, ::toggleAncestor),
+    KtFunction(KoalaInlineJs.toggleRootModifier, ::toggleRootModifier),
+    KtFunction(KoalaInlineJs.toggleRootModifierWithTransition, ::toggleRootModifierWithTransition),
 )
 
 fun scrollToId(id: String) = document.getElementById(id)?.scrollIntoView(ScrollOptions(ScrollBehavior.SMOOTH))
@@ -25,5 +27,17 @@ fun toggleAncestor(element: HTMLElement, ancestorClass: String, toggleClass: Str
             break
         }
         ancestor = ancestor.parentElement
+    }
+}
+
+fun toggleRootModifier(mod: String) {
+    val classes = document.documentElement!!.classList
+    classes.toggle(mod)
+    localStorage.setItem(mod, classes.contains(mod).toString())
+}
+
+fun toggleRootModifierWithTransition(mod: String) {
+    document.startViewTransition {
+        toggleRootModifier(mod)
     }
 }

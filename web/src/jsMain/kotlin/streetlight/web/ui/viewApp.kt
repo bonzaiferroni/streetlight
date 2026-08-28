@@ -1,9 +1,10 @@
 package streetlight.web.ui
 
-import koala.core.addGlobalFunctions
 import koala.css.KoalaBody
 import koala.css.Property
 import koala.dom.*
+import koala.interop.KtFunction
+import koala.interop.addGlobalFunctions
 import koala.model.Portal
 import kotlinx.browser.document
 import kotlinx.coroutines.CancellationException
@@ -28,10 +29,7 @@ fun viewApp() {
     val app = AppContainer(koin)
     val lightService = koin.get<LightService>()
 
-    addGlobalFunctions(globalFunExtended)
-    addGlobalFunctions(listOf(
-        LightControl.ToggleFun to lightService::toggleLight
-    ))
+    addGlobalFunctions(KtFunction(LightControl.ToggleFun, lightService::toggleLight))
 
     with (app) {
         val scope: CoroutineScope = get()

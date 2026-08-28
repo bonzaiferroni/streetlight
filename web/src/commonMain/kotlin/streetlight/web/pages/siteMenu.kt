@@ -4,6 +4,7 @@ import koala.Svg
 import koala.SvgFile
 import koala.css.*
 import koala.html.*
+import koala.interop.KoalaInlineJs
 import kotlinx.html.FlowContent
 import kotlinx.html.onClick
 import streetlight.model.ui.CityListRoute
@@ -63,7 +64,7 @@ fun FlowContent.siteMenuItems() {
     label("config")
     item("Settings", SiteConfigRoute, SvgFile.GearLarge)
     row(SiteHelm.rowMod + ThemeToggle) {
-        onClick = KoalaFun.ToggleTheme.invoke()
+        onClick = KoalaInlineJs.toggleRootModifier.invokeJs(DayTheme)
         icon(SvgFile.Sun, HelmBar.IconMod)
         textBlock("Theme")
     }

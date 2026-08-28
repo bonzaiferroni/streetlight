@@ -38,7 +38,7 @@ fun HTML.appBody(
         appOverlay()
         div(AppBody.ToasterId)
 
-        scriptUnsafe(AppOverlayJs)
+        scriptUnsafe(AppOverlayScript)
         linkScript(JsBundle.Web)
     }
 }
@@ -89,9 +89,11 @@ $RightPanel {
     }
 }
 
-body${AppOverlay.RevealRightPanel} $RightPanel,
-body${AppOverlay.RevealLeftPanel} $LeftPanel {
-    display: grid;
+:root {
+    &${AppOverlay.RevealRightPanel} $RightPanel,
+    &${AppOverlay.RevealLeftPanel} $LeftPanel {
+        display: grid;
+    }
 }
 
 $LeftPanel {

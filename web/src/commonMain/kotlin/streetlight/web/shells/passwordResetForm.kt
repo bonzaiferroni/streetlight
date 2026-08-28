@@ -2,10 +2,9 @@ package streetlight.web.shells
 
 import kampfire.model.Token
 import koala.JsBundle
-import koala.JsFile
 import koala.css.AlignItemsCenter
 import koala.css.Flex1
-import koala.css.JsFun
+import koala.interop.JsSignature
 import koala.css.MaxWidth48
 import koala.css.MaxWidth64
 import koala.css.modify
@@ -36,7 +35,7 @@ fun FlowContent.passwordResetForm(token: Token) {
                 setId(PasswordResetForm.MessageId)
             }
             button("Reset My Password") {
-                onClick = PasswordResetForm.SendReset.invoke(token.toString())
+                onClick = PasswordResetForm.SendReset.invokeJs(token.toString())
             }
         }
         linkScript(JsBundle.PasswordReset)
@@ -48,5 +47,5 @@ object PasswordResetForm {
     val ButtonId = Id("password-reset-button")
     val PasswordId = Id("password-reset-password")
     val RetypeId = Id("password-reset-retype")
-    val SendReset = JsFun("sendReset")
+    val SendReset = JsSignature("sendReset")
 }

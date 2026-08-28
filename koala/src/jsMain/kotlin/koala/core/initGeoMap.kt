@@ -16,7 +16,6 @@ import koala.external.maplibregl
 import koala.html.Attribute
 import koala.html.GeoMapKey
 import kotlinx.browser.localStorage
-import kotlinx.dom.hasClass
 import org.w3c.dom.HTMLElement
 
 // globalThis.geoMapWindow: HTMLElement? = null

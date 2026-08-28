@@ -4,6 +4,8 @@ import kabinet.utils.toMetricString
 import koala.SvgFile
 import koala.css.*
 import koala.html.*
+import koala.interop.JsSignature
+import koala.interop.ThisElement
 import kotlinx.html.FlowContent
 import kotlinx.html.onClick
 import streetlight.model.data.GalaxyPost
@@ -16,7 +18,7 @@ object LightControl {
     val LitIcon = Class("lit-icon")
     val UnlitIcon = Class("unlit-icon")
 
-    val ToggleFun = JsFun("toggleLight")
+    val ToggleFun = JsSignature("toggleLight")
 
     val TypeData = enumAttributeOf<LightType>("light-type")
 
@@ -26,7 +28,7 @@ object LightControl {
 fun FlowContent.postLight(post: GalaxyPost) {
     row(modify(LightControl.Class, AlignItemsCenter, GapTiny, LightControl.getLitMod(post.base.isLit))) {
         setAttribute(LightControl.TypeData.to(LightType.Post))
-        onClick = LightControl.ToggleFun.invoke(ThisElement, post.base.postId)
+        onClick = LightControl.ToggleFun.invokeJs(ThisElement, post.base.postId)
 
         box(modify(OpacityHigh, Height3, Aspect1)) {
             icon(SvgFile.Boost, modify(LightControl.UnlitIcon))

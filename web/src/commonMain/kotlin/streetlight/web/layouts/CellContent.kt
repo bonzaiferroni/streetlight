@@ -6,11 +6,12 @@ import kabinet.utils.toRelativeDayFormat
 import kabinet.utils.toTimeFormat
 import kampfire.api.Username
 import kampfire.model.Url
-import kampfire.model.toUrl
 import koala.Svg
 import koala.SvgFile
 import koala.css.*
 import koala.html.*
+import koala.interop.KoalaInlineJs
+import koala.interop.ThisElement
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kotlinx.html.onClick
@@ -163,6 +164,6 @@ fun FlowContent.linkCell(link: ExtraLink) {
 
 fun FlowContent.moreButton() {
     cellButton(SvgFile.Info) {
-        onClick = KoalaFun.ToggleAncestor.invoke(ThisElement, FeedRow.Base, FeedRow.ToggleExpand)
+        onClick = KoalaInlineJs.ToggleAncestor.invokeJs(ThisElement, FeedRow.Base, FeedRow.ToggleExpand)
     }
 }

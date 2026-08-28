@@ -23,3 +23,8 @@ object UpdateAccountRoute: StreetlightRoute {
     override val screen get() = Screen.UpdateAccount
     override val title get() = "Account"
 }
+
+object InboxRoute: StreetlightRoute {
+    override val screen get() = Screen.Inbox
+    override val title get() = "Inbox"
+}

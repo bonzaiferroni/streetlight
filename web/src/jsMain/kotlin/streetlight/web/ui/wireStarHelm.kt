@@ -1,12 +1,15 @@
 package streetlight.web.ui
 
+import koala.Svg
 import koala.SvgFile
 import koala.css.*
 import koala.dom.*
+import koala.html.AppRoute
 import koala.html.button
 import koala.html.heading3
 import koala.html.icon
 import koala.html.image
+import koala.interop.KoalaInlineJs
 import koala.model.MutableTap
 import koala.model.setTrue
 import koala.model.storeOf
@@ -14,6 +17,7 @@ import kotlinx.browser.document
 import kotlinx.html.onClick
 import org.w3c.dom.HTMLElement
 import streetlight.model.data.Star
+import streetlight.model.ui.InboxRoute
 import streetlight.model.ui.StarDashRoute
 import streetlight.model.ui.StarRoute
 import streetlight.model.ui.UpdateAccountRoute
@@ -62,28 +66,13 @@ private fun ViewScope.starPanel(star: Star) {
         }
 
         // calendar route goes here
-
-        navigation(StarDashRoute) { // filler content
-            onClick = StarHelm.ClosePopover
-
-            row(RowMod) {
-                textBlock("Dashboard")
-                icon(SvgFile.Dashboard, HelmBar.IconMod)
-            }
-        }
-
-        navigation(UpdateAccountRoute) { // filler content
-            onClick = StarHelm.ClosePopover
-
-            row(RowMod) {
-                textBlock("Account")
-                icon(SvgFile.User, HelmBar.IconMod)
-            }
-        }
+        routeItem(StarDashRoute, "Dashboard", SvgFile.Dashboard)
+        routeItem(UpdateAccountRoute, "Account", SvgFile.User)
+        routeItem(InboxRoute, "Inbox", SvgFile.MailLarge)
 
         button({
             eval(StarHelm.ClosePopover)
-            eval(AppOverlay.TogglePanel.invoke(AppOverlay.RevealRightPanel))
+            eval(KoalaInlineJs.toggleRootModifierWithTransition.invokeJs(AppOverlay.RevealRightPanel))
         }) {
             row(RowMod) {
                 textBlock("Pin menu")
@@ -96,6 +85,17 @@ private fun ViewScope.starPanel(star: Star) {
                 textBlock("Sign out", modify(WhiteSpaceNoWrap))
                 icon(SvgFile.SignOut, HelmBar.IconMod)
             }
+        }
+    }
+}
+
+private fun ViewScope.routeItem(route: AppRoute, text: String, svg: Svg) {
+    navigation(route) { // filler content
+        onClick = StarHelm.ClosePopover
+
+        row(RowMod) {
+            textBlock(text)
+            icon(svg, HelmBar.IconMod)
         }
     }
 }

@@ -7,11 +7,12 @@ import kampfire.model.Ok
 import kampfire.model.PasswordResetRequest
 import kampfire.model.Problem
 import kampfire.model.Token
-import koala.core.addGlobalFunctions
 import koala.css.ErrorFg
 import koala.dom.modify
 import koala.dom.querySelector
 import koala.dom.unmodify
+import koala.interop.KtFunction
+import koala.interop.addGlobalFunctions
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -31,9 +32,7 @@ import web.window.window
 
 fun main() {
     println("hello passwordReset")
-    addGlobalFunctions(listOf(
-        PasswordResetForm.SendReset to ::sendReset
-    ))
+    addGlobalFunctions(KtFunction(PasswordResetForm.SendReset, ::sendReset))
 }
 
 fun sendReset(tokenArg: String) {

@@ -2,64 +2,31 @@
 
 package streetlight.web.pages
 
-import koala.SvgFile
 import koala.css.*
+import koala.interop.KoalaInlineJs.initRootModifier
 import koala.html.*
+import koala.interop.jsFunctionOf
 import kotlinx.html.FlowContent
-import kotlinx.html.onClick
 
 fun FlowContent.appOverlay() {
     column(AppOverlay.Container) {
         helmBar()
         spacer(modify(Flex1))
-
-        // td: move these toggles to site config
-        // panel toggles
-        // row(modify(Height8, Padding1, JustifyContentSpaceBetween)) {
-        //     icon(SvgFile.PanelLeft, modify(PointerEventsAuto, Dim, AppOverlay.MediaVlgReveal)) {
-        //         onClick = AppOverlay.TogglePanel.invoke(AppOverlay.RevealLeftPanel)
-        //     }
-        //     icon(SvgFile.PanelRight, modify(PointerEventsAuto, Dim, AppOverlay.MediaVlgReveal)) {
-        //         onClick = AppOverlay.TogglePanel.invoke(AppOverlay.RevealRightPanel)
-        //     }
-        // }
     }
 }
 
-// language="JS"
-val AppOverlayJs get() = """
-
-${AppOverlay.TogglePanel} {
-    console.log($panelMod);
-    document.startViewTransition(() => {
-        document.body.classList.toggle($panelMod)
-        const isToggled = document.body.classList.contains($panelMod);
-        localStorage.setItem($panelMod, isToggled ? 'true' : 'false');
-    })
-}
-
-function initPanel(mod) {
-    if (localStorage.getItem(mod) === 'true') {
-        document.body.classList.add(mod);
+val AppOverlayScript get() = with(AppOverlay) {
+    jsScriptOf {
+        invoke(initRootModifier, RevealLeftPanel)
+        invoke(initRootModifier, RevealRightPanel)
     }
 }
-
-initPanel(${AppOverlay.RevealLeftPanel.jsLiteral});
-initPanel(${AppOverlay.RevealRightPanel.jsLiteral});
-
-"""
-
-private val panelMod = "panelMod"
 
 object AppOverlay {
     val Container = Id("app-overlay")
-    val TogglePanel = JsFun("togglePanel", panelMod)
-    val SpacerMiddleId = Id("spacer-middle")
     val MediaVlgReveal = Class("display-none-below-vlg")
     val RevealLeftPanel = Class("reveal-left-panel")
     val RevealRightPanel = Class("reveal-right-panel")
-
-    val VlgWidthPx = 1000
 }
 
 // language="CSS"
@@ -96,3 +63,4 @@ $MediaVlgReveal {
 }
 
 """ }
+

@@ -1,7 +1,6 @@
 package koala.core
 
 import koala.css.Clickable
-import koala.css.JsFun
 import koala.css.Modifier
 import koala.dom.modify
 import koala.html.Attribute
@@ -11,9 +10,7 @@ import org.w3c.dom.Document
 import org.w3c.dom.Element
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.NamedNodeMap
-import org.w3c.dom.Window
 import org.w3c.dom.asList
-import kotlin.reflect.KFunction
 
 fun Document.queryAll(modifier: Modifier) = querySelectorAll(modifier.selector).asList()
 
@@ -50,10 +47,3 @@ fun Element.appendDiv(id: Id? = null): HTMLElement {
 }
 
 operator fun NamedNodeMap.get(attribute: Attribute<*>): String? = this.getNamedItem(attribute.identifier)?.value
-
-fun addGlobalFunctions(pairs: List<Pair<JsFun, KFunction<Any?>>>) {
-    // val windowDynamic = asDynamic()
-    pairs.forEach {
-        globalThis[it.first.identifier] = it.second
-    }
-}

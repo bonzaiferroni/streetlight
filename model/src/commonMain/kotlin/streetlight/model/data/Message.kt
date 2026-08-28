@@ -2,10 +2,8 @@ package streetlight.model.data
 
 import kampfire.api.Markdown
 import kampfire.api.Username
-import kampfire.api.toMarkdown
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
-import kotlin.time.Clock
 import kotlin.time.Instant
 import kotlin.uuid.Uuid
 
@@ -20,7 +18,7 @@ data class Message(
     val content: Markdown,
     val isArchived: Boolean,
     val isRead: Boolean,
-    val createdAt: Instant,
+    val sentAt: Instant,
 )
 
 @Serializable

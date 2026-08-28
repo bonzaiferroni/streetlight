@@ -12,6 +12,7 @@ import streetlight.model.ui.EventUpdateRoute
 import streetlight.model.ui.GalaxyConfigRoute
 import streetlight.model.ui.GalaxyRoute
 import streetlight.model.ui.HomeRoute
+import streetlight.model.ui.InboxRoute
 import streetlight.model.ui.LocationConfigRoute
 import streetlight.model.ui.LocationRoute
 import streetlight.model.ui.LocationScoutRoute
@@ -48,6 +49,7 @@ class AppContentFetcher(
         is StarDashRoute -> Ok(NullFetcherContent)
         is UpdateProfileRoute -> Ok(NullFetcherContent)
         is UpdateAccountRoute -> api.readAccount()
+        is InboxRoute -> api.readInbox()
         else -> Ok(NullFetcherContent)
     }
 }

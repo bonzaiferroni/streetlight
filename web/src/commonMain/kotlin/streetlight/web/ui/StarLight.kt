@@ -4,6 +4,7 @@ import koala.Svg
 import koala.SvgFile
 import koala.css.*
 import koala.html.*
+import koala.interop.ThisElement
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kotlinx.html.onClick
@@ -32,7 +33,7 @@ fun FlowContent.starLightCell(
     row(modify(AlignItemsCenter, GapTiny)) {
         addModifiers(mod, LightControl.Class, LightControl.getLitMod(isLit))
         setAttribute(LightControl.TypeData.to(lightType))
-        onClick = LightControl.ToggleFun.invoke(ThisElement, uuid)
+        onClick = LightControl.ToggleFun.invokeJs(ThisElement, uuid)
 
         block()
         box {
