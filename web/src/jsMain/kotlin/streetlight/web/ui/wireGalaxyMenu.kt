@@ -4,12 +4,12 @@ import koala.dom.*
 import kotlinx.coroutines.launch
 import kotlinx.dom.clear
 import kotlinx.html.dom.append
-import org.w3c.dom.HTMLElement
 import streetlight.model.data.Galaxy
 import streetlight.web.layouts.GalaxyKey
 import streetlight.web.model.DataCache
 import streetlight.web.shells.GalaxyMenuKey
 import streetlight.web.shells.galaxyMenuItems
+import web.html.HTMLElement
 
 fun ViewScope.wireGalaxyMenu(
     root: HTMLElement,

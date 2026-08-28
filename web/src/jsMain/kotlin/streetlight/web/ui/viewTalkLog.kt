@@ -11,12 +11,12 @@ import koala.html.spacer
 import koala.model.storeOf
 import kotlinx.coroutines.launch
 import kotlinx.html.DIV
-import org.w3c.dom.HTMLElement
 import streetlight.model.data.Comment
 import streetlight.model.data.CommentCreated
 import streetlight.model.data.CommentUpdated
 import streetlight.model.data.PostOrder
 import streetlight.web.io.TalkLog
+import web.html.HTMLElement
 
 fun ViewScope.viewTalkLog(model: TalkLog) {
     // this could be flawed

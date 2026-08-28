@@ -5,8 +5,8 @@ import koala.model.MutableTap
 import koala.model.Tap
 import kotlinx.coroutines.launch
 import kotlinx.html.DIV
-import org.w3c.dom.HTMLDivElement
-import org.w3c.dom.HTMLElement
+import web.html.HTMLDivElement
+import web.html.HTMLElement
 
 fun <Item> ViewScope.selectionBlock(
     items: Tap<List<Item>>,

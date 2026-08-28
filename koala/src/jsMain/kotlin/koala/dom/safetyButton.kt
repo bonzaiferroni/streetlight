@@ -23,7 +23,7 @@ fun AppendScope.safetyButton(
 
     val element = button {
         configureButton(text, modify(Zen, mod), flair, block)
-    }
+    }.asWeb()
 
     element.onClick {
         onClick?.invoke(isConfirm)

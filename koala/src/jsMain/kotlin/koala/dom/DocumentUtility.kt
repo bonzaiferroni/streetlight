@@ -1,25 +1,25 @@
 package koala.dom
 
+import js.array.asList
+import js.promise.Promise
 import koala.html.Id
-import org.w3c.dom.Document
-import org.w3c.dom.HTMLElement
-import org.w3c.dom.asList
-import kotlin.js.Promise
+import web.dom.Document
+import web.dom.ElementId
+import web.viewtransition.ViewTransition
 
-fun Document.getElementById(id: Id) = getElementById(id.identifier) as HTMLElement
-fun Document.getElementOrNullById(id: Id) = getElementById(id.identifier) as? HTMLElement
+val Id.elementId get() = ElementId(identifier)
 
-fun Document.startViewTransition(updateCallback: () -> Unit): ViewTransition =
-    this.asDynamic().startViewTransition(updateCallback).unsafeCast<ViewTransition>()
+fun Document.getElementById(id: Id) = getElementById(id.elementId) ?: error("Element not found: $id")
+fun Document.getElementOrNullById(id: String) = getElementById(ElementId(id))
+fun Document.getElementOrNullById(id: Id) = getElementById(id.elementId)
+
+fun Document.viewTransition(updateCallback: () -> Unit): ViewTransition =
+    startViewTransition {
+        updateCallback()
+        null
+    }
 
 fun Document.closeOpenPopovers() = querySelectorAll("[popover]:popover-open").asList().forEach { node ->
-    (node as? HTMLElement)?.closePopover()
-}
-
-external interface ViewTransition {
-    val ready: Promise<Unit>
-    val finished: Promise<Unit>
-    val updateCallbackDone: Promise<Unit>
-    fun skipTransition()
+    node.closePopover()
 }
 

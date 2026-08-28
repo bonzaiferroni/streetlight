@@ -4,7 +4,6 @@ import koala.css.ModifierSet
 import koala.css.addModifiers
 import koala.css.modify
 import koala.html.Attribute
-import koala.html.ElementEvent
 import koala.html.Id
 import koala.html.Queryable
 import koala.html.SwitchStyle
@@ -16,9 +15,10 @@ import kotlinx.coroutines.launch
 import kotlinx.html.DIV
 import kotlinx.html.js.div
 import kotlinx.html.span
-import org.w3c.dom.HTMLDivElement
-import org.w3c.dom.HTMLElement
-import org.w3c.dom.events.KeyboardEvent
+import web.events.addEventListener
+import web.html.HTMLDivElement
+import web.keyboard.KEY_DOWN
+import web.keyboard.KeyboardEvent
 
 fun ViewScope.switch(
     label: String,
@@ -41,7 +41,7 @@ fun ViewScope.switch(
         span(label, modify(SwitchStyle.Pill))
 
         block?.invoke(this)
-    }
+    }.asWeb()
 
     fun display(value: Boolean) {
         if (value == currentValue) return
@@ -51,8 +51,8 @@ fun ViewScope.switch(
     }
 
     element.onClick { state.set(!currentValue) }
-    element.addEventListener("keydown", { event ->
-        val key = (event as? KeyboardEvent)?.key
+    element.addEventListener(KeyboardEvent.KEY_DOWN, { event ->
+        val key = event.key
         if (key == "Enter" || key == " ") {
             event.preventDefault()
             state.set(!currentValue)

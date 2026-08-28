@@ -8,8 +8,8 @@ import koala.dom.querySelector
 import koala.dom.unmodify
 import koala.html.Attribute
 import kotlinx.coroutines.launch
-import org.w3c.dom.HTMLElement
 import streetlight.web.model.LightCache
+import web.html.HTMLElement
 
 fun <Id> ViewScope.wireLights(
     root: HTMLElement,

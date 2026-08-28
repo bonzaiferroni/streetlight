@@ -1,6 +1,6 @@
 package koala.model
 
-import org.w3c.dom.HTMLElement
+import web.html.HTMLElement
 
 sealed interface PointRenderBody {
     val element: HTMLElement

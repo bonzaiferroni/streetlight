@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalWasmJsInterop::class)
+
 package koala.model
 
 import koala.core.queryAttribute
@@ -6,18 +8,27 @@ import koala.dom.setAttribute
 import koala.html.AppRoute
 import koala.html.AppScreen
 import koala.html.Attribute
-import kotlinx.browser.document
-import kotlinx.browser.window
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.mapNotNull
-import org.w3c.dom.HTMLAnchorElement
-import org.w3c.dom.HTMLElement
-import org.w3c.dom.MANUAL
-import org.w3c.dom.ScrollRestoration
-import org.w3c.dom.Window
-import org.w3c.dom.events.MouseEvent
-import org.w3c.dom.url.URL
+import web.dom.document
+import web.events.EventType
+import web.events.addEventListener
+import web.history.POP_STATE
+import web.history.PopStateEvent
+import web.history.ScrollRestoration
+import web.history.history
+import web.history.manual
+import web.html.HTMLAnchorElement
+import web.html.HTMLElement
+import web.mouse.MouseEvent
+import web.pointer.CLICK
+import web.pointer.PointerEvent
+import web.url.URL
+import web.window.Window
+import web.window.WindowTarget
+import web.window._blank
+import web.window.window
 import kotlin.time.Clock
 import kotlin.time.Instant
 
@@ -44,13 +55,13 @@ class Portal(
         set(value: String) {
             if (window.location.pathname == value) return
             val href = "${window.location.origin}$value${window.location.search}"
-            window.history.pushState(null, "", href)
+            history.pushState(null, "", href)
         }
 
     init {
         // hack to keep scroll from jumping on back press
         // known issue: this prevents scroll restoration on refresh
-        window.history.scrollRestoration = ScrollRestoration.MANUAL
+        history.scrollRestoration = ScrollRestoration.manual
 
         fun handleRoute(href: String, isClick: Boolean) {
             val href = window.prefixContext(href)
@@ -66,20 +77,19 @@ class Portal(
             go(route)
         }
 
-        document.addEventListener("click", { event ->
-            val event = event as? MouseEvent ?: return@addEventListener
+        document.addEventListener(PointerEvent.CLICK, { event ->
             val anchor = (event.target as? HTMLElement)?.closest("a") as? HTMLAnchorElement ?: return@addEventListener
             val modifiedClick = event.ctrlKey || event.metaKey || event.shiftKey
 
             // Only intercept local paths, let external links sail free
-            if (anchor.hostname == window.location.hostname && anchor.target != "_blank" && !modifiedClick && !isWrecked) {
+            if (anchor.hostname == window.location.hostname && anchor.target != WindowTarget._blank && !modifiedClick && !isWrecked) {
                 event.preventDefault()
                 val href = anchor.getAttribute("href") ?: return@addEventListener
                 handleRoute(href, true)
             }
         })
 
-        window.addEventListener("popstate", {
+        window.addEventListener(PopStateEvent.POP_STATE, {
             if (isWrecked) {
                 window.location.reload()
                 return@addEventListener
@@ -136,7 +146,7 @@ class Portal(
         )}
         sitePath = route.toRelativePath()
 
-        document.body?.setAttribute(KoalaBody.ScreenId.to(route.screen.screenId))
+        document.body.setAttribute(KoalaBody.ScreenId.to(route.screen.screenId))
     }
 
     private fun routeOf(hashPath: String): AppRoute? {

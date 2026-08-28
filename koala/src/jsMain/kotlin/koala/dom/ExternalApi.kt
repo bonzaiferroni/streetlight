@@ -1,6 +1,6 @@
 package koala.dom
 
-import org.w3c.dom.HTMLElement
+import web.html.HTMLElement
 
 external fun initTabs(element: HTMLElement, viewport: HTMLElement?)
 external fun findAndInitTabs(element: HTMLElement)

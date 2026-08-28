@@ -5,8 +5,8 @@ import koala.model.MutableTap
 import kotlinx.html.InputType
 import kotlinx.html.js.input
 import kotlinx.html.js.onInputFunction
-import org.w3c.dom.HTMLButtonElement
-import org.w3c.dom.HTMLInputElement
+import web.html.HTMLButtonElement
+import web.html.HTMLInputElement
 
 fun ViewScope.colorPicker(
     text: String,
@@ -38,7 +38,7 @@ fun ViewScope.colorPicker(
                     display(newColor)
                 }
             }
-        }
+        }.asWeb()
         buttonElement = button(text, { inputElement.click() }, modify(Secondary))
     }
 

@@ -5,7 +5,8 @@ import koala.utils.launch
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.dom.clear
 import kotlinx.html.dom.append
-import org.w3c.dom.HTMLElement
+import web.html.HTMLElement
+import kotlin.dom.clear
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
 

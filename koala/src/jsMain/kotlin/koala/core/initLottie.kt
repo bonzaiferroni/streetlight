@@ -1,11 +1,11 @@
 package koala.core
 
+import js.array.asList
 import koala.external.LottieOptions
 import koala.external.RendererSettings
 import koala.external.lottie
 import koala.html.Attribute
-import org.w3c.dom.HTMLElement
-import org.w3c.dom.asList
+import web.html.HTMLElement
 
 fun queryAndInitLotties(ancestor: HTMLElement) {
     val elements = ancestor.querySelectorAll(Attribute.Lottie.selector).asList()

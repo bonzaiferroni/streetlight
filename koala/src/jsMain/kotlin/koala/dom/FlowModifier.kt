@@ -1,5 +1,7 @@
 package koala.dom
 
+import js.core.Void
+import js.promise.Promise
 import kampfire.model.ValidityCheck
 import koala.css.DisplayNone
 import koala.css.Modifier
@@ -10,11 +12,11 @@ import koala.css.Working
 import koala.model.Tap
 import koala.model.tapOf
 import koala.utils.launch
-import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import org.w3c.dom.HTMLElement
+import web.dom.document
+import web.html.HTMLElement
 
 fun HTMLElement.flowModifier(
     initialValue: Boolean,
@@ -38,7 +40,7 @@ fun HTMLElement.flowModifier(
             if (isModified && isModified(modifier) || !isModified && !isModified(modifier)) return@collect
 
             if (viewTransition) {
-                document.startViewTransition {
+                document.viewTransition {
                     applyModifier(isModified)
                 }
             } else {
@@ -62,7 +64,7 @@ fun HTMLElement.flowIsDisplayed(isDisplayedFlow: Flow<Boolean>, scope: Coroutine
     scope.launch {
         isDisplayedFlow.collect { isDisplayed ->
             if (isDisplayed && !isModified(DisplayNone) || !isDisplayed && isModified(DisplayNone)) return@collect
-            document.startViewTransition {
+            document.viewTransition {
                 when (isDisplayed) {
                     true -> unmodify(DisplayNone)
                     false -> modify(DisplayNone)
@@ -86,7 +88,7 @@ fun HTMLElement.flowVisibility(isVisibleFlow: Flow<Boolean>, scope: CoroutineSco
     scope.launch {
         isVisibleFlow.collect { isVisible ->
             if (isVisible && !isModified(VisibilityHidden) || !isVisible && isModified(VisibilityHidden)) return@collect
-            document.startViewTransition {
+            document.viewTransition {
                 when (isVisible) {
                     true -> unmodify(VisibilityHidden)
                     false -> modify(VisibilityHidden)

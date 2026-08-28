@@ -19,8 +19,9 @@ import koala.html.Id
 import koala.html.configurePopover
 import kotlinx.html.DIV
 import kotlinx.html.js.div
-import org.w3c.dom.HTMLElement
-import org.w3c.dom.Node
+import web.dom.Element
+import web.dom.Node
+import web.html.HTMLElement
 
 fun AppendScope.popoverRaw(
     id: Id,
@@ -51,13 +52,13 @@ fun AppendScope.popoverCard(
     content()
 }
 
-fun Node.revealPopover() = asDynamic().showPopover()
-fun Node.closePopover() = try {
+fun Element.revealPopover() = asDynamic().showPopover()
+fun Element.closePopover() = try {
     asDynamic().hidePopover()
 } catch (e: Exception) {
     console.log(e.message)
 }
-fun Node.togglePopover() = asDynamic().togglePopover()
+fun Element.togglePopover() = asDynamic().togglePopover()
 fun HTMLElement.isPopoverOpen() = matches(":popover-open")
 
 fun AppendScope.popoverOption(label: String, mod: ModifierSet? = null, onClick: () -> Unit) =

@@ -20,7 +20,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.html.DIV
 import kotlinx.html.js.div
-import org.w3c.dom.HTMLDivElement
+import web.html.HTMLDivElement
 import kotlin.time.Duration.Companion.milliseconds
 
 fun <Value> ViewScope.flowBlock(
@@ -36,7 +36,7 @@ fun <Value> ViewScope.flowBlock(
     val element = div {
         addModifiers(modifiers, FlowBlockKey.Class)
         config?.invoke(this)
-    }
+    }.asWeb()
 
     var view: View? = null
     var launchJob: Job? = null

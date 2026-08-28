@@ -9,7 +9,7 @@ import koala.html.column
 import koala.html.icon
 import koala.html.span
 import kotlinx.html.js.img
-import org.w3c.dom.HTMLElement
+import web.html.HTMLElement
 
 internal class FeatureRenderBody(
     override val element: HTMLElement,

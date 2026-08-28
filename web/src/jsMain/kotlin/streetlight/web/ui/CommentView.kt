@@ -11,11 +11,11 @@ import koala.html.markdown
 import koala.html.navigationIfNotNull
 import koala.html.spacer
 import kotlinx.dom.clear
-import org.w3c.dom.HTMLElement
-import org.w3c.dom.HTMLParagraphElement
 import streetlight.model.data.Comment
 import streetlight.model.ui.StarRoute
 import streetlight.web.io.TalkLog
+import web.html.HTMLElement
+import web.html.HTMLParagraphElement
 
 class CommentView(
     comment: Comment,

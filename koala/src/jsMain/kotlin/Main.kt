@@ -3,18 +3,15 @@ import koala.core.queryAndInitLotties
 import koala.interop.interopUtilities
 import koala.dom.findAndInitTabs
 import koala.interop.addGlobalFunctions
-import kotlinx.browser.document
-import org.w3c.dom.HTMLElement
+import web.dom.document
+import web.html.HTMLElement
 
 // the purpose of this module is to provide some basic ui functionality while the larger scripts are inbound
 // it has no references to kotlinx.html so it is considerably smaller
 fun main() {
     console.log("koala rawr!!")
-    val body = document.body ?: return
-
     addGlobalFunctions(interopUtilities)
-
-    initElement(body)
+    initElement(document.body)
 }
 
 fun initElement(element: HTMLElement) {

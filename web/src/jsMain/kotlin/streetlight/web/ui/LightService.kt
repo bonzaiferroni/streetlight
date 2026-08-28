@@ -7,10 +7,10 @@ import koala.dom.getAttribute
 import koala.dom.toggle
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import org.w3c.dom.HTMLElement
 import streetlight.model.data.LightEdit
 import streetlight.web.io.ApiClient
 import streetlight.web.layouts.LightControl
+import web.html.HTMLElement
 import kotlin.uuid.Uuid
 
 class LightService(val scope: CoroutineScope, val api: ApiClient) {

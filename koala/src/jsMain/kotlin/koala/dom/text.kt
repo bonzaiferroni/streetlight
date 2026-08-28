@@ -10,10 +10,10 @@ import kotlinx.html.P
 import kotlinx.html.SPAN
 import kotlinx.html.STRONG
 import kotlinx.html.js.p
+import web.html.HTMLParagraphElement
 import kotlinx.html.js.em as emTag
 import kotlinx.html.js.strong as strongTag
 import kotlinx.html.js.span as spanTag
-import org.w3c.dom.HTMLParagraphElement
 
 fun AppendScope.textBlock(
     text: String = "",
@@ -23,7 +23,7 @@ fun AppendScope.textBlock(
     addModifiers(mod)
     +text
     block?.invoke(this)
-}
+}.unsafeCast<HTMLParagraphElement>()
 
 fun <T> ViewScope.textBlock(
     binding: Flow<T>,
@@ -68,4 +68,4 @@ fun AppendScope.span(
     addModifiers(mod)
     +text
     block()
-}
+}.asWeb()

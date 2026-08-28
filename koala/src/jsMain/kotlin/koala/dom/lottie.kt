@@ -6,7 +6,7 @@ import koala.css.ModifierSet
 import koala.html.configureLottie
 import kotlinx.html.DIV
 import kotlinx.html.js.div
-import org.w3c.dom.HTMLDivElement
+import web.html.HTMLDivElement
 
 fun AppendScope.lottie(
     file: Lottie,
@@ -15,7 +15,7 @@ fun AppendScope.lottie(
 ): HTMLDivElement {
     val div = div {
         configureLottie(file, mod, block)
-    }
+    }.asWeb()
     initLottie(div)
     return div
 }

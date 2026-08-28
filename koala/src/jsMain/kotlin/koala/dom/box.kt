@@ -14,7 +14,7 @@ inline fun AppendScope.box(
 ) = div {
     addModifiers(Box, modifiers)
     content()
-}
+}.asWeb()
 
 inline fun AppendScope.box(
     id: Id,
@@ -31,7 +31,7 @@ fun AppendScope.container(
 ) = div {
     addModifiers(modifiers)
     content()
-}
+}.asWeb()
 
 fun AppendScope.container(
     id: Id,

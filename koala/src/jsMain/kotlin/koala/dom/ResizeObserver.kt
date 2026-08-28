@@ -3,8 +3,8 @@ package koala.dom
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
-import org.w3c.dom.DOMRectReadOnly
-import org.w3c.dom.Element
+import web.dom.Element
+import web.geometry.DOMRectReadOnly
 
 external class ResizeObserver(
     callback: (Array<ResizeObserverEntry>, ResizeObserver) -> Unit

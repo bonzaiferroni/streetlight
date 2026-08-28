@@ -4,11 +4,12 @@ import koala.css.addModifiers
 import koala.css.modify
 import koala.css.setStyle
 import koala.dom.AppendScope
+import koala.dom.asWeb
 import koala.dom.setStyle
 import kotlinx.css.properties.deg
 import kotlinx.html.js.div
 import kotlinx.html.js.p
-import org.w3c.dom.HTMLElement
+import web.html.HTMLElement
 
 internal class IconRenderBody(
     override val element: HTMLElement,
@@ -45,19 +46,19 @@ internal fun AppendScope.configureIconRender(marker: TravelMarker): IconRenderBo
         val body = div {
             addModifiers(modify(MarkerStyle.Travel, MarkerStyle.Body))
             setStyle(MarkerStyle.MarkerSvg.to(marker.icon))
-        }
+        }.asWeb()
 
         val bearingElement = marker.bearing?.let {
             div {
                 addModifiers(MarkerStyle.Bearing)
-            }
+            }.asWeb()
         }
 
         val labelElement = label?.let {
             p {
                 addModifiers(MarkerStyle.Label)
                 +it
-            }
+            }.asWeb()
         }
 
         return IconRenderBody(body, labelElement, bearingElement, marker.bearing)

@@ -9,7 +9,7 @@ import kotlinx.html.Entities
 import kotlinx.html.Tag
 import kotlinx.html.Unsafe
 import kotlinx.html.org.w3c.dom.events.Event
-import org.w3c.dom.HTMLElement
+import web.html.HTMLElement
 
 class View(
     private var consumer: AppendScope,
@@ -88,5 +88,5 @@ class View(
     override fun onTagContentEntity(entity: Entities) = consumer.onTagContentEntity(entity)
     override fun onTagContentUnsafe(block: Unsafe.() -> Unit) = consumer.onTagContentUnsafe(block)
     override fun onTagComment(content: CharSequence) = consumer.onTagComment(content)
-    override fun finalize(): HTMLElement = consumer.finalize()
+    override fun finalize(): W3CElement = consumer.finalize()
 }

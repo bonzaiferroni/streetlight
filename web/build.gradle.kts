@@ -64,7 +64,6 @@ kotlin {
         }
 
         wasmJsMain.dependencies {
-            implementation(libs.kotlinx.browser)
         }
     }
 

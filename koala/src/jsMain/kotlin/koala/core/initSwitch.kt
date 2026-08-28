@@ -1,10 +1,7 @@
 package koala.core
 
-import koala.dom.onCustomEvent
-import koala.dom.sendCustomEvent
 import koala.dom.setAttribute
 import koala.html.Attribute
-import koala.html.ElementEvent
 import koala.html.SwitchStyle
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.asList

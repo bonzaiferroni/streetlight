@@ -14,8 +14,8 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.html.dom.append
-import org.w3c.dom.HTMLElement
 import streetlight.web.model.Earth
+import web.html.HTMLElement
 import kotlin.collections.first
 import kotlin.math.min
 

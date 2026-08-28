@@ -1,5 +1,6 @@
 package koala.dom
 
+import js.array.asList
 import koala.css.Magic
 import koala.css.Reveal
 import koala.css.Property
@@ -9,8 +10,7 @@ import kotlinx.browser.window
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.css.Display
-import org.w3c.dom.HTMLElement
-import org.w3c.dom.asList
+import web.html.HTMLElement
 
 fun ViewScope.wireSwapBlock(
     element: HTMLElement,
@@ -19,7 +19,7 @@ fun ViewScope.wireSwapBlock(
     bindFlow?.let { flow ->
         val children = element.children.asList().map { it as HTMLElement }
         console.log(element.id)
-        val isMagic = element.classList.contains(Magic.identifier)
+        val isMagic = element.isModified(Magic)
         contentScope.launch {
             var isInitial = true
             flow.collect { id ->
@@ -46,7 +46,7 @@ fun ViewScope.queryAndWireSwapBlock(
 
 private fun List<HTMLElement>.setVisibility(id: Id) {
     forEach { child ->
-        when (child.id == id.identifier) {
+        when (child.id == id.elementId) {
             true -> child.style.removeStyle(Property.Display)
             else -> child.style.setStyle(Property.Display.to(Display.none))
         }
@@ -55,7 +55,7 @@ private fun List<HTMLElement>.setVisibility(id: Id) {
 
 private fun List<HTMLElement>.setReveal(id: Id, isInitial: Boolean) {
     forEach { child ->
-        when (child.id == id.identifier) {
+        when (child.id == id.elementId) {
             true -> {
                 child.style.removeStyle(Property.Display)
                 if (isInitial) {

@@ -6,8 +6,8 @@ import koala.css.*
 import koala.html.heading3
 import koala.model.MutableTap
 import kotlinx.coroutines.launch
-import org.w3c.dom.HTMLDivElement
-import org.w3c.dom.HTMLElement
+import web.html.HTMLDivElement
+import web.html.HTMLElement
 import kotlin.enums.enumEntries
 
 inline fun <reified State> ViewScope.stageBlock(

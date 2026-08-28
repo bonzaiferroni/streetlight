@@ -16,7 +16,7 @@ import koala.external.maplibregl
 import koala.html.Attribute
 import koala.html.GeoMapKey
 import kotlinx.browser.localStorage
-import org.w3c.dom.HTMLElement
+import web.html.HTMLElement
 
 // globalThis.geoMapWindow: HTMLElement? = null
 external val globalThis: dynamic

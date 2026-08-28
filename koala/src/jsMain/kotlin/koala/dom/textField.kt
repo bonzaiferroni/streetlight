@@ -1,25 +1,19 @@
 package koala.dom
 
-import koala.css.AlignSelfCenter
-import koala.css.Italic
-import koala.css.JustifySelfEnd
-import koala.css.ModifierSet
-import koala.css.OpacityHalf
-import koala.css.Padding1
-import koala.css.PointerEventsNone
-import koala.css.TextSmall
-import koala.css.modify
+import koala.css.*
 import koala.html.Id
 import koala.html.configureTextFieldContainer
 import koala.html.configureTextFieldInput
 import koala.model.MutableTap
 import kotlinx.html.INPUT
 import kotlinx.html.js.onInputFunction
-import org.w3c.dom.HTMLInputElement
 import kotlinx.html.js.input
-import org.w3c.dom.HTMLElement
-import org.w3c.dom.HTMLParagraphElement
-import org.w3c.dom.events.KeyboardEvent
+import web.events.addEventListener
+import web.html.HTMLElement
+import web.html.HTMLInputElement
+import web.html.HTMLParagraphElement
+import web.keyboard.KEY_DOWN
+import web.keyboard.KeyboardEvent
 
 fun ViewScope.textField(
     field: MutableTap<String>,
@@ -60,7 +54,7 @@ fun ViewScope.textField(
                 }
             }
             block?.invoke(this)
-        }
+        }.asWeb()
 
         maxLengthText = maxLength?.let {
             textBlock("${currentValue.length}/$it",
@@ -70,8 +64,7 @@ fun ViewScope.textField(
     }
 
     onEnter?.let {
-        element.addEventListener("keydown", { event ->
-            val event = event as KeyboardEvent
+        element.addEventListener(KeyboardEvent.KEY_DOWN, { event ->
             if (event.key == "Enter") {
                 onEnter()
             }

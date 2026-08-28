@@ -6,7 +6,6 @@ import koala.dom.*
 import koala.interop.KtFunction
 import koala.interop.addGlobalFunctions
 import koala.model.Portal
-import kotlinx.browser.document
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.css.Display
@@ -17,6 +16,7 @@ import streetlight.web.layouts.LightControl
 import streetlight.web.model.TransitMap
 import streetlight.web.model.SessionGate
 import koala.utils.launch
+import web.dom.document
 
 @OptIn(ExperimentalSerializationApi::class)
 fun viewApp() {

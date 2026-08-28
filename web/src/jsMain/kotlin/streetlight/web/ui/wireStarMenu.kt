@@ -17,8 +17,8 @@ import koala.html.Attribute
 import koala.html.Id
 import koala.model.MutableTap
 import koala.model.storeOf
-import org.w3c.dom.HTMLElement
 import streetlight.model.ui.StarRoute
+import web.html.HTMLElement
 import kotlin.js.json
 
 fun ViewScope.wireStarMenu() {

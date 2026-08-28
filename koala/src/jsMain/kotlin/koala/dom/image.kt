@@ -9,7 +9,11 @@ import koala.model.Tap
 import kotlinx.html.IMG
 import kotlinx.html.js.img
 import kotlinx.html.style
-import org.w3c.dom.HTMLImageElement
+import web.events.ERROR
+import web.events.Event
+import web.events.LOAD
+import web.events.addEventListener
+import web.html.HTMLImageElement
 
 fun AppendScope.image(
     url: Url? = SiteImage.placeholderLg,
@@ -24,7 +28,7 @@ fun AppendScope.image(
             style = "display: none;"
         }
         block?.invoke(this)
-    }
+    }.asWeb()
 
     return element
 }
@@ -58,10 +62,10 @@ fun ViewScope.image(
     }
 
     if (hideOnError) {
-        element.addEventListener("error", {
+        element.addEventListener(Event.ERROR, {
             hideImage()
         })
-        element.addEventListener("load", {
+        element.addEventListener(Event.LOAD, {
             showImage()
         })
     }

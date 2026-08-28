@@ -13,7 +13,7 @@ fun AppendScope.div(
 ) = div {
     addModifiers(mod)
     block()
-}
+}.asWeb()
 
 fun AppendScope.div(
     id: Id,

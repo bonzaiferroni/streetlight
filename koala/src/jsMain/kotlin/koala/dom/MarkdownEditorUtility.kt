@@ -1,6 +1,6 @@
 package koala.dom
 
-import org.w3c.dom.HTMLElement
+import web.html.HTMLElement
 
 private val NORMALIZE = Regex("[\u00A0\u200B\uFEFF\r]|\r\n")
 

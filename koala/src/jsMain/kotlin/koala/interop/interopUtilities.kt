@@ -1,12 +1,14 @@
 package koala.interop
 
-import koala.dom.startViewTransition
-import kotlinx.browser.document
-import kotlinx.browser.localStorage
-import org.w3c.dom.HTMLElement
-import org.w3c.dom.SMOOTH
-import org.w3c.dom.ScrollBehavior
-import org.w3c.dom.ScrollOptions
+import koala.dom.getElementOrNullById
+import koala.dom.viewTransition
+import web.cssom.ClassName
+import web.dom.document
+import web.html.HTMLElement
+import web.scroll.ScrollBehavior
+import web.scroll.ScrollIntoViewOptions
+import web.scroll.smooth
+import web.storage.localStorage
 
 val interopUtilities = listOf(
     KtFunction(KoalaInlineJs.ScrollToId, ::scrollToId),
@@ -15,14 +17,14 @@ val interopUtilities = listOf(
     KtFunction(KoalaInlineJs.toggleRootModifierWithTransition, ::toggleRootModifierWithTransition),
 )
 
-fun scrollToId(id: String) = document.getElementById(id)?.scrollIntoView(ScrollOptions(ScrollBehavior.SMOOTH))
+fun scrollToId(id: String) = document.getElementOrNullById(id)?.scrollIntoView(ScrollIntoViewOptions(ScrollBehavior.smooth))
 
 fun toggleAncestor(element: HTMLElement, ancestorClass: String, toggleClass: String) {
     var ancestor = element.parentElement
     while (ancestor != null) {
-        if (ancestor.classList.contains(ancestorClass)) {
-            document.startViewTransition {
-                (ancestor as HTMLElement).classList.toggle(toggleClass)
+        if (ancestor.classList.contains(ClassName(ancestorClass))) {
+            document.viewTransition {
+                (ancestor as HTMLElement).classList.toggle(ClassName(toggleClass))
             }
             break
         }
@@ -31,13 +33,14 @@ fun toggleAncestor(element: HTMLElement, ancestorClass: String, toggleClass: Str
 }
 
 fun toggleRootModifier(mod: String) {
-    val classes = document.documentElement!!.classList
-    classes.toggle(mod)
-    localStorage.setItem(mod, classes.contains(mod).toString())
+    val classes = document.documentElement.classList
+    classes.toggle(ClassName(mod))
+    localStorage.setItem(mod, classes.contains(ClassName(mod)).toString())
 }
 
 fun toggleRootModifierWithTransition(mod: String) {
     document.startViewTransition {
         toggleRootModifier(mod)
+        null
     }
 }

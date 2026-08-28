@@ -4,9 +4,8 @@ import koala.css.*
 import koala.html.SwapStyle
 import kotlinx.browser.window
 import kotlinx.css.px
-import kotlinx.html.dom.append
-import org.w3c.dom.HTMLDivElement
-import org.w3c.dom.HTMLElement
+import web.html.HTMLDivElement
+import web.html.HTMLElement
 
 @Deprecated("reconsider whether this is necessary")
 fun AppendScope.swap(

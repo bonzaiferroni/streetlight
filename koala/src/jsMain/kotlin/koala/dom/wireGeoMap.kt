@@ -2,17 +2,23 @@ package koala.dom
 
 import koala.core.findAndInitGeoMap
 import koala.core.queryFirstOrNull
+import koala.dom.getElementOrNullById
 import koala.external.maplibregl
-import org.w3c.dom.HTMLElement
 import koala.html.GeoMapKey
 import koala.model.GeoCameraController
 import koala.external.maplibregl.Point
 import koala.model.GeoCamera
 import koala.model.GeoMap
 import koala.model.GeoRender
-import kotlinx.browser.document
-import kotlinx.browser.window
 import kotlinx.coroutines.CoroutineScope
+import web.animations.requestAnimationFrame
+import web.dom.document
+import web.events.addEventListener
+import web.html.HTMLElement
+import web.keyboard.*
+import web.keyboard.KeyboardEvent
+import web.performance.performance
+import web.window.window
 
 fun ViewScope.wireGeoMap(
     ancestor: HTMLElement,
@@ -66,25 +72,24 @@ fun ViewScope.wireMapContext(
 }
 
 fun wireKeyboardControls(widget: maplibregl.Map) {
-    val pressedKeys = mutableMapOf<String, Boolean>()
+    val pressedKeys = mutableMapOf<KeyCode, Boolean>()
 
-    window.addEventListener("keydown", { event ->
-        event as org.w3c.dom.events.KeyboardEvent
+    window.addEventListener(KeyboardEvent.KEY_DOWN, { event ->
         if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return@addEventListener
         pressedKeys[event.code] = true
-    }, false)
+    })
 
-    window.addEventListener("keyup", { event ->
+    window.addEventListener(KeyboardEvent.KEY_UP, { event ->
         event as org.w3c.dom.events.KeyboardEvent
         pressedKeys[event.code] = false
-    }, false)
+    })
 
     // pixels the map pans per second
     val panSpeed = 500.0
     // degrees the map rotates per second
     val rotationSpeed = 100.0
 
-    var lastTime = window.performance.now()
+    var lastTime = performance.now()
 
     fun frame(time: Double) {
         val dt = ((time - lastTime) / 1000.0).coerceAtMost(0.1)
@@ -94,12 +99,12 @@ fun wireKeyboardControls(widget: maplibregl.Map) {
         var dy = 0.0
         var dBearing = 0.0
 
-        if (pressedKeys["KeyW"] == true || pressedKeys["ArrowUp"] == true) dy -= 1.0
-        if (pressedKeys["KeyS"] == true || pressedKeys["ArrowDown"] == true) dy += 1.0
-        if (pressedKeys["KeyA"] == true || pressedKeys["ArrowLeft"] == true) dx -= 1.0
-        if (pressedKeys["KeyD"] == true || pressedKeys["ArrowRight"] == true) dx += 1.0
-        if (pressedKeys["KeyQ"] == true) dBearing -= 1.0
-        if (pressedKeys["KeyE"] == true) dBearing += 1.0
+        if (pressedKeys[KeyCode.KeyW] == true || pressedKeys[KeyCode.ArrowUp] == true) dy -= 1.0
+        if (pressedKeys[KeyCode.KeyS] == true || pressedKeys[KeyCode.ArrowDown] == true) dy += 1.0
+        if (pressedKeys[KeyCode.KeyA] == true || pressedKeys[KeyCode.ArrowLeft] == true) dx -= 1.0
+        if (pressedKeys[KeyCode.KeyD] == true || pressedKeys[KeyCode.ArrowRight] == true) dx += 1.0
+        if (pressedKeys[KeyCode.KeyQ] == true) dBearing -= 1.0
+        if (pressedKeys[KeyCode.KeyE] == true) dBearing += 1.0
 
         if (dx != 0.0 && dy != 0.0) {
             val mag = kotlin.math.sqrt(dx * dx + dy * dy)
@@ -115,8 +120,8 @@ fun wireKeyboardControls(widget: maplibregl.Map) {
             widget.setBearing(widget.getBearing() + dBearing * rotationSpeed * dt)
         }
 
-        window.requestAnimationFrame(::frame)
+        requestAnimationFrame(::frame)
     }
 
-    window.requestAnimationFrame(::frame)
+    requestAnimationFrame(::frame)
 }

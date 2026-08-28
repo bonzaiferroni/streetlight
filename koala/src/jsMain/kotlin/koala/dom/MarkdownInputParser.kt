@@ -1,5 +1,6 @@
 package koala.dom
 
+import js.array.asList
 import kampfire.api.Markdown
 import kampfire.api.toMarkdown
 import koala.markdown.ContentBlock
@@ -8,8 +9,7 @@ import koala.markdown.MarkdownRegex
 import koala.markdown.ParsedBlock
 import koala.markdown.accepts
 import koala.markdown.markdownBlockTypeOf
-import org.w3c.dom.HTMLElement
-import org.w3c.dom.asList
+import web.html.HTMLElement
 
 class MarkdownInputParser(private val model: MarkdownEditor) {
 

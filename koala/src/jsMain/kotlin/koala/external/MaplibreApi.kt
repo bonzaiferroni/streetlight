@@ -3,7 +3,7 @@
 package koala.external
 
 import kotlinx.js.JsPlainObject
-import org.w3c.dom.HTMLElement
+import web.html.HTMLElement
 
 external interface Evented {
     fun off(type: String, listener: Listener): Subscription

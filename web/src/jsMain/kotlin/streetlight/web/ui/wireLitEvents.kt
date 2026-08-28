@@ -8,12 +8,12 @@ import koala.dom.*
 import koala.html.fillImageSrcSet
 import koala.html.heading3
 import koala.model.dedup
-import org.w3c.dom.HTMLElement
 import streetlight.model.data.EventId
 import streetlight.model.data.EventLocation
 import streetlight.web.model.DataCache
 import streetlight.web.model.LightCache
 import streetlight.web.shells.HomeShell
+import web.html.HTMLElement
 import kotlin.collections.component1
 import kotlin.collections.component2
 import kotlin.time.Clock

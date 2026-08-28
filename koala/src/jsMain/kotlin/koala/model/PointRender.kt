@@ -6,11 +6,11 @@ import koala.css.*
 import koala.dom.*
 import koala.external.MarkerOptions
 import koala.external.maplibregl
-import kotlinx.browser.document
 import kotlinx.css.properties.s
 import kotlinx.html.dom.append
 import kotlinx.html.js.div
-import org.w3c.dom.HTMLDivElement
+import web.dom.document
+import web.html.HTMLDivElement
 
 internal class PointRender(
     val jsMarker: maplibregl.Marker,
@@ -150,7 +150,7 @@ internal fun PointMarker.toPointRender(pixelPoint: Point, focusEntity: () -> Uni
                 is IconMarker -> configureIconRender(marker)
                 else -> error("unrecognized PointMarker")
             }
-        }
+        }.asWeb()
     }
 
     val view = PointRender(

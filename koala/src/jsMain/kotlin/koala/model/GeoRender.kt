@@ -1,12 +1,14 @@
 package koala.model
 
 import kampfire.model.GeoBounds
+import koala.dom.onClick
 import koala.external.maplibregl
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.w3c.dom.HTMLElement
+import web.html.HTMLElement
+import kotlin.time.Duration.Companion.milliseconds
 
 class GeoRender(
     private val windowElement: HTMLElement,
@@ -20,13 +22,13 @@ class GeoRender(
 
     init {
         val element = windowElement.querySelector(".maplibregl-canvas") ?: error("canvas not found")
-        element.addEventListener("click", {
+        element.onClick {
             setFocus(null)
-        })
+        }
 
         scope.launch {
             while (!jsMap.loaded()) {
-                delay(10)
+                delay(10.milliseconds)
             }
 
             launch {

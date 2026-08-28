@@ -7,7 +7,7 @@ import koala.html.blockLabel
 import koala.html.setAttribute
 import kotlinx.html.DIV
 import kotlinx.html.js.div
-import org.w3c.dom.HTMLElement
+import web.html.HTMLElement
 
 fun AppendScope.blockLabel(
     label: String,
@@ -18,7 +18,7 @@ fun AppendScope.blockLabel(
     addModifiers(mod)
     setAttribute(Attribute.BlockLabel, label)
     block?.invoke(this)
-}
+}.asWeb()
 
 fun HTMLElement.setBlockLabel(label: String): HTMLElement {
     setAttribute(Attribute.BlockLabel.to(label))

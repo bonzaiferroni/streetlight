@@ -15,7 +15,7 @@ import koala.external.SeriesOption
 import koala.external.SplitLineOption
 import koala.external.TitleOption
 import koala.external.TooltipOption
-import org.w3c.dom.HTMLElement
+import web.html.HTMLElement
 
 class LineChart<T>(
     private val container: HTMLElement,

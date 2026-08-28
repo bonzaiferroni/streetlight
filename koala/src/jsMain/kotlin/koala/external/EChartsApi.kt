@@ -1,7 +1,7 @@
 package koala.external
 
 import kotlinx.js.JsPlainObject
-import org.w3c.dom.HTMLElement
+import web.html.HTMLElement
 
 @JsName("echarts")
 external object ECharts {

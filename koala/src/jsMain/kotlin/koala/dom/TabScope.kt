@@ -4,7 +4,7 @@ import koala.css.modify
 import koala.html.Id
 import koala.html.TabClass
 import kotlinx.html.dom.append
-import org.w3c.dom.HTMLElement
+import web.html.HTMLElement
 
 class TabScope(
     maxTabCount: Int = 5,

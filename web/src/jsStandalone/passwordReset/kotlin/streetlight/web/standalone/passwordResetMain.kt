@@ -17,10 +17,10 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
-import org.w3c.dom.HTMLInputElement
-import org.w3c.dom.HTMLParagraphElement
 import streetlight.model.Api
 import streetlight.web.shells.PasswordResetForm
+import web.html.HTMLInputElement
+import web.html.HTMLParagraphElement
 import web.http.BodyInit
 import web.http.Headers
 import web.http.POST

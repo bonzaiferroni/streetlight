@@ -10,8 +10,7 @@ import kotlinx.browser.document
 import kotlinx.html.DIV
 import kotlinx.html.js.div
 import kotlinx.html.js.onInputFunction
-import org.w3c.dom.HTMLElement
-import org.w3c.dom.get
+import web.html.HTMLElement
 
 fun ViewScope.styledMarkdownEditor(
     state: MutableTap<Markdown>,
@@ -56,7 +55,7 @@ fun ViewScope.styledMarkdownEditor(
         }
 
         block()
-    }
+    }.asWeb()
 
 //    element.addEventListener("copy", { event ->
 //        val range = window.selection()?.getRangeAt(0) ?: return@addEventListener

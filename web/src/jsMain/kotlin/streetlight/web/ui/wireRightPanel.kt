@@ -5,12 +5,12 @@ import koala.dom.*
 import koala.model.dedup
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.w3c.dom.HTMLElement
-import org.w3c.dom.SMOOTH
-import org.w3c.dom.ScrollBehavior
-import org.w3c.dom.ScrollToOptions
 import streetlight.web.io.OmniClient
 import streetlight.web.pages.AppBody
+import web.html.HTMLElement
+import web.scroll.ScrollBehavior
+import web.scroll.ScrollToOptions
+import web.scroll.smooth
 import kotlin.time.Duration.Companion.milliseconds
 
 fun ViewScope.wireRightPanel() {
@@ -31,7 +31,7 @@ fun ViewScope.wireRightPanel() {
             delay(100.milliseconds)
             container?.scrollTo(ScrollToOptions(
                 top = container.scrollHeight.toDouble(),
-                behavior = ScrollBehavior.SMOOTH
+                behavior = ScrollBehavior.smooth
             ))
         }
     }

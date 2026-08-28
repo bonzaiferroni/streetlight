@@ -9,7 +9,7 @@ import koala.markdown.contentEnd
 import koala.markdown.forEachLine
 import koala.model.EditorStyle
 import kotlinx.css.GridTemplateColumns
-import org.w3c.dom.HTMLElement
+import web.html.HTMLElement
 
 private fun AppendScope.renderEditorTable(chunk: String, element: HTMLElement, block: MarkdownTable) {
     val columns = block.header.cells.size

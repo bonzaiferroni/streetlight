@@ -13,8 +13,8 @@ import kotlinx.coroutines.launch
 import kotlinx.html.DIV
 import kotlinx.html.classes
 import kotlinx.html.js.div
-import org.w3c.dom.HTMLDivElement
-import org.w3c.dom.HTMLElement
+import web.html.HTMLDivElement
+import web.html.HTMLElement
 import kotlin.collections.plus
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -37,14 +37,14 @@ fun <Item> ViewScope.itemsBlock(
             classes += Magic.identifier
         }
         config?.invoke(this)
-    }
+    }.asWeb()
 
     fun createItem(item: Item): ViewElement {
         lateinit var element: HTMLElement
         val view = parent.appendChildView("itemsBlock", this) {
             element = div {
                 block(item)
-            }
+            }.asWeb()
         }
         return ViewElement(view, element)
     }

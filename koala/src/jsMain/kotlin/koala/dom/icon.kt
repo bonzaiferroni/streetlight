@@ -18,4 +18,4 @@ fun AppendScope.icon(
         modifiers = mod,
         block = block
     )
-}
+}.asWeb()

@@ -9,13 +9,20 @@ import koala.html.FilePickerKey
 import kotlinx.html.InputType
 import kotlinx.html.hidden
 import kotlinx.html.js.*
-import org.w3c.dom.DragEvent
-import org.w3c.dom.HTMLDivElement
-import org.w3c.dom.HTMLImageElement
-import org.w3c.dom.HTMLInputElement
-import org.w3c.dom.url.URL
-import org.w3c.files.File
-import org.w3c.files.get
+import web.dnd.DRAG
+import web.dnd.DRAG_LEAVE
+import web.dnd.DRAG_OVER
+import web.dnd.DragEvent
+import web.events.CHANGE
+import web.events.Event
+import web.events.addEventListener
+import web.file.File
+import web.html.HTMLDivElement
+import web.html.HTMLImageElement
+import web.html.HTMLInputElement
+import web.input.InputEvent
+import web.pointer.PointerEvent
+import web.url.URL
 
 fun AppendScope.filePicker(
     mimeType: MimeType = MimeType.All,
@@ -33,7 +40,7 @@ fun AppendScope.filePicker(
             type = InputType.file
             accept = mimeType.expression
             hidden = true
-        }
+        }.asWeb()
 
         dropZone = div {
             addModifiers(FilePickerKey.DropZone)
@@ -42,12 +49,12 @@ fun AppendScope.filePicker(
             +"— or —"
             br { }
             +"Drop $mimeType"
-        }
+        }.asWeb()
 
         preview = img {
             addModifiers(BorderRadius1)
-        }
-    }
+        }.asWeb()
+    }.asWeb()
 
     fun handleFile(file: File?) {
         val file = file ?: return
@@ -63,8 +70,7 @@ fun AppendScope.filePicker(
         onPickFile(url.toUrl())
     }
 
-    element.addEventListener("drop", { event ->
-        val event = event as DragEvent
+    element.addEventListener(DragEvent.DRAG, { event ->
         event.preventDefault()
         element.unmodify(FilePickerKey.DragOver)
         handleFile(event.dataTransfer?.files?.get(0))
@@ -74,16 +80,16 @@ fun AppendScope.filePicker(
         input.click()
     }
 
-    element.addEventListener("dragover", { event ->
+    element.addEventListener(DragEvent.DRAG_OVER, { event ->
         event.preventDefault()
         element.modify(FilePickerKey.DragOver)
     })
 
-    element.addEventListener("dragleave", {
+    element.addEventListener(DragEvent.DRAG_LEAVE, {
         element.unmodify(FilePickerKey.DragOver)
     })
 
-    input.addEventListener("change", { _ ->
+    input.addEventListener(Event.CHANGE, { _ ->
         handleFile(input.files?.get(0))
     })
 }

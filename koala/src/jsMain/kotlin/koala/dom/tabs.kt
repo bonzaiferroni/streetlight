@@ -6,8 +6,8 @@ import koala.html.Id
 import koala.html.TabClass
 import koala.model.MutableTap
 import kotlinx.html.js.p
-import org.w3c.dom.HTMLDivElement
-import org.w3c.dom.HTMLElement
+import web.html.HTMLDivElement
+import web.html.HTMLElement
 
 fun ViewScope.tabs(
     id: Id? = null,

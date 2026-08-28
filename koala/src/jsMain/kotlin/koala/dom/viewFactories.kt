@@ -1,12 +1,9 @@
 package koala.dom
 
 import koala.html.Id
-import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.dom.clear
-import kotlinx.html.dom.append
-import kotlinx.html.dom.prepend
-import org.w3c.dom.HTMLElement
+import web.dom.document
+import web.html.HTMLElement
 
 fun HTMLElement.mountRootView(
     name: String,
@@ -30,7 +27,7 @@ fun mountRootView(
     ancestor: HTMLElement? = null,
     block: ViewScope.() -> Unit
 ): View {
-    val element = (ancestor ?: document.body!!).querySelector(id) ?: error("element not found: $id")
+    val element = (ancestor ?: document.body).querySelector(id) ?: error("element not found: $id")
     return element.mountRootView(id.selector, parentScope, app, block)
 }
 
@@ -52,7 +49,7 @@ fun ViewScope.mountChildView(
     id: Id,
     ancestor: HTMLElement? = null,
     block: ViewScope.() -> Unit
-) = mountChildView(id.identifier, ((ancestor ?: document.body!!).querySelector(id) ?: error("element not found: $id")), block)
+) = mountChildView(id.identifier, ((ancestor ?: document.body).querySelector(id) ?: error("element not found: $id")), block)
 
 fun HTMLElement.appendChildView(
     name: String,

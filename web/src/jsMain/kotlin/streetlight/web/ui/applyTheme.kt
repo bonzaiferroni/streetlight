@@ -8,16 +8,15 @@ import koala.dom.modify
 import koala.dom.removeStyle
 import koala.dom.setStyle
 import koala.dom.unmodify
-import kotlinx.browser.document
-import kotlinx.browser.window
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.css.pct
 import streetlight.model.data.PageTheme
+import web.dom.document
 import kotlin.time.Duration.Companion.seconds
 
 fun applyTheme(theme: PageTheme?) {
-    val body = document.body ?: return
+    val body = document.body
     body.setStyle(KoalaStyle.Accent, theme?.accent)
     body.setStyle(KoalaStyle.Primary, theme?.primary)
     body.setStyle(KoalaStyle.RhoColor, theme?.rho?.rgba())

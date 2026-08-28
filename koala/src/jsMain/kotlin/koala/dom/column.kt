@@ -24,4 +24,4 @@ fun AppendScope.column(
 ) = div {
     addModifiers(modify(Column, mod))
     content()
-}
+}.asWeb()

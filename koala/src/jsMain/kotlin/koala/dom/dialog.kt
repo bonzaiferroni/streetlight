@@ -19,7 +19,10 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.html.DIV
 import kotlinx.html.js.dialog
-import org.w3c.dom.HTMLDialogElement
+import web.events.addEventListener
+import web.html.HTMLDialogElement
+import web.pointer.CLICK
+import web.pointer.PointerEvent
 import kotlin.time.Duration.Companion.milliseconds
 
 fun ViewScope.dialog(
@@ -30,7 +33,7 @@ fun ViewScope.dialog(
 
     val element = dialog {
         addModifiers(DialogStyle.Class, mod)
-    }
+    }.unsafeCast<HTMLDialogElement>()
 
     var closeJob: Job? = null
     fun closeDialog() {
@@ -54,7 +57,7 @@ fun ViewScope.dialog(
             state.set(true)
     }
 
-    element.addEventListener("click", { event ->
+    element.addEventListener(PointerEvent.CLICK, { event ->
         if (event.target == element) {
             closeDialog()
         }

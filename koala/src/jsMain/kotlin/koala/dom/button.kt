@@ -11,8 +11,11 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.html.BUTTON
 import kotlinx.html.js.button
-import org.w3c.dom.HTMLButtonElement
-import org.w3c.dom.events.Event
+import web.events.Event
+import web.events.addEventListener
+import web.html.HTMLButtonElement
+import web.pointer.CLICK
+import web.pointer.PointerEvent
 
 fun AppendScope.button(
     text: String,
@@ -24,7 +27,7 @@ fun AppendScope.button(
 ): HTMLButtonElement {
     val element = button {
         configureButton(text, mod, flair, block)
-    }
+    }.asWeb()
 
     configureButtonEvents(
         element = element,
@@ -44,7 +47,7 @@ fun AppendScope.button(
 ): HTMLButtonElement {
     val element = button {
         configureSvgButton(svg, mod, block)
-    }
+    }.asWeb()
 
     configureButtonEvents(
         element = element,
@@ -63,7 +66,7 @@ fun AppendScope.button(
 ): HTMLButtonElement {
     val element = button {
         configureElementButton(mod, block)
-    }
+    }.asWeb()
 
     configureButtonEvents(
         element = element,
@@ -80,11 +83,11 @@ private fun configureButtonEvents(
     onClickEvent: ((Event) -> Unit)? = null,
 ) {
     onClickEvent?.let {
-        element.addEventListener("click", it)
+        element.addEventListener(PointerEvent.CLICK, it)
     }
 
     onClick?.let {
-        element.addEventListener("click", { it() })
+        element.addEventListener(PointerEvent.CLICK, { it() })
     }
 }
 

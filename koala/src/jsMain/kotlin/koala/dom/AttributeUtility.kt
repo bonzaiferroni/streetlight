@@ -1,13 +1,12 @@
 package koala.dom
 
-import koala.core.get
+import js.array.asList
 import koala.html.Attribute
 import koala.html.AttributeValue
-import org.w3c.dom.Element
-import org.w3c.dom.HTMLElement
-import org.w3c.dom.MutationObserver
-import org.w3c.dom.MutationObserverInit
-import org.w3c.dom.asList
+import web.dom.Element
+import web.html.HTMLElement
+import web.mutation.MutationObserver
+import web.mutation.MutationObserverInit
 
 data class ElementAttribute<T>(
     val element: HTMLElement,
@@ -52,9 +51,9 @@ fun Element.setAttribute(attribute: Attribute<*>, value: String) =
 fun <T> Element.setAttribute(expression: AttributeValue<T>) =
     setAttribute(expression.attribute.identifier, expression.value.toString())
 
-fun <T> Element.getAttribute(attribute: Attribute<T>): T? = attributes[attribute]?.let {
+fun <T> Element.getAttribute(attribute: Attribute<T>): T? = attributes.getNamedItem(attribute.identifier)?.let {
     val transform = attribute.toValue ?: error("transform not found: ${attribute.name}")
-    transform(it)
+    transform(it.value)
 }
 
 fun <T> Element.observeAttribute(attribute: Attribute<T>, block: (T?) -> Unit) {

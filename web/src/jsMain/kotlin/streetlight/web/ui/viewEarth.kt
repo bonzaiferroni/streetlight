@@ -6,7 +6,6 @@ import koala.css.Padding1
 import koala.dom.*
 import koala.html.filigree
 import koala.html.heading3
-import kotlinx.browser.document
 import streetlight.model.ui.CityMap
 import streetlight.model.ui.CityMapRoute
 import streetlight.model.ui.EarthRoute
@@ -14,6 +13,7 @@ import streetlight.model.ui.GalaxyMapRoute
 import streetlight.web.model.Earth
 import streetlight.model.ui.GalaxyMap
 import streetlight.web.pages.AppBody
+import web.dom.document
 
 fun ViewScope.viewEarth(model: Earth) {
     box(EarthStyle.Container, modify(Size100P)) {

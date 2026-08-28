@@ -13,10 +13,10 @@ import koala.dom.flowBlock
 import koala.dom.querySelector
 import koala.dom.textBlock
 import koala.model.Portal
-import kotlinx.browser.document
-import org.w3c.dom.HTMLElement
 import streetlight.model.ui.Screen
 import koala.model.RouteInflator
+import web.dom.document
+import web.html.HTMLElement
 
 fun ViewScope.viewPortal() {
     val portal = app.get<Portal>()

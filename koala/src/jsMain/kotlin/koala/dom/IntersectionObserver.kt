@@ -1,7 +1,7 @@
 package koala.dom
 
 import kotlinx.js.JsPlainObject
-import org.w3c.dom.Element
+import web.dom.Element
 
 external class IntersectionObserver {
     constructor(

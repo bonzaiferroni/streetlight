@@ -20,7 +20,7 @@ import koala.html.row
 import koala.html.textBlock
 import kotlinx.html.DIV
 import kotlinx.html.js.div
-import org.w3c.dom.HTMLElement
+import web.html.HTMLElement
 
 fun AppendScope.card(
     mod: ModifierSet? = null,
@@ -28,7 +28,7 @@ fun AppendScope.card(
 ) = div {
     addModifiers(Card, mod)
     content()
-}
+}.asWeb()
 
 fun AppendScope.cardOf(
     title: String,

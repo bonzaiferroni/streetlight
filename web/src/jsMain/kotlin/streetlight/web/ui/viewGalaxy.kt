@@ -1,7 +1,6 @@
 package streetlight.web.ui
 
 import koala.dom.*
-import org.w3c.dom.HTMLElement
 import streetlight.model.data.GalaxyContent
 import streetlight.model.ui.GalaxyRoute
 import streetlight.web.model.MarkerService

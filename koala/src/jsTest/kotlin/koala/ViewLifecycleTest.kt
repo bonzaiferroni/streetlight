@@ -6,7 +6,6 @@ import koala.dom.AppContainer
 import koala.dom.View
 import koala.dom.mountChildView
 import koala.dom.mountRootView
-import kotlinx.browser.document
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.TestScope
@@ -15,7 +14,8 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.html.id
 import kotlinx.html.js.div
 import org.koin.dsl.koinApplication
-import org.w3c.dom.HTMLElement
+import web.dom.document
+import web.html.HTMLElement
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -37,13 +37,13 @@ class ViewLifecycleTest {
         val root = mountTestRoot()
         val log = mutableListOf<String>()
 
-        val childA = root.mountChildView("childA", document.createElement("div") as HTMLElement) {
+        val childA = root.mountChildView("childA", document.createElement("div")) {
             onDispose { log.add("childA") }
         }
-        childA.mountChildView("grand", document.createElement("div") as HTMLElement) {
+        childA.mountChildView("grand", document.createElement("div")) {
             onDispose { log.add("grand") }
         }
-        root.mountChildView("childB", document.createElement("div") as HTMLElement) {
+        root.mountChildView("childB", document.createElement("div")) {
             onDispose { log.add("childB") }
         }
 
@@ -59,7 +59,7 @@ class ViewLifecycleTest {
 
         assertFailsWith<IllegalStateException> { root.onDispose { } }
         assertFailsWith<IllegalStateException> {
-            root.mountChildView("late", document.createElement("div") as HTMLElement) { }
+            root.mountChildView("late", document.createElement("div")) { }
         }
     }
 

@@ -1,15 +1,13 @@
 package koala.dom
 
-import koala.external.selection
-import kotlinx.browser.document
-import kotlinx.browser.window
-import org.w3c.dom.HTMLElement
-import org.w3c.dom.Node
-import org.w3c.dom.asList
-
+import js.array.asList
+import web.dom.Node
+import web.dom.document
+import web.html.HTMLElement
+import web.window.window
 
 fun HTMLElement.caretOffset(): Int? {
-    val selection = window.selection() ?: return null
+    val selection = window.getSelection() ?: return null
     if (selection.rangeCount == 0) return null
 
     val range = selection.getRangeAt(0)
@@ -22,7 +20,7 @@ fun HTMLElement.caretOffset(): Int? {
 }
 
 fun HTMLElement.activeChunk(): HTMLElement? {
-    val selection = window.selection() ?: return null
+    val selection = window.getSelection() ?: return null
     if (selection.rangeCount == 0) return null
 
     var node: Node? = selection.getRangeAt(0).startContainer
@@ -45,7 +43,7 @@ fun HTMLElement.activeChunk(): HTMLElement? {
 }
 
 fun HTMLElement.placeCaret(offset: Int) {
-    val selection = window.selection() ?: return
+    val selection = window.getSelection() ?: return
     val safeOffset = offset.coerceIn(0, textContent?.length ?: 0)
     val (node, nodeOffset) = textNodeAt(safeOffset) ?: (this to 0)
     val range = document.createRange()

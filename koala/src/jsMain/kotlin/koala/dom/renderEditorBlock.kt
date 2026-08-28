@@ -1,26 +1,10 @@
 package koala.dom
 
 import kampfire.model.Url
-import koala.css.BorderRadius1
-import koala.css.MarginBottom2
-import koala.css.MarginLeft2
-import koala.css.MoonShadow
-import koala.css.Property
-import koala.css.addModifiers
-import koala.css.modify
+import koala.css.*
 import koala.html.Attribute
 import koala.html.setAttribute
-import koala.markdown.FloatRight
-import koala.markdown.ImageType
-import koala.markdown.MarkdownBlockImage
-import koala.markdown.MarkdownHeading
-import koala.markdown.MarkdownImage
-import koala.markdown.MarkdownInlineImage
-import koala.markdown.MarkdownParagraph
-import koala.markdown.MarkdownSpan
-import koala.markdown.MarkdownStyle
-import koala.markdown.ParsedBlock
-import koala.markdown.renderLottieImage
+import koala.markdown.*
 import koala.model.EditorStyle
 import kotlinx.browser.document
 import kotlinx.dom.clear
@@ -32,10 +16,10 @@ import kotlinx.html.img
 import kotlinx.html.js.div
 import kotlinx.html.span
 import kotlinx.html.style
-import org.w3c.dom.HTMLElement
+import web.html.HTMLElement
 
 fun createEditorBlock(block: ParsedBlock): HTMLElement {
-    val div = document.create.div { }
+    val div = document.create.div { }.asWeb()
     div.syncAttributes(block)
     div.append {
         renderEditorBlock(block, div)

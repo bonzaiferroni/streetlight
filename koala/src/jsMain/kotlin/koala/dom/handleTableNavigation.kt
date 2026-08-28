@@ -1,13 +1,13 @@
 package koala.dom
 
-import koala.external.selection
+import js.array.asList
+import koala.dom.activeChunk
 import koala.markdown.ContentBlock
 import koala.model.EditorStyle
-import kotlinx.browser.window
-import org.w3c.dom.HTMLElement
-import org.w3c.dom.Node
-import org.w3c.dom.asList
-import org.w3c.dom.events.KeyboardEvent
+import web.dom.Node
+import web.html.HTMLElement
+import web.keyboard.KeyboardEvent
+import web.window.window
 
 fun HTMLElement.handleTableNavigation(event: KeyboardEvent): Boolean {
     val vertical = event.key == "ArrowUp" || event.key == "ArrowDown"
@@ -27,7 +27,7 @@ fun HTMLElement.handleTableNavigation(event: KeyboardEvent): Boolean {
 fun HTMLElement.isBlockType(type: ContentBlock) = getAttribute(EditorStyle.BlockType) == type
 
 private fun HTMLElement.moveTableVertical(block: HTMLElement, event: KeyboardEvent): Boolean {
-    val selection = window.selection() ?: return false
+    val selection = window.getSelection() ?: return false
     if (selection.rangeCount == 0) return false
 
     val cell = selection.getRangeAt(0).startContainer.cellAncestor(this) ?: return false

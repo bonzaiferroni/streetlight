@@ -2,10 +2,9 @@ package koala.dom
 
 import koala.css.InlineStyle
 import koala.css.Property
-import org.w3c.dom.HTMLElement
-import org.w3c.dom.css.CSSStyleDeclaration
-import org.w3c.dom.css.ElementCSSInlineStyle
-import org.w3c.dom.svg.SVGSVGElement
+import web.cssom.CSSStyleDeclaration
+import web.cssom.ElementCSSInlineStyle
+import web.html.HTMLElement
 
 fun <T: Any> CSSStyleDeclaration.setStyle(style: InlineStyle<T>) =
     setProperty(style.property.expression, style.valueString)

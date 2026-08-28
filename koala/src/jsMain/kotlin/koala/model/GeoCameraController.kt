@@ -8,7 +8,7 @@ import koala.external.CenterZoomBearing
 import koala.external.maplibregl
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
-import org.w3c.dom.HTMLElement
+import web.html.HTMLElement
 
 class GeoCameraController(
     val jsMap: maplibregl.Map,

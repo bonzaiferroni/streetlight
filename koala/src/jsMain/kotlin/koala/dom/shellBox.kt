@@ -4,10 +4,9 @@ import initElement
 import koala.css.*
 import koala.html.Id
 import koala.html.ShellBoxKey
-import kotlinx.browser.document
 import kotlinx.html.DIV
-import org.w3c.dom.HTMLDivElement
-import org.w3c.dom.HTMLElement
+import web.dom.document
+import web.html.HTMLDivElement
 
 fun ViewScope.shellBox(
     id: Id,

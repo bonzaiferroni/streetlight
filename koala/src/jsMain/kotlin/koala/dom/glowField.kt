@@ -8,8 +8,11 @@ import koala.css.rgba
 import koala.model.MutableTap
 import koala.model.GlowControlStyle
 import kotlinx.css.pct
-import org.w3c.dom.HTMLElement
-import org.w3c.dom.pointerevents.PointerEvent
+import web.events.addEventListener
+import web.html.HTMLElement
+import web.pointer.POINTER_DOWN
+import web.pointer.POINTER_MOVE
+import web.pointer.PointerEvent
 import kotlin.math.roundToInt
 
 fun ViewScope.glowField(
@@ -43,13 +46,11 @@ fun ViewScope.glowField(
         handleElement = box(modify(GlowControlStyle.Handle))
     }
 
-    handleElement.addEventListener("pointerdown", { event ->
-        event as PointerEvent
+    handleElement.addEventListener(PointerEvent.POINTER_DOWN, { event ->
         handleElement.setPointerCapture(event.pointerId)
     })
 
-    handleElement.addEventListener("pointermove", { event ->
-        event as PointerEvent
+    handleElement.addEventListener(PointerEvent.POINTER_MOVE, { event ->
         if (handleElement.hasPointerCapture(event.pointerId)) report(event)
     })
 

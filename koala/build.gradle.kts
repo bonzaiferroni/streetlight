@@ -51,10 +51,10 @@ kotlin {
 
         jsMain.dependencies {
             implementation(libs.kotlinx.html.js)
+            implementation(kotlinWrappers.browser)
         }
 
         wasmJsMain.dependencies {
-            implementation(libs.kotlinx.browser)
         }
     }
 

@@ -13,9 +13,7 @@ import koala.interop.KoalaInlineJs
 import koala.model.MutableTap
 import koala.model.setTrue
 import koala.model.storeOf
-import kotlinx.browser.document
 import kotlinx.html.onClick
-import org.w3c.dom.HTMLElement
 import streetlight.model.data.Star
 import streetlight.model.ui.InboxRoute
 import streetlight.model.ui.StarDashRoute
@@ -25,11 +23,13 @@ import streetlight.web.model.SessionGate
 import streetlight.web.pages.AppOverlay
 import streetlight.web.pages.HelmBar
 import streetlight.web.pages.StarHelm
+import web.dom.document
+import web.html.HTMLElement
 
 fun ViewScope.queryAndWireStarNav() {
-    val helmElement = document.body?.querySelector(StarHelm.HelmMenu) ?: error("star helm content not found")
+    val helmElement = document.body.querySelector(StarHelm.HelmMenu) ?: error("star helm content not found")
     wireStarNav(helmElement)
-    val barElement = document.body?.querySelector(StarHelm.StarMenu) ?: error("star bar element not found")
+    val barElement = document.body.querySelector(StarHelm.StarMenu) ?: error("star bar element not found")
     wireStarNav(barElement)
 }
 

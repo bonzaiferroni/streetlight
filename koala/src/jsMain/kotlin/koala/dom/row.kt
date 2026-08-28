@@ -23,4 +23,4 @@ inline fun AppendScope.row(
 ) = div {
     addModifiers(Row, mod)
     content()
-}
+}.asWeb()
