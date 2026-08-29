@@ -82,8 +82,10 @@ class ApiClient(private val client: FetchClient) {
     suspend fun editLight(edit: EditLightRequest) = client.postApi(Api.Stars.EditLight, edit)
 
     // messages
-    suspend fun sendMessage(message: MessageEdit) = client.postApi(Api.Messages.Send, message)
+    suspend fun sendMessage(message: NewMessage) = client.postApi(Api.Messages.SendNew, message)
+    suspend fun sendMessage(message: ReplyMessage) = client.postApi(Api.Messages.SendReply, message)
     suspend fun readInbox() = client.getApi(Api.Messages.Inbox)
+    suspend fun readChat(chatId: ChatId) = client.getApi(Api.Messages.ReadChat, chatId)
 
     // account actions
     suspend fun verifyExistingEmail() = client.postApi(Api.AccountAction.VerifyExistingEmail)
@@ -101,7 +103,7 @@ class ApiClient(private val client: FetchClient) {
     suspend fun generateUsername() = client.getApi(UserApi.GenerateUsername)
 
     // websockets
-    fun connectChat(scope: CoroutineScope) = WebChatSocket(client.connectSocket(Api.Chat), scope)
+    fun connectChat(scope: CoroutineScope) = WebChatSocket(client.connectSocket(Api.GroupChat), scope)
     fun connectSpiritVision() = client.connectSocket(Api.Map.SpiritVision)
     fun connectOmniLog() = client.connectSSE(Api.Omni.Log)
     fun connectTalkLog(id: Uuid, space: SpaceType) = client.connectSSE(

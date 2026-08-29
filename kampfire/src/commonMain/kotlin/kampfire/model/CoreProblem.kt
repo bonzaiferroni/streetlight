@@ -22,6 +22,7 @@ object HttpProblem {
     val Conflict = Problem("There was a conflict.")
     val InternalServerError = CoreProblem.Something
     val NotFound = Problem("That resource doesn't exist.")
+    val BadRequest = Problem("The request was invalid.")
 }
 
 fun HttpStatusCode.toProblem() = this.value.toHttpProblem()

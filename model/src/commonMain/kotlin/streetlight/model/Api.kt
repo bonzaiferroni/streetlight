@@ -108,11 +108,13 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
     }
 
     object Messages: ApiNode(this) {
-        object Send: PostEndpoint<MessageEdit, Unit>(this)
+        object SendNew: PostEndpoint<NewMessage, Unit>(this)
+        object SendReply: PostEndpoint<ReplyMessage, Unit>(this)
         object Inbox: GetEndpoint<InboxContent>(this)
+        object ReadChat: GetByIdEndpoint<ChatId, List<Message>>(this)
     }
 
-    object Chat: ApiNode(this) { }
+    object GroupChat: ApiNode(this) { }
     object Omni: ApiNode(this) {
         object Log: ApiNode(this)
     }

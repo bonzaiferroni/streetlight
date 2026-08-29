@@ -10,14 +10,8 @@ import kotlin.uuid.Uuid
 @Serializable
 data class Message(
     val messageId: MessageId,
-    val chainId: MessageId,
-    val parentId: MessageId?,
     val author: Username,
-    val recipient: Username,
-    val subject: String?,
     val content: Markdown,
-    val isArchived: Boolean,
-    val isRead: Boolean,
     val sentAt: Instant,
 )
 
@@ -28,13 +22,36 @@ value class MessageId(override val value: Uuid): RecordId {
 }
 
 @Serializable
-data class MessageEdit(
-    val messageId: MessageId,
-    val chainId: MessageId,
-    val parentId: MessageId?,
+data class NewMessage(
     val recipient: Username,
     val subject: String?,
     val content: Markdown,
 ) {
     val isValid get() = content.value.isNotBlank()
+}
+
+@Serializable
+data class ReplyMessage(
+    val chatId: ChatId,
+    val content: Markdown,
+)
+
+@Serializable
+data class ChatPreview(
+    val chatId: ChatId,
+    val usernames: List<Username>,
+    val subject: String?,
+    val lastMessagePreview: String,
+    val lastMessageAt: Instant,
+    val lastReadAt: Instant?,
+    val archivedAt: Instant?,
+    val createdAt: Instant,
+) {
+    val isRead = lastReadAt != null && lastReadAt >= lastMessageAt
+}
+
+@Serializable
+@JvmInline
+value class ChatId(override val value: Uuid): RecordId {
+    override fun toString() = value.toString()
 }

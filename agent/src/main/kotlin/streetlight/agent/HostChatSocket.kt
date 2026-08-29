@@ -4,7 +4,6 @@ import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.websocket.*
 import io.ktor.websocket.*
-import kabinet.console.globalConsole
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -26,7 +25,7 @@ class HostChatSocket {
 
     suspend fun connect() {
         // console.log("connecting")
-        client.webSocket(host = "localhost", port = 8080, path = Api.Chat.path) {
+        client.webSocket(host = "localhost", port = 8080, path = Api.GroupChat.path) {
             val incomingJob = launch {
                 for (frame in incoming) {
                     when (frame) {

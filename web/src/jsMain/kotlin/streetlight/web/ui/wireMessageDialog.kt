@@ -9,8 +9,8 @@ import koala.model.mutableTapOf
 import koala.model.storeOf
 import kotlinx.coroutines.delay
 import streetlight.model.data.Message
-import streetlight.model.data.MessageEdit
 import streetlight.model.data.MessageId
+import streetlight.model.data.NewMessage
 import kotlin.time.Duration.Companion.seconds
 import kotlin.uuid.Uuid
 
@@ -21,8 +21,7 @@ fun ViewScope.wireMessageDialog() {
         val isOpen = recipientState.mutableTapOf({ it != null }) { if (it) this else null }
         dialog(isOpen) {
             val recipient = recipientState.now ?: error("recipient not found")
-            val messageId = MessageId(Uuid.random())
-            val message = MessageEdit(messageId, messageId, null, recipient, null, Markdown.Empty)
+            val message = NewMessage(recipient, "", Markdown.Empty)
             val messenger = MessageStore()
             val messageState = storeOf(message)
             val subjectState = messageState.mutableTapOf({ it.subject ?: ""}) { subject -> copy(subject = subject.takeIf { it.isNotBlank() })}

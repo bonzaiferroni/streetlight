@@ -5,6 +5,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class InboxContent(
-    val messages: List<Message>
+    val chats: List<ChatPreview>
 ): RouteContent {
 }
