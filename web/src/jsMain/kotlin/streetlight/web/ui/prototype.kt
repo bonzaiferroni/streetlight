@@ -2,7 +2,7 @@ package streetlight.web.ui
 
 import koala.css.BlurBackdrop
 import koala.css.CardBg
-import koala.css.Height100P
+import koala.css.Height100Pct
 import koala.css.Height24
 import koala.css.OverflowYAuto
 import koala.css.Padding1
@@ -66,7 +66,7 @@ import streetlight.model.data.GalaxyPost
 //}
 
 fun ViewScope.postPanel(post: GalaxyPost) {
-    column(modify(Height100P, OverflowYAuto, CardBg, BlurBackdrop)) {
+    column(modify(Height100Pct, OverflowYAuto, CardBg, BlurBackdrop)) {
         featureImage(post.image, modify(Width100P, Height24))
         column(modify(Padding1)) {
             heading3(post.label)

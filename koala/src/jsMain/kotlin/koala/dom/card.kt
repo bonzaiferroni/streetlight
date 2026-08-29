@@ -6,7 +6,7 @@ import koala.css.BorderRadius1
 import koala.css.Card
 import koala.css.Flex1
 import koala.css.Gap0
-import koala.css.Height100P
+import koala.css.Height100Pct
 import koala.css.Height8
 import koala.css.ModifierSet
 import koala.css.OverflowHidden
@@ -40,9 +40,9 @@ fun AppendScope.cardOf(
     val element = card(mod) {
         row(modify(Height8, AlignItemsStart)) {
             thumbUrl?.let {
-                image(thumbUrl, modify(Height100P, Aspect1, BorderRadius1))
+                image(thumbUrl, modify(Height100Pct, Aspect1, BorderRadius1))
             }
-            column(modify(Flex1, Gap0, Height100P)) {
+            column(modify(Flex1, Gap0, Height100Pct)) {
                 heading5(title)
                 description?.let {
                     textBlock(description, modify(Flex1, OverflowHidden))

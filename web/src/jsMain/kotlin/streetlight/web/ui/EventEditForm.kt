@@ -119,7 +119,7 @@ fun ViewScope.dayIndicator(field: MutableTap<LocalDate?>) {
     row(modify(AlignItemsCenter, JustifyContentCenter)) {
         button(SvgFile.ArrowLeft, { changeDate(-1) }, modify(Height4, OpacityHigh))
         flowBlock(field, modify(Magic, Blur, Width24)) { date ->
-            column(modify(Gap0, AlignItemsCenter, JustifyContentCenter, Height100P)) {
+            column(modify(Gap0, AlignItemsCenter, JustifyContentCenter, Height100Pct)) {
                 when (date) {
                     null -> heading5("someday", modify(OpacityHalf))
                     else -> {
@@ -142,7 +142,7 @@ fun ViewScope.timeIndicator(field: MutableTap<LocalTime?>, defaultLabel: String)
     row(modify(AlignItemsCenter, JustifyContentCenter)) {
         button(SvgFile.ArrowLeft, { changeTime(-30) }, modify(Height4, OpacityHigh))
         flowBlock(field, modify(Magic, Blur, Width24)) { time ->
-            column(modify(Gap0, AlignItemsCenter, JustifyContentCenter, Height100P)) {
+            column(modify(Gap0, AlignItemsCenter, JustifyContentCenter, Height100Pct)) {
                 when (time) {
                     null -> heading5(defaultLabel, modify(OpacityHalf))
                     else -> heading5(time.toTimeFormat())

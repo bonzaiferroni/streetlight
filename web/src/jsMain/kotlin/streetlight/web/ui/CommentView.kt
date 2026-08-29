@@ -10,7 +10,6 @@ import koala.html.image
 import koala.html.markdown
 import koala.html.navigationIfNotNull
 import koala.html.spacer
-import kotlinx.dom.clear
 import streetlight.model.data.Comment
 import streetlight.model.ui.StarRoute
 import streetlight.web.io.TalkLog
@@ -225,7 +224,7 @@ class CommentView(
                 }
                 column(modify(Padding1, CommentClass.InnerCard)) {
                     _bodyBlock = box(modify(CommentClass.Body)) {
-                        _editBlock = div(modify(CommentClass.Editor, Height100P))
+                        _editBlock = div(modify(CommentClass.Editor, Height100Pct))
                         _contentBlock = div(modify(CommentClass.Content, Padding1)) {
                             markdown(comment.text)
                         }

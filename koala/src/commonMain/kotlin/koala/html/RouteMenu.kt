@@ -46,7 +46,7 @@ internal fun FlowContent.iconsTray(
 
 internal fun FlowContent.iconRoute(icon: IconRoute, routeNow: AppRoute) {
     navigation(icon.route, modify(Height3, RouteMenu.Route, icon.route.routeNowMod(routeNow))) {
-        icon(icon.svg, modify(Height100P))
+        icon(icon.svg, modify(Height100Pct))
     }
 }
 

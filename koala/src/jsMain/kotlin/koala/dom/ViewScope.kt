@@ -20,6 +20,7 @@ sealed interface ViewScope: AppendScope, AppFacade {
     val parent: ViewScope?
 
     fun onDispose(block: () -> Unit)
+    fun onAppend(block: () -> Unit)
 
     fun launchEffect(
         name: String = ::launchEffect.name,

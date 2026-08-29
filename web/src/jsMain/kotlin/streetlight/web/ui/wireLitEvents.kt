@@ -17,7 +17,6 @@ import web.html.HTMLElement
 import kotlin.collections.component1
 import kotlin.collections.component2
 import kotlin.time.Clock
-import kotlin.time.Duration.Companion.hours
 
 fun ViewScope.wireLitEvents(root: HTMLElement) {
     val cache = app.get<DataCache>()
@@ -40,7 +39,7 @@ fun ViewScope.wireLitEvents(root: HTMLElement) {
         // td: fix later or delete
         flowBlock(emptyList(), eventsFlow) { events ->
             val eventMap = events.groupBy { it.startsAt?.toRelativeDayFormat() }
-            row(modify(OverflowXAuto, Height100P, Padding1)) {
+            row(modify(OverflowXAuto, Height100Pct, Padding1)) {
                 eventMap.forEach { (day, events) ->
                     column(modify(Gap0, FlexShrink0)) {
                         heading3(day, modify(LineHeight1, Margin1))

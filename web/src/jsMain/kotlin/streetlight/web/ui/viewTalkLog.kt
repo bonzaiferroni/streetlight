@@ -139,7 +139,7 @@ fun ViewScope.commentEditor(
 ) {
     val text = storeOf(initialText)
 
-    column(modify(Height100P, mod)) {
+    column(modify(Height100Pct, mod)) {
         textEditor(text, label, modify(Flex1))
         row {
             spacer(modify(Flex1))

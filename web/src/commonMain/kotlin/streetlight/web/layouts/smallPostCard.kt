@@ -1,7 +1,6 @@
 package streetlight.web.layouts
 
 import kabinet.utils.toRelativeDayFormat
-import kampfire.model.thumb
 import koala.SvgFile
 import koala.css.*
 import koala.html.navigation
@@ -28,9 +27,9 @@ fun FlowContent.smallPostCard(post: EventPost) {
         column(modify(MediaLgRow, AlignItemsStretch, Gap0)) {
             row(modify(Height16, AlignItemsStart, Padding1)) {
                 thumbUrl?.let {
-                    image(thumbUrl, modify(Height100P, Aspect1, BorderRadius1))
+                    image(thumbUrl, modify(Height100Pct, Aspect1, BorderRadius1))
                 }
-                column(modify(Flex1, Height100P)) {
+                column(modify(Flex1, Height100Pct)) {
                     row(modify(AlignItemsStart)) {
                         column(modify(Flex1, Gap0)) {
                             navigation(postRoute) {

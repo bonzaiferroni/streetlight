@@ -2,8 +2,13 @@ package streetlight.web.ui
 
 import kampfire.api.Markdown
 import koala.SvgFile
+import koala.css.AlignItemsStart
+import koala.css.Flex1
+import koala.css.Flex3
+import koala.css.Height100Vh
 import koala.css.JustifyContentEnd
 import koala.css.Magic
+import koala.css.Padding1
 import koala.css.Scale
 import koala.css.modify
 import koala.dom.*
@@ -18,30 +23,14 @@ fun RouteScope.viewSandbox() {
 
     console.log("welcome to sandbox")
 
-    filigree {
-        heading1("Yer Sandbox")
-    }
+    val list = LazyList((0..1000).map { "Foo $it" })
 
-    val textState = localStoreOf("sandbox-md", Markdown(""))
-    val isEditingState = storeOf(true)
-    val isSwyg = storeOf(false)
-    column {
-        row(modify(JustifyContentEnd)) {
-            button(SvgFile.Magic, {
-                textState.set { Markdown("$value!") }
-            })
-            button(SvgFile.Eye, isSwyg::toggle)
-            button(SvgFile.Edit, isEditingState::toggle)
+    row(modify(Padding1, AlignItemsStart)) {
+        lazyColumn(list, modify(Flex1, Height100Vh)) { item ->
+            textBlock(item, modify(Padding1))
         }
-        flowBlock(isEditingState, modify(Magic, Scale)) { isEditing ->
-            when (isEditing) {
-                true -> styledMarkdownEditor(textState, "sandbox").flowModifier(isSwyg, EditorStyle.SWYG, contentScope)
-                else -> markdown(textState.now)
-            }
-        }
+        card(modify(Flex3))
     }
-
-    appFooter("")
 }
 
 class SandboxException : Exception("Arrr sandbox exception")

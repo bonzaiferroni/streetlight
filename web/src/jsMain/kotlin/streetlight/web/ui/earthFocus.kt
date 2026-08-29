@@ -34,7 +34,7 @@ fun ViewScope.earthFocus(model: Earth) {
     flowBlock(model.focusField, modify(EarthStyle.Focus, Magic)) { focus ->
         when (focus) {
             is ClusterFocus -> tabs(
-                mod = modify(PointerEventsAuto, Height100P),
+                mod = modify(PointerEventsAuto, Height100Pct),
                 viewportMod = modify(Flex1, OverflowYAuto, BorderRadius2)
             ) {
                 focus.members.forEach { marker ->
@@ -45,7 +45,7 @@ fun ViewScope.earthFocus(model: Earth) {
                 }
             }
 
-            is MarkerFocus -> div(modify(Height100P, OverflowYAuto, BorderRadius2)) {
+            is MarkerFocus -> div(modify(Height100Pct, OverflowYAuto, BorderRadius2)) {
                 markerPanel(focus.marker)
             }
             null -> return@flowBlock

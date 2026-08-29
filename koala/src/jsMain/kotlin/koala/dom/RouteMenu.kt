@@ -50,7 +50,7 @@ internal fun ViewScope.iconsTray(
             when (icon) {
                 is IconAction -> icon(icon.svg, modify(Height3)).onClick(icon.action)
                 is IconRoute -> navigation(icon.route, modify(Height3)) {
-                    icon(icon.svg, modify(Height100P))
+                    icon(icon.svg, modify(Height100Pct))
                 }
             }
         }
