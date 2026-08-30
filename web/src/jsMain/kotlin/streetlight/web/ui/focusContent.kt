@@ -1,6 +1,5 @@
 package streetlight.web.ui
 
-import kampfire.model.toUrl
 import koala.css.*
 import koala.dom.*
 import koala.html.featureImage
@@ -30,7 +29,7 @@ fun ViewScope.eventFocusContent(post: EventPost) {
                 }
             }
         }
-        row(modify(Flex1, MinHeight8, FlexItems1, GapTiny, TextAlignCenter, FlexWrap, MoonShadow)) {
+        row(modify(Flex1, MinHeight8, FlexItems1, Gap2Px, TextAlignCenter, FlexWrap, MoonShadow)) {
             cell {
                 startsAtCell(event.startsAt)
             }

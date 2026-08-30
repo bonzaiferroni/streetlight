@@ -47,6 +47,7 @@ data class Attribute<T>(
         val Role = stringAttributeOf("role")
         val Spellcheck = booleanAttributeOf("spellcheck")
         val Draggable = booleanAttributeOf("draggable")
+        val Autofocus = booleanAttributeOf("autofocus")
     }
 }
 

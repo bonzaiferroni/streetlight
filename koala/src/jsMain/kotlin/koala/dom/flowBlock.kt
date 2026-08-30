@@ -1,8 +1,6 @@
 package koala.dom
 
 import koala.css.Blur
-import koala.css.Dummy
-import koala.css.KoalaTheme
 import koala.css.Magic
 import koala.css.MagicStyle
 import koala.css.ModifierSet
@@ -11,7 +9,7 @@ import koala.css.SlideLeft
 import koala.css.Transitioning
 import koala.css.addModifiers
 import koala.css.modify
-import koala.html.FlowBlockKey
+import koala.html.FlowBlockStyle
 import koala.model.Tap
 import koala.utils.launch
 import kotlinx.coroutines.CancellationException
@@ -34,7 +32,7 @@ fun <Value> ViewScope.flowBlock(
 ): HTMLDivElement {
     val magic = modifiers?.contains(Magic) ?: false
     val element = div {
-        addModifiers(modifiers, FlowBlockKey.Class)
+        addModifiers(modifiers, FlowBlockStyle.Class)
         config?.invoke(this)
     }.asWeb()
 

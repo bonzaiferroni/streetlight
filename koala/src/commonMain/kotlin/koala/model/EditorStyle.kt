@@ -36,7 +36,6 @@ object EditorStyle {
 val TextEditorCss get() = with(EditorStyle) { """
 $Container {
     display: flow-root;
-    font-family: ui-monospace, Menlo, Consolas, monospace;
     outline: none;
     padding: var(--unit-spacing);
     font-size: var(--paragraph-size);
@@ -109,6 +108,7 @@ $Container {
     }
     
     ${BlockType.selector(ContentBlock.Code)} {
+        font-family: var(--mono-family);
         background: var(--zen-bg);
         border-radius: 2px;
     }
@@ -131,6 +131,10 @@ $Container {
         }
     }
     
+    ${BlockType.selector(ContentBlock.Table)} {
+        font-family: var(--mono-family);
+    }
+    
     /* Inline styling */
     
     $Emphasis {
@@ -142,6 +146,7 @@ $Container {
     }
     
     $InlineCode {
+        font-family: var(--mono-family);
         color: var(--green-fg);
         border-radius: 2px;
     }

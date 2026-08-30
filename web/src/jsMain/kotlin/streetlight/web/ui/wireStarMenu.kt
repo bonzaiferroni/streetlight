@@ -2,6 +2,7 @@ package streetlight.web.ui
 
 import kampfire.api.Username
 import kampfire.api.toUsername
+import koala.css.Gap2Px
 import koala.css.OpacityHalf
 import koala.css.modify
 import koala.dom.ViewScope
@@ -28,7 +29,7 @@ fun ViewScope.wireStarMenu() {
             it.getAttribute(Attribute.Username)
         }
     ) { username ->
-        column {
+        column(modify(Gap2Px)) {
             popoverOption(StarRoute(username))
             popoverOption("Message") { startMessage(username) }
         }

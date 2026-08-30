@@ -30,7 +30,7 @@ fun FlowContent.starLightCell(
     mod: ModifierSet? = null,
     block: DIV.() -> Unit = {}
 ) {
-    row(modify(AlignItemsCenter, GapTiny)) {
+    row(modify(AlignItemsCenter, Gap2Px)) {
         addModifiers(mod, LightControl.Class, LightControl.getLitMod(isLit))
         setAttribute(LightControl.TypeData.to(lightType))
         onClick = LightControl.ToggleFun.invokeJs(ThisElement, uuid)

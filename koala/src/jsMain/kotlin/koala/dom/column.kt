@@ -1,6 +1,6 @@
 package koala.dom
 
-import koala.css.Column
+import koala.css.FlexColumn
 import koala.css.ModifierSet
 import koala.css.addModifiers
 import koala.css.modify
@@ -22,6 +22,6 @@ fun AppendScope.column(
     mod: ModifierSet? = null,
     content: DIV.() -> Unit = { },
 ) = div {
-    addModifiers(modify(Column, mod))
+    addModifiers(modify(FlexColumn, mod))
     content()
 }.asWeb()

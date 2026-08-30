@@ -2,14 +2,20 @@ package koala.html
 
 import koala.css.Class
 
-object ItemsBlockKey {
+object ItemsBlockStyle {
     val Class = Class("items-block")
 }
 
 // language="CSS"
 val ItemsBlockCss get() = """
+    
+.items-block {
+    position: relative;
+}
+    
 .items-block > * {
     width: 100%;
+    position: absolute;
 }    
 
 .items-block.magic {

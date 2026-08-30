@@ -10,10 +10,14 @@ import kotlin.uuid.Uuid
 @Serializable
 data class Message(
     val messageId: MessageId,
+    val chatId: ChatId,
     val author: Username,
     val content: Markdown,
     val sentAt: Instant,
-)
+): OmniRecord {
+    override val text get() = "$author sent you a message"
+    override val recordAt get() = sentAt
+}
 
 @Serializable
 @JvmInline

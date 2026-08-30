@@ -41,7 +41,7 @@ internal fun AppendScope.configureThumbRender(marker: ThumbMarker): FeatureRende
                 }
             }
 
-            column(modify(GapTiny, LineHeight115, WhiteSpaceNoWrap)) {
+            column(modify(Gap2Px, LineHeight115, WhiteSpaceNoWrap)) {
                 label?.let {
                     textBlock(it, modify(Bold))
                 }
@@ -67,7 +67,7 @@ internal fun AppendScope.configureIconRender(marker: IconMarker): FeatureRenderB
     var clusterElement: HTMLElement? = null
 
     with(marker) {
-        val element = row(modify(MarkerStyle.Body, GapTiny, AlignItemsCenter, BorderRadius3, PaperGradientBg)) {
+        val element = row(modify(MarkerStyle.Body, Gap2Px, AlignItemsCenter, BorderRadius3, PaperGradientBg)) {
             colorScheme?.let {
                 setStyle(Property.ColorScheme.to(it))
             }

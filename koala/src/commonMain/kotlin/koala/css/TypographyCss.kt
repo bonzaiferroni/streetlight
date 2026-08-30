@@ -22,7 +22,8 @@ val TypographyCss get() = """
     --text-small: .9rem;
     --text-large: 1.4rem;
 
-    --font-family: "Fira Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; /*  */
+    --font-family: "Fira Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --mono-family: ui-monospace, Menlo, Consolas, monospace;
 }
 
 span,
@@ -73,7 +74,7 @@ h6 {
 $Prose {
     line-height: 1.7;
     
-    $Column {
+    $FlexColumn {
         gap: var(--unit-spacing-2);
     }
 }

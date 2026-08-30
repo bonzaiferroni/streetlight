@@ -1,14 +1,13 @@
 package koala.dom
 
 import koala.css.*
-import koala.html.ItemsBlockKey
+import koala.html.ItemsBlockStyle
 import koala.model.Tap
 import koala.model.tapOf
 import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.html.DIV
 import kotlinx.html.classes
@@ -32,7 +31,7 @@ fun <Item> ViewScope.itemsBlock(
     // var heightNow = 0
 
     val parent = div {
-        addModifiers(ItemsBlockKey.Class, mod)
+        addModifiers(ItemsBlockStyle.Class, mod)
         if (magic) {
             classes += Magic.identifier
         }

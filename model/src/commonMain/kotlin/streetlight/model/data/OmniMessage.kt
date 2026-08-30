@@ -66,11 +66,11 @@ data class GalaxyFounded(
     override val text get() = "$username founded a galaxy: $name"
 }
 
-@Serializable
-data class MessageSent(val username: Username, val sentAt: Instant): OmniRecord {
-    override val text get() = "$username sent you a message"
-    override val recordAt get() = sentAt
-}
+//@Serializable
+//data class MessageSent(val chatId: ChatId, val username: Username, val sentAt: Instant): OmniRecord {
+//    override val text get() = "$username sent you a message"
+//    override val recordAt get() = sentAt
+//}
 
 @Serializable
 data class OmniHistory(val records: List<OmniRecord>): OmniMessage

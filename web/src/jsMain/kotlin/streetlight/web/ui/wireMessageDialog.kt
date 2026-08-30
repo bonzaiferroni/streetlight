@@ -5,6 +5,8 @@ import kampfire.api.Username
 import kampfire.model.toDataOr
 import koala.css.*
 import koala.dom.*
+import koala.html.Attribute
+import koala.html.setAttribute
 import koala.model.mutableTapOf
 import koala.model.storeOf
 import kotlinx.coroutines.delay
@@ -21,15 +23,18 @@ fun ViewScope.wireMessageDialog() {
         val isOpen = recipientState.mutableTapOf({ it != null }) { if (it) this else null }
         dialog(isOpen) {
             val recipient = recipientState.now ?: error("recipient not found")
-            val message = NewMessage(recipient, "", Markdown.Empty)
+            val message = NewMessage(recipient, null, Markdown.Empty)
             val messenger = MessageStore()
             val messageState = storeOf(message)
             val subjectState = messageState.mutableTapOf({ it.subject ?: ""}) { subject -> copy(subject = subject.takeIf { it.isNotBlank() })}
             val contentState = messageState.mutableTapOf({ it.content }) { copy(content = it) }
             dialogContent("Message to $recipient") {
                 textField(subjectState, "subject", placeholder = "no subject")
-                styledMarkdownEditor(contentState, "message", modify(MinHeight32))
+                styledMarkdownEditor(contentState, "message", modify(MinHeight32)) {
+                    setAttribute(Attribute.Autofocus.to(true))
+                }
                 formSubmit("send", {
+                    println(messageState.now)
                     val message = messageState.now.takeIf { it.isValid } ?: return@formSubmit
                     launchEffect {
                         messenger.deliverSending()

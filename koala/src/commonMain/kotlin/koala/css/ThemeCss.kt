@@ -139,9 +139,9 @@ body {
 
     --primary-button: rgb(var(--primary));
     --primary-fg: color-mix(in srgb, rgb(var(--primary)) 75%, rgb(var(--ink)));
-    --primary-bg: color-mix(in srgb, rgb(var(--primary)) 75%, rgb(var(--paper)));
+    --primary-bg: color-mix(in srgb, rgb(var(--primary)) 50%, rgb(var(--paper)));
     --primary-button-day: color-mix(in srgb, var(--primary-button) 80%, black);
-    --primary-card-bg: color-mix(in srgb, rgba(var(--primary), .2) 50%, var(--card-bg));
+    --primary-card-bg: color-mix(in srgb, rgba(var(--primary), .4) 50%, var(--card-bg));
     
     --accent-button: rgb(var(--accent));
     --accent-fg: color-mix(in srgb, rgb(var(--accent)) 75%, rgb(var(--ink)));

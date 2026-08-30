@@ -18,7 +18,6 @@ object CssFile : FileSet<Css>() {
     val Reset = add("reset.css")
 
     // val Styles = add("styles.css")
-    val Layout = add("layout.css")
     val Tabs = add("tabs.css")
     val GeoMap = add("geo-map.css")
     // val Sandbox = add("sandbox.css")

@@ -21,7 +21,7 @@ import kotlin.time.Instant
 object CellContent {
     val Container = Class("cell-content")
     val CellMod = modify(AlignItemsCenter, CardBg, Gap0, Padding1)
-    val DualCellMod = modify(GapTiny, FlexItems1)
+    val DualCellMod = modify(Gap2Px, FlexItems1)
     val IconMod = modify(Height3, MarginRight4Px, ColorSchemeBg)
     val ButtonIconMod = modify(Height3, OpacityHigh)
     val ThumbMod = modify(Height3, Aspect1, BorderRadius2, MarginRight4Px)
@@ -41,7 +41,7 @@ fun FlowContent.cellBlock(
     mod: ModifierSet? = null,
     block: FlowContent.() -> Unit = {}
 ) {
-    row(modify(mod, MinHeight4, MinWidth16, FlexWrap, FlexItems1, GapTiny, TextAlignCenter, MoonShadow)) {
+    row(modify(mod, MinHeight4, MinWidth16, FlexWrap, FlexItems1, Gap2Px, TextAlignCenter, MoonShadow)) {
         block()
     }
 }

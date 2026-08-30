@@ -17,7 +17,7 @@ fun ViewScope.viewMediaForge(galaxy: Galaxy?) {
     val model = app.getMediaEditor(MediaEdit(), contentScope)
     goOnRoute(model.stateFlow.dedupNotNull { it.slug?.let { slug -> MediaRoute(slug) }  })
 
-    section(modify(Column)) {
+    section(modify(FlexColumn)) {
         heading1(galaxy?.name ?: "Profile Post", modify(TextAlignCenter))
         filigree {
             h3("posting content")

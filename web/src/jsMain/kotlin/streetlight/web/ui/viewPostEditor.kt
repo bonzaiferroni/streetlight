@@ -18,7 +18,7 @@ fun ViewScope.viewMedia(model: MediaEditor) {
     val routeFlow = model.stateFlow.dedupNotNull { it.slug?.let { slug -> MediaRoute(slug) } }
     goOnRoute(routeFlow)
 
-    section(modify(Column)) {
+    section(modify(FlexColumn)) {
         heading1("Edit Post", modify(TextAlignCenter))
 
         card {

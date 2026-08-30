@@ -1,3 +1,13 @@
+package koala.css
+
+val Box = Class("box")
+val Card = Class("card")
+val FlexRow = Class("row")
+val FlexColumn = Class("column")
+val FlexReverse = Class("flex-reverse")
+
+// language="CSS"
+val LayoutCss get() = """
 :root {
     --unit-spacing-1: var(--unit-spacing);
     --unit-spacing-2: calc(var(--unit-spacing) * 2);
@@ -8,22 +18,29 @@
     --unit-spacing-32: calc(var(--unit-spacing) * 32);
 }
 
-.column {
+$FlexColumn, $FlexRow {
     display: flex;
+    min-width: 0;
+    gap: var(--unit-spacing);
+}
+
+$FlexColumn {
     flex-direction: column;
-    min-width: 0;
-    gap: var(--unit-spacing);
+    
+    &$FlexReverse {
+        flex-direction: column-reverse;
+    }
 }
 
-.row {
-    display: flex;
+$FlexRow {
     flex-direction: row;
-    min-width: 0;
-
-    gap: var(--unit-spacing);
+     
+    &$FlexReverse {
+        flex-direction: row-reverse;
+    }
 }
 
-.card {
+$Card {
     display: flex;
     flex-direction: column;
 
@@ -33,25 +50,12 @@
     padding: var(--unit-spacing);
 }
 
-.box {
+$Box {
     display: grid;
-}
-
-.box > * {
-    grid-area: 1 / 1 / 2 / 2;
-}
-
-.flow-block {
-    min-width: 0;
-    min-height: 0;
-}
-
-.items-block {
-    position: relative;
-}
-
-.items-block > * {
-    position: absolute;
+    
+    > * {
+        grid-area: 1 / 1 / 2 / 2;
+    }
 }
 
 @media (min-width: 600px) {
@@ -93,3 +97,4 @@
     .container-lg-column { flex-direction: column; }
     .container-lg-row-reverse { flex-direction: row-reverse; justify-content: flex-end; }
 }
+"""

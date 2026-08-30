@@ -48,7 +48,7 @@ fun FlowContent.smallPostCard(post: EventPost) {
                     }
                 }
             }
-            row(modify(MinHeight8, FlexItems1, AlignItemsStretch, GapTiny, TextAlignCenter)) {
+            row(modify(MinHeight8, FlexItems1, AlignItemsStretch, Gap2Px, TextAlignCenter)) {
                 val cellModifiers = modify(AlignItemsCenter, Gap0, BorderRadius0, JustifyContentCenter)
 //                card(cellModifiers) {
 //                    post.location?.let { location ->
