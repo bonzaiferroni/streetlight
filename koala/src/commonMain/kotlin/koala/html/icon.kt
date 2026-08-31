@@ -8,7 +8,7 @@ import kotlinx.html.div
 
 fun FlowContent.icon(
     file: Svg,
-    modifiers: ModifierSet? = null,
+    modifiers: ModifierSet? = modify(Height3),
     block: DIV.() -> Unit = {}
 ) {
     div {

@@ -11,7 +11,7 @@ val TypographyCss get() = """
     --heading-2-weight: 200;
     --heading-3-size: 2rem;
     --heading-3-weight: 300;
-    --heading-4-size: 1.5rem;
+    --heading-4-size: 1.6rem;
     --heading-4-weight: 300;
     --heading-5-size: 1.1rem;
     --heading-5-weight: 500;

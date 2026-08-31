@@ -17,7 +17,7 @@ fun HTML.eventPortal(event: Event, performer: Performer?, requestItems: List<Req
             setAttribute(EventPortalSelector.eventIdAttribute, event.eventId)
             a("/") {
                 row() {
-                    logo()
+                    textLogo()
                     heading4("Streetlight")
                 }
             }

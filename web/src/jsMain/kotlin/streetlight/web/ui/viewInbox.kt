@@ -4,11 +4,16 @@ import kampfire.api.Markdown
 import kampfire.api.Username
 import koala.css.*
 import koala.dom.*
+import koala.html.heading2
+import koala.html.heading4
+import koala.html.heading5
+import koala.html.iconLogo
 import koala.html.spacer
 import koala.model.storeOf
 import koala.model.tapOf
 import streetlight.model.data.InboxContent
 import streetlight.model.data.Star
+import streetlight.model.ui.HomeRoute
 import streetlight.model.ui.InboxRoute
 import streetlight.web.io.OmniClient
 import streetlight.web.model.Inbox
@@ -19,25 +24,33 @@ fun ViewScope.viewInbox(star: Star, content: InboxContent) {
     val model = Inbox(scope, star, content.chats, api, toaster, omni)
 
     row(modify(Height100Vh)) {
-        flowBlock(model.chatsState, modify(Flex1, PaddingY1, OverflowYScroll)) { chats ->
-            column(modify(Gap2Px, BorderRadius1, OverflowClip)) {
-                chats.forEach { chat ->
-                    val isOpenState = model.openChatState.tapOf { it?.chatId == chat.chatId }
-                    flowBlock(isOpenState) { isOpen ->
-                        val isReadMod = if (isOpen || chat.isRead) null else Bold
-                        val isSelectedMod = if (isOpen) PrimaryCardBg else CardBg
-                        column(modify(Padding1, Gap0, isReadMod, isSelectedMod)) {
-                            val usernames = chat.usernames.filter { it != star.username }.joinToString(", ") { it.value }
-                            textBlock(chat.lastMessagePreview, modify(SingleLine))
-                            row(modify(OpacityHigh, TextSmall)) {
-                                chat.subject?.let {
-                                    textBlock(it, modify(SingleLine))
+        column(modify(Gap0)) {
+            row(modify(AlignItemsCenter, JustifyContentCenter, PaddingTop1, Gap0)) {
+                navigation(HomeRoute, modify(GlowShadow, FlexRow)) {
+                    iconLogo()
+                }
+                heading4("Messages", modify(OpacityHigh))
+            }
+            flowBlock(model.chatsState, modify(Flex1, PaddingY1, OverflowYScroll)) { chats ->
+                column(modify(Gap2Px, BorderRadius1, OverflowClip)) {
+                    chats.forEach { chat ->
+                        val isOpenState = model.openChatState.tapOf { it?.chatId == chat.chatId }
+                        flowBlock(isOpenState) { isOpen ->
+                            val isReadMod = if (isOpen || chat.isRead) null else Bold
+                            val isSelectedMod = if (isOpen) PrimaryCardBg else CardBg
+                            column(modify(Padding1, Gap0, isReadMod, isSelectedMod)) {
+                                val usernames = chat.usernames.filter { it != star.username }.joinToString(", ") { it.value }
+                                textBlock(chat.lastMessagePreview, modify(SingleLine))
+                                row(modify(OpacityHigh, TextSmall)) {
+                                    chat.subject?.let {
+                                        textBlock(it, modify(SingleLine))
+                                    }
+                                    spacer(modify(Flex1))
+                                    textBlock(usernames, modify(SingleLine))
                                 }
-                                spacer(modify(Flex1))
-                                textBlock(usernames, modify(SingleLine))
+                            }.onClick {
+                                model.openChat(chat)
                             }
-                        }.onClick {
-                            model.openChat(chat)
                         }
                     }
                 }

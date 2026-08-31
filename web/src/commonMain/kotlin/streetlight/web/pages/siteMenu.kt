@@ -29,7 +29,7 @@ fun FlowContent.siteMenuPopover() {
                         onClick = SiteHelm.closePopover.block
                     }
                     navigation(HomeRoute) {
-                        logo(modify(Height5))
+                        textLogo(modify(Height5))
                     }
                 }
                 siteMenuItems()
@@ -45,7 +45,7 @@ fun FlowContent.siteMenuSidebar() {
         filigree {
             navigation(HomeRoute) {
                 setAttribute(KoalaBody.ScreenId.to(HomeRoute.screen.screenId))
-                logo(modify(Height5))
+                textLogo(modify(Height5))
             }
         }
         siteMenuItems()

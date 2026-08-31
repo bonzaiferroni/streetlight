@@ -38,6 +38,7 @@ object SvgFile : FileSet<Svg>() {
     val EyeOff = add("eye-off.svg")
     val EyePlus = add("eye-plus.svg")
     val Flame = add("flame.svg")
+    val FlameLarge = add("flame-large.svg")
     val Focus = add("focus.svg")
     val Food = add("food.svg")
     val FrameEye = add("frame-eye.svg")

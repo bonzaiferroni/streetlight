@@ -1,11 +1,9 @@
 package streetlight.web.pages
 
-import koala.SvgFile
 import koala.css.*
 import koala.html.hr
 import koala.html.navigation
-import koala.html.icon
-import koala.html.logo
+import koala.html.textLogo
 import koala.html.row
 import kotlinx.html.FlowContent
 import streetlight.model.ui.HomeRoute
@@ -17,7 +15,7 @@ fun FlowContent.appHeader(
         val rayMod = modify(Flex1, MaxWidth24, Margin1, MoonDropShadow, Height2Px, BorderRadius1)
         hr(modify(rayMod, AccentFg))
         navigation(HomeRoute, modify(DisplayFlex)) {
-            logo(modify(Height7, FocusTarget))
+            textLogo(modify(Height7, FocusTarget))
         }
         hr(modify(rayMod, PrimaryFg))
     }

@@ -1,10 +1,8 @@
 package koala.html
 
 import koala.SvgFile
-import koala.css.Accent
 import koala.css.AccentFg
 import koala.css.AlignSelfCenter
-import koala.css.AntiShadow
 import koala.css.Class
 import koala.css.GlowBackground
 import koala.css.GlowShadow
@@ -17,7 +15,7 @@ import koala.css.modify
 import koala.css.setStyle
 import kotlinx.html.FlowContent
 
-fun FlowContent.logo(
+fun FlowContent.textLogo(
     mod: ModifierSet? = null
 ) {
     div(modify(mod, Class, MoonDropShadow)) {
@@ -38,7 +36,7 @@ fun FlowContent.logo(
 
 fun FlowContent.topLogo() {
     navigation("/", modify(AlignSelfCenter)) {
-        logo(modify(Height5))
+        textLogo(modify(Height5))
     }
 }
 
