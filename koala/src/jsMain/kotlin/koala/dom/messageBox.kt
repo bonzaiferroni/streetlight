@@ -4,7 +4,7 @@ import kampfire.model.UIMessage
 import kampfire.model.UIMessageType
 import koala.css.*
 import koala.html.MessageBox
-import koala.model.Tap
+import kampfire.model.Tap
 
 fun ViewScope.messageBox(
     tap: Tap<UIMessage?>,

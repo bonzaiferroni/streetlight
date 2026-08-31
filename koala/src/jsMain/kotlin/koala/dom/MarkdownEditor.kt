@@ -1,14 +1,10 @@
 package koala.dom
 
 import kampfire.api.Markdown
-import kampfire.api.toMarkdown
-import koala.markdown.MarkdownBlock
-import koala.markdown.MarkdownParagraph
 import koala.markdown.MarkdownParser
 import koala.markdown.ParsedBlock
-import koala.markdown.markdownBlocksOf
-import koala.model.mutableTapOf
-import koala.model.storeOf
+import kampfire.model.mutableTapOf
+import kampfire.model.storeOf
 
 class MarkdownEditor() {
     private val state = storeOf(MarkdownEditorState())

@@ -1,11 +1,11 @@
-package koala.model
+package kampfire.model
 
-import koala.utils.launch
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 
 interface Tap<Value> {
     val flow: Flow<Value>
@@ -35,7 +35,7 @@ inline fun <Base, reified T : Base> MutableTap<Base>.narrow(): MutableTap<T> =
     mutableTapOf(readValue = { it as T }, writeValue = { it })
 
 fun <T> Tap<T>.reactIn(scope: CoroutineScope, block: suspend (T) -> Unit): Tap<T> {
-    scope.launch(Tap<*>::reactIn) {
+    scope.launch {
         flow.collect { value ->
             block(value)
         }

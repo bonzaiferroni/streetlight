@@ -3,8 +3,7 @@ package koala.dom
 import koala.Image
 import koala.SvgFile
 import koala.css.*
-import koala.html.fillImage
-import koala.model.MutableTap
+import kampfire.model.MutableTap
 import koala.toImage
 
 fun ViewScope.imageDrop(

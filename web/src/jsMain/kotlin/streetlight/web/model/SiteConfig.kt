@@ -1,15 +1,9 @@
 package streetlight.web.model
 
 import kampfire.model.Labeled
-import koala.model.mutableTapOf
-import koala.model.reactIn
-import koala.model.storeOf
-import koala.utils.jsonConfig
-import kotlinx.browser.localStorage
+import kampfire.model.mutableTapOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.serialization.Serializable
-import org.w3c.dom.get
-import org.w3c.dom.set
 import streetlight.web.utils.localStoreOf
 
 class SiteConfig(

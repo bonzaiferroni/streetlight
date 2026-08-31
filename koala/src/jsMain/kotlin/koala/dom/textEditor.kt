@@ -9,7 +9,7 @@ import koala.html.Id
 import koala.html.Attribute
 import koala.html.setId
 import koala.html.setAttribute
-import koala.model.MutableTap
+import kampfire.model.MutableTap
 import kotlinx.html.TEXTAREA
 import kotlinx.html.js.div
 import kotlinx.html.js.onInputFunction

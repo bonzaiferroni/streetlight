@@ -1,8 +1,8 @@
 package koala.dom
 
 import koala.css.*
-import koala.model.MutableTap
-import koala.model.Tap
+import kampfire.model.MutableTap
+import kampfire.model.Tap
 import kotlinx.coroutines.launch
 import kotlinx.html.DIV
 import web.html.HTMLDivElement

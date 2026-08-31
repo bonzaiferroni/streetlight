@@ -20,8 +20,8 @@ import koala.dom.lottie
 import koala.dom.row
 import koala.dom.textBlock
 import koala.dom.textField
-import koala.model.MutableTap
-import koala.model.storeOf
+import kampfire.model.MutableTap
+import kampfire.model.storeOf
 import kotlinx.html.InputType
 import streetlight.web.model.CredentialStore
 import streetlight.web.model.SessionGate

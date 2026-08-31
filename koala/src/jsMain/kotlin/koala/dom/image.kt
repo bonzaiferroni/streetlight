@@ -5,7 +5,7 @@ import koala.Image
 import koala.SiteImage
 import koala.css.ModifierSet
 import koala.css.addModifiers
-import koala.model.Tap
+import kampfire.model.Tap
 import kotlinx.html.IMG
 import kotlinx.html.js.img
 import kotlinx.html.style

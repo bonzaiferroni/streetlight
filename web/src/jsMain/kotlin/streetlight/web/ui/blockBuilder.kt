@@ -1,14 +1,12 @@
 package streetlight.web.ui
 
-import kampfire.api.toMarkdown
 import koala.Image
 import koala.SvgFile
 import koala.css.*
 import koala.dom.*
-import koala.html.image
-import koala.model.mutableTapOf
-import koala.model.storeOf
-import koala.model.toggle
+import kampfire.model.mutableTapOf
+import kampfire.model.storeOf
+import kampfire.model.toggle
 import kotlinx.html.FlowContent
 import streetlight.model.data.*
 import streetlight.web.layouts.renderHeading

@@ -3,8 +3,8 @@ package koala.dom
 import kampfire.model.Labeled
 import koala.css.ModifierSet
 import koala.css.addModifiers
-import koala.model.MutableTap
-import koala.model.mutableTapOf
+import kampfire.model.MutableTap
+import kampfire.model.mutableTapOf
 import kotlinx.html.SELECT
 import kotlinx.html.js.option
 import kotlinx.html.js.select

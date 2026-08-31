@@ -48,6 +48,8 @@ data class Attribute<T>(
         val Spellcheck = booleanAttributeOf("spellcheck")
         val Draggable = booleanAttributeOf("draggable")
         val Autofocus = booleanAttributeOf("autofocus")
+        val ContentVisibility = stringAttributeOf("content-visibility")
+        val ContainIntrinsicSize = stringAttributeOf("contain-intrinsic-size")
     }
 }
 

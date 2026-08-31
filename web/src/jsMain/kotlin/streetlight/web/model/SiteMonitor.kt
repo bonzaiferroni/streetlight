@@ -6,8 +6,8 @@ import koala.dom.ChartData
 import koala.dom.ChartLine
 import koala.utils.launch
 import koala.model.dedup
-import koala.model.mutableTapOf
-import koala.model.storeOf
+import kampfire.model.mutableTapOf
+import kampfire.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay

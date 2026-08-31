@@ -2,6 +2,9 @@ package koala.model
 
 import kampfire.model.GeoBounds
 import kampfire.model.GeoPoint
+import kampfire.model.refine
+import kampfire.model.storeOf
+import kampfire.model.tapOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow

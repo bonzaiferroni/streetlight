@@ -6,8 +6,8 @@ import koala.model.FeatureMarker
 import koala.model.GeoFocus
 import koala.model.MarkerFocus
 import koala.model.Portal
-import koala.model.tapOf
-import koala.model.storeOf
+import kampfire.model.tapOf
+import kampfire.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import streetlight.model.ui.CityMap
 import streetlight.model.ui.CityMapRoute

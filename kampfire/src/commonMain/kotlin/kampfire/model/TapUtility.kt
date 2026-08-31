@@ -1,4 +1,4 @@
-package koala.model
+package kampfire.model
 
 fun MutableTap<Boolean>.toggle() {
     update { !it }

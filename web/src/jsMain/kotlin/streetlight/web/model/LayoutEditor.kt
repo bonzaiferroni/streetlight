@@ -2,8 +2,8 @@ package streetlight.web.model
 
 import kampfire.model.Messenger
 import koala.merge
-import koala.model.tapOf
-import koala.model.storeOf
+import kampfire.model.tapOf
+import kampfire.model.storeOf
 import streetlight.model.data.ColumnsBlock
 import streetlight.model.data.DefaultLayout
 import streetlight.model.data.GalleryBlock

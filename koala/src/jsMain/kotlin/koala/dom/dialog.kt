@@ -13,11 +13,9 @@ import koala.css.modify
 import koala.html.DialogStyle
 import koala.html.filigree
 import koala.html.heading2
-import koala.model.MutableTap
+import kampfire.model.MutableTap
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.html.DIV
 import kotlinx.html.js.dialog
 import web.events.addEventListener
 import web.html.HTMLDialogElement

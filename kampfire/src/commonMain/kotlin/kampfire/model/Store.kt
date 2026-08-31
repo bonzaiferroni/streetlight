@@ -1,4 +1,4 @@
-package koala.model
+package kampfire.model
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

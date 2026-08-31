@@ -2,6 +2,7 @@ package koala.model
 
 import kampfire.model.Messenger
 import kampfire.model.Outcome
+import kampfire.model.storeOf
 import kampfire.model.toDataOr
 import koala.utils.launch
 import koala.html.AppRoute

@@ -1,8 +1,15 @@
 package koala.dom
 
+import koala.css.ModifierSet
+import koala.css.addModifiers
 import kotlinx.dom.clear
+import kotlinx.html.DIV
 import kotlinx.html.dom.append
+import kotlinx.html.dom.create
 import kotlinx.html.dom.prepend
+import kotlinx.html.js.div
+import web.dom.Document
+import kotlinx.browser.document as W3CDocument
 import org.w3c.dom.HTMLElement as W3CElementCore
 import org.w3c.dom.HTMLDivElement as W3CDivElement
 import org.w3c.dom.HTMLSpanElement as W3CSpanElement
@@ -31,3 +38,11 @@ fun W3CSpanElement.asWeb() = unsafeCast<HTMLSpanElement>()
 fun W3CInputElement.asWeb() = unsafeCast<HTMLInputElement>()
 fun W3CButtonElement.asWeb() = unsafeCast<HTMLButtonElement>()
 fun W3CImageElement.asWeb() = unsafeCast<HTMLImageElement>()
+
+fun Document.createDiv(
+    mod: ModifierSet? = null,
+    config: DIV.() -> Unit = { },
+) = W3CDocument.create.div {
+    addModifiers(mod)
+    config()
+}.asWeb()

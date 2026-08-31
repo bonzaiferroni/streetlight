@@ -4,7 +4,7 @@ import kampfire.model.Messenger
 import kampfire.model.Problem
 import kampfire.model.UIMessage
 import kampfire.model.UIMessageType
-import koala.model.Store
+import kampfire.model.Store
 import koala.model.dedup
 
 class MessageStore(value: UIMessage? = null): Store<UIMessage?>(value), Messenger {

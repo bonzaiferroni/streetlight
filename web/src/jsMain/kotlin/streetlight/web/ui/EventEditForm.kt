@@ -13,7 +13,7 @@ import koala.html.buttonPopover
 import koala.html.heading3
 import koala.html.heading5
 import koala.html.textProperty
-import koala.model.MutableTap
+import kampfire.model.MutableTap
 import kotlinx.coroutines.flow.map
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate

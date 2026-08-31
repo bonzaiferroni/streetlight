@@ -8,7 +8,7 @@ import koala.html.bulletsOf
 import koala.html.filigree
 import koala.html.heading3
 import koala.html.span
-import koala.model.MutableTap
+import kampfire.model.MutableTap
 import streetlight.web.model.UserCreator
 import streetlight.web.model.UserCreatorState
 

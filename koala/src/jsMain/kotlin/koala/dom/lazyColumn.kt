@@ -1,99 +1,88 @@
 package koala.dom
 
+import kampfire.model.ListChange
+import kampfire.model.LiveList
 import koala.css.*
+import koala.html.Attribute
+import koala.html.setAttribute
 import koala.model.LazyColumnStyle
-import koala.model.MutableTap
-import koala.model.storeOf
+import kotlinx.css.LinearDimension
 import kotlinx.css.px
-import kotlinx.html.js.div
-import web.animations.requestAnimationFrame
-import web.events.AddEventListenerOptions
-import web.events.Event
-import web.events.SCROLL
-import web.events.addEventListener
+import web.dom.document
 import web.html.HTMLDivElement
 import web.html.HTMLElement
-import kotlin.math.roundToInt
-import kotlin.time.Clock
-import kotlin.time.Instant
 
-fun <T> ViewScope.lazyColumn(
-    list: LazyList<T>,
+fun <T, K> ViewScope.lazyColumn(
+    list: LiveList<T, K>,
     mod: ModifierSet? = null,
-    state: MutableTap<LazyColumnState> = storeOf(LazyColumnState()),
-    content: AppendScope.(T) -> Unit
+    expectedHeight: LinearDimension = 60.px,
+    content: ViewScope.(T) -> Unit
 ): HTMLDivElement {
-    lateinit var container: HTMLElement
-    val scroller = div(modify(mod, LazyColumnStyle.Scroller)) {
-        container = div(modify(LazyColumnStyle.Container)) { }
+    val views = mutableListOf<View>()
+
+    val container = div(modify(mod, LazyColumnStyle.Container)) { }
+
+    fun HTMLElement.mountView(item: T) = mountChildView("lazyColumnItem", this) {
+        content(item)
     }
 
-    var appendedAt: Instant? = null
+    fun insert(index: Int, item: T) {
+        val currentElement = views.getOrNull(index)?.mount
+        val itemElement = document.createDiv {
+            setAttribute(Attribute.ContainIntrinsicSize, "auto $expectedHeight")
+            setAttribute(Attribute.ContentVisibility, "auto")
+        }
+        val view = itemElement.mountView(item)
+        views.add(index, view)
+        container.insertBefore(itemElement, currentElement)
+    }
 
-    onAppend {
-        appendedAt = Clock.System.now()
-        val elementHeight = scroller.offsetHeight
-        var contentHeight = 0
-        var appendedCount = 0
-        list.items.forEach { item ->
-            if (contentHeight > elementHeight) return@forEach
-            appendedCount++
+    fun insert(index: Int, items: List<T>) {
+        items.forEachIndexed { itemIndex, item ->
+            insert(index + itemIndex, item)
+        }
+    }
 
-            lateinit var itemElement: HTMLElement
-            container.append {
-                itemElement = div {
-                    content(item)
-                }.asWeb()
+    fun replace(index: Int, item: T) {
+        val currentView = views[index]
+        currentView.dispose()
+        currentView.mount.mountView(item)
+    }
+
+    fun remove(index: Int) {
+        val currentView = views[index]
+        currentView.dispose()
+        currentView.mount.remove()
+        views.removeAt(index)
+    }
+
+    fun remove(index: Int, count: Int) {
+        repeat(count) { remove(index) }
+    }
+
+    fun clear() {
+        views.forEach {
+            it.dispose()
+        }
+        views.clear()
+        container.clear()
+    }
+
+    launchEffect {
+        list.changeFlow.collect { change ->
+            when (change) {
+                ListChange.Clear -> clear()
+                is ListChange.Insert<T> -> insert(change.index, change.items)
+                is ListChange.Remove -> remove(change.index, change.count)
+                is ListChange.Replace<T> -> replace(change.index, change.item)
             }
-            contentHeight += itemElement.offsetHeight
-        }
-        val itemHeight = (contentHeight / appendedCount.toFloat()).roundToInt()
-        container.setStyle(Property.Height.to((itemHeight * list.items.size).px))
-    }
-
-    requestAnimationFrame {
-        println("frame")
-        appendedAt?.let {
-            println("${(Clock.System.now() - it).inWholeMilliseconds}ms")
         }
     }
 
-    val observer = IntersectionObserver({ entries, _ ->
-        if (entries.any { it.isIntersecting }) {
-            println("intersect")
-            appendedAt?.let {
-                println("${(Clock.System.now() - it).inWholeMilliseconds}ms")
-            }
-        }
-    }, IntersectionObserverInit(
-        root = scroller,
-        rootMargin = "400px"
-    ))
-
-    observer.observe(container)
-
-    scroller.addEventListener(Event.SCROLL, {
-        val remaining = scroller.scrollHeight - scroller.scrollTop - scroller.clientHeight
-        println("scrolled")
-        if (remaining < 400) {
-            println("build more")
-        }
-    }, AddEventListenerOptions(passive = true))
-
-    return scroller
+    return container
 }
 
-class LazyList<T>(initialItems: List<T>) {
-    private val state = storeOf(initialItems.size)
-
-    val items: List<T>
-        field = initialItems.toMutableList()
-}
-
-data class LazyListState(
-    val size: Int,
-)
-
+// state: MutableTap<LazyColumnState> = storeOf(LazyColumnState()),
 data class LazyColumnState(
     val scrollIndex: Int = 0,
 )

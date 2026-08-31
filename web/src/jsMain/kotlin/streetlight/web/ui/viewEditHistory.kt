@@ -9,7 +9,6 @@ import koala.dom.ViewScope
 import koala.dom.box
 import koala.dom.button
 import koala.dom.dialog
-import koala.dom.dialogCard
 import koala.dom.dialogContent
 import koala.dom.dropMenu
 import koala.dom.grid
@@ -17,8 +16,8 @@ import koala.dom.row
 import koala.dom.setAttribute
 import koala.dom.textBlock
 import koala.html.spacer
-import koala.model.setTrue
-import koala.model.storeOf
+import kampfire.model.setTrue
+import kampfire.model.storeOf
 import kotlinx.css.LinearDimension
 import kotlinx.css.fr
 import streetlight.model.data.EditLog

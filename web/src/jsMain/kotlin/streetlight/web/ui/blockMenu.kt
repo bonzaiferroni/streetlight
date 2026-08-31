@@ -7,7 +7,7 @@ import koala.dom.*
 import koala.html.Id
 import koala.html.setPopoverTarget
 import koala.markdown.HeadingLevel
-import koala.model.storeOf
+import kampfire.model.storeOf
 import streetlight.model.data.*
 import kotlin.uuid.Uuid
 

@@ -5,12 +5,11 @@ import kampfire.model.Messenger
 import kampfire.model.toDataOr
 import kampfire.model.toDataOrNull
 import kampfire.utils.takeEllipsis
-import koala.model.reactIn
-import koala.model.storeOf
-import koala.model.tapOf
+import kampfire.model.reactIn
+import kampfire.model.storeOf
+import kampfire.model.tapOf
 import koala.utils.launch
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 import streetlight.model.data.ChatPreview
 import streetlight.model.data.Message
 import streetlight.model.data.ReplyMessage

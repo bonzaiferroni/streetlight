@@ -4,8 +4,8 @@ import kampfire.api.Password
 import kampfire.api.toValidOutcome
 import kampfire.model.Outcome
 import kampfire.model.Problem
-import koala.model.mutableTapOf
-import koala.model.storeOf
+import kampfire.model.mutableTapOf
+import kampfire.model.storeOf
 
 class PasswordEditor() {
     private val state = storeOf(PasswordEditorState())

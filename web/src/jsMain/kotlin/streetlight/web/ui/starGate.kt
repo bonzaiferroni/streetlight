@@ -9,9 +9,9 @@ import koala.dom.rawDialogContent
 import koala.dom.tabs
 import koala.dom.textBlock
 import koala.html.Id
-import koala.model.MutableTap
-import koala.model.setTrue
-import koala.model.storeOf
+import kampfire.model.MutableTap
+import kampfire.model.setTrue
+import kampfire.model.storeOf
 import streetlight.model.data.Star
 
 fun ViewScope.starGate(

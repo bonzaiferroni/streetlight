@@ -3,19 +3,14 @@ package koala.model
 import koala.css.Class
 
 object LazyColumnStyle {
-    val Scroller = Class("lazy-scroller")
-    val Container = Class("lazy-container")
+    val Container = Class("lazy-column")
 }
 
 // language="CSS"
 val LazyColumnCss get() = with(LazyColumnStyle) {"""
 
-$Scroller {
-    overflow-y: auto
-}
-
 $Container {
-    
+    overflow-y: auto
 }
 
 """}

@@ -2,7 +2,7 @@ package koala.dom
 
 import koala.css.ModifierSet
 import koala.css.addModifiers
-import koala.model.MutableTap
+import kampfire.model.MutableTap
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
 import kotlinx.html.INPUT

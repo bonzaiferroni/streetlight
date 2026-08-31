@@ -126,7 +126,7 @@ val MaxWidthNone = utilityOf("max-width-none", "max-width: none")
 // Height
 val Height50Pct = utilityOf("height-50", "height: 50%")
 val Height100Pct = utilityOf("height-100", "height: 100%")
-val Height100Vh = utilityOf("height-100vh", "height: 100vh")
+val Height100Vh = utilityOf("height-100vh", "height: 100dvh")
 val HeightAuto = utilityOf("height-auto", "height: auto")
 val Height0 = utilityOf("height-0", "height: 0")
 val Height2 = utilityOf("height-2", "height: calc(var(--unit-spacing) * 2)")

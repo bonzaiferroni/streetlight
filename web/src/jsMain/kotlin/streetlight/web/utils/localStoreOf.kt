@@ -1,8 +1,8 @@
 package streetlight.web.utils
 
 import koala.dom.ViewScope
-import koala.model.Store
-import koala.model.storeOf
+import kampfire.model.Store
+import kampfire.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json

@@ -7,14 +7,9 @@ import koala.css.*
 import koala.dom.*
 import koala.html.Attribute
 import koala.html.setAttribute
-import koala.model.mutableTapOf
-import koala.model.storeOf
-import kotlinx.coroutines.delay
-import streetlight.model.data.Message
-import streetlight.model.data.MessageId
+import kampfire.model.mutableTapOf
+import kampfire.model.storeOf
 import streetlight.model.data.NewMessage
-import kotlin.time.Duration.Companion.seconds
-import kotlin.uuid.Uuid
 
 val recipientState = storeOf<Username?>(null)
 

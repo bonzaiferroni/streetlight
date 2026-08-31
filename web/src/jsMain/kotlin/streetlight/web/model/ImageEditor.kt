@@ -7,7 +7,7 @@ import kampfire.model.UIMessage
 import kampfire.model.UIMessageType
 import kampfire.model.toDataOr
 import koala.Image
-import koala.model.MutableTap
+import kampfire.model.MutableTap
 import streetlight.web.io.ApiClient
 
 class ImageEditor(

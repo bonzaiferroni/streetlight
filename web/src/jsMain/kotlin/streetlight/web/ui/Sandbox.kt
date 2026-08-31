@@ -2,8 +2,8 @@ package streetlight.web.ui
 
 import kampfire.api.toUsername
 import kampfire.model.toDataOr
-import koala.model.mutableTapOf
-import koala.model.storeOf
+import kampfire.model.mutableTapOf
+import kampfire.model.storeOf
 import koala.model.dedup
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay

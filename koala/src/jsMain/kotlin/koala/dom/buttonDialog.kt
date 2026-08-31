@@ -1,8 +1,8 @@
 package koala.dom
 
 import koala.css.*
-import koala.model.storeOf
-import koala.model.toggle
+import kampfire.model.storeOf
+import kampfire.model.toggle
 
 fun ViewScope.buttonDialog(
     label: String,

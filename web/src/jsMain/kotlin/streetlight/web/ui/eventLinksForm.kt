@@ -7,11 +7,11 @@ import koala.dom.*
 import koala.html.heading4
 import koala.html.spacer
 import koala.html.textBlock
-import koala.model.append
-import koala.model.removeAt
-import koala.model.replaceAt
-import koala.model.storeOf
-import koala.model.toggle
+import kampfire.model.append
+import kampfire.model.removeAt
+import kampfire.model.replaceAt
+import kampfire.model.storeOf
+import kampfire.model.toggle
 import streetlight.model.data.ExtraLink
 import streetlight.web.model.EventEditor
 

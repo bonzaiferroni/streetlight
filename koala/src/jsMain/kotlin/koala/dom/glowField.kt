@@ -5,7 +5,7 @@ import koala.css.ModifierSet
 import koala.css.Property
 import koala.css.modify
 import koala.css.rgba
-import koala.model.MutableTap
+import kampfire.model.MutableTap
 import koala.model.GlowControlStyle
 import kotlinx.css.pct
 import web.events.addEventListener

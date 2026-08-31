@@ -17,8 +17,8 @@ import koala.dom.row
 import koala.dom.styledMarkdownEditor
 import koala.html.heading1
 import koala.model.EditorStyle
-import koala.model.storeOf
-import koala.model.toggle
+import kampfire.model.storeOf
+import kampfire.model.toggle
 import streetlight.web.utils.localStoreOf
 
 fun ViewScope.editorSandbox() {

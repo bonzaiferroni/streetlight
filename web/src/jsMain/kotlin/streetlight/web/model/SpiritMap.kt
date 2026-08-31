@@ -1,12 +1,11 @@
 package streetlight.web.model
 
 import koala.model.GeoCamera
-import koala.model.storeOf
+import kampfire.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 import streetlight.model.data.Spirit
-import streetlight.model.data.SpiritFrame
 import streetlight.model.data.SpiritId
 import streetlight.web.io.ApiClient
 import streetlight.web.io.SpiritSocket

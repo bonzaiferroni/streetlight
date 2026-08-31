@@ -4,7 +4,7 @@ import koala.css.*
 import koala.html.Attribute
 import koala.html.Id
 import koala.html.TabClass
-import koala.model.MutableTap
+import kampfire.model.MutableTap
 import kotlinx.html.js.p
 import web.html.HTMLDivElement
 import web.html.HTMLElement

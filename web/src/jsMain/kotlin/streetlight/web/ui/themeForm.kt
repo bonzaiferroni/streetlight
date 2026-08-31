@@ -3,8 +3,8 @@ package streetlight.web.ui
 import koala.SvgFile
 import koala.css.*
 import koala.dom.*
-import koala.model.MutableTap
-import koala.model.mutableTapOf
+import kampfire.model.MutableTap
+import kampfire.model.mutableTapOf
 import streetlight.model.data.PageTheme
 import streetlight.web.model.ThemeEditor
 

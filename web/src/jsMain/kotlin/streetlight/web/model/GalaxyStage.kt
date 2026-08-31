@@ -1,7 +1,7 @@
 package streetlight.web.model
 
 import koala.model.dedup
-import koala.model.storeOf
+import kampfire.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import streetlight.model.data.Galaxy
 import streetlight.model.data.GalaxyContent

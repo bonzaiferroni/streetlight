@@ -10,7 +10,7 @@ import koala.css.Transitioning
 import koala.css.addModifiers
 import koala.css.modify
 import koala.html.FlowBlockStyle
-import koala.model.Tap
+import kampfire.model.Tap
 import koala.utils.launch
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job

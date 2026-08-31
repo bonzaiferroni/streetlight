@@ -4,9 +4,8 @@ import kampfire.model.Messenger
 import kampfire.model.Problem
 import kampfire.model.UIMessage
 import kampfire.model.UIMessageType
-import koala.model.dedup
-import koala.model.storeOf
-import koala.model.tapOf
+import kampfire.model.storeOf
+import kampfire.model.tapOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

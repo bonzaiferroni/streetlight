@@ -1,9 +1,8 @@
 package streetlight.web.model
 
-import koala.model.MutableTap
-import koala.model.tapOf
-import koala.model.mutableTapOf
-import koala.model.storeOf
+import kampfire.model.tapOf
+import kampfire.model.mutableTapOf
+import kampfire.model.storeOf
 import streetlight.model.data.LayoutBlock
 import streetlight.model.data.LayoutContainer
 import kotlin.time.Clock

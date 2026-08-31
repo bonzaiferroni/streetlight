@@ -8,7 +8,7 @@ import koala.dom.*
 import koala.html.filigree
 import koala.html.heading1
 import koala.html.spacer
-import koala.model.storeOf
+import kampfire.model.storeOf
 import kotlinx.coroutines.launch
 import kotlinx.html.DIV
 import streetlight.model.data.Comment

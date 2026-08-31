@@ -6,8 +6,8 @@ import kampfire.model.CoreProblem
 import kampfire.model.toDataOr
 import koala.dom.*
 import koala.html.div
-import koala.model.MutableTap
-import koala.model.mutableTapOf
+import kampfire.model.MutableTap
+import kampfire.model.mutableTapOf
 import streetlight.model.data.LocationConfig
 import streetlight.model.data.SubdomainConfig
 

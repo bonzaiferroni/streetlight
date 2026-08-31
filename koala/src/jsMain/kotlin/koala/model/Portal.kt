@@ -2,6 +2,8 @@
 
 package koala.model
 
+import kampfire.model.storeOf
+import kampfire.model.tapOf
 import koala.core.queryAttribute
 import koala.css.KoalaBody
 import koala.dom.setAttribute
@@ -12,7 +14,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.mapNotNull
 import web.dom.document
-import web.events.EventType
 import web.events.addEventListener
 import web.history.POP_STATE
 import web.history.PopStateEvent
@@ -21,7 +22,6 @@ import web.history.history
 import web.history.manual
 import web.html.HTMLAnchorElement
 import web.html.HTMLElement
-import web.mouse.MouseEvent
 import web.pointer.CLICK
 import web.pointer.PointerEvent
 import web.url.URL

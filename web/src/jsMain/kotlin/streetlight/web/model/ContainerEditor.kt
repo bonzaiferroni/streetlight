@@ -1,7 +1,7 @@
 package streetlight.web.model
 
-import koala.model.mutableTapOf
-import koala.model.storeOf
+import kampfire.model.mutableTapOf
+import kampfire.model.storeOf
 import streetlight.model.data.LayoutBlock
 
 class ContainerEditor(

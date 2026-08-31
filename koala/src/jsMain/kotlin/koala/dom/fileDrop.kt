@@ -5,7 +5,7 @@ import koala.css.Blur
 import koala.css.Magic
 import koala.css.SlideDown
 import koala.css.modify
-import koala.model.MutableTap
+import kampfire.model.MutableTap
 
 fun ViewScope.fileDrop(field: MutableTap<Url?>) {
     flowBlock(field, modify(Magic, Blur, SlideDown)) { url ->

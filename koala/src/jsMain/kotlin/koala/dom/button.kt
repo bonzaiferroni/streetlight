@@ -6,7 +6,7 @@ import koala.html.IconStyle
 import koala.html.configureButton
 import koala.html.configureElementButton
 import koala.html.configureSvgButton
-import koala.model.Tap
+import kampfire.model.Tap
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.html.BUTTON

@@ -12,8 +12,8 @@ import koala.html.heading6
 import koala.html.hr
 import koala.html.setPopoverTarget
 import koala.html.textBlock
-import koala.model.MutableTap
-import koala.model.toggle
+import kampfire.model.MutableTap
+import kampfire.model.toggle
 import kotlinx.html.BUTTON
 import streetlight.web.model.BlockEditor
 import streetlight.web.model.BlockId

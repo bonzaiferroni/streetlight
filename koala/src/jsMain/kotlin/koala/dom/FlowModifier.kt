@@ -1,7 +1,5 @@
 package koala.dom
 
-import js.core.Void
-import js.promise.Promise
 import kampfire.model.ValidityCheck
 import koala.css.DisplayNone
 import koala.css.Modifier
@@ -9,8 +7,8 @@ import koala.css.Required
 import koala.css.Valid
 import koala.css.VisibilityHidden
 import koala.css.Working
-import koala.model.Tap
-import koala.model.tapOf
+import kampfire.model.Tap
+import kampfire.model.tapOf
 import koala.utils.launch
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow

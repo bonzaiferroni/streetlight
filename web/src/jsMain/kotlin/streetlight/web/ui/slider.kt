@@ -10,7 +10,7 @@ import koala.css.modify
 import koala.dom.ViewScope
 import koala.dom.icon
 import koala.dom.row
-import koala.model.MutableTap
+import kampfire.model.MutableTap
 import kotlinx.html.INPUT
 import kotlinx.html.InputType
 import kotlinx.html.js.input

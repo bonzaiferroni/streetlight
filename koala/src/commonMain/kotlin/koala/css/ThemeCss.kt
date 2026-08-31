@@ -134,6 +134,11 @@ val ThemeCss get() = with(Koala) { """
 @property --beta-focus { syntax: '<percentage>'; inherits: true; initial-value: ${beta.focus}%; }
 @property --gamma-focus { syntax: '<percentage>'; inherits: true; initial-value: ${gamma.focus}%; }
 
+:root {
+    scrollbar-color: var(--ink-fg) var(--void-bg);
+    scrollbar-width: thin;
+}
+
 body {
     background-color: var(--body-bg);
 

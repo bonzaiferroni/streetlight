@@ -4,7 +4,7 @@ import koala.css.*
 import koala.html.Id
 import koala.html.configureTextFieldContainer
 import koala.html.configureTextFieldInput
-import koala.model.MutableTap
+import kampfire.model.MutableTap
 import kotlinx.html.INPUT
 import kotlinx.html.js.onInputFunction
 import kotlinx.html.js.input

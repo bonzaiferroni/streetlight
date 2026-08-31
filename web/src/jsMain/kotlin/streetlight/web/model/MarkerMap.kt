@@ -7,9 +7,9 @@ import koala.model.FeatureMarker
 import koala.model.GeoFocus
 import koala.model.GeoMap
 import koala.model.MarkerFocus
-import koala.model.combine
-import koala.model.tapOf
-import koala.model.storeOf
+import kampfire.model.combine
+import kampfire.model.tapOf
+import kampfire.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.launch

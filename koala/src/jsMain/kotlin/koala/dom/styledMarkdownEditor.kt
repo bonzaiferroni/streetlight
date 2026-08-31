@@ -4,7 +4,7 @@ import kampfire.api.Markdown
 import koala.css.*
 import koala.html.Attribute
 import koala.html.setAttribute
-import koala.model.MutableTap
+import kampfire.model.MutableTap
 import koala.model.EditorStyle
 import kotlinx.browser.document
 import kotlinx.html.DIV

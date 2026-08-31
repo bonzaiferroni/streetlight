@@ -1,5 +1,6 @@
 package koala.model
 
+import kampfire.model.storeOf
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 

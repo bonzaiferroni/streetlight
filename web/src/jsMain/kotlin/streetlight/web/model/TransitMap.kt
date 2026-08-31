@@ -12,7 +12,7 @@ import koala.model.Altitude
 import koala.model.GeoMap
 import koala.model.TravelMarker
 import koala.model.dedup
-import koala.model.storeOf
+import kampfire.model.storeOf
 import koala.model.toGeoPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job

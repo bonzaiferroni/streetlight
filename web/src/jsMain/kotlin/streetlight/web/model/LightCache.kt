@@ -3,10 +3,9 @@ package streetlight.web.model
 import kampfire.model.Messenger
 import kampfire.model.Outcome
 import kampfire.model.toDataOr
-import kampfire.model.toDataOrNull
 import koala.dom.setStorageOf
 import koala.model.dedup
-import koala.model.storeOf
+import kampfire.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import streetlight.model.data.LightEdit

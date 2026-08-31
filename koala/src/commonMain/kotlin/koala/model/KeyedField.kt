@@ -1,5 +1,9 @@
 package koala.model
 
+import kampfire.model.MutableTap
+import kampfire.model.Tap
+import kampfire.model.mutableTapOf
+import kampfire.model.tapOf
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlin.uuid.Uuid

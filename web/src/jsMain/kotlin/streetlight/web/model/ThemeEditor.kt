@@ -1,14 +1,10 @@
 package streetlight.web.model
 
-import kampfire.model.Vector2
-import koala.css.GlowPosition
 import koala.css.Koala
-import koala.model.MutableTap
-import koala.model.mutableTapOf
-import koala.model.storeOf
+import kampfire.model.MutableTap
+import kampfire.model.mutableTapOf
+import kampfire.model.storeOf
 import streetlight.model.data.PageTheme
-import kotlin.collections.copy
-import kotlin.math.roundToInt
 
 class ThemeEditor(initialTheme: PageTheme?) {
     private val state = storeOf(initialTheme ?: PageTheme())

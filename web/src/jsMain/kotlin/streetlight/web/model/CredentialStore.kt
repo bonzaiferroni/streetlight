@@ -3,8 +3,8 @@ package streetlight.web.model
 import kampfire.api.Password
 import kampfire.api.obfuscatePassword
 import kampfire.model.LoginRequest
-import koala.model.mutableTapOf
-import koala.model.storeOf
+import kampfire.model.mutableTapOf
+import kampfire.model.storeOf
 import kotlinx.browser.localStorage
 import org.w3c.dom.get
 

@@ -1,23 +1,18 @@
 package streetlight.web.ui
 
-import kampfire.api.Username
-import kampfire.api.toUsername
 import koala.css.Gap2Px
-import koala.css.OpacityHalf
 import koala.css.modify
 import koala.dom.ViewScope
 import koala.dom.column
 import koala.dom.flowBlock
 import koala.dom.getAttribute
 import koala.dom.popoverRaw
-import koala.dom.popover
 import koala.dom.popoverCard
 import koala.dom.popoverOption
-import koala.dom.textBlock
 import koala.html.Attribute
 import koala.html.Id
-import koala.model.MutableTap
-import koala.model.storeOf
+import kampfire.model.MutableTap
+import kampfire.model.storeOf
 import streetlight.model.ui.StarRoute
 import web.html.HTMLElement
 import kotlin.js.json

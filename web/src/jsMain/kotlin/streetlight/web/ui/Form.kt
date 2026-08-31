@@ -11,8 +11,8 @@ import koala.html.heading3
 import koala.html.heading4
 import koala.html.textBlock
 import koala.dom.MenuAction
-import koala.model.Tap
-import koala.model.MutableTap
+import kampfire.model.Tap
+import kampfire.model.MutableTap
 import kotlinx.html.DIV
 import kotlinx.html.SECTION
 

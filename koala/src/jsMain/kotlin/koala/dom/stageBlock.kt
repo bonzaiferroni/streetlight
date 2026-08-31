@@ -4,7 +4,7 @@ import kampfire.model.Labeled
 import koala.SvgFile
 import koala.css.*
 import koala.html.heading3
-import koala.model.MutableTap
+import kampfire.model.MutableTap
 import kotlinx.coroutines.launch
 import web.html.HTMLDivElement
 import web.html.HTMLElement

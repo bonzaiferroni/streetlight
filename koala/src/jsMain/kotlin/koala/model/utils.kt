@@ -13,11 +13,5 @@ fun jsObject(block: dynamic.() -> Unit): dynamic {
     return obj
 }
 
-fun Document.createDiv(modifiers: ModifierSet? = null): HTMLDivElement {
-    val element = createElement("div") as HTMLDivElement
-    modifiers?.let {
-        element.modify(it)
-    }
-    return element
-}
+
 

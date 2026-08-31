@@ -2,9 +2,9 @@ package streetlight.web.model
 
 import kampfire.model.toDataOr
 import koala.utils.launch
-import koala.model.tapOf
-import koala.model.mutableTapOf
-import koala.model.storeOf
+import kampfire.model.tapOf
+import kampfire.model.mutableTapOf
+import kampfire.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import streetlight.model.data.Feedback
 import streetlight.model.data.FeedbackEdit

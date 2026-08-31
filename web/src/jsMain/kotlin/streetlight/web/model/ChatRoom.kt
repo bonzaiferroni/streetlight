@@ -1,9 +1,8 @@
 package streetlight.web.model
 
-import koala.model.dedup
-import koala.model.mutableTapOf
-import koala.model.storeOf
-import koala.model.tapOf
+import kampfire.model.mutableTapOf
+import kampfire.model.storeOf
+import kampfire.model.tapOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlin.time.Clock

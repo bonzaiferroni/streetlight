@@ -1,16 +1,13 @@
 package streetlight.web.ui
 
 import kampfire.api.Markdown
-import kampfire.api.Username
 import koala.css.*
 import koala.dom.*
-import koala.html.heading2
 import koala.html.heading4
-import koala.html.heading5
 import koala.html.iconLogo
 import koala.html.spacer
-import koala.model.storeOf
-import koala.model.tapOf
+import kampfire.model.storeOf
+import kampfire.model.tapOf
 import streetlight.model.data.InboxContent
 import streetlight.model.data.Star
 import streetlight.model.ui.HomeRoute

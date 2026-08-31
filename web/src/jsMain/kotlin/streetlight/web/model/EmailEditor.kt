@@ -5,10 +5,10 @@ import kampfire.api.toEmailAddress
 import kampfire.api.toValidOutcome
 import kampfire.model.Ok
 import kampfire.model.Outcome
-import koala.model.Tap
-import koala.model.mutableTapOf
-import koala.model.reactIn
-import koala.model.storeOf
+import kampfire.model.Tap
+import kampfire.model.mutableTapOf
+import kampfire.model.reactIn
+import kampfire.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 
 class EmailEditor(

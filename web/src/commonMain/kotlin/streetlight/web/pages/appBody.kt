@@ -56,13 +56,13 @@ object AppBody {
 // language="CSS"
 val AppBodyCss get() = with(AppBody) { """
 $Viewport {
-    width: 100vw;
+    width: 100%;
     isolation: isolate;
 }
 
 $PanelGrid {
     display: grid;
-    min-height: 100lvh;
+    min-height: 100dvh;
     gap: var(--unit-spacing-1);
     grid-template-columns: minmax(auto, 1fr) minmax(0, var(--content-panel-width)) minmax(auto, 1fr);
     /* grid-template-columns: auto minmax(0, var(--content-panel-width)) auto; */

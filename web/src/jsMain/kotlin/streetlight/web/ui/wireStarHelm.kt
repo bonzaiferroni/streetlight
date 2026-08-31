@@ -10,9 +10,9 @@ import koala.html.heading3
 import koala.html.icon
 import koala.html.image
 import koala.interop.KoalaFun
-import koala.model.MutableTap
-import koala.model.setTrue
-import koala.model.storeOf
+import kampfire.model.MutableTap
+import kampfire.model.setTrue
+import kampfire.model.storeOf
 import kotlinx.html.onClick
 import streetlight.model.data.Star
 import streetlight.model.ui.InboxRoute

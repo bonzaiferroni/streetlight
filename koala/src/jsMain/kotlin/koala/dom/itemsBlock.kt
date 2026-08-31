@@ -2,8 +2,8 @@ package koala.dom
 
 import koala.css.*
 import koala.html.ItemsBlockStyle
-import koala.model.Tap
-import koala.model.tapOf
+import kampfire.model.Tap
+import kampfire.model.tapOf
 import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.coroutines.Job

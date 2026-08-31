@@ -5,10 +5,10 @@ import kampfire.model.Labeled
 import kampfire.model.toDataOr
 import koala.dom.MessageStore
 import koala.model.dedup
-import koala.model.tapOf
-import koala.model.mutableTapOf
-import koala.model.reactIn
-import koala.model.storeOf
+import kampfire.model.tapOf
+import kampfire.model.mutableTapOf
+import kampfire.model.reactIn
+import kampfire.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import streetlight.model.data.EventLocation
