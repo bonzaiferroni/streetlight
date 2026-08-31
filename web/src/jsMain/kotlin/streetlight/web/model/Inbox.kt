@@ -1,6 +1,7 @@
 package streetlight.web.model
 
 import kampfire.api.Markdown
+import kampfire.model.LiveList
 import kampfire.model.Messenger
 import kampfire.model.toDataOr
 import kampfire.model.toDataOrNull
@@ -10,6 +11,7 @@ import kampfire.model.storeOf
 import kampfire.model.tapOf
 import koala.utils.launch
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import streetlight.model.data.ChatPreview
 import streetlight.model.data.Message
 import streetlight.model.data.ReplyMessage
@@ -25,24 +27,27 @@ class Inbox(
     private val toaster: Toaster,
     omni: OmniClient,
 ) {
-    private val state = storeOf(InboxState(initialChats, initialChats.firstOrNull()))
+    private val state = storeOf(InboxState(initialChats.firstOrNull()))
 
-    val chatsState = state.tapOf { it.chats }
-    val messagesState = state.tapOf { it.messages }
+    val chatList = LiveList(initialChats) { it.chatId }
+    val messageList = LiveList(emptyList<Message>()) { it.messageId }
+
     val openChatState = state.tapOf { it.openChat }
 
     init {
         omni.lastRecordState.reactIn(scope) { omni ->
             val message = omni as? Message ?: return@reactIn
-            state.set { copy(chats = chats.map { chat ->
+            val openChat = openChatState.now
+
+            chatList.liveItems.forEach { chat ->
                 if (chat.chatId == message.chatId) {
                     val lastReadAt = chat.lastReadAt.takeIf { openChat == null || openChat.chatId != chat.chatId } ?: message.sentAt
-                    chat.copy(
+                    chatList.replace(chat.chatId, chat.copy(
                         lastMessageAt = message.sentAt, lastReadAt = lastReadAt,
                         lastMessagePreview = message.content.value.takeEllipsis(40)
-                    )
-                } else chat
-            })}
+                    ))
+                }
+            }
 
             updateChat(message)
         }
@@ -56,7 +61,8 @@ class Inbox(
         state.set { copy(openChat = chat) }
         scope.launch(::openChat) {
             val messages = api.readChat(chat.chatId).toDataOr(toaster) { return@launch }
-            state.set { copy(messages = messages) }
+            messageList.clear()
+            messageList.add(messages)
         }
     }
 
@@ -73,12 +79,12 @@ class Inbox(
 
     private fun updateChat(message: Message) {
         if (state.now.openChat?.chatId != message.chatId) return
-        state.set { copy(messages = listOf(message) + messages) }
+        scope.launch {
+            messageList.insertAt(0, message)
+        }
     }
 }
 
 data class InboxState(
-    val chats: List<ChatPreview>,
     val openChat: ChatPreview?,
-    val messages: List<Message> = emptyList()
 )

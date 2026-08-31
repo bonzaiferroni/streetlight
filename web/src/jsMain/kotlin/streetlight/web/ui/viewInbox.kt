@@ -21,53 +21,49 @@ fun ViewScope.viewInbox(star: Star, content: InboxContent) {
     val model = Inbox(scope, star, content.chats, api, toaster, omni)
 
     row(modify(Height100Vh)) {
-        column(modify(Gap0)) {
+        column(modify(Gap0, Flex1)) {
             row(modify(AlignItemsCenter, JustifyContentCenter, PaddingTop1, Gap0)) {
                 navigation(HomeRoute, modify(GlowShadow, FlexRow)) {
                     iconLogo()
                 }
                 heading4("Messages", modify(OpacityHigh))
             }
-            flowBlock(model.chatsState, modify(Flex1, PaddingY1, OverflowYScroll)) { chats ->
-                column(modify(Gap2Px, BorderRadius1, OverflowClip)) {
-                    chats.forEach { chat ->
-                        val isOpenState = model.openChatState.tapOf { it?.chatId == chat.chatId }
-                        flowBlock(isOpenState) { isOpen ->
-                            val isReadMod = if (isOpen || chat.isRead) null else Bold
-                            val isSelectedMod = if (isOpen) PrimaryCardBg else CardBg
-                            column(modify(Padding1, Gap0, isReadMod, isSelectedMod)) {
-                                val usernames = chat.usernames.filter { it != star.username }.joinToString(", ") { it.value }
-                                textBlock(chat.lastMessagePreview, modify(SingleLine))
-                                row(modify(OpacityHigh, TextSmall)) {
-                                    chat.subject?.let {
-                                        textBlock(it, modify(SingleLine))
-                                    }
-                                    spacer(modify(Flex1))
-                                    textBlock(usernames, modify(SingleLine))
-                                }
-                            }.onClick {
-                                model.openChat(chat)
+            lazyColumn(model.chatList, modify(Flex1, FlexColumn, Gap2Px, BorderRadius1)) { chat ->
+                println("rebuilding")
+                val isOpenState = model.openChatState.tapOf { it?.chatId == chat.chatId }
+                flowBlock(isOpenState) { isOpen ->
+                    val isReadMod = if (isOpen || chat.isRead) null else Bold
+                    val isSelectedMod = if (isOpen) PrimaryCardBg else CardBg
+                    column(modify(Padding1, Gap0, isReadMod, isSelectedMod)) {
+                        val usernames = chat.usernames.filter { it != star.username }.joinToString(", ") { it.value }
+                        textBlock(chat.lastMessagePreview, modify(SingleLine))
+                        row(modify(OpacityHigh, TextSmall)) {
+                            chat.subject?.let {
+                                textBlock(it, modify(SingleLine))
                             }
+                            spacer(modify(Flex1))
+                            textBlock(usernames, modify(SingleLine))
                         }
+                    }.onClick {
+                        model.openChat(chat)
                     }
                 }
             }
         }
-        flowBlock(model.messagesState, modify(Flex4, FlexColumn)) { messages ->
+        flowBlock(model.openChatState, modify(Magic, Flex3, FlexColumn)) {
             val messenger = MessageStore()
 
-            column(modify(Flex1, OverflowYScroll, PaddingTop1, FlexReverse)) {
-                messages.forEachIndexed { index, message ->
-                    card(modify(ZenBg, BorderRadius1, PaddingX2)) {
-                        markdown(message.content)
+            lazyColumn(model.messageList, modify(Flex1, PaddingTop1, FlexColumn, FlexReverse)) { message ->
+                val index = model.messageList.liveItems.indexOf(message)
+                val nextAuthor = model.messageList.liveItems.getOrNull(index + 1)?.author
+                if (message.author != nextAuthor) {
+                    filigree(modify(MarginBottom1)) {
+                        textBlock(message.author.value, modify(TextSmall, OpacityHigh))
                     }
+                }
 
-                    val nextAuthor = messages.getOrNull(index + 1)?.author
-                    if (message.author != nextAuthor) {
-                        filigree {
-                            textBlock(message.author.value, modify(TextSmall, OpacityHigh))
-                        }
-                    }
+                card(modify(ZenBg, BorderRadius1, PaddingX2)) {
+                    markdown(message.content)
                 }
             }
 
