@@ -50,7 +50,7 @@ fun ViewScope.viewInbox(star: Star, content: InboxContent) {
                 }
             }
         }
-        flowBlock(model.openChatState, modify(Magic, Flex3, FlexColumn)) {
+        flowBlock(model.openChatState, modify(Flex3, FlexColumn)) {
             val messenger = MessageStore()
 
             lazyColumn(model.messageList, modify(Flex1, PaddingTop1, FlexColumn, FlexReverse)) { message ->
@@ -62,7 +62,7 @@ fun ViewScope.viewInbox(star: Star, content: InboxContent) {
                     }
                 }
 
-                card(modify(ZenBg, BorderRadius1, PaddingX2)) {
+                card(modify(ZenBg, BorderRadius1, PaddingX2, FadeIn)) {
                     markdown(message.content)
                 }
             }
@@ -71,7 +71,12 @@ fun ViewScope.viewInbox(star: Star, content: InboxContent) {
                 val replyState = storeOf(Markdown.Empty)
                 styledMarkdownEditor(replyState, mod = modify(Flex1, OverflowYScroll))
                 formSubmit("send", {
-                    model.sendReply(replyState.now, messenger)
+                    launchEffect {
+                        messenger.deliverSending()
+                        if (model.sendReply(replyState.now, messenger)) {
+                            replyState.set { Markdown.Empty }
+                        }
+                    }
                 }, messenger, modify(Zen))
             }
         }

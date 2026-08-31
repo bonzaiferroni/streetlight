@@ -5,6 +5,23 @@ object MagicStyle {
     const val InitialScale = .8
 }
 
+val Magic = Class("magic")
+val Transitioning = Class("transitioning")
+val Dummy = Class("dummy")
+val Reveal = Class("reveal")
+val Hide = Class("hide")
+val Blur = Class("blur")
+val SlideLeft = Class("slide-left")
+val SlideUp = Class("slide-up")
+val SlideRight = Class("slide-right")
+val SlideDown = Class("slide-down")
+val Scale = Class("scale")
+
+val AutoMagic = Class("auto-magic")
+val FadeIn = Class("fade-in")
+val ScaleOut = Class("scale-out")
+val ScaleIn = Class("scale-in")
+
 // language="CSS"
 val MagicCss get() = with (MagicStyle) { """
 :root {
@@ -295,7 +312,7 @@ val MagicCss get() = with (MagicStyle) { """
 
 /* utils */
 
-.starting-opacity-0 {
+$FadeIn {
     transition: var(--transition-opacity);
 
     @starting-style {
@@ -303,7 +320,7 @@ val MagicCss get() = with (MagicStyle) { """
     }
 }
 
-.scale-out {
+$ScaleOut {
     transition: var(--transition-transform);
     transform: scale($InitialScale);
 
@@ -312,7 +329,7 @@ val MagicCss get() = with (MagicStyle) { """
     }
 }
 
-.scale-in {
+$ScaleIn {
     transition: var(--transition-transform-bounce);
     transform: scale(1);
 

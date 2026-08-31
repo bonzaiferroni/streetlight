@@ -13,7 +13,6 @@ import koala.model.ThumbMarker
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
-import kotlinx.html.dom.append
 import streetlight.web.model.Earth
 import web.html.HTMLElement
 import kotlin.collections.first
@@ -37,7 +36,7 @@ fun ViewScope.earthUnboundedOverlay(model: Earth, mapContext: GeoCameraControlle
     fun createHint(marker: FeatureMarker) = element.append {
         when (marker) {
             is ThumbMarker -> image(marker.thumbUrl, modify(
-                BorderRadius50P, Height5, Aspect1, PointerEventsAuto, StartingOpacity0, OpacityHalf
+                BorderRadius50P, Height5, Aspect1, PointerEventsAuto, FadeIn, OpacityHalf
             )).onClick {
                 model.setFocus(marker)
             }

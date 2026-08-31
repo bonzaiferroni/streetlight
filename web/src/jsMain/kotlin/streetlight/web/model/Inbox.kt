@@ -58,23 +58,21 @@ class Inbox(
     }
 
     fun openChat(chat: ChatPreview) {
-        state.set { copy(openChat = chat) }
         scope.launch(::openChat) {
-            val messages = api.readChat(chat.chatId).toDataOr(toaster) { return@launch }
             messageList.clear()
+            state.set { copy(openChat = chat) }
+            val messages = api.readChat(chat.chatId).toDataOr(toaster) { return@launch }
             messageList.add(messages)
         }
     }
 
-    fun sendReply(content: Markdown, messenger: Messenger) {
+    suspend fun sendReply(content: Markdown, messenger: Messenger): Boolean {
         val reply = ReplyMessage(
-            chatId = state.now.openChat?.chatId ?: return,
-            content = content.takeIf { it.value.isNotBlank() } ?: return
+            chatId = state.now.openChat?.chatId ?: return false,
+            content = content.takeIf { it.value.isNotBlank() } ?: return false
         )
-        scope.launch(::sendReply) {
-            messenger.deliverSending()
-            api.sendMessage(reply).toDataOrNull(messenger, "Message sent.")
-        }
+        api.sendMessage(reply).toDataOr(messenger) { return false }
+        return true
     }
 
     private fun updateChat(message: Message) {
