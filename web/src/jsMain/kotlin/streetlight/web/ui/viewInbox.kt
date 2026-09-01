@@ -89,14 +89,14 @@ private fun ViewScope.chatList(model: Inbox, star: Star) {
                     starBadge(badge)
                     column(modify(Gap0, Padding1, JustifyContentCenter, Flex1)) {
                         row {
+                            chat.subject?.let {
+                                textBlock(it, modify(SingleLine, Bold))
+                            }
                             textBlock(chat.lastMessagePreview, modify(SingleLine, Flex1))
-                            textBlock(chat.lastMessageAt.toPastFormat(), modify(OpacityHigh))
                         }
                         row(modify(TextSmall)) {
                             textBlock(usernames, modify(SingleLine, Flex1, MinWidth16, OpacityHigh))
-                            chat.subject?.let {
-                                textBlock(it, modify(SingleLine, OpacityHalf))
-                            }
+                            textBlock(chat.lastMessageAt.toPastFormat(), modify(OpacityHigh))
                         }
                     }
                 }.onClick {
