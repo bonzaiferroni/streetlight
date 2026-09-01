@@ -2,6 +2,8 @@ package koala.dom
 
 import kampfire.model.ListChange
 import kampfire.model.LiveList
+import kampfire.model.MutableTap
+import kampfire.model.ScrollState
 import koala.css.*
 import koala.html.Attribute
 import koala.html.setAttribute
@@ -9,12 +11,17 @@ import koala.model.LazyColumnStyle
 import kotlinx.css.LinearDimension
 import kotlinx.css.px
 import web.dom.document
+import web.events.Event
+import web.events.SCROLL
+import web.events.addEventListener
 import web.html.HTMLDivElement
 import web.html.HTMLElement
+import kotlin.math.abs
 
 fun <T, K> ViewScope.lazyColumn(
     list: LiveList<T, K>,
     mod: ModifierSet? = null,
+    scrollState: MutableTap<ScrollState?>? = null,
     expectedHeight: LinearDimension = 60.px,
     content: ViewScope.(T) -> Unit
 ): HTMLDivElement {
@@ -77,6 +84,15 @@ fun <T, K> ViewScope.lazyColumn(
                 is ListChange.Replace<T> -> replace(change.index, change.item)
             }
         }
+    }
+
+    scrollState?.let { state ->
+        container.addEventListener(Event.SCROLL, {
+            val offset = abs(container.scrollTop)
+            val atStart = offset <= 0
+            val atEnd = container.scrollHeight - offset - container.clientHeight <= 10
+            state.set { ScrollState(atStart, atEnd) }
+        })
     }
 
     return container

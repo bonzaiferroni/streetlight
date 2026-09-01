@@ -28,8 +28,11 @@ fun ViewScope.viewInbox(star: Star, content: InboxContent) {
                 }
                 heading4("Messages", modify(OpacityHigh))
             }
-            lazyColumn(model.chatList, modify(Flex1, FlexColumn, Gap2Px, BorderRadius1)) { chat ->
-                println("rebuilding")
+            lazyColumn(
+                list = model.chatList,
+                mod = modify(Flex1, FlexColumn, Gap2Px, BorderRadius1),
+                scrollState = model.chatScrollState
+            ) { chat ->
                 val isOpenState = model.openChatState.tapOf { it?.chatId == chat.chatId }
                 flowBlock(isOpenState) { isOpen ->
                     val isReadMod = if (isOpen || chat.isRead) null else Bold
@@ -53,7 +56,11 @@ fun ViewScope.viewInbox(star: Star, content: InboxContent) {
         flowBlock(model.openChatState, modify(Flex3, FlexColumn)) {
             val messenger = MessageStore()
 
-            lazyColumn(model.messageList, modify(Flex1, PaddingTop1, FlexColumn, FlexReverse)) { message ->
+            lazyColumn(
+                list = model.messageList,
+                mod = modify(Flex1, PaddingTop1, FlexColumn, FlexReverse),
+                scrollState = model.messageScrollState
+            ) { message ->
                 val index = model.messageList.liveItems.indexOf(message)
                 val nextAuthor = model.messageList.liveItems.getOrNull(index + 1)?.author
                 if (message.author != nextAuthor) {
@@ -72,7 +79,6 @@ fun ViewScope.viewInbox(star: Star, content: InboxContent) {
                 styledMarkdownEditor(replyState, mod = modify(Flex1, OverflowYScroll))
                 formSubmit("send", {
                     launchEffect {
-                        messenger.deliverSending()
                         if (model.sendReply(replyState.now, messenger)) {
                             replyState.set { Markdown.Empty }
                         }

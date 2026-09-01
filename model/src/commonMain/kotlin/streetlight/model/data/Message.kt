@@ -59,3 +59,10 @@ data class ChatPreview(
 value class ChatId(override val value: Uuid): RecordId {
     override fun toString() = value.toString()
 }
+
+@Serializable
+data class ChatMessageRequest(
+    val chatId: ChatId,
+    val limit: Int = 100,
+    val cursor: RecordCursor? = null,
+)
