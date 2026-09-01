@@ -1,6 +1,6 @@
 package streetlight.web.layouts
 
-import kabinet.utils.toRelativeDayFormat
+import kabinet.utils.toFutureFormat
 import koala.SvgFile
 import koala.css.*
 import koala.html.navigation
@@ -58,7 +58,7 @@ fun FlowContent.smallPostCard(post: EventPost) {
 //                }
                 card(cellModifiers) {
                     post.event.startsAt?.let { startsAt ->
-                        heading4(startsAt.toRelativeDayFormat())
+                        heading4(startsAt.toFutureFormat())
                         textBlock("8:00 PM")
                     }
                 }

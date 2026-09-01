@@ -43,7 +43,7 @@ data class ReplyMessage(
 @Serializable
 data class ChatPreview(
     val chatId: ChatId,
-    val usernames: List<Username>,
+    val badges: List<StarBadge>,
     val subject: String?,
     val lastMessagePreview: String,
     val lastMessageAt: Instant,

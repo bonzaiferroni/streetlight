@@ -2,7 +2,7 @@ package streetlight.web.layouts
 
 import kabinet.utils.format
 import kabinet.utils.toAgoFormat
-import kabinet.utils.toRelativeDayFormat
+import kabinet.utils.toFutureFormat
 import kabinet.utils.toTimeFormat
 import kampfire.api.Username
 import kampfire.model.Url
@@ -125,7 +125,7 @@ fun FlowContent.startsAtCell(startsAt: Instant?) {
 }
 
 fun FlowContent.dateCell(startsAt: Instant) {
-    cell(SvgFile.Calendar, startsAt.toRelativeDayFormat())
+    cell(SvgFile.Calendar, startsAt.toFutureFormat())
 }
 
 fun FlowContent.exampleStartsAtCell() {

@@ -8,7 +8,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
-import kabinet.utils.toTimeDescription
+import kabinet.utils.toHourAndMinutesFormat
 import kotlin.time.Clock
 import kotlin.time.Instant
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -100,7 +100,7 @@ fun UpdateIndicator(
     updateStatus: UpdateStatus,
 ) {
     Row(1) {
-        Text("Updated at ${updatedAt.toTimeDescription()}")
+        Text("Updated at ${updatedAt.toHourAndMinutesFormat()}")
         InProgressIndicator(updateStatus)
     }
 }

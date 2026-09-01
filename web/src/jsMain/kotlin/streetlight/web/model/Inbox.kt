@@ -30,7 +30,7 @@ class Inbox(
     private val toaster: Toaster,
     omni: OmniClient,
 ) {
-    private val state = storeOf(InboxState(initialChats.firstOrNull()))
+    private val state = storeOf(InboxState())
 
     val messageScrollState = storeOf<ScrollState?>(null)
     val chatScrollState = storeOf<ScrollState?>(null)
@@ -54,10 +54,6 @@ class Inbox(
             }
 
             updateChat(message)
-        }
-
-        state.now.openChat?.let {
-            openChat(it)
         }
 
         scope.launch {
@@ -84,7 +80,7 @@ class Inbox(
         }
     }
 
-    fun openChat(chat: ChatPreview) {
+    fun openChat(chat: ChatPreview?) {
         scope.launch(::openChat) {
             messageList.clear()
             state.set { copy(openChat = chat, atChatEnd = false, cursor = null) }
@@ -120,7 +116,7 @@ class Inbox(
 }
 
 data class InboxState(
-    val openChat: ChatPreview?,
+    val openChat: ChatPreview? = null,
     val messageIndex: Int = 0,
     val atChatEnd: Boolean = false,
     val cursor: RecordCursor? = null

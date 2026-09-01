@@ -1,6 +1,6 @@
 package streetlight.web.model
 
-import kabinet.utils.toRelativeDayFormat
+import kabinet.utils.toFutureFormat
 import kampfire.model.GeoPoint
 import kampfire.model.Labeled
 import koala.SiteImage
@@ -53,7 +53,7 @@ data class EventMarker(
 ): ThumbMarker {
     override val markerId get() = event.eventId.value.toString()
     override val label get() = event.label
-    override val sublabel get() = event.startsAt?.toRelativeDayFormat()
+    override val sublabel get() = event.startsAt?.toFutureFormat()
     override val thumbUrl get() = event.image.thumb ?: SiteImage.placeholderTh
     override val light get() = rgb(240, 100, 180 )
     override val geoPoint get() = event.geoPoint

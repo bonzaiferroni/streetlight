@@ -1,6 +1,7 @@
 package koala
 
 object SvgFile : FileSet<Svg>() {
+    val Archive = add("archive.svg")
     val ArrowLeft = add("arrow-left.svg")
     val ArrowRight = add("arrow-right.svg")
     val ArrowsSort = add("arrows-sort.svg")
@@ -100,6 +101,7 @@ object SvgFile : FileSet<Svg>() {
     val UserSmall = add("user-small.svg")
     val User = add("user.svg")
     val X = add("x.svg")
+    val XLarge = add("x-large.svg")
 
     // filigree
     val CircularFiligree = add("circular-filigree.svg")

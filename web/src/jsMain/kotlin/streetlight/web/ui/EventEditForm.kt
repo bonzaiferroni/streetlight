@@ -1,7 +1,7 @@
 package streetlight.web.ui
 
 import kabinet.utils.toLocalDate
-import kabinet.utils.toRelativeDayFormat
+import kabinet.utils.toFutureFormat
 import kabinet.utils.toTimeFormat
 import koala.LottieFile
 import koala.SvgFile
@@ -123,7 +123,7 @@ fun ViewScope.dayIndicator(field: MutableTap<LocalDate?>) {
                 when (date) {
                     null -> heading5("someday", modify(OpacityHalf))
                     else -> {
-                        heading5(date.toRelativeDayFormat())
+                        heading5(date.toFutureFormat())
                     }
                 }
             }

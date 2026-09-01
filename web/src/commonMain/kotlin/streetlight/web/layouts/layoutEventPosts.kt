@@ -1,6 +1,6 @@
 package streetlight.web.layouts
 
-import kabinet.utils.toRelativeDayFormat
+import kabinet.utils.toFutureFormat
 import koala.css.*
 import koala.html.*
 import kotlinx.html.FlowContent
@@ -20,7 +20,7 @@ fun FlowContent.layoutEventPosts(
         groupings.forEach { grouping ->
             // val date = grouping.key ?: return@forEach // td: show removed post content
             val posts = grouping.value
-            val dayFormat = posts.first().event.startsAt?.toRelativeDayFormat() ?: return@forEach
+            val dayFormat = posts.first().event.startsAt?.toFutureFormat() ?: return@forEach
             section {
                 filigree(modify(MarginTop2)) {
                     heading4(dayFormat, SectionHeadingMod + OpacityHigh)

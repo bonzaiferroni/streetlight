@@ -11,7 +11,7 @@ import compose.icons.tablericons.Clock
 import compose.icons.tablericons.Flame
 import compose.icons.tablericons.PlayerPause
 import kabinet.utils.toAgoFormat
-import kabinet.utils.toTimeDescription
+import kabinet.utils.toHourAndMinutesFormat
 import kotlin.time.Clock
 import kotlin.time.Instant
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -55,11 +55,11 @@ fun EventStatusDash(
                 Column(0, horizontalAlignment = Alignment.End) {
                     Row(1) {
                         Label("start")
-                        Text(startsAt.toTimeDescription(), style = Pond.typo.small)
+                        Text(startsAt.toHourAndMinutesFormat(), style = Pond.typo.small)
                     }
                     Row(1) {
                         Label("end")
-                        Text(endsAt.toTimeDescription(), style = Pond.typo.small)
+                        Text(endsAt.toHourAndMinutesFormat(), style = Pond.typo.small)
                     }
                 }
             }

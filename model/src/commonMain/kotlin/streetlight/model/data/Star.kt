@@ -3,6 +3,7 @@ package streetlight.model.data
 import kampfire.api.Markdown
 import kampfire.api.Username
 import kampfire.model.AccountType
+import kampfire.model.Url
 import kampfire.model.UserRole
 import koala.Image
 import kotlin.time.Instant
@@ -47,4 +48,8 @@ fun Star.toEdit() = StarEdit(
     image = image,
 )
 
-
+@Serializable
+data class StarBadge(
+    val username: Username,
+    val thumb: Url?,
+)

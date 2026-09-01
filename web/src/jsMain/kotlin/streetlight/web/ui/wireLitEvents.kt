@@ -1,6 +1,6 @@
 package streetlight.web.ui
 
-import kabinet.utils.toRelativeDayFormat
+import kabinet.utils.toFutureFormat
 import kabinet.utils.toTimeFormat
 import koala.SvgFile
 import koala.css.*
@@ -38,7 +38,7 @@ fun ViewScope.wireLitEvents(root: HTMLElement) {
     wireBlock(HomeShell.LitEventsId, root, wireOnView = false) {
         // td: fix later or delete
         flowBlock(emptyList(), eventsFlow) { events ->
-            val eventMap = events.groupBy { it.startsAt?.toRelativeDayFormat() }
+            val eventMap = events.groupBy { it.startsAt?.toFutureFormat() }
             row(modify(OverflowXAuto, Height100Pct, Padding1)) {
                 eventMap.forEach { (day, events) ->
                     column(modify(Gap0, FlexShrink0)) {
