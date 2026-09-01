@@ -19,6 +19,7 @@ fun ViewScope.wireMessageDialog() {
         dialog(isOpen) {
             val recipient = recipientState.now ?: error("recipient not found")
             val message = NewMessage(recipient, null, Markdown.Empty)
+            println("starting message")
             val messenger = MessageStore()
             val messageState = storeOf(message)
             val subjectState = messageState.mutableTapOf({ it.subject ?: ""}) { subject -> copy(subject = subject.takeIf { it.isNotBlank() })}
@@ -26,7 +27,7 @@ fun ViewScope.wireMessageDialog() {
             dialogContent("Message to $recipient") {
                 textField(subjectState, "subject", placeholder = "no subject")
                 styledMarkdownEditor(contentState, "message", modify(MinHeight32)) {
-                    setAttribute(Attribute.Autofocus.to(true))
+                     // setAttribute(Attribute.Autofocus.to(true))
                 }
                 formSubmit("send", {
                     println(messageState.now)

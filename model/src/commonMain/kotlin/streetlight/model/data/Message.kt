@@ -63,6 +63,11 @@ value class ChatId(override val value: Uuid): RecordId {
 @Serializable
 data class ChatMessageRequest(
     val chatId: ChatId,
-    val limit: Int = 100,
     val cursor: RecordCursor? = null,
+)
+
+@Serializable
+data class ChatRequest(
+    val isArchive: Boolean,
+    val cursor: RecordCursor? = null
 )

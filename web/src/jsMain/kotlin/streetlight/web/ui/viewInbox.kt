@@ -27,10 +27,15 @@ fun ViewScope.viewInbox(star: Star, content: InboxContent) {
     column(modify(Height100Vh, Gap0)) {
         flowBlock(model.openChatState, modify(Height8)) { chat ->
             when (chat) {
-                null -> box(modify(PlaceItemsCenter, Height100Pct)) {
-                    heading3("Inbox", modify(OpacityHigh))
+                null -> flowBlock(model.isArchiveState, modify(Height100Pct)) { isArchive ->
+                    val title = if (isArchive) "Archive" else "Inbox"
+                    column(modify(Height100Pct, JustifyContentCenter)) {
+                        filigree {
+                            heading3(title, modify(OpacityHigh))
+                        }
+                    }
                 }
-                else -> row(modify(AlignItemsCenter, Height100Pct, ScaleIn)) {
+                else -> row(modify(AlignItemsCenter, Height100Pct, ScaleIn, Gap2)) {
                     val title = if (chat.subject != null) {
                         chat.subject
                     } else if (chat.badges.size == 2) {
@@ -45,8 +50,9 @@ fun ViewScope.viewInbox(star: Star, content: InboxContent) {
                         heading5(title, modify(SingleLine))
                         textBlock(chat.createdAt.toHourAndMinutesFormat(), modify(TextSmall, OpacityHigh))
                     }
+                    val icon = if (model.isArchiveState.now) SvgFile.DatabaseMinus else SvgFile.DatabasePlus
                     row(modify(Flex1, JustifyContentStart)) {
-                        button(SvgFile.Archive)
+                        button(icon, model::toggleArchive, modify(Height5))
                     }
                 }
             }
@@ -67,34 +73,42 @@ fun RouteScope.viewInboxRoute() {
 }
 
 private fun ViewScope.chatList(model: Inbox, star: Star) {
-    lazyColumn(
-        list = model.chatList,
-        mod = modify(InboxStyle.ChatList, Flex1, FlexColumn, Gap2Px, BorderRadius1),
-        scrollState = model.chatScrollState
-    ) { chat ->
-        val isOpenState = model.openChatState.tapOf { it?.chatId == chat.chatId }
-        flowBlock(isOpenState) { isOpen ->
-            val isReadMod = if (isOpen || chat.isRead) null else Bold
-            val isSelectedMod = if (isOpen) PrimaryCardBg else CardBg
-            row(modify(BorderRadiusPillLeft, OverflowClip, Height7, Gap0, isReadMod, isSelectedMod)) {
-                val usernames = chat.badges.filter { it.username != star.username }.joinToString(", ") { it.username.value }
-                val badge = chat.badges.firstOrNull { it.username != star.username } ?: chat.badges.first()
-                starBadge(badge)
-                column(modify(Gap0, Padding1, JustifyContentCenter, Flex1)) {
-                    row {
-                        textBlock(chat.lastMessagePreview, modify(SingleLine, Flex1))
-                        textBlock(chat.lastMessageAt.toPastFormat(), modify(OpacityHigh))
-                    }
-                    row(modify(TextSmall)) {
-                        textBlock(usernames, modify(SingleLine, Flex1, MinWidth16, OpacityHigh))
-                        chat.subject?.let {
-                            textBlock(it, modify(SingleLine, OpacityHalf))
+    column(modify(InboxStyle.ChatList, Flex1, Gap0)) {
+        lazyColumn(
+            list = model.chatList,
+            mod = modify(Flex1, FlexColumn, Gap2Px, BorderRadius1),
+            scrollState = model.chatScrollState
+        ) { chat ->
+            val isOpenState = model.openChatState.tapOf { it?.chatId == chat.chatId }
+            flowBlock(isOpenState) { isOpen ->
+                val isReadMod = if (isOpen || chat.isRead) null else Bold
+                val isSelectedMod = if (isOpen) PrimaryCardBg else CardBg
+                row(modify(BorderRadiusPillLeft, OverflowClip, Height7, Gap0, isReadMod, isSelectedMod)) {
+                    val usernames = chat.badges.filter { it.username != star.username }.joinToString(", ") { it.username.value }
+                    val badge = chat.badges.firstOrNull { it.username != star.username } ?: chat.badges.first()
+                    starBadge(badge)
+                    column(modify(Gap0, Padding1, JustifyContentCenter, Flex1)) {
+                        row {
+                            textBlock(chat.lastMessagePreview, modify(SingleLine, Flex1))
+                            textBlock(chat.lastMessageAt.toPastFormat(), modify(OpacityHigh))
+                        }
+                        row(modify(TextSmall)) {
+                            textBlock(usernames, modify(SingleLine, Flex1, MinWidth16, OpacityHigh))
+                            chat.subject?.let {
+                                textBlock(it, modify(SingleLine, OpacityHalf))
+                            }
                         }
                     }
+                }.onClick {
+                    model.openChat(chat)
                 }
-            }.onClick {
-                model.openChat(chat)
             }
+        }
+        row(modify(Height7, JustifyContentCenter, Padding1)) {
+            button(SvgFile.MailLarge, { model.setIsArchive(false) }, modify(Height100Pct))
+                .flowModifier(model.isArchiveState.tapOf { !it }, PrimaryFg, contentScope)
+            button(SvgFile.Database, { model.setIsArchive(true) }, modify(Height100Pct))
+                .flowModifier(model.isArchiveState, PrimaryFg, contentScope)
         }
     }
 }
