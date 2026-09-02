@@ -3,6 +3,8 @@ package streetlight.web.ui
 import kabinet.utils.toHourAndMinutesFormat
 import kabinet.utils.toPastFormat
 import kampfire.api.Markdown
+import kampfire.model.CursorStatus
+import kampfire.model.Tap
 import koala.css.*
 import koala.dom.*
 import koala.html.spacer
@@ -10,6 +12,7 @@ import kampfire.model.storeOf
 import kampfire.model.tapOf
 import koala.LottieFile
 import koala.SvgFile
+import koala.html.IconStyle
 import koala.html.heading3
 import koala.html.heading5
 import streetlight.model.data.InboxContent
@@ -65,42 +68,44 @@ fun ViewScope.viewInbox(star: Star, content: InboxContent) {
 }
 
 fun RouteScope.viewInboxRoute() {
-    starGate { star ->
-        routeBlock<InboxRoute, InboxContent>(this@viewInboxRoute.inflator, this@viewInboxRoute.state) { content ->
-            viewInbox(star, content)
-        }
+    starRouteBlock<InboxRoute, InboxContent> { star, content ->
+        viewInbox(star, content)
     }
 }
 
 private fun ViewScope.chatList(model: Inbox, star: Star) {
     column(modify(InboxStyle.ChatList, Flex1, Gap0)) {
-        lazyColumn(
-            list = model.chatList,
-            mod = modify(Flex1, FlexColumn, Gap2Px, BorderRadius1),
-            scrollState = model.chatScrollState
-        ) { chat ->
-            val isOpenState = model.openChatState.tapOf { it?.chatId == chat.chatId }
-            flowBlock(isOpenState) { isOpen ->
-                val isReadMod = if (isOpen || chat.isRead) null else Bold
-                val isSelectedMod = if (isOpen) PrimaryCardBg else CardBg
-                row(modify(BorderRadiusPillLeft, OverflowClip, Height7, Gap0, isReadMod, isSelectedMod)) {
-                    val usernames = chat.badges.filter { it.username != star.username }.joinToString(", ") { it.username.value }
-                    val badge = chat.badges.firstOrNull { it.username != star.username } ?: chat.badges.first()
-                    starBadge(badge)
-                    column(modify(Gap0, Padding1, JustifyContentCenter, Flex1)) {
-                        row {
-                            chat.subject?.let {
-                                textBlock(it, modify(SingleLine, Bold))
+        box(modify(Flex1, PositionRelative, MinHeight0)) {
+            workSignal(model.chatCursorState, modify(Bottom0, Right0))
+            lazyColumn(
+                list = model.chatList,
+                mod = modify(FlexColumn, Gap2Px, BorderRadius1),
+                scrollState = model.chatScrollState,
+                hideBar = true,
+            ) { chat ->
+                val isOpenState = model.openChatState.tapOf { it?.chatId == chat.chatId }
+                flowBlock(isOpenState) { isOpen ->
+                    val isReadMod = if (isOpen || chat.isRead) null else Bold
+                    val isSelectedMod = if (isOpen) PrimaryCardBg else CardBg
+                    row(modify(BorderRadiusPillLeft, OverflowClip, Height7, Gap0, isReadMod, isSelectedMod)) {
+                        val usernames = chat.badges.filter { it.username != star.username }.joinToString(", ") { it.username.value }
+                        val badge = chat.badges.firstOrNull { it.username != star.username } ?: chat.badges.first()
+                        starBadge(badge)
+                        column(modify(Gap0, Padding1, JustifyContentCenter, Flex1)) {
+                            row {
+                                chat.subject?.let {
+                                    textBlock(it, modify(SingleLine, Bold))
+                                }
+                                textBlock(chat.lastMessagePreview, modify(SingleLine, Flex1))
                             }
-                            textBlock(chat.lastMessagePreview, modify(SingleLine, Flex1))
+                            row(modify(TextSmall)) {
+                                textBlock(usernames, modify(SingleLine, Flex1, MinWidth16, OpacityHigh))
+                                textBlock(chat.lastMessageAt.toPastFormat(), modify(OpacityHigh))
+                            }
                         }
-                        row(modify(TextSmall)) {
-                            textBlock(usernames, modify(SingleLine, Flex1, MinWidth16, OpacityHigh))
-                            textBlock(chat.lastMessageAt.toPastFormat(), modify(OpacityHigh))
-                        }
+                    }.onClick {
+                        model.openChat(chat)
                     }
-                }.onClick {
-                    model.openChat(chat)
                 }
             }
         }
@@ -123,7 +128,8 @@ fun AppendScope.starBadge(badge: StarBadge) {
 }
 
 private fun ViewScope.messageList(model: Inbox) {
-    flowBlock(model.openChatState, modify(InboxStyle.MessageList, Flex2, FlexColumn)) { chat ->
+    flowBlock(model.openChatState, modify(InboxStyle.MessageList, Flex2, FlexColumn, PositionRelative)) { chat ->
+        workSignal(model.messageCursorState, modify(Top0, Right0))
         if (chat == null) {
             box(modify(Height100Pct)) {
                 lottie(LottieFile.Ghost, modify(PlaceSelfCenter, MaxHeight32, OpacityLow))
@@ -152,14 +158,18 @@ private fun ViewScope.messageList(model: Inbox) {
 
         column(modify(MinHeight16, MaxHeight50P, MarginBottom1)) {
             val replyState = storeOf(Markdown.Empty)
-            styledMarkdownEditor(replyState, mod = modify(Flex1, OverflowYScroll))
-            formSubmit("send", {
-                launchEffect {
-                    if (model.sendReply(replyState.now, messenger)) {
-                        replyState.set { Markdown.Empty }
-                    }
+
+            fun onSubmit() = launchEffect {
+                if (model.sendReply(replyState.now, messenger)) {
+                    replyState.set { Markdown.Empty }
                 }
-            }, messenger, modify(Zen))
+            }
+
+            styledMarkdownEditor(
+                replyState,
+                mod = modify(Flex1, OverflowYScroll), onEnterSubmit = ::onSubmit
+            )
+            formSubmit("send", ::onSubmit, messenger, modify(Zen))
         }
     }
 }

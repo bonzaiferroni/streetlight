@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" width="50" height="50">
+    <style>
+        circle {
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 2;
+        stroke-linecap: round;
+        opacity: 0.33;
+        transform-origin: 25px 25px;
+        animation: spin 1.6s infinite;
+        }
+        .b { animation-timing-function: cubic-bezier(0.5, 0, 0.5, 1); }
+        .c { animation-timing-function: cubic-bezier(0.8, 0, 0.2, 1); }
+        @keyframes spin {
+        to { transform: rotate(360deg); }
+        }
+    </style>
+    <circle cx="25" cy="25" r="20" stroke-dasharray="25 100.66" stroke-dashoffset="6.25"/>
+    <circle class="b" cx="25" cy="25" r="20" stroke-dasharray="25 100.66" stroke-dashoffset="6.25"/>
+    <circle class="c" cx="25" cy="25" r="20" stroke-dasharray="25 100.66" stroke-dashoffset="6.25"/>
+</svg>

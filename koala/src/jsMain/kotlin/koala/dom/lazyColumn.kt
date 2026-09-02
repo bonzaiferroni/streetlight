@@ -23,11 +23,14 @@ fun <T, K> ViewScope.lazyColumn(
     mod: ModifierSet? = null,
     scrollState: MutableTap<ScrollState?>? = null,
     expectedHeight: LinearDimension = 60.px,
+    scrollBoundaryMargin: Int = 400,
+    hideBar: Boolean = false,
     content: ViewScope.(T) -> Unit
 ): HTMLDivElement {
     val views = mutableListOf<View>()
 
-    val container = div(modify(mod, LazyColumnStyle.Container)) { }
+    val barMod = if (hideBar) ScrollbarWidthNone else null
+    val container = div(modify(mod, OverflowYScroll, barMod)) { }
 
     fun HTMLElement.mountView(item: T) = mountChildView("lazyColumnItem", this) {
         content(item)
@@ -89,8 +92,8 @@ fun <T, K> ViewScope.lazyColumn(
     scrollState?.let { state ->
         container.addEventListener(Event.SCROLL, {
             val offset = abs(container.scrollTop)
-            val atStart = offset <= 0
-            val atEnd = container.scrollHeight - offset - container.clientHeight <= 10
+            val atStart = offset <= scrollBoundaryMargin
+            val atEnd = container.scrollHeight - offset - container.clientHeight <= scrollBoundaryMargin
             state.set { ScrollState(atStart, atEnd) }
         })
     }

@@ -107,6 +107,9 @@ object SvgFile : FileSet<Svg>() {
     val X = add("x.svg")
     val XLarge = add("x-large.svg")
 
+    // animations
+    val CircleLoop = add("circle-loop-beta.svg")
+
     // filigree
     val CircularFiligree = add("circular-filigree.svg")
     val CircularFiligreeAnimated = add("circular-filigree-animated.svg")

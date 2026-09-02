@@ -81,7 +81,7 @@ fun ViewScope.tabsBuilder(tabsField: MutableTap<TabsBlock>) {
                     flowBlock(isEditingField, modify(Height5)) { isEditing ->
                         if (isEditing) {
                             val tabNameField = storeOf(tabName)
-                            textField(tabNameField, onEnter = {
+                            textField(tabNameField, onEnterSubmit = {
                                 tabsField.set { copy(tabs = tabs.map { tabContent ->
                                     if (tabContent.name == tabName) tabContent.copy(name = tabNameField.now) else tabContent
                                 })}

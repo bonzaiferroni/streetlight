@@ -25,7 +25,7 @@ fun ViewScope.textField(
     name: String? = null,
     size: Int = 25,
     maxLength: Int? = null,
-    onEnter: (() -> Unit)? = null,
+    onEnterSubmit: (() -> Unit)? = null,
     block: (INPUT.() -> Unit)? = null
 ): HTMLElement {
     var currentValue = field.now
@@ -63,11 +63,9 @@ fun ViewScope.textField(
         }
     }
 
-    onEnter?.let {
+    onEnterSubmit?.let {
         element.addEventListener(KeyboardEvent.KEY_DOWN, { event ->
-            if (event.key == "Enter") {
-                onEnter()
-            }
+            event.handleEnterSubmit(onEnterSubmit)
         })
     }
 
@@ -78,4 +76,12 @@ fun ViewScope.textField(
     }
 
     return parent
+}
+
+fun KeyboardEvent.isEnterSubmit() = key == "Enter" && !shiftKey && !isComposing
+fun KeyboardEvent.handleEnterSubmit(onEnterSubmit: () -> Unit) {
+    if (isEnterSubmit()) {
+        preventDefault()
+        onEnterSubmit()
+    }
 }

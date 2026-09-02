@@ -19,7 +19,7 @@ val DisplayUtilityCss
         NightInk, DayInk, PrimaryFg, AccentFg, ColorSchemeFg, ColorSchemeBg, EditorFg, WhiteFg, ErrorFg, CautionFg, ValidFg,
         // Overflow
         OverflowHidden, OverflowWrapAnywhere, OverflowClip, OverflowXAuto, OverflowXHidden, OverflowYAuto, OverflowYScroll,
-        OverscrollBehaviorContain,
+        OverscrollBehaviorContain, ScrollbarWidthNone,
         // Background
         PrimaryBg, PrimaryCardBg, ZenBg, CardBg, VoidBg, EditorBg, DialogBg, BackgroundImage, SolidBg, BlurBackdrop, TransparentBg,
         PaperGradientBg, CardGradientBg, InkGradientBg,
@@ -124,6 +124,7 @@ val OverflowXHidden = utilityOf("overflow-x-hidden", "overflow-x: hidden")
 val OverflowYAuto = utilityOf("overflow-y-auto", "overflow-y: auto")
 val OverflowYScroll = utilityOf("overflow-y-scroll", "overflow-y: scroll")
 val OverscrollBehaviorContain = utilityOf("overscroll-behavior-contain", "overscroll-behavior: contain")
+val ScrollbarWidthNone = utilityOf("scrollbar-width-none", "scrollbar-width: none")
 
 // Background
 val PrimaryBg = utilityOf("primary-bg", "background-color: var(--primary-bg)")

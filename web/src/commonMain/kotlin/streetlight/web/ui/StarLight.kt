@@ -81,12 +81,12 @@ object StarLightKey {
 
 // language="CSS"
 val StarLightCss get() = """
-${StarLightKey.Class} > ${IconStyle.Class} {
+${StarLightKey.Class} > ${IconStyle.Icon} {
     mask-image: url(${SvgFile.Light});
     -webkit-mask-image: url(${SvgFile.Light});
 }
 
-${StarLightKey.Class}${StarLightKey.IsLit} > ${IconStyle.Class} {
+${StarLightKey.Class}${StarLightKey.IsLit} > ${IconStyle.Icon} {
     mask-image: url(${SvgFile.LightFilled});
     -webkit-mask-image: url(${SvgFile.LightFilled});
     animation: var(--glow-background-infinite), var(--glow-shadow-infinite);

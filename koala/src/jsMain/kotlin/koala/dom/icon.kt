@@ -10,7 +10,7 @@ import org.w3c.dom.HTMLDivElement
 
 fun AppendScope.icon(
     file: Svg,
-    mod: ModifierSet = IconStyle.DefaultMod,
+    mod: ModifierSet? = IconStyle.DefaultMod,
     block: DIV.() -> Unit = {}
 ) = div {
     configureIcon(

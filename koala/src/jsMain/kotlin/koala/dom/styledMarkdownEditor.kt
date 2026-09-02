@@ -10,13 +10,17 @@ import kotlinx.browser.document
 import kotlinx.html.DIV
 import kotlinx.html.js.div
 import kotlinx.html.js.onInputFunction
+import web.events.addEventListener
 import web.html.HTMLElement
+import web.keyboard.KEY_DOWN
+import web.keyboard.KeyboardEvent
 
 fun ViewScope.styledMarkdownEditor(
     state: MutableTap<Markdown>,
     label: String? = null,
     mod: ModifierSet? = null,
     placeholder: String? = label,
+    onEnterSubmit: (() -> Unit)? = null,
     block: DIV.() -> Unit = {}
 ): HTMLElement {
     val model = MarkdownEditor()
@@ -57,20 +61,11 @@ fun ViewScope.styledMarkdownEditor(
         block()
     }.asWeb()
 
-//    element.addEventListener("copy", { event ->
-//        val range = window.selection()?.getRangeAt(0) ?: return@addEventListener
-//        val fragment = range.cloneContents()
-//        val text = range.cloneContents().childNodes.asList()
-//            .joinToString("\n") { it.textContent ?: "" }
-//        event.unsafeCast<ClipboardEvent>().clipboardData?.setData("text/plain", text)
-//        event.preventDefault()
-//    })
-
-    document.addEventListener("selectionchange", {
-        element.activeChunk()?.let {
-            // console.log("offset ${it.caretOffset()} in ${it.className}")
-        }
-    })
+    onEnterSubmit?.let {
+        element.addEventListener(KeyboardEvent.KEY_DOWN, { event ->
+            event.handleEnterSubmit(onEnterSubmit)
+        })
+    }
 
     launchEffect("styledMarkdownEditor") {
         state.flow.collect {

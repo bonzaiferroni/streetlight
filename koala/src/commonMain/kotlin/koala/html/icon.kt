@@ -25,21 +25,23 @@ fun DIV.configureIcon(
     modifiers: ModifierSet? = null,
     block: DIV.() -> Unit = {}
 ) {
-    addModifiers(modify(IconStyle.Class, modifiers))
+    addModifiers(modify(IconStyle.Icon, modifiers))
     setStyle(Property.MaskUrl.to(file))
     block()
 }
 
 object IconStyle {
-    val Class = Class("icon")
+    val Icon = Class("icon")
     val Stretch = Class("icon-stretch")
+    val Signal = Class("signal")
 
     val DefaultMod = modify(Aspect1, Height3)
+    val DefaultSignal = modify(Aspect1, Height3, FadeIn)
 }
 
 // language="CSS"
-val IconCss get() = """
-${IconStyle.Class} {
+val IconCss get() = with(IconStyle) { """
+$Icon {
     display: inline-block;
     background-color: currentColor;
     aspect-ratio: 1 / 1;
@@ -57,20 +59,20 @@ ${IconStyle.Class} {
     -webkit-mask-position: center;
 }
 
-${IconStyle.Stretch} {
+$Stretch {
     mask-size: 100% 100%;   /* or any width/height ye please */
     mask-repeat: no-repeat;
 }
 
-${IconStyle.Class}.clickable {
+$Icon$Clickable {
     /*  transition: background-color var(--magic-interval) var(--magic-easing); */
 }
 
-${IconStyle.Class}.clickable:hover {
+$Icon$Clickable:hover {
     background-color: rgb(var(--accent));
 }
 
-${IconStyle.Class}.danger {
+$Icon$Danger {
     background-color: rgb(var(--danger));
 }
-"""
+""" }

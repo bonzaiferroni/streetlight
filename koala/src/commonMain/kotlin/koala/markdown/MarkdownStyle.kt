@@ -21,6 +21,17 @@ val FloatRight = Class("float-right")
 // language="CSS"
 val MarkdownCss get() = with(MarkdownStyle) { """
 
+$Container {
+    code {
+        font-size: 0.875em;
+        padding: 0.1em 0.3em 0.05em;
+        background-color: var(--void-bg);
+        border: 1px solid var(--outline-low-fg);
+        border-radius: 4px;
+        color: var(--sea-green-fg);
+    }
+}
+
 $FloatRight {
     float: right;
     clear: right;

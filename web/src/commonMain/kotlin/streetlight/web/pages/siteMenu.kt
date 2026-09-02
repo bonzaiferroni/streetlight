@@ -115,7 +115,7 @@ ${SiteHelm.PopoverClass} {
     right: 0;
 }
 
-$DayTheme $ThemeToggle ${IconStyle.Class} {
+$DayTheme $ThemeToggle ${IconStyle.Icon} {
     ${Property.MaskUrl.to(SvgFile.Moon)} !important;
 }
 

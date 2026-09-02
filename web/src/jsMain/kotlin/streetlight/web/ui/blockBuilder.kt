@@ -66,7 +66,7 @@ fun ViewScope.tabsBuilder(editor: BlockEditor) {
                         flowBlock(isEditingField, modify(Height5)) { isEditing ->
                             if (isEditing) {
                                 val tabNameField = storeOf(tabName)
-                                textField(tabNameField, onEnter = {
+                                textField(tabNameField, onEnterSubmit = {
                                     editor.renameContainer(containerId, tabNameField.now)
                                 })
                             } else {
