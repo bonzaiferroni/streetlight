@@ -65,8 +65,8 @@ fun ViewScope.viewInbox(star: Star, content: InboxContent) {
 }
 
 fun RouteScope.viewInboxRoute() {
-    routeBlock<InboxRoute, InboxContent> { content ->
-        starGate { star ->
+    starGate { star ->
+        routeBlock<InboxRoute, InboxContent>(this@viewInboxRoute.inflator, this@viewInboxRoute.state) { content ->
             viewInbox(star, content)
         }
     }

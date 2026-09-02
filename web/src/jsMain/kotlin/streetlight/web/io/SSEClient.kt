@@ -43,9 +43,10 @@ class SSEClient<Message>(
     }
 
     fun disconnect() {
-        val source = source ?: error("source not connected: ${this::class.simpleName}")
-        source.close()
-        this.source = null
+        source?.let {
+            it.close()
+            source = null
+        }
     }
 
     private fun decode(text: String): Message? = try {

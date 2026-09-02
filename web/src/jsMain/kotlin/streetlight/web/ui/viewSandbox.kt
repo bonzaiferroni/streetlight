@@ -43,7 +43,7 @@ fun RouteScope.viewSandbox() {
                 }, modify(Zen))
                 button("replace", {
                     launchEffect {
-                        list.replace(item.first, item.first to item.second + 1)
+                        list.replace(item.first to item.second + 1)
                     }
                 }, modify(Zen))
             }

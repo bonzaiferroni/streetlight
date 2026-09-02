@@ -115,6 +115,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object ReadChats: PostEndpoint<ChatRequest, List<ChatPreview>>(this)
         object ArchiveChat: PostEndpoint<ChatId, Unit>(this)
         object UnarchiveChat: PostEndpoint<ChatId, Unit>(this)
+        object ReadChatPreview: GetByIdEndpoint<ChatId, ChatPreview>(this)
     }
 
     object GroupChat: ApiNode(this) { }

@@ -89,6 +89,7 @@ class ApiClient(private val client: FetchClient) {
     suspend fun readChats(request: ChatRequest) = client.postApi(Api.Messages.ReadChats, request)
     suspend fun archiveChat(chatId: ChatId) = client.postApi(Api.Messages.ArchiveChat, chatId)
     suspend fun unarchiveChat(chatId: ChatId) = client.postApi(Api.Messages.UnarchiveChat, chatId)
+    suspend fun readChatPreview(chatId: ChatId) = client.getApi(Api.Messages.ReadChatPreview, chatId)
 
     // account actions
     suspend fun verifyExistingEmail() = client.postApi(Api.AccountAction.VerifyExistingEmail)

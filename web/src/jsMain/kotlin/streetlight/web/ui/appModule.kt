@@ -43,9 +43,12 @@ val appModule = module {
     single { LightService(get(), get()) }
     single { OSMClient() }
 
-    single { SessionGate(get(), get()) }
-    single { DataCache(get(), get(), get(), get(), get()) }
+    single { Toaster(get()) } bind Messenger::class
     single { Portal(HomeRoute, Screen.entries) }
+    single<ContentFetcher> { AppContentFetcher(get()) }
+    single { RouteInflator(get(), get(), get(), get()) }
+    single { SessionGate(get(), get(), get(), get()) }
+    single { DataCache(get(), get(), get(), get(), get()) }
     // single { GateAgent(get(), get(), get()) }
     single { GeoCamera(get()) }
     single { GeoMap(get(), get()) }
@@ -54,10 +57,6 @@ val appModule = module {
     single { ChatRoom(get(), get()) }
     single { OmniClient(get(), get()) }
     single { MarkerService() }
-    single<ContentFetcher> { AppContentFetcher(get()) }
-    single { RouteInflator(get(), get(), get(), get()) }
-
-    single { Toaster(get()) } bind Messenger::class
 }
 
 fun AppContainer.getUserCreator(scope: CoroutineScope) =

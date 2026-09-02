@@ -53,3 +53,11 @@ inline fun <reified Route: AppRoute, reified Data: FetcherContent> RouteScope.ro
     provideData = { inflator.contentFor<Data>(it) },
     block = block
 )
+
+inline fun <reified Route: AppRoute, reified Data: FetcherContent> ViewScope.routeBlock(
+    inflator: RouteInflator,
+    state: PortalState,
+    crossinline block: ViewScope.(Data) -> Unit
+) {
+    RouteScope(this, inflator, state).routeBlock<Route, Data>(block)
+}

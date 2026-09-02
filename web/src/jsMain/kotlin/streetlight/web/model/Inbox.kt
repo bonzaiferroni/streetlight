@@ -24,6 +24,7 @@ import streetlight.model.data.Star
 import streetlight.model.data.limitOrDefault
 import streetlight.web.io.ApiClient
 import streetlight.web.io.OmniClient
+import kotlin.time.Clock
 
 class Inbox(
     private val scope: CoroutineScope,
@@ -48,18 +49,7 @@ class Inbox(
     init {
         omni.lastRecordState.reactIn(scope) { omni ->
             val message = (omni as? Message) ?: return@reactIn
-            val openChat = openChatState.now
-
-            chatList.liveItems.firstOrNull { it.chatId == message.chatId }?.let { chat ->
-                val lastReadAt = chat.lastReadAt.takeIf { openChat == null || openChat.chatId != chat.chatId } ?: message.sentAt
-                chatList.remove(chat.chatId)
-                chatList.insertAt(0, chat.copy(
-                    lastMessageAt = message.sentAt, lastReadAt = lastReadAt,
-                    lastMessagePreview = message.content.value.takeEllipsis(40)
-                ))
-            }
-
-            updateChat(message)
+            consumeNewMessage(message)
         }
 
         scope.launch {
@@ -125,7 +115,7 @@ class Inbox(
         return true
     }
 
-    private fun updateChat(message: Message) {
+    private fun updateMessages(message: Message) {
         if (state.now.openChat?.chatId != message.chatId) return
         scope.launch {
             messageList.insertAt(0, message)
@@ -139,10 +129,13 @@ class Inbox(
         messageCursorState.set { copy(isFetching = true) }
         val cursor = messageList.liveItems.lastOrNull()?.let { RecordCursor(it.messageId.value, it.sentAt) }
 
-        val messages = api.readChatMessages(ChatMessageRequest(chat.chatId, cursor)).toDataOr(toaster) { return }
+        val messages = api.readChatMessages(ChatMessageRequest(chat.chatId, cursor)).toDataOr(toaster) {
+            messageCursorState.set { copy(isFetching = false) }
+            return
+        }
 
         val isCompleted = messages.size < cursor.limitOrDefault
-        messageCursorState.set { CursorState(isCompleted, false)}
+        messageCursorState.set { CursorState(false, isCompleted)}
         messageList.add(messages)
     }
 
@@ -152,11 +145,50 @@ class Inbox(
         chatCursorState.set { copy(isFetching = true) }
         val cursor = chatList.liveItems.lastOrNull()?.let { RecordCursor(it.chatId.value, it.lastMessageAt) }
 
-        val chats = api.readChats(ChatRequest(state.now.isArchive, cursor)).toDataOr(toaster) { return }
+        val chats = api.readChats(ChatRequest(state.now.isArchive, cursor)).toDataOr(toaster) {
+            chatCursorState.set { copy(isFetching = false) }
+            return
+        }
 
         val isCompleted = chats.size < cursor.limitOrDefault
-        chatCursorState.set { CursorState(isCompleted, false) }
+        chatCursorState.set { CursorState(false, isCompleted) }
         chatList.add(chats)
+    }
+
+    private suspend fun consumeNewMessage(message: Message) {
+        val openChat = openChatState.now
+
+        chatList.liveItems.firstOrNull { it.chatId == message.chatId }.let { cachedChat ->
+            if (cachedChat == null) {
+                if (state.now.isArchive) return@let
+                fetchPreview(message.chatId)
+            }
+            val chat = cachedChat ?: ChatPreview(
+                chatId = message.chatId,
+                badges = emptyList(),
+                subject = null,
+                lastMessagePreview = message.content.value.takeEllipsis(40),
+                lastMessageAt = message.sentAt,
+                lastReadAt = null,
+                archivedAt = null,
+                createdAt = message.sentAt
+            )
+            val lastReadAt = chat.lastReadAt.takeIf { openChat == null || openChat.chatId != chat.chatId } ?: message.sentAt
+            chatList.remove(chat.chatId)
+            chatList.insertAt(0, chat.copy(
+                lastMessageAt = message.sentAt, lastReadAt = lastReadAt,
+                lastMessagePreview = message.content.value.takeEllipsis(40)
+            ))
+        }
+
+        updateMessages(message)
+    }
+
+    private fun fetchPreview(chatId: ChatId) {
+        scope.launch {
+            val chat = api.readChatPreview(chatId).toDataOr(toaster) { return@launch }
+            chatList.replace(chat)
+        }
     }
 }
 

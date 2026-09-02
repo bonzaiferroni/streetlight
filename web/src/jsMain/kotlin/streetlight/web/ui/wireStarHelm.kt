@@ -29,8 +29,8 @@ import web.html.HTMLElement
 fun ViewScope.queryAndWireStarNav() {
     val helmElement = document.body.querySelector(StarHelm.HelmMenu) ?: error("star helm content not found")
     wireStarNav(helmElement)
-    val barElement = document.body.querySelector(StarHelm.StarMenu) ?: error("star bar element not found")
-    wireStarNav(barElement)
+    val panelElement = document.body.querySelector(StarHelm.StarMenu) ?: error("star bar element not found")
+    wireStarNav(panelElement)
 }
 
 fun ViewScope.wireStarNav(element: HTMLElement) {

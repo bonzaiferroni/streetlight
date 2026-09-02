@@ -25,11 +25,11 @@ class RouteInflator(
     init {
         scope.launch(RouteInflator::class) {
             portal.stateFlow.filter { !it.isInitialRoute || !it.route.screen.hasShell }.map { it.route }.collectLatest { route ->
-                // console.log("inflating route")
+                console.log("inflating route")
                 state.set { copy(delivery = null) }
                 val content = fetcher.fetchContent(route).toDataOr(messenger) { return@collectLatest }
                 val delivery = RouteDelivery(route, content)
-                // console.log("inflate content: ${content != null}")
+                console.log("inflated content: ${content}")
                 state.set { copy(delivery = delivery) }
             }
         }
@@ -42,6 +42,11 @@ class RouteInflator(
             error("no content for route: $route")
         }
         return content
+    }
+
+    fun clear() {
+        // td: provision and clear user cache all in one place
+        state.set { RouteInflatorState() }
     }
 }
 

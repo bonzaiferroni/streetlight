@@ -9,9 +9,12 @@ import koala.utils.launch
 import koala.model.dedup
 import kampfire.model.tapOf
 import kampfire.model.storeOf
+import koala.model.Portal
+import koala.model.RouteInflator
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import streetlight.model.data.Star
+import streetlight.model.ui.HomeRoute
 import streetlight.web.io.ApiClient
 import kotlin.time.Clock
 import kotlin.time.Instant
@@ -19,6 +22,8 @@ import kotlin.time.Instant
 class SessionGate(
     private val scope: CoroutineScope,
     private val api: ApiClient,
+    private val inflator: RouteInflator,
+    private val portal: Portal,
 ) {
     private val state = storeOf(StarSessionState())
     val stateNow get() = state.now
@@ -61,9 +66,11 @@ class SessionGate(
     }
 
     fun signOut() {
+        println("signing out")
         scope.launch(::signOut) {
             api.logout()
-            // userCache.reset()
+            inflator.clear()
+            portal.go(HomeRoute)
             state.set { copy(star = null, signedOutAt = Clock.System.now()) }
         }
     }

@@ -42,7 +42,8 @@ class LiveList<T, K>(initialItems: List<T>, private val keyOf: (T) -> K) {
         changes.emit(ListChange.Replace(index, item))
     }
 
-    suspend fun replace(key: K, item: T) {
+    suspend fun replace(item: T) {
+        val key = keyOf(item)
         val index = liveItems.indexOfFirst { keyOf(it) == key }
         if (index >= 0) replaceAt(index, item)
     }
