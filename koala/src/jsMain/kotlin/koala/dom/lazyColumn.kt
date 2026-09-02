@@ -7,7 +7,6 @@ import kampfire.model.ScrollState
 import koala.css.*
 import koala.html.Attribute
 import koala.html.setAttribute
-import koala.model.LazyColumnStyle
 import kotlinx.css.LinearDimension
 import kotlinx.css.px
 import web.dom.document
@@ -34,6 +33,14 @@ fun <T, K> ViewScope.lazyColumn(
 
     fun HTMLElement.mountView(item: T) = mountChildView("lazyColumnItem", this) {
         content(item)
+    }
+
+    fun setScrollState() {
+        val state = scrollState ?: return
+        val offset = abs(container.scrollTop)
+        val atStart = offset <= scrollBoundaryMargin
+        val atEnd = container.scrollHeight - offset - container.clientHeight <= scrollBoundaryMargin
+        state.set { ScrollState(atStart, atEnd) }
     }
 
     fun insert(index: Int, item: T) {
@@ -68,6 +75,7 @@ fun <T, K> ViewScope.lazyColumn(
 
     fun remove(index: Int, count: Int) {
         repeat(count) { remove(index) }
+        setScrollState()
     }
 
     fun clear() {
@@ -89,19 +97,15 @@ fun <T, K> ViewScope.lazyColumn(
         }
     }
 
-    scrollState?.let { state ->
+    scrollState?.let {
         container.addEventListener(Event.SCROLL, {
-            val offset = abs(container.scrollTop)
-            val atStart = offset <= scrollBoundaryMargin
-            val atEnd = container.scrollHeight - offset - container.clientHeight <= scrollBoundaryMargin
-            state.set { ScrollState(atStart, atEnd) }
+            setScrollState()
         })
     }
 
     return container
 }
 
-// state: MutableTap<LazyColumnState> = storeOf(LazyColumnState()),
 data class LazyColumnState(
     val scrollIndex: Int = 0,
 )

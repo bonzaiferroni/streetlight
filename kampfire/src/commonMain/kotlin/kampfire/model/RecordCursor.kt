@@ -30,6 +30,7 @@ suspend fun <T, K> requestWithCursor(
 ) {
     val status = cursorState.now
     if (status.isComplete || status.isFetching) return
+    println("fetching")
     cursorState.set { copy(isFetching = true) }
     val cursor = list.liveItems.lastOrNull()?.let { cursorOf(it) }
 
