@@ -1,6 +1,7 @@
 package streetlight.web.model
 
 import kampfire.api.Markdown
+import kampfire.model.CursorStatus
 import kampfire.model.LiveList
 import kampfire.model.Messenger
 import kampfire.model.ScrollState
@@ -9,6 +10,7 @@ import kampfire.utils.takeEllipsis
 import kampfire.model.reactIn
 import kampfire.model.storeOf
 import kampfire.model.tapOf
+import kampfire.model.toDataOrNull
 import koala.utils.launch
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.filterNotNull
@@ -18,13 +20,12 @@ import streetlight.model.data.ChatMessageRequest
 import streetlight.model.data.ChatPreview
 import streetlight.model.data.ChatRequest
 import streetlight.model.data.Message
-import streetlight.model.data.RecordCursor
+import kampfire.model.RecordCursor
 import streetlight.model.data.ReplyMessage
 import streetlight.model.data.Star
-import streetlight.model.data.limitOrDefault
+import kampfire.model.requestWithCursor
 import streetlight.web.io.ApiClient
 import streetlight.web.io.OmniClient
-import kotlin.time.Clock
 
 class Inbox(
     private val scope: CoroutineScope,
@@ -41,8 +42,8 @@ class Inbox(
     val messageList = LiveList(emptyList<Message>()) { it.messageId }
     val chatScrollState = storeOf<ScrollState?>(null)
     val messageScrollState = storeOf<ScrollState?>(null)
-    val chatCursorState = storeOf(CursorState())
-    val messageCursorState = storeOf(CursorState())
+    val chatCursorState = storeOf(CursorStatus())
+    val messageCursorState = storeOf(CursorStatus())
 
     val openChatState = state.tapOf { it.openChat }
 
@@ -76,7 +77,7 @@ class Inbox(
         scope.launch(::openChat) {
             messageList.clear()
             state.set { copy(openChat = chat) }
-            messageCursorState.set { CursorState() }
+            messageCursorState.set { CursorStatus() }
             requestMoreMessages()
         }
     }
@@ -86,7 +87,7 @@ class Inbox(
         scope.launch(::setIsArchive) {
             chatList.clear()
             state.set { copy(isArchive = isArchive) }
-            chatCursorState.set { CursorState() }
+            chatCursorState.set { CursorStatus() }
             requestMoreChats()
         }
     }
@@ -124,35 +125,15 @@ class Inbox(
 
     private suspend fun requestMoreMessages() {
         val chat = state.now.openChat ?: return
-        val cursorState = messageCursorState.now
-        if (cursorState.isCompleted || cursorState.isFetching) return
-        messageCursorState.set { copy(isFetching = true) }
-        val cursor = messageList.liveItems.lastOrNull()?.let { RecordCursor(it.messageId.value, it.sentAt) }
-
-        val messages = api.readChatMessages(ChatMessageRequest(chat.chatId, cursor)).toDataOr(toaster) {
-            messageCursorState.set { copy(isFetching = false) }
-            return
+        requestWithCursor(messageCursorState, messageList, { RecordCursor(it.messageId.value, it.sentAt) }) {
+            api.readChatMessages(ChatMessageRequest(chat.chatId, it)).toDataOrNull(toaster)
         }
-
-        val isCompleted = messages.size < cursor.limitOrDefault
-        messageCursorState.set { CursorState(false, isCompleted)}
-        messageList.add(messages)
     }
 
     private suspend fun requestMoreChats() {
-        val cursorState = chatCursorState.now
-        if (cursorState.isCompleted || cursorState.isFetching) return
-        chatCursorState.set { copy(isFetching = true) }
-        val cursor = chatList.liveItems.lastOrNull()?.let { RecordCursor(it.chatId.value, it.lastMessageAt) }
-
-        val chats = api.readChats(ChatRequest(state.now.isArchive, cursor)).toDataOr(toaster) {
-            chatCursorState.set { copy(isFetching = false) }
-            return
+        requestWithCursor(chatCursorState, chatList, { RecordCursor(it.chatId.value, it.lastMessageAt) }) {
+            api.readChats(ChatRequest(state.now.isArchive, it)).toDataOrNull(toaster)
         }
-
-        val isCompleted = chats.size < cursor.limitOrDefault
-        chatCursorState.set { CursorState(false, isCompleted) }
-        chatList.add(chats)
     }
 
     private suspend fun consumeNewMessage(message: Message) {
@@ -194,11 +175,7 @@ class Inbox(
 
 data class InboxState(
     val openChat: ChatPreview? = null,
-    val messageIndex: Int = 0,
     val isArchive: Boolean = false,
 )
 
-data class CursorState(
-    val isFetching: Boolean = false,
-    val isCompleted: Boolean = false,
-)
+

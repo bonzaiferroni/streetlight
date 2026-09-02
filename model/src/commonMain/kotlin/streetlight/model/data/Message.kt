@@ -2,6 +2,7 @@ package streetlight.model.data
 
 import kampfire.api.Markdown
 import kampfire.api.Username
+import kampfire.model.RecordCursor
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 import kotlin.time.Instant

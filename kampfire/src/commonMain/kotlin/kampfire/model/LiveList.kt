@@ -12,10 +12,23 @@ class LiveList<T, K>(initialItems: List<T>, private val keyOf: (T) -> K) {
     val changeFlow = changes.onSubscription { emit(ListChange.Insert(0, liveItems)) }
 
     suspend fun insertAt(index: Int, items: List<T>) {
-        liveItems.addAll(index, items)
+        var insertIndex = index
+        items.forEach { item ->
+            val key = keyOf(item)
+            liveItems.indexOfFirst { keyOf(it) == key }.takeIf { it >= 0 }?.let {
+                removeAt(it)
+                if (it < insertIndex) insertIndex--
+            }
+        }
+
+        liveItems.addAll(insertIndex, items)
         state.set { copy(size = liveItems.size) }
-        changes.emit(ListChange.Insert(index, items))
+        changes.emit(ListChange.Insert(insertIndex, items))
     }
+
+    suspend fun insertAt(index: Int, item: T) = insertAt(index, listOf(item))
+    suspend fun add(item: T) = insertAt(liveItems.size, listOf(item))
+    suspend fun add(items: List<T>) = insertAt(liveItems.size, items)
 
     suspend fun insertBefore(key: K, item: T) {
         val index = liveItems.indexOfFirst { keyOf(it) == key }
@@ -53,7 +66,13 @@ class LiveList<T, K>(initialItems: List<T>, private val keyOf: (T) -> K) {
         if (index >= 0) replaceAt(index, item)
     }
 
-    suspend fun removeAt(index: Int, count: Int = 1) {
+    suspend fun removeAt(index: Int) {
+        liveItems.removeAt(index)
+        state.set { copy(size = liveItems.size) }
+        changes.emit(ListChange.Remove(index, 1))
+    }
+
+    suspend fun removeAt(index: Int, count: Int) {
         liveItems.subList(index, index + count).clear()
         state.set { copy(size = liveItems.size) }
         changes.emit(ListChange.Remove(index, count))
@@ -74,10 +93,6 @@ class LiveList<T, K>(initialItems: List<T>, private val keyOf: (T) -> K) {
         state.set { copy(size = 0) }
         changes.emit(ListChange.Clear)
     }
-
-    suspend fun add(item: T) = insertAt(liveItems.size, listOf(item))
-    suspend fun add(items: List<T>) = insertAt(liveItems.size, items)
-    suspend fun insertAt(index: Int, item: T) = insertAt(index, listOf(item))
 }
 
 data class LiveListState(
