@@ -145,7 +145,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object RemovePost: PostEndpoint<PostId, Boolean>(this)
     }
 
-    object Medias: ApiNode(this, "media") { // I have died a little inside but this avoids import conflicts
+    object Medias: ApiNode(this, "media") {
         object ReadMedia: GetByIdEndpoint<Slug, Media>(this)
         object CreateMedia: PostEndpoint<MediaEdit, Media>(this)
         object UpdateMedia: PostEndpoint<MediaEdit, Media>(this)

@@ -18,8 +18,7 @@ import koala.html.textBlock
 import kotlinx.html.FlowContent
 import streetlight.model.data.Post
 import streetlight.model.ui.GalaxyRoute
-import streetlight.model.ui.StarRoute
-import streetlight.web.ui.StarMenu
+import streetlight.web.ui.PopoverId
 import kotlin.time.Clock
 
 fun FlowContent.postInfo(
@@ -40,7 +39,7 @@ fun FlowContent.postInfo(
                 }
                 else -> {
                     button {
-                        setPopoverTarget(StarMenu.PopoverId)
+                        setPopoverTarget(PopoverId.StarMenu)
                         setAttribute(Attribute.Username.to(username))
                         span(username.value, modify(PrimaryFg))
                     }

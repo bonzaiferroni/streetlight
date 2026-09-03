@@ -15,20 +15,20 @@ import kotlinx.html.div
 
 fun FlowContent.popover(
     id: Id,
-    anchor: PositionAnchor?,
     mod: ModifierSet? = null,
+    anchor: PositionAnchor? = null,
     isManual: Boolean = false,
     block: DIV.() -> Unit
 ) {
     div {
-        configurePopover(id, anchor, mod, isManual, block)
+        configurePopover(id, mod, anchor, isManual, block)
     }
 }
 
 fun DIV.configurePopover(
     id: Id?,
-    anchor: PositionAnchor?,
     mod: ModifierSet? = null,
+    anchor: PositionAnchor? = null,
     isManual: Boolean = false,
     block: DIV.() -> Unit
 ) {

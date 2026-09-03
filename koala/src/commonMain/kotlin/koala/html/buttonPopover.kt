@@ -12,13 +12,10 @@ fun FlowContent.buttonPopover(
     id: Id = Id("${label.lowercase().replace(" ", "-")}-popover"),
     block: DIV.() -> Unit = {}
 ) {
-    val anchor = id.toPositionAnchor()
-
-    popover(id, anchor, modify(popoverModifiers, Magic, SlideUp)) {
+    popover(id, mod = modify(popoverModifiers, Magic, SlideUp)) {
         block()
     }
     button("$flair $label", modifiers) {
-        setAnchorName(anchor)
         setPopoverTarget(id)
     }
 }

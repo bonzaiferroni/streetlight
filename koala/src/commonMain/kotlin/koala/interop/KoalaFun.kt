@@ -9,6 +9,7 @@ object KoalaFun {
     val ToggleAncestor = JsSignature("toggleAncestor")
     val toggleRootModifier = JsSignature("toggleRootModifier")
     val toggleRootModifierWithTransition = JsSignature("toggleRootModifierWithTransition")
+    val findAndInitTabs = JsSignature("findAndInitTabs")
 
     val initRootModifier = jsFunctionOf("""
         function initRootModifier(mod) {

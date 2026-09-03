@@ -1,5 +1,6 @@
 package koala.html
 
+import kampfire.api.Slug
 import kampfire.api.Username
 import kampfire.api.toSlug
 import kampfire.api.toUsername
@@ -35,6 +36,7 @@ data class Attribute<T>(
         val RoutePath = stringAttributeOf("route-path", true)
         val Placeholder = stringAttributeOf("placeholder", true)
         val Username = Attribute<Username?>("username", true) { it.toUsername() }
+        val Slug = Attribute<Slug?>("slug", true) { it.toSlug() }
 
         val PopoverTarget = stringAttributeOf("popovertarget")
         val PopoverTargetAction = stringAttributeOf("popovertargetaction")

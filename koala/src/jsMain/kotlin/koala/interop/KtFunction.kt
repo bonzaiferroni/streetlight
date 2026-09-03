@@ -9,6 +9,7 @@ fun addGlobalFunctions(vararg functions: KtFunction) = addGlobalFunctions(functi
 
 fun addGlobalFunctions(functions: List<KtFunction>) {
     functions.forEach {
+        println("adding ${it.signature.name}")
         globalThis[it.signature.name] = it.function
     }
 }

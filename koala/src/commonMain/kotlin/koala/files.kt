@@ -1,9 +1,9 @@
 package koala
 
 object JsFile : FileSet<Js>() {
-    val Utils = add("utils.js")
-    val Tabs = add("tabs.js")
-    val Koala = add("koala/koala.js")
+    val Utils = addJs("utils.js")
+    val Tabs = addJs("tabs.js")
+    val Koala = addJs("koala/koala.js")
 }
 
 object JsBundle {

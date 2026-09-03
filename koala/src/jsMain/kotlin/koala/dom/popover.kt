@@ -6,12 +6,15 @@ import koala.css.BorderRadius3
 import koala.css.BorderSolid2Px
 import koala.css.MinWidth16
 import koala.css.ModifierSet
+import koala.css.OpacityHigh
 import koala.css.OverflowClip
 import koala.css.Padding0
 import koala.css.Padding1
 import koala.css.PositionAnchor
 import koala.css.Scale
 import koala.css.TextAlignCenter
+import koala.css.TextSmall
+import koala.css.TextUppercase
 import koala.css.Width100P
 import koala.css.modify
 import koala.html.AppRoute
@@ -30,7 +33,7 @@ fun AppendScope.popoverRaw(
     isManual: Boolean = false,
     config: DIV.() -> Unit = {}
 ) = div {
-    configurePopover(id, anchor, mod, isManual, config)
+    configurePopover(id, mod, anchor, isManual, config)
 }
 
 fun AppendScope.popover(
@@ -60,6 +63,10 @@ fun Element.closePopover() = try {
 }
 fun Element.togglePopover() = asDynamic().togglePopover()
 fun HTMLElement.isPopoverOpen() = matches(":popover-open")
+
+fun AppendScope.popoverLabel(label: String) = textBlock(
+    label, modify(OpacityHigh, TextSmall, TextAlignCenter, Padding1, TextUppercase)
+)
 
 fun AppendScope.popoverOption(label: String, mod: ModifierSet? = null, onClick: () -> Unit) =
     button(onClick, mod = modify(mod, Padding1, MinWidth16)) {

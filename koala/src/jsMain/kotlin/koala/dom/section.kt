@@ -2,7 +2,7 @@ package koala.dom
 
 import koala.css.ModifierSet
 import koala.css.addModifiers
-import koala.html.SectionKey
+import koala.html.SectionStyle
 import koala.html.filigree
 import koala.html.heading3
 import kotlinx.html.SECTION
@@ -12,7 +12,7 @@ fun AppendScope.section(
     mod: ModifierSet? = null,
     block: SECTION.() -> Unit = {}
 ) = sectionTag {
-    addModifiers(SectionKey.Class, mod)
+    addModifiers(SectionStyle.Class, mod)
     block()
 }
 

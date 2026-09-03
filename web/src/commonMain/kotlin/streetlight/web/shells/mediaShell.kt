@@ -28,6 +28,7 @@ import koala.html.column
 import koala.html.dataIsland
 import koala.html.filigree
 import koala.html.heading1
+import koala.html.heading2
 import koala.html.heading4
 import koala.html.image
 import koala.html.markdown
@@ -41,48 +42,49 @@ import streetlight.web.layouts.cellBlock
 import streetlight.web.layouts.postedAtCell
 import streetlight.web.layouts.starCell
 import streetlight.web.pages.appFooter
+import streetlight.web.pages.appHeader
+import streetlight.web.ui.BodyStyle
 
 fun FlowContent.mediaShell(media: Media) {
-    section(PostKey.ShellId) {
-        column(modify(Gap0)) {
-            heading1(media.title, modify(TextAlignCenter, AntiShadow, LineHeight115, MarginTop4))
-            filigree {
-                heading4("in Denver This Weekend", modify(OpacityHigh, LineHeight115))
-            }
-        }
+    column(MediaShell.ShellId) {
+        appHeader()
 
-        media.image?.largest?.let {
-            column(modify(SideBorder, BorderRadius1)) {
-                image(it, modify(AlignSelfCenter, MaxHeight64, BorderRadius2, MoonShadow))
-            }
-        }
+        section(BodyStyle.MainColumn) {
+            heading2(media.title, modify(TextAlignCenter, AntiShadow, LineHeight115, MarginTop4))
 
-        card(modify(OverflowClip, Gap0, ZenBg, Padding0)) {
-            cellBlock {
-                starCell(media.username)
-                postedAtCell(media.createdAt)
-            }
-
-            media.text?.let {
-                column(modify(Padding2, AlignSelfCenter, MaxWidthTextBody, TextLarge)) {
-                    markdown(it)
+            media.image?.largest?.let {
+                column(modify(SideBorder, BorderRadius1)) {
+                    image(it, modify(AlignSelfCenter, MaxHeight64, BorderRadius2, MoonShadow))
                 }
             }
+
+            card(modify(OverflowClip, Gap0, ZenBg, Padding0)) {
+                cellBlock {
+                    starCell(media.username)
+                    postedAtCell(media.createdAt)
+                }
+
+                media.text?.let {
+                    column(modify(Padding2, AlignSelfCenter, MaxWidthTextBody, TextLarge)) {
+                        markdown(it)
+                    }
+                }
+            }
+
+            row(modify(JustifyContentEnd)) {
+                btn("edit", MediaUpdateRoute(media.slug), modify(Zen))
+            }
+
+            mount(MediaShell.TalkId, modify(MarginTop4))
+
+            appFooter()
         }
-
-        row(modify(JustifyContentEnd)) {
-            btn("edit", MediaUpdateRoute(media.slug), modify(Zen))
-        }
-
-        mount(PostKey.TalkId, modify(MarginTop4))
-
-        appFooter()
-
-        dataIsland(PostKey.IslandId, media)
     }
+
+    dataIsland(MediaShell.IslandId, media)
 }
 
-object PostKey {
+object MediaShell {
     val ShellId = Id("post-shell")
     val IslandId = Id("post-data")
     val TalkId = Id("post-talk")

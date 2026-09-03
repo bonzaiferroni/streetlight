@@ -8,17 +8,25 @@ sealed interface Asset {
     val assetType: AssetType
 }
 
+@Suppress("UNCHECKED_CAST") // td: refactor
 open class FileSet<T : Asset> : MutableSet<T> by mutableSetOf() {
-    @Suppress("UNCHECKED_CAST")
     fun add(filename: String, isGenerated: Boolean = false): T {
         val file = fileOf(filename, isGenerated) as? T ?: error("invalid file: $filename")
         add(file)
         return file
     }
 
-    fun addJs(filename: String, isDeferred: Boolean = true) = jsFileOf(filename, isDeferred)
+    fun addJs(filename: String, isDeferred: Boolean = true): T {
+        val file = jsFileOf(filename, isDeferred) as? T ?: error("invalid file: $filename")
+        add(file)
+        return file
+    }
 
-    fun addLottie(filename: String) = Lottie((lottiePath + filename).toUrl())
+    fun addLottie(filename: String): T {
+        val file = Lottie((lottiePath + filename).toUrl()) as? T ?: error("invalid file: $filename")
+        add(file)
+        return file
+    }
 }
 
 enum class AssetType {

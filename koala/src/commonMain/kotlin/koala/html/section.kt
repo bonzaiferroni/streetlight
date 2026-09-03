@@ -10,7 +10,7 @@ fun FlowContent.section(
     block: SECTION.() -> Unit = {}
 ) {
     sectionTag {
-        addModifiers(SectionKey.Class, modifiers)
+        addModifiers(SectionStyle.Class, modifiers)
         block()
     }
 }
@@ -39,7 +39,7 @@ fun FlowContent.section(
     }
 }
 
-object SectionKey {
+object SectionStyle {
     val Class = Class("section")
 }
 

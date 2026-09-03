@@ -19,16 +19,20 @@ import kotlin.js.json
 
 fun ViewScope.wireStarMenu() {
     popoverMenu(
-        popoverId = StarMenu.PopoverId,
+        popoverId = PopoverId.StarMenu,
         transform = {
             it.getAttribute(Attribute.Username)
         }
     ) { username ->
-        column(modify(Gap2Px)) {
+        column(PopoverMenuMod.Column) {
             popoverOption(StarRoute(username))
             popoverOption("Message") { startMessage(username) }
         }
     }
+}
+
+object PopoverMenuMod {
+    val Column = modify(Gap2Px)
 }
 
 fun <T> ViewScope.popoverMenu(

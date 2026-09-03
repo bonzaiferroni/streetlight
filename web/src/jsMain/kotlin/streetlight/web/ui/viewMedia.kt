@@ -9,22 +9,22 @@ import streetlight.model.data.Media
 import streetlight.model.data.SpaceType
 import streetlight.model.ui.MediaRoute
 import streetlight.web.io.TalkLog
-import streetlight.web.shells.PostKey
+import streetlight.web.shells.MediaShell
 import streetlight.web.shells.mediaShell
 
 fun ViewScope.viewMedia(media: Media) {
-    val root = shellBox(PostKey.ShellId) {
+    val root = shellBox(MediaShell.ShellId) {
         mediaShell(media)
     }
 
-    mountChildView(PostKey.TalkId) {
+    mountChildView(MediaShell.TalkId) {
         val talkLog = TalkLog(contentScope, media.mediaId.value, SpaceType.Post, api)
         viewTalkLog(talkLog)
     }
 }
 
-fun RouteScope.viewPostRoute() {
-    routeBlock<MediaRoute, Media> { post ->
+fun RouteScope.viewMediaRoute() {
+    routeBlock<MediaRoute, Media>(MediaShell.IslandId) { post ->
         viewMedia(post)
     }
 }

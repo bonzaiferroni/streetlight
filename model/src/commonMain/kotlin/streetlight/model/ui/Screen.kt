@@ -85,7 +85,7 @@ enum class Screen(
     CityList(StaticParse { CityListRoute }, "cities"),
 
     // media
-    Media(SlugParse { MediaRoute(it) }, "m");
+    Media(SlugParse { MediaRoute(it) }, "m", true);
 
     override val pathRoot = pathRoot ?: name.pascalToKebabCase()
     override val pathBase = "/${this.pathRoot}"

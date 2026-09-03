@@ -7,13 +7,14 @@ import streetlight.model.data.Galaxy
 import streetlight.model.ui.EventScoutRoute
 import streetlight.model.ui.LocationScoutRoute
 import streetlight.model.ui.MediaForgeRoute
+import streetlight.web.ui.AppAttribute
+import streetlight.web.ui.PopoverId
 
-fun FlowContent.createPostMenu(galaxy: Galaxy) {
-    buttonPopover("Create Post", modify(Accent)) {
-        card(ButtonPopover.CardMod) {
-            btn("Post Event", EventScoutRoute(galaxy.slug))
-            btn("Post Location", LocationScoutRoute(galaxy.slug))
-            btn("Post Media", MediaForgeRoute(galaxy.slug))
+fun FlowContent.createPostMenu(galaxy: Galaxy?) {
+    button("Create Post", modify(Accent), "☰") {
+        setPopoverTarget(PopoverId.CreatePost)
+        galaxy?.let {
+            setAttribute(Attribute.Slug.to(galaxy.slug))
         }
     }
 }

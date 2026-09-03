@@ -20,11 +20,10 @@ fun HTML.appHead(
         linkFira()
 
         link { href = "/www/icon/foxicon.ico"; rel = "icon"}
-        block()
         script(src = "https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js") {
             defer = true
         }
-        applyFiles(JsFile)
+        block()
         style {
             unsafe {
                 +styles

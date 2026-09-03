@@ -9,6 +9,7 @@ import koala.html.filigree
 import koala.html.heading1
 import koala.html.spacer
 import kampfire.model.storeOf
+import koala.html.heading4
 import kotlinx.coroutines.launch
 import kotlinx.html.DIV
 import streetlight.model.data.Comment
@@ -23,7 +24,7 @@ fun ViewScope.viewTalkLog(model: TalkLog) {
     var treeRoot: HTMLElement? = null
 
     column {
-        filigree { heading1("Talk") }
+        filigree { heading4("Talk") }
         commentEditor("comment", "".toMarkdown()) {
             val commentId = model.createComment(null, it)
             return@commentEditor when (commentId) {
