@@ -1,8 +1,7 @@
 package streetlight.model.data
 
 import kampfire.api.Markdown
-import kampfire.model.GeoPoint
-import kampfire.model.Url
+import kampfire.api.Slug
 import kotlinx.serialization.Serializable
 import kotlin.uuid.Uuid
 

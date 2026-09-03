@@ -26,9 +26,7 @@ fun FlowContent.homeShell(content: HomeContent) {
             column(modify(Gap8)) {
                 row(modify(JustifyContentSpaceBetween)) {
                     galaxyMenu(content.galaxies, null)
-                    // switch("bruh", id = Id("bruh"))
-
-                    spacer()
+                    createPostMenu(null)
                 }
 
                 galaxiesSection(content.galaxies)

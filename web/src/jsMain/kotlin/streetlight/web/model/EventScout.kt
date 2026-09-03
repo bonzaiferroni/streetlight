@@ -20,7 +20,7 @@ import streetlight.model.data.PostType
 import streetlight.web.io.ApiClient
 
 class EventScout(
-    val galaxy: Galaxy,
+    val galaxy: Galaxy?,
     private val editor: EventEditor,
     private val locationScout: LocationScout,
     private val scope: CoroutineScope,
@@ -75,6 +75,7 @@ class EventScout(
     }
 
     fun post() {
+        val galaxyId = galaxy?.galaxyId ?: return
         scope.launch {
             postMessage.set("Posting...", true)
             val eventId = when (val event = stateNow.event) {
@@ -82,7 +83,7 @@ class EventScout(
                 else -> event.eventId
             } ?: return@launch
 
-            val edit = PostEdit(null, galaxy.galaxyId, PostType.Event, eventId.value, null)
+            val edit = PostEdit(null, galaxyId, PostType.Event, eventId.value, null)
             val post = api.createPost(edit).toDataOr(postMessage) { return@launch }
             state.set { copy(postId = post.postId) }
         }

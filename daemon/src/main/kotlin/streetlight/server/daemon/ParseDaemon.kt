@@ -6,6 +6,7 @@ import kampfire.api.toMarkdown
 import kampfire.model.Problem
 import kampfire.model.Url
 import kampfire.model.toDataOr
+import kampfire.model.toDataOrNull
 import kampfire.model.toUrl
 import klutch.server.provide
 import koala.Image
@@ -19,7 +20,6 @@ import streetlight.agent.StreetlightAgent
 import streetlight.agent.fetchText
 import streetlight.model.data.EventEdit
 import streetlight.model.data.Galaxy
-import streetlight.model.data.Location
 import streetlight.model.data.LocationConfigContent
 import streetlight.model.data.LocationId
 import streetlight.model.data.Origin

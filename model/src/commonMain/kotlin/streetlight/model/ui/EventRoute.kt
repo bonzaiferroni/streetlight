@@ -12,7 +12,7 @@ data class EventUpdateRoute(override val slug: Slug): SlugRoute {
     override val title get() = "Post Event"
 }
 
-data class EventScoutRoute(override val slug: Slug): StreetlightRoute, SlugRoute {
+data class EventScoutRoute(override val slug: Slug?): StreetlightRoute, SlugRoute {
     override val screen get() = Screen.EventScout
     override val title get() = "Event Scout"
 }

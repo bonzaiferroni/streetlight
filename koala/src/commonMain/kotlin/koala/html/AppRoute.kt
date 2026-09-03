@@ -12,7 +12,7 @@ interface AppRoute: Labeled {
     val origin: String
     fun toRelativePath() = basePath
     fun toAbsolutePath() = "$origin${toRelativePath()}"
-    val title: String
+    val title: String // td initialize as screen title
     val basePath get() = screen.pathBase
     override val label get() = title
 
@@ -44,6 +44,7 @@ interface AppScreen {
     val screenId: String
     val hasShell: Boolean
     val retainWithinScreen: Boolean
+    // td: add title
 }
 
 private fun String.dropStart(char: Char) = if (startsWith(char)) drop(1) else this

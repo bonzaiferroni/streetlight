@@ -3,7 +3,7 @@ package streetlight.web.ui
 import koala.css.*
 import koala.dom.*
 import koala.html.btn
-import koala.model.NullFetcherContent
+import koala.model.NullContent
 import kotlinx.css.LinearDimension
 import kotlinx.css.fr
 import streetlight.model.data.Star
@@ -36,7 +36,7 @@ fun ViewScope.viewStarDash(star: Star) {
 }
 
 fun RouteScope.viewStarDashRoute() {
-    routeBlock<StarDashRoute, NullFetcherContent>() {
+    routeBlock<StarDashRoute, NullContent>() {
         starGate { star ->
             viewStarDash(star)
         }

@@ -8,7 +8,7 @@ fun ViewScope.eventSearchForm(model: EventScout) = formSectionLegacy("Add an eve
     formCard {
         formPart(
             instructions = "What is the name of the event?",
-            bullets = listOf("The event may already be on Streetlight and you can post it to ${model.galaxy.name}.")
+            bullets = listOf("The event may already be on Streetlight.")
         ) {
             row {
                 textField(model.query, "name", modify(Flex1))

@@ -16,12 +16,12 @@ val DisplayUtilityCss
         // Border
         SideBorder,
         // Color
-        NightInk, DayInk, PrimaryFg, AccentFg, ColorSchemeFg, ColorSchemeBg, EditorFg, WhiteFg, ErrorFg, CautionFg, ValidFg,
+        NightInk, DayInk, PrimaryFg, AccentFg, ColorSchemeFg, ColorSchemeBg, SystemFg, WhiteFg, ErrorFg, CautionFg, ValidFg,
         // Overflow
         OverflowHidden, OverflowWrapAnywhere, OverflowClip, OverflowXAuto, OverflowXHidden, OverflowYAuto, OverflowYScroll,
         OverscrollBehaviorContain, ScrollbarWidthNone,
         // Background
-        PrimaryBg, PrimaryCardBg, ZenBg, CardBg, VoidBg, EditorBg, DialogBg, BackgroundImage, SolidBg, BlurBackdrop, TransparentBg,
+        PrimaryBg, PrimaryCardBg, ZenBg, CardBg, VoidBg, SystemBg, DialogBg, BackgroundImage, SolidBg, BlurBackdrop, TransparentBg,
         PaperGradientBg, CardGradientBg, InkGradientBg,
         // Transform
         FlipX, FlipY,
@@ -81,7 +81,7 @@ val BorderRadiusTop1 = utilityOf("border-radius-top-1", "border-radius: var(--un
 val BorderRadiusBottom1 = utilityOf("border-radius-bottom-1", "border-radius: 0 0 var(--unit-spacing) var(--unit-spacing)")
 val Outline = utilityOf("outline-solid", "outline: var(--outline-low)", "outline-offset: -2px")
 val OutlineCurrentColor = utilityOf("outline-current-color", "outline: 2px solid currentColor", "outline-offset: -2px")
-val OutlineEditorFg = utilityOf("outline-editor-fg", "outline: 2px solid var(--editor-fg)", "outline-offset: -2px")
+val OutlineEditorFg = utilityOf("outline-editor-fg", "outline: 2px solid var(--system-fg)", "outline-offset: -2px")
 val OutlineDashed2Px = utilityOf("outline-dashed", "outline: 2px dashed var(--outline-low-fg)")
 val Chopped = utilityOf("chopped", "--chop: var(--unit-spacing-8)",
     "clip-path: polygon(var(--chop) 0, 100% 0, 100% calc(100% - var(--chop)), calc(100% - var(--chop)) 100%, 0 100%, 0 var(--chop))")
@@ -96,7 +96,7 @@ val Primary = Class("primary")
 val Editor = Class("editor")
 val PrimaryFg = utilityOf("primary-fg", "color: var(--primary-fg)")
 val WhiteFg = utilityOf("white-fg", "color: var(--white-fg)")
-val EditorFg = utilityOf("editor-fg", "color: var(--editor-fg)")
+val SystemFg = utilityOf("editor-fg", "color: var(--system-fg)")
 val ErrorFg = utilityOf("red-fg", "color: var(--error-fg)")
 val CautionFg = utilityOf("caution-fg", "color: var(--caution-fg)")
 val ValidFg = utilityOf("valid-fg", "color: var(--valid-fg)")
@@ -129,7 +129,7 @@ val ScrollbarWidthNone = utilityOf("scrollbar-width-none", "scrollbar-width: non
 // Background
 val PrimaryBg = utilityOf("primary-bg", "background-color: var(--primary-bg)")
 val PrimaryCardBg = utilityOf("primary-card-bg", "background-color: var(--primary-card-bg)")
-val EditorBg = utilityOf("editor-bg", "background-color: var(--editor-bg)")
+val SystemBg = utilityOf("system-bg", "background-color: var(--system-bg)")
 val ZenBg = utilityOf("zen-card-bg", "background: var(--zen-bg)")
 val CardBg = utilityOf("card-bg", "background: var(--card-bg)")
 val VoidBg = utilityOf("void-bg", "background: var(--void-bg)")

@@ -52,7 +52,7 @@ fun ViewScope.editorRow(
 ) {
     val popoverId = menuContent?.let {
         Id(Uuid.random().toString()).also {
-            popover(it, mod = modify(EditorBg)) {
+            popover(it, mod = modify(SystemBg)) {
                 menuContent()
             }
         }
@@ -63,7 +63,7 @@ fun ViewScope.editorRow(
                 row(modify(AlignItemsCenter)) {
                     row(modify(Flex1, AlignItemsCenter)) {
                         blockMenu(null, editor.depth ?: error("depth is null")) { editor.addBlockAbove(it) }
-                        hr(modify(EditorFg, Flex1))
+                        hr(modify(SystemFg, Flex1))
                         isEditingState?.let { state ->
                             editorIconButton(SvgFile.Edit, { state.toggle() }).also {
                                 it.flowModifier(state, AccentFg, contentScope)
@@ -85,7 +85,7 @@ fun ViewScope.editorRow(
 
                     row(modify(Flex1, AlignItemsCenter)) {
                         editorIconButton(SvgFile.Trash, { editor.removeFromLayout() })
-                        hr(modify(EditorFg, Flex1))
+                        hr(modify(SystemFg, Flex1))
                         editorIconButton(SvgFile.ArrowsSort, { editor.model.startMove(editor.blockId) })
                     }
                 }
@@ -111,7 +111,7 @@ fun ViewScope.lastEditorRow(
         when (movingBlockId) {
             null -> {
                 row(modify(AlignItemsCenter)) {
-                    hr(modify(EditorFg, Flex1, OpacityLow))
+                    hr(modify(SystemFg, Flex1, OpacityLow))
                     blockMenu(editor.name, editor.depth, { editor.createBlock(it)} )
                 }
             }
@@ -160,11 +160,11 @@ fun ViewScope.editorIconButton(
     icon: Svg,
     onClick: (() -> Unit)? = null,
     config: BUTTON.() -> Unit = { }
-) = button(icon, onClick, modify(EditorFg, Height3)) {
+) = button(icon, onClick, modify(SystemFg, Height3)) {
     config()
 }
 
 object LayoutBuilderMod {
-    val TextButton = modify(TextUppercase, TextSmall, Bold, EditorFg)
+    val TextButton = modify(TextUppercase, TextSmall, Bold, SystemFg)
     val Container = modify(ZenBg, MoonShadow, Padding1)
 }

@@ -49,7 +49,7 @@ body {
     
     &$Editor {
         box-shadow: none;
-        background: var(--editor-bg);
+        background: var(--system-bg);
         outline: var(--outline-low);
         outline-offset: -2px;
     }

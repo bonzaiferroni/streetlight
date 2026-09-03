@@ -10,7 +10,7 @@ import streetlight.model.ui.MediaForgeRoute
 import streetlight.web.ui.AppAttribute
 import streetlight.web.ui.PopoverId
 
-fun FlowContent.createPostMenu(galaxy: Galaxy?) {
+fun FlowContent.createPostMenu(galaxy: Galaxy? = null) {
     button("Create Post", modify(Accent), "☰") {
         setPopoverTarget(PopoverId.CreatePost)
         galaxy?.let {

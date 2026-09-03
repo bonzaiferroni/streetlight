@@ -1,5 +1,6 @@
 package streetlight.web.model
 
+import kampfire.api.Slug
 import kampfire.model.Labeled
 import kampfire.model.toDataOr
 import koala.dom.MessageStore
@@ -23,7 +24,7 @@ import streetlight.web.io.ApiClient
 import streetlight.web.io.OSMClient
 
 class LocationScout(
-    val galaxy: Galaxy,
+    val galaxy: Galaxy?,
     val editor: LocationEditor,
     private val scope: CoroutineScope,
     private val osm: OSMClient,
@@ -99,7 +100,7 @@ class LocationScout(
         queryMessage.deliverSending("Searching OSM...")
         scope.launch {
             val city = stateNow.city?.takeIf { it.isNotBlank() }
-            val bounds = galaxy.geoBounds.takeIf { city == null }?.resizeBy(5f)
+            val bounds = galaxy?.geoBounds.takeIf { city == null }?.resizeBy(5f)
             val locations = osm.readLocations(query, stateNow.city, bounds).toDataOr(queryMessage) { return@launch }
             queryMessage.deliverSuccess("found: ${locations.size}")
             state.set { copy(locations = locations.mapNotNull { loc -> loc.toEditOrNull() }) }
@@ -134,10 +135,11 @@ class LocationScout(
     }
 
     fun postToGalaxy() {
+        val galaxyId = galaxy?.galaxyId ?: return
         scope.launch {
             val location = submitLocation() ?: return@launch
 
-            val edit = PostEdit(null, galaxy.galaxyId, PostType.Location, location.locationId.value, null)
+            val edit = PostEdit(null, galaxyId, PostType.Location, location.locationId.value, null)
             val post = api.createPost(edit).toDataOr(postMessage) { return@launch }
             state.set { copy(postId = post.postId) }
         }

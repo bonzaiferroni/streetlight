@@ -9,6 +9,7 @@ import koala.html.AppRoute
 import koala.html.AppScreen
 import koala.html.IdParse
 import koala.html.RouteParse
+import koala.html.SlugOrNullParse
 import koala.html.SlugParse
 import koala.html.StaticParse
 import koala.html.UsernameParse
@@ -57,7 +58,7 @@ enum class Screen(
     // location
     Location(SlugParse { LocationRoute(it) }, "l", true),
     LocationAdmin(UuidParse { LocationConfigRoute(LocationId(it)) }),
-    LocationScout(SlugParse { LocationScoutRoute(it) }),
+    LocationScout(SlugOrNullParse { LocationScoutRoute(it) }),
     LocationUpdate(SlugParse { LocationUpdateRoute(it) }),
 
     // galaxy
@@ -70,8 +71,8 @@ enum class Screen(
     Event(SlugParse { EventRoute(it) }, "e", true),
     UpdateEvent(SlugParse { EventUpdateRoute(it) }),
 
-    EventScout(SlugParse { EventScoutRoute(it) }),
-    MediaForge(SlugParse { MediaForgeRoute(it) }),
+    EventScout(SlugOrNullParse { EventScoutRoute(it) }),
+    MediaForge(SlugOrNullParse { MediaForgeRoute(it) }),
     SiteConfig(StaticParse { SiteConfigRoute }),
     AboutApp(StaticParse { AboutRoute }),
     Docs(IdParse { SiteDocRoute(it) }),

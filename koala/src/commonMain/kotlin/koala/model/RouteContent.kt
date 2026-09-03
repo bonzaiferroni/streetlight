@@ -4,6 +4,6 @@ sealed interface FetcherContent
 
 interface RouteContent : FetcherContent
 
-object NullFetcherContent: FetcherContent
+object NullContent: FetcherContent
 
 inline fun <reified T> FetcherContent.toContentOrNull(): T? = this as? T

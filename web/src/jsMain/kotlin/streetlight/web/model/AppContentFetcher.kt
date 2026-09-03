@@ -5,7 +5,7 @@ import kampfire.model.Outcome
 import koala.html.AppRoute
 import koala.model.ContentFetcher
 import koala.model.FetcherContent
-import koala.model.NullFetcherContent
+import koala.model.NullContent
 import streetlight.model.ui.EventRoute
 import streetlight.model.ui.EventScoutRoute
 import streetlight.model.ui.EventUpdateRoute
@@ -37,20 +37,20 @@ class AppContentFetcher(
         is LocationRoute -> api.readLocationContent(route.slug)
         is EventRoute -> api.readEventSlug(route.slug)
         is StarRoute -> api.readStarContent(route.username)
-        is LocationScoutRoute -> api.readGalaxy(route.slug)
+        is LocationScoutRoute -> route.slug?.let { api.readGalaxy(it) } ?: Ok(NullContent)
         is LocationUpdateRoute -> api.readLocationUpdaterContent(route.slug)
-        is EventScoutRoute -> api.readGalaxy(route.slug)
+        is EventScoutRoute -> route.slug?.let { api.readGalaxy(it) } ?: Ok(NullContent)
         is LocationConfigRoute -> api.readLocationConfigContent(route.locationId)
         is EventUpdateRoute -> api.readEventUpdaterContent(route.slug)
         is MediaRoute -> api.readMedia(route.slug)
         is MediaUpdateRoute -> api.readMedia(route.slug)
-        is MediaForgeRoute -> route.slug?.let { api.readGalaxy(it) } ?: Ok(NullFetcherContent)
+        is MediaForgeRoute -> route.slug?.let { api.readGalaxy(it) } ?: Ok(NullContent)
         is SiteDocRoute -> api.readSiteDoc(route.docId)
-        is StarDashRoute -> Ok(NullFetcherContent)
-        is UpdateProfileRoute -> Ok(NullFetcherContent)
+        is StarDashRoute -> Ok(NullContent)
+        is UpdateProfileRoute -> Ok(NullContent)
         is UpdateAccountRoute -> api.readAccount()
         is InboxRoute -> api.readInbox()
-        else -> Ok(NullFetcherContent)
+        else -> Ok(NullContent)
     }
 }
 

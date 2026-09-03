@@ -15,7 +15,7 @@ fun ViewScope.imageDrop(
         box(modify(Size100P, OverflowHidden)) {
             block(url)
             button(
-                mod = modify(EditorBg, Outline, BorderRadius50P, PlaceSelfStart, Aspect1, Padding1, Margin1, OpacityHigh),
+                mod = modify(SystemBg, Outline, BorderRadius50P, PlaceSelfStart, Aspect1, Padding1, Margin1, OpacityHigh),
                 onClick = {
                     field.set(null)
                 }) {
