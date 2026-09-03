@@ -22,7 +22,7 @@ fun FlowContent.postSection(posts: List<FeedEntity>) {
 
 fun FlowContent.layoutPosts(block: FlowContent.() -> Unit) {
     mount(PostKey.PostLayoutId) {
-        column(modify(Gap2)) {
+        column(modify(Gap2Px, BorderRadius2, OverflowClip, MoonShadow)) {
             block()
         }
     }

@@ -8,7 +8,7 @@ val LayoutUtilityCss
         Flex0, Flex1, Flex2, Flex3, Flex4, FlexMd1, FlexMd2, FlexBasis25, FlexBasis33, FlexShrink0,
         FlexDirectionRow, QueryRowReverse, NoWrap, FlexWrap, FlexBasisMin, DisplayFlex,
         // Align
-        AlignItemsCenter, AlignItemsStretch, AlignItemsStart, AlignItemsEnd,
+        AlignItemsCenter, AlignItemsStretch, AlignItemsStart, AlignItemsEnd, AlignContentStart, AlignContentCenter,
         JustifyContentCenter, JustifyContentEnd, JustifyContentSpaceAround, JustifyContentSpaceBetween,
         JustifySelfEnd, JustifySelfCenter, JustifyContentStretch, JustifyContentStart,
         AlignSelfStart, AlignSelfCenter, AlignSelfEnd, AlignSelfStretch, JustifySelfStart, JustifySelfStretch,
@@ -66,7 +66,7 @@ val Flex3 = utilityOf("flex-3", "flex: 3")
 val Flex4 = utilityOf("flex-4", "flex: 4")
 val FlexMd1 = CssUtility("flex-md-1")
 val FlexMd2 = CssUtility("flex-md-2")
-val FlexShrink0 = utilityOf("flex-grow", "flex-shrink: 0")
+val FlexShrink0 = utilityOf("flex-shrink", "flex-shrink: 0")
 
 // Flex Basis
 val FlexBasis25 = utilityOf("flex-basis-25", "flex-basis: 25%")
@@ -77,6 +77,8 @@ val AlignItemsCenter = utilityOf("align-items-center", "align-items: center")
 val AlignItemsStretch = utilityOf("align-items-stretch", "align-items: stretch")
 val AlignItemsStart = utilityOf("align-items-start", "align-items: flex-start")
 val AlignItemsEnd = utilityOf("align-items-end", "align-items: flex-end")
+val AlignContentStart = utilityOf("align-content-start", "align-content: flex-start")
+val AlignContentCenter = utilityOf("align-content-center", "align-content: center")
 
 // Justify Content
 val JustifyContentCenter = utilityOf("justify-content-center", "justify-content: center")
