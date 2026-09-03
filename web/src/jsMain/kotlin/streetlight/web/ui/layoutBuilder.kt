@@ -23,7 +23,7 @@ import streetlight.web.model.LayoutEditor
 import kotlin.uuid.Uuid
 
 fun ViewScope.layoutBuilder(model: LayoutEditor) {
-    column(BodyStyle.Column) {
+    column(BodyStyle.MainColumn) {
         containerBuilder(model, model.mainContainerId)
         // td: footer designer
         flowBlock(model.removedBlockIdsState) { removedBlockIds ->

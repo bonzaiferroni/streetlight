@@ -7,7 +7,7 @@ import streetlight.web.layouts.entityRow
 
 fun ViewScope.viewGalaxyList() {
 
-    column(mod = BodyStyle.Column) {
+    column(mod = BodyStyle.MainColumn) {
         featureHeader("Galaxies", "Streetlight Communities", SiteImage.HelixNebula)
 
         tabs(Id("galaxy-list-tabs")) {

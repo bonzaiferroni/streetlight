@@ -17,7 +17,7 @@ fun ViewScope.viewEventUpdater(content: EventUpdaterContent, star: Star) {
     val edit = content.event.toEdit()
     val model = edit.let { app.getEventEditor(it, contentScope) }
 
-    column(BodyStyle.Column) {
+    column(BodyStyle.MainColumn) {
         tabs {
             tab("edit") {
                 column {

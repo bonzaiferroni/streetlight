@@ -29,7 +29,7 @@ import streetlight.web.model.AccountEditor
 import streetlight.web.shells.starRouteMenu
 
 fun ViewScope.viewAccountUpdater(star: Star, model: AccountEditor) {
-    column(mod = BodyStyle.Column) {
+    column(mod = BodyStyle.MainColumn) {
         topLogo()
 
         introSection("Account", lottie = LottieFile.ServerSync) {

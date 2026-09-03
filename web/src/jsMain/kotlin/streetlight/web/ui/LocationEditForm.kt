@@ -5,9 +5,8 @@ import koala.css.*
 import koala.dom.*
 import streetlight.model.data.LocationProperty
 import streetlight.web.model.LocationEditor
-import streetlight.web.ui.formFiller
 
-fun ViewScope.locationEditFormBody(model: LocationEditor) = column(BodyStyle.Column) {
+fun ViewScope.locationEditFormBody(model: LocationEditor) = column(BodyStyle.MainColumn) {
     locationWebsiteForm(model)
     locationDetailsForm(model)
     locationImageForm(model)

@@ -19,7 +19,7 @@ fun FlowContent.renderLayout(content: LocationContent) {
 }
 
 fun FlowContent.renderColumn(blocks: List<LayoutBlock>, content: LocationContent) {
-    column(BodyStyle.Column) {
+    column(BodyStyle.MainColumn) {
         blocks.forEach {
             renderBlock(it, content)
         }
@@ -112,7 +112,7 @@ fun FlowContent.renderFooter() {
 }
 
 fun FlowContent.renderColumn(block: ColumnsBlock, content: LocationContent) {
-    row(modify(BodyStyle.FlexGrid2)) {
+    row(modify(BodyStyle.FormRow)) {
         block.blocks.forEach {
             renderBlock(it, content)
         }

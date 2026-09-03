@@ -1,6 +1,5 @@
 package streetlight.web.shells
 
-import kampfire.model.toUrl
 import koala.css.*
 import koala.html.*
 import kotlinx.html.FlowContent
@@ -10,65 +9,71 @@ import streetlight.web.layouts.costCell
 import streetlight.web.layouts.starCell
 import streetlight.web.layouts.startsAtCell
 import streetlight.web.pages.appFooter
+import streetlight.web.pages.appHeader
+import streetlight.web.ui.BodyStyle
 import streetlight.web.ui.featureHeader
 import streetlight.web.ui.starLightCell
 
 fun FlowContent.eventShell(event: EventLocation) {
-    column(EventShell.id, modify(AlignItemsStretch, Gap4, MarginTop1)) {
-        featureHeader(
-            title = event.title,
-            descriptor = "at",
-            subtitle = event.locationName,
-            image = event.image,
-            description = event.description,
-            cellContent = {
-                startsAtCell(event.startsAt)
-                event.cost?.let {
-                    costCell(it, event.url)
-                }
-                starCell(event.scout)
-                starLightCell(event)
-            },
-            links = event.links,
-            editRoute = EventUpdateRoute(event.eventSlug),
-        )
+    column(EventShell.id, modify(Gap0)) {
+        appHeader()
 
-        tabs {
-            tab("Location") {
-                column {
-                    card(modify(QueryContainer, ZenBg, BorderRadius2, Padding0, OverflowClip, Gap0)) {
-                        column(modify(ContainerMdRow, FlexItems1, CardBg, Gap0)) {
-                            geoMapMount(event.geoPoint, modify(MinHeight48))
-                            column(modify(JustifyContentCenter, AlignItemsCenter)) {
-                                event.locationImage?.small?.let {
-                                    image(it, modify(Flex1, BorderRadius2, MaxHeight16))
-                                }
-                                column(modify(PaddingX1, PaddingY2, Gap0)) {
-                                    heading2(event.locationName, modify(TextAlignCenter, MinWidth0))
-                                    event.addressLine?.let {
-                                        filigree {
-                                            heading4(it, modify(OpacityHigh, TextAlignCenter))
+        column(modify(BodyStyle.MainColumn)) {
+            featureHeader(
+                title = event.title,
+                descriptor = "at",
+                subtitle = event.locationName,
+                image = event.image,
+                description = event.description,
+                cellContent = {
+                    startsAtCell(event.startsAt)
+                    event.cost?.let {
+                        costCell(it, event.url)
+                    }
+                    starCell(event.scout)
+                    starLightCell(event)
+                },
+                links = event.links,
+                editRoute = EventUpdateRoute(event.eventSlug),
+            )
+
+            tabs {
+                tab("Location") {
+                    column {
+                        card(modify(QueryContainer, ZenBg, BorderRadius2, Padding0, OverflowClip, Gap0)) {
+                            column(modify(ContainerMdRow, FlexItems1, CardBg, Gap0)) {
+                                geoMapMount(event.geoPoint, modify(MinHeight48))
+                                column(modify(JustifyContentCenter, AlignItemsCenter)) {
+                                    event.locationImage?.small?.let {
+                                        image(it, modify(Flex1, BorderRadius2, MaxHeight16))
+                                    }
+                                    column(modify(PaddingX1, PaddingY2, Gap0)) {
+                                        heading2(event.locationName, modify(TextAlignCenter, MinWidth0))
+                                        event.addressLine?.let {
+                                            filigree {
+                                                heading4(it, modify(OpacityHigh, TextAlignCenter))
+                                            }
                                         }
                                     }
                                 }
                             }
-                        }
 
-                        column(modify(ContainerMdRow, Padding4, Gap4, AlignItemsStart)) {
-                            column(modify(Flex4)) {
-                                event.locationDescription?.let {
-                                    markdown(it)
+                            column(modify(ContainerMdRow, Padding4, Gap4, AlignItemsStart)) {
+                                column(modify(Flex4)) {
+                                    event.locationDescription?.let {
+                                        markdown(it)
+                                    }
                                 }
                             }
                         }
                     }
                 }
+                tab("Comments") {
+                    textBlock("coming soon")
+                }
             }
-            tab("Comments") {
-                textBlock("coming soon")
-            }
+            appFooter(EventShell.SourcePath)
         }
-        appFooter(EventShell.SourcePath)
     }
 
     dataIsland(EventShell.island, event)

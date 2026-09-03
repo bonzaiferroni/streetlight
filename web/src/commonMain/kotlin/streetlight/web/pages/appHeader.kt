@@ -9,13 +9,13 @@ import kotlinx.html.FlowContent
 import streetlight.model.ui.HomeRoute
 
 fun FlowContent.appHeader(
-    height: Modifier = Height8
+    mod: ModifierSet? = modify(Height8, Padding1)
 ) {
-    row(modify(height, JustifyContentCenter, Gap0, Padding1, AlignItemsCenter)) {
+    row(modify(mod, JustifyContentCenter, Gap0, Padding1, AlignItemsCenter)) {
         val rayMod = modify(Flex1, MaxWidth24, Margin1, MoonDropShadow, Height2Px, AspectAuto, ParticleRay)
         hr(modify(rayMod, AccentFg, FlipX))
-        navigation(HomeRoute, modify(DisplayFlex)) {
-            textLogo(modify(Height7, FocusTarget))
+        navigation(HomeRoute, modify(Height100Pct)) {
+            textLogo(modify(Height100Pct, FocusTarget))
         }
         hr(modify(rayMod, PrimaryFg))
     }

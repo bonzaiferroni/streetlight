@@ -13,14 +13,13 @@ import streetlight.model.ui.HomeRoute
 import streetlight.model.ui.GalaxyListRoute
 import streetlight.model.ui.SandboxRoute
 import streetlight.model.ui.StarDashRoute
-import streetlight.model.ui.TalentProfileRoute
 import streetlight.web.model.DataCache
 import streetlight.web.model.SessionGate
 import streetlight.model.ui.toRoute
 import streetlight.web.shells.starRouteMenu
 
 fun ViewScope.viewStarDash(star: Star) {
-    column(mod = BodyStyle.Column) {
+    column(mod = BodyStyle.MainColumn) {
         tabs {
             tab("activity") {
                 activityContent(star)

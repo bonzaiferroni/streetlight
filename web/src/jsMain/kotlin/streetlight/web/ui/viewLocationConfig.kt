@@ -37,7 +37,7 @@ fun ViewScope.viewLocationConfig(
         }
     }
 
-    column(BodyStyle.Column) {
+    column(BodyStyle.MainColumn) {
         column(modify(Gap0, MarginTop1)) {
             filigree {
                 heading3("configure", modify(TextUppercase, OpacityHalf))

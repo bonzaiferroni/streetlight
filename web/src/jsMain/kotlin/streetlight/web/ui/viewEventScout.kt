@@ -6,7 +6,6 @@ import koala.html.topLogo
 import koala.model.dedupNotNull
 import streetlight.model.data.EventEdit
 import streetlight.model.data.Galaxy
-import streetlight.model.data.Location
 import streetlight.model.data.LocationEdit
 import streetlight.model.ui.EventScoutRoute
 import streetlight.model.ui.GalaxyRoute
@@ -26,7 +25,7 @@ fun ViewScope.viewEventScout(galaxy: Galaxy, isAdmin: Boolean) {
         else -> false
     }
 
-    section(BodyStyle.Column) {
+    section(BodyStyle.MainColumn) {
         topLogo()
 
         introSection("Event Scout", lottie = LottieFile.StrollingMan) {

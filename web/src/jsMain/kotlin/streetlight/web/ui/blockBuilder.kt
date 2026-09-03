@@ -254,7 +254,7 @@ fun ViewScope.columnBuilder(editor: BlockEditor) {
     column {
         editorRow(editor)
         flowBlock(container.blockIdsField) { blockIds ->
-            row(modify(BodyStyle.FlexGrid2)) {
+            row(modify(BodyStyle.FormRow)) {
                 blockIds.forEach { blockId ->
                     blockBuilder(editor.model, blockId)
                 }

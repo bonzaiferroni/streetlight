@@ -48,7 +48,7 @@ fun ViewScope.formSection(
 fun ViewScope.formRow(
     mod: ModifierSet? = null,
     content: DIV.() -> Unit
-) = row(modify(BodyStyle.FlexGrid2, mod), content = content)
+) = row(modify(BodyStyle.FormRow, mod), content = content)
 
 fun ViewScope.formHeading(
     text: String
