@@ -49,14 +49,14 @@ $Icon {
     mask-image: var(--mask-url);
     -webkit-mask-image: var(--mask-url);
 
-    mask-size: contain;
-    -webkit-mask-size: contain;
-
     mask-repeat: no-repeat;
     -webkit-mask-repeat: no-repeat;
 
     mask-position: center;
     -webkit-mask-position: center;
+    
+    mask-size: 100% 100%;
+    -webkit-mask-size: 100% 100%;
 }
 
 $Stretch {

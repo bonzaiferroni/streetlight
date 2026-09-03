@@ -26,7 +26,7 @@ val HrCss = with(HrStyle) {"""
 $Class {
     border: none;
     height: 2px;
-    background-color: currentColor;
+    background: color-mix(in srgb, currentColor 50%, transparent);
 }
 """}
 

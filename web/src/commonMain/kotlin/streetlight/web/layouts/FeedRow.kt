@@ -32,7 +32,9 @@ fun FlowContent.feedRow(
                     navigationIfNotNull(postRoute) {
                         heading5(heading, modify(LineHeight115, Shrinkable, LineClamp2, TextOverflowEllipses))
                     }
-                    spacer(modify(Height2Px, InkGradientBg, MarginTopTiny))
+                    spacer(modify(Height2Px, InkGradientBg, MarginTopTiny, ParticleRay)) {
+                        setRandomSeed()
+                    }
                     subheading?.invoke(this)
                 }
             }

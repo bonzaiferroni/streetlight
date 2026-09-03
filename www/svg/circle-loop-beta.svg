@@ -9,23 +9,20 @@
             transform-origin: 50% 50%;
             animation: spin 1.6s linear infinite;
         }
-        .zeta { animation-duration: 2s; }
-        .iota { animation-duration: 3s; }
+        .zeta { animation-duration: 3.2s; }
+        .iota { animation-duration: 4.8s; }
         @keyframes spin {
             from { transform: rotate(-90deg); }
             to { transform: rotate(270deg); }
         }
     </style>
-    <circle class="beta" cx="12" cy="12" r="10" pathLength="2"/>
-    <circle class="zeta" cx="12" cy="12" r="10" pathLength="2"/>
-    <circle class="iota" cx="12" cy="12" r="10" pathLength="2"/>
-    <circle class="beta" cx="12" cy="12" r="7.5" pathLength="2"/>
-    <circle class="zeta" cx="12" cy="12" r="7.5" pathLength="2"/>
-    <circle class="iota" cx="12" cy="12" r="7.5" pathLength="2"/>
-    <circle class="beta" cx="12" cy="12" r="5" pathLength="2"/>
-    <circle class="zeta" cx="12" cy="12" r="5" pathLength="2"/>
-    <circle class="iota" cx="12" cy="12" r="5" pathLength="2"/>
-    <circle class="beta" cx="12" cy="12" r="2.5" pathLength="2"/>
-    <circle class="zeta" cx="12" cy="12" r="2.5" pathLength="2"/>
-    <circle class="iota" cx="12" cy="12" r="2.5" pathLength="2"/>
+    <circle class="beta" cx="12" cy="12" r="9" pathLength="2"/>
+    <circle class="beta" cx="12" cy="12" r="6" pathLength="2"/>
+    <circle class="beta" cx="12" cy="12" r="3" pathLength="2"/>
+    <circle class="zeta" cx="12" cy="12" r="9" pathLength="2"/>
+    <circle class="zeta" cx="12" cy="12" r="6" pathLength="2"/>
+    <circle class="zeta" cx="12" cy="12" r="3" pathLength="2"/>
+    <circle class="iota" cx="12" cy="12" r="9" pathLength="2"/>
+    <circle class="iota" cx="12" cy="12" r="6" pathLength="2"/>
+    <circle class="iota" cx="12" cy="12" r="3" pathLength="2"/>
 </svg>

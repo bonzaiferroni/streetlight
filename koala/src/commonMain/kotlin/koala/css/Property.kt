@@ -7,6 +7,7 @@ import kotlinx.css.GridTemplateColumns
 import kotlinx.css.LinearDimension
 import kotlinx.html.CoreAttributeGroupFacade
 import kotlinx.html.style
+import kotlin.random.Random
 
 data class Property<T: Any>(
     val identifier: String,
@@ -46,6 +47,7 @@ data class Property<T: Any>(
         val ContainerAnchorId = Property<PositionAnchor>("anchor-container-id")
         val ColumnCount = Property<Int>("column-count")
         val InlineImage = Property<Url>("inline-image")
+        val RandomSeed = Property<Number>("random-seed")
     }
 }
 
@@ -94,6 +96,9 @@ fun CoreAttributeGroupFacade.setPositionAnchor(value: PositionAnchor) =
 
 fun CoreAttributeGroupFacade.setAnchorName(anchor: PositionAnchor) =
     setStyle(Property.AnchorName.to(anchor))
+
+fun CoreAttributeGroupFacade.setRandomSeed(multiplier: Int = 1) =
+    setStyle(Property.RandomSeed.to(Random.nextDouble() * multiplier))
 
 //fun CoreAttributeGroupFacade.setIdAndAnchor(id: Id) {
 //    setId(id)

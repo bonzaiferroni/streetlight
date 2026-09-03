@@ -168,3 +168,63 @@ timestamp,sha,benchmark,variant,cache,headless,run,scripting,rendering,painting,
 2026-08-14T16:15:09.188Z,a0c8a24d,"Light Complexity","simple-mix",cold,true,4,1000.2,377.9,4480.0,1145.3,1145.4,272.0
 2026-08-14T16:15:09.188Z,a0c8a24d,"Light Complexity","control",cold,true,5,991.4,359.6,2801.9,1065.8,1065.9,240.0
 2026-08-14T16:15:09.188Z,a0c8a24d,"Light Complexity","simple-mix",cold,true,5,997.3,325.9,4354.2,1026.5,1026.5,188.0
+2026-09-02T21:48:37.786Z,6169d3cd,"Filigree Animation","particles",cold,false,1,2415.0,522.4,1233.5,1991.0,2023.5,524.0
+2026-09-02T21:48:37.786Z,6169d3cd,"Filigree Animation","control",cold,false,1,1539.9,514.6,794.5,2099.2,2099.4,896.0
+2026-09-02T21:48:37.786Z,6169d3cd,"Filigree Animation","particles",cold,false,2,1782.1,515.9,1402.2,1441.4,1441.4,200.0
+2026-09-02T21:48:37.786Z,6169d3cd,"Filigree Animation","control",cold,false,2,1432.3,389.1,753.9,1290.7,1290.8,200.0
+2026-09-02T21:48:37.786Z,6169d3cd,"Filigree Animation","particles",cold,false,3,1502.6,481.9,1237.1,1488.8,1489.0,232.0
+2026-09-02T21:48:37.786Z,6169d3cd,"Filigree Animation","control",cold,false,3,1574.4,434.1,778.9,1438.9,1439.1,220.0
+2026-09-02T21:48:37.786Z,6169d3cd,"Filigree Animation","particles",cold,false,4,1404.9,471.7,1260.6,1137.7,1137.8,192.0
+2026-09-02T21:48:37.786Z,6169d3cd,"Filigree Animation","control",cold,false,4,1544.7,459.3,844.7,1159.1,1159.3,208.0
+2026-09-02T21:48:37.786Z,6169d3cd,"Filigree Animation","control",cold,false,5,1500.4,456.4,977.2,1089.5,1089.7,188.0
+2026-09-02T21:48:37.786Z,6169d3cd,"Filigree Animation","particles",cold,false,5,1469.2,522.2,1468.7,1097.8,1098.0,196.0
+2026-09-02T21:51:39.160Z,6169d3cd,"Filigree Animation","particles",cold,true,1,1273.3,525.6,6229.8,1401.6,1401.6,244.0
+2026-09-02T21:51:39.160Z,6169d3cd,"Filigree Animation","control",cold,true,1,1129.3,419.1,5113.4,1238.1,1238.2,228.0
+2026-09-02T21:51:39.160Z,6169d3cd,"Filigree Animation","control",cold,true,2,1150.6,400.3,5277.9,1136.1,1136.2,188.0
+2026-09-02T21:51:39.160Z,6169d3cd,"Filigree Animation","particles",cold,true,2,1148.4,461.4,6492.3,1094.5,1094.5,160.0
+2026-09-02T21:51:39.160Z,6169d3cd,"Filigree Animation","particles",cold,true,3,1196.2,457.9,6344.9,1200.6,1200.7,172.0
+2026-09-02T21:51:39.160Z,6169d3cd,"Filigree Animation","control",cold,true,3,1101.1,389.6,5119.3,1173.7,1173.7,176.0
+2026-09-02T21:51:39.160Z,6169d3cd,"Filigree Animation","particles",cold,true,4,1142.9,443.8,6257.1,1217.5,1217.6,188.0
+2026-09-02T21:51:39.160Z,6169d3cd,"Filigree Animation","control",cold,true,4,1176.2,382.4,5171.2,1350.2,1350.3,184.0
+2026-09-02T21:51:39.160Z,6169d3cd,"Filigree Animation","particles",cold,true,5,1115.5,458.3,5840.9,1277.4,1277.5,296.0
+2026-09-02T21:51:39.160Z,6169d3cd,"Filigree Animation","control",cold,true,5,1261.4,397.8,6025.4,1279.4,1279.5,172.0
+2026-09-02T22:01:19.207Z,6169d3cd,"Filigree Drop Shadow","no-shadow",cold,false,1,1576.8,551.5,1320.9,1508.6,1508.8,528.0
+2026-09-02T22:01:19.207Z,6169d3cd,"Filigree Drop Shadow","control",cold,false,1,1479.0,443.7,1102.4,1340.8,1341.1,384.0
+2026-09-02T22:01:19.207Z,6169d3cd,"Filigree Drop Shadow","control",cold,false,2,1545.2,483.4,1174.1,1175.0,1175.2,228.0
+2026-09-02T22:01:19.207Z,6169d3cd,"Filigree Drop Shadow","no-shadow",cold,false,2,1470.1,484.1,1202.1,1127.5,1127.7,200.0
+2026-09-02T22:01:19.207Z,6169d3cd,"Filigree Drop Shadow","no-shadow",cold,false,3,1458.8,491.3,1177.9,1223.9,1224.1,256.0
+2026-09-02T22:01:19.207Z,6169d3cd,"Filigree Drop Shadow","control",cold,false,3,1910.7,445.9,1174.4,1236.2,1236.3,212.0
+2026-09-02T22:01:19.207Z,6169d3cd,"Filigree Drop Shadow","no-shadow",cold,false,4,1491.0,443.5,1101.4,1196.8,1197.0,192.0
+2026-09-02T22:01:19.207Z,6169d3cd,"Filigree Drop Shadow","control",cold,false,4,1432.7,456.4,1146.5,1149.0,1149.1,224.0
+2026-09-02T22:01:19.207Z,6169d3cd,"Filigree Drop Shadow","control",cold,false,5,1435.0,444.5,1186.6,1196.5,1196.6,196.0
+2026-09-02T22:01:19.207Z,6169d3cd,"Filigree Drop Shadow","no-shadow",cold,false,5,1898.3,412.5,1073.8,1150.4,1150.5,204.0
+2026-09-02T22:49:42.255Z,6169d3cd,"Pseudo Particles","control",cold,false,1,2006.1,510.2,1137.5,1511.8,1532.9,508.0
+2026-09-02T22:49:42.255Z,6169d3cd,"Pseudo Particles","pseuedo",cold,false,1,2022.8,501.8,957.2,1918.0,1918.2,920.0
+2026-09-02T22:49:42.255Z,6169d3cd,"Pseudo Particles","pseuedo",cold,false,2,1840.4,477.3,828.6,1212.5,1212.7,292.0
+2026-09-02T22:49:42.255Z,6169d3cd,"Pseudo Particles","control",cold,false,2,1449.6,443.9,1113.5,1159.3,1159.5,212.0
+2026-09-02T22:49:42.255Z,6169d3cd,"Pseudo Particles","control",cold,false,3,1701.2,495.8,1296.0,1231.2,1231.4,196.0
+2026-09-02T22:49:42.255Z,6169d3cd,"Pseudo Particles","pseuedo",cold,false,3,1738.0,559.7,1095.5,1204.4,1204.5,200.0
+2026-09-02T22:49:42.255Z,6169d3cd,"Pseudo Particles","pseuedo",cold,false,4,1440.2,480.2,855.0,1132.9,1133.1,212.0
+2026-09-02T22:49:42.255Z,6169d3cd,"Pseudo Particles","control",cold,false,4,1601.0,521.6,1252.4,1335.2,1335.4,316.0
+2026-09-02T22:49:42.255Z,6169d3cd,"Pseudo Particles","control",cold,false,5,1523.9,471.2,1224.5,1292.3,1292.5,232.0
+2026-09-02T22:49:42.255Z,6169d3cd,"Pseudo Particles","pseuedo",cold,false,5,1756.9,664.3,1164.1,1401.0,1401.2,260.0
+2026-09-02T23:17:57.084Z,6169d3cd,"Pseudo Particles","control",cold,false,1,1878.2,467.4,1117.4,1173.5,1173.8,280.0
+2026-09-02T23:17:57.084Z,6169d3cd,"Pseudo Particles","pseuedo",cold,false,1,1475.7,512.7,899.0,1436.3,1436.4,404.0
+2026-09-02T23:17:57.084Z,6169d3cd,"Pseudo Particles","pseuedo",cold,false,2,1750.5,471.6,839.0,1198.7,1198.8,208.0
+2026-09-02T23:17:57.084Z,6169d3cd,"Pseudo Particles","control",cold,false,2,1698.8,420.0,1141.1,1201.9,1202.0,200.0
+2026-09-02T23:17:57.084Z,6169d3cd,"Pseudo Particles","control",cold,false,3,1596.7,467.9,1454.9,1193.0,1193.2,252.0
+2026-09-02T23:17:57.084Z,6169d3cd,"Pseudo Particles","pseuedo",cold,false,3,2301.4,496.2,853.3,3063.9,3078.2,2104.0
+2026-09-02T23:17:57.084Z,6169d3cd,"Pseudo Particles","control",cold,false,4,1539.7,438.0,1154.2,1437.8,1438.0,280.0
+2026-09-02T23:17:57.084Z,6169d3cd,"Pseudo Particles","pseuedo",cold,false,4,1534.7,500.9,905.3,1359.6,1359.7,220.0
+2026-09-02T23:17:57.084Z,6169d3cd,"Pseudo Particles","pseuedo",cold,false,5,1467.9,475.3,850.8,1151.5,1151.6,220.0
+2026-09-02T23:17:57.084Z,6169d3cd,"Pseudo Particles","control",cold,false,5,1628.2,435.9,1219.6,1208.7,1208.9,204.0
+2026-09-02T23:21:05.995Z,6169d3cd,"Pseudo Particles","pseuedo",cold,true,1,1279.2,552.9,5346.3,1671.3,1671.3,204.0
+2026-09-02T23:21:05.995Z,6169d3cd,"Pseudo Particles","control",cold,true,1,1209.4,492.0,5975.1,1108.0,1108.1,168.0
+2026-09-02T23:21:05.995Z,6169d3cd,"Pseudo Particles","pseuedo",cold,true,2,1091.8,510.8,5088.6,1172.6,1172.6,192.0
+2026-09-02T23:21:05.995Z,6169d3cd,"Pseudo Particles","control",cold,true,2,1144.0,481.7,6398.8,1195.9,1196.0,172.0
+2026-09-02T23:21:05.995Z,6169d3cd,"Pseudo Particles","control",cold,true,3,1150.8,449.1,5859.4,1192.6,1192.7,180.0
+2026-09-02T23:21:05.995Z,6169d3cd,"Pseudo Particles","pseuedo",cold,true,3,1267.9,489.4,5119.9,1292.8,1292.9,172.0
+2026-09-02T23:21:05.995Z,6169d3cd,"Pseudo Particles","control",cold,true,4,1148.1,440.0,6264.8,1276.7,1276.7,192.0
+2026-09-02T23:21:05.995Z,6169d3cd,"Pseudo Particles","pseuedo",cold,true,4,1153.0,507.6,6289.5,1165.8,1165.8,188.0
+2026-09-02T23:21:05.995Z,6169d3cd,"Pseudo Particles","control",cold,true,5,1196.1,452.3,6660.9,1225.2,1225.2,180.0
+2026-09-02T23:21:05.995Z,6169d3cd,"Pseudo Particles","pseuedo",cold,true,5,1119.1,490.9,5485.1,1144.2,1144.3,188.0

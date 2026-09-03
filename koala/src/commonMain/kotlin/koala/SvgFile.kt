@@ -109,6 +109,7 @@ object SvgFile : FileSet<Svg>() {
 
     // animations
     val CircleLoop = add("circle-loop-beta.svg")
+    val LineParticleLoop = add("line-particle-loop.svg")
 
     // filigree
     val CircularFiligree = add("circular-filigree.svg")

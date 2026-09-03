@@ -6,7 +6,7 @@ import koala.css.Modifier
 import koala.css.Required
 import koala.css.Valid
 import koala.css.VisibilityHidden
-import koala.css.Working
+import koala.css.Shimmer
 import kampfire.model.Tap
 import kampfire.model.tapOf
 import koala.utils.launch
@@ -128,8 +128,8 @@ fun HTMLElement.flowIsWorking(isWorkingFlow: Flow<Boolean>, scope: CoroutineScop
     scope.launch {
         isWorkingFlow.collect { isWorking ->
             when (isWorking) {
-                true -> modify(Working)
-                else -> unmodify(Working)
+                true -> modify(Shimmer)
+                else -> unmodify(Shimmer)
             }
         }
     }

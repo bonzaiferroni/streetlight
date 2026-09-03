@@ -66,15 +66,13 @@ fun <T, K> ViewScope.lazyColumn(
         currentView.mount.mountView(item)
     }
 
-    fun remove(index: Int) {
-        val currentView = views[index]
-        currentView.dispose()
-        currentView.mount.remove()
-        views.removeAt(index)
-    }
-
     fun remove(index: Int, count: Int) {
-        repeat(count) { remove(index) }
+        repeat(count) {
+            val currentView = views[index]
+            currentView.dispose()
+            currentView.mount.remove()
+            views.removeAt(index)
+        }
         setScrollState()
     }
 

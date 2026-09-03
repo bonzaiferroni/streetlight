@@ -36,7 +36,7 @@ val DisplayUtilityCss
         // Button
         ButtonPadding, ButtonBorderRadius,
         // Misc
-        Focus, Clickable, PointerEventsAuto, PointerEventsNone, BlurContent, AspectRatioAuto,
+        Focus, Clickable, PointerEventsAuto, PointerEventsNone, BlurContent, AspectAuto,
     )
 
 // Display
@@ -104,14 +104,14 @@ val ColorSchemeFg = utilityOf("color-scheme-fg", "color: var(--color-scheme, cur
 val ColorSchemeBg = utilityOf("color-scheme-bg", "background-color: var(--color-scheme, currentColor)")
 val PaperGradientBg = utilityOf("paper-gradient-bg", "background: var(--paper-gradient-bg)")
 val CardGradientBg = utilityOf("card-gradient-bg", "background: var(--card-gradient-bg)")
-val InkGradientBg = utilityOf("ink-gradient-bg", "background: var(--ink-gradient-bg)")
+val InkGradientBg = utilityOf("ink-gradient-bg",
+    "background: color-mix(in srgb, currentColor 50%, transparent)", "mask-image: var(--ink-gradient-bg)")
 val Zen = Class("zen")
 val Secondary = Class("secondary")
 val Danger = Class("danger")
 val Selected = Class("selected")
 val Valid = Class("valid")
 val Required = Class("required")
-val Working = Class("working")
 val NightInk = utilityOf("night-ink", "color: var(--white-fg)")
 val DayInk = utilityOf("day-ink", "color: var(--black-fg)")
 
@@ -201,7 +201,7 @@ val VignetteBehind = CssUtility("vignette-behind", """
 val PointerEventsAuto = utilityOf("pointer-events-auto", "pointer-events: auto")
 val PointerEventsNone = utilityOf("pointer-events-none", "pointer-events: none")
 val BlurContent = utilityOf("blur-content", "filter: var(--strong-blur)")
-val AspectRatioAuto = utilityOf("aspect-ratio-auto", "aspect-ratio: auto")
+val AspectAuto = utilityOf("aspect-ratio-auto", "aspect-ratio: auto")
 
 
 // defined in stylesheet

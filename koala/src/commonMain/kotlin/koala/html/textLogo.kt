@@ -9,6 +9,7 @@ import koala.css.GlowShadow
 import koala.css.Height5
 import koala.css.ModifierSet
 import koala.css.MoonDropShadow
+import koala.css.ParticleRay
 import koala.css.PrimaryFg
 import koala.css.Property
 import koala.css.modify

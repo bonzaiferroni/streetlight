@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 2" preserveAspectRatio="none">
+    <style>
+        circle {
+            animation: drift 6s linear infinite;
+        }
+        .zeta { animation-duration: 3s; }
+        .iota { animation-duration: 2s; }
+        @keyframes drift {
+            0%   { transform: translateX(0); opacity: 0; }
+            20%  { transform: translateX(0); opacity: 0; }
+            60%  { opacity: 0.5; }
+            80%  { opacity: 0.5; }
+            100% { transform: translateX(94px); opacity: 0; }
+        }
+    </style>
+    <line x1="1" y1="1" x2="95" y2="1" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+    <defs>
+        <radialGradient id="glow">
+            <stop offset="0" stop-color="currentColor"/>
+            <stop offset="1" stop-color="currentColor" stop-opacity="0"/>
+        </radialGradient>
+    </defs>
+    <circle class="beta" cx="1" cy="1" r="16" fill="url(#glow)"/>
+    <circle class="zeta" cx="1" cy="1" r="16" fill="url(#glow)"/>
+    <circle class="iota" cx="1" cy="1" r="16" fill="url(#glow)"/>
+</svg>
