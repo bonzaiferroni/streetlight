@@ -3,7 +3,7 @@ package koala.css
 val TextUtilityCss
     get() = listOf(
         // font weight/style
-        Bold, Italic, TextSmall, TextLarge, GrowText, TextThin,
+        Bold, Italic, TextSmall, TextLarge, GrowText, TextThin, TextBoxTrim,
         // line height
         LineHeight1, LineHeight115, ParagraphLineHeight,
         // misc
@@ -15,6 +15,7 @@ val Bold = utilityOf("bold", "font-weight: 600")
 val Italic = utilityOf("italic", "font-style: italic")
 val TextSmall = utilityOf("text-small", "font-size: var(--text-small) !important")
 val TextLarge = utilityOf("text-large", "font-size: var(--text-large) !important")
+val TextBoxTrim = utilityOf("text-box-trim", "text-box: trim-both cap alphabetic")
 val TextThin = utilityOf("text-thin", "font-weight: 300")
 val GrowText = utilityOf("grow-text", "font-size: 1.1em")
 val WhiteSpaceNormal = utilityOf("white-space-normal", "white-space: normal")

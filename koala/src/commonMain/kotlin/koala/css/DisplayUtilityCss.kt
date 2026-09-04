@@ -16,7 +16,8 @@ val DisplayUtilityCss
         // Border
         SideBorder,
         // Color
-        NightInk, DayInk, PrimaryFg, AccentFg, ColorSchemeFg, ColorSchemeBg, SystemFg, WhiteFg, ErrorFg, CautionFg, ValidFg,
+        NightInk, DayInk, PrimaryFg, AccentFg, SystemFg, WhiteFg, ErrorFg, CautionFg, ValidFg,
+        ColorSchemeFg, ColorSchemeBg, ColorSchemeBorder,
         // Overflow
         OverflowHidden, OverflowWrapAnywhere, OverflowClip, OverflowXAuto, OverflowXHidden, OverflowYAuto, OverflowYScroll,
         OverscrollBehaviorContain, ScrollbarWidthNone,
@@ -101,6 +102,7 @@ val ErrorFg = utilityOf("red-fg", "color: var(--error-fg)")
 val CautionFg = utilityOf("caution-fg", "color: var(--caution-fg)")
 val ValidFg = utilityOf("valid-fg", "color: var(--valid-fg)")
 val ColorSchemeFg = utilityOf("color-scheme-fg", "color: var(--color-scheme, currentColor)")
+val ColorSchemeBorder = utilityOf("color-scheme-border", "border: 3px solid var(--color-scheme, currentColor)")
 val ColorSchemeBg = utilityOf("color-scheme-bg", "background-color: var(--color-scheme, currentColor)")
 val PaperGradientBg = utilityOf("paper-gradient-bg", "background: var(--paper-gradient-bg)")
 val CardGradientBg = utilityOf("card-gradient-bg", "background: var(--card-gradient-bg)")

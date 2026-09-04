@@ -1,37 +1,43 @@
 package streetlight.web.layouts
 
+import kabinet.utils.toMetricString
 import kampfire.api.Markdown
 import koala.Image
 import koala.SiteImage
+import koala.Svg
+import koala.SvgFile
 import koala.css.*
 import koala.html.*
 import kotlinx.css.GridTemplateColumns
-import kotlinx.css.fr
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import streetlight.model.data.ExtraLink
+import streetlight.model.data.PostType
 
 fun FlowContent.feedRow(
     heading: String,
     postRoute: AppRoute?,
     image: Image?,
     description: Markdown?,
-    colorScheme: ColorScheme = ColorScheme.Primary,
+    postType: PostType? = null,
+    light: Int? = null,
     links: List<ExtraLink>?,
     cells: (FlowContent.() -> Unit)?,
     subheading: (DIV.() -> Unit)?,
 ) {
     val imageUrl = image?.thumb ?: SiteImage.placeholder.thumb // td: make placeholder depend on post type
+    val colorScheme = postType?.colorScheme ?: ColorScheme.Primary
+    val flair = postType?.flair ?: FlairIcon.Default
 
     div(modify(FeedRow.Base, modify(Padding1, ZenBg))) {
 
         div(modify(FeedRow.Content)) {
             setStyle(Property.ColorScheme.to(colorScheme.cssValue))
             row(modify(Height10)) {
-                navigationIfNotNull(postRoute, modify(Width10, OverflowClip, BorderRadius50P, BorderSolid2Px, MoonShadow)) {
+                navigationIfNotNull(postRoute, modify(Width10, OverflowClip, BorderRadius1, BorderSolid2Px, MoonShadow)) {
                     image(imageUrl, modify(Size100P, ObjectFitCover))
                 }
-                column(modify(Gap0, JustifyContentCenter, AlignItemsCenter, Flex1)) {
+                column(modify(Flex1, Gap0, JustifyContentCenter, AlignItemsCenter)) {
                     navigationIfNotNull(postRoute) {
                         heading5(heading, modify(LineHeight115, Shrinkable, LineClamp2, TextOverflowEllipses))
                     }
@@ -39,6 +45,10 @@ fun FlowContent.feedRow(
 //                        setRandomSeed()
 //                    }
                     subheading?.invoke(this)
+                }
+                when (light) {
+                    null -> flairBadge(flair.small)
+                    else -> lightBadge(light)
                 }
             }
             // spacer(modify(Height2Px, InkGradientBg, MarginTop2Px))
@@ -60,6 +70,18 @@ fun FlowContent.feedRow(
                 }
             }
         }
+    }
+}
+
+fun FlowContent.flairBadge(flair: Svg) {
+    icon(flair, modify(Width10, ColorSchemeFg, OpacityLow))
+}
+
+fun FlowContent.lightBadge(light: Int) {
+    column(modify(Width10, BorderRadius50P, ColorSchemeBorder, ZenBg, MoonShadow, AlignItemsCenter, JustifyContentCenter, Gap2Px)) {
+        icon(SvgFile.Flame, modify(Height2, OpacityLow))
+        textBlock(light.toMetricString(), modify(OpacityHigh))
+        icon(SvgFile.ArrowUp, modify(Height2, OpacityLow))
     }
 }
 
@@ -93,7 +115,7 @@ $Base {
 
 $Content {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(480px, 1fr));
     align-items: center;
     gap: var(--unit-spacing);
     align-self: start;
@@ -104,3 +126,18 @@ $ExpandedContent {
 }
 
 """}
+
+//                 row(modify(Width10, FlexWrap, BorderRadius1, Gap2Px, OverflowClip, FlexItems1)) {
+//                    menuCell(modify(MinWidth8)) {
+//                        row(modify(AlignItemsCenter)) {
+//                            icon(SvgFile.Star)
+//                            textBlock("2")
+//                        }
+//                    }
+//                    menuCell(modify(MinWidth4)) {
+//                        icon(SvgFile.Info)
+//                    }
+//                    menuCell(modify(MinWidth4)) {
+//                        icon(SvgFile.Dots)
+//                    }
+//                }

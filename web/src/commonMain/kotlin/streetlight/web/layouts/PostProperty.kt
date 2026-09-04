@@ -89,20 +89,3 @@ fun GalaxyPost.cellContent(showMore: Boolean) = when (this) {
     is EventPost -> cellContentOf(event, showMore, this)
     is LocationPost -> cellContentOf(location, this)
 }
-
-val GalaxyPost.colorScheme get() = when (this) {
-    is EventPost -> ColorScheme.Event
-    is LocationPost -> ColorScheme.Location
-    is MediaPost -> ColorScheme.Media
-}
-
-val GalaxyPost.flairIcon get() = when (this) {
-    is EventPost -> FlairIcon.Event
-    is LocationPost -> FlairIcon.Location
-    else -> null
-}
-
-enum class FlairIcon(val svg: Svg) {
-    Event(SvgFile.Calendar),
-    Location(SvgFile.Pin),
-}

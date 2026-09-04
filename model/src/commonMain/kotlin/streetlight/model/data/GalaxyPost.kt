@@ -8,6 +8,7 @@ import kotlin.uuid.Uuid
 @Serializable
 sealed interface GalaxyPost: FeedEntity {
     val base: Post
+    val postType: PostType
 }
 
 @Serializable
@@ -32,10 +33,14 @@ enum class PostOrder(label: String? = null): Labeled {
 data class LocationPost(
     val location: Location,
     override val base: Post,
-): GalaxyPost, FeedEntity by location
+): GalaxyPost, FeedEntity by location {
+    override val postType get() = PostType.Location
+}
 
 @Serializable
 data class EventPost(
     val event: EventLocation,
     override val base: Post,
-): GalaxyPost, FeedEntity by event
+): GalaxyPost, FeedEntity by event {
+    override val postType get() = PostType.Event
+}

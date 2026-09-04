@@ -54,7 +54,7 @@ data class MediaPost(
     override val sublabel get() = media.subtitle
     override val body get() = media.text
     override val links get() = media.link?.let { listOf(ExtraLink("link", it)) }
-
+    override val postType get() = PostType.Media
 }
 
 enum class MediaType(label: String? = null): Labeled {

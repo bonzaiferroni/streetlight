@@ -25,7 +25,7 @@ fun FlowContent.starLightCell(
     isLit: Boolean,
     uuid: Uuid,
     lightCount: Int?,
-    unlitSvg: Svg = SvgFile.StarOutline,
+    unlitSvg: Svg = SvgFile.Star,
     litSvg: Svg = SvgFile.StarFilled,
     mod: ModifierSet? = null,
     block: DIV.() -> Unit = {}

@@ -29,7 +29,7 @@ fun ViewScope.starToggle(
         else -> error("unsupported light type")
     }
     var litNow = isLit
-    fun svg() = if (litNow) SvgFile.StarFilled else SvgFile.StarOutline
+    fun svg() = if (litNow) SvgFile.StarFilled else SvgFile.Star
     icon(svg(), modify(Height3, mod)).onClickElement { icon ->
         launchEffect {
             icon.unmodify(ScaleIn)

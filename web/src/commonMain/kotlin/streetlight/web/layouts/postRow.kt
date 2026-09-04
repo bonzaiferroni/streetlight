@@ -15,6 +15,7 @@ import streetlight.model.data.Location
 import streetlight.model.data.LocationEdit
 import streetlight.model.data.Post
 import streetlight.model.data.FeedEntity
+import streetlight.model.data.PostType
 
 fun FlowContent.postRow(
     post: Post?,
@@ -23,7 +24,7 @@ fun FlowContent.postRow(
     postRoute: AppRoute?,
     image: Image?,
     description: Markdown?,
-    colorScheme: ColorScheme = ColorScheme.Primary,
+    postType: PostType?,
     links: List<ExtraLink>?,
     cells: (FlowContent.() -> Unit)?,
 ) = feedRow(
@@ -31,7 +32,7 @@ fun FlowContent.postRow(
     postRoute = postRoute,
     image = image,
     description = description,
-    colorScheme = colorScheme,
+    postType = postType,
     links = links,
     cells = cells,
 ) {
@@ -54,7 +55,7 @@ fun FlowContent.postRow(post: GalaxyPost) = postRow(
     // subRoute = post.subRoute,
     image = post.image,
     description = post.body,
-    colorScheme = post.colorScheme,
+    postType = post.postType,
     links = post.links,
     cells = post.cellContent(true),
     // isLit = post.isLit,
@@ -66,7 +67,6 @@ fun FlowContent.entityRow(entity: FeedEntity, showMore: Boolean = false) = feedR
     postRoute = entity.contentRoute,
     image = entity.image,
     description = entity.body,
-    colorScheme = entity.colorScheme,
     links = entity.links,
     cells = entity.getCells(showMore),
 ) {
