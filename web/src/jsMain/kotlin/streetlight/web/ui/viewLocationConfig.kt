@@ -13,6 +13,7 @@ import streetlight.model.data.PageDesign
 import streetlight.model.data.toEdit
 import streetlight.model.ui.LocationConfigRoute
 import streetlight.web.layouts.route
+import streetlight.web.model.DesignEditor
 import streetlight.web.model.LayoutEditor
 import streetlight.web.model.ThemeEditor
 import streetlight.web.shells.cardOf
@@ -22,16 +23,14 @@ fun ViewScope.viewLocationConfig(
 ) {
     val locationState = storeOf(content.location)
     val configState = storeOf(content.config)
-    val initialLayout = configState.now.design?.layout ?: DefaultLayout.location
-    val layoutEditor = LayoutEditor(initialLayout, api)
-    val themeEditor = ThemeEditor(content.config.design?.theme)
+    val initialLayout = configState.now.design?.layout
+    val designer = DesignEditor(api, DefaultLayout.location, initialLayout, content.config.design?.theme)
     val saveMessages = MessageStore()
 
     fun saveConfig() {
-        val theme = themeEditor.buildTheme()
         launchEffect("save config") {
-            val layout = layoutEditor.buildLayout(saveMessages)
-            configState.set { copy(design = PageDesign(layout, theme)) }
+            val design = designer.build(saveMessages)
+            configState.set { copy(design = design) }
             saveMessages.deliverSending()
             api.updateLocationConfig(configState.now).toDataOrNull(saveMessages, "Config saved.")
         }
@@ -69,13 +68,13 @@ fun ViewScope.viewLocationConfig(
             }
             tab("theme") {
                 column {
-                    themeForm(themeEditor)
+                    themeForm(designer.theme)
                     formSubmit("save config", ::saveConfig, saveMessages)
                 }
             }
             tab("layout") {
                 column {
-                    layoutBuilder(layoutEditor)
+                    layoutBuilder(designer.layout)
                     formSubmit("save config", ::saveConfig, saveMessages)
                 }
             }

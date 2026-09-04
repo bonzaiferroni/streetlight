@@ -16,7 +16,8 @@ import streetlight.web.io.ApiClient
 import kotlin.uuid.Uuid
 
 class LayoutEditor(
-    initialLayout: PageLayout,
+    initialLayout: PageLayout?,
+    private val defaultLayout: PageLayout,
     private val api: ApiClient,
 ) {
     private val state = storeOf(LayoutEditorState())
@@ -27,7 +28,7 @@ class LayoutEditor(
     val movingBlockIdState = state.tapOf { it.movingBlockId }
     val removedBlockIdsState = state.tapOf { it.removedBlockIds }
 
-    val mainContainerId = createContainer(initialLayout, 0)
+    val mainContainerId = createContainer(initialLayout ?: defaultLayout, 0)
 
     fun getBlock(blockId: BlockId) = blocks.getValue(blockId)
     fun getContainer(containerId: ContainerId) = containers.getValue(containerId)
@@ -119,7 +120,7 @@ class LayoutEditor(
 
     suspend fun buildLayout(messenger: Messenger): PageLayout? {
         val blocks = buildContainer(mainContainerId, messenger).takeIf { it.isNotEmpty() } ?: return null
-        return PageLayout(blocks).takeIf { it != DefaultLayout.location }
+        return PageLayout(blocks).takeIf { it != defaultLayout }
     }
 
     private suspend fun buildContainer(containerId: ContainerId, messenger: Messenger): List<LayoutBlock> {
