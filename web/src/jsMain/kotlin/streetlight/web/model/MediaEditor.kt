@@ -28,7 +28,7 @@ class MediaEditor(
     val editFlow = stateFlow.dedup { it.edit }
     val editNow get() = state.now.edit
 
-    val designer = DesignEditor(api, DefaultLayout.media, initialContent.design?.layout, initialContent.design?.theme)
+    val designer = DesignEditor(api, DefaultLayout.media, initialContent.design)
 
     val editField = state.mutableTapOf({ it.edit }) { copy(edit = it) }
     val imageField = editField.mutableTapOf({ it.image }) { copy(image = it) }

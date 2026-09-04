@@ -11,34 +11,25 @@ import streetlight.web.pages.appFooter
 import streetlight.model.ui.toConfigRoute
 import streetlight.model.ui.toEarthRoute
 import streetlight.model.ui.toRoute
+import streetlight.web.layouts.renderLayout
 import streetlight.web.pages.appHeader
 import streetlight.web.ui.BodyStyle
 import streetlight.web.ui.headerOf
 
 fun FlowContent.galaxyShell(content: GalaxyContent) {
     val galaxy = content.galaxy; val post = content.posts;
-    column(GalaxyShell.id, modify(Gap0)) {
+    column(GalaxyShell.id, BodyStyle.ShellColumn) {
         appHeader()
-        column {
-            headerOf(galaxy)
-            box {
-                column(modify(Gap8)) {
-                    row(modify(JustifyContentSpaceBetween)) {
-                        galaxyMenu(emptyList(), galaxy)
-                        createPostMenu(galaxy)
-                    }
-                    postSection(post)
-                    appFooter(GalaxyShell.SOURCE)
-                }
-            }
-
-            val routeNow = galaxy.toRoute()
-            routeMenu(
-                galaxy.name, routeNow, listOf(routeNow, galaxy.toEarthRoute()),
-                leftIcons = listOf(IconRoute(SvgFile.Home, HomeRoute)),
-                rightIcons = listOf(IconRoute(SvgFile.GearSmall, galaxy.toConfigRoute()))
-            )
+        section(BodyStyle.MainColumn) {
+            renderLayout(content)
+            appFooter()
         }
+        val routeNow = galaxy.toRoute()
+        routeMenu(
+            galaxy.name, routeNow, listOf(routeNow, galaxy.toEarthRoute()),
+            leftIcons = listOf(IconRoute(SvgFile.Home, HomeRoute)),
+            rightIcons = listOf(IconRoute(SvgFile.GearSmall, galaxy.toConfigRoute()))
+        )
     }
 
     dataIsland(GalaxyShell.islandId, content)

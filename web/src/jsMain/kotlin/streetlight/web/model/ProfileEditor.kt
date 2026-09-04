@@ -21,7 +21,7 @@ class ProfileEditor(
     val stateNow get() = state.now
     val stateFlow = state.flow
 
-    val designer = DesignEditor(api, DefaultLayout.star, initialData.design?.layout, initialData.design?.theme)
+    val designer = DesignEditor(api, DefaultLayout.star, initialData.design)
 
     val editField = state.mutableTapOf({ it.edit }) { copy(edit = it) }
     val imageField = editField.mutableTapOf({ it.image }) { copy(image = it) }

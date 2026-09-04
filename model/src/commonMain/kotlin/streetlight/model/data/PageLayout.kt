@@ -14,6 +14,7 @@ data class PageLayout(
             is LocationContent -> DefaultLayout.location
             is Media -> DefaultLayout.media
             is StarContent -> DefaultLayout.star
+            is GalaxyContent -> DefaultLayout.galaxy
         }
     }
 }

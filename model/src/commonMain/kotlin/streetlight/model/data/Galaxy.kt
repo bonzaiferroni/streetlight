@@ -27,6 +27,7 @@ data class Galaxy(
     val reviewCount: Int,
     val postGuide: Markdown?,
     override val image: Image?,
+    val design: PageDesign?,
     val isLit: Boolean,
     val isHost: Boolean,
     val starCount: Int,

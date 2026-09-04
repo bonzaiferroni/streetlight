@@ -17,6 +17,7 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
 import streetlight.model.data.City
+import streetlight.model.data.DefaultLayout
 import streetlight.model.data.GalaxyEdit
 import streetlight.model.data.slugOf
 import streetlight.model.ui.GalaxyRoute
@@ -36,6 +37,8 @@ class GalaxyEditor(
     val stateNow get() = state.now
     // val galaxyFlow = stateFlow.dedup { it.edit }
     val editNow get() = state.now.edit
+
+    val designer = DesignEditor(api, DefaultLayout.galaxy, galaxy.design)
 
     val editField = state.mutableTapOf({ it.edit }) { copy(edit = it) }
     val imageField = editField.mutableTapOf({ it.image }) { copy(image = it) }
@@ -102,7 +105,8 @@ class GalaxyEditor(
         editMessage.set("Saving...", true)
         scope.launch {
             imageEditor.finalizeImage(editMessage)
-            val edit = editField.now.copy(geoBounds = geo.stateNow.bounds)
+            val design = designer.build(editMessage)
+            val edit = editField.now.copy(geoBounds = geo.stateNow.bounds, design = design)
             val slug = when (edit.galaxyId) {
                 null -> api.createGalaxy(edit)
                 else -> api.updateGalaxy(edit)

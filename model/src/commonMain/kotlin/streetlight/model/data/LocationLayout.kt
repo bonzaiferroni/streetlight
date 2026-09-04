@@ -30,4 +30,10 @@ object DefaultLayout {
             PostsBlock,
         )
     )
+    val galaxy = PageLayout(
+        blocks = listOf(
+            HeaderBlock,
+            PostsBlock,
+        )
+    )
 }

@@ -12,6 +12,7 @@ fun ViewScope.viewGalaxy(content: GalaxyContent) {
 
     val root = shellBox(GalaxyShell.id) {
         galaxyShell(content)
+        applyTheme(content.design?.theme)
     }
 
     wireGalaxyMenu(root, content.galaxy)

@@ -57,6 +57,7 @@ fun FlowContent.renderComments() {
 fun FlowContent.renderPosts(content: DesignContent) {
     when (content) {
         is StarContent -> postSection(content.posts)
+        is GalaxyContent -> postSection(content.posts)
         else -> error("not posts content")
     }
 }
@@ -80,6 +81,7 @@ fun FlowContent.renderHeader(content: DesignContent) {
         )
         is Media -> headerOf(content)
         is StarContent -> headerOf(content.star)
+        is GalaxyContent -> headerOf(content.galaxy)
     }
 }
 

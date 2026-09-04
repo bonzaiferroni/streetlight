@@ -32,7 +32,10 @@ data class EventUpdaterContent(
 data class GalaxyContent(
     val galaxy: Galaxy,
     val posts: List<GalaxyPost>,
-): RouteContent
+): RouteContent, DesignContent {
+    override val design get() = galaxy.design
+    override val geoPoint get() = galaxy.geoPoint
+}
 
 @Serializable
 data class StarContent(

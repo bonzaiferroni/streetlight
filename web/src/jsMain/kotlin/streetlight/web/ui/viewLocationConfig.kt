@@ -24,7 +24,7 @@ fun ViewScope.viewLocationConfig(
     val locationState = storeOf(content.location)
     val configState = storeOf(content.config)
     val initialLayout = configState.now.design?.layout
-    val designer = DesignEditor(api, DefaultLayout.location, initialLayout, content.config.design?.theme)
+    val designer = DesignEditor(api, DefaultLayout.location, PageDesign(initialLayout, content.config.design?.theme))
     val saveMessages = MessageStore()
 
     fun saveConfig() {

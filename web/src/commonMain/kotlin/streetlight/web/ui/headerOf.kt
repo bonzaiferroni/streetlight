@@ -15,6 +15,8 @@ import streetlight.web.layouts.cellBlock
 import streetlight.web.layouts.cellContentOf
 import streetlight.web.layouts.postedAtCell
 import streetlight.web.layouts.starCell
+import streetlight.web.shells.createPostMenu
+import streetlight.web.shells.galaxyMenu
 
 fun FlowContent.headerOf(
     location: Location,
@@ -42,19 +44,25 @@ fun FlowContent.headerOf(
     mod: ModifierSet? = null,
     block: DIV.() -> Unit = {}
 ) {
-    featureHeader(
-        title = galaxy.name,
-        descriptor = "a galaxy",
-        subtitle = galaxy.tagline,
-        image = galaxy.image,
-        colorScheme = ColorScheme.Galaxy,
-        description = galaxy.description,
-        mod = mod,
-        cellContent = cellContentOf(galaxy),
-        links = emptyList(),
-        // editRoute = GalaxyConfigRoute(galaxy.slug),
-        block = block
-    )
+    column {
+        featureHeader(
+            title = galaxy.name,
+            descriptor = "a galaxy",
+            subtitle = galaxy.tagline,
+            image = galaxy.image,
+            colorScheme = ColorScheme.Galaxy,
+            description = galaxy.description,
+            mod = mod,
+            cellContent = cellContentOf(galaxy),
+            links = emptyList(),
+            // editRoute = GalaxyConfigRoute(galaxy.slug),
+            block = block
+        )
+        row(modify(JustifyContentSpaceBetween)) {
+            galaxyMenu(emptyList(), galaxy)
+            createPostMenu(galaxy)
+        }
+    }
 }
 
 fun FlowContent.headerOf(

@@ -34,6 +34,12 @@ fun ViewScope.viewGalaxyConfig(edit: GalaxyEdit) {
                     galaxyAccessFormRow(model)
                 }
             }
+            tab("Theme") {
+                themeForm(model.designer.theme)
+            }
+            tab("Layout") {
+                layoutBuilder(model.designer.layout)
+            }
         }
 
         row {

@@ -21,6 +21,7 @@ data class GalaxyEdit(
     val reviewCount: Int? = 3,
     val postGuide: Markdown? = null,
     val image: Image? = null,
+    val design: PageDesign? = null,
 ) {
     companion object {
         val NameCharacters = setOf(' ', '.', ',', '\'', '!', '?', ':', '-', '+')
@@ -59,4 +60,5 @@ fun Galaxy.toEdit() = GalaxyEdit(
     reviewCount = reviewCount,
     postGuide = postGuide,
     image = image,
+    design = design,
 )

@@ -10,11 +10,10 @@ import streetlight.web.io.ApiClient
 class DesignEditor(
     api: ApiClient,
     defaultLayout: PageLayout,
-    initialLayout: PageLayout?,
-    initialTheme: PageTheme?
+    initialDesign: PageDesign?
 ) {
-    val layout = LayoutEditor(initialLayout, defaultLayout, api)
-    val theme = ThemeEditor(initialTheme)
+    val layout = LayoutEditor(initialDesign?.layout, defaultLayout, api)
+    val theme = ThemeEditor(initialDesign?.theme)
 
     suspend fun build(messenger: Messenger): PageDesign? {
         val theme = theme.buildTheme()
