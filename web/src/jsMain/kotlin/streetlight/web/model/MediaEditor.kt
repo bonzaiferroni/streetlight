@@ -12,7 +12,6 @@ import kotlinx.coroutines.launch
 import streetlight.model.data.DefaultLayout
 import streetlight.model.data.Galaxy
 import streetlight.model.data.MediaEdit
-import streetlight.model.data.PageDesign
 import streetlight.model.data.PostEdit
 import streetlight.model.data.PostType
 import streetlight.web.io.ApiClient
@@ -23,14 +22,13 @@ class MediaEditor(
     private val api: ApiClient,
     private val toaster: Toaster,
 ) {
-    val layoutEditor = LayoutEditor(initialContent.design?.layout ?: DefaultLayout.media, api)
-    val themeEditor = ThemeEditor(initialContent.design?.theme)
-
     private val state = storeOf(ContentEditorState(initialContent))
     val stateFlow = state.flow
     val stateNow get() = state.now
     val editFlow = stateFlow.dedup { it.edit }
     val editNow get() = state.now.edit
+
+    val designer = DesignEditor(api, initialContent.design?.layout ?: DefaultLayout.media, initialContent.design?.theme)
 
     val editField = state.mutableTapOf({ it.edit }) { copy(edit = it) }
     val imageField = editField.mutableTapOf({ it.image }) { copy(image = it) }
@@ -55,11 +53,9 @@ class MediaEditor(
 
     fun submitPost(galaxy: Galaxy? = null) {
         if (!editField.now.isValid) return
-        val theme = themeEditor.buildTheme()
         scope.launch {
             imageEditor.finalizeImage(message)
-            val layout = layoutEditor.buildLayout(toaster)
-            val design = if (theme != null || layout != null) PageDesign(layout, theme) else null
+            val design = designer.build(message)
 
             val edit = editField.now.copy(design = design)
             message.set("Posting...", true)

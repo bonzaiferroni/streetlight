@@ -31,6 +31,7 @@ fun FlowContent.renderBlock(block: LayoutBlock, content: DesignContent) {
         HeaderBlock -> renderHeader(content)
         EventsBlock -> renderEvents(content)
         CommentsBlock -> renderComments()
+        PostsBlock -> renderPosts(content)
         MapBlock -> renderMap(content)
         is TextBlock -> renderText(block)
         is RichTextBlock -> renderRichText(block)
@@ -53,6 +54,13 @@ fun FlowContent.renderComments() {
     mount(MediaShell.TalkId)
 }
 
+fun FlowContent.renderPosts(content: DesignContent) {
+    when (content) {
+        is StarContent -> postSection(content.posts)
+        else -> error("not posts content")
+    }
+}
+
 fun FlowContent.renderEvents(content: DesignContent) {
     when (content) {
         is LocationContent -> layoutPosts {
@@ -71,6 +79,7 @@ fun FlowContent.renderHeader(content: DesignContent) {
             editRoute = if (content.canEdit) LocationUpdateRoute(content.location.slug) else null
         )
         is Media -> headerOf(content)
+        is StarContent -> headerOf(content.star)
     }
 }
 

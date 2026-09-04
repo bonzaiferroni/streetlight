@@ -12,9 +12,10 @@ import streetlight.web.io.TalkLog
 import streetlight.web.shells.MediaShell
 import streetlight.web.shells.mediaShell
 
-fun ViewScope.viewMedia(media: Media) {
+fun ViewScope.viewMediaConfig(media: Media) {
     val root = shellBox(MediaShell.ShellId) {
         mediaShell(media)
+        applyTheme(media.design?.theme)
     }
 
     mountChildView(MediaShell.TalkId) {
@@ -25,6 +26,6 @@ fun ViewScope.viewMedia(media: Media) {
 
 fun RouteScope.viewMediaRoute() {
     routeBlock<MediaRoute, Media>(MediaShell.IslandId) { post ->
-        viewMedia(post)
+        viewMediaConfig(post)
     }
 }

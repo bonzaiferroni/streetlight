@@ -12,6 +12,7 @@ import streetlight.web.shells.starShell
 fun ViewScope.viewStar(content: StarContent) {
     shellBox(StarShell.id) {
         starShell(content)
+        applyTheme(content.star.design?.theme)
     }
 }
 

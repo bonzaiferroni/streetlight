@@ -13,12 +13,13 @@ data class PageLayout(
         fun defaultOf(content: DesignContent) = when(content) {
             is LocationContent -> DefaultLayout.location
             is Media -> DefaultLayout.media
+            is StarContent -> DefaultLayout.star
         }
     }
 }
 
 enum class BlockType(label: String? = null): Labeled {
-    Header, Comments, Events, Map,
+    Header, Comments, Posts, Events, Map,
     Heading, Text, RichText("Rich Text"),
     Image, Gallery,
     Tabs, Columns;

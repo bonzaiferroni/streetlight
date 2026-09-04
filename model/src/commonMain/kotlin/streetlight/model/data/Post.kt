@@ -9,10 +9,8 @@ import kotlin.time.Instant
 @Serializable
 data class Post(
     val postId: PostId,
-    val galaxyId: GalaxyId,
+    val galaxy: GalaxyTrace,
     val postType: PostType,
-    val galaxyName: String,
-    val galaxySlug: Slug,
     val username: Username?,
     val title: String?,
     val text: Markdown?,
@@ -20,4 +18,11 @@ data class Post(
     val lightCount: Int,
     val createdAt: Instant,
     val updatedAt: Instant,
+)
+
+@Serializable
+data class GalaxyTrace(
+    val galaxyId: GalaxyId,
+    val name: String,
+    val slug: Slug
 )

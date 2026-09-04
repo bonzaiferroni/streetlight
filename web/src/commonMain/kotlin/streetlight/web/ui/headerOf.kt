@@ -58,20 +58,26 @@ fun FlowContent.headerOf(
 }
 
 fun FlowContent.headerOf(
-    star: Star,
-    mod: ModifierSet? = null,
-    block: DIV.() -> Unit = {}
+    star: Star
 ) {
-    headerImage(star.username.value, star.image?.medium, mod, block)
+    featureHeader(
+        title = star.username.value,
+        descriptor = "a streetlighter",
+        image = star.image,
+        subtitle = star.tagline,
+        description = star.description,
+    )
 }
 
 fun FlowContent.headerOf(media: Media) {
     column {
-        heading2(media.title, modify(TextAlignCenter, AntiShadow, LineHeight115, MarginTop4))
+        media.title?.let {
+            heading2(it, modify(TextAlignCenter, AntiShadow, LineHeight115, MarginTop4))
+        }
 
-        media.image?.largest?.let {
+        media.image?.let {
             column(modify(SideBorder, BorderRadius1)) {
-                image(it, modify(AlignSelfCenter, MaxHeight64, BorderRadius2, MoonShadow))
+                image(it, modify(AlignSelfCenter, MaxHeight96, BorderRadius2, MoonShadow))
             }
         }
 

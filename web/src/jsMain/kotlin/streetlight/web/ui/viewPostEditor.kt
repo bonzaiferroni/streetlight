@@ -14,16 +14,14 @@ import streetlight.model.ui.MediaUpdateRoute
 import streetlight.model.ui.MediaRoute
 import streetlight.web.model.MediaEditor
 
-fun ViewScope.viewMedia(model: MediaEditor) {
+fun ViewScope.viewMediaConfig(model: MediaEditor) {
     val routeFlow = model.stateFlow.dedupNotNull { it.slug?.let { slug -> MediaRoute(slug) } }
     goOnRoute(routeFlow)
 
     section(modify(FlexColumn)) {
         heading1("Edit Post", modify(TextAlignCenter))
 
-        card {
-            mediaForm(model)
-        }
+        mediaForm(model)
 
         row(modify(JustifyContentEnd)) {
             button("Edit", onClick = model::submitPost)
@@ -36,7 +34,7 @@ fun ViewScope.viewMedia(model: MediaEditor) {
 fun RouteScope.viewMediumUpdaterRoute() {
     routeBlock<MediaUpdateRoute, Media> {
         val editor = MediaEditor(it.toEdit(), contentScope, api, toaster)
-        viewMedia(editor)
+        viewMediaConfig(editor)
     }
 }
 

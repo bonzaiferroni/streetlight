@@ -13,7 +13,6 @@ fun ViewScope.starProfileForm(model: ProfileEditor) = formColumn {
             formText("The description will appear under the image, before your posts.")
         }
     }
-    formSubmit("Save", model::submit, model.messages)
 }
 
 private val imageInstructions1 = "This image will appear at the top of your profile."

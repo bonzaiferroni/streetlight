@@ -77,7 +77,7 @@ fun ViewScope.eventDetailsForm(model: EventEditor) = formCard("Event Details") {
         }
     }
     formSection("Description") {
-        styledMarkdownEditor(
+        markdownEditor(
             state = model.descriptionState,
             label = "description",
             mod = modify(MinHeight48)

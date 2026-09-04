@@ -80,6 +80,7 @@ class ApiClient(private val client: FetchClient) {
     suspend fun login(request: LoginRequest) = client.postApi(UserApi.Login, request)
     suspend fun updateProfile(edit: StarEdit) = client.postApi(Api.Stars.UpdateProfile, edit)
     suspend fun editLight(edit: EditLightRequest) = client.postApi(Api.Stars.EditLight, edit)
+    suspend fun readProfileDesign() = client.getApi(Api.Stars.ReadProfileConfig)
 
     // messages
     suspend fun sendMessage(message: NewMessage) = client.postApi(Api.Messages.SendNew, message)

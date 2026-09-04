@@ -5,8 +5,6 @@ import kampfire.api.Username
 import kampfire.model.toDataOr
 import koala.css.*
 import koala.dom.*
-import koala.html.Attribute
-import koala.html.setAttribute
 import kampfire.model.mutableTapOf
 import kampfire.model.storeOf
 import streetlight.model.data.NewMessage
@@ -25,7 +23,7 @@ fun ViewScope.wireMessageDialog() {
         val contentState = messageState.mutableTapOf({ it.content }) { copy(content = it) }
         dialogContent("Message to $recipient") {
             textField(subjectState, "subject", placeholder = "no subject")
-            styledMarkdownEditor(contentState, "message", modify(MinHeight32)) {
+            markdownEditor(contentState, "message", modify(MinHeight32)) {
                 // setAttribute(Attribute.Autofocus.to(true))
             }
             formSubmit("send", {

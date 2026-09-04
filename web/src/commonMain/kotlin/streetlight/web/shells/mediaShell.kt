@@ -50,14 +50,8 @@ fun FlowContent.mediaShell(media: Media) {
     column(MediaShell.ShellId) {
         appHeader()
 
-
-
         section(BodyStyle.MainColumn) {
-            // headerOf
             renderLayout(media)
-
-            mount(MediaShell.TalkId, modify(MarginTop4))
-
             appFooter()
         }
     }

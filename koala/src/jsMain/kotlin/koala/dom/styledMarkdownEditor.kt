@@ -6,7 +6,6 @@ import koala.html.Attribute
 import koala.html.setAttribute
 import kampfire.model.MutableTap
 import koala.model.EditorStyle
-import kotlinx.browser.document
 import kotlinx.html.DIV
 import kotlinx.html.js.div
 import kotlinx.html.js.onInputFunction
@@ -15,7 +14,7 @@ import web.html.HTMLElement
 import web.keyboard.KEY_DOWN
 import web.keyboard.KeyboardEvent
 
-fun ViewScope.styledMarkdownEditor(
+fun ViewScope.markdownEditor(
     state: MutableTap<Markdown>,
     label: String? = null,
     mod: ModifierSet? = null,

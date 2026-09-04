@@ -14,7 +14,7 @@ import koala.dom.flowBlock
 import koala.dom.flowModifier
 import koala.dom.markdown
 import koala.dom.row
-import koala.dom.styledMarkdownEditor
+import koala.dom.markdownEditor
 import koala.html.heading1
 import koala.model.EditorStyle
 import kampfire.model.storeOf
@@ -39,7 +39,7 @@ fun ViewScope.editorSandbox() {
         }
         flowBlock(isEditingState, modify(Magic, Scale)) { isEditing ->
             when (isEditing) {
-                true -> styledMarkdownEditor(textState, "sandbox").flowModifier(isSwyg, EditorStyle.SWYG, contentScope)
+                true -> markdownEditor(textState, "sandbox").flowModifier(isSwyg, EditorStyle.SWYG, contentScope)
                 else -> markdown(textState.now)
             }
         }

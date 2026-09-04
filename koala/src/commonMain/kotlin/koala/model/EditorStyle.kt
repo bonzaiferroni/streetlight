@@ -39,12 +39,12 @@ $Container {
     outline: none;
     padding: var(--unit-spacing);
     font-size: var(--paragraph-size);
-    background-color: var(--void-bg);
+    background-color: var(--zen-bg);
     color: rgb(var(--ink));
     line-height: var(--paragraph-line-height);
     white-space: pre-wrap;
 
-    border: 1px solid var(--void-border);
+    border: 2px solid var(--void-border);
     border-radius: var(--unit-spacing);
     box-shadow: var(--input-shadow);
     

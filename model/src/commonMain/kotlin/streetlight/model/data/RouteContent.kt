@@ -39,7 +39,10 @@ data class StarContent(
     val star: Star,
     val posts: List<Media>,
     val isCaller: Boolean,
-): RouteContent
+): RouteContent, DesignContent {
+    override val geoPoint get() = null
+    override val design get() = star.design
+}
 
 @Serializable
 data class HomeContent(

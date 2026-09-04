@@ -21,7 +21,7 @@ import streetlight.model.ui.MediaForgeRoute
 import streetlight.model.ui.MediaRoute
 import streetlight.model.ui.MediaUpdateRoute
 import streetlight.model.ui.SiteDocRoute
-import streetlight.model.ui.UpdateProfileRoute
+import streetlight.model.ui.ProfileConfigRoute
 import streetlight.model.ui.StarDashRoute
 import streetlight.model.ui.StarRoute
 import streetlight.model.ui.UpdateAccountRoute
@@ -47,7 +47,7 @@ class AppContentFetcher(
         is MediaForgeRoute -> route.slug?.let { api.readGalaxy(it) } ?: Ok(NullContent)
         is SiteDocRoute -> api.readSiteDoc(route.docId)
         is StarDashRoute -> Ok(NullContent)
-        is UpdateProfileRoute -> Ok(NullContent)
+        is ProfileConfigRoute -> api.readProfileDesign()
         is UpdateAccountRoute -> api.readAccount()
         is InboxRoute -> api.readInbox()
         else -> Ok(NullContent)

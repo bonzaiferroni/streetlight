@@ -1,7 +1,9 @@
 package streetlight.web.layouts
 
+import kabinet.utils.toAgoFormat
 import kabinet.utils.toMetricString
 import kampfire.api.Markdown
+import kampfire.api.Username
 import koala.Image
 import koala.SiteImage
 import koala.Svg
@@ -12,7 +14,15 @@ import kotlinx.css.GridTemplateColumns
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import streetlight.model.data.ExtraLink
+import streetlight.model.data.Galaxy
+import streetlight.model.data.GalaxyContent
+import streetlight.model.data.GalaxyTrace
+import streetlight.model.data.Post
 import streetlight.model.data.PostType
+import streetlight.model.ui.GalaxyRoute
+import streetlight.web.ui.PopoverId
+import kotlin.time.Clock
+import kotlin.time.Instant
 
 fun FlowContent.feedRow(
     heading: String,
@@ -84,6 +94,44 @@ fun FlowContent.lightBadge(light: Int) {
         icon(SvgFile.ArrowUp, modify(Height2, OpacityLow))
     }
 }
+
+fun FlowContent.postLine(
+    username: Username?,
+    galaxy: GalaxyTrace?,
+    postedAt: Instant
+) {
+    row(modify(AlignItemsCenter, MarginTopTiny)) {
+        textBlock(mod = modify(TextSmall)) {
+            galaxy?.let {
+                navigation(GalaxyRoute(it.slug)) {
+                    span("${it.name} • ")
+                }
+            }
+            +"posted by "
+            when (username) {
+                null -> {
+                    span("Someone", modify(Bold))
+                }
+                else -> {
+                    button {
+                        setPopoverTarget(PopoverId.StarMenu)
+                        setAttribute(Attribute.Username.to(username))
+                        span(username.value, modify(PrimaryFg))
+                    }
+//                    navigation(StarRoute(username)) {
+//                        span("$username ")
+//                    }
+                }
+            }
+            span(" ${(Clock.System.now() - postedAt).toAgoFormat()}")
+        }
+    }
+}
+
+fun FlowContent.postLine(
+    post: Post,
+    isGalaxyContent: Boolean
+) = postLine(post.username, if (isGalaxyContent) post.galaxy else null, post.createdAt)
 
 object FeedRow {
     val Base = Class("feed-row")

@@ -26,7 +26,7 @@ data class PostEdit(
 
 fun Post.toEdit(recordId: Uuid, postType: PostType) = PostEdit(
     postId = postId,
-    galaxyId = galaxyId,
+    galaxyId = galaxy.galaxyId,
     recordId = recordId,
     postType = postType,
     title = title,

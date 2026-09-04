@@ -20,7 +20,7 @@ import streetlight.web.model.LayoutEditor
 fun ViewScope.blockBuilder(model: LayoutEditor, blockId: BlockId) {
     val editor = model.getBlock(blockId)
     when (val block = editor.blockState.now) {
-        HeaderBlock, EventsBlock, MapBlock, CommentsBlock -> blockBuilder(editor)
+        HeaderBlock, EventsBlock, PostsBlock, MapBlock, CommentsBlock -> blockBuilder(editor)
         is HeadingBlock -> headingBuilder(editor)
         is ImageBlock -> imageBuilder(editor)
         is GalleryBlock -> galleryBuilder(editor)
@@ -164,7 +164,7 @@ fun ViewScope.richTextBuilder(editor: BlockEditor) {
         }
         flowBlock(isEditingState) { isEditing ->
             if (isEditing) {
-                styledMarkdownEditor(textState)
+                markdownEditor(textState)
             } else {
                 flowBlock(blockState) { block ->
                     box {

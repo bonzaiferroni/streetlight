@@ -7,7 +7,7 @@ import koala.model.NullContent
 import kotlinx.css.LinearDimension
 import kotlinx.css.fr
 import streetlight.model.data.Star
-import streetlight.model.ui.UpdateProfileRoute
+import streetlight.model.ui.ProfileConfigRoute
 import streetlight.model.ui.EditTalentRoute
 import streetlight.model.ui.HomeRoute
 import streetlight.model.ui.GalaxyListRoute
@@ -97,7 +97,7 @@ private fun ViewScope.sandboxContent(star: Star) {
         card {
             row {
                 textBlock("Add things to the map.", modify(Flex1))
-                btn("Edit Profile", UpdateProfileRoute)
+                btn("Edit Profile", ProfileConfigRoute)
                 btn("Go to sandbox", SandboxRoute)
                 button("galaxy list", { portal.go(GalaxyListRoute) }, modify(Accent))
             }

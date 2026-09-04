@@ -37,7 +37,7 @@ fun FlowContent.postRow(
     cells = cells,
 ) {
     post?.let {
-        postInfo(post, isGalaxyContext)
+        postLine(post, isGalaxyContext)
     }
 }
 

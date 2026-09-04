@@ -24,4 +24,10 @@ object DefaultLayout {
             CommentsBlock,
         )
     )
+    val star = PageLayout(
+        blocks = listOf(
+            HeaderBlock,
+            PostsBlock,
+        )
+    )
 }

@@ -180,6 +180,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object ReadStarContent: GetEndpoint<StarContent>(this) {
             val username = usernameParamOf("username")
         }
+        object ReadProfileConfig: GetEndpoint<ProfileConfig>(this)
     }
 
     object AccountAction: ApiNode(this) {

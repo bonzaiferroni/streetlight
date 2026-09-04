@@ -3,16 +3,12 @@ package streetlight.web.ui
 import kabinet.utils.toHourAndMinutesFormat
 import kabinet.utils.toPastFormat
 import kampfire.api.Markdown
-import kampfire.model.CursorStatus
-import kampfire.model.Tap
 import koala.css.*
 import koala.dom.*
-import koala.html.spacer
 import kampfire.model.storeOf
 import kampfire.model.tapOf
 import koala.LottieFile
 import koala.SvgFile
-import koala.html.IconStyle
 import koala.html.heading3
 import koala.html.heading5
 import streetlight.model.data.InboxContent
@@ -165,7 +161,7 @@ private fun ViewScope.messageList(model: Inbox) {
                 }
             }
 
-            styledMarkdownEditor(
+            markdownEditor(
                 replyState,
                 mod = modify(Flex1, OverflowYScroll), onEnterSubmit = ::onSubmit
             )
