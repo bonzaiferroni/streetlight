@@ -9,7 +9,7 @@ import streetlight.model.data.PageTheme
 import streetlight.web.model.ThemeEditor
 
 fun ViewScope.themeForm(model: ThemeEditor) {
-    formCard("Theme") {
+    formCard {
         formRow {
             formSection("Colors") {
                 row(modify(FlexItems1)) {

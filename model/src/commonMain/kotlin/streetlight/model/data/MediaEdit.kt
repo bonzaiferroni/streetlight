@@ -15,6 +15,7 @@ data class MediaEdit(
     val link: Url? = null,
     val geoPoint: GeoPoint? = null,
     val image: Image? = null,
+    val design: PageDesign? = null,
 ) {
     val isValid get() = true
     val invalidMessage: String? get() = null

@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <!-- roots -->
+    <g stroke-width="1.2">
+        <path d="M4 12 C2 11 2 8 3 5" />
+        <path d="M4 12 C2 13 2 16 3 19" />
+        <path d="M7 12 C5 10 5 7 3 7" />
+        <path d="M7 12 C5 14 5 17 3 17" />
+    </g>
+    <g stroke-width="0.7">
+        <path d="M2.6 8 C1.5 8 0.8 7 1 6" />
+        <path d="M2.6 16 C1.5 16 0.8 17 1 18" />
+    </g>
+
+    <!-- base segment and stem -->
+    <path stroke-width="2.4" d="M4 12 L16 12" />
+    <path stroke-width="1.8" d="M16 12 C22 12 24 12 28 12" />
+
+    <!-- main spine, following the circle's edge -->
+    <path stroke-width="1.5" d="M28 12 C40 12 50 10 60 7 C70 4 80 5 88 9" />
+    <path stroke-width="0.8" d="M88 9 C92 11 93 15 90 17 C88 18.5 86 17 87 15" />
+
+    <!-- lower branch and its curl -->
+    <path stroke-width="1.2" d="M44 11 C50 12 56 15 60 20 C61 22 64 22 65 20" />
+    <path stroke-width="0.6" d="M62 20.5 C64 23 68 22 68 19 C68 17 66 17 66 18.5" />
+    <path stroke-width="0.6" d="M54 14 C57 14 58 17 56 18.5 C55 19.3 54 18.3 54.5 17.5" />
+
+    <!-- upper branch -->
+    <path stroke-width="1.0" d="M52 9 C58 6 60 2 66 1.5 C70 1.2 73 3 72 5.5 C71.5 7 70 7 69.5 6" />
+
+    <!-- rightward tendrils -->
+    <path stroke-width="0.9" d="M68 5 C72 8 74 12 78 14 C81 15.5 84 15 84 12.5 C84 11 82 10.5 82 12" />
+    <path stroke-width="0.8" d="M76 5.3 C79 3 82 1.5 86 2 C89 2.5 89 5.5 87 5.5 C86 5.5 86 4.5 86.5 4.2" />
+</svg>

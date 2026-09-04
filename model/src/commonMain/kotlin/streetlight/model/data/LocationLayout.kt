@@ -18,4 +18,10 @@ object DefaultLayout {
             )),
         ),
     )
+    val media = PageLayout(
+        blocks = listOf(
+            HeaderBlock,
+            CommentsBlock,
+        )
+    )
 }

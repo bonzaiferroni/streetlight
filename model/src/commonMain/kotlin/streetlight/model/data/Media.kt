@@ -25,9 +25,10 @@ data class Media(
     val link: Url?,
     override val geoPoint: GeoPoint?,
     override val image: Image?,
+    override val design: PageDesign?,
     val updatedAt: Instant,
     val createdAt: Instant,
-): FeedEntity, RouteContent {
+): FeedEntity, RouteContent, DesignContent {
     override val label get() = title ?: "(untitled)"
     override val sublabel get() = subtitle
     override val body get() = text

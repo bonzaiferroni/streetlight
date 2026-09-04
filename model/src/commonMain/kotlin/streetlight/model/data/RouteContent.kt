@@ -1,5 +1,6 @@
 package streetlight.model.data
 
+import kampfire.model.GeoPoint
 import koala.model.DocNode
 import koala.model.DocTable
 import koala.model.RouteContent
@@ -8,10 +9,12 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class LocationContent(
     val location: Location,
-    val design: PageDesign?,
+    override val design: PageDesign?,
     val events: List<Event>,
     val canEdit: Boolean,
-): RouteContent
+): RouteContent, DesignContent {
+    override val geoPoint: GeoPoint get() = location.geoPoint
+}
 
 @Serializable
 data class LocationUpdaterContent(

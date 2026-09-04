@@ -22,12 +22,14 @@ fun ViewScope.formColumn(
 ) = column(mod = modify(mod, Gap2), content = content)
 
 fun ViewScope.formCard(
-    name: String,
+    name: String?,
     mod: ModifierSet? = null,
     content: DIV.() -> Unit,
 ) = column(mod = mod) {
-    filigree {
-        heading3(name)
+    name?.let {
+        filigree {
+            heading3(name)
+        }
     }
     card(modify(ZenBg, Gap2, Outline, Padding2)) {
         content()

@@ -9,8 +9,10 @@ import kampfire.model.mutableTapOf
 import kampfire.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import streetlight.model.data.DefaultLayout
 import streetlight.model.data.Galaxy
 import streetlight.model.data.MediaEdit
+import streetlight.model.data.PageDesign
 import streetlight.model.data.PostEdit
 import streetlight.model.data.PostType
 import streetlight.web.io.ApiClient
@@ -21,6 +23,8 @@ class MediaEditor(
     private val api: ApiClient,
     private val toaster: Toaster,
 ) {
+    val layoutEditor = LayoutEditor(initialContent.design?.layout ?: DefaultLayout.media, api)
+    val themeEditor = ThemeEditor(initialContent.design?.theme)
 
     private val state = storeOf(ContentEditorState(initialContent))
     val stateFlow = state.flow
@@ -50,10 +54,14 @@ class MediaEditor(
     // fun setText(text: Markdown) = setContent { it.copy(text = text) }
 
     fun submitPost(galaxy: Galaxy? = null) {
+        if (!editField.now.isValid) return
+        val theme = themeEditor.buildTheme()
         scope.launch {
-            if (!editField.now.isValid) return@launch
             imageEditor.finalizeImage(message)
-            val edit = editField.now
+            val layout = layoutEditor.buildLayout(toaster)
+            val design = if (theme != null || layout != null) PageDesign(layout, theme) else null
+
+            val edit = editField.now.copy(design = design)
             message.set("Posting...", true)
 
             val media = when (edit.mediaId) {

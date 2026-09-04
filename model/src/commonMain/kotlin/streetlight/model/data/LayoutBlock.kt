@@ -40,6 +40,11 @@ object HeaderBlock: LayoutBlock {
 }
 
 @Serializable
+object CommentsBlock: LayoutBlock {
+    override val blockType get() = BlockType.Comments
+}
+
+@Serializable
 object MapBlock: LayoutBlock {
     override val blockType get() = BlockType.Map
 }

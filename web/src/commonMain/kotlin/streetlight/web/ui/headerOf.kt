@@ -8,9 +8,13 @@ import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import streetlight.model.data.Galaxy
 import streetlight.model.data.Location
+import streetlight.model.data.Media
 import streetlight.model.data.Star
 import streetlight.web.layouts.ColorScheme
+import streetlight.web.layouts.cellBlock
 import streetlight.web.layouts.cellContentOf
+import streetlight.web.layouts.postedAtCell
+import streetlight.web.layouts.starCell
 
 fun FlowContent.headerOf(
     location: Location,
@@ -59,4 +63,29 @@ fun FlowContent.headerOf(
     block: DIV.() -> Unit = {}
 ) {
     headerImage(star.username.value, star.image?.medium, mod, block)
+}
+
+fun FlowContent.headerOf(media: Media) {
+    column {
+        heading2(media.title, modify(TextAlignCenter, AntiShadow, LineHeight115, MarginTop4))
+
+        media.image?.largest?.let {
+            column(modify(SideBorder, BorderRadius1)) {
+                image(it, modify(AlignSelfCenter, MaxHeight64, BorderRadius2, MoonShadow))
+            }
+        }
+
+        card(modify(OverflowClip, Gap0, ZenBg, Padding0)) {
+            cellBlock {
+                starCell(media.username)
+                postedAtCell(media.createdAt)
+            }
+
+            media.text?.let {
+                column(modify(Padding2, AlignSelfCenter, MaxWidthTextBody, TextLarge)) {
+                    markdown(it)
+                }
+            }
+        }
+    }
 }

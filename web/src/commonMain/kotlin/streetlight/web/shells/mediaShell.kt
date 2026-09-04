@@ -40,6 +40,7 @@ import streetlight.model.data.Media
 import streetlight.model.ui.MediaUpdateRoute
 import streetlight.web.layouts.cellBlock
 import streetlight.web.layouts.postedAtCell
+import streetlight.web.layouts.renderLayout
 import streetlight.web.layouts.starCell
 import streetlight.web.pages.appFooter
 import streetlight.web.pages.appHeader
@@ -49,31 +50,11 @@ fun FlowContent.mediaShell(media: Media) {
     column(MediaShell.ShellId) {
         appHeader()
 
+
+
         section(BodyStyle.MainColumn) {
-            heading2(media.title, modify(TextAlignCenter, AntiShadow, LineHeight115, MarginTop4))
-
-            media.image?.largest?.let {
-                column(modify(SideBorder, BorderRadius1)) {
-                    image(it, modify(AlignSelfCenter, MaxHeight64, BorderRadius2, MoonShadow))
-                }
-            }
-
-            card(modify(OverflowClip, Gap0, ZenBg, Padding0)) {
-                cellBlock {
-                    starCell(media.username)
-                    postedAtCell(media.createdAt)
-                }
-
-                media.text?.let {
-                    column(modify(Padding2, AlignSelfCenter, MaxWidthTextBody, TextLarge)) {
-                        markdown(it)
-                    }
-                }
-            }
-
-            row(modify(JustifyContentEnd)) {
-                btn("edit", MediaUpdateRoute(media.slug), modify(Zen))
-            }
+            // headerOf
+            renderLayout(media)
 
             mount(MediaShell.TalkId, modify(MarginTop4))
 

@@ -8,19 +8,20 @@ data class PageLayout(
     override val blocks: List<LayoutBlock>
 ): LayoutContainer {
     override val name get() = "main"
+
+    companion object {
+        fun defaultOf(content: DesignContent) = when(content) {
+            is LocationContent -> DefaultLayout.location
+            is Media -> DefaultLayout.media
+        }
+    }
 }
 
 enum class BlockType(label: String? = null): Labeled {
-    Text,
-    RichText("Rich Text"),
-    Heading,
-    Image,
-    Gallery,
-    Header,
-    Map,
-    Events,
-    Tabs,
-    Columns;
+    Header, Comments, Events, Map,
+    Heading, Text, RichText("Rich Text"),
+    Image, Gallery,
+    Tabs, Columns;
 
     override val label = label ?: name
 }

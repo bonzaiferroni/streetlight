@@ -55,7 +55,7 @@ fun ViewScope.viewPortal() {
                 Screen.Inbox -> viewInboxRoute()
 
                 // location
-                Screen.LocationAdmin -> viewLocationConfigRoute()
+                Screen.LocationConfig -> viewLocationConfigRoute()
                 Screen.Location -> viewLocation()
                 Screen.LocationUpdate -> viewUpdateLocationRoute()
                 Screen.LocationScout -> viewLocationScoutRoute()
