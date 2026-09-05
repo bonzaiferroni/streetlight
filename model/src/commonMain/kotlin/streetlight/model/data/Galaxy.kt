@@ -55,3 +55,9 @@ enum class PostPermission(label: String? = null): Labeled {
 
     override val label = label ?: name
 }
+
+@Serializable
+data class GalaxyConfig(
+    val galaxy: Galaxy,
+    val marks: List<Mark>
+): RouteContent

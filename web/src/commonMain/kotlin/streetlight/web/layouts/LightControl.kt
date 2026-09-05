@@ -26,7 +26,7 @@ object LightControl {
 }
 
 fun FlowContent.postLight(post: GalaxyPost) {
-    row(modify(LightControl.Class, AlignItemsCenter, Gap2Px, LightControl.getLitMod(post.base.isLit))) {
+    row(modify(LightControl.Class, AlignItemsCenter, Gap2Px, LightControl.getLitMod(post.base.isMarked))) {
         setAttribute(LightControl.TypeData.to(LightType.Post))
         onClick = LightControl.ToggleFun.invokeJs(ThisElement, post.base.postId)
 

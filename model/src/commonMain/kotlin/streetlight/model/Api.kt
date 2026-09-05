@@ -136,6 +136,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object ReadGalaxySlug: GetByIdEndpoint<Slug, Galaxy>(this)
         object ReadGalaxyId: GetByIdEndpoint<GalaxyId, Galaxy>(this)
         object ReadContent: GetByIdEndpoint<Slug, GalaxyContent>(this)
+        object ReadConfig: GetByIdEndpoint<Slug, GalaxyConfig>(this)
         object CreatePost: PostEndpoint<PostEdit, Post>(this)
         object UpdatePost: PostEndpoint<PostEdit, Post>(this)
         object ReadMultiPosts: PostEndpoint<List<GalaxyId>, List<GalaxyPost>>(this)
@@ -143,6 +144,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object ReadPostId: GetByIdEndpoint<PostId, GalaxyPost>(this)
         object ReadLights: GetEndpoint<List<GalaxyId>>(this)
         object RemovePost: PostEndpoint<PostId, Boolean>(this)
+        object ProvisionMark: PostEndpoint<String, Mark>(this)
     }
 
     object Medias: ApiNode(this, "media") {

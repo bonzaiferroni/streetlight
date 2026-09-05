@@ -8,7 +8,7 @@ import koala.dom.*
 import streetlight.model.data.GalaxyEdit
 
 fun ViewScope.viewGalaxyFoundry() {
-    val model = app.getGalaxyEditor(GalaxyEdit(), contentScope)
+    val model = app.getGalaxyEditor(GalaxyEdit(marks = emptyList()), contentScope)
 
     column(BodyStyle.MainColumn) {
         introSection("Galaxy Foundry", lottie = LottieFile.AstronautReading) {

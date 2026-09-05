@@ -14,7 +14,7 @@ data class Post(
     val username: Username?,
     val title: String?,
     val text: Markdown?,
-    val isLit: Boolean,
+    val isMarked: Boolean,
     val lightCount: Int,
     val createdAt: Instant,
     val updatedAt: Instant,

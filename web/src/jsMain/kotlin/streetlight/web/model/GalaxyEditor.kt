@@ -19,6 +19,9 @@ import kotlinx.coroutines.launch
 import streetlight.model.data.City
 import streetlight.model.data.DefaultLayout
 import streetlight.model.data.GalaxyEdit
+import streetlight.model.data.Lean
+import streetlight.model.data.Mark
+import streetlight.model.data.MarkId
 import streetlight.model.data.slugOf
 import streetlight.model.ui.GalaxyRoute
 import streetlight.web.io.ApiClient
@@ -40,26 +43,27 @@ class GalaxyEditor(
 
     val designer = DesignEditor(api, DefaultLayout.galaxy, galaxy.design)
 
-    val editField = state.mutableTapOf({ it.edit }) { copy(edit = it) }
-    val imageField = editField.mutableTapOf({ it.image }) { copy(image = it) }
+    val editState = state.mutableTapOf({ it.edit }) { copy(edit = it) }
+    val imageField = editState.mutableTapOf({ it.image }) { copy(image = it) }
     val isLocalField = state.mutableTapOf({ it.isLocal }) { copy(isLocal = it) }
     val countryField = state.mutableTapOf({ it.country }) { copy(country = it) }
-    val validityField = editField.tapOf { it.validity }
+    val validityField = editState.tapOf { it.validity }
     val citiesField = state.tapOf { it.cities }
     val cityField = state.mutableTapOf({ it.city }) { copy(city = it) }
-    val descriptionField = editField.mutableTapOf({ it.description ?: "".toMarkdown() }) { copy(description = it) }
-    val taglineField = editField.mutableTapOf({ it.tagline ?: "" }) { copy(tagline = it) }
-    val postGuideField = editField.mutableTapOf({ it.postGuide ?: "".toMarkdown() }) { copy(postGuide = it) }
-    val reviewCountField = editField.mutableTapOf({ it.reviewCount?.toString() ?: "" }) { copy(reviewCount = it.toIntOrNull()) }
-    val permissionField = editField.mutableTapOf({ it.postPermission }) { copy(postPermission = it) }
+    val descriptionField = editState.mutableTapOf({ it.description ?: "".toMarkdown() }) { copy(description = it) }
+    val taglineField = editState.mutableTapOf({ it.tagline ?: "" }) { copy(tagline = it) }
+    val postGuideField = editState.mutableTapOf({ it.postGuide ?: "".toMarkdown() }) { copy(postGuide = it) }
+    val reviewCountField = editState.mutableTapOf({ it.reviewCount?.toString() ?: "" }) { copy(reviewCount = it.toIntOrNull()) }
+    val permissionField = editState.mutableTapOf({ it.postPermission }) { copy(postPermission = it) }
+    val marksState = editState.tapOf { it.marks }
 
-    val nameField = editField.mutableTapOf({ it.name ?: "" }) { value ->
+    val nameField = editState.mutableTapOf({ it.name ?: "" }) { value ->
         if (value.isNotEmpty() && !GalaxyEdit.isValidName(value)) return@mutableTapOf this
         val slug = slugOf(value)
         copy(name = value, slug = slug)
     }
 
-    val slugField = editField.mutableTapOf({ it.slug?.value ?: "" }) { value ->
+    val slugField = editState.mutableTapOf({ it.slug?.value ?: "" }) { value ->
         if (value.isNotEmpty() && !GalaxyEdit.isValidSlug(value.trim().toSlug())) return@mutableTapOf this
         copy(slug = value.toSlug())
     }
@@ -94,8 +98,20 @@ class GalaxyEditor(
         }
     }
 
+    suspend fun addMark(name: String): Boolean {
+        val trimmedName = name.trim().takeIf { it.length in Mark.ValidLength } ?: return false
+        val mark = api.provisionMark(trimmedName).toDataOr(toaster) { return false }
+        editState.set { copy(marks = marks + mark) }
+        return true
+    }
+
+    fun setLean(markId: MarkId, lean: Lean) {
+        val mark = editState.now.marks.firstOrNull { it.markId == markId } ?: error("mark not found")
+        editState.set { copy(marks = marks.map { if (it.markId == markId) mark else it })}
+    }
+
     fun submit() {
-        val message = editField.now.validity.message
+        val message = editState.now.validity.message
 
         if (message != null) {
             editMessage.deliver(message)
@@ -106,7 +122,7 @@ class GalaxyEditor(
         scope.launch {
             imageEditor.finalizeImage(editMessage)
             val design = designer.build(editMessage)
-            val edit = editField.now.copy(geoBounds = geo.stateNow.bounds, design = design)
+            val edit = editState.now.copy(geoBounds = geo.stateNow.bounds, design = design)
             val slug = when (edit.galaxyId) {
                 null -> api.createGalaxy(edit)
                 else -> api.updateGalaxy(edit)

@@ -22,6 +22,7 @@ data class GalaxyEdit(
     val postGuide: Markdown? = null,
     val image: Image? = null,
     val design: PageDesign? = null,
+    val marks: List<Mark>
 ) {
     companion object {
         val NameCharacters = setOf(' ', '.', ',', '\'', '!', '?', ':', '-', '+')
@@ -48,7 +49,7 @@ object GalaxyProperty {
     val Path = "path"
 }
 
-fun Galaxy.toEdit() = GalaxyEdit(
+fun Galaxy.toEdit(marks: List<Mark>) = GalaxyEdit(
     galaxyId = galaxyId,
     cityId = cityId,
     name = name,
@@ -61,4 +62,5 @@ fun Galaxy.toEdit() = GalaxyEdit(
     postGuide = postGuide,
     image = image,
     design = design,
+    marks = marks
 )

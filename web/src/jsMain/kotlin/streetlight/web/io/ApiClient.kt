@@ -133,6 +133,7 @@ class ApiClient(private val client: FetchClient) {
     suspend fun readGalaxies(galaxyIds: List<GalaxyId>) = client.postApi(Api.Galaxies.ReadGalaxies, galaxyIds)
     suspend fun readUserGalaxies() = client.getApi(Api.Galaxies.ReadUserGalaxies)
     suspend fun readGalaxy(slug: Slug) = client.getApi(Api.Galaxies.ReadGalaxySlug, slug)
+    suspend fun readGalaxyConfig(slug: Slug) = client.getApi(Api.Galaxies.ReadConfig, slug)
     suspend fun readGalaxyContent(slug: Slug) = client.getApi(Api.Galaxies.ReadContent, slug)
     suspend fun readGalaxy(galaxyId: GalaxyId) = client.getApi(Api.Galaxies.ReadGalaxyId, galaxyId)
     suspend fun createPost(post: PostEdit) = client.postApi(Api.Galaxies.CreatePost, post)
@@ -142,6 +143,7 @@ class ApiClient(private val client: FetchClient) {
     suspend fun readPost(postId: PostId) = client.getApi(Api.Galaxies.ReadPostId, postId)
     suspend fun readGalaxyLights() = client.getApi(Api.Galaxies.ReadLights)
     suspend fun removePost(postId: PostId) = client.postApi(Api.Galaxies.RemovePost, postId)
+    suspend fun provisionMark(name: String) = client.postApi(Api.Galaxies.ProvisionMark, name)
 
     // docs
     suspend fun readSiteDoc(docId: DocId) = client.getApi(Api.Docs, docId)

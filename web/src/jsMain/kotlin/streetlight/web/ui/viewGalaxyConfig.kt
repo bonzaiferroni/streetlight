@@ -6,12 +6,13 @@ import koala.dom.*
 import koala.dom.routeBlock
 import koala.html.spacer
 import streetlight.model.data.Galaxy
+import streetlight.model.data.GalaxyConfig
 import streetlight.model.data.GalaxyEdit
 import streetlight.model.data.toEdit
 import streetlight.model.ui.GalaxyConfigRoute
 
-fun ViewScope.viewGalaxyConfig(edit: GalaxyEdit) {
-    val model = app.getGalaxyEditor(edit, contentScope)
+fun ViewScope.viewGalaxyConfig(config: GalaxyConfig) {
+    val model = app.getGalaxyEditor(config.galaxy.toEdit(config.marks), contentScope)
 
     column {
         introSection("Galaxy Settings", lottie = LottieFile.ServerSync) {
@@ -55,7 +56,7 @@ fun ViewScope.viewGalaxyConfig(edit: GalaxyEdit) {
 }
 
 fun RouteScope.viewGalaxyConfigRoute() {
-    routeBlock<GalaxyConfigRoute, Galaxy> {
-        viewGalaxyConfig(it.toEdit())
+    routeBlock<GalaxyConfigRoute, GalaxyConfig> {
+        viewGalaxyConfig(it)
     }
 }

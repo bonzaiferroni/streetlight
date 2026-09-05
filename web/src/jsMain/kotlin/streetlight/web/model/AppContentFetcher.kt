@@ -33,7 +33,7 @@ class AppContentFetcher(
     override suspend fun fetchContent(route: AppRoute): Outcome<FetcherContent> = when (route) {
         is HomeRoute -> api.readHomeContent()
         is GalaxyRoute -> api.readGalaxyContent(route.slug)
-        is GalaxyConfigRoute -> api.readGalaxy(route.slug)
+        is GalaxyConfigRoute -> api.readGalaxyConfig(route.slug)
         is LocationRoute -> api.readLocationContent(route.slug)
         is EventRoute -> api.readEventSlug(route.slug)
         is StarRoute -> api.readStarContent(route.username)

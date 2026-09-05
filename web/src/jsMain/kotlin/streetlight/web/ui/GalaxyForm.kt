@@ -2,6 +2,8 @@ package streetlight.web.ui
 
 import kabinet.utils.format
 import kampfire.api.Slug
+import kampfire.model.reactIn
+import kampfire.model.storeOf
 import koala.css.*
 import koala.dom.*
 import koala.html.bulletsOf
@@ -54,6 +56,31 @@ fun ViewScope.galaxyDescriptionFormRow(model: GalaxyEditor) = formRow {
         formField {
             textEditor(model.postGuideField, "Post Guide")
             formText("Provide guidelines or requirements for the content of community posts.")
+        }
+    }
+
+    formSection("Marks") {
+        column {
+            val newMark = storeOf("")
+            row {
+                textField(newMark, "Mark", modify(Flex1))
+                button("add mark", {
+                    launchEffect {
+                        if (model.addMark(newMark.now)) { return@launchEffect }
+                        newMark.set { "" }
+                    }
+                })
+            }
+            itemsBlock(model.marksState) { mark ->
+                val leanState = storeOf(mark.lean)
+                leanState.reactIn(contentScope) {
+                    model.setLean(mark.markId, it)
+                }
+                row {
+                    textBlock(mark.name, modify(Flex1))
+                    dropMenu(leanState)
+                }
+            }
         }
     }
 }
