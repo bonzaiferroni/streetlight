@@ -6,7 +6,7 @@ import kotlinx.html.FlowContent
 import streetlight.model.data.*
 import streetlight.web.shells.SectionHeadingMod
 
-fun FlowContent.postSection(posts: List<FeedEntity>) {
+fun FlowContent.postSection(posts: List<FeedEntity>, showGalaxy: Boolean) {
     section {
         filigree {
             heading2("Posts", SectionHeadingMod)
@@ -14,7 +14,7 @@ fun FlowContent.postSection(posts: List<FeedEntity>) {
 
         layoutPosts {
             posts.forEach { post ->
-                postRow(post)
+                postRow(post, showGalaxy)
             }
         }
     }

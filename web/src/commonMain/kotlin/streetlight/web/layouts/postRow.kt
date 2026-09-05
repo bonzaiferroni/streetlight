@@ -19,7 +19,7 @@ import streetlight.model.data.PostType
 
 fun FlowContent.postRow(
     post: Post?,
-    isGalaxyContext: Boolean,
+    showGalaxy: Boolean,
     heading: String,
     postRoute: AppRoute?,
     image: Image?,
@@ -37,18 +37,18 @@ fun FlowContent.postRow(
     cells = cells,
 ) {
     post?.let {
-        postLine(post, isGalaxyContext)
+        postLine(post, showGalaxy)
     }
 }
 
-fun FlowContent.postRow(post: FeedEntity) = when (post) {
-    is GalaxyPost -> postRow(post)
+fun FlowContent.postRow(post: FeedEntity, showGalaxy: Boolean) = when (post) {
+    is GalaxyPost -> postRow(post, showGalaxy)
     else -> entityRow(post, true)
 }
 
-fun FlowContent.postRow(post: GalaxyPost) = postRow(
+fun FlowContent.postRow(post: GalaxyPost, showGalaxy: Boolean) = postRow(
     post = post.base,
-    isGalaxyContext = true,
+    showGalaxy = showGalaxy,
     heading = post.label,
     // subHeading = post.subtitle,
     postRoute = post.route,

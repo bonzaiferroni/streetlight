@@ -49,7 +49,7 @@ fun FlowContent.feedRow(
                 }
                 column(modify(Flex1, Gap0, JustifyContentCenter, AlignItemsCenter)) {
                     navigationIfNotNull(postRoute) {
-                        heading5(heading, modify(LineHeight115, Shrinkable, LineClamp2, TextOverflowEllipses))
+                        heading5(heading, modify(LineHeight115, Shrinkable, LineClamp2, TextOverflowEllipses, TextAlignCenter))
                     }
 //                    spacer(modify(ColorSchemeFg, Height2Px, InkGradientBg, MarginTopTiny, ParticleRay)) {
 //                        setRandomSeed()
@@ -100,13 +100,8 @@ fun FlowContent.postLine(
     galaxy: GalaxyTrace?,
     postedAt: Instant
 ) {
-    row(modify(AlignItemsCenter, MarginTopTiny)) {
-        textBlock(mod = modify(TextSmall)) {
-            galaxy?.let {
-                navigation(GalaxyRoute(it.slug)) {
-                    span("${it.name} • ")
-                }
-            }
+    column(modify(MarginTopTiny, TextSmall, AlignItemsCenter, Gap0, OpacityHigh)) {
+        textBlock {
             +"posted by "
             when (username) {
                 null -> {
@@ -123,7 +118,16 @@ fun FlowContent.postLine(
 //                    }
                 }
             }
-            span(" ${(Clock.System.now() - postedAt).toAgoFormat()}")
+            +" "
+            span((Clock.System.now() - postedAt).toAgoFormat())
+        }
+        galaxy?.let {
+            textBlock {
+                +"to "
+                navigation(GalaxyRoute(it.slug)) {
+                    span(it.name)
+                }
+            }
         }
     }
 }

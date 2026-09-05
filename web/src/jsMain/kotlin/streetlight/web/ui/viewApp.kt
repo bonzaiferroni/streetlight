@@ -56,6 +56,7 @@ fun viewApp() {
                     wireCreatePost()
                     wirePostMenu()
                     wireMessageDialog()
+                    wireFps()
 
                     // td: reimplement as sidebar option
                     // wireRightPanel()

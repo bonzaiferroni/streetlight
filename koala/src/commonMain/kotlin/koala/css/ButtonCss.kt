@@ -11,7 +11,7 @@ body {
     --btn-outline: 1px 1px 1px rgba(0, 0, 0, 0.2);
     --btn-font-size: .9rem;
     --btn-font-weight: 500;
-    --btn-padding: .75rem 1rem;
+    --btn-padding: .7rem 1rem .8rem;
     --btn-border-radius: 1.25rem;
 
     --zen-button-day: rgba(var(--paper), .5);
