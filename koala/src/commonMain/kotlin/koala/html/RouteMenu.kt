@@ -57,12 +57,12 @@ internal fun AppRoute.routeNowMod(routeNow: AppRoute) = when (this == routeNow) 
 
 object RouteMenu {
     val Base = Class("route-menu")
-    val ContextMenu = Class("route-menu__context-menu")
-    val Route = Class("route-menu__route")
-    val RouteNow = Class("route-menu__route-now")
-    val Back = Class("route-menu__back")
-    val LeftTray = Class("route-menu__left-tray")
-    val RightTray = Class("route-menu__right-tray")
+    val ContextMenu = Base.withBemElement("context-menu")
+    val Route = Base.withBemElement("route")
+    val RouteNow = Base.withBemElement("route-now")
+    val Back = Base.withBemElement("back")
+    val LeftTray = Base.withBemElement("left-tray")
+    val RightTray = Base.withBemElement("right-tray")
 }
 
 //language="CSS"
@@ -80,7 +80,7 @@ $Base {
     opacity: 1;
     transition: opacity 400ms var(--magic-easing), transform 400ms var(--magic-easing);
     transform: scale(1);
-    
+    z-index: 2;
     
     @starting-style {
         opacity: 0;

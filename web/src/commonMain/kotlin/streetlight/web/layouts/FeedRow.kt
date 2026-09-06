@@ -100,9 +100,36 @@ fun FlowContent.markBadge(recordId: Uuid, feedMarks: List<FeedMark>, postMarks: 
             textBlock("${feedMark.name}: $sum")
         }
     }
+    when (feedMarks.isPolar()) {
+        true -> polarBadge(popoverId, light)
+        else -> neutralBadge(popoverId, light)
+    }
+}
+
+private fun List<FeedMark>.isPolar() = size == 2 && any { it.lean.value > 0} && any { it.lean.value < 0 }
+
+fun FlowContent.polarBadge(popoverId: Id, light: Int) {
+    box(modify(Width10, BorderRadius50P, ColorSchemeBorder, MoonShadow, OverflowClip, PaperBg)) {
+        column(modify(Gap0)) {
+            button(modify(InkBg, Flex1, OpacityHalf))
+            // spacer(modify(Height2Px, InkBg, OpacityHalf))
+            button(modify(InkBg, Flex1, OpacityLow))
+        }
+        column(modify(Gap0, AlignItemsCenter, JustifyContentCenter, ZIndex1, PointerEventsNone)) {
+            icon(SvgFile.ChevronUp, modify(Height3))
+            button(modify(PaddingX2, PaperBg, BorderRadiusPill, PointerEventsAuto)) {
+                setPopoverTarget(popoverId)
+                textBlock(light.toMetricString())
+            }
+            icon(SvgFile.ChevronDown, modify(Height3))
+        }
+    }
+}
+
+fun FlowContent.neutralBadge(popoverId: Id, light: Int) {
     button {
         setPopoverTarget(popoverId)
-        column(modify(Width10, BorderRadius50P, ColorSchemeBorder, ZenBg, MoonShadow, AlignItemsCenter, JustifyContentCenter, Gap2Px)) {
+        column(modify(Width10, BorderRadius50P, ColorSchemeBorder, ZenBg, MoonShadow, AlignItemsCenter, JustifyContentCenter, Gap2Px, OverflowClip)) {
             icon(SvgFile.Flame, modify(Height2, OpacityLow))
             textBlock(light.toMetricString(), modify(OpacityHigh))
             icon(SvgFile.ArrowsSort, modify(Height2, OpacityLow))

@@ -3,10 +3,10 @@ package koala.html
 import kotlinx.html.*
 import koala.css.*
 
-inline fun FlowContent.column(
+fun FlowContent.column(
     id: Id?,
     mod: ModifierSet? = null,
-    crossinline content: DIV.() -> Unit = { },
+    content: DIV.() -> Unit = { },
 ) {
     column(mod) {
         id?.let {
@@ -16,9 +16,9 @@ inline fun FlowContent.column(
     }
 }
 
-inline fun FlowContent.column(
+fun FlowContent.column(
     mod: ModifierSet? = null,
-    crossinline content: DIV.() -> Unit = { },
+    content: DIV.() -> Unit = { },
 ) {
     div {
         addModifiers(modify(FlexColumn, mod))

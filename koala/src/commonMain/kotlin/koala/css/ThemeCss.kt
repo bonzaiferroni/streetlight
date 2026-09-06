@@ -62,7 +62,7 @@ val ThemeCss get() = with(Koala) { """
     
     --sea-green: 58, 200, 158; 
     --sea-green-fg: color-mix(in srgb, rgb(var(--sea-green)) 50%, rgb(var(--ink)));
-    
+
     --green: 99, 255, 132;
     --green-fg: color-mix(in srgb, rgb(var(--green)) 25%, rgb(var(--ink)));
     --valid-bg: color-mix(in srgb, rgb(var(--green)) 33%, rgb(var(--paper)));
@@ -76,6 +76,7 @@ val ThemeCss get() = with(Koala) { """
     
     --gold: 200, 178, 87;
     --lamp-fg: color-mix(in srgb, rgb(var(--gold)) 75%, rgb(var(--ink)));
+    --lamp-bg: color-mix(in srgb, rgb(var(--gold)) 50%, rgb(var(--paper)));
     
     --purple: 158, 87, 200;
     --selection-overlay: rgba(var(--purple), .2);

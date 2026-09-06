@@ -23,6 +23,7 @@ object SvgFile : FileSet<Svg>() {
     val Chart = add("chart.svg")
     val ChartLarge = add("chart-large.svg")
     val Check = add("check.svg")
+    val ChevronUp = add("chevron-up.svg")
     val ChevronDown = add("chevron-down.svg")
     val City = add("city.svg")
     val CityLarge = add("city-large.svg")

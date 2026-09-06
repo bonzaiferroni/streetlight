@@ -22,8 +22,8 @@ val DisplayUtilityCss
         OverflowHidden, OverflowWrapAnywhere, OverflowClip, OverflowXAuto, OverflowXHidden, OverflowYAuto, OverflowYScroll,
         OverscrollBehaviorContain, ScrollbarWidthNone,
         // Background
-        PrimaryBg, PrimaryCardBg, ZenBg, CardBg, VoidBg, SystemBg, DialogBg, BackgroundImage, SolidBg, BlurBackdrop, TransparentBg,
-        PaperGradientBg, CardGradientBg, InkGradientBg,
+        PrimaryBg, PrimaryCardBg, LampBg, InkBg, ZenBg, CardBg, VoidBg, SystemBg, DialogBg, BackgroundImage,
+        SolidBg, BlurBackdrop, TransparentBg, PaperBg, PaperGradientBg, CardGradientBg, InkGradientBg,
         // Transform
         FlipX, FlipY,
         // Shadow
@@ -104,6 +104,7 @@ val ValidFg = utilityOf("valid-fg", "color: var(--valid-fg)")
 val ColorSchemeFg = utilityOf("color-scheme-fg", "color: var(--color-scheme, currentColor)")
 val ColorSchemeBorder = utilityOf("color-scheme-border", "border: 3px solid var(--color-scheme, currentColor)")
 val ColorSchemeBg = utilityOf("color-scheme-bg", "background-color: var(--color-scheme, currentColor)")
+val PaperBg = utilityOf("paper-bg", "background-color: var(--paper-bg)")
 val PaperGradientBg = utilityOf("paper-gradient-bg", "background: var(--paper-gradient-bg)")
 val CardGradientBg = utilityOf("card-gradient-bg", "background: var(--card-gradient-bg)")
 val InkGradientBg = utilityOf("ink-gradient-bg",
@@ -132,7 +133,9 @@ val ScrollbarWidthNone = utilityOf("scrollbar-width-none", "scrollbar-width: non
 val PrimaryBg = utilityOf("primary-bg", "background-color: var(--primary-bg)")
 val PrimaryCardBg = utilityOf("primary-card-bg", "background-color: var(--primary-card-bg)")
 val SystemBg = utilityOf("system-bg", "background-color: var(--system-bg)")
+val InkBg = utilityOf("ink-bg", "background-color: var(--ink-fg)")
 val ZenBg = utilityOf("zen-card-bg", "background: var(--zen-bg)")
+val LampBg = utilityOf("lamp-bg", "background: var(--lamp-bg)")
 val CardBg = utilityOf("card-bg", "background: var(--card-bg)")
 val VoidBg = utilityOf("void-bg", "background: var(--void-bg)")
 val DialogBg = utilityOf("dialog-bg", "background: var(--dialog-bg)")
