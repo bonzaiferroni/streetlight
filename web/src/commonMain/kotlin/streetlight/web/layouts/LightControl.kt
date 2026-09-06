@@ -25,21 +25,21 @@ object LightControl {
     fun getLitMod(isLit: Boolean) = if (isLit) Lit else null
 }
 
-fun FlowContent.postLight(post: GalaxyPost) {
-    row(modify(LightControl.Class, AlignItemsCenter, Gap2Px, LightControl.getLitMod(post.base.isMarked))) {
-        setAttribute(LightControl.TypeData.to(LightType.Post))
-        onClick = LightControl.ToggleFun.invokeJs(ThisElement, post.base.postId)
-
-        box(modify(OpacityHigh, Height3, Aspect1)) {
-            icon(SvgFile.Boost, modify(LightControl.UnlitIcon))
-            icon(SvgFile.BoostFilled, modify(LightControl.LitIcon))
-        }
-        textBlock(
-            post.base.lightCount.toMetricString(),
-            mod = modify(LightControl.Counter, TextAlignCenter, TextSmall, LineHeight1)
-        )
-    }
-}
+//fun FlowContent.postLight(post: GalaxyPost) {
+//    row(modify(LightControl.Class, AlignItemsCenter, Gap2Px, LightControl.getLitMod(post.base.lean))) {
+//        setAttribute(LightControl.TypeData.to(LightType.Post))
+//        onClick = LightControl.ToggleFun.invokeJs(ThisElement, post.base.postId)
+//
+//        box(modify(OpacityHigh, Height3, Aspect1)) {
+//            icon(SvgFile.Boost, modify(LightControl.UnlitIcon))
+//            icon(SvgFile.BoostFilled, modify(LightControl.LitIcon))
+//        }
+//        textBlock(
+//            post.base.lightCount.toMetricString(),
+//            mod = modify(LightControl.Counter, TextAlignCenter, TextSmall, LineHeight1)
+//        )
+//    }
+//}
 
 // language="CSS"
 val LightControlCss get() = with(LightControl) {"""

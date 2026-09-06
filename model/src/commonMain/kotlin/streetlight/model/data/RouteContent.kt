@@ -32,7 +32,7 @@ data class EventUpdaterContent(
 data class GalaxyContent(
     val galaxy: Galaxy,
     val posts: List<GalaxyPost>,
-    val marks: List<Mark>,
+    override val feedMarks: List<Mark>,
 ): RouteContent, DesignContent {
     override val design get() = galaxy.design
     override val geoPoint get() = galaxy.geoPoint

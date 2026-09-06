@@ -4,5 +4,6 @@ import kampfire.model.GeoPoint
 
 sealed interface DesignContent {
     val design: PageDesign?
-    val geoPoint: GeoPoint?
+    val geoPoint: GeoPoint? get() = null
+    val feedMarks: List<Mark>? get() = null
 }

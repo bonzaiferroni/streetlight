@@ -14,9 +14,8 @@ import kotlinx.css.GridTemplateColumns
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import streetlight.model.data.ExtraLink
-import streetlight.model.data.Galaxy
-import streetlight.model.data.GalaxyContent
 import streetlight.model.data.GalaxyTrace
+import streetlight.model.data.Mark
 import streetlight.model.data.Post
 import streetlight.model.data.PostType
 import streetlight.model.ui.GalaxyRoute
@@ -30,7 +29,9 @@ fun FlowContent.feedRow(
     image: Image?,
     description: Markdown?,
     postType: PostType? = null,
+    marks: List<Mark>? = null,
     light: Int? = null,
+    isMarked: Boolean? = null,
     links: List<ExtraLink>?,
     cells: (FlowContent.() -> Unit)?,
     subheading: (DIV.() -> Unit)?,
@@ -58,7 +59,7 @@ fun FlowContent.feedRow(
                 }
                 when (light) {
                     null -> flairBadge(flair.small)
-                    else -> lightBadge(light)
+                    else -> lightBadge(light, isMarked)
                 }
             }
             // spacer(modify(Height2Px, InkGradientBg, MarginTop2Px))
@@ -87,7 +88,7 @@ fun FlowContent.flairBadge(flair: Svg) {
     icon(flair, modify(Width10, ColorSchemeFg, OpacityLow))
 }
 
-fun FlowContent.lightBadge(light: Int) {
+fun FlowContent.lightBadge(light: Int, isMarked: Boolean?) {
     column(modify(Width10, BorderRadius50P, ColorSchemeBorder, ZenBg, MoonShadow, AlignItemsCenter, JustifyContentCenter, Gap2Px)) {
         icon(SvgFile.Flame, modify(Height2, OpacityLow))
         textBlock(light.toMetricString(), modify(OpacityHigh))

@@ -66,7 +66,7 @@ fun cellContentOf(event: EventLocation, showMore: Boolean, post: GalaxyPost? = n
     }
     buttonsCell(MinWidth32) {
         post?.let {
-            postLight(post)
+            // postLight(post)
         }
         starLightCell(event)
         if (showMore) {
