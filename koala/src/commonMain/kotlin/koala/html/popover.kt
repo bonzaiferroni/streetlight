@@ -2,11 +2,21 @@
 
 package koala.html
 
+import koala.css.AutoMagic
+import koala.css.BlurBackdrop
+import koala.css.BorderRadius3
+import koala.css.BorderSolid2Px
 import koala.css.Class
+import koala.css.Margin1
 import koala.css.ModifierSet
+import koala.css.OverflowClip
+import koala.css.Padding0
 import koala.css.PositionAnchor
 import koala.css.Property
+import koala.css.Scale
 import koala.css.addModifiers
+import koala.css.append
+import koala.css.modify
 import koala.css.setStyle
 import kotlinx.html.CommonAttributeGroupFacade
 import kotlinx.html.DIV
@@ -43,16 +53,21 @@ fun DIV.configurePopover(
     block()
 }
 
-// Called on the parent element
-fun CommonAttributeGroupFacade.popoverContainer(anchor: PositionAnchor) {
-    setStyle(Property.AnchorName.to(anchor.containerPosition()))
+fun FlowContent.popoverCard(
+    id: Id,
+    mod: ModifierSet? = null,
+    content: DIV.() -> Unit = {}
+) {
+    popover(id, Popover.CardMod.append(mod) + Margin1) {
+        content()
+    }
 }
-
-private fun PositionAnchor.containerPosition(): PositionAnchor = PositionAnchor("${this.identifier}-container")
 
 object Popover {
     val Class = Class("popover")
     val TargetAction = stringAttributeOf("popovertargetaction")
+
+    val CardMod = modify(BlurBackdrop, BorderRadius3, BorderSolid2Px, AutoMagic, Scale, OverflowClip, Padding0)
 }
 
 // language="CSS"

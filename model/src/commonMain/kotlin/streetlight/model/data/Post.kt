@@ -14,7 +14,6 @@ data class Post(
     val username: Username?,
     val title: String?,
     val text: Markdown?,
-    val lean: Lean?,
     val lightCount: Int,
     val createdAt: Instant,
     val updatedAt: Instant,

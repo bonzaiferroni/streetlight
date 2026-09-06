@@ -144,7 +144,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object ReadPostId: GetByIdEndpoint<PostId, GalaxyPost>(this)
         object ReadLights: GetEndpoint<List<GalaxyId>>(this)
         object RemovePost: PostEndpoint<PostId, Boolean>(this)
-        object ProvisionMark: PostEndpoint<String, Mark>(this)
+        object ProvisionMark: PostEndpoint<String, FeedMark>(this)
     }
 
     object Medias: ApiNode(this, "media") {

@@ -3,7 +3,6 @@ package streetlight.model.data
 import kampfire.api.Markdown
 import kampfire.api.Slug
 import kampfire.model.GeoBounds
-import kampfire.model.Url
 import kampfire.model.toValidityCheck
 import koala.Image
 import kotlinx.serialization.Serializable
@@ -22,7 +21,7 @@ data class GalaxyEdit(
     val postGuide: Markdown? = null,
     val image: Image? = null,
     val design: PageDesign? = null,
-    val marks: List<Mark>
+    val marks: List<FeedMark>
 ) {
     companion object {
         val NameCharacters = setOf(' ', '.', ',', '\'', '!', '?', ':', '-', '+')
@@ -49,7 +48,7 @@ object GalaxyProperty {
     val Path = "path"
 }
 
-fun Galaxy.toEdit(marks: List<Mark>) = GalaxyEdit(
+fun Galaxy.toEdit(marks: List<FeedMark>) = GalaxyEdit(
     galaxyId = galaxyId,
     cityId = cityId,
     name = name,

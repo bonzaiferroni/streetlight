@@ -6,7 +6,7 @@ import kotlin.jvm.JvmInline
 import kotlin.uuid.Uuid
 
 @Serializable
-data class Mark(
+data class FeedMark(
     val markId: MarkId,
     val lean: Lean,
     val name: String
@@ -28,3 +28,14 @@ enum class Lean(override val label: String, val value: Int): Labeled {
     Positive("+1", +1),
     StrongPositive("+2", +2),
 }
+
+@Serializable
+data class PostMark(
+    val markId: MarkId,
+    val sum: Int,
+    val isMarked: Boolean,
+)
+
+fun findLight(feedMarks: List<FeedMark>, postMarks: List<PostMark>?) = postMarks?.sumOf { postMark ->
+    feedMarks.firstOrNull { it.markId == postMark.markId }?.lean?.value ?: 0
+} ?: 0

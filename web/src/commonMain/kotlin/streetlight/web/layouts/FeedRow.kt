@@ -15,23 +15,26 @@ import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import streetlight.model.data.ExtraLink
 import streetlight.model.data.GalaxyTrace
-import streetlight.model.data.Mark
+import streetlight.model.data.FeedMark
 import streetlight.model.data.Post
+import streetlight.model.data.PostMark
 import streetlight.model.data.PostType
+import streetlight.model.data.findLight
 import streetlight.model.ui.GalaxyRoute
 import streetlight.web.ui.PopoverId
 import kotlin.time.Clock
 import kotlin.time.Instant
+import kotlin.uuid.Uuid
 
 fun FlowContent.feedRow(
     heading: String,
     postRoute: AppRoute?,
     image: Image?,
     description: Markdown?,
+    recordId: Uuid? = null,
     postType: PostType? = null,
-    marks: List<Mark>? = null,
-    light: Int? = null,
-    isMarked: Boolean? = null,
+    feedMarks: List<FeedMark>? = null,
+    postMarks: List<PostMark>? = null,
     links: List<ExtraLink>?,
     cells: (FlowContent.() -> Unit)?,
     subheading: (DIV.() -> Unit)?,
@@ -57,9 +60,9 @@ fun FlowContent.feedRow(
 //                    }
                     subheading?.invoke(this)
                 }
-                when (light) {
-                    null -> flairBadge(flair.small)
-                    else -> lightBadge(light, isMarked)
+                when (recordId != null && feedMarks != null) {
+                    true -> markBadge(recordId, feedMarks, postMarks)
+                    else -> flairBadge(flair.small)
                 }
             }
             // spacer(modify(Height2Px, InkGradientBg, MarginTop2Px))
@@ -88,11 +91,22 @@ fun FlowContent.flairBadge(flair: Svg) {
     icon(flair, modify(Width10, ColorSchemeFg, OpacityLow))
 }
 
-fun FlowContent.lightBadge(light: Int, isMarked: Boolean?) {
-    column(modify(Width10, BorderRadius50P, ColorSchemeBorder, ZenBg, MoonShadow, AlignItemsCenter, JustifyContentCenter, Gap2Px)) {
-        icon(SvgFile.Flame, modify(Height2, OpacityLow))
-        textBlock(light.toMetricString(), modify(OpacityHigh))
-        icon(SvgFile.ArrowUp, modify(Height2, OpacityLow))
+fun FlowContent.markBadge(recordId: Uuid, feedMarks: List<FeedMark>, postMarks: List<PostMark>?) {
+    val light = findLight(feedMarks, postMarks)
+    val popoverId = Id("marks-$recordId")
+    popoverCard(popoverId, modify(Padding2)) {
+        feedMarks.forEach { feedMark ->
+            val sum = postMarks?.firstOrNull { it.markId == feedMark.markId } ?: 0
+            textBlock("${feedMark.name}: $sum")
+        }
+    }
+    button {
+        setPopoverTarget(popoverId)
+        column(modify(Width10, BorderRadius50P, ColorSchemeBorder, ZenBg, MoonShadow, AlignItemsCenter, JustifyContentCenter, Gap2Px)) {
+            icon(SvgFile.Flame, modify(Height2, OpacityLow))
+            textBlock(light.toMetricString(), modify(OpacityHigh))
+            icon(SvgFile.ArrowsSort, modify(Height2, OpacityLow))
+        }
     }
 }
 

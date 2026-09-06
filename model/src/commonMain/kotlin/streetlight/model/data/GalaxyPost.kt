@@ -9,6 +9,7 @@ import kotlin.uuid.Uuid
 sealed interface GalaxyPost: FeedEntity {
     val base: Post
     val postType: PostType
+    override val recordId get() = base.postId.value
 }
 
 @Serializable
@@ -35,6 +36,7 @@ data class LocationPost(
     override val base: Post,
 ): GalaxyPost, FeedEntity by location {
     override val postType get() = PostType.Location
+    override val recordId get() = base.postId.value
 }
 
 @Serializable
@@ -43,4 +45,5 @@ data class EventPost(
     override val base: Post,
 ): GalaxyPost, FeedEntity by event {
     override val postType get() = PostType.Event
+    override val recordId get() = base.postId.value
 }

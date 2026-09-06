@@ -16,9 +16,11 @@ import koala.css.TextAlignCenter
 import koala.css.TextSmall
 import koala.css.TextUppercase
 import koala.css.Width100P
+import koala.css.append
 import koala.css.modify
 import koala.html.AppRoute
 import koala.html.Id
+import koala.html.Popover
 import koala.html.configurePopover
 import kotlinx.html.DIV
 import kotlinx.html.js.div
@@ -51,7 +53,7 @@ fun AppendScope.popover(
 fun AppendScope.popoverCard(
     mod: ModifierSet? = null,
     content: DIV.() -> Unit = {}
-) = card(modify(mod, BlurBackdrop, BorderRadius3, BorderSolid2Px, AutoMagic, Scale, OverflowClip, Padding0)) {
+) = card(Popover.CardMod.append(mod)) {
     content()
 }
 

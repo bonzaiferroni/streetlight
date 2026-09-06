@@ -59,5 +59,5 @@ enum class PostPermission(label: String? = null): Labeled {
 @Serializable
 data class GalaxyConfig(
     val galaxy: Galaxy,
-    val marks: List<Mark>
+    val marks: List<FeedMark>
 ): RouteContent

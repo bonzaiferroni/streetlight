@@ -28,6 +28,11 @@ value class Class(override val identifier: String): Modifier {
 
 typealias ModifierSet = Set<Modifier>
 
+fun ModifierSet.append(mod: ModifierSet?) = when (mod) {
+    null -> this
+    else -> this + mod
+}
+
 fun modify(vararg modifiers: Modifier?) = buildSet {
     modifiers.forEach { modifier ->
         modifier?.let {
@@ -62,6 +67,8 @@ fun TagContext.addModifiers(vararg modifiers: Modifier?) {
         classes += modifiers.mapNotNull { it?.identifier }
     }
 }
+
+// fun TagContext.addModifiers()
 
 fun TagContext.addModifiers(modifier: Modifier) {
     classes += modifier.identifier

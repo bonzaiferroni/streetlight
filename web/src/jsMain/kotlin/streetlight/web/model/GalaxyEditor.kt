@@ -20,7 +20,7 @@ import streetlight.model.data.City
 import streetlight.model.data.DefaultLayout
 import streetlight.model.data.GalaxyEdit
 import streetlight.model.data.Lean
-import streetlight.model.data.Mark
+import streetlight.model.data.FeedMark
 import streetlight.model.data.MarkId
 import streetlight.model.data.slugOf
 import streetlight.model.ui.GalaxyRoute
@@ -99,7 +99,7 @@ class GalaxyEditor(
     }
 
     suspend fun addMark(name: String): Boolean {
-        val trimmedName = name.trim().takeIf { it.length in Mark.ValidLength } ?: return false
+        val trimmedName = name.trim().takeIf { it.length in FeedMark.ValidLength } ?: return false
         val mark = api.provisionMark(trimmedName).toDataOr(toaster) { return false }
         editState.set { copy(marks = marks + mark) }
         return true

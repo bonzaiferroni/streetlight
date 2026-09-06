@@ -5,8 +5,14 @@ import koala.html.*
 import kotlinx.html.FlowContent
 import streetlight.model.data.*
 import streetlight.web.shells.SectionHeadingMod
+import kotlin.uuid.Uuid
 
-fun FlowContent.postSection(posts: List<FeedEntity>, showGalaxy: Boolean) {
+fun FlowContent.postSection(
+    posts: List<FeedEntity>,
+    showGalaxy: Boolean,
+    feedMarks: List<FeedMark>? = null,
+    postMarks: Map<Uuid, List<PostMark>>? = null,
+) {
     section {
         filigree {
             heading2("Posts", SectionHeadingMod)
@@ -14,7 +20,7 @@ fun FlowContent.postSection(posts: List<FeedEntity>, showGalaxy: Boolean) {
 
         layoutPosts {
             posts.forEach { post ->
-                postRow(post, showGalaxy)
+                postRow(post, showGalaxy, feedMarks, postMarks?.let { it[post.recordId] })
             }
         }
     }

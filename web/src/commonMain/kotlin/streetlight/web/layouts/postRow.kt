@@ -15,6 +15,8 @@ import streetlight.model.data.Location
 import streetlight.model.data.LocationEdit
 import streetlight.model.data.Post
 import streetlight.model.data.FeedEntity
+import streetlight.model.data.FeedMark
+import streetlight.model.data.PostMark
 import streetlight.model.data.PostType
 
 fun FlowContent.postRow(
@@ -25,6 +27,8 @@ fun FlowContent.postRow(
     image: Image?,
     description: Markdown?,
     postType: PostType?,
+    feedMarks: List<FeedMark>? = null,
+    postMarks: List<PostMark>? = null,
     links: List<ExtraLink>?,
     cells: (FlowContent.() -> Unit)?,
 ) = feedRow(
@@ -34,6 +38,9 @@ fun FlowContent.postRow(
     description = description,
     postType = postType,
     links = links,
+    recordId = post?.postId?.value,
+    feedMarks = feedMarks,
+    postMarks = postMarks,
     cells = cells,
 ) {
     post?.let {
@@ -41,25 +48,33 @@ fun FlowContent.postRow(
     }
 }
 
-fun FlowContent.postRow(post: FeedEntity, showGalaxy: Boolean) = when (post) {
-    is GalaxyPost -> postRow(post, showGalaxy)
+fun FlowContent.postRow(
+    post: FeedEntity,
+    showGalaxy: Boolean,
+    feedMarks: List<FeedMark>? = null,
+    postMarks: List<PostMark>? = null,
+) = when (post) {
+    is GalaxyPost -> postRow(post, showGalaxy, feedMarks, postMarks)
     else -> entityRow(post, true)
 }
 
-fun FlowContent.postRow(post: GalaxyPost, showGalaxy: Boolean) = postRow(
+fun FlowContent.postRow(
+    post: GalaxyPost,
+    showGalaxy: Boolean,
+    feedMarks: List<FeedMark>? = null,
+    postMarks: List<PostMark>? = null,
+) = postRow(
     post = post.base,
     showGalaxy = showGalaxy,
     heading = post.label,
-    // subHeading = post.subtitle,
     postRoute = post.route,
-    // subRoute = post.subRoute,
     image = post.image,
     description = post.body,
     postType = post.postType,
+    feedMarks = feedMarks,
+    postMarks = postMarks,
     links = post.links,
     cells = post.cellContent(true),
-    // isLit = post.isLit,
-    // lightCount = post.lightCount,
 )
 
 fun FlowContent.entityRow(entity: FeedEntity, showMore: Boolean = false) = feedRow(
