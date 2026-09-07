@@ -14,7 +14,7 @@ import kotlin.uuid.Uuid
 
 @Serializable
 data class Galaxy(
-    val galaxyId: GalaxyId,
+    override val galaxyId: GalaxyId,
     val cityId: CityId?,
     val slug: Slug,
     val name: String,
