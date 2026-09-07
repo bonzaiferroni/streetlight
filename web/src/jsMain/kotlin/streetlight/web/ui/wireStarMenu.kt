@@ -10,9 +10,7 @@ import streetlight.model.ui.StarRoute
 fun ViewScope.wireStarMenu() {
     popoverMenu(
         popoverId = PopoverId.StarMenu,
-        transform = {
-            it.getAttribute(Attribute.Username)
-        }
+        transform = { it.getAttribute(Attribute.Username) }
     ) { username ->
         column(PopoverMenuMod.Column) {
             popoverOption(StarRoute(username))

@@ -53,6 +53,7 @@ fun viewApp() {
                     // shows content in user menu
                     queryAndWireStarNav()
                     wireStarMenu()
+                    wireCurator()
                     wireCreatePost()
                     wirePostMenu()
                     wireMessageDialog()

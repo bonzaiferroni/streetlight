@@ -1,42 +1,42 @@
 package streetlight.web.layouts
 
 import kabinet.utils.toAgoFormat
-import kabinet.utils.toMetricString
 import kampfire.api.Markdown
 import kampfire.api.Username
 import koala.Image
 import koala.SiteImage
 import koala.Svg
-import koala.SvgFile
 import koala.css.*
 import koala.html.*
 import kotlinx.css.GridTemplateColumns
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
+import streetlight.model.data.CuratorStatus
 import streetlight.model.data.ExtraLink
 import streetlight.model.data.GalaxyTrace
 import streetlight.model.data.FeedMark
 import streetlight.model.data.Post
+import streetlight.model.data.PostId
 import streetlight.model.data.PostMark
 import streetlight.model.data.PostType
 import streetlight.model.data.VoteType
-import streetlight.model.data.findLight
 import streetlight.model.data.getVoteType
 import streetlight.model.ui.GalaxyRoute
 import streetlight.web.ui.PopoverId
+import streetlight.web.ui.curatorBadge
+import streetlight.web.ui.multiBadge
+import streetlight.web.ui.polarBadge
+import streetlight.web.ui.singleBadge
 import kotlin.time.Clock
 import kotlin.time.Instant
-import kotlin.uuid.Uuid
 
 fun FlowContent.feedRow(
     heading: String,
     postRoute: AppRoute?,
     image: Image?,
     description: Markdown?,
-    recordId: Uuid? = null,
     postType: PostType? = null,
-    feedMarks: List<FeedMark>? = null,
-    postMarks: List<PostMark>? = null,
+    curator: CuratorStatus? = null,
     links: List<ExtraLink>?,
     cells: (FlowContent.() -> Unit)?,
     subheading: (DIV.() -> Unit)?,
@@ -62,10 +62,10 @@ fun FlowContent.feedRow(
 //                    }
                     subheading?.invoke(this)
                 }
-                val voteType = feedMarks?.getVoteType()
-                when (voteType != null && recordId != null) {
-                    true -> voteBadge(voteType, recordId, feedMarks, postMarks)
-                    else -> flairBadge(flair.small)
+
+                when (curator) {
+                    null -> flairBadge(flair.small)
+                    else -> curatorBadge(curator)
                 }
             }
             // spacer(modify(Height2Px, InkGradientBg, MarginTop2Px))
@@ -92,61 +92,6 @@ fun FlowContent.feedRow(
 
 fun FlowContent.flairBadge(flair: Svg) {
     icon(flair, modify(Width10, ColorSchemeFg, OpacityLow))
-}
-
-private fun FlowContent.voteBadge(voteType: VoteType, recordId: Uuid, feedMarks: List<FeedMark>, postMarks: List<PostMark>?) {
-    val light = findLight(feedMarks, postMarks)
-    val popoverId = Id("marks-$recordId")
-    popoverCard(popoverId, modify(Padding2)) {
-        feedMarks.forEach { feedMark ->
-            val sum = postMarks?.firstOrNull { it.markId == feedMark.markId } ?: 0
-            textBlock("${feedMark.name}: $sum")
-        }
-    }
-    when (voteType) {
-        VoteType.Polar -> polarBadge(popoverId, light)
-        VoteType.Multi -> multiBadge(popoverId, light)
-        VoteType.Single -> singleBadge(light)
-    }
-}
-
-fun FlowContent.polarBadge(popoverId: Id, light: Int) {
-    box(modify(Width10, BorderRadius50P, Outline, MoonShadow, OverflowClip, PaperBg, OpacityHigh)) {
-        column(modify(Gap0)) {
-            button(modify(InkBg, Flex1, OpacityHalf))
-            // spacer(modify(Height2Px, InkBg, OpacityHalf))
-            button(modify(InkBg, Flex1, OpacityLow))
-        }
-        column(modify(Gap0, AlignItemsCenter, JustifyContentCenter, ZIndex1, PointerEventsNone)) {
-            icon(SvgFile.ChevronUp, modify(Height3))
-            button(modify(PaddingX2, VoidBg, BorderRadiusPill, PointerEventsAuto)) {
-                setPopoverTarget(popoverId)
-                textBlock(light.toMetricString())
-            }
-            icon(SvgFile.ChevronDown, modify(Height3))
-        }
-    }
-}
-
-fun FlowContent.multiBadge(popoverId: Id, light: Int) {
-    button {
-        setPopoverTarget(popoverId)
-        column(modify(Width10, BorderRadius50P, Outline, ZenBg, MoonShadow, AlignItemsCenter, JustifyContentCenter, Gap2Px, OverflowClip)) {
-            icon(SvgFile.Flame, modify(Height2, OpacityLow))
-            textBlock(light.toMetricString(), modify(PaddingX2, VoidBg, BorderRadiusPill))
-            icon(SvgFile.ArrowsSort, modify(Height2, OpacityLow))
-        }
-    }
-}
-
-fun FlowContent.singleBadge(light: Int) {
-    button {
-        column(modify(Width10, BorderRadius50P, Outline, ZenBg, MoonShadow, AlignItemsCenter, JustifyContentCenter, Gap2Px, OverflowClip)) {
-            icon(SvgFile.Flame, modify(Height2, OpacityLow))
-            textBlock(light.toMetricString(), modify(PaddingX2, VoidBg, BorderRadiusPill))
-            icon(SvgFile.ChevronUp, modify(Height2, OpacityLow))
-        }
-    }
 }
 
 fun FlowContent.postLine(

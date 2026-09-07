@@ -6,6 +6,7 @@ import koala.Image
 import koala.html.AppRoute
 import koala.html.textBlock
 import kotlinx.html.FlowContent
+import streetlight.model.data.CuratorStatus
 import streetlight.model.data.Event
 import streetlight.model.data.EventEdit
 import streetlight.model.data.EventLocation
@@ -27,8 +28,7 @@ fun FlowContent.postRow(
     image: Image?,
     description: Markdown?,
     postType: PostType?,
-    feedMarks: List<FeedMark>? = null,
-    postMarks: List<PostMark>? = null,
+    curator: CuratorStatus?,
     links: List<ExtraLink>?,
     cells: (FlowContent.() -> Unit)?,
 ) = feedRow(
@@ -38,9 +38,7 @@ fun FlowContent.postRow(
     description = description,
     postType = postType,
     links = links,
-    recordId = post?.postId?.value,
-    feedMarks = feedMarks,
-    postMarks = postMarks,
+    curator = curator,
     cells = cells,
 ) {
     post?.let {
@@ -51,18 +49,16 @@ fun FlowContent.postRow(
 fun FlowContent.postRow(
     post: FeedEntity,
     showGalaxy: Boolean,
-    feedMarks: List<FeedMark>? = null,
-    postMarks: List<PostMark>? = null,
+    curator: CuratorStatus?,
 ) = when (post) {
-    is GalaxyPost -> postRow(post, showGalaxy, feedMarks, postMarks)
+    is GalaxyPost -> postRow(post, showGalaxy, curator)
     else -> entityRow(post, true)
 }
 
 fun FlowContent.postRow(
     post: GalaxyPost,
     showGalaxy: Boolean,
-    feedMarks: List<FeedMark>? = null,
-    postMarks: List<PostMark>? = null,
+    curator: CuratorStatus?,
 ) = postRow(
     post = post.base,
     showGalaxy = showGalaxy,
@@ -71,8 +67,7 @@ fun FlowContent.postRow(
     image = post.image,
     description = post.body,
     postType = post.postType,
-    feedMarks = feedMarks,
-    postMarks = postMarks,
+    curator = curator,
     links = post.links,
     cells = post.cellContent(true),
 )

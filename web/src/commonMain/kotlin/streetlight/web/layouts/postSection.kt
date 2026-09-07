@@ -19,8 +19,14 @@ fun FlowContent.postSection(
 
         layoutPosts {
             posts.forEach { post ->
-                val rowFeedMarks = if (feedMarks != null) post.galaxyId?.let { feedMarks[it] }  else null
-                postRow(post, showGalaxy, rowFeedMarks, postMarks?.let { it[post.postId] })
+                val curator = run {
+                    val postId = post.postId ?: return@run null
+                    val galaxyId = post.galaxyId ?: return@run null
+                    val postMarks = postMarks ?: return@run null
+                    val rowFeedMarks = feedMarks?.get(galaxyId) ?: return@run null
+                    curatorStatusOf(postId, rowFeedMarks, postMarks[postId])
+                }
+                postRow(post, showGalaxy, curator)
             }
         }
     }

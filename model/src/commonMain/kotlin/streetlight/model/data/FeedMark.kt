@@ -36,10 +36,6 @@ data class PostMark(
     val isMarked: Boolean,
 )
 
-fun findLight(feedMarks: List<FeedMark>, postMarks: List<PostMark>?) = postMarks?.sumOf { postMark ->
-    feedMarks.firstOrNull { it.markId == postMark.markId }?.lean?.value ?: 0
-} ?: 0
-
 enum class VoteType { Single, Polar, Multi }
 
 fun List<FeedMark>.getVoteType(): VoteType? {
@@ -47,4 +43,20 @@ fun List<FeedMark>.getVoteType(): VoteType? {
     if (size == 1) return VoteType.Single
     if (size == 2 && any { it.lean.value > 0} && any { it.lean.value < 0 }) return VoteType.Polar
     return VoteType.Multi
+}
+
+fun curatorStatusOf(postId: PostId, feedMarks: List<FeedMark>, postMarks: List<PostMark>?) = feedMarks.getVoteType()?.let {
+    CuratorStatus(postId, it, feedMarks, postMarks)
+}
+
+@Serializable
+data class CuratorStatus(
+    val postId: PostId,
+    val voteType: VoteType,
+    val feedMarks: List<FeedMark>,
+    val postMarks: List<PostMark>?,
+) {
+    val light get() = postMarks?.sumOf { postMark ->
+        feedMarks.firstOrNull { it.markId == postMark.markId }?.lean?.value ?: 0
+    } ?: 0
 }
