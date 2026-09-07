@@ -39,3 +39,12 @@ data class PostMark(
 fun findLight(feedMarks: List<FeedMark>, postMarks: List<PostMark>?) = postMarks?.sumOf { postMark ->
     feedMarks.firstOrNull { it.markId == postMark.markId }?.lean?.value ?: 0
 } ?: 0
+
+enum class VoteType { Single, Polar, Multi }
+
+fun List<FeedMark>.getVoteType(): VoteType? {
+    if (isEmpty()) return null
+    if (size == 1) return VoteType.Single
+    if (size == 2 && any { it.lean.value > 0} && any { it.lean.value < 0 }) return VoteType.Polar
+    return VoteType.Multi
+}

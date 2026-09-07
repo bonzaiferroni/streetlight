@@ -38,6 +38,7 @@ val ThemeCss get() = with(Koala) { """
     --moon-shadow-inset: 0 0 4px 4px rgba(0, 0, 0, 0.05) inset, 0 0 8px 8px rgba(0, 0, 0, 0.02) inset;
     --moon-shadow-text: 0px 2px 4px var(--paper-bg), 0px 2px 8px var(--paper-bg);
     --moon-drop-shadow: drop-shadow(0px 4px 4px var(--paper-bg));
+    --text-shadow: 0 1px 2px var(--paper-bg), 0 0 4px var(--paper-bg);
     --btn-text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8), 0 0 6px rgba(0, 0, 0, 0.6);
     --zen-button-shadow: 0 0 20px 5px rgba(0, 0, 0, 0.1) inset;
     --vignette-shadow: 0 0 100px rgba(0, 0, 0, 0.4) inset;

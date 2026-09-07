@@ -26,7 +26,7 @@ val WhiteSpaceNoWrap = utilityOf("white-space-no-wrap", "white-space: nowrap")
 val WhiteSpacePreLine = utilityOf("white-space-pre-line", "white-space: pre-line")
 val SingleLine = utilityOf("single-line", "white-space: nowrap", "overflow: hidden", "text-overflow: ellipsis")
 val TextOverflowEllipses = utilityOf("text-overflow-ellipsis", "overflow: hidden", "text-overflow: ellipsis")
-val TextShadow = utilityOf("text-shadow", "text-shadow: var(--btn-text-shadow)")
+val TextShadow = utilityOf("text-shadow", "text-shadow: var(--text-shadow)")
 val UserSelectNone = utilityOf("user-select-none", "user-select: none")
 val TextUppercase = utilityOf("text-transform-uppercase", "text-transform: uppercase")
 

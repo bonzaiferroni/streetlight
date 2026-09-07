@@ -19,7 +19,9 @@ import streetlight.model.data.FeedMark
 import streetlight.model.data.Post
 import streetlight.model.data.PostMark
 import streetlight.model.data.PostType
+import streetlight.model.data.VoteType
 import streetlight.model.data.findLight
+import streetlight.model.data.getVoteType
 import streetlight.model.ui.GalaxyRoute
 import streetlight.web.ui.PopoverId
 import kotlin.time.Clock
@@ -51,7 +53,7 @@ fun FlowContent.feedRow(
                 navigationIfNotNull(postRoute, modify(Width10, OverflowClip, BorderRadius1, BorderSolid2Px, MoonShadow)) {
                     image(imageUrl, modify(Size100P, ObjectFitCover))
                 }
-                column(modify(Flex1, Gap0, JustifyContentCenter, AlignItemsCenter)) {
+                column(modify(Flex1, Gap0, JustifyContentCenter, AlignItemsCenter, TextShadow)) {
                     navigationIfNotNull(postRoute) {
                         heading5(heading, modify(LineHeight115, Shrinkable, LineClamp2, TextOverflowEllipses, TextAlignCenter))
                     }
@@ -60,8 +62,9 @@ fun FlowContent.feedRow(
 //                    }
                     subheading?.invoke(this)
                 }
-                when (recordId != null && feedMarks != null) {
-                    true -> markBadge(recordId, feedMarks, postMarks)
+                val voteType = feedMarks?.getVoteType()
+                when (voteType != null && recordId != null) {
+                    true -> voteBadge(voteType, recordId, feedMarks, postMarks)
                     else -> flairBadge(flair.small)
                 }
             }
@@ -91,7 +94,7 @@ fun FlowContent.flairBadge(flair: Svg) {
     icon(flair, modify(Width10, ColorSchemeFg, OpacityLow))
 }
 
-fun FlowContent.markBadge(recordId: Uuid, feedMarks: List<FeedMark>, postMarks: List<PostMark>?) {
+private fun FlowContent.voteBadge(voteType: VoteType, recordId: Uuid, feedMarks: List<FeedMark>, postMarks: List<PostMark>?) {
     val light = findLight(feedMarks, postMarks)
     val popoverId = Id("marks-$recordId")
     popoverCard(popoverId, modify(Padding2)) {
@@ -100,16 +103,15 @@ fun FlowContent.markBadge(recordId: Uuid, feedMarks: List<FeedMark>, postMarks: 
             textBlock("${feedMark.name}: $sum")
         }
     }
-    when (feedMarks.isPolar()) {
-        true -> polarBadge(popoverId, light)
-        else -> neutralBadge(popoverId, light)
+    when (voteType) {
+        VoteType.Polar -> polarBadge(popoverId, light)
+        VoteType.Multi -> multiBadge(popoverId, light)
+        VoteType.Single -> singleBadge(light)
     }
 }
 
-private fun List<FeedMark>.isPolar() = size == 2 && any { it.lean.value > 0} && any { it.lean.value < 0 }
-
 fun FlowContent.polarBadge(popoverId: Id, light: Int) {
-    box(modify(Width10, BorderRadius50P, ColorSchemeBorder, MoonShadow, OverflowClip, PaperBg)) {
+    box(modify(Width10, BorderRadius50P, Outline, MoonShadow, OverflowClip, PaperBg, OpacityHigh)) {
         column(modify(Gap0)) {
             button(modify(InkBg, Flex1, OpacityHalf))
             // spacer(modify(Height2Px, InkBg, OpacityHalf))
@@ -117,7 +119,7 @@ fun FlowContent.polarBadge(popoverId: Id, light: Int) {
         }
         column(modify(Gap0, AlignItemsCenter, JustifyContentCenter, ZIndex1, PointerEventsNone)) {
             icon(SvgFile.ChevronUp, modify(Height3))
-            button(modify(PaddingX2, PaperBg, BorderRadiusPill, PointerEventsAuto)) {
+            button(modify(PaddingX2, VoidBg, BorderRadiusPill, PointerEventsAuto)) {
                 setPopoverTarget(popoverId)
                 textBlock(light.toMetricString())
             }
@@ -126,13 +128,23 @@ fun FlowContent.polarBadge(popoverId: Id, light: Int) {
     }
 }
 
-fun FlowContent.neutralBadge(popoverId: Id, light: Int) {
+fun FlowContent.multiBadge(popoverId: Id, light: Int) {
     button {
         setPopoverTarget(popoverId)
-        column(modify(Width10, BorderRadius50P, ColorSchemeBorder, ZenBg, MoonShadow, AlignItemsCenter, JustifyContentCenter, Gap2Px, OverflowClip)) {
+        column(modify(Width10, BorderRadius50P, Outline, ZenBg, MoonShadow, AlignItemsCenter, JustifyContentCenter, Gap2Px, OverflowClip)) {
             icon(SvgFile.Flame, modify(Height2, OpacityLow))
-            textBlock(light.toMetricString(), modify(OpacityHigh))
+            textBlock(light.toMetricString(), modify(PaddingX2, VoidBg, BorderRadiusPill))
             icon(SvgFile.ArrowsSort, modify(Height2, OpacityLow))
+        }
+    }
+}
+
+fun FlowContent.singleBadge(light: Int) {
+    button {
+        column(modify(Width10, BorderRadius50P, Outline, ZenBg, MoonShadow, AlignItemsCenter, JustifyContentCenter, Gap2Px, OverflowClip)) {
+            icon(SvgFile.Flame, modify(Height2, OpacityLow))
+            textBlock(light.toMetricString(), modify(PaddingX2, VoidBg, BorderRadiusPill))
+            icon(SvgFile.ChevronUp, modify(Height2, OpacityLow))
         }
     }
 }
