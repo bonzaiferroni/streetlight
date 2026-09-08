@@ -1,5 +1,7 @@
 package koala.css
 
+import koala.html.ButtonStyle
+
 object ButtonStyle {
 
 }
@@ -155,13 +157,13 @@ body {
     animation: glow-shadow 10s infinite linear;
 }
 
-[onclick], .clickable {
+${ButtonStyle.ElementClass}, [onclick], .clickable {
     cursor: pointer;
-    transition: box-shadow var(--magic-interval) var(--magic-easing);
+    transition: color var(--magic-interval) var(--magic-easing);
 }
 
-[onclick]:hover, .clickable:hover {
-    box-shadow: inset 0 0 0 9999px rgba(255,255,255,.04);
+${ButtonStyle.ElementClass}:hover, [onclick]:hover, .clickable:hover {
+    color: var(--accent-fg);
 }
 
 $Selected {

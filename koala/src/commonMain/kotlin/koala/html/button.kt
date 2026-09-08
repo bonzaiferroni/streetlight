@@ -50,7 +50,7 @@ fun BUTTON.configureSvgButton(
     modifiers: ModifierSet? = null,
     block: BUTTON.() -> Unit = {}
 ) {
-    addModifiers(ButtonKey.IconClass, modify(IconStyle.Icon, modifiers))
+    addModifiers(ButtonStyle.IconClass, modify(IconStyle.Icon, modifiers))
     setStyle(Property.MaskUrl.to(svg))
     block()
 }
@@ -68,28 +68,28 @@ fun BUTTON.configureElementButton(
     modifiers: ModifierSet? = null,
     block: BUTTON.() -> Unit = {}
 ) {
-    addModifiers(ButtonKey.ElementClass, modifiers)
+    addModifiers(ButtonStyle.ElementClass, modifiers)
     block()
 }
 
-object ButtonKey {
+object ButtonStyle {
     val IconClass = Class("icon-button")
     val ElementClass = Class("element-button")
 }
 
 // language="CSS"
 val IconButtonCss get() = """
-${ButtonKey.IconClass} {
+${ButtonStyle.IconClass} {
     color: inherit;
     transition: background-color var(--magic-interval) var(--magic-easing);
 }
 
-${ButtonKey.IconClass}:hover {
+${ButtonStyle.IconClass}:hover {
     background-color: rgb(var(--accent));
     cursor: pointer;
 }
 
-${ButtonKey.ElementClass} {
+${ButtonStyle.ElementClass} {
     display: inline-flex;
     appearance: none;
     -webkit-appearance: none;
@@ -106,15 +106,9 @@ ${ButtonKey.ElementClass} {
     outline: none;
 
     cursor: pointer;
-    transition: box-shadow var(--magic-interval) var(--magic-easing);
 }
 
-${ButtonKey.ElementClass}:focus-visible {
+${ButtonStyle.ElementClass}:focus-visible {
     outline: 2px solid currentColor;
-}
-
-${ButtonKey.ElementClass}:hover {
-    animation: glow-shadow 10s infinite linear;
-    box-shadow: inset 0 0 0 9999px rgba(255,255,255,.04);
 }
 """

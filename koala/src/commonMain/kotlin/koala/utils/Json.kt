@@ -4,10 +4,7 @@ import kotlinx.serialization.json.Json
 
 val jsonConfig = Json {
     ignoreUnknownKeys = true
-}
-
-val cborConfig = Json {
-    ignoreUnknownKeys = true
+    explicitNulls = false
 }
 
 val jsonPrettyConfig = Json {

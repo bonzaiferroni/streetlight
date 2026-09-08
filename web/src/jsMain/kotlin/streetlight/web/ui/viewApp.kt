@@ -16,6 +16,7 @@ import streetlight.web.layouts.LightControl
 import streetlight.web.model.TransitMap
 import streetlight.web.model.SessionGate
 import koala.utils.launch
+import streetlight.web.interop.appGlobalFunctions
 import web.dom.document
 
 @OptIn(ExperimentalSerializationApi::class)
@@ -27,9 +28,6 @@ fun viewApp() {
     }.koin
 
     val app = AppContainer(koin)
-    val lightService = koin.get<LightService>()
-
-    addGlobalFunctions(KtFunction(LightControl.ToggleFun, lightService::toggleLight))
 
     with (app) {
         val scope: CoroutineScope = get()
@@ -58,6 +56,7 @@ fun viewApp() {
                     wirePostMenu()
                     wireMessageDialog()
                     wireFps()
+                    addGlobalFunctions(appGlobalFunctions())
 
                     // td: reimplement as sidebar option
                     // wireRightPanel()

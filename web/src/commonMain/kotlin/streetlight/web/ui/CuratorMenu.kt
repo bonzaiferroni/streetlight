@@ -27,6 +27,7 @@ import koala.css.Width10
 import koala.css.ZIndex1
 import koala.css.ZenBg
 import koala.css.modify
+import koala.html.booleanAttributeOf
 import koala.html.box
 import koala.html.button
 import koala.html.column
@@ -36,12 +37,18 @@ import koala.html.setAttribute
 import koala.html.setJsonData
 import koala.html.setPopoverTarget
 import koala.html.textBlock
+import koala.html.uuidAttributeOf
+import koala.interop.ThisElement
 import kotlinx.html.FlowContent
+import kotlinx.html.onClick
 import streetlight.model.data.CuratorStatus
+import streetlight.model.data.MarkId
 import streetlight.model.data.VoteType
+import streetlight.web.interop.AppFun
 
 object CuratorMenu {
     val Attribute = jsonAttributeOf<CuratorStatus>("curator")
+    val IsMarked = booleanAttributeOf("is-marked")
 }
 
 fun FlowContent.curatorBadge(curator: CuratorStatus) {
@@ -53,11 +60,19 @@ fun FlowContent.curatorBadge(curator: CuratorStatus) {
 }
 
 fun FlowContent.polarBadge(curator: CuratorStatus) {
+    val upMark = curator.feedMarks.first { it.lean.value > 0 }
+    val downMark = curator.feedMarks.first { it.lean.value < 0 }
     box(modify(Width10, BorderRadius50P, Outline, MoonShadow, OverflowClip, PaperBg, OpacityHigh)) {
         column(modify(Gap0)) {
-            button(modify(InkBg, Flex1, OpacityHalf))
+            button(modify(InkBg, Flex1, OpacityHalf)) {
+                setAttribute(AppAttribute.MarkId.to(upMark.markId))
+                onClick = AppFun.SendMark.invokeJs(ThisElement)
+            }
             // spacer(modify(Height2Px, InkBg, OpacityHalf))
-            button(modify(InkBg, Flex1, OpacityLow))
+            button(modify(InkBg, Flex1, OpacityLow)) {
+                setAttribute(AppAttribute.MarkId.to(downMark.markId))
+                onClick = AppFun.SendMark.invokeJs(ThisElement)
+            }
         }
         column(modify(Gap0, AlignItemsCenter, JustifyContentCenter, ZIndex1, PointerEventsNone)) {
             icon(SvgFile.ChevronUp, modify(Height3))

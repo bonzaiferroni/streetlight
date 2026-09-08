@@ -40,7 +40,6 @@ val appModule = module {
     // clients
     single { TransitClient(get()) }
     single { ApiClient(get()) }
-    single { LightService(get(), get()) }
     single { OSMClient() }
 
     single { Toaster(get()) } bind Messenger::class
