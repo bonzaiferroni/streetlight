@@ -13,7 +13,6 @@ import koala.dom.column
 import koala.dom.markdown
 import koala.html.featureImage
 import koala.html.heading3
-import streetlight.model.data.GalaxyPost
 
 //fun RenderContext.galaxyListPanel(model: EarthMap) {
 //    flowBlock(model.galaxiesFlow, modify(Height100P)) { galaxies ->
@@ -65,14 +64,14 @@ import streetlight.model.data.GalaxyPost
 //    }
 //}
 
-fun ViewScope.postPanel(post: GalaxyPost) {
-    column(modify(Height100Pct, OverflowYAuto, CardBg, BlurBackdrop)) {
-        featureImage(post.image, modify(Width100P, Height24))
-        column(modify(Padding1)) {
-            heading3(post.label)
-            post.body?.let {
-                markdown(it)
-            }
-        }
-    }
-}
+//fun ViewScope.postPanel(post: GalaxyPost) {
+//    column(modify(Height100Pct, OverflowYAuto, CardBg, BlurBackdrop)) {
+//        featureImage(post.image, modify(Width100P, Height24))
+//        column(modify(Padding1)) {
+//            heading3(post.label)
+//            post.body?.let {
+//                markdown(it)
+//            }
+//        }
+//    }
+//}

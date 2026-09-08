@@ -3,7 +3,7 @@ package streetlight.web.ui
 import koala.SiteImage
 import koala.dom.*
 import koala.html.Id
-import streetlight.web.layouts.entityRow
+import streetlight.web.layouts.feedRow
 
 fun ViewScope.viewGalaxyList() {
 
@@ -15,7 +15,7 @@ fun ViewScope.viewGalaxyList() {
                 dataBlock(api::readUserGalaxies) { galaxies ->
                     column {
                         galaxies.forEach {
-                            entityRow(it, true)
+                            feedRow(it, true)
                         }
                     }
                 }
@@ -24,7 +24,7 @@ fun ViewScope.viewGalaxyList() {
                 dataBlock(api::readTopGalaxies) { galaxies ->
                     column {
                         galaxies.forEach {
-                            entityRow(it, true)
+                            feedRow(it, true)
                         }
                     }
                 }

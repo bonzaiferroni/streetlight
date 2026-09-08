@@ -5,13 +5,9 @@ import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 import kotlin.uuid.Uuid
 
-@Serializable
-sealed interface GalaxyPost: FeedEntity {
-    val base: Post
-    val postType: PostType
-    override val postId get() = base.postId
-    override val galaxyId get() = base.galaxy.galaxyId
-}
+//@Serializable
+//sealed interface GalaxyPost: FeedEntity {
+//}
 
 @Serializable
 @JvmInline
@@ -34,19 +30,20 @@ enum class PostOrder(label: String? = null): Labeled {
 @Serializable
 data class LocationPost(
     val location: Location,
-    override val base: Post,
-): GalaxyPost, FeedEntity by location {
-    override val postType get() = PostType.Location
-    override val postId get() = base.postId
-    override val galaxyId get() = base.galaxy.galaxyId
+    override val post: Post,
+): FeedEntity by location {
 }
 
 @Serializable
 data class EventPost(
     val event: EventLocation,
-    override val base: Post,
-): GalaxyPost, FeedEntity by event {
-    override val postType get() = PostType.Event
-    override val postId get() = base.postId
-    override val galaxyId get() = base.galaxy.galaxyId
+    override val post: Post,
+): FeedEntity by event {
+}
+
+@Serializable
+data class MediaPost(
+    val media: Media,
+    override val post: Post,
+): FeedEntity by media {
 }

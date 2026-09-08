@@ -42,7 +42,7 @@ fun FlowContent.feedPostLegacy(
         if (postSlug == null) addModifiers(FeedPostLegacy.HideLight)
 
         postSlug?.let {
-            setAttribute(PostKey.Attribute.to(it))
+            setAttribute(FeedKey.Attribute.to(it))
 
             // boost
             column(modify(GridArea.Light, LightControl.Class, LightControl.getLitMod(isLit), Gap0)) {

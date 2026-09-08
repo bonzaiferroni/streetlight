@@ -32,7 +32,7 @@ data class EventUpdaterContent(
 @Serializable
 data class GalaxyContent(
     val galaxy: Galaxy,
-    val posts: List<GalaxyPost>,
+    val posts: List<FeedEntity>,
     val feedMarks: Map<GalaxyId, List<FeedMark>>,
     val postMarks: Map<PostId, List<PostMark>>
 ): RouteContent, DesignContent {
@@ -53,7 +53,7 @@ data class StarContent(
 @Serializable
 data class HomeContent(
     val galaxies: List<Galaxy>,
-    val posts: List<GalaxyPost>,
+    val posts: List<FeedEntity>,
     val feedMarks: Map<GalaxyId, List<FeedMark>>,
     val postMarks: Map<PostId, List<PostMark>>,
 ): RouteContent

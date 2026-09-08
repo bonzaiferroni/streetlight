@@ -8,7 +8,6 @@ import koala.interop.JsSignature
 import koala.interop.ThisElement
 import kotlinx.html.FlowContent
 import kotlinx.html.onClick
-import streetlight.model.data.GalaxyPost
 import streetlight.model.data.LightType
 
 object LightControl {

@@ -10,7 +10,7 @@ import streetlight.model.data.HomeContent
 import streetlight.model.ui.GalaxyFoundryRoute
 import streetlight.model.ui.GalaxyMapRoute
 import streetlight.model.ui.HomeRoute
-import streetlight.web.layouts.postSection
+import streetlight.web.layouts.feedSection
 import streetlight.web.layouts.smallGalaxyCard
 import streetlight.web.pages.appFooter
 import koala.html.routeMenu
@@ -31,7 +31,7 @@ fun FlowContent.homeShell(content: HomeContent) {
 
                 galaxiesSection(content.galaxies)
 
-                postSection(content.posts, true, content.feedMarks, content.postMarks)
+                feedSection(content.posts, true, content.feedMarks, content.postMarks)
                 // layoutEventPosts("Upcoming Events", content.posts)
 
                 section {

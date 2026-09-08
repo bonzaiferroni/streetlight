@@ -2,6 +2,7 @@ package streetlight.web.model
 
 import koala.model.FeatureMarker
 import streetlight.model.data.City
+import streetlight.model.data.CustomEntity
 import streetlight.model.data.Event
 import streetlight.model.data.EventLocation
 import streetlight.model.data.EventPost
@@ -32,6 +33,7 @@ class MarkerService() {
             is MediaPost -> post.media.geoPoint?.let { MediaMarker(post.media, it) }
             is City -> CityMarker(post)
             is Galaxy -> GalaxyMarker(post)
+            is CustomEntity -> null
         }
     }
 

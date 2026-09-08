@@ -21,7 +21,6 @@ interface Streetlight {
     val cache: DataCache
     val config: SiteConfig
     val omni: OmniClient
-    val stage: StageFacade
     val toaster: Toaster
 }
 
@@ -30,9 +29,4 @@ interface ClientFacade {
     val transit: TransitClient
     val api: ApiClient
     val location: OSMClient
-}
-
-@Deprecated("use dependency injection")
-interface StageFacade {
-    val galaxy: GalaxyStage
 }

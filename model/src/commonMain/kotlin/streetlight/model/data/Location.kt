@@ -42,7 +42,7 @@ data class Location(
     override val image: Image?,
     val extraLinks: List<ExtraLink>?,
     val updatedAt: Instant,
-    val createdAt: Instant,
+    override val createdAt: Instant,
 ): FeedEntity, LocationEntity, Labeled, RouteContent {
 
     val addressLine by lazy {

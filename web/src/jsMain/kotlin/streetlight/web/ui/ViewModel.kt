@@ -9,6 +9,5 @@ interface ViewModel {
     val geo get() = app.geoMap
     val osm get() = app.client.location
     val portal get() = app.portal
-    val stage get() = app.stage
     val toaster get() = app.toaster
 }

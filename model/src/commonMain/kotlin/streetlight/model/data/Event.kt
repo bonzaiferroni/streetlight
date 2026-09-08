@@ -38,7 +38,7 @@ data class Event(
     val startsAt: Instant?,
     val endsAt: Instant?,
     val updatedAt: Instant,
-    val createdAt: Instant,
+    override val createdAt: Instant,
 ): FeedEntity {
     val timeZone get() = TimeZone.currentSystemDefault() // notsure
     val isFree get() = cost == 0f

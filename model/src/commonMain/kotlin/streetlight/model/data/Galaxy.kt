@@ -14,7 +14,7 @@ import kotlin.uuid.Uuid
 
 @Serializable
 data class Galaxy(
-    override val galaxyId: GalaxyId,
+    val galaxyId: GalaxyId,
     val cityId: CityId?,
     val slug: Slug,
     val name: String,
@@ -35,7 +35,7 @@ data class Galaxy(
     val locationCount: Int,
     val postCount: Int,
     val updatedAt: Instant,
-    val createdAt: Instant,
+    override val createdAt: Instant,
 ): FeedEntity, RouteContent {
     val postTypes get() = setOf(PostType.Location, PostType.Event, PostType.Media)
     override val label get() = name

@@ -5,10 +5,10 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import streetlight.model.data.EventId
+import streetlight.model.data.FeedEntity
 import streetlight.model.data.Galaxy
 import streetlight.model.data.GalaxyId
 import streetlight.model.data.LightType
-import streetlight.model.data.GalaxyPost
 import streetlight.web.io.ApiClient
 import streetlight.web.ui.StarLightKey
 
@@ -33,8 +33,6 @@ class DataCache(
     val song = ItemCache(scope, toaster, { it.songId }) { api.readSongs() }
     // val file = ItemCache(scope, { it }) { api.readUserFiles() }
     val topGalaxies = ItemCache(scope, toaster, { it.galaxyId }) { api.readTopGalaxies() }
-
-    val newPosts = MutableSharedFlow<GalaxyPost>()
 
     // val galaxy = GalaxyCache(scope, config, api)
 

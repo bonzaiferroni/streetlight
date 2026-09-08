@@ -1,19 +1,38 @@
 package streetlight.model.data
 
 import kampfire.api.Markdown
+import kampfire.api.Username
 import kampfire.model.GeoPoint
 import koala.Image
+import koala.html.AppRoute
 import kotlinx.serialization.Serializable
+import kotlin.time.Instant
 import kotlin.uuid.Uuid
 
 @Serializable
 sealed interface FeedEntity {
     val label: String
     val geoPoint: GeoPoint?
-    val galaxyId: GalaxyId? get() = null
-    val postId: PostId? get() = null
+    val post: Post? get() = null
+    val username: Username? get() = null
+    val heading: String get() = label
     val image: Image? get() = null
     val sublabel: String? get() = null
     val body: Markdown? get() = null
     val links: List<ExtraLink>? get() = null
+    val createdAt: Instant? get() = null
 }
+
+@Serializable
+data class CustomEntity(
+    override val label: String,
+    override val geoPoint: GeoPoint? = null,
+    override val username: Username? = null,
+    override val heading: String = label,
+    override val image: Image? = null,
+    override val sublabel: String? = null,
+    override val body: Markdown? = null,
+    val route: AppRoute? = null,
+    override val links: List<ExtraLink>? = null,
+    override val createdAt: Instant? = null,
+): FeedEntity

@@ -13,6 +13,7 @@ import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import streetlight.model.data.CuratorStatus
 import streetlight.model.data.ExtraLink
+import streetlight.model.data.FeedEntity
 import streetlight.model.data.GalaxyTrace
 import streetlight.model.data.FeedMark
 import streetlight.model.data.Post
@@ -31,19 +32,19 @@ import kotlin.time.Clock
 import kotlin.time.Instant
 
 fun FlowContent.feedRow(
-    heading: String,
-    postRoute: AppRoute?,
-    image: Image?,
-    description: Markdown?,
-    postType: PostType? = null,
+    entity: FeedEntity,
+    isUniverse: Boolean,
     curator: CuratorStatus? = null,
-    links: List<ExtraLink>?,
-    cells: (FlowContent.() -> Unit)?,
-    subheading: (DIV.() -> Unit)?,
+    cellContent: (FlowContent.() -> Unit)? = null
 ) {
-    val imageUrl = image?.thumb ?: SiteImage.placeholder.thumb // td: make placeholder depend on post type
-    val colorScheme = postType?.colorScheme ?: ColorScheme.Primary
-    val flair = postType?.flair ?: FlairIcon.Default
+    val imageUrl = entity.image?.thumb ?: SiteImage.placeholder.thumb // td: make placeholder depend on post type
+    val colorScheme = entity.colorScheme
+    val flair = entity.flair
+    val postRoute = entity.contentRoute
+    val heading = entity.label
+    val cells = cellContent ?: entity.getCells(true)
+    val description = entity.body
+    val links = entity.links
 
     div(modify(FeedRow.Base, modify(Padding1, ZenBg))) {
 
@@ -57,10 +58,7 @@ fun FlowContent.feedRow(
                     navigationIfNotNull(postRoute) {
                         heading5(heading, modify(LineHeight115, Shrinkable, LineClamp2, TextOverflowEllipses, TextAlignCenter))
                     }
-//                    spacer(modify(ColorSchemeFg, Height2Px, InkGradientBg, MarginTopTiny, ParticleRay)) {
-//                        setRandomSeed()
-//                    }
-                    subheading?.invoke(this)
+                    postLine(entity, isUniverse)
                 }
 
                 when (curator) {
@@ -94,11 +92,11 @@ fun FlowContent.flairBadge(flair: Svg) {
     icon(flair, modify(Width10, ColorSchemeFg, OpacityLow))
 }
 
-fun FlowContent.postLine(
-    username: Username?,
-    galaxy: GalaxyTrace?,
-    postedAt: Instant
-) {
+fun FlowContent.postLine(entity: FeedEntity, isUniverse: Boolean) {
+    val username = entity.post?.username ?: entity.username ?: return
+    val postedAt = entity.post?.createdAt ?: entity.createdAt ?: return
+    val galaxy = entity.post?.galaxy?.takeIf { isUniverse }
+
     column(modify(MarginTopTiny, TextSmall, AlignItemsCenter, Gap0, OpacityHigh)) {
         textBlock {
             +"posted by "
@@ -130,11 +128,6 @@ fun FlowContent.postLine(
         }
     }
 }
-
-fun FlowContent.postLine(
-    post: Post,
-    isGalaxyContent: Boolean
-) = postLine(post.username, if (isGalaxyContent) post.galaxy else null, post.createdAt)
 
 object FeedRow {
     val Base = Class("feed-row")

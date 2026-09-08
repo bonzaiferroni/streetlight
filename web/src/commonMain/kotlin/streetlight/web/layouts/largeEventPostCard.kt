@@ -1,6 +1,5 @@
 package streetlight.web.layouts
 
-import kampfire.model.toUrl
 import kotlinx.html.FlowContent
 import streetlight.model.data.EventPost
 import streetlight.web.ui.starLightCell
@@ -21,7 +20,7 @@ fun FlowContent.largeEventPostCard(post: EventPost) {
             event.cost?.let {
                 { costCell(it, event.url) }
             },
-            { starCell(post.base.username) },
+            { starCell(post.post.username) },
             { starLightCell(event) },
         )
     )

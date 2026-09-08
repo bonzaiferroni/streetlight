@@ -17,7 +17,7 @@ import kotlin.uuid.Uuid
 data class Media(
     val mediaId: MediaId,
     val slug: Slug,
-    val username: Username,
+    override val username: Username,
     val mediaType: MediaType,
     val title: String?,
     val subtitle: String?,
@@ -27,7 +27,7 @@ data class Media(
     override val image: Image?,
     override val design: PageDesign?,
     val updatedAt: Instant,
-    val createdAt: Instant,
+    override val createdAt: Instant,
 ): FeedEntity, RouteContent, DesignContent {
     override val label get() = title ?: "(untitled)"
     override val sublabel get() = subtitle
@@ -41,20 +41,6 @@ value class MediaId(override val value: Uuid): RecordId {
     companion object {
         fun random() = MediaId(Uuid.random())
     }
-}
-
-@Serializable
-data class MediaPost(
-    val media: Media,
-    override val base: Post,
-): GalaxyPost {
-    override val image get() = media.image
-    override val geoPoint get() = media.geoPoint
-    override val label get() = media.title ?: "Untitled"
-    override val sublabel get() = media.subtitle
-    override val body get() = media.text
-    override val links get() = media.link?.let { listOf(ExtraLink("link", it)) }
-    override val postType get() = PostType.Media
 }
 
 enum class MediaType(label: String? = null): Labeled {

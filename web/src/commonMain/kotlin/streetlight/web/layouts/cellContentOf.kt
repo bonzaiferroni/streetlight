@@ -9,14 +9,14 @@ import streetlight.model.data.Event
 import streetlight.model.data.EventEdit
 import streetlight.model.data.EventLocation
 import streetlight.model.data.Galaxy
-import streetlight.model.data.GalaxyPost
 import streetlight.model.data.Location
 import streetlight.model.data.LocationEdit
+import streetlight.model.data.Post
 import streetlight.web.ui.postMenu
 import streetlight.web.ui.starLightCell
 
 
-fun cellContentOf(location: Location, post: GalaxyPost? = null): FlowContent.() -> Unit = {
+fun cellContentOf(location: Location, post: Post? = null): FlowContent.() -> Unit = {
     // starCell(location.username)
     val mapType = location.mapType ?: "Location"
     cell(SvgFile.MapPin, mapType)
@@ -27,7 +27,7 @@ fun cellContentOf(location: Location, post: GalaxyPost? = null): FlowContent.() 
         starLightCell(location)
         moreButton()
         post?.let {
-            postMenu(post.base.postId, post.base.username)
+            postMenu(post.postId, post.username)
         }
     }
 }
@@ -48,7 +48,7 @@ fun cellContentOf(event: EventEdit): FlowContent.() -> Unit = {
     // exampleLightCell()
 }
 
-fun cellContentOf(event: EventLocation, showMore: Boolean, post: GalaxyPost? = null): FlowContent.() -> Unit = {
+fun cellContentOf(event: EventLocation, showMore: Boolean, post: Post? = null): FlowContent.() -> Unit = {
     event.startsAt?.let { startsAt ->
         dateCell(startsAt)
         startsAtCell(startsAt)
@@ -73,7 +73,7 @@ fun cellContentOf(event: EventLocation, showMore: Boolean, post: GalaxyPost? = n
             moreButton()
         }
         post?.let {
-            postMenu(post.base.postId, post.base.username)
+            postMenu(post.postId, post.username)
         }
     }
 }

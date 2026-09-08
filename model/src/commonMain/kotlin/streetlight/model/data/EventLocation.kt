@@ -38,7 +38,7 @@ data class EventLocation(
     val startsAt: Instant?,
     val endsAt: Instant?,
     val updatedAt: Instant,
-    val createdAt: Instant,
+    override val createdAt: Instant,
 ): FeedEntity, Labeled, RouteContent {
     override val links by lazy {
         buildList {

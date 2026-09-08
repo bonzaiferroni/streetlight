@@ -1,7 +1,6 @@
 package streetlight.web.shells
 
 import koala.SvgFile
-import koala.css.modify
 import koala.html.AppRoute
 import koala.html.IconRoute
 import koala.html.Id
@@ -12,16 +11,12 @@ import koala.html.section
 import kotlinx.html.FlowContent
 import streetlight.model.data.Star
 import streetlight.model.data.StarContent
-import streetlight.model.ui.StarDashRoute
 import streetlight.model.ui.ProfileConfigRoute
 import streetlight.model.ui.StarRoute
-import streetlight.model.ui.UpdateAccountRoute
-import streetlight.web.layouts.postSection
 import streetlight.web.layouts.renderLayout
 import streetlight.web.pages.appFooter
 import streetlight.web.pages.appHeader
 import streetlight.web.ui.BodyStyle
-import streetlight.web.ui.featureHeader
 
 fun FlowContent.starShell(content: StarContent) {
     val star = content.star

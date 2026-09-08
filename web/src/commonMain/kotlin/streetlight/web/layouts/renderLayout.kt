@@ -56,17 +56,17 @@ fun FlowContent.renderComments() {
 
 fun FlowContent.renderPosts(content: DesignContent) {
     when (content) {
-        is StarContent -> postSection(content.posts, true)
-        is GalaxyContent -> postSection(content.posts, false, content.feedMarks, content.postMarks)
+        is StarContent -> feedSection(content.posts, true)
+        is GalaxyContent -> feedSection(content.posts, false, content.feedMarks, content.postMarks)
         else -> error("not posts content")
     }
 }
 
 fun FlowContent.renderEvents(content: DesignContent) {
     when (content) {
-        is LocationContent -> layoutPosts {
+        is LocationContent -> layoutFeed {
             content.events.forEach {
-                entityRow(it)
+                feedRow(it, true)
             }
         }
         else -> error("not events content")
