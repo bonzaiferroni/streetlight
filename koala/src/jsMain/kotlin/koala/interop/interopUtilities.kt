@@ -21,15 +21,9 @@ val interopUtilities = listOf(
 fun scrollToId(id: String) = document.getElementOrNullById(id)?.scrollIntoView(ScrollIntoViewOptions(ScrollBehavior.smooth))
 
 fun toggleAncestor(element: HTMLElement, ancestorClass: String, toggleClass: String) {
-    var ancestor = element.parentElement
-    while (ancestor != null) {
-        if (ancestor.classList.contains(ClassName(ancestorClass))) {
-            document.viewTransition {
-                (ancestor as HTMLElement).classList.toggle(ClassName(toggleClass))
-            }
-            break
-        }
-        ancestor = ancestor.parentElement
+    val ancestor = element.closest(".$ancestorClass") as? HTMLElement ?: return
+    document.viewTransition {
+        ancestor.classList.toggle(ClassName(toggleClass))
     }
 }
 

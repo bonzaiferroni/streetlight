@@ -31,7 +31,7 @@ fun FlowContent.homeShell(content: HomeContent) {
 
                 galaxiesSection(content.galaxies)
 
-                feedSection(content.posts, true, content.feedMarks, content.postMarks)
+                feedSection(content.posts, true, content.marks, content.postMarks)
                 // layoutEventPosts("Upcoming Events", content.posts)
 
                 section {

@@ -1,35 +1,19 @@
 package streetlight.web.layouts
 
 import kabinet.utils.toAgoFormat
-import kampfire.api.Markdown
-import kampfire.api.Username
-import koala.Image
 import koala.SiteImage
 import koala.Svg
 import koala.css.*
 import koala.html.*
 import kotlinx.css.GridTemplateColumns
-import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import streetlight.model.data.CuratorStatus
-import streetlight.model.data.ExtraLink
 import streetlight.model.data.FeedEntity
-import streetlight.model.data.GalaxyTrace
-import streetlight.model.data.FeedMark
-import streetlight.model.data.Post
-import streetlight.model.data.PostId
-import streetlight.model.data.PostMark
-import streetlight.model.data.PostType
-import streetlight.model.data.VoteType
-import streetlight.model.data.getVoteType
 import streetlight.model.ui.GalaxyRoute
+import streetlight.web.ui.AppAttribute
 import streetlight.web.ui.PopoverId
 import streetlight.web.ui.curatorBadge
-import streetlight.web.ui.multiBadge
-import streetlight.web.ui.polarBadge
-import streetlight.web.ui.singleBadge
 import kotlin.time.Clock
-import kotlin.time.Instant
 
 fun FlowContent.feedRow(
     entity: FeedEntity,
@@ -47,6 +31,12 @@ fun FlowContent.feedRow(
     val links = entity.links
 
     div(modify(FeedRow.Base, modify(Padding1, ZenBg))) {
+        entity.post?.postId?.let {
+            setAttribute(AppAttribute.PostId.to(it))
+        }
+        entity.post?.galaxy?.galaxyId?.let {
+            setAttribute(AppAttribute.GalaxyId.to(it))
+        }
 
         div(modify(FeedRow.Content)) {
             setStyle(Property.ColorScheme.to(colorScheme.cssValue))

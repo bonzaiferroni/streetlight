@@ -51,10 +51,24 @@ fun Element.setAttribute(attribute: Attribute<*>, value: String) =
 fun <T> Element.setAttribute(expression: AttributeValue<T>) =
     setAttribute(expression.attribute.identifier, expression.value.toString())
 
+fun Element.toggleAttribute(attribute: Attribute<Boolean>): Boolean {
+    val value = getAttribute(attribute) ?: true
+    setAttribute(attribute.to(value))
+    return value
+}
+
 fun <T> Element.getAttribute(attribute: Attribute<T>): T? = attributes.getNamedItem(attribute.identifier)?.let {
     val transform = attribute.toValue ?: error("transform not found: ${attribute.name}")
     transform(it.value)
 }
+
+fun <T> Element.requireAttribute(attribute: Attribute<T>): T =
+    getAttribute(attribute) ?: error("$attribute not found on <${tagName.lowercase()}>")
+
+fun <T> Element.getClosestAttribute(attribute: Attribute<T>) = closest(attribute.selector)?.getAttribute(attribute)
+
+fun <T> Element.requireClosestAttribute(attribute: Attribute<T>) =
+    closest(attribute.selector)?.getAttribute(attribute) ?: error("$attribute not found on <${tagName.lowercase()}>")
 
 fun <T> Element.observeAttribute(attribute: Attribute<T>, block: (T?) -> Unit) {
     val observer = MutationObserver({ _, _ ->

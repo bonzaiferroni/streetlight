@@ -144,6 +144,7 @@ class ApiClient(private val client: FetchClient) {
     suspend fun readGalaxyLights() = client.getApi(Api.Galaxies.ReadLights)
     suspend fun removePost(postId: PostId) = client.postApi(Api.Galaxies.RemovePost, postId)
     suspend fun provisionMark(name: String) = client.postApi(Api.Galaxies.ProvisionMark, name)
+    suspend fun updateMark(update: MarkUpdate) = client.postApi(Api.Galaxies.UpdateMark, update)
 
     // docs
     suspend fun readSiteDoc(docId: DocId) = client.getApi(Api.Docs, docId)

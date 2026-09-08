@@ -5,7 +5,6 @@ import koala.model.DocNode
 import koala.model.DocTable
 import koala.model.RouteContent
 import kotlinx.serialization.Serializable
-import kotlin.uuid.Uuid
 
 @Serializable
 data class LocationContent(
@@ -33,8 +32,8 @@ data class EventUpdaterContent(
 data class GalaxyContent(
     val galaxy: Galaxy,
     val posts: List<FeedEntity>,
-    val feedMarks: Map<GalaxyId, List<FeedMark>>,
-    val postMarks: Map<PostId, List<PostMark>>
+    val marks: Map<GalaxyId, List<Mark>>,
+    val postMarks: Map<PostId, List<MarkStatus>>
 ): RouteContent, DesignContent {
     override val design get() = galaxy.design
     override val geoPoint get() = galaxy.geoPoint
@@ -54,8 +53,8 @@ data class StarContent(
 data class HomeContent(
     val galaxies: List<Galaxy>,
     val posts: List<FeedEntity>,
-    val feedMarks: Map<GalaxyId, List<FeedMark>>,
-    val postMarks: Map<PostId, List<PostMark>>,
+    val marks: Map<GalaxyId, List<Mark>>,
+    val postMarks: Map<PostId, List<MarkStatus>>,
 ): RouteContent
 
 @Serializable

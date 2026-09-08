@@ -9,8 +9,8 @@ import streetlight.web.shells.SectionHeadingMod
 fun FlowContent.feedSection(
     entities: List<FeedEntity>,
     isUniverse: Boolean,
-    feedMarks: Map<GalaxyId, List<FeedMark>>? = null,
-    postMarks: Map<PostId, List<PostMark>>? = null,
+    marks: Map<GalaxyId, List<Mark>>? = null,
+    statusMap: Map<PostId, List<MarkStatus>>? = null,
 ) {
     section {
         filigree {
@@ -22,8 +22,8 @@ fun FlowContent.feedSection(
                 val curator = run {
                     val postId = entity.post?.postId ?: return@run null
                     val galaxyId = entity.post?.galaxy?.galaxyId ?: return@run null
-                    val postMarks = postMarks ?: return@run null
-                    val rowFeedMarks = feedMarks?.get(galaxyId) ?: return@run null
+                    val postMarks = statusMap ?: return@run null
+                    val rowFeedMarks = marks?.get(galaxyId) ?: return@run null
                     curatorStatusOf(postId, rowFeedMarks, postMarks[postId])
                 }
                 feedRow(entity, isUniverse, curator)

@@ -9,6 +9,7 @@ import web.animations.requestAnimationFrame
 import web.cssom.CSSStyleDeclaration
 import web.cssom.ClassName
 import web.dom.DOMTokenList
+import web.dom.Document
 import web.dom.Element
 import web.dom.document
 import web.html.HTMLElement
@@ -61,14 +62,18 @@ fun <T: Element> T.unmodifyAfterFrame(vararg modifier: Modifier): T {
 }
 
 fun Element.isModified(modifier: Modifier) = classList.contains(modifier.className)
-fun Element.getAncestor(modifier: Modifier) = closest(modifier.selector) as? HTMLElement
-
 fun Element.toggle(modifier: Modifier) = classList.toggle(modifier.className)
 
+// td: remove cast
 fun Element.querySelector(queryable: Queryable) = querySelector(queryable.selector) as? HTMLElement
-fun Element.querySelectorAll(queryable: Queryable) = querySelectorAll(queryable.selector).asList().map {
-    it as HTMLElement
-}
+fun Element.querySelectorAll(queryable: Queryable) = querySelectorAll(queryable.selector).asList()
+
+fun Document.querySelector(queryable: Queryable) = querySelector(queryable.selector)
+fun Document.querySelectorAll(queryable: Queryable) = querySelectorAll(queryable.selector).asList()
+
+fun Element.getClosest(queryable: Queryable) = closest(queryable.selector)
+fun Element.requireClosest(queryable: Queryable) = closest(queryable.selector)
+    ?: error("closest not found: ${queryable.selector}")
 
 fun querySelector(queryable: Queryable) = document.body.querySelector(queryable)
 fun querySelectorAll(queryable: Queryable) = document.body.querySelectorAll(queryable)

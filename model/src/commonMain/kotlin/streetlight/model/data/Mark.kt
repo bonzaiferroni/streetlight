@@ -6,7 +6,7 @@ import kotlin.jvm.JvmInline
 import kotlin.uuid.Uuid
 
 @Serializable
-data class FeedMark(
+data class Mark(
     val markId: MarkId,
     val lean: Lean,
     val name: String
@@ -30,7 +30,7 @@ enum class Lean(override val label: String, val value: Int): Labeled {
 }
 
 @Serializable
-data class PostMark(
+data class MarkStatus(
     val markId: MarkId,
     val sum: Int,
     val isMarked: Boolean,
@@ -38,25 +38,32 @@ data class PostMark(
 
 enum class VoteType { Single, Polar, Multi }
 
-fun List<FeedMark>.getVoteType(): VoteType? {
+fun List<Mark>.getVoteType(): VoteType? {
     if (isEmpty()) return null
     if (size == 1) return VoteType.Single
     if (size == 2 && any { it.lean.value > 0} && any { it.lean.value < 0 }) return VoteType.Polar
     return VoteType.Multi
 }
 
-fun curatorStatusOf(postId: PostId, feedMarks: List<FeedMark>, postMarks: List<PostMark>?) = feedMarks.getVoteType()?.let {
-    CuratorStatus(postId, it, feedMarks, postMarks)
+fun curatorStatusOf(postId: PostId, marks: List<Mark>, postMarks: List<MarkStatus>?) = marks.getVoteType()?.let {
+    CuratorStatus(postId, it, marks, postMarks)
 }
 
 @Serializable
 data class CuratorStatus(
     val postId: PostId,
     val voteType: VoteType,
-    val feedMarks: List<FeedMark>,
-    val postMarks: List<PostMark>?,
+    val marks: List<Mark>,
+    val postMarks: List<MarkStatus>?,
 ) {
-    val light get() = postMarks?.sumOf { postMark ->
-        feedMarks.firstOrNull { it.markId == postMark.markId }?.lean?.value ?: 0
+    val postTally get() = postMarks?.sumOf { postMark ->
+        marks.firstOrNull { it.markId == postMark.markId }?.lean?.value ?: 0
     } ?: 0
 }
+
+@Serializable
+data class MarkUpdate(
+    val markId: MarkId,
+    val postId: PostId,
+    val isMarked: Boolean,
+)
