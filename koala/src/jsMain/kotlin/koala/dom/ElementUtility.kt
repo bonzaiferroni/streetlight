@@ -8,12 +8,10 @@ import koala.html.Queryable
 import web.animations.requestAnimationFrame
 import web.cssom.CSSStyleDeclaration
 import web.cssom.ClassName
-import web.dom.DOMTokenList
 import web.dom.Document
 import web.dom.Element
 import web.dom.document
 import web.html.HTMLElement
-import org.w3c.dom.HTMLElement as W3CElementCore
 
 fun <T: Element> T.unmodify(vararg modifier: Modifier): T {
     modifier.forEach { classList.remove(it.className) }
@@ -71,7 +69,7 @@ fun Element.querySelectorAll(queryable: Queryable) = querySelectorAll(queryable.
 fun Document.querySelector(queryable: Queryable) = querySelector(queryable.selector)
 fun Document.querySelectorAll(queryable: Queryable) = querySelectorAll(queryable.selector).asList()
 
-fun Element.getClosest(queryable: Queryable) = closest(queryable.selector)
+fun Element.closest(queryable: Queryable) = closest(queryable.selector)
 fun Element.requireClosest(queryable: Queryable) = closest(queryable.selector)
     ?: error("closest not found: ${queryable.selector}")
 

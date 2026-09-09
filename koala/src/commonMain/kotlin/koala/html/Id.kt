@@ -25,3 +25,9 @@ fun CoreAttributeGroupFacade.setId(id: Id?) {
         this.id = id.identifier
     }
 }
+
+@JvmInline
+value class CompoundSelector(override val selector: String) : Queryable
+
+operator fun Queryable.plus(other: Queryable): Queryable =
+    CompoundSelector(selector + other.selector)

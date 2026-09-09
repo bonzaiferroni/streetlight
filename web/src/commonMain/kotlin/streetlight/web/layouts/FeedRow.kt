@@ -11,6 +11,7 @@ import streetlight.model.data.CuratorStatus
 import streetlight.model.data.FeedEntity
 import streetlight.model.ui.GalaxyRoute
 import streetlight.web.ui.AppAttribute
+import streetlight.web.ui.CuratorMenu
 import streetlight.web.ui.PopoverId
 import streetlight.web.ui.curatorBadge
 import kotlin.time.Clock
@@ -34,8 +35,8 @@ fun FlowContent.feedRow(
         entity.post?.postId?.let {
             setAttribute(AppAttribute.PostId.to(it))
         }
-        entity.post?.galaxy?.galaxyId?.let {
-            setAttribute(AppAttribute.GalaxyId.to(it))
+        curator?.let {
+            setAttribute(CuratorMenu.CuratorJson.to(it))
         }
 
         div(modify(FeedRow.Content)) {

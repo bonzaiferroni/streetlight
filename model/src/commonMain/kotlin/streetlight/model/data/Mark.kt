@@ -8,6 +8,7 @@ import kotlin.uuid.Uuid
 @Serializable
 data class Mark(
     val markId: MarkId,
+    val unmarkId: MarkId?,
     val lean: Lean,
     val name: String
 ) {
@@ -32,7 +33,7 @@ enum class Lean(override val label: String, val value: Int): Labeled {
 @Serializable
 data class MarkStatus(
     val markId: MarkId,
-    val sum: Int,
+    val count: Int,
     val isMarked: Boolean,
 )
 
@@ -41,29 +42,46 @@ enum class VoteType { Single, Polar, Multi }
 fun List<Mark>.getVoteType(): VoteType? {
     if (isEmpty()) return null
     if (size == 1) return VoteType.Single
-    if (size == 2 && any { it.lean.value > 0} && any { it.lean.value < 0 }) return VoteType.Polar
+    if (size == 2 && any { it.lean.value > 0 } && any { it.lean.value < 0 } ) return VoteType.Polar
     return VoteType.Multi
 }
 
-fun curatorStatusOf(postId: PostId, marks: List<Mark>, postMarks: List<MarkStatus>?) = marks.getVoteType()?.let {
-    CuratorStatus(postId, it, marks, postMarks)
+fun curatorStatusOf(postId: PostId, marks: List<Mark>, postMarks: List<MarkStatus>?) = marks.getVoteType()?.let { voteType ->
+    CuratorStatus(postId, voteType, marks.map { mark ->
+        val postMark = postMarks?.firstOrNull { it.markId == mark.markId }
+        FeedMark(
+            markId = mark.markId,
+            unmarkId = mark.unmarkId,
+            lean = mark.lean,
+            name = mark.name,
+            count = postMark?.count ?: 0,
+            isMarked = postMark?.isMarked ?: false
+        )
+    })
 }
 
 @Serializable
 data class CuratorStatus(
     val postId: PostId,
     val voteType: VoteType,
-    val marks: List<Mark>,
-    val postMarks: List<MarkStatus>?,
+    val marks: List<FeedMark>,
 ) {
-    val postTally get() = postMarks?.sumOf { postMark ->
-        marks.firstOrNull { it.markId == postMark.markId }?.lean?.value ?: 0
-    } ?: 0
+    val postLean get() = marks.sumOf { it.lean.value * it.count }
 }
 
 @Serializable
 data class MarkUpdate(
     val markId: MarkId,
     val postId: PostId,
+    val isMarked: Boolean,
+)
+
+@Serializable
+data class FeedMark(
+    val markId: MarkId,
+    val unmarkId: MarkId?,
+    val lean: Lean,
+    val name: String,
+    val count: Int,
     val isMarked: Boolean,
 )

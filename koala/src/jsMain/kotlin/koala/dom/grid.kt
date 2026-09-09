@@ -13,9 +13,7 @@ fun AppendScope.grid(
     mod: ModifierSet? = null,
     queryTemplate: GridTemplateColumns = template,
     content: DIV.() -> Unit,
-) {
-    div(modify(GridColumns.Class, mod)) {
-        configureGridColumns(template, queryTemplate)
-        content()
-    }
+) = div(modify(GridColumns.Class, mod)) {
+    configureGridColumns(template, queryTemplate)
+    content()
 }

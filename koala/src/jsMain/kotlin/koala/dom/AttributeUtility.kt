@@ -49,7 +49,7 @@ fun Element.setAttribute(attribute: Attribute<*>, value: String) =
     setAttribute(attribute.identifier, value)
 
 fun <T> Element.setAttribute(expression: AttributeValue<T>) =
-    setAttribute(expression.attribute.identifier, expression.value.toString())
+    setAttribute(expression.attribute.identifier, expression.toStringValue())
 
 fun Element.toggleAttribute(attribute: Attribute<Boolean>): Boolean {
     val value = getAttribute(attribute) ?: true

@@ -3,7 +3,6 @@ package streetlight.web.ui
 import koala.css.KoalaBody
 import koala.css.Property
 import koala.dom.*
-import koala.interop.KtFunction
 import koala.interop.addGlobalFunctions
 import koala.model.Portal
 import kotlinx.coroutines.CancellationException
@@ -12,7 +11,6 @@ import kotlinx.css.Display
 import kotlinx.serialization.ExperimentalSerializationApi
 import org.koin.dsl.koinApplication
 import streetlight.web.io.OmniClient
-import streetlight.web.layouts.LightControl
 import streetlight.web.model.TransitMap
 import streetlight.web.model.SessionGate
 import koala.utils.launch
@@ -51,7 +49,7 @@ fun viewApp() {
                     // shows content in user menu
                     queryAndWireStarNav()
                     wireStarMenu()
-                    wireCurator()
+                    wireCuratorMenu()
                     wireCreatePost()
                     wirePostMenu()
                     wireMessageDialog()

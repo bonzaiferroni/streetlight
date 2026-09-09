@@ -5,6 +5,7 @@ import koala.SvgFile
 import koala.css.AlignItemsCenter
 import koala.css.BorderRadius50P
 import koala.css.BorderRadiusPill
+import koala.css.Class
 import koala.css.Flex1
 import koala.css.Gap0
 import koala.css.Gap2Px
@@ -26,6 +27,7 @@ import koala.css.VoidBg
 import koala.css.Width10
 import koala.css.ZIndex1
 import koala.css.ZenBg
+import koala.css.addModifiers
 import koala.css.modify
 import koala.html.Attribute
 import koala.html.booleanAttributeOf
@@ -47,6 +49,7 @@ import kotlinx.html.CoreAttributeGroupFacade
 import kotlinx.html.FlowContent
 import kotlinx.html.onClick
 import streetlight.model.data.CuratorStatus
+import streetlight.model.data.FeedMark
 import streetlight.model.data.Mark
 import streetlight.model.data.Lean
 import streetlight.model.data.MarkId
@@ -57,15 +60,10 @@ import streetlight.web.interop.AppFun
 
 object CuratorMenu {
     val CuratorJson = jsonAttributeOf<CuratorStatus>("curator")
-    val IsMarked = booleanAttributeOf("is-marked")
-    val MarkTally = intAttributeOf("mark-tally")
-    val PostLean = intAttributeOf("post-lean")
-    val PostLeanId = uuidAttributeOf("post-lean-id") { PostId(it) }
-    val Lean = enumAttributeOf<Lean>("mark-lean")
+    val PostLean = Class("post-lean")
     val MarkIndicatorId = uuidAttributeOf("mark-indicator-id") { MarkId(it) }
     val MarkTallyId = uuidAttributeOf("mark-tally-id") { MarkId(it) }
     val MarkButtonId = uuidAttributeOf("mark-button-id") { MarkId(it) }
-    val UnmarkId = uuidAttributeOf("unmark-id") { MarkId(it) }
 
     fun postLeanTextOf(sum: Int?) = sum?.takeIf { it != 0 }?.toMetricString() ?: "•"
 }
@@ -90,74 +88,56 @@ fun FlowContent.curatorBadge(curator: CuratorStatus) {
 }
 
 fun FlowContent.polarBadge(curator: CuratorStatus) {
-    val postMarks = curator.postMarks
     val upMark = curator.marks.first { it.lean.value > 0 }
-    val upStatus = postMarks?.firstOrNull { it.markId == upMark.markId }
     val downMark = curator.marks.first { it.lean.value < 0 }
-    val downStatus = postMarks?.firstOrNull { it.markId == downMark.markId }
     box(modify(Width10, BorderRadius50P, Outline, MoonShadow, OverflowClip, PaperBg, OpacityHigh)) {
         column(modify(Gap0)) {
             button(modify(InkBg, Flex1, OpacityHalf)) {
-                configMarkButton(curator.postId, upMark, upStatus, downMark)
+                configureMarkButton(upMark)
+                onClick = AppFun.UpdateMark.invokeJs(ThisElement)
             }
             // spacer(modify(Height2Px, InkBg, OpacityHalf))
             button(modify(InkBg, Flex1, OpacityLow)) {
-                configMarkButton(curator.postId, downMark, downStatus, upMark)
+                configureMarkButton(downMark)
+                onClick = AppFun.UpdateMark.invokeJs(ThisElement)
             }
         }
         column(modify(Gap0, AlignItemsCenter, JustifyContentCenter, ZIndex1, PointerEventsNone)) {
             icon(SvgFile.ChevronUp, modify(Height3)) {
-                configMarkIndicator(curator.postId, upMark, upStatus, downMark)
+                configMarkIndicator(upMark)
             }
             button(modify(PaddingX2, VoidBg, BorderRadiusPill, PointerEventsAuto)) {
-                setJsonData(CuratorMenu.CuratorJson, curator)
-                // td: fix this
-                // setAttribute(CuratorMenu.Attribute.to(curator))
                 setPopoverTarget(PopoverId.Curator)
                 textBlock {
-                    configurePostLeanText(curator.postId, curator.postTally)
+                    configurePostLeanText(curator)
                 }
             }
             icon(SvgFile.ChevronDown, modify(Height3)) {
-                configMarkIndicator(curator.postId, downMark, downStatus, upMark)
+                configMarkIndicator(downMark)
             }
         }
     }
 }
 
-fun BUTTON.configMarkButton(postId: PostId, mark: Mark, status: MarkStatus?, unmark: Mark?) {
-    setAttribute(AppAttribute.PostId.to(postId))
+fun BUTTON.configureMarkButton(mark: FeedMark) {
     setAttribute(CuratorMenu.MarkButtonId.to(mark.markId))
-    setAttribute(Attribute.IsOn.to(status?.isMarked ?: false))
-    setAttribute(CuratorMenu.Lean.to(mark.lean))
-    unmark?.let {
-        setAttribute(CuratorMenu.UnmarkId.to(it.markId))
-    }
-    onClick = AppFun.UpdateMark.invokeJs(ThisElement)
+    setAttribute(Attribute.IsOn.to(mark.isMarked))
 }
 
 // td: may not need this
-fun CoreAttributeGroupFacade.configMarkIndicator(postId: PostId, mark: Mark, status: MarkStatus?, unmark: Mark?) {
-    setAttribute(AppAttribute.PostId.to(postId))
+fun CoreAttributeGroupFacade.configMarkIndicator(mark: FeedMark) {
     setAttribute(CuratorMenu.MarkIndicatorId.to(mark.markId))
-    setAttribute(Attribute.IsOn.to(status?.isMarked ?: false))
-    unmark?.let {
-        setAttribute(CuratorMenu.UnmarkId.to(it.markId))
-    }
+    setAttribute(Attribute.IsOn.to(mark.isMarked))
 }
 
-fun CoreAttributeGroupFacade.configMarkTallyText(postId: PostId, mark: Mark, status: MarkStatus?) {
-    val tally = status?.sum ?: 0
-    setAttribute(AppAttribute.PostId.to(postId))
+fun CoreAttributeGroupFacade.configureMarkTallyText(mark: FeedMark) {
     setAttribute(CuratorMenu.MarkTallyId.to(mark.markId))
-    setAttribute(CuratorMenu.MarkTally.to(tally))
-    +tally.toMetricString()
+    +mark.count.toMetricString()
 }
 
-fun CoreAttributeGroupFacade.configurePostLeanText(postId: PostId, lean: Int) {
-    setAttribute(CuratorMenu.PostLeanId.to(postId))
-    setAttribute(CuratorMenu.PostLean.to(lean))
-    +CuratorMenu.postLeanTextOf(lean)
+fun CoreAttributeGroupFacade.configurePostLeanText(curator: CuratorStatus) {
+    addModifiers(CuratorMenu.PostLean)
+    +CuratorMenu.postLeanTextOf(curator.postLean)
 }
 
 fun FlowContent.multiBadge(curator: CuratorStatus) {
@@ -166,7 +146,7 @@ fun FlowContent.multiBadge(curator: CuratorStatus) {
         setPopoverTarget(PopoverId.Curator)
         column(modify(Width10, BorderRadius50P, Outline, ZenBg, MoonShadow, AlignItemsCenter, JustifyContentCenter, Gap2Px, OverflowClip)) {
             icon(SvgFile.Flame, modify(Height2, OpacityLow))
-            textBlock(curator.postTally.toMetricString(), modify(PaddingX2, VoidBg, BorderRadiusPill))
+            textBlock(curator.postLean.toMetricString(), modify(PaddingX2, VoidBg, BorderRadiusPill))
             icon(SvgFile.ArrowsSort, modify(Height2, OpacityLow))
         }
     }
@@ -176,7 +156,7 @@ fun FlowContent.singleBadge(curator: CuratorStatus) {
     button {
         column(modify(Width10, BorderRadius50P, Outline, ZenBg, MoonShadow, AlignItemsCenter, JustifyContentCenter, Gap2Px, OverflowClip)) {
             icon(SvgFile.Flame, modify(Height2, OpacityLow))
-            textBlock(curator.postTally.toMetricString(), modify(PaddingX2, VoidBg, BorderRadiusPill))
+            textBlock(curator.postLean.toMetricString(), modify(PaddingX2, VoidBg, BorderRadiusPill))
             icon(SvgFile.ChevronUp, modify(Height2, OpacityLow))
         }
     }

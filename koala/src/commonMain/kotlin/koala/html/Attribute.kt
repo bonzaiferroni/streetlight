@@ -79,6 +79,8 @@ data class AttributeValue<T>(val attribute: Attribute<T>, val value: T): Queryab
     override val selector get() = "[${attribute.identifier}='${attribute.toStringValue(value)}']"
 
     override fun toString() = selector
+
+    fun toStringValue() = attribute.toStringValue(value)
 }
 
 fun CoreAttributeGroupFacade.applyBlockLabel(label: String?) {
@@ -87,8 +89,9 @@ fun CoreAttributeGroupFacade.applyBlockLabel(label: String?) {
     }
 }
 
-fun <T> CoreAttributeGroupFacade.setAttribute(expression: AttributeValue<T>) =
-    setAttribute(expression.attribute, expression.value)
+fun <T> CoreAttributeGroupFacade.setAttribute(expression: AttributeValue<T>) {
+    attributes[expression.attribute.identifier] = expression.toStringValue()
+}
 
 fun <T> CoreAttributeGroupFacade.setAttribute(attribute: Attribute<T>, value: T?) {
     if (value != null) {
