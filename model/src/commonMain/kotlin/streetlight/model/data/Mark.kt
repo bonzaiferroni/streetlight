@@ -65,6 +65,11 @@ data class CuratorStatus(
     val marks: List<FeedMark>,
 ) {
     val postLean get() = marks.sumOf { it.lean.value * it.count }
+    val maxCount get() = marks.maxOf { it.count }
+
+    fun progressOf(markId: MarkId) = maxCount.takeIf { it > 0 }?.let { max ->
+        marks.first { it.markId == markId }.count / max.toFloat()
+    } ?: 0f
 }
 
 @Serializable

@@ -43,6 +43,7 @@ import koala.html.uuidAttributeOf
 import koala.interop.ThisElement
 import kotlinx.html.BUTTON
 import kotlinx.html.CoreAttributeGroupFacade
+import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kotlinx.html.onClick
 import streetlight.model.data.CuratorStatus
@@ -57,6 +58,7 @@ object CuratorMenu {
     val MarkIndicatorId = uuidAttributeOf("mark-indicator-id") { MarkId(it) }
     val MarkTallyId = uuidAttributeOf("mark-tally-id") { MarkId(it) }
     val MarkButtonId = uuidAttributeOf("mark-button-id") { MarkId(it) }
+    val MarkBarId = uuidAttributeOf("mark-bar-id") { MarkId(it) }
 
     fun postLeanTextOf(sum: Int?) = sum?.takeIf { it != 0 }?.toMetricString() ?: "•"
 }
@@ -131,6 +133,10 @@ fun CoreAttributeGroupFacade.configureMarkTallyText(mark: FeedMark) {
 fun CoreAttributeGroupFacade.configurePostLeanText(curator: CuratorStatus) {
     addModifiers(CuratorMenu.PostLean)
     +CuratorMenu.postLeanTextOf(curator.postLean)
+}
+
+fun DIV.configureMarkBar(mark: FeedMark) {
+    setAttribute(CuratorMenu.MarkBarId.to(mark.markId))
 }
 
 fun FlowContent.multiBadge(curator: CuratorStatus) {

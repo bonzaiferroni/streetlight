@@ -3,12 +3,15 @@ package streetlight.web.interop
 import kabinet.utils.toMetricString
 import kampfire.model.toDataOrNull
 import koala.dom.ViewScope
+import koala.dom.asHtmlElement
 import koala.dom.getAttribute
 import koala.dom.querySelectorAll
 import koala.dom.requireAttribute
 import koala.dom.requireClosest
 import koala.dom.setAttribute
+import koala.dom.setStyle
 import koala.html.Attribute
+import koala.html.ProgressBarStyle
 import koala.html.plus
 import streetlight.model.data.CuratorStatus
 import streetlight.model.data.CuratorType
@@ -63,17 +66,24 @@ fun CuratorStatus.toggleMark(markId: MarkId): CuratorStatus {
 
 fun Element.applyCurator(curator: CuratorStatus) {
     curator.marks.forEach { mark ->
-        // modify tally text
+        // apply tally text
         querySelectorAll(CuratorMenu.MarkTallyId.to(mark.markId)).forEach {
             it.textContent = mark.count.toMetricString()
         }
 
-        // modify mark buttons
+        // apply mark buttons
         querySelectorAll(CuratorMenu.MarkButtonId.to(mark.markId)).forEach {
             it.setAttribute(Attribute.IsOn.to(mark.isMarked))
         }
+
+        // apply mark bar
+        val progress = curator.progressOf(mark.markId)
+        querySelectorAll(CuratorMenu.MarkBarId.to(mark.markId)).forEach {
+            it.asHtmlElement().setStyle(ProgressBarStyle.Progress.to(progress))
+        }
     }
 
+    // apply lean text
     querySelectorAll(CuratorMenu.PostLean).forEach {
         it.textContent = CuratorMenu.postLeanTextOf(curator.postLean)
     }

@@ -9,6 +9,7 @@ import koala.dom.onClickElement
 import koala.dom.requireAttribute
 import koala.dom.requireClosest
 import koala.dom.textBlock
+import koala.html.progressBar
 import kotlinx.css.GridTemplateColumns
 import streetlight.web.interop.applyCurator
 import streetlight.web.interop.updateMark
@@ -23,7 +24,7 @@ fun ViewScope.wireCuratorMenu() {
         val curator = feedElement.requireAttribute(CuratorMenu.CuratorJson)
         lateinit var baseElement: Element
 
-        baseElement = grid(GridTemplateColumns("auto auto"), modify(Padding2)) {
+        baseElement = grid(GridTemplateColumns("auto auto auto"), modify(Padding2)) {
             curator.marks.forEach { mark ->
                 button({
                     baseElement.applyCurator(updateMark(mark.markId, feedElement))
@@ -33,6 +34,10 @@ fun ViewScope.wireCuratorMenu() {
                 }
                 textBlock {
                     configureMarkTallyText(mark)
+                }
+                val progress = curator.progressOf(mark.markId)
+                progressBar(progress) {
+                    configureMarkBar(mark)
                 }
             }
         }
