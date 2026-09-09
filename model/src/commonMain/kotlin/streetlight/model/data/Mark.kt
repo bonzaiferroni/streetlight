@@ -8,7 +8,6 @@ import kotlin.uuid.Uuid
 @Serializable
 data class Mark(
     val markId: MarkId,
-    val unmarkId: MarkId?,
     val lean: Lean,
     val name: String
 ) {
@@ -37,21 +36,20 @@ data class MarkStatus(
     val isMarked: Boolean,
 )
 
-enum class VoteType { Single, Polar, Multi }
+enum class CuratorType { Single, Polar, Multi }
 
-fun List<Mark>.getVoteType(): VoteType? {
+fun List<Mark>.getCuratorType(): CuratorType? {
     if (isEmpty()) return null
-    if (size == 1) return VoteType.Single
-    if (size == 2 && any { it.lean.value > 0 } && any { it.lean.value < 0 } ) return VoteType.Polar
-    return VoteType.Multi
+    if (size == 1) return CuratorType.Single
+    if (size == 2 && any { it.lean.value > 0 } && any { it.lean.value < 0 } ) return CuratorType.Polar
+    return CuratorType.Multi
 }
 
-fun curatorStatusOf(postId: PostId, marks: List<Mark>, postMarks: List<MarkStatus>?) = marks.getVoteType()?.let { voteType ->
+fun curatorStatusOf(postId: PostId, marks: List<Mark>, postMarks: List<MarkStatus>?) = marks.getCuratorType()?.let { voteType ->
     CuratorStatus(postId, voteType, marks.map { mark ->
         val postMark = postMarks?.firstOrNull { it.markId == mark.markId }
         FeedMark(
             markId = mark.markId,
-            unmarkId = mark.unmarkId,
             lean = mark.lean,
             name = mark.name,
             count = postMark?.count ?: 0,
@@ -63,7 +61,7 @@ fun curatorStatusOf(postId: PostId, marks: List<Mark>, postMarks: List<MarkStatu
 @Serializable
 data class CuratorStatus(
     val postId: PostId,
-    val voteType: VoteType,
+    val curatorType: CuratorType,
     val marks: List<FeedMark>,
 ) {
     val postLean get() = marks.sumOf { it.lean.value * it.count }
@@ -79,7 +77,6 @@ data class MarkUpdate(
 @Serializable
 data class FeedMark(
     val markId: MarkId,
-    val unmarkId: MarkId?,
     val lean: Lean,
     val name: String,
     val count: Int,

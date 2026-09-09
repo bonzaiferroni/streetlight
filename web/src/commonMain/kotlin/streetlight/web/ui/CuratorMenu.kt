@@ -30,13 +30,10 @@ import koala.css.ZenBg
 import koala.css.addModifiers
 import koala.css.modify
 import koala.html.Attribute
-import koala.html.booleanAttributeOf
 import koala.html.box
 import koala.html.button
 import koala.html.column
-import koala.html.enumAttributeOf
 import koala.html.icon
-import koala.html.intAttributeOf
 import koala.html.jsonAttributeOf
 import koala.html.setAttribute
 import koala.html.setJsonData
@@ -50,17 +47,13 @@ import kotlinx.html.FlowContent
 import kotlinx.html.onClick
 import streetlight.model.data.CuratorStatus
 import streetlight.model.data.FeedMark
-import streetlight.model.data.Mark
-import streetlight.model.data.Lean
 import streetlight.model.data.MarkId
-import streetlight.model.data.MarkStatus
-import streetlight.model.data.PostId
-import streetlight.model.data.VoteType
+import streetlight.model.data.CuratorType
 import streetlight.web.interop.AppFun
 
 object CuratorMenu {
-    val CuratorJson = jsonAttributeOf<CuratorStatus>("curator")
     val PostLean = Class("post-lean")
+    val CuratorJson = jsonAttributeOf<CuratorStatus>("curator")
     val MarkIndicatorId = uuidAttributeOf("mark-indicator-id") { MarkId(it) }
     val MarkTallyId = uuidAttributeOf("mark-tally-id") { MarkId(it) }
     val MarkButtonId = uuidAttributeOf("mark-button-id") { MarkId(it) }
@@ -80,10 +73,10 @@ $MarkButtonId {
 """}
 
 fun FlowContent.curatorBadge(curator: CuratorStatus) {
-    when (curator.voteType) {
-        VoteType.Polar -> polarBadge(curator)
-        VoteType.Multi -> multiBadge(curator)
-        VoteType.Single -> singleBadge(curator)
+    when (curator.curatorType) {
+        CuratorType.Polar -> polarBadge(curator)
+        CuratorType.Multi -> multiBadge(curator)
+        CuratorType.Single -> singleBadge(curator)
     }
 }
 

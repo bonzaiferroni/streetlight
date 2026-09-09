@@ -11,6 +11,7 @@ import koala.dom.setAttribute
 import koala.html.Attribute
 import koala.html.plus
 import streetlight.model.data.CuratorStatus
+import streetlight.model.data.CuratorType
 import streetlight.model.data.MarkId
 import streetlight.model.data.MarkUpdate
 import streetlight.web.ui.AppAttribute
@@ -40,8 +41,8 @@ fun ViewScope.updateMark(markId: MarkId, baseElement: Element): CuratorStatus {
 }
 
 fun CuratorStatus.toggleMark(markId: MarkId): CuratorStatus {
-    val unmarkId = marks.find { it.markId == markId }?.unmarkId
-    val isMarked = !marks.first { it.markId == markId}.isMarked
+    val isMarked = !marks.first { it.markId == markId }.isMarked
+    val clearOthers = isMarked && curatorType == CuratorType.Polar
 
     return copy(
         marks = marks.map { mark ->
@@ -50,7 +51,7 @@ fun CuratorStatus.toggleMark(markId: MarkId): CuratorStatus {
                     count = mark.count + if (isMarked) 1 else -1,
                     isMarked = isMarked
                 )
-                isMarked && mark.markId == unmarkId && mark.isMarked -> mark.copy(
+                clearOthers && mark.isMarked -> mark.copy(
                     count = mark.count - 1,
                     isMarked = false
                 )
@@ -74,7 +75,6 @@ fun Element.applyCurator(curator: CuratorStatus) {
     }
 
     querySelectorAll(CuratorMenu.PostLean).forEach {
-        println(curator.postLean)
         it.textContent = CuratorMenu.postLeanTextOf(curator.postLean)
     }
 }
