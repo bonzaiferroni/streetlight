@@ -4,7 +4,6 @@ import kabinet.utils.toMetricString
 import kampfire.model.toDataOrNull
 import koala.dom.ViewScope
 import koala.dom.asHtmlElement
-import koala.dom.getAttribute
 import koala.dom.querySelectorAll
 import koala.dom.requireAttribute
 import koala.dom.requireClosest
@@ -12,17 +11,14 @@ import koala.dom.setAttribute
 import koala.dom.setStyle
 import koala.html.Attribute
 import koala.html.ProgressBarStyle
-import koala.html.plus
 import streetlight.model.data.CuratorStatus
 import streetlight.model.data.CuratorType
 import streetlight.model.data.MarkId
 import streetlight.model.data.MarkUpdate
-import streetlight.web.ui.AppAttribute
 import streetlight.web.ui.CuratorMenu
 import streetlight.web.ui.api
 import streetlight.web.ui.toaster
 import web.dom.Element
-import web.dom.document
 import web.html.HTMLElement
 
 fun ViewScope.queryAndUpdateMark(element: HTMLElement): CuratorStatus {

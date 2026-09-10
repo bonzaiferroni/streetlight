@@ -37,3 +37,7 @@ fun <T> MutableTap<List<T>>.append(item: T) {
         list + item
     }
 }
+
+fun <T> MutableTap<List<T>>.mutableTapFirstBy(predicate: (T) -> Boolean) = mutableTapOf({ it.first(predicate) }) { value ->
+    map { if (predicate(it)) value else it }
+}

@@ -2,8 +2,6 @@ package streetlight.web.ui
 
 import koala.css.AlignItemsCenter
 import koala.css.Padding2
-import koala.css.TextAlignRight
-import koala.css.Width100Pct
 import koala.css.Zen
 import koala.css.modify
 import koala.dom.ViewScope

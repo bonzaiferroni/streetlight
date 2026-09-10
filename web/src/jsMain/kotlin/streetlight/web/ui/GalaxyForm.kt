@@ -2,6 +2,8 @@ package streetlight.web.ui
 
 import kabinet.utils.format
 import kampfire.api.Slug
+import kampfire.model.mutableTapFirstBy
+import kampfire.model.mutableTapOf
 import kampfire.model.reactIn
 import kampfire.model.storeOf
 import koala.SvgFile
@@ -72,16 +74,16 @@ fun ViewScope.galaxyDescriptionFormRow(model: GalaxyEditor) = formRow {
                     }
                 })
             }
-            itemsBlock(model.marksState) { mark ->
-                val leanState = storeOf(mark.lean)
-                leanState.reactIn(contentScope) {
-                    model.setLean(mark.markId, it)
-                }
+            itemsBlock(model.markIdsState) { markId ->
+                val markState = model.marksState.mutableTapFirstBy { it.markId == markId }
+                val leanState = markState.mutableTapOf({ it.lean }) { copy(lean = it) }
+                val nameState = markState.mutableTapOf({ it.name }) { copy(name = it) }
+
                 row(modify(AlignItemsCenter, ZenBg, BorderRadius2, Padding1)) {
-                    textBlock(mark.name, modify(Flex1))
+                    textField(nameState, "name", modify(Flex1))
                     dropMenu(leanState)
                     button(SvgFile.X, {
-                        model.removeMark(mark.markId)
+                        model.removeMark(markId)
                     })
                 }
             }

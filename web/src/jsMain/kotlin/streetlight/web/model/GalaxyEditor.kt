@@ -20,12 +20,13 @@ import streetlight.model.data.City
 import streetlight.model.data.DefaultLayout
 import streetlight.model.data.GalaxyEdit
 import streetlight.model.data.Lean
-import streetlight.model.data.Mark
+import streetlight.model.data.GalaxyMark
 import streetlight.model.data.MarkId
 import streetlight.model.data.slugOf
 import streetlight.model.ui.GalaxyRoute
 import streetlight.web.io.ApiClient
 import kotlin.time.Duration.Companion.milliseconds
+import kotlin.uuid.Uuid
 
 class GalaxyEditor(
     galaxy: GalaxyEdit,
@@ -55,7 +56,8 @@ class GalaxyEditor(
     val postGuideField = editState.mutableTapOf({ it.postGuide ?: "".toMarkdown() }) { copy(postGuide = it) }
     val reviewCountField = editState.mutableTapOf({ it.reviewCount?.toString() ?: "" }) { copy(reviewCount = it.toIntOrNull()) }
     val permissionField = editState.mutableTapOf({ it.postPermission }) { copy(postPermission = it) }
-    val marksState = editState.tapOf { it.marks }
+    val marksState = editState.mutableTapOf({ it.marks }) { copy(marks = it) }
+    val markIdsState = editState.tapOf { it.marks.map { mark -> mark.markId } }
 
     val nameField = editState.mutableTapOf({ it.name ?: "" }) { value ->
         if (value.isNotEmpty() && !GalaxyEdit.isValidName(value)) return@mutableTapOf this
@@ -98,10 +100,9 @@ class GalaxyEditor(
         }
     }
 
-    suspend fun addMark(name: String): Boolean {
-        val trimmedName = name.trim().takeIf { it.length in Mark.ValidLength } ?: return false
-        val mark = api.provisionMark(trimmedName).toDataOr(toaster) { return false }
-        editState.set { copy(marks = marks + mark) }
+    fun addMark(name: String): Boolean {
+        val trimmedName = name.trim().takeIf { it.length in GalaxyMark.ValidLength } ?: return false
+        editState.set { copy(marks = marks + GalaxyMark(MarkId(Uuid.random()), Lean.Neutral, trimmedName)) }
         return true
     }
 

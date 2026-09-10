@@ -9,7 +9,7 @@ import streetlight.web.shells.SectionHeadingMod
 fun FlowContent.feedSection(
     entities: List<FeedEntity>,
     isUniverse: Boolean,
-    marks: Map<GalaxyId, List<Mark>>? = null,
+    marks: Map<GalaxyId, List<GalaxyMark>>? = null,
     statusMap: Map<PostId, List<MarkStatus>>? = null,
 ) {
     section {

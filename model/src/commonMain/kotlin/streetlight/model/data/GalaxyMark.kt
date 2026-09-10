@@ -6,7 +6,7 @@ import kotlin.jvm.JvmInline
 import kotlin.uuid.Uuid
 
 @Serializable
-data class Mark(
+data class GalaxyMark(
     val markId: MarkId,
     val lean: Lean,
     val name: String
@@ -18,6 +18,10 @@ data class Mark(
 
 @JvmInline @Serializable
 value class MarkId(override val value: Uuid): RecordId {
+    companion object {
+        val Empty get() = MarkId(Uuid.NIL)
+    }
+
     override fun toString() = value.toString()
 }
 
@@ -38,14 +42,14 @@ data class MarkStatus(
 
 enum class CuratorType { Single, Polar, Multi }
 
-fun List<Mark>.getCuratorType(): CuratorType? {
+fun List<GalaxyMark>.getCuratorType(): CuratorType? {
     if (isEmpty()) return null
     if (size == 1) return CuratorType.Single
     if (size == 2 && any { it.lean.value > 0 } && any { it.lean.value < 0 } ) return CuratorType.Polar
     return CuratorType.Multi
 }
 
-fun curatorStatusOf(postId: PostId, marks: List<Mark>, postMarks: List<MarkStatus>?) = marks.getCuratorType()?.let { voteType ->
+fun curatorStatusOf(postId: PostId, marks: List<GalaxyMark>, postMarks: List<MarkStatus>?) = marks.getCuratorType()?.let { voteType ->
     CuratorStatus(postId, voteType, marks.map { mark ->
         val postMark = postMarks?.firstOrNull { it.markId == mark.markId }
         FeedMark(

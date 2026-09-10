@@ -32,7 +32,7 @@ data class EventUpdaterContent(
 data class GalaxyContent(
     val galaxy: Galaxy,
     val posts: List<FeedEntity>,
-    val marks: Map<GalaxyId, List<Mark>>,
+    val marks: Map<GalaxyId, List<GalaxyMark>>,
     val postMarks: Map<PostId, List<MarkStatus>>
 ): RouteContent, DesignContent {
     override val design get() = galaxy.design
@@ -53,7 +53,7 @@ data class StarContent(
 data class HomeContent(
     val galaxies: List<Galaxy>,
     val posts: List<FeedEntity>,
-    val marks: Map<GalaxyId, List<Mark>>,
+    val marks: Map<GalaxyId, List<GalaxyMark>>,
     val postMarks: Map<PostId, List<MarkStatus>>,
 ): RouteContent
 
