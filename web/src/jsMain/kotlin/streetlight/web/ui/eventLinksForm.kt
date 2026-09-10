@@ -19,7 +19,7 @@ fun ViewScope.eventLinksForm(model: EventEditor) {
     formCard("Event Links") {
         formRow {
             formSection("Website") {
-                textField(model.urlState, "Website", modify(Width100P))
+                textField(model.urlState, "Website", modify(Width100Pct))
                 formText("Is there more information about this event on the web?")
             }
             formSection("Original Source") {

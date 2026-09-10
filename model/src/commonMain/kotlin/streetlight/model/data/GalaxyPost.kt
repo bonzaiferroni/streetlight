@@ -20,8 +20,9 @@ value class PostId(override val value: Uuid): RecordId {
 }
 
 enum class PostOrder(label: String? = null): Labeled {
-    NewFirst("Newest first"),
-    OldFirst("Oldest first");
+    New,
+    Old,
+    Lean;
     // Visibility;
 
     override val label = label ?: name

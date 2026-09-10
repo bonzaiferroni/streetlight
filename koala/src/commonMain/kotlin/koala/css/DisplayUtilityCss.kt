@@ -142,6 +142,7 @@ val DialogBg = utilityOf("dialog-bg", "background: var(--dialog-bg)")
 val HeavyCardBg = utilityOf("heavy-card-bg", "background: rgba(var(--paper), .8)")
 val BackgroundImage = CssUtility("background-image")
 val SolidBg = utilityOf("solid-bg", "background-color: var(--paper-bg)")
+val HoverBg = Class("hover-bg")
 val BlurBackdrop = utilityOf(
     "blur-backdrop",
     "backdrop-filter: var(--strong-blur)",

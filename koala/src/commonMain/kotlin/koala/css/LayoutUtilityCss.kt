@@ -13,7 +13,7 @@ val LayoutUtilityCss
         JustifySelfEnd, JustifySelfCenter, JustifyContentStretch, JustifyContentStart,
         AlignSelfStart, AlignSelfCenter, AlignSelfEnd, AlignSelfStretch, JustifySelfStart, JustifySelfStretch,
         // Width
-        WidthAuto, Width100P, WidthFitContent,
+        WidthAuto, Width100Pct, WidthFitContent,
         Width1, Width2, Width4, Width5, Width8, Width10, Width12, Width16, Width24, Width32, Width64,
         MinWidth0, MinWidth4, MinWidth12, MinWidth6, MinWidth8, MinWidth14, MinWidth16, MinWidth24,
         MinWidth32, MinWidth36, MinWidth48, MinWidthAuto, MaxWidth25P, MaxWidth50P,
@@ -91,7 +91,7 @@ val JustifyContentStart = utilityOf("justify-content-start", "justify-content: f
 
 // Width
 val WidthAuto = utilityOf("width-auto", "width: auto")
-val Width100P = utilityOf("width-100", "width: 100%")
+val Width100Pct = utilityOf("width-100", "width: 100%")
 val WidthFitContent = utilityOf("width-fit-content", "width: fit-content")
 val Width1 = utilityOf("width-1", "width: var(--unit-spacing)")
 val Width2 = utilityOf("width-2", "width: calc(var(--unit-spacing) * 2)")

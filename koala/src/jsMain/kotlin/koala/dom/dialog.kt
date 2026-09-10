@@ -7,7 +7,7 @@ import koala.css.PointerEventsAuto
 import koala.css.PointerEventsNone
 import koala.css.Reveal
 import koala.css.TextAlignCenter
-import koala.css.Width100P
+import koala.css.Width100Pct
 import koala.css.addModifiers
 import koala.css.modify
 import koala.html.DialogStyle
@@ -88,7 +88,7 @@ fun ViewScope.rawDialogContent(
     title: String?,
     mod: ModifierSet? = null,
     content: ViewScope.() -> Unit
-) = column(modify(Width100P, PointerEventsNone)) {
+) = column(modify(Width100Pct, PointerEventsNone)) {
     title?.let {
         filigree {
             heading2(title, modify(TextAlignCenter, PointerEventsAuto, FadeLoop))

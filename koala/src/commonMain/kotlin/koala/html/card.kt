@@ -23,7 +23,7 @@ fun FlowContent.cardOf(
     description: String?,
     modifiers: ModifierSet? = null,
 ) {
-    card(modify(Width100P, modifiers)) {
+    card(modify(Width100Pct, modifiers)) {
         row(modify(Height8, AlignItemsStart)) {
             thumbUrl?.let {
                 image(thumbUrl, modify(Height100Pct, Aspect1, BorderRadius1))

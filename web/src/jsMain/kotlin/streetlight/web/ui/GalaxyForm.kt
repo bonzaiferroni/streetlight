@@ -4,6 +4,7 @@ import kabinet.utils.format
 import kampfire.api.Slug
 import kampfire.model.reactIn
 import kampfire.model.storeOf
+import koala.SvgFile
 import koala.css.*
 import koala.dom.*
 import koala.html.bulletsOf
@@ -76,9 +77,12 @@ fun ViewScope.galaxyDescriptionFormRow(model: GalaxyEditor) = formRow {
                 leanState.reactIn(contentScope) {
                     model.setLean(mark.markId, it)
                 }
-                row {
+                row(modify(AlignItemsCenter, ZenBg, BorderRadius2, Padding1)) {
                     textBlock(mark.name, modify(Flex1))
                     dropMenu(leanState)
+                    button(SvgFile.X, {
+                        model.removeMark(mark.markId)
+                    })
                 }
             }
         }

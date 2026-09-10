@@ -5,26 +5,36 @@ import koala.SvgFile
 import koala.css.AlignItemsCenter
 import koala.css.BorderRadius50P
 import koala.css.BorderRadiusPill
+import koala.css.CardBg
 import koala.css.Class
 import koala.css.Flex1
+import koala.css.FlexColumn
 import koala.css.Gap0
 import koala.css.Gap2Px
 import koala.css.Height2
 import koala.css.Height3
+import koala.css.HoverBg
 import koala.css.InkBg
 import koala.css.JustifyContentCenter
+import koala.css.MinWidth6
 import koala.css.MoonShadow
 import koala.css.OpacityHalf
 import koala.css.OpacityHigh
 import koala.css.OpacityLow
 import koala.css.Outline
 import koala.css.OverflowClip
+import koala.css.PaddingX1
 import koala.css.PaddingX2
 import koala.css.PaperBg
 import koala.css.PointerEventsAuto
 import koala.css.PointerEventsNone
+import koala.css.TextAlignCenter
+import koala.css.TextSmall
 import koala.css.VoidBg
 import koala.css.Width10
+import koala.css.Width100Pct
+import koala.css.Width5
+import koala.css.Width8
 import koala.css.ZIndex1
 import koala.css.ZenBg
 import koala.css.addModifiers
@@ -69,7 +79,7 @@ $MarkButtonId {
     transition: var(--transition-background-color);
     
     &${Attribute.IsOn.to(true)} { 
-        background-color: var(--system-fg);
+        background-color: var(--system-bg) !important;
     }
 }
 """}
@@ -85,14 +95,14 @@ fun FlowContent.curatorBadge(curator: CuratorStatus) {
 fun FlowContent.polarBadge(curator: CuratorStatus) {
     val upMark = curator.marks.first { it.lean.value > 0 }
     val downMark = curator.marks.first { it.lean.value < 0 }
-    box(modify(Width10, BorderRadius50P, Outline, MoonShadow, OverflowClip, PaperBg, OpacityHigh)) {
+    box(modify(Width10, BorderRadius50P, Outline, MoonShadow, OverflowClip, CardBg, OpacityHigh)) {
         column(modify(Gap0)) {
-            button(modify(InkBg, Flex1, OpacityHalf)) {
+            button(modify(Flex1, HoverBg)) {
                 configureMarkButton(upMark)
                 onClick = AppFun.UpdateMark.invokeJs(ThisElement)
             }
             // spacer(modify(Height2Px, InkBg, OpacityHalf))
-            button(modify(InkBg, Flex1, OpacityLow)) {
+            button(modify(Flex1, HoverBg)) {
                 configureMarkButton(downMark)
                 onClick = AppFun.UpdateMark.invokeJs(ThisElement)
             }
@@ -101,9 +111,9 @@ fun FlowContent.polarBadge(curator: CuratorStatus) {
             icon(SvgFile.ChevronUp, modify(Height3)) {
                 configMarkIndicator(upMark)
             }
-            button(modify(PaddingX2, VoidBg, BorderRadiusPill, PointerEventsAuto)) {
+            button(modify(Height3, MinWidth6, FlexColumn, JustifyContentCenter, VoidBg, BorderRadiusPill, PointerEventsAuto, Outline)) {
                 setPopoverTarget(PopoverId.Curator)
-                textBlock {
+                textBlock(mod = modify(TextAlignCenter, TextSmall)) {
                     configurePostLeanText(curator)
                 }
             }

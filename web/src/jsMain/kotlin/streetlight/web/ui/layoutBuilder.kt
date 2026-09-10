@@ -98,7 +98,7 @@ fun ViewScope.editorRow(
                 button(label, {
                     if (isOriginalLocation) editor.model.cancelMove()
                     else editor.model.finishMove(editor.blockId)
-                }, modify(mod, Width100P))
+                }, modify(mod, Width100Pct))
             }
         }
     }
@@ -123,7 +123,7 @@ fun ViewScope.lastEditorRow(
                 if (editor.isDescendentOf(movingBlockId) || isNextPosition) return@flowBlock
                 button("move to ${editor.name}", {
                     editor.model.finishMoveToContainer(editor.containerId)
-                }, modify(Editor, Width100P))
+                }, modify(Editor, Width100Pct))
             }
         }
     }

@@ -1,11 +1,14 @@
 package streetlight.web.ui
 
+import koala.css.AlignItemsCenter
 import koala.css.Padding2
+import koala.css.TextAlignRight
+import koala.css.Width100Pct
+import koala.css.Zen
 import koala.css.modify
 import koala.dom.ViewScope
 import koala.dom.button
 import koala.dom.grid
-import koala.dom.onClickElement
 import koala.dom.requireAttribute
 import koala.dom.requireClosest
 import koala.dom.textBlock
@@ -24,13 +27,12 @@ fun ViewScope.wireCuratorMenu() {
         val curator = feedElement.requireAttribute(CuratorMenu.CuratorJson)
         lateinit var baseElement: Element
 
-        baseElement = grid(GridTemplateColumns("auto auto auto"), modify(Padding2)) {
+        baseElement = grid(GridTemplateColumns("auto auto auto"), modify(Padding2, AlignItemsCenter)) {
             curator.marks.forEach { mark ->
-                button({
+                button(mark.name, {
                     baseElement.applyCurator(updateMark(mark.markId, feedElement))
-                }) {
+                }, modify(Zen)) {
                     configureMarkButton(mark)
-                    textBlock(mark.name)
                 }
                 textBlock {
                     configureMarkTallyText(mark)

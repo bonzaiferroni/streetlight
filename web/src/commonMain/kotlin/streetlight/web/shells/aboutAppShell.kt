@@ -56,7 +56,7 @@ fun FlowContent.aboutAppShell() {
                 textBlock("It's giants all the way down.", modify(TextLarge))
             }
         }
-        column(modify(Gap0, AlignItemsStretch, Width100P, MarginTop4)) {
+        column(modify(Gap0, AlignItemsStretch, Width100Pct, MarginTop4)) {
             heading5("Our Giants", modify(TextAlignCenter))
             githubLink("web", "kotlinx.html", "Kotlin")
             githubLink("app client", "Compose Multiplatform", "jetbrains", "compose-multiplatform")

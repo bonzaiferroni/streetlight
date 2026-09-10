@@ -1,19 +1,5 @@
 package streetlight.web.ui
 
-import koala.css.BlurBackdrop
-import koala.css.CardBg
-import koala.css.Height100Pct
-import koala.css.Height24
-import koala.css.OverflowYAuto
-import koala.css.Padding1
-import koala.css.Width100P
-import koala.css.modify
-import koala.dom.ViewScope
-import koala.dom.column
-import koala.dom.markdown
-import koala.html.featureImage
-import koala.html.heading3
-
 //fun RenderContext.galaxyListPanel(model: EarthMap) {
 //    flowBlock(model.galaxiesFlow, modify(Height100P)) { galaxies ->
 //        column(modify(Padding1)) {

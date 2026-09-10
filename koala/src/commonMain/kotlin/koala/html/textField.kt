@@ -1,7 +1,7 @@
 package koala.html
 
 import koala.css.ModifierSet
-import koala.css.Width100P
+import koala.css.Width100Pct
 import koala.css.addModifiers
 import kotlinx.html.*
 
@@ -47,7 +47,7 @@ fun INPUT.configureTextFieldInput(
 ) {
     setId(id)
     type = InputType.text
-    addModifiers(Width100P, textMod)
+    addModifiers(Width100Pct, textMod)
     placeholder?.let {
         attributes["aria-label"] = it
         this.placeholder = it

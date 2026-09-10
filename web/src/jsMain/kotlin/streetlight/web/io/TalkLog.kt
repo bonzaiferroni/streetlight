@@ -103,5 +103,5 @@ class TalkLog(
 }
 
 data class TalkLogState(
-    val sortBy: PostOrder = PostOrder.OldFirst,
+    val sortBy: PostOrder = PostOrder.Old,
 )

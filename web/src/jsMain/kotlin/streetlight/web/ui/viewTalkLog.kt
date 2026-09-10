@@ -6,7 +6,6 @@ import kampfire.model.toDataOr
 import koala.css.*
 import koala.dom.*
 import koala.html.filigree
-import koala.html.heading1
 import koala.html.spacer
 import kampfire.model.storeOf
 import koala.html.heading4
@@ -79,8 +78,8 @@ fun ViewScope.buildTree(model: TalkLog, treeRoot: HTMLElement, comments: List<Co
     val sortBy = model.stateNow.sortBy
 
     val comments = when (sortBy) {
-        PostOrder.NewFirst -> comments.sortedByDescending { it.createdAt }
-        PostOrder.OldFirst -> comments.sortedBy { it.createdAt }
+        PostOrder.New -> comments.sortedByDescending { it.createdAt }
+        PostOrder.Old, PostOrder.Lean -> comments.sortedBy { it.createdAt }
     }
     val roots = comments.filter { it.parentId == null }
 
@@ -99,14 +98,14 @@ fun ViewScope.growTree(model: TalkLog, treeRoot: HTMLElement, comment: Comment) 
     when (val parentId = comment.parentId) {
         null -> {
             when (model.stateNow.sortBy) {
-                PostOrder.NewFirst -> {
+                PostOrder.New -> {
                     treeRoot.prependChildView("comment", this@growTree) {
                         with (view) {
                             render()
                         }
                     }
                 }
-                PostOrder.OldFirst -> {
+                PostOrder.Old, PostOrder.Lean -> {
                     treeRoot.appendChildView("comment", this@growTree) {
                         with (view) {
                             render()

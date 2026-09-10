@@ -105,9 +105,13 @@ class GalaxyEditor(
         return true
     }
 
+    fun removeMark(markId: MarkId) {
+        editState.set { copy(marks = marks.filterNot { it.markId == markId }) }
+    }
+
     fun setLean(markId: MarkId, lean: Lean) {
         val mark = editState.now.marks.firstOrNull { it.markId == markId } ?: error("mark not found")
-        editState.set { copy(marks = marks.map { if (it.markId == markId) mark else it })}
+        editState.set { copy(marks = marks.map { if (it.markId == markId) mark.copy(lean = lean) else it })}
     }
 
     fun submit() {

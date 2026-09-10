@@ -17,6 +17,14 @@ fun FlowContent.feedSection(
             heading2("Posts", SectionHeadingMod)
         }
 
+        marks?.takeIf { it.size == 1 }?.values?.first()?.let { feedMarks ->
+            row(modify(JustifyContentCenter)) {
+                feedMarks.forEach {
+                    textBlock(it.name)
+                }
+            }
+        }
+
         layoutFeed {
             entities.forEach { entity ->
                 val curator = run {
@@ -32,11 +40,11 @@ fun FlowContent.feedSection(
     }
 }
 
-fun FlowContent.layoutFeed(block: FlowContent.() -> Unit) {
-    mount(FeedKey.PostLayoutId) {
-        column(modify(Gap2Px, BorderRadius2, OverflowClip, MoonShadow)) {
-            block()
-        }
+fun FlowContent.layoutFeed(
+    block: FlowContent.() -> Unit
+) {
+    column(FeedKey.PostLayoutId, modify(Gap2Px, BorderRadius2, OverflowClip, MoonShadow)) {
+        block()
     }
 }
 

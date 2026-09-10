@@ -166,6 +166,15 @@ ${ButtonStyle.ElementClass}:hover, [onclick]:hover, .clickable:hover {
     color: var(--accent-fg);
 }
 
+$HoverBg {
+    box-shadow: inset 0 0 80px transparent;
+    transition: box-shadow var(--magic-interval) var(--magic-easing);
+}
+
+$HoverBg:hover {
+    box-shadow: inset 0 0 80px rgba(var(--ink), 0.2);
+}
+
 $Selected {
     outline: 2px solid rgb(var(--primary));
     outline-offset: -2px;
