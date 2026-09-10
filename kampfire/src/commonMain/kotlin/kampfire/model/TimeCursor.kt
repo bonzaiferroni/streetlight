@@ -5,7 +5,7 @@ import kotlin.time.Instant
 import kotlin.uuid.Uuid
 
 @Serializable
-data class RecordCursor(
+data class TimeCursor(
     val recordId: Uuid,
     val recordAt: Instant,
     val limit: Int = DefaultLimit,
@@ -15,7 +15,7 @@ data class RecordCursor(
     }
 }
 
-val RecordCursor?.limitOrDefault get() = this?.limit ?: RecordCursor.DefaultLimit
+val TimeCursor?.limitOrDefault get() = this?.limit ?: TimeCursor.DefaultLimit
 
 data class CursorStatus(
     val isFetching: Boolean = false,
@@ -25,12 +25,11 @@ data class CursorStatus(
 suspend fun <T, K> requestWithCursor(
     cursorState: MutableTap<CursorStatus>,
     list: LiveList<T, K>,
-    cursorOf: (T) -> RecordCursor,
-    requester: suspend (RecordCursor?) -> List<T>?
+    cursorOf: (T) -> TimeCursor,
+    requester: suspend (TimeCursor?) -> List<T>?
 ) {
     val status = cursorState.now
     if (status.isComplete || status.isFetching) return
-    println("fetching")
     cursorState.set { copy(isFetching = true) }
     val cursor = list.liveItems.lastOrNull()?.let { cursorOf(it) }
 

@@ -7,7 +7,6 @@ import koala.Image
 import koala.html.AppRoute
 import kotlinx.serialization.Serializable
 import kotlin.time.Instant
-import kotlin.uuid.Uuid
 
 @Serializable
 sealed interface FeedEntity {
@@ -36,3 +35,17 @@ data class CustomEntity(
     override val links: List<ExtraLink>? = null,
     override val createdAt: Instant? = null,
 ): FeedEntity
+
+@Serializable
+data class EntityFeed(
+    val entities: List<FeedEntity>,
+    val marks: Map<GalaxyId, List<GalaxyMark>>? = null,
+    val tallies: Map<PostId, List<MarkTally>>? = null,
+) {
+    fun curatorOf(entity: FeedEntity): CuratorStatus? {
+        val postId = entity.post?.postId ?: return null
+        val galaxyId = entity.post?.galaxy?.galaxyId ?: return null
+        val galaxyMarks = marks?.get(galaxyId) ?: return null
+        return curatorStatusOf(postId, galaxyMarks, (tallies ?: return null)[postId])
+    }
+}

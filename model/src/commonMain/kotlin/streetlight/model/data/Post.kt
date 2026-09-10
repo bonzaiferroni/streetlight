@@ -25,3 +25,4 @@ data class GalaxyTrace(
     val name: String,
     val slug: Slug
 )
+

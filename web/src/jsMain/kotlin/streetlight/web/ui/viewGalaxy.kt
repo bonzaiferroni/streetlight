@@ -17,7 +17,7 @@ fun ViewScope.viewGalaxy(content: GalaxyContent) {
 
     wireGalaxyMenu(root, content.galaxy)
 
-    val points = markerService.createMarkers(content.posts)
+    val points = markerService.createMarkers(content.feed.entities)
     markerMap.setPoints(points)
 }
 

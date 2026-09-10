@@ -14,7 +14,7 @@ import streetlight.web.pages.appHeader
 import streetlight.web.ui.BodyStyle
 
 fun FlowContent.galaxyShell(content: GalaxyContent) {
-    val galaxy = content.galaxy; val post = content.posts;
+    val galaxy = content.galaxy
     column(GalaxyShell.id, BodyStyle.ShellColumn) {
         appHeader()
         section(BodyStyle.MainColumn) {

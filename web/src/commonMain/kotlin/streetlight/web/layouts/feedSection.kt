@@ -2,38 +2,39 @@ package streetlight.web.layouts
 
 import koala.css.*
 import koala.html.*
+import koala.interop.ThisElement
 import kotlinx.html.FlowContent
+import kotlinx.html.onClick
 import streetlight.model.data.*
+import streetlight.web.interop.AppFun
 import streetlight.web.shells.SectionHeadingMod
+import streetlight.web.ui.AppAttribute
 
 fun FlowContent.feedSection(
-    entities: List<FeedEntity>,
+    feed: EntityFeed,
     isUniverse: Boolean,
-    marks: Map<GalaxyId, List<GalaxyMark>>? = null,
-    statusMap: Map<PostId, List<MarkStatus>>? = null,
 ) {
     section {
         filigree {
             heading2("Posts", SectionHeadingMod)
         }
 
-        marks?.takeIf { it.size == 1 }?.values?.first()?.let { feedMarks ->
+        feed.marks?.takeIf { it.size == 1 }?.values?.first()?.let { feedMarks ->
+            val galaxyId = feed.marks?.keys?.firstOrNull() ?: return@let
             row(modify(JustifyContentCenter)) {
-                feedMarks.forEach {
-                    textBlock(it.name)
+                setAttribute(AppAttribute.GalaxyId.to(galaxyId))
+                feedMarks.forEach { mark ->
+                    textBlock(mark.name) {
+                        setAttribute(AppAttribute.MarkId.to(mark.markId))
+                        onClick = AppFun.SortByMark.invokeJs(ThisElement)
+                    }
                 }
             }
         }
 
         layoutFeed {
-            entities.forEach { entity ->
-                val curator = run {
-                    val postId = entity.post?.postId ?: return@run null
-                    val galaxyId = entity.post?.galaxy?.galaxyId ?: return@run null
-                    val postMarks = statusMap ?: return@run null
-                    val rowFeedMarks = marks?.get(galaxyId) ?: return@run null
-                    curatorStatusOf(postId, rowFeedMarks, postMarks[postId])
-                }
+            feed.entities.forEach { entity ->
+                val curator = feed.curatorOf(entity)
                 feedRow(entity, isUniverse, curator)
             }
         }
@@ -43,13 +44,16 @@ fun FlowContent.feedSection(
 fun FlowContent.layoutFeed(
     block: FlowContent.() -> Unit
 ) {
-    column(FeedKey.PostLayoutId, modify(Gap2Px, BorderRadius2, OverflowClip, MoonShadow)) {
-        block()
+    mount(FeedSection.MountId) {
+        column(FeedSection.FeedColumnMod) {
+            block()
+        }
     }
 }
 
-object FeedKey {
-    val PostLayoutId = Id("feed-layout")
+object FeedSection {
+    val MountId = Id("feed-layout")
 
     val Attribute = slugAttributeOf("feed-slug")
+    val FeedColumnMod = modify(Gap2Px, BorderRadius2, OverflowClip, MoonShadow)
 }

@@ -78,7 +78,7 @@ class Earth(
                         val galaxy = api.readGalaxy(slug).toDataOr(toaster) { return }
 
                         val markers = api.readPosts(galaxy.galaxyId).toDataOr(toaster) { return }.let {
-                            markerService.createMarkers(it)
+                            markerService.createMarkers(it.entities)
                         }
                         markerMap.setPoints(markers)
                         state.set { copy(map = GalaxyMap(galaxy)) }

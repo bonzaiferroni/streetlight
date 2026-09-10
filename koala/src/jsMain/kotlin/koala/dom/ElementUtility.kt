@@ -70,7 +70,7 @@ fun Document.querySelector(queryable: Queryable) = querySelector(queryable.selec
 fun Document.querySelectorAll(queryable: Queryable) = querySelectorAll(queryable.selector).asList()
 
 fun Element.closest(queryable: Queryable) = closest(queryable.selector)
-fun Element.requireClosest(queryable: Queryable) = closest(queryable.selector)
+fun Element.requireClosest(queryable: Queryable) = closest(queryable.selector) as? HTMLElement
     ?: error("closest not found: ${queryable.selector}")
 
 fun Element.asHtmlElement() = this as HTMLElement

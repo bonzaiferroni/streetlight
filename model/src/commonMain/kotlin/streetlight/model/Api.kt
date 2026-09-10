@@ -140,7 +140,9 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object CreatePost: PostEndpoint<PostEdit, Post>(this)
         object UpdatePost: PostEndpoint<PostEdit, Post>(this)
         object ReadMultiPosts: PostEndpoint<List<GalaxyId>, List<FeedEntity>>(this)
-        object ReadPosts: GetByIdEndpoint<GalaxyId, List<FeedEntity>>(this)
+        object ReadPosts: GetByIdEndpoint<GalaxyId, EntityFeed>(this) {
+            val markId = uuidParamOf("markSortId")
+        }
         object ReadPostId: GetByIdEndpoint<PostId, FeedEntity>(this)
         object ReadLights: GetEndpoint<List<GalaxyId>>(this)
         object RemovePost: PostEndpoint<PostId, Boolean>(this)

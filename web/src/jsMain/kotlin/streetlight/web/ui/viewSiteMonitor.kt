@@ -4,8 +4,8 @@ import koala.SiteImage
 import koala.css.*
 import koala.dom.*
 import koala.external.ECharts
-import kotlinx.browser.document
 import streetlight.model.ui.SiteMonitorRoute
+import web.dom.document
 
 fun RouteScope.viewSiteMonitor() {
     val model = app.getSiteMonitor(contentScope)

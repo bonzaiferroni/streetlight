@@ -34,7 +34,7 @@ enum class Lean(override val label: String, val value: Int): Labeled {
 }
 
 @Serializable
-data class MarkStatus(
+data class MarkTally(
     val markId: MarkId,
     val count: Int,
     val isMarked: Boolean,
@@ -49,7 +49,7 @@ fun List<GalaxyMark>.getCuratorType(): CuratorType? {
     return CuratorType.Multi
 }
 
-fun curatorStatusOf(postId: PostId, marks: List<GalaxyMark>, postMarks: List<MarkStatus>?) = marks.getCuratorType()?.let { voteType ->
+fun curatorStatusOf(postId: PostId, marks: List<GalaxyMark>, postMarks: List<MarkTally>?) = marks.getCuratorType()?.let { voteType ->
     CuratorStatus(postId, voteType, marks.map { mark ->
         val postMark = postMarks?.firstOrNull { it.markId == mark.markId }
         FeedMark(

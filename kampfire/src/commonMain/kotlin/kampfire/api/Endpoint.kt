@@ -147,11 +147,11 @@ fun <T> HttpRequestBuilder.write(param: EndpointParam<T>, value: T?) {
 }
 
 class PathBuilder(
-    private val endpoint: Endpoint<*,*>
+    private val basePath: String
 ) {
     private var params: MutableList<Pair<String, String>> = mutableListOf()
 
-    fun <T> writeParam(param: EndpointParam<T>, value: T) {
+    fun <T> writeParam(param: EndpointParam<T>, value: T?) {
         if (value == null) {
             return
         }
@@ -160,9 +160,9 @@ class PathBuilder(
 
     fun build(): String {
         return if (params.isNotEmpty()) {
-            "${endpoint.path}?${params.joinToString("&") { "${it.first}=${it.second}" }}"
+            "$basePath?${params.joinToString("&") { "${it.first}=${it.second}" }}"
         } else {
-            endpoint.path
+            basePath
         }
     }
 }

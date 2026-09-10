@@ -20,7 +20,7 @@ import streetlight.model.data.ChatMessageRequest
 import streetlight.model.data.ChatPreview
 import streetlight.model.data.ChatRequest
 import streetlight.model.data.Message
-import kampfire.model.RecordCursor
+import kampfire.model.TimeCursor
 import streetlight.model.data.ReplyMessage
 import streetlight.model.data.Star
 import kampfire.model.requestWithCursor
@@ -125,13 +125,13 @@ class Inbox(
 
     private suspend fun requestMoreMessages() {
         val chat = state.now.openChat ?: return
-        requestWithCursor(messageCursorState, messageList, { RecordCursor(it.messageId.value, it.sentAt) }) {
+        requestWithCursor(messageCursorState, messageList, { TimeCursor(it.messageId.value, it.sentAt) }) {
             api.readChatMessages(ChatMessageRequest(chat.chatId, it)).toDataOrNull(toaster)
         }
     }
 
     private suspend fun requestMoreChats() {
-        requestWithCursor(chatCursorState, chatList, { RecordCursor(it.chatId.value, it.lastMessageAt) }) {
+        requestWithCursor(chatCursorState, chatList, { TimeCursor(it.chatId.value, it.lastMessageAt) }) {
             api.readChats(ChatRequest(state.now.isArchive, it)).toDataOrNull(toaster)
         }
     }

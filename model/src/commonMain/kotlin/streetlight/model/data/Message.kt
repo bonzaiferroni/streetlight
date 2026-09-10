@@ -2,7 +2,7 @@ package streetlight.model.data
 
 import kampfire.api.Markdown
 import kampfire.api.Username
-import kampfire.model.RecordCursor
+import kampfire.model.TimeCursor
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 import kotlin.time.Instant
@@ -64,11 +64,11 @@ value class ChatId(override val value: Uuid): RecordId {
 @Serializable
 data class ChatMessageRequest(
     val chatId: ChatId,
-    val cursor: RecordCursor? = null,
+    val cursor: TimeCursor? = null,
 )
 
 @Serializable
 data class ChatRequest(
     val isArchive: Boolean,
-    val cursor: RecordCursor? = null
+    val cursor: TimeCursor? = null
 )

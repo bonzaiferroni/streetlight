@@ -62,10 +62,14 @@ class FetchClient() {
         path = resolvePath(endpoint, block)
     ) { it.decodeBytes() }
 
-    suspend inline fun <Id, reified Returned> getApi(
-        endpoint: GetByIdEndpoint<Id, Returned>,
+    suspend inline fun <Id, reified Returned, Endpoint : GetByIdEndpoint<Id, Returned>> getApi(
+        endpoint: Endpoint,
         id: Id,
-    ): Outcome<Returned> = request(RequestMethod.GET, "${endpoint.path}/$id") { it.decodeBytes() }
+        noinline block: (PathBuilder.(Endpoint) -> Unit)? = null,
+    ): Outcome<Returned> = request(
+        method = RequestMethod.GET,
+        path = resolvePath("${endpoint.path}/$id", endpoint, block)
+    ) { it.decodeBytes() }
 
     suspend inline fun <reified Sent, reified Returned> getApi(
         endpoint: QueryEndpoint<Sent, Returned>,
@@ -136,9 +140,15 @@ class FetchClient() {
     fun <E : Endpoint<*, *>> resolvePath(
         endpoint: E,
         block: (PathBuilder.(E) -> Unit)? = null
+    ) = resolvePath(endpoint.path, endpoint, block)
+
+    fun <E : Endpoint<*, *>> resolvePath(
+        path: String,
+        endpoint: E,
+        block: (PathBuilder.(E) -> Unit)? = null
     ): String {
-        val block = block ?: return endpoint.path
-        val builder = PathBuilder(endpoint)
+        val block = block ?: return path
+        val builder = PathBuilder(path)
         builder.block(endpoint)
         return builder.build()
     }

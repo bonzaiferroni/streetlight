@@ -31,9 +31,7 @@ data class EventUpdaterContent(
 @Serializable
 data class GalaxyContent(
     val galaxy: Galaxy,
-    val posts: List<FeedEntity>,
-    val marks: Map<GalaxyId, List<GalaxyMark>>,
-    val postMarks: Map<PostId, List<MarkStatus>>
+    val feed: EntityFeed,
 ): RouteContent, DesignContent {
     override val design get() = galaxy.design
     override val geoPoint get() = galaxy.geoPoint
@@ -42,7 +40,7 @@ data class GalaxyContent(
 @Serializable
 data class StarContent(
     val star: Star,
-    val posts: List<Media>,
+    val feed: EntityFeed,
     val isCaller: Boolean,
 ): RouteContent, DesignContent {
     override val geoPoint get() = null
@@ -52,9 +50,7 @@ data class StarContent(
 @Serializable
 data class HomeContent(
     val galaxies: List<Galaxy>,
-    val posts: List<FeedEntity>,
-    val marks: Map<GalaxyId, List<GalaxyMark>>,
-    val postMarks: Map<PostId, List<MarkStatus>>,
+    val feed: EntityFeed,
 ): RouteContent
 
 @Serializable

@@ -4,4 +4,5 @@ import koala.interop.JsSignature
 
 object AppFun {
     val UpdateMark = JsSignature("updateMark")
+    val SortByMark = JsSignature("sortByMark")
 }
