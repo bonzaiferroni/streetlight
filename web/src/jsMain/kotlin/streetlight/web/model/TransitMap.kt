@@ -49,7 +49,7 @@ class TransitMap(
         isInitialized = true
         scope.launch {
             config.showTransitState.flow.collect {
-                setIsActive(it)
+                // setIsActive(it)
             }
         }
     }

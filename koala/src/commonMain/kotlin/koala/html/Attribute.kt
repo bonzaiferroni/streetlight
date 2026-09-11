@@ -6,6 +6,8 @@ import kampfire.api.toSlug
 import kampfire.api.toUsername
 import kampfire.model.GeoPoint
 import koala.Lottie
+import koala.css.setAnchorName
+import koala.css.setStyle
 import koala.utils.jsonConfig
 import kotlinx.html.CoreAttributeGroupFacade
 import kotlin.uuid.Uuid
@@ -105,6 +107,7 @@ fun <T> CoreAttributeGroupFacade.setAttribute(attribute: Attribute<T>, value: T?
 
 fun CoreAttributeGroupFacade.setPopoverTarget(id: Id, action: String? = null) {
     setAttribute(Attribute.PopoverTarget, id.identifier)
+    setAnchorName(id.toPositionAnchor())
     action?.let {
         setAttribute(Attribute.PopoverTargetAction, it)
     }

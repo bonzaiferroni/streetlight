@@ -36,7 +36,7 @@ data class Location(
     val resources: Set<ResourceType>,
     val hours: HoursSchedule?,
     val website: Url?,
-    val lightCount: Int?,
+    val starCount: Int?,
     val isLit: Boolean,
     val eventsUrl: Url?,
     override val image: Image?,

@@ -36,7 +36,7 @@ fun FlowContent.popover(
 }
 
 fun DIV.configurePopover(
-    id: Id?,
+    id: Id,
     mod: ModifierSet? = null,
     anchor: PositionAnchor? = null,
     isManual: Boolean = false,
@@ -44,11 +44,7 @@ fun DIV.configurePopover(
 ) {
     addModifiers(Popover.Class, mod)
     setId(id)
-    anchor?.let {
-        setStyle(
-            Property.PositionAnchor.to(anchor)
-        )
-    }
+    setStyle(Property.PositionAnchor.to(anchor ?: id.toPositionAnchor()))
     setAttribute(Attribute.Popover.to(if (isManual) "manual" else "auto"))
     block()
 }

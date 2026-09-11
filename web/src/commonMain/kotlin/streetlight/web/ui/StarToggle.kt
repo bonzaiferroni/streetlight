@@ -59,7 +59,7 @@ fun FlowContent.starToggle(event: Event) {
 }
 
 fun FlowContent.starToggle(location: Location) {
-    starToggle(ToggleType.Location, location.isLit, location.locationId.value, location.lightCount)
+    starToggle(ToggleType.Location, location.isLit, location.locationId.value, location.starCount)
 }
 
 object StarToggle {

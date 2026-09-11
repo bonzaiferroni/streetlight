@@ -65,9 +65,6 @@ fun cellContentOf(event: EventLocation, showMore: Boolean, post: Post? = null): 
         cell(SvgFile.MapPin, it)
     }
     buttonsCell(MinWidth32) {
-        post?.let {
-            // postLight(post)
-        }
         starToggle(event)
         if (showMore) {
             moreButton()

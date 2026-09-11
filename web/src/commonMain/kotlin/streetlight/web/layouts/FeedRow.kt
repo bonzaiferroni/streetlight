@@ -161,11 +161,19 @@ $Base {
 }
 
 $Content {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(480px, 1fr));
-    align-items: center;
+    display: flex;
+    flex-direction: column;
     gap: var(--unit-spacing);
     align-self: start;
+    
+    @media (min-width: 960px) {
+        flex-direction: row;
+        align-items: center;
+        
+        > * {
+            flex: 1;
+        }
+    }
 }
 
 $ExpandedContent {
