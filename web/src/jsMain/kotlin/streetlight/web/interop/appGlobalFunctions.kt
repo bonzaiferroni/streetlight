@@ -25,6 +25,7 @@ import streetlight.model.data.PostCursor
 import streetlight.web.layouts.FeedSection
 import streetlight.web.layouts.LightControl
 import streetlight.web.ui.AppAttribute
+import streetlight.web.ui.RouteView
 import streetlight.web.ui.api
 import streetlight.web.ui.feedRow
 import streetlight.web.ui.requireElement
@@ -36,8 +37,8 @@ import kotlin.uuid.Uuid
 fun ViewScope.appGlobalFunctions() = listOf(
     KtFunction(LightControl.ToggleFun, this::toggleLight),
     KtFunction(AppFun.UpdateMark, this::queryAndUpdateMark),
-    KtFunction(FeedSection.SortByMark, this::sortByMark),
-    KtFunction(FeedSection.MorePosts, this::morePosts),
+    KtFunction(FeedSection.SortByMark, ::sortByMark),
+    KtFunction(FeedSection.MorePosts, ::morePosts),
 )
 
 fun ViewScope.toggleLight(element: HTMLElement, postId: String) {
@@ -55,11 +56,11 @@ fun ViewScope.toggleLight(element: HTMLElement, postId: String) {
     }
 }
 
-fun ViewScope.sortByMark(element: HTMLElement) {
+fun sortByMark(element: HTMLElement) {
     val markId = element.requireAttribute(AppAttribute.MarkId)
     val galaxyId = element.requireClosestAttribute(AppAttribute.GalaxyId)
     val mount = document.requireElement(FeedSection.MountId)
-    launchEffect {
+    RouteView.activeScope.launchEffect {
         mount.modify(OpacityHigh)
         val feed = api.readPosts(galaxyId, PostCursor.Mark(markId)).toDataOr(toaster) {
             mount.unmodify(OpacityHigh)
@@ -73,11 +74,11 @@ fun ViewScope.sortByMark(element: HTMLElement) {
     }
 }
 
-fun ViewScope.morePosts(element: HTMLElement) {
+fun morePosts(element: HTMLElement) {
     val nextCursor = element.requireAttribute(FeedSection.NextCursor)
     val galaxyId = element.requireClosestAttribute(AppAttribute.GalaxyId)
     val mount = document.requireElement(FeedSection.MountId)
-    launchEffect {
+    RouteView.activeScope.launchEffect {
         element.modify(OpacityHigh)
         val feed = api.readPosts(galaxyId, nextCursor).toDataOr(toaster) {
             element.unmodify(OpacityHigh)

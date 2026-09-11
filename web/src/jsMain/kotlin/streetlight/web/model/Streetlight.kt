@@ -18,7 +18,6 @@ interface Streetlight {
     val geoMap: GeoCamera
     val markerMap: MarkerMap
     val chatRoom: ChatRoom
-    val cache: DataCache
     val config: SiteConfig
     val omni: OmniClient
     val toaster: Toaster

@@ -35,7 +35,6 @@ enum class Screen(
     Sandbox(StaticParse { SandboxRoute }),
     Chat(StaticParse { ChatRoute }),
     SongProfile(UuidParse { SongProfileRoute(SongId(it)) }),
-    EditTalent(UuidParse { EditTalentRoute(TalentId(it)) }),
     Feedback(StaticParse { FrontDeskRoute }),
     SiteMonitor(StaticParse { SiteMonitorRoute }),
     Contribute(StaticParse { ContributeRoute }),
@@ -163,13 +162,13 @@ data class TalentProfileRoute(
     override val title get() = "Talent"
 }
 
-data class EditTalentRoute(
-    val talentId: TalentId? = null
-): StreetlightRoute, RecordIdRoute {
-    override val screen get() = Screen.EditTalent
-    override val recordId get() = talentId
-    override val title get() = "Talent"
-}
+//data class EditTalentRoute(
+//    val talentId: TalentId? = null
+//): StreetlightRoute, RecordIdRoute {
+//    override val screen get() = Screen.EditTalent
+//    override val recordId get() = talentId
+//    override val title get() = "Talent"
+//}
 
 object SiteConfigRoute: StreetlightRoute {
     override val screen get() = Screen.SiteConfig

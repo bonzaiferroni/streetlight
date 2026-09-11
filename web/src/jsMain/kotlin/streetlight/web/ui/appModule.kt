@@ -47,7 +47,6 @@ val appModule = module {
     single<ContentFetcher> { AppContentFetcher(get()) }
     single { RouteInflator(get(), get(), get(), get()) }
     single { SessionGate(get(), get(), get(), get()) }
-    single { DataCache(get(), get(), get(), get(), get()) }
     // single { GateAgent(get(), get(), get()) }
     single { GeoCamera(get()) }
     single { GeoMap(get(), get()) }

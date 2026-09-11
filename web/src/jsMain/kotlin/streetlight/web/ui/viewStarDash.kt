@@ -8,12 +8,10 @@ import kotlinx.css.LinearDimension
 import kotlinx.css.fr
 import streetlight.model.data.Star
 import streetlight.model.ui.ProfileConfigRoute
-import streetlight.model.ui.EditTalentRoute
 import streetlight.model.ui.HomeRoute
 import streetlight.model.ui.GalaxyListRoute
 import streetlight.model.ui.SandboxRoute
 import streetlight.model.ui.StarDashRoute
-import streetlight.web.model.DataCache
 import streetlight.web.model.SessionGate
 import streetlight.model.ui.toRoute
 import streetlight.web.shells.starRouteMenu
@@ -84,7 +82,6 @@ private fun ViewScope.activityContent(star: Star) {
 
 private fun ViewScope.sandboxContent(star: Star) {
     // val model = UserHub(renderScope, app.client.api)
-    val userCache = app.get<DataCache>()
     val gate = app.get<SessionGate>()
 
     column {
@@ -103,12 +100,12 @@ private fun ViewScope.sandboxContent(star: Star) {
             }
         }
 
-        card {
-            row {
-                textBlock("Share and grow your talents.", modify(Flex1))
-                button("add talent", { portal.go(EditTalentRoute()) }, modify(Accent))
-            }
-        }
+//        card {
+//            row {
+//                textBlock("Share and grow your talents.", modify(Flex1))
+//                button("add talent", { portal.go(EditTalentRoute()) }, modify(Accent))
+//            }
+//        }
 
 //        itemsBlock(userCache.talent.flow) { talent ->
 //            navigation(TalentProfileRoute(talent.talentId)) {

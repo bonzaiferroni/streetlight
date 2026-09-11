@@ -35,6 +35,7 @@ fun ViewScope.viewPortal() {
         },
     ) { screen ->
         val routeScope = RouteScope(this, inflator, portal.stateNow)
+        RouteView.setActiveScope(routeScope)
         with (routeScope) {
             when (screen) {
                 Screen.Home -> viewHomeRoute()
@@ -43,7 +44,6 @@ fun ViewScope.viewPortal() {
                 Screen.MediaUpdate -> viewMediumUpdaterRoute()
                 Screen.Chat -> viewChatRoom()
                 Screen.SongProfile -> viewSongProfile()
-                Screen.EditTalent -> editTalentForm()
                 Screen.Feedback -> viewFrontDeskRoute()
                 Screen.SiteMonitor -> viewSiteMonitor()
 
@@ -83,5 +83,15 @@ fun ViewScope.viewPortal() {
                 else -> textBlock("Coming soon: $screen")
             }
         }
+    }
+}
+
+// td: consider making this a service
+object RouteView {
+    private var _activeScope: RouteScope? = null
+    val activeScope: RouteScope get() = _activeScope ?: error("active route scope not found")
+
+    fun setActiveScope(scope: RouteScope) {
+        _activeScope = scope
     }
 }

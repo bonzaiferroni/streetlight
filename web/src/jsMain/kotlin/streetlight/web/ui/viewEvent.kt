@@ -4,7 +4,6 @@ import koala.dom.*
 import koala.model.GeoCamera
 import streetlight.model.data.EventLocation
 import streetlight.model.ui.EventRoute
-import streetlight.web.model.DataCache
 import streetlight.web.shells.EventShell
 import streetlight.web.shells.eventShell
 
@@ -17,12 +16,6 @@ fun ViewScope.viewEvent(event: EventLocation) {
     }
 
     camera.panMap(event.geoPoint)
-    // wireLights(
-    //     root = root,
-    //     attribute = StarLightKey.EventLightId,
-    //     cache = cache.eventLights
-    // )
-    // app.streetMap.setPosts td: make event marker visible on map
 }
 
 fun RouteScope.viewEventRoute() {

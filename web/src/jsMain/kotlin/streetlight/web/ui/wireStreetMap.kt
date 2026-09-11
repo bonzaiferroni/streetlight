@@ -3,23 +3,14 @@ package streetlight.web.ui
 import kampfire.model.toDataOr
 import koala.dom.*
 import kotlinx.coroutines.launch
+import streetlight.model.data.EntityFeed
 import streetlight.model.ui.HomeRoute
-import streetlight.web.model.DataCache
 import streetlight.web.model.MarkerService
 import streetlight.web.model.MarkerMap
 
-fun ViewScope.wireStreetMap() {
+fun ViewScope.wireStreetMap(feed: EntityFeed) {
     val markerMap = app.get<MarkerMap>()
-    val cache = app.get<DataCache>()
     val markerService = app.get<MarkerService>()
-
-    contentScope.launch {
-        portal.routeFlowOf<HomeRoute>().collect {
-            val galaxyIds = cache.topGalaxies.getItems().map { it.galaxyId }
-            // td: gather initial posts from json in html
-            val posts = api.readPosts(galaxyIds).toDataOr(toaster) { return@collect }
-            val points = markerService.createMarkers(posts)
-            markerMap.setPoints(points)
-        }
-    }
+    val points = markerService.createMarkers(feed.entities)
+    markerMap.setPoints(points)
 }
