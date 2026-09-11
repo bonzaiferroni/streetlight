@@ -168,7 +168,7 @@ ${ButtonStyle.ElementClass}:hover, [onclick]:hover, .clickable:hover {
 
 $HoverBg {
     box-shadow: inset 0 0 80px transparent;
-    transition: box-shadow var(--magic-interval) var(--magic-easing);
+    transition: color var(--magic-interval) var(--magic-easing), box-shadow var(--magic-interval) var(--magic-easing);
 }
 
 $HoverBg:hover {

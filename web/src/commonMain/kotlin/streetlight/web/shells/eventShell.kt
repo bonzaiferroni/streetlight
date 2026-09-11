@@ -12,7 +12,7 @@ import streetlight.web.pages.appFooter
 import streetlight.web.pages.appHeader
 import streetlight.web.ui.BodyStyle
 import streetlight.web.ui.featureHeader
-import streetlight.web.ui.starLightCell
+import streetlight.web.ui.starToggle
 
 fun FlowContent.eventShell(event: EventLocation) {
     column(EventShell.id, modify(Gap0)) {
@@ -31,7 +31,7 @@ fun FlowContent.eventShell(event: EventLocation) {
                         costCell(it, event.url)
                     }
                     starCell(event.scout)
-                    starLightCell(event)
+                    starToggle(event)
                 },
                 links = event.links,
                 editRoute = EventUpdateRoute(event.eventSlug),

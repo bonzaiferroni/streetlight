@@ -9,6 +9,8 @@ import kotlinx.html.DIV
 import kotlinx.html.HTML
 import kotlinx.html.body
 import streetlight.model.data.PageTheme
+import streetlight.web.ui.WorkSignalStyle
+import streetlight.web.ui.workSignal
 
 fun HTML.appBody(
     screen: AppScreen,
@@ -27,7 +29,7 @@ fun HTML.appBody(
                 }
                 box(AppBody.ContentPanel) {
                     div(KoalaBody.PortalMount)
-                    div(id = KoalaBody.ShellMount, block = block)
+                    div(KoalaBody.ShellMount, block = block)
                 }
                 div(AppBody.RightPanel) {
                     div(StarHelm.StarMenu)

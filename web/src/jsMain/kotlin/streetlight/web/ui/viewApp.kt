@@ -1,5 +1,6 @@
 package streetlight.web.ui
 
+import koala.css.DisplayNone
 import koala.css.KoalaBody
 import koala.css.Property
 import koala.dom.*
@@ -15,6 +16,7 @@ import streetlight.web.model.TransitMap
 import streetlight.web.model.SessionGate
 import koala.utils.launch
 import streetlight.web.interop.appGlobalFunctions
+import streetlight.web.pages.AppOverlay
 import web.dom.document
 
 @OptIn(ExperimentalSerializationApi::class)
@@ -53,6 +55,7 @@ fun viewApp() {
                     wireCreatePost()
                     wirePostMenu()
                     wireMessageDialog()
+                    wireGalaxyMenu()
                     wireFps()
                     addGlobalFunctions(appGlobalFunctions())
 
@@ -62,8 +65,8 @@ fun viewApp() {
                     wireOmni(omni)
 
                     // hides the element that holds server rendered content
-                    val shellBox = document.getElementById(KoalaBody.ShellMount)
-                    shellBox.setStyle(Property.Display.to(Display.none))
+                    document.getElementById(KoalaBody.ShellMount).modify(DisplayNone)
+                    document.getElementById(AppOverlay.WorkSignal).modify(DisplayNone)
                 }
 
                 // td: reimplement as sidebar option

@@ -1,7 +1,6 @@
 package streetlight.web.ui
 
 import kampfire.api.Username
-import kampfire.api.toUsername
 import koala.SvgFile
 import koala.css.AlignSelfCenter
 import koala.css.Height3
@@ -12,7 +11,7 @@ import koala.html.button
 import koala.html.icon
 import koala.html.setAttribute
 import koala.html.setPopoverTarget
-import koala.html.uuidAttributeOf
+import koala.html.idAttributeOf
 import kotlinx.html.FlowContent
 import streetlight.model.data.PostId
 
@@ -28,5 +27,5 @@ fun FlowContent.postMenu(postId: PostId, username: Username?) {
 
 object PostMenu {
     val PopoverId = Id("post-menu-popover")
-    val PostId = uuidAttributeOf("post-menu-slug") { PostId(it) }
+    val PostId = idAttributeOf("post-menu-slug") { PostId(it) }
 }

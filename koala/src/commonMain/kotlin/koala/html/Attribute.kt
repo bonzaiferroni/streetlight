@@ -55,8 +55,10 @@ data class Attribute<T>(
     }
 }
 
-fun <T> uuidAttributeOf(identifier: String, block: (Uuid) -> T ) =
+fun <T> idAttributeOf(identifier: String, block: (Uuid) -> T ) =
     Attribute(identifier, true) { block(Uuid.parse(it)) }
+
+fun uuidAttributeOf(identifier: String) = Attribute(identifier, true) { Uuid.parse(it) }
 
 fun stringAttributeOf(identifier: String, isCustom: Boolean = false) =
     Attribute(identifier, isCustom) { it }

@@ -6,11 +6,16 @@ import koala.css.*
 import koala.interop.KoalaFun.initRootModifier
 import koala.html.*
 import kotlinx.html.FlowContent
+import streetlight.web.ui.WorkSignalStyle
+import streetlight.web.ui.workSignal
 
 fun FlowContent.appOverlay() {
-    column(AppOverlay.Container) {
+    column(AppOverlay.Container, modify(PositionRelative)) {
         helmBar()
         spacer(modify(Flex1))
+        workSignal(WorkSignalStyle.AbsolutePositioned.append(modify(Right0, Bottom0))) {
+            setId(AppOverlay.WorkSignal)
+        }
     }
 }
 
@@ -23,6 +28,7 @@ val AppOverlayScript get() = with(AppOverlay) {
 
 object AppOverlay {
     val Container = Id("app-overlay")
+    val WorkSignal = Id("overlay-work-signal")
     val MediaVlgReveal = Class("display-none-below-vlg")
     val RevealLeftPanel = Class("reveal-left-panel")
     val RevealRightPanel = Class("reveal-right-panel")

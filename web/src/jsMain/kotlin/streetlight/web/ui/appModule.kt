@@ -55,6 +55,10 @@ val appModule = module {
     single { ChatRoom(get(), get()) }
     single { OmniClient(get(), get()) }
     single { MarkerService() }
+    single {
+        val api = get<ApiClient>()
+        Fleet { api.readUserGalaxies() }
+    }
 }
 
 fun AppContainer.getUserCreator(scope: CoroutineScope) =

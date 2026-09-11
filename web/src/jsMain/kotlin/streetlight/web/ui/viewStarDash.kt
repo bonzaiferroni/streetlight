@@ -50,7 +50,7 @@ private fun ViewScope.activityContent(star: Star) {
                         navigation(galaxy.toRoute()) {
                             listingOf(galaxy.name, galaxy.image?.thumb)
                         }
-                        starToggle(galaxy.isLit, galaxy.galaxyId)
+                        // starToggle(galaxy.isLit, galaxy.galaxyId)
                     }
                 }
             }

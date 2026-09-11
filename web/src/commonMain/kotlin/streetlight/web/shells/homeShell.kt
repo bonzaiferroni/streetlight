@@ -25,7 +25,7 @@ fun FlowContent.homeShell(content: HomeContent) {
             // btn("View Map", EarthRoute(null), EarthStyle.ViewMapButtonMod)
             column(modify(Gap8)) {
                 row(modify(JustifyContentSpaceBetween)) {
-                    galaxyMenu(content.galaxies, null)
+                    galaxyMenu()
                     createPostMenu(null)
                 }
 
@@ -34,30 +34,30 @@ fun FlowContent.homeShell(content: HomeContent) {
                 feedSection(content.feed, true)
                 // layoutEventPosts("Upcoming Events", content.posts)
 
-                section {
-                    filigree {
-                        heading2("Lit Events", SectionHeadingMod)
-                    }
-
-                    card(modify(Height32, MoonShadow, Padding0)) {
-                        swapBlock(HomeShell.LightSwapId, modify(Magic)) {
-                            column(modify(JustifyContentCenter, Dim, Gap0)) {
-                                setId(HomeShell.LightInfoId)
-                                setReveal(true)
-
-                                row(modify(JustifyContentCenter)) {
-                                    textBlock("Events that you")
-                                    icon(SvgFile.Light)
-                                    textBlock("will appear here.")
-                                }
-                                textBlock("This is saved on your device, unless you sign in.", modify(TextAlignCenter))
-                            }
-                            box(HomeShell.LitEventsId) {
-                                setReveal(false)
-                            }
-                        }
-                    }
-                }
+//                section {
+//                    filigree {
+//                        heading2("Lit Events", SectionHeadingMod)
+//                    }
+//
+//                    card(modify(Height32, MoonShadow, Padding0)) {
+//                        swapBlock(HomeShell.LightSwapId, modify(Magic)) {
+//                            column(modify(JustifyContentCenter, Dim, Gap0)) {
+//                                setId(HomeShell.LightInfoId)
+//                                setReveal(true)
+//
+//                                row(modify(JustifyContentCenter)) {
+//                                    textBlock("Events that you")
+//                                    icon(SvgFile.Light)
+//                                    textBlock("will appear here.")
+//                                }
+//                                textBlock("This is saved on your device, unless you sign in.", modify(TextAlignCenter))
+//                            }
+//                            box(HomeShell.LitEventsId) {
+//                                setReveal(false)
+//                            }
+//                        }
+//                    }
+//                }
 
                 appFooter(HomeShell.SOURCE)
             }

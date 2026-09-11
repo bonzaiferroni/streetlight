@@ -1,15 +1,5 @@
 package streetlight.web.model
 
-import koala.model.ItemCache
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
-import streetlight.model.data.EventId
-import streetlight.model.data.Galaxy
-import streetlight.model.data.GalaxyId
-import streetlight.model.data.StarType
-import streetlight.web.io.ApiClient
-import streetlight.web.ui.StarLightKey
-
 //class DataCache(
 //    scope: CoroutineScope,
 //    private val config: SiteConfig,

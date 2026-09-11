@@ -12,6 +12,7 @@ import koala.css.Margin1
 import koala.css.ModifierSet
 import koala.css.PositionAbsolute
 import koala.css.PrimaryFg
+import koala.css.append
 import koala.css.modify
 import koala.dom.ViewScope
 import koala.dom.flowModifier
@@ -25,5 +26,5 @@ fun ViewScope.workSignal(
 fun ViewScope.workSignal(
     state: Tap<CursorStatus>,
     mod: ModifierSet? = null
-) = workSignal(modify(mod, PositionAbsolute, Height5, Aspect1, Margin1, PrimaryFg, FadeIn))
+) = workSignal(WorkSignalStyle.AbsolutePositioned.append(mod))
     .flowModifier(state.tapOf { !it.isFetching }, DisplayNone, contentScope)

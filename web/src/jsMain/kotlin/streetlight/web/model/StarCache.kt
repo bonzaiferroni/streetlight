@@ -10,14 +10,14 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import streetlight.model.data.LightEdit
 import streetlight.model.data.EditLightRequest
-import streetlight.model.data.StarType
+import streetlight.model.data.ToggleType
 import streetlight.model.data.MultiLightEdit
 import kotlin.collections.minus
 import kotlin.collections.plus
 import kotlin.uuid.Uuid
 
 class StarCache<Id, Item>(
-    val starType: StarType,
+    val toggleType: ToggleType,
     private val cacheKey: String,
     val idToUuid: (Id) -> Uuid,
     val uuidToId: (Uuid) -> Id,
@@ -46,7 +46,7 @@ class StarCache<Id, Item>(
                 gate.signedInFlow.collect { isSignedIn ->
                     if (isSignedIn) {
                         if (cachedLights.isNotEmpty()) {
-                            val request = MultiLightEdit(cachedLights.map { LightEdit(idToUuid(it), true, starType) })
+                            val request = MultiLightEdit(cachedLights.map { LightEdit(idToUuid(it), true, toggleType) })
                             // send lights cached while signed out
                             starLinkEdit(request)
                             cachedLights = emptySet()
@@ -85,7 +85,7 @@ class StarCache<Id, Item>(
         when (gate.stateNow.isSignedIn) {
             true -> {
                 scope.launch {
-                    val edit = LightEdit(idToUuid(id), isLit, starType)
+                    val edit = LightEdit(idToUuid(id), isLit, toggleType)
                     val isSuccess = starLinkEdit(edit).toDataOr(onError) { return@launch }
                     if (isSuccess)
                         editState(id, isLit)

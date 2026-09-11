@@ -59,7 +59,7 @@ fun FlowContent.headerOf(
             block = block
         )
         row(modify(JustifyContentSpaceBetween)) {
-            galaxyMenu(emptyList(), galaxy)
+            galaxyMenu()
             createPostMenu(galaxy)
         }
     }

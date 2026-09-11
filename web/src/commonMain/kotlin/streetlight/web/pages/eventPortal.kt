@@ -109,8 +109,8 @@ fun FlowContent.requestItem(
 
 object EventPortalSelector {
     val requestItem = Class("request-item")
-    val eventIdAttribute = uuidAttributeOf("event-id") { EventId(it) }
-    val songIdAttribute = uuidAttributeOf("song-id") { SongId(it) }
+    val eventIdAttribute = idAttributeOf("event-id") { EventId(it) }
+    val songIdAttribute = idAttributeOf("song-id") { SongId(it) }
     val sendRequestButtonId = Id("send-request-button")
 }
 

@@ -42,7 +42,7 @@ fun ViewScope.eventFocusContent(post: EventPost) {
                 starCell(event.scout)
             }
             cell {
-                starLightCell(event)
+                starToggle(event)
             }
         }
     }

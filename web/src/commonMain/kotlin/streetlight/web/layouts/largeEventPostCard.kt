@@ -2,7 +2,7 @@ package streetlight.web.layouts
 
 import kotlinx.html.FlowContent
 import streetlight.model.data.EventPost
-import streetlight.web.ui.starLightCell
+import streetlight.web.ui.starToggle
 
 fun FlowContent.largeEventPostCard(post: EventPost) {
     val event = post.event ?: return // td: show removed post content
@@ -21,7 +21,7 @@ fun FlowContent.largeEventPostCard(post: EventPost) {
                 { costCell(it, event.url) }
             },
             { starCell(post.post.username) },
-            { starLightCell(event) },
+            { starToggle(event) },
         )
     )
 }

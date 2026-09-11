@@ -42,7 +42,7 @@ import koala.html.setAttribute
 import koala.html.setJsonData
 import koala.html.setPopoverTarget
 import koala.html.textBlock
-import koala.html.uuidAttributeOf
+import koala.html.idAttributeOf
 import koala.interop.ThisElement
 import kotlinx.html.BUTTON
 import kotlinx.html.CoreAttributeGroupFacade
@@ -58,10 +58,10 @@ import streetlight.web.interop.AppFun
 object CuratorMenu {
     val PostLean = Class("post-lean")
     val CuratorJson = jsonAttributeOf<CuratorStatus>("curator")
-    val MarkIndicatorId = uuidAttributeOf("mark-indicator-id") { MarkId(it) }
-    val MarkTallyId = uuidAttributeOf("mark-tally-id") { MarkId(it) }
-    val MarkButtonId = uuidAttributeOf("mark-button-id") { MarkId(it) }
-    val MarkBarId = uuidAttributeOf("mark-bar-id") { MarkId(it) }
+    val MarkIndicatorId = idAttributeOf("mark-indicator-id") { MarkId(it) }
+    val MarkTallyId = idAttributeOf("mark-tally-id") { MarkId(it) }
+    val MarkButtonId = idAttributeOf("mark-button-id") { MarkId(it) }
+    val MarkBarId = idAttributeOf("mark-bar-id") { MarkId(it) }
 
     fun postLeanTextOf(sum: Int?) = sum?.takeIf { it != 0 }?.toMetricString() ?: "•"
 }

@@ -13,7 +13,7 @@ import streetlight.model.data.Location
 import streetlight.model.data.LocationEdit
 import streetlight.model.data.Post
 import streetlight.web.ui.postMenu
-import streetlight.web.ui.starLightCell
+import streetlight.web.ui.starToggle
 
 
 fun cellContentOf(location: Location, post: Post? = null): FlowContent.() -> Unit = {
@@ -24,7 +24,7 @@ fun cellContentOf(location: Location, post: Post? = null): FlowContent.() -> Uni
         cell(SvgFile.City, it)
     }
     buttonsCell {
-        starLightCell(location)
+        starToggle(location)
         moreButton()
         post?.let {
             postMenu(post.postId, post.username)
@@ -68,7 +68,7 @@ fun cellContentOf(event: EventLocation, showMore: Boolean, post: Post? = null): 
         post?.let {
             // postLight(post)
         }
-        starLightCell(event)
+        starToggle(event)
         if (showMore) {
             moreButton()
         }
@@ -88,7 +88,7 @@ fun cellContentOf(event: Event): FlowContent.() -> Unit = {
     }
 
     buttonsCell {
-        starLightCell(event)
+        starToggle(event)
         moreButton()
     }
 }
@@ -96,6 +96,6 @@ fun cellContentOf(event: Event): FlowContent.() -> Unit = {
 fun cellContentOf(galaxy: Galaxy): FlowContent.() -> Unit = {
     cell(SvgFile.Calendar, galaxy.eventCount.toMetricString())
     buttonsCell {
-        starLightCell(galaxy)
+        starToggle(galaxy)
     }
 }
