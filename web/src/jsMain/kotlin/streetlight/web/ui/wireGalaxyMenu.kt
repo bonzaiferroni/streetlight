@@ -29,7 +29,7 @@ fun ViewScope.wireGalaxyMenu() {
     val fleet = app.get<Fleet<Galaxy>>()
     popoverMenu(
         popoverId = GalaxyMenu.PopoverId,
-        transform = { Random.nextInt() },
+        transform = { it },
     ) { _ ->
         val element = grid(GridTemplateColumns("auto auto"), modify(MaxHeight64, AlignItemsCenter)) { }
         launchEffect {

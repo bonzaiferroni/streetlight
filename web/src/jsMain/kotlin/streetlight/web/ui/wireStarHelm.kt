@@ -10,9 +10,7 @@ import koala.html.heading3
 import koala.html.icon
 import koala.html.image
 import koala.interop.KoalaFun
-import kampfire.model.MutableTap
 import kampfire.model.setTrue
-import kampfire.model.storeOf
 import kotlinx.html.onClick
 import streetlight.model.data.Star
 import streetlight.model.ui.InboxRoute
@@ -26,20 +24,18 @@ import streetlight.web.pages.StarHelm
 import web.dom.document
 import web.html.HTMLElement
 
-fun ViewScope.queryAndWireStarNav() {
-    val helmElement = document.body.querySelector(StarHelm.HelmMenu) ?: error("star helm content not found")
+fun ViewScope.wireStarPanel() {
+    val helmElement = document.body.querySelector(StarHelm.StarBarMenu) ?: error("star helm content not found")
     wireStarNav(helmElement)
-    val panelElement = document.body.querySelector(StarHelm.StarMenu) ?: error("star bar element not found")
+    val panelElement = document.body.querySelector(StarHelm.StarPanelMenu) ?: error("star bar element not found")
     wireStarNav(panelElement)
 }
 
 fun ViewScope.wireStarNav(element: HTMLElement) {
-    val isOpenState = storeOf(false)
     wireBlock("wire-star-nav", element) {
         starGate(
-            isOpenState,
             baseContent = {
-                someonePanel(isOpenState)
+                someonePanel()
             }
         ) { star ->
             starPanel(star)
@@ -100,7 +96,7 @@ private fun ViewScope.routeItem(route: AppRoute, text: String, svg: Svg) {
     }
 }
 
-private fun ViewScope.someonePanel(isOpen: MutableTap<Boolean>) {
+private fun ViewScope.someonePanel() {
     column(modify(MinWidth32)) {
         row(RowMod) {
             heading3("Someone")
@@ -111,7 +107,7 @@ private fun ViewScope.someonePanel(isOpen: MutableTap<Boolean>) {
             }
         }
 
-        button("sign in", onClick = isOpen::setTrue)
+        button("sign in", onClick = SignIn.isOpen::setTrue)
 
 //        tabs(Id("someone-tabs")) {
 //            tab("Sign in") {

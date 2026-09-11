@@ -22,9 +22,9 @@ import kotlinx.html.FlowContent
 import kotlinx.html.onClick
 
 fun FlowContent.starHelmPopover() {
-    popover(StarHelm.Popover, modify(StarHelm.PopoverClass, Magic, SlideLeft)) {
+    popover(StarHelm.PopoverId, modify(StarHelm.PopoverClass, Magic, SlideLeft)) {
         card(modify(StarHelm.PopoverCardClass, HeavyCardBg, BlurBackdrop, OverflowClip, PointerEventsAuto)) {
-            setId(StarHelm.HelmMenu)
+            setId(StarHelm.StarBarMenu)
             button(SvgFile.LoaderSmall, modify(Height5, FadeLoop)) {
                 onClick = StarHelm.ClosePopover.block
             }
@@ -35,13 +35,13 @@ fun FlowContent.starHelmPopover() {
 }
 
 object StarHelm {
-    val Popover = Id("star-helm-popover")
-    val PositionAnchor = Popover.toPositionAnchor()
+    val PopoverId = Id("star-helm-popover")
+    val PositionAnchor = PopoverId.toPositionAnchor()
     val PopoverClass = Class("star-helm-popover")
     val PopoverCardClass = Class("star-helm-popover-card")
-    val ClosePopover = InlineJs.closePopover(Popover)
-    val HelmMenu = Id("star-helm-menu")
-    val StarMenu = Id("star-bar-menu")
+    val ClosePopover = InlineJs.closePopover(PopoverId)
+    val StarBarMenu = Id("star-helm-menu")
+    val StarPanelMenu = Id("star-panel-menu")
 }
 
 // language="CSS"

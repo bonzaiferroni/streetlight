@@ -13,7 +13,7 @@ import streetlight.model.ui.InboxRoute
 inline fun <reified Route: AppRoute, reified Content: FetcherContent> RouteScope.starRouteBlock(
     crossinline content: ViewScope.(Star, Content) -> Unit
 ) {
-    starGate(storeOf(false)) { star ->
+    starGate { star ->
         routeBlock<Route, Content>(this@starRouteBlock.inflator, this@starRouteBlock.state) { content ->
             content(star, content)
         }

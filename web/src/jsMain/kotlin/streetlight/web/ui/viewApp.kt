@@ -2,13 +2,11 @@ package streetlight.web.ui
 
 import koala.css.DisplayNone
 import koala.css.KoalaBody
-import koala.css.Property
 import koala.dom.*
 import koala.interop.addGlobalFunctions
 import koala.model.Portal
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.css.Display
 import kotlinx.serialization.ExperimentalSerializationApi
 import org.koin.dsl.koinApplication
 import streetlight.web.io.OmniClient
@@ -49,7 +47,7 @@ fun viewApp() {
                     // shows user badge in upper right corner
                     wireBadge()
                     // shows content in user menu
-                    queryAndWireStarNav()
+                    wireStarPanel()
                     wireStarMenu()
                     wireCuratorMenu()
                     wireCreatePost()
@@ -57,6 +55,7 @@ fun viewApp() {
                     wireMessageDialog()
                     wireGalaxyMenu()
                     wireFps()
+                    wireSignInDialog()
                     addGlobalFunctions(appGlobalFunctions())
 
                     // td: reimplement as sidebar option

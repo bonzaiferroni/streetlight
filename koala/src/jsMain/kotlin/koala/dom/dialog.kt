@@ -28,7 +28,6 @@ fun ViewScope.dialog(
     mod: ModifierSet? = null,
     content: ViewScope.() -> Unit
 ): HTMLDialogElement {
-
     val element = dialog {
         addModifiers(DialogStyle.Class, mod)
     }.unsafeCast<HTMLDialogElement>()
@@ -37,9 +36,12 @@ fun ViewScope.dialog(
     fun closeDialog() {
         closeJob?.cancel()
         closeJob = launchEffect {
-            element.unmodify(Reveal)
-            delay(MagicStyle.Interval.milliseconds)
-            element.close()
+            try {
+                element.unmodify(Reveal)
+                delay(MagicStyle.Interval.milliseconds)
+            } finally {
+                element.close()
+            }
         }
         if (state.now)
             state.set(false)
@@ -69,6 +71,10 @@ fun ViewScope.dialog(
                 closeDialog()
             }
         }
+    }
+
+    onDispose {
+        element.close()
     }
 
     return element

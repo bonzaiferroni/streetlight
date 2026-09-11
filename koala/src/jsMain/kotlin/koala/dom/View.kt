@@ -84,6 +84,7 @@ class View(
         contentScope.coroutineContext.job.cancel()
         children.toList().asReversed().forEach { it.dispose() }
         disposers.asReversed().forEach { it() }
+        disposers.clear()
         contentScope = createContentScope()
     }
 

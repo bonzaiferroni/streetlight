@@ -42,8 +42,11 @@ fun <T> ViewScope.popoverMenu(
         if (toggle.newState == "open") {
             currentInvoker = invoker
             state.set(transform(invoker) ?: defaultValue ?: error("popover menu content not found"))
-        } else if (invoker !== currentInvoker) {
-            element.asDynamic().showPopover(json("source" to invoker))
+        } else {
+            state.set(null)
+            if (invoker !== currentInvoker) {
+                element.asDynamic().showPopover(json("source" to invoker))
+            }
         }
     })
 }
