@@ -16,7 +16,7 @@ import koala.dom.setStyle
 import koala.dom.unmodify
 import streetlight.model.data.GalaxyId
 import streetlight.model.data.LightEdit
-import streetlight.model.data.LightType
+import streetlight.model.data.StarType
 import streetlight.model.data.RecordId
 
 fun ViewScope.starToggle(
@@ -24,8 +24,8 @@ fun ViewScope.starToggle(
     recordId: RecordId,
     mod: ModifierSet? = null
 ) {
-    val lightType = when (recordId) {
-        is GalaxyId -> LightType.Galaxy
+    val starType = when (recordId) {
+        is GalaxyId -> StarType.Galaxy
         else -> error("unsupported light type")
     }
     var litNow = isLit
@@ -34,7 +34,7 @@ fun ViewScope.starToggle(
         launchEffect {
             icon.unmodify(ScaleIn)
             icon.modify(ScaleOut)
-            api.editLight(LightEdit(recordId.value, !litNow, lightType)).toDataOr(toaster) { return@launchEffect }
+            api.editStarLink(LightEdit(recordId.value, !litNow, starType)).toDataOr(toaster) { return@launchEffect }
 
             litNow = !litNow
             icon.setStyle(Property.MaskUrl.to(svg()))

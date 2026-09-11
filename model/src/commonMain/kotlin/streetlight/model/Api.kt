@@ -140,7 +140,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object CreatePost: PostEndpoint<PostEdit, Post>(this)
         object UpdatePost: PostEndpoint<PostEdit, Post>(this)
         object ReadMultiPosts: PostEndpoint<List<GalaxyId>, List<FeedEntity>>(this)
-        object ReadGalaxyPosts: GetByIdEndpoint<GalaxyId, EntityFeed>(this), CursorEndpoint {
+        object ReadGalaxyFeed: GetByIdEndpoint<GalaxyId, EntityFeed>(this), CursorEndpoint {
             override val postId = uuidParamOf("postId")
             override val markId = uuidParamOf("markId")
             override val count = intParamOf("count")

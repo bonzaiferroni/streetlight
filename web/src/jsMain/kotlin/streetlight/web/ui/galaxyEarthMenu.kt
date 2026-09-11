@@ -19,7 +19,7 @@ fun ViewScope.galaxyEarthMenu(
     mod: ModifierSet? = null
 ) {
     val cache = app.get<DataCache>()
-    val galaxies = cache.galaxyLights.stateNow.items
+    val galaxies = cache.galaxyStars.stateNow.items
 
     box(mod) {
         buttonPopover(currentGalaxy?.name ?: "Galaxies") {

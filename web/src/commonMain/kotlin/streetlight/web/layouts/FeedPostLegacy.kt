@@ -12,7 +12,7 @@ import koala.css.*
 import koala.html.*
 import kotlinx.html.FlowContent
 import streetlight.model.data.ExtraLink
-import streetlight.model.data.LightType
+import streetlight.model.data.StarType
 import streetlight.model.ui.GalaxyRoute
 import streetlight.model.ui.StarRoute
 import kotlin.time.Clock
@@ -46,7 +46,7 @@ fun FlowContent.feedPostLegacy(
 
             // boost
             column(modify(GridArea.Light, LightControl.Class, LightControl.getLitMod(isLit), Gap0)) {
-                setAttribute(LightControl.TypeData.to(LightType.Post))
+                setAttribute(LightControl.TypeData.to(StarType.Post))
 
                 box(modify(Aspect1, AlignItemsCenter, BorderRadius50P, BorderSolid2Px, MarginTop1)) {
                     textBlock(

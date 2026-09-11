@@ -18,16 +18,16 @@ fun ViewScope.viewHome(content: HomeContent) {
         homeShell(content)
     }
 
-    wireLights(
-        root = root,
-        attribute = StarLightKey.EventLightId,
-        cache = cache.eventLights
-    )
-    wireLights(
-        root = root,
-        attribute = StarLightKey.GalaxyLightId,
-        cache = cache.galaxyLights,
-    )
+//    wireLights(
+//        root = root,
+//        attribute = StarLightKey.EventLightId,
+//        cache = cache.eventLights
+//    )
+//    wireLights(
+//        root = root,
+//        attribute = StarLightKey.GalaxyLightId,
+//        cache = cache.galaxyLights,
+//    )
     // wireLitEvents(root)
     wireGalaxyMenu(root, null)
 

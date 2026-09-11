@@ -2,13 +2,11 @@ package streetlight.web.model
 
 import koala.model.ItemCache
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import streetlight.model.data.EventId
-import streetlight.model.data.FeedEntity
 import streetlight.model.data.Galaxy
 import streetlight.model.data.GalaxyId
-import streetlight.model.data.LightType
+import streetlight.model.data.StarType
 import streetlight.web.io.ApiClient
 import streetlight.web.ui.StarLightKey
 
@@ -36,28 +34,28 @@ class DataCache(
 
     // val galaxy = GalaxyCache(scope, config, api)
 
-    val galaxyLights = LightCache(
-        lightType = LightType.Galaxy,
+    val galaxyStars = StarCache(
+        starType = StarType.Galaxy,
         cacheKey = StarLightKey.GALAXY_LIGHT_CACHE,
         idToUuid = { it.value },
         uuidToId = { GalaxyId(it) },
         itemToId = { it.galaxyId },
-        lightEdit = { api.editLight(it) },
-        readRemoteLights = { api.readGalaxyLights() },
+        starLinkEdit = { api.editStarLink(it) },
+        readRemoteLights = { api.readGalaxyStars() },
         readRemoteItems = { api.readGalaxies(it) },
         onError = toaster,
         scope = scope,
         gate = gate,
     )
 
-    val eventLights = LightCache(
-        lightType = LightType.Event,
+    val eventStars = StarCache(
+        starType = StarType.Event,
         cacheKey = StarLightKey.EVENT_LIGHT_CACHE,
         idToUuid = { it.value },
         uuidToId = { EventId(it) },
         itemToId = { it.eventId },
-        lightEdit = { api.editLight(it) },
-        readRemoteLights = { api.readEventLights() },
+        starLinkEdit = { api.editStarLink(it) },
+        readRemoteLights = { api.readEventStars() },
         readRemoteItems = { api.readEventLocations(it) },
         onError = toaster,
         scope = scope,

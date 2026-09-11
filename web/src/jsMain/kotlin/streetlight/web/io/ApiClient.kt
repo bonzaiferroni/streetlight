@@ -1,7 +1,6 @@
 package streetlight.web.io
 
 import kampfire.api.EmailAddress
-import kampfire.api.PathBuilder
 import kampfire.api.Slug
 import kampfire.api.UserApi
 import kampfire.api.Username
@@ -18,7 +17,6 @@ import koala.Image
 import koala.model.DocId
 import kotlinx.coroutines.CoroutineScope
 import streetlight.model.Api
-import streetlight.model.CursorEndpoint
 import streetlight.model.data.*
 import streetlight.model.writeCursor
 import kotlin.uuid.Uuid
@@ -42,7 +40,7 @@ class ApiClient(private val client: FetchClient) {
     suspend fun parseSingleEvent(request: ParseRequest) = client.postApi(Api.Events.ParseSingleEvent, request)
     suspend fun readLocationEvents(slug: Slug) = client.getApi(Api.Events.AtLocation, slug)
     suspend fun readEventLocations(eventIds: List<EventId>) = client.postApi(Api.Events.ReadEventLocations, eventIds)
-    suspend fun readEventLights() = client.getApi(Api.Events.ReadLights)
+    suspend fun readEventStars() = client.getApi(Api.Events.ReadLights)
 
     // locations
     suspend fun readLocation(locationId: LocationId) = client.getApi(Api.Locations, locationId)
@@ -82,7 +80,7 @@ class ApiClient(private val client: FetchClient) {
     suspend fun validateLogin() = client.getApi(Api.Stars.ValidateLogin)
     suspend fun login(request: LoginRequest) = client.postApi(UserApi.Login, request)
     suspend fun updateProfile(edit: StarEdit) = client.postApi(Api.Stars.UpdateProfile, edit)
-    suspend fun editLight(edit: EditLightRequest) = client.postApi(Api.Stars.EditLight, edit)
+    suspend fun editStarLink(edit: EditLightRequest) = client.postApi(Api.Stars.EditLight, edit)
     suspend fun readProfileDesign() = client.getApi(Api.Stars.ReadProfileConfig)
 
     // messages
@@ -142,11 +140,11 @@ class ApiClient(private val client: FetchClient) {
     suspend fun createPost(post: PostEdit) = client.postApi(Api.Galaxies.CreatePost, post)
     suspend fun editPost(post: PostEdit) = client.postApi(Api.Galaxies.UpdatePost, post)
     suspend fun readPosts(galaxyIds: List<GalaxyId>) = client.postApi(Api.Galaxies.ReadMultiPosts, galaxyIds)
-    suspend fun readPosts(galaxyId: GalaxyId, cursor: PostCursor? = null) = client.getApi(Api.Galaxies.ReadGalaxyPosts, galaxyId) {
-        writeCursor(Api.Galaxies.ReadGalaxyPosts, cursor)
+    suspend fun readPosts(galaxyId: GalaxyId, cursor: PostCursor? = null) = client.getApi(Api.Galaxies.ReadGalaxyFeed, galaxyId) {
+        writeCursor(Api.Galaxies.ReadGalaxyFeed, cursor)
     }
     suspend fun readPost(postId: PostId) = client.getApi(Api.Galaxies.ReadPostId, postId)
-    suspend fun readGalaxyLights() = client.getApi(Api.Galaxies.ReadLights)
+    suspend fun readGalaxyStars() = client.getApi(Api.Galaxies.ReadLights)
     suspend fun removePost(postId: PostId) = client.postApi(Api.Galaxies.RemovePost, postId)
     suspend fun updateMark(update: MarkUpdate) = client.postApi(Api.Galaxies.UpdateMark, update)
 

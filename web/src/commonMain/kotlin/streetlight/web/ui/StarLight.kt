@@ -13,7 +13,7 @@ import streetlight.model.data.EventId
 import streetlight.model.data.EventLocation
 import streetlight.model.data.Galaxy
 import streetlight.model.data.GalaxyId
-import streetlight.model.data.LightType
+import streetlight.model.data.StarType
 import streetlight.model.data.Location
 import streetlight.model.data.LocationId
 import streetlight.web.layouts.CellContent
@@ -21,7 +21,7 @@ import streetlight.web.layouts.LightControl
 import kotlin.uuid.Uuid
 
 fun FlowContent.starLightCell(
-    lightType: LightType,
+    starType: StarType,
     isLit: Boolean,
     uuid: Uuid,
     lightCount: Int?,
@@ -32,7 +32,7 @@ fun FlowContent.starLightCell(
 ) {
     row(modify(AlignItemsCenter, Gap2Px)) {
         addModifiers(mod, LightControl.Class, LightControl.getLitMod(isLit))
-        setAttribute(LightControl.TypeData.to(lightType))
+        setAttribute(LightControl.TypeData.to(starType))
         onClick = LightControl.ToggleFun.invokeJs(ThisElement, uuid)
 
         block()
@@ -47,19 +47,19 @@ fun FlowContent.starLightCell(
 }
 
 fun FlowContent.starLightCell(galaxy: Galaxy) {
-    starLightCell(LightType.Galaxy, galaxy.isLit, galaxy.galaxyId.value, galaxy.starCount)
+    starLightCell(StarType.Galaxy, galaxy.isLit, galaxy.galaxyId.value, galaxy.starCount)
 }
 
 fun FlowContent.starLightCell(event: EventLocation) {
-    starLightCell(LightType.Event, event.isLit, event.eventId.value, event.lightCount, SvgFile.CalendarPlus, SvgFile.CalendarMinus)
+    starLightCell(StarType.Event, event.isLit, event.eventId.value, event.lightCount, SvgFile.CalendarPlus, SvgFile.CalendarMinus)
 }
 
 fun FlowContent.starLightCell(event: Event) {
-    starLightCell(LightType.Event, event.isLit, event.eventId.value, event.lightCount, SvgFile.CalendarPlus, SvgFile.CalendarMinus)
+    starLightCell(StarType.Event, event.isLit, event.eventId.value, event.lightCount, SvgFile.CalendarPlus, SvgFile.CalendarMinus)
 }
 
 fun FlowContent.starLightCell(location: Location) {
-    starLightCell(LightType.Location, location.isLit, location.locationId.value, location.lightCount)
+    starLightCell(StarType.Location, location.isLit, location.locationId.value, location.lightCount)
 }
 
 // fun FlowContent.exampleLightCell() {

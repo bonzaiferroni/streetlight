@@ -9,11 +9,9 @@ import koala.dom.ViewScope
 import koala.dom.append
 import koala.dom.button
 import koala.dom.clear
-import koala.dom.getAttribute
-import koala.dom.closest
-import koala.dom.column
 import koala.dom.modify
 import koala.dom.requireAttribute
+import koala.dom.requireClosest
 import koala.dom.requireClosestAttribute
 import koala.dom.toggle
 import koala.dom.unmodify
@@ -26,7 +24,6 @@ import streetlight.model.data.LightEdit
 import streetlight.model.data.PostCursor
 import streetlight.web.layouts.FeedSection
 import streetlight.web.layouts.LightControl
-import streetlight.web.layouts.feedRow
 import streetlight.web.ui.AppAttribute
 import streetlight.web.ui.api
 import streetlight.web.ui.feedRow
@@ -45,8 +42,8 @@ fun ViewScope.appGlobalFunctions() = listOf(
 
 fun ViewScope.toggleLight(element: HTMLElement, postId: String) {
     val uuid = Uuid.parseOrNull(postId) ?: error("uuid not found")
-    val base = element.closest(LightControl.Class) ?: error("ancestor not found")
-    val lightType = base.getAttribute(LightControl.TypeData) ?: error("light type not found")
+    val base = element.requireClosest(LightControl.Class)
+    val lightType = base.requireAttribute(LightControl.TypeData)
     val counter = base.queryFirstOrNull(LightControl.Counter) ?: error("counter not found")
     val isLit = base.toggle(LightControl.Lit)
     counter.textContent?.toIntOrNull()?.let {
@@ -54,7 +51,7 @@ fun ViewScope.toggleLight(element: HTMLElement, postId: String) {
         counter.textContent = count.toMetricString()
     }
     launchEffect {
-        api.editLight(LightEdit(uuid, isLit, lightType))
+        api.editStarLink(LightEdit(uuid, isLit, lightType))
     }
 }
 

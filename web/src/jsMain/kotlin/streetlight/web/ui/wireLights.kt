@@ -8,13 +8,13 @@ import koala.dom.querySelector
 import koala.dom.unmodify
 import koala.html.Attribute
 import kotlinx.coroutines.launch
-import streetlight.web.model.LightCache
+import streetlight.web.model.StarCache
 import web.html.HTMLElement
 
 fun <Id> ViewScope.wireLights(
     root: HTMLElement,
     attribute: Attribute<Id>,
-    cache: LightCache<Id, *>
+    cache: StarCache<Id, *>
 ) {
     val pairs = root.queryAttributeAll(attribute)
 

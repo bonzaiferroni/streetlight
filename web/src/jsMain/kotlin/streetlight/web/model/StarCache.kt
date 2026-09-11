@@ -10,19 +10,19 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import streetlight.model.data.LightEdit
 import streetlight.model.data.EditLightRequest
-import streetlight.model.data.LightType
+import streetlight.model.data.StarType
 import streetlight.model.data.MultiLightEdit
 import kotlin.collections.minus
 import kotlin.collections.plus
 import kotlin.uuid.Uuid
 
-class LightCache<Id, Item>(
-    val lightType: LightType,
+class StarCache<Id, Item>(
+    val starType: StarType,
     private val cacheKey: String,
     val idToUuid: (Id) -> Uuid,
     val uuidToId: (Uuid) -> Id,
     val itemToId: (Item) -> Id,
-    private val lightEdit: suspend (EditLightRequest) -> Outcome<Boolean>,
+    private val starLinkEdit: suspend (EditLightRequest) -> Outcome<Boolean>,
     private val readRemoteLights: suspend () -> Outcome<List<Id>>,
     private val readRemoteItems: suspend (List<Id>) -> Outcome<List<Item>>,
     private val onError: Messenger,
@@ -46,9 +46,9 @@ class LightCache<Id, Item>(
                 gate.signedInFlow.collect { isSignedIn ->
                     if (isSignedIn) {
                         if (cachedLights.isNotEmpty()) {
-                            val request = MultiLightEdit(cachedLights.map { LightEdit(idToUuid(it), true, lightType) })
+                            val request = MultiLightEdit(cachedLights.map { LightEdit(idToUuid(it), true, starType) })
                             // send lights cached while signed out
-                            lightEdit(request)
+                            starLinkEdit(request)
                             cachedLights = emptySet()
                         }
                         val lights = readRemoteLights().toDataOr(onError) { return@collect }
@@ -85,8 +85,8 @@ class LightCache<Id, Item>(
         when (gate.stateNow.isSignedIn) {
             true -> {
                 scope.launch {
-                    val edit = LightEdit(idToUuid(id), isLit, lightType)
-                    val isSuccess = lightEdit(edit).toDataOr(onError) { return@launch }
+                    val edit = LightEdit(idToUuid(id), isLit, starType)
+                    val isSuccess = starLinkEdit(edit).toDataOr(onError) { return@launch }
                     if (isSuccess)
                         editState(id, isLit)
                 }

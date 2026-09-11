@@ -2,8 +2,6 @@ package streetlight.web.ui
 
 import koala.dom.*
 import kotlinx.coroutines.launch
-import kotlinx.dom.clear
-import kotlinx.html.dom.append
 import streetlight.model.data.Galaxy
 import streetlight.web.layouts.GalaxyKey
 import streetlight.web.model.DataCache
@@ -22,7 +20,7 @@ fun ViewScope.wireGalaxyMenu(
     val element = result.element
 
     contentScope.launch {
-        cache.galaxyLights.itemsFlow.collect { galaxies ->
+        cache.galaxyStars.itemsFlow.collect { galaxies ->
             val galaxies = galaxies.takeIf { it.isNotEmpty() } ?: topGalaxies
             element.clear()
             element.append {

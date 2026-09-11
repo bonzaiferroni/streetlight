@@ -10,7 +10,7 @@ sealed interface EditLightRequest
 data class LightEdit(
     val targetId: Uuid,
     val isLit: Boolean,
-    val lightType: LightType,
+    val starType: StarType,
 ): EditLightRequest {
     fun getEventId(): EventId = targetId.toRecordId()
 }
@@ -20,7 +20,7 @@ data class MultiLightEdit(
     val edits: List<LightEdit>
 ): EditLightRequest
 
-enum class LightType {
+enum class StarType {
     Event,
     Galaxy,
     Location,

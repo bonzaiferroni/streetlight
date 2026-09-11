@@ -1,14 +1,9 @@
 package streetlight.web.layouts
 
-import kabinet.utils.toMetricString
-import koala.SvgFile
 import koala.css.*
 import koala.html.*
 import koala.interop.JsSignature
-import koala.interop.ThisElement
-import kotlinx.html.FlowContent
-import kotlinx.html.onClick
-import streetlight.model.data.LightType
+import streetlight.model.data.StarType
 
 object LightControl {
     val Class = Class("light-control")
@@ -19,7 +14,7 @@ object LightControl {
 
     val ToggleFun = JsSignature("toggleLight")
 
-    val TypeData = enumAttributeOf<LightType>("light-type")
+    val TypeData = enumAttributeOf<StarType>("light-type")
 
     fun getLitMod(isLit: Boolean) = if (isLit) Lit else null
 }
