@@ -68,7 +68,7 @@ fun <T> Element.requireAttribute(attribute: Attribute<T>): T =
 fun <T> Element.getClosestAttribute(attribute: Attribute<T>) = closest(attribute.selector)?.getAttribute(attribute)
 
 fun <T> Element.requireClosestAttribute(attribute: Attribute<T>) =
-    closest(attribute.selector)?.getAttribute(attribute) ?: error("$attribute not found on <${tagName.lowercase()}>")
+    closest(attribute.selector)?.getAttribute(attribute) ?: error("$attribute not found close to <${tagName.lowercase()}>")
 
 fun <T> Element.observeAttribute(attribute: Attribute<T>, block: (T?) -> Unit) {
     val observer = MutationObserver({ _, _ ->

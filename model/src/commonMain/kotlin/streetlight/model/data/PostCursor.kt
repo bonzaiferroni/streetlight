@@ -9,28 +9,34 @@ enum class SortDirection { Ascending, Descending }
 
 @Serializable
 sealed interface PostCursor {
-    val postId: PostId
+    val postId: PostId?
+    val direction: SortDirection
 
     @Serializable
     data class Time(
-        override val postId: PostId,
-        val recordAt: Instant,
+        override val direction: SortDirection,
+        override val postId: PostId? = null,
+        val recordAt: Instant? = null,
     ) : PostCursor
 
     @Serializable
     data class Lean(
-        override val postId: PostId,
-        val postLean: Double,
+        override val direction: SortDirection,
+        override val postId: PostId? = null,
+        val postLean: Int? = null,
     ) : PostCursor
 
     @Serializable
     data class Mark(
-        override val postId: PostId,
         val markId: MarkId,
-        val count: Long,
-    ) : PostCursor
+        override val postId: PostId? = null,
+        val count: Int? = null,
+    ) : PostCursor {
+        override val direction get() = SortDirection.Descending
+    }
 
     companion object {
         val DefaultLimit = 30
+        val Default = Time(SortDirection.Descending)
     }
 }

@@ -6,6 +6,7 @@ import koala.Svg
 import koala.css.*
 import koala.html.*
 import kotlinx.css.GridTemplateColumns
+import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import streetlight.model.data.CuratorStatus
 import streetlight.model.data.FeedEntity
@@ -22,6 +23,19 @@ fun FlowContent.feedRow(
     curator: CuratorStatus? = null,
     cellContent: (FlowContent.() -> Unit)? = null
 ) {
+    div() {
+        configureFeedRow(entity, isUniverse, curator, cellContent)
+    }
+}
+
+fun DIV.configureFeedRow(
+    entity: FeedEntity,
+    isUniverse: Boolean,
+    curator: CuratorStatus? = null,
+    cellContent: (FlowContent.() -> Unit)? = null
+) {
+    addModifiers(modify(FeedRow.Base, modify(Padding1, ZenBg)))
+
     val imageUrl = entity.image?.thumb ?: SiteImage.placeholder.thumb // td: make placeholder depend on post type
     val colorScheme = entity.colorScheme
     val flair = entity.flair
@@ -31,48 +45,46 @@ fun FlowContent.feedRow(
     val description = entity.body
     val links = entity.links
 
-    div(modify(FeedRow.Base, modify(Padding1, ZenBg))) {
-        entity.post?.postId?.let {
-            setAttribute(AppAttribute.PostId.to(it))
-        }
-        curator?.let {
-            setAttribute(CuratorMenu.CuratorJson.to(it))
-        }
+    entity.post?.postId?.let {
+        setAttribute(AppAttribute.PostId.to(it))
+    }
+    curator?.let {
+        setAttribute(CuratorMenu.CuratorJson.to(it))
+    }
 
-        div(modify(FeedRow.Content)) {
-            setStyle(Property.ColorScheme.to(colorScheme.cssValue))
-            row(modify(Height10)) {
-                navigationIfNotNull(postRoute, modify(Width10, OverflowClip, BorderRadius1, BorderSolid2Px, MoonShadow)) {
-                    image(imageUrl, modify(Size100P, ObjectFitCover))
-                }
-                column(modify(Flex1, Gap0, JustifyContentCenter, AlignItemsCenter, TextShadow)) {
-                    navigationIfNotNull(postRoute) {
-                        heading5(heading, modify(LineHeight115, Shrinkable, LineClamp2, TextOverflowEllipses, TextAlignCenter))
-                    }
-                    postLine(entity, isUniverse)
-                }
-
-                when (curator) {
-                    null -> flairBadge(flair.small)
-                    else -> curatorBadge(curator)
-                }
+    div(modify(FeedRow.Content)) {
+        setStyle(Property.ColorScheme.to(colorScheme.cssValue))
+        row(modify(Height10)) {
+            navigationIfNotNull(postRoute, modify(Width10, OverflowClip, BorderRadius1, BorderSolid2Px, MoonShadow)) {
+                image(imageUrl, modify(Size100P, ObjectFitCover))
             }
-            // spacer(modify(Height2Px, InkGradientBg, MarginTop2Px))
+            column(modify(Flex1, Gap0, JustifyContentCenter, AlignItemsCenter, TextShadow)) {
+                navigationIfNotNull(postRoute) {
+                    heading5(heading, modify(LineHeight115, Shrinkable, LineClamp2, TextOverflowEllipses, TextAlignCenter))
+                }
+                postLine(entity, isUniverse)
+            }
 
-            cells?.let {
-                cellBlock(modify(FeedRow.Cells, BorderRadius2, OverflowClip, Outline), cells)
+            when (curator) {
+                null -> flairBadge(flair.small)
+                else -> curatorBadge(curator)
             }
         }
+        // spacer(modify(Height2Px, InkGradientBg, MarginTop2Px))
 
-        grid(GridTemplateColumns("1fr min-content"), mod = modify(FeedRow.ExpandedContent, Padding2, Gap2)) {
-            description?.let {
-                markdown(it, modify(Flex1), limit = 1000)
-            }
-            links?.let { links ->
-                row(modify(FlexWrap, AlignItemsStart, AlignContentStart)) {
-                    links.forEach { link ->
-                        btn(link.label, link.url, modify(Zen))
-                    }
+        cells?.let {
+            cellBlock(modify(FeedRow.Cells, BorderRadius2, OverflowClip, Outline), cells)
+        }
+    }
+
+    grid(GridTemplateColumns("1fr min-content"), mod = modify(FeedRow.ExpandedContent, Padding2, Gap2)) {
+        description?.let {
+            markdown(it, modify(Flex1), limit = 1000)
+        }
+        links?.let { links ->
+            row(modify(FlexWrap, AlignItemsStart, AlignContentStart)) {
+                links.forEach { link ->
+                    btn(link.label, link.url, modify(Zen))
                 }
             }
         }

@@ -15,6 +15,8 @@ data class Post(
     val title: String?,
     val text: Markdown?,
     val lightCount: Int,
+    val lean: Int?,
+    val markCount: Int?,
     val createdAt: Instant,
     val updatedAt: Instant,
 )
@@ -25,4 +27,3 @@ data class GalaxyTrace(
     val name: String,
     val slug: Slug
 )
-

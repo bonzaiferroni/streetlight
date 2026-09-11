@@ -41,7 +41,10 @@ data class EntityFeed(
     val entities: List<FeedEntity>,
     val marks: Map<GalaxyId, List<GalaxyMark>>? = null,
     val tallies: Map<PostId, List<MarkTally>>? = null,
+    val nextCursor: PostCursor? = null,
 ) {
+    val isCompleted get() = entities.size >= PostCursor.DefaultLimit
+
     fun curatorOf(entity: FeedEntity): CuratorStatus? {
         val postId = entity.post?.postId ?: return null
         val galaxyId = entity.post?.galaxy?.galaxyId ?: return null

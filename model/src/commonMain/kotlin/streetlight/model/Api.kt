@@ -140,8 +140,13 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object CreatePost: PostEndpoint<PostEdit, Post>(this)
         object UpdatePost: PostEndpoint<PostEdit, Post>(this)
         object ReadMultiPosts: PostEndpoint<List<GalaxyId>, List<FeedEntity>>(this)
-        object ReadPosts: GetByIdEndpoint<GalaxyId, EntityFeed>(this) {
-            val markId = uuidParamOf("markSortId")
+        object ReadGalaxyPosts: GetByIdEndpoint<GalaxyId, EntityFeed>(this), CursorEndpoint {
+            override val postId = uuidParamOf("postId")
+            override val markId = uuidParamOf("markId")
+            override val count = intParamOf("count")
+            override val direction = enumParamOf<SortDirection>("direction")
+            override val lean = intParamOf("lean")
+            override val recordAt = instantParamOf("recordAt")
         }
         object ReadPostId: GetByIdEndpoint<PostId, FeedEntity>(this)
         object ReadLights: GetEndpoint<List<GalaxyId>>(this)

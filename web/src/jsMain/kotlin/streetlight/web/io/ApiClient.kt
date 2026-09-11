@@ -1,6 +1,7 @@
 package streetlight.web.io
 
 import kampfire.api.EmailAddress
+import kampfire.api.PathBuilder
 import kampfire.api.Slug
 import kampfire.api.UserApi
 import kampfire.api.Username
@@ -17,7 +18,9 @@ import koala.Image
 import koala.model.DocId
 import kotlinx.coroutines.CoroutineScope
 import streetlight.model.Api
+import streetlight.model.CursorEndpoint
 import streetlight.model.data.*
+import streetlight.model.writeCursor
 import kotlin.uuid.Uuid
 
 class ApiClient(private val client: FetchClient) {
@@ -139,8 +142,8 @@ class ApiClient(private val client: FetchClient) {
     suspend fun createPost(post: PostEdit) = client.postApi(Api.Galaxies.CreatePost, post)
     suspend fun editPost(post: PostEdit) = client.postApi(Api.Galaxies.UpdatePost, post)
     suspend fun readPosts(galaxyIds: List<GalaxyId>) = client.postApi(Api.Galaxies.ReadMultiPosts, galaxyIds)
-    suspend fun readPosts(galaxyId: GalaxyId, markId: MarkId?) = client.getApi(Api.Galaxies.ReadPosts, galaxyId) {
-        writeParam(it.markId, markId?.value)
+    suspend fun readPosts(galaxyId: GalaxyId, cursor: PostCursor? = null) = client.getApi(Api.Galaxies.ReadGalaxyPosts, galaxyId) {
+        writeCursor(Api.Galaxies.ReadGalaxyPosts, cursor)
     }
     suspend fun readPost(postId: PostId) = client.getApi(Api.Galaxies.ReadPostId, postId)
     suspend fun readGalaxyLights() = client.getApi(Api.Galaxies.ReadLights)
