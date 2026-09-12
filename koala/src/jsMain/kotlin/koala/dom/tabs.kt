@@ -3,7 +3,7 @@ package koala.dom
 import koala.css.*
 import koala.html.Attribute
 import koala.html.Id
-import koala.html.TabClass
+import koala.html.TabStyle
 import kampfire.model.MutableTap
 import kotlinx.html.js.p
 import web.html.HTMLDivElement
@@ -13,26 +13,26 @@ fun ViewScope.tabs(
     id: Id? = null,
     mod: ModifierSet? = null,
     viewportMod: ModifierSet? = null,
-    indexField: MutableTap<Int>? = null,
+    indexState: MutableTap<Int>? = null,
     defaultTab: Int? = null,
-    content: TabScope.() -> Unit,
+    content: DomTabScope.() -> Unit,
 ): HTMLDivElement {
-    val tabScope = TabScope(content = content)
+    val tabScope = DomTabScope(content = content)
     var viewport: HTMLElement? = null
 
-    val root = column(id, modify(TabClass.tabs, mod)) {
+    val root = column(id, modify(TabStyle.Container, mod)) {
         tabsHeader(tabScope)
         viewport = tabsViewport(viewportMod)
     }
 
     tabScope.build(viewport!!)
 
-    val initialTab = indexField?.now ?: defaultTab
+    val initialTab = indexState?.now ?: defaultTab
     initialTab?.let {
         root.setAttribute(Attribute.TabIndex.to(it))
     }
 
-    indexField?.let { field ->
+    indexState?.let { field ->
         var currentTab = field.now
 
         fun display(value: Int) {
@@ -59,10 +59,10 @@ fun ViewScope.tabs(
     return root
 }
 
-fun ViewScope.tabsHeader(tabScope: TabScope) = div(modify(TabClass.header)) {
+fun ViewScope.tabsHeader(tabScope: DomTabScope) = div(modify(TabStyle.header)) {
     tabScope.tabs.forEachIndexed { index, tab ->
         val button = p {
-            addModifiers(TabClass.button)
+            addModifiers(TabStyle.Button)
             attributes["data-tab"] = index.toString()
             tab.colorScheme?.let {
                 setStyle(Property.ColorScheme.to(it))
@@ -77,4 +77,4 @@ fun ViewScope.tabsHeader(tabScope: TabScope) = div(modify(TabClass.header)) {
 
 fun AppendScope.tabsViewport(
     mod: ModifierSet? = null,
-) = box(modify(TabClass.viewport, mod))
+) = box(modify(TabStyle.Viewport, mod))

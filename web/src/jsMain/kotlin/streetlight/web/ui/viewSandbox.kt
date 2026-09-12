@@ -1,82 +1,61 @@
 package streetlight.web.ui
 
-import kampfire.model.LiveList
-import koala.css.AlignItemsCenter
-import koala.css.AlignItemsStart
-import koala.css.Flex1
-import koala.css.Flex3
-import koala.css.Height100Pct
-import koala.css.Height100Vh
-import koala.css.Padding1
-import koala.css.Zen
+import kampfire.model.storeOf
+import koala.css.MarginTop1
 import koala.css.modify
 import koala.dom.*
-import kotlinx.coroutines.delay
-import web.dom.ElementId
-import web.dom.document
-import web.scroll.ScrollBehavior
-import web.scroll.ScrollToOptions
-import web.scroll.smooth
-import kotlin.time.Duration.Companion.seconds
-import kotlin.uuid.Uuid
+import koala.html.tab
+import koala.interop.findAndInitTabsProto
+import kotlinx.css.GridTemplateColumns
 
 fun RouteScope.viewSandbox() {
     // val model = Sandbox(contentScope, api, toaster)
 
     console.log("welcome to sandbox")
 
-    val list = LiveList((0..10000).map { Uuid.random() to it }) { it.first }
+    val nameState = storeOf("Jimmy")
+    val indexState = storeOf(0)
 
-    row(modify(AlignItemsStart, Height100Vh)) {
-        val element = lazyColumn(list, modify(Flex1, Height100Pct)) { item ->
-            row(modify(Padding1, AlignItemsCenter)) {
-                textBlock("Foo ${item.second}", modify(Flex1))
-                button("insert", {
-                    launchEffect {
-                        list.insertAfter(item.first, Uuid.random() to 67)
+    grid(GridTemplateColumns("1fr 1fr"), modify(MarginTop1)) {
+        column {
+            tabsProto(indexState = indexState) {
+                tab("The Dodmand") {
+                    textBlock("yer at The Dodmand.")
+                    textField(nameState, "yer name")
+                }
+                tab("Plymouth") {
+                    textBlock("yer at Plymouth")
+                    flowBlock(nameState) { name ->
+                        textBlock("hello $name")
                     }
-                }, modify(Zen))
-                button("remove", {
-                    launchEffect {
-                        list.remove(item.first)
-                    }
-                }, modify(Zen))
-                button("replace", {
-                    launchEffect {
-                        list.replace(item.first to item.second + 1)
-                    }
-                }, modify(Zen))
+                }
+                tab("Start") {
+                    textBlock("yer at Start")
+                }
             }
-        }
-        column(modify(Flex1, Padding1)) {
-            row {
-                button("clear", {
-                    launchEffect {
-                        list.clear()
-                    }
-                })
-                button("remove 10", {
-                    launchEffect {
-                        list.removeAt(0, 10)
-                    }
-                })
-                button("add 1", {
-                    launchEffect {
-                        list.insertAt(0, Uuid.random() to 0)
-                    }
-                })
-            }
+            textBlock("select a tab")
         }
 
-        launchEffect {
-            repeat(10) {
-                delay(1.seconds)
-                element.scrollBy(ScrollToOptions(top = 1000.0, behavior = ScrollBehavior.smooth))
+        column {
+            tabs(indexState = indexState) {
+                tab("The Dodmand") {
+                    textBlock("yer at The Dodmand.")
+                    textField(nameState, "yer name")
+                }
+                tab("Plymouth") {
+                    textBlock("yer at Plymouth")
+                    flowBlock(nameState) { name ->
+                        textBlock("hello $name")
+                    }
+                }
+                tab("Start") {
+                    textBlock("yer at Start")
+                }
             }
-            document.body.append(document.createElement("div").apply { id = ElementId("scroll-done") })
+            textBlock("select a tab")
         }
     }
 }
 
-class SandboxException : Exception("Arrr sandbox exception")
+class SandboxException : Exception("There's a snake in my boot!")
 

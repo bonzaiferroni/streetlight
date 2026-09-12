@@ -12,14 +12,14 @@ fun FlowContent.tabs(
 ) {
     val scope = TabScope()
     scope.content()
-    column(modify(TabClass.tabs, mod)) {
+    column(modify(TabStyle.Container, mod)) {
         id?.let {
             setId(it)
         }
-        row(modify(TabClass.header)) {
+        row(modify(TabStyle.header)) {
             scope.tabs.forEachIndexed { index, tab ->
                 p {
-                    addModifiers(TabClass.button)
+                    addModifiers(TabStyle.Button)
                     attributes["data-tab"] = index.toString()
                     if (tab.isDefault) {
                         attributes["is-default"] = ""
@@ -31,10 +31,10 @@ fun FlowContent.tabs(
                 }
             }
         }
-        box(modify(TabClass.viewport)) {
+        box(modify(TabStyle.Viewport)) {
             scope.tabs.forEach { tab ->
                 val content = tab.content
-                box(modify(TabClass.panel)) {
+                box(modify(TabStyle.Panel)) {
                     content()
                 }
             }
@@ -42,15 +42,17 @@ fun FlowContent.tabs(
     }
 }
 
-object TabClass {
-    val tabs = Class("tabs")
-    val button = Class("tabs-button")
+object TabStyle {
+    val Container = Class("tabs")
+    val Button = Class("tabs-button")
     val header = Class("tabs-header")
-    val viewport = Class("tabs-viewport")
-    val panel = Class("tabs-panel")
+    val Viewport = Class("tabs-viewport")
+    val Panel = Class("tabs-panel")
 
     val tabIndex = intAttributeOf("tab") // td: didn't work, figure out why
-    val isDefault = booleanAttributeOf("default")
+    val IsDefault = booleanAttributeOf("is-default")
+
+    val IndexDelta = Property<Int>("index-delta")
 }
 
 fun TabScope.tab(
@@ -64,6 +66,8 @@ fun TabScope.tab(
 class TabScope {
     private val _tabs: MutableList<Tab> = mutableListOf()
     val tabs: List<Tab> = _tabs
+
+    val initialIndex get() = tabs.indexOfFirst { it.isDefault }.takeIf { it >= 0 } ?: 0
 
     fun add(label: String, isDefault: Boolean, content: DIV.() -> Unit) {
         _tabs.add(Tab(

@@ -75,8 +75,8 @@ fun Element.requireClosest(queryable: Queryable) = closest(queryable.selector) a
 
 fun Element.asHtmlElement() = this as HTMLElement
 
+@Deprecated("query from document or element")
 fun querySelector(queryable: Queryable) = document.body.querySelector(queryable)
-fun querySelectorAll(queryable: Queryable) = document.body.querySelectorAll(queryable)
 
 fun CSSStyleDeclaration.removeStyle(property: Property<*>) = removeProperty(property.identifier)
 

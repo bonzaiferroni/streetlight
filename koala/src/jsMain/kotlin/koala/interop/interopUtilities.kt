@@ -1,6 +1,5 @@
 package koala.interop
 
-import koala.dom.findAndInitTabs
 import koala.dom.getElementOrNullById
 import koala.dom.viewTransition
 import web.cssom.ClassName

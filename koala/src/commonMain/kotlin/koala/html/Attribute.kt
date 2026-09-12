@@ -73,6 +73,9 @@ fun intAttributeOf(identifier: String, isCustom: Boolean = false) =
 
 fun slugAttributeOf(identifier: String) = Attribute(identifier, false) { it.toSlug() }
 
+fun unitAttributeOf(identifier: String, isCustom: Boolean = false) =
+    Attribute(identifier, isCustom, { "" }) { }
+
 inline fun <reified T: Enum<T>> enumAttributeOf(identifier: String) =
     Attribute<T>(identifier, true, { it.name }) { enumValueOf(it) }
 

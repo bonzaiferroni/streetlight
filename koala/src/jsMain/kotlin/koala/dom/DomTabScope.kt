@@ -2,13 +2,12 @@ package koala.dom
 
 import koala.css.modify
 import koala.html.Id
-import koala.html.TabClass
-import kotlinx.html.dom.append
+import koala.html.TabStyle
 import web.html.HTMLElement
 
-class TabScope(
+class DomTabScope(
     maxTabCount: Int = 5,
-    private val content: TabScope.() -> Unit,
+    private val content: DomTabScope.() -> Unit,
 ) {
     private val _tabs: MutableList<Tab> = mutableListOf()
     val tabs: List<Tab> = _tabs
@@ -43,7 +42,7 @@ class TabScope(
         this.viewport = viewport
         viewport.append {
             tabs.forEachIndexed { index, _ ->
-                val element = box(modify(TabClass.panel))
+                val element = box(modify(TabStyle.Panel))
                 elementCache[index] = element
             }
         }
