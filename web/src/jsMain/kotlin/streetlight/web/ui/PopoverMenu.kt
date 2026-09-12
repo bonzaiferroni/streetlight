@@ -4,11 +4,14 @@ import kampfire.model.MutableTap
 import kampfire.model.storeOf
 import koala.css.Gap2Px
 import koala.css.ModifierSet
+import koala.css.Property
 import koala.css.modify
 import koala.dom.ViewScope
 import koala.dom.flowBlock
 import koala.dom.popoverCard
 import koala.dom.popoverRaw
+import koala.dom.removeStyle
+import koala.dom.setStyle
 import koala.html.Id
 import web.html.HTMLElement
 import kotlin.js.json
@@ -36,11 +39,15 @@ fun <T> ViewScope.popoverMenu(
         }
     }
 
+    val anchor = popoverId.toPositionAnchor()
+
     element.addEventListener("toggle", { event ->
         val toggle = event.asDynamic()
         val invoker = toggle.source as? HTMLElement ?: return@addEventListener
         if (toggle.newState == "open") {
+            currentInvoker?.removeStyle(Property.AnchorName)
             currentInvoker = invoker
+            invoker.setStyle(Property.AnchorName.to(anchor))
             state.set(transform(invoker) ?: defaultValue ?: error("popover menu content not found"))
         } else {
             state.set(null)

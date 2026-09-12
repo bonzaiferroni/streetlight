@@ -3,23 +3,23 @@ package streetlight.web.interop
 import kabinet.utils.toMetricString
 import koala.core.queryFirstOrNull
 import koala.dom.ViewScope
-import koala.dom.isModified
-import koala.dom.querySelector
 import koala.dom.querySelectorAll
 import koala.dom.requireAttribute
 import koala.dom.requireClosest
 import koala.dom.setAttribute
-import koala.dom.toggle
 import koala.html.Attribute
 import streetlight.model.data.Galaxy
 import streetlight.model.data.LightEdit
 import streetlight.web.ui.StarToggle
 import streetlight.web.model.Fleet
 import streetlight.web.ui.api
+import streetlight.web.ui.starCheck
 import web.dom.document
 import web.html.HTMLElement
 
 fun ViewScope.toggleAny(element: HTMLElement) {
+    starCheck { return }
+
     val base = element.requireClosest(StarToggle.Class)
     val uuid = base.requireAttribute(StarToggle.ToggleId)
     val toggleType = base.requireAttribute(StarToggle.TypeData)

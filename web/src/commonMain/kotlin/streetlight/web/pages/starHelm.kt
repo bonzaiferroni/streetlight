@@ -22,7 +22,7 @@ import kotlinx.html.FlowContent
 import kotlinx.html.onClick
 
 fun FlowContent.starHelmPopover() {
-    popover(StarHelm.PopoverId, modify(StarHelm.PopoverClass, Magic, SlideLeft)) {
+    popover(StarHelm.PopoverId, modify(StarHelm.PopoverClass, Magic)) {
         card(modify(StarHelm.PopoverCardClass, HeavyCardBg, BlurBackdrop, OverflowClip, PointerEventsAuto)) {
             setId(StarHelm.StarBarMenu)
             button(SvgFile.LoaderSmall, modify(Height5, FadeLoop)) {

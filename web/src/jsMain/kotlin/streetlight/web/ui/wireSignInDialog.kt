@@ -2,6 +2,7 @@ package streetlight.web.ui
 
 import kampfire.model.reactIn
 import kampfire.model.setFalse
+import kampfire.model.setTrue
 import kampfire.model.storeOf
 import koala.dom.ViewScope
 import koala.dom.dialog
@@ -9,6 +10,7 @@ import koala.dom.dialogCard
 import koala.dom.rawDialogContent
 import koala.dom.tabs
 import koala.html.Id
+import streetlight.model.data.Star
 
 fun ViewScope.wireSignInDialog() {
     session.starState.reactIn(contentScope) { star ->
@@ -39,6 +41,17 @@ fun ViewScope.wireSignInDialog() {
             }
         }
     }
+}
+
+inline fun ViewScope.starCheck(block: () -> Nothing): Star {
+    return when (val star = session.starState.now) {
+        null -> {
+            SignIn.isOpen.setTrue()
+            block()
+        }
+        else -> star
+    }
+
 }
 
 object SignIn {

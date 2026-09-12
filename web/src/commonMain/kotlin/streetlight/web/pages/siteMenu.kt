@@ -21,7 +21,7 @@ import streetlight.web.doc.SiteDoc
 import streetlight.web.layouts.route
 
 fun FlowContent.siteMenuPopover() {
-    popover(SiteHelm.popoverId, modify(SiteHelm.PopoverClass, Magic, SlideRight), SiteHelm.PositionAnchor) {
+    popover(SiteHelm.popoverId, modify(SiteHelm.PopoverClass, Magic), SiteHelm.PositionAnchor) {
         card(modify(SiteHelm.Container, HeavyCardBg, BlurBackdrop, PointerEventsAuto)) {
             column(modify(PaddingRight1)) {
                 row(modify(AlignItemsCenter)) {

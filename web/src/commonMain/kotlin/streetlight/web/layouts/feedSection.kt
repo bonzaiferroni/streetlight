@@ -35,6 +35,7 @@ fun FlowContent.feedSection(
         }
 
         layoutFeed {
+            // td: message when empty
             feed.entities.forEach { entity ->
                 val curator = feed.curatorOf(entity)
                 feedRow(entity, isUniverse, curator)

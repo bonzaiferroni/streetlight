@@ -72,8 +72,10 @@ fun DIV.configureFeedRow(
         }
         // spacer(modify(Height2Px, InkGradientBg, MarginTop2Px))
 
-        cells?.let {
-            cellBlock(modify(FeedRow.Cells, BorderRadius2, OverflowClip, Outline), cells)
+        box(modify(AlignItemsCenter)) {
+            cells?.let {
+                cellBlock(modify(FeedRow.Cells, BorderRadius2, OverflowClip, Outline), cells)
+            }
         }
     }
 
@@ -168,7 +170,6 @@ $Content {
     
     @media (min-width: 960px) {
         flex-direction: row;
-        align-items: center;
         
         > * {
             flex: 1;

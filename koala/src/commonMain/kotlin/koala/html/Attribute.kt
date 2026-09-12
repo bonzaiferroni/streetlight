@@ -107,7 +107,6 @@ fun <T> CoreAttributeGroupFacade.setAttribute(attribute: Attribute<T>, value: T?
 
 fun CoreAttributeGroupFacade.setPopoverTarget(id: Id, action: String? = null) {
     setAttribute(Attribute.PopoverTarget, id.identifier)
-    setAnchorName(id.toPositionAnchor())
     action?.let {
         setAttribute(Attribute.PopoverTargetAction, it)
     }

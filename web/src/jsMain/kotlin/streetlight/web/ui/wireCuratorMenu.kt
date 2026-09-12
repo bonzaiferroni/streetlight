@@ -28,7 +28,9 @@ fun ViewScope.wireCuratorMenu() {
         baseElement = grid(GridTemplateColumns("auto auto auto"), modify(Padding2, AlignItemsCenter)) {
             curator.marks.forEach { mark ->
                 button(mark.name, {
-                    baseElement.applyCurator(updateMark(mark.markId, feedElement))
+                    updateMark(mark.markId, feedElement)?.let {
+                        baseElement.applyCurator(it)
+                    }
                 }, modify(Zen)) {
                     configureMarkButton(mark)
                 }

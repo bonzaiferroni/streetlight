@@ -7,7 +7,9 @@ import koala.css.BorderRadius50P
 import koala.css.Height5
 import koala.css.HoverBg
 import koala.css.MaxHeight64
+import koala.css.MinWidth8
 import koala.css.Padding1
+import koala.css.Width5
 import koala.css.modify
 import koala.dom.ViewScope
 import koala.dom.append
@@ -41,7 +43,7 @@ fun ViewScope.wireGalaxyMenu() {
                         textBlock(galaxy.name)
                     }.onClick { portal.go(galaxy.route) }
 
-                    box(modify(Padding1)) {
+                    box(modify(Padding1, MinWidth8)) {
                         starToggle(galaxy)
                     }
                 }

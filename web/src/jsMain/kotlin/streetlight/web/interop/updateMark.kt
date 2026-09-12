@@ -17,17 +17,19 @@ import streetlight.model.data.MarkId
 import streetlight.model.data.MarkUpdate
 import streetlight.web.ui.CuratorMenu
 import streetlight.web.ui.api
+import streetlight.web.ui.starCheck
 import streetlight.web.ui.toaster
 import web.dom.Element
 import web.html.HTMLElement
 
-fun ViewScope.queryAndUpdateMark(element: HTMLElement): CuratorStatus {
+fun ViewScope.queryAndUpdateMark(element: HTMLElement): CuratorStatus? {
     val markId = element.requireAttribute(CuratorMenu.MarkButtonId)
     val baseElement = element.requireClosest(CuratorMenu.CuratorJson)
     return updateMark(markId, baseElement)
 }
 
-fun ViewScope.updateMark(markId: MarkId, baseElement: Element): CuratorStatus {
+fun ViewScope.updateMark(markId: MarkId, baseElement: Element): CuratorStatus? {
+    starCheck { return null }
     val curator = baseElement.requireAttribute(CuratorMenu.CuratorJson).toggleMark(markId)
     baseElement.setAttribute(CuratorMenu.CuratorJson.to(curator))
     baseElement.applyCurator(curator)
