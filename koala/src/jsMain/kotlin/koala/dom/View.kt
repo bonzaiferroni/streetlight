@@ -22,8 +22,6 @@ class View(
 
     private val disposers: MutableList<() -> Unit> = mutableListOf()
     private val children: MutableList<View> = mutableListOf()
-    private val appendListenersLazy = lazy { mutableListOf<() -> Unit>() }
-    private val appendListeners by appendListenersLazy
     private val parentView get() = parent?.resolveView()
     private var disposed = false
 
@@ -61,23 +59,12 @@ class View(
         disposers += block
     }
 
-    override fun onAppend(block: () -> Unit) {
-        appendListeners += block
-    }
-
     internal fun dispose() {
         if (disposed) return
         disposed = true
         clear()
         scope.coroutineContext.job.cancel()
         parentView?.removeChild(this)
-    }
-
-    internal fun setAppended() {
-        if (!appendListenersLazy.isInitialized()) return
-        appendListeners.forEach {
-            it()
-        }
     }
 
     internal fun clear() {

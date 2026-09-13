@@ -17,7 +17,6 @@ fun HTMLElement.mountRootView(
         view = View(this@append, parentScope, name, app, this@mountRootView, null)
         view.applyView(InsertEdge.Tail, block)
     }
-    view.setAppended()
     return view
 }
 
@@ -43,7 +42,6 @@ fun ViewScope.mountChildView(
         view = View(this@append, contentScope, name, app, mount, this@mountChildView)
         view.applyView(InsertEdge.Tail, block)
     }
-    view.setAppended()
     return view
 }
 
@@ -63,7 +61,6 @@ fun HTMLElement.appendChildView(
         view = View(this@append, viewScope.contentScope, name, viewScope.app, this@appendChildView, viewScope)
         view.applyView(InsertEdge.Tail, block)
     }
-    view.setAppended()
     return view
 }
 
@@ -77,7 +74,6 @@ fun HTMLElement.prependChildView(
         view = View(this@prepend, viewScope.contentScope, name, viewScope.app, this@prependChildView, viewScope)
         view.applyView(InsertEdge.Head, block)
     }
-    view.setAppended()
     return view
 }
 
