@@ -31,7 +31,7 @@ import streetlight.web.model.GalaxyMarker
 import streetlight.web.model.LocationMarker
 
 fun ViewScope.earthFocus(model: Earth) {
-    flowBlock(model.focusField, modify(EarthStyle.Focus, Magic)) { focus ->
+    flowBlock(model.focusState, modify(EarthStyle.Focus, Magic)) { focus ->
         when (focus) {
             is ClusterFocus -> lazyTabs(
                 mod = modify(PointerEventsAuto, Height100Pct),

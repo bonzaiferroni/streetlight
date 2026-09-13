@@ -13,14 +13,12 @@ fun HTML.appPage(
     styles: String,
     screen: AppScreen,
     theme: PageTheme? = null,
-    block: FlowContent.() -> Unit
+    block: (FlowContent.() -> Unit)? = null
 ) {
     appHead("$title | Streetlight", styles) {
         supportProtobuf()
         supportGeoMap()
         applyFiles(JsFile)
     }
-    appBody(screen, theme) {
-        block()
-    }
+    appBody(screen, theme, block)
 }

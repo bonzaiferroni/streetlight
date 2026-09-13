@@ -9,17 +9,22 @@ import koala.model.Portal
 import kampfire.model.tapOf
 import kampfire.model.storeOf
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import streetlight.model.ui.CityMap
 import streetlight.model.ui.CityMapRoute
 import streetlight.model.ui.EarthMap
 import streetlight.model.ui.EarthRoute
 import streetlight.model.ui.GalaxyMap
 import streetlight.model.ui.GalaxyMapRoute
+import streetlight.model.ui.ResultMap
+import streetlight.model.ui.ResultMapRoute
 import streetlight.web.io.ApiClient
+import kotlin.time.Duration.Companion.milliseconds
 
 class Earth(
     private val scope: CoroutineScope,
-    initialMap: EarthMap,
+    initialMap: EarthMap?,
     private val api: ApiClient,
     private val portal: Portal,
     private val toaster: Toaster,
@@ -30,19 +35,23 @@ class Earth(
     val stateFlow = state.flow
     val stateNow get() = state.now
 
-    val mapField = state.tapOf { it.map }
-    val boundedMarkersField = markerMap.partitionedField.tapOf { it?.bounded ?: emptyList() }
-    val unboundedMarkersField = markerMap.partitionedField.tapOf { it?.unbounded ?: emptyList() }
-    val summaryField = boundedMarkersField.tapOf { points ->
+    val mapState = state.tapOf { it.map }
+    val boundedMarkersState = markerMap.partitionedField.tapOf { it?.bounded ?: emptyList() }
+    val unboundedMarkersState = markerMap.partitionedField.tapOf { it?.unbounded ?: emptyList() }
+    val summaryField = boundedMarkersState.tapOf { points ->
         points.groupingBy { it.typeLabel }.eachCount().toList()
     }
-    val isMovingField = markerMap.isMovingField
-    val focusField = markerMap.focusField.tapOf { focus -> focus?.takeIf { it.toGalaxy() == null } }
-    val isFocusedField = focusField.tapOf { it != null }
+    val isMovingState = markerMap.isMovingField
+    val focusState = markerMap.focusField.tapOf { focus -> focus?.takeIf { it.toGalaxy() == null } }
+    val isFocusedState = focusState.tapOf { it != null }
 
     init {
         scope.launch("Earth > routeFlowOf") {
-            portal.routeFlowOf<EarthRoute>(false).collect(::collectRoute)
+            portal.routeFlowOf<EarthRoute>(false).collect {
+                launch {
+                    collectRoute(it)
+                }
+            }
         }
         scope.launch("Earth > focus galaxy") {
             markerMap.focusField.flow.collect {
@@ -58,31 +67,33 @@ class Earth(
     fun showAll() = markerMap.showAll()
 
     private suspend fun collectRoute(route: EarthRoute) {
-        when (route) {
+        val map = createMarkers(route) ?: return
+        state.set { copy(map = map) }
+        delay(10.milliseconds)
+        showAll()
+    }
+
+    private suspend fun createMarkers(route: EarthRoute): EarthMap? {
+        return when (route) {
             is GalaxyMapRoute -> {
                 when (val slug = route.slug) {
                     null -> {
                         // td: replace with map bounds as argument
-                        // val maps = api.readTopGalaxies().handleOutcome(toaster::toast)
-                        //     ?.map { GalaxyMap(it) } ?: emptyList()
-                        // state.set { it.copy(maps = maps) }
-                        val markers = api.readTopGalaxies().toDataOr(toaster) { return }.let {
+                        val markers = api.readTopGalaxies().toDataOr(toaster) { return null }.let {
                             markerService.createMarkers(it)
                         }
                         markerMap.setPoints(markers)
-                        state.set { copy(map = GalaxyMap(null)) }
-                        showAll()
+                        GalaxyMap(null)
                     }
 
                     else -> {
-                        val galaxy = api.readGalaxy(slug).toDataOr(toaster) { return }
+                        val galaxy = api.readGalaxy(slug).toDataOr(toaster) { return null }
 
-                        val markers = api.readPosts(galaxy.galaxyId).toDataOr(toaster) { return }.let {
+                        val markers = api.readPosts(galaxy.galaxyId).toDataOr(toaster) { return null }.let {
                             markerService.createMarkers(it.entities)
                         }
                         markerMap.setPoints(markers)
-                        state.set { copy(map = GalaxyMap(galaxy)) }
-                        showAll()
+                        GalaxyMap(galaxy)
                     }
                 }
             }
@@ -90,24 +101,26 @@ class Earth(
             is CityMapRoute -> {
                 when (val slug = route.slug) {
                     null -> {
-                        val markers = api.readTopCities().toDataOr(toaster) { return }.let {
+                        val markers = api.readTopCities().toDataOr(toaster) { return null }.let {
                             markerService.createMarkers(it)
                         }
                         markerMap.setPoints(markers)
-                        state.set { copy(map = CityMap(null))}
-                        showAll()
+                        CityMap(null)
                     }
                     else -> {
-                        val city = api.readCity(slug).toDataOr(toaster) { return }
+                        val city = api.readCity(slug).toDataOr(toaster) { return null }
 
-                        val markers = api.readCityPosts(slug).toDataOr(toaster) { return }.let {
+                        val markers = api.readCityPosts(slug).toDataOr(toaster) { return null }.let {
                             markerService.createMarkers(it)
                         }
                         markerMap.setPoints(markers)
-                        state.set { copy(map = CityMap(city)) }
-                        showAll()
+                        CityMap(city)
                     }
                 }
+            }
+
+            is ResultMapRoute -> {
+                ResultMap(route.title)
             }
         }
     }
@@ -116,7 +129,7 @@ class Earth(
 }
 
 data class EarthMapState(
-    val map: EarthMap,
+    val map: EarthMap?,
 )
 
 // val maps: List<EarthMap> = emptyList(),

@@ -85,7 +85,9 @@ enum class Screen(
     CityList(StaticParse { CityListRoute }, "cities"),
 
     // media
-    Media(SlugParse { MediaRoute(it) }, "m", true);
+    Media(SlugParse { MediaRoute(it) }, "m", true),
+
+    Error(StaticParse { ErrorRoute });
 
     override val pathRoot = pathRoot ?: name.pascalToKebabCase()
     override val pathBase = "/${this.pathRoot}"
@@ -123,6 +125,11 @@ interface StringIdRoute: StreetlightRoute {
 object HomeRoute: StreetlightRoute {
     override val screen get() = Screen.Home
     override val title get() = "Home"
+}
+
+object ErrorRoute: StreetlightRoute {
+    override val screen get() = Screen.Error
+    override val title get() = "Alas"
 }
 
 object SandboxRoute: StreetlightRoute {

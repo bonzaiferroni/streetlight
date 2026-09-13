@@ -19,12 +19,9 @@ class GeoCamera(
     val stateFlow = state.flow
     val stateNow get() = state.now
 
-    private val _panFlow = MutableSharedFlow<PanPoint>(1)
-    internal val panFlow: SharedFlow<PanPoint> = _panFlow
-    private val _panBoundsFlow = MutableSharedFlow<GeoBounds>(1)
-    internal val panBoundsFlow: SharedFlow<GeoBounds> = _panBoundsFlow
-    private val _movementFlow = MutableSharedFlow<MarkerMovement>(1)
-    internal val movementFlow: Flow<MarkerMovement> = _movementFlow
+    internal val panFlow: SharedFlow<PanPoint> field = MutableSharedFlow<PanPoint>(1)
+    internal val panBoundsFlow: SharedFlow<GeoBounds> field = MutableSharedFlow<GeoBounds>(1)
+    internal val movementFlow: Flow<MarkerMovement> field = MutableSharedFlow<MarkerMovement>(1)
 
     // val viewedStateFlow = stateFlow.filter { it.isViewed }
     // val isMovingFlow = viewedStateFlow.dedup { it.isMoving }
@@ -53,14 +50,14 @@ class GeoCamera(
 
     fun panMap(bounds: GeoBounds) {
         scope.launch {
-            _panBoundsFlow.emit(bounds)
+            panBoundsFlow.emit(bounds)
         }
     }
 
     fun panMap(pan: PanPoint) {
         if (pan.point.isTouching(stateNow.center) && (pan.zoom == null || pan.zoom == stateNow.zoom)) return
         scope.launch {
-            _panFlow.emit(pan)
+            panFlow.emit(pan)
         }
     }
 

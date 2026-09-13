@@ -1,17 +1,11 @@
 package streetlight.web.ui
 
-import kampfire.model.toDataOrNull
 import koala.css.*
 import koala.css.Padding1
 import koala.dom.*
 import koala.html.filigree
 import koala.html.heading3
-import streetlight.model.ui.CityMap
-import streetlight.model.ui.CityMapRoute
-import streetlight.model.ui.EarthRoute
-import streetlight.model.ui.GalaxyMapRoute
 import streetlight.web.model.Earth
-import streetlight.model.ui.GalaxyMap
 import streetlight.web.pages.AppBody
 import web.dom.document
 
@@ -23,48 +17,29 @@ fun ViewScope.viewEarth(model: Earth) {
                 earthUnboundedOverlay(model, cameraController)
                 earthHeader(model)
                 earthMenu(model)
-                // earthList(model)
                 earthFocus(model)
-            }.flowModifier(model.isFocusedField, EarthStyle.IsFocused, contentScope)
+            }.flowModifier(model.isFocusedState, EarthStyle.IsFocused, contentScope)
         }
-    }.flowModifier(model.isMovingField, EarthStyle.IsMoving, contentScope)
+    }.flowModifier(model.isMovingState, EarthStyle.IsMoving, contentScope)
 }
 
 fun ViewScope.viewEarthRoute() {
-    var isVisible = false
     val element = document.getElementById(AppBody.FullScreen)
+    element.modify(Reveal)
 
-    launchEffect(ViewScope::viewEarthRoute) {
-        portal.routeFlow.collect { route ->
-            when (route) {
-                is EarthRoute -> {
-                    if (!isVisible) {
-                        val map = when (route) {
-                            is GalaxyMapRoute -> route.slug?.let { slug ->
-                                api.readGalaxy(slug).toDataOrNull(toaster)?.let { GalaxyMap(it) }
-                            } ?: GalaxyMap(null)
-                            is CityMapRoute -> route.slug?.let { slug ->
-                                api.readCity(slug).toDataOrNull(toaster)?.let { CityMap(it) }
-                            } ?: CityMap(null)
-                        }
-                        this@viewEarthRoute.mountChildView("earth", element) {
-                            val model = app.getEarthMap(contentScope, map)
-                            viewEarth(model)
-                        }
-                        element.modify(Reveal)
-                        isVisible = true
-                    }
-                }
-            }
-        }
+    this@viewEarthRoute.mountChildView("earth", element) {
+        val model = app.getEarthMap(contentScope, null)
+        viewEarth(model)
     }
+
     onDispose {
         element.unmodify(Reveal)
     }
 }
 
 fun ViewScope.earthHeader(model: Earth) {
-    flowBlock(model.mapField, modify(EarthStyle.Header, EarthStyle.MoveDimmer, Magic)) { map ->
+    flowBlock(model.mapState, modify(EarthStyle.Header, EarthStyle.MoveDimmer, Magic)) { map ->
+        if (map == null) return@flowBlock
         column(modify(AlignItemsCenter)) {
             filigree(modify(AlignSelfStretch, EarthStyle.MapTitle)) {
                 heading3(map.title)
@@ -73,56 +48,3 @@ fun ViewScope.earthHeader(model: Earth) {
         }
     }
 }
-
-
-
-// fun TagScope.markerItem(
-//    thumb: Url?,
-//    label: String,
-//    sublabel: String?,
-//    onClick: () -> Unit
-//) {
-//    row(modify(Height8, BorderRadius2, OverflowClip, Gap0, WidthFitContent, PointerEventsAuto)) {
-//        image(thumb, modify(Aspect1))
-//        column(modify(EarthStyle.ListDetail, PaperGradientBg, Padding1, Gap0)) {
-//            heading3(label, modify(Bold, LineHeight115, SingleLine))
-//            sublabel?.let {
-//                textBlock(sublabel, modify(SmallText))
-//            }
-//        }
-//    }.onClick(onClick)
-//}
-
-//fun AppScope.earthList(model: EarthMap) {
-//    val reversedItems = model.boundedMarkersFlow.map { it.reversed() } // reverse shows new items on top
-//    box(modify(Earth.List, Earth.MoveDimmer)) {
-//        itemsBlock(
-//            flow = reversedItems,
-//            mod = modify(Magic, SlideLeft),
-//        ) { marker ->
-//            when (marker) {
-//                is GalaxyMarker -> {
-//                    val galaxy = marker.galaxy
-//                    // if (galaxy.eventCount + galaxy.locationCount == 0) return@itemsBlock
-//                    markerItem(galaxy.images.thumb, galaxy.name, buildString {
-//                        if (galaxy.eventCount > 0) append("${galaxy.eventCount} events")
-//                        if (galaxy.locationCount > 0) {
-//                            if (isNotEmpty()) append(" • ")
-//                            append("${galaxy.locationCount} locations")
-//                        }
-//                    }) {
-//                        portal.go(EarthRoute(marker.galaxy.slug))
-//                    }
-//                }
-//                is EventMarker -> {
-//                    markerItem(marker.post.images.thumb, marker.post.label, marker.post.sublabel) {
-//                        model.setFocus(marker)
-//                    }
-//                }
-//                is LocationMarker -> {
-//                    markerItem(marker.location.images.thumb, marker.location.label, marker.location.sublabel) { }
-//                }
-//            }
-//        }
-//    }
-//}

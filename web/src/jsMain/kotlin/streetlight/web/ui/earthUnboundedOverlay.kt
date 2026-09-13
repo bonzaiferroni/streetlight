@@ -80,7 +80,7 @@ fun ViewScope.earthUnboundedOverlay(model: Earth, mapContext: GeoCameraControlle
     launchEffect(ViewScope::earthUnboundedOverlay) {
         launch {
             combine(
-                model.unboundedMarkersField.flow,
+                model.unboundedMarkersState.flow,
                 offsetFlow,
                 geoMap.movingBoundsField.flow,
             ) { markers, offset, _ -> markers to offset }

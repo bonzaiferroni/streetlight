@@ -22,7 +22,8 @@ import streetlight.model.ui.HomeRoute
 import streetlight.web.model.Earth
 
 fun ViewScope.earthMenu(model: Earth) {
-    flowBlock(model.mapField, modify(Magic, EarthStyle.Window, EarthStyle.MoveDimmer)) { map ->
+    flowBlock(model.mapState, modify(Magic, EarthStyle.Window, EarthStyle.MoveDimmer)) { map ->
+        if (map == null) return@flowBlock
         earthRouteMenu(model, map)
     }
 }
@@ -88,5 +89,6 @@ fun ViewScope.earthRouteMenu(model: Earth, map: EarthMap) {
                 }
             }
         }
+        else -> { }
     }
 }

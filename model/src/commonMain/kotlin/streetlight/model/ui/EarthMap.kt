@@ -16,8 +16,12 @@ data class CityMap(val city: City?): EarthMap {
     override val title get() = city?.name ?: "Cities"
     override val layer get() = EarthLayer.City
 }
+data class ResultMap(override val title: String): EarthMap {
+    override val layer get() = EarthLayer.Result
+}
 
 enum class EarthLayer {
+    Result,
     Galaxy,
     City,
 }

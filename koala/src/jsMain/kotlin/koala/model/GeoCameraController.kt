@@ -1,5 +1,6 @@
 package koala.model
 
+import koala.dom.getPath
 import koala.utils.launch
 import koala.dom.modify
 import koala.dom.onView
@@ -8,7 +9,10 @@ import koala.external.CenterZoomBearing
 import koala.external.maplibregl
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
+import web.animations.requestAnimationFrame
 import web.html.HTMLElement
+import web.timers.setTimeout
+import kotlin.time.Duration.Companion.milliseconds
 
 class GeoCameraController(
     val jsMap: maplibregl.Map,
@@ -24,7 +28,7 @@ class GeoCameraController(
 
         scope.launch(GeoCameraController::class) {
             while (!jsMap.loaded()) {
-                delay(10)
+                delay(10.milliseconds)
             }
 
             launch("collect pan") {
@@ -44,9 +48,19 @@ class GeoCameraController(
                 }
             }
 
+            var baseElement: HTMLElement? = null
             launch("collect pan bounds") {
-                camera.panBoundsFlow.collect {
-                    jsMap.fitBounds(it.toLngLatBounds())
+                camera.panBoundsFlow.collect { bounds ->
+                    // td: find better solution (adds delay if map window was moved)
+                    val base = windowElement.parentElement?.parentElement
+                    if (base == baseElement) {
+                        jsMap.fitBounds(bounds.toLngLatBounds())
+                        return@collect
+                    }
+                    setTimeout({
+                        baseElement = base
+                        jsMap.fitBounds(bounds.toLngLatBounds())
+                    }, 100)
                 }
             }
 

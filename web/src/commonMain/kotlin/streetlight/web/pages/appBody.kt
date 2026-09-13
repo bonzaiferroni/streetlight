@@ -13,7 +13,7 @@ import streetlight.model.data.PageTheme
 fun HTML.appBody(
     screen: AppScreen,
     theme: PageTheme? = null,
-    block: DIV.() -> Unit = { }
+    shellBlock: (DIV.() -> Unit)? = null
 ) {
     body {
         theme?.let {
@@ -27,7 +27,9 @@ fun HTML.appBody(
                 }
                 box(AppBody.ContentPanel) {
                     div(KoalaBody.PortalMount)
-                    div(KoalaBody.ShellMount, block = block)
+                    shellBlock?.let {
+                        div(KoalaBody.ShellMount, block = it)
+                    }
                 }
                 div(AppBody.RightPanel) {
                     div(StarHelm.StarPanelHelm)

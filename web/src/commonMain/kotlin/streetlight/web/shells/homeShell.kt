@@ -14,6 +14,8 @@ import streetlight.web.layouts.feedSection
 import streetlight.web.layouts.smallGalaxyCard
 import streetlight.web.pages.appFooter
 import koala.html.routeMenu
+import streetlight.model.ui.ResultMap
+import streetlight.model.ui.ResultMapRoute
 import streetlight.web.pages.appHeader
 
 fun FlowContent.homeShell(content: HomeContent) {
@@ -36,7 +38,7 @@ fun FlowContent.homeShell(content: HomeContent) {
             }
         }
 
-        routeMenu("Streetlight", HomeRoute, listOf(HomeRoute, GalaxyMapRoute(null)), modify(PositionSticky))
+        routeMenu("Streetlight", HomeRoute, listOf(HomeRoute, ResultMapRoute("Home")), modify(PositionSticky))
     }
 
     dataIsland(HomeShell.IslandId, content)

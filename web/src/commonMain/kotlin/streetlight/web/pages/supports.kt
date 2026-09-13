@@ -7,13 +7,13 @@ import kotlinx.html.script
 
 fun HEAD.supportGeoMap() {
     link(
-        href = "https://cdn.jsdelivr.net/npm/maplibre-gl@5.12.0/dist/maplibre-gl.css",
+        href = "https://cdn.jsdelivr.net/npm/maplibre-gl@5.24.0/dist/maplibre-gl.css",
         rel = "stylesheet",
     ) {
         media = "print"
         onLoad = "this.media='all'"
     }
-    script(src = "https://cdn.jsdelivr.net/npm/maplibre-gl@5.12.0/dist/maplibre-gl.js") {
+    script(src = "https://cdn.jsdelivr.net/npm/maplibre-gl@5.24.0/dist/maplibre-gl.js") {
         defer = true
     }
 }
