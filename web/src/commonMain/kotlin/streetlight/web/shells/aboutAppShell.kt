@@ -13,7 +13,7 @@ import koala.html.lottie
 import streetlight.web.pages.appFooter
 
 fun FlowContent.aboutAppShell() {
-    column(AboutKey.id, modify(AlignItemsCenter)) {
+    column(modify(AlignItemsCenter)) {
         heading1("About Streetlight")
         column(modify(MediaMdRow, AlignItemsCenter)) {
             lottie(LottieFile.cupShuffle, modify(Flex1, MaxWidth50P))
@@ -75,10 +75,6 @@ fun FlowContent.aboutAppShell() {
         }
         appFooter("web/src/commonMain/kotlin/streetlight/web/shells/aboutAppShell.kt")
     }
-}
-
-object AboutKey {
-    val id = Id("about-app-shell")
 }
 
 fun FlowContent.githubLink(

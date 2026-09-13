@@ -10,6 +10,7 @@ import koala.dom.setAttribute
 import koala.html.Attribute
 import streetlight.model.data.Galaxy
 import streetlight.model.data.LightEdit
+import streetlight.web.model.DataCache
 import streetlight.web.ui.StarToggle
 import streetlight.web.model.Fleet
 import streetlight.web.ui.api
@@ -39,5 +40,5 @@ fun ViewScope.toggleAny(element: HTMLElement) {
 
 fun ViewScope.toggleGalaxy(element: HTMLElement) {
     toggleAny(element)
-    app.get<Fleet<Galaxy>>().nullFleet()
+    app.get<DataCache>().galaxyFleet.clear()
 }

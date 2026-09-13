@@ -19,10 +19,11 @@ import streetlight.web.io.ApiClient
 import kotlin.time.Clock
 import kotlin.time.Instant
 
-class SessionGate(
+class SessionClient(
     private val scope: CoroutineScope,
     private val api: ApiClient,
     private val inflator: RouteInflator,
+    private val dataCache: DataCache,
     private val portal: Portal,
 ) {
     private val state = storeOf(StarSessionState())
@@ -70,6 +71,7 @@ class SessionGate(
         scope.launch(::signOut) {
             api.logout()
             inflator.clear()
+            dataCache.clear()
             portal.go(HomeRoute)
             state.set { copy(star = null, signedOutAt = Clock.System.now()) }
         }

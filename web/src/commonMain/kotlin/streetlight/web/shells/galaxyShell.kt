@@ -15,7 +15,7 @@ import streetlight.web.ui.BodyStyle
 
 fun FlowContent.galaxyShell(content: GalaxyContent) {
     val galaxy = content.galaxy
-    column(GalaxyShell.id, BodyStyle.ShellColumn) {
+    column(BodyStyle.ShellColumn) {
         appHeader()
         section(BodyStyle.MainColumn) {
             renderLayout(content)
@@ -33,7 +33,6 @@ fun FlowContent.galaxyShell(content: GalaxyContent) {
 }
 
 object GalaxyShell {
-    val id = Id("galaxy-shell")
     val islandId = Id("galaxy-shell__island")
     const val SOURCE = "web/src/commonMain/kotlin/streetlight/web/shells/galaxyShell.kt"
 }

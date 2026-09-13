@@ -23,12 +23,13 @@ import koala.html.image
 import kotlinx.css.GridTemplateColumns
 import streetlight.model.data.Galaxy
 import streetlight.web.layouts.route
+import streetlight.web.model.DataCache
 import streetlight.web.model.Fleet
 import streetlight.web.shells.GalaxyMenu
 import kotlin.random.Random
 
 fun ViewScope.wireGalaxyMenu() {
-    val fleet = app.get<Fleet<Galaxy>>()
+    val fleet = app.get<DataCache>().galaxyFleet
     popoverMenu(
         popoverId = GalaxyMenu.PopoverId,
         transform = { it },

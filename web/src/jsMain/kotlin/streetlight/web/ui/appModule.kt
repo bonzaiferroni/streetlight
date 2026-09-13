@@ -42,11 +42,12 @@ val appModule = module {
     single { ApiClient(get()) }
     single { OSMClient() }
 
+    single { DataCache(get()) }
     single { Toaster(get()) } bind Messenger::class
     single { Portal(HomeRoute, Screen.entries) }
     single<ContentFetcher> { AppContentFetcher(get()) }
     single { RouteInflator(get(), get(), get(), get()) }
-    single { SessionGate(get(), get(), get(), get()) }
+    single { SessionClient(get(), get(), get(), get(), get()) }
     // single { GateAgent(get(), get(), get()) }
     single { GeoCamera(get()) }
     single { GeoMap(get(), get()) }
@@ -55,10 +56,6 @@ val appModule = module {
     single { ChatRoom(get(), get()) }
     single { OmniClient(get(), get()) }
     single { MarkerService() }
-    single {
-        val api = get<ApiClient>()
-        Fleet { api.readUserGalaxies() }
-    }
 }
 
 fun AppContainer.getUserCreator(scope: CoroutineScope) =

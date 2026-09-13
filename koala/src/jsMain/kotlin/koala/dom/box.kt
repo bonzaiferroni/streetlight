@@ -24,20 +24,3 @@ inline fun AppendScope.box(
     this.id = id.identifier
     content()
 }
-
-fun AppendScope.container(
-    modifiers: ModifierSet? = null,
-    content: DIV.() -> Unit = { },
-) = div {
-    addModifiers(modifiers)
-    content()
-}.asWeb()
-
-fun AppendScope.container(
-    id: Id,
-    modifiers: ModifierSet? = null,
-    content: DIV.() -> Unit = { },
-) = container(modifiers = modifiers) {
-    this.id = id.identifier
-    content()
-}

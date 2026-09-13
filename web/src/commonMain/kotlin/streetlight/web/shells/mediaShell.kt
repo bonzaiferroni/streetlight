@@ -47,7 +47,7 @@ import streetlight.web.pages.appHeader
 import streetlight.web.ui.BodyStyle
 
 fun FlowContent.mediaShell(media: Media) {
-    column(MediaShell.ShellId) {
+    column(BodyStyle.ShellColumn) {
         appHeader()
 
         section(BodyStyle.MainColumn) {
@@ -60,7 +60,6 @@ fun FlowContent.mediaShell(media: Media) {
 }
 
 object MediaShell {
-    val ShellId = Id("post-shell")
     val IslandId = Id("post-data")
     val TalkId = Id("post-talk")
 }

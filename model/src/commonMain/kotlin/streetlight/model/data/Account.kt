@@ -2,6 +2,7 @@ package streetlight.model.data
 
 import kampfire.api.EmailAddress
 import kampfire.model.AccountType
+import koala.model.FetcherContent
 import koala.model.RouteContent
 import kotlinx.serialization.Serializable
 

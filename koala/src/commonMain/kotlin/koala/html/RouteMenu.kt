@@ -88,12 +88,6 @@ $Base {
     }
 }
 
-${KoalaBody.ShellMount} {
-    $Base {
-        display: none;
-    }
-}
-
 $ContextMenu, $LeftTray, $RightTray {
     backdrop-filter: blur(3px);
     -webkit-backdrop-filter: blur(3px);

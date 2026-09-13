@@ -12,7 +12,7 @@ import streetlight.model.ui.HomeRoute
 import streetlight.model.ui.GalaxyListRoute
 import streetlight.model.ui.SandboxRoute
 import streetlight.model.ui.StarDashRoute
-import streetlight.web.model.SessionGate
+import streetlight.web.model.SessionClient
 import streetlight.model.ui.toRoute
 import streetlight.web.shells.starRouteMenu
 
@@ -82,7 +82,7 @@ private fun ViewScope.activityContent(star: Star) {
 
 private fun ViewScope.sandboxContent(star: Star) {
     // val model = UserHub(renderScope, app.client.api)
-    val gate = app.get<SessionGate>()
+    val gate = app.get<SessionClient>()
 
     column {
         row {

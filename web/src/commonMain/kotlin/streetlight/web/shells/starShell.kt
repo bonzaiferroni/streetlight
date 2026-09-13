@@ -20,7 +20,7 @@ import streetlight.web.ui.BodyStyle
 
 fun FlowContent.starShell(content: StarContent) {
     val star = content.star
-    column(StarShell.id, BodyStyle.ShellColumn) {
+    column(BodyStyle.ShellColumn) {
         appHeader()
 
         section(BodyStyle.MainColumn) {
@@ -36,7 +36,6 @@ fun FlowContent.starShell(content: StarContent) {
 }
 
 object StarShell {
-    val id = Id("star-shell")
     val islandId = Id("star-shell-island")
     const val SourcePath = "web/src/commonMain/kotlin/streetlight/web/shells/starShell.kt"
 }

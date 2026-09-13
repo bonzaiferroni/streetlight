@@ -8,7 +8,7 @@ import streetlight.model.ui.Screen
 
 fun FlowContent.helmBar() {
     val cardMod = modify(HelmBar.CardClass, BlurBackdrop, PointerEventsAuto, BorderRadius50P, ZenBg, Outline)
-    siteMenuPopover()
+    siteHelmPopover()
     starHelmPopover()
     row(HelmBar.StickyBarId, modify(Padding1)) {
         div(HelmBar.SiteHelmButton, cardMod) {

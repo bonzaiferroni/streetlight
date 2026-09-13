@@ -9,7 +9,6 @@ import koala.html.button
 import koala.html.heading3
 import koala.html.icon
 import koala.html.image
-import koala.interop.KoalaFun
 import kampfire.model.setTrue
 import koala.html.closePopoverOnClick
 import koala.interop.toggleRootModifierWithTransition
@@ -19,7 +18,7 @@ import streetlight.model.ui.InboxRoute
 import streetlight.model.ui.StarDashRoute
 import streetlight.model.ui.StarRoute
 import streetlight.model.ui.UpdateAccountRoute
-import streetlight.web.model.SessionGate
+import streetlight.web.model.SessionClient
 import streetlight.web.pages.AppOverlay
 import streetlight.web.pages.HelmBar
 import streetlight.web.pages.StarHelm
@@ -48,7 +47,7 @@ fun ViewScope.wireStarHelm(element: HTMLElement) {
 private val RowMod = modify(AlignItemsCenter, PaddingLeft3, JustifyContentEnd)
 
 private fun ViewScope.starPanel(star: Star) {
-    val session = app.get<SessionGate>()
+    val session = app.get<SessionClient>()
 
     column(modify(AlignItemsEnd)) {
         row(RowMod) {

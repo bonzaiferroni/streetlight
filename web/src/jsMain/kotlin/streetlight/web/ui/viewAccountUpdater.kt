@@ -5,6 +5,7 @@ import koala.LottieFile
 import koala.css.AlignSelfStart
 import koala.css.Gap1
 import koala.css.Italic
+import koala.css.Magic
 import koala.css.OpacityHigh
 import koala.css.PrimaryCardBg
 import koala.css.TextAlignCenter
@@ -14,6 +15,7 @@ import koala.dom.RouteScope
 import koala.dom.ViewScope
 import koala.dom.card
 import koala.dom.column
+import koala.dom.flowBlock
 import koala.dom.navigation
 import koala.dom.routeBlock
 import koala.dom.textBlock
@@ -49,11 +51,9 @@ fun ViewScope.viewAccountUpdater(star: Star, model: AccountEditor) {
 }
 
 fun RouteScope.viewUpdateAccountRoute() {
-    routeBlock<UpdateAccountRoute, Account> { account ->
-        starGate { star ->
-            val model = app.getAccountEditor(account, contentScope)
-            viewAccountUpdater(star, model)
-        }
+    starRouteBlock<UpdateAccountRoute, Account>(modify(Magic)) { star, account ->
+        val model = app.getAccountEditor(account, contentScope)
+        viewAccountUpdater(star, model)
     }
 }
 

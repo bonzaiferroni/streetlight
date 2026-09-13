@@ -15,7 +15,7 @@ import streetlight.web.ui.featureHeader
 import streetlight.web.ui.starToggle
 
 fun FlowContent.eventShell(event: EventLocation) {
-    column(EventShell.id, modify(Gap0)) {
+    column(BodyStyle.ShellColumn) {
         appHeader()
 
         column(modify(BodyStyle.MainColumn)) {
@@ -80,7 +80,6 @@ fun FlowContent.eventShell(event: EventLocation) {
 }
 
 object EventShell {
-    val id = Id("event-shell")
     val island = Id("event-shell-island")
     const val SourcePath = "web/src/commonMain/kotlin/streetlight/web/shells/eventShell.kt"
 }

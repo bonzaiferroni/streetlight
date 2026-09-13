@@ -13,7 +13,7 @@ import streetlight.web.shells.MediaShell
 import streetlight.web.shells.mediaShell
 
 fun ViewScope.viewMediaConfig(media: Media) {
-    val root = shellBox(MediaShell.ShellId) {
+    shellBox {
         mediaShell(media)
         applyTheme(media.design?.theme)
     }

@@ -9,7 +9,7 @@ import streetlight.web.shells.SiteDocKey
 import streetlight.web.shells.siteDocShell
 
 fun ViewScope.viewSiteDoc(content: DocContent) {
-    shellBox(SiteDocKey.Id) {
+    shellBox {
         siteDocShell(content)
     }
 }

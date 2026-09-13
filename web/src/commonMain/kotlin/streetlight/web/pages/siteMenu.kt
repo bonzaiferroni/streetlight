@@ -20,8 +20,8 @@ import streetlight.model.ui.SiteMonitorRoute
 import streetlight.web.doc.SiteDoc
 import streetlight.web.layouts.route
 
-fun FlowContent.siteMenuPopover() {
-    popover(SiteHelm.popoverId, modify(SiteHelm.PopoverClass, Magic), SiteHelm.PositionAnchor) {
+fun FlowContent.siteHelmPopover() {
+    popover(SiteHelm.popoverId, modify(SiteHelm.PopoverClass), SiteHelm.PositionAnchor) {
         card(modify(SiteHelm.Container, HeavyCardBg, BlurBackdrop, PointerEventsAuto)) {
             column(modify(PaddingRight1)) {
                 row(modify(AlignItemsCenter)) {
@@ -81,7 +81,7 @@ private fun FlowContent.item(label: String, route: AppRoute, svg: Svg) {
     navigation(route) {
         setAttribute(KoalaBody.ScreenId.to(route.screen.screenId))
         closePopoverOnClick(SiteHelm.popoverId)
-        
+
         row(SiteHelm.rowMod) {
             icon(svg, HelmBar.IconMod)
             textBlock(label)

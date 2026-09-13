@@ -11,7 +11,7 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import org.koin.dsl.koinApplication
 import streetlight.web.io.OmniClient
 import streetlight.web.model.TransitMap
-import streetlight.web.model.SessionGate
+import streetlight.web.model.SessionClient
 import koala.utils.launch
 import streetlight.web.interop.appGlobalFunctions
 import streetlight.web.pages.AppOverlay
@@ -29,7 +29,7 @@ fun viewApp() {
 
     with (app) {
         val scope: CoroutineScope = get()
-        val gate: SessionGate = get()
+        val gate: SessionClient = get()
         val omni: OmniClient = get()
         val transit: TransitMap = get()
         val portal: Portal = get()

@@ -14,7 +14,7 @@ fun FlowContent.locationShell(
 ) {
     val location = content.location
     val routeNow = LocationRoute(location.slug)
-    column(LocationShell.shellId, BodyStyle.MainColumn) {
+    column(BodyStyle.MainColumn) {
         setAttribute(Attribute.RoutePath, routeNow.toRelativePath())
         renderLayout(content)
 
@@ -28,8 +28,5 @@ fun FlowContent.locationShell(
 }
 
 object LocationShell {
-    val shellId = Id("location-shell")
-    val tabsId = Id("location-tabs")
-    val adminCard = Id("location-admin-card")
     val islandId = Id("location-island")
 }

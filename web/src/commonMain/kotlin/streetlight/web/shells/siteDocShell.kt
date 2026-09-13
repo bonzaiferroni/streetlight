@@ -109,7 +109,6 @@ fun FlowContent.siteDocContent(node: DocNode) {
 }
 
 object SiteDocKey {
-    val Id = Id("site-doc-viewer")
     val ContentId = Id("site-doc-content")
     val TableId = Id("site-doc-table")
 }

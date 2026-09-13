@@ -3,13 +3,11 @@ package streetlight.web.model
 import kampfire.model.Messenger
 import kampfire.model.Outcome
 import kampfire.model.toDataOr
-import streetlight.model.data.Galaxy
-import streetlight.web.io.ApiClient
 
 class Fleet<T>(private val provisioner: suspend () -> Outcome<List<T>>) {
     private var fleet: List<T>? = null
 
-    fun nullFleet() {
+    fun clear() {
         fleet = null
     }
 

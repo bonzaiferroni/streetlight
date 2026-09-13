@@ -27,7 +27,7 @@ class StarCache<Id, Item>(
     private val readRemoteItems: suspend (List<Id>) -> Outcome<List<Item>>,
     private val onError: Messenger,
     private val scope: CoroutineScope,
-    private val gate: SessionGate,
+    private val gate: SessionClient,
 ) {
     private val state = storeOf(LightCacheState<Id, Item>())
     val stateNow get() = state.now

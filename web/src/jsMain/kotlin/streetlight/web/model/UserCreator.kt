@@ -18,7 +18,7 @@ import streetlight.web.io.ApiClient
 
 class UserCreator(
     private val scope: CoroutineScope,
-    private val gate: SessionGate,
+    private val gate: SessionClient,
     private val cred: CredentialStore,
     private val api: ApiClient,
     private val toaster: Toaster,

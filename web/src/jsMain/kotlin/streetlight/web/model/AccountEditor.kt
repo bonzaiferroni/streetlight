@@ -29,7 +29,7 @@ class AccountEditor(
     private val initialAccount: Account,
     private val scope: CoroutineScope,
     private val api: ApiClient,
-    private val session: SessionGate,
+    private val session: SessionClient,
     private val toaster: Toaster,
 ) {
     private val state = storeOf(AccountEditorState(initialAccount))

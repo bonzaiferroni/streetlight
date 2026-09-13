@@ -3,7 +3,6 @@ package koala.dom
 import initElement
 import koala.css.*
 import koala.html.Id
-import koala.html.ShellBoxKey
 import kotlinx.html.DIV
 import web.cssom.ms
 import web.dom.document
@@ -12,20 +11,17 @@ import web.html.HTMLElement
 import web.timers.setTimeout
 
 fun ViewScope.shellBox(
-    id: Id,
-    mod: ModifierSet? = null,
     block: DIV.() -> Unit
 ): HTMLElement {
-    val shell = document.getElementOrNullById(id)
+    val shell = document.getElementOrNullById(KoalaBody.ShellMount)
     return if (shell != null) {
         onDispose {
             shell.fadeAndRemove()
         }
         shell
     } else {
-        console.log("generating shell: $id")
-        val element = container {
-            addModifiers(ShellBoxKey.Class, mod)
+        console.log("generating shell")
+        val element = box {
             block()
         }
 
@@ -35,11 +31,9 @@ fun ViewScope.shellBox(
 }
 
 fun ViewScope.shellBoxWithMap(
-    id: Id,
-    mod: ModifierSet? = null,
     block: DIV.() -> Unit
 ): HTMLElement {
-    val element = shellBox(id, mod, block)
+    val element = shellBox(block)
     element.onView {
         wireGeoMap(element)
     }

@@ -24,11 +24,11 @@ import kampfire.model.MutableTap
 import kampfire.model.storeOf
 import kotlinx.html.InputType
 import streetlight.web.model.CredentialStore
-import streetlight.web.model.SessionGate
+import streetlight.web.model.SessionClient
 import streetlight.web.model.UserCreator
 
 fun ViewScope.signInForm(model: UserCreator) {
-    val gate = app.get<SessionGate>()
+    val gate = app.get<SessionClient>()
     val cred = app.get<CredentialStore>()
 
     formColumn {
@@ -47,7 +47,7 @@ fun ViewScope.signInForm(model: UserCreator) {
     }
 }
 
-fun ViewScope.recoverOrSignInForm(cred: CredentialStore, gate: SessionGate) {
+fun ViewScope.recoverOrSignInForm(cred: CredentialStore, gate: SessionClient) {
     val isRecoveringField = storeOf(false)
     flowBlock(isRecoveringField) { isRecovering ->
         when (isRecovering) {
@@ -73,7 +73,7 @@ fun ViewScope.recoverOrSignInForm(cred: CredentialStore, gate: SessionGate) {
     }
 }
 
-fun ViewScope.guestSignInForm(username: Username, cred: CredentialStore, gate: SessionGate) {
+fun ViewScope.guestSignInForm(username: Username, cred: CredentialStore, gate: SessionClient) {
     val messages = MessageStore()
     formColumn {
         formSection("guest sign in") {
@@ -87,7 +87,7 @@ fun ViewScope.guestSignInForm(username: Username, cred: CredentialStore, gate: S
     }
 }
 
-fun ViewScope.registeredSignInForm(isRecoveringField: MutableTap<Boolean>, cred: CredentialStore, gate: SessionGate) {
+fun ViewScope.registeredSignInForm(isRecoveringField: MutableTap<Boolean>, cred: CredentialStore, gate: SessionClient) {
     formColumn {
         val messages = MessageStore()
         formSection("sign in") {

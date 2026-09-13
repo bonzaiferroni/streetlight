@@ -10,7 +10,7 @@ import streetlight.web.shells.galaxyShell
 fun ViewScope.viewGalaxy(content: GalaxyContent) {
     val markerService = app.get<MarkerService>()
 
-    val root = shellBox(GalaxyShell.id) {
+    shellBox {
         galaxyShell(content)
         applyTheme(content.design?.theme)
     }

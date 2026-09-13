@@ -17,12 +17,11 @@ import koala.html.routeMenu
 import streetlight.web.pages.appHeader
 
 fun FlowContent.homeShell(content: HomeContent) {
-    column(HomeShell.ContainerId, modify(MarginTop1)) {
+    column(modify(MarginTop1)) {
         appHeader(modify(Height10))
 
         geoMapMount(null, modify(BorderRadius2, Height48, MoonShadow, BorderSolid2Px))
         box {
-            // btn("View Map", EarthRoute(null), EarthStyle.ViewMapButtonMod)
             column(modify(Gap8)) {
                 row(modify(JustifyContentSpaceBetween)) {
                     galaxyMenu()
@@ -32,32 +31,6 @@ fun FlowContent.homeShell(content: HomeContent) {
                 galaxiesSection(content.galaxies)
 
                 feedSection(content.feed, true)
-                // layoutEventPosts("Upcoming Events", content.posts)
-
-//                section {
-//                    filigree {
-//                        heading2("Lit Events", SectionHeadingMod)
-//                    }
-//
-//                    card(modify(Height32, MoonShadow, Padding0)) {
-//                        swapBlock(HomeShell.LightSwapId, modify(Magic)) {
-//                            column(modify(JustifyContentCenter, Dim, Gap0)) {
-//                                setId(HomeShell.LightInfoId)
-//                                setReveal(true)
-//
-//                                row(modify(JustifyContentCenter)) {
-//                                    textBlock("Events that you")
-//                                    icon(SvgFile.Light)
-//                                    textBlock("will appear here.")
-//                                }
-//                                textBlock("This is saved on your device, unless you sign in.", modify(TextAlignCenter))
-//                            }
-//                            box(HomeShell.LitEventsId) {
-//                                setReveal(false)
-//                            }
-//                        }
-//                    }
-//                }
 
                 appFooter(HomeShell.SOURCE)
             }
@@ -110,10 +83,6 @@ fun FlowContent.galaxiesSection(galaxies: List<Galaxy>) {
 }
 
 object HomeShell {
-    val ContainerId = Id("home-box")
-    val LightSwapId = Id("light-swap")
-    val LightInfoId = Id("light-info")
-    val LitEventsId = Id("lit-events")
     val IslandId = Id("home-island")
     const val SOURCE = "web/src/commonMain/kotlin/streetlight/web/shells/homeShell.kt"
 }
