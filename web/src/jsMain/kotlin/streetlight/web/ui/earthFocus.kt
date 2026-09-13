@@ -33,7 +33,7 @@ import streetlight.web.model.LocationMarker
 fun ViewScope.earthFocus(model: Earth) {
     flowBlock(model.focusField, modify(EarthStyle.Focus, Magic)) { focus ->
         when (focus) {
-            is ClusterFocus -> tabs(
+            is ClusterFocus -> lazyTabs(
                 mod = modify(PointerEventsAuto, Height100Pct),
                 viewportMod = modify(Flex1, OverflowYAuto, BorderRadius2)
             ) {

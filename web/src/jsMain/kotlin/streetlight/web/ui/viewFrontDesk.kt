@@ -8,7 +8,7 @@ fun ViewScope.viewFrontDesk(model: FrontDesk) {
     column(BodyStyle.MainColumn) {
         featureHeader("Help & Feedback", "The Front Desk", SiteImage.FrontDesk)
 
-        tabs {
+        lazyTabs {
             tab("Help") {
                 textBlock("yer help")
             }

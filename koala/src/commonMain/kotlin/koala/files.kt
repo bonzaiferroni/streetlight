@@ -2,7 +2,6 @@ package koala
 
 object JsFile : FileSet<Js>() {
     val Utils = addJs("utils.js")
-    val Tabs = addJs("tabs.js")
     val Koala = addJs("koala/koala.js")
 }
 
@@ -18,7 +17,6 @@ object CssFile : FileSet<Css>() {
     val Reset = add("reset.css")
 
     // val Styles = add("styles.css")
-    val Tabs = add("tabs.css")
     val GeoMap = add("geo-map.css")
     // val Sandbox = add("sandbox.css")
 }

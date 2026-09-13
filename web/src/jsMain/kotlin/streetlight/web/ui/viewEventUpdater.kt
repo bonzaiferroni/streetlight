@@ -4,8 +4,8 @@ import koala.dom.MenuAction
 import koala.dom.RouteScope
 import koala.dom.ViewScope
 import koala.dom.column
+import koala.dom.lazyTabs
 import koala.dom.routeBlock
-import koala.dom.tabs
 import streetlight.model.data.EventEdit
 import streetlight.model.data.EventUpdaterContent
 import streetlight.model.data.Star
@@ -18,7 +18,7 @@ fun ViewScope.viewEventUpdater(content: EventUpdaterContent, star: Star) {
     val model = edit.let { app.getEventEditor(it, contentScope) }
 
     column(BodyStyle.MainColumn) {
-        tabs {
+        lazyTabs {
             tab("edit") {
                 column {
                     updaterGreeting(star, model.stateNow.edit.title ?: "this event")

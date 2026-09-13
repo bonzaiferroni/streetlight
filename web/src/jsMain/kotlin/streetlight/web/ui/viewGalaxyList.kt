@@ -10,7 +10,7 @@ fun ViewScope.viewGalaxyList() {
     column(mod = BodyStyle.MainColumn) {
         featureHeader("Galaxies", "Streetlight Communities", SiteImage.HelixNebula)
 
-        tabs(Id("galaxy-list-tabs")) {
+        lazyTabs(Id("galaxy-list-tabs")) {
             tab("My Galaxies") {
                 dataBlock(api::readUserGalaxies) { galaxies ->
                     column {

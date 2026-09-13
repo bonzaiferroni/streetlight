@@ -48,7 +48,7 @@ fun ViewScope.viewLocationConfig(
             }
         }
 
-        tabs(Id("location-config-tabs")) {
+        lazyTabs(Id("location-config-tabs")) {
             tab("profile") {
                 val editor = app.getLocationEditor(locationState.now.toEdit(), contentScope)
                 column {

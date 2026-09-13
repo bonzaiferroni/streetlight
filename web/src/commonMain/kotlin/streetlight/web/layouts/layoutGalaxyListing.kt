@@ -6,7 +6,6 @@ import koala.css.modify
 import koala.html.Id
 import koala.html.column
 import koala.html.heading3
-import koala.html.tab
 import koala.html.tabs
 import kotlinx.html.FlowContent
 import streetlight.model.data.PostListing

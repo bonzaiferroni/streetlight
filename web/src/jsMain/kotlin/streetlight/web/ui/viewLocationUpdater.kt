@@ -14,7 +14,7 @@ fun ViewScope.viewLocationUpdater(content: LocationUpdaterContent, star: Star) {
     val model = edit.let { app.getLocationEditor(it, contentScope) }
 
     column(BodyStyle.MainColumn) {
-        tabs {
+        lazyTabs {
             tab("edit") {
                 column {
                     updaterGreeting(star, model.stateNow.edit.name ?: "this location")

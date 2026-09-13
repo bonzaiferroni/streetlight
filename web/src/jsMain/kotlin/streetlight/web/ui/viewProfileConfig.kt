@@ -5,8 +5,8 @@ import koala.css.TextAlignCenter
 import koala.css.modify
 import koala.dom.RouteScope
 import koala.dom.ViewScope
+import koala.dom.lazyTabs
 import koala.dom.section
-import koala.dom.tabs
 import koala.html.filigree
 import koala.html.heading2
 import streetlight.model.data.ProfileConfig
@@ -22,7 +22,7 @@ fun ViewScope.viewProfileConfig(star: Star, config: ProfileConfig) {
             heading2("Profile Config", modify(TextAlignCenter))
         }
 
-        tabs {
+        lazyTabs {
             tab("Content") {
                 starProfileForm(model)
             }

@@ -13,8 +13,8 @@ import koala.dom.card
 import koala.dom.column
 import koala.dom.defaultMagic
 import koala.dom.itemsBlock
+import koala.dom.lazyTabs
 import koala.dom.row
-import koala.dom.tabs
 import koala.dom.textBlock
 import koala.dom.textField
 import koala.html.Id
@@ -27,7 +27,7 @@ fun ViewScope.viewMusicianHub(
     val model = MusicianHub(contentScope, api)
 
     column {
-        tabs(Id("user-hub-tabs")) {
+        lazyTabs(Id("user-hub-tabs")) {
             tab("Songs") {
                 column(modify(AlignItemsCenter)) {
                     row(modify(Width64)) {

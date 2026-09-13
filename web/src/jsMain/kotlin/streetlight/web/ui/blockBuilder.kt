@@ -88,7 +88,7 @@ fun ViewScope.tabsBuilder(editor: BlockEditor) {
         }
 
         flowBlock(editor.refreshState) {
-            tabs {
+            lazyTabs {
                 editor.childIds.forEach { containerId ->
                     val container = editor.model.getContainer(containerId)
                     tab(container.name) {

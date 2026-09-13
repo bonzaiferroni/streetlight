@@ -14,7 +14,6 @@ import koala.dom.column
 import koala.dom.flowBlock
 import koala.dom.popover
 import koala.dom.row
-import koala.dom.tabs
 import koala.dom.textBlock
 import koala.dom.textField
 import koala.html.Id
@@ -27,6 +26,7 @@ import koala.model.keysField
 import kampfire.model.mutableTapOf
 import kampfire.model.storeOf
 import kampfire.model.toggle
+import koala.dom.lazyTabs
 import koala.model.mutableTapOf
 import streetlight.model.data.LayoutBlock
 import streetlight.model.data.TabContent
@@ -112,7 +112,7 @@ fun ViewScope.tabsBuilder(tabsField: MutableTap<TabsBlock>) {
             }
         }
         flowBlock(tabsField) { tabsBlock ->
-            tabs {
+            lazyTabs {
                 tabsBlock.tabs.forEachIndexed { index, tabContent ->
                     tab(tabContent.name) {
                         val blocksField = tabsField.mutableTapOf({ it.tabs[index].blocks }) {

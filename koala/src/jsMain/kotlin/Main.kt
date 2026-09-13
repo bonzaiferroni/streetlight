@@ -1,9 +1,8 @@
 import koala.core.findAndInitGeoMap
 import koala.core.queryAndInitLotties
 import koala.interop.interopUtilities
-import koala.dom.findAndInitTabs
 import koala.interop.addGlobalFunctions
-import koala.interop.findAndInitTabsProto
+import koala.interop.findAndInitTabs
 import web.dom.document
 import web.html.HTMLElement
 
@@ -19,5 +18,4 @@ fun initElement(element: HTMLElement) {
     findAndInitGeoMap(element)
     queryAndInitLotties(element)
     findAndInitTabs(element)
-    findAndInitTabsProto(element)
 }

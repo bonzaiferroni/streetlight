@@ -18,7 +18,7 @@ import streetlight.web.shells.starRouteMenu
 
 fun ViewScope.viewStarDash(star: Star) {
     column(mod = BodyStyle.MainColumn) {
-        tabs {
+        lazyTabs {
             tab("activity") {
                 activityContent(star)
             }

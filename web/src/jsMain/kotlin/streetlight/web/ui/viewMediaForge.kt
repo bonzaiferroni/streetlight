@@ -21,7 +21,7 @@ fun ViewScope.viewMediaForge(galaxy: Galaxy?) {
             heading2("Create a Post", modify(TextAlignCenter))
         }
 
-        tabs {
+        lazyTabs {
             tab("Content") {
                 mediaForm(model)
             }

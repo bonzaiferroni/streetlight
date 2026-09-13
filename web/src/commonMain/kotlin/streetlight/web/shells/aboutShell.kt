@@ -11,7 +11,6 @@ import koala.html.filigree
 import koala.html.heading1
 import koala.html.markdown
 import koala.html.section
-import koala.html.tab
 import koala.html.tabs
 import kotlinx.html.FlowContent
 import streetlight.web.pages.appFooter

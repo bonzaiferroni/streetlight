@@ -35,7 +35,7 @@ fun HTML.eventPortal(event: Event, performer: Performer?, requestItems: List<Req
                 tab("bio") {
                     textBlock("yer bio")
                 }
-                tab("requests", true) {
+                tab("requests") {
                     column(Id("request-box"), modify(AlignItemsCenter)) {
                         column(Id("request-songs")) {
                             requestItems.forEach { item ->

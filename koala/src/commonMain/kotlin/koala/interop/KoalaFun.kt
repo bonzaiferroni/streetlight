@@ -10,7 +10,6 @@ object KoalaFun {
     val toggleRootModifier = JsSignature("toggleRootModifier")
     val toggleRootModifierWithTransition = JsSignature("toggleRootModifierWithTransition")
     val findAndInitTabs = JsSignature("findAndInitTabs")
-    val initTabsProto = JsSignature("initTabsProto")
 
     val initRootModifier = jsFunctionOf("""
         function initRootModifier(mod) {

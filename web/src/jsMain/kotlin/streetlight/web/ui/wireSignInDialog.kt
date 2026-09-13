@@ -7,10 +7,9 @@ import kampfire.model.storeOf
 import koala.dom.ViewScope
 import koala.dom.dialog
 import koala.dom.dialogCard
+import koala.dom.lazyTabs
 import koala.dom.rawDialogContent
-import koala.dom.tabsProto
 import koala.html.Id
-import koala.html.tab
 import streetlight.model.data.Star
 
 fun ViewScope.wireSignInDialog() {
@@ -23,7 +22,7 @@ fun ViewScope.wireSignInDialog() {
     dialog(SignIn.isOpen) {
         val model = app.getUserCreator(contentScope)
         rawDialogContent("Sign In") {
-            tabsProto(Id("sign-in-tabs")) { // mod = modify(Width64)
+            lazyTabs(Id("sign-in-tabs")) { // mod = modify(Width64)
                 tab("guest") {
                     dialogCard {
                         guestRegistrationForm(model)

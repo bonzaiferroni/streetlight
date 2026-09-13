@@ -19,7 +19,7 @@ fun ViewScope.viewGalaxyConfig(config: GalaxyConfig) {
             textBlock("Here you can make changes to your galaxy.")
         }
 
-        tabs {
+        lazyTabs {
             tab("settings") {
                 formColumn {
                     galaxyDescriptionFormRow(model)

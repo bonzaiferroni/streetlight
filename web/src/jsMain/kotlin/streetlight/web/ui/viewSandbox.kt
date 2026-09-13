@@ -4,8 +4,6 @@ import kampfire.model.storeOf
 import koala.css.MarginTop1
 import koala.css.modify
 import koala.dom.*
-import koala.html.tab
-import koala.interop.findAndInitTabsProto
 import kotlinx.css.GridTemplateColumns
 
 fun RouteScope.viewSandbox() {
@@ -14,23 +12,26 @@ fun RouteScope.viewSandbox() {
     console.log("welcome to sandbox")
 
     val nameState = storeOf("Jimmy")
-    val indexState = storeOf(0)
+    val indexState = storeOf(1)
 
     grid(GridTemplateColumns("1fr 1fr"), modify(MarginTop1)) {
         column {
-            tabsProto(indexState = indexState) {
+            lazyTabs(indexState = indexState) {
                 tab("The Dodmand") {
                     textBlock("yer at The Dodmand.")
                     textField(nameState, "yer name")
+                    println("haul up")
                 }
                 tab("Plymouth") {
                     textBlock("yer at Plymouth")
                     flowBlock(nameState) { name ->
                         textBlock("hello $name")
                     }
+                    println("clewgarnets")
                 }
                 tab("Start") {
                     textBlock("yer at Start")
+                    println("tacks and sheets")
                 }
             }
             textBlock("select a tab")
