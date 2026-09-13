@@ -19,6 +19,7 @@ val Scale = Class("scale")
 
 val AutoMagic = Class("auto-magic")
 val FadeIn = Class("fade-in")
+val FadeOut = Class("fade-out")
 val ScaleOut = Class("scale-out")
 val ScaleIn = Class("scale-in")
 val ParticleRay = Class("particle-ray")
@@ -320,6 +321,15 @@ $FadeIn {
 
     @starting-style {
         opacity: 0;
+    }
+}
+
+$FadeOut {
+    transition: var(--transition-opacity);
+    opacity: 0;
+
+    @starting-style {
+        opacity: 1;
     }
 }
 

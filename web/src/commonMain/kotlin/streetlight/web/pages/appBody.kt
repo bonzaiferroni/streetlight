@@ -30,7 +30,7 @@ fun HTML.appBody(
                     div(KoalaBody.ShellMount, block = block)
                 }
                 div(AppBody.RightPanel) {
-                    div(StarHelm.StarPanelMenu)
+                    div(StarHelm.StarPanelHelm)
                 }
             }
         }

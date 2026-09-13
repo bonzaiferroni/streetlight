@@ -80,7 +80,8 @@ private fun FlowContent.label(label: String) {
 private fun FlowContent.item(label: String, route: AppRoute, svg: Svg) {
     navigation(route) {
         setAttribute(KoalaBody.ScreenId.to(route.screen.screenId))
-        onClick = SiteHelm.closePopover.block
+        closePopoverOnClick(SiteHelm.popoverId)
+        
         row(SiteHelm.rowMod) {
             icon(svg, HelmBar.IconMod)
             textBlock(label)

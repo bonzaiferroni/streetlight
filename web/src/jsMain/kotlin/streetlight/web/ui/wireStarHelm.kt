@@ -11,6 +11,8 @@ import koala.html.icon
 import koala.html.image
 import koala.interop.KoalaFun
 import kampfire.model.setTrue
+import koala.html.closePopoverOnClick
+import koala.interop.toggleRootModifierWithTransition
 import kotlinx.html.onClick
 import streetlight.model.data.Star
 import streetlight.model.ui.InboxRoute
@@ -24,14 +26,14 @@ import streetlight.web.pages.StarHelm
 import web.dom.document
 import web.html.HTMLElement
 
-fun ViewScope.wireStarPanel() {
-    val helmElement = document.body.querySelector(StarHelm.StarBarMenu) ?: error("star helm content not found")
-    wireStarNav(helmElement)
-    val panelElement = document.body.querySelector(StarHelm.StarPanelMenu) ?: error("star bar element not found")
-    wireStarNav(panelElement)
+fun ViewScope.wireStarHelm() {
+    val barElement = document.body.querySelector(StarHelm.StarBarHelm) ?: error("star helm content not found")
+    wireStarHelm(barElement)
+    val panelElement = document.body.querySelector(StarHelm.StarPanelHelm) ?: error("star bar element not found")
+    wireStarHelm(panelElement)
 }
 
-fun ViewScope.wireStarNav(element: HTMLElement) {
+fun ViewScope.wireStarHelm(element: HTMLElement) {
     wireBlock("wire-star-nav", element) {
         starGate(
             baseContent = {
@@ -51,11 +53,13 @@ private fun ViewScope.starPanel(star: Star) {
     column(modify(AlignItemsEnd)) {
         row(RowMod) {
             navigation(StarRoute(star.username)) {
+                closePopoverOnClick(StarHelm.PopoverId)
+
                 heading3(star.username.value)
             }
 
             button(modify(HelmBar.IconMod)) {
-                onClick = StarHelm.ClosePopover.block
+                closePopoverOnClick(StarHelm.PopoverId)
 
                 image(star.image?.thumb, modify(OpacityHigh, Size100P, BorderRadius50P))
             }
@@ -67,9 +71,10 @@ private fun ViewScope.starPanel(star: Star) {
         routeItem(InboxRoute, "Inbox", SvgFile.MailLarge)
 
         button({
-            eval(StarHelm.ClosePopover.block)
-            eval(KoalaFun.toggleRootModifierWithTransition.invokeJs(AppOverlay.RevealRightPanel))
+            toggleRootModifierWithTransition(AppOverlay.RevealRightPanel.identifier)
         }) {
+            closePopoverOnClick(StarHelm.PopoverId)
+
             row(RowMod) {
                 textBlock("Pin menu")
                 icon(SvgFile.PanelRight, HelmBar.IconMod)
@@ -77,6 +82,8 @@ private fun ViewScope.starPanel(star: Star) {
         }
 
         button(session::signOut) {
+            closePopoverOnClick(StarHelm.PopoverId)
+
             row(RowMod) {
                 textBlock("Sign out", modify(WhiteSpaceNoWrap))
                 icon(SvgFile.SignOut, HelmBar.IconMod)
@@ -87,7 +94,7 @@ private fun ViewScope.starPanel(star: Star) {
 
 private fun ViewScope.routeItem(route: AppRoute, text: String, svg: Svg) {
     navigation(route) { // filler content
-        onClick = StarHelm.ClosePopover.block
+        closePopoverOnClick(StarHelm.PopoverId)
 
         row(RowMod) {
             textBlock(text)

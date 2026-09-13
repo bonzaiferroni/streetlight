@@ -2,12 +2,15 @@ package streetlight.web.ui
 
 import koala.css.Blur
 import koala.css.FocusTarget
+import koala.css.KoalaBody
 import koala.css.Magic
 import koala.css.modify
 import koala.dom.RouteScope
 import koala.dom.ViewScope
 import koala.dom.closeOpenPopovers
 import koala.dom.flowBlock
+import koala.dom.getElementById
+import koala.dom.getElementOrNullById
 import koala.dom.querySelector
 import koala.dom.textBlock
 import koala.model.Portal
@@ -28,7 +31,6 @@ fun ViewScope.viewPortal() {
         // cacheElements = true,
         onTransition = {
             document.closeOpenPopovers()
-
             // td: set title, maybe not here
             // target element, typically a heading, for accessibility functionality
             element?.querySelector(FocusTarget)?.focus()

@@ -5,23 +5,23 @@ import koala.css.*
 import koala.html.Id
 import koala.html.ShellBoxKey
 import kotlinx.html.DIV
+import web.cssom.ms
 import web.dom.document
 import web.html.HTMLDivElement
+import web.html.HTMLElement
+import web.timers.setTimeout
 
 fun ViewScope.shellBox(
     id: Id,
     mod: ModifierSet? = null,
     block: DIV.() -> Unit
-): HTMLDivElement {
+): HTMLElement {
     val shell = document.getElementOrNullById(id)
     return if (shell != null) {
-        console.log("grabbing shell: $id")
-        val element = container {
-            addModifiers(ShellBoxKey.Class, mod)
+        onDispose {
+            shell.fadeAndRemove()
         }
-
-        element.append(shell)
-        element
+        shell
     } else {
         console.log("generating shell: $id")
         val element = container {
@@ -38,10 +38,15 @@ fun ViewScope.shellBoxWithMap(
     id: Id,
     mod: ModifierSet? = null,
     block: DIV.() -> Unit
-): HTMLDivElement {
+): HTMLElement {
     val element = shellBox(id, mod, block)
     element.onView {
         wireGeoMap(element)
     }
     return element
+}
+
+fun HTMLElement.fadeAndRemove() {
+    modify(FadeOut)
+    setTimeout({ remove() }, MagicStyle.Interval)
 }

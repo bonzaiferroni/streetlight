@@ -18,10 +18,14 @@ import koala.css.addModifiers
 import koala.css.append
 import koala.css.modify
 import koala.css.setStyle
+import koala.interop.InlineJs
+import kotlinx.html.A
+import kotlinx.html.BUTTON
 import kotlinx.html.CommonAttributeGroupFacade
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kotlinx.html.div
+import kotlinx.html.onClick
 
 fun FlowContent.popover(
     id: Id,
@@ -57,6 +61,14 @@ fun FlowContent.popoverCard(
     popover(id, Popover.CardMod.append(mod) + Margin1) {
         content()
     }
+}
+
+fun BUTTON.closePopoverOnClick(id: Id) {
+    setPopoverTarget(id, "hide")
+}
+
+fun A.closePopoverOnClick(id: Id) {
+    onClick = InlineJs.closePopover(id).block
 }
 
 object Popover {

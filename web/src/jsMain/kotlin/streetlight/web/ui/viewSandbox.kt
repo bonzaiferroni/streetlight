@@ -27,11 +27,11 @@ fun RouteScope.viewSandbox() {
                     flowBlock(nameState) { name ->
                         textBlock("hello $name")
                     }
-                    println("clewgarnets")
+                    println("yer clewgarnets")
                 }
                 tab("Start") {
                     textBlock("yer at Start")
-                    println("tacks and sheets")
+                    println("let tacks and sheets fly")
                 }
             }
             textBlock("select a tab")

@@ -9,7 +9,6 @@ import koala.css.Height5
 import koala.css.Magic
 import koala.css.OverflowClip
 import koala.css.PointerEventsAuto
-import koala.css.SlideLeft
 import koala.css.modify
 import koala.css.stylesheet
 import koala.html.Id
@@ -24,7 +23,7 @@ import kotlinx.html.onClick
 fun FlowContent.starHelmPopover() {
     popover(StarHelm.PopoverId, modify(StarHelm.PopoverClass, Magic)) {
         card(modify(StarHelm.PopoverCardClass, HeavyCardBg, BlurBackdrop, OverflowClip, PointerEventsAuto)) {
-            setId(StarHelm.StarBarMenu)
+            setId(StarHelm.StarBarHelm)
             button(SvgFile.LoaderSmall, modify(Height5, FadeLoop)) {
                 onClick = StarHelm.ClosePopover.block
             }
@@ -40,8 +39,8 @@ object StarHelm {
     val PopoverClass = Class("star-helm-popover")
     val PopoverCardClass = Class("star-helm-popover-card")
     val ClosePopover = InlineJs.closePopover(PopoverId)
-    val StarBarMenu = Id("star-helm-menu")
-    val StarPanelMenu = Id("star-panel-menu")
+    val StarBarHelm = Id("star-helm-menu")
+    val StarPanelHelm = Id("star-panel-menu")
 }
 
 // language="CSS"

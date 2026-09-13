@@ -47,7 +47,7 @@ fun viewApp() {
                     // shows user badge in upper right corner
                     wireBadge()
                     // shows content in user menu
-                    wireStarPanel()
+                    wireStarHelm()
                     wireStarMenu()
                     wireCuratorMenu()
                     wireCreatePost()
@@ -64,7 +64,7 @@ fun viewApp() {
                     wireOmni(omni)
 
                     // hides the element that holds server rendered content
-                    document.getElementById(KoalaBody.ShellMount).modify(DisplayNone)
+                    // document.getElementById(KoalaBody.ShellMount).modify(DisplayNone)
                     document.getElementById(AppOverlay.WorkSignal).modify(DisplayNone)
                 }
 
