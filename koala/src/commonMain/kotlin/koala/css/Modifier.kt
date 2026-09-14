@@ -33,6 +33,8 @@ fun ModifierSet.append(mod: ModifierSet?) = when (mod) {
     else -> this + mod
 }
 
+fun ModifierSet.append(vararg modifiers: Modifier?) = this + modify(*modifiers)
+
 fun modify(vararg modifiers: Modifier?) = buildSet {
     modifiers.forEach { modifier ->
         modifier?.let {

@@ -23,7 +23,7 @@ val LayoutUtilityCss
         Height0, Height2, Height2Px, Height3, Height4, Height5, Height6, Height7, Height8, Height9, Height10, Height12, Height16,
         Height24, Height32, Height48,
         MinHeightAuto, MinHeight0, MinHeight4, MinHeight5, MinHeight6, MinHeight8, MinHeight16, MinHeight24, MinHeight32, MinHeight48, MinHeight100P,
-        MaxHeight5, MaxHeight8, MaxHeight12, MaxHeight16, MaxHeight24, MaxHeight32, MaxHeight64, MaxHeight96, MaxHeight50P,
+        MaxHeight5, MaxHeight8, MaxHeight12, MaxHeight16, MaxHeight24, MaxHeight32, MaxHeight64, MaxHeight96, MaxHeight50P, MaxHeight100P,
         // Size
         Size100P, FillHeight, Aspect1, Aspect2By1, Aspect3By1, Aspect3By2,
         // Flex Items
@@ -157,6 +157,7 @@ val MaxHeight32 = utilityOf("max-height-32", "max-height: calc(var(--unit-spacin
 val MaxHeight64 = utilityOf("max-height-64", "max-height: calc(var(--unit-spacing) * 64)")
 val MaxHeight96 = utilityOf("max-height-96", "max-height: calc(var(--unit-spacing) * 96)")
 val MaxHeight50P = utilityOf("max-height-50", "max-height: 50%")
+val MaxHeight100P = utilityOf("max-height-100", "max-height: 100%")
 val MinHeightAuto = utilityOf("min-height-auto", "min-height: auto")
 val MinHeight0 = utilityOf("min-height-0", "min-height: 0")
 val MinHeight4 = utilityOf("min-height-4", "min-height: calc(var(--unit-spacing) * 4)")

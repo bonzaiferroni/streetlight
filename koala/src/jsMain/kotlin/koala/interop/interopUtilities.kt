@@ -21,9 +21,7 @@ fun scrollToId(id: String) = document.getElementOrNullById(id)?.scrollIntoView(S
 
 fun toggleAncestor(element: HTMLElement, ancestorClass: String, toggleClass: String) {
     val ancestor = element.closest(".$ancestorClass") as? HTMLElement ?: return
-    document.viewTransition {
-        ancestor.classList.toggle(ClassName(toggleClass))
-    }
+    ancestor.classList.toggle(ClassName(toggleClass))
 }
 
 fun toggleRootModifier(mod: String) {

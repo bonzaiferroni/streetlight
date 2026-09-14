@@ -40,7 +40,11 @@ fun ViewScope.shellBoxWithMap(
     return element
 }
 
-fun HTMLElement.fadeAndRemove() {
+fun HTMLElement.fadeAndRemove(milliseconds: Int = MagicStyle.Interval) {
     modify(FadeOut)
-    setTimeout({ remove() }, MagicStyle.Interval)
+    setTimeout({ remove() }, milliseconds)
+}
+
+fun HTMLElement.clearAfterInterval(milliseconds: Int = MagicStyle.Interval) {
+    setTimeout({ clear() }, milliseconds)
 }

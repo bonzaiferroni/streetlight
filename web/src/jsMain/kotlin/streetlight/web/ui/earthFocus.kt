@@ -19,6 +19,7 @@ import streetlight.model.data.FeedEntity
 import streetlight.model.ui.CityRoute
 import streetlight.model.ui.GalaxyRoute
 import streetlight.web.layouts.ColorScheme
+import streetlight.web.layouts.FeedSection
 import streetlight.web.layouts.cellBlock
 import streetlight.web.layouts.cellContentOf
 import streetlight.web.layouts.eventRoute
@@ -31,43 +32,27 @@ import streetlight.web.model.GalaxyMarker
 import streetlight.web.model.LocationMarker
 
 fun ViewScope.earthFocus(model: Earth) {
-    flowBlock(model.focusState, modify(EarthStyle.Focus, Magic)) { focus ->
+    flowBlock(model.focusState,
+        modify(EarthStyle.Focus, MoonShadow, OverflowYAuto, MaxHeight100P, PointerEventsAuto, ZenBg, BlurBackdrop)
+    ) { focus ->
         when (focus) {
-            is ClusterFocus -> lazyTabs(
-                mod = modify(PointerEventsAuto, Height100Pct),
-                viewportMod = modify(Flex1, OverflowYAuto, BorderRadius2)
-            ) {
+            is ClusterFocus -> column(FeedSection.FeedColumnMod) {
                 focus.members.forEach { marker ->
                     val marker = marker as? FeatureMarker ?: return@forEach
-                    tab(marker.label ?: marker.typeLabel ?: "thing", marker.colorScheme) {
-                        markerPanel(marker)
-                    }
+                    markerRow(marker)
                 }
             }
 
-            is MarkerFocus -> div(modify(Height100Pct, OverflowYAuto, BorderRadius2)) {
-                markerPanel(focus.marker)
-            }
+            is MarkerFocus -> markerRow(focus.marker)
             null -> return@flowBlock
         }
     }
 }
 
-private fun ViewScope.markerPanel(marker: PointMarker) {
+private fun ViewScope.markerRow(marker: PointMarker) {
     when (marker) {
-        is EventMarker -> focusPanel(
-            post = marker.event,
-            route = marker.event.eventRoute,
-            subroute = marker.event.locationRoute,
-            colorScheme = ColorScheme.Accent,
-            cells = cellContentOf(marker.event, false)
-        )
-        is LocationMarker -> focusPanel(
-            post = marker.location,
-            route = marker.location.route,
-            colorScheme = ColorScheme.Primary,
-            cells = cellContentOf(marker.location)
-        )
+        is EventMarker -> feedRow(marker.event, true)
+        is LocationMarker -> feedRow(marker.location, true)
         is CityMarker -> focusPanel(
             post = marker.city,
             route = CityRoute(marker.city.slug),

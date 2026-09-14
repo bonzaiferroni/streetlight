@@ -150,6 +150,7 @@ $Base {
     display: grid;
     gap: 0;
     grid-template-rows: auto 1fr;
+    container-type: inline-size;
     
     &:not($ToggleExpand) {
         $ExpandedContent {
@@ -168,7 +169,7 @@ $Content {
     gap: var(--unit-spacing);
     align-self: start;
     
-    @media (min-width: 960px) {
+    @container (min-width: 960px) {
         flex-direction: row;
         
         > * {

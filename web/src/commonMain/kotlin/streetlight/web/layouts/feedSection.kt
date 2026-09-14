@@ -63,7 +63,7 @@ object FeedSection {
     val MountId = Id("feed-layout")
 
     val Attribute = slugAttributeOf("feed-slug")
-    val FeedColumnMod = modify(Gap2Px, BorderRadius2, OverflowClip, MoonShadow)
+    val FeedColumnMod = modify(Gap2Px, MoonShadow)
     val NextCursor = jsonAttributeOf<PostCursor>("next-post-cursor")
 
     val SortByMark = JsSignature("sortByMark")

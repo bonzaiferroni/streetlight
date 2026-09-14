@@ -51,10 +51,10 @@ $DayTheme .maplibregl-canvas {
 }
 
 $Container {
-    height: 100vh;
+    height: 100dvh;
     
     > * {
-        height: 100vh;
+        height: 100dvh;
     }
 
     $MoveDimmer {
@@ -80,16 +80,15 @@ $Container {
 $Grid {
     display: grid;
     grid-template-columns: auto;
-    grid-template-rows: auto 1fr 400px;
+    grid-template-rows: auto 1fr minmax(0, 2fr);
     grid-template-areas: 
         "header"
         "window"
         "focus";
-    gap: var(--unit-spacing);
 
     > $Header    { grid-area: header; }
     > $Window    { grid-area: window; }
-    > $Focus     { grid-area: focus; max-width: 420px; }
+    > $Focus     { grid-area: focus; max-width: 600px; align-self: end; }
     > $Unbounded { grid-area: 1 / 1 / -1 / -1; }
     
     $ListDetail {
@@ -107,7 +106,7 @@ $Grid {
     }
     
     @media (min-width: ${MinifiedWidth}px) {
-        grid-template-columns: 400px 1fr;
+        grid-template-columns: 600px 1fr;
         grid-template-rows: auto 1fr;
         grid-template-areas:
             "header header"
