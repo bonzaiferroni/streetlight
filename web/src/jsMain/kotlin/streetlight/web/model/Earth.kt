@@ -21,6 +21,7 @@ import streetlight.model.ui.ResultMap
 import streetlight.model.ui.ResultMapRoute
 import streetlight.web.io.ApiClient
 import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.seconds
 
 class Earth(
     private val scope: CoroutineScope,
@@ -120,6 +121,21 @@ class Earth(
             }
 
             is ResultMapRoute -> {
+                delay(1.seconds)
+                val camera = markerMap.geoMap.camera
+                while (camera.stateNow.isMoving) {
+                    delay(100.milliseconds)
+                }
+
+                if (markerMap.stateNow.markers.isNullOrEmpty()) {
+                    val bounds = camera.stateNow.bounds
+                    println(bounds)
+                    val markers = api.readPostsInBounds(bounds).toDataOr(toaster) { return null }.let {
+                        markerService.createMarkers(it)
+                    }
+                    println("markers: ${markers.size}")
+                    markerMap.setPoints(markers)
+                }
                 ResultMap(route.title)
             }
         }

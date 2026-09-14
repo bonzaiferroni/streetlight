@@ -9,6 +9,7 @@ data class GeoBounds(
     val sw: GeoPoint,
     val ne: GeoPoint
 ) {
+    @Deprecated("use endpoint parser")
     fun toQuery() = "$QUERY_KEY=${sw.lng}&$QUERY_KEY=${sw.lat}&$QUERY_KEY=${ne.lng}&$QUERY_KEY=${ne.lat}"
 
     val center get() = GeoPoint(
@@ -32,15 +33,21 @@ data class GeoBounds(
         )
     }
 
+    override fun toString() = "${sw.lng},${sw.lat},${ne.lng},${ne.lat}"
+
     companion object {
         const val QUERY_KEY = "bounds"
 
         val Denver = GeoBounds(GeoPoint(-105.05, 39.75), GeoPoint(-104.85, 39.95))
 
+        @Deprecated("use endpoint parser")
         fun fromQuery(parameters: ParameterMap): GeoBounds? {
             val bounds = parameters.readDoubleList(QUERY_KEY)?.takeIf { it.size == 4 } ?: return null
             return GeoBounds(GeoPoint(bounds[0], bounds[1]), GeoPoint(bounds[2], bounds[3]))
         }
+
+        fun of(value: String): GeoBounds? = value.split(",").mapNotNull { it.toDoubleOrNull() }
+            .takeIf { it.size == 4 }?.let { GeoBounds(GeoPoint(it[0], it[1]), GeoPoint(it[2], it[3])) }
     }
 }
 

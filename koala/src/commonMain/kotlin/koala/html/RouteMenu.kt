@@ -80,7 +80,6 @@ $Base {
     opacity: 1;
     transition: opacity 400ms var(--magic-easing), transform 400ms var(--magic-easing);
     transform: scale(1);
-    z-index: 2;
     
     @starting-style {
         opacity: 0;

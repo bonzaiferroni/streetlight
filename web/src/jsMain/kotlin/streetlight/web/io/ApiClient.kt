@@ -137,6 +137,9 @@ class ApiClient(private val client: FetchClient) {
     suspend fun readGalaxyConfig(slug: Slug) = client.getApi(Api.Galaxies.ReadConfig, slug)
     suspend fun readGalaxyContent(slug: Slug) = client.getApi(Api.Galaxies.ReadContent, slug)
     suspend fun readGalaxy(galaxyId: GalaxyId) = client.getApi(Api.Galaxies.ReadGalaxyId, galaxyId)
+    suspend fun readGalaxyStars() = client.getApi(Api.Galaxies.ReadLights)
+
+    // posts
     suspend fun createPost(post: PostEdit) = client.postApi(Api.Galaxies.CreatePost, post)
     suspend fun editPost(post: PostEdit) = client.postApi(Api.Galaxies.UpdatePost, post)
     suspend fun readPosts(galaxyIds: List<GalaxyId>) = client.postApi(Api.Galaxies.ReadMultiPosts, galaxyIds)
@@ -144,7 +147,9 @@ class ApiClient(private val client: FetchClient) {
         writeCursor(Api.Galaxies.ReadGalaxyFeed, cursor)
     }
     suspend fun readPost(postId: PostId) = client.getApi(Api.Galaxies.ReadPostId, postId)
-    suspend fun readGalaxyStars() = client.getApi(Api.Galaxies.ReadLights)
+    suspend fun readPostsInBounds(bounds: GeoBounds) = client.getApi(Api.Map.ReadEntities) {
+        writeParam(it.bounds, bounds)
+    }
     suspend fun removePost(postId: PostId) = client.postApi(Api.Galaxies.RemovePost, postId)
     suspend fun updateMark(update: MarkUpdate) = client.postApi(Api.Galaxies.UpdateMark, update)
 

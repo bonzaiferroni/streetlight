@@ -125,6 +125,10 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
 
     object Map: ApiNode(this) {
         object SpiritVision: ApiNode(this)
+
+        object ReadEntities: GetEndpoint<List<FeedEntity>>(this) {
+            val bounds = geoBoundsOf("map-bounds")
+        }
     }
 
     object Galaxies: ApiNode(this) {

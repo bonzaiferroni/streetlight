@@ -79,12 +79,12 @@ fun DIV.configureFeedRow(
         }
     }
 
-    grid(GridTemplateColumns("1fr min-content"), mod = modify(FeedRow.ExpandedContent, Padding2, Gap2)) {
+    div(modify(FeedRow.ExpandedContent, Padding2, Gap2)) {
         description?.let {
-            markdown(it, modify(Flex1), limit = 1000)
+            markdown(it, modify(FeedRow.ExpandedBody), limit = 1000)
         }
         links?.let { links ->
-            row(modify(FlexWrap, AlignItemsStart, AlignContentStart)) {
+            row(modify(FeedRow.ExpandedLinks, FlexWrap, AlignItemsStart, AlignContentStart, JustifyContentCenter)) {
                 links.forEach { link ->
                     btn(link.label, link.url, modify(Zen))
                 }
@@ -115,9 +115,6 @@ fun FlowContent.postLine(entity: FeedEntity, isUniverse: Boolean) {
                         setAttribute(Attribute.Username.to(username))
                         span(username.value, modify(PrimaryFg))
                     }
-//                    navigation(StarRoute(username)) {
-//                        span("$username ")
-//                    }
                 }
             }
             +" "
@@ -138,6 +135,8 @@ object FeedRow {
     val Base = Class("feed-row")
     val Content = Base.withBemElement("content")
     val ExpandedContent = Base.withBemElement("expanded-content")
+    val ExpandedLinks = Base.withBemElement("expanded-links")
+    val ExpandedBody = Base.withBemElement("expanded-body")
     val Cells = Base.withBemElement("cells")
 
     val ToggleExpand = Base.withBemModifier("expand-row")
@@ -156,10 +155,6 @@ $Base {
         $ExpandedContent {
             display: none;
         }
-    }
-    
-    &$Transitioning {
-        transition: grid-template-rows var(--magic-interval) var(--magic-easing);
     }
 }
 
@@ -180,21 +175,18 @@ $Content {
 
 $ExpandedContent {
     overflow: hidden;
+    display: grid;
+    grid-template-rows: min-content auto;
+    grid-template-areas: "links" "body";
+    
+    $ExpandedLinks { grid-area: links }
+    $ExpandedBody  { grid-area: body }
+    
+    @container (min-width: 960px) { 
+        grid-template-rows: none;
+        grid-template-columns: 1fr min-content;
+        grid-template-areas: "body links";
+    }
 }
 
 """}
-
-//                 row(modify(Width10, FlexWrap, BorderRadius1, Gap2Px, OverflowClip, FlexItems1)) {
-//                    menuCell(modify(MinWidth8)) {
-//                        row(modify(AlignItemsCenter)) {
-//                            icon(SvgFile.Star)
-//                            textBlock("2")
-//                        }
-//                    }
-//                    menuCell(modify(MinWidth4)) {
-//                        icon(SvgFile.Info)
-//                    }
-//                    menuCell(modify(MinWidth4)) {
-//                        icon(SvgFile.Dots)
-//                    }
-//                }

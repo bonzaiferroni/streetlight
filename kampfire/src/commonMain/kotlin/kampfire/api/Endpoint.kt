@@ -3,6 +3,7 @@ package kampfire.api
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.parameter
 import io.ktor.http.HttpMethod
+import kampfire.model.GeoBounds
 import kampfire.utils.pascalToKebabCase
 import kotlin.enums.enumEntries
 import kotlin.time.Instant
@@ -78,6 +79,12 @@ abstract class Endpoint<SentType, ReturnType>(
     fun booleanParamOf(key: String) = EndpointParam(
         key = key,
         toValue = { it.toBoolean() },
+        toString = { it.toString() }
+    )
+
+    fun geoBoundsOf(key: String) = EndpointParam(
+        key = key,
+        toValue = { GeoBounds.of(it) },
         toString = { it.toString() }
     )
 
