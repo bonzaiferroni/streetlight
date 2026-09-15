@@ -2,7 +2,7 @@ package streetlight.model.data
 
 import kampfire.api.Markdown
 import kampfire.api.Slug
-import kampfire.model.GeoBounds
+import kampfire.model.GeoRect
 import kampfire.model.GeoPoint
 import kampfire.model.Labeled
 import koala.Image
@@ -22,7 +22,7 @@ data class Galaxy(
     val description: Markdown?,
     val city: String?,
     override val geoPoint: GeoPoint,
-    val geoBounds: GeoBounds,
+    val geoRect: GeoRect,
     val postPermission: PostPermission,
     val reviewCount: Int,
     val postGuide: Markdown?,
@@ -40,6 +40,7 @@ data class Galaxy(
     val postTypes get() = setOf(PostType.Location, PostType.Event, PostType.Media)
     override val label get() = name
     override val sublabel get() = tagline
+    override val markerId get() = galaxyId.toString()
 }
 
 @JvmInline @Serializable

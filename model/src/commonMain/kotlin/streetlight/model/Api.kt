@@ -2,7 +2,7 @@ package streetlight.model
 
 import kampfire.api.*
 import kampfire.model.EmailChange
-import kampfire.model.GeoBounds
+import kampfire.model.GeoRect
 import kampfire.model.GeoPoint
 import kampfire.model.PasswordChange
 import kampfire.model.PasswordResetRequest
@@ -26,7 +26,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object CreateEvent: PostEndpoint<EventEdit, Event>(this)
         object UpdateEvent: PostEndpoint<EventEdit, Event>(this)
         object Delete: DeleteEndpoint<EventId>(this)
-        object QueryMap: QueryEndpoint<MapQuery, List<EventLocation>>(this)
+        object QueryMap: QueryEndpoint<MapQueryLegacy, List<EventLocation>>(this)
         object ReadUpdaterContent: GetByIdEndpoint<Slug, EventUpdaterContent>(this)
         // object UserEvents: ApiDaoEndpoint<Event, EventId, NewEvent>(this, "user")
 
@@ -57,7 +57,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         }
         object QueryPoint: QueryEndpoint<GeoPoint, List<Location>>(this)
         object ParseLocation: PostEndpoint<ParseRequest, LocationEdit>(this)
-        object QueryBounds: PostEndpoint<GeoBounds, List<LocationInfo>>(this)
+        object QueryBounds: PostEndpoint<GeoRect, List<LocationInfo>>(this)
         object ReadConfigContent: GetByIdEndpoint<LocationId, LocationConfigContent>(this)
         object ParseEventSchema: PostEndpoint<Url, List<SelectorSchema>>(this)
         object UpdateConfig: PostEndpoint<LocationConfig, Unit>(this)
@@ -123,11 +123,14 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object Log: ApiNode(this)
     }
 
-    object Map: ApiNode(this) {
+    object Posts: ApiNode(this) {
         object SpiritVision: ApiNode(this)
 
-        object ReadEntities: GetEndpoint<List<FeedEntity>>(this) {
-            val bounds = geoBoundsOf("map-bounds")
+        object ReadMapQuery: GetEndpoint<EntityFeed>(this) {
+            val view = geoRectOf("view")
+            val seen = geoRectArrayOf("seen")
+            val postId = uuidParamOf("postId")
+            val postLean = intParamOf("postLean")
         }
     }
 

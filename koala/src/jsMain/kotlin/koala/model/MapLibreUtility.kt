@@ -1,6 +1,6 @@
 package koala.model
 
-import kampfire.model.GeoBounds
+import kampfire.model.GeoRect
 import kampfire.model.GeoPoint
 import kampfire.model.Point
 import koala.external.Position
@@ -33,8 +33,8 @@ fun maplibregl.Marker.move(
 fun Position.toLngLat() = maplibregl.LngLat(longitude.toDouble(), latitude.toDouble())
 fun Position.toGeoPoint() = GeoPoint(lng = longitude.toDouble(), lat = latitude.toDouble())
 
-fun maplibregl.LngLatBounds.toGeoBounds() = GeoBounds(getSouthWest().toGeoPoint(), getNorthEast().toGeoPoint())
-fun GeoBounds.toLngLatBounds() = maplibregl.LngLatBounds(sw.toLngLat(), ne.toLngLat())
+fun maplibregl.LngLatBounds.toGeoBounds() = GeoRect(getSouthWest().toGeoPoint(), getNorthEast().toGeoPoint())
+fun GeoRect.toLngLatBounds() = maplibregl.LngLatBounds(sw.toLngLat(), ne.toLngLat())
 
 fun maplibregl.LngLat.toGeoPoint() = GeoPoint(lng = lng, lat = lat)
 

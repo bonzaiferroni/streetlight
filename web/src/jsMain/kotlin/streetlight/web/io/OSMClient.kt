@@ -1,7 +1,7 @@
 package streetlight.web.io
 
 import kampfire.model.Outcome
-import kampfire.model.GeoBounds
+import kampfire.model.GeoRect
 import kampfire.model.GeoPoint
 import streetlight.model.external.OSMLocation
 import streetlight.model.external.OSMQuery
@@ -30,7 +30,7 @@ class OSMClient() {
         return response.decodeText()
     }
 
-    suspend fun readLocations(query: String, city: String? = null, bounds: GeoBounds? = null): Outcome<List<OSMLocation>> {
+    suspend fun readLocations(query: String, city: String? = null, bounds: GeoRect? = null): Outcome<List<OSMLocation>> {
         val query = when (city?.takeIf { it.isNotBlank() }) {
             null -> query
             else -> "$query, $city"

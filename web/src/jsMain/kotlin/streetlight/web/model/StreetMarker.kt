@@ -37,7 +37,7 @@ enum class MarkerType(
 data class LocationMarker(
     val location: Location,
 ): IconMarker {
-    override val markerId get() = location.locationId.value.toString()
+    override val markerId get() = location.markerId
     override val label get() = location.label
     // override val sublabel get() = location.mapType
     override val geoPoint get() = location.geoPoint
@@ -51,7 +51,7 @@ data class LocationMarker(
 data class EventMarker(
     val event: EventLocation,
 ): ThumbMarker {
-    override val markerId get() = event.eventId.value.toString()
+    override val markerId get() = event.markerId
     override val label get() = event.label
     override val sublabel get() = event.startsAt?.toFutureFormat()
     override val thumbUrl get() = event.image.thumb ?: SiteImage.placeholderTh
@@ -64,7 +64,7 @@ data class EventMarker(
 data class GalaxyMarker(
     val galaxy: Galaxy
 ): ThumbMarker {
-    override val markerId get() = galaxy.galaxyId.string
+    override val markerId get() = galaxy.markerId
     override val label get() = galaxy.name
     override val thumbUrl get() = galaxy.image?.thumb ?: SiteImage.placeholderTh
     override val geoPoint get() = galaxy.geoPoint
@@ -79,7 +79,7 @@ data class MediaMarker(
     override val typeLabel get() = media.mediaType.label
     override val label get() = media.label
     override val thumbUrl get() = media.image?.thumb ?: SiteImage.placeholderTh
-    override val markerId get() = media.mediaId.value.toString()
+    override val markerId get() = media.markerId
     override val colorScheme get() = ColorScheme.Media.cssValue
 }
 
@@ -87,7 +87,7 @@ data class CityMarker(
     val city: City
 ): IconMarker {
     override val label get() = "${city.name}, ${city.state}"
-    override val markerId get() = city.cityId.toString()
+    override val markerId get() = city.markerId
     override val svg get() = SvgFile.City
     override val geoPoint get() = city.geoPoint
     override val typeLabel get() = MarkerType.City.label

@@ -60,6 +60,7 @@ data class EventLocation(
     override val label get() = title
     override val sublabel get() = locationLabel
     override val body get() = description
+    override val markerId get() = eventId.toString()
 
     val locationLabel get() = locationName ?: address ?: "(geolocation)"
 

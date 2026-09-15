@@ -1,6 +1,6 @@
 package streetlight.model.external
 
-import kampfire.model.GeoBounds
+import kampfire.model.GeoRect
 import kampfire.model.GeoPoint
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -88,7 +88,7 @@ data class OSMQuery(
     val state: String? = null,
     val country: String? = null,
     val postalcode: String? = null,
-    val bounds: GeoBounds? = null,
+    val bounds: GeoRect? = null,
     val limit: Int = 10
 )
 
@@ -97,7 +97,7 @@ fun OSMLocation.toGeoPoint() = GeoPoint(
     lng = lon
 )
 
-fun OSMLocation.toGeoBounds() = GeoBounds(
+fun OSMLocation.toGeoBounds() = GeoRect(
     sw = GeoPoint(lat = bounds[0], lng = bounds[2]),
     ne = GeoPoint(lat = bounds[1], lng = bounds[3])
 )
@@ -109,7 +109,7 @@ data class OSMCity(
     val country: String,
     val importance: Float,
     val geoPoint: GeoPoint,
-    val geoBounds: GeoBounds,
+    val geoRect: GeoRect,
 )
 
 fun OSMLocation.toOSMCity() = OSMCity(
@@ -118,7 +118,7 @@ fun OSMLocation.toOSMCity() = OSMCity(
     country = address.country ?: "",
     importance = importance?.toFloat() ?: 0f,
     geoPoint = toGeoPoint(),
-    geoBounds = toGeoBounds(),
+    geoRect = toGeoBounds(),
 )
 
 fun OSMLocation.toHoursSchedule() = extraTags?.opening_hours?.let { osmHoursToSchedule(it) }

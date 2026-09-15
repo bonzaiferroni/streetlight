@@ -1,6 +1,6 @@
 package koala.model
 
-import kampfire.model.GeoBounds
+import kampfire.model.GeoRect
 import kampfire.model.GeoPoint
 import kampfire.model.refine
 import kampfire.model.storeOf
@@ -20,7 +20,7 @@ class GeoCamera(
     val stateNow get() = state.now
 
     internal val panFlow: SharedFlow<PanPoint> field = MutableSharedFlow<PanPoint>(1)
-    internal val panBoundsFlow: SharedFlow<GeoBounds> field = MutableSharedFlow<GeoBounds>(1)
+    internal val panBoundsFlow: SharedFlow<GeoRect> field = MutableSharedFlow<GeoRect>(1)
     internal val movementFlow: Flow<MarkerMovement> field = MutableSharedFlow<MarkerMovement>(1)
 
     // val viewedStateFlow = stateFlow.filter { it.isViewed }
@@ -42,13 +42,13 @@ class GeoCamera(
     val focusField = viewedState.tapOf { it.focus }
     val zoomField = settledState.tapOf { it.zoom }
     val centerField = settledState.tapOf { it.center }
-    val boundsField = settledState.tapOf { it.bounds }
+    val settledView = settledState.tapOf { it.bounds }
 
     fun panMap(point: GeoPoint) {
         panMap(PanPoint(point))
     }
 
-    fun panMap(bounds: GeoBounds) {
+    fun panMap(bounds: GeoRect) {
         scope.launch {
             panBoundsFlow.emit(bounds)
         }
@@ -65,16 +65,16 @@ class GeoCamera(
         state.set { copy(isViewed = value) }
     }
 
-    internal fun setBounds(center: GeoPoint, bounds: GeoBounds, zoom: Float, isMoving: Boolean) {
+    internal fun setBounds(center: GeoPoint, bounds: GeoRect, zoom: Float, isMoving: Boolean) {
         state.set { copy(center = center, bounds = bounds, zoom = zoom, isMoving = isMoving) }
     }
 }
 
 data class GeoCameraState(
     val center: GeoPoint = GeoPoint.Denver,
-    val bounds: GeoBounds = GeoBounds.Denver,
+    val bounds: GeoRect = GeoRect.Denver,
     val zoom: Float = 11f,
-    val isMoving: Boolean = false,
+    val isMoving: Boolean = true,
     val isViewed: Boolean = false,
     val focus: PointMarker? = null,
 )

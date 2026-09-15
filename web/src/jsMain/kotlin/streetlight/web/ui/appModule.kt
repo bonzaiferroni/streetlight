@@ -55,14 +55,13 @@ val appModule = module {
     single { MarkerMap(get(), get()) }
     single { ChatRoom(get(), get()) }
     single { OmniClient(get(), get()) }
-    single { MarkerService() }
 }
 
 fun AppContainer.getUserCreator(scope: CoroutineScope) =
     UserCreator(scope, koin.get(), koin.get(), koin.get(), koin.get())
 
 fun AppContainer.getEarthMap(scope: CoroutineScope, initialMap: EarthMap?) =
-    Earth(scope, initialMap, koin.get(), koin.get(), koin.get(), koin.get(), koin.get())
+    Earth(scope, initialMap, koin.get(), koin.get(), koin.get(), koin.get())
 
 fun AppContainer.getLocationEditor(edit: LocationEdit, scope: CoroutineScope) =
     LocationEditor(edit, scope, koin.get())

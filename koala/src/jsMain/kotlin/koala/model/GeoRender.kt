@@ -1,6 +1,6 @@
 package koala.model
 
-import kampfire.model.GeoBounds
+import kampfire.model.GeoRect
 import koala.dom.onClick
 import koala.external.maplibregl
 import kotlinx.coroutines.CoroutineScope
@@ -88,9 +88,9 @@ class GeoRender(
 
     }
 
-    fun setBounds(bounds: GeoBounds, zoom: Float, isMoving: Boolean) {
+    fun setBounds(bounds: GeoRect, zoom: Float, isMoving: Boolean) {
         // resize to ensure comprehensive view region
-        val bounds = bounds.resizeBy(1.2f)
+        val bounds = bounds.scaleBy(1.2f)
         // set marker visibility
         layerRenders.forEach { layer ->
             layer.setBounds(bounds, zoom, isMoving)

@@ -33,11 +33,14 @@ data class Media(
     override val sublabel get() = subtitle
     override val body get() = text
     override val links get() = link?.let { listOf(ExtraLink("link", it)) }
+    override val markerId get() = mediaId.toString()
 }
 
 @Serializable
 @JvmInline
 value class MediaId(override val value: Uuid): RecordId {
+    override fun toString() = value.toString()
+
     companion object {
         fun random() = MediaId(Uuid.random())
     }

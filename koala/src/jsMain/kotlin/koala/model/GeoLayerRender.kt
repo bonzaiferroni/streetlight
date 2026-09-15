@@ -1,6 +1,6 @@
 package koala.model
 
-import kampfire.model.GeoBounds
+import kampfire.model.GeoRect
 import kampfire.model.DEG_TO_RAD
 import kampfire.model.distanceSquaredTo
 import kampfire.model.toPlanarPoint
@@ -25,7 +25,7 @@ internal class GeoLayerRender(
     private var pointClusters: Map<MarkerId, PointCluster?> = emptyMap()
 
     private var refLatitudeNow: Double? = null
-    private var boundsNow: GeoBounds? = null
+    private var boundsNow: GeoRect? = null
     private var zoomNow: Float? = null
     private var isMovingNow: Boolean = false
 
@@ -147,7 +147,7 @@ internal class GeoLayerRender(
 //        console.log("moved to ${movement.position}")
 //    }
 
-    internal fun setBounds(bounds: GeoBounds, zoom: Float, isMoving: Boolean) {
+    internal fun setBounds(bounds: GeoRect, zoom: Float, isMoving: Boolean) {
         val isClusterReady = !isMoving && zoom != zoomNow || abs((zoomNow ?: 0f) - zoom) >= 1
 
         boundsNow = bounds

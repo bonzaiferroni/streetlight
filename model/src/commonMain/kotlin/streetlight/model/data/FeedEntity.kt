@@ -5,13 +5,16 @@ import kampfire.api.Username
 import kampfire.model.GeoPoint
 import koala.Image
 import koala.html.AppRoute
+import koala.model.MarkerId
 import kotlinx.serialization.Serializable
 import kotlin.time.Instant
+import kotlin.uuid.Uuid
 
 @Serializable
 sealed interface FeedEntity {
     val label: String
     val geoPoint: GeoPoint?
+    val markerId: MarkerId?
     val post: Post? get() = null
     val username: Username? get() = null
     val heading: String get() = label
@@ -25,6 +28,7 @@ sealed interface FeedEntity {
 @Serializable
 data class CustomEntity(
     override val label: String,
+    override val markerId: MarkerId? = null,
     override val geoPoint: GeoPoint? = null,
     override val username: Username? = null,
     override val heading: String = label,
@@ -43,7 +47,7 @@ data class EntityFeed(
     val tallies: Map<PostId, List<MarkTally>>? = null,
     val nextCursor: PostCursor? = null,
 ) {
-    val isCompleted get() = entities.size >= PostCursor.DefaultLimit
+    val isCompleted get() = nextCursor == null
 
     fun curatorOf(entity: FeedEntity): CuratorStatus? {
         val postId = entity.post?.postId ?: return null

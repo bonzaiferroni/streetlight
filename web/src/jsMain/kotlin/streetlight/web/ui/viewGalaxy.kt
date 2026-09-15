@@ -3,13 +3,10 @@ package streetlight.web.ui
 import koala.dom.*
 import streetlight.model.data.GalaxyContent
 import streetlight.model.ui.GalaxyRoute
-import streetlight.web.model.MarkerService
 import streetlight.web.shells.GalaxyShell
 import streetlight.web.shells.galaxyShell
 
 fun ViewScope.viewGalaxy(content: GalaxyContent) {
-    val markerService = app.get<MarkerService>()
-
     shellBox {
         galaxyShell(content)
         applyTheme(content.design?.theme)
@@ -17,8 +14,7 @@ fun ViewScope.viewGalaxy(content: GalaxyContent) {
 
     // wireGalaxyMenu(root, content.galaxy)
 
-    val points = markerService.createMarkers(content.feed.entities)
-    markerMap.setPoints(points)
+    markerMap.setPoints(content.feed.entities)
 }
 
 fun RouteScope.viewGalaxyRoute() {

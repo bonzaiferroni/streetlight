@@ -45,6 +45,7 @@ data class Event(
 
     override val label get() = title
     override val geoPoint get() = null
+    override val markerId get() = eventId.toString()
 
     // repeatInterval
     // val doorsAt: Instant?,

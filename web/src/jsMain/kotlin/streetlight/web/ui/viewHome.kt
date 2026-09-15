@@ -4,18 +4,20 @@ import koala.dom.*
 import koala.dom.routeBlock
 import streetlight.model.data.HomeContent
 import streetlight.model.ui.HomeRoute
+import streetlight.web.model.MarkerMap
 import streetlight.web.shells.HomeShell
 import streetlight.web.shells.homeShell
+import streetlight.web.ui.markerMap
 import web.dom.document
 
 fun ViewScope.viewHome(content: HomeContent) {
+    val markerMap = app.get<MarkerMap>()
 
     shellBoxWithMap {
         homeShell(content)
     }
 
-    wireStreetMap(content.feed)
-
+    markerMap.setPoints(content.feed.entities)
     document.setTitle(HomeRoute)
     applyTheme(null)
 }

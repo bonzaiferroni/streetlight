@@ -44,13 +44,19 @@ data class GeoMapState(
     val focus: GeoFocus? = null
 )
 
-sealed interface GeoFocus
+sealed interface GeoFocus {
+    val markerId: MarkerId
+}
 
 data class MarkerFocus(
     val marker: PointMarker
-): GeoFocus
+): GeoFocus {
+    override val markerId get() = marker.markerId
+}
 
 data class ClusterFocus(
     val principal: PointMarker,
     val members: List<PointMarker>
-): GeoFocus
+): GeoFocus {
+    override val markerId get() = principal.markerId
+}

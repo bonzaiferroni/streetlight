@@ -24,8 +24,8 @@ data class CityMapRoute(override val slug: Slug?): EarthRoute, SlugRoute {
     override fun toRelativePath() = "/earth/city/${slug?.toString() ?: ""}"
 }
 
-data class ResultMapRoute(override val title: String): EarthRoute {
-    override val layer get() = EarthLayer.Result
+data class PostMapRoute(override val title: String): EarthRoute {
+    override val layer get() = EarthLayer.Post
 
     override fun toRelativePath() = "/earth"
 }
@@ -34,7 +34,7 @@ val parseEarthRoute = SegmentParse(listOf("city", "galaxy")) { segments ->
     when (segments.getOrNull(1)) {
         "city" -> CityMapRoute(segments.takeSegment(2)?.toSlug())
         "galaxy" -> GalaxyMapRoute(segments.takeSegment(2)?.toSlug())
-        else -> ResultMapRoute(segments.takeSegment(2) ?: "Earth")
+        else -> PostMapRoute(segments.takeSegment(2) ?: "Earth")
     }
 }
 

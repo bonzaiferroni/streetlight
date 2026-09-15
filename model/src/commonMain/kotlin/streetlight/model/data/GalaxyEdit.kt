@@ -2,7 +2,7 @@ package streetlight.model.data
 
 import kampfire.api.Markdown
 import kampfire.api.Slug
-import kampfire.model.GeoBounds
+import kampfire.model.GeoRect
 import kampfire.model.toValidityCheck
 import koala.Image
 import kotlinx.serialization.Serializable
@@ -15,7 +15,7 @@ data class GalaxyEdit(
     val slug: Slug? = null,
     val tagline: String? = null,
     val description: Markdown? = null,
-    val geoBounds: GeoBounds? = null,
+    val geoRect: GeoRect? = null,
     val postPermission: PostPermission = PostPermission.Accounts,
     val reviewCount: Int? = 3,
     val postGuide: Markdown? = null,
@@ -55,7 +55,7 @@ fun Galaxy.toEdit(marks: List<GalaxyMark>) = GalaxyEdit(
     slug = slug,
     tagline = tagline,
     description = description,
-    geoBounds = geoBounds,
+    geoRect = geoRect,
     postPermission = postPermission,
     reviewCount = reviewCount,
     postGuide = postGuide,

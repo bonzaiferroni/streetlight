@@ -1,6 +1,5 @@
 package streetlight.web.model
 
-import kampfire.api.Slug
 import kampfire.model.Labeled
 import kampfire.model.toDataOr
 import koala.dom.MessageStore
@@ -100,7 +99,7 @@ class LocationScout(
         queryMessage.deliverSending("Searching OSM...")
         scope.launch {
             val city = stateNow.city?.takeIf { it.isNotBlank() }
-            val bounds = galaxy?.geoBounds.takeIf { city == null }?.resizeBy(5f)
+            val bounds = galaxy?.geoRect.takeIf { city == null }?.scaleBy(5f)
             val locations = osm.readLocations(query, stateNow.city, bounds).toDataOr(queryMessage) { return@launch }
             queryMessage.deliverSuccess("found: ${locations.size}")
             state.set { copy(locations = locations.mapNotNull { loc -> loc.toEditOrNull() }) }

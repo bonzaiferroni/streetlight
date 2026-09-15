@@ -5,53 +5,65 @@ import kampfire.utils.readDoubleList
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class GeoBounds(
+data class GeoRect(
     val sw: GeoPoint,
     val ne: GeoPoint
 ) {
     @Deprecated("use endpoint parser")
     fun toQuery() = "$QUERY_KEY=${sw.lng}&$QUERY_KEY=${sw.lat}&$QUERY_KEY=${ne.lng}&$QUERY_KEY=${ne.lat}"
 
-    val center get() = GeoPoint(
-        lng = (sw.lng + ne.lng) / 2.0,
-        lat = (sw.lat + ne.lat) / 2.0
-    )
+    val west get() = sw.lng
+    val east get() = ne.lng
+    val north get() = ne.lat
+    val south get() = sw.lat
+    val width get() = east - west
+    val height get() = north - south
+    val center get() = GeoPoint((west + east) / 2.0, (south + north) / 2.0)
 
-    fun contains(point: GeoPoint) = point.lng >= sw.lng && point.lng < ne.lng
-            && point.lat >= sw.lat && point.lat < ne.lat
+    fun contains(point: GeoPoint) = west <= point.lng && east >= point.lng &&
+            south <= point.lat && north >= point.lat
 
-    fun contains(bounds: GeoBounds) = bounds.sw.lng >= sw.lng && bounds.ne.lng < ne.lng
-            && bounds.sw.lat >= sw.lat && bounds.ne.lat < ne.lat
+    fun contains(other: GeoRect) = west <= other.west && east >= other.east &&
+            south <= other.south && north >= other.north
 
-    fun resizeBy(factor: Float): GeoBounds {
+    fun overlapArea(other: GeoRect): Double =
+        maxOf(0.0, minOf(east, other.east) - maxOf(west, other.west)) *
+                maxOf(0.0, minOf(north, other.north) - maxOf(south, other.south))
+
+    fun scaleBy(factor: Float): GeoRect {
         val center = center
-        val halfWidth = (ne.lng - sw.lng) / 2.0 * factor
-        val halfHeight = (ne.lat - sw.lat) / 2.0 * factor
-        return GeoBounds(
+        val halfWidth = width / 2.0 * factor
+        val halfHeight = height / 2.0 * factor
+        return GeoRect(
             sw = GeoPoint(center.lng - halfWidth, center.lat - halfHeight),
             ne = GeoPoint(center.lng + halfWidth, center.lat + halfHeight)
         )
     }
 
-    override fun toString() = "${sw.lng},${sw.lat},${ne.lng},${ne.lat}"
+    override fun toString() = "$sw:$ne"
 
     companion object {
         const val QUERY_KEY = "bounds"
 
-        val Denver = GeoBounds(GeoPoint(-105.05, 39.75), GeoPoint(-104.85, 39.95))
+        val Denver = GeoRect(GeoPoint(-105.05, 39.75), GeoPoint(-104.85, 39.95))
 
         @Deprecated("use endpoint parser")
-        fun fromQuery(parameters: ParameterMap): GeoBounds? {
+        fun fromQuery(parameters: ParameterMap): GeoRect? {
             val bounds = parameters.readDoubleList(QUERY_KEY)?.takeIf { it.size == 4 } ?: return null
-            return GeoBounds(GeoPoint(bounds[0], bounds[1]), GeoPoint(bounds[2], bounds[3]))
+            return GeoRect(GeoPoint(bounds[0], bounds[1]), GeoPoint(bounds[2], bounds[3]))
         }
 
-        fun of(value: String): GeoBounds? = value.split(",").mapNotNull { it.toDoubleOrNull() }
-            .takeIf { it.size == 4 }?.let { GeoBounds(GeoPoint(it[0], it[1]), GeoPoint(it[2], it[3])) }
+        fun of(value: String): GeoRect? = value.split(":").mapNotNull { GeoPoint.of(it) }
+            .takeIf { it.size == 2 }?.let { GeoRect(it[0], it[1]) }
+
+        fun arrayOf(value: String): List<GeoRect>? = value.split("|").map { of(it) }
+            .takeIf { bounds -> bounds.all { it != null } }?.filterNotNull()
     }
 }
 
-fun getContainingBounds(points: List<GeoPoint>): GeoBounds? {
+fun List<GeoRect>.toArrayString(): String = joinToString("|") { it.toString() }
+
+fun getContainingBounds(points: List<GeoPoint>): GeoRect? {
     if (points.size < 2) return null
 
     val first = points[0]
@@ -87,7 +99,7 @@ fun getContainingBounds(points: List<GeoPoint>): GeoBounds? {
         }
     }
 
-    return GeoBounds(
+    return GeoRect(
         sw = GeoPoint(lng = swLng, lat = minLat),
         ne = GeoPoint(lng = neLng, lat = maxLat),
     )

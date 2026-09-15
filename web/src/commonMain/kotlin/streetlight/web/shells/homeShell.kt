@@ -1,21 +1,18 @@
 package streetlight.web.shells
 
 import koala.LottieFile
-import koala.SvgFile
 import koala.css.*
 import koala.html.*
 import kotlinx.html.FlowContent
 import streetlight.model.data.Galaxy
 import streetlight.model.data.HomeContent
 import streetlight.model.ui.GalaxyFoundryRoute
-import streetlight.model.ui.GalaxyMapRoute
 import streetlight.model.ui.HomeRoute
 import streetlight.web.layouts.feedSection
 import streetlight.web.layouts.smallGalaxyCard
 import streetlight.web.pages.appFooter
 import koala.html.routeMenu
-import streetlight.model.ui.ResultMap
-import streetlight.model.ui.ResultMapRoute
+import streetlight.model.ui.PostMapRoute
 import streetlight.web.pages.appHeader
 
 fun FlowContent.homeShell(content: HomeContent) {
@@ -38,7 +35,7 @@ fun FlowContent.homeShell(content: HomeContent) {
             }
         }
 
-        routeMenu("Streetlight", HomeRoute, listOf(HomeRoute, ResultMapRoute("Home")), modify(PositionSticky))
+        routeMenu("Streetlight", HomeRoute, listOf(HomeRoute, PostMapRoute("Home")), modify(PositionSticky))
     }
 
     dataIsland(HomeShell.IslandId, content)

@@ -3,7 +3,7 @@
 package streetlight.web.model
 
 import kampfire.model.getContainingBounds
-import koala.model.FeatureMarker
+import koala.model.EntityMarker
 import koala.model.GeoFocus
 import koala.model.GeoMap
 import koala.model.MarkerFocus
@@ -13,6 +13,17 @@ import kampfire.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.launch
+import streetlight.model.data.City
+import streetlight.model.data.CustomEntity
+import streetlight.model.data.Event
+import streetlight.model.data.EventLocation
+import streetlight.model.data.EventPost
+import streetlight.model.data.FeedEntity
+import streetlight.model.data.Galaxy
+import streetlight.model.data.Location
+import streetlight.model.data.LocationPost
+import streetlight.model.data.Media
+import streetlight.model.data.MediaPost
 
 class MarkerMap(
     private val scope: CoroutineScope,
@@ -24,15 +35,8 @@ class MarkerMap(
     val markerLayer = geoMap.getOrCreateLayer(MarkerLayerConfig.Markers)
     val centerNow get() = geoMap.camera.stateNow.center
 
-    // val markersFlow = stateFlow.dedup { it.markers }
-    // private val partitionedFlow = markersFlow.combine(geoMap.camera.movingBoundsFlow) { markers, bounds ->
-    //     markers?.partition { bounds.contains(it.geoPoint) }
-    // }.distinctUntilChanged()
-    // val boundedMarkersFlow   = partitionedFlow.map { it?.first }
-    // val unboundedMarkersFlow = partitionedFlow.map { it?.second }
-
-    val markersField = state.tapOf { it.markers }
-    val partitionedField = markersField.combine(geoMap.camera.movingBoundsField) { markers, bounds ->
+    val markersState = state.tapOf { it.markers }
+    val viewMarkersState = markersState.combine(geoMap.camera.movingBoundsField) { markers, bounds ->
         markers?.partition { bounds.contains(it.geoPoint) }?.let {
             PartitionedMarkers(
                 bounded = it.first,
@@ -40,8 +44,8 @@ class MarkerMap(
             )
         }
     }
-    val isMovingField = geoMap.camera.isMovingField
-    val focusField = state.tapOf { it.focus }
+    val isMovingState = geoMap.camera.isMovingField
+    val focusState = state.tapOf { it.focus }
 
     init {
         scope.launch {
@@ -51,17 +55,27 @@ class MarkerMap(
         }
     }
 
-    fun setPoints(markers: List<FeatureMarker>?) {
-        markerLayer.setPoints(markers ?: emptyList())
-        state.set { copy(markers = markers, focus = null) }
+    fun setPoints(entities: List<FeedEntity>) {
+        val markers = mutableListOf<EntityMarker>()
+        createAndSet(markers, entities)
     }
 
-//    fun addPoints(markers: List<AppMarker>) {
-//        geoMap.addEntities(markers)
-//        state.set { it.copy(markers = (it.markers ?: emptyList()) + markers)}
-//    }
+    fun addPoints(entities: List<FeedEntity>) {
+        val markers = (stateNow.markers as? MutableList ?: (stateNow.markers ?: emptyList()).toMutableList())
+        createAndSet(markers, entities)
+    }
 
-    fun setFocus(marker: FeatureMarker) {
+    private fun createAndSet(markers: MutableList<EntityMarker>, entities: List<FeedEntity>) {
+        entities.forEach { entity ->
+            if (markers.any { it.markerId == entity.markerId }) return@forEach
+            val marker = createMarker(entity) ?: return@forEach
+            markers.add(marker)
+        }
+        markerLayer.setPoints(markers.toList())
+        state.set { copy(markers = markers, focus = focus.takeIf { f -> markers.any { it.markerId == f?.markerId } }) }
+    }
+
+    fun setFocus(marker: EntityMarker) {
         val focus = MarkerFocus(marker)
         geoMap.setFocus(focus)
         geoMap.camera.panMap(marker.geoPoint)
@@ -72,17 +86,32 @@ class MarkerMap(
         val markers = stateNow.markers.takeIf { !it.isNullOrEmpty() } ?: return
         when(val bounds = getContainingBounds(markers.map { it.geoPoint })) {
             null -> geoMap.camera.panMap(markers.first().geoPoint)
-            else -> geoMap.camera.panMap(bounds.resizeBy(1.5f))
+            else -> geoMap.camera.panMap(bounds.scaleBy(1.5f))
         }
     }
 }
 
 data class StreetMapState(
-    val markers: List<FeatureMarker>? = null,
+    val markers: List<EntityMarker>? = null,
     val focus: GeoFocus? = null,
 )
 
 data class PartitionedMarkers(
-    val bounded: List<FeatureMarker>,
-    val unbounded: List<FeatureMarker>,
+    val bounded: List<EntityMarker>,
+    val unbounded: List<EntityMarker>,
 )
+
+private fun createMarker(post: FeedEntity): EntityMarker? = when (post) {
+    is EventLocation -> EventMarker(post)
+    is EventPost -> EventMarker(post.event)
+    is Event -> null
+    is Location -> LocationMarker(post)
+    is Media -> post.geoPoint?.let { MediaMarker(post, it) }
+    is LocationPost -> LocationMarker(post.location)
+    is MediaPost -> post.media.geoPoint?.let { MediaMarker(post.media, it) }
+    is City -> CityMarker(post)
+    is Galaxy -> GalaxyMarker(post)
+    is CustomEntity -> null
+}
+
+private fun createMap(posts: List<FeedEntity>): List<EntityMarker> = posts.mapNotNull { createMarker(it) }

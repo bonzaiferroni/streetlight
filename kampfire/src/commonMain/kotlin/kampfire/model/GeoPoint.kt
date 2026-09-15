@@ -15,8 +15,9 @@ data class GeoPoint(
     fun toList(): List<Double> = listOf(lng, lat)
     fun toArray(): Array<Double> = arrayOf(lng, lat)
 
-    override fun toString() = "$lat,$lng"
+    override fun toString() = "$lng,$lat"
 
+    @Deprecated("use new param structure")
     fun toQuery() = "lng=$lng&lat=$lat"
 
     fun isTouching(other: GeoPoint) = abs(lng - other.lng) < 1e-9 && abs(lat - other.lat) < 1e-9
@@ -24,15 +25,20 @@ data class GeoPoint(
     companion object {
         val Denver = GeoPoint(-104.95, 39.75)
 
+        @Deprecated("use new param structure")
         fun fromQuery(parameters: ParameterMap) = parameters.let {
             val lng = parameters["lng"]?.firstOrNull()?.toDoubleOrNull() ?: error("lng not found")
             val lat = parameters["lat"]?.firstOrNull()?.toDoubleOrNull() ?: error("lat not found")
             GeoPoint(lng, lat)
         }
 
+        @Deprecated("use of")
         fun fromString(value: String) = value.split(",").mapNotNull { it.toDoubleOrNull() }.takeIf { it.size == 2 }?.let {
-            GeoPoint(it[1], it[0])
+            GeoPoint(it[0], it[1])
         }
+
+        fun of(value: String): GeoPoint? = value.split(",").mapNotNull { it.toDoubleOrNull() }
+            .takeIf { it.size == 2 }?.let { GeoPoint(it[0], it[1]) }
     }
 }
 

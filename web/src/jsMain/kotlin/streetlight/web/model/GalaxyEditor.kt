@@ -76,7 +76,7 @@ class GalaxyEditor(
     val imageEditor = ImageEditor(imageField, api)
 
     init {
-        galaxy.geoBounds?.let {
+        galaxy.geoRect?.let {
             geo.panMap(it)
         }
 
@@ -127,7 +127,7 @@ class GalaxyEditor(
         scope.launch {
             imageEditor.finalizeImage(editMessage)
             val design = designer.build(editMessage)
-            val edit = editState.now.copy(geoBounds = geo.stateNow.bounds, design = design)
+            val edit = editState.now.copy(geoRect = geo.stateNow.bounds, design = design)
             val slug = when (edit.galaxyId) {
                 null -> api.createGalaxy(edit)
                 else -> api.updateGalaxy(edit)

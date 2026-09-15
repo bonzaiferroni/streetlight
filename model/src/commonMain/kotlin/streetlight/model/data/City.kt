@@ -1,7 +1,7 @@
 package streetlight.model.data
 
 import kampfire.api.Slug
-import kampfire.model.GeoBounds
+import kampfire.model.GeoRect
 import kampfire.model.GeoPoint
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
@@ -16,9 +16,10 @@ data class City(
     val galaxyCount: Int,
     val mapRank: Float?,
     override val geoPoint: GeoPoint,
-    val geoBounds: GeoBounds,
+    val geoRect: GeoRect,
 ): FeedEntity {
     override val label get() = name
+    override val markerId get() = slug.value
 }
 
 @JvmInline @Serializable

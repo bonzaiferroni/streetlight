@@ -2,6 +2,8 @@ package streetlight.model
 
 import kampfire.api.EndpointParam
 import kampfire.api.PathBuilder
+import streetlight.model.data.MapQuery
+import streetlight.model.data.MapQueryLegacy
 import streetlight.model.data.PostCursor
 import streetlight.model.data.SortDirection
 import kotlin.time.Instant

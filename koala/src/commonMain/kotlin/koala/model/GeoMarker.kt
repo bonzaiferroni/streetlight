@@ -35,18 +35,18 @@ interface TravelMarker: PointMarker {
     override val subpixelPositioning get() = true
 }
 
-interface FeatureMarker: PointMarker {
+interface EntityMarker: PointMarker {
     val typeLabel: String? get() = null
     val colorScheme: String? get() = null
 }
 
-interface ThumbMarker: FeatureMarker {
+interface ThumbMarker: EntityMarker {
     val thumbUrl: Url
     val sublabel: String? get() = null
     override val bodySize: LinearDimension get() = 48.px
 }
 
-interface IconMarker: FeatureMarker {
+interface IconMarker: EntityMarker {
     val svg: Svg
     override val bodySize: LinearDimension get() = 32.px
 }

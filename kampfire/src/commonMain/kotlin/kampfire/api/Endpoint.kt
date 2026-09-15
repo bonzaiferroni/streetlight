@@ -3,7 +3,8 @@ package kampfire.api
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.parameter
 import io.ktor.http.HttpMethod
-import kampfire.model.GeoBounds
+import kampfire.model.GeoRect
+import kampfire.model.toArrayString
 import kampfire.utils.pascalToKebabCase
 import kotlin.enums.enumEntries
 import kotlin.time.Instant
@@ -67,7 +68,7 @@ abstract class Endpoint<SentType, ReturnType>(
     fun stringOrNullParamOf(key: String) = EndpointParam<String?>(
         key = key,
         toValue = { it },
-        toString = { it ?: error("value not found") },
+        toString = { it ?: error("string param $key not found") },
     )
 
     fun uuidParamOf(key: String) = EndpointParam(
@@ -82,10 +83,16 @@ abstract class Endpoint<SentType, ReturnType>(
         toString = { it.toString() }
     )
 
-    fun geoBoundsOf(key: String) = EndpointParam(
+    fun geoRectOf(key: String) = EndpointParam(
         key = key,
-        toValue = { GeoBounds.of(it) },
+        toValue = { GeoRect.of(it) },
         toString = { it.toString() }
+    )
+
+    fun geoRectArrayOf(key: String) = EndpointParam(
+        key = key,
+        toValue = { GeoRect.arrayOf(it) },
+        toString = { it?.toArrayString() ?: error("rect array param $key not found") }
     )
 
     fun intListParamOf(key: String) = listParamOf(key, { it.toInt()}, { it.toString() })

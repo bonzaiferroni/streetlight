@@ -69,6 +69,7 @@ data class Location(
             }
         }.takeIf { it.isNotEmpty() }
     }
+    override val markerId get() = locationId.toString()
 
     // td: implement contact info
     val phone: String? get() = null

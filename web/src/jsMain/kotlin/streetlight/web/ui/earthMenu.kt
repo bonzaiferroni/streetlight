@@ -19,7 +19,7 @@ import streetlight.model.ui.GalaxyMap
 import streetlight.model.ui.GalaxyMapRoute
 import streetlight.model.ui.GalaxyRoute
 import streetlight.model.ui.HomeRoute
-import streetlight.model.ui.ResultMap
+import streetlight.model.ui.PostMap
 import streetlight.web.model.Earth
 
 fun ViewScope.earthMenu(model: Earth) {
@@ -93,8 +93,8 @@ fun ViewScope.earthRouteMenu(model: Earth, map: EarthMap) {
                 }
             }
         }
-        is ResultMap -> {
-            val routeNow = MenuLabel("Map")
+        is PostMap -> {
+            val routeNow = MenuLabel("Posts")
             routeMenu(
                 context = map.title,
                 optionNow = routeNow,

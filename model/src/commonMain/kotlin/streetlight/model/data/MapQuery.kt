@@ -1,28 +1,21 @@
 package streetlight.model.data
 
-import kampfire.model.GeoBounds
-import kampfire.model.GeoPoint
-import kampfire.utils.ParameterMap
-import kampfire.utils.readFloat
-import kotlinx.serialization.Serializable
+import kampfire.api.PathBuilder
+import kampfire.model.GeoRect
+import streetlight.model.Api
 
-@Serializable
 data class MapQuery(
-    val bounds: GeoBounds,
-    val zoom: Float,
-) {
-    fun toQuery() = "${bounds.toQuery()}&$ZOOM_KEY=$zoom"
+    val view: GeoRect,
+    val seen: List<GeoRect>?,
+    val cursor: PostCursor.Lean
+)
 
-    fun contains(point: GeoPoint) = point.lng >= bounds.sw.lng && point.lng < bounds.ne.lng
-            && point.lat >= bounds.sw.lat && point.lat < bounds.ne.lat
-
-    companion object {
-        const val ZOOM_KEY = "zoom"
-
-        fun fromQuery(parameters: ParameterMap): MapQuery {
-            val bounds = GeoBounds.fromQuery(parameters) ?: error("bounds not found")
-            val zoom = parameters.readFloat(ZOOM_KEY) ?: error("zoom not found")
-            return MapQuery(bounds, zoom)
-        }
+fun PathBuilder.writeMapQuery(query: MapQuery) {
+    val it = Api.Posts.ReadMapQuery
+    writeParam(it.view, query.view)
+    writeParam(it.seen, query.seen)
+    if (query.cursor != PostCursor.Lean.Default) {
+        writeParam(it.postId, query.cursor.postId?.value)
+        writeParam(it.postLean, query.cursor.postLean)
     }
 }

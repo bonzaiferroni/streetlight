@@ -6,7 +6,7 @@ import kampfire.api.UserApi
 import kampfire.api.Username
 import kampfire.model.AccountUpgradeRequest
 import kampfire.model.EmailChange
-import kampfire.model.GeoBounds
+import kampfire.model.GeoRect
 import kampfire.model.GeoPoint
 import kampfire.model.LoginRequest
 import kampfire.model.PasswordChange
@@ -48,7 +48,7 @@ class ApiClient(private val client: FetchClient) {
     suspend fun readLocationContent(slug: Slug) = client.getApi(Api.Locations.ReadContent, slug)
     suspend fun readLocationUpdaterContent(slug: Slug) = client.getApi(Api.Locations.ReadUpdaterContent, slug)
     suspend fun parseLocation(request: ParseRequest) = client.postApi(Api.Locations.ParseLocation, request)
-    suspend fun readLocationsInBounds(bounds: GeoBounds) = client.postApi(Api.Locations.QueryBounds, bounds)
+    suspend fun readLocationsInBounds(bounds: GeoRect) = client.postApi(Api.Locations.QueryBounds, bounds)
     suspend fun searchLocations(query: String, city: String? = null, state: String? = null, limit: Int = 10) =
         client.getApi(Api.Locations.Search) {
             writeParam(it.query, query)
@@ -63,7 +63,7 @@ class ApiClient(private val client: FetchClient) {
 
     suspend fun createLocation(location: LocationEdit) = client.postApi(Api.Locations.CreateLocation, location)
     suspend fun updateLocation(location: LocationEdit) = client.postApi(Api.Locations.UpdateLocation, location)
-    suspend fun queryMap(request: MapQuery) = client.getApi(Api.Events.QueryMap, request.toQuery())
+    suspend fun queryMap(request: MapQueryLegacy) = client.getApi(Api.Events.QueryMap, request.toQuery())
     suspend fun configSubdomain(config: SubdomainConfig) = client.postApi(Api.Locations.UpdateSubdomain, config)
 
     // stars
@@ -110,7 +110,7 @@ class ApiClient(private val client: FetchClient) {
 
     // websockets
     fun connectChat(scope: CoroutineScope) = WebChatSocket(client.connectSocket(Api.GroupChat), scope)
-    fun connectSpiritVision() = client.connectSocket(Api.Map.SpiritVision)
+    fun connectSpiritVision() = client.connectSocket(Api.Posts.SpiritVision)
     fun connectOmniLog() = client.connectSSE(Api.Omni.Log)
     fun connectTalkLog(id: Uuid, space: SpaceType) = client.connectSSE(
         Api.Talk.Connect,
@@ -147,9 +147,7 @@ class ApiClient(private val client: FetchClient) {
         writeCursor(Api.Galaxies.ReadGalaxyFeed, cursor)
     }
     suspend fun readPost(postId: PostId) = client.getApi(Api.Galaxies.ReadPostId, postId)
-    suspend fun readPostsInBounds(bounds: GeoBounds) = client.getApi(Api.Map.ReadEntities) {
-        writeParam(it.bounds, bounds)
-    }
+    suspend fun readMapPosts(query: MapQuery) = client.getApi(Api.Posts.ReadMapQuery) { writeMapQuery(query) }
     suspend fun removePost(postId: PostId) = client.postApi(Api.Galaxies.RemovePost, postId)
     suspend fun updateMark(update: MarkUpdate) = client.postApi(Api.Galaxies.UpdateMark, update)
 

@@ -24,7 +24,11 @@ sealed interface PostCursor {
         override val direction: SortDirection,
         override val postId: PostId? = null,
         val postLean: Int? = null,
-    ) : PostCursor
+    ) : PostCursor {
+        companion object  {
+            val Default get() = Lean(SortDirection.Descending)
+        }
+    }
 
     @Serializable
     data class Mark(

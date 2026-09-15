@@ -2,7 +2,7 @@ package streetlight.web.model
 
 import kampfire.model.toDataOr
 import koala.utils.launch
-import koala.model.FeatureMarker
+import koala.model.EntityMarker
 import koala.model.GeoFocus
 import koala.model.MarkerFocus
 import koala.model.Portal
@@ -17,11 +17,10 @@ import streetlight.model.ui.EarthMap
 import streetlight.model.ui.EarthRoute
 import streetlight.model.ui.GalaxyMap
 import streetlight.model.ui.GalaxyMapRoute
-import streetlight.model.ui.ResultMap
-import streetlight.model.ui.ResultMapRoute
+import streetlight.model.ui.PostMap
+import streetlight.model.ui.PostMapRoute
 import streetlight.web.io.ApiClient
 import kotlin.time.Duration.Companion.milliseconds
-import kotlin.time.Duration.Companion.seconds
 
 class Earth(
     private val scope: CoroutineScope,
@@ -29,7 +28,6 @@ class Earth(
     private val api: ApiClient,
     private val portal: Portal,
     private val toaster: Toaster,
-    private val markerService: MarkerService,
     private val markerMap: MarkerMap
 ) {
     private val state = storeOf(EarthMapState(initialMap))
@@ -37,14 +35,16 @@ class Earth(
     val stateNow get() = state.now
 
     val mapState = state.tapOf { it.map }
-    val boundedMarkersState = markerMap.partitionedField.tapOf { it?.bounded ?: emptyList() }
-    val unboundedMarkersState = markerMap.partitionedField.tapOf { it?.unbounded ?: emptyList() }
+    val boundedMarkersState = markerMap.viewMarkersState.tapOf { it?.bounded ?: emptyList() }
+    val unboundedMarkersState = markerMap.viewMarkersState.tapOf { it?.unbounded ?: emptyList() }
     val summaryField = boundedMarkersState.tapOf { points ->
         points.groupingBy { it.typeLabel }.eachCount().toList()
     }
-    val isMovingState = markerMap.isMovingField
-    val focusState = markerMap.focusField.tapOf { focus -> focus?.takeIf { it.toGalaxy() == null } }
+    val isMovingState = markerMap.isMovingState
+    val focusState = markerMap.focusState.tapOf { focus -> focus?.takeIf { it.toGalaxy() == null } }
     val isFocusedState = focusState.tapOf { it != null }
+
+    val cache = EarthCache(scope, api, markerMap, toaster)
 
     init {
         scope.launch("Earth > routeFlowOf") {
@@ -55,7 +55,7 @@ class Earth(
             }
         }
         scope.launch("Earth > focus galaxy") {
-            markerMap.focusField.flow.collect {
+            markerMap.focusState.flow.collect {
                 it?.toGalaxy()?.let { galaxy ->
                     portal.go(GalaxyMapRoute(galaxy.slug))
                 }
@@ -63,37 +63,34 @@ class Earth(
         }
     }
 
-    fun setFocus(marker: FeatureMarker) = markerMap.setFocus(marker)
+    fun setFocus(marker: EntityMarker) = markerMap.setFocus(marker)
 
     fun showAll() = markerMap.showAll()
 
     private suspend fun collectRoute(route: EarthRoute) {
-        val map = createMarkers(route) ?: return
+        val map = createMap(route) ?: return
+        cache.setMapContext(route is PostMapRoute)
         state.set { copy(map = map) }
-        delay(10.milliseconds)
+        delay(100.milliseconds)
         showAll()
     }
 
-    private suspend fun createMarkers(route: EarthRoute): EarthMap? {
+    private suspend fun createMap(route: EarthRoute): EarthMap? {
         return when (route) {
             is GalaxyMapRoute -> {
                 when (val slug = route.slug) {
                     null -> {
                         // td: replace with map bounds as argument
-                        val markers = api.readTopGalaxies().toDataOr(toaster) { return null }.let {
-                            markerService.createMarkers(it)
-                        }
-                        markerMap.setPoints(markers)
+                        val galaxies = api.readTopGalaxies().toDataOr(toaster) { return null }
+                        markerMap.setPoints(galaxies)
                         GalaxyMap(null)
                     }
 
                     else -> {
                         val galaxy = api.readGalaxy(slug).toDataOr(toaster) { return null }
 
-                        val markers = api.readPosts(galaxy.galaxyId).toDataOr(toaster) { return null }.let {
-                            markerService.createMarkers(it.entities)
-                        }
-                        markerMap.setPoints(markers)
+                        val feed = api.readPosts(galaxy.galaxyId).toDataOr(toaster) { return null }
+                        markerMap.setPoints(feed.entities)
                         GalaxyMap(galaxy)
                     }
                 }
@@ -102,41 +99,22 @@ class Earth(
             is CityMapRoute -> {
                 when (val slug = route.slug) {
                     null -> {
-                        val markers = api.readTopCities().toDataOr(toaster) { return null }.let {
-                            markerService.createMarkers(it)
-                        }
-                        markerMap.setPoints(markers)
+                        val cities = api.readTopCities().toDataOr(toaster) { return null }
+                        markerMap.setPoints(cities)
                         CityMap(null)
                     }
                     else -> {
                         val city = api.readCity(slug).toDataOr(toaster) { return null }
 
-                        val markers = api.readCityPosts(slug).toDataOr(toaster) { return null }.let {
-                            markerService.createMarkers(it)
-                        }
-                        markerMap.setPoints(markers)
+                        val posts = api.readCityPosts(slug).toDataOr(toaster) { return null }
+                        markerMap.setPoints(posts)
                         CityMap(city)
                     }
                 }
             }
 
-            is ResultMapRoute -> {
-                delay(1.seconds)
-                val camera = markerMap.geoMap.camera
-                while (camera.stateNow.isMoving) {
-                    delay(100.milliseconds)
-                }
-
-                if (markerMap.stateNow.markers.isNullOrEmpty()) {
-                    val bounds = camera.stateNow.bounds
-                    println(bounds)
-                    val markers = api.readPostsInBounds(bounds).toDataOr(toaster) { return null }.let {
-                        markerService.createMarkers(it)
-                    }
-                    println("markers: ${markers.size}")
-                    markerMap.setPoints(markers)
-                }
-                ResultMap(route.title)
+            is PostMapRoute -> {
+                PostMap(route.title)
             }
         }
     }
