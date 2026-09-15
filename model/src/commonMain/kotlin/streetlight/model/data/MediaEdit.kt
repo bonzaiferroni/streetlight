@@ -9,6 +9,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class MediaEdit(
     val mediaId: MediaId? = null,
+    val mediaType: MediaType = MediaType.Text,
     val title: String? = null,
     val subtitle: String? = null,
     val text: Markdown? = null,

@@ -48,9 +48,9 @@ value class MediaId(override val value: Uuid): RecordId {
 
 enum class MediaType(label: String? = null): Labeled {
     Text,
-    Image;
+    Image,
+    Link;
     // Audio,
-    // Link,
     // Gallery
     // News,
 

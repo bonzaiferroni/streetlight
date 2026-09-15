@@ -24,7 +24,6 @@ class GeoCamera(
     internal val movementFlow: Flow<MarkerMovement> field = MutableSharedFlow<MarkerMovement>(1)
 
     val pointAndZoom = state.tapOf { it.center to it.zoom }
-
     val viewedState = state.refine { states -> states.filter { it.isViewed } }
     val settledState = viewedState.refine { states -> states.filter { !it.isMoving } }
 

@@ -37,12 +37,13 @@ class EarthCache(
     fun setMapContext(isQueriedMap: Boolean) {
         this.isQueriedMap = isQueriedMap
         queries.clear()
-        queryView()
+        queryView() // td: resolve redundant query
     }
 
     private fun queryView(view: GeoRect? = null) {
         if (!isQueriedMap) return
         scope.launch {
+            println("querying map")
             val queriedView = view ?: camera.viewedState.flow.first { !it.isMoving }.view
             val query = getQuery(queriedView) ?: return@launch
             val feed = api.readMapPosts(query).toDataOr(toaster) { return@launch }
