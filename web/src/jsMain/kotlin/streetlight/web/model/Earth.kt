@@ -114,6 +114,12 @@ class Earth(
             }
 
             is PostMapRoute -> {
+                markerMap.filterPoints {
+                    when (it) {
+                        is LocationMarker, is EventMarker, is MediaMarker -> true
+                        else -> false
+                    }
+                }
                 PostMap(route.title)
             }
         }

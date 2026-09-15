@@ -61,17 +61,6 @@ data class EventMarker(
     override val colorScheme get() = ColorScheme.Accent.cssValue
 }
 
-data class GalaxyMarker(
-    val galaxy: Galaxy
-): ThumbMarker {
-    override val markerId get() = galaxy.markerId
-    override val label get() = galaxy.name
-    override val thumbUrl get() = galaxy.image?.thumb ?: SiteImage.placeholderTh
-    override val geoPoint get() = galaxy.geoPoint
-    override val typeLabel get() = MarkerType.Galaxy.label
-    override val colorScheme get() = ColorScheme.Galaxy.cssValue
-}
-
 data class MediaMarker(
     val media: Media,
     override val geoPoint: GeoPoint
@@ -92,4 +81,15 @@ data class CityMarker(
     override val geoPoint get() = city.geoPoint
     override val typeLabel get() = MarkerType.City.label
     override val colorScheme get() = ColorScheme.City.cssValue
+}
+
+data class GalaxyMarker(
+    val galaxy: Galaxy
+): ThumbMarker {
+    override val markerId get() = galaxy.markerId
+    override val label get() = galaxy.name
+    override val thumbUrl get() = galaxy.image?.thumb ?: SiteImage.placeholderTh
+    override val geoPoint get() = galaxy.geoPoint
+    override val typeLabel get() = MarkerType.Galaxy.label
+    override val colorScheme get() = ColorScheme.Galaxy.cssValue
 }

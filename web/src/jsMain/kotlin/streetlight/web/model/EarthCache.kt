@@ -8,10 +8,10 @@ import koala.utils.launch
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import streetlight.model.data.MapQuery
 import streetlight.model.data.PostCursor
-import streetlight.model.data.SortDirection
 import streetlight.web.io.ApiClient
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -24,10 +24,11 @@ class EarthCache(
     var isQueriedMap = false
 
     private val queries = mutableMapOf<GeoRect, MapCursor>()
+    private val camera get() = markerMap.geoMap.camera
 
     init {
         scope.launch("Earth > post query") {
-            markerMap.geoMap.camera.settledView.flow.debounce(500.milliseconds).collect {
+            camera.settledViewState.flow.debounce(500.milliseconds).collect {
                 queryView(it)
             }
         }
@@ -36,17 +37,16 @@ class EarthCache(
     fun setMapContext(isQueriedMap: Boolean) {
         this.isQueriedMap = isQueriedMap
         queries.clear()
+        queryView()
     }
 
-    private fun queryView(view: GeoRect) {
+    private fun queryView(view: GeoRect? = null) {
         if (!isQueriedMap) return
         scope.launch {
-            val query = getQuery(view) ?: return@launch
+            val queriedView = view ?: camera.viewedState.flow.first { !it.isMoving }.view
+            val query = getQuery(queriedView) ?: return@launch
             val feed = api.readMapPosts(query).toDataOr(toaster) { return@launch }
-            println("entities: ${feed.entities.size}")
-            println("nextCursor: ${feed.nextCursor} (${feed.nextCursor?.let { it::class.simpleName }})")
-            println("completed: ${feed.isCompleted}")
-            queries[view] = MapCursor(feed.nextCursor as? PostCursor.Lean, feed.isCompleted)
+            queries[queriedView] = MapCursor(feed.nextCursor as? PostCursor.Lean, feed.isCompleted)
             markerMap.addPoints(feed.entities)
         }
     }

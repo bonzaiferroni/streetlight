@@ -108,7 +108,7 @@ class LocationScout(
 
     fun whatIsHere() {
         scope.launch(::whatIsHere) {
-            val center = map.geoMap.camera.centerField.now
+            val center = map.geoMap.camera.centerState.now
             osm.readLocationAt(center).toDataOr(mapMessage) { return@launch }.let { location ->
                 val location = location.toEditOrNull() ?: return@launch
                 mapMessage.deliver(location.label)

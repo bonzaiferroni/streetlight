@@ -36,7 +36,7 @@ class MarkerMap(
     val centerNow get() = geoMap.camera.stateNow.center
 
     val markersState = state.tapOf { it.markers }
-    val viewMarkersState = markersState.combine(geoMap.camera.movingBoundsField) { markers, bounds ->
+    val viewMarkersState = markersState.combine(geoMap.camera.movingViewState) { markers, bounds ->
         markers?.partition { bounds.contains(it.geoPoint) }?.let {
             PartitionedMarkers(
                 bounded = it.first,
@@ -44,7 +44,7 @@ class MarkerMap(
             )
         }
     }
-    val isMovingState = geoMap.camera.isMovingField
+    val isMovingState = geoMap.camera.isMovingState
     val focusState = state.tapOf { it.focus }
 
     init {
@@ -56,23 +56,32 @@ class MarkerMap(
     }
 
     fun setPoints(entities: List<FeedEntity>) {
-        val markers = mutableListOf<EntityMarker>()
-        createAndSet(markers, entities)
+        createAndSetMarkers(entities, emptyList())
     }
 
     fun addPoints(entities: List<FeedEntity>) {
-        val markers = (stateNow.markers as? MutableList ?: (stateNow.markers ?: emptyList()).toMutableList())
-        createAndSet(markers, entities)
+        createAndSetMarkers(entities, stateNow.markers ?: emptyList())
     }
 
-    private fun createAndSet(markers: MutableList<EntityMarker>, entities: List<FeedEntity>) {
+    fun filterPoints(predicate: (EntityMarker) -> Boolean) {
+        stateNow.markers?.filter(predicate)?.let {
+            setMarkers(it)
+        }
+    }
+
+    private fun setMarkers(markers: List<EntityMarker>) {
+        markerLayer.setPoints(markers)
+        state.set { copy(markers = markers, focus = focus.takeIf { f -> markers.any { it.markerId == f?.markerId } }) }
+    }
+
+    private fun createAndSetMarkers(entities: List<FeedEntity>, markers: List<EntityMarker> = emptyList()) {
+        val markers = markers.toMutableList()
         entities.forEach { entity ->
             if (markers.any { it.markerId == entity.markerId }) return@forEach
             val marker = createMarker(entity) ?: return@forEach
             markers.add(marker)
         }
-        markerLayer.setPoints(markers.toList())
-        state.set { copy(markers = markers, focus = focus.takeIf { f -> markers.any { it.markerId == f?.markerId } }) }
+        setMarkers(markers)
     }
 
     fun setFocus(marker: EntityMarker) {

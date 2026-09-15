@@ -7,18 +7,17 @@ import koala.dom.*
 import koala.external.MarkerOptions
 import koala.external.maplibregl
 import kotlinx.css.properties.s
-import kotlinx.html.dom.append
 import kotlinx.html.js.div
 import web.dom.document
 import web.html.HTMLDivElement
 
-internal class PointRender(
+internal class PointMarkerElement(
     val jsMarker: maplibregl.Marker,
     marker: PointMarker,
     planarPoint: Point,
     val element: HTMLDivElement,
     val base: HTMLDivElement,
-    val body: PointRenderBody,
+    val body: PointMarkerBody,
 ) {
     var planarPoint = planarPoint
         private set
@@ -102,7 +101,7 @@ internal class PointRender(
     }
 }
 
-internal fun PointMarker.toPointRender(pixelPoint: Point, focusEntity: () -> Unit): PointRender {
+internal fun PointMarker.toPointRender(pixelPoint: Point, focusEntity: () -> Unit): PointMarkerElement {
     val element = document.createDiv()
     element.modify(MarkerStyle.Root)
 
@@ -116,7 +115,7 @@ internal fun PointMarker.toPointRender(pixelPoint: Point, focusEntity: () -> Uni
     )
 
     var baseElement: HTMLDivElement? = null
-    var renderBody: PointRenderBody? = null
+    var renderBody: PointMarkerBody? = null
 
     element.append { // this element is modified by maplibre
         baseElement = div { // this element is all mine
@@ -145,15 +144,15 @@ internal fun PointMarker.toPointRender(pixelPoint: Point, focusEntity: () -> Uni
             addModifiers(baseMod)
 
             renderBody = when (val marker = this@toPointRender) {
-                is TravelMarker -> configureIconRender(marker)
-                is ThumbMarker -> configureThumbRender(marker)
-                is IconMarker -> configureIconRender(marker)
+                is TravelMarker -> configureIconMarker(marker)
+                is ThumbMarker -> configureThumbMarker(marker)
+                is IconMarker -> configureIconMarker(marker)
                 else -> error("unrecognized PointMarker")
             }
         }.asWeb()
     }
 
-    val view = PointRender(
+    val view = PointMarkerElement(
         jsMarker = jsMarker,
         marker = this,
         planarPoint = pixelPoint,

@@ -11,10 +11,10 @@ import koala.html.span
 import kotlinx.html.js.img
 import web.html.HTMLElement
 
-internal class FeatureRenderBody(
+internal class EntityMarkerBody(
     override val element: HTMLElement,
     override val clusterElement: HTMLElement,
-): PointRenderBody {
+): PointMarkerBody {
     override val labelElement: HTMLElement? get() = null
 
     override fun update(marker: PointMarker) {
@@ -22,7 +22,7 @@ internal class FeatureRenderBody(
     }
 }
 
-internal fun AppendScope.configureThumbRender(marker: ThumbMarker): FeatureRenderBody {
+internal fun AppendScope.configureThumbMarker(marker: ThumbMarker): EntityMarkerBody {
     var clusterElement: HTMLElement? = null
 
     with(marker) {
@@ -59,11 +59,11 @@ internal fun AppendScope.configureThumbRender(marker: ThumbMarker): FeatureRende
             }
         }
 
-        return FeatureRenderBody(element, clusterElement!!)
+        return EntityMarkerBody(element, clusterElement!!)
     }
 }
 
-internal fun AppendScope.configureIconRender(marker: IconMarker): FeatureRenderBody {
+internal fun AppendScope.configureIconMarker(marker: IconMarker): EntityMarkerBody {
     var clusterElement: HTMLElement? = null
 
     with(marker) {
@@ -84,6 +84,6 @@ internal fun AppendScope.configureIconRender(marker: IconMarker): FeatureRenderB
             }
         }
 
-        return FeatureRenderBody(element, clusterElement!!)
+        return EntityMarkerBody(element, clusterElement!!)
     }
 }

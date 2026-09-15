@@ -82,7 +82,7 @@ fun ViewScope.earthUnboundedOverlay(model: Earth, mapContext: GeoCameraControlle
             combine(
                 model.unboundedMarkersState.flow,
                 offsetFlow,
-                geoMap.movingBoundsField.flow,
+                geoMap.movingViewState.flow,
             ) { markers, offset, _ -> markers to offset }
                 .collect { (markers, offset) ->
                     hints.entries.removeAll { (id, hint) ->

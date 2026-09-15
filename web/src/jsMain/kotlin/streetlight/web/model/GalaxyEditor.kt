@@ -127,7 +127,7 @@ class GalaxyEditor(
         scope.launch {
             imageEditor.finalizeImage(editMessage)
             val design = designer.build(editMessage)
-            val edit = editState.now.copy(geoRect = geo.stateNow.bounds, design = design)
+            val edit = editState.now.copy(geoRect = geo.stateNow.view, design = design)
             val slug = when (edit.galaxyId) {
                 null -> api.createGalaxy(edit)
                 else -> api.updateGalaxy(edit)

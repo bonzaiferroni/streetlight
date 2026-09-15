@@ -20,6 +20,7 @@ import streetlight.model.ui.GalaxyMapRoute
 import streetlight.model.ui.GalaxyRoute
 import streetlight.model.ui.HomeRoute
 import streetlight.model.ui.PostMap
+import streetlight.model.ui.PostMapRoute
 import streetlight.web.model.Earth
 
 fun ViewScope.earthMenu(model: Earth) {
@@ -39,7 +40,11 @@ fun ViewScope.earthRouteMenu(model: Earth, map: EarthMap) {
                     routeMenu(
                         context = "Streetlight",
                         optionNow = routeNow,
-                        options = listOf(routeNow, MenuRoute(CityMapRoute(null), "Cities")),
+                        options = listOf(
+                            MenuRoute(PostMapRoute()),
+                            routeNow,
+                            MenuRoute(CityMapRoute(null), "Cities")
+                        ),
                         mod = modify(PointerEventsAuto),
                         leftIcons = listOf(IconRoute(SvgFile.Home, HomeRoute)),
                         rightIcons = listOf(showAll)
@@ -69,6 +74,7 @@ fun ViewScope.earthRouteMenu(model: Earth, map: EarthMap) {
                         context = "Streetlight",
                         optionNow = routeNow,
                         options = listOf(
+                            MenuRoute(PostMapRoute()),
                             MenuRoute(GalaxyMapRoute(null), "Galaxies"),
                             routeNow
                         ),

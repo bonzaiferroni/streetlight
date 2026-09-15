@@ -18,7 +18,7 @@ class GeoRender(
     private val geoMap: GeoMap,
 ) {
     private var layerRenders: List<GeoLayerRender> = emptyList()
-    private var focusRender: PointRender? = null
+    private var focusRender: PointMarkerElement? = null
 
     init {
         val element = windowElement.querySelector(".maplibregl-canvas") ?: error("canvas not found")
@@ -56,7 +56,7 @@ class GeoRender(
 
             launch {
                 camera.stateFlow.collect {
-                    setBounds(it.bounds, it.zoom, it.isMoving)
+                    setBounds(it.view, it.zoom, it.isMoving)
                 }
             }
         }
@@ -79,7 +79,7 @@ class GeoRender(
         geoMap.setFocus(focus)
     }
 
-    internal fun setFocusRender(render: PointRender?) {
+    internal fun setFocusRender(render: PointMarkerElement?) {
         if (focusRender == render) return
         focusRender?.unfocus()
 

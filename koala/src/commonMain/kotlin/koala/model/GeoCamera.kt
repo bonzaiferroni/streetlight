@@ -23,26 +23,17 @@ class GeoCamera(
     internal val panBoundsFlow: SharedFlow<GeoRect> field = MutableSharedFlow<GeoRect>(1)
     internal val movementFlow: Flow<MarkerMovement> field = MutableSharedFlow<MarkerMovement>(1)
 
-    // val viewedStateFlow = stateFlow.filter { it.isViewed }
-    // val isMovingFlow = viewedStateFlow.dedup { it.isMoving }
-    // val settledStateFlow = viewedStateFlow.filter { !it.isMoving }
-    // val zoomFlow = settledStateFlow.dedup { it.zoom }
-    // val centerFlow = settledStateFlow.dedup { it.center }
-    // val boundsFlow = settledStateFlow.dedup { it.bounds }
-    // val movingBoundsFlow = viewedStateFlow.dedup { it.bounds }
-    // val focusFlow = viewedStateFlow.dedup { it.focus }
-
     val pointAndZoom = state.tapOf { it.center to it.zoom }
 
     val viewedState = state.refine { states -> states.filter { it.isViewed } }
     val settledState = viewedState.refine { states -> states.filter { !it.isMoving } }
 
-    val isMovingField = viewedState.tapOf { it.isMoving }
-    val movingBoundsField = viewedState.tapOf { it.bounds }
-    val focusField = viewedState.tapOf { it.focus }
-    val zoomField = settledState.tapOf { it.zoom }
-    val centerField = settledState.tapOf { it.center }
-    val settledView = settledState.tapOf { it.bounds }
+    val isMovingState = viewedState.tapOf { it.isMoving }
+    val movingViewState = viewedState.tapOf { it.view }
+    val focusState = viewedState.tapOf { it.focus }
+    val zoomState = settledState.tapOf { it.zoom }
+    val centerState = settledState.tapOf { it.center }
+    val settledViewState = settledState.tapOf { it.view }
 
     fun panMap(point: GeoPoint) {
         panMap(PanPoint(point))
@@ -66,13 +57,13 @@ class GeoCamera(
     }
 
     internal fun setBounds(center: GeoPoint, bounds: GeoRect, zoom: Float, isMoving: Boolean) {
-        state.set { copy(center = center, bounds = bounds, zoom = zoom, isMoving = isMoving) }
+        state.set { copy(center = center, view = bounds, zoom = zoom, isMoving = isMoving) }
     }
 }
 
 data class GeoCameraState(
     val center: GeoPoint = GeoPoint.Denver,
-    val bounds: GeoRect = GeoRect.Denver,
+    val view: GeoRect = GeoRect.Denver,
     val zoom: Float = 11f,
     val isMoving: Boolean = true,
     val isViewed: Boolean = false,

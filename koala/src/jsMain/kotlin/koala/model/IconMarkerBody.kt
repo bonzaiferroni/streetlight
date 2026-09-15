@@ -11,12 +11,12 @@ import kotlinx.html.js.div
 import kotlinx.html.js.p
 import web.html.HTMLElement
 
-internal class IconRenderBody(
+internal class IconMarkerBody(
     override val element: HTMLElement,
     override val labelElement: HTMLElement?,
     val bearingElement: HTMLElement? = null,
     val bearing: Float? = null
-): PointRenderBody {
+): PointMarkerBody {
     var lastBearing = 0f
 
     init {
@@ -41,7 +41,7 @@ internal class IconRenderBody(
     }
 }
 
-internal fun AppendScope.configureIconRender(marker: TravelMarker): IconRenderBody {
+internal fun AppendScope.configureIconMarker(marker: TravelMarker): IconMarkerBody {
     with(marker) {
         val body = div {
             addModifiers(modify(MarkerStyle.Travel, MarkerStyle.Body))
@@ -61,6 +61,6 @@ internal fun AppendScope.configureIconRender(marker: TravelMarker): IconRenderBo
             }.asWeb()
         }
 
-        return IconRenderBody(body, labelElement, bearingElement, marker.bearing)
+        return IconMarkerBody(body, labelElement, bearingElement, marker.bearing)
     }
 }

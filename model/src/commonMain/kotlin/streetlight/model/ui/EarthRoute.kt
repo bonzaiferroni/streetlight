@@ -24,7 +24,7 @@ data class CityMapRoute(override val slug: Slug?): EarthRoute, SlugRoute {
     override fun toRelativePath() = "/earth/city/${slug?.toString() ?: ""}"
 }
 
-data class PostMapRoute(override val title: String): EarthRoute {
+data class PostMapRoute(override val title: String = "Earth"): EarthRoute {
     override val layer get() = EarthLayer.Post
 
     override fun toRelativePath() = "/earth"

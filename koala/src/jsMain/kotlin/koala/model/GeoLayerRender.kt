@@ -17,7 +17,7 @@ internal class GeoLayerRender(
     val scope: CoroutineScope,
     val onFocus: (GeoFocus?) -> Unit
 ) {
-    var pointRenders: Map<MarkerId, PointRender> = emptyMap()
+    var pointRenders: Map<MarkerId, PointMarkerElement> = emptyMap()
         private set
     var lineRenders: Map<MarkerId, LineRender> = emptyMap()
         private set
@@ -40,7 +40,7 @@ internal class GeoLayerRender(
     }
 
     fun setPoints(markers: List<PointMarker>) {
-        val pointBuffer = mutableMapOf<MarkerId, PointRender>()
+        val pointBuffer = mutableMapOf<MarkerId, PointMarkerElement>()
         val refLatitude = markers.sumOf { it.geoPoint.lat } / markers.size
         refLatitudeNow = refLatitude
 
@@ -175,7 +175,7 @@ internal class GeoLayerRender(
         }
     }
 
-    private fun cullOutsideBounds(render: PointRender) {
+    private fun cullOutsideBounds(render: PointMarkerElement) {
         val bounds = boundsNow ?: return
         val isVisible = bounds.contains(render.position)
         render.setIsVisible(isVisible, jsMap)
