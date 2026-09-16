@@ -1,15 +1,7 @@
 package koala.dom
 
-import koala.css.Clickable
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.launch
+import koala.modifier.Clickable
 import web.dom.Element
-import web.events.CustomEvent
-import web.events.CustomEventInit
 import web.events.Event
 import web.events.EventType
 import web.events.addEventListener
@@ -35,7 +27,7 @@ fun <T: Event> Element.onEvent(event: EventType<T>, onEvent: (Event) -> Unit) {
 
 fun <T: Element> T.onClickEvent(block: (Event) -> Unit): T {
     onEvent(PointerEvent.CLICK, block)
-    modify(Clickable)
+    classList.add(Clickable.className)
     return this
 }
 
@@ -43,7 +35,7 @@ fun <T: Element> T.onClickElement(block: (T) -> Unit): T {
     onEvent(PointerEvent.CLICK) {
         block(this)
     }
-    modify(Clickable)
+    classList.add(Clickable.className)
     return this
 }
 
@@ -51,6 +43,6 @@ fun <T: Element> T.onClick(block: () -> Unit): T {
     onEvent(PointerEvent.CLICK) {
         block()
     }
-    modify(Clickable)
+    classList.add(Clickable.className)
     return this
 }

@@ -1,7 +1,7 @@
 package koala.dom
 
-import koala.css.ModifierSet
-import koala.css.addModifiers
+import koala.modifier.ModifierSet
+import koala.modifier.addModifiers
 import koala.html.SectionStyle
 import koala.html.filigree
 import koala.html.heading3

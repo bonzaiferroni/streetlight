@@ -1,6 +1,6 @@
 package streetlight.web.model
 
-import koala.css.Koala
+import koala.modifier.Koala
 import kampfire.model.MutableTap
 import kampfire.model.mutableTapOf
 import kampfire.model.storeOf

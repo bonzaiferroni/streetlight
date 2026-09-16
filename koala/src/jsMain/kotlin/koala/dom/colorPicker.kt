@@ -1,6 +1,6 @@
 package koala.dom
 
-import koala.css.*
+import koala.modifier.*
 import kampfire.model.MutableTap
 import kotlinx.html.InputType
 import kotlinx.html.js.input

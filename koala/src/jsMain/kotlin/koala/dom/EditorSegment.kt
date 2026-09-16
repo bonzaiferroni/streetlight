@@ -1,7 +1,7 @@
 package koala.dom
 
 import js.array.asList
-import koala.css.Modifier
+import koala.modifier.ClassModifier
 import koala.markdown.*
 import koala.model.EditorStyle
 import web.html.HTMLBRElement
@@ -10,7 +10,7 @@ import kotlin.collections.forEach
 import kotlin.sequences.forEach
 import kotlin.sequences.plus
 
-data class EditorSegment(val from: Int, val to: Int, val mod: Modifier)
+data class EditorSegment(val from: Int, val to: Int, val mod: ClassModifier)
 
 fun ParsedBlock.toEditorSegments(): List<EditorSegment> = segmentsIn(chunk, 0, chunk.length, markdown.editorSpans())
 

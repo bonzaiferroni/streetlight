@@ -1,7 +1,7 @@
 package streetlight.web.ui
 
-import koala.css.DisplayNone
-import koala.css.KoalaBody
+import koala.modifier.DisplayNone
+import koala.modifier.KoalaBody
 import koala.dom.*
 import koala.interop.addGlobalFunctions
 import koala.model.Portal

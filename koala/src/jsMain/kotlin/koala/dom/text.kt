@@ -1,7 +1,7 @@
 package koala.dom
 
-import koala.css.ModifierSet
-import koala.css.addModifiers
+import koala.modifier.ModifierSet
+import koala.modifier.addModifiers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch

@@ -1,6 +1,6 @@
 @file:Suppress("CssOverwrittenProperties", "CssInvalidPseudoSelector")
 
-package koala.css
+package koala.modifier
 
 const val CONTENT_PANEL_WIDTH_PX = 1080
 const val RIGHT_PANEL_WIDTH_PX = 360

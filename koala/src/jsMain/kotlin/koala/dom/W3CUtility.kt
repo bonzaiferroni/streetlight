@@ -1,7 +1,7 @@
 package koala.dom
 
-import koala.css.ModifierSet
-import koala.css.addModifiers
+import koala.modifier.ModifierSet
+import koala.modifier.addModifiers
 import kotlinx.dom.clear
 import kotlinx.html.DIV
 import kotlinx.html.dom.append

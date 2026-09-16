@@ -1,8 +1,8 @@
 package koala.html
 
-import koala.css.Class
-import koala.css.ModifierSet
-import koala.css.addModifiers
+import koala.modifier.Class
+import koala.modifier.ModifierSet
+import koala.modifier.addModifiers
 import kotlinx.html.LI
 import kotlinx.html.OL
 import kotlinx.html.UL

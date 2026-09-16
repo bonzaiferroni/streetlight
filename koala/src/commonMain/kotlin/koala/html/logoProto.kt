@@ -2,7 +2,7 @@ package koala.html
 
 import koala.SvgFile
 import kotlinx.html.*
-import koala.css.*
+import koala.modifier.*
 
 fun FlowContent.logoProto(
     modifiers: ModifierSet? = null

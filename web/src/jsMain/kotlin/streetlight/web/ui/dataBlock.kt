@@ -2,7 +2,7 @@ package streetlight.web.ui
 
 import kampfire.model.Outcome
 import kampfire.model.toDataOr
-import koala.css.ModifierSet
+import koala.modifier.ModifierSet
 import koala.dom.ViewScope
 import koala.dom.column
 import koala.dom.onView

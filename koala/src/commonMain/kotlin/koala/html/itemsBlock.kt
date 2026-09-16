@@ -1,6 +1,6 @@
 package koala.html
 
-import koala.css.Class
+import koala.modifier.Class
 
 object ItemsBlockStyle {
     val Class = Class("items-block")

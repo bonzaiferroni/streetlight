@@ -2,7 +2,7 @@ package streetlight.web.pages
 
 import koala.Svg
 import koala.SvgFile
-import koala.css.*
+import koala.modifier.*
 import koala.html.*
 import koala.interop.InlineJs
 import koala.interop.KoalaFun
@@ -64,7 +64,7 @@ fun FlowContent.siteMenuItems() {
     item("Privacy", SiteDoc.Privacy.route, SvgFile.EyeClosed)
     label("config")
     item("Settings", SiteConfigRoute, SvgFile.GearLarge)
-    row(SiteHelm.rowMod + ThemeToggle) {
+    row(modify(SiteHelm.rowMod, ThemeToggle)) {
         onClick = KoalaFun.toggleRootModifier.invokeJs(DayTheme)
         icon(SvgFile.Sun, HelmBar.IconMod)
         textBlock("Theme")

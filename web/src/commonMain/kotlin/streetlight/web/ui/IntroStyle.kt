@@ -1,6 +1,6 @@
 package streetlight.web.ui
 
-import koala.css.*
+import koala.modifier.*
 import kotlinx.css.GridTemplateColumns
 import kotlinx.css.fr
 import kotlinx.css.rem

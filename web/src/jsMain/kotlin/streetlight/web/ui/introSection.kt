@@ -1,7 +1,7 @@
 package streetlight.web.ui
 
 import koala.Lottie
-import koala.css.*
+import koala.modifier.*
 import koala.dom.*
 import koala.html.filigree
 import koala.html.heading1

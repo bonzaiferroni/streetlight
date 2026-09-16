@@ -1,4 +1,4 @@
-package koala.css
+package koala.modifier
 
 val Box = Class("box")
 val Card = Class("card")

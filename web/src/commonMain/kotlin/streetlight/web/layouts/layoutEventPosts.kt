@@ -1,7 +1,7 @@
 package streetlight.web.layouts
 
 import kabinet.utils.toFutureFormat
-import koala.css.*
+import koala.modifier.*
 import koala.html.*
 import kotlinx.html.FlowContent
 import streetlight.model.data.EventPost
@@ -23,7 +23,7 @@ fun FlowContent.layoutEventPosts(
             val dayFormat = posts.first().event.startsAt?.toFutureFormat() ?: return@forEach
             section {
                 filigree(modify(MarginTop2)) {
-                    heading4(dayFormat, SectionHeadingMod + OpacityHigh)
+                    heading4(dayFormat, modify(SectionHeadingMod, OpacityHigh))
                 }
                 olist {
                     posts.forEach {

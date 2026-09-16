@@ -1,13 +1,12 @@
 package koala.html
 
 import kampfire.model.Url
-import koala.css.BackgroundImage
-import koala.css.Class
-import koala.css.ModifierSet
-import koala.css.Property
-import koala.css.UrlValue
-import koala.css.setStyle
-import koala.css.modify
+import koala.modifier.BackgroundImage
+import koala.modifier.Class
+import koala.modifier.ModifierSet
+import koala.modifier.Property
+import koala.modifier.setStyle
+import koala.modifier.modify
 import kotlinx.html.*
 
 fun FlowContent.btn(

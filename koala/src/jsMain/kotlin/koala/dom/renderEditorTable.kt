@@ -1,7 +1,7 @@
 package koala.dom
 
-import koala.css.Property
-import koala.css.modify
+import koala.modifier.Property
+import koala.modifier.modify
 import koala.html.span
 import koala.markdown.MarkdownSpan
 import koala.markdown.MarkdownTable

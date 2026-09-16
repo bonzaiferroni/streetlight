@@ -1,5 +1,6 @@
 package koala.interop
 
+import koala.dom.className
 import koala.dom.isModified
 import koala.dom.modify
 import koala.dom.querySelector
@@ -38,12 +39,12 @@ fun initTabs(container: HTMLElement) {
         viewport.style.setProperty("height", "${startHeight}px")
         viewport.offsetHeight // a load bearing property reference
 
-        panels[currentIndex].unmodify(TabsStyle.IsActive)
-        buttons[currentIndex].unmodify(TabsStyle.IsActive)
+        panels[currentIndex].classList.remove(TabsStyle.IsActive.className)
+        buttons[currentIndex].classList.remove(TabsStyle.IsActive.className)
         currentIndex = index
 
-        panels[index].modify(TabsStyle.IsActive)
-        buttons[index].modify(TabsStyle.IsActive)
+        panels[index].classList.add(TabsStyle.IsActive.className)
+        buttons[index].classList.add(TabsStyle.IsActive.className)
 
         viewport.style.setProperty("height", "${endHeight}px")
     }

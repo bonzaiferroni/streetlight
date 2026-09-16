@@ -2,7 +2,7 @@ package koala.dom
 
 import kampfire.model.UIMessage
 import kampfire.model.UIMessageType
-import koala.css.*
+import koala.modifier.*
 import koala.html.MessageBox
 import kampfire.model.Tap
 

@@ -1,11 +1,5 @@
 package koala.interop
 
-import kampfire.api.TableId
-import koala.css.Modifier
-import koala.css.PositionAnchor
-import koala.html.Id
-import kotlin.uuid.Uuid
-
 data class JsFunction(
     override val name: String,
     val definition: String,

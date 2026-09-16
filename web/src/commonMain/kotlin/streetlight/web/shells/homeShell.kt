@@ -1,7 +1,7 @@
 package streetlight.web.shells
 
 import koala.LottieFile
-import koala.css.*
+import koala.modifier.*
 import koala.html.*
 import kotlinx.html.FlowContent
 import streetlight.model.data.Galaxy

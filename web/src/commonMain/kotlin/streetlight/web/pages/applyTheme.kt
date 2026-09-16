@@ -1,8 +1,8 @@
 package streetlight.web.pages
 
-import koala.css.KoalaStyle
-import koala.css.rgba
-import koala.css.setStyle
+import koala.modifier.KoalaStyle
+import koala.modifier.rgba
+import koala.modifier.setStyle
 import kotlinx.css.pct
 import kotlinx.html.BODY
 import streetlight.model.data.PageTheme

@@ -2,10 +2,10 @@ package streetlight.web.ui
 
 import kampfire.model.MutableTap
 import kampfire.model.storeOf
-import koala.css.Gap2Px
-import koala.css.ModifierSet
-import koala.css.Property
-import koala.css.modify
+import koala.modifier.Gap2Px
+import koala.modifier.ModifierSet
+import koala.modifier.Property
+import koala.modifier.modify
 import koala.dom.ViewScope
 import koala.dom.flowBlock
 import koala.dom.popoverCard

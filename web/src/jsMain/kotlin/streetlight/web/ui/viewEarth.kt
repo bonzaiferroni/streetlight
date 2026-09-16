@@ -1,7 +1,6 @@
 package streetlight.web.ui
 
-import koala.css.*
-import koala.css.Padding1
+import koala.modifier.*
 import koala.dom.*
 import koala.html.filigree
 import koala.html.heading3

@@ -2,7 +2,7 @@ package streetlight.web.ui
 
 import koala.Svg
 import koala.SvgFile
-import koala.css.*
+import koala.modifier.*
 import koala.dom.*
 import koala.dom.button
 import koala.dom.row
@@ -10,7 +10,7 @@ import koala.html.Id
 import koala.html.heading3
 import koala.html.heading6
 import koala.html.hr
-import koala.html.setPopoverTarget
+import koala.modifier.setPopoverTarget
 import koala.html.textBlock
 import kampfire.model.MutableTap
 import kampfire.model.toggle

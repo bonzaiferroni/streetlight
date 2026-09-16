@@ -1,16 +1,5 @@
 package streetlight.web.ui
 
-import koala.dom.ViewScope
-import koala.dom.modify
-import koala.dom.onClick
-import koala.dom.queryAttributeAll
-import koala.dom.querySelector
-import koala.dom.unmodify
-import koala.html.Attribute
-import kotlinx.coroutines.launch
-import streetlight.web.model.StarCache
-import web.html.HTMLElement
-
 //fun <Id> ViewScope.wireLights(
 //    root: HTMLElement,
 //    attribute: Attribute<Id>,

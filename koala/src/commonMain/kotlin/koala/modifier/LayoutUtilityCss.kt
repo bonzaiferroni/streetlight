@@ -1,12 +1,12 @@
-package koala.css
+package koala.modifier
 
 val LayoutUtilityCss
     get() = listOf(
         // Gap
         Gap0, Gap1, Gap2, Gap3, Gap4, Gap8, Gap2Px, GapHalf,
         // Flex
-        Flex0, Flex1, Flex2, Flex3, Flex4, FlexMd1, FlexMd2, FlexBasis25, FlexBasis33, FlexShrink0,
-        FlexDirectionRow, QueryRowReverse, NoWrap, FlexWrap, FlexBasisMin, DisplayFlex,
+        Flex0, Flex1, Flex2, Flex3, Flex4, FlexBasis25, FlexBasis33, FlexShrink0,
+        FlexDirectionRow, NoWrap, FlexWrap, FlexBasisMin, DisplayFlex,
         // Align
         AlignItemsCenter, AlignItemsStretch, AlignItemsStart, AlignItemsEnd, AlignContentStart, AlignContentCenter,
         JustifyContentCenter, JustifyContentEnd, JustifyContentSpaceAround, JustifyContentSpaceBetween,
@@ -44,8 +44,8 @@ val LayoutUtilityCss
         // Position
         PositionSticky, PositionRelative, PositionAbsolute, Top0, Right0, Bottom0, Left0,
         // Other
-        SpaceBetween, Start, End, PlaceSelfStart, PlaceSelfCenter, PlaceSelfStretch, PlaceContentEnd,
-        PlaceItemsCenter, RelativeParent, ZIndex1, ZIndex2, ZIndex3, Shrinkable, QueryContainer,
+        SpaceBetween, PlaceSelfStart, PlaceSelfCenter, PlaceSelfStretch, PlaceContentEnd,
+        PlaceItemsCenter, RelativeParent, ZIndex1, ZIndex2, ZIndex3, QueryContainer,
         TopSpacing1, TopSpacing8,
     )
 
@@ -65,8 +65,8 @@ val Flex1 = utilityOf("flex-1", "flex: 1")
 val Flex2 = utilityOf("flex-2", "flex: 2")
 val Flex3 = utilityOf("flex-3", "flex: 3")
 val Flex4 = utilityOf("flex-4", "flex: 4")
-val FlexMd1 = CssUtility("flex-md-1")
-val FlexMd2 = CssUtility("flex-md-2")
+val FlexMd1 = Class("flex-md-1")
+val FlexMd2 = Class("flex-md-2")
 val FlexShrink0 = utilityOf("flex-shrink", "flex-shrink: 0")
 
 // Flex Basis
@@ -175,9 +175,9 @@ val Size100P = utilityOf("size-100", "width: 100%", "height: 100%")
 val FillHeight = utilityOf("fill-height", "height: auto", "max-height: 100%")
 
 // Flex Items
-val FlexItems1 = CssUtility("flex-items-1", ".flex-items-1 > * { flex: 1; }")
-val FlexItemsEqual = CssUtility("flex-items-equal", ".flex-items-equal > * { flex: 1 1 0; min-width: 0; }")
-val FlexItemsBasis50 = CssUtility("flex-items-basis-50", ".flex-items-basis-50 > * { flex-basis: 50%; }")
+val FlexItems1 = UtilityClass("flex-items-1", ".flex-items-1 > * { flex: 1; }")
+val FlexItemsEqual = UtilityClass("flex-items-equal", ".flex-items-equal > * { flex: 1 1 0; min-width: 0; }")
+val FlexItemsBasis50 = UtilityClass("flex-items-basis-50", ".flex-items-basis-50 > * { flex-basis: 50%; }")
 
 // Text
 val TextAlignCenter = utilityOf("text-align-center", "text-align: center")
@@ -185,7 +185,6 @@ val TextAlignRight = utilityOf("text-align-right", "text-align: right")
 
 // Row / Wrap
 val FlexDirectionRow = utilityOf("flex-direction-row", "flex-direction: row")
-val QueryRowReverse = CssUtility("query-row-reverse")
 val NoWrap = utilityOf("no-wrap", "flex-wrap: nowrap", "white-space: nowrap")
 val FlexWrap = utilityOf("flex-wrap", "flex-wrap: wrap")
 val FlexBasisMin = utilityOf("flex-basis-min", "flex-basis: min-content")
@@ -253,8 +252,6 @@ val ObjectPositionCenter = utilityOf("object-position-center", "object-position:
 
 // Other
 val SpaceBetween = utilityOf("space-between", "justify-content: space-between")
-val Start = CssUtility("start")
-val End = CssUtility("end")
 val PlaceSelfStart = utilityOf("place-self-start", "place-self: start")
 val PlaceSelfCenter = utilityOf("place-self-center", "place-self: center")
 val PlaceSelfStretch = utilityOf("place-self-stretch", "place-self: stretch")
@@ -272,14 +269,14 @@ val Aspect1 = utilityOf("aspect-1", "aspect-ratio: 1 / 1")
 val Aspect2By1 = utilityOf("aspect-x-2", "aspect-ratio: 2 / 1")
 val Aspect3By2 = utilityOf("aspect-x-3", "aspect-ratio: 3 / 2")
 val Aspect3By1 = utilityOf("aspect-x-3", "aspect-ratio: 3 / 1")
-val RelativeParent = CssUtility(
+val RelativeParent = UtilityClass(
     "relative-parent",
     ".relative-parent { position: relative; } .relative-parent > * { position: absolute; inset: 0; }"
 )
 val ZIndex1 = utilityOf("z-index-1", "z-index: 1")
 val ZIndex2 = utilityOf("z-index-2", "z-index: 2")
 val ZIndex3 = utilityOf("z-index-3", "z-index: 3")
-val Shrinkable = CssUtility("shrinkable")
+val Shrinkable = Class("shrinkable")
 val QueryContainer = utilityOf("query-container", "container-type: inline-size")
 val PositionSticky = utilityOf("position-sticky", "position: sticky")
 val PositionRelative = utilityOf("position-relative", "position: relative")

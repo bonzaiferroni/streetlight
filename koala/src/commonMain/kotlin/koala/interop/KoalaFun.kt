@@ -1,7 +1,7 @@
 package koala.interop
 
-import koala.css.DayTheme
-import koala.css.jsScriptOf
+import koala.modifier.DayTheme
+import koala.modifier.jsScriptOf
 
 //language="JS"
 object KoalaFun {

@@ -1,24 +1,17 @@
 package streetlight.web.ui
 
-import koala.css.Accent
-import koala.css.AlignItemsCenter
-import koala.css.Flex1
-import koala.css.FlexItems1
-import koala.css.Width64
-import koala.css.modify
+import koala.modifier.Accent
+import koala.modifier.AlignItemsCenter
+import koala.modifier.Flex1
+import koala.modifier.FlexItems1
+import koala.modifier.Width64
+import koala.modifier.modify
 import koala.dom.ViewScope
-import koala.dom.navigation
 import koala.dom.button
-import koala.dom.card
 import koala.dom.column
-import koala.dom.defaultMagic
-import koala.dom.itemsBlock
 import koala.dom.lazyTabs
 import koala.dom.row
-import koala.dom.textBlock
-import koala.dom.textField
 import koala.html.Id
-import streetlight.model.ui.SongProfileRoute
 import streetlight.web.model.MusicianHub
 
 fun ViewScope.viewMusicianHub(

@@ -1,7 +1,5 @@
 package streetlight.web.ui
 
-import koala.css.TextSmall
-import koala.css.modify
 import koala.dom.ViewScope
 import koala.dom.textField
 import streetlight.web.model.EmailEditor

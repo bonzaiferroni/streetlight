@@ -1,7 +1,7 @@
 package streetlight.web.ui
 
-import koala.css.*
-import koala.html.enumAttributeOf
+import koala.modifier.*
+import koala.modifier.enumAttributeOf
 import streetlight.model.utils.TextDeltaDisplay
 
 object TextDeltaStyle {

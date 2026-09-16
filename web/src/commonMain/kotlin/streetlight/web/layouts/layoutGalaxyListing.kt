@@ -1,8 +1,8 @@
 package streetlight.web.layouts
 
-import koala.css.OpacityHalf
-import koala.css.TextAlignCenter
-import koala.css.modify
+import koala.modifier.OpacityHalf
+import koala.modifier.TextAlignCenter
+import koala.modifier.modify
 import koala.html.Id
 import koala.html.column
 import koala.html.heading3

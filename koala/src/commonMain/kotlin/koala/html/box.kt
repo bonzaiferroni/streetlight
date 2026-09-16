@@ -1,10 +1,9 @@
 package koala.html
 
-import koala.css.*
+import koala.modifier.*
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kotlinx.html.div
-import kotlinx.html.id
 
 fun FlowContent.box(
     modifiers: ModifierSet? = null,

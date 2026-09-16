@@ -1,9 +1,9 @@
 package streetlight.web.ui
 
-import koala.css.Class
-import koala.css.Gap0
-import koala.css.Gap4
-import koala.css.modify
+import koala.modifier.Class
+import koala.modifier.Gap0
+import koala.modifier.Gap4
+import koala.modifier.modify
 
 object BodyStyle {
     val ShellColumn = modify(Gap0)

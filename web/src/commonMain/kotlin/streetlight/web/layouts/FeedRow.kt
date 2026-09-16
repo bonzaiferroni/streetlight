@@ -3,9 +3,8 @@ package streetlight.web.layouts
 import kabinet.utils.toAgoFormat
 import koala.SiteImage
 import koala.Svg
-import koala.css.*
+import koala.modifier.*
 import koala.html.*
-import kotlinx.css.GridTemplateColumns
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import streetlight.model.data.CuratorStatus

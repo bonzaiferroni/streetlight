@@ -1,7 +1,7 @@
 package streetlight.web.ui
 
-import koala.css.Class
-import koala.css.Hide
+import koala.modifier.Class
+import koala.modifier.Hide
 
 object CommentClass {
     val Root = Class("comment")

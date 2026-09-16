@@ -2,7 +2,7 @@ package koala.model
 
 import kampfire.model.GeoPoint
 import kampfire.model.Point
-import koala.css.*
+import koala.modifier.*
 import koala.dom.*
 import koala.external.MarkerOptions
 import koala.external.maplibregl
@@ -74,7 +74,8 @@ internal class PointMarkerElement(
 
     fun setCluster(cluster: PointCluster?) {
         if (cluster == null) {
-            element.unmodify(MarkerStyle.ClusterPrincipal, MarkerStyle.ClusterMember)
+            element.unmodify(MarkerStyle.ClusterPrincipal)
+            element.unmodify(MarkerStyle.ClusterMember)
             return
         }
 
@@ -127,21 +128,13 @@ internal fun PointMarker.toPointRender(pixelPoint: Point, focusEntity: () -> Uni
                 element.setStyle(Property.ZIndex.to(it))
             }
 
-            val baseMod = buildSet {
-                add(MarkerStyle.Base)
-                mod?.let {
-                    addAll(it)
-                }
+            val modifiers = modify(mod, MarkerStyle.Base, altitude?.cssClass).let { modifiers ->
                 light?.let {
-                    element.setStyle(MarkerStyle.MarkerLight.to(it))
-                    add(MarkerStyle.MarkerGlow)
-                }
-                altitude?.let {
-                    add(it)
+                    modifiers.append(MarkerStyle.MarkerLight.to(it), MarkerStyle.MarkerGlow)
                 }
             }
 
-            addModifiers(baseMod)
+            addModifiers(modifiers)
 
             renderBody = when (val marker = this@toPointRender) {
                 is TravelMarker -> configureIconMarker(marker)

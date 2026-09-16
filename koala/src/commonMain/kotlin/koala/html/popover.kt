@@ -2,26 +2,28 @@
 
 package koala.html
 
-import koala.css.AutoMagic
-import koala.css.BlurBackdrop
-import koala.css.BorderRadius3
-import koala.css.BorderSolid2Px
-import koala.css.Class
-import koala.css.Margin1
-import koala.css.ModifierSet
-import koala.css.OverflowClip
-import koala.css.Padding0
-import koala.css.PositionAnchor
-import koala.css.Property
-import koala.css.Scale
-import koala.css.addModifiers
-import koala.css.append
-import koala.css.modify
-import koala.css.setStyle
+import koala.modifier.Attribute
+import koala.modifier.AutoMagic
+import koala.modifier.BlurBackdrop
+import koala.modifier.BorderRadius3
+import koala.modifier.BorderSolid2Px
+import koala.modifier.Class
+import koala.modifier.Margin1
+import koala.modifier.ModifierSet
+import koala.modifier.OverflowClip
+import koala.modifier.Padding0
+import koala.modifier.PositionAnchor
+import koala.modifier.Property
+import koala.modifier.Scale
+import koala.modifier.addModifiers
+import koala.modifier.modify
+import koala.modifier.setAttribute
+import koala.modifier.setPopoverTarget
+import koala.modifier.setStyle
+import koala.modifier.stringAttributeOf
 import koala.interop.InlineJs
 import kotlinx.html.A
 import kotlinx.html.BUTTON
-import kotlinx.html.CommonAttributeGroupFacade
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kotlinx.html.div
@@ -58,7 +60,7 @@ fun FlowContent.popoverCard(
     mod: ModifierSet? = null,
     content: DIV.() -> Unit = {}
 ) {
-    popover(id, Popover.CardMod.append(mod) + Margin1) {
+    popover(id, modify(Popover.CardMod, Margin1, mod)) {
         content()
     }
 }

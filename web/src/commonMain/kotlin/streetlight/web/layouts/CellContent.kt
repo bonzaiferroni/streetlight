@@ -8,7 +8,7 @@ import kampfire.api.Username
 import kampfire.model.Url
 import koala.Svg
 import koala.SvgFile
-import koala.css.*
+import koala.modifier.*
 import koala.html.*
 import koala.interop.KoalaFun
 import koala.interop.ThisElement

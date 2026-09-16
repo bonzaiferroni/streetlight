@@ -3,7 +3,7 @@ package streetlight.web.layouts
 import kabinet.utils.toMetricString
 import kampfire.api.Username
 import koala.SvgFile
-import koala.css.MinWidth32
+import koala.modifier.MinWidth32
 import kotlinx.html.FlowContent
 import streetlight.model.data.Event
 import streetlight.model.data.EventEdit

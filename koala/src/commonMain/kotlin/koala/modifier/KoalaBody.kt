@@ -1,8 +1,7 @@
-package koala.css
+package koala.modifier
 
 import koala.html.AppScreen
 import koala.html.Id
-import koala.html.stringAttributeOf
 
 object KoalaBody {
     val PortalMount = Id("portal-mount")

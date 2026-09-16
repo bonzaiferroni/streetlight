@@ -1,17 +1,16 @@
 package koala.html
 
-import kampfire.model.ImageSize
 import kampfire.model.ImageVariants
 import kampfire.model.Url
 import kampfire.model.largest
 import koala.Image
 import koala.SiteImage
-import koala.css.Class
-import koala.css.HeightAuto
-import koala.css.ModifierSet
-import koala.css.ObjectFitContain
-import koala.css.addModifiers
-import koala.css.modify
+import koala.modifier.Class
+import koala.modifier.HeightAuto
+import koala.modifier.ModifierSet
+import koala.modifier.ObjectFitContain
+import koala.modifier.addModifiers
+import koala.modifier.modify
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kotlinx.html.IMG

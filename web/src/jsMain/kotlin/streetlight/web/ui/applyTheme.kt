@@ -1,19 +1,12 @@
 package streetlight.web.ui
 
-import koala.css.KoalaStyle
-import koala.css.KoalaTheme
-import koala.css.rgba
-import koala.dom.ViewScope
-import koala.dom.modify
+import koala.modifier.KoalaStyle
+import koala.modifier.rgba
 import koala.dom.removeStyle
 import koala.dom.setStyle
-import koala.dom.unmodify
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.css.pct
 import streetlight.model.data.PageTheme
 import web.dom.document
-import kotlin.time.Duration.Companion.seconds
 
 fun applyTheme(theme: PageTheme?) {
     val body = document.body

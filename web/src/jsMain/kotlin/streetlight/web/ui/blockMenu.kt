@@ -2,10 +2,10 @@ package streetlight.web.ui
 
 import kampfire.api.Markdown
 import koala.SvgFile
-import koala.css.*
+import koala.modifier.*
 import koala.dom.*
 import koala.html.Id
-import koala.html.setPopoverTarget
+import koala.modifier.setPopoverTarget
 import koala.markdown.HeadingLevel
 import kampfire.model.storeOf
 import streetlight.model.data.*

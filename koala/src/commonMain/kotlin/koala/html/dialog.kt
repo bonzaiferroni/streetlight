@@ -1,7 +1,7 @@
 package koala.html
 
-import koala.css.Class
-import koala.css.Reveal
+import koala.modifier.Class
+import koala.modifier.Reveal
 
 object DialogStyle {
     val Class = Class("dialog")

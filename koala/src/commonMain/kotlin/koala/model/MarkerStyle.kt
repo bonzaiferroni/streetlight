@@ -1,11 +1,11 @@
 package koala.model
 
 import koala.Asset
-import koala.css.Class
-import koala.css.Focus
-import koala.css.Property
-import koala.css.Rgb
-import koala.css.Scale
+import koala.modifier.Class
+import koala.modifier.Focus
+import koala.modifier.Property
+import koala.modifier.Rgb
+import koala.modifier.Scale
 import kotlinx.css.Color
 import kotlinx.css.LinearDimension
 import kotlinx.css.properties.Angle

@@ -2,9 +2,8 @@
 
 package koala.markdown
 
-import koala.css.*
+import koala.modifier.*
 import koala.html.LottieClass
-import kotlinx.css.s
 import kotlinx.html.*
 
 fun FlowOrPhrasingContent.renderMarkdownSpans(spans: List<MarkdownSpan>) {

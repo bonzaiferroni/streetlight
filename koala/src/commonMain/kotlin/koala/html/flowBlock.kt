@@ -1,6 +1,6 @@
 package koala.html
 
-import koala.css.*
+import koala.modifier.*
 
 object FlowBlockStyle {
     val Class = Class("flow-block")

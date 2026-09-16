@@ -1,5 +1,7 @@
 package streetlight.web.shells
 
+import koala.modifier.Attribute
+import koala.modifier.setAttribute
 import koala.html.*
 import kotlinx.html.FlowContent
 import streetlight.model.data.LocationContent

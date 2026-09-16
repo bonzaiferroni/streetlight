@@ -1,8 +1,8 @@
 package koala.model
 
-import koala.css.addModifiers
-import koala.css.modify
-import koala.css.setStyle
+import koala.modifier.addModifiers
+import koala.modifier.modify
+import koala.modifier.setStyle
 import koala.dom.AppendScope
 import koala.dom.asWeb
 import koala.dom.setStyle

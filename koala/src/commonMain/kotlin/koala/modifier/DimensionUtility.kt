@@ -1,4 +1,4 @@
-package koala.css
+package koala.modifier
 
 import kotlinx.css.GridTemplateColumns
 import kotlinx.css.LinearDimension

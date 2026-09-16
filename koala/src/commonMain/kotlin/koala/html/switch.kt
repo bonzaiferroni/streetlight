@@ -1,11 +1,6 @@
 package koala.html
 
-import koala.css.Class
-import koala.css.ModifierSet
-import koala.css.addModifiers
-import koala.css.modify
-import kotlinx.html.DIV
-import kotlinx.html.span
+import koala.modifier.Class
 
 object SwitchStyle {
     val Class = Class("switch")

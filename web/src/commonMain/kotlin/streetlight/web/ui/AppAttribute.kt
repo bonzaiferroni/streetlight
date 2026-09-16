@@ -1,7 +1,7 @@
 package streetlight.web.ui
 
-import koala.html.stringAttributeOf
-import koala.html.idAttributeOf
+import koala.modifier.stringAttributeOf
+import koala.modifier.idAttributeOf
 import streetlight.model.data.GalaxyId
 import streetlight.model.data.MarkId
 import streetlight.model.data.PostId

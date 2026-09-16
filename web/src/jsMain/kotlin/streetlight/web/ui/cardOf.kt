@@ -1,7 +1,7 @@
 package streetlight.web.ui
 
 import koala.SiteImage
-import koala.css.ModifierSet
+import koala.modifier.ModifierSet
 import koala.dom.*
 import streetlight.model.data.Location
 

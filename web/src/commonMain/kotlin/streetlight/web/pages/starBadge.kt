@@ -1,11 +1,11 @@
 package streetlight.web.pages
 
 import koala.SvgFile
-import koala.css.BorderRadius50P
-import koala.css.MoonShadow
-import koala.css.OpacityHigh
-import koala.css.Size100P
-import koala.css.modify
+import koala.modifier.BorderRadius50P
+import koala.modifier.MoonShadow
+import koala.modifier.OpacityHigh
+import koala.modifier.Size100P
+import koala.modifier.modify
 import koala.html.Id
 import koala.html.image
 import koala.html.setId

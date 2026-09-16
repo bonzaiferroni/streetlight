@@ -2,7 +2,7 @@ package koala.dom
 
 import koala.Image
 import koala.SvgFile
-import koala.css.*
+import koala.modifier.*
 import kampfire.model.MutableTap
 import koala.toImage
 

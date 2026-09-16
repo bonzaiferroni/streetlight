@@ -1,6 +1,4 @@
-package koala.css
-
-import koala.html.Attribute
+package koala.modifier
 
 // language="CSS"
 val SandboxCss get() = """

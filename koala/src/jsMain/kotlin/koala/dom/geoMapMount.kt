@@ -1,7 +1,7 @@
 package koala.dom
 
 import kampfire.model.GeoPoint
-import koala.css.*
+import koala.modifier.*
 import koala.html.configureGeoMapMount
 import koala.model.GeoCameraController
 import kotlinx.html.DIV

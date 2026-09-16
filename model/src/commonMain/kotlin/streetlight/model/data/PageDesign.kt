@@ -1,9 +1,8 @@
 package streetlight.model.data
 
-import koala.css.Glow
-import koala.css.Koala
-import koala.css.Rgb
-import koala.model.RouteContent
+import koala.modifier.Glow
+import koala.modifier.Koala
+import koala.modifier.Rgb
 import kotlinx.serialization.Serializable
 
 @Serializable

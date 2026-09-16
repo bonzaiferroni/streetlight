@@ -1,12 +1,12 @@
 package streetlight.web.ui
 
 import koala.Svg
-import koala.css.AlignItemsCenter
-import koala.css.Flex1
-import koala.css.Height3
-import koala.css.ModifierSet
-import koala.css.addModifiers
-import koala.css.modify
+import koala.modifier.AlignItemsCenter
+import koala.modifier.Flex1
+import koala.modifier.Height3
+import koala.modifier.ModifierSet
+import koala.modifier.addModifiers
+import koala.modifier.modify
 import koala.dom.ViewScope
 import koala.dom.icon
 import koala.dom.row

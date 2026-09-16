@@ -1,16 +1,17 @@
 package koala.dom
 
-import koala.css.Blur
-import koala.css.Magic
-import koala.css.MagicStyle
-import koala.css.ModifierSet
-import koala.css.Reveal
-import koala.css.SlideLeft
-import koala.css.Transitioning
-import koala.css.addModifiers
-import koala.css.modify
+import koala.modifier.Blur
+import koala.modifier.Magic
+import koala.modifier.MagicStyle
+import koala.modifier.ModifierSet
+import koala.modifier.Reveal
+import koala.modifier.SlideLeft
+import koala.modifier.Transitioning
+import koala.modifier.addModifiers
+import koala.modifier.modify
 import koala.html.FlowBlockStyle
 import kampfire.model.Tap
+import koala.modifier.contains
 import koala.utils.launch
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job

@@ -2,7 +2,7 @@ package streetlight.web.ui
 
 import kampfire.api.Username
 import kampfire.model.AccountType
-import koala.css.*
+import koala.modifier.*
 import koala.dom.*
 import koala.html.bulletsOf
 import koala.html.filigree

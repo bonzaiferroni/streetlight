@@ -1,6 +1,6 @@
 package streetlight.web.ui
 
-import koala.css.Class
+import koala.modifier.Class
 
 object LayoutBuilderStyle {
     val blockOverlay = Class("builder-block-overlay")

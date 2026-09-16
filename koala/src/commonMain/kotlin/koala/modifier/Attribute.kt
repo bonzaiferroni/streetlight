@@ -1,4 +1,4 @@
-package koala.html
+package koala.modifier
 
 import kampfire.api.Slug
 import kampfire.api.Username
@@ -6,8 +6,8 @@ import kampfire.api.toSlug
 import kampfire.api.toUsername
 import kampfire.model.GeoPoint
 import koala.Lottie
-import koala.css.setAnchorName
-import koala.css.setStyle
+import koala.html.Id
+import koala.html.Queryable
 import koala.utils.jsonConfig
 import kotlinx.html.CoreAttributeGroupFacade
 import kotlin.uuid.Uuid
@@ -17,9 +17,9 @@ data class Attribute<T>(
     val isCustom: Boolean = false,
     val toStringValue: (T) -> String = { it.toString() },
     val toValue: ((String) -> T)? = null
-): Queryable {
+): Queryable, Unmodifier {
     override val selector get() = "[$identifier]"
-    val identifier get() = when(isCustom) {
+    override val identifier get() = when(isCustom) {
         true -> "data-$name"
         false -> name
     }
@@ -82,13 +82,7 @@ inline fun <reified T: Enum<T>> enumAttributeOf(identifier: String) =
 inline fun <reified T> jsonAttributeOf(identifier: String) =
     Attribute<T>(identifier, true, jsonConfig::encodeToString, jsonConfig::decodeFromString)
 
-data class AttributeValue<T>(val attribute: Attribute<T>, val value: T): Queryable {
-    override val selector get() = "[${attribute.identifier}='${attribute.toStringValue(value)}']"
 
-    override fun toString() = selector
-
-    fun toStringValue() = attribute.toStringValue(value)
-}
 
 fun CoreAttributeGroupFacade.applyBlockLabel(label: String?) {
     label?.let {

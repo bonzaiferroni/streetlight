@@ -1,4 +1,4 @@
-package koala.css
+package koala.modifier
 
 import kampfire.model.Url
 import koala.Asset
@@ -10,19 +10,19 @@ import kotlinx.html.style
 import kotlin.random.Random
 
 data class Property<T: Any>(
-    val identifier: String,
+    val name: String,
     val isCustom: Boolean = true,
     val valueToString: ((T) -> String)? = null,
-) {
+): Unmodifier {
 
     fun to(value: T) = InlineStyle(this, value)
 
-    val expression get() = when (isCustom) {
-        true -> "--$identifier"
-        else -> identifier
+    override val identifier get() = when (isCustom) {
+        true -> "--$name"
+        else -> name
     }
 
-    override fun toString() = expression
+    override fun toString() = identifier
 
     companion object {
         val AnchorName = Property<PositionAnchor>("anchor-name", false)
@@ -51,12 +51,6 @@ data class Property<T: Any>(
     }
 }
 
-data class InlineStyle<T: Any>(val property: Property<T>, val value: T) {
-    override fun toString() = "${property.expression}: $valueString"
-
-    val valueString get() = property.valueToString?.invoke(value) ?: styleValueOf(value)
-}
-
 data class PositionAnchor(val identifier: String) {
     override fun toString() = "--$identifier"
 }
@@ -82,9 +76,9 @@ fun CoreAttributeGroupFacade.setStyle(styles: StyleSet) {
             }
             styles.forEach { style ->
                 if (style == null) return@forEach
-                append(style.property.expression)
+                append(style.property.identifier)
                 append(": ")
-                append(style.valueString)
+                append(style.stringValue)
                 append("; ")
             }
         }

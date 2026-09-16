@@ -1,8 +1,8 @@
 package koala.interop
 
 import kampfire.api.TableId
-import koala.css.Modifier
-import koala.css.PositionAnchor
+import koala.modifier.Class
+import koala.modifier.PositionAnchor
 import koala.html.Id
 import kotlin.uuid.Uuid
 
@@ -16,7 +16,7 @@ interface GlobalFunction {
             is Id -> arg.jsLiteral
             is PositionAnchor -> "'${arg.identifier}'"
             is TableId<*> -> "'${arg.value}'"
-            is Modifier -> arg.jsLiteral
+            is Class -> arg.jsLiteral
             else -> arg.toString()
         }
     }

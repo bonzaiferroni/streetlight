@@ -1,6 +1,6 @@
 package koala.dom
 
-import koala.css.*
+import koala.modifier.*
 import kampfire.model.MutableTap
 import kampfire.model.Tap
 import kotlinx.coroutines.launch

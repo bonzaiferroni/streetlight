@@ -1,6 +1,6 @@
 package koala.dom
 
-import koala.css.*
+import koala.modifier.*
 import koala.html.Id
 import kampfire.model.MutableTap
 import koala.html.TabScope

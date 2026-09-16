@@ -1,4 +1,4 @@
-package koala.css
+package koala.modifier
 
 val DisplayUtilityCss
     get() = listOf(
@@ -22,14 +22,12 @@ val DisplayUtilityCss
         OverflowHidden, OverflowWrapAnywhere, OverflowClip, OverflowXAuto, OverflowXHidden, OverflowYAuto, OverflowYScroll,
         OverscrollBehaviorContain, ScrollbarWidthNone,
         // Background
-        PrimaryBg, PrimaryCardBg, LampBg, InkBg, ZenBg, CardBg, VoidBg, SystemBg, DialogBg, BackgroundImage,
+        PrimaryBg, PrimaryCardBg, LampBg, InkBg, ZenBg, CardBg, VoidBg, SystemBg, DialogBg,
         SolidBg, BlurBackdrop, TransparentBg, PaperBg, PaperGradientBg, CardGradientBg, InkGradientBg,
         // Transform
         FlipX, FlipY,
         // Shadow
         MoonShadow, MoonShadowText, MoonShadowInset, MoonDropShadow,
-        // Theme
-        DayTheme,
         // Overlays
         VignetteOver, VignetteBehind, GradientDarkBottom,
         // Masks
@@ -37,7 +35,7 @@ val DisplayUtilityCss
         // Button
         ButtonPadding, ButtonBorderRadius,
         // Misc
-        Focus, Clickable, PointerEventsAuto, PointerEventsNone, BlurContent, AspectAuto,
+        PointerEventsAuto, PointerEventsNone, BlurContent, AspectAuto,
     )
 
 // Display
@@ -140,7 +138,7 @@ val CardBg = utilityOf("card-bg", "background: var(--card-bg)")
 val VoidBg = utilityOf("void-bg", "background: var(--void-bg)")
 val DialogBg = utilityOf("dialog-bg", "background: var(--dialog-bg)")
 val HeavyCardBg = utilityOf("heavy-card-bg", "background: rgba(var(--paper), .8)")
-val BackgroundImage = CssUtility("background-image")
+val BackgroundImage = Class("background-image")
 val SolidBg = utilityOf("solid-bg", "background-color: var(--paper-bg)")
 val HoverBg = Class("hover-bg")
 val BlurBackdrop = utilityOf(
@@ -176,7 +174,7 @@ background: linear-gradient(
 );
 """)
 
-val VignetteOver = CssUtility("vignette-over", """
+val VignetteOver = UtilityClass("vignette-over", """
 .vignette-over {
     position: relative;
 }
@@ -190,7 +188,7 @@ val VignetteOver = CssUtility("vignette-over", """
 }
 """)
 
-val VignetteBehind = CssUtility("vignette-behind", """
+val VignetteBehind = UtilityClass("vignette-behind", """
 .vignette-behind {
     position: relative;
 }   
@@ -211,7 +209,6 @@ val AspectAuto = utilityOf("aspect-ratio-auto", "aspect-ratio: auto")
 
 
 // defined in stylesheet
-val DayTheme = CssUtility("day-theme")
-val Activate = CssUtility("activate")
-val Focus = CssUtility("focus")
-val Clickable = CssUtility("clickable")
+val DayTheme = Class("day-theme")
+val Focus = Class("focus")
+val Clickable = Class("clickable")

@@ -1,7 +1,8 @@
 package koala.html
 
-import koala.css.Required
-import koala.css.Valid
+import koala.modifier.Attribute
+import koala.modifier.Required
+import koala.modifier.Valid
 
 // language="CSS"
 val BlockLabelCss get() = """

@@ -1,9 +1,9 @@
 package streetlight.web.ui
 
-import koala.css.AlignItemsCenter
-import koala.css.Padding2
-import koala.css.Zen
-import koala.css.modify
+import koala.modifier.AlignItemsCenter
+import koala.modifier.Padding2
+import koala.modifier.Zen
+import koala.modifier.modify
 import koala.dom.ViewScope
 import koala.dom.button
 import koala.dom.grid

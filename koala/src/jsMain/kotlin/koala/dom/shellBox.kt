@@ -1,12 +1,9 @@
 package koala.dom
 
 import initElement
-import koala.css.*
-import koala.html.Id
+import koala.modifier.*
 import kotlinx.html.DIV
-import web.cssom.ms
 import web.dom.document
-import web.html.HTMLDivElement
 import web.html.HTMLElement
 import web.timers.setTimeout
 

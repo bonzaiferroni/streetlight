@@ -1,10 +1,10 @@
 package koala.dom
 
-import koala.css.Glow
-import koala.css.ModifierSet
-import koala.css.Property
-import koala.css.modify
-import koala.css.rgba
+import koala.modifier.Glow
+import koala.modifier.ModifierSet
+import koala.modifier.Property
+import koala.modifier.modify
+import koala.modifier.rgba
 import kampfire.model.MutableTap
 import koala.model.GlowControlStyle
 import kotlinx.css.pct

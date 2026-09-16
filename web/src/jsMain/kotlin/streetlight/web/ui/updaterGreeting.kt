@@ -1,11 +1,11 @@
 package streetlight.web.ui
 
 import koala.LottieFile
-import koala.css.AlignItemsCenter
-import koala.css.BorderRadius2
-import koala.css.MoonShadow
-import koala.css.OverflowClip
-import koala.css.modify
+import koala.modifier.AlignItemsCenter
+import koala.modifier.BorderRadius2
+import koala.modifier.MoonShadow
+import koala.modifier.OverflowClip
+import koala.modifier.modify
 import koala.dom.ViewScope
 import koala.dom.grid
 import koala.dom.lottie

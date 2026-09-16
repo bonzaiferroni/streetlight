@@ -1,18 +1,5 @@
 package koala.dom
 
-import kampfire.model.Url
-import koala.css.*
-import koala.html.ImageChooserKey
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.launch
-import kotlinx.dom.clear
-import kotlinx.html.dom.append
-import kotlinx.html.js.*
-import kotlinx.html.style
-import org.w3c.dom.HTMLButtonElement
-import org.w3c.dom.HTMLDivElement
-import org.w3c.dom.HTMLImageElement
-
 //fun ViewScope.imageChooser(
 //    modifiers: ModifierSet? = null,
 //    onValueChanged: ((Url?) -> Unit)? = null,

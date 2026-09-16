@@ -1,6 +1,6 @@
 package koala.dom
 
-import koala.css.*
+import koala.modifier.*
 import kampfire.model.storeOf
 import kampfire.model.toggle
 

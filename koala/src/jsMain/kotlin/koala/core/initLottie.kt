@@ -4,7 +4,7 @@ import js.array.asList
 import koala.external.LottieOptions
 import koala.external.RendererSettings
 import koala.external.lottie
-import koala.html.Attribute
+import koala.modifier.Attribute
 import web.html.HTMLElement
 
 fun queryAndInitLotties(ancestor: HTMLElement) {

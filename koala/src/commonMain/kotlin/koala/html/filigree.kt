@@ -1,19 +1,19 @@
 package koala.html
 
-import koala.css.AlignItemsCenter
-import koala.css.AspectAuto
-import koala.css.Flex1
-import koala.css.FlipX
-import koala.css.Height2Px
-import koala.css.JustifyContentCenter
-import koala.css.MaxWidth16
-import koala.css.Modifier
-import koala.css.ModifierSet
-import koala.css.MoonDropShadow
-import koala.css.OpacityHalf
-import koala.css.ParticleRay
-import koala.css.modify
-import koala.css.setRandomSeed
+import koala.modifier.AlignItemsCenter
+import koala.modifier.AspectAuto
+import koala.modifier.Flex1
+import koala.modifier.FlipX
+import koala.modifier.Height2Px
+import koala.modifier.JustifyContentCenter
+import koala.modifier.MaxWidth16
+import koala.modifier.Modifier
+import koala.modifier.ModifierSet
+import koala.modifier.MoonDropShadow
+import koala.modifier.OpacityHalf
+import koala.modifier.ParticleRay
+import koala.modifier.modify
+import koala.modifier.setRandomSeed
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 
@@ -32,7 +32,7 @@ fun DIV.configureFiligree(
     block: DIV.() -> Unit
 ) {
     val hrMods = modify(Flex1, MoonDropShadow, Height2Px, OpacityHalf, ParticleRay, AspectAuto, ruleMaxWidth)
-    hr(hrMods + FlipX) {
+    hr(modify(hrMods, FlipX)) {
         setRandomSeed()
     }
     block()

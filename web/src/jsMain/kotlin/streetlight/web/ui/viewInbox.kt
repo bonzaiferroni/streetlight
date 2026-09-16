@@ -3,7 +3,7 @@ package streetlight.web.ui
 import kabinet.utils.toHourAndMinutesFormat
 import kabinet.utils.toPastFormat
 import kampfire.api.Markdown
-import koala.css.*
+import koala.modifier.*
 import koala.dom.*
 import kampfire.model.storeOf
 import kampfire.model.tapOf

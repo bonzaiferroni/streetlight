@@ -1,12 +1,11 @@
 package koala.dom
 
 import koala.Svg
-import koala.css.*
+import koala.modifier.*
 import koala.html.IconStyle
 import koala.html.configureIcon
 import kotlinx.html.DIV
 import kotlinx.html.js.div
-import org.w3c.dom.HTMLDivElement
 
 fun AppendScope.icon(
     file: Svg,

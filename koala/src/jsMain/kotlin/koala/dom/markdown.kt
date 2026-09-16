@@ -1,9 +1,8 @@
 package koala.dom
 
 import kampfire.api.Markdown
-import koala.css.ModifierSet
+import koala.modifier.ModifierSet
 import koala.html.configureMarkdown
-import koala.markdown.MarkdownBlock
 import koala.markdown.ParsedBlock
 import koala.markdown.markdownBlocksOf
 import kotlinx.html.DIV

@@ -1,6 +1,6 @@
 package koala.html
 
-import koala.css.*
+import koala.modifier.*
 import kotlinx.css.GridTemplateColumns
 import kotlinx.css.fr
 import kotlinx.html.DIV

@@ -1,21 +1,13 @@
 package streetlight.web.ui
 
-import kabinet.utils.toFutureFormat
 import kabinet.utils.toTimeFormat
 import koala.SvgFile
-import koala.css.*
+import koala.modifier.*
 import koala.dom.*
 import koala.html.fillImageSrcSet
-import koala.html.heading3
-import koala.model.dedup
 import streetlight.model.data.EventId
 import streetlight.model.data.EventLocation
 import streetlight.web.model.StarCache
-import streetlight.web.shells.HomeShell
-import web.html.HTMLElement
-import kotlin.collections.component1
-import kotlin.collections.component2
-import kotlin.time.Clock
 
 //fun ViewScope.wireLitEvents(root: HTMLElement) {
 //    val cache = app.get<DataCache>()

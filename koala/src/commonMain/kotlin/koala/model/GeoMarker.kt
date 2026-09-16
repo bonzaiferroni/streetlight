@@ -3,7 +3,7 @@ package koala.model
 import kampfire.model.GeoPoint
 import kampfire.model.Url
 import koala.Svg
-import koala.css.ModifierSet
+import koala.modifier.ModifierSet
 import kotlinx.css.Color
 import kotlinx.css.LinearDimension
 import kotlinx.css.px

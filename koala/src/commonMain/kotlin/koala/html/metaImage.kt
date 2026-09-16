@@ -1,11 +1,7 @@
 package koala.html
 
-import kampfire.model.ImageSize
-import kampfire.model.Url
 import koala.Image
-import koala.SiteImage
-import koala.css.*
-import koala.getVariantOrPlaceholder
+import koala.modifier.*
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 

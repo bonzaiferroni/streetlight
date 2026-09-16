@@ -1,7 +1,7 @@
 package koala.html
 
 import kotlinx.html.*
-import koala.css.*
+import koala.modifier.*
 
 fun FlowContent.row(
     id: Id,

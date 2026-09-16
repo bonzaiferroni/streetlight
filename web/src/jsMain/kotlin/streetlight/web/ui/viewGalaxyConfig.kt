@@ -1,13 +1,11 @@
 package streetlight.web.ui
 
 import koala.LottieFile
-import koala.css.*
+import koala.modifier.*
 import koala.dom.*
 import koala.dom.routeBlock
 import koala.html.spacer
-import streetlight.model.data.Galaxy
 import streetlight.model.data.GalaxyConfig
-import streetlight.model.data.GalaxyEdit
 import streetlight.model.data.toEdit
 import streetlight.model.ui.GalaxyConfigRoute
 

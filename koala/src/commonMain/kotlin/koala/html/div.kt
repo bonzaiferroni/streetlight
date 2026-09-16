@@ -1,7 +1,7 @@
 package koala.html
 
-import koala.css.ModifierSet
-import koala.css.addModifiers
+import koala.modifier.ModifierSet
+import koala.modifier.addModifiers
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kotlinx.html.div as divTag

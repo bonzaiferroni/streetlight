@@ -2,16 +2,16 @@ package streetlight.web.ui
 
 import kampfire.api.EmailAddress
 import kampfire.api.obfuscate
-import koala.css.AlignItemsCenter
-import koala.css.AlignSelfCenter
-import koala.css.Blur
-import koala.css.CautionFg
-import koala.css.Magic
-import koala.css.MarginTop1
-import koala.css.Scale
-import koala.css.ValidFg
-import koala.css.Zen
-import koala.css.modify
+import koala.modifier.AlignItemsCenter
+import koala.modifier.AlignSelfCenter
+import koala.modifier.Blur
+import koala.modifier.CautionFg
+import koala.modifier.Magic
+import koala.modifier.MarginTop1
+import koala.modifier.Scale
+import koala.modifier.ValidFg
+import koala.modifier.Zen
+import koala.modifier.modify
 import koala.dom.*
 import kotlinx.html.InputType
 import streetlight.model.data.EmailStatus

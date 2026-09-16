@@ -1,6 +1,6 @@
 package koala.model
 
-import koala.css.Class
+import koala.modifier.Class
 
 object LazyColumnStyle {
     val Container = Class("lazy-column")

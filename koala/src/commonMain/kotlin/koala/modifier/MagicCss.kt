@@ -1,4 +1,4 @@
-package koala.css
+package koala.modifier
 
 object MagicStyle {
     const val Interval = 222

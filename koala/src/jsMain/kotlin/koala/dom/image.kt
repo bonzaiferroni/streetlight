@@ -3,8 +3,8 @@ package koala.dom
 import kampfire.model.Url
 import koala.Image
 import koala.SiteImage
-import koala.css.ModifierSet
-import koala.css.addModifiers
+import koala.modifier.ModifierSet
+import koala.modifier.addModifiers
 import kampfire.model.Tap
 import kotlinx.html.IMG
 import kotlinx.html.js.img

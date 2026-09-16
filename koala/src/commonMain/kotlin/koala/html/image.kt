@@ -7,7 +7,7 @@ import kampfire.model.toHtmlSrcSet
 import koala.Image
 import koala.SiteImage
 import koala.Svg
-import koala.css.*
+import koala.modifier.*
 import kotlinx.html.*
 
 fun FlowOrInteractiveOrPhrasingContent.image(

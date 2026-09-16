@@ -1,8 +1,8 @@
 package koala.dom
 
 import js.array.asList
-import koala.html.Attribute
-import koala.html.AttributeValue
+import koala.modifier.Attribute
+import koala.modifier.AttributeValue
 import web.dom.Element
 import web.html.HTMLElement
 import web.mutation.MutationObserver

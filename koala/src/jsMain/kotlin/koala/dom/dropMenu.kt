@@ -1,8 +1,8 @@
 package koala.dom
 
 import kampfire.model.Labeled
-import koala.css.ModifierSet
-import koala.css.addModifiers
+import koala.modifier.ModifierSet
+import koala.modifier.addModifiers
 import kampfire.model.MutableTap
 import kampfire.model.mutableTapOf
 import kotlinx.html.SELECT

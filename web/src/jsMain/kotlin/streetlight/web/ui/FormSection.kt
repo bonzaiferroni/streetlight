@@ -1,10 +1,10 @@
 package streetlight.web.ui
 
-import koala.css.AlignSelfCenter
-import koala.css.BorderRadius1
-import koala.css.MaxHeight64
-import koala.css.ObjectFitContain
-import koala.css.modify
+import koala.modifier.AlignSelfCenter
+import koala.modifier.BorderRadius1
+import koala.modifier.MaxHeight64
+import koala.modifier.ObjectFitContain
+import koala.modifier.modify
 import koala.dom.ViewScope
 import koala.dom.box
 import koala.dom.image

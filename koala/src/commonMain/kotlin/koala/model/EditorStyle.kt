@@ -1,8 +1,8 @@
 package koala.model
 
-import koala.css.Class
-import koala.html.enumAttributeOf
-import koala.html.intAttributeOf
+import koala.modifier.Class
+import koala.modifier.enumAttributeOf
+import koala.modifier.intAttributeOf
 import koala.markdown.ContentBlock
 
 object EditorStyle {

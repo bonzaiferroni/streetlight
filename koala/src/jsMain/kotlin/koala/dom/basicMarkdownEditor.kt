@@ -2,9 +2,9 @@ package koala.dom
 
 import kampfire.api.Markdown
 import kampfire.api.toMarkdown
-import koala.css.*
-import koala.html.Attribute
-import koala.html.setAttribute
+import koala.modifier.*
+import koala.modifier.Attribute
+import koala.modifier.setAttribute
 import kampfire.model.MutableTap
 import koala.model.EditorStyle
 import kotlinx.html.DIV

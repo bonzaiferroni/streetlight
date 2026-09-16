@@ -1,6 +1,6 @@
 package koala.model
 
-import koala.css.*
+import koala.modifier.*
 import koala.dom.AppendScope
 import koala.dom.row
 import koala.dom.textBlock

@@ -1,6 +1,6 @@
 package streetlight.web.shells
 
-import koala.css.*
+import koala.modifier.*
 import koala.html.btn
 import kotlinx.html.FlowContent
 import streetlight.model.data.Galaxy

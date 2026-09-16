@@ -1,14 +1,13 @@
 package streetlight.web.shells
 
 import kampfire.model.Token
-import koala.JsBundle
 import koala.PageResource
-import koala.css.AlignItemsCenter
-import koala.css.Flex1
+import koala.modifier.AlignItemsCenter
+import koala.modifier.Flex1
 import koala.interop.JsSignature
-import koala.css.MaxWidth48
-import koala.css.MaxWidth64
-import koala.css.modify
+import koala.modifier.MaxWidth48
+import koala.modifier.MaxWidth64
+import koala.modifier.modify
 import koala.html.Id
 import koala.html.button
 import koala.html.column

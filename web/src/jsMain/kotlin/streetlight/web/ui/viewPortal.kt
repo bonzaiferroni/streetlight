@@ -1,16 +1,13 @@
 package streetlight.web.ui
 
-import koala.css.Blur
-import koala.css.FocusTarget
-import koala.css.KoalaBody
-import koala.css.Magic
-import koala.css.modify
+import koala.modifier.Blur
+import koala.modifier.FocusTarget
+import koala.modifier.Magic
+import koala.modifier.modify
 import koala.dom.RouteScope
 import koala.dom.ViewScope
 import koala.dom.closeOpenPopovers
 import koala.dom.flowBlock
-import koala.dom.getElementById
-import koala.dom.getElementOrNullById
 import koala.dom.querySelector
 import koala.dom.textBlock
 import koala.model.Portal

@@ -1,6 +1,6 @@
 package koala.html
 
-import koala.css.*
+import koala.modifier.*
 import kotlinx.html.FlowContent
 import kotlinx.html.SECTION
 import kotlinx.html.section as sectionTag

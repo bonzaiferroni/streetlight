@@ -2,9 +2,9 @@ package streetlight.web.ui
 
 import kampfire.api.Username
 import kampfire.model.toDataOr
-import koala.css.*
+import koala.modifier.*
 import koala.dom.*
-import koala.html.Attribute
+import koala.modifier.Attribute
 import streetlight.model.data.PostId
 
 fun ViewScope.wirePostMenu() {

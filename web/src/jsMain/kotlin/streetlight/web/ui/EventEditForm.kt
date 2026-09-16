@@ -5,7 +5,7 @@ import kabinet.utils.toFutureFormat
 import kabinet.utils.toTimeFormat
 import koala.LottieFile
 import koala.SvgFile
-import koala.css.*
+import koala.modifier.*
 import koala.dom.*
 import koala.html.ButtonPopover
 import koala.html.bulletsOf

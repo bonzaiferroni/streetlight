@@ -1,6 +1,6 @@
 package koala.dom
 
-import koala.css.*
+import koala.modifier.*
 import koala.html.AppRoute
 import koala.html.RouteMenu
 import koala.html.filigree

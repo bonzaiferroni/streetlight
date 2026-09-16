@@ -1,6 +1,6 @@
 package koala.dom
 
-import koala.css.*
+import koala.modifier.*
 import koala.html.SwapStyle
 import kotlinx.browser.window
 import kotlinx.css.px

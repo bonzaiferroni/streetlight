@@ -1,14 +1,14 @@
 package streetlight.web.ui
 
 import koala.SvgFile
-import koala.css.AlignItemsCenter
-import koala.css.Aspect1
-import koala.css.BlurBackdrop
-import koala.css.Padding1
-import koala.css.PaperGradientBg
-import koala.css.PointerEventsAuto
-import koala.css.Width5
-import koala.css.modify
+import koala.modifier.AlignItemsCenter
+import koala.modifier.Aspect1
+import koala.modifier.BlurBackdrop
+import koala.modifier.Padding1
+import koala.modifier.PaperGradientBg
+import koala.modifier.PointerEventsAuto
+import koala.modifier.Width5
+import koala.modifier.modify
 import koala.dom.ViewScope
 import koala.dom.icon
 import koala.dom.onClick

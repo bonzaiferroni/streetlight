@@ -4,9 +4,9 @@ import kampfire.model.ListChange
 import kampfire.model.LiveList
 import kampfire.model.MutableTap
 import kampfire.model.ScrollState
-import koala.css.*
-import koala.html.Attribute
-import koala.html.setAttribute
+import koala.modifier.*
+import koala.modifier.Attribute
+import koala.modifier.setAttribute
 import kotlinx.css.LinearDimension
 import kotlinx.css.px
 import web.dom.document

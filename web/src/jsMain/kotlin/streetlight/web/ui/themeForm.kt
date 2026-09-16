@@ -1,7 +1,7 @@
 package streetlight.web.ui
 
 import koala.SvgFile
-import koala.css.*
+import koala.modifier.*
 import koala.dom.*
 import kampfire.model.MutableTap
 import kampfire.model.mutableTapOf

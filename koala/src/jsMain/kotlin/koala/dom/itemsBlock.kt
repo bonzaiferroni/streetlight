@@ -1,6 +1,6 @@
 package koala.dom
 
-import koala.css.*
+import koala.modifier.*
 import koala.html.ItemsBlockStyle
 import kampfire.model.Tap
 import kampfire.model.tapOf

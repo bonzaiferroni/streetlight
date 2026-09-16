@@ -1,8 +1,8 @@
 package koala.html
 
+import koala.modifier.Attribute
 import koala.utils.jsonConfig
 import kotlinx.html.Tag
-import kotlinx.serialization.json.Json
 
 inline fun <reified T> Tag.setJsonData(attribute: Attribute<T>, data: T) {
     attributes[attribute.identifier] = jsonConfig.encodeToString(data)

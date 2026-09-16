@@ -1,9 +1,12 @@
 package koala.html
 
 import kampfire.model.GeoPoint
-import koala.css.Class
-import koala.css.ModifierSet
-import koala.css.addModifiers
+import koala.modifier.Attribute
+import koala.modifier.Class
+import koala.modifier.ModifierSet
+import koala.modifier.addModifiers
+import koala.modifier.setAriaLabel
+import koala.modifier.setAttribute
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 

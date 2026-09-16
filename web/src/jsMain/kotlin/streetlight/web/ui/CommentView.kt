@@ -4,7 +4,7 @@ import kabinet.utils.toAgoFormat
 import kampfire.api.Markdown
 import kampfire.api.toMarkdown
 import koala.SvgFile
-import koala.css.*
+import koala.modifier.*
 import koala.dom.*
 import koala.html.image
 import koala.html.markdown

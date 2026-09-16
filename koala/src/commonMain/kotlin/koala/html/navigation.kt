@@ -1,10 +1,10 @@
 package koala.html
 
-import koala.css.Class
+import koala.modifier.Class
 import koala.interop.KoalaFun
-import koala.css.ModifierSet
-import koala.css.addModifiers
-import koala.css.modify
+import koala.modifier.ModifierSet
+import koala.modifier.addModifiers
+import koala.modifier.modify
 import kotlinx.html.A
 import kotlinx.html.FlowContent
 import kotlinx.html.a

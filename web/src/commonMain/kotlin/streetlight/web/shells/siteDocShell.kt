@@ -1,7 +1,7 @@
 package streetlight.web.shells
 
 import koala.SvgFile
-import koala.css.*
+import koala.modifier.*
 import koala.html.*
 import koala.model.DocNode
 import koala.model.DocTable

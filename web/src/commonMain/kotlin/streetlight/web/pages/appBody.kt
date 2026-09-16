@@ -3,7 +3,7 @@
 package streetlight.web.pages
 
 import koala.PageResource
-import koala.css.*
+import koala.modifier.*
 import koala.html.*
 import kotlinx.html.DIV
 import kotlinx.html.HTML

@@ -1,8 +1,8 @@
 package koala.dom
 
 import kampfire.model.Url
-import koala.css.Modifier
-import koala.css.modify
+import koala.modifier.Modifier
+import koala.modifier.modify
 import koala.markdown.ParsedBlock
 import kotlinx.html.a
 

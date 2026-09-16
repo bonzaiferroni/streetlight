@@ -1,8 +1,10 @@
 package koala.html
 
-import koala.css.ModifierSet
-import koala.css.Width100Pct
-import koala.css.addModifiers
+import koala.modifier.Attribute
+import koala.modifier.ModifierSet
+import koala.modifier.Width100Pct
+import koala.modifier.addModifiers
+import koala.modifier.setAttribute
 import kotlinx.html.*
 
 fun FlowContent.textField(

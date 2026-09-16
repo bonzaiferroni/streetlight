@@ -3,7 +3,7 @@ package streetlight.web.ui
 import kampfire.api.Markdown
 import kampfire.api.Username
 import kampfire.model.toDataOr
-import koala.css.*
+import koala.modifier.*
 import koala.dom.*
 import kampfire.model.mutableTapOf
 import kampfire.model.storeOf

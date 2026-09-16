@@ -2,16 +2,16 @@ package streetlight.web.ui
 
 import kampfire.api.Username
 import koala.SvgFile
-import koala.css.AlignSelfCenter
-import koala.css.Height3
-import koala.css.modify
-import koala.html.Attribute
+import koala.modifier.AlignSelfCenter
+import koala.modifier.Height3
+import koala.modifier.modify
+import koala.modifier.Attribute
 import koala.html.Id
 import koala.html.button
 import koala.html.icon
-import koala.html.setAttribute
-import koala.html.setPopoverTarget
-import koala.html.idAttributeOf
+import koala.modifier.setAttribute
+import koala.modifier.setPopoverTarget
+import koala.modifier.idAttributeOf
 import kotlinx.html.FlowContent
 import streetlight.model.data.PostId
 

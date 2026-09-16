@@ -1,9 +1,9 @@
 package koala.dom
 
 import kampfire.model.MutableTap
-import koala.css.ModifierSet
-import koala.css.addModifiers
-import koala.css.modify
+import koala.modifier.ModifierSet
+import koala.modifier.addModifiers
+import koala.modifier.modify
 import koala.html.Id
 import koala.html.TabsStyle
 import koala.html.box

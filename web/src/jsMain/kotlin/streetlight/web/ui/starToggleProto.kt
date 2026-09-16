@@ -2,12 +2,12 @@ package streetlight.web.ui
 
 import kampfire.model.toDataOr
 import koala.SvgFile
-import koala.css.Height3
-import koala.css.ModifierSet
-import koala.css.Property
-import koala.css.ScaleIn
-import koala.css.ScaleOut
-import koala.css.modify
+import koala.modifier.Height3
+import koala.modifier.ModifierSet
+import koala.modifier.Property
+import koala.modifier.ScaleIn
+import koala.modifier.ScaleOut
+import koala.modifier.modify
 import koala.dom.ViewScope
 import koala.dom.icon
 import koala.dom.modify

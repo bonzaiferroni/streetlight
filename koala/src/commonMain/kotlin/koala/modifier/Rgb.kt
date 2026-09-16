@@ -1,4 +1,4 @@
-package koala.css
+package koala.modifier
 
 import kotlinx.serialization.Serializable
 

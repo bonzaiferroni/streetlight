@@ -13,7 +13,7 @@ import koala.external.MapOptions
 import koala.external.MapSource
 import koala.external.MapTerrain
 import koala.external.maplibregl
-import koala.html.Attribute
+import koala.modifier.Attribute
 import koala.html.GeoMapKey
 import kotlinx.browser.localStorage
 import web.html.HTMLElement

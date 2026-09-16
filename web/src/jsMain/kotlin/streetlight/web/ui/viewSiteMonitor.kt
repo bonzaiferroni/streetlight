@@ -1,7 +1,7 @@
 package streetlight.web.ui
 
 import koala.SiteImage
-import koala.css.*
+import koala.modifier.*
 import koala.dom.*
 import koala.external.ECharts
 import streetlight.model.ui.SiteMonitorRoute

@@ -2,7 +2,7 @@ package streetlight.web.layouts
 
 import kampfire.api.Markdown
 import koala.Image
-import koala.css.*
+import koala.modifier.*
 import koala.html.*
 import kotlinx.html.FlowContent
 import streetlight.model.data.ExtraLink

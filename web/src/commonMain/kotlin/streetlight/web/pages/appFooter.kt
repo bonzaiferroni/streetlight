@@ -2,7 +2,7 @@ package streetlight.web.pages
 
 import koala.LottieFile
 import koala.SvgFile
-import koala.css.*
+import koala.modifier.*
 import koala.html.navigation
 import koala.html.column
 import koala.html.filigree

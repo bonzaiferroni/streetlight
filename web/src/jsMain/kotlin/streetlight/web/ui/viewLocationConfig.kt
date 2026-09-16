@@ -1,7 +1,7 @@
 package streetlight.web.ui
 
 import kampfire.model.toDataOrNull
-import koala.css.*
+import koala.modifier.*
 import koala.dom.*
 import koala.html.Id
 import koala.html.heading1
@@ -14,8 +14,6 @@ import streetlight.model.data.toEdit
 import streetlight.model.ui.LocationConfigRoute
 import streetlight.web.layouts.route
 import streetlight.web.model.DesignEditor
-import streetlight.web.model.LayoutEditor
-import streetlight.web.model.ThemeEditor
 import streetlight.web.shells.cardOf
 
 fun ViewScope.viewLocationConfig(

@@ -1,9 +1,9 @@
 package streetlight.web.ui
 
 import koala.SvgFile
-import koala.css.Magic
-import koala.css.PointerEventsAuto
-import koala.css.modify
+import koala.modifier.Magic
+import koala.modifier.PointerEventsAuto
+import koala.modifier.modify
 import koala.dom.ViewScope
 import koala.dom.MenuLabel
 import koala.dom.MenuRoute

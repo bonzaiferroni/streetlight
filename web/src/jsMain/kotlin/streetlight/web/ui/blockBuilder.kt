@@ -2,7 +2,7 @@ package streetlight.web.ui
 
 import koala.Image
 import koala.SvgFile
-import koala.css.*
+import koala.modifier.*
 import koala.dom.*
 import kampfire.model.mutableTapOf
 import kampfire.model.storeOf

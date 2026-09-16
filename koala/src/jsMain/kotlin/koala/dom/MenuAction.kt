@@ -1,7 +1,7 @@
 package koala.dom
 
 import kampfire.model.Labeled
-import koala.css.ModifierSet
+import koala.modifier.ModifierSet
 import koala.html.AppRoute
 
 sealed interface MenuOption: Labeled

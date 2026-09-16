@@ -1,11 +1,5 @@
 package koala.dom
 
-import koala.css.*
-import koala.html.AppRoute
-import koala.model.Portal
-import kotlinx.coroutines.flow.map
-import org.w3c.dom.HTMLElement
-
 // inline fun <reified Route: AppRoute> ViewScope.routeBlock(
 //     portal: Portal,
 //     crossinline block: ViewScope.(Route) -> Unit

@@ -1,7 +1,7 @@
 package streetlight.web.pages
 
 import koala.SvgFile
-import koala.css.*
+import koala.modifier.*
 import koala.html.*
 import kotlinx.html.FlowContent
 import streetlight.model.ui.Screen
@@ -13,7 +13,7 @@ fun FlowContent.helmBar() {
     row(HelmBar.StickyBarId, modify(Padding1)) {
         div(HelmBar.SiteHelmButton, cardMod) {
             setAnchorName(SiteHelm.PositionAnchor)
-            button(SvgFile.Helm, HelmBar.IconMod + WhiteFg) {
+            button(SvgFile.Helm, modify(HelmBar.IconMod, WhiteFg)) {
                 setPopoverTarget(SiteHelm.popoverId)
             }
         }

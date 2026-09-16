@@ -1,7 +1,7 @@
 package koala.html
 
 import koala.Svg
-import koala.css.*
+import koala.modifier.*
 import kotlinx.html.BUTTON
 import kotlinx.html.FlowContent
 import kotlinx.html.button as buttonTag

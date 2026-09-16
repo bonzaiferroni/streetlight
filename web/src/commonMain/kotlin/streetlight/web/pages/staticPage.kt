@@ -1,7 +1,7 @@
 package streetlight.web.pages
 
 import koala.PageResource
-import koala.css.KoalaBody
+import koala.modifier.KoalaBody
 import koala.html.appHead
 import koala.html.box
 import koala.html.div

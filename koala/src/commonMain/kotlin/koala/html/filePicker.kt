@@ -1,6 +1,6 @@
 package koala.html
 
-import koala.css.Class
+import koala.modifier.Class
 
 object FilePickerKey {
     val Class = Class("file-picker")

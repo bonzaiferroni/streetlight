@@ -1,10 +1,10 @@
 package koala.dom
 
-import koala.css.ModifierSet
-import koala.css.addModifiers
-import koala.html.Attribute
-import koala.html.blockLabel
-import koala.html.setAttribute
+import koala.modifier.ModifierSet
+import koala.modifier.addModifiers
+import koala.modifier.Attribute
+import koala.modifier.blockLabel
+import koala.modifier.setAttribute
 import kotlinx.html.DIV
 import kotlinx.html.js.div
 import web.html.HTMLElement

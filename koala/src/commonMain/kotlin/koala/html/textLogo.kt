@@ -1,19 +1,19 @@
 package koala.html
 
 import koala.SvgFile
-import koala.css.AccentFg
-import koala.css.AlignSelfCenter
-import koala.css.Class
-import koala.css.GlowBackground
-import koala.css.GlowShadow
-import koala.css.Height5
-import koala.css.ModifierSet
-import koala.css.MoonDropShadow
-import koala.css.ParticleRay
-import koala.css.PrimaryFg
-import koala.css.Property
-import koala.css.modify
-import koala.css.setStyle
+import koala.modifier.AccentFg
+import koala.modifier.AlignSelfCenter
+import koala.modifier.Class
+import koala.modifier.GlowBackground
+import koala.modifier.GlowShadow
+import koala.modifier.Height5
+import koala.modifier.ModifierSet
+import koala.modifier.MoonDropShadow
+import koala.modifier.PrimaryFg
+import koala.modifier.Property
+import koala.modifier.modify
+import koala.modifier.setAriaLabel
+import koala.modifier.setStyle
 import kotlinx.html.FlowContent
 
 fun FlowContent.textLogo(

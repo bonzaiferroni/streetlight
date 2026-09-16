@@ -1,7 +1,7 @@
 package streetlight.web.ui
 
-import koala.css.Class
-import koala.css.Reveal
+import koala.modifier.Class
+import koala.modifier.Reveal
 
 object InboxStyle {
     val Grid = Class("inbox-grid")

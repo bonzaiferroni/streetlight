@@ -1,6 +1,6 @@
 package koala.html
 
-import koala.css.Class
+import koala.modifier.Class
 
 object MessageBox {
     val Mod = Class("message-box")

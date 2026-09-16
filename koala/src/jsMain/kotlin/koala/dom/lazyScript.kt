@@ -1,6 +1,6 @@
 package koala.dom
 
-import koala.css.ModifierSet
+import koala.modifier.ModifierSet
 import koala.model.ScriptLoader
 
 fun ViewScope.lazyScript(

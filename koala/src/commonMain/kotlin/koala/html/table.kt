@@ -1,6 +1,6 @@
 package koala.html
 
-import koala.css.Prose
+import koala.modifier.Prose
 
 // language="CSS"
 val TableCss get() = """

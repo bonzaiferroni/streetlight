@@ -1,7 +1,7 @@
 package koala.html
 
 import koala.Svg
-import koala.css.*
+import koala.modifier.*
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kotlinx.html.div

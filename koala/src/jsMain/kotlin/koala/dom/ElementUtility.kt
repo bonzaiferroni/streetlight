@@ -2,8 +2,13 @@ package koala.dom
 
 import js.array.asList
 import kampfire.utils.takeEllipsis
-import koala.css.Property
-import koala.css.Modifier
+import koala.modifier.Attribute
+import koala.modifier.AttributeValue
+import koala.modifier.ClassModifier
+import koala.modifier.InlineStyle
+import koala.modifier.Property
+import koala.modifier.Modifier
+import koala.modifier.ModifierSet
 import koala.html.Queryable
 import web.animations.requestAnimationFrame
 import web.cssom.CSSStyleDeclaration
@@ -13,54 +18,64 @@ import web.dom.Element
 import web.dom.document
 import web.html.HTMLElement
 
-fun <T: Element> T.unmodify(vararg modifier: Modifier): T {
-    modifier.forEach { classList.remove(it.className) }
-    return this
-}
-fun <T: Element> T.modify(vararg modifier: Modifier): T {
-    modifier.forEach { classList.add(it.className) }
-    return this
-}
-fun <T: Element> T.unmodify(modifiers: Collection<Modifier>): T {
-    modifiers.forEach { classList.remove(it.className) }
-    return this
-}
-fun <T: Element> T.modify(modifiers: Collection<Modifier>): T {
-    modifiers.forEach { classList.add(it.className) }
-    return this
-}
-
-fun <T: Element> T.setModifiers(vararg modifier: Modifier): T {
-    className = ClassName(modifier.joinToString(" ") { it.identifier })
-    return this
-}
-
-val Modifier.className get() = ClassName(identifier)
-
-fun <T: Element> T.trigger(modifier: Modifier): T {
-    unmodify(modifier)
-    requestAnimationFrame {
-        modify(modifier)
+fun <T: Element> T.modify(modifier: Modifier): T {
+    when (modifier) {
+        is ClassModifier -> classList.add(modifier.className)
+        is InlineStyle<*> -> style.setProperty(modifier.property.identifier, modifier.stringValue)
+        is AttributeValue<*> -> setAttribute(modifier.attribute.identifier, modifier.toStringValue())
+        is ModifierSet -> modifier.modifiers.forEach {
+            it?.let { modify(it) }
+        }
     }
     return this
 }
 
-fun <T: Element> T.modifyAfterFrame(vararg modifier: Modifier): T {
-    requestAnimationFrame {
-        modify(*modifier)
+fun <T: Element> T.unmodify(modifier: Modifier): T {
+    when (val unmodifier = modifier.unmodifier) {
+        is ClassModifier -> classList.remove(unmodifier.className)
+        is Property<*> -> style.removeProperty(unmodifier.identifier)
+        is Attribute<*> -> removeAttribute(unmodifier.identifier)
+        null -> { }
     }
     return this
 }
 
-fun <T: Element> T.unmodifyAfterFrame(vararg modifier: Modifier): T {
+inline val Element.style: CSSStyleDeclaration
+    get() = unsafeCast<HTMLElement>().style
+
+inline val ClassModifier.className: ClassName
+    get() = ClassName(identifier)
+
+fun <T: Element> T.trigger(modifier: ClassModifier): T {
+    classList.remove(modifier.className)
     requestAnimationFrame {
-        unmodify(*modifier)
+        classList.add(modifier.className)
     }
     return this
 }
 
-fun Element.isModified(modifier: Modifier) = classList.contains(modifier.className)
-fun Element.toggle(modifier: Modifier) = classList.toggle(modifier.className)
+fun <T: HTMLElement> T.modifyAfterFrame(modifier: ClassModifier): T {
+    requestAnimationFrame {
+        classList.add(modifier.className)
+    }
+    return this
+}
+
+fun <T: HTMLElement> T.unmodifyAfterFrame(modifier: ClassModifier): T {
+    requestAnimationFrame {
+        classList.remove(modifier.className)
+    }
+    return this
+}
+
+fun HTMLElement.isModified(modifier: Modifier): Boolean = when (modifier) {
+    is ClassModifier -> classList.contains(modifier.className)
+    is InlineStyle<*> -> style.getPropertyValue(modifier.property.identifier) == modifier.stringValue
+    is AttributeValue<*> -> getAttribute(modifier.attribute.identifier) == modifier.toStringValue()
+    is ModifierSet -> modifier.modifiers.all { it == null || isModified(it) }
+}
+
+fun Element.toggle(modifier: ClassModifier) = classList.toggle(modifier.className)
 
 // td: remove cast
 fun Element.querySelector(queryable: Queryable) = querySelector(queryable.selector) as? HTMLElement
@@ -78,7 +93,7 @@ fun Element.asHtmlElement() = this as HTMLElement
 @Deprecated("query from document or element")
 fun querySelector(queryable: Queryable) = document.body.querySelector(queryable)
 
-fun CSSStyleDeclaration.removeStyle(property: Property<*>) = removeProperty(property.identifier)
+fun CSSStyleDeclaration.removeStyle(property: Property<*>) = removeProperty(property.name)
 
 fun Element.getPath(subject: Any? = null, limit: Int = Int.MAX_VALUE): String = buildString {
     subject?.let {

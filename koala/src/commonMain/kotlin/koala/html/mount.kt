@@ -1,6 +1,6 @@
 package koala.html
 
-import koala.css.ModifierSet
+import koala.modifier.ModifierSet
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 

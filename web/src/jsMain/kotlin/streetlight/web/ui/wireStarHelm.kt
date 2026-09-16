@@ -2,7 +2,7 @@ package streetlight.web.ui
 
 import koala.Svg
 import koala.SvgFile
-import koala.css.*
+import koala.modifier.*
 import koala.dom.*
 import koala.html.AppRoute
 import koala.html.button

@@ -86,8 +86,8 @@ class GeoCameraController(
 
         Altitude.entries.forEach {
             when (zoom < it.zoom) {
-                true -> windowElement.modify(it)
-                else -> windowElement.unmodify(it)
+                true -> windowElement.modify(it.cssClass)
+                else -> windowElement.unmodify(it.cssClass)
             }
         }
         

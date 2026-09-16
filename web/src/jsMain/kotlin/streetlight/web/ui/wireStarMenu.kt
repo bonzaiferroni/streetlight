@@ -4,7 +4,7 @@ import koala.dom.ViewScope
 import koala.dom.column
 import koala.dom.getAttribute
 import koala.dom.popoverOption
-import koala.html.Attribute
+import koala.modifier.Attribute
 import streetlight.model.ui.StarRoute
 
 fun ViewScope.wireStarMenu() {

@@ -3,9 +3,8 @@
 package streetlight.web.shells
 
 import kampfire.api.toMarkdown
-import koala.css.*
+import koala.modifier.*
 import koala.html.*
-import koala.markdown.markdownBlocksOf
 import kotlinx.html.FlowContent
 import streetlight.web.pages.appFooter
 

@@ -1,12 +1,12 @@
 package koala.dom
 
-import koala.css.ModifierSet
-import koala.css.addModifiers
-import koala.css.modify
-import koala.html.Attribute
+import koala.modifier.ModifierSet
+import koala.modifier.addModifiers
+import koala.modifier.modify
+import koala.modifier.Attribute
 import koala.html.Id
 import koala.html.SwitchStyle
-import koala.html.setAttribute
+import koala.modifier.setAttribute
 import koala.html.setId
 import kampfire.model.MutableTap
 import kotlinx.html.DIV

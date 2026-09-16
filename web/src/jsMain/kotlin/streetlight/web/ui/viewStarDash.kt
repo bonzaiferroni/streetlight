@@ -1,6 +1,6 @@
 package streetlight.web.ui
 
-import koala.css.*
+import koala.modifier.*
 import koala.dom.*
 import koala.html.btn
 import koala.model.NullContent

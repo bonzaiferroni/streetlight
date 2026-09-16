@@ -1,6 +1,6 @@
 package koala.dom
 
-import koala.css.*
+import koala.modifier.*
 import koala.model.LineChart
 import kotlinx.coroutines.flow.Flow
 import kotlin.random.Random

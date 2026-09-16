@@ -1,7 +1,7 @@
 package streetlight.web.interop
 
 import kampfire.model.toDataOr
-import koala.css.OpacityHigh
+import koala.modifier.OpacityHigh
 import koala.dom.AppendScope
 import koala.dom.append
 import koala.dom.button
@@ -10,12 +10,11 @@ import koala.dom.modify
 import koala.dom.requireAttribute
 import koala.dom.requireClosestAttribute
 import koala.dom.unmodify
-import koala.html.setAttribute
+import koala.modifier.setAttribute
 import koala.interop.ThisElement
 import kotlinx.html.onClick
 import streetlight.model.data.EntityFeed
 import streetlight.model.data.PostCursor
-import streetlight.web.interop.appendFeed
 import streetlight.web.layouts.FeedSection
 import streetlight.web.ui.AppAttribute
 import streetlight.web.ui.RouteView

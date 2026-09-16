@@ -1,8 +1,6 @@
 package streetlight.web.ui
 
-import kampfire.model.large
-import kampfire.model.medium
-import koala.css.*
+import koala.modifier.*
 import koala.html.*
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent

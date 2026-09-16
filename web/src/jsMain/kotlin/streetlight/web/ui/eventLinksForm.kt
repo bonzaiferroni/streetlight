@@ -2,7 +2,7 @@ package streetlight.web.ui
 
 import kampfire.model.toValidAbsoluteUrlOrNull
 import koala.SvgFile
-import koala.css.*
+import koala.modifier.*
 import koala.dom.*
 import koala.html.heading4
 import koala.html.spacer

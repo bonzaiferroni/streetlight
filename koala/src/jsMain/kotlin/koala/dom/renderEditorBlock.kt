@@ -1,21 +1,13 @@
 package koala.dom
 
 import kampfire.model.Url
-import koala.css.*
-import koala.html.Attribute
-import koala.html.setAttribute
+import koala.modifier.*
 import koala.markdown.*
 import koala.model.EditorStyle
 import kotlinx.browser.document
-import kotlinx.dom.clear
-import kotlinx.html.FlowOrPhrasingContent
 import kotlinx.html.br
-import kotlinx.html.dom.append
 import kotlinx.html.dom.create
-import kotlinx.html.img
 import kotlinx.html.js.div
-import kotlinx.html.span
-import kotlinx.html.style
 import web.html.HTMLElement
 
 fun createEditorBlock(block: ParsedBlock): HTMLElement {

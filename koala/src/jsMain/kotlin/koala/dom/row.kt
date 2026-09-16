@@ -1,8 +1,8 @@
 package koala.dom
 
-import koala.css.ModifierSet
-import koala.css.FlexRow
-import koala.css.addModifiers
+import koala.modifier.ModifierSet
+import koala.modifier.FlexRow
+import koala.modifier.addModifiers
 import koala.html.Id
 import kotlinx.html.DIV
 import kotlinx.html.js.div

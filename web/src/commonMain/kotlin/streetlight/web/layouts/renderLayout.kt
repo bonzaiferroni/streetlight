@@ -1,6 +1,6 @@
 package streetlight.web.layouts
 
-import koala.css.*
+import koala.modifier.*
 import koala.html.*
 import koala.html.textBlock
 import kotlinx.css.pct

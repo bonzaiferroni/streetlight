@@ -4,7 +4,7 @@ import kotlinx.html.*
 import kotlinx.html.span as spanTag
 import kotlinx.html.em as emTag
 import kotlinx.html.strong as strongTag
-import koala.css.*
+import koala.modifier.*
 import koala.markdown.HeadingLevel
 
 inline fun FlowContent.textBlock(

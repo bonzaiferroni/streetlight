@@ -1,12 +1,12 @@
 package koala.dom
 
 import kampfire.model.ValidityCheck
-import koala.css.DisplayNone
-import koala.css.Modifier
-import koala.css.Required
-import koala.css.Valid
-import koala.css.VisibilityHidden
-import koala.css.Shimmer
+import koala.modifier.DisplayNone
+import koala.modifier.Modifier
+import koala.modifier.Required
+import koala.modifier.Valid
+import koala.modifier.VisibilityHidden
+import koala.modifier.Shimmer
 import kampfire.model.Tap
 import kampfire.model.tapOf
 import koala.utils.launch

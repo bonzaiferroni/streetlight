@@ -7,7 +7,7 @@ import kampfire.model.Ok
 import kampfire.model.PasswordResetRequest
 import kampfire.model.Problem
 import kampfire.model.Token
-import koala.css.ErrorFg
+import koala.modifier.ErrorFg
 import koala.dom.modify
 import koala.dom.querySelector
 import koala.dom.unmodify

@@ -2,7 +2,7 @@ package streetlight.web.layouts
 
 import kabinet.utils.toFutureFormat
 import koala.SvgFile
-import koala.css.*
+import koala.modifier.*
 import koala.html.navigation
 import koala.html.card
 import koala.html.column

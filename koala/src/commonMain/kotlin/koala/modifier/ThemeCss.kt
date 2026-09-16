@@ -1,6 +1,6 @@
 @file:Suppress("CssInvalidPseudoSelector", "CssInvalidHtmlTagReference", "CssInvalidPropertyValue")
 
-package koala.css
+package koala.modifier
 
 // language="CSS"
 val ThemeCss get() = with(Koala) { """

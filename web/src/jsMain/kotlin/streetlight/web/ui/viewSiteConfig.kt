@@ -1,7 +1,7 @@
 package streetlight.web.ui
 
-import koala.css.AlignItemsStart
-import koala.css.modify
+import koala.modifier.AlignItemsStart
+import koala.modifier.modify
 import koala.dom.ViewScope
 import koala.dom.column
 import koala.dom.dropMenu

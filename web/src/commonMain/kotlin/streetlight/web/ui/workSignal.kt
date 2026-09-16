@@ -1,14 +1,14 @@
 package streetlight.web.ui
 
 import koala.SvgFile
-import koala.css.Aspect1
-import koala.css.FadeIn
-import koala.css.Height5
-import koala.css.Margin1
-import koala.css.ModifierSet
-import koala.css.PositionAbsolute
-import koala.css.PrimaryFg
-import koala.css.modify
+import koala.modifier.Aspect1
+import koala.modifier.FadeIn
+import koala.modifier.Height5
+import koala.modifier.Margin1
+import koala.modifier.ModifierSet
+import koala.modifier.PositionAbsolute
+import koala.modifier.PrimaryFg
+import koala.modifier.modify
 import koala.html.IconStyle
 import koala.html.icon
 import kotlinx.html.DIV

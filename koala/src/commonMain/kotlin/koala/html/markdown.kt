@@ -3,8 +3,7 @@ package koala.html
 import kampfire.api.Markdown
 import kampfire.api.toMarkdown
 import kampfire.utils.takeEllipsis
-import koala.css.*
-import koala.markdown.MarkdownBlock
+import koala.modifier.*
 import koala.markdown.MarkdownStyle
 import koala.markdown.ParsedBlock
 import koala.markdown.markdownBlocksOf

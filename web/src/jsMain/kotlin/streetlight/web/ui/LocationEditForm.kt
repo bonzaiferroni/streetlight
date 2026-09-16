@@ -1,7 +1,7 @@
 package streetlight.web.ui
 
 import koala.LottieFile
-import koala.css.*
+import koala.modifier.*
 import koala.dom.*
 import streetlight.model.data.LocationProperty
 import streetlight.web.model.LocationEditor

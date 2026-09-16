@@ -1,11 +1,5 @@
 package koala.core
 
-import koala.dom.setAttribute
-import koala.html.Attribute
-import koala.html.SwitchStyle
-import org.w3c.dom.HTMLElement
-import org.w3c.dom.asList
-
 //fun findAndInitSwitches(ancestor: HTMLElement) {
 //    val elements = ancestor.querySelectorAll(SwitchStyle.Class.selector).asList()
 //    elements.forEach { element ->

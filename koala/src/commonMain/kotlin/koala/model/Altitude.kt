@@ -1,17 +1,17 @@
 package koala.model
 
-import koala.css.Modifier
+import koala.modifier.Class
 import koala.html.GeoMapKey
 
-enum class Altitude(override val identifier: String, val zoom: Double): Modifier {
-    Kite("kite", 16.0),
-    Raincloud("raincloud", 14.5),
-    Airplane("airplane", 13.0),
-    Satellite("satellite",8.0),
-    Astronaut("astronaut", 4.0),
-    Comet("comet", Double.MIN_VALUE);
+enum class Altitude(val cssClass: Class, val zoom: Double) {
+    Kite(Class("kite"), 16.0),
+    Raincloud(Class("raincloud"), 14.5),
+    Airplane(Class("airplane"), 13.0),
+    Satellite(Class("satellite"),8.0),
+    Astronaut(Class("astronaut"), 4.0),
+    Comet(Class("comet"), Double.MIN_VALUE);
 
-    override fun toString() = selector
+    override fun toString() = cssClass.selector
 }
 
 fun altitudeOf(zoom: Double) = Altitude.entries.first { it.zoom < zoom }

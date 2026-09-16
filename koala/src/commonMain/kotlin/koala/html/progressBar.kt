@@ -1,7 +1,6 @@
 package koala.html
 
-import koala.css.*
-import kotlinx.css.pct
+import koala.modifier.*
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 

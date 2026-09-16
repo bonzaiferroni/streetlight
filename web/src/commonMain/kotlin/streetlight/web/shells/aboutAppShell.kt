@@ -5,8 +5,7 @@ import koala.html.heading5
 import koala.html.textBlock
 import koala.html.row
 import kotlinx.html.*
-import koala.css.*
-import koala.html.Id
+import koala.modifier.*
 import koala.html.column
 import koala.html.heading1
 import koala.html.lottie

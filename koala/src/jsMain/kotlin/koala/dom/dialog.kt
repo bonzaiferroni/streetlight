@@ -1,15 +1,15 @@
 package koala.dom
 
-import koala.css.FadeLoop
-import koala.css.MagicStyle
-import koala.css.ModifierSet
-import koala.css.PointerEventsAuto
-import koala.css.PointerEventsNone
-import koala.css.Reveal
-import koala.css.TextAlignCenter
-import koala.css.Width100Pct
-import koala.css.addModifiers
-import koala.css.modify
+import koala.modifier.FadeLoop
+import koala.modifier.MagicStyle
+import koala.modifier.ModifierSet
+import koala.modifier.PointerEventsAuto
+import koala.modifier.PointerEventsNone
+import koala.modifier.Reveal
+import koala.modifier.TextAlignCenter
+import koala.modifier.Width100Pct
+import koala.modifier.addModifiers
+import koala.modifier.modify
 import koala.html.DialogStyle
 import koala.html.filigree
 import koala.html.heading2

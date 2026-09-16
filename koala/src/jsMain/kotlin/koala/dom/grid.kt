@@ -1,7 +1,7 @@
 package koala.dom
 
-import koala.css.ModifierSet
-import koala.css.modify
+import koala.modifier.ModifierSet
+import koala.modifier.modify
 import koala.html.GridColumns
 import koala.html.configureGridColumns
 import kotlinx.css.GridTemplateColumns

@@ -6,10 +6,10 @@ import kampfire.api.toValidOutcome
 import kampfire.model.LoginRequest
 import kampfire.model.toDataOr
 import koala.LottieFile
-import koala.css.AlignItemsCenter
-import koala.css.Flex1
-import koala.css.MaxWidth24
-import koala.css.modify
+import koala.modifier.AlignItemsCenter
+import koala.modifier.Flex1
+import koala.modifier.MaxWidth24
+import koala.modifier.modify
 import koala.dom.ViewScope
 import koala.dom.MessageStore
 import koala.dom.button

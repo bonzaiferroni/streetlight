@@ -1,7 +1,7 @@
 package koala.html
 
 import kampfire.model.Url
-import koala.css.*
+import koala.modifier.*
 import kotlinx.html.DIV
 
 import kotlinx.html.FlowContent

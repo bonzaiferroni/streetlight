@@ -1,8 +1,8 @@
 package streetlight.web.ui
 
 import kampfire.model.storeOf
-import koala.css.MarginTop1
-import koala.css.modify
+import koala.modifier.MarginTop1
+import koala.modifier.modify
 import koala.dom.*
 import kotlinx.css.GridTemplateColumns
 

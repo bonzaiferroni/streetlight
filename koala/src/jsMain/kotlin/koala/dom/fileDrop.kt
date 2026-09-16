@@ -1,10 +1,10 @@
 package koala.dom
 
 import kampfire.model.Url
-import koala.css.Blur
-import koala.css.Magic
-import koala.css.SlideDown
-import koala.css.modify
+import koala.modifier.Blur
+import koala.modifier.Magic
+import koala.modifier.SlideDown
+import koala.modifier.modify
 import kampfire.model.MutableTap
 
 fun ViewScope.fileDrop(field: MutableTap<Url?>) {

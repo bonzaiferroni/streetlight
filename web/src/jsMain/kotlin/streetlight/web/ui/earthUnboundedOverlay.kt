@@ -1,7 +1,7 @@
 package streetlight.web.ui
 
 import kampfire.model.Point
-import koala.css.*
+import koala.modifier.*
 import koala.dom.*
 import koala.external.maplibregl
 import koala.model.EntityMarker

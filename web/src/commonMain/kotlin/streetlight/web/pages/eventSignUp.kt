@@ -6,7 +6,7 @@ import koala.PageResource
 import koala.html.*
 import kotlinx.html.*
 import streetlight.model.data.*
-import koala.css.*
+import koala.modifier.*
 
 fun HTML.eventSignUp(event: Event, resource: PageResource) {
     appHead("Sign Up | ${event.title}", resource) {

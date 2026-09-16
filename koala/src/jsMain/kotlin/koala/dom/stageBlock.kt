@@ -2,7 +2,7 @@ package koala.dom
 
 import kampfire.model.Labeled
 import koala.SvgFile
-import koala.css.*
+import koala.modifier.*
 import koala.html.heading3
 import kampfire.model.MutableTap
 import kotlinx.coroutines.launch

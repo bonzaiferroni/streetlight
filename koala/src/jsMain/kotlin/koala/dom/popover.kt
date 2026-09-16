@@ -1,16 +1,16 @@
 package koala.dom
 
-import koala.css.MinWidth16
-import koala.css.ModifierSet
-import koala.css.OpacityHigh
-import koala.css.Padding1
-import koala.css.PositionAnchor
-import koala.css.TextAlignCenter
-import koala.css.TextSmall
-import koala.css.TextUppercase
-import koala.css.Width100Pct
-import koala.css.append
-import koala.css.modify
+import koala.modifier.MinWidth16
+import koala.modifier.ModifierSet
+import koala.modifier.OpacityHigh
+import koala.modifier.Padding1
+import koala.modifier.PositionAnchor
+import koala.modifier.TextAlignCenter
+import koala.modifier.TextSmall
+import koala.modifier.TextUppercase
+import koala.modifier.Width100Pct
+import koala.modifier.append
+import koala.modifier.modify
 import koala.html.AppRoute
 import koala.html.Id
 import koala.html.Popover

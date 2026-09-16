@@ -1,6 +1,6 @@
 package koala.html
 
-import koala.css.*
+import koala.modifier.*
 import kotlinx.html.FlowContent
 
 fun FlowContent.bulletsOf(mod: ModifierSet? = null, vararg content: String) {

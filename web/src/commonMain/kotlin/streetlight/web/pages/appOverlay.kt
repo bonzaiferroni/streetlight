@@ -2,7 +2,7 @@
 
 package streetlight.web.pages
 
-import koala.css.*
+import koala.modifier.*
 import koala.interop.KoalaFun.initRootModifier
 import koala.html.*
 import kotlinx.html.FlowContent

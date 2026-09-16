@@ -1,9 +1,9 @@
 package koala.dom
 
-import koala.css.FlexColumn
-import koala.css.ModifierSet
-import koala.css.addModifiers
-import koala.css.modify
+import koala.modifier.FlexColumn
+import koala.modifier.ModifierSet
+import koala.modifier.addModifiers
+import koala.modifier.modify
 import koala.html.Id
 import koala.html.setId
 import kotlinx.html.DIV

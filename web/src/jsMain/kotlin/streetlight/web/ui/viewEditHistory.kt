@@ -1,10 +1,10 @@
 package streetlight.web.ui
 
 import kabinet.utils.toRelativeTimeFormat
-import koala.css.Flex1
-import koala.css.JustifyContentEnd
-import koala.css.columnsOf
-import koala.css.modify
+import koala.modifier.Flex1
+import koala.modifier.JustifyContentEnd
+import koala.modifier.columnsOf
+import koala.modifier.modify
 import koala.dom.ViewScope
 import koala.dom.box
 import koala.dom.button

@@ -1,16 +1,15 @@
 package streetlight.web.pages
 
 import koala.SvgFile
-import koala.css.BlurBackdrop
-import koala.css.Class
-import koala.css.FadeLoop
-import koala.css.HeavyCardBg
-import koala.css.Height5
-import koala.css.Magic
-import koala.css.OverflowClip
-import koala.css.PointerEventsAuto
-import koala.css.modify
-import koala.css.stylesheet
+import koala.modifier.BlurBackdrop
+import koala.modifier.Class
+import koala.modifier.FadeLoop
+import koala.modifier.HeavyCardBg
+import koala.modifier.Height5
+import koala.modifier.OverflowClip
+import koala.modifier.PointerEventsAuto
+import koala.modifier.modify
+import koala.modifier.stylesheet
 import koala.html.Id
 import koala.interop.InlineJs
 import koala.html.button

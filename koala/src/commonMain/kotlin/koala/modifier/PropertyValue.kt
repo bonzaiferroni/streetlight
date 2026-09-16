@@ -1,8 +1,7 @@
-package koala.css
+package koala.modifier
 
 import kampfire.model.Url
 import koala.Asset
-import kotlinx.serialization.Serializable
 
 fun styleValueOf(value: Any) = when (value) {
     is Url -> "url('${value.value}')"

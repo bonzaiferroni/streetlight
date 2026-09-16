@@ -1,4 +1,4 @@
-package koala.css
+package koala.modifier
 
 import koala.interop.JsFunction
 

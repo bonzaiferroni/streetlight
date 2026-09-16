@@ -1,9 +1,9 @@
 package streetlight.web.ui
 
 import koala.LottieFile
-import koala.css.Accent
-import koala.css.JustifyContentSpaceBetween
-import koala.css.modify
+import koala.modifier.Accent
+import koala.modifier.JustifyContentSpaceBetween
+import koala.modifier.modify
 import koala.dom.*
 import streetlight.model.data.GalaxyEdit
 

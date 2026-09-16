@@ -1,6 +1,6 @@
 package koala.html
 
-import koala.css.PositionAnchor
+import koala.modifier.PositionAnchor
 import kotlinx.html.*
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline

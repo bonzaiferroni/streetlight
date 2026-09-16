@@ -1,6 +1,6 @@
 package koala.markdown
 
-import koala.css.*
+import koala.modifier.*
 import koala.html.*
 import kotlinx.html.FlowContent
 import kotlinx.html.blockQuote
@@ -201,7 +201,7 @@ fun FlowContent.renderTable(block: MarkdownTable) {
     }
 }
 
-private fun TagContext.applyAlignment(
+private fun TagConfig.applyAlignment(
     alignment: MarkdownTableAlignment?
 ) {
     when (alignment) {

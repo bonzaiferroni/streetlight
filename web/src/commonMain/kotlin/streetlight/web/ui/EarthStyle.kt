@@ -1,14 +1,13 @@
 package streetlight.web.ui
 
-import koala.css.AlignSelfStart
-import koala.css.Card
-import koala.css.Class
-import koala.css.DayTheme
-import koala.css.JustifySelfCenter
-import koala.css.PositionSticky
-import koala.css.TopSpacing1
-import koala.css.ZIndex1
-import koala.css.modify
+import koala.modifier.AlignSelfStart
+import koala.modifier.Class
+import koala.modifier.DayTheme
+import koala.modifier.JustifySelfCenter
+import koala.modifier.PositionSticky
+import koala.modifier.TopSpacing1
+import koala.modifier.ZIndex1
+import koala.modifier.modify
 import koala.html.Id
 
 object EarthStyle {

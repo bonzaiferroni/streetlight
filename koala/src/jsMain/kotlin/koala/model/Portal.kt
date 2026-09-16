@@ -5,11 +5,11 @@ package koala.model
 import kampfire.model.storeOf
 import kampfire.model.tapOf
 import koala.core.queryAttribute
-import koala.css.KoalaBody
+import koala.modifier.KoalaBody
 import koala.dom.setAttribute
 import koala.html.AppRoute
 import koala.html.AppScreen
-import koala.html.Attribute
+import koala.modifier.Attribute
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.mapNotNull

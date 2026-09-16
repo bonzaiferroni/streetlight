@@ -1,6 +1,6 @@
 package koala.model
 
-import koala.css.KoalaTheme
+import koala.modifier.KoalaTheme
 import koala.dom.ChartData
 import koala.dom.ChartLine
 import koala.dom.ChartUtility

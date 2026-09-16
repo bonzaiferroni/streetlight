@@ -2,13 +2,13 @@ package koala.dom
 
 import kampfire.api.Markdown
 import kampfire.api.toMarkdown
-import koala.css.ModifierSet
-import koala.css.Size100P
-import koala.css.addModifiers
+import koala.modifier.ModifierSet
+import koala.modifier.Size100P
+import koala.modifier.addModifiers
 import koala.html.Id
-import koala.html.Attribute
+import koala.modifier.Attribute
 import koala.html.setId
-import koala.html.setAttribute
+import koala.modifier.setAttribute
 import kampfire.model.MutableTap
 import kotlinx.html.TEXTAREA
 import kotlinx.html.js.div

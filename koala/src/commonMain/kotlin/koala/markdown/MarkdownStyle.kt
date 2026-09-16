@@ -1,6 +1,6 @@
 package koala.markdown
 
-import koala.css.Class
+import koala.modifier.Class
 import koala.model.EditorStyle
 
 object MarkdownStyle {

@@ -1,10 +1,10 @@
 package streetlight.web.shells
 
 import kampfire.api.toMarkdown
-import koala.css.Padding4
-import koala.css.Shrinkable
-import koala.css.ZenBg
-import koala.css.modify
+import koala.modifier.Padding4
+import koala.modifier.Shrinkable
+import koala.modifier.ZenBg
+import koala.modifier.modify
 import koala.html.card
 import koala.html.column
 import koala.html.filigree

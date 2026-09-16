@@ -1,9 +1,6 @@
 package streetlight.web.ui
 
-import koala.css.*
 import koala.dom.*
-import streetlight.model.ui.SongProfileRoute
-import streetlight.web.model.SongProfile
 
 fun RouteScope.viewSongProfile() {
     // td: fix later

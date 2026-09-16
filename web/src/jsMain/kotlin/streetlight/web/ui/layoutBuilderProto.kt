@@ -1,12 +1,12 @@
 package streetlight.web.ui
 
 import koala.SvgFile
-import koala.css.AlignItemsCenter
-import koala.css.Flex1
-import koala.css.Height5
-import koala.css.JustifyContentEnd
-import koala.css.Zen
-import koala.css.modify
+import koala.modifier.AlignItemsCenter
+import koala.modifier.Flex1
+import koala.modifier.Height5
+import koala.modifier.JustifyContentEnd
+import koala.modifier.Zen
+import koala.modifier.modify
 import koala.dom.ViewScope
 import koala.dom.box
 import koala.dom.button
@@ -17,7 +17,7 @@ import koala.dom.row
 import koala.dom.textBlock
 import koala.dom.textField
 import koala.html.Id
-import koala.html.setPopoverTarget
+import koala.modifier.setPopoverTarget
 import kampfire.model.MutableTap
 import kampfire.model.tapOf
 import kampfire.model.insertAt

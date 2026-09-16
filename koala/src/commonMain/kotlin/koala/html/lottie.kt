@@ -2,8 +2,8 @@ package koala.html
 
 import koala.Lottie
 import kotlinx.html.*
-import koala.css.*
-import koala.css.addModifiers
+import koala.modifier.*
+import koala.modifier.addModifiers
 
 fun FlowContent.lottie(
     file: Lottie,

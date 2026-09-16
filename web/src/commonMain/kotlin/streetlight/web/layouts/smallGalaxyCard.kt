@@ -1,6 +1,6 @@
 package streetlight.web.layouts
 
-import koala.css.*
+import koala.modifier.*
 import koala.html.*
 import kotlinx.html.FlowContent
 import streetlight.model.data.Galaxy
@@ -22,7 +22,7 @@ fun FlowContent.smallGalaxyCard(galaxy: Galaxy) {
                     }
                     val modifiers = modify(TextSmall, FadeBottom, Flex1).let {
                         when (galaxy.description) {
-                            null -> it + Italic + Dim
+                            null -> it.append(Italic, Dim)
                             else -> it
                         }
                     }

@@ -1,11 +1,11 @@
 package koala.html
 
-import koala.css.Class
-import koala.css.ModifierSet
-import koala.css.Reveal
-import koala.css.Property
-import koala.css.addModifiers
-import koala.css.setStyle
+import koala.modifier.Class
+import koala.modifier.ModifierSet
+import koala.modifier.Reveal
+import koala.modifier.Property
+import koala.modifier.addModifiers
+import koala.modifier.setStyle
 import kotlinx.css.Display
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent

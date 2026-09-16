@@ -1,6 +1,6 @@
 package koala.html
 
-import koala.css.Class
+import koala.modifier.Class
 
 object ImageChooserKey {
     val Class = Class("set-image")

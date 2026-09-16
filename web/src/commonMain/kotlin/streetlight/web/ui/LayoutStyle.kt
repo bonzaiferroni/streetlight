@@ -1,7 +1,6 @@
 package streetlight.web.ui
 
-import koala.css.*
-import koala.markdown.MarkdownStyle.Container
+import koala.modifier.*
 
 object LayoutStyle {
     val Image = Class("layout-image")
@@ -17,7 +16,7 @@ $Image {
 
 $Gallery {
     display: grid;
-    grid-template-columns: repeat(var(${Property.ColumnCount.expression}), minmax(0, 1fr));
+    grid-template-columns: repeat(var(${Property.ColumnCount.identifier}), minmax(0, 1fr));
     gap: var(--unit-spacing-1);
 }
 """ }

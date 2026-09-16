@@ -1,9 +1,9 @@
 package koala.dom
 
 import js.array.asList
-import koala.css.Magic
-import koala.css.Reveal
-import koala.css.Property
+import koala.modifier.Magic
+import koala.modifier.Reveal
+import koala.modifier.Property
 import koala.html.Id
 import koala.html.Queryable
 import kotlinx.browser.window

@@ -4,10 +4,9 @@ import kabinet.utils.format
 import kampfire.api.Slug
 import kampfire.model.mutableTapFirstBy
 import kampfire.model.mutableTapOf
-import kampfire.model.reactIn
 import kampfire.model.storeOf
 import koala.SvgFile
-import koala.css.*
+import koala.modifier.*
 import koala.dom.*
 import koala.html.bulletsOf
 import streetlight.model.data.GalaxyEdit

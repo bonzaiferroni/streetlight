@@ -7,12 +7,10 @@ import koala.dom.querySelectorAll
 import koala.dom.requireAttribute
 import koala.dom.requireClosest
 import koala.dom.setAttribute
-import koala.html.Attribute
-import streetlight.model.data.Galaxy
+import koala.modifier.Attribute
 import streetlight.model.data.LightEdit
 import streetlight.web.model.DataCache
 import streetlight.web.ui.StarToggle
-import streetlight.web.model.Fleet
 import streetlight.web.ui.api
 import streetlight.web.ui.starCheck
 import web.dom.document

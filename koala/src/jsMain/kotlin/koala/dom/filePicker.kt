@@ -4,7 +4,7 @@ import kampfire.model.UIMessage
 import kampfire.model.UIMessageType
 import kampfire.model.Url
 import kampfire.model.toUrl
-import koala.css.*
+import koala.modifier.*
 import koala.html.FilePickerKey
 import kotlinx.html.InputType
 import kotlinx.html.hidden
@@ -20,8 +20,6 @@ import web.file.File
 import web.html.HTMLDivElement
 import web.html.HTMLImageElement
 import web.html.HTMLInputElement
-import web.input.InputEvent
-import web.pointer.PointerEvent
 import web.url.URL
 
 fun AppendScope.filePicker(

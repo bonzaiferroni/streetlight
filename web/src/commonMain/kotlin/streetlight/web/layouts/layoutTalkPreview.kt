@@ -2,7 +2,7 @@ package streetlight.web.layouts
 
 import kabinet.utils.toAgoFormat
 import koala.SvgFile
-import koala.css.*
+import koala.modifier.*
 import koala.html.*
 import kotlinx.html.FlowContent
 import streetlight.model.data.Comment
