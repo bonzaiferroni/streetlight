@@ -1,6 +1,7 @@
 package streetlight.web.pages
 
 import koala.JsFile
+import koala.PageResource
 import koala.html.AppScreen
 import koala.html.appHead
 import koala.html.applyFiles
@@ -10,15 +11,15 @@ import streetlight.model.data.PageTheme
 
 fun HTML.appPage(
     title: String,
-    styles: String,
     screen: AppScreen,
+    resource: PageResource,
     theme: PageTheme? = null,
     block: (FlowContent.() -> Unit)? = null
 ) {
-    appHead("$title | Streetlight", styles) {
+    appHead("$title | Streetlight", resource) {
         supportProtobuf()
         supportGeoMap()
         applyFiles(JsFile)
     }
-    appBody(screen, theme, block)
+    appBody(screen, resource, theme, block)
 }

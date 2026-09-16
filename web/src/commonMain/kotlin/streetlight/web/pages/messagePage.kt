@@ -2,6 +2,7 @@ package streetlight.web.pages
 
 import kampfire.api.PostEndpoint
 import kampfire.model.Token
+import koala.PageResource
 import koala.css.AlignItemsCenter
 import koala.css.AlignSelfEnd
 import koala.css.AlignSelfStretch
@@ -27,10 +28,10 @@ import streetlight.web.ui.BodyStyle
 fun HTML.messagePage(
     title: String,
     message: FlowContent.() -> Unit,
-    styles: String,
+    resource: PageResource,
     block: FlowContent.() -> Unit = { }
 ) {
-    staticPage("$title | Streetlight", styles) {
+    staticPage("$title | Streetlight", resource) {
         column(modify(BodyStyle.MainColumn, AlignItemsCenter)) {
             topLogo()
             filigree(modify(AlignSelfStretch)) { heading1(title) }
@@ -46,13 +47,13 @@ fun HTML.messagePage(
 fun HTML.messagePage(
     title: String,
     message: String,
-    styles: String,
+    resource: PageResource,
     block: FlowContent.() -> Unit = { }
 ) {
     messagePage(
         title = title,
         message = { textBlock(message) },
-        styles = styles,
+        resource = resource,
         block = block,
     )
 }

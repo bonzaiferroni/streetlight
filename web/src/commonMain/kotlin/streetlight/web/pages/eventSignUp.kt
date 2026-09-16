@@ -2,13 +2,14 @@ package streetlight.web.pages
 
 import koala.FileSet
 import koala.Asset
+import koala.PageResource
 import koala.html.*
 import kotlinx.html.*
 import streetlight.model.data.*
 import koala.css.*
 
-fun HTML.eventSignUp(event: Event, styles: String) {
-    appHead("Sign Up | ${event.title}", styles) {
+fun HTML.eventSignUp(event: Event, resource: PageResource) {
+    appHead("Sign Up | ${event.title}", resource) {
         applyFiles(EventSignUpFiles)
     }
     body {

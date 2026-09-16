@@ -2,7 +2,7 @@
 
 package streetlight.web.pages
 
-import koala.JsBundle
+import koala.PageResource
 import koala.css.*
 import koala.html.*
 import kotlinx.html.DIV
@@ -12,6 +12,7 @@ import streetlight.model.data.PageTheme
 
 fun HTML.appBody(
     screen: AppScreen,
+    resource: PageResource,
     theme: PageTheme? = null,
     shellBlock: (DIV.() -> Unit)? = null
 ) {
@@ -41,7 +42,7 @@ fun HTML.appBody(
         div(AppBody.ToasterId)
 
         scriptUnsafe(AppOverlayScript)
-        linkScript(JsBundle.Web)
+        linkScript(resource.bundle.web)
     }
 }
 

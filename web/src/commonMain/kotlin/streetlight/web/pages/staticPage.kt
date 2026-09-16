@@ -1,5 +1,6 @@
 package streetlight.web.pages
 
+import koala.PageResource
 import koala.css.KoalaBody
 import koala.html.appHead
 import koala.html.box
@@ -10,10 +11,10 @@ import kotlinx.html.body
 
 fun HTML.staticPage(
     title: String,
-    styles: String,
+    resource: PageResource,
     block: FlowContent.() -> Unit
 ) {
-    appHead(title, styles) {
+    appHead(title, resource) {
 
     }
     body {

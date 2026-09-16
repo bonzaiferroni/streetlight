@@ -1,17 +1,19 @@
 package koala
 
+interface PageResource {
+    val bundle: JsBundle
+    val styles: String
+}
+
+interface JsBundle {
+    val web: Js
+    val passwordReset: Js
+}
+
 object JsFile : FileSet<Js>() {
     val Utils = addJs("utils.js")
     val Koala = addJs("koala/koala.js")
 }
-
-object JsBundle {
-    val Web = jsFileOf("web.js", basePath = DEV_PATH)
-    val PasswordReset = jsFileOf("passwordReset.js", basePath = DEV_PATH)
-}
-
-const val DEV_PATH = "/dev/streetlight/"
-const val PROD_PATH = "/prod/streetlight/"
 
 object CssFile : FileSet<Css>() {
     val Reset = add("reset.css")

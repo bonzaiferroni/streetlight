@@ -2,13 +2,14 @@ package streetlight.web.pages
 
 import koala.FileSet
 import koala.Asset
+import koala.PageResource
 import koala.html.*
 import kotlinx.html.*
 import streetlight.model.data.*
 import koala.css.*
 
-fun HTML.eventPortal(event: Event, performer: Performer?, requestItems: List<RequestItem>, styles: String) {
-    appHead(event.title, styles) {
+fun HTML.eventPortal(event: Event, performer: Performer?, requestItems: List<RequestItem>, resource: PageResource) {
+    appHead(event.title, resource) {
         applyFiles(EventPortalFiles)
 //        applyScripts("event-portal/webscripts.js")
     }

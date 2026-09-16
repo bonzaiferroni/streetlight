@@ -4,12 +4,13 @@ import koala.Css
 import koala.Js
 import koala.JsFile
 import koala.Asset
+import koala.PageResource
 import koala.interop.KoalaHeadScript
 import kotlinx.html.*
 
 fun HTML.appHead(
     title: String,
-    styles: String,
+    resource: PageResource,
     block: HEAD.() -> Unit,
 ) {
     head {
@@ -26,7 +27,7 @@ fun HTML.appHead(
         block()
         style {
             unsafe {
-                +styles
+                +resource.styles
             }
         }
         scriptUnsafe(KoalaHeadScript)
