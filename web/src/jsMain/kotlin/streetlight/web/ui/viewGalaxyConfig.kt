@@ -49,7 +49,7 @@ fun ViewScope.viewGalaxyConfig(config: GalaxyConfig) {
             button("Save", model::submit, modify(Accent))
         }
 
-        appFooter("")
+        appFooter(sourcePathUi("viewGalaxyConfig.kt"))
     }
 }
 

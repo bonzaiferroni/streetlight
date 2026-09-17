@@ -35,7 +35,7 @@ fun ViewScope.viewAccountUpdater(star: Star, model: AccountEditor) {
             updateAccountForm(model)
         }
 
-        appFooter("")
+        appFooter(sourcePathUi("viewAccountUpdater.kt"))
 
         starRouteMenu(star, UpdateAccountRoute, true)
     }

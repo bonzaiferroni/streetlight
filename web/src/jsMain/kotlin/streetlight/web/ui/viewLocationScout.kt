@@ -54,7 +54,7 @@ fun ViewScope.viewLocationScout(galaxy: Galaxy, username: Username) {
             }
         }
 
-        appFooter("")
+        appFooter(sourcePathUi("viewLocationScout.kt"))
     }
 }
 

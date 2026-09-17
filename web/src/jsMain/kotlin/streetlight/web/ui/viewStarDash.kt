@@ -27,7 +27,7 @@ fun ViewScope.viewStarDash(star: Star) {
             }
         }
 
-        appFooter("")
+        appFooter(sourcePathUi("viewStarDash.kt"))
 
         starRouteMenu(star, StarDashRoute, true)
     }

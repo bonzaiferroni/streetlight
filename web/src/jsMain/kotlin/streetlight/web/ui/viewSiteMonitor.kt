@@ -28,6 +28,7 @@ fun RouteScope.viewSiteMonitor() {
                     )
                 }
             }
+            appFooter(sourcePathUi("viewSiteMonitor.kt"))
         }
     }
 

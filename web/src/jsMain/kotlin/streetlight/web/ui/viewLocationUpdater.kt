@@ -43,7 +43,7 @@ fun ViewScope.viewLocationUpdater(content: LocationUpdaterContent, star: Star) {
                 }
             }
         }
-        appFooter("")
+        appFooter(sourcePathUi("viewLocationUpdater.kt"))
     }
 }
 

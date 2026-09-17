@@ -35,7 +35,7 @@ fun ViewScope.viewProfileConfig(star: Star, config: ProfileConfig) {
         }
         formSubmit("Save", model::submit, model.messages)
 
-        appFooter("")
+        appFooter(sourcePathUi("viewProfileConfig.kt"))
 
         starRouteMenu(star, ProfileConfigRoute, true)
     }

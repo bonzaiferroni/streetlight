@@ -27,7 +27,7 @@ fun ViewScope.viewMediaConfig(model: MediaEditor) {
             button("Edit", onClick = model::submitPost)
         }
 
-        appFooter("")
+        appFooter(sourcePathUi("viewPostEditor.kt"))
     }
 }
 
