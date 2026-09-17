@@ -4,9 +4,9 @@ import kabinet.utils.toMetricString
 import koala.core.queryFirstOrNull
 import koala.dom.ViewScope
 import koala.dom.querySelectorAll
-import koala.dom.requireAttribute
+import koala.modifier.requireAttribute
 import koala.dom.requireClosest
-import koala.dom.setAttribute
+import koala.modifier.setAttribute
 import koala.modifier.Attribute
 import streetlight.model.data.LightEdit
 import streetlight.web.model.DataCache

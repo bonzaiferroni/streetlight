@@ -4,11 +4,11 @@ import kabinet.utils.toMetricString
 import kampfire.model.toDataOrNull
 import koala.dom.ViewScope
 import koala.dom.asHtmlElement
+import koala.modifier.modify
 import koala.dom.querySelectorAll
-import koala.dom.requireAttribute
+import koala.modifier.requireAttribute
 import koala.dom.requireClosest
-import koala.dom.setAttribute
-import koala.dom.setStyle
+import koala.modifier.setAttribute
 import koala.modifier.Attribute
 import koala.html.ProgressBarStyle
 import streetlight.model.data.CuratorStatus
@@ -77,7 +77,7 @@ fun Element.applyCurator(curator: CuratorStatus) {
         // apply mark bar
         val progress = curator.progressOf(mark.markId)
         querySelectorAll(CuratorMenu.MarkBarId.to(mark.markId)).forEach {
-            it.asHtmlElement().setStyle(ProgressBarStyle.Progress.of(progress))
+            it.asHtmlElement().modify(ProgressBarStyle.Progress.of(progress))
         }
     }
 

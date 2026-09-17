@@ -2,8 +2,6 @@ package koala.modifier
 
 val DisplayUtilityCss
     get() = listOf(
-        // Display/Visibility
-        DisplayNone, VisibilityHidden,
         // Opacity
         Opacity0, Opacity1, OpacityHigh, OpacityHalf, OpacityLow, OpacityGhost, Dim, NoDim,
         // Shape
@@ -38,9 +36,6 @@ val DisplayUtilityCss
         PointerEventsAuto, PointerEventsNone, BlurContent, AspectAuto,
     )
 
-// Display
-val DisplayNone = utilityOf("display-none", "display: none !important")
-val VisibilityHidden = utilityOf("visibility-hidden", "visibility: hidden !important")
 
 // Opacity
 // val Opacity1 = CssUtility("opacity-1", ".opacity-1 { opacity: 1; }")

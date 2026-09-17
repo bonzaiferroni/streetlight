@@ -2,8 +2,8 @@ package streetlight.web.ui
 
 import koala.modifier.KoalaStyle
 import koala.modifier.rgba
-import koala.dom.removeStyle
-import koala.dom.setStyle
+import koala.modifier.removeStyle
+import koala.modifier.setStyle
 import kotlinx.css.pct
 import streetlight.model.data.PageTheme
 import web.dom.document

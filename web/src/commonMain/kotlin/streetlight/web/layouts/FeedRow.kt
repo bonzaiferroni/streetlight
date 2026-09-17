@@ -52,7 +52,7 @@ fun DIV.configureFeedRow(
     }
 
     div(modify(FeedRow.Content)) {
-        setStyle(koala.modifier.ColorScheme.of(colorScheme.cssValue))
+        setStyle(Css.ColorScheme.of(colorScheme.cssValue))
         row(modify(Height10)) {
             navigationIfNotNull(postRoute, modify(Width10, OverflowClip, BorderRadius1, BorderSolid2Px, MoonShadow)) {
                 image(imageUrl, modify(Size100P, ObjectFitCover))

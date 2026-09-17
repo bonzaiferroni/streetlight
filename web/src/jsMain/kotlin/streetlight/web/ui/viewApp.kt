@@ -5,6 +5,7 @@ import koala.modifier.KoalaBody
 import koala.dom.*
 import koala.interop.addGlobalFunctions
 import koala.model.Portal
+import koala.modifier.modify
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.serialization.ExperimentalSerializationApi

@@ -10,6 +10,8 @@ import koala.html.box
 import koala.html.configureTabsContainer
 import koala.html.configureTabsHeader
 import koala.interop.initTabs
+import koala.modifier.observeAttribute
+import koala.modifier.setAttribute
 import web.html.HTMLDivElement
 import web.html.HTMLElement
 

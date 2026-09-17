@@ -17,9 +17,9 @@ data class Attribute<T>(
     val isCustom: Boolean = false,
     val toStringValue: (T) -> String = { it.toString() },
     val toValue: ((String) -> T)? = null
-): Queryable, Unmodifier {
+): Queryable {
     override val selector get() = "[$identifier]"
-    override val identifier get() = when(isCustom) {
+    val identifier get() = when(isCustom) {
         true -> "data-$name"
         false -> name
     }

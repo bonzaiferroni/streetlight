@@ -2,7 +2,6 @@ package koala.dom
 
 import koala.core.findAndInitGeoMap
 import koala.core.queryFirstOrNull
-import koala.dom.getElementOrNullById
 import koala.external.maplibregl
 import koala.html.GeoMapKey
 import koala.model.GeoCameraController
@@ -10,6 +9,7 @@ import koala.external.maplibregl.Point
 import koala.model.GeoCamera
 import koala.model.GeoMap
 import koala.model.GeoRender
+import koala.modifier.isModified
 import kotlinx.coroutines.CoroutineScope
 import web.animations.requestAnimationFrame
 import web.dom.document

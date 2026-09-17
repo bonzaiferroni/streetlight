@@ -22,7 +22,7 @@ fun ViewScope.colorPicker(
         currentColor = color
         val hex = color.toHex()
         inputElement.value = hex
-        buttonElement.setStyle(BackgroundColor.of(hex))
+        buttonElement.setStyle(Css.BackgroundColor.of(hex))
     }
 
     box(mod) {

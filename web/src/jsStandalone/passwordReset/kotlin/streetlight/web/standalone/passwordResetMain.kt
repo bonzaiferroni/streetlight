@@ -8,9 +8,9 @@ import kampfire.model.PasswordResetRequest
 import kampfire.model.Problem
 import kampfire.model.Token
 import koala.modifier.ErrorFg
-import koala.dom.modify
+import koala.modifier.modify
 import koala.dom.querySelector
-import koala.dom.unmodify
+import koala.modifier.unmodify
 import koala.interop.KtFunction
 import koala.interop.addGlobalFunctions
 import kotlinx.coroutines.CoroutineScope

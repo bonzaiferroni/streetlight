@@ -8,7 +8,7 @@ import streetlight.web.layouts.ThemeColor
 import streetlight.web.model.LocationScout
 
 fun ViewScope.locationFinder(model: LocationScout) = formCard("Location Finder") {
-    setStyle(ColorScheme.of(ThemeColor.Location.cssValue))
+    setStyle(Css.ColorScheme.of(ThemeColor.Location.cssValue))
 
     formRow {
         formSection("search") {

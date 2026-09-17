@@ -125,7 +125,7 @@ internal fun PointMarker.toPointRender(pixelPoint: Point, focusEntity: () -> Uni
             element.setStyle(MarkerStyle.BodySize.of(bodySize))
 
             zIndex?.let {
-                element.setStyle(ZIndex.of(it))
+                element.setStyle(Css.ZIndex.of(it))
             }
 
             val modifiers = modify(mod, MarkerStyle.Base, altitude?.cssClass).let { modifiers ->

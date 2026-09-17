@@ -14,6 +14,7 @@ import koala.html.DialogStyle
 import koala.html.filigree
 import koala.html.heading2
 import kampfire.model.MutableTap
+import koala.modifier.unmodify
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.html.js.dialog

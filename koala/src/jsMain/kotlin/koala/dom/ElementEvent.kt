@@ -1,6 +1,7 @@
 package koala.dom
 
 import koala.modifier.Clickable
+import koala.modifier.className
 import web.dom.Element
 import web.events.Event
 import web.events.EventType

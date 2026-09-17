@@ -69,7 +69,7 @@ private fun ViewScope.focusPanel(
 ) {
     val extraLinks = post.links
     card(modify(Gap0, Padding0, BlurBackdrop, PointerEventsAuto, BorderSolid2Px, EarthStyle.MoveDimmer)) {
-        setStyle(ColorScheme.of(colorScheme.cssValue))
+        setStyle(Css.ColorScheme.of(colorScheme.cssValue))
         column(modify(Gap0)) {
             featureImage(post.image, modify(Flex1))
             cells?.let {

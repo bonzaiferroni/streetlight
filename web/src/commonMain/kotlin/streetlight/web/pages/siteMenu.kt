@@ -117,7 +117,7 @@ ${SiteHelm.PopoverClass} {
 }
 
 $DayTheme $ThemeToggle ${IconStyle.Icon} {
-    ${MaskUrl.of(SvgFile.Moon)} !important;
+    ${Css.MaskUrl.of(SvgFile.Moon)} !important;
 }
 
 ${generateScreenSelectors(highlightedScreens)} {

@@ -1,13 +1,12 @@
 package koala.interop
 
-import koala.dom.className
-import koala.dom.isModified
-import koala.dom.modify
+import koala.modifier.className
+import koala.modifier.isModified
 import koala.dom.querySelector
 import koala.dom.querySelectorAll
-import koala.dom.requireAttribute
-import koala.dom.setAttribute
-import koala.dom.unmodify
+import koala.modifier.requireAttribute
+import koala.modifier.setAttribute
+import koala.modifier.unmodify
 import koala.html.TabsStyle
 import web.animations.requestAnimationFrame
 import web.cssom.TRANSITION_END

@@ -7,6 +7,7 @@ import koala.modifier.ModifierSet
 import koala.modifier.Zen
 import koala.modifier.modify
 import koala.html.configureButton
+import koala.modifier.unmodify
 import kotlinx.html.BUTTON
 import kotlinx.html.js.button
 

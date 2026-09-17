@@ -3,8 +3,8 @@
 package koala.core
 
 import koala.dom.ResizeObserver
-import koala.dom.getAttribute
-import koala.dom.isModified
+import koala.modifier.getAttribute
+import koala.modifier.isModified
 import koala.external.FillExtrusionPaint
 import koala.external.HillshadePaint
 import koala.external.MapLayer

@@ -3,7 +3,7 @@ package koala.core
 import js.array.asList
 import koala.modifier.Clickable
 import koala.dom.elementId
-import koala.dom.modify
+import koala.modifier.modify
 import koala.modifier.Attribute
 import koala.html.Id
 import koala.html.Queryable

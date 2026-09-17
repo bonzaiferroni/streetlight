@@ -9,6 +9,9 @@ import koala.modifier.VisibilityHidden
 import koala.modifier.Shimmer
 import kampfire.model.Tap
 import kampfire.model.tapOf
+import koala.modifier.isModified
+import koala.modifier.modify
+import koala.modifier.unmodify
 import koala.utils.launch
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow

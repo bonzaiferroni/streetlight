@@ -1,7 +1,5 @@
-package koala.dom
+package koala.modifier
 
-import koala.modifier.InlineStyle
-import koala.modifier.Property
 import web.cssom.CSSStyleDeclaration
 import web.cssom.ElementCSSInlineStyle
 import web.html.HTMLElement

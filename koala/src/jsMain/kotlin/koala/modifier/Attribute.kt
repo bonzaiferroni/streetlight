@@ -1,61 +1,17 @@
-package koala.dom
+package koala.modifier
 
 import js.array.asList
-import koala.modifier.Attribute
-import koala.modifier.AttributeValue
+import koala.dom.querySelector
 import web.dom.Element
 import web.html.HTMLElement
 import web.mutation.MutationObserver
 import web.mutation.MutationObserverInit
-
-data class ElementAttribute<T>(
-    val element: HTMLElement,
-    val value: T
-)
-
-fun <T> Element.queryAttributeAll(
-    attribute: Attribute<T>,
-): List<ElementAttribute<T>> {
-    return querySelectorAll(attribute.selector).asList().mapNotNull {
-        val element = it as HTMLElement
-        element.getElementAttribute(attribute) ?: return@mapNotNull null
-    }
-}
-
-fun <T> Element.queryAttribute(attribute: Attribute<T>) =
-    querySelector(attribute)?.getElementAttribute(attribute)
-
-private fun <T> HTMLElement.getElementAttribute(
-    attribute: Attribute<T>,
-): ElementAttribute<T>? {
-    val value = getAttribute(attribute) ?: return null
-    return ElementAttribute(this, value)
-}
-
-// dep
-//inline fun <reified T> Element.queryJsonAttributeAll(attribute: Attribute<T>): List<ElementAttributeValue<T>> {
-//    return queryAttributeAll(attribute) { json ->
-//        jsonConfig.decodeFromString<T>(json)
-//    }
-//}
-//
-//inline fun <reified T> Element.queryJsonAttribute(attribute: Attribute<T>): ElementAttributeValue<T>? {
-//    return queryAttribute(attribute) { json ->
-//        jsonConfig.decodeFromString<T>(json)
-//    }
-//}
 
 fun Element.setAttribute(attribute: Attribute<*>, value: String) =
     setAttribute(attribute.identifier, value)
 
 fun <T> Element.setAttribute(expression: AttributeValue<T>) =
     setAttribute(expression.attribute.identifier, expression.toStringValue())
-
-fun Element.toggleAttribute(attribute: Attribute<Boolean>): Boolean {
-    val value = getAttribute(attribute) ?: true
-    setAttribute(attribute.to(value))
-    return value
-}
 
 fun <T> Element.getAttribute(attribute: Attribute<T>): T? = attributes.getNamedItem(attribute.identifier)?.let {
     val transform = attribute.toValue ?: error("transform not found: ${attribute.name}")

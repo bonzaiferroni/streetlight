@@ -42,6 +42,7 @@ import koala.html.markdown
 import koala.html.metaImage
 import koala.html.row
 import koala.html.textBlock
+import koala.modifier.Css
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import streetlight.model.data.ExtraLink
@@ -62,7 +63,7 @@ fun FlowContent.featureHeader(
     block: DIV.() -> Unit = { },
 ) {
     card(modify(mod, QueryContainer, Padding0, Gap0, OverflowClip, MoonShadow, ZenBg, BorderSolid2Px)) {
-        setStyle(koala.modifier.ColorScheme.of(colorScheme.cssValue))
+        setStyle(Css.ColorScheme.of(colorScheme.cssValue))
         block()
 
         column(modify(ContainerMdRow, FlexItems1, Gap0)) {

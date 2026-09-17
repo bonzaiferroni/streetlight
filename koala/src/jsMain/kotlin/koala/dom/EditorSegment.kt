@@ -4,6 +4,7 @@ import js.array.asList
 import koala.modifier.ClassModifier
 import koala.markdown.*
 import koala.model.EditorStyle
+import koala.modifier.isModified
 import web.html.HTMLBRElement
 import web.html.HTMLElement
 import kotlin.collections.forEach

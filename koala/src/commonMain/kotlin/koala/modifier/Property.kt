@@ -8,11 +8,11 @@ data class Property<T: Any>(
     val name: String,
     val isCustom: Boolean = false,
     val valueToString: ((T) -> String)? = null,
-): Unmodifier {
+) {
 
     fun of(value: T) = InlineStyle(this, value)
 
-    override val identifier get() = when (isCustom) {
+    val identifier get() = when (isCustom) {
         true -> "--$name"
         else -> name
     }
@@ -58,10 +58,10 @@ fun CoreAttributeGroupFacade.setPositionAnchor(value: PositionAnchor) =
     setStyle(Css.PositionAnchor.of(value))
 
 fun CoreAttributeGroupFacade.setAnchorName(anchor: PositionAnchor) =
-    setStyle(AnchorName.of(anchor))
+    setStyle(Css.AnchorName.of(anchor))
 
 fun CoreAttributeGroupFacade.setRandomSeed(multiplier: Int = 1) =
-    setStyle(RandomSeed.of(Random.nextDouble() * multiplier))
+    setStyle(Css.RandomSeed.of(Random.nextDouble() * multiplier))
 
 //fun CoreAttributeGroupFacade.setIdAndAnchor(id: Id) {
 //    setId(id)

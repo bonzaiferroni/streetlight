@@ -2,7 +2,7 @@ package koala.html
 
 import kampfire.model.Url
 import koala.modifier.BackgroundImage
-import koala.modifier.BackgroundUrl
+import koala.modifier.Css
 import koala.modifier.Class
 import koala.modifier.ModifierSet
 import koala.modifier.setStyle
@@ -44,7 +44,7 @@ fun FlowContent.btn(
         modifiers = modify(modifiers, BtnKey.Class, BackgroundImage),
     ) {
         background?.let {
-            setStyle(BackgroundUrl.of(it))
+            setStyle(Css.BackgroundUrl.of(it))
         }
         block()
         span {

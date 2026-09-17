@@ -42,7 +42,7 @@ fun ViewScope.earthUnboundedOverlay(model: Earth, mapContext: GeoCameraControlle
             }
             is IconMarker -> icon(marker.svg, modify(Height3, OpacityHalf, PointerEventsAuto, ColorSchemeFg)) {
                 marker.colorScheme?.let {
-                    setStyle(ColorScheme.of(it))
+                    setStyle(Css.ColorScheme.of(it))
                 }
             }.onClick {
                 model.setFocus(marker)

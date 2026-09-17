@@ -3,6 +3,7 @@ package streetlight.web.ui
 import kampfire.api.Slug
 import koala.dom.*
 import koala.modifier.Attribute
+import koala.modifier.getAttribute
 import streetlight.model.ui.EventScoutRoute
 import streetlight.model.ui.LocationScoutRoute
 import streetlight.model.ui.MediaForgeRoute

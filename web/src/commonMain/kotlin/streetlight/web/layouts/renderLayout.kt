@@ -90,14 +90,14 @@ fun FlowContent.renderImage(block: ImageBlock) {
     val fitMod = block.fit.toMod()
     metaImage(block.image, modify(LayoutStyle.Image, shapeMod, fitMod)) {
         block.width?.let {
-            setStyle(Width.of(it.pct))
+            setStyle(Css.Width.of(it.pct))
         }
     }
 }
 
 fun FlowContent.renderGallery(block: GalleryBlock) {
     div(modify(LayoutStyle.Gallery)) {
-        setStyle(ColumnCount.of(block.columns))
+        setStyle(Css.ColumnCount.of(block.columns))
         block.images.forEach {
             image(it, modify(block.shape.toMod(), OverflowClip))
         }

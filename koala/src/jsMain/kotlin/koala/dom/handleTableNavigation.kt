@@ -1,9 +1,10 @@
 package koala.dom
 
 import js.array.asList
-import koala.dom.activeChunk
 import koala.markdown.ContentBlock
 import koala.model.EditorStyle
+import koala.modifier.getAttribute
+import koala.modifier.isModified
 import web.dom.Node
 import web.html.HTMLElement
 import web.keyboard.KeyboardEvent

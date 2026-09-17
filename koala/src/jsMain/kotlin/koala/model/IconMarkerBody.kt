@@ -2,10 +2,8 @@ package koala.model
 
 import koala.modifier.addModifiers
 import koala.modifier.modify
-import koala.modifier.setStyle
 import koala.dom.AppendScope
 import koala.dom.asWeb
-import koala.dom.setStyle
 import kotlinx.css.properties.deg
 import kotlinx.html.js.div
 import kotlinx.html.js.p
@@ -37,15 +35,14 @@ internal class IconMarkerBody(
         val delta = ((bearing - lastBearing + 540) % 360) - 180;
         lastBearing += delta
         val adjusted = lastBearing - 90
-        be.setStyle(MarkerStyle.MarkerBearing.of(adjusted.deg))
+        be.modify(MarkerStyle.MarkerBearing.of(adjusted.deg))
     }
 }
 
 internal fun AppendScope.configureIconMarker(marker: TravelMarker): IconMarkerBody {
     with(marker) {
         val body = div {
-            addModifiers(modify(MarkerStyle.Travel, MarkerStyle.Body))
-            setStyle(MarkerStyle.MarkerSvg.of(marker.icon))
+            addModifiers(modify(MarkerStyle.Travel, MarkerStyle.Body, MarkerStyle.MarkerSvg.of(marker.icon)))
         }.asWeb()
 
         val bearingElement = marker.bearing?.let {

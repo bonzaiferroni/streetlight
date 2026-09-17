@@ -7,12 +7,14 @@ import koala.markdown.MarkdownTable
 import koala.markdown.contentEnd
 import koala.markdown.forEachLine
 import koala.model.EditorStyle
+import koala.modifier.Css
+import koala.modifier.setStyle
 import kotlinx.css.GridTemplateColumns
 import web.html.HTMLElement
 
 private fun AppendScope.renderEditorTable(chunk: String, element: HTMLElement, block: MarkdownTable) {
     val columns = block.header.cells.size
-    element.setStyle(koala.modifier.GridTemplateColumns.of(GridTemplateColumns("repeat($columns, max-content) 1fr")))
+    element.setStyle(Css.GridTemplateColumns.of(GridTemplateColumns("repeat($columns, max-content) 1fr")))
 
     val cursor = SpanCursor(block.tableSpans())
 

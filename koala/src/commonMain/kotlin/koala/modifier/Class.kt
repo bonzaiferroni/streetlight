@@ -6,7 +6,6 @@ import kotlin.jvm.JvmInline
 @JvmInline
 value class Class(override val identifier: String): ClassModifier, Queryable {
     override val selector get() = ".$identifier"
-    override val unmodifier get() = this
 
     val jsLiteral get() = "'$identifier'"
 
@@ -16,6 +15,7 @@ value class Class(override val identifier: String): ClassModifier, Queryable {
     fun withBemModifier(name: String) = Class("${identifier}--$name")
 }
 
-interface ClassModifier: Modifier, Unmodifier {
+interface ClassModifier: Modifier {
     val selector: String
+    val identifier: String
 }

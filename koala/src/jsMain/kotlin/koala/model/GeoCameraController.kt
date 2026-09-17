@@ -1,15 +1,13 @@
 package koala.model
 
-import koala.dom.getPath
 import koala.utils.launch
-import koala.dom.modify
+import koala.modifier.modify
 import koala.dom.onView
-import koala.dom.unmodify
+import koala.modifier.unmodify
 import koala.external.CenterZoomBearing
 import koala.external.maplibregl
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
-import web.animations.requestAnimationFrame
 import web.html.HTMLElement
 import web.timers.setTimeout
 import kotlin.time.Duration.Companion.milliseconds

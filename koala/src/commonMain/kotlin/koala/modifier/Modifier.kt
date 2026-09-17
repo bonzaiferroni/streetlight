@@ -6,17 +6,9 @@ import kotlinx.html.FlowContent
 import kotlinx.html.style
 import kotlinx.html.unsafe
 
-sealed interface Modifier {
-    val unmodifier: Unmodifier?
-}
+sealed interface Modifier
 
-sealed interface Unmodifier {
-    val identifier: String
-}
-
-class ModifierSet(val modifiers: Array<out Modifier?>): Modifier {
-    override val unmodifier get() = null
-}
+class ModifierSet(val modifiers: Array<out Modifier?>): Modifier
 
 fun ModifierSet.append(vararg modifiers: Modifier?) = modify(this, *modifiers)
 

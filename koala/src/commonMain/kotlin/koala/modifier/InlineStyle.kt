@@ -9,8 +9,6 @@ import kotlinx.css.LinearDimension
 import kotlinx.css.px
 
 data class InlineStyle<T: Any>(val property: Property<T>, val value: T): Modifier {
-    override val unmodifier get() = property
-
     val stringValue get() = property.valueToString?.invoke(value) ?: styleValueOf(value)
 
     override fun toString() = "${property.identifier}: $stringValue"

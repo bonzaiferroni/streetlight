@@ -3,17 +3,16 @@ package streetlight.web.ui
 import kampfire.model.toDataOr
 import koala.SvgFile
 import koala.modifier.Height3
-import koala.modifier.MaskUrl
+import koala.modifier.Css
 import koala.modifier.ModifierSet
 import koala.modifier.ScaleIn
 import koala.modifier.ScaleOut
 import koala.modifier.modify
 import koala.dom.ViewScope
 import koala.dom.icon
-import koala.dom.modify
 import koala.dom.onClickElement
-import koala.dom.setStyle
-import koala.dom.unmodify
+import koala.modifier.setStyle
+import koala.modifier.unmodify
 import streetlight.model.data.GalaxyId
 import streetlight.model.data.LightEdit
 import streetlight.model.data.ToggleType
@@ -37,7 +36,7 @@ fun ViewScope.starToggleProto(
             api.editStarLink(LightEdit(recordId.value, !litNow, toggleType)).toDataOr(toaster) { return@launchEffect }
 
             litNow = !litNow
-            icon.setStyle(MaskUrl.of(svg()))
+            icon.setStyle(Css.MaskUrl.of(svg()))
             icon.modify(ScaleIn)
             icon.unmodify(ScaleOut)
         }

@@ -86,5 +86,5 @@ fun HTMLElement.syncImage(url: Url?) {
     }
 
     modify(EditorStyle.WithImage)
-    setStyle(InlineImage.of(url))
+    setStyle(Css.InlineImage.of(url))
 }

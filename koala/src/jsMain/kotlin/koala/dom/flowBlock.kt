@@ -12,6 +12,8 @@ import koala.modifier.modify
 import koala.html.FlowBlockStyle
 import kampfire.model.Tap
 import koala.modifier.contains
+import koala.modifier.unmodify
+import koala.modifier.unmodifyAfterFrame
 import koala.utils.launch
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job

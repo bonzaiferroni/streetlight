@@ -6,7 +6,7 @@ import kampfire.model.storeOf
 import kampfire.model.tapOf
 import koala.core.queryAttribute
 import koala.modifier.KoalaBody
-import koala.dom.setAttribute
+import koala.modifier.setAttribute
 import koala.html.AppRoute
 import koala.html.AppScreen
 import koala.modifier.Attribute

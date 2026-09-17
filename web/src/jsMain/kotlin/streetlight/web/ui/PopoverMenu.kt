@@ -2,7 +2,7 @@ package streetlight.web.ui
 
 import kampfire.model.MutableTap
 import kampfire.model.storeOf
-import koala.modifier.AnchorName
+import koala.modifier.Css
 import koala.modifier.Gap2Px
 import koala.modifier.ModifierSet
 import koala.modifier.modify
@@ -10,8 +10,7 @@ import koala.dom.ViewScope
 import koala.dom.flowBlock
 import koala.dom.popoverCard
 import koala.dom.popoverRaw
-import koala.dom.removeStyle
-import koala.dom.setStyle
+import koala.modifier.removeStyle
 import koala.html.Id
 import web.html.HTMLElement
 import kotlin.js.json
@@ -45,9 +44,9 @@ fun <T> ViewScope.popoverMenu(
         val toggle = event.asDynamic()
         val invoker = toggle.source as? HTMLElement ?: return@addEventListener
         if (toggle.newState == "open") {
-            currentInvoker?.removeStyle(AnchorName)
+            currentInvoker?.removeStyle(Css.AnchorName)
             currentInvoker = invoker
-            invoker.setStyle(AnchorName.of(anchor))
+            invoker.modify(Css.AnchorName.of(anchor))
             state.set(transform(invoker) ?: defaultValue ?: error("popover menu content not found"))
         } else {
             state.set(null)

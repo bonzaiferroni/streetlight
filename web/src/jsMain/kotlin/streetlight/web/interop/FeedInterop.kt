@@ -6,10 +6,10 @@ import koala.dom.AppendScope
 import koala.dom.append
 import koala.dom.button
 import koala.dom.clear
-import koala.dom.modify
-import koala.dom.requireAttribute
-import koala.dom.requireClosestAttribute
-import koala.dom.unmodify
+import koala.modifier.modify
+import koala.modifier.requireAttribute
+import koala.modifier.requireClosestAttribute
+import koala.modifier.unmodify
 import koala.modifier.setAttribute
 import koala.interop.ThisElement
 import kotlinx.html.onClick

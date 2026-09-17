@@ -13,7 +13,7 @@ import koala.dom.dialogContent
 import koala.dom.dropMenu
 import koala.dom.grid
 import koala.dom.row
-import koala.dom.setAttribute
+import koala.modifier.setAttribute
 import koala.dom.textBlock
 import koala.html.spacer
 import kampfire.model.setTrue

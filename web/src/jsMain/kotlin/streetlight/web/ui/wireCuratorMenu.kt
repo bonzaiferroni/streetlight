@@ -7,7 +7,7 @@ import koala.modifier.modify
 import koala.dom.ViewScope
 import koala.dom.button
 import koala.dom.grid
-import koala.dom.requireAttribute
+import koala.modifier.requireAttribute
 import koala.dom.requireClosest
 import koala.dom.textBlock
 import koala.html.progressBar

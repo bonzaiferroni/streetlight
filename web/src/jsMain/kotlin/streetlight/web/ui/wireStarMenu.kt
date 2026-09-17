@@ -2,7 +2,7 @@ package streetlight.web.ui
 
 import koala.dom.ViewScope
 import koala.dom.column
-import koala.dom.getAttribute
+import koala.modifier.getAttribute
 import koala.dom.popoverOption
 import koala.modifier.Attribute
 import streetlight.model.ui.StarRoute
