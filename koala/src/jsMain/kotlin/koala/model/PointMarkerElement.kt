@@ -121,16 +121,16 @@ internal fun PointMarker.toPointRender(pixelPoint: Point, focusEntity: () -> Uni
     element.append { // this element is modified by maplibre
         baseElement = div { // this element is all mine
             val delay = provideDelay()
-            element.setStyle(MarkerStyle.TwinkleDelay.to(delay.s))
-            element.setStyle(MarkerStyle.BodySize.to(bodySize))
+            element.setStyle(MarkerStyle.TwinkleDelay.of(delay.s))
+            element.setStyle(MarkerStyle.BodySize.of(bodySize))
 
             zIndex?.let {
-                element.setStyle(Property.ZIndex.to(it))
+                element.setStyle(Property.ZIndex.of(it))
             }
 
             val modifiers = modify(mod, MarkerStyle.Base, altitude?.cssClass).let { modifiers ->
                 light?.let {
-                    modifiers.append(MarkerStyle.MarkerLight.to(it), MarkerStyle.MarkerGlow)
+                    modifiers.append(MarkerStyle.MarkerLight.of(it), MarkerStyle.MarkerGlow)
                 }
             }
 

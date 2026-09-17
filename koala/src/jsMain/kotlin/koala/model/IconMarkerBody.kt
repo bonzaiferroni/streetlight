@@ -37,7 +37,7 @@ internal class IconMarkerBody(
         val delta = ((bearing - lastBearing + 540) % 360) - 180;
         lastBearing += delta
         val adjusted = lastBearing - 90
-        be.setStyle(MarkerStyle.MarkerBearing.to(adjusted.deg))
+        be.setStyle(MarkerStyle.MarkerBearing.of(adjusted.deg))
     }
 }
 
@@ -45,7 +45,7 @@ internal fun AppendScope.configureIconMarker(marker: TravelMarker): IconMarkerBo
     with(marker) {
         val body = div {
             addModifiers(modify(MarkerStyle.Travel, MarkerStyle.Body))
-            setStyle(MarkerStyle.MarkerSvg.to(marker.icon))
+            setStyle(MarkerStyle.MarkerSvg.of(marker.icon))
         }.asWeb()
 
         val bearingElement = marker.bearing?.let {

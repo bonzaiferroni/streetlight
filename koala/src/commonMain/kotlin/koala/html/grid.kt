@@ -22,8 +22,8 @@ internal fun DIV.configureGridColumns(
     template: GridTemplateColumns,
     queryTemplate: GridTemplateColumns,
 ) {
-    setStyle(Property.GridTemplateColumns.to(template))
-    setStyle(GridColumns.QueryTemplate.to(queryTemplate))
+    setStyle(Property.GridTemplateColumns.of(template))
+    setStyle(GridColumns.QueryTemplate.of(queryTemplate))
 }
 
 object GridColumns {

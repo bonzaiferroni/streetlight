@@ -51,7 +51,7 @@ fun BUTTON.configureSvgButton(
     block: BUTTON.() -> Unit = {}
 ) {
     addModifiers(ButtonStyle.IconClass, modify(IconStyle.Icon, modifiers))
-    setStyle(Property.MaskUrl.to(svg))
+    setStyle(Property.MaskUrl.of(svg))
     block()
 }
 

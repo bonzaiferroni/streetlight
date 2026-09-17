@@ -22,14 +22,14 @@ fun FlowContent.textLogo(
     div(modify(mod, Class, MoonDropShadow)) {
         setAriaLabel("Streetlight Logo")
         box(modify(LogoIcon, AccentFg)) {
-            setStyle(Property.MaskUrl.to(SvgFile.LogoTextStreet))
+            setStyle(Property.MaskUrl.of(SvgFile.LogoTextStreet))
         }
         box(modify(LogoIcon, PrimaryFg)) {
-            setStyle(Property.MaskUrl.to(SvgFile.LogoTextLight))
+            setStyle(Property.MaskUrl.of(SvgFile.LogoTextLight))
         }
         div(modify(ShadowBox, GlowShadow)) {
             div(modify(LogoIcon, GlowBackground)) {
-                setStyle(Property.MaskUrl.to(SvgFile.LogoFlame))
+                setStyle(Property.MaskUrl.of(SvgFile.LogoFlame))
             }
         }
     }

@@ -37,7 +37,7 @@ fun ViewScope.starToggleProto(
             api.editStarLink(LightEdit(recordId.value, !litNow, toggleType)).toDataOr(toaster) { return@launchEffect }
 
             litNow = !litNow
-            icon.setStyle(Property.MaskUrl.to(svg()))
+            icon.setStyle(Property.MaskUrl.of(svg()))
             icon.modify(ScaleIn)
             icon.unmodify(ScaleOut)
         }

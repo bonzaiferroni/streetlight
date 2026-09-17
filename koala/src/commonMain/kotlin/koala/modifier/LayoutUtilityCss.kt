@@ -74,7 +74,6 @@ val FlexBasis25 = utilityOf("flex-basis-25", "flex-basis: 25%")
 val FlexBasis33 = utilityOf("flex-basis-33", "flex-basis: 33%")
 
 // Align Items
-val AlignItemsCenter = utilityOf("align-items-center", "align-items: center")
 val AlignItemsStretch = utilityOf("align-items-stretch", "align-items: stretch")
 val AlignItemsStart = utilityOf("align-items-start", "align-items: flex-start")
 val AlignItemsEnd = utilityOf("align-items-end", "align-items: flex-end")
@@ -82,7 +81,7 @@ val AlignContentStart = utilityOf("align-content-start", "align-content: flex-st
 val AlignContentCenter = utilityOf("align-content-center", "align-content: center")
 
 // Justify Content
-val JustifyContentCenter = utilityOf("justify-content-center", "justify-content: center")
+// val JustifyContentCenter = utilityOf("justify-content-center", "justify-content: center")
 val JustifyContentEnd = utilityOf("justify-content-end", "justify-content: flex-end")
 val JustifyContentSpaceAround = utilityOf("justify-content-space-around", "justify-content: space-around")
 val JustifyContentSpaceBetween = utilityOf("justify-content-space-between", "justify-content: space-between")

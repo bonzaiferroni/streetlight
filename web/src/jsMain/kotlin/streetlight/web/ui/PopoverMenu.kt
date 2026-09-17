@@ -47,7 +47,7 @@ fun <T> ViewScope.popoverMenu(
         if (toggle.newState == "open") {
             currentInvoker?.removeStyle(Property.AnchorName)
             currentInvoker = invoker
-            invoker.setStyle(Property.AnchorName.to(anchor))
+            invoker.setStyle(Property.AnchorName.of(anchor))
             state.set(transform(invoker) ?: defaultValue ?: error("popover menu content not found"))
         } else {
             state.set(null)

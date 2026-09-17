@@ -52,7 +52,7 @@ fun DIV.configureFeedRow(
     }
 
     div(modify(FeedRow.Content)) {
-        setStyle(Property.ColorScheme.to(colorScheme.cssValue))
+        setStyle(Property.ColorScheme.of(colorScheme.cssValue))
         row(modify(Height10)) {
             navigationIfNotNull(postRoute, modify(Width10, OverflowClip, BorderRadius1, BorderSolid2Px, MoonShadow)) {
                 image(imageUrl, modify(Size100P, ObjectFitCover))

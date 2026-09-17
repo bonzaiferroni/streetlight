@@ -63,7 +63,7 @@ fun FlowContent.featureHeader(
     block: DIV.() -> Unit = { },
 ) {
     card(modify(mod, QueryContainer, Padding0, Gap0, OverflowClip, MoonShadow, ZenBg, BorderSolid2Px)) {
-        setStyle(Property.ColorScheme.to(colorScheme.cssValue))
+        setStyle(Property.ColorScheme.of(colorScheme.cssValue))
         block()
 
         column(modify(ContainerMdRow, FlexItems1, Gap0)) {

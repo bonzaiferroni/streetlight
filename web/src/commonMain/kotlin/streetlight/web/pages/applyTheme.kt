@@ -9,24 +9,24 @@ import streetlight.model.data.PageTheme
 
 fun BODY.applyTheme(theme: PageTheme) {
     setStyle(
-        KoalaStyle.Accent.to(theme.accent),
-        KoalaStyle.Primary.to(theme.primary),
-        KoalaStyle.RhoColor.to(theme.rho.rgba()),
-        KoalaStyle.BetaColor.to(theme.beta.rgba()),
-        KoalaStyle.GammaColor.to(theme.gamma.rgba()),
-        KoalaStyle.RhoX.to(theme.rho.position.x.pct),
-        KoalaStyle.BetaX.to(theme.beta.position.x.pct),
-        KoalaStyle.GammaX.to(theme.gamma.position.x.pct),
-        KoalaStyle.RhoY.to(theme.rho.position.y.pct),
-        KoalaStyle.BetaY.to(theme.beta.position.y.pct),
-        KoalaStyle.GammaY.to(theme.gamma.position.y.pct),
-        KoalaStyle.RhoRadius.to(theme.rho.position.radius),
-        KoalaStyle.BetaRadius.to(theme.beta.position.radius),
-        KoalaStyle.GammaRadius.to(theme.gamma.position.radius),
-        KoalaStyle.RhoFocus.to(theme.rho.focus.pct),
-        KoalaStyle.BetaFocus.to(theme.beta.focus.pct),
-        KoalaStyle.GammaFocus.to(theme.gamma.focus.pct),
-        if (!theme.colorFlux) KoalaStyle.ColorFlux.to("none") else null
+        KoalaStyle.Accent.of(theme.accent),
+        KoalaStyle.Primary.of(theme.primary),
+        KoalaStyle.RhoColor.of(theme.rho.rgba()),
+        KoalaStyle.BetaColor.of(theme.beta.rgba()),
+        KoalaStyle.GammaColor.of(theme.gamma.rgba()),
+        KoalaStyle.RhoX.of(theme.rho.position.x.pct),
+        KoalaStyle.BetaX.of(theme.beta.position.x.pct),
+        KoalaStyle.GammaX.of(theme.gamma.position.x.pct),
+        KoalaStyle.RhoY.of(theme.rho.position.y.pct),
+        KoalaStyle.BetaY.of(theme.beta.position.y.pct),
+        KoalaStyle.GammaY.of(theme.gamma.position.y.pct),
+        KoalaStyle.RhoRadius.of(theme.rho.position.radius),
+        KoalaStyle.BetaRadius.of(theme.beta.position.radius),
+        KoalaStyle.GammaRadius.of(theme.gamma.position.radius),
+        KoalaStyle.RhoFocus.of(theme.rho.focus.pct),
+        KoalaStyle.BetaFocus.of(theme.beta.focus.pct),
+        KoalaStyle.GammaFocus.of(theme.gamma.focus.pct),
+        if (!theme.colorFlux) KoalaStyle.ColorFlux.of("none") else null
     )
 }
 

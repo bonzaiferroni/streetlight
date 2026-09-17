@@ -26,7 +26,7 @@ fun DIV.configureIcon(
     block: DIV.() -> Unit = {}
 ) {
     addModifiers(modify(IconStyle.Icon, modifiers))
-    setStyle(Property.MaskUrl.to(file))
+    setStyle(Property.MaskUrl.of(file))
     block()
 }
 

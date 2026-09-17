@@ -22,6 +22,6 @@ fun <T: Any> HTMLElement.removeStyle(property: Property<T>): HTMLElement {
 fun <T: Any> HTMLElement.setStyle(property: Property<T>, value: T?) {
     when (value) {
         null -> removeStyle(property)
-        else -> setStyle(property.to(value))
+        else -> setStyle(property.of(value))
     }
 }

@@ -5,6 +5,7 @@ import koala.html.hr
 import koala.html.navigation
 import koala.html.textLogo
 import koala.html.row
+import kotlinx.css.pct
 import kotlinx.html.FlowContent
 import streetlight.model.ui.HomeRoute
 
@@ -14,7 +15,7 @@ fun FlowContent.appHeader(
     row(modify(mod, JustifyContentCenter, Gap(0), Padding(1), AlignItemsCenter)) {
         val rayMod = modify(Flex1, MaxWidth(24), Margin(1), MoonDropShadow, Height2Px, AspectAuto, ParticleRay)
         hr(modify(rayMod, AccentFg, FlipX))
-        navigation(HomeRoute, modify(Height100Pct)) {
+        navigation(HomeRoute, modify(Height(100.pct))) {
             textLogo(modify(Height100Pct, FocusTarget))
         }
         hr(modify(rayMod, PrimaryFg))

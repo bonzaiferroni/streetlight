@@ -44,7 +44,7 @@ fun FlowContent.btn(
         modifiers = modify(modifiers, BtnKey.Class, BackgroundImage),
     ) {
         background?.let {
-            setStyle(Property.BackgroundUrl.to(it))
+            setStyle(Property.BackgroundUrl.of(it))
         }
         block()
         span {

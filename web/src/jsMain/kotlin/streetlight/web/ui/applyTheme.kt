@@ -29,7 +29,7 @@ fun applyTheme(theme: PageTheme?) {
     body.setStyle(KoalaStyle.GammaFocus, theme?.gamma?.focus?.pct)
 
     when (theme?.colorFlux) {
-        false -> body.setStyle(KoalaStyle.ColorFlux.to("none"))
+        false -> body.setStyle(KoalaStyle.ColorFlux.of("none"))
         else -> body.removeStyle(KoalaStyle.ColorFlux)
     }
 }

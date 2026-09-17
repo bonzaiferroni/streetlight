@@ -64,7 +64,7 @@ fun IMG.configureImage(
         configureSrcSet(it)
     }
     image?.aspect?.let {
-        setStyle(Property.AspectRatio.to(it))
+        setStyle(Property.AspectRatio.of(it))
     }
     addModifiers(mod)
     if (lazy) {

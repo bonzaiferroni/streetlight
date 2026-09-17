@@ -53,7 +53,7 @@ class SwapElement(
 
         window.requestAnimationFrame {
             val height = element.getBoundingClientRect().height
-            parent.setStyle(Property.Height.to(height.px))
+            parent.setStyle(Property.Height.of(height.px))
         }
     }
 

@@ -64,7 +64,7 @@ fun DIV.configureTabsHeader(
                 }
                 addModifiers(TabsStyle.Button)
                 tab.colorScheme?.let {
-                    setStyle(Property.ColorScheme.to(it))
+                    setStyle(Property.ColorScheme.of(it))
                 }
                 +tab.label
             }

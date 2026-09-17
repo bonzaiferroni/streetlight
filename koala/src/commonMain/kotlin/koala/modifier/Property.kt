@@ -15,7 +15,7 @@ data class Property<T: Any>(
     val valueToString: ((T) -> String)? = null,
 ): Unmodifier {
 
-    fun to(value: T) = InlineStyle(this, value)
+    fun of(value: T) = InlineStyle(this, value)
 
     override val identifier get() = when (isCustom) {
         true -> "--$name"
@@ -86,13 +86,13 @@ fun CoreAttributeGroupFacade.setStyle(styles: StyleSet) {
 }
 
 fun CoreAttributeGroupFacade.setPositionAnchor(value: PositionAnchor) =
-    setStyle(Property.PositionAnchor.to(value))
+    setStyle(Property.PositionAnchor.of(value))
 
 fun CoreAttributeGroupFacade.setAnchorName(anchor: PositionAnchor) =
-    setStyle(Property.AnchorName.to(anchor))
+    setStyle(Property.AnchorName.of(anchor))
 
 fun CoreAttributeGroupFacade.setRandomSeed(multiplier: Int = 1) =
-    setStyle(Property.RandomSeed.to(Random.nextDouble() * multiplier))
+    setStyle(Property.RandomSeed.of(Random.nextDouble() * multiplier))
 
 //fun CoreAttributeGroupFacade.setIdAndAnchor(id: Id) {
 //    setId(id)

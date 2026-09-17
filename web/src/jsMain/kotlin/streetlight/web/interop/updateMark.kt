@@ -77,7 +77,7 @@ fun Element.applyCurator(curator: CuratorStatus) {
         // apply mark bar
         val progress = curator.progressOf(mark.markId)
         querySelectorAll(CuratorMenu.MarkBarId.to(mark.markId)).forEach {
-            it.asHtmlElement().setStyle(ProgressBarStyle.Progress.to(progress))
+            it.asHtmlElement().setStyle(ProgressBarStyle.Progress.of(progress))
         }
     }
 

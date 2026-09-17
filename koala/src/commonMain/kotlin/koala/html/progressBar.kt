@@ -12,7 +12,7 @@ fun FlowContent.progressBar(
 ) {
     div(mod) {
         config()
-        setStyle(ProgressBarStyle.Progress.to(progress.coerceIn(0f, 1f)))
+        setStyle(ProgressBarStyle.Progress.of(progress.coerceIn(0f, 1f)))
         div(modify(barMod, ProgressBarStyle.Indicator))
     }
 }

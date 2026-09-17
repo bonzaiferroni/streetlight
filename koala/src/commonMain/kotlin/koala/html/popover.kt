@@ -50,7 +50,7 @@ fun DIV.configurePopover(
 ) {
     addModifiers(Popover.Class, mod)
     setId(id)
-    setStyle(Property.PositionAnchor.to(anchor ?: id.toPositionAnchor()))
+    setStyle(Property.PositionAnchor.of(anchor ?: id.toPositionAnchor()))
     setAttribute(Attribute.Popover.to(if (isManual) "manual" else "auto"))
     block()
 }

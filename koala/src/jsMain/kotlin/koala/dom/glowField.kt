@@ -23,10 +23,10 @@ fun ViewScope.glowField(
     lateinit var handleElement: HTMLElement
 
     fun place(glow: Glow) {
-        handleElement.setStyle(Property.Left.to(glow.position.x.pct))
-        handleElement.setStyle(Property.Top.to(glow.position.y.pct))
-        handleElement.setStyle(Property.Width.to((glow.position.radius / 2.0).pct))
-        handleElement.setStyle(Property.BackgroundColor.to(glow.rgba()))
+        handleElement.setStyle(Property.Left.of(glow.position.x.pct))
+        handleElement.setStyle(Property.Top.of(glow.position.y.pct))
+        handleElement.setStyle(Property.Width.of((glow.position.radius / 2.0).pct))
+        handleElement.setStyle(Property.BackgroundColor.of(glow.rgba()))
     }
 
     fun report(event: PointerEvent) {
