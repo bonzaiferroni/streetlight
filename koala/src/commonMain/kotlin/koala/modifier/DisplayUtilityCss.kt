@@ -67,22 +67,22 @@ val CircleClip = utilityOf("circle-clip", "border-radius: 50%", "overflow: hidde
 
 // Border Radius
 val BorderRadius0 = utilityOf("border-radius-0", "border-radius: 0")
-val BorderRadius1 = utilityOf("border-radius-1", "border-radius: var(--unit-spacing)")
-val BorderRadius2 = utilityOf("border-radius-2", "border-radius: var(--unit-spacing-2)")
-val BorderRadius3 = utilityOf("border-radius-3", "border-radius: var(--unit-spacing-3)")
-val BorderRadius4 = utilityOf("border-radius-4", "border-radius: var(--unit-spacing-4)")
+val BorderRadius1 = utilityOf("border-radius-1", "border-radius: var(--unit)")
+val BorderRadius2 = utilityOf("border-radius-2", "border-radius: var(--unit-2)")
+val BorderRadius3 = utilityOf("border-radius-3", "border-radius: var(--unit-3)")
+val BorderRadius4 = utilityOf("border-radius-4", "border-radius: var(--unit-4)")
 val BorderRadius50P = utilityOf("border-radius-50p", "border-radius: 50%")
 val BorderRadiusPill = utilityOf("border-radius-pill", "border-radius: 9999px")
 val BorderRadiusPillLeft = utilityOf("border-radius-pill-left", "border-radius: 9999px 0 0 9999px")
 val BorderDashed2Px = utilityOf("border-dashed", "border: 2px dashed var(--outline-low-fg)")
 val BorderSolid2Px = utilityOf("border-solid", "border: var(--outline-low)")
-val BorderRadiusTop1 = utilityOf("border-radius-top-1", "border-radius: var(--unit-spacing) var(--unit-spacing) 0 0")
-val BorderRadiusBottom1 = utilityOf("border-radius-bottom-1", "border-radius: 0 0 var(--unit-spacing) var(--unit-spacing)")
+val BorderRadiusTop1 = utilityOf("border-radius-top-1", "border-radius: var(--unit) var(--unit) 0 0")
+val BorderRadiusBottom1 = utilityOf("border-radius-bottom-1", "border-radius: 0 0 var(--unit) var(--unit)")
 val Outline = utilityOf("outline-solid", "outline: var(--outline-low)", "outline-offset: -2px")
 val OutlineCurrentColor = utilityOf("outline-current-color", "outline: 2px solid currentColor", "outline-offset: -2px")
 val OutlineEditorFg = utilityOf("outline-editor-fg", "outline: 2px solid var(--system-fg)", "outline-offset: -2px")
 val OutlineDashed2Px = utilityOf("outline-dashed", "outline: 2px dashed var(--outline-low-fg)")
-val Chopped = utilityOf("chopped", "--chop: var(--unit-spacing-8)",
+val Chopped = utilityOf("chopped", "--chop: var(--unit-8)",
     "clip-path: polygon(var(--chop) 0, 100% 0, 100% calc(100% - var(--chop)), calc(100% - var(--chop)) 100%, 0 100%, 0 var(--chop))")
 
 // Border

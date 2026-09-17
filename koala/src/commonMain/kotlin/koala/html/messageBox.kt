@@ -13,7 +13,7 @@ val MessageBoxCss get() = with(MessageBox) { """
 $Mod {
     position: relative;
     background-color: var(--primary-card-bg);
-    border-radius: calc(var(--unit-spacing));
+    border-radius: calc(var(--unit));
     overflow: hidden;
     white-space: pre-wrap;
     

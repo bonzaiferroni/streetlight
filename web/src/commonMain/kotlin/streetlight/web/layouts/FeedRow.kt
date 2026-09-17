@@ -160,7 +160,7 @@ $Base {
 $Content {
     display: flex;
     flex-direction: column;
-    gap: var(--unit-spacing);
+    gap: var(--unit);
     align-self: start;
     
     @container (min-width: 960px) {

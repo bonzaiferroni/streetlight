@@ -38,7 +38,7 @@ object GridColumns {
 val GridColumnsCss get () = with(GridColumns) { """
 $Class {
     display: grid; 
-    gap: var(--unit-spacing);
+    gap: var(--unit);
     
     @media (max-width: 600px) {
         grid-template-columns: var($QueryTemplate) !important;

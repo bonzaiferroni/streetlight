@@ -37,7 +37,7 @@ val TextEditorCss get() = with(EditorStyle) { """
 $Container {
     display: flow-root;
     outline: none;
-    padding: var(--unit-spacing);
+    padding: var(--unit);
     font-size: var(--paragraph-size);
     background-color: var(--zen-bg);
     color: rgb(var(--ink));
@@ -45,7 +45,7 @@ $Container {
     white-space: pre-wrap;
 
     border: 2px solid var(--void-border);
-    border-radius: var(--unit-spacing);
+    border-radius: var(--unit);
     box-shadow: var(--input-shadow);
     
     > * {
@@ -120,7 +120,7 @@ $Container {
                 content: "";
                 background-image: var(--inline-image);
                 background-size: cover;
-                border-radius: var(--unit-spacing-1);
+                border-radius: var(--unit-1);
                 float: right;
                 clear: right;
                 width: 20%;

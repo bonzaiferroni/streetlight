@@ -9,19 +9,19 @@ val FlexReverse = Class("flex-reverse")
 // language="CSS"
 val LayoutCss get() = """
 :root {
-    --unit-spacing-1: var(--unit-spacing);
-    --unit-spacing-2: calc(var(--unit-spacing) * 2);
-    --unit-spacing-3: calc(var(--unit-spacing) * 3);
-    --unit-spacing-4: calc(var(--unit-spacing) * 4);
-    --unit-spacing-8: calc(var(--unit-spacing) * 8);
-    --unit-spacing-16: calc(var(--unit-spacing) * 16);
-    --unit-spacing-32: calc(var(--unit-spacing) * 32);
+    --unit-1: var(--unit);
+    --unit-2: calc(var(--unit) * 2);
+    --unit-3: calc(var(--unit) * 3);
+    --unit-4: calc(var(--unit) * 4);
+    --unit-8: calc(var(--unit) * 8);
+    --unit-16: calc(var(--unit) * 16);
+    --unit-32: calc(var(--unit) * 32);
 }
 
 $FlexColumn, $FlexRow {
     display: flex;
     min-width: 0;
-    gap: var(--unit-spacing);
+    gap: var(--unit);
 }
 
 $FlexColumn {
@@ -44,10 +44,10 @@ $Card {
     display: flex;
     flex-direction: column;
 
-    gap: var(--unit-spacing);
-    border-radius: var(--unit-spacing-2);
+    gap: var(--unit);
+    border-radius: var(--unit-2);
     background-color: var(--card-bg);
-    padding: var(--unit-spacing);
+    padding: var(--unit);
 }
 
 $Box {

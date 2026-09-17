@@ -49,6 +49,6 @@ val SectionCss get() = """
     display: flex;
     flex-direction: column;
     min-width: 0;
-    gap: var(--unit-spacing);
+    gap: var(--unit);
 }
 """

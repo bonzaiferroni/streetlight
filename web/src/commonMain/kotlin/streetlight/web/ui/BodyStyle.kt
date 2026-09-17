@@ -16,7 +16,7 @@ val BodyCss = with(BodyStyle) { """
 $FormRow {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--unit-spacing-2);
+    gap: var(--unit-2);
     justify-content: center;
     
     > * {

@@ -89,7 +89,7 @@ val ThemeCss get() = with(Koala) { """
     --card-gradient-bg: linear-gradient(to right, var(--card-bg) 0%, transparent 100%);
     --ink-gradient-bg: linear-gradient(to right, rgba(var(--ink), .3) 0%, transparent 75%);
 
-    --unit-spacing: 0.5rem;
+    --unit: 0.5rem;
     
     --strong-blur: blur(10px);
     --ghost-border: 2px solid rgba(var(--ink), .1);

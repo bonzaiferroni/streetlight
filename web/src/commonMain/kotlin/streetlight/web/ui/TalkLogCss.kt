@@ -33,17 +33,17 @@ ${CommentClass.HasNestedContent} > div > ${CommentClass.NestedContent}::before {
     position: absolute;
     top: 0;
     left: 0;
-    width: var(--unit-spacing-2);
-    height: var(--unit-spacing-2);
-    background: radial-gradient(circle at 100% 100%, transparent var(--unit-spacing-2), var(--zen-bg) var(--unit-spacing-2));
+    width: var(--unit-2);
+    height: var(--unit-2);
+    background: radial-gradient(circle at 100% 100%, transparent var(--unit-2), var(--zen-bg) var(--unit-2));
 }
 
 ${CommentClass.HasNestedContent} > div > ${CommentClass.NestedContent} {
-    padding: var(--unit-spacing) 0 0 var(--unit-spacing);
+    padding: var(--unit) 0 0 var(--unit);
 }
 
 ${CommentClass.HasNestedContent} > .card {
-    border-radius: var(--unit-spacing-2) var(--unit-spacing-2) var(--unit-spacing-2) 0;
+    border-radius: var(--unit-2) var(--unit-2) var(--unit-2) 0;
 }
 
 ${CommentClass.Content},

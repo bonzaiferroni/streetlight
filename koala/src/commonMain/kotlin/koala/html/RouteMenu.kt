@@ -70,10 +70,10 @@ val NavMenuCss get() = with(RouteMenu) { """
     
 $Base {
     position: fixed; 
-    bottom: var(--unit-spacing-2);
+    bottom: var(--unit-2);
     left: 0;
     right: 0;
-    /* margin-bottom: var(--unit-spacing-2); */ 
+    /* margin-bottom: var(--unit-2); */ 
     width: fit-content;
     margin-inline: auto;
     user-select: none;
@@ -104,7 +104,7 @@ $ContextMenu {
     
     /* main route menu */
     > $Route {
-        padding: var(--unit-spacing) var(--unit-spacing-2);
+        padding: var(--unit) var(--unit-2);
     }
     
     $RouteNow {
@@ -118,8 +118,8 @@ $LeftTray {
     right: 100%;
     top: 50%;
     translate: 0 -50%;
-    margin-right: var(--unit-spacing);
-    padding: var(--unit-spacing);
+    margin-right: var(--unit);
+    padding: var(--unit);
 }
 
 $RightTray {
@@ -127,7 +127,7 @@ $RightTray {
     left: 100%;
     top: 50%;
     translate: 0 -50%;
-    margin-left: var(--unit-spacing);
-    padding: var(--unit-spacing);
+    margin-left: var(--unit);
+    padding: var(--unit);
 }
 """ }

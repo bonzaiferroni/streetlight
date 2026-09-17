@@ -67,7 +67,7 @@ ${ListKey.Class} {
     min-width: 0;
     min-height: 0;
     list-style: none;
-    gap: var(--unit-spacing);
+    gap: var(--unit);
 }
 
 $Prose ${ListKey.Class} {

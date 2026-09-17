@@ -75,7 +75,7 @@ $Prose {
     line-height: 1.7;
     
     $FlexColumn {
-        gap: var(--unit-spacing-2);
+        gap: var(--unit-2);
     }
 }
 

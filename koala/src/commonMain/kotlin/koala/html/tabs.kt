@@ -110,7 +110,7 @@ $Header {
     background-color: var(--void-bg);
     display: flex;
     flex-wrap: wrap;
-    gap: var(--unit-spacing);
+    gap: var(--unit);
     border-radius: 24px 24px 12px 12px;
     width: 100%;
     text-transform: uppercase;

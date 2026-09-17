@@ -41,7 +41,7 @@ body {
     text-transform: uppercase;
     text-shadow: var(--btn-text-shadow);
     white-space: nowrap;
-    min-width: calc(var(--unit-spacing) * 16);
+    min-width: calc(var(--unit) * 16);
 
     > :first-child { width: 1rem; text-align: center; opacity: .75; }
     > :only-child { grid-column: 1 / -1; justify-self: center; opacity: 1; width: auto; }
@@ -178,7 +178,7 @@ $HoverBg:hover {
 $Selected {
     outline: 2px solid rgb(var(--primary));
     outline-offset: -2px;
-    border-radius: var(--unit-spacing-1);
+    border-radius: var(--unit-1);
 }
 
 .highlighted {

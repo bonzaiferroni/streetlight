@@ -51,14 +51,14 @@ input[type="date"],
 textarea {
     font-family: var(--font-family);
     outline: none;
-    padding: var(--unit-spacing);
+    padding: var(--unit);
     font-size: var(--paragraph-size);
     background-color: var(--void-bg);
     color: rgb(var(--ink));
     line-height: var(--paragraph-line-height);
 
     border: 1px solid var(--void-border);
-    border-radius: var(--unit-spacing);
+    border-radius: var(--unit);
     box-shadow: var(--input-shadow);
 }
 
@@ -94,13 +94,13 @@ input[type="checkbox"]:checked::before {
 
 select {
     border: none;
-    padding: var(--unit-spacing);
+    padding: var(--unit);
     font-size: 1rem;
     background-color: var(--void-bg);
     color: rgb(var(--ink));
 
     outline: 1px solid var(--void-border);
-    border-radius: var(--unit-spacing);
+    border-radius: var(--unit);
     box-shadow: var(--btn-text-shadow);
 }
 
@@ -120,7 +120,7 @@ a:hover {
 label {
     display: inline-flex;
     align-items: start;
-    gap: var(--unit-spacing);
+    gap: var(--unit);
 }
 
 img {

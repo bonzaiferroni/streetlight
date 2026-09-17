@@ -104,7 +104,7 @@ private val ThemeToggle = Class("theme-toggle")
 // language="CSS"
 val SiteHelmCss get() = with(SiteHelm) { """
 ${SiteHelm.Container} {
-    border-radius: 0 0 var(--unit-spacing-2) 0;
+    border-radius: 0 0 var(--unit-2) 0;
     max-height: 100vh;
     overflow-y: auto;
 }

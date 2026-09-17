@@ -43,11 +43,11 @@ $FloatLeft {
 }
 
 $Block > * + * {
-    margin-top: var(--unit-spacing-2);
+    margin-top: var(--unit-2);
 }
 
 $OrderedList {
-    padding-inline-start: var(--unit-spacing-3);
+    padding-inline-start: var(--unit-3);
 }
 
 $UnorderedList {

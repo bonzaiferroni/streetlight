@@ -66,7 +66,7 @@ $Viewport {
 $PanelGrid {
     display: grid;
     min-height: 100dvh;
-    gap: var(--unit-spacing-1);
+    gap: var(--unit-1);
     grid-template-columns: minmax(auto, 1fr) minmax(0, var(--content-panel-width)) minmax(auto, 1fr);
     /* grid-template-columns: auto minmax(0, var(--content-panel-width)) auto; */
     grid-template-areas: "left content right";
@@ -82,8 +82,8 @@ $RightPanel {
     display: none;
     position: sticky;
     place-items: center;
-    top: calc(var(--unit-spacing) * 8);
-    height: calc(100lvh - var(--unit-spacing) * 16);
+    top: calc(var(--unit) * 8);
+    height: calc(100lvh - var(--unit) * 16);
     /* min-width: calc((100vw - ${CONTENT_PANEL_WIDTH_PX}px) / 2); */
     min-width: ${SIDE_PANEL_WIDTH_PX}px;
     
@@ -105,12 +105,12 @@ $LeftPanel {
 
 $RightPanel {
     grid-area: right;
-    /* padding-right: var(--unit-spacing-1); */
+    /* padding-right: var(--unit-1); */
     /* width: var(--right-panel-width); */
 }
 
 $LeftPanel {
-    /* padding-left: var(--unit-spacing-1); */
+    /* padding-left: var(--unit-1); */
 }
 
 ${KoalaBody.PortalMount},

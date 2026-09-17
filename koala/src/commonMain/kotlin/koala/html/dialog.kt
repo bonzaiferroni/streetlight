@@ -15,11 +15,11 @@ $Class {
     position: fixed;
     inset: 0;
 
-    margin: var(--unit-spacing-8) auto;
+    margin: var(--unit-8) auto;
     color: rgb(var(--ink));
     border: none;
     outline: none;
-    width: min(calc(100% - var(--unit-spacing-2)), var(--content-panel-width));
+    width: min(calc(100% - var(--unit-2)), var(--content-panel-width));
     background-color: transparent;
     scrollbar-width: none;
     
@@ -68,9 +68,9 @@ $Class[open]$Reveal::backdrop {
 }
 
 $Card {
-    border-radius: var(--unit-spacing-2);
+    border-radius: var(--unit-2);
     background-color: var(--dialog-bg);
-    padding: var(--unit-spacing-2);
+    padding: var(--unit-2);
     overflow-y: auto;
     max-height: 70vh;
 }

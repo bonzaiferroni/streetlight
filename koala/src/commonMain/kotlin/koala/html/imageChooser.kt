@@ -10,7 +10,7 @@ object ImageChooserKey {
 // language="CSS"
 val ImageChooserCss get() = """
 ${ImageChooserKey.Class} {
-    border-radius: var(--unit-spacing);
+    border-radius: var(--unit);
     position: relative;
 }
 

@@ -66,7 +66,7 @@
 
 .map-event-panel {
     display: grid;
-    gap: var(--unit-spacing);
+    gap: var(--unit);
     grid-template-columns: 1fr; /* small screens */
     align-items: start;
 }
@@ -86,7 +86,7 @@
     width: 100%;
     display: grid;
     grid-template-columns: 3rem 1fr 3rem 3rem;
-    gap: var(--unit-spacing);
+    gap: var(--unit);
 }
 
 .map-panel-card-heading {
@@ -97,14 +97,14 @@
 
 #map-focus-panel {
     position: absolute;
-    padding: var(--unit-spacing);
+    padding: var(--unit);
     width: 100%;
     bottom: 0;
 }
 
 #map-focus-panel > * {
-    max-width: calc(var(--unit-spacing) * 64);
-    max-height: calc(var(--unit-spacing) * 48);
+    max-width: calc(var(--unit) * 64);
+    max-height: calc(var(--unit) * 48);
     margin: 0 auto;
     z-index: 1;
 }

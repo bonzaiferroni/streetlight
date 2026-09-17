@@ -17,6 +17,6 @@ $Image {
 $Gallery {
     display: grid;
     grid-template-columns: repeat(var(${Property.ColumnCount.identifier}), minmax(0, 1fr));
-    gap: var(--unit-spacing-1);
+    gap: var(--unit-1);
 }
 """ }
