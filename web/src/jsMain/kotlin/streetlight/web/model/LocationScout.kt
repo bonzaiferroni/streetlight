@@ -134,6 +134,7 @@ class LocationScout(
     }
 
     fun postToGalaxy() {
+        println("galaxy id: ${galaxy?.galaxyId}")
         val galaxyId = galaxy?.galaxyId ?: return
         scope.launch {
             val location = submitLocation() ?: return@launch
