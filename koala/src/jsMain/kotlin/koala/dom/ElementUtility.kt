@@ -40,11 +40,8 @@ fun <T: Element> T.unmodify(modifier: Modifier): T {
     return this
 }
 
-inline val Element.style: CSSStyleDeclaration
-    get() = unsafeCast<HTMLElement>().style
-
-inline val ClassModifier.className: ClassName
-    get() = ClassName(identifier)
+inline val Element.style: CSSStyleDeclaration get() = unsafeCast<HTMLElement>().style
+inline val ClassModifier.className: ClassName get() = ClassName(identifier)
 
 fun <T: Element> T.trigger(modifier: ClassModifier): T {
     classList.remove(modifier.className)
