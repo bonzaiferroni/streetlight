@@ -12,13 +12,13 @@ data class InlineStyle<T: Any>(val property: Property<T>, val value: T): Modifie
     override fun toString() = "${property.identifier}: $stringValue"
 }
 
-val MinHeight = Property<String>("min-height", false)
-val Height = Property<String>("height", false)
-val Padding = Property<String>("padding", false)
-val Margin = Property<String>("margin", false)
-val Gap = Property<String>("gap", false)
-val MaxWidth = Property<String>("max-width", false)
-val BorderRadius = Property<String>("border-radius", false)
+val MinHeight = Property<String>("min-height")
+val Height = Property<String>("height")
+val Padding = Property<String>("padding")
+val Margin = Property<String>("margin")
+val Gap = Property<String>("gap")
+val MaxWidth = Property<String>("max-width")
+val BorderRadius = Property<String>("border-radius")
 
 operator fun Property<String>.invoke(value: Int) = to("calc(var(--unit) * $value)")
 operator fun Property<String>.invoke(value: LinearDimension) = to(value.value)

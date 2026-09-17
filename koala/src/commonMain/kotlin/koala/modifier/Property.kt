@@ -11,7 +11,7 @@ import kotlin.random.Random
 
 data class Property<T: Any>(
     val name: String,
-    val isCustom: Boolean = true,
+    val isCustom: Boolean = false,
     val valueToString: ((T) -> String)? = null,
 ): Unmodifier {
 
@@ -25,29 +25,29 @@ data class Property<T: Any>(
     override fun toString() = identifier
 
     companion object {
-        val AnchorName = Property<PositionAnchor>("anchor-name", false)
-        val PositionAnchor = Property<PositionAnchor>("position-anchor", false)
-        val Display = Property<Display>("display", false)
-        val Width = Property<LinearDimension>("width", false)
-        val Height = Property<LinearDimension>("height", false)
-        val ZIndex = Property<Int>("z-index", false)
-        val GridTemplateColumns = Property<GridTemplateColumns>("grid-template-columns", false)
-        val ViewTransitionName = Property<String>("view-transition-name", false)
-        val AspectRatio = Property<Float>("aspect-ratio", false)
-        val BackgroundColor = Property<String>("background-color", false)
-        val Top = Property<LinearDimension>("top", false)
-        val Left = Property<LinearDimension>("left", false)
-        val Margin = Property<String>("margin", false)
-        val BackgroundImage = Property<String>("background-image", false)
+        val AnchorName = Property<PositionAnchor>("anchor-name")
+        val PositionAnchor = Property<PositionAnchor>("position-anchor")
+        val Display = Property<Display>("display")
+        val Width = Property<LinearDimension>("width")
+        val Height = Property<LinearDimension>("height")
+        val ZIndex = Property<Int>("z-index")
+        val GridTemplateColumns = Property<GridTemplateColumns>("grid-template-columns")
+        val ViewTransitionName = Property<String>("view-transition-name")
+        val AspectRatio = Property<Float>("aspect-ratio")
+        val BackgroundColor = Property<String>("background-color")
+        val Top = Property<LinearDimension>("top")
+        val Left = Property<LinearDimension>("left")
+        val Margin = Property<String>("margin")
+        val BackgroundImage = Property<String>("background-image")
 
-        val MaskUrl = Property<Asset>("mask-url")
-        val ColorScheme = Property<String>("color-scheme")
-        val BackgroundUrl = Property<Url>("background-url")
-        val AnchorId = Property<PositionAnchor>("anchor-id")
-        val ContainerAnchorId = Property<PositionAnchor>("anchor-container-id")
-        val ColumnCount = Property<Int>("column-count")
-        val InlineImage = Property<Url>("inline-image")
-        val RandomSeed = Property<Number>("random-seed")
+        val MaskUrl = Property<Asset>("mask-url", true)
+        val ColorScheme = Property<String>("color-scheme", true)
+        val BackgroundUrl = Property<Url>("background-url", true)
+        val AnchorId = Property<PositionAnchor>("anchor-id", true)
+        val ContainerAnchorId = Property<PositionAnchor>("anchor-container-id", true)
+        val ColumnCount = Property<Int>("column-count", true)
+        val InlineImage = Property<Url>("inline-image", true)
+        val RandomSeed = Property<Number>("random-seed", true)
     }
 }
 

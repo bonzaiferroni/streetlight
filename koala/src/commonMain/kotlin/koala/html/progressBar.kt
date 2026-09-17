@@ -21,7 +21,7 @@ object ProgressBarStyle {
     val Container = Class("progress-bar")
     val Indicator = Container.withBemElement("indicator")
 
-    val Progress = Property<Number>("bar-progress")
+    val Progress = Property<Number>("bar-progress", true)
 }
 
 // language="CSS"

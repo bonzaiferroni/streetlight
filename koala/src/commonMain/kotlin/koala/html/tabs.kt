@@ -101,7 +101,7 @@ object TabsStyle {
 
     val Index = intAttributeOf("tab")
 
-    val IndexDelta = Property<Int>("index-delta")
+    val IndexDelta = Property<Int>("index-delta", true)
 }
 
 // language="CSS"

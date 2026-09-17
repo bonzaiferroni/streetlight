@@ -26,12 +26,12 @@ object MarkerStyle {
     val ClusterMember = Class("cluster-member")
     val MarkerGlow = Class("marker-glow")
 
-    val BodySize = Property<LinearDimension>("body-size")
-    val TwinkleDelay = Property<Time>("twinkle-delay")
-    val MarkerLight = Property<Color>("marker-light")
-    val MarkerSvg = Property<Asset>("marker-svg")
-    val MarkerBearing = Property<Angle>("marker-bearing")
-    val MarkerBorder = Property<Rgb>("marker-border")
+    val BodySize = Property<LinearDimension>("body-size", true)
+    val TwinkleDelay = Property<Time>("twinkle-delay", true)
+    val MarkerLight = Property<Color>("marker-light", true)
+    val MarkerSvg = Property<Asset>("marker-svg", true)
+    val MarkerBearing = Property<Angle>("marker-bearing", true)
+    val MarkerBorder = Property<Rgb>("marker-border", true)
 }
 
 // language="CSS"
