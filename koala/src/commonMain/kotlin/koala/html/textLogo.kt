@@ -1,19 +1,7 @@
 package koala.html
 
 import koala.SvgFile
-import koala.modifier.AccentFg
-import koala.modifier.AlignSelfCenter
-import koala.modifier.Class
-import koala.modifier.GlowBackground
-import koala.modifier.GlowShadow
-import koala.modifier.Height5
-import koala.modifier.Css
-import koala.modifier.ModifierSet
-import koala.modifier.MoonDropShadow
-import koala.modifier.PrimaryFg
-import koala.modifier.modify
-import koala.modifier.setAriaLabel
-import koala.modifier.setStyle
+import koala.modifier.*
 import kotlinx.html.FlowContent
 
 fun FlowContent.textLogo(
@@ -37,7 +25,7 @@ fun FlowContent.textLogo(
 
 fun FlowContent.topLogo() {
     navigation("/", modify(AlignSelfCenter)) {
-        textLogo(modify(Height5))
+        textLogo(modify(Height(5)))
     }
 }
 

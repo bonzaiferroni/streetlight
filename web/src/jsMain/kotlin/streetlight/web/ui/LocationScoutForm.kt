@@ -14,7 +14,7 @@ fun ViewScope.locationFinder(model: LocationScout) = formCard("Location Finder")
         formSection("search") {
             row {
                 textField(model.queryField, "search", modify(Flex1))
-                textField(model.cityField, "city", modify(Width24))
+                textField(model.cityField, "city", modify(Width(24)))
             }
             formText("Don't see the location in the list? Try a power search with OpenStreetMap.", modify(MarginTop1))
             formSubmit("Search OSM", model::queryOSM, model.queryMessage, modify(Primary))
@@ -22,7 +22,7 @@ fun ViewScope.locationFinder(model: LocationScout) = formCard("Location Finder")
         formSection("locations") {
             selectionBlock(
                 items = model.locationsState, selection = model.selectionState,
-                modifiers = modify(modify(Height32, OverflowYAuto, ZenBg, Outline, BorderRadius1, Padding1, TextSmall)),
+                modifiers = modify(modify(Height(32), OverflowYAuto, ZenBg, Outline, BorderRadius1, Padding1, TextSmall)),
                 emptyText = "Start typing in the search box to see locations",
             ) { location ->
                 searchItem(location.name, location.address, location.city)
@@ -47,7 +47,7 @@ private fun ViewScope.searchItem(
     address: String?,
     city: String?,
 ) = row(modify(AlignItemsCenter)) {
-    icon(SvgFile.MapPinLarge, modify(Height5, ColorSchemeFg))
+    icon(SvgFile.MapPinLarge, modify(Height(5), ColorSchemeFg))
     column(modify(Flex1, Gap0)) {
         textBlock(name ?: "a location", modify(Bold))
         spacer(modify(Height2Px, InkGradientBg))
@@ -56,7 +56,7 @@ private fun ViewScope.searchItem(
         }
     }
     city?.let {
-        icon(SvgFile.City, modify(Height3, ColorSchemeFg))
-        textBlock(it, modify(OpacityHigh, Width16))
+        icon(SvgFile.City, modify(Height(3), ColorSchemeFg))
+        textBlock(it, modify(OpacityHigh, Width(16)))
     }
 }

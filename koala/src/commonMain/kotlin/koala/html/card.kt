@@ -2,6 +2,7 @@ package koala.html
 
 import kampfire.model.Url
 import koala.modifier.*
+import kotlinx.css.pct
 import kotlinx.html.DIV
 
 import kotlinx.html.FlowContent
@@ -23,12 +24,12 @@ fun FlowContent.cardOf(
     description: String?,
     modifiers: ModifierSet? = null,
 ) {
-    card(modify(Width100Pct, modifiers)) {
-        row(modify(Height8, AlignItemsStart)) {
+    card(modify(Width(100.pct), modifiers)) {
+        row(modify(Height(8), AlignItemsStart)) {
             thumbUrl?.let {
-                image(thumbUrl, modify(Height100Pct, Aspect1, BorderRadius1))
+                image(thumbUrl, modify(Height(100.pct), Aspect1, BorderRadius1))
             }
-            column(modify(Flex1, Gap0, Height100Pct)) {
+            column(modify(Flex1, Gap(0), Height(100.pct))) {
                 heading5(title)
                 description?.let {
                     textBlock(description, modify(Flex1, OverflowHidden))

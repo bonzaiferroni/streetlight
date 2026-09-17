@@ -17,11 +17,11 @@ import streetlight.web.pages.appHeader
 
 fun FlowContent.homeShell(content: HomeContent) {
     column(modify(MarginTop1)) {
-        appHeader(modify(Height10))
+        appHeader(modify(Height(10)))
 
-        geoMapMount(null, modify(BorderRadius2, Height48, MoonShadow, BorderSolid2Px))
+        geoMapMount(null, modify(BorderRadius2, Height(48), MoonShadow, BorderSolid2Px))
         box {
-            column(modify(Gap8)) {
+            column(modify(Gap(8))) {
                 row(modify(JustifyContentSpaceBetween)) {
                     galaxyMenu()
                     createPostMenu(null)
@@ -47,7 +47,7 @@ fun FlowContent.galaxiesSection(galaxies: List<Galaxy>) {
             heading2("Galaxies", SectionHeadingMod)
             textBlock(
                 content = "Galaxies are Streetlight communities, each with a particular focus.",
-                mod = modify(Dim, TextAlignCenter)
+                mod = modify(InkDimFg, TextAlignCenter)
             )
         }
 
@@ -70,7 +70,7 @@ fun FlowContent.galaxiesSection(galaxies: List<Galaxy>) {
                     heading4("Featured Galaxies", subHeadingMods)
                 }
                 row(modify(Flex1, AlignItemsCenter, JustifyContentCenter)) {
-                    lottie(LottieFile.dinoLoad, modify(Width32, Aspect1))
+                    lottie(LottieFile.dinoLoad, modify(Width(32), Aspect1))
                 }
             }
         }

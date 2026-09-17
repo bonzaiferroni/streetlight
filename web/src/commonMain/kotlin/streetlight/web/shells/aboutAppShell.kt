@@ -9,19 +9,20 @@ import koala.modifier.*
 import koala.html.column
 import koala.html.heading1
 import koala.html.lottie
+import kotlinx.css.pct
 import streetlight.web.pages.appFooter
 
 fun FlowContent.aboutAppShell() {
     column(modify(AlignItemsCenter)) {
         heading1("About Streetlight")
         column(modify(MediaMdRow, AlignItemsCenter)) {
-            lottie(LottieFile.cupShuffle, modify(Flex1, MaxWidth50P))
+            lottie(LottieFile.cupShuffle, modify(Flex1, MaxWidth(50.pct)))
             val introText = "Streetlight is your front page for community events. " +
                     "It is cross-platform, open-source, and 100% Kotlin. "
             textBlock(introText, modify(Flex3, TextLarge))
         }
         column(modify(MediaMdRow, AlignItemsCenter)) {
-            lottie(LottieFile.StrollingMan, modify(Flex1, MaxWidth50P))
+            lottie(LottieFile.StrollingMan, modify(Flex1, MaxWidth(50.pct)))
             column(modify(Flex3)) {
                 column(modify(Gap0)) {
                     textBlock("Do you have a talent to share with passersby?")
@@ -32,7 +33,7 @@ fun FlowContent.aboutAppShell() {
             }
         }
         column(modify(MediaMdRow, AlignItemsCenter)) {
-            lottie(LottieFile.Cat, modify(Flex1, MaxWidth50P))
+            lottie(LottieFile.Cat, modify(Flex1, MaxWidth(50.pct)))
             column(modify(Flex3)) {
                 textBlock {
                     externalLink("https://github.com/bonzaiferroni/streetlight", "Streetlight")
@@ -55,7 +56,7 @@ fun FlowContent.aboutAppShell() {
                 textBlock("It's giants all the way down.", modify(TextLarge))
             }
         }
-        column(modify(Gap0, AlignItemsStretch, Width100Pct, MarginTop4)) {
+        column(modify(Gap0, AlignItemsStretch, Width(100.pct), MarginTop4)) {
             heading5("Our Giants", modify(TextAlignCenter))
             githubLink("web", "kotlinx.html", "Kotlin")
             githubLink("app client", "Compose Multiplatform", "jetbrains", "compose-multiplatform")

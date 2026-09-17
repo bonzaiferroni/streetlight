@@ -30,17 +30,17 @@ inline fun <reified State> ViewScope.stageBlock(
                         value.ordinal < currentOrdinal -> {
                             element.modify(Clickable)
                             element.unmodify(Selected)
-                            element.unmodify(Dim)
+                            element.unmodify(InkDimFg)
                         }
                         value.ordinal == currentOrdinal -> {
                             element.unmodify(Clickable)
                             element.modify(Selected)
-                            element.unmodify(Dim)
+                            element.unmodify(InkDimFg)
                         }
                         value.ordinal > currentOrdinal -> {
                             element.unmodify(Clickable)
                             element.unmodify(Selected)
-                            element.modify(Dim)
+                            element.modify(InkDimFg)
                         }
                     }
                 }
@@ -50,7 +50,7 @@ inline fun <reified State> ViewScope.stageBlock(
     }
 
     val element = column {
-        addModifiers(mod, Gap4)
+        addModifiers(mod, Gap(4))
         row(modify(JustifyContentCenter, AlignItemsCenter)) {
             var step = 1
             entries.forEach { value ->
@@ -63,7 +63,7 @@ inline fun <reified State> ViewScope.stageBlock(
                     selectElement(value)
                 }
                 if (value.ordinal < entries.size - 1) {
-                    icon(SvgFile.ArrowRight, modify(Height3, Dim))
+                    icon(SvgFile.ArrowRight, modify(SmallIconHeight, InkDimFg))
                 }
             }
         }

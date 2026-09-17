@@ -7,6 +7,7 @@ import koala.html.*
 import kotlinx.html.*
 import streetlight.model.data.*
 import koala.modifier.*
+import kotlinx.css.pct
 
 fun HTML.eventSignUp(event: Event, resource: PageResource) {
     appHead("Sign Up | ${event.title}", resource) {
@@ -28,7 +29,7 @@ fun HTML.eventSignUp(event: Event, resource: PageResource) {
                     textBlock("yes please")
                 }
             }
-            column(Id("sign-up-box"), modify(Width100Pct)) {
+            column(Id("sign-up-box"), modify(Width(100.pct))) {
                 column(Id("guest-details"), modify(DisplayNone)) {
                     textField(id = Id("name"), label = "Your name")
                     textField(id = Id("email"), label = "Email")

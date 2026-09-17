@@ -1,6 +1,7 @@
 package koala.html
 
 import koala.modifier.*
+import kotlinx.css.pct
 import kotlinx.html.FlowContent
 
 fun FlowContent.routeMenu(
@@ -11,11 +12,11 @@ fun FlowContent.routeMenu(
     leftIcons: List<IconRoute>? = null,
     rightIcons: List<IconRoute>? = null
 ) {
-    column(modify(mod, RouteMenu.Base, TextUppercase, TextSmall, Gap0, AlignItemsCenter)) {
+    column(modify(mod, RouteMenu.Base, TextUppercase, TextSmall, Gap(0), AlignItemsCenter)) {
         filigree(modify(AlignSelfStretch)) {
             textBlock(context, modify(PrimaryFg))
         }
-        row(modify(RouteMenu.ContextMenu, Gap0, Padding1, Bold, AlignItemsCenter, BorderSolid2Px)) {
+        row(modify(RouteMenu.ContextMenu, Gap(0), Padding1, Bold, AlignItemsCenter, BorderSolid2Px)) {
             leftIcons?.let { icons ->
                 iconsTray(icons, routeNow, modify(RouteMenu.LeftTray))
             }
@@ -45,8 +46,8 @@ internal fun FlowContent.iconsTray(
 }
 
 internal fun FlowContent.iconRoute(icon: IconRoute, routeNow: AppRoute) {
-    navigation(icon.route, modify(Height3, RouteMenu.Route, icon.route.routeNowMod(routeNow))) {
-        icon(icon.svg, modify(Height100Pct))
+    navigation(icon.route, modify(Height(3), RouteMenu.Route, icon.route.routeNowMod(routeNow))) {
+        icon(icon.svg, modify(Height(100.pct)))
     }
 }
 

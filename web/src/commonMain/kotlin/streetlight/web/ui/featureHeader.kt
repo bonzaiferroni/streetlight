@@ -2,35 +2,7 @@ package streetlight.web.ui
 
 import kampfire.api.Markdown
 import koala.Image
-import koala.modifier.AlignItemsStart
-import koala.modifier.BorderSolid2Px
-import koala.modifier.ContainerMdRow
-import koala.modifier.Flex4
-import koala.modifier.FlexBasisMin
-import koala.modifier.FlexItems1
-import koala.modifier.FlexWrap
-import koala.modifier.FocusTarget
-import koala.modifier.Gap0
-import koala.modifier.Gap4
-import koala.modifier.Italic
-import koala.modifier.JustifyContentCenter
-import koala.modifier.LineHeight1
-import koala.modifier.MinWidth0
-import koala.modifier.ModifierSet
-import koala.modifier.MoonShadow
-import koala.modifier.OpacityHalf
-import koala.modifier.OpacityHigh
-import koala.modifier.OverflowClip
-import koala.modifier.Padding0
-import koala.modifier.Padding2
-import koala.modifier.Padding4
-import koala.modifier.QueryContainer
-import koala.modifier.TextAlignCenter
-import koala.modifier.VignetteOver
-import koala.modifier.Zen
-import koala.modifier.ZenBg
-import koala.modifier.modify
-import koala.modifier.setStyle
+import koala.modifier.*
 import koala.html.AppRoute
 import koala.html.btn
 import koala.html.card
@@ -69,7 +41,7 @@ fun FlowContent.featureHeader(
         column(modify(ContainerMdRow, FlexItems1, Gap0)) {
             // image
             image?.let {
-                metaImage(image, modify(VignetteOver, MinWidth0))
+                metaImage(image, modify(VignetteOver, MinWidth(0)))
             }
 
             // title panel
@@ -90,7 +62,7 @@ fun FlowContent.featureHeader(
         }
 
         if (description != null || links != null ) {
-            column(modify(ContainerMdRow, Padding4, Gap4, AlignItemsStart)) {
+            column(modify(ContainerMdRow, Padding4, Gap(4), AlignItemsStart)) {
 
                 // description
                 description?.let {

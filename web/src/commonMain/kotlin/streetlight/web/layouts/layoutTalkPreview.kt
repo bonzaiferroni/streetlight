@@ -21,7 +21,7 @@ fun FlowContent.layoutTalkPreview(route: AppRoute, comments: List<Comment>) {
         val children = comments.filter { it.parentId == comment.commentId }
 
         column {
-            row(modify(AlignItemsCenter, modify(Height5))) {
+            row(modify(AlignItemsCenter, modify(Height(5)))) {
                 navigationIfNotNull(comment.username?.let { StarRoute(it)}) {
                     row(modify(AlignItemsCenter)) {
                         image(comment.thumb, modify(Aspect1))
@@ -60,7 +60,7 @@ fun FlowContent.layoutTalkPreview(route: AppRoute, comments: List<Comment>) {
             layoutComment(it)
         }
         navigation(route) {
-            column(modify(AlignItemsCenter, JustifyContentCenter, Height12)) {
+            column(modify(AlignItemsCenter, JustifyContentCenter, Height(12))) {
                 textBlock("No comments here yet, be the first.", modify(OpacityHigh))
             }
         }

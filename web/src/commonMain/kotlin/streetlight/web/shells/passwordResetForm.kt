@@ -2,11 +2,8 @@ package streetlight.web.shells
 
 import kampfire.model.Token
 import koala.PageResource
-import koala.modifier.AlignItemsCenter
-import koala.modifier.Flex1
+import koala.modifier.*
 import koala.interop.JsSignature
-import koala.modifier.MaxWidth48
-import koala.modifier.MaxWidth64
 import koala.modifier.modify
 import koala.html.Id
 import koala.html.button
@@ -21,8 +18,8 @@ import kotlinx.html.InputType
 import kotlinx.html.onClick
 
 fun FlowContent.passwordResetForm(token: Token, resource: PageResource) {
-    column(modify(MaxWidth64)) {
-        column(modify(MaxWidth48)) {
+    column(modify(MaxWidth(64))) {
+        column(modify(MaxWidth(48))) {
             textField("password", id = PasswordResetForm.PasswordId) {
                 type = InputType.password
             }

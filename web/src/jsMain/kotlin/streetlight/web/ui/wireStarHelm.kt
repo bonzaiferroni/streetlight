@@ -103,7 +103,7 @@ private fun ViewScope.routeItem(route: AppRoute, text: String, svg: Svg) {
 }
 
 private fun ViewScope.someonePanel() {
-    column(modify(MinWidth32)) {
+    column(modify(MinWidth(32))) {
         row(RowMod) {
             heading3("Someone")
             button(modify(HelmBar.IconMod, FadeLoop)) {

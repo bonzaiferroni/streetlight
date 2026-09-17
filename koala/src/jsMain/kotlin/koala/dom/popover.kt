@@ -1,20 +1,11 @@
 package koala.dom
 
-import koala.modifier.MinWidth16
-import koala.modifier.ModifierSet
-import koala.modifier.OpacityHigh
-import koala.modifier.Padding1
-import koala.modifier.PositionAnchor
-import koala.modifier.TextAlignCenter
-import koala.modifier.TextSmall
-import koala.modifier.TextUppercase
-import koala.modifier.Width100Pct
-import koala.modifier.append
-import koala.modifier.modify
+import koala.modifier.*
 import koala.html.AppRoute
 import koala.html.Id
 import koala.html.Popover
 import koala.html.configurePopover
+import kotlinx.css.pct
 import kotlinx.html.DIV
 import kotlinx.html.js.div
 import web.dom.Element
@@ -63,15 +54,15 @@ fun AppendScope.popoverLabel(label: String) = textBlock(
 )
 
 fun AppendScope.popoverOption(label: String, mod: ModifierSet? = null, onClick: () -> Unit) =
-    button(onClick, mod = modify(mod, Padding1, MinWidth16)) {
-        textBlock(label, modify(TextAlignCenter, Width100Pct))
+    button(onClick, mod = modify(mod, Padding1, MinWidth(16))) {
+        textBlock(label, modify(TextAlignCenter, Width(100.pct)))
     }
 
 fun AppendScope.popoverOption(option: MenuAction) = popoverOption(option.label, option.mod, option.onClick)
 
 fun AppendScope.popoverOption(route: AppRoute, label: String = route.label, mod: ModifierSet? = null) =
-    navigation(route, mod = modify(mod, Padding1, MinWidth16)) {
-        textBlock(label, modify(TextAlignCenter, Width100Pct))
+    navigation(route, mod = modify(mod, Padding1, MinWidth(16))) {
+        textBlock(label, modify(TextAlignCenter, Width(100.pct)))
     }
 
 fun AppendScope.popoverOption(option: MenuRoute) =

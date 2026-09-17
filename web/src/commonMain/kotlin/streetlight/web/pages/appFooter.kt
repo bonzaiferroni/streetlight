@@ -24,7 +24,7 @@ fun FlowContent.appFooter(sourcePath: String? = null) {
 
 fun DIV.configureAppFooter(sourcePath: String?, vararg additional: ExtraLink) {
     addModifiers(modify(JustifyContentCenter, AlignItemsCenter, Gap0, MarginBottom16))
-    lottie(LottieFile.SpinningCircles, modify(Height24))
+    lottie(LottieFile.SpinningCircles, modify(Height(24)))
     textBlock(prayers.random(), modify(Italic, OpacityHigh))
     row(modify(JustifyContentCenter)) {
         navigation(SiteDoc.About.route) {
@@ -44,7 +44,7 @@ fun DIV.configureAppFooter(sourcePath: String?, vararg additional: ExtraLink) {
             navigation(sourceUrlOf(sourcePath)) {
                 column(modify(Gap0)) {
                     filigree {
-                        icon(SvgFile.Github, modify(Height4))
+                        icon(SvgFile.Github, modify(Height(4)))
                     }
                     textBlock("source code for this content")
                 }

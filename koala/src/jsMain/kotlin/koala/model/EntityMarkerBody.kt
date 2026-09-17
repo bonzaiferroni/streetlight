@@ -73,7 +73,7 @@ internal fun AppendScope.configureIconMarker(marker: IconMarker): EntityMarkerBo
             }
 
             box(modify(MarkerStyle.Icon)) {
-                icon(marker.svg, modify(Height3, PlaceSelfCenter, ColorSchemeFg))
+                icon(marker.svg, modify(SmallIconHeight, PlaceSelfCenter, ColorSchemeFg))
                 box(modify(MarkerStyle.ClusterCount)) {
                     clusterElement = textBlock(mod = modify(PlaceSelfCenter, TextLarge, Bold, NightInk, TextShadow))
                 }

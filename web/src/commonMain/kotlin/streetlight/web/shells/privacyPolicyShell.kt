@@ -9,7 +9,7 @@ import kotlinx.html.FlowContent
 import streetlight.web.pages.appFooter
 
 fun FlowContent.privacyPolicyShell() {
-    column(PrivacyPolicyKey.id, modify(Gap8)) {
+    column(PrivacyPolicyKey.id, modify(Gap(8))) {
         section {
             filigree {
                 heading1("Privacy on Streetlight", modify(Shrinkable))

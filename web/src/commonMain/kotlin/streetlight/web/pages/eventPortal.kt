@@ -7,6 +7,7 @@ import koala.html.*
 import kotlinx.html.*
 import streetlight.model.data.*
 import koala.modifier.*
+import kotlinx.css.LinearDimension
 
 fun HTML.eventPortal(event: Event, performer: Performer?, requestItems: List<RequestItem>, resource: PageResource) {
     appHead(event.title, resource) {
@@ -24,7 +25,7 @@ fun HTML.eventPortal(event: Event, performer: Performer?, requestItems: List<Req
             }
             spacer()
             heading1(event.title)
-            column(modify(Gap0, WidthAuto)) {
+            column(modify(Gap0, Width(LinearDimension.auto))) {
                 textProperty("performer", "Luke Bollwerk")
                 textProperty("instagram") {
                     a("https://www.instagram.com/trespasserswilliam/") {
@@ -32,7 +33,7 @@ fun HTML.eventPortal(event: Event, performer: Performer?, requestItems: List<Req
                     }
                 }
             }
-            tabs(Id("event-portal-tabs"), modify(Width64)) {
+            tabs(Id("event-portal-tabs"), modify(Width(64))) {
                 tab("bio") {
                     textBlock("yer bio")
                 }
@@ -62,8 +63,8 @@ fun HTML.eventPortal(event: Event, performer: Performer?, requestItems: List<Req
 
         }
         column(Id("tips-box"), modify(AlignItemsCenter)) {
-            row(modify(AlignItemsCenter, WidthAuto)) {
-                row(modify(WidthAuto)) {
+            row(modify(AlignItemsCenter, Width(LinearDimension.auto))) {
+                row(modify(Width(LinearDimension.auto))) {
                     heading3("Venmo:", modify(OpacityHigh))
                     a("https://venmo.com/colfaxband?txn=pay&note=street+music") {
                         heading3("@colfaxband", modify(GlowShadow))
@@ -96,11 +97,11 @@ fun FlowContent.requestItem(
         onClick = invoke("startRequest", song.songId.value.toString())
 
         row(modify(Flex1)) {
-            column(modify(Flex1, Gap0, WidthAuto)) {
+            column(modify(Flex1, Gap0, Width(LinearDimension.auto))) {
                 textBlock(song.title, modify(Bold))
                 textBlock(song.artist)
             }
-            column(modify(Gap0, AlignItemsCenter, WidthAuto)) {
+            column(modify(Gap0, AlignItemsCenter, Width(LinearDimension.auto))) {
                 textBlock("plays", modify(OpacityHigh))
                 textBlock(plays.toString())
             }

@@ -24,8 +24,8 @@ fun FlowContent.largePostCard(
 
             // non-grid content
             column(modify(Flex3, ContainerMdRow, Gap0)) {
-                featureImage(image, modify(Flex1, MinHeight24))
-                column(modify(Flex2, Padding1, Height24, MaxHeight24)) {
+                featureImage(image, modify(Flex1, MinHeight(24)))
+                column(modify(Flex2, Padding1, Height(24), MaxHeight(24))) {
                     row {
                         column(modify(Flex1, Gap0)) {
                             navigation(postRoute) {
@@ -33,7 +33,7 @@ fun FlowContent.largePostCard(
                             }
 
                             subtitle?.let {
-                                fun FlowContent.showSubtitle() = textBlock(subtitle, modify(Dim))
+                                fun FlowContent.showSubtitle() = textBlock(subtitle, modify(InkDimFg))
                                 when (subRoute) {
                                     null -> showSubtitle()
                                     else -> navigation(subRoute) { showSubtitle() }
@@ -57,7 +57,7 @@ fun FlowContent.largePostCard(
 
             if (cells.isNotEmpty()) {
                 // grid content
-                row(modify(Flex1, ContainerLgColumn, MinHeight8, FlexItems1, Gap2Px, TextAlignCenter, FlexWrap, MoonShadow)) {
+                row(modify(Flex1, ContainerLgColumn, MinHeight(8), FlexItems1, Gap2Px, TextAlignCenter, FlexWrap, MoonShadow)) {
                     cells.forEach {
                         val cell = it ?: return@forEach
                         cell {

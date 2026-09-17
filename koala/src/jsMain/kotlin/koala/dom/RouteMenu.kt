@@ -10,6 +10,7 @@ import koala.html.textBlock
 import koala.html.IconAction
 import koala.html.IconButton
 import koala.html.IconRoute
+import kotlinx.css.pct
 
 fun ViewScope.routeMenu(
     context: String,
@@ -19,11 +20,11 @@ fun ViewScope.routeMenu(
     leftIcons: List<IconButton>? = null,
     rightIcons: List<IconButton>? = null,
 ) {
-    column(modify(mod, RouteMenu.Base, TextUppercase, TextSmall, Gap0, AlignItemsCenter)) {
+    column(modify(mod, RouteMenu.Base, TextUppercase, TextSmall, Gap(0), AlignItemsCenter)) {
         filigree(modify(AlignSelfStretch)) {
             textBlock(context)
         }
-        row(modify(RouteMenu.ContextMenu, Gap0, TextUppercase, TextSmall, Padding1, Bold, BorderSolid2Px)) {
+        row(modify(RouteMenu.ContextMenu, Gap(0), TextUppercase, TextSmall, Padding1, Bold, BorderSolid2Px)) {
             leftIcons?.let { icons ->
                 iconsTray(icons, modify(RouteMenu.LeftTray))
             }
@@ -48,9 +49,9 @@ internal fun ViewScope.iconsTray(
     row(modify(mod, BorderSolid2Px)) {
         icons.forEach { icon ->
             when (icon) {
-                is IconAction -> icon(icon.svg, modify(Height3)).onClick(icon.action)
-                is IconRoute -> navigation(icon.route, modify(Height3)) {
-                    icon(icon.svg, modify(Height100Pct))
+                is IconAction -> icon(icon.svg, modify(SmallIconHeight)).onClick(icon.action)
+                is IconRoute -> navigation(icon.route, modify(SmallIconHeight)) {
+                    icon(icon.svg, modify(Height(100.pct)))
                 }
             }
         }

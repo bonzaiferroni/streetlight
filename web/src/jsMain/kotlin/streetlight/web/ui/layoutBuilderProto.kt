@@ -1,12 +1,7 @@
 package streetlight.web.ui
 
 import koala.SvgFile
-import koala.modifier.AlignItemsCenter
-import koala.modifier.Flex1
-import koala.modifier.Height5
-import koala.modifier.JustifyContentEnd
-import koala.modifier.Zen
-import koala.modifier.modify
+import koala.modifier.*
 import koala.dom.ViewScope
 import koala.dom.box
 import koala.dom.button
@@ -78,7 +73,7 @@ fun ViewScope.tabsBuilder(tabsField: MutableTap<TabsBlock>) {
             column {
                 tabNames.forEach { tabName ->
                     val isEditingField = storeOf(false)
-                    flowBlock(isEditingField, modify(Height5)) { isEditing ->
+                    flowBlock(isEditingField, modify(Height(5))) { isEditing ->
                         if (isEditing) {
                             val tabNameField = storeOf(tabName)
                             textField(tabNameField, onEnterSubmit = {
@@ -87,7 +82,7 @@ fun ViewScope.tabsBuilder(tabsField: MutableTap<TabsBlock>) {
                                 })}
                             })
                         } else {
-                            row(modify(AlignItemsCenter, Height5)) {
+                            row(modify(AlignItemsCenter, Height(5))) {
                                 textBlock(tabName, modify(Flex1))
                                 button(SvgFile.Edit, { isEditingField.toggle() })
                                 button(SvgFile.Minus, {

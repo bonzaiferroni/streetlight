@@ -23,7 +23,7 @@ fun ViewScope.introSection(
             }
             lottie?.let {
                 row(modify(Flex1, JustifyContentCenter)) {
-                    lottie(it, modify(MaxHeight32))
+                    lottie(it, modify(MaxHeight(32)))
                 }
             }
         }

@@ -49,7 +49,7 @@ fun ViewScope.blockBuilder(
 }
 
 fun ViewScope.buildContentBlock(type: BlockType) {
-    box(modify(Outline, BorderRadius1, ZenBg, Height48)) {
+    box(modify(Outline, BorderRadius1, ZenBg, Height(48))) {
         textBlock("${type.label} content", modify(TextUppercase, TextSmall, OpacityHigh, PlaceSelfCenter))
     }
 }
@@ -63,14 +63,14 @@ fun ViewScope.tabsBuilder(editor: BlockEditor) {
                     editor.childIds.forEach { containerId ->
                         val tabName = editor.model.getContainer(containerId).name
                         val isEditingField = storeOf(false)
-                        flowBlock(isEditingField, modify(Height5)) { isEditing ->
+                        flowBlock(isEditingField, modify(Height(5))) { isEditing ->
                             if (isEditing) {
                                 val tabNameField = storeOf(tabName)
                                 textField(tabNameField, onEnterSubmit = {
                                     editor.renameContainer(containerId, tabNameField.now)
                                 })
                             } else {
-                                row(modify(AlignItemsCenter, Height5)) {
+                                row(modify(AlignItemsCenter, Height(5))) {
                                     textBlock(tabName, modify(Flex1))
                                     button(SvgFile.Edit, { isEditingField.toggle() })
                                     button(SvgFile.Minus, {

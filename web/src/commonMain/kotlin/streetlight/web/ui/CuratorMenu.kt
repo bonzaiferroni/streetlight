@@ -2,37 +2,7 @@ package streetlight.web.ui
 
 import kabinet.utils.toMetricString
 import koala.SvgFile
-import koala.modifier.AlignItemsCenter
-import koala.modifier.BorderRadius50P
-import koala.modifier.BorderRadiusPill
-import koala.modifier.CardBg
-import koala.modifier.Class
-import koala.modifier.Flex1
-import koala.modifier.FlexColumn
-import koala.modifier.Gap0
-import koala.modifier.Gap2Px
-import koala.modifier.Height2
-import koala.modifier.Height3
-import koala.modifier.HoverBg
-import koala.modifier.JustifyContentCenter
-import koala.modifier.MinWidth6
-import koala.modifier.MoonShadow
-import koala.modifier.OpacityHigh
-import koala.modifier.OpacityLow
-import koala.modifier.Outline
-import koala.modifier.OverflowClip
-import koala.modifier.PaddingX2
-import koala.modifier.PointerEventsAuto
-import koala.modifier.PointerEventsNone
-import koala.modifier.TextAlignCenter
-import koala.modifier.TextSmall
-import koala.modifier.VoidBg
-import koala.modifier.Width10
-import koala.modifier.ZIndex1
-import koala.modifier.ZenBg
-import koala.modifier.addModifiers
-import koala.modifier.modify
-import koala.modifier.Attribute
+import koala.modifier.*
 import koala.html.box
 import koala.html.button
 import koala.html.column
@@ -88,7 +58,7 @@ fun FlowContent.curatorBadge(curator: CuratorStatus) {
 fun FlowContent.polarBadge(curator: CuratorStatus) {
     val upMark = curator.marks.first { it.lean.value > 0 }
     val downMark = curator.marks.first { it.lean.value < 0 }
-    box(modify(Width10, BorderRadius50P, Outline, MoonShadow, OverflowClip, CardBg, OpacityHigh)) {
+    box(modify(Width(10), BorderRadius50P, Outline, MoonShadow, OverflowClip, CardBg, OpacityHigh)) {
         column(modify(Gap0)) {
             button(modify(Flex1, HoverBg)) {
                 configureMarkButton(upMark)
@@ -101,16 +71,16 @@ fun FlowContent.polarBadge(curator: CuratorStatus) {
             }
         }
         column(modify(Gap0, AlignItemsCenter, JustifyContentCenter, ZIndex1, PointerEventsNone)) {
-            icon(SvgFile.ChevronUp, modify(Height3)) {
+            icon(SvgFile.ChevronUp, modify(Height(3))) {
                 configMarkIndicator(upMark)
             }
-            button(modify(Height3, MinWidth6, FlexColumn, JustifyContentCenter, VoidBg, BorderRadiusPill, PointerEventsAuto, Outline)) {
+            button(modify(Height(3), MinWidth(6), FlexColumn, JustifyContentCenter, VoidBg, BorderRadiusPill, PointerEventsAuto, Outline)) {
                 setPopoverTarget(PopoverId.Curator)
                 textBlock(mod = modify(TextAlignCenter, TextSmall)) {
                     configurePostLeanText(curator)
                 }
             }
-            icon(SvgFile.ChevronDown, modify(Height3)) {
+            icon(SvgFile.ChevronDown, modify(Height(3))) {
                 configMarkIndicator(downMark)
             }
         }
@@ -146,20 +116,20 @@ fun FlowContent.multiBadge(curator: CuratorStatus) {
     button {
         setJsonData(CuratorMenu.CuratorJson, curator)
         setPopoverTarget(PopoverId.Curator)
-        column(modify(Width10, BorderRadius50P, Outline, ZenBg, MoonShadow, AlignItemsCenter, JustifyContentCenter, Gap2Px, OverflowClip)) {
-            icon(SvgFile.Flame, modify(Height2, OpacityLow))
+        column(modify(Width(10), BorderRadius50P, Outline, ZenBg, MoonShadow, AlignItemsCenter, JustifyContentCenter, Gap2Px, OverflowClip)) {
+            icon(SvgFile.Flame, modify(Height(2), OpacityLow))
             textBlock(curator.postLean.toMetricString(), modify(PaddingX2, VoidBg, BorderRadiusPill))
-            icon(SvgFile.ArrowsSort, modify(Height2, OpacityLow))
+            icon(SvgFile.ArrowsSort, modify(Height(2), OpacityLow))
         }
     }
 }
 
 fun FlowContent.singleBadge(curator: CuratorStatus) {
     button {
-        column(modify(Width10, BorderRadius50P, Outline, ZenBg, MoonShadow, AlignItemsCenter, JustifyContentCenter, Gap2Px, OverflowClip)) {
-            icon(SvgFile.Flame, modify(Height2, OpacityLow))
+        column(modify(Width(10), BorderRadius50P, Outline, ZenBg, MoonShadow, AlignItemsCenter, JustifyContentCenter, Gap2Px, OverflowClip)) {
+            icon(SvgFile.Flame, modify(Height(2), OpacityLow))
             textBlock(curator.postLean.toMetricString(), modify(PaddingX2, VoidBg, BorderRadiusPill))
-            icon(SvgFile.ChevronUp, modify(Height2, OpacityLow))
+            icon(SvgFile.ChevronUp, modify(Height(2), OpacityLow))
         }
     }
 }

@@ -19,7 +19,7 @@ import kotlinx.html.SECTION
 fun ViewScope.formColumn(
     mod: ModifierSet? = null,
     content: DIV.() -> Unit,
-) = column(mod = modify(mod, Gap2), content = content)
+) = column(mod = modify(mod, Gap(2)), content = content)
 
 fun ViewScope.formCard(
     name: String?,
@@ -31,7 +31,7 @@ fun ViewScope.formCard(
             heading3(name)
         }
     }
-    card(modify(ZenBg, Gap2, Outline, Padding2)) {
+    card(modify(ZenBg, Gap(2), Outline, Padding2)) {
         content()
     }
 }
@@ -54,7 +54,7 @@ fun ViewScope.formRow(
 
 fun ViewScope.formHeading(
     text: String
-) = filigree(ruleMaxWidth = MaxWidth32) {
+) = filigree(ruleMaxWidth = MaxWidth(32)) {
     heading4(text, modify(SystemFg))
 }
 
@@ -124,4 +124,4 @@ fun ViewScope.formTextField(
 
 fun ViewScope.formFiller(
     lottie: Lottie
-) = lottie(lottie, modify(MaxHeight16))
+) = lottie(lottie, modify(MaxHeight(16)))

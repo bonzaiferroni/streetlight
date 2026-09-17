@@ -53,11 +53,11 @@ fun DIV.configureFeedRow(
 
     div(modify(FeedRow.Content)) {
         setStyle(Css.ColorScheme.of(colorScheme.cssValue))
-        row(modify(Height10)) {
-            navigationIfNotNull(postRoute, modify(Width10, OverflowClip, BorderRadius1, BorderSolid2Px, MoonShadow)) {
+        row(modify(Height(10))) {
+            navigationIfNotNull(postRoute, modify(Width(10), OverflowClip, BorderRadius1, BorderSolid2Px, MoonShadow)) {
                 image(imageUrl, modify(Size100P, ObjectFitCover))
             }
-            column(modify(Flex1, Gap0, JustifyContentCenter, AlignItemsCenter, TextShadow)) {
+            column(modify(Flex1, Gap(0), JustifyContentCenter, AlignItemsCenter, TextShadow)) {
                 navigationIfNotNull(postRoute) {
                     heading5(heading, modify(LineHeight115, Shrinkable, LineClamp2, TextOverflowEllipses, TextAlignCenter))
                 }
@@ -78,7 +78,7 @@ fun DIV.configureFeedRow(
         }
     }
 
-    div(modify(FeedRow.ExpandedContent, Padding2, Gap2)) {
+    div(modify(FeedRow.ExpandedContent, Padding2, Gap(2))) {
         description?.let {
             markdown(it, modify(FeedRow.ExpandedBody), limit = 1000)
         }
@@ -93,7 +93,7 @@ fun DIV.configureFeedRow(
 }
 
 fun FlowContent.flairBadge(flair: Svg) {
-    icon(flair, modify(Width10, ColorSchemeFg, OpacityLow))
+    icon(flair, modify(Width(10), ColorSchemeFg, OpacityLow))
 }
 
 fun FlowContent.postLine(entity: FeedEntity, isUniverse: Boolean) {
@@ -101,7 +101,7 @@ fun FlowContent.postLine(entity: FeedEntity, isUniverse: Boolean) {
     val postedAt = entity.post?.createdAt ?: entity.createdAt ?: return
     val galaxy = entity.post?.galaxy?.takeIf { isUniverse }
 
-    column(modify(MarginTopTiny, TextSmall, AlignItemsCenter, Gap0, OpacityHigh)) {
+    column(modify(MarginTopTiny, TextSmall, AlignItemsCenter, Gap(0), OpacityHigh)) {
         textBlock {
             +"posted by "
             when (username) {

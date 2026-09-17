@@ -2,10 +2,7 @@ package streetlight.web.ui
 
 import kampfire.api.Username
 import koala.SvgFile
-import koala.modifier.AlignSelfCenter
-import koala.modifier.Height3
-import koala.modifier.modify
-import koala.modifier.Attribute
+import koala.modifier.*
 import koala.html.Id
 import koala.html.button
 import koala.html.icon
@@ -21,7 +18,7 @@ fun FlowContent.postMenu(postId: PostId, username: Username?) {
         setPopoverTarget(PostMenu.PopoverId)
         setAttribute(PostMenu.PostId.to(postId))
         setAttribute(Attribute.Username.to(username))
-        icon(SvgFile.Dots, modify(Height3))
+        icon(SvgFile.Dots, modify(SmallIconHeight))
     }
 }
 

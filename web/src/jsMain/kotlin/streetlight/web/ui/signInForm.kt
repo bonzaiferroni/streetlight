@@ -6,10 +6,7 @@ import kampfire.api.toValidOutcome
 import kampfire.model.LoginRequest
 import kampfire.model.toDataOr
 import koala.LottieFile
-import koala.modifier.AlignItemsCenter
-import koala.modifier.Flex1
-import koala.modifier.MaxWidth24
-import koala.modifier.modify
+import koala.modifier.*
 import koala.dom.ViewScope
 import koala.dom.MessageStore
 import koala.dom.button
@@ -41,7 +38,7 @@ fun ViewScope.signInForm(model: UserCreator) {
             }
 
             column(modify(AlignItemsCenter)) {
-                lottie(LottieFile.StrollingMan, modify(MaxWidth24))
+                lottie(LottieFile.StrollingMan, modify(MaxWidth(24)))
             }
         }
     }

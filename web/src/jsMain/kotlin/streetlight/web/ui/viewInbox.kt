@@ -11,6 +11,8 @@ import koala.LottieFile
 import koala.SvgFile
 import koala.html.heading3
 import koala.html.heading5
+import kotlinx.css.dvh
+import kotlinx.css.pct
 import streetlight.model.data.InboxContent
 import streetlight.model.data.Star
 import streetlight.model.data.StarBadge
@@ -23,18 +25,18 @@ fun ViewScope.viewInbox(star: Star, content: InboxContent) {
     val model = Inbox(scope, star, content.chats, api, toaster, omni)
     val isChatOpenState = model.openChatState.tapOf { it != null }
 
-    column(modify(Height100Vh, Gap0)) {
-        flowBlock(model.openChatState, modify(Height8)) { chat ->
+    column(modify(Height(100.dvh), Gap0)) {
+        flowBlock(model.openChatState, modify(Height(8))) { chat ->
             when (chat) {
-                null -> flowBlock(model.isArchiveState, modify(Height100Pct)) { isArchive ->
+                null -> flowBlock(model.isArchiveState, modify(Height(100.pct))) { isArchive ->
                     val title = if (isArchive) "Archive" else "Inbox"
-                    column(modify(Height100Pct, JustifyContentCenter)) {
+                    column(modify(Height(100.pct), JustifyContentCenter)) {
                         filigree {
                             heading3(title, modify(OpacityHigh))
                         }
                     }
                 }
-                else -> row(modify(AlignItemsCenter, Height100Pct, ScaleIn, Gap2)) {
+                else -> row(modify(AlignItemsCenter, Height(100.pct), ScaleIn, Gap(2))) {
                     val title = if (chat.subject != null) {
                         chat.subject
                     } else if (chat.badges.size == 2) {
@@ -43,7 +45,7 @@ fun ViewScope.viewInbox(star: Star, content: InboxContent) {
                         "Group Chat"
                     }
                     row(modify(Flex1, JustifyContentEnd)) {
-                        button(SvgFile.ArrowLeft, { model.openChat(null) }, modify(Height5))
+                        button(SvgFile.ArrowLeft, { model.openChat(null) }, modify(Height(5)))
                     }
                     column(modify(Gap0, AlignItemsCenter)) {
                         heading5(title, modify(SingleLine))
@@ -51,7 +53,7 @@ fun ViewScope.viewInbox(star: Star, content: InboxContent) {
                     }
                     val icon = if (model.isArchiveState.now) SvgFile.DatabaseMinus else SvgFile.DatabasePlus
                     row(modify(Flex1, JustifyContentStart)) {
-                        button(icon, model::toggleArchive, modify(Height5))
+                        button(icon, model::toggleArchive, modify(Height(5)))
                     }
                 }
             }
@@ -83,7 +85,7 @@ private fun ViewScope.chatList(model: Inbox, star: Star) {
                 flowBlock(isOpenState) { isOpen ->
                     val isReadMod = if (isOpen || chat.isRead) null else Bold
                     val isSelectedMod = if (isOpen) PrimaryCardBg else CardBg
-                    row(modify(BorderRadiusPillLeft, OverflowClip, Height7, Gap0, isReadMod, isSelectedMod)) {
+                    row(modify(BorderRadiusPillLeft, OverflowClip, Height(7), Gap0, isReadMod, isSelectedMod)) {
                         val usernames = chat.badges.filter { it.username != star.username }.joinToString(", ") { it.username.value }
                         val badge = chat.badges.firstOrNull { it.username != star.username } ?: chat.badges.first()
                         starBadge(badge)
@@ -95,7 +97,7 @@ private fun ViewScope.chatList(model: Inbox, star: Star) {
                                 textBlock(chat.lastMessagePreview, modify(SingleLine, Flex1))
                             }
                             row(modify(TextSmall)) {
-                                textBlock(usernames, modify(SingleLine, Flex1, MinWidth16, OpacityHigh))
+                                textBlock(usernames, modify(SingleLine, Flex1, MinWidth(16), OpacityHigh))
                                 textBlock(chat.lastMessageAt.toPastFormat(), modify(OpacityHigh))
                             }
                         }
@@ -105,7 +107,7 @@ private fun ViewScope.chatList(model: Inbox, star: Star) {
                 }
             }
         }
-        row(modify(Height7, JustifyContentCenter, Padding1)) {
+        row(modify(Height(7), JustifyContentCenter, Padding1)) {
             button(SvgFile.MailLarge, { model.setIsArchive(false) }, modify(Height100Pct))
                 .flowModifier(model.isArchiveState.tapOf { !it }, PrimaryFg, contentScope)
             button(SvgFile.Database, { model.setIsArchive(true) }, modify(Height100Pct))
@@ -128,7 +130,7 @@ private fun ViewScope.messageList(model: Inbox) {
         workSignal(model.messageCursorState, modify(Top0, Right0))
         if (chat == null) {
             box(modify(Height100Pct)) {
-                lottie(LottieFile.Ghost, modify(PlaceSelfCenter, MaxHeight32, OpacityLow))
+                lottie(LottieFile.Ghost, modify(PlaceSelfCenter, MaxHeight(32), OpacityLow))
             }
             return@flowBlock
         }
@@ -152,7 +154,7 @@ private fun ViewScope.messageList(model: Inbox) {
             }
         }
 
-        column(modify(MinHeight16, MaxHeight50P, MarginBottom1)) {
+        column(modify(MinHeight(16), MaxHeight(50.pct), MarginBottom1)) {
             val replyState = storeOf(Markdown.Empty)
 
             fun onSubmit() = launchEffect {

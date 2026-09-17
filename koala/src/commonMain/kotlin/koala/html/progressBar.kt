@@ -6,7 +6,7 @@ import kotlinx.html.FlowContent
 
 fun FlowContent.progressBar(
     progress: Float = 0f,
-    mod: ModifierSet? = modify(Height2, MinWidth16),
+    mod: ModifierSet? = modify(Height(2), MinWidth(16)),
     barMod: ModifierSet? = modify(PrimaryBg),
     config: DIV.() -> Unit = { },
 ) {

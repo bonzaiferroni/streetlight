@@ -1,10 +1,7 @@
 package koala.html
 
-import koala.modifier.Attribute
-import koala.modifier.ModifierSet
-import koala.modifier.Width100Pct
-import koala.modifier.addModifiers
-import koala.modifier.setAttribute
+import koala.modifier.*
+import kotlinx.css.pct
 import kotlinx.html.*
 
 fun FlowContent.textField(
@@ -49,7 +46,7 @@ fun INPUT.configureTextFieldInput(
 ) {
     setId(id)
     type = InputType.text
-    addModifiers(Width100Pct, textMod)
+    addModifiers(Width(100.pct), textMod)
     placeholder?.let {
         attributes["aria-label"] = it
         this.placeholder = it

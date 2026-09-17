@@ -3,13 +3,7 @@ package streetlight.web.pages
 import kampfire.api.PostEndpoint
 import kampfire.model.Token
 import koala.PageResource
-import koala.modifier.AlignItemsCenter
-import koala.modifier.AlignSelfEnd
-import koala.modifier.AlignSelfStretch
-import koala.modifier.MaxWidth64
-import koala.modifier.Padding1
-import koala.modifier.addModifiers
-import koala.modifier.modify
+import koala.modifier.*
 import koala.html.BtnKey
 import koala.html.card
 import koala.html.column
@@ -17,6 +11,7 @@ import koala.html.filigree
 import koala.html.heading1
 import koala.html.textBlock
 import koala.html.topLogo
+import koala.modifier.MaxWidth
 import kotlinx.html.FlowContent
 import kotlinx.html.FormMethod
 import kotlinx.html.HTML
@@ -35,7 +30,7 @@ fun HTML.messagePage(
         column(modify(BodyStyle.MainColumn, AlignItemsCenter)) {
             topLogo()
             filigree(modify(AlignSelfStretch)) { heading1(title) }
-            card(modify(MaxWidth64, Padding1)) {
+            card(modify(MaxWidth(64), Padding1)) {
                 message()
                 block()
             }

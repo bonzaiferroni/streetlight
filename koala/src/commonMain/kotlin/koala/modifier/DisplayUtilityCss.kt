@@ -3,12 +3,10 @@ package koala.modifier
 val DisplayUtilityCss
     get() = listOf(
         // Opacity
-        Opacity0, Opacity1, OpacityHigh, OpacityHalf, OpacityLow, OpacityGhost, Dim, NoDim,
+        OpacityHigh, OpacityHalf, OpacityLow, OpacityGhost, InkDimFg,
         // Shape
         CircleShape, CircleClip,
         // Border Radius
-        BorderRadius0, BorderRadius1, BorderRadius2, BorderRadius4, BorderRadius3, BorderRadius50P, BorderRadiusPill,
-        BorderRadiusPillLeft,
         BorderRadiusBottom1, BorderRadiusTop1, BorderDashed2Px, BorderSolid2Px, Outline, OutlineCurrentColor, OutlineEditorFg,
         OutlineDashed2Px, Chopped,
         // Border
@@ -39,14 +37,10 @@ val DisplayUtilityCss
 
 // Opacity
 // val Opacity1 = CssUtility("opacity-1", ".opacity-1 { opacity: 1; }")
-val Opacity0 = utilityOf("opacity-0", "opacity: 0")
-val Opacity1 = utilityOf("opacity-1", "opacity: 1")
 val OpacityHigh = utilityOf("opacity-high", "opacity: var(--opacity-high)")
 val OpacityHalf = utilityOf("opacity-half", "opacity: var(--opacity-half)")
 val OpacityLow = utilityOf("opacity-low", "opacity: var(--opacity-low)")
 val OpacityGhost = utilityOf("opacity-ghost", "opacity: .1")
-val Dim = utilityOf("dim", "color: rgba(var(--ink), 0.6)")
-val NoDim = utilityOf("no-dim", "color: rgb(var(--ink)) !important")
 
 // Glow
 val GlowShadow = Class("glow-shadow")
@@ -60,14 +54,6 @@ val CircleShape = utilityOf("circle-shape", "border-radius: 50%", "overflow: hid
 val CircleClip = utilityOf("circle-clip", "border-radius: 50%", "overflow: hidden")
 
 // Border Radius
-val BorderRadius0 = utilityOf("border-radius-0", "border-radius: 0")
-val BorderRadius1 = utilityOf("border-radius-1", "border-radius: var(--unit)")
-val BorderRadius2 = utilityOf("border-radius-2", "border-radius: var(--unit-2)")
-val BorderRadius3 = utilityOf("border-radius-3", "border-radius: var(--unit-3)")
-val BorderRadius4 = utilityOf("border-radius-4", "border-radius: var(--unit-4)")
-val BorderRadius50P = utilityOf("border-radius-50p", "border-radius: 50%")
-val BorderRadiusPill = utilityOf("border-radius-pill", "border-radius: 9999px")
-val BorderRadiusPillLeft = utilityOf("border-radius-pill-left", "border-radius: 9999px 0 0 9999px")
 val BorderDashed2Px = utilityOf("border-dashed", "border: 2px dashed var(--outline-low-fg)")
 val BorderSolid2Px = utilityOf("border-solid", "border: var(--outline-low)")
 val BorderRadiusTop1 = utilityOf("border-radius-top-1", "border-radius: var(--unit) var(--unit) 0 0")
@@ -93,6 +79,7 @@ val SystemFg = utilityOf("editor-fg", "color: var(--system-fg)")
 val ErrorFg = utilityOf("red-fg", "color: var(--error-fg)")
 val CautionFg = utilityOf("caution-fg", "color: var(--caution-fg)")
 val ValidFg = utilityOf("valid-fg", "color: var(--valid-fg)")
+val InkDimFg = utilityOf("dim", "color: rgba(var(--ink), 0.6)")
 val ColorSchemeFg = utilityOf("color-scheme-fg", "color: var(--color-scheme, currentColor)")
 val ColorSchemeBorder = utilityOf("color-scheme-border", "border: 3px solid var(--color-scheme, currentColor)")
 val ColorSchemeBg = utilityOf("color-scheme-bg", "background-color: var(--color-scheme, currentColor)")

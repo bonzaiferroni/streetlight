@@ -15,6 +15,7 @@ import koala.html.heading5
 import koala.html.textProperty
 import kampfire.model.MutableTap
 import kotlinx.coroutines.flow.map
+import kotlinx.css.pct
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
@@ -50,7 +51,7 @@ fun ViewScope.eventDetailsForm(model: EventEditor) = formCard("Event Details") {
         formSection("Cost") {
             row(modify(AlignItemsCenter, JustifyContentCenter)) {
                 checkBox(model.isFreeState, "Free event")
-                textField(model.costState, "cost", modify(Width12))
+                textField(model.costState, "cost", modify(Width(12)))
                     .flowVisibility(model.isFreeState.flow.map { !it }, contentScope)
                     .flowValid(EventProperty.Cost, model.validityState, contentScope)
             }
@@ -80,7 +81,7 @@ fun ViewScope.eventDetailsForm(model: EventEditor) = formCard("Event Details") {
         markdownEditor(
             state = model.descriptionState,
             label = "description",
-            mod = modify(MinHeight48)
+            mod = modify(MinHeight(48))
         )
         row(modify(JustifyContentSpaceBetween)) {
             buttonPopover("Markdown Hints", flair = "💡") {
@@ -117,9 +118,9 @@ fun ViewScope.dayIndicator(field: MutableTap<LocalDate?>) {
     }
 
     row(modify(AlignItemsCenter, JustifyContentCenter)) {
-        button(SvgFile.ArrowLeft, { changeDate(-1) }, modify(Height4, OpacityHigh))
-        flowBlock(field, modify(Magic, Blur, Width24)) { date ->
-            column(modify(Gap0, AlignItemsCenter, JustifyContentCenter, Height100Pct)) {
+        button(SvgFile.ArrowLeft, { changeDate(-1) }, modify(Height(4), OpacityHigh))
+        flowBlock(field, modify(Magic, Blur, Width(24))) { date ->
+            column(modify(Gap0, AlignItemsCenter, JustifyContentCenter, Height(100.pct))) {
                 when (date) {
                     null -> heading5("someday", modify(OpacityHalf))
                     else -> {
@@ -128,7 +129,7 @@ fun ViewScope.dayIndicator(field: MutableTap<LocalDate?>) {
                 }
             }
         }
-        button(SvgFile.ArrowRight, { changeDate(1) }, modify(Height4, OpacityHigh))
+        button(SvgFile.ArrowRight, { changeDate(1) }, modify(Height(4), OpacityHigh))
     }
 }
 
@@ -140,15 +141,15 @@ fun ViewScope.timeIndicator(field: MutableTap<LocalTime?>, defaultLabel: String)
     }
 
     row(modify(AlignItemsCenter, JustifyContentCenter)) {
-        button(SvgFile.ArrowLeft, { changeTime(-30) }, modify(Height4, OpacityHigh))
-        flowBlock(field, modify(Magic, Blur, Width24)) { time ->
-            column(modify(Gap0, AlignItemsCenter, JustifyContentCenter, Height100Pct)) {
+        button(SvgFile.ArrowLeft, { changeTime(-30) }, modify(Height(4), OpacityHigh))
+        flowBlock(field, modify(Magic, Blur, Width(24))) { time ->
+            column(modify(Gap0, AlignItemsCenter, JustifyContentCenter, Height(100.pct))) {
                 when (time) {
                     null -> heading5(defaultLabel, modify(OpacityHalf))
                     else -> heading5(time.toTimeFormat())
                 }
             }
         }
-        button(SvgFile.ArrowRight, { changeTime(30) }, modify(Height4, OpacityHigh))
+        button(SvgFile.ArrowRight, { changeTime(30) }, modify(Height(4), OpacityHigh))
     }
 }

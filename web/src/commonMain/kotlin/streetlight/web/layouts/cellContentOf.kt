@@ -3,7 +3,7 @@ package streetlight.web.layouts
 import kabinet.utils.toMetricString
 import kampfire.api.Username
 import koala.SvgFile
-import koala.modifier.MinWidth32
+import koala.modifier.*
 import kotlinx.html.FlowContent
 import streetlight.model.data.Event
 import streetlight.model.data.EventEdit
@@ -64,7 +64,7 @@ fun cellContentOf(event: EventLocation, showMore: Boolean, post: Post? = null): 
     event.locationName?.let {
         cell(SvgFile.MapPin, it)
     }
-    buttonsCell(MinWidth32) {
+    buttonsCell(MinWidth(32)) {
         starToggle(event)
         if (showMore) {
             moreButton()

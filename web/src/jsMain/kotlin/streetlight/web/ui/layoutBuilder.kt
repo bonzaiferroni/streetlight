@@ -14,6 +14,7 @@ import koala.modifier.setPopoverTarget
 import koala.html.textBlock
 import kampfire.model.MutableTap
 import kampfire.model.toggle
+import kotlinx.css.pct
 import kotlinx.html.BUTTON
 import streetlight.web.model.BlockEditor
 import streetlight.web.model.BlockId
@@ -57,7 +58,7 @@ fun ViewScope.editorRow(
             }
         }
     }
-    flowBlock(editor.model.movingBlockIdState, modify(Magic, Scale, Height5)) { movingBlockId ->
+    flowBlock(editor.model.movingBlockIdState, modify(Magic, Scale, Height(5))) { movingBlockId ->
         when (movingBlockId) {
             null -> {
                 row(modify(AlignItemsCenter)) {
@@ -73,7 +74,7 @@ fun ViewScope.editorRow(
 
                     val headingMod = modify(
                         PaddingX2, PaddingY1, BorderRadiusPill, OutlineEditorFg,
-                        MinWidth16, TextAlignCenter
+                        MinWidth(16), TextAlignCenter
                     )
                     when (popoverId) {
                         null -> heading6(editor.label, headingMod)
@@ -98,7 +99,7 @@ fun ViewScope.editorRow(
                 button(label, {
                     if (isOriginalLocation) editor.model.cancelMove()
                     else editor.model.finishMove(editor.blockId)
-                }, modify(mod, Width100Pct))
+                }, modify(mod, Width(100.pct)))
             }
         }
     }
@@ -107,7 +108,7 @@ fun ViewScope.editorRow(
 fun ViewScope.lastEditorRow(
     editor: ContainerEditor
 ) {
-    flowBlock(editor.model.movingBlockIdState, modify(Magic, Scale, Height5)) { movingBlockId ->
+    flowBlock(editor.model.movingBlockIdState, modify(Magic, Scale, Height(5))) { movingBlockId ->
         when (movingBlockId) {
             null -> {
                 row(modify(AlignItemsCenter)) {
@@ -123,7 +124,7 @@ fun ViewScope.lastEditorRow(
                 if (editor.isDescendentOf(movingBlockId) || isNextPosition) return@flowBlock
                 button("move to ${editor.name}", {
                     editor.model.finishMoveToContainer(editor.containerId)
-                }, modify(Editor, Width100Pct))
+                }, modify(Editor, Width(100.pct)))
             }
         }
     }
@@ -160,7 +161,7 @@ fun ViewScope.editorIconButton(
     icon: Svg,
     onClick: (() -> Unit)? = null,
     config: BUTTON.() -> Unit = { }
-) = button(icon, onClick, modify(SystemFg, Height3)) {
+) = button(icon, onClick, modify(SystemFg, SmallIconHeight)) {
     config()
 }
 

@@ -2,8 +2,6 @@ package koala.modifier
 
 val LayoutUtilityCss
     get() = listOf(
-        // Gap
-        Gap0, Gap1, Gap2, Gap3, Gap4, Gap8, Gap2Px, GapHalf,
         // Flex
         Flex0, Flex2, Flex3, Flex4, FlexBasis25, FlexBasis33, FlexShrink0,
         FlexDirectionRow, NoWrap, FlexWrap, FlexBasisMin, DisplayFlex,
@@ -12,17 +10,9 @@ val LayoutUtilityCss
         JustifySelfEnd, JustifySelfCenter, JustifyContentStretch, JustifyContentStart,
         AlignSelfStart, AlignSelfCenter, AlignSelfEnd, AlignSelfStretch, JustifySelfStart, JustifySelfStretch,
         // Width
-        WidthAuto, Width100Pct, WidthFitContent,
-        Width1, Width2, Width4, Width5, Width8, Width10, Width12, Width16, Width24, Width32, Width64,
-        MinWidth0, MinWidth4, MinWidth12, MinWidth6, MinWidth8, MinWidth14, MinWidth16, MinWidth24,
-        MinWidth32, MinWidth36, MinWidth48, MinWidthAuto, MaxWidth25P, MaxWidth50P,
-        MaxWidth5, MaxWidth16, MaxWidth24, MaxWidth32, MaxWidth48, MaxWidth64, MaxWidthTextBody, MaxWidthNone,
+
         // Height
-        HeightAuto, Height50Pct, Height100Pct, Height100Vh,
-        Height0, Height2, Height3, Height4, Height5, Height6, Height7, Height8, Height9, Height10, Height12, Height16,
-        Height24, Height32, Height48,
-        MinHeightAuto, MinHeight0, MinHeight4, MinHeight5, MinHeight6, MinHeight8, MinHeight16, MinHeight24, MinHeight32, MinHeight48, MinHeight100P,
-        MaxHeight5, MaxHeight8, MaxHeight12, MaxHeight16, MaxHeight24, MaxHeight32, MaxHeight64, MaxHeight96, MaxHeight50P, MaxHeight100P,
+
         // Size
         Size100P, FillHeight, Aspect1, Aspect2By1, Aspect3By1, Aspect3By2,
         // Flex Items
@@ -49,14 +39,7 @@ val LayoutUtilityCss
     )
 
 // Gap
-val Gap0 = utilityOf("gap-0", "gap: 0")
-val Gap1 = utilityOf("gap-1", "gap: var(--unit)")
-val Gap2 = utilityOf("gap-2", "gap: var(--unit-2)")
-val Gap3 = utilityOf("gap-3", "gap: var(--unit-3)")
-val Gap4 = utilityOf("gap-4", "gap: var(--unit-4)")
-val Gap8 = utilityOf("gap-8", "gap: var(--unit-8)")
-val Gap2Px = utilityOf("gap-tiny", "gap: 2px")
-val GapHalf = utilityOf("gap-half", "gap: calc(var(--unit) / 2)")
+
 
 // Flex
 val Flex0 = utilityOf("flex-0", "flex: 0")
@@ -81,84 +64,10 @@ val JustifyContentStretch = utilityOf("justify-content-stretch", "justify-conten
 val JustifyContentStart = utilityOf("justify-content-start", "justify-content: flex-start")
 
 // Width
-val WidthAuto = utilityOf("width-auto", "width: auto")
-val Width100Pct = utilityOf("width-100", "width: 100%")
-val WidthFitContent = utilityOf("width-fit-content", "width: fit-content")
-val Width1 = utilityOf("width-1", "width: var(--unit)")
-val Width2 = utilityOf("width-2", "width: calc(var(--unit) * 2)")
-val Width4 = utilityOf("width-4", "width: calc(var(--unit) * 4)")
-val Width5 = utilityOf("width-5", "width: calc(var(--unit) * 5)")
-val Width8 = utilityOf("width-8", "width: calc(var(--unit) * 8)")
-val Width10 = utilityOf("width-10", "width: calc(var(--unit) * 10)")
-val Width12 = utilityOf("width-12", "width: calc(var(--unit) * 12)")
-val Width16 = utilityOf("width-16", "width: calc(var(--unit) * 16)")
-val Width24 = utilityOf("width-24", "width: calc(var(--unit) * 24)")
-val Width32 = utilityOf("width-32", "width: calc(var(--unit) * 32)")
-val Width64 = utilityOf("width-64", "width: calc(var(--unit) * 64)")
-val MinWidth0 = utilityOf("min-width-0", "min-width: 0")
-val MinWidth4 = utilityOf("min-width-4", "min-width: calc(var(--unit) * 4)")
-val MinWidth6 = utilityOf("min-width-6", "min-width: calc(var(--unit) * 6)")
-val MinWidth8 = utilityOf("min-width-8", "min-width: calc(var(--unit) * 8)")
-val MinWidth12 = utilityOf("min-width-12", "min-width: calc(var(--unit) * 12)")
-val MinWidth14 = utilityOf("min-width-14", "min-width: calc(var(--unit) * 14)")
-val MinWidth16 = utilityOf("min-width-16", "min-width: calc(var(--unit) * 16)")
-val MinWidth24 = utilityOf("min-width-24", "min-width: calc(var(--unit) * 24)")
-val MinWidth32 = utilityOf("min-width-32", "min-width: calc(var(--unit) * 32)")
-val MinWidth36 = utilityOf("min-width-36", "min-width: calc(var(--unit) * 36)")
-val MinWidth48 = utilityOf("min-width-48", "min-width: calc(var(--unit) * 48)")
-val MinWidthAuto = utilityOf("min-width-auto", "min-width: auto")
-val MaxWidth25P = utilityOf("max-width-25", "max-width: 25%")
-val MaxWidth50P = utilityOf("max-width-50", "max-width: 50%")
-val MaxWidth5 = utilityOf("max-width-5", "max-width: calc(var(--unit) * 5)")
-val MaxWidth16 = utilityOf("max-width-16", "max-width: calc(var(--unit) * 16)")
-val MaxWidth24 = utilityOf("max-width-24", "max-width: calc(var(--unit) * 24)")
-val MaxWidth32 = utilityOf("max-width-32", "max-width: calc(var(--unit) * 32)")
-val MaxWidth48 = utilityOf("max-width-48", "max-width: calc(var(--unit) * 48)")
-val MaxWidth64 = utilityOf("max-width-64", "max-width: calc(var(--unit) * 64)")
-val MaxWidthTextBody = utilityOf("max-width-text-body", "max-width: calc(var(--unit) * 108)" )
-val MaxWidthNone = utilityOf("max-width-none", "max-width: none")
+
 
 // Height
-val Height50Pct = utilityOf("height-50", "height: 50%")
-val Height100Pct = utilityOf("height-100", "height: 100%")
-val Height100Vh = utilityOf("height-100vh", "height: 100dvh")
-val HeightAuto = utilityOf("height-auto", "height: auto")
-val Height0 = utilityOf("height-0", "height: 0")
-val Height2 = utilityOf("height-2", "height: calc(var(--unit) * 2)")
-val Height3 = utilityOf("height-3", "height: calc(var(--unit) * 3)")
-val Height4 = utilityOf("height-4", "height: calc(var(--unit) * 4)")
-val Height5 = utilityOf("height-5", "height: calc(var(--unit) * 5)")
-val Height6 = utilityOf("height-6", "height: calc(var(--unit) * 6)")
-val Height7 = utilityOf("height-7", "height: calc(var(--unit) * 7)")
-val Height8 = utilityOf("height-8", "height: calc(var(--unit) * 8)")
-val Height9 = utilityOf("height-9", "height: calc(var(--unit) * 9)")
-val Height10 = utilityOf("height-10", "height: calc(var(--unit) * 10)")
-val Height12 = utilityOf("height-12", "height: calc(var(--unit) * 12)")
-val Height16 = utilityOf("height-16", "height: calc(var(--unit) * 16)")
-val Height24 = utilityOf("height-24", "height: calc(var(--unit) * 24)")
-val Height32 = utilityOf("height-32", "height: calc(var(--unit) * 32)")
-val Height48 = utilityOf("height-48", "height: calc(var(--unit) * 48)")
-val MaxHeight5 = utilityOf("max-height-5", "max-height: calc(var(--unit) * 5)")
-val MaxHeight8 = utilityOf("max-height-8", "max-height: calc(var(--unit) * 8)")
-val MaxHeight12 = utilityOf("max-height-12", "max-height: calc(var(--unit) * 12)")
-val MaxHeight16 = utilityOf("max-height-16", "max-height: calc(var(--unit) * 16)")
-val MaxHeight24 = utilityOf("max-height-24", "max-height: calc(var(--unit) * 24)")
-val MaxHeight32 = utilityOf("max-height-32", "max-height: calc(var(--unit) * 32)")
-val MaxHeight64 = utilityOf("max-height-64", "max-height: calc(var(--unit) * 64)")
-val MaxHeight96 = utilityOf("max-height-96", "max-height: calc(var(--unit) * 96)")
-val MaxHeight50P = utilityOf("max-height-50", "max-height: 50%")
-val MaxHeight100P = utilityOf("max-height-100", "max-height: 100%")
-val MinHeightAuto = utilityOf("min-height-auto", "min-height: auto")
-val MinHeight0 = utilityOf("min-height-0", "min-height: 0")
-val MinHeight4 = utilityOf("min-height-4", "min-height: calc(var(--unit) * 4)")
-val MinHeight5 = utilityOf("min-height-5", "min-height: calc(var(--unit) * 5)")
-val MinHeight6 = utilityOf("min-height-6", "min-height: calc(var(--unit) * 6)")
-val MinHeight8 = utilityOf("min-height-8", "min-height: calc(var(--unit) * 8)")
-val MinHeight16 = utilityOf("min-height-16", "min-height: calc(var(--unit) * 16)")
-val MinHeight24 = utilityOf("min-height-24", "min-height: calc(var(--unit) * 24)")
-val MinHeight32 = utilityOf("min-height-32", "min-height: calc(var(--unit) * 32)")
-val MinHeight48 = utilityOf("min-height-48", "min-height: calc(var(--unit) * 48)")
-val MinHeight100P = utilityOf("min-height-100", "min-height: 100%")
+
 
 // Size
 val Size100P = utilityOf("size-100", "width: 100%", "height: 100%")

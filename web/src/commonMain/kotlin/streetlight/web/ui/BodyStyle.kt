@@ -1,13 +1,10 @@
 package streetlight.web.ui
 
-import koala.modifier.Class
-import koala.modifier.Gap0
-import koala.modifier.Gap4
-import koala.modifier.modify
+import koala.modifier.*
 
 object BodyStyle {
     val ShellColumn = modify(Gap0)
-    val MainColumn = modify(Gap4)
+    val MainColumn = modify(Gap(4))
     val FormRow = Class("form-row")
 }
 

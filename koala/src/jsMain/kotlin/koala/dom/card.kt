@@ -1,23 +1,13 @@
 package koala.dom
 
 import kampfire.model.Url
-import koala.modifier.AlignItemsStart
-import koala.modifier.BorderRadius1
-import koala.modifier.Card
-import koala.modifier.Flex1
-import koala.modifier.Gap0
-import koala.modifier.Height100Pct
-import koala.modifier.Height8
-import koala.modifier.ModifierSet
-import koala.modifier.OverflowHidden
-import koala.modifier.Aspect1
-import koala.modifier.addModifiers
-import koala.modifier.modify
+import koala.modifier.*
 import koala.html.column
 import koala.html.heading5
 import koala.html.image
 import koala.html.row
 import koala.html.textBlock
+import kotlinx.css.pct
 import kotlinx.html.DIV
 import kotlinx.html.js.div
 import web.html.HTMLElement
@@ -38,11 +28,11 @@ fun AppendScope.cardOf(
     onClick: (() -> Unit)? = null,
 ): HTMLElement {
     val element = card(mod) {
-        row(modify(Height8, AlignItemsStart)) {
+        row(modify(Height(8), AlignItemsStart)) {
             thumbUrl?.let {
-                image(thumbUrl, modify(Height100Pct, Aspect1, BorderRadius1))
+                image(thumbUrl, modify(Height(100.pct), Aspect1, BorderRadius1))
             }
-            column(modify(Flex1, Gap0, Height100Pct)) {
+            column(modify(Flex1, Gap(0), Height(100.pct))) {
                 heading5(title)
                 description?.let {
                     textBlock(description, modify(Flex1, OverflowHidden))

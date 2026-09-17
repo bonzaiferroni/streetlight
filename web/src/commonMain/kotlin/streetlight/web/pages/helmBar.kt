@@ -33,7 +33,7 @@ fun FlowContent.helmBar() {
 object HelmBar {
     val StickyBarId = Id("helm-bar")
     val CardClass = Class("helm-card")
-    val IconMod = modify(Height6, Aspect1, DisplayFlex)
+    val IconMod = modify(Height(6), Aspect1, DisplayFlex)
     val SiteHelmButton = Id("site-helm-button")
     val StarHelmButton = Id("star-helm-button")
 }

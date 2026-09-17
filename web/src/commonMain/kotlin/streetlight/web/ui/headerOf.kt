@@ -83,7 +83,7 @@ fun FlowContent.headerOf(media: Media) {
 
         media.image?.let {
             column(modify(SideBorder, BorderRadius1)) {
-                image(it, modify(AlignSelfCenter, MaxHeight96, BorderRadius2, MoonShadow))
+                image(it, modify(AlignSelfCenter, MaxHeight(96), BorderRadius2, MoonShadow))
             }
         }
 

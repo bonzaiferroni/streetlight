@@ -11,24 +11,24 @@ fun FlowContent.smallGalaxyCard(galaxy: Galaxy) {
     card(modify(Padding0, OverflowClip, MoonShadow)) {
         setStyle(Css.ColorScheme.of(ThemeColor.Galaxy.cssValue))
 
-        row(modify(Gap0, Height16)) {
+        row(modify(Gap0, Height(16))) {
             navigation(route, modify(Flex1)) {
                 featureImage(galaxy.image, modify(Size100P))
             }
-            column(modify(Flex2, Height16, Gap0)) {
+            column(modify(Flex2, Height(16), Gap0)) {
                 column(modify(Flex1, Padding1)) {
                     navigation(route) {
                         heading5(galaxy.name, modify(LineHeight1))
                     }
                     val modifiers = modify(TextSmall, FadeBottom, Flex1).let {
                         when (galaxy.description) {
-                            null -> it.append(Italic, Dim)
+                            null -> it.append(Italic, InkDimFg)
                             else -> it
                         }
                     }
                     textBlock(galaxy.description?.value ?: "Too mysterious for a description", modifiers)
                 }
-                cellBlock(modify(Height5, MoonShadow)) {
+                cellBlock(modify(Height(5), MoonShadow)) {
                     cellContentOf(galaxy)()
                 }
             }

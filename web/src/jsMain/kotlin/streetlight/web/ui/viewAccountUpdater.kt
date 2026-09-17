@@ -2,14 +2,7 @@ package streetlight.web.ui
 
 import kampfire.model.AccountType
 import koala.LottieFile
-import koala.modifier.AlignSelfStart
-import koala.modifier.Gap1
-import koala.modifier.Italic
-import koala.modifier.Magic
-import koala.modifier.OpacityHigh
-import koala.modifier.PrimaryCardBg
-import koala.modifier.TextAlignCenter
-import koala.modifier.modify
+import koala.modifier.*
 import koala.dom.MessageStore
 import koala.dom.RouteScope
 import koala.dom.ViewScope
@@ -71,7 +64,7 @@ fun ViewScope.registerAccountForm(model: AccountEditor) = formColumn {
                 textBlock("Benefits of Registration", modify(OpacityHigh, Italic))
             }
             bulletsOf(
-                modify(Gap1),
+                modify(Gap(1)),
                 "The ability to log into your account with other devices",
                 "Better account security on shared devices",
                 "Avoid automatic deletion after 30 days without activity"

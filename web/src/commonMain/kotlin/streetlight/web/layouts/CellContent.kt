@@ -20,11 +20,11 @@ import kotlin.time.Instant
 
 object CellContent {
     val Container = Class("cell-content")
-    val CellMod = modify(AlignItemsCenter, CardBg, Gap0, Padding1)
+    val CellMod = modify(AlignItemsCenter, CardBg, Gap(0), Padding1)
     val DualCellMod = modify(Gap2Px, FlexItems1)
-    val IconMod = modify(Height3, MarginRight4Px, ColorSchemeBg)
-    val ButtonIconMod = modify(Height3, OpacityHigh)
-    val ThumbMod = modify(Height3, Aspect1, BorderRadius2, MarginRight4Px)
+    val IconMod = modify(SmallIconHeight, MarginRight4Px, ColorSchemeBg)
+    val ButtonIconMod = modify(SmallIconHeight, OpacityHigh)
+    val ThumbMod = modify(SmallIconHeight, Aspect1, BorderRadius2, MarginRight4Px)
     val TextMod = modify(TextSmall, SingleLine, TextOverflowEllipses, Flex1)
 }
 
@@ -41,7 +41,7 @@ fun FlowContent.cellBlock(
     mod: ModifierSet? = null,
     block: FlowContent.() -> Unit = {}
 ) {
-    row(modify(mod, MinHeight4, MinWidth16, FlexWrap, FlexItems1, Gap2Px, TextAlignCenter, MoonShadow)) {
+    row(modify(mod, MinHeight(4), MinWidth(16), FlexWrap, FlexItems1, Gap2Px, TextAlignCenter, MoonShadow)) {
         block()
     }
 }
@@ -50,7 +50,7 @@ fun FlowContent.cell(
     svg: Svg? = null,
     text: String? = null,
     label: String? = null,
-    minWidth: Modifier? = MinWidth16,
+    minWidth: Modifier? = MinWidth(16),
     mod: ModifierSet? = null,
     block: DIV.() -> Unit = {}
 ) {
@@ -62,12 +62,12 @@ fun FlowContent.cell(
 }
 
 fun FlowContent.buttonsCell(
-    minWidth: Modifier? = MinWidth16,
+    minWidth: Modifier? = MinWidth(16),
     mod: ModifierSet? = null,
     block: DIV.() -> Unit = {},
 ) {
     box(modify(mod, minWidth, CardBg)) {
-        row(modify(AlignItemsCenter, JustifyContentSpaceAround, Padding1, Gap2), block)
+        row(modify(AlignItemsCenter, JustifyContentSpaceAround, Padding1, Gap(2)), block)
     }
 }
 
@@ -88,7 +88,7 @@ fun DIV.cellContent(
     block: DIV.() -> Unit = {}
 ) {
     label?.let {
-        textBlock("$it:", modify(CellContent.TextMod, Dim))
+        textBlock("$it:", modify(CellContent.TextMod, InkDimFg))
     }
     svg?.let {
         icon(svg, CellContent.IconMod)
@@ -110,7 +110,7 @@ fun FlowContent.linkCell(
     when (url) {
         null -> cell(svg, text, mod = mod, block = block)
         else -> {
-            navigation(url.value, modify(Box, MinWidth12)) {
+            navigation(url.value, modify(Box, MinWidth(12))) {
                 row(modify(CellContent.CellMod, mod)) {
                     cellContent(svg, text, null, block)
                 }

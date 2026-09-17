@@ -115,9 +115,9 @@ fun ViewScope.galaxyMapFormRow(model: GalaxyEditor) = formRow {
         formField {
             row {
                 textField(model.cityQueryField, "city search", modify(Flex1))
-                textField(model.countryField, "country", modify(Width24))
+                textField(model.countryField, "country", modify(Width(24)))
             }
-            column(modify(Height32, OverflowYAuto, Gap0)) {
+            column(modify(Height(32), OverflowYAuto, Gap0)) {
                 row(modify(Padding1, JustifyContentSpaceBetween)) {
                     textBlock("city", modify(OpacityLow, Italic))
                     textBlock("galaxies", modify(OpacityLow, Italic))

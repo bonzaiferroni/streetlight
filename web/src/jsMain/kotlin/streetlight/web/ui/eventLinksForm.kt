@@ -12,6 +12,7 @@ import kampfire.model.removeAt
 import kampfire.model.replaceAt
 import kampfire.model.storeOf
 import kampfire.model.toggle
+import kotlinx.css.pct
 import streetlight.model.data.ExtraLink
 import streetlight.web.model.EventEditor
 
@@ -19,7 +20,7 @@ fun ViewScope.eventLinksForm(model: EventEditor) {
     formCard("Event Links") {
         formRow {
             formSection("Website") {
-                textField(model.urlState, "Website", modify(Width100Pct))
+                textField(model.urlState, "Website", modify(Width(100.pct)))
                 formText("Is there more information about this event on the web?")
             }
             formSection("Original Source") {
@@ -34,7 +35,7 @@ fun ViewScope.eventLinksForm(model: EventEditor) {
             row(modify(AlignItemsEnd)) {
                 column(modify(Flex1)) {
                     heading4("Additional Links")
-                    textBlock("You may provide your original source, a youtube video, or any useful link.", modify(Dim))
+                    textBlock("You may provide your original source, a youtube video, or any useful link.", modify(InkDimFg))
                 }
                 button("➕ Add link", onClick = {
                     model.linksState.append(ExtraLink.Empty)
@@ -53,10 +54,10 @@ fun ViewScope.eventLinksForm(model: EventEditor) {
                                 val label = labelState.now.takeIf { it.isNotEmpty() } ?: return@button
                                 val url = urlState.now.takeIf { it.isNotBlank() }?.toValidAbsoluteUrlOrNull() ?: return@button
                                 model.linksState.replaceAt(index, ExtraLink(label, url))
-                            }, modify(Height5))
+                            }, modify(Height(5)))
                         } else {
                             textBlock(link.label)
-                            textBlock(link.url.value, modify(Dim))
+                            textBlock(link.url.value, modify(InkDimFg))
                             spacer(modify(Flex1))
                             button(SvgFile.Edit, isEditingState::toggle)
                             button(SvgFile.Trash, onClick = { model.linksState.removeAt(index) })

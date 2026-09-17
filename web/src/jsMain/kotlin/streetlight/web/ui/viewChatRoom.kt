@@ -2,6 +2,7 @@ package streetlight.web.ui
 
 import koala.modifier.*
 import koala.dom.*
+import kotlinx.css.pct
 import streetlight.web.model.ChatRoom
 
 fun RouteScope.viewChatRoom() {
@@ -12,7 +13,7 @@ fun RouteScope.viewChatRoom() {
         }
         textField(
             field = model.messageState,
-            mod = modify(Width100Pct),
+            mod = modify(Width(100.pct)),
             onEnterSubmit = model::sendMessage
         )
     }

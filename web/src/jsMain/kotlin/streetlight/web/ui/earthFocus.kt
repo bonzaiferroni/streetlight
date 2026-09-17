@@ -13,6 +13,7 @@ import koala.model.ClusterFocus
 import koala.model.EntityMarker
 import koala.model.MarkerFocus
 import koala.model.PointMarker
+import kotlinx.css.pct
 import kotlinx.html.FlowContent
 import kotlinx.html.hr
 import streetlight.model.data.FeedEntity
@@ -29,7 +30,7 @@ import streetlight.web.model.LocationMarker
 
 fun ViewScope.earthFocus(model: Earth) {
     flowBlock(model.focusState,
-        modify(EarthStyle.Focus, MoonShadow, OverflowYAuto, MaxHeight100P, PointerEventsAuto, ZenBg, BlurBackdrop)
+        modify(EarthStyle.Focus, MoonShadow, OverflowYAuto, MaxHeight(100.pct), PointerEventsAuto, ZenBg, BlurBackdrop)
     ) { focus ->
         when (focus) {
             is ClusterFocus -> column(FeedSection.FeedColumnMod) {

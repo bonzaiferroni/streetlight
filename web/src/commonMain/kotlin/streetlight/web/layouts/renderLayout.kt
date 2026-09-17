@@ -105,7 +105,7 @@ fun FlowContent.renderGallery(block: GalleryBlock) {
 }
 
 fun FlowContent.renderMap(content: DesignContent) {
-    geoMapMount(content.geoPoint, modify(MinHeight48))
+    geoMapMount(content.geoPoint, modify(MinHeight(48)))
 }
 
 fun FlowContent.renderTabs(block: TabsBlock, content: DesignContent) {

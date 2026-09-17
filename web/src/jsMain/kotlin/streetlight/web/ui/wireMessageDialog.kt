@@ -23,7 +23,7 @@ fun ViewScope.wireMessageDialog() {
         val contentState = messageState.mutableTapOf({ it.content }) { copy(content = it) }
         dialogContent("Message to $recipient") {
             textField(subjectState, "subject", placeholder = "no subject")
-            markdownEditor(contentState, "message", modify(MinHeight32)) {
+            markdownEditor(contentState, "message", modify(MinHeight(32))) {
                 // setAttribute(Attribute.Autofocus.to(true))
             }
             formSubmit("send", {

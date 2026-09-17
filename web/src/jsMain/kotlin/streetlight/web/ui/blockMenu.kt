@@ -42,7 +42,7 @@ fun ViewScope.blockMenu(
             }
         }
     }
-    row(modify(AlignItemsCenter, Height5)) {
+    row(modify(AlignItemsCenter, LargeIconHeight)) {
         name?.let {
             textBlock("add to $name", modify(TextSmall, TextUppercase, OpacityHalf))
         }

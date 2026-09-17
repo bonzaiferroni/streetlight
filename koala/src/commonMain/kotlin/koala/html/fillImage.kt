@@ -5,12 +5,8 @@ import kampfire.model.Url
 import kampfire.model.largest
 import koala.Image
 import koala.SiteImage
-import koala.modifier.Class
-import koala.modifier.HeightAuto
-import koala.modifier.ModifierSet
-import koala.modifier.ObjectFitContain
-import koala.modifier.addModifiers
-import koala.modifier.modify
+import koala.modifier.*
+import kotlinx.css.LinearDimension
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kotlinx.html.IMG
@@ -79,7 +75,7 @@ fun DIV.configureFillImage(
         addModifiers(ImageWithBackdropKey.ImageContainerClass)
         img {
             val mod = when(fillWidth) {
-                true -> modify(ImageWithBackdropKey.ImageClass, HeightAuto)
+                true -> modify(ImageWithBackdropKey.ImageClass, Height(LinearDimension.auto))
                 else -> modify(ImageWithBackdropKey.ImageClass, ObjectFitContain)
             }
             addModifiers(mod)

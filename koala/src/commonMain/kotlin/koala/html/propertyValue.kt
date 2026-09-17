@@ -11,7 +11,7 @@ fun FlowContent.textProperty(
     p {
         addModifiers(modifiers)
 
-        span(modify(Dim)) {
+        span(modify(InkDimFg)) {
             +"$propertyName:"
         }
         span(modify(MarginLeft1, OverflowWrapAnywhere)) {
@@ -26,7 +26,7 @@ fun FlowContent.textProperty(
     block: DIV.() -> Unit
 ) {
     row(modify(modifiers, AlignItemsCenter)) {
-        textBlock("${propertyName}:", modify(Dim, TextAlignRight))
+        textBlock("${propertyName}:", modify(InkDimFg, TextAlignRight))
         block()
     }
 }

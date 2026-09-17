@@ -1,10 +1,6 @@
 package streetlight.web.ui
 
-import koala.modifier.AlignSelfCenter
-import koala.modifier.BorderRadius1
-import koala.modifier.MaxHeight64
-import koala.modifier.ObjectFitContain
-import koala.modifier.modify
+import koala.modifier.*
 import koala.dom.ViewScope
 import koala.dom.box
 import koala.dom.image
@@ -18,7 +14,7 @@ fun ViewScope.imageFormSection(
 ) = formSection("Image", modify(AlignSelfCenter)) {
     imageDrop(imageEditor.imageField) {
         box {
-            image(it.url, modify(ObjectFitContain, MaxHeight64, BorderRadius1))
+            image(it.url, modify(ObjectFitContain, MaxHeight(64), BorderRadius1))
         }
     }.setBlockLabel("image")
     formBullets(

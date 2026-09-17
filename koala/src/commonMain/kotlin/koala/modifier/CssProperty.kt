@@ -11,20 +11,24 @@ import kotlinx.css.LinearDimension
 import kotlinx.css.Visibility
 
 object Css {
+    val Height = Property<LinearDimension>("height")
+    val MinHeight = Property<LinearDimension>("min-height")
+    val MaxHeight = Property<LinearDimension>("max-height")
+
+    val Width = Property<LinearDimension>("width")
+    val MinWidth = Property<LinearDimension>("min-width")
+    val MaxWidth = Property<LinearDimension>("max-width")
+
     val JustifyContent = Property<JustifyContent>("justify-content")
     val Flex = Property<Flex>("flex")
     val PositionAnchor = Property<PositionAnchor>("position-anchor")
     val Display = Property<Display>("display")
     val Visibility = Property<Visibility>("visibility")
-    val MinHeight = Property<LinearDimension>("min-height")
-    val Height = Property<LinearDimension>("height")
     val Padding = Property<LinearDimension>("padding")
     val Margin = Property<LinearDimension>("margin")
     val Gap = Property<LinearDimension>("gap")
-    val MaxWidth = Property<LinearDimension>("max-width")
     val BorderRadius = Property<LinearDimension>("border-radius")
     val AnchorName = Property<PositionAnchor>("anchor-name")
-    val Width = Property<LinearDimension>("width")
     val ZIndex = Property<Int>("z-index")
     val GridTemplateColumns = Property<GridTemplateColumns>("grid-template-columns")
     val ViewTransitionName = Property<String>("view-transition-name")
@@ -33,6 +37,7 @@ object Css {
     val Top = Property<LinearDimension>("top")
     val Left = Property<LinearDimension>("left")
     val AlignItems = Property<Align>("align-items")
+    val Opacity = Property<Number>("opacity")
 
     val MaskUrl = Property<Asset>("mask-url", true)
     val ColorScheme = Property<String>("color-scheme", true)

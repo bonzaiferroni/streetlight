@@ -1,12 +1,7 @@
 package streetlight.web.ui
 
 import koala.Svg
-import koala.modifier.AlignItemsCenter
-import koala.modifier.Flex1
-import koala.modifier.Height3
-import koala.modifier.ModifierSet
-import koala.modifier.addModifiers
-import koala.modifier.modify
+import koala.modifier.*
 import koala.dom.ViewScope
 import koala.dom.icon
 import koala.dom.row
@@ -67,6 +62,6 @@ fun ViewScope.slider(
     mod: ModifierSet? = null,
     config: INPUT.() -> Unit = { }
 ) = row(modify(mod, AlignItemsCenter)) {
-    icon(icon, modify(Height3))
+    icon(icon, modify(SmallIconHeight))
     slider(state, range, step, modify(Flex1), config)
 }

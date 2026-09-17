@@ -31,7 +31,7 @@ fun ViewScope.locationDetailsForm(model: LocationEditor) = formCard("Location De
         markdownEditor(
             state = model.descriptionField,
             label = "description",
-            mod = modify(MinHeight24)
+            mod = modify(MinHeight(24))
         )
     }
 }

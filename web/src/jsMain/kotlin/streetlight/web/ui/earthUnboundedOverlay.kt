@@ -36,11 +36,11 @@ fun ViewScope.earthUnboundedOverlay(model: Earth, mapContext: GeoCameraControlle
     fun createHint(marker: EntityMarker) = element.append {
         when (marker) {
             is ThumbMarker -> image(marker.thumbUrl, modify(
-                BorderRadius50P, Height5, Aspect1, PointerEventsAuto, FadeIn, OpacityHalf
+                BorderRadius50P, LargeIconHeight, Aspect1, PointerEventsAuto, FadeIn, OpacityHalf
             )).onClick {
                 model.setFocus(marker)
             }
-            is IconMarker -> icon(marker.svg, modify(Height3, OpacityHalf, PointerEventsAuto, ColorSchemeFg)) {
+            is IconMarker -> icon(marker.svg, modify(SmallIconHeight, OpacityHalf, PointerEventsAuto, ColorSchemeFg)) {
                 marker.colorScheme?.let {
                     setStyle(Css.ColorScheme.of(it))
                 }

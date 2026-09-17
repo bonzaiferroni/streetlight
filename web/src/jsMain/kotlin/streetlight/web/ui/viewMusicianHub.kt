@@ -1,11 +1,6 @@
 package streetlight.web.ui
 
-import koala.modifier.Accent
-import koala.modifier.AlignItemsCenter
-import koala.modifier.Flex1
-import koala.modifier.FlexItems1
-import koala.modifier.Width64
-import koala.modifier.modify
+import koala.modifier.*
 import koala.dom.ViewScope
 import koala.dom.button
 import koala.dom.column
@@ -23,7 +18,7 @@ fun ViewScope.viewMusicianHub(
         lazyTabs(Id("user-hub-tabs")) {
             tab("Songs") {
                 column(modify(AlignItemsCenter)) {
-                    row(modify(Width64)) {
+                    row(modify(Width(64))) {
                         row(modify(Flex1, FlexItems1)) {
                             // td: fix later
                             // textField(

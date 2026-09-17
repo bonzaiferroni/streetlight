@@ -28,7 +28,7 @@ fun ViewScope.guestRegistrationForm(model: UserCreator) {
                     textBlock("How it works", modify(OpacityHigh, Italic))
                 }
                 bulletsOf(
-                    modify(Gap1),
+                    modify(Gap(1)),
                     { textBlock("Guest credentials are stored as secure browser cookies, so the account will only be available on this device.") },
                     { textBlock("Clearing your cookies will remove access to the account.") },
                     {

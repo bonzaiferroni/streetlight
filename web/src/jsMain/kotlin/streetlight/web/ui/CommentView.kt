@@ -10,6 +10,7 @@ import koala.html.image
 import koala.html.markdown
 import koala.html.navigationIfNotNull
 import koala.html.spacer
+import kotlinx.css.pct
 import streetlight.model.data.Comment
 import streetlight.model.ui.StarRoute
 import streetlight.web.io.TalkLog
@@ -205,7 +206,7 @@ class CommentView(
                 row(modify(AlignItemsCenter, modify(ZenBg, Padding1))) {
                     navigationIfNotNull(comment.username?.let { StarRoute(it) }) {
                         row(modify(AlignItemsCenter)) {
-                            image(comment.thumb, modify(Aspect1, Height6, BorderRadius50P))
+                            image(comment.thumb, modify(Aspect1, Height(6), BorderRadius50P))
                             column(modify(Gap0)) {
                                 textBlock(comment.username?.value ?: "[Former Guest]")
                                 textBlock(comment.createdAt.toAgoFormat(), modify(OpacityHigh, TextSmall))
@@ -213,7 +214,7 @@ class CommentView(
                         }
                     }
                     spacer(modify(Flex1))
-                    icon(SvgFile.EyeMinus, modify(Height5, OpacityHigh)).onClickElement {
+                    icon(SvgFile.EyeMinus, modify(Height(5), OpacityHigh)).onClickElement {
                         val isHidden = rootBlock.toggle(Hide)
                         val svg = when (isHidden) {
                             true -> SvgFile.EyePlus
@@ -224,7 +225,7 @@ class CommentView(
                 }
                 column(modify(Padding1, CommentClass.InnerCard)) {
                     _bodyBlock = box(modify(CommentClass.Body)) {
-                        _editBlock = div(modify(CommentClass.Editor, Height100Pct))
+                        _editBlock = div(modify(CommentClass.Editor, Height(100.pct)))
                         _contentBlock = div(modify(CommentClass.Content, Padding1)) {
                             markdown(comment.text)
                         }
@@ -255,7 +256,7 @@ class CommentView(
 
             row(modify(Gap0, CommentClass.AfterCard)) {
                 // indent indicator
-                div(modify(ZenBg, Width1, BorderRadiusBottom1))
+                div(modify(ZenBg, Width(1), BorderRadiusBottom1))
 
                 column(modify(CommentClass.NestedContent, modify(Flex1))) {
                     _replyBlock = div(modify(CommentClass.Reply))

@@ -1,15 +1,6 @@
 package koala.dom
 
-import koala.modifier.FadeLoop
-import koala.modifier.MagicStyle
-import koala.modifier.ModifierSet
-import koala.modifier.PointerEventsAuto
-import koala.modifier.PointerEventsNone
-import koala.modifier.Reveal
-import koala.modifier.TextAlignCenter
-import koala.modifier.Width100Pct
-import koala.modifier.addModifiers
-import koala.modifier.modify
+import koala.modifier.*
 import koala.html.DialogStyle
 import koala.html.filigree
 import koala.html.heading2
@@ -17,6 +8,7 @@ import kampfire.model.MutableTap
 import koala.modifier.unmodify
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.css.pct
 import kotlinx.html.js.dialog
 import web.events.addEventListener
 import web.html.HTMLDialogElement
@@ -95,7 +87,7 @@ fun ViewScope.rawDialogContent(
     title: String?,
     mod: ModifierSet? = null,
     content: ViewScope.() -> Unit
-) = column(modify(Width100Pct, PointerEventsNone)) {
+) = column(modify(Width(100.pct), PointerEventsNone)) {
     title?.let {
         filigree {
             heading2(title, modify(TextAlignCenter, PointerEventsAuto, FadeLoop))

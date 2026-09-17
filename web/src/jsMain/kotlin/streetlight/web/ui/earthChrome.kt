@@ -1,18 +1,12 @@
 package streetlight.web.ui
 
 import koala.SvgFile
-import koala.modifier.AlignItemsCenter
-import koala.modifier.Aspect1
-import koala.modifier.BlurBackdrop
-import koala.modifier.Padding1
-import koala.modifier.PaperGradientBg
-import koala.modifier.PointerEventsAuto
-import koala.modifier.Width5
-import koala.modifier.modify
+import koala.modifier.*
 import koala.dom.ViewScope
 import koala.dom.icon
 import koala.dom.onClick
 import koala.dom.row
+import koala.modifier.Width
 import streetlight.model.ui.HomeRoute
 import streetlight.web.model.Earth
 
@@ -37,7 +31,7 @@ private fun ViewScope.boundsHud(model: Earth) {
 }
 
 fun ViewScope.earthHeaderLegacy(model: Earth) {
-    val iconMod = modify(Width5, Aspect1)
+    val iconMod = modify(Width(5), Aspect1)
     row(modify(EarthStyle.Header, AlignItemsCenter, PaperGradientBg, Padding1, PointerEventsAuto, BlurBackdrop)) {
         // flowBlock(model.mapFlow, modify(Flex1)) { map ->
         //     when (map) {

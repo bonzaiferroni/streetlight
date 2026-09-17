@@ -11,7 +11,7 @@ import kotlinx.html.DIV
 fun ViewScope.formBodyProto(
     mod: ModifierSet? = null,
     block: DIV.() -> Unit
-) = column(modify(mod, Gap8)) {
+) = column(modify(mod, Gap(8))) {
     block()
 }
 
@@ -100,11 +100,11 @@ fun ViewScope.formSubmitLegacy(
 }
 
 object FormMod {
-    val Card = modify(ZenBg, QueryContainer, Gap3)
+    val Card = modify(ZenBg, QueryContainer, Gap(3))
     val Part = modify(ContainerMdRow)
     val Instructions = modify(Flex1, JustifyContentCenter, Margin1)
     val Controls = modify(JustifyContentCenter)
     val Bullets = modify(TextSmall)
-    val GeoMap = modify(Height48, BorderRadius2, OverflowClip, MoonShadow)
+    val GeoMap = modify(Height(48), BorderRadius2, OverflowClip, MoonShadow)
 }
 

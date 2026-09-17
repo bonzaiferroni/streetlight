@@ -12,7 +12,7 @@ fun ViewScope.viewEarth(model: Earth) {
     box(EarthStyle.Container, modify(Size100P)) {
         val cameraController = geoMapMount(mod = modify(EarthStyle.Map))
         column(modify(Gap0, PointerEventsNone)) {
-            div(modify(EarthStyle.Grid, Flex1, MinHeight0)) {
+            div(modify(EarthStyle.Grid, Flex1, MinHeight(0))) {
                 earthUnboundedOverlay(model, cameraController)
                 earthHeader(model)
                 earthMenu(model)
@@ -40,7 +40,7 @@ fun ViewScope.viewEarthRoute() {
 fun ViewScope.earthHeader(model: Earth) {
     flowBlock(model.mapState, modify(EarthStyle.Header, EarthStyle.MoveDimmer, Magic)) { map ->
         if (map == null) return@flowBlock
-        column(modify(Height8, EarthStyle.MapTitle, JustifyContentCenter)) {
+        column(modify(Height(8), EarthStyle.MapTitle, JustifyContentCenter)) {
             filigree {
                 heading3(map.title)
             }

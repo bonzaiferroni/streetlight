@@ -1,15 +1,7 @@
 package streetlight.web.pages
 
 import koala.SvgFile
-import koala.modifier.BlurBackdrop
-import koala.modifier.Class
-import koala.modifier.FadeLoop
-import koala.modifier.HeavyCardBg
-import koala.modifier.Height5
-import koala.modifier.OverflowClip
-import koala.modifier.PointerEventsAuto
-import koala.modifier.modify
-import koala.modifier.stylesheet
+import koala.modifier.*
 import koala.html.Id
 import koala.interop.InlineJs
 import koala.html.button
@@ -23,7 +15,7 @@ fun FlowContent.starHelmPopover() {
     popover(StarHelm.PopoverId, modify(StarHelm.PopoverClass)) {
         card(modify(StarHelm.PopoverCardClass, HeavyCardBg, BlurBackdrop, OverflowClip, PointerEventsAuto)) {
             setId(StarHelm.StarBarHelm)
-            button(SvgFile.LoaderSmall, modify(Height5, FadeLoop)) {
+            button(SvgFile.LoaderSmall, modify(Height(5), FadeLoop)) {
                 onClick = StarHelm.ClosePopover.block
             }
         }

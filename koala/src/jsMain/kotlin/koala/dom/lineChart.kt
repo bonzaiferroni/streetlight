@@ -14,7 +14,7 @@ fun <T> ViewScope.lineChart(
     dataFlow: Flow<ChartData<T>>,
     pointFlow: Flow<T>?,
 ) {
-    val element = div(modify(Height48))
+    val element = div(modify(Height(48)))
     val chart = LineChart<T>(
         container = element,
         title = title,

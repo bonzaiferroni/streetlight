@@ -20,7 +20,7 @@ fun FlowContent.siteDocShell(content: DocContent) {
         featureHeader(doc.title, "a Streetlight doc", doc.image)
 
         row(modify(AlignItemsStart)) {
-            card(modify(Width32, ZenBg, Gap0, PositionSticky, TopSpacing8)) {
+            card(modify(Width(32), ZenBg, Gap0, PositionSticky, TopSpacing8)) {
                 setId(SiteDocKey.TableId)
                 siteDocTable(table)
             }
@@ -64,7 +64,7 @@ fun FlowContent.siteDocContent(node: DocNode) {
             }
         }
 
-        column(modify(Gap8)) {
+        column(modify(Gap(8))) {
             doc.sections.forEach { section ->
 
                 section {
@@ -87,7 +87,7 @@ fun FlowContent.siteDocContent(node: DocNode) {
         row {
             node.previous?.let {
                 navigation(SiteDocRoute(it.docId)) {
-                    row(modify(Height5, AlignItemsCenter)) {
+                    row(modify(LargeIconHeight, AlignItemsCenter)) {
                         icon(SvgFile.ArrowLeft, modify(AlignSelfStretch))
                         textBlock(it.label)
                     }
@@ -96,7 +96,7 @@ fun FlowContent.siteDocContent(node: DocNode) {
             spacer(modify(Flex1))
             node.next?.let {
                 navigation(SiteDocRoute(it.docId)) {
-                    row(modify(Height5, AlignItemsCenter)) {
+                    row(modify(LargeIconHeight, AlignItemsCenter)) {
                         textBlock(it.label)
                         icon(SvgFile.ArrowRight, modify(AlignSelfStretch))
                     }

@@ -8,7 +8,7 @@ import kotlinx.html.div
 
 fun FlowContent.icon(
     file: Svg,
-    modifiers: ModifierSet? = modify(Height3),
+    modifiers: ModifierSet? = modify(SmallIconHeight),
     block: DIV.() -> Unit = {}
 ) {
     div {
@@ -35,8 +35,8 @@ object IconStyle {
     val Stretch = Class("icon-stretch")
     val Signal = Class("signal")
 
-    val DefaultMod = modify(Aspect1, Height3)
-    val DefaultSignal = modify(Aspect1, Height3, FadeIn)
+    val DefaultMod = modify(Aspect1, SmallIconHeight)
+    val DefaultSignal = modify(Aspect1, SmallIconHeight, FadeIn)
 }
 
 // language="CSS"
