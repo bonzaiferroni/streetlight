@@ -37,7 +37,7 @@ enum class AssetType {
     Image,
 }
 
-data class Css(override val url: Url): Asset {
+data class Stylesheet(override val url: Url): Asset {
     override val assetType get() = AssetType.Stylesheet
 }
 
@@ -82,7 +82,7 @@ fun fileOf(filename: String, isGenerated: Boolean): Asset {
 
     return when (type) {
         AssetType.Javascript -> Js(url)
-        AssetType.Stylesheet -> Css(url)
+        AssetType.Stylesheet -> Stylesheet(url)
         AssetType.Svg -> Svg(url)
         AssetType.Image -> Image(url)
         else -> error("unsupported type: $type")

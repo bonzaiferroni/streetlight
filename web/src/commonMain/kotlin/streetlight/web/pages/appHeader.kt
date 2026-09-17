@@ -16,7 +16,7 @@ fun FlowContent.appHeader(
         val rayMod = modify(Flex1, MaxWidth(24), Margin(1), MoonDropShadow, Height2Px, AspectAuto, ParticleRay)
         hr(modify(rayMod, AccentFg, FlipX))
         navigation(HomeRoute, modify(Height(100.pct))) {
-            textLogo(modify(Height100Pct, FocusTarget))
+            textLogo(modify(Height(100.pct), FocusTarget))
         }
         hr(modify(rayMod, PrimaryFg))
     }

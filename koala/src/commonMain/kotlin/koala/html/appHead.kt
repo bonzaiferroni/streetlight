@@ -1,8 +1,7 @@
 package koala.html
 
-import koala.Css
+import koala.Stylesheet
 import koala.Js
-import koala.JsFile
 import koala.Asset
 import koala.PageResource
 import koala.interop.KoalaHeadScript
@@ -41,7 +40,7 @@ fun HEAD.applyFiles(files: Collection<Asset>) {
 fun HEAD.applyFile(file: Asset) {
     when (file) {
         is Js -> linkScript(file)
-        is Css -> linkCssFile(file)
+        is Stylesheet -> linkCssFile(file)
         else -> error("unsupported file: $file")
     }
 }
@@ -52,7 +51,7 @@ fun FlowOrMetaDataOrPhrasingContent.linkScript(file: Js) {
     }
 }
 
-fun HEAD.linkCssFile(file: Css) {
+fun HEAD.linkCssFile(file: Stylesheet) {
     link { rel = "stylesheet"; href = file.url.value }
 }
 

@@ -15,7 +15,7 @@ object JsFile : FileSet<Js>() {
     val Koala = addJs("koala/koala.js")
 }
 
-object CssFile : FileSet<Css>() {
+object CssFile : FileSet<Stylesheet>() {
     val Reset = add("reset.css")
 
     // val Styles = add("styles.css")
