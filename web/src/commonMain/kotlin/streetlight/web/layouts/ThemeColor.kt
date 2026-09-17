@@ -2,7 +2,7 @@ package streetlight.web.layouts
 
 import streetlight.model.data.PostType
 
-enum class ColorScheme(val cssValue: String) {
+enum class ThemeColor(val cssValue: String) {
     Accent("var(--accent-fg)"),
     Primary("var(--primary-fg)"),
     Galaxy("var(--sea-green-fg)"),
@@ -12,8 +12,8 @@ enum class ColorScheme(val cssValue: String) {
     Media("var(--primary-fg)"),
 }
 
-val PostType.colorScheme get() = when (this) {
-    PostType.Event -> ColorScheme.Event
-    PostType.Location -> ColorScheme.Location
-    PostType.Media -> ColorScheme.Media
+val PostType.themeColor get() = when (this) {
+    PostType.Event -> ThemeColor.Event
+    PostType.Location -> ThemeColor.Location
+    PostType.Media -> ThemeColor.Media
 }

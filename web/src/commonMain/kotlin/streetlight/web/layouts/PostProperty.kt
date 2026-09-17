@@ -1,7 +1,5 @@
 package streetlight.web.layouts
 
-import koala.Svg
-import koala.SvgFile
 import koala.html.AppRoute
 import koala.model.Doc
 import streetlight.model.data.City
@@ -43,17 +41,17 @@ val FeedEntity.contentRoute get(): AppRoute? = when (this) {
     is CustomEntity -> route
 }
 
-val FeedEntity.colorScheme get(): ColorScheme = when (this) {
-    is City -> ColorScheme.City
-    is EventLocation -> ColorScheme.Event
-    is EventPost -> ColorScheme.Event
-    is Event -> ColorScheme.Event
-    is Galaxy -> ColorScheme.Galaxy
-    is LocationPost -> ColorScheme.Location
-    is Location -> ColorScheme.Location
-    is MediaPost -> ColorScheme.Media
-    is Media -> ColorScheme.Media
-    is CustomEntity -> ColorScheme.Primary
+val FeedEntity.themeColor get(): ThemeColor = when (this) {
+    is City -> ThemeColor.City
+    is EventLocation -> ThemeColor.Event
+    is EventPost -> ThemeColor.Event
+    is Event -> ThemeColor.Event
+    is Galaxy -> ThemeColor.Galaxy
+    is LocationPost -> ThemeColor.Location
+    is Location -> ThemeColor.Location
+    is MediaPost -> ThemeColor.Media
+    is Media -> ThemeColor.Media
+    is CustomEntity -> ThemeColor.Primary
 }
 
 val FeedEntity.flair get(): FlairIcon = when (this) {

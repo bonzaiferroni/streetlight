@@ -22,7 +22,7 @@ internal fun DIV.configureGridColumns(
     template: GridTemplateColumns,
     queryTemplate: GridTemplateColumns,
 ) {
-    setStyle(Property.GridTemplateColumns.of(template))
+    setStyle(koala.modifier.GridTemplateColumns.of(template))
     setStyle(GridColumns.QueryTemplate.of(queryTemplate))
 }
 

@@ -5,11 +5,10 @@ val LayoutUtilityCss
         // Gap
         Gap0, Gap1, Gap2, Gap3, Gap4, Gap8, Gap2Px, GapHalf,
         // Flex
-        Flex0, Flex1, Flex2, Flex3, Flex4, FlexBasis25, FlexBasis33, FlexShrink0,
+        Flex0, Flex2, Flex3, Flex4, FlexBasis25, FlexBasis33, FlexShrink0,
         FlexDirectionRow, NoWrap, FlexWrap, FlexBasisMin, DisplayFlex,
         // Align
-        AlignItemsCenter, AlignItemsStretch, AlignItemsStart, AlignItemsEnd, AlignContentStart, AlignContentCenter,
-        JustifyContentCenter, JustifyContentEnd, JustifyContentSpaceAround, JustifyContentSpaceBetween,
+        JustifyContentEnd, JustifyContentSpaceAround, JustifyContentSpaceBetween,
         JustifySelfEnd, JustifySelfCenter, JustifyContentStretch, JustifyContentStart,
         AlignSelfStart, AlignSelfCenter, AlignSelfEnd, AlignSelfStretch, JustifySelfStart, JustifySelfStretch,
         // Width
@@ -20,7 +19,7 @@ val LayoutUtilityCss
         MaxWidth5, MaxWidth16, MaxWidth24, MaxWidth32, MaxWidth48, MaxWidth64, MaxWidthTextBody, MaxWidthNone,
         // Height
         HeightAuto, Height50Pct, Height100Pct, Height100Vh,
-        Height0, Height2, Height2Px, Height3, Height4, Height5, Height6, Height7, Height8, Height9, Height10, Height12, Height16,
+        Height0, Height2, Height3, Height4, Height5, Height6, Height7, Height8, Height9, Height10, Height12, Height16,
         Height24, Height32, Height48,
         MinHeightAuto, MinHeight0, MinHeight4, MinHeight5, MinHeight6, MinHeight8, MinHeight16, MinHeight24, MinHeight32, MinHeight48, MinHeight100P,
         MaxHeight5, MaxHeight8, MaxHeight12, MaxHeight16, MaxHeight24, MaxHeight32, MaxHeight64, MaxHeight96, MaxHeight50P, MaxHeight100P,
@@ -72,12 +71,6 @@ val FlexShrink0 = utilityOf("flex-shrink", "flex-shrink: 0")
 val FlexBasis25 = utilityOf("flex-basis-25", "flex-basis: 25%")
 val FlexBasis33 = utilityOf("flex-basis-33", "flex-basis: 33%")
 
-// Align Items
-val AlignItemsStretch = utilityOf("align-items-stretch", "align-items: stretch")
-val AlignItemsStart = utilityOf("align-items-start", "align-items: flex-start")
-val AlignItemsEnd = utilityOf("align-items-end", "align-items: flex-end")
-val AlignContentStart = utilityOf("align-content-start", "align-content: flex-start")
-val AlignContentCenter = utilityOf("align-content-center", "align-content: center")
 
 // Justify Content
 // val JustifyContentCenter = utilityOf("justify-content-center", "justify-content: center")

@@ -24,7 +24,6 @@ import koala.modifier.OverflowClip
 import koala.modifier.Padding0
 import koala.modifier.Padding2
 import koala.modifier.Padding4
-import koala.modifier.Property
 import koala.modifier.QueryContainer
 import koala.modifier.TextAlignCenter
 import koala.modifier.VignetteOver
@@ -46,7 +45,7 @@ import koala.html.textBlock
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import streetlight.model.data.ExtraLink
-import streetlight.web.layouts.ColorScheme
+import streetlight.web.layouts.ThemeColor
 import streetlight.web.layouts.cellBlock
 
 fun FlowContent.featureHeader(
@@ -54,7 +53,7 @@ fun FlowContent.featureHeader(
     descriptor: String,
     image: Image?,
     subtitle: String? = null,
-    colorScheme: ColorScheme = ColorScheme.Primary,
+    colorScheme: ThemeColor = ThemeColor.Primary,
     description: Markdown? = null,
     cellContent: (FlowContent.() -> Unit)? = null,
     links: List<ExtraLink>? = null,
@@ -63,7 +62,7 @@ fun FlowContent.featureHeader(
     block: DIV.() -> Unit = { },
 ) {
     card(modify(mod, QueryContainer, Padding0, Gap0, OverflowClip, MoonShadow, ZenBg, BorderSolid2Px)) {
-        setStyle(Property.ColorScheme.of(colorScheme.cssValue))
+        setStyle(koala.modifier.ColorScheme.of(colorScheme.cssValue))
         block()
 
         column(modify(ContainerMdRow, FlexItems1, Gap0)) {

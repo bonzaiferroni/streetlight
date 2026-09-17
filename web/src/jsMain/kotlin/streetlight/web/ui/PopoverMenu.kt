@@ -2,9 +2,9 @@ package streetlight.web.ui
 
 import kampfire.model.MutableTap
 import kampfire.model.storeOf
+import koala.modifier.AnchorName
 import koala.modifier.Gap2Px
 import koala.modifier.ModifierSet
-import koala.modifier.Property
 import koala.modifier.modify
 import koala.dom.ViewScope
 import koala.dom.flowBlock
@@ -45,9 +45,9 @@ fun <T> ViewScope.popoverMenu(
         val toggle = event.asDynamic()
         val invoker = toggle.source as? HTMLElement ?: return@addEventListener
         if (toggle.newState == "open") {
-            currentInvoker?.removeStyle(Property.AnchorName)
+            currentInvoker?.removeStyle(AnchorName)
             currentInvoker = invoker
-            invoker.setStyle(Property.AnchorName.of(anchor))
+            invoker.setStyle(AnchorName.of(anchor))
             state.set(transform(invoker) ?: defaultValue ?: error("popover menu content not found"))
         } else {
             state.set(null)

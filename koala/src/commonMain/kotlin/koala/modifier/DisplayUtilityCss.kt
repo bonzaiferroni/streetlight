@@ -39,7 +39,6 @@ val DisplayUtilityCss
     )
 
 // Display
-// val DisplayNone = CssUtility("display-none", ".display-none { display: none !important; }")
 val DisplayNone = utilityOf("display-none", "display: none !important")
 val VisibilityHidden = utilityOf("visibility-hidden", "visibility: hidden !important")
 

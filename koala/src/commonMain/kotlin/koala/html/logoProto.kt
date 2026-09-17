@@ -10,7 +10,7 @@ fun FlowContent.logoProto(
     div {
         addModifiers(LogoProtoKey.Class, modifiers)
         div {
-            setStyle(Property.MaskUrl.of(SvgFile.FlameLarge))
+            setStyle(MaskUrl.of(SvgFile.FlameLarge))
         }
     }
 }

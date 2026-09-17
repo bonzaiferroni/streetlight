@@ -231,7 +231,7 @@ fun ViewScope.galleryBuilder(editor: BlockEditor) {
         }
         flowBlock(blockState) { block ->
             div(modify(LayoutStyle.Gallery)) {
-                setStyle(Property.ColumnCount.of(block.columns))
+                setStyle(ColumnCount.of(block.columns))
                 block.images.forEachIndexed { index, _ ->
                     val indexedImageState = blockState.mutableTapOf({ it.images.getOrNull(index) }) { indexedImage ->
                         copy(images = if (indexedImage == null) {

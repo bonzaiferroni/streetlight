@@ -18,7 +18,7 @@ import kotlinx.html.hr
 import streetlight.model.data.FeedEntity
 import streetlight.model.ui.CityRoute
 import streetlight.model.ui.GalaxyRoute
-import streetlight.web.layouts.ColorScheme
+import streetlight.web.layouts.ThemeColor
 import streetlight.web.layouts.FeedSection
 import streetlight.web.layouts.cellBlock
 import streetlight.web.model.CityMarker
@@ -64,12 +64,12 @@ private fun ViewScope.focusPanel(
     post: FeedEntity,
     route: AppRoute,
     subroute: AppRoute? = null,
-    colorScheme: ColorScheme = ColorScheme.Primary,
+    colorScheme: ThemeColor = ThemeColor.Primary,
     cells: (FlowContent.() -> Unit)? = null,
 ) {
     val extraLinks = post.links
     card(modify(Gap0, Padding0, BlurBackdrop, PointerEventsAuto, BorderSolid2Px, EarthStyle.MoveDimmer)) {
-        setStyle(Property.ColorScheme.of(colorScheme.cssValue))
+        setStyle(ColorScheme.of(colorScheme.cssValue))
         column(modify(Gap0)) {
             featureImage(post.image, modify(Flex1))
             cells?.let {

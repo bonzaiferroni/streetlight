@@ -36,7 +36,7 @@ fun DIV.configureFeedRow(
     addModifiers(modify(FeedRow.Base, modify(Padding1, ZenBg)))
 
     val imageUrl = entity.image?.thumb ?: SiteImage.placeholder.thumb // td: make placeholder depend on post type
-    val colorScheme = entity.colorScheme
+    val colorScheme = entity.themeColor
     val flair = entity.flair
     val postRoute = entity.contentRoute
     val heading = entity.label
@@ -52,7 +52,7 @@ fun DIV.configureFeedRow(
     }
 
     div(modify(FeedRow.Content)) {
-        setStyle(Property.ColorScheme.of(colorScheme.cssValue))
+        setStyle(koala.modifier.ColorScheme.of(colorScheme.cssValue))
         row(modify(Height10)) {
             navigationIfNotNull(postRoute, modify(Width10, OverflowClip, BorderRadius1, BorderSolid2Px, MoonShadow)) {
                 image(imageUrl, modify(Size100P, ObjectFitCover))

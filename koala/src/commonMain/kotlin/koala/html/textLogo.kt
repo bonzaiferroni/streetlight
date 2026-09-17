@@ -7,10 +7,10 @@ import koala.modifier.Class
 import koala.modifier.GlowBackground
 import koala.modifier.GlowShadow
 import koala.modifier.Height5
+import koala.modifier.MaskUrl
 import koala.modifier.ModifierSet
 import koala.modifier.MoonDropShadow
 import koala.modifier.PrimaryFg
-import koala.modifier.Property
 import koala.modifier.modify
 import koala.modifier.setAriaLabel
 import koala.modifier.setStyle
@@ -22,14 +22,14 @@ fun FlowContent.textLogo(
     div(modify(mod, Class, MoonDropShadow)) {
         setAriaLabel("Streetlight Logo")
         box(modify(LogoIcon, AccentFg)) {
-            setStyle(Property.MaskUrl.of(SvgFile.LogoTextStreet))
+            setStyle(MaskUrl.of(SvgFile.LogoTextStreet))
         }
         box(modify(LogoIcon, PrimaryFg)) {
-            setStyle(Property.MaskUrl.of(SvgFile.LogoTextLight))
+            setStyle(MaskUrl.of(SvgFile.LogoTextLight))
         }
         div(modify(ShadowBox, GlowShadow)) {
             div(modify(LogoIcon, GlowBackground)) {
-                setStyle(Property.MaskUrl.of(SvgFile.LogoFlame))
+                setStyle(MaskUrl.of(SvgFile.LogoFlame))
             }
         }
     }

@@ -1,6 +1,7 @@
 package koala.html
 
 import koala.modifier.Class
+import koala.modifier.ColorScheme
 import koala.modifier.ModifierSet
 import koala.modifier.Property
 import koala.modifier.addModifiers
@@ -64,7 +65,7 @@ fun DIV.configureTabsHeader(
                 }
                 addModifiers(TabsStyle.Button)
                 tab.colorScheme?.let {
-                    setStyle(Property.ColorScheme.of(it))
+                    setStyle(ColorScheme.of(it))
                 }
                 +tab.label
             }

@@ -1,6 +1,5 @@
 package koala.dom
 
-import koala.modifier.Property
 import koala.modifier.modify
 import koala.html.span
 import koala.markdown.MarkdownSpan
@@ -13,7 +12,7 @@ import web.html.HTMLElement
 
 private fun AppendScope.renderEditorTable(chunk: String, element: HTMLElement, block: MarkdownTable) {
     val columns = block.header.cells.size
-    element.setStyle(Property.GridTemplateColumns.of(GridTemplateColumns("repeat($columns, max-content) 1fr")))
+    element.setStyle(koala.modifier.GridTemplateColumns.of(GridTemplateColumns("repeat($columns, max-content) 1fr")))
 
     val cursor = SpanCursor(block.tableSpans())
 

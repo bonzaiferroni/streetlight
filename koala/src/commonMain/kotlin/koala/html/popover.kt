@@ -13,7 +13,6 @@ import koala.modifier.ModifierSet
 import koala.modifier.OverflowClip
 import koala.modifier.Padding0
 import koala.modifier.PositionAnchor
-import koala.modifier.Property
 import koala.modifier.Scale
 import koala.modifier.addModifiers
 import koala.modifier.modify
@@ -22,6 +21,7 @@ import koala.modifier.setPopoverTarget
 import koala.modifier.setStyle
 import koala.modifier.stringAttributeOf
 import koala.interop.InlineJs
+import koala.modifier.Css
 import kotlinx.html.A
 import kotlinx.html.BUTTON
 import kotlinx.html.DIV
@@ -50,7 +50,7 @@ fun DIV.configurePopover(
 ) {
     addModifiers(Popover.Class, mod)
     setId(id)
-    setStyle(Property.PositionAnchor.of(anchor ?: id.toPositionAnchor()))
+    setStyle(Css.PositionAnchor.of(anchor ?: id.toPositionAnchor()))
     setAttribute(Attribute.Popover.to(if (isManual) "manual" else "auto"))
     block()
 }

@@ -4,11 +4,11 @@ import koala.SvgFile
 import koala.modifier.*
 import koala.dom.*
 import koala.html.spacer
-import streetlight.web.layouts.ColorScheme
+import streetlight.web.layouts.ThemeColor
 import streetlight.web.model.LocationScout
 
 fun ViewScope.locationFinder(model: LocationScout) = formCard("Location Finder") {
-    setStyle(Property.ColorScheme.of(ColorScheme.Location.cssValue))
+    setStyle(ColorScheme.of(ThemeColor.Location.cssValue))
 
     formRow {
         formSection("search") {

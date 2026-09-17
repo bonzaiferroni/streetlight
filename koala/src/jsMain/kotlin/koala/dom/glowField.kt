@@ -1,10 +1,13 @@
 package koala.dom
 
+import koala.modifier.BackgroundColor
 import koala.modifier.Glow
+import koala.modifier.Left
 import koala.modifier.ModifierSet
-import koala.modifier.Property
 import koala.modifier.modify
 import koala.modifier.rgba
+import koala.modifier.Top
+import koala.modifier.Width
 import kampfire.model.MutableTap
 import koala.model.GlowControlStyle
 import kotlinx.css.pct
@@ -23,10 +26,10 @@ fun ViewScope.glowField(
     lateinit var handleElement: HTMLElement
 
     fun place(glow: Glow) {
-        handleElement.setStyle(Property.Left.of(glow.position.x.pct))
-        handleElement.setStyle(Property.Top.of(glow.position.y.pct))
-        handleElement.setStyle(Property.Width.of((glow.position.radius / 2.0).pct))
-        handleElement.setStyle(Property.BackgroundColor.of(glow.rgba()))
+        handleElement.setStyle(Left.of(glow.position.x.pct))
+        handleElement.setStyle(Top.of(glow.position.y.pct))
+        handleElement.setStyle(Width.of((glow.position.radius / 2.0).pct))
+        handleElement.setStyle(BackgroundColor.of(glow.rgba()))
     }
 
     fun report(event: PointerEvent) {

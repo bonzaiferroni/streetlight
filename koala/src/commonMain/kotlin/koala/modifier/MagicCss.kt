@@ -366,11 +366,11 @@ $ParticleRay::after {
     opacity: .8;
     z-index: -1;
     background: linear-gradient(to right, transparent, currentColor, transparent);
-    animation: drift calc(4s + var(${Property.RandomSeed}, 0) * 1s) linear infinite;
-    animation-delay: calc(2s + var(${Property.RandomSeed}, 0) * 1s);
+    animation: drift calc(4s + var(${RandomSeed}, 0) * 1s) linear infinite;
+    animation-delay: calc(2s + var(${RandomSeed}, 0) * 1s);
     animation-fill-mode: backwards;
 }
-$ParticleRay::after { animation-duration: calc(2s + var(${Property.RandomSeed}, 0) * 1s); }
+$ParticleRay::after { animation-duration: calc(2s + var(${RandomSeed}, 0) * 1s); }
 @keyframes drift {
     0%   { transform: translateX(-100%); }
     100% { transform: translateX(100%); }

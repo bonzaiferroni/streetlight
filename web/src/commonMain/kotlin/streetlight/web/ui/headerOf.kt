@@ -8,7 +8,7 @@ import streetlight.model.data.Galaxy
 import streetlight.model.data.Location
 import streetlight.model.data.Media
 import streetlight.model.data.Star
-import streetlight.web.layouts.ColorScheme
+import streetlight.web.layouts.ThemeColor
 import streetlight.web.layouts.cellBlock
 import streetlight.web.layouts.cellContentOf
 import streetlight.web.layouts.postedAtCell
@@ -48,7 +48,7 @@ fun FlowContent.headerOf(
             descriptor = "a galaxy",
             subtitle = galaxy.tagline,
             image = galaxy.image,
-            colorScheme = ColorScheme.Galaxy,
+            colorScheme = ThemeColor.Galaxy,
             description = galaxy.description,
             mod = mod,
             cellContent = cellContentOf(galaxy),
