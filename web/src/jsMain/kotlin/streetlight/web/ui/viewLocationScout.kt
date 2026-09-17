@@ -1,5 +1,6 @@
 package streetlight.web.ui
 
+import kampfire.api.Username
 import koala.LottieFile
 import koala.dom.*
 import koala.dom.MenuAction
@@ -11,7 +12,7 @@ import streetlight.model.ui.LocationScoutRoute
 import streetlight.web.layouts.postRow
 import streetlight.web.model.LocationScoutStage
 
-fun ViewScope.viewLocationScout(galaxy: Galaxy) {
+fun ViewScope.viewLocationScout(galaxy: Galaxy, username: Username) {
     // val model = app.getCoroutineScoped<GalaxyEditor>(null, renderScope)
     val editor = app.getLocationEditor(LocationEdit(), contentScope)
     val model = app.getLocationScout(galaxy, editor, contentScope)
@@ -36,8 +37,12 @@ fun ViewScope.viewLocationScout(galaxy: Galaxy) {
                     )
                 }
                 LocationScoutStage.Review -> column {
-                    val edit = editor.editNow
-                    postRow(edit, session.stateNow.star?.username)
+                    model.stateNow.location?.let {
+                        feedRow(it, true)
+                    } ?: editor.editNow.let {
+                        val edit = editor.editNow
+                        postRow(edit, username)
+                    }
 
                     formSubmit(
                         label = "Post",
@@ -54,8 +59,8 @@ fun ViewScope.viewLocationScout(galaxy: Galaxy) {
 }
 
 fun RouteScope.viewLocationScoutRoute() {
-    routeBlock<LocationScoutRoute, Galaxy> { galaxy ->
-        viewLocationScout(galaxy)
+    starRouteBlock<LocationScoutRoute, Galaxy> { star, galaxy ->
+        viewLocationScout(galaxy, star.username)
     }
 }
 

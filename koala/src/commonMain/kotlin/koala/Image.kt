@@ -62,7 +62,7 @@ fun siteImageOf(
     attribution: String? = null,
     attributionUrl: String? = null,
     caption: String? = null,
-    variants: List<ImageVariant>? = null,
+    variants: List<ImageVariant>? = listOf(ImageVariant(ImageSize.Large, siteImageUrlOf(path))),
     name: String = path.filenameWithoutExtension(),
 ) = Image(
     url = siteImageUrlOf(path),

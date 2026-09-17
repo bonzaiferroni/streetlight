@@ -50,7 +50,7 @@ fun FlowContent.featureHeader(
                     heading2(title, modify(TextAlignCenter, LineHeight1, FocusTarget))
                     filigree { textBlock(descriptor, modify(Italic, OpacityHalf)) }
                     subtitle?.let {
-                        heading4(subtitle, modify(OpacityHigh, TextAlignCenter))
+                        textBlock(subtitle, modify(OpacityHigh, TextAlignCenter))
                     }
                 }
             }
