@@ -10,10 +10,9 @@ import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Instant
-import kotlin.uuid.Uuid
 
 @Serializable
-data class SiteStatus(
+data class StatusPoint(
     val siteStatusId: SiteStatusId,
     val integers: Map<SiteMetric, Int>,
     val doubles: Map<SiteMetric, Double>,

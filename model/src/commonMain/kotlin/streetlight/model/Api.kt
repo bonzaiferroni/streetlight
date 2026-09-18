@@ -241,10 +241,10 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
     }
 
     object Status: ApiNode(this) {
-        object Feed: GetEndpoint<List<SiteStatus>>(this) {
+        object Feed: GetEndpoint<SiteStatusFeed>(this) {
             val resolution = enumParamOf<MetricResolution>("resolution")
         }
-        object ReadLast: GetEndpoint<SiteStatus>(this) {
+        object ReadLast: GetEndpoint<StatusPoint>(this) {
             val resolution = enumParamOf<MetricResolution>("resolution")
         }
     }

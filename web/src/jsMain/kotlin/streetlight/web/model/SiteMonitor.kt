@@ -14,7 +14,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import streetlight.model.data.MetricResolution
 import streetlight.model.data.SiteMetric
-import streetlight.model.data.SiteStatus
+import streetlight.model.data.StatusPoint
 import streetlight.web.io.ApiClient
 
 class SiteMonitor(
@@ -27,7 +27,7 @@ class SiteMonitor(
     val stateFlow = state.flow
 
     val pointsFlow = stateFlow.dedup { it.points }
-    val pointFlow = MutableSharedFlow<SiteStatus>()
+    val pointFlow = MutableSharedFlow<StatusPoint>()
     val timeFrameField = state.mutableTapOf({ it.timeFrame }) {
         refreshData() // td: fix ordering
         copy(timeFrame = it)
@@ -54,8 +54,8 @@ class SiteMonitor(
     private fun refreshData() {
         refreshJob?.cancel()
         refreshJob = scope.launch(::refreshData) {
-            val points = api.feedSiteStatus(stateNow.timeFrame.resolution).toDataOr(toaster) { return@launch }
-            state.set { copy(points = points) }
+            val feed = api.feedSiteStatusFeed(stateNow.timeFrame.resolution).toDataOr(toaster) { return@launch }
+            state.set { copy(points = feed.points) }
             while (true) {
                 delay(stateNow.timeFrame.resolution.duration)
                 val point = api.readLastSiteStatus(stateNow.timeFrame.resolution).toDataOr{ continue }
@@ -66,7 +66,7 @@ class SiteMonitor(
 }
 
 data class SiteMonitorState(
-    val points: List<SiteStatus> = emptyList(),
+    val points: List<StatusPoint> = emptyList(),
     val metrics: Set<SiteMetric> = SiteMetric.entries.toSet(),
     val timeFrame: TimeFrame = TimeFrame.Hour
 )

@@ -184,7 +184,7 @@ class ApiClient(private val client: FetchClient) {
     suspend fun createFeedback(edit: FeedbackEdit) = client.postApi(Api.Feedback.Create, edit)
 
     // site status
-    suspend fun feedSiteStatus(resolution: MetricResolution) = client.getApi(Api.Status.Feed) {
+    suspend fun feedSiteStatusFeed(resolution: MetricResolution) = client.getApi(Api.Status.Feed) {
         writeParam(it.resolution, resolution)
     }
     suspend fun readLastSiteStatus(resolution: MetricResolution) = client.getApi(Api.Status.ReadLast) {
