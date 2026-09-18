@@ -1,6 +1,7 @@
 package streetlight.web.ui
 
 import kampfire.model.storeOf
+import koala.LottieFile
 import koala.modifier.MarginTop1
 import koala.modifier.modify
 import koala.dom.*
@@ -17,10 +18,8 @@ fun RouteScope.viewSandbox() {
     grid(GridTemplateColumns("1fr 1fr"), modify(MarginTop1)) {
         column {
             lazyTabs(indexState = indexState) {
-                tab("The Dodmand") {
-                    textBlock("yer at The Dodmand.")
-                    textField(nameState, "yer name")
-                    println("haul up")
+                tab("cat") {
+                    lottie(LottieFile.Cat)
                 }
                 tab("Plymouth") {
                     textBlock("yer at Plymouth")
@@ -39,9 +38,8 @@ fun RouteScope.viewSandbox() {
 
         column {
             tabs(indexState = indexState) {
-                tab("The Dodmand") {
-                    textBlock("yer at The Dodmand.")
-                    textField(nameState, "yer name")
+                tab("cat") {
+                    textBlock("yer cat")
                 }
                 tab("Plymouth") {
                     textBlock("yer at Plymouth")

@@ -23,7 +23,7 @@ fun RouteScope.viewSiteMonitor() {
                     dropMenu(model.timeFrameState, mod = modify(AlignSelfStart))
                     lineChart(
                         title = "Status",
-                        dataFlow = model.dataFlow,
+                        dataFlow = model.chartFlow,
                         pointFlow = model.pointFlow,
                     )
                 }

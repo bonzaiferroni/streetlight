@@ -15,32 +15,30 @@ import koala.external.TitleOption
 import koala.external.TooltipOption
 import web.html.HTMLElement
 
-class LineChart<T>(
+class LineChartAdapter(
     private val container: HTMLElement,
     private val title: String,
     private val windowSize: Int? = 100,
 ) {
     private val chart: EChartsInstance = ECharts.init(container, KoalaTheme.ThemeId)
     private val observer = ResizeObserver { _, _ -> chart.resize() }
-    private val cache = ArrayDeque<T>()
-    private var lines: List<ChartLine<T>> = emptyList()
+    private var series: List<ChartSeries> = emptyList()
 
     init {
         observer.observe(container)
     }
 
-    fun renderData(data: ChartData<T>) {
-        cache.clear()
-        data.points.forEach { cache.addFirst(it) }
-        if (cache.isEmpty() || data.lines.isEmpty()) return
-        lines = data.lines
-        windowSize?.let { while (cache.size > it) cache.removeFirst() }
+    fun renderData(data: ChartData) {
+        if (data.series.isEmpty()) return
+        series = data.series.map { it.trimmed() }
         chart.setOption(getOption())
     }
 
-    fun addPoint(point: T) {
-        cache.addLast(point)
-        windowSize?.let { while (cache.size > it) cache.removeFirst() }
+    fun addPoint(slice: List<ChartPoint>) {
+        if (slice.size != series.size) return
+        series = series.mapIndexed { index, line ->
+            line.copy(points = line.points + slice[index]).trimmed()
+        }
         chart.setOption(getOption())
     }
 
@@ -49,10 +47,11 @@ class LineChart<T>(
         chart.dispose()
     }
 
-    private fun toPointArray(point: T, line: ChartLine<T>) = arrayOf(line.getX(point), line.getY(point))
+    private fun ChartSeries.trimmed() =
+        windowSize?.takeIf { points.size > it }?.let { copy(points = points.takeLast(it)) } ?: this
 
     private fun getOption(): ChartOption {
-        val axisLabels = lines.map { it.axisLabel }.toSet()
+        val axisLabels = series.map { it.axisLabel }.toSet()
         return ChartOption(
             title = TitleOption(text = title),
             tooltip = TooltipOption(trigger = "axis") { it.asDynamic().toFixed(1) as String },
@@ -70,13 +69,13 @@ class LineChart<T>(
                     }
                 )
             }.toTypedArray(),
-            series = lines.mapIndexed { index, line ->
+            series = series.mapIndexed { index, line ->
                 SeriesOption(
                     name = line.name,
                     type = "line",
                     showSymbol = false,
                     yAxisIndex = axisLabels.indexOf(line.axisLabel),
-                    data = cache.map({ toPointArray(it, line) }).toTypedArray(),
+                    data = line.points.map { arrayOf(it.x, it.y) }.toTypedArray(),
                     lineStyle = LineStyleOption(color = line.color ?: ChartUtility.getLineColor(index), width = 2.0)
                 )
             }.toTypedArray()

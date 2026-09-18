@@ -1,8 +1,9 @@
 package koala.dom
 
 import koala.model.ChartData
+import koala.model.ChartPoint
 import koala.modifier.*
-import koala.model.LineChart
+import koala.model.LineChartAdapter
 import kotlinx.coroutines.flow.Flow
 import kotlin.random.Random
 import kotlin.time.Clock
@@ -10,14 +11,14 @@ import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Instant
 
-fun <T> ViewScope.lineChart(
+fun ViewScope.lineChart(
     title: String,
-    dataFlow: Flow<ChartData<T>>,
-    pointFlow: Flow<T>?,
+    dataFlow: Flow<ChartData>,
+    pointFlow: Flow<List<ChartPoint>>?,
     mod: ModifierSet? = modify(Height(48))
 ) {
     val element = div(mod)
-    val chart = LineChart<T>(
+    val chart = LineChartAdapter(
         container = element,
         title = title,
     )
