@@ -13,13 +13,13 @@ fun RouteScope.viewSandbox() {
     console.log("welcome to sandbox")
 
     val nameState = storeOf("Jimmy")
-    val indexState = storeOf(1)
+    val indexState = storeOf(0)
 
     grid(GridTemplateColumns("1fr 1fr"), modify(MarginTop1)) {
         column {
             lazyTabs(indexState = indexState) {
                 tab("cat") {
-                    lottie(LottieFile.Cat)
+                    lottie(LottieFile.CatProto)
                 }
                 tab("Plymouth") {
                     textBlock("yer at Plymouth")
@@ -39,7 +39,7 @@ fun RouteScope.viewSandbox() {
         column {
             tabs(indexState = indexState) {
                 tab("cat") {
-                    textBlock("yer cat")
+                    lottie(LottieFile.Cat)
                 }
                 tab("Plymouth") {
                     textBlock("yer at Plymouth")

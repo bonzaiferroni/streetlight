@@ -4,7 +4,8 @@ import kampfire.model.Labeled
 import kampfire.model.toDataOr
 import koala.model.ChartData
 import koala.model.ChartPoint
-import koala.model.seriesOf
+import koala.model.markSeriesOf
+import koala.model.pointSeriesOf
 import koala.utils.launch
 import koala.model.dedup
 import kampfire.model.mutableTapOf
@@ -16,6 +17,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.map
 import streetlight.model.data.MetricResolution
+import streetlight.model.data.SiteEvent
 import streetlight.model.data.SiteMetric
 import streetlight.model.data.SiteStatus
 import streetlight.web.io.ApiClient
@@ -32,14 +34,23 @@ class SiteMonitor(
     private val statusFlow = MutableSharedFlow<SiteStatus>()
     val timeFrameState = state.mutableTapOf({ it.timeFrame }) { copy(timeFrame = it) }
     val chartFlow = stateFlow.dedup { state ->
+        val series = state.metrics.map { metric ->
+            pointSeriesOf(
+                name = metric.label,
+                source = state.points.asReversed(),
+                getX = ::timeOf,
+                getY = { it.getMetricOrZero(metric) },
+                axisLabel = metric.metricAxis?.label ?: metric.label,
+            )
+        }
         ChartData(
-            series = state.metrics.map { metric ->
-                seriesOf(
-                    name = metric.label,
-                    source = state.points.asReversed(),
-                    getX = ::timeOf,
-                    getY = { it.getMetricOrZero(metric) },
-                    axisLabel = metric.metricAxis?.label ?: metric.label,
+            series = when {
+                state.events.isEmpty() -> series
+                else -> series + markSeriesOf(
+                    name = "Events",
+                    source = state.events,
+                    getX = { it.time.toEpochMilliseconds().toDouble() },
+                    getLabel = { it.label },
                 )
             }
         )
@@ -60,7 +71,7 @@ class SiteMonitor(
         refreshJob?.cancel()
         refreshJob = scope.launch(::refreshData) {
             val feed = api.feedSiteStatusFeed(stateNow.timeFrame.resolution).toDataOr(toaster) { return@launch }
-            state.set { copy(points = feed.points) }
+            state.set { copy(points = feed.points, events = feed.events) }
             while (true) {
                 delay(stateNow.timeFrame.resolution.duration)
                 val status = api.readLastSiteStatus(stateNow.timeFrame.resolution).toDataOr{ continue }
@@ -74,6 +85,7 @@ private fun timeOf(point: SiteStatus) = point.endedAt.toEpochMilliseconds().toDo
 
 data class SiteMonitorState(
     val points: List<SiteStatus> = emptyList(),
+    val events: List<SiteEvent> = emptyList(),
     val metrics: Set<SiteMetric> = SiteMetric.entries.toSet(),
     val timeFrame: TimeFrame = TimeFrame.Hour
 )

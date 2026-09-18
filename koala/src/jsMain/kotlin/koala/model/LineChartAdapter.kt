@@ -8,7 +8,10 @@ import koala.external.AxisOption
 import koala.external.ChartOption
 import koala.external.ECharts
 import koala.external.EChartsInstance
+import koala.external.LabelOption
 import koala.external.LineStyleOption
+import koala.external.MarkLineDataItem
+import koala.external.MarkLineOption
 import koala.external.SeriesOption
 import koala.external.SplitLineOption
 import koala.external.TitleOption
@@ -30,14 +33,23 @@ class LineChartAdapter(
 
     fun renderData(data: ChartData) {
         if (data.series.isEmpty()) return
-        series = data.series.map { it.trimmed() }
+        series = data.series.map { line ->
+            when (line) {
+                is PointSeries -> line.trimmed()
+                is MarkSeries -> line
+            }
+        }
         chart.setOption(getOption())
     }
 
     fun addPoint(slice: List<ChartPoint>) {
-        if (slice.size != series.size) return
-        series = series.mapIndexed { index, line ->
-            line.copy(points = line.points + slice[index]).trimmed()
+        if (slice.size != series.count { it is PointSeries }) return
+        val points = slice.iterator()
+        series = series.map { line ->
+            when (line) {
+                is PointSeries -> line.copy(points = line.points + points.next()).trimmed()
+                is MarkSeries -> line
+            }
         }
         chart.setOption(getOption())
     }
@@ -47,11 +59,12 @@ class LineChartAdapter(
         chart.dispose()
     }
 
-    private fun ChartSeries.trimmed() =
+    private fun PointSeries.trimmed() =
         windowSize?.takeIf { points.size > it }?.let { copy(points = points.takeLast(it)) } ?: this
 
     private fun getOption(): ChartOption {
-        val axisLabels = series.map { it.axisLabel }.toSet()
+        val pointSeries = series.filterIsInstance<PointSeries>()
+        val axisLabels = pointSeries.map { it.axisLabel }.toSet()
         return ChartOption(
             title = TitleOption(text = title),
             tooltip = TooltipOption(trigger = "axis") { it.asDynamic().toFixed(1) as String },
@@ -69,16 +82,39 @@ class LineChartAdapter(
                     }
                 )
             }.toTypedArray(),
-            series = series.mapIndexed { index, line ->
-                SeriesOption(
-                    name = line.name,
-                    type = "line",
-                    showSymbol = false,
-                    yAxisIndex = axisLabels.indexOf(line.axisLabel),
-                    data = line.points.map { arrayOf(it.x, it.y) }.toTypedArray(),
-                    lineStyle = LineStyleOption(color = line.color ?: ChartUtility.getLineColor(index), width = 2.0)
-                )
+            series = series.map { line ->
+                when (line) {
+                    is PointSeries -> line.toOption(pointSeries.indexOf(line), axisLabels)
+                    is MarkSeries -> line.toOption()
+                }
             }.toTypedArray()
         )
     }
 }
+
+private fun PointSeries.toOption(index: Int, axisLabels: Set<String>) = SeriesOption(
+    name = name,
+    type = "line",
+    showSymbol = false,
+    yAxisIndex = axisLabels.indexOf(axisLabel),
+    data = points.map { arrayOf(it.x, it.y) }.toTypedArray(),
+    lineStyle = LineStyleOption(color = color ?: ChartUtility.getLineColor(index), width = 2.0)
+)
+
+private fun MarkSeries.toOption() = SeriesOption(
+    name = name,
+    type = "line",
+    yAxisIndex = 0,
+    data = emptyArray<Array<Double>>(),
+    markLine = MarkLineOption(
+        symbol = "none",
+        silent = true,
+        lineStyle = color?.let { LineStyleOption(color = it) },
+        data = marks.map { mark ->
+            MarkLineDataItem(
+                xAxis = mark.x,
+                label = LabelOption(formatter = mark.label, position = "end")
+            )
+        }.toTypedArray()
+    )
+)
