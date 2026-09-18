@@ -113,7 +113,12 @@ private fun MarkSeries.toOption() = SeriesOption(
         data = marks.map { mark ->
             MarkLineDataItem(
                 xAxis = mark.x,
-                label = LabelOption(formatter = mark.label, position = "end")
+                label = LabelOption(
+                    formatter = mark.label,
+                    position = "end",
+                    color = ChartUtility.cssVar("--ink-fg"),
+                    textBorderWidth = 0.0,
+                )
             )
         }.toTypedArray()
     )

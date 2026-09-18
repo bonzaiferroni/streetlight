@@ -202,6 +202,7 @@ external interface LabelOption {
     val rotate: Double?
     val color: String?
     val fontSize: Int?
+    val textBorderWidth: Double?
 }
 
 @JsPlainObject

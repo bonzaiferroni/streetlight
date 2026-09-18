@@ -34,6 +34,7 @@ object LottieFile : FileSet<Lottie>() {
     val StrollingMan = addLottie("strolling-man.json")
     val dinoLoad = addLottie("dino-load.json")
     val Ghost = addLottie("ghost.json")
+    val GhostProto = addLottie("ghost-proto.json")
     val FriendWave = addLottie("friend-wave.json") // great motion, too cute
     val helicopter = addLottie("helicopter.json")
     val playPause = addLottie("play-pause.json")

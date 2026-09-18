@@ -19,7 +19,7 @@ fun RouteScope.viewSandbox() {
         column {
             lazyTabs(indexState = indexState) {
                 tab("cat") {
-                    lottie(LottieFile.CatProto)
+                    lottie(LottieFile.GhostProto)
                 }
                 tab("Plymouth") {
                     textBlock("yer at Plymouth")
@@ -39,7 +39,7 @@ fun RouteScope.viewSandbox() {
         column {
             tabs(indexState = indexState) {
                 tab("cat") {
-                    lottie(LottieFile.Cat)
+                    lottie(LottieFile.Ghost)
                 }
                 tab("Plymouth") {
                     textBlock("yer at Plymouth")
