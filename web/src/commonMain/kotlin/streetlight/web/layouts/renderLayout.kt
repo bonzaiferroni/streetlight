@@ -56,8 +56,8 @@ fun FlowContent.renderComments() {
 
 fun FlowContent.renderPosts(content: DesignContent) {
     when (content) {
-        is StarContent -> feedSection(content.feed, true)
-        is GalaxyContent -> feedSection(content.feed, false)
+        is StarContent -> feedSection(content.feed)
+        is GalaxyContent -> feedSection(content.feed, content.galaxy.galaxyId)
         else -> error("not posts content")
     }
 }

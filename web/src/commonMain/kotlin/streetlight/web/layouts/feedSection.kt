@@ -12,10 +12,10 @@ import streetlight.web.ui.AppAttribute
 
 fun FlowContent.feedSection(
     feed: EntityFeed,
-    isUniverse: Boolean,
+    galaxyId: GalaxyId? = null,
 ) {
     section {
-        feed.marks?.keys?.firstOrNull()?.let {
+        galaxyId?.let {
             setAttribute(AppAttribute.GalaxyId.to(it))
         }
 
@@ -38,7 +38,7 @@ fun FlowContent.feedSection(
             // td: message when empty
             feed.entities.forEach { entity ->
                 val curator = feed.curatorOf(entity)
-                feedRow(entity, isUniverse, curator)
+                feedRow(entity, galaxyId == null, curator)
             }
 
             feed.nextCursor?.let {

@@ -29,7 +29,7 @@ fun FlowContent.homeShell(content: HomeContent) {
 
                 galaxiesSection(content.galaxies)
 
-                feedSection(content.feed, true)
+                feedSection(content.feed)
 
                 appFooter(HomeShell.SOURCE)
             }
