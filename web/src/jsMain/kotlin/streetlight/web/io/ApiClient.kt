@@ -143,8 +143,9 @@ class ApiClient(private val client: FetchClient) {
     suspend fun createPost(post: PostEdit) = client.postApi(Api.Galaxies.CreatePost, post)
     suspend fun editPost(post: PostEdit) = client.postApi(Api.Galaxies.UpdatePost, post)
     suspend fun readPosts(galaxyIds: List<GalaxyId>) = client.postApi(Api.Galaxies.ReadMultiPosts, galaxyIds)
-    suspend fun readPosts(galaxyId: GalaxyId, cursor: PostCursor? = null) = client.getApi(Api.Galaxies.ReadGalaxyFeed, galaxyId) {
-        writeCursor(Api.Galaxies.ReadGalaxyFeed, cursor)
+    suspend fun readPosts(galaxyId: GalaxyId?, cursor: PostCursor? = null) = client.getApi(Api.Posts.ReadFeed) {
+        writeParam(it.galaxyId, galaxyId)
+        writeCursor(Api.Posts.ReadFeed, cursor)
     }
     suspend fun readPost(postId: PostId) = client.getApi(Api.Galaxies.ReadPostId, postId)
     suspend fun readMapPosts(query: MapQuery) = client.getApi(Api.Posts.ReadMapQuery) { writeMapQuery(query) }

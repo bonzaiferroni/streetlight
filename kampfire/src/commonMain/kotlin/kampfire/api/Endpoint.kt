@@ -77,6 +77,12 @@ abstract class Endpoint<SentType, ReturnType>(
         toString = { it.toString() }
     )
 
+    fun <T: TableId<Uuid>> tableIdParamOf(key: String, toValue: (Uuid) -> T) = EndpointParam(
+        key = key,
+        toValue = { toValue(Uuid.parse(it)) },
+        toString = { it.value.toString() }
+    )
+
     fun booleanParamOf(key: String) = EndpointParam(
         key = key,
         toValue = { it.toBoolean() },

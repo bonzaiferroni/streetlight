@@ -12,6 +12,7 @@ import koala.modifier.requireClosestAttribute
 import koala.modifier.unmodify
 import koala.modifier.setAttribute
 import koala.interop.ThisElement
+import koala.modifier.getClosestAttribute
 import kotlinx.html.onClick
 import streetlight.model.data.EntityFeed
 import streetlight.model.data.PostCursor
@@ -45,7 +46,7 @@ fun sortByMark(element: HTMLElement) {
 
 fun morePosts(element: HTMLElement) {
     val nextCursor = element.requireAttribute(FeedSection.NextCursor)
-    val galaxyId = element.requireClosestAttribute(AppAttribute.GalaxyId)
+    val galaxyId = element.getClosestAttribute(AppAttribute.GalaxyId)
     val mount = document.requireElement(FeedSection.MountId)
     RouteView.activeScope.launchEffect {
         element.modify(OpacityHigh)
