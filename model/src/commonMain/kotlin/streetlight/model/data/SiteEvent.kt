@@ -9,9 +9,7 @@ import kotlin.uuid.Uuid
 data class SiteEvent(
     val siteEventId: SiteEventId,
     val label: String,
-    val note: String?,
-    val occurredAt: Instant,
-    val createdAt: Instant,
+    val time: Instant,
 )
 
 @Serializable

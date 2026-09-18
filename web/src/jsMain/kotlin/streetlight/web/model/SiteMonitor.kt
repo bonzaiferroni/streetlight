@@ -7,6 +7,7 @@ import koala.model.ChartLine
 import koala.utils.launch
 import koala.model.dedup
 import kampfire.model.mutableTapOf
+import kampfire.model.reactIn
 import kampfire.model.storeOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -14,7 +15,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import streetlight.model.data.MetricResolution
 import streetlight.model.data.SiteMetric
-import streetlight.model.data.StatusPoint
+import streetlight.model.data.StatusStatus
 import streetlight.web.io.ApiClient
 
 class SiteMonitor(
@@ -27,11 +28,8 @@ class SiteMonitor(
     val stateFlow = state.flow
 
     val pointsFlow = stateFlow.dedup { it.points }
-    val pointFlow = MutableSharedFlow<StatusPoint>()
-    val timeFrameField = state.mutableTapOf({ it.timeFrame }) {
-        refreshData() // td: fix ordering
-        copy(timeFrame = it)
-    }
+    val pointFlow = MutableSharedFlow<StatusStatus>()
+    val timeFrameState = state.mutableTapOf({ it.timeFrame }) { copy(timeFrame = it) }
     val dataFlow = stateFlow.dedup { state ->
         ChartData(
             points = state.points,
@@ -48,7 +46,9 @@ class SiteMonitor(
     var refreshJob: Job? = null
 
     init {
-        refreshData()
+        timeFrameState.reactIn(scope) {
+            refreshData()
+        }
     }
 
     private fun refreshData() {
@@ -66,7 +66,7 @@ class SiteMonitor(
 }
 
 data class SiteMonitorState(
-    val points: List<StatusPoint> = emptyList(),
+    val points: List<StatusStatus> = emptyList(),
     val metrics: Set<SiteMetric> = SiteMetric.entries.toSet(),
     val timeFrame: TimeFrame = TimeFrame.Hour
 )
