@@ -12,7 +12,7 @@ import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Instant
 
 @Serializable
-data class StatusStatus(
+data class SiteStatus(
     val siteStatusId: SiteStatusId,
     val integers: Map<SiteMetric, Int>,
     val doubles: Map<SiteMetric, Double>,

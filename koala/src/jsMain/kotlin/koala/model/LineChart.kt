@@ -70,19 +70,6 @@ class LineChart<T>(
                     }
                 )
             }.toTypedArray(),
-//        yAxis = lines.mapIndexed { index, line ->
-//            AxisOption(
-//                type = "value",
-//                name = line.name?.takeIf { index < 2 },
-//                splitLine = SplitLineOption(show = index == 0),
-//                axisLabel = AxisLabelOption(show = index < 2),
-//                position = when(index) {
-//                    0 -> "left"
-//                    1 -> "right"
-//                    else -> null
-//                }
-//            )
-//        }.toTypedArray(),
             series = lines.mapIndexed { index, line ->
                 SeriesOption(
                     name = line.name,
