@@ -74,3 +74,8 @@ enum class MetricResolution(val duration: Duration) {
     val predecessor: MetricResolution?
         get() = if (ordinal > 0) entries[ordinal - 1] else null
 }
+
+data class ChartEvent(
+    val label: String,
+    val time: Instant,
+)

@@ -190,6 +190,37 @@ external interface SeriesOption {
     val data: dynamic
     val lineStyle: LineStyleOption?
     val yAxisIndex: Int
+    val markLine: MarkLineOption?
+}
+
+@JsPlainObject
+external interface LabelOption {
+    val show: Boolean?
+    val formatter: String?
+    val position: String?
+    val distance: Double?
+    val rotate: Double?
+    val color: String?
+    val fontSize: Int?
+}
+
+@JsPlainObject
+external interface MarkLineDataItem {
+    val name: String?
+    val xAxis: Double?
+    val yAxis: Double?
+    val label: LabelOption?
+    val lineStyle: LineStyleOption?
+}
+
+@JsPlainObject
+external interface MarkLineOption {
+    val symbol: String?
+    val silent: Boolean?
+    val animation: Boolean?
+    val label: LabelOption?
+    val lineStyle: LineStyleOption?
+    val data: Array<MarkLineDataItem>
 }
 
 @JsPlainObject

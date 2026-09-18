@@ -1,4 +1,4 @@
-package koala.dom
+package koala.model
 
 data class ChartLine<T>(
     val name: String,

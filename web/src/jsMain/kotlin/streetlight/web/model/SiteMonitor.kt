@@ -2,8 +2,8 @@ package streetlight.web.model
 
 import kampfire.model.Labeled
 import kampfire.model.toDataOr
-import koala.dom.ChartData
-import koala.dom.ChartLine
+import koala.model.ChartData
+import koala.model.ChartLine
 import koala.utils.launch
 import koala.model.dedup
 import kampfire.model.mutableTapOf

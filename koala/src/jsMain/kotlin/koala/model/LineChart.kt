@@ -1,8 +1,6 @@
 package koala.model
 
 import koala.modifier.KoalaTheme
-import koala.dom.ChartData
-import koala.dom.ChartLine
 import koala.dom.ChartUtility
 import koala.dom.ResizeObserver
 import koala.external.AxisLabelOption

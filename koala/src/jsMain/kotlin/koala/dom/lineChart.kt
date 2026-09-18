@@ -1,5 +1,6 @@
 package koala.dom
 
+import koala.model.ChartData
 import koala.modifier.*
 import koala.model.LineChart
 import kotlinx.coroutines.flow.Flow
