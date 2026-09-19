@@ -23,7 +23,7 @@ class SpiritSocket(
     
     fun connect(spirit: Spirit) {
         this.spirit = spirit
-        val socket = api.connectSpiritVision().also { this.socket = it }
+        val socket = api.post.connectSpiritVision().also { this.socket = it }
         socket.onmessage = EventHandler { event ->
             scope.launch {
                 val data = event.data

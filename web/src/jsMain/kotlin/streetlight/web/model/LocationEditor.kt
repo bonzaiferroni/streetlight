@@ -64,7 +64,7 @@ class LocationEditor(
         val website = editNow.website?.takeIf { it.isAbsolute } ?: return
         scope.launch {
             websiteMessage.set("Reading the link, this will take a minute.", true)
-            val edit = api.parseLocation(UrlParseRequest(website)).toDataOr(websiteMessage) { return@launch }
+            val edit = api.location.parseLocation(UrlParseRequest(website)).toDataOr(websiteMessage) { return@launch }
             state.set { copy(edit = edit.mergeLeft(editNow)) }
             websiteMessage.deliver("Does this information look correct?")
         }
@@ -94,8 +94,8 @@ class LocationEditor(
 
         messages.set("Sending...", true)
         return when (editNow.locationId) {
-            null -> api.createLocation(edit).toDataOrNull(messages)
-            else -> api.updateLocation(edit).toDataOrNull(messages)
+            null -> api.location.createLocation(edit).toDataOrNull(messages)
+            else -> api.location.updateLocation(edit).toDataOrNull(messages)
         }
     }
 }

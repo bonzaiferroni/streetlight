@@ -26,7 +26,7 @@ class MusicianHub(
 
     fun refreshSongs() {
         scope.launch {
-            val songs = api.readSongs().toDataOr { return@launch }
+            val songs = api.song.readSongs().toDataOr { return@launch }
             view.set { copy(songs = songs) }
         }
     }
@@ -43,7 +43,7 @@ class MusicianHub(
         val songNow = song.now
         if (!songNow.isValid) return
         scope.launch {
-            api.createSong(songNow).toDataOr { return@launch }
+            api.song.createSong(songNow).toDataOr { return@launch }
             refreshSongs()
             song.set { NewSong() }
         }

@@ -26,7 +26,7 @@ class ChatRoom(
     fun setIsActive(value: Boolean) {
         if (value) {
             if (socket == null) {
-                val socket = client.connectChat(scope)
+                val socket = client.message.connectChat(scope)
                 scope.launch {
                     socket.messageFlow.collect { message ->
                         state.set { copy(messages = stateNow.messages + message) }

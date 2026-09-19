@@ -12,7 +12,7 @@ class OmniClient(
     private val scope: CoroutineScope,
     private val api: ApiClient
 ) {
-    private val client: SSEClient<OmniMessage> = sseClientOf(scope) { api.connectOmniLog() }
+    private val client: SSEClient<OmniMessage> = sseClientOf(scope) { api.omniLog.connectOmniLog() }
 
     private val state = storeOf(OmniLogState())
     val recordsState = state.tapOf { it.records }

@@ -31,7 +31,7 @@ fun ViewScope.wireMessageDialog() {
                 val message = messageState.now.takeIf { it.isValid } ?: return@formSubmit
                 launchEffect {
                     messenger.deliverSending()
-                    api.sendMessage(message).toDataOr(messenger, "message sent", toaster) { return@launchEffect }
+                    api.message.sendMessage(message).toDataOr(messenger, "message sent", toaster) { return@launchEffect }
                     dismissDialog()
                 }
             }, messenger, modify(Accent), back = MenuAction("cancel", onClick = ::dismissDialog))

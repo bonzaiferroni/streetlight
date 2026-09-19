@@ -26,7 +26,7 @@ class SongProfile(
 
     fun refreshSong() {
         scope.launch {
-            val value = api.readSong(songId).toDataOr { return@launch }
+            val value = api.song.readSong(songId).toDataOr { return@launch }
             song.update { value }
         }
     }
@@ -42,7 +42,7 @@ class SongProfile(
     fun updateSong() {
         val song = song.now ?: return
         scope.launch {
-            val isSuccess = api.updateSong(song).toDataOr { return@launch }
+            val isSuccess = api.song.updateSong(song).toDataOr { return@launch }
             if (isSuccess) {
                 refreshSong()
             }

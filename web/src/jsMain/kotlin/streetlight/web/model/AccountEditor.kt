@@ -55,7 +55,7 @@ class AccountEditor(
                 || initialAccount.emailStatus == EmailStatus.Unverified
         if (isUnverified) {
             scope.launch("check verification status") {
-                val isSent = api.readEmailVerificationIsSent().toDataOr(PrintLnMessenger) { return@launch }
+                val isSent = api.accountAction.readEmailVerificationIsSent().toDataOr(PrintLnMessenger) { return@launch }
                 state.set { copy(emailVerificationSent = isSent) }
                 if (isSent) {
                     emailMessages.deliver("Check your inbox to verify your email.")
@@ -71,7 +71,7 @@ class AccountEditor(
 
         val request = AccountUpgradeRequest(password.obfuscatePassword(), email)
         scope.launch {
-            val isSuccess = api.upgradeAccount(request).toDataOr(messenger) { return@launch }
+            val isSuccess = api.user.upgradeAccount(request).toDataOr(messenger) { return@launch }
             if (isSuccess) {
                 if (email != null) {
                     toaster.deliver("Check your inbox to verify your email.")
@@ -84,7 +84,7 @@ class AccountEditor(
     fun verifyExistingEmail() {
         scope.launch(::verifyExistingEmail) {
             emailMessages.deliverSending()
-            api.verifyExistingEmail().toDataOr(emailMessages) { return@launch }
+            api.accountAction.verifyExistingEmail().toDataOr(emailMessages) { return@launch }
             state.set { copy(emailVerificationSent = true) }
             emailMessages.deliver("Request sent, check your email.")
         }
@@ -107,7 +107,7 @@ class AccountEditor(
                 else -> ""
             }
             emailMessages.deliverSending()
-            api.removeEmail(PasswordVerification(password)).toDataOr { return@launch }
+            api.accountAction.removeEmail(PasswordVerification(password)).toDataOr { return@launch }
             state.set { copy(
                 account = account.copy(email = null, emailStatus = null),
                 emailVerificationSent = false,
@@ -126,7 +126,7 @@ class AccountEditor(
         } else null
         scope.launch(::addEmail) {
             emailMessages.deliverSending()
-            api.addEmail(EmailChange(
+            api.accountAction.addEmail(EmailChange(
                 passwordNow = passwordNow?.obfuscatePassword(),
                 newEmail = email,
             )).toDataOr(emailMessages) { return@launch }
@@ -147,7 +147,7 @@ class AccountEditor(
         } else null
         scope.launch(::changePassword) {
             messenger.deliverSending()
-            api.changePassword(PasswordChange(
+            api.accountAction.changePassword(PasswordChange(
                 passwordNow = passwordNow?.obfuscatePassword(),
                 newPassword = password.obfuscatePassword()
             )).toDataOr(messenger) { return@launch }
@@ -160,7 +160,7 @@ class AccountEditor(
     fun resetPassword(email: EmailAddress, messenger: Messenger) {
         scope.launch(::resetPassword) {
             messenger.deliverSending()
-            api.resetPassword(email).toDataOr(messenger) { return@launch }
+            api.accountAction.resetPassword(email).toDataOr(messenger) { return@launch }
             messenger.deliver("Check your email inbox for a link to reset your password.")
         }
     }

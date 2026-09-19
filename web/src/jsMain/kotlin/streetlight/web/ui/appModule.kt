@@ -25,6 +25,7 @@ import streetlight.model.ui.EarthMap
 import streetlight.model.ui.HomeRoute
 import streetlight.model.ui.Screen
 import streetlight.web.io.ApiClient
+import streetlight.web.io.BrowserApiClient
 import streetlight.web.io.FetchClient
 import streetlight.web.io.OSMClient
 import streetlight.web.io.OmniClient
@@ -39,7 +40,7 @@ val appModule = module {
 
     // clients
     single { TransitClient(get()) }
-    single { ApiClient(get()) }
+    single<ApiClient> { BrowserApiClient(get()) }
     single { OSMClient() }
 
     single { DataCache(get()) }

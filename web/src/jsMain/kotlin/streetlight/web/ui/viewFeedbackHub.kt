@@ -6,7 +6,7 @@ import koala.modifier.*
 import streetlight.web.model.FeedbackHub
 
 fun ViewScope.viewFeedbackHub() {
-    val model = FeedbackHub(contentScope, api, toaster)
+    val model = FeedbackHub(contentScope, api.feedback, toaster)
     val messenger = MessageStore()
     column(MarginTop1) {
         filigree {

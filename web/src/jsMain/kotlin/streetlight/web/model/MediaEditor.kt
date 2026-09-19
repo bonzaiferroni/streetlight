@@ -61,15 +61,15 @@ class MediaEditor(
             message.set("Posting...", true)
 
             val media = when (edit.mediaId) {
-                null -> api.createMedia(edit)
-                else -> api.updateMedia(edit)
+                null -> api.media.createMedia(edit)
+                else -> api.media.updateMedia(edit)
             }.toDataOr(toaster) { return@launch }
 
             state.set { copy(slug = media.slug) }
 
             if (galaxy != null) {
                 message.deliver("Posting to ${galaxy.name}...")
-                api.createPost(PostEdit(
+                api.post.createPost(PostEdit(
                     postId = null,
                     galaxyId = galaxy.galaxyId,
                     postType = PostType.Media,

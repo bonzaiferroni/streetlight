@@ -18,7 +18,7 @@ fun ViewScope.eventSchemaSection(content: LocationConfigContent) = formSection("
     //         formSubmit("reload schema", {
     //             launchEffect {
     //                 messages.deliverSending()
-    //                 val schemas = api.parseEventSchema(eventsUrl).handleResponse(messages, "schema delivered")
+    //                 val schemas = api.location.parseEventSchema(eventsUrl).handleResponse(messages, "schema delivered")
     //                     ?: return@launchEffect
     //                 schemasField.addAll(schemas)
     //             }
@@ -28,7 +28,7 @@ fun ViewScope.eventSchemaSection(content: LocationConfigContent) = formSection("
     //             column {
     //                 formSubmit("Upload", {
     //                     launchEffect {
-    //                         api.uploadSchemas(UrlSchemas(content.location.locationId, eventsUrl, schemasField.now))
+    //                         api.location.uploadSchemas(UrlSchemas(content.location.locationId, eventsUrl, schemasField.now))
     //                             .handleResponse(uploadMessages)
     //                     }
     //                 }, uploadMessages)

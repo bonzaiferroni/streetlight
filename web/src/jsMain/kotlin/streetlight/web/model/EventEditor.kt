@@ -76,7 +76,7 @@ class EventEditor(
         val url = state.now.edit.website?.takeIf { it.isAbsolute } ?: return
         scope.launch {
             parseMessage.set("Reading the link, this will take a minute.", true)
-            val edit = api.parseSingleEvent(UrlParseRequest(url)).toDataOr(parseMessage) { return@launch }
+            val edit = api.event.parseSingleEvent(UrlParseRequest(url)).toDataOr(parseMessage) { return@launch }
             val event = edit.mergeRight(state.now.edit)
             parseMessage.deliver("Does this information look correct?")
             state.set { copy(edit = event) }
@@ -90,8 +90,8 @@ class EventEditor(
 
         message.set("Sending...", true)
         return when (editNow.eventId) {
-            null -> api.createEvent(edit)
-            else -> api.updateEvent(edit)
+            null -> api.event.createEvent(edit)
+            else -> api.event.updateEvent(edit)
         }.toDataOrNull(message)
     }
 }

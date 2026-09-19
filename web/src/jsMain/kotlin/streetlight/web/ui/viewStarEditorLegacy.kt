@@ -27,7 +27,7 @@ import kotlinx.coroutines.FlowPreview
 //             val blobUrl = edit.image?.url?.takeIf { it.isBlob }
 //             parentScope.launch {
 //                 edit = if (blobUrl != null) {
-//                     val image = api.uploadImageBlob(blobUrl).getDataOrNull()?.toImage() ?: error("error creating avatar")
+//                     val image = api.user.uploadImageBlob(blobUrl).getDataOrNull()?.toImage() ?: error("error creating avatar")
 //                     edit.copy(image = image)
 //                 } else edit
 //

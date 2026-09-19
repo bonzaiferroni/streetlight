@@ -39,7 +39,7 @@ class ProfileEditor(
 
             messages.set("Sending...", true)
 
-            val star = api.updateProfile(profile).toDataOr(messages) { return@launch }
+            val star = api.star.updateProfile(profile).toDataOr(messages) { return@launch }
             messages.set("Saved.")
             session.setUser(star)
         }

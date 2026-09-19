@@ -32,7 +32,7 @@ fun sortByMark(element: HTMLElement) {
     val mount = document.requireElement(FeedSection.MountId)
     RouteView.activeScope.launchEffect {
         mount.modify(OpacityHigh)
-        val feed = api.readPosts(galaxyId, PostCursor.Mark(markId)).toDataOr(toaster) {
+        val feed = api.post.readPosts(galaxyId, PostCursor.Mark(markId)).toDataOr(toaster) {
             mount.unmodify(OpacityHigh)
             return@launchEffect
         }
@@ -50,7 +50,7 @@ fun morePosts(element: HTMLElement) {
     val mount = document.requireElement(FeedSection.MountId)
     RouteView.activeScope.launchEffect {
         element.modify(OpacityHigh)
-        val feed = api.readPosts(galaxyId, nextCursor).toDataOr(toaster) {
+        val feed = api.post.readPosts(galaxyId, nextCursor).toDataOr(toaster) {
             element.unmodify(OpacityHigh)
             return@launchEffect
         }

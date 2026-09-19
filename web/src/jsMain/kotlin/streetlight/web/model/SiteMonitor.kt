@@ -70,11 +70,11 @@ class SiteMonitor(
     private fun refreshData() {
         refreshJob?.cancel()
         refreshJob = scope.launch(::refreshData) {
-            val feed = api.feedSiteStatusFeed(stateNow.timeFrame.resolution).toDataOr(toaster) { return@launch }
+            val feed = api.status.feedSiteStatusFeed(stateNow.timeFrame.resolution).toDataOr(toaster) { return@launch }
             state.set { copy(points = feed.points, events = feed.events) }
             while (true) {
                 delay(stateNow.timeFrame.resolution.duration)
-                val status = api.readLastSiteStatus(stateNow.timeFrame.resolution).toDataOr{ continue }
+                val status = api.status.readLastSiteStatus(stateNow.timeFrame.resolution).toDataOr{ continue }
                 statusFlow.emit(status)
             }
         }

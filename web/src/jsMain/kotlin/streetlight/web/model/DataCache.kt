@@ -5,7 +5,7 @@ import streetlight.web.io.ApiClient
 
 class DataCache(val api: ApiClient) {
 
-    val galaxyFleet = Fleet { api.readUserGalaxies() }
+    val galaxyFleet = Fleet { api.galaxy.readUserGalaxies() }
 
     fun clear() {
         galaxyFleet.clear()

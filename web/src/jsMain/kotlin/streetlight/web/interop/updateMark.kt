@@ -36,7 +36,7 @@ fun ViewScope.updateMark(markId: MarkId, baseElement: Element): CuratorStatus? {
 
     val isMarked = curator.marks.first { it.markId == markId }.isMarked
     launchEffect {
-        api.updateMark(MarkUpdate(markId, curator.postId, isMarked)).toDataOrNull(toaster)
+        api.post.updateMark(MarkUpdate(markId, curator.postId, isMarked)).toDataOrNull(toaster)
     }
     return curator
 }

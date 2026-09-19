@@ -48,7 +48,3 @@ The unit is a view model together with the view that binds to it. Assertions run
 The binding is what needs a browser. A view model tested alone is a unit test.
 
 Leave the shape of a request to the server to `streetlight.server.e2e`.
-
-## Known Issues
-
-`ApiClient` is a class rather than an interface, so a test has no seam between a view model and the network. `buildTestApp` takes an `ApiClient` and `ViewTest.api()` fails until a test supplies one. A test that drives a view calling the server waits on an interface at that boundary.

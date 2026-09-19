@@ -22,7 +22,7 @@ package streetlight.web.model
 //                lightFlow.collect { lights ->
 //                    val events = when (lights.isEmpty()) {
 //                        true -> emptyList()
-//                        else -> api.readEventLocations(lights.map { it.eventId }) ?: emptyList() // td: fail message
+//                        else -> api.event.readEventLocations(lights.map { it.eventId }) ?: emptyList() // td: fail message
 //                    }.sortedBy { it.startsAt }
 //                    state.set { it.copy(events = events) }
 //                }
@@ -46,7 +46,7 @@ package streetlight.web.model
 //    }
 //
 //    private suspend fun readLights() = when(config.stateNow.lightSync) {
-//        true -> api.readEventStars() ?: emptyList()
+//        true -> api.event.readEventStars() ?: emptyList()
 //        else -> localCache
 //    }
 //

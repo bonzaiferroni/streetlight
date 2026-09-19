@@ -58,7 +58,7 @@ fun ViewScope.recoverOrSignInForm(cred: CredentialStore, gate: SessionClient) {
                     formSubmit("Reset my password", {
                         val email = emailField.now.toEmailAddress().toValidOutcome().toDataOr(messages) { return@formSubmit }
                         launchEffect {
-                            api.resetPassword(email).toDataOr(messages) { return@launchEffect }
+                            api.accountAction.resetPassword(email).toDataOr(messages) { return@launchEffect }
                             isSubmitVisible.set(false)
                             messages.set("Check your email for a link to reset your password.")
                         }

@@ -39,13 +39,13 @@ class UserCreator(
 
     init {
         scope.launch {
-            val username = api.checkGuest().toDataOr(PrintLnMessenger) { return@launch }
+            val username = api.user.checkGuest().toDataOr(PrintLnMessenger) { return@launch }
             state.set { copy(guestUsername = username) }
         }
     }
 
     fun generateUsername() = scope.launch {
-        val username = api.generateUsername().toDataOr(toaster) { return@launch }
+        val username = api.user.generateUsername().toDataOr(toaster) { return@launch }
         state.set { copy(username = username.value)}
     }
 
@@ -68,7 +68,7 @@ class UserCreator(
         )
         messages.deliver("Creating account...")
         scope.launch {
-            api.createUser(request).toDataOr(messages) { return@launch }
+            api.user.createUser(request).toDataOr(messages) { return@launch }
             cred.followUpAuth(true)
             gate.signIn(messages)
             if (accountType == AccountType.Guest) {

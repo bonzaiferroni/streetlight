@@ -96,8 +96,8 @@ class Inbox(
         val chatId = state.now.openChat?.chatId ?: return
         scope.launch {
             when (state.now.isArchive) {
-                true -> api.unarchiveChat(chatId).toDataOr(toaster) { return@launch }
-                else -> api.archiveChat(chatId).toDataOr(toaster) { return@launch }
+                true -> api.message.unarchiveChat(chatId).toDataOr(toaster) { return@launch }
+                else -> api.message.archiveChat(chatId).toDataOr(toaster) { return@launch }
             }
             val index = chatList.liveItems.indexOfFirst { it.chatId == chatId }.takeIf { it < chatList.liveItems.size - 1 }
                 ?: chatList.liveItems.size.takeIf { it > 1 }?.let { it - 2 }
@@ -112,7 +112,7 @@ class Inbox(
             chatId = state.now.openChat?.chatId ?: return false,
             content = content.takeIf { it.value.isNotBlank() } ?: return false
         )
-        api.sendMessage(reply).toDataOr(messenger) { return false }
+        api.message.sendMessage(reply).toDataOr(messenger) { return false }
         return true
     }
 
@@ -126,13 +126,13 @@ class Inbox(
     private suspend fun requestMoreMessages() {
         val chat = state.now.openChat ?: return
         requestWithCursor(messageCursorState, messageList, { TimeCursor(it.messageId.value, it.sentAt) }) {
-            api.readChatMessages(ChatMessageRequest(chat.chatId, it)).toDataOrNull(toaster)
+            api.message.readChatMessages(ChatMessageRequest(chat.chatId, it)).toDataOrNull(toaster)
         }
     }
 
     private suspend fun requestMoreChats() {
         requestWithCursor(chatCursorState, chatList, { TimeCursor(it.chatId.value, it.lastMessageAt) }) {
-            api.readChats(ChatRequest(state.now.isArchive, it)).toDataOrNull(toaster)
+            api.message.readChats(ChatRequest(state.now.isArchive, it)).toDataOrNull(toaster)
         }
     }
 
@@ -167,7 +167,7 @@ class Inbox(
 
     private fun fetchPreview(chatId: ChatId) {
         scope.launch {
-            val chat = api.readChatPreview(chatId).toDataOr(toaster) { return@launch }
+            val chat = api.message.readChatPreview(chatId).toDataOr(toaster) { return@launch }
             chatList.replace(chat)
         }
     }

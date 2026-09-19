@@ -46,7 +46,7 @@ class EarthCache(
             println("querying map")
             val queriedView = view ?: camera.viewedState.flow.first { !it.isMoving }.view
             val query = getQuery(queriedView) ?: return@launch
-            val feed = api.readMapPosts(query).toDataOr(toaster) { return@launch }
+            val feed = api.post.readMapPosts(query).toDataOr(toaster) { return@launch }
             queries[queriedView] = MapCursor(feed.nextCursor as? PostCursor.Lean, feed.isCompleted)
             markerMap.addPoints(feed.entities)
         }

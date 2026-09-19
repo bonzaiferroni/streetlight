@@ -12,7 +12,7 @@ fun ViewScope.viewGalaxyList() {
 
         lazyTabs(Id("galaxy-list-tabs")) {
             tab("My Galaxies") {
-                dataBlock(api::readUserGalaxies) { galaxies ->
+                dataBlock(api.galaxy::readUserGalaxies) { galaxies ->
                     column {
                         galaxies.forEach {
                             feedRow(it, true)
@@ -21,7 +21,7 @@ fun ViewScope.viewGalaxyList() {
                 }
             }
             tab("Top Galaxies") {
-                dataBlock(api::readTopGalaxies) { galaxies ->
+                dataBlock(api.galaxy::readTopGalaxies) { galaxies ->
                     column {
                         galaxies.forEach {
                             feedRow(it, true)

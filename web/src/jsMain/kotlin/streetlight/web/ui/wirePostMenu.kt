@@ -24,7 +24,7 @@ fun ViewScope.wirePostMenu() {
             }
             safetyButton("remove", onConfirm = {
                 launchEffect("remove post") {
-                    api.removePost(postId).toDataOr(toaster) { return@launchEffect }
+                    api.post.removePost(postId).toDataOr(toaster) { return@launchEffect }
                     portal.refresh()
                 }
             })

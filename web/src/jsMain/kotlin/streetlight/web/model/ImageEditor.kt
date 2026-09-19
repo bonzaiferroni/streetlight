@@ -31,5 +31,5 @@ suspend fun uploadImage(image: Image, messenger: Messenger?, api: ApiClient): Im
 suspend fun uploadImage(image: Image, api: ApiClient): Outcome<Image> {
     if (!image.url.isBlob) error("is not a blob")
     println("uploading image: $image")
-    return api.uploadImageBlob(image)
+    return api.user.uploadImageBlob(image)
 }

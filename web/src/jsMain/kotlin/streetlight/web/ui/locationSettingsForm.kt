@@ -36,7 +36,7 @@ fun ViewScope.subdomainSection(configState: MutableTap<LocationConfig>) = formSe
          val locationId = configState.now.locationId
         launchEffect {
             messages.deliverSending()
-            api.configSubdomain(SubdomainConfig(locationId, slug)).toDataOr(messages, "Subdomain is active.") { return@launchEffect }
+            api.location.configSubdomain(SubdomainConfig(locationId, slug)).toDataOr(messages, "Subdomain is active.") { return@launchEffect }
             configState.set { copy(subdomain = slug) }
         }
     }, messages)

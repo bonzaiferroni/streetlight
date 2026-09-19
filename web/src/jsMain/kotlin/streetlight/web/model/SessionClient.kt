@@ -44,20 +44,20 @@ class SessionClient(
 
     fun signIn(request: LoginRequest, receiver: Messenger) {
         scope.launch("sign-in") {
-            api.login(request).toDataOr(receiver) { return@launch }
+            api.user.login(request).toDataOr(receiver) { return@launch }
             readUser(receiver)
         }
     }
 
     suspend fun readUser(receiver: Messenger?) {
-        val star = api.validateLogin().toDataOr(receiver ?: PrintLnMessenger) { return }
+        val star = api.star.validateLogin().toDataOr(receiver ?: PrintLnMessenger) { return }
         console.log("signed in: ${star.accountType}")
         state.set { copy(star = star) }
 
         // guest check in
         if (star.accountType == AccountType.Guest) {
             scope.launch("StarSession > check-guest") {
-                api.checkGuest()
+                api.user.checkGuest()
             }
         }
     }
@@ -69,7 +69,7 @@ class SessionClient(
     fun signOut() {
         println("signing out")
         scope.launch(::signOut) {
-            api.logout()
+            api.user.logout()
             inflator.clear()
             dataCache.clear()
             portal.go(HomeRoute)

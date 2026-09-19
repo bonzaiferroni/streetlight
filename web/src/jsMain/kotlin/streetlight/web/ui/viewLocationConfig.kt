@@ -30,7 +30,7 @@ fun ViewScope.viewLocationConfig(
             val design = designer.build(saveMessages)
             configState.set { copy(design = design) }
             saveMessages.deliverSending()
-            api.updateLocationConfig(configState.now).toDataOrNull(saveMessages, "Config saved.")
+            api.location.updateLocationConfig(configState.now).toDataOrNull(saveMessages, "Config saved.")
         }
     }
 
@@ -79,7 +79,7 @@ fun ViewScope.viewLocationConfig(
             tab("events") {
                 val location = locationState.now
                 column {
-                    dataBlock({ api.readLocationEvents(location.slug) }) { events ->
+                    dataBlock({ api.event.readLocationEvents(location.slug) }) { events ->
                         column {
                             events.forEach { event ->
                                 cardOf(event)

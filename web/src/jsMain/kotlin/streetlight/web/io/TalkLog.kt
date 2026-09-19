@@ -22,7 +22,7 @@ class TalkLog(
     private val api: ApiClient,
 ) {
     private val client: SSEClient<TalkMessage> = sseClientOf(scope) {
-        api.connectTalkLog(spaceId, spaceType)
+        api.talk.connectTalkLog(spaceId, spaceType)
     }
 
     private val state = storeOf(TalkLogState())
@@ -54,7 +54,7 @@ class TalkLog(
         client.connect()
     }
 
-    suspend fun readHistory() = api.readHistory(spaceId, spaceType)
+    suspend fun readHistory() = api.talk.readHistory(spaceId, spaceType)
 
     fun setSortBy(value: PostOrder) {
         commentViews.clear() // is this a memory leak? we need to cancel a supervisor job
@@ -62,7 +62,7 @@ class TalkLog(
     }
 
     suspend fun updateComment(commentId: CommentId, text: Markdown): Boolean? {
-        val response = api.updateComment(UpdatedComment(
+        val response = api.talk.updateComment(UpdatedComment(
             commentId = commentId,
             spaceId = spaceId,
             text = text
@@ -74,7 +74,7 @@ class TalkLog(
     }
 
     suspend fun createComment(parentId: CommentId?, text: Markdown): CommentId? {
-        val response = api.createComment(NewComment(
+        val response = api.talk.createComment(NewComment(
             spaceId = spaceId,
             spaceType = spaceType,
             parentId = parentId,

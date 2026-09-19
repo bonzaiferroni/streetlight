@@ -32,7 +32,7 @@ fun ViewScope.toggleAny(element: HTMLElement) {
         }
     }
     launchEffect {
-        api.editStarLink(LightEdit(uuid, isOn, toggleType))
+        api.star.editStarLink(LightEdit(uuid, isOn, toggleType))
     }
 }
 

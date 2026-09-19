@@ -34,7 +34,7 @@ import streetlight.model.data.toEdit
 ////                modifiers = modify(Accent),
 ////                onClick = {
 ////                    renderScope.launch {
-////                        val talent = api.editTalent(state.now) ?: return@launch
+////                        val talent = api.user.editTalent(state.now) ?: return@launch
 ////                        console.log("edit talent: ${talent.name}")
 ////                        userCache.talent.addItem(talent)
 ////                        portal.goBack()

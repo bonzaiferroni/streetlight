@@ -1,6 +1,5 @@
 package streetlight.web.model
 
-import kampfire.api.toMarkdown
 import kampfire.model.Messenger
 import kampfire.model.toDataOr
 import koala.utils.launch
@@ -11,14 +10,14 @@ import kotlinx.coroutines.CoroutineScope
 import streetlight.model.data.Feedback
 import streetlight.model.data.FeedbackEdit
 import streetlight.model.data.Platform
-import streetlight.web.io.ApiClient
+import streetlight.web.io.FeedbackClient
 import web.device.devicePixelRatio
 import web.navigator.navigator
 import web.window.window
 
 class FeedbackHub(
     private val scope: CoroutineScope,
-    private val api: ApiClient,
+    private val api: FeedbackClient,
     private val toaster: Toaster,
 ) {
     private val state = storeOf(FeedbackHubState(FeedbackEdit(platform = Platform.Web)))
@@ -43,7 +42,7 @@ class FeedbackHub(
         scope.launch(::sendFeedback) {
             messenger.deliverSending()
             api.createFeedback(edit).toDataOr(messenger, "Feedback Sent.") { return@launch }
-            editState.set { copy(text = "".toMarkdown()) }
+            editState.set { FeedbackEdit(platform = Platform.Web) }
             refreshFeedback()
         }
         return true

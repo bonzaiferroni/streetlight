@@ -83,7 +83,7 @@ class GalaxyEditor(
         scope.launch {
             cityQueryField.flow.debounce(500.milliseconds).collect { query ->
                 if (query == stateNow.city?.name) return@collect
-                val localities = api.searchCity(query, stateNow.country).toDataOr(toaster) { return@collect }
+                val localities = api.city.searchCity(query, stateNow.country).toDataOr(toaster) { return@collect }
                 state.set { copy(cities = localities) }
             }
         }
@@ -129,8 +129,8 @@ class GalaxyEditor(
             val design = designer.build(editMessage)
             val edit = editState.now.copy(geoRect = geo.stateNow.view, design = design)
             val slug = when (edit.galaxyId) {
-                null -> api.createGalaxy(edit)
-                else -> api.updateGalaxy(edit)
+                null -> api.galaxy.createGalaxy(edit)
+                else -> api.galaxy.updateGalaxy(edit)
             }.toDataOr(editMessage) { return@launch }
             portal.go(GalaxyRoute(slug))
         }

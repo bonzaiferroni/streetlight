@@ -81,15 +81,15 @@ class Earth(
                 when (val slug = route.slug) {
                     null -> {
                         // td: replace with map bounds as argument
-                        val galaxies = api.readTopGalaxies().toDataOr(toaster) { return null }
+                        val galaxies = api.galaxy.readTopGalaxies().toDataOr(toaster) { return null }
                         markerMap.setPoints(galaxies)
                         GalaxyMap(null)
                     }
 
                     else -> {
-                        val galaxy = api.readGalaxy(slug).toDataOr(toaster) { return null }
+                        val galaxy = api.galaxy.readGalaxy(slug).toDataOr(toaster) { return null }
 
-                        val feed = api.readPosts(galaxy.galaxyId).toDataOr(toaster) { return null }
+                        val feed = api.post.readPosts(galaxy.galaxyId).toDataOr(toaster) { return null }
                         markerMap.setPoints(feed.entities)
                         GalaxyMap(galaxy)
                     }
@@ -99,14 +99,14 @@ class Earth(
             is CityMapRoute -> {
                 when (val slug = route.slug) {
                     null -> {
-                        val cities = api.readTopCities().toDataOr(toaster) { return null }
+                        val cities = api.city.readTopCities().toDataOr(toaster) { return null }
                         markerMap.setPoints(cities)
                         CityMap(null)
                     }
                     else -> {
-                        val city = api.readCity(slug).toDataOr(toaster) { return null }
+                        val city = api.city.readCity(slug).toDataOr(toaster) { return null }
 
-                        val posts = api.readCityPosts(slug).toDataOr(toaster) { return null }
+                        val posts = api.city.readCityPosts(slug).toDataOr(toaster) { return null }
                         markerMap.setPoints(posts)
                         CityMap(city)
                     }

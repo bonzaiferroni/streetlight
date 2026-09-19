@@ -78,7 +78,7 @@ class LocationScout(
         }
 
         queryField.reactIn(scope) { query ->
-            val locations = api.searchLocations(query, stateNow.city?.takeIf { it.isNotBlank() })
+            val locations = api.location.searchLocations(query, stateNow.city?.takeIf { it.isNotBlank() })
                 .toDataOr(toaster) { return@reactIn }
             state.set { copy(locations = locations) }
         }
@@ -139,7 +139,7 @@ class LocationScout(
             val location = submitLocation() ?: return@launch
 
             val edit = PostEdit(null, galaxyId, PostType.Location, location.locationId.value, null)
-            val post = api.createPost(edit).toDataOr(postMessage) { return@launch }
+            val post = api.post.createPost(edit).toDataOr(postMessage) { return@launch }
             state.set { copy(postId = post.postId) }
         }
     }

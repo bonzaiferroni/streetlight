@@ -31,7 +31,7 @@ class Sandbox(
         scope.launch(::checkAvailability.name, toaster, "arrr ${Random.nextInt()}") {
             delay(5.seconds)
             println(null.asDynamic().anything)
-            val isNameTaken = api.checkUsernameExists(stateNow.name.toUsername()).toDataOr(toaster) { return@launch }
+            val isNameTaken = api.user.checkUsernameExists(stateNow.name.toUsername()).toDataOr(toaster) { return@launch }
             val name = if (isNameTaken) "" else stateNow.name
             state.set { copy(isNameTaken = isNameTaken, name = name) }
         }
