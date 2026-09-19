@@ -36,6 +36,16 @@ Report defects, inconsistencies, and unfinished edges in conversation. They do n
 
 An issue is written down only once it is decided that it should be, and then it goes under the `## Known Issues` heading of the document for the package that holds it. The entry is removed in the same pass as the fix.
 
+## Dependencies
+
+Every dependency is declared in `gradle/libs.versions.toml` and referenced from the build file through `libs`. A coordinate written as a string in a `build.gradle.kts` is not an accepted declaration, and is moved to the catalog when found.
+
+A catalog entry puts its version in `[versions]` and reaches it with `version.ref`. Artifacts released together share one version entry, so that a bump moves the set rather than half of it.
+
+The catalog holds older entries that do not follow this. Do not undertake a cleanup of the whole file. Bring the entries you add or touch up to the rule, and leave the rest where they lie.
+
+Confirm a version before raising it. An unverified bump is reported, not made.
+
 ## Scope
 
 Do the task given. When work uncovers a second thing worth doing, report it and wait, rather than widening the change.

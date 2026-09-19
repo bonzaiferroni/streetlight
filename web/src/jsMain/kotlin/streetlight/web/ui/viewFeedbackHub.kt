@@ -7,6 +7,7 @@ import streetlight.web.model.FeedbackHub
 
 fun ViewScope.viewFeedbackHub() {
     val model = FeedbackHub(contentScope, api, toaster)
+    val messenger = MessageStore()
     column(MarginTop1) {
         filigree {
             heading4("Share Feedback")
@@ -23,7 +24,7 @@ fun ViewScope.viewFeedbackHub() {
                 }
             }
             markdownEditor(model.textState, "feedback", MinHeight(32))
-            formSubmit("Send", model::sendFeedback)
+            formSubmit("Send", { model.sendFeedback(messenger) })
         }
 
         filigree {

@@ -1,5 +1,6 @@
 package streetlight.web.model
 
+import kampfire.model.Messenger
 import kampfire.model.toDataOr
 import koala.utils.launch
 import kampfire.model.tapOf
@@ -34,12 +35,13 @@ class FeedbackHub(
         }
     }
 
-    fun sendFeedback() {
+    fun sendFeedback(messenger: Messenger) {
         val edit = stateNow.edit.takeIf { it.isValid }?.copy(
             deviceAgent = readDeviceAgent()
         ) ?: return
         scope.launch(::sendFeedback) {
-            api.createFeedback(edit).toDataOr(toaster) { return@launch }
+            messenger.deliverSending()
+            api.createFeedback(edit).toDataOr(toaster, "Feedback Sent.") { return@launch }
             refreshFeedback()
         }
     }
