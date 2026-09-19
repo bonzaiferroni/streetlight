@@ -67,3 +67,5 @@ Do not restructure existing code without agreeing to it first. Extracting a func
 This holds when the task cannot be finished without the change. Say what the task needs and why, and stop there. 
 
 When the code needed to answer a question is not in hand, ask for it. Do not infer its shape from the code around it.
+
+Change a file by editing its current contents. A write built from an older copy reverts whatever changed in between, in lines the task never touched.

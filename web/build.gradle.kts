@@ -1,5 +1,6 @@
-@file:OptIn(ExperimentalDistributionDsl::class, ExperimentalWasmDsl::class)
+@file:OptIn(ExperimentalDistributionDsl::class, ExperimentalWasmDsl::class, ExperimentalJsTestDsl::class)
 
+import org.jetbrains.kotlin.gradle.ExperimentalJsTestDsl
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JsMainFunctionExecutionMode
 import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalDistributionDsl
@@ -8,7 +9,7 @@ import org.jetbrains.kotlin.gradle.targets.js.ir.KotlinJsIrLink
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.serialization)
-    kotlin("plugin.js-plain-objects") version "2.3.10"
+    alias(libs.plugins.jsPlainObjects)
 }
 
 val standalones = file("standalones.txt").readText()
@@ -23,6 +24,13 @@ kotlin {
         browser {
             commonWebpackConfig {
                 sourceMaps = true
+            }
+
+            test {
+                headless = providers.environmentVariable("VIEW_HEADED")
+                    .map { headed -> !headed.toBoolean() }
+                    .orElse(true)
+                chromium()
             }
         }
         binaries.executable()
@@ -61,6 +69,11 @@ kotlin {
         jsMain.dependencies {
             implementation(libs.kotlinx.html.js)
             implementation(kotlinWrappers.browser)
+        }
+
+        jsTest.dependencies {
+            implementation(kotlin("test"))
+            implementation(libs.kotlinx.coroutines.test)
         }
 
         wasmJsMain.dependencies {
