@@ -46,11 +46,11 @@ fun ViewScope.locationLinksForm(model: LocationEditor) = formCard("Links") {
     formRow {
         formSection("Website") {
             textField(model.websiteField, "website")
-            formText("This location's home on the web.")
+            centeredText("This location's home on the web.")
         }
         formSection("Calendar") {
             textField(model.eventsUrlField, "calendar")
-            formText("Does the location have an events page or calendar?")
+            centeredText("Does the location have an events page or calendar?")
         }
     }
 }

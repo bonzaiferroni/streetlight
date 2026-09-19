@@ -34,7 +34,7 @@ fun ViewScope.eventEditFormBody(model: EventEditor, isAdmin: Boolean = false) = 
 fun ViewScope.eventWebsiteForm(model: EventEditor) = formCard("Parse Event") {
     formRow {
         formSection("Website") {
-            formText("Does this event have a web page? We can read it to find certain details.")
+            centeredText("Does this event have a web page? We can read it to find certain details.")
             textField(model.urlState, "website")
             formSubmit("🤖 read page", model::parseFromUrl, model.parseMessage)
         }

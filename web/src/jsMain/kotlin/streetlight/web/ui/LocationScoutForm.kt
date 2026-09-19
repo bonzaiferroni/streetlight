@@ -16,7 +16,7 @@ fun ViewScope.locationFinder(model: LocationScout) = formCard("Location Finder")
                 textField(model.queryField, "search", modify(Flex1))
                 textField(model.cityField, "city", modify(Width(24)))
             }
-            formText("Don't see the location in the list? Try a power search with OpenStreetMap.", modify(MarginTop1))
+            centeredText("Don't see the location in the list? Try a power search with OpenStreetMap.", modify(MarginTop1))
             formSubmit("Search OSM", model::queryOSM, model.queryMessage, modify(Primary))
         }
         formSection("locations") {

@@ -17,7 +17,7 @@ import web.keyboard.KeyboardEvent
 fun ViewScope.markdownEditor(
     state: MutableTap<Markdown>,
     label: String? = null,
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     placeholder: String? = label,
     onEnterSubmit: (() -> Unit)? = null,
     block: DIV.() -> Unit = {}

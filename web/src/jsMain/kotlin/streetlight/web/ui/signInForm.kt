@@ -53,7 +53,7 @@ fun ViewScope.recoverOrSignInForm(cred: CredentialStore, gate: SessionClient) {
                 val emailField = storeOf("")
                 val isSubmitVisible = storeOf(true)
                 formSection("Reset Password") {
-                    formText("If you have an email address registered with Streetlight you can reset your password.")
+                    centeredText("If you have an email address registered with Streetlight you can reset your password.")
                     textField(emailField)
                     formSubmit("Reset my password", {
                         val email = emailField.now.toEmailAddress().toValidOutcome().toDataOr(messages) { return@formSubmit }

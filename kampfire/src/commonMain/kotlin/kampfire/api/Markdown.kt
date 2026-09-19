@@ -6,13 +6,16 @@ import kotlin.jvm.JvmInline
 @JvmInline
 @Serializable
 value class Markdown(val value: String) {
-    override fun toString() = value
-
-    val length get() = value.length
 
     companion object {
         val Empty = Markdown("")
     }
+
+    override fun toString() = value
+
+    val length get() = value.length
+
+    fun isNotBlank() = value.isNotBlank()
 }
 
 fun String.toMarkdown() = Markdown(this)

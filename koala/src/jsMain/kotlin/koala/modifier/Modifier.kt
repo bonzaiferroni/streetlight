@@ -72,4 +72,16 @@ fun Element.toggle(modifier: Modifier): Boolean {
     return isModified
 }
 
-fun ModifierSet.contains(modifier: ClassModifier) = modifiers.contains(modifier)
+fun Modifier.contains(modifier: Modifier): Boolean {
+    if (modifier is ModifierSet) return modifier.modifiers.all { it == null || contains(it) }
+    return when (this) {
+        is ClassModifier -> modifier is ClassModifier && identifier == modifier.identifier
+        is InlineStyle<*> -> modifier is InlineStyle<*> &&
+                property.identifier == modifier.property.identifier &&
+                stringValue == modifier.stringValue
+        is AttributeValue<*> -> modifier is AttributeValue<*> &&
+                attribute.identifier == modifier.attribute.identifier &&
+                toStringValue() == modifier.toStringValue()
+        is ModifierSet -> modifiers.any { it != null && it.contains(modifier) }
+    }
+}

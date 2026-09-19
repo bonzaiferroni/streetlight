@@ -22,7 +22,7 @@ fun ViewScope.subdomainSection(configState: MutableTap<LocationConfig>) = formSe
     val subdomainState = configState.mutableTapOf({ it.subdomain?.value ?: "" }) { copy(subdomain = it.toSlug())}
     val messages = MessageStore()
 
-    formText("A subdomain provides easy access to your Streetlight page.")
+    centeredText("A subdomain provides easy access to your Streetlight page.")
     textField(subdomainState)
     flowBlock(subdomainState) {
         textBlock("currently: $it.streetlight.ing")

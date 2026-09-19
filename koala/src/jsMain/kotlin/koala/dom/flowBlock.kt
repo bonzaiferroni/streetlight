@@ -11,6 +11,7 @@ import koala.modifier.addModifiers
 import koala.modifier.modify
 import koala.html.FlowBlockStyle
 import kampfire.model.Tap
+import koala.modifier.Modifier
 import koala.modifier.contains
 import koala.modifier.unmodify
 import koala.modifier.unmodifyAfterFrame
@@ -27,15 +28,15 @@ import kotlin.time.Duration.Companion.milliseconds
 fun <Value> ViewScope.flowBlock(
     initialValue: Value,
     flow: Flow<Value>,
-    modifiers: ModifierSet? = null,
+    mod: Modifier? = null,
     name: String = "flowBlock",
     config: (DIV.() -> Unit)? = null,
     onTransition: ((Value) -> Unit)? = null,
     block: ViewScope.(Value) -> Unit
 ): HTMLDivElement {
-    val magic = modifiers?.contains(Magic) ?: false
+    val magic = mod?.contains(Magic) ?: false
     val element = div {
-        addModifiers(modifiers, FlowBlockStyle.Class)
+        addModifiers(mod, FlowBlockStyle.Class)
         config?.invoke(this)
     }.asWeb()
 
@@ -95,7 +96,7 @@ fun <Value> ViewScope.flowBlock(
 
 fun <Value> ViewScope.flowBlock(
     tap: Tap<Value>,
-    modifiers: ModifierSet? = null,
+    mod: Modifier? = null,
     name: String = "flowBlock",
     config: (DIV.() -> Unit)? = null,
     onTransition: ((Value) -> Unit)? = null,
@@ -103,12 +104,10 @@ fun <Value> ViewScope.flowBlock(
 ) = flowBlock(
     initialValue = tap.now,
     flow = tap.flow,
-    modifiers = modifiers,
+    mod = mod,
     name = name,
     config = config,
     onTransition = onTransition,
     block = block
 )
-
-val defaultMagic = modify(Magic, Blur, SlideLeft)
 

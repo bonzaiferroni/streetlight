@@ -2,9 +2,9 @@ package streetlight.web.ui
 
 import koala.SiteImage
 import koala.dom.*
-import streetlight.web.model.FrontDesk
+import streetlight.web.model.FeedbackHub
 
-fun ViewScope.viewFrontDesk(model: FrontDesk) {
+fun ViewScope.viewFrontDesk() {
     column(BodyStyle.MainColumn) {
         featureHeader("Help & Feedback", "The Front Desk", SiteImage.FrontDesk)
 
@@ -13,16 +13,7 @@ fun ViewScope.viewFrontDesk(model: FrontDesk) {
                 textBlock("yer help")
             }
             tab("Feedback") {
-                column {
-                    textField(model.textField, "feedback")
-                    button("send", model::sendFeedback)
-
-                    flowBlock(model.feedFlow) { feed ->
-                        feed.forEach { feedback ->
-                            textBlock(feedback.text)
-                        }
-                    }
-                }
+                viewFeedbackHub()
             }
             tab("Report a bug") {
                 textBlock("yer bug report")
@@ -32,6 +23,5 @@ fun ViewScope.viewFrontDesk(model: FrontDesk) {
 }
 
 fun RouteScope.viewFrontDeskRoute() {
-    val model = app.getFeedbackDesk(contentScope)
-    viewFrontDesk(model)
+    viewFrontDesk()
 }

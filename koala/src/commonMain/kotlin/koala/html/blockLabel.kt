@@ -20,8 +20,8 @@ ${Attribute.BlockLabel}::after {
     top: -0.38rem;
     right: .5rem;
 
-    font-size: 0.75rem;
-    padding: 0.12rem 0.5rem;
+    font-size: 0.65rem;
+    padding: 0.12rem 0.5rem 0.1rem;
 
     background: var(--void-border);
     color: var(--ink-dim);
@@ -30,6 +30,7 @@ ${Attribute.BlockLabel}::after {
     max-width: 75%;
     white-space: nowrap;
     text-overflow: ellipsis;
+    text-transform: uppercase;
 
     border-radius: 0.4rem;
     box-shadow: var(--input-shadow);

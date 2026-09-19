@@ -1,6 +1,9 @@
 package streetlight.model.data
 
+import kampfire.api.Markdown
 import kampfire.api.Username
+import kampfire.api.toMarkdown
+import kampfire.model.Labeled
 import kotlin.time.Instant
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
@@ -11,7 +14,7 @@ data class Feedback(
     val feedbackId: FeedbackId,
     val feedbackType: FeedbackType,
     val username: Username?,
-    val text: String,
+    val text: Markdown,
     val platform: Platform,
     val isPrivate: Boolean,
     val updatedAt: Instant,
@@ -26,9 +29,10 @@ value class FeedbackId(override val value: Uuid): RecordId {
     }
 }
 
-enum class FeedbackType {
-    General,
-    Issue
+enum class FeedbackType(override val label: String): Labeled {
+    General("General Feedback"),
+    Suggestion("Suggestion"),
+    Issue("Issue or Bug");
 }
 
 enum class Platform {
@@ -42,21 +46,12 @@ enum class Platform {
 
 @Serializable
 data class FeedbackEdit(
-    val feedbackId: FeedbackId?,
-    val feedbackType: FeedbackType,
-    val text: String,
+    val feedbackId: FeedbackId? = null,
+    val feedbackType: FeedbackType = FeedbackType.General,
+    val text: Markdown = "".toMarkdown(),
     val platform: Platform,
-    val isPrivate: Boolean,
+    val deviceAgent: String? = null,
+    val isPrivate: Boolean = true,
 ) {
-    companion object {
-        val Empty = FeedbackEdit(
-            feedbackId = null,
-            feedbackType = FeedbackType.General,
-            text = "",
-            platform = Platform.Web,
-            isPrivate = true
-        )
-    }
-
     val isValid get() = text.isNotBlank()
 }

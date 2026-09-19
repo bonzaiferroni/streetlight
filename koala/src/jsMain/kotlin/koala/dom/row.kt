@@ -4,6 +4,7 @@ import koala.modifier.ModifierSet
 import koala.modifier.FlexRow
 import koala.modifier.addModifiers
 import koala.html.Id
+import koala.modifier.Modifier
 import kotlinx.html.DIV
 import kotlinx.html.js.div
 import kotlinx.html.id
@@ -18,7 +19,7 @@ inline fun AppendScope.row(
 }
 
 inline fun AppendScope.row(
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     crossinline content: DIV.() -> Unit,
 ) = div {
     addModifiers(FlexRow, mod)

@@ -44,11 +44,11 @@ fun ViewScope.passwordSection(model: AccountEditor) = formSection("Password") {
             val email = model.stateNow.account.viableEmail
             column {
                 if (email != null) {
-                    formText("Please provide your current password to authorize change.")
+                    centeredText("Please provide your current password to authorize change.")
                     textField(model.verifyPasswordField, "current password") {
                         type = InputType.password
                     }
-                    formText("New password:", modify(MarginTop1))
+                    centeredText("New password:", modify(MarginTop1))
                 }
                 passwordFormInput(model.passwordEditor)
                 if (email != null) {
@@ -131,11 +131,11 @@ private fun ViewScope.emailNullForm(model: AccountEditor) {
     }
     column {
         if (model.stateNow.isChangingEmail && model.stateNow.hasVerifiedEmail) {
-            formText("Please provide a password to authorize change.")
+            centeredText("Please provide a password to authorize change.")
             textField(model.verifyPasswordField, "current password") {
                 type = InputType.password
             }
-            formText("What is your new email?", modify(MarginTop1))
+            centeredText("What is your new email?", modify(MarginTop1))
         }
         emailFormInput(model.emailEditor)
         formSubmit(submitLabel, model::addEmail, model.emailMessages)
@@ -159,12 +159,12 @@ private fun ViewScope.invalidStatusForm(model: AccountEditor, email: EmailAddres
 private fun ViewScope.removingEmailForm(model: AccountEditor) {
     column {
         if (model.stateNow.hasVerifiedEmail) {
-            formText("Please provide a password to authorize removal.")
+            centeredText("Please provide a password to authorize removal.")
             textField(model.verifyPasswordField, "current password") {
                 type = InputType.password
             }
         } else {
-            formText("Please confirm that you want to remove the email address from this account.")
+            centeredText("Please confirm that you want to remove the email address from this account.")
         }
         formSubmit("Remove email", model::removeEmail, model.emailMessages)
     }

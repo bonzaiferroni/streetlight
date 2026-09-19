@@ -57,7 +57,7 @@ fun ViewScope.galaxyDescriptionFormRow(model: GalaxyEditor) = formRow {
     formSection("Post Guide") {
         formField {
             textEditor(model.postGuideField, "Post Guide")
-            formText("Provide guidelines or requirements for the content of community posts.")
+            centeredText("Provide guidelines or requirements for the content of community posts.")
         }
     }
 
@@ -94,7 +94,7 @@ fun ViewScope.galaxyMapFormRow(model: GalaxyEditor) = formRow {
     formSection("Map Location") {
         formField {
             geoMapMount(mod = FormMod.GeoMap)
-            formText("Choose the point on the map and zoom level.")
+            centeredText("Choose the point on the map and zoom level.")
 
             flowBlock(geoCamera.pointAndZoom) { (point, zoom) ->
                 box {
@@ -141,7 +141,7 @@ fun ViewScope.galaxyAccessFormRow(model: GalaxyEditor) = formRow {
     formSection("Permissions") {
         formField {
             dropMenu(model.permissionField)
-            formText("You can open up posting to the community or curate the content yourself.")
+            centeredText("You can open up posting to the community or curate the content yourself.")
         }
 
         // formField {

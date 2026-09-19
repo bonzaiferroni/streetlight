@@ -96,7 +96,7 @@ fun ViewScope.formSubmit(
     }
 }
 
-fun ViewScope.formText(
+fun ViewScope.centeredText(
     text: String,
     mod: ModifierSet? = null,
 ) = textBlock(text, mod = modify(mod, TextAlignCenter, OpacityHigh, WhiteSpacePreLine))

@@ -21,11 +21,11 @@ fun ViewScope.eventLinksForm(model: EventEditor) {
         formRow {
             formSection("Website") {
                 textField(model.urlState, "Website", modify(Width(100.pct)))
-                formText("Is there more information about this event on the web?")
+                centeredText("Is there more information about this event on the web?")
             }
             formSection("Original Source") {
                 textField(model.originalSourceLabelState, "Source name")
-                formText("Want to give a shout out to the original place where you found the event?")
+                centeredText("Want to give a shout out to the original place where you found the event?")
                 textField(model.originalSourceUrlState, "Source url")
             }
         }
@@ -41,7 +41,7 @@ fun ViewScope.eventLinksForm(model: EventEditor) {
                     model.linksState.append(ExtraLink.Empty)
                 })
             }
-            indexedItemsBlock(model.linksState, defaultMagic) { (index, link) ->
+            indexedItemsBlock(model.linksState, modify(Magic, Blur, SlideLeft)) { (index, link) ->
                 val isEditingState = storeOf(link.label.isEmpty() || link.url.value.isEmpty())
                 flowBlock(isEditingState) { isEditing ->
                     row(modify(AlignItemsCenter)) {

@@ -18,7 +18,7 @@ fun ViewScope.themeForm(model: ThemeEditor) {
                 }
                 row(modify(FlexItems1)) {
                     switch("color flux", model.colorFluxState)
-                    formText("Color Flux makes the background colors slowly drift.")
+                    centeredText("Color Flux makes the background colors slowly drift.")
                 }
             }
             formSection("Background") {
@@ -27,7 +27,7 @@ fun ViewScope.themeForm(model: ThemeEditor) {
                     glowField(model.betaState)
                     glowField(model.gammaState)
                 }
-                formText("Click and drag to change the position of background glows.")
+                centeredText("Click and drag to change the position of background glows.")
             }
         }
         formSection("Glow Settings") {
