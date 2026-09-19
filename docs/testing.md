@@ -28,15 +28,27 @@ An end-to-end test covers a crossing: a request leaves the browser and an effect
 
 A guard that stops a request before it is sent is client behavior. It is tested as an integration test through the mounted view, which proves the guard is wired to the action it guards.
 
+A rule that only prevents user error is enforced on the client. The server is not tested for rejecting input the client guard already stops. The server is tested for a rule the system depends on, such as identity, ownership, and uniqueness.
+
 Reach for the cheapest kind that can fail for the reason being tested.
 
 Integration and end-to-end tests carry the majority of correctness. They exercise the code as it is used, so a passing test covers every collaborator on the path.
 
 A unit test is written for logic the compiler cannot check and whose cases are too many to cover through a mounted view, such as a parser. It does not restate what the compiler enforces: types, nullability, and exhaustive branches.
 
+A rule is tested where it lives. A mounted-view test proves the view applies the rule, and does not repeat the rule's cases.
+
+A behavior owned by a helper, such as a guard or a launch wrapper, is tested on the helper. The mounted-view test proves the view uses it.
+
+A case the user cannot produce through the UI is not tested through the UI.
+
 An integration test names the failing scenario, not the failing function. Diagnosing a failure starts from the scenario and narrows from there.
 
 A shared model is a reason to write fewer end-to-end tests than a split stack would need. The client and server hold the same DTO types, so a disagreement about the shape of a request fails to compile.
+
+## Answering the question 'Which tests are still wanted?'
+
+Before answering which tests are still wanted for a unit, read the fixtures of its test package and the existing tests for its behavior at every level: unit, integration, and end-to-end. A behavior already covered at another level is not proposed again.
 
 ## Assertions
 

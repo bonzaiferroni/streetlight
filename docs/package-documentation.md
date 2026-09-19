@@ -8,14 +8,14 @@ This document states what a package document contains. `docs/AGENTS.md` states w
 
 ## Documentation Content
 
-A package document describes where things go and why. The code describes what they are.
+A package document specifies where things go. The code describes what they are.
 
 Include:
 
 - Naming patterns for files and types
 - Where a thing belongs when there are two options
 - The shape of a typical member
-- A rule and the reason behind it
+- A rule
 - Behavior the compiler does not enforce
 
 Exclude:
@@ -27,7 +27,7 @@ Exclude:
 - Exceptions to the convention
 - Defects, inconsistencies, and unfinished work, except under Known Issues
 
-State a rule with its reason. The reason lets a reader apply the rule to a case the document does not cover.
+State a rule without its justification. The statement is sufficient.
 
 ## Accuracy
 

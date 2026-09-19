@@ -57,6 +57,8 @@ The helpers in `ViewUtility.kt` act on a mounted `View` through the labels a use
 | `awaitText`, `showsText` | Text anywhere in the view, awaited or checked once |
 | `awaitUntil` | Any condition, failing with a description after two seconds |
 
+The editor collapses a whitespace-only line to an empty block, so `writeIn` cannot enter text that is only whitespace.
+
 An action that resolves synchronously is asserted right after it. An action that launches a coroutine is awaited first, because an absence checked early passes for the wrong reason.
 
 A test that needs a collaborator to behave unusually replaces `app` with one from `buildTestApp` before it mounts.

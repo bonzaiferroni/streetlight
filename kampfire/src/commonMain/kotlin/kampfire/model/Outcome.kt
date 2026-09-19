@@ -109,7 +109,7 @@ data class Ok<T>(
 ): Outcome<T>
 
 @Serializable
-data class Problem(
+data class  Problem(
     override val message: String,
 ): Outcome<Nothing>
 

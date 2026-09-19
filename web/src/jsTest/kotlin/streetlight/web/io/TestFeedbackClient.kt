@@ -8,11 +8,12 @@ import streetlight.model.data.FeedbackEdit
 class TestFeedbackClient(
     private val feed: MutableList<Feedback> = mutableListOf(),
     private val onCreate: (FeedbackEdit) -> Outcome<Unit> = { Ok(Unit) },
+    private val onFeed: () -> Outcome<List<Feedback>> = { Ok(feed.toList()) },
 ): FeedbackClient {
 
     val sent = mutableListOf<FeedbackEdit>()
 
-    override suspend fun feedFeedback(): Outcome<List<Feedback>> = Ok(feed.toList())
+    override suspend fun feedFeedback(): Outcome<List<Feedback>> = onFeed()
 
     override suspend fun createFeedback(edit: FeedbackEdit): Outcome<Unit> {
         sent.add(edit)

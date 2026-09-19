@@ -3,6 +3,7 @@ package streetlight.web.model
 import kampfire.api.Markdown
 import kampfire.model.Messenger
 import kampfire.model.toDataOr
+import koala.utils.DropWhileBusy
 import koala.utils.launch
 import kampfire.model.tapOf
 import kampfire.model.mutableTapOf
@@ -22,6 +23,7 @@ class FeedbackHub(
     private val api: FeedbackClient,
     private val toaster: Toaster,
 ) {
+    private val sending = DropWhileBusy()
     private val state = storeOf(FeedbackHubState(FeedbackEdit(platform = Platform.Web)))
     val stateNow get() = state.now
 
@@ -41,13 +43,12 @@ class FeedbackHub(
         val edit = stateNow.edit.takeIf { it.isValid }?.copy(
             deviceAgent = readDeviceAgent()
         ) ?: return false
-        scope.launch(::sendFeedback) {
+        return sending.launch(scope, ::sendFeedback.name) {
             messenger.deliverSending()
             api.createFeedback(edit).toDataOr(messenger, "Feedback Sent.") { return@launch }
             editState.set { copy(text = Markdown.Empty) }
             refreshFeedback()
-        }
-        return true
+        } != null
     }
 
     private suspend fun refreshFeedback() {
