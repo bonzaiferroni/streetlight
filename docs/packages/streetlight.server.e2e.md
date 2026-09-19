@@ -44,6 +44,9 @@ Address an element by the role and name a user would perceive, not by a class or
 | `writeIn(label, text)` | Types into an editor and asserts it holds the text |
 | `clickButton(label)` | Clicks a button |
 | `awaitMessage(text)` | Waits for the text to become visible |
+| `awaitEditorCleared(label, text)` | Waits for an editor to let go of the text |
+
+Reload the page only where the test is about what survives a reload.
 
 `writeIn` asserts before returning. A contenteditable that did not receive the typed text would otherwise fail later at the result, where the symptom is identical to a broken endpoint.
 

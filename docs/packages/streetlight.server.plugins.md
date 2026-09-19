@@ -15,6 +15,7 @@ Every configure function is called from `Application.module()`. That function is
 | `configureRateLimits` before `configureAuth` | Rate limit keys read the session principal |
 | `configureSerialization` before `serveApi` | Endpoints negotiate content on registration |
 | `configureDatabases` before `serveApi` | Endpoint bodies reach a live connection |
+| `configureTransit` after `configureDatabases` | The transit load reads and writes tables |
 | `serveApi` last | Routing closes over everything installed before it |
 
 A file holds one configure function, and is named either for that function (`configureMetrics.kt`) or for the concern it configures (`Cors.kt`, `Serialization.kt`).
@@ -44,3 +45,5 @@ These serve functions live here rather than in `streetlight.server.routes`:
 `SiteStatusDaemon` is a background worker, constructed and launched by `configureMetrics`. It holds the `DaoFacade` and the Micrometer registry, and writes metrics to the database on an interval.
 
 A daemon is launched from the configure function of the concern it serves, so that the thing it depends on is installed before it starts.
+
+`configureTransit` launches the GTFS load in the application's own scope, so stopping the application cancels it. Startup work belongs in a configure function rather than a serve function.

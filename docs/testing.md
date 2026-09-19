@@ -18,15 +18,19 @@ This rule covers test code. It says nothing about how the crew talks to each oth
 
 ## Kinds of Test
 
-| Kind | What is real | Entry point |
-|---|---|---|
-| Unit | One function or type | A direct call |
-| Scenario | The server, its database, and its services | A server-side function, below HTTP |
-| End-to-end | The whole stack, including the browser | A user action in a rendered page |
+| Kind | What is real | Entry point | Scope |
+|---|---|---|---|
+| Unit | One function or type | A direct call | A rule that holds with no collaborators |
+| Scenario | The server, its database, and its services | A server-side function, below HTTP | What the server does with a request |
+| End-to-end | The whole stack, including the browser | A user action in a rendered page | Behavior that crosses between client and server |
 
-Reach for the cheapest kind that can fail for the reason being tested. A scenario test proves what the server does with a request. An end-to-end test is reserved for behavior that only exists once a browser is involved: what the page renders, what the view model sends, and what a real user agent supplies.
+An end-to-end test covers a crossing: a request leaves the browser and an effect lands in the database. Behavior that resolves on one side belongs to the kind that tests that side.
 
-A shared model is a reason to write fewer end-to-end tests than a split stack would need. The client and server hold the same DTO types, so a disagreement about the shape of a request fails to compile rather than failing in a browser.
+A guard that stops a request before it is sent is client behavior. Its rule is a unit test on the type that holds it.
+
+Reach for the cheapest kind that can fail for the reason being tested.
+
+A shared model is a reason to write fewer end-to-end tests than a split stack would need. The client and server hold the same DTO types, so a disagreement about the shape of a request fails to compile.
 
 ## Assertions
 
