@@ -52,6 +52,7 @@ Utilities live in `TestUtility.kt`.
 |---|---|
 | `registerStar` | A registered account |
 | `registerVerifiedStar` | `registerStar`, then redeems the mailed token |
+| `registerAdmin` | `registerStar`, then grants the `Admin` role |
 | `latestMail` | The last mail delivered to an address |
 | `extractToken` | The token in a mail, for a given screen |
 | `loginStar` | A live session |

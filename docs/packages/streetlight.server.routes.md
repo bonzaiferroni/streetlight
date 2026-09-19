@@ -23,6 +23,10 @@ Every serve function is registered by a call in `serveApi.kt`. A function that i
 
 Take nothing through a parameter that the scope already supplies. The scope exists so that a serve function's signature stays empty and a new service becomes available to every endpoint at once.
 
+Anything else comes from `provide<T>()`, resolved by the interface rather than the implementing class. `provide<MapReferenceClient>()` is served by the real client in production and the test client under test; `provide<OSMMapReferenceClient>()` is served only where the implementation is registered.
+
+A class a serve function depends on takes its collaborators through its constructor, so that the same substitution reaches it.
+
 ## Endpoint Bodies
 
 `getApi` and `postApi` bind an endpoint object from `Api` to its implementation. Binding to the object rather than to a path string means a renamed or moved endpoint fails to compile on both sides at once.

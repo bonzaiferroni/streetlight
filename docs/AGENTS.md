@@ -10,7 +10,7 @@ Read this first, then `docs/package-documentation.md`.
 
 Add no explanation or justification beyond the specification. The statement covers it.
 
-Avoid the phrasing "x, not y". State what is true and stop.
+A negative specification is valuable when it is not redundant and not more clearly stated as a positive specification.
 
 ## Reading Documents
 
