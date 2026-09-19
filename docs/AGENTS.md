@@ -30,11 +30,19 @@ An explanation often covers several packages at once. Each package named gets it
 
 Accuracy outranks completeness. A document describes the code as it stands, and an inaccurate one is worse than a missing one, because it will be believed.
 
+These are live documents. Drift noticed is drift to correct, in the turn it is noticed, whether or not the current task put it there. Reporting that a document has fallen behind and leaving it that way is not a finding, it is a second reader misled. Correct the drift and say what changed.
+
 ## Reporting Issues
 
 Report defects, inconsistencies, and unfinished edges in conversation. They do not belong in a package document.
 
 An issue is written down only once it is decided that it should be, and then it goes under the `## Known Issues` heading of the document for the package that holds it. The entry is removed in the same pass as the fix.
+
+## Testing
+
+`docs/testing.md` states how tests are written here: the kinds of test and when each is worth its cost, the plain voice test names use, and the discipline for assertions, utilities, and fakes. Read it before writing or changing a test.
+
+The fixtures belonging to a test package are documented in that package's own document, not in `docs/testing.md`.
 
 ## Dependencies
 
@@ -49,5 +57,9 @@ Confirm a version before raising it. An unverified bump is reported, not made.
 ## Scope
 
 Do the task given. When work uncovers a second thing worth doing, report it and wait, rather than widening the change.
+
+Do not restructure existing code without agreeing to it first. Extracting a function, moving code between files, renaming, changing a signature, and reorganizing a package are all changes that should be discussed.
+
+This holds when the task cannot be finished without the change. Say what the task needs and why, and stop there. 
 
 When the code needed to answer a question is not in hand, ask for it. Do not infer its shape from the code around it.

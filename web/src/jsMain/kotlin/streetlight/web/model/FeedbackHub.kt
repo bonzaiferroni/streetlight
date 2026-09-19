@@ -41,7 +41,7 @@ class FeedbackHub(
         ) ?: return
         scope.launch(::sendFeedback) {
             messenger.deliverSending()
-            api.createFeedback(edit).toDataOr(toaster, "Feedback Sent.") { return@launch }
+            api.createFeedback(edit).toDataOr(messenger, "Feedback Sent.") { return@launch }
             refreshFeedback()
         }
     }

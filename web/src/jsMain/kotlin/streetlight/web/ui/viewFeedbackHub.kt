@@ -24,7 +24,7 @@ fun ViewScope.viewFeedbackHub() {
                 }
             }
             markdownEditor(model.textState, "feedback", MinHeight(32))
-            formSubmit("Send", { model.sendFeedback(messenger) })
+            formSubmit("Send", { model.sendFeedback(messenger) }, messenger)
         }
 
         filigree {
