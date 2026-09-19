@@ -45,6 +45,22 @@ A view model constructed by a view reaches its dependencies through `ViewScope`,
 
 Register a service here when a mounted view resolves it. The container stays small enough to read.
 
+## Driving a View
+
+The helpers in `ViewUtility.kt` act on a mounted `View` through the labels a user sees or the block labels a view declares. A test never reaches into the DOM by structure.
+
+| Helper | What it drives |
+|---|---|
+| `writeIn`, `editor` | A markdown editor, by block label |
+| `chooseIn` | A drop menu, by the block label around it |
+| `clickButton`, `button` | A button, by its text |
+| `awaitText`, `showsText` | Text anywhere in the view, awaited or checked once |
+| `awaitUntil` | Any condition, failing with a description after two seconds |
+
+An action that resolves synchronously is asserted right after it. An action that launches a coroutine is awaited first, because an absence checked early passes for the wrong reason.
+
+A test that needs a collaborator to behave unusually replaces `app` with one from `buildTestApp` before it mounts.
+
 ## The Unit Under Test
 
 The unit is a view model together with the view that binds to it. Assertions run in both directions: act on the DOM and read the model, or set the model and read the DOM.

@@ -6,6 +6,8 @@ import kotlinx.browser.document
 import kotlinx.coroutines.delay
 import org.w3c.dom.HTMLButtonElement
 import org.w3c.dom.HTMLElement
+import org.w3c.dom.HTMLOptionElement
+import org.w3c.dom.HTMLSelectElement
 import org.w3c.dom.events.Event
 import kotlin.test.fail
 import kotlin.time.Duration
@@ -37,6 +39,18 @@ suspend fun View.writeIn(label: String, text: String) {
 }
 
 fun View.clickButton(label: String) = button(label).click()
+
+fun View.chooseIn(label: String, option: String) {
+    val select = mount.asW3C().querySelector("[data-block-label='$label'] select") as? HTMLSelectElement
+        ?: fail("no drop menu labelled '$label'")
+    val options = select.options
+    val hasOption = (0 until options.length).any { (options.item(it) as? HTMLOptionElement)?.value == option }
+    if (!hasOption) fail("the drop menu '$label' has no option '$option'")
+    select.value = option
+    select.dispatchEvent(Event("change"))
+}
+
+fun View.showsText(text: String): Boolean = mount.asW3C().textContent?.contains(text) == true
 
 suspend fun View.awaitText(text: String) =
     awaitUntil("the view to show \"$text\"") { mount.asW3C().textContent?.contains(text) == true }
