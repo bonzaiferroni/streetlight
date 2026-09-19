@@ -26,9 +26,15 @@ This rule covers test code. It says nothing about how the crew talks to each oth
 
 An end-to-end test covers a crossing: a request leaves the browser and an effect lands in the database. Behavior that resolves on one side belongs to the kind that tests that side.
 
-A guard that stops a request before it is sent is client behavior. Its rule is a unit test on the type that holds it.
+A guard that stops a request before it is sent is client behavior. It is tested as an integration test through the mounted view, which proves the guard is wired to the action it guards.
 
 Reach for the cheapest kind that can fail for the reason being tested.
+
+Integration and end-to-end tests carry the majority of correctness. They exercise the code as it is used, so a passing test covers every collaborator on the path.
+
+A unit test is written for logic the compiler cannot check and whose cases are too many to cover through a mounted view, such as a parser. It does not restate what the compiler enforces: types, nullability, and exhaustive branches.
+
+An integration test names the failing scenario, not the failing function. Diagnosing a failure starts from the scenario and narrows from there.
 
 A shared model is a reason to write fewer end-to-end tests than a split stack would need. The client and server hold the same DTO types, so a disagreement about the shape of a request fails to compile.
 

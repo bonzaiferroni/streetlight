@@ -16,6 +16,10 @@ The Kotlin browser test DSL runs the suite with Playwright driving Chromium and 
 
 Set `VIEW_HEADED=true` to watch a run in a visible browser.
 
+The browser console is written to the Gradle log as test output.
+
+The build rewrites the generated `test.html` to load Mocha 10.8.2 before the test task runs. The generated page loads Mocha unpinned, and Mocha 12 breaks the Kotlin test runner's reporter, so no test runs and the task fails with `Timeout 30000ms exceeded`. Raise the pin only after confirming the runner works with the newer version.
+
 ## ViewTest
 
 `ViewTest` is the base class. It builds a container and a scope before each test and tears both down after.

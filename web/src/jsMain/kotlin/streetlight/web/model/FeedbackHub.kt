@@ -1,11 +1,13 @@
 package streetlight.web.model
 
+import kampfire.api.Markdown
 import kampfire.model.Messenger
 import kampfire.model.toDataOr
 import koala.utils.launch
 import kampfire.model.tapOf
 import kampfire.model.mutableTapOf
 import kampfire.model.storeOf
+import koala.dom.MarkdownEditor
 import kotlinx.coroutines.CoroutineScope
 import streetlight.model.data.Feedback
 import streetlight.model.data.FeedbackEdit
@@ -42,7 +44,7 @@ class FeedbackHub(
         scope.launch(::sendFeedback) {
             messenger.deliverSending()
             api.createFeedback(edit).toDataOr(messenger, "Feedback Sent.") { return@launch }
-            editState.set { FeedbackEdit(platform = Platform.Web) }
+            editState.set { copy(text = Markdown.Empty) }
             refreshFeedback()
         }
         return true

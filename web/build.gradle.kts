@@ -5,6 +5,7 @@ import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JsMainFunctionExecutionMode
 import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalDistributionDsl
 import org.jetbrains.kotlin.gradle.targets.js.ir.KotlinJsIrLink
+import org.jetbrains.kotlin.gradle.targets.js.testing.KotlinJsTest
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -82,6 +83,19 @@ kotlin {
 
     compilerOptions {
         optIn.add("kotlin.uuid.ExperimentalUuidApi")
+    }
+}
+
+tasks.named<KotlinJsTest>("jsBrowserTest") {
+    testLogging {
+        showStandardStreams = true
+    }
+
+    // the generated test.html loads unpinned Mocha, and Mocha 12 breaks the Kotlin test runner's HTML reporter
+    val testHtml = layout.buildDirectory.file("kotlinJsTest/dist/test.html")
+    doFirst {
+        val file = testHtml.get().asFile
+        file.writeText(file.readText().replace("unpkg.com/mocha/", "unpkg.com/mocha@10.8.2/"))
     }
 }
 

@@ -68,4 +68,13 @@ This holds when the task cannot be finished without the change. Say what the tas
 
 When the code needed to answer a question is not in hand, ask for it. Do not infer its shape from the code around it.
 
+Run only the commands the agreed plan calls for. Do not compile or run tests to confirm code works unless asked. A failed compile is expected and is taken as it comes.
+
+| Action | Rule |
+|---|---|
+| Editing and creating files | Allowed, particularly when discussed. Every edit is visible in the git diff |
+| Commands that read files | Allowed |
+| Build and test commands | Left to the user unless discussed, then allowed |
+| Commands that touch git | Always left to the user |
+
 Change a file by editing its current contents. A write built from an older copy reverts whatever changed in between, in lines the task never touched.
