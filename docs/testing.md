@@ -21,7 +21,7 @@ This rule covers test code. It says nothing about how the crew talks to each oth
 | Kind | What is real | Entry point | Scope |
 |---|---|---|---|
 | Unit | One function or type | A direct call | A rule that holds with no collaborators |
-| Scenario | The server, its database, and its services | A server-side function, below HTTP | What the server does with a request |
+| Integration | Several real collaborators on one side of the wire | A function or a mounted view | What those collaborators do together |
 | End-to-end | The whole stack, including the browser | A user action in a rendered page | Behavior that crosses between client and server |
 
 An end-to-end test covers a crossing: a request leaves the browser and an effect lands in the database. Behavior that resolves on one side belongs to the kind that tests that side.

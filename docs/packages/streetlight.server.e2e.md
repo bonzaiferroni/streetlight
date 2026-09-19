@@ -4,7 +4,7 @@ End-to-end tests. A test here drives a real browser against a real server and a 
 
 `docs/testing.md` states how tests are written. This document states what this package provides.
 
-The package is distinct from `streetlight.server.scenario`, which enters below HTTP by calling server-side functions directly. A test belongs here only when a browser is required to make it fail for the reason it is testing.
+The package is distinct from `streetlight.server.integration`, which enters below HTTP by calling server-side functions directly. A test belongs here only when a browser is required to make it fail for the reason it is testing.
 
 ## BrowserTest
 

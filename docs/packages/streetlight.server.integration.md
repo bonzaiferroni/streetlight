@@ -1,6 +1,6 @@
-# streetlight.server.scenario
+# streetlight.server.integration
 
-Scenario tests for the server. Each file covers one user-facing flow from its entry point to the state it leaves behind.
+Integration tests for the server. Each file covers one user-facing flow from its entry point to the state it leaves behind.
 
 Shared fixtures and utilities live one package up, in `streetlight.server` of the test source set. Fakes for the injected clients live in `streetlight.server.model` of the test source set.
 
