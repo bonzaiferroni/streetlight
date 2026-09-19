@@ -18,19 +18,14 @@ fun RouteScope.viewSandbox() {
     grid(GridTemplateColumns("1fr 1fr"), modify(MarginTop1)) {
         column {
             lazyTabs(indexState = indexState) {
-                tab("cat") {
-                    lottie(LottieFile.GhostProto)
+                tab("original") {
+                    lottie(LottieFile.Math)
                 }
-                tab("Plymouth") {
-                    textBlock("yer at Plymouth")
-                    flowBlock(nameState) { name ->
-                        textBlock("hello $name")
-                    }
-                    println("yer clewgarnets")
+                tab("original") {
+                    lottie(LottieFile.CupShuffleProto)
                 }
-                tab("Start") {
-                    textBlock("yer at Start")
-                    println("let tacks and sheets fly")
+                tab("original") {
+                    lottie(LottieFile.CupShuffleProto)
                 }
             }
             textBlock("select a tab")
@@ -38,17 +33,14 @@ fun RouteScope.viewSandbox() {
 
         column {
             tabs(indexState = indexState) {
-                tab("cat") {
-                    lottie(LottieFile.Ghost)
+                tab("mod 1") {
+                    lottie(LottieFile.CupShuffle)
                 }
-                tab("Plymouth") {
-                    textBlock("yer at Plymouth")
-                    flowBlock(nameState) { name ->
-                        textBlock("hello $name")
-                    }
+                tab("mod 2") {
+                    lottie(LottieFile.CupShuffle)
                 }
-                tab("Start") {
-                    textBlock("yer at Start")
+                tab("mod 3") {
+                    lottie(LottieFile.CupShuffle)
                 }
             }
             textBlock("select a tab")

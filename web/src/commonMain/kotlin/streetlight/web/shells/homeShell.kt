@@ -70,7 +70,7 @@ fun FlowContent.galaxiesSection(galaxies: List<Galaxy>) {
                     heading4("Featured Galaxies", subHeadingMods)
                 }
                 row(modify(Flex1, AlignItemsCenter, JustifyContentCenter)) {
-                    lottie(LottieFile.dinoLoad, modify(Width(32), Aspect1))
+                    lottie(LottieFile.DinoLoad, modify(Width(32), Aspect1))
                 }
             }
         }

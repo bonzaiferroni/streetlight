@@ -16,7 +16,7 @@ fun FlowContent.aboutAppShell() {
     column(modify(AlignItemsCenter)) {
         heading1("About Streetlight")
         column(modify(MediaMdRow, AlignItemsCenter)) {
-            lottie(LottieFile.cupShuffle, modify(Flex1, MaxWidth(50.pct)))
+            lottie(LottieFile.CupShuffle, modify(Flex1, MaxWidth(50.pct)))
             val introText = "Streetlight is your front page for community events. " +
                     "It is cross-platform, open-source, and 100% Kotlin. "
             textBlock(introText, modify(Flex3, TextLarge))
