@@ -4,6 +4,8 @@
 
 A package gets a document when its contents follow conventions that are not obvious from reading a single file.
 
+This document states what a package document contains. `docs/AGENTS.md` states when one is read and when it is amended.
+
 ## Documentation Content
 
 A package document describes where things go and why. The code describes what they are.
@@ -23,24 +25,17 @@ Exclude:
 - Descriptions restating the package name
 - History, deprecations, or planned changes
 - Exceptions to the convention
+- Defects, inconsistencies, and unfinished work, except under Known Issues
 
 State a rule with its reason. The reason lets a reader apply the rule to a case the document does not cover.
 
-## Reading Documents
-
-Read a package document before adding a file to that package, or before changing a convention other files follow.
-
-## Writing Documents
-
-Write a section when the convention is decided, not afterward. Update the document in the same pass as the code that changes it.
-
-### Accuracy
+## Accuracy
 
 A document describes the current state of the code and nothing else. It carries no history: no note that a type used to be named something else, no record of what is planned, no marker on a file that has not caught up yet. A reader treats every statement as true of the code as it stands.
 
 An inaccurate document is worse than a missing one, because it will be believed.
 
-### Style
+## Style
 
 | Rule | Detail |
 |---|---|
@@ -51,5 +46,16 @@ An inaccurate document is worse than a missing one, because it will be believed.
 | Tables | Use them where each row relates its cells to one another |
 | Bullet lists | Use them for items that share no per-row relationship |
 | Code blocks | Use them where a shape is clearer shown than described |
+| Structure first | Reach for the heading, table, list, or code block that fits the content. Prose carries what none of them can |
+
+Recording a convention does not mean writing at length. A convention that fits in a table row is a table row.
 
 A document that runs past a page or two has started describing types.
+
+## Known Issues
+
+A document may carry a `## Known Issues` heading at its end. An entry there names something wrong in the package and what a reader should do when they meet it.
+
+This heading is the one place a document describes something other than the current convention, and the one place it carries something expected to change.
+
+A document with no such heading has no known issues recorded. It does not follow that the package has none.

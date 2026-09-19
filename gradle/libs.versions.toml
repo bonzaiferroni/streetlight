@@ -20,7 +20,7 @@ kotlinxSerializationCbor = "1.11.0"
 kotlinxSerializationJson = "1.11.0"
 kotlinxCollectionsImmutable = "0.4.0"
 ktor = "3.5.1"
-logbackClassic = "1.5.18"
+logbackClassic = "1.6.3"
 tablerIcons = "1.1.1"
 testcontainers = "2.0.5"
 
@@ -31,6 +31,17 @@ koin-bom = "4.1.1"  # Stable version
 
 ksoup = "0.2.6"
 playwright = "1.61.0"
+
+awsSdkKotlin = "1.6.52"
+flexmark = "0.64.8"
+flyway = "13.7.0"
+gtfsRealtime = "0.0.8"
+hikari = "7.1.0"
+logstashLogback = "9.0"
+micrometer = "1.10.3"
+postgresql = "42.7.3"
+scrimage = "4.3.6"
+timeshape = "2026b.29"
 
 [libraries]
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coilCompose" }
@@ -87,12 +98,14 @@ ktor-server-config-yaml = { module = "io.ktor:ktor-server-config-yaml", version.
 ktor-server-rate-limit = { module = "io.ktor:ktor-server-rate-limit", version.ref = "ktor" }
 ktor-server-content-negotiation-jvm = { module = "io.ktor:ktor-server-content-negotiation-jvm", version.ref = "ktor"  }
 ktor-server-core-jvm = { module = "io.ktor:ktor-server-core-jvm", version.ref = "ktor" }
+ktor-server-cio = { module = "io.ktor:ktor-server-cio", version.ref = "ktor" }
 ktor-server-cors = { module = "io.ktor:ktor-server-cors", version.ref = "ktor" }
 ktor-server-html-builder = { module = "io.ktor:ktor-server-html-builder", version.ref = "ktor" }
 ktor-server-metrics-micrometer = { module = "io.ktor:ktor-server-metrics-micrometer", version.ref = "ktor" }
 ktor-server-netty-jvm = { module = "io.ktor:ktor-server-netty-jvm", version.ref = "ktor"  }
 ktor-server-sse = { module = "io.ktor:ktor-server-sse", version.ref = "ktor" }
 ktor-server-status-pages = { module = "io.ktor:ktor-server-status-pages", version.ref = "ktor" }
+ktor-server-test-host = { module = "io.ktor:ktor-server-test-host", version.ref = "ktor" }
 ktor-server-websockets = { module = "io.ktor:ktor-server-websockets", version.ref = "ktor" }
 logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logbackClassic" }
 ktor_client_js = { module = "io.ktor:ktor-client-js", version.ref = "ktor" }
@@ -112,6 +125,20 @@ testcontainers-postgresql = { module = "org.testcontainers:testcontainers-postgr
 
 fleeksoft-ksoup = { module = "com.fleeksoft.ksoup:ksoup", version.ref = "ksoup" }
 playwright = { module = "com.microsoft.playwright:playwright", version.ref = "playwright" }
+
+aws-sdk-bom = { module = "aws.sdk.kotlin:bom", version.ref = "awsSdkKotlin" }
+aws-sdk-s3 = { module = "aws.sdk.kotlin:s3" }
+flexmark-html2md-converter = { module = "com.vladsch.flexmark:flexmark-html2md-converter", version.ref = "flexmark" }
+flyway-core = { module = "org.flywaydb:flyway-core", version.ref = "flyway" }
+flyway-database-postgresql = { module = "org.flywaydb:flyway-database-postgresql", version.ref = "flyway" }
+gtfs-realtime-bindings = { module = "org.mobilitydata:gtfs-realtime-bindings", version.ref = "gtfsRealtime" }
+hikaricp = { module = "com.zaxxer:HikariCP", version.ref = "hikari" }
+logstash-logback-encoder = { module = "net.logstash.logback:logstash-logback-encoder", version.ref = "logstashLogback" }
+micrometer-registry-prometheus = { module = "io.micrometer:micrometer-registry-prometheus", version.ref = "micrometer" }
+postgresql = { module = "org.postgresql:postgresql", version.ref = "postgresql" }
+scrimage-core = { module = "com.sksamuel.scrimage:scrimage-core", version.ref = "scrimage" }
+scrimage-webp = { module = "com.sksamuel.scrimage:scrimage-webp", version.ref = "scrimage" }
+timeshape = { module = "net.iakovlev:timeshape", version.ref = "timeshape" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

@@ -7,7 +7,7 @@ import streetlight.web.model.FeedbackHub
 
 fun ViewScope.viewFeedbackHub() {
     val model = FeedbackHub(contentScope, api, toaster)
-    column {
+    column(MarginTop1) {
         filigree {
             heading4("Share Feedback")
         }

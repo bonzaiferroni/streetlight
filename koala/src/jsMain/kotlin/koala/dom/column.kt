@@ -6,12 +6,13 @@ import koala.modifier.addModifiers
 import koala.modifier.modify
 import koala.html.Id
 import koala.html.setId
+import koala.modifier.Modifier
 import kotlinx.html.DIV
 import kotlinx.html.js.div
 
 fun AppendScope.column(
     id: Id?,
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     content: DIV.() -> Unit = { },
 ) = column(mod) {
     setId(id)
@@ -19,7 +20,7 @@ fun AppendScope.column(
 }
 
 fun AppendScope.column(
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     content: DIV.() -> Unit = { },
 ) = div {
     addModifiers(modify(FlexColumn, mod))

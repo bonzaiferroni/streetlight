@@ -21,6 +21,7 @@ ${Attribute.BlockLabel}::after {
     right: .5rem;
 
     font-size: 0.65rem;
+    font-weight: 500;
     padding: 0.12rem 0.5rem 0.1rem;
 
     background: var(--void-border);
