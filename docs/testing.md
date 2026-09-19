@@ -66,9 +66,7 @@ The test that needs the unusual behavior passes it. Every other test takes the d
 
 Give the parameter the narrowest shape that serves the test: a value where one answer is enough, a function where the answer changes between calls.
 
-What a fake returns is part of the test, not scaffolding around it. An end-to-end test of an external-service flow is a test of what the code does with that service's answer, so the answer belongs in the test that asserts on it.
-
-A fake with no configured answer fails with a message naming what was asked for. Returning an empty or default value instead makes a test pass for the wrong reason.
+A fake with no configured answer fails with a message naming what was asked for.
 
 ## Isolation
 

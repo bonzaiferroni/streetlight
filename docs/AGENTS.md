@@ -8,6 +8,10 @@ Read this first, then `docs/package-documentation.md`.
 
 `docs/package-documentation.md` states what a package document contains, how it is written, and the style it follows. This document states when to read one and when to amend one.
 
+Add no explanation or justification beyond the specification. The statement covers it.
+
+Avoid the phrasing "x, not y". State what is true and stop.
+
 ## Reading Documents
 
 Read the document for a package before adding a file to it, before changing a convention its files follow, and before reporting on code inside it.

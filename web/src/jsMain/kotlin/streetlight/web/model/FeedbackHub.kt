@@ -35,15 +35,17 @@ class FeedbackHub(
         }
     }
 
-    fun sendFeedback(messenger: Messenger) {
+    fun sendFeedback(messenger: Messenger): Boolean {
         val edit = stateNow.edit.takeIf { it.isValid }?.copy(
             deviceAgent = readDeviceAgent()
-        ) ?: return
+        ) ?: return false
         scope.launch(::sendFeedback) {
             messenger.deliverSending()
             api.createFeedback(edit).toDataOr(messenger, "Feedback Sent.") { return@launch }
+            editState.set { FeedbackEdit(platform = Platform.Web) }
             refreshFeedback()
         }
+        return true
     }
 
     private suspend fun refreshFeedback() {
