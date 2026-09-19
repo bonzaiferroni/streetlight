@@ -54,6 +54,22 @@ A collaborator is replaced by a fake that holds real behavior, not by a mock tha
 
 A fake method that no test needs is left as `TODO()`. A test that reaches it fails loudly rather than passing on a fabricated return.
 
+## Controlling a Fake
+
+A fake takes its behavior as a constructor parameter, defaulted to the ordinary case.
+
+```kotlin
+TestEmailClient(emailRouter, getErrorCode = { 406 })
+```
+
+The test that needs the unusual behavior passes it. Every other test takes the default and says nothing.
+
+Give the parameter the narrowest shape that serves the test: a value where one answer is enough, a function where the answer changes between calls.
+
+What a fake returns is part of the test, not scaffolding around it. An end-to-end test of an external-service flow is a test of what the code does with that service's answer, so the answer belongs in the test that asserts on it.
+
+A fake with no configured answer fails with a message naming what was asked for. Returning an empty or default value instead makes a test pass for the wrong reason.
+
 ## Isolation
 
 A test starts from an empty database and assumes nothing left behind by another. Expensive fixtures may be shared across a run; data may not.

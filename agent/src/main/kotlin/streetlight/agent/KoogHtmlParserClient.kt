@@ -20,24 +20,23 @@ import kotlinx.io.files.Path
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.full.createType
-import kotlin.reflect.typeOf
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
-class KoogParserClient(env: Environment, private val retryDelay: Duration = 10.seconds) {
+class KoogHtmlParserClient(
+    env: Environment,
+    private val retryDelay: Duration = 10.seconds,
+): HtmlParserClient {
     private val executor = simpleGoogleAIExecutor(env.read("GEMINI_KEY_A"))
     private val console = KotlinLogging.logger("dao")
     private val cache = mutableMapOf<Int, ParserContent>()
     private val trimmer = HtmlTrimmer()
-    private val log = KotlinLogging.logger(KoogParserClient::class)
+    private val log = KotlinLogging.logger(KoogHtmlParserClient::class)
 
-    suspend inline fun <reified T> readHtml(url: Url, doc: Document, instructions: String): Outcome<T>
-        = readHtml(url, doc, instructions, typeOf<T>())
-
-    suspend fun <T: Any> readHtml(url: Url, doc: Document, instructions: String, type: KClass<T>): Outcome<T>
+    override suspend fun <T: Any> readHtml(url: Url, doc: Document, instructions: String, type: KClass<T>): Outcome<T>
         = readHtml(url, doc, instructions, type.createType())
 
-    suspend fun <T: Any> readHtml(url: Url, doc: Document, instructions: String, type: KType): Outcome<T> {
+    override suspend fun <T: Any> readHtml(url: Url, doc: Document, instructions: String, type: KType): Outcome<T> {
         val response = withCache(doc.hashCode()) {
             readHtmlContent(url, doc, instructions, type)
         }
@@ -112,7 +111,7 @@ class KoogParserClient(env: Environment, private val retryDelay: Duration = 10.s
         return LMProblem.Unspecified
     }
 
-    suspend fun <T> readImage(url: String, instructions: String, type: KType): T? {
+    override suspend fun <T> readImage(url: String, instructions: String, type: KType): T? {
         val cacheKey = url.hashCode()
         val cached = cache[cacheKey]
         if (cached != null) return tryDecode(cached.json, type)
@@ -168,7 +167,7 @@ data class ParserContent(
     val json: String,
 )
 
-private val logger = KotlinLogging.logger(KoogParserClient::class)
+private val logger = KotlinLogging.logger(KoogHtmlParserClient::class)
 
 object LMProblem {
     val Busy = Problem("Language model is busy.")
