@@ -44,7 +44,7 @@ enum class Screen(
     Star(UsernameParse { StarRoute(it) }, "s", true),
     StarDash(StaticParse { StarDashRoute }),
     ProfileConfig(StaticParse { ProfileConfigRoute }),
-    UpdateAccount(StaticParse { UpdateAccountRoute }),
+    StarConfig(StaticParse { StarConfigRoute }),
     Inbox(StaticParse { InboxRoute }),
 
     // token

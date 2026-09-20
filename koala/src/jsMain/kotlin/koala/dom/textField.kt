@@ -18,8 +18,8 @@ import web.keyboard.KeyboardEvent
 fun ViewScope.textField(
     field: MutableTap<String>,
     label: String? = null,
-    mod: ModifierSet? = null,
-    textMod: ModifierSet? = null,
+    mod: Modifier? = null,
+    textMod: Modifier? = null,
     id: Id? = null,
     placeholder: String? = label,
     name: String? = null,

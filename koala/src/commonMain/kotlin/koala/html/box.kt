@@ -6,21 +6,21 @@ import kotlinx.html.FlowContent
 import kotlinx.html.div
 
 fun FlowContent.box(
-    modifiers: ModifierSet? = null,
+    mod: Modifier? = null,
     block: (DIV.() -> Unit)? = null,
 ) {
     div {
-        addModifiers(Box, modifiers)
+        addModifiers(Box, mod)
         block?.invoke(this)
     }
 }
 
 fun FlowContent.box(
     id: Id?,
-    modifiers: ModifierSet? = null,
+    mod: Modifier? = null,
     block: (DIV.() -> Unit)? = null,
 ) {
-    box(modifiers = modifiers) {
+    box(mod = mod) {
         setId(id)
         block?.invoke(this)
     }

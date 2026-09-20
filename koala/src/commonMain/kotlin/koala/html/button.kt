@@ -8,22 +8,22 @@ import kotlinx.html.button as buttonTag
 
 fun FlowContent.button(
     text: String,
-    modifiers: ModifierSet? = null,
+    mod: Modifier? = null,
     flair: String? = null,
     block: BUTTON.() -> Unit = {}
 ) {
     buttonTag {
-        configureButton(text, modifiers, flair, block)
+        configureButton(text, mod, flair, block)
     }
 }
 
 fun BUTTON.configureButton(
     text: String,
-    modifiers: ModifierSet? = null,
+    mod: Modifier? = null,
     flair: String? = null,
     block: BUTTON.() -> Unit = {}
 ) {
-    addModifiers(BtnKey.Class, modifiers)
+    addModifiers(BtnStyle.Class, mod)
     block()
     flair?.let {
         span {
@@ -37,38 +37,38 @@ fun BUTTON.configureButton(
 
 fun FlowContent.button(
     svg: Svg,
-    modifiers: ModifierSet? = null,
+    mod: Modifier? = null,
     block: BUTTON.() -> Unit = {}
 ) {
     buttonTag {
-        configureSvgButton(svg, modifiers, block)
+        configureSvgButton(svg, mod, block)
     }
 }
 
 fun BUTTON.configureSvgButton(
     svg: Svg,
-    modifiers: ModifierSet? = null,
+    mod: Modifier? = null,
     block: BUTTON.() -> Unit = {}
 ) {
-    addModifiers(ButtonStyle.IconClass, modify(IconStyle.Icon, modifiers))
+    addModifiers(ButtonStyle.IconClass, modify(IconStyle.Icon, mod))
     setStyle(Css.MaskUrl.of(svg))
     block()
 }
 
 fun FlowContent.button(
-    modifiers: ModifierSet? = null,
+    mod: Modifier? = null,
     block: BUTTON.() -> Unit = {}
 ) {
     buttonTag {
-        configureElementButton(modifiers, block)
+        configureElementButton(mod, block)
     }
 }
 
 fun BUTTON.configureElementButton(
-    modifiers: ModifierSet? = null,
+    mod: Modifier? = null,
     block: BUTTON.() -> Unit = {}
 ) {
-    addModifiers(ButtonStyle.ElementClass, modifiers)
+    addModifiers(ButtonStyle.ElementClass, mod)
     block()
 }
 

@@ -20,7 +20,7 @@ fun FlowContent.btn(
     val flair = flair ?: if (addFlair) labelPrefixMap[text.lowercase()] else null
     navigation(
         route = route,
-        modifiers = modify(BtnKey.Class, modifiers),
+        mod = modify(BtnStyle.Class, modifiers),
         flair = flair,
     ) {
         block()
@@ -41,7 +41,7 @@ fun FlowContent.btn(
     navigation(
         route = route,
         flair = flair,
-        modifiers = modify(modifiers, BtnKey.Class, BackgroundImage),
+        mod = modify(modifiers, BtnStyle.Class, BackgroundImage),
     ) {
         background?.let {
             setStyle(Css.BackgroundUrl.of(it))
@@ -69,7 +69,7 @@ fun FlowContent.btn(
         }
 
     navigation(
-        modifiers = modify(BtnKey.Class, modifiers),
+        mod = modify(BtnStyle.Class, modifiers),
         flair = flair,
         id = id,
     ) {
@@ -110,6 +110,6 @@ private val labelPrefixMap = mapOf(
     "calendar" to "📅",
 )
 
-object BtnKey {
+object BtnStyle {
     val Class = Class("btn")
 }

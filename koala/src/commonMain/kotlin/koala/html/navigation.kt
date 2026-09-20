@@ -2,7 +2,8 @@ package koala.html
 
 import koala.modifier.Class
 import koala.interop.KoalaFun
-import koala.modifier.ModifierSet
+import koala.modifier.Modifier
+import koala.modifier.PrimaryFg
 import koala.modifier.addModifiers
 import koala.modifier.modify
 import kotlinx.html.A
@@ -12,81 +13,93 @@ import kotlinx.html.onClick
 
 fun FlowContent.navigation(
     href: String? = null,
-    modifiers: ModifierSet? = null,
+    mod: Modifier? = null,
     id: Id? = null,
     flair: String? = null,
-    block: A.() -> Unit = {}
+    config: A.() -> Unit = {},
 ) {
     a {
-        configureNavigation(href, modifiers, id, flair, block)
+        configureNavigation(href, mod, id, flair, config)
     }
 }
 
 internal fun A.configureNavigation(
     href: String? = null,
-    modifiers: ModifierSet? = null,
+    mod: Modifier? = null,
     id: Id? = null,
     flair: String? = null,
-    block: A.() -> Unit = {}
+    config: A.() -> Unit = {}
 ) {
     setId(id)
-    addModifiers(modify(ActionKey.Class, modifiers))
+    addModifiers(modify(ActionKey.Class, mod))
     href?.let { this.href = href }
     flair?.let {
         span {
             +flair
         }
     }
-    block()
+    config()
+}
+
+fun FlowContent.navigation(
+    text: String,
+    href: String,
+    mod: Modifier? = null,
+    config: A.() -> Unit = { }
+) {
+    navigation(href, modify(mod, PrimaryFg)) {
+        config()
+        +text
+    }
 }
 
 fun FlowContent.navigation(
     route: AppRoute,
-    modifiers: ModifierSet? = null,
+    mod: Modifier? = null,
     id: Id? = null,
     flair: String? = null,
     block: A.() -> Unit = {}
 ) {
     navigation(
         href = route.toRelativePath(),
-        modifiers = modifiers,
+        mod = mod,
         id = id,
         flair = flair,
-        block = block
+        config = block
     )
 }
 
 fun FlowContent.navigationIfNotNull(
     route: AppRoute? = null,
-    modifiers: ModifierSet? = null,
+    mod: Modifier? = null,
     id: Id? = null,
     block: FlowContent.() -> Unit = {}
 ) {
-    navigationIfNotNull(route?.toRelativePath(), modifiers, id, block)
+    navigationIfNotNull(route?.toRelativePath(), mod, id, block)
 }
 
 fun FlowContent.navigationIfNotNull(
     href: String? = null,
-    modifiers: ModifierSet? = null,
+    mod: Modifier? = null,
     id: Id? = null,
     block: FlowContent.() -> Unit = {}
 ) {
     if (href == null) {
-        box(id, modifiers) {
+        box(id, mod) {
             block()
         }
     } else {
-        navigation(href = href, modifiers = modifiers, id = id, block = block)
+        navigation(href = href, mod = mod, id = id, config = block)
     }
 }
 
 fun FlowContent.navigation(
     targetId: Id,
-    modifiers: ModifierSet? = null,
+    mod: Modifier? = null,
     block: A.() -> Unit = {}
 ) {
     a {
-        addModifiers(modifiers)
+        addModifiers(mod)
         onClick = KoalaFun.ScrollToId.invokeJs(targetId)
         block()
     }

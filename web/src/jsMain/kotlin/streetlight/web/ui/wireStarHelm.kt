@@ -17,7 +17,7 @@ import streetlight.model.data.Star
 import streetlight.model.ui.InboxRoute
 import streetlight.model.ui.StarDashRoute
 import streetlight.model.ui.StarRoute
-import streetlight.model.ui.UpdateAccountRoute
+import streetlight.model.ui.StarConfigRoute
 import streetlight.web.model.SessionClient
 import streetlight.web.pages.AppOverlay
 import streetlight.web.pages.HelmBar
@@ -66,7 +66,7 @@ private fun ViewScope.starPanel(star: Star) {
 
         // calendar route goes here
         routeItem(StarDashRoute, "Dashboard", SvgFile.Dashboard)
-        routeItem(UpdateAccountRoute, "Account", SvgFile.User)
+        routeItem(StarConfigRoute, "Account", SvgFile.User)
         routeItem(InboxRoute, "Inbox", SvgFile.MailLarge)
 
         button({

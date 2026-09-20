@@ -3,7 +3,7 @@
 package koala.html
 
 import koala.modifier.Class
-import koala.modifier.ModifierSet
+import koala.modifier.Modifier
 import koala.modifier.Prose
 import koala.modifier.addModifiers
 import kotlinx.html.FlowContent
@@ -13,36 +13,36 @@ import kotlinx.html.ol
 import kotlinx.html.ul
 
 fun FlowContent.olist(
-    modifiers: ModifierSet? = null,
+    mod: Modifier? = null,
     axis: ListAxis = ListAxis.Column,
     block: OL.() -> Unit = {},
 ) {
     ol {
-        configureListing(axis, modifiers)
+        configureListing(axis, mod)
         block()
     }
 }
 
 fun FlowContent.ulist(
-    modifiers: ModifierSet? = null,
+    mod: Modifier? = null,
     axis: ListAxis = ListAxis.Column,
     block: UL.() -> Unit = {},
 ) {
     ul {
-        configureListing(axis, modifiers)
+        configureListing(axis, mod)
         block()
     }
 }
 
 internal fun TagConfig.configureListing(
     axis: ListAxis,
-    modifiers: ModifierSet? = null,
+    mod: Modifier? = null,
 ) {
     val axisClass = when (axis) {
         ListAxis.Row -> ListKey.RowClass
         ListAxis.Column -> ListKey.ColumnClass
     }
-    addModifiers(modifiers, ListKey.Class, axisClass)
+    addModifiers(mod, ListKey.Class, axisClass)
 }
 
 enum class ListAxis {
@@ -66,8 +66,15 @@ ${ListKey.Class} {
     display: flex;
     min-width: 0;
     min-height: 0;
-    list-style: none;
     gap: var(--unit);
+}
+
+ul {
+    list-style: none;
+}
+
+ol {
+    padding-left: var(--unit-3);
 }
 
 $Prose ${ListKey.Class} {

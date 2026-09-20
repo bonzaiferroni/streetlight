@@ -29,7 +29,7 @@ fun FlowContent.textField(
 
 fun DIV.configureTextFieldContainer(
     label: String?,
-    mod: ModifierSet?
+    mod: Modifier?
 ) {
     addModifiers(mod)
     setAttribute(Attribute.BlockLabel, label?.lowercase())
@@ -37,7 +37,7 @@ fun DIV.configureTextFieldContainer(
 
 fun INPUT.configureTextFieldInput(
     id: Id?,
-    textMod: ModifierSet?,
+    textMod: Modifier?,
     placeholder: String?,
     size: Int,
     maxLength: Int?,

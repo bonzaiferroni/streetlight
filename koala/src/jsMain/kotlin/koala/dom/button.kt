@@ -7,8 +7,13 @@ import koala.html.configureButton
 import koala.html.configureElementButton
 import koala.html.configureSvgButton
 import kampfire.model.Tap
+import kampfire.model.Url
+import koala.html.BtnStyle
+import koala.modifier.Modifier
+import koala.modifier.modify
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+import kotlinx.html.A
 import kotlinx.html.BUTTON
 import kotlinx.html.js.button
 import web.events.Event
@@ -20,7 +25,7 @@ import web.pointer.PointerEvent
 fun AppendScope.button(
     text: String,
     onClick: (() -> Unit)? = null,
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     onClickEvent: ((Event) -> Unit)? = null,
     flair: String? = null,
     block: BUTTON.() -> Unit = {},
@@ -41,7 +46,7 @@ fun AppendScope.button(
 fun AppendScope.button(
     svg: Svg,
     onClick: (() -> Unit)? = null,
-    mod: ModifierSet = IconStyle.DefaultMod,
+    mod: Modifier = IconStyle.DefaultMod,
     onClickEvent: ((Event) -> Unit)? = null,
     block: BUTTON.() -> Unit = {},
 ): HTMLButtonElement {
@@ -60,7 +65,7 @@ fun AppendScope.button(
 
 fun AppendScope.button(
     onClick: (() -> Unit)? = null,
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     onClickEvent: ((Event) -> Unit)? = null,
     block: BUTTON.() -> Unit = {},
 ): HTMLButtonElement {
@@ -75,6 +80,18 @@ fun AppendScope.button(
     )
 
     return element
+}
+
+fun AppendScope.button(
+    label: String,
+    url: Url,
+    mod: Modifier? = null,
+    config: A.() -> Unit = { }
+) = navigation(url.value, modify(mod, BtnStyle.Class)) {
+    config()
+    span {
+        +label
+    }
 }
 
 private fun configureButtonEvents(

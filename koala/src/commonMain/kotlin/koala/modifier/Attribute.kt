@@ -54,6 +54,7 @@ data class Attribute<T>(
         val Autofocus = booleanAttributeOf("autofocus")
         val ContentVisibility = stringAttributeOf("content-visibility")
         val ContainIntrinsicSize = stringAttributeOf("contain-intrinsic-size")
+        val Disabled = unitAttributeOf("disabled")
     }
 }
 

@@ -2,37 +2,83 @@ package streetlight.web.ui
 
 import kampfire.api.EmailAddress
 import kampfire.api.obfuscate
-import koala.modifier.AlignItemsCenter
-import koala.modifier.AlignSelfCenter
-import koala.modifier.Blur
-import koala.modifier.CautionFg
-import koala.modifier.Magic
-import koala.modifier.MarginTop1
-import koala.modifier.Scale
-import koala.modifier.ValidFg
-import koala.modifier.Zen
-import koala.modifier.modify
+import kampfire.model.toUrl
+import koala.modifier.*
 import koala.dom.*
+import koala.html.Id
+import koala.html.listItem
+import koala.html.olist
+import koala.modifier.Flex1
 import kotlinx.html.InputType
+import kotlinx.html.ol
 import streetlight.model.data.EmailStatus
 import streetlight.model.data.viableEmail
 import streetlight.web.model.AccountEditor
+import streetlight.web.model.AppConnector
 
-fun ViewScope.updateAccountForm(model: AccountEditor) = formColumn {
-    formRow {
-        // formSection("Identity") {
-        //     textField(model.nameField, "name", maxLength = 50)
-        //     formText("You have the option of sharing your real name.")
-        // }
-
-        emailSection(model)
-
-        passwordSection(model)
-
-        //formSection("Validate") {
-        //    button("Verify email", model::verifyEmail)
-        //    // button("Reset Password", model::resetPassword)
-        //}
+fun ViewScope.starConfigTabs(model: AccountEditor) = tabs(Id("star-config-tabs")) {
+    tab("account") {
+        formRow {
+            emailSection(model)
+            passwordSection(model)
+        }
+    }
+    tab("connect apps") {
+        val model = AppConnector()
+        formRow {
+            formSection("PayPal") {
+                olist {
+                    listItem {
+                        +"Visit "
+                        navigation("https://paypal.me", "paypal.me")
+                        +" to create a public link"
+                    }
+                    listItem {
+                        +"Enter the username you chose in the field below."
+                    }
+                    listItem {
+                        +"Payments go directly to you, Streetlight just provides the link."
+                    }
+                }
+                row {
+                    textField(model.paypalIdState, "PayPal username", Flex1)
+                    flowBlock(model.paypalIdState) { paypalId ->
+                        if (paypalId.isEmpty()) {
+                            button("test link", null, Attribute.Disabled.to(Unit))
+                        } else {
+                            val url = "https://paypal.me/${paypalId}".toUrl()
+                            button("Test Link", url)
+                        }
+                    }
+                }
+            }
+            formSection("Venmo") {
+                row {
+                    textField(model.venmoIdState, "Venmo", Flex1)
+                    flowBlock(model.venmoIdState) { venmoId ->
+                        if (venmoId.isEmpty()) {
+                            button("test link", null, Attribute.Disabled.to(Unit))
+                        } else {
+                            val url = "https://venmo.com/${venmoId}".toUrl()
+                            button("Test Link", url)
+                        }
+                    }
+                }
+            }
+            formSection("Cash App") {
+                row {
+                    textField(model.cashAppIdState, "Cash App", Flex1)
+                    flowBlock(model.cashAppIdState) { cashAppId ->
+                        if (cashAppId.isEmpty()) {
+                            button("test link", null, Attribute.Disabled.to(Unit))
+                        } else {
+                            val url = "https://cash.app/${cashAppId}".toUrl()
+                            button("Test Link", url)
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 

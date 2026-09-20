@@ -24,7 +24,7 @@ import streetlight.model.ui.SiteDocRoute
 import streetlight.model.ui.ProfileConfigRoute
 import streetlight.model.ui.StarDashRoute
 import streetlight.model.ui.StarRoute
-import streetlight.model.ui.UpdateAccountRoute
+import streetlight.model.ui.StarConfigRoute
 import streetlight.web.io.ApiClient
 
 class AppContentFetcher(
@@ -48,7 +48,7 @@ class AppContentFetcher(
         is SiteDocRoute -> api.doc.readSiteDoc(route.docId)
         is StarDashRoute -> Ok(NullContent)
         is ProfileConfigRoute -> api.star.readProfileDesign()
-        is UpdateAccountRoute -> api.star.readAccount()
+        is StarConfigRoute -> api.star.readAccount()
         is InboxRoute -> api.message.readInbox()
         else -> Ok(NullContent)
     }

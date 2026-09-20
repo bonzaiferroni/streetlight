@@ -18,8 +18,8 @@ object ProfileConfigRoute: StreetlightRoute {
     override val title get() = "Config"
 }
 
-object UpdateAccountRoute: StreetlightRoute {
-    override val screen get() = Screen.UpdateAccount
+object StarConfigRoute: StreetlightRoute {
+    override val screen get() = Screen.StarConfig
     override val title get() = "Account"
 }
 

@@ -17,11 +17,11 @@ import koala.html.span
 import koala.html.topLogo
 import streetlight.model.data.Account
 import streetlight.model.data.Star
-import streetlight.model.ui.UpdateAccountRoute
+import streetlight.model.ui.StarConfigRoute
 import streetlight.web.model.AccountEditor
 import streetlight.web.shells.starRouteMenu
 
-fun ViewScope.viewAccountUpdater(star: Star, model: AccountEditor) {
+fun ViewScope.viewStarConfig(star: Star, model: AccountEditor) {
     column(mod = BodyStyle.MainColumn) {
         topLogo()
 
@@ -32,19 +32,19 @@ fun ViewScope.viewAccountUpdater(star: Star, model: AccountEditor) {
         if (star.accountType == AccountType.Guest) {
             registerAccountForm(model)
         } else {
-            updateAccountForm(model)
+            starConfigTabs(model)
         }
 
         appFooter(sourcePathUi("viewAccountUpdater.kt"))
 
-        starRouteMenu(star, UpdateAccountRoute, true)
+        starRouteMenu(star, StarConfigRoute, true)
     }
 }
 
-fun RouteScope.viewUpdateAccountRoute() {
-    starRouteBlock<UpdateAccountRoute, Account>(modify(Magic)) { star, account ->
+fun RouteScope.viewStarConfigRoute() {
+    starRouteBlock<StarConfigRoute, Account>(modify(Magic)) { star, account ->
         val model = app.getAccountEditor(account, contentScope)
-        viewAccountUpdater(star, model)
+        viewStarConfig(star, model)
     }
 }
 
