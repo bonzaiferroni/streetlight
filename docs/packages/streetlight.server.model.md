@@ -48,3 +48,16 @@ single { OSMMapReferenceClient() } bind MapReferenceClient::class
 ```
 
 The test module in `buildTestServer` registers the same interfaces against the test clients, so a test substitutes a collaborator without any production code knowing.
+
+## ServerConfig
+
+`ServerConfig` holds the switches that decide which parts of the server start. It is provided through the container like any other service, and `streetlightModule` reads it with `provide<ServerConfig>()`.
+
+| Switch | Off means |
+|---|---|
+| `withMetrics` | No metrics daemon |
+| `withDatabase` | The module does not connect to the database |
+| `withTransit` | No GTFS load |
+| `withRateLimits` | The limiters are registered with an unlimited bucket |
+
+Every switch defaults to `true`. A test provides its own `ServerConfig` through `buildTestServer`.

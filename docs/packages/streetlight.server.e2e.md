@@ -19,13 +19,7 @@ The browser process is the expensive thing and the cookies are the thing that mu
 
 The server is started per test because it closes over the `TestServer` that `DatabaseTest` rebuilds for each one. It runs on port `0` and reports the port it was given, so tests never contend for a fixed one.
 
-It is started with metrics, database setup and transit off.
-
-| Flag | Off because |
-|---|---|
-| `withMetrics` | The daemon writes on an interval and would outlive the test that started it |
-| `withDatabase` | `DatabaseTest` already owns the connection |
-| `withTransit` | The GTFS load reads a large dataset, and truncation defeats the guard that makes it run once |
+It is started with the `ServerConfig` that `buildTestServer` provides, which turns metrics, database setup, transit and rate limits off. `streetlight.server.model.md` states what each switch does.
 
 Set `E2E_HEADED=true` to watch a test run in a visible browser.
 
@@ -89,6 +83,6 @@ A test asserts on the table rather than on the rendered feed when the flow's eff
 
 A column absent from the DTO is read from the table. `Feedback` carries no `deviceAgent`, so a test asserting on it reads the column.
 
-`latestBugRowOrNull` and `bugCount` read `BugTable` the same way. `Bug` carries none of the columns a bug test asserts on, so the test-side `BugRow` holds them.
+`latestBugRowOrNull` and `bugCount` read `BugTable` the same way. They live in `BugUtility.kt` one package up, because `streetlight.server.api` reads them too. `Bug` carries none of the columns a bug test asserts on, so the test-side `BugRow` holds them.
 
 Stating a count alongside the row proves the interaction ran once. A retried click that wrote twice passes every assertion about content.

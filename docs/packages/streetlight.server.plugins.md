@@ -20,6 +20,10 @@ Every configure function is called from `Application.module()`. That function is
 
 A file holds one configure function, and is named either for that function (`configureMetrics.kt`) or for the concern it configures (`Cors.kt`, `Serialization.kt`).
 
+## Startup Switches
+
+`Application.streetlightModule` reads `ServerConfig` and calls a configure function only when its switch is on. `configureRateLimits` always installs the plugin and takes its limit from the switch.
+
 ## serveApi
 
 `serveApi.kt` is the join between the two kinds of member. It opens `routing { }`, constructs a `ServerRouting` from the `ServerScope` and the `Routing`, and calls every serve function in the application with that as receiver.
