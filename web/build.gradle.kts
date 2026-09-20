@@ -77,6 +77,11 @@ kotlin {
             implementation(libs.kotlinx.coroutines.test)
         }
 
+        jvmTest.dependencies {
+            implementation(kotlin("test-junit5"))
+            implementation(libs.playwright)
+        }
+
         wasmJsMain.dependencies {
         }
     }
@@ -96,6 +101,15 @@ tasks.named<KotlinJsTest>("jsBrowserTest") {
     doFirst {
         val file = testHtml.get().asFile
         file.writeText(file.readText().replace("unpkg.com/mocha/", "unpkg.com/mocha@10.8.2/"))
+    }
+}
+
+tasks.named<Test>("jvmTest") {
+    useJUnitPlatform()
+    dependsOn("prepareWebpackBundleForKotlinJsTests")
+    systemProperty("view.dist", layout.buildDirectory.dir("kotlinJsTest/dist").get().asFile.absolutePath)
+    testLogging {
+        showStandardStreams = true
     }
 }
 

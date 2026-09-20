@@ -101,7 +101,7 @@ class FeedbackHubTest: ViewTest() {
     fun `a chosen feedback type reaches the client`() = runViewTest {
         val view = mount { viewFeedbackHub() }
 
-        view.chooseIn("type", "Issue or Bug")
+        view.chooseIn("type", FeedbackType.Issue.label)
         view.sendNote()
 
         assertEquals(FeedbackType.Issue, feedback.sent.single().feedbackType)
