@@ -240,6 +240,10 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
         object Create: PostEndpoint<FeedbackEdit, Unit>(this)
     }
 
+    object Bugs: ApiNode(this) {
+        object Report: PostEndpoint<Bug, Unit>(this)
+    }
+
     object Status: ApiNode(this) {
         object Feed: GetEndpoint<SiteStatusFeed>(this) {
             val resolution = enumParamOf<MetricResolution>("resolution")

@@ -16,7 +16,7 @@ fun ViewScope.viewFrontDesk() {
                 viewFeedbackHub()
             }
             tab("Report a bug") {
-                textBlock("yer bug report")
+                viewBugReporter()
             }
         }
     }
