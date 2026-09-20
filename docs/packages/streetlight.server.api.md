@@ -27,7 +27,7 @@ Each returns an `Outcome`. A `200` response is decoded from the CBOR `Outcome` t
 
 ## Arriving Signed In
 
-`signIn(session)` puts the session cookie in the test client. A test that needs a signed-in sailor registers and logs in server-side, then hands the session over.
+`signIn(session)` puts the session cookie in the test client. A test that needs a signed-in user registers and logs in server-side, then hands the session over.
 
 ```kotlin
 server.registerStar()

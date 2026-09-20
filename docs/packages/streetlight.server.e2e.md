@@ -61,7 +61,7 @@ Reload the page only where the test is about what survives a reload.
 
 ## Arriving Signed In
 
-`signIn` takes a `Session` minted by the integration utilities and writes it into the `BrowserContext` as the session cookie. A test that needs a signed-in sailor registers and logs in server-side, then hands the session to the browser.
+`signIn` takes a `Session` minted by the integration utilities and writes it into the `BrowserContext` as the session cookie. A test that needs a signed-in user registers and logs in server-side, then hands the session to the browser.
 
 ```kotlin
 val session = runBlocking {

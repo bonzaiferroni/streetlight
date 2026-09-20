@@ -40,6 +40,7 @@ interface LocationClient {
     suspend fun createLocation(location: LocationEdit): Outcome<Location>
     suspend fun updateLocation(location: LocationEdit): Outcome<Location>
     suspend fun configSubdomain(config: SubdomainConfig): Outcome<Unit>
+    suspend fun checkSubdomain(config: SubdomainConfig): Outcome<Boolean>
     suspend fun queryLocation(point: GeoPoint): Outcome<List<Location>>
 }
 
@@ -64,5 +65,6 @@ class BrowserLocationClient(private val client: FetchClient): LocationClient {
     override suspend fun createLocation(location: LocationEdit) = client.postApi(Api.Locations.CreateLocation, location)
     override suspend fun updateLocation(location: LocationEdit) = client.postApi(Api.Locations.UpdateLocation, location)
     override suspend fun configSubdomain(config: SubdomainConfig) = client.postApi(Api.Locations.UpdateSubdomain, config)
+    override suspend fun checkSubdomain(config: SubdomainConfig) = client.postApi(Api.Locations.CheckSubdomain, config)
     override suspend fun queryLocation(point: GeoPoint) = client.getApi(Api.Locations.QueryPoint, point.toQuery())
 }

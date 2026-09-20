@@ -25,6 +25,10 @@ suspend fun readByResolution(resolution: MetricResolution, limit: Int = 60) = db
 
 Predicates use function notation — `.eq()`, `.greaterEq()` — with infix `and` joining them. `klutch.utils.eq` carries the overloads that take a `RecordId` directly, so an id never has to be unwrapped at the call site.
 
+## Input
+
+A dao method assumes its arguments are valid. Validation belongs to the caller, before the dao is reached. A dao method holds no `try`/`catch` around its statements, so a constraint violation propagates out of it.
+
 ## Query Windows
 
 A read bounded by time takes the arguments that define the window rather than the window itself, so sibling reads cover the same range without the caller computing it. `readEvents(resolution, limit)` derives `resolution.duration * limit`, matching `readByResolution(resolution, limit)`.
