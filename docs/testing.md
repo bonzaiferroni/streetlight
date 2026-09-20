@@ -7,10 +7,12 @@ How tests are written in this project. Fixtures belonging to one package are doc
 A test name is written in plain, direct language. It names who acts, what they do, and what becomes true. It carries no theme, no metaphor, and no in-joke.
 
 ```kotlin
-fun `a guest submits feedback and it is stored`()
+fun `a signed-out user submits feedback and it is stored`()
 fun `a second verification request consumes the first token`()
 fun `a verified address survives a wrong password`()
 ```
+
+A visitor with no session is a signed-out user. A guest is an account type and holds an identity, so a test name says "guest" only when it means that account type.
 
 Test names are read by people outside this project: a contributor, a reviewer, a failure report in CI. A themed name costs that reader a translation step and tells them nothing about the code. The same applies to assertion messages and to comments inside a test.
 

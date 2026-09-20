@@ -20,7 +20,7 @@ data class Event(
     val locationId: LocationId,
     val currentRequestId: RequestId?,
     val slug: Slug,
-    val scout: Username?,
+    val host: Username?,
     val title: String,
     val description: Markdown?,
     val status: EventStatus,

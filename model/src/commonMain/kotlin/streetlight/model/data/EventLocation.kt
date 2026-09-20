@@ -18,7 +18,7 @@ data class EventLocation(
     val locationId: LocationId,
     val eventSlug: Slug,
     val locationSlug: Slug,
-    val scout: Username,
+    val host: Username,
     val url: Url?,
     val eventImage: Image?,
     val title: String,

@@ -30,7 +30,7 @@ fun FlowContent.eventShell(event: EventLocation) {
                     event.cost?.let {
                         costCell(it, event.url)
                     }
-                    starCell(event.scout)
+                    starCell(event.host)
                     starToggle(event)
                 },
                 links = event.links,

@@ -19,7 +19,20 @@ The server is built by `buildTestServer`, so its `ServerConfig` has metrics, dat
 | Function | Sends |
 |---|---|
 | `postApi(endpoint, body)` | A JSON body to a `PostEndpoint` |
-| `getApi(endpoint)` | A request to a `GetEndpoint` |
+| `postApi(endpoint)` | No body, to a `PostEndpoint<Unit, T>` |
+| `getApi(endpoint) { }` | A request to a `GetEndpoint`, with query parameters written in the block |
+| `getApi(endpoint, id) { }` | A request to `endpoint.path/id`, for a `GetByIdEndpoint` |
+| `getApi(endpoint, query)` | A pre-built query string, for a `QueryEndpoint` |
+| `deleteApi(endpoint, body)` | A JSON body to a `DeleteEndpoint` |
+
+A block writes parameters with the endpoint's own `EndpointParam`, so the key and encoding are the ones the server reads.
+
+```kotlin
+getApi(Api.Locations.Search) {
+    writeParam(it.query, "fox")
+    writeParam(it.limit, 10)
+}
+```
 
 Each returns an `Outcome`. A `200` response is decoded from the CBOR `Outcome` the server writes. Any other status becomes a `Problem`, named for `401`, `409`, `429` and `500` and carrying `HTTP error: <status>` otherwise.
 

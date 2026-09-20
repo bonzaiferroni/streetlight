@@ -8,14 +8,16 @@ Shared fixtures and utilities live one package up, in `streetlight.server` of th
 
 ## Database
 
-`DatabaseTest` is the base class for any test that touches the database. It holds one PostgreSQL container for the whole run, raises the schema once, and truncates every table before each test.
+`DatabaseTest` is the base class for any test that touches the database. It holds one PostgreSQL container for the whole run, drops and raises the schema once, and truncates every table before each test.
 
 | Scope | What |
 |---|---|
-| Once per run | Container start, connection, schema |
+| Once per run | Container start, connection, schema reset and raise |
 | Once per test | Truncate all tables, fresh `TestServer` |
 
 The container is the expensive thing and the data is the thing that must not leak between tests, so the container is shared and the data is not.
+
+The container may be reused across runs. The schema is dropped at the start of every run.
 
 ## Building a Server
 
