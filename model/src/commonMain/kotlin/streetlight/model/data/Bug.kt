@@ -10,48 +10,36 @@ import kotlin.jvm.JvmInline
 import kotlin.uuid.Uuid
 
 @Serializable
-data class Feedback(
-    val feedbackId: FeedbackId,
-    val feedbackType: FeedbackType,
+data class Bug(
+    val bugId: BugId,
     val username: Username?,
     val text: Markdown,
     val platform: Platform,
-    val isPrivate: Boolean,
+    val status: BugStatus,
     val updatedAt: Instant,
     val createdAt: Instant,
 )
 
 @Serializable
 @JvmInline
-value class FeedbackId(override val value: Uuid): RecordId {
+value class BugId(override val value: Uuid): RecordId {
     companion object {
-        fun random() = FeedbackId(Uuid.random())
+        fun random() = BugId(Uuid.random())
     }
 }
 
-enum class FeedbackType(override val label: String): Labeled {
-    General("General Feedback"),
-    Suggestion("Suggestion"),
-    Issue("Issue");
-}
-
-enum class Platform {
-    Web,
-    Android,
-    IOS,
-    Linux,
-    Windows,
-    MacOS,
+enum class BugStatus(override val label: String): Labeled {
+    Open("Open"),
+    Fixed("Fixed"),
+    Dismissed("Dismissed");
 }
 
 @Serializable
-data class FeedbackEdit(
-    val feedbackId: FeedbackId? = null,
-    val feedbackType: FeedbackType = FeedbackType.General,
+data class BugEdit(
+    val bugId: BugId? = null,
     val text: Markdown = "".toMarkdown(),
     val platform: Platform,
     val deviceAgent: String? = null,
-    val isPrivate: Boolean = true,
 ) {
     val isValid get() = text.isNotBlank()
 }

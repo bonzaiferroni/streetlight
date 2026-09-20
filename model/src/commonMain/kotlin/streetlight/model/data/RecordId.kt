@@ -28,6 +28,7 @@ inline fun <reified T> Uuid.toRecordId(): T = when (T::class) {
     PolicyId::class -> PolicyId(this) as T
     FlagId::class -> FlagId(this) as T
     FeedbackId::class -> FeedbackId(this) as T
+    BugId::class -> BugId(this) as T
     ParserId::class -> ParserId(this) as T
     MessageId::class -> MessageId(this) as T
     ChatId::class -> ChatId(this) as T
