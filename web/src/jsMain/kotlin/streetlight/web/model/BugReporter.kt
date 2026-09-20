@@ -12,8 +12,6 @@ import streetlight.model.data.BugEdit
 import streetlight.model.data.Platform
 import streetlight.model.ui.Screen
 import streetlight.web.io.ApiClient
-import web.navigator.navigator
-import web.window.window
 
 class BugReporter(private val scope: CoroutineScope, private val api: ApiClient) {
     private val sending = DropWhileBusy()
@@ -38,5 +36,3 @@ class BugReporter(private val scope: CoroutineScope, private val api: ApiClient)
 data class BugReporterState(
     val bug: BugEdit = BugEdit(platform = Platform.Web)
 )
-
-private fun readDeviceAgent() = "${navigator.userAgent} | viewport=${window.innerWidth}x${window.innerHeight}"

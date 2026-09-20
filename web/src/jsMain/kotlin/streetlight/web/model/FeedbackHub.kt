@@ -14,9 +14,6 @@ import streetlight.model.data.Feedback
 import streetlight.model.data.FeedbackEdit
 import streetlight.model.data.Platform
 import streetlight.web.io.FeedbackClient
-import web.device.devicePixelRatio
-import web.navigator.navigator
-import web.window.window
 
 class FeedbackHub(
     private val scope: CoroutineScope,
@@ -61,9 +58,3 @@ data class FeedbackHubState(
     val edit: FeedbackEdit,
     val feed: List<Feedback> = emptyList(),
 )
-
-private fun readDeviceAgent() = listOf(
-    navigator.userAgent,
-    "viewport=${window.innerWidth}x${window.innerHeight}",
-    "dpr=$devicePixelRatio",
-).joinToString(" | ")
