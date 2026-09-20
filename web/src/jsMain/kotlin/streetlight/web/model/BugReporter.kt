@@ -18,6 +18,7 @@ class BugReporter(private val scope: CoroutineScope, private val api: ApiClient)
     private val state = storeOf(BugReporterState())
 
     val bugState = state.mutableTapOf({ it.bug }) { copy(bug = it) }
+    val descriptionState = bugState.mutableTapOf({ it.description }) { copy(description = it) }
 
     fun report(messenger: Messenger, screen: Screen?, path: String?): Boolean {
         val edit = state.now.bug.takeIf { it.isValid }?.copy(

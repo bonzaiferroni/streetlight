@@ -89,4 +89,6 @@ A test asserts on the table rather than on the rendered feed when the flow's eff
 
 A column absent from the DTO is read from the table. `Feedback` carries no `deviceAgent`, so a test asserting on it reads the column.
 
+`latestBugRowOrNull` and `bugCount` read `BugTable` the same way. `Bug` carries none of the columns a bug test asserts on, so the test-side `BugRow` holds them.
+
 Stating a count alongside the row proves the interaction ran once. A retried click that wrote twice passes every assertion about content.
