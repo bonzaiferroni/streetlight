@@ -241,7 +241,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
     }
 
     object Bugs: ApiNode(this) {
-        object Report: PostEndpoint<Bug, Unit>(this)
+        object Report: PostEndpoint<BugEdit, Unit>(this)
     }
 
     object Status: ApiNode(this) {

@@ -7,6 +7,7 @@ interface ApiClient {
     val doc: DocClient
     val event: EventClient
     val feedback: FeedbackClient
+    val bug: BugClient
     val galaxy: GalaxyClient
     val location: LocationClient
     val media: MediaClient
@@ -28,6 +29,7 @@ class BrowserApiClient(private val client: FetchClient): ApiClient {
     override val doc: DocClient = BrowserDocClient(client)
     override val event: EventClient = BrowserEventClient(client)
     override val feedback: FeedbackClient = BrowserFeedbackClient(client)
+    override val bug: BugClient = BrowserBugClient(client)
     override val galaxy: GalaxyClient = BrowserGalaxyClient(client)
     override val location: LocationClient = BrowserLocationClient(client)
     override val media: MediaClient = BrowserMediaClient(client)
