@@ -12,8 +12,7 @@ import kotlin.uuid.Uuid
 @Serializable
 data class Bug(
     val bugId: BugId,
-    val username: Username?,
-    val text: Markdown,
+    val description: Markdown,
     val platform: Platform,
     val status: BugStatus,
     val updatedAt: Instant,
@@ -37,9 +36,9 @@ enum class BugStatus(override val label: String): Labeled {
 @Serializable
 data class BugEdit(
     val bugId: BugId? = null,
-    val text: Markdown = "".toMarkdown(),
+    val description: Markdown = "".toMarkdown(),
     val platform: Platform,
     val deviceAgent: String? = null,
 ) {
-    val isValid get() = text.isNotBlank()
+    val isValid get() = description.isNotBlank()
 }

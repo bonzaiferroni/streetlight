@@ -26,9 +26,10 @@ If a table translates directly to a DTO, define a transform below the object:
 | Function | Purpose |
 |---|---|
 | `ResultRow.toFoo()` | Reads a row into the dto. Where the dto lines up with the columns precisely, this plus `selectAll()` is the whole read |
-| `UpdateBuilder<*>.writeFull(foo)` | Writes every column |
-| `UpdateBuilder<*>.writeUpdate(foo)` | Writes the columns an update touches |
-| `UpdateBuilder<*>.createRecord(foo, callerId)` | Writes the columns set only at creation, then delegates to `writeUpdate` |
+| `UpdateBuilder<*>.createFoo(foo, ...)` | Writes the columns set only at creation, then delegates to `updateFoo` |
+| `UpdateBuilder<*>.updateFoo(foo)` | Writes the columns an update touches |
+
+`Foo` is the name of the concept the function writes. A `Record`, `Row`, or `Edit` suffix on the parameter type is not part of it.
 
 ## Column Types
 
