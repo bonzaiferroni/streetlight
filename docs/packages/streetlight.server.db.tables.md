@@ -29,6 +29,8 @@ If a table translates directly to a DTO, define a transform below the object:
 | `UpdateBuilder<*>.createFoo(foo, ...)` | Writes the columns set only at creation, then delegates to `updateFoo` |
 | `UpdateBuilder<*>.updateFoo(foo)` | Writes the columns an update touches |
 
+A galaxy's slug is written by `createGalaxy` and by no other function. `updateGalaxy` never writes it.
+
 `Foo` is the name of the concept the function writes. A `Record`, `Row`, or `Edit` suffix on the parameter type is not part of it.
 
 ## Column Types
