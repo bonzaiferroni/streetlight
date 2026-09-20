@@ -4,6 +4,7 @@ import kampfire.api.Markdown
 import kampfire.api.Username
 import kampfire.api.toMarkdown
 import kampfire.model.Labeled
+import streetlight.model.ui.Screen
 import kotlin.time.Instant
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
@@ -38,6 +39,8 @@ data class BugEdit(
     val bugId: BugId? = null,
     val description: Markdown = "".toMarkdown(),
     val platform: Platform,
+    val screen: Screen? = null,
+    val path: String? = null,
     val deviceAgent: String? = null,
 ) {
     val isValid get() = description.isNotBlank()

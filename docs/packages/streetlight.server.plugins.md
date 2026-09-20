@@ -34,6 +34,7 @@ These serve functions live here rather than in `streetlight.server.routes`:
 
 | Function | File | Serves |
 |---|---|---|
+| `serveBug` | `serveBug.kt` | `Api.Bugs` |
 | `serveFeedback` | `serveFeedback.kt` | `Api.Feedback` |
 | `serveSiteStatus` | `serveSiteStatus.kt` | `Api.Status` |
 | `serveWebhooks` | `configureWebhooks.kt` | A raw `post` path, not an `Api` endpoint |

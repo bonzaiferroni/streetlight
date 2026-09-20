@@ -2,6 +2,7 @@ package streetlight.web.io
 
 class TestApiClient(
     override val accountAction: AccountActionClient = TestAccountActionClient(),
+    override val bug: BugClient = TestBugClient(),
     override val city: CityClient = TestCityClient(),
     override val content: ContentClient = TestContentClient(),
     override val doc: DocClient = TestDocClient(),
