@@ -6,6 +6,7 @@ Bounty:
 * Confirm on production, with `\d event`, the name of the foreign key on `scout_id` and whether an index exists on it
 * Confirm the foreign key name and the index name that Exposed generates for `host_id`
 * Write the migration for the migration tool: drop `trg_event_sync_scout`, rename `scout_id` to `host_id`, rename the foreign key to the name Exposed expects, create the `host_id` index if it is missing
+* Apply the migration before the deploy. Outside development, startup installs the triggers without `raiseSchema`, so the `sync` trigger on `host_id` fails if the column is missing.
 * Decide the meaning of existing rows: the rename makes every existing creator a host, which closes their events to community edits
 * Run the migration where the tool applies it, once the change is stable in development
 * Confirm the first startup after it changes nothing further: no second foreign key, no duplicate index, the trigger and both functions recreated on `host_id`

@@ -97,3 +97,20 @@ A fake with no configured answer fails with a message naming what was asked for.
 A test starts from an empty database and assumes nothing left behind by another. Expensive fixtures may be shared across a run; data may not.
 
 A test that needs one collaborator to behave unusually builds its own server with that one collaborator replaced, rather than changing a fixture other tests rely on.
+
+
+## Running Tests
+
+`./gradlew projectTests --continue` runs every suite. `--continue` lets the remaining suites run when one fails, and the exit code is non-zero if any failed. The `tests` alias in `.room` runs it.
+
+| Task | Suite | Needs |
+|---|---|---|
+| `:server:test` | Unit, integration and API tests | Docker |
+| `:server:e2eTest` | End-to-end tests | Docker, Playwright browsers, the web bundle |
+| `:web:jvmTest` | View tests, each in a fresh page | Playwright browsers |
+
+The server suites share one database, so they run one after the other.
+
+A test task always runs when it is requested and is never skipped as up to date. A run prints one line per suite with its totals, and for each failed test its name, the exception and the line in the test file. Pass `-PtestOutput` to also print what the tests write to standard output, including the browser console of the view tests.
+
+A single suite runs by its task, and `--tests` narrows it, as in `./gradlew :server:test --tests '*LocationApiTest*'`.

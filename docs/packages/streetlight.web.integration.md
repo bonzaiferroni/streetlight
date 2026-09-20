@@ -18,7 +18,9 @@ A test starts with no listeners on `window` or `document`, no history entries an
 
 Set `VIEW_HEADED=true` to watch a run in a visible browser.
 
-The browser console is written to the Gradle log as test output.
+The browser console is written to the Gradle log as test output when Gradle runs with `-PtestOutput`.
+
+`ViewPageRunner` waits for the finish marker with Playwright's `waitForCondition`, because the Java API delivers page events only while the calling thread is inside a Playwright call. A wait on a plain future never receives the console messages it waits for. A run that times out reports the page errors, the failed requests and the console output.
 
 `ViewPageRunner` serves the generated `dist` directory over HTTP, because `Portal` navigates with `pushState`, which needs a real origin.
 

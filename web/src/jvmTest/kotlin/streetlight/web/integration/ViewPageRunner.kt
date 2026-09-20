@@ -1,13 +1,14 @@
 package streetlight.web.integration
 
 import com.microsoft.playwright.Browser
+import com.microsoft.playwright.Page
+import com.microsoft.playwright.TimeoutError
 import com.sun.net.httpserver.HttpServer
 import java.net.InetSocketAddress
 import java.net.URLEncoder
 import java.nio.file.Files
 import java.nio.file.Path
 import java.util.concurrent.CompletableFuture
-import java.util.concurrent.TimeUnit
 
 class ViewPageRunner(
     private val browser: Browser,
@@ -52,8 +53,23 @@ class ViewPageRunner(
                 lines += text
                 if (text == FINISHED_MARKER) finished.complete(Unit)
             }
+            val problems = mutableListOf<String>()
+            page.onPageError { problems += "page error: $it" }
+            page.onRequestFailed { problems += "request failed: ${it.url()} ${it.failure()}" }
+            page.onResponse { if (it.status() >= 400) problems += "response ${it.status()}: ${it.url()}" }
             page.navigate(url)
-            finished.get(timeoutSeconds, TimeUnit.SECONDS)
+            try {
+                page.waitForCondition(
+                    { finished.isDone },
+                    Page.WaitForConditionOptions().setTimeout(timeoutSeconds * 1000.0),
+                )
+            } catch (e: TimeoutError) {
+                error(
+                    "the page did not finish within ${timeoutSeconds}s\n" +
+                        "problems:\n${problems.joinToString("\n")}\n" +
+                        "console output:\n${lines.joinToString("\n")}"
+                )
+            }
             return PageRun(lines)
         }
     }

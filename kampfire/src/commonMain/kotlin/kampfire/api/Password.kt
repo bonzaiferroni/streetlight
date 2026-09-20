@@ -75,8 +75,8 @@ enum class PasswordStrength: Labeled {
 }
 
 fun Password.toValidOutcome(): Outcome<Password> = when {
-    !validPasswordLength -> PasswordProblem.InvalidComplexity
-    complexityScore < 3 -> PasswordProblem.InvalidLength
+    !validPasswordLength -> PasswordProblem.InvalidLength
+    complexityScore < 3 -> PasswordProblem.InvalidComplexity
     else -> Ok(this)
 }
 

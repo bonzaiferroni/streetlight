@@ -109,7 +109,7 @@ tasks.named<Test>("jvmTest") {
     dependsOn("prepareWebpackBundleForKotlinJsTests")
     systemProperty("view.dist", layout.buildDirectory.dir("kotlinJsTest/dist").get().asFile.absolutePath)
     testLogging {
-        showStandardStreams = true
+        showStandardStreams = providers.gradleProperty("testOutput").isPresent
     }
 }
 
