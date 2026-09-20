@@ -8,17 +8,29 @@ The tests run inside the browser: the test code compiles to JS and executes in t
 
 ## Running
 
-The Kotlin browser test DSL runs the suite with Playwright driving Chromium and Mocha reporting. Playwright installs the browser on first run. It requires Kotlin 2.4.20 or later.
+```
+./gradlew :web:jvmTest
+```
 
-```
-./gradlew :web:jsBrowserTest
-```
+`ViewSuiteTest` drives the suite. It discovers every test name, then runs each in a fresh page: a new `BrowserContext` loads the generated `test.html` with `--include` set to that one test, and closes when the runner logs `KOTLIN-TEST-FINISHED`. Gradle reports each test by its discovered name.
+
+A test starts with no listeners on `window` or `document`, no history entries and an unmodified URL.
 
 Set `VIEW_HEADED=true` to watch a run in a visible browser.
 
 The browser console is written to the Gradle log as test output.
 
-The build rewrites the generated `test.html` to load Mocha 10.8.2 before the test task runs. The generated page loads Mocha unpinned, and Mocha 12 breaks the Kotlin test runner's reporter, so no test runs and the task fails with `Timeout 30000ms exceeded`. Raise the pin only after confirming the runner works with the newer version.
+`ViewPageRunner` serves the generated `dist` directory over HTTP, because `Portal` navigates with `pushState`, which needs a real origin.
+
+`jsBrowserTest` runs the same tests in one shared page. State a test leaves on `window`, `document` or the URL is visible to the tests after it.
+
+The generated `test.html` loads Mocha unpinned, and Mocha 12 breaks the Kotlin test runner's reporter, so no test runs and the run fails with `Timeout 30000ms exceeded`. Both `ViewPageRunner` and the `jsBrowserTest` task rewrite the page to load Mocha 10.8.2. Raise the pin only after confirming the runner works with the newer version.
+
+## Test Names
+
+`ViewPageRunner` selects a test by passing its name to `--include`, which reads `,`, `*` and `!` as syntax. A test name containing any of them cannot be selected, and `ViewSuiteTest` fails naming the test. Write test names without those characters.
+
+Discovery loads the page with Mocha's `dryRun`, and an empty result fails the run.
 
 ## ViewTest
 
