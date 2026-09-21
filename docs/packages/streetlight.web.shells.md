@@ -48,3 +48,17 @@ A `FeedEntity` is rendered with `feedRow` from `streetlight.web.layouts`, as des
 ## Universe
 
 Content that is not specific to a galaxy is universe content.
+
+## Route Menus
+
+A route menu is declared in the shell as the last child of the outer column, after the body container.
+
+Related routes share one menu function, `fooRouteMenu`, so their menus stay consistent. The function takes the route now and whatever else its group varies by, and calls `routeMenu` from `koala.html`. A shell calls it, and so does a browser-only view of the same group, from inside a block on `ViewScope`.
+
+| Group | Function |
+|---|---|
+| Star | `starRouteMenu` |
+| Universe | `universeRouteMenu` |
+
+`universeRouteMenu` holds Home, Galaxies and Cities. The right tray holds the earth route that is the cousin of the route now: `CityMapRoute` for the city list, `GalaxyMapRoute` for the galaxy list, and `PostMapRoute` for Home.
+

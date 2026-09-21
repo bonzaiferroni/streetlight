@@ -95,6 +95,7 @@ A shell view is wired through these parts.
 | `readFooContent` | `streetlight.server.model`, and bound in `serveContent` |
 | `readFooContent` on `ContentClient` | `streetlight.web.io` |
 | `is FooRoute` branch | `AppContentFetcher` |
+| `Screen.Foo` with `hasShell = true` | `streetlight.model.ui.Screen` |
 | `Screen.Foo` branch | `viewPortal` |
 
 A shell view with a map uses `shellBoxWithMap` and sets the marker points from the content.
@@ -143,3 +144,10 @@ formSubmit("Send", { model.sendFeedback(messenger) }, messenger)
 ```
 
 A view model receives the store as a `Messenger` parameter rather than holding one of its own. The view then decides where a message appears and the view model decides only what it says.
+
+## Route Menus
+
+A route menu function whose group holds an action, or whose state exists only in the browser, is declared here on `ViewScope` and calls `routeMenu` from `koala.dom`. `earthRouteMenu` is one.
+
+A group whose views can be server-rendered declares its menu in `streetlight.web.shells`, and a browser-only view of that group calls it from a block.
+
