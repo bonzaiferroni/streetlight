@@ -45,7 +45,7 @@ data class LocationMarker(
     override val light get() = rgb(180, 240, 100)
     override val typeLabel get() = location.mapType ?: MarkerType.Location.label
     override val svg get() = location.mapType?.let { MapTypeIcon[it] } ?: SvgFile.MapPin
-    val themeColor get() = ThemeColor.Location.cssValue
+    override val themeColor get() = ThemeColor.Location.cssValue
 }
 
 data class EventMarker(
@@ -58,7 +58,7 @@ data class EventMarker(
     override val light get() = rgb(240, 100, 180 )
     override val geoPoint get() = event.geoPoint
     override val typeLabel get() = MarkerType.Event.label
-    val themeColor get() = ThemeColor.Accent.cssValue
+    override val themeColor get() = ThemeColor.Accent.cssValue
 }
 
 data class MediaMarker(
@@ -69,7 +69,7 @@ data class MediaMarker(
     override val label get() = media.label
     override val thumbUrl get() = media.image?.thumb ?: SiteImage.placeholderTh
     override val markerId get() = media.markerId
-    val themeColor get() = ThemeColor.Media.cssValue
+    override val themeColor get() = ThemeColor.Media.cssValue
 }
 
 data class CityMarker(
@@ -80,7 +80,7 @@ data class CityMarker(
     override val svg get() = SvgFile.City
     override val geoPoint get() = city.geoPoint
     override val typeLabel get() = MarkerType.City.label
-    val themeColor get() = ThemeColor.City.cssValue
+    override val themeColor get() = ThemeColor.City.cssValue
 }
 
 data class GalaxyMarker(
@@ -91,5 +91,5 @@ data class GalaxyMarker(
     override val thumbUrl get() = galaxy.image?.thumb ?: SiteImage.placeholderTh
     override val geoPoint get() = galaxy.geoPoint
     override val typeLabel get() = MarkerType.Galaxy.label
-    val themeColor get() = ThemeColor.Galaxy.cssValue
+    override val themeColor get() = ThemeColor.Galaxy.cssValue
 }

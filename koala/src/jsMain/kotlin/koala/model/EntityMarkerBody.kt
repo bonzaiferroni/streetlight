@@ -28,7 +28,7 @@ internal fun AppendScope.configureThumbMarker(marker: ThumbMarker): EntityMarker
     with(marker) {
         // td: declare border radius in stylesheet
         val element = row(modify(MarkerStyle.Body, AlignItemsCenter, BorderRadius3, PaperGradientBg)) {
-            colorScheme?.let {
+            themeColor?.let {
                 setStyle(Css.ColorScheme.of(it))
             }
 
@@ -68,7 +68,7 @@ internal fun AppendScope.configureIconMarker(marker: IconMarker): EntityMarkerBo
 
     with(marker) {
         val element = row(modify(MarkerStyle.Body, Gap2Px, AlignItemsCenter, BorderRadius3, PaperGradientBg)) {
-            colorScheme?.let {
+            themeColor?.let {
                 setStyle(Css.ColorScheme.of(it))
             }
 
@@ -80,7 +80,7 @@ internal fun AppendScope.configureIconMarker(marker: IconMarker): EntityMarkerBo
             }
 
             label?.let {
-                textBlock(it, modify(Bold, LineHeight115, WhiteSpaceNoWrap, ColorSchemeFg))
+                textBlock(it, modify(LineHeight115, WhiteSpaceNoWrap))
             }
         }
 

@@ -37,7 +37,7 @@ interface TravelMarker: PointMarker {
 
 interface EntityMarker: PointMarker {
     val typeLabel: String? get() = null
-    val colorScheme: String? get() = null
+    val themeColor: String? get() = null
 }
 
 interface ThumbMarker: EntityMarker {
