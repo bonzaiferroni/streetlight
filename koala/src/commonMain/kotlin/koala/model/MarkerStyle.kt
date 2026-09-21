@@ -86,6 +86,7 @@ $Body {
     transform: translate(calc(var($BodySize) / -2), calc(var($BodySize) / -2));
     opacity: 1;
     transition: var(--transition-opacity);
+    font-size: var(--paragraph-size);
     
    @starting-style {
         opacity: 0;

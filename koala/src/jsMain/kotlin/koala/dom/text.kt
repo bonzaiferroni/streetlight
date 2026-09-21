@@ -1,5 +1,6 @@
 package koala.dom
 
+import koala.modifier.Modifier
 import koala.modifier.ModifierSet
 import koala.modifier.addModifiers
 import kotlinx.coroutines.flow.Flow
@@ -17,7 +18,7 @@ import kotlinx.html.js.span as spanTag
 
 fun AppendScope.textBlock(
     text: String = "",
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     block: (P.() -> Unit)? = null
 ) = p {
     addModifiers(mod)
