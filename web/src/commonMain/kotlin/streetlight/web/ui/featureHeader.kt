@@ -46,7 +46,7 @@ fun FlowContent.featureHeader(
 
             // title panel
             column(modify(JustifyContentCenter, ZenBg)) { // necessary for flex1 because the inner column has padding
-                column(modify(Padding(2))) {
+                column(Padding(2)) {
                     heading2(title, modify(TextAlignCenter, LineHeight1, FocusTarget))
                     filigree { textBlock(descriptor, modify(Italic, OpacityHalf)) }
                     subtitle?.let {
@@ -66,7 +66,7 @@ fun FlowContent.featureHeader(
 
                 // description
                 description?.let {
-                    column(modify(Flex4)) {
+                    column(Flex4) {
                         markdown(description)
                     }
                 }
@@ -75,10 +75,10 @@ fun FlowContent.featureHeader(
                 links?.let { links ->
                     row(modify(FlexWrap, FlexBasis(LinearDimension.minContent), AlignItemsStart)) {
                         links.forEach { link ->
-                            btn(link.label, link.url, modify(Zen))
+                            btn(link.label, link.url, Zen)
                         }
                         editRoute?.let {
-                            btn("edit", editRoute, modify(Zen))
+                            btn("edit", editRoute, Zen)
                         }
                     }
                 }

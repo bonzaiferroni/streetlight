@@ -27,7 +27,7 @@ fun FlowContent.sectionHeading(
     block: DIV.() -> Unit = {}
 ) {
     sectionHeading(
-        labelContent = { centeredHeading(label, modify(Flex1)) },
+        labelContent = { centeredHeading(label, Flex1) },
         mod = mod,
         block = block,
     )

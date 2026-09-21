@@ -37,8 +37,8 @@ fun ViewScope.signInForm(model: UserCreator) {
                 }
             }
 
-            column(modify(AlignItemsCenter)) {
-                lottie(LottieFile.StrollingMan, modify(MaxWidth(24)))
+            column(AlignItemsCenter) {
+                lottie(LottieFile.StrollingMan, MaxWidth(24))
             }
         }
     }
@@ -101,8 +101,8 @@ fun ViewScope.registeredSignInForm(isRecoveringField: MutableTap<Boolean>, cred:
                 ) {
                     type = InputType.password
                 }
-                row(modify(AlignItemsCenter)) {
-                    checkBox(cred.stayLoggedInField, "Stay signed in", modify(Flex1))
+                row(AlignItemsCenter) {
+                    checkBox(cred.stayLoggedInField, "Stay signed in", Flex1)
                     button({ isRecoveringField.set(true) }) {
                         textBlock("I forgot")
                     }

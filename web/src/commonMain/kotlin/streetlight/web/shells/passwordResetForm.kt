@@ -18,8 +18,8 @@ import kotlinx.html.InputType
 import kotlinx.html.onClick
 
 fun FlowContent.passwordResetForm(token: Token, resource: PageResource) {
-    column(modify(MaxWidth(64))) {
-        column(modify(MaxWidth(48))) {
+    column(MaxWidth(64)) {
+        column(MaxWidth(48)) {
             textField("password", id = PasswordResetForm.PasswordId) {
                 type = InputType.password
             }
@@ -27,8 +27,8 @@ fun FlowContent.passwordResetForm(token: Token, resource: PageResource) {
                 type = InputType.password
             }
         }
-        row(modify(AlignItemsCenter)) {
-            textBlock("", modify(Flex1)) {
+        row(AlignItemsCenter) {
+            textBlock("", Flex1) {
                 setId(PasswordResetForm.MessageId)
             }
             button("Reset My Password") {

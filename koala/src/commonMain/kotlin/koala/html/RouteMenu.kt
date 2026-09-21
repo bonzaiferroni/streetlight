@@ -13,12 +13,12 @@ fun FlowContent.routeMenu(
     rightIcons: List<IconRoute>? = null
 ) {
     column(modify(mod, RouteMenu.Base, TextUppercase, TextSmall, Gap(0), AlignItemsCenter)) {
-        filigree(modify(AlignSelfStretch)) {
-            textBlock(context, modify(PrimaryFg))
+        filigree(AlignSelfStretch) {
+            textBlock(context, PrimaryFg)
         }
         row(modify(RouteMenu.ContextMenu, Gap(0), Padding(1), Bold, AlignItemsCenter, BorderSolid2Px)) {
             leftIcons?.let { icons ->
-                iconsTray(icons, routeNow, modify(RouteMenu.LeftTray))
+                iconsTray(icons, routeNow, RouteMenu.LeftTray)
             }
             routes.forEach { route ->
                 val route = route ?: return@forEach
@@ -27,7 +27,7 @@ fun FlowContent.routeMenu(
                 }
             }
             rightIcons?.let { icons ->
-                iconsTray(icons, routeNow, modify(RouteMenu.RightTray))
+                iconsTray(icons, routeNow, RouteMenu.RightTray)
             }
         }
     }
@@ -47,7 +47,7 @@ internal fun FlowContent.iconsTray(
 
 internal fun FlowContent.iconRoute(icon: IconRoute, routeNow: AppRoute) {
     navigation(icon.route, modify(Height(3), RouteMenu.Route, icon.route.routeNowMod(routeNow))) {
-        icon(icon.svg, modify(Height(100.pct)))
+        icon(icon.svg, Height(100.pct))
     }
 }
 

@@ -59,7 +59,7 @@ fun FlowContent.polarBadge(curator: CuratorStatus) {
     val upMark = curator.marks.first { it.lean.value > 0 }
     val downMark = curator.marks.first { it.lean.value < 0 }
     box(modify(Width(10), BorderRadius50P, Outline, MoonShadow, OverflowClip, CardBg, OpacityHigh)) {
-        column(modify(Gap0)) {
+        column(Gap0) {
             button(modify(Flex1, HoverBg)) {
                 configureMarkButton(upMark)
                 onClick = AppFun.UpdateMark.invokeJs(ThisElement)
@@ -71,7 +71,7 @@ fun FlowContent.polarBadge(curator: CuratorStatus) {
             }
         }
         column(modify(Gap0, AlignItemsCenter, JustifyContentCenter, ZIndex1, PointerEventsNone)) {
-            icon(SvgFile.ChevronUp, modify(Height(3))) {
+            icon(SvgFile.ChevronUp, Height(3)) {
                 configMarkIndicator(upMark)
             }
             button(modify(Height(3), MinWidth(6), FlexColumn, JustifyContentCenter, VoidBg, BorderRadiusPill, PointerEventsAuto, Outline)) {
@@ -80,7 +80,7 @@ fun FlowContent.polarBadge(curator: CuratorStatus) {
                     configurePostLeanText(curator)
                 }
             }
-            icon(SvgFile.ChevronDown, modify(Height(3))) {
+            icon(SvgFile.ChevronDown, Height(3)) {
                 configMarkIndicator(downMark)
             }
         }

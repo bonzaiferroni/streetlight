@@ -21,7 +21,7 @@ class MarkdownEditorRenderer() {
 
     private fun AppendScope.renderSpan(endIndex: Int, mod: Modifier?) {
         if (index == endIndex) return
-        span(chunk.substring(index, endIndex), modify(mod))
+        span(chunk.substring(index, endIndex), mod)
         markRender(endIndex)
     }
 

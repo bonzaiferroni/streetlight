@@ -11,7 +11,7 @@ fun ViewScope.eventSearchForm(model: EventScout) = formSectionLegacy("Add an eve
             bullets = listOf("The event may already be on Streetlight.")
         ) {
             row {
-                textField(model.query, "name", modify(Flex1))
+                textField(model.query, "name", Flex1)
                 button("create", model::create)
             }
 

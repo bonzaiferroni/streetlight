@@ -86,17 +86,17 @@ private fun ViewScope.sandboxContent(star: Star) {
 
     column {
         row {
-            textBlock("Hello ${star.username}!", modify(Flex1))
+            textBlock("Hello ${star.username}!", Flex1)
             button("go home", onClick = { portal.go(HomeRoute) })
             button("sign out", onClick = gate::signOut)
         }
 
         card {
             row {
-                textBlock("Add things to the map.", modify(Flex1))
+                textBlock("Add things to the map.", Flex1)
                 btn("Edit Profile", ProfileConfigRoute)
                 btn("Go to sandbox", SandboxRoute)
-                button("galaxy list", { portal.go(GalaxyListRoute) }, modify(Accent))
+                button("galaxy list", { portal.go(GalaxyListRoute) }, Accent)
             }
         }
 

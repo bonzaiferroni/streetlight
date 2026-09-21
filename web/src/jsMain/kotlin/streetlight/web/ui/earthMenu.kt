@@ -45,7 +45,7 @@ fun ViewScope.earthRouteMenu(model: Earth, map: EarthMap) {
                             routeNow,
                             MenuRoute(CityMapRoute(null), "Cities")
                         ),
-                        mod = modify(PointerEventsAuto),
+                        mod = PointerEventsAuto,
                         leftIcons = listOf(IconRoute(SvgFile.Home, HomeRoute)),
                         rightIcons = listOf(showAll)
                     )
@@ -59,7 +59,7 @@ fun ViewScope.earthRouteMenu(model: Earth, map: EarthMap) {
                             MenuRoute(GalaxyRoute(galaxy.slug), "Feed"),
                             routeNow
                         ),
-                        mod = modify(PointerEventsAuto),
+                        mod = PointerEventsAuto,
                         leftIcons = listOf(IconRoute(SvgFile.CaretLeft, GalaxyMapRoute(null))),
                         rightIcons = listOf(showAll)
                     )
@@ -78,7 +78,7 @@ fun ViewScope.earthRouteMenu(model: Earth, map: EarthMap) {
                             MenuRoute(GalaxyMapRoute(null), "Galaxies"),
                             routeNow
                         ),
-                        mod = modify(PointerEventsAuto),
+                        mod = PointerEventsAuto,
                         leftIcons = listOf(IconRoute(SvgFile.Home, HomeRoute)),
                         rightIcons = listOf(showAll)
                     )
@@ -92,7 +92,7 @@ fun ViewScope.earthRouteMenu(model: Earth, map: EarthMap) {
                             MenuRoute(CityRoute(city.slug), "Feed"),
                             routeNow,
                         ),
-                        mod = modify(PointerEventsAuto),
+                        mod = PointerEventsAuto,
                         leftIcons = listOf(IconRoute(SvgFile.CaretLeft, CityMapRoute(null))),
                         rightIcons = listOf(showAll)
                     )
@@ -109,7 +109,7 @@ fun ViewScope.earthRouteMenu(model: Earth, map: EarthMap) {
                     MenuRoute(GalaxyMapRoute(null), "Galaxies"),
                     MenuRoute(CityMapRoute(null), "Cities"),
                 ),
-                mod = modify(PointerEventsAuto),
+                mod = PointerEventsAuto,
                 leftIcons = listOf(IconRoute(SvgFile.Home, HomeRoute)),
                 rightIcons = listOf(showAll),
             )

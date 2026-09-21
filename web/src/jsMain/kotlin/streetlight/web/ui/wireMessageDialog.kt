@@ -23,7 +23,7 @@ fun ViewScope.wireMessageDialog() {
         val contentState = messageState.mutableTapOf({ it.content }) { copy(content = it) }
         dialogContent("Message to $recipient") {
             textField(subjectState, "subject", placeholder = "no subject")
-            markdownEditor(contentState, "message", modify(MinHeight(32))) {
+            markdownEditor(contentState, "message", MinHeight(32)) {
                 // setAttribute(Attribute.Autofocus.to(true))
             }
             formSubmit("send", {
@@ -34,7 +34,7 @@ fun ViewScope.wireMessageDialog() {
                     api.message.sendMessage(message).toDataOr(messenger, "message sent", toaster) { return@launchEffect }
                     dismissDialog()
                 }
-            }, messenger, modify(Accent), back = MenuAction("cancel", onClick = ::dismissDialog))
+            }, messenger, Accent, back = MenuAction("cancel", onClick = ::dismissDialog))
         }
     }
 }

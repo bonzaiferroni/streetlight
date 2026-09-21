@@ -16,7 +16,7 @@ fun FlowContent.aboutShell() {
     column(PrivacyPolicyKey.id) {
         section {
             filigree {
-                heading1("About Streetlight", modify(Shrinkable))
+                heading1("About Streetlight", Shrinkable)
             }
         }
 

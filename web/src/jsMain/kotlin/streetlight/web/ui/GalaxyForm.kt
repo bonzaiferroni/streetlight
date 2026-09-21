@@ -32,7 +32,7 @@ fun ViewScope.galaxyNameFormRow(model: GalaxyEditor) = formRow {
             ).flowValid(GalaxyProperty.Path, model.validityField, contentScope)
 
             flowBlock(model.slugField) { path ->
-                textBlock("Currently: streetlight.ing/g/$path", modify(OpacityHigh))
+                textBlock("Currently: streetlight.ing/g/$path", OpacityHigh)
             }
         }
     }
@@ -65,7 +65,7 @@ fun ViewScope.galaxyDescriptionFormRow(model: GalaxyEditor) = formRow {
         column {
             val newMark = storeOf("")
             row {
-                textField(newMark, "Mark", modify(Flex1))
+                textField(newMark, "Mark", Flex1)
                 button("add mark", {
                     launchEffect {
                         if (model.addMark(newMark.now)) { return@launchEffect }
@@ -79,7 +79,7 @@ fun ViewScope.galaxyDescriptionFormRow(model: GalaxyEditor) = formRow {
                 val nameState = markState.mutableTapOf({ it.name }) { copy(name = it) }
 
                 row(modify(AlignItemsCenter, ZenBg, BorderRadius2, Padding(1))) {
-                    textField(nameState, "name", modify(Flex1))
+                    textField(nameState, "name", Flex1)
                     dropMenu(leanState)
                     button(SvgFile.X, {
                         model.removeMark(markId)
@@ -110,12 +110,12 @@ fun ViewScope.galaxyMapFormRow(model: GalaxyEditor) = formRow {
     }
 
     formSection("City") {
-        checkBox(model.isLocalField, "This galaxy has a city", modify(Padding(1)))
+        checkBox(model.isLocalField, "This galaxy has a city", Padding(1))
 
         formField {
             row {
-                textField(model.cityQueryField, "city search", modify(Flex1))
-                textField(model.countryField, "country", modify(Width(24)))
+                textField(model.cityQueryField, "city search", Flex1)
+                textField(model.countryField, "country", Width(24))
             }
             column(modify(Height(32), OverflowYAuto, Gap0)) {
                 row(modify(Padding(1), JustifyContentSpaceBetween)) {
@@ -123,9 +123,9 @@ fun ViewScope.galaxyMapFormRow(model: GalaxyEditor) = formRow {
                     textBlock("galaxies", modify(OpacityLow, Italic))
                 }
                 selectionBlock(model.citiesField, model.cityField) { city ->
-                    card(modify(BorderRadius1)) {
-                        row(modify(JustifyContentSpaceBetween)) {
-                            textBlock("${city.name}, ${city.state}", modify(Flex1))
+                    card(BorderRadius1) {
+                        row(JustifyContentSpaceBetween) {
+                            textBlock("${city.name}, ${city.state}", Flex1)
                             textBlock(city.galaxyCount.toString())
                         }
                     }

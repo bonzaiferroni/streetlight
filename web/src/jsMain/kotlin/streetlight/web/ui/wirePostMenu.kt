@@ -20,7 +20,7 @@ fun ViewScope.wirePostMenu() {
                 // do we edit the post or the target record?
                 // btn("edit", MediaUpdateRoute(postId), modify(Secondary))
             } else {
-                button("report", mod = modify(Zen))
+                button("report", mod = Zen)
             }
             safetyButton("remove", onConfirm = {
                 launchEffect("remove post") {

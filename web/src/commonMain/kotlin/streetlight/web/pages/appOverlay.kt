@@ -12,7 +12,7 @@ import streetlight.web.ui.workSignal
 fun FlowContent.appOverlay() {
     column(AppOverlay.Container) {
         helmBar()
-        spacer(modify(Flex1))
+        spacer(Flex1)
         workSignal(WorkSignalStyle.AbsolutePositioned.append(modify(Right0, Bottom0))) {
             setId(AppOverlay.WorkSignal)
         }

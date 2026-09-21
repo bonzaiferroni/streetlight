@@ -37,7 +37,7 @@ fun ViewScope.quorumReviewContent(task: QuorumReviewContent) {
     val edit = task.editLog.recordEdit as? LocationEdit ?: error("edit not found")
     column {
         heading3(quorum.question.label)
-        deltaGrid(modify(TextDeltaStyle.Highlighter)) {
+        deltaGrid(TextDeltaStyle.Highlighter) {
             deltaRow("name", edit.name)
             deltaRow("address", edit.address)
             deltaRow("description", edit.description)

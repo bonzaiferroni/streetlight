@@ -16,9 +16,9 @@ fun ViewScope.viewMediaForge(galaxy: Galaxy?) {
     val model = app.getMediaEditor(MediaEdit(), contentScope)
     goOnRoute(model.stateFlow.dedupNotNull { it.slug?.let { slug -> MediaRoute(slug) }  })
 
-    section(modify(FlexColumn)) {
+    section(FlexColumn) {
         filigree {
-            heading2("Create a Post", modify(TextAlignCenter))
+            heading2("Create a Post", TextAlignCenter)
         }
 
         lazyTabs {
@@ -33,7 +33,7 @@ fun ViewScope.viewMediaForge(galaxy: Galaxy?) {
             }
         }
 
-        row(modify(JustifyContentEnd)) {
+        row(JustifyContentEnd) {
             messageBox(model.message)
             button("Post", onClick = {
                 model.submitPost(galaxy)

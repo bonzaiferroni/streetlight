@@ -36,7 +36,7 @@ inline fun <reified T: RecordEdit> ViewScope.viewEditHistory(
             val compareEdit = previousEdit
             textBlock("${log.username} ${log.editType.verb} the location $timeDescription")
 
-            row(modify(JustifyContentEnd)) {
+            row(JustifyContentEnd) {
                 println("ey 0")
                 if (log.editType == EditType.Update && index == editLogs.size - 1) {
                     button {
@@ -48,11 +48,11 @@ inline fun <reified T: RecordEdit> ViewScope.viewEditHistory(
                 dialog(dialogState) {
                     val content = dialogContent(timeDescription) {
                         row {
-                            spacer(modify(Flex1))
+                            spacer(Flex1)
                             dropMenu(display)
                         }
                         box {
-                            deltaGrid(mod = modify(TextDeltaStyle.Highlighter)) {
+                            deltaGrid(mod = TextDeltaStyle.Highlighter) {
                                 content(edit, compareEdit)
                             }
                         }

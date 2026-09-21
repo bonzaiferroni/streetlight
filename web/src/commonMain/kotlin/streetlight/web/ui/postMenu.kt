@@ -14,11 +14,11 @@ import streetlight.model.data.PostId
 
 fun FlowContent.postMenu(postId: PostId, username: Username?) {
     // val anchor = PositionAnchor("menu-${slug}")
-    button(modify(AlignSelfCenter)) {
+    button(AlignSelfCenter) {
         setPopoverTarget(PostMenu.PopoverId)
         setAttribute(PostMenu.PostId.to(postId))
         setAttribute(Attribute.Username.to(username))
-        icon(SvgFile.Dots, modify(SmallIconHeight))
+        icon(SvgFile.Dots, SmallIconHeight)
     }
 }
 

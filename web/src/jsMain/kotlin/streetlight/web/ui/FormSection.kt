@@ -11,7 +11,7 @@ import streetlight.web.model.ImageEditor
 fun ViewScope.imageFormSection(
     instructions: String,
     imageEditor: ImageEditor,
-) = formSection("Image", modify(AlignSelfCenter)) {
+) = formSection("Image", AlignSelfCenter) {
     imageDrop(imageEditor.imageField) {
         box {
             image(it.url, modify(ObjectFitContain, MaxHeight(64), BorderRadius1))

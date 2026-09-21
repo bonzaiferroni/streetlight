@@ -33,5 +33,5 @@ fun ViewScope.imageDrop(
     field: MutableTap<Image?>,
     mod: Modifier? = null,
 ) = imageDrop(field, mod) {
-    image(it.url, modify(Size100P))
+    image(it.url, Size100P)
 }

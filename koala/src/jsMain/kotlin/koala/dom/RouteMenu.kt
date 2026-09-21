@@ -21,12 +21,12 @@ fun ViewScope.routeMenu(
     rightIcons: List<IconButton>? = null,
 ) {
     column(modify(mod, RouteMenu.Base, TextUppercase, TextSmall, Gap(0), AlignItemsCenter)) {
-        filigree(modify(AlignSelfStretch)) {
+        filigree(AlignSelfStretch) {
             textBlock(context)
         }
         row(modify(RouteMenu.ContextMenu, Gap(0), TextUppercase, TextSmall, Padding(1), Bold, BorderSolid2Px)) {
             leftIcons?.let { icons ->
-                iconsTray(icons, modify(RouteMenu.LeftTray))
+                iconsTray(icons, RouteMenu.LeftTray)
             }
             options.forEach { item ->
                 val item = item ?: return@forEach
@@ -36,7 +36,7 @@ fun ViewScope.routeMenu(
                 }
             }
             rightIcons?.let { icons ->
-                iconsTray(icons, modify(RouteMenu.RightTray))
+                iconsTray(icons, RouteMenu.RightTray)
             }
         }
     }
@@ -49,9 +49,9 @@ internal fun ViewScope.iconsTray(
     row(modify(mod, BorderSolid2Px)) {
         icons.forEach { icon ->
             when (icon) {
-                is IconAction -> icon(icon.svg, modify(SmallIconHeight)).onClick(icon.action)
-                is IconRoute -> navigation(icon.route, modify(SmallIconHeight)) {
-                    icon(icon.svg, modify(Height(100.pct)))
+                is IconAction -> icon(icon.svg, SmallIconHeight).onClick(icon.action)
+                is IconRoute -> navigation(icon.route, SmallIconHeight) {
+                    icon(icon.svg, Height(100.pct))
                 }
             }
         }
@@ -59,9 +59,9 @@ internal fun ViewScope.iconsTray(
 }
 
 fun ViewScope.routeMenuItem(item: MenuOption) = when (item) {
-    is MenuAction -> span(item.label, modify(RouteMenu.Route)).onClick(item.onClick)
-    is MenuRoute -> navigation(item.route, modify(RouteMenu.Route)) { +item.label }
-    is MenuLabel -> span(item.label, modify(RouteMenu.Route))
+    is MenuAction -> span(item.label, RouteMenu.Route).onClick(item.onClick)
+    is MenuRoute -> navigation(item.route, RouteMenu.Route) { +item.label }
+    is MenuLabel -> span(item.label, RouteMenu.Route)
 }
 
 fun AppRoute.toMenuRoute() = MenuRoute(this)

@@ -71,20 +71,20 @@ private fun ViewScope.focusPanel(
     val extraLinks = post.links
     card(modify(Gap0, Padding(0), BlurBackdrop, PointerEventsAuto, BorderSolid2Px, EarthStyle.MoveDimmer)) {
         setStyle(Css.ColorScheme.of(colorScheme.cssValue))
-        column(modify(Gap0)) {
-            featureImage(post.image, modify(Flex1))
+        column(Gap0) {
+            featureImage(post.image, Flex1)
             cells?.let {
-                cellBlock(modify(FlexWrap), cells)
+                cellBlock(FlexWrap, cells)
             }
         }
-        column(modify(Padding(1))) {
+        column(Padding(1)) {
             column(modify(Gap0, TextAlignCenter)) {
                 navigation(route) {
-                    heading3(post.label, modify(Bold))
+                    heading3(post.label, Bold)
                 }
                 post.sublabel?.let {
                     navigationIfNotNull(subroute) {
-                        heading4(it, modify(OpacityHigh))
+                        heading4(it, OpacityHigh)
                     }
                 }
             }
@@ -92,7 +92,7 @@ private fun ViewScope.focusPanel(
                 filigree {
                     row {
                         extraLinks.forEach {
-                            btn(it.label, it.url, modify(Zen))
+                            btn(it.label, it.url, Zen)
                         }
                     }
                 }
@@ -100,7 +100,7 @@ private fun ViewScope.focusPanel(
                 hr { }
             }
             post.body?.let {
-                markdown(it, modify(Padding(1)))
+                markdown(it, Padding(1))
             }
         }
     }

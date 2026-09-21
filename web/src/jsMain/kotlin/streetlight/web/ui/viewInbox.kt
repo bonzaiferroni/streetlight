@@ -26,13 +26,13 @@ fun ViewScope.viewInbox(star: Star, content: InboxContent) {
     val isChatOpenState = model.openChatState.tapOf { it != null }
 
     column(modify(Height(100.dvh), Gap0)) {
-        flowBlock(model.openChatState, modify(Height(8))) { chat ->
+        flowBlock(model.openChatState, Height(8)) { chat ->
             when (chat) {
-                null -> flowBlock(model.isArchiveState, modify(Height(100.pct))) { isArchive ->
+                null -> flowBlock(model.isArchiveState, Height(100.pct)) { isArchive ->
                     val title = if (isArchive) "Archive" else "Inbox"
                     column(modify(Height(100.pct), JustifyContentCenter)) {
                         filigree {
-                            heading3(title, modify(OpacityHigh))
+                            heading3(title, OpacityHigh)
                         }
                     }
                 }
@@ -45,15 +45,15 @@ fun ViewScope.viewInbox(star: Star, content: InboxContent) {
                         "Group Chat"
                     }
                     row(modify(Flex1, JustifyContentEnd)) {
-                        button(SvgFile.ArrowLeft, { model.openChat(null) }, modify(Height(5)))
+                        button(SvgFile.ArrowLeft, { model.openChat(null) }, Height(5))
                     }
                     column(modify(Gap0, AlignItemsCenter)) {
-                        heading5(title, modify(SingleLine))
+                        heading5(title, SingleLine)
                         textBlock(chat.createdAt.toHourAndMinutesFormat(), modify(TextSmall, OpacityHigh))
                     }
                     val icon = if (model.isArchiveState.now) SvgFile.DatabaseMinus else SvgFile.DatabasePlus
                     row(modify(Flex1, JustifyContentStart)) {
-                        button(icon, model::toggleArchive, modify(Height(5)))
+                        button(icon, model::toggleArchive, Height(5))
                     }
                 }
             }
@@ -96,9 +96,9 @@ private fun ViewScope.chatList(model: Inbox, star: Star) {
                                 }
                                 textBlock(chat.lastMessagePreview, modify(SingleLine, Flex1))
                             }
-                            row(modify(TextSmall)) {
+                            row(TextSmall) {
                                 textBlock(usernames, modify(SingleLine, Flex1, MinWidth(16), OpacityHigh))
-                                textBlock(chat.lastMessageAt.toPastFormat(), modify(OpacityHigh))
+                                textBlock(chat.lastMessageAt.toPastFormat(), OpacityHigh)
                             }
                         }
                     }.onClick {
@@ -108,9 +108,9 @@ private fun ViewScope.chatList(model: Inbox, star: Star) {
             }
         }
         row(modify(Height(7), JustifyContentCenter, Padding(1))) {
-            button(SvgFile.MailLarge, { model.setIsArchive(false) }, modify(Height100Pct))
+            button(SvgFile.MailLarge, { model.setIsArchive(false) }, Height100Pct)
                 .flowModifier(model.isArchiveState.tapOf { !it }, PrimaryFg, contentScope)
-            button(SvgFile.Database, { model.setIsArchive(true) }, modify(Height100Pct))
+            button(SvgFile.Database, { model.setIsArchive(true) }, Height100Pct)
                 .flowModifier(model.isArchiveState, PrimaryFg, contentScope)
         }
     }
@@ -129,7 +129,7 @@ private fun ViewScope.messageList(model: Inbox) {
     flowBlock(model.openChatState, modify(InboxStyle.MessageList, Flex2, FlexColumn, PositionRelative)) { chat ->
         workSignal(model.messageCursorState, modify(Top0, Right0))
         if (chat == null) {
-            box(modify(Height100Pct)) {
+            box(Height100Pct) {
                 lottie(LottieFile.Ghost, modify(PlaceSelfCenter, MaxHeight(32), OpacityLow))
             }
             return@flowBlock
@@ -144,7 +144,7 @@ private fun ViewScope.messageList(model: Inbox) {
             val index = model.messageList.liveItems.indexOf(message)
             val nextAuthor = model.messageList.liveItems.getOrNull(index + 1)?.author
             if (message.author != nextAuthor) {
-                filigree(modify(MarginBottom(1))) {
+                filigree(MarginBottom(1)) {
                     textBlock(message.author.value, modify(TextSmall, OpacityHigh))
                 }
             }
@@ -167,7 +167,7 @@ private fun ViewScope.messageList(model: Inbox) {
                 replyState,
                 mod = modify(Flex1, OverflowYScroll), onEnterSubmit = ::onSubmit
             )
-            formSubmit("send", ::onSubmit, messenger, modify(Zen))
+            formSubmit("send", ::onSubmit, messenger, Zen)
         }
     }
 }

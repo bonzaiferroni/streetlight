@@ -16,13 +16,13 @@ import streetlight.model.ui.PostMapRoute
 import streetlight.web.pages.appHeader
 
 fun FlowContent.homeShell(content: HomeContent) {
-    column(modify(MarginTop(1))) {
-        appHeader(modify(Height(10)))
+    column(MarginTop(1)) {
+        appHeader(Height(10))
 
         geoMapMount(null, modify(BorderRadius2, Height(48), MoonShadow, BorderSolid2Px))
         box {
-            column(modify(Gap(8))) {
-                row(modify(JustifyContentSpaceBetween)) {
+            column(Gap(8)) {
+                row(JustifyContentSpaceBetween) {
                     galaxyMenu()
                     createPostMenu(null)
                 }
@@ -35,15 +35,15 @@ fun FlowContent.homeShell(content: HomeContent) {
             }
         }
 
-        routeMenu("Streetlight", HomeRoute, listOf(HomeRoute, PostMapRoute("Home")), modify(PositionSticky))
+        routeMenu("Streetlight", HomeRoute, listOf(HomeRoute, PostMapRoute("Home")), PositionSticky)
     }
 
     dataIsland(HomeShell.IslandId, content)
 }
 
 fun FlowContent.galaxiesSection(galaxies: List<Galaxy>) {
-    section(modify(ContainerTypeInlineSize)) {
-        column(modify(Gap0)) {
+    section(ContainerTypeInlineSize) {
+        column(Gap0) {
             heading2("Galaxies", SectionHeadingMod)
             textBlock(
                 content = "Galaxies are Streetlight communities, each with a particular focus.",
@@ -75,8 +75,8 @@ fun FlowContent.galaxiesSection(galaxies: List<Galaxy>) {
             }
         }
         row {
-            spacer(modify(Flex1))
-            btn("➕ Create a Galaxy", GalaxyFoundryRoute, modify(Accent))
+            spacer(Flex1)
+            btn("➕ Create a Galaxy", GalaxyFoundryRoute, Accent)
         }
     }
 }

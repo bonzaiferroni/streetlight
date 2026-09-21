@@ -29,9 +29,9 @@ fun ViewScope.viewGalaxyFoundry() {
             }
         }
 
-        row(modify(JustifyContentSpaceBetween)) {
+        row(JustifyContentSpaceBetween) {
             button("back", { portal.goBack() })
-            button("Found Galaxy", model::submit, modify(Accent))
+            button("Found Galaxy", model::submit, Accent)
         }
 
         appFooter(sourcePathUi("viewGalaxyFoundry.kt"))

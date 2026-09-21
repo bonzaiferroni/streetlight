@@ -18,7 +18,7 @@ fun FlowContent.eventShell(event: EventLocation) {
     column(BodyStyle.ShellColumn) {
         appHeader()
 
-        column(modify(BodyStyle.MainColumn)) {
+        column(BodyStyle.MainColumn) {
             featureHeader(
                 title = event.title,
                 descriptor = "at",
@@ -42,7 +42,7 @@ fun FlowContent.eventShell(event: EventLocation) {
                     column {
                         card(modify(ContainerTypeInlineSize, ZenBg, BorderRadius2, Padding(0), OverflowClip, Gap0)) {
                             column(modify(ContainerMdRow, FlexItems1, CardBg, Gap0)) {
-                                geoMapMount(event.geoPoint, modify(MinHeight(48)))
+                                geoMapMount(event.geoPoint, MinHeight(48))
                                 column(modify(JustifyContentCenter, AlignItemsCenter)) {
                                     event.locationImage?.small?.let {
                                         image(it, modify(Flex1, BorderRadius2, MaxHeight(16)))
@@ -59,7 +59,7 @@ fun FlowContent.eventShell(event: EventLocation) {
                             }
 
                             column(modify(ContainerMdRow, Padding(4), Gap(4), AlignItemsStart)) {
-                                column(modify(Flex4)) {
+                                column(Flex4) {
                                     event.locationDescription?.let {
                                         markdown(it)
                                     }

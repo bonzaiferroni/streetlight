@@ -40,7 +40,7 @@ fun ViewScope.lazyTabs(
 
         box(modify(viewportMod, TabsStyle.Viewport)) {
             scope.tabs.forEachIndexed { index, _ ->
-                panelCache[index] = column(modify(TabsStyle.Panel)) {
+                panelCache[index] = column(TabsStyle.Panel) {
                     if (index == initialIndex) {
                         addModifiers(TabsStyle.IsActive)
                     }

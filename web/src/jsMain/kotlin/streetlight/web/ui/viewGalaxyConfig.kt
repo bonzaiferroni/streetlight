@@ -43,10 +43,10 @@ fun ViewScope.viewGalaxyConfig(config: GalaxyConfig) {
 
         row {
             button("back", { portal.goBack() })
-            spacer(modify(Flex1))
+            spacer(Flex1)
 
             messageBox(model.editMessage)
-            button("Save", model::submit, modify(Accent))
+            button("Save", model::submit, Accent)
         }
 
         appFooter(sourcePathUi("viewGalaxyConfig.kt"))

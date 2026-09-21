@@ -17,13 +17,13 @@ fun ViewScope.introSection(
         filigree {
             heading1(name, modify(Shrinkable, AntiShadow))
         }
-        row(modify(AlignItemsCenter)) {
+        row(AlignItemsCenter) {
             column(modify(Flex4, PaddingLeft(3))) {
                 block()
             }
             lottie?.let {
                 row(modify(Flex1, JustifyContentCenter)) {
-                    lottie(it, modify(MaxHeight(32)))
+                    lottie(it, MaxHeight(32))
                 }
             }
         }

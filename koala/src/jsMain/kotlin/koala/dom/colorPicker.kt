@@ -39,7 +39,7 @@ fun ViewScope.colorPicker(
                 }
             }
         }.asWeb()
-        buttonElement = button(text, { inputElement.click() }, modify(Secondary))
+        buttonElement = button(text, { inputElement.click() }, Secondary)
     }
 
     display(colorState.now)

@@ -20,7 +20,7 @@ fun ViewScope.eventLinksForm(model: EventEditor) {
     formCard("Event Links") {
         formRow {
             formSection("Website") {
-                textField(model.urlState, "Website", modify(Width(100.pct)))
+                textField(model.urlState, "Website", Width(100.pct))
                 centeredText("Is there more information about this event on the web?")
             }
             formSection("Original Source") {
@@ -32,10 +32,10 @@ fun ViewScope.eventLinksForm(model: EventEditor) {
 
         formSection("additional links") {
             // td: modernize, it be broken
-            row(modify(AlignItemsEnd)) {
-                column(modify(Flex1)) {
+            row(AlignItemsEnd) {
+                column(Flex1) {
                     heading4("Additional Links")
-                    textBlock("You may provide your original source, a youtube video, or any useful link.", modify(InkDimFg))
+                    textBlock("You may provide your original source, a youtube video, or any useful link.", InkDimFg)
                 }
                 button("➕ Add link", onClick = {
                     model.linksState.append(ExtraLink.Empty)
@@ -44,21 +44,21 @@ fun ViewScope.eventLinksForm(model: EventEditor) {
             indexedItemsBlock(model.linksState, modify(Magic, Blur, SlideLeft)) { (index, link) ->
                 val isEditingState = storeOf(link.label.isEmpty() || link.url.value.isEmpty())
                 flowBlock(isEditingState) { isEditing ->
-                    row(modify(AlignItemsCenter)) {
+                    row(AlignItemsCenter) {
                         if (isEditing) {
                             val labelState = storeOf(link.label)
                             val urlState = storeOf(link.url.value)
                             textField(labelState, "label")
-                            textField(urlState, "url", modify(Flex1))
+                            textField(urlState, "url", Flex1)
                             button(SvgFile.Check, {
                                 val label = labelState.now.takeIf { it.isNotEmpty() } ?: return@button
                                 val url = urlState.now.takeIf { it.isNotBlank() }?.toValidAbsoluteUrlOrNull() ?: return@button
                                 model.linksState.replaceAt(index, ExtraLink(label, url))
-                            }, modify(Height(5)))
+                            }, Height(5))
                         } else {
                             textBlock(link.label)
-                            textBlock(link.url.value, modify(InkDimFg))
-                            spacer(modify(Flex1))
+                            textBlock(link.url.value, InkDimFg)
+                            spacer(Flex1)
                             button(SvgFile.Edit, isEditingState::toggle)
                             button(SvgFile.Trash, onClick = { model.linksState.removeAt(index) })
                         }

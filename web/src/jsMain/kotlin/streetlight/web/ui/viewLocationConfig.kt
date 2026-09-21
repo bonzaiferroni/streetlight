@@ -41,7 +41,7 @@ fun ViewScope.viewLocationConfig(
             }
             flowBlock(locationState) { location ->
                 navigation(location.route) {
-                    heading1(location.name, modify(TextAlignCenter))
+                    heading1(location.name, TextAlignCenter)
                 }
             }
         }

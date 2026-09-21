@@ -16,6 +16,6 @@ fun ViewScope.mediaForm(model: MediaEditor) = formCard {
     }
 
     formSection("content") {
-        markdownEditor(model.textField, "content", modify(MinHeight(32)))
+        markdownEditor(model.textField, "content", MinHeight(32))
     }
 }

@@ -24,9 +24,9 @@ fun FlowContent.appFooter(sourcePath: String? = null) {
 
 fun DIV.configureAppFooter(sourcePath: String?, vararg additional: ExtraLink) {
     addModifiers(modify(JustifyContentCenter, AlignItemsCenter, Gap0, MarginBottom(16)))
-    lottie(LottieFile.SpinningCircles, modify(Height(24)))
+    lottie(LottieFile.SpinningCircles, Height(24))
     textBlock(prayers.random(), modify(Italic, OpacityHigh))
-    row(modify(JustifyContentCenter)) {
+    row(JustifyContentCenter) {
         navigation(SiteDoc.About.route) {
             textBlock("about us")
         }
@@ -42,9 +42,9 @@ fun DIV.configureAppFooter(sourcePath: String?, vararg additional: ExtraLink) {
     sourcePath?.let {
         column(modify(Gap0, MarginTop(4), AlignItemsCenter)) {
             navigation(sourceUrlOf(sourcePath)) {
-                column(modify(Gap0)) {
+                column(Gap0) {
                     filigree {
-                        icon(SvgFile.Github, modify(Height(4)))
+                        icon(SvgFile.Github, Height(4))
                     }
                     textBlock("source code for this content")
                 }
@@ -52,7 +52,7 @@ fun DIV.configureAppFooter(sourcePath: String?, vararg additional: ExtraLink) {
             additional.takeIf { it.isNotEmpty() }?.let {
                 it.forEach { link ->
                     navigation(sourceUrlOf(link.url.value)) {
-                        textBlock("+ ${link.label}", modify(OpacityHalf))
+                        textBlock("+ ${link.label}", OpacityHalf)
                     }
                 }
             }

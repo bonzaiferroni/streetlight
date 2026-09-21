@@ -51,7 +51,7 @@ fun ViewScope.eventDetailsForm(model: EventEditor) = formCard("Event Details") {
         formSection("Cost") {
             row(modify(AlignItemsCenter, JustifyContentCenter)) {
                 checkBox(model.isFreeState, "Free event")
-                textField(model.costState, "cost", modify(Width(12)))
+                textField(model.costState, "cost", Width(12))
                     .flowVisibility(model.isFreeState.flow.map { !it }, contentScope)
                     .flowValid(EventProperty.Cost, model.validityState, contentScope)
             }
@@ -81,9 +81,9 @@ fun ViewScope.eventDetailsForm(model: EventEditor) = formCard("Event Details") {
         markdownEditor(
             state = model.descriptionState,
             label = "description",
-            mod = modify(MinHeight(48))
+            mod = MinHeight(48)
         )
-        row(modify(JustifyContentSpaceBetween)) {
+        row(JustifyContentSpaceBetween) {
             buttonPopover("Markdown Hints", flair = "💡") {
                 card(modify(ButtonPopover.CardMod, Padding(2))) {
                     bulletsOf(
@@ -122,7 +122,7 @@ fun ViewScope.dayIndicator(field: MutableTap<LocalDate?>) {
         flowBlock(field, modify(Magic, Blur, Width(24))) { date ->
             column(modify(Gap0, AlignItemsCenter, JustifyContentCenter, Height(100.pct))) {
                 when (date) {
-                    null -> heading5("someday", modify(OpacityHalf))
+                    null -> heading5("someday", OpacityHalf)
                     else -> {
                         heading5(date.toFutureFormat())
                     }
@@ -145,7 +145,7 @@ fun ViewScope.timeIndicator(field: MutableTap<LocalTime?>, defaultLabel: String)
         flowBlock(field, modify(Magic, Blur, Width(24))) { time ->
             column(modify(Gap0, AlignItemsCenter, JustifyContentCenter, Height(100.pct))) {
                 when (time) {
-                    null -> heading5(defaultLabel, modify(OpacityHalf))
+                    null -> heading5(defaultLabel, OpacityHalf)
                     else -> heading5(time.toTimeFormat())
                 }
             }

@@ -24,8 +24,8 @@ fun FlowContent.textLogo(
 }
 
 fun FlowContent.topLogo() {
-    navigation("/", modify(AlignSelfCenter)) {
-        textLogo(modify(Height(5)))
+    navigation("/", AlignSelfCenter) {
+        textLogo(Height(5))
     }
 }
 

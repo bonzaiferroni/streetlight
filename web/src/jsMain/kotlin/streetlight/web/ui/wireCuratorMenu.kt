@@ -27,7 +27,7 @@ fun ViewScope.wireCuratorMenu() {
                     updateMark(mark.markId, feedElement)?.let {
                         baseElement.applyCurator(it)
                     }
-                }, modify(Zen)) {
+                }, Zen) {
                     configureMarkButton(mark)
                 }
                 textBlock {

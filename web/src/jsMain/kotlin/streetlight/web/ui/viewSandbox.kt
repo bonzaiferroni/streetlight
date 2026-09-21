@@ -14,7 +14,7 @@ fun RouteScope.viewSandbox() {
     val nameState = storeOf("Jimmy")
     val indexState = storeOf(0)
 
-    grid(GridTemplateColumns("1fr 1fr"), modify(MarginTop(1))) {
+    grid(GridTemplateColumns("1fr 1fr"), MarginTop(1)) {
         column {
             lazyTabs(indexState = indexState) {
                 tab("original") {

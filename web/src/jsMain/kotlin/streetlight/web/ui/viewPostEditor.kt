@@ -18,12 +18,12 @@ fun ViewScope.viewMediaConfig(model: MediaEditor) {
     val routeFlow = model.stateFlow.dedupNotNull { it.slug?.let { slug -> MediaRoute(slug) } }
     goOnRoute(routeFlow)
 
-    section(modify(FlexColumn)) {
-        heading1("Edit Post", modify(TextAlignCenter))
+    section(FlexColumn) {
+        heading1("Edit Post", TextAlignCenter)
 
         mediaForm(model)
 
-        row(modify(JustifyContentEnd)) {
+        row(JustifyContentEnd) {
             button("Edit", onClick = model::submitPost)
         }
 

@@ -13,7 +13,7 @@ import kotlinx.css.pct
 import streetlight.web.pages.appFooter
 
 fun FlowContent.aboutAppShell() {
-    column(modify(AlignItemsCenter)) {
+    column(AlignItemsCenter) {
         heading1("About Streetlight")
         column(modify(MediaMdRow, AlignItemsCenter)) {
             lottie(LottieFile.CupShuffle, modify(Flex1, MaxWidth(50.pct)))
@@ -23,18 +23,18 @@ fun FlowContent.aboutAppShell() {
         }
         column(modify(MediaMdRow, AlignItemsCenter)) {
             lottie(LottieFile.StrollingMan, modify(Flex1, MaxWidth(50.pct)))
-            column(modify(Flex3)) {
-                column(modify(Gap0)) {
+            column(Flex3) {
+                column(Gap0) {
                     textBlock("Do you have a talent to share with passersby?")
                     textBlock("Do you have a business, venue, or message you would like to promote?")
                     textBlock("Are you walking down the street somewhere and looking for something to experience?")
                 }
-                textBlock("Consider downloading Streetlight to see what it can offer.", modify(Bold))
+                textBlock("Consider downloading Streetlight to see what it can offer.", Bold)
             }
         }
         column(modify(MediaMdRow, AlignItemsCenter)) {
             lottie(LottieFile.Cat, modify(Flex1, MaxWidth(50.pct)))
-            column(modify(Flex3)) {
+            column(Flex3) {
                 textBlock {
                     externalLink("https://github.com/bonzaiferroni/streetlight", "Streetlight")
                     +" is 100% free and open-source. Free as in speech, free as in beer. "
@@ -53,11 +53,11 @@ fun FlowContent.aboutAppShell() {
                     +"The nature of our work supports a level of collaboration as yet unrealized in human history. "
                     +"We are like giants who stand on the shoulders of other giants, each one reaching higher. "
                 }
-                textBlock("It's giants all the way down.", modify(TextLarge))
+                textBlock("It's giants all the way down.", TextLarge)
             }
         }
         column(modify(Gap0, AlignItemsStretch, Width(100.pct), MarginTop(4))) {
-            heading5("Our Giants", modify(TextAlignCenter))
+            heading5("Our Giants", TextAlignCenter)
             githubLink("web", "kotlinx.html", "Kotlin")
             githubLink("app client", "Compose Multiplatform", "jetbrains", "compose-multiplatform")
             githubLink("app database", "SQLite", "sqlite")

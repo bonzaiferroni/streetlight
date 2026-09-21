@@ -205,15 +205,15 @@ class CommentView(
             card(modify(ZenBg, Gap0, Padding(0), OverflowClip, AutoMagic)) {
                 row(modify(AlignItemsCenter, modify(ZenBg, Padding(1)))) {
                     navigationIfNotNull(comment.username?.let { StarRoute(it) }) {
-                        row(modify(AlignItemsCenter)) {
+                        row(AlignItemsCenter) {
                             image(comment.thumb, modify(Aspect1, Height(6), BorderRadius50P))
-                            column(modify(Gap0)) {
+                            column(Gap0) {
                                 textBlock(comment.username?.value ?: "[Former Guest]")
                                 textBlock(comment.createdAt.toAgoFormat(), modify(OpacityHigh, TextSmall))
                             }
                         }
                     }
-                    spacer(modify(Flex1))
+                    spacer(Flex1)
                     icon(SvgFile.EyeMinus, modify(Height(5), OpacityHigh)).onClickElement {
                         val isHidden = rootBlock.toggle(Hide)
                         val svg = when (isHidden) {
@@ -224,29 +224,29 @@ class CommentView(
                     }
                 }
                 column(modify(Padding(1), CommentClass.InnerCard)) {
-                    _bodyBlock = box(modify(CommentClass.Body)) {
+                    _bodyBlock = box(CommentClass.Body) {
                         _editBlock = div(modify(CommentClass.Editor, Height(100.pct)))
                         _contentBlock = div(modify(CommentClass.Content, Padding(1))) {
                             markdown(comment.text)
                         }
                     }
-                    row(modify(AlignItemsCenter)) {
+                    row(AlignItemsCenter) {
                         if (isUserComment) {
                             zenButton {
-                                _editButtonText = textBlock("edit", modify(ButtonText))
+                                _editButtonText = textBlock("edit", ButtonText)
                             }.onClick {
                                 toggleEdit()
                             }
                         } else {
-                            _showUpdateButton = zenButton(modify(DisplayNone)) {
-                                textBlock("show update", modify(ButtonText))
+                            _showUpdateButton = zenButton(DisplayNone) {
+                                textBlock("show update", ButtonText)
                             }.onClick {
                                 showStagedUpdate()
                             }
                         }
-                        spacer(modify(Flex1))
+                        spacer(Flex1)
                         zenButton {
-                            _replyButtonText = textBlock("reply", modify(ButtonText))
+                            _replyButtonText = textBlock("reply", ButtonText)
                         }.onClick {
                             replyAction()
                         }
@@ -258,10 +258,10 @@ class CommentView(
                 // indent indicator
                 div(modify(ZenBg, Width(1), BorderRadiusBottom1))
 
-                column(modify(CommentClass.NestedContent, modify(Flex1))) {
-                    _replyBlock = div(modify(CommentClass.Reply))
+                column(modify(CommentClass.NestedContent, Flex1)) {
+                    _replyBlock = div(CommentClass.Reply)
 
-                    _repliesBlock = column(modify(CommentClass.ChildColumn)) {
+                    _repliesBlock = column(CommentClass.ChildColumn) {
                         replies.forEach { reply ->
                             with (reply) {
                                 render()

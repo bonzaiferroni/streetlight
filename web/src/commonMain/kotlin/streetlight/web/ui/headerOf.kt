@@ -56,7 +56,7 @@ fun FlowContent.headerOf(
             // editRoute = GalaxyConfigRoute(galaxy.slug),
             block = block
         )
-        row(modify(JustifyContentSpaceBetween)) {
+        row(JustifyContentSpaceBetween) {
             galaxyMenu()
             createPostMenu(galaxy)
         }

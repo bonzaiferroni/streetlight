@@ -15,7 +15,7 @@ fun ViewScope.lineChart(
     title: String,
     dataFlow: Flow<ChartData>,
     pointFlow: Flow<List<ChartPoint>>?,
-    mod: Modifier? = modify(Height(48))
+    mod: Modifier? = Height(48)
 ) {
     val element = div(mod)
     val chart = LineChartAdapter(

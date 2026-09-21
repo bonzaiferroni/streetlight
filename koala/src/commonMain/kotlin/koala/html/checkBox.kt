@@ -7,7 +7,7 @@ fun FlowContent.checkBox(
     id: Id,
     label: String,
 ) {
-    row(modify(AlignItemsCenter)) {
+    row(AlignItemsCenter) {
         checkBoxInput {
             this.id = id.identifier
             this.name = id.identifier

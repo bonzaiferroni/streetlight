@@ -140,9 +140,9 @@ fun ViewScope.commentEditor(
     val text = storeOf(initialText)
 
     column(modify(Height100Pct, mod)) {
-        textEditor(text, label, modify(Flex1))
+        textEditor(text, label, Flex1)
         row {
-            spacer(modify(Flex1))
+            spacer(Flex1)
             button("send", onClick = {
                 if (text.now.value.isEmpty()) return@button
                 contentScope.launch {

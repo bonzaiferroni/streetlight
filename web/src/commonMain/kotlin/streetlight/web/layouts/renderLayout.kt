@@ -96,7 +96,7 @@ fun FlowContent.renderImage(block: ImageBlock) {
 }
 
 fun FlowContent.renderGallery(block: GalleryBlock) {
-    div(modify(LayoutStyle.Gallery)) {
+    div(LayoutStyle.Gallery) {
         setStyle(Css.ColumnCount.of(block.columns))
         block.images.forEach {
             image(it, modify(block.shape.toMod(), OverflowClip))
@@ -105,7 +105,7 @@ fun FlowContent.renderGallery(block: GalleryBlock) {
 }
 
 fun FlowContent.renderMap(content: DesignContent) {
-    geoMapMount(content.geoPoint, modify(MinHeight(48)))
+    geoMapMount(content.geoPoint, MinHeight(48))
 }
 
 fun FlowContent.renderTabs(block: TabsBlock, content: DesignContent) {
@@ -125,7 +125,7 @@ fun FlowContent.renderText(block: TextBlock) {
 
 fun FlowContent.renderRichText(block: RichTextBlock) {
     val sizeMod = block.size.toMod()
-    markdown(block.text, modify(sizeMod))
+    markdown(block.text, sizeMod)
 }
 
 fun FlowContent.renderFooter() {
@@ -133,7 +133,7 @@ fun FlowContent.renderFooter() {
 }
 
 fun FlowContent.renderColumn(block: ColumnsBlock, content: DesignContent) {
-    row(modify(BodyStyle.FormRow)) {
+    row(BodyStyle.FormRow) {
         block.blocks.forEach {
             renderBlock(it, content)
         }

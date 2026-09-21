@@ -13,7 +13,7 @@ import web.html.HTMLElement
 
 fun AppendScope.popoverRaw(
     id: Id,
-    mod: Modifier = modify(Padding(1)),
+    mod: Modifier = Padding(1),
     anchor: PositionAnchor? = null,
     isManual: Boolean = false,
     config: DIV.() -> Unit = {}
@@ -27,7 +27,7 @@ fun AppendScope.popover(
     anchor: PositionAnchor? = null,
     isManual: Boolean = false,
     content: DIV.() -> Unit = {}
-) = popoverRaw(id, modify(Padding(1)), anchor, isManual) {
+) = popoverRaw(id, Padding(1), anchor, isManual) {
     popoverCard(mod) {
         content()
     }

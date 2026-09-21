@@ -27,7 +27,7 @@ fun ViewScope.editorSandbox() {
     val isEditingState = storeOf(true)
     val isSwyg = storeOf(false)
     column {
-        row(modify(JustifyContentEnd)) {
+        row(JustifyContentEnd) {
             button(SvgFile.Magic, {
                 textState.set { Markdown("$value!") }
             })

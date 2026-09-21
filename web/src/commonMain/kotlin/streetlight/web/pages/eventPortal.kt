@@ -34,25 +34,25 @@ fun HTML.eventPortal(event: Event, performer: Performer?, requestItems: List<Req
                     }
                 }
             }
-            tabs(Id("event-portal-tabs"), modify(Width(64))) {
+            tabs(Id("event-portal-tabs"), Width(64)) {
                 tab("bio") {
                     textBlock("yer bio")
                 }
                 tab("requests") {
-                    column(Id("request-box"), modify(AlignItemsCenter)) {
+                    column(Id("request-box"), AlignItemsCenter) {
                         column(Id("request-songs")) {
                             requestItems.forEach { item ->
                                 requestItem(item)
                                 // button(song.title, invoke("startRequest", event.eventId.value, song.songId.value))
                             }
                         }
-                        column(Id("request-details"), modify(DisplayNone)) {
+                        column(Id("request-details"), DisplayNone) {
                             textField(id = Id("name"), placeholder = "Your name (optional)")
                             textField(id = Id("comment"), placeholder = "Comment (optional)")
                             checkBox(Id("join"), "Would you like to sing with me?")
                             btn("Send", invoke("sendRequest"))
                         }
-                        column(Id("request-sent"), modify(DisplayNone)) {
+                        column(Id("request-sent"), DisplayNone) {
                             textBlock("Request sent!")
                         }
                     }
@@ -63,12 +63,12 @@ fun HTML.eventPortal(event: Event, performer: Performer?, requestItems: List<Req
             }
 
         }
-        column(Id("tips-box"), modify(AlignItemsCenter)) {
+        column(Id("tips-box"), AlignItemsCenter) {
             row(modify(AlignItemsCenter, Width(LinearDimension.auto))) {
-                row(modify(Width(LinearDimension.auto))) {
-                    heading3("Venmo:", modify(OpacityHigh))
+                row(Width(LinearDimension.auto)) {
+                    heading3("Venmo:", OpacityHigh)
                     a("https://venmo.com/colfaxband?txn=pay&note=street+music") {
-                        heading3("@colfaxband", modify(GlowShadow))
+                        heading3("@colfaxband", GlowShadow)
                     }
                 }
 //                a("https://venmo.com/colfaxband?txn=pay&amount=1&note=street+music") {
@@ -80,7 +80,7 @@ fun HTML.eventPortal(event: Event, performer: Performer?, requestItems: List<Req
                 btn(
                     text = "Send a tip",
                     href = "https://venmo.com/colfaxband?txn=pay&note=street+music",
-                    mod = modify(Accent),
+                    mod = Accent,
                     addFlair = false,
                 )
             }
@@ -97,13 +97,13 @@ fun FlowContent.requestItem(
 //        attributes[EventPortalSelector.songIdAttribute] = song.songId
         onClick = invoke("startRequest", song.songId.value.toString())
 
-        row(modify(Flex1)) {
+        row(Flex1) {
             column(modify(Flex1, Gap0, Width(LinearDimension.auto))) {
-                textBlock(song.title, modify(Bold))
+                textBlock(song.title, Bold)
                 textBlock(song.artist)
             }
             column(modify(Gap0, AlignItemsCenter, Width(LinearDimension.auto))) {
-                textBlock("plays", modify(OpacityHigh))
+                textBlock("plays", OpacityHigh)
                 textBlock(plays.toString())
             }
         }

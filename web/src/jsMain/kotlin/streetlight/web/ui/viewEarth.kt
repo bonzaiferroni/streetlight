@@ -9,8 +9,8 @@ import streetlight.web.pages.AppBody
 import web.dom.document
 
 fun ViewScope.viewEarth(model: Earth) {
-    box(EarthStyle.Container, modify(Size100P)) {
-        val cameraController = geoMapMount(mod = modify(EarthStyle.Map))
+    box(EarthStyle.Container, Size100P) {
+        val cameraController = geoMapMount(mod = EarthStyle.Map)
         column(modify(Gap0, PointerEventsNone)) {
             div(modify(EarthStyle.Grid, Flex1, MinHeight(0))) {
                 earthUnboundedOverlay(model, cameraController)

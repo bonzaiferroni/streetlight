@@ -82,16 +82,16 @@ fun ViewScope.formSubmitLegacy(
 ) {
     row {
         addModifiers(mod, JustifyContentSpaceBetween)
-        row(modify(Flex1)) {
+        row(Flex1) {
             back?.let {
-                button(it.label, it.onClick, it.mod ?: modify(Secondary))
+                button(it.label, it.onClick, it.mod ?: Secondary)
             }
         }
         row {
             messages?.let {
                 messageBox(messages)
             }
-            val element = button(label, onSubmit, modify(Accent))
+            val element = button(label, onSubmit, Accent)
             messages?.let {
                 element.flowIsWorking(it.isWorkingFlow, contentScope)
             }

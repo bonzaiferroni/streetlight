@@ -73,7 +73,7 @@ fun ViewScope.tabsBuilder(tabsField: MutableTap<TabsBlock>) {
             column {
                 tabNames.forEach { tabName ->
                     val isEditingField = storeOf(false)
-                    flowBlock(isEditingField, modify(Height(5))) { isEditing ->
+                    flowBlock(isEditingField, Height(5)) { isEditing ->
                         if (isEditing) {
                             val tabNameField = storeOf(tabName)
                             textField(tabNameField, onEnterSubmit = {
@@ -83,7 +83,7 @@ fun ViewScope.tabsBuilder(tabsField: MutableTap<TabsBlock>) {
                             })
                         } else {
                             row(modify(AlignItemsCenter, Height(5))) {
-                                textBlock(tabName, modify(Flex1))
+                                textBlock(tabName, Flex1)
                                 button(SvgFile.Edit, { isEditingField.toggle() })
                                 button(SvgFile.Minus, {
                                     tabsField.set { copy(tabs = tabs.filter { it.name != tabName }) }
@@ -101,8 +101,8 @@ fun ViewScope.tabsBuilder(tabsField: MutableTap<TabsBlock>) {
     }
 
     column {
-        row(modify(JustifyContentEnd)) {
-            button("tabs", mod = modify(Zen)) {
+        row(JustifyContentEnd) {
+            button("tabs", mod = Zen) {
                 setPopoverTarget(popoverId)
             }
         }

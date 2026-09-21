@@ -69,7 +69,7 @@ private fun AppendScope.renderEditorBlock(block: ParsedBlock, element: HTMLEleme
 
 private fun AppendScope.renderSegmentsBlock(chunk: String, segments: List<EditorSegment>) {
     segments.forEach {
-        span(chunk.substring(it.from, it.to), modify(it.mod))
+        span(chunk.substring(it.from, it.to), it.mod)
     }
     if (chunk.isEmpty() || chunk.endsWith("\n")) {
         br { }

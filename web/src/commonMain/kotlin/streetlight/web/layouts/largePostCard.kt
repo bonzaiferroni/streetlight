@@ -33,7 +33,7 @@ fun FlowContent.largePostCard(
                             }
 
                             subtitle?.let {
-                                fun FlowContent.showSubtitle() = textBlock(subtitle, modify(InkDimFg))
+                                fun FlowContent.showSubtitle() = textBlock(subtitle, InkDimFg)
                                 when (subRoute) {
                                     null -> showSubtitle()
                                     else -> navigation(subRoute) { showSubtitle() }
@@ -49,7 +49,7 @@ fun FlowContent.largePostCard(
 
                     row {
                         links?.forEach { link ->
-                            btn(link.label, link.url, modify(Secondary))
+                            btn(link.label, link.url, Secondary)
                         }
                     }
                 }

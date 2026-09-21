@@ -17,8 +17,8 @@ fun ViewScope.viewMusicianHub(
     column {
         lazyTabs(Id("user-hub-tabs")) {
             tab("Songs") {
-                column(modify(AlignItemsCenter)) {
-                    row(modify(Width(64))) {
+                column(AlignItemsCenter) {
+                    row(Width(64)) {
                         row(modify(Flex1, FlexItems1)) {
                             // td: fix later
                             // textField(
@@ -34,7 +34,7 @@ fun ViewScope.viewMusicianHub(
                             //     onValue = model::setArtist
                             // )
                         }
-                        button("Add new song", model::addSong, modify(Accent))
+                        button("Add new song", model::addSong, Accent)
                     }
 //                    itemsBlock(model.songsFlow, defaultMagic) { song ->
 //                        navigation(SongProfileRoute(song.songId)) {

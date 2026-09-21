@@ -15,9 +15,9 @@ import streetlight.web.shells.starRouteMenu
 
 fun ViewScope.viewProfileConfig(star: Star, config: ProfileConfig) {
     val model = app.getProfileEditor(star.toEdit(config.design), contentScope)
-    section(modify(FlexColumn)) {
+    section(FlexColumn) {
         filigree {
-            heading2("Profile Config", modify(TextAlignCenter))
+            heading2("Profile Config", TextAlignCenter)
         }
 
         lazyTabs {

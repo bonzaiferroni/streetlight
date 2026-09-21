@@ -42,7 +42,7 @@ fun ViewScope.viewStarConfig(star: Star, model: AccountEditor) {
 }
 
 fun RouteScope.viewStarConfigRoute() {
-    starRouteBlock<StarConfigRoute, Account>(modify(Magic)) { star, account ->
+    starRouteBlock<StarConfigRoute, Account>(Magic) { star, account ->
         val model = app.getAccountEditor(account, contentScope)
         viewStarConfig(star, model)
     }
@@ -52,7 +52,7 @@ fun ViewScope.registerAccountForm(model: AccountEditor) = formColumn {
     val messages = MessageStore()
     formRow {
         column {
-            heading3("Register Account", modify(TextAlignCenter))
+            heading3("Register Account", TextAlignCenter)
             textBlock(registerInfo1)
             textBlock {
                 span(registerInfo2)
@@ -64,7 +64,7 @@ fun ViewScope.registerAccountForm(model: AccountEditor) = formColumn {
                 textBlock("Benefits of Registration", modify(OpacityHigh, Italic))
             }
             bulletsOf(
-                modify(Gap(1)),
+                Gap(1),
                 "The ability to log into your account with other devices",
                 "Better account security on shared devices",
                 "Avoid automatic deletion after 30 days without activity"

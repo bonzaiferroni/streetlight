@@ -21,10 +21,10 @@ fun FlowContent.layoutTalkPreview(route: AppRoute, comments: List<Comment>) {
         val children = comments.filter { it.parentId == comment.commentId }
 
         column {
-            row(modify(AlignItemsCenter, modify(Height(5)))) {
+            row(modify(AlignItemsCenter, Height(5))) {
                 navigationIfNotNull(comment.username?.let { StarRoute(it)}) {
-                    row(modify(AlignItemsCenter)) {
-                        image(comment.thumb, modify(Aspect1))
+                    row(AlignItemsCenter) {
+                        image(comment.thumb, Aspect1)
                         heading5(comment.username?.value ?: "[Former Guest]")
                     }
                 }
@@ -44,7 +44,7 @@ fun FlowContent.layoutTalkPreview(route: AppRoute, comments: List<Comment>) {
             markdown(comment.text)
 
             if (children.isNotEmpty()) {
-                column(modify(PaddingLeft(3))) {
+                column(PaddingLeft(3)) {
                     children.forEach {
                         childIds.add(it.commentId)
                         layoutComment(comment)
@@ -61,7 +61,7 @@ fun FlowContent.layoutTalkPreview(route: AppRoute, comments: List<Comment>) {
         }
         navigation(route) {
             column(modify(AlignItemsCenter, JustifyContentCenter, Height(12))) {
-                textBlock("No comments here yet, be the first.", modify(OpacityHigh))
+                textBlock("No comments here yet, be the first.", OpacityHigh)
             }
         }
     }

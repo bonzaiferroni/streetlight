@@ -12,7 +12,7 @@ import kotlinx.html.FlowContent
 import kotlinx.html.onClick
 
 fun FlowContent.starHelmPopover() {
-    popover(StarHelm.PopoverId, modify(StarHelm.PopoverClass)) {
+    popover(StarHelm.PopoverId, StarHelm.PopoverClass) {
         card(modify(StarHelm.PopoverCardClass, HeavyCardBg, BlurBackdrop, OverflowClip, PointerEventsAuto)) {
             setId(StarHelm.StarBarHelm)
             button(SvgFile.LoaderSmall, modify(Height(5), FadeLoop)) {

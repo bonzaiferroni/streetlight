@@ -55,7 +55,7 @@ fun ViewScope.formRow(
 fun ViewScope.formHeading(
     text: String
 ) = filigree(ruleMaxWidth = MaxWidth(32)) {
-    heading4(text, modify(SystemFg))
+    heading4(text, SystemFg)
 }
 
 fun ViewScope.formBullets(
@@ -72,14 +72,14 @@ fun ViewScope.formSubmit(
     label: String = "submit",
     onClick: () -> Unit,
     messenger: MessageStore? = null,
-    buttonMod: Modifier = modify(Primary),
+    buttonMod: Modifier = Primary,
     enabledTap: Tap<Boolean>? = null,
     isDisplayedFlow: Tap<Boolean>? = null,
     back: MenuAction? = null,
-) = row(mod = modify(AlignItemsStart)) {
-    row(modify(Flex1)) {
+) = row(mod = AlignItemsStart) {
+    row(Flex1) {
         back?.let {
-            button(it.label, it.onClick, it.mod ?: modify(Secondary))
+            button(it.label, it.onClick, it.mod ?: Secondary)
         }
     }
     messenger?.let {
@@ -124,4 +124,4 @@ fun ViewScope.formTextField(
 
 fun ViewScope.formFiller(
     lottie: Lottie
-) = lottie(lottie, modify(MaxHeight(16)))
+) = lottie(lottie, MaxHeight(16))

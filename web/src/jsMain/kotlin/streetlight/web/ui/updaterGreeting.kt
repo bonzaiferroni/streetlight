@@ -16,9 +16,9 @@ import koala.html.em
 import streetlight.model.data.Star
 
 fun ViewScope.updaterGreeting(star: Star, targetName: String) = grid(
-    IntroStyle.Columns, modify(AlignItemsCenter)
+    IntroStyle.Columns, AlignItemsCenter
 ) {
-    section(modify(IntroStyle.SectionMod)) {
+    section(IntroStyle.SectionMod) {
         textBlock {
             +"Hello "
             em(star.username.value)

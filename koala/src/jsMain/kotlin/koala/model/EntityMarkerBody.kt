@@ -32,7 +32,7 @@ internal fun AppendScope.configureThumbMarker(marker: ThumbMarker): EntityMarker
                 setStyle(Css.ColorScheme.of(it))
             }
 
-            box(modify(MarkerStyle.Thumb)) {
+            box(MarkerStyle.Thumb) {
                 img {
                     src = thumbUrl.value
                 }
@@ -43,7 +43,7 @@ internal fun AppendScope.configureThumbMarker(marker: ThumbMarker): EntityMarker
 
             column(modify(Gap2Px, LineHeight115, WhiteSpaceNoWrap)) {
                 label?.let {
-                    textBlock(it, modify(Bold))
+                    textBlock(it, Bold)
                 }
                 if (sublabel != null || typeLabel != null) {
                     textBlock(mod = TextSmall) {
@@ -51,8 +51,8 @@ internal fun AppendScope.configureThumbMarker(marker: ThumbMarker): EntityMarker
                             span(it, modify(ColorSchemeFg, Bold))
                         }
                         sublabel?.let {
-                            if (typeLabel != null) span(" • ", modify(OpacityHalf))
-                            span(it, modify(OpacityHigh))
+                            if (typeLabel != null) span(" • ", OpacityHalf)
+                            span(it, OpacityHigh)
                         }
                     }
                 }
@@ -74,7 +74,7 @@ internal fun AppendScope.configureIconMarker(marker: IconMarker): EntityMarkerBo
 
             box(modify(MarkerStyle.Icon, BorderRadius50P, CardBg, Outline)) {
                 icon(marker.svg, modify(SmallIconHeight, PlaceSelfCenter, ColorSchemeFg))
-                box(modify(MarkerStyle.ClusterCount)) {
+                box(MarkerStyle.ClusterCount) {
                     clusterElement = textBlock(mod = modify(PlaceSelfCenter, Bold, NightInk, TextShadow))
                 }
             }

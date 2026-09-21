@@ -49,7 +49,7 @@ fun DIV.configureTabsHeader(
     tabs: List<TabHeader>,
     initialIndex: Int,
 ) {
-    row(modify(TabsStyle.Header)) {
+    row(TabsStyle.Header) {
         tabs.forEachIndexed { index, tab ->
             p {
                 if (index == initialIndex) {
@@ -73,7 +73,7 @@ fun DIV.configureTabsViewport(
     box(modify(viewportMod, TabsStyle.Viewport)) {
         tabs.forEachIndexed { index, tab ->
             val content = tab.content
-            column(modify(TabsStyle.Panel)) {
+            column(TabsStyle.Panel) {
                 if (index == initialIndex) {
                     addModifiers(TabsStyle.IsActive)
                 }

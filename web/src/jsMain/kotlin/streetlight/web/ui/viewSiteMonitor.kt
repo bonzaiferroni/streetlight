@@ -20,7 +20,7 @@ fun RouteScope.viewSiteMonitor() {
                 { ECharts.registerTheme(KoalaTheme.ThemeId, ChartUtility.buildTheme()) }
             ) {
                 column {
-                    dropMenu(model.timeFrameState, mod = modify(AlignSelfStart))
+                    dropMenu(model.timeFrameState, mod = AlignSelfStart)
                     lineChart(
                         title = "Status",
                         dataFlow = model.chartFlow,

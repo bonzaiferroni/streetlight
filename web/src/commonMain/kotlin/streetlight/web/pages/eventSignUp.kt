@@ -14,7 +14,7 @@ fun HTML.eventSignUp(event: Event, resource: PageResource) {
         applyFiles(EventSignUpFiles)
     }
     body {
-        column(Id("event-profile"), modify(AlignItemsCenter)) {
+        column(Id("event-profile"), AlignItemsCenter) {
             heading1(event.title)
             heading2("Sign Up")
 
@@ -29,13 +29,13 @@ fun HTML.eventSignUp(event: Event, resource: PageResource) {
                     textBlock("yes please")
                 }
             }
-            column(Id("sign-up-box"), modify(Width(100.pct))) {
-                column(Id("guest-details"), modify(DisplayNone)) {
+            column(Id("sign-up-box"), Width(100.pct)) {
+                column(Id("guest-details"), DisplayNone) {
                     textField(id = Id("name"), label = "Your name")
                     textField(id = Id("email"), label = "Email")
                     btn("Send", invoke("sendRequest"))
                 }
-                column(Id("user-details"), modify(DisplayNone)) {
+                column(Id("user-details"), DisplayNone) {
                     textBlock("User details form")
                 }
             }

@@ -16,19 +16,19 @@ fun ViewScope.guestRegistrationForm(model: UserCreator) {
     formColumn {
         formRow {
             column {
-                heading3("Guest accounts", modify(TextAlignCenter))
+                heading3("Guest accounts", TextAlignCenter)
                 textBlock(guestAccountIntro1)
                 textBlock {
-                    span(guestAccountIntro2, modify(Flex1))
+                    span(guestAccountIntro2, Flex1)
                     navigation { +"→ Learn More" }
                 }
             }
-            card(modify(PrimaryCardBg)) {
+            card(PrimaryCardBg) {
                 filigree {
                     textBlock("How it works", modify(OpacityHigh, Italic))
                 }
                 bulletsOf(
-                    modify(Gap(1)),
+                    Gap(1),
                     { textBlock("Guest credentials are stored as secure browser cookies, so the account will only be available on this device.") },
                     { textBlock("Clearing your cookies will remove access to the account.") },
                     {
@@ -87,19 +87,19 @@ private fun ViewScope.usernameSection(model: UserCreator) = formSection("Usernam
     row {
         textField(
             label = null,
-            mod = modify(Flex1),
+            mod = Flex1,
             field = model.usernameField,
             maxLength = Username.MAX_LENGTH,
             placeholder = "Username"
         )
-        button("Choose for me", model::generateUsername, modify(Secondary))
+        button("Choose for me", model::generateUsername, Secondary)
     }
     formBullets(null, "Between ${Username.MIN_LENGTH} and ${Username.MAX_LENGTH} characters.")
 }
 
 fun ViewScope.minAgeToggle(
     field: MutableTap<Boolean>
-) = column(modify(AlignItemsCenter)) {
-    textBlock("To create an account, you must be 17 or older.", modify(TextAlignCenter))
+) = column(AlignItemsCenter) {
+    textBlock("To create an account, you must be 17 or older.", TextAlignCenter)
     checkBox(field, "I am ${UserCreatorState.MINIMUM_AGE} or older.")
 }

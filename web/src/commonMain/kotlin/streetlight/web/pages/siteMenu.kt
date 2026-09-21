@@ -21,15 +21,15 @@ import streetlight.web.doc.SiteDoc
 import streetlight.web.layouts.route
 
 fun FlowContent.siteHelmPopover() {
-    popover(SiteHelm.popoverId, modify(SiteHelm.PopoverClass), SiteHelm.PositionAnchor) {
+    popover(SiteHelm.popoverId, SiteHelm.PopoverClass, SiteHelm.PositionAnchor) {
         card(modify(SiteHelm.Container, HeavyCardBg, BlurBackdrop, PointerEventsAuto)) {
-            column(modify(PaddingRight(1))) {
-                row(modify(AlignItemsCenter)) {
+            column(PaddingRight(1)) {
+                row(AlignItemsCenter) {
                     button(SvgFile.Helm, modify(HelmBar.IconMod, SpinLoop, BorderDashed2Px, BorderRadius50P)) {
                         onClick = SiteHelm.closePopover.block
                     }
                     navigation(HomeRoute) {
-                        textLogo(modify(Height(5)))
+                        textLogo(Height(5))
                     }
                 }
                 siteMenuItems()
@@ -45,7 +45,7 @@ fun FlowContent.siteMenuSidebar() {
         filigree {
             navigation(HomeRoute) {
                 setAttribute(KoalaBody.ScreenId.to(HomeRoute.screen.screenId))
-                textLogo(modify(Height(5)))
+                textLogo(Height(5))
             }
         }
         siteMenuItems()

@@ -62,6 +62,6 @@ fun ViewScope.slider(
     mod: Modifier? = null,
     config: INPUT.() -> Unit = { }
 ) = row(modify(mod, AlignItemsCenter)) {
-    icon(icon, modify(SmallIconHeight))
-    slider(state, range, step, modify(Flex1), config)
+    icon(icon, SmallIconHeight)
+    slider(state, range, step, Flex1, config)
 }

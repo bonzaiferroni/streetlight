@@ -12,7 +12,7 @@ import streetlight.web.model.SiteConfig
 fun ViewScope.viewSiteConfig() {
     val config = app.get<SiteConfig>()
 
-    column(modify(AlignItemsStart)) {
+    column(AlignItemsStart) {
         topLogo()
         switch("show transit", config.showTransitState)
         dropMenu(config.themeFlow)

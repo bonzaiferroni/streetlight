@@ -39,7 +39,7 @@ fun ViewScope.glowField(
     }
 
     fieldElement = box(modify(mod, GlowControlStyle.Field)) {
-        handleElement = box(modify(GlowControlStyle.Handle))
+        handleElement = box(GlowControlStyle.Handle)
     }
 
     handleElement.addEventListener(PointerEvent.POINTER_DOWN, { event ->

@@ -24,7 +24,7 @@ fun FlowContent.feedSection(
         }
 
         feed.marks?.takeIf { it.size == 1 }?.values?.first()?.let { feedMarks ->
-            row(modify(JustifyContentCenter)) {
+            row(JustifyContentCenter) {
                 feedMarks.forEach { mark ->
                     textBlock(mark.name) {
                         setAttribute(AppAttribute.MarkId.to(mark.markId))

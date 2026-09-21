@@ -21,8 +21,8 @@ fun ViewScope.locationDetailsForm(model: LocationEditor) = formCard("Location De
         }
         formSection("Address / City") {
             row {
-                textField(model.addressField, "address", modify(Flex1))
-                textField(model.cityField, "city", modify(Flex1))
+                textField(model.addressField, "address", Flex1)
+                textField(model.cityField, "city", Flex1)
             }
         }
     }
@@ -31,7 +31,7 @@ fun ViewScope.locationDetailsForm(model: LocationEditor) = formCard("Location De
         markdownEditor(
             state = model.descriptionField,
             label = "description",
-            mod = modify(MinHeight(24))
+            mod = MinHeight(24)
         )
     }
 }

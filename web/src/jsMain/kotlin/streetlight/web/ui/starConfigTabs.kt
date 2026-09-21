@@ -93,11 +93,11 @@ fun ViewScope.passwordSection(model: AccountEditor) = formSection("Password") {
                     textField(model.verifyPasswordField, "current password") {
                         type = InputType.password
                     }
-                    centeredText("New password:", modify(MarginTop(1)))
+                    centeredText("New password:", MarginTop(1))
                 }
                 passwordFormInput(model.passwordEditor)
                 if (email != null) {
-                    button({ model.resetPassword(email, messages) }, modify(AlignSelfCenter)) {
+                    button({ model.resetPassword(email, messages) }, AlignSelfCenter) {
                         textBlock("I forgot my current password.")
                     }
                 }
@@ -109,7 +109,7 @@ fun ViewScope.passwordSection(model: AccountEditor) = formSection("Password") {
                 )
             }
         } else {
-            column(modify(AlignItemsCenter)) {
+            column(AlignItemsCenter) {
                 button("change password", {
                     model.isEditingPasswordField.set(true)
                     messages.clear()
@@ -143,23 +143,23 @@ private fun ViewScope.emailProvidedForm(
     status: EmailStatus?,
 ) {
     val isUnverified = status == null || status == EmailStatus.Unverified
-    column(modify(AlignItemsCenter)) {
-        row(modify(AlignItemsCenter)) {
+    column(AlignItemsCenter) {
+        row(AlignItemsCenter) {
             textBlock(email.obfuscate())
             when (status) {
-                EmailStatus.Verified -> textBlock("(Verified)", modify(ValidFg))
-                else -> textBlock("(Unverified)", modify(CautionFg))
+                EmailStatus.Verified -> textBlock("(Verified)", ValidFg)
+                else -> textBlock("(Unverified)", CautionFg)
             }
         }
         row {
-            button("Remove", { model.isRemovingEmailField.set(true) }, modify(Zen))
+            button("Remove", { model.isRemovingEmailField.set(true) }, Zen)
             button("Change", {
                 model.changeEmail()
-            }, modify(Zen))
+            }, Zen)
             if (isUnverified) {
                 flowBlock(model.isVerifySentField) { isSent ->
                     when (isSent) {
-                        true -> button("Resend Email", model::verifyExistingEmail, modify(Zen))
+                        true -> button("Resend Email", model::verifyExistingEmail, Zen)
                         else -> button("Verify", model::verifyExistingEmail)
                     }
                 }
@@ -180,7 +180,7 @@ private fun ViewScope.emailNullForm(model: AccountEditor) {
             textField(model.verifyPasswordField, "current password") {
                 type = InputType.password
             }
-            centeredText("What is your new email?", modify(MarginTop(1)))
+            centeredText("What is your new email?", MarginTop(1))
         }
         emailFormInput(model.emailEditor)
         formSubmit(submitLabel, model::addEmail, model.emailMessages)
@@ -191,7 +191,7 @@ private fun ViewScope.invalidStatusForm(model: AccountEditor, email: EmailAddres
     column {
         textBlock(
             "We were unable to deliver to the email address you provided, please provide a different one.",
-            modify(CautionFg)
+            CautionFg
         )
         email?.let {
             textBlock("Provided address: ${email.obfuscate()}")

@@ -55,7 +55,7 @@ fun FlowContent.cell(
     mod: Modifier? = null,
     block: DIV.() -> Unit = {}
 ) {
-    box(modify(minWidth)) {
+    box(minWidth) {
         row(modify(CellContent.CellMod, mod)) {
             cellContent(svg, text, label, block)
         }

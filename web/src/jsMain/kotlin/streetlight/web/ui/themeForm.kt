@@ -12,11 +12,11 @@ fun ViewScope.themeForm(model: ThemeEditor) {
     formCard {
         formRow {
             formSection("Colors") {
-                row(modify(FlexItems1)) {
+                row(FlexItems1) {
                     colorPicker("accent", model.accentState)
                     colorPicker("primary", model.primaryState)
                 }
-                row(modify(FlexItems1)) {
+                row(FlexItems1) {
                     switch("color flux", model.colorFluxState)
                     centeredText("Color Flux makes the background colors slowly drift.")
                 }
@@ -46,7 +46,7 @@ fun ViewScope.glowConfig(name: String, state: MutableTap<Glow>) {
     val energyState = state.mutableTapOf({ it.energy }) { copy(energy = it) }
     val focusState = state.mutableTapOf({ it.focus }) { copy(focus = it) }
 
-    row(modify(FlexItems1)) {
+    row(FlexItems1) {
         colorPicker(name, colorState)
         slider(SvgFile.Ruler, radiusState, (0..KoalaTheme.MaxRadius))
         slider(SvgFile.Bulb, energyState, (0..KoalaTheme.MaxEnergy))

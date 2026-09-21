@@ -37,7 +37,7 @@ fun ViewScope.layoutBuilder(model: LayoutEditor) {
 fun ViewScope.containerBuilder(model: LayoutEditor, containerId: ContainerId) {
     val editor = model.getContainer(containerId)
     flowBlock(editor.blockIdsField) { blockIds ->
-        column(modify(BorderRadius1)) {
+        column(BorderRadius1) {
             blockIds.forEach { blockId ->
                 blockBuilder(model, blockId)
             }
@@ -53,7 +53,7 @@ fun ViewScope.editorRow(
 ) {
     val popoverId = menuContent?.let {
         Id(Uuid.random().toString()).also {
-            popover(it, mod = modify(SystemBg)) {
+            popover(it, mod = SystemBg) {
                 menuContent()
             }
         }
@@ -61,7 +61,7 @@ fun ViewScope.editorRow(
     flowBlock(editor.model.movingBlockIdState, modify(Magic, Scale, Height(5))) { movingBlockId ->
         when (movingBlockId) {
             null -> {
-                row(modify(AlignItemsCenter)) {
+                row(AlignItemsCenter) {
                     row(modify(Flex1, AlignItemsCenter)) {
                         blockMenu(null, editor.depth ?: error("depth is null")) { editor.addBlockAbove(it) }
                         hr(modify(SystemFg, Flex1))
@@ -111,7 +111,7 @@ fun ViewScope.lastEditorRow(
     flowBlock(editor.model.movingBlockIdState, modify(Magic, Scale, Height(5))) { movingBlockId ->
         when (movingBlockId) {
             null -> {
-                row(modify(AlignItemsCenter)) {
+                row(AlignItemsCenter) {
                     hr(modify(SystemFg, Flex1, OpacityLow))
                     blockMenu(editor.name, editor.depth, { editor.createBlock(it)} )
                 }
@@ -136,7 +136,7 @@ fun ViewScope.removedBlockList(model: LayoutEditor, blockIds: List<BlockId>) {
         blockIds.forEach { blockId ->
             val blockEditor = model.getBlock(blockId)
             val blockName = blockEditor.block::class.simpleName ?: "[block]"
-            row(modify(JustifyContentSpaceBetween)) {
+            row(JustifyContentSpaceBetween) {
                 textBlock(blockName)
                 button({
                     model.startMove(blockId)
@@ -152,7 +152,7 @@ fun ViewScope.editorTextButton(
     name: String,
     onClick: (() -> Unit)? = null,
     config: BUTTON.() -> Unit = { }
-) = button(onClick, modify(Padding(1))) {
+) = button(onClick, Padding(1)) {
     config()
     textBlock(name, LayoutBuilderMod.TextButton)
 }

@@ -13,7 +13,7 @@ fun RouteScope.viewChatRoom() {
         }
         textField(
             field = model.messageState,
-            mod = modify(Width(100.pct)),
+            mod = Width(100.pct),
             onEnterSubmit = model::sendMessage
         )
     }

@@ -17,7 +17,7 @@ fun ViewScope.blockMenu(
     onSelection: (LayoutBlock) -> Unit,
 ) {
     val popoverId = Id(Uuid.random().toString())
-    popover(popoverId, modify(SystemBg)) {
+    popover(popoverId, SystemBg) {
         val categoryField = storeOf<BlockCategory?>(null)
         flowBlock(categoryField, modify(Magic, Scale)) { category ->
             val options = when (category) {
@@ -35,7 +35,7 @@ fun ViewScope.blockMenu(
                     ) + options.map { MenuAction(it.label) { onSelection(it.value) } }
                 }
             }
-            column(modify(Gap0)) {
+            column(Gap0) {
                 options.forEach { option ->
                     popoverOption(option)
                 }

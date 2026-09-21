@@ -29,8 +29,8 @@ fun ViewScope.switch(
         setAttribute(Attribute.IsOn, currentValue)
 
         // ghost text defines the inner pill width; outer padding makes the "constraints" larger
-        span(label, modify(SwitchStyle.Ghost))
-        span(label, modify(SwitchStyle.Pill))
+        span(label, SwitchStyle.Ghost)
+        span(label, SwitchStyle.Pill)
 
         block?.invoke(this)
     }.asWeb()

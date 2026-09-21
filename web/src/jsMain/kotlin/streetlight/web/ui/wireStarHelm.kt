@@ -49,7 +49,7 @@ private val RowMod = modify(AlignItemsCenter, PaddingLeft(3), JustifyContentEnd)
 private fun ViewScope.starPanel(star: Star) {
     val session = app.get<SessionClient>()
 
-    column(modify(AlignItemsEnd)) {
+    column(AlignItemsEnd) {
         row(RowMod) {
             navigation(StarRoute(star.username)) {
                 closePopoverOnClick(StarHelm.PopoverId)
@@ -57,7 +57,7 @@ private fun ViewScope.starPanel(star: Star) {
                 heading3(star.username.value)
             }
 
-            button(modify(HelmBar.IconMod)) {
+            button(HelmBar.IconMod) {
                 closePopoverOnClick(StarHelm.PopoverId)
 
                 image(star.image?.thumb, modify(OpacityHigh, Size100P, BorderRadius50P))
@@ -84,7 +84,7 @@ private fun ViewScope.starPanel(star: Star) {
             closePopoverOnClick(StarHelm.PopoverId)
 
             row(RowMod) {
-                textBlock("Sign out", modify(WhiteSpaceNoWrap))
+                textBlock("Sign out", WhiteSpaceNoWrap)
                 icon(SvgFile.SignOut, HelmBar.IconMod)
             }
         }
@@ -103,7 +103,7 @@ private fun ViewScope.routeItem(route: AppRoute, text: String, svg: Svg) {
 }
 
 private fun ViewScope.someonePanel() {
-    column(modify(MinWidth(32))) {
+    column(MinWidth(32)) {
         row(RowMod) {
             heading3("Someone")
             button(modify(HelmBar.IconMod, FadeLoop)) {

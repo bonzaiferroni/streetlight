@@ -11,6 +11,6 @@ fun FlowContent.buttonOf(galaxy: Galaxy, mod: Modifier? = null) {
         text = galaxy.name,
         route = GalaxyRoute(galaxy.slug),
         background = galaxy.image?.small,
-        mod = modify(mod)
+        mod = mod
     )
 }

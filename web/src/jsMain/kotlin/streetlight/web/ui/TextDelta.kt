@@ -29,14 +29,14 @@ fun AppendScope.deltaRow(
     val previousValueText = previousValue?.toString()
     val delta = createTextDelta(previousValueText, valueText)
 
-    textBlock(mod = modify(WhiteSpacePreLine)) {
+    textBlock(mod = WhiteSpacePreLine) {
         delta.segments.forEach { segment ->
             val mod = when (segment) {
                 is CommonText -> TextDeltaStyle.CommonText
                 is AddedText -> TextDeltaStyle.AddedText
                 is RemovedText -> TextDeltaStyle.RemovedText
             }
-            span(segment.text, modify(mod))
+            span(segment.text, mod)
         }
     }
 }

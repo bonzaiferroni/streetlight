@@ -63,7 +63,7 @@ fun ViewScope.tabsBuilder(editor: BlockEditor) {
                     editor.childIds.forEach { containerId ->
                         val tabName = editor.model.getContainer(containerId).name
                         val isEditingField = storeOf(false)
-                        flowBlock(isEditingField, modify(Height(5))) { isEditing ->
+                        flowBlock(isEditingField, Height(5)) { isEditing ->
                             if (isEditing) {
                                 val tabNameField = storeOf(tabName)
                                 textField(tabNameField, onEnterSubmit = {
@@ -71,7 +71,7 @@ fun ViewScope.tabsBuilder(editor: BlockEditor) {
                                 })
                             } else {
                                 row(modify(AlignItemsCenter, Height(5))) {
-                                    textBlock(tabName, modify(Flex1))
+                                    textBlock(tabName, Flex1)
                                     button(SvgFile.Edit, { isEditingField.toggle() })
                                     button(SvgFile.Minus, {
                                         editor.removeContainer(containerId)
@@ -189,7 +189,7 @@ fun ViewScope.imageBuilder(editor: BlockEditor) {
     column {
         editorRow(editor) {
             formColumn {
-                row(modify(FlexItems1)) {
+                row(FlexItems1) {
                     formSection("Shape") {
                         dropMenu(shapeState)
                     }
@@ -230,7 +230,7 @@ fun ViewScope.galleryBuilder(editor: BlockEditor) {
             }
         }
         flowBlock(blockState) { block ->
-            div(modify(LayoutStyle.Gallery)) {
+            div(LayoutStyle.Gallery) {
                 setStyle(Css.ColumnCount.of(block.columns))
                 block.images.forEachIndexed { index, _ ->
                     val indexedImageState = blockState.mutableTapOf({ it.images.getOrNull(index) }) { indexedImage ->
@@ -254,7 +254,7 @@ fun ViewScope.columnBuilder(editor: BlockEditor) {
     column {
         editorRow(editor)
         flowBlock(container.blockIdsField) { blockIds ->
-            row(modify(BodyStyle.FormRow)) {
+            row(BodyStyle.FormRow) {
                 blockIds.forEach { blockId ->
                     blockBuilder(editor.model, blockId)
                 }

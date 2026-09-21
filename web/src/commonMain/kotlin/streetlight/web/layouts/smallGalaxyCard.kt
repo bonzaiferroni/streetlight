@@ -12,13 +12,13 @@ fun FlowContent.smallGalaxyCard(galaxy: Galaxy) {
         setStyle(Css.ColorScheme.of(ThemeColor.Galaxy.cssValue))
 
         row(modify(Gap0, Height(16))) {
-            navigation(route, modify(Flex1)) {
-                featureImage(galaxy.image, modify(Size100P))
+            navigation(route, Flex1) {
+                featureImage(galaxy.image, Size100P)
             }
             column(modify(Flex2, Height(16), Gap0)) {
                 column(modify(Flex1, Padding(1))) {
                     navigation(route) {
-                        heading5(galaxy.name, modify(LineHeight1))
+                        heading5(galaxy.name, LineHeight1)
                     }
                     val modifiers = modify(TextSmall, FadeBottom, Flex1).let {
                         when (galaxy.description) {

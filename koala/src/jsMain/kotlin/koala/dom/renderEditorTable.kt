@@ -19,7 +19,7 @@ private fun AppendScope.renderEditorTable(chunk: String, element: HTMLElement, b
     val cursor = SpanCursor(block.tableSpans())
 
     chunk.forEachLine { lineFrom, lineTo ->
-        div(modify(EditorStyle.TableRow)) {
+        div(EditorStyle.TableRow) {
             var tailFrom = -1
             var tailTo = -1
 
@@ -29,18 +29,18 @@ private fun AppendScope.renderEditorTable(chunk: String, element: HTMLElement, b
                         tailFrom = boxFrom
                         tailTo = boxTo
                     }
-                    else -> span(modify(EditorStyle.TableCell)) {
+                    else -> span(EditorStyle.TableCell) {
                         renderTableBox(chunk, boxFrom, boxTo, cursor.take(boxTo))
                     }
                 }
             }
 
-            span(modify(EditorStyle.TableTail)) {
+            span(EditorStyle.TableTail) {
                 if (tailFrom >= 0) {
                     renderTableBox(chunk, tailFrom, tailTo, cursor.take(tailTo))
                 }
                 if (lineTo < chunk.length) {
-                    span("\n", modify(EditorStyle.Space))
+                    span("\n", EditorStyle.Space)
                 }
             }
         }
@@ -49,7 +49,7 @@ private fun AppendScope.renderEditorTable(chunk: String, element: HTMLElement, b
 
 private fun AppendScope.renderTableBox(chunk: String, from: Int, to: Int, spans: List<MarkdownSpan>) {
     segmentsIn(chunk, from, to, spans.asSequence()).forEach {
-        span(chunk.substring(it.from, it.to), modify(it.mod))
+        span(chunk.substring(it.from, it.to), it.mod)
     }
 }
 

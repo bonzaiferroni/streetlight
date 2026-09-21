@@ -52,9 +52,9 @@ fun DIV.configureFeedRow(
         setAttribute(CuratorMenu.CuratorJson.to(it))
     }
 
-    div(modify(FeedRow.Content)) {
+    div(FeedRow.Content) {
         setStyle(Css.ColorScheme.of(colorScheme.cssValue))
-        row(modify(Height(10))) {
+        row(Height(10)) {
             navigationIfNotNull(postRoute, modify(Width(10), OverflowClip, BorderRadius1, BorderSolid2Px, MoonShadow)) {
                 image(imageUrl, modify(Size100P, ObjectFitCover))
             }
@@ -72,7 +72,7 @@ fun DIV.configureFeedRow(
         }
         // spacer(modify(Height2Px, InkGradientBg, MarginTop2Px))
 
-        box(modify(AlignItemsCenter)) {
+        box(AlignItemsCenter) {
             cells?.let {
                 cellBlock(modify(FeedRow.Cells, BorderRadius2, OverflowClip, Outline), cells)
             }
@@ -81,12 +81,12 @@ fun DIV.configureFeedRow(
 
     div(modify(FeedRow.ExpandedContent, Padding(2), Gap(2))) {
         description?.let {
-            markdown(it, modify(FeedRow.ExpandedBody), limit = 1000)
+            markdown(it, FeedRow.ExpandedBody, limit = 1000)
         }
         links?.let { links ->
             row(modify(FeedRow.ExpandedLinks, FlexWrap, AlignItemsStart, AlignContentStart, JustifyContentCenter)) {
                 links.forEach { link ->
-                    btn(link.label, link.url, modify(Zen))
+                    btn(link.label, link.url, Zen)
                 }
             }
         }
@@ -107,13 +107,13 @@ fun FlowContent.postLine(entity: FeedEntity, isUniverse: Boolean) {
             +"posted by "
             when (username) {
                 null -> {
-                    span("Someone", modify(Bold))
+                    span("Someone", Bold)
                 }
                 else -> {
                     button {
                         setPopoverTarget(PopoverId.StarMenu)
                         setAttribute(Attribute.Username.to(username))
-                        span(username.value, modify(PrimaryFg))
+                        span(username.value, PrimaryFg)
                     }
                 }
             }
