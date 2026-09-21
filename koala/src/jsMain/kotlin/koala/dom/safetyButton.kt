@@ -2,12 +2,8 @@ package koala.dom
 
 import kampfire.model.Messenger
 import kampfire.model.UIMessage
-import koala.modifier.Danger
-import koala.modifier.ModifierSet
-import koala.modifier.Zen
-import koala.modifier.modify
+import koala.modifier.*
 import koala.html.configureButton
-import koala.modifier.unmodify
 import kotlinx.html.BUTTON
 import kotlinx.html.js.button
 
@@ -15,7 +11,7 @@ fun AppendScope.safetyButton(
     text: String,
     onConfirm: (() -> Unit)? = null,
     onClick: ((Boolean) -> Unit)?= null,
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     flair: String? = null,
     confirmText: String = "Confirm",
     block: BUTTON.() -> Unit = {},
@@ -44,7 +40,7 @@ fun ViewScope.safetyButton(
     onConfirm: () -> Unit,
     messenger: Messenger,
     message: String = "This action cannot be reversed.",
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     block: BUTTON.() -> Unit = {},
 ) {
     safetyButton(text, onConfirm, onClick = { isConfirm ->

@@ -1,18 +1,13 @@
 package koala.html
 
 import kampfire.model.Url
-import koala.modifier.BackgroundImage
-import koala.modifier.Css
-import koala.modifier.Class
-import koala.modifier.ModifierSet
-import koala.modifier.setStyle
-import koala.modifier.modify
+import koala.modifier.*
 import kotlinx.html.*
 
 fun FlowContent.btn(
     text: String,
     route: AppRoute,
-    modifiers: ModifierSet? = null,
+    mod: Modifier? = null,
     addFlair: Boolean = true,
     flair: String? = null,
     block: A.() -> Unit = {}
@@ -20,7 +15,7 @@ fun FlowContent.btn(
     val flair = flair ?: if (addFlair) labelPrefixMap[text.lowercase()] else null
     navigation(
         route = route,
-        mod = modify(BtnStyle.Class, modifiers),
+        mod = modify(BtnStyle.Class, mod),
         flair = flair,
     ) {
         block()
@@ -34,14 +29,14 @@ fun FlowContent.btn(
     text: String,
     route: AppRoute,
     background: Url?,
-    modifiers: ModifierSet? = null,
+    mod: Modifier? = null,
     flair: String? = null,
     block: A.() -> Unit = {}
 ) {
     navigation(
         route = route,
         flair = flair,
-        mod = modify(modifiers, BtnStyle.Class, BackgroundImage),
+        mod = modify(mod, BtnStyle.Class, BackgroundImage),
     ) {
         background?.let {
             setStyle(Css.BackgroundUrl.of(it))
@@ -57,7 +52,7 @@ fun FlowContent.btn(
 fun FlowContent.btn(
     text: String,
     href: String,
-    modifiers: ModifierSet? = null,
+    mod: Modifier? = null,
     id: Id? = null,
     addFlair: Boolean = true,
     flair: String? = null,
@@ -69,7 +64,7 @@ fun FlowContent.btn(
         }
 
     navigation(
-        mod = modify(BtnStyle.Class, modifiers),
+        mod = modify(BtnStyle.Class, mod),
         flair = flair,
         id = id,
     ) {
@@ -83,12 +78,12 @@ fun FlowContent.btn(
 fun FlowContent.btn(
     text: String,
     href: Url,
-    modifiers: ModifierSet? = null,
+    mod: Modifier? = null,
     id: Id? = null,
     addFlair: Boolean = true,
     flair: String? = null,
     block: A.() -> Unit = {},
-) = btn(text, href.value, modifiers, id, addFlair, flair, block)
+) = btn(text, href.value, mod, id, addFlair, flair, block)
 
 fun domainOf(url: String): String? =
     Regex("""^(?:[a-zA-Z][a-zA-Z\d+\-.]*://)?(?:[^@/\n]+@)?([^:/\n?#]+)""")

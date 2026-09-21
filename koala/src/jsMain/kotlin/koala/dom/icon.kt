@@ -9,12 +9,12 @@ import kotlinx.html.js.div
 
 fun AppendScope.icon(
     file: Svg,
-    mod: ModifierSet? = IconStyle.DefaultMod,
+    mod: Modifier? = IconStyle.DefaultMod,
     block: DIV.() -> Unit = {}
 ) = div {
     configureIcon(
         file = file,
-        modifiers = mod,
+        mod = mod,
         block = block
     )
 }.asWeb()

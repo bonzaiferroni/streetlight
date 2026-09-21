@@ -16,7 +16,7 @@ fun FlowContent.largePostCard(
     image: Image?,
     postRoute: StreetlightRoute,
     subRoute: StreetlightRoute?,
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     cells: List<(FlowContent.() -> Unit)?>
 ) {
     card(modify(mod, ContainerTypeInlineSize, Padding(0), OverflowHidden, MoonShadow)) {

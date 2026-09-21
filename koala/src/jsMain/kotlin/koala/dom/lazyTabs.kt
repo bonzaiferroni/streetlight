@@ -1,24 +1,20 @@
 package koala.dom
 
 import kampfire.model.MutableTap
-import koala.modifier.ModifierSet
-import koala.modifier.addModifiers
-import koala.modifier.modify
+import koala.modifier.*
 import koala.html.Id
 import koala.html.TabsStyle
 import koala.html.box
 import koala.html.configureTabsContainer
 import koala.html.configureTabsHeader
 import koala.interop.initTabs
-import koala.modifier.observeAttribute
-import koala.modifier.setAttribute
 import web.html.HTMLDivElement
 import web.html.HTMLElement
 
 fun ViewScope.lazyTabs(
     id: Id? = null,
-    mod: ModifierSet? = null,
-    viewportMod: ModifierSet? = null,
+    mod: Modifier? = null,
+    viewportMod: Modifier? = null,
     indexState: MutableTap<Int>? = null,
     defaultTab: Int? = null,
     content: LazyTabScope.() -> Unit,

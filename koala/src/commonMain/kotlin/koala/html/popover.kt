@@ -13,7 +13,7 @@ import kotlinx.html.onClick
 
 fun FlowContent.popover(
     id: Id,
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     anchor: PositionAnchor? = null,
     isManual: Boolean = false,
     block: DIV.() -> Unit
@@ -25,7 +25,7 @@ fun FlowContent.popover(
 
 fun DIV.configurePopover(
     id: Id,
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     anchor: PositionAnchor? = null,
     isManual: Boolean = false,
     block: DIV.() -> Unit
@@ -39,7 +39,7 @@ fun DIV.configurePopover(
 
 fun FlowContent.popoverCard(
     id: Id,
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     content: DIV.() -> Unit = {}
 ) {
     popover(id, modify(Popover.CardMod, Margin1, mod)) {

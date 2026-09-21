@@ -1,20 +1,18 @@
 package koala.html
 
-import koala.modifier.Class
-import koala.modifier.ModifierSet
-import koala.modifier.addModifiers
+import koala.modifier.*
 import kotlinx.html.FlowContent
 import kotlinx.html.div
 import kotlinx.html.style
 
 fun FlowContent.wiringBlock(
     id: Id,
-    modifiers: ModifierSet? = null,
+    mod: Modifier? = null,
     isVisibleWhileLoading: Boolean = false,
 ) {
     div {
         setId(id)
-        addModifiers(WireBlockKey.Class, modifiers)
+        addModifiers(WireBlockKey.Class, mod)
         if (!isVisibleWhileLoading) {
             style = "display: none;"
         }

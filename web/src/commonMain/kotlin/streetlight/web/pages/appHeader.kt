@@ -10,7 +10,7 @@ import kotlinx.html.FlowContent
 import streetlight.model.ui.HomeRoute
 
 fun FlowContent.appHeader(
-    mod: ModifierSet? = modify(Height(8), Padding(1))
+    mod: Modifier? = modify(Height(8), Padding(1))
 ) {
     row(modify(mod, JustifyContentCenter, Gap(0), Padding(1), AlignItemsCenter)) {
         val rayMod = modify(Flex1, MaxWidth(24), Margin(1), MoonDropShadow, Height2Px, AspectAuto, ParticleRay)

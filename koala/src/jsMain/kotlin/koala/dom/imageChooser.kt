@@ -1,7 +1,9 @@
 package koala.dom
 
+import koala.modifier.*
+
 //fun ViewScope.imageChooser(
-//    modifiers: ModifierSet? = null,
+//    mod: Modifier? = null,
 //    onValueChanged: ((Url?) -> Unit)? = null,
 //    onUpload: suspend (Url) -> Url?,
 //    urlFlow: Flow<Url?>? = null,
@@ -16,7 +18,7 @@ package koala.dom
 //    var choices: List<Url>? = null
 //    var isInitialized = false
 //
-//    val element = box(modify(ImageChooserKey.Class, modifiers)) {
+//    val element = box(modify(ImageChooserKey.Class, mod)) {
 //        placeholder = box(modify(ImageChooserKey.Placeholder))
 //        image = img {
 //            addModifiers(modify(BorderRadius1, MaxHeight64))

@@ -3,9 +3,7 @@ package koala.html
 import kampfire.model.ImageSize
 import koala.Image
 import koala.SiteImage
-import koala.modifier.Class
-import koala.modifier.ModifierSet
-import koala.modifier.addModifiers
+import koala.modifier.*
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kotlinx.html.div
@@ -13,13 +11,13 @@ import kotlinx.html.img
 
 fun FlowContent.featureImage(
     image: Image? = null,
-    modifiers: ModifierSet? = null,
+    mod: Modifier? = null,
     size: ImageSize = ImageSize.Medium,
     block: DIV.() -> Unit = {}
 ) {
     val src = image?.getSizeOrNull(size) ?: SiteImage.getPlaceholder(size)
     div {
-        addModifiers(Class, modifiers)
+        addModifiers(Class, mod)
         block()
 
         img {

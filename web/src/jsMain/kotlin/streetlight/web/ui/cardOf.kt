@@ -1,13 +1,13 @@
 package streetlight.web.ui
 
 import koala.SiteImage
-import koala.modifier.ModifierSet
+import koala.modifier.*
 import koala.dom.*
 import streetlight.model.data.Location
 
 fun ViewScope.cardOf(
     location: Location,
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     onClick: (() -> Unit)? = null,
 ) {
     cardOf(

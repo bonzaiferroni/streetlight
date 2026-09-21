@@ -25,7 +25,7 @@ fun FlowContent.starToggle(
     unlitSvg: Svg = SvgFile.Star,
     litSvg: Svg = SvgFile.StarFilled,
     signature: JsSignature = StarToggle.ToggleAny,
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     block: DIV.() -> Unit = {}
 ) {
     row(modify(AlignItemsCenter, Gap2Px)) {

@@ -6,10 +6,10 @@ import kotlinx.html.FlowContent
 
 fun FlowContent.sectionHeading(
     labelContent: DIV.() -> Unit,
-    modifiers: ModifierSet? = null,
+    mod: Modifier? = null,
     block: DIV.() -> Unit = {}
 ) {
-    row(modify(modifiers, AlignItemsEnd)) {
+    row(modify(mod, AlignItemsEnd)) {
         block()
 
 //        spacer(modify(Width4))
@@ -23,12 +23,12 @@ fun FlowContent.sectionHeading(
 
 fun FlowContent.sectionHeading(
     label: String,
-    modifiers: ModifierSet? = null,
+    mod: Modifier? = null,
     block: DIV.() -> Unit = {}
 ) {
     sectionHeading(
         labelContent = { centeredHeading(label, modify(Flex1)) },
-        modifiers = modifiers,
+        mod = mod,
         block = block,
     )
 }

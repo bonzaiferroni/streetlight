@@ -1,11 +1,9 @@
 package koala.dom
 
 import kampfire.model.Labeled
-import koala.modifier.ModifierSet
-import koala.modifier.addModifiers
+import koala.modifier.*
 import kampfire.model.MutableTap
 import kampfire.model.mutableTapOf
-import koala.modifier.Modifier
 import kotlinx.html.SELECT
 import kotlinx.html.js.option
 import kotlinx.html.js.select
@@ -71,7 +69,7 @@ fun ViewScope.dropMenu(
 
 inline fun <reified E> ViewScope.dropMenu(
     state: MutableTap<E>,
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     noinline block: (SELECT.() -> Unit)? = null
 ): HTMLSelectElement where E : Enum<E>, E : Labeled {
     val enums = enumValues<E>()
@@ -83,7 +81,7 @@ inline fun <reified E> ViewScope.dropMenu(
 
 inline fun <reified E> ViewScope.dropMenuNullable(
     field: MutableTap<E?>,
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     noinline block: (SELECT.() -> Unit)? = null
 ): HTMLSelectElement where E : Enum<E>, E : Labeled {
     val enums = enumValues<E>()

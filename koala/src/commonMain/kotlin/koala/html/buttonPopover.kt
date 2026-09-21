@@ -6,16 +6,16 @@ import kotlinx.html.FlowContent
 
 fun FlowContent.buttonPopover(
     label: String,
-    modifiers: ModifierSet? = null,
-    popoverModifiers: ModifierSet? = null,
+    mod: Modifier? = null,
+    popoverMod: Modifier? = null,
     flair: String = "☰",
     id: Id = Id("${label.lowercase().replace(" ", "-")}-popover"),
     block: DIV.() -> Unit = {}
 ) {
-    popover(id, mod = modify(popoverModifiers, Magic, SlideUp)) {
+    popover(id, mod = modify(popoverMod, Magic, SlideUp)) {
         block()
     }
-    button("$flair $label", modifiers) {
+    button("$flair $label", mod) {
         setPopoverTarget(id)
     }
 }

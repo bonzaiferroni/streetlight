@@ -5,11 +5,11 @@ import koala.dom.button
 import koala.dom.flowBlock
 import koala.dom.textBlock
 import kampfire.model.setTrue
-import koala.modifier.ModifierSet
+import koala.modifier.*
 import streetlight.model.data.Star
 
 fun ViewScope.starGate(
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     baseContent: ViewScope.() -> Unit = ViewScope::signInToContinue,
     content: ViewScope.(Star) -> Unit
 ) {

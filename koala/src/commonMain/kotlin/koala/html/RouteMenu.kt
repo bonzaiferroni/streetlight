@@ -8,7 +8,7 @@ fun FlowContent.routeMenu(
     context: String,
     routeNow: AppRoute,
     routes: List<AppRoute?>,
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     leftIcons: List<IconRoute>? = null,
     rightIcons: List<IconRoute>? = null
 ) {
@@ -36,7 +36,7 @@ fun FlowContent.routeMenu(
 internal fun FlowContent.iconsTray(
     icons: List<IconRoute>,
     routeNow: AppRoute,
-    mod: ModifierSet
+    mod: Modifier
 ) {
     row(modify(mod, BorderSolid2Px)) {
         icons.forEach { icon ->

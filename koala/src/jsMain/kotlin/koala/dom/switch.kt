@@ -1,12 +1,8 @@
 package koala.dom
 
-import koala.modifier.ModifierSet
-import koala.modifier.addModifiers
-import koala.modifier.modify
-import koala.modifier.Attribute
+import koala.modifier.*
 import koala.html.Id
 import koala.html.SwitchStyle
-import koala.modifier.setAttribute
 import koala.html.setId
 import kampfire.model.MutableTap
 import kotlinx.html.DIV
@@ -19,7 +15,7 @@ import web.keyboard.KeyboardEvent
 fun ViewScope.switch(
     label: String,
     state: MutableTap<Boolean>,
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     id: Id? = null,
     block: (DIV.() -> Unit)? = null,
 ): HTMLDivElement {

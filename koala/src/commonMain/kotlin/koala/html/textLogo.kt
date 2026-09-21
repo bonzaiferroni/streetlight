@@ -5,7 +5,7 @@ import koala.modifier.*
 import kotlinx.html.FlowContent
 
 fun FlowContent.textLogo(
-    mod: ModifierSet? = null
+    mod: Modifier? = null
 ) {
     div(modify(mod, Class, MoonDropShadow)) {
         setAriaLabel("Streetlight Logo")

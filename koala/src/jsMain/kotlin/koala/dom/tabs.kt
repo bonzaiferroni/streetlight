@@ -11,8 +11,8 @@ import web.html.HTMLDivElement
 
 fun ViewScope.tabs(
     id: Id? = null,
-    mod: ModifierSet? = null,
-    viewportMod: ModifierSet? = null,
+    mod: Modifier? = null,
+    viewportMod: Modifier? = null,
     indexState: MutableTap<Int>? = null,
     content: TabScope.() -> Unit,
 ): HTMLDivElement {

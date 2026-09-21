@@ -1,15 +1,13 @@
 package koala.html
 
-import koala.modifier.Class
-import koala.modifier.ModifierSet
-import koala.modifier.addModifiers
+import koala.modifier.*
 import kotlinx.html.FlowContent
 import kotlinx.html.DIV
 import kotlinx.html.div
 
-fun FlowContent.carousel(modifiers: ModifierSet? = null, content: DIV.() -> Unit) {
+fun FlowContent.carousel(mod: Modifier? = null, content: DIV.() -> Unit) {
     div {
-        addModifiers(CarouselKey.Class, modifiers)
+        addModifiers(CarouselKey.Class, mod)
         row(block = content)
     }
 }

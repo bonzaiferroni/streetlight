@@ -5,7 +5,6 @@ import koala.html.DialogStyle
 import koala.html.filigree
 import koala.html.heading2
 import kampfire.model.MutableTap
-import koala.modifier.unmodify
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.css.pct
@@ -18,7 +17,7 @@ import kotlin.time.Duration.Companion.milliseconds
 
 fun ViewScope.dialog(
     state: MutableTap<Boolean>,
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     content: ViewScope.() -> Unit
 ): HTMLDialogElement {
     val element = dialog {
@@ -75,7 +74,7 @@ fun ViewScope.dialog(
 
 fun ViewScope.dialogContent(
     title: String?,
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     content: ViewScope.() -> Unit
 ) = rawDialogContent(title) {
     dialogCard(mod) {
@@ -85,7 +84,7 @@ fun ViewScope.dialogContent(
 
 fun ViewScope.rawDialogContent(
     title: String?,
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     content: ViewScope.() -> Unit
 ) = column(modify(Width(100.pct), PointerEventsNone)) {
     title?.let {
@@ -100,7 +99,7 @@ fun ViewScope.rawDialogContent(
 }
 
 fun ViewScope.dialogCard(
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     content: ViewScope.() -> Unit
 ) = card(modify(DialogStyle.Card, mod)) {
     content()

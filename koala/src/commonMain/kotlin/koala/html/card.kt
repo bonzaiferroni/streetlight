@@ -9,11 +9,11 @@ import kotlinx.html.FlowContent
 import kotlinx.html.div
 
 inline fun FlowContent.card(
-    modifiers: ModifierSet? = null,
+    mod: Modifier? = null,
     crossinline content: DIV.() -> Unit,
 ) {
     div {
-        addModifiers(Card, modifiers)
+        addModifiers(Card, mod)
         content()
     }
 }
@@ -22,9 +22,9 @@ fun FlowContent.cardOf(
     title: String,
     thumbUrl: Url?,
     description: String?,
-    modifiers: ModifierSet? = null,
+    mod: Modifier? = null,
 ) {
-    card(modify(Width(100.pct), modifiers)) {
+    card(modify(Width(100.pct), mod)) {
         row(modify(Height(8), AlignItemsStart)) {
             thumbUrl?.let {
                 image(thumbUrl, modify(Height(100.pct), Aspect1, BorderRadius1))
@@ -44,13 +44,13 @@ fun FlowContent.cardOf(
     title: String,
     thumbUrl: Url?,
     description: String?,
-    modifiers: ModifierSet? = null,
+    mod: Modifier? = null,
 ) {
     if (route != null) {
-        navigation(route, modifiers) {
+        navigation(route, mod) {
             cardOf(title, thumbUrl, description)
         }
     } else {
-        cardOf(title, thumbUrl, description, modifiers)
+        cardOf(title, thumbUrl, description, mod)
     }
 }

@@ -11,7 +11,7 @@ import streetlight.model.utils.RemovedText
 import streetlight.model.utils.createTextDelta
 
 fun AppendScope.deltaGrid(
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     content: DIV.() -> Unit
 ) {
     grid(columnsOf(LinearDimension.auto, 1.fr), mod = mod) {

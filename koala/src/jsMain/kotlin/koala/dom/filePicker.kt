@@ -24,7 +24,7 @@ import web.url.URL
 
 fun AppendScope.filePicker(
     mimeType: MimeType = MimeType.All,
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     onMessage: ((UIMessage) -> Unit)? = null,
     onPickFile: (Url) -> Unit
 ) {

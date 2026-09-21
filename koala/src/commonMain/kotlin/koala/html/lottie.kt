@@ -3,24 +3,23 @@ package koala.html
 import koala.Lottie
 import kotlinx.html.*
 import koala.modifier.*
-import koala.modifier.addModifiers
 
 fun FlowContent.lottie(
     file: Lottie,
-    modifiers: ModifierSet? = null,
+    mod: Modifier? = null,
     block: (DIV.() -> Unit)? = null
 ) {
     div {
-        configureLottie(file, modifiers, block)
+        configureLottie(file, mod, block)
     }
 }
 
 internal fun DIV.configureLottie(
     file: Lottie,
-    modifiers: ModifierSet? = null,
+    mod: Modifier? = null,
     block: (DIV.() -> Unit)? = null
 ) {
-    addModifiers(modify(LottieClass.Core, modifiers))
+    addModifiers(modify(LottieClass.Core, mod))
     setAttribute(Attribute.Lottie, file)
     block?.invoke(this)
 }

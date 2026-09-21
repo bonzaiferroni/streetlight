@@ -1,8 +1,6 @@
 package koala.dom
 
-import koala.modifier.Modifier
-import koala.modifier.ModifierSet
-import koala.modifier.addModifiers
+import koala.modifier.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
@@ -28,7 +26,7 @@ fun AppendScope.textBlock(
 
 fun <T> ViewScope.textBlock(
     binding: Flow<T>,
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     provideValue: (T) -> String = { it.toString() },
     block: (P.() -> Unit)? = null
 ): HTMLParagraphElement {
@@ -43,7 +41,7 @@ fun <T> ViewScope.textBlock(
 
 fun AppendScope.em(
     text: String = "",
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     block: EM.() -> Unit = { }
 ) = emTag {
     addModifiers(mod)
@@ -53,7 +51,7 @@ fun AppendScope.em(
 
 fun AppendScope.strong(
     text: String = "",
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     block: STRONG.() -> Unit = { }
 ) = strongTag {
     addModifiers(mod)
@@ -63,7 +61,7 @@ fun AppendScope.strong(
 
 fun AppendScope.span(
     text: String = "",
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     block: SPAN.() -> Unit = { }
 ) = spanTag {
     addModifiers(mod)

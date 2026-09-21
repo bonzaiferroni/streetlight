@@ -5,11 +5,11 @@ import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 
 fun FlowContent.filigree(
-    modifiers: ModifierSet? = null,
+    mod: Modifier? = null,
     ruleMaxWidth: Modifier = MaxWidth(16),
     block: DIV.() -> Unit
 ) {
-    row(modify(modifiers, JustifyContentCenter, AlignItemsCenter)) {
+    row(modify(mod, JustifyContentCenter, AlignItemsCenter)) {
         configureFiligree(ruleMaxWidth, block)
     }
 }

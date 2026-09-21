@@ -13,7 +13,7 @@ import kotlinx.html.js.div
 import web.html.HTMLElement
 
 fun AppendScope.card(
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     content: DIV.() -> Unit = {},
 ) = div {
     addModifiers(Card, mod)
@@ -24,7 +24,7 @@ fun AppendScope.cardOf(
     title: String,
     thumbUrl: Url?,
     description: String?,
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     onClick: (() -> Unit)? = null,
 ): HTMLElement {
     val element = card(mod) {

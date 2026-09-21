@@ -134,7 +134,7 @@ fun ViewScope.updateComment(model: TalkLog, message: CommentUpdated) {
 fun ViewScope.commentEditor(
     label: String,
     initialText: Markdown,
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     send: suspend (Markdown) -> Markdown?
 ) {
     val text = storeOf(initialText)
@@ -175,7 +175,7 @@ fun ViewScope.addCommentView(
     return view
 }
 
-fun AppendScope.zenButton(mod: ModifierSet? = null, block: DIV.() -> Unit) =
+fun AppendScope.zenButton(mod: Modifier? = null, block: DIV.() -> Unit) =
     row(modify(mod, ZenBg, ButtonBorderRadius, ButtonPadding)) {
         block()
     }

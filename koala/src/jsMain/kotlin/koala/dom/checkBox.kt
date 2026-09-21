@@ -1,7 +1,6 @@
 package koala.dom
 
-import koala.modifier.ModifierSet
-import koala.modifier.addModifiers
+import koala.modifier.*
 import kampfire.model.MutableTap
 import kotlinx.html.INPUT
 import kotlinx.html.InputType
@@ -13,7 +12,7 @@ import org.w3c.dom.HTMLInputElement
 fun ViewScope.checkBox(
     field: MutableTap<Boolean>,
     label: String,
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     block: (INPUT.() -> Unit)? = null
 ) = label {
     addModifiers(mod)

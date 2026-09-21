@@ -20,7 +20,7 @@ fun AppendScope.navigation(
 
 fun AppendScope.navigation(
     route: AppRoute,
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     block: A.() -> Unit = {},
 ) = navigation(route.toRelativePath(), mod, block = block)
 

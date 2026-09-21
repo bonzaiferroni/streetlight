@@ -14,7 +14,7 @@ import kotlinx.html.div
 
 fun FlowContent.markdown(
     text: Markdown,
-    modifiers: ModifierSet? = null,
+    mod: Modifier? = null,
     limit: Int? = null,
     block: DIV.() -> Unit = {}
 ) = markdown(
@@ -24,26 +24,26 @@ fun FlowContent.markdown(
             // td: better markdown limit
             else -> text.value.takeEllipsis(limit).toMarkdown()
         }
-    ), modifiers, block
+    ), mod, block
 )
 
 fun DIV.configureMarkdown(
     blocks: List<ParsedBlock>,
-    modifiers: ModifierSet? = null,
+    mod: Modifier? = null,
     block: DIV.() -> Unit = {}
 ) {
-    addModifiers(modify(MarkdownStyle.Container, Prose), modifiers)
+    addModifiers(modify(MarkdownStyle.Container, Prose), mod)
     block()
     renderMarkdownBlocks(blocks)
 }
 
 fun FlowContent.markdown(
     blocks: List<ParsedBlock>,
-    modifiers: ModifierSet? = null,
+    mod: Modifier? = null,
     block: DIV.() -> Unit = {}
 ) {
     div {
-        configureMarkdown(blocks, modifiers, block)
+        configureMarkdown(blocks, mod, block)
     }
 }
 

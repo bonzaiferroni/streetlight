@@ -2,13 +2,9 @@ package koala.dom
 
 import kampfire.api.Markdown
 import kampfire.api.toMarkdown
-import koala.modifier.ModifierSet
-import koala.modifier.Size100P
-import koala.modifier.addModifiers
+import koala.modifier.*
 import koala.html.Id
-import koala.modifier.Attribute
 import koala.html.setId
-import koala.modifier.setAttribute
 import kampfire.model.MutableTap
 import kotlinx.html.TEXTAREA
 import kotlinx.html.js.div
@@ -19,8 +15,8 @@ import org.w3c.dom.HTMLTextAreaElement
 fun ViewScope.textEditor(
     state: MutableTap<Markdown>,
     label: String? = null,
-    modifiers: ModifierSet? = null,
-    textModifiers: ModifierSet? = null,
+    mod: Modifier? = null,
+    textMod: Modifier? = null,
     id: Id? = null,
     rows: Int = 5,
     placeholder: String? = label,
@@ -37,12 +33,12 @@ fun ViewScope.textEditor(
     }
 
     div {
-        addModifiers(modifiers)
+        addModifiers(mod)
         setAttribute(Attribute.BlockLabel, label?.lowercase())
 
         element = textArea {
             this.rows = rows.toString()
-            addModifiers(Size100P, textModifiers)
+            addModifiers(Size100P, textMod)
             setId(id)
             label?.let {
                 attributes["aria-label"] = it

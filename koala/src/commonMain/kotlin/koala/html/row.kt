@@ -5,21 +5,21 @@ import koala.modifier.*
 
 fun FlowContent.row(
     id: Id,
-    modifiers: ModifierSet? = null,
+    mod: Modifier? = null,
     block: DIV.() -> Unit = {},
 ) {
-    row(modifiers) {
+    row(mod) {
         this.id = id.identifier
         block()
     }
 }
 
 fun FlowContent.row(
-    modifiers: ModifierSet? = null,
+    mod: Modifier? = null,
     block: DIV.() -> Unit = {},
 ) {
     div {
-        addModifiers(FlexRow, modifiers)
+        addModifiers(FlexRow, mod)
         block()
     }
 }

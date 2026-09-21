@@ -8,11 +8,11 @@ import kotlinx.html.FlowContent
 fun FlowContent.headerImage(
     text: String,
     src: Url?,
-    modifiers: ModifierSet? = null,
+    mod: Modifier? = null,
     block: DIV.() -> Unit = {}
 ) {
     box {
-        addModifiers(modifiers, HeaderImageKey.Class, Aspect3By2)
+        addModifiers(mod, HeaderImageKey.Class, Aspect3By2)
         block()
 
         src?.let {

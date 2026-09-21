@@ -31,7 +31,7 @@ fun FlowContent.featureHeader(
     cellContent: (FlowContent.() -> Unit)? = null,
     links: List<ExtraLink>? = null,
     editRoute: AppRoute? = null,
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     block: DIV.() -> Unit = { },
 ) {
     card(modify(mod, ContainerTypeInlineSize, Padding(0), Gap0, OverflowClip, MoonShadow, ZenBg, BorderSolid2Px)) {

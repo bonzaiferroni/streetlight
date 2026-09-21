@@ -44,12 +44,12 @@ fun FlowContent.renderHeading(heading: MarkdownHeading) {
     val headingMod = modify(TextAlignCenter)
     val block: FlowContent.() -> Unit = {
         when (heading.level) {
-            1 -> heading1(modifiers = headingMod) { renderMarkdownSpans(heading.spans) }
-            2 -> heading2(modifiers = headingMod) { renderMarkdownSpans(heading.spans) }
-            3 -> heading3(modifiers = headingMod) { renderMarkdownSpans(heading.spans) }
-            4 -> heading4(modifiers = headingMod) { renderMarkdownSpans(heading.spans) }
-            5 -> heading5(modifiers = headingMod) { renderMarkdownSpans(heading.spans) }
-            6 -> heading6(modifiers = headingMod) { renderMarkdownSpans(heading.spans) }
+            1 -> heading1(mod = headingMod) { renderMarkdownSpans(heading.spans) }
+            2 -> heading2(mod = headingMod) { renderMarkdownSpans(heading.spans) }
+            3 -> heading3(mod = headingMod) { renderMarkdownSpans(heading.spans) }
+            4 -> heading4(mod = headingMod) { renderMarkdownSpans(heading.spans) }
+            5 -> heading5(mod = headingMod) { renderMarkdownSpans(heading.spans) }
+            6 -> heading6(mod = headingMod) { renderMarkdownSpans(heading.spans) }
             else -> error("invalid markdown")
         }
     }

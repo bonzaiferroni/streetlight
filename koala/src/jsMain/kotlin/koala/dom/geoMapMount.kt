@@ -8,7 +8,7 @@ import kotlinx.html.DIV
 
 fun ViewScope.geoMapMount(
     initialPoint: GeoPoint? = null,
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     block: DIV.() -> Unit = {}
 ): GeoCameraController {
     val element = box {

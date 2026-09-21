@@ -5,10 +5,10 @@ import kotlinx.html.*
 import koala.modifier.*
 
 fun FlowContent.logoProto(
-    modifiers: ModifierSet? = null
+    mod: Modifier? = null
 ) {
     div {
-        addModifiers(LogoProtoKey.Class, modifiers)
+        addModifiers(LogoProtoKey.Class, mod)
         div {
             setStyle(Css.MaskUrl.of(SvgFile.FlameLarge))
         }

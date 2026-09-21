@@ -1,8 +1,6 @@
 package koala.html
 
-import koala.modifier.Class
-import koala.modifier.ModifierSet
-import koala.modifier.addModifiers
+import koala.modifier.*
 import kotlinx.html.LI
 import kotlinx.html.OL
 import kotlinx.html.UL
@@ -10,11 +8,11 @@ import kotlinx.html.li
 
 fun OL.listItem(
     text: String? = null,
-    modifiers: ModifierSet? = null,
+    mod: Modifier? = null,
     block: LI.() -> Unit = {}
 ) {
     li {
-        addModifiers(ListItemKey.Class, modifiers)
+        addModifiers(ListItemKey.Class, mod)
         block()
         text?.let {
             +text
@@ -24,11 +22,11 @@ fun OL.listItem(
 
 fun UL.listItem(
     text: String? = null,
-    modifiers: ModifierSet? = null,
+    mod: Modifier? = null,
     block: LI.() -> Unit = {}
 ) {
     li {
-        addModifiers(ListItemKey.Class, modifiers)
+        addModifiers(ListItemKey.Class, mod)
         block()
         text?.let {
             +text

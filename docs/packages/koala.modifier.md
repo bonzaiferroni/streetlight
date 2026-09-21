@@ -23,6 +23,8 @@ Shared descriptors live as vals in the `Attribute` companion and in the `Css` ob
 
 The common source applies modifiers while HTML is being built, on kotlinx.html receivers such as `TagConfig` and `CoreAttributeGroupFacade`, by writing into the `attributes` map.
 
+A component takes its modifier as `mod: Modifier? = null`. A component that applies a modifier to more than one element takes each further one as `fooMod: Modifier? = null`, named for the element it applies to.
+
 `addModifiers` appends to the `class` and `style` values already on the tag rather than replacing them, so two callers modifying one tag do not erase each other.
 
 ## JS Source

@@ -12,7 +12,7 @@ import kotlinx.html.*
 
 fun FlowOrInteractiveOrPhrasingContent.image(
     src: Url? = null,
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     placeholder: Url = SiteImage.placeholderLg,
     alt: String? = null,
     lazy: Boolean = true,
@@ -25,7 +25,7 @@ fun FlowOrInteractiveOrPhrasingContent.image(
 
 fun FlowOrInteractiveOrPhrasingContent.image(
     svg: Svg,
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     placeholder: Url = SiteImage.placeholderLg,
     alt: String? = null,
     lazy: Boolean = true,
@@ -36,7 +36,7 @@ fun FlowOrInteractiveOrPhrasingContent.image(
 
 fun FlowOrInteractiveOrPhrasingContent.image(
     image: Image?,
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     placeholder: Image = SiteImage.placeholder,
     alt: String? = null,
     lazy: Boolean = true,
@@ -51,7 +51,7 @@ fun FlowOrInteractiveOrPhrasingContent.image(
 fun IMG.configureImage(
     src: Url? = null,
     image: Image? = null,
-    mod: ModifierSet?,
+    mod: Modifier?,
     alt: String? = null,
     lazy: Boolean,
     block: IMG.() -> Unit

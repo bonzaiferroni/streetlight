@@ -16,7 +16,7 @@ fun ViewScope.slider(
     state: MutableTap<Int>,
     range: IntRange = (0..100),
     step: Int = range.step,
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     config: INPUT.() -> Unit = { }
 ): HTMLInputElement {
     var currentValue = state.now
@@ -59,7 +59,7 @@ fun ViewScope.slider(
     state: MutableTap<Int>,
     range: IntRange = (0..100),
     step: Int = range.step,
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     config: INPUT.() -> Unit = { }
 ) = row(modify(mod, AlignItemsCenter)) {
     icon(icon, modify(SmallIconHeight))

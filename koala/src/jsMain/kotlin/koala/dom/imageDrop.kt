@@ -8,7 +8,7 @@ import koala.toImage
 
 fun ViewScope.imageDrop(
     field: MutableTap<Image?>,
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     block: ViewScope.(Image) -> Unit
 ) = flowBlock(field, modify(mod, Magic, Scale)) { url ->
     if (url != null) {
@@ -31,7 +31,7 @@ fun ViewScope.imageDrop(
 
 fun ViewScope.imageDrop(
     field: MutableTap<Image?>,
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
 ) = imageDrop(field, mod) {
     image(it.url, modify(Size100P))
 }

@@ -1,6 +1,6 @@
 package streetlight.web.ui
 
-import koala.modifier.ModifierSet
+import koala.modifier.*
 import koala.dom.RouteScope
 import koala.dom.ViewScope
 import koala.dom.routeBlock
@@ -9,7 +9,7 @@ import koala.model.FetcherContent
 import streetlight.model.data.Star
 
 inline fun <reified Route: AppRoute, reified Content: FetcherContent> RouteScope.starRouteBlock(
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     crossinline content: ViewScope.(Star, Content) -> Unit
 ) {
     starGate(mod) { star ->

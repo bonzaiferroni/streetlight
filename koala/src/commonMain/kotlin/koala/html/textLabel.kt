@@ -1,19 +1,17 @@
 package koala.html
 
-import koala.modifier.Class
-import koala.modifier.ModifierSet
-import koala.modifier.addModifiers
+import koala.modifier.*
 import kotlinx.html.FlowContent
 import kotlinx.html.P
 import kotlinx.html.p
 
 fun FlowContent.textLabel(
     content: String,
-    modifiers: ModifierSet? = null,
+    mod: Modifier? = null,
     block: (P.() -> Unit) = { }
 ) {
     p {
-        addModifiers(TextLabelKey.Class, modifiers)
+        addModifiers(TextLabelKey.Class, mod)
         block()
         +content
     }

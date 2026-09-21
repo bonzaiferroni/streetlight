@@ -2,7 +2,7 @@ package streetlight.web.ui
 
 import kampfire.model.Outcome
 import kampfire.model.toDataOr
-import koala.modifier.ModifierSet
+import koala.modifier.*
 import koala.dom.ViewScope
 import koala.dom.column
 import koala.dom.onView
@@ -10,7 +10,7 @@ import koala.dom.mountChildView
 
 fun <T> ViewScope.dataBlock(
     requestData: suspend () -> Outcome<T>,
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     content: ViewScope.(T) -> Unit
 ) {
     // td: add retry button

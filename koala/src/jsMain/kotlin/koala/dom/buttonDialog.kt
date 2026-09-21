@@ -6,18 +6,18 @@ import kampfire.model.toggle
 
 fun ViewScope.buttonDialog(
     label: String,
-    modifiers: ModifierSet? = null,
-    dialogModifiers: ModifierSet? = null,
+    mod: Modifier? = null,
+    dialogMod: Modifier? = null,
     emoji: String = "👀",
     block: ViewScope.() -> Unit
 ) {
     val isOpen = storeOf(false)
 
-    dialog(isOpen, dialogModifiers) {
+    dialog(isOpen, dialogMod) {
         dialogContent(label) {
             block()
         }
     }
 
-    button("$emoji $label", isOpen::toggle, modifiers)
+    button("$emoji $label", isOpen::toggle, mod)
 }

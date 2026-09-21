@@ -3,8 +3,6 @@ package koala.dom
 import kampfire.api.Markdown
 import kampfire.api.toMarkdown
 import koala.modifier.*
-import koala.modifier.Attribute
-import koala.modifier.setAttribute
 import kampfire.model.MutableTap
 import koala.model.EditorStyle
 import kotlinx.html.DIV
@@ -15,7 +13,7 @@ import org.w3c.dom.HTMLElement
 fun ViewScope.basicMarkdownEditor(
     state: MutableTap<Markdown>,
     label: String? = null,
-    modifiers: ModifierSet? = null,
+    mod: Modifier? = null,
     placeholder: String? = label,
     block: DIV.() -> Unit = {}
 ): HTMLElement {
@@ -29,7 +27,7 @@ fun ViewScope.basicMarkdownEditor(
     }
 
     element = div {
-        addModifiers(EditorStyle.Container, modifiers)
+        addModifiers(EditorStyle.Container, mod)
         label?.let {
             setAttribute(Attribute.BlockLabel, label.lowercase())
         }

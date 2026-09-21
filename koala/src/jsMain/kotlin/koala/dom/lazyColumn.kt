@@ -5,8 +5,6 @@ import kampfire.model.LiveList
 import kampfire.model.MutableTap
 import kampfire.model.ScrollState
 import koala.modifier.*
-import koala.modifier.Attribute
-import koala.modifier.setAttribute
 import kotlinx.css.LinearDimension
 import kotlinx.css.px
 import web.dom.document
@@ -19,7 +17,7 @@ import kotlin.math.abs
 
 fun <T, K> ViewScope.lazyColumn(
     list: LiveList<T, K>,
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     scrollState: MutableTap<ScrollState?>? = null,
     expectedHeight: LinearDimension = 60.px,
     scrollBoundaryMargin: Int = 400,

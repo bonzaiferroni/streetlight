@@ -1,26 +1,24 @@
 package koala.dom
 
-import koala.modifier.Box
-import koala.modifier.ModifierSet
-import koala.modifier.addModifiers
+import koala.modifier.*
 import koala.html.Id
 import kotlinx.html.DIV
 import kotlinx.html.js.div
 import kotlinx.html.id
 
 inline fun AppendScope.box(
-    modifiers: ModifierSet? = null,
+    mod: Modifier? = null,
     crossinline content: DIV.() -> Unit = { },
 ) = div {
-    addModifiers(Box, modifiers)
+    addModifiers(Box, mod)
     content()
 }.asWeb()
 
 inline fun AppendScope.box(
     id: Id,
-    modifiers: ModifierSet? = null,
+    mod: Modifier? = null,
     crossinline content: DIV.() -> Unit = { },
-) = box(modifiers = modifiers) {
+) = box(mod = mod) {
     this.id = id.identifier
     content()
 }

@@ -1,12 +1,12 @@
 package koala.dom
 
-import koala.modifier.ModifierSet
+import koala.modifier.*
 import koala.model.ScriptLoader
 
 fun ViewScope.lazyScript(
     src: String,
     onLoad: suspend () -> Unit = { },
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     content: ViewScope.() -> Unit
 ) {
     val isLoaded = ScriptLoader.isLoaded(src)

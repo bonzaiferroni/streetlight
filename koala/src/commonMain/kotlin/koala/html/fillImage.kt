@@ -16,7 +16,7 @@ import kotlinx.html.img
 
 fun FlowContent.fillImage(
     imageUrl: Url?,
-    modifiers: ModifierSet? = null,
+    mod: Modifier? = null,
     fillWidth: Boolean = true,
     lazy: Boolean = true,
     block: IMG.() -> Unit = {}
@@ -26,7 +26,7 @@ fun FlowContent.fillImage(
         configureFillImage(
             src = src,
             variants = null,
-            modifiers = modifiers,
+            mod = mod,
             fillWidth = fillWidth,
             lazy = lazy,
             block = block
@@ -36,7 +36,7 @@ fun FlowContent.fillImage(
 
 fun FlowContent.fillImageSrcSet(
     image: Image? = null,
-    modifiers: ModifierSet? = null,
+    mod: Modifier? = null,
     fillWidth: Boolean = true,
     lazy: Boolean = true,
     block: IMG.() -> Unit = {}
@@ -46,7 +46,7 @@ fun FlowContent.fillImageSrcSet(
         configureFillImage(
             src = null,
             variants = variants,
-            modifiers = modifiers,
+            mod = mod,
             fillWidth = fillWidth,
             lazy = lazy,
             block = block
@@ -57,13 +57,13 @@ fun FlowContent.fillImageSrcSet(
 fun DIV.configureFillImage(
     src: Url?,
     variants: ImageVariants?,
-    modifiers: ModifierSet?,
+    mod: Modifier?,
     fillWidth: Boolean,
     lazy: Boolean,
     block: IMG.() -> Unit
 ) {
     val src = src ?: variants.largest ?: SiteImage.placeholderLg
-    addModifiers(ImageWithBackdropKey.Class, modifiers)
+    addModifiers(ImageWithBackdropKey.Class, mod)
     img {
         addModifiers(ImageWithBackdropKey.BackdropClass)
         this.src = src.value

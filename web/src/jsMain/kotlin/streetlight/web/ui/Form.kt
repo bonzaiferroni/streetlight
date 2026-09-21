@@ -17,13 +17,13 @@ import kotlinx.html.DIV
 import kotlinx.html.SECTION
 
 fun ViewScope.formColumn(
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     content: DIV.() -> Unit,
 ) = column(mod = modify(mod, Gap(2)), content = content)
 
 fun ViewScope.formCard(
     name: String?,
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     content: DIV.() -> Unit,
 ) = column(mod = mod) {
     name?.let {
@@ -38,7 +38,7 @@ fun ViewScope.formCard(
 
 fun ViewScope.formSection(
     name: String? = null,
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     content: SECTION.() -> Unit
 ) = section(mod) {
     name?.let {
@@ -48,7 +48,7 @@ fun ViewScope.formSection(
 }
 
 fun ViewScope.formRow(
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     content: DIV.() -> Unit
 ) = row(modify(BodyStyle.FormRow, mod), content = content)
 
@@ -72,7 +72,7 @@ fun ViewScope.formSubmit(
     label: String = "submit",
     onClick: () -> Unit,
     messenger: MessageStore? = null,
-    buttonMod: ModifierSet = modify(Primary),
+    buttonMod: Modifier = modify(Primary),
     enabledTap: Tap<Boolean>? = null,
     isDisplayedFlow: Tap<Boolean>? = null,
     back: MenuAction? = null,
@@ -98,11 +98,11 @@ fun ViewScope.formSubmit(
 
 fun ViewScope.centeredText(
     text: String,
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
 ) = textBlock(text, mod = modify(mod, TextAlignCenter, OpacityHigh, WhiteSpacePreLine))
 
 fun ViewScope.formField(
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     block: ViewScope.() -> Unit
 ) = column(mod) {
     block()
@@ -111,7 +111,7 @@ fun ViewScope.formField(
 fun ViewScope.formTextField(
     field: MutableTap<String>,
     label: String? = null,
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     footnote: String? = null,
     placeholder: String? = label,
     maxLength: Int? = null

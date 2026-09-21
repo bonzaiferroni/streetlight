@@ -1,8 +1,10 @@
 package streetlight.web.ui
 
+import koala.modifier.*
+
 // fun ViewScope.starBlock(
 //     redirect: Boolean = false,
-//     mod: ModifierSet? = null,
+//     mod: Modifier? = null,
 //     block: ViewScope.(Star) -> Unit
 // ) {
 //     val gate = app.get<StarSession>()

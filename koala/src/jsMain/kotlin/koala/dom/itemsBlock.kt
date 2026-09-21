@@ -19,7 +19,7 @@ import kotlin.time.Duration.Companion.milliseconds
 
 fun <Item> ViewScope.itemsBlock(
     state: Tap<List<Item>>,
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     gapRems: Float? = 0.5f,
     config: (DIV.() -> Unit)? = null,
     block: ViewScope.(Item) -> Unit
@@ -124,7 +124,7 @@ private data class ViewElement(
 
 fun <Item> ViewScope.indexedItemsBlock(
     state: Tap<List<Item>>,
-    modifiers: ModifierSet? = null,
+    mod: Modifier? = null,
     gapRems: Float? = 0.5f,
     config: (DIV.() -> Unit)? = null,
     block: ViewScope.(IndexedItem<Item>) -> Unit
@@ -132,7 +132,7 @@ fun <Item> ViewScope.indexedItemsBlock(
     val indexedState = state.tapOf { it.mapIndexed { index, item -> IndexedItem(index, item) } }
     return itemsBlock(
         state = indexedState,
-        mod = modifiers,
+        mod = mod,
         gapRems = gapRems,
         config = config,
         block = { block(it) }

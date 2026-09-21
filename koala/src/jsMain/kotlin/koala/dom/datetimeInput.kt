@@ -1,7 +1,6 @@
 package koala.dom
 
-import koala.modifier.ModifierSet
-import koala.modifier.addModifiers
+import koala.modifier.*
 import kampfire.model.MutableTap
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
@@ -20,7 +19,7 @@ fun ViewScope.datetimeInput() {
 
 fun ViewScope.dateInput(
     field: MutableTap<LocalDate?>,
-    modifiers: ModifierSet? = null,
+    mod: Modifier? = null,
     block: INPUT.() -> Unit = {},
 ): HTMLInputElement {
     var currentValue = field.now
@@ -35,7 +34,7 @@ fun ViewScope.dateInput(
     }
 
     element = input {
-        addModifiers(modifiers)
+        addModifiers(mod)
         type = InputType.date
         value = currentValue?.toString() ?: ""
         block()
@@ -61,7 +60,7 @@ fun ViewScope.dateInput(
 
 fun ViewScope.timeInput(
     field: MutableTap<LocalTime?>,
-    modifiers: ModifierSet? = null,
+    mod: Modifier? = null,
     step: Duration = 5.minutes,
     block: INPUT.() -> Unit = {}
 ): HTMLInputElement {
@@ -77,7 +76,7 @@ fun ViewScope.timeInput(
     }
 
     element = input {
-        addModifiers(modifiers)
+        addModifiers(mod)
         type = InputType.time
         this.step = step.inWholeSeconds.toString()
         value = currentValue?.toInputValue() ?: ""

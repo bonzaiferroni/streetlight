@@ -9,7 +9,7 @@ import koala.markdown.HeadingLevel
 
 inline fun FlowContent.textBlock(
     content: String = "",
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     crossinline block: P.() -> Unit = { }
 ) {
     p {
@@ -21,11 +21,11 @@ inline fun FlowContent.textBlock(
 
 fun FlowContent.heading1(
     content: String? = null,
-    modifiers: ModifierSet? = null,
+    mod: Modifier? = null,
     block: H1.() -> Unit = {},
 ) {
     h1 {
-        addModifiers(modifiers)
+        addModifiers(mod)
         block()
         content?.let {
             +it
@@ -35,11 +35,11 @@ fun FlowContent.heading1(
 
 fun FlowContent.heading2(
     content: String? = null,
-    modifiers: ModifierSet? = null,
+    mod: Modifier? = null,
     block: H2.() -> Unit = {},
 ) {
     h2 {
-        addModifiers(modifiers)
+        addModifiers(mod)
         block()
         content?.let {
             +it
@@ -49,11 +49,11 @@ fun FlowContent.heading2(
 
 fun FlowContent.heading3(
     content: String? = null,
-    modifiers: ModifierSet? = null,
+    mod: Modifier? = null,
     block: H3.() -> Unit = {},
 ) {
     h3 {
-        addModifiers(modifiers)
+        addModifiers(mod)
         block()
         content?.let {
             +it
@@ -63,11 +63,11 @@ fun FlowContent.heading3(
 
 fun FlowContent.heading4(
     content: String? = null,
-    modifiers: ModifierSet? = null,
+    mod: Modifier? = null,
     block: H4.() -> Unit = {},
 ) {
     h4 {
-        addModifiers(modifiers)
+        addModifiers(mod)
         block()
         content?.let {
             +it
@@ -77,11 +77,11 @@ fun FlowContent.heading4(
 
 fun FlowContent.heading5(
     content: String? = null,
-    modifiers: ModifierSet? = null,
+    mod: Modifier? = null,
     block: H5.() -> Unit = {},
 ) {
     h5 {
-        addModifiers(modifiers)
+        addModifiers(mod)
         block()
         content?.let {
             +it
@@ -91,11 +91,11 @@ fun FlowContent.heading5(
 
 fun FlowContent.heading6(
     content: String? = null,
-    modifiers: ModifierSet? = null,
+    mod: Modifier? = null,
     block: H6.() -> Unit = {},
 ) {
     h6 {
-        addModifiers(modifiers)
+        addModifiers(mod)
         block()
         content?.let {
             +it
@@ -106,7 +106,7 @@ fun FlowContent.heading6(
 fun FlowContent.heading(
     level: HeadingLevel,
     text: String,
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
 ) {
     when (level) {
         HeadingLevel.H1 -> heading1(text, mod)
@@ -119,31 +119,31 @@ fun FlowContent.heading(
 }
 
 fun FlowContent.p(
-    modifiers: ModifierSet,
+    mod: Modifier,
     block: P.() -> Unit,
 ) {
     p {
-        addModifiers(modifiers)
+        addModifiers(mod)
         block()
     }
 }
 
 fun FlowContent.span(
-    modifiers: ModifierSet? = null,
+    mod: Modifier? = null,
     block: SPAN.() -> Unit,
 ) {
     spanTag {
-        addModifiers(modifiers)
+        addModifiers(mod)
         block()
     }
 }
 
 fun FlowContent.span(
     text: String,
-    modifiers: ModifierSet? = null,
+    mod: Modifier? = null,
     block: SPAN.() -> Unit = {},
 ) {
-    span(modifiers) {
+    span(mod) {
         block()
         +text
     }
@@ -151,11 +151,11 @@ fun FlowContent.span(
 
 fun FlowContent.em(
     text: String,
-    modifiers: ModifierSet? = null,
+    mod: Modifier? = null,
     block: EM.() -> Unit = {},
 ) {
     emTag {
-        addModifiers(modifiers)
+        addModifiers(mod)
         block()
         +text
     }
@@ -163,11 +163,11 @@ fun FlowContent.em(
 
 fun FlowContent.strong(
     text: String,
-    modifiers: ModifierSet? = null,
+    mod: Modifier? = null,
     block: STRONG.() -> Unit = {},
 ) {
     strongTag {
-        addModifiers(modifiers)
+        addModifiers(mod)
         block()
         +text
     }

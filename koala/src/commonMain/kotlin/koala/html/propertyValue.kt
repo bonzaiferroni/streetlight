@@ -6,10 +6,10 @@ import koala.modifier.*
 fun FlowContent.textProperty(
     propertyName: String,
     propertyValue: String,
-    modifiers: ModifierSet? = null,
+    mod: Modifier? = null,
 ) {
     p {
-        addModifiers(modifiers)
+        addModifiers(mod)
 
         span(modify(InkDimFg)) {
             +"$propertyName:"
@@ -22,10 +22,10 @@ fun FlowContent.textProperty(
 
 fun FlowContent.textProperty(
     propertyName: String,
-    modifiers: ModifierSet? = null,
+    mod: Modifier? = null,
     block: DIV.() -> Unit
 ) {
-    row(modify(modifiers, AlignItemsCenter)) {
+    row(modify(mod, AlignItemsCenter)) {
         textBlock("${propertyName}:", modify(InkDimFg, TextAlignRight))
         block()
     }

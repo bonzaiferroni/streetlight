@@ -9,7 +9,7 @@ import koala.dom.MenuAction
 import kotlinx.html.DIV
 
 fun ViewScope.formBodyProto(
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     block: DIV.() -> Unit
 ) = column(modify(mod, Gap(8))) {
     block()
@@ -17,7 +17,7 @@ fun ViewScope.formBodyProto(
 
 fun AppendScope.formSectionLegacy(
     name: String,
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     block: AppendScope.() -> Unit
 ) = section {
     addModifiers(mod)
@@ -28,7 +28,7 @@ fun AppendScope.formSectionLegacy(
 }
 
 fun AppendScope.formCard(
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     block: AppendScope.() -> Unit,
 ) = card(FormMod.Card) {
     addModifiers(mod)
@@ -38,7 +38,7 @@ fun AppendScope.formCard(
 @Deprecated("use formSection")
 fun AppendScope.formCardSection(
     name: String,
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     block: AppendScope.() -> Unit
 ) = formSectionLegacy(name, mod) {
     formCard(null, block)
@@ -76,7 +76,7 @@ fun AppendScope.formPart(
 fun ViewScope.formSubmitLegacy(
     label: String,
     onSubmit: () -> Unit,
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     messages: MessageStore? = null,
     back: MenuAction? = null,
 ) {

@@ -6,20 +6,20 @@ import kotlinx.html.FlowContent
 import kotlinx.html.div
 
 fun FlowContent.spacer(
-    modifiers: ModifierSet? = null,
+    mod: Modifier? = null,
     block: (DIV.() -> Unit)? = null,
 ) {
     div {
-        addModifiers(modifiers)
+        addModifiers(mod)
         block?.invoke(this)
     }
 }
 
 fun FlowContent.centeredHeading(
     text: String,
-    modifiers: ModifierSet? = null,
+    mod: Modifier? = null,
 ) {
-    row(modify(modifiers, JustifyContentCenter, AlignItemsCenter)) {
+    row(modify(mod, JustifyContentCenter, AlignItemsCenter)) {
 //        hr {
 //            addModifiers(modify(Flex1, OpacitySome))
 //        }

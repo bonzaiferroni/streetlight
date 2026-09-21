@@ -22,7 +22,7 @@ fun ViewScope.locationFinder(model: LocationScout) = formCard("Location Finder")
         formSection("locations") {
             selectionBlock(
                 items = model.locationsState, selection = model.selectionState,
-                modifiers = modify(modify(Height(32), OverflowYAuto, ZenBg, Outline, BorderRadius1, Padding(1), TextSmall)),
+                mod = modify(modify(Height(32), OverflowYAuto, ZenBg, Outline, BorderRadius1, Padding(1), TextSmall)),
                 emptyText = "Start typing in the search box to see locations",
             ) { location ->
                 searchItem(location.name, location.address, location.city)

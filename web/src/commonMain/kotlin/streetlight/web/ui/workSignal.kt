@@ -8,7 +8,7 @@ import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 
 fun FlowContent.workSignal(
-    mod: ModifierSet? = IconStyle.DefaultMod,
+    mod: Modifier? = IconStyle.DefaultMod,
     config: DIV.() -> Unit = { }
 ) {
     icon(SvgFile.CircleLoop, modify(mod, IconStyle.Signal), config)

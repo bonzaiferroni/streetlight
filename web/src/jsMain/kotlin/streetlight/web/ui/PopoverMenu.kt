@@ -2,15 +2,11 @@ package streetlight.web.ui
 
 import kampfire.model.MutableTap
 import kampfire.model.storeOf
-import koala.modifier.Css
-import koala.modifier.Gap2Px
-import koala.modifier.ModifierSet
-import koala.modifier.modify
+import koala.modifier.*
 import koala.dom.ViewScope
 import koala.dom.flowBlock
 import koala.dom.popoverCard
 import koala.dom.popoverRaw
-import koala.modifier.removeStyle
 import koala.html.Id
 import web.html.HTMLElement
 import kotlin.js.json
@@ -22,7 +18,7 @@ object PopoverMenuMod {
 fun <T> ViewScope.popoverMenu(
     popoverId: Id,
     transform: (HTMLElement) -> T?,
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     state: MutableTap<T?> = storeOf(null),
     defaultValue: T? = null,
     content: ViewScope.(T) -> Unit

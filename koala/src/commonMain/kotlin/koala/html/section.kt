@@ -6,21 +6,21 @@ import kotlinx.html.SECTION
 import kotlinx.html.section as sectionTag
 
 fun FlowContent.section(
-    modifiers: ModifierSet? = null,
+    mod: Modifier? = null,
     block: SECTION.() -> Unit = {}
 ) {
     sectionTag {
-        addModifiers(SectionStyle.Class, modifiers)
+        addModifiers(SectionStyle.Class, mod)
         block()
     }
 }
 
 fun FlowContent.section(
     id: Id,
-    modifiers: ModifierSet? = null,
+    mod: Modifier? = null,
     block: SECTION.() -> Unit = {}
 ) {
-    section(modifiers) {
+    section(mod) {
         setId(id)
         block()
     }
@@ -28,10 +28,10 @@ fun FlowContent.section(
 
 fun FlowContent.section(
     title: String,
-    modifiers: ModifierSet? = null,
+    mod: Modifier? = null,
     block: SECTION.() -> Unit = {}
 ) {
-    section(modifiers) {
+    section(mod) {
         filigree {
             heading3(title)
         }

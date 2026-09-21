@@ -8,12 +8,12 @@ import kampfire.model.Tap
 
 fun ViewScope.messageBox(
     tap: Tap<UIMessage?>,
-    modifiers: ModifierSet? = null,
+    mod: Modifier? = null,
 ) {
-    flowBlock(tap, modifiers) { message ->
+    flowBlock(tap, mod) { message ->
         val message = message ?: return@flowBlock
         val typeMod = message.messageType.toModifier()
-        card(modify(modifiers, MessageBox.Mod, MoonShadow, typeMod)) {
+        card(modify(mod, MessageBox.Mod, MoonShadow, typeMod)) {
             textBlock(message.text)
         }
     }
@@ -21,8 +21,8 @@ fun ViewScope.messageBox(
 
 // fun ViewScope.messageBox(
 //     store: Store<UIMessage?>,
-//     modifiers: ModifierSet? = null,
-// ) = messageBox(store, modifiers)
+//     mod: Modifier? = null,
+// ) = messageBox(store, mod)
 
 fun UIMessageType.toModifier() = when (this) {
     UIMessageType.Error -> MessageBox.Error

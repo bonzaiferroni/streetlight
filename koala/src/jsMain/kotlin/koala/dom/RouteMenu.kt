@@ -16,7 +16,7 @@ fun ViewScope.routeMenu(
     context: String,
     optionNow: MenuOption,
     options: List<MenuOption?>,
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     leftIcons: List<IconButton>? = null,
     rightIcons: List<IconButton>? = null,
 ) {
@@ -44,7 +44,7 @@ fun ViewScope.routeMenu(
 
 internal fun ViewScope.iconsTray(
     icons: List<IconButton>,
-    mod: ModifierSet
+    mod: Modifier
 ) {
     row(modify(mod, BorderSolid2Px)) {
         icons.forEach { icon ->

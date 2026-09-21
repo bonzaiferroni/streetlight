@@ -1,17 +1,13 @@
 package koala.dom
 
-import koala.modifier.ModifierSet
-import koala.modifier.addModifiers
-import koala.modifier.Attribute
-import koala.modifier.blockLabel
-import koala.modifier.setAttribute
+import koala.modifier.*
 import kotlinx.html.DIV
 import kotlinx.html.js.div
 import web.html.HTMLElement
 
 fun AppendScope.blockLabel(
     label: String,
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     block: (DIV.() -> Unit)? = null
 ) = div {
     this.blockLabel = label

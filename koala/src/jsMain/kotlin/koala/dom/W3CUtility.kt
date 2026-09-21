@@ -1,7 +1,6 @@
 package koala.dom
 
-import koala.modifier.ModifierSet
-import koala.modifier.addModifiers
+import koala.modifier.*
 import kotlinx.dom.clear
 import kotlinx.html.DIV
 import kotlinx.html.dom.append
@@ -40,7 +39,7 @@ fun W3CButtonElement.asWeb() = unsafeCast<HTMLButtonElement>()
 fun W3CImageElement.asWeb() = unsafeCast<HTMLImageElement>()
 
 fun Document.createDiv(
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     config: DIV.() -> Unit = { },
 ) = W3CDocument.create.div {
     addModifiers(mod)

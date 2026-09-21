@@ -5,9 +5,9 @@ import koala.html.configureFiligree
 import kotlinx.html.DIV
 
 fun AppendScope.filigree(
-    modifiers: ModifierSet? = null,
+    mod: Modifier? = null,
     ruleMaxWidth: Modifier = MaxWidth(16),
     block: DIV.() -> Unit
-) = row(modify(modifiers, JustifyContentCenter, AlignItemsCenter)) {
+) = row(modify(mod, JustifyContentCenter, AlignItemsCenter)) {
     configureFiligree(ruleMaxWidth, block)
 }

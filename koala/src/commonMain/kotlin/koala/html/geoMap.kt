@@ -1,18 +1,13 @@
 package koala.html
 
 import kampfire.model.GeoPoint
-import koala.modifier.Attribute
-import koala.modifier.Class
-import koala.modifier.ModifierSet
-import koala.modifier.addModifiers
-import koala.modifier.setAriaLabel
-import koala.modifier.setAttribute
+import koala.modifier.*
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 
 fun FlowContent.geoMapMount(
     initialPoint: GeoPoint? = null,
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     block: DIV.() -> Unit = {}
 ) {
     box {
@@ -22,7 +17,7 @@ fun FlowContent.geoMapMount(
 
 fun DIV.configureGeoMapMount(
     initialPoint: GeoPoint? = null,
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     block: DIV.() -> Unit = {}
 ) {
     addModifiers(mod, GeoMapKey.MapMount)

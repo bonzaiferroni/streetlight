@@ -1,14 +1,12 @@
 package koala.html
 
-import koala.modifier.Class
-import koala.modifier.ModifierSet
-import koala.modifier.addModifiers
+import koala.modifier.*
 import kotlinx.html.FlowContent
 import kotlinx.html.HR
 import kotlinx.html.hr as hrElement
 
 fun FlowContent.hr(
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     block: HR.() -> Unit = { }
 ) {
     hrElement {

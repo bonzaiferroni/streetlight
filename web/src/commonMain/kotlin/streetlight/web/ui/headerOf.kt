@@ -19,7 +19,7 @@ import streetlight.web.shells.galaxyMenu
 fun FlowContent.headerOf(
     location: Location,
     editRoute: AppRoute?,
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     block: DIV.() -> Unit = {}
 ) {
     // headerImage(location.name, location.images.medium, modifiers, block)
@@ -39,7 +39,7 @@ fun FlowContent.headerOf(
 
 fun FlowContent.headerOf(
     galaxy: Galaxy,
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     block: DIV.() -> Unit = {}
 ) {
     column {

@@ -5,7 +5,7 @@ import koala.modifier.*
 
 fun FlowContent.column(
     id: Id?,
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     content: DIV.() -> Unit = { },
 ) {
     column(mod) {
@@ -17,7 +17,7 @@ fun FlowContent.column(
 }
 
 fun FlowContent.column(
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     content: DIV.() -> Unit = { },
 ) {
     div {

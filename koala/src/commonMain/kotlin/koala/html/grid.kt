@@ -9,7 +9,7 @@ import kotlinx.html.FlowContent
 fun FlowContent.grid(
     template: GridTemplateColumns = GridTemplateColumns(1.fr, 1.fr),
     queryTemplate: GridTemplateColumns = template,
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     content: DIV.() -> Unit,
 ) {
     div(modify(GridColumns.Class, mod)) {

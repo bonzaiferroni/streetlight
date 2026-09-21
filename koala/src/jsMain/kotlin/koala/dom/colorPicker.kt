@@ -11,7 +11,7 @@ import web.html.HTMLInputElement
 fun ViewScope.colorPicker(
     text: String,
     colorState: MutableTap<Rgb>,
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
 ) {
     var currentColor: Rgb? = null
     lateinit var inputElement: HTMLInputElement

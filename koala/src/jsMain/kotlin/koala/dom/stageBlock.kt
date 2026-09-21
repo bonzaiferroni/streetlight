@@ -12,7 +12,7 @@ import kotlin.enums.enumEntries
 
 inline fun <reified State> ViewScope.stageBlock(
     stage: MutableTap<State>,
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     crossinline isHeadingStage: (State) -> Boolean = { true },
     noinline block: ViewScope.(State) -> Unit
 ): HTMLDivElement where State: Enum<State>, State: Labeled {

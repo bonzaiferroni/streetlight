@@ -1,8 +1,10 @@
 package streetlight.web.ui
 
+import koala.modifier.*
+
 //fun ViewScope.galaxyEarthMenu(
 //    currentGalaxy: Galaxy?,
-//    mod: ModifierSet? = null
+//    mod: Modifier? = null
 //) {
 //    val cache = app.get<DataCache>()
 //    val galaxies = cache.galaxyStars.stateNow.items

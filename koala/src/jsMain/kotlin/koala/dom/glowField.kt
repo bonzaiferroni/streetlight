@@ -1,13 +1,8 @@
 package koala.dom
 
-import koala.modifier.Css
-import koala.modifier.Glow
-import koala.modifier.ModifierSet
-import koala.modifier.modify
-import koala.modifier.rgba
+import koala.modifier.*
 import kampfire.model.MutableTap
 import koala.model.GlowControlStyle
-import koala.modifier.setStyle
 import kotlinx.css.pct
 import web.events.addEventListener
 import web.html.HTMLElement
@@ -18,7 +13,7 @@ import kotlin.math.roundToInt
 
 fun ViewScope.glowField(
     state: MutableTap<Glow>,
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
 ) {
     lateinit var fieldElement: HTMLElement
     lateinit var handleElement: HTMLElement

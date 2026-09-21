@@ -1,22 +1,14 @@
 package koala.html
 
-import koala.modifier.Class
-import koala.modifier.Css
-import koala.modifier.ModifierSet
-import koala.modifier.Property
-import koala.modifier.addModifiers
-import koala.modifier.intAttributeOf
-import koala.modifier.modify
-import koala.modifier.setAttribute
-import koala.modifier.setStyle
+import koala.modifier.*
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kotlinx.html.p
 
 fun FlowContent.tabs(
     id: Id? = null,
-    mod: ModifierSet? = null,
-    viewportMod: ModifierSet? = null,
+    mod: Modifier? = null,
+    viewportMod: Modifier? = null,
     initialTab: Int? = null,
     content: TabScope.() -> Unit,
 ) {
@@ -27,8 +19,8 @@ fun FlowContent.tabs(
 
 fun DIV.configureTabs(
     id: Id?,
-    mod: ModifierSet?,
-    viewportMod: ModifierSet?,
+    mod: Modifier?,
+    viewportMod: Modifier?,
     initialTab: Int?,
     content: TabScope.() -> Unit,
 ) {
@@ -43,7 +35,7 @@ fun DIV.configureTabs(
 
 fun DIV.configureTabsContainer(
     id: Id?,
-    mod: ModifierSet?,
+    mod: Modifier?,
     initialIndex: Int,
 ) {
     addModifiers(modify(mod, TabsStyle.Container, TabsStyle.Initial))
@@ -74,7 +66,7 @@ fun DIV.configureTabsHeader(
 }
 
 fun DIV.configureTabsViewport(
-    viewportMod: ModifierSet?,
+    viewportMod: Modifier?,
     tabs: List<Tab>,
     initialIndex: Int,
 ) {

@@ -3,8 +3,7 @@ package koala.dom
 import kampfire.model.Url
 import koala.Image
 import koala.SiteImage
-import koala.modifier.ModifierSet
-import koala.modifier.addModifiers
+import koala.modifier.*
 import kampfire.model.Tap
 import kotlinx.html.IMG
 import kotlinx.html.js.img
@@ -17,7 +16,7 @@ import web.html.HTMLImageElement
 
 fun AppendScope.image(
     url: Url? = SiteImage.placeholderLg,
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     block: (IMG.() -> Unit)? = null
 ): HTMLImageElement {
     val initialSrc = url?.value ?: ""
@@ -35,7 +34,7 @@ fun AppendScope.image(
 
 fun ViewScope.image(
     state: Tap<Image?>,
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     hideOnError: Boolean = true,
     block: (IMG.() -> Unit)? = null
 ): HTMLImageElement {

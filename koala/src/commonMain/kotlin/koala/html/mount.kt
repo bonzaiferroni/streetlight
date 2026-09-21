@@ -1,13 +1,13 @@
 package koala.html
 
-import koala.modifier.ModifierSet
+import koala.modifier.*
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 
 fun FlowContent.mount(
     id: Id,
-    modifiers: ModifierSet? = null,
+    mod: Modifier? = null,
     block: (DIV.() -> Unit)? = null,
 ) {
-    box(id, modifiers, block)
+    box(id, mod, block)
 }

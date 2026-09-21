@@ -7,7 +7,7 @@ import kotlinx.html.FlowContent
 
 fun FlowContent.metaImage(
     image: Image?,
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     config: DIV.() -> Unit = { }
 ) {
     box(mod) {

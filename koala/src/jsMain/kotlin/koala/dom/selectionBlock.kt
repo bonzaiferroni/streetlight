@@ -11,7 +11,7 @@ import web.html.HTMLElement
 fun <Item> ViewScope.selectionBlock(
     items: Tap<List<Item>>,
     selection: MutableTap<Item?>,
-    modifiers: ModifierSet? = null,
+    mod: Modifier? = null,
     emptyText: String? = null,
     config: (DIV.() -> Unit)? = null,
     block: ViewScope.(Item) -> HTMLElement
@@ -42,7 +42,7 @@ fun <Item> ViewScope.selectionBlock(
         selection.set(item)
     }
 
-    val element = flowBlock(items, modifiers, config = config) { items ->
+    val element = flowBlock(items, mod, config = config) { items ->
         elementMap.clear()
         when (items.isNotEmpty()) {
             true -> column {

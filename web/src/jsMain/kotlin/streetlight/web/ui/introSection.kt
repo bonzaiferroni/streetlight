@@ -9,7 +9,7 @@ import kotlinx.html.DIV
 
 fun ViewScope.introSection(
     name: String,
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     lottie: Lottie? = null,
     block: DIV.() -> Unit
 ) {

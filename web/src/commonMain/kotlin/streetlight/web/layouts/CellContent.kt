@@ -39,7 +39,7 @@ $Container {
 """ }
 
 fun FlowContent.cellBlock(
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     block: FlowContent.() -> Unit = {}
 ) {
     row(modify(mod, MinHeight(4), MinWidth(16), FlexWrap, FlexItems1, Gap2Px, TextAlignCenter, MoonShadow)) {
@@ -52,7 +52,7 @@ fun FlowContent.cell(
     text: String? = null,
     label: String? = null,
     minWidth: Modifier? = MinWidth(16),
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     block: DIV.() -> Unit = {}
 ) {
     box(modify(minWidth)) {
@@ -64,7 +64,7 @@ fun FlowContent.cell(
 
 fun FlowContent.buttonsCell(
     minWidth: Modifier? = MinWidth(16),
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     block: DIV.() -> Unit = {},
 ) {
     box(modify(mod, minWidth, CardBg)) {
@@ -74,7 +74,7 @@ fun FlowContent.buttonsCell(
 
 fun FlowContent.cellButton(
     svg: Svg,
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     block: DIV.() -> Unit = {},
 ) {
     icon(svg, modify(CellContent.ButtonIconMod, mod)) {
@@ -104,7 +104,7 @@ fun FlowContent.linkCell(
     url: Url?,
     svg: Svg,
     text: String?,
-    mod: ModifierSet? = null,
+    mod: Modifier? = null,
     block: FlowContent.() -> Unit = {}
 ) {
     // cell(modifiers, block)
