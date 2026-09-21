@@ -15,7 +15,7 @@ fun HTML.eventPortal(event: Event, performer: Performer?, requestItems: List<Req
 //        applyScripts("event-portal/webscripts.js")
     }
     body {
-        column(Id("event-profile"), modify(AlignItemsCenter, Padding1)) {
+        column(Id("event-profile"), modify(AlignItemsCenter, Padding(1))) {
             setAttribute(EventPortalSelector.eventIdAttribute, event.eventId)
             a("/") {
                 row() {

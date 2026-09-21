@@ -32,7 +32,7 @@ private fun ViewScope.boundsHud(model: Earth) {
 
 fun ViewScope.earthHeaderLegacy(model: Earth) {
     val iconMod = modify(Width(5), Aspect1)
-    row(modify(EarthStyle.Header, AlignItemsCenter, PaperGradientBg, Padding1, PointerEventsAuto, BlurBackdrop)) {
+    row(modify(EarthStyle.Header, AlignItemsCenter, PaperGradientBg, Padding(1), PointerEventsAuto, BlurBackdrop)) {
         // flowBlock(model.mapFlow, modify(Flex1)) { map ->
         //     when (map) {
         //         null -> row {

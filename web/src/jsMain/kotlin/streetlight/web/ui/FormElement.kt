@@ -100,7 +100,7 @@ fun ViewScope.formSubmitLegacy(
 }
 
 object FormMod {
-    val Card = modify(ZenBg, QueryContainer, Gap(3))
+    val Card = modify(ZenBg, ContainerTypeInlineSize, Gap(3))
     val Part = modify(ContainerMdRow)
     val Instructions = modify(Flex1, JustifyContentCenter, Margin1)
     val Controls = modify(JustifyContentCenter)

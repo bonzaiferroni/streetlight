@@ -40,7 +40,7 @@ fun FlowContent.renderMarkdownBlocks(blocks: List<ParsedBlock>) {
 }
 
 fun FlowContent.renderHeading(heading: MarkdownHeading) {
-    val containerMod = modify(MarginTop4)
+    val containerMod = modify(MarginTop(4))
     val headingMod = modify(TextAlignCenter)
     val block: FlowContent.() -> Unit = {
         when (heading.level) {
@@ -146,7 +146,7 @@ fun FlowContent.renderUnorderedList(block: MarkdownUnorderedList) {
 
     val paddingMod = when (block.marker) {
         '_' -> null
-        else -> PaddingLeft3
+        else -> PaddingLeft(3)
     }
 
     ul {

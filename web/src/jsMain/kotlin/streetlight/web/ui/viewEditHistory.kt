@@ -1,10 +1,7 @@
 package streetlight.web.ui
 
 import kabinet.utils.toRelativeTimeFormat
-import koala.modifier.Flex1
-import koala.modifier.JustifyContentEnd
-import koala.modifier.columnsOf
-import koala.modifier.modify
+import koala.modifier.*
 import koala.dom.ViewScope
 import koala.dom.box
 import koala.dom.button
@@ -13,7 +10,6 @@ import koala.dom.dialogContent
 import koala.dom.dropMenu
 import koala.dom.grid
 import koala.dom.row
-import koala.modifier.setAttribute
 import koala.dom.textBlock
 import koala.html.spacer
 import kampfire.model.setTrue

@@ -13,7 +13,7 @@ import web.html.HTMLElement
 
 fun AppendScope.popoverRaw(
     id: Id,
-    mod: ModifierSet = modify(Padding1),
+    mod: ModifierSet = modify(Padding(1)),
     anchor: PositionAnchor? = null,
     isManual: Boolean = false,
     config: DIV.() -> Unit = {}
@@ -27,7 +27,7 @@ fun AppendScope.popover(
     anchor: PositionAnchor? = null,
     isManual: Boolean = false,
     content: DIV.() -> Unit = {}
-) = popoverRaw(id, modify(Padding1), anchor, isManual) {
+) = popoverRaw(id, modify(Padding(1)), anchor, isManual) {
     popoverCard(mod) {
         content()
     }
@@ -50,18 +50,18 @@ fun Element.togglePopover() = asDynamic().togglePopover()
 fun HTMLElement.isPopoverOpen() = matches(":popover-open")
 
 fun AppendScope.popoverLabel(label: String) = textBlock(
-    label, modify(OpacityHigh, TextSmall, TextAlignCenter, Padding1, TextUppercase)
+    label, modify(OpacityHigh, TextSmall, TextAlignCenter, Padding(1), TextUppercase)
 )
 
 fun AppendScope.popoverOption(label: String, mod: ModifierSet? = null, onClick: () -> Unit) =
-    button(onClick, mod = modify(mod, Padding1, MinWidth(16))) {
+    button(onClick, mod = modify(mod, Padding(1), MinWidth(16))) {
         textBlock(label, modify(TextAlignCenter, Width(100.pct)))
     }
 
 fun AppendScope.popoverOption(option: MenuAction) = popoverOption(option.label, option.mod, option.onClick)
 
 fun AppendScope.popoverOption(route: AppRoute, label: String = route.label, mod: ModifierSet? = null) =
-    navigation(route, mod = modify(mod, Padding1, MinWidth(16))) {
+    navigation(route, mod = modify(mod, Padding(1), MinWidth(16))) {
         textBlock(label, modify(TextAlignCenter, Width(100.pct)))
     }
 

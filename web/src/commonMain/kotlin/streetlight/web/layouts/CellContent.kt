@@ -9,6 +9,7 @@ import kampfire.model.Url
 import koala.Svg
 import koala.SvgFile
 import koala.modifier.*
+import kotlinx.css.px
 import koala.html.*
 import koala.interop.KoalaFun
 import koala.interop.ThisElement
@@ -20,11 +21,11 @@ import kotlin.time.Instant
 
 object CellContent {
     val Container = Class("cell-content")
-    val CellMod = modify(AlignItemsCenter, CardBg, Gap(0), Padding1)
+    val CellMod = modify(AlignItemsCenter, CardBg, Gap(0), Padding(1))
     val DualCellMod = modify(Gap2Px, FlexItems1)
-    val IconMod = modify(SmallIconHeight, MarginRight4Px, ColorSchemeBg)
+    val IconMod = modify(SmallIconHeight, MarginRight(4.px), ColorSchemeBg)
     val ButtonIconMod = modify(SmallIconHeight, OpacityHigh)
-    val ThumbMod = modify(SmallIconHeight, Aspect1, BorderRadius2, MarginRight4Px)
+    val ThumbMod = modify(SmallIconHeight, Aspect1, BorderRadius2, MarginRight(4.px))
     val TextMod = modify(TextSmall, SingleLine, TextOverflowEllipses, Flex1)
 }
 
@@ -67,7 +68,7 @@ fun FlowContent.buttonsCell(
     block: DIV.() -> Unit = {},
 ) {
     box(modify(mod, minWidth, CardBg)) {
-        row(modify(AlignItemsCenter, JustifyContentSpaceAround, Padding1, Gap(2)), block)
+        row(modify(AlignItemsCenter, JustifyContentSpaceAround, Padding(1), Gap(2)), block)
     }
 }
 
@@ -131,7 +132,7 @@ fun FlowContent.dateCell(startsAt: Instant) {
 fun FlowContent.exampleStartsAtCell() {
 //    cell {
 //        textBlock("[Day]", modify(CellContent.TextMod, ColorSchemeFg))
-//        textBlock("[Time]", modify(CellContent.TextMod, MarginLeft1))
+//        textBlock("[Time]", modify(CellContent.TextMod, MarginLeft(1)))
 //    }
 }
 
@@ -150,7 +151,7 @@ fun FlowContent.starCell(username: Username?) = cell(SvgFile.SomeoneSmall, usern
 
 fun FlowContent.textPropertyCell(property: String, value: String) {
     cell {
-        textBlock(value, modify(CellContent.TextMod, MarginLeft1))
+        textBlock(value, modify(CellContent.TextMod, MarginLeft(1)))
     }
 }
 

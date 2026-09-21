@@ -16,7 +16,7 @@ fun FlowContent.routeMenu(
         filigree(modify(AlignSelfStretch)) {
             textBlock(context, modify(PrimaryFg))
         }
-        row(modify(RouteMenu.ContextMenu, Gap(0), Padding1, Bold, AlignItemsCenter, BorderSolid2Px)) {
+        row(modify(RouteMenu.ContextMenu, Gap(0), Padding(1), Bold, AlignItemsCenter, BorderSolid2Px)) {
             leftIcons?.let { icons ->
                 iconsTray(icons, routeNow, modify(RouteMenu.LeftTray))
             }

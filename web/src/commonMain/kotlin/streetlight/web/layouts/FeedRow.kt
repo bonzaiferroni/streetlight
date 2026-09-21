@@ -4,6 +4,7 @@ import kabinet.utils.toAgoFormat
 import koala.SiteImage
 import koala.Svg
 import koala.modifier.*
+import kotlinx.css.px
 import koala.html.*
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
@@ -33,7 +34,7 @@ fun DIV.configureFeedRow(
     curator: CuratorStatus? = null,
     cellContent: (FlowContent.() -> Unit)? = null
 ) {
-    addModifiers(modify(FeedRow.Base, modify(Padding1, ZenBg)))
+    addModifiers(modify(FeedRow.Base, modify(Padding(1), ZenBg)))
 
     val imageUrl = entity.image?.thumb ?: SiteImage.placeholder.thumb // td: make placeholder depend on post type
     val colorScheme = entity.themeColor
@@ -78,7 +79,7 @@ fun DIV.configureFeedRow(
         }
     }
 
-    div(modify(FeedRow.ExpandedContent, Padding2, Gap(2))) {
+    div(modify(FeedRow.ExpandedContent, Padding(2), Gap(2))) {
         description?.let {
             markdown(it, modify(FeedRow.ExpandedBody), limit = 1000)
         }
@@ -101,7 +102,7 @@ fun FlowContent.postLine(entity: FeedEntity, isUniverse: Boolean) {
     val postedAt = entity.post?.createdAt ?: entity.createdAt ?: return
     val galaxy = entity.post?.galaxy?.takeIf { isUniverse }
 
-    column(modify(MarginTopTiny, TextSmall, AlignItemsCenter, Gap(0), OpacityHigh)) {
+    column(modify(MarginTop(2.px), TextSmall, AlignItemsCenter, Gap(0), OpacityHigh)) {
         textBlock {
             +"posted by "
             when (username) {

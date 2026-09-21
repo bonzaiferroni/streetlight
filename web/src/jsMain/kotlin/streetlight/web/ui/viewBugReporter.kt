@@ -9,7 +9,7 @@ import streetlight.web.model.BugReporter
 fun ViewScope.viewBugReporter() {
     val model = BugReporter(contentScope, api)
     val messenger = MessageStore()
-    column(MarginTop1) {
+    column(MarginTop(1)) {
         filigree {
             heading4("Report a Bug")
         }

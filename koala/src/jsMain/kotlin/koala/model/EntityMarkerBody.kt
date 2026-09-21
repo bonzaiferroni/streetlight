@@ -80,7 +80,7 @@ internal fun AppendScope.configureIconMarker(marker: IconMarker): EntityMarkerBo
             }
 
             label?.let {
-                textBlock(it, modify(LineHeight115, WhiteSpaceNoWrap, PaddingRight1, TextShadow))
+                textBlock(it, modify(LineHeight115, WhiteSpaceNoWrap, PaddingRight(1), TextShadow))
             }
         }
 

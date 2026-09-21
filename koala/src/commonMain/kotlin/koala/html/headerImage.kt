@@ -1,15 +1,7 @@
 package koala.html
 
 import kampfire.model.Url
-import koala.modifier.Aspect3By2
-import koala.modifier.Class
-import koala.modifier.GradientDarkBottom
-import koala.modifier.ModifierSet
-import koala.modifier.ObjectFitCover
-import koala.modifier.Size100P
-import koala.modifier.VignetteOver
-import koala.modifier.addModifiers
-import koala.modifier.modify
+import koala.modifier.*
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 

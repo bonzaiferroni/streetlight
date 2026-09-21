@@ -8,7 +8,7 @@ import streetlight.model.ui.toRoute
 
 fun FlowContent.smallGalaxyCard(galaxy: Galaxy) {
     val route = galaxy.toRoute()
-    card(modify(Padding0, OverflowClip, MoonShadow)) {
+    card(modify(Padding(0), OverflowClip, MoonShadow)) {
         setStyle(Css.ColorScheme.of(ThemeColor.Galaxy.cssValue))
 
         row(modify(Gap0, Height(16))) {
@@ -16,7 +16,7 @@ fun FlowContent.smallGalaxyCard(galaxy: Galaxy) {
                 featureImage(galaxy.image, modify(Size100P))
             }
             column(modify(Flex2, Height(16), Gap0)) {
-                column(modify(Flex1, Padding1)) {
+                column(modify(Flex1, Padding(1))) {
                     navigation(route) {
                         heading5(galaxy.name, modify(LineHeight1))
                     }

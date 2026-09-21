@@ -2,10 +2,7 @@ package streetlight.web.ui
 
 import kampfire.api.Markdown
 import koala.SvgFile
-import koala.modifier.JustifyContentEnd
-import koala.modifier.Magic
-import koala.modifier.Scale
-import koala.modifier.modify
+import koala.modifier.*
 import koala.dom.ViewScope
 import koala.dom.button
 import koala.dom.column

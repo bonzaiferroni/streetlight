@@ -10,7 +10,7 @@ fun ViewScope.wireToaster() {
     val model = app.get<Toaster>()
 
     mountChildView(AppBody.ToasterId) {
-        column(modify(Padding2)) {
+        column(modify(Padding(2))) {
             itemsBlock(model.messagesState, modify(Magic, SlideLeft)) { message ->
                 val typeMod = message.messageType.toModifier()
                 row {

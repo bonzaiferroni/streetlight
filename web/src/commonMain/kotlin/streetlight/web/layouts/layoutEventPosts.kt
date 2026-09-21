@@ -22,7 +22,7 @@ fun FlowContent.layoutEventPosts(
             val posts = grouping.value
             val dayFormat = posts.first().event.startsAt?.toFutureFormat() ?: return@forEach
             section {
-                filigree(modify(MarginTop2)) {
+                filigree(modify(MarginTop(2))) {
                     heading4(dayFormat, modify(SectionHeadingMod, OpacityHigh))
                 }
                 olist {

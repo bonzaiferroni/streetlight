@@ -1,10 +1,7 @@
 package streetlight.web.shells
 
 import kampfire.api.toMarkdown
-import koala.modifier.Padding4
-import koala.modifier.Shrinkable
-import koala.modifier.ZenBg
-import koala.modifier.modify
+import koala.modifier.*
 import koala.html.card
 import koala.html.column
 import koala.html.filigree
@@ -26,19 +23,19 @@ fun FlowContent.aboutShell() {
         tabs {
             tab("Background") {
 
-                card(modify(ZenBg, Padding4)) {
+                card(modify(ZenBg, Padding(4))) {
                     markdown(AboutLuke)
                 }
             }
             tab("Ideas") {
 
-                card(modify(ZenBg, Padding4)) {
+                card(modify(ZenBg, Padding(4))) {
                     markdown(IdeasContent)
                 }
             }
             tab("Roadmap") {
 
-                card(modify(ZenBg, Padding4)) {
+                card(modify(ZenBg, Padding(4))) {
                     markdown("yer roadmap".toMarkdown())
                 }
             }

@@ -78,7 +78,7 @@ fun FlowContent.headerOf(
 fun FlowContent.headerOf(media: Media) {
     column {
         media.title?.let {
-            heading2(it, modify(TextAlignCenter, AntiShadow, LineHeight115, MarginTop4))
+            heading2(it, modify(TextAlignCenter, AntiShadow, LineHeight115, MarginTop(4)))
         }
 
         media.image?.let {
@@ -87,14 +87,14 @@ fun FlowContent.headerOf(media: Media) {
             }
         }
 
-        card(modify(OverflowClip, Gap0, ZenBg, Padding0)) {
+        card(modify(OverflowClip, Gap0, ZenBg, Padding(0))) {
             cellBlock {
                 starCell(media.username)
                 postedAtCell(media.createdAt)
             }
 
             media.text?.let {
-                column(modify(Padding2, AlignSelfCenter, MaxWidthTextBody, TextLarge)) {
+                column(modify(Padding(2), AlignSelfCenter, MaxWidthTextBody, TextLarge)) {
                     markdown(it)
                 }
             }

@@ -56,7 +56,7 @@ inline fun <reified State> ViewScope.stageBlock(
             entries.forEach { value ->
                 if (!isHeadingStage(value)) return@forEach
 
-                elements[value] = box(modify(BorderRadius2, Padding1)) {
+                elements[value] = box(modify(BorderRadius2, Padding(1))) {
                     heading3("${step++}. ${value.label}")
                 }.onClick {
                     if (value.ordinal >= (currentValue?.ordinal ?: 0)) return@onClick

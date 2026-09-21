@@ -58,7 +58,7 @@ fun ViewScope.textField(
 
         maxLengthText = maxLength?.let {
             textBlock("${currentValue.length}/$it",
-                modify(AlignSelfCenter, JustifySelfEnd, TextSmall, OpacityHalf, Padding1, PointerEventsNone, Italic)
+                modify(AlignSelfCenter, JustifySelfEnd, TextSmall, OpacityHalf, Padding(1), PointerEventsNone, Italic)
             )
         }
     }

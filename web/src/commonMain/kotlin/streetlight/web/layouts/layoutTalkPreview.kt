@@ -44,7 +44,7 @@ fun FlowContent.layoutTalkPreview(route: AppRoute, comments: List<Comment>) {
             markdown(comment.text)
 
             if (children.isNotEmpty()) {
-                column(modify(PaddingLeft3)) {
+                column(modify(PaddingLeft(3))) {
                     children.forEach {
                         childIds.add(it.commentId)
                         layoutComment(comment)

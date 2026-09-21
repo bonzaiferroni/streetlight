@@ -152,7 +152,7 @@ fun ViewScope.editorTextButton(
     name: String,
     onClick: (() -> Unit)? = null,
     config: BUTTON.() -> Unit = { }
-) = button(onClick, modify(Padding1)) {
+) = button(onClick, modify(Padding(1))) {
     config()
     textBlock(name, LayoutBuilderMod.TextButton)
 }
@@ -167,5 +167,5 @@ fun ViewScope.editorIconButton(
 
 object LayoutBuilderMod {
     val TextButton = modify(TextUppercase, TextSmall, Bold, SystemFg)
-    val Container = modify(ZenBg, MoonShadow, Padding1)
+    val Container = modify(ZenBg, MoonShadow, Padding(1))
 }

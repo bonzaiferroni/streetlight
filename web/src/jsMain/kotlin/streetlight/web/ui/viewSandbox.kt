@@ -2,8 +2,7 @@ package streetlight.web.ui
 
 import kampfire.model.storeOf
 import koala.LottieFile
-import koala.modifier.MarginTop1
-import koala.modifier.modify
+import koala.modifier.*
 import koala.dom.*
 import kotlinx.css.GridTemplateColumns
 
@@ -15,7 +14,7 @@ fun RouteScope.viewSandbox() {
     val nameState = storeOf("Jimmy")
     val indexState = storeOf(0)
 
-    grid(GridTemplateColumns("1fr 1fr"), modify(MarginTop1)) {
+    grid(GridTemplateColumns("1fr 1fr"), modify(MarginTop(1))) {
         column {
             lazyTabs(indexState = indexState) {
                 tab("original") {

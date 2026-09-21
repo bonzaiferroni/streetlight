@@ -26,12 +26,12 @@ fun ViewScope.wireGalaxyMenu() {
             val galaxies = fleet.provisionFleet(toaster) ?: return@launchEffect
             element.append {
                 galaxies.forEach { galaxy ->
-                    row(modify(AlignItemsCenter, Padding1, HoverBg)) {
+                    row(modify(AlignItemsCenter, Padding(1), HoverBg)) {
                         image(galaxy.image?.variants.thumb, modify(Height(5), Aspect1, BorderRadius50P))
                         textBlock(galaxy.name)
                     }.onClick { portal.go(galaxy.route) }
 
-                    box(modify(Padding1, MinWidth(8))) {
+                    box(modify(Padding(1), MinWidth(8))) {
                         starToggle(galaxy)
                     }
                 }

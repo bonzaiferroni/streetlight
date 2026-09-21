@@ -202,8 +202,8 @@ class CommentView(
         isRendered = true
 
         _rootBlock = column(modify(CommentClass.Root, Gap0)) {
-            card(modify(ZenBg, Gap0, Padding0, OverflowClip, AutoMagic)) {
-                row(modify(AlignItemsCenter, modify(ZenBg, Padding1))) {
+            card(modify(ZenBg, Gap0, Padding(0), OverflowClip, AutoMagic)) {
+                row(modify(AlignItemsCenter, modify(ZenBg, Padding(1)))) {
                     navigationIfNotNull(comment.username?.let { StarRoute(it) }) {
                         row(modify(AlignItemsCenter)) {
                             image(comment.thumb, modify(Aspect1, Height(6), BorderRadius50P))
@@ -223,10 +223,10 @@ class CommentView(
                         it.setStyle(Css.MaskUrl.of(svg))
                     }
                 }
-                column(modify(Padding1, CommentClass.InnerCard)) {
+                column(modify(Padding(1), CommentClass.InnerCard)) {
                     _bodyBlock = box(modify(CommentClass.Body)) {
                         _editBlock = div(modify(CommentClass.Editor, Height(100.pct)))
-                        _contentBlock = div(modify(CommentClass.Content, Padding1)) {
+                        _contentBlock = div(modify(CommentClass.Content, Padding(1))) {
                             markdown(comment.text)
                         }
                     }

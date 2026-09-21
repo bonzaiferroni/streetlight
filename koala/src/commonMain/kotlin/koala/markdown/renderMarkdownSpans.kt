@@ -63,7 +63,7 @@ fun FlowOrPhrasingContent.renderFirstInlineImage(spans: List<MarkdownSpan>) {
 
 fun FlowOrPhrasingContent.renderInlineImage(span: MarkdownInlineImage) {
     span {
-        addModifiers(MarkdownStyle.InlineImage, FloatRight, MarginLeft2, MarginBottom2)
+        addModifiers(MarkdownStyle.InlineImage, FloatRight, MarginLeft(2), MarginBottom(2))
         span.maxWidthPercent?.let {
             style = "max-width: $it%;"
         }

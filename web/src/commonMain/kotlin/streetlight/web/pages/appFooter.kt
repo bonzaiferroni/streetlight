@@ -23,7 +23,7 @@ fun FlowContent.appFooter(sourcePath: String? = null) {
 }
 
 fun DIV.configureAppFooter(sourcePath: String?, vararg additional: ExtraLink) {
-    addModifiers(modify(JustifyContentCenter, AlignItemsCenter, Gap0, MarginBottom16))
+    addModifiers(modify(JustifyContentCenter, AlignItemsCenter, Gap0, MarginBottom(16)))
     lottie(LottieFile.SpinningCircles, modify(Height(24)))
     textBlock(prayers.random(), modify(Italic, OpacityHigh))
     row(modify(JustifyContentCenter)) {
@@ -40,7 +40,7 @@ fun DIV.configureAppFooter(sourcePath: String?, vararg additional: ExtraLink) {
         textBlock("report a bug")
     }
     sourcePath?.let {
-        column(modify(Gap0, MarginTop4, AlignItemsCenter)) {
+        column(modify(Gap0, MarginTop(4), AlignItemsCenter)) {
             navigation(sourceUrlOf(sourcePath)) {
                 column(modify(Gap0)) {
                     filigree {

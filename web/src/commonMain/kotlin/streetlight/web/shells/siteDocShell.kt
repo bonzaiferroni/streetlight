@@ -20,7 +20,7 @@ fun FlowContent.siteDocShell(content: DocContent) {
         featureHeader(doc.title, "a Streetlight doc", doc.image)
 
         row(modify(AlignItemsStart)) {
-            card(modify(Width(32), ZenBg, Gap0, PositionSticky, TopSpacing8)) {
+            card(modify(Width(32), ZenBg, Gap0, PositionSticky, Css.Top(8))) {
                 setId(SiteDocKey.TableId)
                 siteDocTable(table)
             }
@@ -32,10 +32,10 @@ fun FlowContent.siteDocShell(content: DocContent) {
 fun FlowContent.siteDocTable(table: DocTable) {
     table.forEach { item ->
         navigation(SiteDocRoute(item.docId)) {
-            textBlock(item.label, modify(Padding1))
+            textBlock(item.label, modify(Padding(1)))
         }
         item.children?.let {
-            column(modify(PaddingLeft3, Gap0)) {
+            column(modify(PaddingLeft(3), Gap0)) {
                 siteDocTable(it)
             }
         }
@@ -45,7 +45,7 @@ fun FlowContent.siteDocTable(table: DocTable) {
 fun FlowContent.siteDocContent(node: DocNode) {
     val doc = node.doc
     column(SiteDocKey.ContentId, modify(Flex1)) {
-        card(modify(BorderRadius2, MoonShadow, OverflowClip, Gap0, Padding0)) {
+        card(modify(BorderRadius2, MoonShadow, OverflowClip, Gap0, Padding(0))) {
             // box(modify(AlignItemsEnd, Aspect2By1)) {
             //     image(doc.image, modify(Size100P, ObjectFitCover, MinHeight0))
             //     spacer(modify(GradientDarkBottom, AlignSelfStretch, VignetteOver))
@@ -57,7 +57,7 @@ fun FlowContent.siteDocContent(node: DocNode) {
                     textBlock("Jump to:", modify(OpacityHigh))
                     idSections.forEach {
                         navigation(it.id!!) {
-                            textBlock(it.title!!, modify(Padding1))
+                            textBlock(it.title!!, modify(Padding(1)))
                         }
                     }
                 }
@@ -78,7 +78,7 @@ fun FlowContent.siteDocContent(node: DocNode) {
                         }
                     }
 
-                    card(modify(ZenBg, Padding4)) {
+                    card(modify(ZenBg, Padding(4))) {
                         markdown(section.content)
                     }
                 }

@@ -30,7 +30,7 @@ fun HTML.messagePage(
         column(modify(BodyStyle.MainColumn, AlignItemsCenter)) {
             topLogo()
             filigree(modify(AlignSelfStretch)) { heading1(title) }
-            card(modify(MaxWidth(64), Padding1)) {
+            card(modify(MaxWidth(64), Padding(1))) {
                 message()
                 block()
             }

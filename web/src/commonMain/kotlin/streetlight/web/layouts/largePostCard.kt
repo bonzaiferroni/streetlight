@@ -19,17 +19,17 @@ fun FlowContent.largePostCard(
     mod: ModifierSet? = null,
     cells: List<(FlowContent.() -> Unit)?>
 ) {
-    card(modify(mod, QueryContainer, Padding0, OverflowHidden, MoonShadow)) {
-        column(modify(QueryContainer, ContainerLgRow, Gap0)) {
+    card(modify(mod, ContainerTypeInlineSize, Padding(0), OverflowHidden, MoonShadow)) {
+        column(modify(ContainerTypeInlineSize, ContainerLgRow, Gap0)) {
 
             // non-grid content
             column(modify(Flex3, ContainerMdRow, Gap0)) {
                 featureImage(image, modify(Flex1, MinHeight(24)))
-                column(modify(Flex2, Padding1, Height(24), MaxHeight(24))) {
+                column(modify(Flex2, Padding(1), Height(24), MaxHeight(24))) {
                     row {
                         column(modify(Flex1, Gap0)) {
                             navigation(postRoute) {
-                                heading3(title, modify(WhiteSpaceNoWrap, LineHeight1, MarginTop1, TextOverflowEllipses))
+                                heading3(title, modify(WhiteSpaceNoWrap, LineHeight1, MarginTop(1), TextOverflowEllipses))
                             }
 
                             subtitle?.let {

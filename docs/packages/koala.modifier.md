@@ -39,3 +39,49 @@ The js source applies modifiers to a live element, on `web.*` receivers. `modify
 The second group takes only a class because it schedules the change on a later animation frame, which exists to let a CSS transition observe the class arriving.
 
 `isModified` asks the element; `contains` asks a modifier. Both compare a leaf by identifier and string value rather than by `==`, because `Class` and `UtilityClass` are different types for the same class name, and a `Property` holds a lambda that defeats data-class equality. `contains` is true when every leaf of the argument is found in the receiver, so a `ModifierSet` argument is satisfied only in full, and a null member is skipped.
+
+## Class Utilities
+
+A utility is a `UtilityClass` made by `utilityOf(identifier, declarations...)`, which builds the rule `.identifier { declaration; ... }`. Each declaration is a CSS string.
+
+A class defined in a hand-written stylesheet is declared as a `Class` val, without a definition.
+
+Utilities live in `*UtilityCss.kt` files grouped by concern. Each file starts with a `val XUtilityCss get() = listOf(...)` that names every utility the file defines, under comments naming the groups, followed by the definitions in the same groups. A utility missing from the list is never written to the stylesheet.
+
+The identifier is the kebab-case form of the val name.
+
+## Stylesheets
+
+A `*Css.kt` file without `Utility` in its name holds stylesheet text as a raw string in a `val XCss get()`, annotated `// language="CSS"`.
+
+`KoalaTheme` holds the values interpolated into `ThemeCss`. `Koala` is the default instance.
+
+## Inline Style Utilities
+
+`CssUtility.kt` holds `InlineStyle` vals, each one a `Property` from `Css` bound to a value. Each is named for the property followed by the value, in PascalCase.
+
+A `Property<LinearDimension>` invoked with an `Int` yields a multiple of `--unit`. Invoked with a `LinearDimension` it yields that dimension unchanged.
+
+`Css` lists the standard descriptors first and the custom ones after.
+
+A style that changes a single property value is an `InlineStyle` rather than a `UtilityClass`. A `UtilityClass` remains where the style must not override a class already held by the element.
+
+`Css` defines each property descriptor. `CssUtility.kt` exposes the most frequently used descriptors as package-level `get()` vals, so that `MinHeight(8)` resolves through the `invoke` operators in `InlineStyle.kt`.
+
+An invoker utility is a package-level `get()` val returning a `Css` descriptor, called with the value. A value utility is a `val` bound to a descriptor and a value, such as `AlignItemsCenter`. A value utility keeps its name when it replaces a `UtilityClass`, so call sites are unchanged. An invoker utility replaces a name such as `MinHeight8` with the call `MinHeight(8)`.
+
+A `UtilityClass` that becomes an `InlineStyle` is removed from its `*UtilityCss` list.
+
+A descriptor for a value that is a plain number is typed `Number` or `Int`. Otherwise it takes the `kotlinx.css` type for the value.
+
+Modifiers are imported with `koala.modifier.*`, not by name.
+
+A property with few variations in use is defined in `CssUtility.kt` as a fixed `InlineStyle`, such as `Flex1` and `BorderRadius1`. A property whose values are kept consistent across the app is also a fixed `InlineStyle`, such as `Gap2Px`.
+
+## Other Files
+
+| File | Holds |
+|---|---|
+| `KoalaBody.kt` | Ids and attributes of the body element, and the screen selector generator |
+| `ScriptBuilder.kt` | `jsScriptOf`, which assembles JS text from `JsFunction`s |
+| `Rgb.kt` | `Rgb` and its hex conversions |

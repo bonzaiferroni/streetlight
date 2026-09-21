@@ -2,26 +2,8 @@
 
 package koala.html
 
-import koala.modifier.Attribute
-import koala.modifier.AutoMagic
-import koala.modifier.BlurBackdrop
-import koala.modifier.BorderRadius3
-import koala.modifier.BorderSolid2Px
-import koala.modifier.Class
-import koala.modifier.Margin1
-import koala.modifier.ModifierSet
-import koala.modifier.OverflowClip
-import koala.modifier.Padding0
-import koala.modifier.PositionAnchor
-import koala.modifier.Scale
-import koala.modifier.addModifiers
-import koala.modifier.modify
-import koala.modifier.setAttribute
-import koala.modifier.setPopoverTarget
-import koala.modifier.setStyle
-import koala.modifier.stringAttributeOf
 import koala.interop.InlineJs
-import koala.modifier.Css
+import koala.modifier.*
 import kotlinx.html.A
 import kotlinx.html.BUTTON
 import kotlinx.html.DIV
@@ -77,7 +59,7 @@ object Popover {
     val Class = Class("popover")
     val TargetAction = stringAttributeOf("popovertargetaction")
 
-    val CardMod = modify(BlurBackdrop, BorderRadius3, BorderSolid2Px, AutoMagic, Scale, OverflowClip, Padding0)
+    val CardMod = modify(BlurBackdrop, BorderRadius3, BorderSolid2Px, AutoMagic, Scale, OverflowClip, Padding(0))
 }
 
 // language="CSS"

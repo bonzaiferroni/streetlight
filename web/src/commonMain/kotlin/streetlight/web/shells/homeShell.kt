@@ -16,7 +16,7 @@ import streetlight.model.ui.PostMapRoute
 import streetlight.web.pages.appHeader
 
 fun FlowContent.homeShell(content: HomeContent) {
-    column(modify(MarginTop1)) {
+    column(modify(MarginTop(1))) {
         appHeader(modify(Height(10)))
 
         geoMapMount(null, modify(BorderRadius2, Height(48), MoonShadow, BorderSolid2Px))
@@ -42,7 +42,7 @@ fun FlowContent.homeShell(content: HomeContent) {
 }
 
 fun FlowContent.galaxiesSection(galaxies: List<Galaxy>) {
-    section(modify(QueryContainer)) {
+    section(modify(ContainerTypeInlineSize)) {
         column(modify(Gap0)) {
             heading2("Galaxies", SectionHeadingMod)
             textBlock(
@@ -65,7 +65,7 @@ fun FlowContent.galaxiesSection(galaxies: List<Galaxy>) {
                     }
                 }
             }
-            column(modify(MarginTop4, ContainerMdMarginTop0)) {
+            column(modify(MarginTop(4), ContainerMdMarginTop0)) {
                 filigree {
                     heading4("Featured Galaxies", subHeadingMods)
                 }

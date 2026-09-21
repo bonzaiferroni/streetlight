@@ -8,7 +8,6 @@ import koala.dom.*
 import koala.html.Id
 import koala.html.listItem
 import koala.html.olist
-import koala.modifier.Flex1
 import kotlinx.html.InputType
 import kotlinx.html.ol
 import streetlight.model.data.EmailStatus
@@ -94,7 +93,7 @@ fun ViewScope.passwordSection(model: AccountEditor) = formSection("Password") {
                     textField(model.verifyPasswordField, "current password") {
                         type = InputType.password
                     }
-                    centeredText("New password:", modify(MarginTop1))
+                    centeredText("New password:", modify(MarginTop(1)))
                 }
                 passwordFormInput(model.passwordEditor)
                 if (email != null) {
@@ -181,7 +180,7 @@ private fun ViewScope.emailNullForm(model: AccountEditor) {
             textField(model.verifyPasswordField, "current password") {
                 type = InputType.password
             }
-            centeredText("What is your new email?", modify(MarginTop1))
+            centeredText("What is your new email?", modify(MarginTop(1)))
         }
         emailFormInput(model.emailEditor)
         formSubmit(submitLabel, model::addEmail, model.emailMessages)

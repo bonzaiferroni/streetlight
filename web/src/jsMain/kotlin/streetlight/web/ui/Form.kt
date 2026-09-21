@@ -31,7 +31,7 @@ fun ViewScope.formCard(
             heading3(name)
         }
     }
-    card(modify(ZenBg, Gap(2), Outline, Padding2)) {
+    card(modify(ZenBg, Gap(2), Outline, Padding(2))) {
         content()
     }
 }

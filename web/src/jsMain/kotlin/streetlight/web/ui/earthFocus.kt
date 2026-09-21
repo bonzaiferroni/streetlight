@@ -69,7 +69,7 @@ private fun ViewScope.focusPanel(
     cells: (FlowContent.() -> Unit)? = null,
 ) {
     val extraLinks = post.links
-    card(modify(Gap0, Padding0, BlurBackdrop, PointerEventsAuto, BorderSolid2Px, EarthStyle.MoveDimmer)) {
+    card(modify(Gap0, Padding(0), BlurBackdrop, PointerEventsAuto, BorderSolid2Px, EarthStyle.MoveDimmer)) {
         setStyle(Css.ColorScheme.of(colorScheme.cssValue))
         column(modify(Gap0)) {
             featureImage(post.image, modify(Flex1))
@@ -77,7 +77,7 @@ private fun ViewScope.focusPanel(
                 cellBlock(modify(FlexWrap), cells)
             }
         }
-        column(modify(Padding1)) {
+        column(modify(Padding(1))) {
             column(modify(Gap0, TextAlignCenter)) {
                 navigation(route) {
                     heading3(post.label, modify(Bold))
@@ -100,7 +100,7 @@ private fun ViewScope.focusPanel(
                 hr { }
             }
             post.body?.let {
-                markdown(it, modify(Padding1))
+                markdown(it, modify(Padding(1)))
             }
         }
     }

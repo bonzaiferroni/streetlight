@@ -69,7 +69,7 @@ fun ViewScope.eventDetailsForm(model: EventEditor) = formCard("Event Details") {
                     dateInput(model.dateState)
                 }.flowValid(EventProperty.Date, model.validityState, contentScope)
             }
-            column(modify(Gap0, MarginTop2)) {
+            column(modify(Gap0, MarginTop(2))) {
                 textBlock("that's", modify(AlignSelfCenter, TextSmall, OpacityHigh))
                 dayIndicator(model.dateState)
                 textBlock("at", modify(AlignSelfCenter, TextSmall, OpacityHigh))
@@ -85,7 +85,7 @@ fun ViewScope.eventDetailsForm(model: EventEditor) = formCard("Event Details") {
         )
         row(modify(JustifyContentSpaceBetween)) {
             buttonPopover("Markdown Hints", flair = "💡") {
-                card(modify(ButtonPopover.CardMod, Padding2)) {
+                card(modify(ButtonPopover.CardMod, Padding(2))) {
                     bulletsOf(
                         "Add a blank line in between paragraphs.",
                         "Use # symbols at the beginning of a line to provide a heading.",

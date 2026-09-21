@@ -1,18 +1,11 @@
 package streetlight.web.ui
 
-import koala.modifier.AlignSelfStart
-import koala.modifier.Class
-import koala.modifier.DayTheme
-import koala.modifier.JustifySelfCenter
-import koala.modifier.PositionSticky
-import koala.modifier.TopSpacing1
-import koala.modifier.ZIndex1
-import koala.modifier.modify
+import koala.modifier.*
 import koala.html.Id
 
 object EarthStyle {
     val Container = Id("earth")
-    val ViewMapButtonMod = modify(PositionSticky, TopSpacing1, JustifySelfCenter, AlignSelfStart, ZIndex1)
+    val ViewMapButtonMod = modify(PositionSticky, Css.Top(1), JustifySelfCenter, AlignSelfStart, ZIndex1)
     val IsMoving = Class("is-moving")
     val MoveDimmer = Class("move-dimmer")
     val IsFocused = Class("is-focused")

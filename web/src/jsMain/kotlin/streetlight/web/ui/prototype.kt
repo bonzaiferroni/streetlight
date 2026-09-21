@@ -2,13 +2,13 @@ package streetlight.web.ui
 
 //fun RenderContext.galaxyListPanel(model: EarthMap) {
 //    flowBlock(model.galaxiesFlow, modify(Height100P)) { galaxies ->
-//        column(modify(Padding1)) {
+//        column(modify(Padding(1))) {
 //            galaxies.forEach { galaxy ->
 //                if (galaxy.eventCount + galaxy.locationCount == 0) return@forEach
 //                navigation(EarthRoute(galaxy.slug), modify(Width100P)) {
 //                    row(modify(Height8, BorderRadius2, OverflowClip, Gap0)) {
 //                        image(galaxy.images.thumb, modify(Aspect1))
-//                        column(modify(PaperGradientBg, Padding1, Gap0)) {
+//                        column(modify(PaperGradientBg, Padding(1), Gap0)) {
 //                            heading3(galaxy.name, modify(Bold, LineHeight115, SingleLine))
 //                            textBlock(buildString {
 //                                if (galaxy.eventCount > 0) append("${galaxy.eventCount} events")
@@ -27,13 +27,13 @@ package streetlight.web.ui
 
 //fun RenderContext.postListPanel(model: EarthMap, posts: List<GalaxyPost>) {
 //    row(modify(Height100P, Gap0, BorderRadiusTop1, OverflowClip)) {
-//        selectionBlock(model.postsFlow, model::setPost, model.postFlow, modify(Padding1, CardBg)) { post ->
+//        selectionBlock(model.postsFlow, model::setPost, model.postFlow, modify(Padding(1), CardBg)) { post ->
 //            image(post.images.thumb, modify(BorderRadius1, Height8))
 //        }
 //        flowBlock(model.postFlow, modify(Flex1)) { post ->
 //            when (post) {
 //                null -> {
-//                    column(modify(PaddingTop1, CardGradientBg, Width32)) {
+//                    column(modify(PaddingTop(1), CardGradientBg, Width32)) {
 //                        posts.forEach { post ->
 //                            column(modify(Gap0, Height8)) {
 //                                heading3(post.label, modify(Bold, LineHeight115, SingleLine))
@@ -53,7 +53,7 @@ package streetlight.web.ui
 //fun ViewScope.postPanel(post: GalaxyPost) {
 //    column(modify(Height100Pct, OverflowYAuto, CardBg, BlurBackdrop)) {
 //        featureImage(post.image, modify(Width100P, Height24))
-//        column(modify(Padding1)) {
+//        column(modify(Padding(1))) {
 //            heading3(post.label)
 //            post.body?.let {
 //                markdown(it)

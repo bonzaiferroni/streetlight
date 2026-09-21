@@ -78,7 +78,7 @@ fun ViewScope.galaxyDescriptionFormRow(model: GalaxyEditor) = formRow {
                 val leanState = markState.mutableTapOf({ it.lean }) { copy(lean = it) }
                 val nameState = markState.mutableTapOf({ it.name }) { copy(name = it) }
 
-                row(modify(AlignItemsCenter, ZenBg, BorderRadius2, Padding1)) {
+                row(modify(AlignItemsCenter, ZenBg, BorderRadius2, Padding(1))) {
                     textField(nameState, "name", modify(Flex1))
                     dropMenu(leanState)
                     button(SvgFile.X, {
@@ -110,7 +110,7 @@ fun ViewScope.galaxyMapFormRow(model: GalaxyEditor) = formRow {
     }
 
     formSection("City") {
-        checkBox(model.isLocalField, "This galaxy has a city", modify(Padding1))
+        checkBox(model.isLocalField, "This galaxy has a city", modify(Padding(1)))
 
         formField {
             row {
@@ -118,7 +118,7 @@ fun ViewScope.galaxyMapFormRow(model: GalaxyEditor) = formRow {
                 textField(model.countryField, "country", modify(Width(24)))
             }
             column(modify(Height(32), OverflowYAuto, Gap0)) {
-                row(modify(Padding1, JustifyContentSpaceBetween)) {
+                row(modify(Padding(1), JustifyContentSpaceBetween)) {
                     textBlock("city", modify(OpacityLow, Italic))
                     textBlock("galaxies", modify(OpacityLow, Italic))
                 }

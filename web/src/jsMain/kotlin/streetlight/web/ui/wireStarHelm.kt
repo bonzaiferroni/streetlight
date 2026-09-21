@@ -44,7 +44,7 @@ fun ViewScope.wireStarHelm(element: HTMLElement) {
     }
 }
 
-private val RowMod = modify(AlignItemsCenter, PaddingLeft3, JustifyContentEnd)
+private val RowMod = modify(AlignItemsCenter, PaddingLeft(3), JustifyContentEnd)
 
 private fun ViewScope.starPanel(star: Star) {
     val session = app.get<SessionClient>()

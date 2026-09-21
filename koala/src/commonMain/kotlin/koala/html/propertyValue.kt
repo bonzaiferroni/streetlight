@@ -14,7 +14,7 @@ fun FlowContent.textProperty(
         span(modify(InkDimFg)) {
             +"$propertyName:"
         }
-        span(modify(MarginLeft1, OverflowWrapAnywhere)) {
+        span(modify(MarginLeft(1), OverflowWrapAnywhere)) {
             +propertyValue
         }
     }

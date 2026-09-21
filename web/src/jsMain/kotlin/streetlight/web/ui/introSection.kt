@@ -18,7 +18,7 @@ fun ViewScope.introSection(
             heading1(name, modify(Shrinkable, AntiShadow))
         }
         row(modify(AlignItemsCenter)) {
-            column(modify(Flex4, FlexMd2, PaddingLeft3)) {
+            column(modify(Flex4, PaddingLeft(3))) {
                 block()
             }
             lottie?.let {

@@ -10,7 +10,7 @@ fun FlowContent.helmBar() {
     val cardMod = modify(HelmBar.CardClass, BlurBackdrop, PointerEventsAuto, BorderRadius50P, ZenBg, Outline)
     siteHelmPopover()
     starHelmPopover()
-    row(HelmBar.StickyBarId, modify(Padding1)) {
+    row(HelmBar.StickyBarId, modify(Padding(1))) {
         div(HelmBar.SiteHelmButton, cardMod) {
             setAnchorName(SiteHelm.PositionAnchor)
             button(SvgFile.Helm, modify(HelmBar.IconMod, WhiteFg)) {

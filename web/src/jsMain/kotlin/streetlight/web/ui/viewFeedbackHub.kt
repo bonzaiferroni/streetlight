@@ -8,7 +8,7 @@ import streetlight.web.model.FeedbackHub
 fun ViewScope.viewFeedbackHub() {
     val model = FeedbackHub(contentScope, api.feedback, toaster)
     val messenger = MessageStore()
-    column(MarginTop1) {
+    column(MarginTop(1)) {
         filigree {
             heading4("Share Feedback")
         }

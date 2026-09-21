@@ -40,7 +40,7 @@ fun FlowContent.eventShell(event: EventLocation) {
             tabs {
                 tab("Location") {
                     column {
-                        card(modify(QueryContainer, ZenBg, BorderRadius2, Padding0, OverflowClip, Gap0)) {
+                        card(modify(ContainerTypeInlineSize, ZenBg, BorderRadius2, Padding(0), OverflowClip, Gap0)) {
                             column(modify(ContainerMdRow, FlexItems1, CardBg, Gap0)) {
                                 geoMapMount(event.geoPoint, modify(MinHeight(48)))
                                 column(modify(JustifyContentCenter, AlignItemsCenter)) {
@@ -58,7 +58,7 @@ fun FlowContent.eventShell(event: EventLocation) {
                                 }
                             }
 
-                            column(modify(ContainerMdRow, Padding4, Gap(4), AlignItemsStart)) {
+                            column(modify(ContainerMdRow, Padding(4), Gap(4), AlignItemsStart)) {
                                 column(modify(Flex4)) {
                                     event.locationDescription?.let {
                                         markdown(it)

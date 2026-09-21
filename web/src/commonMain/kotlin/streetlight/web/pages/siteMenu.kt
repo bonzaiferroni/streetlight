@@ -23,7 +23,7 @@ import streetlight.web.layouts.route
 fun FlowContent.siteHelmPopover() {
     popover(SiteHelm.popoverId, modify(SiteHelm.PopoverClass), SiteHelm.PositionAnchor) {
         card(modify(SiteHelm.Container, HeavyCardBg, BlurBackdrop, PointerEventsAuto)) {
-            column(modify(PaddingRight1)) {
+            column(modify(PaddingRight(1))) {
                 row(modify(AlignItemsCenter)) {
                     button(SvgFile.Helm, modify(HelmBar.IconMod, SpinLoop, BorderDashed2Px, BorderRadius50P)) {
                         onClick = SiteHelm.closePopover.block

@@ -24,7 +24,7 @@ fun ViewScope.routeMenu(
         filigree(modify(AlignSelfStretch)) {
             textBlock(context)
         }
-        row(modify(RouteMenu.ContextMenu, Gap(0), TextUppercase, TextSmall, Padding1, Bold, BorderSolid2Px)) {
+        row(modify(RouteMenu.ContextMenu, Gap(0), TextUppercase, TextSmall, Padding(1), Bold, BorderSolid2Px)) {
             leftIcons?.let { icons ->
                 iconsTray(icons, modify(RouteMenu.LeftTray))
             }

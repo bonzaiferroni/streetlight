@@ -3,6 +3,7 @@ package streetlight.web.ui
 import kampfire.api.Markdown
 import koala.Image
 import koala.modifier.*
+import kotlinx.css.LinearDimension
 import koala.html.AppRoute
 import koala.html.btn
 import koala.html.card
@@ -14,7 +15,6 @@ import koala.html.markdown
 import koala.html.metaImage
 import koala.html.row
 import koala.html.textBlock
-import koala.modifier.Css
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import streetlight.model.data.ExtraLink
@@ -34,7 +34,7 @@ fun FlowContent.featureHeader(
     mod: ModifierSet? = null,
     block: DIV.() -> Unit = { },
 ) {
-    card(modify(mod, QueryContainer, Padding0, Gap0, OverflowClip, MoonShadow, ZenBg, BorderSolid2Px)) {
+    card(modify(mod, ContainerTypeInlineSize, Padding(0), Gap0, OverflowClip, MoonShadow, ZenBg, BorderSolid2Px)) {
         setStyle(Css.ColorScheme.of(colorScheme.cssValue))
         block()
 
@@ -46,7 +46,7 @@ fun FlowContent.featureHeader(
 
             // title panel
             column(modify(JustifyContentCenter, ZenBg)) { // necessary for flex1 because the inner column has padding
-                column(modify(Padding2)) {
+                column(modify(Padding(2))) {
                     heading2(title, modify(TextAlignCenter, LineHeight1, FocusTarget))
                     filigree { textBlock(descriptor, modify(Italic, OpacityHalf)) }
                     subtitle?.let {
@@ -62,7 +62,7 @@ fun FlowContent.featureHeader(
         }
 
         if (description != null || links != null ) {
-            column(modify(ContainerMdRow, Padding4, Gap(4), AlignItemsStart)) {
+            column(modify(ContainerMdRow, Padding(4), Gap(4), AlignItemsStart)) {
 
                 // description
                 description?.let {
@@ -73,7 +73,7 @@ fun FlowContent.featureHeader(
 
                 // button row
                 links?.let { links ->
-                    row(modify(FlexWrap, FlexBasisMin, AlignItemsStart)) {
+                    row(modify(FlexWrap, FlexBasis(LinearDimension.minContent), AlignItemsStart)) {
                         links.forEach { link ->
                             btn(link.label, link.url, modify(Zen))
                         }

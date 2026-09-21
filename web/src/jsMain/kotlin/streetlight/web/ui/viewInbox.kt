@@ -89,7 +89,7 @@ private fun ViewScope.chatList(model: Inbox, star: Star) {
                         val usernames = chat.badges.filter { it.username != star.username }.joinToString(", ") { it.username.value }
                         val badge = chat.badges.firstOrNull { it.username != star.username } ?: chat.badges.first()
                         starBadge(badge)
-                        column(modify(Gap0, Padding1, JustifyContentCenter, Flex1)) {
+                        column(modify(Gap0, Padding(1), JustifyContentCenter, Flex1)) {
                             row {
                                 chat.subject?.let {
                                     textBlock(it, modify(SingleLine, Bold))
@@ -107,7 +107,7 @@ private fun ViewScope.chatList(model: Inbox, star: Star) {
                 }
             }
         }
-        row(modify(Height(7), JustifyContentCenter, Padding1)) {
+        row(modify(Height(7), JustifyContentCenter, Padding(1))) {
             button(SvgFile.MailLarge, { model.setIsArchive(false) }, modify(Height100Pct))
                 .flowModifier(model.isArchiveState.tapOf { !it }, PrimaryFg, contentScope)
             button(SvgFile.Database, { model.setIsArchive(true) }, modify(Height100Pct))
@@ -138,13 +138,13 @@ private fun ViewScope.messageList(model: Inbox) {
 
         lazyColumn(
             list = model.messageList,
-            mod = modify(Flex1, PaddingTop1, FlexColumn, FlexReverse, BorderRadius1),
+            mod = modify(Flex1, PaddingTop(1), FlexColumn, FlexReverse, BorderRadius1),
             scrollState = model.messageScrollState
         ) { message ->
             val index = model.messageList.liveItems.indexOf(message)
             val nextAuthor = model.messageList.liveItems.getOrNull(index + 1)?.author
             if (message.author != nextAuthor) {
-                filigree(modify(MarginBottom1)) {
+                filigree(modify(MarginBottom(1))) {
                     textBlock(message.author.value, modify(TextSmall, OpacityHigh))
                 }
             }
@@ -154,7 +154,7 @@ private fun ViewScope.messageList(model: Inbox) {
             }
         }
 
-        column(modify(MinHeight(16), MaxHeight(50.pct), MarginBottom1)) {
+        column(modify(MinHeight(16), MaxHeight(50.pct), MarginBottom(1))) {
             val replyState = storeOf(Markdown.Empty)
 
             fun onSubmit() = launchEffect {

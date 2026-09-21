@@ -1,8 +1,6 @@
 package streetlight.web.ui
 
-import koala.modifier.FlexColumn
-import koala.modifier.TextAlignCenter
-import koala.modifier.modify
+import koala.modifier.*
 import koala.dom.RouteScope
 import koala.dom.ViewScope
 import koala.dom.lazyTabs
