@@ -1,4 +1,8 @@
-#map-window {
+package koala.html
+
+// language="CSS"
+val GeoMapCss get() = with(GeoMapKey) { """
+$Window {
     position: relative;
     overflow: clip;
     width: 100%;
@@ -7,17 +11,14 @@
     isolation: isolate;
 }
 
-#map-window > * {
+$Window > * {
     width: 100%;
     height: 100%;
     position: absolute;
     inset: 0;
 }
 
-#map-widget {
-}
-
-#map-overlay {
+$Overlay {
     position: relative;
     background: radial-gradient(
             circle,
@@ -30,7 +31,7 @@
     z-index: 1;
 }
 
-#map-crosshairs {
+$Crosshairs {
     width: 12px;
     height: 12px;
 
@@ -54,57 +55,19 @@
     mask-position: center;
 }
 
-#map-panel {
-    width: 100%;
-}
+$Panel { width: 100%; }
 
-.map-mount {
-}
-
-
-/* event panel */
-
-.map-event-panel {
-    display: grid;
-    gap: var(--unit);
-    grid-template-columns: 1fr; /* small screens */
-    align-items: start;
-}
-
-@media (min-width: 48rem) {
-    .map-event-panel {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-}
-
-/* no need for column/break hacks */
-.map-panel-card {
-    margin: 0;
-}
-
-.map-panel-card-grid {
-    width: 100%;
-    display: grid;
-    grid-template-columns: 3rem 1fr 3rem 3rem;
-    gap: var(--unit);
-}
-
-.map-panel-card-heading {
-    grid-column: 1 / 2;
-}
-
-/* map focus.svg */
-
-#map-focus-panel {
+$FocusPanel {
     position: absolute;
     padding: var(--unit);
     width: 100%;
     bottom: 0;
 }
 
-#map-focus-panel > * {
+$FocusPanel > * {
     max-width: calc(var(--unit) * 64);
     max-height: calc(var(--unit) * 48);
     margin: 0 auto;
     z-index: 1;
 }
+""" }

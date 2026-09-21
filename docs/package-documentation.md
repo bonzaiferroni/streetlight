@@ -46,7 +46,7 @@ An inaccurate document is worse than a missing one, because it will be believed.
 | Tables | Use them where each row relates its cells to one another |
 | Bullet lists | Use them for items that share no per-row relationship |
 | Code blocks | Use them where a shape is clearer shown than described |
-| Placeholder names | `Foo` stands for any type or val name, as in `FooCss` and `FooUtilityCss` |
+| Placeholder names | `Foo` stands for any type or val name, as in `FooCss` |
 | Structure first | Reach for the heading, table, list, or code block that fits the content. Prose carries what none of them can |
 
 Recording a convention does not mean writing at length. A convention that fits in a table row is a table row.

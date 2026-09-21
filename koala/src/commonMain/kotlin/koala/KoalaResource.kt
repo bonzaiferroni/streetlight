@@ -15,14 +15,6 @@ object JsFile : FileSet<Js>() {
     val Koala = addJs("koala/koala.js")
 }
 
-object CssFile : FileSet<Stylesheet>() {
-    val Reset = add("reset.css")
-
-    // val Styles = add("styles.css")
-    val GeoMap = add("geo-map.css")
-    // val Sandbox = add("sandbox.css")
-}
-
 object LottieFile : FileSet<Lottie>() {
     val Cat = addLottie("cat.json")
     val CatProto = addLottie("cat-proto.json")

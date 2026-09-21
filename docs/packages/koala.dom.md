@@ -1,12 +1,12 @@
 ### Introduction
 
-The `koala.dom` package provides a Kotlin/JS DSL for building and managing the DOM. It extends `kotlinx.html` to provide a set of styled components and utilities that integrate with `koala.css` and `kotlinx.coroutines`. It is primarily used for creating reactive, component-based UIs in the browser.
+The `koala.dom` package provides a Kotlin/JS DSL for building and managing the DOM. It extends `kotlinx.html` to provide a set of styled components and utilities that integrate with `koala.modifier` and `kotlinx.coroutines`. It is primarily used for creating reactive, component-based UIs in the browser.
 
 ### Dependencies
 
 - `kotlinx.html`: The base DSL for building HTML structures.
 - `kotlinx.coroutines`: Used for managing asynchronous operations and rendering lifecycles.
-- `koala.css`: Provides the styling engine and `ModifierSet` used by DOM elements.
+- `koala.modifier`: Provides `Modifier` and `ModifierSet`, applied to DOM elements.
 - `koala.html`: Provides common HTML-related types like `Id`.
 
 ### Structures
@@ -18,7 +18,7 @@ The `koala.dom` package provides a Kotlin/JS DSL for building and managing the D
 `RenderContext` is an interface that extends `DOMContext` and adds a `renderScope: CoroutineScope`. This allows components to launch coroutines that are tied to the rendering lifecycle.
 
 #### Styled Elements
-Common layout elements like `row`, `column`, `box`, and `fullscreenBox` are implemented as extension functions that apply `koala.css` modifiers to standard HTML tags (usually `div`).
+Common layout elements like `row`, `column`, `box`, and `fullscreenBox` are implemented as extension functions that apply `koala.modifier` modifiers to standard HTML tags (usually `div`).
 
 ```kotlin
 inline fun DOMContext.row(

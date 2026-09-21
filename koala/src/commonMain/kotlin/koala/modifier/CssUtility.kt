@@ -129,6 +129,5 @@ val BorderRadiusPillLeft = Css.BorderRadius(LinearDimension("9999px 0 0 9999px")
 
 val MaxWidthTextBody = MaxWidth(108)
 
-//val Height100Vh = utilityOf("height-100vh", "height: 100dvh")
 val SmallIconHeight = Height(3)
 val LargeIconHeight = Height(5)

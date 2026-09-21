@@ -36,7 +36,7 @@ private fun TagConfig.bufferModifiers(
     if (styleBuffer.isNotEmpty() && styleBuffer.last() != ';') styleBuffer.append(';')
     for (modifier in modifiers) {
         when (modifier) {
-            is ClassModifier -> classBuffer.appendClass(modifier)
+            is Class -> classBuffer.appendClass(modifier)
             is InlineStyle<*> -> {
                 if (styleBuffer.isNotEmpty()) styleBuffer.append(' ')
                 styleBuffer.append(modifier.property.identifier)
@@ -51,7 +51,7 @@ private fun TagConfig.bufferModifiers(
     }
 }
 
-internal fun StringBuilder.appendClass(modifier: ClassModifier) {
+internal fun StringBuilder.appendClass(modifier: Class) {
     if (isNotEmpty()) append(' ')
     append(modifier.identifier)
 }

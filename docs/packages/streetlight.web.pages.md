@@ -7,7 +7,7 @@ The `streetlight.web.pages` package contains the high-level DSL definitions for 
 The most common packages this package depends on are:
 
 * `koala.html`: For core HTML component DSLs and utilities.
-* `koala.css`: For styling classes and layout modifications.
+* `koala.modifier`: For modifiers and utility classes.
 * `kotlinx.html`: The base library for Kotlin-based HTML generation.
 * `streetlight.model.data`: For accessing domain models like `Event` and `Location` to be displayed on pages.
 * `streetlight.web.shells`: For including the reusable UI "shells" that define the main content areas of the pages.

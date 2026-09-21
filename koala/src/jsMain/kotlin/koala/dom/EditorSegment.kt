@@ -1,17 +1,16 @@
 package koala.dom
 
 import js.array.asList
-import koala.modifier.ClassModifier
 import koala.markdown.*
 import koala.model.EditorStyle
-import koala.modifier.isModified
+import koala.modifier.*
 import web.html.HTMLBRElement
 import web.html.HTMLElement
 import kotlin.collections.forEach
 import kotlin.sequences.forEach
 import kotlin.sequences.plus
 
-data class EditorSegment(val from: Int, val to: Int, val mod: ClassModifier)
+data class EditorSegment(val from: Int, val to: Int, val mod: Class)
 
 fun ParsedBlock.toEditorSegments(): List<EditorSegment> = segmentsIn(chunk, 0, chunk.length, markdown.editorSpans())
 

@@ -1,0 +1,19 @@
+package koala.modifier
+
+// language="CSS"
+val ResetCss get() = """
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+a       { color: inherit; text-decoration: none; }
+a:hover { text-decoration: none; }
+
+img, picture, video, canvas, svg { display: block; max-width: 100%; }
+
+@media (prefers-reduced-motion: no-preference) {
+    html { interpolate-size: allow-keywords; }
+}
+"""

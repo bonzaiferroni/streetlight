@@ -6,7 +6,7 @@ The `www` directory serves as the root for static assets and client-side resourc
 
 The directory is organized into several functional subdirectories:
 
-* **css/**: Contains all standard CSS files. The project is currently transitioning from dynamic Kotlin CSS DSL (in `koala.css`) to static CSS files in this directory.
+* **css/**: Contains standard CSS files. Stylesheets declared in Kotlin live in `koala.modifier`.
 * **img/**: Static image assets, including JPEGs and PNGs used throughout the application.
 * **js/**: JavaScript source and compiled outputs. This includes:
     * **koala/** and **streetlight/**: Compiled Kotlin/JS modules (e.g., `koala.js`, `web.js`).
