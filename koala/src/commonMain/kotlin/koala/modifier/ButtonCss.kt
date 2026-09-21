@@ -160,7 +160,7 @@ ${BtnStyle.Class}:hover {
 
 ${ButtonStyle.ElementClass}, [onclick], $Clickable {
     cursor: pointer;
-    transition: color var(--magic-interval) var(--magic-easing);
+    transition: var(--transition-color);
 }
 
 ${ButtonStyle.ElementClass}:hover, [onclick]:hover, $Clickable:hover {
@@ -169,7 +169,7 @@ ${ButtonStyle.ElementClass}:hover, [onclick]:hover, $Clickable:hover {
 
 $HoverBg {
     box-shadow: inset 0 0 80px transparent;
-    transition: color var(--magic-interval) var(--magic-easing), box-shadow var(--magic-interval) var(--magic-easing);
+    transition: var(--transition-color), var(--transition-box-shadow);
 }
 
 $HoverBg:hover {

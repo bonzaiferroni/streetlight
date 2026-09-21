@@ -126,7 +126,7 @@ ${AppBody.FullScreen} {
     inset: 0;
     pointer-events: none;
     opacity: 0;
-    transition: opacity var(--magic-interval) var(--magic-easing);
+    transition: var(--transition-opacity);
 }
 
 ${AppBody.FullScreen}$Reveal {

@@ -1,7 +1,6 @@
 package koala.dom
 
 import koala.modifier.FlexColumn
-import koala.modifier.ModifierSet
 import koala.modifier.addModifiers
 import koala.modifier.modify
 import koala.html.Id

@@ -34,9 +34,7 @@ body {
     line-height: var(--paragraph-line-height);
     color: var(--ink-fg);
     -webkit-font-smoothing: antialiased;
-    transition: 
-        background-color var(--magic-interval) var(--magic-easing), 
-        color var(--magic-interval) var(--magic-easing);
+    transition: var(--transition-background-color), var(--transition-color);
 }
 
 @keyframes hueSpin {

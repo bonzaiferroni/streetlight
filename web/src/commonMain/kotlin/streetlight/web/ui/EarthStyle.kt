@@ -35,7 +35,7 @@ ${EarthStyle.Container} .maplibregl-ctrl-top-right {
 }
 
 .maplibregl-canvas {
-    transition: filter var(--magic-interval) var(--magic-easing);
+    transition: var(--transition-filter);
 }
 
 $DayTheme .maplibregl-canvas {
@@ -81,7 +81,7 @@ $Grid {
     
     $ListDetail {
         width: 400px;
-        transition: width var(--magic-interval) var(--magic-easing);
+        transition: var(--transition-width);
         overflow: hidden;
     }
     

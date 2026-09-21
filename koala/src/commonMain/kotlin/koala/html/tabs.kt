@@ -84,7 +84,7 @@ fun DIV.configureTabsViewport(
 }
 
 object TabsStyle {
-    val Container = Class("tabs-proto")
+    val Container = Class("tabs")
     val Button = Container.withBemElement("button")
     val Header = Container.withBemElement("header")
     val Viewport = Container.withBemElement("viewport")
@@ -120,7 +120,7 @@ $Button {
     padding: 0.5rem 1rem;
     border-radius: 24px 24px 12px 12px;
     cursor: pointer;
-    transition: background-color var(--magic-interval) var(--magic-easing);
+    transition: var(--transition-background-color);
     text-align: center;
     user-select: none;
     text-overflow: ellipsis;
@@ -139,7 +139,7 @@ $Button {
 
 $Viewport {
     position: relative;
-    transition: height var(--magic-interval) var(--magic-easing);
+    transition: var(--transition-height);
     width: 100%;
 }
 
@@ -149,10 +149,7 @@ $Panel {
     inline-size: 100%;
     visibility: hidden;
     opacity: 0;
-    transition:
-        opacity var(--magic-interval) var(--magic-easing),
-        transform var(--magic-interval) var(--magic-easing),
-        visibility var(--magic-interval) var(--magic-easing);
+    transition: var(--transition-opacity), var(--transition-transform), var(--transition-visibility);
 
     &:has(~ $IsActive) {
         transform: translateX(-20px);

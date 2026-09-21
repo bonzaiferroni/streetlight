@@ -81,7 +81,7 @@ object ButtonStyle {
 val IconButtonCss get() = """
 ${ButtonStyle.IconClass} {
     color: inherit;
-    transition: background-color var(--magic-interval) var(--magic-easing);
+    transition: var(--transition-background-color);
 }
 
 ${ButtonStyle.IconClass}:hover {

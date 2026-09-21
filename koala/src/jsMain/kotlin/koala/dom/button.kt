@@ -1,7 +1,6 @@
 package koala.dom
 
 import koala.Svg
-import koala.modifier.ModifierSet
 import koala.html.IconStyle
 import koala.html.configureButton
 import koala.html.configureElementButton

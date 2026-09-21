@@ -1,6 +1,6 @@
 package koala.html
 
-import koala.modifier.Class
+import koala.modifier.*
 
 object SwitchStyle {
     val Class = Class("switch")
@@ -33,9 +33,7 @@ $Pill {
     left: 0;
     right: 1rem;
     transform: translate(0, -50%);
-    transition:
-            transform var(--magic-interval) var(--magic-easing),
-            background var(--magic-interval) var(--magic-easing);
+    transition: var(--transition-transform), var(--transition-background);
 
     padding: var(--btn-padding);
     border: none;
@@ -66,7 +64,7 @@ $Ghost {
 }
 
 /* ON state: slide pill to the right, full opacity */
-$Class[data-is-on="true"] $Pill {
+$Class${Attribute.IsOn.to(true)} $Pill {
     background: var(--primary-button);
     transform: translate(1rem, -50%);
     box-shadow: 0 0 .8rem var(--primary-button), var(--btn-outline);

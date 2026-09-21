@@ -29,6 +29,6 @@ val ProgressBarCss get() = with(ProgressBarStyle) { """
 $Indicator {
     width: calc(var($Progress) * 100%);
     height: 100%;
-    transition: width var(--magic-interval) var(--magic-easing);
+    transition: var(--transition-width);
 }
 """ }

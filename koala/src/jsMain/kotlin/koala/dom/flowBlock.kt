@@ -3,7 +3,6 @@ package koala.dom
 import koala.modifier.Blur
 import koala.modifier.Magic
 import koala.modifier.MagicStyle
-import koala.modifier.ModifierSet
 import koala.modifier.Reveal
 import koala.modifier.SlideLeft
 import koala.modifier.Transitioning
