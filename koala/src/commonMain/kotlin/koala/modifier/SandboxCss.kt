@@ -1,8 +1,10 @@
 package koala.modifier
 
+val FullscreenBox = Class("fullscreen-box")
+
 // language="CSS"
 val SandboxCss get() = """
-.fullscreen-box {
+$FullscreenBox {
     position: fixed;
     inset: 0;
     margin: 0;

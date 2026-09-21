@@ -5,15 +5,27 @@ val Card = Class("card")
 val FlexRow = Class("row")
 val FlexColumn = Class("column")
 val FlexReverse = Class("flex-reverse")
+val Size100P = Class("size-100")
+val FlexItems1 = Class("flex-items-1")
+val PaddingX1 = Class("padding-x-1")
+val PaddingX2 = Class("padding-x-2")
+val PaddingY1 = Class("padding-y-1")
+val PaddingY2 = Class("padding-y-2")
+val Shrinkable = Class("shrinkable")
+val MediaMdRow = Class("media-md-row")
+val ContainerMdRow = Class("container-md-row")
+val ContainerLgRow = Class("container-lg-row")
+val ContainerLgColumn = Class("container-lg-column")
+val ContainerMdMarginTop0 = Class("container-md-margin-top-0")
 
 // language="CSS"
 val LayoutCss get() = """
 :root {
-    --unit-1: var(--unit);
-    --unit-2: calc(var(--unit) * 2);
-    --unit-3: calc(var(--unit) * 3);
-    --unit-4: calc(var(--unit) * 4);
-    --unit-8: calc(var(--unit) * 8);
+    --unit-1:  var(--unit);
+    --unit-2:  calc(var(--unit) * 2);
+    --unit-3:  calc(var(--unit) * 3);
+    --unit-4:  calc(var(--unit) * 4);
+    --unit-8:  calc(var(--unit) * 8);
     --unit-16: calc(var(--unit) * 16);
     --unit-32: calc(var(--unit) * 32);
 }
@@ -58,43 +70,26 @@ $Box {
     }
 }
 
+$Size100P { width: 100%; height: 100%; }
+
+$FlexItems1 > * { flex: 1; }
+
+$PaddingX1 { padding-left: var(--unit);   padding-right:  var(--unit); }
+$PaddingX2 { padding-left: var(--unit-2); padding-right:  var(--unit-2); }
+$PaddingY1 { padding-top:  var(--unit);   padding-bottom: var(--unit); }
+$PaddingY2 { padding-top:  var(--unit-2); padding-bottom: var(--unit-2); }
+
 @media (min-width: 600px) {
-    .media-md-row { flex-direction: row; }
-    .media-md-column { flex-direction: column; }
-    .media-md-row-reverse { flex-direction: row-reverse; justify-content: flex-end; }
-}
-
-@media (min-width: 760px) {
-    .media-lg-row { flex-direction: row; }
-    .media-lg-column { flex-direction: column; }
-    .media-lg-row-reverse { flex-direction: row-reverse; justify-content: flex-end; }
-}
-
-@container (min-width: 300px) {
-    .container-tn-row { flex-direction: row; }
-    .container-tn-column { flex-direction: column; }
-    .container-tn-row-reverse { flex-direction: row-reverse; justify-content: flex-end; }
-}
-
-@container (min-width: 380px) {
-    .container-sm-row { flex-direction: row; }
-    .container-sm-column { flex-direction: column; }
-    .container-sm-row-reverse { flex-direction: row-reverse; justify-content: flex-end; }
+    $MediaMdRow { flex-direction: row; }
 }
 
 @container (min-width: 600px) {
-    .container-md-row { flex-direction: row; }
-    .container-md-column { flex-direction: column; }
-    .container-md-row-reverse { flex-direction: row-reverse; justify-content: flex-end; }
-    .container-md-margin-top-0 { margin-top: 0 !important; }
-
-    .flex-md-1 { flex: 1 !important; }
-    .flex-md-2 { flex: 2 !important; }
+    $ContainerMdRow        { flex-direction: row; }
+    $ContainerMdMarginTop0 { margin-top:     0 !important; }
 }
 
 @container (min-width: 760px) {
-    .container-lg-row { flex-direction: row; }
-    .container-lg-column { flex-direction: column; }
-    .container-lg-row-reverse { flex-direction: row-reverse; justify-content: flex-end; }
+    $ContainerLgRow    { flex-direction: row; }
+    $ContainerLgColumn { flex-direction: column; }
 }
 """

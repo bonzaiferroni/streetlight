@@ -44,15 +44,30 @@ The second group takes only a class because it schedules the change on a later a
 
 A utility is a `UtilityClass` made by `utilityOf(identifier, declarations...)`, which builds the rule `.identifier { declaration; ... }`. Each declaration is a CSS string.
 
-A class defined in a hand-written stylesheet is declared as a `Class` val, without a definition.
+A class defined in a hand-written stylesheet is declared as a `Class` val, without a definition, in the hybrid file that styles it.
 
-Utilities live in `*UtilityCss.kt` files grouped by concern. Each file starts with a `val XUtilityCss get() = listOf(...)` that names every utility the file defines, under comments naming the groups, followed by the definitions in the same groups. A utility missing from the list is never written to the stylesheet.
+Utilities live in `*UtilityCss.kt` files grouped by concern. Each file starts with a `val FooUtilityCss get() = listOf(...)` that names every utility the file defines, under comments naming the groups, followed by the definitions in the same groups. A utility missing from the list is never written to the stylesheet.
 
 The identifier is the kebab-case form of the val name.
 
 ## Stylesheets
 
-A `*Css.kt` file without `Utility` in its name holds stylesheet text as a raw string in a `val XCss get()`, annotated `// language="CSS"`.
+A `*Css.kt` file without `Utility` in its name is a hybrid Kotlin and CSS file. It declares each class it styles as a `Class` val at the top, followed by the stylesheet text as a raw string in a `val FooCss get()`, annotated `// language="CSS"`.
+
+```kotlin
+val Foo = Class("foo")
+
+// language="CSS"
+val FooCss get() = """
+$Foo {
+    display: flex;
+}
+"""
+```
+
+The stylesheet refers to each class by interpolating the val, as in `$Foo`, and never by writing the selector.
+
+A rule of one or two declarations that fits on one line is written on one line. A family of such rules is written as consecutive lines with no blank line between them, and the property names and values on those lines are aligned in columns.
 
 `KoalaTheme` holds the values interpolated into `ThemeCss`. `Koala` is the default instance.
 
@@ -72,7 +87,17 @@ An invoker utility is a package-level `get()` val returning a `Css` descriptor, 
 
 A `UtilityClass` that becomes an `InlineStyle` is removed from its `*UtilityCss` list.
 
-A descriptor for a value that is a plain number is typed `Number` or `Int`. Otherwise it takes the `kotlinx.css` type for the value.
+Converting a class to an `InlineStyle` is preceded by an analysis of the DOM structure and the stylesheets, for any rule that sets the same property on an element that carries the modifier.
+
+A descriptor for a value that is a plain number is typed `Number` or `Int`. Otherwise it takes the `kotlinx.css` type for the value. Where `kotlinx.css` has no type for the property, the descriptor takes the enum of a related property whose values are all valid for it, or `String` when none fits.
+
+A utility that sets more than one property remains a `UtilityClass`.
+
+A descriptor called rarely has no package-level `get()` val and is invoked through `Css`, as in `Css.Top(1)`.
+
+A value utility for a zero length is written with `0.px`, because the `Int` invoker yields `calc(var(--unit) * 0)`.
+
+A value utility whose name equals a `kotlinx.css` type qualifies that type in its initializer, as in `kotlinx.css.FlexWrap.wrap`.
 
 Modifiers are imported with `koala.modifier.*`, not by name.
 

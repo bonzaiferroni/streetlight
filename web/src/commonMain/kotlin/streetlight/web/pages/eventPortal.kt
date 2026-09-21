@@ -8,6 +8,7 @@ import kotlinx.html.*
 import streetlight.model.data.*
 import koala.modifier.*
 import kotlinx.css.LinearDimension
+import kotlinx.css.rem
 
 fun HTML.eventPortal(event: Event, performer: Performer?, requestItems: List<RequestItem>, resource: PageResource) {
     appHead(event.title, resource) {
@@ -15,7 +16,7 @@ fun HTML.eventPortal(event: Event, performer: Performer?, requestItems: List<Req
 //        applyScripts("event-portal/webscripts.js")
     }
     body {
-        column(Id("event-profile"), modify(AlignItemsCenter, Padding(1))) {
+        column(Id("event-profile"), modify(AlignItemsCenter, Padding(1), PaddingBottom(8.rem))) {
             setAttribute(EventPortalSelector.eventIdAttribute, event.eventId)
             a("/") {
                 row() {
