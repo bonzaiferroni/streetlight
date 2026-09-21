@@ -2,7 +2,7 @@ package koala.model
 
 import kampfire.model.GeoRect
 import kampfire.model.DEG_TO_RAD
-import kampfire.model.GeoPoint
+import kampfire.model.distanceSquaredTo
 import kampfire.model.toPlanarPoint
 import koala.external.maplibregl
 import kotlinx.coroutines.CoroutineScope
@@ -77,15 +77,12 @@ internal class GeoLayerRender(
         val clusterRadiusPx = layer.config.clusterRadiusPx ?: return
         val zoom = zoomNow ?: return
         val refLatitude = refLatitudeNow ?: return
-        val clusterRadiusDegrees = clusterRadiusPx * degreesPerPixelOf(zoom)
-        pointClusters = defineClusters(clusterRadiusDegrees, refLatitude)
+        val clusterRadiusMetersSq = clusterRadiusMetersOf(zoom, refLatitude, clusterRadiusPx).let { it * it }
+        pointClusters = defineClusters(clusterRadiusMetersSq)
         applyClusters(pointClusters)
     }
 
-    private fun defineClusters(clusterRadiusDegrees: Double, refLatitude: Double): Map<MarkerId, PointCluster?> {
-        val halfHeightAtEquator = clusterRadiusDegrees * CLUSTER_HEIGHT_RATIO / 2
-        val halfWidth = halfHeightAtEquator * CLUSTER_ASPECT
-        val halfHeight = halfHeightAtEquator * cos(refLatitude * DEG_TO_RAD)
+    private fun defineClusters(clusterRadiusMetersSq: Double): Map<MarkerId, PointCluster?> {
         val clusters = mutableMapOf<MarkerId, PointCluster?>()
         val clustered = mutableSetOf<MarkerId>()
         val currentSet = mutableSetOf<MarkerId>()
@@ -93,15 +90,10 @@ internal class GeoLayerRender(
         pointRenders.forEach { (markerId, render) ->
             if (markerId in clustered) return@forEach
 
-            val anchor = render.position
-            val clusterRect = GeoRect(
-                sw = GeoPoint(lng = anchor.lng - halfWidth, lat = anchor.lat - halfHeight),
-                ne = GeoPoint(lng = anchor.lng + halfWidth, lat = anchor.lat + halfHeight),
-            )
-
             pointRenders.forEach { (otherId, otherRender) ->
                 if (otherId == markerId || otherId in clustered) return@forEach
-                if (!clusterRect.contains(otherRender.position)) return@forEach
+                val distanceSq = render.planarPoint.distanceSquaredTo(otherRender.planarPoint)
+                if (distanceSq > clusterRadiusMetersSq) return@forEach
                 currentSet.add(otherId)
             }
 
@@ -190,14 +182,12 @@ internal class GeoLayerRender(
     }
 }
 
-fun degreesPerPixelOf(zoom: Float): Double = 360.0 / (2.0f.pow(zoom) * MAPLIBRE_TILE_SIZE)
+fun clusterRadiusMetersOf(zoom: Float, refLatitude: Double, pixelRadius: Int): Double {
+    val metersPerPixel = (40_075_016.686 * cos(refLatitude * DEG_TO_RAD)) / (2.0f.pow(zoom) * MAPLIBRE_TILE_SIZE)
+    return pixelRadius * metersPerPixel
+}
 
 const val MAPLIBRE_TILE_SIZE = 512.0
-
-// full height of the cluster rect as a fraction of the cluster radius
-private const val CLUSTER_HEIGHT_RATIO = 1
-// width of the cluster rect as a multiple of its height
-private const val CLUSTER_ASPECT = 3.0
 
 internal class PointCluster(
     val principalId: MarkerId,
