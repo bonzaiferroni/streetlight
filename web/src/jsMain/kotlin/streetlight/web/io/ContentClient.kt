@@ -27,8 +27,10 @@ import kotlin.uuid.Uuid
 
 interface ContentClient {
     suspend fun readHomeContent(): Outcome<HomeContent>
+    suspend fun readCityListContent(): Outcome<CityListContent>
 }
 
 class BrowserContentClient(private val client: FetchClient): ContentClient {
     override suspend fun readHomeContent() = client.getApi(Api.Content.Home)
+    override suspend fun readCityListContent() = client.getApi(Api.Content.CityList)
 }

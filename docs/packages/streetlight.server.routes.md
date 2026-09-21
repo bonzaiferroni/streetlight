@@ -55,6 +55,14 @@ Endpoints sit inside an `authGate` block rather than carrying a per-endpoint che
 
 A serve function opens a separate `authGate` block for each of these when it holds endpoints of both kinds. Grouping by gate rather than by endpoint keeps the authentication requirement visible at the block, where it cannot be missed by a reader skimming for it.
 
+## Content Endpoints
+
+`serveContent.kt` implements the endpoints under `Api.Content`, one per route that has a shell. Each returns the result of `readFooContent`, so the endpoint and `renderFoo` read the same content.
+
 ## Page Routes
 
 `servePages.kt` responds with HTML from `streetlight.web.pages` instead of implementing `Api` endpoints. It takes a `ServerResource` because the templates need build-mode-dependent asset paths.
+
+A screen whose route is likely to be shared or linked from another site is rendered here on the initial load. Its branch in `renderScreen` calls `renderFoo`, an `ApiScope` extension returning `HtmlRender`, which reads the route's content with `readFooContent` and passes it to `fooShell` inside `appPage`. A screen with no branch is rendered by `renderClientBase`, and the browser builds its content.
+
+`readFooContent` is a `DaoScope` extension in `streetlight.server.model`.

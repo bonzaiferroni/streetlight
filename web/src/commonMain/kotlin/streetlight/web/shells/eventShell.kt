@@ -18,7 +18,7 @@ fun FlowContent.eventShell(event: EventLocation) {
     column(BodyStyle.ShellColumn) {
         appHeader()
 
-        column(BodyStyle.MainColumn) {
+        section(BodyStyle.MainColumn) {
             featureHeader(
                 title = event.title,
                 descriptor = "at",

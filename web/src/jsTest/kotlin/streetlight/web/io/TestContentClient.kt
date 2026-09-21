@@ -27,4 +27,5 @@ import kotlin.uuid.Uuid
 
 class TestContentClient: ContentClient {
     override suspend fun readHomeContent(): Outcome<HomeContent> = TODO()
+    override suspend fun readCityListContent(): Outcome<CityListContent> = TODO()
 }

@@ -70,6 +70,9 @@ fun ViewScope.viewPortal() {
                 Screen.GalaxyConfig -> viewGalaxyConfigRoute()
                 Screen.GalaxyList -> viewGalaxyList()
 
+                // city
+                Screen.CityList -> viewCityListRoute()
+
                 // media
                 Screen.MediaForge -> viewContentPosterRoute()
                 Screen.Media -> viewMediaRoute()

@@ -2,6 +2,19 @@
 
 The browser-side presentation layer. View functions build the DOM through the `koala.dom` DSL and wire it to state exposed by the view models in `streetlight.web.model`.
 
+## Layers
+
+The UI has two layers.
+
+| Layer | Package | Holds |
+|---|---|---|
+| Declarative UI | `streetlight.web.ui` | Components, and what is rendered from state |
+| View model | `streetlight.web.model` | The concept of the UI, its state, and communication with the API |
+
+A view model knows nothing of HTML elements or how they render.
+
+A view is not required to have a view model. `ViewScope` carries the API, and a view whose state is simple declares it and makes its API calls itself. A view gains a view model when its state or its API traffic outgrows that.
+
 ## View Functions
 
 A view function is an extension on `ViewScope`, named for what it renders, in a file of the same name.
@@ -35,13 +48,56 @@ Work that rebuilds with the content belongs in `contentScope`. Work that must su
 
 A view model constructed inside a view is given `contentScope`, so its coroutines end when the content it serves is replaced.
 
+## Rendering State
+
+`flowBlock` renders a value as HTML. It takes a `Tap` or a `Flow`, and its block is rebuilt as a child view whenever the value changes. The previous child view is disposed first.
+
+A state parameter is a `Tap` for a read and a `MutableTap` for a read and write. A `Tap` is a lens onto another `Tap` or onto a `Store`, and a `Store` wraps a `StateFlow`. These types are declared in `kampfire.model`.
+
 ## Screens and Routes
 
 `Screen` is an enum in `streetlight.model.ui`. Each entry holds a `RouteParse` that turns a URL into a `StreetlightRoute`, and an optional path root taken from the entry name when absent.
 
-`viewPortal` renders whatever `Portal` has selected, mapping each `Screen` to its route function in a single `when`. A screen with no branch falls to the catch-all rather than failing.
+`Portal` (`koala.model`) holds the current route as `PortalState`. It builds the route from the address bar on load and on browser navigation, and it intercepts clicks on local anchors. Code that holds a reference to `Portal` navigates with `Portal.go(route)`.
+
+`viewPortal` is a `flowBlock` over `Portal.screenState`. It renders the selected `Screen` inside a `RouteScope` built from the current `PortalState`, mapping each `Screen` to its route function in a single `when`. A screen with no branch falls to the catch-all rather than failing.
 
 To add a screen: declare the `Screen` entry and its route, write `viewFoo` and `viewFooRoute`, then add the branch in `viewPortal`.
+
+## Shell Views
+
+A screen that the server renders on the initial load has a shell in `streetlight.web.shells`. Its view is built from the shell.
+
+```kotlin
+fun ViewScope.viewFoo(content: FooContent) {
+    shellBox {
+        fooShell(content)
+    }
+
+    document.setTitle(FooRoute)
+    applyTheme(null)
+}
+
+fun RouteScope.viewFooRoute() {
+    routeBlock<FooRoute, FooContent>(FooShell.IslandId) { content ->
+        viewFoo(content)
+    }
+}
+```
+
+`shellBox` adopts the server-rendered shell when it is present and builds the shell in the browser when it is not. The view builds no elements of its own.
+
+A shell view is wired through these parts.
+
+| Part | Location |
+|---|---|
+| `Api.Content.Foo` endpoint | `streetlight.model.Api` |
+| `readFooContent` | `streetlight.server.model`, and bound in `serveContent` |
+| `readFooContent` on `ContentClient` | `streetlight.web.io` |
+| `is FooRoute` branch | `AppContentFetcher` |
+| `Screen.Foo` branch | `viewPortal` |
+
+A shell view with a map uses `shellBoxWithMap` and sets the marker points from the content.
 
 ## Services
 

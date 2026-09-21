@@ -54,6 +54,11 @@ data class HomeContent(
 ): RouteContent
 
 @Serializable
+data class CityListContent(
+    val cities: List<City>,
+): RouteContent
+
+@Serializable
 data class DocContent(
     val node: DocNode,
     val table: DocTable,

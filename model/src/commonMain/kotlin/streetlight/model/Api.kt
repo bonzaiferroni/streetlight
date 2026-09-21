@@ -19,6 +19,7 @@ object Api: ApiNode(ApiNode(null, "api"), "v1") {
 
     object Content: ApiNode(this) {
         object Home: GetEndpoint<HomeContent>(this)
+        object CityList: GetEndpoint<CityListContent>(this)
     }
 
     object Events: GetEndpoint<List<Event>>(this) {

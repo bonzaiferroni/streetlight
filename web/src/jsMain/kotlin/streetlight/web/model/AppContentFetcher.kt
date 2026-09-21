@@ -11,6 +11,7 @@ import streetlight.model.ui.EventScoutRoute
 import streetlight.model.ui.EventUpdateRoute
 import streetlight.model.ui.GalaxyConfigRoute
 import streetlight.model.ui.GalaxyRoute
+import streetlight.model.ui.CityListRoute
 import streetlight.model.ui.HomeRoute
 import streetlight.model.ui.InboxRoute
 import streetlight.model.ui.LocationConfigRoute
@@ -32,6 +33,7 @@ class AppContentFetcher(
 ): ContentFetcher {
     override suspend fun fetchContent(route: AppRoute): Outcome<FetcherContent> = when (route) {
         is HomeRoute -> api.content.readHomeContent()
+        is CityListRoute -> api.content.readCityListContent()
         is GalaxyRoute -> api.galaxy.readGalaxyContent(route.slug)
         is GalaxyConfigRoute -> api.galaxy.readGalaxyConfig(route.slug)
         is LocationRoute -> api.location.readLocationContent(route.slug)
