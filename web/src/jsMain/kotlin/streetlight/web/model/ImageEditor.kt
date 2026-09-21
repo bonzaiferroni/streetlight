@@ -16,10 +16,11 @@ class ImageEditor(
 ) {
     // td: add meta
 
-    suspend fun finalizeImage(messenger: Messenger? = null) {
-        val blobImage = imageField.now?.takeIf { it.url.isBlob } ?: return
-        val uploadedImage = uploadImage(blobImage, messenger, api) ?: return
+    suspend fun finalizeImage(messenger: Messenger? = null): Boolean {
+        val blobImage = imageField.now?.takeIf { it.url.isBlob } ?: return true
+        val uploadedImage = uploadImage(blobImage, messenger, api) ?: return false
         imageField.set(uploadedImage)
+        return true
     }
 }
 

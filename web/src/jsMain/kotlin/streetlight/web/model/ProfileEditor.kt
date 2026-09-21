@@ -33,7 +33,7 @@ class ProfileEditor(
 
     fun submit() {
         scope.launch(::submit) {
-            imageEditor.finalizeImage(messages)
+            if (!imageEditor.finalizeImage(messages)) return@launch
             val design = designer.build(messages)
             val profile = editField.now.copy(design = design)
 

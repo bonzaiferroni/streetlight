@@ -54,7 +54,7 @@ class MediaEditor(
     fun submitPost(galaxy: Galaxy? = null) {
         if (!editField.now.isValid) return
         scope.launch {
-            imageEditor.finalizeImage(message)
+            if (!imageEditor.finalizeImage(message)) return@launch
             val design = designer.build(message)
 
             val edit = editField.now.copy(design = design)

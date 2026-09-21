@@ -125,7 +125,7 @@ class GalaxyEditor(
 
         editMessage.set("Saving...", true)
         scope.launch {
-            imageEditor.finalizeImage(editMessage)
+            if (!imageEditor.finalizeImage(editMessage)) return@launch
             val design = designer.build(editMessage)
             val edit = editState.now.copy(geoRect = geo.stateNow.view, design = design)
             val slug = when (edit.galaxyId) {

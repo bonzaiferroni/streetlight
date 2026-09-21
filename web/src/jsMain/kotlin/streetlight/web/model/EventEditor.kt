@@ -85,7 +85,7 @@ class EventEditor(
 
     suspend fun submitSuspend(): Event? {
         if (!isEditValid()) return null
-        imageEditor.finalizeImage(message)
+        if (!imageEditor.finalizeImage(message)) return null
         val edit = editState.now
 
         message.set("Sending...", true)
