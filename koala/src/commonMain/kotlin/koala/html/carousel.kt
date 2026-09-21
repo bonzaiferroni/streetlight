@@ -17,8 +17,8 @@ object CarouselKey {
 }
 
 // language="CSS"
-val CarouselCss get() = """
-.carousel {
+val CarouselCss get() = with(CarouselKey) { """
+$Class {
     width: 100%;
     overflow-x: auto;
     overflow-y: visible;
@@ -27,17 +27,17 @@ val CarouselCss get() = """
     scrollbar-width: none;
 }
 
-.carousel::-webkit-scrollbar {
+$Class::-webkit-scrollbar {
     display: none;
 }
 
-.carousel > .row {
+$Class > $FlexRow {
     display: flex;
     flex-wrap: nowrap;
     width: max-content;
 }
 
-.carousel > .row > * {
+$Class > $FlexRow > * {
     scroll-snap-align: start;
 }
-"""
+""" }

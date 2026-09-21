@@ -1,7 +1,6 @@
 package streetlight.web.ui
 
-import koala.modifier.Class
-import koala.modifier.Hide
+import koala.modifier.*
 
 object CommentClass {
     val Root = Class("comment")
@@ -42,7 +41,7 @@ ${CommentClass.HasNestedContent} > div > ${CommentClass.NestedContent} {
     padding: var(--unit) 0 0 var(--unit);
 }
 
-${CommentClass.HasNestedContent} > .card {
+${CommentClass.HasNestedContent} > $Card {
     border-radius: var(--unit-2) var(--unit-2) var(--unit-2) 0;
 }
 
@@ -75,7 +74,7 @@ ${CommentClass.IsEditing} ${CommentClass.Content} {
     pointer-events: none;
 }
 
-${CommentClass.Root}$Hide > .card > ${CommentClass.InnerCard},
+${CommentClass.Root}$Hide > $Card > ${CommentClass.InnerCard},
 ${CommentClass.Root}$Hide > ${CommentClass.AfterCard} {
     display: none;
 }

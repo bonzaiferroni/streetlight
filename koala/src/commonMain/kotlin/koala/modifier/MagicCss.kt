@@ -52,19 +52,15 @@ val MagicCss get() = with (MagicStyle) { """
     --transition-height: height var(--magic-interval) var(--magic-easing);
 }
 
-.glow {
-    animation: var(--glow-shadow-infinite), var(--glow-background-infinite);
-}
-
-.glow-shadow {
+$GlowShadow {
     animation: var(--glow-shadow-infinite);
 }
 
-:root:not(.day-theme) .anti-shadow {
+:root:not($DayTheme) $AntiShadow {
     animation: var(--anti-shadow-infinite);
 }
 
-.glow-background {
+$GlowBackground {
     animation: var(--glow-background-infinite);
 }
 
@@ -170,55 +166,6 @@ val MagicCss get() = with (MagicStyle) { """
     }
 }
 
-/* fade-stack */
-
-.fade-stack {
-    position: relative;
-}
-
-.fade-stack > * {
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    transform: scale(0.9);
-    visibility: hidden;
-    pointer-events: none;
-    transition: opacity 0.35s ease,
-    transform 0.35s ease,
-    visibility 0.35s ease;
-}
-
-.fade-stack > *.show {
-    opacity: 1;
-    transform: scale(1); /* slide into place */
-    visibility: visible;
-    pointer-events: auto;
-}
-
-/* state render */
-
-.state-render {
-    position: relative;
-    transition: height 200ms ease-in-out;
-}
-
-.state-render-animation {
-    opacity: 0;
-    filter: var(--magic-blur);
-    transition: opacity 200ms ease-in-out, transform 200ms ease-in-out, filter 200ms ease-out;
-    pointer-events: none;
-}
-
-.state-render-animation.enter-stage {
-    opacity: 1;
-    filter: blur(0px);
-    pointer-events: auto;
-}
-
-.state-render-animation.exit-stage {
-    position: absolute;
-}
-
 /* slow spin */
 
 @keyframes loop-spin {
@@ -230,7 +177,7 @@ val MagicCss get() = with (MagicStyle) { """
     }
 }
 
-.spin-loop {
+$SpinLoop {
     animation: loop-spin 10s linear infinite;
 }
 
@@ -246,11 +193,11 @@ val MagicCss get() = with (MagicStyle) { """
     }
 }
 
-.fade-loop {
+$FadeLoop {
     animation: loop-fade 2s ease-in-out infinite;
 }
 
-.auto-magic {
+$AutoMagic {
     opacity: 1;
     transition: var(--transition-opacity);
 
@@ -259,7 +206,7 @@ val MagicCss get() = with (MagicStyle) { """
     }
 }
 
-.auto-magic.slide-left {
+$AutoMagic$SlideLeft {
     transform: translate(0px, 0px);
 
     transition: var(--transition-opacity), var(--transition-transform);
@@ -269,7 +216,7 @@ val MagicCss get() = with (MagicStyle) { """
     }
 }
 
-.auto-magic.slide-up {
+$AutoMagic$SlideUp {
     transform: translate(0px, 0px);
 
     transition: var(--transition-opacity), var(--transition-transform);
@@ -279,7 +226,7 @@ val MagicCss get() = with (MagicStyle) { """
     }
 }
 
-.auto-magic.scale {
+$AutoMagic$Scale {
     transform: scale(1);
     transition: var(--transition-opacity), var(--transition-transform-bounce);
 

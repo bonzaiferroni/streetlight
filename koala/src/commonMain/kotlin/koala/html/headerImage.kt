@@ -30,8 +30,8 @@ object HeaderImageKey {
 }
 
 // language="CSS"
-val HeaderImageCss get() = """
-.header-image {
+val HeaderImageCss get() = with(HeaderImageKey) { """
+$Class {
     display: grid;
     width: 100%;
     max-height: 24rem;
@@ -39,12 +39,12 @@ val HeaderImageCss get() = """
     overflow: hidden;
 }
 
-.header-image > * {
+$Class > * {
     grid-area: 1 / 1 / 2 / 2;
 }
 
 /* Make the image fill the box, crop from center vertically if too tall */
-.header-image > img {
+$Class > img {
     width: 100%;
     height: 100%;
     max-height: 24rem;
@@ -54,7 +54,7 @@ val HeaderImageCss get() = """
 }
 
 /* Gradient overlay: transparent until halfway, then to 50% black at bottom */
-.header-image::after {
+$Class::after {
     content: "";
     grid-area: 1 / 1 / 2 / 2;
     pointer-events: none;
@@ -67,7 +67,7 @@ val HeaderImageCss get() = """
 }
 
 /* Title centered horizontally, near the bottom, with a drop shadow */
-.header-image > h1 {
+$Class > h1 {
     align-self: end;
     justify-self: end;
     margin: 0;
@@ -77,4 +77,4 @@ val HeaderImageCss get() = """
     color: white;
     text-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.8);
 }
-"""
+""" }

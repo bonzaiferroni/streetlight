@@ -41,7 +41,7 @@ h2 {
     font-weight: var(--heading-2-weight);
 }
 
-h2.bold {
+h2$Bold {
     font-weight: var(--heading-4-weight);
 }
 
@@ -50,7 +50,7 @@ h3 {
     font-weight: var(--heading-3-weight);
 }
 
-h3.bold {
+h3$Bold {
     font-weight: var(--heading-4-weight);
 }
 
@@ -80,18 +80,16 @@ $Prose {
 }
 
 @media (max-width: 600px) {
-    h1.shrinkable,
-    .shrinkable h1 { font-size: calc(var(--heading-1-size) * 0.8); }
-    h2.shrinkable,
-    .shrinkable h2 { font-size: calc(var(--heading-2-size) * 0.8); }
-    h3.shrinkable,
-    .shrinkable h3 { font-size: calc(var(--heading-3-size) * 0.8); }
+    h1$Shrinkable,
+    $Shrinkable h1 { font-size: calc(var(--heading-1-size) * 0.8); }
+    h2$Shrinkable,
+    $Shrinkable h2 { font-size: calc(var(--heading-2-size) * 0.8); }
+    h3$Shrinkable,
+    $Shrinkable h3 { font-size: calc(var(--heading-3-size) * 0.8); }
 }
 
 p {
     text-overflow: ellipsis;
 }
-
-h2.grow-text { font-size: calc(var(--heading-2-size) * 1.1); } 
 """
 

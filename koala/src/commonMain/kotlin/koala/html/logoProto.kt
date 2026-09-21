@@ -20,14 +20,14 @@ object LogoProtoKey {
 }
 
 // language="CSS"
-val LogoProtoCss get() = """
-.logo {
+val LogoProtoCss get() = with(LogoProtoKey) { """
+$Class {
     display: flex;
     height: 100%;
     animation: glow-shadow 10s infinite linear;
 }
 
-.logo > div {
+$Class > div {
     height: 100%;
     aspect-ratio: 2 / 3;
     display: block;
@@ -44,4 +44,4 @@ val LogoProtoCss get() = """
 
     animation: glow-background 10s infinite linear;
 }
-"""
+""" }

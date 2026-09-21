@@ -46,15 +46,4 @@ $Valid${Attribute.BlockLabel}::after,
 $Valid ${Attribute.BlockLabel}::after {
     background: var(--valid-bg);
 } 
-
-${Attribute.BlockLabel}.start::after {
-    left: .5rem;
-    right: auto;
-}
-
-${Attribute.BlockLabel}.center::after {
-    left: 50%;
-    right: auto;
-    transform: translateX(-50%);
-}
 """

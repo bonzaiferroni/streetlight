@@ -1,5 +1,6 @@
 package koala.modifier
 
+import koala.html.BtnStyle
 import koala.html.ButtonStyle
 
 object ButtonStyle {
@@ -23,7 +24,7 @@ body {
     --danger-shadow: 0 0 .8rem rgb(var(--danger)), var(--btn-outline);
 }
 
-.btn {
+${BtnStyle.Class} {
     display: grid;
     grid-template-columns: auto 1fr;
     align-items: center;
@@ -57,7 +58,7 @@ body {
     }
 }
 
-.btn-text {
+$ButtonText {
     text-transform: uppercase;
     font-weight: var(--btn-font-weight);
     font-size: var(--btn-font-size);
@@ -65,17 +66,17 @@ body {
     white-space: nowrap;
 }
 
-.btn.accent {
+${BtnStyle.Class}$Accent {
     box-shadow: var(--accent-shadow);
     background: var(--accent-button);
 }
 
-.btn.secondary {
+${BtnStyle.Class}$Secondary {
     box-shadow: none;
     background: var(--secondary-button);
 }
 
-.btn.zen {
+${BtnStyle.Class}$Zen {
     color: var(--ink-fg);
     background: var(--zen-bg);
     box-shadow: none;
@@ -83,51 +84,51 @@ body {
     outline: var(--outline-low);
     outline-offset: -2px;
 
-    &.primary-bg {
+    &$PrimaryBg {
         background: var(--primary-card-bg);
     }
 }
 
-.day-theme {
-    .btn {
+$DayTheme {
+    ${BtnStyle.Class} {
         background: var(--primary-button-day);
     }
 
-    .btn.secondary {
+    ${BtnStyle.Class}$Secondary {
         box-shadow: none;
         background: var(--secondary-button);
     }
 
-    .btn.accent {
+    ${BtnStyle.Class}$Accent {
         box-shadow: var(--btn-outline);
         background: var(--accent-button-day);
     }
 
-    .btn.zen {
+    ${BtnStyle.Class}$Zen {
         background: var(--zen-button-day);
     }
 }
 
-.working {
-    &.btn, .btn {
+$Shimmer {
+    &${BtnStyle.Class}, ${BtnStyle.Class} {
         pointer-events: none;
         opacity: .9;
     }
 }
 
-.btn.danger {
+${BtnStyle.Class}$Danger {
     background: var(--danger-bg);
     box-shadow: var(--danger-shadow);
 }
 
-.btn.background-image {
+${BtnStyle.Class}$BackgroundImage {
     position: relative;
     overflow: hidden;
     z-index: 0;
     box-shadow: 0 0 .8rem rgba(var(--ink), .2);
 }
 
-.btn.background-image::before {
+${BtnStyle.Class}$BackgroundImage::before {
     content: "";
     position: absolute;
     inset: 0;
@@ -142,27 +143,27 @@ body {
     z-index: -1;
 }
 
-.btn[disabled] {
+${BtnStyle.Class}[disabled] {
     background: var(--gray-bg);
     color: var(--ink-disabled);
     cursor: not-allowed;
     box-shadow: none;
 }
 
-.btn[disabled]:hover {
+${BtnStyle.Class}[disabled]:hover {
     animation: none;
 }
 
-.btn:hover {
+${BtnStyle.Class}:hover {
     animation: glow-shadow 10s infinite linear;
 }
 
-${ButtonStyle.ElementClass}, [onclick], .clickable {
+${ButtonStyle.ElementClass}, [onclick], $Clickable {
     cursor: pointer;
     transition: color var(--magic-interval) var(--magic-easing);
 }
 
-${ButtonStyle.ElementClass}:hover, [onclick]:hover, .clickable:hover {
+${ButtonStyle.ElementClass}:hover, [onclick]:hover, $Clickable:hover {
     color: var(--accent-fg);
 }
 
@@ -180,8 +181,4 @@ $Selected {
     outline-offset: -2px;
     border-radius: var(--unit-1);
 }
-
-.highlighted {
-    color: var(--primary-fg);
-}    
 """}

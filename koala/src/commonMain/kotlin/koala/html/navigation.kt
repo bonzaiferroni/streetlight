@@ -110,13 +110,13 @@ object ActionKey {
 }
 
 // language="CSS"
-val ActionCss get() = """
-.action {
+val ActionCss get() = with(ActionKey) { """
+$Class {
     /*transition: opacity 0.35s ease;*/
     cursor: pointer;
 }
 
-.action:hover {
+$Class:hover {
     /*opacity: 1;*/
 }
-"""
+""" }

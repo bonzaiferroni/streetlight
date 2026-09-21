@@ -9,8 +9,8 @@ object FilePickerKey {
 }
 
 // language="CSS"
-val FilePickerCss get() = """
-.file-picker-drop-zone {
+val FilePickerCss get() = with(FilePickerKey) { """
+$DropZone {
     border: 2px dashed #888;
     padding: 2rem;
     text-align: center;
@@ -23,9 +23,9 @@ val FilePickerCss get() = """
     border-radius: inherit;
 }
 
-.file-picker-drop-zone.dragover {
+$DropZone$DragOver {
     border-color: #fff;
     background: rgba(255, 255, 255, 0.1);
     box-shadow: inset 0 0 0 9999px rgba(255,255,255,.04);
 }
-"""
+""" }

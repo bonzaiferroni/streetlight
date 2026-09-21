@@ -1,11 +1,8 @@
 package koala.model
 
 import koala.Asset
-import koala.modifier.Class
-import koala.modifier.Focus
-import koala.modifier.Property
-import koala.modifier.Rgb
-import koala.modifier.Scale
+import koala.modifier.*
+import koala.html.IconStyle
 import kotlinx.css.Color
 import kotlinx.css.LinearDimension
 import kotlinx.css.properties.Angle
@@ -177,7 +174,7 @@ $ClusterPrincipal {
         opacity: 1;
     }
     
-    .icon {
+    ${IconStyle.Icon} {
         opacity: 0;
     }
 }

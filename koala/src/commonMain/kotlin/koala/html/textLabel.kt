@@ -21,9 +21,9 @@ object TextLabelKey {
     val Class = Class("text-label")
 }
 
-val TextLabelCss get() = """
-.text-label {
+val TextLabelCss get() = with(TextLabelKey) { """
+$Class {
     font-size: 0.8rem;
     opacity: 0.5;
 }
-"""
+""" }

@@ -61,7 +61,7 @@ $Foo {
 """
 ```
 
-The stylesheet refers to each class by interpolating the val, as in `$Foo`, and never by writing the selector.
+The stylesheet refers to each class by interpolating the val, as in `$Foo`, and never by writing the selector, except for classes owned by another library. A class declared in an object is interpolated with the getter wrapped in `with(FooObject) { """ ... """ }`.
 
 A rule of one or two declarations that fits on one line is written on one line. A family of such rules is written as consecutive lines with no blank line between them, and the property names and values on those lines are aligned in columns.
 

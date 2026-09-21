@@ -44,11 +44,11 @@ object SectionStyle {
 }
 
 // language="CSS"
-val SectionCss get() = """
-.section {
+val SectionCss get() = with(SectionStyle) { """
+$Class {
     display: flex;
     flex-direction: column;
     min-width: 0;
     gap: var(--unit);
 }
-"""
+""" }

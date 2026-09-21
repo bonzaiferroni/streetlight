@@ -1,62 +1,62 @@
 package koala.html
 
-import koala.modifier.Class
+import koala.modifier.*
 
 object ItemsBlockStyle {
     val Class = Class("items-block")
 }
 
 // language="CSS"
-val ItemsBlockCss get() = """
+val ItemsBlockCss get() = with(ItemsBlockStyle) { """
     
-.items-block {
+$Class {
     position: relative;
 }
     
-.items-block > * {
+$Class > * {
     width: 100%;
     position: absolute;
 }    
 
-.items-block.magic {
+$Class$Magic {
     transition: height 200ms ease-in-out;
     
-    > :not(.reveal) {
+    > :not($Reveal) {
         pointer-events: none;
     }
 }
 
-.items-block.magic > * {
+$Class$Magic > * {
     position: absolute;
     opacity: 0;
     transition: opacity 200ms ease-in-out, transform 200ms ease-in-out, filter 200ms ease-in-out, top 200ms ease-in-out;
 }
 
-.items-block.magic > .reveal {
+$Class$Magic > $Reveal {
     opacity: 1;
 }
 
-.items-block.magic.blur > * {
+$Class$Magic$Blur > * {
     filter: var(--magic-blur);
 }
 
-.items-block.magic > .reveal {
+$Class$Magic > $Reveal {
     filter: blur(0px);
 }
 
-.items-block.magic.slide-left > * {
+$Class$Magic$SlideLeft > * {
     transform: translate(20px, 0px);
 }
 
-.items-block.magic.slide-left > .reveal {
+$Class$Magic$SlideLeft > $Reveal {
     transform: translate(0px, 0px);
 }
 
-.items-block.magic.slide-up > * {
+$Class$Magic$SlideUp > * {
     transform: translate(0px, 20px);
 }
 
-.items-block.magic.slide-up > .reveal {
+$Class$Magic$SlideUp > $Reveal {
     transform: translate(0px, 0px);
 }
-"""
+""" }

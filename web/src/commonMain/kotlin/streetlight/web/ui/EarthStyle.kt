@@ -63,10 +63,6 @@ $Container {
     > * {
         isolation: isolate;
     }
-    
-    .tabs-header {
-        border: var(--outline-low);
-    }
 }
 
 $Grid {

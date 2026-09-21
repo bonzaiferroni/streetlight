@@ -74,7 +74,7 @@ ${Popover.Class} {
     color: inherit;
 }
 
-${Popover.Class}.magic {
+${Popover.Class}$Magic {
     transition: 
         opacity 200ms ease-in-out, 
         transform 200ms ease-in-out, 
@@ -82,39 +82,39 @@ ${Popover.Class}.magic {
         display 200ms allow-discrete;
 }
 
-${Popover.Class}.magic:popover-open {
+${Popover.Class}$Magic:popover-open {
     opacity: 1;
 }
 
-${Popover.Class}.magic.blur:popover-open {
+${Popover.Class}$Magic$Blur:popover-open {
     filter: blur(0px);
 }
 
-${Popover.Class}.magic.slide-down:popover-open,
-${Popover.Class}.magic.slide-right:popover-open,
-${Popover.Class}.magic.slide-left:popover-open,
-${Popover.Class}.magic.slide-up:popover-open {
+${Popover.Class}$Magic$SlideDown:popover-open,
+${Popover.Class}$Magic$SlideRight:popover-open,
+${Popover.Class}$Magic$SlideLeft:popover-open,
+${Popover.Class}$Magic$SlideUp:popover-open {
     transform: translate(0px, 0px);
 }
 
 @starting-style {
-    ${Popover.Class}.magic:popover-open {
+    ${Popover.Class}$Magic:popover-open {
         opacity: 0;
     }
     
-    ${Popover.Class}.magic.blur:popover-open {
+    ${Popover.Class}$Magic$Blur:popover-open {
         filter: var(--magic-blur);
     }
     
-    ${Popover.Class}.magic.slide-up:popover-open {
+    ${Popover.Class}$Magic$SlideUp:popover-open {
         transform: translate(0px, 20px);
     }
     
-    ${Popover.Class}.magic.slide-left:popover-open {
+    ${Popover.Class}$Magic$SlideLeft:popover-open {
         transform: translate(20px, 0px);
     }
     
-    ${Popover.Class}.magic.slide-right:popover-open {
+    ${Popover.Class}$Magic$SlideRight:popover-open {
         transform: translate(-20px, 0px);
     }
 }

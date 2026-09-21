@@ -23,7 +23,7 @@ $Class {
     background-color: transparent;
     scrollbar-width: none;
     
-    $Card, .tabs-header {
+    $Card {
         border: var(--outline-low);
         outline-offset: -2px;
     }
