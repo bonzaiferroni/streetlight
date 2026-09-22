@@ -6,12 +6,12 @@ import koala.html.SegmentParse
 
 sealed interface EarthRoute: StreetlightRoute {
     override val screen get() = Screen.Earth
-    override val label get() = "Map"
     val layer: EarthLayer
 }
 
 data class GalaxyMapRoute(override val slug: Slug?): EarthRoute, SlugRoute {
     override val title get() = "Galaxy Map"
+    override val label get() = "Galaxy"
     override val layer get() = EarthLayer.Galaxy
 
     override fun toRelativePath() = "/earth/galaxy/${slug?.toString() ?: ""}"
@@ -19,6 +19,7 @@ data class GalaxyMapRoute(override val slug: Slug?): EarthRoute, SlugRoute {
 
 data class CityMapRoute(override val slug: Slug?): EarthRoute, SlugRoute {
     override val title get() = "City Map"
+    override val label get() = "City"
     override val layer get() = EarthLayer.City
 
     override fun toRelativePath() = "/earth/city/${slug?.toString() ?: ""}"
@@ -26,7 +27,7 @@ data class CityMapRoute(override val slug: Slug?): EarthRoute, SlugRoute {
 
 data class PostMapRoute(override val title: String = "Earth"): EarthRoute {
     override val layer get() = EarthLayer.Post
-
+    override val label get() = "Post"
     override fun toRelativePath() = "/earth"
 }
 
