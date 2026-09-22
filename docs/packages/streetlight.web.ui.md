@@ -163,6 +163,8 @@ A side route is for a route that not every view wants, such as a config route. A
 
 The dock holds routes only. An action belongs in the view it acts on.
 
+The main routes and each tray are a pill of `RouteDockStyle.Glass` with `BlurBackdrop`. `RouteDockCss` holds only the translucent colors, and the rest is modifiers. The trays are `Flex1` on either side of the main routes, which keeps the main routes centered.
+
 ### State
 
 `RouteDock` in `streetlight.web.model` holds the dock's state, reached through `AppFacade.dock`. On every route it sets its state from `stateOf(route)`, which states everything the route alone determines. A route with no branch clears the dock.

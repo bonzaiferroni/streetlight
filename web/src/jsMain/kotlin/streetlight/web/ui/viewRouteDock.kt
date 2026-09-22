@@ -3,7 +3,6 @@ package streetlight.web.ui
 import koala.SvgFile
 import koala.dom.*
 import koala.html.AppRoute
-import koala.html.RouteMenu
 import koala.html.navigation
 import koala.html.row
 import koala.html.textBlock
@@ -27,16 +26,16 @@ fun ViewScope.wireRouteDock() {
 fun ViewScope.viewRouteDock() {
     val model = dock
 
-    column(modify(PointerEventsAuto, TextUppercase, TextSmall, Gap(0), AlignItemsCenter)) {
+    column(modify(PointerEventsAuto, TextUppercase, TextSmall, Gap(0), MarginBottom(2))) {
         flowBlock(model.titleState, modify(Magic, Height(3))) { title ->
             if (title == null) return@flowBlock
             filigree(AlignSelfStretch) {
-                textBlock(title)
+                textBlock(title, PrimaryFg)
             }
         }
-        row {
-            val trayMod = modify()
-            flowBlock(model.leftRoutes, modify(Flex1, Magic)) { leftRoutes ->
+        row(modify(Gap(1), AlignItemsCenter)) {
+            val trayMod = modify(RouteDockStyle.Glass, BlurBackdrop, BorderRadiusPill, BorderSolid2Px, Padding(1))
+            flowBlock(model.leftRoutes, modify(Flex1, Magic, DisplayFlex, JustifyContentEnd)) { leftRoutes ->
                 val routes = leftRoutes?.takeIf { it.isNotEmpty() } ?: return@flowBlock
                 row(trayMod) {
                     routes.forEach { route ->
@@ -48,13 +47,13 @@ fun ViewScope.viewRouteDock() {
             }
             flowBlock(model.mainRoutes, Magic) { mainRoutes ->
                 val routes = mainRoutes ?: return@flowBlock
-                row(modify(Gap(0), Padding(1), Bold, BorderSolid2Px)) {
+                row(modify(RouteDockStyle.Glass, BlurBackdrop, BorderRadiusPill, Gap(0), Padding(1), Bold, AlignItemsCenter, BorderSolid2Px)) {
                     routes.forEach { route ->
-                        navigation(route, RouteMenu.Route) { +route.label }
+                        navigation(route, modify(BorderRadiusPill, PaddingY1, PaddingX2)) { +route.label }
                     }
                 }
             }
-            flowBlock(model.rightRoutes, modify(Flex1, Magic)) { rightRoutes ->
+            flowBlock(model.rightRoutes, modify(Flex1, Magic, DisplayFlex, JustifyContentStart)) { rightRoutes ->
                 val routes = rightRoutes?.takeIf { it.isNotEmpty() } ?: return@flowBlock
                 row(trayMod) {
                     routes.forEach { route ->
