@@ -16,6 +16,7 @@ fun FlowContent.appOverlay() {
         workSignal(WorkSignalStyle.AbsolutePositioned.append(modify(Right0, Bottom0))) {
             setId(AppOverlay.WorkSignal)
         }
+        div(AppOverlay.RouteDockId)
     }
 }
 
@@ -29,6 +30,7 @@ val AppOverlayScript get() = with(AppOverlay) {
 object AppOverlay {
     val Container = Id("app-overlay")
     val WorkSignal = Id("overlay-work-signal")
+    val RouteDockId = Id("route-dock")
     val MediaVlgReveal = Class("display-none-below-vlg")
     val RevealLeftPanel = Class("reveal-left-panel")
     val RevealRightPanel = Class("reveal-right-panel")

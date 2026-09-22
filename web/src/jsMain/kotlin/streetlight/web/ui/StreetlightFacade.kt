@@ -5,6 +5,7 @@ import koala.model.GeoCamera
 import koala.model.Portal
 import streetlight.web.io.ApiClient
 import streetlight.web.model.MarkerMap
+import streetlight.web.model.RouteDock
 import streetlight.web.model.Toaster
 import streetlight.web.model.SessionClient
 
@@ -14,3 +15,4 @@ val AppFacade.toaster get() = app.get<Toaster>()
 val AppFacade.session get() = app.get<SessionClient>()
 val AppFacade.markerMap get() = app.get<MarkerMap>()
 val AppFacade.geoCamera get() = app.get<GeoCamera>()
+val AppFacade.dock get() = app.get<RouteDock>()

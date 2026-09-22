@@ -63,6 +63,7 @@ fun viewApp() {
                     // wireRightPanel()
                     wireToaster()
                     wireOmni(omni)
+                    wireRouteDock()
 
                     // hides the element that holds server rendered content
                     // document.getElementById(KoalaBody.ShellMount).modify(DisplayNone)

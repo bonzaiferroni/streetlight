@@ -40,12 +40,12 @@ class Portal(
     val stateFlow = state.flow
     val stateNow get() = state.now
 
+    val routeState = state.tapOf { it.route }
     val screenState = state.tapOf(
         applyFlow = { states ->
             states.dedupBy({ if (it.route.screen.retainWithinScreen) it.route.screen else it }) { it.route.screen }
         }
     ) { it.route.screen }
-    val routeFlow = stateFlow.dedup { it.route }
 
     private var backstack: List<Navigation> = emptyList()
     private var isWrecked = false

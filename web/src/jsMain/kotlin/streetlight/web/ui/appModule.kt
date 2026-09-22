@@ -46,6 +46,7 @@ val appModule = module {
     single { DataCache(get()) }
     single { Toaster(get()) } bind Messenger::class
     single { Portal(HomeRoute, Screen.entries) }
+    single { RouteDock(get(), get())}
     single<ContentFetcher> { AppContentFetcher(get()) }
     single { RouteInflator(get(), get(), get(), get()) }
     single { SessionClient(get(), get(), get(), get(), get()) }
