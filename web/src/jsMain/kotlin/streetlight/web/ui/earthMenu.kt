@@ -11,6 +11,10 @@ import streetlight.web.model.Earth
 import streetlight.web.model.RouteDockState
 
 fun ViewScope.earthMenu(model: Earth) {
+    model.focusState.reactIn(contentScope) { focus ->
+        dock.setVisible(focus == null)
+    }
+
     model.mapState.reactIn(contentScope) { map ->
         when (map) {
             is GalaxyMap -> map.galaxy?.let { dock.mergeState(GalaxyMapRoute(it.slug), RouteDockState(title = it.name)) }

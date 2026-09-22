@@ -1,6 +1,7 @@
 package streetlight.web.model
 
 import kampfire.model.reactIn
+import kampfire.model.Tap
 import kampfire.model.storeOf
 import kampfire.model.tapOf
 import koala.html.AppRoute
@@ -24,16 +25,19 @@ class RouteDock(scope: CoroutineScope, val portal: Portal) {
     private val state = storeOf<RouteDockState?>(null)
     private var stateRoute: AppRoute? = null
     private var pending: RouteDockMerge? = null
+    private val visible = storeOf(true)
 
     val titleState = state.tapOf { it?.title }
     val mainRoutes = state.tapOf { it?.mainRoutes }
     val leftRoutes = state.tapOf { it?.leftRoutes }
     val rightRoutes = state.tapOf { it?.rightRoutes }
+    val isVisibleState: Tap<Boolean> = visible
 
     init {
         portal.routeState.reactIn(scope) { route ->
             state.set { stateOf(route) }
             stateRoute = route
+            visible.set(true)
             pending?.takeIf { it.route == route }?.let { applyMerge(it.state) }
             pending = null
         }
@@ -44,6 +48,10 @@ class RouteDock(scope: CoroutineScope, val portal: Portal) {
             stateRoute -> applyMerge(merge)
             else -> pending = RouteDockMerge(route, merge)
         }
+    }
+
+    fun setVisible(isVisible: Boolean) {
+        visible.set(isVisible)
     }
 
     private fun applyMerge(merge: RouteDockState) {

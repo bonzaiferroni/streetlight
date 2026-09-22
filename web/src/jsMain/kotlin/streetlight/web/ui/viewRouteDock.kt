@@ -27,7 +27,7 @@ fun ViewScope.viewRouteDock() {
     val model = dock
     fun isRouteNow(route: AppRoute) = portal.routeState.tapOf { it == route }
 
-    column(modify(PointerEventsAuto, TextUppercase, TextSmall, Gap(0), MarginBottom(2))) {
+    column(modify(RouteDockStyle.Container, PointerEventsAuto, TextUppercase, TextSmall, Gap(0), MarginBottom(2))) {
         flowBlock(model.titleState, modify(Magic, Height(3))) { title ->
             if (title == null) return@flowBlock
             filigree(ruleMod = MaxWidth(8)) {
@@ -66,7 +66,7 @@ fun ViewScope.viewRouteDock() {
                 }
             }
         }
-    }
+    }.flowModifier(model.isVisibleState.tapOf { !it }, RouteDockStyle.Hidden, contentScope)
 }
 
 private fun iconOf(route: AppRoute) = when(route) {

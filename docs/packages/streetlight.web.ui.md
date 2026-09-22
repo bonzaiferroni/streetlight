@@ -183,4 +183,12 @@ A merge is applied when the state on hand was built from the same route, and hel
 
 The route passed is the view's own, never `Portal.stateNow.route`, which would name the route that replaced it.
 
+### Visibility
+
+A view hides the dock with `dock.setVisible(false)`, for content it would otherwise sit over. Every route that lands makes it visible again, so a view states only when to hide it and never when to restore it. The reaction that drives it belongs to the view's `contentScope`, so it ends with the view.
+
+Visibility is not part of `RouteDockState`. That state is the dock's content, handed over once per route, while visibility toggles as often as the view's own content does.
+
+The hidden dock carries `RouteDockStyle.Hidden`, applied with `flowModifier`. It fades and drifts down rather than disappearing.
+
 Routes of one group share one `stateOf` branch, or a function it calls, so their docks stay consistent. The universe routes, Home, Galaxies and Cities, share `universeStateOf`, whose right route is the earth route that is the cousin of the route now.
