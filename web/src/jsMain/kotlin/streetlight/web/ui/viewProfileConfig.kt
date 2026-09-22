@@ -36,7 +36,7 @@ fun ViewScope.viewProfileConfig(star: Star, config: ProfileConfig) {
 
         appFooter(sourcePathUi("viewProfileConfig.kt"))
 
-        dock.mergeState(RouteDockState(listOf(StarRoute(star.username)), title = star.username.value))
+        dock.mergeState(ProfileConfigRoute, RouteDockState(listOf(StarRoute(star.username)), title = star.username.value))
     }
 }
 

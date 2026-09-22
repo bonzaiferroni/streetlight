@@ -1,5 +1,6 @@
 package streetlight.web.ui
 
+import streetlight.model.ui.toRoute
 import koala.dom.*
 import streetlight.model.data.GalaxyContent
 import streetlight.model.ui.GalaxyRoute
@@ -15,7 +16,7 @@ fun ViewScope.viewGalaxy(content: GalaxyContent) {
     }
 
     val rightRoutes = content.galaxy.takeIf { it.isHost }?.toConfigRoute()?.let { listOf(it) }
-    dock.mergeState(RouteDockState(title = content.galaxy.name, rightRoutes = rightRoutes))
+    dock.mergeState(content.galaxy.toRoute(), RouteDockState(title = content.galaxy.name, rightRoutes = rightRoutes))
 
     // wireGalaxyMenu(root, content.galaxy)
 

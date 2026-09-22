@@ -17,6 +17,6 @@ fun RouteScope.viewLocation() {
         }
 
         val rightRoutes = content.takeIf { it.canEdit }?.let { listOf(LocationConfigRoute(location.locationId)) }
-        dock.mergeState(RouteDockState(title = location.name, rightRoutes = rightRoutes))
+        dock.mergeState(LocationRoute(location.slug), RouteDockState(title = location.name, rightRoutes = rightRoutes))
     }
 }

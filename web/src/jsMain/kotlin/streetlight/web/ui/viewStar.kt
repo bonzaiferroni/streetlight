@@ -18,7 +18,7 @@ fun ViewScope.viewStar(content: StarContent) {
     }
 
     val rightRoutes = content.takeIf { it.isCaller }?.let { listOf(ProfileConfigRoute) }
-    dock.mergeState(RouteDockState(rightRoutes = rightRoutes))
+    dock.mergeState(StarRoute(content.star.username), RouteDockState(rightRoutes = rightRoutes))
 }
 
 fun RouteScope.viewStarRoute() {

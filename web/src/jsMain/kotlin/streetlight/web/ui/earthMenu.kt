@@ -1,5 +1,7 @@
 package streetlight.web.ui
 
+import streetlight.model.ui.CityMapRoute
+import streetlight.model.ui.GalaxyMapRoute
 import kampfire.model.reactIn
 import koala.dom.ViewScope
 import streetlight.model.ui.CityMap
@@ -10,11 +12,10 @@ import streetlight.web.model.RouteDockState
 
 fun ViewScope.earthMenu(model: Earth) {
     model.mapState.reactIn(contentScope) { map ->
-        val title = when (map) {
-            is GalaxyMap -> map.galaxy?.name
-            is CityMap -> map.city?.name
-            is PostMap, null -> null
+        when (map) {
+            is GalaxyMap -> map.galaxy?.let { dock.mergeState(GalaxyMapRoute(it.slug), RouteDockState(title = it.name)) }
+            is CityMap -> map.city?.let { dock.mergeState(CityMapRoute(it.slug), RouteDockState(title = it.name)) }
+            is PostMap, null -> Unit
         }
-        title?.let { dock.mergeState(RouteDockState(title = it)) }
     }
 }

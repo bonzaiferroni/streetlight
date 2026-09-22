@@ -173,10 +173,14 @@ A dock route equal to the route now carries `RouteDockStyle.RouteNow`, applied w
 
 `RouteDock` in `streetlight.web.model` holds the dock's state, reached through `AppFacade.dock`. On every route it sets its state from `stateOf(route)`, which states everything the route alone determines. A route with no branch clears the dock.
 
-A view adds what only its content knows with `dock.mergeState`. A merge replaces each field it sets and leaves the rest.
+A view adds what only its content knows with `dock.mergeState`, naming its own route. A merge replaces each field it sets and leaves the rest.
 
 ```kotlin
-dock.mergeState(RouteDockState(title = content.galaxy.name, rightRoutes = rightRoutes))
+dock.mergeState(content.galaxy.toRoute(), RouteDockState(title = content.galaxy.name, rightRoutes = rightRoutes))
 ```
+
+A merge is applied when the state on hand was built from the same route, and held as pending otherwise, to be applied when that route arrives. The test is the route the state was built from, not the current route in `Portal`, which already reads as the new one while the dock's own reaction is still pending. A pending merge is dropped when a different route arrives.
+
+The route passed is the view's own, never `Portal.stateNow.route`, which would name the route that replaced it.
 
 Routes of one group share one `stateOf` branch, or a function it calls, so their docks stay consistent. The universe routes, Home, Galaxies and Cities, share `universeStateOf`, whose right route is the earth route that is the cousin of the route now.

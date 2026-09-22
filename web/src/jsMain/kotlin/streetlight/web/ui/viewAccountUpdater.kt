@@ -38,7 +38,7 @@ fun ViewScope.viewStarConfig(star: Star, model: AccountEditor) {
 
         appFooter(sourcePathUi("viewAccountUpdater.kt"))
 
-        dock.mergeState(RouteDockState(listOf(StarRoute(star.username)), title = star.username.value))
+        dock.mergeState(StarConfigRoute, RouteDockState(listOf(StarRoute(star.username)), title = star.username.value))
     }
 }
 

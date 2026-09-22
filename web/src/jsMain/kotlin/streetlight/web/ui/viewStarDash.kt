@@ -30,7 +30,7 @@ fun ViewScope.viewStarDash(star: Star) {
 
         appFooter(sourcePathUi("viewStarDash.kt"))
 
-        dock.mergeState(RouteDockState(listOf(StarRoute(star.username)), title = star.username.value))
+        dock.mergeState(StarDashRoute, RouteDockState(listOf(StarRoute(star.username)), title = star.username.value))
     }
 }
 

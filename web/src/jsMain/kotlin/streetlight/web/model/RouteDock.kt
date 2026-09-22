@@ -22,6 +22,9 @@ import streetlight.model.ui.StarRoute
 
 class RouteDock(scope: CoroutineScope, val portal: Portal) {
     private val state = storeOf<RouteDockState?>(null)
+    private var stateRoute: AppRoute? = null
+    private var pending: RouteDockMerge? = null
+
     val titleState = state.tapOf { it?.title }
     val mainRoutes = state.tapOf { it?.mainRoutes }
     val leftRoutes = state.tapOf { it?.leftRoutes }
@@ -30,10 +33,20 @@ class RouteDock(scope: CoroutineScope, val portal: Portal) {
     init {
         portal.routeState.reactIn(scope) { route ->
             state.set { stateOf(route) }
+            stateRoute = route
+            pending?.takeIf { it.route == route }?.let { applyMerge(it.state) }
+            pending = null
         }
     }
 
-    fun mergeState(merge: RouteDockState) {
+    fun mergeState(route: AppRoute, merge: RouteDockState) {
+        when (route) {
+            stateRoute -> applyMerge(merge)
+            else -> pending = RouteDockMerge(route, merge)
+        }
+    }
+
+    private fun applyMerge(merge: RouteDockState) {
         state.set {
             val base = this ?: RouteDockState()
             base.copy(
@@ -51,6 +64,11 @@ data class RouteDockState(
     val title: String? = null,
     val leftRoutes: List<AppRoute>? = null,
     val rightRoutes: List<AppRoute>? = null,
+)
+
+private data class RouteDockMerge(
+    val route: AppRoute,
+    val state: RouteDockState,
 )
 
 private fun stateOf(route: AppRoute): RouteDockState? {
