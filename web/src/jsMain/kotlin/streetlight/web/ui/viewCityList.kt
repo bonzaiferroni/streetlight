@@ -12,6 +12,8 @@ fun ViewScope.viewCityList(content: CityListContent) {
         cityListShell(content)
     }
 
+    universeRouteMenu(CityListRoute)
+
     document.setTitle(CityListRoute)
     applyTheme(null)
 }

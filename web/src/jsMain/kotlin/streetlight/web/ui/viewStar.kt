@@ -14,6 +14,8 @@ fun ViewScope.viewStar(content: StarContent) {
         starShell(content)
         applyTheme(content.star.design?.theme)
     }
+
+    starRouteMenu(content.star, StarRoute(content.star.username), content.isCaller)
 }
 
 fun RouteScope.viewStarRoute() {

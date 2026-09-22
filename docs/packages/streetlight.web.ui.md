@@ -147,7 +147,19 @@ A view model receives the store as a `Messenger` parameter rather than holding o
 
 ## Route Menus
 
-A route menu function whose group holds an action, or whose state exists only in the browser, is declared here on `ViewScope` and calls `routeMenu` from `koala.dom`. `earthRouteMenu` is one.
+`routeMenu` (`koala.dom`) is the sole route menu implementation. It renders entirely in the browser, never in a shell, per the rule in `streetlight.web.shells.md`.
 
-A group whose views can be server-rendered declares its menu in `streetlight.web.shells`, and a browser-only view of that group calls it from a block.
+Related routes share one menu function, `fooRouteMenu`, declared here on `ViewScope`. It takes the route now and whatever else its group varies by, and calls `routeMenu`.
+
+| Group | Function |
+|---|---|
+| Star | `starRouteMenu` |
+| Universe | `universeRouteMenu` |
+| Galaxy | `galaxyRouteMenu` |
+| Location | `locationRouteMenu` |
+| Earth | `earthRouteMenu` |
+
+`universeRouteMenu` holds Home, Galaxies and Cities. The right tray holds the earth route that is the cousin of the route now: `CityMapRoute` for the city list, `GalaxyMapRoute` for the galaxy list, and `PostMapRoute` for Home.
+
+A view whose route has a shell calls its menu function beside the `shellBox` call, not inside it, so the menu is never part of the shell's content.
 

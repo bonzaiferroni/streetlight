@@ -2,6 +2,12 @@
 
 The server-rendered content of a route. A shell is declared in `commonMain` so the server renders it on the initial load and the browser consumes it with `routeBlock`.
 
+## What Belongs in the Shell
+
+Content the user needs to see immediately, to understand what the page is, belongs in the shell. Content that can gracefully appear once the bundle has loaded belongs in the view instead.
+
+`shellBox { block }` only runs `block` when there is no server-rendered shell already in the document to adopt. Code inside a shell function is therefore part of the first paint. Code placed beside the `shellBox` call, in the view itself, always runs in the browser, after hydration, whether or not a shell was adopted.
+
 ## Shell Functions
 
 A shell is an extension on `FlowContent`, named `fooShell`, in a file of the same name. It takes the route's content type, `FooContent`.
@@ -51,14 +57,5 @@ Content that is not specific to a galaxy is universe content.
 
 ## Route Menus
 
-A route menu is declared in the shell as the last child of the outer column, after the body container.
-
-Related routes share one menu function, `fooRouteMenu`, so their menus stay consistent. The function takes the route now and whatever else its group varies by, and calls `routeMenu` from `koala.html`. A shell calls it, and so does a browser-only view of the same group, from inside a block on `ViewScope`.
-
-| Group | Function |
-|---|---|
-| Star | `starRouteMenu` |
-| Universe | `universeRouteMenu` |
-
-`universeRouteMenu` holds Home, Galaxies and Cities. The right tray holds the earth route that is the cousin of the route now: `CityMapRoute` for the city list, `GalaxyMapRoute` for the galaxy list, and `PostMapRoute` for Home.
+A route menu is not shell content. It is not something a user needs to understand the page, so it is declared and called in `streetlight.web.ui`, on `ViewScope`, and documented there.
 

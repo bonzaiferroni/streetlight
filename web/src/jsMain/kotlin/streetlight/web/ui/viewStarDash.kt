@@ -14,7 +14,6 @@ import streetlight.model.ui.SandboxRoute
 import streetlight.model.ui.StarDashRoute
 import streetlight.web.model.SessionClient
 import streetlight.model.ui.toRoute
-import streetlight.web.shells.starRouteMenu
 
 fun ViewScope.viewStarDash(star: Star) {
     column(mod = BodyStyle.MainColumn) {

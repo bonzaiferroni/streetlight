@@ -23,7 +23,7 @@ fun ViewScope.viewPortal() {
 
     element = flowBlock(
         tap = portal.screenState,
-        mod = modify(Magic, Blur),
+        mod = modify(Magic),
         name = ::viewPortal.name,
         // cacheElements = true,
         onTransition = {

@@ -19,7 +19,6 @@ import streetlight.model.data.Account
 import streetlight.model.data.Star
 import streetlight.model.ui.StarConfigRoute
 import streetlight.web.model.AccountEditor
-import streetlight.web.shells.starRouteMenu
 
 fun ViewScope.viewStarConfig(star: Star, model: AccountEditor) {
     column(mod = BodyStyle.MainColumn) {

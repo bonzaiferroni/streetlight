@@ -7,11 +7,13 @@ import streetlight.web.shells.LocationShell
 import streetlight.web.shells.locationShell
 
 fun RouteScope.viewLocation() {
-    routeBlock<LocationRoute, LocationContent>(LocationShell.islandId) { location ->
+    routeBlock<LocationRoute, LocationContent>(LocationShell.islandId) { content ->
+        val location = content.location
         shellBox {
-            locationShell(location)
-            applyTheme(location.design?.theme)
+            locationShell(content)
+            applyTheme(content.design?.theme)
         }
+
+        locationRouteMenu(location, LocationRoute(location.slug), content.canEdit)
     }
 }
-

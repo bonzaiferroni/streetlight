@@ -7,7 +7,6 @@ import streetlight.model.ui.HomeRoute
 import streetlight.web.model.MarkerMap
 import streetlight.web.shells.HomeShell
 import streetlight.web.shells.homeShell
-import streetlight.web.ui.markerMap
 import web.dom.document
 
 fun ViewScope.viewHome(content: HomeContent) {
@@ -16,6 +15,8 @@ fun ViewScope.viewHome(content: HomeContent) {
     shellBoxWithMap {
         homeShell(content)
     }
+
+    universeRouteMenu(HomeRoute)
 
     markerMap.setPoints(content.feed.entities)
     document.setTitle(HomeRoute)

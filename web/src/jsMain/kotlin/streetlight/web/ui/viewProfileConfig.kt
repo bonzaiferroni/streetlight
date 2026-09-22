@@ -11,7 +11,6 @@ import streetlight.model.data.ProfileConfig
 import streetlight.model.data.Star
 import streetlight.model.data.toEdit
 import streetlight.model.ui.ProfileConfigRoute
-import streetlight.web.shells.starRouteMenu
 
 fun ViewScope.viewProfileConfig(star: Star, config: ProfileConfig) {
     val model = app.getProfileEditor(star.toEdit(config.design), contentScope)

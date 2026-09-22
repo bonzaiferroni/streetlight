@@ -3,6 +3,7 @@ package streetlight.web.ui
 import koala.dom.*
 import streetlight.model.data.GalaxyContent
 import streetlight.model.ui.GalaxyRoute
+import streetlight.model.ui.toRoute
 import streetlight.web.shells.GalaxyShell
 import streetlight.web.shells.galaxyShell
 
@@ -11,6 +12,8 @@ fun ViewScope.viewGalaxy(content: GalaxyContent) {
         galaxyShell(content)
         applyTheme(content.design?.theme)
     }
+
+    galaxyRouteMenu(content.galaxy, content.galaxy.toRoute())
 
     // wireGalaxyMenu(root, content.galaxy)
 

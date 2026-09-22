@@ -3,7 +3,6 @@ package streetlight.web.shells
 import koala.html.*
 import kotlinx.html.FlowContent
 import streetlight.model.data.CityListContent
-import streetlight.model.ui.CityListRoute
 import streetlight.web.layouts.FeedSection
 import streetlight.web.layouts.feedRow
 import streetlight.web.pages.appFooter
@@ -22,8 +21,6 @@ fun FlowContent.cityListShell(content: CityListContent) {
             }
             appFooter()
         }
-
-        universeRouteMenu(CityListRoute)
     }
 
     dataIsland(CityListShell.IslandId, content)

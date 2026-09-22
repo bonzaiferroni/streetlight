@@ -5,7 +5,6 @@ import koala.modifier.setAttribute
 import koala.html.*
 import kotlinx.html.FlowContent
 import streetlight.model.data.LocationContent
-import streetlight.model.ui.LocationConfigRoute
 import streetlight.model.ui.LocationRoute
 import streetlight.web.layouts.renderLayout
 import streetlight.web.pages.appFooter
@@ -21,9 +20,6 @@ fun FlowContent.locationShell(
         renderLayout(content)
 
         appFooter()
-
-        val adminRoute = content.takeIf { it.canEdit }?.let { LocationConfigRoute(location.locationId) }
-        routeMenu(location.name ?: "Location", routeNow, listOf(routeNow, adminRoute))
     }
 
     dataIsland(LocationShell.islandId, content)

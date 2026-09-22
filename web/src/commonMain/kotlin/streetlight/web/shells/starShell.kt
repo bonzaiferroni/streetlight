@@ -1,25 +1,17 @@
 package streetlight.web.shells
 
-import koala.SvgFile
-import koala.html.AppRoute
-import koala.html.IconRoute
 import koala.html.Id
 import koala.html.column
 import koala.html.dataIsland
-import koala.html.routeMenu
 import koala.html.section
 import kotlinx.html.FlowContent
-import streetlight.model.data.Star
 import streetlight.model.data.StarContent
-import streetlight.model.ui.ProfileConfigRoute
-import streetlight.model.ui.StarRoute
 import streetlight.web.layouts.renderLayout
 import streetlight.web.pages.appFooter
 import streetlight.web.pages.appHeader
 import streetlight.web.ui.BodyStyle
 
 fun FlowContent.starShell(content: StarContent) {
-    val star = content.star
     column(BodyStyle.ShellColumn) {
         appHeader()
 
@@ -27,9 +19,6 @@ fun FlowContent.starShell(content: StarContent) {
             renderLayout(content)
             appFooter()
         }
-
-        val routeNow = StarRoute(star.username)
-        starRouteMenu(star, routeNow, content.isCaller)
     }
 
     dataIsland(StarShell.islandId, content)
@@ -38,24 +27,4 @@ fun FlowContent.starShell(content: StarContent) {
 object StarShell {
     val islandId = Id("star-shell-island")
     const val SourcePath = "web/src/commonMain/kotlin/streetlight/web/shells/starShell.kt"
-}
-
-fun FlowContent.starRouteMenu(star: Star, routeNow: AppRoute, isCaller: Boolean) {
-    val routes = when (isCaller) {
-        else -> listOf(StarRoute(star.username))
-    }
-
-    val rightIcons = when (isCaller) {
-        true -> listOf(
-            IconRoute(SvgFile.GearSmall, ProfileConfigRoute),
-        )
-        else -> null
-    }
-
-    routeMenu(
-        context = star.username.value,
-        routeNow = routeNow,
-        routes = routes,
-        rightIcons = rightIcons
-    )
 }

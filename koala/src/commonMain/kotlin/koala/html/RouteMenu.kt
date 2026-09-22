@@ -1,60 +1,6 @@
 package koala.html
 
 import koala.modifier.*
-import kotlinx.css.pct
-import kotlinx.html.FlowContent
-
-fun FlowContent.routeMenu(
-    context: String,
-    routeNow: AppRoute,
-    routes: List<AppRoute?>,
-    mod: Modifier? = null,
-    leftIcons: List<IconRoute>? = null,
-    rightIcons: List<IconRoute>? = null
-) {
-    column(modify(mod, RouteMenu.Base, TextUppercase, TextSmall, Gap(0), AlignItemsCenter)) {
-        filigree(AlignSelfStretch) {
-            textBlock(context, PrimaryFg)
-        }
-        row(modify(RouteMenu.ContextMenu, Gap(0), Padding(1), Bold, AlignItemsCenter, BorderSolid2Px)) {
-            leftIcons?.let { icons ->
-                iconsTray(icons, routeNow, RouteMenu.LeftTray)
-            }
-            routes.forEach { route ->
-                val route = route ?: return@forEach
-                navigation(route, modify(RouteMenu.Route, route.routeNowMod(routeNow))) {
-                    +route.label
-                }
-            }
-            rightIcons?.let { icons ->
-                iconsTray(icons, routeNow, RouteMenu.RightTray)
-            }
-        }
-    }
-}
-
-internal fun FlowContent.iconsTray(
-    icons: List<IconRoute>,
-    routeNow: AppRoute,
-    mod: Modifier
-) {
-    row(modify(mod, BorderSolid2Px)) {
-        icons.forEach { icon ->
-            iconRoute(icon, routeNow)
-        }
-    }
-}
-
-internal fun FlowContent.iconRoute(icon: IconRoute, routeNow: AppRoute) {
-    navigation(icon.route, modify(Height(3), RouteMenu.Route, icon.route.routeNowMod(routeNow))) {
-        icon(icon.svg, Height(100.pct))
-    }
-}
-
-internal fun AppRoute.routeNowMod(routeNow: AppRoute) = when (this == routeNow) {
-    true -> RouteMenu.RouteNow
-    else -> null
-}
 
 object RouteMenu {
     val Base = Class("route-menu")

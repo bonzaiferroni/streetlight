@@ -47,6 +47,8 @@ A tray takes `IconRoute` and `IconAction`. The current option is the one whose l
 
 A view that a server can render uses the `koala.html` variant. A view that only the browser renders, or a menu that holds an action, uses this one.
 
+The route menu is `position: fixed`. A `flowBlock` that can contain one does not use `Blur`, because a `filter` on an ancestor makes the block, not the viewport, the containing block for a fixed element.
+
 #### Route Blocks
 
 `routeBlock` builds a view from the content of its route. It reads the island the shell carried when the route is the initial one, and otherwise takes the content from `RouteInflator`.
