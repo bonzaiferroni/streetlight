@@ -27,40 +27,42 @@ fun ViewScope.viewRouteDock() {
     val model = dock
     fun isRouteNow(route: AppRoute) = portal.routeState.tapOf { it == route }
 
-    div(modify(RouteDockStyle.Container, PointerEventsAuto, TextUppercase, TextSmall, MarginBottom(2))) {
-        val trayMod = modify(RouteDockStyle.Glass, BlurBackdrop, BorderRadiusPill, BorderSolid2Px, Padding(1))
-        flowBlock(model.titleState, modify(RouteDockStyle.Title, Magic, Height(3))) { title ->
+    column(modify(PointerEventsAuto, TextUppercase, TextSmall, Gap(0), MarginBottom(2))) {
+        flowBlock(model.titleState, modify(Magic, Height(3))) { title ->
             if (title == null) return@flowBlock
-            filigree {
+            filigree(ruleMod = MaxWidth(8)) {
                 textBlock(title, PrimaryFg)
             }
         }
-        flowBlock(model.leftRoutes, modify(RouteDockStyle.Left, Magic, DisplayFlex, JustifyContentEnd)) { leftRoutes ->
-            val routes = leftRoutes?.takeIf { it.isNotEmpty() } ?: return@flowBlock
-            row(trayMod) {
-                routes.forEach { route ->
-                    this@flowBlock.navigation(route, SmallIconHeight) {
-                        icon(iconOf(route), Height(100.pct))
-                    }.asWeb().flowModifier(isRouteNow(route), RouteDockStyle.RouteNow, contentScope)
+        row(modify(Gap(1), AlignItemsCenter)) {
+            val trayMod = modify(RouteDockStyle.Glass, BlurBackdrop, BorderRadiusPill, BorderSolid2Px, Padding(1))
+            flowBlock(model.leftRoutes, modify(Flex1, Magic, DisplayFlex, JustifyContentEnd)) { leftRoutes ->
+                val routes = leftRoutes?.takeIf { it.isNotEmpty() } ?: return@flowBlock
+                row(trayMod) {
+                    routes.forEach { route ->
+                        this@flowBlock.navigation(route, modify(SmallIconHeight, BorderRadiusPill)) {
+                            icon(iconOf(route), Height(100.pct))
+                        }.asWeb().flowModifier(isRouteNow(route), RouteDockStyle.RouteNow, contentScope)
+                    }
                 }
             }
-        }
-        flowBlock(model.mainRoutes, modify(RouteDockStyle.Main, Magic)) { mainRoutes ->
-            val routes = mainRoutes ?: return@flowBlock
-            row(modify(RouteDockStyle.Glass, BlurBackdrop, BorderRadiusPill, Gap(0), Padding(1), Bold, AlignItemsCenter, BorderSolid2Px)) {
-                routes.forEach { route ->
-                    this@flowBlock.navigation(route, modify(BorderRadiusPill, PaddingY1, PaddingX2)) { +route.label }
-                        .asWeb().flowModifier(isRouteNow(route), RouteDockStyle.RouteNow, contentScope)
+            flowBlock(model.mainRoutes, Magic) { mainRoutes ->
+                val routes = mainRoutes ?: return@flowBlock
+                row(modify(RouteDockStyle.Glass, BlurBackdrop, BorderRadiusPill, Gap(0), Padding(1), Bold, AlignItemsCenter, BorderSolid2Px)) {
+                    routes.forEach { route ->
+                        this@flowBlock.navigation(route, modify(BorderRadiusPill, PaddingY1, PaddingX2)) { +route.label }
+                            .asWeb().flowModifier(isRouteNow(route), RouteDockStyle.RouteNow, contentScope)
+                    }
                 }
             }
-        }
-        flowBlock(model.rightRoutes, modify(RouteDockStyle.Right, Magic, DisplayFlex, JustifyContentStart)) { rightRoutes ->
-            val routes = rightRoutes?.takeIf { it.isNotEmpty() } ?: return@flowBlock
-            row(trayMod) {
-                routes.forEach { route ->
-                    this@flowBlock.navigation(route, SmallIconHeight) {
-                        icon(iconOf(route), Height(100.pct))
-                    }.asWeb().flowModifier(isRouteNow(route), RouteDockStyle.RouteNow, contentScope)
+            flowBlock(model.rightRoutes, modify(Flex1, Magic, DisplayFlex, JustifyContentStart)) { rightRoutes ->
+                val routes = rightRoutes?.takeIf { it.isNotEmpty() } ?: return@flowBlock
+                row(trayMod) {
+                    routes.forEach { route ->
+                        this@flowBlock.navigation(route, modify(SmallIconHeight, BorderRadiusPill)) {
+                            icon(iconOf(route), Height(100.pct))
+                        }.asWeb().flowModifier(isRouteNow(route), RouteDockStyle.RouteNow, contentScope)
+                    }
                 }
             }
         }

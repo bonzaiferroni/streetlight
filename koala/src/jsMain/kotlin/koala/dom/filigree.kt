@@ -6,8 +6,8 @@ import kotlinx.html.DIV
 
 fun AppendScope.filigree(
     mod: Modifier? = null,
-    ruleMaxWidth: Modifier = MaxWidth(16),
+    ruleMod: Modifier = MaxWidth(16),
     block: DIV.() -> Unit
 ) = row(modify(mod, JustifyContentCenter, AlignItemsCenter)) {
-    configureFiligree(ruleMaxWidth, block)
+    configureFiligree(ruleMod, block)
 }

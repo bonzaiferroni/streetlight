@@ -163,9 +163,9 @@ A side route is for a route that not every view wants, such as a config route. A
 
 The dock holds routes only. An action belongs in the view it acts on.
 
-The dock is a grid in `RouteDockCss`: three columns, `1fr auto 1fr`, with the title over the middle column and the left routes, main routes and right routes beneath. Each part is a `flowBlock` carrying its area class from `RouteDockStyle`. The title spans only the main column, and the side routes center on the main routes.
+The dock is a column: the title, then a row of the left routes, main routes and right routes. The trays are `Flex1` on either side of the main routes, which keeps the main routes centered.
 
-The main routes and each tray are a pill of `RouteDockStyle.Glass` with `BlurBackdrop`. The rest of the styling is modifiers.
+The main routes and each tray are a pill of `RouteDockStyle.Glass` with `BlurBackdrop`. `RouteDockCss` holds only the translucent colors and the selection outline, and the rest is modifiers.
 
 A dock route equal to the route now carries `RouteDockStyle.RouteNow`, applied with `flowModifier` over `Portal.routeState`. The match is by route, not screen, because routes of one dock can share a screen. It updates in place, so a dock that persists across routes is not rebuilt to move the indicator.
 

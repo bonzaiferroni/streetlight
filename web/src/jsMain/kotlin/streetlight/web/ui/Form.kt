@@ -54,7 +54,7 @@ fun ViewScope.formRow(
 
 fun ViewScope.formHeading(
     text: String
-) = filigree(ruleMaxWidth = MaxWidth(32)) {
+) = filigree(ruleMod = MaxWidth(32)) {
     heading4(text, SystemFg)
 }
 
