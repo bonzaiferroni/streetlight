@@ -1,5 +1,7 @@
 package streetlight.web.ui
 
+import streetlight.model.ui.ProfileConfigRoute
+import streetlight.web.model.RouteDockState
 import koala.dom.RouteScope
 import koala.dom.ViewScope
 import koala.dom.routeBlock
@@ -15,7 +17,8 @@ fun ViewScope.viewStar(content: StarContent) {
         applyTheme(content.star.design?.theme)
     }
 
-    starRouteMenu(content.star, StarRoute(content.star.username), content.isCaller)
+    val rightRoutes = content.takeIf { it.isCaller }?.let { listOf(ProfileConfigRoute) }
+    dock.mergeState(RouteDockState(rightRoutes = rightRoutes))
 }
 
 fun RouteScope.viewStarRoute() {

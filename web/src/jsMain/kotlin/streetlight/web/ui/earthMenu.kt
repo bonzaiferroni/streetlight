@@ -1,118 +1,20 @@
 package streetlight.web.ui
 
-import koala.SvgFile
-import koala.modifier.Magic
-import koala.modifier.PointerEventsAuto
-import koala.modifier.modify
+import kampfire.model.reactIn
 import koala.dom.ViewScope
-import koala.dom.MenuLabel
-import koala.dom.MenuRoute
-import koala.dom.flowBlock
-import koala.dom.routeMenu
-import koala.html.IconAction
-import koala.html.IconRoute
 import streetlight.model.ui.CityMap
-import streetlight.model.ui.CityMapRoute
-import streetlight.model.ui.CityRoute
-import streetlight.model.ui.EarthMap
 import streetlight.model.ui.GalaxyMap
-import streetlight.model.ui.GalaxyMapRoute
-import streetlight.model.ui.GalaxyRoute
-import streetlight.model.ui.HomeRoute
 import streetlight.model.ui.PostMap
-import streetlight.model.ui.PostMapRoute
 import streetlight.web.model.Earth
+import streetlight.web.model.RouteDockState
 
 fun ViewScope.earthMenu(model: Earth) {
-    flowBlock(model.mapState, modify(Magic, EarthStyle.Window, EarthStyle.MoveDimmer)) { map ->
-        if (map == null) return@flowBlock
-        earthRouteMenu(model, map)
-    }
-}
-
-fun ViewScope.earthRouteMenu(model: Earth, map: EarthMap) {
-    val showAll = IconAction(SvgFile.FrameEye, model::showAll)
-    when (map) {
-        is GalaxyMap -> {
-            when (val galaxy = map.galaxy) {
-                null -> {
-                    val routeNow = MenuLabel("Galaxies")
-                    routeMenu(
-                        context = "Streetlight",
-                        optionNow = routeNow,
-                        options = listOf(
-                            MenuRoute(PostMapRoute()),
-                            routeNow,
-                            MenuRoute(CityMapRoute(null), "Cities")
-                        ),
-                        mod = PointerEventsAuto,
-                        leftIcons = listOf(IconRoute(SvgFile.Home, HomeRoute)),
-                        rightIcons = listOf(showAll)
-                    )
-                }
-                else -> {
-                    val routeNow = MenuLabel("Map")
-                    routeMenu(
-                        context = galaxy.name,
-                        optionNow = routeNow,
-                        options = listOf(
-                            MenuRoute(GalaxyRoute(galaxy.slug), "Feed"),
-                            routeNow
-                        ),
-                        mod = PointerEventsAuto,
-                        leftIcons = listOf(IconRoute(SvgFile.CaretLeft, GalaxyMapRoute(null))),
-                        rightIcons = listOf(showAll)
-                    )
-                }
-            }
+    model.mapState.reactIn(contentScope) { map ->
+        val title = when (map) {
+            is GalaxyMap -> map.galaxy?.name
+            is CityMap -> map.city?.name
+            is PostMap, null -> null
         }
-        is CityMap -> {
-            when (val city = map.city) {
-                null -> {
-                    val routeNow = MenuLabel("Cities")
-                    routeMenu(
-                        context = "Streetlight",
-                        optionNow = routeNow,
-                        options = listOf(
-                            MenuRoute(PostMapRoute()),
-                            MenuRoute(GalaxyMapRoute(null), "Galaxies"),
-                            routeNow
-                        ),
-                        mod = PointerEventsAuto,
-                        leftIcons = listOf(IconRoute(SvgFile.Home, HomeRoute)),
-                        rightIcons = listOf(showAll)
-                    )
-                }
-                else -> {
-                    val routeNow = MenuLabel("Map")
-                    routeMenu(
-                        context = city.name,
-                        optionNow = routeNow,
-                        options = listOf(
-                            MenuRoute(CityRoute(city.slug), "Feed"),
-                            routeNow,
-                        ),
-                        mod = PointerEventsAuto,
-                        leftIcons = listOf(IconRoute(SvgFile.CaretLeft, CityMapRoute(null))),
-                        rightIcons = listOf(showAll)
-                    )
-                }
-            }
-        }
-        is PostMap -> {
-            val routeNow = MenuLabel("Posts")
-            routeMenu(
-                context = map.title,
-                optionNow = routeNow,
-                options = listOf(
-                    routeNow,
-                    MenuRoute(GalaxyMapRoute(null), "Galaxies"),
-                    MenuRoute(CityMapRoute(null), "Cities"),
-                ),
-                mod = PointerEventsAuto,
-                leftIcons = listOf(IconRoute(SvgFile.Home, HomeRoute)),
-                rightIcons = listOf(showAll),
-            )
-        }
+        title?.let { dock.mergeState(RouteDockState(title = it)) }
     }
 }

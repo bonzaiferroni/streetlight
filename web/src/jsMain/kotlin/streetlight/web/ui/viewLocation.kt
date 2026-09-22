@@ -1,5 +1,7 @@
 package streetlight.web.ui
 
+import streetlight.model.ui.LocationConfigRoute
+import streetlight.web.model.RouteDockState
 import koala.dom.*
 import streetlight.model.data.LocationContent
 import streetlight.model.ui.LocationRoute
@@ -14,6 +16,7 @@ fun RouteScope.viewLocation() {
             applyTheme(content.design?.theme)
         }
 
-        locationRouteMenu(location, LocationRoute(location.slug), content.canEdit)
+        val rightRoutes = content.takeIf { it.canEdit }?.let { listOf(LocationConfigRoute(location.locationId)) }
+        dock.mergeState(RouteDockState(title = location.name, rightRoutes = rightRoutes))
     }
 }

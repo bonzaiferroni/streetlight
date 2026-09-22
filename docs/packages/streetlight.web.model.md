@@ -17,6 +17,8 @@ fun AppContainer.getGalaxyEditor(galaxy: GalaxyEdit, scope: CoroutineScope) =
     GalaxyEditor(galaxy, scope, koin.get(), koin.get(), koin.get(), koin.get())
 ```
 
+`RouteDock` is an app-wide model, registered in `appModule` and documented in `streetlight.web.ui.md`.
+
 ## Scope
 
 A view model takes the view's `contentScope`. Its coroutines then end when the content is replaced, so a request outlives neither the view that wanted it nor the page it was drawn on.

@@ -55,7 +55,7 @@ A `FeedEntity` is rendered with `feedRow` from `streetlight.web.layouts`, as des
 
 Content that is not specific to a galaxy is universe content.
 
-## Route Menus
+## Route Dock
 
-A route menu is not shell content. It is not something a user needs to understand the page, so it is declared and called in `streetlight.web.ui`, on `ViewScope`, and documented there.
+The route dock is not shell content. It is not something a user needs to understand the page, so it lives in the app overlay and is documented in `streetlight.web.ui.md`.
 

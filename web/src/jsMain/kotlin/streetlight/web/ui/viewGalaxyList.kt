@@ -3,7 +3,6 @@ package streetlight.web.ui
 import koala.SiteImage
 import koala.dom.*
 import koala.html.Id
-import streetlight.model.ui.GalaxyListRoute
 import streetlight.web.layouts.feedRow
 
 fun ViewScope.viewGalaxyList() {
@@ -34,7 +33,5 @@ fun ViewScope.viewGalaxyList() {
                 textBlock("Coming soon")
             }
         }
-
-        universeRouteMenu(GalaxyListRoute)
     }
 }

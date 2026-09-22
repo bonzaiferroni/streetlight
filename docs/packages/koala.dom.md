@@ -33,21 +33,9 @@ inline fun DOMContext.row(
 #### Mounting and Wiring
 Functions like `wireBlock` and `renderRoot` are used to attach Kotlin-managed DOM fragments to existing elements in the document, often based on their `Id`. Some components like `wireBlock` use visibility tracking (`onView`) to delay rendering until the element is visible in the viewport.
 
-#### Route Menu
+#### Fixed Elements
 
-`ViewScope.routeMenu` is the browser-only variant of the route menu declared in `koala.html`. It takes `MenuOption` values in place of routes, and `IconButton` values in the trays.
-
-| Option | Renders |
-|---|---|
-| `MenuRoute` | A link |
-| `MenuAction` | A label that runs a function |
-| `MenuLabel` | A label with no behavior |
-
-A tray takes `IconRoute` and `IconAction`. The current option is the one whose label equals `optionNow`'s.
-
-A view that a server can render uses the `koala.html` variant. A view that only the browser renders, or a menu that holds an action, uses this one.
-
-The route menu is `position: fixed`. A `flowBlock` that can contain one does not use `Blur`, because a `filter` on an ancestor makes the block, not the viewport, the containing block for a fixed element.
+A `flowBlock` that can contain a `position: fixed` element does not use `Blur`, because a `filter` on an ancestor makes the block, not the viewport, the containing block for a fixed element.
 
 #### Route Blocks
 

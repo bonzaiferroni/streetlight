@@ -1,5 +1,7 @@
 package streetlight.web.ui
 
+import streetlight.model.ui.StarRoute
+import streetlight.web.model.RouteDockState
 import kampfire.model.AccountType
 import koala.LottieFile
 import koala.modifier.*
@@ -36,7 +38,7 @@ fun ViewScope.viewStarConfig(star: Star, model: AccountEditor) {
 
         appFooter(sourcePathUi("viewAccountUpdater.kt"))
 
-        starRouteMenu(star, StarConfigRoute, true)
+        dock.mergeState(RouteDockState(listOf(StarRoute(star.username)), title = star.username.value))
     }
 }
 

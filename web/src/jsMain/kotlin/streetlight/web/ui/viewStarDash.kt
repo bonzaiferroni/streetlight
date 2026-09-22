@@ -1,5 +1,7 @@
 package streetlight.web.ui
 
+import streetlight.model.ui.StarRoute
+import streetlight.web.model.RouteDockState
 import koala.modifier.*
 import koala.dom.*
 import koala.html.btn
@@ -28,7 +30,7 @@ fun ViewScope.viewStarDash(star: Star) {
 
         appFooter(sourcePathUi("viewStarDash.kt"))
 
-        starRouteMenu(star, StarDashRoute, true)
+        dock.mergeState(RouteDockState(listOf(StarRoute(star.username)), title = star.username.value))
     }
 }
 

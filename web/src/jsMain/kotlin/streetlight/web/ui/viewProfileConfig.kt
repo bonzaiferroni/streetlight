@@ -1,5 +1,7 @@
 package streetlight.web.ui
 
+import streetlight.model.ui.StarRoute
+import streetlight.web.model.RouteDockState
 import koala.modifier.*
 import koala.dom.RouteScope
 import koala.dom.ViewScope
@@ -34,7 +36,7 @@ fun ViewScope.viewProfileConfig(star: Star, config: ProfileConfig) {
 
         appFooter(sourcePathUi("viewProfileConfig.kt"))
 
-        starRouteMenu(star, ProfileConfigRoute, true)
+        dock.mergeState(RouteDockState(listOf(StarRoute(star.username)), title = star.username.value))
     }
 }
 

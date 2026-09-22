@@ -6,8 +6,19 @@ import kampfire.model.tapOf
 import koala.html.AppRoute
 import koala.model.Portal
 import kotlinx.coroutines.CoroutineScope
+import streetlight.model.ui.CityListRoute
+import streetlight.model.ui.CityMapRoute
+import streetlight.model.ui.CityRoute
+import streetlight.model.ui.GalaxyListRoute
 import streetlight.model.ui.GalaxyMapRoute
 import streetlight.model.ui.GalaxyRoute
+import streetlight.model.ui.HomeRoute
+import streetlight.model.ui.LocationRoute
+import streetlight.model.ui.PostMapRoute
+import streetlight.model.ui.ProfileConfigRoute
+import streetlight.model.ui.StarConfigRoute
+import streetlight.model.ui.StarDashRoute
+import streetlight.model.ui.StarRoute
 
 class RouteDock(scope: CoroutineScope, val portal: Portal) {
     private val state = storeOf<RouteDockState?>(null)
@@ -23,7 +34,15 @@ class RouteDock(scope: CoroutineScope, val portal: Portal) {
     }
 
     fun mergeState(merge: RouteDockState) {
-
+        state.set {
+            val base = this ?: RouteDockState()
+            base.copy(
+                mainRoutes = merge.mainRoutes ?: base.mainRoutes,
+                title = merge.title ?: base.title,
+                leftRoutes = merge.leftRoutes ?: base.leftRoutes,
+                rightRoutes = merge.rightRoutes ?: base.rightRoutes,
+            )
+        }
     }
 }
 
@@ -36,7 +55,64 @@ data class RouteDockState(
 
 private fun stateOf(route: AppRoute): RouteDockState? {
     return when (route) {
-        is GalaxyRoute -> RouteDockState(listOf(route, GalaxyMapRoute(route.slug)))
+        // universe
+        is HomeRoute -> universeStateOf(PostMapRoute())
+        is GalaxyListRoute -> universeStateOf(GalaxyMapRoute(null))
+        is CityListRoute -> universeStateOf(CityMapRoute(null))
+
+        // galaxy
+        is GalaxyRoute -> RouteDockState(
+            mainRoutes = listOf(route, GalaxyMapRoute(route.slug)),
+            leftRoutes = listOf(HomeRoute),
+        )
+
+        // city
+        is CityRoute -> RouteDockState(listOf(route, CityMapRoute(route.slug)))
+
+        // star
+        is StarRoute -> RouteDockState(listOf(route), title = route.username.value)
+        is StarDashRoute, is ProfileConfigRoute, is StarConfigRoute -> RouteDockState(
+            rightRoutes = listOf(ProfileConfigRoute),
+        )
+
+        // location
+        is LocationRoute -> RouteDockState(listOf(route))
+
+        // earth
+        is PostMapRoute -> RouteDockState(
+            mainRoutes = listOf(route, GalaxyMapRoute(null), CityMapRoute(null)),
+            title = route.title,
+            leftRoutes = listOf(HomeRoute),
+        )
+        is GalaxyMapRoute -> when (val slug = route.slug) {
+            null -> RouteDockState(
+                mainRoutes = listOf(PostMapRoute(), route, CityMapRoute(null)),
+                title = "Streetlight",
+                leftRoutes = listOf(HomeRoute),
+            )
+            else -> RouteDockState(
+                mainRoutes = listOf(GalaxyRoute(slug), route),
+                leftRoutes = listOf(GalaxyMapRoute(null)),
+            )
+        }
+        is CityMapRoute -> when (val slug = route.slug) {
+            null -> RouteDockState(
+                mainRoutes = listOf(PostMapRoute(), GalaxyMapRoute(null), route),
+                title = "Streetlight",
+                leftRoutes = listOf(HomeRoute),
+            )
+            else -> RouteDockState(
+                mainRoutes = listOf(CityRoute(slug), route),
+                leftRoutes = listOf(CityMapRoute(null)),
+            )
+        }
+
         else -> null
     }
 }
+
+private fun universeStateOf(mapRoute: AppRoute) = RouteDockState(
+    mainRoutes = listOf(HomeRoute, GalaxyListRoute, CityListRoute),
+    title = "Streetlight",
+    rightRoutes = listOf(mapRoute),
+)

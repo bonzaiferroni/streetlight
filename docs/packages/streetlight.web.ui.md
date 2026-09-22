@@ -145,21 +145,32 @@ formSubmit("Send", { model.sendFeedback(messenger) }, messenger)
 
 A view model receives the store as a `Messenger` parameter rather than holding one of its own. The view then decides where a message appears and the view model decides only what it says.
 
-## Route Menus
+## App Overlay
 
-`routeMenu` (`koala.dom`) is the sole route menu implementation. It renders entirely in the browser, never in a shell, per the rule in `streetlight.web.shells.md`.
+`appOverlay` (`streetlight.web.pages`) is a fixed layer above the route content. `helmBar` sits at its top and the route dock at its bottom. The overlay passes no pointer events, so a child that takes input carries `PointerEventsAuto`.
 
-Related routes share one menu function, `fooRouteMenu`, declared here on `ViewScope`. It takes the route now and whatever else its group varies by, and calls `routeMenu`.
+## Route Dock
 
-| Group | Function |
+The route dock holds the routes directly relevant to the route now. It is rendered once by `viewRouteDock` into `AppOverlay.RouteDockId`, wired from `viewApp`, and persists between routes.
+
+| Part | Holds |
 |---|---|
-| Star | `starRouteMenu` |
-| Universe | `universeRouteMenu` |
-| Galaxy | `galaxyRouteMenu` |
-| Location | `locationRouteMenu` |
-| Earth | `earthRouteMenu` |
+| Title | A label naming what the routes belong to |
+| Main routes | Route labels as text |
+| Left and right routes | Icons, chosen by `iconOf` |
 
-`universeRouteMenu` holds Home, Galaxies and Cities. The right tray holds the earth route that is the cousin of the route now: `CityMapRoute` for the city list, `GalaxyMapRoute` for the galaxy list, and `PostMapRoute` for Home.
+A side route is for a route that not every view wants, such as a config route. A side route with no entry in `iconOf` fails.
 
-A view whose route has a shell calls its menu function beside the `shellBox` call, not inside it, so the menu is never part of the shell's content.
+The dock holds routes only. An action belongs in the view it acts on.
 
+### State
+
+`RouteDock` in `streetlight.web.model` holds the dock's state, reached through `AppFacade.dock`. On every route it sets its state from `stateOf(route)`, which states everything the route alone determines. A route with no branch clears the dock.
+
+A view adds what only its content knows with `dock.mergeState`. A merge replaces each field it sets and leaves the rest.
+
+```kotlin
+dock.mergeState(RouteDockState(title = content.galaxy.name, rightRoutes = rightRoutes))
+```
+
+Routes of one group share one `stateOf` branch, or a function it calls, so their docks stay consistent. The universe routes, Home, Galaxies and Cities, share `universeStateOf`, whose right route is the earth route that is the cousin of the route now.

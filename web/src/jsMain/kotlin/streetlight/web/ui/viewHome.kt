@@ -16,8 +16,6 @@ fun ViewScope.viewHome(content: HomeContent) {
         homeShell(content)
     }
 
-    universeRouteMenu(HomeRoute)
-
     markerMap.setPoints(content.feed.entities)
     document.setTitle(HomeRoute)
     applyTheme(null)
