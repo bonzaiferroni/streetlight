@@ -64,6 +64,8 @@ A state parameter is a `Tap` for a read and a `MutableTap` for a read and write.
 
 To add a screen: declare the `Screen` entry and its route, write `viewFoo` and `viewFooRoute`, then add the branch in `viewPortal`.
 
+A route whose view reads content has a branch in `AppContentFetcher`. The content type implements `RouteContent`, which `AppContentFetcher` and `routeBlock` both require, whether it is a `FooContent` or a record such as `City`.
+
 ## Shell Views
 
 A screen that the server renders on the initial load has a shell in `streetlight.web.shells`. Its view is built from the shell.
