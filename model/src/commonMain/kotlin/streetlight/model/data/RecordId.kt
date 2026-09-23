@@ -33,6 +33,7 @@ inline fun <reified T> Uuid.toRecordId(): T = when (T::class) {
     MessageId::class -> MessageId(this) as T
     ChatId::class -> ChatId(this) as T
     MarkId::class -> MarkId(this) as T
+    CityId::class -> CityId(this) as T
     else -> error("invalid recordId type: ${T::class.simpleName}")
 }
 

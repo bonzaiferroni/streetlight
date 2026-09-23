@@ -29,6 +29,8 @@ If a table translates directly to a DTO, define a transform below the object:
 | `UpdateBuilder<*>.createFoo(foo, ...)` | Writes the columns set only at creation, then delegates to `updateFoo` |
 | `UpdateBuilder<*>.updateFoo(foo)` | Writes the columns an update touches |
 
+`createFoo` writes the id as `this[FooTable.id] = Uuid.random()`. A table may take its id another way, such as from the dto, when its workflow calls for it.
+
 A galaxy's slug is written by `createGalaxy` and by no other function. `updateGalaxy` never writes it.
 
 `Foo` is the name of the concept the function writes. A `Record`, `Row`, or `Edit` suffix on the parameter type is not part of it.
@@ -38,6 +40,19 @@ A galaxy's slug is written by `createGalaxy` and by no other function. `updateGa
 | Kotlin | Column |
 |---|---|
 | Instant | timestamp |
+
+## Id Type Migrations
+
+A change to a table's id type is a hand-written migration. `generateMigration` renders it as `ALTER COLUMN ... TYPE`, which has no cast between `INT` and `uuid`.
+
+| Step | Detail |
+|---|---|
+| Add | A new id column on the table and a new reference column on each referencing table |
+| Fill | Each reference column through a join on the old id |
+| Drop | Column-specific triggers (`UPDATE OF foo_id`), foreign keys, old columns, the old sequence |
+| Swap | Rename the new columns into place, then recreate the primary key, foreign keys and indexes under the names Exposed expects |
+
+Startup recreates the dropped triggers.
 
 ## Manual Inserts
 

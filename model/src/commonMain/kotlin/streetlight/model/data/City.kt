@@ -5,6 +5,7 @@ import kampfire.model.GeoRect
 import kampfire.model.GeoPoint
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
+import kotlin.uuid.Uuid
 
 @Serializable
 data class City(
@@ -23,10 +24,7 @@ data class City(
 }
 
 @JvmInline @Serializable
-value class CityId(val value: Int) {
+value class CityId(override val value: Uuid): RecordId {
+    companion object { fun random() = CityId(Uuid.random())}
     override fun toString() = value.toString()
-
-    companion object {
-        val empty = CityId(0)
-    }
 }
