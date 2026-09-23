@@ -1,5 +1,6 @@
 package streetlight.web.model
 
+import kampfire.api.toMarkdown
 import kampfire.model.Messenger
 import kampfire.model.mutableTapOf
 import kampfire.model.storeOf
@@ -25,6 +26,8 @@ class CityEditor(
     val editState = state.mutableTapOf({ it.edit }) { copy(edit = it) }
     val nameField = editState.mutableTapOf({ it.name ?: "" }) { copy(name = it) }
     val imageField = editState.mutableTapOf({ it.image }) { copy(image = it) }
+    val descriptionField = editState.mutableTapOf({ it.description ?: "".toMarkdown() }) { copy(description = it) }
+    val linksState = editState.mutableTapOf({ it.links ?: emptyList() }) { copy(links = it.takeIf { it.isNotEmpty() }) }
     val validityField = editState.tapOf { it.validity }
 
     val imageEditor = ImageEditor(imageField, api)

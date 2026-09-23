@@ -37,4 +37,8 @@ object SiteImage : FileSet<Image>() {
         "helix-nebula.jpg", 960 / 798f, "An eye-shaped nebula with blue clouds surrounding a red star.",
         "NASA | Wikimedia", "https://commons.wikimedia.org/wiki/File:Comets_Kick_up_Dust_in_Helix_Nebula_(PIA09178).jpg"
     )
+    val PearlStreet = siteImageOf(
+        "pearl.jpg", 1000 / 638f, "Tall pines and a banjo player on Pearl Street, Boulder",
+        "Luke Bollwerk"
+    )
 }

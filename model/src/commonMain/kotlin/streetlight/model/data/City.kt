@@ -1,5 +1,6 @@
 package streetlight.model.data
 
+import kampfire.api.Markdown
 import kampfire.api.Slug
 import kampfire.model.GeoRect
 import kampfire.model.GeoPoint
@@ -20,11 +21,14 @@ data class City(
     val locationCount: Int,
     val eventCount: Int,
     override val image: Image?,
+    val description: Markdown?,
+    override val links: List<ExtraLink>?,
     val mapRank: Float?,
     override val geoPoint: GeoPoint,
     val geoRect: GeoRect,
 ): Entity, RouteContent {
     override val label get() = name
+    override val body get() = description
     override val markerId get() = slug.value
 }
 

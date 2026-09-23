@@ -108,23 +108,32 @@ A form is built from the components in `Form.kt`, each a `ViewScope` extension.
 
 | Component | Holds |
 |---|---|
-| `formColumn` | The form's cards, stacked |
-| `formCard(name)` | A titled card of related sections |
-| `formSection(name)` | One labeled part of a card |
-| `formRow` | Sections side by side |
+| `formCard(name)` | A group of forms shown together, under a heading on a background |
+| `formRow` | Form entries in two columns when there is room, and in one column on a narrow screen |
+| `formSection(name)` | One form entry. Its heading does most of the work of saying what the field does |
+| `centeredText`, `formBullets` | Information a field needs beyond its heading, inside its `formSection` |
 | `formTextField(field, label)` | A text field bound to a `MutableTap<String>` |
 | `imageFormSection(instructions, imageEditor)` | An image drop bound to an `ImageEditor` |
+| `linksFormSection(linksState)` | The editable list of a record's `ExtraLink`s, bound to a `MutableTap<List<ExtraLink>>` |
 | `formSubmit(label, onClick, messenger, back)` | The submit button, its `messageBox`, and an optional back action |
+
+Form entries go in a `formRow`. An entry that deserves the full width on a wide screen, such as a `markdownEditor`, sits in the `formCard` outside any `formRow`.
+
+Closely related fields share one `formSection`.
+
+`formColumn` serves no clear purpose and is not used in new forms.
 
 A field that must be filled calls `flowValid(key, validityTap, contentScope)` on its component, keyed by the edit DTO's `FooProperty` constant, so the field is marked while its key is in the DTO's `validity`.
 
-The form functions for a record live in `FooForm.kt`, one per card, each taking the record's editor. The view composes them in `formColumn` and ends with `formSubmit`.
+The form functions for a record live in `FooForm.kt`, one per card, each taking the record's editor. The view stacks them and ends with `formSubmit`.
 
 An editor uploads a pending image with `imageEditor.finalizeImage(messenger)` before it sends the edit.
 
 ## Entity Header
 
 `entityHeader` renders the header of an `Entity`, reading its content from the extensions in `streetlight.web.layouts`. A header for content that is not an `Entity` calls `pageHeader` with each value.
+
+A value the entity holds but the header shows differently is a parameter defaulted to the entity's own, as `cells` and `image`. A city with no image shows `SiteImage.PearlStreet`.
 
 ## Services
 

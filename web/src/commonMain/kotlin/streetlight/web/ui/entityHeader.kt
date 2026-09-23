@@ -1,5 +1,6 @@
 package streetlight.web.ui
 
+import koala.Image
 import koala.html.AppRoute
 import koala.modifier.*
 import kotlinx.html.DIV
@@ -14,13 +15,14 @@ fun FlowContent.entityHeader(
     entity: Entity,
     descriptor: String,
     cells: List<EntityCell>? = entity.toCells(),
+    image: Image? = entity.image,
     editRoute: AppRoute? = null,
     mod: Modifier? = null,
     block: DIV.() -> Unit = { },
 ) = pageHeader(
     title = entity.label,
     descriptor = descriptor,
-    image = entity.image,
+    image = image,
     subtitle = entity.sublabel,
     colorScheme = entity.toThemeColor(),
     description = entity.body,

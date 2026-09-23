@@ -12,16 +12,14 @@ fun ViewScope.viewCityConfig(city: City) {
     val messenger = MessageStore()
 
     column(BodyStyle.MainColumn) {
-        formColumn {
-            cityDetailsForm(model)
-            cityImageForm(model)
-            formSubmit(
-                label = "Save",
-                onClick = { model.submit(messenger) },
-                messenger = messenger,
-                back = MenuAction("go back", onClick = portal::goBack),
-            )
-        }
+        cityDetailsForm(model)
+        cityLinksForm(model)
+        formSubmit(
+            label = "Save",
+            onClick = { model.submit(messenger) },
+            messenger = messenger,
+            back = MenuAction("go back", onClick = portal::goBack),
+        )
         appFooter(sourcePathUi("viewCityConfig.kt"))
     }
 }
