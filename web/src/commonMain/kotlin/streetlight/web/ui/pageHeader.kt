@@ -3,16 +3,12 @@ package streetlight.web.ui
 import kampfire.api.Markdown
 import koala.Image
 import koala.modifier.*
-import kotlinx.css.LinearDimension
 import koala.html.AppRoute
-import koala.html.btn
 import koala.html.card
 import koala.html.column
 import koala.html.filigree
 import koala.html.heading2
-import koala.html.markdown
 import koala.html.metaImage
-import koala.html.row
 import koala.html.textBlock
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
@@ -21,6 +17,7 @@ import streetlight.web.layouts.EntityButton
 import streetlight.web.layouts.EntityCell
 import streetlight.web.layouts.ThemeColor
 import streetlight.web.layouts.cellGrid
+import streetlight.web.layouts.entityBody
 
 fun FlowContent.pageHeader(
     title: String,
@@ -61,28 +58,6 @@ fun FlowContent.pageHeader(
         // cell content
         cellGrid(cells, buttons)
 
-        if (description != null || links != null ) {
-            column(modify(ContainerMdRow, Padding(4), Gap(4), AlignItemsStart)) {
-
-                // description
-                description?.let {
-                    column(Flex4) {
-                        markdown(description)
-                    }
-                }
-
-                // button row
-                links?.let { links ->
-                    row(modify(FlexWrap, FlexBasis(LinearDimension.minContent), AlignItemsStart)) {
-                        links.forEach { link ->
-                            btn(link.label, link.url, Zen)
-                        }
-                        editRoute?.let {
-                            btn("edit", editRoute, Zen)
-                        }
-                    }
-                }
-            }
-        }
+        entityBody(description, links, editRoute)
     }
 }

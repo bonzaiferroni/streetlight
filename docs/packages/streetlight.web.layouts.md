@@ -27,6 +27,8 @@ An entity supplies its content as data, such as an `EntityCell`. The component t
 
 The more button toggles the expanded content of a `feedRow`. Only a component with collapsed content shows it.
 
+`entityBody` renders an entity's description and links. `feedRow` shows it as its expanded content, capped with `limit`, and `entityHeader` shows it in full with the edit route. The links are a grid of equal-width buttons, capped at `--unit-32`: in columns that wrap on a narrow container, and in one column beside the description from 960px.
+
 ## Cells
 
 `cellGrid` lays out the cells of an entity, followed by one buttons cell that holds its buttons.

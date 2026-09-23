@@ -27,6 +27,7 @@ body {
 ${BtnStyle.Class} {
     display: grid;
     grid-template-columns: auto 1fr;
+    column-gap: var(--unit);
     align-items: center;
     padding: var(--btn-padding);
     border: none;

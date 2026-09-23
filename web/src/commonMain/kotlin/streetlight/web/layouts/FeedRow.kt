@@ -8,8 +8,10 @@ import kotlinx.css.px
 import koala.html.*
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
+import kampfire.api.Markdown
 import streetlight.model.data.CuratorStatus
 import streetlight.model.data.Entity
+import streetlight.model.data.ExtraLink
 import streetlight.model.ui.GalaxyRoute
 import streetlight.web.ui.AppAttribute
 import streetlight.web.ui.CuratorMenu
@@ -77,14 +79,28 @@ fun DIV.configureFeedRow(
         }
     }
 
+    entityBody(description, links, limit = 1000)
+}
+
+// the description and links of an entity, shared by feedRow and entityHeader
+fun FlowContent.entityBody(
+    description: Markdown?,
+    links: List<ExtraLink>?,
+    editRoute: AppRoute? = null,
+    limit: Int? = null,
+) {
+    if (description == null && links == null && editRoute == null) return
     div(modify(FeedRow.ExpandedContent, Padding(2), Gap(2))) {
         description?.let {
-            markdown(it, FeedRow.ExpandedBody, limit = 1000)
+            markdown(it, FeedRow.ExpandedBody, limit = limit)
         }
-        links?.let { links ->
-            row(modify(FeedRow.ExpandedLinks, FlexWrap, AlignItemsStart, AlignContentStart, JustifyContentCenter)) {
-                links.forEach { link ->
+        if (links != null || editRoute != null) {
+            div(FeedRow.ExpandedLinks) {
+                links?.forEach { link ->
                     btn(link.label, link.url, Zen)
+                }
+                editRoute?.let {
+                    btn("edit", it, Zen)
                 }
             }
         }
@@ -177,13 +193,27 @@ $ExpandedContent {
     grid-template-rows: min-content auto;
     grid-template-areas: "links" "body";
     
-    $ExpandedLinks { grid-area: links }
+    $ExpandedLinks {
+        grid-area: links;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(var(--unit-16), 1fr));
+        justify-items: center;
+        align-content: start;
+        gap: var(--unit);
+
+        > * {
+            width: 100%;
+            max-width: var(--unit-32);
+        }
+    }
     $ExpandedBody  { grid-area: body }
     
     @container (min-width: 960px) { 
         grid-template-rows: none;
         grid-template-columns: 1fr min-content;
         grid-template-areas: "body links";
+
+        $ExpandedLinks { grid-template-columns: max-content; }
     }
 }
 
