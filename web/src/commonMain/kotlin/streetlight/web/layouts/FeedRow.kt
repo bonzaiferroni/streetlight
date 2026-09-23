@@ -37,7 +37,7 @@ fun DIV.configureFeedRow(
 ) {
     addModifiers(modify(FeedRow.Base, ZenBg))
 
-    val featureImage = entity.image // td: make placeholder depend on post type
+    val image = entity.image // td: make placeholder depend on post type
     val colorScheme = entity.toThemeColor()
     val flair = entity.toFlair()
     val postRoute = entity.toRoute()
@@ -57,7 +57,7 @@ fun DIV.configureFeedRow(
     div(FeedRow.Content) {
         setStyle(Css.ColorScheme.of(colorScheme.cssValue))
         navigationIfNotNull(postRoute, modify(FeedRow.Image, OverflowClip, MoonShadow)) {
-            image(featureImage, modify(Size100P, ObjectFitCover))
+            containImage(image, modify(FeedRow.Feature, Size100P))
         }
         column(modify(FeedRow.Text, Gap(0), JustifyContentCenter, TextShadow)) {
             navigationIfNotNull(postRoute) {
@@ -150,6 +150,7 @@ object FeedRow {
     val Image = Base.withBemElement("image")
     val Text = Base.withBemElement("text")
     val Badge = Base.withBemElement("badge")
+    val Feature = Base.withBemElement("feature")
     val MoreButton = Base.withBemElement("more-button")
     val ExpandedContent = Base.withBemElement("expanded-content")
     val ExpandedLinks = Base.withBemElement("expanded-links")
@@ -205,6 +206,9 @@ $Text {
     text-align: center;
 }
 
+// the thumbnail is cut to match a cover fit, which hides the backdrop
+$Image $Feature { object-fit: cover; }
+
 $Badge { grid-area: badge; }
 
 $Cells { grid-area: cells; }
@@ -232,6 +236,8 @@ ${Mode.selector(FeedMode.Grid)} {
         border: none;
         border-radius: 0;
     }
+
+    $Image $Feature { object-fit: contain; }
 
     $Text { text-align: start; }
 

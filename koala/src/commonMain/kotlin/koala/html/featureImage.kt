@@ -1,6 +1,5 @@
 package koala.html
 
-import kampfire.model.ImageSize
 import koala.Image
 import koala.SiteImage
 import koala.modifier.*
@@ -9,35 +8,38 @@ import kotlinx.html.FlowContent
 import kotlinx.html.div
 import kotlinx.html.img
 
-fun FlowContent.featureImage(
+// the content image is contained over a blurred backdrop of the same image
+fun FlowContent.containImage(
     image: Image? = null,
     mod: Modifier? = null,
-    size: ImageSize = ImageSize.Medium,
+    placeholder: Image = SiteImage.placeholder,
+    alt: String? = null,
+    lazy: Boolean = true,
     block: DIV.() -> Unit = {}
 ) {
-    val src = image?.getSizeOrNull(size) ?: SiteImage.getPlaceholder(size)
+    val image = image ?: placeholder
     div {
-        addModifiers(Class, mod)
+        addModifiers(ContainImage.Class, mod)
         block()
 
         img {
-            addModifiers(BackdropClass)
-            this.src = src.value
+            configureImage(null, image, ContainImage.BackdropClass, null, lazy) { }
         }
 
         img {
-            addModifiers(ContentClass)
-            this.src = src.value
+            configureImage(null, image, ContainImage.ContentClass, alt, lazy) { }
         }
     }
 }
 
-private val Class = Class("feature-image")
-private val BackdropClass = Class("feature-image__backdrop")
-private val ContentClass = Class("feature-image__content")
+object ContainImage {
+    val Class = Class("contain-image")
+    val BackdropClass = Class.withBemElement("backdrop")
+    val ContentClass = Class.withBemElement("content")
+}
 
 // language="CSS"
-val FeatureImageCss get() = """
+val ContainImageCss get() = with(ContainImage) { """
 $Class {
     position: relative;
     display: flex;
@@ -59,10 +61,11 @@ $BackdropClass {
 }
 
 $ContentClass {
+    width: 100%;
     height: 100%;
     position: relative;
     min-width: 0;
     min-height: 0;
     object-fit: inherit;
 }
-"""
+""" }

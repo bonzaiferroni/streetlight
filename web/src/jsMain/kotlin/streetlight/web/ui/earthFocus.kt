@@ -4,7 +4,7 @@ import koala.modifier.*
 import koala.dom.*
 import koala.html.AppRoute
 import koala.html.btn
-import koala.html.featureImage
+import koala.html.containImage
 import koala.html.filigree
 import koala.html.heading3
 import koala.html.heading4
@@ -72,7 +72,7 @@ private fun ViewScope.focusPanel(
     card(modify(Gap0, Padding(0), BlurBackdrop, PointerEventsAuto, BorderSolid2Px, EarthStyle.MoveDimmer)) {
         setStyle(Css.ColorScheme.of(colorScheme.cssValue))
         column(Gap0) {
-            featureImage(post.image, Flex1)
+            containImage(post.image, Flex1)
             cellGrid(post.toCells(), entityButtonsOf(post, false))
         }
         column(Padding(1)) {

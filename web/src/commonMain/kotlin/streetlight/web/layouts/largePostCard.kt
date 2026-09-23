@@ -22,7 +22,7 @@ fun FlowContent.largePostCard(
 
             // non-grid content
             column(modify(Flex3, ContainerMdRow, Gap0)) {
-                featureImage(image, modify(Flex1, MinHeight(24)))
+                containImage(image, modify(Flex1, MinHeight(24)))
                 column(modify(Flex2, Padding(1), Height(24), MaxHeight(24))) {
                     row {
                         column(modify(Flex1, Gap0)) {

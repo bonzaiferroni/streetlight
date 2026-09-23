@@ -36,12 +36,12 @@ The children of `FeedRow.Content` each take a named grid area: `Image`, `Text`, 
 | Mode | Feed | Entry |
 |---|---|---|
 | `Row` | One column | Thumbnail, centered text and badge in a row, cells below; one row from 960px with the cells as its right half |
-| `Grid` | Columns of at least 300px filling the row, 2px apart | Image across the top at 3:2 with `object-fit: cover` and no padding, left-aligned text and badge below, then cells. The expanded content and more button are hidden |
+| `Grid` | Columns of at least 300px filling the row, 2px apart | Image across the top at 3:2, contained over its backdrop, with no padding, left-aligned text and badge below, then cells. The expanded content and more button are hidden |
 | `Minimal` | Not yet styled | |
 
 `feedSection` lays out in `Grid`. `layoutFeed` defaults to `Row`. In `Grid`, a child of the mount that is not an entry, such as the more button, spans the full width.
 
-An entry passes the `Image` itself, not a size of it, so the image carries its source set.
+An entry shows its image with `featureImage`, passing the `Image` itself so it carries its source set. `Row` sets `object-fit: cover`, which fills the square thumbnail and hides the backdrop. `Grid` keeps the `contain` fit.
 
 `entityBody` renders an entity's description and links. `feedRow` shows it as its expanded content, capped with `limit`, and `entityHeader` shows it in full with the edit route. The links are a grid of equal-width buttons, capped at `--unit-32`: in columns that wrap on a narrow container, and in one column beside the description from 960px.
 
