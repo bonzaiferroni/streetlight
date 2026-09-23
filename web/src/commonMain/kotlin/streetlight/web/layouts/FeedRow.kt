@@ -21,7 +21,7 @@ fun FlowContent.feedRow(
     entity: Entity,
     isUniverse: Boolean,
     curator: CuratorStatus? = null,
-    cells: List<EntityCell> = entity.cells,
+    cells: List<EntityCell>? = entity.cells,
 ) {
     div() {
         configureFeedRow(entity, isUniverse, curator, cells)
@@ -32,7 +32,7 @@ fun DIV.configureFeedRow(
     entity: Entity,
     isUniverse: Boolean,
     curator: CuratorStatus? = null,
-    cells: List<EntityCell> = entity.cells,
+    cells: List<EntityCell>? = entity.cells,
 ) {
     addModifiers(modify(FeedRow.Base, modify(Padding(1), ZenBg)))
 

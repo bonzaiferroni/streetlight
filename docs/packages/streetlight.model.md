@@ -20,9 +20,9 @@ The package follows several key structural patterns to maintain a clean domain m
 * **Value Classes for IDs**: Each model typically has a corresponding `FooId` value class that implements `RecordId` for type-safe identification.
 * **Mock Data**: The `MockDb` (in `MockDb.kt`) provides a set of sample data for testing and development of the client-side UI without requiring a live backend.
 
-### Feed Entities
+### Entities
 
-`FeedEntity` is a sealed interface for content shown in a feed or a header. Its members name general content: `label`, `sublabel`, `body`, `image`, `links`. A type maps its own fields onto them, as in `override val body get() = description`, and leaves a member it does not hold at its default.
+`Entity` is a sealed interface for content shown in a feed, a header, or anywhere else an entity appears. Its members name general content: `label`, `sublabel`, `body`, `image`, `links`. A type maps its own fields onto them, as in `override val body get() = description`, and leaves a member it does not hold at its default.
 
 ### Workflows
 

@@ -19,36 +19,28 @@ import kotlinx.html.onClick
 import streetlight.model.data.ExtraLink
 import kotlin.time.Instant
 
-object CellGrid {
-    val CellMod = modify(AlignItemsCenter, CardBg, Gap(0), Padding(1))
-    val IconMod = modify(SmallIconHeight, MarginRight(4.px), ColorSchemeBg)
-    val ButtonIconMod = modify(SmallIconHeight, OpacityHigh)
-    val TextMod = modify(TextSmall, SingleLine, TextOverflowEllipses, Flex1)
-}
-
 fun FlowContent.cellGrid(
-    cells: List<EntityCell>,
-    buttons: List<EntityButton>,
+    cells: List<EntityCell>?,
+    buttons: List<EntityButton>?,
     mod: Modifier? = null,
 ) {
-    if (cells.isEmpty() && buttons.isEmpty()) return
-    row(modify(MinHeight(4), MinWidth(16), FlexWrap, FlexItems1, Gap2Px, TextAlignCenter, MoonShadow, mod)) {
-        cells.forEach { cell ->
-            fun FlowContent.cellRow() = row(CellGrid.CellMod) {
-                icon(cell.icon, CellGrid.IconMod)
-                textBlock(cell.text, CellGrid.TextMod)
-            }
-
+    if (cells.isNullOrEmpty() && buttons.isNullOrEmpty()) return
+    div(modify(CellGrid.Base, MinHeight(4), MinWidth(16), TextAlignCenter, MoonShadow, mod)) {
+        cells?.forEach { cell ->
             when (val url = cell.url) {
-                null -> box(MinWidth(16)) { cellRow() }
-                else -> navigation(url.value, modify(Box, MinWidth(16))) { cellRow() }
+                null -> row(CellGrid.CellMod) {
+                    icon(cell.icon, CellGrid.IconMod)
+                    textBlock(cell.text, CellGrid.TextMod)
+                }
+                else -> navigation(url.value, modify(FlexRow, CellGrid.CellMod)) {
+                    icon(cell.icon, CellGrid.IconMod)
+                    textBlock(cell.text, CellGrid.TextMod)
+                }
             }
         }
-        if (buttons.isNotEmpty()) {
-            box(modify(MinWidth(16), CardBg)) {
-                row(modify(AlignItemsCenter, JustifyContentSpaceAround, Padding(1), Gap(2))) {
-                    buttons.forEach { it.block(this) }
-                }
+        if (!buttons.isNullOrEmpty()) {
+            row(modify(CardBg, AlignItemsCenter, JustifyContentSpaceAround, Padding(1), Gap(2))) {
+                buttons.forEach { it.block(this) }
             }
         }
     }
@@ -59,14 +51,34 @@ fun FlowContent.cell(
     text: String? = null,
     block: DIV.() -> Unit = {}
 ) {
-    box(MinWidth(16)) {
-        row(CellGrid.CellMod) {
-            svg?.let { icon(it, CellGrid.IconMod) }
-            text?.let { textBlock(it, CellGrid.TextMod) }
-            block()
-        }
+    row(CellGrid.CellMod) {
+        svg?.let { icon(it, CellGrid.IconMod) }
+        text?.let { textBlock(it, CellGrid.TextMod) }
+        block()
     }
 }
+
+object CellGrid {
+    val Base = Class("cell-grid")
+    val CellMod = modify(AlignItemsCenter, CardBg, Gap(0), Padding(1))
+    val IconMod = modify(SmallIconHeight, MarginRight(4.px), ColorSchemeBg)
+    val ButtonIconMod = modify(SmallIconHeight, OpacityHigh)
+    val TextMod = modify(TextSmall, SingleLine, TextOverflowEllipses, Flex1)
+}
+
+//language="CSS"
+val CellGridCss get() = with(CellGrid) { """
+$Base {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px;
+
+    > * {
+        flex: 1;
+        min-width: var(--unit-16);
+    }
+}
+""" }
 
 fun startsAtCell(startsAt: Instant?) = startsAt?.let {
     EntityCell(SvgFile.Clock, it.toTimeFormat(), null)

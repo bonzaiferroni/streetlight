@@ -69,7 +69,7 @@ fun FlowContent.headerOf(media: Media) {
         }
 
         card(modify(OverflowClip, Gap0, ZenBg, Padding(0))) {
-            cellGrid(listOf(starCell(media.username), postedAtCell(media.createdAt)), emptyList())
+            cellGrid(listOf(starCell(media.username), postedAtCell(media.createdAt)), null)
 
             media.text?.let {
                 column(modify(Padding(2), AlignSelfCenter, MaxWidthTextBody, TextLarge)) {

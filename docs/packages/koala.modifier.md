@@ -65,7 +65,17 @@ The stylesheet refers to each class by interpolating the val, as in `$Foo`, and 
 
 A rule of one or two declarations that fits on one line is written on one line. A family of such rules is written as consecutive lines with no blank line between them, and the property names and values on those lines are aligned in columns.
 
+A stylesheet that serves a single component is declared in that component's file, with its classes in an object named for the component, as `CellGrid.Base` in `cellGrid.kt`.
+
+A stylesheet is served only once it is listed in `KtStyles` in `ServerResource.kt`.
+
 `KoalaTheme` holds the values interpolated into `ThemeCss`. `Koala` is the default instance.
+
+## Sizing Children
+
+A container sizes its direct children through a child rule in its stylesheet, as `CellGrid.Base` does with `> * { flex: 1; min-width: var(--unit-16); }`. An element is not wrapped only to size it.
+
+A flex item sized by its container has an explicit `min-width`. With `min-width: auto` it grows to fit its content.
 
 ## Inline Style Utilities
 

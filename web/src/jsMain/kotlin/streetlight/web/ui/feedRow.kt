@@ -12,7 +12,7 @@ fun AppendScope.feedRow(
     entity: Entity,
     isUniverse: Boolean,
     curator: CuratorStatus? = null,
-    cells: List<EntityCell> = entity.cells,
+    cells: List<EntityCell>? = entity.cells,
 ) = div(null) {
     configureFeedRow(entity, isUniverse, curator, cells)
 }

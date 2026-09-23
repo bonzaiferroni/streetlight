@@ -102,7 +102,7 @@ A shell view with a map uses `shellBoxWithMap` and sets the marker points from t
 
 ## Entity Header
 
-`entityHeader` renders the header of a `FeedEntity`, reading its content from the extensions in `streetlight.web.layouts`. A header for content that is not a `FeedEntity` calls `featureHeader` with each value.
+`entityHeader` renders the header of an `Entity`, reading its content from the extensions in `streetlight.web.layouts`. A header for content that is not an `Entity` calls `pageHeader` with each value.
 
 ## Services
 

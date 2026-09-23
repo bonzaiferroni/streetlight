@@ -13,7 +13,7 @@ import streetlight.web.layouts.themeColor
 fun FlowContent.entityHeader(
     entity: Entity,
     descriptor: String,
-    cells: List<EntityCell> = entity.cells,
+    cells: List<EntityCell>? = entity.cells,
     editRoute: AppRoute? = null,
     mod: Modifier? = null,
     block: DIV.() -> Unit = { },

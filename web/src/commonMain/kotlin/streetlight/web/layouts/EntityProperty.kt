@@ -69,8 +69,8 @@ val Entity.flair get(): FlairIcon = when (this) {
     else -> FlairIcon.Default
 }
 
-val Entity.cells get(): List<EntityCell> = when (this) {
-    is City -> emptyList()
+val Entity.cells get(): List<EntityCell>? = when (this) {
+    is City -> null
     is EventLocation -> listOfNotNull(
         startsAt?.let { dateCell(it) },
         startsAtCell(startsAt),
@@ -87,23 +87,23 @@ val Entity.cells get(): List<EntityCell> = when (this) {
         EntityCell(SvgFile.Calendar, eventCount.toMetricString(), null),
     )
     is LocationPost -> location.cells
-    is MediaPost -> emptyList()
+    is MediaPost -> null
     is Location -> listOfNotNull(
         EntityCell(SvgFile.MapPin, mapType ?: "Location", null),
         city?.let { EntityCell(SvgFile.City, it, null) },
     )
-    is Media -> emptyList()
-    is CustomEntity -> emptyList()
-    is Star -> emptyList()
+    is Media -> null
+    is CustomEntity -> null
+    is Star -> null
 }
 
-fun entityButtonsOf(entity: Entity, showMore: Boolean): List<EntityButton> = when (entity) {
-    is City -> emptyList()
+fun entityButtonsOf(entity: Entity, showMore: Boolean): List<EntityButton>? = when (entity) {
+    is City -> null
     is EventLocation -> buildList {
         add(EntityButton { starToggle(entity) })
         if (showMore) add(EntityButton { moreButton() })
     }
-    is EventPost -> entityButtonsOf(entity.event, showMore) + EntityButton {
+    is EventPost -> entityButtonsOf(entity.event, showMore).orEmpty() + EntityButton {
         postMenu(entity.post.postId, entity.post.username)
     }
     is Event -> buildList {
@@ -113,17 +113,17 @@ fun entityButtonsOf(entity: Entity, showMore: Boolean): List<EntityButton> = whe
     is Galaxy -> listOf(
         EntityButton { starToggle(entity) },
     )
-    is LocationPost -> entityButtonsOf(entity.location, showMore) + EntityButton {
+    is LocationPost -> entityButtonsOf(entity.location, showMore).orEmpty() + EntityButton {
         postMenu(entity.post.postId, entity.post.username)
     }
-    is MediaPost -> emptyList()
+    is MediaPost -> null
     is Location -> buildList {
         add(EntityButton { starToggle(entity) })
         if (showMore) add(EntityButton { moreButton() })
     }
-    is Media -> emptyList()
-    is CustomEntity -> emptyList()
-    is Star -> emptyList()
+    is Media -> null
+    is CustomEntity -> null
+    is Star -> null
 }
 
 val Entity.subRoute get(): AppRoute? = when (this) {
