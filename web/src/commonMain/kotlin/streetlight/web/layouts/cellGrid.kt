@@ -19,32 +19,11 @@ import kotlinx.html.onClick
 import streetlight.model.data.ExtraLink
 import kotlin.time.Instant
 
-object CellContent {
-    val Container = Class("cell-content")
+object CellGrid {
     val CellMod = modify(AlignItemsCenter, CardBg, Gap(0), Padding(1))
-    val DualCellMod = modify(Gap2Px, FlexItems1)
     val IconMod = modify(SmallIconHeight, MarginRight(4.px), ColorSchemeBg)
     val ButtonIconMod = modify(SmallIconHeight, OpacityHigh)
-    val ThumbMod = modify(SmallIconHeight, Aspect1, BorderRadius2, MarginRight(4.px))
     val TextMod = modify(TextSmall, SingleLine, TextOverflowEllipses, Flex1)
-}
-
-//language="CSS"
-val CellContentCss get() = with(CellContent) { """
-$Container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
-    gap: 2px;
-}
-""" }
-
-fun FlowContent.cellBlock(
-    mod: Modifier? = null,
-    block: FlowContent.() -> Unit = {}
-) {
-    row(modify(MinHeight(4), MinWidth(16), FlexWrap, FlexItems1, Gap2Px, TextAlignCenter, MoonShadow, mod)) {
-        block()
-    }
 }
 
 fun FlowContent.cellGrid(
@@ -53,11 +32,23 @@ fun FlowContent.cellGrid(
     mod: Modifier? = null,
 ) {
     if (cells.isEmpty() && buttons.isEmpty()) return
-    cellBlock(mod) {
-        cells.forEach { entityCell(it) }
+    row(modify(MinHeight(4), MinWidth(16), FlexWrap, FlexItems1, Gap2Px, TextAlignCenter, MoonShadow, mod)) {
+        cells.forEach { cell ->
+            fun FlowContent.cellRow() = row(CellGrid.CellMod) {
+                icon(cell.icon, CellGrid.IconMod)
+                textBlock(cell.text, CellGrid.TextMod)
+            }
+
+            when (val url = cell.url) {
+                null -> box(MinWidth(16)) { cellRow() }
+                else -> navigation(url.value, modify(Box, MinWidth(16))) { cellRow() }
+            }
+        }
         if (buttons.isNotEmpty()) {
-            buttonsCell(MinWidth(32)) {
-                buttons.forEach { it.block(this) }
+            box(modify(MinWidth(16), CardBg)) {
+                row(modify(AlignItemsCenter, JustifyContentSpaceAround, Padding(1), Gap(2))) {
+                    buttons.forEach { it.block(this) }
+                }
             }
         }
     }
@@ -66,60 +57,14 @@ fun FlowContent.cellGrid(
 fun FlowContent.cell(
     svg: Svg? = null,
     text: String? = null,
-    minWidth: Modifier? = MinWidth(16),
-    mod: Modifier? = null,
     block: DIV.() -> Unit = {}
 ) {
-    box(minWidth) {
-        row(modify(CellContent.CellMod, mod)) {
-            cellContent(svg, text, block)
+    box(MinWidth(16)) {
+        row(CellGrid.CellMod) {
+            svg?.let { icon(it, CellGrid.IconMod) }
+            text?.let { textBlock(it, CellGrid.TextMod) }
+            block()
         }
-    }
-}
-
-fun FlowContent.buttonsCell(
-    minWidth: Modifier? = MinWidth(16),
-    mod: Modifier? = null,
-    block: DIV.() -> Unit = {},
-) {
-    box(modify(mod, minWidth, CardBg)) {
-        row(modify(AlignItemsCenter, JustifyContentSpaceAround, Padding(1), Gap(2)), block)
-    }
-}
-
-fun FlowContent.cellButton(
-    svg: Svg,
-    mod: Modifier? = null,
-    block: DIV.() -> Unit = {},
-) {
-    icon(svg, modify(CellContent.ButtonIconMod, mod)) {
-        block()
-    }
-}
-
-fun DIV.cellContent(
-    svg: Svg? = null,
-    text: String? = null,
-    block: DIV.() -> Unit = {}
-) {
-    svg?.let {
-        icon(svg, CellContent.IconMod)
-    }
-    text?.let {
-        textBlock(it, CellContent.TextMod)
-    }
-    block()
-}
-
-fun FlowContent.entityCell(cell: EntityCell) {
-    fun FlowContent.cellRow() = row(CellContent.CellMod) {
-        icon(cell.icon, CellContent.IconMod)
-        textBlock(cell.text, CellContent.TextMod)
-    }
-
-    when (val url = cell.url) {
-        null -> box(MinWidth(16)) { cellRow() }
-        else -> navigation(url.value, modify(Box, MinWidth(16))) { cellRow() }
     }
 }
 
@@ -151,7 +96,7 @@ fun starCell(username: Username?) = EntityCell(SvgFile.SomeoneSmall, username?.v
 
 fun FlowContent.textPropertyCell(property: String, value: String) {
     cell {
-        textBlock(value, modify(CellContent.TextMod, MarginLeft(1)))
+        textBlock(value, modify(CellGrid.TextMod, MarginLeft(1)))
     }
 }
 
@@ -160,7 +105,7 @@ fun postedAtCell(postedAt: Instant) = EntityCell(SvgFile.Clock, postedAt.toAgoFo
 fun linkCell(link: ExtraLink) = EntityCell(SvgFile.Link, link.label, link.url)
 
 fun FlowContent.moreButton() {
-    cellButton(SvgFile.Info) {
+    icon(SvgFile.Info, CellGrid.ButtonIconMod) {
         onClick = KoalaFun.ToggleAncestor.invokeJs(ThisElement, FeedRow.Base, FeedRow.ToggleExpand)
     }
 }

@@ -24,14 +24,14 @@ A component that shows an entity takes the `FeedEntity` and reads its content fr
 
 ## Cells
 
-A cell shows one property of the content in a grid-like structure. `cellGrid` lays out a `List<EntityCell>` followed by a `List<EntityButton>` inside a `cellBlock`, and renders nothing when both are empty. A `mod` passed to `cellBlock` is applied after its own modifiers.
+A cell shows one property of the content in a grid-like structure. `cellGrid` lays out a `List<EntityCell>` followed by a `List<EntityButton>` in one wrapping row, and renders nothing when both are empty. A `mod` passed to `cellGrid` is applied after its own modifiers.
 
 | Type | Holds | Rendered as |
 |---|---|---|
-| `EntityCell` | An icon, a text value and an optional `Url` | `entityCell`, a link when the `Url` is set |
-| `EntityButton` | A block that builds its own element | Inside the buttons cell |
+| `EntityCell` | An icon, a text value and an optional `Url` | A cell, framed as a link when the `Url` is set |
+| `EntityButton` | A block that builds its own element | Inside the buttons cell, which holds every button of the grid |
 
-Every entity cell has the same style and `MinWidth(16)`. The buttons cell holds every button of the grid and has `MinWidth(32)`.
+`cellGrid` declares the content of every entity cell and the buttons cell itself, so every entity is rendered the same way. Every cell and the buttons cell have `MinWidth(16)`.
 
 A cell for a single property, such as `costCell` or `starCell`, is a function in `CellContent.kt` returning an `EntityCell`.
 

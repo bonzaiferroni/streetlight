@@ -14,7 +14,7 @@ import streetlight.model.data.EventLocation
 import streetlight.model.data.Galaxy
 import streetlight.model.data.ToggleType
 import streetlight.model.data.Location
-import streetlight.web.layouts.CellContent
+import streetlight.web.layouts.CellGrid
 import kotlin.uuid.Uuid
 
 fun FlowContent.starToggle(
@@ -37,11 +37,11 @@ fun FlowContent.starToggle(
 
         block()
         box {
-            icon(unlitSvg, modify(CellContent.ButtonIconMod, StarToggle.UnlitIcon))
-            icon(litSvg, modify(CellContent.ButtonIconMod, StarToggle.LitIcon))
+            icon(unlitSvg, modify(CellGrid.ButtonIconMod, StarToggle.UnlitIcon))
+            icon(litSvg, modify(CellGrid.ButtonIconMod, StarToggle.LitIcon))
         }
         starCount?.let {
-            textBlock(it.toString(), modify(CellContent.TextMod, StarToggle.Counter, UserSelectNone))
+            textBlock(it.toString(), modify(CellGrid.TextMod, StarToggle.Counter, UserSelectNone))
         }
     }
 }
