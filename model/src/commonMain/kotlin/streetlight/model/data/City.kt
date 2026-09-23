@@ -15,6 +15,7 @@ data class City(
     val state: String,
     val country: String,
     val galaxyCount: Int,
+    val locationCount: Int,
     val mapRank: Float?,
     override val geoPoint: GeoPoint,
     val geoRect: GeoRect,
