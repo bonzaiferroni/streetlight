@@ -49,6 +49,8 @@ These serve functions live here rather than in `streetlight.server.routes`:
 
 `SiteStatusDaemon` is a background worker, constructed and launched by `configureMetrics`. It holds the `DaoFacade` and the Micrometer registry, and writes metrics to the database on an interval.
 
+`TableDaemon` is launched by `configureDatabases` after `initDb`. It runs the time-dependent aggregates of `streetlight.server.db.tables` every 15 minutes, in the order they depend on each other.
+
 A daemon is launched from the configure function of the concern it serves, so that the thing it depends on is installed before it starts.
 
 `configureTransit` launches the GTFS load in the application's own scope, so stopping the application cancels it. Startup work belongs in a configure function rather than a serve function.

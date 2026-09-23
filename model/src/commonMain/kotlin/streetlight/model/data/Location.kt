@@ -37,6 +37,7 @@ data class Location(
     val hours: HoursSchedule?,
     val website: Url?,
     val starCount: Int?,
+    val eventCount: Int,
     val isLit: Boolean,
     val eventsUrl: Url?,
     override val image: Image?,

@@ -50,6 +50,14 @@ An aggregate that must be current on every read is kept live.
 | Count of child rows | `CounterTrigger`, declared beside the parent table |
 | Other | A private DAO function run in the transaction of the write, as `updatePostMarkCount` |
 
+An aggregate that depends on the time, such as a count of upcoming events, is kept by `TableDaemon` in `streetlight.server.plugins`. Each is an `updateFoo` DAO function that takes `now` and writes one `UPDATE` over the table, touching only rows whose value changed. An aggregate that reads another is run after it.
+
+| Column | Aggregate |
+|---|---|
+| `LocationTable.eventCount` | Events with `startsAt` after `now` |
+| `CityTable.eventCount` | Sum of `LocationTable.eventCount` |
+| `GalaxyTable.eventCount` | Distinct events posted to the galaxy with `startsAt` after `now` |
+
 `CounterTrigger` fires on insert, on delete, and on a change of the foreign key. Its `countFilter` is written against `NEW`, and is applied to `OLD` for a row leaving the count. A change to a column the filter reads does not move the count.
 
 ## Migrations
