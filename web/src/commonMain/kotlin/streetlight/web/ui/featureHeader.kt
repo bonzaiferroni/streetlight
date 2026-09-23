@@ -18,37 +18,10 @@ import koala.html.textBlock
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import streetlight.model.data.ExtraLink
-import streetlight.model.data.FeedEntity
 import streetlight.web.layouts.EntityButton
 import streetlight.web.layouts.EntityCell
 import streetlight.web.layouts.ThemeColor
 import streetlight.web.layouts.cellGrid
-import streetlight.web.layouts.cells
-import streetlight.web.layouts.entityButtonsOf
-import streetlight.web.layouts.themeColor
-
-fun FlowContent.featureHeader(
-    entity: FeedEntity,
-    descriptor: String,
-    description: Markdown? = entity.body,
-    cells: List<EntityCell> = entity.cells,
-    editRoute: AppRoute? = null,
-    mod: Modifier? = null,
-    block: DIV.() -> Unit = { },
-) = featureHeader(
-    title = entity.label,
-    descriptor = descriptor,
-    image = entity.image,
-    subtitle = entity.sublabel,
-    colorScheme = entity.themeColor,
-    description = description,
-    cells = cells,
-    buttons = entityButtonsOf(entity, false),
-    links = entity.links,
-    editRoute = editRoute,
-    mod = mod,
-    block = block,
-)
 
 fun FlowContent.featureHeader(
     title: String,

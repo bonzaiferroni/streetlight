@@ -24,6 +24,7 @@ import streetlight.model.data.Location
 import streetlight.model.data.LocationPost
 import streetlight.model.data.Media
 import streetlight.model.data.MediaPost
+import streetlight.model.data.Star
 
 class MarkerMap(
     private val scope: CoroutineScope,
@@ -121,6 +122,7 @@ private fun createMarker(post: FeedEntity): EntityMarker? = when (post) {
     is City -> CityMarker(post)
     is Galaxy -> GalaxyMarker(post)
     is CustomEntity -> null
+    is Star -> null
 }
 
 private fun createMap(posts: List<FeedEntity>): List<EntityMarker> = posts.mapNotNull { createMarker(it) }

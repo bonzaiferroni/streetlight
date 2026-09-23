@@ -15,12 +15,14 @@ import streetlight.model.data.LocationPost
 import streetlight.model.data.Media
 import streetlight.model.data.MediaPost
 import streetlight.model.data.FeedEntity
+import streetlight.model.data.Star
 import streetlight.model.ui.CityRoute
 import streetlight.model.ui.EventRoute
 import streetlight.model.ui.GalaxyRoute
 import streetlight.model.ui.LocationRoute
 import streetlight.model.ui.MediaRoute
 import streetlight.model.ui.SiteDocRoute
+import streetlight.model.ui.StarRoute
 import streetlight.web.ui.postMenu
 import streetlight.web.ui.starToggle
 
@@ -43,6 +45,7 @@ val FeedEntity.contentRoute get(): AppRoute? = when (this) {
     is Location -> route
     is Media -> route
     is CustomEntity -> route
+    is Star -> StarRoute(username)
 }
 
 val FeedEntity.themeColor get(): ThemeColor = when (this) {
@@ -56,6 +59,7 @@ val FeedEntity.themeColor get(): ThemeColor = when (this) {
     is MediaPost -> ThemeColor.Media
     is Media -> ThemeColor.Media
     is CustomEntity -> ThemeColor.Primary
+    is Star -> ThemeColor.Primary
 }
 
 val FeedEntity.flair get(): FlairIcon = when (this) {
@@ -90,6 +94,7 @@ val FeedEntity.cells get(): List<EntityCell> = when (this) {
     )
     is Media -> emptyList()
     is CustomEntity -> emptyList()
+    is Star -> emptyList()
 }
 
 fun entityButtonsOf(entity: FeedEntity, showMore: Boolean): List<EntityButton> = when (entity) {
@@ -118,6 +123,7 @@ fun entityButtonsOf(entity: FeedEntity, showMore: Boolean): List<EntityButton> =
     }
     is Media -> emptyList()
     is CustomEntity -> emptyList()
+    is Star -> emptyList()
 }
 
 val FeedEntity.subRoute get(): AppRoute? = when (this) {

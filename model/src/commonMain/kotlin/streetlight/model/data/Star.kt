@@ -14,18 +14,24 @@ import kotlin.uuid.Uuid
 
 @Serializable
 data class Star(
-    val username: Username,
+    override val username: Username,
     val roles: Set<UserRole>,
     val name: String?,
     val tagline: String?,
     val description: Markdown?,
     val scoutLevel: Int,
-    val image: Image?,
+    override val image: Image?,
     val design: PageDesign?,
     val accountType: AccountType,
-    val createdAt: Instant,
-) {
+    override val createdAt: Instant,
+): FeedEntity {
     val isAdmin get() = roles.contains(UserRole.Admin)
+
+    override val label get() = username.value
+    override val sublabel get() = tagline
+    override val body get() = description
+    override val geoPoint get() = null
+    override val markerId get() = null
 }
 
 @JvmInline

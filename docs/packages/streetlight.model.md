@@ -9,7 +9,7 @@ The most common packages this package depends on are:
 * `kampfire.api`: For base API node and endpoint definitions (`ApiNode`, `GetEndpoint`, `PostEndpoint`).
 * `kampfire.model`: For shared geographical types like `GeoPoint` and `GeoBounds`.
 * `kotlinx.serialization`: For JSON serialization and deserialization of data classes.
-* `kotlinx.datetime`: For time-based properties using `Instant`.
+* `kotlin.time`: For time-based properties using `Instant`.
 
 ### Structures
 
@@ -17,8 +17,12 @@ The package follows several key structural patterns to maintain a clean domain m
 
 * **Endpoint Definitions**: The `Api` object (in `Api.kt`) provides a hierarchical tree of `ApiNode` and endpoint objects, facilitating clear and organized API discovery.
 * **Domain Models**: Data classes (in `streetlight.model.data`) are designed with a specific property order: IDs first, followed by non-nullable, nullable, and finally time-based properties.
-* **Value Classes for IDs**: Each model typically has a corresponding `FooId` value class that implements `ProjectId` for type-safe identification.
+* **Value Classes for IDs**: Each model typically has a corresponding `FooId` value class that implements `RecordId` for type-safe identification.
 * **Mock Data**: The `MockDb` (in `MockDb.kt`) provides a set of sample data for testing and development of the client-side UI without requiring a live backend.
+
+### Feed Entities
+
+`FeedEntity` is a sealed interface for content shown in a feed or a header. Its members name general content: `label`, `sublabel`, `body`, `image`, `links`. A type maps its own fields onto them, as in `override val body get() = description`, and leaves a member it does not hold at its default.
 
 ### Workflows
 

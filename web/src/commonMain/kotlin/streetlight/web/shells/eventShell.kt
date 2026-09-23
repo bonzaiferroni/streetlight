@@ -11,14 +11,14 @@ import streetlight.web.layouts.startsAtCell
 import streetlight.web.pages.appFooter
 import streetlight.web.pages.appHeader
 import streetlight.web.ui.BodyStyle
-import streetlight.web.ui.featureHeader
+import streetlight.web.ui.entityHeader
 
 fun FlowContent.eventShell(event: EventLocation) {
     column(BodyStyle.ShellColumn) {
         appHeader()
 
         section(BodyStyle.MainColumn) {
-            featureHeader(
+            entityHeader(
                 entity = event,
                 descriptor = "at",
                 cells = listOfNotNull(

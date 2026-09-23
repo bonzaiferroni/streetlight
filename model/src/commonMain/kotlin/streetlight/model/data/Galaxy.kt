@@ -40,6 +40,7 @@ data class Galaxy(
     val postTypes get() = setOf(PostType.Location, PostType.Event, PostType.Media)
     override val label get() = name
     override val sublabel get() = tagline
+    override val body get() = description
     override val markerId get() = galaxyId.toString()
 }
 

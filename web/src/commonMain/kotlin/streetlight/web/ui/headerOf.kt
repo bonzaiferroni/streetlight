@@ -21,7 +21,7 @@ fun FlowContent.headerOf(
     block: DIV.() -> Unit = {}
 ) {
     // headerImage(location.name, location.images.medium, modifiers, block)
-    featureHeader(
+    entityHeader(
         entity = location,
         descriptor = "at",
         mod = mod,
@@ -36,10 +36,9 @@ fun FlowContent.headerOf(
     block: DIV.() -> Unit = {}
 ) {
     column {
-        featureHeader(
+        entityHeader(
             entity = galaxy,
             descriptor = "a galaxy",
-            description = galaxy.description,
             mod = mod,
             // editRoute = GalaxyConfigRoute(galaxy.slug),
             block = block
@@ -54,13 +53,7 @@ fun FlowContent.headerOf(
 fun FlowContent.headerOf(
     star: Star
 ) {
-    featureHeader(
-        title = star.username.value,
-        descriptor = "a streetlighter",
-        image = star.image,
-        subtitle = star.tagline,
-        description = star.description,
-    )
+    entityHeader(star, "a streetlighter")
 }
 
 fun FlowContent.headerOf(media: Media) {
