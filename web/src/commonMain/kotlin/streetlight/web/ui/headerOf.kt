@@ -8,9 +8,7 @@ import streetlight.model.data.Galaxy
 import streetlight.model.data.Location
 import streetlight.model.data.Media
 import streetlight.model.data.Star
-import streetlight.web.layouts.ThemeColor
-import streetlight.web.layouts.cellBlock
-import streetlight.web.layouts.cellContentOf
+import streetlight.web.layouts.cellGrid
 import streetlight.web.layouts.postedAtCell
 import streetlight.web.layouts.starCell
 import streetlight.web.shells.createPostMenu
@@ -24,15 +22,10 @@ fun FlowContent.headerOf(
 ) {
     // headerImage(location.name, location.images.medium, modifiers, block)
     featureHeader(
-        title = location.label,
+        entity = location,
         descriptor = "at",
-        subtitle = location.addressLine,
-        image = location.image,
-        description = location.description,
         mod = mod,
-        cellContent = cellContentOf(location),
         editRoute = editRoute,
-        links = location.links,
         block = block
     )
 }
@@ -44,15 +37,10 @@ fun FlowContent.headerOf(
 ) {
     column {
         featureHeader(
-            title = galaxy.name,
+            entity = galaxy,
             descriptor = "a galaxy",
-            subtitle = galaxy.tagline,
-            image = galaxy.image,
-            colorScheme = ThemeColor.Galaxy,
             description = galaxy.description,
             mod = mod,
-            cellContent = cellContentOf(galaxy),
-            links = emptyList(),
             // editRoute = GalaxyConfigRoute(galaxy.slug),
             block = block
         )
@@ -88,10 +76,7 @@ fun FlowContent.headerOf(media: Media) {
         }
 
         card(modify(OverflowClip, Gap0, ZenBg, Padding(0))) {
-            cellBlock {
-                starCell(media.username)
-                postedAtCell(media.createdAt)
-            }
+            cellGrid(listOf(starCell(media.username), postedAtCell(media.createdAt)), emptyList())
 
             media.text?.let {
                 column(modify(Padding(2), AlignSelfCenter, MaxWidthTextBody, TextLarge)) {

@@ -14,14 +14,15 @@ import koala.model.EntityMarker
 import koala.model.MarkerFocus
 import koala.model.PointMarker
 import kotlinx.css.pct
-import kotlinx.html.FlowContent
 import kotlinx.html.hr
 import streetlight.model.data.FeedEntity
 import streetlight.model.ui.CityRoute
 import streetlight.model.ui.GalaxyRoute
 import streetlight.web.layouts.ThemeColor
 import streetlight.web.layouts.FeedSection
-import streetlight.web.layouts.cellBlock
+import streetlight.web.layouts.cellGrid
+import streetlight.web.layouts.cells
+import streetlight.web.layouts.entityButtonsOf
 import streetlight.web.model.CityMarker
 import streetlight.web.model.Earth
 import streetlight.web.model.EventMarker
@@ -66,16 +67,13 @@ private fun ViewScope.focusPanel(
     route: AppRoute,
     subroute: AppRoute? = null,
     colorScheme: ThemeColor = ThemeColor.Primary,
-    cells: (FlowContent.() -> Unit)? = null,
 ) {
     val extraLinks = post.links
     card(modify(Gap0, Padding(0), BlurBackdrop, PointerEventsAuto, BorderSolid2Px, EarthStyle.MoveDimmer)) {
         setStyle(Css.ColorScheme.of(colorScheme.cssValue))
         column(Gap0) {
             featureImage(post.image, Flex1)
-            cells?.let {
-                cellBlock(FlexWrap, cells)
-            }
+            cellGrid(post.cells, entityButtonsOf(post, false), FlexWrap)
         }
         column(Padding(1)) {
             column(modify(Gap0, TextAlignCenter)) {

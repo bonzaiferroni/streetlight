@@ -12,7 +12,6 @@ import streetlight.web.pages.appFooter
 import streetlight.web.pages.appHeader
 import streetlight.web.ui.BodyStyle
 import streetlight.web.ui.featureHeader
-import streetlight.web.ui.starToggle
 
 fun FlowContent.eventShell(event: EventLocation) {
     column(BodyStyle.ShellColumn) {
@@ -20,20 +19,13 @@ fun FlowContent.eventShell(event: EventLocation) {
 
         section(BodyStyle.MainColumn) {
             featureHeader(
-                title = event.title,
+                entity = event,
                 descriptor = "at",
-                subtitle = event.locationName,
-                image = event.image,
-                description = event.description,
-                cellContent = {
-                    startsAtCell(event.startsAt)
-                    event.cost?.let {
-                        costCell(it, event.url)
-                    }
-                    starCell(event.host)
-                    starToggle(event)
-                },
-                links = event.links,
+                cells = listOfNotNull(
+                    startsAtCell(event.startsAt),
+                    event.cost?.let { costCell(it, event.url) },
+                    starCell(event.host),
+                ),
                 editRoute = EventUpdateRoute(event.eventSlug),
             )
 

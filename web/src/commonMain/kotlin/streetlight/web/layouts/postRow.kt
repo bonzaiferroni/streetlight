@@ -31,8 +31,10 @@ fun FlowContent.postRow(event: EventEdit, location: Location) {
             body = event.description,
             links = event.displayedLinks,
         ),
-        isUniverse = false
-    ) {
-        cellContentOf(event)()
-    }
+        isUniverse = false,
+        cells = listOfNotNull(
+            startsAtCell(event.startsAt),
+            event.cost?.let { costCell(it, event.website) },
+        ),
+    )
 }

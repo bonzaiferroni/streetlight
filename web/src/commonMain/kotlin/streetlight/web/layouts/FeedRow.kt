@@ -21,10 +21,10 @@ fun FlowContent.feedRow(
     entity: FeedEntity,
     isUniverse: Boolean,
     curator: CuratorStatus? = null,
-    cellContent: (FlowContent.() -> Unit)? = null
+    cells: List<EntityCell> = entity.cells,
 ) {
     div() {
-        configureFeedRow(entity, isUniverse, curator, cellContent)
+        configureFeedRow(entity, isUniverse, curator, cells)
     }
 }
 
@@ -32,7 +32,7 @@ fun DIV.configureFeedRow(
     entity: FeedEntity,
     isUniverse: Boolean,
     curator: CuratorStatus? = null,
-    cellContent: (FlowContent.() -> Unit)? = null
+    cells: List<EntityCell> = entity.cells,
 ) {
     addModifiers(modify(FeedRow.Base, modify(Padding(1), ZenBg)))
 
@@ -41,7 +41,7 @@ fun DIV.configureFeedRow(
     val flair = entity.flair
     val postRoute = entity.contentRoute
     val heading = entity.label
-    val cells = cellContent ?: entity.getCells(true)
+    val buttons = entityButtonsOf(entity, true)
     val description = entity.body
     val links = entity.links
 
@@ -73,9 +73,7 @@ fun DIV.configureFeedRow(
         // spacer(modify(Height2Px, InkGradientBg, MarginTop2Px))
 
         box(AlignItemsCenter) {
-            cells?.let {
-                cellBlock(modify(FeedRow.Cells, BorderRadius2, OverflowClip, Outline), cells)
-            }
+            cellGrid(cells, buttons, modify(FeedRow.Cells, BorderRadius2, OverflowClip, Outline))
         }
     }
 

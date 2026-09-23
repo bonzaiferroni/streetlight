@@ -100,6 +100,10 @@ A shell view is wired through these parts.
 
 A shell view with a map uses `shellBoxWithMap` and sets the marker points from the content.
 
+## Feature Header
+
+`featureHeader` has an overload taking a `FeedEntity`, which reads its content from the extensions in `streetlight.web.layouts`. Content that is not a `FeedEntity`, such as a `Star`, uses the overload taking each value.
+
 ## Services
 
 `appModule` is the Koin module holding every browser-side service. `AppContainer` wraps the resulting Koin instance and is reached through `ViewScope.app`.

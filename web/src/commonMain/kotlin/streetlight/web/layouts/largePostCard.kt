@@ -1,24 +1,22 @@
 package streetlight.web.layouts
 
-import kampfire.api.Markdown
-import koala.Image
 import koala.modifier.*
 import koala.html.*
 import kotlinx.html.FlowContent
-import streetlight.model.data.ExtraLink
-import streetlight.model.ui.StreetlightRoute
+import streetlight.model.data.FeedEntity
 
 fun FlowContent.largePostCard(
-    title: String,
-    subtitle: String?,
-    description: Markdown?,
-    links: List<ExtraLink>?,
-    image: Image?,
-    postRoute: StreetlightRoute,
-    subRoute: StreetlightRoute?,
+    entity: FeedEntity,
     mod: Modifier? = null,
-    cells: List<(FlowContent.() -> Unit)?>
 ) {
+    val title = entity.label
+    val subtitle = entity.subtitle
+    val description = entity.body
+    val links = entity.links
+    val image = entity.image
+    val postRoute = entity.contentRoute
+    val subRoute = entity.subRoute
+
     card(modify(mod, ContainerTypeInlineSize, Padding(0), OverflowHidden, MoonShadow)) {
         column(modify(ContainerTypeInlineSize, ContainerLgRow, Gap0)) {
 
@@ -28,7 +26,7 @@ fun FlowContent.largePostCard(
                 column(modify(Flex2, Padding(1), Height(24), MaxHeight(24))) {
                     row {
                         column(modify(Flex1, Gap0)) {
-                            navigation(postRoute) {
+                            navigationIfNotNull(postRoute) {
                                 heading3(title, modify(WhiteSpaceNoWrap, LineHeight1, MarginTop(1), TextOverflowEllipses))
                             }
 
@@ -42,7 +40,7 @@ fun FlowContent.largePostCard(
                         }
                     }
                     description?.let { description ->
-                        navigation(postRoute, modify(Flex1, TextSmall, OverflowHidden, FadeBottom)) {
+                        navigationIfNotNull(postRoute, modify(Flex1, TextSmall, OverflowHidden, FadeBottom)) {
                             textBlock(description.value)
                         }
                     }
@@ -55,17 +53,8 @@ fun FlowContent.largePostCard(
                 }
             }
 
-            if (cells.isNotEmpty()) {
-                // grid content
-                row(modify(Flex1, ContainerLgColumn, MinHeight(8), FlexItems1, Gap2Px, TextAlignCenter, FlexWrap, MoonShadow)) {
-                    cells.forEach {
-                        val cell = it ?: return@forEach
-                        cell {
-                            cell()
-                        }
-                    }
-                }
-            }
+            // grid content
+            cellGrid(entity.cells, entityButtonsOf(entity, false), modify(Flex1, ContainerLgColumn, MinHeight(8)))
         }
     }
 }

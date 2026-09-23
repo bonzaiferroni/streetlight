@@ -28,9 +28,7 @@ fun FlowContent.smallGalaxyCard(galaxy: Galaxy) {
                     }
                     textBlock(galaxy.description?.value ?: "Too mysterious for a description", modifiers)
                 }
-                cellBlock(modify(Height(5), MoonShadow)) {
-                    cellContentOf(galaxy)()
-                }
+                cellGrid(galaxy.cells, entityButtonsOf(galaxy, false), modify(Height(5), MoonShadow))
             }
         }
     }

@@ -1,5 +1,7 @@
 package streetlight.web.layouts
 
+import kabinet.utils.toMetricString
+import koala.SvgFile
 import koala.html.AppRoute
 import koala.model.Doc
 import streetlight.model.data.City
@@ -19,6 +21,8 @@ import streetlight.model.ui.GalaxyRoute
 import streetlight.model.ui.LocationRoute
 import streetlight.model.ui.MediaRoute
 import streetlight.model.ui.SiteDocRoute
+import streetlight.web.ui.postMenu
+import streetlight.web.ui.starToggle
 
 val Location.route get() = LocationRoute(slug)
 val Event.route get() = EventRoute(slug)
@@ -61,17 +65,59 @@ val FeedEntity.flair get(): FlairIcon = when (this) {
     else -> FlairIcon.Default
 }
 
-fun FeedEntity.getCells(showMore: Boolean = false) = when(this) {
-    is City -> null
-    is EventLocation -> cellContentOf(this, showMore)
-    is EventPost -> cellContentOf(event, showMore)
-    is Event -> cellContentOf(this)
-    is Galaxy -> cellContentOf(this)
-    is LocationPost -> cellContentOf(location)
-    is MediaPost -> null
-    is Location -> cellContentOf(this)
-    is Media -> null
-    is CustomEntity -> null
+val FeedEntity.cells get(): List<EntityCell> = when (this) {
+    is City -> emptyList()
+    is EventLocation -> listOfNotNull(
+        startsAt?.let { dateCell(it) },
+        startsAtCell(startsAt),
+        cost?.let { costCell(it, url) },
+        locationName?.let { EntityCell(SvgFile.MapPin, it, null) },
+    )
+    is EventPost -> event.cells
+    is Event -> listOfNotNull(
+        startsAt?.let { dateCell(it) },
+        startsAtCell(startsAt),
+        cost?.let { costCell(it, website) },
+    )
+    is Galaxy -> listOf(
+        EntityCell(SvgFile.Calendar, eventCount.toMetricString(), null),
+    )
+    is LocationPost -> location.cells
+    is MediaPost -> emptyList()
+    is Location -> listOfNotNull(
+        EntityCell(SvgFile.MapPin, mapType ?: "Location", null),
+        city?.let { EntityCell(SvgFile.City, it, null) },
+    )
+    is Media -> emptyList()
+    is CustomEntity -> emptyList()
+}
+
+fun entityButtonsOf(entity: FeedEntity, showMore: Boolean): List<EntityButton> = when (entity) {
+    is City -> emptyList()
+    is EventLocation -> buildList {
+        add(EntityButton { starToggle(entity) })
+        if (showMore) add(EntityButton { moreButton() })
+    }
+    is EventPost -> entityButtonsOf(entity.event, showMore) + EntityButton {
+        postMenu(entity.post.postId, entity.post.username)
+    }
+    is Event -> buildList {
+        add(EntityButton { starToggle(entity) })
+        if (showMore) add(EntityButton { moreButton() })
+    }
+    is Galaxy -> listOf(
+        EntityButton { starToggle(entity) },
+    )
+    is LocationPost -> entityButtonsOf(entity.location, showMore) + EntityButton {
+        postMenu(entity.post.postId, entity.post.username)
+    }
+    is MediaPost -> emptyList()
+    is Location -> buildList {
+        add(EntityButton { starToggle(entity) })
+        if (showMore) add(EntityButton { moreButton() })
+    }
+    is Media -> emptyList()
+    is CustomEntity -> emptyList()
 }
 
 val FeedEntity.subRoute get(): AppRoute? = when (this) {
@@ -85,12 +131,5 @@ val FeedEntity.subtitle get(): String? = when (this) {
     is MediaPost -> media.subtitle
     is EventPost -> "${event.locationName}, ${event.city}"
     is LocationPost -> location.addressLine
-    else -> null
-}
-
-fun FeedEntity.cellContent(showMore: Boolean) = when (this) {
-    is MediaPost -> null
-    is EventPost -> cellContentOf(event, showMore, post)
-    is LocationPost -> cellContentOf(location, post)
     else -> null
 }

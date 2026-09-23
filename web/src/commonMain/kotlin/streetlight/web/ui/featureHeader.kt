@@ -18,8 +18,37 @@ import koala.html.textBlock
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import streetlight.model.data.ExtraLink
+import streetlight.model.data.FeedEntity
+import streetlight.web.layouts.EntityButton
+import streetlight.web.layouts.EntityCell
 import streetlight.web.layouts.ThemeColor
-import streetlight.web.layouts.cellBlock
+import streetlight.web.layouts.cellGrid
+import streetlight.web.layouts.cells
+import streetlight.web.layouts.entityButtonsOf
+import streetlight.web.layouts.themeColor
+
+fun FlowContent.featureHeader(
+    entity: FeedEntity,
+    descriptor: String,
+    description: Markdown? = entity.body,
+    cells: List<EntityCell> = entity.cells,
+    editRoute: AppRoute? = null,
+    mod: Modifier? = null,
+    block: DIV.() -> Unit = { },
+) = featureHeader(
+    title = entity.label,
+    descriptor = descriptor,
+    image = entity.image,
+    subtitle = entity.sublabel,
+    colorScheme = entity.themeColor,
+    description = description,
+    cells = cells,
+    buttons = entityButtonsOf(entity, false),
+    links = entity.links,
+    editRoute = editRoute,
+    mod = mod,
+    block = block,
+)
 
 fun FlowContent.featureHeader(
     title: String,
@@ -28,7 +57,8 @@ fun FlowContent.featureHeader(
     subtitle: String? = null,
     colorScheme: ThemeColor = ThemeColor.Primary,
     description: Markdown? = null,
-    cellContent: (FlowContent.() -> Unit)? = null,
+    cells: List<EntityCell> = emptyList(),
+    buttons: List<EntityButton> = emptyList(),
     links: List<ExtraLink>? = null,
     editRoute: AppRoute? = null,
     mod: Modifier? = null,
@@ -57,9 +87,7 @@ fun FlowContent.featureHeader(
         }
 
         // cell content
-        if (cellContent != null) {
-            cellBlock(block = cellContent)
-        }
+        cellGrid(cells, buttons)
 
         if (description != null || links != null ) {
             column(modify(ContainerMdRow, Padding(4), Gap(4), AlignItemsStart)) {

@@ -42,22 +42,37 @@ fun FlowContent.cellBlock(
     mod: Modifier? = null,
     block: FlowContent.() -> Unit = {}
 ) {
-    row(modify(mod, MinHeight(4), MinWidth(16), FlexWrap, FlexItems1, Gap2Px, TextAlignCenter, MoonShadow)) {
+    row(modify(MinHeight(4), MinWidth(16), FlexWrap, FlexItems1, Gap2Px, TextAlignCenter, MoonShadow, mod)) {
         block()
+    }
+}
+
+fun FlowContent.cellGrid(
+    cells: List<EntityCell>,
+    buttons: List<EntityButton>,
+    mod: Modifier? = null,
+) {
+    if (cells.isEmpty() && buttons.isEmpty()) return
+    cellBlock(mod) {
+        cells.forEach { entityCell(it) }
+        if (buttons.isNotEmpty()) {
+            buttonsCell(MinWidth(32)) {
+                buttons.forEach { it.block(this) }
+            }
+        }
     }
 }
 
 fun FlowContent.cell(
     svg: Svg? = null,
     text: String? = null,
-    label: String? = null,
     minWidth: Modifier? = MinWidth(16),
     mod: Modifier? = null,
     block: DIV.() -> Unit = {}
 ) {
     box(minWidth) {
         row(modify(CellContent.CellMod, mod)) {
-            cellContent(svg, text, label, block)
+            cellContent(svg, text, block)
         }
     }
 }
@@ -85,12 +100,8 @@ fun FlowContent.cellButton(
 fun DIV.cellContent(
     svg: Svg? = null,
     text: String? = null,
-    label: String? = null,
     block: DIV.() -> Unit = {}
 ) {
-    label?.let {
-        textBlock("$it:", modify(CellContent.TextMod, InkDimFg))
-    }
     svg?.let {
         icon(svg, CellContent.IconMod)
     }
@@ -100,34 +111,23 @@ fun DIV.cellContent(
     block()
 }
 
-fun FlowContent.linkCell(
-    url: Url?,
-    svg: Svg,
-    text: String?,
-    mod: Modifier? = null,
-    block: FlowContent.() -> Unit = {}
-) {
-    // cell(modifiers, block)
-    when (url) {
-        null -> cell(svg, text, mod = mod, block = block)
-        else -> {
-            navigation(url.value, modify(Box, MinWidth(12))) {
-                row(modify(CellContent.CellMod, mod)) {
-                    cellContent(svg, text, null, block)
-                }
-            }
-        }
+fun FlowContent.entityCell(cell: EntityCell) {
+    fun FlowContent.cellRow() = row(CellContent.CellMod) {
+        icon(cell.icon, CellContent.IconMod)
+        textBlock(cell.text, CellContent.TextMod)
+    }
+
+    when (val url = cell.url) {
+        null -> box(MinWidth(16)) { cellRow() }
+        else -> navigation(url.value, modify(Box, MinWidth(16))) { cellRow() }
     }
 }
 
-fun FlowContent.startsAtCell(startsAt: Instant?) {
-    val startsAt = startsAt ?: return
-    cell(SvgFile.Clock, startsAt.toTimeFormat())
+fun startsAtCell(startsAt: Instant?) = startsAt?.let {
+    EntityCell(SvgFile.Clock, it.toTimeFormat(), null)
 }
 
-fun FlowContent.dateCell(startsAt: Instant) {
-    cell(SvgFile.Calendar, startsAt.toFutureFormat())
-}
+fun dateCell(startsAt: Instant) = EntityCell(SvgFile.Calendar, startsAt.toFutureFormat(), null)
 
 fun FlowContent.exampleStartsAtCell() {
 //    cell {
@@ -136,7 +136,7 @@ fun FlowContent.exampleStartsAtCell() {
 //    }
 }
 
-fun FlowContent.costCell(cost: Float, purchaseUrl: Url?) {
+fun costCell(cost: Float, purchaseUrl: Url?): EntityCell {
     val ticketsUrl = cost.takeIf { it != 0f }?.let {
         purchaseUrl
     }
@@ -144,10 +144,10 @@ fun FlowContent.costCell(cost: Float, purchaseUrl: Url?) {
         0f -> "FREE"
         else -> "$${cost.format(2, true)}"
     }
-    linkCell(ticketsUrl, SvgFile.TicketSmall, costText)
+    return EntityCell(SvgFile.TicketSmall, costText, ticketsUrl)
 }
 
-fun FlowContent.starCell(username: Username?) = cell(SvgFile.SomeoneSmall, username?.value ?: "Guest")
+fun starCell(username: Username?) = EntityCell(SvgFile.SomeoneSmall, username?.value ?: "Guest", null)
 
 fun FlowContent.textPropertyCell(property: String, value: String) {
     cell {
@@ -155,16 +155,22 @@ fun FlowContent.textPropertyCell(property: String, value: String) {
     }
 }
 
-fun FlowContent.postedAtCell(postedAt: Instant) {
-    cell(SvgFile.Clock, postedAt.toAgoFormat())
-}
+fun postedAtCell(postedAt: Instant) = EntityCell(SvgFile.Clock, postedAt.toAgoFormat(), null)
 
-fun FlowContent.linkCell(link: ExtraLink) {
-    linkCell(link.url, SvgFile.Link, link.label)
-}
+fun linkCell(link: ExtraLink) = EntityCell(SvgFile.Link, link.label, link.url)
 
 fun FlowContent.moreButton() {
     cellButton(SvgFile.Info) {
         onClick = KoalaFun.ToggleAncestor.invokeJs(ThisElement, FeedRow.Base, FeedRow.ToggleExpand)
     }
 }
+
+data class EntityCell(
+    val icon: Svg,
+    val text: String,
+    val url: Url?,
+)
+
+data class EntityButton(
+    val block: DIV.() -> Unit
+)
